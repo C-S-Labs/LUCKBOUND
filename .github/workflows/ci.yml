@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Luau
+        run: |
+          curl -sSL -o luau.zip https://github.com/luau-lang/luau/releases/latest/download/luau-ubuntu.zip
+          unzip -q luau.zip
+          chmod +x luau luau-analyze
+          echo "$PWD" >> "$GITHUB_PATH"
+
+      - name: Syntax check
+        run: |
+          fail=0
+          while IFS= read -r f; do
+            if luau-analyze "$f" 2>&1 | grep -q "SyntaxError"; then
+              echo "::error file=$f::syntax error"
+              luau-analyze "$f" 2>&1 | grep "SyntaxError"
+              fail=1
+            fi
+          done < <(find src tests -name '*.luau' ! -name 'generated_suite.luau')
+          exit $fail
+
+      - name: Forbidden module names (build spec P1-12)
+        run: |
+          hits=$(find src -name '*_Final*' -o -name '*_NEW*' -o -name '*_FIXED*' \
+                          -o -name '*_v2*' -o -name '*_old*' -o -name '*_backup*')
+          if [ -n "$hits" ]; then
+            echo "::error::duplicate-module names found -- see CLAUDE.md rule 1"
+            echo "$hits"
+            exit 1
+          fi
+
+      - name: Unit tests
+        run: |
+          python3 tests/build_suite.py
+          luau tests/generated_suite.luau
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ok-nick/setup-aftman@v0.4.2
+        continue-on-error: true
+      - name: StyLua
+        continue-on-error: true
+        run: stylua --check src tests || true
