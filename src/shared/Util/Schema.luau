@@ -136,8 +136,67 @@ function Schema.validateConfig(config: any, worlds: { [string]: any }): (boolean
 	return #errors == 0, errors
 end
 
+--- Validates the hub layout data. The hub is content like anything else, and
+--- a malformed district would otherwise surface as a silently missing platform.
+function Schema.validateHub(hub: any): (boolean, { string })
+	local errors = {}
+
+	if type(hub) ~= "table" then
+		return false, { "hub layout is not a table" }
+	end
+
+	if type(hub.Theme) ~= "table" then
+		table.insert(errors, "hub: missing Theme")
+	end
+	if type(hub.FateEngine) ~= "table" then
+		table.insert(errors, "hub: missing FateEngine")
+	else
+		if type(hub.FateEngine.AnchorSize) ~= "userdata" and type(hub.FateEngine.AnchorSize) ~= "table" then
+			table.insert(errors, "hub: FateEngine.AnchorSize must be a Vector3")
+		end
+		if type(hub.FateEngine.RingCount) ~= "number" or hub.FateEngine.RingCount < 1 then
+			table.insert(errors, "hub: FateEngine.RingCount must be >= 1")
+		end
+		if type(hub.FateEngine.SpinSpeeds) ~= "table" then
+			table.insert(errors, "hub: FateEngine.SpinSpeeds must be a table")
+		elseif #hub.FateEngine.SpinSpeeds < (hub.FateEngine.RingCount or 0) then
+			table.insert(errors, "hub: FateEngine.SpinSpeeds has fewer entries than RingCount")
+		end
+	end
+
+	if type(hub.Districts) ~= "table" or #hub.Districts == 0 then
+		table.insert(errors, "hub: Districts is empty")
+	else
+		local seen = {}
+		for index, district in hub.Districts do
+			local label = `hub: district #{index}`
+			if type(district.Id) ~= "string" then
+				table.insert(errors, `{label} is missing Id`)
+			elseif seen[district.Id] then
+				table.insert(errors, `{label} duplicates Id '{district.Id}'`)
+			else
+				seen[district.Id] = true
+			end
+			if type(district.Name) ~= "string" or district.Name == "" then
+				table.insert(errors, `{label} needs a display Name`)
+			end
+			if type(district.Angle) ~= "number" or district.Angle < 0 or district.Angle >= 360 then
+				table.insert(errors, `{label} Angle must be in [0, 360)`)
+			end
+			if type(district.Radius) ~= "number" or district.Radius <= 0 then
+				table.insert(errors, `{label} Radius must be positive`)
+			end
+			if district.Pillars ~= nil and (type(district.Pillars) ~= "number" or district.Pillars < 0) then
+				table.insert(errors, `{label} Pillars must be >= 0`)
+			end
+		end
+	end
+
+	return #errors == 0, errors
+end
+
 --- Runs every check. Raises on failure -- called first in bootstrap.
-function Schema.validateAll(worlds: { [string]: any }, config: any): ()
+function Schema.validateAll(worlds: { [string]: any }, config: any, hub: any?): ()
 	local allErrors = {}
 
 	local _, worldErrors = Schema.validateWorlds(worlds)
@@ -148,6 +207,13 @@ function Schema.validateAll(worlds: { [string]: any }, config: any): ()
 	local _, configErrors = Schema.validateConfig(config, worlds)
 	for _, e in configErrors do
 		table.insert(allErrors, e)
+	end
+
+	if hub ~= nil then
+		local _, hubErrors = Schema.validateHub(hub)
+		for _, e in hubErrors do
+			table.insert(allErrors, e)
+		end
 	end
 
 	if #allErrors > 0 then

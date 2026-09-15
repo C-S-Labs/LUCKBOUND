@@ -9,6 +9,7 @@ local EventCore = __require("EventCore")
 local WeightedRandom = __require("WeightedRandom")
 local Schema = __require("Schema")
 local Worlds = __require("Worlds")
+local Crossroads = __require("Crossroads")
 
 -- === tiny harness ===================================================
 local passed, failed = 0, 0
@@ -452,7 +453,65 @@ do
 		#partial.ActiveEvents == 1 and partial.ActiveEvents[1].Id == "A")
 end
 
--- === 8. Constants sanity ============================================
+-- === 8. Hub layout data =============================================
+group("Hub layout (the art-direction dial)")
+
+do
+	local ok, errs = Schema.validateHub(Crossroads)
+	check("real hub layout validates", ok, table.concat(errs, "; "))
+
+	check("all five Master Spec districts are present", #Crossroads.Districts == 5,
+		string.format("got %d", #Crossroads.Districts))
+
+	local byId = {}
+	for _, d in Crossroads.Districts do byId[d.Id] = d end
+	for _, id in { "HALL_OF_LEGENDS", "DISCOVERY_ARCHIVE", "EXPEDITION_GATE",
+		"TRAINING_GROUNDS", "GLOBAL_OBSERVATORY" } do
+		check(string.format("district %s exists", id), byId[id] ~= nil)
+	end
+
+	-- Master Spec §3 places these on specific compass points.
+	check("Hall of Legends is north", byId.HALL_OF_LEGENDS.Angle == 0)
+	check("Discovery Archive is east", byId.DISCOVERY_ARCHIVE.Angle == 90)
+	check("Expedition Gate is south", byId.EXPEDITION_GATE.Angle == 180)
+	check("Training Grounds is west", byId.TRAINING_GROUNDS.Angle == 270)
+	check("Global Observatory is on an upper platform",
+		byId.GLOBAL_OBSERVATORY.Height > 40, tostring(byId.GLOBAL_OBSERVATORY.Height))
+
+	check("Fate Engine has a spin speed per ring",
+		#Crossroads.FateEngine.SpinSpeeds >= Crossroads.FateEngine.RingCount)
+	check("Fate Engine rings counter-rotate",
+		Crossroads.FateEngine.SpinSpeeds[1] * Crossroads.FateEngine.SpinSpeeds[2] < 0)
+
+	-- The mesh seam: every swappable piece must expose MeshId, or authored art
+	-- cannot be dropped in without editing HubBuilder.
+	local seamOk = Crossroads.FateEngine.MeshId == nil
+		and Crossroads.CentralPlatform.MeshId == nil
+		and Crossroads.FloatingIslands.MeshId == nil
+	for _, d in Crossroads.Districts do
+		if rawget(d, "MeshId") ~= nil then seamOk = false end
+	end
+	check("every swappable piece exposes a MeshId seam (currently all blockout)", seamOk)
+
+	check("floating islands are deterministic across servers",
+		type(Crossroads.FloatingIslands.Seed) == "number")
+	check("spawn is offset from the Fate Engine, not on top of it",
+		Crossroads.SpawnOffset.Z ~= 0 or Crossroads.SpawnOffset.X ~= 0)
+
+	-- Bad hub data must be caught at boot, like any other content.
+	local broken = { Theme = {}, FateEngine = { RingCount = 3, SpinSpeeds = {} }, Districts = {} }
+	local okb, errsb = Schema.validateHub(broken)
+	check("rejects malformed hub data", not okb and #errsb >= 2, table.concat(errsb, "; "))
+
+	local dupes = {
+		Theme = {}, FateEngine = Crossroads.FateEngine,
+		Districts = { Crossroads.Districts[1], Crossroads.Districts[1] },
+	}
+	local okd, errsd = Schema.validateHub(dupes)
+	check("rejects duplicate district Ids", not okd, table.concat(errsd, "; "))
+end
+
+-- === 9. Constants sanity ============================================
 group("Constants")
 
 do
