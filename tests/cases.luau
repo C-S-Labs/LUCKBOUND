@@ -117,16 +117,16 @@ do
 end
 
 -- === 2. Scripted onboarding =========================================
-group("Scripted onboarding (first ~5 minutes)")
+group("Scripted onboarding (15-roll arc)")
 
 do
 	local seq = GameConfig.Fate.OnboardingSequence
-	check("onboarding is 3 worlds", #seq == 3, string.format("got %d", #seq))
+	check("onboarding is 15 rolls", #seq == 15, string.format("got %d", #seq))
 
 	-- Every scripted roll must be forced regardless of the random stream.
 	local allMatched = true
 	local detail = ""
-	for trial = 1, 200 do
+	for trial = 1, 120 do
 		local p = profile()
 		local rand = lcg(trial * 7919)
 		for i = 1, #seq do
@@ -140,45 +140,92 @@ do
 		end
 		if not allMatched then break end
 	end
-	check("rolls 1-3 are always the scripted sequence, across 200 random streams", allMatched, detail)
+	check("all 15 rolls follow the scripted order, across 120 random streams", allMatched, detail)
 
-	-- The player must meet the full rarity ladder during onboarding.
-	local rarities = {}
-	for _, id in seq do table.insert(rarities, Worlds[id].Rarity) end
-	check("onboarding shows Common -> Rare -> Mythic",
-		rarities[1] == "COMMON" and rarities[2] == "RARE" and rarities[3] == "MYTHIC",
-		table.concat(rarities, ", "))
+	-- Count what the arc actually hands out.
+	local counts = {}
+	for _, id in seq do
+		local rarity = Worlds[id].Rarity
+		counts[rarity] = (counts[rarity] or 0) + 1
+	end
 
-	-- Indexed by TotalRolls, so it survives a rejoin mid-onboarding.
-	local resumed = profile({ TotalRolls = 2 })
+	-- THE CORE GUARANTEE: a guaranteed Mythic would permanently devalue the
+	-- top tier and the Fatebreak announcement that depends on it.
+	check("onboarding NEVER hands out a Mythic", counts.MYTHIC == nil,
+		string.format("found %d", counts.MYTHIC or 0))
+	check("onboarding never hands out an Unknown", counts.UNKNOWN == nil)
+
+	check("onboarding peaks on exactly one Epic", counts.EPIC == 1, tostring(counts.EPIC))
+	check("the Epic is Sky Citadel", Worlds[seq[8]].Id == "SKY_CITADEL", seq[8])
+	check("the Epic lands mid-arc, not at the end",
+		seq[8] == "SKY_CITADEL" and #seq > 8)
+
+	check("onboarding teaches Common, Rare and Epic",
+		counts.COMMON and counts.RARE and counts.EPIC ~= nil)
+
+	-- The arc must approximate real odds, or roll 16 feels like a punishment.
+	local commonShare = counts.COMMON / #seq * 100
+	local weights = GameConfig.Fate.PrototypeWeights
+	local totalWeight = 0
+	for _, w in weights do totalWeight += w end
+	local trueCommonShare = weights.VERDANT_VALLEY / totalWeight * 100
+	check("scripted Common rate is close to the true rate (no cliff at roll 16)",
+		math.abs(commonShare - trueCommonShare) < 12,
+		string.format("scripted %.1f%% vs true %.1f%%", commonShare, trueCommonShare))
+
+	check("the arc ends on a Common so the handover is continuous",
+		Worlds[seq[#seq]].Rarity == "COMMON", Worlds[seq[#seq]].Rarity)
+
+	-- Rares must be spaced, not front-loaded into a parade.
+	local longestCommonRun, run = 0, 0
+	for _, id in seq do
+		if Worlds[id].Rarity == "COMMON" then
+			run += 1
+			longestCommonRun = math.max(longestCommonRun, run)
+		else
+			run = 0
+		end
+	end
+	check("no run of more than 3 Commons inside the arc", longestCommonRun <= 3,
+		string.format("longest run %d", longestCommonRun))
+
+	-- Indexed by TotalRolls, so it survives a rejoin mid-arc.
+	local resumed = profile({ TotalRolls = 7 })
 	local outcome = FateCore.roll(Worlds, resumed, GameConfig, lcg(1))
-	check("onboarding resumes correctly after a rejoin", outcome.WorldId == seq[3] and outcome.IsScripted,
+	check("onboarding resumes correctly after a rejoin", outcome.WorldId == seq[8] and outcome.IsScripted,
 		outcome.WorldId)
 
 	local done = profile({ TotalRolls = #seq })
 	check("onboarding reports finished after the sequence", not FateCore.isOnboarding(done, GameConfig))
-	check("roll 4 is no longer scripted",
+	check("roll 16 is no longer scripted",
 		FateCore.roll(Worlds, done, GameConfig, lcg(5)).IsScripted == false)
 
-	-- Onboarding expeditions are short so the arc fits the first few minutes.
-	local total = 0
+	-- Only the opening tutorial rolls are shortened, not all 15.
+	local fresh = profile()
+	check("roll 1 gets a short tutorial expedition",
+		FateCore.expeditionDuration(Worlds.VERDANT_VALLEY, fresh, GameConfig)
+			== GameConfig.Fate.OnboardingExpeditionSeconds)
+
+	local past = profile({ TotalRolls = GameConfig.Fate.ShortExpeditionRolls })
+	check("later onboarding rolls run at full expedition length",
+		FateCore.expeditionDuration(Worlds.VERDANT_VALLEY, past, GameConfig)
+			== Worlds.VERDANT_VALLEY.DurationSeconds)
+
+	local tutorialTotal = 0
 	local p = profile()
-	for i = 1, #seq do
-		total += FateCore.expeditionDuration(Worlds[seq[i]], p, GameConfig)
+	for i = 1, GameConfig.Fate.ShortExpeditionRolls do
+		tutorialTotal += FateCore.expeditionDuration(Worlds[seq[i]], p, GameConfig)
 		p.TotalRolls += 1
 	end
-	check("three onboarding expeditions fit in ~5 minutes",
-		total <= 330, string.format("%ds total", total))
-	check("post-onboarding expeditions return to full length",
-		FateCore.expeditionDuration(Worlds.VERDANT_VALLEY, p, GameConfig)
-			== Worlds.VERDANT_VALLEY.DurationSeconds)
+	check("the tutorial expeditions still fit in ~5 minutes",
+		tutorialTotal <= 330, string.format("%ds total", tutorialTotal))
 end
 
 -- === 3. TRUE RNG ====================================================
 group("True RNG after onboarding")
 
 do
-	local done = profile({ TotalRolls = 3 })
+	local done = profile({ TotalRolls = #GameConfig.Fate.OnboardingSequence })
 	local N = 400000
 	local counts = {}
 	local rand = lcg(20260915)
@@ -205,7 +252,7 @@ do
 		string.format("worst %s at %.3fpp", worstId, worstDrift))
 
 	-- THE CORE GUARANTEE: player state must not tilt the odds.
-	local newbie = profile({ TotalRolls = 3, FateLevel = 1, FatePoints = 0 })
+	local newbie = profile({ TotalRolls = 15, FateLevel = 1, FatePoints = 0 })
 	local veteran = profile({ TotalRolls = 9999, FateLevel = 90, FatePoints = 500000 })
 	local identical = true
 	local a, b = lcg(4242), lcg(4242)
@@ -218,7 +265,7 @@ do
 	end
 	check("a level-90 player and a level-1 player draw identically (Fate does not tilt odds)", identical)
 
-	for _, id in { "VERDANT_VALLEY", "EMBERFALL", "ASTRAL_REACH" } do
+	for _, id in { "VERDANT_VALLEY", "EMBERFALL", "SKY_CITADEL", "ASTRAL_REACH" } do
 		check(string.format("weight for %s ignores Fate level", id),
 			FateCore.effectiveWeight(Worlds[id], newbie, GameConfig)
 				== FateCore.effectiveWeight(Worlds[id], veteran, GameConfig))
@@ -240,9 +287,17 @@ do
 		if poolA[i].Id ~= poolB[i].Id then stable = false end
 	end
 	check("roll pool order is stable", stable)
-	check("phase gating excludes Phase 3 content", #FateCore.buildPool(Worlds, 1) == 3,
+	check("phase gating excludes Phase 3 content", #FateCore.buildPool(Worlds, 1) == 4,
 		string.format("%d worlds enabled at phase 1", #FateCore.buildPool(Worlds, 1)))
-	check("THE_UNKNOWN enters the pool at phase 3", #FateCore.buildPool(Worlds, 3) == 4)
+	check("THE_UNKNOWN enters the pool at phase 3", #FateCore.buildPool(Worlds, 3) == 5)
+
+	-- Epic must be commoner than Mythic, or the ladder is upside down.
+	check("Epic is more likely than Mythic",
+		weights.SKY_CITADEL > weights.ASTRAL_REACH,
+		string.format("Epic %d vs Mythic %d", weights.SKY_CITADEL, weights.ASTRAL_REACH))
+	check("prototype weights sum to 10000 so they read as percentages",
+		totalWeight == 10000, tostring(totalWeight))
+	check("Sky Citadel is Epic tier", Worlds.SKY_CITADEL.Rarity == "EPIC")
 
 	-- Same seed, same results: rolls are auditable.
 	local s1, s2 = lcg(777), lcg(777)

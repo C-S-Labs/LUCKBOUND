@@ -224,7 +224,16 @@ This is the centre of Phase 1. Specified to the level where two different implem
 
 **Only worlds with `EnabledInPhase <= GameConfig.CurrentPhase` enter the pool, and weights are renormalised over that pool.** This is why weights are absolute rather than percentages: Phase 3 can enable the full eight without retuning anything.
 
-Phase 1 enables three (`VERDANT_VALLEY`, `EMBERFALL`, `ASTRAL_REACH`) with prototype weights `7500 / 2000 / 500`.
+Phase 1 enables four — `VERDANT_VALLEY`, `EMBERFALL`, `SKY_CITADEL`, `ASTRAL_REACH` — with prototype weights summing to 10000 so they read directly as percentages:
+
+| World | Rarity | Weight | % |
+|---|---|---|---|
+| `VERDANT_VALLEY` | Common | 7000 | 70% |
+| `EMBERFALL` | Rare | 2000 | 20% |
+| `SKY_CITADEL` | Epic | 700 | 7% |
+| `ASTRAL_REACH` | Mythic | 300 | 3% |
+
+Sky Citadel is **data only**: the Biome Blueprint drafts no Sky Citadel (its §7.4 lists it as a reserved slot), so its enemies, boss and loot tables are empty and its Environment values are invented rather than blueprint-sanctioned. Phase 1 never enters a world, so this suffices today. **It needs a real biome before Phase 2 makes worlds enterable.**
 
 > **Design decision requiring your sign-off (D-1):** at 5%, a tester doing 4 rolls has a 19% chance of ever seeing Astral Reach. If the point of the test is "does the rare roll make them react", 5% may be too rare to observe in a 10-minute session. Alternative: 65/25/10. I have gone with **75/20/5** as the default because a rare that is not rare does not produce the reaction either. Change `GameConfig.PrototypeWeights` to override.
 
@@ -247,27 +256,38 @@ Two things this buys you, worth stating because they are the real argument for i
 1. **The roll is defensible.** Every roll is logged with its seed (§3.4.6), the draw is reproducible, and "the game is rigged against me" has a verifiable answer. An odds-tilting system has no such answer, and players will build spreadsheets.
 2. **The rare result keeps meaning.** If Fate raises Mythic odds, a Mythic at high Fate is worth less than a Mythic at low Fate, and the Fatebreak announcement (§12) stops being a statement about luck.
 
-### 3.3.1 Scripted onboarding — the first ~5 minutes
+### 3.3.1 Scripted onboarding — the first 15 rolls
 
-True RNG creates one problem: a new player may never see what the game is capable of. A tester who rolls Common four times has not experienced LUCKBOUND. The onboarding sequence solves this without touching the odds.
+True RNG creates one problem: a new player may never see what the game is capable of. The onboarding sequence solves that without touching the odds. `GameConfig.Fate.OnboardingSequence` forces rolls 1–15, in order; roll 16 onward is pure chance, forever.
 
-`GameConfig.Fate.OnboardingSequence` forces the first N rolls, in order:
+| Roll | World | Rarity | | Roll | World | Rarity |
+|---|---|---|---|---|---|---|
+| 1 | Verdant Valley | Common | | 9 | Verdant Valley | Common |
+| 2 | Verdant Valley | Common | | 10 | Verdant Valley | Common |
+| 3 | Emberfall | **Rare** | | 11 | Emberfall | **Rare** |
+| 4 | Verdant Valley | Common | | 12 | Verdant Valley | Common |
+| 5 | Verdant Valley | Common | | 13 | Verdant Valley | Common |
+| 6 | Emberfall | **Rare** | | 14 | Emberfall | **Rare** |
+| 7 | Verdant Valley | Common | | 15 | Verdant Valley | Common |
+| 8 | **Sky Citadel** | **EPIC** | | 16+ | *true RNG* | — |
 
-| Roll | World | Rarity | Purpose |
-|---|---|---|---|
-| 1 | Verdant Valley | Common | Tutorial. Learn to move, roll, enter, return. |
-| 2 | Emberfall | Rare | A different world exists. Rarity is a real axis. |
-| 3 | Astral Reach | Mythic | **This is what you are chasing.** |
-| 4+ | — | — | True RNG. Forever. |
+Two rules shape it:
 
-Properties that make this honest rather than a rigged tutorial:
+**1. It never hands out a Mythic.** A guaranteed top tier devalues the top tier permanently, and the Fatebreak announcement (§12) depends on Mythic meaning something. The arc peaks on Epic at roll 8. Astral Reach must be earned from honest odds. Enforced by test.
 
-- It is **finite and explicit**. Three rolls, declared in config, then never again.
-- It is **indexed by `profile.TotalRolls`**, so it survives a rejoin mid-sequence and cannot be farmed by disconnecting.
-- Scripted rolls are flagged `IsScripted = true` and are **never announced to the server** (§4.1). Otherwise every new player would fire a Mythic banner and the announcement would stop meaning anything.
-- Onboarding expeditions run at `OnboardingExpeditionSeconds` (default 100 s) rather than full length, so all three fit inside roughly five minutes.
+**2. It approximates the real odds.** Counted out: 10 Common, 4 Rare, 1 Epic — roughly 67/27/7 against true RNG's 70/20/7/3. A front-loaded parade of rares followed by a wall of Commons would make roll 16 feel like a punishment. Ending on a Common means the player has already felt what normal is, so the handover is continuous rather than a cliff. Enforced by test (drift < 12pp, and no run of more than 3 Commons).
 
-**This resolves open question D-1.** The earlier worry was that at a 5% Astral Reach rate, a tester in a short session would probably never see a rare roll and so the test would not measure the reaction it was meant to measure. Guaranteeing the Mythic during onboarding means every tester sees it exactly once, knows it exists, and then faces honest odds. Post-onboarding weights can stay at 75/20/5.
+The valleys are the point. Rares land at 3, 6, 11 and 14 with Commons between them, so each reads as a lift rather than an entitlement.
+
+Other properties:
+
+- **Indexed by `profile.TotalRolls`**, so it survives a rejoin mid-arc and cannot be farmed by disconnecting.
+- Scripted rolls are flagged `IsScripted = true` and are **never announced server-wide** (§4.1) — otherwise every new player would fire banners.
+- Only the first `ShortExpeditionRolls` (default 3) run short expeditions. Shortening all 15 would change what the game is, not just ease someone in.
+
+**This resolves open question D-1.** The earlier worry was that at a 5% Astral Reach rate a tester in a short session would probably never see a rare roll. Guaranteeing an Epic during onboarding means every player learns the ladder exists — and learns there are tiers above what they have been shown.
+
+> **Open design consequence, flagged.** With true RNG, a player at roll 200 faces exactly the same odds as at roll 16, so "stuck in Commons" is a permanent condition, not an early-game one. Fate cannot fix it by weighting — that is D-8. The lever consistent with true RNG is **Fate unlocking which pools you draw from**, never how the draw resolves (§3.3). Phase 3 work.
 
 ### 3.4 Server authority and anti-exploit
 
