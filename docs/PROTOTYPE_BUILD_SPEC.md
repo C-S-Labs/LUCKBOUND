@@ -1,7 +1,7 @@
 # LUCKBOUND — Prototype Build Specification
 ## Phase 1: Foundation · v0.1 · AI-Executable
 
-**Status:** Canonical. Derived from `LUCKBOUND Master Game Design & Development Specification v0.1`.
+**Status:** Canonical. **Phase 1 complete and verified in Studio.** Derived from `LUCKBOUND Master Game Design & Development Specification v0.1`; see `STATUS.md` for current state and `BLUEPRINT_RECONCILIATION.md` for how the Biome Blueprint was merged.
 **Supersedes:** nothing. **Superseded by:** nothing.
 **Rule of precedence:** where this document and the Master Design PDF disagree on an *implementation* detail, this document wins. Where they disagree on *intent*, the PDF wins and this document is wrong and must be amended.
 
@@ -17,20 +17,24 @@ The reason Phase 1 stops there: §25 of the Master Spec ("Design North Star") sa
 
 ### Phase 1 Definition of Done
 
-| # | Criterion | Verified by |
-|---|---|---|
-| P1-1 | Place opens in Studio with zero errors in Output | Studio playtest |
-| P1-2 | Player spawns in Crossroads facing the Fate Engine | Studio playtest |
-| P1-3 | All five districts are identifiable blockout geometry | Visual |
-| P1-4 | ROLL prompt appears within 3 studs of Fate Engine | Studio playtest |
-| P1-5 | Roll is server-authoritative; client cannot force a result | Exploit test (§7.4) |
-| P1-6 | Reveal animation runs ≥2.5s before result is shown | Timing |
-| P1-7 | Result shows world name, rarity name, rarity colour | Visual |
-| P1-8 | Fate points persist across rejoin | Rejoin test |
-| P1-9 | Profile save survives a Studio "Stop" mid-session | DataStore test |
-| P1-10 | Touch controls usable at 1280×720 and phone aspect | Device emulator |
-| P1-11 | `Fate_RequestRoll` spam (100/s) does not crash or over-roll | Exploit test |
-| P1-12 | No module named `*_Final`, `*_NEW`, `*_FIXED`, `*_v2` | `grep` in CI |
+Ten of twelve are **met and verified in Studio** as of 2026-09-15. The two
+persistence criteria require a published place — DataStores do not run on a
+local file — and are the only Phase 1 items still unverified.
+
+| # | Criterion | Verified by | |
+|---|---|---|---|
+| P1-1 | Place opens in Studio with zero errors in Output | Studio playtest | ✅ |
+| P1-2 | Player spawns in Crossroads facing the Fate Engine | Studio playtest | ✅ |
+| P1-3 | All five districts are identifiable blockout geometry | Visual | ✅ |
+| P1-4 | ROLL prompt appears near the Fate Engine (12 studs, `UI.PromptActivationDistance`) | Studio playtest | ✅ |
+| P1-5 | Roll is server-authoritative; client cannot force a result | Exploit test (§7.4) | ✅ |
+| P1-6 | Reveal animation runs ≥2.5s before result is shown | Timing | ✅ |
+| P1-7 | Result shows world name, rarity name, rarity colour | Visual | ✅ |
+| P1-8 | Fate points persist across rejoin | Rejoin test | ⏳ needs a published place |
+| P1-9 | Profile save survives a Studio "Stop" mid-session | DataStore test | ⏳ needs a published place |
+| P1-10 | Touch controls usable at 1280×720 and phone aspect | Device emulator | ✅ |
+| P1-11 | `Fate_RequestRoll` spam (100/s) does not crash or over-roll | Exploit test | ✅ |
+| P1-12 | No module named `*_Final`, `*_NEW`, `*_FIXED`, `*_v2` | `grep` in CI | ✅ |
 
 ---
 
@@ -377,26 +381,30 @@ If you fire a remote to "everyone" without touching `EventCore` state, you have 
 
 Each task is independently assignable. `DoD` = Definition of Done. Dependencies are hard.
 
-| ID | Task | Depends | DoD |
-|---|---|---|---|
-| **T-101** | Repo scaffold: `rokit.toml`, `default.project.json`, `.gitignore`, folder tree | — | `rojo build` produces an `.rbxlx` that opens in Studio |
-| **T-102** | `Core/Types.luau` — all schemas from §2 as Luau types | T-101 | `luau-lsp` reports 0 errors |
-| **T-103** | `Core/Constants.luau` — rarity table, enums, frozen | T-102 | Table is deep-frozen; mutation throws |
-| **T-104** | `Core/GameConfig.luau` — every tunable in §3, §6 | T-102 | No magic number appears in any System |
-| **T-105** | `Core/Net.luau` — builds the 7 Phase-1 remotes | T-103 | All 7 exist under `ReplicatedStorage/Luckbound/Net` at runtime |
-| **T-106** | `Util/WeightedRandom.luau` + unit test | T-102 | 1e6-sample test: observed % within 0.5pp of expected |
-| **T-107** | `Util/Schema.luau` — validate Content against Types | T-102 | Malformed world fixture fails boot with a named field |
-| **T-108** | `Content/Worlds` — 3 prototype + 5 Phase-3 stubs | T-107 | All 8 validate; 3 enabled |
-| **T-109** | `SaveSystem` — ProfileStore-style session locking | T-104 | Rejoin test P1-8; Stop-mid-session test P1-9 |
-| **T-110** | `ProgressionSystem` — Fate points, level curve, roll history | T-109 | Fate increments persist |
-| **T-111** | `FateSystem` — §3 in full, incl. all §3.4 guards | T-106, T-110 | Exploit tests P1-5, P1-11 pass |
-| **T-112** | `HubBuilder` — Crossroads blockout, 5 districts + Fate Engine | T-101 | P1-2, P1-3, P1-4 |
-| **T-113** | `init.server.luau` — bootstrap in §1.2 order | T-105…T-111 | Boots clean, 0 Output errors |
-| **T-114** | `ProximityController` + `StateController` (client) | T-105 | Prompt shows/hides at radius |
-| **T-115** | `UI/FateRoll` — build-up, reveal, result card | T-114 | P1-6, P1-7, P1-10 |
-| **T-116** | `UI/GlobalAnnouncements` — banner for Mythic+ | T-114 | Fires on a forced Mythic roll |
-| **T-117** | `init.client.luau` — client bootstrap | T-114…T-116 | Boots clean |
-| **T-118** | CI: StyLua, Selene, forbidden-name grep (P1-12) | T-101 | Green on push |
+**All 18 tasks are complete.** Kept for reference and for the dependency graph.
+
+| ID | Task | Depends | DoD | |
+|---|---|---|---|---|
+| **T-101** | Repo scaffold: `rokit.toml`, `default.project.json`, `.gitignore`, folder tree | — | `rojo build` produces an `.rbxlx` that opens in Studio | ✅ |
+| **T-102** | `Core/Types.luau` — all schemas from §2 as Luau types | T-101 | `luau-lsp` reports 0 errors | ✅ |
+| **T-103** | `Core/Constants.luau` — rarity table, enums, frozen | T-102 | Table is deep-frozen; mutation throws | ✅ |
+| **T-104** | `Core/GameConfig.luau` — every tunable in §3, §6 | T-102 | No magic number appears in any System | ✅ |
+| **T-105** | `Core/Net.luau` — builds the 7 Phase-1 remotes | T-103 | All 7 exist under `ReplicatedStorage/Luckbound/Net` at runtime | ✅ |
+| **T-106** | `Util/WeightedRandom.luau` + unit test | T-102 | 1e6-sample test: observed % within 0.5pp of expected | ✅ |
+| **T-107** | `Util/Schema.luau` — validate Content against Types | T-102 | Malformed world fixture fails boot with a named field | ✅ |
+| **T-108** | `Content/Worlds` — 3 prototype + 5 Phase-3 stubs | T-107 | All 8 validate; 3 enabled | ✅ |
+| **T-109** | `SaveSystem` — ProfileStore-style session locking | T-104 | Rejoin test P1-8; Stop-mid-session test P1-9 | ✅ |
+| **T-110** | `ProgressionSystem` — Fate points, level curve, roll history | T-109 | Fate increments persist | ✅ |
+| **T-111** | `FateSystem` — §3 in full, incl. all §3.4 guards | T-106, T-110 | Exploit tests P1-5, P1-11 pass | ✅ |
+| **T-112** | `HubBuilder` — Crossroads blockout, 5 districts + Fate Engine | T-101 | P1-2, P1-3, P1-4 | ✅ |
+| **T-113** | `init.server.luau` — bootstrap in §1.2 order | T-105…T-111 | Boots clean, 0 Output errors | ✅ |
+| **T-114** | `ProximityController` + `StateController` (client) | T-105 | Prompt shows/hides at radius | ✅ |
+| **T-115** | `UI/FateRoll` — build-up, reveal, result card | T-114 | P1-6, P1-7, P1-10 | ✅ |
+| **T-116** | `UI/GlobalAnnouncements` — banner for Mythic+ | T-114 | Fires on a forced Mythic roll | ✅ |
+| **T-117** | `init.client.luau` — client bootstrap | T-114…T-116 | Boots clean | ✅ |
+| **T-118** | CI: StyLua, Selene, forbidden-name grep (P1-12) | T-101 | Green on push | ✅ |
+
+Two tasks grew beyond their original description: **T-112** was rebuilt against the Biome Blueprint (five zone builders dispatched by `Kind`, shared PortalRig, `GameConfig.HubLayout` anchors), and **T-115** gained the 2.5 s portal spin-up that must precede the result banner.
 
 **Suggested parallelisation if you run multiple agents:** T-102→104 must be one agent, sequentially, first — everything downstream depends on those three files being coherent. After that, `{T-106,T-107,T-108}`, `{T-109,T-110}`, and `{T-112}` are independent. T-111 joins the first two. UI (T-114→117) needs only T-105.
 
@@ -421,6 +429,24 @@ These are design decisions I made to keep the spec executable. Each is a one-lin
 D-7 is worth arguing about now. Twelve minutes is a long first expedition for a tester who does not yet know if they like the game. Phase 2 may want 4–5 minutes.
 
 ---
+
+## 6.1 Bugs Found Building Phase 1
+
+Recorded because each cost a debugging cycle and each is a class of mistake that will recur.
+
+| Bug | Why the tests missed it |
+|---|---|
+| `Workspace.FilteringEnabled` is read-only; Rojo errored applying it | Never exercised — it is project-file config, not code |
+| `type()` used to validate a `Vector3`; Luau reports `"vector"` | Harness shimmed `Vector3` as a table, so `type()` returned `"table"`. **152 tests passed against a build that could not boot.** |
+| `DataStoreService:GetDataStore` raises on an unpublished place | Roblox-only path; the bootstrap died at step 3 of 9 |
+| `MessagingService:SubscribeAsync` yields forever on an unpublished place | `pcall` catches errors but not hangs. Silent stall at step 5 of 9 — no error text at all |
+| `PortalRig` rings rotated about the world origin, not the ring centre | Geometry, not asserted by any test |
+| `deepFreeze` raised on a table reachable by two paths | Only triggered once `UITheme` reused `Constants` tables |
+
+Two lessons worth keeping:
+
+1. **A shim that is merely enough to pass is worse than no test.** Make shims behave like the real type.
+2. **A yielding `init()` is invisible.** Hence the `[LUCKBOUND] boot N/9` progress logging — a stall now names its own step.
 
 ## 7. What Phase 1 Deliberately Excludes
 

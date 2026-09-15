@@ -1,124 +1,171 @@
 # LUCKBOUND — Art Direction Brief
 
-How to describe the look so it becomes code, and where authored art plugs in later.
+How to describe the look so it becomes code, and where authored art plugs in.
 
 ---
 
 ## The approach
 
-**You describe, I build procedurally, meshes come later.**
+**You describe, it gets built procedurally, meshes come later.**
 
-Every visual is data in `src/shared/Content/Hub/Crossroads.luau`. `HubBuilder`
-reads that data and generates geometry; it contains no art direction at all.
-So describing the look is a data edit, not a rewrite.
+Every visual lives in data:
 
-**The mesh seam.** Every swappable piece exposes an optional `MeshId`. While it
-is `nil` the builder generates primitives. Set it to a Roblox asset id and the
-builder uses the mesh instead, keeping the same position, scale and pivot:
+| File | Holds |
+|---|---|
+| `src/shared/Content/Hub/Crossroads.luau` | Theme palette, lighting, all five zones, Fate Engine, islands |
+| `GameConfig.HubLayout` | Named position anchors and hub dimensions |
+| `GameConfig.Portal` | Every PortalRig tunable |
+| `src/shared/Core/UITheme.luau` | Fonts, colours, radii for every screen |
+| each world's `Environment` | Per-biome ambient, fog, brightness, clock |
+
+`HubBuilder` reads that data and generates geometry. **It contains no art
+direction at all.** If changing how something looks requires editing
+`HubBuilder`, the schema is missing a field — that is the bug, not the look.
+
+### The mesh seam
+
+Every swappable piece exposes an optional `MeshId`. While `nil`, the builder
+generates primitives. Set it and the builder uses the mesh at the same position,
+scale and pivot:
 
 ```lua
 FateEngine = {
 	-- ...
-	MeshId = "rbxassetid://1234567890",  -- ← one line, no other change
+	MeshId = "rbxassetid://1234567890",  -- ← one line, nothing else changes
 }
 ```
 
-That means your second option — AI-generated or Blender-authored models — stays
-open and costs one line *per piece*, whenever you want it. You can replace the
-Fate Engine alone and leave everything else as blockout. There is no flag day.
+Authored art replaces blockout **one piece at a time**, no flag day. A test
+enforces that the seam exists on every swappable piece.
 
-### Why not meshes now
+`HubBuilder` also skips generation entirely if `Workspace` already contains a
+`Crossroads` — hand-authored geometry always wins over blockout.
 
-Not a capability limit — a sequencing one. Mesh imports need export, upload,
-moderation approval, and asset-id wiring, and AI-generated meshes routinely
-arrive with broken scale, pivots or topology. That's a multi-day pipeline whose
-output is *prettier blockout*. Phase 1 exists to answer one question: does
-pressing ROLL make you want to press it again? Procedural geometry answers it
-this week. Your own spec says it: *"It doesn't need to be beautiful yet."*
+> Mesh uploading is covered in `ADDENDUM_ASSET_PIPELINE.md`, which is
+> **explicitly out of scope** until the gameplay loop is proven fun. It is
+> proven for the roll; it is not yet proven for the full loop.
 
-The one exception worth buying early is the **Fate Engine**. It is on screen for
-the entire game and it is the thing the game is named after. If you commission or
-generate a single hero asset, make it that one.
+---
+
+## What exists now
+
+Built to the Biome Blueprint §2. Current state: functional blockout, **very
+dark** — the first thing worth tuning.
+
+| Zone | Position | What's there |
+|---|---|---|
+| Centre | (0,0,0) | Fate Engine: PortalRig @1.5×, 24-stud marble platform, radial rune inlay, 6 orbiting glass shards, gold spotlight |
+| North (−Z) | (0,0,−46) | Hall of Legends: 3-tier semicircular amphitheatre, 5 World-First obelisks, cool museum spotlights |
+| East (+X) | (46,0,0) | Discovery Archive: domed rotunda, 3 rings of orbiting shelves, teal + cosmic trim |
+| South (+Z) | (0,0,46) | Expedition Gate: PortalRig @2×, 12-stud processional, flanking torch pillars |
+| West (−X) | (−46,0,0) | Training Grounds: 30×30 yard, low fence, 3 dummies + boss dummy, warm torches |
+| Up (+Y) | (0,40,0) | Global Observatory: 18-stud platform, glass orrery, spiral ramp |
+
+Plus 14 deterministic floating islands (seeded, so every server shows one
+skyline) and raised radial walkways.
+
+**436 instances total** — the current mobile-budget baseline.
+
+### The PortalRig
+
+One shared component, instanced per use and reskinned by rarity colour only —
+never duplicated per biome. Fate Engine at 1.5×, Expedition Gate at 2×, and
+every future world portal from the same rig.
+
+Carries the **2.5-second spin-up**, which Blueprint §1.3 calls the single most
+important UX beat. The reveal banner can never appear before it completes;
+enforced by test.
 
 ---
 
 ## What to describe
 
-Answer in plain prose — no need for numbers or colour codes, I'll translate.
+Plain prose is fine — no numbers or hex codes needed.
 
-### 1. The Crossroads (highest value)
+### 1. Hub lighting ⭐ (cheapest, highest impact right now)
 
-Currently built from Master Spec §3: deep blue/purple sky at dusk, warm gold
-lighting, slate platforms, neon runes, floating islands in the distance, five
-compass districts around a central plinth.
+Currently a deep dusk: `ClockTime 22`, ambient `rgb(40,35,60)`, fog 150→500.
+It reads as atmospheric but is genuinely hard to see.
 
-- What's the **feeling** standing there? Sacred? Abandoned? Busy? Humming with machinery?
-- Is it **old** — ruins something else built — or **active** — running right now?
-- **Scale**: is the player a visitor in something enormous, or an operator at a workstation?
-- Is the sky **empty** or full of something — stars, storms, other islands, distant worlds?
-- Time of day, and does it change?
+- Should it be **readable** (raise ambient) or stay **moody** (add local lights instead)?
+- Is the mood *sacred*, *abandoned*, *humming with machinery*?
+- Is the Crossroads **old** — ruins someone else built — or **actively running**?
 
-### 2. The Fate Engine ⭐ (most important object in the game)
+### 2. The reveal moment ⭐⭐ (the whole game, per §25)
 
-Currently three counter-rotating gold rings around a glowing purple core on a
-stone plinth.
+Now: screen dims to 60%, world names flash past, scramble into symbols as they
+accelerate, then a card fades in with rarity, world name and flavour. Total wait
+is `RollBuildupSeconds` + the rarity's own reveal duration — 3.7 s for a Common,
+6.7 s for a Mythic.
 
-- Is it **machine** (gears, pistons, metal) or **artifact** (stone, runes, magic) or both?
-- What does it do **at rest**? Idle spin, pulse, hum, dormant until approached?
-- **What happens when you roll?** This is the single most valuable thing you can describe. Does it wind up? Charge? Tear open? Go silent first?
-- What does a **Common** roll look like versus a **Mythic**? Different colour, more rings, a different sound, screen shake?
-- Does the player **enter** it, or watch it?
+- Build-up **tense** (slow, quiet, dread) or **exciting** (fast, building)?
+- When should the player *suspect* it's rare — early (colour shifts) or only at the last frame?
+- On a Mythic: does the world stop? Screen shake? Sound cut out?
+- Is the result a **prize** (celebratory) or a **destination** (ominous)?
 
-### 3. The reveal moment ⭐⭐ (the whole game, per §25)
+### 3. The Fate Engine
 
-Right now: screen dims, world names flash past, then scramble into symbols as it
-accelerates, then a card fades in with rarity, world name and flavour text. Total
-wait is `RollBuildupSeconds` + the rarity's own reveal duration — 3.7s for a
-Common, 6.7s for a Mythic.
+Currently the PortalRig at 1.5× — segmented gold outer ring, neon inner ring,
+ForceField plane, 8 rune plates, floating crystal shards.
 
-- Should the build-up be **tense** (slow, quiet, dread) or **exciting** (fast, loud, building)?
-- When does the player **suspect** it's rare — early (colour shifts as it builds) or only at the end (identical until the last frame)?
-- On a Mythic: does the world **stop**? Screen shake? Everything go white? Sound cut out?
-- Does the result feel like a **prize** (celebratory) or a **destination** (ominous, you're going somewhere)?
-- After the card: should they be **dropped straight in**, or choose when to enter?
+- **Machine** (gears, pistons) or **artifact** (stone, runes) or both?
+- What does it do **at rest**? What happens **when you roll**?
+- How does a Common roll differ visually from a Mythic?
 
-### 4. The three biomes (Phase 2 — describe later)
+### 4. Placeholder text
 
-Verdant Valley, Emberfall and Astral Reach are worlds you *enter*, and entering
-isn't built yet. Their environment data (`Environment = { AmbientColor, FogColor,
-FogEnd, ClockTime }`) is already wired, so lighting and atmosphere land as soon
-as you describe them — but geometry, props and enemies are Phase 2 work.
+Flavour lines, result-card copy, zone labels. All in data — world `Flavor`
+fields and `FateRoll.luau` strings.
 
-Worth describing **after** you've played the roll loop, not before.
+### 5. Biomes (Phase 2)
 
----
+Verdant Valley, Emberfall and Astral Reach have blueprint palettes and wired
+lighting already. Their *geometry* is Phase 2.
 
-## What I'll do with it
-
-Your description becomes edits to `Theme` and the district/engine tables, plus
-tween curves and timing in `src/client/UI/FateRoll.luau`. Then you `rojo serve`,
-look at it, and tell me what's wrong. That loop is fast — most changes are
-numbers.
-
-If you connect the **Studio MCP locally** (see `docs/TOOLCHAIN_ACCESS.md`), a
-local agent can also screenshot the result and iterate on the look without you
-describing every adjustment in words.
+**Sky Citadel has no blueprint at all** — the Biome Blueprint never drafted it
+(§7.4 lists it as a reserved slot). Its lighting values are invented. It needs a
+real section before Phase 2 makes worlds enterable.
 
 ---
 
-## Current defaults, for reference
+## Current defaults
 
-| Thing | Current value |
+| Thing | Value |
 |---|---|
-| Sky / atmosphere | `#1B1740` top, `#3D2E6B` horizon, dusk at ClockTime 20.5 |
-| Key light | Warm gold `#F5C97B` |
-| Stone | `#5B5470`, Slate material |
-| Runes | Cyan `#8FD4FF`, Neon |
-| Crystal / core | Purple `#A97BE8`, Neon |
-| Gold accents | `#D9A441` |
-| Fog | `#2A2350`, 180 → 1100 studs |
-| Central platform | 62-stud radius cylinder |
-| Districts | 120 studs from centre; Observatory at +58 height |
-| Fate Engine | 54 studs tall, 3 rings spinning 0.25 / −0.40 / 0.62 rad/s |
-| Floating islands | 14, deterministic from seed 20260915 |
-| Reveal timing | Common 3.7s → Mythic 6.7s total |
+| Ambient / Outdoor | `rgb(40,35,60)` / `rgb(55,48,80)` |
+| ColorShift_Top | `rgb(90,70,140)` |
+| Fog | `rgb(30,25,50)`, 150 → 500 |
+| Brightness / ClockTime | 2 / 22 |
+| Marble / Gold accent | `rgb(226,221,234)` / `rgb(230,178,74)` |
+| Hub diameter | 120 studs |
+| Zone ring radius | 46 studs |
+| Walkways | 8 studs wide, raised 2 (gate processional 12) |
+| Portal spin-up | 2.5 s |
+| Reveal total | Common 3.7 s → Mythic 6.7 s |
+
+### Rarity colours — do not deviate
+
+Biome Blueprint §1.1, single source of truth. **Rarity colour is a UI and portal
+contract; biome palette is set dressing.** Emberfall's environment is fire-orange
+but its portal ring is Rare blue. Enforced by test.
+
+| Rarity | Hex | |
+|---|---|---|
+| Common | `#9E9E9E` | Verdant Valley |
+| Uncommon | `#5FD97A` | ⚠️ not in the blueprint — needs sign-off |
+| Rare | `#3E8EF7` | Emberfall |
+| Epic | `#B24BF3` | Sky Citadel |
+| Legendary | `#FFD447` | Hall of Legends |
+| Mythic | `#FF7A1A` | Astral Reach |
+| Unknown | `#7CF5E0` | Fatebreaks |
+
+---
+
+## How a description becomes code
+
+Your prose becomes edits to `Crossroads.Theme`, the zone tables, `UITheme`, or
+tween curves in `FateRoll.luau`. Then `rojo serve`, look at it, say what's wrong.
+Most changes are numbers, so the loop is fast.
+
+With the **Studio MCP** connected locally (see `TOOLCHAIN_ACCESS.md`), an agent
+can also screenshot the result and iterate without you describing every tweak.

@@ -11,6 +11,7 @@ There are **two different places Claude can run**, and they have very different 
 | | **This cloud session** (claude.ai/code) | **Claude Code on your own machine** |
 |---|---|---|
 | Write Luau, data, docs, tests | ✅ | ✅ |
+| Run the headless test suite | ✅ | ✅ |
 | Git / GitHub | ✅ | ✅ |
 | Open Roblox Studio | ❌ | ✅ via Studio MCP |
 | Run the game & watch it | ❌ | ✅ via Studio MCP playtest tools |
@@ -73,19 +74,73 @@ The Studio MCP can edit scripts directly, but you do not want it to be the only 
 - **Studio MCP** owns Workspace geometry, playtesting, asset insertion, and inspection.
 - An agent that wants to change a System edits the file and lets Rojo sync it. It does **not** edit the script in Studio.
 
-### Setup
+### Setup (Windows / PowerShell — verified working)
 
-Install [Rokit](https://github.com/rojo-rbx/rokit) (the Rojo team's toolchain manager), then in the repo root:
-
-```bash
-rokit install          # reads rokit.toml, installs rojo + stylua + selene
-rojo plugin install    # installs the Rojo Studio plugin
-rojo serve             # starts the sync server
+```powershell
+Invoke-RestMethod https://raw.githubusercontent.com/rojo-rbx/rokit/main/scripts/install.ps1 | Invoke-Expression
 ```
 
-Current Rojo is **7.6.0**, pinned in `rokit.toml`. In Studio, open the Rojo plugin and click **Connect**.
+**Then close PowerShell and open a new window.** The installer edits PATH, and an
+already-open shell will not see it. This is the single most common "command not
+found right after installing" cause. A terminal inside VS Code inherits the old
+PATH too — restart the whole app, not just the tab.
 
-From then on: edit a file → save → it appears in Studio instantly.
+```powershell
+rokit --version        # confirm it is on PATH
+cd C:\Dev\luckbound
+rokit install          # reads rokit.toml: rojo 7.6.0 + stylua + selene
+rojo serve
+```
+
+Expect a **trust prompt** on first install — Rokit asks before running each tool.
+Say yes to all three; it remembers per tool. If it errors instead of prompting:
+
+```powershell
+rokit trust rojo-rbx/rojo
+rokit trust JohnnyMorganz/StyLua
+rokit trust Kampfkarren/selene
+```
+
+In Studio: **Rojo** panel → **Connect** → **Accept** the sync preview (Rojo 7.7+
+asks before touching the place). Then edit a file → save → it appears instantly.
+
+#### If the installer fails silently
+
+PowerShell 5.1 defaults to old TLS, and `Invoke-RestMethod | Invoke-Expression`
+produces **no error** when the download fails — it just executes nothing. Force
+TLS 1.2 and retry:
+
+```powershell
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+```
+
+Diagnose with `Test-Path "$HOME\.rokit\bin\rokit.exe"` — `False` means the
+install never happened; `True` means it is only a PATH problem.
+
+#### Escape hatch
+
+Rokit is only a version manager, and StyLua/Selene are linters CI already runs.
+**The one tool you actually need is Rojo.** Download `rojo-win64.zip` from the
+[Rojo 7.6.0 release](https://github.com/rojo-rbx/rojo/releases/tag/v7.6.0), drop
+`rojo.exe` in the repo folder, and run `.\rojo.exe serve` (the `.\` is required
+in PowerShell).
+
+### Two gotchas that cost real time
+
+**Rojo does not clean up.** It manages only the three paths in
+`default.project.json`. Old scripts elsewhere in the place keep running
+alongside the new ones — two architectures at once. Converting an existing place
+means deleting the old scripts by hand first.
+
+**Read-only properties break the sync.** `Workspace.FilteringEnabled` is
+permanently true in modern Roblox; a project file that tries to set it makes Rojo
+error mid-apply and can leave the tree half-built with no scripts running.
+Keep `$properties` out of the project file unless genuinely needed.
+
+### Keep the code off OneDrive
+
+The repo must live outside OneDrive (`C:\Dev\luckbound` is fine). The `.rbxl`
+place file on OneDrive is harmless — only the synced source matters.
 
 ---
 
@@ -139,6 +194,19 @@ For automated tests, `run-in-roblox` executes a test suite in a headless Roblox 
 
 ---
 
+## 5.1 Publishing — now a real blocker, not optional polish
+
+Two Phase 1 acceptance criteria (P1-8, P1-9) **cannot be verified on a local
+place**, because `DataStoreService` raises there. `MessagingService` — which
+cross-server Fatebreaks depend on — is unavailable for the same reason.
+
+The server handles both gracefully: `SaveSystem` runs in volatile mode and says
+so, and the cross-server subscribe runs off-thread so it cannot stall the
+bootstrap. But **saving and cross-server events stay untestable until the place
+is published** and Studio Access to API Services is enabled.
+
+Worth doing when you next want to confirm persistence.
+
 ## 6. Recommended setup order
 
 | Step | Time | Unlocks |
@@ -147,8 +215,9 @@ For automated tests, `run-in-roblox` executes a test suite in a headless Roblox 
 | 2. Enable Studio built-in MCP + Quick connect | 3 min | Agent can build, playtest, screenshot |
 | 3. `rokit install` + `rojo serve` + plugin | 10 min | Repo ↔ Studio code sync |
 | 4. Clone this repo locally, `rojo build` | 2 min | Phase 1 scaffold opens in Studio |
-| 5. Blender MCP | 15 min | Defer until Phase 3 — you don't need art yet |
-| 6. Open Cloud + CI | 1 hr | Defer until you have testers |
+| 5. Publish the place | 10 min | Unblocks DataStores and MessagingService (P1-8, P1-9) |
+| 6. Blender MCP | 15 min | Defer until Phase 3 — you don't need art yet |
+| 7. Open Cloud + CI | 1 hr | Defer until you have testers |
 
 **Steps 1–4 are the whole critical path.** Under 25 minutes and the local agent can build Phase 1 against this spec, run it, and show you a screenshot of the reveal.
 

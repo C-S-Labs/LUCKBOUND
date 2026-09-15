@@ -1,8 +1,11 @@
 # Biome Blueprint v0.1 — Reconciliation Record
 
-The Biome Blueprint arrived after the Phase 1 build spec and shipped code. It
-declares itself canon in several places. Where it and existing canon disagreed,
-this is what I did and why. **Four items need your sign-off.**
+**Status: implemented and verified in Studio.** The Biome Blueprint arrived after
+the Phase 1 build spec and shipped code, and declares itself canon in several
+places. Where it and existing canon disagreed, this is what was done and why.
+
+**Four items still need the owner's sign-off** (§ below). Everything else is
+merged, tested and running.
 
 ---
 
@@ -49,7 +52,7 @@ inverts which of the five future worlds is rarest.
 ### 3. UNCOMMON has no blueprint colour
 
 §1.1 lists six tiers. The code carries seven — `UNCOMMON` is used by
-`ANCIENT_RUINS` (25%) in build spec §3.1.
+`ANCIENT_RUINS` (25%) in build spec §3.1, which is Phase 3 content.
 
 **Resolved as:** kept the prototype green `#5FD97A`. **This is the one colour in
 `Constants` that is not blueprint-sanctioned.** Either bless it or give me a hex.
@@ -120,6 +123,26 @@ reversed, flip the sign on the Z anchors and nothing else changes.
 
 ---
 
+## Later additions, after the blueprint merge
+
+**Sky Citadel (Epic) was added** so the onboarding arc could peak on an Epic
+rather than handing every new player a guaranteed Mythic. The blueprint reserves
+Epic `#B24BF3` for exactly this slot (§1.1) and lists Sky Citadel among the five
+undrafted worlds (§7.4).
+
+It is **data only**: no blueprint section exists for it, so its enemies, boss and
+loot tables are empty and its Environment values are invented rather than
+blueprint-sanctioned. Phase 1 never enters a world, so this suffices today.
+
+> ⚠️ **This is the largest open debt.** Sky Citadel is live in the roll pool at
+> 7%. Rolling it in Phase 2 would send a player to a world that does not exist.
+> It needs a blueprint section — palette, layout, enemies, boss, an optional
+> side-content pocket per §6 — before expeditions become enterable.
+
+**Rarity colours are verified against §1.1 by test**, and the theme-vs-rarity
+rule from §4.1 is enforced: Emberfall's environment is fire-orange while its
+portal ring is Rare blue.
+
 ## §6 cross-biome checklist status
 
 | Item | Status |
@@ -132,5 +155,6 @@ reversed, flip the sign on the Z anchors and nothing else changes.
 | One optional side-content pocket per biome | ⏳ only Emberfall's is specified |
 | Mobile part/light budget vs Verdant Valley baseline | ⏳ no biome built yet |
 
-Hub instance count prints on boot (`[HubBuilder] built Crossroads: 5 zones, N
-instances`) — that's your first mobile budget datapoint.
+**Hub baseline measured: 436 instances**, printed on boot. That is the number
+every biome's part budget should be compared against until a biome exists to set
+its own baseline.
