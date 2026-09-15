@@ -232,18 +232,42 @@ Phase 1 enables three (`VERDANT_VALLEY`, `EMBERFALL`, `ASTRAL_REACH`) with proto
 
 `TotalRolls == 0` always returns `VERDANT_VALLEY`, regardless of weights, and is flagged `IsTutorialRoll = true`. A new player's first experience must be the tutorial world. This does not increment any pity counter.
 
-### 3.3 Fate influence (Phase 1 scope)
+### 3.3 TRUE RNG — the roll is never weighted by the player
 
-Phase 1 implements the *first rung* of the §4 progression ladder only — "I hope I roll a good world" → "I can influence my world rolls":
+**Design decision, owner-directed, overrides Master Spec §4.**
 
-```
-effectiveWeight(world) =
-  world.RollWeight * (1 + FateBonus(fateLevel) * rarityOrder(world) / 7)
-```
+The roll is an honest draw. No player state — Fate level, Fate points, total rolls, playtime, spend — changes the probability of any world. `FateCore.effectiveWeight` does not read the profile when `GameConfig.Fate.FateInfluencesOdds` is `false`, which is the default and the intent.
 
-`FateBonus(level) = level * GameConfig.Fate.WeightBonusPerLevel` (default `0.04`, capped at `2.0`).
+Fate remains the primary meta-progression stat. It is a **score and unlock currency**, not an odds modifier: it gates features, titles, Hall of Fate standing and Fatebreak eligibility. What it explicitly does not do is sell better luck.
 
-Net effect: Fate never reduces a rare world's odds and scales up rarer worlds more than common ones. Rerolls, destination choice and modifier control are **Phase 3** and must not be implemented early.
+> **Tension with the source document, recorded deliberately.** Master Spec §4 describes a ladder — "I can influence my world rolls" → "I can manipulate world modifiers" → "I can bend reality" — where Fate buys agency over RNG. True RNG removes the first two rungs. The endgame rungs (modifier control, Fatebreak Expeditions) can still be built as *content access* rather than *odds tilting*, and that is the recommended reading: Fate unlocks **which pools you may draw from**, never **how the draw resolves**. The weighting code is retained and disabled rather than deleted, so the decision is reversible with one boolean.
+
+Two things this buys you, worth stating because they are the real argument for it:
+
+1. **The roll is defensible.** Every roll is logged with its seed (§3.4.6), the draw is reproducible, and "the game is rigged against me" has a verifiable answer. An odds-tilting system has no such answer, and players will build spreadsheets.
+2. **The rare result keeps meaning.** If Fate raises Mythic odds, a Mythic at high Fate is worth less than a Mythic at low Fate, and the Fatebreak announcement (§12) stops being a statement about luck.
+
+### 3.3.1 Scripted onboarding — the first ~5 minutes
+
+True RNG creates one problem: a new player may never see what the game is capable of. A tester who rolls Common four times has not experienced LUCKBOUND. The onboarding sequence solves this without touching the odds.
+
+`GameConfig.Fate.OnboardingSequence` forces the first N rolls, in order:
+
+| Roll | World | Rarity | Purpose |
+|---|---|---|---|
+| 1 | Verdant Valley | Common | Tutorial. Learn to move, roll, enter, return. |
+| 2 | Emberfall | Rare | A different world exists. Rarity is a real axis. |
+| 3 | Astral Reach | Mythic | **This is what you are chasing.** |
+| 4+ | — | — | True RNG. Forever. |
+
+Properties that make this honest rather than a rigged tutorial:
+
+- It is **finite and explicit**. Three rolls, declared in config, then never again.
+- It is **indexed by `profile.TotalRolls`**, so it survives a rejoin mid-sequence and cannot be farmed by disconnecting.
+- Scripted rolls are flagged `IsScripted = true` and are **never announced to the server** (§4.1). Otherwise every new player would fire a Mythic banner and the announcement would stop meaning anything.
+- Onboarding expeditions run at `OnboardingExpeditionSeconds` (default 100 s) rather than full length, so all three fit inside roughly five minutes.
+
+**This resolves open question D-1.** The earlier worry was that at a 5% Astral Reach rate, a tester in a short session would probably never see a rare roll and so the test would not measure the reaction it was meant to measure. Guaranteeing the Mythic during onboarding means every tester sees it exactly once, knows it exists, and then faces honest odds. Post-onboarding weights can stay at 75/20/5.
 
 ### 3.4 Server authority and anti-exploit
 
@@ -304,6 +328,22 @@ Declaring these now stops an agent from inventing `CombatHit2` when it needs one
 
 `Expedition_RequestEnter`, `Expedition_Started`, `Expedition_Ended`, `Expedition_TimerSync`, `Combat_RequestAttack`, `Combat_RequestAbility`, `Combat_RequestDodge`, `Combat_HitConfirmed`, `Combat_EnemyStateChanged`, `Loot_Awarded`, `Discovery_Found`, `Discovery_BookSync`, `Inventory_RequestEquip`, `Inventory_Changed`, `Event_FatebreakStarted`, `Event_FatebreakEnded`.
 
+### 4.1 Late joiners — the rule that is easy to get wrong
+
+**Requirement: anything globally visible must be visible to a player who joins a server that is already running.**
+
+`FireAllClients` only reaches people who are already connected. A Fatebreak broadcast at minute 2 does not exist for someone who joins at minute 3, even though the event is still running. So:
+
+1. **Server state is the source of truth, not the broadcast.** `EventCore.State` holds active events and a recent-announcement buffer. Every broadcast is a *side effect* of mutating that state — never the other way round.
+2. **Mutate state before broadcasting.** A player joining in the gap between the two still gets the event via their snapshot.
+3. **Every join gets `Event_StateSync`** with the full picture: active events with `RemainingSeconds` and `ElapsedSeconds`, plus the last `AnnouncementBufferSize` announcements with `AgeSeconds`.
+4. **Send remaining time, not absolute end time.** A client with a skewed clock still counts down correctly. `ServerNow` is included for anything that needs to reconcile.
+5. **Announcements age out** (`AnnouncementBufferMaxAgeSeconds`, default 300 s) so a joiner sees what just happened, not a week of history.
+6. **Cross-server** (Master Spec §12 — reality altered *everywhere*) runs over `MessagingService`. The payload carries the original `StartedAt`, so every server counts down to the same wall-clock end and a late joiner on *any* server sees the same clock.
+7. **Sweep expired events on a timer** and re-sync, so nobody is left rendering a Starfall that ended.
+
+If you fire a remote to "everyone" without touching `EventCore` state, you have just made something invisible to the next person through the door.
+
 ### Universal remote rules
 
 1. Every `OnServerEvent` handler validates argument **count and type** before use. `FireServer` can be called with anything.
@@ -348,11 +388,13 @@ These are design decisions I made to keep the spec executable. Each is a one-lin
 
 | # | Decision | Default | Why |
 |---|---|---|---|
-| D-1 | Phase 1 roll weights | 75 / 20 / 5 | §3.1 — the tester-sees-a-rare tradeoff |
-| D-2 | First roll forced to tutorial world | Yes | New player must not land in Astral Reach confused |
+| ~~D-1~~ | ~~Phase 1 roll weights~~ | 75 / 20 / 5 | **Resolved** by scripted onboarding (§3.3.1) |
+| ~~D-2~~ | ~~First roll forced to tutorial~~ | — | **Superseded** by the 3-roll onboarding sequence |
+| D-8 | Fate never affects odds | `FateInfluencesOdds = false` | Owner-directed. §3.3 records the tension with Master Spec §4 |
+| D-9 | Onboarding length | 3 rolls / 100 s each | Fits ~5 min; shows the full rarity ladder once |
 | D-3 | Roll cooldown | 3.0 s | Long enough to prevent spam, short enough not to annoy |
 | D-4 | Reveal duration scales with rarity | 2.5 s → 7.0 s | The anticipation mechanic; highest-leverage number |
-| D-5 | Fate weight bonus per level | +4%, cap +200% | Makes Fate felt by level ~10 without trivialising rarity |
+| ~~D-5~~ | ~~Fate weight bonus per level~~ | inert | **Disabled** by D-8; code retained, flag off |
 | D-6 | Roll history cap | 50 entries | DataStore size safety |
 | D-7 | Expedition duration | 720 s (12 min) | From PDF §6; likely too long for a PoC — revisit in Phase 2 |
 

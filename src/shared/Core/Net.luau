@@ -16,6 +16,7 @@ local PHASE_1_REMOTES = {
 	"Profile_Updated", -- S->C, partial snapshot
 	"Progression_FateChanged", -- S->C
 	"Announce_Global", -- S->C
+	"Event_StateSync", -- S->C, full live-event snapshot; fires on join (§4.1)
 	"UI_Acknowledge", -- C->S
 }
 

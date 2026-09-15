@@ -19,16 +19,35 @@ local GameConfig = {
 	CurrentPhase = 1,
 
 	Fate = {
+		-- === TRUE RNG ===
+		-- The roll is never weighted by player state. Fate is a progression and
+		-- score stat; it does not buy better odds. After the scripted onboarding
+		-- below, every roll is an honest draw over the enabled pool.
+		--
+		-- The weighting hook still exists in FateCore but is OFF. Flipping this
+		-- to true re-enables the Master Spec §4 "influence your rolls" ladder.
+		-- Do not flip it without an explicit design decision.
+		FateInfluencesOdds = false,
+		WeightBonusPerLevel = 0.04, -- inert while FateInfluencesOdds = false
+		WeightBonusCap = 2.0, -- inert while FateInfluencesOdds = false
+
+		-- === SCRIPTED ONBOARDING ===
+		-- Rolls 1..#OnboardingSequence are forced, in order. The point is to show
+		-- a new player the whole rarity ladder -- Common, Rare, Mythic -- inside
+		-- their first few minutes, so that when true RNG takes over they already
+		-- know what they are chasing. Roll #(n+1) onward is pure chance.
+		OnboardingSequence = { "VERDANT_VALLEY", "EMBERFALL", "ASTRAL_REACH" },
+
+		-- Onboarding expeditions are short so the scripted arc fits in ~5 minutes.
+		-- Full-length expeditions begin once the sequence is exhausted.
+		OnboardingExpeditionSeconds = 100,
+
 		RollCooldownSeconds = 3.0, -- D-3
 		MaxRollDistance = 30, -- studs from RollAnchor
-		WeightBonusPerLevel = 0.04, -- D-5: +4% weighting per Fate level...
-		WeightBonusCap = 2.0, -- ...capped at +200%
-		ForceTutorialFirstRoll = true, -- D-2
 		RollHistoryCap = 50, -- D-6
 
-		-- D-1: Phase 1 override weights, keyed by world Id. When CurrentPhase
-		-- is 1 these replace the world's own RollWeight. Set to nil to use the
-		-- canonical full-game weights instead.
+		-- Phase 1 pool weights, keyed by world Id. Used only while CurrentPhase
+		-- is 1. Set to nil to use each world's canonical full-game RollWeight.
 		PrototypeWeights = {
 			VERDANT_VALLEY = 7500,
 			EMBERFALL = 2000,
@@ -55,6 +74,15 @@ local GameConfig = {
 		-- proof-of-concept tester; revisit before Phase 2 playtests.
 		DefaultDurationSeconds = 720,
 		ReturnGraceSeconds = 10,
+	},
+
+	Events = {
+		-- Late joiners receive the active event snapshot plus this many recent
+		-- announcements, so someone joining a live server sees what just happened.
+		AnnouncementBufferSize = 8,
+		AnnouncementBufferMaxAgeSeconds = 300,
+		FatebreakDurationSeconds = 300, -- STARFALL, Master Spec §12
+		CrossServerTopic = "LUCKBOUND_Fatebreak_v1",
 	},
 
 	Save = {
