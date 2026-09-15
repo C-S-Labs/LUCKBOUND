@@ -99,10 +99,13 @@ function FateCore.roll(
 	return { WorldId = picked.Id, RollNumber = rollNumber, IsScripted = false }
 end
 
---- How long this player's next expedition should last. Onboarding expeditions
---- are short so the scripted arc fits inside the first few minutes.
+--- How long this player's next expedition should last.
+---
+--- Only the opening tutorial rolls are shortened, not the whole onboarding
+--- arc: the arc is 15 rolls long, and running all of them short would change
+--- what the game is rather than just easing someone into it.
 function FateCore.expeditionDuration(world: any, profile: any, config: any): number
-	if FateCore.isOnboarding(profile, config) then
+	if (profile.TotalRolls or 0) < config.Fate.ShortExpeditionRolls then
 		return config.Fate.OnboardingExpeditionSeconds
 	end
 	return world.DurationSeconds or config.Expedition.DefaultDurationSeconds

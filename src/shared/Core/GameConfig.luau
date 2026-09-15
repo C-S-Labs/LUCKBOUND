@@ -37,14 +37,46 @@ local GameConfig = {
 		WeightBonusCap = 2.0, -- inert while FateInfluencesOdds = false
 
 		-- === SCRIPTED ONBOARDING ===
-		-- Rolls 1..#OnboardingSequence are forced, in order. The point is to show
-		-- a new player the whole rarity ladder -- Common, Rare, Mythic -- inside
-		-- their first few minutes, so that when true RNG takes over they already
-		-- know what they are chasing. Roll #(n+1) onward is pure chance.
-		OnboardingSequence = { "VERDANT_VALLEY", "EMBERFALL", "ASTRAL_REACH" },
+		-- Rolls 1..#OnboardingSequence are forced, in order. Roll #(n+1) onward
+		-- is pure chance, forever.
+		--
+		-- Two rules shape this sequence:
+		--
+		-- 1. IT NEVER HANDS OUT A MYTHIC. A guaranteed top tier devalues the
+		--    top tier permanently, and the Fatebreak announcement (§12) depends
+		--    on Mythic meaning something. The arc peaks on Epic at roll 8;
+		--    Astral Reach must be earned from honest odds.
+		--
+		-- 2. IT APPROXIMATES THE REAL ODDS. Counted out, this is 10 Common,
+		--    4 Rare, 1 Epic -- roughly 67/27/7 against true RNG's 70/20/7/3.
+		--    A front-loaded parade of rares followed by a wall of Commons would
+		--    make roll 16 feel like a punishment. Ending on a Common means the
+		--    handover is continuous: the player has already felt what normal is.
+		--
+		-- The valleys are the point. Rares land at 3, 6, 11 and 14 with Commons
+		-- between them, so each one reads as a lift rather than an entitlement.
+		OnboardingSequence = {
+			"VERDANT_VALLEY", -- 1  Common -- tutorial
+			"VERDANT_VALLEY", -- 2  Common -- establish the baseline
+			"EMBERFALL", -- 3  Rare   -- first lift
+			"VERDANT_VALLEY", -- 4  Common
+			"VERDANT_VALLEY", -- 5  Common
+			"EMBERFALL", -- 6  Rare   -- rare is real, not a fluke
+			"VERDANT_VALLEY", -- 7  Common
+			"SKY_CITADEL", -- 8  EPIC   -- the peak of the arc
+			"VERDANT_VALLEY", -- 9  Common
+			"VERDANT_VALLEY", -- 10 Common
+			"EMBERFALL", -- 11 Rare
+			"VERDANT_VALLEY", -- 12 Common
+			"VERDANT_VALLEY", -- 13 Common
+			"EMBERFALL", -- 14 Rare   -- last lift before the handover
+			"VERDANT_VALLEY", -- 15 Common -- end on baseline, so roll 16 is continuous
+		},
 
-		-- Onboarding expeditions are short so the scripted arc fits in ~5 minutes.
-		-- Full-length expeditions begin once the sequence is exhausted.
+		-- Only the first few rolls are a genuine tutorial, so only those get
+		-- short expeditions. The rest of the onboarding arc runs at full length
+		-- -- 15 short expeditions would be a different game.
+		ShortExpeditionRolls = 3,
 		OnboardingExpeditionSeconds = 100,
 
 		RollCooldownSeconds = 3.0, -- D-3
@@ -53,10 +85,13 @@ local GameConfig = {
 
 		-- Phase 1 pool weights, keyed by world Id. Used only while CurrentPhase
 		-- is 1. Set to nil to use each world's canonical full-game RollWeight.
+		-- Sums to 10000, so these read directly as percentages:
+		-- Common 70%, Rare 20%, Epic 7%, Mythic 3%.
 		PrototypeWeights = {
-			VERDANT_VALLEY = 7500,
+			VERDANT_VALLEY = 7000,
 			EMBERFALL = 2000,
-			ASTRAL_REACH = 500,
+			SKY_CITADEL = 700,
+			ASTRAL_REACH = 300,
 		},
 	},
 
