@@ -22,18 +22,6 @@
           "$path": "src/client"
         }
       }
-    },
-    "Workspace": {
-      "$className": "Workspace",
-      "$properties": {
-        "FilteringEnabled": true
-      }
-    },
-    "SoundService": {
-      "$className": "SoundService",
-      "$properties": {
-        "RespectFilteringEnabled": true
-      }
     }
   }
 }
