@@ -7,19 +7,25 @@ which world they enter, fight and explore it for rare discoveries and powers,
 and progressively gain control over their own RNG — occasionally triggering
 global events that affect everyone playing.
 
-**Current stage: Phase 1 — Foundation.**
-The goal is one sentence: *you can walk around a recognizable LUCKBOUND hub and press ROLL.*
+**Phase 1 is complete and verified in Roblox Studio.** You can walk around the
+Crossroads, press ROLL, and watch a destination resolve. 167 tests passing.
+
+Next up: Phase 2 — expedition entry, combat, loot, Discovery Book.
 
 ## Read these first
 
 | Document | What it is |
 |---|---|
-| [`docs/PROTOTYPE_BUILD_SPEC.md`](docs/PROTOTYPE_BUILD_SPEC.md) | **Canonical.** Architecture, data schemas, RemoteEvent contract, the Phase 1 task list |
-| [`docs/TESTING.md`](docs/TESTING.md) | How to run the tests and what to check in Studio |
-| [`docs/BLUEPRINT_RECONCILIATION.md`](docs/BLUEPRINT_RECONCILIATION.md) | How the Biome Blueprint was merged, and 4 items needing sign-off |
-| [`docs/TOOLCHAIN_ACCESS.md`](docs/TOOLCHAIN_ACCESS.md) | How to connect an AI agent to Roblox Studio, Rojo and Blender |
+| [`docs/STATUS.md`](docs/STATUS.md) | **Start here.** Current state, decisions locked in, open items, where to pick up |
+| [`docs/PROTOTYPE_BUILD_SPEC.md`](docs/PROTOTYPE_BUILD_SPEC.md) | **Canonical.** Architecture, data schemas, RemoteEvent contract, task list |
+| [`docs/TESTING.md`](docs/TESTING.md) | Running the 167 tests, and the Studio manual pass |
+| [`docs/BLUEPRINT_RECONCILIATION.md`](docs/BLUEPRINT_RECONCILIATION.md) | How the Biome Blueprint merged; 4 items needing sign-off |
+| [`docs/ART_DIRECTION.md`](docs/ART_DIRECTION.md) | How to describe the look so it becomes code |
+| [`docs/TOOLCHAIN_ACCESS.md`](docs/TOOLCHAIN_ACCESS.md) | Rojo, Rokit, Studio MCP, Blender, assets |
+| [`docs/ADDENDUM_ASSET_PIPELINE.md`](docs/ADDENDUM_ASSET_PIPELINE.md) | Future asset/procgen architecture — **out of scope for now** |
+| [`docs/LUCKBOUND_Master_Spec_v0.2.pdf`](docs/LUCKBOUND_Master_Spec_v0.2.pdf) | Master design spec, revised against the working prototype |
+| `LUCKBOUND_..._v0.1 (1).pdf` | The original vision. **Authoritative on intent** — kept unchanged |
 | [`CLAUDE.md`](CLAUDE.md) | Rules every AI agent on this project must follow |
-| `LUCKBOUND_Master_Game_Design_Development_Specification_v0.1 (1).pdf` | The original design vision. Authoritative on *intent* |
 
 ## Quick start
 
@@ -48,16 +54,14 @@ See build spec §3.3.
 
 ## What's built
 
-- [x] Canonical Phase 1 build specification
-- [x] Toolchain / AI access guide
-- [x] Rojo project scaffold
-- [x] `Core/Types`, `Core/Constants`, `Core/GameConfig`, `Core/Net`
-- [x] `Util/WeightedRandom`, `Util/Schema`
-- [x] `FateCore`, `ProgressionCore`, `ProfileSchema`, `EventCore` (pure, unit-tested)
-- [x] `SaveSystem` (session-locked), `ProgressionSystem`, `FateSystem`, `EventSystem`
-- [x] Server bootstrap with fail-fast content validation
-- [x] World content: Verdant Valley, Emberfall, Astral Reach (+ The Unknown, Phase 3)
-- [x] Crossroads hub built to the Biome Blueprint, shared PortalRig, UITheme
-- [x] 152-test headless suite + CI
-- [x] `HubBuilder` (T-112) and client UI (T-114–T-117)
-- [ ] Phase 2: expedition entry, combat, loot, Discovery Book
+- [x] Canonical build spec, toolchain guide, art brief, testing guide
+- [x] Rojo project; `Core` (Types, Constants, GameConfig, Net, UITheme, Result)
+- [x] Pure cores — `FateCore`, `ProgressionCore`, `ProfileSchema`, `EventCore`
+- [x] `Util` — `WeightedRandom`, `Schema`, `PortalRig`
+- [x] Systems — `Save` (session-locked), `Progression`, `Fate`, `Event`, `HubBuilder`
+- [x] Client — `FateRoll`, `GlobalAnnouncements`, `State`/`Proximity`/`HubEffects` controllers
+- [x] The Crossroads: 5 zones, 436 instances, generated from data per the Biome Blueprint
+- [x] 15-roll onboarding arc peaking on Epic; true RNG from roll 16
+- [x] 5 worlds; 167-test headless suite + CI
+- [ ] **Sky Citadel biome** — blocks Phase 2
+- [ ] Phase 2 — expedition entry, combat, loot, Discovery Book
