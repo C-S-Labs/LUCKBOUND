@@ -103,20 +103,30 @@ function EventSystem.triggerFatebreak(event: any): ()
 end
 
 function EventSystem.init(): ()
-	local ok, err = pcall(function()
-		MessagingService:SubscribeAsync(GameConfig.Events.CrossServerTopic, function(message)
-			local payload = message.Data
-			if type(payload) ~= "table" or payload.Origin == serverId then
-				return -- we already applied our own
-			end
-			-- StartedAt is preserved, so every server counts down to the same
-			-- wall-clock end and a late joiner anywhere sees the same clock.
-			EventSystem.startLocal(payload)
+	-- SubscribeAsync YIELDS. pcall catches its errors but does nothing about it
+	-- hanging, and on an unpublished place it never returns -- which blocked
+	-- the whole bootstrap before the hub was ever built. Cross-server delivery
+	-- is a nice-to-have; world creation is not. So it runs on its own thread
+	-- and the bootstrap moves on immediately.
+	task.spawn(function()
+		local ok, err = pcall(function()
+			MessagingService:SubscribeAsync(GameConfig.Events.CrossServerTopic, function(message)
+				local payload = message.Data
+				if type(payload) ~= "table" or payload.Origin == serverId then
+					return -- we already applied our own
+				end
+				-- StartedAt is preserved, so every server counts down to the
+				-- same wall-clock end and a late joiner anywhere sees the
+				-- same clock.
+				EventSystem.startLocal(payload)
+			end)
 		end)
+		if ok then
+			print("[EventSystem] cross-server Fatebreaks active")
+		else
+			warn(`[EventSystem] cross-server subscribe unavailable (expected on an unpublished place): {err}`)
+		end
 	end)
-	if not ok then
-		warn(`[EventSystem] cross-server subscribe failed (expected in Studio without API access): {err}`)
-	end
 
 	-- Sweep expired events so snapshots stay accurate and clients are told
 	-- when something ends.
