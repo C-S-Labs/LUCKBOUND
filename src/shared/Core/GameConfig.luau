@@ -4,8 +4,13 @@
 -- A magic number inside a System is a spec violation.
 
 local function deepFreeze<T>(t: T): T
+	-- Guard against a table reachable by two paths (UITheme reuses Constants'
+	-- rarity tables): freezing an already-frozen table raises.
+	if table.isfrozen(t :: any) then
+		return t
+	end
 	for _, v in pairs(t :: any) do
-		if type(v) == "table" then
+		if type(v) == "table" and not table.isfrozen(v) then
 			deepFreeze(v)
 		end
 	end
@@ -74,6 +79,67 @@ local GameConfig = {
 		-- proof-of-concept tester; revisit before Phase 2 playtests.
 		DefaultDurationSeconds = 720,
 		ReturnGraceSeconds = 10,
+	},
+
+	-- Hub geometry. Biome Blueprint §2.1 and §7.3: named anchors live here and
+	-- are never re-derived per script, so the axis mapping is confirmed once in
+	-- Studio and locked. Roblox is Y-up, so "compass" is the X/Z plane:
+	--   NORTH = -Z, SOUTH = +Z, EAST = +X, WEST = -X, UP = +Y.
+	-- Visual detail (materials, palette, props) lives in Content/Hub/Crossroads.
+	HubLayout = {
+		HubDiameter = 120,
+		PlazaRingWidth = 26,
+		WalkwayWidth = 8,
+		WalkwayRaise = 2, -- studs above the lower plaza ring
+		ProcessionalWidth = 12, -- the Expedition Gate approach is wider
+		ZoneRingRadius = 46, -- centre of hub → centre of a compass zone
+
+		Anchors = {
+			FATE_ENGINE = Vector3.new(0, 0, 0),
+			HALL_OF_LEGENDS = Vector3.new(0, 0, -46), -- north
+			DISCOVERY_ARCHIVE = Vector3.new(46, 0, 0), -- east
+			EXPEDITION_GATE = Vector3.new(0, 0, 46), -- south
+			TRAINING_GROUNDS = Vector3.new(-46, 0, 0), -- west
+			GLOBAL_OBSERVATORY = Vector3.new(0, 40, 0), -- upper platform
+		},
+
+		SpawnAnchor = Vector3.new(0, 4, 34), -- south of centre, facing the Engine
+	},
+
+	-- Shared PortalRig. Biome Blueprint §1.3.
+	Portal = {
+		OuterRingRadius = 9,
+		OuterRingThickness = 1.2,
+		InnerRingRadius = 6.5,
+		InnerRingThickness = 0.6,
+		RingSegments = 28, -- segmented ring; see docs/BLUEPRINT_RECONCILIATION.md
+		RuneCount = 8,
+		PlinthDiameter = 14,
+		PlinthHeight = 1.5,
+		PlinthSides = 8, -- octagonal
+
+		IdleParticleRate = 8,
+		ActiveParticleRate = 40,
+		SpinUpParticleRate = 200,
+		ParticleLifetimeMin = 1.5,
+		ParticleLifetimeMax = 3,
+
+		IdleBrightness = 1,
+		ActiveBrightness = 3,
+		LightRange = 24,
+
+		PlanePulseMin = 0.3,
+		PlanePulseMax = 0.7,
+		PlanePulseSeconds = 2.4,
+
+		-- The single most important UX beat in the game (master spec §25,
+		-- blueprint §1.3). Never make it instant.
+		SpinUpSeconds = 2.5,
+		IdleSpinSpeed = 0.15, -- rad/s
+		SpinUpSpinSpeed = 3.2,
+
+		FateEngineScale = 1.5, -- blueprint §2.2
+		ExpeditionGateScale = 2.0, -- blueprint §2.2
 	},
 
 	Events = {

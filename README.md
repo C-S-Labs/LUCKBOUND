@@ -16,6 +16,7 @@ The goal is one sentence: *you can walk around a recognizable LUCKBOUND hub and 
 |---|---|
 | [`docs/PROTOTYPE_BUILD_SPEC.md`](docs/PROTOTYPE_BUILD_SPEC.md) | **Canonical.** Architecture, data schemas, RemoteEvent contract, the Phase 1 task list |
 | [`docs/TESTING.md`](docs/TESTING.md) | How to run the tests and what to check in Studio |
+| [`docs/BLUEPRINT_RECONCILIATION.md`](docs/BLUEPRINT_RECONCILIATION.md) | How the Biome Blueprint was merged, and 4 items needing sign-off |
 | [`docs/TOOLCHAIN_ACCESS.md`](docs/TOOLCHAIN_ACCESS.md) | How to connect an AI agent to Roblox Studio, Rojo and Blender |
 | [`CLAUDE.md`](CLAUDE.md) | Rules every AI agent on this project must follow |
 | `LUCKBOUND_Master_Game_Design_Development_Specification_v0.1 (1).pdf` | The original design vision. Authoritative on *intent* |
@@ -56,5 +57,7 @@ See build spec §3.3.
 - [x] `SaveSystem` (session-locked), `ProgressionSystem`, `FateSystem`, `EventSystem`
 - [x] Server bootstrap with fail-fast content validation
 - [x] World content: Verdant Valley, Emberfall, Astral Reach (+ The Unknown, Phase 3)
-- [x] 83-test headless suite + CI
-- [ ] `HubBuilder` (T-112) and client UI (T-114–T-117) — best done locally in Studio
+- [x] Crossroads hub built to the Biome Blueprint, shared PortalRig, UITheme
+- [x] 152-test headless suite + CI
+- [x] `HubBuilder` (T-112) and client UI (T-114–T-117)
+- [ ] Phase 2: expedition entry, combat, loot, Discovery Book

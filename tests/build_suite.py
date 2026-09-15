@@ -21,6 +21,7 @@ PURE_MODULES = [
     ("ProfileSchema",    "src/shared/Core/ProfileSchema.luau"),
     ("EventCore",        "src/shared/Core/EventCore.luau"),
     ("Schema",           "src/shared/Util/Schema.luau"),
+    ("UITheme",          "src/shared/Core/UITheme.luau"),
     ("Crossroads",       "src/shared/Content/Hub/Crossroads.luau"),
 ]
 
@@ -37,6 +38,9 @@ SHIM = '''
 local Color3 = {}
 function Color3.fromHex(hex) return { __c3 = true, hex = hex } end
 function Color3.fromRGB(r, g, b) return { __c3 = true, r = r, g = g, b = b } end
+
+local UDim = {}
+function UDim.new(scale, offset) return { __udim = true, Scale = scale, Offset = offset } end
 
 local Vector3 = {}
 function Vector3.new(x, y, z) return { __v3 = true, X = x or 0, Y = y or 0, Z = z or 0 } end

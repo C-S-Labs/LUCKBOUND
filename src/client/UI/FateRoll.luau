@@ -23,8 +23,10 @@ local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local Constants = require(Root.Core.Constants)
 local GameConfig = require(Root.Core.GameConfig)
 local Net = require(Root.Core.Net)
+local UITheme = require(Root.Core.UITheme)
 local Worlds = require(Root.Content.Worlds)
 
+local HubEffects = require(script.Parent.Parent.Controllers.HubEffects)
 local ProximityController = require(script.Parent.Parent.Controllers.ProximityController)
 
 local FateRoll = {}
@@ -37,19 +39,14 @@ local scrambleLabel: TextLabel
 local card: Frame
 local rolling = false
 
+-- Styling comes from UITheme (blueprint §1.4) so no screen invents its own
+-- fonts or colours.
 local function corner(parent: Instance, radius: number)
-	local c = Instance.new("UICorner")
-	c.CornerRadius = UDim.new(0, radius)
-	c.Parent = parent
-	return c
+	return UITheme.corner(parent, UDim.new(0, radius))
 end
 
 local function stroke(parent: Instance, color: Color3, thickness: number)
-	local s = Instance.new("UIStroke")
-	s.Color = color
-	s.Thickness = thickness
-	s.Parent = parent
-	return s
+	return UITheme.stroke(parent, color, thickness)
 end
 
 local function build()
@@ -66,20 +63,20 @@ local function build()
 	prompt.AnchorPoint = Vector2.new(0.5, 1)
 	prompt.Position = UDim2.new(0.5, 0, 1, -48)
 	prompt.Size = UDim2.fromOffset(240, 62)
-	prompt.BackgroundColor3 = Color3.fromHex("15122E")
+	prompt.BackgroundColor3 = UITheme.BackgroundColor
 	prompt.BackgroundTransparency = 0.15
 	prompt.Visible = false
 	prompt.Parent = gui
 	corner(prompt, 14)
-	stroke(prompt, Color3.fromHex("D9A441"), 2)
+	stroke(prompt, UITheme.AccentGold, 2)
 
 	local promptLabel = Instance.new("TextLabel")
 	promptLabel.Name = "Label"
 	promptLabel.Size = UDim2.fromScale(1, 1)
 	promptLabel.BackgroundTransparency = 1
-	promptLabel.Font = Enum.Font.GothamBold
+	promptLabel.Font = UITheme.LabelFont
 	promptLabel.TextScaled = true
-	promptLabel.TextColor3 = Color3.fromHex("F5E6C8")
+	promptLabel.TextColor3 = UITheme.TextPrimary
 	promptLabel.Text = if UserInputService.TouchEnabled then "TAP TO ROLL" else "[E]  ROLL"
 	promptLabel.Parent = prompt
 
@@ -106,7 +103,7 @@ local function build()
 	overlay = Instance.new("Frame")
 	overlay.Name = "Overlay"
 	overlay.Size = UDim2.fromScale(1, 1)
-	overlay.BackgroundColor3 = Color3.fromHex("070614")
+	overlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
 	overlay.BackgroundTransparency = 1
 	overlay.Visible = false
 	overlay.ZIndex = 10
@@ -118,7 +115,7 @@ local function build()
 	scrambleLabel.Position = UDim2.fromScale(0.5, 0.45)
 	scrambleLabel.Size = UDim2.new(0.9, 0, 0, 90)
 	scrambleLabel.BackgroundTransparency = 1
-	scrambleLabel.Font = Enum.Font.GothamBlack
+	scrambleLabel.Font = UITheme.HeaderFont
 	scrambleLabel.TextScaled = true
 	scrambleLabel.TextTransparency = 1
 	scrambleLabel.TextColor3 = Color3.fromHex("FFFFFF")
@@ -132,7 +129,7 @@ local function build()
 	card.AnchorPoint = Vector2.new(0.5, 0.5)
 	card.Position = UDim2.fromScale(0.5, 0.5)
 	card.Size = UDim2.new(0.86, 0, 0, 320)
-	card.BackgroundColor3 = Color3.fromHex("110E26")
+	card.BackgroundColor3 = UITheme.BackgroundColor
 	card.BackgroundTransparency = 1
 	card.Visible = false
 	card.ZIndex = 12
@@ -177,16 +174,16 @@ local function build()
 		return l
 	end
 
-	cardLabel("Rarity", 34, Enum.Font.GothamBold, 1)
-	cardLabel("WorldName", 68, Enum.Font.GothamBlack, 2)
+	cardLabel("Rarity", 34, UITheme.LabelFont, 1)
+	cardLabel("WorldName", 68, UITheme.HeaderFont, 2)
 
-	local flavor = cardLabel("Flavor", 60, Enum.Font.Gotham, 3)
+	local flavor = cardLabel("Flavor", 60, UITheme.BodyFont, 3)
 	flavor.TextScaled = false
 	flavor.TextSize = 18
 	flavor.TextWrapped = true
-	flavor.TextColor3 = Color3.fromHex("C7BFE0")
+	flavor.TextColor3 = UITheme.TextSecondary
 
-	cardLabel("RollNumber", 22, Enum.Font.Gotham, 4)
+	cardLabel("RollNumber", 22, UITheme.BodyFont, 4)
 end
 
 local SCRAMBLE_POOL = { "?", "?", "?", "*", "#", "@", "%", "&" }
@@ -245,7 +242,7 @@ local function showCard(payload: any, rarity: any)
 	rollLabel.Text = if payload.IsTutorialRoll
 		then "GUIDED ROLL"
 		else `ROLL #{payload.RollNumber}`
-	rollLabel.TextColor3 = Color3.fromHex("8B84A8")
+	rollLabel.TextColor3 = UITheme.TextSecondary
 	cardStroke.Color = rarity.Color
 
 	local info = TweenInfo.new(0.45, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
@@ -289,21 +286,33 @@ local function onRollResult(payload: any)
 	local revealDuration = payload.RevealDuration or rarity.RevealDuration
 
 	overlay.Visible = true
+	-- 60% dim, per blueprint §1.4 -- the portal spin-up must stay visible
+	-- behind the overlay rather than being hidden by it.
 	TweenService:Create(
 		overlay,
 		TweenInfo.new(0.3, Enum.EasingStyle.Quad),
-		{ BackgroundTransparency = 0.25 }
+		{ BackgroundTransparency = 0.4 }
 	):Play()
+
+	-- The 2.5s portal spin-up runs concurrently with the build-up and must
+	-- complete before the destination banner appears. Blueprint §1.3 calls
+	-- this the single most important UX beat -- never let it be instant.
+	HubEffects.spinUpForRoll(payload.Rarity)
 
 	-- Build-up scales with rarity: the total wait before the answer is
 	-- GameConfig.UI.RollBuildupSeconds plus the rarity's own reveal duration,
-	-- so a Mythic keeps you waiting noticeably longer than a Common.
-	playBuildup(GameConfig.UI.RollBuildupSeconds + revealDuration)
+	-- so a Mythic keeps you waiting noticeably longer than a Common. Floored
+	-- at the spin-up length so the banner never beats the portal.
+	playBuildup(math.max(
+		GameConfig.UI.RollBuildupSeconds + revealDuration,
+		GameConfig.Portal.SpinUpSeconds
+	))
 
 	showCard(payload, rarity)
 	task.wait(GameConfig.UI.ResultCardHoldSeconds)
 	hideAll()
 
+	HubEffects.settle()
 	rolling = false
 	ProximityController.setLocked(false)
 end

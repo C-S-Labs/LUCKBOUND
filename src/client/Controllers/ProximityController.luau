@@ -39,6 +39,14 @@ end
 --- Called by the reveal UI so a player cannot queue rolls mid-animation.
 function ProximityController.setLocked(value: boolean): ()
 	locked = value
+
+	-- Disable the ProximityPrompt too, or a player can re-trigger it mid-reveal
+	-- and the server's silent cooldown drop would look like a broken button.
+	local a = anchor()
+	local prompt = a and a:FindFirstChild("RollPrompt")
+	if prompt and prompt:IsA("ProximityPrompt") then
+		prompt.Enabled = not value
+	end
 	if onRangeChanged then
 		onRangeChanged(inRange and not locked)
 	end
@@ -48,7 +56,41 @@ function ProximityController.bindPrompt(fn: (boolean) -> ()): ()
 	onRangeChanged = fn
 end
 
+--- Binds the Fate Engine's ProximityPrompt. Blueprint §2.2 prefers a
+--- ProximityPrompt to a bespoke keybind because it is the clearer mobile
+--- affordance and handles keyboard, gamepad and touch natively. The custom
+--- prompt UI stays as a visual cue; the server validates distance and cooldown
+--- regardless of which path fired (build spec §3.4).
+local function bindProximityPrompt()
+	task.spawn(function()
+		local a = nil
+		local deadline = os.clock() + 30
+		while not a and os.clock() < deadline do
+			a = anchor()
+			if not a then
+				task.wait(0.5)
+			end
+		end
+		if not a then
+			warn("[ProximityController] no RollAnchor found; using keybind only")
+			return
+		end
+
+		local prompt = a:WaitForChild("RollPrompt", 10)
+		if not prompt or not prompt:IsA("ProximityPrompt") then
+			return
+		end
+		prompt.Triggered:Connect(function(triggeringPlayer)
+			if triggeringPlayer == player then
+				requestRoll()
+			end
+		end)
+	end)
+end
+
 function ProximityController.init(): ()
+	bindProximityPrompt()
+
 	ContextActionService:BindAction("LuckboundRoll", function(_, inputState)
 		if inputState == Enum.UserInputState.Begin then
 			requestRoll()

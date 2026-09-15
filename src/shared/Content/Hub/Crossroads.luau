@@ -1,148 +1,195 @@
 --!strict
--- The Crossroads hub, described as DATA. Master Spec §3.
+-- The Crossroads, described as DATA. Biome Blueprint §2.
 --
--- THIS FILE IS THE ART DIRECTION DIAL.
--- HubBuilder reads it and builds geometry. Changing how the hub looks means
--- editing numbers and colours here -- never touching HubBuilder. That is the
--- prime directive applied to the hub: systems reusable, content data.
+-- THIS FILE IS THE ART-DIRECTION DIAL. HubBuilder reads it and builds
+-- geometry; it holds no art direction of its own. Changing how the hub looks
+-- means editing numbers and colours here.
 --
--- THE MESH SEAM
--- Every district and prop carries an optional `MeshId`. While it is nil the
--- builder generates primitive geometry. Set it to a Roblox asset id and the
--- builder uses the mesh instead, keeping the same position, scale and pivot.
--- So commissioned or Blender-authored art drops in one line at a time, with no
--- rewrite and no flag day -- you can replace the Fate Engine alone and leave
--- everything else as blockout.
+-- Positions come from GameConfig.HubLayout.Anchors, not from this file, per
+-- blueprint §7.3: the axis mapping is confirmed once in Studio and locked in
+-- one place rather than re-derived per script.
+--
+-- THE MESH SEAM: every swappable piece carries an optional MeshId. While nil
+-- the builder generates primitives; set it to an asset id and the builder uses
+-- the mesh at the same position, scale and pivot. Authored art replaces
+-- blockout one piece at a time, with no flag day.
+
+local GameConfig = require(script.Parent.Parent.Parent.Core.GameConfig)
+
+local Layout = GameConfig.HubLayout
 
 local Theme = {
-	-- Master Spec §3: "deep blue/purple sky, warm gold lighting, floating
-	-- islands, runes, crystals, particles, and a monumental Fate Engine."
-	SkyTop = Color3.fromHex("1B1740"),
-	SkyHorizon = Color3.fromHex("3D2E6B"),
-	Ambient = Color3.fromHex("4A3F7A"),
-	OutdoorAmbient = Color3.fromHex("2E2652"),
-	SunColor = Color3.fromHex("F5C97B"), -- warm gold
-	FogColor = Color3.fromHex("2A2350"),
-	FogStart = 180,
-	FogEnd = 1100,
-	ClockTime = 20.5, -- dusk
+	-- Blueprint §2.3 verbatim.
+	Ambient = Color3.fromRGB(40, 35, 60),
+	OutdoorAmbient = Color3.fromRGB(55, 48, 80),
+	ColorShiftTop = Color3.fromRGB(90, 70, 140),
+	ColorShiftBottom = Color3.fromRGB(30, 25, 50),
+	FogColor = Color3.fromRGB(30, 25, 50),
+	FogStart = 150,
+	FogEnd = 500,
+	Brightness = 2,
+	ExposureCompensation = 0,
+	ClockTime = 22,
 
-	Stone = Color3.fromHex("5B5470"),
-	StoneDark = Color3.fromHex("3A3550"),
-	StoneLight = Color3.fromHex("7E7699"),
-	Gold = Color3.fromHex("D9A441"),
-	Rune = Color3.fromHex("8FD4FF"),
-	Crystal = Color3.fromHex("A97BE8"),
+	-- Hub materials and accents.
+	Marble = Color3.fromRGB(226, 221, 234),
+	MarbleTrim = Color3.fromRGB(230, 178, 74), -- AccentGold, matches UITheme
+	Plaza = Color3.fromRGB(58, 52, 76),
+	Walkway = Color3.fromRGB(78, 70, 98),
+	TorchLight = Color3.fromRGB(255, 176, 92),
+	EngineSpot = Color3.fromRGB(255, 200, 120), -- blueprint §2.2
 
-	StoneMaterial = Enum.Material.Slate,
-	AccentMaterial = Enum.Material.Neon,
+	StoneMaterial = Enum.Material.Marble,
+	PlazaMaterial = Enum.Material.Slate,
 }
-
--- Districts sit on the compass points named in Master Spec §3. Angle is
--- degrees clockwise from north; the builder converts to a position.
-local DISTRICT_RADIUS = 120
 
 local Crossroads = {
 	Theme = Theme,
+	SpawnOffset = Layout.SpawnAnchor,
 
-	SpawnOffset = Vector3.new(0, 4, 46), -- south of centre, facing the Engine
-
-	CentralPlatform = {
-		Radius = 62,
-		Thickness = 8,
-		Color = Theme.Stone,
-		Material = Theme.StoneMaterial,
+	-- Lower plaza ring the raised walkways sit above. Blueprint §2.1.
+	Plaza = {
+		Diameter = Layout.HubDiameter,
+		Thickness = 4,
+		Color = Theme.Plaza,
+		Material = Theme.PlazaMaterial,
 		MeshId = nil,
 	},
 
+	-- Centre — Fate Engine. Blueprint §2.2.
 	FateEngine = {
 		Name = "FateEngine",
-		Position = Vector3.new(0, 0, 0),
-		BaseRadius = 16,
-		Height = 54,
-		RingCount = 3,
-		RingThickness = 2.2,
-		CoreSize = 11,
-		CoreColor = Theme.Crystal,
-		RingColor = Theme.Gold,
-		RuneColor = Theme.Rune,
-		SpinSpeeds = { 0.25, -0.4, 0.62 }, -- rad/s per ring, alternating
-		-- The part the server measures roll distance from. Must exist.
+		PlatformRadius = 24,
+		PlatformRaise = 3,
+		PlatformColor = Theme.Marble,
+		PlatformMaterial = Enum.Material.Marble,
+		RuneInlayCount = 12, -- radial groove pattern
+		RuneInlayColor = Color3.fromRGB(124, 245, 224),
+
+		PortalScale = GameConfig.Portal.FateEngineScale,
+		-- The Engine cycles a "featured" rarity cosmetically; it is NOT the
+		-- roll result and must never be read as a prediction.
+		IdleRarity = "UNKNOWN",
+		FeaturedCycleSeconds = 14,
+
+		CrystalShards = {
+			Count = 6,
+			OrbitRadius = 17,
+			MinHeight = 8,
+			MaxHeight = 21,
+			Size = 3.2,
+			Material = Enum.Material.Glass,
+			SpinSpeedMin = 0.2,
+			SpinSpeedMax = 0.7,
+		},
+
+		SpotLight = {
+			Color = Theme.EngineSpot,
+			Brightness = 6,
+			Range = 70,
+			Angle = 70,
+			Height = 46,
+		},
+
 		AnchorSize = Vector3.new(14, 1, 14),
 		AnchorHeight = 4,
-		MeshId = nil, -- ← the single highest-value place to drop real art
+		MeshId = nil, -- ← highest-value place to drop authored art
 	},
 
+	-- Zones. Angle is degrees clockwise from north, kept for validation and
+	-- for bridge maths; the authoritative position is GameConfig anchors.
 	Districts = {
 		{
 			Id = "HALL_OF_LEGENDS",
 			Name = "Hall of Legends",
-			Angle = 0, -- north
-			Radius = DISTRICT_RADIUS,
-			PlatformSize = Vector3.new(56, 6, 44),
-			Height = 6,
-			Color = Theme.StoneLight,
-			Accent = Theme.Gold,
-			Pillars = 6,
-			PillarHeight = 26,
+			Angle = 0,
+			Radius = Layout.ZoneRingRadius,
+			Kind = "AMPHITHEATRE",
+			PlatformSize = Vector3.new(56, 4, 44),
+			Height = 2,
+			Color = Theme.Marble,
+			Accent = Theme.MarbleTrim,
+			Pillars = 0,
+			PillarHeight = 0,
+			-- Blueprint §2.2: 5 initial obelisk slots, TUNABLE, grows over time.
+			ObeliskSlots = 5,
+			ObeliskHeight = 8,
+			TierCount = 3,
+			SpotColor = Color3.fromRGB(226, 236, 255), -- cool white, museum-lit
 			MeshId = nil,
 		},
 		{
 			Id = "DISCOVERY_ARCHIVE",
 			Name = "Discovery Archive",
-			Angle = 90, -- east
-			Radius = DISTRICT_RADIUS,
-			PlatformSize = Vector3.new(48, 6, 48),
+			Angle = 90,
+			Radius = Layout.ZoneRingRadius,
+			Kind = "ROTUNDA",
+			PlatformSize = Vector3.new(26, 4, 26),
 			Height = 2,
-			Color = Theme.Stone,
-			Accent = Theme.Rune,
-			Pillars = 4,
-			PillarHeight = 18,
+			Color = Color3.fromRGB(27, 75, 74), -- #1B4B4A deep teal
+			Accent = Color3.fromRGB(124, 245, 224), -- #7CF5E0 cosmic trim
+			Pillars = 8,
+			PillarHeight = 14,
+			InteriorDiameter = 20,
+			DomeSegments = 5,
+			ShelfRings = 3,
+			ShelvesPerRing = 6,
 			MeshId = nil,
 		},
 		{
 			Id = "EXPEDITION_GATE",
 			Name = "Expedition Gate",
-			Angle = 180, -- south
-			Radius = DISTRICT_RADIUS,
-			PlatformSize = Vector3.new(52, 6, 40),
+			Angle = 180,
+			Radius = Layout.ZoneRingRadius,
+			Kind = "GATE",
+			PlatformSize = Vector3.new(44, 4, 36),
 			Height = 0,
-			Color = Theme.StoneDark,
-			Accent = Theme.Crystal,
-			Pillars = 2,
-			PillarHeight = 34, -- a gateway, not a colonnade
+			Color = Color3.fromRGB(48, 43, 64),
+			Accent = Color3.fromRGB(158, 158, 158),
+			Pillars = 6, -- torch pillars flanking the processional
+			PillarHeight = 16,
+			PortalScale = GameConfig.Portal.ExpeditionGateScale,
 			MeshId = nil,
 		},
 		{
 			Id = "TRAINING_GROUNDS",
 			Name = "Training Grounds",
-			Angle = 270, -- west
-			Radius = DISTRICT_RADIUS,
-			PlatformSize = Vector3.new(58, 6, 58),
-			Height = -2,
-			Color = Theme.Stone,
-			Accent = Theme.Gold,
+			Angle = 270,
+			Radius = Layout.ZoneRingRadius,
+			Kind = "YARD",
+			PlatformSize = Vector3.new(30, 4, 30), -- blueprint §2.2: 30x30
+			Height = 2,
+			Color = Color3.fromRGB(107, 104, 98), -- #6B6862 neutral stone grey
+			Accent = Theme.TorchLight,
 			Pillars = 0,
 			PillarHeight = 0,
+			FenceHeight = 3,
+			DummyCount = 3,
+			HasBossDummy = true,
+			TorchCount = 4,
 			MeshId = nil,
 		},
 		{
 			Id = "GLOBAL_OBSERVATORY",
 			Name = "Global Observatory",
 			Angle = 45,
-			Radius = 74,
-			PlatformSize = Vector3.new(40, 5, 40),
-			Height = 58, -- Master Spec §3: "upper platform"
-			Color = Theme.StoneLight,
-			Accent = Theme.Rune,
-			Pillars = 8,
-			PillarHeight = 14,
+			Radius = 0, -- directly above centre; reached by the spiral ramp
+			Kind = "OBSERVATORY",
+			PlatformSize = Vector3.new(36, 3, 36),
+			Height = 40, -- blueprint §2.2: +40 studs Y
+			PlatformRadius = 18,
+			Color = Color3.fromRGB(16, 14, 24), -- near-black, sky reads clearly
+			Accent = Color3.fromRGB(124, 245, 224),
+			Pillars = 0,
+			PillarHeight = 0,
+			GlobeDiameter = 12,
+			RampTurns = 1.5,
+			RampWidth = 6,
 			MeshId = nil,
 		},
 	},
 
-	-- Floating islands scattered around the hub for depth. Purely decorative,
-	-- deterministic so every server looks identical.
+	-- Decorative depth. Deterministic so every server shows one skyline.
 	FloatingIslands = {
 		Count = 14,
 		MinRadius = 190,
@@ -152,14 +199,16 @@ local Crossroads = {
 		MinSize = 14,
 		MaxSize = 46,
 		Seed = 20260915,
-		Color = Theme.StoneDark,
+		Color = Color3.fromRGB(42, 37, 58),
 		MeshId = nil,
 	},
 
 	Bridges = {
-		Width = 10,
+		Width = Layout.WalkwayWidth,
+		ProcessionalWidth = Layout.ProcessionalWidth,
 		Thickness = 2,
-		Color = Theme.Stone,
+		Raise = Layout.WalkwayRaise,
+		Color = Theme.Walkway,
 		Material = Theme.StoneMaterial,
 	},
 }

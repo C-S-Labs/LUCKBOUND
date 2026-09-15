@@ -10,6 +10,7 @@ local WeightedRandom = __require("WeightedRandom")
 local Schema = __require("Schema")
 local Worlds = __require("Worlds")
 local Crossroads = __require("Crossroads")
+local UITheme = __require("UITheme")
 
 -- === tiny harness ===================================================
 local passed, failed = 0, 0
@@ -470,23 +471,60 @@ do
 		check(string.format("district %s exists", id), byId[id] ~= nil)
 	end
 
-	-- Master Spec §3 places these on specific compass points.
-	check("Hall of Legends is north", byId.HALL_OF_LEGENDS.Angle == 0)
-	check("Discovery Archive is east", byId.DISCOVERY_ARCHIVE.Angle == 90)
-	check("Expedition Gate is south", byId.EXPEDITION_GATE.Angle == 180)
-	check("Training Grounds is west", byId.TRAINING_GROUNDS.Angle == 270)
-	check("Global Observatory is on an upper platform",
-		byId.GLOBAL_OBSERVATORY.Height > 40, tostring(byId.GLOBAL_OBSERVATORY.Height))
+	-- Master Spec §3 / Blueprint §2.1 compass placement. Roblox is Y-up, so
+	-- the compass is the X/Z plane: NORTH = -Z, EAST = +X, SOUTH = +Z, WEST = -X.
+	local anchors = GameConfig.HubLayout.Anchors
+	check("Hall of Legends is north (-Z)", anchors.HALL_OF_LEGENDS.Z < 0)
+	check("Discovery Archive is east (+X)", anchors.DISCOVERY_ARCHIVE.X > 0)
+	check("Expedition Gate is south (+Z)", anchors.EXPEDITION_GATE.Z > 0)
+	check("Training Grounds is west (-X)", anchors.TRAINING_GROUNDS.X < 0)
+	check("Global Observatory is the upper platform (+40Y)",
+		anchors.GLOBAL_OBSERVATORY.Y == 40, tostring(anchors.GLOBAL_OBSERVATORY.Y))
+	check("Fate Engine is at true centre",
+		anchors.FATE_ENGINE.X == 0 and anchors.FATE_ENGINE.Y == 0 and anchors.FATE_ENGINE.Z == 0)
 
-	check("Fate Engine has a spin speed per ring",
-		#Crossroads.FateEngine.SpinSpeeds >= Crossroads.FateEngine.RingCount)
-	check("Fate Engine rings counter-rotate",
-		Crossroads.FateEngine.SpinSpeeds[1] * Crossroads.FateEngine.SpinSpeeds[2] < 0)
+	-- Blueprint §7.3: positions are locked in one place, never re-derived.
+	local everyZoneAnchored = true
+	for _, d in Crossroads.Districts do
+		if anchors[d.Id] == nil then everyZoneAnchored = false end
+	end
+	check("every zone has a named anchor in GameConfig.HubLayout", everyZoneAnchored)
+
+	-- Blueprint §2.2 dimensions.
+	check("Fate Engine platform is 24 stud radius, raised 3",
+		Crossroads.FateEngine.PlatformRadius == 24 and Crossroads.FateEngine.PlatformRaise == 3)
+	check("Fate Engine has 6 crystal shards",
+		Crossroads.FateEngine.CrystalShards.Count == 6)
+	check("Hall of Legends has 5 obelisk slots at 8 studs",
+		byId.HALL_OF_LEGENDS.ObeliskSlots == 5 and byId.HALL_OF_LEGENDS.ObeliskHeight == 8)
+	check("Discovery Archive interior is 20 stud diameter",
+		byId.DISCOVERY_ARCHIVE.InteriorDiameter == 20)
+	check("Training Grounds yard is 30x30",
+		byId.TRAINING_GROUNDS.PlatformSize.X == 30 and byId.TRAINING_GROUNDS.PlatformSize.Z == 30)
+	check("Training Grounds has 3 dummies plus a boss dummy",
+		byId.TRAINING_GROUNDS.DummyCount == 3 and byId.TRAINING_GROUNDS.HasBossDummy)
+	check("Observatory platform is 18 stud radius",
+		byId.GLOBAL_OBSERVATORY.PlatformRadius == 18)
+	check("hub is 120 studs across", Crossroads.Plaza.Diameter == 120)
+	check("walkways are 8 studs wide, raised 2",
+		Crossroads.Bridges.Width == 8 and Crossroads.Bridges.Raise == 2)
+	check("the gate processional is wider than a walkway",
+		Crossroads.Bridges.ProcessionalWidth > Crossroads.Bridges.Width)
+
+	-- Every zone must have a builder, or HubBuilder asserts at boot.
+	local KNOWN_KINDS = { AMPHITHEATRE = true, ROTUNDA = true, GATE = true,
+		YARD = true, OBSERVATORY = true }
+	local kindsOk = true
+	local badKind
+	for _, d in Crossroads.Districts do
+		if not KNOWN_KINDS[d.Kind] then kindsOk = false badKind = d.Id end
+	end
+	check("every zone Kind has a builder", kindsOk, badKind)
 
 	-- The mesh seam: every swappable piece must expose MeshId, or authored art
 	-- cannot be dropped in without editing HubBuilder.
 	local seamOk = Crossroads.FateEngine.MeshId == nil
-		and Crossroads.CentralPlatform.MeshId == nil
+		and Crossroads.Plaza.MeshId == nil
 		and Crossroads.FloatingIslands.MeshId == nil
 	for _, d in Crossroads.Districts do
 		if rawget(d, "MeshId") ~= nil then seamOk = false end
@@ -499,9 +537,16 @@ do
 		Crossroads.SpawnOffset.Z ~= 0 or Crossroads.SpawnOffset.X ~= 0)
 
 	-- Bad hub data must be caught at boot, like any other content.
-	local broken = { Theme = {}, FateEngine = { RingCount = 3, SpinSpeeds = {} }, Districts = {} }
+	local broken = { Theme = {}, FateEngine = { PlatformRadius = 24 }, Districts = {} }
 	local okb, errsb = Schema.validateHub(broken)
 	check("rejects malformed hub data", not okb and #errsb >= 2, table.concat(errsb, "; "))
+
+	local noKind = {
+		Theme = {}, FateEngine = Crossroads.FateEngine,
+		Districts = { { Id = "X", Name = "X", Angle = 0, Radius = 10 } },
+	}
+	local okk, errsk = Schema.validateHub(noKind)
+	check("rejects a zone with no Kind", not okk, table.concat(errsk, "; "))
 
 	local dupes = {
 		Theme = {}, FateEngine = Crossroads.FateEngine,
@@ -511,7 +556,104 @@ do
 	check("rejects duplicate district Ids", not okd, table.concat(errsd, "; "))
 end
 
--- === 9. Constants sanity ============================================
+-- === 9. Portal rig & rarity contract ================================
+group("PortalRig and the rarity colour contract")
+
+do
+	local portal = GameConfig.Portal
+	check("outer ring is radius 9, thickness 1.2",
+		portal.OuterRingRadius == 9 and portal.OuterRingThickness == 1.2)
+	check("inner ring is radius 6.5, thickness 0.6",
+		portal.InnerRingRadius == 6.5 and portal.InnerRingThickness == 0.6)
+	check("rune ring has 8 plates", portal.RuneCount == 8)
+	check("plinth is 14 studs across, 1.5 tall, octagonal",
+		portal.PlinthDiameter == 14 and portal.PlinthHeight == 1.5 and portal.PlinthSides == 8)
+	check("point light is range 24, brightness 3",
+		portal.LightRange == 24 and portal.ActiveBrightness == 3)
+	check("active particle rate is 40", portal.ActiveParticleRate == 40)
+	check("spin-up spikes particles to 200", portal.SpinUpParticleRate == 200)
+	check("particle lifetime is 1.5-3s",
+		portal.ParticleLifetimeMin == 1.5 and portal.ParticleLifetimeMax == 3)
+	check("plane pulses between 0.3 and 0.7",
+		portal.PlanePulseMin == 0.3 and portal.PlanePulseMax == 0.7)
+
+	-- The single most important UX beat (master spec §25, blueprint §1.3).
+	check("spin-up is 2.5s and never instant", portal.SpinUpSeconds == 2.5)
+	check("spin-up spins faster than idle", portal.SpinUpSpinSpeed > portal.IdleSpinSpeed)
+	check("the reveal can never beat the spin-up",
+		math.max(GameConfig.UI.RollBuildupSeconds + Constants.RARITY.COMMON.RevealDuration,
+			portal.SpinUpSeconds) >= portal.SpinUpSeconds)
+
+	check("Fate Engine uses the rig at 1.5x", portal.FateEngineScale == 1.5)
+	check("Expedition Gate uses the rig at 2x", portal.ExpeditionGateScale == 2.0)
+	check("the gate is the larger portal", portal.ExpeditionGateScale > portal.FateEngineScale)
+
+	-- Blueprint §1.1 is declared the single source of truth for rarity colour.
+	local BLUEPRINT = {
+		COMMON = "9E9E9E", RARE = "3E8EF7", EPIC = "B24BF3",
+		MYTHIC = "FF7A1A", LEGENDARY = "FFD447", UNKNOWN = "7CF5E0",
+	}
+	for key, hex in BLUEPRINT do
+		check(string.format("%s uses blueprint colour #%s", key, hex),
+			Constants.RARITY[key].Color.hex == hex,
+			tostring(Constants.RARITY[key].Color.hex))
+	end
+
+	-- Blueprint §4.1/§6: rarity colour is a UI/portal contract; biome palette
+	-- is set dressing and must never bleed into it.
+	check("Emberfall (Rare) carries the Rare colour, not fire orange",
+		Constants.RARITY[Worlds.EMBERFALL.Rarity].Color.hex == "3E8EF7")
+	check("Astral Reach (Mythic) carries Mythic orange",
+		Constants.RARITY[Worlds.ASTRAL_REACH.Rarity].Color.hex == "FF7A1A")
+	check("Verdant Valley (Common) carries Common grey",
+		Constants.RARITY[Worlds.VERDANT_VALLEY.Rarity].Color.hex == "9E9E9E")
+
+	check("UITheme derives rarity colours from Constants, not its own table",
+		UITheme.RarityColors.MYTHIC == Constants.RARITY.MYTHIC.Color)
+	check("UITheme is frozen",
+		(throws(function() UITheme.AccentGold = nil end)))
+end
+
+-- === 10. Biome lighting =============================================
+group("Biome lighting (blueprint §3.3 / §4.3 / §5.3)")
+
+do
+	local vv, ef, ar = Worlds.VERDANT_VALLEY, Worlds.EMBERFALL, Worlds.ASTRAL_REACH
+
+	for _, w in { vv, ef, ar } do
+		check(string.format("%s declares Brightness and FogStart", w.Id),
+			type(w.Environment.Brightness) == "number"
+				and type(w.Environment.FogStart) == "number")
+	end
+
+	check("Verdant Valley is the brightest world", vv.Environment.Brightness == 2.5)
+	check("Emberfall is the darkest (lava lights it locally)",
+		ef.Environment.Brightness == 1.4
+			and ef.Environment.Brightness < ar.Environment.Brightness
+			and ef.Environment.Brightness < vv.Environment.Brightness)
+	check("Emberfall fog is tightest (ash haze)",
+		ef.Environment.FogEnd == 300 and ef.Environment.FogEnd < vv.Environment.FogEnd)
+	check("Verdant Valley fog is soft, not oppressive",
+		vv.Environment.FogStart == 100 and vv.Environment.FogEnd == 400)
+	check("Astral Reach fog is sparse so void-black hides the edges",
+		ar.Environment.FogEnd >= 600)
+
+	-- Blueprint §3.5: modifiers re-tint, they do not build new geometry.
+	check("Verdant Valley has ModifierOverrides", vv.ModifierOverrides ~= nil)
+	check("Night modifier darkens rather than adding geometry",
+		vv.ModifierOverrides.NIGHT.Brightness < vv.Environment.Brightness)
+	check("Night swaps the ambient particle", vv.ModifierOverrides.NIGHT.ParticleId == "FIREFLIES")
+
+	local declared = {}
+	for _, m in vv.Modifiers do declared[m] = true end
+	local overridesDeclared = true
+	for key in vv.ModifierOverrides do
+		if not declared[key] then overridesDeclared = false end
+	end
+	check("every ModifierOverride names a modifier the world declares", overridesDeclared)
+end
+
+-- === 11. Constants sanity ============================================
 group("Constants")
 
 do

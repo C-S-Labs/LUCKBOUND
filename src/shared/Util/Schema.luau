@@ -26,6 +26,7 @@ local WORLD_SPEC: { [string]: FieldSpec } = {
 	LootTableId = field("string", true),
 	DiscoveryTableId = field("string", true),
 	Modifiers = field("table"),
+	ModifierOverrides = field("table", true),
 	DurationSeconds = field("number"),
 	RecommendedPower = field("number"),
 	Flavor = field("string"),
@@ -148,19 +149,25 @@ function Schema.validateHub(hub: any): (boolean, { string })
 	if type(hub.Theme) ~= "table" then
 		table.insert(errors, "hub: missing Theme")
 	end
+	-- The Engine is the shared PortalRig at a scale; ring geometry lives in
+	-- GameConfig.Portal, not here. Blueprint §1.3 / §2.2.
 	if type(hub.FateEngine) ~= "table" then
 		table.insert(errors, "hub: missing FateEngine")
 	else
-		if type(hub.FateEngine.AnchorSize) ~= "userdata" and type(hub.FateEngine.AnchorSize) ~= "table" then
+		local engine = hub.FateEngine
+		if type(engine.AnchorSize) ~= "userdata" and type(engine.AnchorSize) ~= "table" then
 			table.insert(errors, "hub: FateEngine.AnchorSize must be a Vector3")
 		end
-		if type(hub.FateEngine.RingCount) ~= "number" or hub.FateEngine.RingCount < 1 then
-			table.insert(errors, "hub: FateEngine.RingCount must be >= 1")
+		if type(engine.PlatformRadius) ~= "number" or engine.PlatformRadius <= 0 then
+			table.insert(errors, "hub: FateEngine.PlatformRadius must be positive")
 		end
-		if type(hub.FateEngine.SpinSpeeds) ~= "table" then
-			table.insert(errors, "hub: FateEngine.SpinSpeeds must be a table")
-		elseif #hub.FateEngine.SpinSpeeds < (hub.FateEngine.RingCount or 0) then
-			table.insert(errors, "hub: FateEngine.SpinSpeeds has fewer entries than RingCount")
+		if type(engine.PortalScale) ~= "number" or engine.PortalScale <= 0 then
+			table.insert(errors, "hub: FateEngine.PortalScale must be positive")
+		end
+		if type(engine.CrystalShards) ~= "table" then
+			table.insert(errors, "hub: FateEngine.CrystalShards must be a table")
+		elseif type(engine.CrystalShards.Count) ~= "number" or engine.CrystalShards.Count < 1 then
+			table.insert(errors, "hub: FateEngine.CrystalShards.Count must be >= 1")
 		end
 	end
 
@@ -183,8 +190,13 @@ function Schema.validateHub(hub: any): (boolean, { string })
 			if type(district.Angle) ~= "number" or district.Angle < 0 or district.Angle >= 360 then
 				table.insert(errors, `{label} Angle must be in [0, 360)`)
 			end
-			if type(district.Radius) ~= "number" or district.Radius <= 0 then
-				table.insert(errors, `{label} Radius must be positive`)
+			-- Radius 0 is legal: the Observatory sits directly above centre and
+			-- is reached by the spiral ramp rather than a radial walkway.
+			if type(district.Radius) ~= "number" or district.Radius < 0 then
+				table.insert(errors, `{label} Radius must not be negative`)
+			end
+			if type(district.Kind) ~= "string" then
+				table.insert(errors, `{label} is missing Kind (HubBuilder dispatches on it)`)
 			end
 			if district.Pillars ~= nil and (type(district.Pillars) ~= "number" or district.Pillars < 0) then
 				table.insert(errors, `{label} Pillars must be >= 0`)

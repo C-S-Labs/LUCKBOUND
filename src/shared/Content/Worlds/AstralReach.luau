@@ -7,9 +7,15 @@ return {
 	EnabledInPhase = 1,
 	Environment = {
 		SkyId = nil,
-		AmbientColor = Color3.fromHex("2A2050"),
-		FogColor = Color3.fromHex("6B4FC4"),
-		FogEnd = 1400,
+		-- Biome Blueprint §5.3: no fog in the traditional sense -- void-black
+		-- and a dense nebula skybox do the edge-hiding work fog does elsewhere.
+		AmbientColor = Color3.fromRGB(30, 20, 55),
+		OutdoorAmbientColor = Color3.fromRGB(40, 28, 70),
+		ColorShiftTop = Color3.fromRGB(91, 62, 142),
+		FogColor = Color3.fromRGB(13, 11, 26),
+		FogStart = 200,
+		FogEnd = 650,
+		Brightness = 1.8,
 		ClockTime = 0,
 	},
 	MusicId = nil,
