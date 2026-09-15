@@ -155,8 +155,14 @@ function Schema.validateHub(hub: any): (boolean, { string })
 		table.insert(errors, "hub: missing FateEngine")
 	else
 		local engine = hub.FateEngine
-		if type(engine.AnchorSize) ~= "userdata" and type(engine.AnchorSize) ~= "table" then
-			table.insert(errors, "hub: FateEngine.AnchorSize must be a Vector3")
+		-- typeof, not type: Luau reports Vector3 as the native "vector" type,
+		-- so type() can never identify a Roblox datatype. typeof() is the only
+		-- correct test for one.
+		if typeof(engine.AnchorSize) ~= "Vector3" then
+			table.insert(
+				errors,
+				`hub: FateEngine.AnchorSize must be a Vector3, got {typeof(engine.AnchorSize)}`
+			)
 		end
 		if type(engine.PlatformRadius) ~= "number" or engine.PlatformRadius <= 0 then
 			table.insert(errors, "hub: FateEngine.PlatformRadius must be positive")

@@ -541,6 +541,22 @@ do
 	local okb, errsb = Schema.validateHub(broken)
 	check("rejects malformed hub data", not okb and #errsb >= 2, table.concat(errsb, "; "))
 
+	-- Regression guard: this exact bug reached Studio. A Vector3 reports as
+	-- "vector" under type(), so only typeof() can validate it.
+	check("typeof() identifies a Vector3", typeof(Crossroads.FateEngine.AnchorSize) == "Vector3",
+		typeof(Crossroads.FateEngine.AnchorSize))
+
+	local badAnchor = {
+		Theme = {},
+		FateEngine = {
+			AnchorSize = "not a vector",
+			PlatformRadius = 24, PortalScale = 1.5, CrystalShards = { Count = 6 },
+		},
+		Districts = { Crossroads.Districts[1] },
+	}
+	local oka, errsa = Schema.validateHub(badAnchor)
+	check("rejects a non-Vector3 AnchorSize", not oka, table.concat(errsa, "; "))
+
 	local noKind = {
 		Theme = {}, FateEngine = Crossroads.FateEngine,
 		Districts = { { Id = "X", Name = "X", Angle = 0, Radius = 10 } },
