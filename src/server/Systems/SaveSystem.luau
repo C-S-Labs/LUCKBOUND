@@ -18,7 +18,10 @@ local ProfileSchema = require(Root.Core.ProfileSchema)
 
 local SaveSystem = {}
 
-local store: DataStore
+local store: DataStore?
+-- True when DataStores are unreachable -- an unpublished local place, or the
+-- API-services toggle left off. The game runs normally; nothing persists.
+local volatileMode = false
 local cache: { [number]: any } = {}
 local dirty: { [number]: boolean } = {}
 local lockId = game.JobId ~= "" and game.JobId or `studio-{os.time()}`
@@ -45,8 +48,18 @@ end
 function SaveSystem.load(player: Player): any
 	local now = os.time()
 
+	-- No store: hand out a temporary profile immediately rather than spending
+	-- 20 seconds retrying a call that cannot succeed.
+	if volatileMode or not store then
+		local profile = ProfileSchema.default(now)
+		profile.__volatile = true
+		cache[player.UserId] = profile
+		print(`[SaveSystem] {player.Name} given a temporary profile (no persistence this session)`)
+		return profile
+	end
+
 	local loaded = retry(`load {player.UserId}`, function()
-		return store:UpdateAsync(keyFor(player.UserId), function(stored)
+		return (store :: DataStore):UpdateAsync(keyFor(player.UserId), function(stored)
 			stored = stored or {}
 
 			-- Respect a live lock held by another server, unless it is stale.
@@ -97,6 +110,9 @@ end
 
 --- Writes the profile back and optionally releases the lock.
 function SaveSystem.save(player: Player, releaseLock: boolean?): boolean
+	if volatileMode or not store then
+		return false
+	end
 	local profile = cache[player.UserId]
 	if not profile or profile.__volatile then
 		return false
@@ -112,7 +128,7 @@ function SaveSystem.save(player: Player, releaseLock: boolean?): boolean
 	payload.__volatile = nil
 
 	local result = retry(`save {player.UserId}`, function()
-		return store:UpdateAsync(keyFor(player.UserId), function(stored)
+		return (store :: DataStore):UpdateAsync(keyFor(player.UserId), function(stored)
 			local lock = stored and stored.__lock
 			if lock and lock.owner ~= lockId then
 				-- Another server took over mid-session. Its data is newer.
@@ -131,13 +147,37 @@ function SaveSystem.save(player: Player, releaseLock: boolean?): boolean
 end
 
 function SaveSystem.release(player: Player): ()
-	SaveSystem.save(player, true)
+	if not volatileMode then
+		SaveSystem.save(player, true)
+	end
 	cache[player.UserId] = nil
 	dirty[player.UserId] = nil
 end
 
+--- True if profiles cannot persist this session. Read by anything that wants
+--- to surface it to the player.
+function SaveSystem.isVolatile(): boolean
+	return volatileMode
+end
+
 function SaveSystem.init(): ()
-	store = DataStoreService:GetDataStore(Constants.DATASTORE.PROFILE_STORE)
+	-- GetDataStore raises on an unpublished place ("You must publish this
+	-- place to the web to access DataStore"). That is an expected condition
+	-- while developing locally, not a programmer error, so it must not take
+	-- the whole server down -- the bootstrap has not built the hub yet.
+	local ok, result = pcall(function()
+		return DataStoreService:GetDataStore(Constants.DATASTORE.PROFILE_STORE)
+	end)
+
+	if ok then
+		store = result
+	else
+		volatileMode = true
+		warn("[SaveSystem] DataStores unavailable; running WITHOUT persistence.")
+		warn("[SaveSystem] Reason: " .. tostring(result))
+		warn("[SaveSystem] Publish the place and enable Studio Access to API Services to save progress.")
+		return -- no autosave loop, no BindToClose: there is nothing to write
+	end
 
 	task.spawn(function()
 		while true do
