@@ -10,15 +10,17 @@ local GameConfig = require(Root.Core.GameConfig)
 local Net = require(Root.Core.Net)
 local Schema = require(Root.Util.Schema)
 local Worlds = require(Root.Content.Worlds)
+local Crossroads = require(Root.Content.Hub.Crossroads)
 
 local Systems = script.Systems
 local SaveSystem = require(Systems.SaveSystem)
 local ProgressionSystem = require(Systems.ProgressionSystem)
 local FateSystem = require(Systems.FateSystem)
 local EventSystem = require(Systems.EventSystem)
+local HubBuilder = require(Systems.HubBuilder)
 
 -- 1. Fail fast on malformed content, before any player can arrive.
-Schema.validateAll(Worlds, GameConfig)
+Schema.validateAll(Worlds, GameConfig, Crossroads)
 
 -- 2. Remotes must exist before any system connects to them.
 Net.buildRemotes()
@@ -30,8 +32,10 @@ ProgressionSystem.init(SaveSystem)
 EventSystem.init()
 FateSystem.init(SaveSystem, ProgressionSystem, EventSystem)
 
--- 8. Hub blockout is T-112 and lands next; the roll still works without it
--- (FateSystem skips the distance check when no RollAnchor exists).
+-- 8. Hub. Generated from Content/Hub/Crossroads data, and skipped entirely if
+-- Workspace already contains a hand-built Crossroads -- authored geometry
+-- always wins over generated blockout.
+HubBuilder.build()
 
 -- 9. Player binding LAST, so nobody can arrive before systems are ready.
 local function onPlayerAdded(player: Player)

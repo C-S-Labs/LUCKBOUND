@@ -7,9 +7,15 @@ return {
 	EnabledInPhase = 1,
 	Environment = {
 		SkyId = nil,
-		AmbientColor = Color3.fromHex("6B2A18"),
-		FogColor = Color3.fromHex("C4471F"),
-		FogEnd = 600,
+		-- Biome Blueprint §4.3: darker than Verdant Valley -- lava provides
+		-- localised light instead of even ambient. Tighter, ash-haze fog.
+		AmbientColor = Color3.fromRGB(60, 30, 25),
+		OutdoorAmbientColor = Color3.fromRGB(70, 36, 28),
+		ColorShiftTop = Color3.fromRGB(120, 50, 30),
+		FogColor = Color3.fromRGB(50, 20, 15),
+		FogStart = 60,
+		FogEnd = 300,
+		Brightness = 1.4,
 		ClockTime = 18,
 	},
 	MusicId = nil,

@@ -17,12 +17,31 @@ export type Rarity = {
 export type SlotName = "Weapon" | "Ability" | "Companion" | "Relic" | "Aura"
 export type ItemType = SlotName
 
+-- Extended for Biome Blueprint §1.2: each biome overrides the shared Lighting
+-- baseline on expedition entry, which needs Brightness, FogStart and the
+-- colour-shift pair that the original four fields could not express.
 export type Environment = {
 	SkyId: string?,
 	AmbientColor: Color3,
+	OutdoorAmbientColor: Color3?,
+	ColorShiftTop: Color3?,
 	FogColor: Color3,
+	FogStart: number,
 	FogEnd: number,
+	Brightness: number,
 	ClockTime: number,
+}
+
+--- Per-modifier palette overrides. Blueprint §3.5: modifiers re-tint a world
+--- rather than building separate geometry.
+export type ModifierOverride = {
+	AmbientColor: Color3?,
+	FogColor: Color3?,
+	FogStart: number?,
+	FogEnd: number?,
+	Brightness: number?,
+	ClockTime: number?,
+	ParticleId: string?,
 }
 
 export type WorldDefinition = {
@@ -38,6 +57,7 @@ export type WorldDefinition = {
 	LootTableId: string?,
 	DiscoveryTableId: string?,
 	Modifiers: { string },
+	ModifierOverrides: { [string]: ModifierOverride }?,
 	DurationSeconds: number,
 	RecommendedPower: number,
 	Flavor: string,

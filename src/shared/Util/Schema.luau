@@ -26,6 +26,7 @@ local WORLD_SPEC: { [string]: FieldSpec } = {
 	LootTableId = field("string", true),
 	DiscoveryTableId = field("string", true),
 	Modifiers = field("table"),
+	ModifierOverrides = field("table", true),
 	DurationSeconds = field("number"),
 	RecommendedPower = field("number"),
 	Flavor = field("string"),
@@ -136,8 +137,78 @@ function Schema.validateConfig(config: any, worlds: { [string]: any }): (boolean
 	return #errors == 0, errors
 end
 
+--- Validates the hub layout data. The hub is content like anything else, and
+--- a malformed district would otherwise surface as a silently missing platform.
+function Schema.validateHub(hub: any): (boolean, { string })
+	local errors = {}
+
+	if type(hub) ~= "table" then
+		return false, { "hub layout is not a table" }
+	end
+
+	if type(hub.Theme) ~= "table" then
+		table.insert(errors, "hub: missing Theme")
+	end
+	-- The Engine is the shared PortalRig at a scale; ring geometry lives in
+	-- GameConfig.Portal, not here. Blueprint §1.3 / §2.2.
+	if type(hub.FateEngine) ~= "table" then
+		table.insert(errors, "hub: missing FateEngine")
+	else
+		local engine = hub.FateEngine
+		if type(engine.AnchorSize) ~= "userdata" and type(engine.AnchorSize) ~= "table" then
+			table.insert(errors, "hub: FateEngine.AnchorSize must be a Vector3")
+		end
+		if type(engine.PlatformRadius) ~= "number" or engine.PlatformRadius <= 0 then
+			table.insert(errors, "hub: FateEngine.PlatformRadius must be positive")
+		end
+		if type(engine.PortalScale) ~= "number" or engine.PortalScale <= 0 then
+			table.insert(errors, "hub: FateEngine.PortalScale must be positive")
+		end
+		if type(engine.CrystalShards) ~= "table" then
+			table.insert(errors, "hub: FateEngine.CrystalShards must be a table")
+		elseif type(engine.CrystalShards.Count) ~= "number" or engine.CrystalShards.Count < 1 then
+			table.insert(errors, "hub: FateEngine.CrystalShards.Count must be >= 1")
+		end
+	end
+
+	if type(hub.Districts) ~= "table" or #hub.Districts == 0 then
+		table.insert(errors, "hub: Districts is empty")
+	else
+		local seen = {}
+		for index, district in hub.Districts do
+			local label = `hub: district #{index}`
+			if type(district.Id) ~= "string" then
+				table.insert(errors, `{label} is missing Id`)
+			elseif seen[district.Id] then
+				table.insert(errors, `{label} duplicates Id '{district.Id}'`)
+			else
+				seen[district.Id] = true
+			end
+			if type(district.Name) ~= "string" or district.Name == "" then
+				table.insert(errors, `{label} needs a display Name`)
+			end
+			if type(district.Angle) ~= "number" or district.Angle < 0 or district.Angle >= 360 then
+				table.insert(errors, `{label} Angle must be in [0, 360)`)
+			end
+			-- Radius 0 is legal: the Observatory sits directly above centre and
+			-- is reached by the spiral ramp rather than a radial walkway.
+			if type(district.Radius) ~= "number" or district.Radius < 0 then
+				table.insert(errors, `{label} Radius must not be negative`)
+			end
+			if type(district.Kind) ~= "string" then
+				table.insert(errors, `{label} is missing Kind (HubBuilder dispatches on it)`)
+			end
+			if district.Pillars ~= nil and (type(district.Pillars) ~= "number" or district.Pillars < 0) then
+				table.insert(errors, `{label} Pillars must be >= 0`)
+			end
+		end
+	end
+
+	return #errors == 0, errors
+end
+
 --- Runs every check. Raises on failure -- called first in bootstrap.
-function Schema.validateAll(worlds: { [string]: any }, config: any): ()
+function Schema.validateAll(worlds: { [string]: any }, config: any, hub: any?): ()
 	local allErrors = {}
 
 	local _, worldErrors = Schema.validateWorlds(worlds)
@@ -148,6 +219,13 @@ function Schema.validateAll(worlds: { [string]: any }, config: any): ()
 	local _, configErrors = Schema.validateConfig(config, worlds)
 	for _, e in configErrors do
 		table.insert(allErrors, e)
+	end
+
+	if hub ~= nil then
+		local _, hubErrors = Schema.validateHub(hub)
+		for _, e in hubErrors do
+			table.insert(allErrors, e)
+		end
 	end
 
 	if #allErrors > 0 then
