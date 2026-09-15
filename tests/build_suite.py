@@ -39,6 +39,19 @@ local Color3 = {}
 function Color3.fromHex(hex) return { __c3 = true, hex = hex } end
 function Color3.fromRGB(r, g, b) return { __c3 = true, r = r, g = g, b = b } end
 
+-- typeof() must distinguish Roblox datatypes the way the real engine does.
+-- Shimming these as plain tables is what let a type()-vs-typeof() bug reach
+-- Studio: type() on a real Vector3 returns "vector", never "table".
+local _luatype = type
+local function typeof(v)
+	if _luatype(v) == "table" then
+		if rawget(v, "__v3") then return "Vector3" end
+		if rawget(v, "__c3") then return "Color3" end
+		if rawget(v, "__udim") then return "UDim" end
+	end
+	return _luatype(v)
+end
+
 local UDim = {}
 function UDim.new(scale, offset) return { __udim = true, Scale = scale, Offset = offset } end
 
