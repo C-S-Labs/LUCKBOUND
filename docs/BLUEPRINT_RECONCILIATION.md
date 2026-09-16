@@ -49,13 +49,27 @@ at 1.5% is Legendary — the rarer world is Mythic).
 If you actually want Legendary as the top tier, that's a one-line change but it
 inverts which of the five future worlds is rarest.
 
-### 3. UNCOMMON has no blueprint colour
+### 3. UNCOMMON has no blueprint colour — ⚠️ now urgent, was theoretical
 
-§1.1 lists six tiers. The code carries seven — `UNCOMMON` is used by
-`ANCIENT_RUINS` (25%) in build spec §3.1, which is Phase 3 content.
+§1.1 lists six tiers. The code carries seven.
 
-**Resolved as:** kept the prototype green `#5FD97A`. **This is the one colour in
-`Constants` that is not blueprint-sanctioned.** Either bless it or give me a hex.
+**This stopped being a hypothetical on 2026-09-16.** When it was written,
+`UNCOMMON` was used only by `ANCIENT_RUINS`, a Phase 3 world nobody could roll.
+**Ethereal Scape is Uncommon, live at 15%, and guaranteed at onboarding roll 5**
+— so the unsanctioned green `#5FD97A` is now on screen for every player within
+a minute of joining: on the reveal card, on the Gate's ring, and on the portal
+home from the expedition.
+
+**Resolved as:** kept `#5FD97A`. **It is the one colour in `Constants` that is
+not blueprint-sanctioned, and it is now shipping.** Either bless it or give a
+hex — changing it later means changing it after people have learned it.
+
+There is a second, softer problem worth naming: Ethereal Scape's meadows are
+**mint green** and Uncommon is **green**, so this is the weakest test in the
+game of the §4.1 rule that portal colour comes from the rarity table rather
+than the biome palette. On every other world the two are obviously different
+and a mistake would be visible. Here it would not be. A test asserts the
+contract directly for that reason.
 
 ### 4. §4.1's own open flag
 
@@ -108,12 +122,16 @@ Roblox is Y-up, so "compass" is the X/Z plane. Locked in
 `GameConfig.HubLayout.Anchors`, asserted by test:
 
 ```
-NORTH = -Z   Hall of Legends      (0, 0, -46)
-EAST  = +X   Discovery Archive    (46, 0, 0)
-SOUTH = +Z   Expedition Gate      (0, 0, 46)
-WEST  = -X   Training Grounds     (-46, 0, 0)
-UP    = +Y   Global Observatory   (0, 40, 0)
+NORTH = -Z   Hall of Legends      (0, 0, -420)
+EAST  = +X   Discovery Archive    (420, 0, 0)
+SOUTH = +Z   Expedition Gate      (0, 0, 420)
+WEST  = -X   Training Grounds     (-420, 0, 0)
+UP    = +Y   Global Observatory   (0, 140, 0)
 ```
+
+*(The radii were 46 and 40 when this was written; the 10× world rescale on
+2026-09-16 moved them to 420 and 140. The axis mapping itself is unchanged —
+that is the part that was locked.)*
 
 Note the blueprint's §2.1 ASCII has a parenthetical "NORTH (+Z... use +Y in
 Studio terms per your axis convention, confirm in-engine)". +Y is up in Roblox
@@ -132,12 +150,22 @@ undrafted worlds (§7.4).
 
 It is **data only**: no blueprint section exists for it, so its enemies, boss and
 loot tables are empty and its Environment values are invented rather than
-blueprint-sanctioned. Phase 1 never enters a world, so this suffices today.
+blueprint-sanctioned.
 
-> ⚠️ **This is the largest open debt.** Sky Citadel is live in the roll pool at
-> 7%. Rolling it in Phase 2 would send a player to a world that does not exist.
-> It needs a blueprint section — palette, layout, enemies, boss, an optional
-> side-content pocket per §6 — before expeditions become enterable.
+> ⚠️ **This is the largest open debt, and it is no longer hypothetical.**
+> Expeditions became enterable on 2026-09-16 (build spec §7.1). Sky Citadel is
+> live in the roll pool at 7% with no chunk kit, so a player who rolls it and
+> walks to the Gate is told *"That world has no map yet."* — refused politely
+> rather than crashed, but refused. **Emberfall (15%) and Astral Reach (3%) are
+> in the same position**: 25% of honest rolls now land on a world that cannot
+> be entered.
+>
+> Emberfall and Astral Reach at least have blueprint sections and need only a
+> chunk kit. Sky Citadel needs the section first — palette, layout, enemies,
+> boss, and a §6 side pocket.
+>
+> The list is printed as a warning on every boot and asserted by a test, so the
+> number cannot drift without someone noticing.
 
 **Rarity colours are verified against §1.1 by test**, and the theme-vs-rarity
 rule from §4.1 is enforced: Emberfall's environment is fire-orange while its
@@ -148,13 +176,31 @@ portal ring is Rare blue.
 | Item | Status |
 |---|---|
 | Portal/UI colour = rarity table, not biome palette | ✅ enforced by test |
-| Biome geometry under `Assets/Worlds/<WorldId>/` | ⏳ Phase 2 (no biome geometry yet) |
+| Biome geometry under `assets/source/worlds/<world_id>/` | ✅ Ethereal Scape; others still empty |
 | World data in `Content/Worlds/`, zero world logic in Systems | ✅ |
-| Lighting applied/reverted by ExpeditionSystem, never bleeding | ⏳ Phase 2 (data ready) |
-| Boss arena a distinct shape per biome | ⏳ Phase 2 |
-| One optional side-content pocket per biome | ⏳ only Emberfall's is specified |
-| Mobile part/light budget vs Verdant Valley baseline | ⏳ no biome built yet |
+| Lighting applied/reverted by ExpeditionSystem, never bleeding | ✅ **closed** — see below |
+| Boss arena a distinct shape per biome | ⏳ authored, not yet uploaded |
+| One optional side-content pocket per biome | ✅ Verdant Valley + Ethereal Scape have one; Emberfall's is specified but unbuilt |
+| Mobile part/light budget vs Verdant Valley baseline | ⏳ blockout only, no mesh budget yet |
 
 **Hub baseline measured: 436 instances**, printed on boot. That is the number
 every biome's part budget should be compared against until a biome exists to set
 its own baseline.
+
+### Lighting bleed — closed, and the reason matters
+
+This item was listed as "Phase 2, data ready", and the obvious implementation
+would have failed it. `Lighting` is a **shared service**: a server that applied
+a world's `Environment` on entry would paint that biome onto every connected
+player's screen, including people standing in the hub.
+
+So the server never touches `Lighting` at all. It sends the `Environment` table
+in `Expedition_Started`, and `ExpeditionController` applies it **on the entering
+client only**, restoring a snapshot of the hub's lighting on exit. That is what
+makes "never bleeding" true with more than one player on the server rather than
+true only in a single-player test.
+
+The failure mode to watch for is the restore, not the apply: if
+`ExpeditionController.TRACKED` ever misses a property that
+`ChunkLoader.applyEnvironment` writes, that property leaks into the hub and
+stays there. The two lists have to be kept in step.

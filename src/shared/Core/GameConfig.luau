@@ -47,20 +47,30 @@ local GameConfig = {
 		--    on Mythic meaning something. The arc peaks on Epic at roll 8;
 		--    Astral Reach must be earned from honest odds.
 		--
-		-- 2. IT APPROXIMATES THE REAL ODDS. Counted out, this is 10 Common,
-		--    4 Rare, 1 Epic -- roughly 67/27/7 against true RNG's 70/20/7/3.
-		--    A front-loaded parade of rares followed by a wall of Commons would
-		--    make roll 16 feel like a punishment. Ending on a Common means the
-		--    handover is continuous: the player has already felt what normal is.
+		-- 2. IT APPROXIMATES THE REAL ODDS. Counted out, this is 9 Common,
+		--    1 Uncommon, 4 Rare, 1 Epic -- 60/7/27/7 against true RNG's
+		--    60/15/15/7/3. A front-loaded parade of rares followed by a wall of
+		--    Commons would make roll 16 feel like a punishment. Ending on a
+		--    Common means the handover is continuous: the player has already
+		--    felt what normal is.
 		--
 		-- The valleys are the point. Rares land at 3, 6, 11 and 14 with Commons
 		-- between them, so each one reads as a lift rather than an entitlement.
+		--
+		-- Slot 5 is Ethereal Scape (Uncommon), added when that world was. It
+		-- does three things at once: it teaches the second rung of the ladder,
+		-- it guarantees every player SEES the map-generation test biome inside
+		-- the first minute instead of waiting on a 15% draw, and it drops the
+		-- scripted Common share from 66.7% to 60.0% -- which is exactly the
+		-- true rate, so the handover at roll 16 is now seamless rather than
+		-- merely close. The arc still peaks on Epic at roll 8 and still never
+		-- hands out a Mythic; D-9 is extended, not reversed.
 		OnboardingSequence = {
 			"VERDANT_VALLEY", -- 1  Common -- tutorial
 			"VERDANT_VALLEY", -- 2  Common -- establish the baseline
 			"EMBERFALL", -- 3  Rare   -- first lift
-			"VERDANT_VALLEY", -- 4  Common
-			"VERDANT_VALLEY", -- 5  Common
+			"VERDANT_VALLEY", -- 4  Common -- back to normal, so 5 reads as a lift
+			"ETHEREAL_SCAPE", -- 5  UNCOMMON -- the small lift; teaches tier 2
 			"EMBERFALL", -- 6  Rare   -- rare is real, not a fluke
 			"VERDANT_VALLEY", -- 7  Common
 			"SKY_CITADEL", -- 8  EPIC   -- the peak of the arc
@@ -86,10 +96,17 @@ local GameConfig = {
 		-- Phase 1 pool weights, keyed by world Id. Used only while CurrentPhase
 		-- is 1. Set to nil to use each world's canonical full-game RollWeight.
 		-- Sums to 10000, so these read directly as percentages:
-		-- Common 70%, Rare 20%, Epic 7%, Mythic 3%.
+		-- Common 60%, Uncommon 15%, Rare 15%, Epic 7%, Mythic 3%.
+		--
+		-- Adding a fifth world forced a renormalisation -- the set has to keep
+		-- summing to 10000 or the numbers stop reading as percentages. The
+		-- 5 points came off Verdant Valley (70 -> 60) and Emberfall (20 -> 15)
+		-- rather than off the top tiers, because Epic and Mythic rates are the
+		-- ones a player forms an opinion about and they are unchanged.
 		PrototypeWeights = {
-			VERDANT_VALLEY = 7000,
-			EMBERFALL = 2000,
+			VERDANT_VALLEY = 6000,
+			ETHEREAL_SCAPE = 1500,
+			EMBERFALL = 1500,
 			SKY_CITADEL = 700,
 			ASTRAL_REACH = 300,
 		},
@@ -110,10 +127,54 @@ local GameConfig = {
 	},
 
 	Expedition = {
+		-- THE PHASE 2 SWITCH. Build spec §7 excludes expedition entry from
+		-- Phase 1; this flag is the amendment that opens it (spec §7.1), and
+		-- turning it off returns the game to Phase 1 behaviour exactly -- the
+		-- Gate's prompt disappears and Expedition_RequestEnter is dropped.
+		Enabled = true,
+
 		-- D-7: PDF §6 says 12 minutes. Flagged as likely too long for a
-		-- proof-of-concept tester; revisit before Phase 2 playtests.
+		-- proof-of-concept tester; revisit before Phase 2 playtests. A world
+		-- may override it (WorldDefinition.DurationSeconds) and Ethereal Scape
+		-- does, at 300.
 		DefaultDurationSeconds = 720,
 		ReturnGraceSeconds = 10,
+
+		-- Generated maps are built high above the hub rather than beside it.
+		-- The hub's scenery reaches HubLayout.VisualExtent (4000 studs) in the
+		-- X/Z plane, so anything at ground level would be visible from the
+		-- Crossroads; 20000 studs up is out of every sightline and out of fog
+		-- range in both directions.
+		StageOrigin = Vector3.new(0, 20000, 0),
+		-- Concurrent expeditions are spaced along +X. Wider than any layout
+		-- can span (a path-length-8 map is ~6000 studs) with room to spare.
+		StageSpacing = 12000,
+		MaxConcurrent = 12,
+
+		-- Default map size. A world overrides it with MapPathLength.
+		PathLength = 5,
+		-- A layout can legitimately fail when the path folds back on itself;
+		-- that is seed-dependent, so try a few before rejecting. 5 attempts
+		-- succeeds ~98% of the time -- see docs/MODULAR_MAPS.md.
+		AssemblyAttempts = 5,
+
+		EntryCooldownSeconds = 2.0,
+		-- Studs from the Expedition Gate's portal plane. Generous, because the
+		-- Gate platform is 320x260 and the prompt is the real affordance --
+		-- this check exists to stop remote-spam from spawn, not to be precise.
+		MaxEntryDistance = 260,
+
+		-- Blockout geometry for a chunk whose mesh is still PLACEHOLDER.
+		FloorThickness = 8,
+		RimHeight = 10,
+		RimThickness = 6,
+		SocketMarkerHeight = 26,
+		SpawnHeight = 10, -- above a chunk floor, when placing the character
+
+		TimerSyncSeconds = 5,
+		-- The return portal on the arrival chunk. Small: it is a door home,
+		-- not a monument, and it must not upstage the Sky Temple.
+		ReturnPortalScale = 3.0,
 	},
 
 	-- === WORLD SCALE ===

@@ -1,6 +1,6 @@
 # LUCKBOUND — Project Status
 
-**Last updated:** 2026-09-16 · **Phase 1: COMPLETE and verified in Studio**
+**Last updated:** 2026-09-16 · **Phase 1 complete · expedition entry opened (build spec §7.1)**
 
 > **New conversation?** Read `WORKLOG.md`'s top entry first for where the last
 > session stopped, then this file. `CLAUDE.md` has the rules.
@@ -15,6 +15,16 @@ open, and where to pick up.
 Phase 1's goal was one sentence: *you can walk around a recognizable LUCKBOUND
 hub and press ROLL.* That is done, running in Roblox Studio, and playtested.
 
+**As of 2026-09-16 the roll has somewhere to go.** Owner-directed amendment
+§7.1 lifted expedition entry out of the Phase 1 exclusion list: you can roll
+Ethereal Scape, walk through the Expedition Gate, and stand in a map generated
+from its chunk kit. **Combat, enemies, bosses and loot were NOT lifted and
+remain excluded.** An expedition today is: arrive, walk a generated map, come
+home.
+
+⏳ **Not yet seen in Studio.** Everything below is green in CI and nobody has
+walked it. That is the top of the next session's list.
+
 **The Design North Star (Master Spec §25) has been answered.** After playing the
 roll loop with no combat, no loot, no art and grey blockout geometry, the
 owner's verdict was: *"these rolls alone were fun."* Nothing was propping it up,
@@ -24,7 +34,7 @@ which makes that the strongest possible signal the core premise works.
 
 | | Evidence |
 |---|---|
-| Server boots clean, 9/9 steps | `[LUCKBOUND] boot 9/9` → `server ready` |
+| Server boots clean | `[LUCKBOUND] boot 9/9` → `server ready` (now 10 steps) |
 | Hub generates procedurally | `[HubBuilder] built Crossroads: 5 zones, 436 instances` |
 | 15-roll onboarding, exact order | Full arc logged, Epic at roll 8 |
 | True RNG hands over at roll 16 | Roll 16 logged with no `(onboarding)` tag |
@@ -33,6 +43,25 @@ which makes that the strongest possible signal the core premise works.
 | Runs without DataStores | Volatile-mode fallback, no crash |
 
 **436 instances** is the current mobile-budget baseline for the hub.
+
+### Expedition entry — new 2026-09-16
+
+| | |
+|---|---|
+| Enterable worlds | **Verdant Valley, Ethereal Scape** |
+| Rollable but NOT enterable | Emberfall (15%), Sky Citadel (7%), Astral Reach (3%) |
+| Entry point | Expedition Gate `ProximityPrompt`, server-side `Triggered` |
+| Destination | the player's **last roll** — no new state, survives rejoin |
+| Map | `ChunkCore` assembles, `ChunkLoader` builds, seeded per expedition |
+| Seed | `(userId, TotalRolls, worldId)` — logged, so any map can be rebuilt |
+| Lighting | applied **per client**, restored on exit. Never bleeds |
+| Return | a small rarity-coloured portal on the arrival chunk, or the timer |
+| Reward | +25 Fate on completion or return; **nothing for dying** |
+| Switch | `GameConfig.Expedition.Enabled` — one boolean back to Phase 1 |
+
+**25% of honest rolls currently land on a world with no map.** Those players are
+told *"That world has no map yet."* and stay in the hub. It is handled, not
+solved — see §4.
 
 ### World scale — rescaled 2026-09-16
 
@@ -63,14 +92,23 @@ expedition walking must stay under 35% of expedition duration.
 
 Added 2026-09-16. `assets/` holds Blender sources; `AssetManifest` maps logical
 names to Roblox asset ids; `Content/Chunks/` holds authored pieces; `ChunkCore`
-assembles them into a seeded, collision-free, deterministic layout.
+assembles them into a seeded, collision-free, deterministic layout; and
+`ChunkLoader` turns that layout into walkable geometry.
 
-All 8 Verdant Valley pieces are `PLACEHOLDER` — **layouts assemble and validate
-before any mesh exists.** The Roblox-side loader is Phase 2.
+**Two kits now exist, and the second one is the interesting result.** Ethereal
+Scape's was authored against the checklist rather than against Verdant Valley,
+with its own socket vocabulary (`SPAN`/`RITE` vs `PATH`/`WIDE`) — and the same
+emergent gate-to-the-boss property fell out of it. Nobody wrote that rule; it is
+the reserved-Kind rule generalising. See `MODULAR_MAPS.md`.
+
+All 16 pieces are `PLACEHOLDER`, so the loader draws **labelled blockout** —
+each platform carries its ChunkId and Role, with a neon post at every socket
+coloured by Kind. **A generated map is verifiable by eye before any mesh
+exists.**
 
 ### Test suite
 
-**208 tests, all passing.** Headless — no Roblox required.
+**276 tests, all passing.** Headless — no Roblox required.
 
 ```bash
 ./tests/run.sh
@@ -85,30 +123,49 @@ scan (build spec P1-12).
 
 ```
 src/shared/Core/     Types, Constants, GameConfig, Net, UITheme, Result,
-                     FateCore, ProgressionCore, ProfileSchema, EventCore
-src/shared/Util/     WeightedRandom, Schema, PortalRig, ChunkCore
-src/shared/Content/  Worlds/ (5), Hub/Crossroads, Chunks/, AssetManifest
-src/server/          init.server + Systems/ (Save, Progression, Fate, Event, HubBuilder)
-src/client/          init.client + Controllers/ (State, Proximity, HubEffects)
-                                 + UI/ (FateRoll, GlobalAnnouncements)
+                     FateCore, ProgressionCore, ProfileSchema, EventCore,
+                     ExpeditionCore
+src/shared/Util/     WeightedRandom, Schema, PortalRig, ChunkCore, ChunkLoader
+src/shared/Content/  Worlds/ (6), Hub/Crossroads, Chunks/ (2 kits), AssetManifest
+src/server/          init.server + Systems/ (Save, Progression, Fate, Event,
+                                             Expedition, HubBuilder)
+src/client/          init.client + Controllers/ (State, Proximity, HubEffects,
+                                                 Expedition)
+                                 + UI/ (FateRoll, GlobalAnnouncements, ExpeditionHud)
 ```
 
 **Pure cores are the reason the test suite exists.** `FateCore`,
-`ProgressionCore`, `ProfileSchema` and `EventCore` hold every decision with no
-Roblox globals, so they run headlessly. Systems hold only plumbing.
+`ProgressionCore`, `ProfileSchema`, `EventCore` and `ExpeditionCore` hold every
+decision with no Roblox globals, so they run headlessly. Systems hold only
+plumbing.
+
+`ChunkCore` / `ChunkLoader` is the same split applied to geometry: the first
+decides what goes where and is pure, the second turns plain numbers into
+Instances and knows no rules. **The seam between them is a list of numbers, and
+that seam is why map generation is testable at all.**
 
 ### Worlds
 
-| Id | Rarity | Weight | Phase | Biome? |
-|---|---|---|---|---|
-| `VERDANT_VALLEY` | Common | 7000 (70%) | 1 | blueprint written |
-| `EMBERFALL` | Rare | 2000 (20%) | 1 | blueprint written |
-| `SKY_CITADEL` | Epic | 700 (7%) | 1 | ⚠️ **none — data only** |
-| `ASTRAL_REACH` | Mythic | 300 (3%) | 1 | blueprint written |
-| `THE_UNKNOWN` | Unknown | 5 | 3 | none |
+| Id | Rarity | Weight | Phase | Biome? | Enterable? |
+|---|---|---|---|---|---|
+| `VERDANT_VALLEY` | Common | 6000 (60%) | 1 | blueprint written | ✅ kit |
+| `ETHEREAL_SCAPE` | Uncommon | 1500 (15%) | 1 | **authored art** | ✅ kit |
+| `EMBERFALL` | Rare | 1500 (15%) | 1 | blueprint written | ❌ no kit |
+| `SKY_CITADEL` | Epic | 700 (7%) | 1 | ⚠️ **none — data only** | ❌ no kit |
+| `ASTRAL_REACH` | Mythic | 300 (3%) | 1 | blueprint written | ❌ no kit |
+| `THE_UNKNOWN` | Unknown | 5 | 3 | none | ❌ no kit |
 
 Weights sum to 10000 so they read directly as percentages. Verified at 400,000
-draws, worst drift 0.113pp.
+draws, worst drift 0.062pp.
+
+**Ethereal Scape** is the first world with authored art behind it —
+`assets/source/worlds/ethereal_scape/aether_environment_refined.blend`, a sky
+temple above the cloud deck: eight gold-rimmed meadow islands, bridges between
+them, seven waystones, and an R6 rig in a `Scale_Reference` collection so the
+metre-to-stud conversion can be checked rather than assumed. Its eight chunks
+map 1:1 onto those eight islands. It declares **no enemies, boss or loot on
+purpose** — it is the map-generation test biome, and giving it combat content
+would make it a worse test.
 
 ---
 
@@ -119,11 +176,14 @@ These are settled. Do not relitigate without a deliberate reversal.
 | # | Decision | Where |
 |---|---|---|
 | **D-8** | **Fate is TRUE RNG.** No player state ever changes the odds of any world. | spec §3.3 |
-| **D-9** | **15-roll scripted onboarding**, peaking on Epic at roll 8, never Mythic. | spec §3.3.1 |
+| **D-9** | **15-roll scripted onboarding**, peaking on Epic at roll 8, never Mythic. Slot 5 extended to Uncommon 2026-09-16 — arc unchanged in shape. | spec §3.3.1 |
 | D-3 | Roll cooldown 3.0 s, enforced server-side, silent on rejection | spec §3.4 |
 | D-4 | Reveal duration scales with rarity (2.5 s → 7.0 s) | Constants |
 | D-6 | Roll history capped at 50 entries | GameConfig |
-| D-7 | Expedition 720 s — **flagged as likely too long**, revisit in Phase 2 | spec §6 |
+| D-7 | Expedition 720 s default — **still flagged as too long**; a world may override it and Ethereal Scape runs 300 s | spec §6 |
+| — | **Expedition entry is open; combat/loot are not** | spec §7.1 |
+| — | Destination = the player's last roll. No new state, no schema bump | `ExpeditionCore` |
+| — | Biome lighting is applied **per client**, never by the server | Blueprint §6 |
 | — | Rarity colour is a UI/portal contract; biome palette is set dressing | Blueprint §4.1 |
 | — | Compass mapping N=-Z, E=+X, S=+Z, W=-X, up=+Y | GameConfig.HubLayout |
 
@@ -151,16 +211,26 @@ carries Mythic orange. Resolved in favour of §4.4/§5.4 (Emberfall = Rare blue,
 Astral Reach = Mythic orange) and locked by test. Confirming closes it for every
 future world's asset prompts.
 
-Also open: rarity ordering (Mythic above Legendary), a blueprint-sanctioned
-colour for `UNCOMMON`, and formal confirmation of the theme-vs-rarity rule.
+Also open: rarity ordering (Mythic above Legendary) and formal confirmation of
+the theme-vs-rarity rule.
+
+⚠️ **The `UNCOMMON` colour just became urgent.** It was theoretical while
+Uncommon belonged to a Phase 3 world nobody could roll. Ethereal Scape is
+Uncommon, live at 15%, and guaranteed at onboarding roll 5 — so the
+unsanctioned green `#5FD97A` is now on screen for every player within a minute
+of joining. Bless it or replace it **before** people learn it.
 
 ### Known debt
 
 | Item | Severity | Notes |
 |---|---|---|
-| **Sky Citadel has no biome** | **Blocks Phase 2** | Rolling it would send players nowhere. Needs a blueprint section, enemies, boss, loot. |
+| **25% of rolls land on a world with no map** | **High** | Emberfall 15%, Sky Citadel 7%, Astral Reach 3%. Refused politely at the Gate; printed as a boot warning and asserted by test. Emberfall and Astral Reach need only a chunk kit; Sky Citadel needs a blueprint section first. |
+| **Nothing since the rescale has been in Studio** | **Unknown** | The 10× world *and* the whole expedition path are test-verified only. `TESTING.md` Test C2 is the pass. |
+| `UNCOMMON` colour unsanctioned | Medium | Now shipping — see above |
+| Chunk collision is XZ-only | Medium | Blocks any kit that climbs. `MODULAR_MAPS.md` |
+| No pathfinding validation | Medium | Non-overlapping ≠ walkable between. Addendum §A4 step 4 |
+| All 16 chunks are `PLACEHOLDER` | Expected | Blockout is deliberate; upload is a per-piece change |
 | Hub is very dark | Cosmetic | `Crossroads.Theme` — one value |
-| New scale unplayed | Unknown | Verified by test only; needs a Studio walk |
 | UI needs resize/layout pass | Cosmetic | Owner-flagged |
 | Placeholder text | Cosmetic | Flavour lines, labels, result card |
 | Octagonal plinth is a cylinder | Cosmetic | First thing an authored mesh replaces |
@@ -170,20 +240,26 @@ colour for `UNCOMMON`, and formal confirmation of the theme-vs-rarity rule.
 
 ## 5. Next session — pick up here
 
-The owner's stated list, in their words: **UI overhaul with resizing,
-placeholder text, and other tuning.**
+**Everything below the line is unplayed.** The 10× rescale and the entire
+expedition path are green in CI and have never been in Studio. Nothing else on
+this list is worth doing before that.
 
-Cheapest-to-most-expensive:
-
-1. **Playtest the new scale.** Does 1200 studs feel right, or still small? Is
-   WalkSpeed 32 comfortable? Both are one-line changes in `GameConfig`.
+1. **Run `TESTING.md` Test C2.** Roll to 5, take the Gate, walk Ethereal Scape,
+   come home. It answers four questions at once: does the new scale feel right,
+   does map generation produce a *place*, does per-client lighting restore, and
+   is walking through the Gate a payoff or an anticlimax.
 2. **Hub brightness** — one value in `Crossroads.Theme`. Minutes.
-3. **Placeholder text** — flavour lines, result card copy, zone labels.
-4. **UI overhaul** — `FateRoll` and `GlobalAnnouncements` resize/layout, mobile
+3. **Upload the Ethereal Scape islands.** `assets/README.md` has the full
+   walkthrough. Check scale against the R6 rig on the whole-scene import
+   *before* splitting into eight, or it is eight re-uploads.
+4. **A chunk kit for Emberfall** — biggest single reduction in the "no map"
+   number, 15pp, and its blueprint section already exists.
+5. **Placeholder text** — flavour lines, result card copy, zone labels.
+6. **UI overhaul** — `FateRoll` and `GlobalAnnouncements` resize/layout, mobile
    scaling. `UITheme` already centralises fonts and colours.
-5. **Sky Citadel biome** — required before Phase 2.
-6. **Phase 2** — expedition entry, combat, loot, Discovery Book. Build spec §7
-   lists what Phase 1 deliberately excludes.
+7. **Sky Citadel biome** — still the largest content debt.
+8. **Phase 2 proper** — combat, loot, the Discovery Book. Build spec §7 still
+   excludes all of it.
 
 ### Working agreement that emerged this session
 

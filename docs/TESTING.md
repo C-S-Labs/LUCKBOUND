@@ -29,28 +29,32 @@ scan (`*_Final`, `*_NEW`, `*_FIXED`, …) from build spec P1-12.
 
 | Group | Tests | The question it answers |
 |---|---|---|
-| Schema validation | 10 | Does the server refuse to boot on broken content? |
+| Schema validation | 8 | Does the server refuse to boot on broken content? |
 | Scripted onboarding | 17 | Is the 15-roll arc exact, and does it never hand out a Mythic? |
-| **True RNG** | 17 | **Is the roll genuinely unweighted by player state?** |
+| **True RNG** | 16 | **Is the roll genuinely unweighted by player state?** |
 | WeightedRandom | 6 | Zero weights, boundaries, single entry |
 | Fate progression | 11 | Is the level curve monotonic and invertible? |
-| Profile & migration | 11 | Does data survive, migrate, stay in DataStore limits? |
-| **Late-joiner visibility** | 21 | **Does someone joining mid-event see the right thing?** |
-| Hub layout | 21 | Blueprint dimensions, compass anchors, the MeshId seam |
-| PortalRig & rarity | 22 | Rig spec, 2.5 s spin-up, rarity-vs-biome colour contract |
-| Biome lighting | 11 | Per-world Brightness/Fog per Blueprint §3.3/§4.3/§5.3 |
+| Profile & migration | 10 | Does data survive, migrate, stay in DataStore limits? |
+| **Late-joiner visibility** | 17 | **Does someone joining mid-event see the right thing?** |
+| Hub layout & scale | 43 | Blueprint dimensions, compass anchors, the traversal budget |
+| PortalRig & rarity | 25 | Rig spec, 2.5 s spin-up, rarity-vs-biome colour contract |
+| Biome lighting | 15 | Per-world Brightness/Fog per Blueprint §3.3/§4.3/§5.3 |
 | Constants | 12 | Frozen, unique orders, sane reveal durations |
-| **Map assembly** | 32 | **Does a map actually build from the chunk pieces?** |
-| **Scale budget** | 12 | **Is the world big enough, and still walkable?** |
+| **Map assembly** | 33 | **Does a map actually build from the chunk pieces?** |
+| **Ethereal Scape** | 23 | **Does the grammar work on a second, independent kit?** |
+| **Expedition entry** | 40 | **Who may enter, where do they go, can it be replayed?** |
+
+**276 total.**
 
 ### The three that matter most
 
 **True RNG is proven, not asserted.** 400,000 draws:
 
 ```
-VERDANT_VALLEY  expected 70.00%  observed 69.91%  drift 0.088pp
-EMBERFALL       expected 20.00%  observed 20.11%  drift 0.113pp
-SKY_CITADEL     expected  7.00%  observed  6.97%  drift 0.031pp
+VERDANT_VALLEY  expected 60.00%  observed 59.96%  drift 0.037pp
+ETHEREAL_SCAPE  expected 15.00%  observed 15.02%  drift 0.016pp
+EMBERFALL       expected 15.00%  observed 15.06%  drift 0.062pp
+SKY_CITADEL     expected  7.00%  observed  6.95%  drift 0.047pp
 ASTRAL_REACH    expected  3.00%  observed  3.01%  drift 0.006pp
 ```
 
@@ -82,6 +86,12 @@ real type, not merely enough to pass.**
 Nothing that touches `DataStoreService`, `MessagingService`, `Players` or
 `Workspace` is unit-tested. Those are verified in Studio, below.
 
+**This is why `ExpeditionCore` exists.** Entry eligibility, seed derivation,
+destination lookup and the timer are all pure, so the 40 tests above run
+headlessly — while `ExpeditionSystem`'s teleports, geometry and remotes are
+only ever proven by Test C2 in Studio. If you are about to put a decision in
+`ExpeditionSystem`, put it in `ExpeditionCore` instead.
+
 ---
 
 ## 2. Sync to Studio with Rojo
@@ -111,18 +121,26 @@ matters) and `StarterPlayer.StarterPlayerScripts.LuckboundClient`.
 Press **Play**. Output should show every step:
 
 ```
-[LUCKBOUND] boot 1/9: validating content
+[LUCKBOUND] boot 1/10: validating content
+[LUCKBOUND] assets: 0 uploaded, 17 placeholder (placeholders render as primitives)
+[LUCKBOUND] 3 rollable world(s) have no chunk kit and cannot be entered: ASTRAL_REACH, EMBERFALL, SKY_CITADEL
 ...
-[LUCKBOUND] boot 7/9: building the Crossroads
+[LUCKBOUND] boot 7/10: ExpeditionSystem
+[LUCKBOUND] boot 8/10: building the Crossroads
 [HubBuilder] built Crossroads: 5 zones, 436 instances
-[LUCKBOUND] boot 8/9: binding players
-[LUCKBOUND] server ready -- phase 1, true RNG, 15-roll onboarding
+[LUCKBOUND] boot 9/10: binding players
+[LUCKBOUND] server ready -- phase 1, true RNG, 15-roll onboarding, expeditions ENABLED
 [LUCKBOUND] client ready
 ```
 
 **The boot numbers are the diagnostic.** If the server stops partway, the last
-`boot N/9` names the step that failed or hung. A stall with no error means a
+`boot N/10` names the step that failed or hung. A stall with no error means a
 yielding call inside that step, not a crash.
+
+Two of those lines are **warnings that are meant to be there.** The asset count
+says how much of the art is still placeholder; the "no chunk kit" line is the
+gap between rollable and enterable, printed every boot so it cannot quietly
+grow. Neither is a failure.
 
 On an unpublished place you will also see three orange `SaveSystem` warnings.
 **Those are correct** — they report that saving is off, not that anything failed.
@@ -143,7 +161,8 @@ Walk to the Fate Engine; the **[E] ROLL** prompt appears within ~12 studs. Roll
 |---|---|---|
 | 1–2 | Verdant Valley | `(onboarding)` |
 | 3 | Emberfall | `(onboarding)` |
-| 4–5 | Verdant Valley | `(onboarding)` |
+| 4 | Verdant Valley | `(onboarding)` |
+| **5** | **Ethereal Scape (UNCOMMON)** | `(onboarding)` |
 | 6 | Emberfall | `(onboarding)` |
 | 7 | Verdant Valley | `(onboarding)` |
 | **8** | **Sky Citadel (EPIC)** | `(onboarding)` |
@@ -165,6 +184,60 @@ Press **E** repeatedly as fast as you can.
 
 ✅ Pass: at most one roll per 3 seconds, and **no error is shown to the client**.
 Silence is deliberate — an error tells an exploiter where the boundary is.
+
+### Test C2 — the expedition, end to end ⭐ (6 min)
+
+**This is the test the whole §7.1 amendment exists for.** Roll 5 hands you
+Ethereal Scape, so you can run it inside the first minute of a fresh profile.
+
+1. **Roll until you hold Ethereal Scape.** It is guaranteed at roll 5, and is
+   15% of honest rolls after that. The reveal card names it.
+2. **Walk south to the Expedition Gate.** The largest portal in the hub.
+3. Look at the prompt before pressing anything. It should read
+   **ENTER · Ethereal Scape** — that text is set *on your client only*, from
+   your last roll, so two players standing at the same gate see different
+   destinations. Check that with a second player if you have one.
+4. **Hold E.** The server log prints one line with everything needed to rebuild
+   the map:
+
+```
+[Expedition] Player1 -> ETHEREAL_SCAPE  seed 1443871209  5 chunks (0 mesh, 5 blockout)  attempt 1  300s
+```
+
+✅ **Pass conditions, in order of what they tell you:**
+
+| | What it proves |
+|---|---|
+| You arrive standing on a labelled platform reading `ES_ARRIVAL_SHELF` | the layout built and you are on the ENTRY piece |
+| The sky turns bright and near-white | per-client biome lighting applied |
+| The banner top-centre counts down from 5:00 | the timer is live |
+| The pieces form a connected run, each labelled | generation produced a *place*, not a pile |
+| Neon posts of matching colour meet where pieces join | the socket grammar held |
+| **The piece before `ES_SKY_TEMPLE` is always `ES_WAYSTONE_RING`** | the reserved-Kind rule is working, on a kit it was not designed against |
+
+5. **Walk the whole map to the temple.** It is 1152–2432 studs depending on
+   seed — 40–80 seconds at WalkSpeed 32. Time it. If it feels like a slog, the
+   world's `MapPathLength` is the knob, not the walk speed.
+6. **Return.** Walk back to the arrival shelf; a small green portal sits a
+   quarter of the way back from where you spawned. Hold E.
+
+✅ Pass: you are back at the Crossroads spawn, **the hub's dark purple lighting
+is exactly as it was**, and you gained +25 Fate.
+
+> Lighting not restoring is the bug to watch for here. If the hub stays bright
+> after you return, `ExpeditionController.TRACKED` is missing a property.
+
+7. **Roll Emberfall or Sky Citadel and try the Gate.** ✅ Pass: *"That world has
+   no map yet."* and you stay in the hub. Those worlds have no kit — that is the
+   honest current state, not a crash.
+8. **Fall off the edge.** ✅ Pass: the expedition ends, you respawn at the hub,
+   and you gain **no** Fate. Dying is not completing.
+
+#### Determinism, if you want to check it
+
+The seed in that log line is derived from `(userId, TotalRolls, worldId)`, so
+re-entering on the same roll count rebuilds the identical map. Two different
+players never get the same one.
 
 ### Test E — a tampered client is rejected (1 min)
 
@@ -242,3 +315,9 @@ Currently worth watching:
 - Is the 3-second cooldown invisible, or annoying?
 - Does the Epic at roll 8 land as a peak, or pass unnoticed?
 - Does roll 16 — the first honest roll — feel like freedom or like a letdown?
+- Does the Uncommon at roll 5 read as a lift, or as "still not a Rare"?
+- **Is walking through the Gate a payoff, or an anticlimax?** The roll used to
+  be the end of the sentence. It now has a destination attached, and whether
+  that helps or dilutes it is the thing to watch.
+- Is 1200 studs and WalkSpeed 32 right, now that there is somewhere to walk to?
+  Both are one line in `GameConfig`.
