@@ -33,6 +33,67 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 7 — 2026-09-16 — Modeller handoff, and the art seam
+
+**Branch:** `claude/zen-volta-cuhfyh` (PR #13) · **Tests:** 293 passing · no code change
+
+### Done
+
+- Observatory staircase confirmed fixed in Studio by the owner.
+- **`docs/MODELLER_HANDOFF.pdf`** — a 7-page brief to hand to an artist:
+  deliverable formats, the six export settings that matter, the R6 scale check,
+  how to build a prefab whose parts can be animated, the reserved `Crossroads`
+  name, and a spec sheet of exact part names and stud dimensions for the Fate
+  Engine and the Expedition Gate.
+
+### Decisions made
+
+- **Ask for `.rbxmx` (XML), not `.rbxm` (binary).** Both work in the game; only
+  the XML one can be *read* from this side. With XML the wiring code is written
+  against the part names actually in the file; with binary it is written blind
+  against a list, and a typo surfaces at runtime instead of at review.
+- **The spec sheet's numbers are derived from `GameConfig.Portal`, not typed by
+  hand**, so they cannot drift from what the code expects. If a scale changes,
+  regenerate the PDF rather than editing it.
+- **The plinth's 3-stud cap is in the brief as a hard constraint**, with the
+  reason: an earlier build scaled it to 18 and walled the portal off entirely.
+  An artist told only "make it monumental" would rebuild that bug in mesh form.
+
+### Open — two things that will break when art lands
+
+Both are mine to fix, both were found by reading rather than by a test:
+
+1. **`HubBuilder.meshOrNil` is broken.** It sets `MeshPart.MeshId` at runtime,
+   which Roblox does not permit. It is wrapped in a `pcall`, so all nine
+   `MeshId` seams in `Crossroads.luau` **silently fall back to primitives** —
+   an authored mesh would appear not to work, with no error. `ChunkLoader`
+   already does it correctly via `AssetService:CreateMeshPartAsync`; the fix is
+   to bring `meshOrNil` in line, plus a prefab-clone path for `.rbxmx`.
+2. **A hand-built `Crossroads` disables more than the hub.** `HubBuilder.build`
+   returns early if `Workspace.Crossroads` exists, which also skips the
+   `RollAnchor`, the `GateAnchor` and its prompt, the `SpawnLocation` and
+   `applyLighting()` — so rolling and expedition entry break silently. The
+   per-piece `MeshId` seam is the intended path; wholesale replacement needs a
+   guard that still builds the contract parts.
+
+### Stopped at
+
+Docs only, no code touched. The two items above are the first work of the next
+session, and both should land **before** the first authored asset arrives.
+
+### Next
+
+1. Fix `meshOrNil`, add the prefab path, wire `assets/rbxm` into
+   `default.project.json` when the first `.rbxmx` lands.
+2. Guard `HubBuilder.build` so authored geometry cannot silently remove the
+   anchors, spawn and lighting.
+3. Teach `PortalRig` to **adopt** an authored rig rather than only generate one,
+   keeping the same attribute contract (`SpinSpeed`, `Center`, `State`).
+4. Everything from Session 6: Observatory purpose, island upload, hub
+   brightness, `UNCOMMON` colour, Emberfall kit.
+
+---
+
 ## Session 6 — 2026-09-16 — The loop closes, and the staircase moves
 
 **Branch:** `claude/zen-volta-cuhfyh` (PR #13) · **Tests:** 293 passing (was 291)
