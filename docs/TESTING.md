@@ -236,7 +236,9 @@ Silence is deliberate — an error tells an exploiter where the boundary is.
 
 ### Test C2 — the expedition, end to end ⭐ (6 min)
 
-**This is the test the whole §7.1 amendment exists for.** Roll 5 hands you
+**Passed 2026-09-16.** Kept as the regression pass — it is the test the whole
+§7.1 amendment exists for, and every future change to generation or entry
+should be walked through it again. Roll 5 hands you
 Ethereal Scape, so you can run it inside the first minute of a fresh profile.
 
 1. **Roll until you hold Ethereal Scape.** It is guaranteed at roll 5, and is
@@ -289,6 +291,21 @@ is exactly as it was**, and you gained +25 Fate.
 The seed in that log line is derived from `(userId, TotalRolls, worldId)`, so
 re-entering on the same roll count rebuilds the identical map. Two different
 players never get the same one.
+
+### Test C3 — the hub is walkable (3 min)
+
+Added after two playtests found geometry that tests could not see. Do this
+before anything else after a scale or layout change.
+
+1. **Stand anywhere on the plaza.** It is a disc 1150 studs across. If you are
+   on top of a wall or falling, `cylinder()` has regressed.
+2. **Walk all four spokes** — Hall (N), Archive (E), Gate (S), Training (W).
+   ✅ Pass: no gap between walkway and platform, no step you have to jump.
+3. **Walk the Observatory approach.** It leaves the plaza on the NE diagonal
+   at about radius 380 and climbs to the deck. ✅ Pass: it crosses no walkway
+   and **the Fate Engine plaza is completely clear of it** — you can walk to
+   the Engine from any direction without meeting a staircase.
+4. **Stand at the Engine and turn full circle.** ✅ Pass: nothing encircles it.
 
 ### Test E — a tampered client is rejected (1 min)
 

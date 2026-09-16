@@ -222,11 +222,6 @@ local GameConfig = {
 		WalkwayWidth = 44,
 		WalkwayRaise = 6, -- studs above the lower plaza ring
 
-		-- Each spiral-ramp step is cut this much LONGER than the arc it has to
-		-- span, so consecutive steps overlap on the outside of the curve
-		-- instead of leaving a gap. Must be > 1 or the ramp is a ladder of
-		-- floating tiles -- which is exactly what it was.
-		RampStepOverlap = 1.2,
 		-- The invisible pad the Gate's ENTER prompt lives on, as a multiple of
 		-- the portal's scale, and how far above the platform it floats.
 		GateAnchorSpan = 8,

@@ -546,9 +546,9 @@ do
 		for _, d in Crossroads.Districts do
 			if d.Id == "GLOBAL_OBSERVATORY" then obs = d end
 		end
-		local run = (obs.PlatformRadius + 8) * obs.RampTurns * 2 * math.pi
-		check("the observatory ramp has a climbable gradient",
-			anchors.GLOBAL_OBSERVATORY.Y / run < 0.5,
+		local run = obs.Approach.StartRadius - obs.Approach.EndRadius
+		check("the observatory approach has a climbable gradient",
+			anchors.GLOBAL_OBSERVATORY.Y / run < 0.6,
 			string.format("rise %d over run %.0f", anchors.GLOBAL_OBSERVATORY.Y, run))
 	end
 	check("Fate Engine is at true centre",
@@ -1173,28 +1173,50 @@ do
 	check("spawn is over the processional, not out in space",
 		math.abs(GameConfig.HubLayout.SpawnAnchor.Z) < anchors.EXPEDITION_GATE.Z)
 
-	-- 7. THE OBSERVATORY RAMP IS CONTINUOUS.
-	-- A fixed 5-stud step depth was fine on the 120-stud hub; at this radius
-	-- the same step count spans 26 studs of arc each, so the ramp was 70
-	-- floating tiles with 21-stud gaps and no way up.
+	-- 7. THE WAY UP MUST NOT WRAP THE FATE ENGINE.
+	-- The Observatory's access used to be a 2.5-turn helix at radius 118,
+	-- forty studs wide -- so it occupied radius 98 to 138 while the Engine's
+	-- own platform is radius 120. It encircled the single most important
+	-- object in the game and blocked the walk up to it. Reported from the
+	-- 2026-09-16 playtest as "the staircase obstructs the player's path to
+	-- the actual fate engine".
 	local obs
 	for _, d in Crossroads.Districts do
 		if d.Id == "GLOBAL_OBSERVATORY" then obs = d end
 	end
-	local steps = math.floor(obs.RampTurns * 28)
-	local rampRadius = obs.PlatformRadius + 8
-	local arc = 2 * math.pi * rampRadius * obs.RampTurns / steps
-	-- HubBuilder derives step depth from this factor, so asserting it is > 1
-	-- asserts that consecutive steps overlap rather than leaving a gap. It
-	-- being a config value at all is the fix: a hard-coded 5-stud depth is
-	-- what turned the ramp into 70 floating tiles after the 10x rescale.
-	check("ramp step depth is derived from the arc it must span, and overlaps",
-		GameConfig.HubLayout.RampStepOverlap > 1,
-		string.format("%.0f studs of arc per step, overlap x%.2f",
-			arc, GameConfig.HubLayout.RampStepOverlap))
-	local rise = (obs.Height - Crossroads.FateEngine.PlatformRaise) / steps
-	check("each ramp step is a step, not a jump", rise <= 2,
-		string.format("%.2f studs per step", rise))
+	local approach = obs.Approach
+	local engineR = Crossroads.FateEngine.PlatformRadius
+
+	check("the approach starts clear of the Fate Engine platform",
+		approach.StartRadius > engineR,
+		string.format("starts at %d, Engine platform is %d",
+			approach.StartRadius, engineR))
+
+	-- It may only cross the Engine platform's footprint from above. Height at
+	-- a given radius is linear along the deck.
+	local rise = obs.Height + obs.PlatformSize.Y / 2
+	local run = approach.StartRadius - approach.EndRadius
+	local heightAtEngineEdge = rise * (approach.StartRadius - engineR) / run
+	-- The rig's crown: ring centre (radius*scale + capped plinth) plus radius.
+	local rigCrown = GameConfig.Portal.OuterRingRadius * Crossroads.FateEngine.PortalScale * 2
+		+ GameConfig.Portal.MaxPlinthHeight
+	check("where it does pass over the Engine, it clears the rig entirely",
+		heightAtEngineEdge > rigCrown,
+		string.format("%.0f studs up at the platform edge vs a %.0f-stud rig",
+			heightAtEngineEdge, rigCrown))
+
+	-- 45 degrees is the empty diagonal; the four walkways run at 0/90/180/270.
+	local WALKWAY_BEARINGS = { 0, 90, 180, 270 }
+	local clearsWalkways = true
+	for _, bearing in WALKWAY_BEARINGS do
+		if math.abs(obs.Angle - bearing) < 20 then clearsWalkways = false end
+	end
+	check("the approach runs on a diagonal, so it crosses no walkway",
+		clearsWalkways, string.format("bearing %d", obs.Angle))
+
+	check("the approach deck is wide enough to be a road, not a beam",
+		approach.Width >= Crossroads.Bridges.Width * 0.5,
+		string.format("%d studs", approach.Width))
 end
 
 -- === 13. Ethereal Scape =============================================

@@ -211,6 +211,13 @@ function Schema.validateHub(hub: any): (boolean, { string })
 			if district.Pillars ~= nil and (type(district.Pillars) ~= "number" or district.Pillars < 0) then
 				table.insert(errors, `{label} Pillars must be >= 0`)
 			end
+			-- A ROUND platform is drawn from PlatformRadius, so declaring the
+			-- shape without the radius would silently build nothing.
+			if district.PlatformShape == "ROUND" then
+				if type(district.PlatformRadius) ~= "number" or district.PlatformRadius <= 0 then
+					table.insert(errors, `{label} is ROUND but has no positive PlatformRadius`)
+				end
+			end
 		end
 	end
 

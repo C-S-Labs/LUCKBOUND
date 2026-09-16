@@ -108,6 +108,32 @@ anchors and dimensions** in `GameConfig.HubLayout` (locked once, never
 re-derived, per §7.3), **materials, palette and props** in
 `Content/Hub/Crossroads.luau`.
 
+### The Observatory's spiral ramp became a straight processional
+
+§2.2 gives the Global Observatory a spiral ramp down to the Fate Engine plaza.
+Built literally at the rescaled hub it was a 2.5-turn helix at radius 118,
+forty studs wide — occupying radius **98 to 138**, while the Fate Engine's own
+platform is radius **120**.
+
+So it wrapped the single most important object in the game in a wall of steps
+and blocked the walk up to it. The 2026-09-16 playtest reported exactly that:
+*"the players path to the actual fate engine is obstructed via the staircase"*.
+
+**Resolved as:** one straight processional on the Observatory's own bearing —
+45°, the empty diagonal between the Hall and the Archive. It crosses no
+walkway (those run at 0/90/180/270), rises 145 studs over a 274-stud run
+(about 28°), and passes over the Engine platform only in its last few studs,
+by which point it is 137 studs up and clear of the rig's 111-stud crown.
+
+The blueprint was specifying **access to an upper platform**, not a helix
+specifically. That is preserved. Asserted by four tests.
+
+> ⚠️ **The Observatory's purpose is itself an open question** — see
+> `STATUS.md` §4. If it survives, the recommendation is to move it off-centre
+> to a sixth compass point rather than lower it: sitting *above the Engine*
+> forces it above the rig's 111-stud crown, and that height is what forces the
+> climb in the first place.
+
 ### Portal spin-up runs client-side
 
 §1.3's 2.5s spin-up plays on the rolling player's client, so two players rolling

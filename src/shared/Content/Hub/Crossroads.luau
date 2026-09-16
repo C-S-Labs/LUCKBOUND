@@ -182,14 +182,41 @@ local Crossroads = {
 			Kind = "OBSERVATORY",
 			PlatformSize = Vector3.new(240, 10, 240),
 			Height = 140, -- blueprint §2.2: +40 studs Y
+			-- ROUND, so buildPlatform draws a disc. It used to get a box from
+			-- buildPlatform AND a cylinder from its own builder, one hidden
+			-- inside the other.
+			PlatformShape = "ROUND",
 			PlatformRadius = 110,
+			PlatformMaterial = Enum.Material.Slate,
 			Color = Color3.fromRGB(16, 14, 24), -- near-black, sky reads clearly
 			Accent = Color3.fromRGB(124, 245, 224),
 			Pillars = 0,
 			PillarHeight = 0,
 			GlobeDiameter = 80,
-			RampTurns = 2.5,
-			RampWidth = 40,
+
+			-- THE WAY UP. One straight processional on this district's own
+			-- bearing (45 degrees -- the empty diagonal between the Hall and
+			-- the Archive), NOT a helix around the Fate Engine.
+			--
+			-- The previous spiral ran at radius 118 and was 40 studs wide, so
+			-- it covered radius 98-138 while the Engine's platform is radius
+			-- 120. It wrapped the most important object in the game in a wall
+			-- of steps and blocked the approach to it. The first playtest
+			-- reported exactly that.
+			--
+			-- StartRadius sets the gradient: 380 gives a 274-stud run for a
+			-- 145-stud rise, about 28 degrees. EndRadius lands just inside the
+			-- deck edge.
+			Approach = {
+				StartRadius = 380,
+				EndRadius = 106,
+				Width = 40,
+				Thickness = 6,
+				RailHeight = 10,
+				RailThickness = 2.5,
+				PierCount = 4,
+				PierWidth = 10,
+			},
 			MeshId = nil,
 		},
 	},

@@ -22,11 +22,20 @@ from its chunk kit. **Combat, enemies, bosses and loot were NOT lifted and
 remain excluded.** An expedition today is: arrive, walk a generated map, come
 home.
 
-**It has now been walked**, on 2026-09-16, and that playtest found four things
-276 green tests had not: the hub had **no floor**, two walkways stopped short
-of their platforms, the Observatory ramp was 70 floating tiles, and the
-Expedition Gate's prompt could not be reached from on top of its own plinth.
-All four are fixed, and §4 records what the tests were missing.
+**It has now been walked twice**, on 2026-09-16.
+
+The **first** walk found four things 276 green tests had not: the hub had **no
+floor**, two walkways stopped short of their platforms, the Observatory ramp
+was 70 floating tiles, and the Expedition Gate's prompt could not be reached
+from on top of its own plinth.
+
+The **second** walk confirmed all four fixed, and **completed the expedition
+loop end to end** — roll → Gate → generated map → return → Fate awarded. It
+found one further problem: the Observatory's spiral ramp, now continuous,
+encircled the Fate Engine and blocked the walk up to it. Also fixed; the
+access is now a straight processional on the empty 45° diagonal.
+
+§4 records what the tests were missing each time.
 
 **The Design North Star (Master Spec §25) has been answered.** After playing the
 roll loop with no combat, no loot, no art and grey blockout geometry, the
@@ -46,6 +55,11 @@ which makes that the strongest possible signal the core premise works.
 | Runs without DataStores | Volatile-mode fallback, no crash |
 | Rolls reach Ethereal Scape at slot 5 | Full arc logged 2026-09-16 |
 | Portal recolours to the rolled rarity | Verified visually |
+| **Expedition loop, end to end** | `-> ETHEREAL_SCAPE seed 107807269 5 chunks … left after 55s (RETURNED)` |
+| Map generation builds a walkable layout | 5 chunks, 0 mesh / 5 blockout, attempt 1 |
+| Per-client biome lighting applies and reverts | Verified across entry and return |
+| Fate awarded on completion | +25, logged |
+| Developer commands | All of `/fly /speed /tp /roll /enter /leave` verified |
 
 **436 instances** is the current mobile-budget baseline for the hub.
 
@@ -123,11 +137,11 @@ exists.**
 
 ### Test suite
 
-**291 tests, all passing.** Headless — no Roblox required.
+**293 tests, all passing.** Headless — no Roblox required.
 
-**13 of them exist because the test suite was green while the hub had no
+**17 of them exist because the test suite was green while the hub had no
 floor.** The group `Hub geometry a player can actually touch` asserts the
-relationships the first Studio walk found to be silently false — see §4.
+relationships two Studio walks found to be silently false — see §4.
 
 ```bash
 ./tests/run.sh
@@ -284,7 +298,9 @@ survive a rescale and a literal does not.
 |---|---|---|
 | **Portal plane is still above head height** | Medium | You reach the prompt and the rig springs from the floor, but the walk-through *plane* sits inside the inner ring, ~30 studs up. Blueprint §1.3's concentric rings make that inherent. Irrelevant once the rig is authored in Blender. |
 | **25% of rolls land on a world with no map** | **High** | Emberfall 15%, Sky Citadel 7%, Astral Reach 3%. Refused politely at the Gate; printed as a boot warning and asserted by test. Emberfall and Astral Reach need only a chunk kit; Sky Citadel needs a blueprint section first. |
-| **The expedition path has still never been walked** | **Unknown** | The hub has now been walked; the Gate was unreachable, so nobody has entered a generated map. `TESTING.md` Test C2 is still the pass. |
+| **The Observatory's purpose is undecided** | **Design** | Its only content is the orrery — a global-state display. If expeditions move to separate places (below), the hub becomes a lobby and that display arguably matters *more*. But 145 studs of climb for a look-out is a poor trade, and it cannot simply be lowered: sitting above the Engine forces it above the rig's 111-stud crown. **Recommendation: if it survives, move it off-centre to a sixth compass point rather than lowering it.** |
+| **Expeditions are to become a separate place/instance** | **Architecture** | Owner-stated 2026-09-16: worlds will be rendered in a separate instance and reached by `TeleportService`, for performance and to isolate parties and solo queues. The current in-place `ExpeditionStage` is therefore a **prototype of the loop, not of the deployment**. `ExpeditionCore` is unaffected — it decides destination, seed and eligibility, none of which care where the map is built. `ExpeditionSystem` and `ChunkLoader` are what would move. |
+| Fate-on-completion may become currency or loot | Design | Owner-flagged: a completion bonus drawn from an item pool, or a currency for upgrades, rather than flat Fate. `ProgressionSystem.award` is the single seam. |
 | `UNCOMMON` colour unsanctioned | Medium | Now shipping — see above |
 | Chunk collision is XZ-only | Medium | Blocks any kit that climbs. `MODULAR_MAPS.md` |
 | No pathfinding validation | Medium | Non-overlapping ≠ walkable between. Addendum §A4 step 4 |
@@ -299,26 +315,39 @@ survive a rescale and a literal does not.
 
 ## 5. Next session — pick up here
 
-**The hub has been walked; the expedition has not.** The Gate's prompt was
-unreachable, so map generation is still unproven in Studio. That is the whole
-list until it is done.
+**The core loop is proven.** Roll → Gate → generated map → return → Fate,
+walked end to end in Studio on 2026-09-16. What is left is art, content and
+two design decisions.
 
-1. **Run `TESTING.md` Test C2 properly.** Roll to 5 (or `/roll ETHEREAL_SCAPE`),
-   take the Gate, walk the map, come home. Four questions at once: does the
-   new scale feel right, does generation produce a *place*, does per-client
-   lighting restore, and is walking through the Gate a payoff or an anticlimax.
-2. **Re-check the hub floor first.** The plaza, the Engine platform and the
-   Observatory platform were all columns rather than discs. They should now be
-   floors you can stand anywhere on, with all four walkways and the spiral ramp
-   continuous. If any of that is still wrong, stop and report it — everything
-   else depends on it.
-3. **Hub brightness** — one value in `Crossroads.Theme`. Still dark.
-4. **Upload the Ethereal Scape islands.** `assets/README.md`. Check scale
-   against the R6 rig on the whole-scene import *before* splitting into eight.
+1. **Re-walk the Observatory approach.** It is the only untested change from
+   this round. It should rise on the empty NE diagonal, cross no walkway, and
+   leave the Fate Engine plaza completely clear.
+2. **Decide what the Observatory is for**, or cut it. See §4 — the
+   recommendation is to move it off-centre rather than lower it.
+3. **Upload the Ethereal Scape islands.** `assets/README.md`. This is the
+   single biggest visible change available: it turns the blockout into the
+   authored sky temple. Check scale against the R6 rig on the whole-scene
+   import *before* splitting into eight.
+4. **Hub brightness** — one value in `Crossroads.Theme`. Still dark.
 5. **`UNCOMMON`'s colour needs blessing.** On screen inside the first minute.
 6. **A chunk kit for Emberfall** — 15pp off the "no map" number.
 7. **Placeholder text, UI pass** — unchanged.
 8. **Sky Citadel biome** — largest content debt.
+
+### When expeditions move to a separate place
+
+Owner-stated direction, not yet built. When it happens:
+
+- `ExpeditionCore` is **unaffected** — destination, seed, eligibility and
+  timer decide the same things wherever the map is built. That is the payoff
+  of having kept it pure.
+- `ExpeditionSystem.requestEnter` becomes a `TeleportService:TeleportAsync`
+  with the seed and world id in `TeleportData`; the map is built by the
+  destination place from exactly those two values. Determinism already
+  guarantees both ends produce the same layout.
+- `ChunkLoader` moves to the expedition place unchanged.
+- The Crossroads becomes a lobby, which is what makes the Observatory question
+  in §4 worth answering first.
 
 > Before launch, turn **`GameConfig.Debug.AllowCommands`** and
 > **`AllowForcedRolls`** off. They are on for testing and the server shouts

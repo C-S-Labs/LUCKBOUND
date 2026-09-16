@@ -33,6 +33,104 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 6 — 2026-09-16 — The loop closes, and the staircase moves
+
+**Branch:** `claude/zen-volta-cuhfyh` (PR #13) · **Tests:** 293 passing (was 291)
+
+### Done
+
+**The core loop was walked end to end in Studio and it works.** Roll → Gate →
+generated map → return → Fate. From the owner's log:
+
+```
+[Expedition] Setsuru -> ETHEREAL_SCAPE  seed 107807269  5 chunks (0 mesh, 5 blockout)  attempt 1  300s
+[Expedition] Setsuru left ETHEREAL_SCAPE after 55s (RETURNED)
+```
+
+Confirmed working by the owner: the geometry fix, all four walkways, the
+spiral staircase climbing, every developer command, portal recolouring by
+rarity, `/tp` to every region with correct spacing, and Fate on completion.
+
+One new problem, and it was the same class as the others — geometry nobody had
+looked at:
+
+- **The Observatory's spiral ramp encircled the Fate Engine.** A 2.5-turn helix
+  at radius 118, forty studs wide, so it occupied radius **98–138** while the
+  Engine's own platform is radius **120**. Fixing the *step gaps* last session
+  turned it from a broken ladder into a continuous **wall** around the most
+  important object in the game. Replaced with one straight processional on the
+  Observatory's own 45° bearing — the empty diagonal between the Hall and the
+  Archive. Crosses no walkway, clears the rig's 111-stud crown where it passes
+  overhead, leaves the Engine plaza completely open.
+- **The Observatory had two platforms** — a box from `buildPlatform` and a
+  cylinder from its own builder, one buried inside the other. Platform shape is
+  now declared in data (`PlatformShape = "ROUND"`) rather than implied by which
+  builder happened to run.
+
+### Decisions made
+
+- **Shape belongs in the data, not in the builder that runs.** The duplicate
+  platform existed because "the Observatory is round" was knowledge held in
+  `buildObservatory` rather than in the Observatory's own record. One field
+  removed the duplication and made it checkable at boot.
+- **The approach is a ramp, not a stair.** Discrete steps at a 2-stud rise sit
+  exactly on Roblox's auto-step limit and snag; a single sloped deck at 28° is
+  smooth, is four parts instead of sixty-five, and cannot develop gaps.
+- **Balustrades and piers are non-colliding.** A decorative rail must never
+  become the reason a player cannot get onto their own staircase — which is
+  the same mistake, in miniature, as the plinth that walled off the Gate.
+
+### Recommendation, as requested: the Observatory
+
+The staircase is fixed, but **the real question is what the Observatory is
+for.** Its only content is the orrery — a global-state display.
+
+The geometry forces the problem: sitting *above the Engine* means sitting above
+the rig's 111-stud crown, and that height is what forces the climb. It cannot
+simply be lowered.
+
+**Recommendation: if it survives, move it off-centre to a sixth compass point**
+rather than lowering it. A 145-stud climb for a look-out is a poor trade, and a
+ground-level sixth district costs nothing that "above the centre" was buying.
+
+Worth answering *before* the art pass, because it changes the hub's footprint.
+
+### Recorded, not acted on
+
+Two owner-stated directions that change the shape of later work:
+
+- **Expeditions will move to a separate place/instance** via `TeleportService`,
+  for performance and to isolate parties and solo queues. The current in-place
+  `ExpeditionStage` is therefore a prototype of the **loop**, not of the
+  **deployment**. `ExpeditionCore` is unaffected — destination, seed,
+  eligibility and timer decide the same things wherever the map is built, which
+  is the payoff of having kept it pure. `STATUS.md` §5 has the migration notes.
+- **Fate-on-completion may become currency or a loot pool.**
+  `ProgressionSystem.award` is the single seam.
+
+### On the `.blend` question
+
+**It must be uploaded to Roblox first — there is no way around it.** Roblox
+cannot load `.blend` or `.fbx` at runtime; every mesh has to become an
+`rbxassetid://`. But **the PLACE does not need publishing for that**: Studio's
+3D Importer uploads to the account from a local `.rbxl`. Publishing the place
+is only needed for DataStores. Walkthrough in `assets/README.md`.
+
+### Stopped at
+
+Everything from the playtest is fixed and green. **The Observatory approach is
+the only untested change** — it should be re-walked first.
+
+### Next
+
+1. Re-walk the Observatory approach (`TESTING.md` Test C3).
+2. Decide what the Observatory is for, or cut it.
+3. Upload the eight Ethereal Scape islands — the biggest visible change left.
+4. Hub brightness; bless the `UNCOMMON` colour; an Emberfall chunk kit.
+5. **Turn `Debug.AllowCommands` and `AllowForcedRolls` off before launch.**
+
+---
+
 ## Session 5 — 2026-09-16 — The first walk, and what it found
 
 **Branch:** `claude/zen-volta-cuhfyh` (PR #13) · **Tests:** 291 passing (was 276)
