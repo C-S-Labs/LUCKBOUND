@@ -64,7 +64,23 @@ HubBuilder.build()
 
 -- 9. Player binding LAST, so nobody can arrive before systems are ready.
 step("binding players")
+--- The hub is 1200 studs across, so Roblox's default 16 studs/second would
+--- make every trip a chore. GameConfig.Scale.WalkSpeed is the other half of
+--- the traversal budget documented there -- changing hub size without changing
+--- this breaks the budget.
+local function applyMovement(character: Model)
+	local humanoid = character:WaitForChild("Humanoid", 10)
+	if humanoid and humanoid:IsA("Humanoid") then
+		humanoid.WalkSpeed = GameConfig.Scale.WalkSpeed
+	end
+end
+
 local function onPlayerAdded(player: Player)
+	player.CharacterAdded:Connect(applyMovement)
+	if player.Character then
+		task.spawn(applyMovement, player.Character)
+	end
+
 	SaveSystem.load(player)
 
 	local snapshot = ProgressionSystem.snapshot(player)

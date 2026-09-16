@@ -1,6 +1,40 @@
 # LUCKBOUND — Instructions for AI Agents
 
-You are working on a Roblox game. **Read `docs/PROTOTYPE_BUILD_SPEC.md` before writing any code.** It is the canonical architecture. This file is the short version of the rules that protect it.
+You are working on a Roblox game.
+
+## START HERE — read these three, in this order, before doing anything
+
+This project runs across many separate conversations. Nothing carries over
+between them except what is written in the repo, so these three files ARE the
+handoff:
+
+1. **`docs/WORKLOG.md` — the latest entry only.** Where the last session
+   stopped and what comes next. Do not read the whole file; only the top entry
+   is load-bearing.
+2. **`docs/STATUS.md`** — current state, decisions already locked in, open
+   items with severity. If you are about to relitigate a decision, it is
+   probably recorded here as settled.
+3. **`docs/PROTOTYPE_BUILD_SPEC.md`** — the canonical architecture.
+
+Then `docs/` has the rest: `MODULAR_MAPS.md`, `TESTING.md`, `ART_DIRECTION.md`,
+`BLUEPRINT_RECONCILIATION.md`, `TOOLCHAIN_ACCESS.md`.
+
+## BEFORE YOU FINISH — update the handoff
+
+A session that leaves no trace has to be re-derived from scratch next time.
+Before ending any session where you changed something:
+
+- **Append a `docs/WORKLOG.md` entry at the top** using the template there:
+  what you did, what you decided, where you stopped, what comes next.
+- **Update `docs/STATUS.md`** if state changed — test count, what is built,
+  open items, next-session priorities.
+- **Update the doc that owns the thing you changed** (scale → `ART_DIRECTION`
+  and `MODULAR_MAPS`; architecture → the build spec; and so on).
+
+Documentation is not an afterthought on this project — it is the only memory
+it has.
+
+This file is the short version of the rules that protect the architecture.
 
 ## The prime directive
 
@@ -31,6 +65,18 @@ Fixed, in `src/server/init.server.luau`. See build spec §1.2. `Schema.validateA
 - StyLua and Selene are configured; run them before committing.
 - Return a single table from every ModuleScript.
 - Errors use the `Result` convention in `Core/Result.luau` — `{ok = true, value = …}` or `{ok = false, err = …}`. Reserve `error()` for programmer mistakes, not expected failures.
+
+## Verify before you merge
+
+CI runs the tests, a syntax check, and the forbidden-name scan. **Check that it
+is green before merging a PR.** This was skipped once and shipped a `main` that
+could not boot, because `git commit -am` silently skipped a new untracked file.
+
+- `git add` new files explicitly — `-am` stages only tracked ones.
+- Run `./tests/run.sh` before pushing.
+- A shim in the test harness must behave like the real Roblox type. An
+  unfaithful one is worse than no test: `Vector3` faked as a table once let a
+  boot-blocking bug pass 152 tests.
 
 ## When you are unsure
 

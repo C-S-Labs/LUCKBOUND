@@ -64,7 +64,13 @@ dark** — the first thing worth tuning.
 Plus 14 deterministic floating islands (seeded, so every server shows one
 skyline) and raised radial walkways.
 
-**436 instances total** — the current mobile-budget baseline.
+**Rescaled 2026-09-16.** The hub is 10× its original size; see `STATUS.md`. The
+old 436-instance count predates that and needs re-measuring on the next Studio
+boot — it prints on startup.
+
+Scale is set in two places and they must move together: `GameConfig.HubLayout`
+(dimensions) and `GameConfig.Scale.WalkSpeed` (traversal). Changing one without
+the other breaks the 20-second budget, and a test will say so.
 
 ### The PortalRig
 
@@ -134,12 +140,15 @@ real section before Phase 2 makes worlds enterable.
 |---|---|
 | Ambient / Outdoor | `rgb(40,35,60)` / `rgb(55,48,80)` |
 | ColorShift_Top | `rgb(90,70,140)` |
-| Fog | `rgb(30,25,50)`, 150 → 500 |
+| Fog | `rgb(30,25,50)`, 700 → 4400 |
 | Brightness / ClockTime | 2 / 22 |
 | Marble / Gold accent | `rgb(226,221,234)` / `rgb(230,178,74)` |
-| Hub diameter | 120 studs |
-| Zone ring radius | 46 studs |
-| Walkways | 8 studs wide, raised 2 (gate processional 12) |
+| Hub diameter (playable) | 1200 studs |
+| Visual extent (scenery) | 4000 studs |
+| Zone ring radius | 420 studs |
+| Zone platforms | 230–360 studs |
+| WalkSpeed | 32 (Roblox default is 16) |
+| Walkways | 44 studs wide, raised 6 (gate processional 72) |
 | Portal spin-up | 2.5 s |
 | Reveal total | Common 3.7 s → Mythic 6.7 s |
 
