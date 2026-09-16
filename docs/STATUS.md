@@ -397,6 +397,7 @@ Studio → open `LUCKBOUND_dev` → Rojo panel **Connect** → **Accept** → **
 | `MODULAR_MAPS.md` | The chunk system: how biome maps assemble from pieces |
 | `../assets/README.md` | Blender → Roblox asset workflow |
 | `ADDENDUM_ASSET_PIPELINE.md` | Future asset/procgen architecture — target design |
+| `MODELLER_HANDOFF.pdf` | **Give this to an artist.** Deliverable formats, export settings, how to build a prefab we can animate |
 | `LUCKBOUND_Master_Spec_v0.2.pdf` | Master design spec, updated with build reality |
 | `../LUCKBOUND_...v0.1 (1).pdf` | Original vision. **Authoritative on intent.** |
 
