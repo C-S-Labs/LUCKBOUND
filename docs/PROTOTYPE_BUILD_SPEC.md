@@ -84,6 +84,7 @@ src/server/          →  ServerScriptService/LuckboundServer
     FateSystem.luau
     EventSystem.luau
     ExpeditionSystem.luau   (§7.1 -- entry, generation, return. No combat)
+    DebugSystem.luau        (developer commands; delete before launch)
     HubBuilder.luau
     -- Phase 2: CombatSystem, LootSystem, InventorySystem, DiscoverySystem
 
@@ -94,6 +95,7 @@ src/client/          →  StarterPlayer/StarterPlayerScripts/LuckboundClient
     StateController.luau    (single client-side mirror of server state)
     HubEffects.luau
     ExpeditionController.luau  (§7.1 -- lighting apply/revert, local countdown)
+    DebugCommands.luau      (/fly /speed /tp; delete before launch)
   UI/
     FateRoll.luau
     GlobalAnnouncements.luau
@@ -109,7 +111,7 @@ Workspace/
     FateEngine/            -- must contain a Part named "RollAnchor"
     HallOfLegends/
     DiscoveryArchive/
-    ExpeditionGate/
+    ExpeditionGate/        -- must contain a Part named "GateAnchor"
     TrainingGrounds/
     GlobalObservatory/
     SpawnLocation
@@ -130,11 +132,15 @@ ServerStorage/
 5.  EventSystem.init()
 6.  FateSystem.init(SaveSystem, ProgressionSystem, EventSystem)
 7.  ExpeditionSystem.init(SaveSystem, ProgressionSystem)
-8.  HubBuilder.build()        -- only if Workspace.Crossroads is absent
-9.  ExpeditionSystem.bindGatePrompt()   -- attaches to geometry step 8 creates
-10. PlayerService binding     -- PlayerAdded/PlayerRemoving last, so no player can
+8.  DebugSystem.init(FateSystem, ExpeditionSystem)   -- developer commands
+9.  HubBuilder.build()        -- only if Workspace.Crossroads is absent
+10. ExpeditionSystem.bindGatePrompt()  -- attaches to geometry step 9 creates
+11. PlayerService binding     -- PlayerAdded/PlayerRemoving last, so no player can
                                  arrive before systems are ready
 ```
+
+`DebugSystem` is deliberately **last of the systems**: nothing above it may
+depend on it, so deleting the file before launch breaks nothing.
 
 `ExpeditionSystem` occupies the slot this spec originally reserved for
 `WorldSystem`. It takes **no reference to `FateSystem`**: a player's pending
@@ -386,6 +392,14 @@ Created by `Core/Net.luau` and nowhere else.
 | `Expedition_Started` | RemoteEvent | S→C | `ExpeditionPayload` | — |
 | `Expedition_Ended` | RemoteEvent | S→C | `ExpeditionEndPayload` | — |
 | `Expedition_TimerSync` | RemoteEvent | S→C | `{RemainingSeconds, ServerNow}` | — |
+| `Debug_Command` | RemoteEvent | C→S | `{Name, Args}` | **Studio or place creator, + `Debug.AllowCommands`** |
+| `Debug_Reply` | RemoteEvent | S→C | `{Ok, Text}` | — |
+
+The two `Debug_*` remotes always **exist** but are **inert**: `DebugSystem`
+connects no handler unless `GameConfig.Debug.AllowCommands` is true, and every
+command additionally checks that the caller is in Studio or is the place's
+creator. See `TESTING.md` §2.5 for the command list and the reasoning behind
+which commands are server-side at all.
 
 The four `Expedition_*` rows were **Reserved** in this table from the start,
 which is exactly what reserving them was for: implementing expedition entry
@@ -487,11 +501,18 @@ Recorded because each cost a debugging cycle and each is a class of mistake that
 | `MessagingService:SubscribeAsync` yields forever on an unpublished place | `pcall` catches errors but not hangs. Silent stall at step 5 of 9 — no error text at all |
 | `PortalRig` rings rotated about the world origin, not the ring centre | Geometry, not asserted by any test |
 | `deepFreeze` raised on a table reachable by two paths | Only triggered once `UITheme` reused `Constants` tables |
+| **`CylinderMesh` gives a part *block* collision** — invisible corners stopped the player in open space | No test rendered geometry; only data was asserted |
+| **`CylinderMesh`'s axis is Y, `PartType.Cylinder`'s is X** — every caller passed the X convention, so the 1150-stud plaza was built as a 1150-stud **wall** and the hub had no floor | A dimension triple is valid data whichever way round it means |
+| Walkways used the platform's **X** half-extent regardless of approach axis, leaving 30–40 stud holes | The number was right for two zones out of four |
+| The Observatory ramp used a literal 5-stud step depth; at the new radius steps were 26 studs apart | The literal was correct at the old 120-stud scale |
+| The Gate's prompt sat on a plinth wider than its own activation distance | The reach test carried a `* 2` fudge and covered only the Engine |
 
-Two lessons worth keeping:
+Four lessons worth keeping:
 
 1. **A shim that is merely enough to pass is worse than no test.** Make shims behave like the real type.
-2. **A yielding `init()` is invisible.** Hence the `[LUCKBOUND] boot N/9` progress logging — a stall now names its own step.
+2. **A yielding `init()` is invisible.** Hence the `[LUCKBOUND] boot N/11` progress logging — a stall now names its own step.
+3. **A test that asserts a number proves nothing about the shape that number produces.** `Plaza.Diameter == 1150` was true the whole time the plaza was a wall. Assert *relationships* — thinner than it is wide, can be jumped onto, reaches past its own plinth — because those survive a rescale and a literal does not.
+4. **A fudge factor in an assertion is a disabled assertion.** The prompt-reach check passed with `* 2` in it while the Gate was genuinely unusable. If a test needs slack to pass, find out why before adding the slack.
 
 ## 7. What Phase 1 Deliberately Excludes
 

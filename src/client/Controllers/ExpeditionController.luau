@@ -95,9 +95,8 @@ local function labelGateFor(worldId: string?)
 	local hub = Workspace:FindFirstChild(Constants.NAMES.CROSSROADS)
 	local zones = hub and hub:FindFirstChild("Zones")
 	local gate = zones and zones:FindFirstChild("EXPEDITION_GATE")
-	local rig = gate and gate:FindFirstChild("GateRig")
-	local plinth = rig and rig:FindFirstChild("Plinth")
-	local prompt = plinth and plinth:FindFirstChild("EnterPrompt")
+	local anchor = gate and gate:FindFirstChild(Constants.NAMES.GATE_ANCHOR)
+	local prompt = anchor and anchor:FindFirstChild("EnterPrompt")
 	if not prompt or not prompt:IsA("ProximityPrompt") then
 		return
 	end

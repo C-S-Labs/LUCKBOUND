@@ -65,6 +65,55 @@ local function mayRoll(player: Player): boolean
 	return true
 end
 
+--- Records the outcome, tells the player, and announces it if it deserves it.
+--- The one place a roll result becomes real, so a forced developer roll and an
+--- honest one cannot drift apart in what they write or what they send.
+local function deliver(player: Player, profile: any, world: any, outcome: any, forced: boolean): ()
+	local rarity = Constants.RARITY[world.Rarity]
+
+	ProgressionSystem.recordRoll(player, world.Id, world.Rarity)
+
+	if GameConfig.Debug.LogEveryRoll then
+		print(
+			string.format(
+				"[Roll] %s (%d) -> %s [%s]%s",
+				player.Name,
+				player.UserId,
+				world.Id,
+				world.Rarity,
+				if forced then " (FORCED)" elseif outcome.IsScripted then " (onboarding)" else ""
+			)
+		)
+	end
+
+	Net.get("Fate_RollResult"):FireClient(player, {
+		WorldId = world.Id,
+		Name = world.Name,
+		Rarity = world.Rarity,
+		Flavor = world.Flavor,
+		IsTutorialRoll = outcome.IsScripted,
+		RollNumber = outcome.RollNumber,
+		RevealDuration = rarity.RevealDuration,
+		ExpeditionSeconds = FateCore.expeditionDuration(world, profile, GameConfig),
+	})
+
+	-- A scripted onboarding roll is not an achievement and must never be
+	-- announced: the whole server would see three identical "Mythic!" banners
+	-- every time a new player joins, and the signal would mean nothing.
+	--
+	-- A FORCED roll is not an achievement either, for a stronger reason: a
+	-- developer typing /roll ASTRAL_REACH must not fire a Fatebreak banner at
+	-- everyone. Same rule, same line.
+	if not outcome.IsScripted and not forced and rarity.Order >= Constants.ANNOUNCE_RARITY_ORDER then
+		EventSystem.announce({
+			Kind = "ROLL",
+			Text = `{player.Name} rolled {world.Name}!`,
+			Rarity = world.Rarity,
+			PlayerName = player.Name,
+		})
+	end
+end
+
 function FateSystem.requestRoll(player: Player, ...: any): ()
 	-- The client sends nothing. A payload means a tampered client.
 	if select("#", ...) > 0 then
@@ -84,46 +133,40 @@ function FateSystem.requestRoll(player: Player, ...: any): ()
 	lastRollAt[player.UserId] = os.clock()
 
 	local outcome = FateCore.roll(Worlds, profile, GameConfig, nextNumber)
-	local world = Worlds[outcome.WorldId]
-	local rarity = Constants.RARITY[world.Rarity]
+	deliver(player, profile, Worlds[outcome.WorldId], outcome, false)
+end
 
-	ProgressionSystem.recordRoll(player, world.Id, world.Rarity)
-
-	if GameConfig.Debug.LogEveryRoll then
-		print(
-			string.format(
-				"[Roll] %s (%d) -> %s [%s]%s",
-				player.Name,
-				player.UserId,
-				world.Id,
-				world.Rarity,
-				if outcome.IsScripted then " (onboarding)" else ""
-			)
-		)
+--- DEVELOPER TOOL. Forces a specific world, skipping the onboarding sequence,
+--- the cooldown and the distance check -- all three exist to constrain
+--- players, and this is not a player path.
+---
+--- It is inert unless GameConfig.Debug.AllowForcedRolls is true, and the
+--- caller (DebugSystem) checks who is asking before it ever gets here. The
+--- result still goes through `deliver`, so a forced roll is recorded, logged
+--- and sent exactly like a real one -- which is the whole point: it has to
+--- exercise the real path to be worth testing with.
+function FateSystem.forceRoll(player: Player, worldId: string): (boolean, string)
+	if not GameConfig.Debug.AllowForcedRolls then
+		return false, "forced rolls are disabled (GameConfig.Debug.AllowForcedRolls)"
 	end
 
-	Net.get("Fate_RollResult"):FireClient(player, {
+	local world = Worlds[worldId]
+	if not world then
+		return false, `unknown world '{worldId}'`
+	end
+
+	local profile = SaveSystem.get(player)
+	if not profile then
+		return false, "no profile loaded yet"
+	end
+
+	deliver(player, profile, world, {
 		WorldId = world.Id,
-		Name = world.Name,
-		Rarity = world.Rarity,
-		Flavor = world.Flavor,
-		IsTutorialRoll = outcome.IsScripted,
-		RollNumber = outcome.RollNumber,
-		RevealDuration = rarity.RevealDuration,
-		ExpeditionSeconds = FateCore.expeditionDuration(world, profile, GameConfig),
-	})
+		RollNumber = (profile.TotalRolls or 0) + 1,
+		IsScripted = false,
+	}, true)
 
-	-- A scripted onboarding roll is not an achievement and must never be
-	-- announced: the whole server would see three identical "Mythic!" banners
-	-- every time a new player joins, and the signal would mean nothing.
-	if not outcome.IsScripted and rarity.Order >= Constants.ANNOUNCE_RARITY_ORDER then
-		EventSystem.announce({
-			Kind = "ROLL",
-			Text = `{player.Name} rolled {world.Name}!`,
-			Rarity = world.Rarity,
-			PlayerName = player.Name,
-		})
-	end
+	return true, `forced {world.Name} [{world.Rarity}]`
 end
 
 function FateSystem.init(saveSystem: any, progressionSystem: any, eventSystem: any): ()

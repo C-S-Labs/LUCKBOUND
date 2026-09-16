@@ -43,10 +43,25 @@ local function part(props: { [string]: any }, parent: Instance): Part
 	return p
 end
 
+--- A TRUE cylinder -- `Part.Shape = Cylinder`, never a Part wearing a
+--- `CylinderMesh`. Both halves of that distinction cost a playtest:
+---
+--- 1. **A CylinderMesh is VISUAL ONLY.** The part keeps its block collision
+---    hull, so an invisible square corner juts out past every visible round
+---    edge and the player is stopped by nothing they can see.
+--- 2. **CylinderMesh's axis is Y; PartType.Cylinder's axis is X.** Every
+---    caller here passes `(thickness, diameter, diameter)` -- the X
+---    convention -- so the mesh version built a diameter-TALL column where a
+---    thin disc was wanted. At the old 120-stud scale that was a 120-stud
+---    wall; after the 10x rescale the plaza became a 1200-stud wall and the
+---    hub had no floor at all. The player spawned on top of it.
+---
+--- Size keeps the `(thickness, diameter, diameter)` convention; the part is
+--- rolled a quarter turn about Z so its local X axis points up.
 local function cylinder(props: { [string]: any }, parent: Instance): Part
 	local p = part(props, parent)
-	local mesh = Instance.new("CylinderMesh")
-	mesh.Parent = p
+	p.Shape = Enum.PartType.Cylinder
+	p.CFrame = p.CFrame * CFrame.Angles(0, 0, math.pi / 2)
 	return p
 end
 
@@ -423,15 +438,51 @@ local function buildRotunda(zone: any, centre: Vector3, parent: Instance)
 end
 
 local function buildGate(zone: any, centre: Vector3, parent: Instance)
-	-- The largest portal in the hub, at 2x. Blueprint §2.2.
+	local top = centre + Vector3.new(0, zone.PlatformSize.Y / 2, 0)
+
+	-- The largest portal in the hub. Blueprint §2.2.
 	PortalRig.build({
 		Name = "GateRig",
-		Position = centre + Vector3.new(0, zone.PlatformSize.Y / 2, 0),
+		Position = top,
 		Scale = zone.PortalScale,
 		Rarity = "COMMON",
 		PlinthMaterial = Enum.Material.Marble,
 		OuterMaterial = Enum.Material.CorrodedMetal,
 	}, parent)
+
+	-- The part the ENTER prompt lives on, and the part the server measures
+	-- entry distance from. Exactly the RollAnchor pattern from the Fate
+	-- Engine, and for the same two reasons.
+	--
+	-- A ProximityPrompt measures from its parent part's ORIGIN. Hanging the
+	-- prompt on the plinth meant measuring from the plinth's centre, and the
+	-- plinth is wider than the prompt's reach -- so a player standing on it
+	-- was already out of range. An anchor decouples "where the prompt is"
+	-- from "how big the art is", which is what lets the rig be rebuilt in
+	-- Blender at any size without breaking entry.
+	local anchor = part({
+		Name = Constants.NAMES.GATE_ANCHOR,
+		Size = Vector3.new(
+			zone.PortalScale * GameConfig.HubLayout.GateAnchorSpan,
+			1,
+			zone.PortalScale * GameConfig.HubLayout.GateAnchorSpan
+		),
+		Position = top
+			+ Vector3.new(0, GameConfig.Portal.MaxPlinthHeight + GameConfig.HubLayout.GateAnchorLift, 0),
+		Transparency = 1,
+		CanCollide = false,
+	}, parent)
+	anchor:SetAttribute("IsGateAnchor", true)
+
+	local prompt = Instance.new("ProximityPrompt")
+	prompt.Name = "EnterPrompt"
+	prompt.ActionText = "ENTER"
+	prompt.ObjectText = "Expedition Gate"
+	prompt.HoldDuration = 0.5
+	prompt.MaxActivationDistance = GameConfig.UI.PromptActivationDistance
+	prompt.RequiresLineOfSight = false
+	prompt.Enabled = GameConfig.Expedition.Enabled
+	prompt.Parent = anchor
 
 	-- Processional walkway with flanking torch pillars: deliberately the most
 	-- dramatic sightline in the hub, visible from the Fate Engine.
@@ -581,12 +632,21 @@ local function buildObservatory(zone: any, centre: Vector3, parent: Instance)
 
 	local steps = math.floor(zone.RampTurns * 28)
 	local rampRadius = zone.PlatformRadius + 8
+
+	-- EACH STEP MUST REACH THE NEXT ONE. A fixed 5-stud depth was fine on the
+	-- old 120-stud hub; at this radius the same step count spans 26 studs of
+	-- arc apiece, so the ramp was 70 floating tiles with 21-stud gaps and no
+	-- way up to the Observatory. Depth is derived from the arc it has to
+	-- cover, with an overlap so the corners meet on the outside of the curve.
+	local arc = 2 * math.pi * rampRadius * zone.RampTurns / steps
+	local stepDepth = arc * GameConfig.HubLayout.RampStepOverlap
+
 	for i = 0, steps do
 		local t = i / steps
 		local angle = t * zone.RampTurns * math.pi * 2
 		part({
 			Name = `Step{i}`,
-			Size = Vector3.new(zone.RampWidth, 1, 5),
+			Size = Vector3.new(zone.RampWidth, 1, stepDepth),
 			CFrame = CFrame.new(
 				math.cos(angle) * rampRadius,
 				Layout.FateEngine.PlatformRaise + t * (zone.Height - Layout.FateEngine.PlatformRaise),
@@ -615,8 +675,30 @@ local function buildWalkway(zone: any, centre: Vector3, parent: Instance)
 		return -- Observatory sits above centre; the ramp serves it instead.
 	end
 
-	local inner = flat.Unit * Layout.FateEngine.PlatformRadius
-	local outer = flat - flat.Unit * (zone.PlatformSize.X / 2)
+	local dir = flat.Unit
+
+	-- HALF-EXTENT ALONG THE APPROACH, not always X. Hall of Legends is
+	-- 360x280 and is approached down -Z, so its near edge is 140 studs out,
+	-- not 180 -- using X left a 40-stud hole in the floor between the walkway
+	-- and the platform. The Expedition Gate had a 30-stud one for the same
+	-- reason. Projecting the platform's extents onto the approach direction
+	-- gets it right for every zone, including any future diagonal.
+	local half = math.abs(dir.X) * zone.PlatformSize.X / 2
+		+ math.abs(dir.Z) * zone.PlatformSize.Z / 2
+
+	-- Walkway tops must MEET the surfaces they join, or every trip ends in a
+	-- step the player has to jump. Both ends are computed from the top face of
+	-- what they land on, and the deck is sloped between them.
+	local engineTop = Layout.FateEngine.PlatformRaise
+	local zoneTop = centre.Y + zone.PlatformSize.Y / 2
+	local deck = bridges.Thickness / 2
+
+	-- Overlap both ends slightly so there is no hairline seam to catch on.
+	local inner = dir * (Layout.FateEngine.PlatformRadius - bridges.Overlap)
+	local outer = flat - dir * (half - bridges.Overlap)
+	inner = Vector3.new(inner.X, engineTop - deck, inner.Z)
+	outer = Vector3.new(outer.X, zoneTop - deck, outer.Z)
+
 	local delta = outer - inner
 	local length = delta.Magnitude
 	if length < 1 then
@@ -628,10 +710,7 @@ local function buildWalkway(zone: any, centre: Vector3, parent: Instance)
 	part({
 		Name = `Walkway_{zone.Id}`,
 		Size = Vector3.new(width, bridges.Thickness, length),
-		CFrame = CFrame.lookAt(
-			Vector3.new(0, bridges.Raise, 0) + inner + delta / 2,
-			Vector3.new(0, bridges.Raise, 0) + outer
-		),
+		CFrame = CFrame.lookAt(inner + delta / 2, outer),
 		Color = bridges.Color,
 		Material = bridges.Material,
 	}, parent)

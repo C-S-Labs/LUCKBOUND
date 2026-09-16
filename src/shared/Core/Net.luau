@@ -27,6 +27,11 @@ local REMOTES = {
 	"Expedition_Started", -- S->C, ExpeditionPayload
 	"Expedition_Ended", -- S->C, ExpeditionEndPayload
 	"Expedition_TimerSync", -- S->C, { RemainingSeconds, ServerNow }
+	-- Developer tooling. These two always EXIST but are inert unless
+	-- GameConfig.Debug.AllowCommands is true -- DebugSystem does not connect a
+	-- handler otherwise, so an unguarded remote is not left listening.
+	"Debug_Command", -- C->S, { Name, Args }; permission-checked server-side
+	"Debug_Reply", -- S->C, { Ok, Text }
 }
 
 local Net = {}
