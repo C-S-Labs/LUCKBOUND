@@ -31,9 +31,18 @@ which makes that the strongest possible signal the core premise works.
 
 **436 instances** is the current mobile-budget baseline for the hub.
 
+### Modular map system
+
+Added 2026-09-16. `assets/` holds Blender sources; `AssetManifest` maps logical
+names to Roblox asset ids; `Content/Chunks/` holds authored pieces; `ChunkCore`
+assembles them into a seeded, collision-free, deterministic layout.
+
+All 8 Verdant Valley pieces are `PLACEHOLDER` — **layouts assemble and validate
+before any mesh exists.** The Roblox-side loader is Phase 2.
+
 ### Test suite
 
-**167 tests, all passing.** Headless — no Roblox required.
+**196 tests, all passing.** Headless — no Roblox required.
 
 ```bash
 ./tests/run.sh
@@ -49,8 +58,8 @@ scan (build spec P1-12).
 ```
 src/shared/Core/     Types, Constants, GameConfig, Net, UITheme, Result,
                      FateCore, ProgressionCore, ProfileSchema, EventCore
-src/shared/Util/     WeightedRandom, Schema, PortalRig
-src/shared/Content/  Worlds/ (5), Hub/Crossroads
+src/shared/Util/     WeightedRandom, Schema, PortalRig, ChunkCore
+src/shared/Content/  Worlds/ (5), Hub/Crossroads, Chunks/, AssetManifest
 src/server/          init.server + Systems/ (Save, Progression, Fate, Event, HubBuilder)
 src/client/          init.client + Controllers/ (State, Proximity, HubEffects)
                                  + UI/ (FateRoll, GlobalAnnouncements)
@@ -185,7 +194,9 @@ Studio → open `LUCKBOUND_dev` → Rojo panel **Connect** → **Accept** → **
 | `BLUEPRINT_RECONCILIATION.md` | How the Biome Blueprint merged; open sign-offs |
 | `ART_DIRECTION.md` | How to describe the look so it becomes code |
 | `TOOLCHAIN_ACCESS.md` | Studio MCP, Rojo, Blender, assets, setup |
-| `ADDENDUM_ASSET_PIPELINE.md` | Future asset/procgen architecture — **out of scope** |
+| `MODULAR_MAPS.md` | The chunk system: how biome maps assemble from pieces |
+| `../assets/README.md` | Blender → Roblox asset workflow |
+| `ADDENDUM_ASSET_PIPELINE.md` | Future asset/procgen architecture — target design |
 | `LUCKBOUND_Master_Spec_v0.2.pdf` | Master design spec, updated with build reality |
 | `../LUCKBOUND_...v0.1 (1).pdf` | Original vision. **Authoritative on intent.** |
 

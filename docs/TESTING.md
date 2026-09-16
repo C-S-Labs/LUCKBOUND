@@ -7,7 +7,7 @@ Studio pass for what only a running game can tell you.
 
 ## 1. Automated tests
 
-**167 tests. No Roblox required.** They run against the real `src/` modules,
+**196 tests. No Roblox required.** They run against the real `src/` modules,
 not copies.
 
 ```bash
@@ -19,7 +19,7 @@ Expected tail:
 
 ```
 ============================================================
-167 passed, 0 failed, 167 total
+196 passed, 0 failed, 196 total
 ```
 
 CI runs them on every push, plus a syntax check and the forbidden-module-name
@@ -40,6 +40,7 @@ scan (`*_Final`, `*_NEW`, `*_FIXED`, …) from build spec P1-12.
 | PortalRig & rarity | 22 | Rig spec, 2.5 s spin-up, rarity-vs-biome colour contract |
 | Biome lighting | 11 | Per-world Brightness/Fog per Blueprint §3.3/§4.3/§5.3 |
 | Constants | 12 | Frozen, unique orders, sane reveal durations |
+| **Map assembly** | 29 | **Does a map actually build from the chunk pieces?** |
 
 ### The three that matter most
 

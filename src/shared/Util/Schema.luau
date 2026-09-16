@@ -213,8 +213,98 @@ function Schema.validateHub(hub: any): (boolean, { string })
 	return #errors == 0, errors
 end
 
+--- Validates the chunk library and cross-checks every AssetKey against the
+--- manifest. A chunk naming a missing asset is the same class of bug as an
+--- onboarding sequence naming a missing world -- catch it at boot.
+function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boolean, { string })
+	local errors = {}
+	local VALID_ROLES =
+		{ ENTRY = true, PATH = true, COMBAT = true, SIDE = true, BOSS = true }
+	local QUARTER = { [0] = true, [90] = true, [180] = true, [270] = true }
+
+	local perWorld: { [string]: { [string]: number } } = {}
+
+	for key, chunk in chunks do
+		local label = `Chunk '{key}'`
+
+		if chunk.Id ~= key then
+			table.insert(errors, `{label}: Id is '{tostring(chunk.Id)}' -- must match its registry key`)
+		end
+		if not VALID_ROLES[chunk.Role] then
+			table.insert(errors, `{label}: unknown Role '{tostring(chunk.Role)}'`)
+		end
+		if type(chunk.WorldId) ~= "string" then
+			table.insert(errors, `{label}: missing WorldId`)
+		end
+		if type(chunk.Weight) ~= "number" or chunk.Weight <= 0 then
+			table.insert(errors, `{label}: Weight must be positive`)
+		end
+		for _, dim in { "SizeX", "SizeY", "SizeZ" } do
+			if type(chunk[dim]) ~= "number" or chunk[dim] <= 0 then
+				table.insert(errors, `{label}: {dim} must be positive`)
+			end
+		end
+
+		if not manifest.exists(chunk.AssetKey) then
+			table.insert(
+				errors,
+				`{label}: AssetKey '{tostring(chunk.AssetKey)}' is not in the asset manifest`
+			)
+		end
+
+		if type(chunk.Sockets) ~= "table" or #chunk.Sockets == 0 then
+			table.insert(errors, `{label}: has no sockets, so nothing can connect to it`)
+		else
+			local seen = {}
+			for _, socket in chunk.Sockets do
+				if seen[socket.Id] then
+					table.insert(errors, `{label}: duplicate socket id '{socket.Id}'`)
+				end
+				seen[socket.Id] = true
+				if not QUARTER[socket.Facing] then
+					table.insert(
+						errors,
+						`{label}: socket '{socket.Id}' Facing must be 0, 90, 180 or 270 (got {tostring(socket.Facing)})`
+					)
+				end
+			end
+
+			-- Anything on the critical path needs a way in AND a way out.
+			if (chunk.Role == "PATH" or chunk.Role == "COMBAT") and #chunk.Sockets < 2 then
+				table.insert(errors, `{label}: {chunk.Role} chunks need at least 2 sockets, or the path dead-ends`)
+			end
+		end
+
+		if type(chunk.WorldId) == "string" then
+			perWorld[chunk.WorldId] = perWorld[chunk.WorldId] or {}
+			local counts = perWorld[chunk.WorldId]
+			counts[chunk.Role] = (counts[chunk.Role] or 0) + 1
+		end
+	end
+
+	-- A world with pieces must have a complete kit, or assembly always fails.
+	for worldId, counts in perWorld do
+		for _, role in { "ENTRY", "BOSS" } do
+			if (counts[role] or 0) == 0 then
+				table.insert(errors, `world '{worldId}' has chunks but no {role} chunk`)
+			end
+		end
+		if (counts.PATH or 0) + (counts.COMBAT or 0) == 0 then
+			table.insert(errors, `world '{worldId}' has no PATH or COMBAT chunks`)
+		end
+	end
+
+	return #errors == 0, errors
+end
+
 --- Runs every check. Raises on failure -- called first in bootstrap.
-function Schema.validateAll(worlds: { [string]: any }, config: any, hub: any?): ()
+function Schema.validateAll(
+	worlds: { [string]: any },
+	config: any,
+	hub: any?,
+	chunks: { [string]: any }?,
+	manifest: any?
+): ()
 	local allErrors = {}
 
 	local _, worldErrors = Schema.validateWorlds(worlds)
@@ -230,6 +320,13 @@ function Schema.validateAll(worlds: { [string]: any }, config: any, hub: any?): 
 	if hub ~= nil then
 		local _, hubErrors = Schema.validateHub(hub)
 		for _, e in hubErrors do
+			table.insert(allErrors, e)
+		end
+	end
+
+	if chunks ~= nil and manifest ~= nil then
+		local _, chunkErrors = Schema.validateChunks(chunks, manifest)
+		for _, e in chunkErrors do
 			table.insert(allErrors, e)
 		end
 	end
