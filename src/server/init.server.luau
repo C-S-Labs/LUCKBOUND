@@ -10,6 +10,8 @@ local GameConfig = require(Root.Core.GameConfig)
 local Net = require(Root.Core.Net)
 local Schema = require(Root.Util.Schema)
 local Worlds = require(Root.Content.Worlds)
+local AssetManifest = require(Root.Content.AssetManifest)
+local Chunks = require(Root.Content.Chunks)
 local Crossroads = require(Root.Content.Hub.Crossroads)
 
 local Systems = script.Systems
@@ -30,7 +32,14 @@ end
 
 -- 1. Fail fast on malformed content, before any player can arrive.
 step("validating content")
-Schema.validateAll(Worlds, GameConfig, Crossroads)
+Schema.validateAll(Worlds, GameConfig, Crossroads, Chunks, AssetManifest)
+
+do
+	local uploaded, placeholder = AssetManifest.summary()
+	print(
+		`[LUCKBOUND] assets: {uploaded} uploaded, {placeholder} placeholder (placeholders render as primitives)`
+	)
+end
 
 -- 2. Remotes must exist before any system connects to them.
 step("building remotes")

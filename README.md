@@ -20,6 +20,8 @@ Next up: Phase 2 — expedition entry, combat, loot, Discovery Book.
 | [`docs/PROTOTYPE_BUILD_SPEC.md`](docs/PROTOTYPE_BUILD_SPEC.md) | **Canonical.** Architecture, data schemas, RemoteEvent contract, task list |
 | [`docs/TESTING.md`](docs/TESTING.md) | Running the 167 tests, and the Studio manual pass |
 | [`docs/BLUEPRINT_RECONCILIATION.md`](docs/BLUEPRINT_RECONCILIATION.md) | How the Biome Blueprint merged; 4 items needing sign-off |
+| [`docs/MODULAR_MAPS.md`](docs/MODULAR_MAPS.md) | The chunk system: how biome maps assemble from authored pieces |
+| [`assets/README.md`](assets/README.md) | Blender → Roblox asset workflow |
 | [`docs/ART_DIRECTION.md`](docs/ART_DIRECTION.md) | How to describe the look so it becomes code |
 | [`docs/TOOLCHAIN_ACCESS.md`](docs/TOOLCHAIN_ACCESS.md) | Rojo, Rokit, Studio MCP, Blender, assets |
 | [`docs/ADDENDUM_ASSET_PIPELINE.md`](docs/ADDENDUM_ASSET_PIPELINE.md) | Future asset/procgen architecture — **out of scope for now** |
@@ -30,7 +32,7 @@ Next up: Phase 2 — expedition entry, combat, loot, Discovery Book.
 ## Quick start
 
 ```bash
-./tests/run.sh         # 83 headless tests, no Studio needed
+./tests/run.sh         # 196 headless tests, no Studio needed
 
 rokit install          # rojo 7.6.0, stylua, selene
 rojo plugin install    # Studio plugin
@@ -62,6 +64,7 @@ See build spec §3.3.
 - [x] Client — `FateRoll`, `GlobalAnnouncements`, `State`/`Proximity`/`HubEffects` controllers
 - [x] The Crossroads: 5 zones, 436 instances, generated from data per the Biome Blueprint
 - [x] 15-roll onboarding arc peaking on Epic; true RNG from roll 16
-- [x] 5 worlds; 167-test headless suite + CI
+- [x] Modular map system — asset manifest, chunk kit, seeded assembler
+- [x] 5 worlds; 196-test headless suite + CI
 - [ ] **Sky Citadel biome** — blocks Phase 2
 - [ ] Phase 2 — expedition entry, combat, loot, Discovery Book

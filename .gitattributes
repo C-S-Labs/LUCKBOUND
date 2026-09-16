@@ -1,0 +1,13 @@
+# Blender and mesh exchange formats are binary: never diff or auto-merge them.
+*.blend    binary
+*.blend1   binary
+*.fbx      binary
+*.obj      binary
+*.mtl      binary
+*.rbxm     binary
+*.rbxl     binary
+
+# Roblox XML formats are text but should not be merged automatically --
+# a conflicted .rbxmx is unopenable.
+*.rbxmx    -merge
+*.rbxlx    -merge

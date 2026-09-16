@@ -20,6 +20,8 @@ PURE_MODULES = [
     ("ProgressionCore",  "src/shared/Core/ProgressionCore.luau"),
     ("ProfileSchema",    "src/shared/Core/ProfileSchema.luau"),
     ("EventCore",        "src/shared/Core/EventCore.luau"),
+    ("AssetManifest",    "src/shared/Content/AssetManifest.luau"),
+    ("ChunkCore",        "src/shared/Util/ChunkCore.luau"),
     ("Schema",           "src/shared/Util/Schema.luau"),
     ("UITheme",          "src/shared/Core/UITheme.luau"),
     ("Crossroads",       "src/shared/Content/Hub/Crossroads.luau"),
@@ -100,6 +102,15 @@ def main():
         world_defs.append(f'\tdo\n\t\tlocal w = (function()\n{src}\n\t\tend)()\n\t\tassert(registry[w.Id] == nil, "duplicate world Id: " .. w.Id)\n\t\tregistry[w.Id] = w\n\tend')
     out.append('\n-- === Worlds registry (rebuilt for headless) ===\n__define("Worlds", function()\n\tlocal registry = {}\n'
                + "\n".join(world_defs) + '\n\treturn registry\nend)\n')
+
+    chunk_files = sorted((ROOT / "src/shared/Content/Chunks").glob("*.luau"))
+    kits = []
+    for cf in chunk_files:
+        if cf.name == "init.luau":
+            continue
+        kits.append(f'\tdo\n\t\tlocal kit = (function()\n{transform(cf.read_text())}\n\t\tend)()\n\t\tfor _, c in kit do\n\t\t\tassert(registry[c.Id] == nil, "duplicate chunk Id: " .. c.Id)\n\t\t\tregistry[c.Id] = c\n\t\tend\n\tend')
+    out.append('\n-- === Chunk registry (rebuilt for headless) ===\n__define("Chunks", function()\n\tlocal registry = {}\n'
+               + "\n".join(kits) + '\n\treturn registry\nend)\n')
 
     out.append("\n-- === test cases ===\n")
     out.append((ROOT / "tests/cases.luau").read_text())

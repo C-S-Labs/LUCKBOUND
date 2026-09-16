@@ -11,6 +11,9 @@ local Schema = __require("Schema")
 local Worlds = __require("Worlds")
 local Crossroads = __require("Crossroads")
 local UITheme = __require("UITheme")
+local AssetManifest = __require("AssetManifest")
+local ChunkCore = __require("ChunkCore")
+local Chunks = __require("Chunks")
 
 -- === tiny harness ===================================================
 local passed, failed = 0, 0
@@ -745,6 +748,194 @@ do
 	check("Constants are frozen against accidental mutation", frozen)
 	check("GameConfig is frozen against accidental mutation",
 		(throws(function() GameConfig.CurrentPhase = 3 end)))
+end
+
+-- === 12. Modular map chunks =========================================
+group("Asset manifest & modular map assembly")
+
+do
+	-- Manifest ------------------------------------------------------
+	local ok, errs = Schema.validateChunks(Chunks, AssetManifest)
+	check("the real chunk library validates", ok, table.concat(errs, "; "))
+
+	local uploaded, placeholder = AssetManifest.summary()
+	check("manifest reports its status", uploaded + placeholder > 0,
+		string.format("%d uploaded, %d placeholder", uploaded, placeholder))
+	check("a placeholder resolves to nil so the loader falls back to primitives",
+		AssetManifest.assetId("VV_CHUNK_ENTRY") == nil)
+	check("an unknown key does not exist", not AssetManifest.exists("NOT_A_REAL_ASSET"))
+
+	-- Every chunk must name an asset that exists, or the kit is broken.
+	local everyAssetKnown = true
+	local missing
+	for id, c in Chunks do
+		if not AssetManifest.exists(c.AssetKey) then
+			everyAssetKnown = false
+			missing = id .. " -> " .. tostring(c.AssetKey)
+		end
+	end
+	check("every chunk's AssetKey is in the manifest", everyAssetKnown, missing)
+
+	local badAsset = {
+		X = { Id = "X", WorldId = "W", Role = "PATH", AssetKey = "NOPE",
+			SizeX = 1, SizeY = 1, SizeZ = 1, Weight = 1,
+			Sockets = { { Id = "a", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 },
+				{ Id = "b", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = 1, Facing = 180 } } },
+	}
+	local okb, errsb = Schema.validateChunks(badAsset, AssetManifest)
+	check("rejects a chunk naming an unknown asset", not okb, table.concat(errsb, "; "))
+
+	local deadEnd = {
+		D = { Id = "D", WorldId = "W", Role = "PATH", AssetKey = "VV_CHUNK_ENTRY",
+			SizeX = 1, SizeY = 1, SizeZ = 1, Weight = 1,
+			Sockets = { { Id = "a", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 } } },
+	}
+	local okd, errsd = Schema.validateChunks(deadEnd, AssetManifest)
+	check("rejects a one-socket PATH chunk as a dead end", not okd, table.concat(errsd, "; "))
+
+	local badFacing = {
+		F = { Id = "F", WorldId = "W", Role = "ENTRY", AssetKey = "VV_CHUNK_ENTRY",
+			SizeX = 1, SizeY = 1, SizeZ = 1, Weight = 1,
+			Sockets = { { Id = "a", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 45 } } },
+	}
+	local okf, errsf = Schema.validateChunks(badFacing, AssetManifest)
+	check("rejects an off-grid socket facing", not okf, table.concat(errsf, "; "))
+
+	-- Assembly ------------------------------------------------------
+	local lib = ChunkCore.libraryFor(Chunks, "VERDANT_VALLEY")
+	check("Verdant Valley has an ENTRY chunk", lib.ENTRY and #lib.ENTRY == 1)
+	check("Verdant Valley has a BOSS chunk", lib.BOSS and #lib.BOSS == 1)
+	check("Verdant Valley has a SIDE pocket (§6 checklist)", lib.SIDE and #lib.SIDE >= 1)
+	check("Verdant Valley has connective pieces",
+		(#(lib.PATH or {}) + #(lib.COMBAT or {})) >= 4,
+		string.format("%d", #(lib.PATH or {}) + #(lib.COMBAT or {})))
+
+	-- THE CORE QUESTION: can it actually build a map out of the pieces?
+	local built, failed = 0, {}
+	local roleSeen = {}
+	for trial = 1, 300 do
+		local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+			{ WorldId = "VERDANT_VALLEY", PathLength = 5 },
+			function(a) return lcg(trial * 104729 + a * 7919) end, 5)
+		if okA then
+			built += 1
+			for _, c in layout.Chunks do roleSeen[c.Role] = true end
+			local okV, errV = ChunkCore.validateLayout(layout, Chunks)
+			if not okV then
+				table.insert(failed, "trial " .. trial .. ": " .. table.concat(errV, ", "))
+			end
+		end
+	end
+	check("assembles a map from the piece library on nearly every seed", built >= 285,
+		string.format("%d/300 seeds produced a layout within 5 attempts", built))
+	check("every assembled layout is collision-free with one entry and one boss",
+		#failed == 0, failed[1])
+	check("layouts contain entry, connective pieces and a boss arena",
+		roleSeen.ENTRY and roleSeen.BOSS and (roleSeen.PATH or roleSeen.COMBAT))
+
+	-- The arena approach must be the Grove every time -- it is the only WIDE
+	-- provider, and WIDE is what the arena accepts. Blueprint §3.2.
+	local approachAlwaysGrove = true
+	for trial = 1, 60 do
+		local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+			{ WorldId = "VERDANT_VALLEY", PathLength = 4 },
+			function(a) return lcg(trial * 611953 + a) end, 5)
+		if okA then
+			local penultimate = layout.Chunks[#layout.Chunks - 1]
+			if penultimate.ChunkId ~= "VV_GROVE" then approachAlwaysGrove = false end
+		end
+	end
+	check("the Grove always gates the boss arena (emergent from socket Kinds)",
+		approachAlwaysGrove)
+
+	-- A reserved piece must never be spent mid-path.
+	local groveOnlyOnce = true
+	for trial = 1, 60 do
+		local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+			{ WorldId = "VERDANT_VALLEY", PathLength = 6 },
+			function(a) return lcg(trial * 15485863 + a) end, 5)
+		if okA then
+			local n = 0
+			for _, c in layout.Chunks do
+				if c.ChunkId == "VV_GROVE" then n += 1 end
+			end
+			if n ~= 1 then groveOnlyOnce = false end
+		end
+	end
+	check("MaxPerLayout is respected", groveOnlyOnce)
+
+	-- Determinism: the same seed must always produce the same map, so an
+	-- expedition can be reproduced for debugging or exploit investigation.
+	local okA, layoutA = ChunkCore.assemble(Chunks,
+		{ WorldId = "VERDANT_VALLEY", PathLength = 2 }, lcg(2026))
+	local okB, layoutB = ChunkCore.assemble(Chunks,
+		{ WorldId = "VERDANT_VALLEY", PathLength = 2 }, lcg(2026))
+	check("assembly is deterministic for a given seed", okA and okB)
+	if okA and okB then
+		local same = #layoutA.Chunks == #layoutB.Chunks
+		for i = 1, #layoutA.Chunks do
+			local a, b = layoutA.Chunks[i], layoutB.Chunks[i]
+			if a.ChunkId ~= b.ChunkId or a.X ~= b.X or a.Z ~= b.Z or a.Yaw ~= b.Yaw then
+				same = false
+			end
+		end
+		check("identical seeds produce identical maps", same)
+	end
+
+	-- Different seeds should not all produce the same map.
+	local shapes = {}
+	for trial = 1, 60 do
+		local okS, l = ChunkCore.assembleWithRetry(Chunks,
+			{ WorldId = "VERDANT_VALLEY", PathLength = 4 },
+			function(a) return lcg(trial * 7919 + a) end, 5)
+		if okS then
+			local ids = {}
+			for _, c in l.Chunks do table.insert(ids, c.ChunkId) end
+			shapes[table.concat(ids, ">")] = true
+		end
+	end
+	local distinct = 0
+	for _ in shapes do distinct += 1 end
+	check("different seeds produce different maps", distinct > 1,
+		string.format("%d distinct layouts", distinct))
+
+	-- Socket Kind is what stops a footpath opening onto the boss arena.
+	local bossChunk = Chunks.VV_BOSS_CLEARING
+	check("the boss arena only accepts a WIDE approach",
+		bossChunk.Sockets[1].Kind == "WIDE", bossChunk.Sockets[1].Kind)
+	check("the Grove is the only piece offering a WIDE exit",
+		Chunks.VV_GROVE.Sockets[2].Kind == "WIDE")
+
+	-- Geometry helpers ----------------------------------------------
+	local placed = { X = 10, Y = 0, Z = 20, Yaw = 90 }
+	local sock = { Id = "s", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = -48, Facing = 0 }
+	local ws = ChunkCore.worldSocket(placed, nil, sock)
+	check("a quarter turn rotates a socket offset correctly",
+		ws.X == 58 and ws.Z == 20, string.format("(%d, %d)", ws.X, ws.Z))
+	check("a quarter turn rotates a socket facing correctly", ws.Facing == 90, tostring(ws.Facing))
+
+	local a = { X = 0, Y = 0, Z = 0, Yaw = 0 }
+	local b = { X = 200, Y = 0, Z = 0, Yaw = 0 }
+	local box = { SizeX = 96, SizeY = 10, SizeZ = 96 }
+	check("distant chunks do not overlap", not ChunkCore.overlaps(a, box, b, box))
+	check("stacked chunks do overlap", ChunkCore.overlaps(a, box, a, box))
+
+	-- A kit missing a boss must fail cleanly, not error.
+	local partial = { E = Chunks.VV_ENTRY }
+	local okP, errP = ChunkCore.assemble(partial,
+		{ WorldId = "VERDANT_VALLEY", PathLength = 2 }, lcg(1))
+	check("an incomplete kit fails cleanly with a reason", not okP and type(errP) == "string", tostring(errP))
+
+	local okU, errU = ChunkCore.assemble(Chunks,
+		{ WorldId = "NO_SUCH_WORLD", PathLength = 2 }, lcg(1))
+	check("an unknown world fails cleanly", not okU and type(errU) == "string", tostring(errU))
+
+	-- Retry reports how many attempts it needed, so a kit that is chronically
+	-- hard to assemble is visible rather than silently slow.
+	local okR, _, used = ChunkCore.assembleWithRetry(Chunks,
+		{ WorldId = "VERDANT_VALLEY", PathLength = 3 },
+		function(a) return lcg(99 + a) end, 5)
+	check("retry reports its attempt count", okR and used >= 1 and used <= 5, tostring(used))
 end
 
 -- === summary ========================================================

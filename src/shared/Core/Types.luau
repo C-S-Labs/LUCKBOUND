@@ -129,6 +129,63 @@ export type ModifierDefinition = {
 	FateMultiplier: number,
 }
 
+-- Modular map chunks --------------------------------------------------------
+-- Addendum §A4: procedural COMPOSITION, not procedural terrain. Variety comes
+-- from arranging a bounded library of authored, pre-validated pieces rather
+-- than generating unbounded landscape.
+
+export type ChunkRole =
+	"ENTRY" -- exactly one per layout; where the player arrives
+	| "PATH" -- connective tissue
+	| "COMBAT" -- encounter space
+	| "SIDE" -- optional branch, off the critical path
+	| "BOSS" -- exactly one per layout; the destination
+
+--- A connection point on a chunk. Two sockets may join only if their Kind
+--- matches -- that is what stops a 4-stud footpath opening onto a cliff face.
+--- Offset and Facing are LOCAL to the chunk, before it is rotated into place.
+export type ChunkSocket = {
+	Id: string,
+	Kind: string, -- "PATH" | "WIDE" | "WATER" | ...
+	OffsetX: number,
+	OffsetY: number,
+	OffsetZ: number,
+	Facing: number, -- degrees: 0 = -Z (north), 90 = +X, 180 = +Z, 270 = -X
+}
+
+export type ChunkDefinition = {
+	Id: string,
+	WorldId: string,
+	Role: ChunkRole,
+	AssetKey: string, -- key into Content/AssetManifest
+	SizeX: number, -- axis-aligned bounds, used for overlap rejection
+	SizeY: number,
+	SizeZ: number,
+	Sockets: { ChunkSocket },
+	Weight: number, -- selection weight within its Role
+	MaxPerLayout: number?, -- nil = unlimited
+	EnemyTags: { string }?, -- which spawn pools this chunk accepts
+	Tags: { string }?,
+}
+
+--- One placed chunk in an assembled layout. Plain numbers, no Roblox types,
+--- so assembly stays pure and unit-testable; the loader converts to CFrame.
+export type PlacedChunk = {
+	ChunkId: string,
+	Role: ChunkRole,
+	X: number,
+	Y: number,
+	Z: number,
+	Yaw: number, -- 0 | 90 | 180 | 270
+	Index: number, -- order along the critical path; 0 for side branches
+}
+
+export type Layout = {
+	WorldId: string,
+	Seed: number,
+	Chunks: { PlacedChunk },
+}
+
 -- Player data ---------------------------------------------------------------
 
 export type RollHistoryEntry = {
