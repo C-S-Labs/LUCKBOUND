@@ -305,6 +305,8 @@ survive a rescale and a literal does not.
 | Chunk collision is XZ-only | Medium | Blocks any kit that climbs. `MODULAR_MAPS.md` |
 | No pathfinding validation | Medium | Non-overlapping ≠ walkable between. Addendum §A4 step 4 |
 | All 16 chunks are `PLACEHOLDER` | Expected | Blockout is deliberate; upload is a per-piece change |
+| **First authored asset delivered, not yet wired** | **Open** | `assets/rbxm/worlds/ethereal_scape/` — 699 MeshParts, all with real uploaded mesh ids. Needs anchoring, a PrimaryPart, a scale confirmation, and a decision on one-scene-vs-eight-chunks. See the README beside it. |
+| **Ethereal Scape: one scene or eight chunks?** | **Design** | The kit was built for eight generator-fed pieces; the delivery is one pre-arranged scene. Both work. Picking the first retires the socket grammar for this world. |
 | Hub is very dark | Cosmetic | `Crossroads.Theme` — one value |
 | UI needs resize/layout pass | Cosmetic | Owner-flagged |
 | Placeholder text | Cosmetic | Flavour lines, labels, result card |

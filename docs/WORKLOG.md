@@ -33,6 +33,79 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 8 — 2026-09-16 — First authored asset lands
+
+**Branch:** `claude/zen-volta-cuhfyh` (PR #13) · **Tests:** 293 passing · no code change
+
+### Done
+
+- **`assets/rbxm/worlds/ethereal_scape/EtherealScape_Environment.rbxmx`** — the
+  Ethereal Scape Blender scene, imported to Studio and saved back as XML. The
+  first authored art in the repo.
+- A README beside it recording exactly what is in the file and what has to
+  change before it can be used.
+
+### What the file actually is
+
+**699 MeshParts in one flat Model, every one carrying a real
+`rbxassetid://` MeshId.** The geometry is uploaded and on Roblox's CDN; Blender
+names survived (`Island_00_Meadow`, `Temple_Column`, `Waystone_03`,
+`Path_Bridge`, `R6_Torso`). The expensive half of the pipeline worked on the
+first attempt, and `.rbxmx` meant all of this could be read and verified from
+the repo rather than taken on trust — which is the whole argument for asking
+for XML.
+
+### Four things to fix, none of them a repo problem
+
+1. **All 699 parts are `Anchored = false`.** The environment falls the moment
+   the game runs. One click in Studio on the Model.
+2. **Flat Model, not eight islands.** The chunk kit expects 8 separate pieces.
+   This is one pre-arranged scene. Both are legitimate products — see the
+   decision below.
+3. **No `PrimaryPart`**, so there is no defined point to position it from.
+4. **The R6 proxy reads 59.6 studs tall where a character is 5.** Roughly 12x.
+   Either the scene is oversized or the proxy is — the file cannot say which.
+
+### The scale question, and why the reference earned its place
+
+The R6 rig in `Scale_Reference` did exactly the job it was put there for: it
+caught a 12x discrepancy on the first delivery, before anyone built a kit
+around the wrong numbers.
+
+The evidence points at **the proxy being wrong, not the scene**: measured
+island footprints are 1092 x 861 and 1229 x 909 studs, which sit comfortably
+inside the chunk kit's 512-1024 range. A 12x reduction would make them ~90
+studs — smaller than a hub walkway. **Confirm with the modeller before
+rescaling anything**; getting it backwards means re-uploading 699 meshes.
+
+### Decision needed: one scene, or eight chunks?
+
+Not a bug — a fork in the road, and it decides whether Ethereal Scape's chunk
+kit survives:
+
+- **One scene** — a hand-authored map. Needs `ES_ENVIRONMENT_FULL` in the
+  manifest and a whole-scene loader. The generator stops being used for this
+  world, and the socket grammar it proved goes unused here.
+- **Eight chunks** — group by island in Studio, save eight `.rbxmx` files, feed
+  the existing generator. Keeps seeded variety and the Waystone-gate property.
+
+The kit was built for the second. The file as delivered is the first.
+
+### Stopped at
+
+File placed and documented. No code touched, and deliberately so: the two
+loader bugs from Session 7 (`meshOrNil`, the `Crossroads` guard) are still
+open, and both must land before any of this can be wired in.
+
+### Next
+
+1. Confirm the scale question with the modeller.
+2. Decide: one scene or eight chunks.
+3. Fix `meshOrNil` and the `Crossroads` guard (Session 7's list).
+4. Wire `assets/rbxm` into `default.project.json` once the shape is settled.
+
+---
+
 ## Session 7 — 2026-09-16 — Modeller handoff, and the art seam
 
 **Branch:** `claude/zen-volta-cuhfyh` (PR #13) · **Tests:** 293 passing · no code change
