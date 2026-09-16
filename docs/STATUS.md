@@ -1,6 +1,9 @@
 # LUCKBOUND — Project Status
 
-**Last updated:** 2026-09-15 · **Phase 1: COMPLETE and verified in Studio**
+**Last updated:** 2026-09-16 · **Phase 1: COMPLETE and verified in Studio**
+
+> **New conversation?** Read `WORKLOG.md`'s top entry first for where the last
+> session stopped, then this file. `CLAUDE.md` has the rules.
 
 Start here. This is the handoff document: what exists, what is decided, what is
 open, and where to pick up.
@@ -31,6 +34,31 @@ which makes that the strongest possible signal the core premise works.
 
 **436 instances** is the current mobile-budget baseline for the hub.
 
+### World scale — rescaled 2026-09-16
+
+The hub was 120 studs across: 24 character-heights, with a 5×5 Discovery
+Archive. It read as a room.
+
+| | Before | After |
+|---|---|---|
+| Hub playable Ø | 120 | **1200** |
+| Zone ring radius | 46 | **420** |
+| Zone platforms | 26–56 | **230–360** |
+| WalkSpeed | 16 (default) | **32** |
+| Visual extent | ~420 | **4000** |
+| Chunk grid | 48 | **256** |
+
+**Playable footprint and perceived size are separate numbers.** 4000 studs is
+not walkable — 43.8s to a zone even at double speed. 1200 at WalkSpeed 32 gives
+13.1s centre-to-centre, ~4.4s edge-to-edge, and scenery reaching 4000 makes the
+world read as vast anyway.
+
+Both halves are **enforced by test**: no zone may exceed
+`Scale.MaxTraversalSeconds` (20s), every zone must be ≥40 characters across, and
+expedition walking must stay under 35% of expedition duration.
+
+⏳ **Not yet seen in Studio.** Verified by test; nobody has walked it.
+
 ### Modular map system
 
 Added 2026-09-16. `assets/` holds Blender sources; `AssetManifest` maps logical
@@ -42,7 +70,7 @@ before any mesh exists.** The Roblox-side loader is Phase 2.
 
 ### Test suite
 
-**196 tests, all passing.** Headless — no Roblox required.
+**208 tests, all passing.** Headless — no Roblox required.
 
 ```bash
 ./tests/run.sh
@@ -132,6 +160,7 @@ colour for `UNCOMMON`, and formal confirmation of the theme-vs-rarity rule.
 |---|---|---|
 | **Sky Citadel has no biome** | **Blocks Phase 2** | Rolling it would send players nowhere. Needs a blueprint section, enemies, boss, loot. |
 | Hub is very dark | Cosmetic | `Crossroads.Theme` — one value |
+| New scale unplayed | Unknown | Verified by test only; needs a Studio walk |
 | UI needs resize/layout pass | Cosmetic | Owner-flagged |
 | Placeholder text | Cosmetic | Flavour lines, labels, result card |
 | Octagonal plinth is a cylinder | Cosmetic | First thing an authored mesh replaces |
@@ -146,12 +175,14 @@ placeholder text, and other tuning.**
 
 Cheapest-to-most-expensive:
 
-1. **Hub brightness** — one value in `Crossroads.Theme`. Minutes.
-2. **Placeholder text** — flavour lines, result card copy, zone labels.
-3. **UI overhaul** — `FateRoll` and `GlobalAnnouncements` resize/layout, mobile
+1. **Playtest the new scale.** Does 1200 studs feel right, or still small? Is
+   WalkSpeed 32 comfortable? Both are one-line changes in `GameConfig`.
+2. **Hub brightness** — one value in `Crossroads.Theme`. Minutes.
+3. **Placeholder text** — flavour lines, result card copy, zone labels.
+4. **UI overhaul** — `FateRoll` and `GlobalAnnouncements` resize/layout, mobile
    scaling. `UITheme` already centralises fonts and colours.
-4. **Sky Citadel biome** — required before Phase 2.
-5. **Phase 2** — expedition entry, combat, loot, Discovery Book. Build spec §7
+5. **Sky Citadel biome** — required before Phase 2.
+6. **Phase 2** — expedition entry, combat, loot, Discovery Book. Build spec §7
    lists what Phase 1 deliberately excludes.
 
 ### Working agreement that emerged this session
@@ -194,6 +225,7 @@ Studio → open `LUCKBOUND_dev` → Rojo panel **Connect** → **Accept** → **
 | `BLUEPRINT_RECONCILIATION.md` | How the Biome Blueprint merged; open sign-offs |
 | `ART_DIRECTION.md` | How to describe the look so it becomes code |
 | `TOOLCHAIN_ACCESS.md` | Studio MCP, Rojo, Blender, assets, setup |
+| `WORKLOG.md` | **Session history and handoff points — read the top entry** |
 | `MODULAR_MAPS.md` | The chunk system: how biome maps assemble from pieces |
 | `../assets/README.md` | Blender → Roblox asset workflow |
 | `ADDENDUM_ASSET_PIPELINE.md` | Future asset/procgen architecture — target design |

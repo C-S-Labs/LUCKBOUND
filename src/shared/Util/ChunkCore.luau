@@ -335,6 +335,23 @@ function ChunkCore.assembleWithRetry(
 	return false, lastErr, attempts
 end
 
+--- Bounding footprint of a layout, and how long it takes to walk end to end.
+--- The relationship that matters: traverse time must stay a modest fraction of
+--- the expedition duration, or the expedition is a corridor simulator. Raise
+--- or lower PathLength to tune it.
+function ChunkCore.footprint(layout: any): (number, number)
+	local minX, maxX = math.huge, -math.huge
+	local minZ, maxZ = math.huge, -math.huge
+	for _, c in layout.Chunks do
+		minX, maxX = math.min(minX, c.X), math.max(maxX, c.X)
+		minZ, maxZ = math.min(minZ, c.Z), math.max(maxZ, c.Z)
+	end
+	if minX == math.huge then
+		return 0, 0
+	end
+	return maxX - minX, maxZ - minZ
+end
+
 --- Post-assembly check: no two chunks overlap. Assembly rejects collisions as
 --- it goes, so this is a belt-and-braces assertion for tests and for content
 --- authors adding new pieces.

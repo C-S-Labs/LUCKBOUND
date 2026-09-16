@@ -84,13 +84,13 @@ Treants gate the approach to the boss clearing"* — **without the generator
 hard-coding it.** It falls out of the socket rules. A real assembled layout:
 
 ```
-VV_ENTRY          (     0,     0)  [ENTRY]
-VV_STREAM         (     0,   -96)  [COMBAT]
-VV_PATH_STRAIGHT  (     0,  -192)  [PATH]
-VV_MEADOW         (     0,  -336)  [COMBAT]
-VV_PATH_STRAIGHT  (     0,  -480)  [PATH]
-VV_GROVE          (     0,  -600)  [COMBAT]   ← always the approach
-VV_BOSS_CLEARING  (     0,  -768)  [BOSS]
+VV_ENTRY          (     0,      0)  [ENTRY]
+VV_STREAM         (     0,   -512)  [COMBAT]
+VV_PATH_STRAIGHT  (     0,  -1024)  [PATH]
+VV_MEADOW         (     0,  -1792)  [COMBAT]
+VV_PATH_STRAIGHT  (     0,  -2560)  [PATH]
+VV_GROVE          (     0,  -3200)  [COMBAT]   ← always the approach
+VV_BOSS_CLEARING  (     0,  -4096)  [BOSS]
 ```
 
 **Design your socket Kinds deliberately.** They are the level-design grammar,
@@ -113,6 +113,15 @@ The result is plain numbers — `{ ChunkId, X, Y, Z, Yaw, Role, Index }` — wit
 no Roblox types, so a whole layout can be generated and checked in CI. The
 Phase 2 loader turns it into CFrames.
 
+### Expedition size
+
+That layout spans **4096 studs** end to end — about **128 seconds** of walking
+at WalkSpeed 32, roughly 18% of a 720-second expedition. The rest is combat and
+exploration.
+
+`PathLength` is the knob. A test asserts traverse stays under 35% of expedition
+duration, so an expedition can never quietly become a corridor simulator.
+
 **Retries are expected, not a smell.** A path can fold back and collide with
 itself; that is seed-dependent. Measured with 5 attempts:
 
@@ -132,8 +141,10 @@ what addendum §A4 asks for with per-expedition seeding.
 
 ## Authoring a kit — checklist
 
-1. **Pick a grid.** Verdant Valley uses 48 studs. Sockets must land on it or
-   pieces will not meet.
+1. **Pick a grid.** Verdant Valley uses **256 studs**. Sockets must land on it
+   or pieces will not meet. Size against the 5-stud character, not against a
+   floorplan: the smallest connective piece is 256×512, about 51×102
+   character-heights, so a corridor reads as a forest path and not a hallway.
 2. **Decide your Kinds first.** At minimum one connective Kind and one the
    arena accepts. The arena Kind is automatically reserved.
 3. **Two sockets minimum** on anything `PATH` or `COMBAT`, or the path

@@ -25,8 +25,10 @@ local Theme = {
 	ColorShiftTop = Color3.fromRGB(90, 70, 140),
 	ColorShiftBottom = Color3.fromRGB(30, 25, 50),
 	FogColor = Color3.fromRGB(30, 25, 50),
-	FogStart = 150,
-	FogEnd = 500,
+	-- Fog must reach past the distant islands or the world looks boxed in --
+	-- the blueprint's 150/500 was sized to a 120-stud hub.
+	FogStart = 700,
+	FogEnd = 4400,
 	Brightness = 2,
 	ExposureCompensation = 0,
 	ClockTime = 22,
@@ -50,7 +52,7 @@ local Crossroads = {
 	-- Lower plaza ring the raised walkways sit above. Blueprint §2.1.
 	Plaza = {
 		Diameter = Layout.HubDiameter,
-		Thickness = 4,
+		Thickness = 14,
 		Color = Theme.Plaza,
 		Material = Theme.PlazaMaterial,
 		MeshId = nil,
@@ -59,11 +61,11 @@ local Crossroads = {
 	-- Centre — Fate Engine. Blueprint §2.2.
 	FateEngine = {
 		Name = "FateEngine",
-		PlatformRadius = 24,
-		PlatformRaise = 3,
+		PlatformRadius = 140,
+		PlatformRaise = 10,
 		PlatformColor = Theme.Marble,
 		PlatformMaterial = Enum.Material.Marble,
-		RuneInlayCount = 12, -- radial groove pattern
+		RuneInlayCount = 16, -- radial groove pattern
 		RuneInlayColor = Color3.fromRGB(124, 245, 224),
 
 		PortalScale = GameConfig.Portal.FateEngineScale,
@@ -74,10 +76,10 @@ local Crossroads = {
 
 		CrystalShards = {
 			Count = 6,
-			OrbitRadius = 17,
-			MinHeight = 8,
-			MaxHeight = 21,
-			Size = 3.2,
+			OrbitRadius = 115,
+			MinHeight = 50,
+			MaxHeight = 140,
+			Size = 20,
 			Material = Enum.Material.Glass,
 			SpinSpeedMin = 0.2,
 			SpinSpeedMax = 0.7,
@@ -85,14 +87,14 @@ local Crossroads = {
 
 		SpotLight = {
 			Color = Theme.EngineSpot,
-			Brightness = 6,
-			Range = 70,
-			Angle = 70,
-			Height = 46,
+			Brightness = 8,
+			Range = 400,
+			Angle = 80,
+			Height = 300,
 		},
 
-		AnchorSize = Vector3.new(14, 1, 14),
-		AnchorHeight = 4,
+		AnchorSize = Vector3.new(90, 1, 90),
+		AnchorHeight = 12,
 		MeshId = nil, -- ← highest-value place to drop authored art
 	},
 
@@ -105,16 +107,16 @@ local Crossroads = {
 			Angle = 0,
 			Radius = Layout.ZoneRingRadius,
 			Kind = "AMPHITHEATRE",
-			PlatformSize = Vector3.new(56, 4, 44),
-			Height = 2,
+			PlatformSize = Vector3.new(360, 14, 280),
+			Height = 8,
 			Color = Theme.Marble,
 			Accent = Theme.MarbleTrim,
 			Pillars = 0,
 			PillarHeight = 0,
 			-- Blueprint §2.2: 5 initial obelisk slots, TUNABLE, grows over time.
 			ObeliskSlots = 5,
-			ObeliskHeight = 8,
-			TierCount = 3,
+			ObeliskHeight = 56,
+			TierCount = 5,
 			SpotColor = Color3.fromRGB(226, 236, 255), -- cool white, museum-lit
 			MeshId = nil,
 		},
@@ -124,16 +126,16 @@ local Crossroads = {
 			Angle = 90,
 			Radius = Layout.ZoneRingRadius,
 			Kind = "ROTUNDA",
-			PlatformSize = Vector3.new(26, 4, 26),
-			Height = 2,
+			PlatformSize = Vector3.new(230, 14, 230),
+			Height = 8,
 			Color = Color3.fromRGB(27, 75, 74), -- #1B4B4A deep teal
 			Accent = Color3.fromRGB(124, 245, 224), -- #7CF5E0 cosmic trim
 			Pillars = 8,
-			PillarHeight = 14,
-			InteriorDiameter = 20,
-			DomeSegments = 5,
-			ShelfRings = 3,
-			ShelvesPerRing = 6,
+			PillarHeight = 95,
+			InteriorDiameter = 170,
+			DomeSegments = 7,
+			ShelfRings = 4,
+			ShelvesPerRing = 10,
 			MeshId = nil,
 		},
 		{
@@ -142,12 +144,12 @@ local Crossroads = {
 			Angle = 180,
 			Radius = Layout.ZoneRingRadius,
 			Kind = "GATE",
-			PlatformSize = Vector3.new(44, 4, 36),
+			PlatformSize = Vector3.new(320, 14, 260),
 			Height = 0,
 			Color = Color3.fromRGB(48, 43, 64),
 			Accent = Color3.fromRGB(158, 158, 158),
 			Pillars = 6, -- torch pillars flanking the processional
-			PillarHeight = 16,
+			PillarHeight = 110,
 			PortalScale = GameConfig.Portal.ExpeditionGateScale,
 			MeshId = nil,
 		},
@@ -157,16 +159,16 @@ local Crossroads = {
 			Angle = 270,
 			Radius = Layout.ZoneRingRadius,
 			Kind = "YARD",
-			PlatformSize = Vector3.new(30, 4, 30), -- blueprint §2.2: 30x30
-			Height = 2,
+			PlatformSize = Vector3.new(260, 14, 260), -- blueprint §2.2: 30x30
+			Height = 8,
 			Color = Color3.fromRGB(107, 104, 98), -- #6B6862 neutral stone grey
 			Accent = Theme.TorchLight,
 			Pillars = 0,
 			PillarHeight = 0,
-			FenceHeight = 3,
+			FenceHeight = 14,
 			DummyCount = 3,
 			HasBossDummy = true,
-			TorchCount = 4,
+			TorchCount = 8,
 			MeshId = nil,
 		},
 		{
@@ -175,29 +177,32 @@ local Crossroads = {
 			Angle = 45,
 			Radius = 0, -- directly above centre; reached by the spiral ramp
 			Kind = "OBSERVATORY",
-			PlatformSize = Vector3.new(36, 3, 36),
-			Height = 40, -- blueprint §2.2: +40 studs Y
-			PlatformRadius = 18,
+			PlatformSize = Vector3.new(260, 10, 260),
+			Height = 140, -- blueprint §2.2: +40 studs Y
+			PlatformRadius = 120,
 			Color = Color3.fromRGB(16, 14, 24), -- near-black, sky reads clearly
 			Accent = Color3.fromRGB(124, 245, 224),
 			Pillars = 0,
 			PillarHeight = 0,
-			GlobeDiameter = 12,
-			RampTurns = 1.5,
-			RampWidth = 6,
+			GlobeDiameter = 80,
+			RampTurns = 2.5,
+			RampWidth = 40,
 			MeshId = nil,
 		},
 	},
 
 	-- Decorative depth. Deterministic so every server shows one skyline.
+	-- Non-walkable scenery. These extend to GameConfig.HubLayout.VisualExtent,
+	-- far beyond the 1200-stud playable footprint: the world reads as several
+	-- thousand studs across while every walk stays short.
 	FloatingIslands = {
-		Count = 14,
-		MinRadius = 190,
-		MaxRadius = 420,
-		MinHeight = -90,
-		MaxHeight = 120,
-		MinSize = 14,
-		MaxSize = 46,
+		Count = 40,
+		MinRadius = 900,
+		MaxRadius = 4000,
+		MinHeight = -700,
+		MaxHeight = 900,
+		MinSize = 90,
+		MaxSize = 420,
 		Seed = 20260915,
 		Color = Color3.fromRGB(42, 37, 58),
 		MeshId = nil,
@@ -206,7 +211,7 @@ local Crossroads = {
 	Bridges = {
 		Width = Layout.WalkwayWidth,
 		ProcessionalWidth = Layout.ProcessionalWidth,
-		Thickness = 2,
+		Thickness = 8,
 		Raise = Layout.WalkwayRaise,
 		Color = Theme.Walkway,
 		Material = Theme.StoneMaterial,

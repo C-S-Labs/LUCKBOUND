@@ -80,7 +80,7 @@ local GameConfig = {
 		OnboardingExpeditionSeconds = 100,
 
 		RollCooldownSeconds = 3.0, -- D-3
-		MaxRollDistance = 30, -- studs from RollAnchor
+		MaxRollDistance = 140, -- studs from RollAnchor; scaled with the plinth
 		RollHistoryCap = 50, -- D-6
 
 		-- Phase 1 pool weights, keyed by world Id. Used only while CurrentPhase
@@ -116,29 +116,56 @@ local GameConfig = {
 		ReturnGraceSeconds = 10,
 	},
 
+	-- === WORLD SCALE ===
+	-- A Roblox character is about 5 studs tall and walks 16 studs/second by
+	-- default. Those two numbers decide everything here.
+	--
+	-- THE BUDGET. Traversal must stay under ~20 seconds to any hub location.
+	-- Measured centre-to-centre:
+	--
+	--   hub Ø    zone r    @16      @32      @40
+	--     120        42    2.6s     1.3s     1.1s   (the old hub -- 24 chars across)
+	--    1200       420   26.2s    13.1s    10.5s   <- chosen
+	--    2000       700   43.8s    21.9s    17.5s
+	--    4000      1400   87.5s    43.8s    35.0s   (unwalkable at any sane speed)
+	--
+	-- So the PLAYABLE footprint is 1200 studs and movement is doubled to 32.
+	-- The world still READS as 4000+ studs across, because the floating
+	-- islands and skybox extend far past anything you can walk to. Big world,
+	-- short walks -- they are separate numbers and must not be conflated.
+	--
+	-- Centre-to-centre overstates the real walk: from the edge of the Fate
+	-- Engine platform to the edge of a zone is about 140 studs, roughly 4.4s.
+	Scale = {
+		CharacterHeight = 5, -- reference only; Roblox R15 is ~5 studs
+		WalkSpeed = 32, -- doubled from Roblox's default 16
+		MaxTraversalSeconds = 20, -- hard budget, asserted by test
+	},
+
 	-- Hub geometry. Biome Blueprint §2.1 and §7.3: named anchors live here and
 	-- are never re-derived per script, so the axis mapping is confirmed once in
 	-- Studio and locked. Roblox is Y-up, so "compass" is the X/Z plane:
 	--   NORTH = -Z, SOUTH = +Z, EAST = +X, WEST = -X, UP = +Y.
 	-- Visual detail (materials, palette, props) lives in Content/Hub/Crossroads.
 	HubLayout = {
-		HubDiameter = 120,
-		PlazaRingWidth = 26,
-		WalkwayWidth = 8,
-		WalkwayRaise = 2, -- studs above the lower plaza ring
-		ProcessionalWidth = 12, -- the Expedition Gate approach is wider
-		ZoneRingRadius = 46, -- centre of hub → centre of a compass zone
+		HubDiameter = 1200, -- playable extent
+		VisualExtent = 4000, -- how far scenery reaches; not walkable
+		PlazaRingWidth = 200,
+		WalkwayWidth = 44,
+		WalkwayRaise = 6, -- studs above the lower plaza ring
+		ProcessionalWidth = 72, -- the Expedition Gate approach is wider
+		ZoneRingRadius = 420, -- centre of hub → centre of a compass zone
 
 		Anchors = {
 			FATE_ENGINE = Vector3.new(0, 0, 0),
-			HALL_OF_LEGENDS = Vector3.new(0, 0, -46), -- north
-			DISCOVERY_ARCHIVE = Vector3.new(46, 0, 0), -- east
-			EXPEDITION_GATE = Vector3.new(0, 0, 46), -- south
-			TRAINING_GROUNDS = Vector3.new(-46, 0, 0), -- west
-			GLOBAL_OBSERVATORY = Vector3.new(0, 40, 0), -- upper platform
+			HALL_OF_LEGENDS = Vector3.new(0, 0, -420), -- north
+			DISCOVERY_ARCHIVE = Vector3.new(420, 0, 0), -- east
+			EXPEDITION_GATE = Vector3.new(0, 0, 420), -- south
+			TRAINING_GROUNDS = Vector3.new(-420, 0, 0), -- west
+			GLOBAL_OBSERVATORY = Vector3.new(0, 140, 0), -- upper platform
 		},
 
-		SpawnAnchor = Vector3.new(0, 4, 34), -- south of centre, facing the Engine
+		SpawnAnchor = Vector3.new(0, 8, 250), -- south of centre, facing the Engine
 	},
 
 	-- Shared PortalRig. Biome Blueprint §1.3.
@@ -173,8 +200,13 @@ local GameConfig = {
 		IdleSpinSpeed = 0.15, -- rad/s
 		SpinUpSpinSpeed = 3.2,
 
-		FateEngineScale = 1.5, -- blueprint §2.2
-		ExpeditionGateScale = 2.0, -- blueprint §2.2
+		-- Scaled for the 1200-stud hub: the Engine's outer ring lands at ~81
+		-- studs radius and the whole rig stands ~95 studs tall, which is the
+		-- "monumental Fate Engine" the master spec §3 asks for. The blueprint's
+		-- 1.5x/2.0x were relative to a 120-stud hub; the RATIO is what it was
+		-- specifying, and that is preserved (the gate is still the larger).
+		FateEngineScale = 9.0,
+		ExpeditionGateScale = 12.0,
 	},
 
 	Events = {
@@ -200,7 +232,7 @@ local GameConfig = {
 		RollBuildupSeconds = 1.2,
 		ResultCardHoldSeconds = 4.0,
 		AnnouncementDurationSeconds = 6.0,
-		PromptActivationDistance = 12,
+		PromptActivationDistance = 70, -- the plinth alone is ~126 studs across
 	},
 
 	Debug = {

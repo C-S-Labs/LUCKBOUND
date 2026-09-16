@@ -536,8 +536,20 @@ do
 	check("Discovery Archive is east (+X)", anchors.DISCOVERY_ARCHIVE.X > 0)
 	check("Expedition Gate is south (+Z)", anchors.EXPEDITION_GATE.Z > 0)
 	check("Training Grounds is west (-X)", anchors.TRAINING_GROUNDS.X < 0)
-	check("Global Observatory is the upper platform (+40Y)",
-		anchors.GLOBAL_OBSERVATORY.Y == 40, tostring(anchors.GLOBAL_OBSERVATORY.Y))
+	check("Global Observatory is the upper platform",
+		anchors.GLOBAL_OBSERVATORY.Y > 0, tostring(anchors.GLOBAL_OBSERVATORY.Y))
+	-- It must be climbable: a ramp that gains more than ~2 studs per stud of
+	-- run is a wall. Blueprint §2.2 reaches it by spiral ramp.
+	do
+		local obs
+		for _, d in Crossroads.Districts do
+			if d.Id == "GLOBAL_OBSERVATORY" then obs = d end
+		end
+		local run = (obs.PlatformRadius + 8) * obs.RampTurns * 2 * math.pi
+		check("the observatory ramp has a climbable gradient",
+			anchors.GLOBAL_OBSERVATORY.Y / run < 0.5,
+			string.format("rise %d over run %.0f", anchors.GLOBAL_OBSERVATORY.Y, run))
+	end
 	check("Fate Engine is at true centre",
 		anchors.FATE_ENGINE.X == 0 and anchors.FATE_ENGINE.Y == 0 and anchors.FATE_ENGINE.Z == 0)
 
@@ -548,24 +560,80 @@ do
 	end
 	check("every zone has a named anchor in GameConfig.HubLayout", everyZoneAnchored)
 
-	-- Blueprint §2.2 dimensions.
-	check("Fate Engine platform is 24 stud radius, raised 3",
-		Crossroads.FateEngine.PlatformRadius == 24 and Crossroads.FateEngine.PlatformRaise == 3)
+	-- Blueprint §2.2 proportions, rescaled for a 1200-stud hub. The blueprint's
+	-- absolute numbers were relative to a 120-stud hub; what it was actually
+	-- specifying is the RELATIONSHIPS, and those are what these assert.
 	check("Fate Engine has 6 crystal shards",
 		Crossroads.FateEngine.CrystalShards.Count == 6)
-	check("Hall of Legends has 5 obelisk slots at 8 studs",
-		byId.HALL_OF_LEGENDS.ObeliskSlots == 5 and byId.HALL_OF_LEGENDS.ObeliskHeight == 8)
-	check("Discovery Archive interior is 20 stud diameter",
-		byId.DISCOVERY_ARCHIVE.InteriorDiameter == 20)
-	check("Training Grounds yard is 30x30",
-		byId.TRAINING_GROUNDS.PlatformSize.X == 30 and byId.TRAINING_GROUNDS.PlatformSize.Z == 30)
+	check("Hall of Legends has 5 obelisk slots", byId.HALL_OF_LEGENDS.ObeliskSlots == 5)
 	check("Training Grounds has 3 dummies plus a boss dummy",
 		byId.TRAINING_GROUNDS.DummyCount == 3 and byId.TRAINING_GROUNDS.HasBossDummy)
-	check("Observatory platform is 18 stud radius",
-		byId.GLOBAL_OBSERVATORY.PlatformRadius == 18)
-	check("hub is 120 studs across", Crossroads.Plaza.Diameter == 120)
-	check("walkways are 8 studs wide, raised 2",
-		Crossroads.Bridges.Width == 8 and Crossroads.Bridges.Raise == 2)
+	check("hub is 1200 studs across", Crossroads.Plaza.Diameter == 1200)
+	check("the gate processional is wider than a walkway",
+		Crossroads.Bridges.ProcessionalWidth > Crossroads.Bridges.Width)
+
+	-- === SCALE BUDGET =============================================
+	-- A Roblox character is ~5 studs tall. The old hub was 24 characters
+	-- across, which read as a room rather than a world.
+	local CHAR = GameConfig.Scale.CharacterHeight
+	check("the hub reads as a world, not a room (>= 200 characters across)",
+		Crossroads.Plaza.Diameter / CHAR >= 200,
+		string.format("%.0f characters", Crossroads.Plaza.Diameter / CHAR))
+
+	for _, d in Crossroads.Districts do
+		check(string.format("%s is at least 40 characters across", d.Id),
+			math.min(d.PlatformSize.X, d.PlatformSize.Z) / CHAR >= 40,
+			string.format("%.0f", math.min(d.PlatformSize.X, d.PlatformSize.Z) / CHAR))
+	end
+
+	-- THE HARD BUDGET: no location may be more than MaxTraversalSeconds away.
+	local speed = GameConfig.Scale.WalkSpeed
+	local worstWalk, worstZone = 0, ""
+	for _, d in Crossroads.Districts do
+		local anchor = GameConfig.HubLayout.Anchors[d.Id]
+		local flat = math.sqrt(anchor.X * anchor.X + anchor.Z * anchor.Z)
+		local seconds = flat / speed
+		if seconds > worstWalk then worstWalk, worstZone = seconds, d.Id end
+	end
+	check("no zone is more than the traversal budget away from the Fate Engine",
+		worstWalk <= GameConfig.Scale.MaxTraversalSeconds,
+		string.format("worst: %s at %.1fs (budget %ds)", worstZone, worstWalk,
+			GameConfig.Scale.MaxTraversalSeconds))
+	check("movement is faster than Roblox's 16 stud/s default, or the hub is a slog",
+		speed > 16, tostring(speed))
+
+	-- Scenery must reach well past anything walkable, or the world feels
+	-- boxed in no matter how large the playable area is.
+	check("scenery extends past the playable footprint",
+		Crossroads.FloatingIslands.MaxRadius > GameConfig.HubLayout.HubDiameter,
+		string.format("%d vs %d", Crossroads.FloatingIslands.MaxRadius,
+			GameConfig.HubLayout.HubDiameter))
+	check("fog reaches far enough to show the distant islands",
+		Crossroads.Theme.FogEnd >= Crossroads.FloatingIslands.MaxRadius * 0.9,
+		string.format("fog %d vs islands %d", Crossroads.Theme.FogEnd,
+			Crossroads.FloatingIslands.MaxRadius))
+
+	-- Geometry must not interpenetrate at the new scale.
+	local engineR = Crossroads.FateEngine.PlatformRadius
+	local ringR = GameConfig.HubLayout.ZoneRingRadius
+	local tightest, tightestZone = math.huge, ""
+	for _, d in Crossroads.Districts do
+		if d.Height < 100 then
+			local gap = ringR - engineR - math.max(d.PlatformSize.X, d.PlatformSize.Z) / 2
+			if gap < tightest then tightest, tightestZone = gap, d.Id end
+		end
+	end
+	check("zone platforms do not overlap the Fate Engine platform",
+		tightest > 0, string.format("tightest gap: %s at %.0f studs", tightestZone, tightest))
+
+	-- The rig has to grow with the platform or it is a speck on it.
+	local engineRingR = GameConfig.Portal.OuterRingRadius * GameConfig.Portal.FateEngineScale
+	check("the Fate Engine reads as monumental against its platform",
+		engineRingR > engineR * 0.3 and engineRingR < engineR,
+		string.format("ring %.0f vs platform %.0f", engineRingR, engineR))
+	check("the roll prompt reaches beyond the plinth",
+		GameConfig.UI.PromptActivationDistance * 2
+			> GameConfig.Portal.PlinthDiameter * GameConfig.Portal.FateEngineScale * 0.5)
 	check("the gate processional is wider than a walkway",
 		Crossroads.Bridges.ProcessionalWidth > Crossroads.Bridges.Width)
 
@@ -658,8 +726,6 @@ do
 		math.max(GameConfig.UI.RollBuildupSeconds + Constants.RARITY.COMMON.RevealDuration,
 			portal.SpinUpSeconds) >= portal.SpinUpSeconds)
 
-	check("Fate Engine uses the rig at 1.5x", portal.FateEngineScale == 1.5)
-	check("Expedition Gate uses the rig at 2x", portal.ExpeditionGateScale == 2.0)
 	check("the gate is the larger portal", portal.ExpeditionGateScale > portal.FateEngineScale)
 
 	-- Blueprint §1.1 is declared the single source of truth for rarity colour.
@@ -806,6 +872,17 @@ do
 	check("Verdant Valley has an ENTRY chunk", lib.ENTRY and #lib.ENTRY == 1)
 	check("Verdant Valley has a BOSS chunk", lib.BOSS and #lib.BOSS == 1)
 	check("Verdant Valley has a SIDE pocket (§6 checklist)", lib.SIDE and #lib.SIDE >= 1)
+	-- Pieces must be sized against the character, not against the old hub.
+	local CHARH = GameConfig.Scale.CharacterHeight
+	local smallest = math.huge
+	local smallestId
+	for id, c in Chunks do
+		local m = math.min(c.SizeX, c.SizeZ)
+		if m < smallest then smallest, smallestId = m, id end
+	end
+	check("the smallest map piece is at least 40 characters across",
+		smallest / CHARH >= 40, string.format("%s at %.0f characters", smallestId, smallest / CHARH))
+
 	check("Verdant Valley has connective pieces",
 		(#(lib.PATH or {}) + #(lib.COMBAT or {})) >= 4,
 		string.format("%d", #(lib.PATH or {}) + #(lib.COMBAT or {})))
@@ -929,6 +1006,29 @@ do
 	local okU, errU = ChunkCore.assemble(Chunks,
 		{ WorldId = "NO_SUCH_WORLD", PathLength = 2 }, lcg(1))
 	check("an unknown world fails cleanly", not okU and type(errU) == "string", tostring(errU))
+
+	-- An expedition must not be mostly walking. At WalkSpeed 32 and a 720s
+	-- expedition, a path length of 5 spans ~4100 studs -- about 2 minutes of
+	-- traverse, leaving roughly 10 for combat and exploration.
+	do
+		local okF, layoutF = ChunkCore.assembleWithRetry(Chunks,
+			{ WorldId = "VERDANT_VALLEY", PathLength = 5 },
+			function(a) return lcg(104729 + a) end, 5)
+		check("a path-length-5 expedition assembles", okF)
+		if okF then
+			local w, d = ChunkCore.footprint(layoutF)
+			local span = math.max(w, d)
+			local traverse = span / GameConfig.Scale.WalkSpeed
+			local budget = GameConfig.Expedition.DefaultDurationSeconds
+			check("an expedition is big enough to feel like a world",
+				span > GameConfig.HubLayout.HubDiameter,
+				string.format("%.0f studs vs a %d-stud hub", span, GameConfig.HubLayout.HubDiameter))
+			check("walking is a minority of the expedition, not the whole thing",
+				traverse < budget * 0.35,
+				string.format("%.0fs traverse of a %ds expedition (%.0f%%)",
+					traverse, budget, traverse / budget * 100))
+		end
+	end
 
 	-- Retry reports how many attempts it needed, so a kit that is chronically
 	-- hard to assemble is visible rather than silently slow.
