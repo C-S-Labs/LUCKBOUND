@@ -22,6 +22,7 @@ PURE_MODULES = [
     ("EventCore",        "src/shared/Core/EventCore.luau"),
     ("AssetManifest",    "src/shared/Content/AssetManifest.luau"),
     ("ChunkCore",        "src/shared/Util/ChunkCore.luau"),
+    ("ExpeditionCore",   "src/shared/Core/ExpeditionCore.luau"),
     ("Schema",           "src/shared/Util/Schema.luau"),
     ("UITheme",          "src/shared/Core/UITheme.luau"),
     ("Crossroads",       "src/shared/Content/Hub/Crossroads.luau"),

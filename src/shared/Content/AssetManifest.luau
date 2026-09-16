@@ -80,6 +80,71 @@ local ENTRIES: { [string]: AssetEntry } = {
 		Source = "assets/source/worlds/verdant_valley/chunk_boss_clearing.blend",
 		Notes = "60-stud circular arena ringed by 6 oversized trees.",
 	},
+
+	-- === Ethereal Scape chunk kit ================================
+	-- Unlike Verdant Valley, these are not speculative: every entry names a
+	-- collection that already exists inside one authored Blender scene. The
+	-- Source path is the same file for all of them because the kit is produced
+	-- by exporting that scene ISLAND BY ISLAND -- see assets/README.md,
+	-- "Splitting one scene into a kit". Until that export happens they stay
+	-- PLACEHOLDER and the loader draws labelled primitives.
+	ES_ENVIRONMENT_FULL = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/ethereal_scape/aether_environment_refined.blend",
+		Notes = "The WHOLE scene as one mesh. Not used by the chunk system -- "
+			.. "it is the fastest way to get the environment into Studio and "
+			.. "confirm 1 metre = 1 stud against the R6 rig in Scale_Reference.",
+	},
+	ES_CHUNK_ARRIVAL_SHELF = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/ethereal_scape/aether_environment_refined.blend",
+		Notes = "Island_00 (Meadow/GoldRim/Underside) + the four Spawn_Columns.",
+	},
+	ES_CHUNK_SPAN_STRAIGHT = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/ethereal_scape/aether_environment_refined.blend",
+		Notes = "Island_01 + one Path_Bridge and its Bridge_Landings.",
+	},
+	ES_CHUNK_SPAN_BEND = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/ethereal_scape/aether_environment_refined.blend",
+		Notes = "Island_02 + Bridge_Abutments. The quarter turn.",
+	},
+	ES_CHUNK_DRIFT_SHOAL = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/ethereal_scape/aether_environment_refined.blend",
+		Notes = "Island_03 + Crystal_00..04 and their Crystal_Cloud_Base.",
+	},
+	ES_CHUNK_MIRROR_TERRACE = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/ethereal_scape/aether_environment_refined.blend",
+		Notes = "Island_04, the widest meadow. Three exits.",
+	},
+	ES_CHUNK_WAYSTONE_RING = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/ethereal_scape/aether_environment_refined.blend",
+		Notes = "Island_05 + Waystone_00..06 with caps. The temple approach.",
+	},
+	ES_CHUNK_STILL_ALCOVE = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/ethereal_scape/aether_environment_refined.blend",
+		Notes = "Island_06 + SatelliteDetail cairns. This world's §6 side pocket.",
+	},
+	ES_CHUNK_SKY_TEMPLE = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/ethereal_scape/aether_environment_refined.blend",
+		Notes = "Island_07 + the Sky_Temple collection (10 columns and bases) "
+			.. "+ Portal_Left/Portal_Right.",
+	},
 }
 
 AssetManifest.ENTRIES = ENTRIES

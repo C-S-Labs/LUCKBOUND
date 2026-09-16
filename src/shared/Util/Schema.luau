@@ -28,6 +28,7 @@ local WORLD_SPEC: { [string]: FieldSpec } = {
 	Modifiers = field("table"),
 	ModifierOverrides = field("table", true),
 	DurationSeconds = field("number"),
+	MapPathLength = field("number", true),
 	RecommendedPower = field("number"),
 	Flavor = field("string"),
 }
@@ -90,6 +91,9 @@ function Schema.validateWorlds(worlds: { [string]: any }): (boolean, { string })
 			end
 			if type(world.EnabledInPhase) == "number" and world.EnabledInPhase < 1 then
 				table.insert(errors, `World '{key}': EnabledInPhase must be >= 1`)
+			end
+			if type(world.MapPathLength) == "number" and world.MapPathLength < 1 then
+				table.insert(errors, `World '{key}': MapPathLength must be >= 1`)
 			end
 		end
 	end

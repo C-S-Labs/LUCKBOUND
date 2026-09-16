@@ -22,20 +22,33 @@ It is the same combinatorial philosophy as Master Spec §14
 
 ## Status
 
-**Built and tested. No art yet — and that is on purpose.**
+**Built, tested, and — since 2026-09-16 — actually walkable.**
 
 | Piece | State |
 |---|---|
 | `Content/AssetManifest.luau` | ✅ logical name → asset id |
-| `Content/Chunks/` | ✅ Verdant Valley kit, 8 pieces |
+| `Content/Chunks/VerdantValley` | ✅ 8 pieces |
+| `Content/Chunks/EtherealScape` | ✅ 8 pieces, one per island in the authored scene |
 | `Util/ChunkCore.luau` | ✅ seeded assembly, pure and headless |
+| `Util/ChunkLoader.luau` | ✅ Layout → Instances, with a mesh/blockout seam |
 | `Util/Schema.validateChunks` | ✅ boot-time validation |
-| Roblox-side loader | ⏳ Phase 2 — needs expedition entry |
-| Actual meshes | ⏳ all 8 are `PLACEHOLDER` |
+| `Systems/ExpeditionSystem` | ✅ builds a map on entry — build spec §7.1 |
+| Actual meshes | ⏳ all 16 are `PLACEHOLDER` |
 
-Every asset key is a placeholder, so `assetId()` returns `nil` and a loader
-would fall back to primitives. **Layouts are fully assembled, validated and
-tested before a single mesh exists.**
+Every asset key is a placeholder, so `assetId()` returns `nil` and the loader
+falls back to primitives. **Layouts are assembled, validated, tested AND walked
+before a single mesh exists.**
+
+### The blockout is informative, not pretty
+
+When a chunk's mesh is still `PLACEHOLDER`, `ChunkLoader` draws a coloured
+floor with a rim, a billboard naming the piece (`ES_WAYSTONE_RING · COMBAT ·
+#3`), and a neon post at every socket coloured by its `Kind`.
+
+That is deliberate. **A generated map has to be verifiable by eye.** Two posts
+of the same colour meeting is a join the grammar allowed; if the Waystone Ring
+is not the piece before the temple, you can see that from the ground rather
+than inferring it from a test name.
 
 ---
 
@@ -47,10 +60,10 @@ tested before a single mesh exists.**
     WorldId  = "VERDANT_VALLEY",
     Role     = "COMBAT",
     AssetKey = "VV_CHUNK_GROVE",     -- into AssetManifest
-    SizeX = 144, SizeY = 64, SizeZ = 144,
+    SizeX = 768, SizeY = 340, SizeZ = 768,
     Sockets = {
-        socket("south", "PATH", 0,  72, 180),
-        socket("north", "WIDE", 0, -72,   0),
+        socket("south", "PATH", 0,  384, 180),
+        socket("north", "WIDE", 0, -384,   0),
     },
     Weight = 25,
     MaxPerLayout = 1,
@@ -67,7 +80,7 @@ piece, before rotation.
 
 ---
 
-## Socket `Kind` is the whole design
+## Socket `Kind` is the whole design — and it is PER-WORLD
 
 Two sockets may join **only if their `Kind` matches.** That one rule is what
 stops a 4-stud footpath opening onto a cliff face — and it does more work than
@@ -96,6 +109,24 @@ VV_BOSS_CLEARING  (     0,  -4096)  [BOSS]
 **Design your socket Kinds deliberately.** They are the level-design grammar,
 not a technical detail.
 
+### Two worlds, two vocabularies, one rule
+
+Kinds are **not a global enum.** Each world invents its own, and a test asserts
+the two existing sets do not overlap:
+
+| World | Connective | Arena-only |
+|---|---|---|
+| Verdant Valley | `PATH` | `WIDE` |
+| Ethereal Scape | `SPAN` (a bridge between islands) | `RITE` (the temple approach) |
+
+Ethereal Scape's kit was authored against this checklist rather than against
+Verdant Valley, and **the same emergent property fell out of it**: the Waystone Ring is
+the only piece offering a `RITE` exit, the Sky Temple accepts nothing else, so
+seven waystones gate the temple on every seed. Nobody wrote that rule. It is
+the reserved-Kind rule doing its job for a second time, which is the strongest
+evidence available that the grammar generalises rather than having been fitted
+to Verdant Valley.
+
 ---
 
 ## Assembly
@@ -110,8 +141,10 @@ local ok, layout, attempts = ChunkCore.assembleWithRetry(
 ```
 
 The result is plain numbers — `{ ChunkId, X, Y, Z, Yaw, Role, Index }` — with
-no Roblox types, so a whole layout can be generated and checked in CI. The
-Phase 2 loader turns it into CFrames.
+no Roblox types, so a whole layout can be generated and checked in CI.
+`Util/ChunkLoader.luau` is the other half: it turns those numbers into CFrames
+and Instances and knows nothing about layout rules. **The seam between the two
+is a list of numbers, and that seam is why the rules are testable at all.**
 
 ### Expedition size
 
@@ -119,8 +152,16 @@ That layout spans **4096 studs** end to end — about **128 seconds** of walking
 at WalkSpeed 32, roughly 18% of a 720-second expedition. The rest is combat and
 exploration.
 
-`PathLength` is the knob. A test asserts traverse stays under 35% of expedition
-duration, so an expedition can never quietly become a corridor simulator.
+`PathLength` is the knob, and since 2026-09-16 it is **content**: a world sets
+`MapPathLength` and falls back to `GameConfig.Expedition.PathLength` when it
+does not. Ethereal Scape sets 3 against its 300-second duration, and measures
+**1152–2432 studs** depending on seed — 36–76 seconds of walking, 12–25% of the
+expedition.
+
+A test asserts traverse stays under 35% of expedition duration **per world**,
+so an expedition can never quietly become a corridor simulator. Note the shape
+of that rule: it is a *relationship*, not a number, which is what lets a world
+pick its own duration without anyone re-deriving a map size to match.
 
 **Retries are expected, not a smell.** A path can fold back and collide with
 itself; that is seed-dependent. Measured with 5 attempts:
@@ -141,7 +182,7 @@ what addendum §A4 asks for with per-expedition seeding.
 
 ## Authoring a kit — checklist
 
-1. **Pick a grid.** Verdant Valley uses **256 studs**. Sockets must land on it
+1. **Pick a grid.** Both existing kits use **256 studs**. Sockets must land on it
    or pieces will not meet. Size against the 5-stud character, not against a
    floorplan: the smallest connective piece is 256×512, about 51×102
    character-heights, so a corridor reads as a forest path and not a hallway.
@@ -159,9 +200,20 @@ what addendum §A4 asks for with per-expedition seeding.
 
 ---
 
+## Known limits, named rather than discovered later
+
+- **Collision rejection is XZ-only.** `ChunkCore.overlaps` ignores Y entirely,
+  so a path that climbs and folds back over itself is rejected as colliding
+  even though it would clear in three dimensions. Sockets *do* carry `OffsetY`
+  and the placement maths honours it — but both existing kits set it to 0, so
+  that code path is real and untested. **Do not author a climbing kit without
+  fixing collision first**, and note the blockout loader joins chunks flat: a
+  vertical join would need a ramp the loader does not yet draw.
+- **Pathfinding validation is still missing** (below). Two pieces can be
+  non-overlapping and still not walkable between.
+
 ## What is deliberately not built yet
 
-- **The Roblox-side loader** — needs Phase 2 expedition entry to exist
 - **Enemy population** — `EnemyTags` are declared but unconsumed
 - **Pathfinding validation** (addendum §A4 step 4) — a spawn→boss reachability
   pass before letting players in. Collision rejection is not the same thing:

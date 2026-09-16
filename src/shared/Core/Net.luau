@@ -7,9 +7,14 @@ local RunService = game:GetService("RunService")
 
 local Constants = require(script.Parent.Constants)
 
--- The complete Phase 1 remote list. Adding an entry here requires adding the
+-- The complete live remote list. Adding an entry here requires adding the
 -- corresponding row to build spec §4 in the same change.
-local PHASE_1_REMOTES = {
+--
+-- The four Expedition_* remotes were RESERVED by build spec §4 from the
+-- beginning -- declared but unbuilt, precisely so that whoever implemented
+-- expedition entry would promote them rather than invent CombatHit2-style
+-- names. They are promoted here, with §4's table updated in the same change.
+local REMOTES = {
 	"Fate_RequestRoll", -- C->S, no payload
 	"Fate_RollResult", -- S->C, RollPayload
 	"Profile_Loaded", -- S->C, full snapshot, once on join
@@ -18,6 +23,10 @@ local PHASE_1_REMOTES = {
 	"Announce_Global", -- S->C
 	"Event_StateSync", -- S->C, full live-event snapshot; fires on join (§4.1)
 	"UI_Acknowledge", -- C->S
+	"Expedition_RequestEnter", -- C->S, no payload; cooldown + distance guarded
+	"Expedition_Started", -- S->C, ExpeditionPayload
+	"Expedition_Ended", -- S->C, ExpeditionEndPayload
+	"Expedition_TimerSync", -- S->C, { RemainingSeconds, ServerNow }
 }
 
 local Net = {}
@@ -42,7 +51,7 @@ function Net.buildRemotes(): Folder
 	local f = Instance.new("Folder")
 	f.Name = Constants.NAMES.NET_FOLDER
 
-	for _, name in PHASE_1_REMOTES do
+	for _, name in REMOTES do
 		local remote = Instance.new("RemoteEvent")
 		remote.Name = name
 		remote.Parent = f
@@ -64,11 +73,11 @@ function Net.get(name: string): RemoteEvent
 	local remote = (folder :: Folder):WaitForChild(name, 10)
 	assert(
 		remote and remote:IsA("RemoteEvent"),
-		string.format("Unknown remote %q -- add it to Net.PHASE_1_REMOTES and build spec §4", name)
+		string.format("Unknown remote %q -- add it to Net.REMOTES and build spec §4", name)
 	)
 	return remote
 end
 
-Net.REMOTES = table.freeze(PHASE_1_REMOTES)
+Net.REMOTES = table.freeze(REMOTES)
 
 return Net

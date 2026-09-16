@@ -33,6 +33,98 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 4 — 2026-09-16 — Ethereal Scape, and the door at the end of the roll
+
+**Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 276 passing (was 208)
+
+### Done
+
+- **Ethereal Scape**, the Uncommon world, built from the first piece of
+  authored art the project has had. The `.blend` is a sky temple above the
+  cloud deck — eight gold-rimmed meadow islands, bridges, seven waystones, and
+  an **R6 rig in a `Scale_Reference` collection**, which is the single most
+  useful object in the file: it makes the metre-to-stud conversion checkable
+  instead of assumed.
+- **A chunk kit mapped 1:1 onto those eight islands**, with its own socket
+  vocabulary — `SPAN` for the bridges, `RITE` for the temple approach.
+- **Expedition entry.** Roll a world, walk to the Gate, hold E, and stand in a
+  map generated from that world's kit. Timer, per-client biome lighting, a
+  return portal, +25 Fate on completion. Build spec **§7.1** records the
+  amendment.
+- **`ChunkLoader`** — the Roblox half of the chunk system, which did not exist
+  before. Mesh when the manifest has one, labelled blockout when it does not.
+- **`ExpeditionCore`** — pure: destination, seed, eligibility, timer. 40 tests.
+- Four `Expedition_*` remotes **promoted from Reserved**, not invented.
+- Docs: build spec §1.1/§1.2/§2.2/§3.1/§3.3.1/§4/§7.1, `MODULAR_MAPS`,
+  `BLUEPRINT_RECONCILIATION`, `TESTING` (new Test C2), `STATUS`, and a full
+  Blender→Roblox upload walkthrough in `assets/README.md`.
+
+### Decisions made
+
+- **§7 was amended, not ignored.** Expedition entry was on the Phase 1
+  exclusion list and CLAUDE.md rule 8 forbids widening scope, so the owner's
+  direction was recorded as a spec amendment with its own section rather than
+  done quietly. **Combat, enemies, bosses and loot stayed excluded.** The whole
+  thing is one boolean wide: `GameConfig.Expedition.Enabled`.
+- **A player's destination is their last roll.** No pending-destination field,
+  no schema bump, no `FateSystem`→`ExpeditionSystem` reference. It survives a
+  rejoin for free because `RollHistory` is already persisted, and re-rolling
+  changes where you are going — which is what a player would expect anyway.
+- **Biome lighting is applied by the client, never the server.** `Lighting` is
+  a shared service: the obvious server-side implementation would have painted
+  the biome onto everyone's screen including people still in the hub. This is
+  what actually closes the Blueprint §6 checklist item rather than appearing to.
+- **`MapPathLength` is content, not config.** A world with a short expedition
+  needs a short map or the expedition *is* the walk. Ethereal Scape runs 300s
+  and sets 3; at the default 5 it would have been 40% traverse.
+- **Onboarding slot 5 became Ethereal Scape.** Three reasons: it teaches the
+  Uncommon rung the arc skipped, it guarantees the test biome is reachable in
+  the first minute instead of behind a 15% draw, and it drops the scripted
+  Common share from 66.7% to exactly 60.0% — the true rate. D-9 extended, not
+  reversed: still 15 rolls, still peaks on Epic at 8, still never Mythic.
+- **Weights renormalised to 60/15/15/7/3.** The five points came off Verdant
+  Valley and Emberfall, not off Epic or Mythic — those are the rates players
+  form opinions about.
+- **Ethereal Scape declares no enemies, boss or loot.** It is the
+  map-generation test rig. Giving it combat content would make it a worse test
+  and would have meant inventing Phase 2 content nobody asked for.
+- **The blockout is informative rather than pretty.** Every placeholder chunk
+  carries its ChunkId and Role on a billboard and a neon post at each socket,
+  coloured by Kind. A generated map has to be verifiable *by eye* — otherwise
+  "generation works" is just a test name.
+
+### The result worth keeping
+
+Ethereal Scape's kit was authored against the `MODULAR_MAPS` checklist, not
+against Verdant Valley, and **the same emergent property fell out of it**: the
+Waystone Ring is the only piece offering a `RITE` exit, the Sky Temple accepts
+nothing else, so seven waystones gate the temple on every seed. Nobody wrote
+that rule. That is the reserved-Kind rule generalising to a kit it was not
+fitted to, which is the best evidence available that the grammar is real.
+
+### Stopped at
+
+**Green in CI, and nobody has walked any of it.** That is now true of two
+sessions' work stacked on each other — the 10× rescale from Session 3 *and* the
+whole expedition path. 276 tests and a syntax check say the numbers are right;
+no test can say whether a generated map reads as a place.
+
+### Next
+
+1. **`TESTING.md` Test C2** — roll to 5, take the Gate, walk Ethereal Scape,
+   come home. Four questions answered at once. Nothing else matters until this
+   has happened.
+2. **Upload the eight islands** — `assets/README.md`. Check scale against the
+   R6 rig on the whole-scene import *before* splitting, or it is eight
+   re-uploads.
+3. **`UNCOMMON`'s colour needs blessing.** It was theoretical; it is now on
+   screen inside the first minute of every session.
+4. **A chunk kit for Emberfall** — 15pp off the "no map" number, and its
+   blueprint section already exists.
+5. Hub brightness, placeholder text, UI pass — unchanged from Session 3.
+
+---
+
 ## Session 3 — 2026-09-16 — World scale
 
 **Merged:** PR #12 · **Tests:** 208 passing · **Head:** see `git log`

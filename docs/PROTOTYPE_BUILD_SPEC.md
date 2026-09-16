@@ -1,7 +1,7 @@
 # LUCKBOUND — Prototype Build Specification
 ## Phase 1: Foundation · v0.1 · AI-Executable
 
-**Status:** Canonical. **Phase 1 complete and verified in Studio.** Derived from `LUCKBOUND Master Game Design & Development Specification v0.1`; see `STATUS.md` for current state and `BLUEPRINT_RECONCILIATION.md` for how the Biome Blueprint was merged.
+**Status:** Canonical. **Phase 1 complete and verified in Studio; expedition entry opened by amendment §7.1.** Derived from `LUCKBOUND Master Game Design & Development Specification v0.1`; see `STATUS.md` for current state and `BLUEPRINT_RECONCILIATION.md` for how the Biome Blueprint was merged.
 **Supersedes:** nothing. **Superseded by:** nothing.
 **Rule of precedence:** where this document and the Master Design PDF disagree on an *implementation* detail, this document wins. Where they disagree on *intent*, the PDF wins and this document is wrong and must be amended.
 
@@ -11,7 +11,9 @@
 
 > You can walk around a recognizable LUCKBOUND hub and press ROLL.
 
-Nothing more. Phase 1 ships when a player can spawn in The Crossroads, walk to the Fate Engine, press ROLL, watch a reveal animation, and see a destination with its rarity. **No combat. No expedition entry. No loot.** Those are Phase 2.
+Nothing more. Phase 1 ships when a player can spawn in The Crossroads, walk to the Fate Engine, press ROLL, watch a reveal animation, and see a destination with its rarity. **No combat. No loot.** Those are Phase 2.
+
+> Expedition entry *was* in that list and was opened by owner-directed amendment on 2026-09-16. **Combat and loot were not.** See §7.1 for exactly what moved and what did not.
 
 The reason Phase 1 stops there: §25 of the Master Spec ("Design North Star") says the roll → anticipation → reveal moment is the thing the whole game rests on. If the roll does not feel good with nothing else attached to it, adding combat will not fix it. Phase 1 is a test of that, not scaffolding to rush through.
 
@@ -70,6 +72,9 @@ src/shared/          →  ReplicatedStorage/Luckbound
   Util/                   Util/
     WeightedRandom.luau       WeightedRandom
     Schema.luau               Schema        (validates Content against Types at boot)
+    ChunkCore.luau            ChunkCore     (pure: decides what goes where)
+    ChunkLoader.luau          ChunkLoader   (Roblox: turns a Layout into Instances)
+    PortalRig.luau            PortalRig
 
 src/server/          →  ServerScriptService/LuckboundServer
   init.server.luau        (bootstrap: the ONLY Script; everything else is a ModuleScript)
@@ -77,8 +82,9 @@ src/server/          →  ServerScriptService/LuckboundServer
     SaveSystem.luau
     ProgressionSystem.luau
     FateSystem.luau
-    WorldSystem.luau
     EventSystem.luau
+    ExpeditionSystem.luau   (§7.1 -- entry, generation, return. No combat)
+    HubBuilder.luau
     -- Phase 2: CombatSystem, LootSystem, InventorySystem, DiscoverySystem
 
 src/client/          →  StarterPlayer/StarterPlayerScripts/LuckboundClient
@@ -86,10 +92,13 @@ src/client/          →  StarterPlayer/StarterPlayerScripts/LuckboundClient
   Controllers/
     ProximityController.luau
     StateController.luau    (single client-side mirror of server state)
+    HubEffects.luau
+    ExpeditionController.luau  (§7.1 -- lighting apply/revert, local countdown)
   UI/
     FateRoll.luau
     GlobalAnnouncements.luau
-    -- Phase 2: Inventory, DiscoveryBook, Expedition
+    ExpeditionHud.luau      (§7.1 -- destination banner and timer)
+    -- Phase 2: Inventory, DiscoveryBook
 ```
 
 **Explorer objects NOT managed by Rojo** (built in Studio or by `HubBuilder`):
@@ -104,7 +113,7 @@ Workspace/
     TrainingGrounds/
     GlobalObservatory/
     SpawnLocation
-  ExpeditionStage/       -- empty in Phase 1; worlds instantiate here in Phase 2
+  ExpeditionStage/       -- generated maps, one Model per live expedition (§7.1)
 ServerStorage/
   WorldTemplates/        -- empty in Phase 1
 ```
@@ -114,17 +123,25 @@ ServerStorage/
 `init.server.luau` must initialise in exactly this order. Systems declare dependencies but never require each other at module scope (circular requires are a hard error).
 
 ```
-1. Schema.validateAll()      -- fail fast on malformed content, before any player joins
-2. Net.buildRemotes()        -- creates ReplicatedStorage/Luckbound/Net/*
-3. SaveSystem.init()
-4. ProgressionSystem.init(SaveSystem)
-5. FateSystem.init(ProgressionSystem)
-6. WorldSystem.init(FateSystem)
-7. EventSystem.init()
-8. HubBuilder.build()        -- only if Workspace.Crossroads is absent
-9. PlayerService binding     -- PlayerAdded/PlayerRemoving last, so no player can
-                                arrive before systems are ready
+1.  Schema.validateAll()      -- fail fast on malformed content, before any player joins
+2.  Net.buildRemotes()        -- creates ReplicatedStorage/Luckbound/Net/*
+3.  SaveSystem.init()
+4.  ProgressionSystem.init(SaveSystem)
+5.  EventSystem.init()
+6.  FateSystem.init(SaveSystem, ProgressionSystem, EventSystem)
+7.  ExpeditionSystem.init(SaveSystem, ProgressionSystem)
+8.  HubBuilder.build()        -- only if Workspace.Crossroads is absent
+9.  ExpeditionSystem.bindGatePrompt()   -- attaches to geometry step 8 creates
+10. PlayerService binding     -- PlayerAdded/PlayerRemoving last, so no player can
+                                 arrive before systems are ready
 ```
+
+`ExpeditionSystem` occupies the slot this spec originally reserved for
+`WorldSystem`. It takes **no reference to `FateSystem`**: a player's pending
+destination is simply their most recent `RollHistory` entry, read from the
+profile. The two systems therefore share *data* rather than *pointers*, the
+boot order stays a straight line with no back-reference, and a destination
+survives a rejoin for free because `RollHistory` is already persisted.
 
 If `Schema.validateAll()` fails, the server **must** `error()` and refuse to start. A prototype that boots with silently broken content is worse than one that does not boot.
 
@@ -167,10 +184,18 @@ WorldDefinition = {
   DiscoveryTableId   : string?
   Modifiers          : { string }  -- allowed ModifierDefinition Ids
   DurationSeconds    : number
+  MapPathLength      : number?     -- chunks between arrival and the arena; nil = config default
   RecommendedPower   : number
   Flavor             : string      -- shown on the reveal card
 }
 ```
+
+`MapPathLength` is **content, not config**, and the reason is a relationship
+rather than a preference: a world with a short expedition needs a short map or
+the whole expedition is the walk. Ethereal Scape runs 300 seconds and sets
+`MapPathLength = 3`; a world that inherited the default 5 at that duration
+would be 40% traverse. The test suite asserts the relationship rather than
+either number.
 
 `Flavor` is the "No records found." line for THE_UNKNOWN. It is part of the hook, not decoration.
 
@@ -228,14 +253,21 @@ This is the centre of Phase 1. Specified to the level where two different implem
 
 **Only worlds with `EnabledInPhase <= GameConfig.CurrentPhase` enter the pool, and weights are renormalised over that pool.** This is why weights are absolute rather than percentages: Phase 3 can enable the full eight without retuning anything.
 
-Phase 1 enables four — `VERDANT_VALLEY`, `EMBERFALL`, `SKY_CITADEL`, `ASTRAL_REACH` — with prototype weights summing to 10000 so they read directly as percentages:
+Phase 1 enables five — `VERDANT_VALLEY`, `ETHEREAL_SCAPE`, `EMBERFALL`, `SKY_CITADEL`, `ASTRAL_REACH` — with prototype weights summing to 10000 so they read directly as percentages:
 
 | World | Rarity | Weight | % |
 |---|---|---|---|
-| `VERDANT_VALLEY` | Common | 7000 | 70% |
-| `EMBERFALL` | Rare | 2000 | 20% |
+| `VERDANT_VALLEY` | Common | 6000 | 60% |
+| `ETHEREAL_SCAPE` | Uncommon | 1500 | 15% |
+| `EMBERFALL` | Rare | 1500 | 15% |
 | `SKY_CITADEL` | Epic | 700 | 7% |
 | `ASTRAL_REACH` | Mythic | 300 | 3% |
+
+Adding the fifth world forced a renormalisation — the set must keep summing to
+10000 or the numbers stop reading as percentages. The five points came off
+Verdant Valley (70 → 60) and Emberfall (20 → 15), **not** off Epic or Mythic:
+those are the two rates a player forms an opinion about, and they are
+unchanged.
 
 Sky Citadel is **data only**: the Biome Blueprint drafts no Sky Citadel (its §7.4 lists it as a reserved slot), so its enemies, boss and loot tables are empty and its Environment values are invented rather than blueprint-sanctioned. Phase 1 never enters a world, so this suffices today. **It needs a real biome before Phase 2 makes worlds enterable.**
 
@@ -270,7 +302,7 @@ True RNG creates one problem: a new player may never see what the game is capabl
 | 2 | Verdant Valley | Common | | 10 | Verdant Valley | Common |
 | 3 | Emberfall | **Rare** | | 11 | Emberfall | **Rare** |
 | 4 | Verdant Valley | Common | | 12 | Verdant Valley | Common |
-| 5 | Verdant Valley | Common | | 13 | Verdant Valley | Common |
+| 5 | **Ethereal Scape** | **Uncommon** | | 13 | Verdant Valley | Common |
 | 6 | Emberfall | **Rare** | | 14 | Emberfall | **Rare** |
 | 7 | Verdant Valley | Common | | 15 | Verdant Valley | Common |
 | 8 | **Sky Citadel** | **EPIC** | | 16+ | *true RNG* | — |
@@ -279,7 +311,9 @@ Two rules shape it:
 
 **1. It never hands out a Mythic.** A guaranteed top tier devalues the top tier permanently, and the Fatebreak announcement (§12) depends on Mythic meaning something. The arc peaks on Epic at roll 8. Astral Reach must be earned from honest odds. Enforced by test.
 
-**2. It approximates the real odds.** Counted out: 10 Common, 4 Rare, 1 Epic — roughly 67/27/7 against true RNG's 70/20/7/3. A front-loaded parade of rares followed by a wall of Commons would make roll 16 feel like a punishment. Ending on a Common means the player has already felt what normal is, so the handover is continuous rather than a cliff. Enforced by test (drift < 12pp, and no run of more than 3 Commons).
+**2. It approximates the real odds.** Counted out: 9 Common, 1 Uncommon, 4 Rare, 1 Epic — 60/7/27/7 against true RNG's 60/15/15/7/3. A front-loaded parade of rares followed by a wall of Commons would make roll 16 feel like a punishment. Ending on a Common means the player has already felt what normal is, so the handover is continuous rather than a cliff. Enforced by test (drift < 12pp, and no run of more than 3 Commons).
+
+**Slot 5 was changed from Common to Ethereal Scape (Uncommon)** when that world was added. It does three things at once: it teaches the second rung of the ladder, which the arc previously skipped; it guarantees every player sees the map-generation test biome inside the first minute rather than waiting on a 15% draw; and it drops the scripted Common share from 66.7% to **60.0%**, which is exactly the true rate — so the handover at roll 16 is now seamless rather than merely close. The arc still peaks on Epic at roll 8 and still never hands out a Mythic. **D-9 is extended, not reversed.**
 
 The valleys are the point. Rares land at 3, 6, 11 and 14 with Commons between them, so each reads as a lift rather than an entitlement.
 
@@ -334,7 +368,9 @@ server: if result.Rarity >= MYTHIC → EventSystem.announce(...)  (all clients)
 
 Naming: `Domain_Action`. Domain is the owning system. Past tense = server→client fact. Imperative = client→server request.
 
-### Phase 1 remotes — this is the complete list
+### Live remotes — this is the complete list
+
+Created by `Core/Net.luau` and nowhere else.
 
 | Name | Class | Dir | Payload | Guard |
 |---|---|---|---|---|
@@ -344,13 +380,22 @@ Naming: `Domain_Action`. Domain is the owning system. Past tense = server→clie
 | `Profile_Updated` | RemoteEvent | S→C | `PartialSnapshot` | — |
 | `Progression_FateChanged` | RemoteEvent | S→C | `{FatePoints, FateLevel, Delta, Reason}` | — |
 | `Announce_Global` | RemoteEvent | S→C | `{Kind, Text, Rarity, PlayerName}` | server-only |
+| `Event_StateSync` | RemoteEvent | S→C | live-event snapshot | fires on join (§4.1) |
 | `UI_Acknowledge` | RemoteEvent | C→S | `{ScreenId}` | rate-limited 10/s |
+| `Expedition_RequestEnter` | RemoteEvent | C→S | *(none)* | cooldown + distance + one-at-a-time |
+| `Expedition_Started` | RemoteEvent | S→C | `ExpeditionPayload` | — |
+| `Expedition_Ended` | RemoteEvent | S→C | `ExpeditionEndPayload` | — |
+| `Expedition_TimerSync` | RemoteEvent | S→C | `{RemainingSeconds, ServerNow}` | — |
+
+The four `Expedition_*` rows were **Reserved** in this table from the start,
+which is exactly what reserving them was for: implementing expedition entry
+promoted names the spec already owned instead of inventing new ones.
 
 ### Reserved — declared now, implemented in Phase 2/3
 
 Declaring these now stops an agent from inventing `CombatHit2` when it needs one.
 
-`Expedition_RequestEnter`, `Expedition_Started`, `Expedition_Ended`, `Expedition_TimerSync`, `Combat_RequestAttack`, `Combat_RequestAbility`, `Combat_RequestDodge`, `Combat_HitConfirmed`, `Combat_EnemyStateChanged`, `Loot_Awarded`, `Discovery_Found`, `Discovery_BookSync`, `Inventory_RequestEquip`, `Inventory_Changed`, `Event_FatebreakStarted`, `Event_FatebreakEnded`.
+`Combat_RequestAttack`, `Combat_RequestAbility`, `Combat_RequestDodge`, `Combat_HitConfirmed`, `Combat_EnemyStateChanged`, `Loot_Awarded`, `Discovery_Found`, `Discovery_BookSync`, `Inventory_RequestEquip`, `Inventory_Changed`, `Event_FatebreakStarted`, `Event_FatebreakEnded`.
 
 ### 4.1 Late joiners — the rule that is easy to get wrong
 
@@ -452,6 +497,76 @@ Two lessons worth keeping:
 
 Listed so no agent "helpfully" adds them:
 
-Combat of any kind · enemies · bosses · loot · inventory · equipment · the Discovery Book · expedition entry or exit · the 12-minute timer · world modifiers · AFK/idle · trading · leaderboards · monetisation · Fatebreaks beyond the announcement banner · any world past the three prototype worlds · audio beyond a single roll SFX · Blender-authored art.
+Combat of any kind · enemies · bosses · loot · inventory · equipment · the Discovery Book · ~~expedition entry or exit~~ *(see §7.1)* · world modifiers · AFK/idle · trading · leaderboards · monetisation · Fatebreaks beyond the announcement banner · audio beyond a single roll SFX.
 
 If a task seems to require one of these, the task is wrong. Raise it; do not implement it.
+
+---
+
+## 7.1 Amendment: expedition entry, opened 2026-09-16
+
+**Owner-directed.** This is the one item lifted out of §7, and the amendment is
+recorded here rather than made quietly, per CLAUDE.md rule 8.
+
+### What was opened, and what was not
+
+| | |
+|---|---|
+| ✅ Entering a rolled world through the Expedition Gate | the whole point |
+| ✅ Seeded map generation from the chunk library | the thing being tested |
+| ✅ A per-player expedition timer and a way home | you cannot test a door you cannot come back through |
+| ✅ Per-client biome lighting | §6 checklist item, and free once entry exists |
+| ❌ Combat, enemies, bosses, loot, inventory, the Discovery Book | **still excluded** |
+
+**The exclusions above are not softened.** An expedition today is: arrive, walk
+a generated map, come back. Nothing fights you and nothing drops. If a task
+seems to need combat, the task is still wrong.
+
+### Why it was opened now
+
+The modular map system (`docs/MODULAR_MAPS.md`) has been assembling layouts in
+CI since 2026-09-16 and **not one of them had ever been stood in.** A layout
+that validates as a list of numbers and a layout that reads as a place when you
+walk it are different claims, and only the first was being tested. Ethereal
+Scape — the first world with authored art behind it — made the second claim
+worth checking before more kits were authored against untested assumptions.
+
+### The switch
+
+`GameConfig.Expedition.Enabled`. Set it to `false` and the game is Phase 1
+exactly: the Gate's prompt disappears, `Expedition_RequestEnter` is dropped at
+the door, and nothing else changes. The amendment is one boolean wide.
+
+### What it added
+
+| | |
+|---|---|
+| `Core/ExpeditionCore.luau` | pure: destination, seed, eligibility, timer. Testable |
+| `Util/ChunkLoader.luau` | Layout → Instances. The Roblox half of the chunk system |
+| `Systems/ExpeditionSystem.luau` | remotes, geometry, teleports, timer sweep |
+| `Controllers/ExpeditionController` | lighting apply/revert, local countdown |
+| `UI/ExpeditionHud` | destination banner, countdown, toasts |
+| 4 remotes | promoted from Reserved, §4 |
+
+### Anti-exploit, same standard as §3.4
+
+1. `Expedition_RequestEnter` carries **no payload**. One carrying arguments is
+   discarded and logged.
+2. The Gate's `ProximityPrompt.Triggered` fires **on the server** with the
+   triggering player, so the primary entry path carries no client data at all.
+3. Rate limited to one entry per `EntryCooldownSeconds`, server-side.
+4. Distance validated against the Gate's portal, `MaxEntryDistance`.
+5. One expedition per player; stage slots are bounded by `MaxConcurrent`.
+6. Every refusal is **silent** except the two a legitimate player can actually
+   hit (no destination; the world has no map kit). Same reasoning as §3.4.3.
+7. Every expedition is seeded from `(userId, rollNumber, worldId)` and the seed
+   is logged, so any map can be rebuilt exactly. The §3.4.6 argument about
+   rigged rolls applies equally to rigged maps.
+
+### The gap this exposes
+
+Three rollable worlds have no chunk kit — **Emberfall, Sky Citadel, Astral
+Reach.** Rolling one and walking to the Gate now produces *"That world has no
+map yet."* rather than a crash, and the list is printed as a warning on every
+boot and asserted by test. That is the honest state, not a solved problem:
+`ETHEREAL_SCAPE` and `VERDANT_VALLEY` are the only enterable worlds.

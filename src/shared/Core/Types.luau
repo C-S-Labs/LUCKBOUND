@@ -59,6 +59,11 @@ export type WorldDefinition = {
 	Modifiers: { string },
 	ModifierOverrides: { [string]: ModifierOverride }?,
 	DurationSeconds: number,
+	-- How many connective chunks sit between arrival and the boss arena for
+	-- THIS world. nil falls back to GameConfig.Expedition.PathLength. It is
+	-- content, not config: map size is a property of the world, and a world
+	-- with a shorter expedition needs a shorter map or it becomes a corridor.
+	MapPathLength: number?,
 	RecommendedPower: number,
 	Flavor: string,
 }
@@ -234,6 +239,35 @@ export type RollPayload = {
 	Flavor: string,
 	IsTutorialRoll: boolean,
 	RollNumber: number,
+}
+
+--- Sent on Expedition_Started. Carries everything the client needs to dress
+--- the world locally: Environment is applied to Lighting BY THE CLIENT, so one
+--- player's biome never bleeds onto another's screen (§6 checklist).
+---
+--- RemainingSeconds, never an absolute end time -- build spec §4.1 rule 4: a
+--- client with a skewed clock still counts down correctly.
+export type ExpeditionPayload = {
+	WorldId: string,
+	Name: string,
+	Rarity: RarityKey,
+	Flavor: string,
+	Environment: Environment,
+	DurationSeconds: number,
+	RemainingSeconds: number,
+	ServerNow: number,
+	Seed: number,
+	ChunkCount: number,
+}
+
+export type ExpeditionEndPayload = {
+	WorldId: string?,
+	Reason: "COMPLETED" | "RETURNED" | "DIED" | "ABORTED",
+	FateAwarded: number,
+	-- Set only for the two refusals a legitimate player can hit -- no
+	-- destination, or a world with no map kit. Every other refusal is an
+	-- exploit guard and stays silent, per build spec §3.4.3.
+	Message: string?,
 }
 
 export type AnnouncePayload = {

@@ -13,6 +13,7 @@ local Crossroads = __require("Crossroads")
 local UITheme = __require("UITheme")
 local AssetManifest = __require("AssetManifest")
 local ChunkCore = __require("ChunkCore")
+local ExpeditionCore = __require("ExpeditionCore")
 local Chunks = __require("Chunks")
 
 -- === tiny harness ===================================================
@@ -268,7 +269,7 @@ do
 	end
 	check("a level-90 player and a level-1 player draw identically (Fate does not tilt odds)", identical)
 
-	for _, id in { "VERDANT_VALLEY", "EMBERFALL", "SKY_CITADEL", "ASTRAL_REACH" } do
+	for _, id in { "VERDANT_VALLEY", "ETHEREAL_SCAPE", "EMBERFALL", "SKY_CITADEL", "ASTRAL_REACH" } do
 		check(string.format("weight for %s ignores Fate level", id),
 			FateCore.effectiveWeight(Worlds[id], newbie, GameConfig)
 				== FateCore.effectiveWeight(Worlds[id], veteran, GameConfig))
@@ -290,9 +291,9 @@ do
 		if poolA[i].Id ~= poolB[i].Id then stable = false end
 	end
 	check("roll pool order is stable", stable)
-	check("phase gating excludes Phase 3 content", #FateCore.buildPool(Worlds, 1) == 4,
+	check("phase gating excludes Phase 3 content", #FateCore.buildPool(Worlds, 1) == 5,
 		string.format("%d worlds enabled at phase 1", #FateCore.buildPool(Worlds, 1)))
-	check("THE_UNKNOWN enters the pool at phase 3", #FateCore.buildPool(Worlds, 3) == 5)
+	check("THE_UNKNOWN enters the pool at phase 3", #FateCore.buildPool(Worlds, 3) == 6)
 
 	-- Epic must be commoner than Mythic, or the ladder is upside down.
 	check("Epic is more likely than Mythic",
@@ -747,6 +748,12 @@ do
 		Constants.RARITY[Worlds.ASTRAL_REACH.Rarity].Color.hex == "FF7A1A")
 	check("Verdant Valley (Common) carries Common grey",
 		Constants.RARITY[Worlds.VERDANT_VALLEY.Rarity].Color.hex == "9E9E9E")
+	-- Ethereal Scape is the WEAKEST test of this contract in the game, and it
+	-- is worth naming: its meadows are mint green and Uncommon is green, so
+	-- "portal colour came from the rarity table" and "portal colour came from
+	-- the biome" would look the same on screen. It still has to hold.
+	check("Ethereal Scape (Uncommon) carries the Uncommon colour",
+		Constants.RARITY[Worlds.ETHEREAL_SCAPE.Rarity].Color.hex == "5FD97A")
 
 	check("UITheme derives rarity colours from Constants, not its own table",
 		UITheme.RarityColors.MYTHIC == Constants.RARITY.MYTHIC.Color)
@@ -759,14 +766,26 @@ group("Biome lighting (blueprint §3.3 / §4.3 / §5.3)")
 
 do
 	local vv, ef, ar = Worlds.VERDANT_VALLEY, Worlds.EMBERFALL, Worlds.ASTRAL_REACH
+	local es = Worlds.ETHEREAL_SCAPE
 
-	for _, w in { vv, ef, ar } do
+	for _, w in { vv, ef, ar, es } do
 		check(string.format("%s declares Brightness and FogStart", w.Id),
 			type(w.Environment.Brightness) == "number"
 				and type(w.Environment.FogStart) == "number")
 	end
 
-	check("Verdant Valley is the brightest world", vv.Environment.Brightness == 2.5)
+	check("Verdant Valley reads as soft midday", vv.Environment.Brightness == 2.5)
+	-- Ethereal Scape stands above the cloud deck, so it is lit from every
+	-- direction at once. If a brighter world is ever added, this is the
+	-- assertion that will notice.
+	check("Ethereal Scape is the brightest world in the game",
+		es.Environment.Brightness == 3.0
+			and es.Environment.Brightness > vv.Environment.Brightness
+			and es.Environment.Brightness > ar.Environment.Brightness,
+		tostring(es.Environment.Brightness))
+	check("Ethereal Scape fog is cloud, so it reaches far rather than closing in",
+		es.Environment.FogEnd >= 2000 and es.Environment.FogEnd > vv.Environment.FogEnd,
+		string.format("FogEnd %d", es.Environment.FogEnd))
 	check("Emberfall is the darkest (lava lights it locally)",
 		ef.Environment.Brightness == 1.4
 			and ef.Environment.Brightness < ar.Environment.Brightness
@@ -1036,6 +1055,348 @@ do
 		{ WorldId = "VERDANT_VALLEY", PathLength = 3 },
 		function(a) return lcg(99 + a) end, 5)
 	check("retry reports its attempt count", okR and used >= 1 and used <= 5, tostring(used))
+end
+
+-- === 13. Ethereal Scape =============================================
+group("Ethereal Scape (the map-generation test biome)")
+
+do
+	local es = Worlds.ETHEREAL_SCAPE
+	check("Ethereal Scape exists and is Uncommon", es ~= nil and es.Rarity == "UNCOMMON")
+	check("it is rollable in phase 1", es.EnabledInPhase == 1)
+	check("it is in the prototype weight table",
+		GameConfig.Fate.PrototypeWeights.ETHEREAL_SCAPE ~= nil)
+	check("Uncommon sits between Common and Rare in the ladder",
+		Constants.RARITY.COMMON.Order < Constants.RARITY.UNCOMMON.Order
+			and Constants.RARITY.UNCOMMON.Order < Constants.RARITY.RARE.Order)
+
+	-- It is a TEST biome. Declaring enemies it does not have would be a lie
+	-- the Phase 2 combat work would then have to discover.
+	check("it declares no enemies, boss or loot -- combat is still Phase 2",
+		#es.Enemies == 0 and es.BossId == nil and es.LootTableId == nil)
+	check("its expedition is shorter than the 720s default",
+		es.DurationSeconds < GameConfig.Expedition.DefaultDurationSeconds,
+		string.format("%ds", es.DurationSeconds))
+	check("it carries its own map size as content", es.MapPathLength == 3)
+
+	-- The onboarding arc must actually hand it out, or a tester waits on a
+	-- 15% draw to see the thing they are trying to test.
+	local onboardingIndex
+	for i, id in GameConfig.Fate.OnboardingSequence do
+		if id == "ETHEREAL_SCAPE" then onboardingIndex = i end
+	end
+	check("onboarding guarantees it inside the first five rolls",
+		onboardingIndex ~= nil and onboardingIndex <= 5, tostring(onboardingIndex))
+
+	-- The kit ------------------------------------------------------
+	local lib = ChunkCore.libraryFor(Chunks, "ETHEREAL_SCAPE")
+	check("Ethereal Scape has exactly one ENTRY chunk", lib.ENTRY and #lib.ENTRY == 1)
+	check("Ethereal Scape has exactly one BOSS chunk", lib.BOSS and #lib.BOSS == 1)
+	check("Ethereal Scape has a SIDE pocket (§6 checklist)", lib.SIDE and #lib.SIDE >= 1)
+	check("Ethereal Scape has connective pieces",
+		(#(lib.PATH or {}) + #(lib.COMBAT or {})) >= 4,
+		string.format("%d", #(lib.PATH or {}) + #(lib.COMBAT or {})))
+
+	local esCount = 0
+	for _, c in Chunks do
+		if c.WorldId == "ETHEREAL_SCAPE" then esCount += 1 end
+	end
+	-- One chunk per island in the Blender scene's Aether_Terrain collection.
+	check("the kit has one piece per island in the blend", esCount == 8,
+		string.format("%d pieces", esCount))
+
+	-- Every piece must trace back to the authored scene, not to a guess.
+	local BLEND = "assets/source/worlds/ethereal_scape/aether_environment_refined.blend"
+	local allTraced = true
+	local untraced
+	for id, c in Chunks do
+		if c.WorldId == "ETHEREAL_SCAPE" then
+			local entry = AssetManifest.ENTRIES[c.AssetKey]
+			if not entry or entry.Source ~= BLEND then
+				allTraced = false
+				untraced = id
+			end
+		end
+	end
+	check("every piece names the authored .blend as its source", allTraced, untraced)
+
+	-- The grammar --------------------------------------------------
+	-- Socket Kinds are a PER-WORLD design vocabulary, not a global enum. If
+	-- these two ever overlap, a Verdant Valley footpath could in principle be
+	-- reasoned about as an Ethereal Scape bridge, and the point is lost.
+	local vvKinds, esKinds = {}, {}
+	for _, c in Chunks do
+		local into = if c.WorldId == "VERDANT_VALLEY" then vvKinds
+			elseif c.WorldId == "ETHEREAL_SCAPE" then esKinds
+			else nil
+		if into then
+			for _, s in c.Sockets do into[s.Kind] = true end
+		end
+	end
+	local shared = {}
+	for kind in esKinds do
+		if vvKinds[kind] then table.insert(shared, kind) end
+	end
+	check("the two worlds speak different socket vocabularies", #shared == 0,
+		table.concat(shared, ", "))
+	check("Ethereal Scape speaks SPAN and RITE", esKinds.SPAN and esKinds.RITE)
+
+	check("the Sky Temple accepts only a RITE approach",
+		Chunks.ES_SKY_TEMPLE.Sockets[1].Kind == "RITE" and #Chunks.ES_SKY_TEMPLE.Sockets == 1)
+
+	local riteProviders = {}
+	for id, c in Chunks do
+		if c.WorldId == "ETHEREAL_SCAPE" and c.Role ~= "BOSS" then
+			for _, s in c.Sockets do
+				if s.Kind == "RITE" then table.insert(riteProviders, id) end
+			end
+		end
+	end
+	check("the Waystone Ring is the only piece offering a RITE exit",
+		#riteProviders == 1 and riteProviders[1] == "ES_WAYSTONE_RING",
+		table.concat(riteProviders, ", "))
+
+	-- Assembly -----------------------------------------------------
+	local path = ExpeditionCore.pathLengthFor(es, GameConfig)
+	local built, broken = 0, {}
+	local gated = true
+	local minSpan, maxSpan = math.huge, 0
+	for trial = 1, 300 do
+		local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+			{ WorldId = "ETHEREAL_SCAPE", PathLength = path },
+			function(a) return lcg(trial * 2971215073 + a * 7919) end,
+			GameConfig.Expedition.AssemblyAttempts)
+		if okA then
+			built += 1
+			local okV, errV = ChunkCore.validateLayout(layout, Chunks)
+			if not okV then table.insert(broken, table.concat(errV, ", ")) end
+
+			-- The same emergent property Verdant Valley has, from a kit
+			-- authored independently: a Kind the arena accepts is reserved
+			-- for the arena, so the ring always ends up being the approach.
+			local penultimate = layout.Chunks[#layout.Chunks - 1]
+			if penultimate.ChunkId ~= "ES_WAYSTONE_RING" then gated = false end
+
+			local w, d = ChunkCore.footprint(layout)
+			local span = math.max(w, d)
+			minSpan = math.min(minSpan, span)
+			maxSpan = math.max(maxSpan, span)
+		end
+	end
+	print(string.format("        Ethereal Scape spans %.0f-%.0f studs at path length %d",
+		minSpan, maxSpan, path))
+
+	check("Ethereal Scape assembles on nearly every seed", built >= 285,
+		string.format("%d/300 within %d attempts", built, GameConfig.Expedition.AssemblyAttempts))
+	check("every Ethereal Scape layout is collision-free", #broken == 0, broken[1])
+	check("the Waystone Ring always gates the Sky Temple (emergent, second world)", gated)
+
+	-- Scale: the pieces are sized for the post-rescale world, not the old
+	-- 120-stud hub. The smallest map still has to read as a place.
+	check("even the smallest Ethereal Scape map is bigger than a zone platform",
+		minSpan > 800, string.format("%.0f studs", minSpan))
+	check("walking stays a minority of a 300-second expedition",
+		maxSpan / GameConfig.Scale.WalkSpeed < es.DurationSeconds * 0.35,
+		string.format("%.0fs of %ds (%.0f%%)", maxSpan / GameConfig.Scale.WalkSpeed,
+			es.DurationSeconds, maxSpan / GameConfig.Scale.WalkSpeed / es.DurationSeconds * 100))
+end
+
+-- === 14. Expedition entry ===========================================
+group("Expedition entry (build spec §7.1)")
+
+do
+	local function withRolls(history)
+		return profile({ RollHistory = history, TotalRolls = #history })
+	end
+
+	-- Destination ---------------------------------------------------
+	check("a player who has never rolled has no destination",
+		ExpeditionCore.destinationFrom(withRolls({})) == nil)
+	check("the destination is the most recent roll",
+		ExpeditionCore.destinationFrom(withRolls({
+			{ WorldId = "VERDANT_VALLEY", Rarity = "COMMON", Timestamp = 1 },
+			{ WorldId = "ETHEREAL_SCAPE", Rarity = "UNCOMMON", Timestamp = 2 },
+		})) == "ETHEREAL_SCAPE")
+	check("a malformed history entry does not crash the lookup",
+		ExpeditionCore.destinationFrom(withRolls({ "not a table" })) == nil)
+
+	-- Kits ----------------------------------------------------------
+	check("Verdant Valley has a kit", ExpeditionCore.hasKit(Chunks, "VERDANT_VALLEY"))
+	check("Ethereal Scape has a kit", ExpeditionCore.hasKit(Chunks, "ETHEREAL_SCAPE"))
+	check("Sky Citadel does not", not ExpeditionCore.hasKit(Chunks, "SKY_CITADEL"))
+
+	-- THE DEBT, ASSERTED. Three rollable worlds cannot be entered. This test
+	-- is not here to be green forever -- it is here so the number is in the
+	-- suite and someone has to look at it to change it.
+	local missing = ExpeditionCore.worldsWithoutKits(Worlds, Chunks, GameConfig.CurrentPhase)
+	print(string.format("        rollable but not enterable: %s", table.concat(missing, ", ")))
+	check("rollable-but-not-enterable worlds are reported, sorted",
+		#missing == 3 and missing[1] == "ASTRAL_REACH" and missing[2] == "EMBERFALL"
+			and missing[3] == "SKY_CITADEL",
+		table.concat(missing, ", "))
+
+	-- Map size and duration are content, with a config fallback ------
+	check("a world's own MapPathLength wins",
+		ExpeditionCore.pathLengthFor(Worlds.ETHEREAL_SCAPE, GameConfig) == 3)
+	check("a world without one falls back to config",
+		ExpeditionCore.pathLengthFor(Worlds.VERDANT_VALLEY, GameConfig)
+			== GameConfig.Expedition.PathLength)
+	check("duration comes from the world",
+		ExpeditionCore.durationFor(Worlds.ETHEREAL_SCAPE, GameConfig) == 300)
+
+	-- Seeding: an expedition must be reproducible from its log line --
+	local s1 = ExpeditionCore.seedFor(12345, 7, "ETHEREAL_SCAPE")
+	local s2 = ExpeditionCore.seedFor(12345, 7, "ETHEREAL_SCAPE")
+	check("the same player, roll and world always seed the same", s1 == s2)
+	check("a different roll number seeds differently",
+		s1 ~= ExpeditionCore.seedFor(12345, 8, "ETHEREAL_SCAPE"))
+	check("a different player seeds differently",
+		s1 ~= ExpeditionCore.seedFor(999, 7, "ETHEREAL_SCAPE"))
+	check("a different world seeds differently",
+		s1 ~= ExpeditionCore.seedFor(12345, 7, "VERDANT_VALLEY"))
+
+	local inRange = true
+	for userId = 1, 400 do
+		for roll = 1, 5 do
+			local seed = ExpeditionCore.seedFor(userId * 104729, roll, "ETHEREAL_SCAPE")
+			if seed < 0 or seed >= 2147483647 or seed ~= math.floor(seed) then
+				inRange = false
+			end
+		end
+	end
+	check("seeds stay whole and inside 2^31", inRange)
+
+	-- Streams: reproducible per attempt, but each attempt is a new try ---
+	local a1, a2 = ExpeditionCore.streamFor(s1, 1), ExpeditionCore.streamFor(s1, 1)
+	local sameStream = true
+	for _ = 1, 200 do
+		if a1() ~= a2() then sameStream = false end
+	end
+	check("the same seed and attempt produce the same stream", sameStream)
+	check("a retry does not replay the failed attempt",
+		ExpeditionCore.streamFor(s1, 1)() ~= ExpeditionCore.streamFor(s1, 2)())
+
+	-- END TO END: the same player rolling the same world twice must get the
+	-- same map, and two different players must not.
+	local function mapFor(userId, rollNumber)
+		local seed = ExpeditionCore.seedFor(userId, rollNumber, "ETHEREAL_SCAPE")
+		local okM, layout = ChunkCore.assembleWithRetry(Chunks,
+			{ WorldId = "ETHEREAL_SCAPE", PathLength = 3 },
+			function(att) return ExpeditionCore.streamFor(seed, att) end,
+			GameConfig.Expedition.AssemblyAttempts)
+		if not okM then return nil end
+		local ids = {}
+		for _, c in layout.Chunks do
+			table.insert(ids, string.format("%s@%d,%d,%d", c.ChunkId, c.X, c.Z, c.Yaw))
+		end
+		return table.concat(ids, ">")
+	end
+
+	local mine = mapFor(555, 20)
+	check("an expedition can be replayed exactly from its seed",
+		mine ~= nil and mine == mapFor(555, 20))
+
+	local distinct = {}
+	for userId = 1, 40 do
+		local m = mapFor(userId * 7919, 20)
+		if m then distinct[m] = true end
+	end
+	local n = 0
+	for _ in distinct do n += 1 end
+	check("different players get different maps", n > 1, string.format("%d distinct", n))
+
+	-- Timer ---------------------------------------------------------
+	check("remaining counts down", ExpeditionCore.remaining(100, 300, 160) == 240)
+	check("remaining never goes negative", ExpeditionCore.remaining(100, 300, 9999) == 0)
+
+	-- Stage slots ---------------------------------------------------
+	local occupied = {}
+	check("the first slot is 1", ExpeditionCore.freeSlot(occupied, 4) == 1)
+	occupied[1], occupied[2] = true, true
+	check("occupied slots are skipped", ExpeditionCore.freeSlot(occupied, 4) == 3)
+	occupied[3], occupied[4] = true, true
+	check("a full server returns nil rather than stacking maps",
+		ExpeditionCore.freeSlot(occupied, 4) == nil)
+
+	local x, y, z = ExpeditionCore.stageOffset(3, 12000)
+	check("stages are spaced apart so two maps cannot intersect",
+		x == 24000 and y == 0 and z == 0, string.format("(%d,%d,%d)", x, y, z))
+	check("stage spacing exceeds the widest layout a path length can produce",
+		GameConfig.Expedition.StageSpacing > 8000)
+
+	check("the entry chunk is findable", ExpeditionCore.entryChunk({
+		Chunks = { { Role = "PATH", ChunkId = "A" }, { Role = "ENTRY", ChunkId = "B" } },
+	}).ChunkId == "B")
+
+	-- The entry decision, refusal by refusal -------------------------
+	local rolled = withRolls({ { WorldId = "ETHEREAL_SCAPE", Rarity = "UNCOMMON", Timestamp = 1 } })
+
+	-- A Lua table literal cannot carry "set this key to nil", and two of the
+	-- cases below are precisely about a nil field. NONE is the stand-in.
+	local NONE = {}
+	local function decide(overrides)
+		local opts = {
+			Profile = rolled,
+			Worlds = Worlds,
+			Chunks = Chunks,
+			Config = GameConfig,
+			Now = 1000,
+			LastEntryAt = nil,
+			AlreadyActive = false,
+			DistanceToGate = 10,
+			FreeSlot = 1,
+		}
+		for k, v in overrides or {} do
+			opts[k] = if v == NONE then nil else v
+		end
+		return ExpeditionCore.evaluateEntry(opts)
+	end
+
+	local allowed = decide()
+	check("a player who has rolled a world with a kit may enter",
+		allowed.Allowed and allowed.WorldId == "ETHEREAL_SCAPE",
+		tostring(allowed.Refusal))
+
+	check("a player who has not rolled is refused",
+		decide({ Profile = withRolls({}) }).Refusal == "NO_DESTINATION")
+	check("a world with no kit is refused at the door, not mid-assembly",
+		decide({ Profile = withRolls({
+			{ WorldId = "SKY_CITADEL", Rarity = "EPIC", Timestamp = 1 },
+		}) }).Refusal == "NO_KIT")
+	check("a destination that no longer exists is refused",
+		decide({ Profile = withRolls({
+			{ WorldId = "DELETED_WORLD", Rarity = "COMMON", Timestamp = 1 },
+		}) }).Refusal == "UNKNOWN_WORLD")
+	check("you cannot enter an expedition while on one",
+		decide({ AlreadyActive = true }).Refusal == "ALREADY_IN_EXPEDITION")
+	check("entry is rate limited", decide({ LastEntryAt = 999.5 }).Refusal == "COOLDOWN")
+	check("the cooldown expires", decide({ LastEntryAt = 990 }).Allowed)
+	check("you must be at the Gate",
+		decide({ DistanceToGate = 5000 }).Refusal == "TOO_FAR")
+	check("a missing Gate skips the distance check rather than failing shut",
+		decide({ DistanceToGate = NONE }).Allowed)
+	check("a full server refuses rather than overlapping maps",
+		decide({ FreeSlot = NONE }).Refusal == "SERVER_FULL")
+
+	local off = cfg({ Expedition = { Enabled = false } })
+	check("the Phase 2 switch closes the door completely",
+		decide({ Config = off }).Refusal == "DISABLED")
+
+	-- The guards must be checked BEFORE anything that reads content, so a
+	-- spamming client never reaches the assembler.
+	check("cooldown outranks having no destination",
+		decide({ Profile = withRolls({}), LastEntryAt = 999.5 }).Refusal == "COOLDOWN")
+
+	-- Silence is the default, for the reason §3.4.3 gives about the roll.
+	local spoken = {}
+	for _, refusal in { "DISABLED", "NO_DESTINATION", "UNKNOWN_WORLD", "NO_KIT",
+		"ALREADY_IN_EXPEDITION", "COOLDOWN", "TOO_FAR", "SERVER_FULL" } do
+		if ExpeditionCore.refusalMessage(refusal) then table.insert(spoken, refusal) end
+	end
+	table.sort(spoken)
+	check("only the two refusals a legitimate player can hit say anything",
+		#spoken == 2 and spoken[1] == "NO_DESTINATION" and spoken[2] == "NO_KIT",
+		table.concat(spoken, ", "))
 end
 
 -- === summary ========================================================
