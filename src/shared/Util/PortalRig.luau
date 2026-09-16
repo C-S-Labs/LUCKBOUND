@@ -99,10 +99,29 @@ function PortalRig.build(config: Config, parent: Instance): Model
 
 	local base = config.Position
 
+	-- PLINTH HEIGHT IS CAPPED, and that is a gameplay constraint rather than
+	-- an art one. At the Gate's scale an uncapped 1.5-stud plinth stands 18
+	-- studs tall -- higher than a Roblox character can jump -- so the portal
+	-- became a walled-off monument nobody could reach. Width still scales;
+	-- only the step up is capped, so the rig reads as monumental AND is
+	-- something you can walk onto.
+	local plinthHeight = math.min(cfg.PlinthHeight * scale, cfg.MaxPlinthHeight)
+
 	-- Base plinth: octagonal, blueprint §1.3.
+	--
+	-- `Shape = Cylinder`, NOT a Part wearing a CylinderMesh. A CylinderMesh is
+	-- visual only -- the part keeps its square collision hull, so the corners
+	-- block a player standing somewhere that looks like open floor. This was
+	-- reported from a playtest as "I cannot walk near the portal, the mesh is
+	-- too large but not visible".
+	--
+	-- PartType.Cylinder's axis is X, so the part is rolled a quarter turn to
+	-- stand it up and its Size is (height, diameter, diameter).
 	local plinth = makePart("Plinth", model)
-	plinth.Size = Vector3.new(cfg.PlinthDiameter * scale, cfg.PlinthHeight * scale, cfg.PlinthDiameter * scale)
-	plinth.Position = base + Vector3.new(0, cfg.PlinthHeight * scale / 2, 0)
+	plinth.Size = Vector3.new(plinthHeight, cfg.PlinthDiameter * scale, cfg.PlinthDiameter * scale)
+	plinth.Shape = Enum.PartType.Cylinder
+	plinth.CFrame = CFrame.new(base + Vector3.new(0, plinthHeight / 2, 0))
+		* CFrame.Angles(0, 0, math.pi / 2)
 	plinth.Material = config.PlinthMaterial
 	plinth.Color = Color3.fromRGB(196, 190, 208)
 	plinth.CanCollide = true
@@ -111,10 +130,10 @@ function PortalRig.build(config: Config, parent: Instance): Model
 	-- a mesh; this is a cylinder standing in for it, and is the first thing an
 	-- authored plinth mesh should replace. PlinthSides is carried in config so
 	-- the intent is not lost.
-	local plinthMesh = Instance.new("CylinderMesh")
-	plinthMesh.Parent = plinth
 
-	local ringHeight = base + Vector3.new(0, (cfg.OuterRingRadius + cfg.PlinthHeight) * scale, 0)
+	-- The outer ring's BOTTOM sits on the plinth's top, so the arch springs
+	-- from the floor the player is standing on rather than hovering above it.
+	local ringHeight = base + Vector3.new(0, cfg.OuterRingRadius * scale + plinthHeight, 0)
 	local axis = CFrame.new(ringHeight)
 
 	local outer = buildRing(
@@ -162,7 +181,7 @@ function PortalRig.build(config: Config, parent: Instance): Model
 		rune.Size = Vector3.new(2.2 * scale, 0.3 * scale, 3.4 * scale)
 		rune.Material = Enum.Material.Slate
 		rune.Color = Color3.fromRGB(88, 82, 104)
-		rune.CFrame = CFrame.new(base + Vector3.new(0, (cfg.PlinthHeight + 0.2) * scale, 0))
+		rune.CFrame = CFrame.new(base + Vector3.new(0, plinthHeight + 0.2 * scale, 0))
 			* CFrame.Angles(0, angle, 0)
 			* CFrame.new(0, 0, -(cfg.PlinthDiameter / 2 - 1.4) * scale)
 

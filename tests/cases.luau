@@ -546,9 +546,9 @@ do
 		for _, d in Crossroads.Districts do
 			if d.Id == "GLOBAL_OBSERVATORY" then obs = d end
 		end
-		local run = (obs.PlatformRadius + 8) * obs.RampTurns * 2 * math.pi
-		check("the observatory ramp has a climbable gradient",
-			anchors.GLOBAL_OBSERVATORY.Y / run < 0.5,
+		local run = obs.Approach.StartRadius - obs.Approach.EndRadius
+		check("the observatory approach has a climbable gradient",
+			anchors.GLOBAL_OBSERVATORY.Y / run < 0.6,
 			string.format("rise %d over run %.0f", anchors.GLOBAL_OBSERVATORY.Y, run))
 	end
 	check("Fate Engine is at true centre",
@@ -569,7 +569,7 @@ do
 	check("Hall of Legends has 5 obelisk slots", byId.HALL_OF_LEGENDS.ObeliskSlots == 5)
 	check("Training Grounds has 3 dummies plus a boss dummy",
 		byId.TRAINING_GROUNDS.DummyCount == 3 and byId.TRAINING_GROUNDS.HasBossDummy)
-	check("hub is 1200 studs across", Crossroads.Plaza.Diameter == 1200)
+	check("hub is 1150 studs across", Crossroads.Plaza.Diameter == 1150)
 	check("the gate processional is wider than a walkway",
 		Crossroads.Bridges.ProcessionalWidth > Crossroads.Bridges.Width)
 
@@ -632,8 +632,14 @@ do
 	check("the Fate Engine reads as monumental against its platform",
 		engineRingR > engineR * 0.3 and engineRingR < engineR,
 		string.format("ring %.0f vs platform %.0f", engineRingR, engineR))
-	check("the roll prompt reaches beyond the plinth",
-		GameConfig.UI.PromptActivationDistance * 2
+	-- This assertion used to carry a `* 2` fudge factor and covered only the
+	-- Engine. Both were wrong: the Gate is the larger rig, and at 12x its
+	-- plinth was 84 studs in radius against a 70-stud prompt -- so a player
+	-- standing ON the plinth was outside the prompt's range and the portal
+	-- could not be used at all. The generalised version is in its own group
+	-- below; this one stays as the Engine's specific case, without the fudge.
+	check("the roll prompt reaches beyond the Engine's plinth",
+		GameConfig.UI.PromptActivationDistance
 			> GameConfig.Portal.PlinthDiameter * GameConfig.Portal.FateEngineScale * 0.5)
 	check("the gate processional is wider than a walkway",
 		Crossroads.Bridges.ProcessionalWidth > Crossroads.Bridges.Width)
@@ -1055,6 +1061,162 @@ do
 		{ WorldId = "VERDANT_VALLEY", PathLength = 3 },
 		function(a) return lcg(99 + a) end, 5)
 	check("retry reports its attempt count", okR and used >= 1 and used <= 5, tostring(used))
+end
+
+-- === 12b. Hub geometry a player can actually touch ==================
+-- EVERY CHECK IN THIS GROUP IS A PLAYTEST REGRESSION. The 2026-09-16 Studio
+-- pass found the hub had no floor, no complete paths, an unreachable portal
+-- and a spawn point inside a walkway -- and all 276 tests were green. These
+-- assert the relationships that were silently false.
+group("Hub geometry a player can actually touch")
+
+do
+	local anchors = GameConfig.HubLayout.Anchors
+	local portal = GameConfig.Portal
+
+	-- Roblox's default JumpPower 50 against gravity 196.2 clears about 6.37
+	-- studs. Anything a player must get on top of has to be under that.
+	local JUMP_HEIGHT = 6.3
+
+	local PORTALS = {
+		{ Name = "Fate Engine", Scale = portal.FateEngineScale,
+			Reach = GameConfig.UI.PromptActivationDistance },
+		{ Name = "Expedition Gate", Scale = portal.ExpeditionGateScale,
+			Reach = GameConfig.UI.PromptActivationDistance },
+		-- The way home out of an expedition is the same rig at a smaller
+		-- scale, and would fail the same way if nobody checked.
+		{ Name = "Return portal", Scale = GameConfig.Expedition.ReturnPortalScale,
+			Reach = GameConfig.Expedition.ReturnPromptDistance },
+	}
+
+	-- 1. A PROMPT MUST REACH THE EDGE OF ITS OWN PLINTH.
+	-- ProximityPrompt distance is measured from its part's origin, so a plinth
+	-- wider than the prompt's reach locks the player out while standing on it.
+	for _, p in PORTALS do
+		local plinthRadius = portal.PlinthDiameter * p.Scale * 0.5
+		check(
+			string.format("%s: the prompt reaches past its own plinth", p.Name),
+			p.Reach > plinthRadius,
+			string.format("reach %d vs plinth radius %.0f", p.Reach, plinthRadius)
+		)
+	end
+
+	-- 2. A PLINTH MUST BE A STEP, NOT A WALL.
+	for _, p in PORTALS do
+		local height = math.min(portal.PlinthHeight * p.Scale, portal.MaxPlinthHeight)
+		check(
+			string.format("%s: the plinth can be jumped onto", p.Name),
+			height < JUMP_HEIGHT,
+			string.format("%.1f studs vs a %.1f-stud jump", height, JUMP_HEIGHT)
+		)
+	end
+	check("the plinth height cap is what makes that true at any scale",
+		portal.PlinthHeight * portal.ExpeditionGateScale > portal.MaxPlinthHeight,
+		"the cap is inert -- it should be binding at the Gate's scale")
+
+	-- 3. THE PLAZA IS A FLOOR, NOT A COLUMN.
+	-- It was built as a Part wearing a CylinderMesh, whose axis is Y while
+	-- every caller passed the X convention -- so the 1200-stud plaza became a
+	-- 1200-stud-tall wall and the hub had no ground at all.
+	check("the plaza is a disc, not a column",
+		Crossroads.Plaza.Thickness < Crossroads.Plaza.Diameter * 0.1,
+		string.format("%d thick vs %d across",
+			Crossroads.Plaza.Thickness, Crossroads.Plaza.Diameter))
+
+	-- 4. WALKWAYS MUST MEET THE PLATFORMS THEY SERVE.
+	-- The half-extent along the APPROACH, not always X. Hall of Legends is
+	-- 320x250 approached down -Z, so its near edge is 125 studs out, not 160;
+	-- using X left a hole in the floor between walkway and platform.
+	local worstGap, worstZone = math.huge, ""
+	for _, d in Crossroads.Districts do
+		local anchor = anchors[d.Id]
+		local mag = math.sqrt(anchor.X * anchor.X + anchor.Z * anchor.Z)
+		if mag > 1 then
+			local dx, dz = anchor.X / mag, anchor.Z / mag
+			local half = math.abs(dx) * d.PlatformSize.X / 2
+				+ math.abs(dz) * d.PlatformSize.Z / 2
+			-- Walkway runs from the Engine platform edge to the zone edge.
+			local span = mag - half - Crossroads.FateEngine.PlatformRadius
+			if span < worstGap then worstGap, worstZone = span, d.Id end
+		end
+	end
+	check("every walkway has a positive span to cross",
+		worstGap > 0, string.format("%s at %.0f studs", worstZone, worstGap))
+
+	check("walkways overlap both ends rather than butting up to a seam",
+		Crossroads.Bridges.Overlap > 0)
+
+	-- 5. NOTHING HANGS OFF THE EDGE OF THE FLOOR.
+	local plazaRadius = Crossroads.Plaza.Diameter / 2
+	local worstOverhang, overhangZone = -math.huge, ""
+	for _, d in Crossroads.Districts do
+		local anchor = anchors[d.Id]
+		local mag = math.sqrt(anchor.X * anchor.X + anchor.Z * anchor.Z)
+		local far = mag + math.max(d.PlatformSize.X, d.PlatformSize.Z) / 2
+		if far - plazaRadius > worstOverhang then
+			worstOverhang, overhangZone = far - plazaRadius, d.Id
+		end
+	end
+	check("no zone platform overhangs the plaza it stands on",
+		worstOverhang <= 0,
+		string.format("%s overhangs by %.0f studs", overhangZone, worstOverhang))
+
+	-- 6. THE SPAWN POINT IS NOT INSIDE SOMETHING.
+	-- At (0, 8, 250) it sat within the processional walkway's own volume, so
+	-- Roblox ejected the character upward -- which is how a playtest opened
+	-- standing on top of a pillar.
+	local deckTop = GameConfig.HubLayout.WalkwayRaise + Crossroads.Bridges.Thickness / 2
+	check("spawn is above the walkway deck, not inside it",
+		GameConfig.HubLayout.SpawnAnchor.Y > deckTop,
+		string.format("spawn Y %.0f vs deck top %.0f",
+			GameConfig.HubLayout.SpawnAnchor.Y, deckTop))
+	check("spawn is over the processional, not out in space",
+		math.abs(GameConfig.HubLayout.SpawnAnchor.Z) < anchors.EXPEDITION_GATE.Z)
+
+	-- 7. THE WAY UP MUST NOT WRAP THE FATE ENGINE.
+	-- The Observatory's access used to be a 2.5-turn helix at radius 118,
+	-- forty studs wide -- so it occupied radius 98 to 138 while the Engine's
+	-- own platform is radius 120. It encircled the single most important
+	-- object in the game and blocked the walk up to it. Reported from the
+	-- 2026-09-16 playtest as "the staircase obstructs the player's path to
+	-- the actual fate engine".
+	local obs
+	for _, d in Crossroads.Districts do
+		if d.Id == "GLOBAL_OBSERVATORY" then obs = d end
+	end
+	local approach = obs.Approach
+	local engineR = Crossroads.FateEngine.PlatformRadius
+
+	check("the approach starts clear of the Fate Engine platform",
+		approach.StartRadius > engineR,
+		string.format("starts at %d, Engine platform is %d",
+			approach.StartRadius, engineR))
+
+	-- It may only cross the Engine platform's footprint from above. Height at
+	-- a given radius is linear along the deck.
+	local rise = obs.Height + obs.PlatformSize.Y / 2
+	local run = approach.StartRadius - approach.EndRadius
+	local heightAtEngineEdge = rise * (approach.StartRadius - engineR) / run
+	-- The rig's crown: ring centre (radius*scale + capped plinth) plus radius.
+	local rigCrown = GameConfig.Portal.OuterRingRadius * Crossroads.FateEngine.PortalScale * 2
+		+ GameConfig.Portal.MaxPlinthHeight
+	check("where it does pass over the Engine, it clears the rig entirely",
+		heightAtEngineEdge > rigCrown,
+		string.format("%.0f studs up at the platform edge vs a %.0f-stud rig",
+			heightAtEngineEdge, rigCrown))
+
+	-- 45 degrees is the empty diagonal; the four walkways run at 0/90/180/270.
+	local WALKWAY_BEARINGS = { 0, 90, 180, 270 }
+	local clearsWalkways = true
+	for _, bearing in WALKWAY_BEARINGS do
+		if math.abs(obs.Angle - bearing) < 20 then clearsWalkways = false end
+	end
+	check("the approach runs on a diagonal, so it crosses no walkway",
+		clearsWalkways, string.format("bearing %d", obs.Angle))
+
+	check("the approach deck is wide enough to be a road, not a beam",
+		approach.Width >= Crossroads.Bridges.Width * 0.5,
+		string.format("%d studs", approach.Width))
 end
 
 -- === 13. Ethereal Scape =============================================

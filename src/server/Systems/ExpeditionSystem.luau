@@ -46,6 +46,10 @@ type Active = {
 local active: { [number]: Active } = {}
 local occupiedSlots: { [number]: boolean } = {}
 local lastEntryAt: { [number]: number } = {}
+-- Set only for the duration of one forceEnter call, so the distance check is
+-- skipped for that call and nothing else. A flag rather than a parameter keeps
+-- requestEnter's signature honest: it is still "the client sends nothing".
+local forcedEntry: { [number]: boolean } = {}
 
 local function stageFolder(): Folder
 	local existing = Workspace:FindFirstChild(Constants.NAMES.EXPEDITION_STAGE)
@@ -58,16 +62,18 @@ local function stageFolder(): Folder
 	return folder
 end
 
---- The Gate's portal, which is what "walk into the portal" measures against.
+--- The Gate's entry anchor -- the same seam the Fate Engine's RollAnchor is.
+--- Distance is measured from here rather than from the portal art, so the rig
+--- can be rebuilt in Blender at any size without moving the goalposts.
+---
 --- Absent on a place with no hub, in which case the distance check is skipped
 --- rather than failing -- same handling FateSystem gives a missing RollAnchor.
 local function gatePart(): BasePart?
 	local hub = Workspace:FindFirstChild(Constants.NAMES.CROSSROADS)
 	local zones = hub and hub:FindFirstChild("Zones")
 	local gate = zones and zones:FindFirstChild("EXPEDITION_GATE")
-	local rig = gate and gate:FindFirstChild("GateRig")
-	local plane = rig and rig:FindFirstChild("PortalPlane")
-	return if plane and plane:IsA("BasePart") then plane else nil
+	local anchor = gate and gate:FindFirstChild(Constants.NAMES.GATE_ANCHOR)
+	return if anchor and anchor:IsA("BasePart") then anchor else nil
 end
 
 local function distanceToGate(player: Player): number?
@@ -118,7 +124,7 @@ local function buildReturnPortal(stage: Model, position: Vector3, rarityKey: str
 	prompt.ActionText = "RETURN"
 	prompt.ObjectText = "The Crossroads"
 	prompt.HoldDuration = 0.4
-	prompt.MaxActivationDistance = 40
+	prompt.MaxActivationDistance = GameConfig.Expedition.ReturnPromptDistance
 	prompt.RequiresLineOfSight = false
 	prompt.Parent = plinth
 
@@ -215,7 +221,7 @@ function ExpeditionSystem.requestEnter(player: Player, ...: any): ()
 		Now = os.clock(),
 		LastEntryAt = lastEntryAt[player.UserId],
 		AlreadyActive = active[player.UserId] ~= nil,
-		DistanceToGate = distanceToGate(player),
+		DistanceToGate = if forcedEntry[player.UserId] then nil else distanceToGate(player),
 		FreeSlot = ExpeditionCore.freeSlot(occupiedSlots, GameConfig.Expedition.MaxConcurrent),
 	})
 
@@ -340,6 +346,42 @@ function ExpeditionSystem.requestEnter(player: Player, ...: any): ()
 	)
 end
 
+--- DEVELOPER TOOL, behind DebugSystem's permission check.
+---
+--- Bypasses the DISTANCE check only. Everything else -- a destination, a kit
+--- for it, not already running, a free stage slot -- still applies, because
+--- skipping those would exercise a path the game does not actually have and
+--- would prove nothing. Returns ok plus a line to print back.
+function ExpeditionSystem.forceEnter(player: Player): (boolean, string)
+	if active[player.UserId] then
+		return false, "already on an expedition"
+	end
+
+	local profile = SaveSystem.get(player)
+	if not profile then
+		return false, "no profile loaded yet"
+	end
+
+	local worldId = ExpeditionCore.destinationFrom(profile)
+	if not worldId then
+		return false, "roll first -- you have no destination"
+	end
+	if not ExpeditionCore.hasKit(Chunks, worldId) then
+		return false, `{worldId} has no chunk kit, so no map can be built`
+	end
+
+	-- Clear the entry cooldown too: a developer re-entering repeatedly is the
+	-- point of the command, not something to rate limit.
+	lastEntryAt[player.UserId] = nil
+	forcedEntry[player.UserId] = true
+	ExpeditionSystem.requestEnter(player)
+	forcedEntry[player.UserId] = nil
+
+	return active[player.UserId] ~= nil, if active[player.UserId]
+		then `entered {worldId}`
+		else `entry failed -- see the server log`
+end
+
 function ExpeditionSystem.init(saveSystem: any, progressionSystem: any): ()
 	SaveSystem = saveSystem
 	ProgressionSystem = progressionSystem
@@ -391,28 +433,19 @@ function ExpeditionSystem.init(saveSystem: any, progressionSystem: any): ()
 	end)
 end
 
---- Binds the Gate's ProximityPrompt once the hub exists. Triggered fires on
---- the server with the triggering player, so this path carries no client data
---- at all -- the strongest version of build spec §3.4's "the client sends
---- nothing".
+--- Binds the Gate's ProximityPrompt once the hub exists. HubBuilder creates
+--- the prompt (it owns geometry); this only attaches behaviour to it.
+---
+--- Triggered fires on the SERVER with the triggering player, so this path
+--- carries no client data at all -- the strongest version of build spec
+--- §3.4's "the client sends nothing".
 function ExpeditionSystem.bindGatePrompt(): ()
-	local target = gatePart()
-	local rig = target and target.Parent
-	local plinth = rig and rig:FindFirstChild("Plinth")
-	if not plinth or not plinth:IsA("BasePart") then
-		warn("[ExpeditionSystem] no Gate plinth found; entry is remote-only")
+	local anchor = gatePart()
+	local prompt = anchor and anchor:FindFirstChild("EnterPrompt")
+	if not prompt or not prompt:IsA("ProximityPrompt") then
+		warn("[ExpeditionSystem] no GateAnchor prompt found; entry is remote-only")
 		return
 	end
-
-	local prompt = Instance.new("ProximityPrompt")
-	prompt.Name = "EnterPrompt"
-	prompt.ActionText = "ENTER"
-	prompt.ObjectText = "Expedition Gate"
-	prompt.HoldDuration = 0.5
-	prompt.MaxActivationDistance = GameConfig.UI.PromptActivationDistance
-	prompt.RequiresLineOfSight = false
-	prompt.Enabled = GameConfig.Expedition.Enabled
-	prompt.Parent = plinth
 
 	prompt.Triggered:Connect(function(player)
 		ExpeditionSystem.requestEnter(player)

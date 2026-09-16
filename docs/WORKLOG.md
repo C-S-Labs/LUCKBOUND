@@ -33,6 +33,257 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 7 — 2026-09-16 — Modeller handoff, and the art seam
+
+**Branch:** `claude/zen-volta-cuhfyh` (PR #13) · **Tests:** 293 passing · no code change
+
+### Done
+
+- Observatory staircase confirmed fixed in Studio by the owner.
+- **`docs/MODELLER_HANDOFF.pdf`** — a 7-page brief to hand to an artist:
+  deliverable formats, the six export settings that matter, the R6 scale check,
+  how to build a prefab whose parts can be animated, the reserved `Crossroads`
+  name, and a spec sheet of exact part names and stud dimensions for the Fate
+  Engine and the Expedition Gate.
+
+### Decisions made
+
+- **Ask for `.rbxmx` (XML), not `.rbxm` (binary).** Both work in the game; only
+  the XML one can be *read* from this side. With XML the wiring code is written
+  against the part names actually in the file; with binary it is written blind
+  against a list, and a typo surfaces at runtime instead of at review.
+- **The spec sheet's numbers are derived from `GameConfig.Portal`, not typed by
+  hand**, so they cannot drift from what the code expects. If a scale changes,
+  regenerate the PDF rather than editing it.
+- **The plinth's 3-stud cap is in the brief as a hard constraint**, with the
+  reason: an earlier build scaled it to 18 and walled the portal off entirely.
+  An artist told only "make it monumental" would rebuild that bug in mesh form.
+
+### Open — two things that will break when art lands
+
+Both are mine to fix, both were found by reading rather than by a test:
+
+1. **`HubBuilder.meshOrNil` is broken.** It sets `MeshPart.MeshId` at runtime,
+   which Roblox does not permit. It is wrapped in a `pcall`, so all nine
+   `MeshId` seams in `Crossroads.luau` **silently fall back to primitives** —
+   an authored mesh would appear not to work, with no error. `ChunkLoader`
+   already does it correctly via `AssetService:CreateMeshPartAsync`; the fix is
+   to bring `meshOrNil` in line, plus a prefab-clone path for `.rbxmx`.
+2. **A hand-built `Crossroads` disables more than the hub.** `HubBuilder.build`
+   returns early if `Workspace.Crossroads` exists, which also skips the
+   `RollAnchor`, the `GateAnchor` and its prompt, the `SpawnLocation` and
+   `applyLighting()` — so rolling and expedition entry break silently. The
+   per-piece `MeshId` seam is the intended path; wholesale replacement needs a
+   guard that still builds the contract parts.
+
+### Stopped at
+
+Docs only, no code touched. The two items above are the first work of the next
+session, and both should land **before** the first authored asset arrives.
+
+### Next
+
+1. Fix `meshOrNil`, add the prefab path, wire `assets/rbxm` into
+   `default.project.json` when the first `.rbxmx` lands.
+2. Guard `HubBuilder.build` so authored geometry cannot silently remove the
+   anchors, spawn and lighting.
+3. Teach `PortalRig` to **adopt** an authored rig rather than only generate one,
+   keeping the same attribute contract (`SpinSpeed`, `Center`, `State`).
+4. Everything from Session 6: Observatory purpose, island upload, hub
+   brightness, `UNCOMMON` colour, Emberfall kit.
+
+---
+
+## Session 6 — 2026-09-16 — The loop closes, and the staircase moves
+
+**Branch:** `claude/zen-volta-cuhfyh` (PR #13) · **Tests:** 293 passing (was 291)
+
+### Done
+
+**The core loop was walked end to end in Studio and it works.** Roll → Gate →
+generated map → return → Fate. From the owner's log:
+
+```
+[Expedition] Setsuru -> ETHEREAL_SCAPE  seed 107807269  5 chunks (0 mesh, 5 blockout)  attempt 1  300s
+[Expedition] Setsuru left ETHEREAL_SCAPE after 55s (RETURNED)
+```
+
+Confirmed working by the owner: the geometry fix, all four walkways, the
+spiral staircase climbing, every developer command, portal recolouring by
+rarity, `/tp` to every region with correct spacing, and Fate on completion.
+
+One new problem, and it was the same class as the others — geometry nobody had
+looked at:
+
+- **The Observatory's spiral ramp encircled the Fate Engine.** A 2.5-turn helix
+  at radius 118, forty studs wide, so it occupied radius **98–138** while the
+  Engine's own platform is radius **120**. Fixing the *step gaps* last session
+  turned it from a broken ladder into a continuous **wall** around the most
+  important object in the game. Replaced with one straight processional on the
+  Observatory's own 45° bearing — the empty diagonal between the Hall and the
+  Archive. Crosses no walkway, clears the rig's 111-stud crown where it passes
+  overhead, leaves the Engine plaza completely open.
+- **The Observatory had two platforms** — a box from `buildPlatform` and a
+  cylinder from its own builder, one buried inside the other. Platform shape is
+  now declared in data (`PlatformShape = "ROUND"`) rather than implied by which
+  builder happened to run.
+
+### Decisions made
+
+- **Shape belongs in the data, not in the builder that runs.** The duplicate
+  platform existed because "the Observatory is round" was knowledge held in
+  `buildObservatory` rather than in the Observatory's own record. One field
+  removed the duplication and made it checkable at boot.
+- **The approach is a ramp, not a stair.** Discrete steps at a 2-stud rise sit
+  exactly on Roblox's auto-step limit and snag; a single sloped deck at 28° is
+  smooth, is four parts instead of sixty-five, and cannot develop gaps.
+- **Balustrades and piers are non-colliding.** A decorative rail must never
+  become the reason a player cannot get onto their own staircase — which is
+  the same mistake, in miniature, as the plinth that walled off the Gate.
+
+### Recommendation, as requested: the Observatory
+
+The staircase is fixed, but **the real question is what the Observatory is
+for.** Its only content is the orrery — a global-state display.
+
+The geometry forces the problem: sitting *above the Engine* means sitting above
+the rig's 111-stud crown, and that height is what forces the climb. It cannot
+simply be lowered.
+
+**Recommendation: if it survives, move it off-centre to a sixth compass point**
+rather than lowering it. A 145-stud climb for a look-out is a poor trade, and a
+ground-level sixth district costs nothing that "above the centre" was buying.
+
+Worth answering *before* the art pass, because it changes the hub's footprint.
+
+### Recorded, not acted on
+
+Two owner-stated directions that change the shape of later work:
+
+- **Expeditions will move to a separate place/instance** via `TeleportService`,
+  for performance and to isolate parties and solo queues. The current in-place
+  `ExpeditionStage` is therefore a prototype of the **loop**, not of the
+  **deployment**. `ExpeditionCore` is unaffected — destination, seed,
+  eligibility and timer decide the same things wherever the map is built, which
+  is the payoff of having kept it pure. `STATUS.md` §5 has the migration notes.
+- **Fate-on-completion may become currency or a loot pool.**
+  `ProgressionSystem.award` is the single seam.
+
+### On the `.blend` question
+
+**It must be uploaded to Roblox first — there is no way around it.** Roblox
+cannot load `.blend` or `.fbx` at runtime; every mesh has to become an
+`rbxassetid://`. But **the PLACE does not need publishing for that**: Studio's
+3D Importer uploads to the account from a local `.rbxl`. Publishing the place
+is only needed for DataStores. Walkthrough in `assets/README.md`.
+
+### Stopped at
+
+Everything from the playtest is fixed and green. **The Observatory approach is
+the only untested change** — it should be re-walked first.
+
+### Next
+
+1. Re-walk the Observatory approach (`TESTING.md` Test C3).
+2. Decide what the Observatory is for, or cut it.
+3. Upload the eight Ethereal Scape islands — the biggest visible change left.
+4. Hub brightness; bless the `UNCOMMON` colour; an Emberfall chunk kit.
+5. **Turn `Debug.AllowCommands` and `AllowForcedRolls` off before launch.**
+
+---
+
+## Session 5 — 2026-09-16 — The first walk, and what it found
+
+**Branch:** `claude/zen-volta-cuhfyh` (PR #13) · **Tests:** 291 passing (was 276)
+
+### Done
+
+The rescaled hub was walked in Studio for the first time. It found four bugs
+that 276 green tests could not see, three of them sharing one cause.
+
+- **The hub had no floor.** `HubBuilder.cylinder()` built a `Part` wearing a
+  `CylinderMesh`, and two separate things were wrong with that:
+  1. a `CylinderMesh` is **visual only** — the part keeps its *block* collision
+     hull, so invisible square corners stop the player in open space;
+  2. `CylinderMesh`'s axis is **Y**, `PartType.Cylinder`'s is **X**, and every
+     caller passed the X convention `(thickness, diameter, diameter)`. So a
+     thin disc was built as a diameter-**tall column**. The 1150-stud plaza was
+     a 1150-stud wall. The player spawned on top of it.
+
+  Now a real `Shape = Cylinder` primitive, rolled a quarter turn. Real
+  collision, right orientation. Same fix applied to the portal plinths.
+- **Two walkways stopped short.** They used the platform's X half-extent
+  regardless of which axis they approached along — right for the two square
+  zones, 30–40 stud holes for Hall of Legends and the Gate. Now projected onto
+  the approach direction, sloped to meet both surfaces, and overlapped at both
+  ends.
+- **The Observatory ramp was 70 floating tiles.** A literal 5-stud step depth,
+  correct at the old 120-stud scale, left 21-stud gaps at the new radius. Depth
+  is now derived from the arc each step must span.
+- **The Expedition Gate could not be used.** Its prompt sat on a plinth 84
+  studs in radius against a 70-stud activation distance, and the plinth was 18
+  studs tall — higher than a character can jump. Now a `GateAnchor` part
+  (exactly the Fate Engine's `RollAnchor` pattern) and a capped plinth height.
+- **Rescaled on the owner's read of it:** hub 1200 → 1150, zone ring 420 → 400,
+  platforms down ~10%, portal scales 9/12 → 6/8.
+- **Developer commands**, requested: `/fly /speed /tp /where /worlds` on the
+  client, `/roll /enter /leave` on the server. `TESTING.md` §2.5.
+
+### Decisions made
+
+- **Commands live on whichever side already has authority.** Your character's
+  velocity, speed and CFrame are already yours — Roblox gives the client
+  network ownership of its own rig — so routing those through the server buys
+  nothing. Roll results, expedition entry and Fate awards are the opposite and
+  are server-side, debug build or not.
+- **Three gates on the server commands**, and the middle one is the real one:
+  `Debug.AllowCommands`, **Studio-or-place-creator**, then the command's own
+  flag. A config flag left true by accident must not by itself hand a stranger
+  a free Mythic.
+- **A forced roll is never announced.** Same line, same reason, as a scripted
+  onboarding roll: a developer typing `/roll ASTRAL_REACH` must not fire a
+  Fatebreak banner at the whole server.
+- **`MaxPlinthHeight` caps the step, not the width.** The rig still scales and
+  still reads as monumental; only the height you have to climb is capped, so a
+  portal can never again become a walled-off monument.
+- **No `PlatformStand` in `/fly`.** It is the obvious way to stop the humanoid
+  fighting the velocity constraint, and it makes the rig go limp and fly
+  face-down. A `LinearVelocity` with infinite `MaxForce` already beats gravity,
+  so the humanoid is left alone and stays upright.
+
+### The lesson worth keeping
+
+**A test that asserts a number proves nothing about the shape that number
+produces.** `Plaza.Diameter == 1150` was true the entire time the plaza was a
+wall. And **a fudge factor in an assertion is a disabled assertion** — the
+prompt-reach check passed with a `* 2` in it while the Gate was genuinely
+unusable.
+
+The 15 new tests assert *relationships* instead: is it thinner than it is wide,
+can it be jumped onto, does the prompt reach past its own plinth, does the
+walkway have a positive span, is the spawn above the deck. Those survive a
+rescale. Literals do not. Recorded in build spec §6.1 and `STATUS.md` §4.
+
+### Stopped at
+
+**The hub is fixed but unwalked; the expedition is still unproven.** The Gate
+was unreachable last session, so nobody has yet entered a generated map — the
+thing §7.1 was built for. Everything here is green in CI and none of it has
+been seen.
+
+### Next
+
+1. **Check the floor first.** Plaza, Engine platform and Observatory platform
+   should now be surfaces you can stand anywhere on, with four continuous
+   walkways and a continuous ramp. If not, stop there and report it.
+2. **Then `TESTING.md` Test C2** — `/roll ETHEREAL_SCAPE`, take the Gate, walk
+   the map, come home.
+3. Hub brightness; upload the eight islands; bless the `UNCOMMON` colour; an
+   Emberfall chunk kit.
+4. **Turn `Debug.AllowCommands` and `AllowForcedRolls` off before launch.**
+
+---
+
 ## Session 4 — 2026-09-16 — Ethereal Scape, and the door at the end of the roll
 
 **Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 276 passing (was 208)

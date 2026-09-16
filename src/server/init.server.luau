@@ -21,12 +21,13 @@ local ProgressionSystem = require(Systems.ProgressionSystem)
 local FateSystem = require(Systems.FateSystem)
 local EventSystem = require(Systems.EventSystem)
 local ExpeditionSystem = require(Systems.ExpeditionSystem)
+local DebugSystem = require(Systems.DebugSystem)
 local HubBuilder = require(Systems.HubBuilder)
 
 -- Boot progress is printed at every stage. A server that stops partway now
 -- names the step it stopped on, instead of going silent and leaving you to
 -- guess -- which is what a yielding call in a system's init() looks like.
-local TOTAL_STEPS = 10
+local TOTAL_STEPS = 11
 local stepNumber = 0
 local function step(name: string)
 	stepNumber += 1
@@ -79,6 +80,10 @@ FateSystem.init(SaveSystem, ProgressionSystem, EventSystem)
 -- than pointers and the boot order stays a straight line.
 step("ExpeditionSystem")
 ExpeditionSystem.init(SaveSystem, ProgressionSystem)
+-- 8. Developer commands. Last of the systems on purpose: nothing above may
+-- depend on it, so deleting it before launch breaks nothing.
+step("DebugSystem")
+DebugSystem.init(FateSystem, ExpeditionSystem)
 
 -- 9. Hub. Generated from Content/Hub/Crossroads data, and skipped entirely if
 -- Workspace already contains a hand-built Crossroads -- authored geometry
@@ -89,9 +94,9 @@ HubBuilder.build()
 -- geometry HubBuilder creates.
 ExpeditionSystem.bindGatePrompt()
 
--- 10. Player binding LAST, so nobody can arrive before systems are ready.
+-- 11. Player binding LAST, so nobody can arrive before systems are ready.
 step("binding players")
---- The hub is 1200 studs across, so Roblox's default 16 studs/second would
+--- The hub is 1150 studs across, so Roblox's default 16 studs/second would
 --- make every trip a chore. GameConfig.Scale.WalkSpeed is the other half of
 --- the traversal budget documented there -- changing hub size without changing
 --- this breaks the budget.

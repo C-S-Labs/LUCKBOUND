@@ -114,6 +114,51 @@ matters) and `StarterPlayer.StarterPlayerScripts.LuckboundClient`.
 
 ---
 
+## 2.5 Developer commands
+
+On for the current testing phase (`GameConfig.Debug.AllowCommands`). They need
+the **modern chat** — if `TextChatService.ChatVersion` is `LegacyChatService`
+the Output window says so on join and nothing registers.
+
+Replies print to **Output**, prefixed `[cmd]`, not to the chat window: that is
+where the `[Roll]` and `[Expedition]` lines already are.
+
+| Command | Side | What it does |
+|---|---|---|
+| `/fly` | client | Toggle. WASD relative to camera, Space up, Shift down, 120 studs/s. Cancels on respawn. |
+| `/speed <n>` | client | Set walk speed, clamped 1–500. No argument prints the current value. |
+| `/tp <place>` | client | `engine` `gate` `hall` `archive` `training` `observatory` `spawn`. Arrives 20 studs up and drops, so it cannot land you inside a platform. |
+| `/where` | client | Print your position. |
+| `/worlds` | client | List rollable world ids with their rarities. |
+| `/roll <WORLD_ID>` | **server** | Force your next destination. No argument lists the valid ids. |
+| `/enter` | **server** | Enter your destination from anywhere — skips the distance check only. |
+| `/leave` | **server** | End the current expedition (counts as RETURNED, so it pays Fate). |
+| `/help` | client | List all of the above. |
+
+**Why the split.** Your own character's velocity, speed and CFrame are already
+yours — Roblox gives the client network ownership of its own rig — so routing
+those through the server would buy nothing. Roll results, expedition entry and
+Fate awards are the opposite: the client must not be trusted with any of them,
+debug build or not.
+
+### The three gates on the server-side commands
+
+1. `GameConfig.Debug.AllowCommands` — if false, no handler is connected at all.
+2. **Studio, or the place's creator.** Checked per command, every time.
+3. `/roll` additionally needs `GameConfig.Debug.AllowForcedRolls`.
+
+Gate 2 is the one that matters: a config flag left true by accident should not
+by itself hand a stranger the ability to roll themselves a Mythic. **Turn both
+flags off before the place goes public anyway** — defence in depth is not a
+reason to leave the front door open.
+
+A forced roll is recorded, logged and sent through the real pipeline — that is
+the point, it has to exercise the real path to be worth testing with — but it
+is **never announced server-wide**, for the same reason a scripted onboarding
+roll is not.
+
+---
+
 ## 3. Manual Studio pass
 
 ### Test A — the server boots (1 min)
@@ -121,23 +166,27 @@ matters) and `StarterPlayer.StarterPlayerScripts.LuckboundClient`.
 Press **Play**. Output should show every step:
 
 ```
-[LUCKBOUND] boot 1/10: validating content
+[LUCKBOUND] boot 1/11: validating content
 [LUCKBOUND] assets: 0 uploaded, 17 placeholder (placeholders render as primitives)
 [LUCKBOUND] 3 rollable world(s) have no chunk kit and cannot be entered: ASTRAL_REACH, EMBERFALL, SKY_CITADEL
 ...
-[LUCKBOUND] boot 7/10: ExpeditionSystem
-[LUCKBOUND] boot 8/10: building the Crossroads
+[LUCKBOUND] boot 7/11: ExpeditionSystem
+[LUCKBOUND] boot 8/11: DebugSystem
+[LUCKBOUND] boot 9/11: building the Crossroads
 [HubBuilder] built Crossroads: 5 zones, 436 instances
-[LUCKBOUND] boot 9/10: binding players
+[LUCKBOUND] boot 10/11: binding players
 [LUCKBOUND] server ready -- phase 1, true RNG, 15-roll onboarding, expeditions ENABLED
 [LUCKBOUND] client ready
 ```
 
 **The boot numbers are the diagnostic.** If the server stops partway, the last
-`boot N/10` names the step that failed or hung. A stall with no error means a
+`boot N/11` names the step that failed or hung. A stall with no error means a
 yielding call inside that step, not a crash.
 
-Two of those lines are **warnings that are meant to be there.** The asset count
+You will also see a loud orange `[DebugSystem] DEVELOPER COMMANDS ARE ON`.
+That one is meant to be impossible to miss.
+
+Two of the other lines are **warnings that are meant to be there.** The asset count
 says how much of the art is still placeholder; the "no chunk kit" line is the
 gap between rollable and enterable, printed every boot so it cannot quietly
 grow. Neither is a failure.
@@ -187,12 +236,15 @@ Silence is deliberate — an error tells an exploiter where the boundary is.
 
 ### Test C2 — the expedition, end to end ⭐ (6 min)
 
-**This is the test the whole §7.1 amendment exists for.** Roll 5 hands you
+**Passed 2026-09-16.** Kept as the regression pass — it is the test the whole
+§7.1 amendment exists for, and every future change to generation or entry
+should be walked through it again. Roll 5 hands you
 Ethereal Scape, so you can run it inside the first minute of a fresh profile.
 
 1. **Roll until you hold Ethereal Scape.** It is guaranteed at roll 5, and is
    15% of honest rolls after that. The reveal card names it.
-2. **Walk south to the Expedition Gate.** The largest portal in the hub.
+2. **Walk south to the Expedition Gate.** The largest portal in the hub. Or
+   `/tp gate` if you are testing something else and do not want the walk.
 3. Look at the prompt before pressing anything. It should read
    **ENTER · Ethereal Scape** — that text is set *on your client only*, from
    your last roll, so two players standing at the same gate see different
@@ -219,7 +271,8 @@ Ethereal Scape, so you can run it inside the first minute of a fresh profile.
    seed — 40–80 seconds at WalkSpeed 32. Time it. If it feels like a slog, the
    world's `MapPathLength` is the knob, not the walk speed.
 6. **Return.** Walk back to the arrival shelf; a small green portal sits a
-   quarter of the way back from where you spawned. Hold E.
+   quarter of the way back from where you spawned. Hold E. (`/leave` does the
+   same thing from anywhere.)
 
 ✅ Pass: you are back at the Crossroads spawn, **the hub's dark purple lighting
 is exactly as it was**, and you gained +25 Fate.
@@ -227,7 +280,7 @@ is exactly as it was**, and you gained +25 Fate.
 > Lighting not restoring is the bug to watch for here. If the hub stays bright
 > after you return, `ExpeditionController.TRACKED` is missing a property.
 
-7. **Roll Emberfall or Sky Citadel and try the Gate.** ✅ Pass: *"That world has
+7. **Roll Emberfall or Sky Citadel and try the Gate.** (`/roll EMBERFALL`.) ✅ Pass: *"That world has
    no map yet."* and you stay in the hub. Those worlds have no kit — that is the
    honest current state, not a crash.
 8. **Fall off the edge.** ✅ Pass: the expedition ends, you respawn at the hub,
@@ -238,6 +291,21 @@ is exactly as it was**, and you gained +25 Fate.
 The seed in that log line is derived from `(userId, TotalRolls, worldId)`, so
 re-entering on the same roll count rebuilds the identical map. Two different
 players never get the same one.
+
+### Test C3 — the hub is walkable (3 min)
+
+Added after two playtests found geometry that tests could not see. Do this
+before anything else after a scale or layout change.
+
+1. **Stand anywhere on the plaza.** It is a disc 1150 studs across. If you are
+   on top of a wall or falling, `cylinder()` has regressed.
+2. **Walk all four spokes** — Hall (N), Archive (E), Gate (S), Training (W).
+   ✅ Pass: no gap between walkway and platform, no step you have to jump.
+3. **Walk the Observatory approach.** It leaves the plaza on the NE diagonal
+   at about radius 380 and climbs to the deck. ✅ Pass: it crosses no walkway
+   and **the Fate Engine plaza is completely clear of it** — you can walk to
+   the Engine from any direction without meeting a staircase.
+4. **Stand at the Engine and turn full circle.** ✅ Pass: nothing encircles it.
 
 ### Test E — a tampered client is rejected (1 min)
 

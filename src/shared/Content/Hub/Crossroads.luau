@@ -61,7 +61,10 @@ local Crossroads = {
 	-- Centre — Fate Engine. Blueprint §2.2.
 	FateEngine = {
 		Name = "FateEngine",
-		PlatformRadius = 140,
+		-- 140 -> 120 with the rest of the de-scale. Must stay larger than the
+		-- Engine's outer ring (OuterRingRadius * FateEngineScale = 54) or the
+		-- rig overhangs the floor it stands on -- asserted by test.
+		PlatformRadius = 120,
 		PlatformRaise = 10,
 		PlatformColor = Theme.Marble,
 		PlatformMaterial = Enum.Material.Marble,
@@ -76,7 +79,7 @@ local Crossroads = {
 
 		CrystalShards = {
 			Count = 6,
-			OrbitRadius = 115,
+			OrbitRadius = 100,
 			MinHeight = 50,
 			MaxHeight = 140,
 			Size = 20,
@@ -107,7 +110,7 @@ local Crossroads = {
 			Angle = 0,
 			Radius = Layout.ZoneRingRadius,
 			Kind = "AMPHITHEATRE",
-			PlatformSize = Vector3.new(360, 14, 280),
+			PlatformSize = Vector3.new(320, 14, 250),
 			Height = 8,
 			Color = Theme.Marble,
 			Accent = Theme.MarbleTrim,
@@ -126,13 +129,13 @@ local Crossroads = {
 			Angle = 90,
 			Radius = Layout.ZoneRingRadius,
 			Kind = "ROTUNDA",
-			PlatformSize = Vector3.new(230, 14, 230),
+			PlatformSize = Vector3.new(210, 14, 210),
 			Height = 8,
 			Color = Color3.fromRGB(27, 75, 74), -- #1B4B4A deep teal
 			Accent = Color3.fromRGB(124, 245, 224), -- #7CF5E0 cosmic trim
 			Pillars = 8,
 			PillarHeight = 95,
-			InteriorDiameter = 170,
+			InteriorDiameter = 155,
 			DomeSegments = 7,
 			ShelfRings = 4,
 			ShelvesPerRing = 10,
@@ -144,7 +147,7 @@ local Crossroads = {
 			Angle = 180,
 			Radius = Layout.ZoneRingRadius,
 			Kind = "GATE",
-			PlatformSize = Vector3.new(320, 14, 260),
+			PlatformSize = Vector3.new(290, 14, 240),
 			Height = 0,
 			Color = Color3.fromRGB(48, 43, 64),
 			Accent = Color3.fromRGB(158, 158, 158),
@@ -159,7 +162,7 @@ local Crossroads = {
 			Angle = 270,
 			Radius = Layout.ZoneRingRadius,
 			Kind = "YARD",
-			PlatformSize = Vector3.new(260, 14, 260), -- blueprint §2.2: 30x30
+			PlatformSize = Vector3.new(235, 14, 235), -- blueprint §2.2: 30x30
 			Height = 8,
 			Color = Color3.fromRGB(107, 104, 98), -- #6B6862 neutral stone grey
 			Accent = Theme.TorchLight,
@@ -177,16 +180,43 @@ local Crossroads = {
 			Angle = 45,
 			Radius = 0, -- directly above centre; reached by the spiral ramp
 			Kind = "OBSERVATORY",
-			PlatformSize = Vector3.new(260, 10, 260),
+			PlatformSize = Vector3.new(240, 10, 240),
 			Height = 140, -- blueprint §2.2: +40 studs Y
-			PlatformRadius = 120,
+			-- ROUND, so buildPlatform draws a disc. It used to get a box from
+			-- buildPlatform AND a cylinder from its own builder, one hidden
+			-- inside the other.
+			PlatformShape = "ROUND",
+			PlatformRadius = 110,
+			PlatformMaterial = Enum.Material.Slate,
 			Color = Color3.fromRGB(16, 14, 24), -- near-black, sky reads clearly
 			Accent = Color3.fromRGB(124, 245, 224),
 			Pillars = 0,
 			PillarHeight = 0,
 			GlobeDiameter = 80,
-			RampTurns = 2.5,
-			RampWidth = 40,
+
+			-- THE WAY UP. One straight processional on this district's own
+			-- bearing (45 degrees -- the empty diagonal between the Hall and
+			-- the Archive), NOT a helix around the Fate Engine.
+			--
+			-- The previous spiral ran at radius 118 and was 40 studs wide, so
+			-- it covered radius 98-138 while the Engine's platform is radius
+			-- 120. It wrapped the most important object in the game in a wall
+			-- of steps and blocked the approach to it. The first playtest
+			-- reported exactly that.
+			--
+			-- StartRadius sets the gradient: 380 gives a 274-stud run for a
+			-- 145-stud rise, about 28 degrees. EndRadius lands just inside the
+			-- deck edge.
+			Approach = {
+				StartRadius = 380,
+				EndRadius = 106,
+				Width = 40,
+				Thickness = 6,
+				RailHeight = 10,
+				RailThickness = 2.5,
+				PierCount = 4,
+				PierWidth = 10,
+			},
 			MeshId = nil,
 		},
 	},
@@ -213,6 +243,10 @@ local Crossroads = {
 		ProcessionalWidth = Layout.ProcessionalWidth,
 		Thickness = 8,
 		Raise = Layout.WalkwayRaise,
+		-- Walkways run a little INTO the surfaces they join at both ends.
+		-- Butting them edge to edge leaves a hairline seam that a character
+		-- can catch on, and any float error turns it into a hole.
+		Overlap = 10,
 		Color = Theme.Walkway,
 		Material = Theme.StoneMaterial,
 	},

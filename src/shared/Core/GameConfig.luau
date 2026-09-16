@@ -160,7 +160,7 @@ local GameConfig = {
 
 		EntryCooldownSeconds = 2.0,
 		-- Studs from the Expedition Gate's portal plane. Generous, because the
-		-- Gate platform is 320x260 and the prompt is the real affordance --
+		-- Gate platform is 290x240 and the prompt is the real affordance --
 		-- this check exists to stop remote-spam from spawn, not to be precise.
 		MaxEntryDistance = 260,
 
@@ -175,6 +175,10 @@ local GameConfig = {
 		-- The return portal on the arrival chunk. Small: it is a door home,
 		-- not a monument, and it must not upstage the Sky Temple.
 		ReturnPortalScale = 3.0,
+		-- Must exceed the return plinth's radius (PlinthDiameter * scale / 2)
+		-- or the way home is unusable from on top of it -- the same mistake
+		-- the Expedition Gate shipped with. Asserted by test.
+		ReturnPromptDistance = 40,
 	},
 
 	-- === WORLD SCALE ===
@@ -209,24 +213,40 @@ local GameConfig = {
 	--   NORTH = -Z, SOUTH = +Z, EAST = +X, WEST = -X, UP = +Y.
 	-- Visual detail (materials, palette, props) lives in Content/Hub/Crossroads.
 	HubLayout = {
-		HubDiameter = 1200, -- playable extent
+		-- 1200 was one playtest ago. The owner's verdict on walking it was
+		-- "much better, could be slightly smaller, perhaps just a tad" -- so
+		-- 50 studs came off the diameter rather than a wholesale re-tune.
+		HubDiameter = 1150, -- playable extent
 		VisualExtent = 4000, -- how far scenery reaches; not walkable
 		PlazaRingWidth = 200,
 		WalkwayWidth = 44,
 		WalkwayRaise = 6, -- studs above the lower plaza ring
+
+		-- The invisible pad the Gate's ENTER prompt lives on, as a multiple of
+		-- the portal's scale, and how far above the platform it floats.
+		GateAnchorSpan = 8,
+		GateAnchorLift = 2,
 		ProcessionalWidth = 72, -- the Expedition Gate approach is wider
-		ZoneRingRadius = 420, -- centre of hub → centre of a compass zone
+		-- 400, not 420: the plaza lost 25 studs of radius and a zone platform
+		-- must not hang off the edge of the floor it stands on. Furthest
+		-- platform edge is now 400 + 160 = 560 against a 575-stud plaza.
+		ZoneRingRadius = 400, -- centre of hub → centre of a compass zone
 
 		Anchors = {
 			FATE_ENGINE = Vector3.new(0, 0, 0),
-			HALL_OF_LEGENDS = Vector3.new(0, 0, -420), -- north
-			DISCOVERY_ARCHIVE = Vector3.new(420, 0, 0), -- east
-			EXPEDITION_GATE = Vector3.new(0, 0, 420), -- south
-			TRAINING_GROUNDS = Vector3.new(-420, 0, 0), -- west
+			HALL_OF_LEGENDS = Vector3.new(0, 0, -400), -- north
+			DISCOVERY_ARCHIVE = Vector3.new(400, 0, 0), -- east
+			EXPEDITION_GATE = Vector3.new(0, 0, 400), -- south
+			TRAINING_GROUNDS = Vector3.new(-400, 0, 0), -- west
 			GLOBAL_OBSERVATORY = Vector3.new(0, 140, 0), -- upper platform
 		},
 
-		SpawnAnchor = Vector3.new(0, 8, 250), -- south of centre, facing the Engine
+		-- ON the processional, not inside it. At (0, 8, 250) the spawn sat
+		-- within the walkway's own volume, so Roblox ejected the character
+		-- upward -- which is how a playtest began on top of a pillar. Y is now
+		-- clear of the deck and the SpawnLocation does not collide, so the
+		-- player simply drops the last couple of studs onto the walkway.
+		SpawnAnchor = Vector3.new(0, 14, 250), -- south of centre, facing the Engine
 	},
 
 	-- Shared PortalRig. Biome Blueprint §1.3.
@@ -240,6 +260,12 @@ local GameConfig = {
 		PlinthDiameter = 14,
 		PlinthHeight = 1.5,
 		PlinthSides = 8, -- octagonal
+
+		-- A HARD CEILING ON THE STEP UP, in studs, regardless of scale.
+		-- A Roblox character jumps about 7 studs; the Gate's uncapped plinth
+		-- stood 18 and walled the portal off completely. Width still scales
+		-- with the rig, so it stays monumental -- only the step is capped.
+		MaxPlinthHeight = 3,
 
 		IdleParticleRate = 8,
 		ActiveParticleRate = 40,
@@ -261,13 +287,19 @@ local GameConfig = {
 		IdleSpinSpeed = 0.15, -- rad/s
 		SpinUpSpinSpeed = 3.2,
 
-		-- Scaled for the 1200-stud hub: the Engine's outer ring lands at ~81
-		-- studs radius and the whole rig stands ~95 studs tall, which is the
-		-- "monumental Fate Engine" the master spec §3 asks for. The blueprint's
-		-- 1.5x/2.0x were relative to a 120-stud hub; the RATIO is what it was
-		-- specifying, and that is preserved (the gate is still the larger).
-		FateEngineScale = 9.0,
-		ExpeditionGateScale = 12.0,
+		-- The blueprint's 1.5x/2.0x were relative to a 120-stud hub; the RATIO
+		-- is what it was specifying, and that is preserved (the gate is still
+		-- the larger).
+		--
+		-- Reduced from 9.0/12.0 after the first playtest: "structures now
+		-- shifted to be a bit too large". The binding constraint is no longer
+		-- taste, though -- it is reach. A plinth is PlinthDiameter * scale
+		-- across, and the prompt on it only reaches
+		-- UI.PromptActivationDistance, so any scale above 10 puts the edge of
+		-- the plinth outside its own prompt's range. Asserted by test, for
+		-- every portal in the hub rather than just the Engine.
+		FateEngineScale = 6.0,
+		ExpeditionGateScale = 8.0,
 	},
 
 	Events = {
@@ -297,8 +329,24 @@ local GameConfig = {
 	},
 
 	Debug = {
-		-- Never ship true. Lets a developer force a specific roll result.
-		AllowForcedRolls = false,
+		-- === DEVELOPER COMMANDS -- NEVER SHIP EITHER OF THESE TRUE ===
+		--
+		-- Both are ON for the current testing phase, at the owner's request,
+		-- and both are belt-and-braces gated at the point of use: DebugSystem
+		-- additionally requires RunService:IsStudio() or the place creator, so
+		-- flipping these on a live place still does not hand commands to a
+		-- stranger. Turn them off before the place is public anyway -- defence
+		-- in depth is not a reason to leave the front door open.
+		AllowCommands = true,
+		AllowForcedRolls = true,
+
+		-- How fast /fly moves, in studs per second.
+		FlySpeed = 120,
+		-- Guard rails on /speed, so a typo does not launch the character into
+		-- the skybox and require a rejoin.
+		MinWalkSpeed = 1,
+		MaxWalkSpeed = 500,
+
 		LogEveryRoll = true,
 	},
 }

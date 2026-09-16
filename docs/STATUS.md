@@ -22,8 +22,20 @@ from its chunk kit. **Combat, enemies, bosses and loot were NOT lifted and
 remain excluded.** An expedition today is: arrive, walk a generated map, come
 home.
 
-⏳ **Not yet seen in Studio.** Everything below is green in CI and nobody has
-walked it. That is the top of the next session's list.
+**It has now been walked twice**, on 2026-09-16.
+
+The **first** walk found four things 276 green tests had not: the hub had **no
+floor**, two walkways stopped short of their platforms, the Observatory ramp
+was 70 floating tiles, and the Expedition Gate's prompt could not be reached
+from on top of its own plinth.
+
+The **second** walk confirmed all four fixed, and **completed the expedition
+loop end to end** — roll → Gate → generated map → return → Fate awarded. It
+found one further problem: the Observatory's spiral ramp, now continuous,
+encircled the Fate Engine and blocked the walk up to it. Also fixed; the
+access is now a straight processional on the empty 45° diagonal.
+
+§4 records what the tests were missing each time.
 
 **The Design North Star (Master Spec §25) has been answered.** After playing the
 roll loop with no combat, no loot, no art and grey blockout geometry, the
@@ -34,13 +46,20 @@ which makes that the strongest possible signal the core premise works.
 
 | | Evidence |
 |---|---|
-| Server boots clean | `[LUCKBOUND] boot 9/9` → `server ready` (now 10 steps) |
+| Server boots clean | `[LUCKBOUND] boot 11/11` → `server ready` |
 | Hub generates procedurally | `[HubBuilder] built Crossroads: 5 zones, 436 instances` |
 | 15-roll onboarding, exact order | Full arc logged, Epic at roll 8 |
 | True RNG hands over at roll 16 | Roll 16 logged with no `(onboarding)` tag |
 | ProximityPrompt roll interaction | `[E] ROLL` at the Fate Engine |
 | Reveal pacing scales with rarity | Measured 9.4 s (Rare) vs 12.2 s (Mythic) |
 | Runs without DataStores | Volatile-mode fallback, no crash |
+| Rolls reach Ethereal Scape at slot 5 | Full arc logged 2026-09-16 |
+| Portal recolours to the rolled rarity | Verified visually |
+| **Expedition loop, end to end** | `-> ETHEREAL_SCAPE seed 107807269 5 chunks … left after 55s (RETURNED)` |
+| Map generation builds a walkable layout | 5 chunks, 0 mesh / 5 blockout, attempt 1 |
+| Per-client biome lighting applies and reverts | Verified across entry and return |
+| Fate awarded on completion | +25, logged |
+| Developer commands | All of `/fly /speed /tp /roll /enter /leave` verified |
 
 **436 instances** is the current mobile-budget baseline for the hub.
 
@@ -63,19 +82,29 @@ which makes that the strongest possible signal the core premise works.
 told *"That world has no map yet."* and stay in the hub. It is handled, not
 solved — see §4.
 
-### World scale — rescaled 2026-09-16
+### World scale — rescaled 2026-09-16, tuned after the first walk
 
 The hub was 120 studs across: 24 character-heights, with a 5×5 Discovery
 Archive. It read as a room.
 
-| | Before | After |
-|---|---|---|
-| Hub playable Ø | 120 | **1200** |
-| Zone ring radius | 46 | **420** |
-| Zone platforms | 26–56 | **230–360** |
-| WalkSpeed | 16 (default) | **32** |
-| Visual extent | ~420 | **4000** |
-| Chunk grid | 48 | **256** |
+| | Original | Rescale | After playtest |
+|---|---|---|---|
+| Hub playable Ø | 120 | 1200 | **1150** |
+| Zone ring radius | 46 | 420 | **400** |
+| Zone platforms | 26–56 | 230–360 | **210–320** |
+| Fate Engine platform r | 24 | 140 | **120** |
+| Portal scale (Engine / Gate) | 1.5 / 2 | 9 / 12 | **6 / 8** |
+| WalkSpeed | 16 (default) | **32** | 32 |
+| Visual extent | ~420 | **4000** | 4000 |
+| Chunk grid | 48 | **256** | 256 |
+
+The owner's verdict on walking 1200 was *"much better, could be slightly
+smaller, perhaps just a tad"* and *"structures now shifted to be a bit too
+large"* — so the footprint lost 50 studs and the structures on it came down
+about 10%. **The portal scales came down for a harder reason than taste:** a
+plinth is `PlinthDiameter × scale` across, and the prompt on it only reaches
+`UI.PromptActivationDistance`, so at 12× the Gate's plinth was wider than its
+own prompt's range and could not be used at all.
 
 **Playable footprint and perceived size are separate numbers.** 4000 studs is
 not walkable — 43.8s to a zone even at double speed. 1200 at WalkSpeed 32 gives
@@ -108,7 +137,11 @@ exists.**
 
 ### Test suite
 
-**276 tests, all passing.** Headless — no Roblox required.
+**293 tests, all passing.** Headless — no Roblox required.
+
+**17 of them exist because the test suite was green while the hub had no
+floor.** The group `Hub geometry a player can actually touch` asserts the
+relationships two Studio walks found to be silently false — see §4.
 
 ```bash
 ./tests/run.sh
@@ -220,12 +253,54 @@ Uncommon, live at 15%, and guaranteed at onboarding roll 5 — so the
 unsanctioned green `#5FD97A` is now on screen for every player within a minute
 of joining. Bless it or replace it **before** people learn it.
 
+### What 276 green tests missed — and what now covers it
+
+The first Studio walk of the rescaled hub found four bugs the suite could not
+see. Three shared one cause and it is worth naming precisely:
+
+**`HubBuilder.cylinder()` built a `Part` wearing a `CylinderMesh`.** Two things
+were wrong with that, and each alone would have been enough:
+
+1. **A `CylinderMesh` is visual only.** The part keeps its *block* collision
+   hull, so an invisible square corner juts past every visible round edge.
+   Reported as *"I cannot walk near the portal, the mesh is too large but not
+   visible"*.
+2. **`CylinderMesh`'s axis is Y; `PartType.Cylinder`'s axis is X.** Every
+   caller passed `(thickness, diameter, diameter)` — the X convention — so a
+   *thin disc* was built as a *diameter-tall column*. The 1150-stud plaza was
+   a 1150-stud **wall**. The hub had no ground, and the player spawned on top
+   of it.
+
+The others: two walkways used the platform's **X** half-extent regardless of
+which axis they approached along, leaving 30–40 stud holes; the Observatory
+ramp used a fixed 5-stud step depth that at the new radius left 21-stud gaps
+between steps; and the Gate's prompt lived on a plinth wider than its own
+reach.
+
+| Why the suite missed it | What covers it now |
+|---|---|
+| No test rendered geometry — only data was asserted | `the plaza is a disc, not a column` asserts the *shape ratio* the bug inverted |
+| The prompt-reach test carried a `* 2` fudge and covered only the Engine | Generalised to **every portal**, fudge removed, and the return portal added |
+| Nothing asserted a plinth could be jumped onto | `MaxPlinthHeight` capped and asserted against jump height |
+| Walkway geometry was untested | Approach-axis half-extent asserted per zone |
+| Ramp step depth was a literal inside a System | Moved to `HubLayout.RampStepOverlap`, asserted > 1 |
+| Nothing checked the spawn was in open space | Asserted above the walkway deck |
+
+**The lesson, which is the same one §6.1 of the build spec already records in a
+different form:** a test that asserts a *number* proves nothing about the
+*shape* that number produces. These new ones assert relationships — is it
+thinner than it is wide, can it be jumped onto, does it reach — because those
+survive a rescale and a literal does not.
+
 ### Known debt
 
 | Item | Severity | Notes |
 |---|---|---|
+| **Portal plane is still above head height** | Medium | You reach the prompt and the rig springs from the floor, but the walk-through *plane* sits inside the inner ring, ~30 studs up. Blueprint §1.3's concentric rings make that inherent. Irrelevant once the rig is authored in Blender. |
 | **25% of rolls land on a world with no map** | **High** | Emberfall 15%, Sky Citadel 7%, Astral Reach 3%. Refused politely at the Gate; printed as a boot warning and asserted by test. Emberfall and Astral Reach need only a chunk kit; Sky Citadel needs a blueprint section first. |
-| **Nothing since the rescale has been in Studio** | **Unknown** | The 10× world *and* the whole expedition path are test-verified only. `TESTING.md` Test C2 is the pass. |
+| **The Observatory's purpose is undecided** | **Design** | Its only content is the orrery — a global-state display. If expeditions move to separate places (below), the hub becomes a lobby and that display arguably matters *more*. But 145 studs of climb for a look-out is a poor trade, and it cannot simply be lowered: sitting above the Engine forces it above the rig's 111-stud crown. **Recommendation: if it survives, move it off-centre to a sixth compass point rather than lowering it.** |
+| **Expeditions are to become a separate place/instance** | **Architecture** | Owner-stated 2026-09-16: worlds will be rendered in a separate instance and reached by `TeleportService`, for performance and to isolate parties and solo queues. The current in-place `ExpeditionStage` is therefore a **prototype of the loop, not of the deployment**. `ExpeditionCore` is unaffected — it decides destination, seed and eligibility, none of which care where the map is built. `ExpeditionSystem` and `ChunkLoader` are what would move. |
+| Fate-on-completion may become currency or loot | Design | Owner-flagged: a completion bonus drawn from an item pool, or a currency for upgrades, rather than flat Fate. `ProgressionSystem.award` is the single seam. |
 | `UNCOMMON` colour unsanctioned | Medium | Now shipping — see above |
 | Chunk collision is XZ-only | Medium | Blocks any kit that climbs. `MODULAR_MAPS.md` |
 | No pathfinding validation | Medium | Non-overlapping ≠ walkable between. Addendum §A4 step 4 |
@@ -240,26 +315,43 @@ of joining. Bless it or replace it **before** people learn it.
 
 ## 5. Next session — pick up here
 
-**Everything below the line is unplayed.** The 10× rescale and the entire
-expedition path are green in CI and have never been in Studio. Nothing else on
-this list is worth doing before that.
+**The core loop is proven.** Roll → Gate → generated map → return → Fate,
+walked end to end in Studio on 2026-09-16. What is left is art, content and
+two design decisions.
 
-1. **Run `TESTING.md` Test C2.** Roll to 5, take the Gate, walk Ethereal Scape,
-   come home. It answers four questions at once: does the new scale feel right,
-   does map generation produce a *place*, does per-client lighting restore, and
-   is walking through the Gate a payoff or an anticlimax.
-2. **Hub brightness** — one value in `Crossroads.Theme`. Minutes.
-3. **Upload the Ethereal Scape islands.** `assets/README.md` has the full
-   walkthrough. Check scale against the R6 rig on the whole-scene import
-   *before* splitting into eight, or it is eight re-uploads.
-4. **A chunk kit for Emberfall** — biggest single reduction in the "no map"
-   number, 15pp, and its blueprint section already exists.
-5. **Placeholder text** — flavour lines, result card copy, zone labels.
-6. **UI overhaul** — `FateRoll` and `GlobalAnnouncements` resize/layout, mobile
-   scaling. `UITheme` already centralises fonts and colours.
-7. **Sky Citadel biome** — still the largest content debt.
-8. **Phase 2 proper** — combat, loot, the Discovery Book. Build spec §7 still
-   excludes all of it.
+1. **Re-walk the Observatory approach.** It is the only untested change from
+   this round. It should rise on the empty NE diagonal, cross no walkway, and
+   leave the Fate Engine plaza completely clear.
+2. **Decide what the Observatory is for**, or cut it. See §4 — the
+   recommendation is to move it off-centre rather than lower it.
+3. **Upload the Ethereal Scape islands.** `assets/README.md`. This is the
+   single biggest visible change available: it turns the blockout into the
+   authored sky temple. Check scale against the R6 rig on the whole-scene
+   import *before* splitting into eight.
+4. **Hub brightness** — one value in `Crossroads.Theme`. Still dark.
+5. **`UNCOMMON`'s colour needs blessing.** On screen inside the first minute.
+6. **A chunk kit for Emberfall** — 15pp off the "no map" number.
+7. **Placeholder text, UI pass** — unchanged.
+8. **Sky Citadel biome** — largest content debt.
+
+### When expeditions move to a separate place
+
+Owner-stated direction, not yet built. When it happens:
+
+- `ExpeditionCore` is **unaffected** — destination, seed, eligibility and
+  timer decide the same things wherever the map is built. That is the payoff
+  of having kept it pure.
+- `ExpeditionSystem.requestEnter` becomes a `TeleportService:TeleportAsync`
+  with the seed and world id in `TeleportData`; the map is built by the
+  destination place from exactly those two values. Determinism already
+  guarantees both ends produce the same layout.
+- `ChunkLoader` moves to the expedition place unchanged.
+- The Crossroads becomes a lobby, which is what makes the Observatory question
+  in §4 worth answering first.
+
+> Before launch, turn **`GameConfig.Debug.AllowCommands`** and
+> **`AllowForcedRolls`** off. They are on for testing and the server shouts
+> about it on every boot.
 
 ### Working agreement that emerged this session
 
@@ -305,6 +397,7 @@ Studio → open `LUCKBOUND_dev` → Rojo panel **Connect** → **Accept** → **
 | `MODULAR_MAPS.md` | The chunk system: how biome maps assemble from pieces |
 | `../assets/README.md` | Blender → Roblox asset workflow |
 | `ADDENDUM_ASSET_PIPELINE.md` | Future asset/procgen architecture — target design |
+| `MODELLER_HANDOFF.pdf` | **Give this to an artist.** Deliverable formats, export settings, how to build a prefab we can animate |
 | `LUCKBOUND_Master_Spec_v0.2.pdf` | Master design spec, updated with build reality |
 | `../LUCKBOUND_...v0.1 (1).pdf` | Original vision. **Authoritative on intent.** |
 

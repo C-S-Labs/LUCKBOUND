@@ -98,6 +98,7 @@ local Constants = {
 		CROSSROADS = "Crossroads",
 		FATE_ENGINE = "FateEngine",
 		ROLL_ANCHOR = "RollAnchor",
+		GATE_ANCHOR = "GateAnchor",
 		EXPEDITION_STAGE = "ExpeditionStage",
 	},
 
