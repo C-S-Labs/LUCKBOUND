@@ -33,6 +33,71 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 9 — 2026-09-16 — Unblocking the art pipeline
+
+**Branch:** `claude/zen-volta-cuhfyh` (PR #13) · **Tests:** 301 passing (was 293)
+
+### Done
+
+The two bugs found by reading in Session 7, both of which would have bitten the
+moment authored art was wired in, plus the brightness complaint that had been
+open since Session 1.
+
+- **`HubBuilder.meshOrNil` was silently broken.** It set `MeshPart.MeshId`
+  directly, which Roblox permits only from the importer, inside a `pcall` — so
+  it failed, warned, and fell back to a primitive. **Every `MeshId` seam in
+  `Content/Hub/Crossroads` did nothing.** The symptom would have been "we
+  uploaded the mesh and the game ignored it", with no error to chase. Now uses
+  `AssetService:CreateMeshPartAsync`, which is what `Util/ChunkLoader` already
+  used — the two seams had drifted apart.
+- **An authored `Crossroads` disabled the contract, not just the geometry.**
+  `build()` returned early as a single branch, taking the `RollAnchor`, the
+  `GateAnchor` and its prompt, the `SpawnLocation` and `applyLighting()` with
+  it. An artist naming a model `Crossroads` would have switched off rolling and
+  expedition entry with no error. Geometry and contract are now separate:
+  lighting always applies, `ensureContract` always runs, and it adds anything
+  missing while warning loudly about what it had to add.
+- **Hub brightness.** `ClockTime` 22 → 4.5, `Brightness` 2 → 2.6,
+  `ExposureCompensation` 0 → 0.15, ambient lifted in luminance only.
+
+### Decisions made
+
+- **The contract is three named parts, and they live in one place.**
+  `buildRollAnchor`, `buildGateAnchor` and `buildSpawn` were extracted from the
+  three builders that used to own them inline, because *both* paths through
+  HubBuilder now need them. Duplicating any one would let an authored hub drift
+  from a generated one — which is exactly the class of bug being fixed.
+- **`ensureContract` only adds invisible, non-colliding parts.** It changes
+  behaviour and never appearance, so it can run against authored art without an
+  artist ever seeing it interfere.
+- **The darkness was `ClockTime`, not `Brightness`.** With the sun below the
+  horizon there is no key light for `Brightness` to raise; turning it up blows
+  out the neon and the portal glow while the stone stays flat. 4.5 puts the sun
+  just above the horizon — a low raking pre-dawn light that still reads as
+  night and keeps §2.3's purple sky. **The palette is untouched.**
+- **The `SpawnLocation` is now non-colliding**, so it cannot be a 1-stud lip on
+  the walkway it sits over.
+
+### Stopped at
+
+All three fixed, 301 green, nothing walked. Three changes are untested in
+Studio: the Observatory approach from Session 6, the brightness pass, and the
+non-colliding spawn.
+
+**The art pipeline is now unblocked** — an uploaded mesh id in a `MeshId` seam
+will actually be used, and authored geometry can no longer silently break the
+game.
+
+### Next
+
+1. Walk the hub once (`TESTING.md` Test C3) — three untested changes.
+2. Answer the two open design questions: the Observatory's purpose, and
+   one-scene-vs-eight-chunks for Ethereal Scape.
+3. Confirm the Ethereal Scape scale with the modeller.
+4. Wire the authored asset in, which now has nothing blocking it.
+
+---
+
 ## Session 8 — 2026-09-16 — First authored asset lands
 
 **Branch:** `claude/zen-volta-cuhfyh` (PR #13) · **Tests:** 293 passing · no code change

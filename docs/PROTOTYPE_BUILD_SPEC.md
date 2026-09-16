@@ -133,7 +133,7 @@ ServerStorage/
 6.  FateSystem.init(SaveSystem, ProgressionSystem, EventSystem)
 7.  ExpeditionSystem.init(SaveSystem, ProgressionSystem)
 8.  DebugSystem.init(FateSystem, ExpeditionSystem)   -- developer commands
-9.  HubBuilder.build()        -- only if Workspace.Crossroads is absent
+9.  HubBuilder.build()        -- lighting always; geometry only if absent
 10. ExpeditionSystem.bindGatePrompt()  -- attaches to geometry step 9 creates
 11. PlayerService binding     -- PlayerAdded/PlayerRemoving last, so no player can
                                  arrive before systems are ready
@@ -141,6 +141,23 @@ ServerStorage/
 
 `DebugSystem` is deliberately **last of the systems**: nothing above it may
 depend on it, so deleting the file before launch breaks nothing.
+
+**Step 9 does two separable things, and that separation is load-bearing.**
+`HubBuilder.build()` skips *generating geometry* when `Workspace.Crossroads`
+already exists — authored art wins, as intended. But it always applies lighting
+and always runs `ensureContract`, which guarantees the parts other systems look
+up by name exist regardless of who built the hub:
+
+| Part | Needed by |
+|---|---|
+| `Crossroads/FateEngine/RollAnchor` + `RollPrompt` | `FateSystem` — roll distance |
+| `Crossroads/Zones/EXPEDITION_GATE/GateAnchor` + `EnterPrompt` | `ExpeditionSystem` — entry distance |
+| `Crossroads/SpawnLocation` | players arriving |
+
+Without that split, an artist modelling a hub and naming it `Crossroads` would
+silently switch off rolling and expedition entry. `ensureContract` adds
+anything missing and **warns loudly** naming what it had to add. Everything it
+adds is invisible and non-colliding, so it changes behaviour and never looks.
 
 `ExpeditionSystem` occupies the slot this spec originally reserved for
 `WorldSystem`. It takes **no reference to `FateSystem`**: a player's pending
@@ -508,6 +525,8 @@ Recorded because each cost a debugging cycle and each is a class of mistake that
 | The Gate's prompt sat on a plinth wider than its own activation distance | The reach test carried a `* 2` fudge and covered only the Engine |
 | The Observatory's spiral ramp encircled the Fate Engine (radius 98–138 against a 120-stud platform) and blocked the approach to it | A gradient test existed; nothing asserted *where* the ramp was |
 | The Observatory got two platforms — a box from `buildPlatform` and a cylinder from its own builder, one buried in the other | Platform shape was implied by which builder ran, not declared in data |
+| **`MeshPart.MeshId` is not assignable at runtime** — `HubBuilder.meshOrNil` set it inside a `pcall`, so every `MeshId` seam silently drew a primitive instead | No authored mesh had ever been supplied, so the fallback path was the only one ever exercised |
+| **An authored `Crossroads` disabled the roll anchor, gate anchor, spawn and lighting** along with the generated geometry | `build()` returned early as one branch; nothing separated *geometry* from *contract* |
 
 Four lessons worth keeping:
 

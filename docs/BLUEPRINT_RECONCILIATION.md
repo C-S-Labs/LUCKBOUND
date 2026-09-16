@@ -134,6 +134,25 @@ specifically. That is preserved. Asserted by four tests.
 > forces it above the rig's 111-stud crown, and that height is what forces the
 > climb in the first place.
 
+### §2.3's hub lighting was brightened — key light, not exposure
+
+"Hub is very dark" was open from the first Studio session to the sixth.
+§2.3's values were authored against Roblox's default lighting; under `Future`
+lighting across a 1150-stud footprint they left the plaza close to unreadable.
+
+**The cause was `ClockTime = 22`, not `Brightness`.** With the sun below the
+horizon there is no key light for `Brightness` to raise — turning it up only
+blows out the neon and the portal glow while the stone stays flat.
+
+**Resolved as:** `ClockTime` 22 → **4.5**, which puts the sun just above the
+horizon: a low raking pre-dawn light that still reads as night and keeps the
+purple sky §2.3 specifies. `Brightness` 2 → 2.6 and `ExposureCompensation`
+0 → 0.15 alongside it. **The palette is untouched** — ambient and outdoor fill
+were lifted in luminance only, the hues are §2.3's.
+
+Asserted by test as a relationship rather than a number: the key light must be
+above the horizon, and the hub must be brighter than the darkest biome.
+
 ### Portal spin-up runs client-side
 
 §1.3's 2.5s spin-up plays on the rolling player's client, so two players rolling

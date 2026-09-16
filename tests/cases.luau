@@ -1173,6 +1173,40 @@ do
 	check("spawn is over the processional, not out in space",
 		math.abs(GameConfig.HubLayout.SpawnAnchor.Z) < anchors.EXPEDITION_GATE.Z)
 
+	-- 6b. THE HUB MUST BE LIT WELL ENOUGH TO READ.
+	-- "Hub is very dark" was open from the first Studio session to the sixth.
+	-- The cause was ClockTime 22 -- the sun below the horizon, so there was no
+	-- key light for Brightness to raise, and raising it only blew out the neon.
+	local theme = Crossroads.Theme
+	check("the hub's key light is above the horizon",
+		theme.ClockTime > 4 and theme.ClockTime < 20,
+		string.format("ClockTime %.1f", theme.ClockTime))
+	check("the hub is brighter than the darkest biome",
+		theme.Brightness > Worlds.EMBERFALL.Environment.Brightness,
+		string.format("hub %.1f vs Emberfall %.1f",
+			theme.Brightness, Worlds.EMBERFALL.Environment.Brightness))
+	local function lum(c) return (c.r or 0) + (c.g or 0) + (c.b or 0) end
+	check("outdoor fill is brighter than indoor ambient",
+		lum(theme.OutdoorAmbient) > lum(theme.Ambient),
+		string.format("%d vs %d", lum(theme.OutdoorAmbient), lum(theme.Ambient)))
+
+	-- 6c. THE CONTRACT PARTS OTHER SYSTEMS LOOK UP BY NAME.
+	-- HubBuilder hands the hub over to authored geometry when it finds one,
+	-- and that used to take the contract with it -- an artist naming a model
+	-- "Crossroads" would silently switch off rolling and expedition entry.
+	-- ensureContract now re-adds these; it keys off these names and this
+	-- district, so a rename here must not go unnoticed.
+	for _, key in { "CROSSROADS", "FATE_ENGINE", "ROLL_ANCHOR", "GATE_ANCHOR" } do
+		check(string.format("Constants.NAMES.%s is defined", key),
+			type(Constants.NAMES[key]) == "string" and #Constants.NAMES[key] > 0,
+			tostring(Constants.NAMES[key]))
+	end
+	local hasGate = false
+	for _, d in Crossroads.Districts do
+		if d.Id == "EXPEDITION_GATE" then hasGate = true end
+	end
+	check("the EXPEDITION_GATE district exists (ensureContract asserts on it)", hasGate)
+
 	-- 7. THE WAY UP MUST NOT WRAP THE FATE ENGINE.
 	-- The Observatory's access used to be a 2.5-turn helix at radius 118,
 	-- forty studs wide -- so it occupied radius 98 to 138 while the Engine's

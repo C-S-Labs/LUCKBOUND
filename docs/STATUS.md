@@ -137,7 +137,7 @@ exists.**
 
 ### Test suite
 
-**293 tests, all passing.** Headless — no Roblox required.
+**301 tests, all passing.** Headless — no Roblox required.
 
 **17 of them exist because the test suite was green while the hub had no
 floor.** The group `Hub geometry a player can actually touch` asserts the
@@ -307,7 +307,6 @@ survive a rescale and a literal does not.
 | All 16 chunks are `PLACEHOLDER` | Expected | Blockout is deliberate; upload is a per-piece change |
 | **First authored asset delivered, not yet wired** | **Open** | `assets/rbxm/worlds/ethereal_scape/` — 699 MeshParts, all with real uploaded mesh ids. Needs anchoring, a PrimaryPart, a scale confirmation, and a decision on one-scene-vs-eight-chunks. See the README beside it. |
 | **Ethereal Scape: one scene or eight chunks?** | **Design** | The kit was built for eight generator-fed pieces; the delivery is one pre-arranged scene. Both work. Picking the first retires the socket grammar for this world. |
-| Hub is very dark | Cosmetic | `Crossroads.Theme` — one value |
 | UI needs resize/layout pass | Cosmetic | Owner-flagged |
 | Placeholder text | Cosmetic | Flavour lines, labels, result card |
 | Octagonal plinth is a cylinder | Cosmetic | First thing an authored mesh replaces |
@@ -321,16 +320,17 @@ survive a rescale and a literal does not.
 walked end to end in Studio on 2026-09-16. What is left is art, content and
 two design decisions.
 
-1. **Re-walk the Observatory approach.** It is the only untested change from
-   this round. It should rise on the empty NE diagonal, cross no walkway, and
-   leave the Fate Engine plaza completely clear.
-2. **Decide what the Observatory is for**, or cut it. See §4 — the
-   recommendation is to move it off-centre rather than lower it.
-3. **Upload the Ethereal Scape islands.** `assets/README.md`. This is the
-   single biggest visible change available: it turns the blockout into the
-   authored sky temple. Check scale against the R6 rig on the whole-scene
-   import *before* splitting into eight.
-4. **Hub brightness** — one value in `Crossroads.Theme`. Still dark.
+1. **Walk the hub once.** Three changes landed untested: the Observatory
+   approach (NE diagonal, crosses no walkway, Engine plaza clear), the
+   brightness pass (`ClockTime` 22 → 4.5), and a non-colliding SpawnLocation.
+   `TESTING.md` Test C3.
+2. **Answer the two open questions** in §4 — the Observatory's purpose, and
+   one-scene-vs-eight-chunks for Ethereal Scape. Both gate real work.
+3. **Confirm the Ethereal Scape scale** with the modeller (the R6 proxy reads
+   12× oversized; the evidence says the proxy is wrong, not the scene).
+4. **Wire the authored asset in** — now unblocked: `meshOrNil` works and
+   `ensureContract` protects the hub. Needs `assets/rbxm` in
+   `default.project.json` and the shape decision from (2).
 5. **`UNCOMMON`'s colour needs blessing.** On screen inside the first minute.
 6. **A chunk kit for Emberfall** — 15pp off the "no map" number.
 7. **Placeholder text, UI pass** — unchanged.

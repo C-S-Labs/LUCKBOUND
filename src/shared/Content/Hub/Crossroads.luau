@@ -19,9 +19,23 @@ local GameConfig = require(script.Parent.Parent.Parent.Core.GameConfig)
 local Layout = GameConfig.HubLayout
 
 local Theme = {
-	-- Blueprint §2.3 verbatim.
-	Ambient = Color3.fromRGB(40, 35, 60),
-	OutdoorAmbient = Color3.fromRGB(55, 48, 80),
+	-- Blueprint §2.3, with the brightness deviation recorded below and in
+	-- docs/BLUEPRINT_RECONCILIATION.md. Palette is unchanged; only the key
+	-- light and the ambient fill moved.
+	--
+	-- BRIGHTNESS PASS, 2026-09-16. "Hub is very dark" has been open since the
+	-- first Studio session. The blueprint's §2.3 values were authored against
+	-- Roblox's default lighting; at ClockTime 22 with Future lighting and a
+	-- 1150-stud footprint they left the plaza close to unreadable.
+	--
+	-- The fix is mostly ClockTime, not Brightness. Raising Brightness alone
+	-- blows out the neon and the portal glow while leaving the stone flat,
+	-- because at ClockTime 22 the sun is below the horizon and there is no key
+	-- light to raise. Moving to 4.5 puts the sun just above it -- a low, raking
+	-- pre-dawn light that still reads as night, keeps the purple sky, and gives
+	-- the marble something to catch.
+	Ambient = Color3.fromRGB(72, 66, 96),
+	OutdoorAmbient = Color3.fromRGB(96, 88, 128),
 	ColorShiftTop = Color3.fromRGB(90, 70, 140),
 	ColorShiftBottom = Color3.fromRGB(30, 25, 50),
 	FogColor = Color3.fromRGB(30, 25, 50),
@@ -29,9 +43,9 @@ local Theme = {
 	-- the blueprint's 150/500 was sized to a 120-stud hub.
 	FogStart = 700,
 	FogEnd = 4400,
-	Brightness = 2,
-	ExposureCompensation = 0,
-	ClockTime = 22,
+	Brightness = 2.6,
+	ExposureCompensation = 0.15,
+	ClockTime = 4.5,
 
 	-- Hub materials and accents.
 	Marble = Color3.fromRGB(226, 221, 234),
