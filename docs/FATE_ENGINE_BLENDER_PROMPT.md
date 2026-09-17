@@ -4,6 +4,10 @@
 connection attached. It builds the Fate Engine to the exact contract the game
 already expects, so the export drops in without a single code change.
 
+**House style.** Low poly, flat shaded, no textures, one hub palette — set out
+in `ART_DIRECTION.md` and restated inside the prompt. Every hub asset follows
+it, so the hub reads as one place rather than a gallery of unrelated pieces.
+
 **Why it is this specific.** The owner chose the **whole rig** option: the
 authored model replaces *everything* the Fate Engine is today, including the
 portal rings. `Util/PortalRig` will not build this slot any more — it will
@@ -67,6 +71,30 @@ A previous asset on this project shipped ~10× oversized because it was measured
 against a rig that was itself wrong. Doorways came out 48 person-heights tall.
 Check your work against the 5 m cube, not against a feeling.
 
+## Style law — low poly, flat shaded
+
+**This is a low-poly game.** Not "optimised", not "stylised" — low poly, in the
+literal sense: every curve resolves into a small number of flat faces you could
+count, and every face is **flat shaded** so it catches the light as its own
+plane.
+
+| Do | Do not |
+|---|---|
+| Shade Flat on every object | Shade Smooth, or Auto Smooth |
+| Cylinders of 8–16 sides | 32, 64, or "enough to look round" |
+| One flat colour per material | textures, veining, gradients, roughness variation |
+| Let facets be visible | subdivision, bevel modifiers, smoothing groups |
+
+**Flat shading is the whole style.** A low-poly mesh with smooth shading does
+not read as stylised — it reads as a high-poly mesh that went wrong. After
+building every object, select all and apply `Object ▸ Shade Flat`.
+
+**No textures at all.** No image maps, no roughness/normal/metallic maps, no UV
+unwrapping needed. Colour is flat material colour and nothing else.
+
+The rest of this game's art is already built this way. This piece has to sit in
+the same hub as everything else and read as the same hand.
+
 ## Orientation
 
 - **Up is Blender +Z.**
@@ -101,7 +129,7 @@ Give every object **exactly** the name in the left column. No suffixes, no
 
 | Name | Shape | Size (m) | Position (centre) |
 |---|---|---|---|
-| `Platform` | cylinder, 64+ sides | 240 diameter × 10 tall | `(0, 0, 5)` |
+| `Platform` | cylinder, **16 sides** | 240 across the flats × 10 tall | `(0, 0, 5)` |
 | `Inlay1`…`Inlay16` | thin flat spoke | 0.6 wide × 102 long × 0.12 thick | lying flat on the platform top, radiating from the centre, one every 22.5°, each spanning radius 3 → 105, top surface at height 10.02 |
 
 `Platform` is the floor. Keep its top flat and walkable — no lip, no raised rim.
@@ -113,9 +141,14 @@ invisible interaction pad there that players stand on to roll.
 | Name | Shape | Size (m) | Position (centre) |
 |---|---|---|---|
 | `Plinth` | octagonal prism, 8 sides | 84 across flats × **3 tall** | `(0, 0, 11.5)` — sits on the platform, spans height 10 → 13 |
-| `OuterRing` | torus, standing vertically | 108 across the centreline, tube 7.2 thick → 115.2 overall | `(0, 0, 67)` |
-| `InnerRing` | torus, standing vertically, concentric | 78 across the centreline, tube 3.6 thick → 81.6 overall | `(0, 0, 67)` |
-| `PortalPlane` | flattened lens / thin disc | 78 diameter × ~3 thick | `(0, 0, 67)`, thin axis along Y |
+| `OuterRing` | torus, standing vertically, **32 major × 6 minor segments** | 108 across the centreline, tube 7.2 thick → 115.2 overall | `(0, 0, 67)` |
+| `InnerRing` | torus, standing vertically, concentric, **32 major × 6 minor** | 78 across the centreline, tube 3.6 thick → 81.6 overall | `(0, 0, 67)` |
+| `PortalPlane` | flat **16-sided** disc | 78 across × ~3 thick | `(0, 0, 67)`, thin axis along Y |
+
+`Plinth` is a true **octagon** — 8 sides, and at this style that is the real
+shape rather than a cylinder standing in for one. `Platform` at 16 sides is
+exactly twice that, so the dais and the plinth share a rhythm instead of
+fighting.
 
 **The 3 m plinth height is a hard cap, not a proportion.** A Roblox character
 jumps about 7 m. An earlier version of this rig stood 18 m and walled the portal
@@ -151,7 +184,7 @@ differently so the group never reads as mechanical.
 
 | Name | Shape | Size (m) | Position |
 |---|---|---|---|
-| `Shard1`…`Shard6` | elongated faceted crystal, tapered at both ends | ~20 × 20 × 48 tall | on a circle of **radius 100** about the Z axis, one every 60°, at heights varying between **50 and 140** |
+| `Shard1`…`Shard6` | **hexagonal** crystal, tapered to a point at both ends — 6 sides, no more | ~20 × 20 × 48 tall | on a circle of **radius 100** about the Z axis, one every 60°, at heights varying between **50 and 140** |
 
 Vary the heights properly — 55, 92, 138, 71, 120, 84 rather than an even ladder.
 Tilt each one a little off vertical, up to about 20°, with a different spin
@@ -169,38 +202,48 @@ than beyond it.
 Invisible in game — code attaches a spotlight to it. Build it anyway; without it
 the Engine has no key light.
 
-## Materials
+## Materials — flat colour, no textures
 
-Use Blender materials with these exact names. They map to Roblox materials on
-import, and the names are how I will find them.
+Use Blender materials with these exact names. **Every one is a flat base colour
+with no texture of any kind** — no image maps, no roughness, normal or metallic
+maps, no UV unwrapping. Colour is the material's base colour and that is all.
 
-| Material name | Goes on | Look |
-|---|---|---|
-| `Marble_Pale` | `Platform`, `Plinth` | pale warm marble, soft veining, matte |
-| `Basalt_Dark` | `OuterRing` | dark volcanic stone, RGB around (64, 58, 78), rough |
-| `Slate_Rune` | `Rune1`…`Rune8` | dark grey-violet slate, RGB around (88, 82, 104) |
-| `Inlay_Neon` | `Inlay1`…`Inlay16` | emissive mint, RGB around (124, 245, 224) |
-| `Tint_White` | `InnerRing`, `PortalPlane`, `Glyph1`…`Glyph8`, `Shard1`…`Shard6` | **pure white, fully emissive, no texture, no colour variation whatsoever** |
+These RGB values are the game's hub palette. They are not suggestions and not a
+starting point — the whole hub is built from this one set, and a piece that
+invents its own colours will read as imported from a different game.
+
+| Material name | Goes on | RGB | Reads as |
+|---|---|---|---|
+| `Marble_Pale` | `Platform`, `Plinth` | `226, 221, 234` | pale lilac-white stone |
+| `Basalt_Dark` | `OuterRing` | `64, 58, 78` | heavy dusk-purple stone |
+| `Slate_Rune` | `Rune1`…`Rune8` | `88, 82, 104` | grey-violet carved slate |
+| `Inlay_Neon` | `Inlay1`…`Inlay16` | `124, 245, 224` | emissive mint, glowing |
+| `Trim_Gold` | optional accent banding on `Plinth` and `Platform` | `230, 178, 74` | warm gold — **use sparingly**, it is the only warm note and it stops being an accent if it is everywhere |
+| `Tint_White` | `InnerRing`, `PortalPlane`, `Glyph1`…`Glyph8`, `Shard1`…`Shard6` | `255, 255, 255` | pure white, fully emissive |
 
 ### `Tint_White` is not laziness, it is the contract
 
 Those parts are **recoloured by the game every time a player rolls** — the whole
 portal turns Uncommon green, then Legendary gold, and so on. Roblox does that by
-multiplying against the part's base colour, and a **PBR texture set overrides it
-completely**.
+setting the part's `Color`, which multiplies against what you exported.
 
 So for every object using `Tint_White`:
 
-- **no image textures**
-- **no baked colour**
-- **no roughness, normal or metallic maps**
-- pure white base, emission on
+- **pure white base colour**, emission on
+- **no texture of any kind**
+- **no vertex colour painting** — that multiplies too
 
 Colour them in your head if it helps, but export them white. If you paint
-`InnerRing` blue, it will be blue forever and the rarity system dies on the
-Engine — which is the single most visible feature in the game.
+`InnerRing` blue it will be blue forever, and the rarity system dies on the most
+visible object in the game.
 
-Everything using the other four materials may be textured freely.
+### Light the scene like the hub, not like a studio
+
+The hub sits under a low, raking pre-dawn key light — warm gold from above,
+cool purple ambient fill, `ClockTime 4.5`. Set your viewport up that way before
+you judge anything. A piece that looks right under Blender's default lighting
+will read washed-out and shapeless in the game, because flat-shaded facets live
+or die on where the key light is.
 
 ## Hierarchy
 
@@ -231,25 +274,41 @@ children. Only `OuterRing`, `InnerRing` and the shards have special origins.
 
 ## Polygon budget
 
-This is a hub centrepiece rendered on phones, so keep it lean:
+The segment counts above already set this. Built as specified, the whole model
+lands around **1,800 triangles**:
 
-- `Platform`: 64-sided cylinder is plenty
-- each torus: 48 segments around, 16 around the tube
-- shards: under 200 triangles each — they are read as silhouettes
-- **whole model under 60,000 triangles**
+| | Triangles |
+|---|---|
+| `Platform`, 16-sided | ~90 |
+| `Plinth`, octagonal | ~40 |
+| 16 inlays | ~190 |
+| `OuterRing` + `InnerRing`, 32 × 6 each | ~770 |
+| `PortalPlane`, 16-sided disc | ~30 |
+| 8 runes | ~100 |
+| 8 glyphs | ~320 |
+| 6 shards, hexagonal | ~240 |
+| `SpotAnchor` | 12 |
 
-Detail belongs in the silhouette and the materials, not in the wireframe.
+**Hard ceiling: 5,000 triangles for the entire model.** If you are anywhere
+near it, something has been subdivided that should not have been.
+
+That is not a mobile-performance number — at this scale the game could afford
+far more. It is the **style**. Detail lives in the silhouette, in the facet
+angles and in where the gold accent lands, never in the polygon count. If a
+shape needs more geometry to read, change the shape.
 
 ## Export
 
 1. Delete `SCALE_REF_R6` — after the final check below, not before.
 2. Select the `FateEngine` empty and all descendants.
-3. `File ▸ Export ▸ FBX`, with:
+3. Select everything and apply `Object ▸ Shade Flat` one final time. Confirm
+   no object has an Auto Smooth or Smooth By Angle modifier left on it.
+4. `File ▸ Export ▸ FBX`, with:
    - **Selected Objects** on
    - **Apply Scalings: FBX All**
    - **Forward: -Z Forward**, **Up: Y Up**
    - **Apply Modifiers** on
-4. Save as `fate_engine.fbx`.
+5. Save as `fate_engine.fbx`.
 
 ## Before you say you are done, verify
 
@@ -264,10 +323,21 @@ Report each of these back to me with the actual measured number:
    confirm by selecting each and reading the origin, not the bounding box.
 6. Both rings stand **vertically**, faces pointing along ±Y, so a character
    walking along Y passes through them.
-7. Every object using `Tint_White` has **no image texture of any kind**.
-8. Object names are exactly as specified, with **no `.001` suffixes anywhere**.
-   List every object name you created so I can check.
-9. Triangle count for the whole model.
+7. **Every object is flat shaded.** Name any object still set to Shade Smooth,
+   or carrying an Auto Smooth / Smooth By Angle modifier — there should be none.
+8. **No object anywhere in the file has a texture, an image map, or a UV-mapped
+   material.** Every material is a flat base colour.
+9. The material colours match the palette RGB values exactly. List each
+   material and its RGB so I can check.
+10. Every object using `Tint_White` is pure white `255, 255, 255` with **no
+    vertex colour painting**.
+11. `Platform` has **16 sides**, `Plinth` has **8**, each torus is **32 × 6**,
+    each shard is **hexagonal**. Report the actual counts.
+12. Object names are exactly as specified, with **no `.001` suffixes anywhere**.
+    List every object name you created so I can check.
+13. **Triangle count for the whole model — it should be near 1,800 and must be
+    under 5,000.** If it is in the tens of thousands, something got subdivided
+    and the style is broken; find it and fix it before reporting.
 
 If any number is off, fix it and re-report rather than telling me it is close.
 

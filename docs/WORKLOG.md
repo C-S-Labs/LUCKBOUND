@@ -45,7 +45,33 @@ delete an older entry; if something turned out wrong, say so in a newer one.
   the game already enforces. It is not a style brief: the part names in it are
   the API `PortalRig` looks up.
 
+- **Corrected the prompt to low poly** after the owner flagged it. The first
+  version was **lean but not low poly** — a 64-sided platform, 48x16 tori,
+  "soft veining" marble, textures allowed on four of five materials, and a
+  60,000-triangle ceiling. That is an optimisation budget, not a style. There
+  was also no `Shade Flat` instruction anywhere, and a low-poly mesh with
+  smooth shading reads as a high-poly mesh that went wrong.
+
+  Now: 16-sided platform, octagonal plinth, 32x6 tori, hexagonal shards, flat
+  shading mandatory, **no textures at all**, and a ceiling of 5,000 triangles
+  against an expected ~1,800.
+
 ### Decisions made
+
+- **Low poly and one palette are the hub-wide house style**, not a note on one
+  asset. Recorded in `ART_DIRECTION.md` rather than only in the prompt, with
+  the palette lifted from `Content/Hub/Crossroads.luau` so there is one source
+  of truth. Ethereal Scape v2 is already built this way, so the hub matching it
+  is what makes the game look like one game.
+
+  The no-textures rule is style *and* mechanics: a `SurfaceAppearance`
+  overrides a part's `Color`, and rarity reskinning works by setting `Color`.
+
+- **Fixed a stale `ART_DIRECTION` defaults table** while establishing the
+  palette beside it — it still read Brightness 2 / ClockTime 22, hub 1200,
+  zone ring 420, five zone platforms. All superseded by the brightness pass,
+  the de-scale and the Observatory's removal. Stale numbers next to a new
+  palette would have been read as current by the next modeller.
 
 - **The Fate Engine prefab replaces the WHOLE RIG, rings included.**
   Owner-directed. The alternative was a static shell with `PortalRig` still
