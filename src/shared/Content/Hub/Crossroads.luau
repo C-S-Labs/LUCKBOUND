@@ -179,13 +179,16 @@ local Crossroads = {
 			Plinth_SideBand = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
 			Plinth_TopFiligree = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
 			Plinth_CornerButtresses = { Color = Color3.fromRGB(64, 58, 78), Material = Enum.Material.Basalt },
-			Inlay = { Color = Color3.fromRGB(124, 245, 224), Material = Enum.Material.Neon },
+			-- Dimmed from the palette's 124,245,224 by Portal.NeonTint. Neon emits at
+			-- full Color and bloom amplifies it; at full value these spokes bled a
+			-- halo across the dais.
+			Inlay = { Color = Color3.fromRGB(68, 135, 123), Material = Enum.Material.Neon },
 
 			-- Rune ring ---------------------------------------------------
 			Rune = { Color = Color3.fromRGB(88, 82, 104), Material = Enum.Material.Slate },
 			Rune_GoldFrames = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
 			-- Rarity-tinted. The colour set here is only the idle look.
-			Glyph = { Color = Color3.fromRGB(124, 245, 224), Material = Enum.Material.Neon },
+			Glyph = { Color = Color3.fromRGB(68, 135, 123), Material = Enum.Material.Neon },
 
 			-- The portal --------------------------------------------------
 			OuterRing = {
@@ -198,7 +201,7 @@ local Crossroads = {
 			},
 			RingFoot_Clamps = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
 			InnerRing = {
-				Color = Color3.fromRGB(124, 245, 224),
+				Color = Color3.fromRGB(68, 135, 123),
 				Material = Enum.Material.Neon,
 				Attributes = { SpinSpeed = -1.4 },
 			},
@@ -214,20 +217,21 @@ local Crossroads = {
 			LevitationGenerator = { Color = Color3.fromRGB(88, 82, 104), Material = Enum.Material.Slate, CanCollide = true },
 			GeneratorVents = { Color = Color3.fromRGB(64, 58, 78), Material = Enum.Material.Basalt },
 			GeneratorPanelTrim = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
-			GeneratorEmitter = { Color = Color3.fromRGB(124, 245, 224), Material = Enum.Material.Neon },
-			LevitationCoils = { Color = Theme.MarbleTrim, Material = Enum.Material.Neon },
+			GeneratorEmitter = { Color = Color3.fromRGB(68, 135, 123), Material = Enum.Material.Neon },
+			LevitationCoils = { Color = Color3.fromRGB(128, 99, 41), Material = Enum.Material.Neon },
 			-- Static. The artist's design note is explicit that the
 			-- generator, core and coils are decorative unless the game adds
 			-- behaviour, and a rotating core would also get caught by the
 			-- shard rarity cycle and tinted away from its cyan-violet.
-			LevitationCore = { Color = Color3.fromRGB(124, 245, 224), Material = Enum.Material.Neon },
+			LevitationCore = { Color = Color3.fromRGB(78, 150, 140), Material = Enum.Material.Neon },
 
 			-- Floating crystals. Rarity-tinted, and each spins in place.
 			Shard = {
-				Color = Color3.fromRGB(124, 245, 224),
+				Color = Color3.fromRGB(68, 135, 123),
 				Material = Enum.Material.Glass,
 				Transparency = 0.35,
-				Attributes = { IsFeaturedShard = true, SpinSpeed = 0.35 },
+				-- 0.35 rad/s was 18 seconds a revolution, which reads as still.
+				Attributes = { IsFeaturedShard = true, SpinSpeed = 0.9 },
 			},
 
 			-- Invisible: the spotlight's mount point, nothing to look at.

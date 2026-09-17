@@ -119,6 +119,16 @@ function HubEffects.init(): ()
 			end
 		end
 
+		print(
+			string.format(
+				"[HubEffects] scan: %d shard(s), %d orbiter(s); engineRig %s, gateRig %s",
+				#shards,
+				#orbiters,
+				if engineRig then "found" else "MISSING",
+				if gateRig then "found" else "MISSING"
+			)
+		)
+
 		-- Belt and braces: anything tagged that arrives after the scan still
 		-- animates. Streaming, or a part added by a later system, would
 		-- otherwise sit still with no way to tell why.

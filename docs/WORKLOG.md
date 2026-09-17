@@ -33,6 +33,81 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 14 — 2026-09-18 — Spin speed, neon glare, and a diagnostic
+
+**Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 305 passing
+
+### Done
+
+Second playtest. **Sizing confirmed good** at `Scale = 0.464`. Rarity recolour
+on the portal confirmed working. Animation still reported dead.
+
+**The rarity recolour working is the diagnostic that matters.** It proves
+`engineRig` is found and `PortalRig.playSpinUp` runs — so the Session 13
+replication-race fix worked, and the rig is not missing. The fault is
+downstream of that.
+
+**Most likely cause, and fixed: the spin was too slow to see.**
+`Portal.IdleSpinSpeed` was `0.15` rad/s — **one revolution every 42 seconds.**
+On the blockout's 28 visible segments that reads as a slow hum. On an authored
+ring, which is near rotationally symmetric, a slow rotation about its own
+symmetry axis is **invisible by construction**. Raised to `0.6` (a revolution
+every 10s). Shards went `0.35` → `0.9` for the same reason: 18 seconds a
+revolution reads as still.
+
+**Added a diagnostic rather than guessing again.** Two prints, because "nothing
+is animated" has now cost two rounds and a screenshot cannot distinguish "no
+rings found" from "rings turning too slowly to see":
+
+```
+[PortalRig] EngineRig: driving 2 ring(s) OuterRing(MeshPart, spin 1) InnerRing(MeshPart, spin -1.4), plane yes
+[HubEffects] scan: 6 shard(s), 0 orbiter(s); engineRig found, gateRig found
+```
+
+If those numbers come back as expected, the speed was the whole story. If they
+come back `0 ring(s)` or `MISSING`, the fault is lookup, not speed, and the
+line says which.
+
+**Neon glare.** The portal was bright enough to bloom a halo over its own mesh
+detail. Roblox's `Neon` emits at the part's **full `Color`** and bloom
+amplifies it — and `Transparency` does not help, because Neon ignores it. The
+only lever is the colour itself.
+
+Added `Portal.NeonTint = 0.55`, applied in `PortalRig.setRarity` to everything
+Neon before it lands, and dimmed the statically-painted Neon parts in the paint
+table by the same factor (mint `124,245,224` → `68,135,123`). Hue preserved,
+geometry readable.
+
+### Decisions made
+
+- **An animation speed that is invisible is a bug, not a taste.** The old value
+  was chosen against blockout geometry with 28 visible segments. Authored art
+  changed what "slow" means, and nothing flagged it because both look identical
+  in a still.
+
+- **Neon is tinted at the source, in config, not per part.** `NeonTint` is one
+  tunable that every Neon path goes through, so the Gate and the return portals
+  get the same treatment without a second decision.
+
+- **Not addressed: walkways cover the base of the portal.** Owner-noted and
+  explicitly deprioritised — the current Crossroads is a test harness, not the
+  real map, which is the next piece of work. Recorded so it is not rediscovered
+  as a bug.
+
+### Stopped at
+
+305 passing. Both fixes are unverified in-engine; the diagnostic exists to make
+the next round conclusive either way.
+
+### Next
+
+1. **Walk it and read the two `[PortalRig]` / `[HubEffects]` lines.** They
+   settle whether the remaining fault is lookup or speed.
+2. Placeholder staircase, once animation is confirmed.
+3. Then the spec amendment for portal-as-entry.
+
+---
+
 ## Session 13 — 2026-09-18 — First playtest of the authored Engine
 
 **Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 305 passing

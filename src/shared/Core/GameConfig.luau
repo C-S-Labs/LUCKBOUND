@@ -272,6 +272,14 @@ local GameConfig = {
 		ParticleLifetimeMin = 1.5,
 		ParticleLifetimeMax = 3,
 
+		-- HOW HARD THE NEON IS DRIVEN. Roblox's Neon material emits at the
+		-- part's full Color and bloom amplifies it, so a rarity colour applied
+		-- raw blows out into a halo that swallows the mesh detail behind it --
+		-- reported from the first authored playtest. Tinting the colour down
+		-- before it reaches a Neon part keeps the hue and gives the geometry
+		-- back. Transparency would not work here: Neon ignores it.
+		NeonTint = 0.55,
+
 		IdleBrightness = 1,
 		ActiveBrightness = 3,
 		LightRange = 24,
@@ -283,7 +291,12 @@ local GameConfig = {
 		-- The single most important UX beat in the game (master spec §25,
 		-- blueprint §1.3). Never make it instant.
 		SpinUpSeconds = 2.5,
-		IdleSpinSpeed = 0.15, -- rad/s
+		-- 0.15 was one revolution every 42 SECONDS. On the blockout's 28 visible
+		-- segments that read as a slow hum; on an authored ring, which is
+		-- near rotationally symmetric, it is invisible -- the first playtest
+		-- of the authored Engine reported it as "static, non moving".
+		-- 0.6 is a revolution every 10s: clearly turning, still not a fan.
+		IdleSpinSpeed = 0.6, -- rad/s
 		SpinUpSpinSpeed = 3.2,
 
 		-- The blueprint's 1.5x/2.0x were relative to a 120-stud hub; the RATIO

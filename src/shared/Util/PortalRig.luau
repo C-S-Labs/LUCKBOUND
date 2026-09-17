@@ -282,6 +282,14 @@ end
 
 --- Reskins an existing rig to a different rarity. Blueprint §1.3: portals are
 --- reskinned by colour, never rebuilt.
+--- Neon emits at full Color and bloom amplifies it, so the raw rarity colour
+--- becomes a halo that eats the mesh detail behind it. Everything painted onto
+--- a Neon part goes through here first.
+local function neon(color: Color3): Color3
+	local tint = GameConfig.Portal.NeonTint
+	return Color3.new(color.R * tint, color.G * tint, color.B * tint)
+end
+
 function PortalRig.setRarity(model: Model, rarityKey: string): ()
 	local rarity = Constants.RARITY[rarityKey]
 	if not rarity then
@@ -295,7 +303,7 @@ function PortalRig.setRarity(model: Model, rarityKey: string): ()
 	-- the portal simply stops responding to rarity and nothing errors.
 	local inner = model:FindFirstChild("InnerRing")
 	if inner and inner:IsA("BasePart") then
-		inner.Color = rarity.Color
+		inner.Color = neon(rarity.Color)
 	elseif inner then
 		for _, segment in inner:GetChildren() do
 			if segment:IsA("BasePart") then
@@ -322,7 +330,7 @@ function PortalRig.setRarity(model: Model, rarityKey: string): ()
 	if runes then
 		for _, child in runes:GetChildren() do
 			if child:IsA("BasePart") and child.Name:match("^Glyph") then
-				child.Color = rarity.Color
+				child.Color = neon(rarity.Color)
 			end
 		end
 	end
@@ -410,6 +418,23 @@ function PortalRig.animate(model: Model): RBXScriptConnection
 
 	local plane = model:FindFirstChild("PortalPlane")
 	local elapsed = 0
+
+	-- Says out loud what this found. "Nothing is animated" has now cost two
+	-- playtest rounds, and the difference between "no rings" and "rings
+	-- turning too slowly to see" is invisible from a screenshot.
+	local report = {}
+	for _, ring in rings do
+		table.insert(report, `{ring.Name}({ring.ClassName}, spin {ring:GetAttribute("SpinSpeed") or "nil"})`)
+	end
+	print(
+		string.format(
+			"[PortalRig] %s: driving %d ring(s) %s, plane %s",
+			model.Name,
+			#rings,
+			if #rings > 0 then table.concat(report, " ") else "-- NONE FOUND",
+			if plane then "yes" else "MISSING"
+		)
+	)
 
 	return RunService.Heartbeat:Connect(function(dt)
 		elapsed += dt
