@@ -100,6 +100,15 @@ local Constants = {
 		ROLL_ANCHOR = "RollAnchor",
 		GATE_ANCHOR = "GateAnchor",
 		EXPEDITION_STAGE = "ExpeditionStage",
+
+		-- A prebuilt map is a Model synced into ServerStorage by Rojo, named for
+		-- its AssetManifest key. Inside it, two named parts are the whole
+		-- contract between art and code -- the same trick the hub plays with
+		-- RollAnchor and GateAnchor, and for the same reason: the modeller can
+		-- rebuild everything around them without touching a line of Luau.
+		MAPS_FOLDER = "LuckboundMaps",
+		MAP_ENTRY_ANCHOR = "EntryAnchor",
+		MAP_RETURN_ANCHOR = "ReturnAnchor",
 	},
 
 	DATASTORE = {

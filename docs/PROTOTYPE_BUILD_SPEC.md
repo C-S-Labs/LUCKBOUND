@@ -207,17 +207,49 @@ WorldDefinition = {
   Modifiers          : { string }  -- allowed ModifierDefinition Ids
   DurationSeconds    : number
   MapPathLength      : number?     -- chunks between arrival and the arena; nil = config default
+  PrebuiltMap        : { AssetKey : string, Scale : number }?   -- see below
   RecommendedPower   : number
   Flavor             : string      -- shown on the reveal card
 }
 ```
 
+**A world gets its map one of two ways, and declares which by data.**
+
+| | Chunk kit | Prebuilt map |
+|---|---|---|
+| Declared by | chunks in `Content/Chunks/` naming the world | `PrebuiltMap` |
+| Built by | `ChunkCore` + `Util/ChunkLoader` | `Util/PrebuiltLoader` |
+| Every run | a different layout, from the expedition seed | identical |
+| The art must be | modular: matching rims, gaps, heights | anything |
+
+Declaring **both is a boot error** (`Schema.validateMaps`). Two routes to one
+world's map is an ambiguity something downstream would have to resolve, and
+resolving it is the second competing architecture CLAUDE.md rule 1 exists to
+prevent. Declaring **neither** is legal and means the world is rollable but not
+enterable — printed as a boot warning, refused politely at the Gate.
+
+`ExpeditionSystem` contains exactly one branch on this, and it reads
+`ExpeditionCore.hasPrebuiltMap(world)` — never a world id. Adding an authored
+world changes no System.
+
+`PrebuiltMap.AssetKey` names an `AssetManifest` entry, which names a `.rbxmx`
+in `assets/rbxm/maps/` that Rojo syncs to `ServerStorage.LuckboundMaps`. Inside
+it, two optional named parts are the whole contract with the modeller:
+`EntryAnchor` (where the player arrives) and `ReturnAnchor` (where the way home
+goes). Missing either, the loader derives it from the bounding box and warns —
+so art can be walked before it is finished.
+
+`PrebuiltMap.Scale` exists because authored scenes arrive at the scale their
+author worked in. It is one number on the world, so correcting an oversized
+scene costs a data edit rather than a re-export and re-upload of every mesh.
+
 `MapPathLength` is **content, not config**, and the reason is a relationship
 rather than a preference: a world with a short expedition needs a short map or
-the whole expedition is the walk. Ethereal Scape runs 300 seconds and sets
-`MapPathLength = 3`; a world that inherited the default 5 at that duration
-would be 40% traverse. The test suite asserts the relationship rather than
-either number.
+the whole expedition is the walk. A world running 300 seconds wants about 3
+connective chunks; one that inherited the default 5 at that duration would be
+40% traverse. The test suite asserts the relationship rather than either
+number. It is meaningless on a prebuilt world, so setting both is also a boot
+error.
 
 `Flavor` is the "No records found." line for THE_UNKNOWN. It is part of the hook, not decoration.
 

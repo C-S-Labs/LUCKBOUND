@@ -141,6 +141,36 @@ had.
 A test now asserts the general rule the ramp broke: **no district's platform
 may reach into the Fate Engine's footprint.**
 
+### A world may ship one authored map instead of a chunk kit
+
+**Added 2026-09-17**, and it is an addition rather than a retreat: the chunk
+system is untouched and still builds Verdant Valley.
+
+Addendum §A4 describes one way a biome gets a map — a kit of interchangeable
+pieces that the assembler arranges per seed. The first real delivery of
+authored art did not fit it. Ethereal Scape's scene is a **composed traverse**:
+its eight islands climb 58 studs a step, each of its six bridges is cut to its
+own gap at that gap's height, the landings are authored in matched pairs naming
+the two islands they join, and the islands grow from 1030 × 813 at the arrival
+shelf to 1932 × 1535 under the temple. Every one of those breaks if the pieces
+are shuffled.
+
+Making it modular would have meant re-authoring it — identical gaps, identical
+height deltas, identical rims — to buy variety in a world that exists to test
+map loading. So a world now declares **either** a chunk kit **or** a
+`PrebuiltMap`, and that choice is data (build spec §2.2). `ExpeditionSystem`
+has one branch on it, reading `ExpeditionCore.hasPrebuiltMap(world)` and never
+a world id, so the prime directive holds: adding an authored world changes no
+System.
+
+Declaring both is a boot error. Two routes to one world's map would put a
+choice somewhere downstream, and that is the second competing architecture
+CLAUDE.md rule 1 exists to prevent.
+
+**What this costs:** every run of a prebuilt world is the same map. For a test
+biome with no combat that is nothing; for a world players farm it would be a
+real loss, and the kit route stays the default for those.
+
 ### §2.3's hub lighting was brightened — key light, not exposure
 
 "Hub is very dark" was open from the first Studio session to the sixth.
@@ -178,7 +208,7 @@ NORTH = -Z   Hall of Legends      (0, 0, -420)
 EAST  = +X   Discovery Archive    (420, 0, 0)
 SOUTH = +Z   Expedition Gate      (0, 0, 420)
 WEST  = -X   Training Grounds     (-420, 0, 0)
-UP    = +Y   Global Observatory   (0, 140, 0)
+UP    = +Y   Global Observatory   (0, 140, 0)   <- cut 2026-09-17, see above
 ```
 
 *(The radii were 46 and 40 when this was written; the 10× world rescale on
@@ -231,8 +261,8 @@ portal ring is Rare blue.
 | Biome geometry under `assets/source/worlds/<world_id>/` | ✅ Ethereal Scape; others still empty |
 | World data in `Content/Worlds/`, zero world logic in Systems | ✅ |
 | Lighting applied/reverted by ExpeditionSystem, never bleeding | ✅ **closed** — see below |
-| Boss arena a distinct shape per biome | ⏳ authored, not yet uploaded |
-| One optional side-content pocket per biome | ✅ Verdant Valley + Ethereal Scape have one; Emberfall's is specified but unbuilt |
+| Boss arena a distinct shape per biome | ✅ Ethereal Scape's Sky Temple is authored and uploaded; Verdant Valley's is blockout |
+| One optional side-content pocket per biome | ✅ Verdant Valley's is a kit piece; Ethereal Scape's are its 14 satellite islands. Emberfall's is specified but unbuilt |
 | Mobile part/light budget vs Verdant Valley baseline | ⏳ blockout only, no mesh budget yet |
 
 **Hub baseline measured: 436 instances**, printed on boot. That is the number

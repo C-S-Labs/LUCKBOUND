@@ -41,10 +41,10 @@ scan (`*_Final`, `*_NEW`, `*_FIXED`, …) from build spec P1-12.
 | Biome lighting | 15 | Per-world Brightness/Fog per Blueprint §3.3/§4.3/§5.3 |
 | Constants | 12 | Frozen, unique orders, sane reveal durations |
 | **Map assembly** | 33 | **Does a map actually build from the chunk pieces?** |
-| **Ethereal Scape** | 23 | **Does the grammar work on a second, independent kit?** |
-| **Expedition entry** | 40 | **Who may enter, where do they go, can it be replayed?** |
+| **Ethereal Scape** | 15 | **Is the prebuilt map's scale honest against the art?** |
+| **Expedition entry** | 46 | **Who may enter, where do they go, can it be replayed?** |
 
-**276 total.**
+**295 total.** Run `./tests/run.sh`; the suite prints the count.
 
 ### The three that matter most
 
@@ -253,14 +253,21 @@ Ethereal Scape, so you can run it inside the first minute of a fresh profile.
    the map:
 
 ```
-[Expedition] Player1 -> ETHEREAL_SCAPE  seed 1443871209  5 chunks (0 mesh, 5 blockout)  attempt 1  300s
+[Expedition] Player1 -> ETHEREAL_SCAPE  seed 1443871209  prebuilt ES_ENVIRONMENT_FULL  699 parts at 0.10 scale  derived arrival  300s
 ```
+
+That line says which route built the map. A kitted world prints
+`5 chunks (0 mesh, 5 blockout) attempt 1` instead — same slot, different
+summary. `derived arrival` means the scene has no `EntryAnchor` yet and the
+loader guessed; it will read `authored` once one is added.
 
 ✅ **Pass conditions, in order of what they tell you:**
 
 | | What it proves |
 |---|---|
-| You arrive standing on a labelled platform reading `ES_ARRIVAL_SHELF` | the layout built and you are on the ENTRY piece |
+| You arrive standing on the authored islands, not a grey blockout platform | the prebuilt map cloned out of `ServerStorage.LuckboundMaps` |
+| A character reaches a doorway's handle-height, not its skirting | `PrebuiltMap.Scale` is right. **This is the one to look at** — the scene ships ~10× oversized and the scale is unwalked |
+| Nothing falls | the loader anchored the clone |
 | The sky turns bright and near-white | per-client biome lighting applied |
 | The banner top-centre counts down from 5:00 | the timer is live |
 | The pieces form a connected run, each labelled | generation produced a *place*, not a pile |

@@ -60,11 +60,11 @@ that will waste an evening if you get them wrong, is
 
 ---
 
-## Splitting one authored scene into a kit
+## One authored scene: split it, or ship it whole?
 
-`aether_environment_refined.blend` is the first real case, and it is the shape
-most authored environments will arrive in: **one scene containing a whole
-place**, not eight tidy chunk files. Its collections are
+Authored environments arrive in the shape `aether_environment_refined.blend`
+arrived in: **one scene containing a whole place**, not eight tidy chunk files.
+That leaves a decision, and it is the art that makes it, not the code.
 
 ```
 Aether_Terrain     Island_00 .. Island_07   (each: _Meadow, _GoldRim, _Underside)
@@ -76,19 +76,48 @@ Scale_Reference    an R6 rig  <- the most important object in the file
 Presentation       AI_Preview_Camera / _Sun / _Fill  (do NOT export these)
 ```
 
-Eight islands, eight chunks. `Content/Chunks/EtherealScape.luau` maps them
-1:1 and the manifest `Notes` field records which island is which, so the
-correspondence is written down rather than remembered.
+### The question to ask first
 
-### The rule that makes it work
+**Are the pieces interchangeable, or were they composed?**
 
-**Export each island with its own origin at the island's centre, on the
-256-stud grid.** The chunk system positions pieces by their centre and joins
-them at sockets; a mesh whose origin sits at the world origin of the Blender
-scene will assemble into a pile at one point. In Blender: select the island's
-objects → `Object ▸ Set Origin ▸ Origin to Geometry` (or snap the 3D cursor to
-the socket grid and use `Origin to 3D Cursor`) → then export **Selected Objects
-only**.
+A chunk kit buys variety and charges modularity for it: every piece must join
+to every other piece, so gaps, heights and rims all have to be the same. Art
+that was composed cannot supply that without being re-authored.
+
+Ethereal Scape looked like eight chunks and measured like one map — its islands
+climb, its six bridges are each cut to their own gap, and the islands grow
+toward the temple. `assets/rbxm/maps/README.md` shows the measurements. It
+ships whole.
+
+Four questions that settle it, all answerable by measuring the file:
+
+1. Do the pieces sit at the **same height**, or does the route climb?
+2. Are the **gaps between them identical**, or is each connector bespoke?
+3. Are the pieces **the same size**, or do they build toward something?
+4. Would **shuffling them** still read as the same place?
+
+Four yeses is a kit. Any no is a map.
+
+### If it is a kit: export island by island
+
+**Export each piece with its own origin at the piece's centre, on the 256-stud
+grid.** The chunk system positions pieces by their centre and joins them at
+sockets; a mesh whose origin sits at the world origin of the Blender scene will
+assemble into a pile at one point. In Blender: select the piece's objects →
+`Object ▸ Set Origin ▸ Origin to Geometry` (or snap the 3D cursor to the socket
+grid and use `Origin to 3D Cursor`) → then export **Selected Objects only**.
+
+Each piece becomes a manifest entry and a chunk in `Content/Chunks/`.
+
+### If it is a map: one file, one entry
+
+Save the whole scene as a `.rbxmx` into `assets/rbxm/maps/`, named for its
+manifest key, and give the world a `PrebuiltMap`. Two named parts inside it —
+`EntryAnchor` and `ReturnAnchor` — are the entire contract. See
+`assets/rbxm/maps/README.md`.
+
+No socket grammar, no grid alignment, no per-piece origins. Every run of that
+world is the same map, which is the price.
 
 ### Scale: check it, do not assume it
 
@@ -102,13 +131,19 @@ select that rig in Studio and read its size:
 | ~0.5 studs | the importer applied a 0.1 scale — re-import with World Units set |
 | ~50 studs | a 10× — same fix, other direction |
 
-Do this **once, on the whole-scene import** (`ES_ENVIRONMENT_FULL`) before
-splitting anything. Getting it wrong after eight separate uploads means eight
-re-uploads.
+Do this **once, on the whole-scene import**, before splitting anything. Getting
+it wrong after eight separate uploads means eight re-uploads.
 
-Then sanity-check against `Content/Chunks/EtherealScape.luau`: the pieces
-declare 256–768 studs, so an island that imports at 40 studs across is not a
-chunk, it is a prop.
+**Do not check the rig alone.** Ethereal Scape's proxy measured 59.6 studs and
+two sessions concluded the proxy was wrong, because the islands looked the
+right size for a chunk kit. They were not: the doorways were 48 person-heights
+tall, the trees 25. Measure a doorway, a tree and a walkway against a 5-stud
+character too — if they all agree with the rig, the rig is right and the scene
+is oversized.
+
+A prebuilt map can fix that with one number (`PrebuiltMap.Scale`) and no
+re-upload. A chunk kit cannot: its `SizeX/Y/Z` drive collision rejection and
+must match the uploaded geometry.
 
 ---
 
@@ -204,19 +239,14 @@ A `.rbxm`/`.rbxmx` is a Roblox model file that can hold MeshParts, attachments,
 lights and configuration together. Rojo can sync one straight into the place, so
 it suits prefabs that are more than bare geometry.
 
-Not wired into `default.project.json` yet — an empty mapping risks breaking the
-sync. When the first prefab exists, add:
+`rbxm/maps/` is wired into `default.project.json` and syncs to
+`ServerStorage.LuckboundMaps`, where `Util/PrebuiltLoader` finds whole authored
+maps by name. See `rbxm/maps/README.md`.
 
-```json
-"ServerStorage": {
-  "$className": "ServerStorage",
-  "Prefabs": { "$path": "assets/rbxm" }
-}
-```
-
-`ServerStorage` is deliberate: prefabs there are invisible to clients, so
+`ServerStorage` is deliberate: models there are invisible to clients, so
 exploiters cannot dump the discovery, loot or enemy roster ahead of time
-(addendum §A2).
+(addendum §A2). It also means a 4 MB map is not replicated to every player at
+join — only the clone on the stage is.
 
 ---
 

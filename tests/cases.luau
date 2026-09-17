@@ -1237,7 +1237,6 @@ do
 	check("its expedition is shorter than the 720s default",
 		es.DurationSeconds < GameConfig.Expedition.DefaultDurationSeconds,
 		string.format("%ds", es.DurationSeconds))
-	check("it carries its own map size as content", es.MapPathLength == 3)
 
 	-- The onboarding arc must actually hand it out, or a tester waits on a
 	-- 15% draw to see the thing they are trying to test.
@@ -1248,117 +1247,78 @@ do
 	check("onboarding guarantees it inside the first five rolls",
 		onboardingIndex ~= nil and onboardingIndex <= 5, tostring(onboardingIndex))
 
-	-- The kit ------------------------------------------------------
-	local lib = ChunkCore.libraryFor(Chunks, "ETHEREAL_SCAPE")
-	check("Ethereal Scape has exactly one ENTRY chunk", lib.ENTRY and #lib.ENTRY == 1)
-	check("Ethereal Scape has exactly one BOSS chunk", lib.BOSS and #lib.BOSS == 1)
-	check("Ethereal Scape has a SIDE pocket (§6 checklist)", lib.SIDE and #lib.SIDE >= 1)
-	check("Ethereal Scape has connective pieces",
-		(#(lib.PATH or {}) + #(lib.COMBAT or {})) >= 4,
-		string.format("%d", #(lib.PATH or {}) + #(lib.COMBAT or {})))
+	-- The map ------------------------------------------------------
+	-- This world does not assemble a map. It ships one, because the delivered
+	-- art is a COMPOSED traverse rather than a set of interchangeable pieces
+	-- (see the comment on its PrebuiltMap). The chunk kit that used to live
+	-- here was retired with the scene it never matched.
+	check("Ethereal Scape declares a prebuilt map", type(es.PrebuiltMap) == "table")
+	check("no chunk claims Ethereal Scape any more",
+		not ExpeditionCore.hasKit(Chunks, "ETHEREAL_SCAPE"))
+	check("its AssetKey is in the manifest",
+		AssetManifest.exists(es.PrebuiltMap.AssetKey), tostring(es.PrebuiltMap.AssetKey))
+	check("it declares no MapPathLength -- nothing would read it",
+		es.MapPathLength == nil)
 
-	local esCount = 0
-	for _, c in Chunks do
-		if c.WorldId == "ETHEREAL_SCAPE" then esCount += 1 end
+	-- MEASURED FROM THE DELIVERED FILE, assets/rbxm/maps/ES_ENVIRONMENT_FULL
+	-- .rbxmx, not estimated. These are the numbers the Scale below has to
+	-- reconcile, and they are written down so a future rescale argues with
+	-- evidence rather than with taste.
+	local SCENE_TRAVERSE = 10278 -- studs, island 00 centre to island 07 centre
+	local SCENE_R6_HEIGHT = 59.6 -- the Scale_Reference proxy: legs+torso+head
+	local REAL_R6_HEIGHT = 5 -- what a Roblox R6 character actually is
+
+	-- The proxy is the modeller's own statement of scale, and every other
+	-- object in the scene agrees with it: 24-stud doorways, 11-stud trees,
+	-- 12-stud waystones. So the scene is internally consistent and uniformly
+	-- oversized, and ONE number fixes all of it.
+	local impliedScale = REAL_R6_HEIGHT / SCENE_R6_HEIGHT
+	check("the declared Scale matches the scene's own R6 reference",
+		math.abs(es.PrebuiltMap.Scale - impliedScale) < 0.03,
+		string.format("declared %.3f, implied %.3f", es.PrebuiltMap.Scale, impliedScale))
+
+	-- THE RELATIONSHIP THAT MATTERS, and the one a bad Scale breaks. At 1.0
+	-- the walk alone is 642 seconds against a 300-second expedition; the test
+	-- that would have caught that is this one, not an assertion that Scale is
+	-- some particular number.
+	local walkSeconds = SCENE_TRAVERSE * es.PrebuiltMap.Scale / GameConfig.Scale.WalkSpeed
+	print(string.format("        Ethereal Scape traverse: %.0f studs, %.0fs one way at scale %.2f",
+		SCENE_TRAVERSE * es.PrebuiltMap.Scale, walkSeconds, es.PrebuiltMap.Scale))
+	check("the walk there and back fits inside the expedition with room to spare",
+		walkSeconds * 2 < es.DurationSeconds * 0.75,
+		string.format("%.0fs of %ds", walkSeconds * 2, es.DurationSeconds))
+	-- ...and is not so small that the traverse stops being a journey.
+	check("the map is still bigger than the hub is wide",
+		SCENE_TRAVERSE * es.PrebuiltMap.Scale > GameConfig.HubLayout.HubDiameter * 0.6,
+		string.format("%.0f studs", SCENE_TRAVERSE * es.PrebuiltMap.Scale))
+
+	-- Schema: the rules that keep the two routes from blurring -------
+	local function mapErrors(world, chunks)
+		local _, errs = Schema.validateMaps({ W = world }, chunks or {}, AssetManifest)
+		return errs
 	end
-	-- One chunk per island in the Blender scene's Aether_Terrain collection.
-	check("the kit has one piece per island in the blend", esCount == 8,
-		string.format("%d pieces", esCount))
+	check("the real content validates", #mapErrors(es) == 0, mapErrors(es)[1])
+	check("a world cannot have both a kit and a prebuilt map",
+		#mapErrors(es, { C = { WorldId = "W" } }) == 1,
+		mapErrors(es, { C = { WorldId = "W" } })[1])
 
-	-- Every piece must trace back to the authored scene, not to a guess.
-	local BLEND = "assets/source/worlds/ethereal_scape/aether_environment_refined.blend"
-	local allTraced = true
-	local untraced
-	for id, c in Chunks do
-		if c.WorldId == "ETHEREAL_SCAPE" then
-			local entry = AssetManifest.ENTRIES[c.AssetKey]
-			if not entry or entry.Source ~= BLEND then
-				allTraced = false
-				untraced = id
-			end
+	local function variant(changes)
+		local copy = {}
+		for k, v in es do copy[k] = v end
+		local pm = {}
+		for k, v in es.PrebuiltMap do pm[k] = v end
+		for k, v in changes do
+			if k == "MapPathLength" then copy[k] = v else pm[k] = v end
 		end
+		copy.PrebuiltMap = pm
+		return copy
 	end
-	check("every piece names the authored .blend as its source", allTraced, untraced)
-
-	-- The grammar --------------------------------------------------
-	-- Socket Kinds are a PER-WORLD design vocabulary, not a global enum. If
-	-- these two ever overlap, a Verdant Valley footpath could in principle be
-	-- reasoned about as an Ethereal Scape bridge, and the point is lost.
-	local vvKinds, esKinds = {}, {}
-	for _, c in Chunks do
-		local into = if c.WorldId == "VERDANT_VALLEY" then vvKinds
-			elseif c.WorldId == "ETHEREAL_SCAPE" then esKinds
-			else nil
-		if into then
-			for _, s in c.Sockets do into[s.Kind] = true end
-		end
-	end
-	local shared = {}
-	for kind in esKinds do
-		if vvKinds[kind] then table.insert(shared, kind) end
-	end
-	check("the two worlds speak different socket vocabularies", #shared == 0,
-		table.concat(shared, ", "))
-	check("Ethereal Scape speaks SPAN and RITE", esKinds.SPAN and esKinds.RITE)
-
-	check("the Sky Temple accepts only a RITE approach",
-		Chunks.ES_SKY_TEMPLE.Sockets[1].Kind == "RITE" and #Chunks.ES_SKY_TEMPLE.Sockets == 1)
-
-	local riteProviders = {}
-	for id, c in Chunks do
-		if c.WorldId == "ETHEREAL_SCAPE" and c.Role ~= "BOSS" then
-			for _, s in c.Sockets do
-				if s.Kind == "RITE" then table.insert(riteProviders, id) end
-			end
-		end
-	end
-	check("the Waystone Ring is the only piece offering a RITE exit",
-		#riteProviders == 1 and riteProviders[1] == "ES_WAYSTONE_RING",
-		table.concat(riteProviders, ", "))
-
-	-- Assembly -----------------------------------------------------
-	local path = ExpeditionCore.pathLengthFor(es, GameConfig)
-	local built, broken = 0, {}
-	local gated = true
-	local minSpan, maxSpan = math.huge, 0
-	for trial = 1, 300 do
-		local okA, layout = ChunkCore.assembleWithRetry(Chunks,
-			{ WorldId = "ETHEREAL_SCAPE", PathLength = path },
-			function(a) return lcg(trial * 2971215073 + a * 7919) end,
-			GameConfig.Expedition.AssemblyAttempts)
-		if okA then
-			built += 1
-			local okV, errV = ChunkCore.validateLayout(layout, Chunks)
-			if not okV then table.insert(broken, table.concat(errV, ", ")) end
-
-			-- The same emergent property Verdant Valley has, from a kit
-			-- authored independently: a Kind the arena accepts is reserved
-			-- for the arena, so the ring always ends up being the approach.
-			local penultimate = layout.Chunks[#layout.Chunks - 1]
-			if penultimate.ChunkId ~= "ES_WAYSTONE_RING" then gated = false end
-
-			local w, d = ChunkCore.footprint(layout)
-			local span = math.max(w, d)
-			minSpan = math.min(minSpan, span)
-			maxSpan = math.max(maxSpan, span)
-		end
-	end
-	print(string.format("        Ethereal Scape spans %.0f-%.0f studs at path length %d",
-		minSpan, maxSpan, path))
-
-	check("Ethereal Scape assembles on nearly every seed", built >= 285,
-		string.format("%d/300 within %d attempts", built, GameConfig.Expedition.AssemblyAttempts))
-	check("every Ethereal Scape layout is collision-free", #broken == 0, broken[1])
-	check("the Waystone Ring always gates the Sky Temple (emergent, second world)", gated)
-
-	-- Scale: the pieces are sized for the post-rescale world, not the old
-	-- 120-stud hub. The smallest map still has to read as a place.
-	check("even the smallest Ethereal Scape map is bigger than a zone platform",
-		minSpan > 800, string.format("%.0f studs", minSpan))
-	check("walking stays a minority of a 300-second expedition",
-		maxSpan / GameConfig.Scale.WalkSpeed < es.DurationSeconds * 0.35,
-		string.format("%.0fs of %ds (%.0f%%)", maxSpan / GameConfig.Scale.WalkSpeed,
-			es.DurationSeconds, maxSpan / GameConfig.Scale.WalkSpeed / es.DurationSeconds * 100))
+	check("an unknown AssetKey is a boot error",
+		#mapErrors(variant({ AssetKey = "NO_SUCH_ASSET" })) == 1)
+	check("a zero Scale is a boot error",
+		#mapErrors(variant({ Scale = 0 })) == 1)
+	check("a leftover MapPathLength is a boot error",
+		#mapErrors(variant({ MapPathLength = 3 })) == 1)
 end
 
 -- === 14. Expedition entry ===========================================
@@ -1380,15 +1340,32 @@ do
 	check("a malformed history entry does not crash the lookup",
 		ExpeditionCore.destinationFrom(withRolls({ "not a table" })) == nil)
 
-	-- Kits ----------------------------------------------------------
+	-- The two ways a world gets a map --------------------------------
 	check("Verdant Valley has a kit", ExpeditionCore.hasKit(Chunks, "VERDANT_VALLEY"))
-	check("Ethereal Scape has a kit", ExpeditionCore.hasKit(Chunks, "ETHEREAL_SCAPE"))
-	check("Sky Citadel does not", not ExpeditionCore.hasKit(Chunks, "SKY_CITADEL"))
+	check("Ethereal Scape does not -- it ships one instead",
+		not ExpeditionCore.hasKit(Chunks, "ETHEREAL_SCAPE"))
+	check("Ethereal Scape is prebuilt",
+		ExpeditionCore.hasPrebuiltMap(Worlds.ETHEREAL_SCAPE))
+	check("Verdant Valley is not prebuilt",
+		not ExpeditionCore.hasPrebuiltMap(Worlds.VERDANT_VALLEY))
+	check("Sky Citadel has neither",
+		not ExpeditionCore.hasKit(Chunks, "SKY_CITADEL")
+			and not ExpeditionCore.hasPrebuiltMap(Worlds.SKY_CITADEL))
+
+	-- BOTH routes count as having a map. This is the assertion that stops a
+	-- prebuilt world being turned away at its own door -- the bug this seam
+	-- would otherwise have shipped with.
+	check("a prebuilt world has a map",
+		ExpeditionCore.hasMap(Worlds.ETHEREAL_SCAPE, Chunks, "ETHEREAL_SCAPE"))
+	check("a kitted world has a map",
+		ExpeditionCore.hasMap(Worlds.VERDANT_VALLEY, Chunks, "VERDANT_VALLEY"))
+	check("a world with neither has no map",
+		not ExpeditionCore.hasMap(Worlds.SKY_CITADEL, Chunks, "SKY_CITADEL"))
 
 	-- THE DEBT, ASSERTED. Three rollable worlds cannot be entered. This test
 	-- is not here to be green forever -- it is here so the number is in the
 	-- suite and someone has to look at it to change it.
-	local missing = ExpeditionCore.worldsWithoutKits(Worlds, Chunks, GameConfig.CurrentPhase)
+	local missing = ExpeditionCore.worldsWithoutMaps(Worlds, Chunks, GameConfig.CurrentPhase)
 	print(string.format("        rollable but not enterable: %s", table.concat(missing, ", ")))
 	check("rollable-but-not-enterable worlds are reported, sorted",
 		#missing == 3 and missing[1] == "ASTRAL_REACH" and missing[2] == "EMBERFALL"
@@ -1396,8 +1373,11 @@ do
 		table.concat(missing, ", "))
 
 	-- Map size and duration are content, with a config fallback ------
+	-- No world overrides it today -- Ethereal Scape did until it became
+	-- prebuilt -- but the override is still how a short world gets a short
+	-- map, so it stays tested rather than quietly rotting.
 	check("a world's own MapPathLength wins",
-		ExpeditionCore.pathLengthFor(Worlds.ETHEREAL_SCAPE, GameConfig) == 3)
+		ExpeditionCore.pathLengthFor({ MapPathLength = 3 }, GameConfig) == 3)
 	check("a world without one falls back to config",
 		ExpeditionCore.pathLengthFor(Worlds.VERDANT_VALLEY, GameConfig)
 			== GameConfig.Expedition.PathLength)
@@ -1438,10 +1418,12 @@ do
 
 	-- END TO END: the same player rolling the same world twice must get the
 	-- same map, and two different players must not.
+	-- Verdant Valley, because determinism is a property of the ASSEMBLER and
+	-- Ethereal Scape no longer goes near it.
 	local function mapFor(userId, rollNumber)
-		local seed = ExpeditionCore.seedFor(userId, rollNumber, "ETHEREAL_SCAPE")
+		local seed = ExpeditionCore.seedFor(userId, rollNumber, "VERDANT_VALLEY")
 		local okM, layout = ChunkCore.assembleWithRetry(Chunks,
-			{ WorldId = "ETHEREAL_SCAPE", PathLength = 3 },
+			{ WorldId = "VERDANT_VALLEY", PathLength = 3 },
 			function(att) return ExpeditionCore.streamFor(seed, att) end,
 			GameConfig.Expedition.AssemblyAttempts)
 		if not okM then return nil end
@@ -1513,16 +1495,16 @@ do
 	end
 
 	local allowed = decide()
-	check("a player who has rolled a world with a kit may enter",
+	check("a player who has rolled a world with a map may enter",
 		allowed.Allowed and allowed.WorldId == "ETHEREAL_SCAPE",
 		tostring(allowed.Refusal))
 
 	check("a player who has not rolled is refused",
 		decide({ Profile = withRolls({}) }).Refusal == "NO_DESTINATION")
-	check("a world with no kit is refused at the door, not mid-assembly",
+	check("a world with no map is refused at the door, not mid-assembly",
 		decide({ Profile = withRolls({
 			{ WorldId = "SKY_CITADEL", Rarity = "EPIC", Timestamp = 1 },
-		}) }).Refusal == "NO_KIT")
+		}) }).Refusal == "NO_MAP")
 	check("a destination that no longer exists is refused",
 		decide({ Profile = withRolls({
 			{ WorldId = "DELETED_WORLD", Rarity = "COMMON", Timestamp = 1 },
@@ -1549,13 +1531,13 @@ do
 
 	-- Silence is the default, for the reason §3.4.3 gives about the roll.
 	local spoken = {}
-	for _, refusal in { "DISABLED", "NO_DESTINATION", "UNKNOWN_WORLD", "NO_KIT",
+	for _, refusal in { "DISABLED", "NO_DESTINATION", "UNKNOWN_WORLD", "NO_MAP",
 		"ALREADY_IN_EXPEDITION", "COOLDOWN", "TOO_FAR", "SERVER_FULL" } do
 		if ExpeditionCore.refusalMessage(refusal) then table.insert(spoken, refusal) end
 	end
 	table.sort(spoken)
 	check("only the two refusals a legitimate player can hit say anything",
-		#spoken == 2 and spoken[1] == "NO_DESTINATION" and spoken[2] == "NO_KIT",
+		#spoken == 2 and spoken[1] == "NO_DESTINATION" and spoken[2] == "NO_MAP",
 		table.concat(spoken, ", "))
 end
 

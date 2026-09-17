@@ -257,7 +257,12 @@ export type ExpeditionPayload = {
 	RemainingSeconds: number,
 	ServerNow: number,
 	Seed: number,
-	ChunkCount: number,
+	-- How the map was produced, in one human-readable line -- "6 chunks (0
+	-- mesh, 6 blockout) attempt 1" or "prebuilt ES_ENVIRONMENT_FULL, 699 parts
+	-- at 0.10 scale". A string rather than a chunk count because a prebuilt
+	-- world has no chunks, and a field that means nothing for half the worlds
+	-- is a field that gets misread.
+	MapSummary: string,
 }
 
 export type ExpeditionEndPayload = {
@@ -265,7 +270,7 @@ export type ExpeditionEndPayload = {
 	Reason: "COMPLETED" | "RETURNED" | "DIED" | "ABORTED",
 	FateAwarded: number,
 	-- Set only for the two refusals a legitimate player can hit -- no
-	-- destination, or a world with no map kit. Every other refusal is an
+	-- destination, or a world with no map at all. Every other refusal is an
 	-- exploit guard and stays silent, per build spec §3.4.3.
 	Message: string?,
 }
