@@ -226,6 +226,40 @@ function PortalRig.build(config: Config, parent: Instance): Model
 	return model
 end
 
+--- Eases the rig's SpinBoost toward `target`. HubEffects multiplies every
+--- ring's rate by it, so one attribute winds the whole portal up and down.
+---
+--- A generation counter rather than a cancellable tween: attributes cannot be
+--- tweened, and a second roll landing mid-ramp must abandon the first cleanly
+--- rather than leave two loops fighting over the same number.
+local function rampBoost(model: Model, target: number, seconds: number)
+	local generation = ((model:GetAttribute("BoostGen") :: number?) or 0) + 1
+	model:SetAttribute("BoostGen", generation)
+
+	local from = (model:GetAttribute("SpinBoost") :: number?) or 1
+	if seconds <= 0 then
+		model:SetAttribute("SpinBoost", target)
+		return
+	end
+
+	task.spawn(function()
+		local elapsed = 0
+		while elapsed < seconds do
+			if model:GetAttribute("BoostGen") ~= generation or not model.Parent then
+				return
+			end
+			elapsed += task.wait()
+			local t = math.min(elapsed / seconds, 1)
+			-- Smoothstep: no kick at the start, no jolt at the end.
+			t = t * t * (3 - 2 * t)
+			model:SetAttribute("SpinBoost", from + (target - from) * t)
+		end
+		if model:GetAttribute("BoostGen") == generation then
+			model:SetAttribute("SpinBoost", target)
+		end
+	end)
+end
+
 --- Gives an AUTHORED rig the light and particles a generated one builds for
 --- itself. The artist ships geometry only -- lights and emitters are not mesh
 --- data and cannot survive an FBX -- so without this the 2.5-second spin-up
@@ -355,11 +389,14 @@ end
 function PortalRig.playSpinUp(model: Model, rarityKey: string?): ()
 	local cfg = GameConfig.Portal
 	if rarityKey then
-		-- Gradual, not a snap: this fires as the spin-up begins, so the colour
-		-- should travel across the rig while the rings wind up.
-		PortalRig.setRarity(model, rarityKey, GameConfig.Portal.RarityTweenSeconds)
+		-- DELIBERATELY NOT REVEALED HERE. The colour is the answer, and the
+		-- answer should arrive as the rings SETTLE rather than the instant the
+		-- player presses the button -- otherwise the whole wind-up is spent
+		-- showing something already decided. setIdle paints it.
+		model:SetAttribute("PendingRarity", rarityKey)
 	end
 	model:SetAttribute("State", "SpinUp")
+	rampBoost(model, cfg.SpinBoostPeak, cfg.SpinRampUpSeconds)
 
 	local plane = model:FindFirstChild("PortalPlane")
 	local light = plane and plane:FindFirstChild("PortalLight")
@@ -406,6 +443,16 @@ end
 function PortalRig.setIdle(model: Model): ()
 	local cfg = GameConfig.Portal
 	model:SetAttribute("State", "Idle")
+	rampBoost(model, 1, cfg.SpinWindDownSeconds)
+
+	-- The portal LANDS on what was rolled. Tweened over RarityTweenSeconds so
+	-- the colour arrives while the rings are still slowing, rather than
+	-- snapping into place ahead of them.
+	local pending = model:GetAttribute("PendingRarity") :: string?
+	if pending then
+		model:SetAttribute("PendingRarity", nil)
+		PortalRig.setRarity(model, pending, cfg.RarityTweenSeconds)
+	end
 
 	local plane = model:FindFirstChild("PortalPlane")
 	local light = plane and plane:FindFirstChild("PortalLight")

@@ -1743,6 +1743,23 @@ do
 	check("the inner ring is matte so the veil reads as the light source",
 		styles.InnerRing.Material ~= Enum.Material.Neon)
 
+	-- THE ROLL RAMP. The portal winds up, holds while the result builds, and
+	-- coasts down as the colour lands. Three relationships make that read as
+	-- one gesture rather than three effects that happen to overlap.
+	local portal = GameConfig.Portal
+	check("rolling actually winds the portal up",
+		portal.SpinBoostPeak > 1, string.format("%.1fx", portal.SpinBoostPeak))
+	check("it snaps up and coasts down, not the reverse",
+		portal.SpinRampUpSeconds < portal.SpinWindDownSeconds,
+		string.format("up %.1fs, down %.1fs", portal.SpinRampUpSeconds, portal.SpinWindDownSeconds))
+	-- The colour is the answer; it must arrive WHILE the rings are still
+	-- slowing. Finishing after them would leave the portal sitting at rest on
+	-- the wrong colour, which is worse than snapping.
+	check("the colour lands before the rings finish slowing",
+		portal.RarityTweenSeconds <= portal.SpinWindDownSeconds,
+		string.format("colour %.1fs, wind-down %.1fs",
+			portal.RarityTweenSeconds, portal.SpinWindDownSeconds))
+
 	-- Performance: the animator runs every frame on every client, including
 	-- the phones the §6 checklist budgets for.
 	check("distant parts stop animating",

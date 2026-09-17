@@ -308,7 +308,16 @@ local GameConfig = {
 		-- than as the portal reacting -- reported from the fourth authored
 		-- playtest. Long enough to see it travel, short enough not to lag the
 		-- reveal it belongs to.
-		RarityTweenSeconds = 0.9,
+		RarityTweenSeconds = 1.6,
+
+		-- THE ROLL RAMP. The rings wind up when you roll, hold while the
+		-- result builds, then coast back down as the portal settles on the
+		-- world you got. Before this the authored Engine had no reaction at
+		-- all: HubEffects drives its rings off attributes and never read the
+		-- State flag PortalRig sets, so the whole spin-up beat missed it.
+		SpinBoostPeak = 5.5, -- multiplier on the idle rate at full wind-up
+		SpinRampUpSeconds = 1.1, -- idle -> peak, as the roll begins
+		SpinWindDownSeconds = 2.6, -- peak -> idle, as the result lands
 
 		IdleBrightness = 1,
 		ActiveBrightness = 3,

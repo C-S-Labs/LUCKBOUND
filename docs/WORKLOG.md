@@ -33,6 +33,86 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 21 — 2026-09-18 — The roll ramp, and a brief for the Crossroads
+
+**Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 328 passing (was 325)
+
+### The Engine had no reaction to a roll at all
+
+Not a tuning problem — a wiring gap. `PortalRig.playSpinUp` set a `State`
+attribute and `PortalRig.animate` read it to pick a faster spin. But the
+**authored** rings are driven by `HubEffects`, off attributes, and it never read
+`State`. So the 2.5-second spin-up — build spec §1.3's "single most important UX
+beat" — missed the Engine entirely. The blockout Gate behind it was the only
+thing reacting.
+
+**The ramp now lives on one attribute.** `PortalRig` eases `SpinBoost` on the
+rig, and every ring inside multiplies its rate by it:
+
+| | |
+|---|---|
+| `SpinBoostPeak` 5.5× | how hard it winds up |
+| `SpinRampUpSeconds` 1.1 | idle → peak, as the roll begins |
+| `SpinWindDownSeconds` 2.6 | peak → idle, as the result lands |
+
+Smoothstepped, so there is no kick at the start or jolt at the end, and guarded
+by a generation counter — a second roll landing mid-ramp abandons the first
+cleanly rather than leaving two loops fighting over one number. Attributes
+cannot be tweened, so this is a spawned ease rather than a `TweenService` call.
+
+**The colour is now the answer, and arrives last.** It used to be painted the
+instant the player pressed the button, which spent the entire wind-up showing
+something already decided. `playSpinUp` stores a `PendingRarity` and paints
+nothing; `setIdle` releases the ramp **and** tweens the colour over 1.6s. So the
+portal slows down *into* the world you rolled.
+
+A test asserts the three relationships that make that read as one gesture:
+the roll winds it up at all, it snaps up faster than it coasts down, and the
+colour lands **before** the rings finish slowing — finishing after them would
+leave the portal at rest on the wrong colour, which is worse than snapping.
+
+### The Crossroads brief
+
+`docs/CROSSROADS_BLENDER_PROMPT.md`, with a PDF sent to the owner.
+
+Every dimension is read out of `GameConfig.HubLayout` and
+`Content/Hub/Crossroads.luau` rather than invented — 1150-stud plaza, districts
+at radius 400, walkways 44 wide at Z 1.5, platforms 14 thick at Z 14 — so
+authored art meets the walkways the game already cuts to those numbers.
+
+It carries the same three guards the Fate Engine brief earned: the 5-metre scale
+reference, staged work with the scene read back after each stage, and a
+verification checklist demanding measured numbers rather than assurances. Plus
+a new one for a floor plan this large: **do not go overkill.** The temptation on
+1150 studs is to fill it, and the portal at the centre is the hero.
+
+**It also reserves the Engine's footprint and asks for nothing inside it** — a
+plain `EngineReserve` marker, 60 studs of clear radius, and an explicit
+instruction not to model a portal.
+
+**One mismatch, recorded rather than silently resolved.** The four districts the
+owner named do not match the four in content: Leaderboard is `HALL_OF_LEGENDS`
+renamed, and **Shop replaces `EXPEDITION_GATE`** — which goes redundant under
+the portal-as-entry direction. The brief asks for what the finished hub wants;
+the district table catches up when that spec amendment lands. Flagged in
+`STATUS.md` so it is a decision rather than a discrepancy.
+
+### Stopped at
+
+328 passing. This is the last pass before a break until the Crossroads map is
+built.
+
+### Next, when work resumes
+
+1. Walk the roll ramp — it is unverified in-engine.
+2. **Profile on a real low-end device.** Four sessions of animation have been
+   added on top of a budget that has never been measured.
+3. The Crossroads map, from the brief.
+4. Then: the portal-as-entry spec amendment, the placeholder staircase, and the
+   `EXPEDITION_GATE` → `SHOP` district swap that follows from it.
+
+---
+
 ## Session 20 — 2026-09-18 — Nesting, materials, and the barrier that timed out
 
 **Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 325 passing (was 322)

@@ -243,6 +243,10 @@ function HubEffects.init(): ()
 				BaseSize = part.Size,
 				Angle = 0,
 				Active = true,
+				-- The rig this part belongs to. PortalRig winds SpinBoost up
+				-- and down on it during a roll, and every ring inside
+				-- multiplies by it -- so one attribute drives the whole beat.
+				Boost = part.Parent,
 				Spin = spin,
 				Axis = AXES[(part:GetAttribute("SpinAxis") :: string?) or "Y"] or Vector3.yAxis,
 				Bob = bob,
@@ -329,6 +333,8 @@ function HubEffects.init(): ()
 			end
 
 			local eye = Workspace.CurrentCamera and Workspace.CurrentCamera.CFrame.Position
+			-- One attribute read per rig per frame, not per part per frame.
+			local boosts: { [Instance]: number } = {}
 
 			for _, a in animated do
 				local part = a.Part
@@ -346,6 +352,15 @@ function HubEffects.init(): ()
 				if a.Spin then
 					-- Breathe the rate a little rather than holding it exact.
 					local rate = a.Spin
+					local source = a.Boost
+					if source then
+						local boost = boosts[source]
+						if boost == nil then
+							boost = (source:GetAttribute("SpinBoost") :: number?) or 1
+							boosts[source] = boost
+						end
+						rate *= boost
+					end
 					if a.Jitter > 0 then
 						rate *= 1 + math.sin(elapsed / 3.1 + a.Phase) * a.Jitter
 					end
