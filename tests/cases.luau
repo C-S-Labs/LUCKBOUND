@@ -1669,8 +1669,24 @@ do
 	local veil = styles.PortalPlane
 	check("the veil is non-colliding -- you walk through a portal",
 		veil.CanCollide == false)
-	check("the veil is the most visible surface in the rig",
-		veil.Transparency < 0.35, string.format("%.2f", veil.Transparency))
+	-- VISIBILITY, not transparency. The first version of this test asserted
+	-- Transparency < 0.35, which was a proxy that stopped meaning anything the
+	-- moment the veil moved from ForceField to Neon -- an emissive surface at
+	-- 0.45 reads far brighter than a shimmer at 0.2. Assert the two things
+	-- that actually make it visible instead.
+	check("the veil is emissive, so it reads against a dark hub",
+		veil.Material == Enum.Material.Neon)
+	check("the veil never fades far enough to vanish",
+		veil.Attributes.PulseAlphaMax < 0.7,
+		string.format("peaks at %.2f", veil.Attributes.PulseAlphaMax))
+
+	-- The rings must not turn like a motor. Both carry a sway and a rate that
+	-- breathes, which is what separates "suspended" from "bolted on".
+	for _, name in { "OuterRing", "InnerRing" } do
+		local attrs = styles[name].Attributes
+		check(`{name} sways rather than turning perfectly true`,
+			(attrs.WobbleDegrees or 0) > 0 and (attrs.SpinJitter or 0) > 0)
+	end
 	check("the veil has a breath of its own",
 		veil.Attributes.PulseScale ~= nil and veil.Attributes.PulseAlphaMin ~= nil)
 

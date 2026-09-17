@@ -290,7 +290,17 @@ local function neon(color: Color3): Color3
 	return Color3.new(color.R * tint, color.G * tint, color.B * tint)
 end
 
-function PortalRig.setRarity(model: Model, rarityKey: string): ()
+--- Paints `instance.prop` to `value`, over `seconds` when asked. Instant at
+--- build time, gradual when a roll changes the destination.
+local function paint(instance: Instance, prop: string, value: any, seconds: number?)
+	if not seconds or seconds <= 0 then
+		(instance :: any)[prop] = value
+		return
+	end
+	TweenService:Create(instance, TweenInfo.new(seconds, Enum.EasingStyle.Quad), { [prop] = value }):Play()
+end
+
+function PortalRig.setRarity(model: Model, rarityKey: string, seconds: number?): ()
 	local rarity = Constants.RARITY[rarityKey]
 	if not rarity then
 		return
@@ -303,11 +313,11 @@ function PortalRig.setRarity(model: Model, rarityKey: string): ()
 	-- the portal simply stops responding to rarity and nothing errors.
 	local inner = model:FindFirstChild("InnerRing")
 	if inner and inner:IsA("BasePart") then
-		inner.Color = neon(rarity.Color)
+		paint(inner, "Color", neon(rarity.Color), seconds)
 	elseif inner then
 		for _, segment in inner:GetChildren() do
 			if segment:IsA("BasePart") then
-				segment.Color = rarity.Color
+				paint(segment, "Color", rarity.Color, seconds)
 			end
 		end
 	end
@@ -317,11 +327,11 @@ function PortalRig.setRarity(model: Model, rarityKey: string): ()
 		-- NOT dimmed by NeonTint: the veil is ForceField, not Neon, so it
 		-- does not bloom, and it is the one surface that has to stay the
 		-- brightest thing in the rig. It is also what players walk through.
-		plane.Color = rarity.Color
+		paint(plane, "Color", rarity.Color, seconds)
 		plane.CanCollide = false
 		local light = plane:FindFirstChild("PortalLight")
 		if light and light:IsA("PointLight") then
-			light.Color = rarity.Color
+			paint(light, "Color", rarity.Color, seconds)
 		end
 		local attachment = plane:FindFirstChild("EmitterAttachment")
 		local particles = attachment and attachment:FindFirstChild("PortalParticles")
@@ -334,7 +344,7 @@ function PortalRig.setRarity(model: Model, rarityKey: string): ()
 	if runes then
 		for _, child in runes:GetChildren() do
 			if child:IsA("BasePart") and child.Name:match("^Glyph") then
-				child.Color = neon(rarity.Color)
+				paint(child, "Color", neon(rarity.Color), seconds)
 			end
 		end
 	end
@@ -345,7 +355,9 @@ end
 function PortalRig.playSpinUp(model: Model, rarityKey: string?): ()
 	local cfg = GameConfig.Portal
 	if rarityKey then
-		PortalRig.setRarity(model, rarityKey)
+		-- Gradual, not a snap: this fires as the spin-up begins, so the colour
+		-- should travel across the rig while the rings wind up.
+		PortalRig.setRarity(model, rarityKey, GameConfig.Portal.RarityTweenSeconds)
 	end
 	model:SetAttribute("State", "SpinUp")
 

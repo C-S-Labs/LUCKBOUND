@@ -203,13 +203,28 @@ local Crossroads = {
 				-- SpinAxis Z because the ring is thin along its own Z, so Z is
 				-- the axle. Driven by HubEffects, not PortalRig -- see the
 				-- comment on the animator there.
-				Attributes = { SpinSpeed = 0.32, SpinAxis = "Z" },
+				-- Wobble and jitter are what stop a constant spin on a fixed
+				-- axis reading as machinery. A degree and a half of sway on
+				-- two uneven periods, and a rate that breathes +/-25%.
+				Attributes = {
+					SpinSpeed = 0.32,
+					SpinAxis = "Z",
+					SpinJitter = 0.25,
+					WobbleDegrees = 1.5,
+					WobbleSeconds = 7,
+				},
 			},
 			RingFoot_Clamps = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
 			InnerRing = {
 				Color = Color3.fromRGB(68, 135, 123),
 				Material = Enum.Material.Neon,
-				Attributes = { SpinSpeed = -0.45, SpinAxis = "Z" },
+				Attributes = {
+					SpinSpeed = -0.45,
+					SpinAxis = "Z",
+					SpinJitter = 0.3,
+					WobbleDegrees = 1.1,
+					WobbleSeconds = 5.5,
+				},
 			},
 			-- THE VEIL. This is the surface a player walks through, so it is
 			-- the one piece that has to read as the point of the whole
@@ -222,13 +237,18 @@ local Crossroads = {
 			-- Explicitly non-colliding: you walk through a portal.
 			PortalPlane = {
 				Color = Color3.fromRGB(96, 170, 235),
-				Material = Enum.Material.ForceField,
-				Transparency = 0.2,
+				-- Neon, not ForceField. ForceField's shimmer is too subtle to
+				-- read against a dark hub -- the aperture looked like a hole
+				-- rather than the thing you step into, across two playtests.
+				-- Neon glows; the transparency pulse keeps the bloom in check
+				-- and lets the ring's teeth stay readable through it.
+				Material = Enum.Material.Neon,
+				Transparency = 0.45,
 				CanCollide = false,
 				Attributes = {
-					PulseAlphaMin = 0.12,
-					PulseAlphaMax = 0.38,
-					PulseScale = 0.05,
+					PulseAlphaMin = 0.38,
+					PulseAlphaMax = 0.62,
+					PulseScale = 0.06,
 					PulseSeconds = 2.8,
 				},
 			},
@@ -272,11 +292,22 @@ local Crossroads = {
 					SpinSpeed = 0.5,
 					BobStuds = 1.6,
 					BobSeconds = 5.5,
+					WobbleDegrees = 4,
+					WobbleSeconds = 6,
 				},
 				-- Six crystals sharing one entry animated in lockstep, which
 				-- read as machinery rather than as things adrift. Each now
 				-- gets its own speed, drift and period from its name.
-				Vary = { SpinSpeed = 0.5, BobStuds = 0.4, BobSeconds = 0.35 },
+				-- Now that the hash actually separates Shard1..Shard6, these
+				-- spreads do what they always claimed to. Wobble is varied
+				-- too, so no two crystals tumble the same way.
+				Vary = {
+					SpinSpeed = 0.55,
+					BobStuds = 0.45,
+					BobSeconds = 0.4,
+					WobbleDegrees = 0.5,
+					WobbleSeconds = 0.4,
+				},
 			},
 
 			-- Invisible: the spotlight's mount point, nothing to look at.

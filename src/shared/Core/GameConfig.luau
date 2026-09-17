@@ -303,6 +303,13 @@ local GameConfig = {
 		-- back. Transparency would not work here: Neon ignores it.
 		NeonTint = 0.55,
 
+		-- How long a rarity change takes to cross the rig. Snapping the whole
+		-- portal to a new colour on one frame read as a texture swap rather
+		-- than as the portal reacting -- reported from the fourth authored
+		-- playtest. Long enough to see it travel, short enough not to lag the
+		-- reveal it belongs to.
+		RarityTweenSeconds = 0.9,
+
 		IdleBrightness = 1,
 		ActiveBrightness = 3,
 		LightRange = 24,

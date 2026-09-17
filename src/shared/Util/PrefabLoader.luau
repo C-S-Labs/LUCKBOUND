@@ -197,11 +197,20 @@ function PrefabLoader.build(
 				for key, spread in style.Vary or {} do
 					local base = d:GetAttribute(key)
 					if type(base) == "number" then
-						local hash = 0
+						-- Keyed on name AND attribute, so a part's speed and
+						-- its drift are not varied by the same amount. The
+						-- trailing multiply is what separates Shard1 from
+						-- Shard2 -- without it adjacent names hash to adjacent
+						-- values and nothing actually varies.
+						local h = 0
 						for k = 1, #d.Name do
-							hash = (hash * 31 + string.byte(d.Name, k)) % 997
+							h = (h * 131 + string.byte(d.Name, k)) % 1000003
 						end
-						d:SetAttribute(key, base * (1 + (hash / 997 * 2 - 1) * spread))
+						for k = 1, #key do
+							h = (h * 131 + string.byte(key, k)) % 1000003
+						end
+						local unit = (h * 2654435761) % 1000003 / 1000003
+						d:SetAttribute(key, base * (1 + (unit * 2 - 1) * spread))
 					end
 				end
 			end

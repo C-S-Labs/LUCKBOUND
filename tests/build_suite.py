@@ -64,9 +64,19 @@ Vector3.zero = Vector3.new(0, 0, 0)
 Vector3.one = Vector3.new(1, 1, 1)
 
 -- Enum values only need to be distinct and comparable here.
+-- Roblox EnumItems are SINGLETONS: Enum.Material.Neon == Enum.Material.Neon.
+-- The first version of this shim built a fresh table on every access, so that
+-- comparison was always false and any test asserting a material silently could
+-- not pass. Same class of bug as the Vector3-as-table shim recorded in
+-- CLAUDE.md -- an unfaithful shim is worse than no test. Each item is now
+-- cached, so identity behaves the way the real engine does.
 local Enum = setmetatable({}, { __index = function(t, category)
+	local items = {}
 	local c = setmetatable({}, { __index = function(_, name)
-		return { __enum = true, Category = category, Name = name }
+		if items[name] == nil then
+			items[name] = { __enum = true, Category = category, Name = name }
+		end
+		return items[name]
 	end })
 	rawset(t, category, c)
 	return c

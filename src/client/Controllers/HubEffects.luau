@@ -23,6 +23,17 @@ local engineRig: Model? = nil
 local gateRig: Model? = nil
 local featuredIndex = 0
 
+--- A stable 0-1 value from a name. See the note at its call site for why the
+--- trailing multiply matters -- without it, names that differ only in their
+--- last character hash to neighbouring values and every "variation" collapses.
+local function hashName(name: string): number
+	local h = 0
+	for i = 1, #name do
+		h = (h * 131 + string.byte(name, i)) % 1000003
+	end
+	return (h * 2654435761) % 1000003 / 1000003
+end
+
 local function findRigs()
 	local hub = Workspace:FindFirstChild(Constants.NAMES.CROSSROADS)
 	if not hub then
@@ -56,7 +67,11 @@ end
 function HubEffects.settle(rarityKey: string?): ()
 	if engineRig then
 		PortalRig.setIdle(engineRig)
-		PortalRig.setRarity(engineRig, rarityKey or Constants.RARITY.UNKNOWN.Key)
+		PortalRig.setRarity(
+			engineRig,
+			rarityKey or Constants.RARITY.UNKNOWN.Key,
+			GameConfig.Portal.RarityTweenSeconds
+		)
 	end
 	if gateRig then
 		PortalRig.setIdle(gateRig)
@@ -155,17 +170,23 @@ function HubEffects.init(): ()
 			local bob = part:GetAttribute("BobStuds") :: number?
 			local pulse = part:GetAttribute("PulseScale") :: number?
 			local alphaMin = part:GetAttribute("PulseAlphaMin") :: number?
-			if not (spin or bob or pulse or alphaMin) then
+			local wobble = part:GetAttribute("WobbleDegrees") :: number?
+			if not (spin or bob or pulse or alphaMin or wobble) then
 				return
 			end
 
 			-- A deterministic per-part phase, so six shards do not bob in
 			-- lockstep like a machine. Derived from the name rather than
 			-- random, so it is the same every join.
-			local phase = 0
-			for k = 1, #part.Name do
-				phase = (phase * 31 + string.byte(part.Name, k)) % 1000
-			end
+			--
+			-- THE SCRAMBLE IS NOT DECORATION. The obvious rolling hash gives
+			-- adjacent names adjacent values -- Shard1..Shard6 came out 147,
+			-- 148, 149, 150, 151, 152 out of 1000, half a percent apart, so
+			-- every crystal got the same phase and the variation code did
+			-- nothing for two playtests. The final multiply is what pulls
+			-- neighbours apart: the same six now land at .50 .92 .35 .78 .21
+			-- .64.
+			local phase = hashName(part.Name)
 
 			table.insert(animated, {
 				Part = part,
@@ -181,11 +202,19 @@ function HubEffects.init(): ()
 				Axis = AXES[(part:GetAttribute("SpinAxis") :: string?) or "Y"] or Vector3.yAxis,
 				Bob = bob,
 				BobSeconds = (part:GetAttribute("BobSeconds") :: number?) or 4,
+				-- A small oscillating tilt across the spin axis. A ring
+				-- turning at a perfectly constant rate on a perfectly fixed
+				-- axis is the definition of robotic; a degree or two of sway
+				-- is what makes it read as suspended rather than bolted on.
+				Wobble = (part:GetAttribute("WobbleDegrees") :: number?),
+				WobbleSeconds = (part:GetAttribute("WobbleSeconds") :: number?) or 7,
+				-- Varies the spin rate itself, so it is never metronomic.
+				Jitter = (part:GetAttribute("SpinJitter") :: number?) or 0,
 				Pulse = pulse,
 				PulseSeconds = (part:GetAttribute("PulseSeconds") :: number?) or 3.5,
 				AlphaMin = alphaMin,
 				AlphaMax = (part:GetAttribute("PulseAlphaMax") :: number?) or 0.7,
-				Phase = phase / 1000 * math.pi * 2,
+				Phase = phase * math.pi * 2,
 			})
 		end
 
@@ -265,8 +294,25 @@ function HubEffects.init(): ()
 				local cf = a.Base
 
 				if a.Spin then
-					a.Angle += a.Spin * dt
+					-- Breathe the rate a little rather than holding it exact.
+					local rate = a.Spin
+					if a.Jitter > 0 then
+						rate *= 1 + math.sin(elapsed / 3.1 + a.Phase) * a.Jitter
+					end
+					a.Angle += rate * dt
 					cf = cf * CFrame.fromAxisAngle(a.Axis, a.Angle)
+					moved = true
+				end
+				if a.Wobble then
+					-- Tilt across the spin axis on two slightly different
+					-- periods, so the sway never repeats on a beat.
+					local w = math.rad(a.Wobble)
+					cf = cf
+						* CFrame.Angles(
+							math.sin(elapsed / a.WobbleSeconds * math.pi * 2 + a.Phase) * w,
+							math.sin(elapsed / (a.WobbleSeconds * 1.37) * math.pi * 2 + a.Phase) * w,
+							0
+						)
 					moved = true
 				end
 				if a.Bob then

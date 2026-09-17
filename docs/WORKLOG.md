@@ -33,6 +33,86 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 17 — 2026-09-18 — Making the Engine stop reading as a machine
+
+**Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 320 passing (was 317)
+
+### Done
+
+Fifth playtest. Speed confirmed good. Every remaining note was a variation of
+the same thing — *it moves, but it moves like machinery* — so this round is
+about breaking uniformity.
+
+**THE VARIATION CODE WAS RIGHT; THE HASH WAS USELESS.** Two sessions of
+"crystals still in unison" traced to one line. Both the bob phase and the
+`Vary` spread keyed off a plain rolling hash of the part name, and
+`Shard1`..`Shard6` differ only in the last character:
+
+```
+Shard1 -> 147   Shard4 -> 150
+Shard2 -> 148   Shard5 -> 151
+Shard3 -> 149   Shard6 -> 152     out of 1000
+```
+
+Half a percent apart, so every crystal got the same phase and effectively the
+same speed. A trailing multiply by a large constant scrambles it — the same six
+now land at .50 .92 .35 .78 .21 .64. `Vary` is also keyed on the attribute name
+as well as the part, so a shard's speed and its drift are not varied by the
+same amount.
+
+**Adjacent names hashing to adjacent values is the kind of bug that produces no
+error and no wrong number — just an effect that quietly does nothing.**
+
+**Rings turn like a motor → wobble and jitter.** New `WobbleDegrees` /
+`WobbleSeconds` (a small tilt across the spin axis, on two uneven periods so
+the sway never lands on a beat) and `SpinJitter` (the rate breathes ±25%
+instead of holding exact). Shards wobble too, varied per crystal.
+
+**The colour snap → a tween.** `setRarity` took an optional duration and every
+paint goes through it. `GameConfig.Portal.RarityTweenSeconds = 0.9`, applied
+both when the spin-up starts and when the roll settles, so the colour travels
+across the rig while the rings wind up rather than swapping on one frame.
+
+**The veil → Neon.** `ForceField`'s shimmer was too subtle to read against a
+dark hub, so the aperture looked like a hole rather than the thing you step
+into. Neon actually glows; the transparency pulse (0.38–0.62) keeps the bloom
+in check and lets the ring's teeth stay readable through it.
+
+### The harness bug this uncovered
+
+Asserting `veil.Material == Enum.Material.Neon` failed against a correct
+value. The `Enum` shim built **a fresh table on every access**, so
+`Enum.Material.Neon ~= Enum.Material.Neon` and no test asserting a material
+could ever have passed.
+
+Same class as the Vector3-as-table shim recorded in CLAUDE.md, and the same
+lesson: an unfaithful shim is worse than no test. Fixed in `build_suite.py` by
+caching each item, so identity behaves as the engine does.
+
+### Decisions made
+
+- **Test the property, not a proxy for it.** The veil test asserted
+  `Transparency < 0.35`, which stopped meaning anything the moment the material
+  changed — an emissive surface at 0.45 reads far brighter than a shimmer at
+  0.2. It now asserts the two things that actually make it visible: that it is
+  emissive, and that its pulse never fades far enough to vanish.
+
+- **Uniformity is the bug, not the lack of features.** Every note this round
+  was fixed by making something less regular rather than by adding motion.
+
+### Stopped at
+
+320 passing. Unverified in-engine.
+
+### Next
+
+1. Walk it. Six visibly different crystals, a swaying ring, a glowing aperture,
+   and a colour that travels rather than snaps.
+2. Profile on a real low-end device — the Session 16 budget is still unmeasured.
+3. Placeholder staircase, then the spec amendment for portal-as-entry.
+
+---
+
 ## Session 16 — 2026-09-18 — Tuning the Engine, and a performance budget
 
 **Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 317 passing (was 311)
