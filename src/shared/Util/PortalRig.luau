@@ -226,6 +226,60 @@ function PortalRig.build(config: Config, parent: Instance): Model
 	return model
 end
 
+--- Gives an AUTHORED rig the light and particles a generated one builds for
+--- itself. The artist ships geometry only -- lights and emitters are not mesh
+--- data and cannot survive an FBX -- so without this the 2.5-second spin-up
+--- would have nothing to ramp, and build spec §1.3 calls that beat the single
+--- most important moment in the game.
+---
+--- Safe to call twice: it adds only what is missing.
+function PortalRig.attachEffects(model: Model, rarityKey: string): ()
+	local cfg = GameConfig.Portal
+	local rarity = Constants.RARITY[rarityKey]
+	local plane = model:FindFirstChild("PortalPlane")
+	if not (plane and plane:IsA("BasePart") and rarity) then
+		return
+	end
+
+	local scale = (model:GetAttribute("Scale") :: number?) or 1
+
+	if not plane:FindFirstChild("PortalLight") then
+		local light = Instance.new("PointLight")
+		light.Name = "PortalLight"
+		light.Color = rarity.Color
+		light.Range = math.min(cfg.LightRange * scale, 60)
+		light.Brightness = cfg.IdleBrightness
+		light.Parent = plane
+	end
+
+	local attachment = plane:FindFirstChild("EmitterAttachment")
+	if not attachment then
+		local created = Instance.new("Attachment")
+		created.Name = "EmitterAttachment"
+		created.Parent = plane
+		attachment = created
+	end
+
+	if not attachment:FindFirstChild("PortalParticles") then
+		local particles = Instance.new("ParticleEmitter")
+		particles.Name = "PortalParticles"
+		particles.Rate = cfg.IdleParticleRate
+		particles.Lifetime = NumberRange.new(cfg.ParticleLifetimeMin, cfg.ParticleLifetimeMax)
+		particles.Color = ColorSequence.new(rarity.Color)
+		particles.Speed = NumberRange.new(2, 5)
+		particles.SpreadAngle = Vector2.new(18, 18)
+		particles.Size = NumberSequence.new(math.min(0.6 * scale, 4))
+		particles.Transparency = NumberSequence.new({
+			NumberSequenceKeypoint.new(0, 1),
+			NumberSequenceKeypoint.new(0.2, 0.2),
+			NumberSequenceKeypoint.new(1, 1),
+		})
+		particles.EmissionDirection = Enum.NormalId.Top
+		particles.Acceleration = Vector3.new(0, 6, 0)
+		particles.Parent = attachment
+	end
+end
+
 --- Reskins an existing rig to a different rarity. Blueprint §1.3: portals are
 --- reskinned by colour, never rebuilt.
 function PortalRig.setRarity(model: Model, rarityKey: string): ()
@@ -235,8 +289,14 @@ function PortalRig.setRarity(model: Model, rarityKey: string): ()
 	end
 	model:SetAttribute("Rarity", rarityKey)
 
+	-- The inner ring is a Model of segments when this rig was generated and a
+	-- single MeshPart when it was authored. Both are reskinned, because a
+	-- loop that only understands one of them fails SILENTLY on the other --
+	-- the portal simply stops responding to rarity and nothing errors.
 	local inner = model:FindFirstChild("InnerRing")
-	if inner then
+	if inner and inner:IsA("BasePart") then
+		inner.Color = rarity.Color
+	elseif inner then
 		for _, segment in inner:GetChildren() do
 			if segment:IsA("BasePart") then
 				segment.Color = rarity.Color
@@ -357,11 +417,23 @@ function PortalRig.animate(model: Model): RBXScriptConnection
 		local speed = if state == "SpinUp" then cfg.SpinUpSpinSpeed else cfg.IdleSpinSpeed
 
 		for _, ring in rings do
+			local ringSpeed = (ring:GetAttribute("SpinSpeed") or 1) * speed
+
+			-- AUTHORED: one MeshPart, thin along its own Z, so it spins about
+			-- its own centre on its own Z axis. No Center attribute needed --
+			-- a MeshPart's pivot is its bounding-box centre, which for a ring
+			-- is the hub of the wheel. That is why the art spec insisted the
+			-- rings be symmetric about their origin.
+			if ring:IsA("BasePart") then
+				ring.CFrame = ring.CFrame * CFrame.Angles(0, 0, ringSpeed * dt)
+				continue
+			end
+
+			-- GENERATED: a Model of segments arranged around a stored centre.
 			local centre = ring:GetAttribute("Center") :: CFrame?
 			if not centre then
 				continue
 			end
-			local ringSpeed = (ring:GetAttribute("SpinSpeed") or 1) * speed
 			-- The ring stands in its centre's XY plane, so it spins about that
 			-- CFrame's Z axis. Conjugating by the centre keeps the rotation
 			-- local to the ring wherever the rig sits in the world.

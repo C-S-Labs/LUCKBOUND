@@ -112,7 +112,108 @@ local Crossroads = {
 
 		AnchorSize = Vector3.new(90, 1, 90),
 		AnchorHeight = 12,
-		MeshId = nil, -- ← highest-value place to drop authored art
+		MeshId = nil, -- superseded by Prefab below; kept for the blockout path
+
+		-- THE AUTHORED ENGINE. Delivered 2026-09-18, 78 MeshParts.
+		--
+		-- Whole-rig replacement: when this loads, HubBuilder draws no portal
+		-- primitives at all and PortalRig DRIVES these parts instead of
+		-- building its own. Absent (no Rojo, missing file), the blockout runs
+		-- exactly as before -- there is no flag day either way.
+		Prefab = {
+			AssetKey = "HUB_FATE_ENGINE",
+			-- Studio's FBX importer landed the model at 0.42x. Measured
+			-- against the spec on arrival, every part by the same factor:
+			-- Platform 101.0 -> 240, Plinth 35.35 -> 84, OuterRing
+			-- 48.48 -> 115.2, SpotAnchor y 126.29 -> 300. One number fixes
+			-- all of it; re-exporting 78 meshes to fix it is how a pipeline
+			-- gets abandoned.
+			Scale = 2.3762,
+		},
+
+		-- PAINT, BY PART NAME. Authored meshes import untextured and grey,
+		-- and that is the intended pipeline here: the house style is flat
+		-- colour with no textures, so colour is data rather than something
+		-- baked into an upload. Changing the Engine's palette is an edit here
+		-- and a rejoin.
+		--
+		-- Longest matching prefix wins, so Plinth_SideBand is gold while
+		-- Plinth stays marble.
+		--
+		-- NEVER give a rarity-tinted part a SurfaceAppearance: it overrides
+		-- Color, and Color is how the rarity reskin works.
+		PrefabStyles = {
+			-- Ceremonial architecture ------------------------------------
+			Platform = {
+				Color = Theme.Marble,
+				Material = Enum.Material.Marble,
+				CanCollide = true,
+			},
+			Platform_RadialPanels = { Color = Color3.fromRGB(88, 82, 104), Material = Enum.Material.Slate },
+			Platform_ConcentricInlays = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
+			Platform_EdgeAccents = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
+			Plinth = {
+				Color = Color3.fromRGB(196, 190, 208),
+				Material = Enum.Material.Marble,
+				CanCollide = true,
+			},
+			Plinth_SideBand = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
+			Plinth_TopFiligree = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
+			Plinth_CornerButtresses = { Color = Color3.fromRGB(64, 58, 78), Material = Enum.Material.Basalt },
+			Inlay = { Color = Color3.fromRGB(124, 245, 224), Material = Enum.Material.Neon },
+
+			-- Rune ring ---------------------------------------------------
+			Rune = { Color = Color3.fromRGB(88, 82, 104), Material = Enum.Material.Slate },
+			Rune_GoldFrames = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
+			-- Rarity-tinted. The colour set here is only the idle look.
+			Glyph = { Color = Color3.fromRGB(124, 245, 224), Material = Enum.Material.Neon },
+
+			-- The portal --------------------------------------------------
+			OuterRing = {
+				Color = Color3.fromRGB(64, 58, 78),
+				Material = Enum.Material.Basalt,
+				-- Drives the spin. Negative on the inner ring so the two
+				-- counter-rotate, which is what makes the portal read as a
+				-- mechanism rather than a wheel.
+				Attributes = { SpinSpeed = 1 },
+			},
+			RingFoot_Clamps = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
+			InnerRing = {
+				Color = Color3.fromRGB(124, 245, 224),
+				Material = Enum.Material.Neon,
+				Attributes = { SpinSpeed = -1.4 },
+			},
+			PortalPlane = {
+				Color = Color3.fromRGB(40, 70, 150), -- Portal_Veil: deep blue
+				Material = Enum.Material.ForceField,
+				Transparency = 0.45,
+			},
+
+			-- The levitation stack, added by the artist on top of the spec.
+			-- Static geometry: it sells the floating portal and nothing in
+			-- code needs to move it.
+			LevitationGenerator = { Color = Color3.fromRGB(88, 82, 104), Material = Enum.Material.Slate, CanCollide = true },
+			GeneratorVents = { Color = Color3.fromRGB(64, 58, 78), Material = Enum.Material.Basalt },
+			GeneratorPanelTrim = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
+			GeneratorEmitter = { Color = Color3.fromRGB(124, 245, 224), Material = Enum.Material.Neon },
+			LevitationCoils = { Color = Theme.MarbleTrim, Material = Enum.Material.Neon },
+			-- Static. The artist's design note is explicit that the
+			-- generator, core and coils are decorative unless the game adds
+			-- behaviour, and a rotating core would also get caught by the
+			-- shard rarity cycle and tinted away from its cyan-violet.
+			LevitationCore = { Color = Color3.fromRGB(124, 245, 224), Material = Enum.Material.Neon },
+
+			-- Floating crystals. Rarity-tinted, and each spins in place.
+			Shard = {
+				Color = Color3.fromRGB(124, 245, 224),
+				Material = Enum.Material.Glass,
+				Transparency = 0.35,
+				Attributes = { IsFeaturedShard = true, SpinSpeed = 0.35 },
+			},
+
+			-- Invisible: the spotlight's mount point, nothing to look at.
+			SpotAnchor = { Transparency = 1 },
+		},
 	},
 
 	-- Zones. Angle is degrees clockwise from north, kept for validation and

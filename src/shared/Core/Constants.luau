@@ -107,6 +107,9 @@ local Constants = {
 		-- RollAnchor and GateAnchor, and for the same reason: the modeller can
 		-- rebuild everything around them without touching a line of Luau.
 		MAPS_FOLDER = "LuckboundMaps",
+		-- Authored hub props, same idea as MAPS_FOLDER but for pieces of the
+		-- Crossroads rather than whole worlds.
+		PREFABS_FOLDER = "LuckboundPrefabs",
 		MAP_ENTRY_ANCHOR = "EntryAnchor",
 		MAP_RETURN_ANCHOR = "ReturnAnchor",
 	},

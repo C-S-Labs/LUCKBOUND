@@ -17,6 +17,21 @@ below are not suggestions; they are the API.
 
 ---
 
+## How to run this
+
+**Attach or paste the block between the `COPY FROM HERE` / `COPY TO HERE`
+markers** into Claude Desktop with a Blender MCP connection attached. Only that
+block is instructions — everything outside the markers is reference for us, and
+handing it over as well just adds noise about a repo the modelling session
+cannot see.
+
+Blender MCP works by executing Python inside Blender, so what Claude Desktop
+will actually do is write and run a script. That is the right approach and the
+prompt now says so explicitly: build in stages, verify between them, and never
+try to do forty objects in one unverified call.
+
+---
+
 ## The contract, for reference
 
 `PortalRig` finds these by name and does this to them. Nothing else in the
@@ -56,6 +71,32 @@ centrepiece of the game's hub, the thing every player walks to first.
 This model has to satisfy an exact technical contract, because game code drives
 its parts by name. Follow the naming, dimensions and origin rules literally.
 Style is yours; the skeleton is not.
+
+## How to work
+
+**Write Python and run it in Blender. Do not place objects by hand.** There are
+around fifty objects here with mandated names, exact positions and specific
+origins — that is arithmetic, and a script gets it right every time where
+hand-placement drifts.
+
+**Build in six stages, and verify after each one before moving on:**
+
+1. Materials — all six, with the exact palette RGB
+2. The dais — `Platform` and the 16 inlays
+3. The portal rig — `Plinth`, both rings, `PortalPlane`
+4. The rune ring — 8 runes and 8 glyphs
+5. The shards and `SpotAnchor`
+6. Parenting, flat shading, and the final checks
+
+After each stage, query the scene and tell me what you actually created — object
+names, dimensions and positions read back from Blender, not what your script
+intended to make. A script that silently no-ops is the failure mode here, and it
+looks identical to success until the export is opened.
+
+**Make the script idempotent.** Delete any object it is about to create if one
+with that name already exists, so re-running a stage after a fix does not leave
+`Platform.001` behind. If you do end up with a `.001`, the name is wrong and the
+game will not find the part.
 
 ## Scale law — read this first
 

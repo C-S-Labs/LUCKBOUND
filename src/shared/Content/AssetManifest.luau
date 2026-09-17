@@ -81,6 +81,20 @@ local ENTRIES: { [string]: AssetEntry } = {
 		Notes = "60-stud circular arena ringed by 6 oversized trees.",
 	},
 
+	-- === Hub prefabs =============================================
+	-- Authored pieces of the Crossroads, synced to ServerStorage by Rojo and
+	-- cloned by Util/PrefabLoader. Like the map entries below, AssetId stays
+	-- empty forever: a prefab is a Model of many MeshParts, so the loader
+	-- reads the NAME, not an uploaded mesh id.
+	HUB_FATE_ENGINE = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/rbxm/prefabs/HUB_FATE_ENGINE.rbxmx",
+		Notes = "The Fate Engine, delivered 2026-09-18: 78 MeshParts, flat "
+			.. "shaded, untextured. A generator at ground level, a levitation "
+			.. "core above it, the portal floating at the crown.",
+	},
+
 	-- === Ethereal Scape ==========================================
 	-- ONE ENTRY, not a kit. The delivered scene is a composed traverse -- its
 	-- islands climb, its six bridges are each cut to their own gap, and the

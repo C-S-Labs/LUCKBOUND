@@ -33,6 +33,105 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 12 — 2026-09-18 — The authored Fate Engine is in the game
+
+**Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 305 passing (was 295)
+
+### Done
+
+The Fate Engine was built in Blender against Session 11's contract and
+delivered as `.rbxmx`. It is now the centrepiece of the Crossroads.
+
+**The delivery passed the contract clean.** 78 MeshParts, all 46 required
+names present, no `.001` suffixes, no `SurfaceAppearance`, everything
+anchored, untextured. The naming contract worked exactly as designed — that
+is the first delivery on this project that needed no correction to its
+structure.
+
+**Two things needed fixing on the way in, neither the artist's fault:**
+
+- **Scale.** Studio's FBX importer landed it at 0.42x, uniformly: `Platform`
+  101.0 against a spec 240, `Plinth` 1.26 against 3, `OuterRing` 48.48 against
+  115.2, `SpotAnchor` 126.29 against 300 — the same factor to four figures. One
+  number in content (`Prefab.Scale = 2.3762`) corrects all of it. Re-exporting
+  78 meshes to fix an importer setting is how a pipeline gets abandoned.
+- **Hierarchy.** Blender empties do NOT survive an FBX round trip, so the model
+  came back flat while `PortalRig` and `HubEffects` walk a tree. The loader
+  rebuilds `EngineRig` / `RuneRing` / `CrystalShards` / `RuneInlay` by name
+  rather than asking for 78 parts to be hand-grouped in Studio after every
+  delivery.
+
+**New `Util/PrefabLoader`** — the hub's counterpart to `PrebuiltLoader`. Clones,
+anchors, scales, pivots, regroups and paints. It also reports any contract part
+it could not find, rather than going quietly dead.
+
+**`HubBuilder.buildFateEngine` now prefers the prefab** and draws no portal
+primitives when it loads. The blockout path underneath is untouched and still
+runs on a place with no Rojo — no flag day in either direction.
+
+**Two silent no-ops fixed in `PortalRig`**, both predicted in Session 11 and
+both real:
+
+- `setRarity` looped over `InnerRing`'s *children*. An authored ring is a
+  single `MeshPart`, so the loop found nothing, coloured nothing, and errored
+  nothing. The portal would simply have stopped responding to rarity.
+- The spin driver required a `Center` attribute and `continue`d without one, so
+  an authored ring would never have turned.
+
+Both now handle a `BasePart` and a `Model` of segments.
+
+**New `PortalRig.attachEffects`** gives an authored rig the point light and
+particle emitter a generated one builds for itself. Emitters are not mesh data
+and cannot survive an FBX, and without them the 2.5-second spin-up — build spec
+§1.3's "single most important UX beat" — would have had nothing to ramp.
+
+### Decisions made
+
+- **Colour is applied in code, from content, not baked into the art.** The
+  meshes import grey and that is the pipeline working, not a failure: the house
+  style is flat colour with no textures. `Crossroads.FateEngine.PrefabStyles`
+  maps part name to `Color`/`Material`/`Transparency`/`CanCollide` plus
+  animation attributes, resolved by longest matching prefix so
+  `Plinth_SideBand` can be gold while `Plinth` stays marble. Recolouring the
+  Engine is now a data edit and a rejoin. Recorded in `ART_DIRECTION.md`.
+
+- **The artist's three-stage machine is honoured, not corrected.** The brief
+  asked for a portal on a dais; the delivery is a grounded generator, a
+  suspended levitation core, and the portal floating at the crown, with visible
+  air gaps that make energy rather than struts the explanation. That moved the
+  portal centre from the spec's 67 studs to 102. The spec's number was a
+  starting point and the design is better, so the code took the art's number.
+  Their design note is saved beside the asset as `FATE_ENGINE_DESIGN.txt`.
+
+- **The generator, core and coils are static.** The design note says explicitly
+  that everything beyond the named contract is decorative unless the game adds
+  behaviour. A rotating core would also have been caught by the shard rarity
+  cycle and tinted away from its cyan-violet.
+
+- **Ring pivots survived because the art spec insisted on symmetry.** A
+  `MeshPart`'s rotation centre is its bounding-box centre, not the Blender
+  origin — Roblox discards that. For a symmetric ring the two coincide, which
+  is why "origin at the hub of the wheel" was written as a hard rule. It was
+  load-bearing, not decoration.
+
+### Stopped at
+
+305 passing, syntax and forbidden-name scans clean, everything wired. **The
+Engine has never been rendered.** No Studio pass has happened at all.
+
+### Next
+
+1. **Walk the Crossroads.** Watch for the dais landing flush with the walkways,
+   the rings counter-rotating, the portal pulsing, and a `/roll` turning the
+   inner ring, plane, glyphs and shards to the rolled rarity.
+2. **The rest of the Crossroads** — owner-stated as the next day's work. The
+   seam is proven now, so each further piece is a `.rbxmx`, a `Prefab` field
+   and a paint table, with no new code.
+3. Unchanged: walk Ethereal Scape v2, `EntryAnchor` / `ReturnAnchor`,
+   Emberfall's kit, `UNCOMMON`'s colour.
+
+---
+
 ## Session 11 — 2026-09-17 — The Fate Engine contract
 
 **Branch:** `claude/zen-volta-cuhfyh`, restarted from `main` after #16 merged

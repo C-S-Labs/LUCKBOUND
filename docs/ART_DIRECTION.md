@@ -162,6 +162,21 @@ A textured portal ring is a dead portal ring.
 Ethereal Scape v2 is already built this way, so the hub matching it is what
 makes the game look like one game.
 
+### Colour is applied in code, not baked in
+
+Authored meshes arrive **grey** — Roblox imports untextured geometry with no
+colour, and untextured is exactly what this style asks for. That is not a
+failure to fix in Blender; it is the pipeline working.
+
+Colour is two per-part Roblox properties, `Color` and `Material`, neither of
+which needs UVs. They are set from a **paint table in content**, keyed by part
+name with longest-prefix matching (see `Crossroads.FateEngine.PrefabStyles`).
+So recolouring an authored piece is a data edit and a rejoin — never a
+re-export.
+
+Roblox's built-in materials give stone grain, glass and neon bloom for free.
+Use them instead of authoring a surface.
+
 ### The hub palette — the thematic cycle
 
 Straight from `Content/Hub/Crossroads.luau`, which is the source of truth. An
