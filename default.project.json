@@ -27,6 +27,9 @@
       "$className": "ServerStorage",
       "LuckboundMaps": {
         "$path": "assets/rbxm/maps"
+      },
+      "LuckboundPrefabs": {
+        "$path": "assets/rbxm/prefabs"
       }
     }
   }

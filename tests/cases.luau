@@ -1551,6 +1551,96 @@ do
 		table.concat(spoken, ", "))
 end
 
+-- === 20. The authored Fate Engine ===================================
+group("The authored Fate Engine prefab")
+
+do
+	local engine = Crossroads.FateEngine
+	local prefab = engine.Prefab
+
+	check("the Engine declares a prefab", type(prefab) == "table")
+	check("its AssetKey is in the manifest",
+		AssetManifest.exists(prefab.AssetKey), tostring(prefab.AssetKey))
+	check("its Scale is positive", type(prefab.Scale) == "number" and prefab.Scale > 0)
+
+	-- MEASURED FROM assets/rbxm/prefabs/HUB_FATE_ENGINE.rbxmx as delivered.
+	-- Studio's FBX importer landed it at 0.42x, uniformly. A re-delivery means
+	-- re-measuring these; what the tests assert is the RELATIONSHIPS below,
+	-- never that Scale is a particular number.
+	local RAW_PLATFORM = 101.0 -- Platform, widest axis
+	local RAW_PLINTH_H = 1.26 -- Plinth, height
+	local RAW_OUTER = 48.48 -- OuterRing, widest axis
+
+	local scale = prefab.Scale
+
+	-- THE ONE THAT MATTERS. The dais is the floor players stand on, and the
+	-- hub reserves exactly PlatformRadius for it -- walkways are cut to meet
+	-- its edge (Bridges.Overlap). A prefab scaled wrong either floats short of
+	-- its own walkways or overhangs the plaza.
+	local platform = RAW_PLATFORM * scale
+	check("the authored dais matches the platform radius the hub reserves",
+		math.abs(platform - engine.PlatformRadius * 2) < engine.PlatformRadius * 0.05,
+		string.format("%.1f studs against %d", platform, engine.PlatformRadius * 2))
+
+	-- The plinth cap is a hard rule, not a proportion: a character jumps about
+	-- 7 studs and the Gate once shipped an 18-stud plinth that walled off its
+	-- own portal. Scale can violate it silently.
+	local plinth = RAW_PLINTH_H * scale
+	check("the authored plinth is still a step, not a wall",
+		plinth <= GameConfig.Portal.MaxPlinthHeight + 0.5,
+		string.format("%.2f studs", plinth))
+
+	-- The rig must not overhang the floor it stands on -- the same assertion
+	-- the generated rig has always had, applied to the authored one.
+	check("the portal rig fits on its own dais",
+		RAW_OUTER * scale < engine.PlatformRadius * 2,
+		string.format("ring %.1f, dais %d", RAW_OUTER * scale, engine.PlatformRadius * 2))
+
+	-- Every part the code drives by name needs a paint rule, or it stays the
+	-- grey Roblox imports it as. Longest matching prefix wins, exactly as
+	-- PrefabLoader resolves it.
+	local styles = engine.PrefabStyles
+	check("a paint table exists", type(styles) == "table")
+
+	local contract = { "Platform", "Plinth", "OuterRing", "InnerRing", "PortalPlane" }
+	for i = 1, 8 do
+		table.insert(contract, `Rune{i}`)
+		table.insert(contract, `Glyph{i}`)
+	end
+	for i = 1, 6 do
+		table.insert(contract, `Shard{i}`)
+	end
+	for i = 1, 16 do
+		table.insert(contract, `Inlay{i}`)
+	end
+
+	local unpainted = {}
+	for _, name in contract do
+		local matched = false
+		for prefix in styles do
+			if string.sub(name, 1, #prefix) == prefix then
+				matched = true
+				break
+			end
+		end
+		if not matched then
+			table.insert(unpainted, name)
+		end
+	end
+	check("every contract part has a paint rule", #unpainted == 0,
+		table.concat(unpainted, ", "))
+
+	-- The counter-rotation is what makes the portal read as a mechanism
+	-- rather than a wheel. Asserting the SIGNS, not the speeds.
+	local outer = styles.OuterRing.Attributes.SpinSpeed
+	local inner = styles.InnerRing.Attributes.SpinSpeed
+	check("the rings counter-rotate", outer * inner < 0,
+		string.format("outer %.2f, inner %.2f", outer, inner))
+
+	check("the shards are tagged for the rarity cycle",
+		styles.Shard.Attributes.IsFeaturedShard == true)
+end
+
 -- === summary ========================================================
 print(string.format("\n%s\n%d passed, %d failed, %d total", string.rep("=", 60),
 	passed, failed, passed + failed))

@@ -309,7 +309,7 @@ survive a rescale and a literal does not.
 |---|---|---|
 | **Portal plane is still above head height** | Medium | You reach the prompt and the rig springs from the floor, but the walk-through *plane* sits inside the inner ring, ~30 studs up. Blueprint §1.3's concentric rings make that inherent. Irrelevant once the rig is authored in Blender. |
 | **25% of rolls land on a world with no map** | **High** | Emberfall 15%, Sky Citadel 7%, Astral Reach 3%. Refused politely at the Gate; printed as a boot warning and asserted by test. Emberfall and Astral Reach need only a chunk kit; Sky Citadel needs a blueprint section first. |
-| **The Fate Engine prefab is authored but unwired** | **Open** | Owner is building it in Blender against `docs/FATE_ENGINE_BLENDER_PROMPT.md`. Decision 2026-09-17: the prefab replaces the **whole rig**, rings included — `PortalRig` will drive the authored parts rather than build them. The contract is the part names in that document. |
+| **The authored Fate Engine is wired but unwalked** | **Open** | Delivered 2026-09-18 and in the game: 78 MeshParts, all 46 contract names present, painted from the palette, rings counter-rotating, shards on the rarity cycle. Never seen in Studio. `assets/rbxm/prefabs/README.md` has the measurements. |
 | **Ethereal Scape's `Scale_Reference` proxy is loose** | Low | The v2 R6 proxy measures 13.2 studs against a real 5, but the rest of the scene reads correctly at `Scale = 1.0`. So the proxy is a stand-in, not a live reference. Worth tightening before the next world, or dropping — measuring it alone is what produced the ~10× v1. |
 | **The scene has no `EntryAnchor` / `ReturnAnchor`** | Medium | The loader derives both from the bounding box and warns, so the map loads and walks. Arrival lands on top of the bounding box rather than on `Spawn_Platform` (44 × 44, under the colonnade). Two named parts in Studio fix it — the only thing left on that file. |
 | **Expeditions are to become a separate place/instance** | **Architecture** | Owner-stated 2026-09-16: worlds will be rendered in a separate instance and reached by `TeleportService`, for performance and to isolate parties and solo queues. The current in-place `ExpeditionStage` is therefore a **prototype of the loop, not of the deployment**. `ExpeditionCore` is unaffected — it decides destination, seed and eligibility, none of which care where the map is built. `ExpeditionSystem` and `ChunkLoader` are what would move. |
@@ -332,21 +332,25 @@ survive a rescale and a literal does not.
 walked end to end in Studio on 2026-09-16. What is left is art, content and
 two design decisions.
 
-1. **Walk Ethereal Scape v2.** Entry, lighting, the timer and the return are
+1. **Walk the Crossroads and look at the Engine.** It is wired end to end and
+   has never been rendered. Watch for: the dais landing flush with the
+   walkways, the rings counter-rotating, the portal pulsing, and a `/roll`
+   turning the inner ring, plane, glyphs and shards to the rolled rarity.
+2. **Walk Ethereal Scape v2.** Entry, lighting, the timer and the return are
    proven — the whole path was walked on v1. What is new is 925 anchored PBR
    parts at play scale. The thing to judge is the traverse: 71 seconds one way,
    142 there and back of a 300-second expedition. If that reads as too much
    walking, `DurationSeconds` is the knob, not `Scale`.
-2. **Walk the hub once.** Untested: the brightness pass (`ClockTime` 22 → 4.5),
+3. **Walk the hub once.** Untested: the brightness pass (`ClockTime` 22 → 4.5),
    the non-colliding SpawnLocation, and the Observatory's removal.
    `TESTING.md` Test C3.
-3. **Add `EntryAnchor` and `ReturnAnchor`** to the scene in Studio. Until then
+4. **Add `EntryAnchor` and `ReturnAnchor`** to the scene in Studio. Until then
    the loader guesses the arrival point from the bounding box and warns on
    every entry. (v2 already ships anchored, so that half is done.)
-4. **Build the hub prefab loader.** `assets/rbxm/prefabs/` → `ServerStorage` →
-   `HubBuilder` clones into a slot. A mirror of `PrebuiltLoader`, blocked only
-   on the first authored file arriving. The naming contract it will read is
-   already written down — `docs/FATE_ENGINE_BLENDER_PROMPT.md`.
+5. **Build the rest of the Crossroads.** The prefab seam now exists and is
+   proven on the Engine, so each further piece is a `.rbxmx` in
+   `assets/rbxm/prefabs/`, a `Prefab` field and a paint table — no new code.
+   Owner-stated: this is the next day's work.
 5. **`UNCOMMON`'s colour needs blessing.** On screen inside the first minute.
 6. **A chunk kit for Emberfall** — 15pp off the "no map" number.
 7. **Placeholder text, UI pass** — unchanged.

@@ -20,6 +20,7 @@ local Constants = require(Root.Core.Constants)
 local GameConfig = require(Root.Core.GameConfig)
 local Layout = require(Root.Content.Hub.Crossroads)
 local PortalRig = require(Root.Util.PortalRig)
+local PrefabLoader = require(Root.Util.PrefabLoader)
 
 local HubBuilder = {}
 
@@ -256,6 +257,25 @@ end
 
 -- === centre: Fate Engine =============================================
 
+-- Every part an authored Engine must supply, because something in code drives
+-- it by this exact name: PortalRig spins and reskins the portal, HubEffects
+-- turns the shards. A delivery missing one of these still builds -- the rest
+-- of the Engine is fine -- but it warns rather than going quietly dead, which
+-- is the failure the MeshId seam taught us to shout about.
+local ENGINE_CONTRACT = { "Platform", "Plinth", "OuterRing", "InnerRing", "PortalPlane", "SpotAnchor" }
+do
+	for i = 1, 8 do
+		table.insert(ENGINE_CONTRACT, `Rune{i}`)
+		table.insert(ENGINE_CONTRACT, `Glyph{i}`)
+	end
+	for i = 1, 6 do
+		table.insert(ENGINE_CONTRACT, `Shard{i}`)
+	end
+	for i = 1, 16 do
+		table.insert(ENGINE_CONTRACT, `Inlay{i}`)
+	end
+end
+
 local function buildFateEngine(parent: Instance): Model
 	local cfg = Layout.FateEngine
 	local base = Anchors.FATE_ENGINE
@@ -263,6 +283,71 @@ local function buildFateEngine(parent: Instance): Model
 	local engine = Instance.new("Model")
 	engine.Name = Constants.NAMES.FATE_ENGINE
 	engine.Parent = parent
+
+	-- THE AUTHORED ENGINE, when there is one. Whole-rig replacement: the
+	-- prefab carries the dais, the plinth, the rune ring, the portal and the
+	-- shards, so none of the blockout below runs. The spotlight and the
+	-- RollAnchor are still ours -- they are behaviour, not art.
+	--
+	-- The blockout path underneath stays live and untouched. A place without
+	-- Rojo, or with the file missing, builds exactly what it built before.
+	if cfg.Prefab then
+		local built = PrefabLoader.build(
+			{ AssetKey = cfg.Prefab.AssetKey, Scale = cfg.Prefab.Scale, Styles = cfg.PrefabStyles },
+			ENGINE_CONTRACT,
+			CFrame.new(base),
+			engine,
+			"Authored"
+		)
+		if built then
+			if #built.Missing > 0 then
+				warn(
+					`[HubBuilder] {cfg.Prefab.AssetKey} is missing {#built.Missing} contract part(s): `
+						.. table.concat(built.Missing, ", ")
+						.. " -- those will not animate or reskin"
+				)
+			end
+			print(
+				string.format(
+					"[HubBuilder] Fate Engine: authored prefab, %d parts at %.3f scale",
+					built.PartCount,
+					cfg.Prefab.Scale
+				)
+			)
+
+			local rig = built.Model:FindFirstChild("EngineRig")
+			if rig and rig:IsA("Model") then
+				-- Reparent to the Engine so HubEffects finds it at the path
+				-- it has always looked at: FateEngine/EngineRig.
+				rig.Parent = engine
+				rig:SetAttribute("Rarity", cfg.IdleRarity)
+				rig:SetAttribute("State", "Idle")
+				rig:SetAttribute("Scale", cfg.Prefab.Scale)
+				PortalRig.attachEffects(rig, cfg.IdleRarity)
+				PortalRig.setRarity(rig, cfg.IdleRarity)
+			end
+
+			local spotAnchor = built.Model:FindFirstChild("SpotAnchor", true)
+			if spotAnchor and spotAnchor:IsA("BasePart") then
+				local spot = Instance.new("SpotLight")
+				spot.Color = cfg.SpotLight.Color
+				spot.Brightness = cfg.SpotLight.Brightness
+				spot.Range = cfg.SpotLight.Range
+				spot.Angle = cfg.SpotLight.Angle
+				spot.Face = Enum.NormalId.Bottom
+				spot.Parent = spotAnchor
+			end
+
+			local authoredAnchor = buildRollAnchor(engine)
+			engine.PrimaryPart = authoredAnchor
+			return engine
+		end
+
+		warn(
+			`[HubBuilder] prefab '{cfg.Prefab.AssetKey}' not found in ServerStorage.`
+				.. `{Constants.NAMES.PREFABS_FOLDER} -- drawing the blockout Engine instead`
+		)
+	end
 
 	-- Raised marble platform with a radial rune inlay.
 	cylinder({
