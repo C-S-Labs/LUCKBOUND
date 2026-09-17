@@ -133,19 +133,77 @@ real section before Phase 2 makes worlds enterable.
 
 ---
 
+## The house style — low poly, one palette
+
+**Owner-directed, 2026-09-17.** Every authored asset in the hub is **low poly
+and flat shaded**, and every asset draws from the one palette below. The hub has
+to read as a single place built by a single hand, not a gallery of pieces that
+happen to stand near each other.
+
+This is a *style*, not a budget. A mesh can be cheap and still be wrong here:
+
+| | Low poly | Merely optimised |
+|---|---|---|
+| Shading | **flat** — every facet visibly its own plane | smooth, normals interpolated |
+| Curves | resolved into a countable number of flat faces | approximated finely enough to look round |
+| Surface | one flat colour per material | textures, veining, roughness variation |
+| A cylinder | 12–16 sides you can count | 64 sides you cannot |
+
+**Flat shading is not optional.** A low-poly mesh with smooth shading does not
+read as stylised — it reads as a high-poly mesh that went wrong. Shade Flat in
+Blender, and let the facets catch the light.
+
+**No textures anywhere in the hub.** No image maps, no roughness, normal or
+metallic maps, no `SurfaceAppearance`. Colour comes from flat material colour
+only. This is partly style and partly mechanics: a `SurfaceAppearance`
+**overrides a part's `Color`**, and rarity reskinning works by setting `Color`.
+A textured portal ring is a dead portal ring.
+
+Ethereal Scape v2 is already built this way, so the hub matching it is what
+makes the game look like one game.
+
+### The hub palette — the thematic cycle
+
+Straight from `Content/Hub/Crossroads.luau`, which is the source of truth. An
+authored piece uses these and nothing else.
+
+| Role | RGB | Reads as |
+|---|---|---|
+| Marble | `226, 221, 234` | pale lilac-white — the dais, the plinth, every floor |
+| Marble trim / gold | `230, 178, 74` | the one warm accent; use sparingly or it stops being an accent |
+| Plaza stone | `58, 52, 76` | deep dusk purple — the ground plane |
+| Walkway stone | `78, 70, 98` | one step lighter than the plaza |
+| Dark stone | `64, 58, 78` | the outer portal ring, heavy structural pieces |
+| Rune slate | `88, 82, 104` | grey-violet, for carved detail |
+| Mint neon | `124, 245, 224` | the rune inlays and `UNKNOWN` glow |
+| Torch light | `255, 176, 92` | warm flame |
+| Engine spot | `255, 200, 120` | the key light over the Fate Engine |
+
+Ambient is `72, 66, 96` under a `90, 70, 140` sky at `ClockTime 4.5` — a low,
+raking pre-dawn light. **Author for that.** A piece that looks right under
+Blender's default studio lighting will read washed-out and flat in the hub;
+check it under a single low warm key with cool purple fill.
+
+Anything that gets **recoloured by rarity** — portal rings, portal planes,
+glyphs, the Engine's crystal shards — is exported **pure white and emissive**,
+with no colour of its own. The game tints those at runtime, and a colour baked
+in fights it.
+
+---
+
 ## Current defaults
 
 | Thing | Value |
 |---|---|
-| Ambient / Outdoor | `rgb(40,35,60)` / `rgb(55,48,80)` |
+| Ambient / Outdoor | `rgb(72,66,96)` / `rgb(96,88,128)` |
 | ColorShift_Top | `rgb(90,70,140)` |
 | Fog | `rgb(30,25,50)`, 700 → 4400 |
-| Brightness / ClockTime | 2 / 22 |
+| Brightness / ClockTime | 2.6 / 4.5 (brightness pass, 2026-09-16) |
 | Marble / Gold accent | `rgb(226,221,234)` / `rgb(230,178,74)` |
-| Hub diameter (playable) | 1200 studs |
+| Hub diameter (playable) | 1150 studs |
 | Visual extent (scenery) | 4000 studs |
-| Zone ring radius | 420 studs |
-| Zone platforms | 230–360 studs |
+| Zone ring radius | 400 studs |
+| Zone platforms | 210–320 studs (four districts; the Observatory was cut) |
 | WalkSpeed | 32 (Roblox default is 16) |
 | Walkways | 44 studs wide, raised 6 (gate processional 72) |
 | Portal spin-up | 2.5 s |

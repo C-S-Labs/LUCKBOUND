@@ -33,6 +33,92 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 11 — 2026-09-17 — The Fate Engine contract
+
+**Branch:** `claude/zen-volta-cuhfyh`, restarted from `main` after #16 merged
+**Tests:** 295 passing (unchanged — this session added no code)
+
+### Done
+
+- **Wrote `docs/FATE_ENGINE_BLENDER_PROMPT.md`** — a prompt for Claude Desktop
+  driving Blender over MCP, which builds the Fate Engine to the exact contract
+  the game already enforces. It is not a style brief: the part names in it are
+  the API `PortalRig` looks up.
+
+- **Corrected the prompt to low poly** after the owner flagged it. The first
+  version was **lean but not low poly** — a 64-sided platform, 48x16 tori,
+  "soft veining" marble, textures allowed on four of five materials, and a
+  60,000-triangle ceiling. That is an optimisation budget, not a style. There
+  was also no `Shade Flat` instruction anywhere, and a low-poly mesh with
+  smooth shading reads as a high-poly mesh that went wrong.
+
+  Now: 16-sided platform, octagonal plinth, 32x6 tori, hexagonal shards, flat
+  shading mandatory, **no textures at all**, and a ceiling of 5,000 triangles
+  against an expected ~1,800.
+
+### Decisions made
+
+- **Low poly and one palette are the hub-wide house style**, not a note on one
+  asset. Recorded in `ART_DIRECTION.md` rather than only in the prompt, with
+  the palette lifted from `Content/Hub/Crossroads.luau` so there is one source
+  of truth. Ethereal Scape v2 is already built this way, so the hub matching it
+  is what makes the game look like one game.
+
+  The no-textures rule is style *and* mechanics: a `SurfaceAppearance`
+  overrides a part's `Color`, and rarity reskinning works by setting `Color`.
+
+- **Fixed a stale `ART_DIRECTION` defaults table** while establishing the
+  palette beside it — it still read Brightness 2 / ClockTime 22, hub 1200,
+  zone ring 420, five zone platforms. All superseded by the brightness pass,
+  the de-scale and the Observatory's removal. Stale numbers next to a new
+  palette would have been read as current by the next modeller.
+
+- **The Fate Engine prefab replaces the WHOLE RIG, rings included.**
+  Owner-directed. The alternative was a static shell with `PortalRig` still
+  building the rings on top, which would have kept rarity reskinning for free.
+  The owner wants exact art control instead.
+
+  **What that costs, written down so it is not rediscovered:** `PortalRig` no
+  longer *builds* this slot, it *drives* it. Every part `setRarity`,
+  `playSpinUp`, `setActive`, `setIdle` and the spin loop look up by name must
+  exist in the export, spelled exactly:
+
+  `Plinth` · `OuterRing` · `InnerRing` · `PortalPlane` · `Rune1..8` ·
+  `Glyph1..8` · `Shard1..6` · `Platform` · `Inlay1..16` · `SpotAnchor`
+
+- **The rarity-tinted parts must ship untextured.** `InnerRing`, `PortalPlane`,
+  the glyphs and the shards are recoloured on every roll by setting `Color`. A
+  Roblox `SurfaceAppearance` overrides `Color` outright, so a PBR texture on
+  any of them silently kills rarity reskinning **on the most visible object in
+  the game**. The prompt spends a section on this because it is the failure
+  that would ship looking fine and be found weeks later.
+
+- **The plinth cap is restated as a rule, not a proportion.** 3 studs, hard.
+  A character jumps ~7; the Gate shipped an 18-stud plinth once and walled its
+  own portal off. The prompt says "monumental by being wide, never by being
+  tall" for that reason.
+
+### Stopped at
+
+The prompt is written and committed. No code changed — the loader it implies
+does not exist yet, deliberately: the contract is agreed first, the loader is
+written against the first real file.
+
+### Next
+
+1. **Owner builds the Engine in Blender**, exports FBX, imports to Studio,
+   saves `assets/rbxm/prefabs/FATE_ENGINE.rbxmx`.
+2. **Then the hub prefab loader** — `assets/rbxm/prefabs/` → `ServerStorage` →
+   `HubBuilder` clones into a slot, and `PortalRig` gains a "drive an existing
+   rig" path beside its "build one" path. A mirror of `PrebuiltLoader`.
+3. **Check the scale on arrival** against a real character *and* a doorway and
+   a tree — never the reference rig alone. That is what put Ethereal Scape v1
+   10x out.
+4. Unchanged: walk Ethereal Scape v2, walk the hub, `EntryAnchor` /
+   `ReturnAnchor`, Emberfall's kit, `UNCOMMON`'s colour.
+
+---
+
 ## Session 10 — 2026-09-17 — Cutting the Observatory, and one map instead of eight chunks
 
 **Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 295 passing (was 301)
