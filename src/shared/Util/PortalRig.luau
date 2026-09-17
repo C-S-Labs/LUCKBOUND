@@ -314,7 +314,11 @@ function PortalRig.setRarity(model: Model, rarityKey: string): ()
 
 	local plane = model:FindFirstChild("PortalPlane")
 	if plane and plane:IsA("BasePart") then
+		-- NOT dimmed by NeonTint: the veil is ForceField, not Neon, so it
+		-- does not bloom, and it is the one surface that has to stay the
+		-- brightest thing in the rig. It is also what players walk through.
 		plane.Color = rarity.Color
+		plane.CanCollide = false
 		local light = plane:FindFirstChild("PortalLight")
 		if light and light:IsA("PointLight") then
 			light.Color = rarity.Color

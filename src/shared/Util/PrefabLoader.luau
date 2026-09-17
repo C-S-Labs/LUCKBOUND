@@ -39,6 +39,8 @@ export type Style = {
 	Transparency: number?,
 	CanCollide: boolean?,
 	Attributes: { [string]: any }?,
+	-- Attribute name -> fraction to vary it by, per part. See the paint loop.
+	Vary: { [string]: number }?,
 }
 
 --- The Rojo-synced source model for a key, or nil when it is not there --
@@ -185,6 +187,22 @@ function PrefabLoader.build(
 				end
 				for key, value in style.Attributes or {} do
 					d:SetAttribute(key, value)
+				end
+				-- PER-PART VARIATION. Six shards sharing one style entry all
+				-- animated identically, which made floating crystals read as
+				-- one machine. `Vary` scales a numeric attribute by up to
+				-- +/- its fraction, from a hash of the part NAME -- so the
+				-- spread is different per part, identical every run, and
+				-- still a single line of content rather than six.
+				for key, spread in style.Vary or {} do
+					local base = d:GetAttribute(key)
+					if type(base) == "number" then
+						local hash = 0
+						for k = 1, #d.Name do
+							hash = (hash * 31 + string.byte(d.Name, k)) % 997
+						end
+						d:SetAttribute(key, base * (1 + (hash / 997 * 2 - 1) * spread))
+					end
 				end
 			end
 		end

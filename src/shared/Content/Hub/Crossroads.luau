@@ -203,21 +203,34 @@ local Crossroads = {
 				-- SpinAxis Z because the ring is thin along its own Z, so Z is
 				-- the axle. Driven by HubEffects, not PortalRig -- see the
 				-- comment on the animator there.
-				Attributes = { SpinSpeed = 1.0, SpinAxis = "Z" },
+				Attributes = { SpinSpeed = 0.32, SpinAxis = "Z" },
 			},
 			RingFoot_Clamps = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
 			InnerRing = {
 				Color = Color3.fromRGB(68, 135, 123),
 				Material = Enum.Material.Neon,
-				Attributes = { SpinSpeed = -1.4, SpinAxis = "Z" },
+				Attributes = { SpinSpeed = -0.45, SpinAxis = "Z" },
 			},
+			-- THE VEIL. This is the surface a player walks through, so it is
+			-- the one piece that has to read as the point of the whole
+			-- machine. At deep blue and 0.45 transparent it was nearly
+			-- invisible against the dark hub -- reported from the third
+			-- authored playtest as "you can't even see it hardly".
+			--
+			-- Brighter, more opaque, rarity-tinted, and given its own slow
+			-- breath so it is the only part of the Engine that changes SIZE.
+			-- Explicitly non-colliding: you walk through a portal.
 			PortalPlane = {
-				Color = Color3.fromRGB(40, 70, 150), -- Portal_Veil: deep blue
+				Color = Color3.fromRGB(96, 170, 235),
 				Material = Enum.Material.ForceField,
-				Transparency = 0.45,
-				-- The veil breathes. Slower than the rings so the two do not
-				-- beat against each other.
-				Attributes = { PulseAlphaMin = 0.3, PulseAlphaMax = 0.6, PulseSeconds = 3.2 },
+				Transparency = 0.2,
+				CanCollide = false,
+				Attributes = {
+					PulseAlphaMin = 0.12,
+					PulseAlphaMax = 0.38,
+					PulseScale = 0.05,
+					PulseSeconds = 2.8,
+				},
 			},
 
 			-- The levitation stack, added by the artist on top of the spec.
@@ -256,10 +269,14 @@ local Crossroads = {
 				-- its name, so the six never bob in lockstep.
 				Attributes = {
 					IsFeaturedShard = true,
-					SpinSpeed = 0.9,
+					SpinSpeed = 0.5,
 					BobStuds = 1.6,
 					BobSeconds = 5.5,
 				},
+				-- Six crystals sharing one entry animated in lockstep, which
+				-- read as machinery rather than as things adrift. Each now
+				-- gets its own speed, drift and period from its name.
+				Vary = { SpinSpeed = 0.5, BobStuds = 0.4, BobSeconds = 0.35 },
 			},
 
 			-- Invisible: the spotlight's mount point, nothing to look at.

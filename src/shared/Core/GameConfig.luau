@@ -212,6 +212,24 @@ local GameConfig = {
 	-- Studio and locked. Roblox is Y-up, so "compass" is the X/Z plane:
 	--   NORTH = -Z, SOUTH = +Z, EAST = +X, WEST = -X, UP = +Y.
 	-- Visual detail (materials, palette, props) lives in Content/Hub/Crossroads.
+	-- Client-side hub animation. These exist because the hub animator runs
+	-- every frame on every player's machine, including the low-end phones the
+	-- §6 checklist budgets for, and the first authored playtest already
+	-- reported it "slightly choppy" in Studio on a desktop.
+	Effects = {
+		-- Beyond this, a part stops animating entirely. The hub is 1150 studs
+		-- across and scenery reaches 4000, so most of what is tagged is off
+		-- screen or a speck for most of the session.
+		AnimationDistance = 700,
+		-- How often the distance check itself runs. Doing it per part per
+		-- frame would cost more than the animation it is protecting.
+		CullIntervalSeconds = 0.5,
+		-- Size and Transparency are far more expensive to write than CFrame --
+		-- a Size change on a MeshPart re-scales the mesh. 20 Hz is
+		-- indistinguishable from 60 for a slow breath and a third of the work.
+		SlowUpdateSeconds = 0.05,
+	},
+
 	HubLayout = {
 		-- 1200 was one playtest ago. The owner's verdict on walking it was
 		-- "much better, could be slightly smaller, perhaps just a tad" -- so

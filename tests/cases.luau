@@ -1647,14 +1647,42 @@ do
 		styles.OuterRing.Attributes.SpinAxis == "Z"
 			and styles.InnerRing.Attributes.SpinAxis == "Z")
 
-	-- A speed that cannot be seen is the same as no animation, and that is
-	-- exactly how this shipped twice. One revolution in under 30 seconds.
+	-- SPIN SPEED IS A BAND, and both edges are bugs that shipped. Too slow
+	-- (0.15 rad/s, 42s a revolution) read as "not animated" for two
+	-- playtests; too fast (1.4 rad/s) read as "very very fast" on the third.
+	-- Between 8 and 30 seconds a revolution is a machine idling.
 	for _, name in { "OuterRing", "InnerRing", "Shard" } do
 		local speed = math.abs(styles[name].Attributes.SpinSpeed)
-		check(`{name} turns fast enough to be visible`,
-			speed > math.pi * 2 / 30,
-			string.format("%.2f rad/s = %.0fs per revolution", speed, math.pi * 2 / speed))
+		local seconds = math.pi * 2 / speed
+		check(`{name} idles rather than racing or sitting still`,
+			seconds >= 8 and seconds <= 30,
+			string.format("%.2f rad/s = %.0fs per revolution", speed, seconds))
 	end
+
+	-- The crystals must not move as one. A single shared style entry is what
+	-- made six of them read as machinery.
+	check("the shards vary per crystal", type(styles.Shard.Vary) == "table"
+		and (styles.Shard.Vary.SpinSpeed or 0) > 0)
+
+	-- THE VEIL is the surface a player walks through, so it has to be
+	-- walkable and it has to be the thing you look at.
+	local veil = styles.PortalPlane
+	check("the veil is non-colliding -- you walk through a portal",
+		veil.CanCollide == false)
+	check("the veil is the most visible surface in the rig",
+		veil.Transparency < 0.35, string.format("%.2f", veil.Transparency))
+	check("the veil has a breath of its own",
+		veil.Attributes.PulseScale ~= nil and veil.Attributes.PulseAlphaMin ~= nil)
+
+	-- Performance: the animator runs every frame on every client, including
+	-- the phones the §6 checklist budgets for.
+	check("distant parts stop animating",
+		GameConfig.Effects.AnimationDistance > 0
+			and GameConfig.Effects.AnimationDistance < GameConfig.HubLayout.VisualExtent,
+		string.format("%d studs", GameConfig.Effects.AnimationDistance))
+	check("expensive properties are written below frame rate",
+		GameConfig.Effects.SlowUpdateSeconds > 1 / 60,
+		string.format("%.3fs", GameConfig.Effects.SlowUpdateSeconds))
 
 	-- WALKWAYS MUST NOT BURY THE DAIS. The deck sits below the dais top, or
 	-- it runs over the platform the Engine stands on and hides it -- which is

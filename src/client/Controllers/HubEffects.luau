@@ -13,6 +13,7 @@ local Workspace = game:GetService("Workspace")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local Constants = require(Root.Core.Constants)
+local GameConfig = require(Root.Core.GameConfig)
 local Layout = require(Root.Content.Hub.Crossroads)
 local PortalRig = require(Root.Util.PortalRig)
 
@@ -47,10 +48,15 @@ function HubEffects.spinUpForRoll(rarityKey: string): ()
 	end
 end
 
-function HubEffects.settle(): ()
+--- Ends the reveal. The Engine KEEPS the rolled rarity rather than reverting
+--- to UNKNOWN: it is the portal to the world you just rolled, and a player
+--- looking at it should be able to see where they are going. Reverting made
+--- the Engine disagree with the Gate, which holds the destination colour --
+--- reported from the third authored playtest.
+function HubEffects.settle(rarityKey: string?): ()
 	if engineRig then
 		PortalRig.setIdle(engineRig)
-		PortalRig.setRarity(engineRig, Constants.RARITY.UNKNOWN.Key)
+		PortalRig.setRarity(engineRig, rarityKey or Constants.RARITY.UNKNOWN.Key)
 	end
 	if gateRig then
 		PortalRig.setIdle(gateRig)
@@ -68,10 +74,20 @@ local function cycleFeaturedRarity(shards: { BasePart })
 	table.sort(keys)
 
 	featuredIndex = featuredIndex % #keys + 1
-	local color = Constants.RARITY[keys[featuredIndex]].Color
 
-	for _, shard in shards do
-		TweenService:Create(shard, TweenInfo.new(1.6), { Color = color }):Play()
+	-- A WAVE, not a switch. Every shard taking the same colour at the same
+	-- instant is what made six floating crystals read as one machine --
+	-- reported from the third authored playtest. Each shard takes the NEXT
+	-- rarity along and starts a little after the one before, so the group
+	-- always shows a spread and the change travels around the ring.
+	for index, shard in shards do
+		local key = keys[(featuredIndex + index - 2) % #keys + 1]
+		local color = Constants.RARITY[key].Color
+		task.delay(0.18 * (index - 1), function()
+			if shard.Parent then
+				TweenService:Create(shard, TweenInfo.new(1.6), { Color = color }):Play()
+			end
+		end)
 	end
 end
 
@@ -160,6 +176,7 @@ function HubEffects.init(): ()
 				Base = part.CFrame,
 				BaseSize = part.Size,
 				Angle = 0,
+				Active = true,
 				Spin = spin,
 				Axis = AXES[(part:GetAttribute("SpinAxis") :: string?) or "Y"] or Vector3.yAxis,
 				Bob = bob,
@@ -197,12 +214,53 @@ function HubEffects.init(): ()
 			end
 		end)
 
+		-- PERFORMANCE. This loop runs every frame on every player's machine,
+		-- including the low-end phones the §6 checklist budgets for, so it is
+		-- built around doing as little as possible:
+		--
+		--   1. Parts further than Effects.AnimationDistance from the camera do
+		--      not animate at all. The hub is 1150 studs across; most of what
+		--      is tagged is off screen or a speck for most of the session.
+		--   2. The distance check itself is throttled -- per part per frame it
+		--      would cost more than the animation it protects.
+		--   3. Size and Transparency are written at Effects.SlowUpdateSeconds,
+		--      not every frame. A Size change on a MeshPart re-scales the
+		--      mesh, which is far more expensive than a CFrame write, and at
+		--      20 Hz a slow breath is indistinguishable from 60.
+		--
+		-- Only CFrame runs at full rate, because motion is what the eye
+		-- catches stuttering.
+		local fx = GameConfig.Effects
 		local elapsed = 0
+		local sinceCull = math.huge
+		local sinceSlow = 0
+
 		RunService.Heartbeat:Connect(function(dt)
 			elapsed += dt
+			sinceCull += dt
+			sinceSlow += dt
+
+			local recull = sinceCull >= fx.CullIntervalSeconds
+			if recull then
+				sinceCull = 0
+			end
+			local slow = sinceSlow >= fx.SlowUpdateSeconds
+			if slow then
+				sinceSlow = 0
+			end
+
+			local eye = Workspace.CurrentCamera and Workspace.CurrentCamera.CFrame.Position
 
 			for _, a in animated do
 				local part = a.Part
+
+				if recull and eye then
+					a.Active = (part.Position - eye).Magnitude <= fx.AnimationDistance
+				end
+				if not a.Active then
+					continue
+				end
+
 				local moved = false
 				local cf = a.Base
 
@@ -220,13 +278,15 @@ function HubEffects.init(): ()
 					part.CFrame = cf
 				end
 
-				if a.Pulse then
-					local t = (math.sin(elapsed / a.PulseSeconds * math.pi * 2 + a.Phase) + 1) / 2
-					part.Size = a.BaseSize * (1 - a.Pulse + a.Pulse * 2 * t)
-				end
-				if a.AlphaMin then
-					local t = (math.sin(elapsed / a.PulseSeconds * math.pi * 2 + a.Phase) + 1) / 2
-					part.Transparency = a.AlphaMin + (a.AlphaMax - a.AlphaMin) * t
+				if slow then
+					if a.Pulse then
+						local t = (math.sin(elapsed / a.PulseSeconds * math.pi * 2 + a.Phase) + 1) / 2
+						part.Size = a.BaseSize * (1 - a.Pulse + a.Pulse * 2 * t)
+					end
+					if a.AlphaMin then
+						local t = (math.sin(elapsed / a.PulseSeconds * math.pi * 2 + a.Phase) + 1) / 2
+						part.Transparency = a.AlphaMin + (a.AlphaMax - a.AlphaMin) * t
+					end
 				end
 			end
 

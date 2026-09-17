@@ -312,7 +312,7 @@ local function onRollResult(payload: any)
 	task.wait(GameConfig.UI.ResultCardHoldSeconds)
 	hideAll()
 
-	HubEffects.settle()
+	HubEffects.settle(payload.Rarity)
 	rolling = false
 	ProximityController.setLocked(false)
 end

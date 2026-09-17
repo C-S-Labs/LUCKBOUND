@@ -33,6 +33,87 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 16 — 2026-09-18 — Tuning the Engine, and a performance budget
+
+**Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 317 passing (was 311)
+
+### Done
+
+Fourth playtest. **Rings turn now.** Five fixes from the notes, plus the first
+real performance work on the hub animator.
+
+- **Rings were too fast.** 1.0 / -1.4 rad/s is a 6- and 4.5-second revolution,
+  which on fine teeth reads as a fan. Down to 0.32 / -0.45 — 20 and 14 seconds.
+  Shards 0.9 → 0.5.
+
+- **The Engine reverted to UNKNOWN after a roll.** `HubEffects.settle()` reset
+  it deliberately, which was right when the Engine was a decorative monument
+  and wrong now that it is the portal to the world you just rolled. It made the
+  Engine disagree with the Gate standing behind it, holding the destination
+  colour — visible in the same screenshot, blue against purple. `settle` now
+  takes the rolled rarity and keeps it.
+
+- **The crystals moved in lockstep.** Two causes, both fixed. The rarity cycle
+  tweened all six to the same colour at the same instant; it is now a **wave**
+  — each shard takes the next rarity along, starting 0.18s after the one
+  before, so the group always shows a spread. And all six shared one style
+  entry, so they shared one speed: new `Vary` support in `PrefabLoader` scales
+  a numeric attribute per part from a hash of its **name**, so the spread is
+  different per crystal, identical every run, and still one line of content.
+
+- **The veil was nearly invisible**, which is backwards — it is the surface
+  players walk through and the point of the whole machine. Deep blue at 0.45
+  transparent against a dark hub. Now brighter, 0.2 transparent, explicitly
+  **non-colliding**, and the only part of the Engine that changes size: it
+  breathes on a 2.8s loop, faster than the core, so it reads as the live thing.
+  Its rarity tint deliberately skips `NeonTint` — it is `ForceField`, not Neon,
+  so it does not bloom and should stay the brightest surface in the rig.
+
+### The performance budget
+
+The owner reported Studio "slightly choppy" and flagged low-end devices for
+launch. The animator runs every frame on every client, so it is now built
+around doing as little as possible. New `GameConfig.Effects`:
+
+| | |
+|---|---|
+| `AnimationDistance` 700 | past this a part stops animating entirely — the hub is 1150 across and scenery reaches 4000, so most of what is tagged is off screen or a speck |
+| `CullIntervalSeconds` 0.5 | the distance check is throttled; per part per frame it would cost more than the animation it protects |
+| `SlowUpdateSeconds` 0.05 | `Size` and `Transparency` write at 20 Hz, not 60 |
+
+**Only `CFrame` runs at full rate**, because motion is what the eye catches
+stuttering. A `Size` change on a MeshPart re-scales the mesh and is far more
+expensive than a CFrame write; at 20 Hz a slow breath is indistinguishable
+from 60 and costs a third as much.
+
+### Decisions made
+
+- **Spin speed is a band, and both edges are bugs that shipped.** Too slow
+  (0.15 rad/s) read as "not animated" for two playtests; too fast (1.4) read as
+  "very very fast" on the third. The test now asserts a revolution between 8
+  and 30 seconds rather than a minimum.
+
+- **The Engine holds the destination.** Consistent with the owner's stated
+  direction that this portal becomes the way into biomes.
+
+- **Variation is content, not code.** `Vary` on a style entry, keyed off the
+  part name, rather than six near-identical entries or a random jitter that
+  differs every join.
+
+### Stopped at
+
+317 passing. Unverified in-engine. Performance work is by construction rather
+than measurement — no profiling has been done, and the cull distance is a
+guess that wants a real device behind it.
+
+### Next
+
+1. Walk it. Speeds, the held rarity, varied crystals, a visible veil.
+2. **Profile on a real low-end device** before trusting the numbers above.
+3. Placeholder staircase, then the spec amendment for portal-as-entry.
+
+---
+
 ## Session 15 — 2026-09-18 — The rings were never in the list
 
 **Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 311 passing (was 305)
