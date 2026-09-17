@@ -55,8 +55,16 @@ local Theme = {
 	TorchLight = Color3.fromRGB(255, 176, 92),
 	EngineSpot = Color3.fromRGB(255, 200, 120), -- blueprint §2.2
 
-	StoneMaterial = Enum.Material.Marble,
-	PlazaMaterial = Enum.Material.Slate,
+	-- NO BUILT-IN ROBLOX MATERIALS ANYWHERE IN THE HUB. Owner-directed
+	-- 2026-09-18: their grain fights flat-shaded low-poly geometry, and the
+	-- palette is meant to carry the look on its own. SmoothPlastic takes the
+	-- colour and nothing else. Neon and ForceField stay, because those are
+	-- light rather than surface.
+	--
+	-- It is also cheaper: Glass in particular is expensive on the phones the
+	-- §6 checklist budgets for, and six floating crystals were using it.
+	StoneMaterial = Enum.Material.SmoothPlastic,
+	PlazaMaterial = Enum.Material.SmoothPlastic,
 }
 
 local Crossroads = {
@@ -75,13 +83,20 @@ local Crossroads = {
 	-- Centre — Fate Engine. Blueprint §2.2.
 	FateEngine = {
 		Name = "FateEngine",
-		-- 140 -> 120 with the rest of the de-scale. Must stay larger than the
-		-- Engine's outer ring (OuterRingRadius * FateEngineScale = 54) or the
-		-- rig overhangs the floor it stands on -- asserted by test.
-		PlatformRadius = 120,
-		PlatformRaise = 10,
+		-- 140 -> 120 with the world de-scale, then 120 -> 23 when the authored
+		-- Engine arrived and the owner's verdict was "way too big".
+		--
+		-- THIS IS NOW DERIVED, not chosen: it is half the authored Platform's
+		-- width at Prefab.Scale (101.0 * 0.464 / 2). The dais IS this radius,
+		-- so the two cannot drift -- walkways are cut to meet this number and
+		-- would otherwise stop short in mid-air. Asserted by test.
+		PlatformRadius = 23,
+		-- 10 -> 2, to match the authored dais (4.21 raw at Prefab.Scale). The
+		-- blockout stands in for the real thing, so a player stepping onto it
+		-- has to step the same distance in either build.
+		PlatformRaise = 2,
 		PlatformColor = Theme.Marble,
-		PlatformMaterial = Enum.Material.Marble,
+		PlatformMaterial = Enum.Material.SmoothPlastic,
 		RuneInlayCount = 16, -- radial groove pattern
 		RuneInlayColor = Color3.fromRGB(124, 245, 224),
 
@@ -97,7 +112,7 @@ local Crossroads = {
 			MinHeight = 50,
 			MaxHeight = 140,
 			Size = 20,
-			Material = Enum.Material.Glass,
+			Material = Enum.Material.SmoothPlastic,
 			SpinSpeedMin = 0.2,
 			SpinSpeedMax = 0.7,
 		},
@@ -110,8 +125,11 @@ local Crossroads = {
 			Height = 300,
 		},
 
-		AnchorSize = Vector3.new(90, 1, 90),
-		AnchorHeight = 12,
+		-- The roll pad, and it has to FIT the dais. At 90 it was wider than
+		-- the whole re-tuned Engine, so the prompt would have floated out
+		-- over open plaza.
+		AnchorSize = Vector3.new(30, 1, 30),
+		AnchorHeight = 6,
 		MeshId = nil, -- superseded by Prefab below; kept for the blockout path
 
 		-- THE AUTHORED ENGINE. Delivered 2026-09-18, 78 MeshParts.
@@ -128,7 +146,19 @@ local Crossroads = {
 			-- 48.48 -> 115.2, SpotAnchor y 126.29 -> 300. One number fixes
 			-- all of it; re-exporting 78 meshes to fix it is how a pipeline
 			-- gets abandoned.
-			Scale = 2.3762,
+			-- 2.3762 put the ring 115 studs tall -- 23x a player -- and the
+			-- owner's verdict on walking it was "way too big". Retuned to
+			-- put the PORTAL at ~4.5x player height, which was the ask:
+			--
+			--   OuterRing   48.48 raw -> 22.5 studs  (4.5x a 5-stud player)
+			--   InnerRing   34.34 raw -> 15.9 studs  (the opening, walkable)
+			--   Platform   101.0  raw -> 46.9 studs  (the dais)
+			--   Crown      126.29 raw -> 58.6 studs  (SpotAnchor height)
+			--
+			-- Everything else in this file that describes the dais is derived
+			-- from this number rather than set beside it, so one edit re-tunes
+			-- the Engine and a test catches it if they disagree.
+			Scale = 0.464,
 		},
 
 		-- PAINT, BY PART NAME. Authored meshes import untextured and grey,
@@ -146,69 +176,220 @@ local Crossroads = {
 			-- Ceremonial architecture ------------------------------------
 			Platform = {
 				Color = Theme.Marble,
-				Material = Enum.Material.Marble,
+				Material = Enum.Material.SmoothPlastic,
 				CanCollide = true,
 			},
-			Platform_RadialPanels = { Color = Color3.fromRGB(88, 82, 104), Material = Enum.Material.Slate },
-			Platform_ConcentricInlays = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
-			Platform_EdgeAccents = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
+			Platform_RadialPanels = { Color = Color3.fromRGB(88, 82, 104), Material = Enum.Material.SmoothPlastic },
+			Platform_ConcentricInlays = { Color = Theme.MarbleTrim, Material = Enum.Material.SmoothPlastic },
+			Platform_EdgeAccents = { Color = Theme.MarbleTrim, Material = Enum.Material.SmoothPlastic },
 			Plinth = {
 				Color = Color3.fromRGB(196, 190, 208),
-				Material = Enum.Material.Marble,
+				Material = Enum.Material.SmoothPlastic,
 				CanCollide = true,
 			},
-			Plinth_SideBand = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
-			Plinth_TopFiligree = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
-			Plinth_CornerButtresses = { Color = Color3.fromRGB(64, 58, 78), Material = Enum.Material.Basalt },
-			Inlay = { Color = Color3.fromRGB(124, 245, 224), Material = Enum.Material.Neon },
+			Plinth_SideBand = { Color = Theme.MarbleTrim, Material = Enum.Material.SmoothPlastic },
+			Plinth_TopFiligree = { Color = Theme.MarbleTrim, Material = Enum.Material.SmoothPlastic },
+			Plinth_CornerButtresses = { Color = Color3.fromRGB(64, 58, 78), Material = Enum.Material.SmoothPlastic },
+			-- Dimmed from the palette's 124,245,224 by Portal.NeonTint. Neon emits at
+			-- full Color and bloom amplifies it; at full value these spokes bled a
+			-- halo across the dais.
+			Inlay = {
+				Color = Color3.fromRGB(68, 135, 123),
+				Material = Enum.Material.Neon,
+				-- The same ripple, one ring further out. Sixteen spokes on a
+				-- slower period than the glyphs, so the dais breathes under
+				-- the plinth rather than with it.
+				WaveCount = 16,
+				Attributes = { PulseAlphaMin = 0.1, PulseAlphaMax = 0.6, PulseSeconds = 3.4 },
+			},
 
 			-- Rune ring ---------------------------------------------------
-			Rune = { Color = Color3.fromRGB(88, 82, 104), Material = Enum.Material.Slate },
-			Rune_GoldFrames = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
+			Rune = { Color = Color3.fromRGB(88, 82, 104), Material = Enum.Material.SmoothPlastic },
+			Rune_GoldFrames = { Color = Theme.MarbleTrim, Material = Enum.Material.SmoothPlastic },
 			-- Rarity-tinted. The colour set here is only the idle look.
-			Glyph = { Color = Color3.fromRGB(124, 245, 224), Material = Enum.Material.Neon },
+			-- Eight glyphs lighting one after another around the plinth. A
+			-- travelling ripple reads as the machine thinking; eight random
+			-- phases would just read as flicker.
+			Glyph = {
+				Color = Color3.fromRGB(68, 135, 123),
+				Material = Enum.Material.Neon,
+				WaveCount = 8,
+				Attributes = { PulseAlphaMin = 0.05, PulseAlphaMax = 0.55, PulseSeconds = 2.6 },
+			},
 
 			-- The portal --------------------------------------------------
+			-- POLISHED, NOT RUSTIC. Basalt's heavy grain read as corroded
+			-- bronze against pale marble and cool energy -- a third material
+			-- language in a palette that only has two. Slate keeps the mass
+			-- and the dark value without the rust, so the frame reads as
+			-- machined stone. One line to put back if the weathered look is
+			-- wanted after all.
 			OuterRing = {
-				Color = Color3.fromRGB(64, 58, 78),
-				Material = Enum.Material.Basalt,
+				Color = Color3.fromRGB(58, 53, 72),
+				Material = Enum.Material.SmoothPlastic,
 				-- Drives the spin. Negative on the inner ring so the two
 				-- counter-rotate, which is what makes the portal read as a
 				-- mechanism rather than a wheel.
-				Attributes = { SpinSpeed = 1 },
+				-- SpinAxis Z because the ring is thin along its own Z, so Z is
+				-- the axle. Driven by HubEffects, not PortalRig -- see the
+				-- comment on the animator there.
+				-- Wobble and jitter are what stop a constant spin on a fixed
+				-- axis reading as machinery. A degree and a half of sway on
+				-- two uneven periods, and a rate that breathes +/-25%.
+				Attributes = {
+					-- 0.32 -> 0.22. Still reading as "rigid" rather than
+					-- drifting; a 28-second revolution with a rate that
+					-- breathes +/-32% over a long wobble is a ring that is
+					-- floating, not one that is driven.
+					SpinSpeed = 0.22,
+					SpinAxis = "Z",
+					SpinJitter = 0.32,
+					-- THE RINGS SHARE ONE SWAY. Giving them different wobble
+					-- periods made them tilt independently, and with ~1 stud
+					-- of clearance the inner assembly swung straight out
+					-- through the outer aperture. Identical degrees and
+					-- period means the whole rig leans as one object -- still
+					-- alive, never diverging. Only the SPIN differs.
+					WobbleDegrees = 1.6,
+					WobbleSeconds = 8,
+					-- NO PulseScale here. Swelling the outer ring shrinks the
+					-- hole the inner ring sits in, which is the one thing
+					-- guaranteed to clip. Its emphasis comes from the spin,
+					-- the jitter and the gold clamps instead.
+				},
 			},
-			RingFoot_Clamps = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
-			InnerRing = {
-				Color = Color3.fromRGB(124, 245, 224),
+			RingFoot_Clamps = {
+				Color = Theme.MarbleTrim,
 				Material = Enum.Material.Neon,
-				Attributes = { SpinSpeed = -1.4 },
+				-- Four gold catches around the frame, breathing against the
+				-- ring's swell rather than with it, so the eye has something
+				-- warm to land on in a cool palette.
+				WaveCount = 4,
+				Attributes = { PulseAlphaMin = 0.25, PulseAlphaMax = 0.72, PulseSeconds = 4.1 },
 			},
+			-- MATTE, deliberately. With the ring and the veil both emissive in
+			-- the same hue they merged into one bright disc and the teeth
+			-- stopped reading. Metal takes the rarity colour but catches light
+			-- instead of emitting it, so the frame is machined and the
+			-- aperture inside it glows -- which is the way round it should be.
+			InnerRing = {
+				Color = Color3.fromRGB(68, 135, 123),
+				Material = Enum.Material.SmoothPlastic,
+				-- The delivered inner ring is 15.92 studs across inside an
+				-- 18.0 aperture -- about a stud a side, which anything that
+				-- moves can eat. At 0.88 it sits ~2 studs clear, so the
+				-- assembly reads as nested rather than jammed.
+				SizeScale = 0.88,
+				Attributes = {
+					SpinSpeed = -0.31,
+					SpinAxis = "Z",
+					SpinJitter = 0.38,
+					-- Matched to the outer ring on purpose. See the note there.
+					WobbleDegrees = 1.6,
+					WobbleSeconds = 8,
+				},
+			},
+			-- THE VEIL. This is the surface a player walks through, so it is
+			-- the one piece that has to read as the point of the whole
+			-- machine. At deep blue and 0.45 transparent it was nearly
+			-- invisible against the dark hub -- reported from the third
+			-- authored playtest as "you can't even see it hardly".
+			--
+			-- Brighter, more opaque, rarity-tinted, and given its own slow
+			-- breath so it is the only part of the Engine that changes SIZE.
+			-- Explicitly non-colliding: you walk through a portal.
 			PortalPlane = {
-				Color = Color3.fromRGB(40, 70, 150), -- Portal_Veil: deep blue
-				Material = Enum.Material.ForceField,
+				Color = Color3.fromRGB(96, 170, 235),
+				-- Neon, not ForceField. ForceField's shimmer is too subtle to
+				-- read against a dark hub -- the aperture looked like a hole
+				-- rather than the thing you step into, across two playtests.
+				-- Neon glows; the transparency pulse keeps the bloom in check
+				-- and lets the ring's teeth stay readable through it.
+				Material = Enum.Material.Neon,
 				Transparency = 0.45,
+				CanCollide = false,
+				-- Set INTO the ring, not flush with it. The mesh arrived
+				-- 15.22 studs across inside a 15.92 ring -- 0.35 a side -- so
+				-- anything that moved it clipped. At 0.9 it sits ~1.1 studs
+				-- clear all round, which reads as an aperture in a frame
+				-- rather than a disc jammed in a hole.
+				SizeScale = 0.82,
+				Attributes = {
+					-- NO PulseScale. The veil is 15.22 studs across inside a
+					-- 15.92 ring: 0.35 studs of clearance a side. A 6% breath
+					-- grew it to 16.13 and it pulsed straight through its own
+					-- frame. The breath is carried entirely by transparency,
+					-- which cannot clip.
+					PulseAlphaMin = 0.35,
+					PulseAlphaMax = 0.62,
+					PulseSeconds = 2.8,
+				},
 			},
 
 			-- The levitation stack, added by the artist on top of the spec.
 			-- Static geometry: it sells the floating portal and nothing in
 			-- code needs to move it.
-			LevitationGenerator = { Color = Color3.fromRGB(88, 82, 104), Material = Enum.Material.Slate, CanCollide = true },
-			GeneratorVents = { Color = Color3.fromRGB(64, 58, 78), Material = Enum.Material.Basalt },
-			GeneratorPanelTrim = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
-			GeneratorEmitter = { Color = Color3.fromRGB(124, 245, 224), Material = Enum.Material.Neon },
-			LevitationCoils = { Color = Theme.MarbleTrim, Material = Enum.Material.Neon },
+			LevitationGenerator = { Color = Color3.fromRGB(88, 82, 104), Material = Enum.Material.SmoothPlastic, CanCollide = true },
+			GeneratorVents = { Color = Color3.fromRGB(64, 58, 78), Material = Enum.Material.SmoothPlastic },
+			GeneratorPanelTrim = { Color = Theme.MarbleTrim, Material = Enum.Material.SmoothPlastic },
+			GeneratorEmitter = { Color = Color3.fromRGB(68, 135, 123), Material = Enum.Material.Neon },
+			-- The core's second colour. Cyan core over violet coils gives the
+			-- energy stack two tones instead of one flat glow, and both are
+			-- hub palette rather than invented.
+			LevitationCoils = {
+				Color = Color3.fromRGB(96, 70, 140),
+				Material = Enum.Material.Neon,
+				Attributes = { PulseScale = 0.08, PulseSeconds = 3.6 },
+			},
 			-- Static. The artist's design note is explicit that the
 			-- generator, core and coils are decorative unless the game adds
 			-- behaviour, and a rotating core would also get caught by the
 			-- shard rarity cycle and tinted away from its cyan-violet.
-			LevitationCore = { Color = Color3.fromRGB(124, 245, 224), Material = Enum.Material.Neon },
+			-- The core is a SINGLE mesh, so it cannot be painted two tones --
+			-- but it can be both in turn. It drifts cyan to violet over six
+			-- seconds while breathing on a different period, so the two never
+			-- line up and it never looks like a loop.
+			LevitationCore = {
+				Color = Color3.fromRGB(78, 150, 140),
+				Material = Enum.Material.Neon,
+				Attributes = {
+					PulseScale = 0.12,
+					PulseSeconds = 3.6,
+					ColorA = Color3.fromRGB(78, 150, 140),
+					ColorB = Color3.fromRGB(112, 78, 164),
+					ColorSeconds = 6,
+				},
+			},
 
 			-- Floating crystals. Rarity-tinted, and each spins in place.
 			Shard = {
-				Color = Color3.fromRGB(124, 245, 224),
-				Material = Enum.Material.Glass,
+				Color = Color3.fromRGB(68, 135, 123),
+				Material = Enum.Material.SmoothPlastic,
 				Transparency = 0.35,
-				Attributes = { IsFeaturedShard = true, SpinSpeed = 0.35 },
+				-- Spin, plus a slow vertical drift so they read as floating
+				-- rather than mounted. Each shard gets a different phase from
+				-- its name, so the six never bob in lockstep.
+				Attributes = {
+					IsFeaturedShard = true,
+					SpinSpeed = 0.5,
+					BobStuds = 1.6,
+					BobSeconds = 5.5,
+					WobbleDegrees = 4,
+					WobbleSeconds = 6,
+				},
+				-- Six crystals sharing one entry animated in lockstep, which
+				-- read as machinery rather than as things adrift. Each now
+				-- gets its own speed, drift and period from its name.
+				-- Now that the hash actually separates Shard1..Shard6, these
+				-- spreads do what they always claimed to. Wobble is varied
+				-- too, so no two crystals tumble the same way.
+				Vary = {
+					SpinSpeed = 0.55,
+					BobStuds = 0.45,
+					BobSeconds = 0.4,
+					WobbleDegrees = 0.5,
+					WobbleSeconds = 0.4,
+				},
 			},
 
 			-- Invisible: the spotlight's mount point, nothing to look at.
@@ -316,7 +497,9 @@ local Crossroads = {
 		-- Walkways run a little INTO the surfaces they join at both ends.
 		-- Butting them edge to edge leaves a hairline seam that a character
 		-- can catch on, and any float error turns it into a hole.
-		Overlap = 10,
+		-- 10 -> 3. A 10-stud bite into a 23-radius dais swallowed most of its
+		-- visible edge. Enough to hide the seam, not enough to hide the dais.
+		Overlap = 3,
 		Color = Theme.Walkway,
 		Material = Theme.StoneMaterial,
 	},

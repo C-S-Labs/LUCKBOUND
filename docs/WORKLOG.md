@@ -33,6 +33,751 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 21 — 2026-09-18 — The roll ramp, and a brief for the Crossroads
+
+**Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 328 passing (was 325)
+
+### The Engine had no reaction to a roll at all
+
+Not a tuning problem — a wiring gap. `PortalRig.playSpinUp` set a `State`
+attribute and `PortalRig.animate` read it to pick a faster spin. But the
+**authored** rings are driven by `HubEffects`, off attributes, and it never read
+`State`. So the 2.5-second spin-up — build spec §1.3's "single most important UX
+beat" — missed the Engine entirely. The blockout Gate behind it was the only
+thing reacting.
+
+**The ramp now lives on one attribute.** `PortalRig` eases `SpinBoost` on the
+rig, and every ring inside multiplies its rate by it:
+
+| | |
+|---|---|
+| `SpinBoostPeak` 5.5× | how hard it winds up |
+| `SpinRampUpSeconds` 1.1 | idle → peak, as the roll begins |
+| `SpinWindDownSeconds` 2.6 | peak → idle, as the result lands |
+
+Smoothstepped, so there is no kick at the start or jolt at the end, and guarded
+by a generation counter — a second roll landing mid-ramp abandons the first
+cleanly rather than leaving two loops fighting over one number. Attributes
+cannot be tweened, so this is a spawned ease rather than a `TweenService` call.
+
+**The colour is now the answer, and arrives last.** It used to be painted the
+instant the player pressed the button, which spent the entire wind-up showing
+something already decided. `playSpinUp` stores a `PendingRarity` and paints
+nothing; `setIdle` releases the ramp **and** tweens the colour over 1.6s. So the
+portal slows down *into* the world you rolled.
+
+A test asserts the three relationships that make that read as one gesture:
+the roll winds it up at all, it snaps up faster than it coasts down, and the
+colour lands **before** the rings finish slowing — finishing after them would
+leave the portal at rest on the wrong colour, which is worse than snapping.
+
+### The Crossroads brief
+
+`docs/CROSSROADS_BLENDER_PROMPT.md`, with a PDF sent to the owner.
+
+Every dimension is read out of `GameConfig.HubLayout` and
+`Content/Hub/Crossroads.luau` rather than invented — 1150-stud plaza, districts
+at radius 400, walkways 44 wide at Z 1.5, platforms 14 thick at Z 14 — so
+authored art meets the walkways the game already cuts to those numbers.
+
+It carries the same three guards the Fate Engine brief earned: the 5-metre scale
+reference, staged work with the scene read back after each stage, and a
+verification checklist demanding measured numbers rather than assurances. Plus
+a new one for a floor plan this large: **do not go overkill.** The temptation on
+1150 studs is to fill it, and the portal at the centre is the hero.
+
+**It also reserves the Engine's footprint and asks for nothing inside it** — a
+plain `EngineReserve` marker, 60 studs of clear radius, and an explicit
+instruction not to model a portal.
+
+**One mismatch, recorded rather than silently resolved.** The four districts the
+owner named do not match the four in content: Leaderboard is `HALL_OF_LEGENDS`
+renamed, and **Shop replaces `EXPEDITION_GATE`** — which goes redundant under
+the portal-as-entry direction. The brief asks for what the finished hub wants;
+the district table catches up when that spec amendment lands. Flagged in
+`STATUS.md` so it is a decision rather than a discrepancy.
+
+### Stopped at
+
+328 passing. This is the last pass before a break until the Crossroads map is
+built.
+
+### Next, when work resumes
+
+1. Walk the roll ramp — it is unverified in-engine.
+2. **Profile on a real low-end device.** Four sessions of animation have been
+   added on top of a budget that has never been measured.
+3. The Crossroads map, from the brief.
+4. Then: the portal-as-entry spec amendment, the placeholder staircase, and the
+   `EXPEDITION_GATE` → `SHOP` district swap that follows from it.
+
+---
+
+## Session 20 — 2026-09-18 — Nesting, materials, and the barrier that timed out
+
+**Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 325 passing (was 322)
+
+### The barrier worked, by giving up
+
+The log confirmed the fix — `driving 2 ring(s) OuterRing(MeshPart, spin 0.22)
+InnerRing(MeshPart, spin -0.31), plane yes` and `animating 35 part(s), 6
+shard(s), 40 orbiter(s)` — but the timestamps told a second story:
+
+```
+12:54:06.447  client ready
+12:54:26.493  [PortalRig] EngineRig: driving 2 ring(s) ...
+```
+
+**Exactly 20 seconds: the timeout, not the condition.** `seen >= PartCount`
+never became true, because a client's view of the hub need never match the
+server's exactly — a part can be culled, streamed out, or not be a `BasePart`
+by the time it arrives. Requiring equality looked rigorous and was simply
+wrong.
+
+It now waits for replication to **settle**: three consecutive polls with no new
+parts. That asks the question that matters — *has anything arrived recently* —
+rather than a stricter one that can never be satisfied.
+
+### Why the rings kept clipping
+
+The owner's close-up showed the pale inner assembly riding outside the dark
+scaffold. Three separate causes, all mine, all from the last two sessions:
+
+1. A 6% size pulse on the veil, which grew it through its own frame.
+2. **Different wobble periods on the two rings**, so they tilted independently
+   — and with ~1 stud of clearance the inner assembly swung straight out
+   through the outer aperture.
+3. A swell I had *just* added to the outer ring, which shrinks the hole the
+   inner ring sits in. The one part I thought was safe to breathe was the one
+   part that could not.
+
+Fixed by making the rig nest properly and lean as one object:
+
+| | Studs |
+|---|---|
+| Outer aperture | 18.00 |
+| Inner ring (`SizeScale` 0.88) | 14.02 — **1.99 clear a side** |
+| Veil (`SizeScale` 0.82) | 12.49 — inside the ring it fills |
+
+Both rings now share identical wobble degrees and period, so the assembly leans
+as one and only the **spin** differs. New `SizeScale` on a style entry sets a
+piece into its frame without re-exporting the mesh.
+
+The outer ring's emphasis comes from its spin, its jitter, and four gold clamps
+that pulse **against** the ring's rhythm rather than with it — warmth to land on
+in a cool palette, and no geometry risk.
+
+### No built-in Roblox materials
+
+Owner-directed, and it matches the house style better than what was there.
+Every surface is now `SmoothPlastic`: 21 material references across the Engine
+paint table and the blockout hub. `Neon` and `ForceField` stay, because those
+are light rather than surface.
+
+Photographic grain fights flat-shaded low-poly geometry — it adds surface noise
+to a style whose premise is that facets and colour carry the read. It is also
+cheaper: `Glass` is expensive on the phones the §6 checklist budgets for, and
+six floating crystals were using it.
+
+Recorded in `ART_DIRECTION.md` with the counter-argument the owner asked for:
+if a future model is authored expecting real materials, revisit it **there**
+rather than letting one asset drift.
+
+### Logged, not built
+
+**First-join intro screen.** Title over slow cinematic shots of the map until
+the player presses Play. The stated purpose is as much technical as aesthetic —
+it buys the client time to render and replicate. Directly relevant: the hub
+animator already waits for ~450 instances, and that wait is currently invisible
+and unexplained to the player.
+
+### Stopped at
+
+325 passing. Three new assertions cover the nesting, the shared sway, and the
+no-textures rule — each one a bug that actually shipped.
+
+### Next
+
+1. Walk it. The barrier should now report in well under a second.
+2. Profile on a real low-end device — still unmeasured.
+3. Placeholder staircase, then the spec amendment for portal-as-entry.
+
+---
+
+## Session 19 — 2026-09-18 — The replication barrier that was not one
+
+**Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 322 passing
+
+### Done
+
+The owner sent the server log, and it named the bug in two lines that had been
+invisible from screenshots for four playtests:
+
+```
+[PortalRig]  EngineRig: driving 0 ring(s) -- NONE FOUND, plane MISSING
+[HubEffects] animating 0 part(s), 0 shard(s), 0 orbiter(s); engineRig found
+```
+
+**`engineRig` found, `OuterRing` not found inside it.** That is a
+half-replicated model, and it means every animation this client ever ran was
+running against a hub that had not arrived.
+
+**The Session 13 barrier was never a barrier.** I had the server set
+`Crossroads:SetAttribute("Ready", true)` last and the client wait for it. But
+**an attribute replicates with the model it sits on, while that model's 447
+descendants stream in afterwards.** The client saw `Ready` instantly, scanned
+instantly, and found a Crossroads containing almost nothing.
+
+Worse, it explains the whole sequence of wrong diagnoses: the shards happened to
+win the race often enough to look like they worked, which made every subsequent
+symptom look like a property of the rings rather than a property of timing.
+
+**A count is a barrier an attribute cannot be.** The server now publishes
+`PartCount` alongside `Ready`, and the client waits until it can actually *see*
+that many BaseParts (capped at 20 seconds, then proceeds regardless rather than
+hanging). It is checking the thing it needs, not a proxy for it.
+
+**Also fixed: the shard rarity cycle could never start.** It was gated on
+`#shards > 0` **at scan time** and spawned only then — so with zero shards
+found, the rotation never began at all, even once the crystals arrived. It now
+runs unconditionally and asks "are there shards yet" each pass.
+
+### Decisions made
+
+- **Wait for the thing, not for a signal about the thing.** `Ready` was a flag
+  that meant "the server finished", and I read it as "the client has it". Those
+  are different statements and the gap between them is exactly one replication
+  window.
+
+- **A lazily-gated loop beats a conditionally-spawned one.** Anything that asks
+  "is there work?" once, at the worst possible moment, answers no forever.
+
+### Benign log lines, noted so they are not chased later
+
+- `[SaveSystem] DataStores unavailable` — expected in Studio until the place is
+  published with Studio API access enabled. Profiles run in memory.
+- `[DebugSystem] DEVELOPER COMMANDS ARE ON` — intentional, and already on the
+  pre-launch checklist to turn off.
+- `[Rojo-Warn] Disconnected` — the dev session dropping, not the game.
+
+### Stopped at
+
+322 passing. The barrier is unverified in-engine; the log will say
+`animating N part(s)` with a real N if it worked.
+
+### Next
+
+1. Walk it and read that one line.
+2. Profile on a real low-end device — still unmeasured across three sessions of
+   added animation.
+3. Placeholder staircase, then the spec amendment for portal-as-entry.
+
+---
+
+## Session 18 — 2026-09-18 — Clipping, layering, and a polish pass
+
+**Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 322 passing (was 320)
+
+### Done
+
+Sixth playtest. Two reported faults, both measurable, plus an unprompted polish
+pass the owner asked for.
+
+**THE VEIL PULSED THROUGH ITS OWN FRAME, and the numbers say so exactly.**
+Measured from the delivered mesh at `Prefab.Scale`:
+
+| | Studs |
+|---|---|
+| `PortalPlane` | 15.22 |
+| `InnerRing` | 15.92 |
+| Clearance | **0.35 a side** |
+| Veil at `PulseScale = 0.06` | **16.13** |
+
+I added that size pulse last session without checking it against the ring it
+sits inside. The breath is now carried entirely by transparency, which cannot
+clip, and a test asserts the veil's pulsed width stays inside the ring.
+
+**Ring and veil had merged.** Both emissive in the same hue, so they read as one
+bright disc and the ring's teeth stopped existing. `InnerRing` is now `Metal`:
+it takes the rarity colour but catches light instead of emitting it, so the
+frame is machined and the aperture inside it glows. That is the way round it
+should have been — the thing you walk through should be the light source.
+
+**The base is two-tone at last, by being both colours in turn.** The "blue
+cylindrical base" is `LevitationCore`, a **single mesh** — it cannot be painted
+two tones, which is why two attempts at recolouring it failed. It now drifts
+cyan → violet over six seconds while breathing on a different period, so the two
+never line up and it never looks like a loop. New `ColorA`/`ColorB`/
+`ColorSeconds` in the animator.
+
+### The polish pass
+
+Asked what would make a player stop and say the game is well made, the answer
+was **ordered motion** — things that happen *in sequence* read as a mechanism
+thinking, where the same things at random phases read as flicker.
+
+New `WaveCount` on a style entry: `PrefabLoader` reads the trailing number in
+each part's name and sets an ordered phase, so a set ripples instead of
+twinkling.
+
+- **Eight glyphs** light one after another around the plinth.
+- **Sixteen inlays** ripple outward on a slower period, so the dais breathes
+  under the plinth rather than with it.
+
+### Owner notes taken mid-session
+
+- **Rings slower and looser.** 0.32 / −0.45 → **0.22 / −0.31**, a 28- and
+  20-second revolution, with the rate breathing ±32% over a longer wobble. The
+  note was "fluid and flowing, not forced", and the fix for *forced* is less
+  regularity rather than less speed alone.
+
+- **Polished over rustic** — a judgement call, and reversible in one line.
+  `Basalt`'s heavy grain read as corroded bronze against pale marble and cool
+  energy, which is a third material language in a palette that only has two.
+  `Slate` keeps the mass and the dark value without the rust.
+
+### Decisions made
+
+- **Geometry that moves needs its clearance checked.** A size pulse is not a
+  free effect: it has a budget set by whatever surrounds it, and that budget is
+  now asserted rather than assumed.
+
+- **Layer by material, not by colour.** Dark matte frame → matte machined ring →
+  emissive aperture gives three readable layers from one rarity hue. Colour
+  alone had all three fighting.
+
+- **Sequence beats randomness for sets.** Hash phasing is right for six shards
+  adrift; ordered phasing is right for eight glyphs in a ring.
+
+### Stopped at
+
+322 passing. Unverified in-engine. The performance budget from Session 16 is
+still unmeasured, and this round added ~24 animated parts (glyphs and inlays),
+all on the throttled transparency path and distance-culled.
+
+### Next
+
+1. Walk it.
+2. **Profile on a real low-end device.** Two sessions have now added animation
+   on top of an unmeasured budget.
+3. Placeholder staircase, then the spec amendment for portal-as-entry.
+4. The Crossroads proper — the owner expects the Engine to read much better
+   once it is not standing in a test harness.
+
+---
+
+## Session 17 — 2026-09-18 — Making the Engine stop reading as a machine
+
+**Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 320 passing (was 317)
+
+### Done
+
+Fifth playtest. Speed confirmed good. Every remaining note was a variation of
+the same thing — *it moves, but it moves like machinery* — so this round is
+about breaking uniformity.
+
+**THE VARIATION CODE WAS RIGHT; THE HASH WAS USELESS.** Two sessions of
+"crystals still in unison" traced to one line. Both the bob phase and the
+`Vary` spread keyed off a plain rolling hash of the part name, and
+`Shard1`..`Shard6` differ only in the last character:
+
+```
+Shard1 -> 147   Shard4 -> 150
+Shard2 -> 148   Shard5 -> 151
+Shard3 -> 149   Shard6 -> 152     out of 1000
+```
+
+Half a percent apart, so every crystal got the same phase and effectively the
+same speed. A trailing multiply by a large constant scrambles it — the same six
+now land at .50 .92 .35 .78 .21 .64. `Vary` is also keyed on the attribute name
+as well as the part, so a shard's speed and its drift are not varied by the
+same amount.
+
+**Adjacent names hashing to adjacent values is the kind of bug that produces no
+error and no wrong number — just an effect that quietly does nothing.**
+
+**Rings turn like a motor → wobble and jitter.** New `WobbleDegrees` /
+`WobbleSeconds` (a small tilt across the spin axis, on two uneven periods so
+the sway never lands on a beat) and `SpinJitter` (the rate breathes ±25%
+instead of holding exact). Shards wobble too, varied per crystal.
+
+**The colour snap → a tween.** `setRarity` took an optional duration and every
+paint goes through it. `GameConfig.Portal.RarityTweenSeconds = 0.9`, applied
+both when the spin-up starts and when the roll settles, so the colour travels
+across the rig while the rings wind up rather than swapping on one frame.
+
+**The veil → Neon.** `ForceField`'s shimmer was too subtle to read against a
+dark hub, so the aperture looked like a hole rather than the thing you step
+into. Neon actually glows; the transparency pulse (0.38–0.62) keeps the bloom
+in check and lets the ring's teeth stay readable through it.
+
+### The harness bug this uncovered
+
+Asserting `veil.Material == Enum.Material.Neon` failed against a correct
+value. The `Enum` shim built **a fresh table on every access**, so
+`Enum.Material.Neon ~= Enum.Material.Neon` and no test asserting a material
+could ever have passed.
+
+Same class as the Vector3-as-table shim recorded in CLAUDE.md, and the same
+lesson: an unfaithful shim is worse than no test. Fixed in `build_suite.py` by
+caching each item, so identity behaves as the engine does.
+
+### Decisions made
+
+- **Test the property, not a proxy for it.** The veil test asserted
+  `Transparency < 0.35`, which stopped meaning anything the moment the material
+  changed — an emissive surface at 0.45 reads far brighter than a shimmer at
+  0.2. It now asserts the two things that actually make it visible: that it is
+  emissive, and that its pulse never fades far enough to vanish.
+
+- **Uniformity is the bug, not the lack of features.** Every note this round
+  was fixed by making something less regular rather than by adding motion.
+
+### Stopped at
+
+320 passing. Unverified in-engine.
+
+### Next
+
+1. Walk it. Six visibly different crystals, a swaying ring, a glowing aperture,
+   and a colour that travels rather than snaps.
+2. Profile on a real low-end device — the Session 16 budget is still unmeasured.
+3. Placeholder staircase, then the spec amendment for portal-as-entry.
+
+---
+
+## Session 16 — 2026-09-18 — Tuning the Engine, and a performance budget
+
+**Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 317 passing (was 311)
+
+### Done
+
+Fourth playtest. **Rings turn now.** Five fixes from the notes, plus the first
+real performance work on the hub animator.
+
+- **Rings were too fast.** 1.0 / -1.4 rad/s is a 6- and 4.5-second revolution,
+  which on fine teeth reads as a fan. Down to 0.32 / -0.45 — 20 and 14 seconds.
+  Shards 0.9 → 0.5.
+
+- **The Engine reverted to UNKNOWN after a roll.** `HubEffects.settle()` reset
+  it deliberately, which was right when the Engine was a decorative monument
+  and wrong now that it is the portal to the world you just rolled. It made the
+  Engine disagree with the Gate standing behind it, holding the destination
+  colour — visible in the same screenshot, blue against purple. `settle` now
+  takes the rolled rarity and keeps it.
+
+- **The crystals moved in lockstep.** Two causes, both fixed. The rarity cycle
+  tweened all six to the same colour at the same instant; it is now a **wave**
+  — each shard takes the next rarity along, starting 0.18s after the one
+  before, so the group always shows a spread. And all six shared one style
+  entry, so they shared one speed: new `Vary` support in `PrefabLoader` scales
+  a numeric attribute per part from a hash of its **name**, so the spread is
+  different per crystal, identical every run, and still one line of content.
+
+- **The veil was nearly invisible**, which is backwards — it is the surface
+  players walk through and the point of the whole machine. Deep blue at 0.45
+  transparent against a dark hub. Now brighter, 0.2 transparent, explicitly
+  **non-colliding**, and the only part of the Engine that changes size: it
+  breathes on a 2.8s loop, faster than the core, so it reads as the live thing.
+  Its rarity tint deliberately skips `NeonTint` — it is `ForceField`, not Neon,
+  so it does not bloom and should stay the brightest surface in the rig.
+
+### The performance budget
+
+The owner reported Studio "slightly choppy" and flagged low-end devices for
+launch. The animator runs every frame on every client, so it is now built
+around doing as little as possible. New `GameConfig.Effects`:
+
+| | |
+|---|---|
+| `AnimationDistance` 700 | past this a part stops animating entirely — the hub is 1150 across and scenery reaches 4000, so most of what is tagged is off screen or a speck |
+| `CullIntervalSeconds` 0.5 | the distance check is throttled; per part per frame it would cost more than the animation it protects |
+| `SlowUpdateSeconds` 0.05 | `Size` and `Transparency` write at 20 Hz, not 60 |
+
+**Only `CFrame` runs at full rate**, because motion is what the eye catches
+stuttering. A `Size` change on a MeshPart re-scales the mesh and is far more
+expensive than a CFrame write; at 20 Hz a slow breath is indistinguishable
+from 60 and costs a third as much.
+
+### Decisions made
+
+- **Spin speed is a band, and both edges are bugs that shipped.** Too slow
+  (0.15 rad/s) read as "not animated" for two playtests; too fast (1.4) read as
+  "very very fast" on the third. The test now asserts a revolution between 8
+  and 30 seconds rather than a minimum.
+
+- **The Engine holds the destination.** Consistent with the owner's stated
+  direction that this portal becomes the way into biomes.
+
+- **Variation is content, not code.** `Vary` on a style entry, keyed off the
+  part name, rather than six near-identical entries or a random jitter that
+  differs every join.
+
+### Stopped at
+
+317 passing. Unverified in-engine. Performance work is by construction rather
+than measurement — no profiling has been done, and the cull distance is a
+guess that wants a real device behind it.
+
+### Next
+
+1. Walk it. Speeds, the held rarity, varied crystals, a visible veil.
+2. **Profile on a real low-end device** before trusting the numbers above.
+3. Placeholder staircase, then the spec amendment for portal-as-entry.
+
+---
+
+## Session 15 — 2026-09-18 — The rings were never in the list
+
+**Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 311 passing (was 305)
+
+### Done
+
+Third playtest. Neon dimming confirmed good. **Shards rotate; rings still did
+not** — and that pairing is what finally identified the bug, because both are
+client-side CFrame writes on anchored server parts. Anchoring was never the
+problem, and the owner's guess that it might be was the right question to ask.
+
+**ROOT CAUSE: there were two animation paths, and the rings were only in the
+broken one.**
+
+`HubEffects` ran a Heartbeat loop that collected parts tagged
+`IsFeaturedShard` — shards, and nothing else. The rings depended entirely on a
+separate route: `findRigs()` → `PortalRig.animate(engineRig)` → find rings by
+name. Two independent lookups, failing differently, which is why the symptom
+kept pointing at replication, then at spin speed, then at anchoring.
+
+I raised the spin speed last session on the theory it was too slow to see.
+That was a real problem and worth fixing, but it was not *this* problem, and I
+should have gone looking for why one set of parts moved and another did not
+rather than reaching for the most available explanation.
+
+**The fix collapses the two paths into one.** `HubEffects` now animates
+anything carrying a motion attribute, wherever it sits and whoever put it
+there:
+
+| Attribute | Does |
+|---|---|
+| `SpinSpeed` + `SpinAxis` | turns about its own X, Y or Z |
+| `BobStuds` + `BobSeconds` | drifts up and down |
+| `PulseScale` + `PulseSeconds` | breathes larger and smaller |
+| `PulseAlphaMin` / `PulseAlphaMax` | pulses transparency |
+
+Each part gets a phase derived from its **name**, so six shards never bob in
+lockstep, and it is the same every join rather than random.
+
+Rotation accumulates as an angle and the CFrame is rebuilt from a captured base
+each frame. Multiplying into the live CFrame instead would let the bob offset
+compound and walk the part away from where the artist put it.
+
+`PortalRig.animate` now skips `BasePart` rings and a plane carrying
+`PulseAlphaMin`, so nothing is driven twice. It still drives the blockout rig's
+segment Models, which the data path cannot.
+
+**Also done, from the same playtest:**
+
+- **Shards float.** `BobStuds = 1.6` over 5.5s, phase-offset per shard.
+- **The levitation core breathes** (`PulseScale = 0.12`) and now reads in two
+  tones: cyan core over **violet coils**, both from the hub palette rather than
+  invented.
+- **The portal veil breathes too**, slower than the rings so the two do not
+  beat against each other.
+- **Walkways stopped burying the dais.** `WalkwayRaise` 6 → 1.5 and
+  `Bridges.Overlap` 10 → 3. The authored dais is only ~2 studs proud of the hub
+  floor, so decks raised 6 ran straight over the top of it. `PlatformRaise`
+  10 → 2 as well, so the blockout dais is the same step as the authored one.
+
+### Decisions made
+
+- **One animator, driven by data.** Motion is now a line in the content paint
+  table, not a code change — consistent with the prime directive, and it means
+  a part cannot be animated by one system and invisible to another.
+
+- **Tests for the failure modes that shipped, not just for the fix.** Three new
+  relationship assertions, each of which would have caught a real bug from this
+  round:
+  - both rings name `Z` as their spin axis (a ring is thin along Z, so Z is the
+    axle; spinning about Y would tumble it end over end)
+  - every spinner completes a revolution in **under 30 seconds** — a speed that
+    cannot be seen is the same as no animation, and that is exactly how it
+    shipped twice
+  - walkway decks sit **below** the dais top, and the overlap leaves most of
+    the dais visible
+
+### Stopped at
+
+311 passing. Unverified in-engine. The `[HubEffects] animating N part(s)` line
+now reports the count directly, so if anything is still still, that number says
+whether it was collected.
+
+### Next
+
+1. Walk it. Rings, bobbing shards, breathing core, visible dais.
+2. Placeholder staircase.
+3. Spec amendment for portal-as-entry.
+
+---
+
+## Session 14 — 2026-09-18 — Spin speed, neon glare, and a diagnostic
+
+**Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 305 passing
+
+### Done
+
+Second playtest. **Sizing confirmed good** at `Scale = 0.464`. Rarity recolour
+on the portal confirmed working. Animation still reported dead.
+
+**The rarity recolour working is the diagnostic that matters.** It proves
+`engineRig` is found and `PortalRig.playSpinUp` runs — so the Session 13
+replication-race fix worked, and the rig is not missing. The fault is
+downstream of that.
+
+**Most likely cause, and fixed: the spin was too slow to see.**
+`Portal.IdleSpinSpeed` was `0.15` rad/s — **one revolution every 42 seconds.**
+On the blockout's 28 visible segments that reads as a slow hum. On an authored
+ring, which is near rotationally symmetric, a slow rotation about its own
+symmetry axis is **invisible by construction**. Raised to `0.6` (a revolution
+every 10s). Shards went `0.35` → `0.9` for the same reason: 18 seconds a
+revolution reads as still.
+
+**Added a diagnostic rather than guessing again.** Two prints, because "nothing
+is animated" has now cost two rounds and a screenshot cannot distinguish "no
+rings found" from "rings turning too slowly to see":
+
+```
+[PortalRig] EngineRig: driving 2 ring(s) OuterRing(MeshPart, spin 1) InnerRing(MeshPart, spin -1.4), plane yes
+[HubEffects] scan: 6 shard(s), 0 orbiter(s); engineRig found, gateRig found
+```
+
+If those numbers come back as expected, the speed was the whole story. If they
+come back `0 ring(s)` or `MISSING`, the fault is lookup, not speed, and the
+line says which.
+
+**Neon glare.** The portal was bright enough to bloom a halo over its own mesh
+detail. Roblox's `Neon` emits at the part's **full `Color`** and bloom
+amplifies it — and `Transparency` does not help, because Neon ignores it. The
+only lever is the colour itself.
+
+Added `Portal.NeonTint = 0.55`, applied in `PortalRig.setRarity` to everything
+Neon before it lands, and dimmed the statically-painted Neon parts in the paint
+table by the same factor (mint `124,245,224` → `68,135,123`). Hue preserved,
+geometry readable.
+
+### Decisions made
+
+- **An animation speed that is invisible is a bug, not a taste.** The old value
+  was chosen against blockout geometry with 28 visible segments. Authored art
+  changed what "slow" means, and nothing flagged it because both look identical
+  in a still.
+
+- **Neon is tinted at the source, in config, not per part.** `NeonTint` is one
+  tunable that every Neon path goes through, so the Gate and the return portals
+  get the same treatment without a second decision.
+
+- **Not addressed: walkways cover the base of the portal.** Owner-noted and
+  explicitly deprioritised — the current Crossroads is a test harness, not the
+  real map, which is the next piece of work. Recorded so it is not rediscovered
+  as a bug.
+
+### Stopped at
+
+305 passing. Both fixes are unverified in-engine; the diagnostic exists to make
+the next round conclusive either way.
+
+### Next
+
+1. **Walk it and read the two `[PortalRig]` / `[HubEffects]` lines.** They
+   settle whether the remaining fault is lookup or speed.
+2. Placeholder staircase, once animation is confirmed.
+3. Then the spec amendment for portal-as-entry.
+
+---
+
+## Session 13 — 2026-09-18 — First playtest of the authored Engine
+
+**Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 305 passing
+
+### Done
+
+The Engine was walked in Studio. It rendered, and the paint table worked —
+the owner confirmed colour came through. Two real bugs and one re-tune.
+
+**THE ANIMATION BUG WAS A REPLICATION RACE, and it was never about the
+prefab.** Nothing in the hub animated: no rings, no shards, nothing on a roll.
+
+`HubEffects.init` does `Workspace:WaitForChild("Crossroads")` and then scans
+once. But a Model does **not** replicate atomically — the client sees the
+Crossroads before its descendants arrive. It then finds no `EngineRig` and no
+shards, animates nothing, and never retries. It looks exactly like broken
+animation code.
+
+This was latent all along; the blockout hub is small enough to usually win the
+race. An authored Engine is ~80 MeshParts of mesh data, which loses it every
+time. So the prefab did not cause the bug, it made it deterministic.
+
+Fixed with an explicit done signal rather than a delay: the server sets
+`Crossroads:SetAttribute("Ready", true)` as its last act, and the client waits
+for that before scanning. Plus a `DescendantAdded` hook so anything tagged that
+lands late still animates.
+
+**Re-tuned the scale.** The owner's verdict was "way too big" — the ring stood
+115 studs, 23x a player. The ask was ~4.5x player height:
+
+| | Was | Now |
+|---|---|---|
+| `Prefab.Scale` | 2.3762 | **0.464** |
+| Portal ring height | 115.2 | **22.5** (4.5x a 5-stud player) |
+| Portal opening | 81.6 | 15.9 — still walkable |
+| Dais width | 240 | 46.9 |
+| Crown height | 300 | 58.6 |
+
+**That cascaded, and the tests caught it.** `PlatformRadius` is the number
+walkways are cut to meet, so leaving it at 120 would have left four walkways
+stopping 97 studs short in mid-air. It is now **derived** from the authored
+platform (101.0 x 0.464 / 2 = 23) rather than chosen beside it. `AnchorSize`
+came down from 90 to 30 — at 90 the roll pad was wider than the entire
+re-tuned Engine.
+
+Then the suite failed on the BLOCKOUT rig: `Portal.FateEngineScale` still put
+its ring at radius 54 against a 23-radius dais. Dropped 6.0 -> 1.25 so the
+stand-in matches the authored rig at 11.25 either way. A place with no Rojo now
+looks proportionally like the real thing.
+
+### Decisions made
+
+- **`PlatformRadius` is derived from the prefab, not set alongside it.** The
+  dais *is* that radius. Two numbers describing one edge is how walkways end up
+  in mid-air, and the test asserting they agree is what caught it within a
+  minute of the change.
+
+- **The blockout tracks the authored art's size.** A stand-in that is 5x the
+  thing it stands in for is not a stand-in.
+
+- **Recorded, not built: the Engine portal becomes the way into biomes.**
+  Owner-stated direction — roll, react, a prompt to keep the biome, then a
+  staircase generates from the portal's centre down to the base and animates as
+  if building itself. Logged in `STATUS.md` §4 as **architecture**, because the
+  "keep this biome?" step is **new game state** between rolling and entering
+  (today the destination is implicitly the last roll), and it makes the
+  Expedition Gate district redundant the way the Observatory became. That needs
+  a spec amendment before any of it is written.
+
+### Stopped at
+
+305 passing. The re-tuned Engine has not been walked — the scale is arithmetic
+against the owner's stated target, not an observation.
+
+### Next
+
+1. **Walk it again.** Judge the new size, and whether the rings now turn and a
+   `/roll` recolours the portal. The animation fix is unverified in-engine.
+2. **Placeholder staircase** from the portal centre to the base, so walkability
+   can be tested before the real one is modelled. Held until the size is
+   confirmed — building it against a scale that may move again would be wasted.
+3. Then the spec amendment for portal-as-entry.
+
+---
+
 ## Session 12 — 2026-09-18 — The authored Fate Engine is in the game
 
 **Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 305 passing (was 295)

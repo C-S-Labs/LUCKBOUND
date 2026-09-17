@@ -226,6 +226,40 @@ function PortalRig.build(config: Config, parent: Instance): Model
 	return model
 end
 
+--- Eases the rig's SpinBoost toward `target`. HubEffects multiplies every
+--- ring's rate by it, so one attribute winds the whole portal up and down.
+---
+--- A generation counter rather than a cancellable tween: attributes cannot be
+--- tweened, and a second roll landing mid-ramp must abandon the first cleanly
+--- rather than leave two loops fighting over the same number.
+local function rampBoost(model: Model, target: number, seconds: number)
+	local generation = ((model:GetAttribute("BoostGen") :: number?) or 0) + 1
+	model:SetAttribute("BoostGen", generation)
+
+	local from = (model:GetAttribute("SpinBoost") :: number?) or 1
+	if seconds <= 0 then
+		model:SetAttribute("SpinBoost", target)
+		return
+	end
+
+	task.spawn(function()
+		local elapsed = 0
+		while elapsed < seconds do
+			if model:GetAttribute("BoostGen") ~= generation or not model.Parent then
+				return
+			end
+			elapsed += task.wait()
+			local t = math.min(elapsed / seconds, 1)
+			-- Smoothstep: no kick at the start, no jolt at the end.
+			t = t * t * (3 - 2 * t)
+			model:SetAttribute("SpinBoost", from + (target - from) * t)
+		end
+		if model:GetAttribute("BoostGen") == generation then
+			model:SetAttribute("SpinBoost", target)
+		end
+	end)
+end
+
 --- Gives an AUTHORED rig the light and particles a generated one builds for
 --- itself. The artist ships geometry only -- lights and emitters are not mesh
 --- data and cannot survive an FBX -- so without this the 2.5-second spin-up
@@ -282,7 +316,25 @@ end
 
 --- Reskins an existing rig to a different rarity. Blueprint §1.3: portals are
 --- reskinned by colour, never rebuilt.
-function PortalRig.setRarity(model: Model, rarityKey: string): ()
+--- Neon emits at full Color and bloom amplifies it, so the raw rarity colour
+--- becomes a halo that eats the mesh detail behind it. Everything painted onto
+--- a Neon part goes through here first.
+local function neon(color: Color3): Color3
+	local tint = GameConfig.Portal.NeonTint
+	return Color3.new(color.R * tint, color.G * tint, color.B * tint)
+end
+
+--- Paints `instance.prop` to `value`, over `seconds` when asked. Instant at
+--- build time, gradual when a roll changes the destination.
+local function paint(instance: Instance, prop: string, value: any, seconds: number?)
+	if not seconds or seconds <= 0 then
+		(instance :: any)[prop] = value
+		return
+	end
+	TweenService:Create(instance, TweenInfo.new(seconds, Enum.EasingStyle.Quad), { [prop] = value }):Play()
+end
+
+function PortalRig.setRarity(model: Model, rarityKey: string, seconds: number?): ()
 	local rarity = Constants.RARITY[rarityKey]
 	if not rarity then
 		return
@@ -295,21 +347,25 @@ function PortalRig.setRarity(model: Model, rarityKey: string): ()
 	-- the portal simply stops responding to rarity and nothing errors.
 	local inner = model:FindFirstChild("InnerRing")
 	if inner and inner:IsA("BasePart") then
-		inner.Color = rarity.Color
+		paint(inner, "Color", neon(rarity.Color), seconds)
 	elseif inner then
 		for _, segment in inner:GetChildren() do
 			if segment:IsA("BasePart") then
-				segment.Color = rarity.Color
+				paint(segment, "Color", rarity.Color, seconds)
 			end
 		end
 	end
 
 	local plane = model:FindFirstChild("PortalPlane")
 	if plane and plane:IsA("BasePart") then
-		plane.Color = rarity.Color
+		-- NOT dimmed by NeonTint: the veil is ForceField, not Neon, so it
+		-- does not bloom, and it is the one surface that has to stay the
+		-- brightest thing in the rig. It is also what players walk through.
+		paint(plane, "Color", rarity.Color, seconds)
+		plane.CanCollide = false
 		local light = plane:FindFirstChild("PortalLight")
 		if light and light:IsA("PointLight") then
-			light.Color = rarity.Color
+			paint(light, "Color", rarity.Color, seconds)
 		end
 		local attachment = plane:FindFirstChild("EmitterAttachment")
 		local particles = attachment and attachment:FindFirstChild("PortalParticles")
@@ -322,7 +378,7 @@ function PortalRig.setRarity(model: Model, rarityKey: string): ()
 	if runes then
 		for _, child in runes:GetChildren() do
 			if child:IsA("BasePart") and child.Name:match("^Glyph") then
-				child.Color = rarity.Color
+				paint(child, "Color", neon(rarity.Color), seconds)
 			end
 		end
 	end
@@ -333,9 +389,14 @@ end
 function PortalRig.playSpinUp(model: Model, rarityKey: string?): ()
 	local cfg = GameConfig.Portal
 	if rarityKey then
-		PortalRig.setRarity(model, rarityKey)
+		-- DELIBERATELY NOT REVEALED HERE. The colour is the answer, and the
+		-- answer should arrive as the rings SETTLE rather than the instant the
+		-- player presses the button -- otherwise the whole wind-up is spent
+		-- showing something already decided. setIdle paints it.
+		model:SetAttribute("PendingRarity", rarityKey)
 	end
 	model:SetAttribute("State", "SpinUp")
+	rampBoost(model, cfg.SpinBoostPeak, cfg.SpinRampUpSeconds)
 
 	local plane = model:FindFirstChild("PortalPlane")
 	local light = plane and plane:FindFirstChild("PortalLight")
@@ -382,6 +443,16 @@ end
 function PortalRig.setIdle(model: Model): ()
 	local cfg = GameConfig.Portal
 	model:SetAttribute("State", "Idle")
+	rampBoost(model, 1, cfg.SpinWindDownSeconds)
+
+	-- The portal LANDS on what was rolled. Tweened over RarityTweenSeconds so
+	-- the colour arrives while the rings are still slowing, rather than
+	-- snapping into place ahead of them.
+	local pending = model:GetAttribute("PendingRarity") :: string?
+	if pending then
+		model:SetAttribute("PendingRarity", nil)
+		PortalRig.setRarity(model, pending, cfg.RarityTweenSeconds)
+	end
 
 	local plane = model:FindFirstChild("PortalPlane")
 	local light = plane and plane:FindFirstChild("PortalLight")
@@ -411,6 +482,23 @@ function PortalRig.animate(model: Model): RBXScriptConnection
 	local plane = model:FindFirstChild("PortalPlane")
 	local elapsed = 0
 
+	-- Says out loud what this found. "Nothing is animated" has now cost two
+	-- playtest rounds, and the difference between "no rings" and "rings
+	-- turning too slowly to see" is invisible from a screenshot.
+	local report = {}
+	for _, ring in rings do
+		table.insert(report, `{ring.Name}({ring.ClassName}, spin {ring:GetAttribute("SpinSpeed") or "nil"})`)
+	end
+	print(
+		string.format(
+			"[PortalRig] %s: driving %d ring(s) %s, plane %s",
+			model.Name,
+			#rings,
+			if #rings > 0 then table.concat(report, " ") else "-- NONE FOUND",
+			if plane then "yes" else "MISSING"
+		)
+	)
+
 	return RunService.Heartbeat:Connect(function(dt)
 		elapsed += dt
 		local state = model:GetAttribute("State")
@@ -424,8 +512,10 @@ function PortalRig.animate(model: Model): RBXScriptConnection
 			-- a MeshPart's pivot is its bounding-box centre, which for a ring
 			-- is the hub of the wheel. That is why the art spec insisted the
 			-- rings be symmetric about their origin.
+			-- AUTHORED rings are single MeshParts and are driven by
+			-- HubEffects' data animator instead, off their SpinSpeed
+			-- attribute. Driving them here as well would spin them twice.
 			if ring:IsA("BasePart") then
-				ring.CFrame = ring.CFrame * CFrame.Angles(0, 0, ringSpeed * dt)
 				continue
 			end
 
@@ -445,7 +535,8 @@ function PortalRig.animate(model: Model): RBXScriptConnection
 			end
 		end
 
-		if plane and plane:IsA("BasePart") then
+		-- Same split: a plane carrying PulseAlphaMin is the animator's.
+		if plane and plane:IsA("BasePart") and plane:GetAttribute("PulseAlphaMin") == nil then
 			local t = (math.sin(elapsed / cfg.PlanePulseSeconds * math.pi * 2) + 1) / 2
 			plane.Transparency = cfg.PlanePulseMin + (cfg.PlanePulseMax - cfg.PlanePulseMin) * t
 		end

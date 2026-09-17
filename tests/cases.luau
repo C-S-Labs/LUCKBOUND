@@ -1639,6 +1639,151 @@ do
 
 	check("the shards are tagged for the rarity cycle",
 		styles.Shard.Attributes.IsFeaturedShard == true)
+
+	-- THE RINGS SPIN ABOUT THEIR OWN AXLE. A ring is thin along its own Z, so
+	-- Z is the axle; spinning it about Y would tumble it end over end. Two
+	-- playtests reported "no animation" while this was simply not set.
+	check("both rings name Z as their spin axis",
+		styles.OuterRing.Attributes.SpinAxis == "Z"
+			and styles.InnerRing.Attributes.SpinAxis == "Z")
+
+	-- SPIN SPEED IS A BAND, and both edges are bugs that shipped. Too slow
+	-- (0.15 rad/s, 42s a revolution) read as "not animated" for two
+	-- playtests; too fast (1.4 rad/s) read as "very very fast" on the third.
+	-- Between 8 and 30 seconds a revolution is a machine idling.
+	for _, name in { "OuterRing", "InnerRing", "Shard" } do
+		local speed = math.abs(styles[name].Attributes.SpinSpeed)
+		local seconds = math.pi * 2 / speed
+		check(`{name} idles rather than racing or sitting still`,
+			seconds >= 8 and seconds <= 30,
+			string.format("%.2f rad/s = %.0fs per revolution", speed, seconds))
+	end
+
+	-- The crystals must not move as one. A single shared style entry is what
+	-- made six of them read as machinery.
+	check("the shards vary per crystal", type(styles.Shard.Vary) == "table"
+		and (styles.Shard.Vary.SpinSpeed or 0) > 0)
+
+	-- THE VEIL is the surface a player walks through, so it has to be
+	-- walkable and it has to be the thing you look at.
+	local veil = styles.PortalPlane
+	check("the veil is non-colliding -- you walk through a portal",
+		veil.CanCollide == false)
+	-- VISIBILITY, not transparency. The first version of this test asserted
+	-- Transparency < 0.35, which was a proxy that stopped meaning anything the
+	-- moment the veil moved from ForceField to Neon -- an emissive surface at
+	-- 0.45 reads far brighter than a shimmer at 0.2. Assert the two things
+	-- that actually make it visible instead.
+	check("the veil is emissive, so it reads against a dark hub",
+		veil.Material == Enum.Material.Neon)
+	check("the veil never fades far enough to vanish",
+		veil.Attributes.PulseAlphaMax < 0.7,
+		string.format("peaks at %.2f", veil.Attributes.PulseAlphaMax))
+
+	-- The rings must not turn like a motor. Both carry a sway and a rate that
+	-- breathes, which is what separates "suspended" from "bolted on".
+	for _, name in { "OuterRing", "InnerRing" } do
+		local attrs = styles[name].Attributes
+		check(`{name} sways rather than turning perfectly true`,
+			(attrs.WobbleDegrees or 0) > 0 and (attrs.SpinJitter or 0) > 0)
+	end
+	check("the veil has a breath of its own",
+		veil.Attributes.PulseAlphaMin ~= nil)
+
+	-- THE RINGS MUST NEST, AND STAY NESTED WHILE THEY MOVE. This has broken
+	-- three times: a 6% veil pulse that grew it through its frame, mismatched
+	-- wobble periods that swung the inner assembly out of the outer aperture,
+	-- and a swell on the outer ring that shrank the hole the inner one sits
+	-- in. Raw widths measured from the delivered mesh at Prefab.Scale; a
+	-- re-delivery re-measures them.
+	local RAW_OUTER, RAW_OUTER_TUBE = 48.48, 4.84
+	local RAW_INNER, RAW_VEIL = 34.34, 32.82
+
+	local function width(raw, style)
+		return raw * scale * ((style and style.SizeScale) or 1)
+			* (1 + ((style and style.Attributes and style.Attributes.PulseScale) or 0))
+	end
+
+	local aperture = width(RAW_OUTER, styles.OuterRing) - 2 * RAW_OUTER_TUBE * scale
+	local innerW = width(RAW_INNER, styles.InnerRing)
+	local veilW = width(RAW_VEIL, veil)
+
+	check("the inner ring clears the outer aperture with room to sway",
+		(aperture - innerW) / 2 > 1,
+		string.format("%.2f studs a side", (aperture - innerW) / 2))
+	check("the veil sits inside the ring it fills",
+		veilW < innerW, string.format("veil %.2f, ring %.2f", veilW, innerW))
+
+	-- ...and the two rings must lean as ONE object. Different wobble periods
+	-- is what let the inner assembly swing out through the outer one.
+	check("both rings share a single sway",
+		styles.OuterRing.Attributes.WobbleDegrees == styles.InnerRing.Attributes.WobbleDegrees
+			and styles.OuterRing.Attributes.WobbleSeconds == styles.InnerRing.Attributes.WobbleSeconds)
+
+	-- Nothing in the hub may use a built-in Roblox material. Owner-directed:
+	-- their grain fights flat-shaded low-poly geometry, and Glass in
+	-- particular is expensive on the phones the §6 checklist budgets for.
+	local TEXTURED = {
+		[Enum.Material.Marble] = "Marble",
+		[Enum.Material.Slate] = "Slate",
+		[Enum.Material.Basalt] = "Basalt",
+		[Enum.Material.Metal] = "Metal",
+		[Enum.Material.Glass] = "Glass",
+	}
+	local textured = {}
+	for name, style in styles do
+		if style.Material and TEXTURED[style.Material] then
+			table.insert(textured, `{name} ({TEXTURED[style.Material]})`)
+		end
+	end
+	check("no part of the Engine uses a textured Roblox material",
+		#textured == 0, table.concat(textured, ", "))
+
+	-- The frame must not emit, or it merges with the aperture it frames.
+	check("the inner ring is matte so the veil reads as the light source",
+		styles.InnerRing.Material ~= Enum.Material.Neon)
+
+	-- THE ROLL RAMP. The portal winds up, holds while the result builds, and
+	-- coasts down as the colour lands. Three relationships make that read as
+	-- one gesture rather than three effects that happen to overlap.
+	local portal = GameConfig.Portal
+	check("rolling actually winds the portal up",
+		portal.SpinBoostPeak > 1, string.format("%.1fx", portal.SpinBoostPeak))
+	check("it snaps up and coasts down, not the reverse",
+		portal.SpinRampUpSeconds < portal.SpinWindDownSeconds,
+		string.format("up %.1fs, down %.1fs", portal.SpinRampUpSeconds, portal.SpinWindDownSeconds))
+	-- The colour is the answer; it must arrive WHILE the rings are still
+	-- slowing. Finishing after them would leave the portal sitting at rest on
+	-- the wrong colour, which is worse than snapping.
+	check("the colour lands before the rings finish slowing",
+		portal.RarityTweenSeconds <= portal.SpinWindDownSeconds,
+		string.format("colour %.1fs, wind-down %.1fs",
+			portal.RarityTweenSeconds, portal.SpinWindDownSeconds))
+
+	-- Performance: the animator runs every frame on every client, including
+	-- the phones the §6 checklist budgets for.
+	check("distant parts stop animating",
+		GameConfig.Effects.AnimationDistance > 0
+			and GameConfig.Effects.AnimationDistance < GameConfig.HubLayout.VisualExtent,
+		string.format("%d studs", GameConfig.Effects.AnimationDistance))
+	check("expensive properties are written below frame rate",
+		GameConfig.Effects.SlowUpdateSeconds > 1 / 60,
+		string.format("%.3fs", GameConfig.Effects.SlowUpdateSeconds))
+
+	-- WALKWAYS MUST NOT BURY THE DAIS. The deck sits below the dais top, or
+	-- it runs over the platform the Engine stands on and hides it -- which is
+	-- what the second authored playtest reported.
+	local daisTop = engine.PlatformRaise
+	check("walkway decks sit below the dais they meet",
+		GameConfig.HubLayout.WalkwayRaise < daisTop,
+		string.format("deck %.1f against dais top %.1f",
+			GameConfig.HubLayout.WalkwayRaise, daisTop))
+
+	-- ...and must not bite so far in that there is no dais left to see.
+	check("the walkway overlap leaves most of the dais visible",
+		Crossroads.Bridges.Overlap < engine.PlatformRadius * 0.25,
+		string.format("%d studs into a %d radius",
+			Crossroads.Bridges.Overlap, engine.PlatformRadius))
 end
 
 -- === summary ========================================================

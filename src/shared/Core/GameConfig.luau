@@ -212,6 +212,24 @@ local GameConfig = {
 	-- Studio and locked. Roblox is Y-up, so "compass" is the X/Z plane:
 	--   NORTH = -Z, SOUTH = +Z, EAST = +X, WEST = -X, UP = +Y.
 	-- Visual detail (materials, palette, props) lives in Content/Hub/Crossroads.
+	-- Client-side hub animation. These exist because the hub animator runs
+	-- every frame on every player's machine, including the low-end phones the
+	-- §6 checklist budgets for, and the first authored playtest already
+	-- reported it "slightly choppy" in Studio on a desktop.
+	Effects = {
+		-- Beyond this, a part stops animating entirely. The hub is 1150 studs
+		-- across and scenery reaches 4000, so most of what is tagged is off
+		-- screen or a speck for most of the session.
+		AnimationDistance = 700,
+		-- How often the distance check itself runs. Doing it per part per
+		-- frame would cost more than the animation it is protecting.
+		CullIntervalSeconds = 0.5,
+		-- Size and Transparency are far more expensive to write than CFrame --
+		-- a Size change on a MeshPart re-scales the mesh. 20 Hz is
+		-- indistinguishable from 60 for a slow breath and a third of the work.
+		SlowUpdateSeconds = 0.05,
+	},
+
 	HubLayout = {
 		-- 1200 was one playtest ago. The owner's verdict on walking it was
 		-- "much better, could be slightly smaller, perhaps just a tad" -- so
@@ -220,7 +238,12 @@ local GameConfig = {
 		VisualExtent = 4000, -- how far scenery reaches; not walkable
 		PlazaRingWidth = 200,
 		WalkwayWidth = 44,
-		WalkwayRaise = 6, -- studs above the lower plaza ring
+		-- 6 -> 1.5. The authored dais is only ~2 studs proud of the hub floor
+		-- (its 4.21 raw thickness at Prefab.Scale), so walkways raised 6 ran
+		-- OVER the top of it and buried the platform the Engine stands on --
+		-- reported from the second authored playtest. The deck now sits just
+		-- under the dais lip and the player steps up onto it.
+		WalkwayRaise = 1.5, -- studs above the lower plaza ring
 
 		-- The invisible pad the Gate's ENTER prompt lives on, as a multiple of
 		-- the portal's scale, and how far above the platform it floats.
@@ -272,6 +295,30 @@ local GameConfig = {
 		ParticleLifetimeMin = 1.5,
 		ParticleLifetimeMax = 3,
 
+		-- HOW HARD THE NEON IS DRIVEN. Roblox's Neon material emits at the
+		-- part's full Color and bloom amplifies it, so a rarity colour applied
+		-- raw blows out into a halo that swallows the mesh detail behind it --
+		-- reported from the first authored playtest. Tinting the colour down
+		-- before it reaches a Neon part keeps the hue and gives the geometry
+		-- back. Transparency would not work here: Neon ignores it.
+		NeonTint = 0.55,
+
+		-- How long a rarity change takes to cross the rig. Snapping the whole
+		-- portal to a new colour on one frame read as a texture swap rather
+		-- than as the portal reacting -- reported from the fourth authored
+		-- playtest. Long enough to see it travel, short enough not to lag the
+		-- reveal it belongs to.
+		RarityTweenSeconds = 1.6,
+
+		-- THE ROLL RAMP. The rings wind up when you roll, hold while the
+		-- result builds, then coast back down as the portal settles on the
+		-- world you got. Before this the authored Engine had no reaction at
+		-- all: HubEffects drives its rings off attributes and never read the
+		-- State flag PortalRig sets, so the whole spin-up beat missed it.
+		SpinBoostPeak = 5.5, -- multiplier on the idle rate at full wind-up
+		SpinRampUpSeconds = 1.1, -- idle -> peak, as the roll begins
+		SpinWindDownSeconds = 2.6, -- peak -> idle, as the result lands
+
 		IdleBrightness = 1,
 		ActiveBrightness = 3,
 		LightRange = 24,
@@ -283,7 +330,12 @@ local GameConfig = {
 		-- The single most important UX beat in the game (master spec §25,
 		-- blueprint §1.3). Never make it instant.
 		SpinUpSeconds = 2.5,
-		IdleSpinSpeed = 0.15, -- rad/s
+		-- 0.15 was one revolution every 42 SECONDS. On the blockout's 28 visible
+		-- segments that read as a slow hum; on an authored ring, which is
+		-- near rotationally symmetric, it is invisible -- the first playtest
+		-- of the authored Engine reported it as "static, non moving".
+		-- 0.6 is a revolution every 10s: clearly turning, still not a fan.
+		IdleSpinSpeed = 0.6, -- rad/s
 		SpinUpSpinSpeed = 3.2,
 
 		-- The blueprint's 1.5x/2.0x were relative to a 120-stud hub; the RATIO
@@ -297,7 +349,13 @@ local GameConfig = {
 		-- UI.PromptActivationDistance, so any scale above 10 puts the edge of
 		-- the plinth outside its own prompt's range. Asserted by test, for
 		-- every portal in the hub rather than just the Engine.
-		FateEngineScale = 6.0,
+		-- 6.0 -> 1.25 when the authored Engine was re-tuned to ~4.5x player
+		-- height. The blockout is a STAND-IN for the authored rig, so it has
+		-- to be the same size: 9 * 1.25 = an 11.25-stud ring radius, against
+		-- the authored ring's 11.25. A place with no Rojo now looks
+		-- proportionally like the real thing rather than like a different
+		-- game -- and the platform the walkways meet is the same either way.
+		FateEngineScale = 1.25,
 		ExpeditionGateScale = 8.0,
 	},
 

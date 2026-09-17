@@ -388,8 +388,8 @@ local function buildFateEngine(parent: Instance): Model
 			Position = base + Vector3.new(0, cfg.PlatformRaise, 0),
 			Scale = cfg.PortalScale,
 			Rarity = cfg.IdleRarity,
-			PlinthMaterial = Enum.Material.Marble,
-			OuterMaterial = Enum.Material.Basalt,
+			PlinthMaterial = Enum.Material.SmoothPlastic,
+			OuterMaterial = Enum.Material.SmoothPlastic,
 		}, engine)
 	end
 
@@ -497,7 +497,7 @@ local function buildAmphitheatre(zone: any, centre: Vector3, parent: Instance)
 					math.sin(angle) * radius
 				)) * CFrame.Angles(0, -angle, 0),
 				Color = zone.Color,
-				Material = Enum.Material.Marble,
+				Material = Enum.Material.SmoothPlastic,
 			}, parent)
 		end
 	end
@@ -513,7 +513,7 @@ local function buildAmphitheatre(zone: any, centre: Vector3, parent: Instance)
 			Size = Vector3.new(3, zone.ObeliskHeight, 3),
 			Position = centre + Vector3.new(offset, zone.PlatformSize.Y / 2 + zone.ObeliskHeight / 2, -6),
 			Color = zone.Color,
-			Material = Enum.Material.Marble,
+			Material = Enum.Material.SmoothPlastic,
 		}, obelisks)
 		obelisk:SetAttribute("WorldFirstSlot", slot)
 
@@ -631,7 +631,7 @@ local function buildGate(zone: any, centre: Vector3, parent: Instance)
 		Position = top,
 		Scale = zone.PortalScale,
 		Rarity = "COMMON",
-		PlinthMaterial = Enum.Material.Marble,
+		PlinthMaterial = Enum.Material.SmoothPlastic,
 		OuterMaterial = Enum.Material.CorrodedMetal,
 	}, parent)
 
@@ -930,6 +930,7 @@ function HubBuilder.build(): Model
 	if existing then
 		print("[HubBuilder] Crossroads already in Workspace; leaving its geometry alone")
 		ensureContract(existing)
+		existing:SetAttribute("Ready", true)
 		return existing :: Model
 	end
 
@@ -985,6 +986,33 @@ function HubBuilder.build(): Model
 	buildSpawn(hub)
 
 	hub.Parent = Workspace
+	-- THE DONE SIGNAL. A Model does not replicate atomically: the client can
+	-- see the Crossroads before its descendants arrive, and with an authored
+	-- Engine that is ~80 MeshParts of mesh data rather than a dozen
+	-- primitives. A client that scans too early finds no rig and no shards,
+	-- animates nothing, and never retries -- which looks exactly like broken
+	-- animation code. Set last, so waiting on it means waiting for all of it.
+	-- HOW MANY PARTS THE CLIENT SHOULD WAIT FOR.
+	--
+	-- `Ready` alone was not a barrier. An attribute replicates with the model
+	-- it sits on, while that model's descendants stream in afterwards -- so a
+	-- client saw Ready, scanned immediately, found the Crossroads and the
+	-- EngineRig but NOT the OuterRing inside it, and animated nothing. The
+	-- playtest log said exactly that: "engineRig found" next to "driving 0
+	-- ring(s) -- NONE FOUND".
+	--
+	-- A count is a barrier an attribute cannot be: the client waits until it
+	-- can actually see this many parts.
+	do
+		local parts = 0
+		for _, d in hub:GetDescendants() do
+			if d:IsA("BasePart") then
+				parts += 1
+			end
+		end
+		hub:SetAttribute("PartCount", parts)
+	end
+	hub:SetAttribute("Ready", true)
 	print(`[HubBuilder] built Crossroads: {#Layout.Districts} zones, {#hub:GetDescendants()} instances`)
 	return hub
 end

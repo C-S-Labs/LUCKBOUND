@@ -39,6 +39,13 @@ export type Style = {
 	Transparency: number?,
 	CanCollide: boolean?,
 	Attributes: { [string]: any }?,
+	-- Attribute name -> fraction to vary it by, per part. See the paint loop.
+	-- Multiplies the part's size on load, for setting a piece into the frame
+	-- around it without re-exporting the mesh.
+	SizeScale: number?,
+	Vary: { [string]: number }?,
+	-- How many parts are in this set, for ordered wave phasing.
+	WaveCount: number?,
 }
 
 --- The Rojo-synced source model for a key, or nil when it is not there --
@@ -180,11 +187,48 @@ function PrefabLoader.build(
 				if style.Transparency then
 					d.Transparency = style.Transparency
 				end
+				if style.SizeScale then
+					d.Size *= style.SizeScale
+				end
 				if style.CanCollide ~= nil then
 					d.CanCollide = style.CanCollide
 				end
 				for key, value in style.Attributes or {} do
 					d:SetAttribute(key, value)
+				end
+				-- PER-PART VARIATION. Six shards sharing one style entry all
+				-- animated identically, which made floating crystals read as
+				-- one machine. `Vary` scales a numeric attribute by up to
+				-- +/- its fraction, from a hash of the part NAME -- so the
+				-- spread is different per part, identical every run, and
+				-- still a single line of content rather than six.
+				-- Ordered phase for a set that should pulse as a wave. Inlay7
+				-- of 16 sits 7/16 of the way round the loop, so the ripple
+				-- travels instead of flickering.
+				if style.WaveCount then
+					local index = tonumber(string.match(d.Name, "(%d+)$"))
+					if index then
+						d:SetAttribute("WavePhase", (index - 1) / style.WaveCount)
+					end
+				end
+				for key, spread in style.Vary or {} do
+					local base = d:GetAttribute(key)
+					if type(base) == "number" then
+						-- Keyed on name AND attribute, so a part's speed and
+						-- its drift are not varied by the same amount. The
+						-- trailing multiply is what separates Shard1 from
+						-- Shard2 -- without it adjacent names hash to adjacent
+						-- values and nothing actually varies.
+						local h = 0
+						for k = 1, #d.Name do
+							h = (h * 131 + string.byte(d.Name, k)) % 1000003
+						end
+						for k = 1, #key do
+							h = (h * 131 + string.byte(key, k)) % 1000003
+						end
+						local unit = (h * 2654435761) % 1000003 / 1000003
+						d:SetAttribute(key, base * (1 + (unit * 2 - 1) * spread))
+					end
 				end
 			end
 		end
