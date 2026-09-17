@@ -33,6 +33,270 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 10 — 2026-09-17 — Cutting the Observatory, and one map instead of eight chunks
+
+**Branch:** `claude/zen-volta-cuhfyh` (PR #13) · **Tests:** 295 passing (was 301)
+
+### Done
+
+Two owner decisions, both structural, and the second one reversed a decision
+made earlier the same session.
+
+**1. The Global Observatory is gone.** Removed from `Content/Hub/Crossroads`
+(the district), `Core/GameConfig` (its anchor), `Systems/HubBuilder`
+(`buildObservatory` and `buildObservatoryApproach`, 108 lines, plus its
+`ZONE_BUILDERS` entry), `Controllers/HubEffects` (the `IsOrrery` branch),
+`Controllers/DebugCommands` (the teleport alias) and a stale comment in
+`Util/Schema`. Nothing else referenced it — the district table really was the
+only seam. The hub is four districts.
+
+Seven tests named it by Id; they became one rule that holds for any district,
+present or future: *no district reaches into the Fate Engine's platform.* That
+is the property the staircase violated.
+
+**2. Ethereal Scape ships as one authored map, not eight chunks.**
+
+The session started by writing a script to split the delivered `.rbxmx` into
+eight chunks, on the owner's instruction. Then the owner asked whether shipping
+it whole would be easier, and measuring the file to answer that showed the
+split was wrong. The script was deleted rather than left beside a working
+alternative (CLAUDE.md rule 1).
+
+**What the measurements said.** Four independent properties of the scene, all
+from `assets/rbxm/maps/ES_ENVIRONMENT_FULL.rbxmx` itself:
+
+- The eight island meadows **climb monotonically**, y 354 → 761, ~58 studs a
+  step.
+- The six `Path_Bridge` parts are **each cut to their own gap** — 714–833 studs
+  long, each at its gap's specific height.
+- The thirteen `Bridge_Landing` parts are **authored in matched pairs**,
+  `_NN_0` and `_NN_1`, naming the two islands each bridge joins.
+- The islands **grow toward the temple**: 1030 × 813 at the arrival shelf,
+  1932 × 1535 under the Sky Temple.
+
+Shuffle the islands and all four break at once. The bridges are the hardest
+of the four: a bridge is one part spanning a gap, so nearest-centre assignment
+tears each one onto a single side and leaves the far island with nothing to
+land on.
+
+**The seam that makes it data, not a special case.** A world declares EITHER a
+chunk kit OR a `PrebuiltMap { AssetKey, Scale }`. Declaring both is a boot
+error (`Schema.validateMaps`). New `Util/PrebuiltLoader` clones the scene,
+anchors it, scales it and pivots it onto the stage. `ExpeditionSystem` gained
+exactly **one branch**, and it reads `ExpeditionCore.hasPrebuiltMap(world)` —
+never a world id. Adding another authored world changes no System.
+
+Wired end to end: `assets/rbxm/maps/` → `ServerStorage.LuckboundMaps` (Rojo) →
+`PrebuiltLoader`. The Ethereal Scape chunk kit and its eight `ES_CHUNK_*`
+manifest entries were deleted; `ES_ENVIRONMENT_FULL` is now the world's only
+asset entry.
+
+**3. The scale question is answered, provisionally, and it reverses the
+previous two sessions' guess.** Sessions 8 and 9 read the `Scale_Reference` R6
+proxy at 59.6 studs (≈12× a real 5-stud character) and concluded the *proxy*
+was wrong, because the islands measured 1030–1932 studs and that suited the
+kit. Measuring the rest of the scene says otherwise — everything agrees with
+the proxy rather than with Roblox:
+
+| Object | Delivered | Against a 5-stud character |
+|---|---|---|
+| Temple doorway jamb | 239 studs | 48× a person |
+| Tree | 126 | 25× |
+| Waystone + cap | 117 | 23× |
+| Colonnade column | 108 | 22× |
+| Arrival → temple | 10,278 | 642 s of walking |
+
+A 48-person-high doorway is a unit error, not a style. The scene is internally
+consistent and uniformly ~10× oversized, so **one number fixes all of it**:
+`PrebuiltMap.Scale = 0.1`. At that scale the traverse is 1,028 studs and 32
+seconds one way, which sits comfortably inside the 300-second expedition.
+
+### Decisions made
+
+- **The Observatory was cut, not relocated.** Session 9 recommended moving it
+  to a sixth compass point. The owner's answer was that its purpose was never
+  clear, and with expeditions moving to separate places the hub becomes a
+  lobby — a monument you climb on the way to nowhere is harder to justify in a
+  lobby, not easier. Recorded in `BLUEPRINT_RECONCILIATION` as a deliberate
+  deviation from §2.2's five zones, so nobody "restores" it.
+- **Composed art ships whole; modular art ships as a kit.** Written up in
+  `assets/README.md` as four questions answerable by measuring a file: do the
+  pieces sit at the same height, are the gaps identical, are the pieces the
+  same size, would shuffling them still read as the same place. Four yeses is
+  a kit; any no is a map.
+- **The chunk system was not weakened.** Verdant Valley still assembles, and
+  every assembly test still runs against it. The Ethereal Scape kit's one real
+  result — that the reserved-Kind rule produced boss gating on a second,
+  independently authored vocabulary — is recorded in `MODULAR_MAPS.md` rather
+  than lost with the kit.
+- **`Scale` is data on the world, not a re-export.** Getting it wrong costs a
+  one-line edit and a rejoin. Getting a chunk kit's `SizeX/Y/Z` wrong costs
+  re-uploading meshes, which is the other half of why prebuilt won here.
+
+### Stopped at
+
+295 tests passing, syntax and forbidden-name scans clean, everything wired.
+Nothing has been walked in Studio: the Observatory's removal, the hub
+brightness pass and the entire prebuilt path are all untested on the ground.
+
+### Next
+
+1. **Walk Ethereal Scape.** `/enter` forces it. The one thing to judge is
+   whether `Scale = 0.1` reads right — a character should reach a doorway's
+   handle height, not its skirting. Change the number, rejoin, walk again.
+2. **Walk the hub** — brightness, the non-colliding SpawnLocation, and the gap
+   where the Observatory was. `TESTING.md` Test C3.
+3. **Add `EntryAnchor` and `ReturnAnchor`** to the scene in Studio and anchor
+   all 699 parts. Until then the loader guesses arrival from the bounding box
+   and warns on every entry — it works, it is just not the modeller's choice of
+   where you land. `Spawn_Platform` on Island_00 is the obvious home for the
+   first.
+4. **A chunk kit for Emberfall** — 15pp off the "rollable but not enterable"
+   number, and the real second data point for the socket grammar now that
+   Ethereal Scape's kit is retired.
+5. **`UNCOMMON`'s colour still needs blessing**, and placeholder text and the
+   UI pass are unchanged.
+
+---
+
+## Session 9 — 2026-09-16 — Unblocking the art pipeline
+
+**Branch:** `claude/zen-volta-cuhfyh` (PR #13) · **Tests:** 301 passing (was 293)
+
+### Done
+
+The two bugs found by reading in Session 7, both of which would have bitten the
+moment authored art was wired in, plus the brightness complaint that had been
+open since Session 1.
+
+- **`HubBuilder.meshOrNil` was silently broken.** It set `MeshPart.MeshId`
+  directly, which Roblox permits only from the importer, inside a `pcall` — so
+  it failed, warned, and fell back to a primitive. **Every `MeshId` seam in
+  `Content/Hub/Crossroads` did nothing.** The symptom would have been "we
+  uploaded the mesh and the game ignored it", with no error to chase. Now uses
+  `AssetService:CreateMeshPartAsync`, which is what `Util/ChunkLoader` already
+  used — the two seams had drifted apart.
+- **An authored `Crossroads` disabled the contract, not just the geometry.**
+  `build()` returned early as a single branch, taking the `RollAnchor`, the
+  `GateAnchor` and its prompt, the `SpawnLocation` and `applyLighting()` with
+  it. An artist naming a model `Crossroads` would have switched off rolling and
+  expedition entry with no error. Geometry and contract are now separate:
+  lighting always applies, `ensureContract` always runs, and it adds anything
+  missing while warning loudly about what it had to add.
+- **Hub brightness.** `ClockTime` 22 → 4.5, `Brightness` 2 → 2.6,
+  `ExposureCompensation` 0 → 0.15, ambient lifted in luminance only.
+
+### Decisions made
+
+- **The contract is three named parts, and they live in one place.**
+  `buildRollAnchor`, `buildGateAnchor` and `buildSpawn` were extracted from the
+  three builders that used to own them inline, because *both* paths through
+  HubBuilder now need them. Duplicating any one would let an authored hub drift
+  from a generated one — which is exactly the class of bug being fixed.
+- **`ensureContract` only adds invisible, non-colliding parts.** It changes
+  behaviour and never appearance, so it can run against authored art without an
+  artist ever seeing it interfere.
+- **The darkness was `ClockTime`, not `Brightness`.** With the sun below the
+  horizon there is no key light for `Brightness` to raise; turning it up blows
+  out the neon and the portal glow while the stone stays flat. 4.5 puts the sun
+  just above the horizon — a low raking pre-dawn light that still reads as
+  night and keeps §2.3's purple sky. **The palette is untouched.**
+- **The `SpawnLocation` is now non-colliding**, so it cannot be a 1-stud lip on
+  the walkway it sits over.
+
+### Stopped at
+
+All three fixed, 301 green, nothing walked. Three changes are untested in
+Studio: the Observatory approach from Session 6, the brightness pass, and the
+non-colliding spawn.
+
+**The art pipeline is now unblocked** — an uploaded mesh id in a `MeshId` seam
+will actually be used, and authored geometry can no longer silently break the
+game.
+
+### Next
+
+1. Walk the hub once (`TESTING.md` Test C3) — three untested changes.
+2. Answer the two open design questions: the Observatory's purpose, and
+   one-scene-vs-eight-chunks for Ethereal Scape.
+3. Confirm the Ethereal Scape scale with the modeller.
+4. Wire the authored asset in, which now has nothing blocking it.
+
+---
+
+## Session 8 — 2026-09-16 — First authored asset lands
+
+**Branch:** `claude/zen-volta-cuhfyh` (PR #13) · **Tests:** 293 passing · no code change
+
+### Done
+
+- **`assets/rbxm/worlds/ethereal_scape/EtherealScape_Environment.rbxmx`** — the
+  Ethereal Scape Blender scene, imported to Studio and saved back as XML. The
+  first authored art in the repo.
+- A README beside it recording exactly what is in the file and what has to
+  change before it can be used.
+
+### What the file actually is
+
+**699 MeshParts in one flat Model, every one carrying a real
+`rbxassetid://` MeshId.** The geometry is uploaded and on Roblox's CDN; Blender
+names survived (`Island_00_Meadow`, `Temple_Column`, `Waystone_03`,
+`Path_Bridge`, `R6_Torso`). The expensive half of the pipeline worked on the
+first attempt, and `.rbxmx` meant all of this could be read and verified from
+the repo rather than taken on trust — which is the whole argument for asking
+for XML.
+
+### Four things to fix, none of them a repo problem
+
+1. **All 699 parts are `Anchored = false`.** The environment falls the moment
+   the game runs. One click in Studio on the Model.
+2. **Flat Model, not eight islands.** The chunk kit expects 8 separate pieces.
+   This is one pre-arranged scene. Both are legitimate products — see the
+   decision below.
+3. **No `PrimaryPart`**, so there is no defined point to position it from.
+4. **The R6 proxy reads 59.6 studs tall where a character is 5.** Roughly 12x.
+   Either the scene is oversized or the proxy is — the file cannot say which.
+
+### The scale question, and why the reference earned its place
+
+The R6 rig in `Scale_Reference` did exactly the job it was put there for: it
+caught a 12x discrepancy on the first delivery, before anyone built a kit
+around the wrong numbers.
+
+The evidence points at **the proxy being wrong, not the scene**: measured
+island footprints are 1092 x 861 and 1229 x 909 studs, which sit comfortably
+inside the chunk kit's 512-1024 range. A 12x reduction would make them ~90
+studs — smaller than a hub walkway. **Confirm with the modeller before
+rescaling anything**; getting it backwards means re-uploading 699 meshes.
+
+### Decision needed: one scene, or eight chunks?
+
+Not a bug — a fork in the road, and it decides whether Ethereal Scape's chunk
+kit survives:
+
+- **One scene** — a hand-authored map. Needs `ES_ENVIRONMENT_FULL` in the
+  manifest and a whole-scene loader. The generator stops being used for this
+  world, and the socket grammar it proved goes unused here.
+- **Eight chunks** — group by island in Studio, save eight `.rbxmx` files, feed
+  the existing generator. Keeps seeded variety and the Waystone-gate property.
+
+The kit was built for the second. The file as delivered is the first.
+
+### Stopped at
+
+File placed and documented. No code touched, and deliberately so: the two
+loader bugs from Session 7 (`meshOrNil`, the `Crossroads` guard) are still
+open, and both must land before any of this can be wired in.
+
+### Next
+
+1. Confirm the scale question with the modeller.
+2. Decide: one scene or eight chunks.
+3. Fix `meshOrNil` and the `Crossroads` guard (Session 7's list).
+4. Wire `assets/rbxm` into `default.project.json` once the shape is settled.
+
+---
+
 ## Session 7 — 2026-09-16 — Modeller handoff, and the art seam
 
 **Branch:** `claude/zen-volta-cuhfyh` (PR #13) · **Tests:** 293 passing · no code change

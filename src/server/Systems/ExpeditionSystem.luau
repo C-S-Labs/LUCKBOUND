@@ -26,6 +26,7 @@ local ExpeditionCore = require(Root.Core.ExpeditionCore)
 local GameConfig = require(Root.Core.GameConfig)
 local Net = require(Root.Core.Net)
 local PortalRig = require(Root.Util.PortalRig)
+local PrebuiltLoader = require(Root.Util.PrebuiltLoader)
 local Worlds = require(Root.Content.Worlds)
 
 local ExpeditionSystem = {}
@@ -246,51 +247,94 @@ function ExpeditionSystem.requestEnter(player: Player, ...: any): ()
 	local world = Worlds[worldId]
 	local seed = ExpeditionCore.seedFor(player.UserId, profile.TotalRolls, worldId)
 
-	local ok, layout, attempts = ChunkCore.assembleWithRetry(Chunks, {
-		WorldId = worldId,
-		PathLength = ExpeditionCore.pathLengthFor(world, GameConfig),
-	}, function(attempt)
-		return ExpeditionCore.streamFor(seed, attempt)
-	end, GameConfig.Expedition.AssemblyAttempts)
-
-	if not ok then
-		-- A kit that cannot assemble is a CONTENT bug, not a player problem.
-		-- Say so loudly server-side and refuse quietly client-side.
-		warn(
-			string.format(
-				"[ExpeditionSystem] %s: assembly failed for %s after %d attempts -- %s",
-				player.Name,
-				worldId,
-				attempts,
-				tostring(layout)
-			)
-		)
-		return
-	end
-
-	layout.Seed = seed
-
 	local slot = ExpeditionCore.freeSlot(occupiedSlots, GameConfig.Expedition.MaxConcurrent) :: number
-	occupiedSlots[slot] = true
-
 	local dx, dy, dz = ExpeditionCore.stageOffset(slot, GameConfig.Expedition.StageSpacing)
 	local origin = GameConfig.Expedition.StageOrigin + Vector3.new(dx, dy, dz)
+	local stageName = `{worldId}_{player.UserId}`
 
-	local result = ChunkLoader.build(
-		layout,
-		Chunks,
-		origin,
-		stageFolder(),
-		`{worldId}_{player.UserId}`
-	)
+	-- THE ONE BRANCH. It reads a data field, never a world id -- add an
+	-- authored world and this file does not change. See ExpeditionCore
+	-- .hasPrebuiltMap for why the two routes exist at all.
+	local stage: Model
+	local entryPosition: Vector3
+	local returnPosition: Vector3
+	local summary: string
+
+	if ExpeditionCore.hasPrebuiltMap(world) then
+		local built = PrebuiltLoader.build(world, origin, stageFolder(), stageName)
+		if not built then
+			-- The scene is not in ServerStorage: Rojo is not running, or the
+			-- file is not in assets/rbxm/maps/. A CONTENT problem, so it is
+			-- loud server-side and silent client-side, exactly like a kit that
+			-- will not assemble.
+			warn(
+				string.format(
+					"[ExpeditionSystem] %s: prebuilt map '%s' for %s is not in ServerStorage.%s",
+					player.Name,
+					tostring(world.PrebuiltMap.AssetKey),
+					worldId,
+					Constants.NAMES.MAPS_FOLDER
+				)
+			)
+			return
+		end
+		stage, entryPosition, returnPosition = built.Model, built.EntryPosition, built.ReturnPosition
+		summary = string.format(
+			"prebuilt %s  %d parts at %.2f scale  %s arrival",
+			world.PrebuiltMap.AssetKey,
+			built.PartCount,
+			world.PrebuiltMap.Scale,
+			if built.Authored then "authored" else "derived"
+		)
+	else
+		local ok, layout, attempts = ChunkCore.assembleWithRetry(Chunks, {
+			WorldId = worldId,
+			PathLength = ExpeditionCore.pathLengthFor(world, GameConfig),
+		}, function(attempt)
+			return ExpeditionCore.streamFor(seed, attempt)
+		end, GameConfig.Expedition.AssemblyAttempts)
+
+		if not ok then
+			-- A kit that cannot assemble is a CONTENT bug, not a player
+			-- problem. Say so loudly server-side and refuse quietly
+			-- client-side.
+			warn(
+				string.format(
+					"[ExpeditionSystem] %s: assembly failed for %s after %d attempts -- %s",
+					player.Name,
+					worldId,
+					attempts,
+					tostring(layout)
+				)
+			)
+			return
+		end
+
+		layout.Seed = seed
+
+		local result = ChunkLoader.build(layout, Chunks, origin, stageFolder(), stageName)
+		stage, entryPosition, returnPosition =
+			result.Model, result.EntryPosition, result.ReturnPosition
+		summary = string.format(
+			"%d chunks (%d mesh, %d blockout)  attempt %d",
+			#layout.Chunks,
+			result.UsedMeshes,
+			result.FloorCount,
+			attempts
+		)
+	end
+
+	-- Claimed only once the stage actually exists, so a refused build above
+	-- does not leak a slot for the life of the server.
+	occupiedSlots[slot] = true
 
 	-- Reskinned to the rolled world's rarity, like every other portal in the
 	-- game: the way home from an Uncommon world is an Uncommon-green ring.
-	buildReturnPortal(result.Model, result.ReturnPosition, world.Rarity)
+	buildReturnPortal(stage, returnPosition, world.Rarity)
 
-	if not moveCharacter(player, result.EntryPosition) then
+	if not moveCharacter(player, entryPosition) then
 		-- No character to move: tear the stage down rather than leaking it.
-		result.Model:Destroy()
+		stage:Destroy()
 		occupiedSlots[slot] = nil
 		return
 	end
@@ -302,7 +346,7 @@ function ExpeditionSystem.requestEnter(player: Player, ...: any): ()
 		Seed = seed,
 		StartedAt = os.clock(),
 		Duration = duration,
-		Stage = result.Model,
+		Stage = stage,
 	}
 
 	-- Falling off a floating island is a real outcome in Ethereal Scape. End
@@ -328,19 +372,16 @@ function ExpeditionSystem.requestEnter(player: Player, ...: any): ()
 		RemainingSeconds = duration,
 		ServerNow = os.time(),
 		Seed = seed,
-		ChunkCount = #layout.Chunks,
+		MapSummary = summary,
 	})
 
 	print(
 		string.format(
-			"[Expedition] %s -> %s  seed %d  %d chunks (%d mesh, %d blockout)  attempt %d  %ds",
+			"[Expedition] %s -> %s  seed %d  %s  %ds",
 			player.Name,
 			worldId,
 			seed,
-			#layout.Chunks,
-			result.UsedMeshes,
-			result.FloorCount,
-			attempts,
+			summary,
 			duration
 		)
 	)
@@ -366,8 +407,8 @@ function ExpeditionSystem.forceEnter(player: Player): (boolean, string)
 	if not worldId then
 		return false, "roll first -- you have no destination"
 	end
-	if not ExpeditionCore.hasKit(Chunks, worldId) then
-		return false, `{worldId} has no chunk kit, so no map can be built`
+	if not ExpeditionCore.hasMap(Worlds[worldId], Chunks, worldId) then
+		return false, `{worldId} has neither a chunk kit nor a prebuilt map`
 	end
 
 	-- Clear the entry cooldown too: a developer re-entering repeatedly is the

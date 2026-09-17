@@ -10,6 +10,14 @@ How a biome map gets built from authored pieces. Addendum §A4.
 arranging a bounded library of hand-authored, pre-validated pieces — not from
 generating unbounded landscape.
 
+> **This is one of two routes, not the only one.** A world may instead declare
+> a `PrebuiltMap` and ship one whole authored scene — see build spec §2.2 and
+> `assets/rbxm/maps/README.md`. A kit buys variety and charges modularity for
+> it: every piece has to join to every other piece, so gaps, heights and rims
+> must all match. Art that was *composed* rather than assembled cannot supply
+> that without being re-authored, and Ethereal Scape turned out to be exactly
+> that case. Everything below describes the kit route.
+
 The addendum rejects noise-generated terrain for good reasons: unreachable or
 buried bosses, voxel micro-gaps that let players skip combat, and wildly
 variable mobile performance. A chunk library has none of those failure modes,
@@ -28,12 +36,12 @@ It is the same combinatorial philosophy as Master Spec §14
 |---|---|
 | `Content/AssetManifest.luau` | ✅ logical name → asset id |
 | `Content/Chunks/VerdantValley` | ✅ 8 pieces |
-| `Content/Chunks/EtherealScape` | ✅ 8 pieces, one per island in the authored scene |
+| `Util/PrebuiltLoader.luau` | ✅ the other route: one authored scene, cloned |
 | `Util/ChunkCore.luau` | ✅ seeded assembly, pure and headless |
 | `Util/ChunkLoader.luau` | ✅ Layout → Instances, with a mesh/blockout seam |
 | `Util/Schema.validateChunks` | ✅ boot-time validation |
 | `Systems/ExpeditionSystem` | ✅ builds a map on entry — build spec §7.1 |
-| Actual meshes | ⏳ all 16 are `PLACEHOLDER` |
+| Actual meshes | ⏳ all 8 are `PLACEHOLDER` |
 
 Every asset key is a placeholder, so `assetId()` returns `nil` and the loader
 falls back to primitives. **Layouts are assembled, validated, tested AND walked
@@ -117,15 +125,21 @@ the two existing sets do not overlap:
 | World | Connective | Arena-only |
 |---|---|---|
 | Verdant Valley | `PATH` | `WIDE` |
-| Ethereal Scape | `SPAN` (a bridge between islands) | `RITE` (the temple approach) |
 
-Ethereal Scape's kit was authored against this checklist rather than against
-Verdant Valley, and **the same emergent property fell out of it**: the Waystone Ring is
-the only piece offering a `RITE` exit, the Sky Temple accepts nothing else, so
-seven waystones gate the temple on every seed. Nobody wrote that rule. It is
-the reserved-Kind rule doing its job for a second time, which is the strongest
-evidence available that the grammar generalises rather than having been fitted
-to Verdant Valley.
+Only one kit exists today. A second was written for Ethereal Scape, against
+this checklist rather than against Verdant Valley, and **the same emergent
+property fell out of it**: the Waystone Ring was the only piece offering a
+`RITE` exit, the Sky Temple accepted nothing else, so the waystones gated the
+temple on every seed. Nobody wrote that rule — it was the reserved-Kind rule
+doing its job for a second time.
+
+That kit was retired on 2026-09-17 when the art it was written for turned out
+to be a composed traverse rather than eight interchangeable pieces, and the
+world became prebuilt instead. **The evidence for the grammar still stands:**
+it was written blind against a second world's design and produced correct
+gating, which is what was being tested. What it did not survive was contact
+with art that was never modular — and that is a fact about the art, not about
+the grammar. The next kit (Emberfall) is the real second data point.
 
 ---
 
@@ -154,14 +168,19 @@ exploration.
 
 `PathLength` is the knob, and since 2026-09-16 it is **content**: a world sets
 `MapPathLength` and falls back to `GameConfig.Expedition.PathLength` when it
-does not. Ethereal Scape sets 3 against its 300-second duration, and measures
-**1152–2432 studs** depending on seed — 36–76 seconds of walking, 12–25% of the
-expedition.
+does not.
 
 A test asserts traverse stays under 35% of expedition duration **per world**,
 so an expedition can never quietly become a corridor simulator. Note the shape
 of that rule: it is a *relationship*, not a number, which is what lets a world
 pick its own duration without anyone re-deriving a map size to match.
+
+**The same relationship guards a prebuilt world**, where there is no
+`PathLength` to turn — the knob is `PrebuiltMap.Scale` instead, and the test
+asserts the scaled traverse fits inside the duration. Ethereal Scape's scene is
+10,278 studs end to end as delivered: 642 seconds of walking against a
+300-second expedition. At `Scale = 0.1` it is 1,028 studs and 32 seconds. That
+test is the one that would have caught shipping the scene unscaled.
 
 **Retries are expected, not a smell.** A path can fold back and collide with
 itself; that is seed-dependent. Measured with 5 attempts:

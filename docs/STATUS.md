@@ -71,7 +71,7 @@ which makes that the strongest possible signal the core premise works.
 | Rollable but NOT enterable | Emberfall (15%), Sky Citadel (7%), Astral Reach (3%) |
 | Entry point | Expedition Gate `ProximityPrompt`, server-side `Triggered` |
 | Destination | the player's **last roll** — no new state, survives rejoin |
-| Map | `ChunkCore` assembles, `ChunkLoader` builds, seeded per expedition |
+| Map | a kit assembled by `ChunkCore`/`ChunkLoader`, **or** one authored scene cloned by `PrebuiltLoader` — the world declares which |
 | Seed | `(userId, TotalRolls, worldId)` — logged, so any map can be rebuilt |
 | Lighting | applied **per client**, restored on exit. Never bleeds |
 | Return | a small rarity-coloured portal on the arrival chunk, or the timer |
@@ -124,20 +124,28 @@ names to Roblox asset ids; `Content/Chunks/` holds authored pieces; `ChunkCore`
 assembles them into a seeded, collision-free, deterministic layout; and
 `ChunkLoader` turns that layout into walkable geometry.
 
-**Two kits now exist, and the second one is the interesting result.** Ethereal
-Scape's was authored against the checklist rather than against Verdant Valley,
-with its own socket vocabulary (`SPAN`/`RITE` vs `PATH`/`WIDE`) — and the same
-emergent gate-to-the-boss property fell out of it. Nobody wrote that rule; it is
-the reserved-Kind rule generalising. See `MODULAR_MAPS.md`.
+**There are now two routes to a map, and a world declares which by data.** A
+kit is assembled (`ChunkCore` + `ChunkLoader`); a `PrebuiltMap` is one authored
+scene cloned whole (`PrebuiltLoader`). Declaring both is a boot error.
+`ExpeditionSystem` has exactly one branch on it and it reads a field, never a
+world id. Build spec §2.2.
 
-All 16 pieces are `PLACEHOLDER`, so the loader draws **labelled blockout** —
+A second kit existed briefly, for Ethereal Scape, authored against the
+checklist rather than against Verdant Valley and with its own socket vocabulary
+(`SPAN`/`RITE` vs `PATH`/`WIDE`) — and the same emergent gate-to-the-boss
+property fell out of it, which was the thing being tested. It was retired
+2026-09-17 when the delivered art turned out to be a composed traverse rather
+than eight interchangeable pieces (§4). The grammar result stands; the kit had
+no art to describe.
+
+All 8 remaining pieces are `PLACEHOLDER`, so the loader draws **labelled blockout** —
 each platform carries its ChunkId and Role, with a neon post at every socket
 coloured by Kind. **A generated map is verifiable by eye before any mesh
 exists.**
 
 ### Test suite
 
-**293 tests, all passing.** Headless — no Roblox required.
+**301 tests, all passing.** Headless — no Roblox required.
 
 **17 of them exist because the test suite was green while the hub had no
 floor.** The group `Hub geometry a player can actually touch` asserts the
@@ -191,14 +199,17 @@ that seam is why map generation is testable at all.**
 Weights sum to 10000 so they read directly as percentages. Verified at 400,000
 draws, worst drift 0.062pp.
 
-**Ethereal Scape** is the first world with authored art behind it —
-`assets/source/worlds/ethereal_scape/aether_environment_refined.blend`, a sky
-temple above the cloud deck: eight gold-rimmed meadow islands, bridges between
-them, seven waystones, and an R6 rig in a `Scale_Reference` collection so the
-metre-to-stud conversion can be checked rather than assumed. Its eight chunks
-map 1:1 onto those eight islands. It declares **no enemies, boss or loot on
-purpose** — it is the map-generation test biome, and giving it combat content
-would make it a worse test.
+**Ethereal Scape** is the first world with authored art behind it, and the
+first **prebuilt** world: a sky temple above the cloud deck, eight gold-rimmed
+meadow islands climbing toward it, six bridges, fourteen satellite islands as
+backdrop, 699 MeshParts, all uploaded. It ships whole rather than as a kit,
+because the art is composed: the route climbs 58 studs an island, each bridge
+is cut to its own gap, the landings are authored in matched pairs, and the
+islands grow toward the temple. Shuffling them breaks all four at once. The
+measurements are in `assets/rbxm/maps/README.md`.
+
+It declares **no enemies, boss or loot on purpose** — it is the map test biome,
+and giving it combat content would make it a worse test.
 
 ---
 
@@ -298,14 +309,15 @@ survive a rescale and a literal does not.
 |---|---|---|
 | **Portal plane is still above head height** | Medium | You reach the prompt and the rig springs from the floor, but the walk-through *plane* sits inside the inner ring, ~30 studs up. Blueprint §1.3's concentric rings make that inherent. Irrelevant once the rig is authored in Blender. |
 | **25% of rolls land on a world with no map** | **High** | Emberfall 15%, Sky Citadel 7%, Astral Reach 3%. Refused politely at the Gate; printed as a boot warning and asserted by test. Emberfall and Astral Reach need only a chunk kit; Sky Citadel needs a blueprint section first. |
-| **The Observatory's purpose is undecided** | **Design** | Its only content is the orrery — a global-state display. If expeditions move to separate places (below), the hub becomes a lobby and that display arguably matters *more*. But 145 studs of climb for a look-out is a poor trade, and it cannot simply be lowered: sitting above the Engine forces it above the rig's 111-stud crown. **Recommendation: if it survives, move it off-centre to a sixth compass point rather than lowering it.** |
+| **Ethereal Scape's scale is provisional** | Medium | `PrebuiltMap.Scale = 0.1`, derived from the scene's own R6 proxy and corroborated by its doorways, trees and waystones — all of which read as ~10× a real character. Unwalked. It is one number on the world, so correcting it costs a data edit and a rejoin, not a re-upload. |
+| **The scene has no `EntryAnchor` / `ReturnAnchor`** | Medium | The loader derives both from the bounding box and warns, so the map loads and walks. Arrival lands on top of the bounding box rather than on `Spawn_Platform`. Two named parts in Studio fix it. |
 | **Expeditions are to become a separate place/instance** | **Architecture** | Owner-stated 2026-09-16: worlds will be rendered in a separate instance and reached by `TeleportService`, for performance and to isolate parties and solo queues. The current in-place `ExpeditionStage` is therefore a **prototype of the loop, not of the deployment**. `ExpeditionCore` is unaffected — it decides destination, seed and eligibility, none of which care where the map is built. `ExpeditionSystem` and `ChunkLoader` are what would move. |
 | Fate-on-completion may become currency or loot | Design | Owner-flagged: a completion bonus drawn from an item pool, or a currency for upgrades, rather than flat Fate. `ProgressionSystem.award` is the single seam. |
 | `UNCOMMON` colour unsanctioned | Medium | Now shipping — see above |
 | Chunk collision is XZ-only | Medium | Blocks any kit that climbs. `MODULAR_MAPS.md` |
 | No pathfinding validation | Medium | Non-overlapping ≠ walkable between. Addendum §A4 step 4 |
-| All 16 chunks are `PLACEHOLDER` | Expected | Blockout is deliberate; upload is a per-piece change |
-| Hub is very dark | Cosmetic | `Crossroads.Theme` — one value |
+| All 8 chunks are `PLACEHOLDER` | Expected | Blockout is deliberate; upload is a per-piece change |
+| **Ethereal Scape: one whole map, not eight chunks** | Decided 2026-09-17 | The art is a composed traverse and cannot be shuffled — evidence in `assets/rbxm/maps/README.md`. Wired: `assets/rbxm/maps/` → `ServerStorage.LuckboundMaps` → `PrebuiltLoader`. Unwalked. |
 | UI needs resize/layout pass | Cosmetic | Owner-flagged |
 | Placeholder text | Cosmetic | Flavour lines, labels, result card |
 | Octagonal plinth is a cylinder | Cosmetic | First thing an authored mesh replaces |
@@ -319,16 +331,18 @@ survive a rescale and a literal does not.
 walked end to end in Studio on 2026-09-16. What is left is art, content and
 two design decisions.
 
-1. **Re-walk the Observatory approach.** It is the only untested change from
-   this round. It should rise on the empty NE diagonal, cross no walkway, and
-   leave the Fate Engine plaza completely clear.
-2. **Decide what the Observatory is for**, or cut it. See §4 — the
-   recommendation is to move it off-centre rather than lower it.
-3. **Upload the Ethereal Scape islands.** `assets/README.md`. This is the
-   single biggest visible change available: it turns the blockout into the
-   authored sky temple. Check scale against the R6 rig on the whole-scene
-   import *before* splitting into eight.
-4. **Hub brightness** — one value in `Crossroads.Theme`. Still dark.
+1. **Walk Ethereal Scape.** Everything is wired: Rojo syncs
+   `assets/rbxm/maps/` into `ServerStorage.LuckboundMaps`, `PrebuiltLoader`
+   clones and scales it, `/enter` forces entry. The only open question is
+   whether `Scale = 0.1` reads right on the ground, and that is a number on the
+   world — change it, rejoin, walk it again. **This is the critical path and it
+   no longer needs the modeller.**
+2. **Walk the hub once.** Untested: the brightness pass (`ClockTime` 22 → 4.5),
+   the non-colliding SpawnLocation, and the Observatory's removal.
+   `TESTING.md` Test C3.
+3. **Add `EntryAnchor` and `ReturnAnchor`** to the scene in Studio, anchor all
+   699 parts, re-save. Until then the loader guesses the arrival point from the
+   bounding box and warns on every entry.
 5. **`UNCOMMON`'s colour needs blessing.** On screen inside the first minute.
 6. **A chunk kit for Emberfall** — 15pp off the "no map" number.
 7. **Placeholder text, UI pass** — unchanged.
@@ -346,8 +360,9 @@ Owner-stated direction, not yet built. When it happens:
   destination place from exactly those two values. Determinism already
   guarantees both ends produce the same layout.
 - `ChunkLoader` moves to the expedition place unchanged.
-- The Crossroads becomes a lobby, which is what makes the Observatory question
-  in §4 worth answering first.
+- The Crossroads becomes a lobby. That is part of why the Global Observatory
+  was cut: a monument you climb on the way to nowhere is harder to justify in a
+  lobby, not easier.
 
 > Before launch, turn **`GameConfig.Debug.AllowCommands`** and
 > **`AllowForcedRolls`** off. They are on for testing and the server shouts

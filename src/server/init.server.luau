@@ -46,15 +46,15 @@ do
 end
 
 -- The gap between "rollable" and "enterable", named out loud on every boot.
--- Sky Citadel is in the roll pool at 7% with no chunk kit, so a player who
+-- Sky Citadel is in the roll pool at 7% with no map of either kind, so a player who
 -- rolls it reaches the Gate and is turned away. That is handled gracefully by
 -- ExpeditionCore rather than crashing -- but it is debt, and debt that prints
 -- itself at boot cannot quietly grow.
 do
-	local missing = ExpeditionCore.worldsWithoutKits(Worlds, Chunks, GameConfig.CurrentPhase)
+	local missing = ExpeditionCore.worldsWithoutMaps(Worlds, Chunks, GameConfig.CurrentPhase)
 	if #missing > 0 then
 		warn(
-			`[LUCKBOUND] {#missing} rollable world(s) have no chunk kit and cannot be entered: `
+			`[LUCKBOUND] {#missing} rollable world(s) have no map and cannot be entered: `
 				.. table.concat(missing, ", ")
 		)
 	end

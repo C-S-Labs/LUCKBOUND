@@ -52,9 +52,36 @@ return {
 	-- probably too long). A test biome you walk through in five minutes tells
 	-- you whether generation works; twelve minutes of standing in it does not.
 	DurationSeconds = 300,
-	-- Three connective pieces between arrival and the vault. Sized so walking
-	-- stays a minority of the 300 seconds -- asserted by test.
-	MapPathLength = 3,
+	-- NO MapPathLength: this world does not assemble a map from chunks. It
+	-- ships one, below.
+	--
+	-- WHY THIS WORLD IS PREBUILT AND VERDANT VALLEY IS NOT
+	-- The delivered art is a COMPOSED traverse, not a set of interchangeable
+	-- pieces. Its eight islands climb monotonically (y 354 -> 761), each of
+	-- the six bridges is cut to its own gap, every bridge landing is authored
+	-- as a matched pair naming the two islands it joins, and the islands grow
+	-- toward the temple (1030x813 -> 1932x1535). Shuffle them and all four of
+	-- those break at once. The socket grammar is not wrong -- this art simply
+	-- is not modular, and pretending otherwise would mean re-authoring it.
+	--
+	-- A world declares EITHER a chunk kit OR a PrebuiltMap, never both;
+	-- Schema.validateMaps enforces that, because two ways to build one world's
+	-- map is exactly the second competing architecture CLAUDE.md forbids.
+	PrebuiltMap = {
+		-- Names the AssetManifest entry, which names the Rojo-synced model.
+		AssetKey = "ES_ENVIRONMENT_FULL",
+		-- The scene was modelled against the R6 proxy in its Scale_Reference
+		-- collection, and that proxy is ~10x a real R6 character (59.6 studs
+		-- tall against 5). Everything else in the scene agrees with the proxy
+		-- rather than with Roblox: doorways 24 studs, trees 11, waystones 12,
+		-- a 1028-stud walk end to end. So the scene is internally consistent
+		-- and uniformly oversized, and one number fixes all of it.
+		--
+		-- PROVISIONAL until someone walks it. 0.1 puts the traverse at ~64
+		-- seconds one way at the default WalkSpeed, which fits inside the
+		-- 300-second expedition with room for detours.
+		Scale = 0.1,
+	},
 	RecommendedPower = 3,
 	Flavor = "Above the weather, and nothing casts a shadow. The ground is a courtesy, and it ends.",
 }

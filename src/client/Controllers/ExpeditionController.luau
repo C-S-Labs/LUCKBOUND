@@ -131,10 +131,10 @@ function ExpeditionController.init(): ()
 		notify()
 		print(
 			string.format(
-				"[Expedition] entered %s -- seed %d, %d chunks, %ds",
+				"[Expedition] entered %s -- seed %d, %s, %ds",
 				payload.Name,
 				payload.Seed,
-				payload.ChunkCount,
+				payload.MapSummary,
 				payload.DurationSeconds
 			)
 		)

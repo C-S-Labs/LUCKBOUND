@@ -29,6 +29,7 @@ local WORLD_SPEC: { [string]: FieldSpec } = {
 	ModifierOverrides = field("table", true),
 	DurationSeconds = field("number"),
 	MapPathLength = field("number", true),
+	PrebuiltMap = field("table", true),
 	RecommendedPower = field("number"),
 	Flavor = field("string"),
 }
@@ -200,8 +201,8 @@ function Schema.validateHub(hub: any): (boolean, { string })
 			if type(district.Angle) ~= "number" or district.Angle < 0 or district.Angle >= 360 then
 				table.insert(errors, `{label} Angle must be in [0, 360)`)
 			end
-			-- Radius 0 is legal: the Observatory sits directly above centre and
-			-- is reached by the spiral ramp rather than a radial walkway.
+			-- Radius 0 is legal: a district may sit at the hub's centre and be
+			-- reached by something other than a radial walkway.
 			if type(district.Radius) ~= "number" or district.Radius < 0 then
 				table.insert(errors, `{label} Radius must not be negative`)
 			end
@@ -308,6 +309,76 @@ function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boole
 	return #errors == 0, errors
 end
 
+--- Cross-checks how each world gets its map.
+---
+--- A world builds its map EITHER by assembling a chunk kit OR by cloning one
+--- authored scene. Declaring both is not a richer world, it is an ambiguity:
+--- something downstream would have to pick, and picking is exactly the second
+--- competing architecture CLAUDE.md rule 1 exists to prevent. So it is a boot
+--- error, not a warning.
+function Schema.validateMaps(
+	worlds: { [string]: any },
+	chunks: { [string]: any },
+	manifest: any
+): (boolean, { string })
+	local errors = {}
+
+	local kitted: { [string]: boolean } = {}
+	for _, chunk in chunks do
+		if type(chunk.WorldId) == "string" then
+			kitted[chunk.WorldId] = true
+		end
+	end
+
+	for key, world in worlds do
+		local prebuilt = type(world) == "table" and world.PrebuiltMap or nil
+		if prebuilt == nil then
+			continue
+		end
+
+		local label = `World '{key}' PrebuiltMap`
+
+		if type(prebuilt) ~= "table" then
+			table.insert(errors, `{label}: expected a table, got {type(prebuilt)}`)
+			continue
+		end
+
+		if type(prebuilt.AssetKey) ~= "string" then
+			table.insert(errors, `{label}: missing AssetKey`)
+		elseif not manifest.exists(prebuilt.AssetKey) then
+			table.insert(
+				errors,
+				`{label}: AssetKey '{prebuilt.AssetKey}' is not in the asset manifest`
+			)
+		end
+
+		-- Scale is what makes an oversized authored scene walkable. A zero or
+		-- negative one would collapse or invert the map, and Model:ScaleTo
+		-- would not complain until a player was standing in it.
+		if type(prebuilt.Scale) ~= "number" or prebuilt.Scale <= 0 then
+			table.insert(errors, `{label}: Scale must be a positive number`)
+		end
+
+		if kitted[key] then
+			table.insert(
+				errors,
+				`World '{key}' has BOTH a chunk kit and a PrebuiltMap -- pick one`
+			)
+		end
+
+		-- MapPathLength only means something to the assembler. Left on a
+		-- prebuilt world it reads as a live tuning knob that does nothing.
+		if world.MapPathLength ~= nil then
+			table.insert(
+				errors,
+				`World '{key}' is prebuilt, so MapPathLength does nothing -- remove it`
+			)
+		end
+	end
+
+	return #errors == 0, errors
+end
+
 --- Runs every check. Raises on failure -- called first in bootstrap.
 function Schema.validateAll(
 	worlds: { [string]: any },
@@ -338,6 +409,11 @@ function Schema.validateAll(
 	if chunks ~= nil and manifest ~= nil then
 		local _, chunkErrors = Schema.validateChunks(chunks, manifest)
 		for _, e in chunkErrors do
+			table.insert(allErrors, e)
+		end
+
+		local _, mapErrors = Schema.validateMaps(worlds, chunks, manifest)
+		for _, e in mapErrors do
 			table.insert(allErrors, e)
 		end
 	end

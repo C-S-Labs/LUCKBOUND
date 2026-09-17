@@ -108,31 +108,87 @@ anchors and dimensions** in `GameConfig.HubLayout` (locked once, never
 re-derived, per §7.3), **materials, palette and props** in
 `Content/Hub/Crossroads.luau`.
 
-### The Observatory's spiral ramp became a straight processional
+### The Global Observatory was cut entirely
 
-§2.2 gives the Global Observatory a spiral ramp down to the Fate Engine plaza.
-Built literally at the rescaled hub it was a 2.5-turn helix at radius 118,
-forty studs wide — occupying radius **98 to 138**, while the Fate Engine's own
-platform is radius **120**.
+**Owner-directed, 2026-09-17.** §2.2 specifies five hub zones. There are now
+four: the Global Observatory is gone, along with its orrery, its platform and
+its access ramp.
 
-So it wrapped the single most important object in the game in a wall of steps
-and blocked the walk up to it. The 2026-09-16 playtest reported exactly that:
-*"the players path to the actual fate engine is obstructed via the staircase"*.
+**The reason is that nobody could say what it was for.** Its only content was
+the orrery — a translucent globe "representing the server". That is a
+decoration, not a feature, and the owner's verdict was *"I don't understand the
+purpose in the first place."*
 
-**Resolved as:** one straight processional on the Observatory's own bearing —
-45°, the empty diagonal between the Hall and the Archive. It crosses no
-walkway (those run at 0/90/180/270), rises 145 studs over a 274-stud run
-(about 28°), and passes over the Engine platform only in its last few studs,
-by which point it is 137 studs up and clear of the rig's 111-stud crown.
+Two things had already made it expensive:
 
-The blueprint was specifying **access to an upper platform**, not a helix
-specifically. That is preserved. Asserted by four tests.
+- **Its access blocked the Fate Engine.** §2.2's spiral ramp, built literally
+  at the rescaled hub, was a 2.5-turn helix at radius 118 and forty studs wide
+  — occupying radius 98–138 against the Engine's 120-stud platform. It wrapped
+  the most important object in the game in a wall of steps. Straightening it
+  into a processional fixed the symptom and cost a session.
+- **It could not simply be lowered.** Sitting above the Engine meant sitting
+  above the rig's 111-stud crown, and *that* height is what forced a 145-stud
+  climb for a look-out.
+- **The architecture moved under it.** Expeditions are to become a separate
+  place (`STATUS.md` §5), so the Crossroads becomes a lobby. A monument you
+  climb on your way to nowhere is harder to justify in a lobby, not easier.
 
-> ⚠️ **The Observatory's purpose is itself an open question** — see
-> `STATUS.md` §4. If it survives, the recommendation is to move it off-centre
-> to a sixth compass point rather than lower it: sitting *above the Engine*
-> forces it above the rig's 111-stud crown, and that height is what forces the
-> climb in the first place.
+**Resolved as:** removed. If a global-state display is wanted later, the
+recommendation on record is a **ground-level sixth compass point**, not a tower
+above the centre — height above the Engine is what created every problem it
+had.
+
+A test now asserts the general rule the ramp broke: **no district's platform
+may reach into the Fate Engine's footprint.**
+
+### A world may ship one authored map instead of a chunk kit
+
+**Added 2026-09-17**, and it is an addition rather than a retreat: the chunk
+system is untouched and still builds Verdant Valley.
+
+Addendum §A4 describes one way a biome gets a map — a kit of interchangeable
+pieces that the assembler arranges per seed. The first real delivery of
+authored art did not fit it. Ethereal Scape's scene is a **composed traverse**:
+its eight islands climb 58 studs a step, each of its six bridges is cut to its
+own gap at that gap's height, the landings are authored in matched pairs naming
+the two islands they join, and the islands grow from 1030 × 813 at the arrival
+shelf to 1932 × 1535 under the temple. Every one of those breaks if the pieces
+are shuffled.
+
+Making it modular would have meant re-authoring it — identical gaps, identical
+height deltas, identical rims — to buy variety in a world that exists to test
+map loading. So a world now declares **either** a chunk kit **or** a
+`PrebuiltMap`, and that choice is data (build spec §2.2). `ExpeditionSystem`
+has one branch on it, reading `ExpeditionCore.hasPrebuiltMap(world)` and never
+a world id, so the prime directive holds: adding an authored world changes no
+System.
+
+Declaring both is a boot error. Two routes to one world's map would put a
+choice somewhere downstream, and that is the second competing architecture
+CLAUDE.md rule 1 exists to prevent.
+
+**What this costs:** every run of a prebuilt world is the same map. For a test
+biome with no combat that is nothing; for a world players farm it would be a
+real loss, and the kit route stays the default for those.
+
+### §2.3's hub lighting was brightened — key light, not exposure
+
+"Hub is very dark" was open from the first Studio session to the sixth.
+§2.3's values were authored against Roblox's default lighting; under `Future`
+lighting across a 1150-stud footprint they left the plaza close to unreadable.
+
+**The cause was `ClockTime = 22`, not `Brightness`.** With the sun below the
+horizon there is no key light for `Brightness` to raise — turning it up only
+blows out the neon and the portal glow while the stone stays flat.
+
+**Resolved as:** `ClockTime` 22 → **4.5**, which puts the sun just above the
+horizon: a low raking pre-dawn light that still reads as night and keeps the
+purple sky §2.3 specifies. `Brightness` 2 → 2.6 and `ExposureCompensation`
+0 → 0.15 alongside it. **The palette is untouched** — ambient and outdoor fill
+were lifted in luminance only, the hues are §2.3's.
+
+Asserted by test as a relationship rather than a number: the key light must be
+above the horizon, and the hub must be brighter than the darkest biome.
 
 ### Portal spin-up runs client-side
 
@@ -152,7 +208,7 @@ NORTH = -Z   Hall of Legends      (0, 0, -420)
 EAST  = +X   Discovery Archive    (420, 0, 0)
 SOUTH = +Z   Expedition Gate      (0, 0, 420)
 WEST  = -X   Training Grounds     (-420, 0, 0)
-UP    = +Y   Global Observatory   (0, 140, 0)
+UP    = +Y   Global Observatory   (0, 140, 0)   <- cut 2026-09-17, see above
 ```
 
 *(The radii were 46 and 40 when this was written; the 10× world rescale on
@@ -205,8 +261,8 @@ portal ring is Rare blue.
 | Biome geometry under `assets/source/worlds/<world_id>/` | ✅ Ethereal Scape; others still empty |
 | World data in `Content/Worlds/`, zero world logic in Systems | ✅ |
 | Lighting applied/reverted by ExpeditionSystem, never bleeding | ✅ **closed** — see below |
-| Boss arena a distinct shape per biome | ⏳ authored, not yet uploaded |
-| One optional side-content pocket per biome | ✅ Verdant Valley + Ethereal Scape have one; Emberfall's is specified but unbuilt |
+| Boss arena a distinct shape per biome | ✅ Ethereal Scape's Sky Temple is authored and uploaded; Verdant Valley's is blockout |
+| One optional side-content pocket per biome | ✅ Verdant Valley's is a kit piece; Ethereal Scape's are its 14 satellite islands. Emberfall's is specified but unbuilt |
 | Mobile part/light budget vs Verdant Valley baseline | ⏳ blockout only, no mesh budget yet |
 
 **Hub baseline measured: 436 instances**, printed on boot. That is the number

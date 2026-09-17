@@ -14,7 +14,7 @@ export type EntryRefusal =
 	"DISABLED" -- GameConfig.Expedition.Enabled is false
 	| "NO_DESTINATION" -- the player has not rolled yet
 	| "UNKNOWN_WORLD" -- their last roll names a world that no longer exists
-	| "NO_KIT" -- the world has no chunk kit, so no map can be built
+	| "NO_MAP" -- the world has neither a chunk kit nor a prebuilt map
 	| "ALREADY_IN_EXPEDITION"
 	| "COOLDOWN"
 	| "TOO_FAR"
@@ -55,19 +55,37 @@ function ExpeditionCore.hasKit(chunks: { [string]: any }, worldId: string): bool
 	return false
 end
 
---- Every world a player can currently roll that has no chunk kit.
+--- True when the world ships a hand-authored map instead of a chunk kit.
+---
+--- THE TWO WAYS A WORLD GETS A MAP. Generated worlds declare a kit and the
+--- assembler lays it out; authored worlds declare one composed scene and the
+--- loader clones it. Ethereal Scape is the first of the second kind, because
+--- its art is a composed traverse -- see the comment on its PrebuiltMap.
+---
+--- Which kind a world is, is DATA. Nothing downstream branches on a world id.
+function ExpeditionCore.hasPrebuiltMap(world: any): boolean
+	return type(world) == "table" and type(world.PrebuiltMap) == "table"
+end
+
+--- True when the world can produce a map at all, by either route. This is the
+--- question the door actually asks; `hasKit` answers the narrower one.
+function ExpeditionCore.hasMap(world: any, chunks: { [string]: any }, worldId: string): boolean
+	return ExpeditionCore.hasPrebuiltMap(world) or ExpeditionCore.hasKit(chunks, worldId)
+end
+
+--- Every world a player can currently roll that has no map by either route.
 ---
 --- This is the Sky Citadel debt made visible: it is printed at boot, so the
 --- gap between "rollable" and "enterable" can never quietly grow. Sorted, so
 --- the boot log is stable across restarts.
-function ExpeditionCore.worldsWithoutKits(
+function ExpeditionCore.worldsWithoutMaps(
 	worlds: { [string]: any },
 	chunks: { [string]: any },
 	currentPhase: number
 ): { string }
 	local missing = {}
 	for id, world in worlds do
-		if world.EnabledInPhase <= currentPhase and not ExpeditionCore.hasKit(chunks, id) then
+		if world.EnabledInPhase <= currentPhase and not ExpeditionCore.hasMap(world, chunks, id) then
 			table.insert(missing, id)
 		end
 	end
@@ -77,7 +95,8 @@ end
 
 --- How many connective chunks this world's map should have. Content wins over
 --- config: a world with a short expedition needs a short map, or the whole
---- expedition is the walk.
+--- expedition is the walk. Meaningless for a prebuilt world, which is why
+--- those declare no MapPathLength and never reach the assembler.
 function ExpeditionCore.pathLengthFor(world: any, config: any): number
 	return world.MapPathLength or config.Expedition.PathLength
 end
@@ -200,8 +219,8 @@ function ExpeditionCore.evaluateEntry(opts: {
 		return { Allowed = false, Refusal = "UNKNOWN_WORLD" }
 	end
 
-	if not ExpeditionCore.hasKit(opts.Chunks, worldId) then
-		return { Allowed = false, WorldId = worldId, Refusal = "NO_KIT" }
+	if not ExpeditionCore.hasMap(world, opts.Chunks, worldId) then
+		return { Allowed = false, WorldId = worldId, Refusal = "NO_MAP" }
 	end
 
 	if opts.FreeSlot == nil then
@@ -218,7 +237,7 @@ end
 function ExpeditionCore.refusalMessage(refusal: EntryRefusal): string?
 	if refusal == "NO_DESTINATION" then
 		return "Roll at the Fate Engine first."
-	elseif refusal == "NO_KIT" then
+	elseif refusal == "NO_MAP" then
 		return "That world has no map yet."
 	end
 	return nil

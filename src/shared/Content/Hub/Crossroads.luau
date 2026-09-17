@@ -19,9 +19,23 @@ local GameConfig = require(script.Parent.Parent.Parent.Core.GameConfig)
 local Layout = GameConfig.HubLayout
 
 local Theme = {
-	-- Blueprint §2.3 verbatim.
-	Ambient = Color3.fromRGB(40, 35, 60),
-	OutdoorAmbient = Color3.fromRGB(55, 48, 80),
+	-- Blueprint §2.3, with the brightness deviation recorded below and in
+	-- docs/BLUEPRINT_RECONCILIATION.md. Palette is unchanged; only the key
+	-- light and the ambient fill moved.
+	--
+	-- BRIGHTNESS PASS, 2026-09-16. "Hub is very dark" has been open since the
+	-- first Studio session. The blueprint's §2.3 values were authored against
+	-- Roblox's default lighting; at ClockTime 22 with Future lighting and a
+	-- 1150-stud footprint they left the plaza close to unreadable.
+	--
+	-- The fix is mostly ClockTime, not Brightness. Raising Brightness alone
+	-- blows out the neon and the portal glow while leaving the stone flat,
+	-- because at ClockTime 22 the sun is below the horizon and there is no key
+	-- light to raise. Moving to 4.5 puts the sun just above it -- a low, raking
+	-- pre-dawn light that still reads as night, keeps the purple sky, and gives
+	-- the marble something to catch.
+	Ambient = Color3.fromRGB(72, 66, 96),
+	OutdoorAmbient = Color3.fromRGB(96, 88, 128),
 	ColorShiftTop = Color3.fromRGB(90, 70, 140),
 	ColorShiftBottom = Color3.fromRGB(30, 25, 50),
 	FogColor = Color3.fromRGB(30, 25, 50),
@@ -29,9 +43,9 @@ local Theme = {
 	-- the blueprint's 150/500 was sized to a 120-stud hub.
 	FogStart = 700,
 	FogEnd = 4400,
-	Brightness = 2,
-	ExposureCompensation = 0,
-	ClockTime = 22,
+	Brightness = 2.6,
+	ExposureCompensation = 0.15,
+	ClockTime = 4.5,
 
 	-- Hub materials and accents.
 	Marble = Color3.fromRGB(226, 221, 234),
@@ -172,51 +186,6 @@ local Crossroads = {
 			DummyCount = 3,
 			HasBossDummy = true,
 			TorchCount = 8,
-			MeshId = nil,
-		},
-		{
-			Id = "GLOBAL_OBSERVATORY",
-			Name = "Global Observatory",
-			Angle = 45,
-			Radius = 0, -- directly above centre; reached by the spiral ramp
-			Kind = "OBSERVATORY",
-			PlatformSize = Vector3.new(240, 10, 240),
-			Height = 140, -- blueprint §2.2: +40 studs Y
-			-- ROUND, so buildPlatform draws a disc. It used to get a box from
-			-- buildPlatform AND a cylinder from its own builder, one hidden
-			-- inside the other.
-			PlatformShape = "ROUND",
-			PlatformRadius = 110,
-			PlatformMaterial = Enum.Material.Slate,
-			Color = Color3.fromRGB(16, 14, 24), -- near-black, sky reads clearly
-			Accent = Color3.fromRGB(124, 245, 224),
-			Pillars = 0,
-			PillarHeight = 0,
-			GlobeDiameter = 80,
-
-			-- THE WAY UP. One straight processional on this district's own
-			-- bearing (45 degrees -- the empty diagonal between the Hall and
-			-- the Archive), NOT a helix around the Fate Engine.
-			--
-			-- The previous spiral ran at radius 118 and was 40 studs wide, so
-			-- it covered radius 98-138 while the Engine's platform is radius
-			-- 120. It wrapped the most important object in the game in a wall
-			-- of steps and blocked the approach to it. The first playtest
-			-- reported exactly that.
-			--
-			-- StartRadius sets the gradient: 380 gives a 274-stud run for a
-			-- 145-stud rise, about 28 degrees. EndRadius lands just inside the
-			-- deck edge.
-			Approach = {
-				StartRadius = 380,
-				EndRadius = 106,
-				Width = 40,
-				Thickness = 6,
-				RailHeight = 10,
-				RailThickness = 2.5,
-				PierCount = 4,
-				PierWidth = 10,
-			},
 			MeshId = nil,
 		},
 	},

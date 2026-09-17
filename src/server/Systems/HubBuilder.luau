@@ -10,6 +10,7 @@
 -- Zone geometry is dispatched by `Kind`, so adding a sixth zone means adding a
 -- data entry and (only if it is a genuinely new shape) one builder function.
 
+local AssetService = game:GetService("AssetService")
 local Lighting = game:GetService("Lighting")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local Workspace = game:GetService("Workspace")
@@ -67,24 +68,40 @@ end
 
 --- Uses an authored mesh when the data supplies one. Returns nil so callers
 --- fall through to primitives when it is absent or fails to load.
+---
+--- THIS USED TO BE BROKEN, SILENTLY, AND THAT IS THE INTERESTING PART.
+--- The original set `MeshPart.MeshId` directly, which Roblox does not permit at
+--- runtime -- MeshId is assignable only by the importer. The assignment was
+--- wrapped in a `pcall`, so it failed, warned, and fell back to a primitive.
+--- Every `MeshId` seam in `Content/Hub/Crossroads` would therefore have done
+--- nothing at all, and the symptom would have been "we uploaded the mesh and
+--- the game ignored it" with no error to chase.
+---
+--- `AssetService:CreateMeshPartAsync` is the supported runtime path, and it is
+--- what `Util/ChunkLoader` already used -- the two seams had drifted apart.
+--- Note it YIELDS: it fetches from Roblox's CDN. That is fine here because
+--- HubBuilder runs during bootstrap, before any player is bound (build spec
+--- §1.2 step 9 of 11), but it is the reason this must not be called per-frame.
 local function meshOrNil(meshId: string?, size: Vector3, cframe: CFrame, name: string, parent: Instance): BasePart?
-	if not meshId then
+	if not meshId or meshId == "" then
 		return nil
 	end
-	local p = Instance.new("MeshPart")
+
+	local ok, result = pcall(function()
+		return AssetService:CreateMeshPartAsync(meshId)
+	end)
+	if not ok or not result then
+		warn(`[HubBuilder] mesh {meshId} failed for {name}: {result}; using primitive`)
+		return nil
+	end
+
+	local p = result :: MeshPart
 	p.Name = name
 	p.Anchored = true
 	p.Size = size
 	p.CFrame = cframe
 	p.Parent = parent
-	local ok, err = pcall(function()
-		p.MeshId = meshId
-	end)
-	if not ok then
-		warn(`[HubBuilder] mesh {meshId} failed for {name}: {err}; using primitive`)
-		p:Destroy()
-		return nil
-	end
+	print(`[HubBuilder] {name}: using authored mesh {meshId}`)
 	return p
 end
 
@@ -149,6 +166,92 @@ local function applyLighting()
 	bloom.Size = 24
 	bloom.Threshold = 0.9
 	bloom.Parent = Lighting
+end
+
+-- === the contract ====================================================
+-- The three things other systems look up by name. They live here, alone,
+-- because BOTH paths through HubBuilder need them: the generated hub builds
+-- them inline, and an authored hub has them added by ensureContract when the
+-- artist did not supply them. Duplicating any of these would let an authored
+-- hub drift from a generated one.
+
+--- What FateSystem measures roll distance from. Invisible, non-colliding.
+local function buildRollAnchor(parent: Instance): BasePart
+	local cfg = Layout.FateEngine
+	local anchor = part({
+		Name = Constants.NAMES.ROLL_ANCHOR,
+		Size = cfg.AnchorSize,
+		Position = Anchors.FATE_ENGINE + Vector3.new(0, cfg.AnchorHeight, 0),
+		Transparency = 1,
+		CanCollide = false,
+	}, parent)
+	anchor:SetAttribute("IsRollAnchor", true)
+
+	-- ProximityPrompt over a bespoke keybind: blueprint §2.2 calls it the
+	-- clearer mobile affordance, and it handles keyboard, gamepad and touch
+	-- natively. The client listens for Triggered; the server still validates
+	-- distance and cooldown independently (build spec §3.4).
+	local prompt = Instance.new("ProximityPrompt")
+	prompt.Name = "RollPrompt"
+	prompt.ActionText = "ROLL"
+	prompt.ObjectText = "Fate Engine"
+	prompt.HoldDuration = 0
+	prompt.MaxActivationDistance = GameConfig.UI.PromptActivationDistance
+	prompt.RequiresLineOfSight = false
+	prompt.Parent = anchor
+
+	return anchor
+end
+
+--- What ExpeditionSystem measures entry distance from, and where the ENTER
+--- prompt lives. Decoupled from the portal art on purpose: a ProximityPrompt
+--- measures from its part's origin, and a plinth wider than the prompt's reach
+--- locks the player out while standing on it. That shipped once.
+local function buildGateAnchor(zone: any, top: Vector3, parent: Instance): BasePart
+	local anchor = part({
+		Name = Constants.NAMES.GATE_ANCHOR,
+		Size = Vector3.new(
+			zone.PortalScale * GameConfig.HubLayout.GateAnchorSpan,
+			1,
+			zone.PortalScale * GameConfig.HubLayout.GateAnchorSpan
+		),
+		Position = top
+			+ Vector3.new(0, GameConfig.Portal.MaxPlinthHeight + GameConfig.HubLayout.GateAnchorLift, 0),
+		Transparency = 1,
+		CanCollide = false,
+	}, parent)
+	anchor:SetAttribute("IsGateAnchor", true)
+
+	local prompt = Instance.new("ProximityPrompt")
+	prompt.Name = "EnterPrompt"
+	prompt.ActionText = "ENTER"
+	prompt.ObjectText = "Expedition Gate"
+	prompt.HoldDuration = 0.5
+	prompt.MaxActivationDistance = GameConfig.UI.PromptActivationDistance
+	prompt.RequiresLineOfSight = false
+	prompt.Enabled = GameConfig.Expedition.Enabled
+	prompt.Parent = anchor
+
+	return anchor
+end
+
+--- Where a player arrives. Non-colliding, so it cannot become a lip on the
+--- walkway it sits over.
+local function buildSpawn(parent: Instance): SpawnLocation
+	local spawn = Instance.new("SpawnLocation")
+	spawn.Name = "SpawnLocation"
+	spawn.Anchored = true
+	spawn.CanCollide = false
+	spawn.Size = Vector3.new(12, 1, 12)
+	spawn.Transparency = 0.6
+	spawn.Color = Layout.Theme.MarbleTrim
+	spawn.Material = Enum.Material.Neon
+	spawn.TopSurface = Enum.SurfaceType.Smooth
+	-- Spawn faces the Fate Engine: a new player's first frame must contain the
+	-- thing the game is about.
+	spawn.CFrame = CFrame.lookAt(Layout.SpawnOffset, Vector3.new(0, Layout.SpawnOffset.Y, 0))
+	spawn.Parent = parent
+	return spawn
 end
 
 -- === centre: Fate Engine =============================================
@@ -253,30 +356,7 @@ local function buildFateEngine(parent: Instance): Model
 	spot.Face = Enum.NormalId.Bottom
 	spot.Parent = spotAnchor
 
-	-- The part the server measures roll distance from. FateSystem depends on
-	-- this name, so it exists whether or not a mesh replaced the rig.
-	local anchor = part({
-		Name = Constants.NAMES.ROLL_ANCHOR,
-		Size = cfg.AnchorSize,
-		Position = base + Vector3.new(0, cfg.AnchorHeight, 0),
-		Transparency = 1,
-		CanCollide = false,
-	}, engine)
-	anchor:SetAttribute("IsRollAnchor", true)
-
-	-- ProximityPrompt over a bespoke keybind: blueprint §2.2 calls it the
-	-- clearer mobile affordance, and it handles keyboard, gamepad and touch
-	-- natively. The client listens for Triggered; the server still validates
-	-- distance and cooldown independently (build spec §3.4).
-	local prompt = Instance.new("ProximityPrompt")
-	prompt.Name = "RollPrompt"
-	prompt.ActionText = "ROLL"
-	prompt.ObjectText = "Fate Engine"
-	prompt.HoldDuration = 0
-	prompt.MaxActivationDistance = GameConfig.UI.PromptActivationDistance
-	prompt.RequiresLineOfSight = false
-	prompt.Parent = anchor
-
+	local anchor = buildRollAnchor(engine)
 	engine.PrimaryPart = anchor
 	return engine
 end
@@ -288,10 +368,10 @@ local function buildPlatform(zone: any, centre: Vector3, parent: Instance)
 		return
 	end
 
-	-- A ROUND zone gets a disc, not a box. The Observatory previously got
-	-- BOTH -- a box from here and a cylinder from its own builder, one buried
-	-- inside the other -- because the shape was implied by which builder ran
-	-- rather than declared in the data.
+	-- A ROUND zone gets a disc, not a box. Shape is declared in the data
+	-- rather than implied by which builder happens to run -- a district that
+	-- got both a box from here and a disc from its own builder, one buried
+	-- inside the other, is what taught that lesson.
 	if zone.PlatformShape == "ROUND" then
 		cylinder({
 			Name = "Platform",
@@ -480,29 +560,7 @@ local function buildGate(zone: any, centre: Vector3, parent: Instance)
 	-- was already out of range. An anchor decouples "where the prompt is"
 	-- from "how big the art is", which is what lets the rig be rebuilt in
 	-- Blender at any size without breaking entry.
-	local anchor = part({
-		Name = Constants.NAMES.GATE_ANCHOR,
-		Size = Vector3.new(
-			zone.PortalScale * GameConfig.HubLayout.GateAnchorSpan,
-			1,
-			zone.PortalScale * GameConfig.HubLayout.GateAnchorSpan
-		),
-		Position = top
-			+ Vector3.new(0, GameConfig.Portal.MaxPlinthHeight + GameConfig.HubLayout.GateAnchorLift, 0),
-		Transparency = 1,
-		CanCollide = false,
-	}, parent)
-	anchor:SetAttribute("IsGateAnchor", true)
-
-	local prompt = Instance.new("ProximityPrompt")
-	prompt.Name = "EnterPrompt"
-	prompt.ActionText = "ENTER"
-	prompt.ObjectText = "Expedition Gate"
-	prompt.HoldDuration = 0.5
-	prompt.MaxActivationDistance = GameConfig.UI.PromptActivationDistance
-	prompt.RequiresLineOfSight = false
-	prompt.Enabled = GameConfig.Expedition.Enabled
-	prompt.Parent = anchor
+	buildGateAnchor(zone, top, parent)
 
 	-- Processional walkway with flanking torch pillars: deliberately the most
 	-- dramatic sightline in the hub, visible from the Fate Engine.
@@ -616,120 +674,11 @@ local function buildYard(zone: any, centre: Vector3, parent: Instance)
 	end
 end
 
---- The way up to the Observatory.
----
---- IT NO LONGER SPIRALS AROUND THE FATE ENGINE. The previous version ran a
---- 2.5-turn helix at radius 118, forty studs wide, so it occupied radius
---- 98-138 -- and the Engine's own platform is radius 120. It wrapped the
---- single most important object in the game in a wall of steps and blocked
---- the walk up to it. The first Studio playtest reported exactly that.
----
---- This is one straight processional on the Observatory's OWN bearing: 45
---- degrees, the empty diagonal between the Hall and the Archive. It crosses
---- no walkway, because those run at 0/90/180/270. It passes over the Engine
---- platform only in its final few studs, by which point it is 137 studs up
---- and clear of the rig's 111-stud crown.
-local function buildObservatoryApproach(zone: any, centre: Vector3, parent: Instance)
-	local cfg = zone.Approach
-
-	-- District Angle is degrees clockwise from north, and north is -Z.
-	local bearing = math.rad(zone.Angle)
-	local dir = Vector3.new(math.sin(bearing), 0, -math.cos(bearing))
-
-	-- The plaza's top face: it is centred at -Thickness/2, so its surface is
-	-- y = 0 by construction. Derived rather than written as 0, so moving the
-	-- plaza moves the stair with it.
-	local plazaTop = -Layout.Plaza.Thickness / 2 + Layout.Plaza.Thickness / 2
-	local deckTop = centre.Y + zone.PlatformSize.Y / 2
-
-	-- Both ends drop by half the deck thickness, so the WALKING SURFACE meets
-	-- the plaza and the Observatory floor -- not the part's centre line.
-	local sink = Vector3.new(0, cfg.Thickness / 2, 0)
-	local bottom = dir * cfg.StartRadius + Vector3.new(0, plazaTop, 0) - sink
-	local top = dir * cfg.EndRadius + Vector3.new(0, deckTop, 0) - sink
-
-	local delta = top - bottom
-	local length = delta.Magnitude
-
-	local approach = Instance.new("Folder")
-	approach.Name = "Approach"
-	approach.Parent = parent
-
-	local deck = part({
-		Name = "Deck",
-		Size = Vector3.new(cfg.Width, cfg.Thickness, length),
-		CFrame = CFrame.lookAt(bottom + delta / 2, top),
-		Color = zone.Color,
-		Material = Enum.Material.Slate,
-	}, approach)
-
-	-- Balustrades. Non-colliding on purpose: they exist so the drop reads as a
-	-- drop, and a decorative rail must never become the reason a player cannot
-	-- get onto their own staircase.
-	for side = -1, 1, 2 do
-		part({
-			Name = `Rail{side}`,
-			Size = Vector3.new(cfg.RailThickness, cfg.RailHeight, length),
-			CFrame = deck.CFrame
-				* CFrame.new(side * (cfg.Width / 2), cfg.RailHeight / 2, 0),
-			Color = zone.Accent,
-			Material = Enum.Material.Marble,
-			CanCollide = false,
-			Transparency = 0.35,
-		}, approach)
-	end
-
-	-- Piers, so 145 studs of stair does not appear to float. Also
-	-- non-colliding: they are under the deck and nothing should catch on them.
-	for i = 1, cfg.PierCount do
-		local t = i / (cfg.PierCount + 1)
-		local at = bottom + delta * t
-		local height = at.Y - plazaTop
-		if height > 1 then
-			part({
-				Name = `Pier{i}`,
-				Size = Vector3.new(cfg.PierWidth, height, cfg.PierWidth),
-				Position = Vector3.new(at.X, plazaTop + height / 2, at.Z),
-				Color = zone.Color,
-				Material = Enum.Material.Slate,
-				CanCollide = false,
-			}, approach)
-		end
-	end
-end
-
-local function buildObservatory(zone: any, centre: Vector3, parent: Instance)
-	-- The deck itself is built by buildPlatform, which reads PlatformShape.
-
-	-- Translucent orrery representing the server. Fatebreaks flare this.
-	local globe = part({
-		Name = "Orrery",
-		Shape = Enum.PartType.Ball,
-		Size = Vector3.new(zone.GlobeDiameter, zone.GlobeDiameter, zone.GlobeDiameter),
-		Position = centre + Vector3.new(0, zone.GlobeDiameter / 2 + 3, 0),
-		Color = zone.Accent,
-		Material = Enum.Material.Glass,
-		Transparency = 0.55,
-		CanCollide = false,
-	}, parent)
-	globe:SetAttribute("IsOrrery", true)
-	globe:SetAttribute("SpinSpeed", 0.12)
-
-	local core = Instance.new("PointLight")
-	core.Color = zone.Accent
-	core.Brightness = 3
-	core.Range = 40
-	core.Parent = globe
-
-	buildObservatoryApproach(zone, centre, parent)
-end
-
 local ZONE_BUILDERS: { [string]: (any, Vector3, Instance) -> () } = {
 	AMPHITHEATRE = buildAmphitheatre,
 	ROTUNDA = buildRotunda,
 	GATE = buildGate,
 	YARD = buildYard,
-	OBSERVATORY = buildObservatory,
 }
 
 -- === assembly ========================================================
@@ -738,7 +687,7 @@ local function buildWalkway(zone: any, centre: Vector3, parent: Instance)
 	local bridges = Layout.Bridges
 	local flat = Vector3.new(centre.X, 0, centre.Z)
 	if flat.Magnitude < 1 then
-		return -- Observatory sits above centre; the ramp serves it instead.
+		return -- a district at the hub's centre needs no radial walkway
 	end
 
 	local dir = flat.Unit
@@ -809,14 +758,95 @@ end
 
 --- Builds the hub if absent. Idempotent: a place that already contains a
 --- hand-built Crossroads is left alone, so authored geometry always wins.
-function HubBuilder.build(): Model
-	local existing = Workspace:FindFirstChild(Constants.NAMES.CROSSROADS)
-	if existing then
-		print("[HubBuilder] Crossroads already in Workspace; leaving it alone")
-		return existing :: Model
+--- THE CONTRACT: the parts other systems look up by name.
+---
+--- `HubBuilder.build` hands the hub over to an authored Crossroads whenever one
+--- is present -- authored art wins, which is the intent. But "authored art
+--- wins" silently took the CONTRACT with it: `FateSystem` needs a `RollAnchor`
+--- to measure roll distance from, `ExpeditionSystem` needs a `GateAnchor` and
+--- its prompt, and players need somewhere to spawn. An artist who models a
+--- beautiful Crossroads and names it `Crossroads` would switch off rolling and
+--- expedition entry, with no error anywhere.
+---
+--- So the contract is checked separately from the geometry. A hand-built hub
+--- that supplies these keeps them; one that does not gets them added, loudly.
+--- Nothing here draws anything visible -- the anchors are invisible and
+--- non-colliding, so adding them to authored art changes only behaviour.
+local function ensureContract(hub: Instance): ()
+	local added = {}
+
+	local engine = hub:FindFirstChild(Constants.NAMES.FATE_ENGINE)
+	if not engine then
+		engine = Instance.new("Model")
+		;(engine :: Model).Name = Constants.NAMES.FATE_ENGINE
+		;(engine :: Model).Parent = hub
+		table.insert(added, Constants.NAMES.FATE_ENGINE)
 	end
 
+	if not engine:FindFirstChild(Constants.NAMES.ROLL_ANCHOR) then
+		buildRollAnchor(engine)
+		table.insert(added, Constants.NAMES.ROLL_ANCHOR)
+	end
+
+	local zones = hub:FindFirstChild("Zones")
+	if not zones then
+		zones = Instance.new("Folder")
+		;(zones :: Folder).Name = "Zones"
+		;(zones :: Folder).Parent = hub
+		table.insert(added, "Zones")
+	end
+
+	local gate = zones:FindFirstChild("EXPEDITION_GATE")
+	if not gate then
+		gate = Instance.new("Model")
+		;(gate :: Model).Name = "EXPEDITION_GATE"
+		;(gate :: Model).Parent = zones
+		table.insert(added, "EXPEDITION_GATE")
+	end
+
+	if not gate:FindFirstChild(Constants.NAMES.GATE_ANCHOR) then
+		local zone
+		for _, d in Layout.Districts do
+			if d.Id == "EXPEDITION_GATE" then
+				zone = d
+			end
+		end
+		-- Schema.validateHub guarantees the district exists, so this is a
+		-- programmer error rather than a content one if it ever fires.
+		assert(zone, "Content/Hub/Crossroads has no EXPEDITION_GATE district")
+		buildGateAnchor(
+			zone,
+			Anchors.EXPEDITION_GATE + Vector3.new(0, zone.Height + zone.PlatformSize.Y / 2, 0),
+			gate
+		)
+		table.insert(added, Constants.NAMES.GATE_ANCHOR)
+	end
+
+	if not hub:FindFirstChildOfClass("SpawnLocation") then
+		buildSpawn(hub)
+		table.insert(added, "SpawnLocation")
+	end
+
+	if #added > 0 then
+		warn(
+			`[HubBuilder] authored Crossroads was missing {#added} contract part(s); added: `
+				.. table.concat(added, ", ")
+				.. " -- see HubBuilder.ensureContract"
+		)
+	end
+end
+
+function HubBuilder.build(): Model
+	-- Lighting is applied either way. It is a property of the PLACE, not of the
+	-- geometry, and an authored hub in the dark is not an improvement.
 	applyLighting()
+
+	local existing = Workspace:FindFirstChild(Constants.NAMES.CROSSROADS)
+	if existing then
+		print("[HubBuilder] Crossroads already in Workspace; leaving its geometry alone")
+		ensureContract(existing)
+		return existing :: Model
+	end
 
 	local hub = Instance.new("Model")
 	hub.Name = Constants.NAMES.CROSSROADS
@@ -867,21 +897,7 @@ function HubBuilder.build(): Model
 
 	buildFloatingIslands(hub)
 
-	local spawn = Instance.new("SpawnLocation")
-	spawn.Name = "SpawnLocation"
-	spawn.Anchored = true
-	spawn.Size = Vector3.new(12, 1, 12)
-	spawn.Transparency = 0.6
-	spawn.Color = Layout.Theme.MarbleTrim
-	spawn.Material = Enum.Material.Neon
-	spawn.TopSurface = Enum.SurfaceType.Smooth
-	-- Spawn faces the Fate Engine: a new player's first frame must contain the
-	-- thing the game is about.
-	spawn.CFrame = CFrame.lookAt(
-		Layout.SpawnOffset,
-		Vector3.new(0, Layout.SpawnOffset.Y, 0)
-	)
-	spawn.Parent = hub
+	buildSpawn(hub)
 
 	hub.Parent = Workspace
 	print(`[HubBuilder] built Crossroads: {#Layout.Districts} zones, {#hub:GetDescendants()} instances`)
