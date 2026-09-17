@@ -85,6 +85,16 @@ function HubEffects.init(): ()
 			return
 		end
 
+		-- Wait for the server to say the hub is FINISHED, not merely present.
+		-- WaitForChild returns as soon as the Crossroads model itself
+		-- replicates, which with an authored Fate Engine is well before its
+		-- ~80 MeshParts have arrived. Scanning at that moment finds no
+		-- EngineRig and no shards, so nothing animates for the whole session
+		-- and the cause looks like the animation code rather than timing.
+		if not hub:GetAttribute("Ready") then
+			hub:GetAttributeChangedSignal("Ready"):Wait()
+		end
+
 		findRigs()
 		if engineRig then
 			PortalRig.animate(engineRig)
@@ -108,6 +118,16 @@ function HubEffects.init(): ()
 				table.insert(orbiters, descendant)
 			end
 		end
+
+		-- Belt and braces: anything tagged that arrives after the scan still
+		-- animates. Streaming, or a part added by a later system, would
+		-- otherwise sit still with no way to tell why.
+		hub.DescendantAdded:Connect(function(descendant)
+			if descendant:IsA("BasePart") and descendant:GetAttribute("IsFeaturedShard") then
+				table.insert(shards, descendant)
+				table.insert(spinners, descendant)
+			end
+		end)
 
 		local elapsed = 0
 		RunService.Heartbeat:Connect(function(dt)

@@ -33,6 +33,91 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 13 — 2026-09-18 — First playtest of the authored Engine
+
+**Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 305 passing
+
+### Done
+
+The Engine was walked in Studio. It rendered, and the paint table worked —
+the owner confirmed colour came through. Two real bugs and one re-tune.
+
+**THE ANIMATION BUG WAS A REPLICATION RACE, and it was never about the
+prefab.** Nothing in the hub animated: no rings, no shards, nothing on a roll.
+
+`HubEffects.init` does `Workspace:WaitForChild("Crossroads")` and then scans
+once. But a Model does **not** replicate atomically — the client sees the
+Crossroads before its descendants arrive. It then finds no `EngineRig` and no
+shards, animates nothing, and never retries. It looks exactly like broken
+animation code.
+
+This was latent all along; the blockout hub is small enough to usually win the
+race. An authored Engine is ~80 MeshParts of mesh data, which loses it every
+time. So the prefab did not cause the bug, it made it deterministic.
+
+Fixed with an explicit done signal rather than a delay: the server sets
+`Crossroads:SetAttribute("Ready", true)` as its last act, and the client waits
+for that before scanning. Plus a `DescendantAdded` hook so anything tagged that
+lands late still animates.
+
+**Re-tuned the scale.** The owner's verdict was "way too big" — the ring stood
+115 studs, 23x a player. The ask was ~4.5x player height:
+
+| | Was | Now |
+|---|---|---|
+| `Prefab.Scale` | 2.3762 | **0.464** |
+| Portal ring height | 115.2 | **22.5** (4.5x a 5-stud player) |
+| Portal opening | 81.6 | 15.9 — still walkable |
+| Dais width | 240 | 46.9 |
+| Crown height | 300 | 58.6 |
+
+**That cascaded, and the tests caught it.** `PlatformRadius` is the number
+walkways are cut to meet, so leaving it at 120 would have left four walkways
+stopping 97 studs short in mid-air. It is now **derived** from the authored
+platform (101.0 x 0.464 / 2 = 23) rather than chosen beside it. `AnchorSize`
+came down from 90 to 30 — at 90 the roll pad was wider than the entire
+re-tuned Engine.
+
+Then the suite failed on the BLOCKOUT rig: `Portal.FateEngineScale` still put
+its ring at radius 54 against a 23-radius dais. Dropped 6.0 -> 1.25 so the
+stand-in matches the authored rig at 11.25 either way. A place with no Rojo now
+looks proportionally like the real thing.
+
+### Decisions made
+
+- **`PlatformRadius` is derived from the prefab, not set alongside it.** The
+  dais *is* that radius. Two numbers describing one edge is how walkways end up
+  in mid-air, and the test asserting they agree is what caught it within a
+  minute of the change.
+
+- **The blockout tracks the authored art's size.** A stand-in that is 5x the
+  thing it stands in for is not a stand-in.
+
+- **Recorded, not built: the Engine portal becomes the way into biomes.**
+  Owner-stated direction — roll, react, a prompt to keep the biome, then a
+  staircase generates from the portal's centre down to the base and animates as
+  if building itself. Logged in `STATUS.md` §4 as **architecture**, because the
+  "keep this biome?" step is **new game state** between rolling and entering
+  (today the destination is implicitly the last roll), and it makes the
+  Expedition Gate district redundant the way the Observatory became. That needs
+  a spec amendment before any of it is written.
+
+### Stopped at
+
+305 passing. The re-tuned Engine has not been walked — the scale is arithmetic
+against the owner's stated target, not an observation.
+
+### Next
+
+1. **Walk it again.** Judge the new size, and whether the rings now turn and a
+   `/roll` recolours the portal. The animation fix is unverified in-engine.
+2. **Placeholder staircase** from the portal centre to the base, so walkability
+   can be tested before the real one is modelled. Held until the size is
+   confirmed — building it against a scale that may move again would be wasted.
+3. Then the spec amendment for portal-as-entry.
+
+---
+
 ## Session 12 — 2026-09-18 — The authored Fate Engine is in the game
 
 **Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 305 passing (was 295)

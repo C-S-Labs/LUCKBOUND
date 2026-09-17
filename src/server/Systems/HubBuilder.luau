@@ -930,6 +930,7 @@ function HubBuilder.build(): Model
 	if existing then
 		print("[HubBuilder] Crossroads already in Workspace; leaving its geometry alone")
 		ensureContract(existing)
+		existing:SetAttribute("Ready", true)
 		return existing :: Model
 	end
 
@@ -985,6 +986,13 @@ function HubBuilder.build(): Model
 	buildSpawn(hub)
 
 	hub.Parent = Workspace
+	-- THE DONE SIGNAL. A Model does not replicate atomically: the client can
+	-- see the Crossroads before its descendants arrive, and with an authored
+	-- Engine that is ~80 MeshParts of mesh data rather than a dozen
+	-- primitives. A client that scans too early finds no rig and no shards,
+	-- animates nothing, and never retries -- which looks exactly like broken
+	-- animation code. Set last, so waiting on it means waiting for all of it.
+	hub:SetAttribute("Ready", true)
 	print(`[HubBuilder] built Crossroads: {#Layout.Districts} zones, {#hub:GetDescendants()} instances`)
 	return hub
 end

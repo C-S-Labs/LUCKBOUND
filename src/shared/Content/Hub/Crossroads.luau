@@ -75,10 +75,14 @@ local Crossroads = {
 	-- Centre — Fate Engine. Blueprint §2.2.
 	FateEngine = {
 		Name = "FateEngine",
-		-- 140 -> 120 with the rest of the de-scale. Must stay larger than the
-		-- Engine's outer ring (OuterRingRadius * FateEngineScale = 54) or the
-		-- rig overhangs the floor it stands on -- asserted by test.
-		PlatformRadius = 120,
+		-- 140 -> 120 with the world de-scale, then 120 -> 23 when the authored
+		-- Engine arrived and the owner's verdict was "way too big".
+		--
+		-- THIS IS NOW DERIVED, not chosen: it is half the authored Platform's
+		-- width at Prefab.Scale (101.0 * 0.464 / 2). The dais IS this radius,
+		-- so the two cannot drift -- walkways are cut to meet this number and
+		-- would otherwise stop short in mid-air. Asserted by test.
+		PlatformRadius = 23,
 		PlatformRaise = 10,
 		PlatformColor = Theme.Marble,
 		PlatformMaterial = Enum.Material.Marble,
@@ -110,8 +114,11 @@ local Crossroads = {
 			Height = 300,
 		},
 
-		AnchorSize = Vector3.new(90, 1, 90),
-		AnchorHeight = 12,
+		-- The roll pad, and it has to FIT the dais. At 90 it was wider than
+		-- the whole re-tuned Engine, so the prompt would have floated out
+		-- over open plaza.
+		AnchorSize = Vector3.new(30, 1, 30),
+		AnchorHeight = 6,
 		MeshId = nil, -- superseded by Prefab below; kept for the blockout path
 
 		-- THE AUTHORED ENGINE. Delivered 2026-09-18, 78 MeshParts.
@@ -128,7 +135,19 @@ local Crossroads = {
 			-- 48.48 -> 115.2, SpotAnchor y 126.29 -> 300. One number fixes
 			-- all of it; re-exporting 78 meshes to fix it is how a pipeline
 			-- gets abandoned.
-			Scale = 2.3762,
+			-- 2.3762 put the ring 115 studs tall -- 23x a player -- and the
+			-- owner's verdict on walking it was "way too big". Retuned to
+			-- put the PORTAL at ~4.5x player height, which was the ask:
+			--
+			--   OuterRing   48.48 raw -> 22.5 studs  (4.5x a 5-stud player)
+			--   InnerRing   34.34 raw -> 15.9 studs  (the opening, walkable)
+			--   Platform   101.0  raw -> 46.9 studs  (the dais)
+			--   Crown      126.29 raw -> 58.6 studs  (SpotAnchor height)
+			--
+			-- Everything else in this file that describes the dais is derived
+			-- from this number rather than set beside it, so one edit re-tunes
+			-- the Engine and a test catches it if they disagree.
+			Scale = 0.464,
 		},
 
 		-- PAINT, BY PART NAME. Authored meshes import untextured and grey,

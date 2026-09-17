@@ -297,7 +297,13 @@ local GameConfig = {
 		-- UI.PromptActivationDistance, so any scale above 10 puts the edge of
 		-- the plinth outside its own prompt's range. Asserted by test, for
 		-- every portal in the hub rather than just the Engine.
-		FateEngineScale = 6.0,
+		-- 6.0 -> 1.25 when the authored Engine was re-tuned to ~4.5x player
+		-- height. The blockout is a STAND-IN for the authored rig, so it has
+		-- to be the same size: 9 * 1.25 = an 11.25-stud ring radius, against
+		-- the authored ring's 11.25. A place with no Rojo now looks
+		-- proportionally like the real thing rather than like a different
+		-- game -- and the platform the walkways meet is the same either way.
+		FateEngineScale = 1.25,
 		ExpeditionGateScale = 8.0,
 	},
 
