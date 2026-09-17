@@ -176,11 +176,17 @@ of that rule: it is a *relationship*, not a number, which is what lets a world
 pick its own duration without anyone re-deriving a map size to match.
 
 **The same relationship guards a prebuilt world**, where there is no
-`PathLength` to turn — the knob is `PrebuiltMap.Scale` instead, and the test
-asserts the scaled traverse fits inside the duration. Ethereal Scape's scene is
-10,278 studs end to end as delivered: 642 seconds of walking against a
-300-second expedition. At `Scale = 0.1` it is 1,028 studs and 32 seconds. That
-test is the one that would have caught shipping the scene unscaled.
+`PathLength` to turn — the knob is `PrebuiltMap.Scale`, and the tests assert
+the scaled traverse fits inside the duration, that an island stays at least as
+roomy as a hub district platform, and that a doorway is grand rather than
+absurd. Ethereal Scape's first delivery was ~10× oversized: 10,278 studs and
+642 seconds against a 300-second expedition. `Scale = 0.1` fixed the arithmetic
+and read too small on the ground, so the modeller rebuilt the scene at play
+scale — 2,277 studs, 71 seconds one way, `Scale = 1.0`.
+
+That round trip is the argument for the second and third assertions. The first
+one alone is satisfied by *any* sufficiently small scale, and "the walk fits"
+is not the same claim as "this is a place".
 
 **Retries are expected, not a smell.** A path can fold back and collide with
 itself; that is seed-dependent. Measured with 5 attempts:

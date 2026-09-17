@@ -253,7 +253,7 @@ Ethereal Scape, so you can run it inside the first minute of a fresh profile.
    the map:
 
 ```
-[Expedition] Player1 -> ETHEREAL_SCAPE  seed 1443871209  prebuilt ES_ENVIRONMENT_FULL  699 parts at 0.10 scale  derived arrival  300s
+[Expedition] Player1 -> ETHEREAL_SCAPE  seed 1443871209  prebuilt ES_ENVIRONMENT_FULL  925 parts at 1.00 scale  derived arrival  300s
 ```
 
 That line says which route built the map. A kitted world prints
@@ -266,8 +266,9 @@ loader guessed; it will read `authored` once one is added.
 | | What it proves |
 |---|---|
 | You arrive standing on the authored islands, not a grey blockout platform | the prebuilt map cloned out of `ServerStorage.LuckboundMaps` |
-| A character reaches a doorway's handle-height, not its skirting | `PrebuiltMap.Scale` is right. **This is the one to look at** — the scene ships ~10× oversized and the scale is unwalked |
-| Nothing falls | the loader anchored the clone |
+| A character reaches a doorway's handle-height, not its skirting | `PrebuiltMap.Scale` is right. v1 shipped ~10× oversized and `0.1` then read too small; v2 is authored at play scale and runs at `1.0` |
+| Nothing falls | the scene is anchored (v2 ships that way; the loader also anchors on clone) |
+| The walk to the temple takes about 70 seconds | the traverse budget. If it drags, `DurationSeconds` is the knob — not `Scale`, which would shrink the art |
 | The sky turns bright and near-white | per-client biome lighting applied |
 | The banner top-centre counts down from 5:00 | the timer is live |
 | The pieces form a connected run, each labelled | generation produced a *place*, not a pile |
