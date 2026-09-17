@@ -33,6 +33,76 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 19 — 2026-09-18 — The replication barrier that was not one
+
+**Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 322 passing
+
+### Done
+
+The owner sent the server log, and it named the bug in two lines that had been
+invisible from screenshots for four playtests:
+
+```
+[PortalRig]  EngineRig: driving 0 ring(s) -- NONE FOUND, plane MISSING
+[HubEffects] animating 0 part(s), 0 shard(s), 0 orbiter(s); engineRig found
+```
+
+**`engineRig` found, `OuterRing` not found inside it.** That is a
+half-replicated model, and it means every animation this client ever ran was
+running against a hub that had not arrived.
+
+**The Session 13 barrier was never a barrier.** I had the server set
+`Crossroads:SetAttribute("Ready", true)` last and the client wait for it. But
+**an attribute replicates with the model it sits on, while that model's 447
+descendants stream in afterwards.** The client saw `Ready` instantly, scanned
+instantly, and found a Crossroads containing almost nothing.
+
+Worse, it explains the whole sequence of wrong diagnoses: the shards happened to
+win the race often enough to look like they worked, which made every subsequent
+symptom look like a property of the rings rather than a property of timing.
+
+**A count is a barrier an attribute cannot be.** The server now publishes
+`PartCount` alongside `Ready`, and the client waits until it can actually *see*
+that many BaseParts (capped at 20 seconds, then proceeds regardless rather than
+hanging). It is checking the thing it needs, not a proxy for it.
+
+**Also fixed: the shard rarity cycle could never start.** It was gated on
+`#shards > 0` **at scan time** and spawned only then — so with zero shards
+found, the rotation never began at all, even once the crystals arrived. It now
+runs unconditionally and asks "are there shards yet" each pass.
+
+### Decisions made
+
+- **Wait for the thing, not for a signal about the thing.** `Ready` was a flag
+  that meant "the server finished", and I read it as "the client has it". Those
+  are different statements and the gap between them is exactly one replication
+  window.
+
+- **A lazily-gated loop beats a conditionally-spawned one.** Anything that asks
+  "is there work?" once, at the worst possible moment, answers no forever.
+
+### Benign log lines, noted so they are not chased later
+
+- `[SaveSystem] DataStores unavailable` — expected in Studio until the place is
+  published with Studio API access enabled. Profiles run in memory.
+- `[DebugSystem] DEVELOPER COMMANDS ARE ON` — intentional, and already on the
+  pre-launch checklist to turn off.
+- `[Rojo-Warn] Disconnected` — the dev session dropping, not the game.
+
+### Stopped at
+
+322 passing. The barrier is unverified in-engine; the log will say
+`animating N part(s)` with a real N if it worked.
+
+### Next
+
+1. Walk it and read that one line.
+2. Profile on a real low-end device — still unmeasured across three sessions of
+   added animation.
+3. Placeholder staircase, then the spec amendment for portal-as-entry.
+
+---
+
 ## Session 18 — 2026-09-18 — Clipping, layering, and a polish pass
 
 **Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 322 passing (was 320)

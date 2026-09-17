@@ -126,6 +126,27 @@ function HubEffects.init(): ()
 			hub:GetAttributeChangedSignal("Ready"):Wait()
 		end
 
+		-- ...and then wait for the parts themselves. Ready says the SERVER has
+		-- finished; it says nothing about what has reached this client yet.
+		-- Without this the scan runs against a half-replicated hub and finds
+		-- an EngineRig with no rings inside it.
+		local expected = hub:GetAttribute("PartCount") :: number?
+		if expected then
+			local waited = 0
+			while waited < 20 do
+				local seen = 0
+				for _, d in hub:GetDescendants() do
+					if d:IsA("BasePart") then
+						seen += 1
+					end
+				end
+				if seen >= expected then
+					break
+				end
+				waited += task.wait(0.1)
+			end
+		end
+
 		findRigs()
 		if engineRig then
 			PortalRig.animate(engineRig)
@@ -367,14 +388,18 @@ function HubEffects.init(): ()
 			end
 		end)
 
-		if #shards > 0 then
-			task.spawn(function()
-				while true do
+		-- Runs regardless of what the scan found. Gated on "are there shards
+		-- YET" each pass rather than "were there shards then", so a crystal
+		-- that replicates late still joins the cycle instead of the whole
+		-- rotation never starting.
+		task.spawn(function()
+			while true do
+				if #shards > 0 then
 					cycleFeaturedRarity(shards)
-					task.wait(Layout.FateEngine.FeaturedCycleSeconds)
 				end
-			end)
-		end
+				task.wait(Layout.FateEngine.FeaturedCycleSeconds)
+			end
+		end)
 	end)
 end
 

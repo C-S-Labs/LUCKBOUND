@@ -992,6 +992,26 @@ function HubBuilder.build(): Model
 	-- primitives. A client that scans too early finds no rig and no shards,
 	-- animates nothing, and never retries -- which looks exactly like broken
 	-- animation code. Set last, so waiting on it means waiting for all of it.
+	-- HOW MANY PARTS THE CLIENT SHOULD WAIT FOR.
+	--
+	-- `Ready` alone was not a barrier. An attribute replicates with the model
+	-- it sits on, while that model's descendants stream in afterwards -- so a
+	-- client saw Ready, scanned immediately, found the Crossroads and the
+	-- EngineRig but NOT the OuterRing inside it, and animated nothing. The
+	-- playtest log said exactly that: "engineRig found" next to "driving 0
+	-- ring(s) -- NONE FOUND".
+	--
+	-- A count is a barrier an attribute cannot be: the client waits until it
+	-- can actually see this many parts.
+	do
+		local parts = 0
+		for _, d in hub:GetDescendants() do
+			if d:IsA("BasePart") then
+				parts += 1
+			end
+		end
+		hub:SetAttribute("PartCount", parts)
+	end
 	hub:SetAttribute("Ready", true)
 	print(`[HubBuilder] built Crossroads: {#Layout.Districts} zones, {#hub:GetDescendants()} instances`)
 	return hub
