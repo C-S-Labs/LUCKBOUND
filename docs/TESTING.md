@@ -301,11 +301,10 @@ before anything else after a scale or layout change.
    on top of a wall or falling, `cylinder()` has regressed.
 2. **Walk all four spokes** — Hall (N), Archive (E), Gate (S), Training (W).
    ✅ Pass: no gap between walkway and platform, no step you have to jump.
-3. **Walk the Observatory approach.** It leaves the plaza on the NE diagonal
-   at about radius 380 and climbs to the deck. ✅ Pass: it crosses no walkway
-   and **the Fate Engine plaza is completely clear of it** — you can walk to
-   the Engine from any direction without meeting a staircase.
-4. **Stand at the Engine and turn full circle.** ✅ Pass: nothing encircles it.
+3. **Stand at the Fate Engine and turn a full circle.** ✅ Pass: nothing
+   encircles it and nothing blocks the approach from any of the four spokes.
+   The Global Observatory and its ramp were cut on 2026-09-17; if you see a
+   staircase wrapping the Engine, the sync did not take.
 
 ### Test E — a tampered client is rejected (1 min)
 

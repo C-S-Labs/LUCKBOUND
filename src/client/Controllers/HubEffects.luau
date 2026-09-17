@@ -104,8 +104,6 @@ function HubEffects.init(): ()
 			if descendant:GetAttribute("IsFeaturedShard") then
 				table.insert(shards, descendant)
 				table.insert(spinners, descendant)
-			elseif descendant:GetAttribute("IsOrrery") then
-				table.insert(spinners, descendant)
 			elseif descendant:GetAttribute("OrbitRadius") then
 				table.insert(orbiters, descendant)
 			end

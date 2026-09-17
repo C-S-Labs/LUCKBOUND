@@ -368,10 +368,10 @@ local function buildPlatform(zone: any, centre: Vector3, parent: Instance)
 		return
 	end
 
-	-- A ROUND zone gets a disc, not a box. The Observatory previously got
-	-- BOTH -- a box from here and a cylinder from its own builder, one buried
-	-- inside the other -- because the shape was implied by which builder ran
-	-- rather than declared in the data.
+	-- A ROUND zone gets a disc, not a box. Shape is declared in the data
+	-- rather than implied by which builder happens to run -- a district that
+	-- got both a box from here and a disc from its own builder, one buried
+	-- inside the other, is what taught that lesson.
 	if zone.PlatformShape == "ROUND" then
 		cylinder({
 			Name = "Platform",
@@ -674,120 +674,11 @@ local function buildYard(zone: any, centre: Vector3, parent: Instance)
 	end
 end
 
---- The way up to the Observatory.
----
---- IT NO LONGER SPIRALS AROUND THE FATE ENGINE. The previous version ran a
---- 2.5-turn helix at radius 118, forty studs wide, so it occupied radius
---- 98-138 -- and the Engine's own platform is radius 120. It wrapped the
---- single most important object in the game in a wall of steps and blocked
---- the walk up to it. The first Studio playtest reported exactly that.
----
---- This is one straight processional on the Observatory's OWN bearing: 45
---- degrees, the empty diagonal between the Hall and the Archive. It crosses
---- no walkway, because those run at 0/90/180/270. It passes over the Engine
---- platform only in its final few studs, by which point it is 137 studs up
---- and clear of the rig's 111-stud crown.
-local function buildObservatoryApproach(zone: any, centre: Vector3, parent: Instance)
-	local cfg = zone.Approach
-
-	-- District Angle is degrees clockwise from north, and north is -Z.
-	local bearing = math.rad(zone.Angle)
-	local dir = Vector3.new(math.sin(bearing), 0, -math.cos(bearing))
-
-	-- The plaza's top face: it is centred at -Thickness/2, so its surface is
-	-- y = 0 by construction. Derived rather than written as 0, so moving the
-	-- plaza moves the stair with it.
-	local plazaTop = -Layout.Plaza.Thickness / 2 + Layout.Plaza.Thickness / 2
-	local deckTop = centre.Y + zone.PlatformSize.Y / 2
-
-	-- Both ends drop by half the deck thickness, so the WALKING SURFACE meets
-	-- the plaza and the Observatory floor -- not the part's centre line.
-	local sink = Vector3.new(0, cfg.Thickness / 2, 0)
-	local bottom = dir * cfg.StartRadius + Vector3.new(0, plazaTop, 0) - sink
-	local top = dir * cfg.EndRadius + Vector3.new(0, deckTop, 0) - sink
-
-	local delta = top - bottom
-	local length = delta.Magnitude
-
-	local approach = Instance.new("Folder")
-	approach.Name = "Approach"
-	approach.Parent = parent
-
-	local deck = part({
-		Name = "Deck",
-		Size = Vector3.new(cfg.Width, cfg.Thickness, length),
-		CFrame = CFrame.lookAt(bottom + delta / 2, top),
-		Color = zone.Color,
-		Material = Enum.Material.Slate,
-	}, approach)
-
-	-- Balustrades. Non-colliding on purpose: they exist so the drop reads as a
-	-- drop, and a decorative rail must never become the reason a player cannot
-	-- get onto their own staircase.
-	for side = -1, 1, 2 do
-		part({
-			Name = `Rail{side}`,
-			Size = Vector3.new(cfg.RailThickness, cfg.RailHeight, length),
-			CFrame = deck.CFrame
-				* CFrame.new(side * (cfg.Width / 2), cfg.RailHeight / 2, 0),
-			Color = zone.Accent,
-			Material = Enum.Material.Marble,
-			CanCollide = false,
-			Transparency = 0.35,
-		}, approach)
-	end
-
-	-- Piers, so 145 studs of stair does not appear to float. Also
-	-- non-colliding: they are under the deck and nothing should catch on them.
-	for i = 1, cfg.PierCount do
-		local t = i / (cfg.PierCount + 1)
-		local at = bottom + delta * t
-		local height = at.Y - plazaTop
-		if height > 1 then
-			part({
-				Name = `Pier{i}`,
-				Size = Vector3.new(cfg.PierWidth, height, cfg.PierWidth),
-				Position = Vector3.new(at.X, plazaTop + height / 2, at.Z),
-				Color = zone.Color,
-				Material = Enum.Material.Slate,
-				CanCollide = false,
-			}, approach)
-		end
-	end
-end
-
-local function buildObservatory(zone: any, centre: Vector3, parent: Instance)
-	-- The deck itself is built by buildPlatform, which reads PlatformShape.
-
-	-- Translucent orrery representing the server. Fatebreaks flare this.
-	local globe = part({
-		Name = "Orrery",
-		Shape = Enum.PartType.Ball,
-		Size = Vector3.new(zone.GlobeDiameter, zone.GlobeDiameter, zone.GlobeDiameter),
-		Position = centre + Vector3.new(0, zone.GlobeDiameter / 2 + 3, 0),
-		Color = zone.Accent,
-		Material = Enum.Material.Glass,
-		Transparency = 0.55,
-		CanCollide = false,
-	}, parent)
-	globe:SetAttribute("IsOrrery", true)
-	globe:SetAttribute("SpinSpeed", 0.12)
-
-	local core = Instance.new("PointLight")
-	core.Color = zone.Accent
-	core.Brightness = 3
-	core.Range = 40
-	core.Parent = globe
-
-	buildObservatoryApproach(zone, centre, parent)
-end
-
 local ZONE_BUILDERS: { [string]: (any, Vector3, Instance) -> () } = {
 	AMPHITHEATRE = buildAmphitheatre,
 	ROTUNDA = buildRotunda,
 	GATE = buildGate,
 	YARD = buildYard,
-	OBSERVATORY = buildObservatory,
 }
 
 -- === assembly ========================================================
@@ -796,7 +687,7 @@ local function buildWalkway(zone: any, centre: Vector3, parent: Instance)
 	local bridges = Layout.Bridges
 	local flat = Vector3.new(centre.X, 0, centre.Z)
 	if flat.Magnitude < 1 then
-		return -- Observatory sits above centre; the ramp serves it instead.
+		return -- a district at the hub's centre needs no radial walkway
 	end
 
 	local dir = flat.Unit

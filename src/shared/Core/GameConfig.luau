@@ -238,7 +238,6 @@ local GameConfig = {
 			DISCOVERY_ARCHIVE = Vector3.new(400, 0, 0), -- east
 			EXPEDITION_GATE = Vector3.new(0, 0, 400), -- south
 			TRAINING_GROUNDS = Vector3.new(-400, 0, 0), -- west
-			GLOBAL_OBSERVATORY = Vector3.new(0, 140, 0), -- upper platform
 		},
 
 		-- ON the processional, not inside it. At (0, 8, 250) the spawn sat

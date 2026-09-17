@@ -194,7 +194,6 @@ local DESTINATIONS: { [string]: string } = {
 	hall = "HALL_OF_LEGENDS",
 	archive = "DISCOVERY_ARCHIVE",
 	training = "TRAINING_GROUNDS",
-	observatory = "GLOBAL_OBSERVATORY",
 	spawn = "SPAWN",
 }
 

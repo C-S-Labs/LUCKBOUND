@@ -27,7 +27,7 @@ local file — and are the only Phase 1 items still unverified.
 |---|---|---|---|
 | P1-1 | Place opens in Studio with zero errors in Output | Studio playtest | ✅ |
 | P1-2 | Player spawns in Crossroads facing the Fate Engine | Studio playtest | ✅ |
-| P1-3 | All five districts are identifiable blockout geometry | Visual | ✅ |
+| P1-3 | All hub districts are identifiable blockout geometry | Visual | ✅ |
 | P1-4 | ROLL prompt appears near the Fate Engine (12 studs, `UI.PromptActivationDistance`) | Studio playtest | ✅ |
 | P1-5 | Roll is server-authoritative; client cannot force a result | Exploit test (§7.4) | ✅ |
 | P1-6 | Reveal animation runs ≥2.5s before result is shown | Timing | ✅ |
@@ -113,7 +113,6 @@ Workspace/
     DiscoveryArchive/
     ExpeditionGate/        -- must contain a Part named "GateAnchor"
     TrainingGrounds/
-    GlobalObservatory/
     SpawnLocation
   ExpeditionStage/       -- generated maps, one Model per live expedition (§7.1)
 ServerStorage/
@@ -523,8 +522,8 @@ Recorded because each cost a debugging cycle and each is a class of mistake that
 | Walkways used the platform's **X** half-extent regardless of approach axis, leaving 30–40 stud holes | The number was right for two zones out of four |
 | The Observatory ramp used a literal 5-stud step depth; at the new radius steps were 26 studs apart | The literal was correct at the old 120-stud scale |
 | The Gate's prompt sat on a plinth wider than its own activation distance | The reach test carried a `* 2` fudge and covered only the Engine |
-| The Observatory's spiral ramp encircled the Fate Engine (radius 98–138 against a 120-stud platform) and blocked the approach to it | A gradient test existed; nothing asserted *where* the ramp was |
-| The Observatory got two platforms — a box from `buildPlatform` and a cylinder from its own builder, one buried in the other | Platform shape was implied by which builder ran, not declared in data |
+| The Observatory's spiral ramp encircled the Fate Engine (radius 98–138 against a 120-stud platform) and blocked the approach to it | A gradient test existed; nothing asserted *where* the ramp was. The district was later cut — see `BLUEPRINT_RECONCILIATION.md` |
+| A district got two platforms — a box from `buildPlatform` and a cylinder from its own builder, one buried in the other | Platform shape was implied by which builder ran, not declared in data |
 | **`MeshPart.MeshId` is not assignable at runtime** — `HubBuilder.meshOrNil` set it inside a `pcall`, so every `MeshId` seam silently drew a primitive instead | No authored mesh had ever been supplied, so the fallback path was the only one ever exercised |
 | **An authored `Crossroads` disabled the roll anchor, gate anchor, spawn and lighting** along with the generated geometry | `build()` returned early as one branch; nothing separated *geometry* from *contract* |
 

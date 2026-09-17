@@ -200,8 +200,8 @@ function Schema.validateHub(hub: any): (boolean, { string })
 			if type(district.Angle) ~= "number" or district.Angle < 0 or district.Angle >= 360 then
 				table.insert(errors, `{label} Angle must be in [0, 360)`)
 			end
-			-- Radius 0 is legal: the Observatory sits directly above centre and
-			-- is reached by the spiral ramp rather than a radial walkway.
+			-- Radius 0 is legal: a district may sit at the hub's centre and be
+			-- reached by something other than a radial walkway.
 			if type(district.Radius) ~= "number" or district.Radius < 0 then
 				table.insert(errors, `{label} Radius must not be negative`)
 			end

@@ -59,7 +59,6 @@ dark** — the first thing worth tuning.
 | East (+X) | (46,0,0) | Discovery Archive: domed rotunda, 3 rings of orbiting shelves, teal + cosmic trim |
 | South (+Z) | (0,0,46) | Expedition Gate: PortalRig @2×, 12-stud processional, flanking torch pillars |
 | West (−X) | (−46,0,0) | Training Grounds: 30×30 yard, low fence, 3 dummies + boss dummy, warm torches |
-| Up (+Y) | (0,40,0) | Global Observatory: 18-stud platform, glass orrery, spiral ramp |
 
 Plus 14 deterministic floating islands (seeded, so every server shows one
 skyline) and raised radial walkways.

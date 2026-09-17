@@ -520,13 +520,13 @@ do
 	local ok, errs = Schema.validateHub(Crossroads)
 	check("real hub layout validates", ok, table.concat(errs, "; "))
 
-	check("all five Master Spec districts are present", #Crossroads.Districts == 5,
+	check("all four hub districts are present", #Crossroads.Districts == 4,
 		string.format("got %d", #Crossroads.Districts))
 
 	local byId = {}
 	for _, d in Crossroads.Districts do byId[d.Id] = d end
 	for _, id in { "HALL_OF_LEGENDS", "DISCOVERY_ARCHIVE", "EXPEDITION_GATE",
-		"TRAINING_GROUNDS", "GLOBAL_OBSERVATORY" } do
+		"TRAINING_GROUNDS" } do
 		check(string.format("district %s exists", id), byId[id] ~= nil)
 	end
 
@@ -537,20 +537,6 @@ do
 	check("Discovery Archive is east (+X)", anchors.DISCOVERY_ARCHIVE.X > 0)
 	check("Expedition Gate is south (+Z)", anchors.EXPEDITION_GATE.Z > 0)
 	check("Training Grounds is west (-X)", anchors.TRAINING_GROUNDS.X < 0)
-	check("Global Observatory is the upper platform",
-		anchors.GLOBAL_OBSERVATORY.Y > 0, tostring(anchors.GLOBAL_OBSERVATORY.Y))
-	-- It must be climbable: a ramp that gains more than ~2 studs per stud of
-	-- run is a wall. Blueprint §2.2 reaches it by spiral ramp.
-	do
-		local obs
-		for _, d in Crossroads.Districts do
-			if d.Id == "GLOBAL_OBSERVATORY" then obs = d end
-		end
-		local run = obs.Approach.StartRadius - obs.Approach.EndRadius
-		check("the observatory approach has a climbable gradient",
-			anchors.GLOBAL_OBSERVATORY.Y / run < 0.6,
-			string.format("rise %d over run %.0f", anchors.GLOBAL_OBSERVATORY.Y, run))
-	end
 	check("Fate Engine is at true centre",
 		anchors.FATE_ENGINE.X == 0 and anchors.FATE_ENGINE.Y == 0 and anchors.FATE_ENGINE.Z == 0)
 
@@ -1207,50 +1193,28 @@ do
 	end
 	check("the EXPEDITION_GATE district exists (ensureContract asserts on it)", hasGate)
 
-	-- 7. THE WAY UP MUST NOT WRAP THE FATE ENGINE.
-	-- The Observatory's access used to be a 2.5-turn helix at radius 118,
-	-- forty studs wide -- so it occupied radius 98 to 138 while the Engine's
-	-- own platform is radius 120. It encircled the single most important
-	-- object in the game and blocked the walk up to it. Reported from the
-	-- 2026-09-16 playtest as "the staircase obstructs the player's path to
-	-- the actual fate engine".
-	local obs
-	for _, d in Crossroads.Districts do
-		if d.Id == "GLOBAL_OBSERVATORY" then obs = d end
-	end
-	local approach = obs.Approach
+	-- 7. NOTHING MAY ENCIRCLE THE FATE ENGINE.
+	-- The Global Observatory's spiral access was a 2.5-turn helix at radius
+	-- 118, forty studs wide, so it occupied radius 98 to 138 -- while the
+	-- Engine's own platform is radius 120. It wrapped the single most
+	-- important object in the game in a wall of steps. Straightening it fixed
+	-- the symptom; the district was cut entirely on 2026-09-17 because nobody
+	-- could say what it was for.
+	--
+	-- The Engine's plaza must stay clear whatever is added back. Every
+	-- district's platform has to leave the Engine's footprint alone.
 	local engineR = Crossroads.FateEngine.PlatformRadius
-
-	check("the approach starts clear of the Fate Engine platform",
-		approach.StartRadius > engineR,
-		string.format("starts at %d, Engine platform is %d",
-			approach.StartRadius, engineR))
-
-	-- It may only cross the Engine platform's footprint from above. Height at
-	-- a given radius is linear along the deck.
-	local rise = obs.Height + obs.PlatformSize.Y / 2
-	local run = approach.StartRadius - approach.EndRadius
-	local heightAtEngineEdge = rise * (approach.StartRadius - engineR) / run
-	-- The rig's crown: ring centre (radius*scale + capped plinth) plus radius.
-	local rigCrown = GameConfig.Portal.OuterRingRadius * Crossroads.FateEngine.PortalScale * 2
-		+ GameConfig.Portal.MaxPlinthHeight
-	check("where it does pass over the Engine, it clears the rig entirely",
-		heightAtEngineEdge > rigCrown,
-		string.format("%.0f studs up at the platform edge vs a %.0f-stud rig",
-			heightAtEngineEdge, rigCrown))
-
-	-- 45 degrees is the empty diagonal; the four walkways run at 0/90/180/270.
-	local WALKWAY_BEARINGS = { 0, 90, 180, 270 }
-	local clearsWalkways = true
-	for _, bearing in WALKWAY_BEARINGS do
-		if math.abs(obs.Angle - bearing) < 20 then clearsWalkways = false end
+	local encroaching = {}
+	for _, d in Crossroads.Districts do
+		local a = anchors[d.Id]
+		local reach = math.sqrt(a.X * a.X + a.Z * a.Z)
+			- math.max(d.PlatformSize.X, d.PlatformSize.Z) / 2
+		if reach < engineR then
+			table.insert(encroaching, d.Id)
+		end
 	end
-	check("the approach runs on a diagonal, so it crosses no walkway",
-		clearsWalkways, string.format("bearing %d", obs.Angle))
-
-	check("the approach deck is wide enough to be a road, not a beam",
-		approach.Width >= Crossroads.Bridges.Width * 0.5,
-		string.format("%d studs", approach.Width))
+	check("no district reaches into the Fate Engine's platform",
+		#encroaching == 0, table.concat(encroaching, ", "))
 end
 
 -- === 13. Ethereal Scape =============================================

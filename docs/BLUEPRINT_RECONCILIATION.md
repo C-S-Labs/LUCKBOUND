@@ -108,31 +108,38 @@ anchors and dimensions** in `GameConfig.HubLayout` (locked once, never
 re-derived, per §7.3), **materials, palette and props** in
 `Content/Hub/Crossroads.luau`.
 
-### The Observatory's spiral ramp became a straight processional
+### The Global Observatory was cut entirely
 
-§2.2 gives the Global Observatory a spiral ramp down to the Fate Engine plaza.
-Built literally at the rescaled hub it was a 2.5-turn helix at radius 118,
-forty studs wide — occupying radius **98 to 138**, while the Fate Engine's own
-platform is radius **120**.
+**Owner-directed, 2026-09-17.** §2.2 specifies five hub zones. There are now
+four: the Global Observatory is gone, along with its orrery, its platform and
+its access ramp.
 
-So it wrapped the single most important object in the game in a wall of steps
-and blocked the walk up to it. The 2026-09-16 playtest reported exactly that:
-*"the players path to the actual fate engine is obstructed via the staircase"*.
+**The reason is that nobody could say what it was for.** Its only content was
+the orrery — a translucent globe "representing the server". That is a
+decoration, not a feature, and the owner's verdict was *"I don't understand the
+purpose in the first place."*
 
-**Resolved as:** one straight processional on the Observatory's own bearing —
-45°, the empty diagonal between the Hall and the Archive. It crosses no
-walkway (those run at 0/90/180/270), rises 145 studs over a 274-stud run
-(about 28°), and passes over the Engine platform only in its last few studs,
-by which point it is 137 studs up and clear of the rig's 111-stud crown.
+Two things had already made it expensive:
 
-The blueprint was specifying **access to an upper platform**, not a helix
-specifically. That is preserved. Asserted by four tests.
+- **Its access blocked the Fate Engine.** §2.2's spiral ramp, built literally
+  at the rescaled hub, was a 2.5-turn helix at radius 118 and forty studs wide
+  — occupying radius 98–138 against the Engine's 120-stud platform. It wrapped
+  the most important object in the game in a wall of steps. Straightening it
+  into a processional fixed the symptom and cost a session.
+- **It could not simply be lowered.** Sitting above the Engine meant sitting
+  above the rig's 111-stud crown, and *that* height is what forced a 145-stud
+  climb for a look-out.
+- **The architecture moved under it.** Expeditions are to become a separate
+  place (`STATUS.md` §5), so the Crossroads becomes a lobby. A monument you
+  climb on your way to nowhere is harder to justify in a lobby, not easier.
 
-> ⚠️ **The Observatory's purpose is itself an open question** — see
-> `STATUS.md` §4. If it survives, the recommendation is to move it off-centre
-> to a sixth compass point rather than lower it: sitting *above the Engine*
-> forces it above the rig's 111-stud crown, and that height is what forces the
-> climb in the first place.
+**Resolved as:** removed. If a global-state display is wanted later, the
+recommendation on record is a **ground-level sixth compass point**, not a tower
+above the centre — height above the Engine is what created every problem it
+had.
+
+A test now asserts the general rule the ramp broke: **no district's platform
+may reach into the Fate Engine's footprint.**
 
 ### §2.3's hub lighting was brightened — key light, not exposure
 
