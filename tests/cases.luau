@@ -1639,6 +1639,37 @@ do
 
 	check("the shards are tagged for the rarity cycle",
 		styles.Shard.Attributes.IsFeaturedShard == true)
+
+	-- THE RINGS SPIN ABOUT THEIR OWN AXLE. A ring is thin along its own Z, so
+	-- Z is the axle; spinning it about Y would tumble it end over end. Two
+	-- playtests reported "no animation" while this was simply not set.
+	check("both rings name Z as their spin axis",
+		styles.OuterRing.Attributes.SpinAxis == "Z"
+			and styles.InnerRing.Attributes.SpinAxis == "Z")
+
+	-- A speed that cannot be seen is the same as no animation, and that is
+	-- exactly how this shipped twice. One revolution in under 30 seconds.
+	for _, name in { "OuterRing", "InnerRing", "Shard" } do
+		local speed = math.abs(styles[name].Attributes.SpinSpeed)
+		check(`{name} turns fast enough to be visible`,
+			speed > math.pi * 2 / 30,
+			string.format("%.2f rad/s = %.0fs per revolution", speed, math.pi * 2 / speed))
+	end
+
+	-- WALKWAYS MUST NOT BURY THE DAIS. The deck sits below the dais top, or
+	-- it runs over the platform the Engine stands on and hides it -- which is
+	-- what the second authored playtest reported.
+	local daisTop = engine.PlatformRaise
+	check("walkway decks sit below the dais they meet",
+		GameConfig.HubLayout.WalkwayRaise < daisTop,
+		string.format("deck %.1f against dais top %.1f",
+			GameConfig.HubLayout.WalkwayRaise, daisTop))
+
+	-- ...and must not bite so far in that there is no dais left to see.
+	check("the walkway overlap leaves most of the dais visible",
+		Crossroads.Bridges.Overlap < engine.PlatformRadius * 0.25,
+		string.format("%d studs into a %d radius",
+			Crossroads.Bridges.Overlap, engine.PlatformRadius))
 end
 
 -- === summary ========================================================

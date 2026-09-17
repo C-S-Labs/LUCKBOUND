@@ -83,7 +83,10 @@ local Crossroads = {
 		-- so the two cannot drift -- walkways are cut to meet this number and
 		-- would otherwise stop short in mid-air. Asserted by test.
 		PlatformRadius = 23,
-		PlatformRaise = 10,
+		-- 10 -> 2, to match the authored dais (4.21 raw at Prefab.Scale). The
+		-- blockout stands in for the real thing, so a player stepping onto it
+		-- has to step the same distance in either build.
+		PlatformRaise = 2,
 		PlatformColor = Theme.Marble,
 		PlatformMaterial = Enum.Material.Marble,
 		RuneInlayCount = 16, -- radial groove pattern
@@ -197,18 +200,24 @@ local Crossroads = {
 				-- Drives the spin. Negative on the inner ring so the two
 				-- counter-rotate, which is what makes the portal read as a
 				-- mechanism rather than a wheel.
-				Attributes = { SpinSpeed = 1 },
+				-- SpinAxis Z because the ring is thin along its own Z, so Z is
+				-- the axle. Driven by HubEffects, not PortalRig -- see the
+				-- comment on the animator there.
+				Attributes = { SpinSpeed = 1.0, SpinAxis = "Z" },
 			},
 			RingFoot_Clamps = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
 			InnerRing = {
 				Color = Color3.fromRGB(68, 135, 123),
 				Material = Enum.Material.Neon,
-				Attributes = { SpinSpeed = -1.4 },
+				Attributes = { SpinSpeed = -1.4, SpinAxis = "Z" },
 			},
 			PortalPlane = {
 				Color = Color3.fromRGB(40, 70, 150), -- Portal_Veil: deep blue
 				Material = Enum.Material.ForceField,
 				Transparency = 0.45,
+				-- The veil breathes. Slower than the rings so the two do not
+				-- beat against each other.
+				Attributes = { PulseAlphaMin = 0.3, PulseAlphaMax = 0.6, PulseSeconds = 3.2 },
 			},
 
 			-- The levitation stack, added by the artist on top of the spec.
@@ -218,20 +227,39 @@ local Crossroads = {
 			GeneratorVents = { Color = Color3.fromRGB(64, 58, 78), Material = Enum.Material.Basalt },
 			GeneratorPanelTrim = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
 			GeneratorEmitter = { Color = Color3.fromRGB(68, 135, 123), Material = Enum.Material.Neon },
-			LevitationCoils = { Color = Color3.fromRGB(128, 99, 41), Material = Enum.Material.Neon },
+			-- The core's second colour. Cyan core over violet coils gives the
+			-- energy stack two tones instead of one flat glow, and both are
+			-- hub palette rather than invented.
+			LevitationCoils = {
+				Color = Color3.fromRGB(96, 70, 140),
+				Material = Enum.Material.Neon,
+				Attributes = { PulseScale = 0.08, PulseSeconds = 3.6 },
+			},
 			-- Static. The artist's design note is explicit that the
 			-- generator, core and coils are decorative unless the game adds
 			-- behaviour, and a rotating core would also get caught by the
 			-- shard rarity cycle and tinted away from its cyan-violet.
-			LevitationCore = { Color = Color3.fromRGB(78, 150, 140), Material = Enum.Material.Neon },
+			LevitationCore = {
+				Color = Color3.fromRGB(78, 150, 140),
+				Material = Enum.Material.Neon,
+				-- Breathes in and out, +/-12%, as a regulator under load.
+				Attributes = { PulseScale = 0.12, PulseSeconds = 3.6 },
+			},
 
 			-- Floating crystals. Rarity-tinted, and each spins in place.
 			Shard = {
 				Color = Color3.fromRGB(68, 135, 123),
 				Material = Enum.Material.Glass,
 				Transparency = 0.35,
-				-- 0.35 rad/s was 18 seconds a revolution, which reads as still.
-				Attributes = { IsFeaturedShard = true, SpinSpeed = 0.9 },
+				-- Spin, plus a slow vertical drift so they read as floating
+				-- rather than mounted. Each shard gets a different phase from
+				-- its name, so the six never bob in lockstep.
+				Attributes = {
+					IsFeaturedShard = true,
+					SpinSpeed = 0.9,
+					BobStuds = 1.6,
+					BobSeconds = 5.5,
+				},
 			},
 
 			-- Invisible: the spotlight's mount point, nothing to look at.
@@ -339,7 +367,9 @@ local Crossroads = {
 		-- Walkways run a little INTO the surfaces they join at both ends.
 		-- Butting them edge to edge leaves a hairline seam that a character
 		-- can catch on, and any float error turns it into a hole.
-		Overlap = 10,
+		-- 10 -> 3. A 10-stud bite into a 23-radius dais swallowed most of its
+		-- visible edge. Enough to hide the seam, not enough to hide the dais.
+		Overlap = 3,
 		Color = Theme.Walkway,
 		Material = Theme.StoneMaterial,
 	},

@@ -33,6 +33,97 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 15 — 2026-09-18 — The rings were never in the list
+
+**Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 311 passing (was 305)
+
+### Done
+
+Third playtest. Neon dimming confirmed good. **Shards rotate; rings still did
+not** — and that pairing is what finally identified the bug, because both are
+client-side CFrame writes on anchored server parts. Anchoring was never the
+problem, and the owner's guess that it might be was the right question to ask.
+
+**ROOT CAUSE: there were two animation paths, and the rings were only in the
+broken one.**
+
+`HubEffects` ran a Heartbeat loop that collected parts tagged
+`IsFeaturedShard` — shards, and nothing else. The rings depended entirely on a
+separate route: `findRigs()` → `PortalRig.animate(engineRig)` → find rings by
+name. Two independent lookups, failing differently, which is why the symptom
+kept pointing at replication, then at spin speed, then at anchoring.
+
+I raised the spin speed last session on the theory it was too slow to see.
+That was a real problem and worth fixing, but it was not *this* problem, and I
+should have gone looking for why one set of parts moved and another did not
+rather than reaching for the most available explanation.
+
+**The fix collapses the two paths into one.** `HubEffects` now animates
+anything carrying a motion attribute, wherever it sits and whoever put it
+there:
+
+| Attribute | Does |
+|---|---|
+| `SpinSpeed` + `SpinAxis` | turns about its own X, Y or Z |
+| `BobStuds` + `BobSeconds` | drifts up and down |
+| `PulseScale` + `PulseSeconds` | breathes larger and smaller |
+| `PulseAlphaMin` / `PulseAlphaMax` | pulses transparency |
+
+Each part gets a phase derived from its **name**, so six shards never bob in
+lockstep, and it is the same every join rather than random.
+
+Rotation accumulates as an angle and the CFrame is rebuilt from a captured base
+each frame. Multiplying into the live CFrame instead would let the bob offset
+compound and walk the part away from where the artist put it.
+
+`PortalRig.animate` now skips `BasePart` rings and a plane carrying
+`PulseAlphaMin`, so nothing is driven twice. It still drives the blockout rig's
+segment Models, which the data path cannot.
+
+**Also done, from the same playtest:**
+
+- **Shards float.** `BobStuds = 1.6` over 5.5s, phase-offset per shard.
+- **The levitation core breathes** (`PulseScale = 0.12`) and now reads in two
+  tones: cyan core over **violet coils**, both from the hub palette rather than
+  invented.
+- **The portal veil breathes too**, slower than the rings so the two do not
+  beat against each other.
+- **Walkways stopped burying the dais.** `WalkwayRaise` 6 → 1.5 and
+  `Bridges.Overlap` 10 → 3. The authored dais is only ~2 studs proud of the hub
+  floor, so decks raised 6 ran straight over the top of it. `PlatformRaise`
+  10 → 2 as well, so the blockout dais is the same step as the authored one.
+
+### Decisions made
+
+- **One animator, driven by data.** Motion is now a line in the content paint
+  table, not a code change — consistent with the prime directive, and it means
+  a part cannot be animated by one system and invisible to another.
+
+- **Tests for the failure modes that shipped, not just for the fix.** Three new
+  relationship assertions, each of which would have caught a real bug from this
+  round:
+  - both rings name `Z` as their spin axis (a ring is thin along Z, so Z is the
+    axle; spinning about Y would tumble it end over end)
+  - every spinner completes a revolution in **under 30 seconds** — a speed that
+    cannot be seen is the same as no animation, and that is exactly how it
+    shipped twice
+  - walkway decks sit **below** the dais top, and the overlap leaves most of
+    the dais visible
+
+### Stopped at
+
+311 passing. Unverified in-engine. The `[HubEffects] animating N part(s)` line
+now reports the count directly, so if anything is still still, that number says
+whether it was collected.
+
+### Next
+
+1. Walk it. Rings, bobbing shards, breathing core, visible dais.
+2. Placeholder staircase.
+3. Spec amendment for portal-as-entry.
+
+---
+
 ## Session 14 — 2026-09-18 — Spin speed, neon glare, and a diagnostic
 
 **Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 305 passing

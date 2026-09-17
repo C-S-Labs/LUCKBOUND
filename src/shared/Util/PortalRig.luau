@@ -449,8 +449,10 @@ function PortalRig.animate(model: Model): RBXScriptConnection
 			-- a MeshPart's pivot is its bounding-box centre, which for a ring
 			-- is the hub of the wheel. That is why the art spec insisted the
 			-- rings be symmetric about their origin.
+			-- AUTHORED rings are single MeshParts and are driven by
+			-- HubEffects' data animator instead, off their SpinSpeed
+			-- attribute. Driving them here as well would spin them twice.
 			if ring:IsA("BasePart") then
-				ring.CFrame = ring.CFrame * CFrame.Angles(0, 0, ringSpeed * dt)
 				continue
 			end
 
@@ -470,7 +472,8 @@ function PortalRig.animate(model: Model): RBXScriptConnection
 			end
 		end
 
-		if plane and plane:IsA("BasePart") then
+		-- Same split: a plane carrying PulseAlphaMin is the animator's.
+		if plane and plane:IsA("BasePart") and plane:GetAttribute("PulseAlphaMin") == nil then
 			local t = (math.sin(elapsed / cfg.PlanePulseSeconds * math.pi * 2) + 1) / 2
 			plane.Transparency = cfg.PlanePulseMin + (cfg.PlanePulseMax - cfg.PlanePulseMin) * t
 		end

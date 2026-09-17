@@ -103,29 +103,88 @@ function HubEffects.init(): ()
 			PortalRig.animate(gateRig)
 		end
 
+		-- ONE DATA-DRIVEN ANIMATOR for everything in the hub that moves.
+		--
+		-- It used to be two paths: this loop, which only ever looked for
+		-- IsFeaturedShard, and PortalRig.animate, which found the rings by
+		-- name through the EngineRig lookup. The shards moved and the rings
+		-- did not, across two playtests -- and because the two paths fail
+		-- differently, the symptom looked like an anchoring or replication
+		-- problem rather than "the rings were never in the list".
+		--
+		-- Now anything carrying a SpinSpeed, BobStuds, PulseScale or
+		-- PulseAlphaMin attribute animates, wherever it sits in the hub and
+		-- whoever put it there. Adding motion to an authored part is a line in
+		-- the content paint table, not a code change.
+		local animated: { any } = {}
 		local shards: { BasePart } = {}
 		local orbiters: { BasePart } = {}
-		local spinners: { BasePart } = {}
+
+		local AXES: { [string]: Vector3 } = {
+			X = Vector3.xAxis,
+			Y = Vector3.yAxis,
+			Z = Vector3.zAxis,
+		}
+
+		local function consider(part: BasePart)
+			if part:GetAttribute("IsFeaturedShard") then
+				table.insert(shards, part)
+			end
+			if part:GetAttribute("OrbitRadius") then
+				table.insert(orbiters, part)
+				return
+			end
+
+			local spin = part:GetAttribute("SpinSpeed") :: number?
+			local bob = part:GetAttribute("BobStuds") :: number?
+			local pulse = part:GetAttribute("PulseScale") :: number?
+			local alphaMin = part:GetAttribute("PulseAlphaMin") :: number?
+			if not (spin or bob or pulse or alphaMin) then
+				return
+			end
+
+			-- A deterministic per-part phase, so six shards do not bob in
+			-- lockstep like a machine. Derived from the name rather than
+			-- random, so it is the same every join.
+			local phase = 0
+			for k = 1, #part.Name do
+				phase = (phase * 31 + string.byte(part.Name, k)) % 1000
+			end
+
+			table.insert(animated, {
+				Part = part,
+				-- The rotation is accumulated as an ANGLE and the CFrame is
+				-- rebuilt from a captured base each frame. Multiplying into
+				-- the live CFrame instead would let the bob offset compound
+				-- and walk the part away from where the artist put it.
+				Base = part.CFrame,
+				BaseSize = part.Size,
+				Angle = 0,
+				Spin = spin,
+				Axis = AXES[(part:GetAttribute("SpinAxis") :: string?) or "Y"] or Vector3.yAxis,
+				Bob = bob,
+				BobSeconds = (part:GetAttribute("BobSeconds") :: number?) or 4,
+				Pulse = pulse,
+				PulseSeconds = (part:GetAttribute("PulseSeconds") :: number?) or 3.5,
+				AlphaMin = alphaMin,
+				AlphaMax = (part:GetAttribute("PulseAlphaMax") :: number?) or 0.7,
+				Phase = phase / 1000 * math.pi * 2,
+			})
+		end
 
 		for _, descendant in hub:GetDescendants() do
-			if not descendant:IsA("BasePart") then
-				continue
-			end
-			if descendant:GetAttribute("IsFeaturedShard") then
-				table.insert(shards, descendant)
-				table.insert(spinners, descendant)
-			elseif descendant:GetAttribute("OrbitRadius") then
-				table.insert(orbiters, descendant)
+			if descendant:IsA("BasePart") then
+				consider(descendant)
 			end
 		end
 
 		print(
 			string.format(
-				"[HubEffects] scan: %d shard(s), %d orbiter(s); engineRig %s, gateRig %s",
+				"[HubEffects] animating %d part(s), %d shard(s), %d orbiter(s); engineRig %s",
+				#animated,
 				#shards,
 				#orbiters,
-				if engineRig then "found" else "MISSING",
-				if gateRig then "found" else "MISSING"
+				if engineRig then "found" else "MISSING"
 			)
 		)
 
@@ -133,9 +192,8 @@ function HubEffects.init(): ()
 		-- animates. Streaming, or a part added by a later system, would
 		-- otherwise sit still with no way to tell why.
 		hub.DescendantAdded:Connect(function(descendant)
-			if descendant:IsA("BasePart") and descendant:GetAttribute("IsFeaturedShard") then
-				table.insert(shards, descendant)
-				table.insert(spinners, descendant)
+			if descendant:IsA("BasePart") then
+				consider(descendant)
 			end
 		end)
 
@@ -143,9 +201,33 @@ function HubEffects.init(): ()
 		RunService.Heartbeat:Connect(function(dt)
 			elapsed += dt
 
-			for _, spinner in spinners do
-				local speed = spinner:GetAttribute("SpinSpeed") or 0.2
-				spinner.CFrame = spinner.CFrame * CFrame.Angles(0, speed * dt, 0)
+			for _, a in animated do
+				local part = a.Part
+				local moved = false
+				local cf = a.Base
+
+				if a.Spin then
+					a.Angle += a.Spin * dt
+					cf = cf * CFrame.fromAxisAngle(a.Axis, a.Angle)
+					moved = true
+				end
+				if a.Bob then
+					local t = math.sin(elapsed / a.BobSeconds * math.pi * 2 + a.Phase)
+					cf = cf + Vector3.new(0, t * a.Bob, 0)
+					moved = true
+				end
+				if moved then
+					part.CFrame = cf
+				end
+
+				if a.Pulse then
+					local t = (math.sin(elapsed / a.PulseSeconds * math.pi * 2 + a.Phase) + 1) / 2
+					part.Size = a.BaseSize * (1 - a.Pulse + a.Pulse * 2 * t)
+				end
+				if a.AlphaMin then
+					local t = (math.sin(elapsed / a.PulseSeconds * math.pi * 2 + a.Phase) + 1) / 2
+					part.Transparency = a.AlphaMin + (a.AlphaMax - a.AlphaMin) * t
+				end
 			end
 
 			-- Shelves orbit the Archive's centre at their own radius and speed.

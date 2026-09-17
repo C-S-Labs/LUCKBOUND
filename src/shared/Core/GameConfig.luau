@@ -220,7 +220,12 @@ local GameConfig = {
 		VisualExtent = 4000, -- how far scenery reaches; not walkable
 		PlazaRingWidth = 200,
 		WalkwayWidth = 44,
-		WalkwayRaise = 6, -- studs above the lower plaza ring
+		-- 6 -> 1.5. The authored dais is only ~2 studs proud of the hub floor
+		-- (its 4.21 raw thickness at Prefab.Scale), so walkways raised 6 ran
+		-- OVER the top of it and buried the platform the Engine stands on --
+		-- reported from the second authored playtest. The deck now sits just
+		-- under the dais lip and the player steps up onto it.
+		WalkwayRaise = 1.5, -- studs above the lower plaza ring
 
 		-- The invisible pad the Gate's ENTER prompt lives on, as a multiple of
 		-- the portal's scale, and how far above the platform it floats.
