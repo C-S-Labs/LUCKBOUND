@@ -33,6 +33,98 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 18 — 2026-09-18 — Clipping, layering, and a polish pass
+
+**Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 322 passing (was 320)
+
+### Done
+
+Sixth playtest. Two reported faults, both measurable, plus an unprompted polish
+pass the owner asked for.
+
+**THE VEIL PULSED THROUGH ITS OWN FRAME, and the numbers say so exactly.**
+Measured from the delivered mesh at `Prefab.Scale`:
+
+| | Studs |
+|---|---|
+| `PortalPlane` | 15.22 |
+| `InnerRing` | 15.92 |
+| Clearance | **0.35 a side** |
+| Veil at `PulseScale = 0.06` | **16.13** |
+
+I added that size pulse last session without checking it against the ring it
+sits inside. The breath is now carried entirely by transparency, which cannot
+clip, and a test asserts the veil's pulsed width stays inside the ring.
+
+**Ring and veil had merged.** Both emissive in the same hue, so they read as one
+bright disc and the ring's teeth stopped existing. `InnerRing` is now `Metal`:
+it takes the rarity colour but catches light instead of emitting it, so the
+frame is machined and the aperture inside it glows. That is the way round it
+should have been — the thing you walk through should be the light source.
+
+**The base is two-tone at last, by being both colours in turn.** The "blue
+cylindrical base" is `LevitationCore`, a **single mesh** — it cannot be painted
+two tones, which is why two attempts at recolouring it failed. It now drifts
+cyan → violet over six seconds while breathing on a different period, so the two
+never line up and it never looks like a loop. New `ColorA`/`ColorB`/
+`ColorSeconds` in the animator.
+
+### The polish pass
+
+Asked what would make a player stop and say the game is well made, the answer
+was **ordered motion** — things that happen *in sequence* read as a mechanism
+thinking, where the same things at random phases read as flicker.
+
+New `WaveCount` on a style entry: `PrefabLoader` reads the trailing number in
+each part's name and sets an ordered phase, so a set ripples instead of
+twinkling.
+
+- **Eight glyphs** light one after another around the plinth.
+- **Sixteen inlays** ripple outward on a slower period, so the dais breathes
+  under the plinth rather than with it.
+
+### Owner notes taken mid-session
+
+- **Rings slower and looser.** 0.32 / −0.45 → **0.22 / −0.31**, a 28- and
+  20-second revolution, with the rate breathing ±32% over a longer wobble. The
+  note was "fluid and flowing, not forced", and the fix for *forced* is less
+  regularity rather than less speed alone.
+
+- **Polished over rustic** — a judgement call, and reversible in one line.
+  `Basalt`'s heavy grain read as corroded bronze against pale marble and cool
+  energy, which is a third material language in a palette that only has two.
+  `Slate` keeps the mass and the dark value without the rust.
+
+### Decisions made
+
+- **Geometry that moves needs its clearance checked.** A size pulse is not a
+  free effect: it has a budget set by whatever surrounds it, and that budget is
+  now asserted rather than assumed.
+
+- **Layer by material, not by colour.** Dark matte frame → matte machined ring →
+  emissive aperture gives three readable layers from one rarity hue. Colour
+  alone had all three fighting.
+
+- **Sequence beats randomness for sets.** Hash phasing is right for six shards
+  adrift; ordered phasing is right for eight glyphs in a ring.
+
+### Stopped at
+
+322 passing. Unverified in-engine. The performance budget from Session 16 is
+still unmeasured, and this round added ~24 animated parts (glyphs and inlays),
+all on the throttled transparency path and distance-culled.
+
+### Next
+
+1. Walk it.
+2. **Profile on a real low-end device.** Two sessions have now added animation
+   on top of an unmeasured budget.
+3. Placeholder staircase, then the spec amendment for portal-as-entry.
+4. The Crossroads proper — the owner expects the Engine to read much better
+   once it is not standing in a test harness.
+
+---
+
 ## Session 17 — 2026-09-18 — Making the Engine stop reading as a machine
 
 **Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 320 passing (was 317)

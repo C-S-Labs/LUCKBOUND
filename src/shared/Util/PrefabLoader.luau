@@ -41,6 +41,8 @@ export type Style = {
 	Attributes: { [string]: any }?,
 	-- Attribute name -> fraction to vary it by, per part. See the paint loop.
 	Vary: { [string]: number }?,
+	-- How many parts are in this set, for ordered wave phasing.
+	WaveCount: number?,
 }
 
 --- The Rojo-synced source model for a key, or nil when it is not there --
@@ -194,6 +196,15 @@ function PrefabLoader.build(
 				-- +/- its fraction, from a hash of the part NAME -- so the
 				-- spread is different per part, identical every run, and
 				-- still a single line of content rather than six.
+				-- Ordered phase for a set that should pulse as a wave. Inlay7
+				-- of 16 sits 7/16 of the way round the loop, so the ripple
+				-- travels instead of flickering.
+				if style.WaveCount then
+					local index = tonumber(string.match(d.Name, "(%d+)$"))
+					if index then
+						d:SetAttribute("WavePhase", (index - 1) / style.WaveCount)
+					end
+				end
 				for key, spread in style.Vary or {} do
 					local base = d:GetAttribute(key)
 					if type(base) == "number" then

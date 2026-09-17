@@ -171,7 +171,8 @@ function HubEffects.init(): ()
 			local pulse = part:GetAttribute("PulseScale") :: number?
 			local alphaMin = part:GetAttribute("PulseAlphaMin") :: number?
 			local wobble = part:GetAttribute("WobbleDegrees") :: number?
-			if not (spin or bob or pulse or alphaMin or wobble) then
+			local colorA = part:GetAttribute("ColorA") :: Color3?
+			if not (spin or bob or pulse or alphaMin or wobble or colorA) then
 				return
 			end
 
@@ -186,7 +187,11 @@ function HubEffects.init(): ()
 			-- nothing for two playtests. The final multiply is what pulls
 			-- neighbours apart: the same six now land at .50 .92 .35 .78 .21
 			-- .64.
-			local phase = hashName(part.Name)
+			-- A WavePhase makes a set pulse IN ORDER rather than at random --
+			-- eight glyphs lighting one after another around the plinth reads
+			-- as the machine thinking, where eight random phases just reads as
+			-- flicker. Set from the trailing number in the part's name.
+			local phase = (part:GetAttribute("WavePhase") :: number?) or hashName(part.Name)
 
 			table.insert(animated, {
 				Part = part,
@@ -214,6 +219,11 @@ function HubEffects.init(): ()
 				PulseSeconds = (part:GetAttribute("PulseSeconds") :: number?) or 3.5,
 				AlphaMin = alphaMin,
 				AlphaMax = (part:GetAttribute("PulseAlphaMax") :: number?) or 0.7,
+				-- Drifts between two colours. One mesh cannot be painted two
+				-- tones, but it can be both in turn.
+				ColorA = colorA,
+				ColorB = (part:GetAttribute("ColorB") :: Color3?) or colorA,
+				ColorSeconds = (part:GetAttribute("ColorSeconds") :: number?) or 6,
 				Phase = phase * math.pi * 2,
 			})
 		end
@@ -332,6 +342,10 @@ function HubEffects.init(): ()
 					if a.AlphaMin then
 						local t = (math.sin(elapsed / a.PulseSeconds * math.pi * 2 + a.Phase) + 1) / 2
 						part.Transparency = a.AlphaMin + (a.AlphaMax - a.AlphaMin) * t
+					end
+					if a.ColorA then
+						local t = (math.sin(elapsed / a.ColorSeconds * math.pi * 2 + a.Phase) + 1) / 2
+						part.Color = a.ColorA:Lerp(a.ColorB, t)
 					end
 				end
 			end

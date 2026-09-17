@@ -1688,7 +1688,20 @@ do
 			(attrs.WobbleDegrees or 0) > 0 and (attrs.SpinJitter or 0) > 0)
 	end
 	check("the veil has a breath of its own",
-		veil.Attributes.PulseScale ~= nil and veil.Attributes.PulseAlphaMin ~= nil)
+		veil.Attributes.PulseAlphaMin ~= nil)
+
+	-- IT MUST NOT BREATHE WIDER THAN ITS OWN FRAME. The veil is 15.22 studs
+	-- across inside a 15.92 inner ring -- 0.35 studs of clearance a side -- and
+	-- a 6% size pulse grew it to 16.13 and clipped straight through. Measured
+	-- from the delivered mesh; a re-delivery re-measures.
+	local VEIL_W, INNER_W = 15.22, 15.92
+	check("the veil cannot pulse through the ring around it",
+		VEIL_W * (1 + (veil.Attributes.PulseScale or 0)) < INNER_W,
+		string.format("%.2f into %.2f", VEIL_W * (1 + (veil.Attributes.PulseScale or 0)), INNER_W))
+
+	-- The frame must not emit, or it merges with the aperture it frames.
+	check("the inner ring is matte so the veil reads as the light source",
+		styles.InnerRing.Material ~= Enum.Material.Neon)
 
 	-- Performance: the animator runs every frame on every client, including
 	-- the phones the §6 checklist budgets for.

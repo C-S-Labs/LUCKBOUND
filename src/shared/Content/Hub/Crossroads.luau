@@ -185,18 +185,40 @@ local Crossroads = {
 			-- Dimmed from the palette's 124,245,224 by Portal.NeonTint. Neon emits at
 			-- full Color and bloom amplifies it; at full value these spokes bled a
 			-- halo across the dais.
-			Inlay = { Color = Color3.fromRGB(68, 135, 123), Material = Enum.Material.Neon },
+			Inlay = {
+				Color = Color3.fromRGB(68, 135, 123),
+				Material = Enum.Material.Neon,
+				-- The same ripple, one ring further out. Sixteen spokes on a
+				-- slower period than the glyphs, so the dais breathes under
+				-- the plinth rather than with it.
+				WaveCount = 16,
+				Attributes = { PulseAlphaMin = 0.1, PulseAlphaMax = 0.6, PulseSeconds = 3.4 },
+			},
 
 			-- Rune ring ---------------------------------------------------
 			Rune = { Color = Color3.fromRGB(88, 82, 104), Material = Enum.Material.Slate },
 			Rune_GoldFrames = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
 			-- Rarity-tinted. The colour set here is only the idle look.
-			Glyph = { Color = Color3.fromRGB(68, 135, 123), Material = Enum.Material.Neon },
+			-- Eight glyphs lighting one after another around the plinth. A
+			-- travelling ripple reads as the machine thinking; eight random
+			-- phases would just read as flicker.
+			Glyph = {
+				Color = Color3.fromRGB(68, 135, 123),
+				Material = Enum.Material.Neon,
+				WaveCount = 8,
+				Attributes = { PulseAlphaMin = 0.05, PulseAlphaMax = 0.55, PulseSeconds = 2.6 },
+			},
 
 			-- The portal --------------------------------------------------
+			-- POLISHED, NOT RUSTIC. Basalt's heavy grain read as corroded
+			-- bronze against pale marble and cool energy -- a third material
+			-- language in a palette that only has two. Slate keeps the mass
+			-- and the dark value without the rust, so the frame reads as
+			-- machined stone. One line to put back if the weathered look is
+			-- wanted after all.
 			OuterRing = {
-				Color = Color3.fromRGB(64, 58, 78),
-				Material = Enum.Material.Basalt,
+				Color = Color3.fromRGB(58, 53, 72),
+				Material = Enum.Material.Slate,
 				-- Drives the spin. Negative on the inner ring so the two
 				-- counter-rotate, which is what makes the portal read as a
 				-- mechanism rather than a wheel.
@@ -207,23 +229,32 @@ local Crossroads = {
 				-- axis reading as machinery. A degree and a half of sway on
 				-- two uneven periods, and a rate that breathes +/-25%.
 				Attributes = {
-					SpinSpeed = 0.32,
+					-- 0.32 -> 0.22. Still reading as "rigid" rather than
+					-- drifting; a 28-second revolution with a rate that
+					-- breathes +/-32% over a long wobble is a ring that is
+					-- floating, not one that is driven.
+					SpinSpeed = 0.22,
 					SpinAxis = "Z",
-					SpinJitter = 0.25,
-					WobbleDegrees = 1.5,
-					WobbleSeconds = 7,
+					SpinJitter = 0.32,
+					WobbleDegrees = 1.8,
+					WobbleSeconds = 9,
 				},
 			},
 			RingFoot_Clamps = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
+			-- MATTE, deliberately. With the ring and the veil both emissive in
+			-- the same hue they merged into one bright disc and the teeth
+			-- stopped reading. Metal takes the rarity colour but catches light
+			-- instead of emitting it, so the frame is machined and the
+			-- aperture inside it glows -- which is the way round it should be.
 			InnerRing = {
 				Color = Color3.fromRGB(68, 135, 123),
-				Material = Enum.Material.Neon,
+				Material = Enum.Material.Metal,
 				Attributes = {
-					SpinSpeed = -0.45,
+					SpinSpeed = -0.31,
 					SpinAxis = "Z",
-					SpinJitter = 0.3,
-					WobbleDegrees = 1.1,
-					WobbleSeconds = 5.5,
+					SpinJitter = 0.38,
+					WobbleDegrees = 1.3,
+					WobbleSeconds = 6.5,
 				},
 			},
 			-- THE VEIL. This is the surface a player walks through, so it is
@@ -246,9 +277,13 @@ local Crossroads = {
 				Transparency = 0.45,
 				CanCollide = false,
 				Attributes = {
-					PulseAlphaMin = 0.38,
+					-- NO PulseScale. The veil is 15.22 studs across inside a
+					-- 15.92 ring: 0.35 studs of clearance a side. A 6% breath
+					-- grew it to 16.13 and it pulsed straight through its own
+					-- frame. The breath is carried entirely by transparency,
+					-- which cannot clip.
+					PulseAlphaMin = 0.35,
 					PulseAlphaMax = 0.62,
-					PulseScale = 0.06,
 					PulseSeconds = 2.8,
 				},
 			},
@@ -272,11 +307,20 @@ local Crossroads = {
 			-- generator, core and coils are decorative unless the game adds
 			-- behaviour, and a rotating core would also get caught by the
 			-- shard rarity cycle and tinted away from its cyan-violet.
+			-- The core is a SINGLE mesh, so it cannot be painted two tones --
+			-- but it can be both in turn. It drifts cyan to violet over six
+			-- seconds while breathing on a different period, so the two never
+			-- line up and it never looks like a loop.
 			LevitationCore = {
 				Color = Color3.fromRGB(78, 150, 140),
 				Material = Enum.Material.Neon,
-				-- Breathes in and out, +/-12%, as a regulator under load.
-				Attributes = { PulseScale = 0.12, PulseSeconds = 3.6 },
+				Attributes = {
+					PulseScale = 0.12,
+					PulseSeconds = 3.6,
+					ColorA = Color3.fromRGB(78, 150, 140),
+					ColorB = Color3.fromRGB(112, 78, 164),
+					ColorSeconds = 6,
+				},
 			},
 
 			-- Floating crystals. Rarity-tinted, and each spins in place.
