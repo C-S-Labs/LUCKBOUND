@@ -98,9 +98,10 @@ local ENTRIES: { [string]: AssetEntry } = {
 		AssetId = "",
 		Status = "PLACEHOLDER",
 		Source = "assets/rbxm/maps/ES_ENVIRONMENT_FULL.rbxmx",
-		Notes = "The whole Ethereal Scape scene: 699 MeshParts, 14 landmasses, "
-			.. "six bridges, one sky temple. Cloned per expedition and scaled "
-			.. "by WorldDefinition.PrebuiltMap.Scale.",
+		Notes = "The whole Ethereal Scape scene, v2 (2026-09-17): 925 MeshParts "
+			.. "with PBR SurfaceAppearances, 8 islands + 16 satellites, six "
+			.. "railed golden bridges, one sky temple. Delivered anchored and "
+			.. "at play scale. Cloned per expedition.",
 	},
 }
 

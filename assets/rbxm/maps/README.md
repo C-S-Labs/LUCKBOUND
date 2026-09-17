@@ -47,93 +47,72 @@ onto the stage origin.
 
 # `ES_ENVIRONMENT_FULL.rbxmx` — Ethereal Scape
 
-The Blender scene imported into Studio and saved back out as a Roblox XML
-model. Delivered 2026-09-16.
+**v2, delivered 2026-09-17.** The Blender scene imported into Studio and saved
+back out as a Roblox XML model.
 
 | | |
 |---|---|
 | Format | `.rbxmx` (XML) — readable from the repo, which is the point |
-| Size | 4.3 MB |
-| Contents | **699 MeshParts** in one flat `Model` |
-| Mesh data | **every part carries a real `rbxassetid://` MeshId** — the geometry is uploaded and lives on Roblox's CDN |
-| Names | preserved from Blender: `Island_00_Meadow`, `Temple_Column`, `Waystone_03`, `Path_Bridge`, `Spawn_Column`, `R6_Torso` … |
+| Size | 6.6 MB |
+| Contents | **925 MeshParts** in one flat `Model` |
+| Materials | **429 `SurfaceAppearance`** objects — PBR, not flat colour |
+| Mesh data | every part carries a real `rbxassetid://` MeshId |
+| Anchoring | ✅ **all 925 anchored on delivery** |
+| Scale | ✅ **play scale — `PrebuiltMap.Scale = 1.0`** |
+| Layout | 8 islands, 16 satellites, 6 railed bridges, 1 sky temple |
 
-**The upload half of the pipeline worked.** 699 meshes on the CDN, referenced
-by id, names intact. That is the expensive part and it is done.
+## Measured on arrival
+
+Against a 5-stud R6 character, and at `WalkSpeed = 32`:
+
+| | Studs | Reads as |
+|---|---|---|
+| Tree (trunk + crown) | 28 | 5.6 person-heights |
+| Waystone + cap | 24 | 4.8 |
+| Temple doorway | 53 | 10.6 — a cathedral door |
+| Temple columns | 62 | 12.4 |
+| Temple floor | 267 × 164 | about a hub district platform |
+| Smallest island (`Island_00`) | 228 × 180 | ~7 s to cross |
+| Largest island (`Island_07`) | 428 × 340 | the temple's plateau |
+| Arrival → temple | 2,277 | **71 s one way**, 142 there and back of 300 |
+
+`tests/cases.luau` asserts the *relationships* these imply — the round trip
+fits the expedition, an island is at least as roomy as a hub district, a
+doorway is grand and not absurd. It does not assert the numbers themselves,
+because a re-delivery changes them.
+
+> **Note for a re-delivery:** the `Scale_Reference` R6 proxy in this version
+> measures 13.2 studs tall (legs 5 + torso 5 + head 3.2) against a real 5. The
+> rest of the scene reads correctly at 1.0, so the proxy is a loose stand-in
+> rather than a live reference. Worth tightening if it is meant to be the
+> yardstick — measure a doorway and a tree too, never the proxy alone.
 
 ## Why this world is prebuilt
 
-It was going to be eight chunks. Measuring the delivered file settled it the
-other way: **the scene is a composed traverse, not a set of interchangeable
-pieces.** Four independent things say so.
+It was going to be eight chunks. Measuring the delivery settled it the other
+way: **the scene is a composed traverse, not a set of interchangeable pieces.**
 
-**1. It climbs.** The eight island meadows rise monotonically, ~58 studs a
-step:
+- **It climbs.** The eight island meadows rise monotonically, y 61 → 151.
+- **Each bridge is built for its own gap.** Six `BridgeGolden_NN` assemblies —
+  planks, posts, upper and lower rails, underframe, caps — each spanning one
+  specific pair at that pair's height.
+- **The islands are individually themed.** `AI_Island01_Centerpiece`,
+  `AI_Island03_ArchPier`, `AI_Island04_Gnomon`, `AI_Island05_GroundCrystal` —
+  v2 leaned *further* into composition, not less.
+- **It builds toward the temple.** Islands grow 228 × 180 at the arrival shelf
+  to 428 × 340 under the Sky Temple.
+- **Paths are laid across it.** `IslandPath_01`–`06` gravel runs join each
+  island's bridgeheads.
 
-```
-Island_00  y 354      Island_04  y 571
-Island_01  y 408      Island_05  y 625
-Island_02  y 467      Island_06  y 693
-Island_03  y 512      Island_07  y 761
-```
-
-**2. Each bridge is cut to its own gap.** Six `Path_Bridge` parts, 714–833
-studs long, each sitting in one specific gap at that gap's specific height.
-
-**3. The landings are authored in matched pairs.** Thirteen `Bridge_Landing`
-parts named `_NN_0` and `_NN_1` — the two ends of bridge NN, one on each island
-it joins.
-
-**4. It builds toward the temple.** Islands grow 1030 × 813 at the arrival
-shelf to 1932 × 1535 under the Sky Temple.
-
-Shuffle the islands and all four break at once. The socket grammar is not
+Shuffle the islands and every one of those breaks. The socket grammar is not
 wrong — this art is simply not modular, and making it modular would mean
-re-authoring it: identical gaps, identical height deltas, identical rims.
-
-Fourteen more landmasses (`Satellite_00`–`15`) hang off the route as backdrop.
-
-## Scale — resolved, provisionally
-
-The scene carries its own R6 proxy in `Scale_Reference`, and this is exactly
-what it was for:
-
-```
-R6_Leg   22.6 studs tall
-R6_Torso 22.6
-R6_Head  14.4
-         -----
-         59.6 studs total     A real Roblox R6 character is 5.
-```
-
-Earlier sessions read that as ~12× and guessed the **proxy** was wrong, because
-the islands measured 1030–1932 studs and that felt right. Measuring the rest of
-the scene reverses the verdict: **everything agrees with the proxy, not with
-Roblox.**
-
-| Object | As delivered | Against a 5-stud character | At scale 0.1 |
-|---|---|---|---|
-| Temple doorway jamb | 239 studs | 48× a person | 24 studs |
-| Tree (trunk + crown) | 126 | 25× | 13 |
-| Waystone + cap | 117 | 23× | 12 |
-| Spawn colonnade column | 108 | 22× | 11 |
-| Bridge deck | 789 long | — | 79 |
-| Island 00 meadow | 1030 × 813 | — | 103 × 81 |
-| Arrival → temple | 10,278 | 642 s walk | 1,028 studs, 32 s |
-
-A 48-person-high doorway is not a stylistic choice, it is a unit error. The
-scene is internally consistent and uniformly ~10× oversized, so **one number
-fixes all of it** — `PrebuiltMap.Scale`, currently `0.1`.
-
-That number is **provisional until someone walks it.** It is data on the world,
-not a re-upload: change it, rejoin, walk it again. Nothing has to be re-exported
-and no mesh has to be re-uploaded whatever the answer turns out to be.
+re-authoring it with identical gaps, heights and rims.
 
 ## Still to do on this file
 
 1. **Add `EntryAnchor` and `ReturnAnchor`.** Today the loader derives both and
-   warns. `Spawn_Platform` on Island_00 is the obvious home for the first.
-2. **Anchor it in Studio and re-save.** All 699 parts are `Anchored = false`.
-   The loader fixes this on every clone, which is correct as a safety net and
-   wasteful as a habit.
-3. **Walk it at `Scale = 0.1`** and tune from there.
+   warns on every entry. `Spawn_Platform` on Island_00 (44 × 44, at the
+   colonnade) is the obvious home for the first; somewhere on the temple
+   plateau for the second.
+
+That is the whole list. v2 arrived anchored and at scale.

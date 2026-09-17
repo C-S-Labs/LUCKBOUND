@@ -309,15 +309,15 @@ survive a rescale and a literal does not.
 |---|---|---|
 | **Portal plane is still above head height** | Medium | You reach the prompt and the rig springs from the floor, but the walk-through *plane* sits inside the inner ring, ~30 studs up. Blueprint §1.3's concentric rings make that inherent. Irrelevant once the rig is authored in Blender. |
 | **25% of rolls land on a world with no map** | **High** | Emberfall 15%, Sky Citadel 7%, Astral Reach 3%. Refused politely at the Gate; printed as a boot warning and asserted by test. Emberfall and Astral Reach need only a chunk kit; Sky Citadel needs a blueprint section first. |
-| **Ethereal Scape's scale is provisional** | Medium | `PrebuiltMap.Scale = 0.1`, derived from the scene's own R6 proxy and corroborated by its doorways, trees and waystones — all of which read as ~10× a real character. Unwalked. It is one number on the world, so correcting it costs a data edit and a rejoin, not a re-upload. |
-| **The scene has no `EntryAnchor` / `ReturnAnchor`** | Medium | The loader derives both from the bounding box and warns, so the map loads and walks. Arrival lands on top of the bounding box rather than on `Spawn_Platform`. Two named parts in Studio fix it. |
+| **Ethereal Scape's `Scale_Reference` proxy is loose** | Low | The v2 R6 proxy measures 13.2 studs against a real 5, but the rest of the scene reads correctly at `Scale = 1.0`. So the proxy is a stand-in, not a live reference. Worth tightening before the next world, or dropping — measuring it alone is what produced the ~10× v1. |
+| **The scene has no `EntryAnchor` / `ReturnAnchor`** | Medium | The loader derives both from the bounding box and warns, so the map loads and walks. Arrival lands on top of the bounding box rather than on `Spawn_Platform` (44 × 44, under the colonnade). Two named parts in Studio fix it — the only thing left on that file. |
 | **Expeditions are to become a separate place/instance** | **Architecture** | Owner-stated 2026-09-16: worlds will be rendered in a separate instance and reached by `TeleportService`, for performance and to isolate parties and solo queues. The current in-place `ExpeditionStage` is therefore a **prototype of the loop, not of the deployment**. `ExpeditionCore` is unaffected — it decides destination, seed and eligibility, none of which care where the map is built. `ExpeditionSystem` and `ChunkLoader` are what would move. |
 | Fate-on-completion may become currency or loot | Design | Owner-flagged: a completion bonus drawn from an item pool, or a currency for upgrades, rather than flat Fate. `ProgressionSystem.award` is the single seam. |
 | `UNCOMMON` colour unsanctioned | Medium | Now shipping — see above |
 | Chunk collision is XZ-only | Medium | Blocks any kit that climbs. `MODULAR_MAPS.md` |
 | No pathfinding validation | Medium | Non-overlapping ≠ walkable between. Addendum §A4 step 4 |
 | All 8 chunks are `PLACEHOLDER` | Expected | Blockout is deliberate; upload is a per-piece change |
-| **Ethereal Scape: one whole map, not eight chunks** | Decided 2026-09-17 | The art is a composed traverse and cannot be shuffled — evidence in `assets/rbxm/maps/README.md`. Wired: `assets/rbxm/maps/` → `ServerStorage.LuckboundMaps` → `PrebuiltLoader`. Unwalked. |
+| **Ethereal Scape: one whole map, not eight chunks** | Decided 2026-09-17 | The art is a composed traverse and cannot be shuffled — evidence in `assets/rbxm/maps/README.md`. Wired: `assets/rbxm/maps/` → `ServerStorage.LuckboundMaps` → `PrebuiltLoader`. **Walked in Studio 2026-09-17** — v1 at `Scale = 0.1` read too small, modeller re-delivered at play scale, now `Scale = 1.0`. |
 | UI needs resize/layout pass | Cosmetic | Owner-flagged |
 | Placeholder text | Cosmetic | Flavour lines, labels, result card |
 | Octagonal plinth is a cylinder | Cosmetic | First thing an authored mesh replaces |
@@ -331,12 +331,11 @@ survive a rescale and a literal does not.
 walked end to end in Studio on 2026-09-16. What is left is art, content and
 two design decisions.
 
-1. **Walk Ethereal Scape.** Everything is wired: Rojo syncs
-   `assets/rbxm/maps/` into `ServerStorage.LuckboundMaps`, `PrebuiltLoader`
-   clones and scales it, `/enter` forces entry. The only open question is
-   whether `Scale = 0.1` reads right on the ground, and that is a number on the
-   world — change it, rejoin, walk it again. **This is the critical path and it
-   no longer needs the modeller.**
+1. **Walk Ethereal Scape v2.** Entry, lighting, the timer and the return are
+   proven — the whole path was walked on v1. What is new is 925 anchored PBR
+   parts at play scale. The thing to judge is the traverse: 71 seconds one way,
+   142 there and back of a 300-second expedition. If that reads as too much
+   walking, `DurationSeconds` is the knob, not `Scale`.
 2. **Walk the hub once.** Untested: the brightness pass (`ClockTime` 22 → 4.5),
    the non-colliding SpawnLocation, and the Observatory's removal.
    `TESTING.md` Test C3.

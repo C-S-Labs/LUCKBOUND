@@ -35,7 +35,8 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ## Session 10 — 2026-09-17 — Cutting the Observatory, and one map instead of eight chunks
 
-**Branch:** `claude/zen-volta-cuhfyh` (PR #13) · **Tests:** 295 passing (was 301)
+**Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 295 passing (was 301)
+**Note:** PR #13 and #14 are both merged. This work is unmerged and needs a new PR.
 
 ### Done
 
@@ -111,6 +112,46 @@ consistent and uniformly ~10× oversized, so **one number fixes all of it**:
 `PrebuiltMap.Scale = 0.1`. At that scale the traverse is 1,028 studs and 32
 seconds one way, which sits comfortably inside the 300-second expedition.
 
+**4. Same session, after a playtest: v2 of the scene, and `Scale = 1.0`.**
+
+The owner walked the map at `Scale = 0.1` and reported it too small. The
+modeller re-delivered the scene rebuilt at Roblox scale, and it arrived
+better in three other ways too:
+
+| | v1 | v2 |
+|---|---|---|
+| MeshParts | 699 | 925 |
+| Materials | flat colour | 429 PBR `SurfaceAppearance` |
+| Anchored on delivery | none | all 925 |
+| Bridges | bare decks | `BridgeGolden_NN` — planks, posts, rails, underframe |
+| Island paths | none | `IslandPath_01`–`06` gravel runs |
+| Per-island theming | none | `AI_Island01_Centerpiece`, `AI_Island03_ArchPier`, … |
+| Traverse | 10,278 studs (642 s) | 2,277 studs (**71 s** one way) |
+
+`PrebuiltMap.Scale` is now `1.0`. The field stays at 1.0 deliberately: it is
+the seam that made correcting v1 a one-line edit instead of a re-export, and
+the next authored world will not arrive at play scale either.
+
+**The v2 delivery also broke a test I wrote earlier the same session**, and
+that is the lesson worth keeping. I had asserted that `Scale` matched the
+ratio of the scene's R6 proxy to a real character — a number derived from
+measurements of one specific file. The file was replaced four hours later and
+the assertion became a liability. v2's proxy measures 13.2 studs against a
+real 5, while the rest of the scene reads correctly at 1.0, so the proxy is a
+loose stand-in and the assertion would have demanded `Scale = 0.379`.
+
+Replaced with three relationships that survive a re-delivery:
+
+- the round trip fits inside `DurationSeconds` with room to spare
+- an island is at least as roomy as a hub district platform (**this is the
+  one that catches "too small"** — "the walk fits" is satisfied by any
+  sufficiently tiny scale)
+- a doorway is between 1.5 and 20 person-heights (catches v1's 48×)
+
+Same mistake as the `Plaza.Diameter == 1150` test recorded in build spec
+§6.1, in a new outfit: *a test that asserts a measurement proves nothing once
+the thing measured is replaced.*
+
 ### Decisions made
 
 - **The Observatory was cut, not relocated.** Session 9 recommended moving it
@@ -141,9 +182,10 @@ brightness pass and the entire prebuilt path are all untested on the ground.
 
 ### Next
 
-1. **Walk Ethereal Scape.** `/enter` forces it. The one thing to judge is
-   whether `Scale = 0.1` reads right — a character should reach a doorway's
-   handle height, not its skirting. Change the number, rejoin, walk again.
+1. **Walk Ethereal Scape v2.** Entry, lighting, timer and return are already
+   proven on v1. What is new is 925 anchored PBR parts at play scale. Judge
+   the traverse — 71 s one way, 142 there and back of 300. If it drags,
+   `DurationSeconds` is the knob, not `Scale`.
 2. **Walk the hub** — brightness, the non-colliding SpawnLocation, and the gap
    where the Observatory was. `TESTING.md` Test C3.
 3. **Add `EntryAnchor` and `ReturnAnchor`** to the scene in Studio and anchor

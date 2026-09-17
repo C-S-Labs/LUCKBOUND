@@ -70,17 +70,21 @@ return {
 	PrebuiltMap = {
 		-- Names the AssetManifest entry, which names the Rojo-synced model.
 		AssetKey = "ES_ENVIRONMENT_FULL",
-		-- The scene was modelled against the R6 proxy in its Scale_Reference
-		-- collection, and that proxy is ~10x a real R6 character (59.6 studs
-		-- tall against 5). Everything else in the scene agrees with the proxy
-		-- rather than with Roblox: doorways 24 studs, trees 11, waystones 12,
-		-- a 1028-stud walk end to end. So the scene is internally consistent
-		-- and uniformly oversized, and one number fixes all of it.
+		-- 1.0: THE DELIVERY IS ALREADY AT PLAY SCALE.
 		--
-		-- PROVISIONAL until someone walks it. 0.1 puts the traverse at ~64
-		-- seconds one way at the default WalkSpeed, which fits inside the
-		-- 300-second expedition with room for detours.
-		Scale = 0.1,
+		-- The first delivery was not -- it was ~10x oversized, and 0.1 was the
+		-- correction. The owner walked that and found it too small, and the
+		-- modeller re-delivered the scene rebuilt at Roblox scale on
+		-- 2026-09-17. Measured on arrival: a 28-stud tree, a 24-stud waystone,
+		-- a 53-stud temple doorway, 228-428 stud islands, and a 2277-stud walk
+		-- from the arrival shelf to the temple -- 71 seconds one way at
+		-- GameConfig.Scale.WalkSpeed, 142 there and back inside a 300-second
+		-- expedition. Those are the numbers the tests assert against.
+		--
+		-- The field stays even at 1.0. It is the seam that made correcting the
+		-- first delivery a one-line edit instead of a re-export, and the next
+		-- authored world will not arrive at play scale either.
+		Scale = 1.0,
 	},
 	RecommendedPower = 3,
 	Flavor = "Above the weather, and nothing casts a shadow. The ground is a courtesy, and it ends.",

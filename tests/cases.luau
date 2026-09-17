@@ -1261,36 +1261,46 @@ do
 		es.MapPathLength == nil)
 
 	-- MEASURED FROM THE DELIVERED FILE, assets/rbxm/maps/ES_ENVIRONMENT_FULL
-	-- .rbxmx, not estimated. These are the numbers the Scale below has to
-	-- reconcile, and they are written down so a future rescale argues with
-	-- evidence rather than with taste.
-	local SCENE_TRAVERSE = 10278 -- studs, island 00 centre to island 07 centre
-	local SCENE_R6_HEIGHT = 59.6 -- the Scale_Reference proxy: legs+torso+head
-	local REAL_R6_HEIGHT = 5 -- what a Roblox R6 character actually is
+	-- .rbxmx, not estimated. Re-delivered at Roblox scale 2026-09-17 after the
+	-- first cut shipped ~10x oversized.
+	--
+	-- A RE-DELIVERY MEANS RE-MEASURING THESE. They are a snapshot of one file,
+	-- and the previous set went stale the moment the modeller sent a new one.
+	-- What they are for is the RELATIONSHIPS below -- none of these tests
+	-- assert that a number is a particular number.
+	local SCENE_TRAVERSE = 2277 -- studs, island 00 centre to island 07 centre
+	local SMALLEST_ISLAND = 228 -- Island_00_Meadow, its widest axis
+	local TEMPLE_DOOR_HEIGHT = 53 -- Temple_Entry_Jamb, floor to head
+	local CHARACTER_HEIGHT = 5 -- what a Roblox R6 character actually is
 
-	-- The proxy is the modeller's own statement of scale, and every other
-	-- object in the scene agrees with it: 24-stud doorways, 11-stud trees,
-	-- 12-stud waystones. So the scene is internally consistent and uniformly
-	-- oversized, and ONE number fixes all of it.
-	local impliedScale = REAL_R6_HEIGHT / SCENE_R6_HEIGHT
-	check("the declared Scale matches the scene's own R6 reference",
-		math.abs(es.PrebuiltMap.Scale - impliedScale) < 0.03,
-		string.format("declared %.3f, implied %.3f", es.PrebuiltMap.Scale, impliedScale))
-
-	-- THE RELATIONSHIP THAT MATTERS, and the one a bad Scale breaks. At 1.0
-	-- the walk alone is 642 seconds against a 300-second expedition; the test
-	-- that would have caught that is this one, not an assertion that Scale is
-	-- some particular number.
-	local walkSeconds = SCENE_TRAVERSE * es.PrebuiltMap.Scale / GameConfig.Scale.WalkSpeed
+	local scale = es.PrebuiltMap.Scale
+	local walkSeconds = SCENE_TRAVERSE * scale / GameConfig.Scale.WalkSpeed
 	print(string.format("        Ethereal Scape traverse: %.0f studs, %.0fs one way at scale %.2f",
-		SCENE_TRAVERSE * es.PrebuiltMap.Scale, walkSeconds, es.PrebuiltMap.Scale))
+		SCENE_TRAVERSE * scale, walkSeconds, scale))
+
+	-- THE RELATIONSHIP THAT MATTERS, and the one a bad Scale breaks in the
+	-- expensive direction. The first delivery walked 642 seconds against a
+	-- 300-second expedition.
 	check("the walk there and back fits inside the expedition with room to spare",
 		walkSeconds * 2 < es.DurationSeconds * 0.75,
 		string.format("%.0fs of %ds", walkSeconds * 2, es.DurationSeconds))
-	-- ...and is not so small that the traverse stops being a journey.
-	check("the map is still bigger than the hub is wide",
-		SCENE_TRAVERSE * es.PrebuiltMap.Scale > GameConfig.HubLayout.HubDiameter * 0.6,
-		string.format("%.0f studs", SCENE_TRAVERSE * es.PrebuiltMap.Scale))
+
+	-- ...and the other direction, which is how 0.1 failed its playtest: at
+	-- some point an island stops being somewhere you arrive and becomes a
+	-- stepping stone. A district platform in the hub is the yardstick, since
+	-- that is the smallest space in the game a player is meant to stand around
+	-- in.
+	check("an island is at least as roomy as a hub district platform",
+		SMALLEST_ISLAND * scale >= GameConfig.HubLayout.ZoneRingRadius * 0.4,
+		string.format("%.0f studs across", SMALLEST_ISLAND * scale))
+
+	-- THE SCALE SANITY CHECK THAT GENERALISES. Nothing a person walks through
+	-- should be dozens of person-heights tall. The first delivery's doorway
+	-- was 48; this catches that class of error without pinning a number.
+	local doorHeights = TEMPLE_DOOR_HEIGHT * scale / CHARACTER_HEIGHT
+	check("the temple doorway is grand, not absurd",
+		doorHeights > 1.5 and doorHeights < 20,
+		string.format("%.1f person-heights", doorHeights))
 
 	-- Schema: the rules that keep the two routes from blurring -------
 	local function mapErrors(world, chunks)
