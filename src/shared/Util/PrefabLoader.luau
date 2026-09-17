@@ -40,6 +40,9 @@ export type Style = {
 	CanCollide: boolean?,
 	Attributes: { [string]: any }?,
 	-- Attribute name -> fraction to vary it by, per part. See the paint loop.
+	-- Multiplies the part's size on load, for setting a piece into the frame
+	-- around it without re-exporting the mesh.
+	SizeScale: number?,
 	Vary: { [string]: number }?,
 	-- How many parts are in this set, for ordered wave phasing.
 	WaveCount: number?,
@@ -183,6 +186,9 @@ function PrefabLoader.build(
 				end
 				if style.Transparency then
 					d.Transparency = style.Transparency
+				end
+				if style.SizeScale then
+					d.Size *= style.SizeScale
 				end
 				if style.CanCollide ~= nil then
 					d.CanCollide = style.CanCollide

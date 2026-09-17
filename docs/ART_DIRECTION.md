@@ -162,6 +162,29 @@ A textured portal ring is a dead portal ring.
 Ethereal Scape v2 is already built this way, so the hub matching it is what
 makes the game look like one game.
 
+### No built-in Roblox materials
+
+**Owner-directed, 2026-09-18.** Every surface in the hub is `SmoothPlastic`.
+Not `Marble`, not `Slate`, not `Basalt`, not `Metal`, not `Glass`.
+
+Roblox's material textures are photographic grain, and grain fights flat-shaded
+low-poly geometry — it adds surface noise to a style whose whole premise is that
+facets and colour carry the read. The palette is meant to do the work on its
+own.
+
+It is also cheaper. `Glass` in particular is expensive on the phones the §6
+checklist budgets for, and six floating crystals were using it.
+
+**The exceptions are light, not surface:** `Neon` for emissive parts and
+`ForceField` where a shimmer is wanted. Those are shaders, not textures.
+
+Enforced by test for the Fate Engine's paint table.
+
+> **If a future model is authored expecting real materials**, this is the
+> decision to revisit — the point is consistency across the hub, not a hatred
+> of `Marble`. Revisit it deliberately and change it here, rather than letting
+> one asset drift.
+
 ### Colour is applied in code, not baked in
 
 Authored meshes arrive **grey** — Roblox imports untextured geometry with no

@@ -55,8 +55,16 @@ local Theme = {
 	TorchLight = Color3.fromRGB(255, 176, 92),
 	EngineSpot = Color3.fromRGB(255, 200, 120), -- blueprint §2.2
 
-	StoneMaterial = Enum.Material.Marble,
-	PlazaMaterial = Enum.Material.Slate,
+	-- NO BUILT-IN ROBLOX MATERIALS ANYWHERE IN THE HUB. Owner-directed
+	-- 2026-09-18: their grain fights flat-shaded low-poly geometry, and the
+	-- palette is meant to carry the look on its own. SmoothPlastic takes the
+	-- colour and nothing else. Neon and ForceField stay, because those are
+	-- light rather than surface.
+	--
+	-- It is also cheaper: Glass in particular is expensive on the phones the
+	-- §6 checklist budgets for, and six floating crystals were using it.
+	StoneMaterial = Enum.Material.SmoothPlastic,
+	PlazaMaterial = Enum.Material.SmoothPlastic,
 }
 
 local Crossroads = {
@@ -88,7 +96,7 @@ local Crossroads = {
 		-- has to step the same distance in either build.
 		PlatformRaise = 2,
 		PlatformColor = Theme.Marble,
-		PlatformMaterial = Enum.Material.Marble,
+		PlatformMaterial = Enum.Material.SmoothPlastic,
 		RuneInlayCount = 16, -- radial groove pattern
 		RuneInlayColor = Color3.fromRGB(124, 245, 224),
 
@@ -104,7 +112,7 @@ local Crossroads = {
 			MinHeight = 50,
 			MaxHeight = 140,
 			Size = 20,
-			Material = Enum.Material.Glass,
+			Material = Enum.Material.SmoothPlastic,
 			SpinSpeedMin = 0.2,
 			SpinSpeedMax = 0.7,
 		},
@@ -168,20 +176,20 @@ local Crossroads = {
 			-- Ceremonial architecture ------------------------------------
 			Platform = {
 				Color = Theme.Marble,
-				Material = Enum.Material.Marble,
+				Material = Enum.Material.SmoothPlastic,
 				CanCollide = true,
 			},
-			Platform_RadialPanels = { Color = Color3.fromRGB(88, 82, 104), Material = Enum.Material.Slate },
-			Platform_ConcentricInlays = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
-			Platform_EdgeAccents = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
+			Platform_RadialPanels = { Color = Color3.fromRGB(88, 82, 104), Material = Enum.Material.SmoothPlastic },
+			Platform_ConcentricInlays = { Color = Theme.MarbleTrim, Material = Enum.Material.SmoothPlastic },
+			Platform_EdgeAccents = { Color = Theme.MarbleTrim, Material = Enum.Material.SmoothPlastic },
 			Plinth = {
 				Color = Color3.fromRGB(196, 190, 208),
-				Material = Enum.Material.Marble,
+				Material = Enum.Material.SmoothPlastic,
 				CanCollide = true,
 			},
-			Plinth_SideBand = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
-			Plinth_TopFiligree = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
-			Plinth_CornerButtresses = { Color = Color3.fromRGB(64, 58, 78), Material = Enum.Material.Basalt },
+			Plinth_SideBand = { Color = Theme.MarbleTrim, Material = Enum.Material.SmoothPlastic },
+			Plinth_TopFiligree = { Color = Theme.MarbleTrim, Material = Enum.Material.SmoothPlastic },
+			Plinth_CornerButtresses = { Color = Color3.fromRGB(64, 58, 78), Material = Enum.Material.SmoothPlastic },
 			-- Dimmed from the palette's 124,245,224 by Portal.NeonTint. Neon emits at
 			-- full Color and bloom amplifies it; at full value these spokes bled a
 			-- halo across the dais.
@@ -196,8 +204,8 @@ local Crossroads = {
 			},
 
 			-- Rune ring ---------------------------------------------------
-			Rune = { Color = Color3.fromRGB(88, 82, 104), Material = Enum.Material.Slate },
-			Rune_GoldFrames = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
+			Rune = { Color = Color3.fromRGB(88, 82, 104), Material = Enum.Material.SmoothPlastic },
+			Rune_GoldFrames = { Color = Theme.MarbleTrim, Material = Enum.Material.SmoothPlastic },
 			-- Rarity-tinted. The colour set here is only the idle look.
 			-- Eight glyphs lighting one after another around the plinth. A
 			-- travelling ripple reads as the machine thinking; eight random
@@ -218,7 +226,7 @@ local Crossroads = {
 			-- wanted after all.
 			OuterRing = {
 				Color = Color3.fromRGB(58, 53, 72),
-				Material = Enum.Material.Slate,
+				Material = Enum.Material.SmoothPlastic,
 				-- Drives the spin. Negative on the inner ring so the two
 				-- counter-rotate, which is what makes the portal read as a
 				-- mechanism rather than a wheel.
@@ -236,11 +244,29 @@ local Crossroads = {
 					SpinSpeed = 0.22,
 					SpinAxis = "Z",
 					SpinJitter = 0.32,
-					WobbleDegrees = 1.8,
-					WobbleSeconds = 9,
+					-- THE RINGS SHARE ONE SWAY. Giving them different wobble
+					-- periods made them tilt independently, and with ~1 stud
+					-- of clearance the inner assembly swung straight out
+					-- through the outer aperture. Identical degrees and
+					-- period means the whole rig leans as one object -- still
+					-- alive, never diverging. Only the SPIN differs.
+					WobbleDegrees = 1.6,
+					WobbleSeconds = 8,
+					-- NO PulseScale here. Swelling the outer ring shrinks the
+					-- hole the inner ring sits in, which is the one thing
+					-- guaranteed to clip. Its emphasis comes from the spin,
+					-- the jitter and the gold clamps instead.
 				},
 			},
-			RingFoot_Clamps = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
+			RingFoot_Clamps = {
+				Color = Theme.MarbleTrim,
+				Material = Enum.Material.Neon,
+				-- Four gold catches around the frame, breathing against the
+				-- ring's swell rather than with it, so the eye has something
+				-- warm to land on in a cool palette.
+				WaveCount = 4,
+				Attributes = { PulseAlphaMin = 0.25, PulseAlphaMax = 0.72, PulseSeconds = 4.1 },
+			},
 			-- MATTE, deliberately. With the ring and the veil both emissive in
 			-- the same hue they merged into one bright disc and the teeth
 			-- stopped reading. Metal takes the rarity colour but catches light
@@ -248,13 +274,19 @@ local Crossroads = {
 			-- aperture inside it glows -- which is the way round it should be.
 			InnerRing = {
 				Color = Color3.fromRGB(68, 135, 123),
-				Material = Enum.Material.Metal,
+				Material = Enum.Material.SmoothPlastic,
+				-- The delivered inner ring is 15.92 studs across inside an
+				-- 18.0 aperture -- about a stud a side, which anything that
+				-- moves can eat. At 0.88 it sits ~2 studs clear, so the
+				-- assembly reads as nested rather than jammed.
+				SizeScale = 0.88,
 				Attributes = {
 					SpinSpeed = -0.31,
 					SpinAxis = "Z",
 					SpinJitter = 0.38,
-					WobbleDegrees = 1.3,
-					WobbleSeconds = 6.5,
+					-- Matched to the outer ring on purpose. See the note there.
+					WobbleDegrees = 1.6,
+					WobbleSeconds = 8,
 				},
 			},
 			-- THE VEIL. This is the surface a player walks through, so it is
@@ -276,6 +308,12 @@ local Crossroads = {
 				Material = Enum.Material.Neon,
 				Transparency = 0.45,
 				CanCollide = false,
+				-- Set INTO the ring, not flush with it. The mesh arrived
+				-- 15.22 studs across inside a 15.92 ring -- 0.35 a side -- so
+				-- anything that moved it clipped. At 0.9 it sits ~1.1 studs
+				-- clear all round, which reads as an aperture in a frame
+				-- rather than a disc jammed in a hole.
+				SizeScale = 0.82,
 				Attributes = {
 					-- NO PulseScale. The veil is 15.22 studs across inside a
 					-- 15.92 ring: 0.35 studs of clearance a side. A 6% breath
@@ -291,9 +329,9 @@ local Crossroads = {
 			-- The levitation stack, added by the artist on top of the spec.
 			-- Static geometry: it sells the floating portal and nothing in
 			-- code needs to move it.
-			LevitationGenerator = { Color = Color3.fromRGB(88, 82, 104), Material = Enum.Material.Slate, CanCollide = true },
-			GeneratorVents = { Color = Color3.fromRGB(64, 58, 78), Material = Enum.Material.Basalt },
-			GeneratorPanelTrim = { Color = Theme.MarbleTrim, Material = Enum.Material.Metal },
+			LevitationGenerator = { Color = Color3.fromRGB(88, 82, 104), Material = Enum.Material.SmoothPlastic, CanCollide = true },
+			GeneratorVents = { Color = Color3.fromRGB(64, 58, 78), Material = Enum.Material.SmoothPlastic },
+			GeneratorPanelTrim = { Color = Theme.MarbleTrim, Material = Enum.Material.SmoothPlastic },
 			GeneratorEmitter = { Color = Color3.fromRGB(68, 135, 123), Material = Enum.Material.Neon },
 			-- The core's second colour. Cyan core over violet coils gives the
 			-- energy stack two tones instead of one flat glow, and both are
@@ -326,7 +364,7 @@ local Crossroads = {
 			-- Floating crystals. Rarity-tinted, and each spins in place.
 			Shard = {
 				Color = Color3.fromRGB(68, 135, 123),
-				Material = Enum.Material.Glass,
+				Material = Enum.Material.SmoothPlastic,
 				Transparency = 0.35,
 				-- Spin, plus a slow vertical drift so they read as floating
 				-- rather than mounted. Each shard gets a different phase from

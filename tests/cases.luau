@@ -1690,14 +1690,54 @@ do
 	check("the veil has a breath of its own",
 		veil.Attributes.PulseAlphaMin ~= nil)
 
-	-- IT MUST NOT BREATHE WIDER THAN ITS OWN FRAME. The veil is 15.22 studs
-	-- across inside a 15.92 inner ring -- 0.35 studs of clearance a side -- and
-	-- a 6% size pulse grew it to 16.13 and clipped straight through. Measured
-	-- from the delivered mesh; a re-delivery re-measures.
-	local VEIL_W, INNER_W = 15.22, 15.92
-	check("the veil cannot pulse through the ring around it",
-		VEIL_W * (1 + (veil.Attributes.PulseScale or 0)) < INNER_W,
-		string.format("%.2f into %.2f", VEIL_W * (1 + (veil.Attributes.PulseScale or 0)), INNER_W))
+	-- THE RINGS MUST NEST, AND STAY NESTED WHILE THEY MOVE. This has broken
+	-- three times: a 6% veil pulse that grew it through its frame, mismatched
+	-- wobble periods that swung the inner assembly out of the outer aperture,
+	-- and a swell on the outer ring that shrank the hole the inner one sits
+	-- in. Raw widths measured from the delivered mesh at Prefab.Scale; a
+	-- re-delivery re-measures them.
+	local RAW_OUTER, RAW_OUTER_TUBE = 48.48, 4.84
+	local RAW_INNER, RAW_VEIL = 34.34, 32.82
+
+	local function width(raw, style)
+		return raw * scale * ((style and style.SizeScale) or 1)
+			* (1 + ((style and style.Attributes and style.Attributes.PulseScale) or 0))
+	end
+
+	local aperture = width(RAW_OUTER, styles.OuterRing) - 2 * RAW_OUTER_TUBE * scale
+	local innerW = width(RAW_INNER, styles.InnerRing)
+	local veilW = width(RAW_VEIL, veil)
+
+	check("the inner ring clears the outer aperture with room to sway",
+		(aperture - innerW) / 2 > 1,
+		string.format("%.2f studs a side", (aperture - innerW) / 2))
+	check("the veil sits inside the ring it fills",
+		veilW < innerW, string.format("veil %.2f, ring %.2f", veilW, innerW))
+
+	-- ...and the two rings must lean as ONE object. Different wobble periods
+	-- is what let the inner assembly swing out through the outer one.
+	check("both rings share a single sway",
+		styles.OuterRing.Attributes.WobbleDegrees == styles.InnerRing.Attributes.WobbleDegrees
+			and styles.OuterRing.Attributes.WobbleSeconds == styles.InnerRing.Attributes.WobbleSeconds)
+
+	-- Nothing in the hub may use a built-in Roblox material. Owner-directed:
+	-- their grain fights flat-shaded low-poly geometry, and Glass in
+	-- particular is expensive on the phones the §6 checklist budgets for.
+	local TEXTURED = {
+		[Enum.Material.Marble] = "Marble",
+		[Enum.Material.Slate] = "Slate",
+		[Enum.Material.Basalt] = "Basalt",
+		[Enum.Material.Metal] = "Metal",
+		[Enum.Material.Glass] = "Glass",
+	}
+	local textured = {}
+	for name, style in styles do
+		if style.Material and TEXTURED[style.Material] then
+			table.insert(textured, `{name} ({TEXTURED[style.Material]})`)
+		end
+	end
+	check("no part of the Engine uses a textured Roblox material",
+		#textured == 0, table.concat(textured, ", "))
 
 	-- The frame must not emit, or it merges with the aperture it frames.
 	check("the inner ring is matte so the veil reads as the light source",

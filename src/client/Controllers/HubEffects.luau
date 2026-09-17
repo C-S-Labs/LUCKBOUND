@@ -130,9 +130,19 @@ function HubEffects.init(): ()
 		-- finished; it says nothing about what has reached this client yet.
 		-- Without this the scan runs against a half-replicated hub and finds
 		-- an EngineRig with no rings inside it.
-		local expected = hub:GetAttribute("PartCount") :: number?
-		if expected then
-			local waited = 0
+		-- ...and then wait for the parts themselves. Ready says the SERVER has
+		-- finished; it says nothing about what has reached this client yet.
+		--
+		-- WAIT FOR REPLICATION TO SETTLE, not for an exact count. Requiring
+		-- `seen >= PartCount` looked right and always timed out: the first
+		-- playtest of it sat the full 20 seconds before animating anything,
+		-- because a client's view of the hub need never match the server's
+		-- exactly -- a part can be culled, streamed out, or simply not be a
+		-- BasePart by the time the client sees it. Settling asks the question
+		-- that actually matters: has anything new arrived recently?
+		do
+			local expected = hub:GetAttribute("PartCount") :: number?
+			local waited, last, stable = 0, -1, 0
 			while waited < 20 do
 				local seen = 0
 				for _, d in hub:GetDescendants() do
@@ -140,9 +150,18 @@ function HubEffects.init(): ()
 						seen += 1
 					end
 				end
-				if seen >= expected then
+				if expected and seen >= expected then
 					break
 				end
+				if seen == last and seen > 0 then
+					stable += 1
+					if stable >= 3 then
+						break -- three quiet polls: nothing else is coming
+					end
+				else
+					stable = 0
+				end
+				last = seen
 				waited += task.wait(0.1)
 			end
 		end

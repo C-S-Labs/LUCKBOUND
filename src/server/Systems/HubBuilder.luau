@@ -388,8 +388,8 @@ local function buildFateEngine(parent: Instance): Model
 			Position = base + Vector3.new(0, cfg.PlatformRaise, 0),
 			Scale = cfg.PortalScale,
 			Rarity = cfg.IdleRarity,
-			PlinthMaterial = Enum.Material.Marble,
-			OuterMaterial = Enum.Material.Basalt,
+			PlinthMaterial = Enum.Material.SmoothPlastic,
+			OuterMaterial = Enum.Material.SmoothPlastic,
 		}, engine)
 	end
 
@@ -497,7 +497,7 @@ local function buildAmphitheatre(zone: any, centre: Vector3, parent: Instance)
 					math.sin(angle) * radius
 				)) * CFrame.Angles(0, -angle, 0),
 				Color = zone.Color,
-				Material = Enum.Material.Marble,
+				Material = Enum.Material.SmoothPlastic,
 			}, parent)
 		end
 	end
@@ -513,7 +513,7 @@ local function buildAmphitheatre(zone: any, centre: Vector3, parent: Instance)
 			Size = Vector3.new(3, zone.ObeliskHeight, 3),
 			Position = centre + Vector3.new(offset, zone.PlatformSize.Y / 2 + zone.ObeliskHeight / 2, -6),
 			Color = zone.Color,
-			Material = Enum.Material.Marble,
+			Material = Enum.Material.SmoothPlastic,
 		}, obelisks)
 		obelisk:SetAttribute("WorldFirstSlot", slot)
 
@@ -631,7 +631,7 @@ local function buildGate(zone: any, centre: Vector3, parent: Instance)
 		Position = top,
 		Scale = zone.PortalScale,
 		Rarity = "COMMON",
-		PlinthMaterial = Enum.Material.Marble,
+		PlinthMaterial = Enum.Material.SmoothPlastic,
 		OuterMaterial = Enum.Material.CorrodedMetal,
 	}, parent)
 

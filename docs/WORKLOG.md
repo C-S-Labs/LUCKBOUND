@@ -33,6 +33,97 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 20 — 2026-09-18 — Nesting, materials, and the barrier that timed out
+
+**Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 325 passing (was 322)
+
+### The barrier worked, by giving up
+
+The log confirmed the fix — `driving 2 ring(s) OuterRing(MeshPart, spin 0.22)
+InnerRing(MeshPart, spin -0.31), plane yes` and `animating 35 part(s), 6
+shard(s), 40 orbiter(s)` — but the timestamps told a second story:
+
+```
+12:54:06.447  client ready
+12:54:26.493  [PortalRig] EngineRig: driving 2 ring(s) ...
+```
+
+**Exactly 20 seconds: the timeout, not the condition.** `seen >= PartCount`
+never became true, because a client's view of the hub need never match the
+server's exactly — a part can be culled, streamed out, or not be a `BasePart`
+by the time it arrives. Requiring equality looked rigorous and was simply
+wrong.
+
+It now waits for replication to **settle**: three consecutive polls with no new
+parts. That asks the question that matters — *has anything arrived recently* —
+rather than a stricter one that can never be satisfied.
+
+### Why the rings kept clipping
+
+The owner's close-up showed the pale inner assembly riding outside the dark
+scaffold. Three separate causes, all mine, all from the last two sessions:
+
+1. A 6% size pulse on the veil, which grew it through its own frame.
+2. **Different wobble periods on the two rings**, so they tilted independently
+   — and with ~1 stud of clearance the inner assembly swung straight out
+   through the outer aperture.
+3. A swell I had *just* added to the outer ring, which shrinks the hole the
+   inner ring sits in. The one part I thought was safe to breathe was the one
+   part that could not.
+
+Fixed by making the rig nest properly and lean as one object:
+
+| | Studs |
+|---|---|
+| Outer aperture | 18.00 |
+| Inner ring (`SizeScale` 0.88) | 14.02 — **1.99 clear a side** |
+| Veil (`SizeScale` 0.82) | 12.49 — inside the ring it fills |
+
+Both rings now share identical wobble degrees and period, so the assembly leans
+as one and only the **spin** differs. New `SizeScale` on a style entry sets a
+piece into its frame without re-exporting the mesh.
+
+The outer ring's emphasis comes from its spin, its jitter, and four gold clamps
+that pulse **against** the ring's rhythm rather than with it — warmth to land on
+in a cool palette, and no geometry risk.
+
+### No built-in Roblox materials
+
+Owner-directed, and it matches the house style better than what was there.
+Every surface is now `SmoothPlastic`: 21 material references across the Engine
+paint table and the blockout hub. `Neon` and `ForceField` stay, because those
+are light rather than surface.
+
+Photographic grain fights flat-shaded low-poly geometry — it adds surface noise
+to a style whose premise is that facets and colour carry the read. It is also
+cheaper: `Glass` is expensive on the phones the §6 checklist budgets for, and
+six floating crystals were using it.
+
+Recorded in `ART_DIRECTION.md` with the counter-argument the owner asked for:
+if a future model is authored expecting real materials, revisit it **there**
+rather than letting one asset drift.
+
+### Logged, not built
+
+**First-join intro screen.** Title over slow cinematic shots of the map until
+the player presses Play. The stated purpose is as much technical as aesthetic —
+it buys the client time to render and replicate. Directly relevant: the hub
+animator already waits for ~450 instances, and that wait is currently invisible
+and unexplained to the player.
+
+### Stopped at
+
+325 passing. Three new assertions cover the nesting, the shared sway, and the
+no-textures rule — each one a bug that actually shipped.
+
+### Next
+
+1. Walk it. The barrier should now report in well under a second.
+2. Profile on a real low-end device — still unmeasured.
+3. Placeholder staircase, then the spec amendment for portal-as-entry.
+
+---
+
 ## Session 19 — 2026-09-18 — The replication barrier that was not one
 
 **Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 322 passing
