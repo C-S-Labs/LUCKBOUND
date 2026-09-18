@@ -226,6 +226,29 @@ cached per mesh asset. It is spent on 30 parts deliberately rather than
 granted by default, and it is the **only** correct way to make one of these
 solid — `CanCollide` alone would wall off a route.
 
+### `CollisionFidelity` is baked into the file, not set at runtime
+
+**It cannot be assigned from a script.** It is plugin security, exactly like
+`MeshId`, and writing it throws *"The current thread cannot write
+'CollisionFidelity' (lacking capability Plugin)"*. That exception took down
+`PrefabLoader.build`, which took down `HubBuilder.build`, which meant boot
+stopped at 9/11 and **the entire hub failed to appear**. One property.
+
+It is a *serialized* property, so the value lives in the `.rbxmx`:
+
+```xml
+<token name="CollisionFidelity">3</token>   <!-- PreciseConvexDecomposition -->
+```
+
+Baked into the 30 parts listed above, and verified by reparsing the file. The
+`CollisionFidelity` field in `Content/Hub/Crossroads` is still the place to
+read what a piece is *supposed* to be — the loader now **checks** the asset
+agrees and warns by name when it does not, rather than trying to set it.
+
+**If a re-delivery arrives, the bake has to be redone.** A fresh export from
+Studio carries no `CollisionFidelity`, so every one of those 30 parts would
+silently drop to `Default` — the loader's warning is what catches that.
+
 ## Paint coverage
 
 **225 of 225 parts resolve to a paint rule**, verified against the delivered

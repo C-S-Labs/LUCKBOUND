@@ -33,6 +33,63 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 24 — 2026-09-18 — One property took down the whole hub
+
+**Branch:** `claude/crossroads-prefab-integration-08761b` · **Tests:** 367 passing
+
+Session 23's collision fix did not boot. The Crossroads did not render at all,
+and the log said why in one line:
+
+```
+The current thread cannot write 'CollisionFidelity' (lacking capability Plugin)
+  PrefabLoader, Line 257 - function build
+```
+
+**`MeshPart.CollisionFidelity` cannot be assigned at runtime.** It is plugin
+security, exactly like `MeshId` — which this project already has a comment
+about, in this same file, from the last time it happened. The throw killed
+`PrefabLoader.build`, which killed `HubBuilder.build`, so boot stopped at 9/11
+and there was no hub at all. One property, whole world.
+
+### The fix, and why it is in the asset rather than the code
+
+`CollisionFidelity` is a *serialized* property, so the value belongs in the
+`.rbxmx`. Baked into the 30 parts that need it as
+`<token name="CollisionFidelity">3</token>`, and verified by reparsing the
+file — 225 MeshParts, 30 carrying fidelity 3, exactly the intended set.
+
+**Content still declares it.** `Crossroads.Shell.Styles` remains the one place
+to read what a piece is supposed to be; `PrefabLoader` now **checks the asset
+agrees** and warns by name when it does not, instead of trying to set it. That
+warning is the only thing standing between a re-delivery and a hub full of
+invisible walls, because a fresh export from Studio carries no fidelity at all
+and every precise part would silently drop back to `Default`.
+
+### The lesson worth carrying
+
+Two properties on `MeshPart` are now known to be script-unwritable: `MeshId`
+and `CollisionFidelity`. Both were discovered the same way — by a seam that
+looked correct, passed every headless test, and did nothing (or worse) in
+engine. **A content field that maps to a Roblox property is not proven until
+it has been set in a running place.** The headless suite can assert that
+content declares the right value; it cannot assert Roblox will accept it.
+
+The difference this time: it threw rather than failing quietly, and the thing
+it took down was load-bearing. That is the better failure of the two.
+
+### Stopped at
+
+367 passing, all gates green. The hub builds again in principle — **not yet
+re-walked.**
+
+### Next
+
+1. Walk it. Same list as Session 23, which no longer applies to anything that
+   has actually been seen.
+2. Then the Fate Engine's entry logic.
+
+---
+
 ## Session 23 — 2026-09-18 — The first walk of the authored hub
 
 **Branch:** `claude/crossroads-prefab-integration-08761b` · **Tests:** 367 passing (was 361)
