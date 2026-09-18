@@ -23,6 +23,76 @@ local engineRig: Model? = nil
 local gateRig: Model? = nil
 local featuredIndex = 0
 
+--- THE PORTAL'S YAW, and why it is one module-level number rather than a
+--- per-part attribute like every other motion here.
+---
+--- Every piece that turns with the portal must turn by exactly the same
+--- amount -- two rings, a veil and a floating core that are supposed to read
+--- as one assembly. Accumulating an angle per part would let them drift apart
+--- over minutes of float error, which is precisely the failure the rings
+--- already had once when they were given independent wobble periods.
+---
+--- It is also a state machine, which an attribute is not: free-running while
+--- idle, riding the SpinBoost ramp through a roll, then easing to a dead stop
+--- on a quarter-turn slot and staying there until the next roll.
+local Yaw = {
+	Angle = 0,
+	Locked = false,
+	-- Set while easing to a stop: { From, To, Elapsed, Seconds }
+	Ease = nil :: { From: number, To: number, Elapsed: number, Seconds: number }?,
+}
+
+--- Smooth at both ends, so the portal neither jerks into its stop nor creeps
+--- the last degree. Same curve the SpinBoost ramp uses, for the same reason.
+local function smoothstep(t: number): number
+	t = math.clamp(t, 0, 1)
+	return t * t * (3 - 2 * t)
+end
+
+--- Advances the yaw for one frame. Returns nothing; `Yaw.Angle` is read by
+--- every part carrying a YawFollow attribute.
+local function stepYaw(dt: number, boost: number): ()
+	local ease = Yaw.Ease
+	if ease then
+		ease.Elapsed += dt
+		local t = smoothstep(ease.Elapsed / ease.Seconds)
+		Yaw.Angle = ease.From + (ease.To - ease.From) * t
+		if ease.Elapsed >= ease.Seconds then
+			-- Land on the slot EXACTLY. Leaving it a hair off would be
+			-- invisible now and a visible seam once a staircase is aligned
+			-- to it.
+			Yaw.Angle = ease.To
+			Yaw.Ease = nil
+			Yaw.Locked = true
+		end
+		return
+	end
+	if not Yaw.Locked then
+		Yaw.Angle += GameConfig.Portal.YawIdleSpeed * boost * dt
+	end
+end
+
+--- Picks the slot to stop on and starts the ease onto it.
+---
+--- The target is the first slot the portal has NOT already passed by the time
+--- it could plausibly stop: `travel` is roughly what a decelerating turn
+--- covers over the wind-down. Choosing the nearest slot instead would make
+--- the portal stop dead or reverse, and reversing a machine that has been
+--- spinning one way for a minute looks broken rather than deliberate.
+local function lockYawToSlot(boost: number): ()
+	local cfg = GameConfig.Portal
+	local slot = math.pi * 2 / cfg.YawSlots
+	local rate = cfg.YawIdleSpeed * boost
+	local travel = rate * cfg.SpinWindDownSeconds * 0.5
+	Yaw.Ease = {
+		From = Yaw.Angle,
+		To = math.ceil((Yaw.Angle + travel) / slot) * slot,
+		Elapsed = 0,
+		Seconds = cfg.SpinWindDownSeconds,
+	}
+	Yaw.Locked = false
+end
+
 --- A stable 0-1 value from a name. See the note at its call site for why the
 --- trailing multiply matters -- without it, names that differ only in their
 --- last character hash to neighbouring values and every "variation" collapses.
@@ -51,6 +121,11 @@ end
 --- Plays the 2.5s spin-up on both rigs, coloured to the rolled rarity.
 --- Blueprint §1.3: this beat happens BEFORE the destination banner.
 function HubEffects.spinUpForRoll(rarityKey: string): ()
+	-- Release the lock from the previous roll. The portal starts turning
+	-- again on the same frame the player presses the button, which is what
+	-- makes the wind-up feel like a response rather than a cutscene.
+	Yaw.Ease = nil
+	Yaw.Locked = false
 	if engineRig then
 		PortalRig.playSpinUp(engineRig, rarityKey)
 	end
@@ -65,6 +140,10 @@ end
 --- the Engine disagree with the Gate, which holds the destination colour --
 --- reported from the third authored playtest.
 function HubEffects.settle(rarityKey: string?): ()
+	-- The portal coasts down WITH the rings and then, unlike them, stops --
+	-- square to the hub, on a quarter-turn slot. That stop is the cue the
+	-- staircase will be built on.
+	lockYawToSlot((engineRig and (engineRig:GetAttribute("SpinBoost") :: number?)) or 1)
 	if engineRig then
 		PortalRig.setIdle(engineRig)
 		PortalRig.setRarity(
@@ -206,13 +285,14 @@ function HubEffects.init(): ()
 				return
 			end
 
+			local yaw = part:GetAttribute("YawFollow") == true
 			local spin = part:GetAttribute("SpinSpeed") :: number?
 			local bob = part:GetAttribute("BobStuds") :: number?
 			local pulse = part:GetAttribute("PulseScale") :: number?
 			local alphaMin = part:GetAttribute("PulseAlphaMin") :: number?
 			local wobble = part:GetAttribute("WobbleDegrees") :: number?
 			local colorA = part:GetAttribute("ColorA") :: Color3?
-			if not (spin or bob or pulse or alphaMin or wobble or colorA) then
+			if not (yaw or spin or bob or pulse or alphaMin or wobble or colorA) then
 				return
 			end
 
@@ -269,6 +349,8 @@ function HubEffects.init(): ()
 				ColorB = (part:GetAttribute("ColorB") :: Color3?) or colorA,
 				ColorSeconds = (part:GetAttribute("ColorSeconds") :: number?) or 6,
 				Phase = phase * math.pi * 2,
+				-- Turns with the portal assembly rather than on its own.
+				Yaw = part:GetAttribute("YawFollow") == true,
 			})
 		end
 
@@ -336,6 +418,10 @@ function HubEffects.init(): ()
 			-- One attribute read per rig per frame, not per part per frame.
 			local boosts: { [Instance]: number } = {}
 
+			-- Once per frame for the whole assembly, before any part reads it.
+			stepYaw(dt, (engineRig and (engineRig:GetAttribute("SpinBoost") :: number?)) or 1)
+			local yawCF = CFrame.Angles(0, Yaw.Angle, 0)
+
 			for _, a in animated do
 				local part = a.Part
 
@@ -383,6 +469,17 @@ function HubEffects.init(): ()
 				if a.Bob then
 					local t = math.sin(elapsed / a.BobSeconds * math.pi * 2 + a.Phase)
 					cf = cf + Vector3.new(0, t * a.Bob, 0)
+					moved = true
+				end
+				if a.Yaw then
+					-- LEFT-multiplied, so this turns the part about the hub's
+					-- vertical axis rather than its own -- which is the same
+					-- thing for the rings and the core, because they are
+					-- centred on it, and would not be for anything off-axis.
+					-- The Engine sits at HubLayout.Anchors.FATE_ENGINE, which
+					-- is the origin; a test pins that, because this line is
+					-- silently wrong anywhere else.
+					cf = yawCF * cf
 					moved = true
 				end
 				if moved then

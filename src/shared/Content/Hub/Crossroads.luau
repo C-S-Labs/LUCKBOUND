@@ -146,7 +146,12 @@ local ShellStyles: { [string]: any } = {
 	Plaza_RimLampCrystals = {
 		Color = Theme.Inlay,
 		Material = Enum.Material.Neon,
-		Attributes = { PulseAlphaMin = 0.15, PulseAlphaMax = 0.5, PulseSeconds = 5.2 },
+		Attributes = {
+			PulseAlphaMin = 0.15,
+			PulseAlphaMax = 0.5,
+			PulseSeconds = 5.2,
+			SpinSpeed = 0.15,
+		},
 	},
 	Plaza_Braziers = { Color = Theme.Basalt, Material = Theme.StoneMaterial },
 	Plaza_BrazierFlames = {
@@ -169,12 +174,14 @@ local ShellStyles: { [string]: any } = {
 		Attributes = { PulseAlphaMin = 0.2, PulseAlphaMax = 0.6, PulseSeconds = 6.5 },
 	},
 	Plaza_GoldNodes = {
+		Attributes = { PulseAlphaMin = 0.25, PulseAlphaMax = 0.55, PulseSeconds = 7.5 },
 		Color = Theme.MarbleTrim,
 		Material = Enum.Material.Neon,
 		Transparency = 0.15,
 	},
 	Plaza_PromenadeRing = { Color = Theme.Walkway, Material = Theme.StoneMaterial },
 	Plaza_PromenadeInlay = {
+		Attributes = { PulseAlphaMin = 0.15, PulseAlphaMax = 0.45, PulseSeconds = 6.8 },
 		Color = Theme.Inlay,
 		Material = Enum.Material.Neon,
 		Transparency = 0.25,
@@ -207,20 +214,34 @@ local ShellStyles: { [string]: any } = {
 	Walkways_GatewayCrystals = {
 		Color = Theme.Inlay,
 		Material = Enum.Material.Neon,
-		Attributes = { PulseAlphaMin = 0.18, PulseAlphaMax = 0.55, PulseSeconds = 4.4 },
+		Attributes = {
+			PulseAlphaMin = 0.18,
+			PulseAlphaMax = 0.55,
+			PulseSeconds = 4.4,
+			SpinSpeed = 0.3,
+			BobStuds = 0.7,
+			BobSeconds = 6,
+		},
 	},
 	Walkways_GoldThresholds = {
+		Attributes = { PulseAlphaMin = 0.1, PulseAlphaMax = 0.4, PulseSeconds = 5.4 },
 		Color = Theme.MarbleTrim,
 		Material = Enum.Material.Neon,
 		Transparency = 0.2,
 	},
-	Walkways_RuneBands = { Color = Theme.Inlay, Material = Enum.Material.Neon, Transparency = 0.3 },
+	Walkways_RuneBands = {
+		Attributes = { PulseAlphaMin = 0.2, PulseAlphaMax = 0.5, PulseSeconds = 6.2 },
+		Color = Theme.Inlay,
+		Material = Enum.Material.Neon,
+		Transparency = 0.3,
+	},
 	-- THE FLAGS, ON THEIR THIRD COLOUR. Basalt read as black; gold read as
 	-- wrong. Owner-directed: match the crystal-and-pedestal objects the rest
 	-- of the hub is dressed with -- so the cloth is the same dimmed teal the
 	-- shrine crystals and lamp crystals use, and the poles are pale stone
 	-- like the pedestals under them.
 	Walkways_Banners = {
+		Attributes = { WobbleDegrees = 1.8, WobbleSeconds = 7 },
 		Color = Theme.Inlay,
 		Material = Enum.Material.Neon,
 		Transparency = 0.3,
@@ -237,6 +258,7 @@ local ShellStyles: { [string]: any } = {
 	},
 	Processional_South_GuardianCrests = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
 	Processional_South_Threshold = {
+		Attributes = { PulseAlphaMin = 0.1, PulseAlphaMax = 0.45, PulseSeconds = 4.6 },
 		Color = Theme.MarbleTrim,
 		Material = Enum.Material.Neon,
 		Transparency = 0.2,
@@ -256,7 +278,12 @@ local ShellStyles: { [string]: any } = {
 	Backdrop_Rocks = { Color = Theme.Plaza, Material = Theme.StoneMaterial },
 	Backdrop_TreeTrunks = { Color = Theme.Basalt, Material = Theme.StoneMaterial },
 	Backdrop_TreeCanopies = { Color = Theme.DeepTeal, Material = Theme.StoneMaterial },
-	Backdrop_Crystals = { Color = Theme.Inlay, Material = Theme.StoneMaterial, Transparency = 0.4 },
+	Backdrop_Crystals = {
+		Attributes = { PulseAlphaMin = 0.3, PulseAlphaMax = 0.55, PulseSeconds = 11.0 },
+		Color = Theme.Inlay,
+		Material = Theme.StoneMaterial,
+		Transparency = 0.4,
+	},
 
 	-- District 1: the Leaderboard (HALL_OF_LEGENDS) -------------------
 	-- Marble and gold, museum-lit. Reads as the ceremonial one.
@@ -289,6 +316,7 @@ local ShellStyles: { [string]: any } = {
 		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
 	},
 	District_Leaderboard_SeatLights = {
+		Attributes = { PulseAlphaMin = 0.2, PulseAlphaMax = 0.5, PulseSeconds = 5.1 },
 		Color = Theme.Inlay,
 		Material = Enum.Material.Neon,
 		Transparency = 0.35,
@@ -323,11 +351,13 @@ local ShellStyles: { [string]: any } = {
 		Material = Theme.StoneMaterial,
 	},
 	District_Leaderboard_NamePanelInlays = {
+		Attributes = { PulseAlphaMin = 0.25, PulseAlphaMax = 0.6, PulseSeconds = 4.4 },
 		Color = Theme.Inlay,
 		Material = Enum.Material.Neon,
 		Transparency = 0.4,
 	},
 	District_Leaderboard_Runes = {
+		Attributes = { PulseAlphaMin = 0.2, PulseAlphaMax = 0.55, PulseSeconds = 3.9 },
 		Color = Theme.Inlay,
 		Material = Enum.Material.Neon,
 		Transparency = 0.3,
@@ -342,10 +372,16 @@ local ShellStyles: { [string]: any } = {
 	District_Leaderboard_CrystalFinials = {
 		Color = Theme.Inlay,
 		Material = Enum.Material.Neon,
-		Attributes = { PulseAlphaMin = 0.15, PulseAlphaMax = 0.5, PulseSeconds = 5.6 },
+		Attributes = {
+			PulseAlphaMin = 0.15,
+			PulseAlphaMax = 0.5,
+			PulseSeconds = 5.6,
+			SpinSpeed = 0.2,
+		},
 	},
 	District_Leaderboard_BannerMasts = { Color = Theme.MarbleDim, Material = Theme.StoneMaterial },
 	District_Leaderboard_BannerCloth = {
+		Attributes = { WobbleDegrees = 2.0, WobbleSeconds = 6.4 },
 		Color = Theme.Inlay,
 		Material = Enum.Material.Neon,
 		Transparency = 0.3,
@@ -400,6 +436,7 @@ local ShellStyles: { [string]: any } = {
 	},
 	District_Archive_PlinthTrim = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
 	District_Archive_RuneFloor = {
+		Attributes = { PulseAlphaMin = 0.2, PulseAlphaMax = 0.55, PulseSeconds = 6.6 },
 		Color = Theme.Inlay,
 		Material = Enum.Material.Neon,
 		Transparency = 0.35,
@@ -408,7 +445,14 @@ local ShellStyles: { [string]: any } = {
 	District_Archive_LampCrystals = {
 		Color = Theme.Inlay,
 		Material = Enum.Material.Neon,
-		Attributes = { PulseAlphaMin = 0.15, PulseAlphaMax = 0.5, PulseSeconds = 4.9 },
+		Attributes = {
+			PulseAlphaMin = 0.15,
+			PulseAlphaMax = 0.5,
+			PulseSeconds = 4.9,
+			SpinSpeed = 0.22,
+			BobStuds = 0.5,
+			BobSeconds = 8,
+		},
 	},
 	District_Archive_Braziers = { Color = Theme.Basalt, Material = Theme.StoneMaterial },
 	District_Archive_BrazierFlames = {
@@ -503,9 +547,16 @@ local ShellStyles: { [string]: any } = {
 	District_Shop_LanternCrystals = {
 		Color = Theme.TorchLight,
 		Material = Enum.Material.Neon,
-		Attributes = { PulseAlphaMin = 0.1, PulseAlphaMax = 0.45, PulseSeconds = 3.3 },
+		Attributes = {
+			PulseAlphaMin = 0.1,
+			PulseAlphaMax = 0.45,
+			PulseSeconds = 3.3,
+			WobbleDegrees = 2.4,
+			WobbleSeconds = 5.5,
+		},
 	},
 	District_Shop_AisleRunes = {
+		Attributes = { PulseAlphaMin = 0.2, PulseAlphaMax = 0.5, PulseSeconds = 4.2 },
 		Color = Theme.Inlay,
 		Material = Enum.Material.Neon,
 		Transparency = 0.35,
@@ -522,6 +573,7 @@ local ShellStyles: { [string]: any } = {
 		Attributes = { PulseAlphaMin = 0.3, PulseAlphaMax = 0.65, PulseSeconds = 4.6 },
 	},
 	District_Shop_RuneRing = {
+		Attributes = { PulseAlphaMin = 0.25, PulseAlphaMax = 0.6, PulseSeconds = 5.3 },
 		Color = Theme.Inlay,
 		Material = Enum.Material.Neon,
 		Transparency = 0.3,
@@ -551,6 +603,7 @@ local ShellStyles: { [string]: any } = {
 		CanCollide = true,
 	},
 	District_Training_RuneRing = {
+		Attributes = { PulseAlphaMin = 0.2, PulseAlphaMax = 0.55, PulseSeconds = 4.8 },
 		Color = Theme.Inlay,
 		Material = Enum.Material.Neon,
 		Transparency = 0.35,
@@ -597,6 +650,7 @@ local ShellStyles: { [string]: any } = {
 	District_Training_Gate = { Color = Theme.MarbleDim, Material = Theme.StoneMaterial },
 	District_Training_Banners = { Color = Theme.MarbleDim, Material = Theme.StoneMaterial },
 	District_Training_BannerCloth = {
+		Attributes = { WobbleDegrees = 2.0, WobbleSeconds = 6.4 },
 		Color = Theme.Inlay,
 		Material = Enum.Material.Neon,
 		Transparency = 0.3,
@@ -638,8 +692,12 @@ do
 		CanCollide = true,
 		ExtendInwardTo = 20,
 	}
-	ShellStyles.Processional_South_Inlay =
-		{ Color = Theme.Inlay, Material = Enum.Material.Neon, Transparency = 0.3 }
+	ShellStyles.Processional_South_Inlay = {
+		Attributes = { PulseAlphaMin = 0.2, PulseAlphaMax = 0.5, PulseSeconds = 5.8 },
+		Color = Theme.Inlay,
+		Material = Enum.Material.Neon,
+		Transparency = 0.3,
+	}
 
 	-- Every district is reached by a flight of steps, and all three parts of
 	-- one (treads, cheeks, rails) must be solid or the climb fails halfway.
@@ -658,7 +716,14 @@ do
 		ShellStyles[`PlazaInner_{corner}_Crystal`] = {
 			Color = Theme.Inlay,
 			Material = Enum.Material.Neon,
-			Attributes = { PulseAlphaMin = 0.2, PulseAlphaMax = 0.6, PulseSeconds = 5.0 },
+			Attributes = {
+				PulseAlphaMin = 0.2,
+				PulseAlphaMax = 0.6,
+				PulseSeconds = 5.0,
+				SpinSpeed = 0.28,
+				BobStuds = 0.6,
+				BobSeconds = 7.2,
+			},
 		}
 
 		ShellStyles[`PlazaOuter_{corner}_RockBase`] =
@@ -668,7 +733,14 @@ do
 		ShellStyles[`PlazaOuter_{corner}_Crystals`] = {
 			Color = Theme.Inlay,
 			Material = Enum.Material.Neon,
-			Attributes = { PulseAlphaMin = 0.2, PulseAlphaMax = 0.58, PulseSeconds = 5.8 },
+			Attributes = {
+				PulseAlphaMin = 0.2,
+				PulseAlphaMax = 0.58,
+				PulseSeconds = 5.8,
+				SpinSpeed = 0.24,
+				BobStuds = 0.5,
+				BobSeconds = 8.4,
+			},
 		}
 		ShellStyles[`PlazaOuter_{corner}_Shrine`] =
 			{ Color = Theme.Slate, Material = Theme.StoneMaterial, CanCollide = true }
@@ -677,12 +749,24 @@ do
 		ShellStyles[`PlazaOuter_{corner}_ShrineCrystal`] = {
 			Color = Theme.Cosmic,
 			Material = Enum.Material.Neon,
-			Attributes = { PulseAlphaMin = 0.25, PulseAlphaMax = 0.7, PulseSeconds = 3.6 },
+			Attributes = {
+				PulseAlphaMin = 0.25,
+				PulseAlphaMax = 0.7,
+				PulseSeconds = 3.6,
+				SpinSpeed = 0.35,
+				BobStuds = 0.8,
+				BobSeconds = 6.5,
+			},
 		}
 		ShellStyles[`PlazaOuter_{corner}_TreeTrunk`] =
 			{ Color = Theme.Basalt, Material = Theme.StoneMaterial, CanCollide = true }
-		ShellStyles[`PlazaOuter_{corner}_TreeCanopy`] =
-			{ Color = Theme.DeepTeal, Material = Theme.StoneMaterial }
+		ShellStyles[`PlazaOuter_{corner}_TreeCanopy`] = {
+			Color = Theme.DeepTeal,
+			Material = Theme.StoneMaterial,
+			-- A degree or two on a long period. Anything more and low-poly
+			-- foliage reads as rubber rather than as leaves.
+			Attributes = { WobbleDegrees = 1.4, WobbleSeconds = 9 },
+		}
 	end
 end
 
@@ -1024,6 +1108,8 @@ local Crossroads = {
 			-- machined stone. One line to put back if the weathered look is
 			-- wanted after all.
 			OuterRing = {
+				-- Turns with the portal assembly. See GameConfig.Portal.YawIdleSpeed.
+				YawFollow = true,
 				Color = Color3.fromRGB(58, 53, 72),
 				Material = Enum.Material.SmoothPlastic,
 				-- Drives the spin. Negative on the inner ring so the two
@@ -1058,6 +1144,8 @@ local Crossroads = {
 				},
 			},
 			RingFoot_Clamps = {
+				-- Turns with the portal assembly. See GameConfig.Portal.YawIdleSpeed.
+				YawFollow = true,
 				Color = Theme.MarbleTrim,
 				Material = Enum.Material.Neon,
 				-- Four gold catches around the frame, breathing against the
@@ -1072,6 +1160,8 @@ local Crossroads = {
 			-- instead of emitting it, so the frame is machined and the
 			-- aperture inside it glows -- which is the way round it should be.
 			InnerRing = {
+				-- Turns with the portal assembly. See GameConfig.Portal.YawIdleSpeed.
+				YawFollow = true,
 				Color = Color3.fromRGB(68, 135, 123),
 				Material = Enum.Material.SmoothPlastic,
 				-- The delivered inner ring is 15.92 studs across inside an
@@ -1098,6 +1188,8 @@ local Crossroads = {
 			-- breath so it is the only part of the Engine that changes SIZE.
 			-- Explicitly non-colliding: you walk through a portal.
 			PortalPlane = {
+				-- Turns with the portal assembly. See GameConfig.Portal.YawIdleSpeed.
+				YawFollow = true,
 				Color = Color3.fromRGB(96, 170, 235),
 				-- Neon, not ForceField. ForceField's shimmer is too subtle to
 				-- read against a dark hub -- the aperture looked like a hole
@@ -1149,6 +1241,8 @@ local Crossroads = {
 			-- seconds while breathing on a different period, so the two never
 			-- line up and it never looks like a loop.
 			LevitationCore = {
+				-- Turns with the portal assembly. See GameConfig.Portal.YawIdleSpeed.
+				YawFollow = true,
 				Color = Color3.fromRGB(78, 150, 140),
 				Material = Enum.Material.Neon,
 				Attributes = {
