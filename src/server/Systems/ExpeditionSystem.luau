@@ -179,7 +179,12 @@ function ExpeditionSystem.finish(player: Player, reason: string): ()
 
 	-- Bring the player home BEFORE destroying the ground under them, or they
 	-- fall for a frame and Roblox's FallenPartsDestroyHeight takes over.
-	moveCharacter(player, GameConfig.HubLayout.SpawnAnchor)
+	-- Home is the spawn ring's southern pad. Any pad would do; picking one
+	-- keeps a return deterministic rather than dropping players at random.
+	moveCharacter(
+		player,
+		Vector3.new(0, GameConfig.HubLayout.SpawnRing.Height, GameConfig.HubLayout.SpawnRing.Radius)
+	)
 	state.Stage:Destroy()
 
 	Net.get("Expedition_Ended"):FireClient(player, {

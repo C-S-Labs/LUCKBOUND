@@ -263,12 +263,31 @@ local GameConfig = {
 			TRAINING_GROUNDS = Vector3.new(-400, 0, 0), -- west
 		},
 
-		-- ON the processional, not inside it. At (0, 8, 250) the spawn sat
-		-- within the walkway's own volume, so Roblox ejected the character
-		-- upward -- which is how a playtest began on top of a pillar. Y is now
-		-- clear of the deck and the SpawnLocation does not collide, so the
-		-- player simply drops the last couple of studs onto the walkway.
-		SpawnAnchor = Vector3.new(0, 14, 250), -- south of centre, facing the Engine
+		-- WHERE PLAYERS ARRIVE. A RING AROUND THE ENGINE, not a single pad.
+		--
+		-- Owner-directed after the first authored walk. One spawn 250 studs
+		-- down the processional meant every player began with the same long
+		-- walk to the only interactive thing in the game; arriving at the
+		-- Engine's edge puts them in front of it immediately, which is what
+		-- the Master Spec's "first frame must contain the thing the game is
+		-- about" was always after.
+		--
+		-- Radius clears the dais rather than guessing: the authored Platform
+		-- is 46.9 studs across, so 34 stands a player just off its rim with
+		-- room for several to arrive at once without stacking. Count is 8 so
+		-- the ring covers the four walkway mouths AND the four diagonals --
+		-- half arrive on a path, half on the open plaza, both walkable.
+		--
+		-- Height is above the deck, never inside it. At (0, 8, 250) the spawn
+		-- once sat within the walkway's own volume, so Roblox ejected the
+		-- character upward -- which is how a playtest began on top of a
+		-- pillar. The pads do not collide, so the player simply drops the
+		-- last couple of studs.
+		SpawnRing = {
+			Count = 8,
+			Radius = 34,
+			Height = 6,
+		},
 	},
 
 	-- Shared PortalRig. Biome Blueprint §1.3.

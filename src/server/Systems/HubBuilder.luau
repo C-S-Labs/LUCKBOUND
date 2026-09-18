@@ -238,21 +238,74 @@ end
 
 --- Where a player arrives. Non-colliding, so it cannot become a lip on the
 --- walkway it sits over.
+--- A RING OF INVISIBLE PADS AROUND THE ENGINE'S DAIS, not one visible pad.
+---
+--- Owner-directed after the first authored walk. Invisible because the
+--- authored plaza already has a floor worth looking at and a glowing disc on
+--- it is set dressing nobody asked for; a ring because several players
+--- arriving at once must not stack inside each other.
+---
+--- Every pad faces the Engine. A new player's first frame must contain the
+--- thing the game is about -- that rule survives the move, it just no longer
+--- costs a 250-stud walk to honour.
 local function buildSpawn(parent: Instance): SpawnLocation
-	local spawn = Instance.new("SpawnLocation")
-	spawn.Name = "SpawnLocation"
-	spawn.Anchored = true
-	spawn.CanCollide = false
-	spawn.Size = Vector3.new(12, 1, 12)
-	spawn.Transparency = 0.6
-	spawn.Color = Layout.Theme.MarbleTrim
-	spawn.Material = Enum.Material.Neon
-	spawn.TopSurface = Enum.SurfaceType.Smooth
-	-- Spawn faces the Fate Engine: a new player's first frame must contain the
-	-- thing the game is about.
-	spawn.CFrame = CFrame.lookAt(Layout.SpawnOffset, Vector3.new(0, Layout.SpawnOffset.Y, 0))
-	spawn.Parent = parent
-	return spawn
+	local ring = GameConfig.HubLayout.SpawnRing
+
+	local folder = Instance.new("Folder")
+	folder.Name = "SpawnPads"
+	folder.Parent = parent
+
+	local first: SpawnLocation? = nil
+	for i = 1, ring.Count do
+		local angle = (i - 1) / ring.Count * math.pi * 2
+		local position = Vector3.new(
+			math.sin(angle) * ring.Radius,
+			ring.Height,
+			math.cos(angle) * ring.Radius
+		)
+
+		local spawn = Instance.new("SpawnLocation")
+		spawn.Name = `SpawnPad{i}`
+		spawn.Anchored = true
+		-- Non-colliding, so a pad can never become a lip on the deck it sits
+		-- over. The player drops the last couple of studs onto the floor.
+		spawn.CanCollide = false
+		spawn.Size = Vector3.new(12, 1, 12)
+		spawn.Transparency = 1
+		spawn.Neutral = true
+		spawn.TopSurface = Enum.SurfaceType.Smooth
+		spawn.CFrame = CFrame.lookAt(position, Vector3.new(0, position.Y, 0))
+		spawn.Parent = folder
+
+		first = first or spawn
+	end
+
+	return first :: SpawnLocation
+end
+
+--- Removes what a fresh Roblox place ships with. The default Baseplate sits at
+--- Y 0 -- exactly where the authored plaza's top surface is -- so it z-fights
+--- the floor and extends past it; the default SpawnLocation drops players onto
+--- the Baseplate instead of into the ring above.
+---
+--- Deliberately conservative: it takes the Baseplate by name and SpawnLocations
+--- that are direct children of Workspace, which is where Roblox puts its own
+--- and where ours never are (they live under the Crossroads). Anything an
+--- author has deliberately placed elsewhere is left alone.
+local function clearPlaceDefaults(): ()
+	local removed = {}
+	for _, child in Workspace:GetChildren() do
+		if child.Name == "Baseplate" and child:IsA("BasePart") then
+			table.insert(removed, child.Name)
+			child:Destroy()
+		elseif child:IsA("SpawnLocation") then
+			table.insert(removed, `SpawnLocation '{child.Name}'`)
+			child:Destroy()
+		end
+	end
+	if #removed > 0 then
+		print(`[HubBuilder] removed place defaults: ` .. table.concat(removed, ", "))
+	end
 end
 
 -- === centre: Fate Engine =============================================
@@ -295,7 +348,10 @@ local function buildFateEngine(parent: Instance): Model
 		local built = PrefabLoader.build(
 			{ AssetKey = cfg.Prefab.AssetKey, Scale = cfg.Prefab.Scale, Styles = cfg.PrefabStyles },
 			ENGINE_CONTRACT,
-			CFrame.new(base),
+			-- Offset lands the dais flush with the walkways that meet it, so
+			-- a player walks on rather than steps up. Content derives it; see
+			-- FateEngine.Prefab.Offset.
+			CFrame.new(base + (cfg.Prefab.Offset or Vector3.zero)),
 			engine,
 			"Authored"
 		)
@@ -976,27 +1032,25 @@ local function ensureContract(hub: Instance): ()
 		table.insert(added, "EXPEDITION_GATE")
 	end
 
-	if not gate:FindFirstChild(Constants.NAMES.GATE_ANCHOR) then
-		local zone
-		for _, d in Layout.Districts do
-			if d.Id == "EXPEDITION_GATE" then
-				zone = d
-			end
-		end
-		-- Schema.validateHub guarantees the district exists, so this is a
-		-- programmer error rather than a content one if it ever fires.
-		assert(zone, "Content/Hub/Crossroads has no EXPEDITION_GATE district")
-		buildGateAnchor(
-			zone,
-			Anchors.EXPEDITION_GATE + Vector3.new(0, zone.Height + zone.PlatformSize.Y / 2, 0),
-			gate
-		)
-		table.insert(added, Constants.NAMES.GATE_ANCHOR)
-	end
+	-- NO GATE ANCHOR IS ADDED HERE ANY MORE. It used to be, on the reasoning
+	-- that an artist who models a hub and names it Crossroads must not
+	-- silently switch expedition entry off. That reasoning is now obsolete:
+	-- entry is moving to the Fate Engine's portal, and the ENTER prompt in
+	-- the middle of the market was the thing the first authored walk asked to
+	-- be rid of. Putting it back here would resurrect it the moment anyone
+	-- saved the built hub into the place.
+	--
+	-- ExpeditionSystem already tolerates a missing anchor -- it warns that
+	-- entry is remote-only and carries on -- so nothing here can break. When
+	-- the Engine carries entry, whatever it needs gets ensured in this spot.
 
-	if not hub:FindFirstChildOfClass("SpawnLocation") then
+	-- Looks for the FOLDER, not for a SpawnLocation. The pads live inside
+	-- `SpawnPads`, and FindFirstChildOfClass does not recurse -- so checking
+	-- for the class here would never find them and would stack a fresh ring
+	-- on top of the existing one on every boot.
+	if not hub:FindFirstChild("SpawnPads") then
 		buildSpawn(hub)
-		table.insert(added, "SpawnLocation")
+		table.insert(added, "SpawnPads")
 	end
 
 	if #added > 0 then
@@ -1023,6 +1077,12 @@ function HubBuilder.build(): Model
 
 	local hub = Instance.new("Model")
 	hub.Name = Constants.NAMES.CROSSROADS
+
+	-- A fresh place ships with a Baseplate at Y 0 and a SpawnLocation on it.
+	-- The authored plaza's top surface is also Y 0, so the two fight; and the
+	-- default spawn lands players on the Baseplate rather than in the ring
+	-- around the Engine. Both go before anything is built.
+	clearPlaceDefaults()
 
 	-- AUTHORED ART WINS, one piece at a time. With a shell present the plaza,
 	-- the districts, the walkways and the skyline all come from it; without
@@ -1068,16 +1128,12 @@ function HubBuilder.build(): Model
 		if shell then
 			deckTop = Layout.Shell.DeckHeight
 
-			-- THE GATE KEEPS ITS PROMPT AND LOSES ITS PORTAL. The authored
-			-- south district is a market, because the brief asked for the hub
-			-- the portal-as-entry direction wants -- but that amendment has
-			-- not landed, so expedition entry still runs through this zone and
-			-- still has to work today. Drawing a monumental portal rig on top
-			-- of the stalls would be the wrong answer to that; an invisible
-			-- anchor at the head of the market stairs is the right one.
-			if zone.Kind == "GATE" then
-				buildGateAnchor(zone, Layout.Shell.GateAnchorTop, model)
-			end
+			-- NO GATE ANCHOR, AND NO ENTER PROMPT. Owner-directed after the
+			-- first authored walk: a "Verdant Valley / ENTER" prompt standing
+			-- in the middle of the market is not where a biome gets entered,
+			-- and the Fate Engine's portal takes that job. See the note on
+			-- Layout.Shell -- this leaves expedition entry remote-only until
+			-- the Engine carries it, which is a deliberate gap.
 		else
 			deckTop = centre.Y + zone.PlatformSize.Y / 2
 

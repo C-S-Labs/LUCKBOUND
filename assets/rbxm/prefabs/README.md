@@ -201,15 +201,30 @@ invisible wall exactly where players walk:
 That is the same class of bug as the `CylinderMesh` that once left the hub
 with no floor, and it is invisible in exactly the same way.
 
-So collision is granted to **57 of 225 parts**: the floor, the four decks, the
-four walkways and their kerbs, every stair flight, the training yard floor,
-and freestanding single-volume props — pillars, rocks, tree trunks, shrines,
-the monument, the fountain. Everything else is scenery you walk through.
+### What the first walk changed — 2026-09-18
 
-**None of this is verified in Studio.** It is the safe half of a choice that
-cannot be checked headlessly. If a walk shows a railing that ought to stop
-you, the fix is one `CollisionFidelity` line on that entry in
-`Content/Hub/Crossroads`, never `CanCollide` on its own.
+The first pass granted collision to only **57 of 225** parts and left every
+merged or hollow mesh pass-through. That was the safe half of a choice that
+could not be checked headlessly, and the walk found its cost: **players sank
+into the flanks of district platforms and walked through railings.**
+
+Collision now covers **91 of 225**, and **30 of those carry an explicit
+`CollisionFidelity = PreciseConvexDecomposition`** — precisely the meshes
+listed above, where a `Default` hull would seal the opening that makes the
+piece the shape it is.
+
+| | Fidelity | Why |
+|---|---|---|
+| Floors, decks, walkways, kerbs, stairs, yard | `Default` | flat slabs; a coarse hull is exactly right, and cheap |
+| Platform skirts | `Default` | solid frustums under each deck — the piece players were sinking into |
+| Freestanding props (pillars, rocks, trunks, shrines, monument, fountain) | `Default` | filling their own volume is correct |
+| Arches, colonnades, balustrades, walls, pylons, stalls, seating, dummies, racks | **`PreciseConvexDecomposition`** | the openings are the point |
+| Everything else (banners, flames, runes, glows, roofs, signs, canopies, islands, horizon) | — | no collision at all |
+
+`PreciseConvexDecomposition` is a real runtime cost, computed at load and
+cached per mesh asset. It is spent on 30 parts deliberately rather than
+granted by default, and it is the **only** correct way to make one of these
+solid — `CanCollide` alone would wall off a route.
 
 ## Paint coverage
 
@@ -222,35 +237,63 @@ The export left `.001`-style suffixes on duplicated objects
 but note there is **no plain `District_Archive_Dome`**, so nothing may require
 one by exact name.
 
-## The Expedition Gate has no gate
+## The Expedition Gate is gone entirely
 
-The authored south district is a **market**, because the brief asked for the
-hub that the portal-as-entry direction wants. That amendment has not landed,
-so expedition entry still runs through `EXPEDITION_GATE` and still has to work
-today.
+The authored south district is a **market**. The first pass kept an invisible
+`ENTER` prompt on it so expedition entry still worked; the walk rejected that
+— *"Verdant Valley teleport remains in shop area, this should not be here"*
+— and the Fate Engine's portal takes the job instead.
 
-The Gate therefore keeps its anchor and its `ENTER` prompt and **loses its
-art** — no portal rig is drawn on top of the stalls. The prompt sits at the
-head of the market stairs, at `(0, 14, 250)`, measured:
+So the authored hub now builds **no gate anchor and no gate prompt at all**,
+and `ensureContract` no longer puts one back either (it would have resurrected
+the prompt the moment anyone saved the built hub into the place).
 
+**What this costs, stated plainly:** until the Engine carries entry, there is
+no in-world way into an expedition. `ExpeditionSystem` already tolerates a
+missing anchor — it warns that entry is remote-only and carries on — so
+`/enter` still works for testing and nothing else breaks. A test pins the
+absence so it cannot be closed by accident.
+
+## The Fate Engine sits flush on it
+
+Measured: the Engine's `Platform` top face is **1.934 studs above its model
+pivot** at Scale 0.464, while the authored walkways' top face is
+`WalkwayRaise` (1.5). The dais was therefore proud of every path meeting it,
+and the walk asked for one continuous surface. `FateEngine.Prefab.Offset`
+lowers the model by the difference, derived rather than typed:
+
+```lua
+Offset = Vector3.new(0, GameConfig.HubLayout.WalkwayRaise - 1.934, 0)
 ```
-stairs           218.5
-deck near edge   235.0
-prompt           250.0
-entrance pylons  248.0
-stalls begin     256.0
-```
 
-When the amendment lands, that whole arrangement goes away with the district.
+Note this makes the dais flush with the **walkways**, which stand 1.5 studs
+above the plaza by design. Crossing the open plaza to the Engine still has
+that one low step — it is the walkway's step, not the dais's.
+
+## Where players arrive
+
+A ring of **8 invisible `SpawnLocation` pads at radius 34**, just clear of the
+dais (23.4), each facing the Engine. `GameConfig.HubLayout.SpawnRing`.
+
+The single pad 250 studs down the processional is gone: it meant every player
+began with a long walk to the only interactive thing in the game. Eight pads
+cover the four walkway mouths and the four diagonals, so several players can
+arrive at once without stacking.
+
+`HubBuilder` also removes the place's default `Baseplate` and `SpawnLocation`
+at boot. The Baseplate sits at Y 0 — exactly where the authored plaza's top
+surface is — so it z-fights the floor and extends past it.
 
 ## Still to do
 
-- **Walk it.** Never seen in Studio. In priority order: does the floor hold,
-  do the stairs climb, can you reach the market prompt, and does anything
-  invisible stop you.
-- **Profile it.** 225 MeshParts replace ~436 primitives, but mesh data is
-  heavier to replicate than a `Part`, and 57 generated collision hulls are new
-  work at load.
+- **Walk it again.** The collision restoration, the flush dais, the spawn ring
+  and the colour lift are all unverified.
+- **Profile it.** 225 MeshParts replace ~436 primitives, mesh data is heavier
+  to replicate than a `Part`, and there are now 91 generated collision hulls —
+  30 of them precise decompositions — as new work at load.
+- **Minor, accepted:** the walkways clip slightly into the district stair
+  flights. Authored geometry overlapping authored geometry; fixing it means a
+  re-export, and the walk called it minimal.
 
 ---
 
@@ -264,29 +307,60 @@ than merely near each other.
 | | |
 |---|---|
 | Contents | **4 MeshParts** in one flat `Model` |
-| Scale | **2.0**, same as the hub |
-| Span | 2048 → **4096 studs**, against `HubLayout.VisualExtent` 4000 |
-| Height | 452 → **904 studs**, base 68 studs below the plaza deck |
+| Scale | **1.0** — retuned by eye; see below |
+| Span | 2048 → **2048 studs**, 1.57x the plaza's 1305 |
+| Height | 452 → **452 studs**, 383 above the plaza deck |
 | Collision | **none** — nothing out there is walked on |
 | Contract | none; nothing in the game looks it up |
 
 Binary `.rbxm` rather than `.rbxmx`. Rojo syncs both, and the file stem is
 still the manifest key.
 
+## Scale — retuned after the first walk
+
+As authored it took the hub's 2.0, and at 2.0 the ring was **4096 studs across
+against a 1305-stud plaza** — more than three times the hub's width. The
+verdict on walking it was *"far too large and not properly spaced"*.
+
+At **1.0** the ring is 2048 across, 1.57x the plaza, and its outer radius
+(1024) falls just inside the hub's own ground skirt (1097) — so the mountains
+**rise from the island** rather than floating past its edge. That nesting is
+the reason for this number rather than any other, and it is asserted by test
+from both sides.
+
+**One thing to know before retuning it.** A uniform scale moves the ring closer
+as it shrinks, so *from the hub's centre the mountains subtend the same angle
+at any scale* — height and radius fall together. What actually changes is how
+they read from the plaza's **edge**, and how big they look next to the hub in
+a wide shot. Below about **0.64** the ring is narrower than the plaza and the
+mountains would stand on it.
+
 ## How it registers
 
-There is no `EngineReserve` out here, so it registers from the largest mesh:
+There is no `EngineReserve` out here, so it registers from the largest mesh —
+and only in Y:
 
 ```
 AnchorPart   = "Backdrop_Mountain"
-AnchorOffset = (-15.3538, -157.2021, -34.9448)   -- source units
+AnchorOffset = (0, -122.9784, 0)   -- source units, AT SCALE 1.0
 ```
 
-That offset is the vector from that mesh's centre to **the hub centre in the
-shared source scene**. The check that it is right: both models' ground planes
-(source `Y = 0`) then land on the same world height, `-68.45`. They agree to
-four decimals, which is the evidence for the same-scene claim and is asserted
-by test.
+X and Z are zero on purpose: that mesh **is** the ring, so centring its
+bounding box on the origin is what keeps the mountains concentric with the
+plaza at any scale.
+
+**The Y term is scale-dependent and must be recomputed if the scale changes:**
+
+```
+registrationSourceY = 68.4475 / Scale
+AnchorOffset.Y      = registrationSourceY - 191.425858
+```
+
+where `68.4475` is the hub's ground plane in world studs and `191.425858` is
+`Backdrop_Mountain`'s measured centre. Get it wrong and the mountains float
+above the ground or sink through it. A test asserts the two ground planes
+agree **in world studs** — not in source units, which would no longer mean the
+same thing now that the two models are at different scales.
 
 | Part | Source size | Source centre |
 |---|---|---|

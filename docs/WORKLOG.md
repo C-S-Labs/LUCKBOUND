@@ -33,6 +33,130 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 23 — 2026-09-18 — The first walk of the authored hub
+
+**Branch:** `claude/crossroads-prefab-integration-08761b` · **Tests:** 367 passing (was 361)
+
+The Crossroads was walked in Studio for the first time. The verdict was *"looks
+very nice in general"* with seven specific faults, all fixed the same day. This
+entry is mostly about what a walk found that 361 green tests could not.
+
+### It did not load at first, and that was not a code fault
+
+The first run showed the old blockout hub. The log gave it away by what was
+**missing**: no `Shell: authored HUB_CROSSROADS` line, but also no
+`prefab not found ... using the blockout instead` warning. Getting neither
+means execution never reached that check — `Layout.Shell` was nil.
+
+`C:\Dev\luckbound`, the checkout Rojo serves, was on `claude/zen-volta-cuhfyh`
+at `07b3ea3`: two merges behind, with no `Shell` in its content file at all.
+**Merging to GitHub does not move the working checkout**, and a worktree is a
+separate directory. Worth remembering — the symptom looks exactly like a
+broken asset path.
+
+### What the walk found
+
+**Collision, and the first pass had it backwards.** Session 22 granted
+collision to 57 of 225 parts and left every merged or hollow mesh
+pass-through — the safe half of a choice that could not be checked headlessly,
+chosen because a `Default` hull on an archway seals the walkway behind it. The
+walk found the cost immediately: **players sank into the flanks of district
+platforms and walked through railings.**
+
+It is now **91 of 225, with 30 at `PreciseConvexDecomposition`** — the arches,
+colonnades, balustrades, walls, pylons, stalls, seating, dummies and racks
+whose openings are the point. Skirts collide at `Default`, because a skirt is
+a solid frustum and is exactly the piece players were sinking into.
+
+> The rule this settles, now in `ART_DIRECTION.md`: **collision and fidelity
+> are decided together, never separately.** Both halves cost a playtest.
+
+**The horizon was three times the hub.** At the authored Scale 2.0 the ring
+was 4096 studs across against a 1305-stud plaza. Retuned to **1.0**: 2048
+across, 1.57× the plaza, outer radius 1024 falling just inside the hub's own
+ground skirt at 1097 — so the mountains rise *from* the island rather than
+floating past its edge. That nesting is why 1.0 and not another number.
+
+Two things fell out of that which are worth writing down:
+
+- **`AnchorOffset.Y` is scale-dependent.** It is multiplied by `Scale`, so
+  rescaling silently moves the model's ground plane. The formula
+  (`registrationSourceY = 68.4475 / Scale`) is now in the prefab README, and
+  the test that guards it was rewritten to compare ground planes **in world
+  studs** rather than source units — which only meant the same thing while the
+  two models shared a scale.
+- **A uniform scale cannot change apparent size from the centre.** Height and
+  radius fall together, so the mountains subtend the same angle wherever the
+  scale lands. What changes is how they read from the plaza's *edge* and how
+  big they look beside the hub in a wide shot. Recorded so the next person
+  retuning it does not expect the other thing.
+
+**The Engine was not flush with its paths.** Measured: `Platform`'s top face
+sits 1.934 studs above the model pivot at Scale, against a walkway deck at
+`WalkwayRaise` 1.5 — so the dais stood 0.43 proud of every path meeting it.
+`FateEngine.Prefab.Offset` now lowers it by the difference, derived from
+`WalkwayRaise` rather than typed, and a test pins the result rather than the
+input.
+
+**Things that were painted read as unpainted.** Gateway arches, banners,
+training dummies, braziers and weapon racks were all reported as
+"uncolored". They were painted — in `Basalt` (64,58,78) and `Slate`
+(88,82,104) — and at `ClockTime 4.5` those simply read as black against a
+night sky. The palette did not change; those pieces moved one step up it.
+**When something reads as unpainted here, suspect the value before the paint
+table.**
+
+### Two things removed, one added
+
+**The Expedition Gate is gone entirely.** Session 22 kept an invisible `ENTER`
+prompt on the market so entry still worked. The walk rejected that outright —
+*"Verdant Valley teleport remains in shop area, this should not be here"* —
+and the Fate Engine's portal takes the job. `ensureContract` no longer puts
+one back either, because it would have resurrected the prompt the moment
+anyone saved the built hub into the place.
+
+**This leaves no in-world way into an expedition**, and that is deliberate
+rather than an oversight. `ExpeditionSystem` already tolerated a missing
+anchor — it warns that entry is remote-only and carries on — so `/enter` still
+works for testing. A test pins the absence so it cannot be closed by accident.
+
+**The spawn is a ring now.** Eight invisible pads at radius 34, just clear of
+the 23.4-stud dais, each facing the Engine. The single pad 250 studs down the
+processional meant every player began with a long walk to the only interactive
+thing in the game; the ring honours "the first frame must contain the thing
+the game is about" without charging for it. `HubBuilder` also removes the
+place's default `Baseplate` and `SpawnLocation` at boot — the Baseplate sits
+at Y 0, exactly where the authored plaza's top surface is.
+
+### Accepted, not fixed
+
+The walkways clip slightly into the district stair flights. That is authored
+geometry overlapping authored geometry, so fixing it means a re-export, and
+the walk called it minimal.
+
+### Stopped at
+
+367 passing. Re-verified against the delivered file: 225 of 225 parts painted,
+91 collidable, 30 precise; the dais lands at exactly 1.500 against a 1.5
+walkway; the horizon's ground plane at −68.447 matching the hub's.
+
+**None of the fixes have been walked.** Everything in this entry is reasoned
+and asserted, not seen.
+
+### Next, when work resumes
+
+1. **Walk it again** — the collision restoration above all. The risk has moved
+   from "invisible walls where there should be none" to "the precise hulls
+   cost more at load than the budget allows".
+2. **Then the Fate Engine's entry logic**, which is now the only way into a
+   biome and does not exist yet. Note the design point already recorded: "keep
+   this biome?" is **new game state** between rolling and entering.
+3. **Profile on a real low-end device.** Still never measured, and there are
+   now 91 generated collision hulls on top of everything else.
+4. Then texturing and animation, which is what the hub was cleared for.
+
+---
+
 ## Session 22 — 2026-09-18 — The Crossroads arrives, and is measured first
 
 **Branch:** `claude/crossroads-prefab-integration-08761b` · **Tests:** 361 passing (was 328)
