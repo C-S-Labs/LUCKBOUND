@@ -1908,14 +1908,23 @@ do
 	local RAW_PLATFORM_TOP = 1.934 -- Platform top above the model pivot, at Scale
 	local engineOffset = Crossroads.FateEngine.Prefab.Offset
 	check("the Engine declares a placement offset", typeof(engineOffset) == "Vector3")
+
+	-- ON THE PLAZA, NOT ON THE WALKWAYS. The first attempt put the dais flush
+	-- with the four paths, which still left a step for anyone crossing the
+	-- open plaza -- most of the approach angles, and the second walk said so.
+	-- The plaza is Y 0, so the dais top must be too.
+	local daisTop = RAW_PLATFORM_TOP + engineOffset.Y
 	check(
-		"the authored dais lands flush with the walkways that meet it",
-		math.abs((RAW_PLATFORM_TOP + engineOffset.Y) - GameConfig.HubLayout.WalkwayRaise) < 0.05,
-		string.format(
-			"dais top %.3f vs walkway %.1f",
-			RAW_PLATFORM_TOP + engineOffset.Y,
-			GameConfig.HubLayout.WalkwayRaise
-		)
+		"the authored dais lands flush with the plaza, walkable from any angle",
+		math.abs(daisTop) < 0.05,
+		string.format("dais top %.3f", daisTop)
+	)
+	-- Approaching along a path is then a step DOWN, which is free. Stepping
+	-- UP is the thing that catches, so the dais must never be the higher one.
+	check(
+		"arriving along a walkway is a step down onto the dais, never up",
+		daisTop <= GameConfig.HubLayout.WalkwayRaise,
+		string.format("dais %.3f vs walkway %.1f", daisTop, GameConfig.HubLayout.WalkwayRaise)
 	)
 	-- Only the height is corrected: nudging it sideways would walk the dais
 	-- off the footprint the shell reserves for it.
@@ -2094,6 +2103,22 @@ do
 	end
 	check("no district platform has a hollow flank", #sunk == 0, table.concat(sunk, ", "))
 
+	-- THE KERBS MUST REACH WHAT THEY RUN TO. Authored from radius 60 while
+	-- their walkway runs from 20, so every path had 40 studs of bare deck and
+	-- the black edging stopped in mid-air short of the dais.
+	local short = {}
+	for _, key in { "Walkway_North_Edge", "Walkway_East_Edge", "Walkway_West_Edge", "Processional_South_Edge" } do
+		local style = resolve(key)
+		if
+			not style
+			or not style.ExtendInwardTo
+			or style.ExtendInwardTo >= Crossroads.FateEngine.PlatformRadius
+		then
+			table.insert(short, key)
+		end
+	end
+	check("every walkway kerb is extended to meet the dais", #short == 0, table.concat(short, ", "))
+
 	check(
 		"no merged or hollow mesh collides at Default fidelity",
 		#sealed == 0,
@@ -2203,15 +2228,9 @@ do
 	)
 
 	-- THE HORIZON IS NO LONGER AT THE HUB'S SCALE, and that is deliberate.
-	-- Both came out of one Blender scene, so 2.0 was the as-authored answer --
-	-- and as authored the ring was 4096 studs across against a 1305-stud
-	-- plaza, which the first walk called "far too large". It is tuned by eye
-	-- now, so what can still be asserted is the FRAMING, below, not equality.
-	check(
-		"the horizon is not larger than it was authored",
-		prefab.Scale <= Crossroads.Shell.Prefab.Scale,
-		string.format("%.4f against %.4f", prefab.Scale, Crossroads.Shell.Prefab.Scale)
-	)
+	-- Both came out of one Blender scene, so 2.0 was the as-authored answer.
+	-- It is tuned by eye now -- 2.0 read as too large, 1.0 clipped through the
+	-- plaza -- so what can be asserted is the FRAMING below, not equality.
 	check(
 		"the horizon takes the same compass correction",
 		prefab.YawDegrees == Crossroads.Shell.Prefab.YawDegrees
@@ -2238,25 +2257,34 @@ do
 		string.format("%.3f against %.3f in world studs", shellGround, backdropGround)
 	)
 
-	-- THE RING MUST FRAME THE HUB, NOT STAND ON IT. Below about 0.64 the
-	-- mountains would be narrower than the plaza itself. Asserted as a
-	-- relationship so a future retune cannot quietly cross that line.
+	-- THE RING MUST STAND WELL CLEAR OF THE HUB. At Scale 1.0 its outer
+	-- radius (1024) fell inside the hub's own ground skirt (1097) and the
+	-- peaks clipped through the plaza edge -- which is what the second walk
+	-- reported. Clearing the GROUND, not merely the plaza, is the assertion
+	-- that would have caught it.
 	local RAW_RADIUS = 1024.0 -- Backdrop_Mountain, half its widest axis
-	local plazaRadius = 652.626648 * Crossroads.Shell.Prefab.Scale / 2
+	local GROUND_RADIUS = 548.4949 * Crossroads.Shell.Prefab.Scale
+	local ringRadius = RAW_RADIUS * prefab.Scale
 	check(
-		"the horizon rings the plaza rather than standing on it",
-		RAW_RADIUS * prefab.Scale > plazaRadius,
-		string.format("ring radius %.0f, plaza radius %.0f", RAW_RADIUS * prefab.Scale, plazaRadius)
+		"the horizon stands clear of the hub's own ground, not through it",
+		ringRadius > GROUND_RADIUS,
+		string.format("ring radius %.0f, ground radius %.0f", ringRadius, GROUND_RADIUS)
 	)
 
-	-- ...and it must not be so far out that the hub's own ground ends in a
-	-- void before the mountains begin. The shell's ground skirt reaches 1097
-	-- studs, so a ring inside that rises FROM the island.
-	local GROUND_RADIUS = 548.4949 * Crossroads.Shell.Prefab.Scale
+	-- ...and far enough past the platform edge to read as a horizon rather
+	-- than as scenery crowding the plaza. Owner-directed: "vastly further".
+	local plazaRadius = 652.626648 * Crossroads.Shell.Prefab.Scale / 2
 	check(
-		"the horizon rises from the hub's own ground, not past its edge",
-		RAW_RADIUS * prefab.Scale <= GROUND_RADIUS,
-		string.format("ring %.0f, ground %.0f", RAW_RADIUS * prefab.Scale, GROUND_RADIUS)
+		"the horizon is vastly further out than the platform edge",
+		ringRadius > plazaRadius * 3,
+		string.format("ring %.0f, plaza %.0f", ringRadius, plazaRadius)
+	)
+
+	-- ...but still inside the fog, or it is simply not there.
+	check(
+		"the horizon is close enough to be seen at all",
+		ringRadius < Crossroads.Theme.FogEnd,
+		string.format("ring %.0f, fog %d", ringRadius, Crossroads.Theme.FogEnd)
 	)
 
 	-- ...and the fog must not cut it off before it is seen.
