@@ -231,6 +231,13 @@ So the rule is:
 cached per mesh asset, so it is spent deliberately rather than granted by
 default. In the Crossroads it is on 30 parts of 225.
 
+**And it is set in the asset file, never from a script.** `CollisionFidelity`
+is plugin security, like `MeshId`: assigning it at runtime throws, and that
+exception is fatal to whatever was building at the time — it cost an entire
+hub at boot. Bake it into the `.rbxmx` as
+`<token name="CollisionFidelity">3</token>`; content declares what it should
+be and `PrefabLoader` warns when the file disagrees.
+
 This is also why `CanCollide` defaults to **off** in `PrefabLoader` and
 content turns it on: the failure mode of forgetting is a part you can walk
 through, not a world you cannot walk in.

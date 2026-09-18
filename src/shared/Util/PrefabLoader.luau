@@ -38,11 +38,18 @@ export type Style = {
 	Material: Enum.Material?,
 	Transparency: number?,
 	CanCollide: boolean?,
-	-- Only meaningful with CanCollide. An imported MeshPart carries no baked
-	-- PhysicsData, so Roblox generates its hull at `Default` fidelity, which
-	-- is coarse enough to fill an archway or the gaps in a colonnade. Content
-	-- raises this to PreciseConvexDecomposition for the pieces where the
-	-- openings are the point -- at a real cost, so only where it is earned.
+	-- DECLARED HERE, BUT SET IN THE ASSET FILE. An imported MeshPart carries
+	-- no baked PhysicsData, so Roblox generates its hull at `Default`
+	-- fidelity, which is coarse enough to fill an archway or the gaps in a
+	-- colonnade. The pieces where those openings are the point need
+	-- PreciseConvexDecomposition.
+	--
+	-- `CollisionFidelity` CANNOT BE ASSIGNED AT RUNTIME. It is plugin
+	-- security, exactly like MeshId, and writing it throws
+	-- "lacking capability Plugin" -- which killed an entire hub build at boot
+	-- once. It is a SERIALIZED property, so the value lives in the .rbxmx and
+	-- this field is the declaration of what that value must be. The loader
+	-- checks the two agree and says so when they do not.
 	CollisionFidelity: Enum.CollisionFidelity?,
 	Attributes: { [string]: any }?,
 	-- Attribute name -> fraction to vary it by, per part. See the paint loop.
@@ -223,6 +230,7 @@ function PrefabLoader.build(
 	end
 
 	local partCount = 0
+	local wrongFidelity = {}
 	local styles = spec.Styles
 	for _, d in model:GetDescendants() do
 		if not d:IsA("BasePart") then
@@ -250,11 +258,16 @@ function PrefabLoader.build(
 				if style.CanCollide ~= nil then
 					d.CanCollide = style.CanCollide
 				end
-				-- Set before nothing in particular, but only on a MeshPart:
-				-- CollisionFidelity does not exist on a plain Part, and the
-				-- blockout path shares this loop.
+				-- VERIFIED, NEVER WRITTEN -- see the note on the field. A
+				-- mismatch means the .rbxmx was not baked, and the symptom is
+				-- a railing you walk through or an arch you cannot, with
+				-- nothing in the log. Collected and reported once below
+				-- rather than warned per part, because a fresh delivery would
+				-- otherwise print thirty lines.
 				if style.CollisionFidelity and d:IsA("MeshPart") then
-					d.CollisionFidelity = style.CollisionFidelity
+					if d.CollisionFidelity ~= style.CollisionFidelity then
+						table.insert(wrongFidelity, d.Name)
+					end
 				end
 				for key, value in style.Attributes or {} do
 					d:SetAttribute(key, value)
@@ -295,6 +308,15 @@ function PrefabLoader.build(
 				end
 			end
 		end
+	end
+
+	if #wrongFidelity > 0 then
+		warn(
+			`[PrefabLoader] {spec.AssetKey}: {#wrongFidelity} part(s) do not carry the `
+				.. "CollisionFidelity content declares, so their hulls will be wrong: "
+				.. table.concat(wrongFidelity, ", ")
+				.. " -- CollisionFidelity is set in the .rbxmx, not at runtime"
+		)
 	end
 
 	-- A missing name is not fatal -- the rest of the Engine still stands --

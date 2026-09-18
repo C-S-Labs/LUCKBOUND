@@ -866,6 +866,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBXF83F5CB239FF421C88CFFAF7D713CCBA">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -1541,6 +1542,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBX20F66D786F89400BB5577925F2D58D82">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -3026,6 +3028,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBX1787AA296DAF43B78C52EF538860E912">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -3431,6 +3434,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBXDDF6475743814150BF982731CD226AE5">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -4376,6 +4380,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBX56AD035997794F92A38262608F37DBB8">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -4916,6 +4921,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBX9299FB2AB3F344B7B4C12ED8C9859463">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -6401,6 +6407,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBXAF84280491D24FABA8AA02BEE1C0C255">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -6941,6 +6948,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBXBFB5680949C341199F9305B1C2667E71">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -7886,6 +7894,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBX0018D329D94044D29D9F479FE8B2EBE9">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -8156,6 +8165,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBX11479F4030BA435FB79743429DCDEE25">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -8291,6 +8301,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBX7F85667B6ABF490D9B255048DF2E24B0">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -8426,6 +8437,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBXED1FAD20F0B5466EA25061DB9312EAD3">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -8561,6 +8573,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBXEC3DEB530FED441896A8B1E408855F7F">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -8696,6 +8709,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBXBD5AB6BF4EF34A1AA534E2D26A623D86">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -8831,6 +8845,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBXDFF17D626E7646FDA229534FB4CE0A76">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -8966,6 +8981,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBXA4B1C5CCB2274C6B8EFC1AC3B65B2AE8">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -9236,6 +9252,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBX1F5A90670F684FB7A52A9CF8ADB0923F">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -12881,6 +12898,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBX3C784EB2CF7747849AC2ADA2A69663F1">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -14771,6 +14789,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBX5126549904C54E5281325CA94CCB859E">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -15446,6 +15465,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBX491F2E01D84B49FFA7FF02CEB8E35488">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -15851,6 +15871,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBXEFC3AF6314754CB2ACBE822A02320D69">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -15986,6 +16007,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBX882AEBBFC20F4B70A8D38FBAFCBDB743">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -16121,6 +16143,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBXBDF8F8884DC84D61B4D1499050A5FFB3">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -17336,6 +17359,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBXE38106E734464830B1DF2BC85092523A">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -17606,6 +17630,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBX74E73D9C520B42D2A9A1E4F51C3D17E5">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -17876,6 +17901,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBX95CA743BBB04425A8F9F635DA6F2E6C9">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -26246,6 +26272,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBXE24D4D574406452296A0BAFA5C45920E">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -26921,6 +26948,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBX420D79BA28ED40008E5860941FDC9AA3">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -27866,6 +27894,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBX468721BA4AA64E008EC90AF4300152F6">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
@@ -30026,6 +30055,7 @@ YmQ0ZTdjODQx]]></BinaryString>
 		</Item>
 		<Item class="MeshPart" referent="RBX19175E30DE834687BB14DFB89A69E978">
 			<Properties>
+				<token name="CollisionFidelity">3</token>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
