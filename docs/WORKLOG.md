@@ -33,6 +33,92 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 26 — 2026-09-18 — The horizon is built, not placed
+
+**Branch:** `claude/crossroads-prefab-integration-08761b` · **Tests:** 369 passing
+
+Third walk, one fault: the mountains still clipped the hub and were still too
+close, at Scale 3.0. This entry is about why scaling was never going to fix it.
+
+### Three scales, three failures
+
+| Scale | Ring across | Result |
+|---|---|---|
+| 2.0 (as authored) | 4096 | "far too large" |
+| 1.0 | 2048 | clipped through the plaza |
+| 3.0 | 6144 | **still clipping** |
+
+**The distance from the hub to the nearest peak is a property of the mesh
+geometry**, which lives in a Roblox asset id — nothing in this repo can
+measure it. Every scale was therefore a guess dressed up as a calculation. The
+bounding box says where the ring *ends* and says nothing about where it
+*begins*, which is the only number that mattered.
+
+And scaling could not separate the two things anyway:
+
+> A uniform scale moves the ring closer as it shrinks, so height and radius
+> fall together and the mountains subtend the same angle from the hub's centre
+> at any scale. Scaling cannot make them look smaller from where players
+> stand. All it changes is how far away they are.
+
+### The fix was the owner's suggestion, and it is better than what it replaced
+
+Take one chunk of mountain, stand it a set distance beyond the crossroads, and
+clone it around a circle. **Distance stops being emergent and becomes a number
+we choose** — and a number is testable.
+
+```
+Part    Backdrop_Mountain     Count   14        Radius  2400
+Scale   1.0                   BaseY   -68.4475  Seed    20260918
+```
+
+Every one chosen against measured hub geometry: plaza edge 653, ground skirt
+1097, chunk half-width 1024 — giving a band from 1376 to 3424, so **723 studs
+of clear sky** past the crossroads edge and **279** past the ground skirt,
+with the far face inside `FogEnd` so the range fades rather than ending.
+
+Chunks are *meant* to overlap: 1.9x coverage, with yaw and scale jittered from
+a seeded `Random`. A single chunk is a ragged mass; overlapping rotated copies
+turn a repeated mesh into a continuous range rather than a ring of identical
+lumps. One skyline per server, the same rule the floating islands follow.
+
+`buildBackdrop` is now shaped exactly like `buildFloatingIslands`, which is the
+right precedent — content declares count, radius and seed; the System holds no
+numbers.
+
+### The assertion that was missing all along
+
+None of the three failed attempts had a test that could fail, because with a
+whole placed model there was no number to assert against — only `Scale`, which
+is not the thing anyone cares about. The gap is now asserted directly:
+
+```
+the mountains stand 500-1000 studs clear of the crossroads edge
+```
+
+plus ground clearance, fog, coverage ratio, and that the chunks stand on the
+same ground plane as the plaza.
+
+**To retune it, change `Radius`, never `Scale`.** `Scale` sets how big each
+massif is; `Radius` is the distance, which is what every complaint about this
+horizon has actually been about.
+
+### Stopped at
+
+369 passing, all gates green. Verified: band 1376..3424, 723 studs of clear
+sky, 279 past the ground, 1.90x coverage, ground plane -68.4475 matching the
+shell exactly.
+
+**Not re-walked.**
+
+### Next
+
+1. Walk it.
+2. Then the Fate Engine's entry logic — still the only planned way into a
+   biome, and still not built.
+
+---
+
 ## Session 25 — 2026-09-18 — The second walk: distance, height, kerbs, flags
 
 **Branch:** `claude/crossroads-prefab-integration-08761b` · **Tests:** 369 passing (was 367)

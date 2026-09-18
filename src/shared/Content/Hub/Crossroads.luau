@@ -787,63 +787,69 @@ local Crossroads = {
 		-- oversight, and it closes with the portal-as-entry amendment.
 	},
 
-	-- THE HORIZON. Four MeshParts, delivered 2026-09-18 and authored in the
-	-- same Blender scene as the hub -- which is why it takes the same yaw,
-	-- and why it registers to the same ground plane. Its SCALE is no longer
-	-- the hub's: as authored the ring was 4096 studs across against a
-	-- 1305-stud plaza, and the first walk called that far too large.
+	-- THE HORIZON, BUILT RATHER THAN PLACED.
+	--
+	-- The delivered `HUB_BACKDROP` is one ring-shaped model, and placing it
+	-- whole failed three times: at Scale 2.0 it read as far too large, at 1.0
+	-- it clipped through the plaza, and at 3.0 it was still clipping. The
+	-- reason is that the distance from the hub to its nearest peak is a
+	-- property of the MESH, which lives in a Roblox asset we cannot measure --
+	-- so every scale was a guess, and scaling moves size and distance
+	-- together anyway.
+	--
+	-- Owner-directed after the third attempt: take ONE chunk of mountain,
+	-- stand it a set distance beyond the crossroads, and clone it round a
+	-- circle. Distance stops being emergent and becomes a number we choose.
 	--
 	-- It is decoration with no contract: nothing looks it up, nothing drives
-	-- it, and a place without it simply has no mountains.
+	-- it, and a place without the file simply has no mountains.
 	Backdrop = {
-		Prefab = {
-			AssetKey = "HUB_BACKDROP",
-
-			-- 2.0 -> 1.0 -> 3.0, and the round trip is the useful part.
-			--
-			-- At the authored 2.0 the ring was 4096 studs across and read as
-			-- "far too large". Shrinking it to 1.0 made it smaller AND
-			-- brought it inside the hub's own ground skirt, where the peaks
-			-- clipped straight through the plaza edge -- which is the thing
-			-- the second walk actually objected to.
-			--
-			-- THE TRAP, AND IT IS WORTH UNDERSTANDING BEFORE TOUCHING THIS
-			-- NUMBER AGAIN: a uniform scale moves the ring closer as it
-			-- shrinks, so height and radius fall together and the mountains
-			-- subtend the SAME ANGLE from the hub's centre at any scale.
-			-- Scaling cannot make them look smaller from where players
-			-- stand. All it changes is how far away they are.
-			--
-			-- So the only question worth asking is distance, and the answer
-			-- is "vastly further than the platform edge": at 3.0 the ring is
-			-- 6144 studs across, its outer radius 3072 against a 653-stud
-			-- plaza and a 1097-stud ground skirt, and still inside FogEnd
-			-- (4400) so it is visible rather than swallowed.
-			Scale = 3.0,
-			YawDegrees = 180,
-
-			-- No EngineReserve out here, so it registers from the largest
-			-- mesh instead, and only in Y. X/Z are zero on purpose: that mesh
-			-- IS the ring, so centring its bounding box on the origin is what
-			-- makes the mountains concentric with the plaza at any scale.
-			--
-			-- THE Y TERM IS SCALE-DEPENDENT AND MUST BE RECOMPUTED IF SCALE
-			-- CHANGES. The hub's ground plane sits at world Y -68.4475 (its
-			-- own source Y 0, at the shell's Scale 2.0). The backdrop's base
-			-- is its source Y 0, and the loader puts the registration point
-			-- on the origin, so:
-			--
-			--   registrationSourceY = 68.4475 / Scale
-			--   AnchorOffset.Y      = registrationSourceY - 191.425858
-			--
-			-- where 191.425858 is Backdrop_Mountain's measured centre. At
-			-- Scale 3.0 that is 22.815833 - 191.425858 = -168.6100. Get this
-			-- wrong and the mountains float above the ground or sink through
-			-- it; a test asserts the two ground planes agree in WORLD studs.
-			AnchorPart = "Backdrop_Mountain",
-			AnchorOffset = Vector3.new(0, -168.6100, 0),
-		},
+		-- The model is now only the SOURCE of a mesh. It is never placed
+		-- whole, so it has no Scale, yaw or anchor of its own.
+		AssetKey = "HUB_BACKDROP",
 		Styles = BackdropStyles,
+
+		Ring = {
+			-- Which mesh gets cloned. One name, so trying a different massif
+			-- is a one-line edit. The others in the file are
+			-- Backdrop_Foothills, Backdrop_MountainCap and Backdrop_Spires.
+			Part = "Backdrop_Mountain",
+
+			-- Studs from the hub centre to each chunk's CENTRE. Every number
+			-- here is chosen against measured hub geometry rather than eyed:
+			--
+			--   plaza edge          653
+			--   hub ground skirt   1097
+			--   chunk half-width   1024  (Backdrop_Mountain, at Scale 1.0)
+			--
+			-- so the band spans 1376 .. 3424 studs. Its NEAR FACE lands 723
+			-- studs beyond the plaza edge -- inside the 500-1000 the owner
+			-- asked for -- and its far face stays inside FogEnd (4400) so the
+			-- range fades rather than ending in a hard line.
+			Radius = 2400,
+
+			-- 14 chunks of 2048 across a 15080-stud circumference is ~1.9x
+			-- coverage. They are MEANT to overlap: a single chunk is itself a
+			-- ragged mass, and overlapping rotated copies is what turns a
+			-- repeated mesh into a continuous range instead of a ring of
+			-- identical lumps.
+			Count = 14,
+			Scale = 1.0,
+
+			-- The hub's own ground plane, which every chunk stands on. Equal
+			-- to -(34.7237511 + Shell.Prefab.AnchorOffset.Y) * Shell scale --
+			-- the shell's source Y 0 in world studs. A test asserts the two
+			-- agree, because a horizon floating above its own ground is the
+			-- first thing anyone would notice.
+			BaseY = -68.4475,
+
+			-- Deterministic, like FloatingIslands: one skyline per server,
+			-- never a different one per boot. Jitter is what stops 14 copies
+			-- of one mesh reading as 14 copies of one mesh.
+			Seed = 20260918,
+			YawJitterDegrees = 30,
+			ScaleJitter = 0.25,
+		},
 	},
 
 	-- Lower plaza ring the raised walkways sit above. Blueprint §2.1.

@@ -977,11 +977,89 @@ local function buildShell(parent: Instance): Model?
 	return buildHubPrefab(Layout.Shell, SHELL_CONTRACT, "Shell", parent)
 end
 
---- The mountain horizon. Decoration with no contract, so an empty required
---- list: nothing in the game looks any of it up, and a place without the file
---- simply has no mountains.
-local function buildBackdrop(parent: Instance): Model?
-	return buildHubPrefab(Layout.Backdrop, {}, "Backdrop", parent)
+--- THE MOUNTAIN HORIZON, BUILT RATHER THAN PLACED.
+---
+--- The delivered backdrop is one ring-shaped model, and placing it whole
+--- failed three times over: the distance from the hub to its nearest peak is a
+--- property of the MESH, which lives in a Roblox asset nothing here can
+--- measure, so every scale was a guess -- and scaling moves size and distance
+--- together anyway, so a smaller ring is also a closer one.
+---
+--- Cloning one chunk around a circle makes distance a number we choose instead
+--- of one we discover. Same shape as buildFloatingIslands, and for the same
+--- reason: a seeded Random so every server shows one skyline.
+---
+--- Decoration with no contract. A place without the file simply has no
+--- mountains, and nothing else changes.
+local function buildBackdrop(parent: Instance): Folder?
+	local cfg = Layout.Backdrop
+	local ring = cfg and cfg.Ring
+	if not ring then
+		return nil
+	end
+
+	local source = PrefabLoader.source(cfg.AssetKey)
+	if not source then
+		print(
+			`[HubBuilder] prefab '{cfg.AssetKey}' not found in ServerStorage.`
+				.. `{Constants.NAMES.PREFABS_FOLDER} -- the hub has no horizon`
+		)
+		return nil
+	end
+
+	local template = source:FindFirstChild(ring.Part, true)
+	if not template or not template:IsA("BasePart") then
+		warn(`[HubBuilder] {cfg.AssetKey} has no BasePart named '{ring.Part}'; no horizon built`)
+		return nil
+	end
+
+	local folder = Instance.new("Folder")
+	folder.Name = "Backdrop"
+	folder.Parent = parent
+
+	local style = cfg.Styles and cfg.Styles[ring.Part]
+	local rng = Random.new(ring.Seed)
+
+	for i = 1, ring.Count do
+		local chunk = (template :: BasePart):Clone()
+		chunk.Name = `Massif{i}`
+		chunk.Anchored = true
+		-- Never. It is 4000 studs of scenery no player can reach, and hulls
+		-- for it would be pure cost.
+		chunk.CanCollide = false
+		chunk.CastShadow = false
+		local jitter = 1 + rng:NextNumber(-ring.ScaleJitter, ring.ScaleJitter)
+		chunk.Size = template.Size * (ring.Scale * jitter)
+
+		if style then
+			if style.Color then
+				chunk.Color = style.Color
+			end
+			if style.Material then
+				chunk.Material = style.Material
+			end
+			if style.Transparency then
+				chunk.Transparency = style.Transparency
+			end
+		end
+
+		-- Placed on the ring, then turned to face the centre, then jittered.
+		-- The yaw is what keeps fourteen copies of one mesh from reading as
+		-- fourteen copies of one mesh.
+		local angle = (i - 1) / ring.Count * math.pi * 2
+		local yaw = angle + math.rad(rng:NextNumber(-ring.YawJitterDegrees, ring.YawJitterDegrees))
+		chunk.CFrame = CFrame.new(
+			math.sin(angle) * ring.Radius,
+			-- Standing ON the hub's ground plane, not floating over it.
+			ring.BaseY + chunk.Size.Y / 2,
+			math.cos(angle) * ring.Radius
+		) * CFrame.Angles(0, yaw, 0)
+
+		chunk.Parent = folder
+	end
+
+	print(`[HubBuilder] Backdrop: {ring.Count} massif(s) of '{ring.Part}' at radius {ring.Radius}`)
+	return folder
 end
 
 --- Builds the hub if absent. Idempotent: a place that already contains a
