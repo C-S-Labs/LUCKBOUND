@@ -2288,6 +2288,124 @@ do
 	)
 end
 
+
+-- === 22. The portal's yaw, and the hub's animation budget ============
+group("The portal turns, and the hub breathes")
+
+do
+	local cfg = GameConfig.Portal
+	local styles = Crossroads.FateEngine.PrefabStyles
+
+	-- THE ASSEMBLY TURNS AS ONE. Two rings, the veil, the clamps that hold
+	-- the frame and the floating core. Not the plinth and not the glyphs --
+	-- those are the base it turns above. Any one of these missing and the
+	-- portal comes apart as it rotates.
+	local missing = {}
+	for _, name in { "OuterRing", "InnerRing", "PortalPlane", "RingFoot_Clamps", "LevitationCore" } do
+		if not (styles[name] and styles[name].YawFollow) then
+			table.insert(missing, name)
+		end
+	end
+	check(
+		"every part of the portal assembly turns with it",
+		#missing == 0,
+		table.concat(missing, ", ")
+	)
+
+	-- ...and nothing else does. A glyph or a shard picking this up would
+	-- orbit the hub rather than spin, because the yaw is applied about the
+	-- hub's axis and those parts are not on it.
+	local strays = {}
+	for name, style in styles do
+		if
+			style.YawFollow
+			and name ~= "OuterRing"
+			and name ~= "InnerRing"
+			and name ~= "PortalPlane"
+			and name ~= "RingFoot_Clamps"
+			and name ~= "LevitationCore"
+		then
+			table.insert(strays, name)
+		end
+	end
+	check("nothing off the portal's axis turns with it", #strays == 0, table.concat(strays, ", "))
+
+	-- ONE MECHANISM, NOT TWO. The rings spin about their own axle and the
+	-- assembly turns about the vertical; at different rates they read as two
+	-- machines bolted together.
+	check(
+		"the portal turns at the same rate its rings spin",
+		math.abs(cfg.YawIdleSpeed - math.abs(styles.OuterRing.Attributes.SpinSpeed)) < 0.01,
+		string.format(
+			"yaw %.2f, ring %.2f",
+			cfg.YawIdleSpeed,
+			styles.OuterRing.Attributes.SpinSpeed
+		)
+	)
+
+	-- IT STOPS SQUARE TO THE HUB. Four slots, so the portal always comes to
+	-- rest facing a walkway -- which is where a staircase up to it has to
+	-- land. A count that does not divide the compass would leave it stopping
+	-- at angles no path reaches.
+	check("the portal stops on a quarter turn", cfg.YawSlots == 4, tostring(cfg.YawSlots))
+	check("its slots divide the compass evenly", 360 % (360 / cfg.YawSlots) == 0)
+
+	-- The yaw is applied about the WORLD vertical through the origin, which
+	-- is only the Engine's own axis because the Engine sits there. This is
+	-- the assumption that line rests on.
+	local engine = GameConfig.HubLayout.Anchors.FATE_ENGINE
+	check(
+		"the Engine sits on the hub origin, which is what the yaw turns about",
+		engine.X == 0 and engine.Z == 0,
+		string.format("(%.1f, %.1f)", engine.X, engine.Z)
+	)
+end
+
+do
+	-- THE ANIMATION BUDGET. Spin, Bob and Wobble write a CFrame EVERY frame;
+	-- transparency and size pulses run at GameConfig.Effects.SlowUpdateSeconds
+	-- and cost almost nothing. The hub is meant to feel alive on a phone, so
+	-- the expensive kind is capped and the cheap kind is not.
+	--
+	-- This counts STYLE KEYS rather than parts, which understates the real
+	-- total -- a key like PlazaOuter_NE_Crystals paints one part, but the
+	-- four-corner loop stamps four keys. It is still the number that moves
+	-- when someone adds an animation, which is what a budget needs to catch.
+	local perFrame, pulseOnly = {}, 0
+	for name, style in Crossroads.Shell.Styles do
+		local a = style.Attributes
+		if a then
+			if a.SpinSpeed or a.BobStuds or a.WobbleDegrees then
+				table.insert(perFrame, name)
+			elseif a.PulseAlphaMin or a.PulseScale then
+				pulseOnly += 1
+			end
+		end
+	end
+
+	check(
+		"the hub animates enough to feel alive",
+		#perFrame + pulseOnly >= 20,
+		string.format("%d per-frame, %d pulse-only", #perFrame, pulseOnly)
+	)
+	check(
+		"...but not so much that a phone pays for it every frame",
+		#perFrame <= 30,
+		string.format("%d styles write a CFrame per frame", #perFrame)
+	)
+
+	-- Distance culling is what makes the rest affordable: a hub 1300 studs
+	-- across would otherwise animate its far side for nobody.
+	check(
+		"animation is culled before it reaches the far side of the hub",
+		GameConfig.Effects.AnimationDistance < GameConfig.HubLayout.HubDiameter,
+		string.format(
+			"cull %d, hub %d",
+			GameConfig.Effects.AnimationDistance,
+			GameConfig.HubLayout.HubDiameter
+		)
+	)
+end
 -- === summary ========================================================
 print(string.format("\n%s\n%d passed, %d failed, %d total", string.rep("=", 60),
 	passed, failed, passed + failed))

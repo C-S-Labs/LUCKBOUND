@@ -336,7 +336,23 @@ local GameConfig = {
 		-- State flag PortalRig sets, so the whole spin-up beat missed it.
 		SpinBoostPeak = 5.5, -- multiplier on the idle rate at full wind-up
 		SpinRampUpSeconds = 1.1, -- idle -> peak, as the roll begins
-		SpinWindDownSeconds = 2.6, -- peak -> idle, as the result lands
+		SpinWindDownSeconds = 2.6,
+
+		-- THE PORTAL TURNS TO FACE YOU, AND STOPS SOMEWHERE MEANINGFUL.
+		--
+		-- The rings spin about their own axle like a wheel. The portal ASSEMBLY
+		-- -- both rings, the veil and the levitation core -- also turns about the
+		-- vertical, so the aperture sweeps the hub instead of facing one way
+		-- forever. Owner-directed after the third walk.
+		--
+		-- Matched to OuterRing's own SpinSpeed (0.22 rad/s) so the two read as
+		-- one mechanism rather than two. It rides the same SpinBoost ramp the
+		-- rings do, so a roll winds it up for free.
+		YawIdleSpeed = 0.22,
+		-- ...and where it is allowed to stop. Four slots, so the portal always
+		-- comes to rest square to the hub -- facing a walkway, which is where a
+		-- staircase up to it would have to land.
+		YawSlots = 4, -- peak -> idle, as the result lands
 
 		IdleBrightness = 1,
 		ActiveBrightness = 3,

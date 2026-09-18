@@ -55,6 +55,12 @@ export type Style = {
 	-- centre, keeping its OUTER end exactly where it is. For kerbs and edging
 	-- that were authored short of the centrepiece they run to.
 	ExtendInwardTo: number?,
+	-- Marks a piece as part of the portal ASSEMBLY, which turns about the
+	-- hub's vertical axis as one object. A first-class field rather than an
+	-- entry in `Attributes` on purpose: those tables carry commentary, and a
+	-- flag that has to be merged into commented Lua is a flag that will one
+	-- day be merged into a comment.
+	YawFollow: boolean?,
 	Attributes: { [string]: any }?,
 	-- Attribute name -> fraction to vary it by, per part. See the paint loop.
 	-- Multiplies the part's size on load, for setting a piece into the frame
@@ -318,6 +324,9 @@ function PrefabLoader.build(
 					if d.CollisionFidelity ~= style.CollisionFidelity then
 						table.insert(wrongFidelity, d.Name)
 					end
+				end
+				if style.YawFollow then
+					d:SetAttribute("YawFollow", true)
 				end
 				for key, value in style.Attributes or {} do
 					d:SetAttribute(key, value)

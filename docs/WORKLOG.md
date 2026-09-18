@@ -33,6 +33,104 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 27 — 2026-09-18 — The portal turns, and the hub breathes
+
+**Branch:** `claude/crossroads-prefab-integration-08761b` · **Tests:** 378 passing (was 369)
+
+The hub was accepted as good enough to build on. Two things were added to it:
+the Fate Engine's portal now turns and stops somewhere meaningful, and about
+fifty pieces of the Crossroads that were inert now move.
+
+### The portal turns, and stops square to the hub
+
+The rings already spun about their own axle like a wheel. The portal
+**assembly** — both rings, the veil, the gold clamps and the levitation core —
+now also turns about the hub's vertical axis, so the aperture sweeps the plaza
+instead of facing one direction forever.
+
+| | |
+|---|---|
+| `YawIdleSpeed` 0.22 rad/s | matched to `OuterRing`'s own spin, so the two read as one mechanism rather than two machines bolted together |
+| `YawSlots` 4 | it may only stop square to the hub — facing a walkway, which is where a staircase up to it has to land |
+
+It rides the same `SpinBoost` ramp the rings do, so a roll winds it up for
+free. What is new is the **stop**: on settle it eases onto the next quarter-turn
+slot and holds there until the next roll.
+
+**Why the next slot and not the nearest.** The target is the first slot the
+portal has not already passed by the time it could plausibly stop. Choosing the
+nearest would make it stop dead or reverse, and reversing a machine that has
+been turning one way for a minute reads as broken rather than deliberate.
+
+**Why the yaw is one module-level number** rather than a per-part attribute
+like every other motion in `HubEffects`: every piece must turn by exactly the
+same amount, and accumulating an angle per part would let them drift apart over
+minutes of float error. That is precisely the failure the two rings already had
+once, when they were given independent wobble periods and the inner assembly
+swung out through the outer aperture.
+
+It is also a state machine, which an attribute is not — free-running, then
+riding the ramp, then eased to a dead stop, then locked.
+
+**One assumption, pinned by test.** The yaw is applied about the *world*
+vertical through the origin, which is only the Engine's own axis because the
+Engine sits there. A test asserts `Anchors.FATE_ENGINE` is the origin, because
+that line is silently wrong anywhere else.
+
+### `YawFollow` is a style field, not an attribute
+
+It would have been natural to put it in a style's `Attributes` table. That
+turned out to be a trap worth recording: those tables carry multi-line
+commentary, and a script that merges into one flattens the comment onto a
+single line and **comments out everything after it**. A flag that has to be
+merged into commented Lua is a flag that will one day be merged into a comment.
+
+It is a first-class field alongside `SizeScale` and `CollisionFidelity`, and
+`PrefabLoader` sets the attribute from it.
+
+### The animation pass
+
+About fifty parts of the Crossroads read as painted-on. Now:
+
+| | Count | Cost |
+|---|---|---|
+| Spin, bob or wobble | **26** | a CFrame write every frame |
+| Transparency pulse | **24** | 20 Hz, effectively free |
+
+The rule applied: **anything that glows should breathe, anything crystalline
+should drift, and anything made of cloth or leaves should move in the wind.**
+The long tail of floor inlays and rune rings gets pulses only; per-frame motion
+is spent on the pieces a player walks right past — shrine crystals, lamp
+crystals, gateway crystals, banners and tree canopies.
+
+Periods are deliberately unequal across districts so the four do not breathe in
+unison, and canopies get 1.4° on a nine-second period — anything more and
+low-poly foliage reads as rubber rather than as leaves.
+
+**A budget test now caps it.** Per-frame styles are capped at 30, and the suite
+also asserts the hub animates *enough* to feel alive, and that culling happens
+before the far side of a 1300-stud plaza.
+
+### Stopped at
+
+378 passing, all gates green. **None of it has been seen in Studio.**
+
+### Next
+
+1. Walk it: the portal's turn and its stop, and whether fifty animated parts
+   cost anything noticeable.
+2. **The staircase.** Deliberately not built — the owner asked whether to author
+   it in Blender or generate it in Studio, and that decision shapes the work.
+   The recommendation given: **author ONE step in Blender**, and have code clone
+   and stack it. That is the same pattern the mountain ring just proved —
+   authored look, procedural placement — and it means the staircase can be
+   built to whatever height and slot the portal actually stops at, rather than
+   being a fixed model that only fits one configuration.
+3. Then the Fate Engine's entry logic, which is still the only planned way into
+   a biome and still does not exist.
+
+---
+
 ## Session 26 — 2026-09-18 — The horizon is built, not placed
 
 **Branch:** `claude/crossroads-prefab-integration-08761b` · **Tests:** 369 passing
