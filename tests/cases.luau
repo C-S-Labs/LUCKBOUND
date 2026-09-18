@@ -1786,6 +1786,434 @@ do
 			Crossroads.Bridges.Overlap, engine.PlatformRadius))
 end
 
+
+-- === 21. The authored Crossroads shell ==============================
+group("The authored Crossroads shell")
+
+do
+	local shell = Crossroads.Shell
+	local prefab = shell and shell.Prefab
+
+	check("the hub declares a shell prefab", type(prefab) == "table")
+	check(
+		"its AssetKey is in the manifest",
+		AssetManifest.exists(prefab.AssetKey),
+		tostring(prefab.AssetKey)
+	)
+
+	-- MEASURED FROM assets/rbxm/prefabs/HUB_CROSSROADS.rbxmx AS DELIVERED.
+	-- Studio's FBX importer halved it, uniformly. A re-delivery means
+	-- re-measuring these four; what the tests assert is the RELATIONSHIPS
+	-- below, never that Scale is a particular number.
+	local RAW_RESERVE = 23.0 -- EngineReserve, width
+	local RAW_WALKWAY_W = 22.0 -- Walkway_North, width
+	local RAW_WALKWAY_T = 0.750031 -- Walkway_North, thickness
+	local RAW_RING = 200.0 -- district centre to hub centre
+	local RAW_PLAZA = 652.626648 -- Plaza, width
+	local RAW_DECK = 7.0000267 -- District_Shop, thickness
+
+	local scale = prefab.Scale
+	check("its Scale is positive", type(scale) == "number" and scale > 0)
+
+	-- THE ONE THAT MATTERS MOST. The authored reserve is the footprint the
+	-- Fate Engine's dais lands on, and the hub cuts its walkways to exactly
+	-- FateEngine.PlatformRadius. If the two disagree the player walks to the
+	-- centre and finds a step, a gap, or a dais floating inside its own floor.
+	check(
+		"the authored Engine footprint matches the dais radius the hub reserves",
+		math.abs(RAW_RESERVE * scale - Crossroads.FateEngine.PlatformRadius * 2) < 1,
+		string.format(
+			"%.2f studs against %d",
+			RAW_RESERVE * scale,
+			Crossroads.FateEngine.PlatformRadius * 2
+		)
+	)
+
+	-- Three more independent dimensions that must all fall out of the SAME
+	-- number. One agreeing measurement is a coincidence; four is a scale.
+	check(
+		"the authored walkways are the width the layout declares",
+		math.abs(RAW_WALKWAY_W * scale - GameConfig.HubLayout.WalkwayWidth) < 1,
+		string.format("%.2f against %d", RAW_WALKWAY_W * scale, GameConfig.HubLayout.WalkwayWidth)
+	)
+	check(
+		"the authored walkway deck is the single low step the layout declares",
+		math.abs(RAW_WALKWAY_T * scale - GameConfig.HubLayout.WalkwayRaise) < 0.25,
+		string.format("%.2f against %.1f", RAW_WALKWAY_T * scale, GameConfig.HubLayout.WalkwayRaise)
+	)
+	check(
+		"the authored districts stand on the compass ring the anchors use",
+		math.abs(RAW_RING * scale - GameConfig.HubLayout.ZoneRingRadius) < 1,
+		string.format("%.2f against %d", RAW_RING * scale, GameConfig.HubLayout.ZoneRingRadius)
+	)
+
+	-- THE FLOOR MUST REACH UNDER EVERYTHING THAT STANDS ON IT. A district
+	-- platform hanging off the edge of the plaza is the bug the ZoneRingRadius
+	-- comment in GameConfig records being fixed once already, and an authored
+	-- plaza is a new chance to reintroduce it.
+	-- Measured from the delivery, not from the blockout district table: the
+	-- artist built the platforms larger than the brief asked, so the blockout
+	-- sizes would understate exactly the number this is checking.
+	local RAW_WIDEST_DECK = 200.0 -- District_Shop / District_Leaderboard, X
+	local plazaRadius = RAW_PLAZA * scale / 2
+	local furthest = GameConfig.HubLayout.ZoneRingRadius + RAW_WIDEST_DECK * scale / 2
+	check(
+		"the authored plaza reaches under the furthest district",
+		plazaRadius > furthest,
+		string.format("plaza radius %.1f, furthest edge %.1f", plazaRadius, furthest)
+	)
+	check(
+		"the authored plaza covers the playable diameter the layout promises",
+		plazaRadius * 2 >= GameConfig.HubLayout.HubDiameter,
+		string.format("%.1f against %d", plazaRadius * 2, GameConfig.HubLayout.HubDiameter)
+	)
+
+	-- THE COMPASS CORRECTION. The delivery arrived with north at +Z while
+	-- HubLayout.Anchors puts north at -Z. That is a rotation, and a rotation
+	-- about the vertical only: a value that is not a quarter turn would mean
+	-- the hub had been TILTED, which no importer setting can cause and which
+	-- would put every district at a different height.
+	check(
+		"the compass correction is a quarter turn",
+		prefab.YawDegrees % 90 == 0,
+		tostring(prefab.YawDegrees)
+	)
+
+	-- Registration. The shell is placed from a named part rather than from
+	-- the model pivot, and the part it names has to be one the contract
+	-- guarantees is there -- otherwise the loader falls back to the pivot and
+	-- the hub lands somewhere nobody predicted.
+	check(
+		"the shell registers from a part in its own contract",
+		prefab.AnchorPart == "EngineReserve"
+	)
+
+	-- The deck height behaviour is placed from must match the art it is
+	-- placed on. Derived here from the delivered platform rather than copied.
+	local deck = RAW_DECK * scale
+	check(
+		"the declared deck height matches the authored platform",
+		math.abs(shell.DeckHeight - deck) < 0.5,
+		string.format("declared %d, measured %.2f", shell.DeckHeight, deck)
+	)
+end
+
+do
+	local shell = Crossroads.Shell
+	local styles = shell.Styles
+	check("a paint table exists", type(styles) == "table")
+
+	-- Longest matching prefix wins, exactly as PrefabLoader.styleFor resolves
+	-- it. Reimplemented here rather than imported because PrefabLoader needs
+	-- Roblox services this suite does not have -- so if the two ever diverge,
+	-- that is the thing to fix.
+	local function resolve(name)
+		local best, bestLength = nil, -1
+		for prefix, style in styles do
+			if #prefix > bestLength and string.sub(name, 1, #prefix) == prefix then
+				best, bestLength = style, #prefix
+			end
+		end
+		return best
+	end
+
+	-- Every part the loader is told to require must have a colour, or it
+	-- stays the grey Roblox imports it as.
+	local contract = {
+		"Plaza",
+		"EngineReserve",
+		"Walkway_North",
+		"Walkway_East",
+		"Walkway_West",
+		"Processional_South",
+		"District_Leaderboard",
+		"District_Archive",
+		"District_Shop",
+		"District_Training",
+	}
+	local unpainted = {}
+	for _, name in contract do
+		if not resolve(name) then
+			table.insert(unpainted, name)
+		end
+	end
+	check("every contract part has a paint rule", #unpainted == 0, table.concat(unpainted, ", "))
+
+	-- THE FLOOR COLLIDES AND ITS TRIM DOES NOT. PrefabLoader turns collision
+	-- OFF for every part by default and content turns it back on, which is
+	-- the right way round -- but it means a missing entry is a hole in the
+	-- world, and a careless prefix is a 1300-stud invisible lip.
+	check("the authored plaza is solid ground", resolve("Plaza").CanCollide == true)
+	check("the plaza's proud trim disc is not", resolve("PlazaRim").CanCollide ~= true)
+
+	-- PREFIX RESOLUTION IS THE REAL RISK IN THIS TABLE, and it is silent when
+	-- it goes wrong: a district's dressing inheriting the PLATFORM's entry
+	-- would make banners and lanterns solid, and nothing would say so. These
+	-- are the cases where one key is a prefix of another, including the
+	-- `.001` suffixes the FBX export left on duplicated objects.
+	-- EVERY WALKABLE SURFACE. A player walks the plaza, up a walkway, up a
+	-- flight of stairs and onto a deck. Every step of that has to be solid, or
+	-- the route simply ends -- and a route that ends is the one hub bug this
+	-- project has already shipped twice.
+	local mustBeSolid = {
+		"Plaza",
+		"Walkway_North",
+		"Walkway_East",
+		"Walkway_West",
+		"Processional_South",
+		"District_Leaderboard",
+		"District_Archive",
+		"District_Shop",
+		"District_Training",
+		"District_Training_YardFloor",
+	}
+	for _, district in { "Leaderboard", "Archive", "Shop", "Training" } do
+		table.insert(mustBeSolid, `District_{district}_Stairs`)
+		table.insert(mustBeSolid, `District_{district}_StairCheeks`)
+		table.insert(mustBeSolid, `District_{district}_StairRails`)
+	end
+	local notSolid = {}
+	for _, name in mustBeSolid do
+		local style = resolve(name)
+		if not style or style.CanCollide ~= true then
+			table.insert(notSolid, name)
+		end
+	end
+	check(
+		"every surface on the walk from spawn to a district is solid",
+		#notSolid == 0,
+		table.concat(notSolid, ", ")
+	)
+
+	-- THE MESHES THAT MERGE MANY OBJECTS MUST NOT COLLIDE, and this is the
+	-- assertion that would have caught the mistake that was nearly shipped
+	-- here. All 225 parts arrive with empty PhysicsData, so Roblox builds
+	-- their hulls at Default fidelity, which fills openings. A filled hull on
+	-- any of these is an invisible wall across a route:
+	--
+	--   Walkways_Gateways              seals all four walkway mouths
+	--   Processional_South_Guardians   seals the spawn approach
+	--   Plaza_RimParapet               lays a slab across the whole floor
+	--   District_Archive_Columns       fills the rotunda
+	--   District_Shop_EntrancePylons   seals the market entrance
+	--   District_Training_Wall         fills the yard
+	--
+	-- If one of these ever needs to stop a player, the answer is a
+	-- CollisionFidelity on that entry -- never CanCollide on its own.
+	local mustNotSeal = {
+		"Walkways_Gateways",
+		"Processional_South_Guardians",
+		"Plaza_RimParapet",
+		"Plaza_Obelisks",
+		"District_Archive_Columns",
+		"District_Archive_Balustrade",
+		"District_Archive_Shelves",
+		"District_Shop_EntrancePylons",
+		"District_Shop_Columns",
+		"District_Shop_StallStructures",
+		"District_Training_Wall",
+		"District_Training_DummyPosts",
+		"District_Leaderboard_Seating",
+		"District_Leaderboard_Balustrade",
+	}
+	local sealed = {}
+	for _, name in mustNotSeal do
+		local style = resolve(name)
+		if style and style.CanCollide == true and not style.CollisionFidelity then
+			table.insert(sealed, name)
+		end
+	end
+	check(
+		"no merged or hollow mesh collides at Default fidelity",
+		#sealed == 0,
+		table.concat(sealed, ", ")
+	)
+
+	-- ...and the plain case: dressing must not inherit its platform's entry,
+	-- including the `.001` suffixes the FBX export left on duplicates.
+	local shouldNotCollide = {
+		"District_Leaderboard_BannerCloth",
+		"District_Archive_Dome.001",
+		"District_Archive_TomeGlow",
+		"District_Shop_DisplayGoods.017",
+		"District_Shop_Signs",
+		"District_Training_BannerCloth",
+		"Walkways_Banners.010",
+		"FloatingIsland3",
+		"Backdrop_TreeCanopies",
+		"EngineReserve",
+	}
+	local solid = {}
+	for _, name in shouldNotCollide do
+		local style = resolve(name)
+		if not style or style.CanCollide == true then
+			table.insert(solid, name)
+		end
+	end
+	check(
+		"no piece of dressing inherited its platform's collision",
+		#solid == 0,
+		table.concat(solid, ", ")
+	)
+
+	-- The marker exists to be measured from, never to be seen.
+	check(
+		"the Engine's reserved footprint is invisible",
+		resolve("EngineReserve").Transparency == 1
+	)
+
+	-- Nothing in the hub may use a built-in Roblox material. Owner-directed
+	-- 2026-09-18, and the same assertion the Engine's paint table carries --
+	-- applied to a table twelve times its size, where eyeballing it is not a
+	-- realistic check.
+	local TEXTURED = {
+		[Enum.Material.Marble] = "Marble",
+		[Enum.Material.Slate] = "Slate",
+		[Enum.Material.Basalt] = "Basalt",
+		[Enum.Material.Metal] = "Metal",
+		[Enum.Material.Glass] = "Glass",
+		[Enum.Material.Sand] = "Sand",
+		[Enum.Material.Grass] = "Grass",
+		[Enum.Material.Wood] = "Wood",
+		[Enum.Material.WoodPlanks] = "WoodPlanks",
+		[Enum.Material.Concrete] = "Concrete",
+		[Enum.Material.Brick] = "Brick",
+		[Enum.Material.Cobblestone] = "Cobblestone",
+		[Enum.Material.CorrodedMetal] = "CorrodedMetal",
+	}
+	local textured = {}
+	for name, style in styles do
+		if style.Material and TEXTURED[style.Material] then
+			table.insert(textured, `{name} ({TEXTURED[style.Material]})`)
+		end
+	end
+	check(
+		"no part of the hub shell uses a textured Roblox material",
+		#textured == 0,
+		table.concat(textured, ", ")
+	)
+end
+
+do
+	-- THE EXPEDITION GATE, WHICH NO LONGER HAS A GATE. Its district is a
+	-- market in the authored art, but the portal-as-entry amendment has not
+	-- landed, so entry still runs through it and the prompt still has to be
+	-- reachable. These pin the two things that would silently break it.
+	local shell = Crossroads.Shell
+	local gate = shell.GateAnchorTop
+
+	check(
+		"the gate prompt sits on the authored deck, not the blockout one",
+		gate.Y == shell.DeckHeight,
+		string.format("%.1f against %d", gate.Y, shell.DeckHeight)
+	)
+
+	-- Measured from the delivered market: its deck edge is 235 studs out and
+	-- its stalls begin at 256. A prompt outside that window is either hanging
+	-- over the plaza or buried inside a stall.
+	local DECK_EDGE, STALLS = 235, 256
+	check(
+		"the gate prompt is on the market apron, between its edge and its stalls",
+		gate.Z > DECK_EDGE and gate.Z < STALLS,
+		string.format("Z %.1f, apron %d..%d", gate.Z, DECK_EDGE, STALLS)
+	)
+
+	-- A ProximityPrompt only reaches UI.PromptActivationDistance, and a prompt
+	-- you cannot reach from the place players actually walk to is the exact
+	-- bug the Gate shipped with once already -- its plinth was wider than its
+	-- own prompt's range. The place players walk to here is the head of the
+	-- market stairs, measured at 218.5 studs out.
+	local STAIRS = 218.5
+	check(
+		"the gate prompt is in reach from the top of the market stairs",
+		math.abs(gate.Z - STAIRS) < GameConfig.UI.PromptActivationDistance,
+		string.format(
+			"%.1f studs, reach %d",
+			math.abs(gate.Z - STAIRS),
+			GameConfig.UI.PromptActivationDistance
+		)
+	)
+end
+
+do
+	-- THE HORIZON. Authored in the same Blender scene as the hub, which is
+	-- the claim the next two assertions exist to keep honest -- if it is
+	-- true, both take the same scale and both register to the same point in
+	-- that scene, and the mountains ring the plaza instead of sitting beside
+	-- it.
+	local backdrop = Crossroads.Backdrop
+	local prefab = backdrop and backdrop.Prefab
+
+	check("the hub declares a backdrop prefab", type(prefab) == "table")
+	check(
+		"its AssetKey is in the manifest",
+		AssetManifest.exists(prefab.AssetKey),
+		tostring(prefab.AssetKey)
+	)
+
+	check(
+		"the horizon is built at the same scale as the hub it rings",
+		prefab.Scale == Crossroads.Shell.Prefab.Scale,
+		string.format("%.4f against %.4f", prefab.Scale, Crossroads.Shell.Prefab.Scale)
+	)
+	check(
+		"the horizon takes the same compass correction",
+		prefab.YawDegrees == Crossroads.Shell.Prefab.YawDegrees
+	)
+
+	-- BOTH MODELS' GROUND PLANES MUST LAND ON THE SAME HEIGHT, or the plaza
+	-- floats above its own mountains or sinks into them. Each model's ground
+	-- plane is source Y 0, and its registration point is the anchor part's
+	-- centre plus the declared offset -- so the two registration heights must
+	-- agree in source units.
+	local SHELL_ANCHOR_Y = 34.7237511 -- EngineReserve centre, as delivered
+	local BACKDROP_ANCHOR_Y = 191.425858 -- Backdrop_Mountain centre, as delivered
+
+	local shellGround = SHELL_ANCHOR_Y + Crossroads.Shell.Prefab.AnchorOffset.Y
+	local backdropGround = BACKDROP_ANCHOR_Y + prefab.AnchorOffset.Y
+	check(
+		"the horizon stands on the same ground plane as the plaza",
+		math.abs(shellGround - backdropGround) * prefab.Scale < 2,
+		string.format("%.4f against %.4f in source units", shellGround, backdropGround)
+	)
+
+	-- It has to reach as far as the layout has always claimed the world does,
+	-- or the fog ends before the scenery does and the hub reads as boxed in.
+	local RAW_SPAN = 2048.0 -- Backdrop_Mountain, widest axis
+	check(
+		"the horizon reaches the visual extent the layout promises",
+		RAW_SPAN * prefab.Scale >= GameConfig.HubLayout.VisualExtent,
+		string.format("%.0f against %d", RAW_SPAN * prefab.Scale, GameConfig.HubLayout.VisualExtent)
+	)
+
+	-- ...and the fog must not cut it off before it is seen.
+	check(
+		"the fog reaches past the plaza toward the horizon",
+		Crossroads.Theme.FogEnd > GameConfig.HubLayout.HubDiameter,
+		string.format("fog %d, hub %d", Crossroads.Theme.FogEnd, GameConfig.HubLayout.HubDiameter)
+	)
+
+	local styles = backdrop.Styles
+	local unpainted = {}
+	for _, name in
+		{ "Backdrop_Foothills", "Backdrop_Mountain", "Backdrop_MountainCap", "Backdrop_Spires" }
+	do
+		if not styles[name] then
+			table.insert(unpainted, name)
+		end
+	end
+	check("every mountain has a colour", #unpainted == 0, table.concat(unpainted, ", "))
+
+	-- Nothing out there is walked on, and a collidable horizon 4000 studs
+	-- across is a physics bill for something no player can ever touch.
+	local solid = {}
+	for name, style in styles do
+		if style.CanCollide == true then
+			table.insert(solid, name)
+		end
+	end
+	check("no part of the horizon collides", #solid == 0, table.concat(solid, ", "))
+end
 -- === summary ========================================================
 print(string.format("\n%s\n%d passed, %d failed, %d total", string.rep("=", 60),
 	passed, failed, passed + failed))

@@ -328,3 +328,56 @@ If any number is off, fix it and re-report rather than telling me it is close.
 Expect the import to arrive at the wrong scale and with a flat hierarchy. Both
 are normal, both are handled by `PrefabLoader`, and neither is the modeller's
 problem.
+
+---
+
+## What actually arrived — 2026-09-18
+
+The delivery is in: `assets/rbxm/prefabs/HUB_CROSSROADS.rbxmx`, 225 MeshParts,
+plus an unbriefed second file, `HUB_BACKDROP.rbxm`, holding a mountain horizon.
+Both are wired and the generated blockout hub no longer runs. Full measurements
+live in `assets/rbxm/prefabs/README.md`.
+
+**Two things the brief predicted, both handled in content:**
+
+- It imported at **0.5×** → `Prefab.Scale = 2.0`, confirmed on six independent
+  dimensions that agreed to four figures.
+- The hierarchy came back **flat**, as expected.
+
+**One the brief did not predict, and should next time:**
+
+- **North arrived at Roblox `+Z`, and the game's north is `-Z`.** The FBX
+  export settings in step 4 carry the exporter's axis convention, not the
+  game's, so a 180° compass error is the *normal* outcome rather than a
+  mistake. It is now corrected by `Prefab.YawDegrees` — a number in content,
+  never a re-export. **A future brief should say so up front**, next to the
+  scale warning, and should ask the modeller to confirm which way north points
+  in the exported file.
+
+**Where the delivery differs from what was asked**, recorded rather than
+corrected — none of it is a fault:
+
+| | Asked | Delivered (at Scale) |
+|---|---|---|
+| Plaza diameter | 1150 | 1305 |
+| `Processional_South` width | 72 | 44 |
+| District footprints | 210–320 | 300–400 |
+| Pillar ring radius | 520 | 640 |
+
+The dimensions the brief called load-bearing — walkway width, deck heights,
+the 400-stud ring, and `EngineReserve` — all landed exactly. The ones that
+drifted are the ones nothing connects to, which is the brief working as
+intended.
+
+The one worth noting for next time: **the south processional is no longer
+wider than the other three walkways.** The brief asked for 72 against 44 and
+explicitly said why — it is the approach every player walks in along. It came
+back at walkway width, so the spawn approach lost the emphasis it was meant to
+have. Not worth a re-export; worth restating if the hub is ever re-authored.
+
+**What the brief got right and should be reused:** the reserved
+`EngineReserve` footprint. Asking for a plain named marker at the centre and
+nothing inside it gave the integration an exact registration point, and it is
+now what the whole 225-part model is positioned from — in preference to the
+model pivot, which is invisible metadata. **Every future hub-scale brief should
+ask for a marker like it.**

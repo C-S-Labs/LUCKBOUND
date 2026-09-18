@@ -33,6 +33,144 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 22 — 2026-09-18 — The Crossroads arrives, and is measured first
+
+**Branch:** `claude/crossroads-prefab-integration-08761b` · **Tests:** 361 passing (was 328)
+
+The authored hub landed: `Crossroads.rbxmx`, 225 MeshParts, built from the
+brief written last session. Plus a second, unbriefed delivery — a mountain
+horizon, 4 MeshParts. Both are now wired in, and the generated blockout hub no
+longer runs when they are present.
+
+### Everything below was measured before any code was written
+
+That is the whole method, and it paid twice this session. Both deliveries were
+parsed straight out of the files — the `.rbxmx` as XML, the binary `.rbxm`
+with a small LZ4 reader — and every number in content came from that, not from
+the brief and not from an assumption.
+
+**Scale is exactly 2.0.** Studio's importer halved it. Six independent
+dimensions agreed to four figures: the Engine's reserved footprint, walkway
+width, walkway thickness, walkway length, district deck thickness, and the
+district ring radius. Six agreeing measurements is what makes one number the
+right correction rather than a guess that happens to look close.
+
+**The compass was 180° out**, and it is the exporter rather than the modeller:
+the brief put north at Blender `+Y`, the FBX landed it at Roblox `+Z`, and
+`HubLayout.Anchors` has always had north at `-Z`. Confirmed as a pure rotation
+and not a mirror — all four districts negated in both X and Z, and all 225
+parts with identity rotation. A mirror would have needed a re-export; this
+needed a number.
+
+### Two new fields on the prefab seam, and why they are not special-casing
+
+`PrefabLoader` gained `YawDegrees` and `AnchorPart`/`AnchorOffset`. Both are
+"how the import landed", which is the file's stated job, and both are general
+rather than Crossroads-shaped — the Fate Engine simply declares neither.
+
+The second one is the interesting one. **The model is registered from a named
+part, not from its pivot.** The artist's pivot was in fact perfect: the hub
+centre at floor level, to four decimals. It is still not what the loader uses,
+because a pivot is invisible metadata and invisible metadata is what a
+Blender → FBX → Studio → rbxm chain mangles quietly. `EngineReserve` is a part
+name — already the contract with the artist, visible in the file, and the one
+object in the scene whose whole purpose is to mark that point.
+
+### The collision decision, which is the risky part of this session
+
+**All 225 parts ship with empty `PhysicsData` and no `CollisionFidelity`**, so
+Roblox generates every hull at `Default` fidelity on load — and `Default`
+fills small openings.
+
+Many of these meshes are several objects merged into one: eight columns in a
+ring, four archways, two flanking guardians, a parapet circling the plaza. A
+filled hull on `Walkways_Gateways` seals all four walkway mouths. On
+`Processional_South_Guardians` it seals the spawn approach. On
+`Plaza_RimParapet` it lays a 5.8-stud slab across the whole floor.
+
+That is the `CylinderMesh`-with-a-block-hull bug again, in a new costume, and
+it is invisible in the same way.
+
+So collision went to **57 of 225 parts** — the floor, four decks, four
+walkways and kerbs, every stair flight, the yard floor, and freestanding
+single-volume props. Everything else is walk-through scenery. A player passing
+through a balustrade is a small oddity; a player unable to reach the market is
+not.
+
+**This is the safe half of a choice that cannot be checked headlessly**, and it
+is the first thing to look at on a walk. The escape hatch is a
+`CollisionFidelity` line on the one entry that needs it — never `CanCollide`
+alone. `PrefabLoader` now honours that field for exactly this reason.
+
+### The Expedition Gate keeps its prompt and loses its portal
+
+The authored south district is a **market**, because the brief asked for the
+hub the portal-as-entry direction wants. That amendment has not landed, so
+entry still runs through `EXPEDITION_GATE` and still has to work today.
+
+Drawing a monumental portal rig on top of the stalls would be the wrong answer
+to that. An invisible anchor at the head of the market stairs is the right one:
+`(0, 14, 250)`, measured between the entrance pylons at 248 and the stalls at
+256, and 31.5 studs from the stair head — inside the 70-stud prompt reach.
+Asserted by test, because a prompt out of reach of the place players stand is
+the exact bug the Gate shipped with once already.
+
+### What the delivery does differently from the brief
+
+Recorded rather than corrected — none of it is a fault:
+
+| | Brief | Delivered |
+|---|---|---|
+| Plaza diameter | 1150 | 1305 |
+| `Processional_South` width | 72 | 44 |
+| District footprints | 210–320 | 300–400 |
+| Pillar ring radius | 520 | 640 |
+
+The plaza still reaches under the furthest district (600 against a 652 radius)
+and still covers `HubDiameter`; both are asserted. The processional is no
+longer wider than the other three, which costs the spawn approach some
+emphasis but breaks nothing.
+
+### 33 new tests
+
+The ones worth naming, because they assert relationships rather than numbers:
+
+- the authored Engine footprint equals the dais radius the hub cuts walkways to
+- walkway width, deck step and ring radius all fall out of the same scale
+- the plaza reaches under the furthest district, and covers `HubDiameter`
+- the compass correction is a quarter turn, not a tilt
+- **every surface on the walk from spawn to a district is solid**
+- **no merged or hollow mesh collides at `Default` fidelity** — with the six
+  worst offenders named in the test, so the reason survives the code
+- the horizon shares the hub's scale, yaw and ground plane
+- no dressing inherits its platform's collision, including the `.001` suffixes
+
+Paint coverage was verified separately against the delivered file: **225 of
+225 parts resolve to a rule**, 184 keys, longest prefix. That check is offline
+rather than in CI, because embedding 225 part names in the suite would be
+worse than the bug it catches.
+
+### Stopped at
+
+361 passing, CI gates green locally (syntax, forbidden names, tests; selene
+`src` unchanged at 3 pre-existing warnings). Nothing opened in Studio.
+
+### Next, when work resumes
+
+1. **Walk the Crossroads.** Nothing here has been seen. In order: does the
+   floor hold, do the stairs climb, can you reach the market prompt, and does
+   anything invisible stop you. The collision set is the reason to look.
+2. **Then colour and animation**, which is the owner's stated next step —
+   matching the hub to the Fate Engine's palette now that both are on screen
+   together. The paint table is the whole dial; no code needed.
+3. **Profile on a real low-end device.** Still never measured, and 225
+   MeshParts plus 57 generated collision hulls have just been added to a
+   budget that was already carrying four sessions of animation.
+4. Then the portal-as-entry spec amendment, and the `EXPEDITION_GATE` → `SHOP`
+   swap that follows from it.
+
+---
+
 ## Session 21 — 2026-09-18 — The roll ramp, and a brief for the Crossroads
 
 **Branch:** `claude/zen-volta-cuhfyh` · **Tests:** 328 passing (was 325)
