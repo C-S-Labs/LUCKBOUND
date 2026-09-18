@@ -652,8 +652,10 @@ do
 
 	check("floating islands are deterministic across servers",
 		type(Crossroads.FloatingIslands.Seed) == "number")
-	check("spawn is offset from the Fate Engine, not on top of it",
-		Crossroads.SpawnOffset.Z ~= 0 or Crossroads.SpawnOffset.X ~= 0)
+	check("the spawn ring clears the Fate Engine's dais",
+		GameConfig.HubLayout.SpawnRing.Radius > Crossroads.FateEngine.PlatformRadius,
+		string.format("ring %d, dais %d",
+			GameConfig.HubLayout.SpawnRing.Radius, Crossroads.FateEngine.PlatformRadius))
 
 	-- Bad hub data must be caught at boot, like any other content.
 	local broken = { Theme = {}, FateEngine = { PlatformRadius = 24 }, Districts = {} }
@@ -1147,17 +1149,28 @@ do
 		worstOverhang <= 0,
 		string.format("%s overhangs by %.0f studs", overhangZone, worstOverhang))
 
-	-- 6. THE SPAWN POINT IS NOT INSIDE SOMETHING.
-	-- At (0, 8, 250) it sat within the processional walkway's own volume, so
-	-- Roblox ejected the character upward -- which is how a playtest opened
-	-- standing on top of a pillar.
+	-- 6. THE SPAWN POINTS ARE NOT INSIDE ANYTHING.
+	-- At (0, 8, 250) the old single spawn sat within the processional
+	-- walkway's own volume, so Roblox ejected the character upward -- which is
+	-- how a playtest opened standing on top of a pillar. The ring inherits the
+	-- rule: every pad must clear the deck it hangs over.
+	local ring = GameConfig.HubLayout.SpawnRing
 	local deckTop = GameConfig.HubLayout.WalkwayRaise + Crossroads.Bridges.Thickness / 2
-	check("spawn is above the walkway deck, not inside it",
-		GameConfig.HubLayout.SpawnAnchor.Y > deckTop,
-		string.format("spawn Y %.0f vs deck top %.0f",
-			GameConfig.HubLayout.SpawnAnchor.Y, deckTop))
-	check("spawn is over the processional, not out in space",
-		math.abs(GameConfig.HubLayout.SpawnAnchor.Z) < anchors.EXPEDITION_GATE.Z)
+	check("every spawn pad is above the walkway deck, not inside it",
+		ring.Height > deckTop,
+		string.format("pad Y %.0f vs deck top %.0f", ring.Height, deckTop))
+
+	-- ...and inside the hub, not out over the plaza edge or off the world.
+	check("the spawn ring is on the plaza, not out in space",
+		ring.Radius < GameConfig.HubLayout.HubDiameter / 2,
+		string.format("ring %d, plaza radius %d",
+			ring.Radius, GameConfig.HubLayout.HubDiameter / 2))
+
+	-- ENOUGH PADS TO COVER THE APPROACHES. Four walkways plus four diagonals:
+	-- fewer than eight and some players arrive facing a direction with no
+	-- path, which is a worse first frame than a short walk.
+	check("there are enough spawn pads to cover every approach",
+		ring.Count >= 8 and ring.Count % 4 == 0, tostring(ring.Count))
 
 	-- 6b. THE HUB MUST BE LIT WELL ENOUGH TO READ.
 	-- "Hub is very dark" was open from the first Studio session to the sixth.
@@ -1888,6 +1901,26 @@ do
 		prefab.AnchorPart == "EngineReserve"
 	)
 
+	-- THE ENGINE'S DAIS MUST BE FLUSH WITH THE PATHS THAT MEET IT. The first
+	-- authored walk asked for the two to be one continuous surface rather
+	-- than a step, and the Offset that achieves it is derived from the
+	-- walkway height -- so this pins the RESULT, which is what a player feels.
+	local RAW_PLATFORM_TOP = 1.934 -- Platform top above the model pivot, at Scale
+	local engineOffset = Crossroads.FateEngine.Prefab.Offset
+	check("the Engine declares a placement offset", typeof(engineOffset) == "Vector3")
+	check(
+		"the authored dais lands flush with the walkways that meet it",
+		math.abs((RAW_PLATFORM_TOP + engineOffset.Y) - GameConfig.HubLayout.WalkwayRaise) < 0.05,
+		string.format(
+			"dais top %.3f vs walkway %.1f",
+			RAW_PLATFORM_TOP + engineOffset.Y,
+			GameConfig.HubLayout.WalkwayRaise
+		)
+	)
+	-- Only the height is corrected: nudging it sideways would walk the dais
+	-- off the footprint the shell reserves for it.
+	check("the Engine is only moved vertically", engineOffset.X == 0 and engineOffset.Z == 0)
+
 	-- The deck height behaviour is placed from must match the art it is
 	-- placed on. Derived here from the delivered platform rather than copied.
 	local deck = RAW_DECK * scale
@@ -2023,6 +2056,44 @@ do
 			table.insert(sealed, name)
 		end
 	end
+	-- THESE NOW COLLIDE, AND MUST. The first pass left every one of them
+	-- pass-through -- the safe half of a choice that could not be checked
+	-- headlessly -- and the walk found the cost: players sank into platform
+	-- flanks and walked through railings. They are solid now, and each
+	-- carries an explicit fidelity, because a Default hull would seal the
+	-- opening that makes it the shape it is.
+	local mustBeSolidAndPrecise = {
+		"District_Archive_Columns",
+		"District_Shop_EntrancePylons",
+		"District_Training_Wall",
+		"Walkways_Gateways",
+		"Processional_South_Guardians",
+		"District_Leaderboard_Balustrade",
+	}
+	local notPrecise = {}
+	for _, name in mustBeSolidAndPrecise do
+		local style = resolve(name)
+		if not style or style.CanCollide ~= true or not style.CollisionFidelity then
+			table.insert(notPrecise, name)
+		end
+	end
+	check(
+		"structure a player leans on is solid, and precisely so",
+		#notPrecise == 0,
+		table.concat(notPrecise, ", ")
+	)
+
+	-- The skirt under each deck is what a player sinks into when it is
+	-- missing, which is exactly what the walk reported.
+	local sunk = {}
+	for _, d in { "Leaderboard", "Archive", "Shop", "Training" } do
+		local style = resolve(`District_{d}_Skirt`)
+		if not style or style.CanCollide ~= true then
+			table.insert(sunk, d)
+		end
+	end
+	check("no district platform has a hollow flank", #sunk == 0, table.concat(sunk, ", "))
+
 	check(
 		"no merged or hollow mesh collides at Default fidelity",
 		#sealed == 0,
@@ -2095,44 +2166,24 @@ do
 end
 
 do
-	-- THE EXPEDITION GATE, WHICH NO LONGER HAS A GATE. Its district is a
-	-- market in the authored art, but the portal-as-entry amendment has not
-	-- landed, so entry still runs through it and the prompt still has to be
-	-- reachable. These pin the two things that would silently break it.
-	local shell = Crossroads.Shell
-	local gate = shell.GateAnchorTop
+	-- THE EXPEDITION GATE HAS NO GATE, AND THAT IS ON PURPOSE.
+	-- Owner-directed after the first authored walk: a "Verdant Valley / ENTER"
+	-- prompt standing in the middle of the market is not where a biome gets
+	-- entered. The authored hub therefore declares no gate anchor at all, and
+	-- entry waits for the Fate Engine's portal.
+	--
+	-- This pins the DELIBERATE gap so it cannot be closed by accident -- if a
+	-- future change puts a gate back on the market, this fails and asks why.
+	check("the authored hub declares no Expedition Gate anchor",
+		Crossroads.Shell.GateAnchorTop == nil)
 
-	check(
-		"the gate prompt sits on the authored deck, not the blockout one",
-		gate.Y == shell.DeckHeight,
-		string.format("%.1f against %d", gate.Y, shell.DeckHeight)
-	)
-
-	-- Measured from the delivered market: its deck edge is 235 studs out and
-	-- its stalls begin at 256. A prompt outside that window is either hanging
-	-- over the plaza or buried inside a stall.
-	local DECK_EDGE, STALLS = 235, 256
-	check(
-		"the gate prompt is on the market apron, between its edge and its stalls",
-		gate.Z > DECK_EDGE and gate.Z < STALLS,
-		string.format("Z %.1f, apron %d..%d", gate.Z, DECK_EDGE, STALLS)
-	)
-
-	-- A ProximityPrompt only reaches UI.PromptActivationDistance, and a prompt
-	-- you cannot reach from the place players actually walk to is the exact
-	-- bug the Gate shipped with once already -- its plinth was wider than its
-	-- own prompt's range. The place players walk to here is the head of the
-	-- market stairs, measured at 218.5 studs out.
-	local STAIRS = 218.5
-	check(
-		"the gate prompt is in reach from the top of the market stairs",
-		math.abs(gate.Z - STAIRS) < GameConfig.UI.PromptActivationDistance,
-		string.format(
-			"%.1f studs, reach %d",
-			math.abs(gate.Z - STAIRS),
-			GameConfig.UI.PromptActivationDistance
-		)
-	)
+	-- The district itself still exists in content: the EXPEDITION_GATE ->
+	-- SHOP rename is a separate, still-ungated change.
+	local ids = {}
+	for _, d in Crossroads.Districts do
+		ids[d.Id] = true
+	end
+	check("the district it belonged to is still declared", ids.EXPEDITION_GATE == true)
 end
 
 do
@@ -2151,9 +2202,14 @@ do
 		tostring(prefab.AssetKey)
 	)
 
+	-- THE HORIZON IS NO LONGER AT THE HUB'S SCALE, and that is deliberate.
+	-- Both came out of one Blender scene, so 2.0 was the as-authored answer --
+	-- and as authored the ring was 4096 studs across against a 1305-stud
+	-- plaza, which the first walk called "far too large". It is tuned by eye
+	-- now, so what can still be asserted is the FRAMING, below, not equality.
 	check(
-		"the horizon is built at the same scale as the hub it rings",
-		prefab.Scale == Crossroads.Shell.Prefab.Scale,
+		"the horizon is not larger than it was authored",
+		prefab.Scale <= Crossroads.Shell.Prefab.Scale,
 		string.format("%.4f against %.4f", prefab.Scale, Crossroads.Shell.Prefab.Scale)
 	)
 	check(
@@ -2161,29 +2217,46 @@ do
 		prefab.YawDegrees == Crossroads.Shell.Prefab.YawDegrees
 	)
 
-	-- BOTH MODELS' GROUND PLANES MUST LAND ON THE SAME HEIGHT, or the plaza
-	-- floats above its own mountains or sinks into them. Each model's ground
-	-- plane is source Y 0, and its registration point is the anchor part's
-	-- centre plus the declared offset -- so the two registration heights must
-	-- agree in source units.
+	-- BOTH GROUND PLANES MUST LAND ON THE SAME WORLD HEIGHT, or the plaza
+	-- floats above its own mountains or sinks into them. This is asserted in
+	-- WORLD studs rather than source units on purpose: the two models are no
+	-- longer at the same scale, so agreeing in source units would no longer
+	-- mean agreeing in the game -- which is exactly the trap that rescaling
+	-- the horizon set. Each model's ground plane is its source Y 0, and the
+	-- loader puts its registration point on the origin.
 	local SHELL_ANCHOR_Y = 34.7237511 -- EngineReserve centre, as delivered
 	local BACKDROP_ANCHOR_Y = 191.425858 -- Backdrop_Mountain centre, as delivered
 
-	local shellGround = SHELL_ANCHOR_Y + Crossroads.Shell.Prefab.AnchorOffset.Y
-	local backdropGround = BACKDROP_ANCHOR_Y + prefab.AnchorOffset.Y
+	local function groundWorldY(anchorY, spec)
+		return -(anchorY + spec.AnchorOffset.Y) * spec.Scale
+	end
+	local shellGround = groundWorldY(SHELL_ANCHOR_Y, Crossroads.Shell.Prefab)
+	local backdropGround = groundWorldY(BACKDROP_ANCHOR_Y, prefab)
 	check(
 		"the horizon stands on the same ground plane as the plaza",
-		math.abs(shellGround - backdropGround) * prefab.Scale < 2,
-		string.format("%.4f against %.4f in source units", shellGround, backdropGround)
+		math.abs(shellGround - backdropGround) < 2,
+		string.format("%.3f against %.3f in world studs", shellGround, backdropGround)
 	)
 
-	-- It has to reach as far as the layout has always claimed the world does,
-	-- or the fog ends before the scenery does and the hub reads as boxed in.
-	local RAW_SPAN = 2048.0 -- Backdrop_Mountain, widest axis
+	-- THE RING MUST FRAME THE HUB, NOT STAND ON IT. Below about 0.64 the
+	-- mountains would be narrower than the plaza itself. Asserted as a
+	-- relationship so a future retune cannot quietly cross that line.
+	local RAW_RADIUS = 1024.0 -- Backdrop_Mountain, half its widest axis
+	local plazaRadius = 652.626648 * Crossroads.Shell.Prefab.Scale / 2
 	check(
-		"the horizon reaches the visual extent the layout promises",
-		RAW_SPAN * prefab.Scale >= GameConfig.HubLayout.VisualExtent,
-		string.format("%.0f against %d", RAW_SPAN * prefab.Scale, GameConfig.HubLayout.VisualExtent)
+		"the horizon rings the plaza rather than standing on it",
+		RAW_RADIUS * prefab.Scale > plazaRadius,
+		string.format("ring radius %.0f, plaza radius %.0f", RAW_RADIUS * prefab.Scale, plazaRadius)
+	)
+
+	-- ...and it must not be so far out that the hub's own ground ends in a
+	-- void before the mountains begin. The shell's ground skirt reaches 1097
+	-- studs, so a ring inside that rises FROM the island.
+	local GROUND_RADIUS = 548.4949 * Crossroads.Shell.Prefab.Scale
+	check(
+		"the horizon rises from the hub's own ground, not past its edge",
+		RAW_RADIUS * prefab.Scale <= GROUND_RADIUS,
+		string.format("ring %.0f, ground %.0f", RAW_RADIUS * prefab.Scale, GROUND_RADIUS)
 	)
 
 	-- ...and the fog must not cut it off before it is seen.

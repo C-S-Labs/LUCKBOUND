@@ -135,7 +135,12 @@ local ShellStyles: { [string]: any } = {
 	-- visible cause.
 	PlazaRim = { Color = Theme.Plaza, Material = Theme.StoneMaterial },
 	Plaza_ = { Color = Theme.Slate, Material = Theme.StoneMaterial },
-	Plaza_RimParapet = { Color = Theme.Basalt, Material = Theme.StoneMaterial },
+	Plaza_RimParapet = {
+		Color = Theme.Basalt,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
 	Plaza_RimParapetCaps = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
 	Plaza_RimLampPosts = { Color = Theme.Slate, Material = Theme.StoneMaterial },
 	Plaza_RimLampCrystals = {
@@ -149,7 +154,12 @@ local ShellStyles: { [string]: any } = {
 		Material = Enum.Material.Neon,
 		Attributes = { PulseAlphaMin = 0.05, PulseAlphaMax = 0.35, PulseSeconds = 1.9 },
 	},
-	Plaza_Obelisks = { Color = Theme.Slate, Material = Theme.StoneMaterial },
+	Plaza_Obelisks = {
+		Color = Theme.Slate,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
 	Plaza_ObeliskCaps = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
 	-- The ring of light the Engine stands inside. Slow, because it is 780
 	-- studs across and a fast pulse on something that large reads as a fault.
@@ -182,7 +192,17 @@ local ShellStyles: { [string]: any } = {
 
 	-- Ceremonial gateways where the walkways leave the centre ---------
 	Walkways_ = { Color = Theme.Slate, Material = Theme.StoneMaterial },
-	Walkways_Gateways = { Color = Theme.Basalt, Material = Theme.StoneMaterial },
+	-- WAS Basalt, AND READ AS BLACK. These are the four ceremonial arches over
+	-- the walkway mouths, and at 64,58,78 under a pre-dawn key they were
+	-- indistinguishable from the night sky behind them -- reported as
+	-- "flags and pillars remain uncolored". Pale stone, like the colonnades
+	-- they stand beside.
+	Walkways_Gateways = {
+		Color = Theme.MarbleDim,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
 	Walkways_GatewayTrim = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
 	Walkways_GatewayCrystals = {
 		Color = Theme.Inlay,
@@ -195,12 +215,20 @@ local ShellStyles: { [string]: any } = {
 		Transparency = 0.2,
 	},
 	Walkways_RuneBands = { Color = Theme.Inlay, Material = Enum.Material.Neon, Transparency = 0.3 },
-	Walkways_Banners = { Color = Theme.Slate, Material = Theme.StoneMaterial },
+	-- Gold cloth. Banners are the one place the warm accent can be used at
+	-- size without stopping being an accent, and they were the other half of
+	-- the "uncolored" report.
+	Walkways_Banners = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
 
 	-- The spawn approach ---------------------------------------------
 	-- The first thing anybody sees, so it gets the guardians and the gold.
 	Processional_South = { Color = Theme.Marble, Material = Theme.StoneMaterial, CanCollide = true },
-	Processional_South_Guardians = { Color = Theme.Slate, Material = Theme.StoneMaterial },
+	Processional_South_Guardians = {
+		Color = Theme.MarbleDim,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
 	Processional_South_GuardianCrests = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
 	Processional_South_Threshold = {
 		Color = Theme.MarbleTrim,
@@ -232,20 +260,39 @@ local ShellStyles: { [string]: any } = {
 		CanCollide = true,
 	},
 	District_Leaderboard_ = { Color = Theme.Slate, Material = Theme.StoneMaterial },
-	District_Leaderboard_Skirt = { Color = Theme.Basalt, Material = Theme.StoneMaterial },
+	District_Leaderboard_Skirt = {
+		Color = Theme.Basalt,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+	},
 	District_Leaderboard_EdgeBand = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
-	District_Leaderboard_Balustrade = { Color = Theme.MarbleDim, Material = Theme.StoneMaterial },
+	District_Leaderboard_Balustrade = {
+		Color = Theme.MarbleDim,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
 	District_Leaderboard_BalustradeCaps = {
 		Color = Theme.MarbleTrim,
 		Material = Theme.StoneMaterial,
 	},
-	District_Leaderboard_Seating = { Color = Theme.Slate, Material = Theme.StoneMaterial },
+	District_Leaderboard_Seating = {
+		Color = Theme.Slate,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
 	District_Leaderboard_SeatLights = {
 		Color = Theme.Inlay,
 		Material = Enum.Material.Neon,
 		Transparency = 0.35,
 	},
-	District_Leaderboard_Podiums = { Color = Theme.Slate, Material = Theme.StoneMaterial },
+	District_Leaderboard_Podiums = {
+		Color = Theme.Slate,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
 	District_Leaderboard_PodiumTops = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
 	District_Leaderboard_Rails = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
 	District_Leaderboard_MonumentPlinth = {
@@ -279,26 +326,45 @@ local ShellStyles: { [string]: any } = {
 		Material = Enum.Material.Neon,
 		Transparency = 0.3,
 	},
-	District_Leaderboard_Buttresses = { Color = Theme.Basalt, Material = Theme.StoneMaterial },
+	District_Leaderboard_Buttresses = {
+		Color = Theme.Basalt,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
 	District_Leaderboard_FinialPylons = { Color = Theme.Slate, Material = Theme.StoneMaterial },
 	District_Leaderboard_CrystalFinials = {
 		Color = Theme.Inlay,
 		Material = Enum.Material.Neon,
 		Attributes = { PulseAlphaMin = 0.15, PulseAlphaMax = 0.5, PulseSeconds = 5.6 },
 	},
-	District_Leaderboard_BannerMasts = { Color = Theme.Basalt, Material = Theme.StoneMaterial },
-	District_Leaderboard_BannerCloth = { Color = Theme.Slate, Material = Theme.StoneMaterial },
+	District_Leaderboard_BannerMasts = { Color = Theme.Slate, Material = Theme.StoneMaterial },
+	District_Leaderboard_BannerCloth = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
 
 	-- District 2: the Discovery Archive -------------------------------
 	-- The only district with its own hue. Deep teal and cosmic trim, which
 	-- are already DISCOVERY_ARCHIVE's colours in the blockout district table.
 	District_Archive = { Color = Theme.Marble, Material = Theme.StoneMaterial, CanCollide = true },
 	District_Archive_ = { Color = Theme.Slate, Material = Theme.StoneMaterial },
-	District_Archive_Skirt = { Color = Theme.Basalt, Material = Theme.StoneMaterial },
+	District_Archive_Skirt = {
+		Color = Theme.Basalt,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+	},
 	District_Archive_EdgeBand = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
-	District_Archive_Balustrade = { Color = Theme.MarbleDim, Material = Theme.StoneMaterial },
+	District_Archive_Balustrade = {
+		Color = Theme.MarbleDim,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
 	District_Archive_BalustradeCaps = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
-	District_Archive_Columns = { Color = Theme.Marble, Material = Theme.StoneMaterial },
+	District_Archive_Columns = {
+		Color = Theme.Marble,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
 	District_Archive_ColumnCapitals = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
 	District_Archive_Dome = { Color = Theme.DeepTeal, Material = Theme.StoneMaterial },
 	District_Archive_DomeRibs = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
@@ -309,9 +375,19 @@ local ShellStyles: { [string]: any } = {
 		Transparency = 0.3,
 		Attributes = { PulseAlphaMin = 0.2, PulseAlphaMax = 0.6, PulseSeconds = 7.2 },
 	},
-	District_Archive_Shelves = { Color = Theme.Slate, Material = Theme.StoneMaterial },
+	District_Archive_Shelves = {
+		Color = Theme.Slate,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
 	District_Archive_ShelfBands = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
-	District_Archive_ReadingPlinths = { Color = Theme.Slate, Material = Theme.StoneMaterial },
+	District_Archive_ReadingPlinths = {
+		Color = Theme.Slate,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
 	District_Archive_PlinthTrim = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
 	District_Archive_RuneFloor = {
 		Color = Theme.Inlay,
@@ -357,24 +433,58 @@ local ShellStyles: { [string]: any } = {
 	-- the finished hub wants; the ID catches up when the amendment lands.
 	District_Shop = { Color = Theme.Marble, Material = Theme.StoneMaterial, CanCollide = true },
 	District_Shop_ = { Color = Theme.Slate, Material = Theme.StoneMaterial },
-	District_Shop_Skirt = { Color = Theme.Basalt, Material = Theme.StoneMaterial },
+	District_Shop_Skirt = {
+		Color = Theme.Basalt,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+	},
 	District_Shop_EdgeBand = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
-	District_Shop_Balustrade = { Color = Theme.MarbleDim, Material = Theme.StoneMaterial },
+	District_Shop_Balustrade = {
+		Color = Theme.MarbleDim,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
 	District_Shop_BalustradeCaps = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
-	District_Shop_EntrancePylons = { Color = Theme.Slate, Material = Theme.StoneMaterial },
+	District_Shop_EntrancePylons = {
+		Color = Theme.Slate,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
 	District_Shop_EntranceCrystals = {
 		Color = Theme.Inlay,
 		Material = Enum.Material.Neon,
 		Attributes = { PulseAlphaMin = 0.18, PulseAlphaMax = 0.55, PulseSeconds = 4.2 },
 	},
-	District_Shop_Columns = { Color = Theme.Marble, Material = Theme.StoneMaterial },
-	District_Shop_StallStructures = { Color = Theme.Slate, Material = Theme.StoneMaterial },
+	District_Shop_Columns = {
+		Color = Theme.Marble,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
+	District_Shop_StallStructures = {
+		Color = Theme.Slate,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
 	District_Shop_HippedRoofs = { Color = Theme.Basalt, Material = Theme.StoneMaterial },
 	District_Shop_RoofTiles = { Color = Theme.Plaza, Material = Theme.StoneMaterial },
 	District_Shop_GoldTrim = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
-	District_Shop_Counters = { Color = Theme.Slate, Material = Theme.StoneMaterial },
+	District_Shop_Counters = {
+		Color = Theme.Slate,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
 	District_Shop_DisplayGoods = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
-	District_Shop_Crates = { Color = Theme.Slate, Material = Theme.StoneMaterial },
+	District_Shop_Crates = {
+		Color = Theme.Slate,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
 	District_Shop_CrateBands = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
 	District_Shop_Signs = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
 	District_Shop_LanternBases = { Color = Theme.Slate, Material = Theme.StoneMaterial },
@@ -412,9 +522,18 @@ local ShellStyles: { [string]: any } = {
 	-- four: it is the practical one, and Phase 2 is where it gets a purpose.
 	District_Training = { Color = Theme.Marble, Material = Theme.StoneMaterial, CanCollide = true },
 	District_Training_ = { Color = Theme.Slate, Material = Theme.StoneMaterial },
-	District_Training_Skirt = { Color = Theme.Basalt, Material = Theme.StoneMaterial },
+	District_Training_Skirt = {
+		Color = Theme.Basalt,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+	},
 	District_Training_EdgeBand = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
-	District_Training_Wall = { Color = Theme.Slate, Material = Theme.StoneMaterial },
+	District_Training_Wall = {
+		Color = Theme.Slate,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
 	District_Training_WallCaps = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
 	District_Training_YardFloor = {
 		Color = Theme.Sand,
@@ -427,18 +546,48 @@ local ShellStyles: { [string]: any } = {
 		Transparency = 0.35,
 	},
 	District_Training_ArenaMarkers = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
-	District_Training_DummyPosts = { Color = Theme.Basalt, Material = Theme.StoneMaterial },
-	District_Training_DummyHeads = { Color = Theme.Slate, Material = Theme.StoneMaterial },
-	District_Training_WeaponRacks = { Color = Theme.Slate, Material = Theme.StoneMaterial },
+	District_Training_DummyPosts = {
+		Color = Theme.Slate,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
+	District_Training_DummyHeads = {
+		Color = Theme.MarbleDim,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
+	District_Training_WeaponRacks = {
+		Color = Theme.MarbleDim,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
 	District_Training_Targets = { Color = Theme.Marble, Material = Theme.StoneMaterial },
-	District_Training_TargetStands = { Color = Theme.Basalt, Material = Theme.StoneMaterial },
+	District_Training_TargetStands = {
+		Color = Theme.Slate,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
 	District_Training_TargetRings = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
-	District_Training_Bleachers = { Color = Theme.Slate, Material = Theme.StoneMaterial },
-	District_Training_Buttresses = { Color = Theme.Basalt, Material = Theme.StoneMaterial },
-	District_Training_Gate = { Color = Theme.Slate, Material = Theme.StoneMaterial },
-	District_Training_Banners = { Color = Theme.Basalt, Material = Theme.StoneMaterial },
-	District_Training_BannerCloth = { Color = Theme.Slate, Material = Theme.StoneMaterial },
-	District_Training_Braziers = { Color = Theme.Basalt, Material = Theme.StoneMaterial },
+	District_Training_Bleachers = {
+		Color = Theme.MarbleDim,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
+	District_Training_Buttresses = {
+		Color = Theme.Slate,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+	},
+	District_Training_Gate = { Color = Theme.MarbleDim, Material = Theme.StoneMaterial },
+	District_Training_Banners = { Color = Theme.Slate, Material = Theme.StoneMaterial },
+	District_Training_BannerCloth = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
+	District_Training_Braziers = { Color = Theme.Slate, Material = Theme.StoneMaterial },
 	District_Training_BrazierFlames = {
 		Color = Theme.TorchLight,
 		Material = Enum.Material.Neon,
@@ -528,7 +677,6 @@ local BackdropStyles: { [string]: any } = {
 }
 local Crossroads = {
 	Theme = Theme,
-	SpawnOffset = Layout.SpawnAnchor,
 
 	-- THE AUTHORED HUB SHELL. Delivered 2026-09-18, 225 MeshParts.
 	--
@@ -599,56 +747,74 @@ local Crossroads = {
 		-- Where a district's name floats, above its deck.
 		SignLift = 46,
 
-		-- WHERE THE EXPEDITION GATE'S PROMPT GOES, NOW THAT ITS DISTRICT IS A
-		-- MARKET. This is the open question STATUS.md records, met honestly
-		-- rather than resolved early.
+		-- NO EXPEDITION GATE. Owner-directed after the first authored walk: the
+		-- "Verdant Valley / ENTER" prompt standing in the middle of the market
+		-- is not where a biome is entered, and the Fate Engine's portal takes
+		-- that job. So the authored hub builds no gate anchor and no gate
+		-- prompt at all.
 		--
-		-- The authored south district is a Shop. It has no gate and no portal,
-		-- because the brief asked for the hub the portal-as-entry direction
-		-- wants. But that amendment has NOT landed, so expedition entry still
-		-- runs through EXPEDITION_GATE and still has to work today.
-		--
-		-- So the Gate keeps its anchor and its prompt and loses its art: no
-		-- portal rig is drawn on top of the market. The prompt sits at the
-		-- head of the market stairs, which is where a player arrives anyway.
-		-- Measured from the delivery, in studs from the hub centre along +Z:
-		--
-		--   stairs           218.5
-		--   deck near edge   235.0
-		--   entrance pylons  248.0
-		--   stalls begin     256.0
-		--
-		-- 250 is between the pylons and clear of the stalls. When the
-		-- amendment lands, this whole block goes away with the district.
-		GateAnchorTop = Vector3.new(0, 14, 250),
+		-- WHAT THIS COSTS, STATED PLAINLY: until the Engine carries entry,
+		-- there is no in-world way into an expedition. ExpeditionSystem
+		-- already handles a missing anchor -- it warns that entry is
+		-- remote-only and keeps running -- so /enter still works for testing
+		-- and nothing else breaks. This is a deliberate gap, not an
+		-- oversight, and it closes with the portal-as-entry amendment.
 	},
 
-	-- THE HORIZON. Four MeshParts, 4096 studs across, delivered separately
-	-- 2026-09-18 and authored in the same Blender scene as the hub -- which
-	-- is why it takes the same Scale and the same yaw, and why registering
-	-- both from the same point in that scene puts them concentric.
+	-- THE HORIZON. Four MeshParts, delivered 2026-09-18 and authored in the
+	-- same Blender scene as the hub -- which is why it takes the same yaw,
+	-- and why it registers to the same ground plane. Its SCALE is no longer
+	-- the hub's: as authored the ring was 4096 studs across against a
+	-- 1305-stud plaza, and the first walk called that far too large.
 	--
 	-- It is decoration with no contract: nothing looks it up, nothing drives
 	-- it, and a place without it simply has no mountains.
 	Backdrop = {
 		Prefab = {
 			AssetKey = "HUB_BACKDROP",
-			-- Same export, same halving. Cross-checked: at 2.0 the ring is
-			-- 4096 studs across against HubLayout.VisualExtent's 4000, and
-			-- its ground plane lands on the hub's own ground plane to within
-			-- a stud. Both fall out of the scale rather than being tuned to.
-			Scale = 2.0,
+
+			-- 2.0 -> 1.0. As exported the ring was 4096 studs across against a
+			-- 1305-stud plaza -- more than three times the hub's width, and
+			-- the verdict on walking it was "far too large and not properly
+			-- spaced". At 1.0 it is 2048 across, 1.57x the plaza, and its
+			-- outer radius (1024) falls just inside the hub's own ground
+			-- skirt (1097) -- so the mountains rise FROM the island instead
+			-- of floating past its edge. That nesting is the reason for this
+			-- number rather than any other.
+			--
+			-- ONE THING TO KNOW BEFORE RETUNING IT. A uniform scale moves the
+			-- ring closer as it shrinks, so from the hub's CENTRE the
+			-- mountains subtend the same angle at any scale -- height and
+			-- radius fall together. What actually changes is how they read
+			-- from the plaza's EDGE, and how big they look next to the hub in
+			-- a wide shot. Below ~0.64 the ring is narrower than the plaza
+			-- and the mountains would stand on it.
+			Scale = 1.0,
 			YawDegrees = 180,
+
 			-- No EngineReserve out here, so it registers from the largest
-			-- mesh instead. The offset is the vector from that mesh's centre
-			-- to the hub centre IN THE SHARED SOURCE SCENE, which is what
-			-- makes the two models concentric rather than merely close.
+			-- mesh instead, and only in Y. X/Z are zero on purpose: that mesh
+			-- IS the ring, so centring its bounding box on the origin is what
+			-- makes the mountains concentric with the plaza at any scale.
+			--
+			-- THE Y TERM IS SCALE-DEPENDENT AND MUST BE RECOMPUTED IF SCALE
+			-- CHANGES. The hub's ground plane sits at world Y -68.4475 (its
+			-- own source Y 0, at the shell's Scale 2.0). The backdrop's base
+			-- is its source Y 0, and the loader puts the registration point
+			-- on the origin, so:
+			--
+			--   registrationSourceY = 68.4475 / Scale
+			--   AnchorOffset.Y      = registrationSourceY - 191.425858
+			--
+			-- where 191.425858 is Backdrop_Mountain's measured centre. At
+			-- Scale 1.0 that is 68.4475 - 191.425858 = -122.9784. Get this
+			-- wrong and the mountains float above the ground or sink through
+			-- it; a test asserts the two ground planes agree in WORLD studs.
 			AnchorPart = "Backdrop_Mountain",
-			AnchorOffset = Vector3.new(-15.3538, -157.2021, -34.9448),
+			AnchorOffset = Vector3.new(0, -122.9784, 0),
 		},
 		Styles = BackdropStyles,
 	},
-
 
 	-- Lower plaza ring the raised walkways sit above. Blueprint §2.1.
 	Plaza = {
@@ -738,6 +904,18 @@ local Crossroads = {
 			-- from this number rather than set beside it, so one edit re-tunes
 			-- the Engine and a test catches it if they disagree.
 			Scale = 0.464,
+
+			-- WALK ON, DO NOT STEP UP. Measured from the delivered Engine:
+			-- Platform's top face sits 1.934 studs above the model pivot at
+			-- this Scale, while the authored walkways' top face is
+			-- HubLayout.WalkwayRaise. The dais was therefore proud of every
+			-- path that meets it, and the first authored walk asked for the
+			-- two to be one continuous surface.
+			--
+			-- Derived, not typed: change WalkwayRaise or the Scale and this
+			-- follows. RAW_PLATFORM_TOP is the one measured number, and a
+			-- test pins the result to the walkway deck.
+			Offset = Vector3.new(0, GameConfig.HubLayout.WalkwayRaise - 1.934, 0),
 		},
 
 		-- PAINT, BY PART NAME. Authored meshes import untextured and grey,

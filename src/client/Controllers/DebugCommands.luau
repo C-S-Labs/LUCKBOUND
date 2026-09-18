@@ -220,8 +220,11 @@ local function teleport(where: string?)
 		return
 	end
 
+	-- The spawn is a ring now, so /tp spawn aims at its southern pad -- the
+	-- one a player walking in from the processional would have used.
+	local ring = GameConfig.HubLayout.SpawnRing
 	local target = if key == "SPAWN"
-		then GameConfig.HubLayout.SpawnAnchor
+		then Vector3.new(0, ring.Height, ring.Radius)
 		else GameConfig.HubLayout.Anchors[key]
 	if not target then
 		say(`no anchor for '{key}'`)

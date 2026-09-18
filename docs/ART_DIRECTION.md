@@ -220,19 +220,26 @@ players walk.
 
 So the rule is:
 
-> **Grant collision only to things that are a single solid volume and are
-> meant to be one.** Floors, decks, walkways, stairs, and freestanding props
-> like pillars, rocks and tree trunks. Railings, colonnades, arches, walls and
-> stalls are scenery you walk through.
+> **Collision and fidelity are decided together, never separately.** A single
+> solid volume — a floor, a deck, a stair flight, a pillar, a rock — collides
+> at `Default`, which is cheap and exactly right. A mesh with openings that
+> matter — an arch, a colonnade, a balustrade, a ring wall — collides at
+> `PreciseConvexDecomposition` or not at all. **`CanCollide` on its own, on a
+> mesh with a hole in it, walls off a route.**
 
-Walking through a balustrade is a small oddity. Being unable to reach a
-district is not. Where a piece genuinely must stop a player, raise
-`CollisionFidelity` on **that one entry** — it is a real runtime cost, so it
-is spent deliberately rather than by default.
+`PreciseConvexDecomposition` is a real runtime cost, computed at load and
+cached per mesh asset, so it is spent deliberately rather than granted by
+default. In the Crossroads it is on 30 parts of 225.
 
 This is also why `CanCollide` defaults to **off** in `PrefabLoader` and
 content turns it on: the failure mode of forgetting is a part you can walk
 through, not a world you cannot walk in.
+
+**Both halves of that rule cost a playtest to learn.** The first authored hub
+shipped with collision on only the unambiguous solids and everything else
+pass-through — safe against invisible walls, and it produced the opposite
+complaint: players sank into the flanks of district platforms and walked
+through railings. Neither half is optional.
 
 Roblox's built-in materials give stone grain, glass and neon bloom for free.
 Use them instead of authoring a surface.
@@ -257,6 +264,14 @@ authored piece uses these and nothing else.
 | Marble in shadow | `196, 190, 208` | balustrades and railings against a pale deck |
 | Torch light | `255, 176, 92` | warm flame |
 | Engine spot | `255, 200, 120` | the key light over the Fate Engine |
+
+**Dark values do not survive this lighting at scale.** The first authored walk
+reported gateway arches, banners, training dummies, braziers and weapon racks
+as *"uncolored"* — they were painted, in `Basalt` and `Slate`, and at
+`ClockTime 4.5` those simply read as black against a night sky. The palette
+did not change; those pieces moved one step up it, to `Slate` and
+`MarbleDim`. **When something reads as unpainted here, suspect the value
+before the paint table.**
 
 All of these are named fields on `Crossroads.Theme` — `Marble`, `MarbleTrim`,
 `Plaza`, `Walkway`, `Basalt`, `Slate`, `Inlay`, `Cosmic`, `DeepTeal`, `Sand`,
