@@ -841,6 +841,93 @@ local function buildFloatingIslands(parent: Instance)
 	end
 end
 
+-- === the authored hub shell ==========================================
+
+-- Every part of the authored Crossroads that something outside the art
+-- depends on: the floor players stand on, the marker the whole model is
+-- registered from, the four walkways that join the centre to the districts,
+-- and the four district decks. A delivery missing one of these still builds --
+-- the rest of the hub is fine -- but it says so, rather than going quietly
+-- wrong in a place nobody looks. Same contract-or-warn rule as ENGINE_CONTRACT.
+local SHELL_CONTRACT = {
+	"Plaza",
+	"EngineReserve",
+	"Walkway_North",
+	"Walkway_East",
+	"Walkway_West",
+	"Processional_South",
+	"District_Leaderboard",
+	"District_Archive",
+	"District_Shop",
+	"District_Training",
+}
+
+--- Clones a hub-scale prefab in, or returns nil so the caller falls through
+--- to the blockout. Exactly the shape buildFateEngine's prefab branch has --
+--- the seam was built to take a second and a third piece without new code,
+--- and this is that turning out to be true.
+local function buildHubPrefab(
+	cfg: any,
+	contract: { string },
+	name: string,
+	parent: Instance
+): Model?
+	if not cfg or not cfg.Prefab then
+		return nil
+	end
+
+	local built = PrefabLoader.build({
+		AssetKey = cfg.Prefab.AssetKey,
+		Scale = cfg.Prefab.Scale,
+		YawDegrees = cfg.Prefab.YawDegrees,
+		AnchorPart = cfg.Prefab.AnchorPart,
+		AnchorOffset = cfg.Prefab.AnchorOffset,
+		Styles = cfg.Styles,
+	}, contract, CFrame.new(Anchors.FATE_ENGINE), parent, name)
+
+	if not built then
+		print(
+			`[HubBuilder] prefab '{cfg.Prefab.AssetKey}' not found in ServerStorage.`
+				.. `{Constants.NAMES.PREFABS_FOLDER} -- using the blockout instead`
+		)
+		return nil
+	end
+
+	if #built.Missing > 0 then
+		warn(
+			`[HubBuilder] {cfg.Prefab.AssetKey} is missing {#built.Missing} contract part(s): `
+				.. table.concat(built.Missing, ", ")
+		)
+	end
+
+	print(
+		`[HubBuilder] {name}: authored {cfg.Prefab.AssetKey}, `
+			.. `{built.PartCount} part(s) at scale {cfg.Prefab.Scale}`
+	)
+	return built.Model
+end
+
+--- THE AUTHORED CROSSROADS. When this loads, none of the blockout plaza,
+--- district or walkway geometry below runs: the art supplies all of it, and
+--- only BEHAVIOUR is built on top -- the Fate Engine, the roll and gate
+--- anchors, the district labels and the spawn.
+---
+--- It is placed at the hub centre at floor level, and the authored plaza's
+--- top surface lands on Y 0 -- which is exactly where the blockout plaza's
+--- top is. That is not a coincidence to be grateful for, it is the whole
+--- reason the Engine, the spawn and every anchor need no adjustment in either
+--- build.
+local function buildShell(parent: Instance): Model?
+	return buildHubPrefab(Layout.Shell, SHELL_CONTRACT, "Shell", parent)
+end
+
+--- The mountain horizon. Decoration with no contract, so an empty required
+--- list: nothing in the game looks any of it up, and a place without the file
+--- simply has no mountains.
+local function buildBackdrop(parent: Instance): Model?
+	return buildHubPrefab(Layout.Backdrop, {}, "Backdrop", parent)
+end
+
 --- Builds the hub if absent. Idempotent: a place that already contains a
 --- hand-built Crossroads is left alone, so authored geometry always wins.
 --- THE CONTRACT: the parts other systems look up by name.
@@ -937,15 +1024,28 @@ function HubBuilder.build(): Model
 	local hub = Instance.new("Model")
 	hub.Name = Constants.NAMES.CROSSROADS
 
-	-- Lower plaza ring the raised walkways sit above.
-	cylinder({
-		Name = "Plaza",
-		Size = Vector3.new(Layout.Plaza.Thickness, Layout.Plaza.Diameter, Layout.Plaza.Diameter),
-		Position = Vector3.new(0, -Layout.Plaza.Thickness / 2, 0),
-		Color = Layout.Plaza.Color,
-		Material = Layout.Plaza.Material,
-	}, hub)
+	-- AUTHORED ART WINS, one piece at a time. With a shell present the plaza,
+	-- the districts, the walkways and the skyline all come from it; without
+	-- one, every line below builds exactly what it built before.
+	local shell = buildShell(hub)
 
+	if not shell then
+		-- Lower plaza ring the raised walkways sit above.
+		cylinder({
+			Name = "Plaza",
+			Size = Vector3.new(
+				Layout.Plaza.Thickness,
+				Layout.Plaza.Diameter,
+				Layout.Plaza.Diameter
+			),
+			Position = Vector3.new(0, -Layout.Plaza.Thickness / 2, 0),
+			Color = Layout.Plaza.Color,
+			Material = Layout.Plaza.Material,
+		}, hub)
+	end
+
+	-- The Engine is its own prefab and is built either way. The shell reserves
+	-- its footprint and deliberately models nothing inside it.
 	buildFateEngine(hub)
 
 	local zones = Instance.new("Folder")
@@ -961,27 +1061,55 @@ function HubBuilder.build(): Model
 		model.Name = zone.Id
 		model.Parent = zones
 
-		buildPlatform(zone, centre, model)
+		-- WITH A SHELL, the platform, its dressing and its walkway are all in
+		-- the art, and only behaviour is built here. The one thing that still
+		-- has to be placed is the Expedition Gate's prompt -- see below.
+		local deckTop
+		if shell then
+			deckTop = Layout.Shell.DeckHeight
 
-		local builder = ZONE_BUILDERS[zone.Kind]
-		assert(builder, `no builder for zone Kind '{zone.Kind}' (zone {zone.Id})`)
-		builder(zone, centre, model)
+			-- THE GATE KEEPS ITS PROMPT AND LOSES ITS PORTAL. The authored
+			-- south district is a market, because the brief asked for the hub
+			-- the portal-as-entry direction wants -- but that amendment has
+			-- not landed, so expedition entry still runs through this zone and
+			-- still has to work today. Drawing a monumental portal rig on top
+			-- of the stalls would be the wrong answer to that; an invisible
+			-- anchor at the head of the market stairs is the right one.
+			if zone.Kind == "GATE" then
+				buildGateAnchor(zone, Layout.Shell.GateAnchorTop, model)
+			end
+		else
+			deckTop = centre.Y + zone.PlatformSize.Y / 2
 
+			buildPlatform(zone, centre, model)
+
+			local builder = ZONE_BUILDERS[zone.Kind]
+			assert(builder, `no builder for zone Kind '{zone.Kind}' (zone {zone.Id})`)
+			builder(zone, centre, model)
+
+			buildWalkway(zone, centre, hub)
+		end
+
+		local lift = if shell then Layout.Shell.SignLift else 12
 		local sign = part({
 			Name = "Sign",
 			Size = Vector3.new(4, 1, 1),
-			Position = centre + Vector3.new(0, zone.PlatformSize.Y / 2 + 12, 0),
+			Position = Vector3.new(anchor.X, deckTop + lift, anchor.Z),
 			Transparency = 1,
 			CanCollide = false,
 		}, model)
 		-- Every zone is labelled so a tester can name where they are without
 		-- being told. Master Spec §20's success criterion depends on it.
 		label(zone.Name, zone.Accent, UDim2.fromScale(24, 5), sign, 320)
-
-		buildWalkway(zone, centre, hub)
 	end
 
-	buildFloatingIslands(hub)
+	if not shell then
+		buildFloatingIslands(hub)
+	end
+
+	-- The horizon is independent of the shell: it is the one piece that can
+	-- stand behind either build without looking wrong.
+	buildBackdrop(hub)
 
 	buildSpawn(hub)
 

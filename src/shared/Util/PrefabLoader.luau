@@ -38,6 +38,12 @@ export type Style = {
 	Material: Enum.Material?,
 	Transparency: number?,
 	CanCollide: boolean?,
+	-- Only meaningful with CanCollide. An imported MeshPart carries no baked
+	-- PhysicsData, so Roblox generates its hull at `Default` fidelity, which
+	-- is coarse enough to fill an archway or the gaps in a colonnade. Content
+	-- raises this to PreciseConvexDecomposition for the pieces where the
+	-- openings are the point -- at a real cost, so only where it is earned.
+	CollisionFidelity: Enum.CollisionFidelity?,
 	Attributes: { [string]: any }?,
 	-- Attribute name -> fraction to vary it by, per part. See the paint loop.
 	-- Multiplies the part's size on load, for setting a piece into the frame
@@ -104,14 +110,39 @@ export type LoadResult = {
 	Missing: { string },
 }
 
+export type PrefabSpec = {
+	AssetKey: string,
+	Scale: number,
+	Styles: { [string]: Style }?,
+	-- COMPASS CORRECTION. An FBX round trip carries the exporter's axis
+	-- convention, not the game's: the Crossroads arrived with its north at +Z
+	-- while GameConfig.HubLayout.Anchors put north at -Z, so every district was
+	-- exactly 180 degrees out. That is a property of the DELIVERY, in the same
+	-- family as Scale, and it belongs beside it rather than re-derived by every
+	-- caller. Degrees about Y, applied before placement.
+	YawDegrees: number?,
+	-- WHERE THE MODEL IS REGISTERED FROM. Without this the model is placed by
+	-- its pivot, which is what the Fate Engine does and is fine when the pivot
+	-- survived the round trip intact.
+	--
+	-- A pivot is invisible metadata, and invisible metadata is exactly what a
+	-- Blender -> FBX -> Studio -> rbxm chain mangles quietly. A PART NAME does
+	-- not get mangled -- it is already the contract with the artist, and it is
+	-- readable in the file. So a prefab may instead name the part it is
+	-- registered from, plus the offset from that part's CENTRE to the point
+	-- that should land on `cframe`, in SOURCE units (pre-scale, pre-yaw).
+	AnchorPart: string?,
+	AnchorOffset: Vector3?,
+}
+
 --- Clones `spec.AssetKey` to `cframe` under `parent`.
 ---
---- Order matters and is not arbitrary: anchor, then scale, then pivot, then
---- regroup, then paint. Scaling before the pivot move keeps ScaleTo working
+--- Order matters and is not arbitrary: anchor, then scale, then place, then
+--- regroup, then paint. Scaling before the placement keeps ScaleTo working
 --- about the model's own centre; regrouping before painting means the paint
 --- pass walks the finished tree exactly as the game will.
 function PrefabLoader.build(
-	spec: { AssetKey: string, Scale: number, Styles: { [string]: Style }? },
+	spec: PrefabSpec,
 	required: { string },
 	cframe: CFrame,
 	parent: Instance,
@@ -134,7 +165,33 @@ function PrefabLoader.build(
 	end
 
 	model:ScaleTo(spec.Scale)
-	model:PivotTo(cframe)
+
+	-- PLACEMENT. The yaw is part of the delivery, so it composes onto whatever
+	-- orientation the caller asked for rather than replacing it.
+	local placement = cframe * CFrame.Angles(0, math.rad(spec.YawDegrees or 0), 0)
+	model:PivotTo(placement)
+
+	-- ...then, if the prefab is registered from a named part rather than its
+	-- pivot, slide the whole model so that part's registration point lands
+	-- exactly on `cframe`. The offset is rotated by the PLACEMENT rather than
+	-- by the part's own CFrame, so a part that arrived with baked rotation
+	-- cannot skew the correction.
+	if spec.AnchorPart then
+		local anchorPart = model:FindFirstChild(spec.AnchorPart, true)
+		if anchorPart and anchorPart:IsA("BasePart") then
+			local offset = (spec.AnchorOffset or Vector3.zero) * spec.Scale
+			local registration = anchorPart.Position + placement:VectorToWorldSpace(offset)
+			model:PivotTo(placement + (cframe.Position - registration))
+		else
+			-- Loud, because the symptom otherwise is a hub sitting a few hundred
+			-- studs off to one side with nothing in the log to explain it.
+			warn(
+				`[PrefabLoader] {spec.AssetKey} names AnchorPart '{spec.AnchorPart}' `
+					.. "but no such BasePart is in the model; placed by pivot instead"
+			)
+		end
+	end
+
 	model.Parent = parent
 
 	-- The tree PortalRig and HubEffects expect. Rune and Glyph share one
@@ -192,6 +249,12 @@ function PrefabLoader.build(
 				end
 				if style.CanCollide ~= nil then
 					d.CanCollide = style.CanCollide
+				end
+				-- Set before nothing in particular, but only on a MeshPart:
+				-- CollisionFidelity does not exist on a plain Part, and the
+				-- blockout path shares this loop.
+				if style.CollisionFidelity and d:IsA("MeshPart") then
+					d.CollisionFidelity = style.CollisionFidelity
 				end
 				for key, value in style.Attributes or {} do
 					d:SetAttribute(key, value)

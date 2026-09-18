@@ -193,9 +193,46 @@ failure to fix in Blender; it is the pipeline working.
 
 Colour is two per-part Roblox properties, `Color` and `Material`, neither of
 which needs UVs. They are set from a **paint table in content**, keyed by part
-name with longest-prefix matching (see `Crossroads.FateEngine.PrefabStyles`).
-So recolouring an authored piece is a data edit and a rejoin — never a
-re-export.
+name with longest-prefix matching (see `Crossroads.FateEngine.PrefabStyles`
+for the Engine and `Crossroads.Shell.Styles` for the hub itself, 184 keys
+across 225 parts). So recolouring an authored piece is a data edit and a
+rejoin — never a re-export.
+
+**Longest prefix wins, and the trailing underscore is the tool for it.**
+`Plinth_SideBand` can be gold while `Plinth` stays marble, because the longer
+key matches first. The same trick is what keeps a district's dressing separate
+from its platform: `District_Shop` is the deck, and `District_Shop_` is the
+catch-all for everything mounted on it. Without that second key a part the
+table forgot would silently inherit the deck's entry — including its
+collision.
+
+### Collision is part of the paint table, and it is the dangerous part
+
+An imported `MeshPart` arrives with **no baked `PhysicsData`**, so Roblox
+generates its collision hull on load at `Default` fidelity. `Default` is
+coarse, and coarse means **it fills small openings**.
+
+That matters because a Blender export routinely merges many separate objects
+into one mesh — a colonnade of eight columns, four archways, a pair of
+flanking statues, a parapet that rings a plaza. Each of those is one
+`MeshPart`, and a filled hull across it is an invisible wall exactly where
+players walk.
+
+So the rule is:
+
+> **Grant collision only to things that are a single solid volume and are
+> meant to be one.** Floors, decks, walkways, stairs, and freestanding props
+> like pillars, rocks and tree trunks. Railings, colonnades, arches, walls and
+> stalls are scenery you walk through.
+
+Walking through a balustrade is a small oddity. Being unable to reach a
+district is not. Where a piece genuinely must stop a player, raise
+`CollisionFidelity` on **that one entry** — it is a real runtime cost, so it
+is spent deliberately rather than by default.
+
+This is also why `CanCollide` defaults to **off** in `PrefabLoader` and
+content turns it on: the failure mode of forgetting is a part you can walk
+through, not a world you cannot walk in.
 
 Roblox's built-in materials give stone grain, glass and neon bloom for free.
 Use them instead of authoring a surface.
@@ -214,8 +251,24 @@ authored piece uses these and nothing else.
 | Dark stone | `64, 58, 78` | the outer portal ring, heavy structural pieces |
 | Rune slate | `88, 82, 104` | grey-violet, for carved detail |
 | Mint neon | `124, 245, 224` | the rune inlays and `UNKNOWN` glow |
+| Dimmed inlay | `68, 135, 123` | mint neon, knocked back for emissive surfaces — see below |
+| Deep teal | `27, 75, 74` | the Discovery Archive's own hue, the only district with one |
+| Sand | `107, 104, 98` | the Training yard floor |
+| Marble in shadow | `196, 190, 208` | balustrades and railings against a pale deck |
 | Torch light | `255, 176, 92` | warm flame |
 | Engine spot | `255, 200, 120` | the key light over the Fate Engine |
+
+All of these are named fields on `Crossroads.Theme` — `Marble`, `MarbleTrim`,
+`Plaza`, `Walkway`, `Basalt`, `Slate`, `Inlay`, `Cosmic`, `DeepTeal`, `Sand`,
+`MarbleDim`. They were literals scattered through the Engine's paint table
+until the hub needed them a hundred more times; **use the name, never the
+triple**, so a palette change is one edit.
+
+**Why there are two mint greens.** `Neon` emits at full `Color` and bloom
+amplifies it, so the palette's `124, 245, 224` bleeds a halo across everything
+near it at any real size. Emissive surfaces get the knocked-back
+`68, 135, 123`; the bright value is kept for small accents — a shrine crystal,
+an oculus — where the bloom is the point.
 
 Ambient is `72, 66, 96` under a `90, 70, 140` sky at `ClockTime 4.5` — a low,
 raking pre-dawn light. **Author for that.** A piece that looks right under

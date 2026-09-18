@@ -1,6 +1,6 @@
 # LUCKBOUND — Project Status
 
-**Last updated:** 2026-09-16 · **Phase 1 complete · expedition entry opened (build spec §7.1)**
+**Last updated:** 2026-09-18 · **Phase 1 complete · expedition entry opened (build spec §7.1) · the hub is authored art**
 
 > **New conversation?** Read `WORKLOG.md`'s top entry first for where the last
 > session stopped, then this file. `CLAUDE.md` has the rules.
@@ -14,6 +14,12 @@ open, and where to pick up.
 
 Phase 1's goal was one sentence: *you can walk around a recognizable LUCKBOUND
 hub and press ROLL.* That is done, running in Roblox Studio, and playtested.
+
+**As of 2026-09-18 the hub is authored art.** The generated blockout
+Crossroads no longer runs: a 225-MeshPart authored plaza, four districts, four
+walkways and a 4096-stud mountain horizon replace it, with the Fate Engine
+still loading at the centre on the footprint the art reserves for it. None of
+it has been seen in Studio — see §4.
 
 **As of 2026-09-16 the roll has somewhere to go.** Owner-directed amendment
 §7.1 lifted expedition entry out of the Phase 1 exclusion list: you can roll
@@ -145,7 +151,7 @@ exists.**
 
 ### Test suite
 
-**301 tests, all passing.** Headless — no Roblox required.
+**361 tests, all passing.** Headless — no Roblox required.
 
 **17 of them exist because the test suite was green while the hub had no
 floor.** The group `Hub geometry a player can actually touch` asserts the
@@ -168,6 +174,7 @@ src/shared/Core/     Types, Constants, GameConfig, Net, UITheme, Result,
                      ExpeditionCore
 src/shared/Util/     WeightedRandom, Schema, PortalRig, ChunkCore, ChunkLoader
 src/shared/Content/  Worlds/ (6), Hub/Crossroads, Chunks/ (2 kits), AssetManifest
+assets/rbxm/prefabs/ HUB_FATE_ENGINE, HUB_CROSSROADS, HUB_BACKDROP
 src/server/          init.server + Systems/ (Save, Progression, Fate, Event,
                                              Expedition, HubBuilder)
 src/client/          init.client + Controllers/ (State, Proximity, HubEffects,
@@ -230,6 +237,8 @@ These are settled. Do not relitigate without a deliberate reversal.
 | — | Biome lighting is applied **per client**, never by the server | Blueprint §6 |
 | — | Rarity colour is a UI/portal contract; biome palette is set dressing | Blueprint §4.1 |
 | — | Compass mapping N=-Z, E=+X, S=+Z, W=-X, up=+Y | GameConfig.HubLayout |
+| — | **A prefab is registered from a NAMED PART, not from its model pivot.** A pivot is invisible metadata an FBX chain mangles quietly; a part name is already the contract with the artist | `Util/PrefabLoader` |
+| — | **Scale and compass corrections are content, never re-exports.** An importer setting is fixed by a number in `Prefab` | `Content/Hub/Crossroads` |
 
 ### Why true RNG matters downstream
 
@@ -309,7 +318,9 @@ survive a rescale and a literal does not.
 |---|---|---|
 | **Portal plane is still above head height** | Medium | You reach the prompt and the rig springs from the floor, but the walk-through *plane* sits inside the inner ring, ~30 studs up. Blueprint §1.3's concentric rings make that inherent. Irrelevant once the rig is authored in Blender. |
 | **25% of rolls land on a world with no map** | **High** | Emberfall 15%, Sky Citadel 7%, Astral Reach 3%. Refused politely at the Gate; printed as a boot warning and asserted by test. Emberfall and Astral Reach need only a chunk kit; Sky Citadel needs a blueprint section first. |
-| **The Crossroads map is briefed, not built** | **Open** | `docs/CROSSROADS_BLENDER_PROMPT.md` — plaza, four walkways, four districts, scenery, all measured from `GameConfig.HubLayout` so authored art meets the walkways the game already cuts. **Names four districts that do not match `Crossroads.Districts` today:** Leaderboard is `HALL_OF_LEGENDS` renamed, and **Shop replaces `EXPEDITION_GATE`**, which goes redundant under portal-as-entry. That swap is gated on the spec amendment below and is deliberately not made yet. |
+| **The authored Crossroads is wired but unwalked** | **Open** | Delivered 2026-09-18 and in the game: 225 MeshParts, all 10 contract names present, 225 of 225 painted, placed at Scale 2.0 with a 180° compass correction. The blockout hub no longer runs when it is present. Never seen in Studio. `assets/rbxm/prefabs/README.md` has the measurements. **Its south district is a Shop**, while Content still calls that zone `EXPEDITION_GATE` — see the portal-as-entry row below. |
+| **The authored hub's collision set is a reasoned guess** | **High** | All 225 parts ship with empty `PhysicsData`, so Roblox generates hulls at `Default` fidelity, which fills openings. Many meshes merge several objects — four archways, eight columns, two flanking guardians, a parapet ringing the plaza — and a filled hull on any of those is an invisible wall across a route. Collision was therefore granted to **57 of 225**: floors, decks, walkways, stairs, and freestanding solid props. **Unverifiable headlessly; this is the first thing to check on a walk.** The fix for any piece that should stop a player is one `CollisionFidelity` line in content, never `CanCollide` alone. |
+| **The mountain horizon** | Low | `HUB_BACKDROP.rbxm`, 4 MeshParts, 4096 studs across — matching `VisualExtent`'s 4000. Authored in the same Blender scene as the hub, so it shares its scale and yaw and registers to the same ground plane. Pure decoration; nothing looks it up. Unwalked. |
 | **First-join intro screen** | **Design** | Owner-stated 2026-09-18. On a player's first join to a server, show a title screen over slow cinematic shots of the map until they press **Play**. The stated purpose is as much technical as aesthetic: it gives the client time to render and replicate before the player is standing in the hub. Directly relevant — the hub animator already has to wait for ~450 instances to arrive, and that wait is currently invisible and unexplained to the player. Not built. |
 | **The Engine portal is to become the way into biomes** | **Architecture** | Owner-stated 2026-09-18. The rolled world would be entered through the Fate Engine itself, not the Expedition Gate — roll, react, then a prompt to keep the biome, then a **staircase generates from the portal's centre down to the base** and the player walks up it. The staircase animates as if building itself. **This is not only art:** "keep this biome?" is new state between rolling and entering, where today the destination is implicitly the last roll. It also makes the Expedition Gate district redundant, the way the Observatory became. Needs a spec amendment before any of it is built. |
 | **The authored Fate Engine is wired but unwalked** | **Open** | Delivered 2026-09-18 and in the game: 78 MeshParts, all 46 contract names present, painted from the palette, rings counter-rotating, shards on the rarity cycle. Never seen in Studio. `assets/rbxm/prefabs/README.md` has the measurements. |
@@ -335,29 +346,40 @@ survive a rescale and a literal does not.
 walked end to end in Studio on 2026-09-16. What is left is art, content and
 two design decisions.
 
-1. **Walk the Crossroads and look at the Engine.** It is wired end to end and
-   has never been rendered. Watch for: the dais landing flush with the
-   walkways, the rings counter-rotating, the portal pulsing, and a `/roll`
-   turning the inner ring, plane, glyphs and shards to the rolled rarity.
-2. **Walk Ethereal Scape v2.** Entry, lighting, the timer and the return are
+1. **Walk the Crossroads.** The whole hub is now authored and none of it has
+   been rendered. In priority order:
+   - **Does the floor hold, and do the stairs climb?** The collision set is a
+     reasoned guess that cannot be checked headlessly (§4).
+   - **Can you reach the market's ENTER prompt?** It sits at `(0, 14, 250)`,
+     at the head of the stairs, because its district is a Shop now.
+   - **Does anything invisible stop you?** Especially at the four walkway
+     mouths, on the spawn approach, and anywhere on the open plaza — those are
+     the three places a filled collision hull would do most damage.
+   - Then the Engine: the dais landing flush with the walkways, the rings
+     counter-rotating, the portal pulsing, and a `/roll` turning the inner
+     ring, plane, glyphs and shards to the rolled rarity.
+2. **Then colour and animate the Crossroads to match the Engine.**
+   Owner-stated as the next step once it is placed. `Crossroads.Shell.Styles`
+   is the entire dial — 184 keys, longest-prefix matched — and needs no code.
+3. **Walk Ethereal Scape v2.** Entry, lighting, the timer and the return are
    proven — the whole path was walked on v1. What is new is 925 anchored PBR
    parts at play scale. The thing to judge is the traverse: 71 seconds one way,
    142 there and back of a 300-second expedition. If that reads as too much
    walking, `DurationSeconds` is the knob, not `Scale`.
-3. **Walk the hub once.** Untested: the brightness pass (`ClockTime` 22 → 4.5),
-   the non-colliding SpawnLocation, and the Observatory's removal.
-   `TESTING.md` Test C3.
-4. **Add `EntryAnchor` and `ReturnAnchor`** to the scene in Studio. Until then
+4. **Walk the hub's lighting.** Untested: the brightness pass (`ClockTime`
+   22 → 4.5) and the non-colliding SpawnLocation — both now seen against
+   authored art rather than grey blockout, which is the first time the
+   `ClockTime` choice can actually be judged. `TESTING.md` Test C3.
+5. **Add `EntryAnchor` and `ReturnAnchor`** to the scene in Studio. Until then
    the loader guesses the arrival point from the bounding box and warns on
    every entry. (v2 already ships anchored, so that half is done.)
-5. **Build the rest of the Crossroads.** The prefab seam now exists and is
-   proven on the Engine, so each further piece is a `.rbxmx` in
-   `assets/rbxm/prefabs/`, a `Prefab` field and a paint table — no new code.
-   Owner-stated: this is the next day's work.
-5. **`UNCOMMON`'s colour needs blessing.** On screen inside the first minute.
-6. **A chunk kit for Emberfall** — 15pp off the "no map" number.
-7. **Placeholder text, UI pass** — unchanged.
-8. **Sky Citadel biome** — largest content debt.
+6. **Profile on a real low-end device.** Still never measured, and 225
+   MeshParts plus 57 generated collision hulls were just added on top of four
+   sessions of animation. `GameConfig.Effects` is reasoned, not measured.
+7. **`UNCOMMON`'s colour needs blessing.** On screen inside the first minute.
+8. **A chunk kit for Emberfall** — 15pp off the "no map" number.
+9. **Placeholder text, UI pass** — unchanged.
+10. **Sky Citadel biome** — largest content debt.
 
 ### When expeditions move to a separate place
 

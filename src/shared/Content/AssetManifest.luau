@@ -95,6 +95,25 @@ local ENTRIES: { [string]: AssetEntry } = {
 			.. "core above it, the portal floating at the crown.",
 	},
 
+	HUB_CROSSROADS = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/rbxm/prefabs/HUB_CROSSROADS.rbxmx",
+		Notes = "The hub shell, delivered 2026-09-18: 225 MeshParts, flat "
+			.. "shaded, untextured. Plaza, four walkways, four districts and "
+			.. "their dressing, plus the ground it stands on. Reserves the "
+			.. "Fate Engine's footprint and models nothing inside it.",
+	},
+	HUB_BACKDROP = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/rbxm/prefabs/HUB_BACKDROP.rbxm",
+		Notes = "The mountain horizon, delivered 2026-09-18: 4 MeshParts, "
+			.. "4096 studs across at Scale. Authored in the same Blender "
+			.. "scene as HUB_CROSSROADS, so it shares its scale and yaw. "
+			.. "Pure decoration -- nothing looks it up.",
+	},
+
 	-- === Ethereal Scape ==========================================
 	-- ONE ENTRY, not a kit. The delivered scene is a composed traverse -- its
 	-- islands climb, its six bridges are each cut to their own gap, and the
