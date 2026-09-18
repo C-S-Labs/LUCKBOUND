@@ -33,6 +33,83 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 25 — 2026-09-18 — The second walk: distance, height, kerbs, flags
+
+**Branch:** `claude/crossroads-prefab-integration-08761b` · **Tests:** 369 passing (was 367)
+
+Four faults from the second walk of the authored hub. Two of them are
+corrections to Session 23's own fixes, which is the useful part of this entry.
+
+### The horizon: 2.0 → 1.0 → 3.0, and the round trip is the lesson
+
+Session 23 shrank the ring from 4096 studs to 2048 because it read as "far too
+large". That made it smaller **and brought it inside the hub's own ground
+skirt (1097 studs)**, where the peaks clipped through the plaza edge — which is
+what the second walk actually objected to.
+
+**The trap, written down so nobody walks into it a third time:** a uniform
+scale moves the ring closer as it shrinks, so height and radius fall together
+and the mountains subtend **the same angle from the hub's centre at any
+scale**. Scaling cannot make them look smaller from where players stand. All
+it changes is how far away they are.
+
+So the only question worth asking is distance. At **3.0** the ring is 6144
+across, outer radius 3072 — **1975 studs clear of the hub's ground skirt** —
+and still inside `FogEnd` 4400 so it is visible rather than swallowed.
+
+The test that would have caught the clipping now exists: it asserts the ring
+clears the **ground skirt**, not merely the plaza. Clearing the plaza was true
+at Scale 1.0 and meant nothing.
+
+### The Engine: flush with the plaza, not with the walkways
+
+Session 23 lowered the dais to `WalkwayRaise` (1.5), flush with the four paths.
+That still left a 1.5-stud step for anyone crossing the **open plaza**, which
+is most of the approach angles.
+
+It now sits at **Y 0**, on the plaza. Arriving along a walkway is a step
+*down* onto it, which is free in Roblox; stepping *up* is the thing that
+catches. Confirmed the 1.934 figure is the walkable deck and not a rim by
+measuring the concentric inlays, which sit on it at 1.933.
+
+### The kerbs stopped 40 studs short
+
+Measured: every walkway runs radius 20 → 400, but its kerbs were authored
+60 → 400. So each path had 40 studs of bare deck and the black edging ended in
+mid-air before the dais.
+
+`PrefabLoader` gained `ExtendInwardTo`: it grows a bar toward the hub centre
+until its inner end reaches a given radius, keeping the outer end fixed.
+Stretching a MeshPart's `Size` along its own length is safe **here** precisely
+because these are straight extruded bars with no detail along that axis — so
+it is opt-in per style, never applied to everything that stops short. It also
+refuses to shrink a part, because silently cropping one that already reaches
+would be a far harder bug to see.
+
+### The flags, on their third colour
+
+`Basalt` read as black. Gold read as wrong. Owner-directed: match the
+crystal-and-pedestal objects the rest of the hub is dressed with — so the
+cloth is now the same dimmed teal (`Theme.Inlay`, Neon, 0.3 transparent) as
+the shrine and lamp crystals, and the poles are pale stone like the pedestals
+under them.
+
+### Stopped at
+
+369 passing, all gates green. Verified against the delivered files: dais top
+`0.000`, ring radius 3072 with 1975 studs of clearance, ground planes agreeing
+at −68.448, kerbs extending to 20 against a 23-stud dais.
+
+**Not re-walked.**
+
+### Next
+
+1. Walk it.
+2. Then the Fate Engine's entry logic — still the only planned way into a
+   biome, and still not built.
+
+---
+
 ## Session 24 — 2026-09-18 — One property took down the whole hub
 
 **Branch:** `claude/crossroads-prefab-integration-08761b` · **Tests:** 367 passing

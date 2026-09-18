@@ -51,6 +51,10 @@ export type Style = {
 	-- this field is the declaration of what that value must be. The loader
 	-- checks the two agree and says so when they do not.
 	CollisionFidelity: Enum.CollisionFidelity?,
+	-- Grows a bar inward until its inner end is this many studs from the hub
+	-- centre, keeping its OUTER end exactly where it is. For kerbs and edging
+	-- that were authored short of the centrepiece they run to.
+	ExtendInwardTo: number?,
 	Attributes: { [string]: any }?,
 	-- Attribute name -> fraction to vary it by, per part. See the paint loop.
 	-- Multiplies the part's size on load, for setting a piece into the frame
@@ -109,6 +113,47 @@ local function regroup(
 		part.Parent = container
 	end
 	return container
+end
+
+--- Grows a bar toward `origin` until its inner end reaches `target` studs,
+--- keeping its outer end exactly where it is.
+---
+--- WHY THIS IS NOT A RE-EXPORT. The Crossroads' walkways run from radius 20
+--- to 400, but their kerbs were authored from 60 to 400 -- so every path had
+--- 40 studs of bare deck before it reached the Fate Engine's dais, with the
+--- black edging stopping in mid-air. Reported from the second authored walk.
+---
+--- Stretching a MeshPart's Size along its own length is safe here precisely
+--- because these pieces are straight extruded bars: there is no detail along
+--- that axis to distort. It would NOT be safe on a shaped piece, which is why
+--- this is opt-in per style rather than applied to everything short.
+local function extendInward(part: BasePart, origin: Vector3, target: number): ()
+	local offset = part.Position - origin
+	local size = part.Size
+
+	-- The axis it runs along is simply its longest horizontal one.
+	local alongX = size.X >= size.Z
+	local centre = if alongX then offset.X else offset.Z
+	local half = (if alongX then size.X else size.Z) / 2
+
+	local sign = if centre < 0 then -1 else 1
+	local outer = math.abs(centre) + half
+	-- Already reaching, or pointing the wrong way. Never SHRINK a part here:
+	-- the fix is for pieces that stop short, and silently cropping one that
+	-- does not would be a far harder bug to see.
+	if outer <= target or math.abs(centre) - half <= target then
+		return
+	end
+
+	local newHalf = (outer - target) / 2
+	local newCentre = sign * (target + newHalf)
+	if alongX then
+		part.Size = Vector3.new(newHalf * 2, size.Y, size.Z)
+		part.Position = Vector3.new(origin.X + newCentre, part.Position.Y, part.Position.Z)
+	else
+		part.Size = Vector3.new(size.X, size.Y, newHalf * 2)
+		part.Position = Vector3.new(part.Position.X, part.Position.Y, origin.Z + newCentre)
+	end
 end
 
 export type LoadResult = {
@@ -254,6 +299,11 @@ function PrefabLoader.build(
 				end
 				if style.SizeScale then
 					d.Size *= style.SizeScale
+				end
+				-- After SizeScale, so a piece can be both set into its frame
+				-- and extended to meet what it runs to.
+				if style.ExtendInwardTo then
+					extendInward(d, cframe.Position, style.ExtendInwardTo)
 				end
 				if style.CanCollide ~= nil then
 					d.CanCollide = style.CanCollide

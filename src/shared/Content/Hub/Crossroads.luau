@@ -215,10 +215,16 @@ local ShellStyles: { [string]: any } = {
 		Transparency = 0.2,
 	},
 	Walkways_RuneBands = { Color = Theme.Inlay, Material = Enum.Material.Neon, Transparency = 0.3 },
-	-- Gold cloth. Banners are the one place the warm accent can be used at
-	-- size without stopping being an accent, and they were the other half of
-	-- the "uncolored" report.
-	Walkways_Banners = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
+	-- THE FLAGS, ON THEIR THIRD COLOUR. Basalt read as black; gold read as
+	-- wrong. Owner-directed: match the crystal-and-pedestal objects the rest
+	-- of the hub is dressed with -- so the cloth is the same dimmed teal the
+	-- shrine crystals and lamp crystals use, and the poles are pale stone
+	-- like the pedestals under them.
+	Walkways_Banners = {
+		Color = Theme.Inlay,
+		Material = Enum.Material.Neon,
+		Transparency = 0.3,
+	},
 
 	-- The spawn approach ---------------------------------------------
 	-- The first thing anybody sees, so it gets the guardians and the gold.
@@ -338,8 +344,12 @@ local ShellStyles: { [string]: any } = {
 		Material = Enum.Material.Neon,
 		Attributes = { PulseAlphaMin = 0.15, PulseAlphaMax = 0.5, PulseSeconds = 5.6 },
 	},
-	District_Leaderboard_BannerMasts = { Color = Theme.Slate, Material = Theme.StoneMaterial },
-	District_Leaderboard_BannerCloth = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
+	District_Leaderboard_BannerMasts = { Color = Theme.MarbleDim, Material = Theme.StoneMaterial },
+	District_Leaderboard_BannerCloth = {
+		Color = Theme.Inlay,
+		Material = Enum.Material.Neon,
+		Transparency = 0.3,
+	},
 
 	-- District 2: the Discovery Archive -------------------------------
 	-- The only district with its own hue. Deep teal and cosmic trim, which
@@ -585,8 +595,12 @@ local ShellStyles: { [string]: any } = {
 		CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
 	},
 	District_Training_Gate = { Color = Theme.MarbleDim, Material = Theme.StoneMaterial },
-	District_Training_Banners = { Color = Theme.Slate, Material = Theme.StoneMaterial },
-	District_Training_BannerCloth = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
+	District_Training_Banners = { Color = Theme.MarbleDim, Material = Theme.StoneMaterial },
+	District_Training_BannerCloth = {
+		Color = Theme.Inlay,
+		Material = Enum.Material.Neon,
+		Transparency = 0.3,
+	},
 	District_Training_Braziers = { Color = Theme.Slate, Material = Theme.StoneMaterial },
 	District_Training_BrazierFlames = {
 		Color = Theme.TorchLight,
@@ -607,11 +621,23 @@ do
 		-- Kerbs. Collidable on purpose -- they are the lip that stops a
 		-- player walking off a deck raised above the plaza without noticing,
 		-- and at 0.36 studs they are far too low to be a wall.
-		ShellStyles[`Walkway_{compass}_Edge`] =
-			{ Color = Theme.Walkway, Material = Theme.StoneMaterial, CanCollide = true }
+		-- ExtendInwardTo: the kerbs were authored from radius 60 while their
+		-- walkway runs from 20, so each path had 40 studs of bare deck and
+		-- the edging stopped in mid-air short of the Engine. 20 matches the
+		-- walkway exactly, which tucks both under the dais by the same amount.
+		ShellStyles[`Walkway_{compass}_Edge`] = {
+			Color = Theme.Walkway,
+			Material = Theme.StoneMaterial,
+			CanCollide = true,
+			ExtendInwardTo = 20,
+		}
 	end
-	ShellStyles.Processional_South_Edge =
-		{ Color = Theme.Walkway, Material = Theme.StoneMaterial, CanCollide = true }
+	ShellStyles.Processional_South_Edge = {
+		Color = Theme.Walkway,
+		Material = Theme.StoneMaterial,
+		CanCollide = true,
+		ExtendInwardTo = 20,
+	}
 	ShellStyles.Processional_South_Inlay =
 		{ Color = Theme.Inlay, Material = Enum.Material.Neon, Transparency = 0.3 }
 
@@ -773,23 +799,27 @@ local Crossroads = {
 		Prefab = {
 			AssetKey = "HUB_BACKDROP",
 
-			-- 2.0 -> 1.0. As exported the ring was 4096 studs across against a
-			-- 1305-stud plaza -- more than three times the hub's width, and
-			-- the verdict on walking it was "far too large and not properly
-			-- spaced". At 1.0 it is 2048 across, 1.57x the plaza, and its
-			-- outer radius (1024) falls just inside the hub's own ground
-			-- skirt (1097) -- so the mountains rise FROM the island instead
-			-- of floating past its edge. That nesting is the reason for this
-			-- number rather than any other.
+			-- 2.0 -> 1.0 -> 3.0, and the round trip is the useful part.
 			--
-			-- ONE THING TO KNOW BEFORE RETUNING IT. A uniform scale moves the
-			-- ring closer as it shrinks, so from the hub's CENTRE the
-			-- mountains subtend the same angle at any scale -- height and
-			-- radius fall together. What actually changes is how they read
-			-- from the plaza's EDGE, and how big they look next to the hub in
-			-- a wide shot. Below ~0.64 the ring is narrower than the plaza
-			-- and the mountains would stand on it.
-			Scale = 1.0,
+			-- At the authored 2.0 the ring was 4096 studs across and read as
+			-- "far too large". Shrinking it to 1.0 made it smaller AND
+			-- brought it inside the hub's own ground skirt, where the peaks
+			-- clipped straight through the plaza edge -- which is the thing
+			-- the second walk actually objected to.
+			--
+			-- THE TRAP, AND IT IS WORTH UNDERSTANDING BEFORE TOUCHING THIS
+			-- NUMBER AGAIN: a uniform scale moves the ring closer as it
+			-- shrinks, so height and radius fall together and the mountains
+			-- subtend the SAME ANGLE from the hub's centre at any scale.
+			-- Scaling cannot make them look smaller from where players
+			-- stand. All it changes is how far away they are.
+			--
+			-- So the only question worth asking is distance, and the answer
+			-- is "vastly further than the platform edge": at 3.0 the ring is
+			-- 6144 studs across, its outer radius 3072 against a 653-stud
+			-- plaza and a 1097-stud ground skirt, and still inside FogEnd
+			-- (4400) so it is visible rather than swallowed.
+			Scale = 3.0,
 			YawDegrees = 180,
 
 			-- No EngineReserve out here, so it registers from the largest
@@ -807,11 +837,11 @@ local Crossroads = {
 			--   AnchorOffset.Y      = registrationSourceY - 191.425858
 			--
 			-- where 191.425858 is Backdrop_Mountain's measured centre. At
-			-- Scale 1.0 that is 68.4475 - 191.425858 = -122.9784. Get this
+			-- Scale 3.0 that is 22.815833 - 191.425858 = -168.6100. Get this
 			-- wrong and the mountains float above the ground or sink through
 			-- it; a test asserts the two ground planes agree in WORLD studs.
 			AnchorPart = "Backdrop_Mountain",
-			AnchorOffset = Vector3.new(0, -122.9784, 0),
+			AnchorOffset = Vector3.new(0, -168.6100, 0),
 		},
 		Styles = BackdropStyles,
 	},
@@ -905,17 +935,23 @@ local Crossroads = {
 			-- the Engine and a test catches it if they disagree.
 			Scale = 0.464,
 
-			-- WALK ON, DO NOT STEP UP. Measured from the delivered Engine:
-			-- Platform's top face sits 1.934 studs above the model pivot at
-			-- this Scale, while the authored walkways' top face is
-			-- HubLayout.WalkwayRaise. The dais was therefore proud of every
-			-- path that meets it, and the first authored walk asked for the
-			-- two to be one continuous surface.
+			-- WALK ON, DO NOT STEP UP -- AND FROM ANY DIRECTION.
 			--
-			-- Derived, not typed: change WalkwayRaise or the Scale and this
-			-- follows. RAW_PLATFORM_TOP is the one measured number, and a
-			-- test pins the result to the walkway deck.
-			Offset = Vector3.new(0, GameConfig.HubLayout.WalkwayRaise - 1.934, 0),
+			-- Measured from the delivered Engine: Platform's top face sits
+			-- 1.934 studs above the model pivot at this Scale, and the
+			-- concentric inlays sit ON that face at 1.933, which is how we
+			-- know it is the walkable deck rather than a rim.
+			--
+			-- The first attempt lowered it to WalkwayRaise, flush with the
+			-- four paths. That still left a step for anyone crossing the open
+			-- plaza, which is most of the approach angles, and the second
+			-- walk said so. It now sits on the PLAZA -- dais top at Y 0 --
+			-- so it can be walked onto from anywhere.
+			--
+			-- The walkways still run 1.5 studs above it and overlap its rim
+			-- by 3.4, so arriving along a path is a step DOWN onto the dais.
+			-- That is free in Roblox; stepping UP is the thing that catches.
+			Offset = Vector3.new(0, -1.934, 0),
 		},
 
 		-- PAINT, BY PART NAME. Authored meshes import untextured and grey,
