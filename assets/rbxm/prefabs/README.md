@@ -330,60 +330,12 @@ than merely near each other.
 | | |
 |---|---|
 | Contents | **4 MeshParts** in one flat `Model` |
-| Scale | **1.0** — retuned by eye; see below |
-| Span | 2048 → **2048 studs**, 1.57x the plaza's 1305 |
-| Height | 452 → **452 studs**, 383 above the plaza deck |
+| Used as | a **source of one mesh**, never placed whole — see below |
 | Collision | **none** — nothing out there is walked on |
 | Contract | none; nothing in the game looks it up |
 
 Binary `.rbxm` rather than `.rbxmx`. Rojo syncs both, and the file stem is
 still the manifest key.
-
-## Scale — retuned after the first walk
-
-As authored it took the hub's 2.0, and at 2.0 the ring was **4096 studs across
-against a 1305-stud plaza** — more than three times the hub's width. The
-verdict on walking it was *"far too large and not properly spaced"*.
-
-At **1.0** the ring is 2048 across, 1.57x the plaza, and its outer radius
-(1024) falls just inside the hub's own ground skirt (1097) — so the mountains
-**rise from the island** rather than floating past its edge. That nesting is
-the reason for this number rather than any other, and it is asserted by test
-from both sides.
-
-**One thing to know before retuning it.** A uniform scale moves the ring closer
-as it shrinks, so *from the hub's centre the mountains subtend the same angle
-at any scale* — height and radius fall together. What actually changes is how
-they read from the plaza's **edge**, and how big they look next to the hub in
-a wide shot. Below about **0.64** the ring is narrower than the plaza and the
-mountains would stand on it.
-
-## How it registers
-
-There is no `EngineReserve` out here, so it registers from the largest mesh —
-and only in Y:
-
-```
-AnchorPart   = "Backdrop_Mountain"
-AnchorOffset = (0, -122.9784, 0)   -- source units, AT SCALE 1.0
-```
-
-X and Z are zero on purpose: that mesh **is** the ring, so centring its
-bounding box on the origin is what keeps the mountains concentric with the
-plaza at any scale.
-
-**The Y term is scale-dependent and must be recomputed if the scale changes:**
-
-```
-registrationSourceY = 68.4475 / Scale
-AnchorOffset.Y      = registrationSourceY - 191.425858
-```
-
-where `68.4475` is the hub's ground plane in world studs and `191.425858` is
-`Backdrop_Mountain`'s measured centre. Get it wrong and the mountains float
-above the ground or sink through it. A test asserts the two ground planes
-agree **in world studs** — not in source units, which would no longer mean the
-same thing now that the two models are at different scales.
 
 | Part | Source size | Source centre |
 |---|---|---|
@@ -394,9 +346,64 @@ same thing now that the two models are at different scales.
 
 All four arrived with identity rotation and their base at source `Y = 0`.
 
-**Note the name collision.** `HUB_CROSSROADS` also contains five
-`Backdrop_*` meshes — `GroundIslets`, `Rocks`, `TreeCanopies`, `TreeTrunks`,
-`Crystals` — which are the *ground skirt under the plaza*, not the horizon.
-They are painted from the shell's table; these four from the backdrop's. Two
-tables, two models, no overlap in practice, but the prefix is shared and worth
-knowing about before adding a `Backdrop_` rule to either.
+## It is built as a ring of clones, not placed whole
+
+**Placing the delivered model at the origin failed three times**, and the
+reason is worth recording because it is not obvious:
+
+| Scale | Ring across | Result |
+|---|---|---|
+| 2.0 (as authored) | 4096 | *"far too large"* |
+| 1.0 | 2048 | clipped through the plaza |
+| 3.0 | 6144 | **still clipping** |
+
+The distance from the hub to the nearest peak is a property of the **mesh
+geometry**, which lives in a Roblox asset id — nothing in this repo can
+measure it. So every scale was a guess. And scaling cannot separate the two
+things that matter anyway:
+
+> A uniform scale moves the ring closer as it shrinks, so height and radius
+> fall together and the mountains subtend **the same angle from the hub's
+> centre at any scale.** Scaling cannot make them look smaller from where
+> players stand. All it changes is how far away they are.
+
+So the horizon is now **built**: one chunk mesh, cloned around a circle at a
+radius we choose. Distance stops being emergent and becomes a number — and a
+number is testable.
+
+```
+Part    Backdrop_Mountain     Count   14        Radius  2400
+Scale   1.0                   BaseY   -68.4475  Seed    20260918
+```
+
+Every one of those is chosen against measured hub geometry:
+
+| | Studs |
+|---|---|
+| Plaza edge | 653 |
+| Hub ground skirt | 1097 |
+| Chunk half-width | 1024 |
+| **Band near face** | **1376** |
+| Band far face | 3424 |
+| `FogEnd` | 4400 |
+
+which leaves **723 studs of clear sky** between the crossroads edge and the
+mountains — inside the 500–1000 the owner asked for — and **279 studs** of
+clearance past the hub's own ground skirt. The far face stays inside the fog,
+so the range fades rather than ending in a hard line.
+
+**The chunks are meant to overlap.** 14 chunks of 2048 across a 15080-stud
+circumference is 1.9× coverage. A single chunk is a ragged mass, and
+overlapping rotated copies is what turns a repeated mesh into a continuous
+range instead of a ring of identical lumps. Yaw and scale are jittered from a
+seeded `Random`, so every server shows one skyline rather than a new one each
+boot — the same rule the floating islands follow.
+
+Every number above is asserted by test, including the gap, the ground
+clearance, the fog, the coverage ratio, and that the chunks stand on the same
+ground plane as the plaza.
+
+**To retune it, change `Radius`** — not `Scale`. `Scale` changes how big each
+massif is; `Radius` is the distance, which is what every complaint about this
+horizon has actually been about.
+

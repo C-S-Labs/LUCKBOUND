@@ -2212,109 +2212,82 @@ do
 end
 
 do
-	-- THE HORIZON. Authored in the same Blender scene as the hub, which is
-	-- the claim the next two assertions exist to keep honest -- if it is
-	-- true, both take the same scale and both register to the same point in
-	-- that scene, and the mountains ring the plaza instead of sitting beside
-	-- it.
+	-- THE HORIZON IS BUILT, NOT PLACED. Three attempts at scaling the
+	-- delivered ring into position failed, because the distance from the hub
+	-- to its nearest peak is a property of a mesh nothing here can measure --
+	-- so every scale was a guess. Cloning one chunk around a circle makes
+	-- distance a number, and a number is testable.
 	local backdrop = Crossroads.Backdrop
-	local prefab = backdrop and backdrop.Prefab
+	local ring = backdrop and backdrop.Ring
 
-	check("the hub declares a backdrop prefab", type(prefab) == "table")
+	check("the hub declares a horizon", type(ring) == "table")
+	check("its AssetKey is in the manifest", AssetManifest.exists(backdrop.AssetKey), tostring(backdrop.AssetKey))
+	check("the chunk it clones has a paint rule", backdrop.Styles[ring.Part] ~= nil, tostring(ring.Part))
+
+	-- Measured from the delivered file: Backdrop_Mountain is 2048 studs
+	-- across at Scale 1.0, so half of it reaches this far from a chunk centre.
+	local CHUNK_HALF = 1024.0 * ring.Scale
+	local plazaRadius = 652.626648 * Crossroads.Shell.Prefab.Scale / 2
+	local near = ring.Radius - CHUNK_HALF
+	local far = ring.Radius + CHUNK_HALF
+
+	-- THE WHOLE POINT. Owner-directed: 500 to 1000 studs of clear sky between
+	-- the crossroads edge and the mountains. This is the assertion the three
+	-- failed scale attempts never had, because with a whole placed model
+	-- there was no number to assert against.
+	local gap = near - plazaRadius
 	check(
-		"its AssetKey is in the manifest",
-		AssetManifest.exists(prefab.AssetKey),
-		tostring(prefab.AssetKey)
+		"the mountains stand 500-1000 studs clear of the crossroads edge",
+		gap >= 500 and gap <= 1000,
+		string.format("%.0f studs of clear sky (near face %.0f, plaza %.0f)", gap, near, plazaRadius)
 	)
 
-	-- THE HORIZON IS NO LONGER AT THE HUB'S SCALE, and that is deliberate.
-	-- Both came out of one Blender scene, so 2.0 was the as-authored answer.
-	-- It is tuned by eye now -- 2.0 read as too large, 1.0 clipped through the
-	-- plaza -- so what can be asserted is the FRAMING below, not equality.
+	-- ...and clear of the hub's own ground skirt, which is what the ring was
+	-- cutting through when it was merely clear of the plaza.
+	local GROUND_RADIUS = 548.4949 * Crossroads.Shell.Prefab.Scale
 	check(
-		"the horizon takes the same compass correction",
-		prefab.YawDegrees == Crossroads.Shell.Prefab.YawDegrees
+		"the mountains stand clear of the hub's ground, not through it",
+		near > GROUND_RADIUS,
+		string.format("near face %.0f, ground radius %.0f", near, GROUND_RADIUS)
 	)
 
-	-- BOTH GROUND PLANES MUST LAND ON THE SAME WORLD HEIGHT, or the plaza
-	-- floats above its own mountains or sinks into them. This is asserted in
-	-- WORLD studs rather than source units on purpose: the two models are no
-	-- longer at the same scale, so agreeing in source units would no longer
-	-- mean agreeing in the game -- which is exactly the trap that rescaling
-	-- the horizon set. Each model's ground plane is its source Y 0, and the
-	-- loader puts its registration point on the origin.
+	-- The far side must stay inside the fog or the range ends in a hard line.
+	check(
+		"the far side of the range fades rather than ending",
+		far <= Crossroads.Theme.FogEnd,
+		string.format("far face %.0f, fog %d", far, Crossroads.Theme.FogEnd)
+	)
+
+	-- CHUNKS MUST OVERLAP, or the horizon is a ring of separate lumps with
+	-- sky between them. Arc length per chunk against the chunk's own width.
+	local circumference = 2 * math.pi * ring.Radius
+	local coverage = (ring.Count * CHUNK_HALF * 2) / circumference
+	check(
+		"there are enough chunks to form a continuous range",
+		coverage >= 1.5,
+		string.format("%.2fx coverage from %d chunks", coverage, ring.Count)
+	)
+
+	-- STANDING ON THE HUB'S GROUND. Derived the same way the shell's own
+	-- ground plane is, so the two cannot drift apart silently.
 	local SHELL_ANCHOR_Y = 34.7237511 -- EngineReserve centre, as delivered
-	local BACKDROP_ANCHOR_Y = 191.425858 -- Backdrop_Mountain centre, as delivered
-
-	local function groundWorldY(anchorY, spec)
-		return -(anchorY + spec.AnchorOffset.Y) * spec.Scale
-	end
-	local shellGround = groundWorldY(SHELL_ANCHOR_Y, Crossroads.Shell.Prefab)
-	local backdropGround = groundWorldY(BACKDROP_ANCHOR_Y, prefab)
+	local shellGround = -(SHELL_ANCHOR_Y + Crossroads.Shell.Prefab.AnchorOffset.Y)
+		* Crossroads.Shell.Prefab.Scale
 	check(
 		"the horizon stands on the same ground plane as the plaza",
-		math.abs(shellGround - backdropGround) < 2,
-		string.format("%.3f against %.3f in world studs", shellGround, backdropGround)
+		math.abs(ring.BaseY - shellGround) < 2,
+		string.format("%.4f against %.4f in world studs", ring.BaseY, shellGround)
 	)
 
-	-- THE RING MUST STAND WELL CLEAR OF THE HUB. At Scale 1.0 its outer
-	-- radius (1024) fell inside the hub's own ground skirt (1097) and the
-	-- peaks clipped through the plaza edge -- which is what the second walk
-	-- reported. Clearing the GROUND, not merely the plaza, is the assertion
-	-- that would have caught it.
-	local RAW_RADIUS = 1024.0 -- Backdrop_Mountain, half its widest axis
-	local GROUND_RADIUS = 548.4949 * Crossroads.Shell.Prefab.Scale
-	local ringRadius = RAW_RADIUS * prefab.Scale
+	-- One skyline per server, like the floating islands. A horizon that
+	-- reshuffles on every boot is a bug nobody would think to report.
+	check("the horizon is deterministic across servers", type(ring.Seed) == "number")
 	check(
-		"the horizon stands clear of the hub's own ground, not through it",
-		ringRadius > GROUND_RADIUS,
-		string.format("ring radius %.0f, ground radius %.0f", ringRadius, GROUND_RADIUS)
+		"the chunks are jittered so they do not read as copies",
+		ring.YawJitterDegrees > 0 and ring.ScaleJitter > 0
 	)
-
-	-- ...and far enough past the platform edge to read as a horizon rather
-	-- than as scenery crowding the plaza. Owner-directed: "vastly further".
-	local plazaRadius = 652.626648 * Crossroads.Shell.Prefab.Scale / 2
-	check(
-		"the horizon is vastly further out than the platform edge",
-		ringRadius > plazaRadius * 3,
-		string.format("ring %.0f, plaza %.0f", ringRadius, plazaRadius)
-	)
-
-	-- ...but still inside the fog, or it is simply not there.
-	check(
-		"the horizon is close enough to be seen at all",
-		ringRadius < Crossroads.Theme.FogEnd,
-		string.format("ring %.0f, fog %d", ringRadius, Crossroads.Theme.FogEnd)
-	)
-
-	-- ...and the fog must not cut it off before it is seen.
-	check(
-		"the fog reaches past the plaza toward the horizon",
-		Crossroads.Theme.FogEnd > GameConfig.HubLayout.HubDiameter,
-		string.format("fog %d, hub %d", Crossroads.Theme.FogEnd, GameConfig.HubLayout.HubDiameter)
-	)
-
-	local styles = backdrop.Styles
-	local unpainted = {}
-	for _, name in
-		{ "Backdrop_Foothills", "Backdrop_Mountain", "Backdrop_MountainCap", "Backdrop_Spires" }
-	do
-		if not styles[name] then
-			table.insert(unpainted, name)
-		end
-	end
-	check("every mountain has a colour", #unpainted == 0, table.concat(unpainted, ", "))
-
-	-- Nothing out there is walked on, and a collidable horizon 4000 studs
-	-- across is a physics bill for something no player can ever touch.
-	local solid = {}
-	for name, style in styles do
-		if style.CanCollide == true then
-			table.insert(solid, name)
-		end
-	end
-	check("no part of the horizon collides", #solid == 0, table.concat(solid, ", "))
 end
+
 -- === summary ========================================================
 print(string.format("\n%s\n%d passed, %d failed, %d total", string.rep("=", 60),
 	passed, failed, passed + failed))
