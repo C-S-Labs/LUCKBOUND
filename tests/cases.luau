@@ -1677,6 +1677,17 @@ do
 	check("the shards are tagged for the rarity cycle",
 		styles.Shard.Attributes.IsFeaturedShard == true)
 
+	-- Owner-directed after the third walk: the veil between the two rings was
+	-- the one part of the machine standing still. It turns against the OUTER
+	-- ring, which is the one the eye reads first.
+	local plane = styles.PortalPlane.Attributes.SpinSpeed
+	check("the aperture turns against the outer ring", plane ~= nil and plane * outer < 0,
+		string.format("outer %.2f, plane %s", outer, tostring(plane)))
+
+	check("...and slower than the inner ring, so the layers stay readable",
+		math.abs(plane) < math.abs(inner),
+		string.format("plane %.2f, inner %.2f", plane, inner))
+
 	-- THE RINGS SPIN ABOUT THEIR OWN AXLE. A ring is thin along its own Z, so
 	-- Z is the axle; spinning it about Y would tumble it end over end. Two
 	-- playtests reported "no animation" while this was simply not set.
@@ -1829,6 +1840,46 @@ group("The authored Crossroads shell")
 
 do
 	local shell = Crossroads.Shell
+
+	-- A LIGHT SOURCE DOES NOT MOVE. Owner-directed 2026-09-21 after seeing the
+	-- market: the glow is right, the drifting is not -- a lamp that spins or
+	-- bobs reads as a floating object rather than as a fixture. Colour
+	-- animation (PulseAlpha) stays; anything that changes POSITION does not.
+	--
+	-- The Fate Engine's shards are deliberately out of scope: they orbit
+	-- because they are part of a machine, not because they are a light.
+	check("no lamp, lantern or finial moves", (function()
+		local moving = {}
+		for name, style in shell.Styles do
+			local isFixture = string.find(name, "Lamp")
+				or string.find(name, "Lantern")
+				or string.find(name, "Finial")
+				or string.find(name, "GatewayCrystals")
+			local attributes = style.Attributes
+			if isFixture and attributes then
+				for _, key in { "SpinSpeed", "BobStuds", "BobSeconds", "WobbleDegrees", "WobbleSeconds" } do
+					if attributes[key] ~= nil then
+						table.insert(moving, `{name}.{key}`)
+					end
+				end
+			end
+		end
+		return #moving == 0, table.concat(moving, ", ")
+	end)())
+
+	check("...but they still pulse, which is what makes them read as lit", (function()
+		local lit = 0
+		for name, style in shell.Styles do
+			if
+				(string.find(name, "Lamp") or string.find(name, "Lantern"))
+				and style.Attributes
+				and style.Attributes.PulseAlphaMax ~= nil
+			then
+				lit += 1
+			end
+		end
+		return lit >= 2
+	end)())
 	local prefab = shell and shell.Prefab
 
 	check("the hub declares a shell prefab", type(prefab) == "table")
