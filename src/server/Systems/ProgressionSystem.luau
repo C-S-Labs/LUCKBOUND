@@ -42,6 +42,32 @@ function ProgressionSystem.award(player: Player, reason: string): ()
 	})
 end
 
+--- Grants an explicit amount of Fate, for content that carries its own value
+--- (a redeemable code). Same broadcast as `award`, so the client's Fate bar
+--- animates identically however the points arrived.
+function ProgressionSystem.grant(player: Player, amount: number, reason: string): ()
+	local profile = SaveSystem.get(player)
+	if not profile then
+		return
+	end
+
+	local points, level, leveledUp = ProgressionCore.grant(profile, amount, GameConfig)
+	local delta = points - profile.FatePoints
+
+	profile.FatePoints = points
+	profile.FateLevel = level
+	SaveSystem.markDirty(player)
+
+	Net.get("Progression_FateChanged"):FireClient(player, {
+		FatePoints = points,
+		FateLevel = level,
+		Delta = delta,
+		Reason = reason,
+		LeveledUp = leveledUp,
+		Progress = ProgressionCore.levelProgress(points, GameConfig),
+	})
+end
+
 --- Records a roll in the profile. Called by FateSystem, which owns the
 --- decision; this owns the bookkeeping.
 function ProgressionSystem.recordRoll(player: Player, worldId: string, rarity: string): ()
@@ -80,6 +106,11 @@ function ProgressionSystem.snapshot(player: Player): any?
 		RollHistory = profile.RollHistory,
 		Stats = profile.Stats,
 		Discoveries = profile.Discoveries,
+		-- The client needs these to draw the Settings panel in the state the
+		-- player left it, and the Codes panel without re-offering a code they
+		-- have already used.
+		Settings = profile.Settings,
+		RedeemedCodes = profile.RedeemedCodes,
 	}
 end
 

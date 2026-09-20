@@ -119,7 +119,9 @@ local Constants = {
 		KEY_PREFIX = "player_",
 	},
 
-	CURRENT_SCHEMA_VERSION = 1,
+	-- v2 added RedeemedCodes and Settings, for the hub menu's Codes and
+	-- Settings panels. ProfileSchema.MIGRATIONS[1] fills both in.
+	CURRENT_SCHEMA_VERSION = 2,
 }
 
 return deepFreeze(Constants)

@@ -314,6 +314,68 @@ before anything else after a scale or layout change.
    The Global Observatory and its ramp were cut on 2026-09-17; if you see a
    staircase wrapping the Engine, the sync did not take.
 
+### Test I — the loading screen (3 min) ⭐ NEW
+
+The first thing anyone sees, and none of it has been rendered.
+
+1. **Press Play in Studio.** ✅ Pass: a blurred camera arc over the Crossroads
+   behind the LUCKBOUND title, a caption naming the district on screen, and a
+   progress bar that moves.
+2. **Watch the PLAY button.** ✅ Pass: it is dim until the bar fills, then
+   lights gold. It must never light instantly (`Loading.MinimumSeconds` is
+   3.5s) and never fail to light (`MaximumSeconds` is 25s — if you see
+   *"Taking longer than usual"*, the instance count never reached
+   `RequiredHubInstances`; report the number the hub actually built).
+3. **Try to walk during it.** ✅ Pass: you cannot. The character is held at
+   WalkSpeed 0.
+4. **Press PLAY.** ✅ Pass: the blur clears, the camera hands back to the
+   player, and you can walk **and sprint** — if you can walk but not sprint,
+   `LocomotionController` did not start, which means `LoadingScreen.onFinished`
+   never fired.
+5. **Let it loop.** Six shots at 9s each. ✅ Pass: each one drifts rather than
+   orbits, and the captions crossfade rather than cut.
+
+### Test J — the hub menu (5 min) ⭐ NEW
+
+1. **The rail is there, on the left.** ✅ Pass: seven buttons, a Fate card
+   above them, and an arrow against its edge.
+2. **Press the arrow.** ✅ Pass: the whole rail slides off the left edge and
+   only the arrow remains. Press again to bring it back. **This is the noise
+   control the whole rail is judged on — if it feels slow or sticky, say so.**
+3. **Open Travel, then Shop.** ✅ Pass: opening the second closes the first.
+   Never two panels at once.
+4. **Travel to each of the five destinations.** ✅ Pass: the screen fades, you
+   arrive **on the deck** (not inside it, not under it, not on the skirt), and
+   you are facing the Fate Engine. ⚠️ Check the server output for
+   `no floor under landing for '<Id>'` — that means the ray missed and the
+   landing is a guess.
+5. **Travel again immediately.** ✅ Pass: the buttons show a countdown instead
+   of travelling (6s).
+6. **Codes.** Enter `LUCKBOUND`. ✅ Pass: +150 Fate and a message. Enter it
+   again: *"You have already redeemed that code."* Enter nonsense: *"That code
+   is not valid."*
+7. **Settings.** Move a slider, flip Reduce Motion. ✅ Pass: with Reduce Motion
+   on, panels snap rather than slide — **but the roll reveal is unchanged.**
+8. **Roll at the Engine with the menu open.** ✅ Pass: the whole menu
+   disappears for the reveal and comes back after the card.
+9. **Enter an expedition.** ✅ Pass: the menu is **gone** — rail, arrow and
+   all — and returns when you do.
+10. **On a phone (or Studio's device emulator).** ✅ Pass: the rail starts
+    collapsed, the panel is readable, and nothing is cut off at the edges.
+
+### Test K — run and double jump (2 min) ⭐ NEW
+
+1. **Hold Shift and run.** ✅ Pass: you accelerate over ~0.25s rather than
+   snapping, and a small bar appears above the roll prompt.
+2. **Keep running.** ✅ Pass: about 8 seconds later you drop back to walking
+   and the bar is empty and amber. You cannot immediately sprint again.
+3. **Stand still and hold Shift.** ✅ Pass: the bar does not move.
+4. **Jump, then jump again in the air.** ✅ Pass: a second, smaller jump with a
+   gold spark ring at your feet. A third press does nothing.
+5. **Walk off the edge of a walkway and press jump immediately.** ✅ Pass: you
+   get a **full** jump, not the weaker air one — that is the coyote window. You
+   should then still have the air jump available.
+
 ### Test E — a tampered client is rejected (1 min)
 
 From the **client** console:

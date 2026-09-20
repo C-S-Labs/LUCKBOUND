@@ -27,6 +27,15 @@ local REMOTES = {
 	"Expedition_Started", -- S->C, ExpeditionPayload
 	"Expedition_Ended", -- S->C, ExpeditionEndPayload
 	"Expedition_TimerSync", -- S->C, { RemainingSeconds, ServerNow }
+	-- The hub menu. Three requests and two facts; everything else the menu
+	-- draws it already has from Profile_Loaded. A panel that needs a new
+	-- remote gets a row in build spec §4 in the same change as its code --
+	-- these were added that way.
+	"Hub_RequestTravel", -- C->S, { DestinationId }; cooldown + hub-only + known Id
+	"Hub_TravelResult", -- S->C, { Ok, DestinationId, Reason }
+	"Code_Redeem", -- C->S, { Code }; rate-limited
+	"Code_Result", -- S->C, { Ok, Message, Fate }
+	"Settings_Update", -- C->S, { Id, Value }; validated by SettingsCore
 	-- Developer tooling. These two always EXIST but are inert unless
 	-- GameConfig.Debug.AllowCommands is true -- DebugSystem does not connect a
 	-- handler otherwise, so an unguarded remote is not left listening.

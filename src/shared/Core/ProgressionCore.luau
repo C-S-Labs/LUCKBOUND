@@ -56,4 +56,22 @@ function ProgressionCore.award(
 	return newPoints, newLevel, newLevel > (profile.FateLevel or 1)
 end
 
+--- Applies a Fate award of an EXPLICIT amount. Same maths as `award`, for the
+--- cases where the amount belongs to the content rather than to a reward
+--- reason -- a redeemable code carries its own value, and inventing a
+--- GameConfig reward row per code would put content in the config file.
+--- Negative amounts are refused: taking Fate away is not a reward, and if it
+--- ever becomes a mechanic it needs its own function and its own floor rules.
+function ProgressionCore.grant(
+	profile: any,
+	amount: number,
+	config: any
+): (number, number, boolean)
+	assert(type(amount) == "number" and amount >= 0, `Fate grant must be a non-negative number, got {tostring(amount)}`)
+
+	local newPoints = (profile.FatePoints or 0) + amount
+	local newLevel = ProgressionCore.levelForPoints(newPoints, config)
+	return newPoints, newLevel, newLevel > (profile.FateLevel or 1)
+end
+
 return ProgressionCore

@@ -440,6 +440,11 @@ Created by `Core/Net.luau` and nowhere else.
 | `Expedition_Started` | RemoteEvent | S→C | `ExpeditionPayload` | — |
 | `Expedition_Ended` | RemoteEvent | S→C | `ExpeditionEndPayload` | — |
 | `Expedition_TimerSync` | RemoteEvent | S→C | `{RemainingSeconds, ServerNow}` | — |
+| `Hub_RequestTravel` | RemoteEvent | C→S | `{DestinationId}` | known Id + hub-only + cooldown + 20/min |
+| `Hub_TravelResult` | RemoteEvent | S→C | `{Ok, DestinationId, Reason}` | — |
+| `Code_Redeem` | RemoteEvent | C→S | `{Code}` | length cap + 6/min + one redemption per code |
+| `Code_Result` | RemoteEvent | S→C | `{Ok, Message, Fate, CodeId}` | — |
+| `Settings_Update` | RemoteEvent | C→S | `{Id, Value}` | `SettingsCore.validate`; unknown ids dropped silently |
 | `Debug_Command` | RemoteEvent | C→S | `{Name, Args}` | **Studio or place creator, + `Debug.AllowCommands`** |
 | `Debug_Reply` | RemoteEvent | S→C | `{Ok, Text}` | — |
 
@@ -452,6 +457,20 @@ which commands are server-side at all.
 The four `Expedition_*` rows were **Reserved** in this table from the start,
 which is exactly what reserving them was for: implementing expedition entry
 promoted names the spec already owned instead of inventing new ones.
+
+The five hub-menu rows were **added with the code that uses them**, in the same
+change, which is the rule this table exists to enforce. Note what is *not*
+there: the Shop, the Fate Tree, Party and Rebirth panels ship as designed
+screens over placeholder data and own **no remote at all**. A panel gets a
+remote when it gets an implementation, not when it gets a button — otherwise
+the network contract fills up with names nothing sends.
+
+Travel deserves one note. `Hub_RequestTravel` carries a **destination Id and
+nothing else**. The client never sends a position, and the server never reads
+one from it: the Id is looked up in `Content/Hub/Menu`, the anchor comes from
+`GameConfig.HubLayout.Anchors`, and the landing Y comes from a downward ray
+cast by the server. An unknown Id is refused by name. That is the whole
+attack surface (§5, rule 5).
 
 ### Reserved — declared now, implemented in Phase 2/3
 

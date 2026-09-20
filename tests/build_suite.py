@@ -26,6 +26,13 @@ PURE_MODULES = [
     ("Schema",           "src/shared/Util/Schema.luau"),
     ("UITheme",          "src/shared/Core/UITheme.luau"),
     ("Crossroads",       "src/shared/Content/Hub/Crossroads.luau"),
+    ("SettingsCore",     "src/shared/Core/SettingsCore.luau"),
+    ("HubMenuCore",      "src/shared/Core/HubMenuCore.luau"),
+    ("CodeCore",         "src/shared/Core/CodeCore.luau"),
+    ("LocomotionCore",   "src/shared/Core/LocomotionCore.luau"),
+    ("Menu",             "src/shared/Content/Hub/Menu.luau"),
+    ("Cinematics",       "src/shared/Content/Hub/Cinematics.luau"),
+    ("Codes",            "src/shared/Content/Codes.luau"),
 ]
 
 WORLD_FILES = sorted((ROOT / "src/shared/Content/Worlds").glob("*.luau"))
@@ -58,8 +65,32 @@ end
 local UDim = {}
 function UDim.new(scale, offset) return { __udim = true, Scale = scale, Offset = offset } end
 
+-- A Vector3 that ADDS like one. The first shim was a plain table, so
+-- `anchor + landing` -- which is how the hub menu states where a traveller
+-- lands -- would have raised in the harness while working in Studio, and the
+-- test would have been deleted rather than the bug found. CLAUDE.md: a shim
+-- that does not behave like the real type is worse than no test.
 local Vector3 = {}
-function Vector3.new(x, y, z) return { __v3 = true, X = x or 0, Y = y or 0, Z = z or 0 } end
+local __v3meta = {}
+__v3meta.__index = function(v, key)
+	if key == "Magnitude" then
+		return math.sqrt(rawget(v, "X") ^ 2 + rawget(v, "Y") ^ 2 + rawget(v, "Z") ^ 2)
+	end
+	return nil
+end
+__v3meta.__add = function(a, b) return Vector3.new(a.X + b.X, a.Y + b.Y, a.Z + b.Z) end
+__v3meta.__sub = function(a, b) return Vector3.new(a.X - b.X, a.Y - b.Y, a.Z - b.Z) end
+__v3meta.__mul = function(a, b)
+	if type(b) == "number" then return Vector3.new(a.X * b, a.Y * b, a.Z * b) end
+	return Vector3.new(a.X * b.X, a.Y * b.Y, a.Z * b.Z)
+end
+-- Roblox Vector3 compares BY VALUE. Two separately constructed anchors at the
+-- same point are equal there, so they must be equal here.
+__v3meta.__eq = function(a, b) return a.X == b.X and a.Y == b.Y and a.Z == b.Z end
+__v3meta.__tostring = function(v) return string.format("%g, %g, %g", v.X, v.Y, v.Z) end
+function Vector3.new(x, y, z)
+	return setmetatable({ __v3 = true, X = x or 0, Y = y or 0, Z = z or 0 }, __v3meta)
+end
 Vector3.zero = Vector3.new(0, 0, 0)
 Vector3.one = Vector3.new(1, 1, 1)
 

@@ -33,6 +33,89 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 28 — 2026-09-20 — The hub gets a face
+
+**Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 472 passing (was 378)
+
+The game had no way to talk to the player except a prompt and a result card.
+It now has a loading screen, a side rail with seven panels, travel to all five
+Crossroads locations, redeemable codes, saved settings, and two player
+abilities. **None of it has been rendered** — see below.
+
+### What was built
+
+| | |
+|---|---|
+| **Loading screen** | Blurred camera tour over six hub subjects, title, progress, PLAY and EXIT. `UI/LoadingScreen` + `Content/Hub/Cinematics` |
+| **Hub menu** | A collapsible left rail, seven panels, one open at a time. `UI/HubMenu` + `Content/Hub/Menu` |
+| **Travel** | Five destinations, server-authorised, 6s cooldown, screen fade. `HubMenuCore` + `HubUISystem` |
+| **Codes** | Three shipped codes, redeem-once, rate-limited. `CodeCore` + `Content/Codes` |
+| **Settings** | Seven, validated and persisted. `SettingsCore`, profile schema v2 |
+| **Abilities** | Sprint with stamina, and a double jump with a coyote window. `LocomotionCore` + `LocomotionController` |
+| **Widget kit** | `UI/UIKit` — the only place a tween is created in the hub UI |
+
+### Decisions made
+
+**The menu exists in the Crossroads and nowhere else**, and that rule is one
+pure function (`HubMenuCore.isVisible`) that the client and the server both
+call. An expedition is meant to be the game rather than a screen with the game
+behind it. It also hides itself during a roll: the reveal is the four seconds
+the whole thing rests on and must not be framed by a rail.
+
+**Collapsing hides the rail entirely** rather than shrinking it to a strip of
+glyphs. The ask was for the screen back, and a rail of icons is still a rail on
+the screen. Collapsing closes any open panel for the same reason.
+
+**Four panels ship designed but labelled.** Shop, Fate Tree, Party and Rebirth
+draw their real layout over placeholder copy with an IN DESIGN badge, because
+the direction was "designed now, implemented after testing" and a button that
+silently does nothing is worse than no button. **They own no remotes** — a
+panel gets a remote when it gets an implementation.
+
+**A player has movement; an item has combat.** Sprint and double jump are the
+whole of Phase 1's player abilities, and damage, effects and animations belong
+to the model that grants them. This is now pinned by a test that fails the
+build if `GameConfig.Locomotion` grows a field whose name contains damage,
+attack, crit or dps. `docs/PLAYER_ABILITIES.md` holds the planned ladder and
+the Fate Tree's four branches — the "more ideas for what to upgrade" request.
+
+**Travel sends a destination Id and nothing else.** The server looks the Id up
+in Content, takes the anchor from `GameConfig`, and finds the Y by raycasting
+down onto the deck — because the authored districts' heights are a property of
+a mesh nothing in code can measure. An unknown Id is refused by name.
+
+**Five remotes were added to build spec §4 in the same change** as the code
+that uses them, which is the rule that table exists to enforce.
+
+### One thing the harness learned
+
+The shimmed `Vector3` was a plain table with no operators, so `anchor +
+landing` — the expression the whole travel system rests on — would have raised
+in the test harness while working perfectly in Studio, and the likely outcome
+is that the *test* gets deleted. It now adds, subtracts, scales and compares by
+value, like the real one. Same lesson as the `Vector3`-as-table bug already
+recorded in CLAUDE.md.
+
+### Stopped at
+
+Everything is written, tested headlessly and pushed. **Nothing has been seen in
+Studio.** The loading screen's blur, the rail's feel on a phone, and whether
+the five travel landings actually put a player on the deck are all reasoned
+rather than observed.
+
+### Next
+
+1. **Walk the UI.** `TESTING.md` tests I, J and K — they were written for this.
+   Watch the server output for `no floor under landing for '<Id>'`.
+2. **Then the Crossroads walk** that was next before this session (STATUS §5).
+3. **Sound.** Every beat here wants one — the rail opening, PLAY, a code
+   accepted — and there is no audio system at all.
+4. **Decide whether the Fate Tree's four branches are the right four** before
+   any of it is built. `PLAYER_ABILITIES.md` §3 is the proposal, not a
+   decision.
+
+---
+
 ## Session 27 — 2026-09-18 — The portal turns, and the hub breathes
 
 **Branch:** `claude/crossroads-prefab-integration-08761b` · **Tests:** 378 passing (was 369)
