@@ -113,13 +113,25 @@ local function playShot(shot: any, index: number)
 		local dt = RunService.RenderStepped:Wait()
 		elapsed += dt
 
-		-- THE CAMERA HAS TO BE TAKEN BACK EVERY FRAME. When the character
-		-- spawns, Roblox's own camera script sets CameraType to Custom and
-		-- starts following the humanoid -- which is why the first Studio look
-		-- reported the camera "locked in place" partway through loading. It
-		-- had not locked; it had been handed back. Re-acquiring CurrentCamera
-		-- as well, because the engine can replace the camera object outright
-		-- on spawn, leaving this module writing to an orphan.
+		-- STOP THE MOMENT PLAY IS PRESSED, BEFORE TOUCHING THE CAMERA.
+		--
+		-- This guard is the whole fix for a bug reported from the second
+		-- Studio walk: "camera is still stuck". RenderStepped:Wait() returns
+		-- mid-frame, so finish() could run WHILE this loop was suspended --
+		-- releasing the camera to the player -- and then the next two lines
+		-- would take it straight back and pin it to the tour's last position
+		-- forever. The release lost a race it did not know it was in.
+		if finished then
+			return
+		end
+
+		-- THE CAMERA HAS TO BE TAKEN BACK EVERY FRAME WHILE LOADING. When the
+		-- character spawns, Roblox's own camera script sets CameraType to
+		-- Custom and starts following the humanoid -- which is why the first
+		-- walk reported the camera "locked in place" partway through loading.
+		-- It had not locked; it had been handed back. Re-acquiring
+		-- CurrentCamera as well, because the engine can replace the camera
+		-- object outright on spawn, leaving this module writing to an orphan.
 		local live = Workspace.CurrentCamera
 		if live and live ~= camera then
 			camera = live
@@ -304,6 +316,34 @@ local function releaseCharacter()
 	end
 end
 
+--- HANDS THE CAMERA BACK TO THE PLAYER.
+---
+--- Restoring CameraType is not enough on its own. While the tour held the
+--- camera as Scriptable, Roblox's camera script never got to point it at
+--- anything, so a camera set back to Custom with no CameraSubject simply
+--- stays where the tour left it -- which looks exactly like a camera that is
+--- still stuck. Naming the humanoid is what actually gives control back.
+---
+--- Called twice on purpose: once immediately, and once a frame later, because
+--- the tour loop may be suspended inside RenderStepped and about to write one
+--- more frame. The second call costs nothing and closes the race from the
+--- other side.
+local function releaseCamera()
+	local live = Workspace.CurrentCamera
+	if not live then
+		return
+	end
+	camera = live
+	camera.CameraType = savedCameraType or Enum.CameraType.Custom
+	camera.FieldOfView = savedFieldOfView or 70
+
+	local character = player.Character
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	if humanoid then
+		camera.CameraSubject = humanoid
+	end
+end
+
 local function finish()
 	if finished then
 		return
@@ -324,9 +364,25 @@ local function finish()
 		TweenService:Create(blur, TweenInfo.new(UITheme.Motion.Slow), { Size = 0 }):Play()
 	end
 
-	camera.CameraType = savedCameraType or Enum.CameraType.Custom
-	camera.FieldOfView = savedFieldOfView or 70
+	releaseCamera()
 	releaseCharacter()
+
+	-- The belt to releaseCamera's braces: by now the tour has certainly
+	-- stopped, so whatever it may have written last frame is undone.
+	task.defer(releaseCamera)
+
+	-- And if the character arrives AFTER Play was pressed -- a slow spawn, or
+	-- a respawn on the way in -- the camera needs pointing at it then too.
+	player.CharacterAdded:Connect(function(character)
+		local humanoid = character:WaitForChild("Humanoid", 10)
+		if humanoid and humanoid:IsA("Humanoid") then
+			local live = Workspace.CurrentCamera
+			if live then
+				live.CameraSubject = humanoid
+				live.CameraType = Enum.CameraType.Custom
+			end
+		end
+	end)
 
 	fade.Completed:Once(function()
 		gui:Destroy()

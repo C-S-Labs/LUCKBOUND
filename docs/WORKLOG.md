@@ -33,6 +33,88 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 33 — 2026-09-21 — The second walk: a button that ate its label, and settings that saved nothing
+
+**Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 559 passing · **PR:** #27
+
+Three more from Studio. All three are the same class as the last three: things
+that only exist once a person is holding the mouse.
+
+### 1. The TRAVEL buttons swallowed their own rows
+
+A screenshot of the Travel panel showed four rows that were nothing but a
+full-width yellow TRAVEL button — no destination name, no subtitle. The fifth
+row, the one never clicked, was fine.
+
+`UIKit.button`'s press animation shrank the button by 3px on mouse-down and
+then tweened it back to **`UDim2.new(1, 0, 0, 44)`** — the size the
+*constructor* happens to use. Every caller that resizes its button afterwards
+(the travel rows are 104×38) therefore had it snap to full width on the first
+click and stay there, covering the label beside it.
+
+Now the resting size is captured **at press time**, so a button returns to
+wherever it currently belongs rather than to where it started life. Mouse-leave
+releases it too, so dragging off a pressed button no longer leaves it shrunk.
+
+### 2. The camera release lost a race it did not know it was in
+
+Reported as "camera is still stuck" — the tour's last frame, frozen, not
+following the player.
+
+Session 32 fixed the camera being *taken* by Roblox's camera script mid-load by
+re-asserting `Scriptable` every frame. That fix then caused this one:
+`RenderStepped:Wait()` returns mid-frame, so `finish()` could run **while the
+tour loop was suspended**, hand the camera back — and then the loop's next two
+lines would take it straight back and pin it forever.
+
+Fixed on both sides, because one would have been another race:
+- The tour returns immediately if `finished`, **before** touching the camera.
+- `releaseCamera` runs again a frame later, by which point the tour has
+  certainly stopped.
+
+And a second cause underneath it: restoring `CameraType` is not enough.
+While the tour held the camera, Roblox's camera script never got to point it at
+anything, so a camera set back to `Custom` with **no `CameraSubject`** simply
+stays where it was left — which looks exactly like a camera that is still
+stuck. Naming the humanoid is what actually gives control back.
+
+### 3. The Settings panel saved everything and applied nothing
+
+Correctly reported, and it was true: `SettingsCore` declared, `StateController`
+held and synced, and nothing anywhere *applied*. Three of the seven now do
+something real:
+
+| | |
+|---|---|
+| Music / Effects | Two `SoundGroup`s, created **before any sound exists** — a sound added to a game with no routing is a sound that ships ignoring the volume slider |
+| Interface size | A `UIScale` on every Luckbound ScreenGui, including ones built later |
+| Others' rolls | Suppresses other players' roll banners. Your own result and anything world-scale still arrive — those are not chatter |
+
+Reduce motion and Start-with-menu-hidden already worked. **Screen shake is
+still inert and now says so**, with a `SettingsController.screenShake()` for
+whoever builds a shake to honour from its first frame. `PLAYER_UI.md` §3.6 is
+the honest table of what drives what.
+
+### The pattern in six bugs across two walks
+
+Not one of them was a logic error a test could have caught. They were: an Enum
+name, a guessed constant, a camera the engine also owns, a tween restoring the
+wrong value, a race between two threads, and a layer that was never written.
+**Every one needed a person holding the mouse.** The suite is doing its job —
+it is just not the job of finding these.
+
+### Stopped at
+
+Pushed to PR #27. Tests J and L–N are still unwalked.
+
+### Next
+
+1. The rest of the walk: travel landings, the district tint, the event sky.
+2. Sound. The groups exist and the sliders drive them; nothing plays.
+3. Then `EventCore.scheduledAt` and the rift portal.
+
+---
+
 ## Session 32 — 2026-09-21 — The first walk of the UI, and three bugs 551 tests could not see
 
 **Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 559 passing (was 551)
