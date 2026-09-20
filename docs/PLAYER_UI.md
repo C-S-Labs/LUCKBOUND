@@ -45,9 +45,13 @@ half-built world with no explanation.
 |---|---|
 | Camera | `Scriptable`, flying a slow arc per shot from `Content/Hub/Cinematics` |
 | Backdrop | the live hub, blurred (`GameConfig.Loading.BlurSize`) with a vignette over it |
-| Progress | the **slower** of "instances arrived" and "minimum time elapsed" |
+| Progress | the **slower** of "replication has settled" and "minimum time elapsed" |
 | PLAY | lights at `MinimumSeconds` **and** readiness — or at `MaximumSeconds` regardless |
 | Buttons | **PLAY, and nothing else.** Owner-directed: an EXIT that can only kick you back to the app's home screen is a button whose best outcome is leaving. If anything ever joins it, it should be something a player arrives *wanting* |
+
+**How it knows the hub has arrived.** Not by counting to a number — by
+watching the descendant count stop moving. A guessed target is wrong the day
+the art changes; a settle is not.
 
 **Two rules it keeps.** It never traps a player — every wait is bounded, and a
 stalled client is let in with an apology rather than held. And it restores
@@ -209,7 +213,7 @@ directions is what makes a menu feel rubbery.
 |---|---|---|
 | **None of this has been seen in Studio** | **Open** | Every number below is reasoned, not observed. First-walk priorities are in `TESTING.md` |
 | Rail position on a phone in portrait | Medium | The rail is left-anchored and centred; on a tall narrow screen it may want to be a bottom bar instead. Judge it on a device |
-| The loading screen's instance target | Medium | `RequiredHubInstances = 380` against a hub that built 436. If the authored hub's count changes, this wants changing with it — it is asserted to stay under 436 by test, not to be correct |
+| ~~The loading screen's instance target~~ | **Fixed 2026-09-21** | It waited for 380 instances against a hub that builds 357, so the bar stuck at 94% and every player timed out. Replication is now judged by SETTLING — instances arrive, then stop arriving — which needs no number and survives the art changing |
 | Shop / Tree / Party / Rebirth are copy | Expected | Deliberate. They ship designed and labelled |
 | **Five settings drive nothing** — see below | Medium | (unchanged) |
 | The live tint is unseen | **High** | Hue-shift-at-constant-luminance is correct on paper and has never been looked at. On dark surfaces it is subtle by construction — it may need to be stronger, and `Strength` in `Content/Hub/Palettes` is the only dial |

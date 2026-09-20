@@ -158,7 +158,7 @@ exists.**
 
 ### Test suite
 
-**551 tests, all passing.** Headless — no Roblox required. 136 of them arrived
+**559 tests, all passing.** Headless — no Roblox required. 136 of them arrived
 with the player UI and the live palette: the menu reducer, travel authorisation, code redemption,
 settings validation, the stamina curve and the coyote window.
 
@@ -362,7 +362,8 @@ survive a rescale and a literal does not.
 | **The event sky is built and unwalked** | **High** | Three authored events (Aurora Veil, Starfall, Catalyst Star), per-client lighting, a mote layer and a colour grade, reverting to the hub's own light exactly. Never rendered. `TESTING.md` test M — and step 5, the expedition collision, is the one most likely to be wrong |
 | **The event catalogue is a proposal, not a plan** | **Design** | `docs/EVENTS.md` §4 lists 15 candidate events across the three scopes with triggers, rarity and durations. §6 holds five questions for the owner; the biggest is whether a rift reward is permanent, temporary, or split (a permanent look with a rechargeable power, which is the recommendation) |
 | **Global scarcity (Catalyst Star)** | **Built, unproven under concurrency** | `LedgerCore` (pure) + `LedgerSystem` claim a number from a single DataStore key with `UpdateAsync` before anything is announced, and **fail closed**: an unreachable ledger grants nothing, which is the opposite of SaveSystem's instinct and deliberately so. Concurrency cannot be tested headlessly or by eye — it needs the two-instance Studio test in `EVENTS.md`/`TESTING.md` |
-| **The hub UI has never been rendered** | **High** | Every pixel of the rail, the panels and the loading screen is reasoned rather than observed. `TESTING.md` tests I, J and K are the first walk |
+| **The hub UI has been walked once** | Medium | First Studio walk 2026-09-21. The rail draws, in the right order, and the hub reads well. Three bugs found and fixed the same day: a hotkey name that threw on every keystroke, a loading gate that could never complete, and two glyphs that rendered as empty boxes. See the WORKLOG entry — all three were invisible to 551 green tests |
+| ~~**The hub UI has never been rendered**~~ | Superseded | Every pixel of the rail, the panels and the loading screen is reasoned rather than observed. `TESTING.md` tests I, J and K are the first walk |
 | **Four panels are designed, not implemented** | Expected | Shop, Fate Tree, Party and Rebirth draw their real screen over placeholder copy with an IN DESIGN badge. Owner-directed: designed now, built after testing. Branch-level ideas for the tree are in `docs/PLAYER_ABILITIES.md` §3 |
 | **Five settings are stored and honoured by nothing** | Medium | `MusicVolume`, `SfxVolume`, `UiScale`, `ScreenShake`, `ShowGlobalAnnouncements` persist but drive no system, because those systems do not exist. `ReduceMotion` and `AutoHideMenu` do work |
 | **Travel landings are guesses with a safety net** | Medium | Content names an X/Z per district and the server rays down for the Y. Watch the output for `no floor under landing` on the first walk |

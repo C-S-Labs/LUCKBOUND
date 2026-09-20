@@ -410,6 +410,12 @@ function Schema.validateHubMenu(menu: any, config: any): (boolean, { string })
 		else
 			seenOrder[panel.Order] = true
 		end
+		if panel.Hotkey ~= nil and not Constants.HOTKEY_NAMES[panel.Hotkey] then
+			table.insert(
+				errors,
+				`{label}: Hotkey '{tostring(panel.Hotkey)}' is not in Constants.HOTKEY_NAMES`
+			)
+		end
 		if not VALID_STATUS[panel.Status] then
 			table.insert(errors, `{label}: Status must be LIVE or PREVIEW, got {tostring(panel.Status)}`)
 		end
@@ -423,6 +429,16 @@ function Schema.validateHubMenu(menu: any, config: any): (boolean, { string })
 
 	if next(seenPanel) == nil then
 		table.insert(errors, "hub menu: no panels defined")
+	end
+
+	-- The name that started all this. Indexing Enum.KeyCode with a name it
+	-- does not have raises, so a typo here is an error on every keystroke
+	-- rather than a shortcut that quietly does nothing.
+	if menu.CollapseHotkey ~= nil and not Constants.HOTKEY_NAMES[menu.CollapseHotkey] then
+		table.insert(
+			errors,
+			`hub menu: CollapseHotkey '{tostring(menu.CollapseHotkey)}' is not in Constants.HOTKEY_NAMES`
+		)
 	end
 
 	local anchors = config.HubLayout.Anchors

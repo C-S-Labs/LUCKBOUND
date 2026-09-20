@@ -2471,6 +2471,45 @@ do
 		return true
 	end)())
 
+	-- THE BUG THIS PREVENTS, which reached Studio: content named the collapse
+	-- key "Backslash"; Roblox calls it "BackSlash". Indexing an Enum with a
+	-- name it does not have RAISES rather than returning nil, so every
+	-- keystroke threw and took the panel shortcuts down with it. Checking
+	-- names against a list the suite can see turns that into a boot failure.
+	check("every hotkey is a name Roblox actually has", (function()
+		for _, panel in Menu.Panels do
+			if panel.Hotkey ~= nil and not Constants.HOTKEY_NAMES[panel.Hotkey] then
+				return false
+			end
+		end
+		return Constants.HOTKEY_NAMES[Menu.CollapseHotkey] == true
+	end)())
+
+	check("the collapse key is BackSlash, with the capital S",
+		Menu.CollapseHotkey == "BackSlash")
+
+	check("a misspelled hotkey fails validation", (function()
+		local broken = { Panels = {}, Destinations = Menu.Destinations, CollapseHotkey = "Backslash" }
+		for _, panel in Menu.Panels do
+			table.insert(broken.Panels, panel)
+		end
+		local ok = Schema.validateHubMenu(broken, GameConfig)
+		return not ok
+	end)())
+
+	check("no two panels share a hotkey", (function()
+		local seen = {}
+		for _, panel in Menu.Panels do
+			if panel.Hotkey then
+				if seen[panel.Hotkey] then
+					return false
+				end
+				seen[panel.Hotkey] = true
+			end
+		end
+		return true
+	end)())
+
 	-- The rail is the thing the owner asked not to be overwhelming. A hard
 	-- cap turns "do not add a tenth button" from taste into a failing build.
 	check("the rail stays short enough to read at a glance", #panels <= 8,
@@ -2684,11 +2723,36 @@ do
 	check("the screen can never trap a player",
 		GameConfig.Loading.MaximumSeconds > GameConfig.Loading.MinimumSeconds)
 
-	-- It waits on the hub that HubBuilder actually builds. Asking for more
-	-- instances than the hub HAS would hold every player to the timeout.
-	check("the instance target is under the hub's own budget",
-		GameConfig.Loading.RequiredHubInstances <= 436,
-		string.format("%d required", GameConfig.Loading.RequiredHubInstances))
+	-- THE BUG THIS REPLACED. The screen waited for a fixed instance count --
+	-- 380, guessed -- against a hub that builds 357. The bar could only ever
+	-- reach 94%, so every player waited out the 25-second timeout and was
+	-- told loading had "taken longer than usual". Waiting for replication to
+	-- SETTLE needs no number and survives the art changing, and these assert
+	-- the floor stays a floor rather than creeping back into a target.
+	check("there is no fixed instance target to get wrong",
+		GameConfig.Loading.RequiredHubInstances == nil)
+
+	check("the instance floor is far below any hub the game would ship",
+		GameConfig.Loading.MinimumHubInstances <= 200,
+		string.format("%d", GameConfig.Loading.MinimumHubInstances))
+
+	check("the settle window is longer than the poll that measures it",
+		GameConfig.Loading.HubSettleSeconds > GameConfig.Loading.HubPollSeconds,
+		string.format("settle %.2fs, poll %.2fs",
+			GameConfig.Loading.HubSettleSeconds, GameConfig.Loading.HubPollSeconds))
+
+	-- The timeout has to leave room for the settle to happen at all, or the
+	-- screen would time out before it could ever succeed.
+	check("the timeout allows for a minimum wait plus a settle",
+		GameConfig.Loading.MaximumSeconds
+			> GameConfig.Loading.MinimumSeconds + GameConfig.Loading.HubSettleSeconds)
+
+	-- Reported from Studio as "the camera locks in place". At 26 degrees over
+	-- nine seconds it moved about three degrees a second.
+	check("a shot moves fast enough to be seen moving",
+		GameConfig.Loading.ShotArcDegrees / GameConfig.Loading.ShotSeconds >= 4,
+		string.format("%.1f deg/s",
+			GameConfig.Loading.ShotArcDegrees / GameConfig.Loading.ShotSeconds))
 end
 
 -- === codes ==========================================================

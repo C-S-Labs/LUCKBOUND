@@ -546,19 +546,36 @@ local GameConfig = {
 		-- never complete.
 		MaximumSeconds = 25,
 
-		-- What "loaded" means, in order of what actually blocks a good first
-		-- frame: the hub's instances have replicated, and the engine says the
-		-- assets in view have finished streaming in.
-		RequiredHubInstances = 380,
+		-- WHAT "LOADED" MEANS. Not a count -- a SETTLE.
+		--
+		-- This was `RequiredHubInstances = 380`, a guess at how many parts the
+		-- hub has. The authored Crossroads builds 357, so the bar could only
+		-- ever reach 94% and every player waited out the 25-second timeout and
+		-- was told loading had "taken longer than usual". The number was wrong
+		-- the day it was written and would have gone wrong again every time
+		-- the hub changed.
+		--
+		-- Replication is now judged by its SHAPE instead: instances arrive,
+		-- and then they stop arriving. When the descendant count has not moved
+		-- for SettleSeconds, the hub is here -- however many parts it turns out
+		-- to have. Nothing to retune when the art changes.
+		MinimumHubInstances = 100, -- a sanity floor, not a target
+		HubSettleSeconds = 1.0,
+		HubPollSeconds = 0.2,
 		PreloadBatchSize = 64,
 
 		-- The camera tour behind the panel. One shot is a slow arc around a
 		-- subject; the list of subjects is CONTENT (Content/Hub/Cinematics).
 		ShotSeconds = 9.0,
 		ShotCrossfadeSeconds = 1.2,
-		-- Degrees of arc a single shot sweeps. Small: the camera should drift,
-		-- not orbit like a turntable.
-		ShotArcDegrees = 26,
+		-- Degrees of arc a single shot sweeps. 26 -> 52: at 26 over nine
+		-- seconds the camera moved about three degrees a second, which the
+		-- first Studio look reported as "locked in place". It should read as
+		-- a drift, which means it has to be visible.
+		ShotArcDegrees = 52,
+		-- ...and a gentle push in over the shot, as a fraction of the radius.
+		-- Parallax is what makes a slow move read as a move at all.
+		ShotDollyFraction = 0.08,
 		BlurSize = 18,
 		-- Field of view, pulled in slightly from Roblox's 70 so the shots read
 		-- as photographed rather than as gameplay.

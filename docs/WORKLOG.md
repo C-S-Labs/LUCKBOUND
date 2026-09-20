@@ -33,6 +33,97 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 32 — 2026-09-21 — The first walk of the UI, and three bugs 551 tests could not see
+
+**Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 559 passing (was 551)
+
+The hub UI was rendered for the first time. It works: the rail draws in the
+owner's order, the Fate card reads, the Crossroads looks like a place. Three
+things were wrong, and the interesting part is *why none of them were caught*.
+
+### 1. Every keystroke threw
+
+```
+Backslash is not a valid member of "Enum.KeyCode"  -- HubMenu:607
+```
+
+Content named the collapse key `"Backslash"`. Roblox calls it **`BackSlash`**,
+with a capital S. And indexing an Enum with a name it does not have **raises**
+— it does not return nil — so the handler threw on *every key pressed*, twice a
+second in the output, and died before it reached the panel shortcuts. None of
+the seven hotkeys worked.
+
+**Why the tests missed it:** the harness shims `Enum` permissively, returning
+an item for any name asked of it. A test could not have told the difference.
+That is the CLAUDE.md shim rule again, in its subtlest form yet — the shim was
+not *wrong*, it was more forgiving than the engine.
+
+**Fixed three ways**, because one was not enough:
+- `Constants.HOTKEY_NAMES` — an explicit list of names content may use, which
+  the suite *can* see. `BackSlash` is in it with a comment saying the capital
+  S is not a typo.
+- `Schema.validateHubMenu` refuses an unknown name at boot, with the name in
+  the message.
+- The client resolves hotkeys **once at init** through a guarded lookup, not
+  per keystroke inside the handler — the slowest possible place to put an Enum
+  index and the worst place for it to throw.
+
+### 2. The loading screen could never finish
+
+The bar stopped at ~94% and every player waited out the 25-second timeout to
+be told loading had *"taken longer than usual"*.
+
+`RequiredHubInstances = 380`. The hub builds **357**. The number was a guess,
+it was wrong the day it was written, and it would have gone wrong again every
+time the art changed.
+
+**The fix is to stop counting.** Replication is now judged by its *shape*:
+instances arrive, and then they stop arriving. When the descendant count has
+not moved for `HubSettleSeconds`, the hub is here — however many parts it
+turns out to have. There is no number left to get wrong.
+
+**Why the tests missed it:** there *was* a test, and it asserted
+`RequiredHubInstances <= 436`. 380 passes that. The test checked the number was
+not absurd; it could not check the number was *right*, because the right answer
+only exists at runtime. A test that asserts a literal is under another literal
+proves nothing about the world — the same lesson STATUS §4 already records
+about the hub having no floor while 276 tests passed.
+
+### 3. The camera stopped moving, and two glyphs were boxes
+
+"Camera locks in place." It had not locked — it had been **handed back**. When
+the character spawns, Roblox's own camera script sets `CameraType` to `Custom`
+and starts following the humanoid, so the loading tour was writing CFrames to a
+camera that was no longer listening. It now re-asserts `Scriptable` every frame
+and re-acquires `CurrentCamera`, because the engine can also replace the camera
+object outright on spawn.
+
+The tour was also genuinely too slow to read as motion — 26° over 9 seconds is
+under 3°/s. Now 52° with a gentle dolly in, and a test asserts the arc rate
+stays above 4°/s.
+
+`✦` and `⟲` rendered as empty boxes: Roblox's font does not carry every symbol
+a text editor will happily show you. Now `★` and `↺`. **A glyph must be seen in
+Studio before it is trusted** — there is no headless test for font coverage.
+
+### Stopped at
+
+All three fixed, 559 tests green, pushed. The rest of test I–N is unwalked:
+the hub menu's panels, travel, the district tint and the event sky have not
+been exercised yet.
+
+### Next
+
+1. **Walk the rest.** Tests J (menu), L (tint), M (event sky) in particular —
+   M step 5, an event running across an expedition boundary, is the likeliest
+   remaining bug.
+2. The DataStore warning in the log is expected in Studio — but note it means
+   **no unique can be granted there**, by design. Test N needs a published
+   place.
+3. Then `EventCore.scheduledAt` and the rift portal, as before.
+
+---
+
 ## Session 31 — 2026-09-20 — Events become content, and scarcity becomes true
 
 **Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 551 passing (was 514)

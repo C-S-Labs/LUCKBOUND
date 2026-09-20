@@ -327,13 +327,13 @@ The first thing anyone sees, and none of it has been rendered.
    3.5s) and never fail to light (`MaximumSeconds` is 25s — if you see
    *"Taking longer than usual"*, the instance count never reached
    `RequiredHubInstances`; report the number the hub actually built).
-3. **Try to walk during it.** ✅ Pass: you cannot. The character is held at
+4. **Try to walk during it.** ✅ Pass: you cannot. The character is held at
    WalkSpeed 0.
-4. **Press PLAY.** ✅ Pass: the blur clears, the camera hands back to the
+5. **Press PLAY.** ✅ Pass: the blur clears, the camera hands back to the
    player, and you can walk **and sprint** — if you can walk but not sprint,
    `LocomotionController` did not start, which means `LoadingScreen.onFinished`
    never fired.
-5. **Let it loop.** Six shots at 9s each. ✅ Pass: each one drifts rather than
+6. **Let it loop.** Six shots at 9s each. ✅ Pass: each one drifts rather than
    orbits, and the captions crossfade rather than cut.
 
 ### Test J — the hub menu (5 min) ⭐ NEW
