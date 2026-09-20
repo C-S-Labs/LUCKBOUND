@@ -60,6 +60,12 @@ function EventSystem.startLocal(event: any): ()
 		Id = event.Id,
 		Kind = event.Kind,
 		Name = event.Name,
+		-- An event with no stated reach is a SERVER event: the narrowest
+		-- honest answer. Defaulting to GLOBAL would let a missing field
+		-- announce itself to the whole game.
+		Scope = event.Scope or "SERVER",
+		WorldId = event.WorldId,
+		Priority = event.Priority,
 		StartedAt = event.StartedAt or now,
 		EndsAt = (event.StartedAt or now) + (event.Duration or GameConfig.Events.FatebreakDurationSeconds),
 		TriggeredBy = event.TriggeredBy,
@@ -85,6 +91,12 @@ function EventSystem.triggerFatebreak(event: any): ()
 		Id = event.Id,
 		Kind = "FATEBREAK",
 		Name = event.Name,
+		-- A Fatebreak is game-wide by definition (Master Spec §12: reality has
+		-- been altered EVERYWHERE), so it is the one caller that overrides the
+		-- SERVER default.
+		Scope = event.Scope or "GLOBAL",
+		WorldId = event.WorldId,
+		Priority = event.Priority,
 		Rarity = event.Rarity,
 		TriggeredBy = event.TriggeredBy,
 		DiscoveryId = event.DiscoveryId,
@@ -100,6 +112,23 @@ function EventSystem.triggerFatebreak(event: any): ()
 	if not ok then
 		warn(`[EventSystem] cross-server publish failed: {err}`)
 	end
+end
+
+--- Ends every live event on this server. Developer tooling only -- the game
+--- itself ends an event by letting its EndsAt arrive, which is what clients
+--- count down to locally (EventController). Returns how many were stopped.
+function EventSystem.endAll(): number
+	local count = 0
+	for id in state.ActiveEvents do
+		state.ActiveEvents[id] = nil
+		count += 1
+	end
+	if count > 0 then
+		for _, player in Players:GetPlayers() do
+			EventSystem.syncTo(player)
+		end
+	end
+	return count
 end
 
 function EventSystem.init(): ()

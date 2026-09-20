@@ -548,6 +548,74 @@ function Schema.validateCinematics(cinematics: any, worlds: { [string]: any }): 
 	return #errors == 0, errors
 end
 
+--- The live palette layer. Two classes of bug are worth a failed boot: a
+--- district tint naming a district that does not exist (which would simply
+--- never appear, silently), and a strength outside 0..1 (which would push the
+--- menu past the colour it was leaning toward and out the other side).
+---
+--- What is NOT checked here is contrast -- that is enforced at resolve time
+--- by ThemeCore rather than refused at boot, because a too-strong tint should
+--- degrade to a duller one rather than stop the server.
+function Schema.validatePalettes(palettes: any, menu: any): (boolean, { string })
+	local errors = {}
+
+	if type(palettes) ~= "table" then
+		return false, { "palettes: expected a table" }
+	end
+
+	local known = {}
+	for _, destination in menu.Destinations do
+		known[destination.Id] = true
+	end
+
+	local seenDistrict = {}
+	for index, entry in palettes.Districts or {} do
+		local label = `palette district #{index}`
+		if type(entry.Id) ~= "string" then
+			table.insert(errors, `{label}: 'Id' must be a string`)
+		elseif not known[entry.Id] then
+			table.insert(errors, `{label}: '{entry.Id}' is not a district the menu knows`)
+		elseif seenDistrict[entry.Id] then
+			table.insert(errors, `{label}: duplicate district '{entry.Id}'`)
+		else
+			seenDistrict[entry.Id] = true
+		end
+
+		if type(entry.Strength) ~= "number" or entry.Strength < 0 or entry.Strength > 1 then
+			table.insert(errors, `{label}: 'Strength' must be between 0 and 1`)
+		end
+		if entry.Tint ~= nil and typeof(entry.Tint) ~= "Color3" then
+			table.insert(errors, `{label}: 'Tint' must be a Color3 or nil`)
+		end
+		if entry.Tint == nil and entry.Strength ~= 0 then
+			-- A strength with nothing to lean toward is a half-finished edit,
+			-- and it reads as "this district is deliberately untinted" to
+			-- everyone who comes after.
+			table.insert(errors, `{label}: has a Strength but no Tint -- set Strength to 0`)
+		end
+	end
+
+	local seenKind = {}
+	for index, entry in palettes.Events or {} do
+		local label = `palette event #{index}`
+		if type(entry.Kind) ~= "string" then
+			table.insert(errors, `{label}: 'Kind' must be a string`)
+		elseif seenKind[entry.Kind] then
+			table.insert(errors, `{label}: duplicate event kind '{entry.Kind}'`)
+		else
+			seenKind[entry.Kind] = true
+		end
+		if typeof(entry.Tint) ~= "Color3" then
+			table.insert(errors, `{label}: 'Tint' must be a Color3`)
+		end
+		if type(entry.Strength) ~= "number" or entry.Strength < 0 or entry.Strength > 1 then
+			table.insert(errors, `{label}: 'Strength' must be between 0 and 1`)
+		end
+	end
+
+	return #errors == 0, errors
+end
+
 --- Runs every check. Raises on failure -- called first in bootstrap.
 function Schema.validateAll(
 	worlds: { [string]: any },
@@ -557,7 +625,8 @@ function Schema.validateAll(
 	manifest: any?,
 	menu: any?,
 	codes: any?,
-	cinematics: any?
+	cinematics: any?,
+	palettes: any?
 ): ()
 	local allErrors = {}
 
@@ -607,6 +676,13 @@ function Schema.validateAll(
 	if cinematics ~= nil then
 		local _, cinematicErrors = Schema.validateCinematics(cinematics, worlds)
 		for _, e in cinematicErrors do
+			table.insert(allErrors, e)
+		end
+	end
+
+	if palettes ~= nil and menu ~= nil then
+		local _, paletteErrors = Schema.validatePalettes(palettes, menu)
+		for _, e in paletteErrors do
 			table.insert(allErrors, e)
 		end
 	end

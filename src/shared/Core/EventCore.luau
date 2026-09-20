@@ -18,6 +18,18 @@ export type LiveEvent = {
 	Id: string,
 	Kind: string, -- "FATEBREAK" | "STARFALL" | ...
 	Name: string,
+	-- HOW FAR THIS EVENT REACHES. "GLOBAL" is every server in the game,
+	-- "SERVER" is this one, "BIOME" is everyone inside one world.
+	--
+	-- Scope is a FIELD rather than a flavour of Kind because the reach and the
+	-- thing that happened are independent: the same aurora can be a one-server
+	-- curiosity or a game-wide announcement, and content should be able to say
+	-- so without a second Kind.
+	Scope: string,
+	WorldId: string?, -- BIOME scope only; which world it is confined to
+	-- Ranking within a scope. The sky can only be one sky, so when two events
+	-- overlap, EventCore.dominant decides which one owns it.
+	Priority: number?,
 	StartedAt: number,
 	EndsAt: number,
 	TriggeredBy: string?, -- player name, for the banner
@@ -62,6 +74,80 @@ function EventCore.startEvent(state: State, event: LiveEvent): LiveEvent
 	return event
 end
 
+-- How far an event reaches, ranked. A game-wide event is by definition the
+-- biggest news on the screen, so scope outranks priority rather than
+-- competing with it -- otherwise a high-priority local event could shout over
+-- something happening to every player in the game.
+local SCOPE_RANK: { [string]: number } = {
+	GLOBAL = 3,
+	SERVER = 2,
+	BIOME = 1,
+}
+
+EventCore.SCOPE_RANK = SCOPE_RANK
+
+function EventCore.isValidScope(scope: any): boolean
+	return type(scope) == "string" and SCOPE_RANK[scope] ~= nil
+end
+
+--- WHICH EVENT OWNS THE SKY? Pure, total and deterministic.
+---
+--- There is one sky, one set of lighting properties and one menu tint, so
+--- overlapping events cannot all have them. Exactly one event is dominant and
+--- the rest contribute additive effects only -- which keeps "what colour is
+--- the world right now" a function of state rather than of whichever
+--- broadcast happened to land last.
+---
+--- The order is scope, then Priority, then the event that has been running
+--- LONGEST, then Id. Longest-running rather than newest is deliberate: a tie
+--- broken by recency would make the sky flip every time an equal event
+--- started somewhere, and a sky that changes for no visible reason reads as a
+--- bug. Id is the final tiebreak so the answer is identical on every client.
+---
+--- `context` is optional and filters by reach: { WorldId = <world the viewer
+--- is inside, or nil for the hub> }. A BIOME event is invisible to anyone who
+--- is not in that biome.
+function EventCore.dominant(events: { LiveEvent }, context: any?): LiveEvent?
+	local viewerWorld = if context then context.WorldId else nil
+	local best: LiveEvent? = nil
+
+	for _, event in events do
+		local rank = SCOPE_RANK[event.Scope]
+		if rank == nil then
+			continue -- an unknown scope never owns the sky
+		end
+		if event.Scope == "BIOME" and event.WorldId ~= viewerWorld then
+			continue
+		end
+
+		if best == nil then
+			best = event
+		else
+			local current = best :: LiveEvent
+			local bestRank = SCOPE_RANK[current.Scope]
+			local bestPriority = current.Priority or 0
+			local priority = event.Priority or 0
+
+			local wins = false
+			if rank ~= bestRank then
+				wins = rank > bestRank
+			elseif priority ~= bestPriority then
+				wins = priority > bestPriority
+			elseif event.StartedAt ~= current.StartedAt then
+				wins = event.StartedAt < current.StartedAt
+			else
+				wins = event.Id < current.Id
+			end
+
+			if wins then
+				best = event
+			end
+		end
+	end
+
+	return best
+end
+
 --- Appends an announcement and trims the buffer by size and age.
 function EventCore.pushAnnouncement(
 	state: State,
@@ -100,6 +186,9 @@ function EventCore.snapshot(state: State, now: number, config: any): any
 			Id = event.Id,
 			Kind = event.Kind,
 			Name = event.Name,
+			Scope = event.Scope,
+			WorldId = event.WorldId,
+			Priority = event.Priority,
 			TriggeredBy = event.TriggeredBy,
 			DiscoveryId = event.DiscoveryId,
 			RemainingSeconds = math.max(0, event.EndsAt - now),

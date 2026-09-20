@@ -20,6 +20,7 @@ local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local UITheme = require(Root.Core.UITheme)
 
 local StateController = require(script.Parent.Parent.Controllers.StateController)
+local ThemeController = require(script.Parent.Parent.Controllers.ThemeController)
 
 local UIKit = {}
 
@@ -55,26 +56,40 @@ end
 
 --- A surface: the panel/rail/raised background with its corner, stroke and
 --- gradient already on it.
+---
+--- Surfaces are the ONLY thing that carries the live tint (ThemeController).
+--- Buttons deliberately keep a fixed raised colour: they own hover and press
+--- states that tween their own background, and a tint arriving mid-hover
+--- would fight those. The rail and panel behind them are what shift, which is
+--- the whole effect anyway.
 function UIKit.surface(parent: Instance, kind: string): Frame
 	local frame = Instance.new("Frame")
 	frame.BorderSizePixel = 0
 
+	local token: string
 	if kind == "RAIL" then
-		frame.BackgroundColor3 = UITheme.RailColor
+		token = "RailColor"
 		frame.BackgroundTransparency = UITheme.RailTransparency
 	elseif kind == "RAISED" then
-		frame.BackgroundColor3 = UITheme.RaisedColor
+		token = "RaisedColor"
 		frame.BackgroundTransparency = UITheme.RaisedTransparency
 	else
-		frame.BackgroundColor3 = UITheme.PanelColor
+		token = "PanelColor"
 		frame.BackgroundTransparency = UITheme.PanelTransparency
 	end
+	frame.BackgroundColor3 = (UITheme :: any)[token]
 
 	frame.Parent = parent
 	UITheme.corner(frame, if kind == "RAISED" then UITheme.RadiusSmall else UITheme.RadiusLarge)
 	UITheme.gradient(frame)
 	local stroke = UITheme.stroke(frame)
 	stroke.Transparency = UITheme.StrokeTransparency
+
+	ThemeController.register(frame, "BackgroundColor3", token)
+	-- The stroke is the half that reads best: a 1px edge picking up the local
+	-- colour says "this room" without repainting the room.
+	ThemeController.register(stroke, "Color", "StrokeColor")
+
 	return frame
 end
 

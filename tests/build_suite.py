@@ -33,6 +33,8 @@ PURE_MODULES = [
     ("Menu",             "src/shared/Content/Hub/Menu.luau"),
     ("Cinematics",       "src/shared/Content/Hub/Cinematics.luau"),
     ("Codes",            "src/shared/Content/Codes.luau"),
+    ("ThemeCore",        "src/shared/Core/ThemeCore.luau"),
+    ("Palettes",         "src/shared/Content/Hub/Palettes.luau"),
 ]
 
 WORLD_FILES = sorted((ROOT / "src/shared/Content/Worlds").glob("*.luau"))
@@ -45,9 +47,61 @@ def transform(src: str) -> str:
 
 SHIM = '''
 -- === Roblox global shims ===========================================
+-- A Color3 that BEHAVES like one. It carries R/G/B as 0..1 floats (which is
+-- what the real datatype exposes and what every contrast and tint calculation
+-- reads), answers :Lerp, and compares by value. The earlier shim carried only
+-- the raw arguments, so any code doing colour MATHS could not be tested at all
+-- -- the same trap the Vector3 shim fell into.
 local Color3 = {}
-function Color3.fromHex(hex) return { __c3 = true, hex = hex } end
-function Color3.fromRGB(r, g, b) return { __c3 = true, r = r, g = g, b = b } end
+local __c3meta = {}
+__c3meta.__index = {
+	Lerp = function(self, other, alpha)
+		return Color3.new(
+			self.R + (other.R - self.R) * alpha,
+			self.G + (other.G - self.G) * alpha,
+			self.B + (other.B - self.B) * alpha
+		)
+	end,
+	ToHex = function(self)
+		return string.format("%02X%02X%02X",
+			math.round(self.R * 255), math.round(self.G * 255), math.round(self.B * 255))
+	end,
+}
+__c3meta.__eq = function(a, b)
+	-- Roblox compares Color3 by value, and float equality is exact there too.
+	return a.R == b.R and a.G == b.G and a.B == b.B
+end
+__c3meta.__tostring = function(c)
+	return string.format("%.3f, %.3f, %.3f", c.R, c.G, c.B)
+end
+
+local function makeColor(red, green, blue, hex)
+	return setmetatable({
+		__c3 = true,
+		R = red, G = green, B = blue,
+		-- 0..255 mirrors, kept because content and older tests read them.
+		r = math.round(red * 255), g = math.round(green * 255), b = math.round(blue * 255),
+		hex = hex or string.format("%02X%02X%02X",
+			math.round(red * 255), math.round(green * 255), math.round(blue * 255)),
+	}, __c3meta)
+end
+
+function Color3.new(red, green, blue)
+	return makeColor(red or 0, green or 0, blue or 0)
+end
+function Color3.fromHex(hex)
+	local clean = string.gsub(hex, "^#", "")
+	local value = tonumber(clean, 16) or 0
+	return makeColor(
+		math.floor(value / 65536) / 255,
+		(math.floor(value / 256) % 256) / 255,
+		(value % 256) / 255,
+		string.upper(clean)
+	)
+end
+function Color3.fromRGB(red, green, blue)
+	return makeColor((red or 0) / 255, (green or 0) / 255, (blue or 0) / 255)
+end
 
 -- typeof() must distinguish Roblox datatypes the way the real engine does.
 -- Shimming these as plain tables is what let a type()-vs-typeof() bug reach

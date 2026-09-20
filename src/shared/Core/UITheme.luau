@@ -62,7 +62,15 @@ local UITheme = {
 	-- meaning "this is the thing to press".
 	AccentCool = Color3.fromRGB(124, 245, 224),
 	AccentWarn = Color3.fromRGB(240, 132, 96),
-	TextMuted = Color3.fromRGB(116, 110, 140),
+	-- RAISED FROM (116, 110, 140) ON 2026-09-20, and the reason is worth
+	-- keeping: at the old value this token scored 3.40:1 against a raised row
+	-- and 3.74:1 against a panel -- below WCAG's 4.5:1 floor for body text,
+	-- which a 13px row subtitle is by any honest reading. Nobody saw it,
+	-- because contrast failure is invisible to whoever picked the colour and
+	-- obvious to whoever cannot read it. The live-palette work added a
+	-- contrast test over every surface, and this is the first thing it found.
+	-- Now 5.06:1 at worst. ThemeCore.CONTRAST_FLOOR holds the line.
+	TextMuted = Color3.fromRGB(145, 139, 170),
 	DividerColor = Color3.fromRGB(92, 82, 128),
 
 	-- === RHYTHM =======================================================

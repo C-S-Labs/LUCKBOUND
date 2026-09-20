@@ -158,8 +158,8 @@ exists.**
 
 ### Test suite
 
-**473 tests, all passing.** Headless — no Roblox required. 95 of them arrived
-with the player UI: the menu reducer, travel authorisation, code redemption,
+**514 tests, all passing.** Headless — no Roblox required. 136 of them arrived
+with the player UI and the live palette: the menu reducer, travel authorisation, code redemption,
 settings validation, the stamina curve and the coyote window.
 
 **17 of them exist because the test suite was green while the hub had no
@@ -352,10 +352,13 @@ survive a rescale and a literal does not.
 | All 8 chunks are `PLACEHOLDER` | Expected | Blockout is deliberate; upload is a per-piece change |
 | **Ethereal Scape: one whole map, not eight chunks** | Decided 2026-09-17 | The art is a composed traverse and cannot be shuffled — evidence in `assets/rbxm/maps/README.md`. Wired: `assets/rbxm/maps/` → `ServerStorage.LuckboundMaps` → `PrebuiltLoader`. **Walked in Studio 2026-09-17** — v1 at `Scale = 0.1` read too small, modeller re-delivered at play scale, now `Scale = 1.0`. |
 | UI needs resize/layout pass | Cosmetic | Owner-flagged. The new hub UI is built to `UITheme`'s scale/offset caps from the start; the older three screens are not |
+| **The live menu tint is unseen** | **High** | The menu leans toward the district you are in and toward any live event. Hue-shift-at-constant-luminance is correct on paper and has never been looked at; on dark surfaces it is subtle by construction and may want to be stronger. `TESTING.md` test L, `Content/Hub/Palettes` is the dial |
+| **Global scarcity (Catalyst Star) has no ledger** | **Open** | Owner-stated direction. MessagingService cannot enforce "only 10 will ever exist" — it is lossy and reaches only running servers. A `DataStore:UpdateAsync` claim on a single key is the only atomic cross-server primitive, and the roll must CLAIM before it announces. Not built; see the options recorded in `PLAYER_UI.md` §3.5 and the session's WORKLOG entry |
 | **The hub UI has never been rendered** | **High** | Every pixel of the rail, the panels and the loading screen is reasoned rather than observed. `TESTING.md` tests I, J and K are the first walk |
 | **Four panels are designed, not implemented** | Expected | Shop, Fate Tree, Party and Rebirth draw their real screen over placeholder copy with an IN DESIGN badge. Owner-directed: designed now, built after testing. Branch-level ideas for the tree are in `docs/PLAYER_ABILITIES.md` §3 |
 | **Five settings are stored and honoured by nothing** | Medium | `MusicVolume`, `SfxVolume`, `UiScale`, `ScreenShake`, `ShowGlobalAnnouncements` persist but drive no system, because those systems do not exist. `ReduceMotion` and `AutoHideMenu` do work |
 | **Travel landings are guesses with a safety net** | Medium | Content names an X/Z per district and the server rays down for the Y. Watch the output for `no floor under landing` on the first walk |
+| **`TextMuted` was below the contrast floor** | Fixed 2026-09-20 | It shipped at 3.40:1 against a raised row — under WCAG's 4.5:1 for body text, which a 13px row subtitle is. Found by the new contrast test, not by eye, which is the point. Now 5.06:1 at worst. It is now closer in value to `TextSecondary`, so the two roles lean more on size and letter-spacing than before — worth a look in Studio |
 | **Profile schema is now v2** | Note | `RedeemedCodes` and `Settings` were added with a migration. Every existing test save is v1 and migrates on load |
 | Placeholder text | Cosmetic | Flavour lines, labels, result card |
 | Octagonal plinth is a cylinder | Cosmetic | First thing an authored mesh replaces |

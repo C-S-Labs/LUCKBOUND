@@ -15,6 +15,8 @@ local StateController = require(Controllers.StateController)
 local ProximityController = require(Controllers.ProximityController)
 local ExpeditionController = require(Controllers.ExpeditionController)
 local LocomotionController = require(Controllers.LocomotionController)
+local EventController = require(Controllers.EventController)
+local ThemeController = require(Controllers.ThemeController)
 local DebugCommands = require(Controllers.DebugCommands)
 local FateRoll = require(UI.FateRoll)
 local GlobalAnnouncements = require(UI.GlobalAnnouncements)
@@ -36,6 +38,12 @@ ProximityController.init()
 -- but a player rejoining mid-expedition gets the banner without a frame gap.
 ExpeditionHud.init()
 ExpeditionController.init()
+-- The live palette, before any screen is built: EventController holds what is
+-- happening to the world, ThemeController turns that plus where the player is
+-- standing into the colours the menu paints with. A widget built afterwards
+-- registers itself and is painted on the spot.
+EventController.init()
+ThemeController.init()
 FateRoll.init()
 GlobalAnnouncements.init()
 -- The hub menu after the roll UI: it subscribes to FateRoll's rolling signal

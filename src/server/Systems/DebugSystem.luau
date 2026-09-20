@@ -24,11 +24,13 @@ local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local GameConfig = require(Root.Core.GameConfig)
 local Net = require(Root.Core.Net)
 local Worlds = require(Root.Content.Worlds)
+local Palettes = require(Root.Content.Hub.Palettes)
 
 local DebugSystem = {}
 
 local FateSystem
 local ExpeditionSystem
+local EventSystem
 
 --- Who is allowed to run a command. Studio is the everyday case; the creator
 --- check is what makes this safe to leave wired up on a published test place.
@@ -71,6 +73,61 @@ COMMANDS.roll = function(player: Player, args: { string }): (boolean, string)
 		return false, "usage: /roll <WORLD_ID> -- " .. table.concat(ids, ", ")
 	end
 	return FateSystem.forceRoll(player, string.upper(worldId))
+end
+
+--- /event <KIND> [SCOPE] [SECONDS] -- start a live event on this server.
+---
+--- THE ONLY WAY TO TEST A 1-IN-A-TRILLION EVENT. A Catalyst Star is supposed
+--- to happen ten times in the life of the game; nobody can walk the sky it
+--- produces by rolling for it. This starts one on demand so the lighting, the
+--- menu tint and the announcement can actually be looked at.
+---
+--- It is a LOCAL event even when the scope says GLOBAL: this starts the event
+--- on this server only, and deliberately does not publish cross-server, so a
+--- test in Studio cannot crack the sky on a live place by accident.
+COMMANDS.event = function(player: Player, args: { string }): (boolean, string)
+	local kind = args[1]
+	if not kind then
+		local kinds = {}
+		for _, entry in Palettes.Events do
+			table.insert(kinds, entry.Kind)
+		end
+		table.sort(kinds)
+		return false,
+			"usage: /event <KIND> [GLOBAL|SERVER|BIOME] [seconds] -- tinted kinds: "
+				.. table.concat(kinds, ", ")
+	end
+
+	local scope = string.upper(args[2] or "SERVER")
+	if scope ~= "GLOBAL" and scope ~= "SERVER" and scope ~= "BIOME" then
+		return false, "scope must be GLOBAL, SERVER or BIOME"
+	end
+
+	local duration = tonumber(args[3]) or GameConfig.Events.FatebreakDurationSeconds
+
+	EventSystem.startLocal({
+		Id = `DEBUG_{string.upper(kind)}_{os.time()}`,
+		Kind = string.upper(kind),
+		Name = string.upper(kind),
+		Scope = scope,
+		Priority = 0,
+		Duration = duration,
+		TriggeredBy = player.Name,
+		Rarity = "MYTHIC",
+	})
+
+	return true, `started {string.upper(kind)} ({scope}) for {math.floor(duration)}s -- local server only`
+end
+
+--- /endevents -- stop every live event on this server at once.
+--- The counterpart to /event: without it, testing the sky means waiting out
+--- five minutes of Starfall before you can look at anything else.
+COMMANDS.endevents = function(_player: Player, _args: { string }): (boolean, string)
+	local ended = EventSystem.endAll()
+	if ended == 0 then
+		return false, "no events are running"
+	end
+	return true, `ended {ended} event(s)`
 end
 
 --- /enter -- start the expedition for your current destination, wherever you
@@ -125,9 +182,10 @@ function DebugSystem.handle(player: Player, name: any, args: any): ()
 	reply(player, ok, text)
 end
 
-function DebugSystem.init(fateSystem: any, expeditionSystem: any): ()
+function DebugSystem.init(fateSystem: any, expeditionSystem: any, eventSystem: any): ()
 	FateSystem = fateSystem
 	ExpeditionSystem = expeditionSystem
+	EventSystem = eventSystem
 
 	if not GameConfig.Debug.AllowCommands then
 		print("[DebugSystem] commands disabled (GameConfig.Debug.AllowCommands)")

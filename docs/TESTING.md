@@ -380,6 +380,34 @@ The first thing anyone sees, and none of it has been rendered.
    get a **full** jump, not the weaker air one — that is the coyote window. You
    should then still have the air jump available.
 
+### Test L — the menu follows the world (4 min) ⭐ NEW
+
+The tint is subtle on purpose. Judge whether it is *too* subtle.
+
+1. **Stand at the Fate Engine, open Travel.** ✅ Pass: the base look — deep
+   purple, gold accents. The centre is deliberately untinted.
+2. **Walk to the Discovery Archive** (or `/tp`). ✅ Pass: over about a second,
+   the panel and rail shift toward the Archive's teal and the 1px edge picks
+   it up more strongly. **The panel must not get lighter** — only change hue.
+   If it looks washed out, the luminance-preserving mix has regressed.
+3. **Walk back onto the open plaza.** ✅ Pass: it returns to base. The plaza
+   belongs to no district.
+4. **`/event FATEBREAK SERVER 60`.** ✅ Pass: the menu shifts toward Mythic
+   orange within a second, over the top of whatever district you are in.
+   `/endevents` clears it.
+5. **`/event CATALYST_STAR GLOBAL 60`.** ✅ Pass: cold starlight, the
+   strongest tint in the game. This is the one to judge hardest — it should
+   read as *an event*, not as a different app.
+6. **Start both at once.** ✅ Pass: the Catalyst Star wins, because GLOBAL
+   outranks SERVER. It keeps winning until it expires.
+7. **Read the Settings panel during each.** ✅ Pass: every label is readable.
+   This is enforced by test, so a failure here means the test's model of the
+   screen is wrong — report it.
+8. **Let an event expire on its own.** ✅ Pass: the menu returns to base
+   without anyone pressing anything — the client expires it locally.
+9. **Turn on Reduce Motion, then walk between districts.** ✅ Pass: the tint
+   snaps instead of fading.
+
 ### Test E — a tampered client is rejected (1 min)
 
 From the **client** console:

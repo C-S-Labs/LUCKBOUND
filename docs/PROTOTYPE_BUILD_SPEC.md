@@ -487,6 +487,36 @@ Declaring these now stops an agent from inventing `CombatHit2` when it needs one
 1. **Server state is the source of truth, not the broadcast.** `EventCore.State` holds active events and a recent-announcement buffer. Every broadcast is a *side effect* of mutating that state — never the other way round.
 2. **Mutate state before broadcasting.** A player joining in the gap between the two still gets the event via their snapshot.
 3. **Every join gets `Event_StateSync`** with the full picture: active events with `RemainingSeconds` and `ElapsedSeconds`, plus the last `AnnouncementBufferSize` announcements with `AgeSeconds`.
+
+### 4.2 Event scope and precedence — added 2026-09-20
+
+A live event carries **`Scope`**: `GLOBAL` (every server in the game), `SERVER`
+(this one) or `BIOME` (everyone inside one world, named by `WorldId`). Scope is
+a field rather than a flavour of `Kind` because reach and subject are
+independent — the same aurora can be a one-server curiosity or a game-wide
+announcement, and content must be able to say so without inventing a second
+Kind. An event with no stated scope is a **SERVER** event: the narrowest honest
+answer, so a missing field cannot announce itself to the whole game.
+
+**There is one sky, so exactly one event owns it.** `EventCore.dominant` is the
+only thing that decides, and it is pure, total and deterministic:
+
+1. Scope rank: `GLOBAL` > `SERVER` > `BIOME`. Scope outranks priority, because
+   something happening to every player in the game must not be shouted over by
+   a local event with a big number on it.
+2. `Priority`, within a scope.
+3. The event that has been running **longest**. Not the newest: a tie broken by
+   recency flips the sky whenever an equal event starts somewhere, and a sky
+   that changes for no visible reason reads as a bug.
+4. `Id`, so every client resolves the same winner.
+
+Everything else contributes additive effects only. A `BIOME` event is invisible
+to anyone outside that biome.
+
+**Clients expire events themselves.** The snapshot carries `RemainingSeconds`,
+not an end time, and the client counts it down locally. Cross-server messages
+are lossy and servers die mid-event; without local expiry one dropped message
+leaves a player's sky altered until they rejoin.
 4. **Send remaining time, not absolute end time.** A client with a skewed clock still counts down correctly. `ServerNow` is included for anything that needs to reconcile.
 5. **Announcements age out** (`AnnouncementBufferMaxAgeSeconds`, default 300 s) so a joiner sees what just happened, not a week of history.
 6. **Cross-server** (Master Spec §12 — reality altered *everywhere*) runs over `MessagingService`. The payload carries the original `StartedAt`, so every server counts down to the same wall-clock end and a late joiner on *any* server sees the same clock.

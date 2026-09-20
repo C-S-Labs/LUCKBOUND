@@ -479,6 +479,26 @@ local GameConfig = {
 		TeleportProbeHeight = 400,
 		TeleportProbeDepth = 800,
 		TeleportLandingClearance = 4,
+
+		-- === THE LIVE TINT ===
+		-- The menu leans toward the district you are standing in, and toward
+		-- whatever event is happening to the sky. How far it leans is content
+		-- (Content/Hub/Palettes); these are the mechanics.
+		LiveTintEnabled = true,
+		-- How close to a district's anchor counts as being IN it. The ring
+		-- radius is 400 and the widest platform is 320, so 220 puts the
+		-- boundary just outside the biggest deck: you are in a district when
+		-- you are standing on it and for a few strides after, and on the open
+		-- plaza you are in none of them.
+		DistrictTintRadius = 220,
+		-- Checked on a timer, never per frame. Same reasoning as
+		-- Effects.CullIntervalSeconds: a distance test that runs 60 times a
+		-- second to answer a question that changes every thirty seconds is
+		-- the kind of cost a phone pays for all session.
+		DistrictPollSeconds = 0.5,
+		-- Long. A tint that snaps reads as a glitch; one that takes most of a
+		-- second reads as the room changing around you.
+		TintTweenSeconds = 0.8,
 	},
 
 	-- === CODES ===

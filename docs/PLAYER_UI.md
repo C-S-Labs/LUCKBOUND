@@ -13,11 +13,15 @@ are unchanged by it.
 ```
 src/shared/Core/UITheme.luau        colours, spacing, radii, motion   (design tokens)
 src/shared/Core/HubMenuCore.luau    panel/travel RULES                (pure, tested)
+src/shared/Core/ThemeCore.luau      the LIVE palette + contrast       (pure, tested)
+src/shared/Content/Hub/Palettes.luau  how far the menu leans, per district and event
 src/shared/Core/SettingsCore.luau   settings schema + validation      (pure, tested)
 src/shared/Content/Hub/Menu.luau    which panels and destinations EXIST
 src/shared/Content/Hub/Cinematics.luau  the loading screen's camera shots
 src/client/UI/UIKit.luau            buttons, toggles, sliders, tweens (widgets)
 src/client/UI/HubMenu.luau          the rail and the panels           (pixels only)
+src/client/Controllers/EventController.luau  what is happening to the world (self-expiring)
+src/client/Controllers/ThemeController.luau  paints the live palette onto instances
 src/client/UI/LoadingScreen.luau    title, camera tour, PLAY
 src/server/Systems/HubUISystem.luau travel, codes, settings           (authority)
 ```
@@ -124,6 +128,63 @@ content point is a guess at X/Z; the ray decides Y.
 
 ---
 
+## 3.5 The live tint
+
+The menu leans toward the district you are standing in, and toward whatever
+event is happening to the world. Both resolve through one pure function,
+`ThemeCore.resolve(palettes, { DistrictId, Event })`, so "what colour is the
+menu in the Archive during a Starfall" is an assertion rather than something
+somebody has to go and stand in.
+
+**Only surfaces tint.** Gold means "press this", teal means "designed, not yet
+built", and the seven rarity colours are a contract. Two of those collide with
+authored district colours — the Archive's accent *is* that teal, the Hall's
+*is* that gold — so `ThemeCore.TINTABLE` is the closed list of what may move,
+and a test asserts no semantic token ever appears in a resolved palette.
+
+**A tint is a hue shift, not a fade**, and this is the one piece of real
+colour maths in the project. Measured: mixing a surface 20% toward starlight
+took a raised row from 5.06:1 to 2.96:1 against the menu's faintest text —
+unreadable. So `ThemeCore` mixes in linear light and then rescales the result
+back to the surface's *original* luminance. The menu changes colour without
+getting lighter, contrast survives, and content can ask for a tint strong
+enough to see. The stroke is the deliberate exception: it mixes straight,
+because nothing is read against a 1px edge and it is the part that reads best.
+**Surfaces lean; the edge speaks.**
+
+**The contrast clamp is a backstop, not the mechanism.** `enforceContrast`
+walks a surface back toward base until the faintest text clears 4.5:1. With
+luminance preserved it almost never fires — but it is what stops a future
+palette author from shipping a beautiful tint that makes Settings unreadable.
+
+**What is NOT painted:** buttons. They own hover and press states that tween
+their own background, and a tint arriving mid-hover would fight them. The rail
+and panel behind them shift, which is the effect anyway.
+
+### How it reaches the screen
+
+`UITheme` is deep-frozen and every screen reads it once at build time, so
+there is no way to "change the theme" after the fact short of rebuilding the
+UI — which would close whatever panel the player had open. Instead
+`UIKit.surface` registers each surface with `ThemeController`, which repaints
+exactly those instances and drops destroyed ones as it goes. The district
+check runs on a timer (`DistrictPollSeconds`, 0.5s), never per frame, and a
+repaint only happens when the resolved palette actually differs.
+
+### Events
+
+`EventController` mirrors the live event state and **expires events itself**.
+The server says "this is running, N seconds left"; it does not promise to say
+when it ends. Cross-server messages are lossy and servers die, so the deadline
+arrives with the event and the client counts it down — the world heals itself
+without anyone having to say so.
+
+`EventCore.dominant` picks the one event that owns the sky: scope
+(GLOBAL > SERVER > BIOME), then Priority, then the event running **longest**,
+then Id. Longest-running rather than newest is deliberate — a tie broken by
+recency would flip the sky whenever an equal event started somewhere, and a
+sky that changes for no visible reason reads as a bug.
+
 ## 4. The design system
 
 Everything visual comes from `UITheme`: three surface depths, one spacing
@@ -150,6 +211,8 @@ directions is what makes a menu feel rubbery.
 | Rail position on a phone in portrait | Medium | The rail is left-anchored and centred; on a tall narrow screen it may want to be a bottom bar instead. Judge it on a device |
 | The loading screen's instance target | Medium | `RequiredHubInstances = 380` against a hub that built 436. If the authored hub's count changes, this wants changing with it — it is asserted to stay under 436 by test, not to be correct |
 | Shop / Tree / Party / Rebirth are copy | Expected | Deliberate. They ship designed and labelled |
+| **Five settings drive nothing** — see below | Medium | (unchanged) |
+| The live tint is unseen | **High** | Hue-shift-at-constant-luminance is correct on paper and has never been looked at. On dark surfaces it is subtle by construction — it may need to be stronger, and `Strength` in `Content/Hub/Palettes` is the only dial |
 | No sound | Low | Every one of these beats wants a sound: the rail opening, PLAY, a code accepted. There is no audio system yet |
 | Settings do not drive anything yet | Medium | `ReduceMotion` and `AutoHideMenu` do. `MusicVolume`, `SfxVolume`, `UiScale`, `ScreenShake` and `ShowGlobalAnnouncements` are stored and honoured by nothing, because the systems they would drive do not exist |
 | The travel fade is open-loop | Low | The client fades out, *then* sends the request. If the server refuses mid-fade, the player gets a brief black screen and a refusal rather than no fade at all. The fade is ~0.5s end to end, so the cost of being wrong is small |

@@ -33,6 +33,104 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 30 — 2026-09-20 — The menu learns where it is standing
+
+**Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 514 passing (was 473)
+
+Owner direction: the menu should change colour with the area and with live
+events. There is no day/night cycle and there will not be one — instead,
+**events** at three scopes (global, server, biome) will shape the sky. This
+session built the half that can be built now.
+
+### What was built
+
+| | |
+|---|---|
+| `EventCore.Scope` + `dominant()` | Three scopes and one deterministic answer to "which event owns the sky" |
+| `ThemeCore` | The live palette, the contrast floor, and which district a point is in. Pure |
+| `Content/Hub/Palettes` | How far the menu leans, per district and per event kind |
+| `EventController` | The client's event mirror, which **expires events itself** |
+| `ThemeController` | Resolves and paints, on a timer, never per frame |
+| `/event` and `/endevents` | Start any event on demand — the only way to walk a 1-in-a-trillion sky |
+
+### The measurement that changed the design
+
+A plain mix toward a district colour **lightens** the surface, and the menu's
+faintest text sits only ~5:1 above that surface to begin with. Measured: 20%
+toward starlight took a raised row from 5.06:1 to **2.96:1** — unreadable. So
+every interesting tint would have been clawed back by the contrast clamp, and
+what content asked for would not have been what rendered.
+
+`ThemeCore` therefore mixes in **linear light and rescales back to the
+surface's original luminance**: the surface takes the district's hue and keeps
+its own brightness. Contrast survives a tint essentially unchanged, the clamp
+becomes a backstop that rarely fires, and the strengths in content can be
+interesting rather than timid. It is also the better look — the menu stays
+dark and shifts colour rather than fading toward whatever it is standing next
+to.
+
+The stroke is the deliberate exception and mixes straight: nothing is read
+against a 1px edge, and it is the part that reads best. **Surfaces lean; the
+edge speaks.**
+
+### What the contrast test found on its first run
+
+`TextMuted` shipped last session at **3.40:1** against a raised row — below
+WCAG's 4.5:1 floor for body text, which a 13px row subtitle is by any honest
+reading. Nothing to do with the tint; it was wrong the day it was written.
+Contrast failure is invisible to whoever picks the colour and obvious to
+whoever cannot read it, which is exactly the kind of bug a test should find
+and an eye should not be asked to. Raised to (145, 139, 170), now 5.06:1 at
+worst. It is closer to `TextSecondary` now, so the two roles lean more on size
+and letter-spacing — worth a look in Studio.
+
+### Decisions made
+
+**Scope outranks priority.** A game-wide event is by definition the biggest
+news on screen; a local event with a big number must not shout over it.
+
+**A tie goes to the event running longest, not the newest.** A tie broken by
+recency would flip the sky whenever an equal event started somewhere, and a
+sky that changes for no reason the player can see reads as a bug.
+
+**The client expires events itself.** The server says "N seconds left" and
+never promises to say when it ends. Cross-server messages are lossy and
+servers die; local expiry means the world heals itself.
+
+**An event with no scope is a SERVER event.** The narrowest honest default —
+a missing field must not be able to announce itself to the whole game.
+
+**Only surfaces tint, never semantics.** Gold means "press this", teal means
+"designed, not built", rarity colours are a contract — and two of those
+collide with authored district colours (the Archive's accent *is* that teal,
+the Hall's *is* that gold). A test asserts no semantic token ever appears in a
+resolved palette.
+
+### The harness learned a second lesson
+
+The `Color3` shim carried only the arguments it was constructed with — no
+`R`/`G`/`B` floats, no `Lerp`. Any code doing colour *maths* was therefore
+untestable, which is the same trap the `Vector3` shim fell into and the same
+one CLAUDE.md already records. It now carries linear-ready floats, lerps and
+compares by value.
+
+### Stopped at
+
+Pushed, all green, **nothing rendered**. The tint is subtle by construction on
+dark surfaces and may want to be stronger; `Content/Hub/Palettes` is the only
+dial. `TESTING.md` test L walks it.
+
+### Next
+
+1. **Walk test L** along with I, J and K.
+2. **The owner is choosing between options** for the rest: the global ledger
+   that makes "only 10 will ever exist" true, what the sky actually does, and
+   how events are authored. None of it is started.
+3. `EventSystem` still publishes cross-server as fire-and-forget. That is fine
+   for spectacle and **not** fine for scarcity — see STATUS §4.
+
+---
+
 ## Session 29 — 2026-09-20 — Three owner corrections to the hub UI
 
 **Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 473 passing (was 472)

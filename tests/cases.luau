@@ -22,6 +22,9 @@ local HubMenuCore = __require("HubMenuCore")
 local CodeCore = __require("CodeCore")
 local SettingsCore = __require("SettingsCore")
 local LocomotionCore = __require("LocomotionCore")
+local ThemeCore = __require("ThemeCore")
+local Palettes = __require("Palettes")
+local EventCore = __require("EventCore")
 
 -- === tiny harness ===================================================
 local passed, failed = 0, 0
@@ -3017,6 +3020,406 @@ do
 			end
 		end
 		return true
+	end)())
+end
+
+
+-- === event scope and precedence =====================================
+do
+	group("Which event owns the sky")
+
+	local function event(overrides)
+		local e = {
+			Id = "E1",
+			Kind = "FATEBREAK",
+			Name = "Test",
+			Scope = "SERVER",
+			Priority = 0,
+			StartedAt = 1000,
+			EndsAt = 2000,
+		}
+		for k, v in overrides or {} do e[k] = v end
+		return e
+	end
+
+	check("no events means no dominant event", EventCore.dominant({}) == nil)
+
+	check("one event owns the sky by default",
+		EventCore.dominant({ event({}) }).Id == "E1")
+
+	-- Scope outranks priority on purpose: a game-wide event is by definition
+	-- the biggest news on screen, and a local event with a high number must
+	-- not shout over something happening to every player in the game.
+	check("a global event beats a server event", (function()
+		local winner = EventCore.dominant({
+			event({ Id = "LOCAL", Scope = "SERVER", Priority = 99 }),
+			event({ Id = "WORLDWIDE", Scope = "GLOBAL", Priority = 0 }),
+		})
+		return winner.Id == "WORLDWIDE"
+	end)())
+
+	check("a server event beats a biome event", (function()
+		local winner = EventCore.dominant({
+			event({ Id = "BIOME", Scope = "BIOME", WorldId = "EMBERFALL", Priority = 50 }),
+			event({ Id = "SERVER", Scope = "SERVER", Priority = 0 }),
+		}, { WorldId = "EMBERFALL" })
+		return winner.Id == "SERVER"
+	end)())
+
+	check("priority decides within a scope", (function()
+		local winner = EventCore.dominant({
+			event({ Id = "QUIET", Priority = 1 }),
+			event({ Id = "LOUD", Priority = 9 }),
+		})
+		return winner.Id == "LOUD"
+	end)())
+
+	-- A tie broken by recency would flip the sky every time an equal event
+	-- started somewhere, and a sky that changes for no visible reason reads
+	-- as a bug rather than as an event.
+	check("a tie goes to the event that has been running longest", (function()
+		local winner = EventCore.dominant({
+			event({ Id = "NEW", StartedAt = 1500 }),
+			event({ Id = "OLD", StartedAt = 1000 }),
+		})
+		return winner.Id == "OLD"
+	end)())
+
+	check("a total tie is still deterministic", (function()
+		local a = EventCore.dominant({ event({ Id = "B" }), event({ Id = "A" }) })
+		local b = EventCore.dominant({ event({ Id = "A" }), event({ Id = "B" }) })
+		return a.Id == b.Id and a.Id == "A"
+	end)())
+
+	-- A BIOME event is confined to its world. Someone standing in the hub
+	-- must not get Emberfall's sky.
+	check("a biome event is invisible outside its biome",
+		EventCore.dominant({ event({ Scope = "BIOME", WorldId = "EMBERFALL" }) }, { WorldId = nil }) == nil)
+
+	check("...and visible inside it",
+		EventCore.dominant({ event({ Scope = "BIOME", WorldId = "EMBERFALL" }) },
+			{ WorldId = "EMBERFALL" }) ~= nil)
+
+	check("an unknown scope never owns the sky",
+		EventCore.dominant({ event({ Scope = "EVERYWHERE" }) }) == nil)
+
+	check("every scope the code accepts is one of the three",
+		EventCore.isValidScope("GLOBAL") and EventCore.isValidScope("SERVER")
+			and EventCore.isValidScope("BIOME") and not EventCore.isValidScope("WORLD")
+			and not EventCore.isValidScope(nil))
+
+	-- The snapshot is the only thing a client ever sees. A field missing
+	-- from it may as well not exist on the server.
+	check("the snapshot carries scope, world and priority", (function()
+		local state = EventCore.newState()
+		EventCore.startEvent(state, event({
+			Scope = "BIOME", WorldId = "EMBERFALL", Priority = 3, EndsAt = 9999,
+		}))
+		local snap = EventCore.snapshot(state, 1000, GameConfig)
+		local first = snap.ActiveEvents[1]
+		return first.Scope == "BIOME" and first.WorldId == "EMBERFALL" and first.Priority == 3
+	end)())
+end
+
+-- === the live palette ===============================================
+do
+	group("The live menu palette")
+
+	local ok, errors = Schema.validatePalettes(Palettes, Menu)
+	check("the shipped palettes validate", ok, table.concat(errors, "; "))
+
+	local base = ThemeCore.base()
+
+	check("the base palette is UITheme, untouched", (function()
+		for _, token in ThemeCore.TINTABLE do
+			if base[token] ~= UITheme[token] then
+				return false
+			end
+		end
+		return true
+	end)())
+
+	-- Every district, every event, and every combination of the two. This is
+	-- the whole point of the resolver being pure: "what does the menu look
+	-- like in the Archive during a Catalyst Star" is an assertion rather than
+	-- a thing somebody has to stand in.
+	local function everyContext()
+		local contexts = { { DistrictId = nil, Event = nil } }
+		for _, district in Palettes.Districts do
+			table.insert(contexts, { DistrictId = district.Id, Event = nil })
+			for _, e in Palettes.Events do
+				table.insert(contexts, { DistrictId = district.Id, Event = { Kind = e.Kind } })
+			end
+		end
+		for _, e in Palettes.Events do
+			table.insert(contexts, { DistrictId = nil, Event = { Kind = e.Kind } })
+		end
+		return contexts
+	end
+
+	local contexts = everyContext()
+	check("there is more than one palette to check", #contexts > 10,
+		string.format("%d contexts", #contexts))
+
+	-- RULE 1: only surfaces tint. Gold means "press this", teal means
+	-- "designed, not built", and the seven rarity colours are a contract.
+	-- The Archive's authored accent IS that teal and the Hall's IS that gold,
+	-- so this is a live collision, not a hypothetical one.
+	check("no palette moves a colour that carries a meaning", (function()
+		for _, context in contexts do
+			local palette = ThemeCore.resolve(Palettes, context)
+			for _, token in { "AccentGold", "AccentCool", "AccentWarn",
+				"TextPrimary", "TextSecondary", "TextMuted" } do
+				if palette[token] ~= nil then
+					return false -- a semantic token must not even appear
+				end
+			end
+			for key in Constants.RARITY do
+				if palette[key] ~= nil then
+					return false
+				end
+			end
+		end
+		return true
+	end)())
+
+	check("the tintable list is exactly the surfaces", (function()
+		local expected = { PanelColor = true, RailColor = true, RaisedColor = true,
+			ScrimColor = true, StrokeColor = true }
+		local count = 0
+		for _, token in ThemeCore.TINTABLE do
+			if not expected[token] then
+				return false
+			end
+			count += 1
+		end
+		return count == 5
+	end)())
+
+	-- RULE 2: text stays readable. This is the test that matters most: a
+	-- Catalyst Star tint that looks magnificent on a panel is also the thing
+	-- that makes the Settings labels vanish, and nobody finds that by eye
+	-- until a player cannot turn the music down.
+	check("every palette keeps the faintest text readable", (function()
+		for _, context in contexts do
+			local palette = ThemeCore.resolve(Palettes, context)
+			for _, token in { "PanelColor", "RailColor", "RaisedColor", "ScrimColor" } do
+				local ratio = ThemeCore.contrast(UITheme.TextMuted, palette[token])
+				if ratio < ThemeCore.CONTRAST_FLOOR then
+					return false
+				end
+			end
+		end
+		return true
+	end)())
+
+	-- THE BASE THEME ITSELF MUST CLEAR THE FLOOR. This is what the contrast
+	-- test found first: TextMuted shipped at 3.40:1 against a raised row,
+	-- below AA, before any tint existed. Pinned here so it cannot drift back.
+	check("the untinted theme is readable on every surface", (function()
+		for _, text in { UITheme.TextMuted, UITheme.TextSecondary, UITheme.TextPrimary } do
+			for _, surface in { UITheme.PanelColor, UITheme.RailColor, UITheme.RaisedColor } do
+				if ThemeCore.contrast(text, surface) < ThemeCore.CONTRAST_FLOOR then
+					return false
+				end
+			end
+		end
+		return true
+	end)())
+
+	-- Clearing the floor is not the same as not making things worse. A tint
+	-- is allowed to cost a little readability; it is not allowed to eat the
+	-- headroom the base design has.
+	check("no tint costs more than a sixth of the base's readability", (function()
+		for _, context in contexts do
+			local palette = ThemeCore.resolve(Palettes, context)
+			for _, token in { "PanelColor", "RailColor", "RaisedColor" } do
+				local before = ThemeCore.contrast(UITheme.TextMuted, UITheme[token])
+				local after = ThemeCore.contrast(UITheme.TextMuted, palette[token])
+				if after < before * 0.84 then
+					return false
+				end
+			end
+		end
+		return true
+	end)())
+
+	-- The contrast maths itself, against values with known answers, because a
+	-- floor enforced by a broken ruler is worse than no floor.
+	check("black on white is the maximum ratio",
+		math.abs(ThemeCore.contrast(Color3.new(0, 0, 0), Color3.new(1, 1, 1)) - 21) < 0.01)
+	check("a colour against itself is 1:1",
+		math.abs(ThemeCore.contrast(UITheme.AccentGold, UITheme.AccentGold) - 1) < 1e-6)
+	check("luminance is weighted, not averaged", (function()
+		-- Green reads far brighter than blue at the same channel value. An
+		-- averaging implementation would call these equal and pass palettes
+		-- a player cannot read.
+		local green = ThemeCore.luminance(Color3.new(0, 1, 0))
+		local blue = ThemeCore.luminance(Color3.new(0, 0, 1))
+		return green > blue * 5
+	end)())
+
+	-- A deliberately absurd palette: the clamp must save it rather than the
+	-- author having to notice.
+	check("an unreadable tint is clamped, not shipped", (function()
+		local awful = {
+			Districts = { { Id = "HALL_OF_LEGENDS", Tint = UITheme.TextMuted, Strength = 1 } },
+			Events = {},
+		}
+		local palette = ThemeCore.resolve(awful, { DistrictId = "HALL_OF_LEGENDS" })
+		return ThemeCore.contrast(UITheme.TextMuted, palette.PanelColor) >= ThemeCore.CONTRAST_FLOOR
+	end)())
+
+	-- RULE 3: the resolver is total. Anything can be asked of it.
+	check("an unknown district resolves to the base palette", (function()
+		local palette = ThemeCore.resolve(Palettes, { DistrictId = "ATLANTIS" })
+		return palette.PanelColor == UITheme.PanelColor
+	end)())
+	check("an unknown event kind does not tint", (function()
+		local palette = ThemeCore.resolve(Palettes, { Event = { Kind = "SOMETHING_NEW" } })
+		return palette.PanelColor == UITheme.PanelColor
+	end)())
+	check("no context at all resolves to the base palette",
+		ThemeCore.resolve(Palettes, {}).PanelColor == UITheme.PanelColor)
+
+	check("the Fate Engine is deliberately untinted", (function()
+		-- The centre is where the game's own colour comes from -- the rarity
+		-- on the portal -- and a tint there would compete with it.
+		local palette = ThemeCore.resolve(Palettes, { DistrictId = "FATE_ENGINE" })
+		return palette.PanelColor == UITheme.PanelColor
+	end)())
+
+	check("standing in a district actually changes something", (function()
+		local palette = ThemeCore.resolve(Palettes, { DistrictId = "DISCOVERY_ARCHIVE" })
+		return palette.PanelColor ~= UITheme.PanelColor
+	end)())
+
+	check("an event beats standing still", (function()
+		local plain = ThemeCore.resolve(Palettes, { DistrictId = "DISCOVERY_ARCHIVE" })
+		local starfall = ThemeCore.resolve(Palettes,
+			{ DistrictId = "DISCOVERY_ARCHIVE", Event = { Kind = "FATEBREAK" } })
+		return plain.PanelColor ~= starfall.PanelColor and starfall.EventKind == "FATEBREAK"
+	end)())
+
+	-- Bounded drift: a tint may lean the menu, never redesign it. Without a
+	-- ceiling, "subtle district colour" becomes a full reskin one content
+	-- edit at a time.
+	--
+	-- The stroke has its own, looser ceiling. It is the part that is MEANT to
+	-- speak -- a 1px edge going orange during a Starfall is the effect, not a
+	-- defect -- and it is exempt from the contrast rule for the same reason:
+	-- nothing is read against it. Surfaces lean; the edge speaks.
+	local function drift(a, b)
+		return math.sqrt((a.R - b.R) ^ 2 + (a.G - b.G) ^ 2 + (a.B - b.B) ^ 2)
+	end
+
+	check("no surface wanders far from the base", (function()
+		for _, context in contexts do
+			local palette = ThemeCore.resolve(Palettes, context)
+			for _, token in ThemeCore.TINTABLE do
+				if token ~= "StrokeColor" and drift(palette[token], UITheme[token]) > 0.35 then
+					return false
+				end
+			end
+		end
+		return true
+	end)())
+
+	check("...and the stroke, while louder, is still bounded", (function()
+		for _, context in contexts do
+			local palette = ThemeCore.resolve(Palettes, context)
+			if drift(palette.StrokeColor, UITheme.StrokeColor) > 0.6 then
+				return false
+			end
+		end
+		return true
+	end)())
+
+	-- THE INVARIANT THE WHOLE APPROACH RESTS ON. A surface takes the hue and
+	-- keeps its own brightness, which is why contrast survives a tint at all.
+	-- If this ever stops holding, every readability test above starts passing
+	-- for the wrong reason.
+	check("a tint changes a surface's colour but not its brightness", (function()
+		for _, context in contexts do
+			local palette = ThemeCore.resolve(Palettes, context)
+			for _, token in { "PanelColor", "RailColor", "RaisedColor", "ScrimColor" } do
+				local before = ThemeCore.luminance(UITheme[token])
+				local after = ThemeCore.luminance(palette[token])
+				if math.abs(after - before) > 0.005 then
+					return false
+				end
+			end
+		end
+		return true
+	end)())
+
+	check("...and it really does change the colour", (function()
+		-- Guarding the test above from passing trivially: a tint that did
+		-- nothing at all would also preserve luminance perfectly.
+		local palette = ThemeCore.resolve(Palettes,
+			{ DistrictId = "DISCOVERY_ARCHIVE", Event = { Kind = "CATALYST_STAR" } })
+		return drift(palette.PanelColor, UITheme.PanelColor) > 0.01
+	end)())
+
+	check("resolving twice gives the same answer", (function()
+		local a = ThemeCore.resolve(Palettes, { DistrictId = "EXPEDITION_GATE" })
+		local b = ThemeCore.resolve(Palettes, { DistrictId = "EXPEDITION_GATE" })
+		return a.PanelColor == b.PanelColor and a.RailColor == b.RailColor
+	end)())
+
+	check("resolving does not mutate UITheme", (function()
+		ThemeCore.resolve(Palettes, { DistrictId = "TRAINING_GROUNDS", Event = { Kind = "CATALYST_STAR" } })
+		return UITheme.PanelColor == Color3.fromRGB(24, 19, 40)
+	end)())
+
+	-- === where am I standing ========================================
+	local radius = GameConfig.HubMenu.DistrictTintRadius
+
+	check("standing on a district's anchor is standing in it", (function()
+		for _, destination in Menu.Destinations do
+			if ThemeCore.districtAt(destination.Anchor, Menu, radius) ~= destination.Id then
+				return false
+			end
+		end
+		return true
+	end)())
+
+	check("height does not change which district you are in", (function()
+		local hall = HubMenuCore.destinationById(Menu, "HALL_OF_LEGENDS")
+		local aloft = hall.Anchor + Vector3.new(0, 90, 0)
+		return ThemeCore.districtAt(aloft, Menu, radius) == "HALL_OF_LEGENDS"
+	end)())
+
+	check("the open plaza belongs to no district", (function()
+		-- Halfway between the Engine and the Hall, on the diagonal: outside
+		-- every district's reach.
+		local point = Vector3.new(280, 0, -280)
+		return ThemeCore.districtAt(point, Menu, radius) == nil
+	end)())
+
+	-- The radius must not be so wide that two districts overlap, or the menu
+	-- would flicker between them on the boundary.
+	check("no two districts overlap at the tint radius", (function()
+		local anchors = {}
+		for _, destination in Menu.Destinations do
+			table.insert(anchors, destination.Anchor)
+		end
+		for i = 1, #anchors do
+			for j = i + 1, #anchors do
+				local dx = anchors[i].X - anchors[j].X
+				local dz = anchors[i].Z - anchors[j].Z
+				if math.sqrt(dx * dx + dz * dz) < radius then
+					return false
+				end
+			end
+		end
+		return true
+	end)())
+
+	check("the tint radius covers the widest platform", (function()
+		-- A player standing on the far edge of the biggest deck must still be
+		-- in that district; the widest is 320 across, so half of it is 160.
+		return radius > 160
 	end)())
 end
 

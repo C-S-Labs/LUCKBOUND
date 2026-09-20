@@ -17,6 +17,7 @@ local Crossroads = require(Root.Content.Hub.Crossroads)
 local Menu = require(Root.Content.Hub.Menu)
 local Cinematics = require(Root.Content.Hub.Cinematics)
 local Codes = require(Root.Content.Codes)
+local Palettes = require(Root.Content.Hub.Palettes)
 
 local Systems = script.Systems
 local SaveSystem = require(Systems.SaveSystem)
@@ -40,7 +41,7 @@ end
 
 -- 1. Fail fast on malformed content, before any player can arrive.
 step("validating content")
-Schema.validateAll(Worlds, GameConfig, Crossroads, Chunks, AssetManifest, Menu, Codes, Cinematics)
+Schema.validateAll(Worlds, GameConfig, Crossroads, Chunks, AssetManifest, Menu, Codes, Cinematics, Palettes)
 
 do
 	local uploaded, placeholder = AssetManifest.summary()
@@ -92,7 +93,7 @@ HubUISystem.init(SaveSystem, ProgressionSystem, ExpeditionSystem)
 -- 8. Developer commands. Last of the systems on purpose: nothing above may
 -- depend on it, so deleting it before launch breaks nothing.
 step("DebugSystem")
-DebugSystem.init(FateSystem, ExpeditionSystem)
+DebugSystem.init(FateSystem, ExpeditionSystem, EventSystem)
 
 -- 9. Hub. Generated from Content/Hub/Crossroads data, and skipped entirely if
 -- Workspace already contains a hand-built Crossroads -- authored geometry
