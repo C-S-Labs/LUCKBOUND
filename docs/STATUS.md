@@ -158,7 +158,7 @@ exists.**
 
 ### Test suite
 
-**514 tests, all passing.** Headless — no Roblox required. 136 of them arrived
+**559 tests, all passing.** Headless — no Roblox required. 136 of them arrived
 with the player UI and the live palette: the menu reducer, travel authorisation, code redemption,
 settings validation, the stamina curve and the coyote window.
 
@@ -244,6 +244,11 @@ These are settled. Do not relitigate without a deliberate reversal.
 | D-4 | Reveal duration scales with rarity (2.5 s → 7.0 s) | Constants |
 | D-6 | Roll history capped at 50 entries | GameConfig |
 | D-7 | Expedition 720 s default — **still flagged as too long**; a world may override it and Ethereal Scape runs 300 s | spec §6 |
+| **D-10** | **A rift reward is permanent; only the WINDOW is temporary.** No decay, no charge, no expiry attribute. Fair only while events recur — that is a commitment, not a preference | `EVENTS.md` §5.4, §6 |
+| **D-11** | **The finder gets the unique item; everyone gets the event.** Ten Catalyst Stars produce ten game-wide occasions, not ten private ones | `EVENTS.md` §5.5 |
+| **D-12** | **A failed rift run costs the attempt, not the event.** The rift stays open to all until the event ends; no per-player attempt counter | `EVENTS.md` §5.3 |
+| **D-13** | **Event access never depends on the roll pool.** A biome with a live event is directly enterable by anyone, regardless of what their pool contains — otherwise pool progression locks high-tier players out of the events they have earned | `EVENTS.md` §5.4b |
+| **D-14** | **Events are tiered AMBIENT / MODIFIER / WORLD**, enforced by the validator. Only WORLD may open a rift or grant a unique | `EVENTS.md` §4.0 |
 | — | **Expedition entry is open; combat/loot are not** | spec §7.1 |
 | — | Destination = the player's last roll. No new state, no schema bump | `ExpeditionCore` |
 | — | Biome lighting is applied **per client**, never by the server | Blueprint §6 |
@@ -354,9 +359,11 @@ survive a rescale and a literal does not.
 | UI needs resize/layout pass | Cosmetic | Owner-flagged. The new hub UI is built to `UITheme`'s scale/offset caps from the start; the older three screens are not |
 | **The live menu tint is unseen** | **High** | The menu leans toward the district you are in and toward any live event. Hue-shift-at-constant-luminance is correct on paper and has never been looked at; on dark surfaces it is subtle by construction and may want to be stronger. `TESTING.md` test L, `Content/Hub/Palettes` is the dial |
 | **Rifts: event-gated dungeons** | **Design** | Owner-directed 2026-09-20. A biome event opens a portal in a generated map; through it is a far harder dungeon with rewards obtainable nowhere else. Fully designed in `docs/EVENTS.md` §5, including where the portal attaches for both map routes and the reward-permanence question. **Blocked on combat and items (Phase 2)** — but the portal, the gating and the timer can be prototyped with an empty room behind them |
+| **The event sky is built and unwalked** | **High** | Three authored events (Aurora Veil, Starfall, Catalyst Star), per-client lighting, a mote layer and a colour grade, reverting to the hub's own light exactly. Never rendered. `TESTING.md` test M — and step 5, the expedition collision, is the one most likely to be wrong |
 | **The event catalogue is a proposal, not a plan** | **Design** | `docs/EVENTS.md` §4 lists 15 candidate events across the three scopes with triggers, rarity and durations. §6 holds five questions for the owner; the biggest is whether a rift reward is permanent, temporary, or split (a permanent look with a rechargeable power, which is the recommendation) |
-| **Global scarcity (Catalyst Star)** | **Built, unproven** | `LedgerCore` (pure) + `LedgerSystem` claim a number from a single DataStore key with `UpdateAsync` before anything is announced, and **fail closed**: an unreachable ledger grants nothing, which is the opposite of SaveSystem's instinct and deliberately so. Concurrency cannot be tested headlessly or by eye — it needs the two-instance Studio test in `EVENTS.md`/`TESTING.md` |
-| **The hub UI has never been rendered** | **High** | Every pixel of the rail, the panels and the loading screen is reasoned rather than observed. `TESTING.md` tests I, J and K are the first walk |
+| **Global scarcity (Catalyst Star)** | **Built, unproven under concurrency** | `LedgerCore` (pure) + `LedgerSystem` claim a number from a single DataStore key with `UpdateAsync` before anything is announced, and **fail closed**: an unreachable ledger grants nothing, which is the opposite of SaveSystem's instinct and deliberately so. Concurrency cannot be tested headlessly or by eye — it needs the two-instance Studio test in `EVENTS.md`/`TESTING.md` |
+| **The hub UI has been walked once** | Medium | First Studio walk 2026-09-21. The rail draws, in the right order, and the hub reads well. Three bugs found and fixed the same day: a hotkey name that threw on every keystroke, a loading gate that could never complete, and two glyphs that rendered as empty boxes. See the WORKLOG entry — all three were invisible to 551 green tests |
+| ~~**The hub UI has never been rendered**~~ | Superseded | Every pixel of the rail, the panels and the loading screen is reasoned rather than observed. `TESTING.md` tests I, J and K are the first walk |
 | **Four panels are designed, not implemented** | Expected | Shop, Fate Tree, Party and Rebirth draw their real screen over placeholder copy with an IN DESIGN badge. Owner-directed: designed now, built after testing. Branch-level ideas for the tree are in `docs/PLAYER_ABILITIES.md` §3 |
 | **Five settings are stored and honoured by nothing** | Medium | `MusicVolume`, `SfxVolume`, `UiScale`, `ScreenShake`, `ShowGlobalAnnouncements` persist but drive no system, because those systems do not exist. `ReduceMotion` and `AutoHideMenu` do work |
 | **Travel landings are guesses with a safety net** | Medium | Content names an X/Z per district and the server rays down for the Y. Watch the output for `no floor under landing` on the first walk |

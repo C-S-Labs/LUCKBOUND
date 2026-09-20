@@ -11,6 +11,9 @@ return {
 	-- Kind is what the menu palette and any effects match on; several events
 	-- may share one. Id is what this event IS.
 	Kind = "FATEBREAK",
+	-- WORLD: the loudest tier, and the only one allowed to open a rift or
+	-- grant a unique. See docs/EVENTS.md §4.0 -- the validator enforces it.
+	Tier = "WORLD",
 	Scope = "GLOBAL",
 	Priority = 50,
 	DurationSeconds = 300,

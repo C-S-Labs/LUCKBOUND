@@ -25,6 +25,7 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local UserInputService = game:GetService("UserInputService")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
+local Constants = require(Root.Core.Constants)
 local GameConfig = require(Root.Core.GameConfig)
 local HubMenuCore = require(Root.Core.HubMenuCore)
 local Menu = require(Root.Content.Hub.Menu)
@@ -590,7 +591,43 @@ end
 
 -- === wiring =========================================================
 
+--- Resolves a KeyCode NAME to its EnumItem, safely.
+---
+--- Indexing an Enum with a name it does not have RAISES; it does not return
+--- nil. Content naming the collapse key "Backslash" (Roblox calls it
+--- "BackSlash") therefore threw on every keypress and took the panel
+--- shortcuts down with it. Content is now checked against
+--- Constants.HOTKEY_NAMES at boot, and this is the belt to that braces: an
+--- unknown name degrades to "no shortcut" rather than to an error per
+--- keystroke.
+local function keyCodeNamed(name: any): EnumItem?
+	if type(name) ~= "string" or not Constants.HOTKEY_NAMES[name] then
+		return nil
+	end
+	local ok, value = pcall(function()
+		return (Enum.KeyCode :: any)[name]
+	end)
+	if ok and typeof(value) == "EnumItem" then
+		return value
+	end
+	return nil
+end
+
 local function bindHotkeys()
+	-- Resolved ONCE, not per keystroke: this used to be an Enum index inside
+	-- the input handler, which is both the slowest place to put it and the
+	-- worst place for it to throw.
+	local collapseKey = keyCodeNamed(Menu.CollapseHotkey)
+	local panelKeys: { [any]: string } = {}
+	for _, panel in Menu.Panels do
+		local key = keyCodeNamed(panel.Hotkey)
+		if key then
+			panelKeys[key] = panel.Id
+		elseif panel.Hotkey ~= nil then
+			warn(`[HubMenu] panel '{panel.Id}' has an unusable hotkey '{tostring(panel.Hotkey)}'`)
+		end
+	end
+
 	UserInputService.InputBegan:Connect(function(input, processed)
 		if processed or not gui.Enabled then
 			return
@@ -604,22 +641,19 @@ local function bindHotkeys()
 			return
 		end
 
-		local collapseKey = (Enum.KeyCode :: any)[Menu.CollapseHotkey]
 		if collapseKey and input.KeyCode == collapseKey then
 			dispatch({ Kind = "TOGGLE_COLLAPSE" })
 			return
 		end
 
-		for _, panel in Menu.Panels do
-			if panel.Hotkey and input.KeyCode == (Enum.KeyCode :: any)[panel.Hotkey] then
-				if state.Collapsed then
-					-- A hotkey for a hidden rail opens the rail with it,
-					-- rather than opening a panel next to nothing.
-					dispatch({ Kind = "SET_COLLAPSED", Collapsed = false })
-				end
-				dispatch({ Kind = "TOGGLE_PANEL", PanelId = panel.Id })
-				return
+		local panelId = panelKeys[input.KeyCode]
+		if panelId then
+			if state.Collapsed then
+				-- A hotkey for a hidden rail opens the rail with it, rather
+				-- than opening a panel next to nothing.
+				dispatch({ Kind = "SET_COLLAPSED", Collapsed = false })
 			end
+			dispatch({ Kind = "TOGGLE_PANEL", PanelId = panelId })
 		end
 	end)
 end

@@ -20,11 +20,15 @@ local GameConfig = require(script.Parent.Parent.Parent.Core.GameConfig)
 local Anchors = GameConfig.HubLayout.Anchors
 
 local Menu = {
-	-- The key that hides and shows the whole rail, by Enum.KeyCode NAME. A
-	-- name rather than the enum itself so this file stays a data file -- the
-	-- client resolves it, and an unknown name degrades to "no shortcut"
-	-- rather than to an error at require time.
-	CollapseHotkey = "Backslash",
+	-- The key that hides and shows the whole rail, by Enum.KeyCode NAME.
+	--
+	-- It is "BackSlash", with a capital S, because that is what Roblox calls
+	-- it. Named wrongly, this threw on EVERY keypress -- indexing an Enum
+	-- with a name it does not have raises rather than returning nil -- and
+	-- took the panel shortcuts down with it. Every name here is checked
+	-- against Constants.HOTKEY_NAMES at boot so the next one fails loudly
+	-- and early instead of quietly and often.
+	CollapseHotkey = "BackSlash",
 
 	-- === THE SIDE RAIL ================================================
 	-- Order is the vertical order on the rail, top to bottom. Owner-directed
@@ -61,7 +65,11 @@ local Menu = {
 		{
 			Id = "SKILLS",
 			Label = "Fate Tree",
-			Glyph = "✦",
+			-- ★ and ↺ rather than ✦ and ⟲: the first two rendered as empty
+			-- boxes in Studio, because Roblox's font does not carry every
+			-- symbol a text editor will happily show you. A glyph must be
+			-- seen in Studio before it is trusted.
+			Glyph = "★",
 			Order = 3,
 			Status = "PREVIEW",
 			Summary = "Spend Fate levels on lasting upgrades.",
@@ -70,7 +78,7 @@ local Menu = {
 		{
 			Id = "REBIRTH",
 			Label = "Rebirth",
-			Glyph = "⟲",
+			Glyph = "↺",
 			Order = 4,
 			Status = "PREVIEW",
 			Summary = "Trade everything for a permanent edge.",

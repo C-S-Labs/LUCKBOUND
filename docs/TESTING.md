@@ -327,13 +327,13 @@ The first thing anyone sees, and none of it has been rendered.
    3.5s) and never fail to light (`MaximumSeconds` is 25s — if you see
    *"Taking longer than usual"*, the instance count never reached
    `RequiredHubInstances`; report the number the hub actually built).
-3. **Try to walk during it.** ✅ Pass: you cannot. The character is held at
+4. **Try to walk during it.** ✅ Pass: you cannot. The character is held at
    WalkSpeed 0.
-4. **Press PLAY.** ✅ Pass: the blur clears, the camera hands back to the
+5. **Press PLAY.** ✅ Pass: the blur clears, the camera hands back to the
    player, and you can walk **and sprint** — if you can walk but not sprint,
    `LocomotionController` did not start, which means `LoadingScreen.onFinished`
    never fired.
-5. **Let it loop.** Six shots at 9s each. ✅ Pass: each one drifts rather than
+6. **Let it loop.** Six shots at 9s each. ✅ Pass: each one drifts rather than
    orbits, and the captions crossfade rather than cut.
 
 ### Test J — the hub menu (5 min) ⭐ NEW
@@ -407,6 +407,53 @@ The tint is subtle on purpose. Judge whether it is *too* subtle.
    without anyone pressing anything — the client expires it locally.
 9. **Turn on Reduce Motion, then walk between districts.** ✅ Pass: the tint
    snaps instead of fading.
+
+### Test M — an event changes the world (4 min) ⭐ NEW
+
+1. **`/event AURORA_VEIL`.** ✅ Pass: over about a second the hub's light goes
+   blue-green, slow motes drift down over the plaza, and the menu's panel and
+   stroke shift with it. The plaza stays **readable** — an AMBIENT event
+   deliberately does not touch Brightness or ClockTime.
+2. **`/endevents`.** ✅ Pass: the sky returns to exactly the hub's own light
+   and the motes are gone. ⚠️ Look at the fog and the ambient colour
+   specifically — a property that does not return is the bug this whole
+   design is built to prevent.
+3. **`/event STARFALL`.** ✅ Pass: Mythic-orange sky, heavier motes, the
+   announcement banner, the menu tint following it.
+4. **Start `AURORA_VEIL` while `STARFALL` runs.** ✅ Pass: nothing visibly
+   changes — the Starfall outranks it. Now `/endevents` and start only the
+   Veil: it takes over. Precedence is working.
+5. **Enter an expedition during an event.** ✅ Pass: the biome's own lighting
+   applies cleanly, with no orange left over. Return: the event's sky comes
+   back if it is still running, the hub's own if it is not. **This is the
+   collision most likely to be wrong — look carefully.**
+6. **Let an event expire.** ✅ Pass: it ends on its own, on time, without
+   `/endevents`.
+
+### Test N — the ledger holds under a race ⭐ NEW — **two instances, 10 min**
+
+The one test that cannot be done headlessly *or* by eye, because it is about
+two servers doing the same thing at the same moment. Needs a **published**
+place with API services enabled.
+
+1. **`/ledger CATALYST_STAR`.** ✅ Pass: `0 of 10 claimed`. If it says the
+   ledger is unavailable, the place is not published or API access is off —
+   and note that **no unique can be granted in that state, by design**.
+2. **`/event CATALYST_STAR`.** ✅ Pass: the starlight sky, the announcement,
+   and `/ledger` now reads `1 of 10 claimed` with your name against #1.
+3. **Open a second Studio instance on the same published place** (Test > Start
+   Server, or two clients). Run `/event CATALYST_STAR` in **both at once**.
+   ✅ Pass: the ledger's count rises by exactly the number of successful
+   claims — never more. Two claims must never both report the same number.
+4. **Claim until ten are gone.** ✅ Pass: the eleventh refuses with
+   `EXHAUSTED`, and refuses on **every** server, forever.
+5. **Turn off Studio's API access and try again.** ✅ Pass: it refuses with
+   `UNAVAILABLE` and grants nothing. **Fail-closed is the whole point** — a
+   Star handed out while the ledger was unreachable could never be counted or
+   taken back.
+
+⚠️ Claims made while testing are **permanent**. Ten is ten. Test on a separate
+published place, or accept that the production ledger starts partly spent.
 
 ### Test E — a tampered client is rejected (1 min)
 

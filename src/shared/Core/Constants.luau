@@ -114,6 +114,44 @@ local Constants = {
 		MAP_RETURN_ANCHOR = "ReturnAnchor",
 	},
 
+	-- KEYBOARD SHORTCUT NAMES CONTENT MAY USE.
+	--
+	-- This list exists because of a bug that reached Studio: content named the
+	-- collapse key "Backslash", Roblox's KeyCode is "BackSlash", and indexing
+	-- an Enum with a name it does not have RAISES rather than returning nil.
+	-- So every keypress threw, the handler died before it reached the panel
+	-- shortcuts, and the output filled with the same error twice a second.
+	--
+	-- Validating against a list the test suite can see turns that into a boot
+	-- failure with the offending name in it. Add a name here when content
+	-- needs it, and check it against the real Enum first.
+	HOTKEY_NAMES = {
+		A = true, B = true, C = true, D = true, E = true, F = true, G = true,
+		H = true, I = true, J = true, K = true, L = true, M = true, N = true,
+		O = true, P = true, Q = true, R = true, S = true, T = true, U = true,
+		V = true, W = true, X = true, Y = true, Z = true,
+		Zero = true, One = true, Two = true, Three = true, Four = true,
+		Five = true, Six = true, Seven = true, Eight = true, Nine = true,
+		-- The capital S is not a typo and is the whole reason this table
+		-- exists.
+		BackSlash = true,
+		Slash = true,
+		LeftBracket = true,
+		RightBracket = true,
+		Semicolon = true,
+		Quote = true,
+		Comma = true,
+		Period = true,
+		Minus = true,
+		Equals = true,
+		Tab = true,
+		Insert = true,
+		Home = true,
+		End = true,
+		PageUp = true,
+		PageDown = true,
+	},
+
 	DATASTORE = {
 		PROFILE_STORE = "LUCKBOUND_Profiles_v1",
 		KEY_PREFIX = "player_",

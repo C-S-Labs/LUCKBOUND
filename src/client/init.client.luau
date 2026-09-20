@@ -17,6 +17,7 @@ local ExpeditionController = require(Controllers.ExpeditionController)
 local LocomotionController = require(Controllers.LocomotionController)
 local EventController = require(Controllers.EventController)
 local ThemeController = require(Controllers.ThemeController)
+local SkyController = require(Controllers.SkyController)
 local DebugCommands = require(Controllers.DebugCommands)
 local FateRoll = require(UI.FateRoll)
 local GlobalAnnouncements = require(UI.GlobalAnnouncements)
@@ -44,6 +45,9 @@ ExpeditionController.init()
 -- registers itself and is painted on the spot.
 EventController.init()
 ThemeController.init()
+-- The sky reads the same event state the menu tint does, so the two can never
+-- disagree about which event is running.
+SkyController.init()
 FateRoll.init()
 GlobalAnnouncements.init()
 -- The hub menu after the roll UI: it subscribes to FateRoll's rolling signal

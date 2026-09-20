@@ -113,10 +113,29 @@ local function playShot(shot: any, index: number)
 		local dt = RunService.RenderStepped:Wait()
 		elapsed += dt
 
+		-- THE CAMERA HAS TO BE TAKEN BACK EVERY FRAME. When the character
+		-- spawns, Roblox's own camera script sets CameraType to Custom and
+		-- starts following the humanoid -- which is why the first Studio look
+		-- reported the camera "locked in place" partway through loading. It
+		-- had not locked; it had been handed back. Re-acquiring CurrentCamera
+		-- as well, because the engine can replace the camera object outright
+		-- on spawn, leaving this module writing to an orphan.
+		local live = Workspace.CurrentCamera
+		if live and live ~= camera then
+			camera = live
+			camera.FieldOfView = loading.FieldOfView
+		end
+		if camera.CameraType ~= Enum.CameraType.Scriptable then
+			camera.CameraType = Enum.CameraType.Scriptable
+		end
+
 		local t = elapsed / loading.ShotSeconds
 		local angle = startAngle + sweep * t
+		-- A gentle push in over the shot. Parallax is what makes a slow move
+		-- read as a move rather than as a still frame.
+		local radius = shot.Radius * (1 - loading.ShotDollyFraction * t)
 		local position = subject
-			+ Vector3.new(math.cos(angle) * shot.Radius, shot.Height, math.sin(angle) * shot.Radius)
+			+ Vector3.new(math.cos(angle) * radius, shot.Height, math.sin(angle) * radius)
 
 		camera.CFrame = CFrame.lookAt(position, look)
 	end
@@ -163,9 +182,12 @@ local function countHub(): number
 	return #crossroads:GetDescendants()
 end
 
+local preloadDone = false
+
 local function preloadInBatches()
 	local crossroads = Workspace:FindFirstChild(Constants.NAMES.CROSSROADS)
 	if not crossroads then
+		preloadDone = true
 		return
 	end
 
@@ -186,6 +208,7 @@ local function preloadInBatches()
 			pcall(ContentProvider.PreloadAsync, ContentProvider, batch)
 			batch = {}
 			if finished then
+				preloadDone = true
 				return
 			end
 		end
@@ -193,6 +216,7 @@ local function preloadInBatches()
 	if #batch > 0 then
 		pcall(ContentProvider.PreloadAsync, ContentProvider, batch)
 	end
+	preloadDone = true
 end
 
 local function setReady(reason: string)
@@ -210,26 +234,47 @@ local function watchProgress()
 	local loading = GameConfig.Loading
 	task.spawn(preloadInBatches)
 
+	-- REPLICATION IS JUDGED BY ITS SHAPE, NOT BY A COUNT. Instances arrive,
+	-- then they stop arriving. Waiting for a specific number meant guessing
+	-- how many parts the hub has -- and the guess was 380 against a hub that
+	-- builds 357, so the bar stuck at 94% and every player was told loading
+	-- had taken longer than usual. Watching it settle needs no number and
+	-- survives the art changing.
+	local lastCount = -1
+	local settledFor = 0
+
 	while not ready and not finished do
 		local elapsed = os.clock() - startedAt
 		local arrived = countHub()
-		local instanceProgress = math.clamp(arrived / loading.RequiredHubInstances, 0, 1)
+
+		if arrived == lastCount and arrived >= loading.MinimumHubInstances then
+			settledFor += loading.HubPollSeconds
+		else
+			settledFor = 0
+		end
+		lastCount = arrived
+
+		-- Two halves: the hub showing up at all, then it holding still. The
+		-- bar reaches 1 exactly when replication has settled, so it never
+		-- sits full while the screen refuses to open -- the single most
+		-- annoying thing a loading bar can do.
+		local arrivalProgress = math.clamp(arrived / loading.MinimumHubInstances, 0, 1) * 0.5
+		local settleProgress = math.clamp(settledFor / loading.HubSettleSeconds, 0, 1) * 0.5
+		local replicated = arrivalProgress + settleProgress
 		local timeProgress = math.clamp(elapsed / loading.MinimumSeconds, 0, 1)
 
-		-- The bar shows the SLOWER of the two, so it never sits at 100% while
-		-- the screen refuses to let the player in -- the single most annoying
-		-- thing a loading bar can do.
-		local shown = math.min(instanceProgress, timeProgress)
+		local shown = math.min(replicated, timeProgress)
 		UIKit.tween(progressFill, UITheme.Motion.Normal, { Size = UDim2.fromScale(shown, 1) })
 		statusLabel.Text = string.format("Building the Crossroads…  %d%%", math.floor(shown * 100))
 
+		local replicationDone = settledFor >= loading.HubSettleSeconds
 		if elapsed >= loading.MaximumSeconds then
 			setReady("Taking longer than usual — you can go in now.")
-		elseif instanceProgress >= 1 and elapsed >= loading.MinimumSeconds then
+		elseif replicationDone and preloadDone and elapsed >= loading.MinimumSeconds then
 			setReady("Ready.")
 		end
 
-		task.wait(0.2)
+		task.wait(loading.HubPollSeconds)
 	end
 end
 
