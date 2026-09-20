@@ -358,8 +358,17 @@ The first thing anyone sees, and none of it has been rendered.
 6. **Codes.** Enter `LUCKBOUND`. ✅ Pass: +150 Fate and a message. Enter it
    again: *"You have already redeemed that code."* Enter nonsense: *"That code
    is not valid."*
-7. **Settings.** Move a slider, flip Reduce Motion. ✅ Pass: with Reduce Motion
-   on, panels snap rather than slide — **but the roll reveal is unchanged.**
+7. **Settings.** ✅ Pass, one at a time:
+   - **Interface size** — the whole UI grows and shrinks as you drag, live.
+   - **Reduce motion** — panels snap rather than slide. **The roll reveal is
+     unchanged**, deliberately.
+   - **Music / Effects** — nothing audible yet (the game has no sound), but
+     `SoundService.LuckboundMusic.Volume` should track the slider. Check it in
+     the Explorer.
+   - **Others' rolls** — needs a second player, or `/roll` from another client.
+     Off: their banner does not appear. Yours still does.
+   - **Screen shake** — stored only; nothing shakes yet, by design.
+   - Rejoin. ✅ Pass: everything you set is still set.
 8. **Roll at the Engine with the menu open.** ✅ Pass: the whole menu
    disappears for the reveal and comes back after the card.
 9. **Enter an expedition.** ✅ Pass: the menu is **gone** — rail, arrow and

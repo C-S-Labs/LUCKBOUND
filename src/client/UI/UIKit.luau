@@ -164,14 +164,44 @@ function UIKit.button(parent: Instance, text: string, style: string?, onClick: (
 	button.MouseLeave:Connect(function()
 		UIKit.tween(button, UITheme.Motion.Quick, { BackgroundColor3 = base }, true)
 	end)
-	button.MouseButton1Down:Connect(function()
+	-- THE PRESS ANIMATION MUST RESTORE THE BUTTON'S OWN SIZE, NOT THE DEFAULT.
+	--
+	-- This released with the release tween hard-coded to UDim2.new(1, 0, 0, 44)
+	-- -- the size the constructor happens to start with. Every caller that
+	-- resizes its button afterwards (the travel rows are 104x38) therefore had
+	-- it snap to full width on the first click and stay there, covering the
+	-- label it sat next to. Reported from the first Studio walk of the menu,
+	-- and visible in a screenshot as four rows of nothing but TRAVEL.
+	--
+	-- The resting size is captured at press time rather than at construction,
+	-- so a button that is resized or re-laid out later still returns to
+	-- wherever it currently belongs.
+	local restingSize: UDim2? = nil
+
+	local function press()
+		if restingSize == nil then
+			restingSize = button.Size
+		end
 		-- A press is a shrink, not a flash: it reads on a phone, where there
 		-- is no cursor to show a hover in the first place.
-		UIKit.tween(button, UITheme.Motion.Instant, { Size = button.Size - UDim2.fromOffset(0, 3) })
-	end)
-	button.MouseButton1Up:Connect(function()
-		UIKit.tween(button, UITheme.Motion.Quick, { Size = UDim2.new(1, 0, 0, 44) })
-	end)
+		UIKit.tween(button, UITheme.Motion.Instant, {
+			Size = (restingSize :: UDim2) - UDim2.fromOffset(0, 3),
+		})
+	end
+
+	local function release()
+		if restingSize == nil then
+			return
+		end
+		UIKit.tween(button, UITheme.Motion.Quick, { Size = restingSize :: UDim2 })
+		restingSize = nil
+	end
+
+	button.MouseButton1Down:Connect(press)
+	button.MouseButton1Up:Connect(release)
+	-- Dragging off a pressed button must also let it go, or it stays shrunk
+	-- until the next click.
+	button.MouseLeave:Connect(release)
 
 	if onClick then
 		button.Activated:Connect(function()

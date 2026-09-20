@@ -18,6 +18,8 @@ local Constants = require(Root.Core.Constants)
 local GameConfig = require(Root.Core.GameConfig)
 local Net = require(Root.Core.Net)
 
+local SettingsController = require(script.Parent.Parent.Controllers.SettingsController)
+
 local GlobalAnnouncements = {}
 
 local player = Players.LocalPlayer
@@ -103,7 +105,27 @@ end
 
 --- `ageSeconds` > 0 means this is backfill for a late joiner: show it dimmed
 --- and briefly, because they were not here for it.
+--- Someone else's Mythic is a full-screen announcement, and on a busy server
+--- that is either the best thing about the game or the worst. The player
+--- decides (Settings > Others' rolls).
+---
+--- Only OTHER people's rolls are suppressed: your own result and anything
+--- world-scale (a Fatebreak, a Catalyst Star) still arrive, because those are
+--- not chatter -- they are the game changing around you.
+local function isSuppressed(payload: any): boolean
+	if payload.Kind ~= "ROLL" then
+		return false
+	end
+	if payload.PlayerName == nil or payload.PlayerName == player.Name then
+		return false
+	end
+	return not SettingsController.showsOthersRolls()
+end
+
 local function showBanner(payload: any, ageSeconds: number)
+	if isSuppressed(payload) then
+		return
+	end
 	local rarity = Constants.RARITY[payload.Rarity] or Constants.RARITY.COMMON
 	local isBackfill = ageSeconds > 2
 

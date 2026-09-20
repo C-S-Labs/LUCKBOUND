@@ -18,6 +18,7 @@ local LocomotionController = require(Controllers.LocomotionController)
 local EventController = require(Controllers.EventController)
 local ThemeController = require(Controllers.ThemeController)
 local SkyController = require(Controllers.SkyController)
+local SettingsController = require(Controllers.SettingsController)
 local DebugCommands = require(Controllers.DebugCommands)
 local FateRoll = require(UI.FateRoll)
 local GlobalAnnouncements = require(UI.GlobalAnnouncements)
@@ -32,6 +33,10 @@ local LoadingScreen = require(UI.LoadingScreen)
 LoadingScreen.init()
 
 StateController.init()
+-- Settings before the screens they affect: it adopts any ScreenGui that
+-- already exists and watches for the rest, so a panel built later is scaled
+-- the moment it appears.
+SettingsController.init()
 HubEffects.init()
 ProximityController.init()
 -- The HUD before the controller: the controller fires state immediately to

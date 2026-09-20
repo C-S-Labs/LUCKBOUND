@@ -101,7 +101,7 @@ setting overrides both, applied **once** when their profile arrives.
 |---|---|---|
 | Travel | **LIVE** | Five destinations, server-validated, **no cooldown** — press, a ~0.5s fade, arrive |
 | Codes | **LIVE** | A text box; the server decides and the answer is what the player reads |
-| Settings | **LIVE** | Drawn from `SettingsCore.SPEC`; saved to the profile |
+| Settings | **LIVE** | Drawn from `SettingsCore.SPEC`, saved to the profile, and applied by `SettingsController` — see §3.6 |
 | Shop | PREVIEW | Designed screen, placeholder copy, labelled |
 | Fate Tree | PREVIEW | ditto — see `PLAYER_ABILITIES.md` §3 for the branch design |
 | Party | PREVIEW | ditto |
@@ -189,6 +189,25 @@ then Id. Longest-running rather than newest is deliberate — a tie broken by
 recency would flip the sky whenever an equal event started somewhere, and a
 sky that changes for no visible reason reads as a bug.
 
+### 3.6 What each setting actually does
+
+`SettingsCore` declares and validates; `StateController` holds and syncs;
+`SettingsController` applies. The third of those was missing until the second
+Studio walk reported, correctly, that the Settings panel did nothing.
+
+| Setting | Drives |
+|---|---|
+| **Music / Effects** | Two `SoundGroup`s in `SoundService`. Every sound the game plays must be parented to one of them and the sliders then work for free |
+| **Interface size** | A `UIScale` on every Luckbound `ScreenGui`, including ones built later |
+| **Others' rolls** | Whether another player's roll banner is shown. Your own result and anything world-scale still arrive — those are not chatter |
+| **Reduce motion** | Read by `UIKit.tween` and `ThemeController`; collapses every UI tween. Never shortens the roll reveal |
+| **Start with menu hidden** | Read once by `HubMenu` when the profile arrives |
+| **Screen shake** | **Nothing yet.** Nothing in the game shakes. Readable via `SettingsController.screenShake()` so that whoever builds a shake honours it from its first frame |
+
+**The sound groups are created before any sound exists**, deliberately. A
+sound added to a game with no routing is a sound that ships ignoring the
+volume slider — by the time anyone notices, there are forty of them.
+
 ## 4. The design system
 
 Everything visual comes from `UITheme`: three surface depths, one spacing
@@ -218,5 +237,5 @@ directions is what makes a menu feel rubbery.
 | **Five settings drive nothing** — see below | Medium | (unchanged) |
 | The live tint is unseen | **High** | Hue-shift-at-constant-luminance is correct on paper and has never been looked at. On dark surfaces it is subtle by construction — it may need to be stronger, and `Strength` in `Content/Hub/Palettes` is the only dial |
 | No sound | Low | Every one of these beats wants a sound: the rail opening, PLAY, a code accepted. There is no audio system yet |
-| Settings do not drive anything yet | Medium | `ReduceMotion` and `AutoHideMenu` do. `MusicVolume`, `SfxVolume`, `UiScale`, `ScreenShake` and `ShowGlobalAnnouncements` are stored and honoured by nothing, because the systems they would drive do not exist |
+| No audio at all | Medium | The `SoundGroup`s exist and the sliders drive them, but the game plays no sound. Every beat in the UI wants one — the rail opening, PLAY, a code accepted |
 | The travel fade is open-loop | Low | The client fades out, *then* sends the request. If the server refuses mid-fade, the player gets a brief black screen and a refusal rather than no fade at all. The fade is ~0.5s end to end, so the cost of being wrong is small |
