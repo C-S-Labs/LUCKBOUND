@@ -117,9 +117,18 @@ local Constants = {
 	DATASTORE = {
 		PROFILE_STORE = "LUCKBOUND_Profiles_v1",
 		KEY_PREFIX = "player_",
+		-- THE SCARCITY LEDGER. Separate store from profiles on purpose: it is
+		-- the one piece of data in the game that is about the GAME rather
+		-- than about a player, it must never be wiped with a profile, and it
+		-- is written by a different code path with different failure rules
+		-- (LedgerSystem fails closed; SaveSystem fails open).
+		LEDGER_STORE = "LUCKBOUND_Ledger_v1",
+		LEDGER_PREFIX = "unique_",
 	},
 
-	CURRENT_SCHEMA_VERSION = 1,
+	-- v2 added RedeemedCodes and Settings, for the hub menu's Codes and
+	-- Settings panels. ProfileSchema.MIGRATIONS[1] fills both in.
+	CURRENT_SCHEMA_VERSION = 2,
 }
 
 return deepFreeze(Constants)

@@ -15,6 +15,16 @@ local AssetManifest = __require("AssetManifest")
 local ChunkCore = __require("ChunkCore")
 local ExpeditionCore = __require("ExpeditionCore")
 local Chunks = __require("Chunks")
+local Menu = __require("Menu")
+local Cinematics = __require("Cinematics")
+local Codes = __require("Codes")
+local HubMenuCore = __require("HubMenuCore")
+local CodeCore = __require("CodeCore")
+local SettingsCore = __require("SettingsCore")
+local LocomotionCore = __require("LocomotionCore")
+local ThemeCore = __require("ThemeCore")
+local Palettes = __require("Palettes")
+local EventCore = __require("EventCore")
 
 -- === tiny harness ===================================================
 local passed, failed = 0, 0
@@ -413,11 +423,23 @@ do
 	local migrated = ProfileSchema.migrate(nil, now)
 	check("nil stored data yields a default profile", migrated.SchemaVersion == ProfileSchema.CURRENT)
 
-	local partial = { SchemaVersion = 1, FatePoints = 500 }
+	local partial = { SchemaVersion = ProfileSchema.CURRENT, FatePoints = 500 }
 	local filled, applied = ProfileSchema.migrate(partial, now)
 	check("missing fields are backfilled", filled.RollHistory ~= nil and filled.Stats ~= nil)
 	check("backfill preserves existing values", filled.FatePoints == 500)
 	check("no migrations run for a current-version profile", applied == 0)
+
+	-- v1 -> v2 added the hub menu's two fields. A v1 profile is what every
+	-- existing tester's save IS, so this is the migration that actually runs
+	-- in the wild rather than a hypothetical one.
+	local legacy = { SchemaVersion = 1, FatePoints = 900, FateLevel = 4 }
+	local upgraded, steps = ProfileSchema.migrate(legacy, now)
+	check("a v1 profile migrates to the current version", upgraded.SchemaVersion == ProfileSchema.CURRENT)
+	check("exactly one migration ran", steps == 1)
+	check("the migration keeps what was there", upgraded.FatePoints == 900 and upgraded.FateLevel == 4)
+	check("the migration adds RedeemedCodes", type(upgraded.RedeemedCodes) == "table")
+	check("the migration adds a full settings table",
+		type(upgraded.Settings) == "table" and upgraded.Settings.MusicVolume ~= nil)
 
 	local future = { SchemaVersion = 99 }
 	local f = ProfileSchema.migrate(future, now)
@@ -2406,6 +2428,1001 @@ do
 		)
 	)
 end
+
+-- === the hub menu ===================================================
+do
+	group("The hub menu, as data")
+
+	local ok, errors = Schema.validateHubMenu(Menu, GameConfig)
+	check("the shipped menu validates", ok, table.concat(errors, "; "))
+
+	local panels = HubMenuCore.panels(Menu)
+	check("every panel the owner asked for exists", (function()
+		local wanted = { "TRAVEL", "SHOP", "CODES", "SKILLS", "PARTY", "REBIRTH", "SETTINGS" }
+		for _, id in wanted do
+			if not HubMenuCore.panelById(Menu, id) then
+				return false
+			end
+		end
+		return true
+	end)())
+
+	-- The owner's order, 2026-09-20. Pinned because it is a deliberate
+	-- grouping (get somewhere, get someone, progression, transactions,
+	-- settings) and alphabetical or add-order drift would undo it silently.
+	check("the rail is in the order the owner set", (function()
+		local wanted = { "TRAVEL", "PARTY", "SKILLS", "REBIRTH", "SHOP", "CODES", "SETTINGS" }
+		for index, id in wanted do
+			if panels[index] == nil or panels[index].Id ~= id then
+				return false
+			end
+		end
+		return #panels == #wanted
+	end)())
+
+	check("panels come back in rail order", (function()
+		for i = 2, #panels do
+			if panels[i - 1].Order > panels[i].Order then
+				return false
+			end
+		end
+		return true
+	end)())
+
+	-- The rail is the thing the owner asked not to be overwhelming. A hard
+	-- cap turns "do not add a tenth button" from taste into a failing build.
+	check("the rail stays short enough to read at a glance", #panels <= 8,
+		string.format("%d panels", #panels))
+
+	check("sorting the result cannot reorder the content table", (function()
+		local first = Menu.Panels[1].Id
+		local copy = HubMenuCore.panels(Menu)
+		table.sort(copy, function(a, b) return a.Order > b.Order end)
+		return Menu.Panels[1].Id == first
+	end)())
+
+	-- === travel =====================================================
+	local destinations = HubMenuCore.destinations(Menu)
+	check("there are five destinations -- the Engine and the four districts",
+		#destinations == 5, string.format("%d", #destinations))
+
+	check("every destination names a real hub anchor", (function()
+		for _, destination in destinations do
+			if GameConfig.HubLayout.Anchors[destination.AnchorId] == nil then
+				return false
+			end
+		end
+		return true
+	end)())
+
+	check("every district in Content/Hub/Crossroads is reachable", (function()
+		for _, district in Crossroads.Districts do
+			if not HubMenuCore.destinationById(Menu, district.Id) then
+				return false
+			end
+		end
+		return true
+	end)())
+
+	check("landing points are offsets from the anchor, not absolute positions", (function()
+		for _, destination in destinations do
+			local point = HubMenuCore.landingPoint(destination)
+			local expected = destination.Anchor + destination.Landing
+			if point.X ~= expected.X or point.Y ~= expected.Y or point.Z ~= expected.Z then
+				return false
+			end
+		end
+		return true
+	end)())
+
+	-- A landing must not be so far from its anchor that the district it
+	-- names is not the district you arrive in. Platforms run to 320 studs
+	-- across, so half of that is the widest a landing can honestly be.
+	check("a landing stays on the platform it names", (function()
+		for _, destination in destinations do
+			local landing = destination.Landing
+			if math.sqrt(landing.X ^ 2 + landing.Z ^ 2) > 160 then
+				return false
+			end
+		end
+		return true
+	end)())
+
+	check("the Fate Engine's landing clears its dais", (function()
+		local engine = HubMenuCore.destinationById(Menu, "FATE_ENGINE")
+		local distance = math.sqrt(engine.Landing.X ^ 2 + engine.Landing.Z ^ 2)
+		-- The authored Platform is ~47 studs across, so anything inside ~24
+		-- would stand the player inside the dais geometry.
+		return distance > 24
+	end)())
+
+	check("nobody arrives below the hub floor", (function()
+		for _, destination in destinations do
+			if destination.Landing.Y <= 0 then
+				return false
+			end
+		end
+		return true
+	end)())
+
+	-- === the visibility rule ========================================
+	check("the menu is visible in the hub", HubMenuCore.isVisible(nil, GameConfig))
+	check("the menu is NOT visible on an expedition",
+		not HubMenuCore.isVisible({ WorldId = "ETHEREAL_SCAPE" }, GameConfig))
+	check("one config flag turns the whole menu off",
+		not HubMenuCore.isVisible(nil, cfg({ HubMenu = { Enabled = false } })))
+
+	-- === the reducer ================================================
+	local state = HubMenuCore.newState(GameConfig, false)
+	check("a desktop rail starts open", state.Collapsed == false)
+	check("a touch rail starts collapsed",
+		HubMenuCore.newState(GameConfig, true).Collapsed == GameConfig.HubMenu.StartCollapsedOnTouch)
+
+	state = HubMenuCore.reduce(state, { Kind = "TOGGLE_PANEL", PanelId = "TRAVEL" }, GameConfig)
+	check("toggling a panel opens it", state.OpenPanelId == "TRAVEL")
+
+	state = HubMenuCore.reduce(state, { Kind = "TOGGLE_PANEL", PanelId = "SHOP" }, GameConfig)
+	check("opening a second panel closes the first", state.OpenPanelId == "SHOP")
+
+	state = HubMenuCore.reduce(state, { Kind = "TOGGLE_PANEL", PanelId = "SHOP" }, GameConfig)
+	check("toggling the open panel closes it", state.OpenPanelId == nil)
+
+	state = HubMenuCore.reduce(state, { Kind = "OPEN_PANEL", PanelId = "CODES" }, GameConfig)
+	state = HubMenuCore.reduce(state, { Kind = "TOGGLE_COLLAPSE" }, GameConfig)
+	check("collapsing the rail takes the panel with it",
+		state.Collapsed and state.OpenPanelId == nil)
+
+	state = HubMenuCore.reduce(state, { Kind = "TOGGLE_COLLAPSE" }, GameConfig)
+	check("expanding again does not restore the panel", state.OpenPanelId == nil)
+
+	state = HubMenuCore.reduce(state, { Kind = "OPEN_PANEL", PanelId = "TRAVEL" }, GameConfig)
+	state = HubMenuCore.reduce(state, { Kind = "SET_VISIBLE", Visible = false }, GameConfig)
+	check("leaving the hub closes whatever was open",
+		state.Visible == false and state.OpenPanelId == nil)
+
+	check("the reducer never mutates the state it was given", (function()
+		local before = HubMenuCore.newState(GameConfig, false)
+		HubMenuCore.reduce(before, { Kind = "OPEN_PANEL", PanelId = "SHOP" }, GameConfig)
+		return before.OpenPanelId == nil
+	end)())
+
+	-- === travel authorisation =======================================
+	local function request(overrides)
+		local r = {
+			DestinationId = "HALL_OF_LEGENDS",
+			OnExpedition = false,
+			Rolling = false,
+		}
+		for k, v in overrides or {} do r[k] = v end
+		return r
+	end
+
+	check("a plain request is allowed", HubMenuCore.canTravel(Menu, request(), GameConfig).ok)
+
+	check("a fabricated destination is refused by name", (function()
+		local result = HubMenuCore.canTravel(Menu, request({ DestinationId = "MOON" }), GameConfig)
+		return not result.ok and result.err == "Unknown destination."
+	end)())
+
+	check("a non-string destination is refused rather than resolved", (function()
+		return not HubMenuCore.canTravel(Menu, request({ DestinationId = 5 }), GameConfig).ok
+	end)())
+
+	check("travel is refused on an expedition",
+		not HubMenuCore.canTravel(Menu, request({ OnExpedition = true }), GameConfig).ok)
+
+	check("travel is refused mid-roll",
+		not HubMenuCore.canTravel(Menu, request({ Rolling = true }), GameConfig).ok)
+
+	-- NO COOLDOWN, owner-directed. Travelling twice in a row is allowed, and
+	-- the config must not grow a cooldown field by the back door -- a version
+	-- of this that only removed the CHECK would leave the next session to
+	-- find the number and wire it back up.
+	check("travelling twice in a row is allowed",
+		HubMenuCore.canTravel(Menu, request(), GameConfig).ok
+			and HubMenuCore.canTravel(Menu, request(), GameConfig).ok)
+
+	check("no travel cooldown exists to be checked",
+		GameConfig.HubMenu.TeleportCooldownSeconds == nil
+			and HubMenuCore.travelCooldownRemaining == nil)
+
+	-- The rate limit is a spam guard, not a cooldown wearing another name: a
+	-- player pressing the button as fast as they can must never meet it.
+	check("the rate limit is far above what a human can press",
+		GameConfig.HubMenu.TeleportRequestsPerMinute >= 30,
+		string.format("%d/min", GameConfig.HubMenu.TeleportRequestsPerMinute))
+
+	-- The fade covers the swap, so the player never sees the world change --
+	-- and it is now the ONLY thing between pressing TRAVEL and arriving, so
+	-- it has a ceiling as well as a floor.
+	local timing = HubMenuCore.travelTiming(GameConfig)
+	check("the travel fade is long enough to hide the swap",
+		timing.FadeOut > 0 and timing.Total > timing.FadeOut)
+	check("...and short enough to read as instant",
+		timing.Total <= 0.75, string.format("%.2fs", timing.Total))
+end
+
+-- === the loading screen's shots =====================================
+do
+	group("The loading screen")
+
+	local ok, errors = Schema.validateCinematics(Cinematics, Worlds)
+	check("the shipped shot list validates", ok, table.concat(errors, "; "))
+
+	check("there is more than one shot", #Cinematics.Shots > 1)
+
+	-- A shot of a biome would be a shot of empty sky: expedition maps are
+	-- built 20000 studs up and only while somebody is inside one. Until
+	-- expeditions move to their own place, every shot must be a hub shot.
+	check("every shot frames geometry that exists while loading", (function()
+		for _, shot in Cinematics.Shots do
+			if shot.WorldId ~= nil then
+				return false
+			end
+		end
+		return true
+	end)())
+
+	check("no shot puts the camera inside its own subject", (function()
+		for _, shot in Cinematics.Shots do
+			if shot.Radius <= 0 or shot.Height <= 0 then
+				return false
+			end
+		end
+		return true
+	end)())
+
+	-- The tour must outlast the minimum hold, or a player on a warm client
+	-- sees the first shot cut mid-move on the way to the Play button.
+	check("one shot outlasts the minimum hold",
+		GameConfig.Loading.ShotSeconds >= GameConfig.Loading.MinimumSeconds,
+		string.format("shot %.1fs, hold %.1fs",
+			GameConfig.Loading.ShotSeconds, GameConfig.Loading.MinimumSeconds))
+
+	check("the screen can never trap a player",
+		GameConfig.Loading.MaximumSeconds > GameConfig.Loading.MinimumSeconds)
+
+	-- It waits on the hub that HubBuilder actually builds. Asking for more
+	-- instances than the hub HAS would hold every player to the timeout.
+	check("the instance target is under the hub's own budget",
+		GameConfig.Loading.RequiredHubInstances <= 436,
+		string.format("%d required", GameConfig.Loading.RequiredHubInstances))
+end
+
+-- === codes ==========================================================
+do
+	group("Redeemable codes")
+
+	local ok, errors = Schema.validateCodes(Codes)
+	check("the shipped code list validates", ok, table.concat(errors, "; "))
+
+	check("case does not matter", CodeCore.normalise("LuckBound") == "LUCKBOUND")
+	check("spaces and punctuation do not matter",
+		CodeCore.normalise(" luck-bound ") == "LUCKBOUND")
+	check("a non-string normalises to empty", CodeCore.normalise(nil) == "")
+
+	local function freshProfile()
+		return ProfileSchema.default(1700000000)
+	end
+
+	check("a valid code is accepted", CodeCore.redeem(Codes, freshProfile(), "luckbound", 1700000000, GameConfig).ok)
+
+	check("the reward comes from content, never from the caller", (function()
+		local result = CodeCore.redeem(Codes, freshProfile(), "LUCKBOUND", 1700000000, GameConfig)
+		return result.ok and result.value.Fate == Codes.LAUNCH.Fate
+	end)())
+
+	check("an unknown code is refused", (function()
+		local result = CodeCore.redeem(Codes, freshProfile(), "NOPE", 1700000000, GameConfig)
+		return not result.ok and result.err == "That code is not valid."
+	end)())
+
+	check("an empty code asks for one", (function()
+		local result = CodeCore.redeem(Codes, freshProfile(), "   ", 1700000000, GameConfig)
+		return not result.ok and result.err == "Enter a code."
+	end)())
+
+	-- The cap is checked on the RAW string, so a megabyte of punctuation is
+	-- refused before it is normalised rather than after.
+	check("an oversized code is refused before it is processed", (function()
+		local huge = string.rep("!", GameConfig.Codes.MaxLength + 1)
+		return not CodeCore.redeem(Codes, freshProfile(), huge, 1700000000, GameConfig).ok
+	end)())
+
+	check("the same code cannot be redeemed twice", (function()
+		local profile = freshProfile()
+		local first = CodeCore.redeem(Codes, profile, "LUCKBOUND", 1700000000, GameConfig)
+		CodeCore.record(profile, first.value.Id, 1700000000)
+		local second = CodeCore.redeem(Codes, profile, "luck bound", 1700000000, GameConfig)
+		return not second.ok and second.err == "You have already redeemed that code."
+	end)())
+
+	check("deciding does not write", (function()
+		local profile = freshProfile()
+		CodeCore.redeem(Codes, profile, "LUCKBOUND", 1700000000, GameConfig)
+		return next(profile.RedeemedCodes) == nil
+	end)())
+
+	check("an expired code says so rather than 'not valid'", (function()
+		local expired = {
+			OLD = { Id = "OLD", Code = "OLDCODE", Fate = 10, Message = "hi", ExpiresAt = 100 },
+		}
+		local result = CodeCore.redeem(expired, freshProfile(), "OLDCODE", 200, GameConfig)
+		return not result.ok and result.err == "That code has expired."
+	end)())
+
+	check("codes can be closed with one flag",
+		not CodeCore.redeem(Codes, freshProfile(), "LUCKBOUND", 1700000000,
+			cfg({ Codes = { Enabled = false } })).ok)
+
+	check("a code grants Fate through the same maths as any other award", (function()
+		local profile = freshProfile()
+		local points, level = ProgressionCore.grant(profile, Codes.TESTER.Fate, GameConfig)
+		return points == Codes.TESTER.Fate and level == ProgressionCore.levelForPoints(points, GameConfig)
+	end)())
+
+	check("a negative grant is a programmer error, not a refund",
+		(throws(function()
+			ProgressionCore.grant(freshProfile(), -50, GameConfig)
+		end)))
+end
+
+-- === settings =======================================================
+do
+	group("Player settings")
+
+	local defaults = SettingsCore.defaults()
+	check("every setting in the spec has a default", (function()
+		for _, entry in SettingsCore.SPEC do
+			if defaults[entry.Id] == nil then
+				return false
+			end
+		end
+		return true
+	end)())
+
+	check("a number setting clamps rather than refusing",
+		SettingsCore.validate("MusicVolume", 5).value == 1)
+	check("...at both ends", SettingsCore.validate("MusicVolume", -3).value == 0)
+	check("NaN falls back to the default rather than being stored",
+		SettingsCore.validate("MusicVolume", 0 / 0).value == 0.6)
+	check("a boolean setting refuses a number",
+		not SettingsCore.validate("ReduceMotion", 1).ok)
+	check("an unknown setting is refused",
+		not SettingsCore.validate("GodMode", true).ok)
+	check("a non-string id is refused", not SettingsCore.validate(7, true).ok)
+
+	local sanitised = SettingsCore.sanitise({
+		MusicVolume = 99,
+		GodMode = true,
+		ReduceMotion = "yes",
+	})
+	check("sanitising clamps what it can", sanitised.MusicVolume == 1)
+	check("sanitising drops what it cannot", sanitised.GodMode == nil)
+	check("sanitising replaces a bad value with its default",
+		sanitised.ReduceMotion == false)
+	check("sanitising fills in everything missing", (function()
+		for _, entry in SettingsCore.SPEC do
+			if sanitised[entry.Id] == nil then
+				return false
+			end
+		end
+		return true
+	end)())
+	check("anything at all can be sanitised", (function()
+		return SettingsCore.sanitise("nonsense").MusicVolume == 0.6
+	end)())
+
+	check("a new profile carries valid settings", (function()
+		local profile = ProfileSchema.default(1700000000)
+		for _, entry in SettingsCore.SPEC do
+			if profile.Settings[entry.Id] == nil then
+				return false
+			end
+		end
+		return true
+	end)())
+end
+
+-- === movement =======================================================
+do
+	group("Player abilities: run and double jump")
+
+	local function state()
+		return LocomotionCore.newState(GameConfig, 0)
+	end
+
+	local function sprintFor(seconds, from)
+		local s = from or state()
+		local dt = 1 / 60
+		local elapsed = 0
+		while elapsed < seconds do
+			s = LocomotionCore.step(s, dt, {
+				WantsSprint = true,
+				Moving = true,
+				Grounded = true,
+				Now = elapsed,
+			}, GameConfig)
+			elapsed += dt
+		end
+		return s, elapsed
+	end
+
+	check("a fresh state starts with full stamina",
+		LocomotionCore.staminaFraction(state(), GameConfig) == 1)
+
+	check("sprinting is faster than walking", (function()
+		local s = sprintFor(0.5)
+		return LocomotionCore.targetSpeed(s, GameConfig) > GameConfig.Scale.WalkSpeed
+	end)())
+
+	-- Sprint is a multiplier on the hub's traversal budget, never a second
+	-- speed to keep in step with it.
+	check("sprint speed is derived from the hub's walk speed", (function()
+		local s = sprintFor(0.5)
+		return LocomotionCore.targetSpeed(s, GameConfig)
+			== GameConfig.Scale.WalkSpeed * GameConfig.Locomotion.SprintMultiplier
+	end)())
+
+	check("holding sprint while stood still costs nothing", (function()
+		local s = LocomotionCore.step(state(), 1, {
+			WantsSprint = true,
+			Moving = false,
+			Grounded = true,
+			Now = 0,
+		}, GameConfig)
+		return s.Stamina == GameConfig.Locomotion.StaminaMax and not s.Sprinting
+	end)())
+
+	check("stamina drains while sprinting", (function()
+		local s = sprintFor(2)
+		return s.Stamina < GameConfig.Locomotion.StaminaMax
+	end)())
+
+	local drained = sprintFor(GameConfig.Locomotion.StaminaMax / GameConfig.Locomotion.StaminaDrainPerSecond + 0.5)
+	check("a sprint ends when stamina runs out",
+		drained.Stamina == 0 and not drained.Sprinting)
+
+	check("you cannot restart a sprint the instant you run dry",
+		not LocomotionCore.canStartSprint(drained, drained.RegenBlockedUntil - 0.1, GameConfig))
+
+	check("stamina refills once the delay has passed", (function()
+		local s = drained
+		local now = s.RegenBlockedUntil + 0.001
+		for _ = 1, 60 do
+			s = LocomotionCore.step(s, 1 / 60, {
+				WantsSprint = false,
+				Moving = true,
+				Grounded = true,
+				Now = now,
+			}, GameConfig)
+			now += 1 / 60
+		end
+		return s.Stamina > 0
+	end)())
+
+	check("stamina never exceeds its maximum", (function()
+		local s = state()
+		for i = 1, 600 do
+			s = LocomotionCore.step(s, 1 / 60, {
+				WantsSprint = false,
+				Moving = true,
+				Grounded = true,
+				Now = i / 60,
+			}, GameConfig)
+		end
+		return s.Stamina == GameConfig.Locomotion.StaminaMax
+	end)())
+
+	check("a full drain takes the number of seconds the config says it does", (function()
+		local seconds = GameConfig.Locomotion.StaminaMax / GameConfig.Locomotion.StaminaDrainPerSecond
+		-- 8 seconds of sprint. Long enough to cross a district, short enough
+		-- that it is a decision.
+		return seconds >= 5 and seconds <= 12
+	end)())
+
+	-- === jumps ======================================================
+	check("the first jump on the ground is the ground jump",
+		LocomotionCore.jumpKind(state(), 0, GameConfig) == "GROUND")
+
+	check("the second press in the air is the air jump", (function()
+		local s, kind = LocomotionCore.jump(state(), 0, GameConfig)
+		if kind ~= "GROUND" then return false end
+		s = LocomotionCore.step(s, 1 / 60, {
+			WantsSprint = false, Moving = true, Grounded = false, Now = 0.5,
+		}, GameConfig)
+		local _, second = LocomotionCore.jump(s, 0.5, GameConfig)
+		return second == "AIR"
+	end)())
+
+	check("there is no third jump", (function()
+		local s, _ = LocomotionCore.jump(state(), 0, GameConfig)
+		s = LocomotionCore.step(s, 1 / 60, {
+			WantsSprint = false, Moving = true, Grounded = false, Now = 0.5,
+		}, GameConfig)
+		local afterAir = select(1, LocomotionCore.jump(s, 0.5, GameConfig))
+		local _, third = LocomotionCore.jump(afterAir, 1.5, GameConfig)
+		return third == nil
+	end)())
+
+	check("one input frame cannot spend two jumps", (function()
+		local s = state()
+		s = LocomotionCore.step(s, 1 / 60, {
+			WantsSprint = false, Moving = true, Grounded = false, Now = 1,
+		}, GameConfig)
+		-- Already past the coyote window, so the first press is the air jump.
+		s.LastGroundedAt = 0
+		local afterFirst, first = LocomotionCore.jump(s, 1, GameConfig)
+		local _, second = LocomotionCore.jump(afterFirst, 1, GameConfig)
+		return first == "AIR" and second == nil
+	end)())
+
+	check("landing gives the jumps back", (function()
+		local s = state()
+		s.AirJumpsUsed = GameConfig.Locomotion.AirJumps
+		s.GroundJumpSpent = true
+		s = LocomotionCore.step(s, 1 / 60, {
+			WantsSprint = false, Moving = true, Grounded = true, Now = 2,
+		}, GameConfig)
+		return s.AirJumpsUsed == 0 and s.GroundJumpSpent == false
+	end)())
+
+	-- THE COYOTE WINDOW. Walking off a walkway and jumping must spend the
+	-- GROUND jump, not the air jump -- otherwise stepping off an edge
+	-- silently costs the player their double jump.
+	check("stepping off an edge still gets the ground jump", (function()
+		local s = state()
+		s = LocomotionCore.step(s, 1 / 60, {
+			WantsSprint = false, Moving = true, Grounded = false,
+			Now = GameConfig.Locomotion.CoyoteTimeSeconds * 0.5,
+		}, GameConfig)
+		return LocomotionCore.jumpKind(s, GameConfig.Locomotion.CoyoteTimeSeconds * 0.5, GameConfig) == "GROUND"
+	end)())
+
+	check("...but only for a moment", (function()
+		local s = state()
+		s = LocomotionCore.step(s, 1 / 60, {
+			WantsSprint = false, Moving = true, Grounded = false,
+			Now = GameConfig.Locomotion.CoyoteTimeSeconds * 3,
+		}, GameConfig)
+		return LocomotionCore.jumpKind(s, GameConfig.Locomotion.CoyoteTimeSeconds * 3, GameConfig) == "AIR"
+	end)())
+
+	check("the coyote window does not hand out an extra jump", (function()
+		local s = state()
+		s = LocomotionCore.step(s, 1 / 60, {
+			WantsSprint = false, Moving = true, Grounded = false,
+			Now = GameConfig.Locomotion.CoyoteTimeSeconds * 0.5,
+		}, GameConfig)
+		local afterGround = select(1, LocomotionCore.jump(s, GameConfig.Locomotion.CoyoteTimeSeconds * 0.5, GameConfig))
+		local afterAir, kind = LocomotionCore.jump(afterGround, 0.4, GameConfig)
+		local _, third = LocomotionCore.jump(afterAir, 1.0, GameConfig)
+		return kind == "AIR" and third == nil
+	end)())
+
+	check("stepping does not mutate the state it was given", (function()
+		local before = state()
+		LocomotionCore.step(before, 1, {
+			WantsSprint = true, Moving = true, Grounded = true, Now = 0,
+		}, GameConfig)
+		return before.Stamina == GameConfig.Locomotion.StaminaMax
+	end)())
+
+	-- PHASE SCOPE, PINNED. Movement abilities may not grow combat numbers:
+	-- a sword carries its own damage, and the day this config has a damage
+	-- field is the day that rule quietly broke.
+	check("no player ability config carries a combat number", (function()
+		for key in GameConfig.Locomotion do
+			local lowered = string.lower(key)
+			if string.find(lowered, "damage") or string.find(lowered, "attack")
+				or string.find(lowered, "crit") or string.find(lowered, "dps") then
+				return false
+			end
+		end
+		return true
+	end)())
+end
+
+
+-- === event scope and precedence =====================================
+do
+	group("Which event owns the sky")
+
+	local function event(overrides)
+		local e = {
+			Id = "E1",
+			Kind = "FATEBREAK",
+			Name = "Test",
+			Scope = "SERVER",
+			Priority = 0,
+			StartedAt = 1000,
+			EndsAt = 2000,
+		}
+		for k, v in overrides or {} do e[k] = v end
+		return e
+	end
+
+	check("no events means no dominant event", EventCore.dominant({}) == nil)
+
+	check("one event owns the sky by default",
+		EventCore.dominant({ event({}) }).Id == "E1")
+
+	-- Scope outranks priority on purpose: a game-wide event is by definition
+	-- the biggest news on screen, and a local event with a high number must
+	-- not shout over something happening to every player in the game.
+	check("a global event beats a server event", (function()
+		local winner = EventCore.dominant({
+			event({ Id = "LOCAL", Scope = "SERVER", Priority = 99 }),
+			event({ Id = "WORLDWIDE", Scope = "GLOBAL", Priority = 0 }),
+		})
+		return winner.Id == "WORLDWIDE"
+	end)())
+
+	check("a server event beats a biome event", (function()
+		local winner = EventCore.dominant({
+			event({ Id = "BIOME", Scope = "BIOME", WorldId = "EMBERFALL", Priority = 50 }),
+			event({ Id = "SERVER", Scope = "SERVER", Priority = 0 }),
+		}, { WorldId = "EMBERFALL" })
+		return winner.Id == "SERVER"
+	end)())
+
+	check("priority decides within a scope", (function()
+		local winner = EventCore.dominant({
+			event({ Id = "QUIET", Priority = 1 }),
+			event({ Id = "LOUD", Priority = 9 }),
+		})
+		return winner.Id == "LOUD"
+	end)())
+
+	-- A tie broken by recency would flip the sky every time an equal event
+	-- started somewhere, and a sky that changes for no visible reason reads
+	-- as a bug rather than as an event.
+	check("a tie goes to the event that has been running longest", (function()
+		local winner = EventCore.dominant({
+			event({ Id = "NEW", StartedAt = 1500 }),
+			event({ Id = "OLD", StartedAt = 1000 }),
+		})
+		return winner.Id == "OLD"
+	end)())
+
+	check("a total tie is still deterministic", (function()
+		local a = EventCore.dominant({ event({ Id = "B" }), event({ Id = "A" }) })
+		local b = EventCore.dominant({ event({ Id = "A" }), event({ Id = "B" }) })
+		return a.Id == b.Id and a.Id == "A"
+	end)())
+
+	-- A BIOME event is confined to its world. Someone standing in the hub
+	-- must not get Emberfall's sky.
+	check("a biome event is invisible outside its biome",
+		EventCore.dominant({ event({ Scope = "BIOME", WorldId = "EMBERFALL" }) }, { WorldId = nil }) == nil)
+
+	check("...and visible inside it",
+		EventCore.dominant({ event({ Scope = "BIOME", WorldId = "EMBERFALL" }) },
+			{ WorldId = "EMBERFALL" }) ~= nil)
+
+	check("an unknown scope never owns the sky",
+		EventCore.dominant({ event({ Scope = "EVERYWHERE" }) }) == nil)
+
+	check("every scope the code accepts is one of the three",
+		EventCore.isValidScope("GLOBAL") and EventCore.isValidScope("SERVER")
+			and EventCore.isValidScope("BIOME") and not EventCore.isValidScope("WORLD")
+			and not EventCore.isValidScope(nil))
+
+	-- The snapshot is the only thing a client ever sees. A field missing
+	-- from it may as well not exist on the server.
+	check("the snapshot carries scope, world and priority", (function()
+		local state = EventCore.newState()
+		EventCore.startEvent(state, event({
+			Scope = "BIOME", WorldId = "EMBERFALL", Priority = 3, EndsAt = 9999,
+		}))
+		local snap = EventCore.snapshot(state, 1000, GameConfig)
+		local first = snap.ActiveEvents[1]
+		return first.Scope == "BIOME" and first.WorldId == "EMBERFALL" and first.Priority == 3
+	end)())
+end
+
+-- === the live palette ===============================================
+do
+	group("The live menu palette")
+
+	local ok, errors = Schema.validatePalettes(Palettes, Menu)
+	check("the shipped palettes validate", ok, table.concat(errors, "; "))
+
+	local base = ThemeCore.base()
+
+	check("the base palette is UITheme, untouched", (function()
+		for _, token in ThemeCore.TINTABLE do
+			if base[token] ~= UITheme[token] then
+				return false
+			end
+		end
+		return true
+	end)())
+
+	-- Every district, every event, and every combination of the two. This is
+	-- the whole point of the resolver being pure: "what does the menu look
+	-- like in the Archive during a Catalyst Star" is an assertion rather than
+	-- a thing somebody has to stand in.
+	local function everyContext()
+		local contexts = { { DistrictId = nil, Event = nil } }
+		for _, district in Palettes.Districts do
+			table.insert(contexts, { DistrictId = district.Id, Event = nil })
+			for _, e in Palettes.Events do
+				table.insert(contexts, { DistrictId = district.Id, Event = { Kind = e.Kind } })
+			end
+		end
+		for _, e in Palettes.Events do
+			table.insert(contexts, { DistrictId = nil, Event = { Kind = e.Kind } })
+		end
+		return contexts
+	end
+
+	local contexts = everyContext()
+	check("there is more than one palette to check", #contexts > 10,
+		string.format("%d contexts", #contexts))
+
+	-- RULE 1: only surfaces tint. Gold means "press this", teal means
+	-- "designed, not built", and the seven rarity colours are a contract.
+	-- The Archive's authored accent IS that teal and the Hall's IS that gold,
+	-- so this is a live collision, not a hypothetical one.
+	check("no palette moves a colour that carries a meaning", (function()
+		for _, context in contexts do
+			local palette = ThemeCore.resolve(Palettes, context)
+			for _, token in { "AccentGold", "AccentCool", "AccentWarn",
+				"TextPrimary", "TextSecondary", "TextMuted" } do
+				if palette[token] ~= nil then
+					return false -- a semantic token must not even appear
+				end
+			end
+			for key in Constants.RARITY do
+				if palette[key] ~= nil then
+					return false
+				end
+			end
+		end
+		return true
+	end)())
+
+	check("the tintable list is exactly the surfaces", (function()
+		local expected = { PanelColor = true, RailColor = true, RaisedColor = true,
+			ScrimColor = true, StrokeColor = true }
+		local count = 0
+		for _, token in ThemeCore.TINTABLE do
+			if not expected[token] then
+				return false
+			end
+			count += 1
+		end
+		return count == 5
+	end)())
+
+	-- RULE 2: text stays readable. This is the test that matters most: a
+	-- Catalyst Star tint that looks magnificent on a panel is also the thing
+	-- that makes the Settings labels vanish, and nobody finds that by eye
+	-- until a player cannot turn the music down.
+	check("every palette keeps the faintest text readable", (function()
+		for _, context in contexts do
+			local palette = ThemeCore.resolve(Palettes, context)
+			for _, token in { "PanelColor", "RailColor", "RaisedColor", "ScrimColor" } do
+				local ratio = ThemeCore.contrast(UITheme.TextMuted, palette[token])
+				if ratio < ThemeCore.CONTRAST_FLOOR then
+					return false
+				end
+			end
+		end
+		return true
+	end)())
+
+	-- THE BASE THEME ITSELF MUST CLEAR THE FLOOR. This is what the contrast
+	-- test found first: TextMuted shipped at 3.40:1 against a raised row,
+	-- below AA, before any tint existed. Pinned here so it cannot drift back.
+	check("the untinted theme is readable on every surface", (function()
+		for _, text in { UITheme.TextMuted, UITheme.TextSecondary, UITheme.TextPrimary } do
+			for _, surface in { UITheme.PanelColor, UITheme.RailColor, UITheme.RaisedColor } do
+				if ThemeCore.contrast(text, surface) < ThemeCore.CONTRAST_FLOOR then
+					return false
+				end
+			end
+		end
+		return true
+	end)())
+
+	-- Clearing the floor is not the same as not making things worse. A tint
+	-- is allowed to cost a little readability; it is not allowed to eat the
+	-- headroom the base design has.
+	check("no tint costs more than a sixth of the base's readability", (function()
+		for _, context in contexts do
+			local palette = ThemeCore.resolve(Palettes, context)
+			for _, token in { "PanelColor", "RailColor", "RaisedColor" } do
+				local before = ThemeCore.contrast(UITheme.TextMuted, UITheme[token])
+				local after = ThemeCore.contrast(UITheme.TextMuted, palette[token])
+				if after < before * 0.84 then
+					return false
+				end
+			end
+		end
+		return true
+	end)())
+
+	-- The contrast maths itself, against values with known answers, because a
+	-- floor enforced by a broken ruler is worse than no floor.
+	check("black on white is the maximum ratio",
+		math.abs(ThemeCore.contrast(Color3.new(0, 0, 0), Color3.new(1, 1, 1)) - 21) < 0.01)
+	check("a colour against itself is 1:1",
+		math.abs(ThemeCore.contrast(UITheme.AccentGold, UITheme.AccentGold) - 1) < 1e-6)
+	check("luminance is weighted, not averaged", (function()
+		-- Green reads far brighter than blue at the same channel value. An
+		-- averaging implementation would call these equal and pass palettes
+		-- a player cannot read.
+		local green = ThemeCore.luminance(Color3.new(0, 1, 0))
+		local blue = ThemeCore.luminance(Color3.new(0, 0, 1))
+		return green > blue * 5
+	end)())
+
+	-- A deliberately absurd palette: the clamp must save it rather than the
+	-- author having to notice.
+	check("an unreadable tint is clamped, not shipped", (function()
+		local awful = {
+			Districts = { { Id = "HALL_OF_LEGENDS", Tint = UITheme.TextMuted, Strength = 1 } },
+			Events = {},
+		}
+		local palette = ThemeCore.resolve(awful, { DistrictId = "HALL_OF_LEGENDS" })
+		return ThemeCore.contrast(UITheme.TextMuted, palette.PanelColor) >= ThemeCore.CONTRAST_FLOOR
+	end)())
+
+	-- RULE 3: the resolver is total. Anything can be asked of it.
+	check("an unknown district resolves to the base palette", (function()
+		local palette = ThemeCore.resolve(Palettes, { DistrictId = "ATLANTIS" })
+		return palette.PanelColor == UITheme.PanelColor
+	end)())
+	check("an unknown event kind does not tint", (function()
+		local palette = ThemeCore.resolve(Palettes, { Event = { Kind = "SOMETHING_NEW" } })
+		return palette.PanelColor == UITheme.PanelColor
+	end)())
+	check("no context at all resolves to the base palette",
+		ThemeCore.resolve(Palettes, {}).PanelColor == UITheme.PanelColor)
+
+	check("the Fate Engine is deliberately untinted", (function()
+		-- The centre is where the game's own colour comes from -- the rarity
+		-- on the portal -- and a tint there would compete with it.
+		local palette = ThemeCore.resolve(Palettes, { DistrictId = "FATE_ENGINE" })
+		return palette.PanelColor == UITheme.PanelColor
+	end)())
+
+	check("standing in a district actually changes something", (function()
+		local palette = ThemeCore.resolve(Palettes, { DistrictId = "DISCOVERY_ARCHIVE" })
+		return palette.PanelColor ~= UITheme.PanelColor
+	end)())
+
+	check("an event beats standing still", (function()
+		local plain = ThemeCore.resolve(Palettes, { DistrictId = "DISCOVERY_ARCHIVE" })
+		local starfall = ThemeCore.resolve(Palettes,
+			{ DistrictId = "DISCOVERY_ARCHIVE", Event = { Kind = "FATEBREAK" } })
+		return plain.PanelColor ~= starfall.PanelColor and starfall.EventKind == "FATEBREAK"
+	end)())
+
+	-- Bounded drift: a tint may lean the menu, never redesign it. Without a
+	-- ceiling, "subtle district colour" becomes a full reskin one content
+	-- edit at a time.
+	--
+	-- The stroke has its own, looser ceiling. It is the part that is MEANT to
+	-- speak -- a 1px edge going orange during a Starfall is the effect, not a
+	-- defect -- and it is exempt from the contrast rule for the same reason:
+	-- nothing is read against it. Surfaces lean; the edge speaks.
+	local function drift(a, b)
+		return math.sqrt((a.R - b.R) ^ 2 + (a.G - b.G) ^ 2 + (a.B - b.B) ^ 2)
+	end
+
+	check("no surface wanders far from the base", (function()
+		for _, context in contexts do
+			local palette = ThemeCore.resolve(Palettes, context)
+			for _, token in ThemeCore.TINTABLE do
+				if token ~= "StrokeColor" and drift(palette[token], UITheme[token]) > 0.35 then
+					return false
+				end
+			end
+		end
+		return true
+	end)())
+
+	check("...and the stroke, while louder, is still bounded", (function()
+		for _, context in contexts do
+			local palette = ThemeCore.resolve(Palettes, context)
+			if drift(palette.StrokeColor, UITheme.StrokeColor) > 0.6 then
+				return false
+			end
+		end
+		return true
+	end)())
+
+	-- THE INVARIANT THE WHOLE APPROACH RESTS ON. A surface takes the hue and
+	-- keeps its own brightness, which is why contrast survives a tint at all.
+	-- If this ever stops holding, every readability test above starts passing
+	-- for the wrong reason.
+	check("a tint changes a surface's colour but not its brightness", (function()
+		for _, context in contexts do
+			local palette = ThemeCore.resolve(Palettes, context)
+			for _, token in { "PanelColor", "RailColor", "RaisedColor", "ScrimColor" } do
+				local before = ThemeCore.luminance(UITheme[token])
+				local after = ThemeCore.luminance(palette[token])
+				if math.abs(after - before) > 0.005 then
+					return false
+				end
+			end
+		end
+		return true
+	end)())
+
+	check("...and it really does change the colour", (function()
+		-- Guarding the test above from passing trivially: a tint that did
+		-- nothing at all would also preserve luminance perfectly.
+		local palette = ThemeCore.resolve(Palettes,
+			{ DistrictId = "DISCOVERY_ARCHIVE", Event = { Kind = "CATALYST_STAR" } })
+		return drift(palette.PanelColor, UITheme.PanelColor) > 0.01
+	end)())
+
+	check("resolving twice gives the same answer", (function()
+		local a = ThemeCore.resolve(Palettes, { DistrictId = "EXPEDITION_GATE" })
+		local b = ThemeCore.resolve(Palettes, { DistrictId = "EXPEDITION_GATE" })
+		return a.PanelColor == b.PanelColor and a.RailColor == b.RailColor
+	end)())
+
+	check("resolving does not mutate UITheme", (function()
+		ThemeCore.resolve(Palettes, { DistrictId = "TRAINING_GROUNDS", Event = { Kind = "CATALYST_STAR" } })
+		return UITheme.PanelColor == Color3.fromRGB(24, 19, 40)
+	end)())
+
+	-- === where am I standing ========================================
+	local radius = GameConfig.HubMenu.DistrictTintRadius
+
+	check("standing on a district's anchor is standing in it", (function()
+		for _, destination in Menu.Destinations do
+			if ThemeCore.districtAt(destination.Anchor, Menu, radius) ~= destination.Id then
+				return false
+			end
+		end
+		return true
+	end)())
+
+	check("height does not change which district you are in", (function()
+		local hall = HubMenuCore.destinationById(Menu, "HALL_OF_LEGENDS")
+		local aloft = hall.Anchor + Vector3.new(0, 90, 0)
+		return ThemeCore.districtAt(aloft, Menu, radius) == "HALL_OF_LEGENDS"
+	end)())
+
+	check("the open plaza belongs to no district", (function()
+		-- Halfway between the Engine and the Hall, on the diagonal: outside
+		-- every district's reach.
+		local point = Vector3.new(280, 0, -280)
+		return ThemeCore.districtAt(point, Menu, radius) == nil
+	end)())
+
+	-- The radius must not be so wide that two districts overlap, or the menu
+	-- would flicker between them on the boundary.
+	check("no two districts overlap at the tint radius", (function()
+		local anchors = {}
+		for _, destination in Menu.Destinations do
+			table.insert(anchors, destination.Anchor)
+		end
+		for i = 1, #anchors do
+			for j = i + 1, #anchors do
+				local dx = anchors[i].X - anchors[j].X
+				local dz = anchors[i].Z - anchors[j].Z
+				if math.sqrt(dx * dx + dz * dz) < radius then
+					return false
+				end
+			end
+		end
+		return true
+	end)())
+
+	check("the tint radius covers the widest platform", (function()
+		-- A player standing on the far edge of the biggest deck must still be
+		-- in that district; the widest is 320 across, so half of it is 160.
+		return radius > 160
+	end)())
+end
+
 -- === summary ========================================================
 print(string.format("\n%s\n%d passed, %d failed, %d total", string.rep("=", 60),
 	passed, failed, passed + failed))

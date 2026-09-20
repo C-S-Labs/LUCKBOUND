@@ -7,6 +7,7 @@
 -- and idempotent.
 
 local Constants = require(script.Parent.Constants)
+local SettingsCore = require(script.Parent.SettingsCore)
 
 local ProfileSchema = {}
 
@@ -27,13 +28,29 @@ function ProfileSchema.default(now: number): any
 			BossesDefeated = 0,
 			DeepestRarity = "COMMON",
 		},
+		-- Code id -> the timestamp it was redeemed at. A map rather than a
+		-- list, because the only question ever asked of it is "has this one
+		-- been used", and a list answers that in O(n) for no benefit.
+		RedeemedCodes = {},
+		Settings = SettingsCore.defaults(),
 		LastSeenAt = now,
 		CreatedAt = now,
 	}
 end
 
 -- MIGRATIONS[n] upgrades a profile from version n to version n+1.
-ProfileSchema.MIGRATIONS = {} :: { [number]: (any) -> any }
+ProfileSchema.MIGRATIONS = {
+	-- v1 -> v2: the hub menu arrived, and with it two new fields. Both are
+	-- additive; nothing is renamed or repurposed, per the rule at the top of
+	-- this file. Sanitising the settings rather than assigning the defaults
+	-- means a v1 profile that somehow already carried a Settings table keeps
+	-- whatever of it is valid.
+	[1] = function(profile: any): any
+		profile.RedeemedCodes = profile.RedeemedCodes or {}
+		profile.Settings = SettingsCore.sanitise(profile.Settings)
+		return profile
+	end,
+} :: { [number]: (any) -> any }
 
 --- Brings any stored profile up to the current schema version. Returns the
 --- migrated profile and how many migrations ran.

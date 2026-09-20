@@ -379,13 +379,254 @@ function Schema.validateMaps(
 	return #errors == 0, errors
 end
 
+--- The hub menu: panels and travel destinations. Two classes of bug are
+--- worth failing a boot over -- a panel the rail cannot draw (no label, no
+--- order) and a destination that names an anchor the hub does not have, which
+--- would teleport a player to (0, 0, 0) and look like a physics bug rather
+--- than like bad data.
+function Schema.validateHubMenu(menu: any, config: any): (boolean, { string })
+	local errors = {}
+
+	if type(menu) ~= "table" then
+		return false, { "hub menu: expected a table" }
+	end
+
+	local VALID_STATUS = { LIVE = true, PREVIEW = true }
+
+	local seenPanel = {}
+	local seenOrder = {}
+	for index, panel in menu.Panels or {} do
+		local label = `hub menu panel #{index}`
+		for _, key in { "Id", "Label", "Glyph", "Summary" } do
+			if type(panel[key]) ~= "string" then
+				table.insert(errors, `{label}: '{key}' must be a string`)
+			end
+		end
+		if type(panel.Order) ~= "number" then
+			table.insert(errors, `{label}: 'Order' must be a number`)
+		elseif seenOrder[panel.Order] then
+			table.insert(errors, `{label}: duplicate Order {panel.Order}`)
+		else
+			seenOrder[panel.Order] = true
+		end
+		if not VALID_STATUS[panel.Status] then
+			table.insert(errors, `{label}: Status must be LIVE or PREVIEW, got {tostring(panel.Status)}`)
+		end
+		if type(panel.Id) == "string" then
+			if seenPanel[panel.Id] then
+				table.insert(errors, `{label}: duplicate panel Id '{panel.Id}'`)
+			end
+			seenPanel[panel.Id] = true
+		end
+	end
+
+	if next(seenPanel) == nil then
+		table.insert(errors, "hub menu: no panels defined")
+	end
+
+	local anchors = config.HubLayout.Anchors
+	local seenDestination = {}
+	for index, destination in menu.Destinations or {} do
+		local label = `hub menu destination #{index}`
+		if type(destination.Id) ~= "string" then
+			table.insert(errors, `{label}: 'Id' must be a string`)
+		elseif seenDestination[destination.Id] then
+			table.insert(errors, `{label}: duplicate destination Id '{destination.Id}'`)
+		else
+			seenDestination[destination.Id] = true
+		end
+
+		if type(destination.AnchorId) ~= "string" or anchors[destination.AnchorId] == nil then
+			table.insert(
+				errors,
+				`{label}: AnchorId '{tostring(destination.AnchorId)}' is not in GameConfig.HubLayout.Anchors`
+			)
+		elseif typeof(destination.Anchor) ~= "Vector3" then
+			table.insert(errors, `{label}: 'Anchor' must be a Vector3`)
+		elseif destination.Anchor ~= anchors[destination.AnchorId] then
+			-- The Anchor field is a convenience copy. If it ever drifts from
+			-- the anchor it names, the menu and the hub disagree about where
+			-- a district IS, and the menu wins -- silently.
+			table.insert(errors, `{label}: 'Anchor' does not match Anchors.{destination.AnchorId}`)
+		end
+
+		if typeof(destination.Landing) ~= "Vector3" then
+			table.insert(errors, `{label}: 'Landing' must be a Vector3`)
+		end
+		if type(destination.Facing) ~= "number" then
+			table.insert(errors, `{label}: 'Facing' must be a number`)
+		end
+	end
+
+	if next(seenDestination) == nil then
+		table.insert(errors, "hub menu: no travel destinations defined")
+	end
+
+	return #errors == 0, errors
+end
+
+--- Redeemable codes. A code whose Id does not match its registry key is the
+--- bug worth catching: redemption is RECORDED by Id, so a mismatch would let
+--- the same code be redeemed twice under two names.
+function Schema.validateCodes(codes: any): (boolean, { string })
+	local errors = {}
+
+	local seenText = {}
+	for key, definition in codes do
+		local label = `code '{key}'`
+		if type(definition) ~= "table" then
+			table.insert(errors, `{label}: expected a table`)
+			continue
+		end
+		if definition.Id ~= key then
+			table.insert(errors, `{label}: Id '{tostring(definition.Id)}' must match its registry key`)
+		end
+		if type(definition.Code) ~= "string" or definition.Code == "" then
+			table.insert(errors, `{label}: 'Code' must be a non-empty string`)
+		else
+			local normalised = (string.upper(definition.Code):gsub("[^%w]", ""))
+			if seenText[normalised] then
+				table.insert(errors, `{label}: '{definition.Code}' collides with code '{seenText[normalised]}'`)
+			end
+			seenText[normalised] = key
+		end
+		if type(definition.Fate) ~= "number" or definition.Fate < 0 then
+			table.insert(errors, `{label}: 'Fate' must be a non-negative number`)
+		end
+		if type(definition.Message) ~= "string" then
+			table.insert(errors, `{label}: 'Message' must be a string`)
+		end
+		if definition.ExpiresAt ~= nil and type(definition.ExpiresAt) ~= "number" then
+			table.insert(errors, `{label}: 'ExpiresAt' must be a number or nil`)
+		end
+	end
+
+	return #errors == 0, errors
+end
+
+--- The loading screen's camera tour. A shot with a zero or negative radius
+--- puts the camera inside its own subject, which renders as a grey screen --
+--- indistinguishable, to a player, from the game failing to load at all.
+function Schema.validateCinematics(cinematics: any, worlds: { [string]: any }): (boolean, { string })
+	local errors = {}
+
+	local shots = if type(cinematics) == "table" then cinematics.Shots else nil
+	if type(shots) ~= "table" or #shots == 0 then
+		return false, { "cinematics: no shots defined" }
+	end
+
+	local seen = {}
+	for index, shot in shots do
+		local label = `cinematic shot #{index}`
+		if type(shot.Id) ~= "string" then
+			table.insert(errors, `{label}: 'Id' must be a string`)
+		elseif seen[shot.Id] then
+			table.insert(errors, `{label}: duplicate shot Id '{shot.Id}'`)
+		else
+			seen[shot.Id] = true
+		end
+		if type(shot.Caption) ~= "string" then
+			table.insert(errors, `{label}: 'Caption' must be a string`)
+		end
+		if typeof(shot.Subject) ~= "Vector3" then
+			table.insert(errors, `{label}: 'Subject' must be a Vector3`)
+		end
+		if typeof(shot.LookOffset) ~= "Vector3" then
+			table.insert(errors, `{label}: 'LookOffset' must be a Vector3`)
+		end
+		if type(shot.Radius) ~= "number" or shot.Radius <= 0 then
+			table.insert(errors, `{label}: 'Radius' must be greater than zero`)
+		end
+		if type(shot.Height) ~= "number" then
+			table.insert(errors, `{label}: 'Height' must be a number`)
+		end
+		if shot.WorldId ~= nil and worlds[shot.WorldId] == nil then
+			table.insert(errors, `{label}: WorldId '{tostring(shot.WorldId)}' is not a known world`)
+		end
+	end
+
+	return #errors == 0, errors
+end
+
+--- The live palette layer. Two classes of bug are worth a failed boot: a
+--- district tint naming a district that does not exist (which would simply
+--- never appear, silently), and a strength outside 0..1 (which would push the
+--- menu past the colour it was leaning toward and out the other side).
+---
+--- What is NOT checked here is contrast -- that is enforced at resolve time
+--- by ThemeCore rather than refused at boot, because a too-strong tint should
+--- degrade to a duller one rather than stop the server.
+function Schema.validatePalettes(palettes: any, menu: any): (boolean, { string })
+	local errors = {}
+
+	if type(palettes) ~= "table" then
+		return false, { "palettes: expected a table" }
+	end
+
+	local known = {}
+	for _, destination in menu.Destinations do
+		known[destination.Id] = true
+	end
+
+	local seenDistrict = {}
+	for index, entry in palettes.Districts or {} do
+		local label = `palette district #{index}`
+		if type(entry.Id) ~= "string" then
+			table.insert(errors, `{label}: 'Id' must be a string`)
+		elseif not known[entry.Id] then
+			table.insert(errors, `{label}: '{entry.Id}' is not a district the menu knows`)
+		elseif seenDistrict[entry.Id] then
+			table.insert(errors, `{label}: duplicate district '{entry.Id}'`)
+		else
+			seenDistrict[entry.Id] = true
+		end
+
+		if type(entry.Strength) ~= "number" or entry.Strength < 0 or entry.Strength > 1 then
+			table.insert(errors, `{label}: 'Strength' must be between 0 and 1`)
+		end
+		if entry.Tint ~= nil and typeof(entry.Tint) ~= "Color3" then
+			table.insert(errors, `{label}: 'Tint' must be a Color3 or nil`)
+		end
+		if entry.Tint == nil and entry.Strength ~= 0 then
+			-- A strength with nothing to lean toward is a half-finished edit,
+			-- and it reads as "this district is deliberately untinted" to
+			-- everyone who comes after.
+			table.insert(errors, `{label}: has a Strength but no Tint -- set Strength to 0`)
+		end
+	end
+
+	local seenKind = {}
+	for index, entry in palettes.Events or {} do
+		local label = `palette event #{index}`
+		if type(entry.Kind) ~= "string" then
+			table.insert(errors, `{label}: 'Kind' must be a string`)
+		elseif seenKind[entry.Kind] then
+			table.insert(errors, `{label}: duplicate event kind '{entry.Kind}'`)
+		else
+			seenKind[entry.Kind] = true
+		end
+		if typeof(entry.Tint) ~= "Color3" then
+			table.insert(errors, `{label}: 'Tint' must be a Color3`)
+		end
+		if type(entry.Strength) ~= "number" or entry.Strength < 0 or entry.Strength > 1 then
+			table.insert(errors, `{label}: 'Strength' must be between 0 and 1`)
+		end
+	end
+
+	return #errors == 0, errors
+end
+
 --- Runs every check. Raises on failure -- called first in bootstrap.
 function Schema.validateAll(
 	worlds: { [string]: any },
 	config: any,
 	hub: any?,
 	chunks: { [string]: any }?,
-	manifest: any?
+	manifest: any?,
+	menu: any?,
+	codes: any?,
+	cinematics: any?,
+	palettes: any?
 ): ()
 	local allErrors = {}
 
@@ -414,6 +655,34 @@ function Schema.validateAll(
 
 		local _, mapErrors = Schema.validateMaps(worlds, chunks, manifest)
 		for _, e in mapErrors do
+			table.insert(allErrors, e)
+		end
+	end
+
+	if menu ~= nil then
+		local _, menuErrors = Schema.validateHubMenu(menu, config)
+		for _, e in menuErrors do
+			table.insert(allErrors, e)
+		end
+	end
+
+	if codes ~= nil then
+		local _, codeErrors = Schema.validateCodes(codes)
+		for _, e in codeErrors do
+			table.insert(allErrors, e)
+		end
+	end
+
+	if cinematics ~= nil then
+		local _, cinematicErrors = Schema.validateCinematics(cinematics, worlds)
+		for _, e in cinematicErrors do
+			table.insert(allErrors, e)
+		end
+	end
+
+	if palettes ~= nil and menu ~= nil then
+		local _, paletteErrors = Schema.validatePalettes(palettes, menu)
+		for _, e in paletteErrors do
 			table.insert(allErrors, e)
 		end
 	end

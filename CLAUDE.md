@@ -17,7 +17,8 @@ handoff:
 3. **`docs/PROTOTYPE_BUILD_SPEC.md`** — the canonical architecture.
 
 Then `docs/` has the rest: `MODULAR_MAPS.md`, `TESTING.md`, `ART_DIRECTION.md`,
-`BLUEPRINT_RECONCILIATION.md`, `TOOLCHAIN_ACCESS.md`.
+`BLUEPRINT_RECONCILIATION.md`, `TOOLCHAIN_ACCESS.md`, `PLAYER_UI.md`,
+`PLAYER_ABILITIES.md`, `EVENTS.md`.
 
 ## BEFORE YOU FINISH — update the handoff
 

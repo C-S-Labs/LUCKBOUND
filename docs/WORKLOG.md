@@ -33,6 +33,240 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 30 — 2026-09-20 — The menu learns where it is standing
+
+**Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 514 passing (was 473)
+
+Owner direction: the menu should change colour with the area and with live
+events. There is no day/night cycle and there will not be one — instead,
+**events** at three scopes (global, server, biome) will shape the sky. This
+session built the half that can be built now.
+
+### What was built
+
+| | |
+|---|---|
+| `EventCore.Scope` + `dominant()` | Three scopes and one deterministic answer to "which event owns the sky" |
+| `ThemeCore` | The live palette, the contrast floor, and which district a point is in. Pure |
+| `Content/Hub/Palettes` | How far the menu leans, per district and per event kind |
+| `EventController` | The client's event mirror, which **expires events itself** |
+| `ThemeController` | Resolves and paints, on a timer, never per frame |
+| `/event` and `/endevents` | Start any event on demand — the only way to walk a 1-in-a-trillion sky |
+
+### The measurement that changed the design
+
+A plain mix toward a district colour **lightens** the surface, and the menu's
+faintest text sits only ~5:1 above that surface to begin with. Measured: 20%
+toward starlight took a raised row from 5.06:1 to **2.96:1** — unreadable. So
+every interesting tint would have been clawed back by the contrast clamp, and
+what content asked for would not have been what rendered.
+
+`ThemeCore` therefore mixes in **linear light and rescales back to the
+surface's original luminance**: the surface takes the district's hue and keeps
+its own brightness. Contrast survives a tint essentially unchanged, the clamp
+becomes a backstop that rarely fires, and the strengths in content can be
+interesting rather than timid. It is also the better look — the menu stays
+dark and shifts colour rather than fading toward whatever it is standing next
+to.
+
+The stroke is the deliberate exception and mixes straight: nothing is read
+against a 1px edge, and it is the part that reads best. **Surfaces lean; the
+edge speaks.**
+
+### What the contrast test found on its first run
+
+`TextMuted` shipped last session at **3.40:1** against a raised row — below
+WCAG's 4.5:1 floor for body text, which a 13px row subtitle is by any honest
+reading. Nothing to do with the tint; it was wrong the day it was written.
+Contrast failure is invisible to whoever picks the colour and obvious to
+whoever cannot read it, which is exactly the kind of bug a test should find
+and an eye should not be asked to. Raised to (145, 139, 170), now 5.06:1 at
+worst. It is closer to `TextSecondary` now, so the two roles lean more on size
+and letter-spacing — worth a look in Studio.
+
+### Decisions made
+
+**Scope outranks priority.** A game-wide event is by definition the biggest
+news on screen; a local event with a big number must not shout over it.
+
+**A tie goes to the event running longest, not the newest.** A tie broken by
+recency would flip the sky whenever an equal event started somewhere, and a
+sky that changes for no reason the player can see reads as a bug.
+
+**The client expires events itself.** The server says "N seconds left" and
+never promises to say when it ends. Cross-server messages are lossy and
+servers die; local expiry means the world heals itself.
+
+**An event with no scope is a SERVER event.** The narrowest honest default —
+a missing field must not be able to announce itself to the whole game.
+
+**Only surfaces tint, never semantics.** Gold means "press this", teal means
+"designed, not built", rarity colours are a contract — and two of those
+collide with authored district colours (the Archive's accent *is* that teal,
+the Hall's *is* that gold). A test asserts no semantic token ever appears in a
+resolved palette.
+
+### The harness learned a second lesson
+
+The `Color3` shim carried only the arguments it was constructed with — no
+`R`/`G`/`B` floats, no `Lerp`. Any code doing colour *maths* was therefore
+untestable, which is the same trap the `Vector3` shim fell into and the same
+one CLAUDE.md already records. It now carries linear-ready floats, lerps and
+compares by value.
+
+### Stopped at
+
+Pushed, all green, **nothing rendered**. The tint is subtle by construction on
+dark surfaces and may want to be stronger; `Content/Hub/Palettes` is the only
+dial. `TESTING.md` test L walks it.
+
+### Next
+
+1. **Walk test L** along with I, J and K.
+2. **The owner is choosing between options** for the rest: the global ledger
+   that makes "only 10 will ever exist" true, what the sky actually does, and
+   how events are authored. None of it is started.
+3. `EventSystem` still publishes cross-server as fire-and-forget. That is fine
+   for spectacle and **not** fine for scarcity — see STATUS §4.
+
+---
+
+## Session 29 — 2026-09-20 — Three owner corrections to the hub UI
+
+**Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 473 passing (was 472)
+
+Owner review of Session 28's UI. Three changes, all small, all directed.
+
+### EXIT is gone
+
+The loading screen has **one button**. Roblox gives no way to close the app
+from inside a place, so EXIT could only ever kick the player back to the app's
+home screen — a button whose best outcome is leaving. A title screen offering
+one thing is stronger than one offering a choice nobody wants to make. The
+`controls` frame lost 32px with it.
+
+### Travel has no cooldown
+
+`TeleportCooldownSeconds` is **deleted**, not set to zero, along with
+`HubMenuCore.travelCooldownRemaining` and the per-frame loop that drove the
+buttons' countdown. Owner-directed: travel should be quick and effectively
+instantaneous.
+
+The fades came down with it — 0.45/0.25/0.55 to **0.22/0.06/0.28**, about half
+a second end to end, which reads as a cut rather than a wait. That fade is now
+the *only* thing between pressing TRAVEL and arriving, so it is asserted to
+stay under 0.75s as well as above zero.
+
+The server's rate limit stays and went **up**, 20/min to 60. It is not a
+cooldown wearing another name: a player pressing the button as fast as they
+can will never meet it, and a script firing the remote in a loop will. A test
+pins both halves — that the cooldown field does not exist, and that the limit
+is far above human speed. Removing only the *check* would have left the number
+sitting there for the next session to wire back up.
+
+### The rail is in the owner's order
+
+Travel, Party, Fate Tree, Rebirth, Shop, Codes, Settings. The blocks were
+sorted in the content file too, so the file reads in the same order as the
+rail. It groups by what a player is doing — get somewhere, get someone, the
+two progression screens that talk to each other, the two transactional ones,
+then Settings — and a test pins the sequence, because add-order drift would
+undo it silently.
+
+### Stopped at
+
+Pushed. Still nothing rendered in Studio; `TESTING.md` tests I, J and K are
+updated for all three changes (the rail order is now step 1 of test J).
+
+### Next
+
+Unchanged from Session 28: walk the UI, then the Crossroads.
+
+---
+
+## Session 28 — 2026-09-20 — The hub gets a face
+
+**Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 472 passing (was 378)
+
+The game had no way to talk to the player except a prompt and a result card.
+It now has a loading screen, a side rail with seven panels, travel to all five
+Crossroads locations, redeemable codes, saved settings, and two player
+abilities. **None of it has been rendered** — see below.
+
+### What was built
+
+| | |
+|---|---|
+| **Loading screen** | Blurred camera tour over six hub subjects, title, progress, PLAY and EXIT. `UI/LoadingScreen` + `Content/Hub/Cinematics` |
+| **Hub menu** | A collapsible left rail, seven panels, one open at a time. `UI/HubMenu` + `Content/Hub/Menu` |
+| **Travel** | Five destinations, server-authorised, 6s cooldown, screen fade. `HubMenuCore` + `HubUISystem` |
+| **Codes** | Three shipped codes, redeem-once, rate-limited. `CodeCore` + `Content/Codes` |
+| **Settings** | Seven, validated and persisted. `SettingsCore`, profile schema v2 |
+| **Abilities** | Sprint with stamina, and a double jump with a coyote window. `LocomotionCore` + `LocomotionController` |
+| **Widget kit** | `UI/UIKit` — the only place a tween is created in the hub UI |
+
+### Decisions made
+
+**The menu exists in the Crossroads and nowhere else**, and that rule is one
+pure function (`HubMenuCore.isVisible`) that the client and the server both
+call. An expedition is meant to be the game rather than a screen with the game
+behind it. It also hides itself during a roll: the reveal is the four seconds
+the whole thing rests on and must not be framed by a rail.
+
+**Collapsing hides the rail entirely** rather than shrinking it to a strip of
+glyphs. The ask was for the screen back, and a rail of icons is still a rail on
+the screen. Collapsing closes any open panel for the same reason.
+
+**Four panels ship designed but labelled.** Shop, Fate Tree, Party and Rebirth
+draw their real layout over placeholder copy with an IN DESIGN badge, because
+the direction was "designed now, implemented after testing" and a button that
+silently does nothing is worse than no button. **They own no remotes** — a
+panel gets a remote when it gets an implementation.
+
+**A player has movement; an item has combat.** Sprint and double jump are the
+whole of Phase 1's player abilities, and damage, effects and animations belong
+to the model that grants them. This is now pinned by a test that fails the
+build if `GameConfig.Locomotion` grows a field whose name contains damage,
+attack, crit or dps. `docs/PLAYER_ABILITIES.md` holds the planned ladder and
+the Fate Tree's four branches — the "more ideas for what to upgrade" request.
+
+**Travel sends a destination Id and nothing else.** The server looks the Id up
+in Content, takes the anchor from `GameConfig`, and finds the Y by raycasting
+down onto the deck — because the authored districts' heights are a property of
+a mesh nothing in code can measure. An unknown Id is refused by name.
+
+**Five remotes were added to build spec §4 in the same change** as the code
+that uses them, which is the rule that table exists to enforce.
+
+### One thing the harness learned
+
+The shimmed `Vector3` was a plain table with no operators, so `anchor +
+landing` — the expression the whole travel system rests on — would have raised
+in the test harness while working perfectly in Studio, and the likely outcome
+is that the *test* gets deleted. It now adds, subtracts, scales and compares by
+value, like the real one. Same lesson as the `Vector3`-as-table bug already
+recorded in CLAUDE.md.
+
+### Stopped at
+
+Everything is written, tested headlessly and pushed. **Nothing has been seen in
+Studio.** The loading screen's blur, the rail's feel on a phone, and whether
+the five travel landings actually put a player on the deck are all reasoned
+rather than observed.
+
+### Next
+
+1. **Walk the UI.** `TESTING.md` tests I, J and K — they were written for this.
+   Watch the server output for `no floor under landing for '<Id>'`.
+2. **Then the Crossroads walk** that was next before this session (STATUS §5).
+3. **Sound.** Every beat here wants one — the rail opening, PLAY, a code
+   accepted — and there is no audio system at all.
+4. **Decide whether the Fate Tree's four branches are the right four** before
+   any of it is built. `PLAYER_ABILITIES.md` §3 is the proposal, not a
+   decision.
+
+---
+
 ## Session 27 — 2026-09-18 — The portal turns, and the hub breathes
 
 **Branch:** `claude/crossroads-prefab-integration-08761b` · **Tests:** 378 passing (was 369)

@@ -403,6 +403,25 @@ local GameConfig = {
 		CrossServerTopic = "LUCKBOUND_Fatebreak_v1",
 	},
 
+	-- === GLOBAL SCARCITY ===
+	-- The ledger that makes "only N will ever exist" true across every server.
+	-- Its numbers are separate from Save's because its failure rules are the
+	-- opposite: a save that cannot reach a DataStore carries on without
+	-- persistence, and a CLAIM that cannot reach one must be refused.
+	Ledger = {
+		Enabled = true,
+		-- Fewer retries than a save, and shorter. A claim happens inside a
+		-- roll the player is watching resolve; spending 30 seconds retrying
+		-- would hold the reveal open. Three quick attempts, then refuse.
+		MaxRetries = 3,
+		RetryBackoffSeconds = 0.5,
+		-- FAIL CLOSED. If the ledger cannot be reached, no unique is granted.
+		-- Setting this true would hand out unique items that were never
+		-- counted, which is unrecoverable -- there is no way to take one back
+		-- once it has been announced to every server in the game.
+		GrantWhenUnavailable = false,
+	},
+
 	Save = {
 		AutosaveIntervalSeconds = 60,
 		SessionLockTimeoutSeconds = 30,
@@ -418,6 +437,182 @@ local GameConfig = {
 		ResultCardHoldSeconds = 4.0,
 		AnnouncementDurationSeconds = 6.0,
 		PromptActivationDistance = 70, -- the plinth alone is ~126 studs across
+	},
+
+	-- === THE HUB MENU =================================================
+	-- The side rail, its panels, and the travel network. Behaviour only --
+	-- every colour, radius, pad and tween length is a UITheme token, so a
+	-- restyle never touches a number here and a retune never touches a colour.
+	--
+	-- THE MENU EXISTS ONLY IN THE CROSSROADS. Owner-directed: an expedition
+	-- is meant to be the game, not a screen with the game behind it. The rule
+	-- is enforced in one pure function (HubMenuCore.isVisible) so the client
+	-- and the server agree on what "in the hub" means.
+	HubMenu = {
+		Enabled = true,
+
+		-- Start collapsed on a phone. The rail plus an open panel is most of a
+		-- portrait screen, and the owner's note was explicit: the HUB must not
+		-- be overwhelming. On desktop the rail is a sliver of a wide screen, so
+		-- it opens expanded and the arrow is there for anyone who disagrees.
+		StartCollapsedOnTouch = true,
+		StartCollapsedOnDesktop = false,
+
+		-- Opening a second panel closes the first. Two panels open at once is
+		-- the fastest way to turn a clean rail into screen noise.
+		SinglePanel = true,
+
+		-- The rail hides itself during a roll so the game's most important
+		-- four seconds are not framed by a menu. It comes back when the result
+		-- card does.
+		HideDuringRoll = true,
+		-- ...and this long after the reveal resolves, so the rail sliding back
+		-- in does not race the card sliding out.
+		RestoreDelaySeconds = 0.35,
+
+		-- === TRAVEL ===
+		-- THERE IS NO COOLDOWN. Owner-directed 2026-09-20: travel should be
+		-- quick and effectively instantaneous. The only thing between pressing
+		-- TRAVEL and arriving is the fade that hides the swap, and it is short
+		-- enough to read as a cut rather than as a wait.
+		--
+		-- What remains is a rate limit, and it is not a cooldown wearing a
+		-- different name: at 60 a minute a player pressing the button as fast
+		-- as they can will never see it, while a script firing the remote in a
+		-- loop will. It exists to stop remote spam, nothing else.
+		TeleportFadeOutSeconds = 0.22,
+		TeleportHoldSeconds = 0.06,
+		TeleportFadeInSeconds = 0.28,
+		-- Rule 5 -- the destination Id is the ONLY thing the client is allowed
+		-- to choose, and it must name a district that exists in Content. A
+		-- client that asks to travel while on an expedition is refused.
+		TeleportRequestsPerMinute = 60,
+
+		-- WHERE A TRAVELLER ACTUALLY LANDS. Content names a landing point per
+		-- district; the server drops a ray from ProbeHeight above it and
+		-- stands the player on whatever it hits, so an authored district whose
+		-- deck is not at the height the content guessed still receives players
+		-- correctly. If the ray hits nothing, the content point is used as-is
+		-- and the server warns by name -- a silent fall through the world is
+		-- the one outcome worth a log line.
+		TeleportProbeHeight = 400,
+		TeleportProbeDepth = 800,
+		TeleportLandingClearance = 4,
+
+		-- === THE LIVE TINT ===
+		-- The menu leans toward the district you are standing in, and toward
+		-- whatever event is happening to the sky. How far it leans is content
+		-- (Content/Hub/Palettes); these are the mechanics.
+		LiveTintEnabled = true,
+		-- How close to a district's anchor counts as being IN it. The ring
+		-- radius is 400 and the widest platform is 320, so 220 puts the
+		-- boundary just outside the biggest deck: you are in a district when
+		-- you are standing on it and for a few strides after, and on the open
+		-- plaza you are in none of them.
+		DistrictTintRadius = 220,
+		-- Checked on a timer, never per frame. Same reasoning as
+		-- Effects.CullIntervalSeconds: a distance test that runs 60 times a
+		-- second to answer a question that changes every thirty seconds is
+		-- the kind of cost a phone pays for all session.
+		DistrictPollSeconds = 0.5,
+		-- Long. A tint that snaps reads as a glitch; one that takes most of a
+		-- second reads as the room changing around you.
+		TintTweenSeconds = 0.8,
+	},
+
+	-- === CODES ===
+	Codes = {
+		Enabled = true,
+		MaxLength = 32,
+		-- A code box is a brute-force surface. Six attempts a minute is
+		-- generous for typing and useless for guessing.
+		AttemptsPerMinute = 6,
+	},
+
+	-- === THE LOADING SCREEN ===
+	-- Owner-directed 2026-09-18 (STATUS §4, "First-join intro screen"). Its
+	-- purpose is as much technical as aesthetic: the hub is ~450 instances
+	-- plus authored art, and the client currently spends that wait standing in
+	-- a half-built world. This gives the wait a face and a Play button.
+	Loading = {
+		Enabled = true,
+
+		-- Never flash. A player whose client is already warm still gets the
+		-- title, the camera move and the music sting -- an intro that appears
+		-- for 200ms reads as a bug, not as polish.
+		MinimumSeconds = 3.5,
+		-- ...and never trap. If replication stalls, the Play button lights up
+		-- anyway rather than holding the player hostage to a count that may
+		-- never complete.
+		MaximumSeconds = 25,
+
+		-- What "loaded" means, in order of what actually blocks a good first
+		-- frame: the hub's instances have replicated, and the engine says the
+		-- assets in view have finished streaming in.
+		RequiredHubInstances = 380,
+		PreloadBatchSize = 64,
+
+		-- The camera tour behind the panel. One shot is a slow arc around a
+		-- subject; the list of subjects is CONTENT (Content/Hub/Cinematics).
+		ShotSeconds = 9.0,
+		ShotCrossfadeSeconds = 1.2,
+		-- Degrees of arc a single shot sweeps. Small: the camera should drift,
+		-- not orbit like a turntable.
+		ShotArcDegrees = 26,
+		BlurSize = 18,
+		-- Field of view, pulled in slightly from Roblox's 70 so the shots read
+		-- as photographed rather than as gameplay.
+		FieldOfView = 58,
+	},
+
+	-- === PLAYER ABILITIES, PHASE 1 ===
+	-- Movement only, and deliberately so. Owner-directed: combat, damage and
+	-- every offensive stat belong to the ITEM that grants them (a sword model
+	-- carries its own damage, effects, abilities and animations), never to the
+	-- player. Nothing here may grow a damage number.
+	--
+	-- These are client-applied, because Roblox movement is client-authoritative
+	-- by construction -- the server cannot make a character run without the
+	-- client agreeing. The server's defence is the same one it already uses for
+	-- rolls: it validates OUTCOMES (distance to the Fate Engine, expedition
+	-- eligibility) and never reads a client-supplied speed. See
+	-- docs/PLAYER_ABILITIES.md for the planned ladder beyond these two.
+	Locomotion = {
+		-- Base is GameConfig.Scale.WalkSpeed (32) -- the hub traversal budget
+		-- owns that number and this must not fork it.
+		SprintMultiplier = 1.55, -- 32 -> 49.6
+		SprintAccelerationSeconds = 0.25, -- ramp, so it reads as effort
+		SprintDecelerationSeconds = 0.4,
+
+		-- Stamina exists to make sprinting a decision instead of a walk speed.
+		-- Full drain is 8s of sprint; a full refill is 6s of not sprinting.
+		StaminaMax = 100,
+		StaminaDrainPerSecond = 12.5,
+		StaminaRegenPerSecond = 16.6,
+		-- You cannot re-start a sprint the instant you run dry; you have to let
+		-- it breathe. Without this the player taps sprint forever at 0.
+		StaminaRegenDelaySeconds = 0.8,
+		StaminaSprintFloor = 5,
+
+		-- Roblox's own default JumpPower, restated here because two places
+		-- need to restore it (the loading screen releases the character it
+		-- froze, and the air jump multiplies it) and neither may guess.
+		JumpPower = 50,
+
+		-- === DOUBLE JUMP ===
+		-- Two jumps total (the ground jump plus one), which is the whole
+		-- feature. A third is not a tuning change -- it is a movement game.
+		AirJumps = 1,
+		AirJumpPower = 0.85, -- multiplier on the humanoid's JumpPower
+		-- A grace window after leaving a ledge in which the FIRST jump is
+		-- still the ground jump. Every platformer has this and nobody notices
+		-- it until it is missing.
+		CoyoteTimeSeconds = 0.12,
+		-- Stops one input frame from spending both jumps at once.
+		AirJumpCooldownSeconds = 0.2,
+		-- Fires a small ring effect under the feet on the air jump, so the
+		-- second jump is legible to the player and to anyone watching.
+		AirJumpEffect = true,
 	},
 
 	Debug = {

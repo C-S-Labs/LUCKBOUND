@@ -1,6 +1,6 @@
 # LUCKBOUND — Project Status
 
-**Last updated:** 2026-09-18 · **Phase 1 complete · expedition entry opened (build spec §7.1) · the hub is authored art**
+**Last updated:** 2026-09-20 · **Phase 1 complete · expedition entry opened (build spec §7.1) · the hub is authored art · the hub has a UI**
 
 > **New conversation?** Read `WORKLOG.md`'s top entry first for where the last
 > session stopped, then this file. `CLAUDE.md` has the rules.
@@ -14,6 +14,13 @@ open, and where to pick up.
 
 Phase 1's goal was one sentence: *you can walk around a recognizable LUCKBOUND
 hub and press ROLL.* That is done, running in Roblox Studio, and playtested.
+
+**As of 2026-09-20 the hub has a player UI.** A loading screen with a camera
+tour and a PLAY button, a collapsible side rail with seven panels (three live,
+four designed-but-labelled), travel to all five Crossroads locations, code
+redemption, saved settings, and two player abilities: sprint and double jump.
+None of it has been seen in Studio — see `docs/PLAYER_UI.md` §5 and
+`TESTING.md` tests I, J and K.
 
 **As of 2026-09-18 the hub is authored art.** The generated blockout
 Crossroads no longer runs: a 225-MeshPart authored plaza, four districts, four
@@ -151,7 +158,9 @@ exists.**
 
 ### Test suite
 
-**378 tests, all passing.** Headless — no Roblox required.
+**514 tests, all passing.** Headless — no Roblox required. 136 of them arrived
+with the player UI and the live palette: the menu reducer, travel authorisation, code redemption,
+settings validation, the stamina curve and the coyote window.
 
 **17 of them exist because the test suite was green while the hub had no
 floor.** The group `Hub geometry a player can actually touch` asserts the
@@ -171,15 +180,18 @@ scan (build spec P1-12).
 ```
 src/shared/Core/     Types, Constants, GameConfig, Net, UITheme, Result,
                      FateCore, ProgressionCore, ProfileSchema, EventCore,
-                     ExpeditionCore
+                     ExpeditionCore, HubMenuCore, SettingsCore, CodeCore,
+                     LocomotionCore
 src/shared/Util/     WeightedRandom, Schema, PortalRig, ChunkCore, ChunkLoader
-src/shared/Content/  Worlds/ (6), Hub/Crossroads, Chunks/ (2 kits), AssetManifest
+src/shared/Content/  Worlds/ (6), Hub/Crossroads, Hub/Menu, Hub/Cinematics,
+                     Codes, Chunks/ (2 kits), AssetManifest
 assets/rbxm/prefabs/ HUB_FATE_ENGINE, HUB_CROSSROADS, HUB_BACKDROP
 src/server/          init.server + Systems/ (Save, Progression, Fate, Event,
-                                             Expedition, HubBuilder)
+                                             Expedition, HubBuilder, HubUI)
 src/client/          init.client + Controllers/ (State, Proximity, HubEffects,
-                                                 Expedition)
-                                 + UI/ (FateRoll, GlobalAnnouncements, ExpeditionHud)
+                                                 Expedition, Locomotion)
+                                 + UI/ (FateRoll, GlobalAnnouncements, ExpeditionHud,
+                                        UIKit, HubMenu, LoadingScreen)
 ```
 
 **Pure cores are the reason the test suite exists.** `FateCore`,
@@ -326,7 +338,7 @@ survive a rescale and a literal does not.
 | **Trees on the bordering floating islands are malformed** | Low | Owner-observed 2026-09-18, deliberately deferred. The tree geometry on the islands ringing the plaza is wrong in the delivered mesh. Cosmetic, far from the player, and a re-export fixes it rather than any code here. |
 | **The portal's stop has nothing to lead to yet** | **Open** | The Engine's portal now turns and locks on a quarter-turn slot, which was built so a staircase could land on it. The staircase itself is not built: the owner asked whether to author it in Blender or generate it in Studio. **Recommended: one authored step, cloned and stacked by code** — the same authored-look / procedural-placement split the mountain ring just proved, and the only version that adapts to the height and slot the portal actually stops at. |
 | **The mountain horizon is built, not placed** | Low | Three attempts to scale the delivered ring into position failed — the hub-to-peak distance is a property of a mesh asset nothing here can measure, so every scale was a guess. It is now **14 clones of one chunk at radius 2400**, leaving 723 studs of clear sky past the plaza edge and 279 past the ground skirt. Retune with `Ring.Radius`, never `Ring.Scale`. |
-| **First-join intro screen** | **Design** | Owner-stated 2026-09-18. On a player's first join to a server, show a title screen over slow cinematic shots of the map until they press **Play**. The stated purpose is as much technical as aesthetic: it gives the client time to render and replicate before the player is standing in the hub. Directly relevant — the hub animator already has to wait for ~450 instances to arrive, and that wait is currently invisible and unexplained to the player. Not built. |
+| **First-join intro screen** | **Built, unwalked** | Built 2026-09-20 — `client/UI/LoadingScreen`, shots in `Content/Hub/Cinematics`, `docs/PLAYER_UI.md` §2. The design note that produced it follows. Owner-stated 2026-09-18. On a player's first join to a server, show a title screen over slow cinematic shots of the map until they press **Play**. The stated purpose is as much technical as aesthetic: it gives the client time to render and replicate before the player is standing in the hub. Directly relevant — the hub animator already has to wait for ~450 instances to arrive, and that wait is currently invisible and unexplained to the player. Not built. |
 | **There is no in-world way into an expedition** | **High** | Owner-directed 2026-09-18: the `ENTER` prompt standing in the middle of the authored market was not where a biome should be entered, so the gate anchor and prompt were removed outright rather than relocated. `ExpeditionSystem` tolerates the absence — it warns that entry is remote-only and carries on — so `/enter` still works for testing. **This is a deliberate gap and it closes when the Fate Engine carries entry**, which is the next piece of work. A test pins the absence so it cannot be closed by accident. |
 | **The Engine portal is to become the way into biomes** | **Architecture** | Owner-stated 2026-09-18. The rolled world would be entered through the Fate Engine itself, not the Expedition Gate — roll, react, then a prompt to keep the biome, then a **staircase generates from the portal's centre down to the base** and the player walks up it. The staircase animates as if building itself. **This is not only art:** "keep this biome?" is new state between rolling and entering, where today the destination is implicitly the last roll. It also makes the Expedition Gate district redundant, the way the Observatory became. Needs a spec amendment before any of it is built. |
 | **The authored Fate Engine is wired but unwalked** | **Open** | Delivered 2026-09-18 and in the game: 78 MeshParts, all 46 contract names present, painted from the palette, rings counter-rotating, shards on the rarity cycle. Never seen in Studio. `assets/rbxm/prefabs/README.md` has the measurements. |
@@ -339,7 +351,17 @@ survive a rescale and a literal does not.
 | No pathfinding validation | Medium | Non-overlapping ≠ walkable between. Addendum §A4 step 4 |
 | All 8 chunks are `PLACEHOLDER` | Expected | Blockout is deliberate; upload is a per-piece change |
 | **Ethereal Scape: one whole map, not eight chunks** | Decided 2026-09-17 | The art is a composed traverse and cannot be shuffled — evidence in `assets/rbxm/maps/README.md`. Wired: `assets/rbxm/maps/` → `ServerStorage.LuckboundMaps` → `PrebuiltLoader`. **Walked in Studio 2026-09-17** — v1 at `Scale = 0.1` read too small, modeller re-delivered at play scale, now `Scale = 1.0`. |
-| UI needs resize/layout pass | Cosmetic | Owner-flagged |
+| UI needs resize/layout pass | Cosmetic | Owner-flagged. The new hub UI is built to `UITheme`'s scale/offset caps from the start; the older three screens are not |
+| **The live menu tint is unseen** | **High** | The menu leans toward the district you are in and toward any live event. Hue-shift-at-constant-luminance is correct on paper and has never been looked at; on dark surfaces it is subtle by construction and may want to be stronger. `TESTING.md` test L, `Content/Hub/Palettes` is the dial |
+| **Rifts: event-gated dungeons** | **Design** | Owner-directed 2026-09-20. A biome event opens a portal in a generated map; through it is a far harder dungeon with rewards obtainable nowhere else. Fully designed in `docs/EVENTS.md` §5, including where the portal attaches for both map routes and the reward-permanence question. **Blocked on combat and items (Phase 2)** — but the portal, the gating and the timer can be prototyped with an empty room behind them |
+| **The event catalogue is a proposal, not a plan** | **Design** | `docs/EVENTS.md` §4 lists 15 candidate events across the three scopes with triggers, rarity and durations. §6 holds five questions for the owner; the biggest is whether a rift reward is permanent, temporary, or split (a permanent look with a rechargeable power, which is the recommendation) |
+| **Global scarcity (Catalyst Star)** | **Built, unproven** | `LedgerCore` (pure) + `LedgerSystem` claim a number from a single DataStore key with `UpdateAsync` before anything is announced, and **fail closed**: an unreachable ledger grants nothing, which is the opposite of SaveSystem's instinct and deliberately so. Concurrency cannot be tested headlessly or by eye — it needs the two-instance Studio test in `EVENTS.md`/`TESTING.md` |
+| **The hub UI has never been rendered** | **High** | Every pixel of the rail, the panels and the loading screen is reasoned rather than observed. `TESTING.md` tests I, J and K are the first walk |
+| **Four panels are designed, not implemented** | Expected | Shop, Fate Tree, Party and Rebirth draw their real screen over placeholder copy with an IN DESIGN badge. Owner-directed: designed now, built after testing. Branch-level ideas for the tree are in `docs/PLAYER_ABILITIES.md` §3 |
+| **Five settings are stored and honoured by nothing** | Medium | `MusicVolume`, `SfxVolume`, `UiScale`, `ScreenShake`, `ShowGlobalAnnouncements` persist but drive no system, because those systems do not exist. `ReduceMotion` and `AutoHideMenu` do work |
+| **Travel landings are guesses with a safety net** | Medium | Content names an X/Z per district and the server rays down for the Y. Watch the output for `no floor under landing` on the first walk |
+| **`TextMuted` was below the contrast floor** | Fixed 2026-09-20 | It shipped at 3.40:1 against a raised row — under WCAG's 4.5:1 for body text, which a 13px row subtitle is. Found by the new contrast test, not by eye, which is the point. Now 5.06:1 at worst. It is now closer in value to `TextSecondary`, so the two roles lean more on size and letter-spacing than before — worth a look in Studio |
+| **Profile schema is now v2** | Note | `RedeemedCodes` and `Settings` were added with a migration. Every existing test save is v1 and migrates on load |
 | Placeholder text | Cosmetic | Flavour lines, labels, result card |
 | Octagonal plinth is a cylinder | Cosmetic | First thing an authored mesh replaces |
 | Training dummies inert | By design | Combat is Phase 2; tagged `Phase = 2` |
@@ -351,6 +373,16 @@ survive a rescale and a literal does not.
 **The core loop is proven.** Roll → Gate → generated map → return → Fate,
 walked end to end in Studio on 2026-09-16. What is left is art, content and
 two design decisions.
+
+0. **Walk the new UI first — it is the largest unrendered thing in the repo.**
+   `TESTING.md` tests I (loading screen), J (hub menu) and K (run + double
+   jump), in that order. The three questions that matter most:
+   - **Do the five travel destinations land you on the deck?** The Y comes
+     from a ray, so watch the server output for `no floor under landing`.
+   - **Does the collapse arrow feel like getting your screen back?** That is
+     the whole point of it.
+   - **Is the rail readable on a phone?** It starts collapsed there on
+     purpose; judge whether that is right.
 
 1. **Walk the Crossroads.** The whole hub is now authored and none of it has
    been rendered. In priority order:

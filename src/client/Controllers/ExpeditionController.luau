@@ -18,6 +18,7 @@ local Workspace = game:GetService("Workspace")
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local ChunkLoader = require(Root.Util.ChunkLoader)
 local Constants = require(Root.Core.Constants)
+local EventCore = require(Root.Core.EventCore)
 local Net = require(Root.Core.Net)
 local Worlds = require(Root.Content.Worlds)
 
@@ -26,16 +27,10 @@ local ExpeditionController = {}
 -- Every Lighting property ChunkLoader.applyEnvironment writes. Restoring means
 -- writing exactly this set back -- anything missing here would leak a biome's
 -- look into the hub, which is the bug this whole arrangement exists to avoid.
-local TRACKED = {
-	"Ambient",
-	"OutdoorAmbient",
-	"ColorShift_Top",
-	"FogColor",
-	"FogStart",
-	"FogEnd",
-	"Brightness",
-	"ClockTime",
-}
+-- Derived from EventCore rather than typed out, because a live event writes
+-- the same properties and both lists have to be the same list. They were two
+-- copies for about an hour, which is exactly long enough for them to diverge.
+local TRACKED = EventCore.trackedLighting()
 
 local hubLighting: { [string]: any } = {}
 local active: any = nil

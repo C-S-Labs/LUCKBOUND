@@ -14,6 +14,10 @@ local Worlds = require(Root.Content.Worlds)
 local AssetManifest = require(Root.Content.AssetManifest)
 local Chunks = require(Root.Content.Chunks)
 local Crossroads = require(Root.Content.Hub.Crossroads)
+local Menu = require(Root.Content.Hub.Menu)
+local Cinematics = require(Root.Content.Hub.Cinematics)
+local Codes = require(Root.Content.Codes)
+local Palettes = require(Root.Content.Hub.Palettes)
 
 local Systems = script.Systems
 local SaveSystem = require(Systems.SaveSystem)
@@ -23,11 +27,12 @@ local EventSystem = require(Systems.EventSystem)
 local ExpeditionSystem = require(Systems.ExpeditionSystem)
 local DebugSystem = require(Systems.DebugSystem)
 local HubBuilder = require(Systems.HubBuilder)
+local HubUISystem = require(Systems.HubUISystem)
 
 -- Boot progress is printed at every stage. A server that stops partway now
 -- names the step it stopped on, instead of going silent and leaving you to
 -- guess -- which is what a yielding call in a system's init() looks like.
-local TOTAL_STEPS = 11
+local TOTAL_STEPS = 12
 local stepNumber = 0
 local function step(name: string)
 	stepNumber += 1
@@ -36,7 +41,7 @@ end
 
 -- 1. Fail fast on malformed content, before any player can arrive.
 step("validating content")
-Schema.validateAll(Worlds, GameConfig, Crossroads, Chunks, AssetManifest)
+Schema.validateAll(Worlds, GameConfig, Crossroads, Chunks, AssetManifest, Menu, Codes, Cinematics, Palettes)
 
 do
 	local uploaded, placeholder = AssetManifest.summary()
@@ -80,10 +85,15 @@ FateSystem.init(SaveSystem, ProgressionSystem, EventSystem)
 -- than pointers and the boot order stays a straight line.
 step("ExpeditionSystem")
 ExpeditionSystem.init(SaveSystem, ProgressionSystem)
+-- The hub menu's server half: travel, codes and settings. It takes
+-- ExpeditionSystem only to ask one question -- "is this player in the hub?"
+-- -- which is also the menu's entire visibility rule.
+step("HubUISystem")
+HubUISystem.init(SaveSystem, ProgressionSystem, ExpeditionSystem)
 -- 8. Developer commands. Last of the systems on purpose: nothing above may
 -- depend on it, so deleting it before launch breaks nothing.
 step("DebugSystem")
-DebugSystem.init(FateSystem, ExpeditionSystem)
+DebugSystem.init(FateSystem, ExpeditionSystem, EventSystem)
 
 -- 9. Hub. Generated from Content/Hub/Crossroads data, and skipped entirely if
 -- Workspace already contains a hand-built Crossroads -- authored geometry

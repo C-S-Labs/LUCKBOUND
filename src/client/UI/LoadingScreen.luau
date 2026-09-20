@@ -1,0 +1,453 @@
+--!strict
+-- THE FIRST THING ANYONE SEES. Owner-directed (STATUS §4, "First-join intro
+-- screen"), and its purpose is half technical: the hub is hundreds of
+-- instances of authored art, and until they arrive the player is standing in
+-- a half-built world with no explanation. This gives that wait a face, a
+-- camera move, and a button that says when it is over.
+--
+-- WHAT IT DOES, IN ORDER:
+--   1. Takes the camera before the character exists, so the player never sees
+--      the inside of a partially replicated hub.
+--   2. Flies a slow arc around each subject in Content/Hub/Cinematics, blurred
+--      and crossfaded, behind the title.
+--   3. Counts what has actually arrived and preloads what is on screen.
+--   4. Lights its one button -- PLAY -- when the place is ready AND
+--      GameConfig.Loading.MinimumSeconds
+--      has passed -- never before, so a warm client still gets the intro, and
+--      never later than MaximumSeconds, so a stalled one is not held hostage.
+--
+-- TWO RULES IT KEEPS:
+--   * IT NEVER TRAPS A PLAYER. Every wait is bounded. If replication stalls,
+--     PLAY lights anyway and says so.
+--   * IT RESTORES WHAT IT TOOK. Camera type, blur, field of view and the
+--     character's movement are all snapshotted and put back on PLAY -- the
+--     same discipline ExpeditionController uses for biome lighting.
+
+local ContentProvider = game:GetService("ContentProvider")
+local Lighting = game:GetService("Lighting")
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+local Workspace = game:GetService("Workspace")
+
+local Root = ReplicatedStorage:WaitForChild("Luckbound")
+local Cinematics = require(Root.Content.Hub.Cinematics)
+local Constants = require(Root.Core.Constants)
+local GameConfig = require(Root.Core.GameConfig)
+local UITheme = require(Root.Core.UITheme)
+
+local UIKit = require(script.Parent.UIKit)
+
+local LoadingScreen = {}
+
+local player = Players.LocalPlayer
+
+local gui: ScreenGui
+local backdrop: Frame
+local titleLabel: TextLabel
+local captionLabel: TextLabel
+local statusLabel: TextLabel
+local progressFill: Frame
+local playButton: TextButton
+
+local blur: BlurEffect?
+local camera: Camera
+local savedCameraType: Enum.CameraType?
+local savedFieldOfView: number?
+local finished = false
+local ready = false
+local startedAt = 0
+
+local listeners: { () -> () } = {}
+
+--- Fires when the player presses PLAY. The hub animator and the roll UI use
+--- it to hold their entrance until there is someone to see it.
+function LoadingScreen.onFinished(fn: () -> ()): ()
+	if finished then
+		task.spawn(fn)
+		return
+	end
+	table.insert(listeners, fn)
+end
+
+function LoadingScreen.isFinished(): boolean
+	return finished
+end
+
+-- === the camera tour ================================================
+
+--- Shots whose world is actually present. A shot naming a world declares a
+--- dependency on geometry that only exists while someone is inside it, so it
+--- is skipped rather than pointed at empty sky.
+local function playableShots(): { any }
+	local shots = {}
+	for _, shot in Cinematics.Shots do
+		if shot.WorldId == nil then
+			table.insert(shots, shot)
+		end
+	end
+	return shots
+end
+
+--- One slow arc. Returns when the shot's time is up or the screen is done.
+local function playShot(shot: any, index: number)
+	local loading = GameConfig.Loading
+	local subject = shot.Subject
+	local look = subject + shot.LookOffset
+
+	-- Each shot starts from a different bearing so the tour does not read as
+	-- one camera circling one building. Deterministic -- the golden angle
+	-- rather than a random draw, because a loading screen that looks
+	-- different every time reads as unstable, and because CLAUDE.md rule 6
+	-- forbids math.random anyway.
+	local startAngle = math.rad((index - 1) * 137.5)
+	local sweep = math.rad(loading.ShotArcDegrees)
+
+	captionLabel.Text = shot.Caption
+	captionLabel.TextTransparency = 1
+	UIKit.tween(captionLabel, UITheme.Motion.Slow, { TextTransparency = 0.25 })
+
+	local elapsed = 0
+	while elapsed < loading.ShotSeconds and not finished do
+		local dt = RunService.RenderStepped:Wait()
+		elapsed += dt
+
+		local t = elapsed / loading.ShotSeconds
+		local angle = startAngle + sweep * t
+		local position = subject
+			+ Vector3.new(math.cos(angle) * shot.Radius, shot.Height, math.sin(angle) * shot.Radius)
+
+		camera.CFrame = CFrame.lookAt(position, look)
+	end
+
+	if not finished then
+		UIKit.tween(captionLabel, loading.ShotCrossfadeSeconds, { TextTransparency = 1 }, true)
+	end
+end
+
+local function runTour()
+	local shots = playableShots()
+	if #shots == 0 then
+		-- Content validation would have caught an empty shot list at boot, so
+		-- this is the "every shot names an unloaded world" case. Hold a fixed
+		-- frame rather than leaving the camera wherever it happened to be.
+		camera.CFrame = CFrame.lookAt(Vector3.new(0, 400, 900), Vector3.new(0, 0, 0))
+		return
+	end
+
+	local index = 1
+	while not finished do
+		playShot(shots[index], index)
+		index += 1
+		if index > #shots then
+			index = 1
+		end
+	end
+end
+
+-- === readiness ======================================================
+
+--- HAS THE PLACE ARRIVED? Two questions, both bounded.
+---
+--- Instance count is the honest one: the authored Crossroads is a known
+--- number of parts (STATUS records 436 as the mobile baseline) and until they
+--- have replicated there is nothing to look at. Preloading is the second: the
+--- engine knows when the meshes and textures in view have finished streaming,
+--- and PreloadAsync is the only way to ask.
+local function countHub(): number
+	local crossroads = Workspace:FindFirstChild(Constants.NAMES.CROSSROADS)
+	if not crossroads then
+		return 0
+	end
+	return #crossroads:GetDescendants()
+end
+
+local function preloadInBatches()
+	local crossroads = Workspace:FindFirstChild(Constants.NAMES.CROSSROADS)
+	if not crossroads then
+		return
+	end
+
+	local queue: { Instance } = {}
+	for _, descendant in crossroads:GetDescendants() do
+		if descendant:IsA("MeshPart") or descendant:IsA("Decal") or descendant:IsA("Texture") then
+			table.insert(queue, descendant)
+		end
+	end
+
+	-- In batches, because PreloadAsync on several hundred meshes at once
+	-- blocks this thread for as long as it takes and the progress bar would
+	-- sit still through all of it.
+	local batch: { Instance } = {}
+	for _, instance in queue do
+		table.insert(batch, instance)
+		if #batch >= GameConfig.Loading.PreloadBatchSize then
+			pcall(ContentProvider.PreloadAsync, ContentProvider, batch)
+			batch = {}
+			if finished then
+				return
+			end
+		end
+	end
+	if #batch > 0 then
+		pcall(ContentProvider.PreloadAsync, ContentProvider, batch)
+	end
+end
+
+local function setReady(reason: string)
+	if ready then
+		return
+	end
+	ready = true
+	statusLabel.Text = reason
+	progressFill.Size = UDim2.fromScale(1, 1)
+	UIKit.setEnabled(playButton, true)
+	UIKit.tween(playButton, UITheme.Motion.Normal, { BackgroundColor3 = UITheme.AccentGold })
+end
+
+local function watchProgress()
+	local loading = GameConfig.Loading
+	task.spawn(preloadInBatches)
+
+	while not ready and not finished do
+		local elapsed = os.clock() - startedAt
+		local arrived = countHub()
+		local instanceProgress = math.clamp(arrived / loading.RequiredHubInstances, 0, 1)
+		local timeProgress = math.clamp(elapsed / loading.MinimumSeconds, 0, 1)
+
+		-- The bar shows the SLOWER of the two, so it never sits at 100% while
+		-- the screen refuses to let the player in -- the single most annoying
+		-- thing a loading bar can do.
+		local shown = math.min(instanceProgress, timeProgress)
+		UIKit.tween(progressFill, UITheme.Motion.Normal, { Size = UDim2.fromScale(shown, 1) })
+		statusLabel.Text = string.format("Building the Crossroads…  %d%%", math.floor(shown * 100))
+
+		if elapsed >= loading.MaximumSeconds then
+			setReady("Taking longer than usual — you can go in now.")
+		elseif instanceProgress >= 1 and elapsed >= loading.MinimumSeconds then
+			setReady("Ready.")
+		end
+
+		task.wait(0.2)
+	end
+end
+
+-- === taking and giving back =========================================
+
+local function holdCharacter(character: Model)
+	local humanoid = character:WaitForChild("Humanoid", 10)
+	if humanoid and humanoid:IsA("Humanoid") then
+		if finished then
+			return
+		end
+		-- The player is looking at a camera tour, not at their character. A
+		-- character that can walk off during it arrives at PLAY somewhere
+		-- other than where the hub put them.
+		humanoid.WalkSpeed = 0
+		humanoid.JumpPower = 0
+	end
+end
+
+local function releaseCharacter()
+	local character = player.Character
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	if humanoid then
+		humanoid.WalkSpeed = GameConfig.Scale.WalkSpeed
+		humanoid.UseJumpPower = true
+		humanoid.JumpPower = GameConfig.Locomotion.JumpPower
+	end
+end
+
+local function finish()
+	if finished then
+		return
+	end
+	finished = true
+
+	local fade = UIKit.tween(backdrop, UITheme.Motion.Slow, { BackgroundTransparency = 1 })
+	for _, child in gui:GetDescendants() do
+		if child:IsA("TextLabel") or child:IsA("TextButton") then
+			UIKit.tween(child, UITheme.Motion.Normal, { TextTransparency = 1 }, true)
+		end
+		if child:IsA("GuiObject") and child ~= backdrop then
+			UIKit.tween(child, UITheme.Motion.Normal, { BackgroundTransparency = 1 }, true)
+		end
+	end
+
+	if blur then
+		TweenService:Create(blur, TweenInfo.new(UITheme.Motion.Slow), { Size = 0 }):Play()
+	end
+
+	camera.CameraType = savedCameraType or Enum.CameraType.Custom
+	camera.FieldOfView = savedFieldOfView or 70
+	releaseCharacter()
+
+	fade.Completed:Once(function()
+		gui:Destroy()
+		if blur then
+			blur:Destroy()
+			blur = nil
+		end
+	end)
+
+	for _, fn in listeners do
+		task.spawn(fn)
+	end
+	listeners = {}
+end
+
+-- === build ==========================================================
+
+local function build()
+	gui = Instance.new("ScreenGui")
+	gui.Name = "LuckboundLoading"
+	gui.ResetOnSpawn = false
+	gui.IgnoreGuiInset = true
+	gui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+	-- Above everything. It is the only screen in the game that is allowed to
+	-- be.
+	gui.DisplayOrder = 100
+	gui.Parent = player:WaitForChild("PlayerGui")
+
+	-- A dark wash rather than a solid fill: the camera tour is the background
+	-- and must stay legible through it, but white text on an unblurred hub is
+	-- not readable at any size.
+	backdrop = Instance.new("Frame")
+	backdrop.Size = UDim2.fromScale(1, 1)
+	backdrop.BackgroundColor3 = UITheme.BackgroundColor
+	backdrop.BackgroundTransparency = 0.35
+	backdrop.BorderSizePixel = 0
+	backdrop.Parent = gui
+
+	-- The vignette: the same wash again, gradient-faded, so the edges of the
+	-- screen are darker than the middle and the title sits in a pool of
+	-- light. Two frames is cheaper than an image and cannot fail to load.
+	local vignette = Instance.new("Frame")
+	vignette.Size = UDim2.fromScale(1, 1)
+	vignette.BackgroundColor3 = Color3.new(0, 0, 0)
+	vignette.BackgroundTransparency = 0.25
+	vignette.BorderSizePixel = 0
+	vignette.Parent = backdrop
+
+	local vignetteGradient = Instance.new("UIGradient")
+	vignetteGradient.Rotation = 90
+	vignetteGradient.Transparency = NumberSequence.new({
+		NumberSequenceKeypoint.new(0, 0.2),
+		NumberSequenceKeypoint.new(0.5, 1),
+		NumberSequenceKeypoint.new(1, 0.1),
+	})
+	vignetteGradient.Parent = vignette
+
+	titleLabel = UIKit.label(backdrop, "LUCKBOUND", 64)
+	titleLabel.Font = UITheme.HeaderFont
+	titleLabel.AnchorPoint = Vector2.new(0.5, 1)
+	titleLabel.Position = UDim2.fromScale(0.5, 0.44)
+	titleLabel.Size = UDim2.new(0.9, 0, 0, 74)
+	titleLabel.TextXAlignment = Enum.TextXAlignment.Center
+	titleLabel.TextColor3 = UITheme.TextPrimary
+
+	local titleGradient = Instance.new("UIGradient")
+	titleGradient.Rotation = 90
+	titleGradient.Color = ColorSequence.new({
+		ColorSequenceKeypoint.new(0, UITheme.TextPrimary),
+		ColorSequenceKeypoint.new(1, UITheme.AccentGold),
+	})
+	titleGradient.Parent = titleLabel
+
+	local tagline = UIKit.label(backdrop, "Roll the world. Walk what you get.", 18, "SECONDARY")
+	tagline.AnchorPoint = Vector2.new(0.5, 0)
+	tagline.Position = UDim2.fromScale(0.5, 0.45)
+	tagline.Size = UDim2.new(0.9, 0, 0, 24)
+	tagline.TextXAlignment = Enum.TextXAlignment.Center
+
+	-- The caption names the place on screen. It is what makes the tour read
+	-- as a tour of somewhere rather than as a screensaver.
+	captionLabel = UIKit.label(backdrop, "", 15, "MUTED")
+	captionLabel.AnchorPoint = Vector2.new(0, 1)
+	captionLabel.Position = UDim2.new(0, UITheme.Space.XL, 1, -UITheme.Space.XL)
+	captionLabel.Size = UDim2.fromOffset(420, 22)
+
+	local controls = Instance.new("Frame")
+	controls.AnchorPoint = Vector2.new(0.5, 0)
+	controls.Position = UDim2.fromScale(0.5, 0.56)
+	controls.Size = UDim2.new(0.5, 0, 0, 100)
+	controls.BackgroundTransparency = 1
+	controls.Parent = backdrop
+
+	local controlsConstraint = Instance.new("UISizeConstraint")
+	controlsConstraint.MinSize = Vector2.new(260, 100)
+	controlsConstraint.MaxSize = Vector2.new(420, 100)
+	controlsConstraint.Parent = controls
+
+	local track = Instance.new("Frame")
+	track.Size = UDim2.new(1, 0, 0, 4)
+	track.BackgroundColor3 = UITheme.RaisedColor
+	track.BorderSizePixel = 0
+	track.Parent = controls
+	UITheme.corner(track, UDim.new(0, 2))
+
+	progressFill = Instance.new("Frame")
+	progressFill.Size = UDim2.fromScale(0, 1)
+	progressFill.BackgroundColor3 = UITheme.AccentGold
+	progressFill.BorderSizePixel = 0
+	progressFill.Parent = track
+	UITheme.corner(progressFill, UDim.new(0, 2))
+
+	statusLabel = UIKit.label(controls, "Building the Crossroads…", 13, "MUTED")
+	statusLabel.Position = UDim2.fromOffset(0, 12)
+	statusLabel.Size = UDim2.new(1, 0, 0, 18)
+	statusLabel.TextXAlignment = Enum.TextXAlignment.Center
+
+	playButton = UIKit.button(controls, "PLAY", "PRIMARY", function()
+		if ready then
+			finish()
+		end
+	end)
+	playButton.Position = UDim2.fromOffset(0, 44)
+	playButton.Size = UDim2.new(1, 0, 0, 48)
+	playButton.TextSize = 20
+	UIKit.setEnabled(playButton, false)
+
+	-- PLAY IS THE ONLY BUTTON. Owner-directed 2026-09-20: an EXIT that can
+	-- only kick you back to the app's home screen is a button whose best
+	-- outcome is leaving, and a title screen offering one thing is a
+	-- stronger screen than one offering a choice nobody wants to make.
+	-- If anything ever joins it here, it should be something a player
+	-- arrives WANTING -- not a way out.
+end
+
+function LoadingScreen.init(): ()
+	if not GameConfig.Loading.Enabled then
+		finished = true
+		return
+	end
+
+	startedAt = os.clock()
+	camera = Workspace.CurrentCamera
+	savedCameraType = camera.CameraType
+	savedFieldOfView = camera.FieldOfView
+
+	build()
+
+	camera.CameraType = Enum.CameraType.Scriptable
+	camera.FieldOfView = GameConfig.Loading.FieldOfView
+
+	-- The blur is what turns hub geometry into a backdrop. It is a Lighting
+	-- effect the client owns and destroys, never a server one -- the same
+	-- rule biome lighting follows (Biome Blueprint §6).
+	local effect = Instance.new("BlurEffect")
+	effect.Size = GameConfig.Loading.BlurSize
+	effect.Parent = Lighting
+	blur = effect
+
+	if player.Character then
+		task.spawn(holdCharacter, player.Character)
+	end
+	player.CharacterAdded:Connect(holdCharacter)
+
+	task.spawn(runTour)
+	task.spawn(watchProgress)
+end
+
+return LoadingScreen

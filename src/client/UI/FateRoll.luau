@@ -38,6 +38,17 @@ local overlay: Frame
 local scrambleLabel: TextLabel
 local card: Frame
 local rolling = false
+-- Anything that must get out of the way during a roll subscribes here. The
+-- hub menu does: the reveal is the four seconds the whole game rests on
+-- (Master Spec §25) and it must not be framed by a side rail.
+local rollingListeners: { (boolean) -> () } = {}
+
+local function setRolling(value: boolean)
+	rolling = value
+	for _, fn in rollingListeners do
+		task.spawn(fn, value)
+	end
+end
 
 -- Styling comes from UITheme (blueprint §1.4) so no screen invents its own
 -- fonts or colours.
@@ -279,7 +290,7 @@ local function onRollResult(payload: any)
 	if rolling then
 		return
 	end
-	rolling = true
+	setRolling(true)
 	ProximityController.setLocked(true)
 
 	local rarity = Constants.RARITY[payload.Rarity]
@@ -313,8 +324,21 @@ local function onRollResult(payload: any)
 	hideAll()
 
 	HubEffects.settle(payload.Rarity)
-	rolling = false
+	setRolling(false)
 	ProximityController.setLocked(false)
+end
+
+--- Subscribe to "is a roll resolving right now". Fires immediately with the
+--- current answer, so a screen built mid-roll is never out of step.
+function FateRoll.onRollingChanged(fn: (boolean) -> ()): () -> ()
+	table.insert(rollingListeners, fn)
+	task.spawn(fn, rolling)
+	return function()
+		local index = table.find(rollingListeners, fn)
+		if index then
+			table.remove(rollingListeners, index)
+		end
+	end
 end
 
 function FateRoll.init(): ()

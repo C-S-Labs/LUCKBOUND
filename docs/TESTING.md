@@ -314,6 +314,100 @@ before anything else after a scale or layout change.
    The Global Observatory and its ramp were cut on 2026-09-17; if you see a
    staircase wrapping the Engine, the sync did not take.
 
+### Test I — the loading screen (3 min) ⭐ NEW
+
+The first thing anyone sees, and none of it has been rendered.
+
+1. **Press Play in Studio.** ✅ Pass: a blurred camera arc over the Crossroads
+   behind the LUCKBOUND title, a caption naming the district on screen, and a
+   progress bar that moves.
+2. **Watch the PLAY button** — the only button on the screen. ✅ Pass: it is
+   dim until the bar fills, then
+   lights gold. It must never light instantly (`Loading.MinimumSeconds` is
+   3.5s) and never fail to light (`MaximumSeconds` is 25s — if you see
+   *"Taking longer than usual"*, the instance count never reached
+   `RequiredHubInstances`; report the number the hub actually built).
+3. **Try to walk during it.** ✅ Pass: you cannot. The character is held at
+   WalkSpeed 0.
+4. **Press PLAY.** ✅ Pass: the blur clears, the camera hands back to the
+   player, and you can walk **and sprint** — if you can walk but not sprint,
+   `LocomotionController` did not start, which means `LoadingScreen.onFinished`
+   never fired.
+5. **Let it loop.** Six shots at 9s each. ✅ Pass: each one drifts rather than
+   orbits, and the captions crossfade rather than cut.
+
+### Test J — the hub menu (5 min) ⭐ NEW
+
+1. **The rail is there, on the left.** ✅ Pass: a Fate card, an arrow against
+   its edge, and seven buttons in this order — **Travel, Party, Fate Tree,
+   Rebirth, Shop, Codes, Settings**.
+2. **Press the arrow.** ✅ Pass: the whole rail slides off the left edge and
+   only the arrow remains. Press again to bring it back. **This is the noise
+   control the whole rail is judged on — if it feels slow or sticky, say so.**
+3. **Open Travel, then Shop.** ✅ Pass: opening the second closes the first.
+   Never two panels at once.
+4. **Travel to each of the five destinations.** ✅ Pass: the screen fades, you
+   arrive **on the deck** (not inside it, not under it, not on the skirt), and
+   you are facing the Fate Engine. ⚠️ Check the server output for
+   `no floor under landing for '<Id>'` — that means the ray missed and the
+   landing is a guess.
+5. **Travel again immediately, and again.** ✅ Pass: it just works, every
+   time — there is no cooldown. The whole fade is about half a second; **if it
+   feels like a wait rather than a cut, say so** and `TeleportFade*Seconds`
+   comes down.
+6. **Codes.** Enter `LUCKBOUND`. ✅ Pass: +150 Fate and a message. Enter it
+   again: *"You have already redeemed that code."* Enter nonsense: *"That code
+   is not valid."*
+7. **Settings.** Move a slider, flip Reduce Motion. ✅ Pass: with Reduce Motion
+   on, panels snap rather than slide — **but the roll reveal is unchanged.**
+8. **Roll at the Engine with the menu open.** ✅ Pass: the whole menu
+   disappears for the reveal and comes back after the card.
+9. **Enter an expedition.** ✅ Pass: the menu is **gone** — rail, arrow and
+   all — and returns when you do.
+10. **On a phone (or Studio's device emulator).** ✅ Pass: the rail starts
+    collapsed, the panel is readable, and nothing is cut off at the edges.
+
+### Test K — run and double jump (2 min) ⭐ NEW
+
+1. **Hold Shift and run.** ✅ Pass: you accelerate over ~0.25s rather than
+   snapping, and a small bar appears above the roll prompt.
+2. **Keep running.** ✅ Pass: about 8 seconds later you drop back to walking
+   and the bar is empty and amber. You cannot immediately sprint again.
+3. **Stand still and hold Shift.** ✅ Pass: the bar does not move.
+4. **Jump, then jump again in the air.** ✅ Pass: a second, smaller jump with a
+   gold spark ring at your feet. A third press does nothing.
+5. **Walk off the edge of a walkway and press jump immediately.** ✅ Pass: you
+   get a **full** jump, not the weaker air one — that is the coyote window. You
+   should then still have the air jump available.
+
+### Test L — the menu follows the world (4 min) ⭐ NEW
+
+The tint is subtle on purpose. Judge whether it is *too* subtle.
+
+1. **Stand at the Fate Engine, open Travel.** ✅ Pass: the base look — deep
+   purple, gold accents. The centre is deliberately untinted.
+2. **Walk to the Discovery Archive** (or `/tp`). ✅ Pass: over about a second,
+   the panel and rail shift toward the Archive's teal and the 1px edge picks
+   it up more strongly. **The panel must not get lighter** — only change hue.
+   If it looks washed out, the luminance-preserving mix has regressed.
+3. **Walk back onto the open plaza.** ✅ Pass: it returns to base. The plaza
+   belongs to no district.
+4. **`/event FATEBREAK SERVER 60`.** ✅ Pass: the menu shifts toward Mythic
+   orange within a second, over the top of whatever district you are in.
+   `/endevents` clears it.
+5. **`/event CATALYST_STAR GLOBAL 60`.** ✅ Pass: cold starlight, the
+   strongest tint in the game. This is the one to judge hardest — it should
+   read as *an event*, not as a different app.
+6. **Start both at once.** ✅ Pass: the Catalyst Star wins, because GLOBAL
+   outranks SERVER. It keeps winning until it expires.
+7. **Read the Settings panel during each.** ✅ Pass: every label is readable.
+   This is enforced by test, so a failure here means the test's model of the
+   screen is wrong — report it.
+8. **Let an event expire on its own.** ✅ Pass: the menu returns to base
+   without anyone pressing anything — the client expires it locally.
+9. **Turn on Reduce Motion, then walk between districts.** ✅ Pass: the tint
+   snaps instead of fading.
+
 ### Test E — a tampered client is rejected (1 min)
 
 From the **client** console:
