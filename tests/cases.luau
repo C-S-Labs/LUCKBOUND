@@ -2444,6 +2444,19 @@ do
 		return true
 	end)())
 
+	-- The owner's order, 2026-09-20. Pinned because it is a deliberate
+	-- grouping (get somewhere, get someone, progression, transactions,
+	-- settings) and alphabetical or add-order drift would undo it silently.
+	check("the rail is in the order the owner set", (function()
+		local wanted = { "TRAVEL", "PARTY", "SKILLS", "REBIRTH", "SHOP", "CODES", "SETTINGS" }
+		for index, id in wanted do
+			if panels[index] == nil or panels[index].Id ~= id then
+				return false
+			end
+		end
+		return #panels == #wanted
+	end)())
+
 	check("panels come back in rail order", (function()
 		for i = 2, #panels do
 			if panels[i - 1].Order > panels[i].Order then
@@ -2574,8 +2587,6 @@ do
 	local function request(overrides)
 		local r = {
 			DestinationId = "HALL_OF_LEGENDS",
-			Now = 1000,
-			LastTravelAt = 0,
 			OnExpedition = false,
 			Rolling = false,
 		}
@@ -2600,32 +2611,32 @@ do
 	check("travel is refused mid-roll",
 		not HubMenuCore.canTravel(Menu, request({ Rolling = true }), GameConfig).ok)
 
-	check("travel is refused inside the cooldown",
-		not HubMenuCore.canTravel(
-			Menu,
-			request({ Now = 1000, LastTravelAt = 999 }),
-			GameConfig
-		).ok)
+	-- NO COOLDOWN, owner-directed. Travelling twice in a row is allowed, and
+	-- the config must not grow a cooldown field by the back door -- a version
+	-- of this that only removed the CHECK would leave the next session to
+	-- find the number and wire it back up.
+	check("travelling twice in a row is allowed",
+		HubMenuCore.canTravel(Menu, request(), GameConfig).ok
+			and HubMenuCore.canTravel(Menu, request(), GameConfig).ok)
 
-	check("travel is allowed once the cooldown expires",
-		HubMenuCore.canTravel(
-			Menu,
-			request({ Now = 1000 + GameConfig.HubMenu.TeleportCooldownSeconds + 0.1, LastTravelAt = 1000 }),
-			GameConfig
-		).ok)
+	check("no travel cooldown exists to be checked",
+		GameConfig.HubMenu.TeleportCooldownSeconds == nil
+			and HubMenuCore.travelCooldownRemaining == nil)
 
-	check("the first travel of a session is never on cooldown",
-		HubMenuCore.travelCooldownRemaining(1000, 0, GameConfig) == 0)
+	-- The rate limit is a spam guard, not a cooldown wearing another name: a
+	-- player pressing the button as fast as they can must never meet it.
+	check("the rate limit is far above what a human can press",
+		GameConfig.HubMenu.TeleportRequestsPerMinute >= 30,
+		string.format("%d/min", GameConfig.HubMenu.TeleportRequestsPerMinute))
 
-	check("the cooldown counts down rather than jumping",
-		math.abs(HubMenuCore.travelCooldownRemaining(1002, 1000, GameConfig)
-			- (GameConfig.HubMenu.TeleportCooldownSeconds - 2)) < 1e-6)
-
-	-- The fade covers the swap, so the player never sees the world change.
-	-- If the fade were shorter than the move, they would.
+	-- The fade covers the swap, so the player never sees the world change --
+	-- and it is now the ONLY thing between pressing TRAVEL and arriving, so
+	-- it has a ceiling as well as a floor.
 	local timing = HubMenuCore.travelTiming(GameConfig)
 	check("the travel fade is long enough to hide the swap",
-		timing.FadeOut > 0 and timing.Hold > 0 and timing.Total > timing.FadeOut)
+		timing.FadeOut > 0 and timing.Total > timing.FadeOut)
+	check("...and short enough to read as instant",
+		timing.Total <= 0.75, string.format("%.2fs", timing.Total))
 end
 
 -- === the loading screen's shots =====================================

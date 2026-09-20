@@ -36,12 +36,13 @@ local ExpeditionSystem: any
 
 type Limiter = { Count: number, WindowStartedAt: number }
 
-local lastTravelAt: { [number]: number } = {}
 local travelLimiter: { [number]: Limiter } = {}
 local codeLimiter: { [number]: Limiter } = {}
 
 --- A fixed-window rate limiter. Crude on purpose: it exists to make spam
---- pointless, not to be fair to the millisecond.
+--- pointless, not to be fair to the millisecond, and travel has no cooldown
+--- for it to stand in for -- at 60 a minute a human pressing the button as
+--- fast as they can never meets it.
 local function allow(limiters: { [number]: Limiter }, userId: number, perMinute: number): boolean
 	local now = os.clock()
 	local state = limiters[userId]
@@ -137,8 +138,6 @@ function HubUISystem.travel(player: Player, payload: any): ()
 
 	local decision = HubMenuCore.canTravel(Menu, {
 		DestinationId = destinationId,
-		Now = os.clock(),
-		LastTravelAt = lastTravelAt[player.UserId],
 		OnExpedition = ExpeditionSystem.isActive(player),
 		-- The server does not track a "rolling" flag per player: the roll's
 		-- own cooldown already refuses a second roll, and a player who travels
@@ -159,7 +158,6 @@ function HubUISystem.travel(player: Player, payload: any): ()
 		return
 	end
 
-	lastTravelAt[player.UserId] = os.clock()
 	Net.get("Hub_TravelResult"):FireClient(player, {
 		Ok = true,
 		DestinationId = destination.Id,
@@ -242,7 +240,6 @@ function HubUISystem.init(saveSystem: any, progressionSystem: any, expeditionSys
 	end)
 
 	Players.PlayerRemoving:Connect(function(player)
-		lastTravelAt[player.UserId] = nil
 		travelLimiter[player.UserId] = nil
 		codeLimiter[player.UserId] = nil
 	end)

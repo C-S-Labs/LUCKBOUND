@@ -440,7 +440,7 @@ Created by `Core/Net.luau` and nowhere else.
 | `Expedition_Started` | RemoteEvent | S→C | `ExpeditionPayload` | — |
 | `Expedition_Ended` | RemoteEvent | S→C | `ExpeditionEndPayload` | — |
 | `Expedition_TimerSync` | RemoteEvent | S→C | `{RemainingSeconds, ServerNow}` | — |
-| `Hub_RequestTravel` | RemoteEvent | C→S | `{DestinationId}` | known Id + hub-only + cooldown + 20/min |
+| `Hub_RequestTravel` | RemoteEvent | C→S | `{DestinationId}` | known Id + hub-only + 60/min (spam guard; **no cooldown**) |
 | `Hub_TravelResult` | RemoteEvent | S→C | `{Ok, DestinationId, Reason}` | — |
 | `Code_Redeem` | RemoteEvent | C→S | `{Code}` | length cap + 6/min + one redemption per code |
 | `Code_Result` | RemoteEvent | S→C | `{Ok, Message, Fate, CodeId}` | — |

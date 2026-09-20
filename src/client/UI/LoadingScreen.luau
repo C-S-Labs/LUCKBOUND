@@ -11,7 +11,8 @@
 --   2. Flies a slow arc around each subject in Content/Hub/Cinematics, blurred
 --      and crossfaded, behind the title.
 --   3. Counts what has actually arrived and preloads what is on screen.
---   4. Lights PLAY when the place is ready AND GameConfig.Loading.MinimumSeconds
+--   4. Lights its one button -- PLAY -- when the place is ready AND
+--      GameConfig.Loading.MinimumSeconds
 --      has passed -- never before, so a warm client still gets the intro, and
 --      never later than MaximumSeconds, so a stalled one is not held hostage.
 --
@@ -49,7 +50,6 @@ local captionLabel: TextLabel
 local statusLabel: TextLabel
 local progressFill: Frame
 local playButton: TextButton
-local exitButton: TextButton
 
 local blur: BlurEffect?
 local camera: Camera
@@ -371,13 +371,13 @@ local function build()
 	local controls = Instance.new("Frame")
 	controls.AnchorPoint = Vector2.new(0.5, 0)
 	controls.Position = UDim2.fromScale(0.5, 0.56)
-	controls.Size = UDim2.new(0.5, 0, 0, 132)
+	controls.Size = UDim2.new(0.5, 0, 0, 100)
 	controls.BackgroundTransparency = 1
 	controls.Parent = backdrop
 
 	local controlsConstraint = Instance.new("UISizeConstraint")
-	controlsConstraint.MinSize = Vector2.new(260, 132)
-	controlsConstraint.MaxSize = Vector2.new(420, 132)
+	controlsConstraint.MinSize = Vector2.new(260, 100)
+	controlsConstraint.MaxSize = Vector2.new(420, 100)
 	controlsConstraint.Parent = controls
 
 	local track = Instance.new("Frame")
@@ -409,15 +409,12 @@ local function build()
 	playButton.TextSize = 20
 	UIKit.setEnabled(playButton, false)
 
-	exitButton = UIKit.button(controls, "EXIT", nil, function()
-		-- Roblox gives no way to close the app from inside a place. Kicking
-		-- is the honest equivalent: it returns the player to the app's home
-		-- screen with a message rather than pretending to quit.
-		player:Kick("Thanks for playing LUCKBOUND.")
-	end)
-	exitButton.Position = UDim2.fromOffset(0, 100)
-	exitButton.Size = UDim2.new(1, 0, 0, 32)
-	exitButton.TextSize = 14
+	-- PLAY IS THE ONLY BUTTON. Owner-directed 2026-09-20: an EXIT that can
+	-- only kick you back to the app's home screen is a button whose best
+	-- outcome is leaving, and a title screen offering one thing is a
+	-- stronger screen than one offering a choice nobody wants to make.
+	-- If anything ever joins it here, it should be something a player
+	-- arrives WANTING -- not a way out.
 end
 
 function LoadingScreen.init(): ()

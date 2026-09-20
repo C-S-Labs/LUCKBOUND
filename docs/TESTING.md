@@ -321,7 +321,8 @@ The first thing anyone sees, and none of it has been rendered.
 1. **Press Play in Studio.** ✅ Pass: a blurred camera arc over the Crossroads
    behind the LUCKBOUND title, a caption naming the district on screen, and a
    progress bar that moves.
-2. **Watch the PLAY button.** ✅ Pass: it is dim until the bar fills, then
+2. **Watch the PLAY button** — the only button on the screen. ✅ Pass: it is
+   dim until the bar fills, then
    lights gold. It must never light instantly (`Loading.MinimumSeconds` is
    3.5s) and never fail to light (`MaximumSeconds` is 25s — if you see
    *"Taking longer than usual"*, the instance count never reached
@@ -337,8 +338,9 @@ The first thing anyone sees, and none of it has been rendered.
 
 ### Test J — the hub menu (5 min) ⭐ NEW
 
-1. **The rail is there, on the left.** ✅ Pass: seven buttons, a Fate card
-   above them, and an arrow against its edge.
+1. **The rail is there, on the left.** ✅ Pass: a Fate card, an arrow against
+   its edge, and seven buttons in this order — **Travel, Party, Fate Tree,
+   Rebirth, Shop, Codes, Settings**.
 2. **Press the arrow.** ✅ Pass: the whole rail slides off the left edge and
    only the arrow remains. Press again to bring it back. **This is the noise
    control the whole rail is judged on — if it feels slow or sticky, say so.**
@@ -349,8 +351,10 @@ The first thing anyone sees, and none of it has been rendered.
    you are facing the Fate Engine. ⚠️ Check the server output for
    `no floor under landing for '<Id>'` — that means the ray missed and the
    landing is a guess.
-5. **Travel again immediately.** ✅ Pass: the buttons show a countdown instead
-   of travelling (6s).
+5. **Travel again immediately, and again.** ✅ Pass: it just works, every
+   time — there is no cooldown. The whole fade is about half a second; **if it
+   feels like a wait rather than a cut, say so** and `TeleportFade*Seconds`
+   comes down.
 6. **Codes.** Enter `LUCKBOUND`. ✅ Pass: +150 Fate and a message. Enter it
    again: *"You have already redeemed that code."* Enter nonsense: *"That code
    is not valid."*

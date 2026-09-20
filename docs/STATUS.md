@@ -158,7 +158,7 @@ exists.**
 
 ### Test suite
 
-**472 tests, all passing.** Headless — no Roblox required. 94 of them arrived
+**473 tests, all passing.** Headless — no Roblox required. 95 of them arrived
 with the player UI: the menu reducer, travel authorisation, code redemption,
 settings validation, the stamina curve and the coyote window.
 

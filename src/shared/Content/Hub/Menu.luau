@@ -27,10 +27,12 @@ local Menu = {
 	CollapseHotkey = "Backslash",
 
 	-- === THE SIDE RAIL ================================================
-	-- Order is the vertical order on the rail, top to bottom, and it is a
-	-- design statement: Travel first because it is the thing a player in a
-	-- 1150-stud hub reaches for most, Rebirth last because it is the thing
-	-- they reach for once.
+	-- Order is the vertical order on the rail, top to bottom. Owner-directed
+	-- 2026-09-20, and it groups by what a player is DOING rather than by how
+	-- often they press it: get somewhere (Travel), get someone (Party), then
+	-- the two progression screens that talk to each other (Fate Tree and the
+	-- Rebirth that resets it), then the two transactional ones (Shop, Codes),
+	-- then Settings, which is last because it always is.
 	--
 	-- Glyphs are text, not images. A rail built from asset ids cannot be read
 	-- in a diff, cannot be changed without an upload, and renders as a grey
@@ -48,10 +50,37 @@ local Menu = {
 			Hotkey = "T",
 		},
 		{
+			Id = "PARTY",
+			Label = "Party",
+			Glyph = "◎",
+			Order = 2,
+			Status = "PREVIEW",
+			Summary = "Roll and expedition together.",
+			Hotkey = "P",
+		},
+		{
+			Id = "SKILLS",
+			Label = "Fate Tree",
+			Glyph = "✦",
+			Order = 3,
+			Status = "PREVIEW",
+			Summary = "Spend Fate levels on lasting upgrades.",
+			Hotkey = "K",
+		},
+		{
+			Id = "REBIRTH",
+			Label = "Rebirth",
+			Glyph = "⟲",
+			Order = 4,
+			Status = "PREVIEW",
+			Summary = "Trade everything for a permanent edge.",
+			Hotkey = "R",
+		},
+		{
 			Id = "SHOP",
 			Label = "Shop",
 			Glyph = "❖",
-			Order = 2,
+			Order = 5,
 			Status = "PREVIEW",
 			Summary = "Spend Fate on what the market has today.",
 			Hotkey = "B",
@@ -60,37 +89,10 @@ local Menu = {
 			Id = "CODES",
 			Label = "Codes",
 			Glyph = "⌘",
-			Order = 3,
+			Order = 6,
 			Status = "LIVE",
 			Summary = "Redeem a code.",
 			Hotkey = "C",
-		},
-		{
-			Id = "SKILLS",
-			Label = "Fate Tree",
-			Glyph = "✦",
-			Order = 4,
-			Status = "PREVIEW",
-			Summary = "Spend Fate levels on lasting upgrades.",
-			Hotkey = "K",
-		},
-		{
-			Id = "PARTY",
-			Label = "Party",
-			Glyph = "◎",
-			Order = 5,
-			Status = "PREVIEW",
-			Summary = "Roll and expedition together.",
-			Hotkey = "P",
-		},
-		{
-			Id = "REBIRTH",
-			Label = "Rebirth",
-			Glyph = "⟲",
-			Order = 6,
-			Status = "PREVIEW",
-			Summary = "Trade everything for a permanent edge.",
-			Hotkey = "R",
 		},
 		{
 			Id = "SETTINGS",

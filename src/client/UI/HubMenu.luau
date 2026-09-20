@@ -22,7 +22,6 @@
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
-local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
@@ -55,7 +54,6 @@ local toast: TextLabel
 
 local railButtons: { [string]: TextButton } = {}
 local state = HubMenuCore.newState(GameConfig, UserInputService.TouchEnabled)
-local lastTravelAt = 0
 local hiddenForRoll = false
 local travelling = false
 local veilGui: ScreenGui
@@ -147,8 +145,6 @@ end
 --- TRAVEL. The five places the Crossroads is made of, and a cooldown that
 --- keeps walking it the default rather than the punishment.
 local function buildTravel()
-	local buttons: { { Button: TextButton, Destination: any } } = {}
-
 	section("Crossroads", 1)
 
 	local order = 2
@@ -172,36 +168,10 @@ local function buildTravel()
 		go.AnchorPoint = Vector2.new(1, 0.5)
 		go.Position = UDim2.new(1, -UITheme.Space.MD, 0.5, 0)
 		go.Size = UDim2.fromOffset(104, 38)
-
-		table.insert(buttons, { Button = go, Destination = destination })
 	end
 
-	paragraph(
-		"Travel is a convenience, not a shortcut past the world — "
-			.. "the walk between districts is short on purpose.",
-		order
-	)
+	paragraph("Anywhere in the Crossroads, immediately.", order)
 
-	-- The cooldown is live on the buttons rather than announced after the
-	-- fact: a button that tells you when it will work is worth more than an
-	-- error that tells you it did not.
-	local connection: RBXScriptConnection
-	connection = RunService.Heartbeat:Connect(function()
-		if not panelBody.Parent or state.OpenPanelId ~= "TRAVEL" then
-			connection:Disconnect()
-			return
-		end
-		local remaining = HubMenuCore.travelCooldownRemaining(os.clock(), lastTravelAt, GameConfig)
-		for _, entry in buttons do
-			if remaining > 0 then
-				entry.Button.Text = string.format("%.0fs", math.ceil(remaining))
-				UIKit.setEnabled(entry.Button, false)
-			elseif not entry.Button.Active then
-				entry.Button.Text = "TRAVEL"
-				UIKit.setEnabled(entry.Button, true)
-			end
-		end
-	end)
 end
 
 --- CODES. The one panel where the client sends a free string, so it is also
@@ -692,7 +662,6 @@ function HubMenu.init(): ()
 
 	Net.get("Hub_TravelResult").OnClientEvent:Connect(function(payload)
 		if payload.Ok then
-			lastTravelAt = os.clock()
 			local destination = HubMenuCore.destinationById(Menu, payload.DestinationId)
 			say(if destination then `Arrived: {destination.Label}` else "Arrived.", true)
 		else

@@ -18,7 +18,7 @@ src/shared/Content/Hub/Menu.luau    which panels and destinations EXIST
 src/shared/Content/Hub/Cinematics.luau  the loading screen's camera shots
 src/client/UI/UIKit.luau            buttons, toggles, sliders, tweens (widgets)
 src/client/UI/HubMenu.luau          the rail and the panels           (pixels only)
-src/client/UI/LoadingScreen.luau    title, camera tour, PLAY / EXIT
+src/client/UI/LoadingScreen.luau    title, camera tour, PLAY
 src/server/Systems/HubUISystem.luau travel, codes, settings           (authority)
 ```
 
@@ -43,7 +43,7 @@ half-built world with no explanation.
 | Backdrop | the live hub, blurred (`GameConfig.Loading.BlurSize`) with a vignette over it |
 | Progress | the **slower** of "instances arrived" and "minimum time elapsed" |
 | PLAY | lights at `MinimumSeconds` **and** readiness — or at `MaximumSeconds` regardless |
-| EXIT | `player:Kick`. Roblox gives no way to close the app from inside a place; this returns the player to the app's home screen, which is the honest equivalent |
+| Buttons | **PLAY, and nothing else.** Owner-directed: an EXIT that can only kick you back to the app's home screen is a button whose best outcome is leaving. If anything ever joins it, it should be something a player arrives *wanting* |
 
 **Two rules it keeps.** It never traps a player — every wait is bounded, and a
 stalled client is let in with an apology rather than held. And it restores
@@ -91,7 +91,7 @@ setting overrides both, applied **once** when their profile arrives.
 
 | Panel | Status | What it does today |
 |---|---|---|
-| Travel | **LIVE** | Five destinations, server-validated, with a live cooldown on the buttons |
+| Travel | **LIVE** | Five destinations, server-validated, **no cooldown** — press, a ~0.5s fade, arrive |
 | Codes | **LIVE** | A text box; the server decides and the answer is what the player reads |
 | Settings | **LIVE** | Drawn from `SettingsCore.SPEC`; saved to the profile |
 | Shop | PREVIEW | Designed screen, placeholder copy, labelled |
@@ -107,9 +107,11 @@ silently does nothing would be worse than no button.
 ### Travel, precisely
 
 1. Client sends `{ DestinationId }` — and nothing else, ever.
-2. `HubMenuCore.canTravel` decides: known Id, not on an expedition, cooldown
-   elapsed. The **client calls the same function** to grey its own buttons out,
-   which is a courtesy and never the authority.
+2. `HubMenuCore.canTravel` decides: known Id, not on an expedition, not
+   mid-roll. The **client calls the same function** to grey its own buttons
+   out, which is a courtesy and never the authority. **There is no cooldown**
+   (owner-directed) — the server's 60/min rate limit is a spam guard, and the
+   client must never grey a button out for it.
 3. The server resolves the Id to `Anchors[AnchorId] + Landing`, drops a ray
    from `TeleportProbeHeight` above it, and stands the player on what it hits.
    Nothing hit → the content point is used and the server warns by name.
@@ -150,4 +152,4 @@ directions is what makes a menu feel rubbery.
 | Shop / Tree / Party / Rebirth are copy | Expected | Deliberate. They ship designed and labelled |
 | No sound | Low | Every one of these beats wants a sound: the rail opening, PLAY, a code accepted. There is no audio system yet |
 | Settings do not drive anything yet | Medium | `ReduceMotion` and `AutoHideMenu` do. `MusicVolume`, `SfxVolume`, `UiScale`, `ScreenShake` and `ShowGlobalAnnouncements` are stored and honoured by nothing, because the systems they would drive do not exist |
-| The travel fade is open-loop | Low | The client fades out, *then* sends the request. If the server refuses mid-fade, the player gets a black screen and a refusal rather than no fade at all. Acceptable for a cooldown-guarded request; revisit if refusals turn out to be common |
+| The travel fade is open-loop | Low | The client fades out, *then* sends the request. If the server refuses mid-fade, the player gets a brief black screen and a refusal rather than no fade at all. The fade is ~0.5s end to end, so the cost of being wrong is small |

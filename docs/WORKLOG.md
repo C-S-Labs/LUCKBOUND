@@ -33,6 +33,59 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 29 — 2026-09-20 — Three owner corrections to the hub UI
+
+**Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 473 passing (was 472)
+
+Owner review of Session 28's UI. Three changes, all small, all directed.
+
+### EXIT is gone
+
+The loading screen has **one button**. Roblox gives no way to close the app
+from inside a place, so EXIT could only ever kick the player back to the app's
+home screen — a button whose best outcome is leaving. A title screen offering
+one thing is stronger than one offering a choice nobody wants to make. The
+`controls` frame lost 32px with it.
+
+### Travel has no cooldown
+
+`TeleportCooldownSeconds` is **deleted**, not set to zero, along with
+`HubMenuCore.travelCooldownRemaining` and the per-frame loop that drove the
+buttons' countdown. Owner-directed: travel should be quick and effectively
+instantaneous.
+
+The fades came down with it — 0.45/0.25/0.55 to **0.22/0.06/0.28**, about half
+a second end to end, which reads as a cut rather than a wait. That fade is now
+the *only* thing between pressing TRAVEL and arriving, so it is asserted to
+stay under 0.75s as well as above zero.
+
+The server's rate limit stays and went **up**, 20/min to 60. It is not a
+cooldown wearing another name: a player pressing the button as fast as they
+can will never meet it, and a script firing the remote in a loop will. A test
+pins both halves — that the cooldown field does not exist, and that the limit
+is far above human speed. Removing only the *check* would have left the number
+sitting there for the next session to wire back up.
+
+### The rail is in the owner's order
+
+Travel, Party, Fate Tree, Rebirth, Shop, Codes, Settings. The blocks were
+sorted in the content file too, so the file reads in the same order as the
+rail. It groups by what a player is doing — get somewhere, get someone, the
+two progression screens that talk to each other, the two transactional ones,
+then Settings — and a test pins the sequence, because add-order drift would
+undo it silently.
+
+### Stopped at
+
+Pushed. Still nothing rendered in Studio; `TESTING.md` tests I, J and K are
+updated for all three changes (the rail order is now step 1 of test J).
+
+### Next
+
+Unchanged from Session 28: walk the UI, then the Crossroads.
+
+---
+
 ## Session 28 — 2026-09-20 — The hub gets a face
 
 **Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 472 passing (was 378)

@@ -145,7 +145,7 @@ end
 --- IS THIS TRAVEL REQUEST ALLOWED? The server's authority and the client's
 --- button state, decided once.
 ---
---- `request` = { DestinationId, Now, LastTravelAt, OnExpedition, Rolling }
+--- `request` = { DestinationId, OnExpedition, Rolling }
 function HubMenuCore.canTravel(menu: any, request: any, config: any): any
 	if not config.HubMenu.Enabled then
 		return Result.err("Travel is disabled.")
@@ -167,28 +167,16 @@ function HubMenuCore.canTravel(menu: any, request: any, config: any): any
 		return Result.err("Wait for the roll to finish.")
 	end
 
-	local last = request.LastTravelAt or 0
-	local elapsed = request.Now - last
-	local cooldown = config.HubMenu.TeleportCooldownSeconds
-	if last > 0 and elapsed < cooldown then
-		return Result.err(string.format("Travel again in %.0fs.", math.max(0, cooldown - elapsed)))
-	end
-
+	-- NO COOLDOWN. Owner-directed: travel is quick and effectively
+	-- instantaneous. The server's rate limit is a spam guard living in
+	-- HubUISystem, not a rule about play, so it is deliberately not checked
+	-- here -- the client must never grey a button out for it.
 	return Result.ok(destination)
 end
 
---- Seconds left on the travel cooldown. Drives the button's countdown ring;
---- returns 0 when travel is available.
-function HubMenuCore.travelCooldownRemaining(now: number, lastTravelAt: number?, config: any): number
-	local last = lastTravelAt or 0
-	if last <= 0 then
-		return 0
-	end
-	return math.max(0, config.HubMenu.TeleportCooldownSeconds - (now - last))
-end
-
 --- How long the client's fade covers the swap. The server moves the character
---- at the midpoint, so both halves are stated once, here.
+--- at the midpoint, so both halves are stated once, here. Short by design:
+--- this is the ONLY thing between pressing TRAVEL and arriving.
 function HubMenuCore.travelTiming(config: any): any
 	local hub = config.HubMenu
 	return {

@@ -452,19 +452,22 @@ local GameConfig = {
 		RestoreDelaySeconds = 0.35,
 
 		-- === TRAVEL ===
-		-- Walking the hub is a feature (docs/STATUS §1, the traversal budget),
-		-- so travel is deliberately not instant and not free of friction:
-		-- a short fade, a cooldown, and no travel while you are mid-roll.
-		TeleportCooldownSeconds = 6.0,
-		TeleportFadeOutSeconds = 0.45,
-		TeleportHoldSeconds = 0.25,
-		TeleportFadeInSeconds = 0.55,
-		-- Requests are validated server-side against this: a client that asks
-		-- to travel while rolling, while on an expedition, or before its
-		-- cooldown is up is simply refused. Rule 5 -- the destination Id is the
-		-- ONLY thing the client is allowed to choose, and it must name a
-		-- district that exists in Content.
-		TeleportRequestsPerMinute = 20,
+		-- THERE IS NO COOLDOWN. Owner-directed 2026-09-20: travel should be
+		-- quick and effectively instantaneous. The only thing between pressing
+		-- TRAVEL and arriving is the fade that hides the swap, and it is short
+		-- enough to read as a cut rather than as a wait.
+		--
+		-- What remains is a rate limit, and it is not a cooldown wearing a
+		-- different name: at 60 a minute a player pressing the button as fast
+		-- as they can will never see it, while a script firing the remote in a
+		-- loop will. It exists to stop remote spam, nothing else.
+		TeleportFadeOutSeconds = 0.22,
+		TeleportHoldSeconds = 0.06,
+		TeleportFadeInSeconds = 0.28,
+		-- Rule 5 -- the destination Id is the ONLY thing the client is allowed
+		-- to choose, and it must name a district that exists in Content. A
+		-- client that asks to travel while on an expedition is refused.
+		TeleportRequestsPerMinute = 60,
 
 		-- WHERE A TRAVELLER ACTUALLY LANDS. Content names a landing point per
 		-- district; the server drops a ray from ProbeHeight above it and
