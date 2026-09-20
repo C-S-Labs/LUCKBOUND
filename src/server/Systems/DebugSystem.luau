@@ -24,13 +24,14 @@ local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local GameConfig = require(Root.Core.GameConfig)
 local Net = require(Root.Core.Net)
 local Worlds = require(Root.Content.Worlds)
-local Palettes = require(Root.Content.Hub.Palettes)
+local Events = require(Root.Content.Events)
 
 local DebugSystem = {}
 
 local FateSystem
 local ExpeditionSystem
 local EventSystem
+local LedgerSystem
 
 --- Who is allowed to run a command. Studio is the everyday case; the creator
 --- check is what makes this safe to leave wired up on a published test place.
@@ -75,48 +76,74 @@ COMMANDS.roll = function(player: Player, args: { string }): (boolean, string)
 	return FateSystem.forceRoll(player, string.upper(worldId))
 end
 
---- /event <KIND> [SCOPE] [SECONDS] -- start a live event on this server.
+--- /event <ID> -- start an authored event from Content/Events.
 ---
---- THE ONLY WAY TO TEST A 1-IN-A-TRILLION EVENT. A Catalyst Star is supposed
---- to happen ten times in the life of the game; nobody can walk the sky it
+--- THE ONLY WAY TO TEST A 1-IN-A-TRILLION EVENT. A Catalyst Star should
+--- happen ten times in the life of the game; nobody can walk the sky it
 --- produces by rolling for it. This starts one on demand so the lighting, the
---- menu tint and the announcement can actually be looked at.
+--- sky layer, the menu tint and the announcement can actually be looked at.
 ---
---- It is a LOCAL event even when the scope says GLOBAL: this starts the event
---- on this server only, and deliberately does not publish cross-server, so a
---- test in Studio cannot crack the sky on a live place by accident.
+--- A unique event started this way STILL CLAIMS FROM THE LEDGER, deliberately:
+--- testing the sky must not be a way to mint an eleventh Star. Use a
+--- non-unique event to test the visuals, and expect /event CATALYST_STAR to
+--- refuse once ten exist.
 COMMANDS.event = function(player: Player, args: { string }): (boolean, string)
-	local kind = args[1]
-	if not kind then
-		local kinds = {}
-		for _, entry in Palettes.Events do
-			table.insert(kinds, entry.Kind)
+	local id = args[1] and string.upper(args[1])
+	if not id then
+		local ids = {}
+		for key, definition in Events do
+			table.insert(ids, `{key} ({definition.Tier})`)
 		end
-		table.sort(kinds)
-		return false,
-			"usage: /event <KIND> [GLOBAL|SERVER|BIOME] [seconds] -- tinted kinds: "
-				.. table.concat(kinds, ", ")
+		table.sort(ids)
+		return false, "usage: /event <ID> -- " .. table.concat(ids, ", ")
 	end
 
-	local scope = string.upper(args[2] or "SERVER")
-	if scope ~= "GLOBAL" and scope ~= "SERVER" and scope ~= "BIOME" then
-		return false, "scope must be GLOBAL, SERVER or BIOME"
+	local result = EventSystem.trigger(id, player)
+	if not result.ok then
+		return false, `could not start {id}: {result.err}`
+	end
+	return true, `started {id} ({result.value.Scope}) for {math.floor(result.value.Duration)}s`
+end
+
+--- /ledger [ID] -- how many of a unique have ever been claimed, and by whom.
+--- The scarcity is the feature; being able to see it is how you know the
+--- ledger is working before ten of them are gone.
+COMMANDS.ledger = function(_player: Player, args: { string }): (boolean, string)
+	local id = args[1] and string.upper(args[1])
+	if not id then
+		local ids = {}
+		for _, definition in Events do
+			if definition.Unique then
+				table.insert(ids, definition.Unique.LedgerId)
+			end
+		end
+		table.sort(ids)
+		if #ids == 0 then
+			return false, "no event grants a unique"
+		end
+		return false, "usage: /ledger <ID> -- " .. table.concat(ids, ", ")
 	end
 
-	local duration = tonumber(args[3]) or GameConfig.Events.FatebreakDurationSeconds
+	local cap = 0
+	for _, definition in Events do
+		if definition.Unique and definition.Unique.LedgerId == id then
+			cap = definition.Unique.Cap
+		end
+	end
+	if cap == 0 then
+		return false, `no event grants '{id}'`
+	end
 
-	EventSystem.startLocal({
-		Id = `DEBUG_{string.upper(kind)}_{os.time()}`,
-		Kind = string.upper(kind),
-		Name = string.upper(kind),
-		Scope = scope,
-		Priority = 0,
-		Duration = duration,
-		TriggeredBy = player.Name,
-		Rarity = "MYTHIC",
-	})
+	local summary = LedgerSystem.summary(id, cap)
+	if not summary.ok then
+		return false, `ledger unavailable ({summary.err}) -- no unique can be granted here`
+	end
 
-	return true, `started {string.upper(kind)} ({scope}) for {math.floor(duration)}s -- local server only`
+	local lines = { `{summary.value.Issued} of {summary.value.Cap} claimed` }
+	for _, claim in summary.value.Claims do
+		table.insert(lines, `#{claim.Number} {claim.Name}`)
+	end
+	return true, table.concat(lines, " | ")
 end
 
 --- /endevents -- stop every live event on this server at once.
@@ -182,10 +209,16 @@ function DebugSystem.handle(player: Player, name: any, args: any): ()
 	reply(player, ok, text)
 end
 
-function DebugSystem.init(fateSystem: any, expeditionSystem: any, eventSystem: any): ()
+function DebugSystem.init(
+	fateSystem: any,
+	expeditionSystem: any,
+	eventSystem: any,
+	ledgerSystem: any
+): ()
 	FateSystem = fateSystem
 	ExpeditionSystem = expeditionSystem
 	EventSystem = eventSystem
+	LedgerSystem = ledgerSystem
 
 	if not GameConfig.Debug.AllowCommands then
 		print("[DebugSystem] commands disabled (GameConfig.Debug.AllowCommands)")

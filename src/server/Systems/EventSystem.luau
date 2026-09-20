@@ -17,14 +17,17 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
+local Events = require(Root.Content.Events)
 local EventCore = require(Root.Core.EventCore)
 local GameConfig = require(Root.Core.GameConfig)
 local Net = require(Root.Core.Net)
+local Result = require(Root.Core.Result)
 
 local EventSystem = {}
 
 local state = EventCore.newState()
 local serverId = game.JobId ~= "" and game.JobId or "studio"
+local LedgerSystem: any = nil
 
 --- Sends the full live-event picture to one player. Called on join.
 function EventSystem.syncTo(player: Player): ()
@@ -73,8 +76,12 @@ function EventSystem.startLocal(event: any): ()
 	})
 
 	EventSystem.announce({
-		Kind = "FATEBREAK",
-		Text = `FATEBREAK! {live.TriggeredBy or "Someone"} has discovered {live.Name}. Reality has been altered.`,
+		Kind = live.Kind,
+		-- Content writes the line when it has one (EventSystem.trigger fills
+		-- the placeholders). The fallback is for the older callers that
+		-- predate events being content.
+		Text = event.Text
+			or `FATEBREAK! {live.TriggeredBy or "Someone"} has discovered {live.Name}. Reality has been altered.`,
 		Rarity = event.Rarity or "UNKNOWN",
 		PlayerName = live.TriggeredBy or "",
 	})
@@ -84,13 +91,20 @@ function EventSystem.startLocal(event: any): ()
 	end
 end
 
---- Triggers a Fatebreak across every server. Master Spec §12.
-function EventSystem.triggerFatebreak(event: any): ()
+--- Starts an event HERE and on every other server. Master Spec §12.
+---
+--- Cross-server delivery is best-effort by nature: MessagingService is lossy,
+--- rate-limited, and reaches only servers that are running and subscribed. It
+--- is the right tool for spectacle and the wrong one for anything that has to
+--- be counted -- which is why a unique is claimed from the ledger BEFORE this
+--- is ever called.
+function EventSystem.publish(event: any): ()
 	local payload = {
 		Origin = serverId,
 		Id = event.Id,
-		Kind = "FATEBREAK",
+		Kind = event.Kind or "FATEBREAK",
 		Name = event.Name,
+		Text = event.Text,
 		-- A Fatebreak is game-wide by definition (Master Spec §12: reality has
 		-- been altered EVERYWHERE), so it is the one caller that overrides the
 		-- SERVER default.
@@ -114,6 +128,77 @@ function EventSystem.triggerFatebreak(event: any): ()
 	end
 end
 
+--- STARTS AN AUTHORED EVENT, BY ITS CONTENT ID. The one entry point content
+--- should use; `startLocal` and `triggerFatebreak` are the plumbing under it.
+---
+--- THE ORDER IS THE WHOLE POINT for an event that grants a unique:
+---
+---     CLAIM FIRST. ANNOUNCE SECOND.
+---
+--- A Catalyst Star that announces and then records will, on a busy day,
+--- announce eleven of ten -- to every server, with no way to take it back.
+--- So the ledger is asked first, and a refusal means nothing happened at all:
+--- no event, no sky, no announcement. A player whose claim lost the race
+--- simply did not find one (docs/EVENTS.md §5.5).
+---
+--- Returns Result.ok(live event) or Result.err(reason).
+function EventSystem.trigger(definitionId: string, player: Player?): any
+	local definition = Events[definitionId]
+	if not definition then
+		return Result.err(`unknown event '{definitionId}'`)
+	end
+
+	local remaining: number? = nil
+
+	if definition.Unique then
+		if not LedgerSystem then
+			return Result.err("UNAVAILABLE")
+		end
+		if not player then
+			return Result.err("a unique event needs a claimant")
+		end
+
+		local claim = LedgerSystem.claim(
+			definition.Unique.LedgerId,
+			definition.Unique.Cap,
+			player
+		)
+		if not claim.ok then
+			return Result.err(claim.err)
+		end
+		remaining = claim.value.Remaining
+	end
+
+	local payload = {
+		Id = `{definition.Id}_{os.time()}`,
+		Kind = definition.Kind,
+		Name = definition.Name,
+		Scope = definition.Scope,
+		WorldId = definition.WorldId,
+		Priority = definition.Priority,
+		Duration = definition.DurationSeconds,
+		TriggeredBy = if player then player.Name else nil,
+		Rarity = definition.Announcement and definition.Announcement.Rarity or "UNKNOWN",
+		Text = EventCore.formatAnnouncement(
+			definition.Announcement and definition.Announcement.Text or "{event}",
+			{
+				Player = if player then player.Name else "Someone",
+				Event = definition.Name,
+				Remaining = remaining or 0,
+			}
+		),
+		StartedAt = os.time(),
+	}
+
+	if definition.Scope == "GLOBAL" then
+		EventSystem.publish(payload)
+	else
+		EventSystem.startLocal(payload)
+	end
+
+	return Result.ok(payload)
+end
+
 --- Ends every live event on this server. Developer tooling only -- the game
 --- itself ends an event by letting its EndsAt arrive, which is what clients
 --- count down to locally (EventController). Returns how many were stopped.
@@ -131,7 +216,14 @@ function EventSystem.endAll(): number
 	return count
 end
 
-function EventSystem.init(): ()
+--- Kept as the name Master Spec §12 and FateSystem already use. A Fatebreak
+--- is one global event among several now, rather than the only one.
+function EventSystem.triggerFatebreak(event: any): ()
+	EventSystem.publish(event)
+end
+
+function EventSystem.init(ledgerSystem: any?): ()
+	LedgerSystem = ledgerSystem
 	-- SubscribeAsync YIELDS. pcall catches its errors but does nothing about it
 	-- hanging, and on an unpublished place it never returns -- which blocked
 	-- the whole bootstrap before the hub was ever built. Cross-server delivery

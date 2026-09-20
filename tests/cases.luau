@@ -6,6 +6,8 @@ local FateCore = __require("FateCore")
 local ProgressionCore = __require("ProgressionCore")
 local ProfileSchema = __require("ProfileSchema")
 local EventCore = __require("EventCore")
+local Events = __require("Events")
+local LedgerCore = __require("LedgerCore")
 local WeightedRandom = __require("WeightedRandom")
 local Schema = __require("Schema")
 local Worlds = __require("Worlds")
@@ -3420,6 +3422,243 @@ do
 		-- A player standing on the far edge of the biggest deck must still be
 		-- in that district; the widest is 320 across, so half of it is 160.
 		return radius > 160
+	end)())
+end
+
+
+-- === events as content ==============================================
+do
+	group("Events, authored as data")
+
+	local ok, errors = Schema.validateEvents(Events, Worlds)
+	check("the shipped events validate", ok, table.concat(errors, "; "))
+
+	check("every tier has a worked example", (function()
+		local seen = {}
+		for _, event in Events do
+			seen[event.Tier] = true
+		end
+		-- MODIFIER has no example yet and that is honest: nothing mechanical
+		-- exists for one to modify until combat does.
+		return seen.AMBIENT and seen.WORLD
+	end)())
+
+	-- THE RULE THAT PREVENTS AN AURORA FROM LEAVING THE FOG GREEN FOREVER.
+	-- An event may only write lighting properties that something restores,
+	-- and the list it is checked against is the same list the client
+	-- snapshots. Three places agree about one list, by construction.
+	check("no event writes a lighting property nobody restores", (function()
+		for _, event in Events do
+			for field in event.Lighting or {} do
+				if EventCore.LIGHTING_PROPERTIES[field] == nil then
+					return false
+				end
+			end
+		end
+		return true
+	end)())
+
+	check("the restore list and the content vocabulary are the same set", (function()
+		local tracked = EventCore.trackedLighting()
+		local count = 0
+		for _ in EventCore.LIGHTING_PROPERTIES do
+			count += 1
+		end
+		return #tracked == count
+	end)())
+
+	local function definition(overrides)
+		local e = {
+			Id = "TEST",
+			Name = "Test",
+			Kind = "TEST",
+			Tier = "WORLD",
+			Scope = "SERVER",
+			Priority = 1,
+			DurationSeconds = 60,
+			Announcement = { Text = "{player} did a thing.", Rarity = "RARE" },
+		}
+		for k, v in overrides or {} do e[k] = v end
+		return { TEST = e }
+	end
+
+	local function rejects(overrides)
+		local passed = Schema.validateEvents(definition(overrides), Worlds)
+		return not passed
+	end
+
+	check("a valid definition passes", (function()
+		return (Schema.validateEvents(definition(), Worlds))
+	end)())
+
+	-- === the tier rules (docs/EVENTS.md §4.0) ===
+	check("an AMBIENT event may not grant a unique",
+		rejects({ Tier = "AMBIENT", Unique = { LedgerId = "X", Cap = 1 } }))
+	check("an AMBIENT event may not open a rift",
+		rejects({ Tier = "AMBIENT", Rift = { Enabled = true } }))
+	check("a MODIFIER event may not open a rift either",
+		rejects({ Tier = "MODIFIER", Rift = { Enabled = true } }))
+	check("a WORLD event may do both", (function()
+		return (Schema.validateEvents(
+			definition({ Unique = { LedgerId = "X", Cap = 10 }, Rift = { Enabled = true } }),
+			Worlds
+		))
+	end)())
+	check("an unknown tier is refused", rejects({ Tier = "LOUD" }))
+
+	-- === scope ===
+	check("an unknown scope is refused", rejects({ Scope = "EVERYWHERE" }))
+	check("a BIOME event must name a real world",
+		rejects({ Scope = "BIOME", WorldId = "NOWHERE" }))
+	check("a BIOME event naming a real world is fine", (function()
+		return (Schema.validateEvents(
+			definition({ Scope = "BIOME", WorldId = "EMBERFALL" }), Worlds))
+	end)())
+	check("only a BIOME event may name a world",
+		rejects({ Scope = "GLOBAL", WorldId = "EMBERFALL" }))
+
+	-- === announcements ===
+	-- A placeholder nobody substitutes reaches the player as raw braces,
+	-- which is exactly the sort of thing that ships.
+	check("an unknown placeholder is refused",
+		rejects({ Announcement = { Text = "{wizard} appears.", Rarity = "RARE" } }))
+	check("the three known placeholders are allowed", (function()
+		return (Schema.validateEvents(definition({
+			Announcement = { Text = "{player} found {event}. {remaining} left.", Rarity = "RARE" },
+		}), Worlds))
+	end)())
+	check("an unknown rarity is refused",
+		rejects({ Announcement = { Text = "hi", Rarity = "SUPREME" } }))
+
+	check("a lighting property outside the restore list is refused",
+		rejects({ Lighting = { Ambient = Color3.fromRGB(1, 1, 1), GlobalShadows = true } }))
+	check("a zero-length event is refused", rejects({ DurationSeconds = 0 }))
+
+	-- Substitution itself, since the validator only checks the template.
+	check("announcement placeholders are filled", (function()
+		local text = EventCore.formatAnnouncement("{player} found {event}. {remaining} remain.", {
+			Player = "Ada", Event = "Catalyst Star", Remaining = 9,
+		})
+		return text == "Ada found Catalyst Star. 9 remain."
+	end)())
+
+	check("a missing value does not leave braces on screen", (function()
+		local text = EventCore.formatAnnouncement("{player} rolled.", {})
+		return text == "Someone rolled."
+	end)())
+
+	-- The Catalyst Star's own shape, since it is the one the whole ledger
+	-- exists for.
+	check("the Catalyst Star is capped at ten, forever",
+		Events.CATALYST_STAR.Unique.Cap == 10)
+	check("...and it is open to everyone once it fires",
+		Events.CATALYST_STAR.OpenToEveryone == true)
+	check("...and it outranks the Fatebreak sky",
+		Events.CATALYST_STAR.Priority > Events.STARFALL.Priority)
+end
+
+-- === the scarcity ledger ============================================
+do
+	group("Global scarcity: only ten will ever exist")
+
+	local claimant = { UserId = 7, Name = "Ada" }
+
+	check("an empty ledger grants number one", (function()
+		local result = LedgerCore.claim(nil, 10, claimant, 1000)
+		return result.ok and result.value.Claim.Number == 1
+	end)())
+
+	check("claims number sequentially", (function()
+		local ledger: any = nil
+		for expected = 1, 5 do
+			local result = LedgerCore.claim(ledger, 10, claimant, 1000 + expected)
+			if not result.ok or result.value.Claim.Number ~= expected then
+				return false
+			end
+			ledger = result.value.Ledger
+		end
+		return true
+	end)())
+
+	-- THE WHOLE POINT. When the last one is gone it is gone, on every server,
+	-- forever.
+	check("the cap is absolute", (function()
+		local ledger: any = nil
+		for i = 1, 10 do
+			ledger = LedgerCore.claim(ledger, 10, claimant, 1000 + i).value.Ledger
+		end
+		local eleventh = LedgerCore.claim(ledger, 10, claimant, 2000)
+		return not eleventh.ok and eleventh.err == "EXHAUSTED"
+	end)())
+
+	-- UpdateAsync may call the transform more than once for a single claim,
+	-- against a newer value each time. The answer has to be right every time,
+	-- which means reading only the ledger it was handed.
+	check("the transform is pure -- it never mutates what it was given", (function()
+		local ledger = { Claims = { { Number = 1, UserId = 1, Name = "A", At = 0 } } }
+		LedgerCore.claim(ledger, 10, claimant, 1000)
+		return #ledger.Claims == 1
+	end)())
+
+	check("re-running the transform on the same input gives the same answer", (function()
+		local ledger = { Claims = { { Number = 1, UserId = 1, Name = "A", At = 0 } } }
+		local first = LedgerCore.claim(ledger, 10, claimant, 1000)
+		local second = LedgerCore.claim(ledger, 10, claimant, 1000)
+		return first.value.Claim.Number == second.value.Claim.Number
+	end)())
+
+	-- A malformed ledger must never LOSE claims: dropping one silently
+	-- re-issues a unique item that already exists in the world.
+	check("a ledger with claims keeps every one of them", (function()
+		local messy = { Claims = {
+			{ Number = 3, UserId = 3, Name = "C", At = 3 },
+			{ Number = 1, UserId = 1, Name = "A", At = 1 },
+			{ Number = 2, UserId = 2, Name = "B", At = 2 },
+		} }
+		local sane = LedgerCore.sanitise(messy)
+		return #sane.Claims == 3 and sane.Claims[1].Number == 1 and sane.Claims[3].Number == 3
+	end)())
+
+	check("an unreadable ledger reads as empty rather than as corrupt", (function()
+		return LedgerCore.issued(LedgerCore.sanitise("nonsense")) == 0
+			and LedgerCore.issued(LedgerCore.sanitise(nil)) == 0
+	end)())
+
+	check("a claim missing its number is dropped, not trusted", (function()
+		local ledger = LedgerCore.sanitise({ Claims = { { UserId = 1 }, { Number = 1, UserId = 2 } } })
+		return #ledger.Claims == 1
+	end)())
+
+	check("a nonsense cap is refused rather than guessed", (function()
+		return not LedgerCore.claim(nil, 0, claimant, 1000).ok
+			and not LedgerCore.claim(nil, -5, claimant, 1000).ok
+	end)())
+
+	check("a claimant without a user id is refused",
+		not LedgerCore.claim(nil, 10, { Name = "Nobody" }, 1000).ok)
+
+	check("the claim records who and when", (function()
+		local result = LedgerCore.claim(nil, 10, claimant, 1700000000)
+		local claim = result.value.Claim
+		return claim.UserId == 7 and claim.Name == "Ada" and claim.At == 1700000000
+	end)())
+
+	-- Scarcity nobody can see is a rumour. This is what the Hall displays.
+	check("the public summary counts what is left", (function()
+		local ledger: any = nil
+		for i = 1, 3 do
+			ledger = LedgerCore.claim(ledger, 10, claimant, 1000 + i).value.Ledger
+		end
+		local summary = LedgerCore.summary(ledger, 10)
+		return summary.Issued == 3 and summary.Remaining == 7 and #summary.Claims == 3
+	end)())
+
+	check("remaining never goes negative", (function()
+		local ledger = { Claims = {} }
+		for i = 1, 12 do
+			table.insert(ledger.Claims, { Number = i, UserId = i, Name = "x", At = i })
+		end
+		return LedgerCore.remaining(ledger, 10) == 0
 	end)())
 end
 

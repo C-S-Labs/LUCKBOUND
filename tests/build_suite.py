@@ -35,6 +35,7 @@ PURE_MODULES = [
     ("Codes",            "src/shared/Content/Codes.luau"),
     ("ThemeCore",        "src/shared/Core/ThemeCore.luau"),
     ("Palettes",         "src/shared/Content/Hub/Palettes.luau"),
+    ("LedgerCore",       "src/shared/Core/LedgerCore.luau"),
 ]
 
 WORLD_FILES = sorted((ROOT / "src/shared/Content/Worlds").glob("*.luau"))
@@ -207,6 +208,15 @@ def main():
         kits.append(f'\tdo\n\t\tlocal kit = (function()\n{transform(cf.read_text())}\n\t\tend)()\n\t\tfor _, c in kit do\n\t\t\tassert(registry[c.Id] == nil, "duplicate chunk Id: " .. c.Id)\n\t\t\tregistry[c.Id] = c\n\t\tend\n\tend')
     out.append('\n-- === Chunk registry (rebuilt for headless) ===\n__define("Chunks", function()\n\tlocal registry = {}\n'
                + "\n".join(kits) + '\n\treturn registry\nend)\n')
+
+    event_files = sorted((ROOT / "src/shared/Content/Events").glob("*.luau"))
+    defs = []
+    for ef in event_files:
+        if ef.name == "init.luau":
+            continue
+        defs.append(f'\tdo\n\t\tlocal e = (function()\n{transform(ef.read_text())}\n\t\tend)()\n\t\tassert(registry[e.Id] == nil, "duplicate event Id: " .. e.Id)\n\t\tregistry[e.Id] = e\n\tend')
+    out.append('\n-- === Event registry (rebuilt for headless) ===\n__define("Events", function()\n\tlocal registry = {}\n'
+               + "\n".join(defs) + '\n\treturn registry\nend)\n')
 
     out.append("\n-- === test cases ===\n")
     out.append((ROOT / "tests/cases.luau").read_text())

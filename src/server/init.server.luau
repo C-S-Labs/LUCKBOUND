@@ -18,6 +18,7 @@ local Menu = require(Root.Content.Hub.Menu)
 local Cinematics = require(Root.Content.Hub.Cinematics)
 local Codes = require(Root.Content.Codes)
 local Palettes = require(Root.Content.Hub.Palettes)
+local Events = require(Root.Content.Events)
 
 local Systems = script.Systems
 local SaveSystem = require(Systems.SaveSystem)
@@ -28,11 +29,12 @@ local ExpeditionSystem = require(Systems.ExpeditionSystem)
 local DebugSystem = require(Systems.DebugSystem)
 local HubBuilder = require(Systems.HubBuilder)
 local HubUISystem = require(Systems.HubUISystem)
+local LedgerSystem = require(Systems.LedgerSystem)
 
 -- Boot progress is printed at every stage. A server that stops partway now
 -- names the step it stopped on, instead of going silent and leaving you to
 -- guess -- which is what a yielding call in a system's init() looks like.
-local TOTAL_STEPS = 12
+local TOTAL_STEPS = 13
 local stepNumber = 0
 local function step(name: string)
 	stepNumber += 1
@@ -41,7 +43,7 @@ end
 
 -- 1. Fail fast on malformed content, before any player can arrive.
 step("validating content")
-Schema.validateAll(Worlds, GameConfig, Crossroads, Chunks, AssetManifest, Menu, Codes, Cinematics, Palettes)
+Schema.validateAll(Worlds, GameConfig, Crossroads, Chunks, AssetManifest, Menu, Codes, Cinematics, Palettes, Events)
 
 do
 	local uploaded, placeholder = AssetManifest.summary()
@@ -75,8 +77,13 @@ step("SaveSystem")
 SaveSystem.init()
 step("ProgressionSystem")
 ProgressionSystem.init(SaveSystem)
+-- The ledger before the events that claim from it. Global scarcity is the one
+-- thing in the game that cannot be recovered if it is got wrong once, so the
+-- system that guards it comes up before anything can ask it a question.
+step("LedgerSystem")
+LedgerSystem.init()
 step("EventSystem")
-EventSystem.init()
+EventSystem.init(LedgerSystem)
 step("FateSystem")
 FateSystem.init(SaveSystem, ProgressionSystem, EventSystem)
 -- ExpeditionSystem takes the slot build spec §1.2 reserved for WorldSystem.
@@ -93,7 +100,7 @@ HubUISystem.init(SaveSystem, ProgressionSystem, ExpeditionSystem)
 -- 8. Developer commands. Last of the systems on purpose: nothing above may
 -- depend on it, so deleting it before launch breaks nothing.
 step("DebugSystem")
-DebugSystem.init(FateSystem, ExpeditionSystem, EventSystem)
+DebugSystem.init(FateSystem, ExpeditionSystem, EventSystem, LedgerSystem)
 
 -- 9. Hub. Generated from Content/Hub/Crossroads data, and skipped entirely if
 -- Workspace already contains a hand-built Crossroads -- authored geometry

@@ -18,6 +18,7 @@ return {
 	Id = "CATALYST_STAR",
 	Name = "Catalyst Star",
 	Kind = "CATALYST_STAR",
+	Tier = "WORLD",
 	Scope = "GLOBAL",
 	-- Above Starfall: a Fatebreak happens; this happens ten times, ever.
 	Priority = 100,
@@ -32,6 +33,14 @@ return {
 		Text = "{player} has found a CATALYST STAR. {remaining} remain.",
 		Rarity = "MYTHIC",
 	},
+
+	-- THE FINDER GETS THE ITEM. EVERYONE GETS THE EVENT. (docs/EVENTS.md §5.5)
+	-- The Star belongs to whoever claimed it from the ledger; the sky, the
+	-- rift and everything the rift yields are open to every player online for
+	-- the duration. Scarcity and participation stop competing, and the player
+	-- who found it is the reason everyone else is having a good night rather
+	-- than the only one allowed through a door.
+	OpenToEveryone = true,
 
 	Lighting = {
 		Ambient = Color3.fromRGB(68, 96, 118),

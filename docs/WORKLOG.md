@@ -33,6 +33,80 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 31 — 2026-09-20 — Events become content, and scarcity becomes true
+
+**Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 551 passing (was 514)
+
+The owner answered the five open event questions, and two of the answers
+**removed** work rather than adding it. `docs/EVENTS.md` now carries the
+catalogue, the Rift design and every decision with its reasoning.
+
+### The decisions (EVENTS.md §6, STATUS D-10..D-14)
+
+| | |
+|---|---|
+| **Rift rewards** | The item is **permanent**; only the window is temporary. No decay, no charge — so **no expiry attribute on the item schema** |
+| **Who gets in** | The finder gets the *item*, everyone gets the *event*. Ten Stars = ten game-wide occasions |
+| **Failure** | Costs the attempt, not the event — so **no per-player attempt counter** |
+| **Convergence** | D-8-safe: it changes which pool you draw from, never how the draw resolves |
+| **Loudness** | Three tiers, AMBIENT / MODIFIER / WORLD, enforced by the validator rather than by convention |
+
+**Q1 and Q3 between them deleted two systems** that the alternative readings
+would have required. The debt they create is §5.6: a permanent
+event-exclusive reward is only fair while events recur. If recurrence is
+dropped, D-10 has to be reopened with it.
+
+### The conflict the owner caught
+
+Worth recording in full, because it is the kind of thing that only shows up
+when two features meet. The planned progression lever is that **Fate unlocks
+which pools you draw from** — at a high enough tier, Commons stop appearing.
+Now put a rift in Verdant Valley: a high-tier player **cannot roll that world
+any more**, so the event they are invited to is one they cannot reach. The
+better you do, the fewer events you can attend.
+
+Resolved as **D-13: event access never depends on the roll pool.** A biome
+with a live event is directly enterable for the duration. The roll decides
+where you go when rolling; an event decides where you may go while it runs.
+Two doors, two locks.
+
+### What was built
+
+- **`Content/Events/`** — three authored events. Aurora Veil is the AMBIENT
+  worked example and exists to argue that some weather should just be weather.
+- **`Schema.validateEvents`** — the tier rules, scope rules, placeholder
+  checking, and the one that matters most: **an event may only write lighting
+  properties that something restores.** That list now lives once in
+  `EventCore` and `ExpeditionController` derives its restore list from it.
+- **`EventSystem.trigger(id, player)`** — claim first, announce second. A
+  refused claim means nothing happened: no event, no sky, no announcement.
+- **`SkyController`** — per-client lighting, a mote layer and a colour grade,
+  reverting exactly. It releases the sky when an expedition starts and takes
+  it back on return, because otherwise `ExpeditionController` would snapshot
+  an event-altered hub as "the hub" and restore that forever.
+- **`/event <ID>` and `/ledger <ID>`** — a unique started this way **still
+  claims from the ledger**, deliberately: testing the sky must not be a way to
+  mint an eleventh Star.
+
+### Stopped at
+
+All green, nothing rendered. Two Studio tests are new and one of them is
+unusual: **test N needs two instances on a published place**, because a
+concurrency bug cannot be seen headlessly or by eye. Claims made while testing
+are permanent — ten is ten.
+
+### Next
+
+1. Walk tests I–N. Test M step 5 (an event running when you enter and leave an
+   expedition) is the likeliest thing to be wrong.
+2. `EventCore.scheduledAt` — scheduled events need no cross-server
+   coordination at all if they are a pure function of UTC time. Cheapest class
+   in the catalogue and it unlocks the seasonal recurrence D-10 depends on.
+3. The rift portal with an empty room behind it, which proves placement,
+   gating and the timer without waiting for combat.
+
+---
+
 ## Session 30 — 2026-09-20 — The menu learns where it is standing
 
 **Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 514 passing (was 473)

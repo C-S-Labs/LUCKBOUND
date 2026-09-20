@@ -4,6 +4,7 @@
 -- with silently broken data is worse than one that does not boot.
 
 local Constants = require(script.Parent.Parent.Core.Constants)
+local EventCore = require(script.Parent.Parent.Core.EventCore)
 
 local Schema = {}
 
@@ -616,6 +617,141 @@ function Schema.validatePalettes(palettes: any, menu: any): (boolean, { string }
 	return #errors == 0, errors
 end
 
+--- Live events. The rules here are the ones that turn docs/EVENTS.md's tier
+--- system from an intention into something the boot refuses to violate.
+---
+--- The one worth the most: an event may only write lighting properties that
+--- EventCore.LIGHTING_PROPERTIES names, because that list is also what the
+--- client snapshots and restores. An event writing anything else would leave
+--- it changed after the event ended -- an aurora that leaves the fog green
+--- until the player rejoins.
+function Schema.validateEvents(events: any, worlds: { [string]: any }): (boolean, { string })
+	local errors = {}
+
+	local TIERS = { AMBIENT = true, MODIFIER = true, WORLD = true }
+	local count = 0
+
+	for key, event in events do
+		count += 1
+		local label = `Event '{key}'`
+
+		if type(event) ~= "table" then
+			table.insert(errors, `{label}: expected a table`)
+			continue
+		end
+
+		if event.Id ~= key then
+			table.insert(errors, `{label}: Id '{tostring(event.Id)}' must match its registry key`)
+		end
+		for _, field in { "Name", "Kind" } do
+			if type(event[field]) ~= "string" then
+				table.insert(errors, `{label}: '{field}' must be a string`)
+			end
+		end
+
+		if not TIERS[event.Tier] then
+			table.insert(errors, `{label}: Tier must be AMBIENT, MODIFIER or WORLD (got {tostring(event.Tier)})`)
+		end
+		if not EventCore.isValidScope(event.Scope) then
+			table.insert(errors, `{label}: Scope must be GLOBAL, SERVER or BIOME (got {tostring(event.Scope)})`)
+		end
+		if event.Scope == "BIOME" then
+			if type(event.WorldId) ~= "string" or worlds[event.WorldId] == nil then
+				table.insert(errors, `{label}: a BIOME event must name a world that exists`)
+			end
+		elseif event.WorldId ~= nil then
+			table.insert(errors, `{label}: only a BIOME event may name a WorldId`)
+		end
+
+		if type(event.Priority) ~= "number" then
+			table.insert(errors, `{label}: 'Priority' must be a number`)
+		end
+		if type(event.DurationSeconds) ~= "number" or event.DurationSeconds <= 0 then
+			table.insert(errors, `{label}: 'DurationSeconds' must be greater than zero`)
+		end
+
+		-- === THE TIER RULES (docs/EVENTS.md §4.0) ===
+		if event.Tier ~= "WORLD" then
+			if event.Unique ~= nil then
+				table.insert(errors, `{label}: only a WORLD event may grant a unique`)
+			end
+			if event.Rift ~= nil then
+				table.insert(errors, `{label}: only a WORLD event may open a rift`)
+			end
+		end
+		if event.Tier == "AMBIENT" and event.Modifiers ~= nil then
+			table.insert(
+				errors,
+				`{label}: an AMBIENT event changes the sky and nothing else -- use MODIFIER`
+			)
+		end
+
+		if event.Unique ~= nil then
+			if type(event.Unique.LedgerId) ~= "string" then
+				table.insert(errors, `{label}: Unique.LedgerId must be a string`)
+			end
+			if type(event.Unique.Cap) ~= "number" or event.Unique.Cap < 1 then
+				table.insert(errors, `{label}: Unique.Cap must be at least 1`)
+			end
+		end
+
+		if type(event.Announcement) ~= "table" then
+			table.insert(errors, `{label}: 'Announcement' must be a table`)
+		else
+			if type(event.Announcement.Text) ~= "string" then
+				table.insert(errors, `{label}: Announcement.Text must be a string`)
+			else
+				-- A placeholder nobody substitutes reaches the player as raw
+				-- braces, which is the sort of thing that ships.
+				for placeholder in string.gmatch(event.Announcement.Text, "{(%w+)}") do
+					if placeholder ~= "player" and placeholder ~= "event" and placeholder ~= "remaining" then
+						table.insert(
+							errors,
+							`{label}: Announcement.Text uses unknown placeholder '{placeholder}'`
+						)
+					end
+				end
+			end
+			if
+				event.Announcement.Rarity ~= nil
+				and Constants.RARITY[event.Announcement.Rarity] == nil
+			then
+				table.insert(errors, `{label}: Announcement.Rarity is not a known rarity`)
+			end
+		end
+
+		if event.Lighting ~= nil then
+			if type(event.Lighting) ~= "table" then
+				table.insert(errors, `{label}: 'Lighting' must be a table`)
+			else
+				for field in event.Lighting do
+					if EventCore.LIGHTING_PROPERTIES[field] == nil then
+						table.insert(
+							errors,
+							`{label}: Lighting.'{field}' is not a property anything restores -- `
+								.. `add it to EventCore.LIGHTING_PROPERTIES or remove it`
+						)
+					end
+				end
+			end
+		end
+
+		if event.Sky ~= nil then
+			if type(event.Sky) ~= "table" then
+				table.insert(errors, `{label}: 'Sky' must be a table`)
+			elseif event.Sky.Enabled and typeof(event.Sky.ParticleColor) ~= "Color3" then
+				table.insert(errors, `{label}: Sky.ParticleColor must be a Color3`)
+			end
+		end
+	end
+
+	if count == 0 then
+		table.insert(errors, "event registry is empty")
+	end
+
+	return #errors == 0, errors
+end
+
 --- Runs every check. Raises on failure -- called first in bootstrap.
 function Schema.validateAll(
 	worlds: { [string]: any },
@@ -626,7 +762,8 @@ function Schema.validateAll(
 	menu: any?,
 	codes: any?,
 	cinematics: any?,
-	palettes: any?
+	palettes: any?,
+	events: any?
 ): ()
 	local allErrors = {}
 
@@ -683,6 +820,13 @@ function Schema.validateAll(
 	if palettes ~= nil and menu ~= nil then
 		local _, paletteErrors = Schema.validatePalettes(palettes, menu)
 		for _, e in paletteErrors do
+			table.insert(allErrors, e)
+		end
+	end
+
+	if events ~= nil then
+		local _, eventErrors = Schema.validateEvents(events, worlds)
+		for _, e in eventErrors do
 			table.insert(allErrors, e)
 		end
 	end
