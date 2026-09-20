@@ -403,6 +403,25 @@ local GameConfig = {
 		CrossServerTopic = "LUCKBOUND_Fatebreak_v1",
 	},
 
+	-- === GLOBAL SCARCITY ===
+	-- The ledger that makes "only N will ever exist" true across every server.
+	-- Its numbers are separate from Save's because its failure rules are the
+	-- opposite: a save that cannot reach a DataStore carries on without
+	-- persistence, and a CLAIM that cannot reach one must be refused.
+	Ledger = {
+		Enabled = true,
+		-- Fewer retries than a save, and shorter. A claim happens inside a
+		-- roll the player is watching resolve; spending 30 seconds retrying
+		-- would hold the reveal open. Three quick attempts, then refuse.
+		MaxRetries = 3,
+		RetryBackoffSeconds = 0.5,
+		-- FAIL CLOSED. If the ledger cannot be reached, no unique is granted.
+		-- Setting this true would hand out unique items that were never
+		-- counted, which is unrecoverable -- there is no way to take one back
+		-- once it has been announced to every server in the game.
+		GrantWhenUnavailable = false,
+	},
+
 	Save = {
 		AutosaveIntervalSeconds = 60,
 		SessionLockTimeoutSeconds = 30,

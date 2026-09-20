@@ -49,6 +49,45 @@ export type State = {
 	Announcements: { Announcement },
 }
 
+-- THE COMPLETE SET OF LIGHTING PROPERTIES ANYTHING MAY TOUCH, and the
+-- content field name that maps to each. Stated once, here, because three
+-- places depend on agreeing about it: the client that applies an event's
+-- lighting, the client that snapshots and restores the hub's own, and the
+-- validator that refuses an event declaring a property nobody restores.
+--
+-- The failure this prevents is specific and nasty: an event that sets a
+-- property outside the restore list leaves it changed forever -- an aurora
+-- that ends and leaves the fog green until the player rejoins.
+EventCore.LIGHTING_PROPERTIES = table.freeze({
+	Ambient = "Ambient",
+	OutdoorAmbient = "OutdoorAmbient",
+	ColorShiftTop = "ColorShift_Top",
+	FogColor = "FogColor",
+	FogStart = "FogStart",
+	FogEnd = "FogEnd",
+	Brightness = "Brightness",
+	ClockTime = "ClockTime",
+})
+
+--- The same set as an array of Roblox property names, for snapshot/restore.
+function EventCore.trackedLighting(): { string }
+	local names = {}
+	for _, property in EventCore.LIGHTING_PROPERTIES do
+		table.insert(names, property)
+	end
+	table.sort(names)
+	return names
+end
+
+--- Fills {player}, {event} and {remaining} into an announcement. Kept tiny on
+--- purpose: an announcement can only reference things the server always has.
+function EventCore.formatAnnouncement(template: string, values: any): string
+	local text = string.gsub(template, "{player}", tostring(values.Player or "Someone"))
+	text = string.gsub(text, "{event}", tostring(values.Event or ""))
+	text = string.gsub(text, "{remaining}", tostring(values.Remaining or 0))
+	return text
+end
+
 function EventCore.newState(): State
 	return { ActiveEvents = {}, Announcements = {} }
 end
