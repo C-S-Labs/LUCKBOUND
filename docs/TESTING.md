@@ -314,27 +314,47 @@ before anything else after a scale or layout change.
    The Global Observatory and its ramp were cut on 2026-09-17; if you see a
    staircase wrapping the Engine, the sync did not take.
 
+### Test H2 — the half-size world (4 min) ⭐ NEW
+
+The biggest unverified change in the project. `HubLayout.WorldScale` is 0.5;
+setting it to 1.0 restores the old world exactly, so this is cheap to A/B.
+
+1. **Stand at a shop counter.** ✅ Pass: your head and the top of your torso
+   clear it. That was the whole point — it used to stand a stud over your head.
+2. **Stand at a district railing.** ✅ Pass: it is about waist height.
+3. **Walk the Engine → a district.** ✅ Pass: about 8 seconds at WalkSpeed 24.
+   If it feels like a jog rather than a walk, `Scale.WalkSpeed` is the dial.
+4. **Look at the horizon.** ✅ Pass: the mountains still ring the hub with
+   clear sky between, and do not cut through the plaza.
+5. **Walk all four walkways to the dais.** ✅ Pass: they still MEET the dais —
+   no step up, no gap. This is the coupling four tests pin; a failure here
+   means the authored mesh and the layout numbers have come apart.
+
 ### Test I — the loading screen (3 min) ⭐ NEW
 
-The first thing anyone sees, and none of it has been rendered.
+The first thing anyone sees.
 
 1. **Press Play in Studio.** ✅ Pass: a blurred camera arc over the Crossroads
    behind the LUCKBOUND title, a caption naming the district on screen, and a
    progress bar that moves.
-2. **Watch the PLAY button** — the only button on the screen. ✅ Pass: it is
-   dim until the bar fills, then
-   lights gold. It must never light instantly (`Loading.MinimumSeconds` is
-   3.5s) and never fail to light (`MaximumSeconds` is 25s — if you see
-   *"Taking longer than usual"*, the instance count never reached
-   `RequiredHubInstances`; report the number the hub actually built).
-4. **Try to walk during it.** ✅ Pass: you cannot. The character is held at
-   WalkSpeed 0.
-5. **Press PLAY.** ✅ Pass: the blur clears, the camera hands back to the
-   player, and you can walk **and sprint** — if you can walk but not sprint,
-   `LocomotionController` did not start, which means `LoadingScreen.onFinished`
-   never fired.
-6. **Let it loop.** Six shots at 9s each. ✅ Pass: each one drifts rather than
+2. **Watch the camera.** ✅ Pass: it arcs steadily the whole time. If it stops
+   partway, Roblox's camera script has taken it back and the per-frame
+   re-assert has regressed.
+3. **Watch the PLAY button** — the only button on the screen. ✅ Pass: the bar
+   reaches 100% and it lights gold. It must never light instantly
+   (`MinimumSeconds` is 3.5s) and, now that readiness is a settle rather than a
+   count, should never say *"Taking longer than usual"* on a normal load.
+4. **Look for your character.** ✅ Pass: **there isn't one.** Nobody spawns
+   until PLAY, so nothing can be prompting you behind the screen.
+5. **Let it loop.** Six shots at 9s each. ✅ Pass: each drifts rather than
    orbits, and the captions crossfade rather than cut.
+6. **Press PLAY.** ✅ Pass, all of it:
+   - You spawn ~110 studs from the Engine with **no ROLL prompt** until you
+     walk in. That gap is where a first-join tutorial goes.
+   - The blur clears and the camera follows you **on a first join**, not only
+     after a respawn — that was the bug three sessions running.
+   - You can walk **and sprint**. Walk but no sprint means
+     `LoadingScreen.onFinished` never fired.
 
 ### Test J — the hub menu (5 min) ⭐ NEW
 

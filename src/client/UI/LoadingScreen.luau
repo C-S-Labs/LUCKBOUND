@@ -33,6 +33,7 @@ local Workspace = game:GetService("Workspace")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local Cinematics = require(Root.Content.Hub.Cinematics)
+local Net = require(Root.Core.Net)
 local Constants = require(Root.Core.Constants)
 local GameConfig = require(Root.Core.GameConfig)
 local UITheme = require(Root.Core.UITheme)
@@ -291,6 +292,9 @@ end
 
 -- === taking and giving back =========================================
 
+--- Only reached if a character somehow exists while the screen is up -- a
+--- respawn, or Players.CharacterAutoLoads being turned back on. The normal
+--- first join has no character at all until PLAY is pressed.
 local function holdCharacter(character: Model)
 	local humanoid = character:WaitForChild("Humanoid", 10)
 	if humanoid and humanoid:IsA("Humanoid") then
@@ -392,6 +396,11 @@ local function finish()
 	if blur then
 		TweenService:Create(blur, TweenInfo.new(UITheme.Motion.Slow), { Size = 0 }):Play()
 	end
+
+	-- ASK FOR A CHARACTER. Nobody has one until now: the server holds every
+	-- spawn until this arrives (build spec §4, Player_Ready), so the player
+	-- cannot have been standing in the hub behind the screen.
+	Net.get("Player_Ready"):FireServer()
 
 	releaseCamera()
 	releaseCharacter()

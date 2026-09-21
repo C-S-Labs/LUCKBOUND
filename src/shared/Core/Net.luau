@@ -36,6 +36,10 @@ local REMOTES = {
 	"Code_Redeem", -- C->S, { Code }; rate-limited
 	"Code_Result", -- S->C, { Ok, Message, Fate }
 	"Settings_Update", -- C->S, { Id, Value }; validated by SettingsCore
+	-- The player has pressed PLAY on the loading screen. Until this arrives
+	-- they have no character at all (Players.CharacterAutoLoads is false), so
+	-- nobody is standing in a half-built hub watching it appear around them.
+	"Player_Ready", -- C->S, no payload; once per join, ignored if repeated
 	-- Developer tooling. These two always EXIST but are inert unless
 	-- GameConfig.Debug.AllowCommands is true -- DebugSystem does not connect a
 	-- handler otherwise, so an unguarded remote is not left listening.

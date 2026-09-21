@@ -124,6 +124,19 @@ local function applyMovement(character: Model)
 	end
 end
 
+-- NOBODY SPAWNS UNTIL THEY PRESS PLAY.
+--
+-- With CharacterAutoLoads true, a joining player stands in the hub while the
+-- loading screen is still up: they were being offered the Fate Engine's ROLL
+-- prompt before they had pressed anything, which spoils the screen and skips
+-- the moment a tutorial would use. Owner-directed 2026-09-21.
+--
+-- The client says when it is ready (Player_Ready, build spec §4). A second
+-- one is ignored, so the remote cannot be used as a free respawn.
+Players.CharacterAutoLoads = false
+
+local spawned: { [number]: boolean } = {}
+
 local function onPlayerAdded(player: Player)
 	player.CharacterAdded:Connect(applyMovement)
 	if player.Character then
@@ -142,9 +155,18 @@ local function onPlayerAdded(player: Player)
 	EventSystem.syncTo(player)
 end
 
+Net.get("Player_Ready").OnServerEvent:Connect(function(player)
+	if spawned[player.UserId] then
+		return
+	end
+	spawned[player.UserId] = true
+	player:LoadCharacter()
+end)
+
 Players.PlayerAdded:Connect(onPlayerAdded)
 Players.PlayerRemoving:Connect(function(player)
 	SaveSystem.release(player)
+	spawned[player.UserId] = nil
 end)
 
 -- Anyone who joined while the above was still wiring up.

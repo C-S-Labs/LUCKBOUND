@@ -579,7 +579,13 @@ do
 	check("Hall of Legends has 5 obelisk slots", byId.HALL_OF_LEGENDS.ObeliskSlots == 5)
 	check("Training Grounds has 3 dummies plus a boss dummy",
 		byId.TRAINING_GROUNDS.DummyCount == 3 and byId.TRAINING_GROUNDS.HasBossDummy)
-	check("hub is 1150 studs across", Crossroads.Plaza.Diameter == 1150)
+	-- The plaza IS the playable diameter -- asserted as the relationship
+	-- rather than as the literal 1150 it used to be, so a world rescale
+	-- cannot leave the two disagreeing and still pass.
+	check("the plaza is exactly the playable diameter the layout promises",
+		Crossroads.Plaza.Diameter == GameConfig.HubLayout.HubDiameter,
+		string.format("plaza %.0f, layout %.0f",
+			Crossroads.Plaza.Diameter, GameConfig.HubLayout.HubDiameter))
 	check("the gate processional is wider than a walkway",
 		Crossroads.Bridges.ProcessionalWidth > Crossroads.Bridges.Width)
 
@@ -587,13 +593,21 @@ do
 	-- A Roblox character is ~5 studs tall. The old hub was 24 characters
 	-- across, which read as a room rather than a world.
 	local CHAR = GameConfig.Scale.CharacterHeight
-	check("the hub reads as a world, not a room (>= 200 characters across)",
-		Crossroads.Plaza.Diameter / CHAR >= 200,
+	-- 200 -> 100, and 40 -> 20, when the world was halved to player scale
+	-- (GameConfig WORLD_SCALE). Both numbers were written against a hub that
+	-- measured 230 characters across BECAUSE it was twice the size it should
+	-- have been -- the counters stood 6 studs against a 5-stud player. So the
+	-- old thresholds were really asking for 100 and 20 characters of honest
+	-- space, and that is what they now ask for. The guard they exist to be is
+	-- unchanged: the ORIGINAL hub was 24 characters across and read as a
+	-- room, and 100 is still four times that.
+	check("the hub reads as a world, not a room (>= 100 characters across)",
+		Crossroads.Plaza.Diameter / CHAR >= 100,
 		string.format("%.0f characters", Crossroads.Plaza.Diameter / CHAR))
 
 	for _, d in Crossroads.Districts do
-		check(string.format("%s is at least 40 characters across", d.Id),
-			math.min(d.PlatformSize.X, d.PlatformSize.Z) / CHAR >= 40,
+		check(string.format("%s is at least 20 characters across", d.Id),
+			math.min(d.PlatformSize.X, d.PlatformSize.Z) / CHAR >= 20,
 			string.format("%.0f", math.min(d.PlatformSize.X, d.PlatformSize.Z) / CHAR))
 	end
 
@@ -1677,15 +1691,17 @@ do
 	check("the shards are tagged for the rarity cycle",
 		styles.Shard.Attributes.IsFeaturedShard == true)
 
-	-- Owner-directed after the third walk: the veil between the two rings was
-	-- the one part of the machine standing still. It turns against the OUTER
-	-- ring, which is the one the eye reads first.
+	-- TWO RINGS, NOT THREE. Owner-directed: the inner ring so nearly encases
+	-- the portal that they read as one object, so ring 2 is the inner ring
+	-- AND the aperture, turning as one against the outer frame.
 	local plane = styles.PortalPlane.Attributes.SpinSpeed
 	check("the aperture turns against the outer ring", plane ~= nil and plane * outer < 0,
 		string.format("outer %.2f, plane %s", outer, tostring(plane)))
 
-	check("...and slower than the inner ring, so the layers stay readable",
-		math.abs(plane) < math.abs(inner),
+	-- Identical, not merely similar. Two nested discs at slightly different
+	-- speeds slide against each other, which reads as one of them slipping
+	-- rather than as a mechanism -- worse than either extreme.
+	check("the aperture and the inner ring turn as ONE ring", plane == inner,
 		string.format("plane %.2f, inner %.2f", plane, inner))
 
 	-- THE RINGS SPIN ABOUT THEIR OWN AXLE. A ring is thin along its own Z, so
@@ -1756,8 +1772,9 @@ do
 	local innerW = width(RAW_INNER, styles.InnerRing)
 	local veilW = width(RAW_VEIL, veil)
 
+	-- The clearance floor scales with the world, because the ring does.
 	check("the inner ring clears the outer aperture with room to sway",
-		(aperture - innerW) / 2 > 1,
+		(aperture - innerW) / 2 > 1 * GameConfig.HubLayout.WorldScale,
 		string.format("%.2f studs a side", (aperture - innerW) / 2))
 	check("the veil sits inside the ring it fills",
 		veilW < innerW, string.format("veil %.2f, ring %.2f", veilW, innerW))
@@ -1980,7 +1997,7 @@ do
 	-- authored walk asked for the two to be one continuous surface rather
 	-- than a step, and the Offset that achieves it is derived from the
 	-- walkway height -- so this pins the RESULT, which is what a player feels.
-	local RAW_PLATFORM_TOP = 1.934 -- Platform top above the model pivot, at Scale
+	local RAW_PLATFORM_TOP = 1.934 * GameConfig.HubLayout.WorldScale -- Platform top above the pivot
 	local engineOffset = Crossroads.FateEngine.Prefab.Offset
 	check("the Engine declares a placement offset", typeof(engineOffset) == "Vector3")
 
@@ -2311,9 +2328,15 @@ do
 	-- failed scale attempts never had, because with a whole placed model
 	-- there was no number to assert against.
 	local gap = near - plazaRadius
+	-- The owner asked for 500-1000 studs of clear sky when the hub was twice
+	-- this size. The ASK is a proportion of the world, not an absolute, so it
+	-- scales with it -- otherwise a half-size hub would demand the same
+	-- absolute gap and push the horizon out of fog range.
+	local clearMin = 500 * GameConfig.HubLayout.WorldScale
+	local clearMax = 1000 * GameConfig.HubLayout.WorldScale
 	check(
-		"the mountains stand 500-1000 studs clear of the crossroads edge",
-		gap >= 500 and gap <= 1000,
+		string.format("the mountains stand %.0f-%.0f studs clear of the crossroads edge", clearMin, clearMax),
+		gap >= clearMin and gap <= clearMax,
 		string.format("%.0f studs of clear sky (near face %.0f, plaza %.0f)", gap, near, plazaRadius)
 	)
 
@@ -2636,6 +2659,28 @@ do
 		end
 		return true
 	end)())
+
+	-- SPAWNING OUT OF EVERY PROMPT'S REACH. Owner-directed: a player was
+	-- offered ROLL before they had pressed PLAY. The spawn ring and the
+	-- prompt reach must not drift back together, because the gap between
+	-- them is where a first-join tutorial lives.
+	check("nobody spawns inside the Fate Engine's prompt", (function()
+		local spawn = GameConfig.HubLayout.SpawnRing.Radius
+		return spawn > GameConfig.UI.PromptActivationDistance
+	end)(), string.format("spawn %.0f, prompt reach %.0f",
+		GameConfig.HubLayout.SpawnRing.Radius, GameConfig.UI.PromptActivationDistance))
+
+	check("...nor inside the distance a roll is allowed from",
+		GameConfig.HubLayout.SpawnRing.Radius > GameConfig.Fate.MaxRollDistance,
+		string.format("spawn %.0f, roll reach %.0f",
+			GameConfig.HubLayout.SpawnRing.Radius, GameConfig.Fate.MaxRollDistance))
+
+	-- ...but still on the plaza, looking at the Engine, rather than out among
+	-- the districts.
+	check("...and still well inside the districts",
+		GameConfig.HubLayout.SpawnRing.Radius < GameConfig.HubLayout.ZoneRingRadius,
+		string.format("spawn %.0f, districts %.0f",
+			GameConfig.HubLayout.SpawnRing.Radius, GameConfig.HubLayout.ZoneRingRadius))
 
 	-- === the visibility rule ========================================
 	check("the menu is visible in the hub", HubMenuCore.isVisible(nil, GameConfig))
@@ -3535,8 +3580,13 @@ do
 
 	check("the tint radius covers the widest platform", (function()
 		-- A player standing on the far edge of the biggest deck must still be
-		-- in that district; the widest is 320 across, so half of it is 160.
-		return radius > 160
+		-- in that district. Derived from the deck rather than from a literal,
+		-- so it survives a world rescale -- which is exactly what caught it.
+		local widest = 0
+		for _, district in Crossroads.Districts do
+			widest = math.max(widest, district.PlatformSize.X, district.PlatformSize.Z)
+		end
+		return radius > widest / 2
 	end)())
 end
 
