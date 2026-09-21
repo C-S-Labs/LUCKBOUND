@@ -42,7 +42,9 @@ local function build()
 	bannerHolder = Instance.new("Frame")
 	bannerHolder.Name = "Banners"
 	bannerHolder.AnchorPoint = Vector2.new(0.5, 0)
-	bannerHolder.Position = UDim2.new(0.5, 0, 0, 12)
+	-- Below the event bar's resting place, so a Starfall banner does not land
+	-- on top of the Starfall timer.
+	bannerHolder.Position = UDim2.new(0.5, 0, 0, 62)
 	bannerHolder.Size = UDim2.new(0.9, 0, 0, 260)
 	bannerHolder.BackgroundTransparency = 1
 	bannerHolder.Parent = gui
@@ -63,7 +65,15 @@ local function build()
 	eventBar = Instance.new("Frame")
 	eventBar.Name = "ActiveEvent"
 	eventBar.AnchorPoint = Vector2.new(0.5, 0)
-	eventBar.Position = UDim2.new(0.5, 0, 0, 280)
+	-- THE VERY TOP OF THE SCREEN, not the middle of it. At 280 it sat across
+	-- the player's view of the hub during the one event they were trying to
+	-- look at -- reported from the fifth walk. A status bar belongs at an
+	-- edge; the middle of the screen belongs to the game.
+	--
+	-- Above the roll banner holder (12) rather than below it: an event is
+	-- world state and persists, while a banner is a passing notification, so
+	-- the announcement slides in underneath it.
+	eventBar.Position = UDim2.new(0.5, 0, 0, 8)
 	eventBar.Size = UDim2.fromOffset(340, 44)
 	eventBar.BackgroundColor3 = Color3.fromHex("1A0F2E")
 	eventBar.BackgroundTransparency = 0.1

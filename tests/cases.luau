@@ -3582,6 +3582,21 @@ do
 		return true
 	end)())
 
+	-- THE WEATHER HAS TO COVER THE THING IT IS WEATHERING. It emitted from a
+	-- one-stud part over the Fate Engine, so an event's motes fell on the
+	-- dais and nowhere else.
+	check("an event's sky layer spans the whole plaza",
+		GameConfig.Events.SkySpanFactor >= 1
+			and GameConfig.Events.SkySpanFactor * GameConfig.HubLayout.HubDiameter
+				>= GameConfig.HubLayout.HubDiameter,
+		string.format("%.0f studs across a %.0f-stud hub",
+			GameConfig.Events.SkySpanFactor * GameConfig.HubLayout.HubDiameter,
+			GameConfig.HubLayout.HubDiameter))
+
+	-- ...and it has to start high enough to fall, and be given time to.
+	check("the sky layer starts above head height",
+		GameConfig.Events.SkyHeight * GameConfig.HubLayout.WorldScale > GameConfig.Scale.CharacterHeight * 4)
+
 	check("...and it really does change the colour", (function()
 		-- Guarding the test above from passing trivially: a tint that did
 		-- nothing at all would also preserve luminance perfectly.
