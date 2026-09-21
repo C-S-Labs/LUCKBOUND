@@ -2709,6 +2709,29 @@ do
 		string.format("spawn %.0f, districts %.0f",
 			GameConfig.HubLayout.SpawnRing.Radius, GameConfig.HubLayout.ZoneRingRadius))
 
+	-- ENTRY ON THE ENGINE. The portal is enterable from the dais while the
+	-- staircase is still unmodelled, so two prompts now share one platform.
+	check("the entry prompt does not fight the roll prompt for E", (function()
+		local key = GameConfig.Expedition.EntryPromptKey
+		-- A ProximityPrompt defaults to E, which is what ROLL uses, so the
+		-- entry key must be something else -- and something Roblox has.
+		return Constants.HOTKEY_NAMES[key] == true and key ~= "E"
+	end)(), tostring(GameConfig.Expedition.EntryPromptKey))
+
+	check("the entry prompt floats clear of the roll prompt",
+		Crossroads.FateEngine.EntryPromptLift > 0)
+
+	-- ...and both still have to be reachable from the dais they stand on.
+	-- A prompt lifted out of its own range is the bug the Expedition Gate
+	-- shipped with once already.
+	check("both prompts stay inside their own reach from the dais", (function()
+		local engine = Crossroads.FateEngine
+		local top = engine.AnchorHeight + engine.EntryPromptLift
+		return top < GameConfig.UI.PromptActivationDistance
+	end)(), string.format("entry prompt %.1f up, reach %.1f",
+		Crossroads.FateEngine.AnchorHeight + Crossroads.FateEngine.EntryPromptLift,
+		GameConfig.UI.PromptActivationDistance))
+
 	-- === the visibility rule ========================================
 	check("the menu is visible in the hub", HubMenuCore.isVisible(nil, GameConfig))
 	check("the menu is NOT visible on an expedition",

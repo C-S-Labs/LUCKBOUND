@@ -33,6 +33,75 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 38 — 2026-09-21 — A command that was never a command
+
+**Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 572 passing (was 569)
+
+### Why `/event` did nothing
+
+Reported as "events don't trigger". They trigger fine — **the command was
+never registered on the client.**
+
+`DebugSystem.COMMANDS.event` has existed on the server for two sessions, but
+the client registers each command as a `TextChatCommand` and forwards it, and
+`/event`, `/endevents` and `/ledger` were never added to that list. So typing
+them sent an ordinary chat message and nothing else, which is exactly what the
+screenshot showed: the text in the chat log, no reply, no sky.
+
+**A server command with no client alias is not a command.** All three are
+registered now.
+
+### The reason nobody noticed for two sessions
+
+Replies went to the **Output window only**. In Studio that is reasonable — it
+is where the rest of the diagnostics live. In a running client nobody can see
+it, so "this command failed", "this command does not exist" and "this command
+worked silently" were the same experience: nothing happened.
+
+Replies now also go to chat as a system message. `DisplaySystemMessage` rather
+than `SendAsync`, because this is the game answering the player rather than the
+player saying something.
+
+### Entry on the Fate Engine
+
+The portal is enterable from the dais. The staircase is still unmodelled and no
+longer blocks testing the teleport or the biome scripts.
+
+Two details worth keeping:
+
+- **The anchor carries the `GATE_ANCHOR` name wherever it sits**, and
+  `ExpeditionSystem.gatePart` now searches the hub by name rather than walking
+  a fixed path to `Zones/EXPEDITION_GATE`. Moving entry again -- to the top of
+  the staircase, when it exists -- is a placement decision in `HubBuilder`
+  rather than an edit to a system.
+- **`F`, not `E`.** Every ProximityPrompt defaults to E and ROLL already owns
+  it on that dais. The key is content, checked against
+  `Constants.HOTKEY_NAMES` like every other key, and a test asserts it is both
+  real and not E.
+
+### The menu behind the loading screen
+
+Three independent things can hide the hub menu -- leaving the Crossroads, a
+roll resolving, and the loading screen being up -- and each of them used to set
+`gui.Enabled` itself. That is how the rail ended up sitting over the title
+card: one of them said "show" without knowing another had said "hide".
+
+One function decides now, and the three inputs are three booleans it reads.
+
+### Stopped at
+
+All four items from the fourth walk are done. Pushed, 572 green, none of it
+walked.
+
+### Next
+
+1. Walk it: entry from the Engine (test C2b), the events now that they run,
+   and the loading screen with the menu hidden.
+2. The staircase junction in Studio, with the collision re-bake.
+3. Travel landings, district tint, event sky.
+
+---
+
 ## Session 37 — 2026-09-21 — The Engine, dimmer again
 
 **Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 569 passing (was 568)

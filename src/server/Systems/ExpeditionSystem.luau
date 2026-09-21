@@ -69,11 +69,16 @@ end
 ---
 --- Absent on a place with no hub, in which case the distance check is skipped
 --- rather than failing -- same handling FateSystem gives a missing RollAnchor.
+--- WHEREVER ENTRY LIVES. It was under Zones/EXPEDITION_GATE; it is now on the
+--- Fate Engine, and it moves again when the portal grows its staircase.
+--- Searching the hub by NAME rather than by path makes that a placement
+--- decision in HubBuilder instead of an edit here every time.
 local function gatePart(): BasePart?
 	local hub = Workspace:FindFirstChild(Constants.NAMES.CROSSROADS)
-	local zones = hub and hub:FindFirstChild("Zones")
-	local gate = zones and zones:FindFirstChild("EXPEDITION_GATE")
-	local anchor = gate and gate:FindFirstChild(Constants.NAMES.GATE_ANCHOR)
+	if not hub then
+		return nil
+	end
+	local anchor = hub:FindFirstChild(Constants.NAMES.GATE_ANCHOR, true)
 	return if anchor and anchor:IsA("BasePart") then anchor else nil
 end
 

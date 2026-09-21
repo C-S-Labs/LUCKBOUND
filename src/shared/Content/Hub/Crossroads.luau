@@ -1024,6 +1024,10 @@ local Crossroads = {
 		-- over open plaza.
 		AnchorSize = Vector3.new(30 * S, 1, 30 * S),
 		AnchorHeight = 6 * S,
+		-- How far the ENTER prompt floats above the ROLL one. Far enough that
+		-- the two labels do not overlap on screen, close enough that both are
+		-- within their own reach from anywhere on the dais.
+		EntryPromptLift = 9 * S,
 		MeshId = nil, -- superseded by Prefab below; kept for the blockout path
 
 		-- THE AUTHORED ENGINE. Delivered 2026-09-18, 78 MeshParts.

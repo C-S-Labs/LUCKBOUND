@@ -178,6 +178,21 @@ local GameConfig = {
 		-- succeeds ~98% of the time -- see docs/MODULAR_MAPS.md.
 		AssemblyAttempts = 5,
 
+		-- ENTRY LIVES ON THE FATE ENGINE. Owner-directed 2026-09-21: the
+		-- staircase up to the portal is not modelled yet, but the teleport
+		-- and the biome scripts need testing now -- so the portal is
+		-- enterable from the dais and the stairs become art rather than a
+		-- blocker.
+		--
+		-- This is the direction STATUS already records ("the Engine portal is
+		-- to become the way into biomes"), arriving early and without the
+		-- "keep this biome?" step, which still needs a spec amendment.
+		EntryAtEngine = true,
+		-- A different key from ROLL: both prompts stand on the same dais and
+		-- every ProximityPrompt defaults to E. Checked against
+		-- Constants.HOTKEY_NAMES like every other key in content.
+		EntryPromptKey = "F",
+
 		EntryCooldownSeconds = 2.0,
 		-- Studs from the Expedition Gate's portal plane. Generous, because the
 		-- Gate platform is 290x240 and the prompt is the real affordance --

@@ -234,6 +234,23 @@ Press **E** repeatedly as fast as you can.
 ✅ Pass: at most one roll per 3 seconds, and **no error is shown to the client**.
 Silence is deliberate — an error tells an exploiter where the boundary is.
 
+### Test C2b — entering from the Fate Engine ⭐ NEW (3 min)
+
+The portal is enterable from the dais while its staircase is unmodelled, so
+the teleport and the biome scripts can be tested now.
+
+1. **Walk onto the dais.** ✅ Pass: **two** prompts — `[E] ROLL` and
+   `[F] ENTER`, stacked, both reachable, neither fighting the other for E.
+2. **Roll first**, so you have a destination. `/roll VERDANT_VALLEY` or
+   `ETHEREAL_SCAPE` if you want a specific one.
+3. **Hold F.** ✅ Pass: you are teleported into the biome, its lighting
+   applies, and the expedition banner and timer appear.
+4. **Return through the portal on the arrival chunk**, or `/leave`. ✅ Pass:
+   the hub's own lighting comes back exactly, Fate is awarded, and the menu
+   reappears.
+5. **Roll a world with no map** (Emberfall, Sky Citadel, Astral Reach) and
+   press F. ✅ Pass: refused politely, and you stay in the hub.
+
 ### Test C2 — the expedition, end to end ⭐ (6 min)
 
 **Passed 2026-09-16.** Kept as the regression pass — it is the test the whole
@@ -438,6 +455,9 @@ The tint is subtle on purpose. Judge whether it is *too* subtle.
    snaps instead of fading.
 
 ### Test M — an event changes the world (4 min) ⭐ NEW
+
+Commands reply **in chat** now, not only in the Output window — if you type one
+and see nothing at all, it is not registered.
 
 1. **`/event AURORA_VEIL`.** ✅ Pass: over about a second the hub's light goes
    blue-green, slow motes drift down over the plaza, and the menu's panel and
