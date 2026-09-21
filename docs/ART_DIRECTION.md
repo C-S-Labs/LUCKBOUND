@@ -437,3 +437,42 @@ blind.
 
 **It is a ~20-minute change when done together**, and the numbers above are the
 evidence for it.
+
+
+---
+
+## Replacing the Crossroads later — the drop-in contract
+
+**Owner-proposed and agreed 2026-09-21:** rebuild the Crossroads' structures
+and level of detail properly *after* the testing phase, and drop the new
+`.rbxmx` in when it is ready. Agreed, and the reasoning is worth keeping:
+
+- **The current hub is good enough to test the SYSTEMS on**, which is what
+  testing is for right now — travel, the menu, events, the sky, the ledger.
+  None of those care what the buildings look like.
+- **Every art change costs a re-walk.** Replacing the shell mid-test means
+  re-verifying things that had already passed, for no gain to the thing being
+  tested.
+- **The interface between art and code is already narrow**, so a later swap is
+  cheap. That is what makes deferring safe rather than merely convenient.
+
+### What the new delivery has to keep
+
+This is the whole contract. Anything else in the file can change freely.
+
+| | |
+|---|---|
+| **The 10 contract part names** | `PrefabLoader` registers and paints by name. A renamed part is an unpainted, unplaced part |
+| **`EngineReserve`** | The shell is registered from this named part, not from the model pivot — an FBX chain mangles pivots quietly |
+| **The footprint it reserves** | The hub cuts its walkways to `FateEngine.PlatformRadius`; a reserve that disagrees leaves a step or a hole at the centre |
+| **A quarter-turn compass** | North is `-Z` here. A delivery at `+Z` is fine — `Prefab.YawDegrees` corrects it — but it must be a multiple of 90 |
+| **The collision bake** | 30 parts at `PreciseConvexDecomposition`. A fresh Studio export loses it and those parts seal their own openings. `assets/rbxm/prefabs/README.md` has the step |
+
+### And the one thing to do differently
+
+**Measure against a player, not against the brief.** The current shell arrived
+measured to its brief, consistently — and the brief's stud assumption was
+double, which is why the counters were 6 studs tall and everything had to be
+halved. Put an R15 rig next to a counter, a railing and a doorway in Blender
+before exporting. If the head clears the counter and the railing is at the
+waist, the scale is right and `Prefab.Scale` can stay at 1.0.

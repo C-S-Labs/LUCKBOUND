@@ -405,7 +405,7 @@ local GameConfig = {
 
 		IdleBrightness = 1,
 		ActiveBrightness = 3,
-		LightRange = 24,
+		LightRange = 24 * WORLD_SCALE,
 
 		PlanePulseMin = 0.3,
 		PlanePulseMax = 0.7,

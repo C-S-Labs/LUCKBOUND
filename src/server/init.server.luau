@@ -3,6 +3,7 @@
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
 
@@ -137,8 +138,53 @@ Players.CharacterAutoLoads = false
 
 local spawned: { [number]: boolean } = {}
 
+-- WHAT THE CLIENT REPLICATES AROUND WHILE IT HAS NO CHARACTER.
+--
+-- Holding the spawn until PLAY has a consequence that is easy to miss: with
+-- StreamingEnabled, Roblox streams the world around the player's CHARACTER,
+-- and a player who has none is a player nothing streams to. The loading
+-- screen would then fly its camera around a hub that never arrives -- which
+-- is what the fourth walk reported, both as an empty background and as the
+-- screen timing out with "taking longer than usual".
+--
+-- ReplicationFocus is the documented answer: a part the server names as the
+-- centre of that player's interest. Pointed at the hub, the Crossroads
+-- streams in while they watch the tour, and clearing it when they spawn
+-- hands the job back to their character.
+--
+-- It is harmless when streaming is off, which is why it is set unconditionally
+-- rather than behind a check on a property a place file can change without
+-- anybody here knowing.
+local function loadingFocus(): BasePart
+	local existing = Workspace:FindFirstChild("LuckboundLoadingFocus")
+	if existing and existing:IsA("BasePart") then
+		return existing
+	end
+
+	local focus = Instance.new("Part")
+	focus.Name = "LuckboundLoadingFocus"
+	focus.Anchored = true
+	focus.CanCollide = false
+	focus.CanQuery = false
+	focus.CanTouch = false
+	focus.Transparency = 1
+	focus.Size = Vector3.one
+	focus.Position = GameConfig.HubLayout.Anchors.FATE_ENGINE
+	focus.Parent = Workspace
+	return focus
+end
+
 local function onPlayerAdded(player: Player)
-	player.CharacterAdded:Connect(applyMovement)
+	-- Before anything else: give them somewhere to replicate around, so the
+	-- hub is arriving while the loading screen plays.
+	player.ReplicationFocus = loadingFocus()
+
+	player.CharacterAdded:Connect(function(character)
+		-- Their character is the focus from here; the hub part was only ever
+		-- a stand-in for not having one.
+		player.ReplicationFocus = nil
+		applyMovement(character)
+	end)
 	if player.Character then
 		task.spawn(applyMovement, player.Character)
 	end
