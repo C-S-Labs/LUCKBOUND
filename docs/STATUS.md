@@ -158,7 +158,7 @@ exists.**
 
 ### Test suite
 
-**559 tests, all passing.** Headless — no Roblox required. 136 of them arrived
+**563 tests, all passing.** Headless — no Roblox required. 136 of them arrived
 with the player UI and the live palette: the menu reducer, travel authorisation, code redemption,
 settings validation, the stamina curve and the coyote window.
 
@@ -357,6 +357,7 @@ survive a rescale and a literal does not.
 | All 8 chunks are `PLACEHOLDER` | Expected | Blockout is deliberate; upload is a per-piece change |
 | **Ethereal Scape: one whole map, not eight chunks** | Decided 2026-09-17 | The art is a composed traverse and cannot be shuffled — evidence in `assets/rbxm/maps/README.md`. Wired: `assets/rbxm/maps/` → `ServerStorage.LuckboundMaps` → `PrebuiltLoader`. **Walked in Studio 2026-09-17** — v1 at `Scale = 0.1` read too small, modeller re-delivered at play scale, now `Scale = 1.0`. |
 | UI needs resize/layout pass | Cosmetic | Owner-flagged. The new hub UI is built to `UITheme`'s scale/offset caps from the start; the older three screens are not |
+| **The hub is about twice player scale** | **High** | Measured 2026-09-21 from the prefab: shop counters stand 6.00 studs and railings 6.70 against a ~5-stud character — you cannot see over either. Three independent props agree. `Shell.Prefab.Scale` 2.0 → **1.0** is the fix, but it must move with every `HubLayout` distance or the walkways stop meeting the districts. Evidence and the full knock-on list in `ART_DIRECTION.md`. **Deliberately not changed yet** — it is a coordinated change to every distance in the game |
 | **The live menu tint is unseen** | **High** | The menu leans toward the district you are in and toward any live event. Hue-shift-at-constant-luminance is correct on paper and has never been looked at; on dark surfaces it is subtle by construction and may want to be stronger. `TESTING.md` test L, `Content/Hub/Palettes` is the dial |
 | **Rifts: event-gated dungeons** | **Design** | Owner-directed 2026-09-20. A biome event opens a portal in a generated map; through it is a far harder dungeon with rewards obtainable nowhere else. Fully designed in `docs/EVENTS.md` §5, including where the portal attaches for both map routes and the reward-permanence question. **Blocked on combat and items (Phase 2)** — but the portal, the gating and the timer can be prototyped with an empty room behind them |
 | **The event sky is built and unwalked** | **High** | Three authored events (Aurora Veil, Starfall, Catalyst Star), per-client lighting, a mote layer and a colour grade, reverting to the hub's own light exactly. Never rendered. `TESTING.md` test M — and step 5, the expedition collision, is the one most likely to be wrong |

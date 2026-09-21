@@ -33,6 +33,92 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 34 — 2026-09-21 — The third walk: a camera saved too early, and lamps that drift
+
+**Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 563 passing (was 559)
+
+### 1. The camera, finally — it was restoring a value captured too early
+
+Reported precisely enough to solve it: *"persists ONLY when the player is first
+put into the loading screen. After resetting the character, my camera locked
+back on."*
+
+`releaseCamera` wrote back the `CameraType` captured at init. On a **first
+join** that capture happens before Roblox's camera system has started, when
+`CurrentCamera.CameraType` is still **`Fixed`** — so the screen faithfully
+restored `Fixed`, and a Fixed camera follows nobody. After a respawn the camera
+script had already set `Custom`, so the saved value was right *by accident*,
+which is exactly why resetting appeared to fix it.
+
+Gameplay wants `Custom`. That is not a value worth preserving from a moment
+before the game had started, so it is now simply asserted, `savedCameraType` is
+deleted rather than left to tempt someone, and the subject is named with a
+bounded retry for a character that has not finished loading.
+
+**Three sessions, three different causes, same symptom.** The camera being
+taken by the engine, then a race with the tour thread, now a saved value from
+too early. Worth remembering that "the camera is stuck" is a symptom with a
+family of causes, not a bug.
+
+### 2. Light sources are fixtures, not floating objects
+
+Owner-directed: *anything labelled a light source should be static with colour
+animations*. The glow was right; the drifting was not.
+
+Five styles lost every attribute that changed their position and kept their
+`PulseAlpha`: `Plaza_RimLampCrystals`, `Walkways_GatewayCrystals`,
+`District_Leaderboard_CrystalFinials`, `District_Archive_LampCrystals`,
+`District_Shop_LanternCrystals`.
+
+The Fate Engine's `CrystalShards` deliberately still orbit — they are part of a
+machine, not a light fitting. A test pins the rule and a second pins that the
+lamps still pulse, so "make them static" cannot quietly become "make them
+dead".
+
+### 3. The aperture turns against the frame
+
+The outer ring runs +0.22 and the inner −0.31, but the veil between them had no
+spin at all — the middle of the machine was the one part standing still. Now
+−0.14: opposed to the **outer** ring, which is the one the eye reads first, and
+slower than the inner ring so the three layers stay distinguishable instead of
+blurring into one direction.
+
+### 4. The hub is about twice player scale — measured, not changed
+
+Owner's test: *if the head clears the shop counters, the map is sized right.*
+Measured from the prefab at the shipped `Prefab.Scale = 2.0`:
+
+| Prop | At Scale 2.0 | Should be |
+|---|---|---|
+| Shop counters | **6.00 studs** | ~3.0 (chest) |
+| Railings | **6.70 studs** | ~3.2 (waist) |
+| Crates | **28.80 studs** | a crate |
+
+A character is ~5 studs. Three independent human-scale props agree: the set
+dressing is about twice the size it should be, and `Prefab.Scale = 1.0` makes
+the owner's test pass on both references.
+
+**Deliberately not applied.** `Prefab.Scale` alone breaks the hub: the authored
+districts scale with the shell, but the walkways, spawn ring, travel landings,
+prompt reach and portal scales are separate `GameConfig.HubLayout` numbers that
+would not move with it. It is a coordinated change to every distance in the
+game, several pinned by tests, and it should be made with somebody watching it
+rather than shipped blind. Full evidence and knock-on list in
+`ART_DIRECTION.md`.
+
+### Stopped at
+
+Pushed. The scale change is the first thing to do together.
+
+### Next
+
+1. **The rescale**, with eyes on it: `Prefab.Scale` and every `HubLayout`
+   distance, in one pass.
+2. The rest of the walk — travel landings, district tint, event sky.
+3. Sound; then `scheduledAt` and the rift portal.
+
+---
+
 ## Session 33 — 2026-09-21 — The second walk: a button that ate its label, and settings that saved nothing
 
 **Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 559 passing · **PR:** #27

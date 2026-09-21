@@ -143,6 +143,18 @@ local ShellStyles: { [string]: any } = {
 	},
 	Plaza_RimParapetCaps = { Color = Theme.MarbleTrim, Material = Theme.StoneMaterial },
 	Plaza_RimLampPosts = { Color = Theme.Slate, Material = Theme.StoneMaterial },
+	-- === LIGHT SOURCES DO NOT MOVE ===
+	-- Owner-directed 2026-09-21, after seeing the market: the glow on these is
+	-- right, the drifting is not. A lamp that spins, bobs or wobbles reads as
+	-- a floating object rather than as a fixture bolted to a post.
+	--
+	-- So every lamp, lantern, finial and gateway crystal keeps its PulseAlpha
+	-- (colour and brightness animation, which is what makes them feel lit)
+	-- and has lost every attribute that changed its position.
+	--
+	-- The Fate Engine's CrystalShards are deliberately NOT in this group:
+	-- they orbit because they are part of a machine, not because they are a
+	-- light fitting.
 	Plaza_RimLampCrystals = {
 		Color = Theme.Inlay,
 		Material = Enum.Material.Neon,
@@ -150,7 +162,6 @@ local ShellStyles: { [string]: any } = {
 			PulseAlphaMin = 0.15,
 			PulseAlphaMax = 0.5,
 			PulseSeconds = 5.2,
-			SpinSpeed = 0.15,
 		},
 	},
 	Plaza_Braziers = { Color = Theme.Basalt, Material = Theme.StoneMaterial },
@@ -218,9 +229,6 @@ local ShellStyles: { [string]: any } = {
 			PulseAlphaMin = 0.18,
 			PulseAlphaMax = 0.55,
 			PulseSeconds = 4.4,
-			SpinSpeed = 0.3,
-			BobStuds = 0.7,
-			BobSeconds = 6,
 		},
 	},
 	Walkways_GoldThresholds = {
@@ -376,7 +384,6 @@ local ShellStyles: { [string]: any } = {
 			PulseAlphaMin = 0.15,
 			PulseAlphaMax = 0.5,
 			PulseSeconds = 5.6,
-			SpinSpeed = 0.2,
 		},
 	},
 	District_Leaderboard_BannerMasts = { Color = Theme.MarbleDim, Material = Theme.StoneMaterial },
@@ -449,9 +456,6 @@ local ShellStyles: { [string]: any } = {
 			PulseAlphaMin = 0.15,
 			PulseAlphaMax = 0.5,
 			PulseSeconds = 4.9,
-			SpinSpeed = 0.22,
-			BobStuds = 0.5,
-			BobSeconds = 8,
 		},
 	},
 	District_Archive_Braziers = { Color = Theme.Basalt, Material = Theme.StoneMaterial },
@@ -551,8 +555,6 @@ local ShellStyles: { [string]: any } = {
 			PulseAlphaMin = 0.1,
 			PulseAlphaMax = 0.45,
 			PulseSeconds = 3.3,
-			WobbleDegrees = 2.4,
-			WobbleSeconds = 5.5,
 		},
 	},
 	District_Shop_AisleRunes = {
@@ -1206,6 +1208,16 @@ local Crossroads = {
 				-- rather than a disc jammed in a hole.
 				SizeScale = 0.82,
 				Attributes = {
+					-- THE APERTURE TURNS AGAINST THE FRAME. Owner-directed
+					-- 2026-09-21. The outer ring runs +0.22 and the inner one
+					-- -0.31; the veil between them had no spin at all, so the
+					-- middle of the machine was the one part standing still.
+					--
+					-- Negative, so it opposes the OUTER ring the eye reads
+					-- first, and slower than the inner ring so the three
+					-- layers stay distinguishable rather than blurring into
+					-- one direction.
+					SpinSpeed = -0.14,
 					-- NO PulseScale. The veil is 15.22 studs across inside a
 					-- 15.92 ring: 0.35 studs of clearance a side. A 6% breath
 					-- grew it to 16.13 and it pulsed straight through its own

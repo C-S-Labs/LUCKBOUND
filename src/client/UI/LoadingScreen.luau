@@ -53,7 +53,6 @@ local playButton: TextButton
 
 local blur: BlurEffect?
 local camera: Camera
-local savedCameraType: Enum.CameraType?
 local savedFieldOfView: number?
 local finished = false
 local ready = false
@@ -318,30 +317,60 @@ end
 
 --- HANDS THE CAMERA BACK TO THE PLAYER.
 ---
---- Restoring CameraType is not enough on its own. While the tour held the
---- camera as Scriptable, Roblox's camera script never got to point it at
---- anything, so a camera set back to Custom with no CameraSubject simply
---- stays where the tour left it -- which looks exactly like a camera that is
---- still stuck. Naming the humanoid is what actually gives control back.
+--- WHY THIS DOES NOT RESTORE WHAT IT SAVED. It used to write back the
+--- CameraType captured at init -- and on a FIRST join that capture happens
+--- before Roblox's own camera system has started, when CurrentCamera.CameraType
+--- is still `Fixed`. So the screen faithfully restored `Fixed`, and a Fixed
+--- camera does not follow anybody. It looked exactly like the camera was
+--- still stuck, and it only happened on the first load: after a respawn the
+--- camera script had already set `Custom`, so the saved value was right by
+--- accident. Reported from the third Studio walk, with precisely that clue --
+--- "resetting the character fixed it".
 ---
---- Called twice on purpose: once immediately, and once a frame later, because
---- the tour loop may be suspended inside RenderStepped and about to write one
---- more frame. The second call costs nothing and closes the race from the
---- other side.
-local function releaseCamera()
+--- Gameplay wants `Custom`. That is not a value worth preserving from a
+--- moment before the game had started, so it is simply asserted.
+---
+--- Restoring CameraType is also not enough on its own: while the tour held
+--- the camera as Scriptable, the camera script never got to point it at
+--- anything, and `Custom` with no CameraSubject sits where it was left. The
+--- subject has to be named, and the character may not have finished loading
+--- when PLAY is pressed -- hence the retry.
+local function pointCameraAtCharacter(): boolean
 	local live = Workspace.CurrentCamera
 	if not live then
-		return
+		return false
 	end
 	camera = live
-	camera.CameraType = savedCameraType or Enum.CameraType.Custom
 	camera.FieldOfView = savedFieldOfView or 70
 
 	local character = player.Character
 	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-	if humanoid then
-		camera.CameraSubject = humanoid
+	if not humanoid then
+		return false
 	end
+
+	camera.CameraSubject = humanoid
+	camera.CameraType = Enum.CameraType.Custom
+	return true
+end
+
+local function releaseCamera()
+	if pointCameraAtCharacter() then
+		return
+	end
+
+	-- No character yet. Keep trying briefly rather than leaving the player
+	-- looking at a frozen frame -- and bounded, so a character that never
+	-- arrives does not leave a thread spinning for the session.
+	task.spawn(function()
+		for _ = 1, 40 do
+			task.wait(0.1)
+			if pointCameraAtCharacter() then
+				return
+			end
+		end
+		warn("[LoadingScreen] gave up handing the camera back -- no humanoid arrived")
+	end)
 end
 
 local function finish()
@@ -526,7 +555,9 @@ function LoadingScreen.init(): ()
 
 	startedAt = os.clock()
 	camera = Workspace.CurrentCamera
-	savedCameraType = camera.CameraType
+	-- FieldOfView IS worth keeping: it is a real value set by the place, not
+	-- a placeholder from before the camera system started. CameraType is
+	-- deliberately not saved -- see releaseCamera.
 	savedFieldOfView = camera.FieldOfView
 
 	build()

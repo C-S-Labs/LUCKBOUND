@@ -348,3 +348,62 @@ Most changes are numbers, so the loop is fast.
 
 With the **Studio MCP** connected locally (see `TOOLCHAIN_ACCESS.md`), an agent
 can also screenshot the result and iterate without you describing every tweak.
+
+---
+
+## Hub scale vs. the player — measured 2026-09-21
+
+**Owner's test, and it is a good one:** *if the top of the torso and the
+player's head can look over the shop counters, the map is properly sized.*
+
+Measured out of `HUB_CROSSROADS.rbxmx`, at the shipped `Prefab.Scale = 2.0`:
+
+| Prop | Raw | At Scale 2.0 | Should be, for a ~5-stud character |
+|---|---|---|---|
+| `District_Shop_Counters` | 3.00 | **6.00 studs** | ~3.0 (chest) |
+| `District_*_Balustrade` (railings) | 3.35 | **6.70 studs** | ~3.2 (waist) |
+| `District_Shop_Crates` | 14.40 | **28.80 studs** | a crate, not a house |
+
+A Roblox R15 character is about **5 studs** tall, eyes at ~4.5. So the counter
+tops sit a stud above the player's head and the railings are higher still —
+which is exactly what the third Studio walk reported and what the screenshot
+shows.
+
+**Three independent human-scale props all say the same thing: the set dressing
+is about twice the size it should be.** Monumental pieces (columns at 28–37
+studs, the dome at 38) are fine — those are *meant* to dwarf you.
+
+### What the number would be
+
+`Content/Hub/Crossroads.luau` → `Shell.Prefab.Scale`, currently **2.0**.
+
+At **1.0**, the counters become 3.0 studs (chest), the railings 3.35 (waist),
+and the owner's test passes on both. That is the value the props point at, and
+it is worth noting what it implies: the importer's "halved" delivery was
+already right for the character, and the correction to 2.0 — measured against
+the *brief* rather than against a person — doubled a world that did not need
+doubling. The `assets/rbxm/prefabs/README.md` scale section is measured against
+the brief and is internally consistent; it is the brief's stud assumption that
+is off.
+
+### Why it was NOT changed in the same pass
+
+Because `Prefab.Scale` alone would break the hub. The authored districts scale
+with the shell; the things placed *around* them do not — they come from
+`GameConfig.HubLayout`:
+
+- `ZoneRingRadius` (400) — where walkways run to
+- `HubDiameter` (1150) — the plaza
+- `SpawnRing` radius and height
+- Travel landing offsets in `Content/Hub/Menu`
+- Prompt reach (`UI.PromptActivationDistance`) and portal scales
+
+Halve the shell without halving those and the walkways stop meeting the
+districts, players spawn in the wrong place, and travel lands people off the
+decks. It is a coordinated change to **every distance in the game**, several of
+which are pinned by tests (traversal budget, zone width, prompt reach), and it
+deserves to be made with somebody watching it in Studio rather than shipped
+blind.
+
+**It is a ~20-minute change when done together**, and the numbers above are the
+evidence for it.
