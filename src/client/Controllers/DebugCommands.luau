@@ -37,12 +37,24 @@ local DebugCommands = {}
 local player = Players.LocalPlayer
 
 -- === output ==========================================================
--- Replies go to the Output window rather than the chat. Studio's Output is
--- where the rest of the diagnostics already are, and a command's answer is
--- more useful next to the [Roll] and [Expedition] lines than scrolled away in
--- a chat window.
+-- Replies go to BOTH the Output window and the chat, and the second half was
+-- missing for a long time. Output is where the rest of the diagnostics live,
+-- which is right in Studio -- but in a running client nobody can see it, so a
+-- command that failed and a command that was never registered looked
+-- identical: nothing happened. That is exactly how /event went unnoticed.
+--
+-- DisplaySystemMessage rather than SendAsync: this is the game answering the
+-- player, not the player saying something to the server.
 local function say(text: string)
 	print(`[cmd] {text}`)
+
+	local channels = TextChatService:FindFirstChild("TextChannels")
+	local general = channels and channels:FindFirstChild("RBXGeneral")
+	if general and general:IsA("TextChannel") then
+		pcall(function()
+			general:DisplaySystemMessage(`[cmd] {text}`)
+		end)
+	end
 end
 
 -- === flight ==========================================================
@@ -298,6 +310,20 @@ function DebugCommands.init(): ()
 	end))
 	table.insert(HELP, register("leave", "end the current expedition", function()
 		remote("leave", {})
+	end))
+
+	-- THE EVENT COMMANDS. These existed on the server for two sessions and
+	-- were never registered here, so typing /event sent a chat message and
+	-- nothing else -- which looked exactly like "events do not trigger".
+	-- A server command with no client alias is not a command.
+	table.insert(HELP, register("event", "/event <ID> -- start a live event", function(args)
+		remote("event", args)
+	end))
+	table.insert(HELP, register("endevents", "stop every live event", function()
+		remote("endevents", {})
+	end))
+	table.insert(HELP, register("ledger", "/ledger <ID> -- how many uniques are left", function(args)
+		remote("ledger", args)
 	end))
 
 	table.insert(HELP, register("worlds", "list rollable world ids", function()

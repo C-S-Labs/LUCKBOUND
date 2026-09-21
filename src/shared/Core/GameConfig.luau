@@ -178,6 +178,21 @@ local GameConfig = {
 		-- succeeds ~98% of the time -- see docs/MODULAR_MAPS.md.
 		AssemblyAttempts = 5,
 
+		-- ENTRY LIVES ON THE FATE ENGINE. Owner-directed 2026-09-21: the
+		-- staircase up to the portal is not modelled yet, but the teleport
+		-- and the biome scripts need testing now -- so the portal is
+		-- enterable from the dais and the stairs become art rather than a
+		-- blocker.
+		--
+		-- This is the direction STATUS already records ("the Engine portal is
+		-- to become the way into biomes"), arriving early and without the
+		-- "keep this biome?" step, which still needs a spec amendment.
+		EntryAtEngine = true,
+		-- A different key from ROLL: both prompts stand on the same dais and
+		-- every ProximityPrompt defaults to E. Checked against
+		-- Constants.HOTKEY_NAMES like every other key in content.
+		EntryPromptKey = "F",
+
 		EntryCooldownSeconds = 2.0,
 		-- Studs from the Expedition Gate's portal plane. Generous, because the
 		-- Gate platform is 290x240 and the prompt is the real affordance --
@@ -334,7 +349,10 @@ local GameConfig = {
 			--
 			-- Asserted against the prompt reach by test rather than written
 			-- as a bare number, because the two must not drift.
-			Radius = 110,
+			-- 110 -> 105: five studs in, asked for after the fourth walk. Still
+			-- outside PromptActivationDistance (17.5) and MaxRollDistance
+			-- (35), which is what the tests pin.
+			Radius = 105,
 			Height = 6 * WORLD_SCALE,
 		},
 	},
@@ -403,8 +421,11 @@ local GameConfig = {
 		-- staircase up to it would have to land.
 		YawSlots = 4, -- peak -> idle, as the result lands
 
-		IdleBrightness = 1,
-		ActiveBrightness = 3,
+		-- Halved with the world for the same inverse-square reason as the
+		-- Engine's spotlight: a light that did not move away from a surface
+		-- that came closer is a brighter light.
+		IdleBrightness = 0.5,
+		ActiveBrightness = 1.5,
 		LightRange = 24 * WORLD_SCALE,
 
 		PlanePulseMin = 0.3,

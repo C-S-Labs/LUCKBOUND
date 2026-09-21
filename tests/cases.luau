@@ -743,12 +743,19 @@ do
 	check("rune ring has 8 plates", portal.RuneCount == 8)
 	check("plinth is 14 studs across, 1.5 tall, octagonal",
 		portal.PlinthDiameter == 14 and portal.PlinthHeight == 1.5 and portal.PlinthSides == 8)
-	-- Range is a DISTANCE and scales with the world; brightness is not and
-	-- does not. Asserted as the relationship rather than as 24, so a rescale
+	-- Range is a DISTANCE and scales with the world. Brightness does not --
+	-- it moves the OTHER way, because a light that did not move away from a
+	-- surface that came closer is a brighter light (inverse square). Both
+	-- are asserted as relationships rather than as literals, so a rescale
 	-- cannot leave a light reaching twice as far as the thing it lights.
-	check("point light reaches 24 studs at full world scale, brightness 3",
-		portal.LightRange == 24 * GameConfig.HubLayout.WorldScale and portal.ActiveBrightness == 3,
-		string.format("range %.1f, brightness %.1f", portal.LightRange, portal.ActiveBrightness))
+	check("the point light reaches 24 studs at full world scale",
+		portal.LightRange == 24 * GameConfig.HubLayout.WorldScale,
+		string.format("range %.1f", portal.LightRange))
+
+	check("...and the active flare is brighter than the idle glow, but not by much",
+		portal.ActiveBrightness > portal.IdleBrightness
+			and portal.ActiveBrightness <= portal.IdleBrightness * 4,
+		string.format("idle %.2f, active %.2f", portal.IdleBrightness, portal.ActiveBrightness))
 	check("active particle rate is 40", portal.ActiveParticleRate == 40)
 	check("spin-up spikes particles to 200", portal.SpinUpParticleRate == 200)
 	check("particle lifetime is 1.5-3s",
@@ -2701,6 +2708,29 @@ do
 		GameConfig.HubLayout.SpawnRing.Radius < GameConfig.HubLayout.ZoneRingRadius,
 		string.format("spawn %.0f, districts %.0f",
 			GameConfig.HubLayout.SpawnRing.Radius, GameConfig.HubLayout.ZoneRingRadius))
+
+	-- ENTRY ON THE ENGINE. The portal is enterable from the dais while the
+	-- staircase is still unmodelled, so two prompts now share one platform.
+	check("the entry prompt does not fight the roll prompt for E", (function()
+		local key = GameConfig.Expedition.EntryPromptKey
+		-- A ProximityPrompt defaults to E, which is what ROLL uses, so the
+		-- entry key must be something else -- and something Roblox has.
+		return Constants.HOTKEY_NAMES[key] == true and key ~= "E"
+	end)(), tostring(GameConfig.Expedition.EntryPromptKey))
+
+	check("the entry prompt floats clear of the roll prompt",
+		Crossroads.FateEngine.EntryPromptLift > 0)
+
+	-- ...and both still have to be reachable from the dais they stand on.
+	-- A prompt lifted out of its own range is the bug the Expedition Gate
+	-- shipped with once already.
+	check("both prompts stay inside their own reach from the dais", (function()
+		local engine = Crossroads.FateEngine
+		local top = engine.AnchorHeight + engine.EntryPromptLift
+		return top < GameConfig.UI.PromptActivationDistance
+	end)(), string.format("entry prompt %.1f up, reach %.1f",
+		Crossroads.FateEngine.AnchorHeight + Crossroads.FateEngine.EntryPromptLift,
+		GameConfig.UI.PromptActivationDistance))
 
 	-- === the visibility rule ========================================
 	check("the menu is visible in the hub", HubMenuCore.isVisible(nil, GameConfig))

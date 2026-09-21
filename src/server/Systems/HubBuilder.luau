@@ -204,6 +204,64 @@ local function buildRollAnchor(parent: Instance): BasePart
 	return anchor
 end
 
+--- THE WAY INTO A BIOME, ON THE ENGINE ITSELF.
+---
+--- Owner-directed 2026-09-21. The staircase up to the portal is not modelled
+--- yet, but the teleport and the biome scripts need testing now -- so the
+--- portal is enterable from the dais, and the stairs become art rather than a
+--- blocker.
+---
+--- It carries the GATE_ANCHOR name deliberately: ExpeditionSystem finds entry
+--- by that name wherever it sits, so moving entry from the market to the
+--- Engine (and later to the top of a staircase) is a placement decision here
+--- rather than a change to a system.
+local function buildEngineEntryAnchor(parent: Instance): BasePart?
+	if not GameConfig.Expedition.Enabled or not GameConfig.Expedition.EntryAtEngine then
+		return nil
+	end
+
+	local cfg = Layout.FateEngine
+	local anchor = part({
+		Name = Constants.NAMES.GATE_ANCHOR,
+		Size = cfg.AnchorSize,
+		-- Above the roll anchor rather than beside it: the two prompts share
+		-- one dais, and stacking keeps both inside their own reach from
+		-- anywhere a player can stand on it.
+		Position = Anchors.FATE_ENGINE + Vector3.new(0, cfg.AnchorHeight + cfg.EntryPromptLift, 0),
+		Transparency = 1,
+		CanCollide = false,
+	}, parent)
+	anchor:SetAttribute("IsGateAnchor", true)
+
+	local prompt = Instance.new("ProximityPrompt")
+	prompt.Name = "EnterPrompt"
+	prompt.ActionText = "ENTER"
+	prompt.ObjectText = "The Portal"
+	prompt.HoldDuration = 0.5
+	prompt.MaxActivationDistance = GameConfig.UI.PromptActivationDistance
+	prompt.RequiresLineOfSight = false
+	prompt.Enabled = true
+
+	-- A DIFFERENT KEY FROM ROLL. Every ProximityPrompt defaults to E, and two
+	-- of them on one dais would fight over it. Resolved through the same
+	-- allow-list every other key in content uses, so a typo warns here rather
+	-- than throwing on every keystroke somewhere else.
+	local keyName = GameConfig.Expedition.EntryPromptKey
+	if Constants.HOTKEY_NAMES[keyName] then
+		local ok, keyCode = pcall(function()
+			return (Enum.KeyCode :: any)[keyName]
+		end)
+		if ok then
+			prompt.KeyboardKeyCode = keyCode
+		end
+	else
+		warn(`[HubBuilder] entry prompt key '{tostring(keyName)}' is not in Constants.HOTKEY_NAMES`)
+	end
+
+	prompt.Parent = anchor
+	return anchor
+end
+
 --- What ExpeditionSystem measures entry distance from, and where the ENTER
 --- prompt lives. Decoupled from the portal art on purpose: a ProximityPrompt
 --- measures from its part's origin, and a plinth wider than the prompt's reach
@@ -395,6 +453,7 @@ local function buildFateEngine(parent: Instance): Model
 			end
 
 			local authoredAnchor = buildRollAnchor(engine)
+			buildEngineEntryAnchor(engine)
 			engine.PrimaryPart = authoredAnchor
 			return engine
 		end
@@ -498,6 +557,7 @@ local function buildFateEngine(parent: Instance): Model
 	spot.Parent = spotAnchor
 
 	local anchor = buildRollAnchor(engine)
+	buildEngineEntryAnchor(engine)
 	engine.PrimaryPart = anchor
 	return engine
 end

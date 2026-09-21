@@ -33,6 +33,129 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 38 — 2026-09-21 — A command that was never a command
+
+**Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 572 passing (was 569)
+
+### Why `/event` did nothing
+
+Reported as "events don't trigger". They trigger fine — **the command was
+never registered on the client.**
+
+`DebugSystem.COMMANDS.event` has existed on the server for two sessions, but
+the client registers each command as a `TextChatCommand` and forwards it, and
+`/event`, `/endevents` and `/ledger` were never added to that list. So typing
+them sent an ordinary chat message and nothing else, which is exactly what the
+screenshot showed: the text in the chat log, no reply, no sky.
+
+**A server command with no client alias is not a command.** All three are
+registered now.
+
+### The reason nobody noticed for two sessions
+
+Replies went to the **Output window only**. In Studio that is reasonable — it
+is where the rest of the diagnostics live. In a running client nobody can see
+it, so "this command failed", "this command does not exist" and "this command
+worked silently" were the same experience: nothing happened.
+
+Replies now also go to chat as a system message. `DisplaySystemMessage` rather
+than `SendAsync`, because this is the game answering the player rather than the
+player saying something.
+
+### Entry on the Fate Engine
+
+The portal is enterable from the dais. The staircase is still unmodelled and no
+longer blocks testing the teleport or the biome scripts.
+
+Two details worth keeping:
+
+- **The anchor carries the `GATE_ANCHOR` name wherever it sits**, and
+  `ExpeditionSystem.gatePart` now searches the hub by name rather than walking
+  a fixed path to `Zones/EXPEDITION_GATE`. Moving entry again -- to the top of
+  the staircase, when it exists -- is a placement decision in `HubBuilder`
+  rather than an edit to a system.
+- **`F`, not `E`.** Every ProximityPrompt defaults to E and ROLL already owns
+  it on that dais. The key is content, checked against
+  `Constants.HOTKEY_NAMES` like every other key, and a test asserts it is both
+  real and not E.
+
+### The menu behind the loading screen
+
+Three independent things can hide the hub menu -- leaving the Crossroads, a
+roll resolving, and the loading screen being up -- and each of them used to set
+`gui.Enabled` itself. That is how the rail ended up sitting over the title
+card: one of them said "show" without knowing another had said "hide".
+
+One function decides now, and the three inputs are three booleans it reads.
+
+### Stopped at
+
+All four items from the fourth walk are done. Pushed, 572 green, none of it
+walked.
+
+### Next
+
+1. Walk it: entry from the Engine (test C2b), the events now that they run,
+   and the loading screen with the menu hidden.
+2. The staircase junction in Studio, with the collision re-bake.
+3. Travel landings, district tint, event sky.
+
+---
+
+## Session 37 — 2026-09-21 — The Engine, dimmer again
+
+**Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 569 passing (was 568)
+
+A partial session — two of four changes from the fourth walk, committed on
+their own because the other two are not started.
+
+### The Engine's light, cut a second time
+
+Session 36 took the spotlight from 8 to 3 and it was still a white pool over
+the plaza. Now **1.1**, and the cone from 80° to **50°** — a wide cone washes
+the whole plaza, a narrow one pools on the dais, which is what the light is
+for. The portal's own point light came down with it (idle 1 → 0.5, active
+3 → 1.5).
+
+**There is no ratio to derive any of this from.** Range and height are
+distances and scale with the world; brightness moves the *other* way, because
+a light that did not move away from a surface that came closer is a brighter
+light. Past that it is a look, and the only instrument is a walk. The numbers
+are commented as such so the next person tunes rather than derives.
+
+The light test stopped asserting `brightness == 3` and now asserts the
+relationship — active brighter than idle, but not by more than 4× — so tuning
+the look does not mean editing a test each time.
+
+### Spawn ring 110 → 105
+
+Five studs in, as asked. Still outside prompt reach and roll range, which is
+what the three tests pin.
+
+### Not done, and why
+
+- **The GUI is still visible behind the loading screen.** Not started.
+- **Entry on the Fate Engine portal** — started, and stopped: the edit that
+  wired the ENTER prompt onto the Engine was declined mid-session. The config
+  flags I had added for it (`EntryAtEngine`, `EntryPromptKey`) were **removed
+  rather than left dangling**, because config that nothing reads is the same
+  lie as a button that does nothing. Two lines to put back when it goes ahead.
+
+The design for it, so it is not re-derived: the entry anchor carries the
+`GATE_ANCHOR` name wherever it sits, and `ExpeditionSystem.gatePart` finds it
+by name rather than by path — so moving entry from the market to the Engine is
+a placement change in `HubBuilder`, not a system change. The prompt needs a key
+other than `E`, since every ProximityPrompt defaults to it and ROLL is already
+on the same dais.
+
+### Next
+
+1. Hide the hub menu while the loading screen is up.
+2. Entry on the Engine portal, if it is still wanted.
+3. Then the walk: travel landings, district tint, event sky.
+
+---
+
 ## Session 36 — 2026-09-21 — Three things the rescale left behind
 
 **Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 568 passing (was 566)

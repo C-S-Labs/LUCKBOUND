@@ -36,6 +36,7 @@ local UITheme = require(Root.Core.UITheme)
 local ExpeditionController = require(script.Parent.Parent.Controllers.ExpeditionController)
 local StateController = require(script.Parent.Parent.Controllers.StateController)
 local FateRoll = require(script.Parent.FateRoll)
+local LoadingScreen = require(script.Parent.LoadingScreen)
 local UIKit = require(script.Parent.UIKit)
 
 local HubMenu = {}
@@ -56,6 +57,10 @@ local toast: TextLabel
 local railButtons: { [string]: TextButton } = {}
 local state = HubMenuCore.newState(GameConfig, UserInputService.TouchEnabled)
 local hiddenForRoll = false
+-- The menu is built while the loading screen is still up -- it has to be, so
+-- that it is ready the moment PLAY is pressed -- but it must not be VISIBLE
+-- behind it. The fourth walk caught the rail sitting over the title card.
+local hiddenForLoading = not LoadingScreen.isFinished()
 local travelling = false
 local veilGui: ScreenGui
 local veil: Frame
@@ -403,12 +408,22 @@ local function dispatch(action: any)
 	applyState()
 end
 
+--- THE ONE PLACE THAT DECIDES WHETHER THE MENU IS ON SCREEN.
+---
+--- Three things can hide it and they are independent: leaving the Crossroads,
+--- a roll resolving, and the loading screen still being up. Each used to set
+--- gui.Enabled itself, which is how the rail ended up visible behind the
+--- title card -- one of them said "show" without knowing another said "hide".
+local function refreshVisibility()
+	gui.Enabled = state.Visible and not hiddenForRoll and not hiddenForLoading
+end
+
 local function setVisible(visible: boolean)
 	-- Visibility is a property of the GUI, not of the state machine's idea of
 	-- itself: the reducer still closes panels on the way out, so returning to
 	-- the hub never restores a panel left open ten minutes ago.
 	dispatch({ Kind = "SET_VISIBLE", Visible = visible })
-	gui.Enabled = visible and not hiddenForRoll
+	refreshVisibility()
 end
 
 -- === build ==========================================================
@@ -662,6 +677,13 @@ function HubMenu.init(): ()
 	build()
 	bindHotkeys()
 	applyState()
+	refreshVisibility()
+
+	-- The loading screen owns the screen until PLAY.
+	LoadingScreen.onFinished(function()
+		hiddenForLoading = false
+		refreshVisibility()
+	end)
 
 	StateController.onChanged(function(snapshot)
 		fateLabel.Text = string.format("FATE %d", snapshot.FateLevel)
@@ -684,12 +706,10 @@ function HubMenu.init(): ()
 		end
 		hiddenForRoll = rolling
 		if rolling then
-			gui.Enabled = false
+			refreshVisibility()
 		else
 			task.delay(GameConfig.HubMenu.RestoreDelaySeconds, function()
-				if not hiddenForRoll then
-					gui.Enabled = state.Visible
-				end
+				refreshVisibility()
 			end)
 		end
 	end)
