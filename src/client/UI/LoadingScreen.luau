@@ -281,6 +281,16 @@ local function watchProgress()
 
 		local replicationDone = settledFor >= loading.HubSettleSeconds
 		if elapsed >= loading.MaximumSeconds then
+			-- SAY WHAT WAS ACTUALLY MISSING. The first time this fired, the
+			-- message told nobody anything and the cause -- a hub that never
+			-- replicated because a player with no character has nothing to
+			-- stream around -- took a walk and a code read to find. A
+			-- timeout that names what it was waiting for is the difference
+			-- between a bug report and a diagnosis.
+			warn(string.format(
+				"[LoadingScreen] timed out: %d instances, settled %.1fs of %.1fs, preload %s",
+				arrived, settledFor, loading.HubSettleSeconds, tostring(preloadDone)
+			))
 			setReady("Taking longer than usual — you can go in now.")
 		elseif replicationDone and preloadDone and elapsed >= loading.MinimumSeconds then
 			setReady("Ready.")

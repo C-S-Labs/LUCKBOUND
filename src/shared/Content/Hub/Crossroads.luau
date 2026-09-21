@@ -988,10 +988,13 @@ local Crossroads = {
 
 		CrystalShards = {
 			Count = 6,
-			OrbitRadius = 100,
-			MinHeight = 50,
-			MaxHeight = 140,
-			Size = 20,
+			-- Every one of these is a distance around the Engine, so they
+			-- scale with it. Left alone they were shards the size of the
+			-- machine they orbit.
+			OrbitRadius = 100 * S,
+			MinHeight = 50 * S,
+			MaxHeight = 140 * S,
+			Size = 20 * S,
 			Material = Enum.Material.SmoothPlastic,
 			SpinSpeedMin = 0.2,
 			SpinSpeedMax = 0.7,
@@ -999,17 +1002,23 @@ local Crossroads = {
 
 		SpotLight = {
 			Color = Theme.EngineSpot,
-			Brightness = 8,
-			Range = 400,
+			-- 8 -> 3. Range and Height are distances and scale with the
+			-- world, but BRIGHTNESS does not work that way: the same light
+			-- hung half as high over a half-size dais is four times the
+			-- illuminance by inverse square, and the third walk reported the
+			-- Engine as a white blowout. Cutting it here rather than scaling
+			-- it, because the right number is a look, not a ratio.
+			Brightness = 3,
+			Range = 400 * S,
 			Angle = 80,
-			Height = 300,
+			Height = 300 * S,
 		},
 
 		-- The roll pad, and it has to FIT the dais. At 90 it was wider than
 		-- the whole re-tuned Engine, so the prompt would have floated out
 		-- over open plaza.
-		AnchorSize = Vector3.new(30, 1, 30),
-		AnchorHeight = 6,
+		AnchorSize = Vector3.new(30 * S, 1, 30 * S),
+		AnchorHeight = 6 * S,
 		MeshId = nil, -- superseded by Prefab below; kept for the blockout path
 
 		-- THE AUTHORED ENGINE. Delivered 2026-09-18, 78 MeshParts.
@@ -1233,6 +1242,12 @@ local Crossroads = {
 					-- other, which reads as one of them slipping rather than
 					-- as a mechanism. Identical is what makes them one ring.
 					SpinSpeed = -0.31,
+					-- AND ABOUT THE SAME AXIS. This is what was still wrong
+					-- after the speeds matched: SpinAxis defaults to "Y", so
+					-- the aperture was turning about the VERTICAL while the
+					-- rings turned about their own Z. Same number, different
+					-- axle -- which looks exactly like "still not connected".
+					SpinAxis = "Z",
 					-- NO PulseScale. The veil is 15.22 studs across inside a
 					-- 15.92 ring: 0.35 studs of clearance a side. A 6% breath
 					-- grew it to 16.13 and it pulsed straight through its own

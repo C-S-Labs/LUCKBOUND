@@ -158,7 +158,7 @@ exists.**
 
 ### Test suite
 
-**566 tests, all passing.** Headless — no Roblox required. 136 of them arrived
+**568 tests, all passing.** Headless — no Roblox required. 136 of them arrived
 with the player UI and the live palette: the menu reducer, travel authorisation, code redemption,
 settings validation, the stamina curve and the coyote window.
 
@@ -358,6 +358,7 @@ survive a rescale and a literal does not.
 | **Ethereal Scape: one whole map, not eight chunks** | Decided 2026-09-17 | The art is a composed traverse and cannot be shuffled — evidence in `assets/rbxm/maps/README.md`. Wired: `assets/rbxm/maps/` → `ServerStorage.LuckboundMaps` → `PrebuiltLoader`. **Walked in Studio 2026-09-17** — v1 at `Scale = 0.1` read too small, modeller re-delivered at play scale, now `Scale = 1.0`. |
 | UI needs resize/layout pass | Cosmetic | Owner-flagged. The new hub UI is built to `UITheme`'s scale/offset caps from the start; the older three screens are not |
 | ~~The hub is twice player scale~~ | **Fixed 2026-09-21, unwalked** | Halved through one number, `HubLayout.WorldScale = 0.5`. Counters are now 3.0 studs and railings 3.35 against a ~5-stud player. WalkSpeed 32 → 24 with it. **Nobody has walked the half-size hub** — judge the plaza, the district distances and whether 24 feels right |
+| **The Crossroads wants a revamp after testing** | **Design** | Owner-proposed 2026-09-21 and agreed: rebuild the structures and level of detail properly, then drop a new `.rbxmx` in once testing is done. The contract that makes that a drop-in is in `ART_DIRECTION.md` — the 10 named parts, the `EngineReserve` anchor, the collision bake, and measuring against a player rather than a brief |
 | **Staircase clipping at the walkway junctions** | Medium | Seen 2026-09-21. The stairs and walkways are **entirely authored mesh** — with a shell present `HubBuilder` generates no walkways at all — so no code number can fix it. It is a Studio edit plus a re-export, and the re-export must re-bake `CollisionFidelity` (see `assets/rbxm/prefabs/README.md`) or 30 precise parts silently seal their own openings |
 | **The live menu tint is unseen** | **High** | The menu leans toward the district you are in and toward any live event. Hue-shift-at-constant-luminance is correct on paper and has never been looked at; on dark surfaces it is subtle by construction and may want to be stronger. `TESTING.md` test L, `Content/Hub/Palettes` is the dial |
 | **Rifts: event-gated dungeons** | **Design** | Owner-directed 2026-09-20. A biome event opens a portal in a generated map; through it is a far harder dungeon with rewards obtainable nowhere else. Fully designed in `docs/EVENTS.md` §5, including where the portal attaches for both map routes and the reward-permanence question. **Blocked on combat and items (Phase 2)** — but the portal, the gating and the timer can be prototyped with an empty room behind them |

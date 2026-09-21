@@ -33,6 +33,79 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 36 — 2026-09-21 — Three things the rescale left behind
+
+**Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 568 passing (was 566)
+
+The half-size world was walked. Everything that broke was the same mistake in
+three places: **a distance that did not scale with the world.**
+
+### 1. The loading screen had no Crossroads in it
+
+Two causes, and they compounded.
+
+`Content/Hub/Cinematics` is nothing but distances — six camera radii, six
+heights, six look-offsets — and none of them scaled. The cameras stayed where
+they were while the hub halved underneath them, so every shot framed empty sky
+with something small in the middle of it.
+
+The second is subtler and follows from Session 35's spawn gating: **with
+StreamingEnabled, Roblox streams the world around the player's CHARACTER, and a
+player who has none is a player nothing streams to.** The screen flew its
+camera around a hub that was never going to arrive, which is also why it timed
+out with "taking longer than usual". Fixed with `ReplicationFocus`, the
+documented answer: the server points each joining player at a part in the hub
+until their character exists and can take the job back.
+
+**And the timeout now says what it was waiting for** — instance count, settle
+time, preload state. The first version of that message told nobody anything,
+and finding the cause took a walk and a code read.
+
+### 2. The Fate Engine was a white blowout
+
+Its spotlight was `Brightness 8, Range 400, Height 300` — tuned for a world
+twice this size. Range and Height are distances and now scale, but **brightness
+does not work that way**: the same light hung half as high over a half-size
+dais is four times the illuminance by inverse square. Cut to 3, by eye rather
+than by ratio, because the right number there is a look.
+
+The crystal shards had the same problem in a more obvious form: `OrbitRadius`,
+heights and `Size` unscaled meant shards the size of the machine they orbit.
+
+### 3. The rings still were not connected — same speed, different axle
+
+Session 35 gave `PortalPlane` exactly `InnerRing`'s speed, and it still read as
+disconnected. The reason: **`SpinAxis` defaults to `"Y"`**, and the rings
+declare `"Z"`. The aperture was turning about the vertical at precisely the
+right rate — the one combination that looks like a bug rather than a
+mechanism.
+
+A test now asserts every part in the portal assembly shares an axle, not just a
+speed.
+
+### The pattern, worth naming
+
+A world rescale does not fail on the numbers you think about. It fails on the
+ones nobody filed under "distance": a camera radius, a light's range, an orbit,
+a shard's size. The suite caught twelve of those in Session 35 because the hub
+geometry was pinned by relationships; these three were missed because nothing
+related them to the hub. Two new tests close that — every camera shot must
+frame something the size of the hub, and everything in one assembly must share
+an axle.
+
+### Stopped at
+
+Pushed. The revamp question was answered: **agreed, after testing** — the
+contract that makes a new `.rbxmx` a drop-in is recorded in `ART_DIRECTION.md`.
+
+### Next
+
+1. Walk it again: the loading tour, the Engine's light, the rings.
+2. The staircase junction in Studio, with the collision re-bake.
+3. Travel landings, district tint, event sky — still unwalked.
+
+---
+
 ## Session 35 — 2026-09-21 — The world halves, the rings become two, and nobody spawns early
 
 **Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 566 passing (was 563)

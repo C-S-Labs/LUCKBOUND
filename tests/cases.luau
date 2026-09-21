@@ -743,8 +743,12 @@ do
 	check("rune ring has 8 plates", portal.RuneCount == 8)
 	check("plinth is 14 studs across, 1.5 tall, octagonal",
 		portal.PlinthDiameter == 14 and portal.PlinthHeight == 1.5 and portal.PlinthSides == 8)
-	check("point light is range 24, brightness 3",
-		portal.LightRange == 24 and portal.ActiveBrightness == 3)
+	-- Range is a DISTANCE and scales with the world; brightness is not and
+	-- does not. Asserted as the relationship rather than as 24, so a rescale
+	-- cannot leave a light reaching twice as far as the thing it lights.
+	check("point light reaches 24 studs at full world scale, brightness 3",
+		portal.LightRange == 24 * GameConfig.HubLayout.WorldScale and portal.ActiveBrightness == 3,
+		string.format("range %.1f, brightness %.1f", portal.LightRange, portal.ActiveBrightness))
 	check("active particle rate is 40", portal.ActiveParticleRate == 40)
 	check("spin-up spikes particles to 200", portal.SpinUpParticleRate == 200)
 	check("particle lifetime is 1.5-3s",
@@ -1703,6 +1707,22 @@ do
 	-- rather than as a mechanism -- worse than either extreme.
 	check("the aperture and the inner ring turn as ONE ring", plane == inner,
 		string.format("plane %.2f, inner %.2f", plane, inner))
+
+	-- SAME SPEED IS NOT ENOUGH -- SAME AXLE TOO. SpinAxis defaults to "Y", so
+	-- a part given a ring's speed but no axis turns about the VERTICAL while
+	-- the rings turn about their own Z. That looks exactly like "still not
+	-- connected", and it is what the fourth walk was still seeing after the
+	-- speeds were matched.
+	check("everything in the portal assembly turns about the same axle", (function()
+		local axis = styles.OuterRing.Attributes.SpinAxis
+		for _, name in { "OuterRing", "InnerRing", "PortalPlane" } do
+			local attributes = styles[name].Attributes
+			if attributes.SpinSpeed ~= nil and attributes.SpinAxis ~= axis then
+				return false
+			end
+		end
+		return axis ~= nil
+	end)())
 
 	-- THE RINGS SPIN ABOUT THEIR OWN AXLE. A ring is thin along its own Z, so
 	-- Z is the axle; spinning it about Y would tumble it end over end. Two
@@ -2794,6 +2814,23 @@ do
 	check("every shot frames geometry that exists while loading", (function()
 		for _, shot in Cinematics.Shots do
 			if shot.WorldId ~= nil then
+				return false
+			end
+		end
+		return true
+	end)())
+
+	-- THE SHOTS ARE DISTANCES, SO THEY SCALE WITH THE WORLD. When they did
+	-- not, the cameras stayed put while the hub halved underneath them and
+	-- the loading screen framed empty sky with something small in the middle
+	-- -- reported as "the background is not working".
+	check("every shot frames the hub rather than empty sky", (function()
+		local hub = GameConfig.HubLayout.HubDiameter
+		for _, shot in Cinematics.Shots do
+			-- Closer than four hub-widths (so the hub fills something of the
+			-- frame) and further than a tenth of one (so it is not inside a
+			-- building).
+			if shot.Radius > hub * 4 or shot.Radius < hub * 0.1 then
 				return false
 			end
 		end
