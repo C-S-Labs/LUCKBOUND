@@ -33,6 +33,60 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 37 — 2026-09-21 — The Engine, dimmer again
+
+**Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 569 passing (was 568)
+
+A partial session — two of four changes from the fourth walk, committed on
+their own because the other two are not started.
+
+### The Engine's light, cut a second time
+
+Session 36 took the spotlight from 8 to 3 and it was still a white pool over
+the plaza. Now **1.1**, and the cone from 80° to **50°** — a wide cone washes
+the whole plaza, a narrow one pools on the dais, which is what the light is
+for. The portal's own point light came down with it (idle 1 → 0.5, active
+3 → 1.5).
+
+**There is no ratio to derive any of this from.** Range and height are
+distances and scale with the world; brightness moves the *other* way, because
+a light that did not move away from a surface that came closer is a brighter
+light. Past that it is a look, and the only instrument is a walk. The numbers
+are commented as such so the next person tunes rather than derives.
+
+The light test stopped asserting `brightness == 3` and now asserts the
+relationship — active brighter than idle, but not by more than 4× — so tuning
+the look does not mean editing a test each time.
+
+### Spawn ring 110 → 105
+
+Five studs in, as asked. Still outside prompt reach and roll range, which is
+what the three tests pin.
+
+### Not done, and why
+
+- **The GUI is still visible behind the loading screen.** Not started.
+- **Entry on the Fate Engine portal** — started, and stopped: the edit that
+  wired the ENTER prompt onto the Engine was declined mid-session. The config
+  flags I had added for it (`EntryAtEngine`, `EntryPromptKey`) were **removed
+  rather than left dangling**, because config that nothing reads is the same
+  lie as a button that does nothing. Two lines to put back when it goes ahead.
+
+The design for it, so it is not re-derived: the entry anchor carries the
+`GATE_ANCHOR` name wherever it sits, and `ExpeditionSystem.gatePart` finds it
+by name rather than by path — so moving entry from the market to the Engine is
+a placement change in `HubBuilder`, not a system change. The prompt needs a key
+other than `E`, since every ProximityPrompt defaults to it and ROLL is already
+on the same dais.
+
+### Next
+
+1. Hide the hub menu while the loading screen is up.
+2. Entry on the Engine portal, if it is still wanted.
+3. Then the walk: travel landings, district tint, event sky.
+
+---
+
 ## Session 36 — 2026-09-21 — Three things the rescale left behind
 
 **Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 568 passing (was 566)

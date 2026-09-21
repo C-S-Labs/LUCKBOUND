@@ -334,7 +334,10 @@ local GameConfig = {
 			--
 			-- Asserted against the prompt reach by test rather than written
 			-- as a bare number, because the two must not drift.
-			Radius = 110,
+			-- 110 -> 105: five studs in, asked for after the fourth walk. Still
+			-- outside PromptActivationDistance (17.5) and MaxRollDistance
+			-- (35), which is what the tests pin.
+			Radius = 105,
 			Height = 6 * WORLD_SCALE,
 		},
 	},
@@ -403,8 +406,11 @@ local GameConfig = {
 		-- staircase up to it would have to land.
 		YawSlots = 4, -- peak -> idle, as the result lands
 
-		IdleBrightness = 1,
-		ActiveBrightness = 3,
+		-- Halved with the world for the same inverse-square reason as the
+		-- Engine's spotlight: a light that did not move away from a surface
+		-- that came closer is a brighter light.
+		IdleBrightness = 0.5,
+		ActiveBrightness = 1.5,
 		LightRange = 24 * WORLD_SCALE,
 
 		PlanePulseMin = 0.3,

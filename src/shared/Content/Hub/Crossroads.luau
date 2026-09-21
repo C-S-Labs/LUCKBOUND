@@ -1002,15 +1002,20 @@ local Crossroads = {
 
 		SpotLight = {
 			Color = Theme.EngineSpot,
-			-- 8 -> 3. Range and Height are distances and scale with the
-			-- world, but BRIGHTNESS does not work that way: the same light
-			-- hung half as high over a half-size dais is four times the
-			-- illuminance by inverse square, and the third walk reported the
-			-- Engine as a white blowout. Cutting it here rather than scaling
-			-- it, because the right number is a look, not a ratio.
-			Brightness = 3,
+			-- 8 -> 3 -> 1.1, across two walks. Range and Height are distances
+			-- and scale with the world, but BRIGHTNESS does not work that
+			-- way: the same light hung half as high over a half-size dais is
+			-- four times the illuminance by inverse square, so halving the
+			-- world QUADRUPLED this. 3 was still a white pool over the plaza.
+			--
+			-- There is no ratio to derive this from -- it is a look, and the
+			-- only instrument is a walk. If it is still too hot, this is the
+			-- number, and the Angle below is the other one.
+			Brightness = 1.1,
 			Range = 400 * S,
-			Angle = 80,
+			-- 80 -> 50. A wide cone washes the whole plaza; a narrow one pools
+			-- on the dais, which is the thing the light is for.
+			Angle = 50,
 			Height = 300 * S,
 		},
 

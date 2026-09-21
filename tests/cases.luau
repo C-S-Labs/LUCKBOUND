@@ -743,12 +743,19 @@ do
 	check("rune ring has 8 plates", portal.RuneCount == 8)
 	check("plinth is 14 studs across, 1.5 tall, octagonal",
 		portal.PlinthDiameter == 14 and portal.PlinthHeight == 1.5 and portal.PlinthSides == 8)
-	-- Range is a DISTANCE and scales with the world; brightness is not and
-	-- does not. Asserted as the relationship rather than as 24, so a rescale
+	-- Range is a DISTANCE and scales with the world. Brightness does not --
+	-- it moves the OTHER way, because a light that did not move away from a
+	-- surface that came closer is a brighter light (inverse square). Both
+	-- are asserted as relationships rather than as literals, so a rescale
 	-- cannot leave a light reaching twice as far as the thing it lights.
-	check("point light reaches 24 studs at full world scale, brightness 3",
-		portal.LightRange == 24 * GameConfig.HubLayout.WorldScale and portal.ActiveBrightness == 3,
-		string.format("range %.1f, brightness %.1f", portal.LightRange, portal.ActiveBrightness))
+	check("the point light reaches 24 studs at full world scale",
+		portal.LightRange == 24 * GameConfig.HubLayout.WorldScale,
+		string.format("range %.1f", portal.LightRange))
+
+	check("...and the active flare is brighter than the idle glow, but not by much",
+		portal.ActiveBrightness > portal.IdleBrightness
+			and portal.ActiveBrightness <= portal.IdleBrightness * 4,
+		string.format("idle %.2f, active %.2f", portal.IdleBrightness, portal.ActiveBrightness))
 	check("active particle rate is 40", portal.ActiveParticleRate == 40)
 	check("spin-up spikes particles to 200", portal.SpinUpParticleRate == 200)
 	check("particle lifetime is 1.5-3s",
