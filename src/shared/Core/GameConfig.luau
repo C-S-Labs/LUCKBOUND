@@ -17,6 +17,26 @@ local function deepFreeze<T>(t: T): T
 	return table.freeze(t :: any) :: T
 end
 
+-- === THE WORLD SCALE ===
+-- Owner-directed 2026-09-21, after measuring the hub against a player.
+--
+-- The authored Crossroads shipped at Prefab.Scale 2.0, and at that scale the
+-- shop counters stood 6.00 studs and the railings 6.70 against a character
+-- that is about 5 studs tall. You could not see over either. Three
+-- independent human-scale props agreed the set dressing was twice the size it
+-- should be -- the delivery was measured against the BRIEF rather than
+-- against a person, and the brief's stud assumption was off.
+--
+-- So the whole world is halved, through this one number. Every distance below
+-- that positions something on or around the authored shell is derived from it,
+-- and so are the two prefab scales in Content/Hub/Crossroads. The test suite
+-- pins the coupling from the other end: the authored mesh's own measurements,
+-- times the prefab scale, must equal the layout numbers here. Change this
+-- alone and four tests fail by name.
+--
+-- 1.0 restores the world exactly as it shipped before this change.
+local WORLD_SCALE = 0.5
+
 local GameConfig = {
 	-- Gates content by phase. Worlds with EnabledInPhase > CurrentPhase are
 	-- excluded from the roll pool without being deleted. Bump to 2 / 3 to
@@ -90,7 +110,7 @@ local GameConfig = {
 		OnboardingExpeditionSeconds = 100,
 
 		RollCooldownSeconds = 3.0, -- D-3
-		MaxRollDistance = 140, -- studs from RollAnchor; scaled with the plinth
+		MaxRollDistance = 140 * WORLD_SCALE, -- studs from RollAnchor; scaled with the plinth
 		RollHistoryCap = 50, -- D-6
 
 		-- Phase 1 pool weights, keyed by world Id. Used only while CurrentPhase
@@ -162,7 +182,7 @@ local GameConfig = {
 		-- Studs from the Expedition Gate's portal plane. Generous, because the
 		-- Gate platform is 290x240 and the prompt is the real affordance --
 		-- this check exists to stop remote-spam from spawn, not to be precise.
-		MaxEntryDistance = 260,
+		MaxEntryDistance = 260 * WORLD_SCALE,
 
 		-- Blockout geometry for a chunk whose mesh is still PLACEHOLDER.
 		FloorThickness = 8,
@@ -203,7 +223,18 @@ local GameConfig = {
 	-- Engine platform to the edge of a zone is about 140 studs, roughly 4.4s.
 	Scale = {
 		CharacterHeight = 5, -- reference only; Roblox R15 is ~5 studs
-		WalkSpeed = 32, -- doubled from Roblox's default 16
+		-- 32 -> 24. The doubling existed because the world was twice player
+		-- scale: a 1150-stud hub needed a 2x walk to stay inside the budget,
+		-- and at WORLD_SCALE that compensation comes off with it.
+		--
+		-- Not all the way to Roblox's 16, and the reason is Ethereal Scape:
+		-- the biomes are authored at PLAY scale and were always correct, so
+		-- they were sized against this number rather than against the
+		-- oversized hub. Dropping to 16 would turn a 95-second traverse into
+		-- 142 and make an authored map read as a hike. 24 keeps the hub brisk
+		-- (8.3s centre to district, well inside the 20s budget) and leaves
+		-- the biomes as they were designed.
+		WalkSpeed = 24,
 		MaxTraversalSeconds = 20, -- hard budget, asserted by test
 	},
 
@@ -220,7 +251,7 @@ local GameConfig = {
 		-- Beyond this, a part stops animating entirely. The hub is 1150 studs
 		-- across and scenery reaches 4000, so most of what is tagged is off
 		-- screen or a speck for most of the session.
-		AnimationDistance = 700,
+		AnimationDistance = 700 * WORLD_SCALE,
 		-- How often the distance check itself runs. Doing it per part per
 		-- frame would cost more than the animation it is protecting.
 		CullIntervalSeconds = 0.5,
@@ -231,36 +262,40 @@ local GameConfig = {
 	},
 
 	HubLayout = {
+		-- Read by Content/Hub/Crossroads so the authored mesh and the numbers
+		-- that position things on it can never disagree about the scale.
+		WorldScale = WORLD_SCALE,
+
 		-- 1200 was one playtest ago. The owner's verdict on walking it was
 		-- "much better, could be slightly smaller, perhaps just a tad" -- so
 		-- 50 studs came off the diameter rather than a wholesale re-tune.
-		HubDiameter = 1150, -- playable extent
-		VisualExtent = 4000, -- how far scenery reaches; not walkable
-		PlazaRingWidth = 200,
-		WalkwayWidth = 44,
+		HubDiameter = 1150 * WORLD_SCALE, -- playable extent
+		VisualExtent = 4000 * WORLD_SCALE, -- how far scenery reaches; not walkable
+		PlazaRingWidth = 200 * WORLD_SCALE,
+		WalkwayWidth = 44 * WORLD_SCALE,
 		-- 6 -> 1.5. The authored dais is only ~2 studs proud of the hub floor
 		-- (its 4.21 raw thickness at Prefab.Scale), so walkways raised 6 ran
 		-- OVER the top of it and buried the platform the Engine stands on --
 		-- reported from the second authored playtest. The deck now sits just
 		-- under the dais lip and the player steps up onto it.
-		WalkwayRaise = 1.5, -- studs above the lower plaza ring
+		WalkwayRaise = 1.5 * WORLD_SCALE, -- studs above the lower plaza ring
 
 		-- The invisible pad the Gate's ENTER prompt lives on, as a multiple of
 		-- the portal's scale, and how far above the platform it floats.
 		GateAnchorSpan = 8,
-		GateAnchorLift = 2,
-		ProcessionalWidth = 72, -- the Expedition Gate approach is wider
+		GateAnchorLift = 2 * WORLD_SCALE,
+		ProcessionalWidth = 72 * WORLD_SCALE, -- the Expedition Gate approach is wider
 		-- 400, not 420: the plaza lost 25 studs of radius and a zone platform
 		-- must not hang off the edge of the floor it stands on. Furthest
 		-- platform edge is now 400 + 160 = 560 against a 575-stud plaza.
-		ZoneRingRadius = 400, -- centre of hub → centre of a compass zone
+		ZoneRingRadius = 400 * WORLD_SCALE, -- centre of hub → centre of a compass zone
 
 		Anchors = {
 			FATE_ENGINE = Vector3.new(0, 0, 0),
-			HALL_OF_LEGENDS = Vector3.new(0, 0, -400), -- north
-			DISCOVERY_ARCHIVE = Vector3.new(400, 0, 0), -- east
-			EXPEDITION_GATE = Vector3.new(0, 0, 400), -- south
-			TRAINING_GROUNDS = Vector3.new(-400, 0, 0), -- west
+			HALL_OF_LEGENDS = Vector3.new(0, 0, -400 * WORLD_SCALE), -- north
+			DISCOVERY_ARCHIVE = Vector3.new(400 * WORLD_SCALE, 0, 0), -- east
+			EXPEDITION_GATE = Vector3.new(0, 0, 400 * WORLD_SCALE), -- south
+			TRAINING_GROUNDS = Vector3.new(-400 * WORLD_SCALE, 0, 0), -- west
 		},
 
 		-- WHERE PLAYERS ARRIVE. A RING AROUND THE ENGINE, not a single pad.
@@ -285,8 +320,22 @@ local GameConfig = {
 		-- last couple of studs.
 		SpawnRing = {
 			Count = 8,
-			Radius = 34,
-			Height = 6,
+			-- ARRIVE OUTSIDE EVERY PROMPT'S REACH. Owner-directed 2026-09-21:
+			-- a player was being offered ROLL before they had pressed PLAY,
+			-- which both spoils the loading screen and skips the moment where
+			-- a tutorial would explain what rolling IS.
+			--
+			-- 34 stood them on the dais rim, inside the Engine's prompt. This
+			-- is well outside PromptActivationDistance (35 at WorldScale) and
+			-- outside MaxRollDistance (70), so nothing is offered until they
+			-- choose to walk in -- which is the room a first-join tutorial
+			-- needs. It is still short of the districts at 200, so the Engine
+			-- is what they are looking at.
+			--
+			-- Asserted against the prompt reach by test rather than written
+			-- as a bare number, because the two must not drift.
+			Radius = 110,
+			Height = 6 * WORLD_SCALE,
 		},
 	},
 
@@ -390,8 +439,8 @@ local GameConfig = {
 		-- the authored ring's 11.25. A place with no Rojo now looks
 		-- proportionally like the real thing rather than like a different
 		-- game -- and the platform the walkways meet is the same either way.
-		FateEngineScale = 1.25,
-		ExpeditionGateScale = 8.0,
+		FateEngineScale = 1.25 * WORLD_SCALE,
+		ExpeditionGateScale = 8.0 * WORLD_SCALE,
 	},
 
 	Events = {
@@ -436,7 +485,7 @@ local GameConfig = {
 		RollBuildupSeconds = 1.2,
 		ResultCardHoldSeconds = 4.0,
 		AnnouncementDurationSeconds = 6.0,
-		PromptActivationDistance = 70, -- the plinth alone is ~126 studs across
+		PromptActivationDistance = 70 * WORLD_SCALE, -- reach scales with the world
 	},
 
 	-- === THE HUB MENU =================================================
@@ -509,7 +558,7 @@ local GameConfig = {
 		-- boundary just outside the biggest deck: you are in a district when
 		-- you are standing on it and for a few strides after, and on the open
 		-- plaza you are in none of them.
-		DistrictTintRadius = 220,
+		DistrictTintRadius = 220 * WORLD_SCALE,
 		-- Checked on a timer, never per frame. Same reasoning as
 		-- Effects.CullIntervalSeconds: a distance test that runs 60 times a
 		-- second to answer a question that changes every thirty seconds is

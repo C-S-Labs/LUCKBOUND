@@ -351,7 +351,7 @@ can also screenshot the result and iterate without you describing every tweak.
 
 ---
 
-## Hub scale vs. the player — measured 2026-09-21
+## Hub scale vs. the player — measured and APPLIED 2026-09-21
 
 **Owner's test, and it is a good one:** *if the top of the torso and the
 player's head can look over the shop counters, the map is properly sized.*
@@ -386,7 +386,37 @@ doubling. The `assets/rbxm/prefabs/README.md` scale section is measured against
 the brief and is internally consistent; it is the brief's stud assumption that
 is off.
 
-### Why it was NOT changed in the same pass
+### It was applied on 2026-09-21
+
+Owner-directed: *"shrink the ENTIRE map scale down to 1.0 instead of 2.0."*
+
+It is one number — `GameConfig.HubLayout.WorldScale = 0.5` — and everything
+that positions something on or around the authored shell derives from it,
+including both prefab scales in `Content/Hub/Crossroads`. Setting it back to
+1.0 restores the world exactly as it shipped.
+
+**The test suite did the hard part.** It already pinned the couplings from the
+mesh's own measurements (`RAW_RING × Prefab.Scale == ZoneRingRadius`, and three
+more), so halving the shell alone failed four tests by name and each one said
+which number had been left behind. Twelve failures in total, worked through
+one at a time; none of them needed a judgement call about geometry, only about
+thresholds — see below.
+
+**WalkSpeed came down 32 → 24, not to 16.** The doubling existed to make an
+oversized hub walkable. But the biomes were always authored at play scale, so
+they were sized against 32 rather than against the oversized hub: dropping to
+Roblox's 16 would turn Ethereal Scape's 95-second traverse into 142 and make
+an authored map read as a hike. 24 keeps the plaza brisk (8.3s centre to
+district, inside the 20s budget) and leaves the biomes as designed.
+
+**Four test thresholds were re-derived, not relaxed.** Each had been written as
+an absolute in a world that was twice the size it should be: "≥200 characters
+across" became 100, "≥40 characters" became 20, the mountains' "500–1000 studs
+of clear sky" became a proportion of the world, and the plaza-diameter test
+stopped asserting the literal 1150 and started asserting that the plaza equals
+whatever `HubDiameter` says. The guard each one exists to be is unchanged.
+
+### Why it was not changed in the pass before
 
 Because `Prefab.Scale` alone would break the hub. The authored districts scale
 with the shell; the things placed *around* them do not — they come from

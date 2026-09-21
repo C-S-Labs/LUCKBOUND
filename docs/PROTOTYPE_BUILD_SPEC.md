@@ -445,6 +445,7 @@ Created by `Core/Net.luau` and nowhere else.
 | `Code_Redeem` | RemoteEvent | C→S | `{Code}` | length cap + 6/min + one redemption per code |
 | `Code_Result` | RemoteEvent | S→C | `{Ok, Message, Fate, CodeId}` | — |
 | `Settings_Update` | RemoteEvent | C→S | `{Id, Value}` | `SettingsCore.validate`; unknown ids dropped silently |
+| `Player_Ready` | RemoteEvent | C→S | *(none)* | once per join; a second is ignored |
 | `Debug_Command` | RemoteEvent | C→S | `{Name, Args}` | **Studio or place creator, + `Debug.AllowCommands`** |
 | `Debug_Reply` | RemoteEvent | S→C | `{Ok, Text}` | — |
 
@@ -464,6 +465,13 @@ there: the Shop, the Fate Tree, Party and Rebirth panels ship as designed
 screens over placeholder data and own **no remote at all**. A panel gets a
 remote when it gets an implementation, not when it gets a button — otherwise
 the network contract fills up with names nothing sends.
+
+`Player_Ready` is what makes the loading screen real rather than cosmetic.
+`Players.CharacterAutoLoads` is **false**, so a joining player has no character
+until they press PLAY — they cannot be standing in the hub, prompting the Fate
+Engine, while the screen that is supposed to be hiding the hub is still up. The
+server spawns them on the first `Player_Ready` and ignores any that follow, so
+the remote cannot be used to respawn at will.
 
 Travel deserves one note. `Hub_RequestTravel` carries a **destination Id and
 nothing else**. The client never sends a position, and the server never reads

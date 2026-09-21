@@ -18,6 +18,13 @@ local GameConfig = require(script.Parent.Parent.Parent.Core.GameConfig)
 
 local Layout = GameConfig.HubLayout
 
+-- THE WORLD SCALE, from the one place that owns it. The authored meshes and
+-- the layout numbers that position things on them must agree, and the test
+-- suite checks the agreement from the mesh's own measurements -- so both
+-- sides derive from GameConfig.HubLayout.WorldScale rather than carrying two
+-- numbers that happen to match today.
+local S = Layout.WorldScale
+
 local Theme = {
 	-- Blueprint §2.3, with the brightness deviation recorded below and in
 	-- docs/BLUEPRINT_RECONCILIATION.md. Palette is unchanged; only the key
@@ -685,14 +692,14 @@ do
 			Color = Theme.Walkway,
 			Material = Theme.StoneMaterial,
 			CanCollide = true,
-			ExtendInwardTo = 20,
+			ExtendInwardTo = 20 * S,
 		}
 	end
 	ShellStyles.Processional_South_Edge = {
 		Color = Theme.Walkway,
 		Material = Theme.StoneMaterial,
 		CanCollide = true,
-		ExtendInwardTo = 20,
+		ExtendInwardTo = 20 * S,
 	}
 	ShellStyles.Processional_South_Inlay = {
 		Attributes = { PulseAlphaMin = 0.2, PulseAlphaMax = 0.5, PulseSeconds = 5.8 },
@@ -818,7 +825,11 @@ local Crossroads = {
 			-- Six agreeing measurements is what makes ONE number the right
 			-- correction. Re-exporting 225 meshes to fix an importer setting
 			-- is how a pipeline gets abandoned.
-			Scale = 2.0,
+			-- 2.0 * WorldScale. The delivery measured 2.0 against the brief
+			-- and that was internally consistent; what was wrong was the
+			-- brief's stud assumption, which made the counters 6 studs tall
+			-- for a 5-stud player. See docs/ART_DIRECTION.md.
+			Scale = 2.0 * S,
 
 			-- THE COMPASS WAS 180 DEGREES OUT, and that is the export's axis
 			-- convention rather than anybody's mistake. The brief put north at
@@ -843,7 +854,7 @@ local Crossroads = {
 			-- (23.000 x 1.000 x 23.000, bottom flush with the floor), so the
 			-- registration point is half a source unit below its centre.
 			AnchorPart = "EngineReserve",
-			AnchorOffset = Vector3.new(0, -0.5, 0),
+			AnchorOffset = Vector3.new(0, -0.5 * S, 0),
 		},
 		Styles = ShellStyles,
 
@@ -854,7 +865,7 @@ local Crossroads = {
 		-- It is here because behaviour has to sit on top of art: the ENTER
 		-- prompt and the district labels are placed from it, and the blockout
 		-- district heights no longer describe the floor anyone stands on.
-		DeckHeight = 14,
+		DeckHeight = 14 * S,
 
 		-- Where a district's name floats, above its deck.
 		SignLift = 46,
@@ -912,7 +923,7 @@ local Crossroads = {
 			-- studs beyond the plaza edge -- inside the 500-1000 the owner
 			-- asked for -- and its far face stays inside FogEnd (4400) so the
 			-- range fades rather than ending in a hard line.
-			Radius = 2400,
+			Radius = 2400 * S,
 
 			-- 14 chunks of 2048 across a 15080-stud circumference is ~1.9x
 			-- coverage. They are MEANT to overlap: a single chunk is itself a
@@ -920,14 +931,16 @@ local Crossroads = {
 			-- repeated mesh into a continuous range instead of a ring of
 			-- identical lumps.
 			Count = 14,
-			Scale = 1.0,
+			-- Scales with the world: a full-size massif standing in a
+			-- half-size ring would march across the plaza.
+			Scale = 1.0 * S,
 
 			-- The hub's own ground plane, which every chunk stands on. Equal
 			-- to -(34.7237511 + Shell.Prefab.AnchorOffset.Y) * Shell scale --
 			-- the shell's source Y 0 in world studs. A test asserts the two
 			-- agree, because a horizon floating above its own ground is the
 			-- first thing anyone would notice.
-			BaseY = -68.4475,
+			BaseY = -68.4475 * S,
 
 			-- Deterministic, like FloatingIslands: one skyline per server,
 			-- never a different one per boot. Jitter is what stops 14 copies
@@ -957,7 +970,7 @@ local Crossroads = {
 		-- width at Prefab.Scale (101.0 * 0.464 / 2). The dais IS this radius,
 		-- so the two cannot drift -- walkways are cut to meet this number and
 		-- would otherwise stop short in mid-air. Asserted by test.
-		PlatformRadius = 23,
+		PlatformRadius = 23 * S,
 		-- 10 -> 2, to match the authored dais (4.21 raw at Prefab.Scale). The
 		-- blockout stands in for the real thing, so a player stepping onto it
 		-- has to step the same distance in either build.
@@ -1025,7 +1038,7 @@ local Crossroads = {
 			-- Everything else in this file that describes the dais is derived
 			-- from this number rather than set beside it, so one edit re-tunes
 			-- the Engine and a test catches it if they disagree.
-			Scale = 0.464,
+			Scale = 0.464 * S,
 
 			-- WALK ON, DO NOT STEP UP -- AND FROM ANY DIRECTION.
 			--
@@ -1043,7 +1056,7 @@ local Crossroads = {
 			-- The walkways still run 1.5 studs above it and overlap its rim
 			-- by 3.4, so arriving along a path is a step DOWN onto the dais.
 			-- That is free in Roblox; stepping UP is the thing that catches.
-			Offset = Vector3.new(0, -1.934, 0),
+			Offset = Vector3.new(0, -1.934 * S, 0),
 		},
 
 		-- PAINT, BY PART NAME. Authored meshes import untextured and grey,
@@ -1208,16 +1221,18 @@ local Crossroads = {
 				-- rather than a disc jammed in a hole.
 				SizeScale = 0.82,
 				Attributes = {
-					-- THE APERTURE TURNS AGAINST THE FRAME. Owner-directed
-					-- 2026-09-21. The outer ring runs +0.22 and the inner one
-					-- -0.31; the veil between them had no spin at all, so the
-					-- middle of the machine was the one part standing still.
+					-- TWO RINGS, NOT THREE. Owner-directed 2026-09-21: the
+					-- inner ring so nearly encases the portal that the two
+					-- read as one object, so they are treated as one --
+					-- ring 1 is the outer frame, ring 2 is the inner ring and
+					-- the aperture it holds, turning together against it.
 					--
-					-- Negative, so it opposes the OUTER ring the eye reads
-					-- first, and slower than the inner ring so the three
-					-- layers stay distinguishable rather than blurring into
-					-- one direction.
-					SpinSpeed = -0.14,
+					-- EXACTLY InnerRing's speed, not merely a similar one. A
+					-- near-match is worse than either extreme: two nested
+					-- discs at -0.31 and -0.14 slowly slide against each
+					-- other, which reads as one of them slipping rather than
+					-- as a mechanism. Identical is what makes them one ring.
+					SpinSpeed = -0.31,
 					-- NO PulseScale. The veil is 15.22 studs across inside a
 					-- 15.92 ring: 0.35 studs of clearance a side. A 6% breath
 					-- grew it to 16.13 and it pulsed straight through its own
@@ -1311,15 +1326,15 @@ local Crossroads = {
 			Angle = 0,
 			Radius = Layout.ZoneRingRadius,
 			Kind = "AMPHITHEATRE",
-			PlatformSize = Vector3.new(320, 14, 250),
-			Height = 8,
+			PlatformSize = Vector3.new(320 * S, 14 * S, 250 * S),
+			Height = 8 * S,
 			Color = Theme.Marble,
 			Accent = Theme.MarbleTrim,
 			Pillars = 0,
 			PillarHeight = 0,
 			-- Blueprint §2.2: 5 initial obelisk slots, TUNABLE, grows over time.
 			ObeliskSlots = 5,
-			ObeliskHeight = 56,
+			ObeliskHeight = 56 * S,
 			TierCount = 5,
 			SpotColor = Color3.fromRGB(226, 236, 255), -- cool white, museum-lit
 			MeshId = nil,
@@ -1330,13 +1345,13 @@ local Crossroads = {
 			Angle = 90,
 			Radius = Layout.ZoneRingRadius,
 			Kind = "ROTUNDA",
-			PlatformSize = Vector3.new(210, 14, 210),
-			Height = 8,
+			PlatformSize = Vector3.new(210 * S, 14 * S, 210 * S),
+			Height = 8 * S,
 			Color = Color3.fromRGB(27, 75, 74), -- #1B4B4A deep teal
 			Accent = Color3.fromRGB(124, 245, 224), -- #7CF5E0 cosmic trim
 			Pillars = 8,
-			PillarHeight = 95,
-			InteriorDiameter = 155,
+			PillarHeight = 95 * S,
+			InteriorDiameter = 155 * S,
 			DomeSegments = 7,
 			ShelfRings = 4,
 			ShelvesPerRing = 10,
@@ -1348,12 +1363,12 @@ local Crossroads = {
 			Angle = 180,
 			Radius = Layout.ZoneRingRadius,
 			Kind = "GATE",
-			PlatformSize = Vector3.new(290, 14, 240),
+			PlatformSize = Vector3.new(290 * S, 14 * S, 240 * S),
 			Height = 0,
 			Color = Color3.fromRGB(48, 43, 64),
 			Accent = Color3.fromRGB(158, 158, 158),
 			Pillars = 6, -- torch pillars flanking the processional
-			PillarHeight = 110,
+			PillarHeight = 110 * S,
 			PortalScale = GameConfig.Portal.ExpeditionGateScale,
 			MeshId = nil,
 		},
@@ -1363,13 +1378,13 @@ local Crossroads = {
 			Angle = 270,
 			Radius = Layout.ZoneRingRadius,
 			Kind = "YARD",
-			PlatformSize = Vector3.new(235, 14, 235), -- blueprint §2.2: 30x30
-			Height = 8,
+			PlatformSize = Vector3.new(235 * S, 14 * S, 235 * S), -- blueprint §2.2: 30x30
+			Height = 8 * S,
 			Color = Color3.fromRGB(107, 104, 98), -- #6B6862 neutral stone grey
 			Accent = Theme.TorchLight,
 			Pillars = 0,
 			PillarHeight = 0,
-			FenceHeight = 14,
+			FenceHeight = 14 * S,
 			DummyCount = 3,
 			HasBossDummy = true,
 			TorchCount = 8,
@@ -1383,12 +1398,12 @@ local Crossroads = {
 	-- thousand studs across while every walk stays short.
 	FloatingIslands = {
 		Count = 40,
-		MinRadius = 900,
-		MaxRadius = 4000,
-		MinHeight = -700,
-		MaxHeight = 900,
-		MinSize = 90,
-		MaxSize = 420,
+		MinRadius = 900 * S,
+		MaxRadius = 4000 * S,
+		MinHeight = -700 * S,
+		MaxHeight = 900 * S,
+		MinSize = 90 * S,
+		MaxSize = 420 * S,
 		Seed = 20260915,
 		Color = Color3.fromRGB(42, 37, 58),
 		MeshId = nil,
@@ -1397,14 +1412,14 @@ local Crossroads = {
 	Bridges = {
 		Width = Layout.WalkwayWidth,
 		ProcessionalWidth = Layout.ProcessionalWidth,
-		Thickness = 8,
+		Thickness = 8 * S,
 		Raise = Layout.WalkwayRaise,
 		-- Walkways run a little INTO the surfaces they join at both ends.
 		-- Butting them edge to edge leaves a hairline seam that a character
 		-- can catch on, and any float error turns it into a hole.
 		-- 10 -> 3. A 10-stud bite into a 23-radius dais swallowed most of its
 		-- visible edge. Enough to hide the seam, not enough to hide the dais.
-		Overlap = 3,
+		Overlap = 3 * S,
 		Color = Theme.Walkway,
 		Material = Theme.StoneMaterial,
 	},

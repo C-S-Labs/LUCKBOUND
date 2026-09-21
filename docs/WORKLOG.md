@@ -33,6 +33,101 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 35 — 2026-09-21 — The world halves, the rings become two, and nobody spawns early
+
+**Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 566 passing (was 563)
+
+### 1. The whole world is half the size it was
+
+Owner-directed after the measurement in Session 34: *"shrink the ENTIRE map
+scale down to 1.0 instead of 2.0."*
+
+Done through **one number** — `GameConfig.HubLayout.WorldScale = 0.5` — which
+every distance that positions something on or around the authored shell now
+derives from, including both prefab scales in content. Setting it back to 1.0
+restores the world exactly.
+
+**The test suite did the hard part**, and this is the clearest return the
+project has had on writing tests as relationships rather than literals. The
+couplings were already pinned from the mesh's own measurements
+(`RAW_RING × Prefab.Scale == ZoneRingRadius`, and three more), so halving the
+shell alone produced **twelve failures, each naming the number left behind**:
+the blockout districts, the bridge overlap, the deck height, the kerb
+extensions, the backdrop's own scale and base height, the island field. Not one
+of them needed a judgement about geometry.
+
+**WalkSpeed 32 → 24, and not to 16.** The doubling existed to make an oversized
+hub walkable — but the *biomes* were always authored at play scale, so they
+were sized against 32 rather than against the oversized hub. Dropping to
+Roblox's 16 would turn Ethereal Scape's 95-second traverse into 142 and make an
+authored map read as a hike. 24 keeps the plaza brisk (8.3s centre to district,
+inside the 20s budget) and leaves the biomes as designed.
+
+**Four thresholds were re-derived rather than relaxed**, and the distinction
+matters: each had been written as an absolute in a world that was twice the
+size it should have been. "≥200 characters across" was really asking for 100
+characters of honest space; "≥40 characters" for 20; the mountains' "500–1000
+studs of clear sky" was a proportion of the world all along. The fourth stopped
+asserting the literal 1150 entirely and now asserts that the plaza equals
+whatever `HubDiameter` says — which is the assertion it should always have
+been.
+
+### 2. Two rings, not three
+
+The inner ring so nearly encases the portal that they read as one object, so
+they are now one: ring 1 is the outer frame, ring 2 is the inner ring **and**
+the aperture, turning together against it.
+
+`PortalPlane` takes `InnerRing`'s speed **exactly** (−0.31), not a similar one.
+A near-match is worse than either extreme: two nested discs at −0.31 and −0.14
+slide against each other, which reads as one of them slipping rather than as a
+mechanism. A test pins the equality.
+
+### 3. Nobody spawns until they press PLAY
+
+A player was being offered the Fate Engine's ROLL prompt *before pressing
+anything* — which spoils the loading screen and skips the moment a tutorial
+would use.
+
+`Players.CharacterAutoLoads` is now **false**. The client fires `Player_Ready`
+when PLAY is pressed (declared in build spec §4 in the same change) and the
+server spawns them then; a second is ignored, so it cannot be used as a free
+respawn.
+
+And the spawn ring moved from 34 to **110** — outside `PromptActivationDistance`
+(35) and outside `MaxRollDistance` (70), but well inside the districts at 200,
+so the Engine is still what you are looking at. **The gap between the spawn and
+the prompt is where a first-join tutorial lives**, and three tests now stop the
+two drifting back together.
+
+### 4. The staircase clipping is not ours to fix in code
+
+Reported from the walk. Worth recording precisely, because the instinct is to
+reach for `Bridges.Overlap`:
+
+> **With an authored shell present, `HubBuilder` generates no walkways at
+> all.** `if shell then ... else buildWalkway() end`. The stairs, the walkways
+> and the districts are all mesh.
+
+So `Overlap`, `WalkwayWidth` and `ExtendInwardTo` only apply to the blockout
+path, which does not run. The junction is a Studio edit plus a re-export — and
+the re-export must re-bake `CollisionFidelity`, or the 30 precise parts drop to
+`Default` and seal their own openings.
+
+### Stopped at
+
+Pushed, all green, **none of it rendered**. The half-size hub is the biggest
+unverified change the project has made in one pass.
+
+### Next
+
+1. **Walk the half-size hub**: the plaza, the district walk at WalkSpeed 24,
+   and whether the counters now read correctly against the player.
+2. The staircase junction in Studio, then a re-export with the collision bake.
+3. The rest of the walk — travel landings, district tint, event sky.
+
+---
+
 ## Session 34 — 2026-09-21 — The third walk: a camera saved too early, and lamps that drift
 
 **Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 563 passing (was 559)
