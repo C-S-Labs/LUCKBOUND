@@ -470,6 +470,24 @@ local GameConfig = {
 		AnnouncementBufferSize = 8,
 		AnnouncementBufferMaxAgeSeconds = 300,
 		FatebreakDurationSeconds = 300, -- STARFALL, Master Spec §12
+
+		-- === THE SKY LAYER ===
+		-- How far an event's weather reaches. It used to emit from a
+		-- one-stud part over the Fate Engine, so the motes fell on the dais
+		-- and nowhere else -- the fifth walk reported the effect as being
+		-- "only over the Fate Engine".
+		--
+		-- A ParticleEmitter emits across its part, so the part has to be the
+		-- size of the thing being weathered: the whole plaza, with a margin
+		-- so the edges are not obviously a square.
+		SkySpanFactor = 1.35, -- multiple of HubLayout.HubDiameter
+		SkyHeight = 260, -- studs above the plaza, before WORLD_SCALE
+		-- Rate in content is written per-event as a feel ("a Starfall is
+		-- heavier than a Veil"). Spreading the same rate over the whole plaza
+		-- instead of one dais would make every event a drizzle, so the area
+		-- carries its own multiplier and the content numbers keep meaning
+		-- what they meant.
+		SkyRateScale = 8,
 		CrossServerTopic = "LUCKBOUND_Fatebreak_v1",
 	},
 

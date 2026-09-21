@@ -17,6 +17,7 @@ local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local UITheme = require(Root.Core.UITheme)
 
 local ExpeditionController = require(script.Parent.Parent.Controllers.ExpeditionController)
+local EventController = require(script.Parent.Parent.Controllers.EventController)
 
 local ExpeditionHud = {}
 
@@ -44,6 +45,14 @@ local function build()
 	banner.Name = "Banner"
 	banner.AnchorPoint = Vector2.new(0.5, 0)
 	banner.Position = UDim2.new(0.5, 0, 0, 18)
+	-- THREE THINGS WANT THE TOP OF THE SCREEN: this banner, the live-event
+	-- bar and a roll announcement. The event bar took the very top when it
+	-- moved off the middle of the screen, so this steps down out of its way
+	-- while one is running rather than sitting on top of it.
+	EventController.onChanged(function(events)
+		local shift = if #events > 0 then 60 else 0
+		banner.Position = UDim2.new(0.5, 0, 0, 18 + shift)
+	end)
 	-- Scale-width with an offset cap, so it reads on a phone without becoming
 	-- a stripe across a desktop monitor.
 	banner.Size = UDim2.new(0.5, 0, 0, 62)

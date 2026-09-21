@@ -158,7 +158,7 @@ exists.**
 
 ### Test suite
 
-**572 tests, all passing.** Headless — no Roblox required. 136 of them arrived
+**574 tests, all passing.** Headless — no Roblox required. 136 of them arrived
 with the player UI and the live palette: the menu reducer, travel authorisation, code redemption,
 settings validation, the stamina curve and the coyote window.
 
@@ -379,6 +379,14 @@ survive a rescale and a literal does not.
 ---
 
 ## 5. Next session — pick up here
+
+> **There is a plan now.** `docs/DEVELOPMENT_PLAN.md` lays out the path to a
+> real playtest in five phases with exit gates, and says what is deliberately
+> being left alone until then. The headline: **the first playtest does not wait
+> for combat** — expeditions get a non-combat objective so the loop closes, and
+> the biggest single risk to a playtest is that 25% of rolls still land on a
+> world with no map. The list below is the pre-plan list and is superseded by
+> Phase 0 of that document.
 
 **The core loop is proven.** Roll → Gate → generated map → return → Fate,
 walked end to end in Studio on 2026-09-16. What is left is art, content and

@@ -33,6 +33,72 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 39 — 2026-09-21 — Weather that covers the plaza, and a plan
+
+**Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 574 passing (was 572)
+
+### The event bar moved to the top
+
+It sat at y=280 — the middle of the screen, across the player's view of the one
+event they were trying to look at. A status bar belongs at an edge.
+
+Three things want the top of the screen now: the event bar, a roll
+announcement and the expedition banner. The event bar takes the very top (it is
+world state and persists), announcements slide in below it, and the expedition
+banner steps down 60px while an event is running rather than landing on top of
+it — driven off `EventController`, which both already had access to.
+
+### The weather covers the plaza now
+
+The mote emitter was a **one-stud part** over the Fate Engine. A
+ParticleEmitter emits across its part, so a one-stud part makes a column and a
+plaza-sized one makes weather — which is why the effect only ever appeared over
+the dais.
+
+The emitter is now `HubDiameter × SkySpanFactor` across. Two supporting
+changes: particle lifetime went 6–11s to 10–18s, because they now have to fall
+the whole way from `SkyHeight` rather than a short hop, and the content rate is
+multiplied by `SkyRateScale` — content states a rate as a *feel* ("a Starfall
+is heavier than a Veil") and spreading the same rate over a whole plaza would
+have made every event a drizzle.
+
+### `docs/DEVELOPMENT_PLAN.md`
+
+Owner-requested, and overdue: development has been reactive — walk, find three
+things, fix three things — which was right while the shape was being found and
+is wrong now.
+
+**The recommendation it turns on: the first playtest should not wait for
+combat.** Combat is the largest unbuilt system in the project and none of it is
+needed to answer what a first playtest is for — *does the roll loop hold a
+stranger for an hour, and do they come back*. The owner has already answered
+half of that alone ("these rolls alone were fun"); what is unknown is whether
+it survives people who did not build it.
+
+So the playtest build closes the loop **without** combat: an expedition becomes
+find the things worth finding and get out before the timer. Every part of that
+is content on systems that already exist.
+
+Five phases, each with a checkable exit gate: clear the deck → every roll
+leads somewhere → something to do in a world → make it feel like a game → run
+the test. Plus a list of what is deliberately NOT being built yet and why, and
+six working rules aimed squarely at the back-and-forth.
+
+**The number that matters most in it:** 25% of honest rolls still land on a
+world with no map. A tester who rolls a *Rare* and is told the world does not
+exist has been punished for a good roll.
+
+### Stopped at
+
+Pushed. `CLAUDE.md` now points at the plan, and STATUS §5 defers to it.
+
+### Next
+
+Phase 0 of the plan: walk everything unwalked, fix the staircase in Studio,
+publish the place and prove saves, the ledger and the two-instance race.
+
+---
+
 ## Session 38 — 2026-09-21 — A command that was never a command
 
 **Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 572 passing (was 569)

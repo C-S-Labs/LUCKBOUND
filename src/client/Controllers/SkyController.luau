@@ -86,6 +86,13 @@ local function buildEffects(sky: any)
 	folder.Name = "LuckboundEventSky"
 	folder.Parent = Workspace
 
+	-- THE EMITTER IS THE SIZE OF THE WEATHER. A ParticleEmitter emits across
+	-- its part, so a one-stud part makes a column and a plaza-sized one makes
+	-- weather. It was a column, which is why the effect only ever appeared
+	-- over the Fate Engine.
+	local span = GameConfig.HubLayout.HubDiameter * GameConfig.Events.SkySpanFactor
+	local height = GameConfig.Events.SkyHeight * GameConfig.HubLayout.WorldScale
+
 	local anchor = Instance.new("Part")
 	anchor.Name = "SkyAnchor"
 	anchor.Anchored = true
@@ -93,17 +100,20 @@ local function buildEffects(sky: any)
 	anchor.CanQuery = false
 	anchor.CanTouch = false
 	anchor.Transparency = 1
-	anchor.Size = Vector3.new(1, 1, 1)
-	-- High over the plaza, wide enough that the motes read as weather rather
-	-- than as something following the player around.
-	anchor.Position = GameConfig.HubLayout.Anchors.FATE_ENGINE + Vector3.new(0, 260, 0)
+	anchor.Size = Vector3.new(span, 1, span)
+	anchor.Position = GameConfig.HubLayout.Anchors.FATE_ENGINE + Vector3.new(0, height, 0)
 	anchor.Parent = folder
 
 	local emitter = Instance.new("ParticleEmitter")
 	emitter.Texture = "rbxasset://textures/particles/sparkles_main.dds"
 	emitter.Color = ColorSequence.new(sky.ParticleColor)
-	emitter.Lifetime = NumberRange.new(6, 11)
-	emitter.Rate = sky.ParticleRate or 20
+	-- Long enough to fall the whole way from SkyHeight, or the weather stops
+	-- in mid-air above head height.
+	emitter.Lifetime = NumberRange.new(10, 18)
+	-- Content states a rate as a FEEL -- a Starfall is heavier than a Veil --
+	-- and the area multiplier keeps that meaning now that the same rate has a
+	-- whole plaza to cover instead of one dais.
+	emitter.Rate = (sky.ParticleRate or 20) * GameConfig.Events.SkyRateScale
 	emitter.Speed = NumberRange.new(4, 12)
 	emitter.SpreadAngle = Vector2.new(180, 180)
 	emitter.Size = NumberSequence.new(3)
