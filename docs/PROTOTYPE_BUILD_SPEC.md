@@ -805,3 +805,105 @@ courtesy.
   hub server loses the party (the reunite record covers only the trip home).
 - **Nothing here has run on a live server yet.** `TESTING.md` Test P.
 
+## 7.3 Amendment: the scenario layer, opened 2026-09-22
+
+**Owner-directed**, from the *Procedural Biome Design Brief*. Recorded here
+rather than made quietly, per CLAUDE.md rule 8 — the same way §7.1 was.
+
+### The idea
+
+> A chunk is physical space. A **scenario** is the gameplay placed inside it.
+> The same Ridge Overlook can be an ambush on one run, a shrine on another and
+> a treasure room on a third.
+
+Twelve pieces of geometry stop being twelve experiences. The player learns the
+place and stays uncertain about what is in it — *"I know this place. I don't
+know what is going to happen here."*
+
+### The generation pipeline
+
+```
+RUN SEED
+  → CHUNK SELECTION        ChunkCore       where pieces go
+  → CONNECTION VALIDATION  ChunkCore       sockets, Kinds, collision
+  → SCENARIO SELECTION     ScenarioCore    what happens in each room   ← §7.2
+  → ENCOUNTER CONFIG       not built       what actually spawns
+  → REWARD CONFIG          not built       what it drops
+  → FATE EVENTS            partial         Fate may override the scenario
+```
+
+Each stage reads the one before and none reaches backwards. `ChunkCore` knows
+nothing about scenarios; `ScenarioCore` knows nothing about geometry. **The
+seam between them is a list of plain numbers and ids**, which is why both are
+testable headlessly — the same argument §7.1 made for the layout half.
+
+### What is opened, and what is NOT
+
+| | |
+|---|---|
+| ✅ A scenario **library** as content (`Content/Scenarios`) | data, no behaviour |
+| ✅ Chunk **compatibility metadata** (`Supports`) | data, no behaviour |
+| ✅ Seeded scenario **selection** with pacing and anti-repetition | decides a label per room |
+| ✅ **Fate intervention** overriding ordinary weighting | the brief's §6, and Luckbound's identity |
+| ❌ **Encounter configuration** — spawning anything | needs combat, §7 |
+| ❌ **Reward configuration** — loot, drops | needs the item system, §7 |
+| ❌ Enemies, bosses, the Discovery Book | **still excluded** |
+
+**The line is: this layer decides and records; it does not spawn.** A plan says
+"room 3 is an Ambush". Nothing reads that yet. When combat exists, the thing
+that reads it is new code against a stable data shape — which is the entire
+reason to build the seam before the system that needs it.
+
+That distinction is what keeps this inside §7 rather than widening it. If a
+task seems to need the ❌ rows, the task is still wrong.
+
+### Why now rather than with combat
+
+The alternative was to build scenarios *into* the encounter system later. That
+fails the prime directive twice: the chunk kit would have to be re-authored to
+carry compatibility it was never asked for, and every new scenario would mean
+touching a System. Declaring `Supports` while the kit is being authored costs
+one table per piece; retrofitting it costs a re-delivery.
+
+### The shape of a plan
+
+```lua
+{ WorldId = "VERDANT_VALLEY", Seed = 8123,
+  Steps = {
+    { Index = 0, ChunkId = "VV_ENTRY",       Role = "ENTRY",  ScenarioId = nil },
+    { Index = 1, ChunkId = "VV_MEADOW_A",    Role = "COMBAT", ScenarioId = "NORMAL_COMBAT", Band = "ORDINARY" },
+    { Index = 2, ChunkId = "VV_RUINS",       Role = "COMBAT", ScenarioId = "PUZZLE",        Band = "UNCOMMON" },
+    { Index = 3, ChunkId = "VV_WATERFALL",   Role = "COMBAT", ScenarioId = "SECRET",        Band = "RARE", FateTouched = true },
+    { Index = 4, ChunkId = "VV_BOSS_CLEARING", Role = "BOSS", ScenarioId = nil },
+  } }
+```
+
+**ENTRY and BOSS are deliberately left without a scenario.** Arrival should be
+calm enough to get your bearings, and the arena is already the largest thing in
+the run. Giving either one would be the generator competing with pacing the
+layout already has.
+
+### The rules, and where they live
+
+Every pacing dial is in `GameConfig.Expedition` — `FateInterventionChance`,
+`ScenarioRecentMemory`, `ScenarioEscalateFrom` — because each is a number a
+designer will want to turn, and rule 4 says those never live in a System.
+
+Two rules are **hard**, not weighted, and the difference is load-bearing:
+
+1. **A scenario never repeats back to back.** This was a weight once, and the
+   fallback path quietly reinstated the repeat it had just excluded — 10
+   back-to-back pairs in 300 runs. Anything that must always hold belongs in
+   the candidate pool, not the weights.
+2. **Compatibility is absolute.** A chunk hosts only what its `Supports`
+   declares. Not every chunk supports everything, deliberately: a traversal
+   challenge in a flat meadow is not a challenge.
+
+### Measured
+
+11 pieces × their supported scenarios → **50 distinct chunk/scenario rooms**,
+against 174 distinct layouts from 200 seeds. Bands land at roughly 51% ordinary,
+37% uncommon, 11% rare, with Fate touching ~4% of rooms.
+
+---
+

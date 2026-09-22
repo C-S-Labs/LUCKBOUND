@@ -28,13 +28,20 @@ Six sections. A world is ready to be built when all six are filled in.
 1. **Identity** — rarity, roll weight, one paragraph on what the place is.
 2. **Palette and light** — the colours and lighting values, and where they live
    in content.
-3. **The kinds of place** — the list of piece types the world is made of, and
-   what each is for. This is the part that decides variety.
+3. **The kinds of place** — the list of piece types the world is made of, what
+   each is for, and **what each can support** (the scenario compatibility that
+   decides what can happen there). Together these are what decide variety: the
+   pieces × what they can host, not the piece count alone.
 4. **How pieces connect** — the world's connection types, which pieces offer
    which, and what that makes happen. Decided **before** modelling.
 5. **Inhabitants** — enemies per piece type, the boss, and where each appears.
 6. **Piece size and count** — how big a piece is in this world, and how many
    the kit wants.
+
+A world is *varied* when §3 and §4 multiply well. Build spec §7.2 has the
+generation pipeline; the short version is that a chunk declares what it can
+support and the generator decides per run what actually happens there, so 11
+pieces can be 50 distinct rooms.
 
 None of that is construction detail. It is the design the construction serves.
 

@@ -227,6 +227,28 @@ what addendum §A4 asks for with per-expedition seeding.
 
 ---
 
+## The layer above: what happens in a room
+
+**This document is about where pieces go. It is deliberately not about what
+happens in them** — that is the scenario layer, `PROTOTYPE_BUILD_SPEC.md` §7.2,
+and the separation is the point:
+
+```
+RUN SEED → CHUNK SELECTION → CONNECTION VALIDATION → SCENARIO SELECTION → …
+              ChunkCore            ChunkCore              ScenarioCore
+```
+
+`ChunkCore` knows nothing about scenarios and `ScenarioCore` knows nothing
+about geometry. A chunk declares `Supports` — what it *can* host — and the
+generator intersects that with `Content/Scenarios`. So the same Ridge Overlook
+is an ambush on one seed and a shrine on the next, and **11 pieces produced 50
+distinct chunk/scenario rooms** in the measurement below.
+
+That is why the piece count in a kit matters less than it looks: model count is
+not content count.
+
+---
+
 ## The geometry contract
 
 The layout rules above are about *data*. The rules below are about the *art*,
@@ -343,6 +365,8 @@ openings. Everything else was over-specification, and
 ## What is deliberately not built yet
 
 - **Enemy population** — `EnemyTags` are declared but unconsumed
+- **Encounter and reward configuration** — a scenario plan says a room is an
+  Ambush; nothing spawns it. Build spec §7.2 draws that line deliberately
 - **Pathfinding validation** (addendum §A4 step 4) — a spawn→boss reachability
   pass before letting players in. Collision rejection is not the same thing:
   two pieces can be non-overlapping and still not walkable between.

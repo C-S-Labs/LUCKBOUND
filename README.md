@@ -28,7 +28,7 @@ Next up: Phase 2 — expedition entry, combat, loot, Discovery Book.
 | [`docs/ART_DIRECTION.md`](docs/ART_DIRECTION.md) | How to describe the look so it becomes code |
 | [`docs/TOOLCHAIN_ACCESS.md`](docs/TOOLCHAIN_ACCESS.md) | Rojo, Rokit, Studio MCP, Blender, assets |
 | [`docs/ADDENDUM_ASSET_PIPELINE.md`](docs/ADDENDUM_ASSET_PIPELINE.md) | Future asset/procgen architecture — **out of scope for now** |
-| [`docs/LUCKBOUND_Master_Spec_v0.2.pdf`](docs/LUCKBOUND_Master_Spec_v0.2.pdf) | Master design spec, revised against the working prototype |
+| [`docs/MASTER_DESIGN.md`](docs/MASTER_DESIGN.md) | **The design source of truth** — what the game is, and what is built vs planned |
 | `LUCKBOUND_..._v0.1 (1).pdf` | The original vision. **Authoritative on intent** — kept unchanged |
 | [`CLAUDE.md`](CLAUDE.md) | Rules every AI agent on this project must follow |
 

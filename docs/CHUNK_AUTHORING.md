@@ -82,6 +82,25 @@ all; nothing reads them.
 
 ---
 
+## What a piece can support
+
+Beyond the five conventions, tell us **what kinds of thing could happen in this
+piece** — is there arena space for a mini-boss, real verticality for a
+traversal challenge, an enclosed corner for a puzzle, somewhere a secret could
+hide, a point of no return for an ambush?
+
+You are not designing those encounters. You are saying what the geometry can
+carry, and we record it as the piece's compatibility list. The generator picks
+what actually happens in a room per run, so **the same piece is a different
+room on different runs** — which is where most of the game's variety comes
+from, and why a piece that can carry several things is worth more than a piece
+that can carry one.
+
+A sentence per piece is enough: *"open, with high ground at one end — good for
+a fight or an ambush, no cover for a puzzle."*
+
+---
+
 ## Export settings
 
 | Setting | Value |

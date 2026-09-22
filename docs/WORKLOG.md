@@ -33,6 +33,141 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 46 — 2026-09-22 — The kit is in, and rooms stopped being places
+
+**Branch:** `claude/nifty-babbage-elpxrv` · **Tests:** 589 passing (was 574)
+
+Three things landed: the delivered kit is wired in and generating, the two
+long-standing loader/assembler gaps are closed, and the *Procedural Biome
+Design Brief* became build spec §7.2.
+
+### The kit arrived as .rbxmx, which was better than what I asked for
+
+11 models, each a `Model` wrapping **one MeshPart already carrying a real
+`rbxassetid`** — so the meshes were uploaded on the modeller's side and the
+asset ids were the entire integration. No upload step, no FBX round trip.
+
+**Every number in the content file was read off the delivered geometry**, not
+typed: footprints and heights from the MeshPart sizes, openings and skirt
+depths from the source FBX vertex data. That is the "art leads, data follows"
+rule actually being followed rather than asserted.
+
+Result: **200/200 seeds assemble, 174 distinct layouts.**
+
+### The Grove did not make it, and that turned out to be the fix
+
+14,448 triangles against Roblox's 10,000 cap for one MeshPart. It was the
+**only `WIDE` provider**, so on its own its absence would have made every
+assembly fail — the arena would have been unreachable on every seed.
+
+`WIDE` moved to Ruins, Waterfall and Ridge Overlook. Not a workaround: it is
+the fix Session 44 already recorded as owed. *A Kind offered by exactly one
+piece is a gate AND the same map every seed.* The approach now splits roughly
+35/35/30 instead of being identical every run.
+
+### Two gaps closed, one of which explained itself
+
+**`GroundOffsetY`.** A layout's Y is the walking surface; setting `mesh.Size`
+and `CFrame` puts the bounding-box *centre* there. Every delivered piece would
+have sat ~20 studs into the floor. The field is the studs from the bottom of
+the box up to the walk plane, and absent it defaults to `SizeY/2` — the old
+behaviour exactly, so nothing else moved.
+
+**`IncludeSide`**, declared and unread since 2026-09-16. Implemented by
+tracking which sockets each placement spends, then hanging a pocket off one
+the critical path did not. Best-effort on purpose: a pocket that will not fit
+is a pocket this seed does not get, never a failed expedition.
+
+Implementing it immediately explained why it had never mattered: **every
+delivered piece has exactly two openings, and the critical path spends both.**
+No seed ever leaves a spare socket. A side pocket needs a three-opening piece
+and this kit has none — so Fern Hollow became `COMBAT`, and
+`Schema.validateChunks` now **refuses** a kit that declares `SIDE` without a
+3-socket piece. A declared pocket that can never attach is a content bug, not
+a quiet no-op, and it had been quietly no-op for six days.
+
+### The scenario layer — build spec §7.2
+
+The brief's core idea, and it earns its place: **a chunk is physical space, a
+scenario is what happens inside it.**
+
+- `Content/Scenarios` — the library, 10 scenarios in three pacing bands
+- `Supports` on each chunk — what it *can* host, deliberately not universal
+- `Util/ScenarioCore` — pure, seeded assignment, the same shape as `ChunkCore`
+
+**Measured: 50 distinct chunk/scenario rooms from 11 pieces.** Bands land at
+51/37/11% ordinary/uncommon/rare with Fate touching ~4% of rooms.
+
+**It spawns nothing, and that is the line §7.2 draws.** A plan records "room 3
+is an Ambush"; nothing reads it. Encounter and reward configuration need combat
+and items, which §7 still excludes. Written as an amendment rather than done
+quietly, the same way §7.1 opened expedition entry.
+
+Building the seam now rather than with combat is the cheaper order: declaring
+`Supports` while the kit is being authored costs one table per piece;
+retrofitting it costs a re-delivery.
+
+### One rule that had to move from a weight to a constraint
+
+"Never the same scenario twice running" was a weight. The fallback path — the
+one that keeps a legal run when every damping rule zeroes a small pool —
+quietly reinstated the repeat it had just excluded. **10 back-to-back pairs in
+300 runs.** It is now a hard filter on the candidate pool, with relaxation
+steps that never relax past it. *Anything that must always hold belongs in the
+pool, not the weights.*
+
+### Documentation: one source of truth per layer
+
+Two **agent-generated** PDFs were deleted:
+
+| Removed | Why |
+|---|---|
+| `LUCKBOUND_Master_Spec_v0.2.pdf` | A 7-page binary snapshot of the design after Phase 1. Could not be diffed or reviewed in a PR, drifted the moment anything shipped, and had begun to contradict the markdown. A second source of truth — rule 1 |
+| `MODELLER_HANDOFF.pdf` | Superseded by `CHUNK_AUTHORING.md` + `biomes/`, and **actively contradicted them** after the Session 42–44 rewrites |
+
+**The owner's v0.1 PDF at the repository root stays** and remains authoritative
+on intent. What replaced the v0.2 snapshot is `docs/MASTER_DESIGN.md` — a
+living markdown master design doc, with the layer map stated at the top:
+intent (v0.1) → design (MASTER_DESIGN) → architecture (build spec) → order of
+work (DEVELOPMENT_PLAN) → state (STATUS, WORKLOG).
+
+`MODULAR_MAPS`, `CHUNK_AUTHORING`, `biomes/`, `DEVELOPMENT_PLAN`, `STATUS`,
+`README` and `CLAUDE.md` were all brought into line with it. The development
+plan gained a **Phase 1b** mapping the brief's §9 order onto what already
+exists — steps A–D are done, E is blocked by §7, and **G (walk twenty seeds and
+judge the variety) is the gate**, because no test can tell you whether 174
+distinct layouts *feel* different on the ground.
+
+### Four tests that named a piece now assert the property
+
+`VV_GROVE` appeared in four assertions; three failed and one crashed when the
+kit improved. The properties they stood for were untouched. Rewritten to assert
+the arena is approached through a piece offering its Kind, that the approach is
+not the same piece every seed, that `MaxPerLayout` holds for every capped
+piece, and that some non-boss piece offers the arena's Kind. Build spec §623's
+own lesson, relearned.
+
+Also added: every piece must appear in some layout, and every scenario in the
+library must actually occur. Both catch dead content — the Fern Hollow failure
+is exactly what the first one was written for.
+
+### Stopped at
+
+589 green. The kit generates, the scenarios assign, and **none of it has been
+stood in.** No System was widened beyond the recorded §7.2 amendment.
+
+### Next
+
+1. **Walk it.** Twenty seeds in Studio. The suite cannot judge whether the
+   variety reads on the ground, and that is Phase 1b's exit gate.
+2. **Decimate and re-upload the Grove** under 10,000 triangles.
+3. **Ask for a three-opening piece** if this world is to have its §6 pocket.
+4. **`PathLength` retune** once a real piece has been walked — the map is
+   1536 studs, ~7% of the expedition, which is a lot of slack.
+5. **Sky Citadel §2 and §3** before any of its geometry exists.
+
+---
+
 ## Session 45 — 2026-09-22 — The docs were telling the modeller not to vary
 
 **Branch:** `claude/nifty-babbage-elpxrv` · **Tests:** 574 passing (unchanged)

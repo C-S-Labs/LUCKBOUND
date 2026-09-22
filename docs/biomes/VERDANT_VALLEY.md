@@ -135,13 +135,55 @@ retuning once a real piece has been walked, not before.
 
 ---
 
-## 6. Open questions for this world
+## 6. What each piece can support
 
-- **Which pieces offer `WIDE`?** See §3. Recommended: Grove, Ridge Overlook,
-  Ruins.
-- **`chunk_entry`'s opening faces south in the delivered art**, while content
-  declares it north. One of the two has to move; the art is easier to keep and
-  the data is easier to change.
-- **`SIDE` pockets are never placed.** `IncludeSide` is declared and never read,
-  so an optional branch cannot occur at all. Fern Hollow and Mushroom Glen are
-  the natural side pockets for this world once it works.
+The scenario-compatibility gate (build spec §7.2). Deliberately not universal —
+a traversal challenge in a flat meadow is not a challenge, and a mini-boss in a
+corridor is not an arena.
+
+| Piece | Supports |
+|---|---|
+| `VV_PATH_STRAIGHT` | Combat, Traversal, Ambush |
+| `VV_MEADOW_A` | Combat, MiniBoss, Treasure, Ambush |
+| `VV_MEADOW_B` | Combat, MiniBoss, Ambush, Shrine |
+| `VV_STREAM_CROSSING` | Combat, Traversal, Ambush, Event |
+| `VV_MUSHROOM_GLEN` | Combat, Shrine, Event, Secret, Puzzle |
+| `VV_FERN_HOLLOW` | Combat, Puzzle, Treasure, Secret, Ambush |
+| `VV_RUINS` | Combat, Puzzle, Treasure, MiniBoss, Secret, Event |
+| `VV_WATERFALL` | Combat, Traversal, Secret, Shrine, Event |
+| `VV_RIDGE_OVERLOOK` | Combat, Traversal, Ambush, Shrine, MiniBoss |
+
+`VV_ENTRY` and `VV_BOSS_CLEARING` declare none and are never assigned a
+scenario — arrival should be calm and the arena is already the biggest thing in
+the run.
+
+**Measured: 50 distinct chunk/scenario rooms from 11 pieces**, across 174
+distinct layouts in 200 seeds.
+
+---
+
+## 7. Settled, and what is still open
+
+### Settled 2026-09-22, when the kit was delivered
+
+- **`WIDE` now sits on Ruins, Waterfall and Ridge Overlook.** The Grove was the
+  only provider and did not survive the upload (14,448 triangles against a
+  10,000 cap). Three providers keep the gate — the arena is still only
+  approached deliberately — and the approach now varies ~35/35/30 per seed
+  instead of being the same room every time.
+- **The entry opens south.** The art decided; the data moved to match.
+- **There is no side pocket, and there cannot be one yet.** Every delivered
+  piece has exactly two openings, the critical path spends both, so no seed
+  leaves a spare socket for a branch. Fern Hollow became a `COMBAT` piece.
+  `Schema.validateChunks` now refuses a kit that declares `SIDE` without a
+  3-socket piece, rather than letting a pocket validate and never appear.
+
+### Still open
+
+- **The Grove.** It needs decimating under 10,000 triangles and re-uploading.
+  Its absence costs a kind of place, not a working kit.
+- **A three-opening piece**, if this world is to have the optional branch
+  Blueprint §6 asks for. A T-junction or a crossroads clearing. This is a
+  request for the modeller, not a code change.
+- **Encounter and reward configuration.** A plan says a room is an Ambush;
+  nothing spawns it. Build spec §7 still excludes that.

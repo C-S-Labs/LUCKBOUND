@@ -94,7 +94,10 @@ The 25% problem. Two routes, and I recommend the second:
    player never sees the two side by side.
 
 Route 2 is **content only** — `Content/Chunks/` plus each world's existing
-`Environment` — and makes all five worlds enterable in one pass. Bespoke kits
+`Environment` — and makes all five worlds enterable in one pass. Note it is
+cheaper still now that scenarios exist: a shared kit dressed per world already
+produces different *rooms* per world, because each world can declare its own
+`Supports` intent over the same geometry. Bespoke kits
 then replace it one world at a time, invisibly, whenever they are ready.
 
 **Gate:** 100 rolls, every one enterable. No "that world has no map yet" path
@@ -120,6 +123,31 @@ tables back. It does **not** close the 25% item — Route 2 above still does
 that — and it must not be allowed to become the reason the other kits never
 get built. The geometry brief for the kit itself is
 [`CHUNK_AUTHORING.md`](CHUNK_AUTHORING.md).
+
+### Phase 1b — The procedural loop proves itself · **S/M**
+
+From the *Procedural Biome Design Brief* §9, adapted to what already exists.
+Steps A–E are done or in flight; the value left is in F–H, and **G is the one
+that matters**.
+
+| | Step | State |
+|---|---|---|
+| A | 4–8 more physical chunks | ✅ 11 delivered for Verdant Valley |
+| B | Chunk metadata — connectors, size, tags, supported scenarios | ✅ `Supports`, sockets, sizes all from measured geometry |
+| C | Generator assembles reliably and validates connections | ✅ 200/200 seeds, collision-free |
+| D | Scenario assignment, independent of geometry | ✅ `ScenarioCore`, build spec §7.2 |
+| E | Encounter and reward configuration | ⬜ **blocked by §7** — needs combat and items |
+| F | Rare Fate-driven mutations | 🟡 scenario-level done; room-rule changes need E |
+| G | **Generate many seeded runs, inspect repetition and pacing** | 🟡 headless only — never walked |
+| H | Expand the asset library | ⬜ after the loop proves useful |
+
+**G is the gate for this phase, and it is not a test suite.** The suite already
+asserts 174 distinct layouts and 50 distinct rooms from 11 pieces. What it
+cannot tell you is whether those numbers *feel* varied on the ground — the same
+gap §7.1 opened expedition entry to close. Walk twenty seeds and judge.
+
+**Exit gate:** twenty seeds walked; no run reads as a repeat of another; no
+dead ends; the arena approach does not feel like a rut.
 
 ### Phase 2 — Something to do in a world · **M/L**
 
