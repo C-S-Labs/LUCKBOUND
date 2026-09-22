@@ -79,8 +79,15 @@ than inferring it from a test name.
 }
 ```
 
-**Roles:** `ENTRY` (exactly one), `PATH`, `COMBAT`, `SIDE` (optional branch),
-`BOSS` (exactly one).
+**Roles:** `ENTRY`, `PATH`, `COMBAT`, `SIDE` (optional branch), `BOSS`. A world
+needs at least one `ENTRY`, at least one `BOSS` and at least one connective
+piece; everything else is free.
+
+**A role is a routing concept, not a design one.** It tells the assembler where
+a piece may be placed and nothing else. A ruin and a mushroom glen can both be
+`COMBAT` and be nothing alike — the variety of a world lives in how many
+different *kinds of place* it has, not in how many roles. What those are, per
+world, is in [`biomes/`](biomes/).
 
 **Sockets** are connection points. `Facing` is degrees on a quarter-turn grid:
 `0 = -Z (north)`, `90 = +X`, `180 = +Z`, `270 = -X`. Offsets are local to the
@@ -116,6 +123,14 @@ VV_BOSS_CLEARING  (     0,  -1536)  [BOSS]
 
 **Design your socket Kinds deliberately.** They are the level-design grammar,
 not a technical detail.
+
+> **This cuts both ways, and the Verdant Valley kit has now hit the other
+> edge.** A Kind offered by exactly one piece produces a gate; a Kind offered by
+> exactly one piece *also* produces the same map every seed. With 8 pieces the
+> Grove gating the boss was the intent. With 12 it is the single largest limit
+> on variety, because the arena approach can never be anything else. The fix is
+> content — give the arena Kind to two or three pieces that each deserve to be
+> the last thing before a boss. The gate survives; the sameness does not.
 
 ### Two worlds, two vocabularies, one rule
 
@@ -296,11 +311,16 @@ openings. Everything else was over-specification, and
    rare, not new roles.
 3. **Two sockets minimum** on anything `PATH` or `COMBAT`, or the path
    dead-ends. Validation rejects this.
-4. **One `ENTRY`, one `BOSS`** per world.
+4. **At least one `ENTRY` and one `BOSS`** per world — that is all the schema
+   requires. More of either is legal and gives a run two different arrivals or
+   two different arenas. (A test currently asserts Verdant Valley has exactly
+   one of each; that is a statement about that kit, not a rule.)
 5. **`MaxPerLayout`** on anything that should feel special.
 6. **`SizeX/Y/Z` must be honest** — they drive collision rejection. Too small
    and pieces interpenetrate; too large and assembly fails needlessly.
-7. **One `SIDE` pocket per world** — Biome Blueprint §6 checklist.
+7. **At least one `SIDE` pocket** — Biome Blueprint §6 checklist asks for one;
+   it is a floor, not a cap. (Note that `IncludeSide` is declared and never
+   read, so no SIDE piece is placed today — `STATUS.md`.)
 8. **Author the geometry against [`CHUNK_AUTHORING.md`](CHUNK_AUTHORING.md)** —
    origin at the chunk's centre, one FBX per chunk, an opening at every socket.
 9. Run `./tests/run.sh`. The kit is validated at boot too; a broken kit stops

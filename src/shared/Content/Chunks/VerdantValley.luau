@@ -1,42 +1,38 @@
 --!strict
--- Verdant Valley chunk kit. Biome Blueprint §3.2 turned into modular pieces.
+-- Verdant Valley chunk kit. The WORLD's design -- what kinds of place it is
+-- made of, what connects to what, and why -- is docs/biomes/VERDANT_VALLEY.md.
+-- This file is only that design expressed as data.
 --
--- The blueprint's layout is a south-to-north progression:
---   ENTRY (Moss Slimes) → STREAM (Thorn Goblins) → MEADOW (Forest Wolves)
---   → GROVE (Elder Treants) → BOSS CLEARING (Rootbound Guardian)
--- with the HOLLOW as this world's optional side pocket (§6 checklist).
+-- Blueprint §3.2 describes a south-to-north progression (slimes, then goblins
+-- at the water, wolves in the open, treants in the grove, the Guardian at the
+-- end). That is the intended DIFFICULTY curve, not a fixed running order: the
+-- assembler shuffles, and the only ordering the rules actually enforce is that
+-- the arena is approached through a piece offering the Kind it accepts.
 --
 -- Sockets: Facing is degrees, 0 = -Z (north), 90 = +X, 180 = +Z (south),
 -- 270 = -X. Offsets are local to the piece, before rotation.
 --
--- SIZE: every piece is 256 x 256, owner-directed 2026-09-22. One size for the
--- whole kit, so the modeller has one number to build against rather than a
--- table of eight. It is about 51 character-heights across -- the middle ground
--- between two iterations that came back at ~100 studs (too tight to read as a
--- place) and ~1024 (so open the scatter disappeared into it). Sockets sit at
--- the edge midpoints, +/-128.
+-- SIZE: every piece is 256 x 256, owner-directed 2026-09-22, sockets at the
+-- edge midpoints (+/-128). Bracketed by two iterations that missed: ~100 studs
+-- read too tight to be a place, ~1024 so open the scatter vanished into it.
 --
 -- THE SIZES FOLLOW THE ART, NOT THE OTHER WAY ROUND. These are numbers in a
--- content file; the piece that reads correctly on the ground wins. If the
--- modeller comes back saying 256 is wrong, change it here -- that is the whole
--- reason it lives in content.
+-- content file and the piece that reads correctly on the ground wins.
 --
--- SizeY = 340 is provisional and applies to every piece. Height is deliberately
--- unconstrained in docs/CHUNK_AUTHORING.md, so this gets set from the measured
--- geometry when the first piece arrives.
+-- SizeY = 340 is PROVISIONAL and wrong for the delivered art, which measures
+-- 42-77 studs tall. ChunkLoader forces mesh.Size, so a piece would be stretched
+-- 5-7x vertically. Set per piece from measured geometry before any upload.
 --
--- KIT SIZE: this file declares 8 pieces, one per role in the Blueprint's
--- progression. The authoring target is 12-16 (owner-directed 2026-09-22) --
--- the variety of a run is the variety of the kit, and 8 starts to repeat
--- itself. Extra pieces arrive as VARIANTS of these roles, not new roles:
--- several meadows, several groves, weighted so one is common and another rare.
--- Entries get added here as each piece is authored; nothing speculative, since
--- a declared chunk with no art is a piece the blockout draws and nobody meant.
+-- KIT SIZE: 12-16 distinct pieces is the target. The variety of a run is the
+-- variety of the kit -- the assembler only shuffles what it is given -- and 8
+-- starts to repeat itself.
 --
--- FIRST DELIVERY is 4 pieces -- ENTRY, PATH_STRAIGHT, GROVE, BOSS_CLEARING --
--- which is the smallest set that assembles into a complete walkable map. The
--- WIDE reservation means the Grove has to be among them: it is the only piece
--- offering the exit the arena accepts.
+-- A NEW KIND OF PLACE NEEDS NO PERMISSION. An earlier version of this header
+-- said extra pieces should be "variants of existing roles, not new roles", and
+-- that was wrong in a way worth naming: it read as "only build more meadows".
+-- Role is a ROUTING concept -- it tells the assembler where a piece may go --
+-- not a design one. Ruins, a waterfall and a mushroom glen can all be COMBAT
+-- and be nothing alike, and the world is better for it.
 --
 -- Every AssetKey is a PLACEHOLDER in the manifest today. That is deliberate:
 -- the layout can be assembled, validated and tested before any mesh exists.

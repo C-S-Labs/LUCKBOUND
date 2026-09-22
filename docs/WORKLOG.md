@@ -33,6 +33,96 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 45 — 2026-09-22 — The docs were telling the modeller not to vary
+
+**Branch:** `claude/nifty-babbage-elpxrv` · **Tests:** 574 passing (unchanged)
+
+### The question, and the honest answer
+
+Asked whether anything in the repo conflicted with building a varied kit.
+**Four things did**, and the root cause was structural rather than any one
+sentence.
+
+| Said | Problem |
+|---|---|
+| `CHUNK_AUTHORING.md`: extra pieces are "variants of existing roles, not new roles — several meadows, several groves" | Reads as *only build more meadows*. The delivered kit has ruins, a waterfall, a mushroom glen and a ridge overlook — none of which are meadow variants, all of which are exactly right |
+| `MODULAR_MAPS.md`: "One `SIDE` pocket per world" | The schema requires a floor of one. Written as a cap |
+| `MODULAR_MAPS.md`: "One `ENTRY`, one `BOSS` per world" | Same. Two arrivals or two arenas are legal and would vary a run |
+| The Verdant Valley progression, presented as the world's layout | Reads as a fixed running order. It is a difficulty curve; the assembler shuffles |
+
+I wrote the first three. The common thread is that **one document was trying to
+be both the engine contract and the description of a world**, so every
+biome-specific number in it arrived at the modeller as a universal law — the
+same failure as the size table two sessions ago, in a different place.
+
+### The fix is the owner's: one design schema per biome
+
+`docs/biomes/` now holds one file per world, and the split is:
+
+| Document | Owns | Changes when |
+|---|---|---|
+| `CHUNK_AUTHORING.md` | What makes a chunk work in the engine at all | Almost never |
+| `biomes/<WORLD>.md` | What that world is made of | Whenever its design does |
+
+**If a rule only applies to one world, it belongs in the biome file.** Piece
+size, kit size, kinds of place, connection types and inhabitants all moved out
+of the authoring doc, which is now five conventions and an export section with
+no world in it.
+
+Written: `biomes/README.md` (the split, the six-section shape, per-world
+status), `biomes/VERDANT_VALLEY.md` (filled in, including the 12 delivered
+pieces), `biomes/SKY_CITADEL.md` (a stub, marked 🔴, since the owner is starting
+that world next).
+
+### The Sky Citadel stub is mostly empty on purpose
+
+It has no Biome Blueprint section — it was added after the merge so the
+onboarding arc could peak on an Epic — so §2 (kinds of place), §3 (connection
+types) and §4 (inhabitants) are blank with the questions that have to be
+answered written into them. The one section with substance is its lighting,
+which was invented but has a real idea in it: long fog, 7 a.m. clock, the
+brightest world in the prototype, *a place you look out from*.
+
+**§2 and §3 gate everything else** and are pure design — cheapest step, and
+discovering them after geometry exists means re-cutting every piece.
+
+### The variety limit nobody had noticed
+
+Recorded while writing the Verdant Valley schema. The reserved-arena-Kind rule
+has a second edge:
+
+> A Kind offered by exactly one piece produces a gate. It *also* produces the
+> same map every seed.
+
+The Grove is the only `WIDE` provider, so it precedes the boss on every seed.
+At 8 pieces that was the intent and this log has praised it twice as an
+emergent property. At 12 pieces it is **the single largest limit on variety**,
+because the arena approach can never be anything else. Fix is content — give
+`WIDE` to two or three pieces that each deserve to be last before a boss. The
+gate survives; the sameness does not. Left as the owner's call.
+
+### Also
+
+The delivered kit was inspected from the FBX files and the findings recorded in
+`STATUS.md`: correct on size, origin, edge heights and openings; four problems
+(grove over the triangle cap, Apply Transform off, six materials on one mesh,
+and our `SizeY = 340` against real heights of 42–77).
+
+### Stopped at
+
+Docs and one content header. No System changed, 574 green. Content data is
+**not** updated — sizes, the twelve entries and the socket table are waiting on
+two decisions recorded in `biomes/VERDANT_VALLEY.md` §6.
+
+### Next
+
+1. **`GroundOffsetY`** — still the thing that must land before any upload.
+2. **The two open questions** in `biomes/VERDANT_VALLEY.md` §6: which pieces
+   offer `WIDE`, and whether the entry's opening faces south.
+3. **Then the content update** — twelve entries, real sizes, sockets derived
+   from the art rather than hand-typed.
+4. **Sky Citadel §2 and §3** before any of its geometry exists.
+
 ## Session 44 — 2026-09-22 — Parties, and the portal opens a new server
 
 **Branch:** `claude/party-portal-instances` · **Tests:** 639 passing (+65)
