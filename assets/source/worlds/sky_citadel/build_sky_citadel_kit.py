@@ -2766,6 +2766,15 @@ def main(export=False, save=True):
         paths = export_kit(objs)
         out["exported"] = verify_exports(paths)
     if save:
+        # Put the joined-map and four-corner previews in the saved file too, so
+        # opening the .blend shows them (they were only built for renders).
+        # Linked duplicates in *_NotExported collections: never exported.
+        review = os.path.join(SOURCE_DIR, "render_review.py")
+        rg = {"__name__": "sc_review_lib", "__file__": review}
+        exec(open(review, encoding="utf-8").read(), rg)
+        kit = {o.name: o for o in bpy.data.objects if o.get("kit") == "SKY_CITADEL"}
+        rg["build_chain"](kit)
+        rg["build_corner"](kit)
         os.makedirs(SOURCE_DIR, exist_ok=True)
         bpy.ops.wm.save_as_mainfile(filepath=os.path.join(SOURCE_DIR, "sky_citadel_kit.blend"))
     return out
