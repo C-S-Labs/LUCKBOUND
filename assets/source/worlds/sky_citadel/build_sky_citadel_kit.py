@@ -2484,6 +2484,140 @@ def build_path_aviary():
     return p
 
 
+# --------------------------------------------------------------------------
+# CAPS (2026-09-22). Owner-directed: "I don't want any paths to lead to
+# nothing, unless that specific chunk is a dead end, crumbling bridge, etc."
+# ChunkCore now fills every opening the path left unused with one of these,
+# or rejects the seed. Each reads as an ENDING, not as a missing piece.
+# --------------------------------------------------------------------------
+
+
+def light_obelisk(p, x, y, top=CROWN_TOP):
+    p.solid("light obelisk", x, y, 6, 0, top)
+    frustum(p, "DeepAlloy", 4, 6, 5.4, 0, 2, x, y, rot=45)
+    frustum(p, "CitadelWhite", 4, 4.2, 1.2, 2, top - 8, x, y, rot=45)
+    for z in (30, 60, 90, 116):
+        t = z / (top - 8)
+        r = 4.2 - (4.2 - 1.2) * t + 0.15
+        frustum(p, "AzureDim", 4, r, r, z, z + 1.5, x, y, rot=45)
+    frustum(p, "SunGold", 4, 1.2, 0, top - 8, top, x, y, rot=45)
+
+
+def build_cap_crumbling():
+    p = Piece("chunk_cap_crumbling", "CAP | one opening: south SKYWAY -- the span breaks off")
+    # the skyway runs in from the south and simply stops, broken
+    hw = SKYWAY_W / 2
+    box_span(p, "CitadelWhite", -hw, hw, -HALF, -14, -DECK_T, 0)
+    for s_ in (-1, 1):
+        box_span(p, "AzureDim", s_ * hw - (0.6 if s_ < 0 else 0), s_ * hw + (0.6 if s_ > 0 else 0),
+                 -HALF, -14, -2.2, -0.8)
+    railing(p, -(hw - 0.6), -HALF + 0.4, -(hw - 0.6), -22)
+    railing(p, hw - 0.6, -HALF + 0.4, hw - 0.6, -40)
+    spine(p, "HullSlate", -HALF, -14, hw - 2, 22)
+    # the broken lip: jagged slabs hinged down off the end, a bent railing
+    for i, (x0, x1, ang, drop) in enumerate(((-20, -8, 24, 3), (-8, 5, 38, 6), (5, 20, 16, 2))):
+        with frame(p, xf((x0 + x1) / 2, -14, -DECK_T / 2, rx=-ang)):
+            box(p, "CitadelWhite", 0, 4 + i, 0, x1 - x0 - 0.6, 8 + 2 * i, DECK_T)
+            box(p, "AzureDim", 0, 4 + i, -1.2, x1 - x0 - 1.2, 8 + 2 * i, 0.4)
+    with frame(p, xf(hw - 0.6, -40, 0, rz=-20, rx=-18)):
+        railing(p, 0, 0, 0, 14)
+    for x, y in ((-12, -30), (10, -60)):
+        crystal(p, "HullSlate", x, y, 0.1, 2.2, 1.0, 0.1, n=5, rz=x)     # rubble on the deck
+    # warning lights at the edge
+    for x in (-15, 15):
+        light_pillar(p, x, -24, h=5)
+    # the rest of the span, falling away
+    scatter_floats(p, "falling span", 8,
+                   lambda r: (r.uniform(-30, 30), r.uniform(-2, 60), r.uniform(-70, -8), r.uniform(0, 90),
+                              r.uniform(5, 11)),
+                   debris)
+    # the Fallen Tower: a spire on a rock, leaning out over the gap
+    rpts = moved(ngon(7, 20), -76, 52)
+    island(p, rpts, "HullSlate")
+    crystal_root_keel(p, rpts, seed="fallen rock", centre=(-76, 52), count=5)
+    tilt = 12.0
+    H = CROWN_TOP / math.cos(math.radians(tilt))
+    p.solid("fallen tower", -76, 52, 9 + H * math.sin(math.radians(tilt)), 0, CROWN_TOP)
+    with frame(p, xf(-76, 52, 0, ry=tilt)):
+        spire(p, 0, 0, 5.5, H, halo=False, fins=False)
+        torus(p, "AzureDim", 7, 0.4, 0, 0, 40, n=12)
+    crystal_cluster(p, -62, 60, seed=41, scale=0.9)
+    finish(p)
+    return p
+
+
+def build_cap_overlook():
+    p = Piece("chunk_cap_overlook", "CAP | one opening: south SKYWAY -- a railed overlook")
+    R = 38.0
+    cy = 22.0
+    pts = moved(ngon(12, R), 0, cy)
+    apo = R * math.cos(math.radians(15))
+    island(p, pts, "PaleAlloy")
+    crystal_root_keel(p, pts, seed="overlook", centre=(0, cy), count=8)
+    floor_radial(p, 0, cy, 12, 32, 12, "CitadelWhite", width=2.2, phase=15)
+    torus(p, "AzureDim", 10, 0.3, 0, cy, 0.05, n=16)
+    skyway_deck(p, -HALF, cy - apo, -HALF + 0.4, cy - apo - 1)
+    edge_ring(p, pts, [("S", SKYWAY_W, 0)], "railing")
+    light_obelisk(p, 0, cy + 22)
+    brazier(p, -12, cy)
+    brazier(p, 12, cy)
+    telescope(p, -22, cy + 14, 2.5, rz=20, elev=18)
+    frustum(p, "DeepAlloy", 6, 1.6, 1.0, 0, 2.5, -22, cy + 14)
+    telescope(p, 22, cy + 14, 2.5, rz=-20, elev=24)
+    frustum(p, "DeepAlloy", 6, 1.6, 1.0, 0, 2.5, 22, cy + 14)
+    bench(p, -16, cy - 18, rz=30)
+    bench(p, 16, cy - 18, rz=-30)
+    planter(p, -28, cy - 6)
+    planter(p, 28, cy - 6)
+    anti_grav_pylon(p, 70, 60, 4)
+    float_crystal(p, "SkyGlass", -64, -40, 22, 2.6, 6, 4.5)
+    finish(p)
+    return p
+
+
+def build_cap_sealed_gate():
+    p = Piece("chunk_cap_sealed_gate", "CAP | one opening: south SKYWAY -- a gate that stays shut")
+    pts = chamfer_rect(58, 40, 12)
+    pts = moved(pts, 0, 10)
+    island(p, pts)
+    stepped_keel(p, pts, steps=4)
+    floor_checker(p, pts, "PaleAlloy", tile=8, margin=3)
+    skyway_deck(p, -HALF, -30, -HALF + 0.4, -31)
+    edge_ring(p, pts, [("S", SKYWAY_W, 0)], "parapet")
+
+    # the wall the gate is set in, running the width of the islet
+    p.solid_box("citadel wall", -56, 56, 26, 34, 0, 24)
+    box_span(p, "CitadelWhite", -56, -18, 26, 34, 0, 20)
+    box_span(p, "CitadelWhite", 18, 56, 26, 34, 0, 20)
+    for x in range(-54, 55, 6):
+        if abs(x) > 18:
+            box(p, "PaleAlloy", x, 30, 21.2, 3, 8, 2.4)
+    tower(p, -22, 30, 7, 30)
+    tower(p, 22, 30, 7, 30)
+    # the doors: shut, gold-trimmed, crossed by a glowing seal
+    box_span(p, "DeepAlloy", -15, -0.2, 28, 31, 0, 22)
+    box_span(p, "DeepAlloy", 0.2, 15, 28, 31, 0, 22)
+    box_span(p, "PaleAlloy", -15.5, 15.5, 27, 32, 22, 25)
+    for x in (-10, -5, 5, 10):
+        box(p, "SunGold", x, 27.8, 11, 0.5, 0.5, 20)
+    vault_door(p, 0, 28, 11, R=6.5)
+    for k in (-1, 1):
+        box(p, "AzureNeon", 0, 27.6, 11, 30, 0.3, 0.6, ry=k * 35)
+    # a force field in front: you can see there is more, and you cannot go
+    box_span(p, "SkyGlass", -15, 15, 22, 22.6, 0, 18)
+    for x in (-16, 16):
+        frustum(p, "PaleAlloy", 4, 1.4, 1.2, 0, 19, x, 22.3, rot=45)
+        crystal(p, "AzureNeon", x, 22.3, 20.5, 0.8, 1.4, 0.8)
+    spire(p, 0, 42, 5, CROWN_TOP, fins=False)
+    for x in (-10, 10):
+        banner(p, x, 12)
+    for x in (-30, 30):
+        brazier(p, x, 0)
+    float_crystal(p, "CitadelViolet", 70, 70, 24, 2.2, 5, 4)
+    finish(p)
+    return p
+
+
 def finish(p):
     """Every piece ends here: beacons last (they fit round everything else),
     then the bounding-box pins."""
@@ -2502,6 +2636,8 @@ BUILDERS = [
     build_garden_terrace, build_observatory, build_armory, build_archive,
     # row 5: the arena approach and the arena
     build_spire_court, build_spire_court_b, build_boss_clearing,
+    # row 6: the caps -- dead ends authored as dead ends
+    build_cap_crumbling, build_cap_overlook, build_cap_sealed_gate,
 ]
 
 
@@ -2766,6 +2902,9 @@ def main(export=False, save=True):
         paths = export_kit(objs)
         out["exported"] = verify_exports(paths)
     if save:
+        # Only the kit and the scale figures are saved. The joined-map and
+        # corner previews are duplicates of kit pieces and read as extra
+        # pieces in the scene, so they exist only for render_review.py.
         os.makedirs(SOURCE_DIR, exist_ok=True)
         bpy.ops.wm.save_as_mainfile(filepath=os.path.join(SOURCE_DIR, "sky_citadel_kit.blend"))
     return out

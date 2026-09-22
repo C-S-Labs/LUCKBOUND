@@ -114,7 +114,8 @@ def build_chain(pieces):
     """A map the grammar allows, joined as the generator joins it: entry ->
     crossroads (straight on) -> shattered span -> west bend -> archive ->
     Hall of Winds -> arena, with the side lookout hung off the crossroads'
-    spare east socket. Pieces after the bend are turned a quarter (yaw +90) so
+    east socket and its last spare (west) closed by a CAP, the sealed gate --
+    so, as in the game, no mouth opens onto nothing. Pieces after the bend are turned a quarter (yaw +90) so
     their south SKYWAY meets the bend's west one; the lookout is turned -90
     so its only socket faces the crossroads."""
     b = CHAIN_BASE
@@ -122,6 +123,7 @@ def build_chain(pieces):
         ("chunk_entry", (b.x, b.y), 0),
         ("chunk_crossroads", (b.x, b.y + 256), 0),
         ("chunk_side_lookout", (b.x + 256, b.y + 256), -90),
+        ("chunk_cap_sealed_gate", (b.x - 256, b.y + 256), 90),
         ("chunk_path_shattered", (b.x, b.y + 512), 0),
         ("chunk_path_bend_west", (b.x, b.y + 768), 0),
         ("chunk_archive", (b.x - 256, b.y + 768), 90),

@@ -1525,8 +1525,14 @@ do
 				built += 1
 				local okV = ChunkCore.validateLayout(layout, Chunks)
 				if not okV then allValid = false end
-				local penultimate = layout.Chunks[#layout.Chunks - 1]
-				if not GATE_COURTS[penultimate.ChunkId] then courtGates = false end
+				-- Caps and the pocket are appended after the arena, so find the
+				-- arena and look at what the path placed just before it.
+				local bossAt
+				for i, c in layout.Chunks do
+					if c.Role == "BOSS" then bossAt = i end
+				end
+				local approach = bossAt and layout.Chunks[bossAt - 1]
+				if not approach or not GATE_COURTS[approach.ChunkId] then courtGates = false end
 				for _, c in layout.Chunks do
 					if c.Yaw ~= 0 then turned = true end
 				end
@@ -1632,6 +1638,70 @@ do
 		local offSides = sidesOver("SKY_CITADEL", false)
 		check("without IncludeSide, no SIDE pocket is ever placed", offSides == 0, tostring(offSides))
 		check("the expedition turns IncludeSide on", GameConfig.Expedition.IncludeSide == true)
+	end
+
+	-- CAPS: no opening onto nothing (owner-directed 2026-09-22) -------
+	-- In a world with CAP chunks, every socket of every placed piece must meet
+	-- a socket of another placed piece, head-on, at the same point. That is
+	-- the whole promise: a skyway never runs off into the sky unless the piece
+	-- was authored to end there.
+	do
+		local function openSockets(layout: any): { string }
+			local points = {}
+			for _, placed in layout.Chunks do
+				for _, sk in Chunks[placed.ChunkId].Sockets do
+					local w = ChunkCore.worldSocket(placed, nil, sk)
+					table.insert(points, { Id = placed.ChunkId .. "." .. sk.Id, X = w.X, Z = w.Z, F = w.Facing })
+				end
+			end
+			local open = {}
+			for i, a in points do
+				local met = false
+				for j, b in points do
+					if i ~= j and math.abs(a.X - b.X) < 0.01 and math.abs(a.Z - b.Z) < 0.01
+						and (a.F - b.F) % 360 == 180 then
+						met = true
+					end
+				end
+				if not met then table.insert(open, a.Id) end
+			end
+			return open
+		end
+		local scLib = ChunkCore.libraryFor(Chunks, "SKY_CITADEL")
+		check("Sky Citadel has CAP pieces (dead ends authored as dead ends)",
+			scLib.CAP and #scLib.CAP >= 3, tostring(scLib.CAP and #scLib.CAP))
+		for _, includeSide in { true, false } do
+			local built, leaks, firstLeak, capsSeen = 0, 0, nil, 0
+			for trial = 1, 200 do
+				local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+					{ WorldId = "SKY_CITADEL", PathLength = 5, IncludeSide = includeSide },
+					function(a) return lcg(trial * 4561 + a * 13) end, 5)
+				if okA then
+					built += 1
+					local open = openSockets(layout)
+					if #open > 0 then
+						leaks += 1
+						firstLeak = firstLeak or table.concat(open, ", ")
+					end
+					for _, c in layout.Chunks do
+						if c.Role == "CAP" then capsSeen += 1 end
+					end
+				end
+			end
+			local tag = if includeSide then "with" else "without"
+			check(`every opening in a Sky Citadel map meets another piece ({tag} a side pocket)`,
+				leaks == 0, firstLeak)
+			check(`capping still assembles on nearly every seed ({tag} a side pocket)`, built >= 190,
+				string.format("%d/200, %d caps placed", built, capsSeen))
+		end
+		local okCap, errCap = Schema.validateChunks({ X = {
+			Id = "X", WorldId = "W", Role = "CAP", AssetKey = "VV_CHUNK_ENTRY", Weight = 1,
+			SizeX = 1, SizeY = 1, SizeZ = 1,
+			Sockets = { { Id = "a", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 },
+				{ Id = "b", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = 1, Facing = 180 } } } },
+			AssetManifest)
+		check("rejects a CAP with two sockets -- it would open a new mouth", not okCap,
+			table.concat(errCap, "; "))
 	end
 
 	-- Geometry helpers ----------------------------------------------
