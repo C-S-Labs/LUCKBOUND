@@ -1640,6 +1640,46 @@ do
 		check("the expedition turns IncludeSide on", GameConfig.Expedition.IncludeSide == true)
 	end
 
+	-- THE DELIVERED KIT (2026-09-23) ---------------------------------
+	-- The Sky Citadel meshes are in. Two things the content asserts about
+	-- them are things the delivered files actually say, and both are only
+	-- worth anything while they stay true of every piece.
+	do
+		local scIds, notUploaded, wrongSize = 0, nil, nil
+		for id, c in Chunks do
+			if c.WorldId == "SKY_CITADEL" then
+				scIds += 1
+				if not AssetManifest.isUploaded(c.AssetKey) then
+					notUploaded = notUploaded or id
+				end
+				-- ChunkLoader sets mesh.Size = (SizeX, SizeY, SizeZ) outright,
+				-- so a piece whose declared box is not the delivered box is
+				-- silently STRETCHED into it. Every delivered Sky Citadel mesh
+				-- measures 256 cubed; the content has to keep saying so.
+				if c.SizeX ~= 256 or c.SizeY ~= 256 or c.SizeZ ~= 256 then
+					wrongSize = wrongSize or string.format("%s is %dx%dx%d", id, c.SizeX, c.SizeY, c.SizeZ)
+				end
+			end
+		end
+		check("Sky Citadel declares 22 pieces", scIds == 22, tostring(scIds))
+		check("every Sky Citadel piece resolves to an uploaded mesh",
+			notUploaded == nil, notUploaded)
+		check("every Sky Citadel piece is declared at the delivered 256 cubed",
+			wrongSize == nil, wrongSize)
+		-- GroundOffsetY = 96 is the walk plane 96 studs up from the bottom of
+		-- the box. The delivered MeshParts carry PivotOffset.Y = -32, which is
+		-- the same statement from the other side (128 - 32). If the kit is
+		-- ever re-exported against a different pivot, this is the number that
+		-- has to move with it.
+		local offsetsOk = true
+		for _, c in Chunks do
+			if c.WorldId == "SKY_CITADEL" and c.GroundOffsetY ~= 96 then
+				offsetsOk = false
+			end
+		end
+		check("every Sky Citadel piece keeps the delivered ground offset", offsetsOk)
+	end
+
 	-- CAPS: no opening onto nothing (owner-directed 2026-09-22) -------
 	-- In a world with CAP chunks, every socket of every placed piece must meet
 	-- a socket of another placed piece, head-on, at the same point. That is

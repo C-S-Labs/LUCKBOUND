@@ -220,6 +220,27 @@ the brief asks for.
 All twenty-two are exactly **256 × 256 × 256**: footprint ±128, bottom at −96,
 crown at +160. Origin at the centre of the footprint on the walk plane.
 
+**Delivered and uploaded 2026-09-23**, as `.rbxmx` models each wrapping one
+MeshPart that already carries its `rbxassetid` — so there was no upload step on
+our side, exactly as Verdant Valley arrived. The files are kept in
+`assets/rbxm/chunks/sky_citadel/` as provenance and a re-import path; the ids in
+`Content/AssetManifest.luau` are the load route, and `ChunkLoader` calls
+`CreateMeshPartAsync` on them.
+
+Two numbers were **read off the delivered meshes rather than trusted**:
+
+- every piece measures exactly 256³, which is what the content declares and
+  what `ChunkLoader` forces onto `mesh.Size` — a box that differed would have
+  been silently stretched;
+- every piece carries `PivotOffset.Y = −32`, the walk plane 32 studs below the
+  box centre. That is **`GroundOffsetY = 96` arriving from the art side**,
+  independently of the generator that derived it. The two agree.
+
+The pieces are **untextured**: `TextureID` is null on all 22, and the look is
+the mesh's own vertex colour with a flat `Color3`. Whether
+`CreateMeshPartAsync` preserves vertex colour is a Studio question —
+`TESTING.md` Test Q.
+
 ### Variety: five axes, mixed differently on every piece
 
 Owner review of the 12-piece kit (2026-09-22): *"each piece is very similar to

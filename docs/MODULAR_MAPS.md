@@ -36,17 +36,18 @@ It is the same combinatorial philosophy as Master Spec §14
 |---|---|
 | `Content/AssetManifest.luau` | ✅ logical name → asset id |
 | `Content/Chunks/VerdantValley` | ✅ 11 pieces, uploaded |
-| `Content/Chunks/SkyCitadel` | ✅ 19 pieces, **FBXs exported** — [`biomes/SKY_CITADEL.md`](biomes/SKY_CITADEL.md) |
+| `Content/Chunks/SkyCitadel` | ✅ 22 pieces, **delivered and uploaded** — [`biomes/SKY_CITADEL.md`](biomes/SKY_CITADEL.md) |
 | `Util/PrebuiltLoader.luau` | ✅ the other route: one authored scene, cloned |
 | `Util/ChunkCore.luau` | ✅ seeded assembly, pure and headless |
 | `Util/ChunkLoader.luau` | ✅ Layout → Instances, with a mesh/blockout seam |
 | `Util/Schema.validateChunks` | ✅ boot-time validation |
 | `Systems/ExpeditionSystem` | ✅ builds a map on entry — build spec §7.1 |
-| Actual meshes | ⏳ all 27 are `PLACEHOLDER`; Sky Citadel's 19 are exported as FBX |
+| Actual meshes | ✅ both kits uploaded — Verdant Valley's 11 (2026-09-22), Sky Citadel's 22 (2026-09-23) |
 
-Every asset key is a placeholder, so `assetId()` returns `nil` and the loader
-falls back to primitives. **Layouts are assembled, validated, tested AND walked
-before a single mesh exists.**
+Both kits now resolve to real mesh ids. The blockout seam has not gone
+anywhere: `assetId()` returns `nil` for anything still `PLACEHOLDER` and the
+loader falls back to primitives, which is what let **layouts be assembled,
+validated, tested AND walked before a single mesh existed.**
 
 ### The blockout is informative, not pretty
 
@@ -82,9 +83,10 @@ than inferring it from a test name.
 }
 ```
 
-**Roles:** `ENTRY`, `PATH`, `COMBAT`, `SIDE` (optional branch), `BOSS`. A world
-needs at least one `ENTRY`, at least one `BOSS` and at least one connective
-piece; everything else is free.
+**Roles:** `ENTRY`, `PATH`, `COMBAT`, `SIDE` (optional branch), `BOSS`, and
+`CAP` (a one-socket ending, placed on whatever the layout leaves open — build
+spec §7.4). A world needs at least one `ENTRY`, at least one `BOSS` and at
+least one connective piece; everything else is free.
 
 **A role is a routing concept, not a design one.** It tells the assembler where
 a piece may be placed and nothing else. A ruin and a mushroom glen can both be
@@ -172,7 +174,7 @@ the grammar. The next kit (Emberfall) is the real second data point.
 
 ---
 
-## Exits and side pockets — changed 2026-09-22
+## Exits, side pockets and caps — changed 2026-09-22, extended 2026-09-23
 
 Two behaviours that were documented as debt are now built, because the Sky
 Citadel kit needed them to make an intersection mean anything:
@@ -187,6 +189,13 @@ Citadel kit needed them to make an intersection mean anything:
   `GameConfig.Expedition.IncludeSide` is the switch; the expedition passes it.
   Verdant Valley's Hollow — authored, validated and never placed until now —
   is placed off the Meadow's west socket.
+- **Leftover openings are sealed** (build spec §7.4). Last of all — after the
+  path, the arena and the pocket — every socket still open takes a `CAP`
+  piece, so a map never ends at an opening onto nothing. There is no switch:
+  in a world that declares caps this is **mandatory**, and a socket that can
+  take no cap **fails the attempt**, so `assembleWithRetry` tries the next
+  seed and the player gets a different map rather than a hole. A world with no
+  `CAP` pieces is unaffected.
 
 ## Assembly
 
@@ -371,11 +380,17 @@ openings. Everything else was over-specification, and
 6. **`SizeX/Y/Z` must be honest** — they drive collision rejection. Too small
    and pieces interpenetrate; too large and assembly fails needlessly.
 7. **At least one `SIDE` pocket** — Biome Blueprint §6 checklist asks for one;
-   it is a floor, not a cap. (Note that `IncludeSide` is declared and never
-   read, so no SIDE piece is placed today — `STATUS.md`.)
-8. **Author the geometry against [`CHUNK_AUTHORING.md`](CHUNK_AUTHORING.md)** —
+   it is a floor, not a ceiling. It needs a piece with 3+ sockets to hang off,
+   and the schema refuses a kit that declares a pocket without one.
+8. **`CAP` pieces if any piece has more openings than a path can spend** — an
+   intersection strands a mouth on most seeds, and without a cap that mouth
+   opens onto nothing. A cap has exactly one socket (the schema enforces it)
+   and, like any other placeable piece, declares `Supports`: it is a dead end
+   you can walk into, not a wall. Author more than one so a map with two loose
+   ends does not end the same way twice.
+9. **Author the geometry against [`CHUNK_AUTHORING.md`](CHUNK_AUTHORING.md)** —
    origin at the chunk's centre, one FBX per chunk, an opening at every socket.
-9. Run `./tests/run.sh`. The kit is validated at boot too; a broken kit stops
+10. Run `./tests/run.sh`. The kit is validated at boot too; a broken kit stops
    the server rather than shipping a broken expedition.
 
 ---

@@ -33,6 +33,109 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 48 — 2026-09-23 — The Sky Citadel meshes are in, and caps were built twice
+
+**Branch:** `claude/clever-cori-oiq6pb` · **Tests:** 690 passing (was 686 on
+`main` after the caps merge)
+
+The 22-piece Sky Citadel kit arrived as `.rbxmx` with a written chunk
+reference, and is now uploaded and wired in.
+
+### The delivery, and what was read rather than trusted
+
+Same shape as the Verdant Valley delivery: one `Model` around one `MeshPart`
+already carrying a real `rbxassetid`, so the ids **are** the integration — no
+upload step, no FBX round trip. All 22 manifest entries move from
+`PLACEHOLDER` to `UPLOADED`, and the `.rbxmx` files are kept in
+`assets/rbxm/chunks/sky_citadel/` as provenance.
+
+Two numbers were checked against the files instead of assumed, and both are
+now tests rather than prose:
+
+- **Every piece measures exactly 256 × 256 × 256**, which is what the content
+  declares. `ChunkLoader` sets `mesh.Size` outright, so a box that differed
+  would have been silently stretched.
+- **Every piece carries `PivotOffset.Y = −32`** — the walk plane 32 studs below
+  the box centre. That is `GroundOffsetY = 96` arriving from the art side,
+  independently of the generator that derived it. The two agree.
+
+The pieces are untextured: `TextureID` is null on all 22 and the look is vertex
+colour. Whether `CreateMeshPartAsync` keeps it is a Studio question, now
+written down as one.
+
+### The reference sheet matched the repo exactly
+
+The kit came with a per-chunk description — openings, roles, the `ASCENT` rule,
+the gate-courts. **All 19 pre-existing entries matched it**, so nothing about
+them changed beyond an asset id. This is the first time the project has had an
+independent description of a kit to check content against, and it is worth
+asking for every time.
+
+### Caps were implemented twice, on the same day, on two branches
+
+This session built a `CAP` role, a sealing pass and a
+`GameConfig.Expedition.SealOpenSockets` switch — and `main` had merged PR #40
+doing the same thing while that work was in flight. **Exactly the §7.2
+collision the spec warns about, and the second time it has happened.**
+
+`main`'s design won, wholesale, and the differences are worth recording because
+they were real design choices rather than accidents:
+
+| | `main` (kept) | this branch (dropped) |
+|---|---|---|
+| A cap is | a dead end you walk into; declares `Supports`, hosts a scenario | scenery, exempt from scenarios |
+| Sealing is | mandatory where a world has caps | a config switch |
+| A cap that will not fit | fails the attempt; the next seed is tried | is skipped, leaving the opening |
+
+`main`'s failure semantics are stronger: a capped world never ships an opening
+onto nothing, it ships a different map. The local `ChunkCore`, `Schema`,
+`ScenarioCore`, `Types`, `GameConfig` and content changes were reverted to
+`main`'s in the merge rather than reconciled line by line, because two
+half-merged implementations of one feature is how the §7.3 boot failure
+happened.
+
+**The collision was only caught because the PR would not merge.** Neither
+branch's CI could see the other, which is the same blind spot session 47
+documented; what saved it this time was a conflict, not a test.
+
+### What survived from this branch
+
+- the uploaded ids and the `.rbxmx` provenance — the actual delivery
+- four tests tying the content to the delivered files: 22 pieces, every one
+  uploaded, every one declared at 256³, every one keeping `GroundOffsetY = 96`
+- **build spec §7.4**, claimed and written after the fact. PR #40 shipped a
+  System change — a new role and a new assembly pass — with no amendment, and
+  the index exists so that does not happen quietly. §7.4 documents what was
+  built, including its failure semantics, and says plainly that two branches
+  built it at once
+- `MODULAR_MAPS.md` and `CHUNK_AUTHORING.md`, which said nothing about caps:
+  the system doc now carries the rule, the authoring contract now tells a
+  modeller what a cap is and that it should have something in it
+- `TESTING.md` **Test Q** — the Studio walk for the kit
+
+### Verified
+
+690/690 · syntax clean on every module · forbidden-name scan clean · no
+duplicate manifest keys (the merge produced three, each pair one `UPLOADED` and
+one `PLACEHOLDER`; in Luau the later wins and the uploads would have vanished
+in silence).
+
+### Stopped at
+
+Green and merged with `main`, and **still unwalked**. Every remaining question
+about this kit is a mesh question: feet on the deck, joins lining up, vertex
+colours surviving the round trip.
+
+### Next
+
+1. **Walk Test Q.** Then `PathLength` can be tuned against a real route.
+2. Tests O and P (parties, published place) — still owed from session 46.
+3. **Decimate and re-upload the Verdant Valley Grove** (14,448 tris).
+4. A **three-opening Verdant Valley piece**, so that world can host its §6
+   pocket — and so its Meadow's west mouth stops facing nothing.
+
+---
+
 ## Session 47 — 2026-09-23 — Architecture reconciliation, from an audit
 
 **Branch:** `claude/architecture-reconciliation` · **Tests:** 680 passing (was
