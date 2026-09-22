@@ -1045,6 +1045,73 @@ do
 	check("the Grove is the only piece offering a WIDE exit",
 		Chunks.VV_GROVE.Sockets[2].Kind == "WIDE")
 
+	-- Sky Citadel: the second kit, with its own vocabulary ------------
+	-- docs/SKY_CITADEL.md. SKYWAY is connective; ASCENT is arena-only and
+	-- offered by the Spire Court alone, so the court must gate the arena on
+	-- every seed without anything hard-coding it.
+	do
+		local scLib = ChunkCore.libraryFor(Chunks, "SKY_CITADEL")
+		check("Sky Citadel has one ENTRY and one BOSS",
+			scLib.ENTRY and #scLib.ENTRY == 1 and scLib.BOSS and #scLib.BOSS == 1)
+		check("the Crown Spire arena only accepts an ASCENT approach",
+			Chunks.SC_BOSS_CLEARING.Sockets[1].Kind == "ASCENT")
+
+		local kindsFor = function(worldId)
+			local set = {}
+			for _, c in Chunks do
+				if c.WorldId == worldId then
+					for _, s in c.Sockets do set[s.Kind] = true end
+				end
+			end
+			return set
+		end
+		local vv, sc = kindsFor("VERDANT_VALLEY"), kindsFor("SKY_CITADEL")
+		local shared
+		for k in sc do
+			if vv[k] then shared = k end
+		end
+		check("socket Kinds are per-world: Sky Citadel shares none with Verdant Valley",
+			shared == nil, tostring(shared))
+
+		local ascentProviders = {}
+		for id, c in Chunks do
+			if c.WorldId == "SKY_CITADEL" and c.Role ~= "BOSS" then
+				for _, s in c.Sockets do
+					if s.Kind == "ASCENT" then table.insert(ascentProviders, id) end
+				end
+			end
+		end
+		check("the Spire Court is the only piece offering an ASCENT exit",
+			#ascentProviders == 1 and ascentProviders[1] == "SC_SPIRE_COURT",
+			table.concat(ascentProviders, ", "))
+
+		-- The generator pins every mesh to exactly 256^3, because ChunkLoader
+		-- stretches a mesh to SizeX/Y/Z. Declared size must match that box.
+		local sized = true
+		for _, c in Chunks do
+			if c.WorldId == "SKY_CITADEL" and (c.SizeX ~= 256 or c.SizeY ~= 256 or c.SizeZ ~= 256) then
+				sized = false
+			end
+		end
+		check("every Sky Citadel piece declares the 256^3 box its mesh is built to", sized)
+
+		local built, courtGates = 0, true
+		for trial = 1, 200 do
+			local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+				{ WorldId = "SKY_CITADEL", PathLength = 4 },
+				function(a) return lcg(trial * 7307 + a * 31) end, 5)
+			if okA then
+				built += 1
+				local okV = ChunkCore.validateLayout(layout, Chunks)
+				local penultimate = layout.Chunks[#layout.Chunks - 1]
+				if not okV or penultimate.ChunkId ~= "SC_SPIRE_COURT" then courtGates = false end
+			end
+		end
+		check("Sky Citadel assembles a valid map on every seed", built == 200,
+			string.format("%d/200", built))
+		check("the Spire Court always gates the Crown Spire arena", courtGates)
+	end
+
 	-- Geometry helpers ----------------------------------------------
 	local placed = { X = 10, Y = 0, Z = 20, Yaw = 90 }
 	local sock = { Id = "s", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = -48, Facing = 0 }
@@ -1420,9 +1487,12 @@ do
 		ExpeditionCore.hasPrebuiltMap(Worlds.ETHEREAL_SCAPE))
 	check("Verdant Valley is not prebuilt",
 		not ExpeditionCore.hasPrebuiltMap(Worlds.VERDANT_VALLEY))
-	check("Sky Citadel has neither",
-		not ExpeditionCore.hasKit(Chunks, "SKY_CITADEL")
+	check("Sky Citadel has a kit, not a prebuilt map",
+		ExpeditionCore.hasKit(Chunks, "SKY_CITADEL")
 			and not ExpeditionCore.hasPrebuiltMap(Worlds.SKY_CITADEL))
+	check("Emberfall has neither",
+		not ExpeditionCore.hasKit(Chunks, "EMBERFALL")
+			and not ExpeditionCore.hasPrebuiltMap(Worlds.EMBERFALL))
 
 	-- BOTH routes count as having a map. This is the assertion that stops a
 	-- prebuilt world being turned away at its own door -- the bug this seam
@@ -1432,16 +1502,16 @@ do
 	check("a kitted world has a map",
 		ExpeditionCore.hasMap(Worlds.VERDANT_VALLEY, Chunks, "VERDANT_VALLEY"))
 	check("a world with neither has no map",
-		not ExpeditionCore.hasMap(Worlds.SKY_CITADEL, Chunks, "SKY_CITADEL"))
+		not ExpeditionCore.hasMap(Worlds.EMBERFALL, Chunks, "EMBERFALL"))
 
-	-- THE DEBT, ASSERTED. Three rollable worlds cannot be entered. This test
+	-- THE DEBT, ASSERTED. Two rollable worlds cannot be entered (three until
+	-- Sky Citadel's kit landed, 2026-09-22). This test
 	-- is not here to be green forever -- it is here so the number is in the
 	-- suite and someone has to look at it to change it.
 	local missing = ExpeditionCore.worldsWithoutMaps(Worlds, Chunks, GameConfig.CurrentPhase)
 	print(string.format("        rollable but not enterable: %s", table.concat(missing, ", ")))
 	check("rollable-but-not-enterable worlds are reported, sorted",
-		#missing == 3 and missing[1] == "ASTRAL_REACH" and missing[2] == "EMBERFALL"
-			and missing[3] == "SKY_CITADEL",
+		#missing == 2 and missing[1] == "ASTRAL_REACH" and missing[2] == "EMBERFALL",
 		table.concat(missing, ", "))
 
 	-- Map size and duration are content, with a config fallback ------
@@ -1575,7 +1645,7 @@ do
 		decide({ Profile = withRolls({}) }).Refusal == "NO_DESTINATION")
 	check("a world with no map is refused at the door, not mid-assembly",
 		decide({ Profile = withRolls({
-			{ WorldId = "SKY_CITADEL", Rarity = "EPIC", Timestamp = 1 },
+			{ WorldId = "EMBERFALL", Rarity = "RARE", Timestamp = 1 },
 		}) }).Refusal == "NO_MAP")
 	check("a destination that no longer exists is refused",
 		decide({ Profile = withRolls({

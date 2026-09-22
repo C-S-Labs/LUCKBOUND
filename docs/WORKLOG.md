@@ -33,6 +33,62 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 44 — 2026-09-22 — Sky Citadel: art direction and the first generated kit
+
+**Branch:** `claude/sky-citadel-chunk-kit` · **Tests:** 582 passing (574 + 8)
+
+### Done
+- **`docs/SKY_CITADEL.md`** — the section the Biome Blueprint never wrote.
+  Owner direction: *floating spires, future-like castle architecture, a
+  floating citadel with varying decorations and objects.* A white futurist
+  castle on floating islands: needle spires with neon halos, violet-roofed
+  turrets, azure seams of light, a ten-role palette, a prop vocabulary, and an
+  explicit "what floats on purpose" list for the hand pass. Written against
+  Ethereal Scape so the two sky worlds do not blur.
+- **Connection vocabulary first**, as the brief asks: `SKYWAY` (40 studs,
+  connective) and `ASCENT` (72, arena-only). The Spire Court is the only
+  `ASCENT` provider, so it gates the arena on every seed — the reserved-Kind
+  rule producing gating for the third time.
+- **Four pieces, generated in Blender 5.2 by a script in the repo**
+  (`assets/source/worlds/sky_citadel/build_sky_citadel_kit.py`): entry, path
+  straight, spire court (grove role), boss clearing. Exported as four FBXs,
+  each re-imported and measured: 256 × 256 × 256, one mesh, Y up, metres,
+  opening confirmed at FBX −Z (north). 3.7k–7.3k triangles.
+- **Content:** `Content/Chunks/SkyCitadel.luau`, four `SC_CHUNK_*` manifest
+  placeholders, world header rewritten. Sky Citadel is now **enterable**
+  (blockout, no enemies); "no map" drops from 25% to 18%.
+- **Tests:** 4 that asserted Sky Citadel had no map moved to Emberfall; 8 new
+  — per-world Kinds disjoint, ASCENT reservation, 256³ declared, 200/200
+  seeds assemble, the court always precedes the arena.
+
+### Decisions made
+- **Every piece fills an exact 256³ box.** `ChunkLoader.tryMesh` stretches the
+  mesh to `SizeX/Y/Z`, which the brief never says. Corner beacons pin the
+  footprint, the keel apex (−96) and one 160-stud spire pin the height. The
+  walk plane is therefore 32 below the box centre, kit-wide — the number
+  `GroundOffsetY` will need.
+- **Colour baked as vertex colours** as well as material slots: a chunk is one
+  MeshPart, so paint-by-part-name is not available. Unverified in Studio.
+- **The `.blend` is an output.** The script is the source; re-run it.
+- **Render headless.** Rendering through the Blender MCP bridge crashed the
+  interactive session twice on the same shot; `blender -b` does all ten in
+  ~3 s. Both scripts are documented headless-first.
+
+### Stopped at
+Four FBXs exported and committed, nothing uploaded. Found four loader-side
+issues on the way and recorded them in `STATUS.md` rather than fixing them
+(this pass was content): mesh stretched to declared size, single-MeshPart
+colour, default collision fidelity, spawn from the mesh top.
+
+### Next
+1. Import `chunk_entry.fbx` into Studio: does it read 256³, and do the vertex
+   colours survive?
+2. `GroundOffsetY` (32 for this kit) and `CollisionFidelity` in `ChunkLoader`.
+3. Owner review of the look (`renders/`), then iterate the generator.
+4. `chunk_path_bend` — no current socket turns — then the other 7–11 pieces.
+
+---
+
 ## Session 43 — 2026-09-22 — Unit scale, kit size, and a hand pass
 
 **Branch:** `claude/nifty-babbage-elpxrv` · **Tests:** 574 passing (unchanged)

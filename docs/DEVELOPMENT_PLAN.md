@@ -52,11 +52,12 @@ Honest inventory. Detail in `STATUS.md`.
 |---|---|
 | ✅ **Solid** | The roll and its pacing · Fate and levels · saves and migrations · the hub, rescaled to the player · the whole player UI · travel · codes · settings · live events with scope and precedence · the scarcity ledger · movement (sprint, double jump) |
 | 🟡 **Built, never walked** | Almost all of the above. 574 headless tests pass; the Studio walks keep finding things tests structurally cannot see |
-| 🔴 **Missing for a playtest** | Something to DO in a world · maps for 3 of 5 rollable worlds · sound · a tutorial · proven persistence · measured performance · a way to hear from testers |
+| 🔴 **Missing for a playtest** | Something to DO in a world · maps for 2 of 5 rollable worlds · sound · a tutorial · proven persistence · measured performance · a way to hear from testers |
 | ⬜ **Missing for launch** | Combat · items and inventory · the Fate Tree · Rebirth · a real shop economy · parties · rifts |
 
-**The single most important number:** **25% of honest rolls land on a world
-with no map.** Emberfall (15%), Sky Citadel (7%), Astral Reach (3%). A tester
+**The single most important number:** **18% of honest rolls land on a world
+with no map** — Emberfall (15%), Astral Reach (3%). It was 25% until Sky
+Citadel got a kit on 2026-09-22 (`SKY_CITADEL.md`). A tester
 who rolls Emberfall — a *Rare* — and is told "that world has no map yet" has
 been punished for a good roll. Nothing else on this list damages a playtest as
 directly.
