@@ -33,6 +33,78 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 44 — 2026-09-22 — Parties, and the portal opens a new server
+
+**Branch:** `claude/party-portal-instances` · **Tests:** 639 passing (+65)
+
+Owner-directed: get the Party menu working, make the centre portal start a new
+Roblox server, and have a party leader bring the whole party into that same
+server with the same parameters — everyone keeping their own level and Fate.
+Recorded as build spec **§7.2**, since the development plan had both parked
+under "not yet".
+
+### Done
+
+- **`Core/PartyCore.luau`** (pure): invite / accept / decline / leave / kick /
+  promote, `MaxSize` 4, 60 s invite expiry, request parsing, who goes through
+  the portal (`expeditionGroup`), and `reunite` for rebuilding a party after
+  the trip home. An invite creates nothing; accepting does, so a declined
+  invite leaves no party of one behind.
+- **`Systems/PartySystem.luau`**: `Party_Request` / `Party_Sync`, rate limit,
+  display names, and the MemoryStore reunite records.
+- **`Systems/ExpeditionSystem.luau`** reworked around a *group*: one stage,
+  one timer, one seed (the leader's). Three modes — hub-teleport, hub-in-place
+  (Studio), and **host** (this server is the reserved expedition server).
+- **`SaveSystem`**: `handOff` (save + release lock before a teleport) and a
+  bounded wait on a held lock in `load`. Without this, every teleported player
+  would race their own old server for the lock and usually get a session that
+  silently does not save.
+- **Client**: `PartyController` (with a native Accept/Decline notification
+  for invites) and a real Party panel in `HubMenu`. The loading screen skips
+  its title card on an expedition server and when coming back from one. The
+  menu stays hidden on an expedition server.
+- Boot: server kind stated on `ReplicatedStorage.Luckbound` first;
+  `PartySystem` before `ExpeditionSystem`; `startHost()` instead of the portal
+  on an expedition server.
+- Docs: build spec §4 (two rows), §1.1, §1.2, **§7.2**; `TESTING.md` tests
+  **O** (Studio, 3 clients) and **P** (published, 2 accounts); `STATUS`,
+  `PLAYER_UI`, `DEVELOPMENT_PLAN`.
+- `tests/build_suite.py` reads sources as UTF-8, so the suite also builds on
+  Windows (it failed on `cp1252` before).
+
+### Decisions made
+
+- **One place, not two.** The expedition server is a reserved server of the
+  hub's own place; `isExpeditionServer` = private server with no owner. No
+  second place to publish or keep in sync. `InstancePlaceId` exists for later.
+- **The manifest goes through MemoryStore keyed by `PrivateServerId`**, never
+  TeleportData — a client could rewrite TeleportData and pick its own world.
+- **Only the leader opens the portal.** A member at the portal is told so;
+  going alone would split the party without anyone deciding to.
+- **AUTO mode**: teleport live, build in place in Studio — so Studio still
+  tests every party rule.
+- **Home to the same hub server** via `ServerInstanceId`, falling back to any.
+- The expedition server still builds the Crossroads under its map: harmless,
+  and it keeps every client controller working unchanged. Skipping it is a
+  measured-performance job for later.
+
+### Stopped at
+
+All code and docs in; 639 green; CI syntax check clean. **Nothing walked.**
+The teleport path cannot run in Studio at all.
+
+### Next
+
+1. **Test O in Studio** (3 clients) — the party panel, the member refusal,
+   and a party arriving on one map together.
+2. **Publish, enable API Services, run Test P** with two accounts — the
+   teleport, the save hand-off (`could not acquire profile` in the output is
+   the failure to look for), and the party coming home formed.
+3. Then back to the plan: Sky Citadel, `GroundOffsetY`, the Verdant Valley
+   pieces.
+
+---
+
 ## Session 43 — 2026-09-22 — Unit scale, kit size, and a hand pass
 
 **Branch:** `claude/nifty-babbage-elpxrv` · **Tests:** 574 passing (unchanged)

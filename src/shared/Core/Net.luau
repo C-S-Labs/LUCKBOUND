@@ -40,6 +40,11 @@ local REMOTES = {
 	-- they have no character at all (Players.CharacterAutoLoads is false), so
 	-- nobody is standing in a half-built hub watching it appear around them.
 	"Player_Ready", -- C->S, no payload; once per join, ignored if repeated
+	-- Parties (build spec §7.2). One request carrying an action name, and one
+	-- fact carrying the whole picture -- a client never has to piece a party
+	-- together from a stream of deltas.
+	"Party_Request", -- C->S, { Action, TargetUserId? }; PartyCore.parseRequest + 40/min
+	"Party_Sync", -- S->C, party snapshot + invites + players here + optional Message
 	-- Developer tooling. These two always EXIST but are inert unless
 	-- GameConfig.Debug.AllowCommands is true -- DebugSystem does not connect a
 	-- handler otherwise, so an unguarded remote is not left listening.

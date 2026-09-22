@@ -8,6 +8,7 @@ local ProfileSchema = __require("ProfileSchema")
 local EventCore = __require("EventCore")
 local Events = __require("Events")
 local LedgerCore = __require("LedgerCore")
+local PartyCore = __require("PartyCore")
 local WeightedRandom = __require("WeightedRandom")
 local Schema = __require("Schema")
 local Worlds = __require("Worlds")
@@ -3907,6 +3908,404 @@ do
 		end
 		return LedgerCore.remaining(ledger, 10) == 0
 	end)())
+end
+
+-- === Parties (build spec §7.2) ======================================
+group("Parties: forming, leading and leaving")
+
+do
+	local C = cfg()
+
+	check("an invite does not create a party", (function()
+		local s = PartyCore.newState()
+		local r = PartyCore.invite(s, 1, 2, 0, C)
+		return r.ok and PartyCore.partyOf(s, 1) == nil and PartyCore.partyOf(s, 2) == nil
+	end)())
+
+	check("accepting creates a party led by the inviter", (function()
+		local s = PartyCore.newState()
+		PartyCore.invite(s, 1, 2, 0, C)
+		local r = PartyCore.accept(s, 2, 1, 1, C)
+		local p = PartyCore.partyOf(s, 2)
+		return r.ok and p ~= nil and p.LeaderUserId == 1 and #p.Members == 2 and PartyCore.partyOf(s, 1) == p
+	end)())
+
+	check("a declined invite leaves nothing behind", (function()
+		local s = PartyCore.newState()
+		PartyCore.invite(s, 1, 2, 0, C)
+		PartyCore.decline(s, 2, 1)
+		return PartyCore.partyOf(s, 1) == nil and #PartyCore.invitesFor(s, 2, 1) == 0
+	end)())
+
+	check("you cannot invite yourself", not PartyCore.invite(PartyCore.newState(), 1, 1, 0, C).ok)
+
+	check("only the leader invites", (function()
+		local s = PartyCore.newState()
+		PartyCore.invite(s, 1, 2, 0, C)
+		PartyCore.accept(s, 2, 1, 0, C)
+		return not PartyCore.invite(s, 2, 3, 0, C).ok and PartyCore.invite(s, 1, 3, 0, C).ok
+	end)())
+
+	check("a player already in a party cannot be invited", (function()
+		local s = PartyCore.newState()
+		PartyCore.invite(s, 1, 2, 0, C)
+		PartyCore.accept(s, 2, 1, 0, C)
+		return not PartyCore.invite(s, 5, 2, 0, C).ok
+	end)())
+
+	check("an invite expires", (function()
+		local s = PartyCore.newState()
+		PartyCore.invite(s, 1, 2, 0, C)
+		local late = C.Party.InviteExpirySeconds + 1
+		return not PartyCore.accept(s, 2, 1, late, C).ok and PartyCore.partyOf(s, 2) == nil
+	end)())
+
+	check("pruning drops expired invites and names who changed", (function()
+		local s = PartyCore.newState()
+		PartyCore.invite(s, 1, 2, 0, C)
+		local changed = PartyCore.pruneInvites(s, C.Party.InviteExpirySeconds + 1)
+		return #changed == 1 and changed[1] == 2 and s.Invites[2] == nil
+	end)())
+
+	check("a party stops at MaxSize", (function()
+		local s = PartyCore.newState()
+		for id = 2, C.Party.MaxSize do
+			PartyCore.invite(s, 1, id, 0, C)
+			assert(PartyCore.accept(s, id, 1, 0, C).ok)
+		end
+		return #PartyCore.partyOf(s, 1).Members == C.Party.MaxSize
+			and not PartyCore.invite(s, 1, 99, 0, C).ok
+	end)())
+
+	check("accepting into a party that filled meanwhile is refused", (function()
+		local s = PartyCore.newState()
+		for id = 2, C.Party.MaxSize + 1 do
+			PartyCore.invite(s, 1, id, 0, C)
+		end
+		for id = 2, C.Party.MaxSize do
+			PartyCore.accept(s, id, 1, 0, C)
+		end
+		return not PartyCore.accept(s, C.Party.MaxSize + 1, 1, 0, C).ok
+	end)())
+
+	check("joining clears every other invite you held", (function()
+		local s = PartyCore.newState()
+		PartyCore.invite(s, 1, 3, 0, C)
+		PartyCore.invite(s, 2, 3, 0, C)
+		PartyCore.accept(s, 3, 1, 0, C)
+		return #PartyCore.invitesFor(s, 3, 0) == 0
+	end)())
+
+	check("an invite from someone who has since joined another party is void", (function()
+		local s = PartyCore.newState()
+		PartyCore.invite(s, 2, 3, 0, C) -- 2 invites 3
+		PartyCore.invite(s, 1, 2, 0, C)
+		PartyCore.accept(s, 2, 1, 0, C) -- 2 joins 1's party as a member
+		return not PartyCore.accept(s, 3, 2, 0, C).ok and PartyCore.partyOf(s, 3) == nil
+	end)())
+
+	check("the leader leaving hands the lead to the next member", (function()
+		local s = PartyCore.newState()
+		for id = 2, 3 do
+			PartyCore.invite(s, 1, id, 0, C)
+			PartyCore.accept(s, id, 1, 0, C)
+		end
+		local r = PartyCore.leave(s, 1)
+		local p = PartyCore.partyOf(s, 2)
+		return r.ok and not r.value.Disbanded and r.value.NewLeaderUserId == 2 and p.LeaderUserId == 2
+	end)())
+
+	check("a party of one disbands", (function()
+		local s = PartyCore.newState()
+		PartyCore.invite(s, 1, 2, 0, C)
+		PartyCore.accept(s, 2, 1, 0, C)
+		local r = PartyCore.leave(s, 2)
+		return r.value.Disbanded and PartyCore.partyOf(s, 1) == nil and next(s.Parties) == nil
+	end)())
+
+	check("only the leader kicks, and not themselves", (function()
+		local s = PartyCore.newState()
+		for id = 2, 3 do
+			PartyCore.invite(s, 1, id, 0, C)
+			PartyCore.accept(s, id, 1, 0, C)
+		end
+		return not PartyCore.kick(s, 2, 3).ok
+			and not PartyCore.kick(s, 1, 1).ok
+			and PartyCore.kick(s, 1, 3).ok
+			and PartyCore.partyOf(s, 3) == nil
+	end)())
+
+	check("promote hands over the lead", (function()
+		local s = PartyCore.newState()
+		PartyCore.invite(s, 1, 2, 0, C)
+		PartyCore.accept(s, 2, 1, 0, C)
+		return not PartyCore.promote(s, 2, 1).ok
+			and PartyCore.promote(s, 1, 2).ok
+			and PartyCore.isLeader(s, 2)
+			and not PartyCore.isLeader(s, 1)
+	end)())
+
+	check("leaving the server removes you and every invite to or from you", (function()
+		local s = PartyCore.newState()
+		for id = 2, 3 do
+			PartyCore.invite(s, 1, id, 0, C)
+			PartyCore.accept(s, id, 1, 0, C)
+		end
+		PartyCore.invite(s, 1, 7, 0, C)
+		local affected = PartyCore.removePlayer(s, 1)
+		local inbox = s.Invites[7]
+		return PartyCore.partyOf(s, 1) == nil
+			and PartyCore.isLeader(s, 2)
+			and (inbox == nil or next(inbox) == nil)
+			and table.find(affected, 7) ~= nil
+			and table.find(affected, 2) ~= nil
+	end)())
+end
+
+group("Parties: requests from a client")
+
+do
+	check("an unknown action is refused", not PartyCore.parseRequest({ Action = "EXPLODE" }).ok)
+	check("a non-table payload is refused", not PartyCore.parseRequest("INVITE").ok)
+	check("INVITE needs a target", not PartyCore.parseRequest({ Action = "INVITE" }).ok)
+	check("a fractional UserId is refused", not PartyCore.parseRequest({ Action = "INVITE", TargetUserId = 1.5 }).ok)
+	check("a negative UserId is refused", not PartyCore.parseRequest({ Action = "KICK", TargetUserId = -4 }).ok)
+	check("NaN is refused", not PartyCore.parseRequest({ Action = "KICK", TargetUserId = 0 / 0 }).ok)
+	check("infinity is refused", not PartyCore.parseRequest({ Action = "KICK", TargetUserId = math.huge }).ok)
+	check("a string UserId is refused", not PartyCore.parseRequest({ Action = "KICK", TargetUserId = "12" }).ok)
+	check("LEAVE ignores any target it is sent", (function()
+		local r = PartyCore.parseRequest({ Action = "LEAVE", TargetUserId = 5 })
+		return r.ok and r.value.TargetUserId == nil
+	end)())
+	check("a good INVITE parses", (function()
+		local r = PartyCore.parseRequest({ Action = "INVITE", TargetUserId = 12345 })
+		return r.ok and r.value.Action == "INVITE" and r.value.TargetUserId == 12345
+	end)())
+end
+
+group("Parties: who goes through the portal")
+
+do
+	local C = cfg()
+	local s = PartyCore.newState()
+	for id = 2, 3 do
+		PartyCore.invite(s, 1, id, 0, C)
+		PartyCore.accept(s, id, 1, 0, C)
+	end
+
+	local solo = PartyCore.expeditionGroup(s, 42)
+	check("a player with no party goes alone", solo.Role == "SOLO" and #solo.Members == 1 and solo.Members[1] == 42)
+
+	local lead = PartyCore.expeditionGroup(s, 1)
+	check("the leader takes the whole party, leader first",
+		lead.Role == "LEADER" and #lead.Members == 3 and lead.Members[1] == 1)
+
+	local member = PartyCore.expeditionGroup(s, 2)
+	check("a member takes nobody", member.Role == "MEMBER" and #member.Members == 0)
+
+	check("the leader after a promote leads first", (function()
+		PartyCore.promote(s, 1, 3)
+		local g = PartyCore.expeditionGroup(s, 3)
+		return g.Role == "LEADER" and g.Members[1] == 3 and #g.Members == 3
+	end)())
+
+	local base = {
+		Profile = profile({ RollHistory = { { WorldId = "VERDANT_VALLEY", Rarity = "COMMON", At = 1 } } }),
+		Worlds = Worlds,
+		Chunks = Chunks,
+		Config = GameConfig,
+		Now = 100,
+		AlreadyActive = false,
+		DistanceToGate = 1,
+		FreeSlot = 1,
+	}
+	local function entry(role)
+		local o = table.clone(base)
+		o.PartyRole = role
+		return ExpeditionCore.evaluateEntry(o)
+	end
+	check("a party member at the portal is refused, and told why", (function()
+		local d = entry("MEMBER")
+		return not d.Allowed and d.Refusal == "NOT_PARTY_LEADER" and ExpeditionCore.refusalMessage(d.Refusal) ~= nil
+	end)())
+	check("a leader at the portal is allowed", entry("LEADER").Allowed)
+	check("solo is unchanged", entry("SOLO").Allowed and entry(nil).Allowed)
+	check("a member's refusal does not outrank the distance guard", (function()
+		local o = table.clone(base)
+		o.PartyRole = "MEMBER"
+		o.DistanceToGate = 1e9
+		return ExpeditionCore.evaluateEntry(o).Refusal == "TOO_FAR"
+	end)())
+end
+
+group("Parties: coming home together")
+
+do
+	local C = cfg()
+
+	check("a party is rebuilt when leader and member are both home", (function()
+		local s = PartyCore.newState()
+		local pending = {
+			[1] = { LeaderUserId = 1, ExpiresAt = 100 },
+			[2] = { LeaderUserId = 1, ExpiresAt = 100 },
+		}
+		local changed = PartyCore.reunite(s, pending, { [1] = true, [2] = true }, 0, C)
+		local p = PartyCore.partyOf(s, 2)
+		return p ~= nil and p.LeaderUserId == 1 and #p.Members == 2 and #changed == 2
+	end)())
+
+	check("a member home before the leader waits for them", (function()
+		local s = PartyCore.newState()
+		local pending = {
+			[1] = { LeaderUserId = 1, ExpiresAt = 100 },
+			[2] = { LeaderUserId = 1, ExpiresAt = 100 },
+		}
+		PartyCore.reunite(s, pending, { [2] = true }, 0, C)
+		local before = PartyCore.partyOf(s, 2)
+		PartyCore.reunite(s, pending, { [1] = true, [2] = true }, 5, C)
+		return before == nil and PartyCore.partyOf(s, 2) ~= nil
+	end)())
+
+	check("a straggler still finds the party after it formed", (function()
+		local s = PartyCore.newState()
+		local pending = {
+			[1] = { LeaderUserId = 1, ExpiresAt = 100 },
+			[2] = { LeaderUserId = 1, ExpiresAt = 100 },
+			[3] = { LeaderUserId = 1, ExpiresAt = 100 },
+		}
+		PartyCore.reunite(s, pending, { [1] = true, [2] = true }, 0, C)
+		PartyCore.reunite(s, pending, { [1] = true, [2] = true, [3] = true }, 10, C)
+		return #PartyCore.partyOf(s, 1).Members == 3
+	end)())
+
+	check("nobody waits past the reunite window", (function()
+		local s = PartyCore.newState()
+		local pending = { [2] = { LeaderUserId = 1, ExpiresAt = 100 } }
+		PartyCore.reunite(s, pending, { [2] = true }, 101, C)
+		return pending[2] == nil
+	end)())
+
+	check("a member who joined another party meanwhile is left alone", (function()
+		local s = PartyCore.newState()
+		PartyCore.invite(s, 9, 2, 0, C)
+		PartyCore.accept(s, 2, 9, 0, C)
+		local pending = {
+			[1] = { LeaderUserId = 1, ExpiresAt = 100 },
+			[2] = { LeaderUserId = 1, ExpiresAt = 100 },
+		}
+		PartyCore.reunite(s, pending, { [1] = true, [2] = true, [9] = true }, 1, C)
+		return PartyCore.partyOf(s, 2).LeaderUserId == 9 and PartyCore.partyOf(s, 1) == nil
+	end)())
+
+	check("the leader leads however the party lands", (function()
+		local function run(order)
+			local s = PartyCore.newState()
+			local pending = {}
+			for _, id in { 1, 2, 3 } do
+				pending[id] = { LeaderUserId = 1, ExpiresAt = 100 }
+			end
+			local present = {}
+			for _, id in order do
+				present[id] = true
+				PartyCore.reunite(s, pending, present, 0, C)
+			end
+			local p = PartyCore.partyOf(s, 1)
+			return p and p.LeaderUserId == 1 and #p.Members == 3
+		end
+		return run({ 1, 2, 3 }) and run({ 3, 2, 1 }) and run({ 2, 1, 3 })
+	end)())
+end
+
+group("Expeditions as their own server")
+
+do
+	check("AUTO builds in place in Studio", ExpeditionCore.instanceMode(GameConfig, true) == "IN_PLACE")
+	check("AUTO teleports on a live server", ExpeditionCore.instanceMode(GameConfig, false) == "TELEPORT")
+	check(
+		"a forced mode wins over Studio",
+		ExpeditionCore.instanceMode(cfg({ Expedition = { InstanceMode = "TELEPORT" } }), true) == "TELEPORT"
+	)
+	check("the shipped mode is AUTO", GameConfig.Expedition.InstanceMode == "AUTO")
+
+	check("a reserved server is an expedition server", ExpeditionCore.isExpeditionServer("abc", 0))
+	check("a VIP server is a hub", not ExpeditionCore.isExpeditionServer("abc", 12345))
+	check("a public server is a hub", not ExpeditionCore.isExpeditionServer("", 0))
+
+	check("place 0 means this place", ExpeditionCore.placeFor(0, 777) == 777)
+	check("a configured place wins", ExpeditionCore.placeFor(555, 777) == 555)
+
+	local function manifest(overrides)
+		local m = ExpeditionCore.buildManifest({
+			WorldId = "VERDANT_VALLEY",
+			Seed = 123,
+			DurationSeconds = 300,
+			LeaderUserId = 1,
+			Members = { 1, 2 },
+			HubPlaceId = 777,
+			HubJobId = "job",
+			CreatedAt = 0,
+		})
+		for k, v in overrides or {} do
+			m[k] = v
+		end
+		return m
+	end
+
+	check("a good manifest validates", (ExpeditionCore.validateManifest(manifest(), Worlds, Chunks)))
+	check("a missing manifest fails", not ExpeditionCore.validateManifest(nil, Worlds, Chunks))
+	check("an unknown world fails", not ExpeditionCore.validateManifest(manifest({ WorldId = "NOWHERE" }), Worlds, Chunks))
+	check("a world with no map fails", not ExpeditionCore.validateManifest(manifest({ WorldId = "THE_UNKNOWN" }), Worlds, Chunks))
+	check("a leader outside the members fails", not ExpeditionCore.validateManifest(manifest({ LeaderUserId = 9 }), Worlds, Chunks))
+	check("an empty party fails", not ExpeditionCore.validateManifest(manifest({ Members = {} }), Worlds, Chunks))
+	check("a zero duration fails", not ExpeditionCore.validateManifest(manifest({ DurationSeconds = 0 }), Worlds, Chunks))
+	check("a future version fails", not ExpeditionCore.validateManifest(manifest({ Version = 2 }), Worlds, Chunks))
+
+	check("buildManifest copies the member list", (function()
+		local members = { 1, 2 }
+		local m = ExpeditionCore.buildManifest({
+			WorldId = "VERDANT_VALLEY",
+			Seed = 1,
+			DurationSeconds = 1,
+			LeaderUserId = 1,
+			Members = members,
+			HubPlaceId = 1,
+			HubJobId = "",
+			CreatedAt = 0,
+		})
+		table.insert(members, 3)
+		return #m.Members == 2
+	end)())
+
+	check(
+		"only listed members may stay",
+		ExpeditionCore.isManifestMember(manifest(), 2) and not ExpeditionCore.isManifestMember(manifest(), 3)
+	)
+
+	check("arrivals do not stand inside one another", (function()
+		local seen = {}
+		for i = 1, GameConfig.Party.MaxSize do
+			local x, z = ExpeditionCore.arrivalOffset(i, GameConfig.Expedition.ArrivalSpreadStuds)
+			for _, other in seen do
+				if math.sqrt((other[1] - x) ^ 2 + (other[2] - z) ^ 2) < 3 then
+					return false
+				end
+			end
+			table.insert(seen, { x, z })
+		end
+		return true
+	end)())
+end
+
+group("Party config")
+
+do
+	check("real config validates with Party present", (Schema.validateConfig(GameConfig, Worlds)))
+	check("MaxSize below 2 is a boot error", not Schema.validateConfig(cfg({ Party = { MaxSize = 1 } }), Worlds))
+	check(
+		"an unknown InstanceMode is a boot error",
+		not Schema.validateConfig(cfg({ Expedition = { InstanceMode = "WARP" } }), Worlds)
+	)
+	check("the Party panel is live", HubMenuCore.panelById(Menu, "PARTY").Status == "LIVE")
 end
 
 -- === summary ========================================================

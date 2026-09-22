@@ -504,6 +504,74 @@ place with API services enabled.
 ⚠️ Claims made while testing are **permanent**. Ten is ten. Test on a separate
 published place, or accept that the production ledger starts partly spent.
 
+### Test O — parties, in Studio ⭐ NEW — **3 clients, 10 min**
+
+Build spec §7.2. Studio cannot teleport, so here the portal builds the map
+in the same server (`Expedition.InstanceMode = "AUTO"`) — **the party logic
+is identical to the live path**, only the hop is missing. Test > Clients and
+Servers > **3 players** > Start.
+
+1. **Player1: rail → Party (P).** ✅ Pass: "Your party", "You are not in a
+   party", and Player2 and Player3 listed under *Players here* with INVITE.
+2. **Player1 invites Player2.** ✅ Pass: toast `Invited Player2.`; Player2
+   gets a Roblox notification with **Accept / Decline** *even with the panel
+   closed*, and the invite is listed in their Party panel.
+3. **Player2 accepts** (either the notification or the panel). ✅ Pass: both
+   panels show `Your party 2 / 4`, Player1 tagged *Leader*. Player3's list now
+   shows both as *In a party* with INVITE greyed.
+4. **Player2 tries to invite Player3.** ✅ Pass: the INVITE button is greyed —
+   only the leader invites.
+5. **Player1 invites Player3; Player3 declines.** ✅ Pass: nothing changes for
+   the party; the invite disappears from Player3's panel.
+6. **Everyone rolls. Player2 walks to the Fate Engine and presses ENTER (F).**
+   ✅ Pass: *"Your party leader opens the portal."* Nobody moves.
+7. **Player1 presses ENTER.** ✅ Pass: Player1 **and Player2** arrive on the
+   same map, a few studs apart, with the same banner and the same countdown.
+   The server log has one `-> <WORLD> seed N ... (party of 2)` line **per
+   player with the same seed**. Player3 stays in the hub.
+8. **Player2 uses the RETURN portal.** ✅ Pass: Player2 home with +25 Fate;
+   Player1 still on the map, which is still there.
+9. **Player1 returns.** ✅ Pass: map destroyed (no `ExpeditionStage` child
+   left), party still intact in both panels.
+10. **Player1 → LEAD on Player2**, then **Player2 → REMOVE Player1**.
+    ✅ Pass: lead passes; after the removal the party disbands (a party of one
+    is not a party) and both panels read "not in a party".
+11. **Invite someone and wait 60 s without answering.** ✅ Pass: the invite
+    drops off their list on its own.
+
+Also worth a look: leaving the game (stop one client) while in a party — the
+others' panels update and the lead passes on if it was the leader.
+
+### Test P — the portal opens a new server ⭐ NEW — **published place, 2 accounts, 10 min**
+
+The teleport half of §7.2, which **cannot run in Studio**. Needs the place
+published, API Services enabled (DataStore + MemoryStore), and two Roblox
+accounts in a live server.
+
+1. **Solo: roll, press ENTER.** ✅ Pass: a Roblox teleport screen, then you
+   arrive **straight on the map — no title card, no PLAY button** — with the
+   banner and timer. The hub's output shows `opens <WORLD> for 1 ... ->
+   reserved server <id>`; the developer console on the new server shows
+   `this is an expedition server` and `hosting <WORLD> seed N`.
+2. **Your Fate and level came with you.** Open the rail? It is hidden on an
+   expedition server by design — check instead that the RETURN reward
+   (step 3) lands on top of your real total, not on a fresh profile. If the
+   output says `could not acquire profile ... will not persist`, the save
+   hand-off lost its race — report it.
+3. **RETURN.** ✅ Pass: teleported back **into the same hub server you
+   left**, again with no title card, +25 Fate.
+4. **Party of two: A invites B, B accepts, both roll *different* worlds, A
+   presses ENTER.** ✅ Pass: both land in the **same new server**, on **A's**
+   world, same map. B's own roll is untouched and still waiting for them.
+5. **Let the timer run out.** ✅ Pass: both teleported home together, into the
+   hub server they left, and **the party is still formed** when they land.
+6. **B returns early via the portal, A stays.** ✅ Pass: B home; A still on the
+   map. When A comes back, the party re-forms (within
+   `Party.ReuniteWindowSeconds`, 120 s).
+
+If any step lands you in a *different* hub server than the one you left, that
+is the fallback working (the old one filled or closed) — note it, not a fail.
+
 ### Test E — a tampered client is rejected (1 min)
 
 From the **client** console:

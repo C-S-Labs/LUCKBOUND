@@ -19,6 +19,7 @@ export type EntryRefusal =
 	| "COOLDOWN"
 	| "TOO_FAR"
 	| "SERVER_FULL" -- every stage slot is occupied
+	| "NOT_PARTY_LEADER" -- in a party, and only the leader opens the portal
 
 export type EntryDecision = {
 	Allowed: boolean,
@@ -185,6 +186,8 @@ function ExpeditionCore.evaluateEntry(opts: {
 	AlreadyActive: boolean,
 	DistanceToGate: number?,
 	FreeSlot: number?,
+	-- From PartyCore.expeditionGroup. nil and "SOLO" mean the same thing.
+	PartyRole: string?,
 }): EntryDecision
 	local config = opts.Config
 
@@ -207,6 +210,12 @@ function ExpeditionCore.evaluateEntry(opts: {
 	local distance = opts.DistanceToGate
 	if distance ~= nil and distance > config.Expedition.MaxEntryDistance then
 		return { Allowed = false, Refusal = "TOO_FAR" }
+	end
+
+	-- A member walking into the portal would either split the party or drag
+	-- it somewhere the leader did not choose. Neither is theirs to decide.
+	if opts.PartyRole == "MEMBER" then
+		return { Allowed = false, Refusal = "NOT_PARTY_LEADER" }
 	end
 
 	local worldId = ExpeditionCore.destinationFrom(opts.Profile)
@@ -239,8 +248,118 @@ function ExpeditionCore.refusalMessage(refusal: EntryRefusal): string?
 		return "Roll at the Fate Engine first."
 	elseif refusal == "NO_MAP" then
 		return "That world has no map yet."
+	elseif refusal == "NOT_PARTY_LEADER" then
+		return "Your party leader opens the portal."
 	end
 	return nil
+end
+
+-- === EXPEDITIONS AS THEIR OWN SERVER (build spec §7.2) ================
+
+--- "TELEPORT" or "IN_PLACE". AUTO teleports everywhere except Studio, where
+--- TeleportService cannot run -- so a Studio session still walks the whole
+--- loop, parties included, and a live server always gets its own instance.
+function ExpeditionCore.instanceMode(config: any, isStudio: boolean): string
+	local mode = config.Expedition.InstanceMode
+	if mode == "TELEPORT" or mode == "IN_PLACE" then
+		return mode
+	end
+	return if isStudio then "IN_PLACE" else "TELEPORT"
+end
+
+--- True when this server is an expedition instance rather than a hub.
+---
+--- A reserved server has a PrivateServerId and NO owner. A VIP server has
+--- both, and is a hub someone paid for; a public server has neither. So the
+--- owner check is what stops a private server being mistaken for an
+--- expedition and sending its players home.
+function ExpeditionCore.isExpeditionServer(privateServerId: string, privateServerOwnerId: number): boolean
+	return privateServerId ~= "" and privateServerOwnerId == 0
+end
+
+--- The place a teleport targets: the configured one, or this place when the
+--- config says 0.
+function ExpeditionCore.placeFor(configuredId: number, currentPlaceId: number): number
+	return if configuredId and configuredId > 0 then configuredId else currentPlaceId
+end
+
+--- EVERYTHING AN EXPEDITION SERVER NEEDS TO BUILD THE SAME MAP.
+---
+--- Written by the hub to MemoryStore under the reserved server's id, read by
+--- that server on boot. The seed and world are the leader's, which is what
+--- makes a party's map identical for everyone in it. Each member's OWN
+--- profile -- level, Fate, history -- follows them through SaveSystem and is
+--- never in here.
+---
+--- `HubJobId` is the hub server they left, so they can be sent back to the
+--- same one and find their party where they left it.
+function ExpeditionCore.buildManifest(opts: {
+	WorldId: string,
+	Seed: number,
+	DurationSeconds: number,
+	LeaderUserId: number,
+	Members: { number },
+	HubPlaceId: number,
+	HubJobId: string,
+	CreatedAt: number,
+})
+	return {
+		Version = 1,
+		WorldId = opts.WorldId,
+		Seed = opts.Seed,
+		DurationSeconds = opts.DurationSeconds,
+		LeaderUserId = opts.LeaderUserId,
+		Members = table.clone(opts.Members),
+		HubPlaceId = opts.HubPlaceId,
+		HubJobId = opts.HubJobId,
+		CreatedAt = opts.CreatedAt,
+	}
+end
+
+--- Checks a manifest read back from MemoryStore before any of it is used.
+--- It came from our own server, but through a store, and a half-written or
+--- stale entry must fail here rather than as a nil index halfway through a
+--- map build.
+function ExpeditionCore.validateManifest(manifest: any, worlds: { [string]: any }, chunks: { [string]: any })
+	if type(manifest) ~= "table" then
+		return false, "manifest missing"
+	end
+	if manifest.Version ~= 1 then
+		return false, `unknown manifest version {tostring(manifest.Version)}`
+	end
+	local worldId = manifest.WorldId
+	if type(worldId) ~= "string" or not worlds[worldId] then
+		return false, `unknown world {tostring(worldId)}`
+	end
+	if not ExpeditionCore.hasMap(worlds[worldId], chunks, worldId) then
+		return false, `{worldId} has no map`
+	end
+	if type(manifest.Seed) ~= "number" or type(manifest.DurationSeconds) ~= "number" or manifest.DurationSeconds <= 0 then
+		return false, "bad seed or duration"
+	end
+	if type(manifest.LeaderUserId) ~= "number" or type(manifest.Members) ~= "table" or #manifest.Members == 0 then
+		return false, "no members"
+	end
+	if not table.find(manifest.Members, manifest.LeaderUserId) then
+		return false, "leader is not a member"
+	end
+	return true, nil
+end
+
+--- Only the players the hub sent may stay. Anyone else who reaches a
+--- reserved server is sent home.
+function ExpeditionCore.isManifestMember(manifest: any, userId: number): boolean
+	return type(manifest) == "table" and type(manifest.Members) == "table" and table.find(manifest.Members, userId) ~= nil
+end
+
+--- Where the Nth arrival stands: a small ring around the entry point, so a
+--- party does not spawn inside itself. Index 1 is the centre.
+function ExpeditionCore.arrivalOffset(index: number, radius: number): (number, number)
+	if index <= 1 then
+		return 0, 0
+	end
+	local angle = (index - 2) * (math.pi / 3)
+	return math.cos(angle) * radius, math.sin(angle) * radius
 end
 
 return ExpeditionCore

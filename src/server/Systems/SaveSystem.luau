@@ -58,22 +58,38 @@ function SaveSystem.load(player: Player): any
 		return profile
 	end
 
-	local loaded = retry(`load {player.UserId}`, function()
-		return (store :: DataStore):UpdateAsync(keyFor(player.UserId), function(stored)
-			stored = stored or {}
+	-- A TELEPORT IS A HAND-OFF, AND THE TWO ENDS RACE. The server a player
+	-- left releases their lock (SaveSystem.handOff) just before the hop, but
+	-- the server they arrive on can still ask first and find it held. Giving
+	-- up there would hand every teleported player a session that silently
+	-- does not save -- so a held lock is waited on, briefly, before that.
+	local deadline = os.clock() + GameConfig.Save.LockWaitSeconds
+	local loaded
+	repeat
+		local heldElsewhere = false
+		loaded = retry(`load {player.UserId}`, function()
+			return (store :: DataStore):UpdateAsync(keyFor(player.UserId), function(stored)
+				stored = stored or {}
+				local at = os.time()
 
-			-- Respect a live lock held by another server, unless it is stale.
-			local lock = stored.__lock
-			if lock and lock.owner ~= lockId then
-				if now - (lock.at or 0) < GameConfig.Save.SessionLockTimeoutSeconds then
-					return nil -- abort; another server still owns this profile
+				-- Respect a live lock held by another server, unless it is stale.
+				local lock = stored.__lock
+				if lock and lock.owner ~= lockId then
+					if at - (lock.at or 0) < GameConfig.Save.SessionLockTimeoutSeconds then
+						heldElsewhere = true
+						return nil -- abort; another server still owns this profile
+					end
 				end
-			end
 
-			stored.__lock = { owner = lockId, at = now }
-			return stored
+				stored.__lock = { owner = lockId, at = at }
+				return stored
+			end)
 		end)
-	end)
+		if loaded ~= nil or not heldElsewhere or player.Parent == nil then
+			break
+		end
+		task.wait(GameConfig.Save.LockPollSeconds)
+	until os.clock() >= deadline
 
 	local profile
 	if loaded == nil then
@@ -144,6 +160,21 @@ function SaveSystem.save(player: Player, releaseLock: boolean?): boolean
 		return true
 	end
 	return false
+end
+
+--- Saves and RELEASES the lock while keeping the profile cached, so the
+--- server a player is about to be teleported to can take it straight away.
+---
+--- The cache stays because the player is still here until the teleport
+--- lands, and systems may still read it. If the teleport fails the next
+--- autosave re-takes the lock on its own: save() writes a lock whenever it
+--- is not releasing, and a released lock belongs to nobody.
+function SaveSystem.handOff(player: Player): ()
+	if volatileMode then
+		return
+	end
+	dirty[player.UserId] = true
+	SaveSystem.save(player, true)
 end
 
 function SaveSystem.release(player: Player): ()

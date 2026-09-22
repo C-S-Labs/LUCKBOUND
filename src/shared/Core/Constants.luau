@@ -162,7 +162,21 @@ local Constants = {
 		-- (LedgerSystem fails closed; SaveSystem fails open).
 		LEDGER_STORE = "LUCKBOUND_Ledger_v1",
 		LEDGER_PREFIX = "unique_",
+		-- MemoryStore, not DataStore: an expedition manifest only has to live
+		-- as long as a teleport. Keyed by the reserved server's
+		-- PrivateServerId, which the destination server can read about itself
+		-- -- so nothing the manifest says ever passes through a client.
+		EXPEDITION_MANIFESTS = "LUCKBOUND_Expeditions_v1",
+		-- Who was in whose party, written by an expedition server as it sends
+		-- a party home, read by the hub server they land on. Keyed by UserId.
+		PARTY_REUNITE = "LUCKBOUND_PartyReunite_v1",
 	},
+	-- Attribute on ReplicatedStorage.Luckbound saying what this server is
+	-- for, set first thing at boot so every client can read it before any
+	-- screen is built.
+	SERVER_KIND_ATTRIBUTE = "ServerKind",
+	SERVER_KIND_HUB = "HUB",
+	SERVER_KIND_EXPEDITION = "EXPEDITION",
 
 	-- v2 added RedeemedCodes and Settings, for the hub menu's Codes and
 	-- Settings panels. ProfileSchema.MIGRATIONS[1] fills both in.

@@ -140,6 +140,24 @@ function Schema.validateConfig(config: any, worlds: { [string]: any }): (boolean
 		table.insert(errors, `no world has EnabledInPhase <= CurrentPhase ({config.CurrentPhase}) -- roll pool would be empty`)
 	end
 
+	-- Expeditions as their own server, and parties (build spec §7.2).
+	local mode = config.Expedition.InstanceMode
+	if mode ~= "AUTO" and mode ~= "TELEPORT" and mode ~= "IN_PLACE" then
+		table.insert(errors, `GameConfig.Expedition.InstanceMode must be AUTO, TELEPORT or IN_PLACE, got {tostring(mode)}`)
+	end
+	local party = config.Party
+	if type(party) ~= "table" then
+		table.insert(errors, "GameConfig.Party is missing")
+	else
+		-- A party of one is a player; two is the smallest party there is.
+		if type(party.MaxSize) ~= "number" or party.MaxSize < 2 then
+			table.insert(errors, `GameConfig.Party.MaxSize must be at least 2, got {tostring(party.MaxSize)}`)
+		end
+		if type(party.InviteExpirySeconds) ~= "number" or party.InviteExpirySeconds <= 0 then
+			table.insert(errors, "GameConfig.Party.InviteExpirySeconds must be positive")
+		end
+	end
+
 	return #errors == 0, errors
 end
 
