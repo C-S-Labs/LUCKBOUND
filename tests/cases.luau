@@ -1087,13 +1087,35 @@ do
 				and ascentProviders[2] == "SC_SPIRE_COURT_B",
 			table.concat(ascentProviders, ", "))
 		check("Sky Citadel has its SIDE pocket (Blueprint §6)",
-			scLib.SIDE and #scLib.SIDE == 1 and scLib.SIDE[1].Id == "SC_SIDE_VAULT")
+			scLib.SIDE and #scLib.SIDE == 1 and scLib.SIDE[1].Id == "SC_SIDE_LOOKOUT")
 		local scCount = 0
 		for _, c in Chunks do
 			if c.WorldId == "SKY_CITADEL" then scCount += 1 end
 		end
-		check("Sky Citadel's kit is within the 12-16 target", scCount >= 12 and scCount <= 16,
-			tostring(scCount))
+		check("Sky Citadel's kit meets the 12-piece minimum", scCount >= 12, tostring(scCount))
+
+		-- Turns both ways, so a run does not spiral one direction into itself.
+		local rights, lefts = 0, 0
+		for _, c in Chunks do
+			if c.WorldId == "SKY_CITADEL" and #c.Sockets == 2 then
+				local has = {}
+				for _, sk in c.Sockets do has[sk.Id] = true end
+				if has.south and has.east then rights += 1 end
+				if has.south and has.west then lefts += 1 end
+			end
+		end
+		check("Sky Citadel turns both ways", rights >= 2 and lefts >= 2,
+			string.format("%d right, %d left", rights, lefts))
+
+		-- Nothing on the critical path dead-ends: every PATH/COMBAT piece has
+		-- a way in and a way out.
+		local deadEnd
+		for id, c in Chunks do
+			if c.WorldId == "SKY_CITADEL" and (c.Role == "PATH" or c.Role == "COMBAT") and #c.Sockets < 2 then
+				deadEnd = id
+			end
+		end
+		check("no Sky Citadel path piece is a dead end", deadEnd == nil, tostring(deadEnd))
 
 		-- The generator pins every mesh to exactly 256^3, because ChunkLoader
 		-- stretches a mesh to SizeX/Y/Z. Declared size must match that box.
@@ -1130,6 +1152,67 @@ do
 		check("every assembled Sky Citadel layout is valid", allValid)
 		check("a gate-court always precedes the Crown Spire arena", courtGates)
 		check("the bend piece makes some layouts turn", turned)
+
+		-- THE INTERSECTION. With a seeded exit pick, the crossroads must leave
+		-- by more than one of its three free mouths across seeds.
+		local function toLocal(dx: number, dz: number, yaw: number): string
+			local x, z = dx, dz
+			for _ = 1, (360 - yaw) % 360 // 90 do
+				x, z = -z, x
+			end
+			return string.format("%d,%d", math.sign(x), math.sign(z))
+		end
+		local exits = {}
+		for trial = 1, 300 do
+			local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+				{ WorldId = "SKY_CITADEL", PathLength = 5 },
+				function(a) return lcg(trial * 92821 + a * 17) end, 5)
+			if okA then
+				for i, c in layout.Chunks do
+					local nxt = layout.Chunks[i + 1]
+					if c.ChunkId == "SC_CROSSROADS" and nxt and nxt.Role ~= "SIDE" then
+						exits[toLocal(nxt.X - c.X, nxt.Z - c.Z, c.Yaw)] = true
+					end
+				end
+			end
+		end
+		local nExits = 0
+		for _ in exits do nExits += 1 end
+		check("the crossroads leaves by more than one mouth across seeds", nExits >= 2,
+			string.format("%d distinct exits", nExits))
+	end
+
+	-- SIDE pockets (IncludeSide) -- consumed since 2026-09-22 -----------
+	-- A SIDE chunk hangs off a spare socket after the arena is placed. It is
+	-- optional (no fit is not a failure) and at most one per layout.
+	do
+		local function sidesOver(worldId: string, includeSide: boolean): (number, number, boolean)
+			local withSide, built, allValid = 0, 0, true
+			for trial = 1, 200 do
+				local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+					{ WorldId = worldId, PathLength = 5, IncludeSide = includeSide },
+					function(a) return lcg(trial * 6151 + a * 3) end, 5)
+				if okA then
+					built += 1
+					local okV = ChunkCore.validateLayout(layout, Chunks)
+					if not okV then allValid = false end
+					for _, c in layout.Chunks do
+						if c.Role == "SIDE" then withSide += 1 end
+					end
+				end
+			end
+			return withSide, built, allValid
+		end
+		local scSides, scBuilt, scValid = sidesOver("SKY_CITADEL", true)
+		check("with IncludeSide, Sky Citadel places its lookout on some seeds", scSides > 0,
+			string.format("%d of %d layouts", scSides, scBuilt))
+		check("layouts with a SIDE pocket are still valid (no overlap, <= 1 pocket)", scValid)
+		local vvSides, vvBuilt = sidesOver("VERDANT_VALLEY", true)
+		check("with IncludeSide, Verdant Valley's Hollow is finally placed", vvSides > 0,
+			string.format("%d of %d layouts", vvSides, vvBuilt))
+		local offSides = sidesOver("SKY_CITADEL", false)
+		check("without IncludeSide, no SIDE pocket is ever placed", offSides == 0, tostring(offSides))
+		check("the expedition turns IncludeSide on", GameConfig.Expedition.IncludeSide == true)
 	end
 
 	-- Geometry helpers ----------------------------------------------

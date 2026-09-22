@@ -300,6 +300,7 @@ function ExpeditionSystem.requestEnter(player: Player, ...: any): ()
 		local ok, layout, attempts = ChunkCore.assembleWithRetry(Chunks, {
 			WorldId = worldId,
 			PathLength = ExpeditionCore.pathLengthFor(world, GameConfig),
+			IncludeSide = GameConfig.Expedition.IncludeSide,
 		}, function(attempt)
 			return ExpeditionCore.streamFor(seed, attempt)
 		end, GameConfig.Expedition.AssemblyAttempts)

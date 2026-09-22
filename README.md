@@ -68,5 +68,5 @@ See build spec §3.3.
 - [x] 15-roll onboarding arc peaking on Epic; true RNG from roll 16
 - [x] Modular map system — asset manifest, chunk kit, seeded assembler
 - [x] 5 worlds; 208-test headless suite + CI
-- [ ] **Sky Citadel biome** — art direction and a 12-piece kit exported (`docs/SKY_CITADEL.md`); needs upload, enemies and a boss
+- [ ] **Sky Citadel biome** — art direction and a 19-piece kit exported, with turns both ways and a crossroads (`docs/SKY_CITADEL.md`); needs upload, enemies and a boss
 - [ ] Phase 2 — expedition entry, combat, loot, Discovery Book

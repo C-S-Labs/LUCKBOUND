@@ -90,77 +90,115 @@ local ENTRIES: { [string]: AssetEntry } = {
 		AssetId = "",
 		Status = "PLACEHOLDER",
 		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
-		Notes = "chunk_entry.fbx -- octagonal arrival plaza, landing pad, "
-			.. "the 160-stud Beacon spire. Opening: north SKYWAY.",
+		Notes = "chunk_entry.fbx -- Octagonal arrival plaza under the Beacon.",
 	},
 	SC_CHUNK_PATH_STRAIGHT = {
 		AssetId = "",
 		Status = "PLACEHOLDER",
 		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
-		Notes = "chunk_path_straight.fbx -- 40-stud skyway through a "
-			.. "gatehouse on a hexagonal pier. Openings: north and south SKYWAY.",
-	},
-	SC_CHUNK_SPIRE_COURT = {
-		AssetId = "",
-		Status = "PLACEHOLDER",
-		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
-		Notes = "chunk_spire_court.fbx -- walled court, Sky Fountain, twin "
-			.. "crown spires, the Ascent Gate. Openings: south SKYWAY, north ASCENT.",
-	},
-	SC_CHUNK_BOSS_CLEARING = {
-		AssetId = "",
-		Status = "PLACEHOLDER",
-		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
-		Notes = "chunk_boss_clearing.fbx -- round arena, obelisk ring, the "
-			.. "Crown Spire. Opening: south ASCENT.",
-	},
-	SC_CHUNK_PATH_BEND = {
-		AssetId = "",
-		Status = "PLACEHOLDER",
-		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
-		Notes = "chunk_path_bend.fbx -- a skyway turning round the Spired Keep. Openings: south and east SKYWAY.",
+		Notes = "chunk_path_straight.fbx -- The gatehouse pier: a skyway under an arch between two turrets.",
 	},
 	SC_CHUNK_PATH_SKYPORT = {
 		AssetId = "",
 		Status = "PLACEHOLDER",
 		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
-		Notes = "chunk_path_skyport.fbx -- skiff dock: landing pad, crane, moored skiff. Openings: north and south SKYWAY.",
+		Notes = "chunk_path_skyport.fbx -- A plank pier with a dock islet off it: hazard pad, crane, a moored skiff.",
 	},
 	SC_CHUNK_PATH_HOOPS = {
 		AssetId = "",
 		Status = "PLACEHOLDER",
 		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
-		Notes = "chunk_path_hoops.fbx -- a bare span through three floating rings. Openings: north and south SKYWAY.",
+		Notes = "chunk_path_hoops.fbx -- A bare glass-floored span through three floating rings, between two satellites.",
+	},
+	SC_CHUNK_PATH_SHATTERED = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "chunk_path_shattered.fbx -- The span is broken: eight floating plates, a stride apart, and the Sundered Spire whose crown hangs over its stump.",
+	},
+	SC_CHUNK_PATH_AVIARY = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "chunk_path_aviary.fbx -- The path runs through a gilded birdcage dome, birds in and around it.",
+	},
+	SC_CHUNK_CROSSROADS = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "chunk_crossroads.fbx -- THE INTERSECTION.",
+	},
+	SC_CHUNK_PATH_BEND = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "chunk_path_bend.fbx -- Turns right round the Spired Keep.",
+	},
+	SC_CHUNK_PATH_BEND_WEST = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "chunk_path_bend_west.fbx -- Turns left on a dark engine-deck, the lighthouse on its own islet.",
+	},
+	SC_CHUNK_VAULT_TURN = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "chunk_vault_turn.fbx -- The treasury, passed THROUGH on a right turn.",
+	},
+	SC_CHUNK_AETHER_SPRINGS = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "chunk_aether_springs.fbx -- Terraced pools and the Cascade Tower, water falling off the east rim; turns left.",
 	},
 	SC_CHUNK_GARDEN_TERRACE = {
 		AssetId = "",
 		Status = "PLACEHOLDER",
 		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
-		Notes = "chunk_garden_terrace.fbx -- hedges, reflecting pool, pergola, gazebo. Openings: north and south SKYWAY.",
+		Notes = "chunk_garden_terrace.fbx -- The hanging gardens: three islets, the Sky Tree, a pool, a gazebo.",
 	},
 	SC_CHUNK_OBSERVATORY = {
 		AssetId = "",
 		Status = "PLACEHOLDER",
 		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
-		Notes = "chunk_observatory.fbx -- dome and mast, dish array, orrery. Openings: north and south SKYWAY.",
+		Notes = "chunk_observatory.fbx -- A night-dark deck of stars: dome and mast, an orrery, dishes on a raised deck.",
 	},
 	SC_CHUNK_ARMORY = {
 		AssetId = "",
 		Status = "PLACEHOLDER",
 		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
-		Notes = "chunk_armory.fbx -- sparring ring, targets, racks, barracks, forge. Openings: north and south SKYWAY.",
+		Notes = "chunk_armory.fbx -- A slate training yard and a barracks islet, under the banner mast.",
 	},
-	SC_CHUNK_SIDE_VAULT = {
+	SC_CHUNK_ARCHIVE = {
 		AssetId = "",
 		Status = "PLACEHOLDER",
 		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
-		Notes = "chunk_side_vault.fbx -- the side pocket: a sealed treasury. Opening: south SKYWAY.",
+		Notes = "chunk_archive.fbx -- A roofed hall of shelves and ribbed vaults, floating tomes, the clock tower.",
+	},
+	SC_CHUNK_SPIRE_COURT = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "chunk_spire_court.fbx -- Gate-court: the Sky Fountain and the Ascent Gate.",
 	},
 	SC_CHUNK_SPIRE_COURT_B = {
 		AssetId = "",
 		Status = "PLACEHOLDER",
 		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
-		Notes = "chunk_spire_court_b.fbx -- the Hall of Winds: colonnades, turbines, Moon Gate. Openings: south SKYWAY, north ASCENT.",
+		Notes = "chunk_spire_court_b.fbx -- Gate-court, rare: the Hall of Winds and its Moon Gate.",
+	},
+	SC_CHUNK_SIDE_LOOKOUT = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "chunk_side_lookout.fbx -- The world's SIDE pocket: a lookout and a loot cache, hung off a spare socket (a crossroads branch, typically) when IncludeSide is on.",
+	},
+	SC_CHUNK_BOSS_CLEARING = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "chunk_boss_clearing.fbx -- The Crown Spire arena.",
 	},
 
 	-- === Hub prefabs =============================================

@@ -143,6 +143,7 @@ class Piece:
         self.solids = []
         self.floats = []
         self.slabs = []
+        self.up = set()     # single-sided floor panels: forced to face up
         self.rng = random.Random(name)   # seeded by name: rebuilds are identical
 
     def add(self, verts, faces, mat, M):
@@ -159,7 +160,7 @@ class Piece:
 
     def _cyl(self, x, y, r, z0, z1):
         c = self.base @ Vector((x, y, 0))
-        return ("cyl", c.x, c.y, r, z0, z1)
+        return ("cyl", c.x, c.y, r, z0 + c.z, z1 + c.z)
 
     def solid(self, label, x, y, r, z0, z1):
         self.solids.append((label, self._cyl(x, y, r, z0, z1)))
@@ -386,18 +387,31 @@ def shape_over_slab(shape, slab_entry, gap=FLOAT_GAP):
     sz = _z(shape)
     if sz[1] + gap <= z0 or z1 + gap <= sz[0]:
         return False
-    x0, x1, y0, y1 = _xy_extent(shape)
-    cx, cy = (x0 + x1) / 2, (y0 + y1) / 2
-    r = max(x1 - x0, y1 - y0) / 2
     n = len(pts)
-    worst = math.inf   # signed distance to the polygon, + inside
+    if shape[0] == "cyl":
+        cx, cy, r = shape[1], shape[2], shape[3]
+        worst = math.inf   # signed distance to the polygon, + inside
+        for i in range(n):
+            (ax, ay), (bx, by) = pts[i], pts[(i + 1) % n]
+            ex, ey = bx - ax, by - ay
+            L = math.hypot(ex, ey)
+            worst = min(worst, ((cx - ax) * -ey + (cy - ay) * ex) / L)   # CCW: + is inside
+        return worst > -(r + gap)
+    # A box: separating-axis test against the convex deck, so a long thin
+    # float (a skiff) is not treated as the circle round it.
+    x0, x1, y0, y1 = _xy_extent(shape)
+    corners = [(x0 - gap, y0 - gap), (x1 + gap, y0 - gap), (x1 + gap, y1 + gap), (x0 - gap, y1 + gap)]
+    if max(q[0] for q in pts) <= corners[0][0] or min(q[0] for q in pts) >= corners[1][0]:
+        return False
+    if max(q[1] for q in pts) <= corners[0][1] or min(q[1] for q in pts) >= corners[2][1]:
+        return False
     for i in range(n):
         (ax, ay), (bx, by) = pts[i], pts[(i + 1) % n]
         ex, ey = bx - ax, by - ay
         L = math.hypot(ex, ey)
-        d = ((cx - ax) * -ey + (cy - ay) * ex) / L   # CCW: + is inside
-        worst = min(worst, d)
-    return worst > -(r + gap)
+        if all(((qx - ax) * -ey + (qy - ay) * ex) / L <= 0 for qx, qy in corners):
+            return False   # every corner outside this edge: separated
+    return True
 
 
 def shape_fits_tile(shape):
@@ -722,237 +736,6 @@ def ascent_deck(p, y0, y1):
 
 
 # --------------------------------------------------------------------------
-# The four pieces
-# --------------------------------------------------------------------------
-
-
-def build_entry():
-    p = Piece("chunk_entry", "ENTRY | one opening: north SKYWAY")
-    R = 84.0
-    pts = ngon(8, R)
-    apo = R * math.cos(math.radians(22.5))
-    slab(p, "CitadelWhite", pts, -DECK_T, 0)
-    standard_keel(p, pts)
-    border_band(p, pts)
-    torus(p, "AzureDim", 62, 0.35, 0, 0, 0.05, n=24)
-
-    # north SKYWAY, abutting the octagon's north flat edge
-    skyway_deck(p, apo, HALF, apo + 1, HALF - 0.4)
-    parapet_ring(p, pts, skip=lambda a, b: a[1] > apo - 1 and b[1] > apo - 1)
-
-    # arrival pad -- the spawn falls onto this; keep the column above (0,0) clear
-    frustum(p, "PaleAlloy", 16, 22, 21, 0, 0.5, 0, 0)
-    torus(p, "AzureNeon", 19, 0.3, 0, 0, 0.55, n=24)
-    for k in range(8):
-        a = math.radians(22.5 + 45 * k)
-        box(p, "AzureDim", math.cos(a) * 12, math.sin(a) * 12, 0.55, 6, 0.8, 0.2, rz=45 * k + 22.5)
-
-    # the Beacon -- tallest point, pins the crown to +160
-    spire(p, -50, 30, 7, CROWN_TOP, extra_halos=1)
-    spire(p, 50, 30, 6, 118)
-    tower(p, -54, -46, 9, 30)
-    tower(p, 54, -46, 9, 30)
-
-    banner(p, -26, apo - 8, rz=0)
-    banner(p, 26, apo - 8, rz=0)
-    for x, y in ((-30, -26), (30, -26), (-30, 14), (30, 14)):
-        lamp(p, x, y)
-    holo_pedestal(p, -24, -62)   # return portal lands near (0, -64): keep it clear
-    holo_pedestal(p, 24, -62)
-    for x, y in ((-40, -6), (40, -6), (-16, 50), (16, 50)):
-        planter(p, x, y)
-    bench(p, -40, 4, rz=90)
-    bench(p, 40, 4, rz=90)
-    # cargo stack by the west turret
-    crate(p, -66, -18, 3.2, rz=10)
-    crate(p, -62, -20, 3.2, rz=-6)
-    crate(p, -64, -19, 3.0, z=3.2, rz=25)
-    crate(p, 66, -16, 2.6, rz=-14)
-    # floating crystals over the plaza's shoulders
-    float_crystal(p, "SkyGlass", -34, 50, 20, 2.4, 5, 4, n=6)
-    float_crystal(p, "SkyGlass", 34, 50, 26, 2.0, 4, 3.5, n=6)
-    finish(p)
-    return p
-
-
-def build_path_straight():
-    p = Piece("chunk_path_straight", "PATH | openings: north SKYWAY, south SKYWAY")
-    R = 44.0
-    pts = ngon(6, R, rot=0)     # flat edges north and south
-    apo = R * math.cos(math.radians(30))
-    slab(p, "CitadelWhite", pts, -DECK_T, 0)
-    standard_keel(p, pts)
-    torus(p, "AzureDim", 26, 0.3, 0, 0, 0.05, n=18)
-
-    skyway_deck(p, apo, HALF, apo + 1, HALF - 0.4)
-    skyway_deck(p, -HALF, -apo, -HALF + 0.4, -apo - 1)
-
-    # railings on the hex's four slanted edges
-    n = len(pts)
-    for i in range(n):
-        a, b = pts[i], pts[(i + 1) % n]
-        if abs(a[1] - b[1]) < 1e-3:     # the flat north/south edges carry the deck
-            continue
-        ex, ey = b[0] - a[0], b[1] - a[1]
-        L = math.hypot(ex, ey)
-        ix, iy = -ey / L * 0.8, ex / L * 0.8
-        railing(p, a[0] + ix, a[1] + iy, b[0] + ix, b[1] + iy)
-
-    # the gatehouse the skyway passes under
-    p.solid_box("gatehouse lintel", -30, 30, -4, 4, 28, 48)
-    tower(p, -32, 0, 6, 64)
-    tower(p, 32, 0, 6, 64)
-    box(p, "PaleAlloy", 0, 0, 32, 52, 7, 4)
-    box(p, "AzureDim", 0, 0, 29.7, 50, 3.5, 0.6)
-    for s in (-1, 1):
-        box(p, "CitadelWhite", s * 13, 0, 37.2, 27.5, 5.6, 3, ry=s * 16)
-    crystal(p, "SunGold", 0, 0, 45.5, 2.0, 3.6, 2.2)
-
-    # the mast -- pins the crown to +160
-    spire(p, -30, -24, 5, CROWN_TOP)
-    spire(p, 30, 24, 4.5, 104, fins=False)
-
-    for x, y in ((17, 62), (-17, 102), (-17, -62), (17, -102)):
-        lamp(p, x, y)
-    banner(p, -24, 22)
-    banner(p, 24, -22)
-    holo_pedestal(p, -34, 12)
-    crate(p, 26, -28, 3.0, rz=12)
-    crate(p, 29, -31, 2.6, rz=-20)
-    anti_grav_pylon(p, -76, 70, 6)
-    anti_grav_pylon(p, 76, -70, 10)
-    finish(p)
-    return p
-
-
-def build_spire_court():
-    p = Piece("chunk_spire_court", "COMBAT (grove role) | openings: south SKYWAY, north ASCENT")
-    h, c = 100.0, 24.0
-    pts = [(-h + c, -h), (h - c, -h), (h, -h + c), (h, h - c),
-           (h - c, h), (-h + c, h), (-h, h - c), (-h, -h + c)]
-    slab(p, "CitadelWhite", pts, -DECK_T, 0)
-    standard_keel(p, pts)
-    border_band(p, pts, width=8.0)
-
-    skyway_deck(p, -HALF, -h, -HALF + 0.4, -h - 1)
-    ascent_deck(p, h, HALF)
-
-    def skip(a, b):
-        return abs(a[1] - b[1]) < 1e-3 and abs(a[1]) > h - 1   # north and south edges are split below
-
-    parapet_ring(p, pts, skip=skip)
-    for x0, x1 in ((-h + c, -SKYWAY_W / 2), (SKYWAY_W / 2, h - c)):
-        parapet(p, (x0, -h), (x1, -h), (0, 1))
-    for x0, x1 in ((h - c, ASCENT_W / 2), (-ASCENT_W / 2, -h + c)):
-        parapet(p, (x0, h), (x1, h), (0, -1))
-
-    # avenue inlay: from the south skyway to the Ascent Gate
-    box_span(p, "AzureDim", -1.5, 1.5, -h, -20, 0, 0.12)
-    box_span(p, "AzureDim", -1.5, 1.5, 20, 86, 0, 0.12)
-    torus(p, "AzureDim", 22, 0.3, 0, 0, 0.05, n=24)
-
-    # the Sky Fountain
-    p.solid("fountain", 0, 0, 16, 0, 24)
-    frustum(p, "DeepAlloy", 12, 16, 16, 0, 1.2, 0, 0)
-    frustum(p, "SkyGlass", 12, 14.5, 14.5, 1.2, 1.5, 0, 0)
-    frustum(p, "PaleAlloy", 8, 3, 2, 1.5, 10, 0, 0)
-    frustum(p, "SunGold", 8, 2, 5, 10, 11.5, 0, 0)
-    crystal(p, "AzureNeon", 0, 0, 17, 2.2, 4.5, 3.5, n=6)
-    torus(p, "AzureNeon", 5.5, 0.3, 0, 0, 17, n=16)
-    torus(p, "AzureNeon", 7.5, 0.3, 0, 0, 21, n=16, rx=20)
-
-    # corner turrets, twin crown spires (pin +160), lesser spires
-    for sx in (-1, 1):
-        for sy in (-1, 1):
-            tower(p, sx * 76, sy * 76, 10, 52)
-    spire(p, -42, 58, 7, CROWN_TOP, extra_halos=1)
-    spire(p, 42, 58, 7, CROWN_TOP, extra_halos=1)
-    spire(p, -58, -40, 5, 96, fins=False)
-    spire(p, 58, -40, 5, 96, fins=False)
-
-    # the Ascent Gate -- the arena lies beyond it
-    gate(p, 0, 92, ASCENT_W, 58)
-    banner(p, -30, 82)
-    banner(p, 30, 82)
-
-    for y in (-84, -56, -30):
-        lamp(p, -16, y)
-        lamp(p, 16, y)
-    for y in (30, 58):
-        lamp(p, -16, y)
-        lamp(p, 16, y)
-    for x, y in ((-64, 14), (-64, -8), (64, 14), (64, -8), (-30, -74), (30, -74)):
-        planter(p, x, y)
-    bench(p, -32, 0, rz=90)
-    bench(p, 32, 0, rz=90)
-    holo_pedestal(p, -24, 78)
-    holo_pedestal(p, 24, 78)
-    crate(p, 74, 30, 3.2, rz=8)
-    crate(p, 70, 34, 3.0, rz=-12)
-    crate(p, 72, 32, 2.8, z=3.2, rz=30)
-    crate(p, -74, 30, 3.0, rz=-5)
-    float_crystal(p, "SkyGlass", -66, 58, 30, 2.8, 6, 4.5, n=6)
-    float_crystal(p, "SkyGlass", 66, 58, 24, 2.4, 5, 4, n=6)
-    finish(p)
-    return p
-
-
-def build_boss_clearing():
-    p = Piece("chunk_boss_clearing", "BOSS | one opening: south ASCENT")
-    R = 112.0
-    ring = ngon(16, R)
-    chord_y = -math.sqrt(R * R - (ASCENT_W / 2) ** 2)
-    pts = [v for v in ring if v[1] > chord_y + 0.01]
-    # insert the flat south throat so the ASCENT deck abuts a straight edge
-    i_insert = next(i for i in range(len(pts)) if pts[i][1] < 0 and pts[i][0] > 0)
-    pts = pts[:i_insert] + [(-ASCENT_W / 2, chord_y), (ASCENT_W / 2, chord_y)] + pts[i_insert:]
-    # ngon() is CCW; re-sort by angle to be safe
-    pts.sort(key=lambda v: math.atan2(v[1], v[0]))
-    slab(p, "CitadelWhite", pts, -DECK_T, 0)
-    standard_keel(p, pts)
-    border_band(p, pts, width=8.0)
-
-    ascent_deck(p, -HALF, chord_y)
-    parapet_ring(p, pts, skip=lambda a, b: abs(a[1] - chord_y) < 1e-3 and abs(b[1] - chord_y) < 1e-3)
-
-    # arena floor inlay
-    torus(p, "AzureDim", 64, 0.35, 0, 0, 0.05, n=32)
-    torus(p, "AzureDim", 34, 0.35, 0, 0, 0.05, n=24)
-    for k in range(8):
-        a = 22.5 + 45 * k
-        rr = 49
-        box(p, "AzureDim", math.cos(math.radians(a)) * rr, math.sin(math.radians(a)) * rr, 0.05,
-            30, 0.8, 0.3, rz=a)
-
-    # the Crown Spire -- the boss's throne, pins +160
-    frustum(p, "PaleAlloy", 8, 26, 24, 0, 1.5, 0, 70)
-    frustum(p, "DeepAlloy", 8, 24, 23, 1.5, 3, 0, 70)
-    spire(p, 0, 70, 13, CROWN_TOP, extra_halos=2)
-    for k in range(4):
-        a = math.radians(45 + 90 * k)
-        float_crystal(p, "SkyGlass", math.cos(a) * 30, 70 + math.sin(a) * 30, 52, 3.2, 7, 5, n=6)
-
-    # obelisk ring, open to the south
-    for k in range(12):
-        a = 30 * k
-        if 225 <= a <= 315:
-            continue
-        obelisk(p, math.cos(math.radians(a)) * 96, math.sin(math.radians(a)) * 96)
-
-    tower(p, -50, -88, 8, 44)
-    tower(p, 50, -88, 8, 44)
-    banner(p, -34, -94)
-    banner(p, 34, -94)
-    banner(p, -28, 44)
-    banner(p, 28, 44)
-    for k in range(4):
-        a = math.radians(0 + 90 * k + 45)
-        float_crystal(p, "SkyGlass", math.cos(a) * 72, math.sin(a) * 72, 36, 5, 12, 10, n=6)
-    finish(p)
-    return p
-
-
-# --------------------------------------------------------------------------
 # Kit expansion props (2026-09-22). Same hand as the set pieces above.
 # --------------------------------------------------------------------------
 
@@ -1031,8 +814,8 @@ def parapet_open(p, pts, openings):
 
 def skiff(p, x, y, z, rz=0.0):
     """A moored sky-skiff: white hull, violet sails, azure drive. Floats."""
-    p.float_("skiff", x, y, 16.5, z - 4.5, z + 13)
     with frame(p, xf(x, y, z, rz)):
+        p.float_box("skiff", -13.5, 16, -6, 6, -4.5, 13)
         hull = xf(ry=90)
         frustum(p, "CitadelWhite", 6, 3.4, 3.4, -8, 8, M=hull)
         frustum(p, "CitadelWhite", 6, 3.4, 0, 8, 15, M=hull)
@@ -1100,6 +883,10 @@ def telescope(p, x, y, z, rz, elev=40.0):
 
 def dish(p, x, y, h, rz=0.0, tilt=35.0, R=7.0):
     p.solid("dish", x, y, R + 0.5, 0, h + R + 2)
+    _dish(p, x, y, h, rz, tilt, R)
+
+
+def _dish(p, x, y, h, rz, tilt, R):
     frustum(p, "DeepAlloy", 6, 1.4, 1.0, 0, 1.2, x, y)
     frustum(p, "PaleAlloy", 6, 0.7, 0.5, 1.2, h, x, y)
     with frame(p, xf(x, y, h, rz, rx=tilt)):
@@ -1330,121 +1117,667 @@ def chamfer_rect(hx, hy, c):
 
 
 # --------------------------------------------------------------------------
-# The eight new pieces (kit expansion, 2026-09-22)
+# Variety toolkit (pass 3, 2026-09-22)
+#
+# Owner review of the 12-piece kit: "each piece is very similar to the next."
+# It was: every piece was one white slab on the same cone keel, ringed by the
+# same parapet, lit by the same lamps, marked by the same needle spire. The
+# pieces below are built from FIVE independent axes, and no two neighbours in
+# the table in docs/SKY_CITADEL.md share more than two:
+#
+#   shape     one deck, or an archipelago of islands joined by short bridges
+#   floor     radial gold, planks, checker, lawn, night sky, slate yard,
+#             compass rose, hazard stripes, gold grid, glass
+#   edge      parapet, railing, glowing kerb, hedge
+#   keel      cone, stepped ziggurat, twin cones, crystal roots, engine,
+#             cone with floating rings
+#   landmark  needle spire, spired keep, lighthouse, sky tree, floating
+#             prism, banner mast, turbine, observatory mast, signal mast
 # --------------------------------------------------------------------------
 
 
+def panel(p, mat, cx, cy, sx, sy, z=0.06, rz=0.0):
+    """A single-faced floor decal, forced to face up. 2 triangles, where a
+    box would be 12 -- which is what makes whole patterned floors affordable."""
+    hx, hy = sx / 2, sy / 2
+    p.up.add(len(p.faces))
+    p.add([(-hx, -hy, 0), (hx, -hy, 0), (hx, hy, 0), (-hx, hy, 0)], [(0, 1, 2, 3)], mat,
+          xf(cx, cy, z, rz))
+
+
+def tri_panel(p, mat, a, b, c, z=0.06):
+    p.up.add(len(p.faces))
+    p.add([(a[0], a[1], z), (b[0], b[1], z), (c[0], c[1], z)], [(0, 1, 2)], mat, Matrix.Identity(4))
+
+
+def inside(pts, x, y, margin=0.0):
+    n = len(pts)
+    for i in range(n):
+        (ax, ay), (bx, by) = pts[i], pts[(i + 1) % n]
+        ex, ey = bx - ax, by - ay
+        L = math.hypot(ex, ey)
+        if ((x - ax) * -ey + (y - ay) * ex) / L < margin:
+            return False
+    return True
+
+
+def moved(pts, dx, dy):
+    return [(x + dx, y + dy) for x, y in pts]
+
+
+# ---- floors ----------------------------------------------------------------
+
+
+def floor_checker(p, pts, mat, tile=10.0, margin=5.0, keep=None, z=0.06):
+    xs, ys = [q[0] for q in pts], [q[1] for q in pts]
+    for i in range(int(min(xs) // tile) - 1, int(max(xs) // tile) + 1):
+        for j in range(int(min(ys) // tile) - 1, int(max(ys) // tile) + 1):
+            if (i + j) % 2:
+                continue
+            cx, cy = (i + 0.5) * tile, (j + 0.5) * tile
+            h = tile / 2
+            if all(inside(pts, cx + dx, cy + dy, margin) for dx in (-h, h) for dy in (-h, h)):
+                if keep is None or keep(cx, cy):
+                    panel(p, mat, cx, cy, tile - 0.5, tile - 0.5, z=z)
+
+
+def floor_planks(p, x0, x1, y0, y1, mat, step=5.0, width=2.2):
+    y = y0 + step / 2
+    while y < y1:
+        panel(p, mat, (x0 + x1) / 2, y, x1 - x0, width)
+        y += step
+
+
+def floor_radial(p, cx, cy, r0, r1, n, mat, width=2.0, z=0.06, phase=0.0):
+    for k in range(n):
+        a = math.radians(phase + 360.0 * k / n)
+        rm = (r0 + r1) / 2
+        panel(p, mat, cx + math.cos(a) * rm, cy + math.sin(a) * rm, r1 - r0, width, z=z,
+              rz=math.degrees(a))
+
+
+def floor_stars(p, cx, cy, rmin, rmax, count, seed, keep=None):
+    rng = random.Random(seed)
+    placed = 0
+    while placed < count:
+        a, d = rng.uniform(0, 2 * math.pi), rng.uniform(rmin, rmax)
+        x, y = cx + math.cos(a) * d, cy + math.sin(a) * d
+        if keep and not keep(x, y):
+            continue
+        s = rng.uniform(0.6, 1.4)
+        panel(p, "AzureNeon" if rng.random() < 0.6 else "SunGold", x, y, s, s, rz=45)
+        placed += 1
+
+
+def floor_grid(p, pts, mat, step=16.0, w=0.8, margin=4.0):
+    """Grid lines clipped to a convex deck."""
+    xs, ys = [q[0] for q in pts], [q[1] for q in pts]
+    x = (min(xs) // step + 1) * step
+    while x < max(xs):
+        span = [y for y in _frange(min(ys), max(ys), 1.0) if inside(pts, x, y, margin)]
+        if len(span) > 2:
+            panel(p, mat, x, (span[0] + span[-1]) / 2, w, span[-1] - span[0])
+        x += step
+    y = (min(ys) // step + 1) * step
+    while y < max(ys):
+        span = [x_ for x_ in _frange(min(xs), max(xs), 1.0) if inside(pts, x_, y, margin)]
+        if len(span) > 2:
+            panel(p, mat, (span[0] + span[-1]) / 2, y, span[-1] - span[0], w, z=0.07)
+        y += step
+
+
+def _frange(a, b, st):
+    v = a
+    while v <= b:
+        yield v
+        v += st
+
+
+def compass_rose(p, cx, cy, r_long, r_short):
+    """A four-point gold star on an eight-point pale one."""
+    for k in range(8):
+        a = math.radians(45 * k)
+        rl = r_long if k % 2 == 0 else r_long * 0.62
+        tip = (cx + math.cos(a) * rl, cy + math.sin(a) * rl)
+        for side in (-1, 1):
+            b = math.radians(45 * k + side * 22.5)
+            mid = (cx + math.cos(b) * r_short, cy + math.sin(b) * r_short)
+            mat = ("SunGold" if side < 0 else "PaleAlloy") if k % 2 == 0 else "AzureDim"
+            tri_panel(p, mat, (cx, cy), tip, mid, z=0.08 if k % 2 == 0 else 0.07)
+
+
+def hazard_pad(p, cx, cy, R):
+    frustum(p, "HullSlate", 12, R, R - 0.6, 0, 0.4, cx, cy)
+    for k in range(12):
+        a = 15 + 30 * k
+        r = math.radians(a)
+        panel(p, "SunGold" if k % 2 else "DeepAlloy", cx + math.cos(r) * (R - 3), cy + math.sin(r) * (R - 3),
+              4.2, 2.2, z=0.46, rz=a + 90)
+    torus(p, "AzureNeon", R * 0.55, 0.25, cx, cy, 0.5, n=16)
+    panel(p, "PaleAlloy", cx, cy, 1.6, R * 0.7, z=0.47)
+    panel(p, "PaleAlloy", cx, cy, R * 0.45, 1.6, z=0.48)
+
+
+# ---- edges -----------------------------------------------------------------
+
+
+def open_segments(pts, openings):
+    """Edges of a convex deck, split round its openings. openings: list of
+    (side, width) or (side, width, centre) -- side in 'NSEW', centre is the
+    mouth's position along that edge (default 0)."""
+    n = len(pts)
+    ymax, ymin = max(q[1] for q in pts), min(q[1] for q in pts)
+    xmax, xmin = max(q[0] for q in pts), min(q[0] for q in pts)
+    out = []
+    for i in range(n):
+        a, b = pts[i], pts[(i + 1) % n]
+        ex, ey = b[0] - a[0], b[1] - a[1]
+        L = math.hypot(ex, ey)
+        inward = (-ey / L, ex / L)
+        segs = [(a, b)]
+        for op in openings:
+            side, w = op[0], op[1]
+            c = op[2] if len(op) > 2 else 0.0
+            hw = w / 2
+            new = []
+            for s0, s1 in segs:
+                if side in "NS":
+                    yl = ymax if side == "N" else ymin
+                    if abs(s0[1] - yl) < 1e-3 and abs(s1[1] - yl) < 1e-3:
+                        lo, hi = sorted((s0[0], s1[0]))
+                        for x0, x1 in ((lo, min(hi, c - hw)), (max(lo, c + hw), hi)):
+                            if x1 - x0 > 2:
+                                new.append(((x0, yl), (x1, yl)))
+                        continue
+                else:
+                    xl = xmax if side == "E" else xmin
+                    if abs(s0[0] - xl) < 1e-3 and abs(s1[0] - xl) < 1e-3:
+                        lo, hi = sorted((s0[1], s1[1]))
+                        for y0, y1 in ((lo, min(hi, c - hw)), (max(lo, c + hw), hi)):
+                            if y1 - y0 > 2:
+                                new.append(((xl, y0), (xl, y1)))
+                        continue
+                new.append((s0, s1))
+            segs = new
+        for s0, s1 in segs:
+            if (s1[0] - s0[0]) * ex + (s1[1] - s0[1]) * ey < 0:
+                s0, s1 = s1, s0
+            out.append((s0, s1, inward))
+    return out
+
+
+def _edge_parapet(p, a, b, inward):
+    parapet(p, a, b, inward)
+
+
+def _edge_railing(p, a, b, inward):
+    ix, iy = inward
+    railing(p, a[0] + ix * 0.8, a[1] + iy * 0.8, b[0] + ix * 0.8, b[1] + iy * 0.8)
+
+
+def _edge_kerb(p, a, b, inward):
+    ix, iy = inward
+    L = math.hypot(b[0] - a[0], b[1] - a[1])
+    ang = math.degrees(math.atan2(b[1] - a[1], b[0] - a[0]))
+    mx, my = (a[0] + b[0]) / 2 + ix * 0.8, (a[1] + b[1]) / 2 + iy * 0.8
+    box(p, "PaleAlloy", mx, my, 0.45, L, 1.4, 0.9, rz=ang)
+    box(p, "AzureDim", mx, my, 0.95, L, 0.6, 0.12, rz=ang)
+
+
+def _edge_hedge(p, a, b, inward):
+    ix, iy = inward
+    hedge(p, a[0] + ix * 1.2, a[1] + iy * 1.2, b[0] + ix * 1.2, b[1] + iy * 1.2, h=2.6)
+
+
+EDGES = {"parapet": _edge_parapet, "railing": _edge_railing, "kerb": _edge_kerb, "hedge": _edge_hedge}
+
+
+def edge_ring(p, pts, openings, style):
+    for a, b, inward in open_segments(pts, openings):
+        EDGES[style](p, a, b, inward)
+
+
+# ---- keels -----------------------------------------------------------------
+
+
+def stepped_keel(p, pts, centre=(0.0, 0.0), steps=5):
+    """An inverted ziggurat: terraces shrinking downward."""
+    prof = [(-DECK_T + 0.5, 0.98, 0, "HullSlate")]
+    z, sc = -DECK_T + 0.5, 0.98
+    for k in range(steps):
+        zn = z - 9.0
+        prof.append((zn, sc, 0, "HullSlate"))
+        sc2 = sc * 0.74
+        prof.append((zn, sc2, 0, "PaleAlloy" if k % 2 == 0 else "DeepAlloy"))
+        z, sc = zn, sc2
+    prof.append((z - 16, 0.0, 0, "AzureDim"))
+    keel(p, pts, prof, centre=centre)
+
+
+def shallow_hull(p, pts, centre=(0.0, 0.0), depth=16.0):
+    keel(p, pts, [(-DECK_T + 0.5, 0.98, 0, "HullSlate"), (-10, 0.9, 3, "HullSlate"),
+                  (-12, 0.91, 3, "AzureDim"), (-depth, 0.7, 0, "HullSlate"),
+                  (-depth - 3, 0.0, 0, "DeepAlloy")], centre=centre)
+
+
+def twin_keel(p, pts, c1, c2, r, depth=80.0):
+    shallow_hull(p, pts)
+    for i, (cx, cy) in enumerate((c1, c2)):
+        d = depth - 14 * i
+        frustum(p, "HullSlate", 8, r, r * 0.8, -12, -12 - d * 0.35, cx, cy)
+        frustum(p, "AzureDim", 8, r * 0.82, r * 0.82, -12 - d * 0.35, -15 - d * 0.35, cx, cy)
+        frustum(p, "DeepAlloy", 8, r * 0.8, 0, -15 - d * 0.35, -12 - d, cx, cy)
+
+
+def crystal_root_keel(p, pts, seed, centre=(0.0, 0.0), spread=0.55, count=11):
+    """A shallow hull with crystals hanging from it like roots."""
+    shallow_hull(p, pts, centre=centre, depth=14)
+    rng = random.Random(seed)
+    cx0, cy0 = centre
+    for i in range(count):
+        x, y = rng.choice(pts)
+        t = rng.uniform(0.0, spread)
+        x, y = cx0 + (x - cx0) * t, cy0 + (y - cy0) * t
+        length = 84 if i == 0 else rng.uniform(18, 60)
+        mat = ("SkyGlass", "HullSlate", "CitadelViolet")[i % 3]
+        crystal(p, mat, x, y, -12, rng.uniform(2.5, 5.5), 5, length, n=5, rz=rng.uniform(0, 72))
+
+
+def engine_keel(p, pts, centre=(0.0, 0.0), R=30.0):
+    """A hull with a drive underneath: drum, glowing ring, four nozzles."""
+    cx, cy = centre
+    keel(p, pts, [(-DECK_T + 0.5, 0.98, 0, "HullSlate"), (-14, 0.86, 0, "HullSlate"),
+                  (-17, 0.87, 0, "DeepAlloy"), (-30, 0.5, 0, "HullSlate"),
+                  (-32, 0.0, 0, "HullSlate")], centre=centre)
+    frustum(p, "DeepAlloy", 12, R * 0.34, R * 0.34, -44, -28, cx, cy)
+    torus(p, "AzureNeon", R * 0.38, 0.5, cx, cy, -40, n=20)
+    for k in range(4):
+        a = math.radians(45 + 90 * k)
+        nx, ny = cx + math.cos(a) * R * 0.3, cy + math.sin(a) * R * 0.3
+        frustum(p, "PaleAlloy", 8, R * 0.09, R * 0.13, -30, -52, nx, ny)
+        frustum(p, "AzureNeon", 8, R * 0.12, R * 0.12, -52, -53, nx, ny)
+    frustum(p, "HullSlate", 8, R * 0.16, 0, -44, -70, cx, cy)
+
+
+def ring_keel(p, pts, R):
+    standard_keel(p, pts)
+    for z, rr in ((-50, R * 0.62), (-72, R * 0.38)):
+        p.float_("keel ring", 0, 0, rr + 1.2, z - 1.2, z + 1.2)
+        torus(p, "AzureNeon", rr, 0.6, 0, 0, z, n=24)
+        torus(p, "PaleAlloy", rr + 1.2, 0.5, 0, 0, z, n=24)
+
+
+def vines(p, pts, seed, count=10):
+    """Green strands hanging from a deck's rim -- garden islands only."""
+    rng = random.Random(seed)
+    n = len(pts)
+    for _ in range(count):
+        i = rng.randrange(n)
+        (ax, ay), (bx, by) = pts[i], pts[(i + 1) % n]
+        t = rng.uniform(0.2, 0.8)
+        x, y = ax + (bx - ax) * t, ay + (by - ay) * t
+        L = rng.uniform(6, 18)
+        box(p, "Verdure", x * 0.985, y * 0.985, -DECK_T - L / 2, 0.8, 0.8, L)
+
+
+# ---- lights ----------------------------------------------------------------
+
+
+def brazier(p, x, y):
+    p.solid("brazier", x, y, 2.4, 0, 8)
+    frustum(p, "DeepAlloy", 6, 1.2, 0.8, 0, 3.2, x, y)
+    frustum(p, "PaleAlloy", 8, 0.8, 2.2, 3.2, 4.4, x, y)
+    frustum(p, "AzureDim", 8, 1.9, 1.9, 4.2, 4.5, x, y)
+    crystal(p, "AzureNeon", x, y, 6.2, 0.9, 1.6, 1.4)
+
+
+def light_pillar(p, x, y, h=7.0):
+    frustum(p, "PaleAlloy", 4, 1.0, 0.9, 0, 0.8, x, y, rot=45)
+    frustum(p, "AzureDim", 4, 0.55, 0.55, 0.8, h, x, y, rot=45)
+    frustum(p, "PaleAlloy", 4, 0.9, 0, h, h + 1.2, x, y, rot=45)
+
+
+# ---- landmarks -------------------------------------------------------------
+
+
+def lighthouse(p, x, y, top=CROWN_TOP):
+    p.solid("lighthouse", x, y, 10, 0, top)
+    frustum(p, "PaleAlloy", 12, 10, 9.4, 0, 2, x, y)
+    bands = [(2, 18, "CitadelWhite"), (18, 22, "CitadelViolet"), (22, 38, "CitadelWhite"),
+             (38, 42, "CitadelViolet"), (42, 58, "CitadelWhite")]
+    for z0, z1, mat in bands:
+        r0 = 8.0 - z0 * 0.03
+        r1 = 8.0 - z1 * 0.03
+        frustum(p, mat, 12, r0, r1, z0, z1, x, y)
+    frustum(p, "PaleAlloy", 12, 6.4, 8.6, 58, 60, x, y)
+    for k in range(6):
+        a = math.radians(30 + 60 * k)
+        frustum(p, "DeepAlloy", 4, 0.4, 0.4, 60, 68, x + math.cos(a) * 5.4, y + math.sin(a) * 5.4)
+    frustum(p, "AzureNeon", 8, 3.0, 3.0, 61, 67, x, y)
+    frustum(p, "PaleAlloy", 12, 6.6, 0.8, 68, 75, x, y)
+    frustum(p, "DeepAlloy", 4, 0.8, 0, 75, top, x, y)
+    for z in (95, 118):
+        box(p, "SunGold", x, y, z, 5, 0.4, 0.4)
+
+
+def sky_tree(p, x, y, top=CROWN_TOP):
+    """A white-barked tree with a canopy of green and glass -- the garden's
+    landmark, and the only living thing in the world taller than a person."""
+    p.solid("tree trunk", x, y, 9.5, 0, 90)
+    p.solid("tree canopy", x, y, 34, 90, top)
+    frustum(p, "PaleAlloy", 8, 9, 8, 0, 1.2, x, y)
+    frustum(p, "DeepAlloy", 8, 8, 7.5, 1.2, 2.2, x, y)
+    for k in range(5):
+        a = math.radians(20 + 72 * k)
+        box(p, "CitadelWhite", x + math.cos(a) * 5, y + math.sin(a) * 5, 1.2, 7, 1.6, 2.2, rz=math.degrees(a))
+    trunk = [(0, 5.2), (30, 4.4), (60, 3.8), (95, 3.0)]
+    for (z0, r0), (z1, r1) in zip(trunk, trunk[1:]):
+        frustum(p, "CitadelWhite", 8, r0, r1, 2.2 if z0 == 0 else z0, z1, x, y)
+    rng = random.Random("sky tree")
+    blobs = []
+    for k in range(6):
+        a = math.radians(15 + 60 * k)
+        L = rng.uniform(16, 22)
+        z = 72 + 5 * (k % 3)
+        box(p, "CitadelWhite", x + math.cos(a) * L / 2, y + math.sin(a) * L / 2, z + L * 0.25, L, 1.8, 1.8,
+            rz=math.degrees(a), ry=-25)
+        blobs.append((x + math.cos(a) * L, y + math.sin(a) * L, z + L * 0.5 + 12))
+    blobs.append((x, y, 128))
+    blobs.append((x + 6, y - 5, 110))
+    for i, (bx, by, bz) in enumerate(blobs):
+        r = 13 if i < 6 else 17
+        orb(p, "Verdure" if i % 3 else "SkyGlass", bx, by, bz, r)
+    crystal(p, "SkyGlass", x, y, 150, 4.5, top - 150, 6, n=6)
+
+
+def arcane_prism(p, x, y, top=CROWN_TOP):
+    """A great glass prism hanging over the crossroads, ringed, held by four
+    gold-tipped pylons that stop short of it."""
+    for k in range(4):
+        a = math.radians(45 + 90 * k)
+        px, py = x + math.cos(a) * 36, y + math.sin(a) * 36
+        p.solid("prism pylon", px, py, 3.4, 0, 80)
+        frustum(p, "DeepAlloy", 4, 3.4, 3.0, 0, 2, px, py, rot=45)
+        frustum(p, "PaleAlloy", 4, 2.6, 1.1, 2, 72, px, py, rot=45)
+        frustum(p, "AzureDim", 4, 2.0, 2.0, 40, 42, px, py, rot=45)
+        crystal(p, "SunGold", px, py, 75, 1.1, 4.5, 3.0)
+    p.float_("arcane prism", x, y, 23.5, 100, top)
+    crystal(p, "SkyGlass", x, y, 128, 12, top - 128, 26, n=6)
+    torus(p, "AzureNeon", 17, 0.6, x, y, 128, n=24)
+    torus(p, "PaleAlloy", 21.5, 0.7, x, y, 122, n=24, rx=24)
+
+
+def banner_mast(p, x, y, top=CROWN_TOP):
+    p.solid("banner mast", x, y, 9, 0, top)
+    frustum(p, "DeepAlloy", 8, 6, 5, 0, 3, x, y)
+    frustum(p, "PaleAlloy", 6, 1.7, 0.7, 3, 150, x, y)
+    for z, w, h in ((42, 14, 18), (84, 10, 13), (120, 7, 9)):
+        box(p, "SunGold", x, y, z, w, 0.6, 0.6)
+        for s in (-1, 1):
+            box(p, "CitadelViolet", x + s * w * 0.28, y, z - 0.8 - h / 2, w * 0.36, 0.3, h)
+        frustum(p, "AzureDim", 6, 1.3, 1.3, z - 3, z - 2, x, y)
+    crystal(p, "SunGold", x, y, 153, 1.6, top - 153, 3)
+
+
+def signal_mast(p, x, y, top=CROWN_TOP):
+    p.solid("signal mast", x, y, 5, 0, top)
+    frustum(p, "PaleAlloy", 4, 3.4, 3.0, 0, 3, x, y, rot=45)
+    frustum(p, "CitadelWhite", 4, 1.6, 0.4, 3, top - 4, x, y, rot=45)
+    for z in (40, 70, 100, 128):
+        box(p, "CitadelViolet", x + 3, y, z, 6, 0.25, 2.4)
+        frustum(p, "AzureDim", 4, 1.2, 1.2, z + 3, z + 4, x, y, rot=45)
+    crystal(p, "AzureNeon", x, y, top - 2.5, 1.0, 2.5, 1.5)
+
+
+# ---- structure -------------------------------------------------------------
+
+
+def bridge_x(p, x0, x1, yc, w=12.0):
+    """A short internal bridge along X between two of a piece's own islands."""
+    hw = w / 2
+    box_span(p, "CitadelWhite", x0, x1, yc - hw, yc + hw, -DECK_T, 0)
+    for sy in (-1, 1):
+        box_span(p, "AzureDim", x0, x1, yc + sy * hw - (0.5 if sy < 0 else 0), yc + sy * hw + (0.5 if sy > 0 else 0),
+                 -2.2, -0.9)
+        railing(p, x0 + 0.5, yc + sy * (hw - 0.6), x1 - 0.5, yc + sy * (hw - 0.6), spacing=8)
+
+
+def terrace(p, pts, h, mat="CitadelWhite"):
+    """A raised, walkable deck standing on the main one."""
+    slab_raised = [(x, y) for x, y in pts]
+    n = len(pts)
+    verts = [(x, y, 0.0) for x, y in slab_raised] + [(x, y, h) for x, y in slab_raised]
+    faces = [tuple(reversed(range(n))), tuple(range(n, 2 * n))]
+    for i in range(n):
+        j = (i + 1) % n
+        faces.append((i, j, n + j, n + i))
+    p.add(verts, faces, mat, Matrix.Identity(4))
+    for i in range(n):
+        (ax, ay), (bx, by) = pts[i], pts[(i + 1) % n]
+        L = math.hypot(bx - ax, by - ay)
+        ang = math.degrees(math.atan2(by - ay, bx - ax))
+        box(p, "AzureDim", (ax + bx) / 2, (ay + by) / 2, h - 0.6, L + 0.1, 0.25, 0.4, rz=ang)
+    xs, ys = [q[0] for q in pts], [q[1] for q in pts]
+    p.solid_box("terrace", min(xs), max(xs), min(ys), max(ys), 0, h)
+
+
+def ramp(p, x, y, w, L, h, facing, mat="PaleAlloy"):
+    """A walkable wedge: foot at (x, y), rising h over L toward `facing`
+    ('N', 'S', 'E', 'W'). Kept under 30 degrees."""
+    rz = {"N": 0, "W": 90, "S": 180, "E": -90}[facing]
+    hw = w / 2
+    v = [(-hw, 0, 0), (hw, 0, 0), (hw, L, 0), (-hw, L, 0), (hw, L, h), (-hw, L, h)]
+    f = [(0, 3, 2, 1), (0, 1, 4, 5), (2, 3, 5, 4), (1, 2, 4), (0, 5, 3)]
+    p.add(v, f, mat, xf(x, y, 0, rz))
+    for sx in (-1, 1):
+        box(p, "AzureDim", 0, 0, 0, 0.3, 0.3, 0.3)   # (no-op spacer kept tiny)
+    with frame(p, xf(x, y, 0, rz)):
+        for sx in (-1, 1):
+            box(p, "AzureDim", sx * (hw - 0.3), L / 2, h / 2 * 0.5 + 0.2, 0.3, L, 0.3, rx=-math.degrees(math.atan2(h, L)))
+
+
+def island(p, pts, floor_mat="CitadelWhite"):
+    slab(p, floor_mat, pts, -DECK_T, 0)
+
+
+# --------------------------------------------------------------------------
+# The fifteen pieces
+# --------------------------------------------------------------------------
+
+
+def build_entry():
+    p = Piece("chunk_entry", "ENTRY | one opening: north SKYWAY -- arrival plaza")
+    R = 84.0
+    pts = ngon(8, R)
+    apo = R * math.cos(math.radians(22.5))
+    island(p, pts)
+    standard_keel(p, pts)
+    border_band(p, pts)
+    floor_radial(p, 0, 0, 26, 60, 16, "SunGold", width=1.6, phase=11.25)
+    torus(p, "AzureDim", 62, 0.35, 0, 0, 0.05, n=24)
+    skyway_deck(p, apo, HALF, apo + 1, HALF - 0.4)
+    edge_ring(p, pts, [("N", SKYWAY_W)], "parapet")
+
+    # arrival pad -- the spawn falls onto it; the column above (0,0) stays clear
+    frustum(p, "PaleAlloy", 16, 22, 21, 0, 0.5, 0, 0)
+    torus(p, "AzureNeon", 19, 0.3, 0, 0, 0.55, n=24)
+    for k in range(8):
+        a = math.radians(22.5 + 45 * k)
+        box(p, "AzureDim", math.cos(a) * 12, math.sin(a) * 12, 0.55, 6, 0.8, 0.2, rz=45 * k + 22.5)
+
+    spire(p, -50, 30, 7, CROWN_TOP, extra_halos=1)    # the Beacon
+    spire(p, 50, 30, 6, 118)
+    tower(p, -54, -46, 9, 30)
+    tower(p, 54, -46, 9, 30)
+    banner(p, -26, apo - 8)
+    banner(p, 26, apo - 8)
+    for x, y in ((-30, -26), (30, -26), (-30, 14), (30, 14)):
+        lamp(p, x, y)
+    holo_pedestal(p, -24, -62)    # the return portal lands near (0, -64)
+    holo_pedestal(p, 24, -62)
+    for x, y in ((-40, -6), (40, -6), (-16, 50), (16, 50)):
+        planter(p, x, y)
+    bench(p, -40, 4, rz=90)
+    bench(p, 40, 4, rz=90)
+    crate(p, -66, -18, 3.2, rz=10)
+    crate(p, -62, -20, 3.2, rz=-6)
+    crate(p, -64, -19, 3.0, z=3.2, rz=25)
+    float_crystal(p, "SkyGlass", -34, 50, 20, 2.4, 5, 4)
+    float_crystal(p, "SkyGlass", 34, 50, 26, 2.0, 4, 3.5)
+    finish(p)
+    return p
+
+
+def build_path_straight():
+    p = Piece("chunk_path_straight", "PATH | N + S SKYWAY -- the gatehouse pier")
+    R = 44.0
+    pts = ngon(6, R, rot=0)
+    apo = R * math.cos(math.radians(30))
+    island(p, pts, "PaleAlloy")
+    twin_keel(p, pts, (0, 22), (0, -22), 13)
+    floor_planks(p, -20, 20, -apo + 1, apo - 1, "CitadelWhite", step=4.5, width=2.6)
+    skyway_deck(p, apo, HALF, apo + 1, HALF - 0.4)
+    skyway_deck(p, -HALF, -apo, -HALF + 0.4, -apo - 1)
+    edge_ring(p, pts, [("N", SKYWAY_W), ("S", SKYWAY_W)], "railing")
+
+    tower(p, -32, 0, 6, 64)
+    tower(p, 32, 0, 6, 64)
+    p.solid_box("gatehouse lintel", -30, 30, -4, 4, 28, 48)
+    box(p, "PaleAlloy", 0, 0, 32, 52, 7, 4)
+    box(p, "AzureDim", 0, 0, 29.7, 50, 3.5, 0.6)
+    for s_ in (-1, 1):
+        box(p, "CitadelWhite", s_ * 13, 0, 37.2, 27.5, 5.6, 3, ry=s_ * 16)
+    crystal(p, "SunGold", 0, 0, 45.5, 2.0, 3.6, 2.2)
+
+    spire(p, -30, -24, 5, CROWN_TOP)
+    spire(p, 30, 24, 4.5, 104, fins=False)
+    for x, y in ((17, 62), (-17, 102), (-17, -62), (17, -102)):
+        lamp(p, x, y)
+    banner(p, -24, 22)
+    banner(p, 24, -22)
+    crate(p, 26, -28, 3.0, rz=12)
+    anti_grav_pylon(p, -76, 70, 6)
+    anti_grav_pylon(p, 76, -70, 10)
+    finish(p)
+    return p
+
+
 def build_path_bend():
-    p = Piece("chunk_path_bend", "PATH | openings: south SKYWAY, east SKYWAY -- the quarter turn")
+    p = Piece("chunk_path_bend", "PATH | S + E SKYWAY -- turns right round the Spired Keep")
     R = 58.0
     pts = ngon(8, R)
     apo = R * math.cos(math.radians(22.5))
-    slab(p, "CitadelWhite", pts, -DECK_T, 0)
-    standard_keel(p, pts)
-    border_band(p, pts)
+    island(p, pts)
+    crystal_root_keel(p, pts, seed="bend roots")
+    floor_checker(p, pts, "PaleAlloy", tile=9, margin=4, keep=lambda x, y: math.hypot(x, y) > 20)
     skyway_deck(p, -HALF, -apo, -HALF + 0.4, -apo - 1)
     skyway_deck_x(p, apo, HALF, apo + 1, HALF - 0.4)
-    parapet_open(p, pts, [("S", SKYWAY_W), ("E", SKYWAY_W)])
-    torus(p, "AzureDim", 40, 0.3, 0, 0, 0.05, n=24)
+    edge_ring(p, pts, [("S", SKYWAY_W), ("E", SKYWAY_W)], "railing")
 
-    # the Spired Keep -- the corner the skyway turns round; pins +160
     tower(p, 0, 0, 13, 56, roof=False)
     spire(p, 0, 0, 5.5, CROWN_TOP, fins=False, z0=59)
     for k in range(4):
         a = math.radians(135 + 90 * k)
         banner(p, math.cos(a) * 20, math.sin(a) * 20, rz=math.degrees(a) + 90)
-
-    for k in range(8):
-        a = math.radians(22.5 + 45 * k)
-        if -1 < math.cos(a) * 44 and math.cos(a) > 0.5 and math.sin(a) < 0.5 and math.sin(a) > -0.5:
-            continue
-        lamp(p, math.cos(a) * 44, math.sin(a) * 44)
-    holo_pedestal(p, -36, -28)
-    planter(p, -30, 36)
+    for a in (100, 160, 200, 250):
+        r = math.radians(a)
+        brazier(p, math.cos(r) * 42, math.sin(r) * 42)
     planter(p, 30, 36)
-    bench(p, -40, 10, rz=90)
     crate(p, 34, -36, 3.0, rz=15)
     crate(p, 37, -33, 2.6, rz=-10)
-    crate(p, 35, -35, 2.4, z=3.0, rz=40)
     anti_grav_pylon(p, -86, 72, 4)
     float_crystal(p, "SkyGlass", -64, -60, 18, 2.6, 6, 4.5)
-    float_crystal(p, "SkyGlass", 70, 66, 24, 2.2, 5, 4)
+    finish(p)
+    return p
+
+
+def build_path_bend_west():
+    p = Piece("chunk_path_bend_west", "PATH | S + W SKYWAY -- turns left past the lighthouse")
+    R = 58.0
+    pts = ngon(8, R)
+    apo = R * math.cos(math.radians(22.5))
+    island(p, pts, "DeepAlloy")
+    engine_keel(p, pts, R=52)
+    border_band(p, pts, width=5)
+    torus(p, "AzureDim", 30, 0.3, 0, 0, 0.05, n=24)
+    torus(p, "AzureDim", 44, 0.3, 0, 0, 0.05, n=28)
+    floor_radial(p, 0, 0, 30, 44, 24, "PaleAlloy", width=1.0)
+    compass_rose(p, 0, 0, 22, 6)
+    skyway_deck(p, -HALF, -apo, -HALF + 0.4, -apo - 1)
+    with oriented(p, 90):
+        skyway_deck(p, apo, HALF, apo + 1, HALF - 0.4)
+    edge_ring(p, pts, [("S", SKYWAY_W), ("W", SKYWAY_W), ("E", 12)], "kerb")
+
+    # the lighthouse stands on its own islet, reached by a short bridge east
+    ipts = moved(ngon(12, 24), 90, 0)
+    island(p, ipts)
+    keel(p, ipts, [(-DECK_T + 0.5, 0.97, 0, "HullSlate"), (-10, 0.8, 0, "HullSlate"),
+                   (-12, 0.81, 0, "AzureDim"), (-40, 0.0, 0, "DeepAlloy")], centre=(90, 0))
+    bridge_x(p, apo, 90 - 24 * math.cos(math.radians(15)), 0, w=12)
+    edge_ring(p, ipts, [("W", 12)], "railing")
+    lighthouse(p, 92, 0)
+    for x, y in ((-26, 26), (26, 26), (26, -26), (-26, -26)):
+        light_pillar(p, x, y)
+    bench(p, 30, 40, rz=-45)
+    holo_pedestal(p, -34, 38)
+    float_crystal(p, "SkyGlass", 70, 70, 22, 2.4, 5.5, 4)
+    float_crystal(p, "SkyGlass", -70, -72, 30, 2.0, 4.5, 3.5)
     finish(p)
     return p
 
 
 def build_path_skyport():
-    p = Piece("chunk_path_skyport", "PATH | openings: north SKYWAY, south SKYWAY -- a skiff dock")
-    pts = [(-20, -60), (60, -60), (84, -36), (84, 36), (60, 60), (-20, 60)]
-    slab(p, "CitadelWhite", pts, -DECK_T, 0)
-    keel(p, pts, [
-        (-DECK_T + 0.5, 0.98, 0, "HullSlate"), (-14, 0.9, 3, "HullSlate"), (-17, 0.91, 3, "DeepAlloy"),
-        (-44, 0.6, -5, "HullSlate"), (-48, 0.61, -5, "AzureDim"), (-72, 0.25, 4, "DeepAlloy"),
-        (KEEL_BOTTOM, 0.0, 0, "DeepAlloy")], centre=(28, 0))
-    border_band(p, pts)
-    skyway_deck(p, -HALF, -60, -HALF + 0.4, -61)
-    skyway_deck(p, 60, HALF, 61, HALF - 0.4)
-    railing(p, -19.4, -60, -19.4, 60)
-    # parapets on the chamfers and the dock's flanks; a gap on the east edge for the gangway
-    parapet(p, (20, -60), (60, -60), (0, 1))
-    parapet(p, (60, -60), (84, -36), (-0.707, 0.707))
-    parapet(p, (84, -36), (84, -8), (-1, 0))
-    parapet(p, (84, 8), (84, 36), (-1, 0))
-    parapet(p, (84, 36), (60, 60), (-0.707, -0.707))
-    parapet(p, (60, 60), (20, 60), (0, -1))
-    box_span(p, "AzureDim", -1.5, 1.5, -60, 60, 0, 0.12)
+    p = Piece("chunk_path_skyport", "PATH | N + S SKYWAY -- the skiff dock")
+    mpts = chamfer_rect(26, 62, 6)
+    island(p, mpts, "PaleAlloy")
+    stepped_keel(p, mpts, steps=4)
+    floor_planks(p, -20, 20, -56, 56, "CitadelWhite", step=6, width=3.2)
+    skyway_deck(p, -HALF, -62, -HALF + 0.4, -63)
+    skyway_deck(p, 62, HALF, 63, HALF - 0.4)
+    edge_ring(p, mpts, [("N", SKYWAY_W), ("S", SKYWAY_W), ("E", 12)], "railing")
+    for (x, y, r) in ((-12, -40, 90), (-12, 30, 90)):
+        container(p, x - 8, y, rz=r)
+    crate(p, 14, -46, 3.0, rz=14)
+    crate(p, 14, -46, 2.6, z=3.0, rz=-4)
 
-    # landing pad, gangway, the moored skiff
-    frustum(p, "PaleAlloy", 12, 20, 19, 0, 0.4, 46, 0)
-    torus(p, "AzureNeon", 17, 0.3, 46, 0, 0.45, n=24)
-    for dx in (-5, 5):
-        box(p, "AzureDim", 46 + dx, 0, 0.45, 1.4, 12, 0.15)
-    box(p, "AzureDim", 46, 0, 0.45, 10, 1.4, 0.15)
-    box_span(p, "PaleAlloy", 84, 99, -3, 3, -0.6, -0.1)
-    for sy in (-1, 1):
-        box_span(p, "DeepAlloy", 84, 99, sy * 3 - 0.2, sy * 3 + 0.2, -0.1, 1.2)
-    skiff(p, 104, 2, -2.2, rz=90)
-
-    crane(p, 70, -40, rz=20)
-    for (x, y, r) in ((30, -44, 0), (30, -36, 6), (40, 44, 90), (32, 46, 84)):
-        container(p, x, y, rz=r, mat="PaleAlloy" if r < 45 else "HullSlate")
-    crate(p, 44, -44, 3.0, rz=14)
-    crate(p, 44, -44, 2.6, z=3.0, rz=-4)
-    # control tower with an antenna spire -- pins +160
-    tower(p, 64, 38, 7, 34, roof=False)
-    spire(p, 64, 38, 3.2, CROWN_TOP, fins=False, halo=True, z0=37)
-    for y in (-40, 0, 40):
-        lamp(p, -16, y)
+    # the dock islet: hazard pad, crane, control tower, and the skiff beyond
+    dpts = moved(ngon(12, 34), 76, 0)
+    island(p, dpts, "HullSlate")
+    engine_keel(p, dpts, centre=(76, 0), R=34)
+    bridge_x(p, 26, 76 - 34 * math.cos(math.radians(15)), 0, w=12)
+    edge_ring(p, dpts, [("W", 12), ("E", 12)], "kerb")
+    hazard_pad(p, 72, -8, 16)
+    crane(p, 94, -20, rz=10)
+    tower(p, 86, 20, 6, 30, roof=False)
+    signal_mast(p, 86, 20)
+    box_span(p, "PaleAlloy", 76 + 33, 76 + 44, -3, 3, -0.6, -0.1)
+    skiff(p, 117, 0, -2.2, rz=90)
     anti_grav_pylon(p, -70, -40, 6)
-    float_crystal(p, "SkyGlass", -64, 52, 22, 2.4, 5.5, 4)
+    float_crystal(p, "SkyGlass", -64, 56, 22, 2.4, 5.5, 4)
     finish(p)
     return p
 
 
 def build_path_hoops():
-    p = Piece("chunk_path_hoops", "PATH | openings: north SKYWAY, south SKYWAY -- a bare span through three rings")
+    p = Piece("chunk_path_hoops", "PATH | N + S SKYWAY -- a bare span through three rings")
     skyway_deck(p, -HALF, HALF, -HALF + 0.4, HALF - 0.4)
-    # a plumb-bob keel under the span's midpoint
+    for y in range(-120, 121, 12):
+        panel(p, "SkyGlass", 0, y, 10, 8)
     frustum(p, "HullSlate", 8, 9, 7, -DECK_T + 0.5, -20, 0, 0)
     frustum(p, "AzureDim", 8, 7.2, 7.2, -20, -23, 0, 0)
     frustum(p, "DeepAlloy", 8, 7, 0, -23, -64, 0, 0)
     for y in (-78, 0, 78):
         hoop(p, y)
     for y in (-40, 40):
-        lamp(p, 17, y)
-        lamp(p, -17, y)
-
-    # two satellite islands the span passes between; the west one pins +160
+        light_pillar(p, 17, y, h=5)
+        light_pillar(p, -17, y, h=5)
     for (cx, cy, R, rot) in ((-74, 34, 22, 0), (72, -44, 17, 30)):
-        spts = [(cx + x, cy + y) for x, y in ngon(6, R, rot=rot)]
-        slab(p, "CitadelWhite", spts, -DECK_T, 0)
-        keel(p, spts, [(-DECK_T + 0.5, 0.97, 0, "HullSlate"), (-10, 0.85, 5, "HullSlate"),
-                       (-12, 0.86, 5, "AzureDim"), (-30, 0.45, -4, "HullSlate"),
-                       (-56, 0.0, 0, "DeepAlloy")], centre=(cx, cy))
-        parapet_ring(p, spts)
+        spts = moved(ngon(6, R, rot=rot), cx, cy)
+        island(p, spts)
+        crystal_root_keel(p, spts, seed="hoops %d" % cx, centre=(cx, cy), count=5)
+        edge_ring(p, spts, [], "parapet")
     spire(p, -74, 34, 6, CROWN_TOP, extra_halos=1)
     obelisk(p, 72, -44, h=18)
-    banner(p, 66, -38)
     crystal_cluster(p, 78, -50, seed=7)
     anti_grav_pylon(p, 64, 72, 10)
     anti_grav_pylon(p, -66, -70, 2)
@@ -1452,203 +1785,701 @@ def build_path_hoops():
     return p
 
 
-def build_garden_terrace():
-    p = Piece("chunk_garden_terrace", "COMBAT | openings: north SKYWAY, south SKYWAY -- gardens")
-    pts = chamfer_rect(92, 96, 26)
-    slab(p, "CitadelWhite", pts, -DECK_T, 0)
-    standard_keel(p, pts)
-    border_band(p, pts, width=7)
-    skyway_deck(p, -HALF, -96, -HALF + 0.4, -97)
-    skyway_deck(p, 96, HALF, 97, HALF - 0.4)
-    parapet_open(p, pts, [("N", SKYWAY_W), ("S", SKYWAY_W)])
+def build_crossroads():
+    p = Piece("chunk_crossroads", "PATH | N + S + E + W SKYWAY -- the intersection")
+    R = 56.0
+    pts = ngon(8, R)
+    apo = R * math.cos(math.radians(22.5))
+    island(p, pts)
+    stepped_keel(p, pts, steps=5)
+    compass_rose(p, 0, 0, 34, 9)
+    torus(p, "AzureDim", 40, 0.35, 0, 0, 0.05, n=28)
+    torus(p, "SunGold", 44, 0.25, 0, 0, 0.05, n=28)
+    skyway_deck(p, apo, HALF, apo + 1, HALF - 0.4)
+    skyway_deck(p, -HALF, -apo, -HALF + 0.4, -apo - 1)
+    skyway_deck_x(p, apo, HALF, apo + 1, HALF - 0.4)
+    with oriented(p, 90):
+        skyway_deck(p, apo, HALF, apo + 1, HALF - 0.4)
+    edge_ring(p, pts, [("N", SKYWAY_W), ("S", SKYWAY_W), ("E", SKYWAY_W), ("W", SKYWAY_W)], "kerb")
+    arcane_prism(p, 0, 0)
+    # a signpost at each mouth, a lantern at each diagonal
+    for k, (x, y, rz) in enumerate(((26, 44, 0), (-26, -44, 180), (44, -26, -90), (-44, 26, 90))):
+        banner(p, x, y, rz=rz, h=10)
+    for k in range(4):
+        a = math.radians(45 + 90 * k)
+        brazier(p, math.cos(a) * 48, math.sin(a) * 48)
+    finish(p)
+    return p
 
-    # hedged avenue, broken by a cross walk
-    for sx in (-1, 1):
-        for y0, y1 in ((-90, -12), (12, 90)):
-            hedge(p, sx * 22, y0, sx * 22, y1)
-    box_span(p, "PaleAlloy", -88, 88, -5, 5, 0, 0.1)
-    # west: a long reflecting pool under a pergola walk
-    pool(p, -52, 36, 22, 40)
-    pergola(p, -76, -60, 64)
-    for y in (-32, -52):
-        topiary_orb(p, -52, y)
-    float_crystal(p, "SkyGlass", -52, 36, 16, 2.6, 5.5, 4.5)
-    # east: a gazebo in a ring of flower beds, orbs, benches
-    gazebo(p, 56, 44)
-    for k, a in enumerate((200, 250, 290, 340)):
+
+def build_garden_terrace():
+    p = Piece("chunk_garden_terrace", "COMBAT | N + S SKYWAY -- the hanging gardens")
+    cpts = chamfer_rect(34, 100, 10)
+    island(p, cpts)
+    crystal_root_keel(p, cpts, seed="garden roots", count=8)
+    vines(p, cpts, "garden vines", 12)
+    floor_checker(p, cpts, "Verdure", tile=8, margin=4,
+                  keep=lambda x, y: abs(x) > 12 and math.hypot(x, y - 44) > 12)
+    skyway_deck(p, -HALF, -100, -HALF + 0.4, -101)
+    skyway_deck(p, 100, HALF, 101, HALF - 0.4)
+    edge_ring(p, cpts, [("N", SKYWAY_W), ("S", SKYWAY_W), ("W", 12, 26), ("E", 12, -30)], "hedge")
+    sky_tree(p, 0, 44)
+    for y in (-80, -56, -32, -8):
+        topiary_orb(p, -24, y, r=2.0)
+        topiary_orb(p, 24, y, r=2.0)
+
+    # the west islet: a reflecting pool under a pergola
+    wpts = moved(ngon(12, 36), -84, 26)
+    island(p, wpts)
+    crystal_root_keel(p, wpts, seed="west islet", centre=(-84, 26), count=6)
+    vines(p, wpts, "west vines", 8)
+    bridge_x(p, -84 + 36 * math.cos(math.radians(15)), -34, 26, w=12)
+    edge_ring(p, wpts, [("E", 12)], "hedge")
+    pool(p, -86, 26, 20, 30)
+    pergola(p, -104, 8, 44, width=8, h=8)
+    float_crystal(p, "SkyGlass", -86, 26, 16, 2.4, 5, 4)
+
+    # the east islet: a gazebo in flower beds
+    epts = moved(ngon(8, 34), 80, -30)
+    island(p, epts)
+    crystal_root_keel(p, epts, seed="east islet", centre=(80, -30), count=6)
+    vines(p, epts, "east vines", 8)
+    bridge_x(p, 34, 80 - 34 * math.cos(math.radians(22.5)), -30, w=12)
+    edge_ring(p, epts, [("W", 12)], "hedge")
+    gazebo(p, 84, -30)
+    for k, a in enumerate((60, 120, 240, 300)):
         r = math.radians(a)
-        flower_bed(p, 56 + math.cos(r) * 22, 44 + math.sin(r) * 22, seed=k)
-    for y in (-26, -44, -62):
-        topiary_orb(p, 36, y, r=2.0)
-    bench(p, 34, 12, rz=0)
-    bench(p, -34, -12, rz=0)
-    # the Sun Spire -- pins +160
-    spire(p, 64, -58, 6, CROWN_TOP, extra_halos=1)
-    for y in (-70, -40, 40, 70):
-        lamp(p, -17, y)
-        lamp(p, 17, y)
-    float_crystal(p, "SkyGlass", 64, 4, 26, 2.2, 5, 4)
+        flower_bed(p, 84 + math.cos(r) * 20, -30 + math.sin(r) * 20, lx=7, seed=k)
+    bench(p, 62, -14, rz=0)
     finish(p)
     return p
 
 
 def build_observatory():
-    p = Piece("chunk_observatory", "COMBAT | openings: north SKYWAY, south SKYWAY -- stargazers' deck")
+    p = Piece("chunk_observatory", "COMBAT | N + S SKYWAY -- the stargazers' deck, at night")
     R = 84.0
     pts = ngon(12, R)
     apo = R * math.cos(math.radians(15))
-    slab(p, "CitadelWhite", pts, -DECK_T, 0)
-    standard_keel(p, pts)
-    border_band(p, pts)
+    island(p, pts, "DeepAlloy")
+    ring_keel(p, pts, R)
+    border_band(p, pts, width=5)
+    floor_stars(p, 0, 0, 8, 76, 60, "night sky",
+                keep=lambda x, y: not (26 < x < 80 and -52 < y < 52) and abs(x) > 3)
+    torus(p, "AzureDim", 34, 0.3, 0, -4, 0.05, n=28)
     skyway_deck(p, -HALF, -apo, -HALF + 0.4, -apo - 1)
     skyway_deck(p, apo, HALF, apo + 1, HALF - 0.4)
-    parapet_open(p, pts, [("N", SKYWAY_W), ("S", SKYWAY_W)])
-
-    # star-map floor: a ring and constellations of inlaid points
-    torus(p, "AzureDim", 34, 0.3, 0, -4, 0.05, n=28)
-    rng = random.Random("observatory stars")
-    for _ in range(26):
-        a, d = rng.uniform(0, 2 * math.pi), rng.uniform(16, 32)
-        box(p, "AzureNeon", math.cos(a) * d, -4 + math.sin(a) * d, 0.05, 0.9, 0.9, 0.2, rz=45)
+    edge_ring(p, pts, [("N", SKYWAY_W), ("S", SKYWAY_W)], "railing")
     orrery(p, 0, -4)
 
-    # the great dome and its mast -- pins +160
+    # the upper deck: dishes six studs up, reached by a ramp
+    tpts = [(30, -48), (72, -40), (72, 40), (30, 48)]
+    terrace(p, tpts, 6.0, "CitadelWhite")
+    ramp(p, 18, 0, 12, 12, 6.0, "E")
+    for a, b in ((tpts[1], tpts[2]), (tpts[2], tpts[3]), (tpts[0], tpts[1])):
+        with frame(p, xf(z=6)):
+            railing(p, a[0], a[1], b[0], b[1])
+    with frame(p, xf(z=6)):
+        dish(p, 52, 26, 10, rz=200, tilt=38)
+        dish(p, 60, -2, 14, rz=160, tilt=30, R=8)
+        dish(p, 48, -30, 8, rz=230, tilt=42, R=6)
+
     top = dome(p, -44, 30, 18)
     telescope(p, -44, 30, 16, rz=-30, elev=38)
     spire(p, -44, 30, 2.6, CROWN_TOP, fins=False, halo=True, z0=top - 0.5)
-    # the dish array
-    dish(p, 50, 40, 12, rz=200, tilt=38)
-    dish(p, 60, 2, 16, rz=160, tilt=30, R=8)
-    dish(p, 46, -38, 10, rz=230, tilt=42, R=6)
-    for x, y in ((-30, -50), (-50, -24)):
+    for x, y in ((-30, -50), (-54, -20)):
         holo_pedestal(p, x, y)
-    bench(p, -26, -30, rz=60)
-    crate(p, 30, -62, 2.8, rz=10)
-    crate(p, 33, -60, 2.4, rz=-18)
     for y in (-60, -30, 30, 60):
-        lamp(p, 17, y)
-    float_crystal(p, "SkyGlass", 64, 58, 30, 2.2, 5, 4)
+        light_pillar(p, 17, y)
+        light_pillar(p, -17, y)
     float_crystal(p, "SkyGlass", -66, -60, 22, 2.6, 6, 4.5)
     finish(p)
     return p
 
 
 def build_armory():
-    p = Piece("chunk_armory", "COMBAT | openings: north SKYWAY, south SKYWAY -- a training yard")
-    pts = chamfer_rect(90, 90, 20)
-    slab(p, "CitadelWhite", pts, -DECK_T, 0)
-    standard_keel(p, pts)
-    border_band(p, pts)
+    p = Piece("chunk_armory", "COMBAT | N + S SKYWAY -- the barracks yard")
+    ypts = moved(chamfer_rect(60, 90, 20), -20, 0)
+    island(p, ypts, "HullSlate")
+    twin_keel(p, ypts, (-20, 40), (-20, -40), 22)
+    floor_grid(p, ypts, "PaleAlloy", step=18, w=0.9)
     skyway_deck(p, -HALF, -90, -HALF + 0.4, -91)
     skyway_deck(p, 90, HALF, 91, HALF - 0.4)
-    parapet_open(p, pts, [("N", SKYWAY_W), ("S", SKYWAY_W)])
+    edge_ring(p, ypts, [("N", SKYWAY_W), ("S", SKYWAY_W), ("E", 12)], "parapet")
 
-    # the sparring ring
-    torus(p, "AzureDim", 22, 0.35, -48, 14, 0.05, n=24)
-    torus(p, "AzureDim", 8, 0.3, -48, 14, 0.05, n=12)
+    torus(p, "AzureDim", 20, 0.35, -50, 20, 0.05, n=24)
+    torus(p, "SunGold", 8, 0.3, -50, 20, 0.05, n=12)
     for k in range(8):
         a = math.radians(22.5 + 45 * k)
-        frustum(p, "PaleAlloy", 6, 0.6, 0.5, 0, 3.4, -48 + math.cos(a) * 24, 14 + math.sin(a) * 24)
-        crystal(p, "AzureNeon", -48 + math.cos(a) * 24, 14 + math.sin(a) * 24, 3.9, 0.45, 0.6, 0.5)
-    # the target line and the racks along the avenue
-    for y in (-60, -46, -32):
-        target(p, -76, y, rz=90)
+        frustum(p, "PaleAlloy", 6, 0.6, 0.5, 0, 3.4, -50 + math.cos(a) * 22, 20 + math.sin(a) * 22)
+    for y in (-66, -52, -38):
+        target(p, -70, y, rz=90)
     for y in (-66, -30, 30, 66):
         weapon_rack(p, -30, y, rz=90)
-    for y in (-50, 50):
-        shield_rack(p, 30, y, rz=90)
-    # barracks, forge, watch turret, and the spire -- pins +160
-    barracks(p, 62, 38, lx=40, ly=16, rz=90)
-    forge(p, 58, -32)
-    tower(p, -70, -70, 8, 38)
-    spire(p, -68, 66, 6, CROWN_TOP, extra_halos=1)
-    banner(p, -26, 14)
-    banner(p, 40, 0)
-    for x, y in ((74, -62), (78, -58), (70, -58)):
+    tower(p, -64, -70, 8, 38)
+    banner_mast(p, -62, 68)
+    for x, y in ((24, -60), (28, -56)):
         crate(p, x, y, 3.0, rz=x)
-    crate(p, 74, -60, 2.8, z=3.0, rz=33)
-    container(p, 38, -64, rz=10)
     for y in (-66, -20, 20, 66):
-        lamp(p, 17, y)
-    float_crystal(p, "SkyGlass", -46, 14, 24, 2.4, 5.5, 4.5)
+        brazier(p, 22, y)
+
+    # the barracks islet, over a short bridge east
+    bpts = moved(chamfer_rect(22, 52, 8), 82, 0)
+    island(p, bpts)
+    standard_keel(p, [(x - 82, y) for x, y in bpts]) if False else keel(
+        p, bpts, [(-DECK_T + 0.5, 0.97, 0, "HullSlate"), (-16, 0.8, 0, "HullSlate"),
+                  (-19, 0.81, 0, "AzureDim"), (-54, 0.0, 0, "DeepAlloy")], centre=(82, 0))
+    bridge_x(p, 40, 60, 0, w=12)
+    edge_ring(p, bpts, [("W", 12)], "parapet")
+    barracks(p, 84, 24, lx=36, ly=16, rz=90)
+    forge(p, 84, -30, rz=180)
+    shield_rack(p, 70, -8, rz=90)
+    shield_rack(p, 96, -8, rz=90)
+    float_crystal(p, "SkyGlass", 84, -2, 26, 2.2, 5, 4)
     finish(p)
     return p
 
 
-def build_side_vault():
-    p = Piece("chunk_side_vault", "SIDE | one opening: south SKYWAY -- a sealed treasury")
+def build_vault_turn():
+    p = Piece("chunk_vault_turn", "COMBAT | S + E SKYWAY -- the treasury, passed through on a turn")
     R = 66.0
     pts = ngon(8, R)
     apo = R * math.cos(math.radians(22.5))
-    slab(p, "CitadelWhite", pts, -DECK_T, 0)
-    standard_keel(p, pts)
-    border_band(p, pts)
+    island(p, pts)
+    crystal_root_keel(p, pts, seed="vault roots", count=13)
+    floor_grid(p, pts, "SunGold", step=12, w=0.5)
     skyway_deck(p, -HALF, -apo, -HALF + 0.4, -apo - 1)
-    parapet_open(p, pts, [("S", SKYWAY_W)])
+    skyway_deck_x(p, apo, HALF, apo + 1, HALF - 0.4)
+    edge_ring(p, pts, [("S", SKYWAY_W), ("E", SKYWAY_W)], "parapet")
 
-    # the vault keep, its round door facing the skyway
-    p.solid_box("vault keep", -24, 24, 9, 45, 0, 26)
-    box_span(p, "PaleAlloy", -23, 23, 10, 44, 0, 1.5)
-    box_span(p, "CitadelWhite", -20, 20, 12, 42, 1.5, 21)
-    box_span(p, "PaleAlloy", -21, 21, 11, 43, 21, 22.5)
-    box_span(p, "CitadelWhite", -16, 16, 16, 38, 22.5, 25)
+    # the keep sits in the north-west; the path turns across its door
+    kx, ky = -22, 30
+    p.solid_box("vault keep", kx - 19, kx + 19, ky - 15, ky + 15, 0, 26)
+    box_span(p, "PaleAlloy", kx - 18, kx + 18, ky - 14, ky + 14, 0, 1.5)
+    box_span(p, "CitadelWhite", kx - 16, kx + 16, ky - 12, ky + 12, 1.5, 20)
+    box_span(p, "PaleAlloy", kx - 17, kx + 17, ky - 13, ky + 13, 20, 21.5)
+    box_span(p, "CitadelWhite", kx - 12, kx + 12, ky - 8, ky + 8, 21.5, 24)
     for sx in (-1, 1):
-        box_span(p, "AzureDim", sx * 20 - 0.2, sx * 20 + 0.2, 16, 38, 6, 16)
-        tower(p, sx * 20, 12, 3.6, 24)
-    vault_door(p, 0, 12, 10)
-    spire(p, 0, 27, 4.2, CROWN_TOP, fins=False, z0=25)     # pins +160
+        box_span(p, "AzureDim", kx + sx * 16 - 0.2, kx + sx * 16 + 0.2, ky - 6, ky + 6, 5, 15)
+    tower(p, kx - 16, ky - 12, 3.2, 22)
+    tower(p, kx + 16, ky - 12, 3.2, 22)
+    vault_door(p, kx, ky - 12, 10)
+    spire(p, kx, ky + 2, 3.8, CROWN_TOP, fins=False, z0=24)
+    for x, rz in ((-28, 10), (-20, -6), (-12, 4)):
+        chest(p, x, 10, rz=rz)
+    for x, y, r in ((-36, 6, 2.2), (-6, 8, 1.6)):
+        frustum(p, "SunGold", 8, r, r * 0.3, 0, r * 0.9, x, y)
+    crystal_cluster(p, -48, 44, seed=11, scale=1.2)
+    crystal_cluster(p, 20, 44, seed=12)
+    crystal_cluster(p, -44, -30, seed=13, scale=0.9)
+    obelisk(p, 30, -30, h=16)
+    for x, y in ((12, -12), (-14, -40), (40, 12)):
+        brazier(p, x, y)
+    float_crystal(p, "CitadelViolet", 40, 46, 24, 2.0, 4.5, 3.5)
+    finish(p)
+    return p
 
-    obelisk(p, -30, -8, h=16)
-    obelisk(p, 30, -8, h=16)
-    for x, rz in ((-10, 10), (-5, -6), (8, 4)):
-        chest(p, x, 2, rz=rz)
-    crystal_cluster(p, -38, 20, seed=11, scale=1.2)
-    crystal_cluster(p, 40, 16, seed=12)
-    crystal_cluster(p, 26, -30, seed=13, scale=0.8)
-    for x in (-15, 15):
-        lamp(p, x, -40)
-    float_crystal(p, "SkyGlass", -40, 44, 30, 2.6, 6, 4.5)
-    float_crystal(p, "CitadelViolet", 42, 46, 24, 2.0, 4.5, 3.5)
+
+def build_spire_court():
+    p = Piece("chunk_spire_court", "COMBAT (gate-court) | S SKYWAY, N ASCENT -- the Ascent Gate")
+    h, c = 100.0, 24.0
+    pts = chamfer_rect(h, h, c)
+    island(p, pts)
+    standard_keel(p, pts)
+    border_band(p, pts, width=8.0)
+    skyway_deck(p, -HALF, -h, -HALF + 0.4, -h - 1)
+    ascent_deck(p, h, HALF)
+    edge_ring(p, pts, [("S", SKYWAY_W), ("N", ASCENT_W)], "parapet")
+    box_span(p, "AzureDim", -1.5, 1.5, -h, -20, 0, 0.12)
+    box_span(p, "AzureDim", -1.5, 1.5, 20, 86, 0, 0.12)
+    torus(p, "AzureDim", 22, 0.3, 0, 0, 0.05, n=24)
+
+    p.solid("fountain", 0, 0, 16, 0, 24)
+    frustum(p, "DeepAlloy", 12, 16, 16, 0, 1.2, 0, 0)
+    frustum(p, "SkyGlass", 12, 14.5, 14.5, 1.2, 1.5, 0, 0)
+    frustum(p, "PaleAlloy", 8, 3, 2, 1.5, 10, 0, 0)
+    frustum(p, "SunGold", 8, 2, 5, 10, 11.5, 0, 0)
+    crystal(p, "AzureNeon", 0, 0, 17, 2.2, 4.5, 3.5, n=6)
+    torus(p, "AzureNeon", 5.5, 0.3, 0, 0, 17, n=16)
+    torus(p, "AzureNeon", 7.5, 0.3, 0, 0, 21, n=16, rx=20)
+
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            tower(p, sx * 76, sy * 76, 10, 52)
+    spire(p, -42, 58, 7, CROWN_TOP, extra_halos=1)
+    spire(p, 42, 58, 7, CROWN_TOP, extra_halos=1)
+    spire(p, -58, -40, 5, 96, fins=False)
+    spire(p, 58, -40, 5, 96, fins=False)
+    gate(p, 0, 92, ASCENT_W, 58)
+    banner(p, -30, 82)
+    banner(p, 30, 82)
+    for y in (-84, -56, -30, 30, 58):
+        lamp(p, -16, y)
+        lamp(p, 16, y)
+    for x, y in ((-64, 14), (-64, -8), (64, 14), (64, -8), (-30, -74), (30, -74)):
+        planter(p, x, y)
+    bench(p, -32, 0, rz=90)
+    bench(p, 32, 0, rz=90)
+    holo_pedestal(p, -24, 78)
+    holo_pedestal(p, 24, 78)
+    float_crystal(p, "SkyGlass", -66, 58, 30, 2.8, 6, 4.5)
+    float_crystal(p, "SkyGlass", 66, 58, 24, 2.4, 5, 4)
     finish(p)
     return p
 
 
 def build_spire_court_b():
-    p = Piece("chunk_spire_court_b", "COMBAT (grove role, rare) | openings: south SKYWAY, north ASCENT -- the Hall of Winds")
+    p = Piece("chunk_spire_court_b", "COMBAT (gate-court, rare) | S SKYWAY, N ASCENT -- the Hall of Winds")
     pts = [(-60, -100), (60, -100), (96, -40), (96, 40), (60, 100), (-60, 100), (-96, 40), (-96, -40)]
-    slab(p, "CitadelWhite", pts, -DECK_T, 0)
-    standard_keel(p, pts)
-    border_band(p, pts, width=7)
+    island(p, pts, "PaleAlloy")
+    twin_keel(p, pts, (0, 44), (0, -44), 24)
     skyway_deck(p, -HALF, -100, -HALF + 0.4, -101)
     ascent_deck(p, 100, HALF)
-    parapet_open(p, pts, [("S", SKYWAY_W), ("N", ASCENT_W)])
+    edge_ring(p, pts, [("S", SKYWAY_W), ("N", ASCENT_W)], "railing")
 
+    # the raised nave between the colonnades, ramped at both ends
+    npts = [(-30, -56), (30, -56), (30, 56), (-30, 56)]
+    terrace(p, npts, 3.0, "CitadelWhite")
+    with frame(p, xf(z=3)):
+        floor_checker(p, npts, "PaleAlloy", tile=10, margin=2)
+    ramp(p, 0, -72, 40, 16, 3.0, "N")
+    ramp(p, 0, 72, 40, 16, 3.0, "S")
     colonnade(p, -44, -72, 54, 6)
     colonnade(p, 44, -72, 54, 6)
     for sx in (-1, 1):
         for y in (-46, 2, 50):
             banner(p, sx * 36, y, rz=90)
-    # the Wind Altar and its orbiting shards
-    frustum(p, "PaleAlloy", 8, 10, 9, 0, 1.2, 0, -24)
-    frustum(p, "DeepAlloy", 8, 6, 5, 1.2, 3.2, 0, -24)
-    torus(p, "AzureNeon", 7.5, 0.3, 0, -24, 3.4, n=16)
-    p.solid("wind altar", 0, -24, 10.5, 0, 4)
-    for k in range(3):
-        a = math.radians(90 + 120 * k)
-        float_crystal(p, "SkyGlass", 8 * math.cos(a), -24 + 8 * math.sin(a), 12 + 3 * k, 1.6, 4, 3)
-    # the Moon Gate: a ring standing in the deck, 72 clear at the ground
+    with frame(p, xf(z=3)):
+        p.solid("wind altar", 0, -24, 10.5, 0, 4)
+        frustum(p, "PaleAlloy", 8, 10, 9, 0, 1.2, 0, -24)
+        frustum(p, "DeepAlloy", 8, 6, 5, 1.2, 3.2, 0, -24)
+        torus(p, "AzureNeon", 7.5, 0.3, 0, -24, 3.4, n=16)
+        for k in range(3):
+            a = math.radians(90 + 120 * k)
+            float_crystal(p, "SkyGlass", 8 * math.cos(a), -24 + 8 * math.sin(a), 12 + 3 * k, 1.6, 4, 3)
     zc, RG = 8.0, 44.0
     a0 = math.degrees(math.asin(-zc / RG)) + 1.0
     p.solid_box("moon gate", -RG - 4, RG + 4, 86, 94, 0, zc + RG + 8)
     torus_arc(p, "CitadelWhite", RG, 3.0, 0, 90, zc, a0, 180 - a0, n=28, rx=90)
     torus_arc(p, "AzureNeon", RG - 3.4, 0.4, 0, 90, zc, a0 + 3, 177 - a0, n=28, rx=90)
     crystal(p, "SunGold", 0, 90, zc + RG + 5.2, 2.2, 4, 2.4)
-    # the Great Turbine pins +160; a lesser one to the west
     turbine(p, 74, -10, 132, 17, rz=0, needle_to=CROWN_TOP)
     turbine(p, -74, 20, 64, 12, rz=0)
-    for y in (-80, -50, 30, 70):
-        lamp(p, -17, y)
-        lamp(p, 17, y)
+    for y in (-86, 80):
+        light_pillar(p, -24, y)
+        light_pillar(p, 24, y)
+    finish(p)
+    return p
+
+
+def build_side_lookout():
+    p = Piece("chunk_side_lookout", "SIDE | one opening: south SKYWAY -- a lookout on a branch")
+    R = 46.0
+    pts = ngon(12, R)
+    apo = R * math.cos(math.radians(15))
+    island(p, pts)
+    crystal_root_keel(p, pts, seed="lookout roots", count=9)
+    floor_radial(p, 0, 6, 10, 38, 12, "PaleAlloy", width=1.4)
+    skyway_deck(p, -HALF, -apo, -HALF + 0.4, -apo - 1)
+    edge_ring(p, pts, [("S", 24)], "railing")
+    # the lookout faces north over the drop
+    signal_mast(p, 0, 22)
+    telescope(p, -14, 32, 2.5, rz=0, elev=20)
+    frustum(p, "DeepAlloy", 6, 1.6, 1.0, 0, 2.5, -14, 32)
+    telescope(p, 14, 32, 2.5, rz=0, elev=28)
+    frustum(p, "DeepAlloy", 6, 1.6, 1.0, 0, 2.5, 14, 32)
+    for x, rz in ((-10, 8), (-4, -6)):
+        chest(p, x, 2, rz=rz)
+    crystal_cluster(p, 26, 0, seed=21)
+    crystal_cluster(p, -28, -4, seed=22, scale=0.8)
+    bench(p, 0, -12)
+    brazier(p, -20, -24)
+    brazier(p, 20, -24)
+    float_crystal(p, "SkyGlass", -24, 16, 34, 2.6, 6, 4.5)
+    finish(p)
+    return p
+
+
+def build_boss_clearing():
+    p = Piece("chunk_boss_clearing", "BOSS | one opening: south ASCENT -- the Crown Spire")
+    R = 112.0
+    ring = ngon(16, R)
+    chord_y = -math.sqrt(R * R - (ASCENT_W / 2) ** 2)
+    pts = [v for v in ring if v[1] > chord_y + 0.01]
+    pts += [(-ASCENT_W / 2, chord_y), (ASCENT_W / 2, chord_y)]
+    pts.sort(key=lambda v: math.atan2(v[1], v[0]))
+    island(p, pts)
+    engine_keel(p, pts, R=100)
+    border_band(p, pts, width=8.0)
+    ascent_deck(p, -HALF, chord_y)
+    edge_ring(p, pts, [("S", ASCENT_W)], "parapet")
+    torus(p, "AzureDim", 64, 0.35, 0, 0, 0.05, n=32)
+    torus(p, "AzureDim", 34, 0.35, 0, 0, 0.05, n=24)
+    for k in range(8):
+        a = 22.5 + 45 * k
+        box(p, "AzureDim", math.cos(math.radians(a)) * 49, math.sin(math.radians(a)) * 49, 0.05, 30, 0.8, 0.3, rz=a)
+
+    frustum(p, "PaleAlloy", 8, 26, 24, 0, 1.5, 0, 70)
+    frustum(p, "DeepAlloy", 8, 24, 23, 1.5, 3, 0, 70)
+    spire(p, 0, 70, 13, CROWN_TOP, extra_halos=2)
+    for k in range(4):
+        a = math.radians(45 + 90 * k)
+        float_crystal(p, "SkyGlass", math.cos(a) * 30, 70 + math.sin(a) * 30, 52, 3.2, 7, 5)
+    for k in range(12):
+        a = 30 * k
+        if 225 <= a <= 315:
+            continue
+        obelisk(p, math.cos(math.radians(a)) * 96, math.sin(math.radians(a)) * 96)
+    tower(p, -50, -88, 8, 44)
+    tower(p, 50, -88, 8, 44)
+    banner(p, -34, -94)
+    banner(p, 34, -94)
+    banner(p, -28, 44)
+    banner(p, 28, 44)
+    for k in range(4):
+        a = math.radians(90 * k + 45)
+        float_crystal(p, "SkyGlass", math.cos(a) * 72, math.sin(a) * 72, 36, 5, 12, 10)
+    finish(p)
+    return p
+
+
+# --------------------------------------------------------------------------
+# Four more (pass 3, 2026-09-22): each brings a kind of thing no other piece
+# has -- a broken floor, water, a roof, and living things.
+# --------------------------------------------------------------------------
+
+
+def scatter_floats(p, label, count, sampler, maker, tries=60):
+    """Place up to `count` floating things, each only where validate() will
+    accept it: probe the shape first, build only if the spot is free."""
+    placed = 0
+    for _ in range(count * tries):
+        if placed >= count:
+            break
+        args = sampler(p.rng)
+        shape = maker(Piece("_probe", ""), *args)
+        if free_for_float(p, shape):
+            maker(p, *args)
+            p.floats.append((label, shape))
+            placed += 1
+    return placed
+
+
+def bird(p, x, y, z, rz, mat):
+    """A low-poly bird in flight: a glass body, two raised wings, a tail."""
+    with frame(p, xf(x, y, z, rz)):
+        crystal(p, mat, 0, 0, 0, 0.8, 1.2, 0.9, n=4, rz=45)
+        frustum(p, mat, 4, 0.7, 0, 0, 2.2, M=xf(0.6, 0, 0, ry=90))
+        frustum(p, "SunGold", 4, 0.3, 0, 0, 0.8, M=xf(2.7, 0, 0, ry=90))
+        for s in (-1, 1):
+            box(p, "PaleAlloy", 0, s * 1.9, 0.5, 1.6, 3.2, 0.15, rx=s * 24)
+        box(p, mat, -1.8, 0, 0.1, 1.4, 1.1, 0.15)
+    return ("cyl", x, y, 3.4, z - 1.2, z + 1.9)
+
+
+def tome(p, x, y, z, rz):
+    """A floating open book: gold covers in a shallow V, pale pages."""
+    with frame(p, xf(x, y, z, rz)):
+        for s in (-1, 1):
+            box(p, "SunGold", s * 0.8, 0, 0, 1.7, 2.3, 0.15, ry=s * 14)
+            box(p, "CitadelWhite", s * 0.78, 0, 0.14, 1.5, 2.1, 0.12, ry=s * 14)
+        crystal(p, "AzureNeon", 0, 0, 1.3, 0.25, 0.4, 0.3)
+    return ("cyl", x, y, 1.9, z - 0.8, z + 1.8)
+
+
+def debris(p, x, y, z, rz, sz):
+    """A fragment of the broken span, tumbling slowly in place."""
+    with frame(p, xf(x, y, z, rz, rx=sz * 3)):
+        box(p, "CitadelWhite", 0, 0, 0, sz, sz * 0.7, 1.2)
+        box(p, "AzureDim", 0, 0, -0.75, sz * 0.9, sz * 0.62, 0.3)
+        crystal(p, "HullSlate", 0, 0, -0.8, sz * 0.25, 0.2, sz * 0.6, n=4)
+    return ("cyl", x, y, sz * 0.8, z - sz * 0.6 - 2, z + sz * 0.5 + 1)
+
+
+def perch_tree(p, x, y):
+    p.solid("perch tree", x, y, 4.2, 0, 16)
+    frustum(p, "DeepAlloy", 6, 1.8, 1.6, 0, 0.8, x, y)
+    frustum(p, "CitadelWhite", 6, 0.8, 0.5, 0.8, 11, x, y)
+    box(p, "CitadelWhite", x + 1.6, y, 8, 3.4, 0.4, 0.4, ry=-30)
+    orb(p, "Verdure", x, y, 12.5, 3.4)
+    orb(p, "Verdure", x + 2.8, y + 0.6, 10.2, 2.0, n=6)
+
+
+def birdbath(p, x, y):
+    p.solid("birdbath", x, y, 3.4, 0, 4)
+    frustum(p, "PaleAlloy", 8, 1.6, 0.8, 0, 2.6, x, y)
+    frustum(p, "PaleAlloy", 8, 1.2, 3.2, 2.6, 3.4, x, y)
+    frustum(p, "SkyGlass", 8, 2.9, 2.9, 3.4, 3.55, x, y)
+
+
+def bookshelf(p, x, y0, y1, H=10.0, depth=2.4, face=1, seed=0):
+    """A shelf wall along Y; `face` is the side the spines show on (+1 = +X)."""
+    p.solid_box("bookshelf", x - depth / 2 - 0.3, x + depth / 2 + 0.3, y0, y1, 0, H + 0.6)
+    L = y1 - y0
+    yc = (y0 + y1) / 2
+    box(p, "DeepAlloy", x, yc, H / 2, depth, L, H)
+    box(p, "PaleAlloy", x, yc, H + 0.3, depth + 0.4, L + 0.4, 0.6)
+    rng = random.Random(seed)
+    rows = 3
+    for r in range(rows):
+        z = 0.8 + r * (H - 1.2) / rows
+        box(p, "PaleAlloy", x + face * (depth / 2 + 0.05), yc, z, 0.2, L, 0.25)
+        yy = y0 + 0.5
+        while yy < y1 - 1.5:
+            w = rng.uniform(4.0, 9.0)
+            w = min(w, y1 - 0.5 - yy)
+            hgt = rng.uniform(1.2, (H - 1.2) / rows - 0.3)
+            mat = rng.choice(("CitadelViolet", "SkyGlass", "SunGold", "HullSlate", "Verdure"))
+            box(p, mat, x + face * (depth / 2 + 0.12), yy + w / 2, z + 0.12 + hgt / 2, 0.35, w - 0.2, hgt)
+            yy += w
+
+
+def clock_tower(p, x, y, top=CROWN_TOP):
+    p.solid("clock tower", x, y, 11, 0, top)
+    box(p, "PaleAlloy", x, y, 1.5, 17, 17, 3)
+    box(p, "CitadelWhite", x, y, 3 + 40, 13, 13, 80)
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            box(p, "PaleAlloy", x + sx * 6.5, y + sy * 6.5, 43, 2, 2, 80)
+    box(p, "PaleAlloy", x, y, 83.5, 15, 15, 1.5)
+    for k in range(4):
+        a = 90 * k
+        r = math.radians(a)
+        cx, cy = x + math.cos(r) * 6.6, y + math.sin(r) * 6.6
+        with frame(p, xf(cx, cy, 68, a - 90)):
+            frustum(p, "CitadelWhite", 12, 5, 5, 0, 0.5, M=xf(rx=90))
+            torus(p, "SunGold", 5.1, 0.35, 0, -0.5, 0, n=16, rx=90)
+            box(p, "DeepAlloy", 0.9, -0.7, 1.4, 0.4, 0.2, 3.4, ry=-30)
+            box(p, "DeepAlloy", -1.1, -0.7, 0.2, 2.6, 0.2, 0.4, ry=10)
+            crystal(p, "AzureNeon", 0, -0.8, 0, 0.4, 0.4, 0.4)
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            box(p, "CitadelWhite", x + sx * 6, y + sy * 6, 91, 1.6, 1.6, 14)
+    crystal(p, "AzureNeon", x, y, 91, 2.2, 3, 3, n=6)
+    box(p, "PaleAlloy", x, y, 98.5, 15, 15, 1)
+    frustum(p, "CitadelViolet", 4, 11, 0.8, 99, 120, x, y, rot=45)
+    frustum(p, "SunGold", 4, 1.0, 1.0, 120, 122, x, y, rot=45)
+    frustum(p, "PaleAlloy", 4, 0.8, 0, 122, top, x, y, rot=45)
+
+
+def cascade_tower(p, x, y, top=CROWN_TOP):
+    """Tiered bowls on a white column, each spilling a glass sheet of water
+    into the one below."""
+    p.solid("cascade tower", x, y, 16.5, 0, top)
+    frustum(p, "DeepAlloy", 12, 16, 16, 0, 1.0, x, y)
+    frustum(p, "SkyGlass", 12, 14.6, 14.6, 1.0, 1.3, x, y)
+    frustum(p, "CitadelWhite", 8, 3.0, 1.8, 1.3, 128, x, y)
+    tiers = [(24, 12.0), (50, 10.0), (76, 8.0), (100, 6.2), (122, 4.6)]
+    for i, (z, r) in enumerate(tiers):
+        frustum(p, "PaleAlloy", 12, r * 0.35, r, z - 2.4, z, x, y)
+        frustum(p, "SunGold", 12, r, r, z - 0.4, z, x, y)
+        frustum(p, "SkyGlass", 12, r * 0.9, r * 0.9, z, z + 0.2, x, y)
+        lower = tiers[i - 1] if i else (1.3, 14.0)
+        frustum(p, "SkyGlass", 12, lower[1] * 0.82, r * 0.96, lower[0] + 0.2, z - 2.4, x, y)
+    crystal(p, "AzureNeon", x, y, 136, 3.0, top - 136, 8, n=6)
+
+
+def light_fall(p, x, y0, y1, depth=58.0):
+    """Water spilling off the east rim of a deck and falling out of sight."""
+    box_span(p, "SkyGlass", x, x + 0.6, y0, y1, -depth, 0.1)
+    box_span(p, "AzureDim", x + 0.6, x + 0.8, (y0 + y1) / 2 - 1, (y0 + y1) / 2 + 1, -depth, -1)
+    panel(p, "SkyGlass", x - 7, (y0 + y1) / 2, 14, y1 - y0 - 1)
+
+
+def build_path_shattered():
+    p = Piece("chunk_path_shattered", "PATH | N + S SKYWAY -- a broken span, crossed on floating plates")
+    skyway_deck(p, -HALF, -69, -HALF + 0.4, -69.4)
+    skyway_deck(p, 69, HALF, 69.4, HALF - 0.4)
+    for y in (-69, 69):
+        light_pillar(p, -16, y - 4 * (1 if y > 0 else -1), h=6)
+        light_pillar(p, 16, y - 4 * (1 if y > 0 else -1), h=6)
+    rng = random.Random("shattered plates")
+    for i, yc in enumerate((-59.5, -42.5, -25.5, -8.5, 8.5, 25.5, 42.5, 59.5)):
+        xc = 3.0 if i % 2 else -3.0
+        pts = moved(ngon(6, 9.0, rot=0), xc, yc)
+        slab(p, "CitadelWhite" if i % 3 else "PaleAlloy", pts, -DECK_T, 0)
+        p.slabs[-1] = (p.slabs[-1][0], -26.0, 1.0)
+        frustum(p, "AzureDim", 6, 9.25, 9.25, -2.2, -0.8, xc, yc, rot=0)
+        crystal(p, "HullSlate", xc, yc, -DECK_T, 5.0, 1.0, rng.uniform(10, 22), n=6, rz=rng.uniform(0, 60))
+    scatter_floats(p, "span debris", 7,
+                   lambda r: (r.uniform(-60, 60) * r.choice((-1, 1)) + r.choice((-38, 38)), r.uniform(-90, 90),
+                              r.uniform(-22, 18), r.uniform(0, 90), r.uniform(4, 9)),
+                   debris)
+
+    # the Sundered Spire: its crown hangs, cut clean, above its own stump
+    wpts = moved(ngon(6, 21, rot=0), -74, 18)
+    island(p, wpts)
+    crystal_root_keel(p, wpts, seed="sundered", centre=(-74, 18), count=6)
+    edge_ring(p, wpts, [], "kerb")
+    p.solid("spire stump", -74, 18, 9.5, 0, 72)
+    frustum(p, "PaleAlloy", 8, 9, 8, 0, 4, -74, 18)
+    frustum(p, "CitadelWhite", 8, 6, 4.8, 4, 64, -74, 18)
+    frustum(p, "AzureDim", 8, 5.3, 5.3, 30, 32, -74, 18)
+    for k, h in enumerate((6, 4, 7.5)):
+        a = math.radians(40 + 120 * k)
+        crystal(p, "CitadelWhite", -74 + math.cos(a) * 2.2, 18 + math.sin(a) * 2.2, 64, 2.2, h, 0.5, n=4)
+    p.float_("spire crown", -74, 18, 9.0, 76, CROWN_TOP)
+    torus(p, "AzureNeon", 7.5, 0.4, -74, 18, 78, n=16)
+    for k, h in enumerate((5, 7, 4)):
+        a = math.radians(100 + 120 * k)
+        crystal(p, "CitadelWhite", -74 + math.cos(a) * 2, 18 + math.sin(a) * 2, 86, 2.1, 0.5, h, n=4)
+    frustum(p, "CitadelWhite", 8, 4.6, 3.4, 86, 124, -74, 18)
+    frustum(p, "SunGold", 8, 3.8, 3.8, 124, 126, -74, 18)
+    frustum(p, "PaleAlloy", 8, 3.3, 0, 126, CROWN_TOP, -74, 18)
+
+    # a broken arch on the east islet, its lintel adrift
+    epts = moved(ngon(8, 16), 74, -44)
+    island(p, epts)
+    keel(p, epts, [(-DECK_T + 0.5, 0.95, 0, "HullSlate"), (-12, 0.7, 0, "AzureDim"),
+                   (-34, 0.0, 0, "DeepAlloy")], centre=(74, -44))
+    edge_ring(p, epts, [], "kerb")
+    for sx in (-1, 1):
+        p.solid("arch pylon", 74 + sx * 8, -44, 3.2, 0, 22)
+        box(p, "CitadelWhite", 74 + sx * 8, -44, 10, 4, 4, 20)
+        crystal(p, "CitadelWhite", 74 + sx * 8, -44, 20, 2.2, 2.5, 0.2, n=4)
+    p.float_box("drifting lintel", 62, 86, -48, -40, 26, 33)
+    box(p, "PaleAlloy", 74, -44, 29, 20, 4.4, 3.6, rz=8, ry=-6)
+    crystal(p, "SunGold", 74, -44, 32, 1.2, 2.2, 0.8)
+    finish(p)
+    return p
+
+
+def build_aether_springs():
+    p = Piece("chunk_aether_springs", "COMBAT | S + W SKYWAY -- terraced pools, a left turn")
+    pts = chamfer_rect(92, 92, 22)
+    apo = 92.0
+    island(p, pts)
+    standard_keel(p, pts)
+    floor_checker(p, pts, "SkyGlass", tile=12, margin=5, keep=lambda x, y: x < 0 or y < 0)
+    skyway_deck(p, -HALF, -apo, -HALF + 0.4, -apo - 1)
+    with oriented(p, 90):
+        skyway_deck(p, apo, HALF, apo + 1, HALF - 0.4)
+    edge_ring(p, pts, [("S", SKYWAY_W), ("W", SKYWAY_W), ("E", 70)], "kerb")
+    for y0, y1 in ((-60, -46), (-8, 8), (40, 54)):
+        light_fall(p, 92, y0, y1)
+
+    # two terraces in the north-east, pools on each, spilling down
+    ta = [(4, 12), (86, 12), (86, 64), (64, 86), (4, 86)]
+    tb = [(30, 40), (80, 40), (80, 62), (62, 80), (30, 80)]
+    terrace(p, ta, 3.0)
+    terrace(p, tb, 6.0, "PaleAlloy")
+    ramp(p, 40, -2, 14, 14, 3.0, "N")
+    with frame(p, xf(z=3)):
+        ramp(p, 18, 58, 12, 12, 3.0, "E")
+        pool(p, 18, 38, 16, 24)
+        for x, y in ((8, 80), (20, 80)):
+            light_pillar(p, x, y, h=5)
+    with frame(p, xf(z=6)):
+        pool(p, 56, 60, 28, 22)
+        bench(p, 70, 48, rz=0)
+    box_span(p, "SkyGlass", 46, 66, 39.3, 39.8, 3.0, 6.3)
+    box_span(p, "SkyGlass", 50, 70, 11.3, 11.8, 0.0, 3.3)
+    pool(p, 60, 4, 18, 8)
+    float_crystal(p, "SkyGlass", 56, 60, 22, 2.4, 5, 4)
+
+    cascade_tower(p, 58, -46)
+    for x, y in ((-30, -30), (-60, 30), (20, -70)):
+        light_pillar(p, x, y)
+    bench(p, -40, -60, rz=90)
+    planter(p, -70, -70)
+    crystal_cluster(p, -66, 60, seed=31)
+    finish(p)
+    return p
+
+
+def build_archive():
+    p = Piece("chunk_archive", "COMBAT | N + S SKYWAY -- a roofed hall of shelves")
+    pts = chamfer_rect(70, 100, 16)
+    island(p, pts, "PaleAlloy")
+    stepped_keel(p, pts, steps=4)
+    floor_checker(p, pts, "DeepAlloy", tile=8, margin=4, keep=lambda x, y: abs(x) > 22)
+    panel(p, "CitadelViolet", 0, 0, 14, 196)
+    for sx in (-1, 1):
+        panel(p, "SunGold", sx * 7.6, 0, 1.0, 196, z=0.07)
+    skyway_deck(p, -HALF, -100, -HALF + 0.4, -101)
+    skyway_deck(p, 100, HALF, 101, HALF - 0.4)
+    edge_ring(p, pts, [("N", SKYWAY_W), ("S", SKYWAY_W)], "kerb")
+
+    for sx in (-1, 1):
+        for i, (y0, y1) in enumerate(((-84, -44), (-32, 8), (20, 60))):
+            bookshelf(p, sx * 30, y0, y1, face=-sx, seed=10 * i + sx)
+            bookshelf(p, sx * 54, y0 + 4, y1 - 4, H=8, face=-sx, seed=10 * i + sx + 5)
+        for yy in (-38, 14):
+            box(p, "DeepAlloy", sx * 41, yy, 1.3, 6, 2.6, 2.6)
+            box(p, "PaleAlloy", sx * 41, yy, 2.7, 6.4, 3.0, 0.3)
+            crystal(p, "AzureNeon", sx * 41, yy, 3.9, 0.4, 0.8, 0.3)
+    # ribbed vaults over the aisle, springing from the shelf tops
+    for y in (-72, -48, -24, 0, 24, 48):
+        p.solid_box("vault rib", -30, 30, y - 1.6, y + 1.6, 9, 39)
+        torus_arc(p, "CitadelWhite", 28, 1.1, 0, y, 10, 0, 180, n=16, rx=90)
+        torus_arc(p, "AzureDim", 26.6, 0.3, 0, y, 10, 3, 177, n=16, rx=90)
+    p.solid_box("ridge", -2, 2, -74, 50, 36, 40)
+    box_span(p, "PaleAlloy", -0.8, 0.8, -73, 49, 37.2, 38.6)
+    # the map table under the crossing
+    p.solid("map table", 0, 0, 7.5, 0, 10)
+    frustum(p, "DeepAlloy", 12, 5, 6.5, 0, 3.0, 0, 0)
+    frustum(p, "AzureDim", 12, 6.5, 6.5, 3.0, 3.3, 0, 0)
+    orb(p, "AzureNeon", 0, 0, 7.4, 1.8)
+    torus(p, "SunGold", 2.8, 0.15, 0, 0, 7.4, n=12, rx=70)
+    scatter_floats(p, "floating tome", 9,
+                   lambda r: (r.uniform(-16, 16), r.uniform(-80, 60), r.uniform(14, 28), r.uniform(0, 360)),
+                   tome)
+    clock_tower(p, -52, 80)
+    for x, y in ((-16, -92), (16, -92), (-16, 76), (16, 76)):
+        brazier(p, x, y)
+    finish(p)
+    return p
+
+
+def build_path_aviary():
+    p = Piece("chunk_path_aviary", "PATH | N + S SKYWAY -- through a gilded birdcage")
+    R = 62.0
+    pts = ngon(8, R)
+    apo = R * math.cos(math.radians(22.5))
+    island(p, pts)
+    crystal_root_keel(p, pts, seed="aviary roots", count=9)
+    vines(p, pts, "aviary vines", 10)
+    floor_checker(p, pts, "Verdure", tile=7, margin=4, keep=lambda x, y: abs(x) > 12)
+    for y in range(-54, 55, 9):
+        panel(p, "PaleAlloy", 0, y, 8, 6)
+    skyway_deck(p, -HALF, -apo, -HALF + 0.4, -apo - 1)
+    skyway_deck(p, apo, HALF, apo + 1, HALF - 0.4)
+    edge_ring(p, pts, [("N", SKYWAY_W), ("S", SKYWAY_W)], "railing")
+
+    # the cage: five meridian ribs (none lands on the path), two hoops, a crown
+    RC = 50.0
+    p.solid("cage crown", 0, 0, 8, 46, 56)
+    for rz in (0, 30, 60, 120, 150):
+        torus_arc(p, "PaleAlloy", RC, 0.9, 0, 0, 0, 0, 180, n=24, rx=90, rz=rz)
+        for s in (-1, 1):
+            a = math.radians(rz)
+            frustum(p, "SunGold", 8, 2.0, 1.4, 0, 1.6, s * math.cos(a) * RC, s * math.sin(a) * RC)
+    for z in (20.0, 38.0):
+        torus(p, "PaleAlloy", math.sqrt(RC * RC - z * z), 0.6, 0, 0, z, n=32)
+    torus(p, "SunGold", 6, 0.8, 0, 0, RC, n=16)
+    spire(p, 0, 0, 3.4, CROWN_TOP, fins=False, halo=True, z0=RC)
+
+    for k in range(4):
+        a = math.radians(45 + 90 * k)
+        perch_tree(p, math.cos(a) * 32, math.sin(a) * 32)
+    birdbath(p, -34, 0)
+    birdbath(p, 34, 0)
+    for y in (-40, 40):
+        bench(p, -24, y, rz=90)
+
+    def inside_cage(r):
+        z = r.uniform(12, 34)
+        rmax = math.sqrt(RC * RC - z * z) - 6
+        a, d = r.uniform(0, 2 * math.pi), r.uniform(10, rmax)
+        return (math.cos(a) * d, math.sin(a) * d, z, r.uniform(0, 360),
+                r.choice(("SkyGlass", "CitadelViolet", "SkyGlass", "PaleAlloy")))
+
+    def outside_cage(r):
+        a, d = r.uniform(0, 2 * math.pi), r.uniform(66, 104)
+        return (math.cos(a) * d, math.sin(a) * d, r.uniform(10, 60), r.uniform(0, 360),
+                r.choice(("SkyGlass", "CitadelViolet")))
+
+    scatter_floats(p, "bird", 10, inside_cage, bird)
+    scatter_floats(p, "bird", 5, outside_cage, bird)
     finish(p)
     return p
 
@@ -1661,11 +2492,16 @@ def finish(p):
 
 
 BUILDERS = [
-    # first delivery
-    build_entry, build_path_straight, build_spire_court, build_boss_clearing,
-    # kit expansion, 2026-09-22
-    build_path_bend, build_path_skyport, build_path_hoops, build_garden_terrace,
-    build_observatory, build_armory, build_side_vault, build_spire_court_b,
+    # row 1: arrival and the straight connectives
+    build_entry, build_path_straight, build_path_skyport, build_path_hoops,
+    # row 2: more straights, each a different crossing
+    build_path_shattered, build_path_aviary, build_crossroads, build_side_lookout,
+    # row 3: the turns
+    build_path_bend, build_path_bend_west, build_vault_turn, build_aether_springs,
+    # row 4: the combat decks
+    build_garden_terrace, build_observatory, build_armory, build_archive,
+    # row 5: the arena approach and the arena
+    build_spire_court, build_spire_court_b, build_boss_clearing,
 ]
 
 
@@ -1689,6 +2525,14 @@ def to_object(p, mats, collection):
     bm = bmesh.new()
     bm.from_mesh(mesh)
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    # Floor panels are single faces, which recalc cannot orient by volume.
+    # They are decals on a deck: they face up, always.
+    bm.faces.ensure_lookup_table()
+    for i in p.up:
+        face = bm.faces[i]
+        face.normal_update()
+        if face.normal.z < 0:
+            face.normal_flip()
     bm.to_mesh(mesh)
     bm.free()
 

@@ -107,27 +107,30 @@ def _preview(pieces, coll_name, placements):
     return coll
 
 
-CHAIN_BASE = Vector((0, -2400, 0))
+CHAIN_BASE = Vector((0, -3200, 0))
 
 
 def build_chain(pieces):
     """A map the grammar allows, joined as the generator joins it: entry ->
-    skyport -> bend (turns east) -> garden -> Hall of Winds -> arena. The
-    three pieces after the bend are turned a quarter (yaw -90) so their south
-    SKYWAY meets the bend's east one -- the rotation check from
-    CHUNK_AUTHORING.md."""
+    crossroads (straight on) -> shattered span -> west bend -> archive ->
+    Hall of Winds -> arena, with the side lookout hung off the crossroads'
+    spare east socket. Pieces after the bend are turned a quarter (yaw +90) so
+    their south SKYWAY meets the bend's west one; the lookout is turned -90
+    so its only socket faces the crossroads."""
     b = CHAIN_BASE
     return _preview(pieces, "PreviewChain_NotExported", [
         ("chunk_entry", (b.x, b.y), 0),
-        ("chunk_path_skyport", (b.x, b.y + 256), 0),
-        ("chunk_path_bend", (b.x, b.y + 512), 0),
-        ("chunk_garden_terrace", (b.x + 256, b.y + 512), -90),
-        ("chunk_spire_court_b", (b.x + 512, b.y + 512), -90),
-        ("chunk_boss_clearing", (b.x + 768, b.y + 512), -90),
+        ("chunk_crossroads", (b.x, b.y + 256), 0),
+        ("chunk_side_lookout", (b.x + 256, b.y + 256), -90),
+        ("chunk_path_shattered", (b.x, b.y + 512), 0),
+        ("chunk_path_bend_west", (b.x, b.y + 768), 0),
+        ("chunk_archive", (b.x - 256, b.y + 768), 90),
+        ("chunk_spire_court_b", (b.x - 512, b.y + 768), 90),
+        ("chunk_boss_clearing", (b.x - 768, b.y + 768), 90),
     ])
 
 
-CORNER = Vector((1800, -2400, 0))
+CORNER = Vector((2000, -3200, 0))
 
 
 def build_corner(pieces):
@@ -173,7 +176,7 @@ def main():
 
     build_chain(pieces)
     b = CHAIN_BASE
-    shot("preview_chain", b + Vector((-260, -360, 620)), b + Vector((380, 380, 0)), lens=24)
+    shot("preview_chain", b + Vector((520, -420, 760)), b + Vector((-300, 480, 0)), lens=22)
 
     build_corner(pieces)
     c = CORNER
@@ -183,7 +186,7 @@ def main():
     xs = [o.location.x for o in pieces.values()]
     ys = [o.location.y for o in pieces.values()]
     mid = Vector(((min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2, 0))
-    shot("kit_overview", mid + Vector((0, -1500, 1250)), mid, lens=30)
+    shot("kit_overview", mid + Vector((0, -1900, 1650)), mid, lens=30)
     return written
 
 

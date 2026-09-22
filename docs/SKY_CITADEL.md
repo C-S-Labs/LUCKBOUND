@@ -115,6 +115,15 @@ hand. Every prop is a function in the generator.
 | *Armory* — weapon rack · shield rack · target · forge · barracks | glass blades and gold hilts; violet hex shields; azure bullseye; glowing mouth and chimney; long hall under a violet pitched roof | 3.4–20 |
 | *Vault* — keep · round door · chests · crystal cluster | white strongbox with corner turrets; gold-ringed vault door; gold chests; glass and violet crystals growing from the deck | 25 · 16 · 2 · 9 |
 | *Hall of Winds* — colonnade · turbine · wind altar | two rows of pillars under an architrave; 3-blade turbines; a ring with three orbiting shards | 31 · 76–160 · 18 |
+| *Crossroads* — Arcane Prism | a great glass prism hung over a compass rose, ringed, held by four gold-tipped pylons that stop short of it | 60 → 160 |
+| *Lighthouse* | violet-banded white tower, open lantern with an azure core, antenna | 160 |
+| *Sky Tree* | white-barked trunk, branches, a canopy of green and glass orbs | 160 |
+| *Banner mast* | alloy mast with three gold crossbars and violet banners | 160 |
+| *Shattered span* — stepping plate · span debris · Sundered Spire | 18-stud hex plates a stride apart, each on its own shard; tumbling fragments; a spire whose crown hangs above its stump | 0 · 4–9 · 160 |
+| *Aviary* — cage · bird · perch tree · birdbath | five meridian ribs, two hoops and a gold crown; low-poly birds in flight; white trees; glass basins | 50 · 3 · 16 · 4 |
+| *Archive* — bookshelf · ribbed vault · tome · map table · clock tower | shelf walls of coloured spines; white arches with azure inner ribs; floating open books; an azure globe; a four-faced clock under a violet roof | 8–10 · 38 · — · 10 · 160 |
+| *Aether Springs* — terrace · ramp · light-fall · Cascade Tower | raised walkable decks; 3-over-12 wedges; water sheets falling off the rim; gold-rimmed bowls spilling glass down a white column | 3–6 · — · 58 down · 160 |
+| *Lights* — lamp · brazier · light pillar | three light props, assigned per piece so avenues differ | 7–11 |
 
 #### What floats on purpose
 
@@ -125,7 +134,9 @@ else floating is a bug:
 spire halos · floating crystals · the pedestal and obelisk-top crystals ·
 anti-grav pylons · the fountain's crystal and halos · the corner beacons · the
 skiff · the great hoops · the wind altar's shards · the orrery's rings and
-planets · the keel itself. (Lamp crystals and the gate and turret finials sit
+planets · the Arcane Prism · the birds · the tomes · the span debris · the
+Sundered Spire's crown · the drifting lintel · the keel hoops · the stepping
+plates · the keel itself. (Lamp crystals and the gate and turret finials sit
 *on* their mounts — if one is floating, that is a bug.)
 
 #### Floating things never clip — checked, not eyeballed
@@ -198,42 +209,87 @@ the brief asks for.
 
 ---
 
-## The kit — 12 pieces
+## The kit — 19 pieces
 
-All twelve are exactly **256 × 256 × 256**: footprint ±128, bottom at −96,
+All nineteen are exactly **256 × 256 × 256**: footprint ±128, bottom at −96,
 crown at +160. Origin at the centre of the footprint on the walk plane.
 
-| File | Id | Role | Openings | Weight | Tris | What it is |
-|---|---|---|---|---|---|---|
-| `chunk_entry` | `SC_ENTRY` | ENTRY | N `SKYWAY` | — | 5,054 | Octagonal arrival plaza, landing pad, the Beacon spire, two turrets, kiosks, cargo |
-| `chunk_path_straight` | `SC_PATH_STRAIGHT` | PATH | N + S `SKYWAY` | 40 | 4,282 | Skyway across a hex pier, through a gatehouse between two turrets |
-| `chunk_path_bend` | `SC_PATH_BEND` | PATH | S + **E** `SKYWAY` | 25 | 4,036 | **The quarter turn.** Skyway round the Spired Keep — a turret carrying a 100-stud spire |
-| `chunk_path_skyport` | `SC_PATH_SKYPORT` | PATH | N + S `SKYWAY` | 20 | 3,910 | A skiff dock off the skyway: landing pad, crane, containers, control tower with antenna spire, a moored skiff |
-| `chunk_path_hoops` | `SC_PATH_HOOPS` | PATH | N + S `SKYWAY` | 20 | 4,964 | A bare span, no pier, through three great floating rings, between two unreachable satellite islands |
-| `chunk_garden_terrace` | `SC_GARDEN_TERRACE` | COMBAT | N + S `SKYWAY` | 20 | 5,810 | Hedged avenue, reflecting pool under a pergola, gazebo in flower beds, topiary, the Sun Spire |
-| `chunk_observatory` | `SC_OBSERVATORY` | COMBAT | N + S `SKYWAY` | 15 | 5,138 | Dome with telescope and mast, a dish array, an orrery over a star-map floor |
-| `chunk_armory` | `SC_ARMORY` | COMBAT | N + S `SKYWAY` | 15 | 6,070 | Sparring ring, target line, weapon and shield racks, barracks, forge, watch turret |
-| `chunk_spire_court` | `SC_SPIRE_COURT` | COMBAT (gate-court) | S `SKYWAY`, N `ASCENT` | 25 | 7,690 | Walled court, four turrets, twin crown spires, the Sky Fountain, the Ascent Gate |
-| `chunk_spire_court_b` | `SC_SPIRE_COURT_B` | COMBAT (gate-court, **rare**) | S `SKYWAY`, N `ASCENT` | 8 | 5,620 | The Hall of Winds: two colonnades, the Great Turbine, the Wind Altar, the Moon Gate |
-| `chunk_side_vault` | `SC_SIDE_VAULT` | SIDE | S `SKYWAY` | 100 | 3,646 | A sealed treasury: vault keep with a round gold door, chests, crystal clusters |
-| `chunk_boss_clearing` | `SC_BOSS_CLEARING` | BOSS | S `ASCENT` | — | 5,398 | Round arena, inlaid floor, obelisk ring, the Crown Spire with three halos |
+### Variety: five axes, mixed differently on every piece
 
-Every COMBAT piece and the side vault are `MaxPerLayout = 1`.
+Owner review of the 12-piece kit (2026-09-22): *"each piece is very similar to
+the next."* It was: every piece was one white slab on the same cone keel,
+ringed by the same parapet, lit by the same lamps, marked by the same needle
+spire. Pieces are now built from five independent axes, and the table below
+is arranged so neighbours in it differ on most of them:
 
-**The side vault is declared but never placed yet** — the same as Verdant
-Valley's Hollow: `ChunkCore` does not consume `IncludeSide` (`STATUS.md`,
-Medium). It is validated and exported, ready for when it does.
+| Axis | Options |
+|---|---|
+| **Shape** | one deck · an **archipelago** of islets joined by short railed bridges · a bare span with no deck at all · floating stepping plates |
+| **Floor** | white · gold rays · planks · checker · lawn · **night sky** (dark deck, star inlay) · slate yard with a grid · compass rose · hazard stripes · gold grid · glass mosaic · violet carpet |
+| **Edge** | castle parapet · railing · low glowing kerb · clipped hedge |
+| **Keel** | cone · stepped ziggurat · twin cones · hanging crystal roots · engine drum with nozzles · cone ringed by floating hoops · (+ hanging vines on the garden pieces) |
+| **Landmark** | needle spire · spired keep · lighthouse · Sky Tree · Arcane Prism · banner mast · clock tower · Cascade Tower · Sundered Spire · birdcage crown · turbine · observatory mast · signal mast · Crown Spire |
 
-**Only one piece turns, and only one way.** The bend exits east; a mirrored
-west bend was left out on purpose, because `ChunkCore.exitFor` takes the first
-valid socket (`STATUS.md`, High) and the extra variety would not show until
-that is fixed.
+Every landmark reaches exactly +160: it pins the top of the bounding box.
+
+| File | Role | Openings | Shape | Floor | Edge | Keel | Landmark | Tris |
+|---|---|---|---|---|---|---|---|---|
+| `chunk_entry` | ENTRY | N | octagon | gold rays | parapet | cone | the Beacon (spire) | 5,158 |
+| `chunk_path_straight` | PATH | N S | hex pier | planks | railing | twin cones | gatehouse + mast spire | 4,234 |
+| `chunk_path_skyport` | PATH | N S | pier + dock islet | planks · hazard pad | railing · kerb | ziggurat · engine | signal mast | 4,234 |
+| `chunk_path_hoops` | PATH | N S | bare span + 2 satellites | glass | railing | plumb-bob · roots | satellite spire | 4,890 |
+| `chunk_path_shattered` | PATH | N S | **8 floating plates** + 2 satellites | white/pale plates | kerb | a shard under each plate | **Sundered Spire** | 2,562 |
+| `chunk_path_aviary` | PATH | N S | octagon under a **cage** | lawn + stepping path | railing | roots + vines | cage crown spire | 6,300 |
+| `chunk_crossroads` | PATH | **N S E W** | octagon, 4 mouths | **compass rose** | kerb | ziggurat | **Arcane Prism** | 3,158 |
+| `chunk_path_bend` | PATH | S **E** | octagon | checker | railing | crystal roots | spired keep | 3,464 |
+| `chunk_path_bend_west` | PATH | S **W** | octagon + lighthouse islet | **night** + compass | kerb | engine | **lighthouse** | 4,060 |
+| `chunk_vault_turn` | COMBAT | S **E** | octagon | gold grid | parapet | crystal roots | spire on the keep | 3,726 |
+| `chunk_aether_springs` | COMBAT | S **W** | chamfered square, **two raised terraces** | glass mosaic | kerb, open east rim | cone + **falls** | **Cascade Tower** | 3,390 |
+| `chunk_garden_terrace` | COMBAT | N S | **three islets** | lawn | hedge | roots + vines | **Sky Tree** | 5,684 |
+| `chunk_observatory` | COMBAT | N S | 12-gon + **raised deck** | **night sky** | railing | cone + floating hoops | observatory mast | 5,750 |
+| `chunk_armory` | COMBAT | N S | yard + barracks islet | slate yard, grid | parapet | twin cones | **banner mast** | 6,190 |
+| `chunk_archive` | COMBAT | N S | chamfered rect, **roofed aisle** | dark checker · violet carpet | kerb | ziggurat | **clock tower** | 8,594 |
+| `chunk_spire_court` | COMBAT (gate-court) | S · N `ASCENT` | chamfered square | white | parapet | cone | twin crown spires | 7,594 |
+| `chunk_spire_court_b` | COMBAT (gate-court, rare) | S · N `ASCENT` | long octagon + **raised nave** | checker | railing | twin cones | turbine | 5,020 |
+| `chunk_side_lookout` | SIDE | S | small 12-gon | pale rays | railing | crystal roots | signal mast | 2,396 |
+| `chunk_boss_clearing` | BOSS | S `ASCENT` | round arena | inlaid rings | parapet | engine | Crown Spire | 5,744 |
+
+Weights and `MaxPerLayout` are in `Content/Chunks/SkyCitadel.luau`. Every
+COMBAT piece, the crossroads and the lookout are once per layout.
+
+### The shape of a run: turns, one intersection, no dead ends
+
+Owner review: *"there is only 1 turning piece, and 0 intersections … the vault
+can only be used for loot, and then it dead-ends."* Three changes answer it:
+
+- **Four turns, two each way.** Right: the Spired Keep bend and the vault. Left:
+  the lighthouse bend and the Aether Springs. Two of them are COMBAT decks, so
+  a turn can be a place and not only a corridor. A test asserts both
+  directions exist.
+- **One intersection.** The crossroads has a `SKYWAY` mouth on every side.
+  That needed a **System change** — `ChunkCore` used to leave every piece by its
+  *first* valid exit, so a four-way piece would have gone straight on every
+  seed. It now takes a **seeded pick** among the valid exits (only drawn when
+  there is a choice, so single-exit kits consume no extra numbers). Asserted:
+  across 300 seeds the crossroads leaves by more than one mouth.
+- **No dead ends on the path.** The vault is now `chunk_vault_turn`, a COMBAT
+  deck you pass through on a right turn, its keep and door beside the route.
+  The optional pocket is a new, small **`chunk_side_lookout`** — and
+  `IncludeSide` is now **consumed**: after the arena is placed, the assembler
+  hangs one SIDE chunk off a spare socket (a crossroads branch, typically),
+  tried in seeded order until one fits. `GameConfig.Expedition.IncludeSide`
+  switches it; the expedition passes it. It also means **Verdant Valley's
+  Hollow is placed for the first time** — asserted.
+
+An intersection's fourth mouth still faces the sky when the lookout takes
+another branch or none; per the brief it reads as a skyway carrying on out of
+sight.
 
 Review renders, `assets/source/worlds/sky_citadel/renders/`:
 
-- `kit_overview.jpg` — all twelve on the review grid, rows of four
-- `preview_chain.jpg` — entry → skyport → **bend** → garden → Hall of Winds →
-  arena, the last three turned a quarter so the join follows the bend
+- `kit_overview.jpg` — all nineteen on the review grid, rows of four
+- `preview_chain.jpg` — entry → **crossroads** (with the lookout on its east
+  branch) → shattered span → **west bend** → archive → Hall of Winds → arena
 - `preview_corner.jpg`, `preview_corner_top.jpg` — four pieces at four yaws
   meeting at one corner: the beacon check
 - a hero and a ground-level shot of each piece
@@ -241,9 +297,9 @@ Review renders, `assets/source/worlds/sky_citadel/renders/`:
 ### Axes
 
 Blender +Y is Roblox **north** (−Z) under `-Z Forward, Y Up`; Blender +X is
-Roblox +X. **Verified in the written files, not assumed:** the entry's
-deck-edge vertices sit at FBX z = −128 and none at +128; the bend's sit at FBX
-z = +128 (south) and x = +128 (east), and nowhere else.
+Roblox +X. **Verified in the written files, not assumed:** deck-edge vertices
+were read out of each turning piece's FBX — bend `SE`, west bend `SW`, vault
+`SE`, springs `SW`, crossroads `NSEW`, lookout `S` — matching the socket data.
 
 ### How to change it
 
@@ -255,10 +311,10 @@ blender -b --factory-startup --python assets/source/worlds/sky_citadel/build_sky
 blender -b --factory-startup --python assets/source/worlds/sky_citadel/render_review.py
 ```
 
-The first rebuilds, validates, exports all twelve FBXs, **re-imports each one
-and measures it**, and saves the `.blend`. It refuses to export if any piece
-fails validation. The second renders the review set (28 images). Both run
-headless in seconds — see *Render headless* below.
+The first rebuilds, validates, exports every FBX, **re-imports each one and
+measures it**, and saves the `.blend`. It refuses to export if any piece fails
+validation. The second renders the review set (42 images). Both run headless
+in seconds — see *Render headless* below.
 
 `validate()` checks, per piece: footprint exactly 256 × 256; height exactly
 −96 → +160; footprint centred on the origin; under 10,000 triangles; flat
@@ -266,13 +322,24 @@ shaded; **every float clear of every other float, solid and deck, and ≥ 4 insi
 the tile edge**.
 
 To add a piece: write a `build_<name>()` that ends in `finish(p)`, add it to
-`BUILDERS`, register anything that floats (`float_crystal`, `p.float_`) and
-anything large (`p.solid`, `p.solid_box`), and give it one landmark reaching
-`CROWN_TOP`.
+`BUILDERS`, register anything that floats (`float_crystal`, `scatter_floats`,
+`p.float_`) and anything large (`p.solid`, `p.solid_box`), give it one landmark
+reaching `CROWN_TOP`, and pick a combination of the five axes no neighbour has.
 
 ---
 
 ## Hand pass
+
+### 2026-09-22 — variety, turns, the intersection, and four more
+
+| Check | Result |
+|---|---|
+| **Floating objects** | `validate()` on all 19, including the new scattered floats (birds, tomes, span debris) — each placed only where the checker accepts it. |
+| **Clipping** | The checker caught two real faults while building and both were fixed: the skiff's box was tested as the circle round it (the box test is now an exact separating-axis test), and a lookout crystal had been put through its own signal mast. |
+| **Scale** | Shelves 8–10 (a reading room, not a warehouse), the cage 50 high, stepping plates 18 across with ~1.5-stud gaps (a stride, not a jump), terrace ramps 3 over 12–14. |
+| **Edges** | `preview_chain.jpg`: straight through the crossroads, the lookout on its east branch, left at the lighthouse, and on to the arena — every join deck to deck. |
+| **Origin** | Every footprint centred on (0, 0) within 0.01. |
+| **Budget** | The archive first came in at 13,790 triangles — every book spine a box. Wider spines, three shelf rows and one outer shelf row brought it to 8,594. |
 
 ### 2026-09-22 — the kit expansion
 
@@ -336,8 +403,12 @@ content. They are recorded in `STATUS.md`.
    ground offset lands). The entry keeps the column above (0, 0) clear so a
    player drops onto the landing pad rather than a spire, but it is a 128-stud
    drop until the loader spawns from the ground offset instead.
-6. **Triangle budget.** The Spire Court is highest at 7,690 of 10,000.
+6. **Triangle budget.** The archive is highest at 8,594 of 10,000.
    `validate()` fails over 10,000.
+7. **Gaps you can see through.** The shattered span's plates are ~1.5 studs
+   apart. With a single-mesh default-fidelity hull (risk 4) those gaps may be
+   filled in; with precise collision a character's foot cannot fall through a
+   gap that size either way. Worth confirming on the first walk.
 
 ---
 
@@ -357,8 +428,7 @@ Building (no render) through the bridge worked fine.
    whether the vertex colours survive (risk 3).
 2. Land `GroundOffsetY` and the collision-fidelity option in `ChunkLoader`
    (risks 1, 4) before uploading the rest.
-3. `ChunkCore`: a random pick among valid exits, and `IncludeSide` — then a
-   west-turning bend is worth adding, and the vault gets placed.
-4. Up to four more pieces to reach 16, if runs still repeat once walked:
-   a second straight variant, a second arena approach, a crossroads pier.
-5. Retune `Environment` once a piece has been seen in Studio.
+3. **Walk a generated map.** The first thing worth judging is whether the
+   shattered span's stepping plates and the terrace ramps feel right under a
+   real character — both are sized by arithmetic, not by a walk.
+4. Retune `Environment` once a piece has been seen in Studio.

@@ -173,6 +173,9 @@ local GameConfig = {
 
 		-- Default map size. A world overrides it with MapPathLength.
 		PathLength = 5,
+		-- Hang one SIDE pocket off a spare socket when a kit has one (Biome
+		-- Blueprint §6). Off returns maps to exactly the critical path.
+		IncludeSide = true,
 		-- A layout can legitimately fail when the path folds back on itself;
 		-- that is seed-dependent, so try a few before rejecting. 5 attempts
 		-- succeeds ~98% of the time -- see docs/MODULAR_MAPS.md.

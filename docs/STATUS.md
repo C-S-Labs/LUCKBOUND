@@ -176,7 +176,7 @@ exists.**
 
 ### Test suite
 
-**586 tests, all passing.** (12 added 2026-09-22 for the Sky Citadel kit.) Headless — no Roblox required. 136 of them arrived
+**594 tests, all passing.** (20 added 2026-09-22 for the Sky Citadel kit, exit choice and side pockets.) Headless — no Roblox required. 136 of them arrived
 with the player UI and the live palette: the menu reducer, travel authorisation, code redemption,
 settings validation, the stamina curve and the coyote window.
 
@@ -351,8 +351,8 @@ survive a rescale and a literal does not.
 
 | Item | Severity | Notes |
 |---|---|---|
-| **`ChunkCore.exitFor` takes the FIRST valid socket, not a random one** | **High** | A piece with four sockets leaves through the same one every seed, and the entry chunk is hard-coded to `entry.Sockets[1]`. So **authoring more sockets currently buys no extra variety** — what varies is which piece is drawn and which yaw the join implies. Owner-raised 2026-09-22, wanting layouts that differ genuinely per run. The fix is a weighted random pick among the valid exits: small, contained, and it wants its own tests. Not done here — this pass was documentation. |
-| **`IncludeSide` is declared and never read** | Medium | `AssembleOptions.IncludeSide` exists and `ChunkCore.assemble`'s own docstring promises "optionally hanging one SIDE pocket off a spare socket". Nothing consumes the field. **`VV_HOLLOW` is authored, validated, and never placed** — the Biome Blueprint §6 side-pocket checklist item is satisfied on paper only. Found 2026-09-22 while answering a question about socket counts. |
+| ~~`ChunkCore.exitFor` takes the FIRST valid socket~~ | **Fixed 2026-09-22** | A seeded pick among valid exits, drawn only when there is a choice. Needed for the Sky Citadel crossroads; asserted (the crossroads leaves by more than one mouth across seeds). `MODULAR_MAPS.md` → *Exits and side pockets*. |
+| ~~`IncludeSide` is declared and never read~~ | **Fixed 2026-09-22** | Consumed: one SIDE chunk hung off a spare socket after the arena, if one fits. `GameConfig.Expedition.IncludeSide = true`, passed by `ExpeditionSystem`. Verdant Valley's Hollow is placed for the first time; Sky Citadel's lookout hangs off a crossroads branch. Asserted. |
 | **Unused sockets are never capped** | Medium | The generator consumes one socket to arrive and one to leave; every other opening on the piece faces nothing, and the loader does not close them. With high socket counts — which is what gives a run variety — that is several openings per piece looking onto the void. Today the art has to solve it (`CHUNK_AUTHORING.md`: an opening must read as plausible unattached). A cap piece placed by the loader at unused sockets is the systematic fix and would need a schema field for it. |
 | **A chunk's mesh origin must be its footprint centre, and nothing enforces it** | **High** | `ChunkLoader` puts the mesh's origin at the layout centre and rotates about it by a seed-derived `Yaw`, and `ChunkCore.overlaps` checks collisions against centre ± half-size. A corner or edge origin therefore lands the art half a chunk out, by a different amount per rotation, and the generator still certifies the layout as collision-free. It is a **data contract with the Blender file that no test can see** — the origin is invisible metadata, exactly the failure mode that produced the "register a prefab from a NAMED PART, not from its pivot" rule for the hub. Documented in `CHUNK_AUTHORING.md`; the first uploaded mesh is where it gets proven. |
 | **A brief that specifies the piece gets the piece it specified** | **Process** | Recorded 2026-09-22 after it happened. The first `CHUNK_AUTHORING.md` was handed to the modeller's AI engine carrying a table of eight footprints (512–1024), a 32-stud flat weld band on every edge, and a 13-item checklist. All three were read as targets: the kit came back at roughly 10× the area with terrain flattened to the boundary and the scatter lost in it, and the better earlier iteration had to be restored from backup. **A number stated in a brief is a number that gets built.** The rewrite states only what breaks the game and says outright that everything else is the modeller's. The general rule for any art brief on this project: **specify the seam, not the piece.** |
@@ -385,7 +385,7 @@ survive a rescale and a literal does not.
 | `UNCOMMON` colour unsanctioned | Medium | Now shipping — see above |
 | Chunk collision is XZ-only | Medium | Blocks any kit that climbs. `MODULAR_MAPS.md` |
 | No pathfinding validation | Medium | Non-overlapping ≠ walkable between. Addendum §A4 step 4 |
-| All 20 chunks are `PLACEHOLDER` | Expected | Blockout is deliberate; upload is a per-piece change. **Sky Citadel's twelve have FBXs exported** (`assets/export/worlds/sky_citadel/`), not yet uploaded |
+| All 27 chunks are `PLACEHOLDER` | Expected | Blockout is deliberate; upload is a per-piece change. **Sky Citadel's nineteen have FBXs exported** (`assets/export/worlds/sky_citadel/`), not yet uploaded |
 | **Ethereal Scape: one whole map, not eight chunks** | Decided 2026-09-17 | The art is a composed traverse and cannot be shuffled — evidence in `assets/rbxm/maps/README.md`. Wired: `assets/rbxm/maps/` → `ServerStorage.LuckboundMaps` → `PrebuiltLoader`. **Walked in Studio 2026-09-17** — v1 at `Scale = 0.1` read too small, modeller re-delivered at play scale, now `Scale = 1.0`. |
 | UI needs resize/layout pass | Cosmetic | Owner-flagged. The new hub UI is built to `UITheme`'s scale/offset caps from the start; the older three screens are not |
 | ~~The hub is twice player scale~~ | **Fixed 2026-09-21, unwalked** | Halved through one number, `HubLayout.WorldScale = 0.5`. Counters are now 3.0 studs and railings 3.35 against a ~5-stud player. WalkSpeed 32 → 24 with it. **Nobody has walked the half-size hub** — judge the plaza, the district distances and whether 24 feels right |
@@ -466,7 +466,7 @@ two design decisions.
 7. **`UNCOMMON`'s colour needs blessing.** On screen inside the first minute.
 8. **A chunk kit for Emberfall** — 15pp off the "no map" number.
 9. **Placeholder text, UI pass** — unchanged.
-10. **Sky Citadel** — art direction and a **12-piece kit** done 2026-09-22 (`SKY_CITADEL.md`), inside the 12–16 target. Next: import `chunk_entry.fbx` into Studio and measure it (256³; do the vertex colours survive?), then the loader fixes above.
+10. **Sky Citadel** — art direction and a **19-piece kit** done 2026-09-22 (`SKY_CITADEL.md`): turns both ways, one crossroads, a side pocket, no dead ends. Next: import `chunk_entry.fbx` into Studio and measure it (256³; do the vertex colours survive?), then the loader fixes above.
 
 ### When expeditions move to a separate place
 
