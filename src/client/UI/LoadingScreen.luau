@@ -566,9 +566,29 @@ local function build()
 	-- arrives WANTING -- not a way out.
 end
 
+--- NO TITLE CARD WHEN PASSING THROUGH. Build spec §7.2: an expedition is its
+--- own server, so walking into the portal and walking back out are both a
+--- fresh join. Showing the intro and a PLAY button on each would put the
+--- title screen between a player and every expedition they take. So it is
+--- skipped on an expedition server, and on a hub for someone arriving back
+--- from one. The return hint travels as TeleportData, which a client can
+--- forge -- harmless, because all it can buy is skipping a cinematic.
+local function passingThrough(): boolean
+	if Root:GetAttribute(Constants.SERVER_KIND_ATTRIBUTE) == Constants.SERVER_KIND_EXPEDITION then
+		return true
+	end
+	local ok, data = pcall(function()
+		return game:GetService("TeleportService"):GetLocalPlayerTeleportData()
+	end)
+	return ok and type(data) == "table" and data.Kind == "RETURN"
+end
+
 function LoadingScreen.init(): ()
-	if not GameConfig.Loading.Enabled then
+	if not GameConfig.Loading.Enabled or passingThrough() then
 		finished = true
+		-- The server holds every spawn until this arrives (build spec §4),
+		-- so skipping the screen must still ask for a character.
+		Net.get("Player_Ready"):FireServer()
 		return
 	end
 

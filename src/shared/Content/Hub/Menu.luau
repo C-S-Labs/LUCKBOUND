@@ -58,8 +58,10 @@ local Menu = {
 			Label = "Party",
 			Glyph = "◎",
 			Order = 2,
-			Status = "PREVIEW",
-			Summary = "Roll and expedition together.",
+			-- LIVE 2026-09-22 (build spec §7.2): invite, accept, leave, kick,
+			-- promote -- and the leader's portal brings everyone.
+			Status = "LIVE",
+			Summary = "Enter the portal together, on the leader's roll.",
 			Hotkey = "P",
 		},
 		{

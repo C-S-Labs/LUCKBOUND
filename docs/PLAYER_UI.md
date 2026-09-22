@@ -104,7 +104,7 @@ setting overrides both, applied **once** when their profile arrives.
 | Settings | **LIVE** | Drawn from `SettingsCore.SPEC`, saved to the profile, and applied by `SettingsController` — see §3.6 |
 | Shop | PREVIEW | Designed screen, placeholder copy, labelled |
 | Fate Tree | PREVIEW | ditto — see `PLAYER_ABILITIES.md` §3 for the branch design |
-| Party | PREVIEW | ditto |
+| Party | **LIVE** (2026-09-22) | Invite anyone in the server, accept/decline (also as a Roblox notification), leave, and — for the leader — remove and hand over the lead. The leader's portal takes the whole party. Build spec §7.2, `TESTING.md` tests O and P |
 | Rebirth | PREVIEW | ditto, with prestige inside it rather than beside it |
 
 **PREVIEW is an honest label, not a placeholder.** The owner's direction is

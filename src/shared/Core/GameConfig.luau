@@ -214,6 +214,57 @@ local GameConfig = {
 		-- or the way home is unusable from on top of it -- the same mistake
 		-- the Expedition Gate shipped with. Asserted by test.
 		ReturnPromptDistance = 40,
+
+		-- === EXPEDITIONS AS THEIR OWN SERVER ================================
+		-- Owner-directed 2026-09-22 (build spec §7.2): entering the centre
+		-- portal starts a NEW Roblox server for the expedition, and a party
+		-- leader entering brings the whole party into that same server.
+		--
+		-- "AUTO" teleports on a live server and builds in place in Studio,
+		-- where TeleportService cannot run -- so a Studio test still walks
+		-- the whole loop, parties included, just without the hop.
+		-- "TELEPORT" and "IN_PLACE" force one or the other.
+		InstanceMode = "AUTO",
+		-- The place the expedition server runs. 0 means THIS place: a
+		-- reserved server of the hub's own place, which boots, sees it is a
+		-- reserved server, and becomes an expedition host instead of a hub.
+		-- One place file, one Rojo project, nothing extra to publish. Set a
+		-- real place id here only if expeditions ever move to a place of
+		-- their own in the same universe.
+		InstancePlaceId = 0,
+		-- The place players are sent back to. 0 means the place this server
+		-- is running, which is right while hub and expedition share one.
+		HubPlaceId = 0,
+		-- How long the expedition's manifest lives in MemoryStore. Only has
+		-- to outlast the teleport; generous so a slow hop never strands a
+		-- party on a server that cannot find out what it is for.
+		ManifestTtlSeconds = 900,
+		-- How long a freshly booted expedition server keeps asking for its
+		-- manifest before giving up and sending everyone home.
+		ManifestWaitSeconds = 20,
+		ManifestPollSeconds = 1,
+		TeleportAttempts = 3,
+		TeleportRetrySeconds = 1.5,
+		-- Party members arrive a few studs apart rather than inside one
+		-- another. Radius of the ring they are placed on.
+		ArrivalSpreadStuds = 6,
+	},
+
+	-- === PARTIES =========================================================
+	-- Owner-directed 2026-09-22. The roll stays personal; a party travels on
+	-- its LEADER's roll, so everyone enters the same world, seed and map.
+	Party = {
+		Enabled = true,
+		MaxSize = 4,
+		-- An unanswered invite lapses rather than sitting in someone's list
+		-- forever. Long enough to finish a roll reveal and answer.
+		InviteExpirySeconds = 60,
+		-- Spam guard on Party_Request, same fixed-window limiter as travel.
+		RequestsPerMinute = 40,
+		-- After an expedition, members come home in one teleport and the
+		-- party is rebuilt when they land. A member who has not arrived
+		-- within this long is no longer waited for.
+		ReuniteWindowSeconds = 120,
 	},
 
 	-- === WORLD SCALE ===
@@ -513,6 +564,12 @@ local GameConfig = {
 	Save = {
 		AutosaveIntervalSeconds = 60,
 		SessionLockTimeoutSeconds = 30,
+		-- A teleport hands the profile from one server to another. The old
+		-- server releases the lock just before the hop, but the new one can
+		-- still ask first -- so a held lock is waited on for this long before
+		-- the session is given up as non-persisting.
+		LockWaitSeconds = 12,
+		LockPollSeconds = 1.5,
 		MaxRetries = 5,
 		RetryBackoffSeconds = 2,
 	},
