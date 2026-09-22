@@ -321,6 +321,17 @@ for _, chunk in CHUNKS do
 	-- every Sky Citadel piece would sit 32 studs into the floor. The header
 	-- above derived this number and nothing had yet applied it.
 	c.GroundOffsetY = 96
+	-- THE ART'S NORTH IS NOT THE LAYOUT'S NORTH.
+	--
+	-- The kit is authored Z-up with +Y = north (the delivered chunk reference
+	-- says so); Roblox is Y-up and this content calls -Z north. The FBX axis
+	-- conversion lands the art a half turn out, so bridges met nothing on the
+	-- first Studio walk even though every piece loaded and every socket lined
+	-- up in the layout. Turning the MESH is the whole fix -- see ChunkLoader.
+	--
+	-- If a walk shows the pieces a quarter turn out instead of a half, this is
+	-- the one number to change: 90 or 270.
+	c.MeshYawOffset = 180
 	table.insert(out, c)
 end
 return out

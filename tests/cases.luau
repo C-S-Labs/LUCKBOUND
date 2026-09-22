@@ -1678,6 +1678,26 @@ do
 			end
 		end
 		check("every Sky Citadel piece keeps the delivered ground offset", offsetsOk)
+		-- The art is authored with a different north than the layout, so the
+		-- MESH is turned to agree with it. A 256-cubed box hides the error
+		-- completely -- bounding box, sockets and collision are all identical
+		-- at every yaw -- so nothing but a walk can catch a wrong value, and
+		-- the only protection worth having is that every piece shares one.
+		local yaws = {}
+		for _, c in Chunks do
+			if c.WorldId == "SKY_CITADEL" then
+				yaws[tostring(c.MeshYawOffset)] = true
+			end
+		end
+		local distinct = 0
+		for _ in yaws do distinct += 1 end
+		check("every Sky Citadel piece shares one mesh yaw offset", distinct == 1)
+		check("a mesh yaw offset off the quarter-turn grid is a boot error",
+			not (Schema.validateChunks({
+				Y = { Id = "Y", WorldId = "W", Role = "ENTRY", AssetKey = "VV_CHUNK_ENTRY",
+					SizeX = 1, SizeY = 1, SizeZ = 1, Weight = 1, MeshYawOffset = 45,
+					Sockets = { { Id = "a", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 } } },
+			}, AssetManifest)))
 	end
 
 	-- CAPS: no opening onto nothing (owner-directed 2026-09-22) -------

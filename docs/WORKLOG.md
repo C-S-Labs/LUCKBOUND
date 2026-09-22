@@ -35,7 +35,7 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ## Session 48 — 2026-09-23 — The Sky Citadel meshes are in, and caps were built twice
 
-**Branch:** `claude/clever-cori-oiq6pb` · **Tests:** 690 passing (was 686 on
+**Branch:** `claude/clever-cori-oiq6pb` · **Tests:** 692 passing (was 686 on
 `main` after the caps merge)
 
 The 22-piece Sky Citadel kit arrived as `.rbxmx` with a written chunk
@@ -120,9 +120,28 @@ duplicate manifest keys (the merge produced three, each pair one `UPLOADED` and
 one `PLACEHOLDER`; in Luau the later wins and the uploads would have vanished
 in silence).
 
+### The walk happened, and found two things
+
+**It generates.** Twenty-two meshes load, the chain assembles, the timer runs.
+
+1. **The bridges met nothing.** The kit is authored Z-up with +Y as north; this
+   content calls −Z north, and the FBX axis conversion lands the art a half
+   turn out. Fixed as data: `MeshYawOffset = 180` on the kit, applied by
+   `ChunkLoader` to the **mesh only** — sockets, collision and the layout stay
+   in layout space, so a wrong value is one number to change and can never
+   desync the map from the geometry it was checked against. **A 256³ box hides
+   this perfectly**: bounding box, sockets and collision read identically at
+   every yaw, so no headless test can ever catch it. Only a walk can.
+2. **The player stood on an invisible shell above the deck.** Default
+   `CollisionFidelity` on a 256³ piece with a spire is a hull close to the
+   whole box. Now `PreciseConvexDecomposition`, passed **at creation** —
+   assigning it afterwards does not re-cook the collision.
+
+Both are unproven until the next walk.
+
 ### Stopped at
 
-Green and merged with `main`, and **still unwalked**. Every remaining question
+Green and merged with `main`, walked once. Every remaining question
 about this kit is a mesh question: feet on the deck, joins lining up, vertex
 colours surviving the round trip.
 
