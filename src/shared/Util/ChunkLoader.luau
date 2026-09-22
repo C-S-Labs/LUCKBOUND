@@ -37,6 +37,7 @@ local ROLE_COLOR: { [string]: Color3 } = {
 	COMBAT = Color3.fromRGB(156, 140, 190),
 	SIDE = Color3.fromRGB(196, 176, 110),
 	BOSS = Color3.fromRGB(198, 104, 104),
+	CAP = Color3.fromRGB(96, 100, 116),
 }
 
 local function part(props: { [string]: any }, parent: Instance): Part

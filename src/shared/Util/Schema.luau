@@ -161,6 +161,20 @@ function Schema.validateConfig(config: any, worlds: { [string]: any }): (boolean
 		end
 	end
 
+	-- Assembly switches. Both reach ChunkCore, which reads a missing one as
+	-- ON -- so a typo'd or deleted key does not fail, it quietly re-enables
+	-- whatever a designer turned off. Same class as the numeric dials above,
+	-- and cheaper to catch at boot than in a layout nobody is looking at.
+	for _, key in { "IncludeSide", "SealOpenSockets" } do
+		if type(config.Expedition[key]) ~= "boolean" then
+			table.insert(
+				errors,
+				`GameConfig.Expedition.{key} must be a boolean -- `
+					.. `ChunkCore reads a missing switch as on`
+			)
+		end
+	end
+
 	-- Expeditions as their own server, and parties (build spec §7.2).
 	local mode = config.Expedition.InstanceMode
 	if mode ~= "AUTO" and mode ~= "TELEPORT" and mode ~= "IN_PLACE" then
@@ -271,7 +285,7 @@ end
 function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boolean, { string })
 	local errors = {}
 	local VALID_ROLES =
-		{ ENTRY = true, PATH = true, COMBAT = true, SIDE = true, BOSS = true }
+		{ ENTRY = true, PATH = true, COMBAT = true, SIDE = true, BOSS = true, CAP = true }
 	local QUARTER = { [0] = true, [90] = true, [180] = true, [270] = true }
 
 	local perWorld: { [string]: { [string]: number } } = {}
@@ -323,10 +337,45 @@ function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boole
 			)
 		end
 
+		-- A CAP seals an opening the layout left over (build spec §7.4), which
+		-- makes it the one role placed repeatedly in a single layout and the
+		-- one role with nothing on the far side.
+		if chunk.Role == "CAP" then
+			-- A second socket would be a way out of a piece that exists to
+			-- have no way out -- the assembler would never use it, and the
+			-- art would read as a corridor that stops for no reason.
+			if type(chunk.Sockets) == "table" and #chunk.Sockets ~= 1 then
+				table.insert(
+					errors,
+					`{label}: CAP chunks need exactly 1 socket (got {#chunk.Sockets}) -- `
+						.. `a cap is where the map ends`
+				)
+			end
+			-- MaxPerLayout on a cap silently leaves openings unsealed once the
+			-- allowance runs out, which is the failure it exists to prevent.
+			if chunk.MaxPerLayout ~= nil then
+				table.insert(
+					errors,
+					`{label}: CAP chunks must not set MaxPerLayout -- one layout needs `
+						.. `as many caps as it has open sockets`
+				)
+			end
+			-- Nothing happens on a cap, so a Supports table here would be a
+			-- declaration nothing reads -- docs/RESERVED.md's definition of a
+			-- defect rather than a decision.
+			if chunk.Supports ~= nil then
+				table.insert(
+					errors,
+					`{label}: CAP chunks must not declare Supports -- a cap is scenery `
+						.. `and is never assigned a scenario`
+				)
+			end
+		end
+
 		-- Supports is the scenario-compatibility gate. A placeable chunk with
 		-- none supports nothing, so the generator would have no room to fill
-		-- and the piece would be walked through empty. ENTRY and BOSS are
-		-- exempt: neither is ever assigned a scenario.
+		-- and the piece would be walked through empty. ENTRY, BOSS and CAP are
+		-- exempt: none of them is ever assigned a scenario.
 		if chunk.Role == "PATH" or chunk.Role == "COMBAT" or chunk.Role == "SIDE" then
 			if type(chunk.Supports) ~= "table" then
 				table.insert(errors, `{label}: {chunk.Role} chunks need a Supports table`)
@@ -404,6 +453,38 @@ function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boole
 					`world '{worldId}' declares a SIDE chunk but no chunk has 3+ sockets, `
 						.. `so the critical path spends every socket and the pocket can never attach`
 				)
+			end
+		end
+
+		-- A cap attaches by Kind like anything else, so a cap whose Kind no
+		-- other piece in its world offers is a cap that never seals anything.
+		-- It would validate, pass every layout test and leave the openings it
+		-- was authored to close -- the same silent no-op the SIDE rule above
+		-- exists to refuse.
+		if (counts.CAP or 0) > 0 then
+			local offered: { [string]: boolean } = {}
+			for _, chunk in chunks do
+				local isOther = chunk.Role ~= "CAP" and type(chunk.Sockets) == "table"
+				if chunk.WorldId == worldId and isOther then
+					for _, socket in chunk.Sockets do
+						offered[socket.Kind] = true
+					end
+				end
+			end
+			for _, chunk in chunks do
+				local isCap = chunk.Role == "CAP" and type(chunk.Sockets) == "table"
+				if chunk.WorldId == worldId and isCap then
+					for _, socket in chunk.Sockets do
+						if not offered[socket.Kind] then
+							table.insert(
+								errors,
+								`Chunk '{chunk.Id}': socket Kind '{socket.Kind}' is offered by `
+									.. `no other chunk in world '{worldId}', so this cap `
+									.. `can never seal anything`
+							)
+						end
+					end
+				end
 			end
 		end
 	end

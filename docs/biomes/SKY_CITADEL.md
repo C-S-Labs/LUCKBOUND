@@ -215,10 +215,23 @@ the brief asks for.
 
 ---
 
-## The kit — 19 pieces
+## The kit — 22 pieces
 
-All nineteen are exactly **256 × 256 × 256**: footprint ±128, bottom at −96,
+All twenty-two are exactly **256 × 256 × 256**: footprint ±128, bottom at −96,
 crown at +160. Origin at the centre of the footprint on the walk plane.
+
+**Delivered and uploaded 2026-09-23**, as `.rbxmx` models each wrapping one
+MeshPart that already carries its `rbxassetid` — so there was no upload step on
+our side, exactly as Verdant Valley arrived. Every size above was **read off
+the delivered meshes rather than trusted**, and every piece came with
+`PivotOffset.Y = −32`: the walk plane 32 studs below the box centre, which is
+`GroundOffsetY = 96` confirmed by the art instead of derived from the generator
+alone. The files are kept in `assets/rbxm/chunks/sky_citadel/` as provenance and
+a re-import path; the asset ids in `Content/AssetManifest.luau` are the load
+route.
+
+The pieces are **untextured**: `TextureID` is null on all 22, and the look is
+the mesh's own vertex colour with a flat `Color3`.
 
 ### Variety: five axes, mixed differently on every piece
 
@@ -259,6 +272,13 @@ Every landmark reaches exactly +160: it pins the top of the bounding box.
 | `chunk_spire_court_b` | COMBAT (gate-court, rare) | S · N `ASCENT` | long octagon + **raised nave** | checker | railing | twin cones | turbine | 5,020 |
 | `chunk_side_lookout` | SIDE | S | small 12-gon | pale rays | railing | crystal roots | signal mast | 2,396 |
 | `chunk_boss_clearing` | BOSS | S `ASCENT` | round arena | inlaid rings | parapet | engine | Crown Spire | 5,744 |
+| `chunk_cap_overlook` | CAP | S | small deck | pale | railing | cone | — | not measured |
+| `chunk_cap_crumbling` | CAP | S | broken stub | pale | — | shards | — | not measured |
+| `chunk_cap_sealed_gate` | CAP | S | small deck | pale | parapet | cone | shut gate | not measured |
+
+The three caps arrived with the 2026-09-23 delivery and their triangle counts
+were not measured here — they are well inside the budget by inspection, but
+"not measured" is the honest entry until someone reads them.
 
 Weights and `MaxPerLayout` are in `Content/Chunks/SkyCitadel.luau`. Every
 COMBAT piece, the crossroads and the lookout are once per layout.
@@ -287,13 +307,25 @@ can only be used for loot, and then it dead-ends."* Three changes answer it:
   switches it; the expedition passes it. It also means **Verdant Valley's
   Hollow is placed for the first time** — asserted.
 
-An intersection's fourth mouth still faces the sky when the lookout takes
-another branch or none; per the brief it reads as a skyway carrying on out of
-sight.
+- **Every leftover mouth is closed.** An intersection's spare mouths used to
+  face open sky when the lookout took another branch or none — the brief called
+  that a skyway carrying on out of sight, and standing in one it reads as an
+  unfinished map instead. The three `chunk_cap_*` pieces seal them: a railed
+  overlook, a span that has broken off, and a gate that stays shut, so a map
+  with several loose ends does not end the same way twice. This needed a
+  **System change** and is recorded as build spec **§7.4**; the switch is
+  `GameConfig.Expedition.SealOpenSockets`.
+
+  Caps turn up in **31 of 200 seeds** — the crossroads' own share, because it
+  is the only piece that strands a mouth in the first place. Where the path
+  folds back and the cell beyond an opening is already occupied, the opening
+  stays: three of them across those 200 layouts, and a test tells those apart
+  from an opening a cap could have reached and did not.
 
 Review renders, `assets/source/worlds/sky_citadel/renders/`:
 
-- `kit_overview.jpg` — all nineteen on the review grid, rows of four
+- `kit_overview.jpg` — the original nineteen on the review grid, rows of four
+  (the three caps postdate it)
 - `preview_chain.jpg` — entry → **crossroads** (with the lookout on its east
   branch) → shattered span → **west bend** → archive → Hall of Winds → arena
 - `preview_corner.jpg`, `preview_corner_top.jpg` — four pieces at four yaws

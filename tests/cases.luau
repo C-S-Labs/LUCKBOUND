@@ -1634,6 +1634,218 @@ do
 		check("the expedition turns IncludeSide on", GameConfig.Expedition.IncludeSide == true)
 	end
 
+	-- CAPS (SealOpenSockets) -- build spec §7.4 ------------------------
+	-- Every socket the path and the pocket leave unjoined gets a CAP piece,
+	-- so a map ends in authored art rather than at an opening onto nothing.
+	do
+		local function assembleSC(trial: number, seal: boolean)
+			return ChunkCore.assembleWithRetry(Chunks, {
+				WorldId = "SKY_CITADEL",
+				PathLength = 5,
+				IncludeSide = true,
+				SealOpenSockets = seal,
+			}, function(a) return lcg(trial * 40503 + a * 7) end, 5)
+		end
+
+		-- THE PROPERTY THE CAPS EXIST FOR, measured off the finished geometry
+		-- rather than off the assembler's own bookkeeping: after sealing, no
+		-- socket anywhere in the layout is left facing nothing.
+		-- An opening survives sealing only when there is nowhere to put the
+		-- cap: the cell beyond it already holds another piece, because the
+		-- path folded back and passed its own side. That is not an opening
+		-- onto nothing, so the honest property is "sealed, or physically
+		-- blocked" -- and a cap that could have fitted and did not still
+		-- fails this.
+		local function blocked(layout: any, open: any): boolean
+			for _, cap in ChunkCore.libraryFor(Chunks, "SKY_CITADEL").CAP or {} do
+				local p = ChunkCore.placeAgainst(cap, open.Socket, 0)
+				if p then
+					local hits = false
+					for _, other in layout.Chunks do
+						if ChunkCore.overlaps(p, cap, other, Chunks[other.ChunkId]) then
+							hits = true
+						end
+					end
+					if not hits then return false end
+				end
+			end
+			return true
+		end
+
+		local sealedBuilt, sealedOpen, sealedUnblocked = 0, 0, 0
+		local cappedLayouts, sealedValid = 0, true
+		for trial = 1, 200 do
+			local okA, layout = assembleSC(trial, true)
+			if okA then
+				sealedBuilt += 1
+				for _, open in ChunkCore.openSockets(layout, Chunks) do
+					sealedOpen += 1
+					if not blocked(layout, open) then sealedUnblocked += 1 end
+				end
+				local okV = ChunkCore.validateLayout(layout, Chunks)
+				if not okV then sealedValid = false end
+				for _, c in layout.Chunks do
+					if c.Role == "CAP" then cappedLayouts += 1 break end
+				end
+			end
+		end
+		check("with SealOpenSockets, every socket a cap could reach is sealed",
+			sealedBuilt > 0 and sealedUnblocked == 0,
+			string.format("%d of %d surviving openings had room for a cap, across %d layouts",
+				sealedUnblocked, sealedOpen, sealedBuilt))
+		check("the openings that do survive are ones the map folded shut itself",
+			sealedOpen < sealedBuilt,
+			string.format("%d openings across %d layouts", sealedOpen, sealedBuilt))
+		-- Variety, the reason there are three of them: a map with several
+		-- loose ends should not end the same way three times, and across
+		-- seeds all three endings should turn up.
+		local capCounts, capTotal = {}, 0
+		for trial = 1, 200 do
+			local okA, layout = assembleSC(trial, true)
+			if okA then
+				for _, c in layout.Chunks do
+					if c.Role == "CAP" then
+						capCounts[c.ChunkId] = (capCounts[c.ChunkId] or 0) + 1
+						capTotal += 1
+					end
+				end
+			end
+		end
+		local distinctCaps = 0
+		for _ in capCounts do distinctCaps += 1 end
+		check("caps are actually placed, not merely permitted", cappedLayouts > 0,
+			string.format("%d of %d layouts carry a cap, %d caps in all (%.2f per layout)",
+				cappedLayouts, sealedBuilt, capTotal, capTotal / math.max(sealedBuilt, 1)))
+		check("all three endings are drawn across seeds", distinctCaps == 3,
+			string.format("%d distinct caps", distinctCaps))
+		check("a capped layout still has no overlapping pieces", sealedValid)
+
+		-- Without it, the openings are there to find -- which is what makes
+		-- the assertion above a measurement rather than a tautology.
+		local unsealedOpen = 0
+		for trial = 1, 200 do
+			local okA, layout = assembleSC(trial, false)
+			if okA then
+				unsealedOpen += #ChunkCore.openSockets(layout, Chunks)
+				for _, c in layout.Chunks do
+					if c.Role == "CAP" then unsealedOpen = -1 end
+				end
+			end
+		end
+		check("without SealOpenSockets, sockets are left open and no cap is placed",
+			unsealedOpen > 0, tostring(unsealedOpen))
+
+		-- SEALING MUST NOT MOVE THE MAP. Caps are chosen last and drawn from
+		-- the stream after every other decision, so the same seed has to
+		-- produce the same critical path with sealing on and off. If this
+		-- goes red, turning caps on has silently changed which world every
+		-- player walks.
+		local pathsMatch, firstDiff = true, nil
+		for trial = 1, 100 do
+			local okOn, on = assembleSC(trial, true)
+			local okOff, off = assembleSC(trial, false)
+			if okOn ~= okOff then
+				pathsMatch = false
+				firstDiff = firstDiff or string.format("seed %d assembles differently", trial)
+			elseif okOn then
+				for i, c in off.Chunks do
+					local other = on.Chunks[i]
+					if not other or other.ChunkId ~= c.ChunkId or other.X ~= c.X
+						or other.Z ~= c.Z or other.Yaw ~= c.Yaw then
+						pathsMatch = false
+						firstDiff = firstDiff or string.format("seed %d differs at piece %d", trial, i)
+					end
+				end
+			end
+		end
+		check("sealing leaves the critical path and the pocket untouched",
+			pathsMatch, firstDiff)
+
+		-- A cap is scenery. ScenarioCore must skip it exactly as it skips the
+		-- arrival plaza and the arena -- a scenario assigned to a sealed
+		-- ending would be a room nobody can reach.
+		local capsClean, assignedElsewhere = true, false
+		for trial = 1, 40 do
+			local okA, layout = assembleSC(trial, true)
+			if okA then
+				local okP, plan = ScenarioCore.assign(layout, Chunks, Scenarios, {
+					FateInterventionChance = GameConfig.Expedition.FateInterventionChance,
+					RecentMemory = GameConfig.Expedition.ScenarioRecentMemory,
+					EscalateFrom = GameConfig.Expedition.ScenarioEscalateFrom,
+				}, lcg(trial * 13))
+				if not okP then
+					capsClean = false
+				else
+					for _, step in plan.Steps do
+						if step.Role == "CAP" and step.ScenarioId ~= nil then capsClean = false end
+						if step.Role == "COMBAT" and step.ScenarioId ~= nil then assignedElsewhere = true end
+					end
+				end
+			end
+		end
+		check("a cap is never assigned a scenario", capsClean)
+		check("the rooms around it still are", assignedElsewhere)
+
+		-- Worlds with no caps are untouched by the switch.
+		local vvSame = true
+		for trial = 1, 50 do
+			local okOn, on = ChunkCore.assembleWithRetry(Chunks,
+				{ WorldId = "VERDANT_VALLEY", PathLength = 5, SealOpenSockets = true },
+				function(a) return lcg(trial * 7717 + a) end, 5)
+			local okOff, off = ChunkCore.assembleWithRetry(Chunks,
+				{ WorldId = "VERDANT_VALLEY", PathLength = 5, SealOpenSockets = false },
+				function(a) return lcg(trial * 7717 + a) end, 5)
+			if okOn ~= okOff then vvSame = false
+			elseif okOn and #on.Chunks ~= #off.Chunks then vvSame = false end
+		end
+		check("a world that declares no caps is unaffected by the switch", vvSame)
+
+		check("the expedition turns SealOpenSockets on",
+			GameConfig.Expedition.SealOpenSockets == true)
+	end
+
+	-- What the schema refuses a cap ------------------------------------
+	do
+		local function kit(cap)
+			local k = {
+				A = { Id = "A", WorldId = "CW", Role = "ENTRY", AssetKey = "VV_CHUNK_ENTRY",
+					SizeX = 1, SizeY = 1, SizeZ = 1, Weight = 1,
+					Sockets = { { Id = "a", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 } } },
+				B = { Id = "B", WorldId = "CW", Role = "BOSS", AssetKey = "VV_CHUNK_ENTRY",
+					SizeX = 1, SizeY = 1, SizeZ = 1, Weight = 1,
+					Sockets = { { Id = "a", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 } } },
+				C = { Id = "C", WorldId = "CW", Role = "PATH", AssetKey = "VV_CHUNK_ENTRY",
+					SizeX = 1, SizeY = 1, SizeZ = 1, Weight = 1,
+					Supports = { Combat = true },
+					Sockets = {
+						{ Id = "a", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 },
+						{ Id = "b", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 180 } } },
+			}
+			cap.Id, cap.WorldId, cap.Role = "K", "CW", "CAP"
+			cap.AssetKey = cap.AssetKey or "VV_CHUNK_ENTRY"
+			cap.SizeX, cap.SizeY, cap.SizeZ, cap.Weight = 1, 1, 1, 1
+			k.K = cap
+			return k
+		end
+		local function fresh(extra)
+			local c = { Sockets = { { Id = "a", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 } } }
+			for k, v in extra do c[k] = v end
+			return c
+		end
+		check("a valid cap passes", (Schema.validateChunks(kit(fresh({})), AssetManifest)))
+		check("a cap with two sockets is a boot error",
+			not (Schema.validateChunks(kit(fresh({ Sockets = {
+				{ Id = "a", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 },
+				{ Id = "b", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 180 } } })), AssetManifest)))
+		check("a cap with MaxPerLayout is a boot error",
+			not (Schema.validateChunks(kit(fresh({ MaxPerLayout = 1 })), AssetManifest)))
+		check("a cap declaring Supports is a boot error",
+			not (Schema.validateChunks(kit(fresh({ Supports = { Combat = true } })), AssetManifest)))
+		check("a cap whose Kind nothing else offers is a boot error",
+			not (Schema.validateChunks(kit(fresh({ Sockets = {
+				{ Id = "a", Kind = "UNOFFERED", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 } } })), AssetManifest)))
+	end
+
 	-- Geometry helpers ----------------------------------------------
 	local placed = { X = 10, Y = 0, Z = 20, Yaw = 90 }
 	local sock = { Id = "s", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = -48, Facing = 0 }

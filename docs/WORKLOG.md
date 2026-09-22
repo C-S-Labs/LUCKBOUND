@@ -33,6 +33,115 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 48 — 2026-09-23 — The Sky Citadel kit is in, and maps stopped ending in mid-air
+
+**Branch:** `claude/clever-cori-oiq6pb` · **Tests:** 696 passing (was 680)
+
+The 22-piece Sky Citadel kit arrived as `.rbxmx` and is wired in. Three of the
+22 were new, and they needed a System capability the engine did not have.
+
+### The delivery, and what was read rather than trusted
+
+Same shape as the Verdant Valley delivery: one `Model` around one `MeshPart`
+already carrying a real `rbxassetid`, so the ids **are** the integration — no
+upload step, no FBX round trip. 19 manifest entries flipped from `PLACEHOLDER`
+to `UPLOADED`; 3 are new.
+
+Two numbers were checked against the files instead of assumed:
+
+- **Every piece measures exactly 256 × 256 × 256**, which is what the content
+  module declares. `ChunkLoader` sets `mesh.Size` outright, so a box that
+  differed would have been silently stretched.
+- **Every piece carries `PivotOffset.Y = −32`** — the walk plane 32 studs below
+  the box centre. That is `GroundOffsetY = 96` arriving from the art side,
+  independently of the generator that derived it. The two agree.
+
+The pieces are untextured: `TextureID` is null on all 22 and the look is vertex
+colour. Whether `CreateMeshPartAsync` preserves that is a Studio question and
+is now written down as one.
+
+### Every opening the delivery described already matched the repo
+
+The kit came with a chunk reference sheet. Openings, roles, the ASCENT rule,
+the gate-courts — all 19 existing entries matched it exactly, so nothing about
+the 19 changed beyond their asset ids. That is the first time this project has
+had an independent description of a kit to check content against, and it is
+worth asking for again.
+
+### Caps — build spec §7.4, and the one real system change
+
+Three of the 22 are new: a railed overlook, a span that has broken off, and a
+gate that stays shut. They exist because **a piece with more openings than the
+path spends strands one.** Sky Citadel's crossroads has four mouths; the path
+takes two, the pocket may take a third, and the fourth was a skyway running out
+over open air and stopping. `SKY_CITADEL.md` had called that "a skyway carrying
+on out of sight"; on a floating island it reads as an unfinished map.
+
+Sealing is not a piece, it is **a rule about leftovers**, so it is a System
+change and is recorded as an amendment rather than made quietly:
+
+- a new `CAP` role, a sealing pass in `ChunkCore` after the path and the
+  pocket, and `GameConfig.Expedition.SealOpenSockets`
+- the schema refuses a cap with a second socket, with `MaxPerLayout`, with
+  `Supports`, or with a socket Kind nothing else in its world offers — each of
+  which would make the cap a silent no-op or a lie
+- `ScenarioCore` skips caps as it skips the entry and the arena
+
+**Sealing changes nothing before it.** Caps draw from the stream after every
+other decision, and a test asserts that 100 seeds produce the same map piece by
+piece with sealing on and off. If that ever goes red, turning caps on has
+silently changed the world every player walks.
+
+### The property is measured, not asserted
+
+`ChunkCore.openSockets` computes what is still open **from the finished
+geometry** — two sockets are joined when they sit at the same point facing
+opposite ways — rather than asking the assembler whether it thinks it sealed
+everything. Self-agreement is what let a faked `Vector3` pass 152 tests.
+
+Across 200 seeds: every opening a cap could physically reach is sealed, all
+three endings are drawn, and caps appear in **31 of 200 layouts** — the
+crossroads' own share, because it is the only piece that strands a mouth.
+Three openings survive, all of them where the path folded back and the cell
+beyond was already occupied; the test tells those apart from an opening a cap
+could have reached and did not.
+
+### Two things fixed in passing
+
+- **`ChunkCore` kept two records of which sockets were spent.** A `spent` table
+  indexed by placement order sat beside `consumedBy` and nothing ever read it.
+  Removed: the sealing pass turns on exactly that question, and two answers to
+  "is this socket free" is how a cap ends up sealing a doorway the path uses.
+- **The SIDE pocket never marked its own join.** It recorded the piece but not
+  the two sockets it consumed, which was invisible until something else asked.
+  The sealing pass would have capped the branch the pocket stands on.
+- Also: `IncludeSide` and `SealOpenSockets` are now boot-validated as booleans,
+  because `ChunkCore` reads a missing switch as ON — so a typo silently
+  re-enables what a designer turned off.
+
+### Verified
+
+696/696 · syntax clean on every module · forbidden-name scan clean. StyLua
+reports pre-existing diffs across the repo at 2.5.2 and none in the new code,
+so nothing was reformatted; CI runs that step `continue-on-error`.
+
+### Stopped at
+
+Green, and **still unwalked**. Every remaining question about this kit is a
+question about meshes: feet on the deck, joins lining up, vertex colours
+surviving the round trip. `TESTING.md` **Test Q** is new and is exactly that
+walk.
+
+### Next
+
+1. **Walk Test Q.** Then `PathLength` can finally be tuned against a real route.
+2. Tests O and P (parties, published place) — still owed from session 46.
+3. **Decimate and re-upload the Verdant Valley Grove** (14,448 tris).
+4. A **three-opening Verdant Valley piece**, so that world can host its §6
+   pocket — and, now, so a cap has somewhere to happen there too.
+
+---
+
 ## Session 47 — 2026-09-23 — Architecture reconciliation, from an audit
 
 **Branch:** `claude/architecture-reconciliation` · **Tests:** 680 passing (was

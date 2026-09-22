@@ -602,6 +602,35 @@ accounts in a live server.
 If any step lands you in a *different* hub server than the one you left, that
 is the fallback working (the old one filled or closed) — note it, not a fail.
 
+### Test Q — the Sky Citadel kit, in the world ⭐ NEW (8 min)
+
+The 22 pieces were uploaded on 2026-09-23 and **not one has been stood on**.
+Everything below is a claim the test suite cannot make: it checks numbers, and
+these are all claims about what the meshes actually do.
+
+1. **Roll until you get Sky Citadel, enter, and read the output.** ✅ Pass:
+   the summary says `N chunks (N mesh, 0 blockout)`. **Any blockout at all
+   means an asset id failed to load** — the seam is working, the art is not.
+2. **Stand still and look at your feet.** ✅ Pass: you are standing *on* the
+   deck, not in it and not above it. This is `GroundOffsetY = 96` meeting a
+   real mesh for the first time; if you are 32 studs under the floor or
+   hovering over it, that number is what to suspect.
+3. **Walk the whole route to the arena.** ✅ Pass: no gap at any join, no step
+   up or down between pieces, and the skyway decks line up edge to edge.
+4. **Find a crossroads and look down its unused mouth.** ✅ Pass: it ends in a
+   cap — an overlook, a broken span or a shut gate (§7.4) — not in open sky.
+   Re-roll a few times: you should see more than one of the three.
+5. **Select a chunk folder in the Explorer.** ✅ Pass: its attributes read
+   `Role`, `Yaw`, and on a non-cap piece a `Scenario`, `ScenarioBand` and
+   `FateTouched`. A cap carries no scenario, by design.
+6. **Look at the piece from a distance.** The meshes are untextured — flat
+   vertex colour is expected, not a fault. What to report is anything that
+   reads wrong at scale: a piece that looks the wrong size next to your
+   character, or a landmark clipping its neighbour.
+
+Report `PathLength` feel here too: this is the first walk that can say whether
+the route is too short, too long, or about right.
+
 ### Test E — a tampered client is rejected (1 min)
 
 From the **client** console:
