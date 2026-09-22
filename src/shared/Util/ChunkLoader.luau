@@ -225,7 +225,17 @@ function ChunkLoader.build(
 	local usedMeshes = 0
 	local floorCount = 0
 
+	-- Scenario steps keyed by layout index, so the loop below can look one up
+	-- without caring whether a plan exists at all.
+	local planByIndex: { [number]: any } = {}
+	if layout.ScenarioPlan then
+		for _, step in layout.ScenarioPlan.Steps do
+			planByIndex[step.Index] = step
+		end
+	end
+
 	for _, placed in layout.Chunks do
+		local step = planByIndex[placed.Index]
 		local chunk = chunks[placed.ChunkId]
 		if not chunk then
 			warn(`[ChunkLoader] layout names unknown chunk '{placed.ChunkId}'; skipped`)
@@ -236,6 +246,18 @@ function ChunkLoader.build(
 		folder.Name = `{placed.Index}_{placed.ChunkId}`
 		folder:SetAttribute("Role", placed.Role)
 		folder:SetAttribute("Yaw", placed.Yaw)
+
+		-- The scenario for this room, when the layout carries a plan (build
+		-- spec §7.3). Written as attributes rather than through a new channel
+		-- because Role and Yaw already travel this way, and because it makes a
+		-- generated map READABLE IN STUDIO: select a chunk and see what Fate
+		-- decided happens there. Nothing consumes these yet -- encounter
+		-- configuration is still excluded by §7.
+		if step then
+			folder:SetAttribute("Scenario", step.ScenarioId)
+			folder:SetAttribute("ScenarioBand", step.Band)
+			folder:SetAttribute("FateTouched", step.FateTouched == true)
+		end
 		folder.Parent = model
 
 		-- THE ORIGIN CONTRACT WITH THE BLENDER FILE.

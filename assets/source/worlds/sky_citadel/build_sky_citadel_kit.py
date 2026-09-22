@@ -10,7 +10,7 @@ or from a shell:
 
 It rebuilds the whole kit from scratch every time, so the .blend next to this
 file is an OUTPUT, not a source. Change the look here, re-run, re-export.
-docs/SKY_CITADEL.md is the art direction this script implements, and
+docs/biomes/SKY_CITADEL.md is the art direction this script implements, and
 docs/CHUNK_AUTHORING.md is the contract every piece has to satisfy.
 
 What it guarantees, and checks before it will export (`validate()`):
@@ -63,7 +63,7 @@ SOURCE_DIR = os.path.join(REPO, "assets", "source", "worlds", "sky_citadel")
 EXPORT_DIR = os.path.join(REPO, "assets", "export", "worlds", "sky_citadel")
 
 # --------------------------------------------------------------------------
-# Palette. docs/SKY_CITADEL.md explains each role. sRGB 0-255.
+# Palette. docs/biomes/SKY_CITADEL.md explains each role. sRGB 0-255.
 # (rgb, emissive)
 # --------------------------------------------------------------------------
 
@@ -431,7 +431,7 @@ def free_for_float(p, shape):
 # --------------------------------------------------------------------------
 # Set pieces. Every one of these stands on z = 0 unless it is one of the
 # deliberately floating anti-grav elements (halos, crystals, beacons) -- see
-# "What floats on purpose" in docs/SKY_CITADEL.md.
+# "What floats on purpose" in docs/biomes/SKY_CITADEL.md.
 # --------------------------------------------------------------------------
 
 
@@ -1123,7 +1123,7 @@ def chamfer_rect(hx, hy, c):
 # It was: every piece was one white slab on the same cone keel, ringed by the
 # same parapet, lit by the same lamps, marked by the same needle spire. The
 # pieces below are built from FIVE independent axes, and no two neighbours in
-# the table in docs/SKY_CITADEL.md share more than two:
+# the table in docs/biomes/SKY_CITADEL.md share more than two:
 #
 #   shape     one deck, or an archipelago of islands joined by short bridges
 #   floor     radial gold, planks, checker, lawn, night sky, slate yard,

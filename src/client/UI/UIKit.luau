@@ -29,6 +29,14 @@ local UIKit = {}
 -- swim".
 local REDUCED_SECONDS = 0.05
 
+--- Seconds as M:SS. Clamped at zero -- two copies of this existed and only
+--- one clamped, so a countdown that overran rendered "-1:-30" in one place
+--- and "0:00" in the other.
+function UIKit.formatClock(seconds: number): string
+	local whole = math.max(0, math.floor(seconds))
+	return string.format("%d:%02d", whole // 60, whole % 60)
+end
+
 function UIKit.reduceMotion(): boolean
 	return StateController.setting("ReduceMotion") == true
 end

@@ -45,6 +45,8 @@ local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local ChunkCore = require(Root.Util.ChunkCore)
 local ChunkLoader = require(Root.Util.ChunkLoader)
 local Chunks = require(Root.Content.Chunks)
+local ScenarioCore = require(Root.Util.ScenarioCore)
+local Scenarios = require(Root.Content.Scenarios)
 local Constants = require(Root.Core.Constants)
 local ExpeditionCore = require(Root.Core.ExpeditionCore)
 local GameConfig = require(Root.Core.GameConfig)
@@ -237,6 +239,11 @@ local function buildStage(worldId: string, seed: number, origin: Vector3, stageN
 	local ok, layout, attempts = ChunkCore.assembleWithRetry(Chunks, {
 		WorldId = worldId,
 		PathLength = ExpeditionCore.pathLengthFor(world, GameConfig),
+		-- Was never passed, so GameConfig.Expedition.IncludeSide did nothing:
+		-- ChunkCore treats nil as "on", which happened to match the config's
+		-- value, so a designer turning it off would have been ignored in
+		-- silence. A dial that is read nowhere is not a dial.
+		IncludeSide = GameConfig.Expedition.IncludeSide,
 	}, function(attempt)
 		return ExpeditionCore.streamFor(seed, attempt)
 	end, GameConfig.Expedition.AssemblyAttempts)
@@ -256,16 +263,66 @@ local function buildStage(worldId: string, seed: number, origin: Vector3, stageN
 	end
 
 	layout.Seed = seed
+
+	-- SCENARIO SELECTION -- build spec §7.3, the layer above the geometry.
+	--
+	-- ChunkCore decided WHERE the pieces go; this decides WHAT HAPPENS in
+	-- them. It spawns nothing: the plan is recorded on the layout and written
+	-- onto each chunk folder as an attribute, so a generated map is
+	-- verifiable by eye in Studio exactly like Role and Yaw already are.
+	-- Encounter and reward configuration remain behind the §7 exclusions.
+	--
+	-- Its own stream, offset well past the assembly attempts, so adding or
+	-- removing a scenario can never shift which CHUNKS a seed picks. The two
+	-- layers stay independently reproducible, which is the whole point of the
+	-- seam between them.
+	local planOk, plan = ScenarioCore.assign(layout, Chunks, Scenarios, {
+		FateInterventionChance = GameConfig.Expedition.FateInterventionChance,
+		RecentMemory = GameConfig.Expedition.ScenarioRecentMemory,
+		EscalateFrom = GameConfig.Expedition.ScenarioEscalateFrom,
+	}, ExpeditionCore.streamFor(seed, GameConfig.Expedition.ScenarioStreamOffset))
+
+	if planOk then
+		layout.ScenarioPlan = plan
+	else
+		-- A kit that cannot be populated is a CONTENT bug, and it is not worth
+		-- refusing a walkable expedition over: nothing reads the plan yet.
+		-- Loud server-side, invisible to the player -- the same posture the
+		-- loader takes when a mesh fails and it falls back to blockout.
+		warn(
+			string.format(
+				"[ExpeditionSystem] scenario assignment failed for %s seed %d -- %s",
+				worldId,
+				seed,
+				tostring(plan)
+			)
+		)
+	end
+
 	local result = ChunkLoader.build(layout, Chunks, origin, stageFolder(), stageName)
+
+	local scenarioSummary = "no plan"
+	if planOk then
+		local bands = ScenarioCore.bandCounts(plan)
+		scenarioSummary = string.format(
+			"%d ordinary/%d uncommon/%d rare",
+			bands.ORDINARY,
+			bands.UNCOMMON,
+			bands.RARE
+		)
+	end
+
 	return {
 		Stage = result.Model,
 		EntryPosition = result.EntryPosition,
 		ReturnPosition = result.ReturnPosition,
+		ScenarioPlan = if planOk then plan else nil,
 		Summary = string.format(
-			"%d chunks (%d mesh, %d blockout)  attempt %d",
+			"%d chunks (%d mesh, %d blockout)  scenarios %s  attempt %d",
 			#layout.Chunks,
 			result.UsedMeshes,
 			result.FloorCount,
+			scenarioSummary,
 			attempts
 		),
 	}

@@ -11,6 +11,7 @@ import re, pathlib, sys
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 
 PURE_MODULES = [
+    ("Freeze",           "src/shared/Core/Freeze.luau"),
     ("Types",            "src/shared/Core/Types.luau"),
     ("Constants",        "src/shared/Core/Constants.luau"),
     ("GameConfig",       "src/shared/Core/GameConfig.luau"),
@@ -41,7 +42,9 @@ PURE_MODULES = [
     ("LedgerCore",       "src/shared/Core/LedgerCore.luau"),
 ]
 
-WORLD_FILES = sorted((ROOT / "src/shared/Content/Worlds").glob("*.luau"))
+# Folders already bundled verbatim through PURE_MODULES must not also be
+# rebuilt as registries -- Scenarios is a single init.luau with a literal list.
+PURE_MODULE_NAMES = {name for name, _ in PURE_MODULES}
 
 REQUIRE_RE = re.compile(r'require\(\s*script[\w.]*?\.(\w+)\s*\)')
 
@@ -192,41 +195,51 @@ def main():
         src = transform((ROOT / rel).read_text(encoding="utf-8"))
         out.append(f'\n-- === {rel} ===\n__define("{name}", function()\n{src}\nend)\n')
 
-    # Worlds registry: the real init.luau walks script:GetChildren(), which has
-    # no headless equivalent. Rebuild it from the same world files.
-    world_defs = []
-    for wf in WORLD_FILES:
-        if wf.name == "init.luau":
+    # CONTENT REGISTRIES, discovered rather than enumerated.
+    #
+    # The real Content/<Kind>/init.luau modules walk script:GetChildren(),
+    # which has no headless equivalent, so the harness has to rebuild them.
+    # It used to do that with one bespoke block per kind -- Worlds, Chunks,
+    # Events -- which meant a new content kind needed an edit here for reasons
+    # that had nothing to do with the content. Now every folder under
+    # Content/ that has an init.luau is rebuilt by the same rule, so adding a
+    # kind needs no change to this file at all.
+    #
+    # The one rule that has to match the real init.luau: a module returns
+    # either a single Id-bearing table (Worlds, Events) or a LIST of them
+    # (Chunks, one file per kit). Detected at runtime rather than configured.
+    registries = 0
+    for folder in sorted((ROOT / "src/shared/Content").iterdir()):
+        if not folder.is_dir() or not (folder / "init.luau").exists():
             continue
-        src = transform(wf.read_text(encoding="utf-8"))
-        world_defs.append(f'\tdo\n\t\tlocal w = (function()\n{src}\n\t\tend)()\n\t\tassert(registry[w.Id] == nil, "duplicate world Id: " .. w.Id)\n\t\tregistry[w.Id] = w\n\tend')
-    out.append('\n-- === Worlds registry (rebuilt for headless) ===\n__define("Worlds", function()\n\tlocal registry = {}\n'
-               + "\n".join(world_defs) + '\n\treturn registry\nend)\n')
-
-    chunk_files = sorted((ROOT / "src/shared/Content/Chunks").glob("*.luau"))
-    kits = []
-    for cf in chunk_files:
-        if cf.name == "init.luau":
-            continue
-        kits.append(f'\tdo\n\t\tlocal kit = (function()\n{transform(cf.read_text(encoding="utf-8"))}\n\t\tend)()\n\t\tfor _, c in kit do\n\t\t\tassert(registry[c.Id] == nil, "duplicate chunk Id: " .. c.Id)\n\t\t\tregistry[c.Id] = c\n\t\tend\n\tend')
-    out.append('\n-- === Chunk registry (rebuilt for headless) ===\n__define("Chunks", function()\n\tlocal registry = {}\n'
-               + "\n".join(kits) + '\n\treturn registry\nend)\n')
-
-    event_files = sorted((ROOT / "src/shared/Content/Events").glob("*.luau"))
-    defs = []
-    for ef in event_files:
-        if ef.name == "init.luau":
-            continue
-        defs.append(f'\tdo\n\t\tlocal e = (function()\n{transform(ef.read_text(encoding="utf-8"))}\n\t\tend)()\n\t\tassert(registry[e.Id] == nil, "duplicate event Id: " .. e.Id)\n\t\tregistry[e.Id] = e\n\tend')
-    out.append('\n-- === Event registry (rebuilt for headless) ===\n__define("Events", function()\n\tlocal registry = {}\n'
-               + "\n".join(defs) + '\n\treturn registry\nend)\n')
+        name = folder.name
+        if name in PURE_MODULE_NAMES:
+            continue  # already bundled verbatim, e.g. Scenarios
+        entries = []
+        for f in sorted(folder.glob("*.luau")):
+            if f.name == "init.luau":
+                continue
+            entries.append(
+                '\tdo\n\t\tlocal m = (function()\n%s\n\t\tend)()\n'
+                '\t\tlocal items = if m.Id ~= nil then { m } else m\n'
+                '\t\tfor _, item in items do\n'
+                '\t\t\tassert(registry[item.Id] == nil, "duplicate %s Id: " .. item.Id)\n'
+                '\t\t\tregistry[item.Id] = item\n'
+                '\t\tend\n\tend' % (transform(f.read_text(encoding="utf-8")), name)
+            )
+        out.append(
+            '\n-- === %s registry (rebuilt for headless) ===\n'
+            '__define("%s", function()\n\tlocal registry = {}\n%s\n\treturn registry\nend)\n'
+            % (name, name, "\n".join(entries))
+        )
+        registries += 1
 
     out.append("\n-- === test cases ===\n")
     out.append((ROOT / "tests/cases.luau").read_text(encoding="utf-8"))
 
     target = ROOT / "tests/generated_suite.luau"
     target.write_text("".join(out), encoding="utf-8")
-    print(f"wrote {target.relative_to(ROOT)} ({len(''.join(out))} bytes, {len(PURE_MODULES)} modules, {len(world_defs)} worlds)")
+    print(f"wrote {target.relative_to(ROOT)} ({len(''.join(out))} bytes, {len(PURE_MODULES)} modules, {registries} content registries)")
 
 if __name__ == "__main__":
     sys.exit(main())

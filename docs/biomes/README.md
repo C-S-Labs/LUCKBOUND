@@ -52,13 +52,16 @@ None of that is construction detail. It is the design the construction serves.
 | World | Schema | Kit |
 |---|---|---|
 | **Verdant Valley** | ✅ `VERDANT_VALLEY.md` | 12 test pieces delivered 2026-09-22 |
-| **Sky Citadel** | 🔴 `SKY_CITADEL.md` — stub, needs filling | none |
+| **Sky Citadel** | ✅ `SKY_CITADEL.md` — art direction and kit | 19 pieces, FBXs exported, not uploaded |
 | **Emberfall** | ⏳ Biome Blueprint §3.3, not yet extracted here | none |
 | **Astral Reach** | ⏳ Biome Blueprint §3.5, not yet extracted here | none |
 | **Ethereal Scape** | n/a — ships as a `PrebuiltMap`, not a kit | one authored scene |
 
 Emberfall and Astral Reach have Biome Blueprint sections already and need
-extracting into this shape. **Sky Citadel has no blueprint section at all** —
-it was added after the blueprint merge so the onboarding arc could peak on an
-Epic, and its lighting values are invented rather than designed. It is the
-largest content debt in the project.
+extracting into this shape — they are now the largest content debt, because
+**Sky Citadel gained a real design and a 19-piece kit on 2026-09-22.**
+
+That design lived at `docs/SKY_CITADEL.md` for a day while a stub in this
+folder simultaneously declared the world undesigned: two documents for one
+world, in two places, disagreeing. Consolidated here 2026-09-23. A world's
+schema lives in this folder and nowhere else.

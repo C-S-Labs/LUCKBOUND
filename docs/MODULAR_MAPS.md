@@ -35,8 +35,8 @@ It is the same combinatorial philosophy as Master Spec §14
 | Piece | State |
 |---|---|
 | `Content/AssetManifest.luau` | ✅ logical name → asset id |
-| `Content/Chunks/VerdantValley` | ✅ 8 pieces |
-| `Content/Chunks/SkyCitadel` | ✅ 19 pieces, **FBXs exported** — [`SKY_CITADEL.md`](SKY_CITADEL.md) |
+| `Content/Chunks/VerdantValley` | ✅ 11 pieces, uploaded |
+| `Content/Chunks/SkyCitadel` | ✅ 19 pieces, **FBXs exported** — [`biomes/SKY_CITADEL.md`](biomes/SKY_CITADEL.md) |
 | `Util/PrebuiltLoader.luau` | ✅ the other route: one authored scene, cloned |
 | `Util/ChunkCore.luau` | ✅ seeded assembly, pure and headless |
 | `Util/ChunkLoader.luau` | ✅ Layout → Instances, with a mesh/blockout seam |
@@ -65,18 +65,20 @@ than inferring it from a test name.
 
 ```lua
 {
-    Id       = "VV_GROVE",
+    Id       = "VV_RIDGE_OVERLOOK",
     WorldId  = "VERDANT_VALLEY",
     Role     = "COMBAT",
-    AssetKey = "VV_CHUNK_GROVE",     -- into AssetManifest
-    SizeX = 256, SizeY = 340, SizeZ = 256,
+    AssetKey = "VV_CHUNK_RIDGE_OVERLOOK",  -- into AssetManifest
+    SizeX = 256, SizeY = 47.20, SizeZ = 256,
+    GroundOffsetY = 4,               -- walk plane, measured up from the box floor
     Sockets = {
-        socket("south", "PATH", 0,  128, 180),
-        socket("north", "WIDE", 0, -128,   0),
+        socket("west", "PATH", -128, 0, 270),
+        socket("east", "WIDE",  128, 0,  90),   -- an arena approach
     },
+    Supports = { Combat = true, Traversal = true, Ambush = true, Shrine = true, MiniBoss = true },
     Weight = 25,
     MaxPerLayout = 1,
-    EnemyTags = { "ELDER_TREANT", "FOREST_WOLF" },
+    EnemyTags = { "ELDER_TREANT" },
 }
 ```
 
@@ -108,18 +110,19 @@ Verdant Valley's arena accepts only `WIDE`. The Grove is the only piece that
 - **never spends the Grove mid-path** (a `WIDE` exit is reserved for the arena)
 - **always ends the path on the Grove** before the boss
 
-Which produces exactly Biome Blueprint §3.2's intended progression — *"Elder
-Treants gate the approach to the boss clearing"* — **without the generator
-hard-coding it.** It falls out of the socket rules. A real assembled layout:
+Which produces Biome Blueprint §3.2's intended gating — the arena is never
+reached down a footpath — **without the generator hard-coding it.** It falls
+out of the socket rules. A real assembled layout (the path runs SOUTH here
+because the delivered entry piece opens south):
 
 ```
-VV_ENTRY          (     0,      0)  [ENTRY]
-VV_STREAM         (     0,   -256)  [COMBAT]
-VV_PATH_STRAIGHT  (     0,   -512)  [PATH]
-VV_MEADOW         (     0,   -768)  [COMBAT]
-VV_PATH_STRAIGHT  (     0,  -1024)  [PATH]
-VV_GROVE          (     0,  -1280)  [COMBAT]   ← always the approach
-VV_BOSS_CLEARING  (     0,  -1536)  [BOSS]
+VV_ENTRY            (   0,     0)  [ENTRY]
+VV_PATH_STRAIGHT    (   0,   256)  [PATH]
+VV_MEADOW_A         (   0,   512)  [COMBAT]
+VV_STREAM_CROSSING  (   0,   768)  [COMBAT]
+VV_MUSHROOM_GLEN    (   0,  1024)  [COMBAT]
+VV_RIDGE_OVERLOOK   (-256,  1024)  [COMBAT]   ← an arena approach, one of three
+VV_BOSS_CLEARING    (-512,  1024)  [BOSS]
 ```
 
 **Design your socket Kinds deliberately.** They are the level-design grammar,

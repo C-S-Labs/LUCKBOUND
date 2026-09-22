@@ -58,19 +58,19 @@ Root:SetAttribute(
 
 -- 1. Fail fast on malformed content, before any player can arrive.
 step("validating content")
-Schema.validateAll(
-	Worlds,
-	GameConfig,
-	Crossroads,
-	Chunks,
-	AssetManifest,
-	Menu,
-	Codes,
-	Cinematics,
-	Palettes,
-	Events,
-	Scenarios
-)
+Schema.validateAll({
+	worlds = Worlds,
+	config = GameConfig,
+	hub = Crossroads,
+	chunks = Chunks,
+	manifest = AssetManifest,
+	menu = Menu,
+	codes = Codes,
+	cinematics = Cinematics,
+	palettes = Palettes,
+	events = Events,
+	scenarios = Scenarios,
+})
 
 do
 	local uploaded, placeholder = AssetManifest.summary()

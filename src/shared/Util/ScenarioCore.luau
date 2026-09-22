@@ -85,6 +85,27 @@ function ScenarioCore.assign(
 	options: AssignOptions,
 	nextNumber: () -> number
 ): (boolean, any)
+	-- VALIDATE THE OPTIONS BEFORE TOUCHING THEM.
+	--
+	-- `nextNumber() < options.FateInterventionChance` against a nil dial threw
+	-- "attempt to compare number < nil" and took the whole test suite down
+	-- with it -- ~430 checks never ran and no summary printed. A generator
+	-- that crashes on bad configuration is worse than one that refuses it:
+	-- the crash hides every result after it.
+	--
+	-- Returned as (false, message) rather than a Result table because that is
+	-- this module pair's established contract -- ChunkCore.assemble uses the
+	-- same shape and ExpeditionSystem already branches on it. Introducing a
+	-- second failure convention at one call site would be the duplication the
+	-- Result pattern exists to avoid.
+	for _, key in { "FateInterventionChance", "RecentMemory", "EscalateFrom" } do
+		if type((options :: any)[key]) ~= "number" then
+			return false,
+				`ScenarioCore: options.{key} must be a number (got {typeof((options :: any)[key])}) -- `
+					.. `these live in GameConfig.Expedition and Schema.validateConfig requires them`
+		end
+	end
+
 	local steps = {}
 	local recent: { string } = {}
 	local lastScenario: string? = nil

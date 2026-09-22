@@ -131,8 +131,33 @@ do
 	local oke = Schema.validateConfig(emptyPool, Worlds)
 	check("catches an empty roll pool", not oke)
 
-	local raised = throws(function() Schema.validateAll(bad, GameConfig) end)
+	local raised = throws(function() Schema.validateAll({ worlds = bad, config = GameConfig }) end)
 	check("validateAll raises on bad content (server refuses to boot)", raised)
+
+	-- THE WHOLE BUNDLE, exactly as src/server/init.server.luau passes it.
+	--
+	-- MERGE SAFETY. Two branches that were each green produced a main that
+	-- could not boot: one added a schema rule requiring Supports, the other
+	-- added a 19-piece kit without it, and neither diff touched the other's
+	-- files. Per-module tests cannot see that. This one can -- it validates
+	-- the real, assembled content bundle, which is the only thing the server
+	-- actually cares about.
+	local bootOk, bootErr = pcall(function()
+		Schema.validateAll({
+			worlds = Worlds,
+			config = GameConfig,
+			hub = Crossroads,
+			chunks = Chunks,
+			manifest = AssetManifest,
+			menu = Menu,
+			codes = Codes,
+			cinematics = Cinematics,
+			palettes = Palettes,
+			events = Events,
+			scenarios = Scenarios,
+		})
+	end)
+	check("the real content bundle passes boot validation", bootOk, tostring(bootErr))
 end
 
 -- === 2. Scripted onboarding =========================================
@@ -1287,6 +1312,101 @@ do
 			bands.ORDINARY, bands.UNCOMMON, bands.RARE, fateTouched))
 	end
 
+	-- === THE INTEGRATION, not just the module ====================
+	-- The audit's central finding was that ScenarioCore was proven by tests
+	-- and called by nothing. These assert the contract the expedition flow
+	-- actually depends on, so "the module works" can never again be mistaken
+	-- for "the feature exists".
+
+	-- MERGE SAFETY. A merge silently deleted these three values from
+	-- GameConfig; nothing at boot objected, and the failure surfaced 400
+	-- tests into a run as an uncaught comparison against nil. Assert the
+	-- dials the integration reads, by name.
+	do
+		local missing = {}
+		for _, key in { "FateInterventionChance", "ScenarioRecentMemory", "ScenarioEscalateFrom", "ScenarioStreamOffset" } do
+			if type(GameConfig.Expedition[key]) ~= "number" then
+				table.insert(missing, key)
+			end
+		end
+		check("every pacing dial the expedition flow reads exists in GameConfig",
+			#missing == 0, table.concat(missing, ", "))
+		check("the scenario stream is offset past the assembly attempts",
+			GameConfig.Expedition.ScenarioStreamOffset > GameConfig.Expedition.AssemblyAttempts)
+	end
+
+	-- Bad configuration must be REFUSED, not fatal. A generator that throws
+	-- takes every result after it down with it.
+	do
+		local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+			{ WorldId = "VERDANT_VALLEY", PathLength = 4 },
+			function(a) return lcg(99 + a) end, 5)
+		local refusedNil = false
+		local threw = false
+		if okA then
+			local fine, res = pcall(function()
+				return { ScenarioCore.assign(layout, Chunks, Scenarios,
+					{ RecentMemory = 6, EscalateFrom = 0.4 } :: any,
+					function() return 0.5 end) }
+			end)
+			if not fine then
+				threw = true
+			else
+				refusedNil = res[1] == false and type(res[2]) == "string"
+			end
+		end
+		check("missing options are refused with a reason, not thrown", refusedNil and not threw)
+	end
+
+	-- EVERY world with a kit must be able to carry a plan, not just the one
+	-- that shipped first. A kit merged without Supports took main down.
+	do
+		local worldsWithKits = {}
+		for _, c in Chunks do worldsWithKits[c.WorldId] = true end
+		local failures = {}
+		for worldId in worldsWithKits do
+			local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+				{ WorldId = worldId, PathLength = 4 },
+				function(a) return lcg(31337 + a) end, 5)
+			if not okA then
+				table.insert(failures, worldId .. " (no layout)")
+			else
+				local okS, err = ScenarioCore.assign(layout, Chunks, Scenarios, {
+					FateInterventionChance = GameConfig.Expedition.FateInterventionChance,
+					RecentMemory = GameConfig.Expedition.ScenarioRecentMemory,
+					EscalateFrom = GameConfig.Expedition.ScenarioEscalateFrom,
+				}, lcg(4242))
+				if not okS then table.insert(failures, worldId .. ": " .. tostring(err)) end
+			end
+		end
+		table.sort(failures)
+		check("every world with a chunk kit can be assigned a scenario plan",
+			#failures == 0, table.concat(failures, "; "))
+	end
+
+	-- THE SEAM. Scenario selection must not perturb chunk selection, or the
+	-- two layers stop being independently reproducible and adding a scenario
+	-- would silently change every map.
+	do
+		local function chunkIds(seed)
+			local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+				{ WorldId = "VERDANT_VALLEY", PathLength = 5 },
+				function(a) return ExpeditionCore.streamFor(seed, a) end, 5)
+			if not okA then return nil end
+			local ids = {}
+			for _, c in layout.Chunks do table.insert(ids, c.ChunkId) end
+			-- assign AFTER capturing, using the offset stream the flow uses
+			ScenarioCore.assign(layout, Chunks, Scenarios, {
+				FateInterventionChance = GameConfig.Expedition.FateInterventionChance,
+				RecentMemory = GameConfig.Expedition.ScenarioRecentMemory,
+				EscalateFrom = GameConfig.Expedition.ScenarioEscalateFrom,
+			}, ExpeditionCore.streamFor(seed, GameConfig.Expedition.ScenarioStreamOffset))
+			return table.concat(ids, ">")
+		end
+		check("the scenario stream leaves chunk selection untouched",
+			chunkIds(777) == chunkIds(777))
+	end
+
 	-- Determinism, same as the layout half: a run must be reproducible from
 	-- its seed or it cannot be debugged.
 	do
@@ -1314,7 +1434,7 @@ do
 	end
 
 	-- Sky Citadel: the second kit, with its own vocabulary ------------
-	-- docs/SKY_CITADEL.md. SKYWAY is connective; ASCENT is arena-only and
+	-- docs/biomes/SKY_CITADEL.md. SKYWAY is connective; ASCENT is arena-only and
 	-- offered only by the two gate-courts, so a gate-court must precede the
 	-- arena on every seed without anything hard-coding it.
 	do
@@ -1475,9 +1595,40 @@ do
 		check("with IncludeSide, Sky Citadel places its lookout on some seeds", scSides > 0,
 			string.format("%d of %d layouts", scSides, scBuilt))
 		check("layouts with a SIDE pocket are still valid (no overlap, <= 1 pocket)", scValid)
-		local vvSides, vvBuilt = sidesOver("VERDANT_VALLEY", true)
-		check("with IncludeSide, Verdant Valley's Hollow is finally placed", vvSides > 0,
-			string.format("%d of %d layouts", vvSides, vvBuilt))
+		-- THE GENERAL PROPERTY, not one world's claim.
+		--
+		-- This asserted "Verdant Valley's Hollow is finally placed" and went
+		-- red the moment the Hollow stopped being a SIDE piece. It had to:
+		-- VV has no chunk with 3+ sockets, the critical path spends two per
+		-- piece, so no seed ever leaves a spare socket for a branch to hang
+		-- off. The claim was true of one kit at one moment, not of the system.
+		--
+		-- Stated as a property it survives any kit: a world that CAN host a
+		-- pocket does, and a world that cannot must not declare one -- which
+		-- Schema.validateChunks already refuses, so the two halves agree.
+		local pocketable = {}
+		for _, c in Chunks do
+			if #c.Sockets >= 3 then pocketable[c.WorldId] = true end
+		end
+		local sideDeclaring = {}
+		for _, c in Chunks do
+			if c.Role == "SIDE" then sideDeclaring[c.WorldId] = true end
+		end
+		local pocketOk, pocketWhy = true, {}
+		for worldId in sideDeclaring do
+			if not pocketable[worldId] then
+				pocketOk = false
+				table.insert(pocketWhy, worldId .. " declares SIDE with no 3-socket piece")
+			else
+				local n = sidesOver(worldId, true)
+				if n == 0 then
+					pocketOk = false
+					table.insert(pocketWhy, worldId .. " can host a pocket but never placed one")
+				end
+			end
+		end
+		check("every world that declares a SIDE pocket can and does place it",
+			pocketOk, table.concat(pocketWhy, "; "))
 		local offSides = sidesOver("SKY_CITADEL", false)
 		check("without IncludeSide, no SIDE pocket is ever placed", offSides == 0, tostring(offSides))
 		check("the expedition turns IncludeSide on", GameConfig.Expedition.IncludeSide == true)

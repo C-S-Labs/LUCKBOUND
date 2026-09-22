@@ -117,7 +117,8 @@ Model count is not content count. Six layers, each reading only the one before:
 RUN SEED
   → CHUNK SELECTION        ✅ ChunkCore
   → CONNECTION VALIDATION  ✅ ChunkCore
-  → SCENARIO SELECTION     ✅ ScenarioCore      build spec §7.3
+  → SCENARIO SELECTION     ✅ ScenarioCore      build spec §7.3, wired into
+                                              ExpeditionSystem 2026-09-23
   → ENCOUNTER CONFIG       ⬜ needs combat
   → REWARD CONFIG          ⬜ needs items
   → FATE EVENTS            🟡 scenario-level only
@@ -176,7 +177,7 @@ System change, the schema is wrong.
 | Movement — sprint, double jump | solid |
 | Live events, scoped and precedence-ordered | solid |
 | Expedition entry, seeded maps, a way home | walkable |
-| Scenario selection | headless, unwalked |
+| Scenario selection | wired into the expedition flow; unwalked |
 
 | Not built | Needed for |
 |---|---|
@@ -194,8 +195,12 @@ System change, the schema is wrong.
 hold except where an amendment records otherwise:
 
 - **§7.1** opened expedition entry — arrive, walk a generated map, come back.
+- **§7.2** opened parties, and expeditions as their own server.
 - **§7.3** opened the scenario layer — decide and record what a room is; spawn
   nothing.
+
+Amendment numbers are claimed in the index at the head of §7, in the same
+change. Two branches once claimed §7.2 simultaneously.
 
 Both were owner-directed and written down rather than done quietly. That is the
 process: **an exclusion is lifted by an amendment in the spec, in the same

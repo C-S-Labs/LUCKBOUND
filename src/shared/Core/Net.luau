@@ -18,10 +18,12 @@ local REMOTES = {
 	"Fate_RequestRoll", -- C->S, no payload
 	"Fate_RollResult", -- S->C, RollPayload
 	"Profile_Loaded", -- S->C, full snapshot, once on join
+	-- RESERVED: see docs/RESERVED.md -- nothing fires this yet.
 	"Profile_Updated", -- S->C, partial snapshot
 	"Progression_FateChanged", -- S->C
 	"Announce_Global", -- S->C
 	"Event_StateSync", -- S->C, full live-event snapshot; fires on join (§4.1)
+	-- RESERVED: see docs/RESERVED.md -- nothing fires this yet.
 	"UI_Acknowledge", -- C->S
 	"Expedition_RequestEnter", -- C->S, no payload; cooldown + distance guarded
 	"Expedition_Started", -- S->C, ExpeditionPayload

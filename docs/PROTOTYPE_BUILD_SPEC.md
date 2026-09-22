@@ -436,11 +436,11 @@ Created by `Core/Net.luau` and nowhere else.
 | `Fate_RequestRoll` | RemoteEvent | C→S | *(none)* | cooldown + distance |
 | `Fate_RollResult` | RemoteEvent | S→C | `RollPayload` | — |
 | `Profile_Loaded` | RemoteEvent | S→C | `ProfileSnapshot` | fires once on join |
-| `Profile_Updated` | RemoteEvent | S→C | `PartialSnapshot` | — |
+| `Profile_Updated` | RemoteEvent | S→C | `PartialSnapshot` | **RESERVED** — declared, nothing fires it. `docs/RESERVED.md` |
 | `Progression_FateChanged` | RemoteEvent | S→C | `{FatePoints, FateLevel, Delta, Reason}` | — |
 | `Announce_Global` | RemoteEvent | S→C | `{Kind, Text, Rarity, PlayerName}` | server-only |
 | `Event_StateSync` | RemoteEvent | S→C | live-event snapshot | fires on join (§4.1) |
-| `UI_Acknowledge` | RemoteEvent | C→S | `{ScreenId}` | rate-limited 10/s |
+| `UI_Acknowledge` | RemoteEvent | C→S | `{ScreenId}` | rate-limited 10/s. **RESERVED** — declared, nothing fires it. `docs/RESERVED.md` |
 | `Expedition_RequestEnter` | RemoteEvent | C→S | *(none)* | cooldown + distance + one-at-a-time |
 | `Expedition_Started` | RemoteEvent | S→C | `ExpeditionPayload` | — |
 | `Expedition_Ended` | RemoteEvent | S→C | `ExpeditionEndPayload` | — |
@@ -631,6 +631,18 @@ Four lessons worth keeping:
 4. **A fudge factor in an assertion is a disabled assertion.** The prompt-reach check passed with `* 2` in it while the Gate was genuinely unusable. If a test needs slack to pass, find out why before adding the slack.
 
 ## 7. What Phase 1 Deliberately Excludes
+
+### Amendment index — claim a number here, in the same change
+
+| | Amendment | Opened |
+|---|---|---|
+| **§7.1** | Expedition entry | 2026-09-16 |
+| **§7.2** | Parties, and expeditions as their own server | 2026-09-22 |
+| **§7.3** | The scenario layer | 2026-09-22 |
+
+**Two branches once claimed §7.2 simultaneously**, each green on its own, and
+the collision was caught by hand during a merge. An amendment number is
+allocated by adding a row here in the same change that writes the amendment.
 
 Listed so no agent "helpfully" adds them:
 

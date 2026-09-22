@@ -5,19 +5,8 @@
 
 local Constants = require(script.Parent.Constants)
 
-local function deepFreeze<T>(t: T): T
-	-- Guard against a table reachable by two paths (UITheme reuses Constants'
-	-- rarity tables): freezing an already-frozen table raises.
-	if table.isfrozen(t :: any) then
-		return t
-	end
-	for _, v in pairs(t :: any) do
-		if type(v) == "table" and not table.isfrozen(v) then
-			deepFreeze(v)
-		end
-	end
-	return table.freeze(t :: any) :: T
-end
+local Freeze = require(script.Parent.Freeze)
+local deepFreeze = Freeze.deep
 
 local rarityColors = {}
 for key, rarity in Constants.RARITY do

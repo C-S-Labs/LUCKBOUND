@@ -7,7 +7,10 @@ Studio pass for what only a running game can tell you.
 
 ## 1. Automated tests
 
-**208 tests. No Roblox required.** They run against the real `src/` modules,
+**No Roblox required.** `./tests/run.sh` prints the totals — this file
+deliberately does not repeat the number, because a count written into prose
+drifts the moment anyone adds a test, and it had drifted to four different
+values across four documents before anyone noticed. They run against the real `src/` modules,
 not copies.
 
 ```bash
@@ -85,6 +88,33 @@ real type, not merely enough to pass.**
 
 Nothing that touches `DataStoreService`, `MessagingService`, `Players` or
 `Workspace` is unit-tested. Those are verified in Studio, below.
+
+### The untested boundary — named, so it cannot be mistaken for covered
+
+**A green suite does NOT mean the Roblox runtime path works.** These modules
+are the seam between the pure logic the harness can run and the engine it
+cannot, and they carry little or no direct coverage *by design* — a shim
+faithful enough to test them would be a reimplementation of Roblox.
+
+| Module | Coverage | What could break without a test noticing | Verified by |
+|---|---|---|---|
+| `Util/ChunkLoader` | indirect | A piece placed at the wrong height or rotation; a mesh stretched by a wrong `SizeY`; scenario attributes missing | Studio walk — **E** below |
+| `Util/PrebuiltLoader` | none | A scene cloned unanchored, at the wrong scale, or without its anchors | Studio walk — **D** |
+| `Util/PrefabLoader` | partial | A prefab registered from the wrong part; a lost `CollisionFidelity` bake | Studio walk — **B** |
+| `Util/PortalRig` | partial | A portal plane above head height, or a collision hull that blocks the walk-through | Studio walk — **B** |
+| `Core/Net` | none | A remote missing, misnamed, or created twice | Boot — the server errors on a missing remote |
+| `Core/Result` | none | Nothing realistic — it is eight lines with no branches | — |
+
+**What CAN be pulled back across the line, and has been:** every decision
+these modules act on is computed by a pure module that *is* tested.
+`ChunkCore` decides placement, `ScenarioCore` decides what happens in a room,
+`ExpeditionCore` decides timing and slots. `ChunkLoader` only turns those
+numbers into Instances. That split is deliberate: it is what keeps the
+untestable surface thin.
+
+**What cannot:** whether the Instances that come out look and behave right.
+There is no substitute for the Studio pass, and a change to any module above
+should not be called done until it has had one.
 
 **This is why `ExpeditionCore` exists.** Entry eligibility, seed derivation,
 destination lookup and the timer are all pure, so the 40 tests above run

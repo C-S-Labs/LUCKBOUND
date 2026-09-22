@@ -24,18 +24,15 @@
 -- traversal challenge in a flat meadow is not a challenge, and a mini-boss in
 -- a corridor is not an arena.
 
-export type Scenario = {
-	Id: string,
-	Name: string,
-	Band: "ORDINARY" | "UNCOMMON" | "RARE",
-	Weight: number,
-	Requires: string, -- the Supports key a chunk must declare
-	-- Roles this scenario may be placed on. ENTRY and BOSS are excluded from
-	-- everything by default: arrival should be calm and the arena is already
-	-- the biggest thing in the run.
-	Roles: { string }?,
-	Notes: string?,
-}
+local Types = require(script.Parent.Parent.Core.Types)
+
+-- The shape lives in Core/Types with every other content shape. Typing it
+-- here privately was the one content kind that broke that rule.
+--
+-- Roles: which roles a scenario may be placed on. ENTRY and BOSS are excluded
+-- from everything -- arrival should be calm and the arena is already the
+-- biggest thing in the run.
+export type Scenario = Types.ScenarioDefinition
 
 local PATH_AND_COMBAT = { "PATH", "COMBAT", "SIDE" }
 
