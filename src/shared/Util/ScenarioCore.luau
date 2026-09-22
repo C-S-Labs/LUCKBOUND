@@ -19,15 +19,6 @@ local WeightedRandom = require(script.Parent.WeightedRandom)
 
 local ScenarioCore = {}
 
---- Roles that are never assigned a scenario: the arrival plaza, the arena,
---- and a cap (build spec §7.4), which is a sealed ending with no room in it.
---- Stated once because `assign` asks twice -- to count the assignable pieces
---- and then to walk them -- and the two answers disagreeing would shift every
---- step's pacing by one.
-local function isDressing(role: string): boolean
-	return role == "ENTRY" or role == "BOSS" or role == "CAP"
-end
-
 export type AssignOptions = {
 	-- How often Fate overrides ordinary weighting entirely (brief §6).
 	-- 0 disables it; the caller passes GameConfig rather than a literal.
@@ -121,14 +112,14 @@ function ScenarioCore.assign(
 
 	local assignable = 0
 	for _, placed in layout.Chunks do
-		if not isDressing(placed.Role) then
+		if placed.Role ~= "ENTRY" and placed.Role ~= "BOSS" then
 			assignable += 1
 		end
 	end
 
 	local seen = 0
 	for _, placed in layout.Chunks do
-		if isDressing(placed.Role) then
+		if placed.Role == "ENTRY" or placed.Role == "BOSS" then
 			table.insert(steps, {
 				Index = placed.Index,
 				ChunkId = placed.ChunkId,

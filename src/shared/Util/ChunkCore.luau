@@ -136,9 +136,6 @@ export type AssembleOptions = {
 	WorldId: string,
 	PathLength: number, -- chunks between entry and boss
 	IncludeSide: boolean?,
-	-- Seal every socket the layout leaves open with a CAP chunk (build spec
-	-- §7.4). No effect in a world that declares no CAP pieces.
-	SealOpenSockets: boolean?,
 }
 
 --- Builds a layout: ENTRY → PathLength connective/combat chunks → BOSS,
@@ -156,9 +153,13 @@ export type AssembleOptions = {
 --- it. This is what makes an intersection mean something: the path takes one
 --- branch, the pocket can sit on another.
 ---
---- CAPS (SealOpenSockets). Last of all, every socket still unjoined is closed
---- with a CAP chunk, so the map ends in authored art rather than at a raw
---- opening. Worlds with no CAP pieces are unaffected.
+--- CAPS (owner-directed 2026-09-22: "I don't want any paths to lead to
+--- nothing"). If the world has CAP chunks -- one-socket dead ends authored as
+--- dead ends: a crumbling bridge, an overlook, a sealed gate -- then every
+--- socket still open after the path, arena and pocket gets one. A socket that
+--- no cap can fill fails the attempt, and assembleWithRetry tries the next
+--- seed: in a capped world a layout never ships an opening onto nothing. A
+--- world with no CAP chunks keeps the old behaviour.
 ---
 --- Returns ok, layout-or-error. Failure is a normal outcome, not an error:
 --- a kit whose sockets cannot reach the boss is a content bug, and the caller
@@ -191,22 +192,28 @@ function ChunkCore.assemble(
 
 	local placed: { any } = {}
 	local used: { [string]: number } = {}
-	-- Per placed piece: which of its sockets are already joined to something.
-	-- The critical path spends at most two per piece -- one to arrive, one to
-	-- leave -- and whatever is left over is where an optional pocket hangs and
-	-- where a cap goes. Without this the spare sockets are unknowable after
-	-- the fact, which is why IncludeSide sat unimplemented for so long.
-	--
-	-- ONE record of what is spent, not two. A parallel `spent` table indexed
-	-- by placement order used to sit beside this one; nothing ever read it,
-	-- and two answers to "is this socket free" is how a cap ends up sealing a
-	-- doorway the path walks through.
+	-- Per placed piece: which of its sockets the path consumed. The rest are
+	-- spare, and a SIDE pocket may hang off one.
 	local consumedBy: { [any]: { [string]: boolean } } = {}
+
+	-- Which sockets each placement has already spent, keyed by its index in
+	-- `placed`. The critical path spends at most two per piece -- one to
+	-- arrive, one to leave -- and whatever is left over is where an optional
+	-- pocket can hang. Without this the spare sockets are unknowable after the
+	-- fact, which is why IncludeSide sat unimplemented for so long.
+	local spent: { [number]: { [string]: boolean } } = {}
 
 	local function record(p: any, chunk: any)
 		table.insert(placed, p)
+		spent[#placed] = {}
 		used[chunk.Id] = (used[chunk.Id] or 0) + 1
 		consumedBy[p] = {}
+	end
+
+	local function spend(socketId: string?)
+		if socketId and spent[#placed] then
+			spent[#placed][socketId] = true
+		end
 	end
 
 	local function allowed(chunk: any): boolean
@@ -240,6 +247,7 @@ function ChunkCore.assemble(
 	end
 	consumedBy[entryPlacement][openSocketDef.Id] = true
 	local open = ChunkCore.worldSocket(openPlacement, openChunk, openSocketDef)
+	spend(openSocketDef.Id)
 
 	-- Which socket kinds the boss arena will accept. The final path chunk has
 	-- to offer one of them, or the layout dead-ends at the arena door.
@@ -382,65 +390,55 @@ function ChunkCore.assemble(
 			end, nextNumber)
 			if side and allowed(side) then
 				local at = ChunkCore.worldSocket(spare.Placement, spare.Chunk, spare.Socket)
-				local p, consumed = ChunkCore.placeAgainst(side, at, options.PathLength + 2)
+				local p, arrived = ChunkCore.placeAgainst(side, at, options.PathLength + 2)
 				if p and not collides(p, side) then
 					record(p, side)
-					-- BOTH ends of the join, or the sealing pass below reads
-					-- the branch the pocket is standing on as still open and
-					-- caps a doorway that already has a room behind it.
+					consumedBy[p][arrived.Id] = true
 					consumedBy[spare.Placement][spare.Socket.Id] = true
-					consumedBy[p][(consumed :: any).Id] = true
 					break
 				end
 			end
 		end
 	end
 
-	-- SEALING THE LEFTOVERS (build spec §7.4). Every socket still unjoined is
-	-- an opening onto nothing -- in Sky Citadel, a skyway mouth that stops at
-	-- the edge of a floating island. A CAP chunk closes it with authored art.
-	--
-	-- Runs LAST, on purpose: the path and the pocket decide what the map is,
-	-- and capping only dresses what they left. Placed in a fixed order
-	-- (placement order, then socket declaration order) rather than a shuffled
-	-- one, because every open socket gets a cap -- there is nothing to choose
-	-- between, and a shuffle would burn stream numbers for no variety.
-	--
-	-- A cap that does not fit is skipped, not an error: the layout was already
-	-- complete and walkable before any of this.
-	if options.SealOpenSockets and byRole.CAP and #byRole.CAP > 0 then
-		local nextIndex = options.PathLength + 3
-		-- Snapshot: caps are appended to `placed` as they are made, and a cap
-		-- has one socket which its own join consumes, so it can never need
-		-- capping itself.
-		local openings = {}
+	local caps = byRole.CAP
+	if caps and #caps > 0 then
+		-- Snapshot: caps are one-socket pieces, so they never add openings.
+		local open = {}
 		for _, p in placed do
-			for _, s in chunks[p.ChunkId].Sockets do
-				if not consumedBy[p][s.Id] then
-					table.insert(openings, { Placement = p, Chunk = chunks[p.ChunkId], Socket = s })
+			local chunk = chunks[p.ChunkId]
+			for _, s in chunk.Sockets do
+				if not consumedBy[p][s.Id] and not isBossKind(s.Kind) then
+					table.insert(open, { Placement = p, Chunk = chunk, Socket = s })
 				end
 			end
 		end
-
-		for _, opening in openings do
-			local at = ChunkCore.worldSocket(opening.Placement, opening.Chunk, opening.Socket)
-			-- Several attempts: which cap is drawn is seeded, so the three
-			-- Sky Citadel endings vary across the map, and a cap that
-			-- collides gives way to another draw rather than to a hole.
-			for _ = 1, 8 do
-				local cap = WeightedRandom.pick(byRole.CAP, function(c)
+		for n, spare in open do
+			-- Try every cap once, in a seeded order weighted by Weight.
+			local pool = table.clone(caps)
+			local capped = false
+			while #pool > 0 and not capped do
+				local cap = WeightedRandom.pick(pool, function(c)
 					return c.Weight
 				end, nextNumber)
-				if cap then
-					local p, consumed = ChunkCore.placeAgainst(cap, at, nextIndex)
+				if not cap then
+					break
+				end
+				table.remove(pool, table.find(pool, cap) :: number)
+				if allowed(cap) then
+					local at = ChunkCore.worldSocket(spare.Placement, spare.Chunk, spare.Socket)
+					local p, arrived = ChunkCore.placeAgainst(cap, at, options.PathLength + 2 + n)
 					if p and not collides(p, cap) then
 						record(p, cap)
-						consumedBy[opening.Placement][opening.Socket.Id] = true
-						consumedBy[p][(consumed :: any).Id] = true
-						nextIndex += 1
-						break
+						consumedBy[p][arrived.Id] = true
+						consumedBy[spare.Placement][spare.Socket.Id] = true
+						capped = true
 					end
 				end
+			end
+			if not capped then
+				return false,
+					`socket '{spare.Socket.Id}' on '{spare.Chunk.Id}' opens onto nothing and no CAP chunk fits there`
 			end
 		end
 	end
@@ -488,49 +486,6 @@ function ChunkCore.footprint(layout: any): (number, number)
 		return 0, 0
 	end
 	return maxX - minX, maxZ - minZ
-end
-
---- Every socket in a finished layout that is not joined to another one.
----
---- Computed from GEOMETRY, not from the assembler's own bookkeeping: two
---- sockets are joined when they sit at the same point facing opposite ways.
---- Asking the assembler whether it sealed everything would only ever confirm
---- that it believes it did -- the same class of self-agreement that let a
---- faked Vector3 pass 152 tests. This measures the map instead.
-function ChunkCore.openSockets(layout: any, chunks: { [string]: any }): { any }
-	local TOL = 1
-	local all = {}
-	for _, placed in layout.Chunks do
-		local chunk = chunks[placed.ChunkId]
-		for _, socket in chunk.Sockets do
-			local world = ChunkCore.worldSocket(placed, chunk, socket)
-			table.insert(all, { Placed = placed, World = world, Joined = false })
-		end
-	end
-
-	for i = 1, #all do
-		for j = i + 1, #all do
-			local a, b = all[i], all[j]
-			if
-				not a.Joined
-				and not b.Joined
-				and math.abs(a.World.X - b.World.X) < TOL
-				and math.abs(a.World.Y - b.World.Y) < TOL
-				and math.abs(a.World.Z - b.World.Z) < TOL
-				and norm(a.World.Facing + 180) == b.World.Facing
-			then
-				a.Joined, b.Joined = true, true
-			end
-		end
-	end
-
-	local open = {}
-	for _, entry in all do
-		if not entry.Joined then
-			table.insert(open, { ChunkId = entry.Placed.ChunkId, Socket = entry.World })
-		end
-	end
-	return open
 end
 
 --- Post-assembly check: no two chunks overlap. Assembly rejects collisions as

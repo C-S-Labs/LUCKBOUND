@@ -194,10 +194,6 @@ local GameConfig = {
 		-- Hang one SIDE pocket off a spare socket when a kit has one (Biome
 		-- Blueprint §6). Off returns maps to exactly the critical path.
 		IncludeSide = true,
-		-- Seal every socket a layout leaves open with a CAP piece (build spec
-		-- §7.4), so a map ends in authored art rather than at an opening onto
-		-- nothing. No effect in a world whose kit declares no caps.
-		SealOpenSockets = true,
 		-- A layout can legitimately fail when the path folds back on itself;
 		-- that is seed-dependent, so try a few before rejecting. 5 attempts
 		-- succeeds ~98% of the time -- see docs/MODULAR_MAPS.md.

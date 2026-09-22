@@ -619,10 +619,12 @@ these are all claims about what the meshes actually do.
    up or down between pieces, and the skyway decks line up edge to edge.
 4. **Find a crossroads and look down its unused mouth.** ✅ Pass: it ends in a
    cap — an overlook, a broken span or a shut gate (§7.4) — not in open sky.
-   Re-roll a few times: you should see more than one of the three.
-5. **Select a chunk folder in the Explorer.** ✅ Pass: its attributes read
-   `Role`, `Yaw`, and on a non-cap piece a `Scenario`, `ScenarioBand` and
-   `FateTouched`. A cap carries no scenario, by design.
+   Sealing is mandatory in this world, so **an opening onto nothing anywhere on
+   the map is a failure**, and worth a screenshot with the seed from the output.
+5. **Walk into the cap.** ✅ Pass: it is somewhere you can stand — a dead end
+   authored as a dead end, per §7.4 — and its chunk folder in the Explorer
+   carries `Role`, `Yaw`, `Scenario`, `ScenarioBand` and `FateTouched` like
+   any other placeable piece.
 6. **Look at the piece from a distance.** The meshes are untextured — flat
    vertex colour is expected, not a fault. What to report is anything that
    reads wrong at scale: a piece that looks the wrong size next to your

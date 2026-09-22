@@ -60,11 +60,12 @@ Two rules of thumb that make a kit hold together:
   sight than as a clean doorway onto an edge.
 
 **If a kit has a piece with more openings than a route can spend** — an
-intersection, typically — most maps will leave one of them over, and the
-engine can close it for you. A **cap** is a piece whose whole job is to be the
-end of something: one opening, nothing beyond it, and a reason for the path to
-stop (a viewpoint, a collapse, a locked gate). Author two or three so a map
-with several loose ends does not end the same way twice. They are placed
+intersection, typically — most maps will leave one of them over, and the engine
+closes it for you. A **cap** is a piece whose whole job is to be the end of
+something: one opening, and a reason for the path to stop (a viewpoint, a
+collapse, a locked gate). It is somewhere a player walks into and looks around,
+not a wall, so give it something to find. Author two or three so a map with
+several loose ends does not end the same way twice. They are placed
 automatically wherever a route runs out; see build spec §7.4.
 
 Which openings are which *type* is a per-world decision. It is in the world's

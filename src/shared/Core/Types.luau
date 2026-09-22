@@ -150,12 +150,8 @@ export type ChunkRole =
 	| "PATH" -- connective tissue
 	| "COMBAT" -- encounter space
 	| "SIDE" -- optional branch, off the critical path
+	| "CAP" -- a dead end authored as one, closing an opening the path left unused
 	| "BOSS" -- exactly one per layout; the destination
-	-- Seals a socket the layout left open, so the map ends somewhere authored
-	-- instead of at a raw opening (build spec §7.4). The only role placed MANY
-	-- times in one layout, and the only one with nothing beyond it: a cap is
-	-- scenery, never assigned a scenario and never walked through.
-	| "CAP"
 
 --- A connection point on a chunk. Two sockets may join only if their Kind
 --- matches -- that is what stops a 4-stud footpath opening onto a cliff face.

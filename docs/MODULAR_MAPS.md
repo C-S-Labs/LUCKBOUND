@@ -84,9 +84,9 @@ than inferring it from a test name.
 ```
 
 **Roles:** `ENTRY`, `PATH`, `COMBAT`, `SIDE` (optional branch), `BOSS`, and
-`CAP` (seals a socket the layout left open — build spec §7.4). A world needs at
-least one `ENTRY`, at least one `BOSS` and at least one connective piece;
-everything else is free.
+`CAP` (a one-socket ending, placed on whatever the layout leaves open — build
+spec §7.4). A world needs at least one `ENTRY`, at least one `BOSS` and at
+least one connective piece; everything else is free.
 
 **A role is a routing concept, not a design one.** It tells the assembler where
 a piece may be placed and nothing else. A ruin and a mushroom glen can both be
@@ -189,14 +189,13 @@ Citadel kit needed them to make an intersection mean anything:
   `GameConfig.Expedition.IncludeSide` is the switch; the expedition passes it.
   Verdant Valley's Hollow — authored, validated and never placed until now —
   is placed off the Meadow's west socket.
-- **Leftover openings are sealed** (build spec §7.4). Last of all, every socket
-  still unjoined takes a `CAP` piece, so a map ends in authored art instead of
-  at an opening onto nothing. It runs after everything else and draws from the
-  stream after every other decision, so **the same seed produces the same map
-  with sealing on and off** — asserted seed by seed, piece by piece. A cap that
-  will not fit is skipped: where the path folds back, the cell beyond an
-  opening can already be occupied. `GameConfig.Expedition.SealOpenSockets` is
-  the switch; a world with no `CAP` pieces is unaffected by it.
+- **Leftover openings are sealed** (build spec §7.4). Last of all — after the
+  path, the arena and the pocket — every socket still open takes a `CAP`
+  piece, so a map never ends at an opening onto nothing. There is no switch:
+  in a world that declares caps this is **mandatory**, and a socket that can
+  take no cap **fails the attempt**, so `assembleWithRetry` tries the next
+  seed and the player gets a different map rather than a hole. A world with no
+  `CAP` pieces is unaffected.
 
 ## Assembly
 
@@ -385,8 +384,10 @@ openings. Everything else was over-specification, and
    and the schema refuses a kit that declares a pocket without one.
 8. **`CAP` pieces if any piece has more openings than a path can spend** — an
    intersection strands a mouth on most seeds, and without a cap that mouth
-   opens onto nothing. A cap has exactly one socket, no `Supports` and no
-   `MaxPerLayout`; the schema enforces all three.
+   opens onto nothing. A cap has exactly one socket (the schema enforces it)
+   and, like any other placeable piece, declares `Supports`: it is a dead end
+   you can walk into, not a wall. Author more than one so a map with two loose
+   ends does not end the same way twice.
 9. **Author the geometry against [`CHUNK_AUTHORING.md`](CHUNK_AUTHORING.md)** —
    origin at the chunk's centre, one FBX per chunk, an opening at every socket.
 10. Run `./tests/run.sh`. The kit is validated at boot too; a broken kit stops

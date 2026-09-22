@@ -222,16 +222,24 @@ crown at +160. Origin at the centre of the footprint on the walk plane.
 
 **Delivered and uploaded 2026-09-23**, as `.rbxmx` models each wrapping one
 MeshPart that already carries its `rbxassetid` — so there was no upload step on
-our side, exactly as Verdant Valley arrived. Every size above was **read off
-the delivered meshes rather than trusted**, and every piece came with
-`PivotOffset.Y = −32`: the walk plane 32 studs below the box centre, which is
-`GroundOffsetY = 96` confirmed by the art instead of derived from the generator
-alone. The files are kept in `assets/rbxm/chunks/sky_citadel/` as provenance and
-a re-import path; the asset ids in `Content/AssetManifest.luau` are the load
-route.
+our side, exactly as Verdant Valley arrived. The files are kept in
+`assets/rbxm/chunks/sky_citadel/` as provenance and a re-import path; the ids in
+`Content/AssetManifest.luau` are the load route, and `ChunkLoader` calls
+`CreateMeshPartAsync` on them.
+
+Two numbers were **read off the delivered meshes rather than trusted**:
+
+- every piece measures exactly 256³, which is what the content declares and
+  what `ChunkLoader` forces onto `mesh.Size` — a box that differed would have
+  been silently stretched;
+- every piece carries `PivotOffset.Y = −32`, the walk plane 32 studs below the
+  box centre. That is **`GroundOffsetY = 96` arriving from the art side**,
+  independently of the generator that derived it. The two agree.
 
 The pieces are **untextured**: `TextureID` is null on all 22, and the look is
-the mesh's own vertex colour with a flat `Color3`.
+the mesh's own vertex colour with a flat `Color3`. Whether
+`CreateMeshPartAsync` preserves vertex colour is a Studio question —
+`TESTING.md` Test Q.
 
 ### Variety: five axes, mixed differently on every piece
 
@@ -272,13 +280,9 @@ Every landmark reaches exactly +160: it pins the top of the bounding box.
 | `chunk_spire_court_b` | COMBAT (gate-court, rare) | S · N `ASCENT` | long octagon + **raised nave** | checker | railing | twin cones | turbine | 5,020 |
 | `chunk_side_lookout` | SIDE | S | small 12-gon | pale rays | railing | crystal roots | signal mast | 2,396 |
 | `chunk_boss_clearing` | BOSS | S `ASCENT` | round arena | inlaid rings | parapet | engine | Crown Spire | 5,744 |
-| `chunk_cap_overlook` | CAP | S | small deck | pale | railing | cone | — | not measured |
-| `chunk_cap_crumbling` | CAP | S | broken stub | pale | — | shards | — | not measured |
-| `chunk_cap_sealed_gate` | CAP | S | small deck | pale | parapet | cone | shut gate | not measured |
-
-The three caps arrived with the 2026-09-23 delivery and their triangle counts
-were not measured here — they are well inside the budget by inspection, but
-"not measured" is the honest entry until someone reads them.
+| `chunk_cap_crumbling` | **CAP** | S | a span that **breaks off** | white | railing, one bent | spine | **Fallen Tower** (leaning) | 1,640 |
+| `chunk_cap_overlook` | **CAP** | S | railed round terrace | pale rays | railing | crystal roots | light obelisk | 2,880 |
+| `chunk_cap_sealed_gate` | **CAP** | S | walled islet | checker | parapet | ziggurat | spire behind a **shut gate** | 3,406 |
 
 Weights and `MaxPerLayout` are in `Content/Chunks/SkyCitadel.luau`. Every
 COMBAT piece, the crossroads and the lookout are once per layout.
@@ -307,26 +311,45 @@ can only be used for loot, and then it dead-ends."* Three changes answer it:
   switches it; the expedition passes it. It also means **Verdant Valley's
   Hollow is placed for the first time** — asserted.
 
-- **Every leftover mouth is closed.** An intersection's spare mouths used to
-  face open sky when the lookout took another branch or none — the brief called
-  that a skyway carrying on out of sight, and standing in one it reads as an
-  unfinished map instead. The three `chunk_cap_*` pieces seal them: a railed
-  overlook, a span that has broken off, and a gate that stays shut, so a map
-  with several loose ends does not end the same way twice. This needed a
-  **System change** and is recorded as build spec **§7.4**; the switch is
-  `GameConfig.Expedition.SealOpenSockets`.
+### No opening onto nothing: the caps
 
-  Caps turn up in **31 of 200 seeds** — the crossroads' own share, because it
-  is the only piece that strands a mouth in the first place. Where the path
-  folds back and the cell beyond an opening is already occupied, the opening
-  stays: three of them across those 200 layouts, and a test tells those apart
-  from an opening a cap could have reached and did not.
+Owner-directed: *"I don't want any paths to lead to 'nothing', unless that
+specific chunk is a dead end, crumbling bridge, etc."*
+
+A **CAP** is a new role: a one-socket piece authored as an ending. There are
+three, each a different kind of ending — a span that **breaks off** over a
+drop, with its far half falling away and the Fallen Tower leaning over the
+gap; a railed **overlook** with telescopes and a light obelisk; and a citadel
+**gate that stays shut**, sealed doors behind a force field.
+
+After the path, the arena and the side pocket are placed, `ChunkCore` puts a
+cap on **every socket still open**. If some socket cannot take any cap
+(everything collides), the attempt fails and the next seed is tried. So in a
+world that has caps, a map never ships an opening onto nothing — asserted over
+200 seeds each with and without the side pocket, by checking that every socket
+of every placed piece meets another piece's socket head-on at the same point.
+A world without caps keeps the old behaviour; Verdant Valley has none yet, so
+its Meadow's west mouth can still face nothing when the Hollow is not there.
+
+**How many of each** (why this is enough): only the crossroads has more
+sockets than the path uses, so a map needs at most **two** caps (three spare
+mouths minus the pocket); the three caps are unlimited per layout and equally
+weighted, so the two ends of one crossroads can differ. Every other piece has
+exactly the sockets it uses.
+
+| Role | Pieces | Notes |
+|---|---|---|
+| ENTRY | 1 | always the first piece |
+| PATH | 8 | 4 straights, 1 broken span, 1 aviary, the crossroads, 2 bends (1 each way) |
+| COMBAT | 8 | 4 straight decks, 2 turning decks (1 each way), 2 gate-courts |
+| SIDE | 1 | the lookout, on a spare mouth |
+| CAP | 3 | dead ends authored as dead ends |
+| BOSS | 1 | always the last piece on the path |
 
 Review renders, `assets/source/worlds/sky_citadel/renders/`:
 
-- `kit_overview.jpg` — the original nineteen on the review grid, rows of four
-  (the three caps postdate it)
-- `preview_chain.jpg` — entry → **crossroads** (with the lookout on its east
+- `kit_overview.jpg` — all twenty-two on the review grid, rows of four (the caps are row 6)
+- `preview_chain.jpg` — entry → **crossroads** (its west mouth closed by the sealed-gate cap, the lookout on its east
   branch) → shattered span → **west bend** → archive → Hall of Winds → arena
 - `preview_corner.jpg`, `preview_corner_top.jpg` — four pieces at four yaws
   meeting at one corner: the beacon check
@@ -367,6 +390,15 @@ reaching `CROWN_TOP`, and pick a combination of the five axes no neighbour has.
 ---
 
 ## Hand pass
+
+### 2026-09-22 — the caps
+
+| Check | Result |
+|---|---|
+| **Floating objects** | The crumbling span's falling half is eight scattered fragments, each placed only where the checker accepts it. |
+| **Edges** | `preview_chain.jpg`: the crossroads now has no free mouth — lookout east, sealed gate west. Test: in 400 generated maps, every socket meets another. |
+| **Scale** | The gate's doors are 22 tall, the force field 18 — a wall, not a door you could step round. The overlook's railing is waist height all the way round. |
+| **Reads as an ending** | Checked on the ground shots: the gate is plainly shut, the span plainly broken, the overlook plainly a place to stop and look. |
 
 ### 2026-09-22 — variety, turns, the intersection, and four more
 

@@ -247,27 +247,23 @@ local ENTRIES: { [string]: AssetEntry } = {
 		Source = "assets/rbxm/chunks/sky_citadel/chunk_boss_clearing.rbxmx",
 		Notes = "The Crown Spire arena.",
 	},
-
-	-- The three CAPs (build spec §7.4). A cap seals a socket the layout left
-	-- open, so unlike every other piece it is placed MANY times in one
-	-- layout -- hence no MaxPerLayout on any of them.
-	SC_CHUNK_CAP_OVERLOOK = {
-		AssetId = "rbxassetid://71950983482489",
-		Status = "UPLOADED",
-		Source = "assets/rbxm/chunks/sky_citadel/chunk_cap_overlook.rbxmx",
-		Notes = "Cap: a railed overlook. The skyway arrives somewhere worth standing.",
-	},
 	SC_CHUNK_CAP_CRUMBLING = {
 		AssetId = "rbxassetid://88594616695898",
 		Status = "UPLOADED",
 		Source = "assets/rbxm/chunks/sky_citadel/chunk_cap_crumbling.rbxmx",
-		Notes = "Cap: the span breaks off. The skyway ends because it fell.",
+		Notes = "A CAP: the skyway breaks off, its far half falling away, the Fallen Tower leaning over the gap.",
+	},
+	SC_CHUNK_CAP_OVERLOOK = {
+		AssetId = "rbxassetid://71950983482489",
+		Status = "UPLOADED",
+		Source = "assets/rbxm/chunks/sky_citadel/chunk_cap_overlook.rbxmx",
+		Notes = "A CAP: the skyway ends at a railed round overlook with a light obelisk and telescopes.",
 	},
 	SC_CHUNK_CAP_SEALED_GATE = {
 		AssetId = "rbxassetid://92822941612076",
 		Status = "UPLOADED",
 		Source = "assets/rbxm/chunks/sky_citadel/chunk_cap_sealed_gate.rbxmx",
-		Notes = "Cap: a gate that stays shut. The skyway ends because someone closed it.",
+		Notes = "A CAP: a citadel gate that stays shut.",
 	},
 
 	-- === Hub prefabs =============================================

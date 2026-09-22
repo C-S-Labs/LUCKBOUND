@@ -922,51 +922,49 @@ against 174 distinct layouts from 200 seeds. Bands land at roughly 51% ordinary,
 
 ## 7.4 Amendment: caps, opened 2026-09-23
 
-**Owner-directed**, arriving with the Sky Citadel kit: three pieces whose whole
-job is to close an opening. Recorded here rather than made quietly, per
-CLAUDE.md rule 8, because sealing is a System capability and no amount of
-content could add it on its own.
+**Owner-directed**: *"I don't want any paths to lead to 'nothing', unless that
+specific chunk is a dead end, crumbling bridge, etc."*
+
+Recorded here after the fact. The change shipped in PR #40 without an
+amendment number, and the amendment index exists precisely so that a System
+change is not made quietly — so the number is claimed here, describing what was
+built rather than proposing something new. **Two branches implemented caps
+independently on the same day**; this is the second one standing down to the
+merged design, which is the same collision the §7.2 note warns about and the
+second time it has happened.
 
 ### The problem the art found
 
 A layout spends two sockets per piece — one to arrive, one to leave — so most
 maps join up exactly. **A piece with more openings than the path uses does
-not.** Sky Citadel's crossroads has four mouths; the path takes two and a SIDE
-pocket may take a third, which leaves at least one skyway running out over
-open air and stopping. In a biome of floating islands that reads as an
-unfinished map rather than an edge of the world.
-
-The kit's answer is content: a railed overlook, a span that has broken off, and
-a gate that stays shut — three different reasons for a path to end.
+not.** Sky Citadel's crossroads has four mouths: the path takes two and a SIDE
+pocket may take a third, which leaves at least one skyway running out over open
+air and stopping. In a biome of floating islands that reads as an unfinished
+map rather than an edge of the world.
 
 ### What was opened, and what was not
 
 | | |
 |---|---|
-| ✅ A new chunk **Role**, `CAP` | one more value in an enum the schema already gates |
-| ✅ A **sealing pass** in `ChunkCore`, after the path and the pocket | places caps on whatever is still open |
-| ✅ `GameConfig.Expedition.SealOpenSockets` | rule 4: the switch is a dial, not a literal |
-| ❌ Anything **inside** a cap — encounters, loot, scenarios | a cap is scenery; §7 still excludes all three |
-| ❌ Any change to how the **critical path** is chosen | proven by test, not by assertion — see below |
+| ✅ A new chunk **Role**, `CAP` | a one-socket piece authored as an ending |
+| ✅ A **sealing pass** in `ChunkCore`, after the path, the arena and the pocket | every socket still open takes a cap |
+| ✅ A cap is **a place**, not scenery — it declares `Supports` and hosts a scenario | a dead end you can walk into and find something in |
+| ❌ Anything **inside** a cap beyond that label — encounters, loot | §7 still excludes all of it |
+| ❌ Any change to how the **critical path** is chosen | sealing runs after every other decision |
 
 ### The rules
 
-1. **A cap has exactly one socket.** A second would be a way out of a piece
-   that exists to have no way out.
-2. **A cap declares no `Supports` and is never assigned a scenario.**
-   `ScenarioCore` skips it exactly as it skips the arrival plaza and the arena.
-   A scenario placed on a cap would be a room nobody can reach.
-3. **A cap sets no `MaxPerLayout`.** It is the one role placed many times in a
-   single layout; an allowance that ran out would leave exactly the openings
-   caps exist to close. The schema refuses one.
-4. **Sealing runs last and changes nothing before it.** The path and the pocket
-   decide what the map is; capping only dresses what they left. Caps draw from
-   the seeded stream after every other decision, so a seed produces the same
-   map with sealing on and with it off — asserted over 100 seeds, piece by
-   piece, position by position.
-5. **A cap that does not fit is skipped, not an error.** Where the path folds
-   back on itself, the cell beyond a leftover opening can already hold another
-   piece. The layout was complete and walkable before any cap was placed.
+1. **A cap has exactly one socket.** A second would open a new mouth, and
+   `Schema.validateChunks` refuses it.
+2. **Sealing is not optional in a world that has caps.** If some open socket
+   can take no cap — everything collides — **the attempt fails** and
+   `assembleWithRetry` tries the next seed. So a capped world never ships a
+   map with an opening onto nothing; it ships a different map instead.
+3. **A world with no `CAP` pieces is unchanged.** Verdant Valley has none, so
+   its Meadow's west mouth can still face nothing when the Hollow is absent.
+4. **Caps are unlimited per layout and equally weighted**, so the two ends of
+   one crossroads can differ. Only the crossroads has more sockets than the
+   path uses, so a map needs at most two.
 
 ### Why it is a System change and not content
 
@@ -978,11 +976,9 @@ the assembler, which is what the directive actually forbids.
 
 ### Measured
 
-Across 200 Sky Citadel seeds: **every opening a cap could physically reach is
-sealed**, and all three endings are drawn. Caps appear in 31 of 200 layouts —
-which is the crossroads' share of them, and the point: the only piece that
-strands an opening is the only piece that needs one. Three openings in 200
-layouts survive because the map folded shut against itself, and a test
-distinguishes those from ones a cap could have reached and did not.
+Over 200 seeds with and against the side pocket: **every socket of every placed
+piece meets another piece's socket head-on at the same point**, checked from
+the finished geometry rather than from the assembler's own bookkeeping, and
+assembly still succeeds on at least 190 of 200 seeds.
 
 ---
