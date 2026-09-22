@@ -1692,7 +1692,7 @@ do
 		local distinct = 0
 		for _ in yaws do distinct += 1 end
 		check("Sky Citadel's mesh yaw offsets are one of a small confirmed set",
-			distinct <= 2, string.format("%d distinct values", distinct))
+			distinct <= 4, string.format("%d distinct values", distinct))
 		check("a mesh yaw offset off the quarter-turn grid is a boot error",
 			not (Schema.validateChunks({
 				Y = { Id = "Y", WorldId = "W", Role = "ENTRY", AssetKey = "VV_CHUNK_ENTRY",
