@@ -80,8 +80,15 @@ than inferring it from a test name.
 }
 ```
 
-**Roles:** `ENTRY` (exactly one), `PATH`, `COMBAT`, `SIDE` (optional branch),
-`BOSS` (exactly one).
+**Roles:** `ENTRY`, `PATH`, `COMBAT`, `SIDE` (optional branch), `BOSS`. A world
+needs at least one `ENTRY`, at least one `BOSS` and at least one connective
+piece; everything else is free.
+
+**A role is a routing concept, not a design one.** It tells the assembler where
+a piece may be placed and nothing else. A ruin and a mushroom glen can both be
+`COMBAT` and be nothing alike — the variety of a world lives in how many
+different *kinds of place* it has, not in how many roles. What those are, per
+world, is in [`biomes/`](biomes/).
 
 **Sockets** are connection points. `Facing` is degrees on a quarter-turn grid:
 `0 = -Z (north)`, `90 = +X`, `180 = +Z`, `270 = -X`. Offsets are local to the
@@ -117,6 +124,14 @@ VV_BOSS_CLEARING  (     0,  -1536)  [BOSS]
 
 **Design your socket Kinds deliberately.** They are the level-design grammar,
 not a technical detail.
+
+> **This cuts both ways, and the Verdant Valley kit has now hit the other
+> edge.** A Kind offered by exactly one piece produces a gate; a Kind offered by
+> exactly one piece *also* produces the same map every seed. With 8 pieces the
+> Grove gating the boss was the intent. With 12 it is the single largest limit
+> on variety, because the arena approach can never be anything else. The fix is
+> content — give the arena Kind to two or three pieces that each deserve to be
+> the last thing before a boss. The gate survives; the sameness does not.
 
 ### Two worlds, two vocabularies, one rule
 
@@ -239,6 +254,28 @@ what addendum §A4 asks for with per-expedition seeding.
 
 ---
 
+## The layer above: what happens in a room
+
+**This document is about where pieces go. It is deliberately not about what
+happens in them** — that is the scenario layer, `PROTOTYPE_BUILD_SPEC.md` §7.3,
+and the separation is the point:
+
+```
+RUN SEED → CHUNK SELECTION → CONNECTION VALIDATION → SCENARIO SELECTION → …
+              ChunkCore            ChunkCore              ScenarioCore
+```
+
+`ChunkCore` knows nothing about scenarios and `ScenarioCore` knows nothing
+about geometry. A chunk declares `Supports` — what it *can* host — and the
+generator intersects that with `Content/Scenarios`. So the same Ridge Overlook
+is an ambush on one seed and a shrine on the next, and **11 pieces produced 50
+distinct chunk/scenario rooms** in the measurement below.
+
+That is why the piece count in a kit matters less than it looks: model count is
+not content count.
+
+---
+
 ## The geometry contract
 
 The layout rules above are about *data*. The rules below are about the *art*,
@@ -323,11 +360,16 @@ openings. Everything else was over-specification, and
    rare, not new roles.
 3. **Two sockets minimum** on anything `PATH` or `COMBAT`, or the path
    dead-ends. Validation rejects this.
-4. **One `ENTRY`, one `BOSS`** per world.
+4. **At least one `ENTRY` and one `BOSS`** per world — that is all the schema
+   requires. More of either is legal and gives a run two different arrivals or
+   two different arenas. (A test currently asserts Verdant Valley has exactly
+   one of each; that is a statement about that kit, not a rule.)
 5. **`MaxPerLayout`** on anything that should feel special.
 6. **`SizeX/Y/Z` must be honest** — they drive collision rejection. Too small
    and pieces interpenetrate; too large and assembly fails needlessly.
-7. **One `SIDE` pocket per world** — Biome Blueprint §6 checklist.
+7. **At least one `SIDE` pocket** — Biome Blueprint §6 checklist asks for one;
+   it is a floor, not a cap. (Note that `IncludeSide` is declared and never
+   read, so no SIDE piece is placed today — `STATUS.md`.)
 8. **Author the geometry against [`CHUNK_AUTHORING.md`](CHUNK_AUTHORING.md)** —
    origin at the chunk's centre, one FBX per chunk, an opening at every socket.
 9. Run `./tests/run.sh`. The kit is validated at boot too; a broken kit stops
@@ -350,6 +392,8 @@ openings. Everything else was over-specification, and
 ## What is deliberately not built yet
 
 - **Enemy population** — `EnemyTags` are declared but unconsumed
+- **Encounter and reward configuration** — a scenario plan says a room is an
+  Ambush; nothing spawns it. Build spec §7.3 draws that line deliberately
 - **Pathfinding validation** (addendum §A4 step 4) — a spawn→boss reachability
   pass before letting players in. Collision rejection is not the same thing:
   two pieces can be non-overlapping and still not walkable between.

@@ -14,7 +14,13 @@ handoff:
 2. **`docs/STATUS.md`** — current state, decisions already locked in, open
    items with severity. If you are about to relitigate a decision, it is
    probably recorded here as settled.
-3. **`docs/PROTOTYPE_BUILD_SPEC.md`** — the canonical architecture.
+3. **`docs/PROTOTYPE_BUILD_SPEC.md`** — the canonical architecture. §7 lists
+   what Phase 1 excludes; §7.1 and §7.2 are the only things lifted out of it,
+   and both were lifted by a written amendment rather than quietly.
+
+`docs/MASTER_DESIGN.md` is the design-level source of truth — what the game is,
+how the generation layers fit together, what is built versus planned. Read it
+before anything that touches design rather than plumbing.
 
 **`docs/DEVELOPMENT_PLAN.md` says what to work on next**, and why in that
 order. Read it before picking up anything that is not already in flight.

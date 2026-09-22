@@ -276,11 +276,50 @@ function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boole
 			end
 		end
 
+		-- GroundOffsetY is optional -- absent means "the walk plane is the
+		-- bounding-box centre", which is what every chunk meant before the
+		-- field existed. Present, it must be INSIDE the piece: a walk plane
+		-- outside its own bounding box would float the chunk off the layout
+		-- plane by however wrong the number is, silently.
+		if chunk.GroundOffsetY ~= nil then
+			if type(chunk.GroundOffsetY) ~= "number" then
+				table.insert(errors, `{label}: GroundOffsetY must be a number`)
+			elseif
+				type(chunk.SizeY) == "number"
+				and (chunk.GroundOffsetY < 0 or chunk.GroundOffsetY > chunk.SizeY)
+			then
+				table.insert(
+					errors,
+					`{label}: GroundOffsetY {chunk.GroundOffsetY} is outside the piece (SizeY {chunk.SizeY})`
+				)
+			end
+		end
+
 		if not manifest.exists(chunk.AssetKey) then
 			table.insert(
 				errors,
 				`{label}: AssetKey '{tostring(chunk.AssetKey)}' is not in the asset manifest`
 			)
+		end
+
+		-- Supports is the scenario-compatibility gate. A placeable chunk with
+		-- none supports nothing, so the generator would have no room to fill
+		-- and the piece would be walked through empty. ENTRY and BOSS are
+		-- exempt: neither is ever assigned a scenario.
+		if chunk.Role == "PATH" or chunk.Role == "COMBAT" or chunk.Role == "SIDE" then
+			if type(chunk.Supports) ~= "table" then
+				table.insert(errors, `{label}: {chunk.Role} chunks need a Supports table`)
+			else
+				local any = false
+				for _, v in chunk.Supports do
+					if v then
+						any = true
+					end
+				end
+				if not any then
+					table.insert(errors, `{label}: Supports declares nothing, so no scenario can be placed here`)
+				end
+			end
 		end
 
 		if type(chunk.Sockets) ~= "table" or #chunk.Sockets == 0 then
@@ -322,6 +361,82 @@ function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boole
 		end
 		if (counts.PATH or 0) + (counts.COMBAT or 0) == 0 then
 			table.insert(errors, `world '{worldId}' has no PATH or COMBAT chunks`)
+		end
+
+		-- A SIDE pocket hangs off a socket the critical path did not spend,
+		-- and the path spends two per piece -- one to arrive, one to leave.
+		-- So a kit whose pieces all have two sockets has no spare socket on
+		-- any seed, and its SIDE pieces validate, pass every other test and
+		-- are never once placed. That is exactly what happened to Verdant
+		-- Valley's Fern Hollow. Refuse it at boot instead: a declared pocket
+		-- that cannot be reached is a content bug, not a quiet no-op.
+		if (counts.SIDE or 0) > 0 then
+			local hasSpare = false
+			for _, chunk in chunks do
+				if chunk.WorldId == worldId and type(chunk.Sockets) == "table" and #chunk.Sockets >= 3 then
+					hasSpare = true
+				end
+			end
+			if not hasSpare then
+				table.insert(
+					errors,
+					`world '{worldId}' declares a SIDE chunk but no chunk has 3+ sockets, `
+						.. `so the critical path spends every socket and the pocket can never attach`
+				)
+			end
+		end
+	end
+
+	return #errors == 0, errors
+end
+
+--- The scenario library, and that the chunk kits can actually host it.
+---
+--- Two failure modes, both silent without this: a scenario whose Requires key
+--- no chunk declares can never be placed, and a Band or Weight typo quietly
+--- removes a scenario from the draw. Neither shows up as an error at runtime;
+--- the run is simply less varied than the content says it is.
+function Schema.validateScenarios(
+	scenarios: { [string]: any },
+	chunks: { [string]: any }?
+): (boolean, { string })
+	local errors = {}
+	local BANDS = { ORDINARY = true, UNCOMMON = true, RARE = true }
+
+	for key, s in scenarios do
+		local label = `Scenario '{key}'`
+		if s.Id ~= key then
+			table.insert(errors, `{label}: Id is '{tostring(s.Id)}' -- must match its registry key`)
+		end
+		if not BANDS[s.Band] then
+			table.insert(errors, `{label}: unknown Band '{tostring(s.Band)}'`)
+		end
+		if type(s.Weight) ~= "number" or s.Weight <= 0 then
+			table.insert(errors, `{label}: Weight must be positive`)
+		end
+		if type(s.Requires) ~= "string" or s.Requires == "" then
+			table.insert(errors, `{label}: Requires must name a Supports key`)
+		end
+	end
+
+	-- Every scenario must be reachable by SOMETHING, or it is content nobody
+	-- will ever see.
+	if chunks then
+		for key, s in scenarios do
+			if type(s.Requires) == "string" then
+				local reachable = false
+				for _, chunk in chunks do
+					if type(chunk.Supports) == "table" and chunk.Supports[s.Requires] then
+						reachable = true
+					end
+				end
+				if not reachable then
+					table.insert(
+						errors,
+						`Scenario '{key}': no chunk in any world declares Supports.{s.Requires}, so it can never be placed`
+					)
+				end
+			end
 		end
 	end
 
@@ -797,7 +912,8 @@ function Schema.validateAll(
 	codes: any?,
 	cinematics: any?,
 	palettes: any?,
-	events: any?
+	events: any?,
+	scenarios: any?
 ): ()
 	local allErrors = {}
 
@@ -814,6 +930,13 @@ function Schema.validateAll(
 	if hub ~= nil then
 		local _, hubErrors = Schema.validateHub(hub)
 		for _, e in hubErrors do
+			table.insert(allErrors, e)
+		end
+	end
+
+	if scenarios ~= nil then
+		local _, scenarioErrors = Schema.validateScenarios(scenarios, chunks)
+		for _, e in scenarioErrors do
 			table.insert(allErrors, e)
 		end
 	end

@@ -188,10 +188,24 @@ function ChunkCore.assemble(
 	-- spare, and a SIDE pocket may hang off one.
 	local consumedBy: { [any]: { [string]: boolean } } = {}
 
+	-- Which sockets each placement has already spent, keyed by its index in
+	-- `placed`. The critical path spends at most two per piece -- one to
+	-- arrive, one to leave -- and whatever is left over is where an optional
+	-- pocket can hang. Without this the spare sockets are unknowable after the
+	-- fact, which is why IncludeSide sat unimplemented for so long.
+	local spent: { [number]: { [string]: boolean } } = {}
+
 	local function record(p: any, chunk: any)
 		table.insert(placed, p)
+		spent[#placed] = {}
 		used[chunk.Id] = (used[chunk.Id] or 0) + 1
 		consumedBy[p] = {}
+	end
+
+	local function spend(socketId: string?)
+		if socketId and spent[#placed] then
+			spent[#placed][socketId] = true
+		end
 	end
 
 	local function allowed(chunk: any): boolean
@@ -225,6 +239,7 @@ function ChunkCore.assemble(
 	end
 	consumedBy[entryPlacement][openSocketDef.Id] = true
 	local open = ChunkCore.worldSocket(openPlacement, openChunk, openSocketDef)
+	spend(openSocketDef.Id)
 
 	-- Which socket kinds the boss arena will accept. The final path chunk has
 	-- to offer one of them, or the layout dead-ends at the arena door.
@@ -292,7 +307,7 @@ function ChunkCore.assemble(
 			return false, `ran out of usable chunks at step {i}`
 		end
 
-		local chosen, placement, nextSocket
+		local chosen, placement, nextSocket, arrivedOn
 		-- Several attempts: a piece may not match the open socket's Kind, may
 		-- have no usable exit, or may collide with something already placed.
 		for _ = 1, 24 do
@@ -304,7 +319,7 @@ function ChunkCore.assemble(
 				if p and not collides(p, c) then
 					local exit = exitFor(c, consumed.Id, isFinalStep)
 					if exit then
-						chosen, placement, nextSocket = c, p, exit
+						chosen, placement, nextSocket, arrivedOn = c, p, exit, consumed
 						break
 					end
 				end
