@@ -19,6 +19,7 @@
 
 local AssetService = game:GetService("AssetService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local Workspace = game:GetService("Workspace")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local AssetManifest = require(Root.Content.AssetManifest)
@@ -113,6 +114,74 @@ local function tryMesh(assetKey: string, size: Vector3, cframe: CFrame, parent: 
 	mesh.CFrame = cframe
 	mesh.Parent = parent
 	return mesh
+end
+
+-- Measured mesh yaw per AssetKey, per server. See calibrateYaw.
+local yawCache: { [string]: number } = {}
+
+--- Finds which quarter turn of the ART puts deck under every declared socket.
+---
+--- THE SOCKETS ARE THE TRUTH; THE MESH IS MEASURED AGAINST THEM. A delivered
+--- mesh can arrive rotated by any quarter turn -- the export step does that
+--- per piece, and a 256-cubed bounding box hides it completely. So instead of
+--- typing an offset per piece and checking it in Studio, the loader tries all
+--- four and raycasts down just inside each socket's mouth. Deck at the walk
+--- plane there means an opening there; the turn that finds deck under the most
+--- sockets is the one the art was authored in.
+---
+--- Visual only. The LAYOUT -- which piece goes where, at what yaw, from which
+--- seed -- is decided by ChunkCore before this runs and is never touched, so
+--- generation stays exactly as random as it was. Cached per AssetKey, so the
+--- probe runs once per piece type per server, not once per placement.
+---
+--- Ties keep the declared MeshYawOffset: a straight or a four-way reads the
+--- same at two or four turns, and for those any of them connects.
+local function calibrateYaw(chunk: any, placed: any, origin: Vector3, meshPos: Vector3, mesh: BasePart): number
+	local cached = yawCache[chunk.AssetKey]
+	if cached ~= nil then
+		return cached
+	end
+	local probe = GameConfig.Expedition.SocketProbe
+	local params = RaycastParams.new()
+	params.FilterType = Enum.RaycastFilterType.Include
+	params.FilterDescendantsInstances = { mesh }
+
+	-- Spatial queries only see the live world.
+	local home = mesh.Parent
+	mesh.Parent = Workspace
+
+	local centre = origin + Vector3.new(placed.X, placed.Y, placed.Z)
+	local hint = chunk.MeshYawOffset or 0
+	local best, bestHits = hint, -1
+	for turn = 0, 3 do
+		-- The hint first, so a tie keeps it.
+		local k = (hint + turn * 90) % 360
+		mesh.CFrame = CFrame.new(meshPos) * CFrame.Angles(0, math.rad(placed.Yaw + k), 0)
+		local hits = 0
+		for _, socket in chunk.Sockets do
+			local ws = ChunkCore.worldSocket(placed, chunk, socket)
+			local mouth = origin + Vector3.new(ws.X, ws.Y, ws.Z)
+			local inward = Vector3.new(centre.X - mouth.X, 0, centre.Z - mouth.Z).Unit
+			local from = mouth + inward * probe.Inset + Vector3.new(0, probe.Height, 0)
+			local hit = Workspace:Raycast(from, Vector3.new(0, -probe.Height * 2, 0), params)
+			if hit and math.abs(hit.Position.Y - mouth.Y) <= probe.Tolerance then
+				hits += 1
+			end
+		end
+		if hits > bestHits then
+			best, bestHits = k, hits
+		end
+	end
+
+	mesh.Parent = home
+	if bestHits < #chunk.Sockets then
+		warn(
+			`[ChunkLoader] {chunk.AssetKey}: no rotation puts deck under all {#chunk.Sockets} sockets `
+				.. `(best {bestHits} at {best}); the art may not match its declared openings`
+		)
+	end
+	yawCache[chunk.AssetKey] = best
+	return best
 end
 
 --- Blockout for one chunk: a floor, a rim so the edge reads at distance, and
@@ -327,6 +396,9 @@ function ChunkLoader.build(
 
 		local surface: BasePart
 		if mesh then
+			local meshPos = meshCFrame.Position
+			local k = calibrateYaw(chunk, placed, origin, meshPos, mesh)
+			mesh.CFrame = CFrame.new(meshPos) * CFrame.Angles(0, math.rad(placed.Yaw + k), 0)
 			usedMeshes += 1
 			surface = mesh
 		else

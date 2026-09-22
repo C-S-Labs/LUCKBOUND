@@ -334,25 +334,9 @@ for _, chunk in CHUNKS do
 	-- conversion lands the art a half turn out, so bridges met nothing on the
 	-- first Studio walk even though every piece loaded and every socket lined
 	-- up in the layout. Turning the MESH is the whole fix -- see ChunkLoader.
-	--
-	-- If a walk shows the pieces a quarter turn out instead of a half, this is
-	-- the one number to change: 90 or 270.
 	c.MeshYawOffset = 180
-	-- Per-piece corrections, each confirmed by a Studio walk 2026-09-23.
-	-- Boss arena: authored facing opposite the connector convention.
-	if c.Id == "SC_BOSS_CLEARING" then
-		c.MeshYawOffset = 0
-	end
-	-- Crumbling-span cap and Aether Springs: still wrong at 180 or 0, so these
-	-- are off by a quarter turn from the rest of the kit rather than a half.
-	if c.Id == "SC_CAP_CRUMBLING" then
-		c.MeshYawOffset = 90
-	end
-	-- Aether Springs was still wrong at 90; try the other quarter turn.
-	-- Spire Court (the boss gateway) was still wrong at the kit-wide 180.
-	if c.Id == "SC_AETHER_SPRINGS" or c.Id == "SC_SPIRE_COURT" or c.Id == "SC_SPIRE_COURT_B" then
-		c.MeshYawOffset = 270
-	end
+	-- No per-piece offsets: ChunkLoader measures each mesh's facing against
+	-- these sockets at load (calibrateYaw). 180 is only the tie-break hint.
 	table.insert(out, c)
 end
 return out
