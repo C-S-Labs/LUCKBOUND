@@ -161,7 +161,11 @@ local GameConfig = {
 		MaxConcurrent = 12,
 
 		-- Default map size. A world overrides it with MapPathLength.
-		PathLength = 5,
+		PathLength = 8,
+		-- How far a branch off a spare mouth runs before it dead-ends in a
+		-- cap. Owner-directed 2026-09-23: an intersection whose side mouths
+		-- are capped where they stand is not an intersection. 0 restores that.
+		BranchLength = 2,
 
 		-- === Scenario layer (build spec §7.3) ====================
 		-- RESTORED 2026-09-23. This block was silently deleted by merge

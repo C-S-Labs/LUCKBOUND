@@ -123,8 +123,14 @@ local CHUNKS = {
 			socket("west", "SKYWAY", -128, 0, 270),
 		},
 		Supports = { Combat = true, Ambush = true, Shrine = true, Event = true },
-		Weight = 14,
-		MaxPerLayout = 1,
+		-- WEIGHTED AND CAPPED FOR BRANCHING, not for scarcity. At weight 14
+		-- and one per layout the intersection turned up in about one run in
+		-- six, so two Studio walks in a row were a single straight shot with
+		-- nothing to choose. It is the only piece in the kit with a mouth to
+		-- spare, which makes it the only source of branches; two of them is a
+		-- run with a shape.
+		Weight = 30,
+		MaxPerLayout = 2,
 		EnemyTags = {},
 		Tags = { "intersection" },
 	},

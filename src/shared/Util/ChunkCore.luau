@@ -136,6 +136,10 @@ export type AssembleOptions = {
 	WorldId: string,
 	PathLength: number, -- chunks between entry and boss
 	IncludeSide: boolean?,
+	-- How many pieces a branch off a spare mouth may grow before it is capped.
+	-- 0 or nil caps the mouth where it stands, which is what every layout did
+	-- before 2026-09-23.
+	BranchLength: number?,
 }
 
 --- Builds a layout: ENTRY → PathLength connective/combat chunks → BOSS,
@@ -395,6 +399,80 @@ function ChunkCore.assemble(
 					record(p, side)
 					consumedBy[p][arrived.Id] = true
 					consumedBy[spare.Placement][spare.Socket.Id] = true
+					break
+				end
+			end
+		end
+	end
+
+	-- BRANCHES (build spec §7.4, extended 2026-09-23). Owner-directed after the
+	-- first two walks came back a single straight shot: *"when paths branch
+	-- off, ensure that all paths are filled to either a dead end or lead to
+	-- the boss."*
+	--
+	-- A spare mouth used to take a cap where it stood, so an intersection was
+	-- an intersection in name only -- three ways in, two of them a wall you
+	-- could see from the junction. Now each one grows a short spur of ordinary
+	-- pieces first, and the cap pass below closes whatever the spur leaves. A
+	-- branch is therefore somewhere to go and a reason to choose.
+	--
+	-- Bounded on purpose: the frontier is SNAPSHOT before any spur is grown,
+	-- so a spur's own leftovers are capped rather than grown again. Without
+	-- that a kit whose pieces have spare sockets grows until it collides with
+	-- itself, and every seed fails.
+	--
+	-- A spur never takes a socket Kind the arena accepts -- that Kind is
+	-- reserved for the approach, and spending it here would strand the boss.
+	local branchLength = options.BranchLength or 0
+	if branchLength > 0 and #middle > 0 then
+		local frontier = {}
+		for _, p in placed do
+			local chunk = chunks[p.ChunkId]
+			for _, s in chunk.Sockets do
+				if not consumedBy[p][s.Id] and not isBossKind(s.Kind) then
+					table.insert(frontier, { Placement = p, Chunk = chunk, Socket = s })
+				end
+			end
+		end
+
+		local branchIndex = options.PathLength + 100
+		for _, start in frontier do
+			local steps = math.clamp(math.floor(nextNumber() * branchLength) + 1, 1, branchLength)
+			local fromP, fromC, fromS = start.Placement, start.Chunk, start.Socket
+			for _ = 1, steps do
+				if fromS == nil or consumedBy[fromP][fromS.Id] then
+					break
+				end
+				local at = ChunkCore.worldSocket(fromP, fromC, fromS)
+				local grown = false
+				for _ = 1, 12 do
+					local c = WeightedRandom.pick(middle, function(x)
+						return x.Weight
+					end, nextNumber)
+					if c and allowed(c) then
+						local p, arrived = ChunkCore.placeAgainst(c, at, branchIndex)
+						if p and not collides(p, c) then
+							record(p, c)
+							branchIndex += 1
+							consumedBy[p][(arrived :: any).Id] = true
+							consumedBy[fromP][fromS.Id] = true
+							-- Carry on out of one of its other mouths, if it
+							-- has one the arena does not want.
+							local onward = nil
+							for _, s in c.Sockets do
+								if s.Id ~= (arrived :: any).Id and not isBossKind(s.Kind) then
+									onward = s
+									break
+								end
+							end
+							fromP, fromC, fromS = p, c, onward
+							grown = true
+							break
+						end
+					end
+				end
+				-- Nothing fitted: stop here and let the cap pass close it.
+				if not grown then
 					break
 				end
 			end
