@@ -1046,6 +1046,176 @@ do
 	check("the Grove is the only piece offering a WIDE exit",
 		Chunks.VV_GROVE.Sockets[2].Kind == "WIDE")
 
+	-- Sky Citadel: the second kit, with its own vocabulary ------------
+	-- docs/SKY_CITADEL.md. SKYWAY is connective; ASCENT is arena-only and
+	-- offered only by the two gate-courts, so a gate-court must precede the
+	-- arena on every seed without anything hard-coding it.
+	do
+		local scLib = ChunkCore.libraryFor(Chunks, "SKY_CITADEL")
+		check("Sky Citadel has one ENTRY and one BOSS",
+			scLib.ENTRY and #scLib.ENTRY == 1 and scLib.BOSS and #scLib.BOSS == 1)
+		check("the Crown Spire arena only accepts an ASCENT approach",
+			Chunks.SC_BOSS_CLEARING.Sockets[1].Kind == "ASCENT")
+
+		local kindsFor = function(worldId)
+			local set = {}
+			for _, c in Chunks do
+				if c.WorldId == worldId then
+					for _, s in c.Sockets do set[s.Kind] = true end
+				end
+			end
+			return set
+		end
+		local vv, sc = kindsFor("VERDANT_VALLEY"), kindsFor("SKY_CITADEL")
+		local shared
+		for k in sc do
+			if vv[k] then shared = k end
+		end
+		check("socket Kinds are per-world: Sky Citadel shares none with Verdant Valley",
+			shared == nil, tostring(shared))
+
+		local ascentProviders = {}
+		for id, c in Chunks do
+			if c.WorldId == "SKY_CITADEL" and c.Role ~= "BOSS" then
+				for _, s in c.Sockets do
+					if s.Kind == "ASCENT" then table.insert(ascentProviders, id) end
+				end
+			end
+		end
+		table.sort(ascentProviders)
+		check("only the two gate-courts offer an ASCENT exit",
+			#ascentProviders == 2 and ascentProviders[1] == "SC_SPIRE_COURT"
+				and ascentProviders[2] == "SC_SPIRE_COURT_B",
+			table.concat(ascentProviders, ", "))
+		check("Sky Citadel has its SIDE pocket (Blueprint §6)",
+			scLib.SIDE and #scLib.SIDE == 1 and scLib.SIDE[1].Id == "SC_SIDE_LOOKOUT")
+		local scCount = 0
+		for _, c in Chunks do
+			if c.WorldId == "SKY_CITADEL" then scCount += 1 end
+		end
+		check("Sky Citadel's kit meets the 12-piece minimum", scCount >= 12, tostring(scCount))
+
+		-- Turns both ways, so a run does not spiral one direction into itself.
+		local rights, lefts = 0, 0
+		for _, c in Chunks do
+			if c.WorldId == "SKY_CITADEL" and #c.Sockets == 2 then
+				local has = {}
+				for _, sk in c.Sockets do has[sk.Id] = true end
+				if has.south and has.east then rights += 1 end
+				if has.south and has.west then lefts += 1 end
+			end
+		end
+		check("Sky Citadel turns both ways", rights >= 2 and lefts >= 2,
+			string.format("%d right, %d left", rights, lefts))
+
+		-- Nothing on the critical path dead-ends: every PATH/COMBAT piece has
+		-- a way in and a way out.
+		local deadEnd
+		for id, c in Chunks do
+			if c.WorldId == "SKY_CITADEL" and (c.Role == "PATH" or c.Role == "COMBAT") and #c.Sockets < 2 then
+				deadEnd = id
+			end
+		end
+		check("no Sky Citadel path piece is a dead end", deadEnd == nil, tostring(deadEnd))
+
+		-- The generator pins every mesh to exactly 256^3, because ChunkLoader
+		-- stretches a mesh to SizeX/Y/Z. Declared size must match that box.
+		local sized = true
+		for _, c in Chunks do
+			if c.WorldId == "SKY_CITADEL" and (c.SizeX ~= 256 or c.SizeY ~= 256 or c.SizeZ ~= 256) then
+				sized = false
+			end
+		end
+		check("every Sky Citadel piece declares the 256^3 box its mesh is built to", sized)
+
+		local built, courtGates, turned, allValid = 0, true, false, true
+		local GATE_COURTS = { SC_SPIRE_COURT = true, SC_SPIRE_COURT_B = true }
+		for trial = 1, 200 do
+			local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+				{ WorldId = "SKY_CITADEL", PathLength = 5 },
+				function(a) return lcg(trial * 7307 + a * 31) end, 5)
+			if okA then
+				built += 1
+				local okV = ChunkCore.validateLayout(layout, Chunks)
+				if not okV then allValid = false end
+				local penultimate = layout.Chunks[#layout.Chunks - 1]
+				if not GATE_COURTS[penultimate.ChunkId] then courtGates = false end
+				for _, c in layout.Chunks do
+					if c.Yaw ~= 0 then turned = true end
+				end
+			end
+		end
+		-- Same bar as Verdant Valley's: a path that turns can fold back on
+		-- itself, so a handful of seeds needing more than 5 attempts is the
+		-- grammar working, not failing (MODULAR_MAPS.md, "Retries").
+		check("Sky Citadel assembles a map on nearly every seed", built >= 190,
+			string.format("%d/200", built))
+		check("every assembled Sky Citadel layout is valid", allValid)
+		check("a gate-court always precedes the Crown Spire arena", courtGates)
+		check("the bend piece makes some layouts turn", turned)
+
+		-- THE INTERSECTION. With a seeded exit pick, the crossroads must leave
+		-- by more than one of its three free mouths across seeds.
+		local function toLocal(dx: number, dz: number, yaw: number): string
+			local x, z = dx, dz
+			for _ = 1, (360 - yaw) % 360 // 90 do
+				x, z = -z, x
+			end
+			return string.format("%d,%d", math.sign(x), math.sign(z))
+		end
+		local exits = {}
+		for trial = 1, 300 do
+			local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+				{ WorldId = "SKY_CITADEL", PathLength = 5 },
+				function(a) return lcg(trial * 92821 + a * 17) end, 5)
+			if okA then
+				for i, c in layout.Chunks do
+					local nxt = layout.Chunks[i + 1]
+					if c.ChunkId == "SC_CROSSROADS" and nxt and nxt.Role ~= "SIDE" then
+						exits[toLocal(nxt.X - c.X, nxt.Z - c.Z, c.Yaw)] = true
+					end
+				end
+			end
+		end
+		local nExits = 0
+		for _ in exits do nExits += 1 end
+		check("the crossroads leaves by more than one mouth across seeds", nExits >= 2,
+			string.format("%d distinct exits", nExits))
+	end
+
+	-- SIDE pockets (IncludeSide) -- consumed since 2026-09-22 -----------
+	-- A SIDE chunk hangs off a spare socket after the arena is placed. It is
+	-- optional (no fit is not a failure) and at most one per layout.
+	do
+		local function sidesOver(worldId: string, includeSide: boolean): (number, number, boolean)
+			local withSide, built, allValid = 0, 0, true
+			for trial = 1, 200 do
+				local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+					{ WorldId = worldId, PathLength = 5, IncludeSide = includeSide },
+					function(a) return lcg(trial * 6151 + a * 3) end, 5)
+				if okA then
+					built += 1
+					local okV = ChunkCore.validateLayout(layout, Chunks)
+					if not okV then allValid = false end
+					for _, c in layout.Chunks do
+						if c.Role == "SIDE" then withSide += 1 end
+					end
+				end
+			end
+			return withSide, built, allValid
+		end
+		local scSides, scBuilt, scValid = sidesOver("SKY_CITADEL", true)
+		check("with IncludeSide, Sky Citadel places its lookout on some seeds", scSides > 0,
+			string.format("%d of %d layouts", scSides, scBuilt))
+		check("layouts with a SIDE pocket are still valid (no overlap, <= 1 pocket)", scValid)
+		local vvSides, vvBuilt = sidesOver("VERDANT_VALLEY", true)
+		check("with IncludeSide, Verdant Valley's Hollow is finally placed", vvSides > 0,
+			string.format("%d of %d layouts", vvSides, vvBuilt))
+		local offSides = sidesOver("SKY_CITADEL", false)
+		check("without IncludeSide, no SIDE pocket is ever placed", offSides == 0, tostring(offSides))
+		check("the expedition turns IncludeSide on", GameConfig.Expedition.IncludeSide == true)
+	end
+
 	-- Geometry helpers ----------------------------------------------
 	local placed = { X = 10, Y = 0, Z = 20, Yaw = 90 }
 	local sock = { Id = "s", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = -48, Facing = 0 }
@@ -1421,9 +1591,12 @@ do
 		ExpeditionCore.hasPrebuiltMap(Worlds.ETHEREAL_SCAPE))
 	check("Verdant Valley is not prebuilt",
 		not ExpeditionCore.hasPrebuiltMap(Worlds.VERDANT_VALLEY))
-	check("Sky Citadel has neither",
-		not ExpeditionCore.hasKit(Chunks, "SKY_CITADEL")
+	check("Sky Citadel has a kit, not a prebuilt map",
+		ExpeditionCore.hasKit(Chunks, "SKY_CITADEL")
 			and not ExpeditionCore.hasPrebuiltMap(Worlds.SKY_CITADEL))
+	check("Emberfall has neither",
+		not ExpeditionCore.hasKit(Chunks, "EMBERFALL")
+			and not ExpeditionCore.hasPrebuiltMap(Worlds.EMBERFALL))
 
 	-- BOTH routes count as having a map. This is the assertion that stops a
 	-- prebuilt world being turned away at its own door -- the bug this seam
@@ -1433,16 +1606,16 @@ do
 	check("a kitted world has a map",
 		ExpeditionCore.hasMap(Worlds.VERDANT_VALLEY, Chunks, "VERDANT_VALLEY"))
 	check("a world with neither has no map",
-		not ExpeditionCore.hasMap(Worlds.SKY_CITADEL, Chunks, "SKY_CITADEL"))
+		not ExpeditionCore.hasMap(Worlds.EMBERFALL, Chunks, "EMBERFALL"))
 
-	-- THE DEBT, ASSERTED. Three rollable worlds cannot be entered. This test
+	-- THE DEBT, ASSERTED. Two rollable worlds cannot be entered (three until
+	-- Sky Citadel's kit landed, 2026-09-22). This test
 	-- is not here to be green forever -- it is here so the number is in the
 	-- suite and someone has to look at it to change it.
 	local missing = ExpeditionCore.worldsWithoutMaps(Worlds, Chunks, GameConfig.CurrentPhase)
 	print(string.format("        rollable but not enterable: %s", table.concat(missing, ", ")))
 	check("rollable-but-not-enterable worlds are reported, sorted",
-		#missing == 3 and missing[1] == "ASTRAL_REACH" and missing[2] == "EMBERFALL"
-			and missing[3] == "SKY_CITADEL",
+		#missing == 2 and missing[1] == "ASTRAL_REACH" and missing[2] == "EMBERFALL",
 		table.concat(missing, ", "))
 
 	-- Map size and duration are content, with a config fallback ------
@@ -1576,7 +1749,7 @@ do
 		decide({ Profile = withRolls({}) }).Refusal == "NO_DESTINATION")
 	check("a world with no map is refused at the door, not mid-assembly",
 		decide({ Profile = withRolls({
-			{ WorldId = "SKY_CITADEL", Rarity = "EPIC", Timestamp = 1 },
+			{ WorldId = "EMBERFALL", Rarity = "RARE", Timestamp = 1 },
 		}) }).Refusal == "NO_MAP")
 	check("a destination that no longer exists is refused",
 		decide({ Profile = withRolls({

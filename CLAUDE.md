@@ -20,7 +20,7 @@ handoff:
 order. Read it before picking up anything that is not already in flight.
 
 Then `docs/` has the rest: `MODULAR_MAPS.md`, `CHUNK_AUTHORING.md`,
-`TESTING.md`, `ART_DIRECTION.md`,
+`TESTING.md`, `ART_DIRECTION.md`, `SKY_CITADEL.md`,
 `BLUEPRINT_RECONCILIATION.md`, `TOOLCHAIN_ACCESS.md`, `PLAYER_UI.md`,
 `PLAYER_ABILITIES.md`, `EVENTS.md`.
 
