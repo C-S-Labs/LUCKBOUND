@@ -100,6 +100,27 @@ then replace it one world at a time, invisibly, whenever they are ready.
 **Gate:** 100 rolls, every one enterable. No "that world has no map yet" path
 reachable from the roll pool.
 
+#### Interim, while the first kit is being modelled — owner-directed 2026-09-22
+
+Verdant Valley's chunk art is in authoring. Until it is in and a second world
+has a map, **gate the roll pool to Verdant Valley** rather than let a tester
+roll into a refusal. Both knobs are data and neither touches a System:
+
+- `GameConfig.Fate.PrototypeWeights` — `VERDANT_VALLEY = 10000`, the rest 0.
+  This is the table that governs while `CurrentPhase == 1`; each world's own
+  `RollWeight` is only consulted outside Phase 1.
+- `GameConfig.Fate.OnboardingSequence` — rolls 1–8 are forced regardless of
+  weight, and four of them are not Verdant Valley. Gating the weights without
+  also flattening this sequence still drops a fresh profile into Emberfall on
+  roll 3.
+
+This is a testing posture, not a design change: it narrows what a tester sees
+to the one world that can actually be walked, and it reverses by putting both
+tables back. It does **not** close the 25% item — Route 2 above still does
+that — and it must not be allowed to become the reason the other kits never
+get built. The geometry brief for the kit itself is
+[`CHUNK_AUTHORING.md`](CHUNK_AUTHORING.md).
+
 ### Phase 2 — Something to do in a world · **M/L**
 
 The loop closes here, and it is the phase that decides whether the playtest is

@@ -205,6 +205,46 @@ what addendum §A4 asks for with per-expedition seeding.
 
 ---
 
+## The geometry contract
+
+The layout rules above are about *data*. The rules below are about the *art*,
+and they are the ones that are expensive to discover late.
+
+**The full brief is [`CHUNK_AUTHORING.md`](CHUNK_AUTHORING.md)** — read it
+before modelling. The three rules that everything else hangs off:
+
+### 1. The origin is the middle-most point of the chunk
+
+Centre in X, centre in Y, centre in Z. Not a corner, not the middle of a side,
+not the Blender world origin.
+
+`ChunkLoader` places a piece by putting its origin at the centre the assembler
+chose, and `ChunkCore.overlaps` rejects collisions against centre ± half-size
+boxes — so any other origin lands the art half a chunk from where the generator
+believes it is. Worse, `Yaw` is derived from the socket pair, so **every piece
+gets rotated 0/90/180/270 depending on the seed**, and rotation happens about
+the origin. A centre origin spins the piece in place; a corner origin swings it
+a whole chunk-width sideways, by a different amount for each yaw. It is not a
+constant offset anything can correct for.
+
+### 2. Every chunk is independent
+
+Nothing crosses a boundary, nothing depends on a neighbour, every piece reads
+alone and at four rotations. The piece next to it is a different piece next
+seed. Art that cannot meet that is a map, not a kit — ship it as a
+`PrebuiltMap` instead (`assets/rbxm/maps/README.md`).
+
+### 3. Chunks do not join on any side — only at sockets, only by Kind
+
+An edge with no socket is a wall to the generator; nothing is ever placed
+against it. Two sockets join only when their `Kind` strings match exactly, and
+each join consumes one socket from each side. Which means **every socket of the
+same `Kind` must be physically interchangeable across the whole kit** — same
+opening width, same ground height, same approach — because the seed decides
+which two meet.
+
+---
+
 ## Authoring a kit — checklist
 
 1. **Pick a grid.** Both existing kits use **256 studs**. Sockets must land on it
@@ -220,7 +260,9 @@ what addendum §A4 asks for with per-expedition seeding.
 6. **`SizeX/Y/Z` must be honest** — they drive collision rejection. Too small
    and pieces interpenetrate; too large and assembly fails needlessly.
 7. **One `SIDE` pocket per world** — Biome Blueprint §6 checklist.
-8. Run `./tests/run.sh`. The kit is validated at boot too; a broken kit stops
+8. **Author the geometry against [`CHUNK_AUTHORING.md`](CHUNK_AUTHORING.md)** —
+   origin at the chunk's centre, one FBX per chunk, an opening at every socket.
+9. Run `./tests/run.sh`. The kit is validated at boot too; a broken kit stops
    the server rather than shipping a broken expedition.
 
 ---
@@ -250,7 +292,8 @@ what addendum §A4 asks for with per-expedition seeding.
 
 ## Adding a new world's kit
 
-1. Author pieces in `assets/source/worlds/<world_id>/`
+1. Author pieces in `assets/source/worlds/<world_id>/`, one `.blend` per
+   piece, to `CHUNK_AUTHORING.md`
 2. Add manifest entries (`PLACEHOLDER` is fine)
 3. Add `src/shared/Content/Chunks/<World>.luau` returning a list
 4. Run the tests

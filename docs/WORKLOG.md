@@ -33,6 +33,104 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 40 — 2026-09-22 — The chunk origin contract, written down
+
+**Branch:** `claude/nifty-babbage-elpxrv` · **Tests:** 574 passing (unchanged)
+
+### What prompted this
+
+The owner is modelling the Verdant Valley chunk kit in Blender and sent a
+screenshot of four 100 × 100 pieces with their **origins at the corners**,
+asking why the earlier guidance had said corners.
+
+It had — in conversation, not in the repo, which is the actual failure here.
+**There was no chunk-authoring brief in `docs/` at all.** The Crossroads and
+the Fate Engine each got a full Blender prompt; the chunk kit, which is the
+piece with the strictest geometry contract of the three, got none. So the
+guidance lived in a chat, was wrong, and nothing in the repo contradicted it.
+
+### The origin belongs at the chunk's centre, and this is why
+
+`ChunkLoader` places a piece by putting its origin at `placed.X/Y/Z` — which is
+the **centre** the assembler chose — and `ChunkCore.overlaps` rejects
+collisions against centre ± half-size. And `Yaw` is derived from the socket
+pair, so **every piece is rotated 0/90/180/270 depending on the seed**, about
+its origin.
+
+That last part is what makes a corner origin unrecoverable rather than merely
+offset: the error is a different vector for each of the four yaws. Meanwhile
+the generator still certifies the layout as collision-free, because it only
+ever saw centre ± half-size. **A wrong origin produces a map that is correct in
+data and broken on the ground** — the worst shape a bug can have here.
+
+### Done
+
+- **New `docs/CHUNK_AUTHORING.md`** — the brief that should have existed.
+  Scale, the origin rule and its derivation, what "independent chunk" forbids,
+  how sockets actually gate joins, FBX settings, and a pre-export checklist.
+- **`MODULAR_MAPS.md`** gained a *geometry contract* section: origin, chunk
+  independence, and "chunks do not join on any side — only at sockets, only by
+  Kind". Its authoring checklist now points at the new brief.
+- **`assets/README.md`** — the kit-export section said "origin at the piece's
+  centre" already, which was right but under-argued and easy to skim past. It
+  now says middle-most point in all three axes, says why, and says one FBX per
+  chunk explicitly.
+- **`ChunkLoader.luau`** carries the contract as a comment at the exact two
+  lines that depend on it. No behaviour change.
+- **`STATUS.md`** — two new debt rows and the Verdant Valley testing posture.
+- **`DEVELOPMENT_PLAN.md`** — the interim roll-gating step under Phase 1.
+- **`README.md`, `CLAUDE.md`** — doc lists updated.
+
+### Decisions made
+
+- **Origin at the geometric centre of the bounding box, all three axes.**
+  Recorded in code and in three docs, because it is invisible metadata that no
+  test can see — the same class of failure as the hub's "register from a named
+  part, not a pivot" rule.
+- **The kit is not a tiled grid.** The screenshot's four equal 100 × 100
+  squares in a 2 × 2 block is a different system from the one that exists: the
+  kit is eight differently-sized pieces (256 × 512 up to 1024 × 1024) chained
+  end to end. Said plainly in the new brief, with the size table, because it is
+  the kind of misunderstanding that costs an art pass.
+- **Gating the roll pool to Verdant Valley for testing is a data change, and
+  it is `GameConfig.Fate.PrototypeWeights`, not each world's `RollWeight`.**
+  `FateCore.effectiveWeight` prefers the override table while
+  `CurrentPhase == 1`. `OnboardingSequence` has to be flattened too or rolls
+  1–8 still force four other worlds. Written down, not implemented — it is the
+  owner's call when to flip it.
+
+### Not done, deliberately
+
+- **Nothing was renamed.** The owner called the world "Verdant Plains"; the
+  repo calls it `VERDANT_VALLEY` throughout — content ids, `VV_` asset keys,
+  chunk ids, tests, the Biome Blueprint. If the name is changing that is a
+  rename pass of its own, and it should happen before the art is uploaded
+  rather than after.
+- **The `GroundOffsetY` field is not built.** The mesh path puts the bounding
+  box *centre* at the layout Y while the blockout puts the *walking surface*
+  there. The brief works around it by requiring the walk plane be centred in
+  `SizeY`; the real fix is a schema field, which is a spec amendment. Logged
+  in `STATUS.md` debt.
+
+### Stopped at
+
+Docs only. No System changed, no content changed, 574 tests still green.
+
+### Next
+
+1. **Owner decides the name** — Verdant Valley or Verdant Plains — before art
+   is uploaded.
+2. **Re-author the test chunks to the real sizes** in
+   `Content/Chunks/VerdantValley.luau`, with centre origins and an opening at
+   every declared socket.
+3. **Upload one piece** — `VV_CHUNK_ENTRY` is the smallest useful test — flip
+   its manifest entry to `UPLOADED`, and walk a generated map with one mesh
+   among seven blockouts. That is the cheapest possible proof of the origin
+   contract, and it also settles the `GroundOffsetY` question with evidence.
+4. **Then gate the roll pool** and test the loop end to end.
+
+---
+
 ## Session 39 — 2026-09-21 — Weather that covers the plaza, and a plan
 
 **Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 574 passing (was 572)

@@ -151,6 +151,24 @@ property fell out of it, which was the thing being tested. It was retired
 than eight interchangeable pieces (§4). The grammar result stands; the kit had
 no art to describe.
 
+**Verdant Valley is the kit being built for testing** (owner-directed
+2026-09-22). Its art is in authoring now. The intent while it is the only kit
+with a map: **gate the roll to it for the duration of testing**, then restore
+the pool as each biome lands. Two knobs do that and both are data:
+
+- `GameConfig.Fate.PrototypeWeights` — the Phase 1 pool. `FateCore.effectiveWeight`
+  prefers it over each world's `RollWeight` while `CurrentPhase == 1`, so this
+  is the one that actually governs today. `VERDANT_VALLEY = 10000` with the
+  rest at 0 keeps the set summing to 10000, which is what makes those numbers
+  readable as percentages.
+- `GameConfig.Fate.OnboardingSequence` — rolls 1–8 are **forced** regardless of
+  weights, and four of them are not Verdant Valley. A weight change alone will
+  not stop a fresh profile landing in Emberfall on roll 3.
+
+No System changes either way, which is the point: this is the cheap answer to
+the "25% of rolls land on a world with no map" row below, and it reverses by
+editing the same two tables back.
+
 All 8 remaining pieces are `PLACEHOLDER`, so the loader draws **labelled blockout** —
 each platform carries its ChunkId and Role, with a neon post at every socket
 coloured by Kind. **A generated map is verifiable by eye before any mesh
@@ -333,6 +351,8 @@ survive a rescale and a literal does not.
 
 | Item | Severity | Notes |
 |---|---|---|
+| **A chunk's mesh origin must be its bounding-box centre, and nothing enforces it** | **High** | `ChunkLoader` puts the mesh's origin at the layout centre and rotates about it by a seed-derived `Yaw`, and `ChunkCore.overlaps` checks collisions against centre ± half-size. A corner or edge origin therefore lands the art half a chunk out, by a different amount per rotation, and the generator still certifies the layout as collision-free. It is a **data contract with the Blender file that no test can see** — the origin is invisible metadata, exactly the failure mode that produced the "register a prefab from a NAMED PART, not from its pivot" rule for the hub. Documented in `CHUNK_AUTHORING.md`; the first uploaded mesh is where it gets proven. |
+| **The mesh path and the blockout disagree about vertical origin** | Medium | `ChunkLoader` sets `mesh.Size = (SizeX, SizeY, SizeZ)` and puts that box's **centre** at the layout Y, while the blockout puts the **walking surface** there. They agree only if the art centres its walk plane inside `SizeY` — which `CHUNK_AUTHORING.md` now requires, and which is an awkward thing to ask of art (170 studs of ground body under the walk plane at `SizeY = 340`). The clean fix is a `GroundOffsetY` on the chunk schema, which is a spec amendment, not a loader special-case. Not urgent while all 8 pieces are `PLACEHOLDER`; it bites the day the first mesh is uploaded. |
 | **Portal plane is still above head height** | Medium | You reach the prompt and the rig springs from the floor, but the walk-through *plane* sits inside the inner ring, ~30 studs up. Blueprint §1.3's concentric rings make that inherent. Irrelevant once the rig is authored in Blender. |
 | **25% of rolls land on a world with no map** | **High** | Emberfall 15%, Sky Citadel 7%, Astral Reach 3%. Refused politely at the Gate; printed as a boot warning and asserted by test. Emberfall and Astral Reach need only a chunk kit; Sky Citadel needs a blueprint section first. |
 | **The authored Crossroads is in, and has been walked once** | **Open** | Delivered 2026-09-18: 225 MeshParts, all 10 contract names present, 225 of 225 painted, Scale 2.0 with a 180° compass correction. **Walked 2026-09-18** and the owner's verdict was *"looks very nice in general"*, with seven specific faults — all fixed the same day (§1). `assets/rbxm/prefabs/README.md` has the measurements. **Its south district is a Shop**, while Content still calls that zone `EXPEDITION_GATE` — see the portal-as-entry row below. |
@@ -499,6 +519,7 @@ Studio → open `LUCKBOUND_dev` → Rojo panel **Connect** → **Accept** → **
 | `TOOLCHAIN_ACCESS.md` | Studio MCP, Rojo, Blender, assets, setup |
 | `WORKLOG.md` | **Session history and handoff points — read the top entry** |
 | `MODULAR_MAPS.md` | The chunk system: how biome maps assemble from pieces |
+| `CHUNK_AUTHORING.md` | **Give this to whoever models a kit.** Origin, scale, sockets, independence, export |
 | `../assets/README.md` | Blender → Roblox asset workflow |
 | `ADDENDUM_ASSET_PIPELINE.md` | Future asset/procgen architecture — target design |
 | `MODELLER_HANDOFF.pdf` | **Give this to an artist.** Deliverable formats, export settings, how to build a prefab we can animate |
