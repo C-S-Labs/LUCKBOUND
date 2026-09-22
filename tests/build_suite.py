@@ -23,6 +23,7 @@ PURE_MODULES = [
     ("AssetManifest",    "src/shared/Content/AssetManifest.luau"),
     ("ChunkCore",        "src/shared/Util/ChunkCore.luau"),
     ("ExpeditionCore",   "src/shared/Core/ExpeditionCore.luau"),
+    ("PartyCore",        "src/shared/Core/PartyCore.luau"),
     ("Schema",           "src/shared/Util/Schema.luau"),
     ("UITheme",          "src/shared/Core/UITheme.luau"),
     ("Crossroads",       "src/shared/Content/Hub/Crossroads.luau"),
@@ -186,7 +187,7 @@ def main():
     out = [SHIM]
 
     for name, rel in PURE_MODULES:
-        src = transform((ROOT / rel).read_text())
+        src = transform((ROOT / rel).read_text(encoding="utf-8"))
         out.append(f'\n-- === {rel} ===\n__define("{name}", function()\n{src}\nend)\n')
 
     # Worlds registry: the real init.luau walks script:GetChildren(), which has
@@ -195,7 +196,7 @@ def main():
     for wf in WORLD_FILES:
         if wf.name == "init.luau":
             continue
-        src = transform(wf.read_text())
+        src = transform(wf.read_text(encoding="utf-8"))
         world_defs.append(f'\tdo\n\t\tlocal w = (function()\n{src}\n\t\tend)()\n\t\tassert(registry[w.Id] == nil, "duplicate world Id: " .. w.Id)\n\t\tregistry[w.Id] = w\n\tend')
     out.append('\n-- === Worlds registry (rebuilt for headless) ===\n__define("Worlds", function()\n\tlocal registry = {}\n'
                + "\n".join(world_defs) + '\n\treturn registry\nend)\n')
@@ -205,7 +206,7 @@ def main():
     for cf in chunk_files:
         if cf.name == "init.luau":
             continue
-        kits.append(f'\tdo\n\t\tlocal kit = (function()\n{transform(cf.read_text())}\n\t\tend)()\n\t\tfor _, c in kit do\n\t\t\tassert(registry[c.Id] == nil, "duplicate chunk Id: " .. c.Id)\n\t\t\tregistry[c.Id] = c\n\t\tend\n\tend')
+        kits.append(f'\tdo\n\t\tlocal kit = (function()\n{transform(cf.read_text(encoding="utf-8"))}\n\t\tend)()\n\t\tfor _, c in kit do\n\t\t\tassert(registry[c.Id] == nil, "duplicate chunk Id: " .. c.Id)\n\t\t\tregistry[c.Id] = c\n\t\tend\n\tend')
     out.append('\n-- === Chunk registry (rebuilt for headless) ===\n__define("Chunks", function()\n\tlocal registry = {}\n'
                + "\n".join(kits) + '\n\treturn registry\nend)\n')
 
@@ -214,15 +215,15 @@ def main():
     for ef in event_files:
         if ef.name == "init.luau":
             continue
-        defs.append(f'\tdo\n\t\tlocal e = (function()\n{transform(ef.read_text())}\n\t\tend)()\n\t\tassert(registry[e.Id] == nil, "duplicate event Id: " .. e.Id)\n\t\tregistry[e.Id] = e\n\tend')
+        defs.append(f'\tdo\n\t\tlocal e = (function()\n{transform(ef.read_text(encoding="utf-8"))}\n\t\tend)()\n\t\tassert(registry[e.Id] == nil, "duplicate event Id: " .. e.Id)\n\t\tregistry[e.Id] = e\n\tend')
     out.append('\n-- === Event registry (rebuilt for headless) ===\n__define("Events", function()\n\tlocal registry = {}\n'
                + "\n".join(defs) + '\n\treturn registry\nend)\n')
 
     out.append("\n-- === test cases ===\n")
-    out.append((ROOT / "tests/cases.luau").read_text())
+    out.append((ROOT / "tests/cases.luau").read_text(encoding="utf-8"))
 
     target = ROOT / "tests/generated_suite.luau"
-    target.write_text("".join(out))
+    target.write_text("".join(out), encoding="utf-8")
     print(f"wrote {target.relative_to(ROOT)} ({len(''.join(out))} bytes, {len(PURE_MODULES)} modules, {len(world_defs)} worlds)")
 
 if __name__ == "__main__":

@@ -1,6 +1,6 @@
 # LUCKBOUND — Project Status
 
-**Last updated:** 2026-09-22 · **Sky Citadel has art direction and a 4-piece kit** · **Phase 1 complete · expedition entry opened (build spec §7.1) · the hub is authored art · the hub has a UI**
+**Last updated:** 2026-09-22 · **Phase 1 complete · expedition entry opened (build spec §7.1) · parties + expeditions as their own server (§7.2) · the hub is authored art · the hub has a UI**
 
 > **New conversation?** Read `WORKLOG.md`'s top entry first for where the last
 > session stopped, then this file. `CLAUDE.md` has the rules.
@@ -14,6 +14,16 @@ open, and where to pick up.
 
 Phase 1's goal was one sentence: *you can walk around a recognizable LUCKBOUND
 hub and press ROLL.* That is done, running in Roblox Studio, and playtested.
+
+**As of 2026-09-22 there are parties, and the portal opens a new server.**
+Owner-directed (build spec §7.2). The Party panel is live — invite, accept,
+leave, kick, promote — and entering the centre portal reserves a fresh Roblox
+server for the expedition. A party leader entering brings the whole party into
+that same server on the leader's world, seed and timer; everyone keeps their
+own profile, and comes home together to the hub server they left. In Studio,
+where teleports cannot run, the same party logic builds the map in place, so
+it is testable with a 3-client session. **Neither half has been walked** —
+`TESTING.md` tests O (Studio) and P (published, two accounts).
 
 **As of 2026-09-20 the hub has a player UI.** A loading screen with a camera
 tour and a PLAY button, a collapsible side rail with seven panels (three live,
@@ -176,7 +186,7 @@ exists.**
 
 ### Test suite
 
-**594 tests, all passing.** (20 added 2026-09-22 for the Sky Citadel kit, exit choice and side pockets.) Headless — no Roblox required. 136 of them arrived
+**639 tests, all passing.** 65 arrived with parties and expedition instances (§7.2): every party rule, request parsing, who goes through the portal, rebuilding a party after the trip home, and the expedition manifest. Before that: Headless — no Roblox required. 136 of them arrived
 with the player UI and the live palette: the menu reducer, travel authorisation, code redemption,
 settings validation, the stamina curve and the coyote window.
 
@@ -380,7 +390,7 @@ survive a rescale and a literal does not.
 | **The authored Fate Engine is wired but unwalked** | **Open** | Delivered 2026-09-18 and in the game: 78 MeshParts, all 46 contract names present, painted from the palette, rings counter-rotating, shards on the rarity cycle. Never seen in Studio. `assets/rbxm/prefabs/README.md` has the measurements. |
 | **Ethereal Scape's `Scale_Reference` proxy is loose** | Low | The v2 R6 proxy measures 13.2 studs against a real 5, but the rest of the scene reads correctly at `Scale = 1.0`. So the proxy is a stand-in, not a live reference. Worth tightening before the next world, or dropping — measuring it alone is what produced the ~10× v1. |
 | **The scene has no `EntryAnchor` / `ReturnAnchor`** | Medium | The loader derives both from the bounding box and warns, so the map loads and walks. Arrival lands on top of the bounding box rather than on `Spawn_Platform` (44 × 44, under the colonnade). Two named parts in Studio fix it — the only thing left on that file. |
-| **Expeditions are to become a separate place/instance** | **Architecture** | Owner-stated 2026-09-16: worlds will be rendered in a separate instance and reached by `TeleportService`, for performance and to isolate parties and solo queues. The current in-place `ExpeditionStage` is therefore a **prototype of the loop, not of the deployment**. `ExpeditionCore` is unaffected — it decides destination, seed and eligibility, none of which care where the map is built. `ExpeditionSystem` and `ChunkLoader` are what would move. |
+| ~~Expeditions are to become a separate place/instance~~ | **Built 2026-09-22, unwalked** — build spec §7.2. A reserved server of the same place, manifest via MemoryStore, parties travel together. `TESTING.md` Test P. The note that follows is the original | Owner-stated 2026-09-16: worlds will be rendered in a separate instance and reached by `TeleportService`, for performance and to isolate parties and solo queues. The current in-place `ExpeditionStage` is therefore a **prototype of the loop, not of the deployment**. `ExpeditionCore` is unaffected — it decides destination, seed and eligibility, none of which care where the map is built. `ExpeditionSystem` and `ChunkLoader` are what would move. |
 | Fate-on-completion may become currency or loot | Design | Owner-flagged: a completion bonus drawn from an item pool, or a currency for upgrades, rather than flat Fate. `ProgressionSystem.award` is the single seam. |
 | `UNCOMMON` colour unsanctioned | Medium | Now shipping — see above |
 | Chunk collision is XZ-only | Medium | Blocks any kit that climbs. `MODULAR_MAPS.md` |
@@ -398,7 +408,7 @@ survive a rescale and a literal does not.
 | **Global scarcity (Catalyst Star)** | **Built, unproven under concurrency** | `LedgerCore` (pure) + `LedgerSystem` claim a number from a single DataStore key with `UpdateAsync` before anything is announced, and **fail closed**: an unreachable ledger grants nothing, which is the opposite of SaveSystem's instinct and deliberately so. Concurrency cannot be tested headlessly or by eye — it needs the two-instance Studio test in `EVENTS.md`/`TESTING.md` |
 | **The hub UI has been walked twice** | Medium | Walks on 2026-09-21. The rail draws, in the right order, and the hub reads well. Three bugs found and fixed the same day: a hotkey name that threw on every keystroke, a loading gate that could never complete, and two glyphs that rendered as empty boxes. The second walk found three more: a button that ate its own label after one click, a camera release that lost a race to the tour thread, and a Settings panel that saved everything and applied nothing. See the WORKLOG entries |
 | ~~**The hub UI has never been rendered**~~ | Superseded | Every pixel of the rail, the panels and the loading screen is reasoned rather than observed. `TESTING.md` tests I, J and K are the first walk |
-| **Four panels are designed, not implemented** | Expected | Shop, Fate Tree, Party and Rebirth draw their real screen over placeholder copy with an IN DESIGN badge. Owner-directed: designed now, built after testing. Branch-level ideas for the tree are in `docs/PLAYER_ABILITIES.md` §3 |
+| **Three panels are designed, not implemented** | Expected | Party went LIVE 2026-09-22 (§7.2). Shop, Fate Tree and Rebirth draw their real screen over placeholder copy with an IN DESIGN badge. Owner-directed: designed now, built after testing. Branch-level ideas for the tree are in `docs/PLAYER_ABILITIES.md` §3 |
 | **Five settings are stored and honoured by nothing** | Medium | `MusicVolume`, `SfxVolume`, `UiScale`, `ScreenShake`, `ShowGlobalAnnouncements` persist but drive no system, because those systems do not exist. `ReduceMotion` and `AutoHideMenu` do work |
 | **Travel landings are guesses with a safety net** | Medium | Content names an X/Z per district and the server rays down for the Y. Watch the output for `no floor under landing` on the first walk |
 | **`TextMuted` was below the contrast floor** | Fixed 2026-09-20 | It shipped at 3.40:1 against a raised row — under WCAG's 4.5:1 for body text, which a 13px row subtitle is. Found by the new contrast test, not by eye, which is the point. Now 5.06:1 at worst. It is now closer in value to `TextSecondary`, so the two roles lean more on size and letter-spacing than before — worth a look in Studio |
@@ -410,6 +420,12 @@ survive a rescale and a literal does not.
 ---
 
 ## 5. Next session — pick up here
+
+> **2026-09-22: parties and expedition instances are built and unwalked.**
+> Walk `TESTING.md` Test O in Studio (3 clients) first — it needs nothing
+> published. Test P needs the place published with API Services on and two
+> accounts; it is the only way to see the teleport, the save hand-off and the
+> party coming home together.
 
 > **There is a plan now.** `docs/DEVELOPMENT_PLAN.md` lays out the path to a
 > real playtest in five phases with exit gates, and says what is deliberately

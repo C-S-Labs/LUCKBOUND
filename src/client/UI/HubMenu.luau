@@ -34,6 +34,7 @@ local SettingsCore = require(Root.Core.SettingsCore)
 local UITheme = require(Root.Core.UITheme)
 
 local ExpeditionController = require(script.Parent.Parent.Controllers.ExpeditionController)
+local PartyController = require(script.Parent.Parent.Controllers.PartyController)
 local StateController = require(script.Parent.Parent.Controllers.StateController)
 local FateRoll = require(script.Parent.FateRoll)
 local LoadingScreen = require(script.Parent.LoadingScreen)
@@ -61,6 +62,10 @@ local hiddenForRoll = false
 -- that it is ready the moment PLAY is pressed -- but it must not be VISIBLE
 -- behind it. The fourth walk caught the rail sitting over the title card.
 local hiddenForLoading = not LoadingScreen.isFinished()
+-- An expedition server (build spec §7.2) is the expedition, start to finish.
+-- There is no Crossroads to travel around and no party to form there.
+local onExpeditionServer = Root:GetAttribute(Constants.SERVER_KIND_ATTRIBUTE)
+	== Constants.SERVER_KIND_EXPEDITION
 local travelling = false
 local veilGui: ScreenGui
 local veil: Frame
@@ -267,6 +272,147 @@ local function buildSettings()
 	paragraph("Settings save to your profile and follow you between servers.", order)
 end
 
+--- One row of the party panel: a name, an optional tag under it, and up to two
+--- buttons on the right. Buttons are {Text, Style, Enabled, OnClick}.
+local function partyRow(order: number, name: string, tag: string?, buttons: { any })
+	local row = UIKit.surface(panelBody, "RAISED")
+	row.Size = UDim2.new(1, 0, 0, 56)
+	row.LayoutOrder = order
+
+	local reserved = #buttons * (UITheme.Space.SM + 92) + UITheme.Space.MD
+	local title = UIKit.label(row, name, 15, "PRIMARY")
+	title.Position = UDim2.fromOffset(UITheme.Space.MD, if tag then UITheme.Space.SM else 0)
+	title.Size = UDim2.new(1, -reserved, 0, if tag then 20 else 56)
+
+	if tag then
+		local sub = UIKit.label(row, tag, 12, "MUTED")
+		sub.Position = UDim2.fromOffset(UITheme.Space.MD, UITheme.Space.SM + 22)
+		sub.Size = UDim2.new(1, -reserved, 0, 16)
+	end
+
+	local right = UITheme.Space.MD
+	for index = #buttons, 1, -1 do
+		local spec = buttons[index]
+		local button = UIKit.button(row, spec.Text, spec.Style, spec.OnClick)
+		button.AnchorPoint = Vector2.new(1, 0.5)
+		button.Position = UDim2.new(1, -right, 0.5, 0)
+		button.Size = UDim2.fromOffset(92, 34)
+		button.TextSize = 13
+		if spec.Enabled == false then
+			UIKit.setEnabled(button, false)
+		end
+		right += 92 + UITheme.Space.SM
+	end
+end
+
+--- PARTY. Live 2026-09-22 (build spec §7.2). Everything drawn here comes from
+--- PartyController's last sync; every button sends one request and waits for
+--- the server's answer, which redraws the panel. Buttons the server would
+--- refuse are greyed rather than hidden, so the rule explains itself.
+local function buildParty()
+	local party = PartyController.get()
+	local me = player.UserId
+	local inParty = party.PartyId ~= nil
+	local full = inParty and #party.Members >= party.MaxSize
+	local order = 1
+
+	local function nextOrder(): number
+		order += 1
+		return order
+	end
+
+	section(if inParty then string.format("Your party  %d / %d", #party.Members, party.MaxSize) else "Your party", order)
+
+	if not inParty then
+		paragraph("You are not in a party. Invite someone below.", nextOrder())
+	else
+		for _, userId in party.Members do
+			local isLeader = userId == party.LeaderUserId
+			local isMe = userId == me
+			local tag = if isLeader and isMe
+				then "Leader · you"
+				elseif isLeader then "Leader"
+				elseif isMe then "You"
+				else nil
+			local buttons = {}
+			if party.IsLeader and not isMe then
+				table.insert(buttons, {
+					Text = "LEAD",
+					OnClick = function()
+						PartyController.request("PROMOTE", userId)
+					end,
+				})
+				table.insert(buttons, {
+					Text = "REMOVE",
+					Style = "DANGER",
+					OnClick = function()
+						PartyController.request("KICK", userId)
+					end,
+				})
+			end
+			partyRow(nextOrder(), PartyController.nameOf(userId), tag, buttons)
+		end
+
+		local leave = UIKit.button(panelBody, "LEAVE PARTY", "DANGER", function()
+			PartyController.request("LEAVE")
+		end)
+		leave.LayoutOrder = nextOrder()
+	end
+
+	if #party.Invites > 0 then
+		section("Invites", nextOrder())
+		for _, invite in party.Invites do
+			partyRow(nextOrder(), PartyController.nameOf(invite.FromUserId), "wants you in their party", {
+				{
+					Text = "ACCEPT",
+					Style = "PRIMARY",
+					Enabled = not inParty,
+					OnClick = function()
+						PartyController.request("ACCEPT", invite.FromUserId)
+					end,
+				},
+				{
+					Text = "DECLINE",
+					OnClick = function()
+						PartyController.request("DECLINE", invite.FromUserId)
+					end,
+				},
+			})
+		end
+	end
+
+	section("Players here", nextOrder())
+	local canInvite = (not inParty or party.IsLeader) and not full
+	local anyone = false
+	for _, other in party.Others or {} do
+		local isMember = inParty and table.find(party.Members, other.UserId) ~= nil
+		if isMember then
+			continue
+		end
+		anyone = true
+		partyRow(nextOrder(), other.Name, if other.InParty then "In a party" else nil, {
+			{
+				Text = "INVITE",
+				Style = "PRIMARY",
+				Enabled = canInvite and not other.InParty,
+				OnClick = function()
+					PartyController.request("INVITE", other.UserId)
+				end,
+			},
+		})
+	end
+	if not anyone then
+		paragraph("Nobody else is in this server yet.", nextOrder())
+	end
+
+	paragraph(
+		if inParty and not party.IsLeader
+			then "Your leader opens the portal. When they step in, you go with them — to their world, on their map."
+			else "When the leader steps into the portal, the whole party goes with them: one world, one map, one timer. Everyone keeps their own Fate and level.",
+		nextOrder()
+	)
+end
+
 --- The PREVIEW panels. These draw their real design over placeholder data and
 --- say so on the badge, because the owner's direction is that they are
 --- designed now and implemented after testing. A button that silently does
@@ -303,11 +449,6 @@ local PREVIEW_LINES: { [string]: { string } } = {
 		"<b>Spent in Fate levels</b>, not points — so levelling stays the thing that unlocks, and points stay the score.",
 		"<b>Nothing in it touches the odds.</b> Decision D-8: Fate unlocks which pools you draw from, never how a draw resolves.",
 	},
-	PARTY = {
-		"<b>Up to four.</b> Roll together, enter together, and land on the same map seed.",
-		"<b>The roll stays personal.</b> Everyone's own roll decides their own world; a party votes on which one to enter.",
-		"<b>Invite by name or by code</b>, and the party survives a rejoin.",
-	},
 	REBIRTH = {
 		"<b>Rebirth trades everything</b> — Fate level, tree, inventory — for a permanent multiplier and a tier you keep.",
 		"<b>Prestige lives inside it.</b> One screen, two scales: Rebirth is the loop, Prestige is the shelf the loop fills.",
@@ -330,6 +471,8 @@ local function buildPanelBody(panelId: string)
 		buildCodes()
 	elseif panelId == "SETTINGS" then
 		buildSettings()
+	elseif panelId == "PARTY" then
+		buildParty()
 	else
 		buildPreview(panel, PREVIEW_LINES[panelId] or {})
 	end
@@ -415,7 +558,7 @@ end
 --- gui.Enabled itself, which is how the rail ended up visible behind the
 --- title card -- one of them said "show" without knowing another said "hide".
 local function refreshVisibility()
-	gui.Enabled = state.Visible and not hiddenForRoll and not hiddenForLoading
+	gui.Enabled = state.Visible and not hiddenForRoll and not hiddenForLoading and not onExpeditionServer
 end
 
 local function setVisible(visible: boolean)
@@ -720,6 +863,18 @@ function HubMenu.init(): ()
 			say(if destination then `Arrived: {destination.Label}` else "Arrived.", true)
 		else
 			say(payload.Reason or "You cannot travel right now.", false)
+		end
+	end)
+
+	-- The party panel redraws on every sync while it is open, and whatever
+	-- the server said about the last request lands in the toast. Syncs with
+	-- no message (someone else joined the server) redraw silently.
+	PartyController.onChanged(function(snapshot)
+		if state.OpenPanelId == "PARTY" then
+			buildPanelBody("PARTY")
+		end
+		if snapshot.Message and state.OpenPanelId == "PARTY" then
+			say(snapshot.Message, snapshot.Good == true)
 		end
 	end)
 

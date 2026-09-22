@@ -7,6 +7,7 @@ local Workspace = game:GetService("Workspace")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
 
+local Constants = require(Root.Core.Constants)
 local ExpeditionCore = require(Root.Core.ExpeditionCore)
 local GameConfig = require(Root.Core.GameConfig)
 local Net = require(Root.Core.Net)
@@ -31,16 +32,28 @@ local DebugSystem = require(Systems.DebugSystem)
 local HubBuilder = require(Systems.HubBuilder)
 local HubUISystem = require(Systems.HubUISystem)
 local LedgerSystem = require(Systems.LedgerSystem)
+local PartySystem = require(Systems.PartySystem)
 
 -- Boot progress is printed at every stage. A server that stops partway now
 -- names the step it stopped on, instead of going silent and leaving you to
 -- guess -- which is what a yielding call in a system's init() looks like.
-local TOTAL_STEPS = 13
+local TOTAL_STEPS = 14
 local stepNumber = 0
 local function step(name: string)
 	stepNumber += 1
 	print(`[LUCKBOUND] boot {stepNumber}/{TOTAL_STEPS}: {name}`)
 end
+
+-- 0. WHAT IS THIS SERVER FOR? Build spec §7.2. A reserved server with no
+-- owner is an expedition instance a hub opened; everything else is a hub.
+-- Stated on the shared root before anything else, so every client can read
+-- it before it builds a single screen -- the loading screen and the menu
+-- both behave differently on an expedition server.
+local isExpeditionServer = ExpeditionCore.isExpeditionServer(game.PrivateServerId, game.PrivateServerOwnerId)
+Root:SetAttribute(
+	Constants.SERVER_KIND_ATTRIBUTE,
+	if isExpeditionServer then Constants.SERVER_KIND_EXPEDITION else Constants.SERVER_KIND_HUB
+)
 
 -- 1. Fail fast on malformed content, before any player can arrive.
 step("validating content")
@@ -91,8 +104,12 @@ FateSystem.init(SaveSystem, ProgressionSystem, EventSystem)
 -- It needs no reference to FateSystem: a player's destination is simply their
 -- last roll, read out of the profile, so the two systems share data rather
 -- than pointers and the boot order stays a straight line.
+-- Parties before expeditions: the portal asks PartySystem who is coming,
+-- and PartySystem needs nothing from anyone.
+step("PartySystem")
+PartySystem.init()
 step("ExpeditionSystem")
-ExpeditionSystem.init(SaveSystem, ProgressionSystem)
+ExpeditionSystem.init(SaveSystem, ProgressionSystem, PartySystem)
 -- The hub menu's server half: travel, codes and settings. It takes
 -- ExpeditionSystem only to ask one question -- "is this player in the hub?"
 -- -- which is also the menu's entire visibility rule.
@@ -109,8 +126,13 @@ DebugSystem.init(FateSystem, ExpeditionSystem, EventSystem, LedgerSystem)
 step("building the Crossroads")
 HubBuilder.build()
 -- The Gate's prompt is bound AFTER the hub exists, because it attaches to
--- geometry HubBuilder creates.
-ExpeditionSystem.bindGatePrompt()
+-- geometry HubBuilder creates. An expedition server has no way onward: it
+-- reads its manifest and builds the one map it exists for instead.
+if isExpeditionServer then
+	ExpeditionSystem.startHost()
+else
+	ExpeditionSystem.bindGatePrompt()
+end
 
 -- 11. Player binding LAST, so nobody can arrive before systems are ready.
 step("binding players")
@@ -221,7 +243,7 @@ for _, player in Players:GetPlayers() do
 end
 
 print(
-	`[LUCKBOUND] server ready -- phase {GameConfig.CurrentPhase}, true RNG, `
+	`[LUCKBOUND] {if isExpeditionServer then "expedition" else "hub"} server ready -- phase {GameConfig.CurrentPhase}, true RNG, `
 		.. `{#GameConfig.Fate.OnboardingSequence}-roll onboarding, expeditions `
 		.. (if GameConfig.Expedition.Enabled then "ENABLED" else "disabled")
 )

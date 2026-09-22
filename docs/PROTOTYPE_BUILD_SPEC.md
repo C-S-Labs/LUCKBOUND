@@ -83,7 +83,9 @@ src/server/          →  ServerScriptService/LuckboundServer
     ProgressionSystem.luau
     FateSystem.luau
     EventSystem.luau
-    ExpeditionSystem.luau   (§7.1 -- entry, generation, return. No combat)
+    PartySystem.luau        (§7.2 -- parties; who goes through the portal)
+    ExpeditionSystem.luau   (§7.1/§7.2 -- entry, generation, return, and the
+                             expedition-server host. No combat)
     DebugSystem.luau        (developer commands; delete before launch)
     HubBuilder.luau
     -- Phase 2: CombatSystem, LootSystem, InventorySystem, DiscoverySystem
@@ -129,11 +131,14 @@ ServerStorage/
 3.  SaveSystem.init()
 4.  ProgressionSystem.init(SaveSystem)
 5.  EventSystem.init()
+0.  Server kind -> ReplicatedStorage.Luckbound:SetAttribute("ServerKind")  (§7.2)
 6.  FateSystem.init(SaveSystem, ProgressionSystem, EventSystem)
-7.  ExpeditionSystem.init(SaveSystem, ProgressionSystem)
+6b. PartySystem.init()                                                   (§7.2)
+7.  ExpeditionSystem.init(SaveSystem, ProgressionSystem, PartySystem)
 8.  DebugSystem.init(FateSystem, ExpeditionSystem)   -- developer commands
 9.  HubBuilder.build()        -- lighting always; geometry only if absent
 10. ExpeditionSystem.bindGatePrompt()  -- attaches to geometry step 9 creates
+    -- or, on an expedition server, ExpeditionSystem.startHost() (§7.2)
 11. PlayerService binding     -- PlayerAdded/PlayerRemoving last, so no player can
                                  arrive before systems are ready
 ```
@@ -446,6 +451,8 @@ Created by `Core/Net.luau` and nowhere else.
 | `Code_Result` | RemoteEvent | S→C | `{Ok, Message, Fate, CodeId}` | — |
 | `Settings_Update` | RemoteEvent | C→S | `{Id, Value}` | `SettingsCore.validate`; unknown ids dropped silently |
 | `Player_Ready` | RemoteEvent | C→S | *(none)* | once per join; a second is ignored |
+| `Party_Request` | RemoteEvent | C→S | `{Action, TargetUserId?}` | `PartyCore.parseRequest` (known action, integer UserId) + target must be in this server + 40/min (§7.2) |
+| `Party_Sync` | RemoteEvent | S→C | party snapshot, invites, players here, `Message?` | — |
 | `Debug_Command` | RemoteEvent | C→S | `{Name, Args}` | **Studio or place creator, + `Debug.AllowCommands`** |
 | `Debug_Reply` | RemoteEvent | S→C | `{Ok, Text}` | — |
 
@@ -700,3 +707,101 @@ Reach.** Rolling one and walking to the Gate now produces *"That world has no
 map yet."* rather than a crash, and the list is printed as a warning on every
 boot and asserted by test. That is the honest state, not a solved problem:
 `ETHEREAL_SCAPE` and `VERDANT_VALLEY` are the only enterable worlds.
+
+---
+
+## 7.2 Amendment: parties, and expeditions as their own server — 2026-09-22
+
+**Owner-directed.** Two items the development plan had parked under "not yet"
+(`DEVELOPMENT_PLAN.md` §5: *Parties*, *Expeditions in their own place*) were
+asked for directly, to be testable before the Sky Citadel lands. Recorded here
+rather than made quietly, per CLAUDE.md rule 8. **Combat, loot and enemies
+remain excluded; nothing here touches them.**
+
+### What was opened
+
+| | |
+|---|---|
+| ✅ Parties of up to `Party.MaxSize` (4) | invite, accept/decline, leave, kick, promote — `PartyCore` |
+| ✅ The Party panel is LIVE | `HubMenu`, `PartyController` |
+| ✅ Entering the centre portal starts a **new Roblox server** | `TeleportService:ReserveServer` + `TeleportAsync` |
+| ✅ A party leader entering brings the **whole party** into that server | same world, seed, map and timer — the leader's |
+| ✅ Everyone comes home to the hub server they left, party intact | `ServerInstanceId` + MemoryStore reunite record |
+
+### The rules
+
+1. **The roll stays personal; the trip is the leader's.** The party enters the
+   leader's last roll with the leader's seed — `seedFor(leader, leader's
+   TotalRolls, world)` — so "same instance, same parameters" is literal. Each
+   member's own roll history is untouched and waiting for them.
+2. **Only the leader opens the portal.** A member at the portal is refused
+   with a spoken message (`NOT_PARTY_LEADER`), checked *after* the distance
+   guard so it reveals nothing to a spammer.
+3. **Local data stays local.** Fate, level, history and settings follow each
+   player through `SaveSystem`; nothing about a profile is in the manifest.
+4. **A member who cannot go is told**, not silently left: already on an
+   expedition, mid-teleport, no profile yet, or (in place) no character.
+
+### How the instance works
+
+- **One place.** The expedition server is a *reserved server of the hub's own
+  place* (`Expedition.InstancePlaceId = 0`). It boots, sees
+  `ExpeditionCore.isExpeditionServer(PrivateServerId, PrivateServerOwnerId)`
+  — a private server with **no owner** — and runs `ExpeditionSystem.startHost`
+  instead of binding the portal. A VIP server has an owner and stays a hub.
+- **The manifest never passes through a client.** The hub writes
+  `{WorldId, Seed, DurationSeconds, LeaderUserId, Members, HubPlaceId,
+  HubJobId}` to MemoryStore (`LUCKBOUND_Expeditions_v1`) keyed by the reserved
+  server's `PrivateServerId`, which that server can read about itself.
+  TeleportData carries only a cosmetic `Kind` hint (skip the title card).
+- **Only listed members may stay.** Anyone else reaching the server is sent
+  home.
+- **The save hand-off.** `SaveSystem.handOff` saves and releases the session
+  lock just before the hop; `SaveSystem.load` now waits up to
+  `Save.LockWaitSeconds` on a lock held elsewhere. Without both, every
+  teleported player raced their own old server and usually lost, getting a
+  session that silently did not persist.
+- **Home.** On the timer, the whole group goes in **one** `TeleportAsync` to
+  the hub `JobId` they left (falling back to any hub server). The expedition
+  server writes a short-lived "you were in X's party" record per member
+  (`LUCKBOUND_PartyReunite_v1`), and the hub rebuilds the party with
+  `PartyCore.reunite` as they land.
+
+### Studio
+
+`TeleportService` cannot run in Studio, so `Expedition.InstanceMode = "AUTO"`
+**builds in place** there — the §7.1 prototype path, now group-aware (one
+stage, one timer, members placed on a small ring). The party and entry
+decisions are identical to the live path; only the hop differs. Force either
+path with `"TELEPORT"` / `"IN_PLACE"`.
+
+### Anti-exploit
+
+`Party_Request` carries an action name and at most one UserId. The UserId must
+be an integer in range (`PartyCore.parseRequest`) **and** name a player in
+this server before any rule runs. Rate limited to `Party.RequestsPerMinute`.
+Every rule is server-side in `PartyCore`; the panel greys buttons only as a
+courtesy.
+
+### What it added
+
+| | |
+|---|---|
+| `Core/PartyCore.luau` | pure party rules + reunite. Testable |
+| `ExpeditionCore` | `instanceMode`, `isExpeditionServer`, `placeFor`, manifest build/validate, `arrivalOffset`, `NOT_PARTY_LEADER` |
+| `Systems/PartySystem.luau` | remote, rate limit, names, reunite records |
+| `Systems/ExpeditionSystem.luau` | groups, teleport launch, host mode |
+| `SaveSystem` | `handOff`, lock wait on load |
+| `Controllers/PartyController`, Party panel in `UI/HubMenu` | client |
+| 2 remotes | `Party_Request`, `Party_Sync` (§4) |
+
+### Known limits
+
+- **The expedition server still builds the Crossroads** (`HubBuilder.build`)
+  before its map. Harmless — the map is 20,000 studs above it — and it keeps
+  every client controller that looks for the hub working unchanged. Skipping
+  it is a performance win worth taking once it has been measured.
+- **Parties live in one hub server's memory.** A rejoin into a *different*
+  hub server loses the party (the reunite record covers only the trip home).
+- **Nothing here has run on a live server yet.** `TESTING.md` Test P.
+

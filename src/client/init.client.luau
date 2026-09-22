@@ -14,6 +14,7 @@ local HubEffects = require(Controllers.HubEffects)
 local StateController = require(Controllers.StateController)
 local ProximityController = require(Controllers.ProximityController)
 local ExpeditionController = require(Controllers.ExpeditionController)
+local PartyController = require(Controllers.PartyController)
 local LocomotionController = require(Controllers.LocomotionController)
 local EventController = require(Controllers.EventController)
 local ThemeController = require(Controllers.ThemeController)
@@ -44,6 +45,8 @@ ProximityController.init()
 -- but a player rejoining mid-expedition gets the banner without a frame gap.
 ExpeditionHud.init()
 ExpeditionController.init()
+-- Before the menu, which draws the party panel from it.
+PartyController.init()
 -- The live palette, before any screen is built: EventController holds what is
 -- happening to the world, ThemeController turns that plus where the player is
 -- standing into the colours the menu paints with. A widget built afterwards

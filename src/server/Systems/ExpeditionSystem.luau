@@ -1,20 +1,44 @@
 --!strict
--- Expedition entry, generation and return. Build spec §7.1 (the Phase 2 slice).
+-- Expedition entry, generation and return. Build spec §7.1, and §7.2 for
+-- parties and expeditions as their own server.
 --
 -- WHAT THIS DELIBERATELY IS NOT: there is no combat, no loot, no enemies and
 -- no boss here. Build spec §7 excludes all of those and they stay excluded.
--- This system answers one question and no others -- can a player roll a world,
--- walk through the Gate, and arrive in a map that was generated for them?
--- Everything past that is still Phase 2 proper.
+-- This system answers one question and no others -- can a player (or a
+-- party) roll a world, walk through the portal, and arrive in a map that was
+-- generated for them? Everything past that is still Phase 2 proper.
 --
 -- ExpeditionCore owns every decision; this file owns remotes, geometry,
 -- teleports and timers. If you find yourself writing an `if worldId ==` in
 -- here, the schema is wrong -- stop and amend the spec (CLAUDE.md, prime
 -- directive).
+--
+-- THE THREE WAYS THIS FILE RUNS (§7.2):
+--
+--   HUB, TELEPORT  -- a live hub server. Entering the portal reserves a new
+--                     server, writes a manifest (world, seed, duration,
+--                     members) to MemoryStore under that server's id, and
+--                     teleports the player -- or the leader's whole party --
+--                     into it together.
+--   HUB, IN_PLACE  -- Studio, where TeleportService cannot run. The map is
+--                     built high above the hub in this server, exactly as
+--                     the §7.1 prototype did, and a party is placed on it
+--                     together. Same decision, same seed, same map.
+--   HOST           -- this server IS the reserved expedition server. It reads
+--                     its manifest, builds the one map, places each member as
+--                     they arrive, runs the timer, and teleports everyone
+--                     home to the hub server they came from.
+--
+-- Whichever it is, the players are a GROUP: one map, one timer, one seed --
+-- the leader's. Each player's own profile (Fate, level, history) follows
+-- them through SaveSystem and is never shared.
 
 local Lighting = game:GetService("Lighting")
+local MemoryStoreService = game:GetService("MemoryStoreService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local TeleportService = game:GetService("TeleportService")
 local Workspace = game:GetService("Workspace")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
@@ -33,24 +57,64 @@ local ExpeditionSystem = {}
 
 local SaveSystem
 local ProgressionSystem
+local PartySystem
+
+-- One map and everyone on it.
+type Group = {
+	WorldId: string,
+	Seed: number,
+	Slot: number?, -- IN_PLACE only; a host has the whole server
+	Stage: Model,
+	EntryPosition: Vector3,
+	Summary: string,
+	Duration: number,
+	-- Set when the first member arrives, so a slow teleport does not eat
+	-- into the expedition. In place, that is the moment of entry.
+	StartedAt: number?,
+	LeaderUserId: number,
+	PartySize: number,
+	Members: { [number]: boolean },
+	Arrivals: number,
+}
 
 type Active = {
-	WorldId: string,
-	Slot: number,
-	Seed: number,
-	StartedAt: number,
-	Duration: number,
-	Stage: Model,
+	Group: Group,
 	Died: RBXScriptConnection?,
 }
 
 local active: { [number]: Active } = {}
+local groups: { Group } = {}
 local occupiedSlots: { [number]: boolean } = {}
 local lastEntryAt: { [number]: number } = {}
+-- Players between "teleport requested" and "left the server". They are not
+-- on an expedition yet, but they must not be sent on a second one.
+local launching: { [number]: boolean } = {}
 -- Set only for the duration of one forceEnter call, so the distance check is
 -- skipped for that call and nothing else. A flag rather than a parameter keeps
 -- requestEnter's signature honest: it is still "the client sends nothing".
 local forcedEntry: { [number]: boolean } = {}
+
+-- HOST mode only.
+local hosting = false
+local manifest: any = nil
+local manifestFailed = false
+local hostGroup: Group? = nil
+
+local manifestMap: MemoryStoreHashMap? = nil
+local function manifestStore(): MemoryStoreHashMap?
+	if manifestMap then
+		return manifestMap
+	end
+	local ok, map = pcall(function()
+		return MemoryStoreService:GetHashMap(Constants.DATASTORE.EXPEDITION_MANIFESTS)
+	end)
+	if ok then
+		manifestMap = map
+		return map
+	end
+	warn(`[ExpeditionSystem] MemoryStore unavailable: {map}`)
+	return nil
+end
 
 local function stageFolder(): Folder
 	local existing = Workspace:FindFirstChild(Constants.NAMES.EXPEDITION_STAGE)
@@ -107,6 +171,106 @@ local function moveCharacter(player: Player, position: Vector3): boolean
 	return true
 end
 
+--- Tells one player something about the door without starting anything.
+--- ABORTED is what ExpeditionController already reads as "a refusal at the
+--- door": no lighting change, just the message.
+local function tell(player: Player, worldId: string?, message: string)
+	Net.get("Expedition_Ended"):FireClient(player, {
+		WorldId = worldId,
+		Reason = "ABORTED",
+		FateAwarded = 0,
+		Message = message,
+	})
+end
+
+--- Fired on entry and then on a timer. RemainingSeconds, never an absolute end
+--- time -- build spec §4.1 rule 4.
+local function syncTimer(player: Player, group: Group)
+	Net.get("Expedition_TimerSync"):FireClient(player, {
+		RemainingSeconds = ExpeditionCore.remaining(
+			group.StartedAt or os.clock(),
+			group.Duration,
+			os.clock()
+		),
+		ServerNow = os.time(),
+	})
+end
+
+-- === the map ==========================================================
+
+--- THE ONE BRANCH. It reads a data field, never a world id -- add an authored
+--- world and this function does not change. See ExpeditionCore.hasPrebuiltMap
+--- for why the two routes exist at all. Returns nil on a content failure,
+--- which is loud here and silent to the player.
+local function buildStage(worldId: string, seed: number, origin: Vector3, stageName: string)
+	local world = Worlds[worldId]
+
+	if ExpeditionCore.hasPrebuiltMap(world) then
+		local built = PrebuiltLoader.build(world, origin, stageFolder(), stageName)
+		if not built then
+			-- The scene is not in ServerStorage: Rojo is not running, or the
+			-- file is not in assets/rbxm/maps/. A CONTENT problem.
+			warn(
+				string.format(
+					"[ExpeditionSystem] prebuilt map '%s' for %s is not in ServerStorage.%s",
+					tostring(world.PrebuiltMap.AssetKey),
+					worldId,
+					Constants.NAMES.MAPS_FOLDER
+				)
+			)
+			return nil
+		end
+		return {
+			Stage = built.Model,
+			EntryPosition = built.EntryPosition,
+			ReturnPosition = built.ReturnPosition,
+			Summary = string.format(
+				"prebuilt %s  %d parts at %.2f scale  %s arrival",
+				world.PrebuiltMap.AssetKey,
+				built.PartCount,
+				world.PrebuiltMap.Scale,
+				if built.Authored then "authored" else "derived"
+			),
+		}
+	end
+
+	local ok, layout, attempts = ChunkCore.assembleWithRetry(Chunks, {
+		WorldId = worldId,
+		PathLength = ExpeditionCore.pathLengthFor(world, GameConfig),
+	}, function(attempt)
+		return ExpeditionCore.streamFor(seed, attempt)
+	end, GameConfig.Expedition.AssemblyAttempts)
+
+	if not ok then
+		-- A kit that cannot assemble is a CONTENT bug, not a player problem.
+		warn(
+			string.format(
+				"[ExpeditionSystem] assembly failed for %s seed %d after %d attempts -- %s",
+				worldId,
+				seed,
+				attempts,
+				tostring(layout)
+			)
+		)
+		return nil
+	end
+
+	layout.Seed = seed
+	local result = ChunkLoader.build(layout, Chunks, origin, stageFolder(), stageName)
+	return {
+		Stage = result.Model,
+		EntryPosition = result.EntryPosition,
+		ReturnPosition = result.ReturnPosition,
+		Summary = string.format(
+			"%d chunks (%d mesh, %d blockout)  attempt %d",
+			#layout.Chunks,
+			result.UsedMeshes,
+			result.FloorCount,
+			attempts
+		),
+	}
+end
+
 --- The way home, on the arrival chunk. Small on purpose (GameConfig.Expedition
 --- .ReturnPortalScale): it is a door, and it must not read as more important
 --- than whatever the world put at the far end.
@@ -143,28 +307,283 @@ local function buildReturnPortal(stage: Model, position: Vector3, rarityKey: str
 	end)
 end
 
---- Fired on entry and then on a timer. RemainingSeconds, never an absolute end
---- time -- build spec §4.1 rule 4.
-local function syncTimer(player: Player, state: Active)
-	Net.get("Expedition_TimerSync"):FireClient(player, {
-		RemainingSeconds = ExpeditionCore.remaining(state.StartedAt, state.Duration, os.clock()),
-		ServerNow = os.time(),
-	})
+local function newGroup(
+	worldId: string,
+	seed: number,
+	built: any,
+	slot: number?,
+	leaderUserId: number,
+	partySize: number
+): Group
+	local world = Worlds[worldId]
+	buildReturnPortal(built.Stage, built.ReturnPosition, world.Rarity)
+	local group: Group = {
+		WorldId = worldId,
+		Seed = seed,
+		Slot = slot,
+		Stage = built.Stage,
+		EntryPosition = built.EntryPosition,
+		Summary = built.Summary,
+		Duration = ExpeditionCore.durationFor(world, GameConfig),
+		StartedAt = nil,
+		LeaderUserId = leaderUserId,
+		PartySize = partySize,
+		Members = {},
+		Arrivals = 0,
+	}
+	table.insert(groups, group)
+	return group
 end
+
+local function dropGroup(group: Group)
+	local index = table.find(groups, group)
+	if index then
+		table.remove(groups, index)
+	end
+	if group.Slot then
+		occupiedSlots[group.Slot] = nil
+	end
+	group.Stage:Destroy()
+end
+
+--- Puts one player on the group's map and starts their expedition. Party
+--- members stand on a small ring around the entry point.
+local function placeMember(player: Player, group: Group): boolean
+	group.Arrivals += 1
+	local dx, dz =
+		ExpeditionCore.arrivalOffset(group.Arrivals, GameConfig.Expedition.ArrivalSpreadStuds)
+	if not moveCharacter(player, group.EntryPosition + Vector3.new(dx, 0, dz)) then
+		return false
+	end
+
+	if group.StartedAt == nil then
+		group.StartedAt = os.clock()
+	end
+
+	local state: Active = { Group = group }
+	-- Falling off a floating island is a real outcome in Ethereal Scape. End
+	-- the expedition rather than respawning the player at the hub with an
+	-- expedition still notionally running above their head.
+	local humanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+	if humanoid then
+		state.Died = humanoid.Died:Connect(function()
+			ExpeditionSystem.finish(player, "DIED")
+		end)
+	end
+	active[player.UserId] = state
+	group.Members[player.UserId] = true
+
+	local world = Worlds[group.WorldId]
+	local remaining =
+		ExpeditionCore.remaining(group.StartedAt :: number, group.Duration, os.clock())
+	Net.get("Expedition_Started"):FireClient(player, {
+		WorldId = group.WorldId,
+		Name = world.Name,
+		Rarity = world.Rarity,
+		Flavor = world.Flavor,
+		Environment = world.Environment,
+		DurationSeconds = group.Duration,
+		RemainingSeconds = remaining,
+		ServerNow = os.time(),
+		Seed = group.Seed,
+		MapSummary = group.Summary,
+		PartySize = group.PartySize,
+	})
+
+	print(
+		string.format(
+			"[Expedition] %s -> %s  seed %d  %s  %ds  (party of %d)",
+			player.Name,
+			group.WorldId,
+			group.Seed,
+			group.Summary,
+			math.floor(remaining),
+			group.PartySize
+		)
+	)
+	return true
+end
+
+-- === teleports ========================================================
+
+--- TeleportAsync with retries. Returns true once Roblox accepts the request;
+--- an individual failure after that arrives through TeleportInitFailed.
+local function teleport(placeId: number, players: { Player }, options: TeleportOptions): boolean
+	for attempt = 1, GameConfig.Expedition.TeleportAttempts do
+		local ok, err = pcall(function()
+			TeleportService:TeleportAsync(placeId, players, options)
+		end)
+		if ok then
+			return true
+		end
+		warn(`[ExpeditionSystem] teleport attempt {attempt} failed: {err}`)
+		if attempt < GameConfig.Expedition.TeleportAttempts then
+			task.wait(GameConfig.Expedition.TeleportRetrySeconds)
+		end
+	end
+	return false
+end
+
+--- HOST: sends players back to the Crossroads -- to the very hub server they
+--- left if it is still running, so they land among the people they left;
+--- any hub server if not. One call for everyone going together, so a party
+--- coming home at the timer lands in the same server.
+local function sendHome(players: { Player })
+	if #players == 0 then
+		return
+	end
+	local hubPlaceId = ExpeditionCore.placeFor(
+		if manifest then manifest.HubPlaceId else GameConfig.Expedition.HubPlaceId,
+		game.PlaceId
+	)
+
+	local userIds = {}
+	for _, player in players do
+		table.insert(userIds, player.UserId)
+		SaveSystem.handOff(player)
+	end
+	if manifest and PartySystem then
+		PartySystem.recordForReunite(manifest.LeaderUserId, userIds, #manifest.Members)
+	end
+
+	-- Marks the arrival for the loading screen, which skips its title card
+	-- for someone coming back. It is only a cosmetic hint, so it may travel
+	-- through the client.
+	local function options(toSameServer: boolean): TeleportOptions
+		local opts = Instance.new("TeleportOptions")
+		if
+			toSameServer
+			and manifest
+			and type(manifest.HubJobId) == "string"
+			and manifest.HubJobId ~= ""
+		then
+			opts.ServerInstanceId = manifest.HubJobId
+		end
+		opts:SetTeleportData({ Kind = "RETURN" })
+		return opts
+	end
+
+	task.spawn(function()
+		if teleport(hubPlaceId, players, options(true)) then
+			return
+		end
+		-- The hub they came from has closed or filled. Any hub will do.
+		if not teleport(hubPlaceId, players, options(false)) then
+			for _, player in players do
+				if player.Parent then
+					player:Kick("Could not return you to the Crossroads. Please rejoin.")
+				end
+			end
+		end
+	end)
+end
+
+--- HUB: reserves a server, writes its manifest, and teleports the group in.
+--- Returns false if anything fails BEFORE players have been sent, so the
+--- caller can fall back to building in place.
+local function launchInstance(
+	leader: Player,
+	members: { Player },
+	worldId: string,
+	seed: number
+): boolean
+	local map = manifestStore()
+	if not map then
+		return false
+	end
+
+	local placeId = ExpeditionCore.placeFor(GameConfig.Expedition.InstancePlaceId, game.PlaceId)
+	local okReserve, accessCode, privateServerId = pcall(function()
+		return TeleportService:ReserveServer(placeId)
+	end)
+	if not okReserve or type(accessCode) ~= "string" or type(privateServerId) ~= "string" then
+		warn(`[ExpeditionSystem] ReserveServer failed: {accessCode}`)
+		return false
+	end
+
+	local memberIds = {}
+	for _, member in members do
+		table.insert(memberIds, member.UserId)
+	end
+	local world = Worlds[worldId]
+	local record = ExpeditionCore.buildManifest({
+		WorldId = worldId,
+		Seed = seed,
+		DurationSeconds = ExpeditionCore.durationFor(world, GameConfig),
+		LeaderUserId = leader.UserId,
+		Members = memberIds,
+		HubPlaceId = ExpeditionCore.placeFor(GameConfig.Expedition.HubPlaceId, game.PlaceId),
+		HubJobId = game.JobId,
+		CreatedAt = os.time(),
+	})
+
+	-- Keyed by the destination's own PrivateServerId: that server can read
+	-- this about itself, and no client ever carries it.
+	local okWrite, writeErr = pcall(function()
+		(map :: MemoryStoreHashMap):SetAsync(
+			privateServerId,
+			record,
+			GameConfig.Expedition.ManifestTtlSeconds
+		)
+	end)
+	if not okWrite then
+		warn(`[ExpeditionSystem] could not write manifest: {writeErr}`)
+		return false
+	end
+
+	for _, member in members do
+		launching[member.UserId] = true
+		SaveSystem.handOff(member)
+	end
+
+	local options = Instance.new("TeleportOptions")
+	options.ReservedServerAccessCode = accessCode
+	options:SetTeleportData({ Kind = "EXPEDITION" })
+
+	print(
+		string.format(
+			"[Expedition] %s opens %s for %d  seed %d  -> reserved server %s",
+			leader.Name,
+			worldId,
+			#members,
+			seed,
+			privateServerId
+		)
+	)
+
+	task.spawn(function()
+		if not teleport(placeId, members, options) then
+			for _, member in members do
+				launching[member.UserId] = nil
+				if member.Parent then
+					tell(member, worldId, "The portal flickered. Try again.")
+				end
+			end
+		end
+	end)
+	return true
+end
+
+-- === the public surface ================================================
 
 function ExpeditionSystem.isActive(player: Player): boolean
-	return active[player.UserId] ~= nil
+	return active[player.UserId] ~= nil or launching[player.UserId] == true
 end
 
---- Ends an expedition and brings the player home. Safe to call for a player
---- who is not on one.
+function ExpeditionSystem.isHosting(): boolean
+	return hosting
+end
+
+--- Ends one player's expedition and brings them home. Safe to call for a
+--- player who is not on one. The map goes when its last player does.
 function ExpeditionSystem.finish(player: Player, reason: string): ()
 	local state = active[player.UserId]
 	if not state then
 		return
 	end
 	active[player.UserId] = nil
-	occupiedSlots[state.Slot] = nil
+	local group = state.Group
+	group.Members[player.UserId] = nil
 
 	if state.Died then
 		state.Died:Disconnect()
@@ -182,18 +601,8 @@ function ExpeditionSystem.finish(player: Player, reason: string): ()
 		end
 	end
 
-	-- Bring the player home BEFORE destroying the ground under them, or they
-	-- fall for a frame and Roblox's FallenPartsDestroyHeight takes over.
-	-- Home is the spawn ring's southern pad. Any pad would do; picking one
-	-- keeps a return deterministic rather than dropping players at random.
-	moveCharacter(
-		player,
-		Vector3.new(0, GameConfig.HubLayout.SpawnRing.Height, GameConfig.HubLayout.SpawnRing.Radius)
-	)
-	state.Stage:Destroy()
-
 	Net.get("Expedition_Ended"):FireClient(player, {
-		WorldId = state.WorldId,
+		WorldId = group.WorldId,
 		Reason = reason,
 		FateAwarded = awarded,
 	})
@@ -202,27 +611,110 @@ function ExpeditionSystem.finish(player: Player, reason: string): ()
 		string.format(
 			"[Expedition] %s left %s after %.0fs (%s)",
 			player.Name,
-			state.WorldId,
-			os.clock() - state.StartedAt,
+			group.WorldId,
+			os.clock() - (group.StartedAt or os.clock()),
 			reason
 		)
 	)
+
+	if hosting then
+		-- Home is another server. The map stays for anyone still on it;
+		-- the server closes itself once the last player has gone.
+		sendHome({ player })
+		return
+	end
+
+	-- Bring the player home BEFORE destroying the ground under them, or they
+	-- fall for a frame and Roblox's FallenPartsDestroyHeight takes over.
+	-- Home is the spawn ring's southern pad. Any pad would do; picking one
+	-- keeps a return deterministic rather than dropping players at random.
+	moveCharacter(
+		player,
+		Vector3.new(0, GameConfig.HubLayout.SpawnRing.Height, GameConfig.HubLayout.SpawnRing.Radius)
+	)
+	if next(group.Members) == nil then
+		dropGroup(group)
+	end
+end
+
+--- The timer ran out for the whole group. On a host, everyone goes home in
+--- ONE teleport so a party lands in the same hub server together.
+local function completeGroup(group: Group)
+	local leaving = {}
+	for userId in group.Members do
+		local player = Players:GetPlayerByUserId(userId)
+		if player then
+			table.insert(leaving, player)
+		end
+	end
+
+	if not hosting then
+		for _, player in leaving do
+			ExpeditionSystem.finish(player, "COMPLETED")
+		end
+		return
+	end
+
+	-- Award and notify each, but hold the teleport so it can be one call.
+	-- The group leaves the sweep now, or the next tick would complete it
+	-- again with nobody in it.
+	local index = table.find(groups, group)
+	if index then
+		table.remove(groups, index)
+	end
+	for _, player in leaving do
+		local state = active[player.UserId]
+		if state then
+			active[player.UserId] = nil
+			group.Members[player.UserId] = nil
+			if state.Died then
+				state.Died:Disconnect()
+			end
+			local profile = SaveSystem.get(player)
+			local awarded = 0
+			if profile then
+				profile.Stats.ExpeditionsCompleted += 1
+				ProgressionSystem.award(player, "ExpeditionCompleted")
+				awarded = GameConfig.Progression.Rewards.ExpeditionCompleted
+			end
+			Net.get("Expedition_Ended"):FireClient(player, {
+				WorldId = group.WorldId,
+				Reason = "COMPLETED",
+				FateAwarded = awarded,
+			})
+		end
+	end
+	print(`[Expedition] {group.WorldId} completed; sending {#leaving} home together`)
+	sendHome(leaving)
 end
 
 --- The whole entry path. Every refusal is decided by ExpeditionCore and most
 --- are silent, for the reason build spec §3.4.3 gives about the roll cooldown:
 --- an error that names the boundary tells an exploiter where the boundary is.
+---
+--- `player` is whoever walked into the portal. If they lead a party, the
+--- party comes too, on this player's roll; if they are a member, nobody goes.
 function ExpeditionSystem.requestEnter(player: Player, ...: any): ()
 	-- The client sends nothing. A payload means a tampered client.
 	if select("#", ...) > 0 then
-		warn(`[ExpeditionSystem] {player.Name} sent arguments with Expedition_RequestEnter; discarded`)
+		warn(
+			`[ExpeditionSystem] {player.Name} sent arguments with Expedition_RequestEnter; discarded`
+		)
 		return
+	end
+	if hosting then
+		return -- there is no portal onward from an expedition
 	end
 
 	local profile = SaveSystem.get(player)
 	if not profile then
 		return
 	end
+
+	local group = if PartySystem
+		then PartySystem.groupFor(player)
+		else { Role = "SOLO", Members = { player.UserId } }
+	local mode = ExpeditionCore.instanceMode(GameConfig, RunService:IsStudio())
 
 	local decision = ExpeditionCore.evaluateEntry({
 		Profile = profile,
@@ -231,22 +723,21 @@ function ExpeditionSystem.requestEnter(player: Player, ...: any): ()
 		Config = GameConfig,
 		Now = os.clock(),
 		LastEntryAt = lastEntryAt[player.UserId],
-		AlreadyActive = active[player.UserId] ~= nil,
+		AlreadyActive = ExpeditionSystem.isActive(player),
 		DistanceToGate = if forcedEntry[player.UserId] then nil else distanceToGate(player),
-		FreeSlot = ExpeditionCore.freeSlot(occupiedSlots, GameConfig.Expedition.MaxConcurrent),
+		-- A teleport needs no stage slot here; the new server is the slot.
+		FreeSlot = if mode == "TELEPORT"
+			then 1
+			else ExpeditionCore.freeSlot(occupiedSlots, GameConfig.Expedition.MaxConcurrent),
+		PartyRole = group.Role,
 	})
 
 	if not decision.Allowed then
 		local message = ExpeditionCore.refusalMessage(decision.Refusal :: any)
 		if message then
-			-- Only the two refusals a legitimate player can actually hit are
+			-- Only the refusals a legitimate player can actually hit are
 			-- spoken aloud. The rest are exploit guards and stay silent.
-			Net.get("Expedition_Ended"):FireClient(player, {
-				WorldId = decision.WorldId,
-				Reason = "ABORTED",
-				FateAwarded = 0,
-				Message = message,
-			})
+			tell(player, decision.WorldId, message)
 		end
 		return
 	end
@@ -254,148 +745,66 @@ function ExpeditionSystem.requestEnter(player: Player, ...: any): ()
 	lastEntryAt[player.UserId] = os.clock()
 
 	local worldId = decision.WorldId :: string
-	local world = Worlds[worldId]
+	-- THE LEADER'S SEED, for everyone. That is what "the same instance with
+	-- the same parameters" means: one world, one map, one timer.
 	local seed = ExpeditionCore.seedFor(player.UserId, profile.TotalRolls, worldId)
 
-	local slot = ExpeditionCore.freeSlot(occupiedSlots, GameConfig.Expedition.MaxConcurrent) :: number
-	local dx, dy, dz = ExpeditionCore.stageOffset(slot, GameConfig.Expedition.StageSpacing)
-	local origin = GameConfig.Expedition.StageOrigin + Vector3.new(dx, dy, dz)
-	local stageName = `{worldId}_{player.UserId}`
-
-	-- THE ONE BRANCH. It reads a data field, never a world id -- add an
-	-- authored world and this file does not change. See ExpeditionCore
-	-- .hasPrebuiltMap for why the two routes exist at all.
-	local stage: Model
-	local entryPosition: Vector3
-	local returnPosition: Vector3
-	local summary: string
-
-	if ExpeditionCore.hasPrebuiltMap(world) then
-		local built = PrebuiltLoader.build(world, origin, stageFolder(), stageName)
-		if not built then
-			-- The scene is not in ServerStorage: Rojo is not running, or the
-			-- file is not in assets/rbxm/maps/. A CONTENT problem, so it is
-			-- loud server-side and silent client-side, exactly like a kit that
-			-- will not assemble.
-			warn(
-				string.format(
-					"[ExpeditionSystem] %s: prebuilt map '%s' for %s is not in ServerStorage.%s",
-					player.Name,
-					tostring(world.PrebuiltMap.AssetKey),
-					worldId,
-					Constants.NAMES.MAPS_FOLDER
-				)
-			)
-			return
+	-- Who actually goes. The leader always; each member only if they are
+	-- still here, not already somewhere, and -- in place -- has a body to
+	-- move. Anyone left behind is told why rather than wondering.
+	local travellers: { Player } = { player }
+	for _, userId in group.Members do
+		if userId == player.UserId then
+			continue
 		end
-		stage, entryPosition, returnPosition = built.Model, built.EntryPosition, built.ReturnPosition
-		summary = string.format(
-			"prebuilt %s  %d parts at %.2f scale  %s arrival",
-			world.PrebuiltMap.AssetKey,
-			built.PartCount,
-			world.PrebuiltMap.Scale,
-			if built.Authored then "authored" else "derived"
-		)
-	else
-		local ok, layout, attempts = ChunkCore.assembleWithRetry(Chunks, {
-			WorldId = worldId,
-			PathLength = ExpeditionCore.pathLengthFor(world, GameConfig),
-			IncludeSide = GameConfig.Expedition.IncludeSide,
-		}, function(attempt)
-			return ExpeditionCore.streamFor(seed, attempt)
-		end, GameConfig.Expedition.AssemblyAttempts)
-
-		if not ok then
-			-- A kit that cannot assemble is a CONTENT bug, not a player
-			-- problem. Say so loudly server-side and refuse quietly
-			-- client-side.
-			warn(
-				string.format(
-					"[ExpeditionSystem] %s: assembly failed for %s after %d attempts -- %s",
-					player.Name,
-					worldId,
-					attempts,
-					tostring(layout)
-				)
-			)
-			return
+		local member = Players:GetPlayerByUserId(userId)
+		if not member then
+			continue
 		end
-
-		layout.Seed = seed
-
-		local result = ChunkLoader.build(layout, Chunks, origin, stageFolder(), stageName)
-		stage, entryPosition, returnPosition =
-			result.Model, result.EntryPosition, result.ReturnPosition
-		summary = string.format(
-			"%d chunks (%d mesh, %d blockout)  attempt %d",
-			#layout.Chunks,
-			result.UsedMeshes,
-			result.FloorCount,
-			attempts
-		)
+		local busy = ExpeditionSystem.isActive(member)
+		local noBody = mode == "IN_PLACE" and member.Character == nil
+		if busy or noBody or not SaveSystem.get(member) then
+			tell(member, worldId, "Your party went through the portal without you.")
+		else
+			table.insert(travellers, member)
+		end
 	end
 
+	if mode == "TELEPORT" then
+		if launchInstance(player, travellers, worldId, seed) then
+			return
+		end
+		-- Nothing has left yet: reserving or recording failed. Building here
+		-- is better than a portal that does nothing, and it is the same map.
+		warn("[ExpeditionSystem] could not open an instance; building in place instead")
+	end
+
+	local slot = ExpeditionCore.freeSlot(occupiedSlots, GameConfig.Expedition.MaxConcurrent)
+	if not slot then
+		return -- SERVER_FULL, silently, as before
+	end
+	local dx, dy, dz = ExpeditionCore.stageOffset(slot, GameConfig.Expedition.StageSpacing)
+	local origin = GameConfig.Expedition.StageOrigin + Vector3.new(dx, dy, dz)
+
+	local built = buildStage(worldId, seed, origin, `{worldId}_{player.UserId}`)
+	if not built then
+		return
+	end
 	-- Claimed only once the stage actually exists, so a refused build above
 	-- does not leak a slot for the life of the server.
 	occupiedSlots[slot] = true
+	local stageGroup = newGroup(worldId, seed, built, slot, player.UserId, #travellers)
 
-	-- Reskinned to the rolled world's rarity, like every other portal in the
-	-- game: the way home from an Uncommon world is an Uncommon-green ring.
-	buildReturnPortal(stage, returnPosition, world.Rarity)
-
-	if not moveCharacter(player, entryPosition) then
-		-- No character to move: tear the stage down rather than leaking it.
-		stage:Destroy()
-		occupiedSlots[slot] = nil
-		return
+	for _, traveller in travellers do
+		if not placeMember(traveller, stageGroup) and traveller ~= player then
+			tell(traveller, worldId, "Your party went through the portal without you.")
+		end
 	end
 
-	local duration = ExpeditionCore.durationFor(world, GameConfig)
-	local state: Active = {
-		WorldId = worldId,
-		Slot = slot,
-		Seed = seed,
-		StartedAt = os.clock(),
-		Duration = duration,
-		Stage = stage,
-	}
-
-	-- Falling off a floating island is a real outcome in Ethereal Scape. End
-	-- the expedition rather than respawning the player at the hub with an
-	-- expedition still notionally running above their head.
-	local character = player.Character
-	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
-	if humanoid then
-		state.Died = humanoid.Died:Connect(function()
-			ExpeditionSystem.finish(player, "DIED")
-		end)
+	if next(stageGroup.Members) == nil then
+		-- Nobody could be moved: tear the stage down rather than leaking it.
+		dropGroup(stageGroup)
 	end
-
-	active[player.UserId] = state
-
-	Net.get("Expedition_Started"):FireClient(player, {
-		WorldId = worldId,
-		Name = world.Name,
-		Rarity = world.Rarity,
-		Flavor = world.Flavor,
-		Environment = world.Environment,
-		DurationSeconds = duration,
-		RemainingSeconds = duration,
-		ServerNow = os.time(),
-		Seed = seed,
-		MapSummary = summary,
-	})
-
-	print(
-		string.format(
-			"[Expedition] %s -> %s  seed %d  %s  %ds",
-			player.Name,
-			worldId,
-			seed,
-			summary,
-			duration
-		)
-	)
 end
 
 --- DEVELOPER TOOL, behind DebugSystem's permission check.
@@ -405,7 +814,7 @@ end
 --- skipping those would exercise a path the game does not actually have and
 --- would prove nothing. Returns ok plus a line to print back.
 function ExpeditionSystem.forceEnter(player: Player): (boolean, string)
-	if active[player.UserId] then
+	if ExpeditionSystem.isActive(player) then
 		return false, "already on an expedition"
 	end
 
@@ -429,14 +838,131 @@ function ExpeditionSystem.forceEnter(player: Player): (boolean, string)
 	ExpeditionSystem.requestEnter(player)
 	forcedEntry[player.UserId] = nil
 
-	return active[player.UserId] ~= nil, if active[player.UserId]
-		then `entered {worldId}`
-		else `entry failed -- see the server log`
+	return ExpeditionSystem.isActive(player),
+		if ExpeditionSystem.isActive(player)
+			then `entered {worldId}`
+			else `entry failed -- see the server log`
 end
 
-function ExpeditionSystem.init(saveSystem: any, progressionSystem: any): ()
+-- === HOST mode ==========================================================
+
+--- One arrival on the expedition server. Called once their character exists.
+local function hostArrive(player: Player)
+	if active[player.UserId] then
+		return
+	end
+
+	-- The manifest may still be on its way from MemoryStore.
+	local deadline = os.clock() + GameConfig.Expedition.ManifestWaitSeconds
+	while not hostGroup and not manifestFailed and os.clock() < deadline and player.Parent do
+		task.wait(0.25)
+	end
+	if not player.Parent then
+		return
+	end
+
+	if not hostGroup or not manifest then
+		warn(`[ExpeditionSystem] no expedition here for {player.Name}; sending them home`)
+		tell(player, nil, "The way closed behind you. Returning to the Crossroads.")
+		sendHome({ player })
+		return
+	end
+
+	if not ExpeditionCore.isManifestMember(manifest, player.UserId) then
+		warn(
+			`[ExpeditionSystem] {player.Name} is not on this expedition's manifest; sending them home`
+		)
+		sendHome({ player })
+		return
+	end
+
+	if not placeMember(player, hostGroup) then
+		sendHome({ player })
+	end
+end
+
+--- Turns this server into an expedition host. Called from bootstrap in
+--- place of bindGatePrompt when ExpeditionCore.isExpeditionServer is true.
+function ExpeditionSystem.startHost(): ()
+	hosting = true
+	print(`[ExpeditionSystem] this is an expedition server ({game.PrivateServerId})`)
+
+	-- Characters are placed as they spawn. The client skips its title card
+	-- here and asks to spawn immediately (LoadingScreen), and the character
+	-- is moved onto the map the moment it exists.
+	local function bind(player: Player)
+		player.CharacterAdded:Connect(function()
+			task.defer(hostArrive, player)
+		end)
+		if player.Character then
+			task.defer(hostArrive, player)
+		end
+	end
+	Players.PlayerAdded:Connect(bind)
+	for _, player in Players:GetPlayers() do
+		bind(player)
+	end
+
+	task.spawn(function()
+		local map = manifestStore()
+		local deadline = os.clock() + GameConfig.Expedition.ManifestWaitSeconds
+		local record = nil
+		while map and os.clock() < deadline do
+			local ok, value = pcall(function()
+				return (map :: MemoryStoreHashMap):GetAsync(game.PrivateServerId)
+			end)
+			if ok and value ~= nil then
+				record = value
+				break
+			end
+			task.wait(GameConfig.Expedition.ManifestPollSeconds)
+		end
+
+		local valid, reason = ExpeditionCore.validateManifest(record, Worlds, Chunks)
+		if not valid then
+			warn(
+				`[ExpeditionSystem] expedition server has no usable manifest ({reason}); everyone goes home`
+			)
+			manifestFailed = true
+			sendHome(Players:GetPlayers())
+			return
+		end
+		manifest = record
+
+		local built = buildStage(
+			record.WorldId,
+			record.Seed,
+			GameConfig.Expedition.StageOrigin,
+			record.WorldId
+		)
+		if not built then
+			manifestFailed = true
+			sendHome(Players:GetPlayers())
+			return
+		end
+		local group =
+			newGroup(record.WorldId, record.Seed, built, nil, record.LeaderUserId, #record.Members)
+		-- The duration was decided by the hub from the same world; the
+		-- manifest's copy wins so both ends agree even across a content
+		-- update mid-flight.
+		group.Duration = record.DurationSeconds
+		hostGroup = group
+		print(
+			string.format(
+				"[ExpeditionSystem] hosting %s  seed %d  %s  for %d player(s)",
+				record.WorldId,
+				record.Seed,
+				built.Summary,
+				#record.Members
+			)
+		)
+	end)
+end
+
+function ExpeditionSystem.init(saveSystem: any, progressionSystem: any, partySystem: any?): ()
 	SaveSystem = saveSystem
 	ProgressionSystem = progressionSystem
+	PartySystem = partySystem
 
 	-- Lighting is a shared service. The server never touches it -- each client
 	-- dresses its own screen from the Environment in Expedition_Started, which
@@ -450,21 +976,36 @@ function ExpeditionSystem.init(saveSystem: any, progressionSystem: any): ()
 		ExpeditionSystem.requestEnter(player, ...)
 	end)
 
-	-- Timer sweep. One loop for every expedition rather than a task per
-	-- player: the cost is fixed regardless of how many are running.
+	-- A teleport Roblox accepted can still fail for one player. They are
+	-- still here, so they are simply no longer on their way anywhere; the
+	-- next autosave re-takes the save lock handOff released.
+	TeleportService.TeleportInitFailed:Connect(function(player, result, message)
+		if launching[player.UserId] then
+			launching[player.UserId] = nil
+			warn(`[ExpeditionSystem] teleport failed for {player.Name}: {result} {message}`)
+			tell(player, nil, "The portal flickered. Try again.")
+		end
+	end)
+
+	-- Timer sweep. One loop for every group rather than a task per player:
+	-- the cost is fixed regardless of how many are running.
 	task.spawn(function()
 		while true do
 			task.wait(GameConfig.Expedition.TimerSyncSeconds)
 			local now = os.clock()
-			for userId, state in active do
-				local player = Players:GetPlayerByUserId(userId)
-				if not player then
+			for _, group in table.clone(groups) do
+				if group.StartedAt == nil then
 					continue
 				end
-				if ExpeditionCore.remaining(state.StartedAt, state.Duration, now) <= 0 then
-					ExpeditionSystem.finish(player, "COMPLETED")
+				if ExpeditionCore.remaining(group.StartedAt, group.Duration, now) <= 0 then
+					completeGroup(group)
 				else
-					syncTimer(player, state)
+					for userId in group.Members do
+						local player = Players:GetPlayerByUserId(userId)
+						if player then
+							syncTimer(player, group)
+						end
+					end
 				end
 			end
 		end
@@ -474,14 +1015,17 @@ function ExpeditionSystem.init(saveSystem: any, progressionSystem: any): ()
 		local state = active[player.UserId]
 		if state then
 			-- Leaving mid-expedition must not leak a stage or a slot.
-			occupiedSlots[state.Slot] = nil
+			active[player.UserId] = nil
+			state.Group.Members[player.UserId] = nil
 			if state.Died then
 				state.Died:Disconnect()
 			end
-			state.Stage:Destroy()
-			active[player.UserId] = nil
+			if not hosting and next(state.Group.Members) == nil then
+				dropGroup(state.Group)
+			end
 		end
 		lastEntryAt[player.UserId] = nil
+		launching[player.UserId] = nil
 	end)
 end
 

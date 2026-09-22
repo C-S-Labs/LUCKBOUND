@@ -33,159 +33,75 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
-## Session 46 — 2026-09-22 — Sky Citadel: variety, turns, an intersection, and four more
+## Session 44 — 2026-09-22 — Parties, and the portal opens a new server
 
-**Branch:** `claude/sky-citadel-kit-expansion` (PR #37, stacked on #35) · **Tests:** 594 passing (586 + 8)
+**Branch:** `claude/party-portal-instances` · **Tests:** 639 passing (+65)
 
-### Done
-- **Variety pass on every piece.** Owner review: "each piece is very similar
-  to the next." Pieces are now built from five axes — shape (single deck,
-  archipelago, bare span, stepping plates), floor (eleven treatments), edge
-  (parapet, railing, kerb, hedge), keel (six styles) and landmark (fourteen) —
-  mixed so neighbours differ. New landmarks: lighthouse, Sky Tree, Arcane
-  Prism, banner mast, clock tower, Cascade Tower, Sundered Spire, birdcage.
-- **Turns both ways, one intersection, no dead ends.** Owner review: "only 1
-  turning piece, and 0 intersections … the vault … dead-ends." Added a west
-  bend and a four-way crossroads; the vault became `chunk_vault_turn`, a deck
-  you pass through on a right turn; the side pocket is a new small lookout.
-- **Four more pieces**, owner-requested: `chunk_path_shattered` (stepping
-  plates, the Sundered Spire), `chunk_path_aviary` (a birdcage dome with
-  birds), `chunk_archive` (the first roofed hall), `chunk_aether_springs`
-  (terraced pools, a left turn). **19 pieces.**
-- **System change, generic and tested:** `ChunkCore` picks a seeded exit among
-  valid ones, and consumes `IncludeSide` (one SIDE pocket off a spare socket).
-  `GameConfig.Expedition.IncludeSide = true`, passed by `ExpeditionSystem`.
-  Verdant Valley's Hollow is placed for the first time. Two STATUS debts closed.
-- Validator: an exact separating-axis test for box-shaped floats against decks;
-  floor decals are single up-facing faces (2 tris, not 12); registrations honour
-  lifted frames. `scatter_floats` places birds, tomes and debris only where the
-  checker accepts them.
-- All 19 exported and re-imported at 256³; every turning piece's and the
-  crossroads' openings read back out of the FBX and match the socket data.
-
-### Decisions made
-- **19 pieces, above the 12–16 target** — owner asked for four more; the brief
-  says more is welcome. The count test is now a minimum.
-- **The side pocket stays a dead end, by definition** — but it now hangs off a
-  crossroads branch, so taking it is a choice, and nothing on the critical path
-  dead-ends (asserted).
-- **Local StyLua was not applied** to System files: its output disagreed with
-  the committed style (and once changed a statement's parse). CI's StyLua check
-  is non-blocking; edits follow the surrounding hand style.
-
-### Stopped at
-Nineteen FBXs exported, nothing uploaded. PR #37 updated; #35 still unmerged.
-
-### Next
-1. Merge #35, then #37.
-2. Import `chunk_entry.fbx` into Studio: 256³? vertex colours?
-3. Loader: `GroundOffsetY` (32), `CollisionFidelity`.
-4. Walk a generated map: stepping-plate gaps, terrace ramps, the crossroads.
-
----
-
-## Session 45 — 2026-09-22 — Sky Citadel: eight more pieces, and floats that cannot clip
-
-**Branch:** `claude/sky-citadel-kit-expansion` (stacked on PR #35) · **Tests:** 586 passing (582 + 4)
+Owner-directed: get the Party menu working, make the centre portal start a new
+Roblox server, and have a party leader bring the whole party into that same
+server with the same parameters — everyone keeping their own level and Fate.
+Recorded as build spec **§7.2**, since the development plan had both parked
+under "not yet".
 
 ### Done
-- **Eight new pieces**, owner-directed, each a different reason to be there
-  and each bringing new props: `chunk_path_bend` (the first quarter turn),
-  `chunk_path_skyport` (skiff dock, crane, landing pad), `chunk_path_hoops`
-  (a bare span through three floating rings, between satellite islands),
-  `chunk_garden_terrace`, `chunk_observatory` (dome, dishes, orrery),
-  `chunk_armory` (racks, targets, forge, barracks), `chunk_side_vault` (the
-  world's SIDE pocket) and `chunk_spire_court_b` (the Hall of Winds — a rare
-  second gate-court with a Moon Gate). **12 pieces**, inside the 12–16 target.
-- **Floating objects cannot clip** — owner-directed: identical flush corner
-  beacons fused into one block where four tiles met. Every float and every
-  large solid is now registered as it is built, and `validate()` refuses to
-  export a piece where a float touches another float, a solid or a deck, or
-  comes within 4 studs of the tile edge (so neighbours' floats are always ≥ 8
-  apart, at any rotation). Tested against planted faults.
-- **Corner beacons vary**: three styles, and per-corner size, height, turn and
-  inset, seeded by piece name, each placed only where the checker accepts it.
-- **Edge pins** took over the beacons' other job — holding each mesh's box to
-  exactly 256 × 256 — as four 0.3-stud pins at the keel line.
-- All 12 exported and re-imported at 256³; the bend's openings verified at FBX
-  +Z (south) and +X (east). Review renders now include a chain through the
-  bend and four pieces meeting at a corner.
-- Content: 8 chunk entries, 8 manifest placeholders. Tests: two gate-courts,
-  the SIDE pocket, the 12–16 count, layouts that turn.
+
+- **`Core/PartyCore.luau`** (pure): invite / accept / decline / leave / kick /
+  promote, `MaxSize` 4, 60 s invite expiry, request parsing, who goes through
+  the portal (`expeditionGroup`), and `reunite` for rebuilding a party after
+  the trip home. An invite creates nothing; accepting does, so a declined
+  invite leaves no party of one behind.
+- **`Systems/PartySystem.luau`**: `Party_Request` / `Party_Sync`, rate limit,
+  display names, and the MemoryStore reunite records.
+- **`Systems/ExpeditionSystem.luau`** reworked around a *group*: one stage,
+  one timer, one seed (the leader's). Three modes — hub-teleport, hub-in-place
+  (Studio), and **host** (this server is the reserved expedition server).
+- **`SaveSystem`**: `handOff` (save + release lock before a teleport) and a
+  bounded wait on a held lock in `load`. Without this, every teleported player
+  would race their own old server for the lock and usually get a session that
+  silently does not save.
+- **Client**: `PartyController` (with a native Accept/Decline notification
+  for invites) and a real Party panel in `HubMenu`. The loading screen skips
+  its title card on an expedition server and when coming back from one. The
+  menu stays hidden on an expedition server.
+- Boot: server kind stated on `ReplicatedStorage.Luckbound` first;
+  `PartySystem` before `ExpeditionSystem`; `startHost()` instead of the portal
+  on an expedition server.
+- Docs: build spec §4 (two rows), §1.1, §1.2, **§7.2**; `TESTING.md` tests
+  **O** (Studio, 3 clients) and **P** (published, 2 accounts); `STATUS`,
+  `PLAYER_UI`, `DEVELOPMENT_PLAN`.
+- `tests/build_suite.py` reads sources as UTF-8, so the suite also builds on
+  Windows (it failed on `cp1252` before).
 
 ### Decisions made
-- **Two ASCENT providers, not one.** The rare Hall of Winds shares the Spire
-  Court's role; the reserved-Kind rule still guarantees a gate-court before the
-  arena.
-- **No west bend yet.** `exitFor` takes the first socket, so it would add no
-  variety until that is fixed.
-- **Sky Citadel's assembly bar is ≥ 190/200 seeds**, like Verdant Valley's:
-  a path that turns can fold back on itself.
+
+- **One place, not two.** The expedition server is a reserved server of the
+  hub's own place; `isExpeditionServer` = private server with no owner. No
+  second place to publish or keep in sync. `InstancePlaceId` exists for later.
+- **The manifest goes through MemoryStore keyed by `PrivateServerId`**, never
+  TeleportData — a client could rewrite TeleportData and pick its own world.
+- **Only the leader opens the portal.** A member at the portal is told so;
+  going alone would split the party without anyone deciding to.
+- **AUTO mode**: teleport live, build in place in Studio — so Studio still
+  tests every party rule.
+- **Home to the same hub server** via `ServerInstanceId`, falling back to any.
+- The expedition server still builds the Crossroads under its map: harmless,
+  and it keeps every client controller working unchanged. Skipping it is a
+  measured-performance job for later.
 
 ### Stopped at
-Twelve FBXs exported, nothing uploaded; PR stacked on #35.
+
+All code and docs in; 639 green; CI syntax check clean. **Nothing walked.**
+The teleport path cannot run in Studio at all.
 
 ### Next
-1. Merge #35, then this.
-2. Import `chunk_entry.fbx` into Studio: 256³? vertex colours?
-3. Loader: `GroundOffsetY` (32), `CollisionFidelity`, a random exit pick,
-   `IncludeSide`.
 
----
-
-## Session 44 — 2026-09-22 — Sky Citadel: art direction and the first generated kit
-
-**Branch:** `claude/sky-citadel-chunk-kit` · **Tests:** 582 passing (574 + 8)
-
-### Done
-- **`docs/SKY_CITADEL.md`** — the section the Biome Blueprint never wrote.
-  Owner direction: *floating spires, future-like castle architecture, a
-  floating citadel with varying decorations and objects.* A white futurist
-  castle on floating islands: needle spires with neon halos, violet-roofed
-  turrets, azure seams of light, a ten-role palette, a prop vocabulary, and an
-  explicit "what floats on purpose" list for the hand pass. Written against
-  Ethereal Scape so the two sky worlds do not blur.
-- **Connection vocabulary first**, as the brief asks: `SKYWAY` (40 studs,
-  connective) and `ASCENT` (72, arena-only). The Spire Court is the only
-  `ASCENT` provider, so it gates the arena on every seed — the reserved-Kind
-  rule producing gating for the third time.
-- **Four pieces, generated in Blender 5.2 by a script in the repo**
-  (`assets/source/worlds/sky_citadel/build_sky_citadel_kit.py`): entry, path
-  straight, spire court (grove role), boss clearing. Exported as four FBXs,
-  each re-imported and measured: 256 × 256 × 256, one mesh, Y up, metres,
-  opening confirmed at FBX −Z (north). 3.7k–7.3k triangles.
-- **Content:** `Content/Chunks/SkyCitadel.luau`, four `SC_CHUNK_*` manifest
-  placeholders, world header rewritten. Sky Citadel is now **enterable**
-  (blockout, no enemies); "no map" drops from 25% to 18%.
-- **Tests:** 4 that asserted Sky Citadel had no map moved to Emberfall; 8 new
-  — per-world Kinds disjoint, ASCENT reservation, 256³ declared, 200/200
-  seeds assemble, the court always precedes the arena.
-
-### Decisions made
-- **Every piece fills an exact 256³ box.** `ChunkLoader.tryMesh` stretches the
-  mesh to `SizeX/Y/Z`, which the brief never says. Corner beacons pin the
-  footprint, the keel apex (−96) and one 160-stud spire pin the height. The
-  walk plane is therefore 32 below the box centre, kit-wide — the number
-  `GroundOffsetY` will need.
-- **Colour baked as vertex colours** as well as material slots: a chunk is one
-  MeshPart, so paint-by-part-name is not available. Unverified in Studio.
-- **The `.blend` is an output.** The script is the source; re-run it.
-- **Render headless.** Rendering through the Blender MCP bridge crashed the
-  interactive session twice on the same shot; `blender -b` does all ten in
-  ~3 s. Both scripts are documented headless-first.
-
-### Stopped at
-Four FBXs exported and committed, nothing uploaded. Found four loader-side
-issues on the way and recorded them in `STATUS.md` rather than fixing them
-(this pass was content): mesh stretched to declared size, single-MeshPart
-colour, default collision fidelity, spawn from the mesh top.
-
-### Next
-1. Import `chunk_entry.fbx` into Studio: does it read 256³, and do the vertex
-   colours survive?
-2. `GroundOffsetY` (32 for this kit) and `CollisionFidelity` in `ChunkLoader`.
-3. Owner review of the look (`renders/`), then iterate the generator.
-4. `chunk_path_bend` — no current socket turns — then the other 7–11 pieces.
+1. **Test O in Studio** (3 clients) — the party panel, the member refusal,
+   and a party arriving on one map together.
+2. **Publish, enable API Services, run Test P** with two accounts — the
+   teleport, the save hand-off (`could not acquire profile` in the output is
+   the failure to look for), and the party coming home formed.
+3. Then back to the plan: Sky Citadel, `GroundOffsetY`, the Verdant Valley
+   pieces.
 
 ---
 

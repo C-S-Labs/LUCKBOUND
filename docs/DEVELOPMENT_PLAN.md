@@ -214,9 +214,9 @@ would feel productive and would delay the playtest.
 | Combat | §1. The playtest does not need it, and it is the biggest thing in the project |
 | The Crossroads revamp | Agreed. The current hub tests the systems fine, and every art swap costs a re-walk |
 | Rifts | Need combat and items |
-| Parties | Multiplayer content before the single-player loop is proven |
+| ~~Parties~~ | **Built 2026-09-22 at the owner's direction** — build spec §7.2 |
 | Rebirth / prestige | Nothing to reset yet |
-| Expeditions in their own place | A performance fix for a performance problem nobody has measured |
+| ~~Expeditions in their own place~~ | **Built 2026-09-22 at the owner's direction** — a reserved server of the same place, build spec §7.2 |
 | More events | Three are enough to prove the system. More is content, and content is cheap *later* |
 
 ---
