@@ -33,6 +33,115 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 41 — 2026-09-22 — Sockets on every open side, and the seam
+
+**Branch:** `claude/nifty-babbage-elpxrv` · **Tests:** 574 passing (unchanged)
+
+Follow-up to Session 40, same branch. Three owner questions from Blender
+screenshots of the Verdant Valley kit in progress.
+
+### "Can sockets go on every side that isn't blocked?"
+
+Yes, and it is the right instinct — but **it buys nothing today**, and finding
+out why turned up two pieces of code/doc drift:
+
+1. **`ChunkCore.exitFor` returns the FIRST valid socket**, not a random one. A
+   four-socket piece leaves through the same one every seed. The entry chunk is
+   worse: hard-coded to `entry.Sockets[1]`. So the variety the owner is asking
+   for is one weighted-random pick away, and is not there now.
+2. **`AssembleOptions.IncludeSide` is declared and never read.**
+   `ChunkCore.assemble`'s own docstring promises it hangs a SIDE pocket off a
+   spare socket. Nothing consumes the field. **`VV_HOLLOW` has never been
+   placed in any layout** — the Blueprint §6 side-pocket item is satisfied on
+   paper only.
+
+Neither was fixed here. Both change a System and belong in their own piece of
+work with their own tests; this pass was documentation. Both are now debt rows
+in `STATUS.md`, and the brief tells the modeller to author the sockets anyway —
+the data is right either way and the run gets more varied the day the pick
+lands, with no re-export.
+
+A third thing falls out of high socket counts and is worth naming: **the
+generator consumes exactly two sockets per piece, so every other opening faces
+nothing, and nothing caps them.** Today that is the art's problem — an opening
+must read as plausible unattached — and the systematic fix is a cap piece the
+loader places, which needs a schema field.
+
+### "The edges vary, so pieces won't meet — do we generate a connector in Studio?"
+
+The edges do vary, and they slope off; two of them meeting would step, gap or
+lip. The answer is a **weld band**: a 32-stud flat strip at ground height along
+every edge of every piece, empty of scatter, with terrain variation easing to
+zero before it reaches it. Two flat coplanar straight edges butt together
+perfectly at any rotation, with no per-pair work and no runtime cost.
+
+The proposed Studio-generated connector was considered properly and rejected,
+for reasons worth keeping:
+
+- **It cannot match the material.** Colour and finish live inside the uploaded
+  mesh as `SurfaceAppearance` and textures, which code cannot read. The
+  connector would be a flat-coloured strip between two textured pieces —
+  trading an invisible seam for a visible band.
+- **It is a permanent System change** in `ChunkLoader`, at four rotations, for
+  every Kind, to work around an art rule that costs one flat band.
+- It halves the useful footprint, and bridging a height difference means a ramp
+  at every join, which changes how the map plays.
+
+One part of the idea was kept: a **skirt** under the join — thin,
+non-colliding, never meant to be seen — so float drift shows dark ground
+rather than sky.
+
+### "What should the anchor points be named?"
+
+For a chunk kit, **names inside the piece do not matter at all**, and that is
+worth stating because it is not true elsewhere here: `PrefabLoader` registers
+the hub from a NAMED PART and `PrebuiltLoader` reads `EntryAnchor` /
+`ReturnAnchor`, but `ChunkLoader` builds a MeshPart from an asset id and never
+looks inside. The existing `VerdantValley_Chunk_02_RouteRock_01_Slab` scheme is
+fine as it stands.
+
+Two things about naming do matter, and both are now in the brief:
+
+- **The root.** The origin is not an object — it is the root's transform, so
+  the root's name is what export, manifest and content must agree on.
+  `Chunk_03` says nothing about which of eight role-named pieces it is, and the
+  role decides size, socket count and where the generator may put it. The brief
+  carries the full root ↔ manifest key ↔ chunk Id table.
+- **Socket marker empties**, `Socket_<id>_<KIND>`, in their own collection,
+  excluded from export. Nothing reads them; the point is that the offsets in
+  `Content/Chunks/` are hand-typed today with no way to check them against the
+  file. Proposed as a convention, explicitly not as a promise to automate.
+
+Also flagged from the screenshot: the root of `VerdantValley_Chunk_03` sits at
+**Location Y = 100 m**. Export writes positions relative to the scene origin,
+so that arrives 100 studs out.
+
+### Done
+
+- `docs/CHUNK_AUTHORING.md` — three new sections: how many sockets and on which
+  sides, the edge contract, naming. Checklist grew from 9 items to 13.
+- `docs/MODULAR_MAPS.md` — the weld band added as a fourth geometry-contract
+  rule; the socket section now carries the two caveats.
+- `docs/STATUS.md` — three debt rows: `exitFor` first-match, `IncludeSide`
+  never read, unused sockets never capped.
+- The brief was exported to PDF for the owner's modeller.
+
+### Stopped at
+
+Docs only, again. No System changed. 574 tests still green.
+
+### Next
+
+1. **`exitFor` picks its exit at random** — the one change that makes "sockets
+   on every open side" do what the owner wants. Small, needs tests, should not
+   ride along with anything else.
+2. **Decide `IncludeSide`**: implement it, or delete the field and the
+   docstring's promise. A declared option nothing reads is worse than neither.
+3. Re-author the kit's edges to the weld band before any piece is uploaded —
+   it is a cheap rule now and an eight-piece re-export later.
+
+---
+
 ## Session 40 — 2026-09-22 — The chunk origin contract, written down
 
 **Branch:** `claude/nifty-babbage-elpxrv` · **Tests:** 574 passing (unchanged)

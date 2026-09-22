@@ -243,6 +243,23 @@ same `Kind` must be physically interchangeable across the whole kit** — same
 opening width, same ground height, same approach — because the seed decides
 which two meet.
 
+Author a socket on every side the art leaves genuinely open, and none on a side
+it closes. Two caveats, both tracked in `STATUS.md`: `exitFor` currently returns
+the **first** valid socket rather than a random one, so extra sockets do not yet
+vary a run; and the generator consumes only two sockets per piece, so every
+other opening faces nothing and must read as plausible unattached.
+
+### 4. Every edge carries a flat weld band
+
+A **32-stud flat band at ground height along every edge of every piece**, empty
+of scatter, with terrain variation easing to zero before it reaches it. Two
+flat, coplanar, straight edges butt together perfectly at any rotation with no
+per-pair work — which is the only version of this that survives a kit growing.
+Undulating edges produce steps, gaps and lips at the seam, and no amount of
+generated connector geometry fixes that as cheaply as the band does.
+`CHUNK_AUTHORING.md` has the argument in full, including why a Studio-generated
+connector piece is the more expensive answer.
+
 ---
 
 ## Authoring a kit — checklist

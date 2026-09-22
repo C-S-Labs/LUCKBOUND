@@ -214,6 +214,250 @@ no opening behind it is art that has drifted from its data.
 
 ---
 
+## How many sockets, and on which sides
+
+**Author a socket on every side that is genuinely open, and none on a side the
+art closes.** A cliff face, a canyon wall, a dense thicket, the back of a ruin
+— those get no socket, and the generator will never place anything against
+them. That instinct is right and it is what the system wants.
+
+`BOSS` gets exactly one. `ENTRY` gets one exit. Everything else should offer as
+many as its art honestly allows.
+
+But three things have to be true before extra sockets actually buy variety, and
+today only one of them is.
+
+### 1. The exit is not currently random — this needs a fix
+
+`ChunkCore.exitFor` returns the **first** socket in declaration order that is
+valid for the step:
+
+```lua
+local function exitFor(chunk: any, consumedId: string, isFinal: boolean): any?
+	for _, sock in chunk.Sockets do
+		if sock.Id ~= consumedId and isBossKind(sock.Kind) == isFinal then
+			return sock
+		end
+	end
+	return nil
+end
+```
+
+So a piece with four sockets leaves through the same one every time. The entry
+chunk is worse — it is hard-coded to `entry.Sockets[1]`. **Adding sockets to a
+piece today adds nothing to the variety of a run.** What varies is which piece
+is drawn and which yaw the join implies.
+
+Making the exit a weighted random pick among the valid sockets is a small,
+contained change to `ChunkCore`, and it is what turns "sockets on every open
+side" into the thing you are asking for. It is **recorded as an open item in
+`STATUS.md`, not done in this pass** — it changes a System, and a System change
+gets its own piece of work with its own tests rather than riding along with a
+documentation update.
+
+**Author the sockets anyway.** The data is right either way, and the run
+becomes more varied the day that change lands, with no re-export.
+
+### 2. An unused socket is a hole in the art
+
+The generator consumes one socket to arrive and one to leave. On a four-socket
+piece that leaves **two openings facing nothing**, and nothing in the loader
+caps them. If a socket is modelled as a real gap in the tree line, the player
+walks up to it and sees the void under the map.
+
+Until there is a capping mechanism, the art has to solve it:
+
+> **Every socket opening must read as plausible when nothing is attached to
+> it.** A path that continues into dense trees and bends out of sight. A gap
+> between boulders that narrows. A creek that runs off the edge. What it must
+> not be is a clean architectural doorway onto nothing.
+
+This is the real cost of a high socket count, and it is worth paying on the
+big `COMBAT` pieces — a meadow with four exits is the piece that makes two
+seeds feel different — while a narrow `PATH` piece is fine with two.
+
+### 3. Every socket of a Kind must still be interchangeable
+
+Covered below in the edge contract, but it scales with socket count: four
+`PATH` openings on a meadow means four openings that each have to match every
+other `PATH` opening in the kit, because the seed decides which meets which.
+
+### What bounds "truly random" anyway
+
+Even with a random exit, a run is not unconstrained, by design:
+
+- **Collision rejection is XZ-only.** A path that folds back over itself is
+  rejected even where it would clear in 3D, so some shapes never occur.
+- **The arena Kind is reserved.** A Kind the boss accepts is not spendable
+  mid-path — that is the rule that makes the Grove always gate the boss, and
+  it is a feature, not a limit to remove.
+- **`MaxPerLayout`** caps anything that should feel special.
+- **The path is a chain, not a graph.** One open socket is carried forward at
+  a time; layouts branch only through the SIDE pocket.
+
+### The SIDE pocket does not exist yet
+
+`AssembleOptions.IncludeSide` is declared and `ChunkCore.assemble`'s docstring
+promises "optionally hanging one SIDE pocket off a spare socket" — but
+**nothing reads that field.** `VV_HOLLOW` is authored, validated, and never
+placed. Logged in `STATUS.md`. Worth knowing before anyone spends a day
+modelling the hollow.
+
+---
+
+## The edge contract — the seam problem
+
+The terrain in the current pieces varies right up to the boundary, and it slopes
+off at the edge. **Two of those edges meeting will not line up**, and the join
+shows as a step, a gap you can see through, or a lip that stops the player.
+
+The fix is in the art, and it is a single kit-wide rule.
+
+### The weld band
+
+> **Reserve a flat band, `32` studs wide, along every edge of every chunk. It
+> is perfectly flat, at ground height exactly, straight along the footprint
+> boundary, on every piece in the kit. Terrain variation lives inward of it
+> and eases to zero before it reaches it.**
+
+Two flat, coplanar, straight edges butt together perfectly at any rotation,
+forever, with no per-pair work and no runtime cost. It does not matter how
+different the two pieces are, how many vertices each edge has, or which yaw the
+seed picked — the seam is watertight because both sides are the same flat
+plane.
+
+32 studs is about six character-heights: wide enough that the eye reads a
+continuous ground plane across the join, narrow enough that it is a small
+fraction of a 512-stud piece. **The exact number matters less than it being
+identical on every piece.** Pick it once, put it in this doc, never vary it.
+
+Inside the band:
+
+- **Ground height is exactly the walk plane.** No undulation, no slope, no
+  displacement modifier reaching into it.
+- **Nothing sits on it** except art that is duplicated identically on both
+  sides of the join — which in practice means nothing. No rocks, no trees, no
+  scatter, no creek stones. The `EdgeDetail_E_01` objects in the current file
+  are exactly what has to move inward.
+- **Materials match across the kit.** Two pieces of different vintage meeting
+  must not show a colour step at the seam.
+
+Outside the band, vary as much as you like. A meadow can roll, a creek can cut,
+the ground can rise — as long as it has returned to flat ground height by the
+time it reaches the band.
+
+### The skirt
+
+Add a **downward apron** below the band — 8 studs is plenty — so that a
+hairline gap from floating-point drift shows dark ground rather than sky. It is
+never seen when the join is correct, and it is cheap insurance for when it is
+not.
+
+### On generating a connector piece in Studio
+
+You proposed a middle connector piece, generated in Studio, that bridges two
+edges and matches their material and colour. Reasonable instinct, and it is the
+right question to ask — but it is the more expensive of the two fixes and it
+does not actually solve the problem:
+
+- **It cannot match the material.** A chunk's colour and finish live inside the
+  uploaded mesh, as `SurfaceAppearance` and textures. Code can read neither. A
+  procedurally generated connector would be a flat-coloured strip between two
+  textured pieces — trading an invisible seam for a visible band.
+- **It is a System change.** `ChunkLoader` currently knows how to place a piece
+  and nothing else. Teaching it to synthesise geometry at every join, at four
+  rotations, for every `Kind`, is a large amount of new behaviour to maintain
+  forever, in service of working around an art rule that costs one flat band.
+- **It halves the useful footprint.** Every join gains a piece that is not part
+  of the level.
+- **The problem comes back anyway.** A connector bridges a height difference by
+  ramping, and a ramp at every join changes how the map plays.
+
+**Fix it in the art with the weld band.** The one form of the connector idea
+worth keeping is the skirt above: a thin, non-colliding piece *under* the join
+that stops you seeing through it. That version does not need to match anything,
+because it is never meant to be seen.
+
+---
+
+## Naming
+
+**Does it matter? For a chunk kit — no, and that is worth stating explicitly,
+because it is not true elsewhere in this project.**
+
+`ChunkLoader` builds a MeshPart from an asset id and positions it. It never
+looks inside the model for a named part. Contrast:
+
+| Loader | Reads names? |
+|---|---|
+| `ChunkLoader` (a chunk kit) | ❌ nothing inside the piece is read by name |
+| `PrefabLoader` (the hub) | ✅ registers from a **named part** — a pivot is invisible metadata an FBX chain mangles quietly |
+| `PrebuiltLoader` (a whole map) | ✅ `EntryAnchor` and `ReturnAnchor` |
+
+So inside a chunk you may name objects whatever helps you work. The convention
+in the current file — `VerdantValley_Chunk_02_Terrain`,
+`VerdantValley_Chunk_02_RouteRock_01_Slab`,
+`VerdantValley_Chunk_03_CreekStone_S_01_Pebble` — is clear and consistent, and
+nothing here asks you to change it.
+
+### The one name that does matter: the root
+
+The chunk's origin is **not an object with a name.** It is the transform of the
+piece's root object, so what carries it is the root's name — and that is the
+name the export, the manifest and the content file all have to agree on.
+
+`VerdantValley_Chunk_03` does not say which of the eight pieces this is. The
+kit is role-named, and the manifest already has all eight keys reserved with
+their source paths:
+
+| Root object / file stem | Manifest key | Chunk `Id` |
+|---|---|---|
+| `chunk_entry` | `VV_CHUNK_ENTRY` | `VV_ENTRY` |
+| `chunk_path_straight` | `VV_CHUNK_PATH_STRAIGHT` | `VV_PATH_STRAIGHT` |
+| `chunk_path_bend` | `VV_CHUNK_PATH_BEND` | `VV_PATH_BEND` |
+| `chunk_stream` | `VV_CHUNK_STREAM` | `VV_STREAM` |
+| `chunk_meadow` | `VV_CHUNK_MEADOW` | `VV_MEADOW` |
+| `chunk_grove` | `VV_CHUNK_GROVE` | `VV_GROVE` |
+| `chunk_hollow` | `VV_CHUNK_HOLLOW` | `VV_HOLLOW` |
+| `chunk_boss_clearing` | `VV_CHUNK_BOSS_CLEARING` | `VV_BOSS_CLEARING` |
+
+A number tells nobody whether `Chunk_03` is the meadow or the stream, and the
+role is what decides its size, its socket count and where the generator is
+allowed to put it. **Name the root for the piece it is.**
+
+### Socket markers — a convention worth adopting
+
+Nothing reads them today, but the socket offsets in `Content/Chunks/` are
+currently typed by hand and there is no way to check them against the file.
+An empty at each socket makes the file self-describing and the data reviewable:
+
+```
+Socket_north_PATH        empty, at the socket's centre, +Y pointing outward
+Socket_south_PATH
+Socket_east_WIDE
+```
+
+`Socket_<id>_<KIND>`, matching the `Id` and `Kind` in the content file exactly.
+Put them in their own collection and **exclude that collection from the FBX
+export** — they are authoring metadata, not geometry.
+
+The payoff is that the offsets in `Content/Chunks/VerdantValley.luau` can be
+read straight off the file instead of derived from a screenshot, and a
+mismatch between art and data becomes something a person can see. If that turns
+out to be worth automating later, a script reading these empties and emitting
+the Lua table is the obvious next step — but that is a proposal, not a promise,
+and the content file stays the source of truth until it happens.
+
+### Do not leave the root off the world origin
+
+The root of `VerdantValley_Chunk_03` currently sits at **Location Y = 100 m**.
+Export writes positions relative to the scene origin, so a root parked away
+from it arrives offset by exactly that much. Zero the root's location before
+exporting — and note this is separate from the origin rule: the *origin* must
+be at the piece's centre, and that centre must then sit at `(0, 0, 0)`.
+
+---
+
 ## Export
 
 **One FBX per chunk. One chunk per file. Never the whole folder.**
@@ -268,11 +512,18 @@ half-uploaded kit is a valid state to play in. There is no flag day.
    multiples of 256.
 3. `SizeY` matches the true full height, walk plane centred in it.
 4. Origin at the middle-most point of the bounding box — all three axes.
-5. All transforms applied; piece sitting at the Blender world origin.
-6. An opening in the edge at every declared socket, on the 256 grid, at the
-   declared offset, identical in width and height to every other socket of
-   that `Kind` anywhere in the kit.
-7. Nothing crosses the boundary; nothing depends on a neighbour.
-8. Exported alone, to the manifest's `Source`-mirroring export path.
-9. `./tests/run.sh` still green — the kit is validated at boot too, and a
-   broken kit stops the server rather than shipping a broken expedition.
+5. All transforms applied; **root location zeroed**, piece sitting at the
+   Blender world origin.
+6. Root object named for the piece's role, matching its manifest key.
+7. **A 32-stud weld band on all four edges: flat, at ground height, empty of
+   scatter, identical on every piece in the kit.** Variation eases to zero
+   before it reaches the band. Skirt below it.
+8. A socket on every genuinely open side, none on a side the art closes — and
+   **every opening reads as plausible with nothing attached to it.**
+9. Each opening is on the 256 grid, at its declared offset, identical in width
+   and ground height to every other socket of that `Kind` in the kit.
+10. Nothing crosses the boundary; nothing depends on a neighbour.
+11. Socket marker empties in their own collection, excluded from the export.
+12. Exported alone, to the manifest's `Source`-mirroring export path.
+13. `./tests/run.sh` still green — the kit is validated at boot too, and a
+    broken kit stops the server rather than shipping a broken expedition.
