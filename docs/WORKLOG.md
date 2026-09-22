@@ -33,6 +33,24 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 49 — 2026-09-23 — Walk-driven fixes to the Sky Citadel run
+
+**Tests:** 696 passing · PRs #42–#50, all merged.
+
+Studio walks, one fix each: mesh yaw (#42, #44–#46 were guesses, superseded);
+scenario error on caps — `ScenarioCore` never exempted `CAP` (#45); longer path
+(8) and branches that grow before capping (#43); **a new seed per entry** —
+debug `/roll` never advanced `TotalRolls`, so every test rebuilt one map (#47);
+**facing measured by raycast instead of typed** (#48); no piece over
+`MaxRepeats` (2), never back to back (#49); **width-aware probe** so a
+gate-court's ASCENT end and SKYWAY end are told apart (#50).
+
+**Stopped at:** every piece aligned on the last walk except Spire Court B,
+which #50 targets. **Next:** confirm #50 in Studio; the rules are world-agnostic
+(`MODULAR_MAPS.md` → *Carrying this to another world*).
+
+---
+
 ## Session 48 — 2026-09-23 — The Sky Citadel meshes are in, and caps were built twice
 
 **Branch:** `claude/clever-cori-oiq6pb` · **Tests:** 696 passing (was 686 on
