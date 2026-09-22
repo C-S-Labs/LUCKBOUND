@@ -166,6 +166,11 @@ local GameConfig = {
 		-- cap. Owner-directed 2026-09-23: an intersection whose side mouths
 		-- are capped where they stand is not an intersection. 0 restores that.
 		BranchLength = 2,
+		-- How ChunkLoader finds which way a delivered mesh faces: a ray just
+		-- inside each socket's mouth (Inset studs), cast from Height above the
+		-- walk plane, must land within Tolerance of it. Visual only -- the
+		-- layout and its randomness are decided before this runs.
+		SocketProbe = { Inset = 6, Height = 20, Tolerance = 3 },
 
 		-- === Scenario layer (build spec §7.3) ====================
 		-- RESTORED 2026-09-23. This block was silently deleted by merge
