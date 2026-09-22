@@ -338,6 +338,12 @@ for _, chunk in CHUNKS do
 	-- If a walk shows the pieces a quarter turn out instead of a half, this is
 	-- the one number to change: 90 or 270.
 	c.MeshYawOffset = 180
+	-- Two single-socket end pieces (boss arena, crumbling-span cap) were
+	-- authored facing the opposite convention from the connector pieces, so
+	-- the kit-wide 180 over-rotates them. Confirmed by Studio walk 2026-09-23.
+	if c.Id == "SC_BOSS_CLEARING" or c.Id == "SC_CAP_CRUMBLING" then
+		c.MeshYawOffset = 0
+	end
 	table.insert(out, c)
 end
 return out
