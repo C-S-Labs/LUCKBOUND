@@ -25,6 +25,19 @@
 -- unconstrained in docs/CHUNK_AUTHORING.md, so this gets set from the measured
 -- geometry when the first piece arrives.
 --
+-- KIT SIZE: this file declares 8 pieces, one per role in the Blueprint's
+-- progression. The authoring target is 12-16 (owner-directed 2026-09-22) --
+-- the variety of a run is the variety of the kit, and 8 starts to repeat
+-- itself. Extra pieces arrive as VARIANTS of these roles, not new roles:
+-- several meadows, several groves, weighted so one is common and another rare.
+-- Entries get added here as each piece is authored; nothing speculative, since
+-- a declared chunk with no art is a piece the blockout draws and nobody meant.
+--
+-- FIRST DELIVERY is 4 pieces -- ENTRY, PATH_STRAIGHT, GROVE, BOSS_CLEARING --
+-- which is the smallest set that assembles into a complete walkable map. The
+-- WIDE reservation means the Grove has to be among them: it is the only piece
+-- offering the exit the arena accepts.
+--
 -- Every AssetKey is a PLACEHOLDER in the manifest today. That is deliberate:
 -- the layout can be assembled, validated and tested before any mesh exists.
 

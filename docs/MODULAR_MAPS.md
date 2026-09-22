@@ -286,7 +286,14 @@ openings. Everything else was over-specification, and
    it), which is how 256 was arrived at. Differently-sized pieces are legal and
    the assembler handles them; one size is simply easier to author to.
 2. **Decide your Kinds first.** At minimum one connective Kind and one the
-   arena accepts. The arena Kind is automatically reserved.
+   arena accepts. The arena Kind is automatically reserved. **Do this before
+   any modelling** — it is what decides where each piece's openings go, and
+   re-cutting openings on a finished kit is the expensive version of this
+   conversation.
+2b. **Aim for 12–16 pieces.** The variety of a run is the variety of the kit;
+   8 starts to repeat itself. Extra pieces are variants of the existing roles —
+   several meadows, several groves — weighted so one is common and another
+   rare, not new roles.
 3. **Two sockets minimum** on anything `PATH` or `COMBAT`, or the path
    dead-ends. Validation rejects this.
 4. **One `ENTRY`, one `BOSS`** per world.

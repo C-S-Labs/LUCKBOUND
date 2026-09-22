@@ -33,6 +33,111 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 43 — 2026-09-22 — Unit scale, kit size, and a hand pass
+
+**Branch:** `claude/nifty-babbage-elpxrv` · **Tests:** 574 passing (unchanged)
+
+Third pass on the same brief, from a real export batch. All four changes came
+from things that actually went wrong, which is the right way for this document
+to grow.
+
+### The export was in millimetres
+
+The eight Verdant Valley FBXs imported at **256,000 studs** against a declared
+256. Exactly 1000×, so the file was written in millimetres while everything
+downstream reads metres. Studio cannot do anything useful with a part that
+size.
+
+The brief now names both settings that have to agree — Blender units
+Metric/Metres/Unit Scale 1.0, and FBX Transform → Scale 1.00 with Apply
+Scalings `FBX All` — but the part that will actually catch it is the check
+rather than the settings: **import one piece and measure it; a 256 piece must
+read 256.** Settings drift between Blender versions and exporter presets; a
+measurement does not. The FBX-scale-0.001 workaround is named and discouraged,
+because a compensating factor is a thing someone later removes for looking
+wrong.
+
+### The kit wants 12–16 pieces, not 8
+
+Owner-directed. The variety of a run is the variety of the kit — the generator
+shuffles what it is given — and 8 starts to repeat itself.
+
+Recorded as **variants of existing roles, not new roles**: several meadows,
+several groves, weighted so one is common and another rare. That keeps the
+socket grammar and the Blueprint progression intact while multiplying what a
+seed can produce, and it costs no System change. `Content/Chunks/` stays at 8
+declared until art exists for more — a declared chunk with no art is a piece
+the blockout draws and nobody meant.
+
+**First delivery is 4:** ENTRY, PATH_STRAIGHT, GROVE, BOSS_CLEARING. Smallest
+set that assembles a complete walkable map, and the Grove has to be in it — the
+WIDE reservation makes it the only piece offering the exit the arena accepts.
+Worth noting that fell out of the socket rules rather than being chosen.
+
+### The pieces were generated stacked
+
+Every piece occupied the same spot in the scene. Nothing was broken — the
+exports were fine — but the kit could not be reviewed without hiding objects
+one at a time, and **a piece nobody can see is a piece nobody checks.**
+
+The brief asks for a spaced review layout, with the catch stated plainly: the
+review position and the export position are different things, and a piece
+exported while parked on the review grid arrives that far off in game. That is
+the same origin/transform trap as everything else in this document, wearing a
+different hat.
+
+### A hand pass before delivery
+
+Owner-requested, and yes it is reasonable to ask for: automated generation is
+good at making a hundred things and bad at noticing that four of them are
+wrong. Five specific checks — floating scatter, clipping, scale against the
+5-metre reference, and two that are worth the minute they cost:
+
+- **Place a copy of the piece beside itself, rotated a quarter turn.** That is
+  exactly what the game does, so it is the fastest way to see a bad join before
+  it is eight pieces and an upload.
+- **Rotate the piece 90° in the viewport.** It should spin in place. If it
+  swings sideways, the origin is wrong — the one error no test here can catch.
+
+### Also added
+
+A short **"starting a different world"** section, since Sky Citadel is next:
+the conventions port, the connection vocabulary does not. Each world's socket
+Kinds are decided before modelling, because they decide where the openings go
+and re-cutting openings on a finished kit is the expensive version of that
+conversation.
+
+### Done
+
+- `docs/CHUNK_AUTHORING.md` — unit scale, kit size and first delivery, review
+  layout, the hand pass, starting a new world. ~940 words to ~1,800; still
+  conventions, still no compliance checklist.
+- `docs/MODULAR_MAPS.md` — the authoring checklist gained the 12–16 target and
+  "decide your Kinds before modelling".
+- `Content/Chunks/VerdantValley.luau` — header records the 12–16 target, the
+  variants-not-roles rule, and the 4-piece first delivery.
+- `docs/STATUS.md` — four rows, including the process one that should have been
+  written last session and was not: **specify the seam, not the piece.**
+
+### Stopped at
+
+Docs and one content header. No System changed, 574 green. PDF re-exported.
+
+### Next
+
+Unchanged from Session 42, and now blocking real art:
+
+1. **`GroundOffsetY`** — must land before any mesh is uploaded.
+2. **Four pieces through the whole pipeline** before the remaining 8–12 are
+   built.
+3. **Sky Citadel's socket Kinds** — the owner is starting that world next, and
+   `STATUS.md` still says it needs a Blueprint section first. Worth settling
+   before geometry exists, not after.
+4. `PathLength` retune after a real piece is walked; `exitFor` random exit;
+   decide `IncludeSide`.
+
+---
+
 ## Session 42 — 2026-09-22 — The brief was a spec; the kit came back wrong
 
 **Branch:** `claude/nifty-babbage-elpxrv` · **Tests:** 574 passing (unchanged)
