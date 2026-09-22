@@ -8,7 +8,7 @@ and progressively gain control over their own RNG — occasionally triggering
 global events that affect everyone playing.
 
 **Phase 1 is complete and verified in Roblox Studio.** You can walk around the
-Crossroads, press ROLL, and watch a destination resolve. 167 tests passing.
+Crossroads, press ROLL, and watch a destination resolve. The headless suite runs with `./tests/run.sh` and prints its own totals.
 
 Next up: Phase 2 — expedition entry, combat, loot, Discovery Book.
 
@@ -18,7 +18,7 @@ Next up: Phase 2 — expedition entry, combat, loot, Discovery Book.
 |---|---|
 | [`docs/STATUS.md`](docs/STATUS.md) | **Start here.** Current state, decisions locked in, open items, where to pick up |
 | [`docs/PROTOTYPE_BUILD_SPEC.md`](docs/PROTOTYPE_BUILD_SPEC.md) | **Canonical.** Architecture, data schemas, RemoteEvent contract, task list |
-| [`docs/TESTING.md`](docs/TESTING.md) | Running the 167 tests, and the Studio manual pass |
+| [`docs/TESTING.md`](docs/TESTING.md) | Running the headless suite, and the Studio manual pass |
 | [`docs/BLUEPRINT_RECONCILIATION.md`](docs/BLUEPRINT_RECONCILIATION.md) | How the Biome Blueprint merged; 4 items needing sign-off |
 | [`docs/WORKLOG.md`](docs/WORKLOG.md) | Session history and handoff points — **read the top entry first** |
 | [`docs/MODULAR_MAPS.md`](docs/MODULAR_MAPS.md) | The chunk system: how biome maps assemble from authored pieces |
@@ -69,5 +69,5 @@ See build spec §3.3.
 - [x] 15-roll onboarding arc peaking on Epic; true RNG from roll 16
 - [x] Modular map system — asset manifest, chunk kit, seeded assembler
 - [x] 5 worlds; 208-test headless suite + CI
-- [ ] **Sky Citadel biome** — art direction and a 19-piece kit exported, with turns both ways and a crossroads (`docs/SKY_CITADEL.md`); needs upload, enemies and a boss
+- [ ] **Sky Citadel biome** — art direction and a 19-piece kit exported, with turns both ways and a crossroads (`docs/biomes/SKY_CITADEL.md`); needs upload, enemies and a boss
 - [ ] Phase 2 — expedition entry, combat, loot, Discovery Book

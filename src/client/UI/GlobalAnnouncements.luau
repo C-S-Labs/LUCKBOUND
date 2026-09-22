@@ -17,6 +17,7 @@ local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local Constants = require(Root.Core.Constants)
 local GameConfig = require(Root.Core.GameConfig)
 local Net = require(Root.Core.Net)
+local UIKit = require(script.Parent.UIKit)
 
 local SettingsController = require(script.Parent.Parent.Controllers.SettingsController)
 
@@ -189,11 +190,8 @@ local function showBanner(payload: any, ageSeconds: number)
 	end)
 end
 
-local function formatClock(seconds: number): string
-	local m = math.floor(seconds / 60)
-	local s = math.floor(seconds % 60)
-	return string.format("%d:%02d", m, s)
-end
+-- Was a second, unclamped copy: an overrun rendered "-1:-30".
+local formatClock = UIKit.formatClock
 
 --- Drives the active-event bar from a snapshot. Counts down locally from
 --- RemainingSeconds rather than a server timestamp, so a skewed client clock

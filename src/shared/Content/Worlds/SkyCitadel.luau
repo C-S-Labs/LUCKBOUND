@@ -4,7 +4,7 @@
 -- and the Fatebreak announcement that depends on it.
 --
 -- The Biome Blueprint drafts no Sky Citadel (its §7.4 lists it as a reserved
--- slot), so its art direction lives in docs/SKY_CITADEL.md instead: a white
+-- slot), so its art direction lives in docs/biomes/SKY_CITADEL.md instead: a white
 -- futurist castle broken into floating islands -- needle spires with neon
 -- halos, violet-roofed turrets, azure seams of light. Owner-directed
 -- 2026-09-22.

@@ -15,6 +15,7 @@ local TweenService = game:GetService("TweenService")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local UITheme = require(Root.Core.UITheme)
+local UIKit = require(script.Parent.UIKit)
 
 local ExpeditionController = require(script.Parent.Parent.Controllers.ExpeditionController)
 local EventController = require(script.Parent.Parent.Controllers.EventController)
@@ -28,10 +29,7 @@ local worldLabel: TextLabel
 local timerLabel: TextLabel
 local toast: TextLabel
 
-local function formatClock(seconds: number): string
-	local whole = math.max(0, math.floor(seconds))
-	return string.format("%d:%02d", whole // 60, whole % 60)
-end
+local formatClock = UIKit.formatClock
 
 local function build()
 	gui = Instance.new("ScreenGui")

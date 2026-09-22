@@ -140,6 +140,27 @@ function Schema.validateConfig(config: any, worlds: { [string]: any }): (boolean
 		table.insert(errors, `no world has EnabledInPhase <= CurrentPhase ({config.CurrentPhase}) -- roll pool would be empty`)
 	end
 
+	-- Scenario-layer pacing dials (build spec §7.3). Required, not optional:
+	-- ScenarioCore cannot assign without them, and losing them silently is
+	-- exactly what merge f9dec00 did -- the block vanished, nothing at boot
+	-- objected because the module had no runtime caller, and the failure
+	-- surfaced 400 tests into a run as an uncaught comparison against nil.
+	-- A missing dial is a boot error now.
+	for _, key in { "FateInterventionChance", "ScenarioRecentMemory", "ScenarioEscalateFrom" } do
+		if type(config.Expedition[key]) ~= "number" then
+			table.insert(
+				errors,
+				`GameConfig.Expedition.{key} must be a number -- the scenario layer cannot pace a run without it`
+			)
+		end
+	end
+	if type(config.Expedition.FateInterventionChance) == "number" then
+		local c = config.Expedition.FateInterventionChance
+		if c < 0 or c > 1 then
+			table.insert(errors, `GameConfig.Expedition.FateInterventionChance must be a 0..1 probability, got {c}`)
+		end
+	end
+
 	-- Expeditions as their own server, and parties (build spec §7.2).
 	local mode = config.Expedition.InstanceMode
 	if mode ~= "AUTO" and mode ~= "TELEPORT" and mode ~= "IN_PLACE" then
@@ -902,88 +923,85 @@ function Schema.validateEvents(events: any, worlds: { [string]: any }): (boolean
 end
 
 --- Runs every check. Raises on failure -- called first in bootstrap.
-function Schema.validateAll(
-	worlds: { [string]: any },
-	config: any,
-	hub: any?,
-	chunks: { [string]: any }?,
-	manifest: any?,
-	menu: any?,
-	codes: any?,
-	cinematics: any?,
-	palettes: any?,
-	events: any?,
-	scenarios: any?
-): ()
+--- CONTENT VALIDATION, driven by a registry rather than a parameter list.
+---
+--- Every entry names a content kind and a check that pulls what it needs out
+--- of the bundle. Cross-checks (a chunk's AssetKey against the manifest, a
+--- palette against the menu) read sibling kinds from the same table, so they
+--- keep working without the caller having to know the dependency order.
+---
+--- WHY A REGISTRY. This was eleven positional parameters, which meant adding
+--- a content kind edited five files: the content module, its validator, this
+--- signature, the boot call, and the test harness. Content requiring system
+--- code in four places is the prime directive failing quietly. Adding a kind
+--- is now one entry here plus one line at the boot call.
+---
+--- `required` marks the kinds a server cannot start without. The rest are
+--- optional so partial bundles -- which tests build constantly -- validate
+--- only what they actually supply.
+local VALIDATORS: { { Kind: string, Required: boolean?, Run: (any) -> (boolean, { string }) } } = {
+	{ Kind = "worlds", Required = true, Run = function(c)
+		return Schema.validateWorlds(c.worlds)
+	end },
+	{ Kind = "config", Required = true, Run = function(c)
+		return Schema.validateConfig(c.config, c.worlds)
+	end },
+	{ Kind = "hub", Run = function(c)
+		return Schema.validateHub(c.hub)
+	end },
+	{ Kind = "scenarios", Run = function(c)
+		return Schema.validateScenarios(c.scenarios, c.chunks)
+	end },
+	{ Kind = "chunks", Run = function(c)
+		if c.manifest == nil then
+			return true, {}
+		end
+		return Schema.validateChunks(c.chunks, c.manifest)
+	end },
+	{ Kind = "chunks", Run = function(c)
+		-- The other half of the chunk story: which ROUTE each world takes to
+		-- a map. Separate entry because it reads worlds as well.
+		if c.manifest == nil then
+			return true, {}
+		end
+		return Schema.validateMaps(c.worlds, c.chunks, c.manifest)
+	end },
+	{ Kind = "menu", Run = function(c)
+		return Schema.validateHubMenu(c.menu, c.config)
+	end },
+	{ Kind = "codes", Run = function(c)
+		return Schema.validateCodes(c.codes)
+	end },
+	{ Kind = "cinematics", Run = function(c)
+		return Schema.validateCinematics(c.cinematics)
+	end },
+	{ Kind = "palettes", Run = function(c)
+		if c.menu == nil then
+			return true, {}
+		end
+		return Schema.validatePalettes(c.palettes, c.menu)
+	end },
+	{ Kind = "events", Run = function(c)
+		return Schema.validateEvents(c.events, c.worlds)
+	end },
+}
+
+--- Validates a bundle of content and RAISES on any error, because a server
+--- that boots on malformed content is worse than one that refuses to.
+--- Build spec §1.2 -- this is boot step 1.
+function Schema.validateAll(content: { [string]: any }): ()
 	local allErrors = {}
 
-	local _, worldErrors = Schema.validateWorlds(worlds)
-	for _, e in worldErrors do
-		table.insert(allErrors, e)
-	end
-
-	local _, configErrors = Schema.validateConfig(config, worlds)
-	for _, e in configErrors do
-		table.insert(allErrors, e)
-	end
-
-	if hub ~= nil then
-		local _, hubErrors = Schema.validateHub(hub)
-		for _, e in hubErrors do
-			table.insert(allErrors, e)
+	for _, entry in VALIDATORS do
+		local supplied = content[entry.Kind]
+		if supplied == nil then
+			if entry.Required then
+				table.insert(allErrors, `content bundle is missing '{entry.Kind}', which is required to boot`)
+			end
+			continue
 		end
-	end
-
-	if scenarios ~= nil then
-		local _, scenarioErrors = Schema.validateScenarios(scenarios, chunks)
-		for _, e in scenarioErrors do
-			table.insert(allErrors, e)
-		end
-	end
-
-	if chunks ~= nil and manifest ~= nil then
-		local _, chunkErrors = Schema.validateChunks(chunks, manifest)
-		for _, e in chunkErrors do
-			table.insert(allErrors, e)
-		end
-
-		local _, mapErrors = Schema.validateMaps(worlds, chunks, manifest)
-		for _, e in mapErrors do
-			table.insert(allErrors, e)
-		end
-	end
-
-	if menu ~= nil then
-		local _, menuErrors = Schema.validateHubMenu(menu, config)
-		for _, e in menuErrors do
-			table.insert(allErrors, e)
-		end
-	end
-
-	if codes ~= nil then
-		local _, codeErrors = Schema.validateCodes(codes)
-		for _, e in codeErrors do
-			table.insert(allErrors, e)
-		end
-	end
-
-	if cinematics ~= nil then
-		local _, cinematicErrors = Schema.validateCinematics(cinematics, worlds)
-		for _, e in cinematicErrors do
-			table.insert(allErrors, e)
-		end
-	end
-
-	if palettes ~= nil and menu ~= nil then
-		local _, paletteErrors = Schema.validatePalettes(palettes, menu)
-		for _, e in paletteErrors do
-			table.insert(allErrors, e)
-		end
-	end
-
-	if events ~= nil then
-		local _, eventErrors = Schema.validateEvents(events, worlds)
-		for _, e in eventErrors do
+		local _, errors = entry.Run(content)
+		for _, e in errors do
 			table.insert(allErrors, e)
 		end
 	end
@@ -995,5 +1013,6 @@ function Schema.validateAll(
 		)
 	end
 end
+
 
 return Schema

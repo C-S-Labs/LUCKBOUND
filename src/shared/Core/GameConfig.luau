@@ -3,19 +3,8 @@
 -- Rule: if a designer might want to change it, it belongs in this file.
 -- A magic number inside a System is a spec violation.
 
-local function deepFreeze<T>(t: T): T
-	-- Guard against a table reachable by two paths (UITheme reuses Constants'
-	-- rarity tables): freezing an already-frozen table raises.
-	if table.isfrozen(t :: any) then
-		return t
-	end
-	for _, v in pairs(t :: any) do
-		if type(v) == "table" and not table.isfrozen(v) then
-			deepFreeze(v)
-		end
-	end
-	return table.freeze(t :: any) :: T
-end
+local Freeze = require(script.Parent.Freeze)
+local deepFreeze = Freeze.deep
 
 -- === THE WORLD SCALE ===
 -- Owner-directed 2026-09-21, after measuring the hub against a player.
@@ -173,6 +162,35 @@ local GameConfig = {
 
 		-- Default map size. A world overrides it with MapPathLength.
 		PathLength = 5,
+
+		-- === Scenario layer (build spec §7.3) ====================
+		-- RESTORED 2026-09-23. This block was silently deleted by merge
+		-- f9dec00 -- a conflict hunk resolved in favour of the other side --
+		-- and nothing noticed, because ScenarioCore had no runtime caller and
+		-- only the test suite read these. Schema.validateConfig now requires
+		-- all three, so losing them again is a BOOT error rather than a
+		-- crash 400 tests into a run.
+		-- What HAPPENS in a chunk, decided separately from which chunk it is.
+		-- Every number here is a pacing dial, which is exactly why none of
+		-- them live in ScenarioCore.
+		--
+		-- How often Fate overrides ordinary weighting and picks from the rare
+		-- band regardless of pacing. The brief asks for "uncommon enough to
+		-- feel special"; at 6% a five-room run sees one about a quarter of the
+		-- time, which is rare enough to be worth mentioning and common enough
+		-- that players learn it exists. Set 0 to switch Fate intervention off.
+		FateInterventionChance = 0.06,
+		-- How many recent (chunk, scenario) PAIRS to remember when damping
+		-- repeats. Pairs, not chunk ids: a place reappearing is fine when
+		-- something different happens in it.
+		ScenarioRecentMemory = 6,
+		-- Fraction of the path after which the rare band unlocks and uncommon
+		-- is favoured. Below it a run stays legible; above it, it escalates.
+		ScenarioEscalateFrom = 0.4,
+		-- The scenario layer draws from its own stream, offset well past the
+		-- assembly attempts, so adding or removing a scenario can never shift
+		-- which CHUNKS a seed picks. Keep it larger than AssemblyAttempts.
+		ScenarioStreamOffset = 1000,
 		-- Hang one SIDE pocket off a spare socket when a kit has one (Biome
 		-- Blueprint §6). Off returns maps to exactly the critical path.
 		IncludeSide = true,

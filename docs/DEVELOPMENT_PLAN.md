@@ -256,7 +256,7 @@ The rules that would have prevented most of the back-and-forth so far.
 1. **One phase at a time, and finish it.** A phase is done when its gate is
    met, not when the interesting part is done.
 2. **Walk it before building on it.** Every Studio walk so far has found things
-   574 tests could not — a camera the engine also owns, an Enum name, a guessed
+   the headless suite could not — a camera the engine also owns, an Enum name, a guessed
    constant. Unwalked work is unfinished work, however green the suite is.
 3. **Batch the art.** Art changes force re-walks. Collect them and land them
    together rather than one at a time.

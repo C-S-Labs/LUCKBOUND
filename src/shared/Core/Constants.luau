@@ -4,19 +4,8 @@
 
 local Types = require(script.Parent.Types)
 
-local function deepFreeze<T>(t: T): T
-	-- Guard against a table reachable by two paths (UITheme reuses Constants'
-	-- rarity tables): freezing an already-frozen table raises.
-	if table.isfrozen(t :: any) then
-		return t
-	end
-	for _, v in pairs(t :: any) do
-		if type(v) == "table" and not table.isfrozen(v) then
-			deepFreeze(v)
-		end
-	end
-	return table.freeze(t :: any) :: T
-end
+local Freeze = require(script.Parent.Freeze)
+local deepFreeze = Freeze.deep
 
 -- Colours are the Biome Blueprint §1.1 table, which declares itself the single
 -- source of truth for rarity across UI, portals, particles and loot glows.

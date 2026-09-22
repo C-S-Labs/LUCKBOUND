@@ -15,8 +15,12 @@ handoff:
    items with severity. If you are about to relitigate a decision, it is
    probably recorded here as settled.
 3. **`docs/PROTOTYPE_BUILD_SPEC.md`** — the canonical architecture. §7 lists
-   what Phase 1 excludes; §7.1 and §7.2 are the only things lifted out of it,
-   and both were lifted by a written amendment rather than quietly.
+   what Phase 1 excludes. **§7.1 (expedition entry), §7.2 (parties and
+   expeditions as their own server) and §7.3 (the scenario layer)** are the
+   only things lifted out of it, each by a written amendment rather than
+   quietly. Claiming a new amendment number means editing the index at the
+   head of §7 in the same change — two branches once claimed §7.2 at the same
+   time and the collision was only caught by hand.
 
 `docs/MASTER_DESIGN.md` is the design-level source of truth — what the game is,
 how the generation layers fit together, what is built versus planned. Read it
@@ -25,8 +29,13 @@ before anything that touches design rather than plumbing.
 **`docs/DEVELOPMENT_PLAN.md` says what to work on next**, and why in that
 order. Read it before picking up anything that is not already in flight.
 
+`docs/RESERVED.md` lists every declaration that is deliberately unread — fields,
+remotes and options that exist before the system that consumes them. **A
+declaration that is unread and NOT in that register is a defect, not a
+decision.** Add a row before adding a reserved field.
+
 Then `docs/` has the rest: `MODULAR_MAPS.md`, `CHUNK_AUTHORING.md`,
-`TESTING.md`, `ART_DIRECTION.md`, `SKY_CITADEL.md`,
+`TESTING.md`, `ART_DIRECTION.md`, `biomes/SKY_CITADEL.md`,
 `BLUEPRINT_RECONCILIATION.md`, `TOOLCHAIN_ACCESS.md`, `PLAYER_UI.md`,
 `PLAYER_ABILITIES.md`, `EVENTS.md`.
 

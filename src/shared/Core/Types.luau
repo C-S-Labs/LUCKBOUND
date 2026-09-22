@@ -21,6 +21,8 @@ export type ItemType = SlotName
 -- baseline on expedition entry, which needs Brightness, FogStart and the
 -- colour-shift pair that the original four fields could not express.
 export type Environment = {
+	-- RESERVED: see docs/RESERVED.md -- a per-world SKYBOX. Not the same as an
+	-- event's `Sky` table, which is a temporary overlay SkyController reads.
 	SkyId: string?,
 	AmbientColor: Color3,
 	OutdoorAmbientColor: Color3?,
@@ -51,11 +53,15 @@ export type WorldDefinition = {
 	RollWeight: number, -- basis points of the full game; renormalised over the enabled pool
 	EnabledInPhase: number,
 	Environment: Environment,
+	-- RESERVED: see docs/RESERVED.md -- per-world music, blocked on audio.
 	MusicId: string?,
 	Enemies: { string },
+	-- RESERVED: see docs/RESERVED.md -- the four below are blocked by build
+	-- spec §7 (combat, items, discoveries) or by audio not existing yet.
 	BossId: string?,
 	LootTableId: string?,
 	DiscoveryTableId: string?,
+	-- RESERVED: see docs/RESERVED.md -- world modifiers, blocked by §7.
 	Modifiers: { string },
 	ModifierOverrides: { [string]: ModifierOverride }?,
 	DurationSeconds: number,
@@ -169,8 +175,59 @@ export type ChunkDefinition = {
 	Sockets: { ChunkSocket },
 	Weight: number, -- selection weight within its Role
 	MaxPerLayout: number?, -- nil = unlimited
-	EnemyTags: { string }?, -- which spawn pools this chunk accepts
+	-- Studs from the BOTTOM of the piece's bounding box up to its walking
+	-- surface. ChunkLoader lifts the mesh by (SizeY/2 - GroundOffsetY) so the
+	-- ground lands on the layout plane; nil means "the walk plane is the box
+	-- centre", which is what every chunk meant before the field existed.
+	GroundOffsetY: number?,
+	-- Scenario compatibility (build spec §7.3): what can HAPPEN here, keyed by
+	-- a scenario's Requires. Deliberately not universal -- a traversal
+	-- challenge in a flat meadow is not a challenge. Required on PATH,
+	-- COMBAT and SIDE; ENTRY and BOSS are never assigned a scenario.
+	Supports: { [string]: boolean }?,
+	-- RESERVED: see docs/RESERVED.md -- which spawn pools this chunk accepts,
+	-- blocked by §7 (enemies). Declared per piece so a kit authored now does
+	-- not need revisiting when population lands.
+	EnemyTags: { string }?,
+	-- AUTHORING ONLY, deliberately unread: free-text notes that make a kit
+	-- legible to a human. Reading them from code would turn authoring notes
+	-- into behaviour, which is exactly what Supports exists to prevent.
 	Tags: { string }?,
+}
+
+--- A SCENARIO -- what happens inside a chunk, as opposed to what the chunk is.
+--- Build spec §7.3. Centralised here with every other content shape rather
+--- than typed locally in Content/Scenarios: Types.luau is the canonical
+--- description of content, and one kind typing itself privately is how that
+--- stops being true.
+export type ScenarioBand = "ORDINARY" | "UNCOMMON" | "RARE"
+
+export type ScenarioDefinition = {
+	Id: string,
+	Name: string,
+	Band: ScenarioBand,
+	Weight: number, -- relative within its band, not a percentage
+	Requires: string, -- the Supports key a chunk must declare
+	Roles: { string }?, -- nil = any role the assigner offers
+	Notes: string?,
+}
+
+--- One room's assignment, as ScenarioCore returns it. ENTRY and BOSS carry no
+--- scenario, so the scenario fields are optional by design rather than by
+--- accident.
+export type ScenarioStep = {
+	Index: number,
+	ChunkId: string,
+	Role: ChunkRole,
+	ScenarioId: string?,
+	Band: ScenarioBand?,
+	FateTouched: boolean,
+}
+
+export type ScenarioPlan = {
+	WorldId: string,
+	Seed: number?,
+	Steps: { ScenarioStep },
 }
 
 --- One placed chunk in an assembled layout. Plain numbers, no Roblox types,

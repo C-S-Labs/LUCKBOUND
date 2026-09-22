@@ -33,6 +33,133 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 47 — 2026-09-23 — Architecture reconciliation, from an audit
+
+**Branch:** `claude/architecture-reconciliation` · **Tests:** 680 passing (was
+a crash at 210 of 640)
+
+Driven by a read-only audit of merged `main`. Order worked: health →
+architecture → types → integration → docs → validation.
+
+### `main` could not boot, and the suite was crashing
+
+Two defects, both from **merging branches that were each green alone**:
+
+1. The `Supports` requirement (§7.3) and the 19-piece Sky Citadel kit arrived
+   from different branches. Neither diff touched the other's files, so neither
+   branch's CI could see it. `Schema.validateAll` is boot step 1 and errored on
+   all 19 chunks — **the server refused to start.**
+2. Merge `f9dec00` silently deleted three `GameConfig` scenario dials. With
+   them gone `ScenarioCore.assign` compared a number against nil and **threw**,
+   so the suite aborted 210 checks into 640 and printed no summary. ~430 checks
+   had been silently unverified.
+
+> **Per-branch CI cannot see either.** The merged repository is the only state
+> worth validating, which is now a test: *the real content bundle passes boot
+> validation*, running `validateAll` over the assembled bundle exactly as the
+> server does.
+
+### Sky Citadel got its Supports — deliberately, not uniformly
+
+17 placeable pieces, each derived from its own description: the Archive takes
+puzzles and secrets, the Armory a mini-boss, the shattered span traversal and
+an ambush and neither of the other two. A kit where every piece accepted
+everything would make the metadata decoration.
+
+Its own header had already derived `GroundOffsetY = 96` and nothing had applied
+it; every piece would have sat 32 studs into the floor. Applied.
+
+### ScenarioCore was proven and unwired — the audit's central finding
+
+It had tests and no caller. That is how a config block feeding it could be
+deleted with only the test suite noticing.
+
+Wired at its §7.3 position — after assembly, before loading — with the plan
+riding on the layout and `ChunkLoader` writing `Scenario`, `ScenarioBand` and
+`FateTouched` onto each chunk folder. **Reused the attribute channel that
+already carries `Role` and `Yaw`** rather than inventing one, so a generated
+map is readable in Studio. It still spawns nothing.
+
+It draws from its own seeded stream so adding a scenario can never shift which
+chunks a seed picks; a test asserts that seam holds.
+
+### One rule moved from a weight to a guard
+
+`ScenarioCore.assign` now validates its options and returns `(false, reason)` —
+the contract `ChunkCore.assemble` already uses, rather than a second failure
+convention at one call site. **A generator that crashes on bad configuration is
+worse than one that refuses it: the crash hides every result after it.**
+
+### A test that named a world became a property
+
+*"With IncludeSide, Verdant Valley's Hollow is finally placed"* went red,
+correctly: VV has no 3-socket piece, the critical path spends two per piece, so
+no seed leaves a spare socket. The claim was true of one kit at one moment.
+
+Restated as a property — *every world that declares a SIDE pocket can and does
+place it* — which is true of both worlds and survives any kit. The
+implementation and the spec disagreed (Blueprint §6 wants a pocket per world);
+resolved explicitly as a **content gap needing a three-opening piece**, recorded
+rather than silently dropped.
+
+### Structural fixes
+
+- **`Schema.validateAll` is a registry.** Adding a content kind was five files;
+  it is one registry entry plus one line at the boot call.
+- **The harness discovers content registries** by walking `Content/` instead of
+  enumerating Worlds, Chunks and Events by hand. A new kind needs no harness
+  edit — the duplicated registry knowledge is gone.
+- **`Types.luau` is canonical again**: `ChunkDefinition` declares `Supports`
+  and `GroundOffsetY`; `ScenarioDefinition`, `ScenarioStep` and `ScenarioPlan`
+  moved in from `Content/Scenarios`, the one kind that typed itself privately.
+- **`docs/RESERVED.md`** classifies every declared-but-unread field. Unread and
+  unregistered is now a defect rather than a mystery.
+- **`deepFreeze` deduplicated** into `Core/Freeze` (three byte-identical
+  copies). `formatClock` into `UIKit` — the two copies differed, and the
+  unclamped one rendered `-1:-30` on an overrun.
+- **`part()` deliberately NOT consolidated**: HubBuilder's applies hub theme
+  defaults, ChunkLoader's is a plain setter. Merging would make the loader
+  depend on hub theming.
+
+### Documentation
+
+`CLAUDE.md` claimed §7.1 and §7.2 were the only amendments — §7.3 exists. §7
+now opens with an **amendment index** you must edit to claim a number, because
+two branches once claimed §7.2 simultaneously.
+
+Two Sky Citadel documents disagreed about whether the world was designed;
+consolidated into `biomes/`. `MODULAR_MAPS.md`'s worked example described a
+retired 8-piece kit using three chunk ids that no longer exist. Test counts
+were stated four ways — **removed from prose entirely** except `STATUS.md`,
+since a number written into four documents drifts by construction.
+
+`TESTING.md` gained **the untested boundary**, naming `ChunkLoader`,
+`PrebuiltLoader`, `PrefabLoader`, `PortalRig`, `Net` and `Result`, what could
+break without a test noticing, and which Studio pass covers each — so a green
+suite cannot be read as a verified runtime path.
+
+### Verified
+
+Suite 680/680 · syntax clean on every module · forbidden-name scan clean · no
+conflict remnants · `validateAll` accepts the real bundle · no config key,
+remote or exported type removed.
+
+### Stopped at
+
+Green and coherent. **Still unwalked in Studio** — that remains the real gate.
+
+### Next
+
+1. **Walk it.** Twenty seeds, and confirm scenario attributes read correctly on
+   chunk folders.
+2. **Upload the Sky Citadel kit** — 19 pieces are exported, none uploaded.
+3. **Decimate and re-upload the Verdant Valley Grove** (14,448 tris).
+4. A **three-opening Verdant Valley piece** if that world is to have its §6
+   pocket.
+5. `PathLength` retune once a real piece has been walked.
+
+---
+
 ## Session 46 — 2026-09-22 — The kit is in, and rooms stopped being places
 
 **Branch:** `claude/nifty-babbage-elpxrv` · **Tests:** 589 passing (was 574)
