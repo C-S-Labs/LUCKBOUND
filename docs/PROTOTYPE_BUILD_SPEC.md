@@ -974,6 +974,30 @@ to do with leftovers** — every world with cap pieces gets it, every world
 without is untouched. The alternative was a Sky-Citadel-shaped special case in
 the assembler, which is what the directive actually forbids.
 
+### Extended 2026-09-23: a branch goes somewhere first
+
+**Owner-directed**, after two Studio walks came back a single straight shot:
+*"when paths branch off, ensure that all paths are filled to either a dead end
+or lead to the boss."*
+
+A spare mouth took a cap **where it stood**, so an intersection was three ways
+in and two walls you could see from the junction. A spare mouth now grows a
+short spur of ordinary pieces first (`GameConfig.Expedition.BranchLength`), and
+the cap pass closes whatever the spur leaves — so every branch either dead-ends
+somewhere you had to walk to, or is the path to the arena.
+
+Bounded deliberately: the frontier is snapshot **before** any spur grows, so a
+spur's own leftovers are capped rather than grown again. Without that a kit
+with spare sockets grows until it collides with itself and every seed fails. A
+spur also never takes a socket Kind the arena accepts — that Kind is reserved
+for the approach, and spending it on a branch would strand the boss.
+
+The same walks showed the other half of the problem was **content, not the
+assembler**: the crossroads is the only piece in the kit with a mouth to spare,
+and at weight 14 and one per layout it appeared in about one run in six. Now
+weight 30 and two per layout, which puts an intersection in roughly 6 runs in
+10.
+
 ### Measured
 
 Over 200 seeds with and against the side pocket: **every socket of every placed

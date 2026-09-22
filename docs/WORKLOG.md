@@ -35,7 +35,7 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ## Session 48 — 2026-09-23 — The Sky Citadel meshes are in, and caps were built twice
 
-**Branch:** `claude/clever-cori-oiq6pb` · **Tests:** 692 passing (was 686 on
+**Branch:** `claude/clever-cori-oiq6pb` · **Tests:** 696 passing (was 686 on
 `main` after the caps merge)
 
 The 22-piece Sky Citadel kit arrived as `.rbxmx` with a written chunk
@@ -138,6 +138,30 @@ in silence).
    assigning it afterwards does not re-cook the collision.
 
 Both are unproven until the next walk.
+
+### Then the walk said it was a corridor
+
+Rotation confirmed fixed — the decks meet. Two follow-on asks, owner-directed:
+a longer run, and *"when paths branch off, ensure that all paths are filled to
+either a dead end or lead to the boss."*
+
+The straight shot had **two causes, one in each half of the system**, and
+measuring first is what separated them:
+
+- **The assembler** capped a spare mouth where it stood, so an intersection
+  was a junction with two visible walls. A mouth now grows a spur of up to
+  `BranchLength` pieces and the cap closes its far end. The frontier is
+  snapshot before any spur grows — otherwise a kit with spare sockets grows
+  until it collides with itself and every seed fails.
+- **The content** was the bigger half, and the first measurement said so:
+  turning branches on moved the average map from 11.6 to 12.0 pieces, because
+  the crossroads is the **only** piece in the kit with a mouth to spare and it
+  sat at weight 14, one per layout — one run in six had anywhere to branch.
+  Weight 30 and two per layout puts an intersection in ~6 runs in 10.
+
+`PathLength` 5 → 8. A map now runs **~12.6 pieces against ~7.3**, and 300 of
+300 seeds assemble. Worth watching on the next walk: the expedition timer was
+tuned against the shorter map.
 
 ### Stopped at
 

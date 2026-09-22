@@ -1700,6 +1700,50 @@ do
 			}, AssetManifest)))
 	end
 
+	-- BRANCHES: a spare mouth goes somewhere (owner-directed 2026-09-23) --
+	-- Two Studio walks in a row came back a single straight shot. A branch
+	-- that is capped where it stands is not a branch, so a spare mouth now
+	-- grows a short spur first and the cap closes its far end.
+	do
+		local function build(branchLength: number)
+			local grown, intersections = 0, 0
+			for trial = 1, 200 do
+				local okA, layout = ChunkCore.assembleWithRetry(Chunks, {
+					WorldId = "SKY_CITADEL",
+					PathLength = GameConfig.Expedition.PathLength,
+					IncludeSide = true,
+					BranchLength = branchLength,
+				}, function(a) return lcg(trial * 2207 + a * 11) end, 5)
+				if okA then
+					local hasX = false
+					for _, c in layout.Chunks do
+						if c.ChunkId == "SC_CROSSROADS" then hasX = true end
+					end
+					if hasX then
+						intersections += 1
+						-- A spur is any piece placed after the arena and the
+						-- pocket that is not itself a cap.
+						for _, c in layout.Chunks do
+							if c.Index > GameConfig.Expedition.PathLength + 2 and c.Role ~= "CAP" then
+								grown += 1
+								break
+							end
+						end
+					end
+				end
+			end
+			return grown, intersections
+		end
+		local grown, intersections = build(GameConfig.Expedition.BranchLength)
+		check("Sky Citadel lays out an intersection on a good share of seeds",
+			intersections > 60, string.format("%d of 200", intersections))
+		check("a branch off an intersection runs before it dead-ends",
+			grown > 0, string.format("%d of %d intersecting layouts grew a spur", grown, intersections))
+		local flat = build(0)
+		check("BranchLength 0 restores capping the mouth where it stands", flat == 0)
+		check("the expedition grows branches", GameConfig.Expedition.BranchLength > 0)
+	end
+
 	-- CAPS: no opening onto nothing (owner-directed 2026-09-22) -------
 	-- In a world with CAP chunks, every socket of every placed piece must meet
 	-- a socket of another placed piece, head-on, at the same point. That is
