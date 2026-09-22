@@ -38,7 +38,7 @@ Six sections. A world is ready to be built when all six are filled in.
 6. **Piece size and count** — how big a piece is in this world, and how many
    the kit wants.
 
-A world is *varied* when §3 and §4 multiply well. Build spec §7.2 has the
+A world is *varied* when §3 and §4 multiply well. Build spec §7.3 has the
 generation pipeline; the short version is that a chunk declares what it can
 support and the generator decides per run what actually happens there, so 11
 pieces can be 50 distinct rooms.

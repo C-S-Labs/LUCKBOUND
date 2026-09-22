@@ -34,7 +34,7 @@
 -- than the bounding-box centre. It is the skirt depth: 4 on every piece except
 -- the Fern Hollow, which sits 6 deep because it is a sunken place.
 
--- SUPPORTS is the scenario-compatibility gate (brief §3, build spec §7.2):
+-- SUPPORTS is the scenario-compatibility gate (brief §3, build spec §7.3):
 -- what can HAPPEN here, as opposed to what this place IS. Deliberately not
 -- universal -- a traversal challenge in a flat meadow is not a challenge, and
 -- a mini-boss in a corridor is not an arena. The generator intersects this

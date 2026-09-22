@@ -230,7 +230,7 @@ what addendum §A4 asks for with per-expedition seeding.
 ## The layer above: what happens in a room
 
 **This document is about where pieces go. It is deliberately not about what
-happens in them** — that is the scenario layer, `PROTOTYPE_BUILD_SPEC.md` §7.2,
+happens in them** — that is the scenario layer, `PROTOTYPE_BUILD_SPEC.md` §7.3,
 and the separation is the point:
 
 ```
@@ -366,7 +366,7 @@ openings. Everything else was over-specification, and
 
 - **Enemy population** — `EnemyTags` are declared but unconsumed
 - **Encounter and reward configuration** — a scenario plan says a room is an
-  Ambush; nothing spawns it. Build spec §7.2 draws that line deliberately
+  Ambush; nothing spawns it. Build spec §7.3 draws that line deliberately
 - **Pathfinding validation** (addendum §A4 step 4) — a spawn→boss reachability
   pass before letting players in. Collision rejection is not the same thing:
   two pieces can be non-overlapping and still not walkable between.

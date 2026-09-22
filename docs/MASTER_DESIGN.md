@@ -59,7 +59,7 @@ Where Fate *does* reach:
 | | |
 |---|---|
 | **Which world** | weighted by rarity, true RNG |
-| **What a room becomes** | Fate may override ordinary scenario weighting and pick from the rare band — build spec §7.2 |
+| **What a room becomes** | Fate may override ordinary scenario weighting and pick from the rare band — build spec §7.3 |
 | **World modifiers** | a world re-tinted and re-ruled (`NIGHT`, and per-world overrides) |
 | **Live events** | server-wide, scoped and precedence-ordered — `EVENTS.md` |
 | **Scarcity** | some things only ever exist ten times, ledger-backed |
@@ -117,7 +117,7 @@ Model count is not content count. Six layers, each reading only the one before:
 RUN SEED
   → CHUNK SELECTION        ✅ ChunkCore
   → CONNECTION VALIDATION  ✅ ChunkCore
-  → SCENARIO SELECTION     ✅ ScenarioCore      build spec §7.2
+  → SCENARIO SELECTION     ✅ ScenarioCore      build spec §7.3
   → ENCOUNTER CONFIG       ⬜ needs combat
   → REWARD CONFIG          ⬜ needs items
   → FATE EVENTS            🟡 scenario-level only
@@ -194,7 +194,7 @@ System change, the schema is wrong.
 hold except where an amendment records otherwise:
 
 - **§7.1** opened expedition entry — arrive, walk a generated map, come back.
-- **§7.2** opened the scenario layer — decide and record what a room is; spawn
+- **§7.3** opened the scenario layer — decide and record what a room is; spawn
   nothing.
 
 Both were owner-directed and written down rather than done quietly. That is the

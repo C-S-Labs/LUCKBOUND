@@ -135,7 +135,7 @@ that matters**.
 | A | 4–8 more physical chunks | ✅ 11 delivered for Verdant Valley |
 | B | Chunk metadata — connectors, size, tags, supported scenarios | ✅ `Supports`, sockets, sizes all from measured geometry |
 | C | Generator assembles reliably and validates connections | ✅ 200/200 seeds, collision-free |
-| D | Scenario assignment, independent of geometry | ✅ `ScenarioCore`, build spec §7.2 |
+| D | Scenario assignment, independent of geometry | ✅ `ScenarioCore`, build spec §7.3 |
 | E | Encounter and reward configuration | ⬜ **blocked by §7** — needs combat and items |
 | F | Rare Fate-driven mutations | 🟡 scenario-level done; room-rule changes need E |
 | G | **Generate many seeded runs, inspect repetition and pacing** | 🟡 headless only — never walked |

@@ -174,7 +174,7 @@ local GameConfig = {
 		-- Default map size. A world overrides it with MapPathLength.
 		PathLength = 5,
 
-		-- === Scenario layer (build spec §7.2) ====================
+		-- === Scenario layer (build spec §7.3) ====================
 		-- What HAPPENS in a chunk, decided separately from which chunk it is.
 		-- Every number here is a pacing dial, which is exactly why none of
 		-- them live in ScenarioCore.

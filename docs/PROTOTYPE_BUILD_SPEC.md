@@ -826,7 +826,7 @@ know what is going to happen here."*
 RUN SEED
   → CHUNK SELECTION        ChunkCore       where pieces go
   → CONNECTION VALIDATION  ChunkCore       sockets, Kinds, collision
-  → SCENARIO SELECTION     ScenarioCore    what happens in each room   ← §7.2
+  → SCENARIO SELECTION     ScenarioCore    what happens in each room   ← §7.3
   → ENCOUNTER CONFIG       not built       what actually spawns
   → REWARD CONFIG          not built       what it drops
   → FATE EVENTS            partial         Fate may override the scenario

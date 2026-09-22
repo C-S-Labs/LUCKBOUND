@@ -1,6 +1,6 @@
 --!strict
 -- SCENARIO LIBRARY -- what can HAPPEN in a chunk, as opposed to what a chunk
--- IS. Procedural Biome Design Brief §4; build spec §7.2.
+-- IS. Procedural Biome Design Brief §4; build spec §7.3.
 --
 -- THE SEPARATION THIS EXISTS FOR
 -- A chunk is physical space. A scenario is the gameplay placed inside it. The

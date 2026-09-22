@@ -1,6 +1,6 @@
 --!strict
 -- Assigns a SCENARIO to each placed chunk in a layout. Brief §3/§5/§8,
--- build spec §7.2.
+-- build spec §7.3.
 --
 -- THE SEAM. ChunkCore decides WHERE pieces go and knows nothing about what
 -- happens in them; this decides WHAT HAPPENS and knows nothing about geometry.
@@ -12,7 +12,7 @@
 --   { Index, ChunkId, Role, ScenarioId, Band, FateTouched }
 --
 -- It spawns nothing. Turning a scenario into enemies, loot and props is
--- ENCOUNTER CONFIGURATION, which build spec §7 still excludes -- see §7.2 for
+-- ENCOUNTER CONFIGURATION, which build spec §7 still excludes -- see §7.3 for
 -- exactly where the line is drawn and why it is drawn there.
 
 local WeightedRandom = require(script.Parent.WeightedRandom)

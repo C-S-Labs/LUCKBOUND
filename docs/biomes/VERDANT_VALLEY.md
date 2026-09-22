@@ -137,7 +137,7 @@ retuning once a real piece has been walked, not before.
 
 ## 6. What each piece can support
 
-The scenario-compatibility gate (build spec §7.2). Deliberately not universal —
+The scenario-compatibility gate (build spec §7.3). Deliberately not universal —
 a traversal challenge in a flat meadow is not a challenge, and a mini-boss in a
 corridor is not an arena.
 
