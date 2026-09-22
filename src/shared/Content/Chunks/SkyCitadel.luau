@@ -338,11 +338,15 @@ for _, chunk in CHUNKS do
 	-- If a walk shows the pieces a quarter turn out instead of a half, this is
 	-- the one number to change: 90 or 270.
 	c.MeshYawOffset = 180
-	-- Two single-socket end pieces (boss arena, crumbling-span cap) were
-	-- authored facing the opposite convention from the connector pieces, so
-	-- the kit-wide 180 over-rotates them. Confirmed by Studio walk 2026-09-23.
-	if c.Id == "SC_BOSS_CLEARING" or c.Id == "SC_CAP_CRUMBLING" then
+	-- Per-piece corrections, each confirmed by a Studio walk 2026-09-23.
+	-- Boss arena: authored facing opposite the connector convention.
+	if c.Id == "SC_BOSS_CLEARING" then
 		c.MeshYawOffset = 0
+	end
+	-- Crumbling-span cap and Aether Springs: still wrong at 180 or 0, so these
+	-- are off by a quarter turn from the rest of the kit rather than a half.
+	if c.Id == "SC_CAP_CRUMBLING" or c.Id == "SC_AETHER_SPRINGS" then
+		c.MeshYawOffset = 90
 	end
 	table.insert(out, c)
 end

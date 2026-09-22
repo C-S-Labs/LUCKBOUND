@@ -72,9 +72,9 @@ local function bandMultiplier(band: string, progress: number, escalateFrom: numb
 	return if band == "UNCOMMON" then 1.2 else 1
 end
 
---- Assigns a scenario to every non-ENTRY, non-BOSS chunk in a layout.
+--- Assigns a scenario to every non-ENTRY, non-BOSS, non-CAP chunk in a layout.
 ---
---- ENTRY and BOSS are left alone on purpose: arrival should be calm enough to
+--- ENTRY, BOSS and CAP are left alone on purpose: arrival should be calm enough to
 --- get your bearings, and the arena is already the largest thing in the run.
 --- Giving either a scenario would be the generator competing with the pacing
 --- the layout already has.
@@ -112,14 +112,14 @@ function ScenarioCore.assign(
 
 	local assignable = 0
 	for _, placed in layout.Chunks do
-		if placed.Role ~= "ENTRY" and placed.Role ~= "BOSS" then
+		if placed.Role ~= "ENTRY" and placed.Role ~= "BOSS" and placed.Role ~= "CAP" then
 			assignable += 1
 		end
 	end
 
 	local seen = 0
 	for _, placed in layout.Chunks do
-		if placed.Role == "ENTRY" or placed.Role == "BOSS" then
+		if placed.Role == "ENTRY" or placed.Role == "BOSS" or placed.Role == "CAP" then
 			table.insert(steps, {
 				Index = placed.Index,
 				ChunkId = placed.ChunkId,
