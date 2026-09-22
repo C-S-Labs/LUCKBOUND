@@ -103,6 +103,18 @@ function ChunkCore.placeAgainst(chunk: any, openSocket: any, index: number): (an
 	return nil, nil
 end
 
+--- The socket placeAgainst would arrive through: the first of a matching
+--- Kind. Kept beside placeAgainst so the two cannot disagree.
+function ChunkCore.arrivalSocket(chunk: any, openSocket: any): any?
+	local wanted = norm(openSocket.Facing + 180)
+	for _, s in chunk.Sockets do
+		if s.Kind == openSocket.Kind and QUARTER[norm(wanted - s.Facing)] then
+			return s
+		end
+	end
+	return nil
+end
+
 --- Axis-aligned overlap between two placed chunks, with a small tolerance so
 --- pieces that merely touch at a socket are not counted as colliding.
 function ChunkCore.overlaps(a: any, chunkA: any, b: any, chunkB: any): boolean
@@ -128,6 +140,18 @@ export type AssembleOptions = {
 
 --- Builds a layout: ENTRY → PathLength connective/combat chunks → BOSS,
 --- optionally hanging one SIDE pocket off a spare socket.
+---
+--- EXITS ARE CHOSEN, NOT DEFAULTED. A piece with several valid exits leaves
+--- through a seeded random one, so a crossroads can go straight, left or
+--- right. Until 2026-09-22 this took the first valid socket, and a piece with
+--- four openings left the same way on every seed.
+---
+--- SIDE POCKETS (IncludeSide). After the arena is placed, one SIDE chunk is
+--- hung off a spare socket -- one the path neither arrived through nor left
+--- through -- on any placed piece, tried in seeded order until one fits
+--- without colliding. No fit is not a failure: the map is complete without
+--- it. This is what makes an intersection mean something: the path takes one
+--- branch, the pocket can sit on another.
 ---
 --- Returns ok, layout-or-error. Failure is a normal outcome, not an error:
 --- a kit whose sockets cannot reach the boss is a content bug, and the caller
@@ -160,6 +184,9 @@ function ChunkCore.assemble(
 
 	local placed: { any } = {}
 	local used: { [string]: number } = {}
+	-- Per placed piece: which of its sockets the path consumed. The rest are
+	-- spare, and a SIDE pocket may hang off one.
+	local consumedBy: { [any]: { [string]: boolean } } = {}
 
 	-- Which sockets each placement has already spent, keyed by its index in
 	-- `placed`. The critical path spends at most two per piece -- one to
@@ -172,6 +199,7 @@ function ChunkCore.assemble(
 		table.insert(placed, p)
 		spent[#placed] = {}
 		used[chunk.Id] = (used[chunk.Id] or 0) + 1
+		consumedBy[p] = {}
 	end
 
 	local function spend(socketId: string?)
@@ -209,6 +237,7 @@ function ChunkCore.assemble(
 	if not openSocketDef then
 		return false, `entry chunk '{entry.Id}' has no sockets`
 	end
+	consumedBy[entryPlacement][openSocketDef.Id] = true
 	local open = ChunkCore.worldSocket(openPlacement, openChunk, openSocketDef)
 	spend(openSocketDef.Id)
 
@@ -239,12 +268,18 @@ function ChunkCore.assemble(
 	end
 
 	local function exitFor(chunk: any, consumedId: string, isFinal: boolean): any?
+		local valid = {}
 		for _, sock in chunk.Sockets do
 			if sock.Id ~= consumedId and isBossKind(sock.Kind) == isFinal then
-				return sock
+				table.insert(valid, sock)
 			end
 		end
-		return nil
+		if #valid <= 1 then
+			return valid[1]
+		end
+		-- A seeded pick, so a many-exit piece varies by seed. Only drawn when
+		-- there is a real choice, so single-exit kits consume no extra numbers.
+		return valid[math.clamp(math.floor(nextNumber() * #valid) + 1, 1, #valid)]
 	end
 
 	-- Walk the critical path.
@@ -302,8 +337,8 @@ function ChunkCore.assemble(
 				`no chunk could be placed at step {i} while {where} (open socket Kind '{open.Kind}'): nothing matched, or every candidate collided`
 		end
 		record(placement, chosen)
-		spend(arrivedOn and arrivedOn.Id)
-		spend(nextSocket.Id)
+		consumedBy[placement][nextSocket.Id] = true
+		consumedBy[placement][(ChunkCore.arrivalSocket(chosen, open) :: any).Id] = true
 
 		openChunk, openPlacement = chosen, placement
 		open = ChunkCore.worldSocket(openPlacement, openChunk, nextSocket)
@@ -324,55 +359,33 @@ function ChunkCore.assemble(
 	end
 	record(bossPlacement, boss)
 
-	-- === The optional side pocket ================================
-	-- Hung off a socket the critical path did not spend. This is what
-	-- IncludeSide has always promised and never done -- the field was declared
-	-- and nothing read it, so every SIDE piece in every kit validated, passed
-	-- its tests and was never once placed.
-	--
-	-- It is deliberately best-effort: a pocket that will not fit is a pocket
-	-- this seed does not get, never a failed expedition. The critical path is
-	-- already complete and valid by the time we get here, and refusing the
-	-- whole layout because an OPTIONAL branch collided would trade something
-	-- that matters for something that does not.
-	if options.IncludeSide ~= false then
-		local sides = byRole.SIDE or {}
-		if #sides > 0 then
-			-- Every unspent socket on every placed piece, as a flat list so
-			-- one pick chooses both the host and the socket.
-			local spare = {}
-			for index, p in placed do
-				local hostChunk = chunks[p.ChunkId]
-				for _, sock in hostChunk.Sockets do
-					if not (spent[index] and spent[index][sock.Id]) then
-						table.insert(spare, { Placement = p, Chunk = hostChunk, Socket = sock })
+	if options.IncludeSide and byRole.SIDE and #byRole.SIDE > 0 then
+		local spares = {}
+		for _, p in placed do
+			local chunk = chunks[p.ChunkId]
+			if p.Role ~= "BOSS" then
+				for _, s in chunk.Sockets do
+					if not consumedBy[p][s.Id] and not isBossKind(s.Kind) then
+						table.insert(spares, { Placement = p, Chunk = chunk, Socket = s })
 					end
 				end
 			end
-
-			-- Shuffled by the same seeded stream, so which pocket a seed gets
-			-- is reproducible like everything else here.
-			for i = #spare, 2, -1 do
-				local j = math.floor(nextNumber() * i) + 1
-				spare[i], spare[j] = spare[j], spare[i]
-			end
-
-			local pocketPlaced = false
-			for _, slot in spare do
-				if pocketPlaced then
+		end
+		-- Seeded shuffle, so which branch carries the pocket varies by seed.
+		for i = #spares, 2, -1 do
+			local j = math.clamp(math.floor(nextNumber() * i) + 1, 1, i)
+			spares[i], spares[j] = spares[j], spares[i]
+		end
+		for _, spare in spares do
+			local side = WeightedRandom.pick(byRole.SIDE, function(c)
+				return c.Weight
+			end, nextNumber)
+			if side and allowed(side) then
+				local at = ChunkCore.worldSocket(spare.Placement, spare.Chunk, spare.Socket)
+				local p = ChunkCore.placeAgainst(side, at, options.PathLength + 2)
+				if p and not collides(p, side) then
+					record(p, side)
 					break
-				end
-				local openSide = ChunkCore.worldSocket(slot.Placement, slot.Chunk, slot.Socket)
-				for _, side in sides do
-					if allowed(side) then
-						local p = ChunkCore.placeAgainst(side, openSide, #placed)
-						if p and not collides(p, side) then
-							p.Index = #placed
-							record(p, side)
-							pocketPlaced = true
-							break
-						end
-					end
 				end
 			end
 		end
@@ -437,6 +450,9 @@ function ChunkCore.validateLayout(layout: any, chunks: { [string]: any }): (bool
 	end
 	if roles.BOSS ~= 1 then
 		table.insert(errors, `layout has {roles.BOSS or 0} BOSS chunks, expected exactly 1`)
+	end
+	if (roles.SIDE or 0) > 1 then
+		table.insert(errors, `layout has {roles.SIDE} SIDE pockets, expected at most 1`)
 	end
 
 	for i = 1, #layout.Chunks do

@@ -127,7 +127,10 @@ fields and `FateRoll.luau` strings.
 Verdant Valley, Emberfall and Astral Reach have blueprint palettes and wired
 lighting already. Their *geometry* is Phase 2.
 
-**Sky Citadel has no blueprint at all** — the Biome Blueprint never drafted it
+**Sky Citadel now has its section: [`SKY_CITADEL.md`](SKY_CITADEL.md)**
+(2026-09-22) — a white futurist castle on floating islands, its palette, its
+props, and a four-piece chunk kit. What follows is kept for the record: the
+Biome Blueprint never drafted it
 (§7.4 lists it as a reserved slot). Its lighting values are invented. It needs a
 real section before Phase 2 makes worlds enterable.
 

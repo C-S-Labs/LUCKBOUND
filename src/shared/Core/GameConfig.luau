@@ -173,25 +173,9 @@ local GameConfig = {
 
 		-- Default map size. A world overrides it with MapPathLength.
 		PathLength = 5,
-
-		-- === Scenario layer (build spec §7.3) ====================
-		-- What HAPPENS in a chunk, decided separately from which chunk it is.
-		-- Every number here is a pacing dial, which is exactly why none of
-		-- them live in ScenarioCore.
-		--
-		-- How often Fate overrides ordinary weighting and picks from the rare
-		-- band regardless of pacing. The brief asks for "uncommon enough to
-		-- feel special"; at 6% a five-room run sees one about a quarter of the
-		-- time, which is rare enough to be worth mentioning and common enough
-		-- that players learn it exists. Set 0 to switch Fate intervention off.
-		FateInterventionChance = 0.06,
-		-- How many recent (chunk, scenario) PAIRS to remember when damping
-		-- repeats. Pairs, not chunk ids: a place reappearing is fine when
-		-- something different happens in it.
-		ScenarioRecentMemory = 6,
-		-- Fraction of the path after which the rare band unlocks and uncommon
-		-- is favoured. Below it a run stays legible; above it, it escalates.
-		ScenarioEscalateFrom = 0.4,
+		-- Hang one SIDE pocket off a spare socket when a kit has one (Biome
+		-- Blueprint §6). Off returns maps to exactly the critical path.
+		IncludeSide = true,
 		-- A layout can legitimately fail when the path folds back on itself;
 		-- that is seed-dependent, so try a few before rejecting. 5 attempts
 		-- succeeds ~98% of the time -- see docs/MODULAR_MAPS.md.
