@@ -105,16 +105,21 @@ manifest key maps to exactly one uploaded asset, and the generator shuffles
 those assets independently; a grouped export arrives as one fused object with
 one id and there is nothing to shuffle.
 
-**The origin of each piece goes at the middle-most point of its bounding box —
-centre in X, centre in Y, centre in Z.** Not a corner, not the middle of a
-side, not the Blender world origin. The chunk system positions pieces by their
-centre *and rotates them about the origin* in seed-dependent 90° steps, so a
-corner origin swings the piece a whole chunk-width sideways by a different
-amount for each rotation. In Blender: select the piece's objects →
-`Ctrl+A ▸ All Transforms` → `Object ▸ Set Origin ▸ Origin to Geometry` (bounds
-centre; or snap the 3D cursor to the computed centre and use `Origin to 3D
-Cursor` when the scatter is uneven) → move the piece to the world origin →
-export **Selected Objects only**.
+**The origin of each piece goes at the centre of its footprint, at ground
+level** — the point a person would stand on at the middle of the piece. Not a
+corner, not the middle of a side, not the Blender world origin. The chunk
+system positions pieces by that point *and rotates them about it* in
+seed-dependent 90° steps, so a corner origin swings the piece a whole
+chunk-width sideways by a different amount for each rotation. In Blender: select
+the piece's objects → `Ctrl+A ▸ All Transforms` → snap the 3D cursor to the
+footprint centre on the ground plane → `Object ▸ Set Origin ▸ Origin to 3D
+Cursor` → move the piece to the world origin → export **Selected Objects
+only**.
+
+> Ground level, not bounding-box centre. `ChunkLoader` currently expects the
+> latter — see the `GroundOffsetY` row in `docs/STATUS.md`. That is a loader
+> change owed before the first upload, not something the art should contort
+> around.
 
 Each piece becomes a manifest entry and a chunk in `Content/Chunks/`.
 

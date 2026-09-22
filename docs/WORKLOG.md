@@ -33,6 +33,115 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 42 — 2026-09-22 — The brief was a spec; the kit came back wrong
+
+**Branch:** `claude/nifty-babbage-elpxrv` · **Tests:** 574 passing (unchanged)
+
+### What happened
+
+The Session 40/41 brief was handed to the modeller's AI engine. What came back
+was roughly 10× the area of the previous iteration, terrain flattened to the
+boundary on all four sides, scatter lost in an empty green plane. The earlier
+iteration — which was good — had to be restored from backup.
+
+**The brief caused it, and it is worth being precise about how**, because the
+same mistake is available on every future art brief here:
+
+1. **A table of eight footprints (512–1024 studs).** Stated as "the contract".
+   The engine built to the largest numbers, and the same scatter budget spread
+   over ~10× the area reads as empty.
+2. **"A 32-stud flat band along every edge, empty of scatter, variation eases
+   to zero before it reaches it."** Read literally, that flattens the terrain
+   to the perimeter and pushes all detail into the middle.
+3. **A 13-item checklist.** It reads as a compliance list, so satisfying it
+   became the goal rather than building something that looks like a forest.
+
+Every one of those was written in good faith and every one was over-reach. The
+join needed level ground *at the openings*. I specified the whole piece.
+
+> **A number stated in a brief is a number that gets built.** Specify the seam,
+> not the piece.
+
+### Done — the brief is now conventions, not a spec
+
+`docs/CHUNK_AUTHORING.md` rewritten from ~3,800 words to ~940: six conventions,
+export settings, a short "what happens on our side", and an explicit line at
+the top that **everything not listed is the modeller's** and nothing in it
+should be read as a target. Owner-scoped, four decisions:
+
+- **One size for the whole kit: 256 × 256.** Not a table. The two iterations
+  bracketed it — ~100 studs read too tight, ~1024 too open — so the number is
+  the middle they named, and the doc says out loud that it lives in one content
+  file and is meant to move if it reads wrong on the ground.
+- **Level ground at the openings only.** The rest of the perimeter is free to
+  cliff, wall or roll. The weld band is gone.
+- **Invariants only.** No reasoning, no essays, no compliance checklist. The
+  long-form argument stays in `MODULAR_MAPS.md` for us.
+- **Nothing about look.** Density, scatter and style are not mentioned, by the
+  owner's call — `ART_DIRECTION` and the modeller own that.
+
+### The content followed the art, not the other way round
+
+`Content/Chunks/VerdantValley.luau`: **all 8 pieces are now 256 × 256**, sockets
+at the edge midpoints (±128). Header rewritten to say why, and to say plainly
+that the sizes follow the art — they are numbers in a content file and the
+piece that reads correctly on the ground wins.
+
+No System changed. 574 tests still pass, including the 300-trial assembly run
+and "the smallest map piece is at least 40 characters across" (256 / 5 = 51).
+
+**Traverse dropped from 4096 studs to 1536** — about 48 s of a 720 s
+expedition, ~7%. The test asserts a relationship rather than a number so it is
+green, but that is a lot of slack. `PathLength` takes it up, and that is worth
+retuning **after** a real piece has been walked: how long 256 studs of authored
+forest takes to cross is a different question from how long an empty blockout
+takes.
+
+### The origin convention changed too
+
+The brief now asks for the origin at the **centre of the footprint, at ground
+level** — what an artist would author anyway, and what the blockout already
+assumes. The previous version asked for the bounding-box centre, which meant
+170 studs of ground body under the player's feet at `SizeY = 340`. That was
+bending the wrong side.
+
+`ChunkLoader` does not yet consume a ground-level origin. **`GroundOffsetY` is
+now a prerequisite for the first mesh upload**, not deferrable debt — raised to
+High in `STATUS.md`, with the loader carrying a comment at the two lines
+involved. Nothing is uploaded yet, so there is time; a piece imported before it
+lands sits half-sunk.
+
+### Decisions made
+
+- **Specify the seam, not the piece.** Recorded as a process row in `STATUS.md`
+  so the next art brief on this project inherits it rather than rediscovering
+  it.
+- **Sizes are content and follow the art.** Stated in the brief, the content
+  file header and `MODULAR_MAPS.md`. If 256 reads wrong, the number moves.
+- **Uniform size over varied.** Differently-sized pieces remain legal and the
+  assembler handles them; one number is simply easier to author against, which
+  is the constraint that matters right now.
+
+### Stopped at
+
+Docs, the content sizes, and two code comments. 574 green. PDF re-exported for
+the modeller.
+
+### Next
+
+1. **`GroundOffsetY`** — the one thing that must land before a mesh is
+   uploaded.
+2. **One piece through the whole pipeline** before the other seven are
+   modelled: author, export, upload, flip the manifest to `UPLOADED`, walk it
+   among seven blockouts. Every remaining assumption in this area gets settled
+   by that one piece, and getting it wrong costs one re-export instead of
+   eight.
+3. **Retune `PathLength`** once that piece has been walked.
+4. `exitFor` random exit, and decide `IncludeSide` — both still open from
+   Session 41.
+
+---
+
 ## Session 41 — 2026-09-22 — Sockets on every open side, and the seam
 
 **Branch:** `claude/nifty-babbage-elpxrv` · **Tests:** 574 passing (unchanged)

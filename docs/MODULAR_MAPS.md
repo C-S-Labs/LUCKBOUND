@@ -68,10 +68,10 @@ than inferring it from a test name.
     WorldId  = "VERDANT_VALLEY",
     Role     = "COMBAT",
     AssetKey = "VV_CHUNK_GROVE",     -- into AssetManifest
-    SizeX = 768, SizeY = 340, SizeZ = 768,
+    SizeX = 256, SizeY = 340, SizeZ = 256,
     Sockets = {
-        socket("south", "PATH", 0,  384, 180),
-        socket("north", "WIDE", 0, -384,   0),
+        socket("south", "PATH", 0,  128, 180),
+        socket("north", "WIDE", 0, -128,   0),
     },
     Weight = 25,
     MaxPerLayout = 1,
@@ -106,12 +106,12 @@ hard-coding it.** It falls out of the socket rules. A real assembled layout:
 
 ```
 VV_ENTRY          (     0,      0)  [ENTRY]
-VV_STREAM         (     0,   -512)  [COMBAT]
+VV_STREAM         (     0,   -256)  [COMBAT]
+VV_PATH_STRAIGHT  (     0,   -512)  [PATH]
+VV_MEADOW         (     0,   -768)  [COMBAT]
 VV_PATH_STRAIGHT  (     0,  -1024)  [PATH]
-VV_MEADOW         (     0,  -1792)  [COMBAT]
-VV_PATH_STRAIGHT  (     0,  -2560)  [PATH]
-VV_GROVE          (     0,  -3200)  [COMBAT]   ← always the approach
-VV_BOSS_CLEARING  (     0,  -4096)  [BOSS]
+VV_GROVE          (     0,  -1280)  [COMBAT]   ← always the approach
+VV_BOSS_CLEARING  (     0,  -1536)  [BOSS]
 ```
 
 **Design your socket Kinds deliberately.** They are the level-design grammar,
@@ -162,9 +162,16 @@ is a list of numbers, and that seam is why the rules are testable at all.**
 
 ### Expedition size
 
-That layout spans **4096 studs** end to end — about **128 seconds** of walking
-at WalkSpeed 32, roughly 18% of a 720-second expedition. The rest is combat and
+That layout spans **1536 studs** end to end — about **48 seconds** of walking
+at WalkSpeed 32, roughly 7% of a 720-second expedition. The rest is combat and
 exploration.
+
+It was 4096 studs until the kit went to a uniform 256 on 2026-09-22. **That is
+a lot of slack, and `PathLength` is the knob that takes it up** — the traverse
+test asserts a relationship, not a number, so a longer path is a content change
+and nothing re-derives. Worth retuning once a real piece has been walked, not
+before: how long 256 studs of authored forest takes to cross is not the same
+question as how long it takes to walk across an empty blockout.
 
 `PathLength` is the knob, and since 2026-09-16 it is **content**: a world sets
 `MapPathLength` and falls back to `GameConfig.Expedition.PathLength` when it
@@ -249,25 +256,35 @@ the **first** valid socket rather than a random one, so extra sockets do not yet
 vary a run; and the generator consumes only two sockets per piece, so every
 other opening faces nothing and must read as plausible unattached.
 
-### 4. Every edge carries a flat weld band
+### 4. Openings need level ground; the rest of the perimeter does not
 
-A **32-stud flat band at ground height along every edge of every piece**, empty
-of scatter, with terrain variation easing to zero before it reaches it. Two
-flat, coplanar, straight edges butt together perfectly at any rotation with no
-per-pair work — which is the only version of this that survives a kit growing.
-Undulating edges produce steps, gaps and lips at the seam, and no amount of
-generated connector geometry fixes that as cheaply as the band does.
-`CHUNK_AUTHORING.md` has the argument in full, including why a Studio-generated
-connector piece is the more expensive answer.
+Pieces butt together edge to edge, so **where a piece connects, the ground must
+arrive at that opening level and at the same height on every piece in the kit**
+— otherwise the join is a step or a gap.
+
+That constraint applies at the openings and nowhere else. The rest of the
+perimeter can cliff off, be walled, run into dense trees or roll however the
+art wants, and a piece does not have to be connectable on all four sides.
+
+**This was originally written as a kit-wide flat band along every edge, and
+that was wrong.** Handed to a modeller it flattened the terrain to the
+boundary on all four sides and produced a putting green — the rule was doing
+far more work than the join needed. The join needs level ground at the
+openings. Everything else was over-specification, and
+`CHUNK_AUTHORING.md` is now scoped to what actually breaks.
 
 ---
 
 ## Authoring a kit — checklist
 
-1. **Pick a grid.** Both existing kits use **256 studs**. Sockets must land on it
-   or pieces will not meet. Size against the 5-stud character, not against a
-   floorplan: the smallest connective piece is 256×512, about 51×102
-   character-heights, so a corridor reads as a forest path and not a hallway.
+1. **Pick one size for the kit.** Verdant Valley uses **256 × 256 for every
+   piece**, with sockets at the edge midpoints — one number for the modeller to
+   build against rather than a table of eight. Size it against the 5-stud
+   character, not against a floorplan: 256 is about 51 character-heights, which
+   reads as a clearing. Two earlier iterations came back at ~100 studs (too
+   tight to read as a place) and ~1024 (so open that the scatter vanished into
+   it), which is how 256 was arrived at. Differently-sized pieces are legal and
+   the assembler handles them; one size is simply easier to author to.
 2. **Decide your Kinds first.** At minimum one connective Kind and one the
    arena accepts. The arena Kind is automatically reserved.
 3. **Two sockets minimum** on anything `PATH` or `COMBAT`, or the path
