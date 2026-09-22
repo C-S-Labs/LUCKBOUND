@@ -167,16 +167,20 @@ local function calibrateYaw(chunk: any, placed: any, origin: Vector3, meshPos: V
 				local hit = Workspace:Raycast(point + Vector3.new(0, probe.Height, 0), Vector3.new(0, -probe.Height * 2, 0), params)
 				return hit ~= nil and math.abs(hit.Position.Y - mouth.Y) <= probe.Tolerance
 			end
-			local ok = deckAt(centreProbe)
-			-- With a declared Width, the mouth must be that wide too: both
-			-- sides, just inside its edges. That is what tells a wide opening
-			-- from a narrow one when both have deck at their centre.
-			if ok and socket.Width then
-				local across = Vector3.new(-inward.Z, 0, inward.X) * (socket.Width / 2 - probe.EdgeMargin)
-				ok = deckAt(centreProbe + across) and deckAt(centreProbe - across)
-			end
-			if ok then
+			-- Deck at the mouth's centre is the main evidence. A declared Width
+			-- adds a stronger signal on top -- deck just inside both edges --
+			-- which tells a wide opening from a narrow one. Scored rather than
+			-- required: a piece whose approach is narrower than its Kind (the
+			-- side lookout) still wins on centre hits instead of scoring zero
+			-- at every turn and falling back to the hint.
+			if deckAt(centreProbe) then
 				hits += 1
+				if socket.Width then
+					local across = Vector3.new(-inward.Z, 0, inward.X) * (socket.Width / 2 - probe.EdgeMargin)
+					if deckAt(centreProbe + across) and deckAt(centreProbe - across) then
+						hits += 10
+					end
+				end
 			end
 		end
 		if hits > bestHits then
@@ -185,7 +189,7 @@ local function calibrateYaw(chunk: any, placed: any, origin: Vector3, meshPos: V
 	end
 
 	mesh.Parent = home
-	if bestHits < #chunk.Sockets then
+	if bestHits < #chunk.Sockets then -- fewer than one centre hit per socket
 		warn(
 			`[ChunkLoader] {chunk.AssetKey}: no rotation puts deck under all {#chunk.Sockets} sockets `
 				.. `(best {bestHits} at {best}); the art may not match its declared openings`
