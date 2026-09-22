@@ -33,6 +33,427 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 43 — 2026-09-22 — Unit scale, kit size, and a hand pass
+
+**Branch:** `claude/nifty-babbage-elpxrv` · **Tests:** 574 passing (unchanged)
+
+Third pass on the same brief, from a real export batch. All four changes came
+from things that actually went wrong, which is the right way for this document
+to grow.
+
+### The export was in millimetres
+
+The eight Verdant Valley FBXs imported at **256,000 studs** against a declared
+256. Exactly 1000×, so the file was written in millimetres while everything
+downstream reads metres. Studio cannot do anything useful with a part that
+size.
+
+The brief now names both settings that have to agree — Blender units
+Metric/Metres/Unit Scale 1.0, and FBX Transform → Scale 1.00 with Apply
+Scalings `FBX All` — but the part that will actually catch it is the check
+rather than the settings: **import one piece and measure it; a 256 piece must
+read 256.** Settings drift between Blender versions and exporter presets; a
+measurement does not. The FBX-scale-0.001 workaround is named and discouraged,
+because a compensating factor is a thing someone later removes for looking
+wrong.
+
+### The kit wants 12–16 pieces, not 8
+
+Owner-directed. The variety of a run is the variety of the kit — the generator
+shuffles what it is given — and 8 starts to repeat itself.
+
+Recorded as **variants of existing roles, not new roles**: several meadows,
+several groves, weighted so one is common and another rare. That keeps the
+socket grammar and the Blueprint progression intact while multiplying what a
+seed can produce, and it costs no System change. `Content/Chunks/` stays at 8
+declared until art exists for more — a declared chunk with no art is a piece
+the blockout draws and nobody meant.
+
+**First delivery is 4:** ENTRY, PATH_STRAIGHT, GROVE, BOSS_CLEARING. Smallest
+set that assembles a complete walkable map, and the Grove has to be in it — the
+WIDE reservation makes it the only piece offering the exit the arena accepts.
+Worth noting that fell out of the socket rules rather than being chosen.
+
+### The pieces were generated stacked
+
+Every piece occupied the same spot in the scene. Nothing was broken — the
+exports were fine — but the kit could not be reviewed without hiding objects
+one at a time, and **a piece nobody can see is a piece nobody checks.**
+
+The brief asks for a spaced review layout, with the catch stated plainly: the
+review position and the export position are different things, and a piece
+exported while parked on the review grid arrives that far off in game. That is
+the same origin/transform trap as everything else in this document, wearing a
+different hat.
+
+### A hand pass before delivery
+
+Owner-requested, and yes it is reasonable to ask for: automated generation is
+good at making a hundred things and bad at noticing that four of them are
+wrong. Five specific checks — floating scatter, clipping, scale against the
+5-metre reference, and two that are worth the minute they cost:
+
+- **Place a copy of the piece beside itself, rotated a quarter turn.** That is
+  exactly what the game does, so it is the fastest way to see a bad join before
+  it is eight pieces and an upload.
+- **Rotate the piece 90° in the viewport.** It should spin in place. If it
+  swings sideways, the origin is wrong — the one error no test here can catch.
+
+### Also added
+
+A short **"starting a different world"** section, since Sky Citadel is next:
+the conventions port, the connection vocabulary does not. Each world's socket
+Kinds are decided before modelling, because they decide where the openings go
+and re-cutting openings on a finished kit is the expensive version of that
+conversation.
+
+### Done
+
+- `docs/CHUNK_AUTHORING.md` — unit scale, kit size and first delivery, review
+  layout, the hand pass, starting a new world. ~940 words to ~1,800; still
+  conventions, still no compliance checklist.
+- `docs/MODULAR_MAPS.md` — the authoring checklist gained the 12–16 target and
+  "decide your Kinds before modelling".
+- `Content/Chunks/VerdantValley.luau` — header records the 12–16 target, the
+  variants-not-roles rule, and the 4-piece first delivery.
+- `docs/STATUS.md` — four rows, including the process one that should have been
+  written last session and was not: **specify the seam, not the piece.**
+
+### Stopped at
+
+Docs and one content header. No System changed, 574 green. PDF re-exported.
+
+### Next
+
+Unchanged from Session 42, and now blocking real art:
+
+1. **`GroundOffsetY`** — must land before any mesh is uploaded.
+2. **Four pieces through the whole pipeline** before the remaining 8–12 are
+   built.
+3. **Sky Citadel's socket Kinds** — the owner is starting that world next, and
+   `STATUS.md` still says it needs a Blueprint section first. Worth settling
+   before geometry exists, not after.
+4. `PathLength` retune after a real piece is walked; `exitFor` random exit;
+   decide `IncludeSide`.
+
+---
+
+## Session 42 — 2026-09-22 — The brief was a spec; the kit came back wrong
+
+**Branch:** `claude/nifty-babbage-elpxrv` · **Tests:** 574 passing (unchanged)
+
+### What happened
+
+The Session 40/41 brief was handed to the modeller's AI engine. What came back
+was roughly 10× the area of the previous iteration, terrain flattened to the
+boundary on all four sides, scatter lost in an empty green plane. The earlier
+iteration — which was good — had to be restored from backup.
+
+**The brief caused it, and it is worth being precise about how**, because the
+same mistake is available on every future art brief here:
+
+1. **A table of eight footprints (512–1024 studs).** Stated as "the contract".
+   The engine built to the largest numbers, and the same scatter budget spread
+   over ~10× the area reads as empty.
+2. **"A 32-stud flat band along every edge, empty of scatter, variation eases
+   to zero before it reaches it."** Read literally, that flattens the terrain
+   to the perimeter and pushes all detail into the middle.
+3. **A 13-item checklist.** It reads as a compliance list, so satisfying it
+   became the goal rather than building something that looks like a forest.
+
+Every one of those was written in good faith and every one was over-reach. The
+join needed level ground *at the openings*. I specified the whole piece.
+
+> **A number stated in a brief is a number that gets built.** Specify the seam,
+> not the piece.
+
+### Done — the brief is now conventions, not a spec
+
+`docs/CHUNK_AUTHORING.md` rewritten from ~3,800 words to ~940: six conventions,
+export settings, a short "what happens on our side", and an explicit line at
+the top that **everything not listed is the modeller's** and nothing in it
+should be read as a target. Owner-scoped, four decisions:
+
+- **One size for the whole kit: 256 × 256.** Not a table. The two iterations
+  bracketed it — ~100 studs read too tight, ~1024 too open — so the number is
+  the middle they named, and the doc says out loud that it lives in one content
+  file and is meant to move if it reads wrong on the ground.
+- **Level ground at the openings only.** The rest of the perimeter is free to
+  cliff, wall or roll. The weld band is gone.
+- **Invariants only.** No reasoning, no essays, no compliance checklist. The
+  long-form argument stays in `MODULAR_MAPS.md` for us.
+- **Nothing about look.** Density, scatter and style are not mentioned, by the
+  owner's call — `ART_DIRECTION` and the modeller own that.
+
+### The content followed the art, not the other way round
+
+`Content/Chunks/VerdantValley.luau`: **all 8 pieces are now 256 × 256**, sockets
+at the edge midpoints (±128). Header rewritten to say why, and to say plainly
+that the sizes follow the art — they are numbers in a content file and the
+piece that reads correctly on the ground wins.
+
+No System changed. 574 tests still pass, including the 300-trial assembly run
+and "the smallest map piece is at least 40 characters across" (256 / 5 = 51).
+
+**Traverse dropped from 4096 studs to 1536** — about 48 s of a 720 s
+expedition, ~7%. The test asserts a relationship rather than a number so it is
+green, but that is a lot of slack. `PathLength` takes it up, and that is worth
+retuning **after** a real piece has been walked: how long 256 studs of authored
+forest takes to cross is a different question from how long an empty blockout
+takes.
+
+### The origin convention changed too
+
+The brief now asks for the origin at the **centre of the footprint, at ground
+level** — what an artist would author anyway, and what the blockout already
+assumes. The previous version asked for the bounding-box centre, which meant
+170 studs of ground body under the player's feet at `SizeY = 340`. That was
+bending the wrong side.
+
+`ChunkLoader` does not yet consume a ground-level origin. **`GroundOffsetY` is
+now a prerequisite for the first mesh upload**, not deferrable debt — raised to
+High in `STATUS.md`, with the loader carrying a comment at the two lines
+involved. Nothing is uploaded yet, so there is time; a piece imported before it
+lands sits half-sunk.
+
+### Decisions made
+
+- **Specify the seam, not the piece.** Recorded as a process row in `STATUS.md`
+  so the next art brief on this project inherits it rather than rediscovering
+  it.
+- **Sizes are content and follow the art.** Stated in the brief, the content
+  file header and `MODULAR_MAPS.md`. If 256 reads wrong, the number moves.
+- **Uniform size over varied.** Differently-sized pieces remain legal and the
+  assembler handles them; one number is simply easier to author against, which
+  is the constraint that matters right now.
+
+### Stopped at
+
+Docs, the content sizes, and two code comments. 574 green. PDF re-exported for
+the modeller.
+
+### Next
+
+1. **`GroundOffsetY`** — the one thing that must land before a mesh is
+   uploaded.
+2. **One piece through the whole pipeline** before the other seven are
+   modelled: author, export, upload, flip the manifest to `UPLOADED`, walk it
+   among seven blockouts. Every remaining assumption in this area gets settled
+   by that one piece, and getting it wrong costs one re-export instead of
+   eight.
+3. **Retune `PathLength`** once that piece has been walked.
+4. `exitFor` random exit, and decide `IncludeSide` — both still open from
+   Session 41.
+
+---
+
+## Session 41 — 2026-09-22 — Sockets on every open side, and the seam
+
+**Branch:** `claude/nifty-babbage-elpxrv` · **Tests:** 574 passing (unchanged)
+
+Follow-up to Session 40, same branch. Three owner questions from Blender
+screenshots of the Verdant Valley kit in progress.
+
+### "Can sockets go on every side that isn't blocked?"
+
+Yes, and it is the right instinct — but **it buys nothing today**, and finding
+out why turned up two pieces of code/doc drift:
+
+1. **`ChunkCore.exitFor` returns the FIRST valid socket**, not a random one. A
+   four-socket piece leaves through the same one every seed. The entry chunk is
+   worse: hard-coded to `entry.Sockets[1]`. So the variety the owner is asking
+   for is one weighted-random pick away, and is not there now.
+2. **`AssembleOptions.IncludeSide` is declared and never read.**
+   `ChunkCore.assemble`'s own docstring promises it hangs a SIDE pocket off a
+   spare socket. Nothing consumes the field. **`VV_HOLLOW` has never been
+   placed in any layout** — the Blueprint §6 side-pocket item is satisfied on
+   paper only.
+
+Neither was fixed here. Both change a System and belong in their own piece of
+work with their own tests; this pass was documentation. Both are now debt rows
+in `STATUS.md`, and the brief tells the modeller to author the sockets anyway —
+the data is right either way and the run gets more varied the day the pick
+lands, with no re-export.
+
+A third thing falls out of high socket counts and is worth naming: **the
+generator consumes exactly two sockets per piece, so every other opening faces
+nothing, and nothing caps them.** Today that is the art's problem — an opening
+must read as plausible unattached — and the systematic fix is a cap piece the
+loader places, which needs a schema field.
+
+### "The edges vary, so pieces won't meet — do we generate a connector in Studio?"
+
+The edges do vary, and they slope off; two of them meeting would step, gap or
+lip. The answer is a **weld band**: a 32-stud flat strip at ground height along
+every edge of every piece, empty of scatter, with terrain variation easing to
+zero before it reaches it. Two flat coplanar straight edges butt together
+perfectly at any rotation, with no per-pair work and no runtime cost.
+
+The proposed Studio-generated connector was considered properly and rejected,
+for reasons worth keeping:
+
+- **It cannot match the material.** Colour and finish live inside the uploaded
+  mesh as `SurfaceAppearance` and textures, which code cannot read. The
+  connector would be a flat-coloured strip between two textured pieces —
+  trading an invisible seam for a visible band.
+- **It is a permanent System change** in `ChunkLoader`, at four rotations, for
+  every Kind, to work around an art rule that costs one flat band.
+- It halves the useful footprint, and bridging a height difference means a ramp
+  at every join, which changes how the map plays.
+
+One part of the idea was kept: a **skirt** under the join — thin,
+non-colliding, never meant to be seen — so float drift shows dark ground
+rather than sky.
+
+### "What should the anchor points be named?"
+
+For a chunk kit, **names inside the piece do not matter at all**, and that is
+worth stating because it is not true elsewhere here: `PrefabLoader` registers
+the hub from a NAMED PART and `PrebuiltLoader` reads `EntryAnchor` /
+`ReturnAnchor`, but `ChunkLoader` builds a MeshPart from an asset id and never
+looks inside. The existing `VerdantValley_Chunk_02_RouteRock_01_Slab` scheme is
+fine as it stands.
+
+Two things about naming do matter, and both are now in the brief:
+
+- **The root.** The origin is not an object — it is the root's transform, so
+  the root's name is what export, manifest and content must agree on.
+  `Chunk_03` says nothing about which of eight role-named pieces it is, and the
+  role decides size, socket count and where the generator may put it. The brief
+  carries the full root ↔ manifest key ↔ chunk Id table.
+- **Socket marker empties**, `Socket_<id>_<KIND>`, in their own collection,
+  excluded from export. Nothing reads them; the point is that the offsets in
+  `Content/Chunks/` are hand-typed today with no way to check them against the
+  file. Proposed as a convention, explicitly not as a promise to automate.
+
+Also flagged from the screenshot: the root of `VerdantValley_Chunk_03` sits at
+**Location Y = 100 m**. Export writes positions relative to the scene origin,
+so that arrives 100 studs out.
+
+### Done
+
+- `docs/CHUNK_AUTHORING.md` — three new sections: how many sockets and on which
+  sides, the edge contract, naming. Checklist grew from 9 items to 13.
+- `docs/MODULAR_MAPS.md` — the weld band added as a fourth geometry-contract
+  rule; the socket section now carries the two caveats.
+- `docs/STATUS.md` — three debt rows: `exitFor` first-match, `IncludeSide`
+  never read, unused sockets never capped.
+- The brief was exported to PDF for the owner's modeller.
+
+### Stopped at
+
+Docs only, again. No System changed. 574 tests still green.
+
+### Next
+
+1. **`exitFor` picks its exit at random** — the one change that makes "sockets
+   on every open side" do what the owner wants. Small, needs tests, should not
+   ride along with anything else.
+2. **Decide `IncludeSide`**: implement it, or delete the field and the
+   docstring's promise. A declared option nothing reads is worse than neither.
+3. Re-author the kit's edges to the weld band before any piece is uploaded —
+   it is a cheap rule now and an eight-piece re-export later.
+
+---
+
+## Session 40 — 2026-09-22 — The chunk origin contract, written down
+
+**Branch:** `claude/nifty-babbage-elpxrv` · **Tests:** 574 passing (unchanged)
+
+### What prompted this
+
+The owner is modelling the Verdant Valley chunk kit in Blender and sent a
+screenshot of four 100 × 100 pieces with their **origins at the corners**,
+asking why the earlier guidance had said corners.
+
+It had — in conversation, not in the repo, which is the actual failure here.
+**There was no chunk-authoring brief in `docs/` at all.** The Crossroads and
+the Fate Engine each got a full Blender prompt; the chunk kit, which is the
+piece with the strictest geometry contract of the three, got none. So the
+guidance lived in a chat, was wrong, and nothing in the repo contradicted it.
+
+### The origin belongs at the chunk's centre, and this is why
+
+`ChunkLoader` places a piece by putting its origin at `placed.X/Y/Z` — which is
+the **centre** the assembler chose — and `ChunkCore.overlaps` rejects
+collisions against centre ± half-size. And `Yaw` is derived from the socket
+pair, so **every piece is rotated 0/90/180/270 depending on the seed**, about
+its origin.
+
+That last part is what makes a corner origin unrecoverable rather than merely
+offset: the error is a different vector for each of the four yaws. Meanwhile
+the generator still certifies the layout as collision-free, because it only
+ever saw centre ± half-size. **A wrong origin produces a map that is correct in
+data and broken on the ground** — the worst shape a bug can have here.
+
+### Done
+
+- **New `docs/CHUNK_AUTHORING.md`** — the brief that should have existed.
+  Scale, the origin rule and its derivation, what "independent chunk" forbids,
+  how sockets actually gate joins, FBX settings, and a pre-export checklist.
+- **`MODULAR_MAPS.md`** gained a *geometry contract* section: origin, chunk
+  independence, and "chunks do not join on any side — only at sockets, only by
+  Kind". Its authoring checklist now points at the new brief.
+- **`assets/README.md`** — the kit-export section said "origin at the piece's
+  centre" already, which was right but under-argued and easy to skim past. It
+  now says middle-most point in all three axes, says why, and says one FBX per
+  chunk explicitly.
+- **`ChunkLoader.luau`** carries the contract as a comment at the exact two
+  lines that depend on it. No behaviour change.
+- **`STATUS.md`** — two new debt rows and the Verdant Valley testing posture.
+- **`DEVELOPMENT_PLAN.md`** — the interim roll-gating step under Phase 1.
+- **`README.md`, `CLAUDE.md`** — doc lists updated.
+
+### Decisions made
+
+- **Origin at the geometric centre of the bounding box, all three axes.**
+  Recorded in code and in three docs, because it is invisible metadata that no
+  test can see — the same class of failure as the hub's "register from a named
+  part, not a pivot" rule.
+- **The kit is not a tiled grid.** The screenshot's four equal 100 × 100
+  squares in a 2 × 2 block is a different system from the one that exists: the
+  kit is eight differently-sized pieces (256 × 512 up to 1024 × 1024) chained
+  end to end. Said plainly in the new brief, with the size table, because it is
+  the kind of misunderstanding that costs an art pass.
+- **Gating the roll pool to Verdant Valley for testing is a data change, and
+  it is `GameConfig.Fate.PrototypeWeights`, not each world's `RollWeight`.**
+  `FateCore.effectiveWeight` prefers the override table while
+  `CurrentPhase == 1`. `OnboardingSequence` has to be flattened too or rolls
+  1–8 still force four other worlds. Written down, not implemented — it is the
+  owner's call when to flip it.
+
+### Not done, deliberately
+
+- **Nothing was renamed.** The owner called the world "Verdant Plains"; the
+  repo calls it `VERDANT_VALLEY` throughout — content ids, `VV_` asset keys,
+  chunk ids, tests, the Biome Blueprint. If the name is changing that is a
+  rename pass of its own, and it should happen before the art is uploaded
+  rather than after.
+- **The `GroundOffsetY` field is not built.** The mesh path puts the bounding
+  box *centre* at the layout Y while the blockout puts the *walking surface*
+  there. The brief works around it by requiring the walk plane be centred in
+  `SizeY`; the real fix is a schema field, which is a spec amendment. Logged
+  in `STATUS.md` debt.
+
+### Stopped at
+
+Docs only. No System changed, no content changed, 574 tests still green.
+
+### Next
+
+1. **Owner decides the name** — Verdant Valley or Verdant Plains — before art
+   is uploaded.
+2. **Re-author the test chunks to the real sizes** in
+   `Content/Chunks/VerdantValley.luau`, with centre origins and an opening at
+   every declared socket.
+3. **Upload one piece** — `VV_CHUNK_ENTRY` is the smallest useful test — flip
+   its manifest entry to `UPLOADED`, and walk a generated map with one mesh
+   among seven blockouts. That is the cheapest possible proof of the origin
+   contract, and it also settles the `GroundOffsetY` question with evidence.
+4. **Then gate the roll pool** and test the loop end to end.
+
+---
+
 ## Session 39 — 2026-09-21 — Weather that covers the plaza, and a plan
 
 **Branch:** `claude/player-ui-crossroads-gui-2accal` · **Tests:** 574 passing (was 572)

@@ -22,6 +22,7 @@ Next up: Phase 2 — expedition entry, combat, loot, Discovery Book.
 | [`docs/BLUEPRINT_RECONCILIATION.md`](docs/BLUEPRINT_RECONCILIATION.md) | How the Biome Blueprint merged; 4 items needing sign-off |
 | [`docs/WORKLOG.md`](docs/WORKLOG.md) | Session history and handoff points — **read the top entry first** |
 | [`docs/MODULAR_MAPS.md`](docs/MODULAR_MAPS.md) | The chunk system: how biome maps assemble from authored pieces |
+| [`docs/CHUNK_AUTHORING.md`](docs/CHUNK_AUTHORING.md) | Modelling a chunk in Blender: origin, scale, sockets, export |
 | [`assets/README.md`](assets/README.md) | Blender → Roblox asset workflow |
 | [`docs/ART_DIRECTION.md`](docs/ART_DIRECTION.md) | How to describe the look so it becomes code |
 | [`docs/TOOLCHAIN_ACCESS.md`](docs/TOOLCHAIN_ACCESS.md) | Rojo, Rokit, Studio MCP, Blender, assets |

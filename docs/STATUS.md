@@ -151,6 +151,24 @@ property fell out of it, which was the thing being tested. It was retired
 than eight interchangeable pieces (§4). The grammar result stands; the kit had
 no art to describe.
 
+**Verdant Valley is the kit being built for testing** (owner-directed
+2026-09-22). Its art is in authoring now. The intent while it is the only kit
+with a map: **gate the roll to it for the duration of testing**, then restore
+the pool as each biome lands. Two knobs do that and both are data:
+
+- `GameConfig.Fate.PrototypeWeights` — the Phase 1 pool. `FateCore.effectiveWeight`
+  prefers it over each world's `RollWeight` while `CurrentPhase == 1`, so this
+  is the one that actually governs today. `VERDANT_VALLEY = 10000` with the
+  rest at 0 keeps the set summing to 10000, which is what makes those numbers
+  readable as percentages.
+- `GameConfig.Fate.OnboardingSequence` — rolls 1–8 are **forced** regardless of
+  weights, and four of them are not Verdant Valley. A weight change alone will
+  not stop a fresh profile landing in Emberfall on roll 3.
+
+No System changes either way, which is the point: this is the cheap answer to
+the "25% of rolls land on a world with no map" row below, and it reverses by
+editing the same two tables back.
+
 All 8 remaining pieces are `PLACEHOLDER`, so the loader draws **labelled blockout** —
 each platform carries its ChunkId and Role, with a neon post at every socket
 coloured by Kind. **A generated map is verifiable by eye before any mesh
@@ -333,6 +351,15 @@ survive a rescale and a literal does not.
 
 | Item | Severity | Notes |
 |---|---|---|
+| **`ChunkCore.exitFor` takes the FIRST valid socket, not a random one** | **High** | A piece with four sockets leaves through the same one every seed, and the entry chunk is hard-coded to `entry.Sockets[1]`. So **authoring more sockets currently buys no extra variety** — what varies is which piece is drawn and which yaw the join implies. Owner-raised 2026-09-22, wanting layouts that differ genuinely per run. The fix is a weighted random pick among the valid exits: small, contained, and it wants its own tests. Not done here — this pass was documentation. |
+| **`IncludeSide` is declared and never read** | Medium | `AssembleOptions.IncludeSide` exists and `ChunkCore.assemble`'s own docstring promises "optionally hanging one SIDE pocket off a spare socket". Nothing consumes the field. **`VV_HOLLOW` is authored, validated, and never placed** — the Biome Blueprint §6 side-pocket checklist item is satisfied on paper only. Found 2026-09-22 while answering a question about socket counts. |
+| **Unused sockets are never capped** | Medium | The generator consumes one socket to arrive and one to leave; every other opening on the piece faces nothing, and the loader does not close them. With high socket counts — which is what gives a run variety — that is several openings per piece looking onto the void. Today the art has to solve it (`CHUNK_AUTHORING.md`: an opening must read as plausible unattached). A cap piece placed by the loader at unused sockets is the systematic fix and would need a schema field for it. |
+| **A chunk's mesh origin must be its footprint centre, and nothing enforces it** | **High** | `ChunkLoader` puts the mesh's origin at the layout centre and rotates about it by a seed-derived `Yaw`, and `ChunkCore.overlaps` checks collisions against centre ± half-size. A corner or edge origin therefore lands the art half a chunk out, by a different amount per rotation, and the generator still certifies the layout as collision-free. It is a **data contract with the Blender file that no test can see** — the origin is invisible metadata, exactly the failure mode that produced the "register a prefab from a NAMED PART, not from its pivot" rule for the hub. Documented in `CHUNK_AUTHORING.md`; the first uploaded mesh is where it gets proven. |
+| **A brief that specifies the piece gets the piece it specified** | **Process** | Recorded 2026-09-22 after it happened. The first `CHUNK_AUTHORING.md` was handed to the modeller's AI engine carrying a table of eight footprints (512–1024), a 32-stud flat weld band on every edge, and a 13-item checklist. All three were read as targets: the kit came back at roughly 10× the area with terrain flattened to the boundary and the scatter lost in it, and the better earlier iteration had to be restored from backup. **A number stated in a brief is a number that gets built.** The rewrite states only what breaks the game and says outright that everything else is the modeller's. The general rule for any art brief on this project: **specify the seam, not the piece.** |
+| **FBX exported at 1000× — millimetres, not metres** | **Closed 2026-09-22, in the brief** | The first Verdant Valley batch imported at **256,000 studs** against a declared 256. Exactly 1000×, so the FBX was written in millimetres. The brief now names both settings that have to agree (Blender units Metric/Metres/1.0; FBX Transform → Scale 1.00, Apply Scalings `FBX All`) and, more usefully, tells the modeller to **measure one piece in Studio rather than trust the export** — a 256 piece must read 256. The compensating-factor workaround (FBX export scale 0.001) is named and discouraged, because a compensating factor is a thing someone later removes for looking wrong. |
+| **Kit target raised to 12–16 pieces** | **Content** | Owner-directed 2026-09-22. This file declares 8 — one per role in the Blueprint progression — and the variety of a run is the variety of the kit, so 8 repeats itself. Extra pieces arrive as **variants of existing roles**, not new roles: several meadows, several groves, weighted so one is common and another rare. Entries get added as each piece is authored; declaring chunks with no art would have the blockout drawing pieces nobody meant. **First delivery is 4** — ENTRY, PATH_STRAIGHT, GROVE, BOSS_CLEARING — the smallest set that assembles a complete walkable map. The Grove has to be among them: the WIDE reservation makes it the only piece offering the exit the arena accepts. |
+| **The kit was generated stacked at one point** | Low | Every Verdant Valley piece came back occupying the same spot in the Blender scene. Nothing was broken by it — the exports were correct — but it made the kit impossible to review without hiding objects one at a time, and a piece nobody can see is a piece nobody checks. The brief now asks for a spaced review layout, with the catch stated: **the review position and the export position are different things**, and a piece exported while parked on the review grid arrives that far off in game. |
+| **`GroundOffsetY` — the loader needs a ground-level origin and does not have one** | **High** | `ChunkLoader` sets `mesh.Size = (SizeX, SizeY, SizeZ)` and puts that box's **centre** at the layout Y, while the blockout puts the **walking surface** there. The first version of the brief closed the gap by requiring the art to centre its walk plane inside `SizeY` — 170 studs of ground body under the player's feet at `SizeY = 340`. That was the wrong side to bend: **`CHUNK_AUTHORING.md` now asks for a ground-level origin**, which is what an artist would author anyway and what the blockout already assumes. The loader owes a `GroundOffsetY` on the chunk schema to consume it. **This is now a prerequisite for the first mesh upload**, not deferrable debt — nothing is uploaded yet, so there is time, but a piece imported before it lands will sit half-sunk. |
 | **Portal plane is still above head height** | Medium | You reach the prompt and the rig springs from the floor, but the walk-through *plane* sits inside the inner ring, ~30 studs up. Blueprint §1.3's concentric rings make that inherent. Irrelevant once the rig is authored in Blender. |
 | **25% of rolls land on a world with no map** | **High** | Emberfall 15%, Sky Citadel 7%, Astral Reach 3%. Refused politely at the Gate; printed as a boot warning and asserted by test. Emberfall and Astral Reach need only a chunk kit; Sky Citadel needs a blueprint section first. |
 | **The authored Crossroads is in, and has been walked once** | **Open** | Delivered 2026-09-18: 225 MeshParts, all 10 contract names present, 225 of 225 painted, Scale 2.0 with a 180° compass correction. **Walked 2026-09-18** and the owner's verdict was *"looks very nice in general"*, with seven specific faults — all fixed the same day (§1). `assets/rbxm/prefabs/README.md` has the measurements. **Its south district is a Shop**, while Content still calls that zone `EXPEDITION_GATE` — see the portal-as-entry row below. |
@@ -499,6 +526,7 @@ Studio → open `LUCKBOUND_dev` → Rojo panel **Connect** → **Accept** → **
 | `TOOLCHAIN_ACCESS.md` | Studio MCP, Rojo, Blender, assets, setup |
 | `WORKLOG.md` | **Session history and handoff points — read the top entry** |
 | `MODULAR_MAPS.md` | The chunk system: how biome maps assemble from pieces |
+| `CHUNK_AUTHORING.md` | **Give this to whoever models a kit.** Origin, scale, sockets, independence, export |
 | `../assets/README.md` | Blender → Roblox asset workflow |
 | `ADDENDUM_ASSET_PIPELINE.md` | Future asset/procgen architecture — target design |
 | `MODELLER_HANDOFF.pdf` | **Give this to an artist.** Deliverable formats, export settings, how to build a prefab we can animate |

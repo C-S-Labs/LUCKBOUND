@@ -68,10 +68,10 @@ than inferring it from a test name.
     WorldId  = "VERDANT_VALLEY",
     Role     = "COMBAT",
     AssetKey = "VV_CHUNK_GROVE",     -- into AssetManifest
-    SizeX = 768, SizeY = 340, SizeZ = 768,
+    SizeX = 256, SizeY = 340, SizeZ = 256,
     Sockets = {
-        socket("south", "PATH", 0,  384, 180),
-        socket("north", "WIDE", 0, -384,   0),
+        socket("south", "PATH", 0,  128, 180),
+        socket("north", "WIDE", 0, -128,   0),
     },
     Weight = 25,
     MaxPerLayout = 1,
@@ -106,12 +106,12 @@ hard-coding it.** It falls out of the socket rules. A real assembled layout:
 
 ```
 VV_ENTRY          (     0,      0)  [ENTRY]
-VV_STREAM         (     0,   -512)  [COMBAT]
+VV_STREAM         (     0,   -256)  [COMBAT]
+VV_PATH_STRAIGHT  (     0,   -512)  [PATH]
+VV_MEADOW         (     0,   -768)  [COMBAT]
 VV_PATH_STRAIGHT  (     0,  -1024)  [PATH]
-VV_MEADOW         (     0,  -1792)  [COMBAT]
-VV_PATH_STRAIGHT  (     0,  -2560)  [PATH]
-VV_GROVE          (     0,  -3200)  [COMBAT]   ← always the approach
-VV_BOSS_CLEARING  (     0,  -4096)  [BOSS]
+VV_GROVE          (     0,  -1280)  [COMBAT]   ← always the approach
+VV_BOSS_CLEARING  (     0,  -1536)  [BOSS]
 ```
 
 **Design your socket Kinds deliberately.** They are the level-design grammar,
@@ -162,9 +162,16 @@ is a list of numbers, and that seam is why the rules are testable at all.**
 
 ### Expedition size
 
-That layout spans **4096 studs** end to end — about **128 seconds** of walking
-at WalkSpeed 32, roughly 18% of a 720-second expedition. The rest is combat and
+That layout spans **1536 studs** end to end — about **48 seconds** of walking
+at WalkSpeed 32, roughly 7% of a 720-second expedition. The rest is combat and
 exploration.
+
+It was 4096 studs until the kit went to a uniform 256 on 2026-09-22. **That is
+a lot of slack, and `PathLength` is the knob that takes it up** — the traverse
+test asserts a relationship, not a number, so a longer path is a content change
+and nothing re-derives. Worth retuning once a real piece has been walked, not
+before: how long 256 studs of authored forest takes to cross is not the same
+question as how long it takes to walk across an empty blockout.
 
 `PathLength` is the knob, and since 2026-09-16 it is **content**: a world sets
 `MapPathLength` and falls back to `GameConfig.Expedition.PathLength` when it
@@ -205,14 +212,88 @@ what addendum §A4 asks for with per-expedition seeding.
 
 ---
 
+## The geometry contract
+
+The layout rules above are about *data*. The rules below are about the *art*,
+and they are the ones that are expensive to discover late.
+
+**The full brief is [`CHUNK_AUTHORING.md`](CHUNK_AUTHORING.md)** — read it
+before modelling. The three rules that everything else hangs off:
+
+### 1. The origin is the middle-most point of the chunk
+
+Centre in X, centre in Y, centre in Z. Not a corner, not the middle of a side,
+not the Blender world origin.
+
+`ChunkLoader` places a piece by putting its origin at the centre the assembler
+chose, and `ChunkCore.overlaps` rejects collisions against centre ± half-size
+boxes — so any other origin lands the art half a chunk from where the generator
+believes it is. Worse, `Yaw` is derived from the socket pair, so **every piece
+gets rotated 0/90/180/270 depending on the seed**, and rotation happens about
+the origin. A centre origin spins the piece in place; a corner origin swings it
+a whole chunk-width sideways, by a different amount for each yaw. It is not a
+constant offset anything can correct for.
+
+### 2. Every chunk is independent
+
+Nothing crosses a boundary, nothing depends on a neighbour, every piece reads
+alone and at four rotations. The piece next to it is a different piece next
+seed. Art that cannot meet that is a map, not a kit — ship it as a
+`PrebuiltMap` instead (`assets/rbxm/maps/README.md`).
+
+### 3. Chunks do not join on any side — only at sockets, only by Kind
+
+An edge with no socket is a wall to the generator; nothing is ever placed
+against it. Two sockets join only when their `Kind` strings match exactly, and
+each join consumes one socket from each side. Which means **every socket of the
+same `Kind` must be physically interchangeable across the whole kit** — same
+opening width, same ground height, same approach — because the seed decides
+which two meet.
+
+Author a socket on every side the art leaves genuinely open, and none on a side
+it closes. Two caveats, both tracked in `STATUS.md`: `exitFor` currently returns
+the **first** valid socket rather than a random one, so extra sockets do not yet
+vary a run; and the generator consumes only two sockets per piece, so every
+other opening faces nothing and must read as plausible unattached.
+
+### 4. Openings need level ground; the rest of the perimeter does not
+
+Pieces butt together edge to edge, so **where a piece connects, the ground must
+arrive at that opening level and at the same height on every piece in the kit**
+— otherwise the join is a step or a gap.
+
+That constraint applies at the openings and nowhere else. The rest of the
+perimeter can cliff off, be walled, run into dense trees or roll however the
+art wants, and a piece does not have to be connectable on all four sides.
+
+**This was originally written as a kit-wide flat band along every edge, and
+that was wrong.** Handed to a modeller it flattened the terrain to the
+boundary on all four sides and produced a putting green — the rule was doing
+far more work than the join needed. The join needs level ground at the
+openings. Everything else was over-specification, and
+`CHUNK_AUTHORING.md` is now scoped to what actually breaks.
+
+---
+
 ## Authoring a kit — checklist
 
-1. **Pick a grid.** Both existing kits use **256 studs**. Sockets must land on it
-   or pieces will not meet. Size against the 5-stud character, not against a
-   floorplan: the smallest connective piece is 256×512, about 51×102
-   character-heights, so a corridor reads as a forest path and not a hallway.
+1. **Pick one size for the kit.** Verdant Valley uses **256 × 256 for every
+   piece**, with sockets at the edge midpoints — one number for the modeller to
+   build against rather than a table of eight. Size it against the 5-stud
+   character, not against a floorplan: 256 is about 51 character-heights, which
+   reads as a clearing. Two earlier iterations came back at ~100 studs (too
+   tight to read as a place) and ~1024 (so open that the scatter vanished into
+   it), which is how 256 was arrived at. Differently-sized pieces are legal and
+   the assembler handles them; one size is simply easier to author to.
 2. **Decide your Kinds first.** At minimum one connective Kind and one the
-   arena accepts. The arena Kind is automatically reserved.
+   arena accepts. The arena Kind is automatically reserved. **Do this before
+   any modelling** — it is what decides where each piece's openings go, and
+   re-cutting openings on a finished kit is the expensive version of this
+   conversation.
+2b. **Aim for 12–16 pieces.** The variety of a run is the variety of the kit;
+   8 starts to repeat itself. Extra pieces are variants of the existing roles —
+   several meadows, several groves — weighted so one is common and another
+   rare, not new roles.
 3. **Two sockets minimum** on anything `PATH` or `COMBAT`, or the path
    dead-ends. Validation rejects this.
 4. **One `ENTRY`, one `BOSS`** per world.
@@ -220,7 +301,9 @@ what addendum §A4 asks for with per-expedition seeding.
 6. **`SizeX/Y/Z` must be honest** — they drive collision rejection. Too small
    and pieces interpenetrate; too large and assembly fails needlessly.
 7. **One `SIDE` pocket per world** — Biome Blueprint §6 checklist.
-8. Run `./tests/run.sh`. The kit is validated at boot too; a broken kit stops
+8. **Author the geometry against [`CHUNK_AUTHORING.md`](CHUNK_AUTHORING.md)** —
+   origin at the chunk's centre, one FBX per chunk, an opening at every socket.
+9. Run `./tests/run.sh`. The kit is validated at boot too; a broken kit stops
    the server rather than shipping a broken expedition.
 
 ---
@@ -250,7 +333,8 @@ what addendum §A4 asks for with per-expedition seeding.
 
 ## Adding a new world's kit
 
-1. Author pieces in `assets/source/worlds/<world_id>/`
+1. Author pieces in `assets/source/worlds/<world_id>/`, one `.blend` per
+   piece, to `CHUNK_AUTHORING.md`
 2. Add manifest entries (`PLACEHOLDER` is fine)
 3. Add `src/shared/Content/Chunks/<World>.luau` returning a list
 4. Run the tests

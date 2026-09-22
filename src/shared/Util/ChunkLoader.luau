@@ -238,6 +238,26 @@ function ChunkLoader.build(
 		folder:SetAttribute("Yaw", placed.Yaw)
 		folder.Parent = model
 
+		-- THE ORIGIN CONTRACT WITH THE BLENDER FILE.
+		--
+		-- placed.X/Y/Z is the chunk's CENTRE, and the yaw rotates ABOUT that
+		-- point. So an authored mesh must have its origin at the centre of its
+		-- own footprint. A corner or edge origin lands the art half a chunk
+		-- out -- by a DIFFERENT amount for each of the four yaws, so it is not
+		-- an offset anything can correct for -- while ChunkCore.overlaps still
+		-- certifies the layout as collision-free, because it only ever sees
+		-- centre +/- half-size.
+		--
+		-- VERTICALLY THE TWO SIDES DISAGREE TODAY. Setting mesh.Size and
+		-- CFrame puts the BOUNDING BOX CENTRE at placed.Y, while
+		-- docs/CHUNK_AUTHORING.md asks the modeller for a GROUND-LEVEL origin
+		-- -- which is the intuitive thing to author and the thing the blockout
+		-- already assumes. A GroundOffsetY on the chunk schema is what closes
+		-- that, and it is owed before the first mesh is uploaded. STATUS.md.
+		--
+		-- Nothing here can detect a wrong origin: it is invisible metadata in
+		-- an FBX, the same class of failure that produced the "register a
+		-- prefab from a NAMED PART, not from its pivot" rule for the hub.
 		local centre = origin + Vector3.new(placed.X, placed.Y, placed.Z)
 		local cframe = CFrame.new(centre) * CFrame.Angles(0, math.rad(placed.Yaw), 0)
 

@@ -98,16 +98,34 @@ Four questions that settle it, all answerable by measuring the file:
 
 Four yeses is a kit. Any no is a map.
 
-### If it is a kit: export island by island
+### If it is a kit: one file per piece
 
-**Export each piece with its own origin at the piece's centre, on the 256-stud
-grid.** The chunk system positions pieces by their centre and joins them at
-sockets; a mesh whose origin sits at the world origin of the Blender scene will
-assemble into a pile at one point. In Blender: select the piece's objects →
-`Object ▸ Set Origin ▸ Origin to Geometry` (or snap the 3D cursor to the socket
-grid and use `Origin to 3D Cursor`) → then export **Selected Objects only**.
+**One FBX per chunk, one chunk per file — never the grouped folder.** A
+manifest key maps to exactly one uploaded asset, and the generator shuffles
+those assets independently; a grouped export arrives as one fused object with
+one id and there is nothing to shuffle.
+
+**The origin of each piece goes at the centre of its footprint, at ground
+level** — the point a person would stand on at the middle of the piece. Not a
+corner, not the middle of a side, not the Blender world origin. The chunk
+system positions pieces by that point *and rotates them about it* in
+seed-dependent 90° steps, so a corner origin swings the piece a whole
+chunk-width sideways by a different amount for each rotation. In Blender: select
+the piece's objects → `Ctrl+A ▸ All Transforms` → snap the 3D cursor to the
+footprint centre on the ground plane → `Object ▸ Set Origin ▸ Origin to 3D
+Cursor` → move the piece to the world origin → export **Selected Objects
+only**.
+
+> Ground level, not bounding-box centre. `ChunkLoader` currently expects the
+> latter — see the `GroundOffsetY` row in `docs/STATUS.md`. That is a loader
+> change owed before the first upload, not something the art should contort
+> around.
 
 Each piece becomes a manifest entry and a chunk in `Content/Chunks/`.
+
+**The full geometry brief — sizes, sockets, edge matching, what "independent"
+means — is [`docs/CHUNK_AUTHORING.md`](../docs/CHUNK_AUTHORING.md). Read it
+before modelling a kit.**
 
 ### If it is a map: one file, one entry
 
@@ -156,7 +174,7 @@ the source path. Settings that matter:
 
 | Setting | Value | Why |
 |---|---|---|
-| **Limit to → Selected Objects** | ✅ | one island per file |
+| **Limit to → Selected Objects** | ✅ | one chunk (or one island) per file |
 | **Forward / Up** | `-Z Forward`, `Y Up` | Blender is Z-up, Roblox is Y-up |
 | **Apply Transform** | ✅ | otherwise rotation and scale arrive baked wrong |
 | **Object Types** | Mesh only | leave out the cameras, lights and the R6 rig |
@@ -263,6 +281,8 @@ painful — history rewriting later is far worse than setting it up early.
 ## Modular map pieces
 
 The chunk system that consumes these is documented in
-[`docs/MODULAR_MAPS.md`](../docs/MODULAR_MAPS.md). Read it before authoring a
-kit — socket placement and grid alignment decide whether pieces can connect at
-all, and those are cheap to get right up front and expensive to retrofit.
+[`docs/MODULAR_MAPS.md`](../docs/MODULAR_MAPS.md), and the Blender-side brief
+is [`docs/CHUNK_AUTHORING.md`](../docs/CHUNK_AUTHORING.md). Read both before
+authoring a kit — origin placement, socket placement and grid alignment decide
+whether pieces can connect at all, and those are cheap to get right up front
+and expensive to retrofit.

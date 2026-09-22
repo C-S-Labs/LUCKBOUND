@@ -19,7 +19,8 @@ handoff:
 **`docs/DEVELOPMENT_PLAN.md` says what to work on next**, and why in that
 order. Read it before picking up anything that is not already in flight.
 
-Then `docs/` has the rest: `MODULAR_MAPS.md`, `TESTING.md`, `ART_DIRECTION.md`,
+Then `docs/` has the rest: `MODULAR_MAPS.md`, `CHUNK_AUTHORING.md`,
+`TESTING.md`, `ART_DIRECTION.md`,
 `BLUEPRINT_RECONCILIATION.md`, `TOOLCHAIN_ACCESS.md`, `PLAYER_UI.md`,
 `PLAYER_ABILITIES.md`, `EVENTS.md`.
 
