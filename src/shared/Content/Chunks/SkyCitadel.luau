@@ -37,8 +37,13 @@
 -- landmark per piece at +160. The walk plane therefore sits 32 studs BELOW
 -- the box centre -- the number GroundOffsetY will need (STATUS.md, High).
 
+-- Opening widths, from the kit's chunk reference. ChunkLoader uses them to
+-- tell a wide mouth from a narrow one when it measures which way a mesh faces:
+-- without them a gate-court's ASCENT end and SKYWAY end both read as "deck".
+local WIDTH = { SKYWAY = 40, ASCENT = 72 }
+
 local function socket(id: string, kind: string, x: number, z: number, facing: number)
-	return { Id = id, Kind = kind, OffsetX = x, OffsetY = 0, OffsetZ = z, Facing = facing }
+	return { Id = id, Kind = kind, OffsetX = x, OffsetY = 0, OffsetZ = z, Facing = facing, Width = WIDTH[kind] }
 end
 
 local CHUNKS = {

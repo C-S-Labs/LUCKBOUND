@@ -162,9 +162,20 @@ local function calibrateYaw(chunk: any, placed: any, origin: Vector3, meshPos: V
 			local ws = ChunkCore.worldSocket(placed, chunk, socket)
 			local mouth = origin + Vector3.new(ws.X, ws.Y, ws.Z)
 			local inward = Vector3.new(centre.X - mouth.X, 0, centre.Z - mouth.Z).Unit
-			local from = mouth + inward * probe.Inset + Vector3.new(0, probe.Height, 0)
-			local hit = Workspace:Raycast(from, Vector3.new(0, -probe.Height * 2, 0), params)
-			if hit and math.abs(hit.Position.Y - mouth.Y) <= probe.Tolerance then
+			local centreProbe = mouth + inward * probe.Inset
+			local function deckAt(point: Vector3): boolean
+				local hit = Workspace:Raycast(point + Vector3.new(0, probe.Height, 0), Vector3.new(0, -probe.Height * 2, 0), params)
+				return hit ~= nil and math.abs(hit.Position.Y - mouth.Y) <= probe.Tolerance
+			end
+			local ok = deckAt(centreProbe)
+			-- With a declared Width, the mouth must be that wide too: both
+			-- sides, just inside its edges. That is what tells a wide opening
+			-- from a narrow one when both have deck at their centre.
+			if ok and socket.Width then
+				local across = Vector3.new(-inward.Z, 0, inward.X) * (socket.Width / 2 - probe.EdgeMargin)
+				ok = deckAt(centreProbe + across) and deckAt(centreProbe - across)
+			end
+			if ok then
 				hits += 1
 			end
 		end

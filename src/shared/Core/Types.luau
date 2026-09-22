@@ -159,6 +159,10 @@ export type ChunkRole =
 export type ChunkSocket = {
 	Id: string,
 	Kind: string, -- "PATH" | "WIDE" | "WATER" | ...
+	-- Studs across the opening. Optional; when set, ChunkLoader's facing probe
+	-- also checks the mouth is this wide, which is what tells two openings of
+	-- different Kinds apart.
+	Width: number?,
 	OffsetX: number,
 	OffsetY: number,
 	OffsetZ: number,
