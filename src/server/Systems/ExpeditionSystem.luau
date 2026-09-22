@@ -45,6 +45,9 @@ local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local ChunkCore = require(Root.Util.ChunkCore)
 local ChunkLoader = require(Root.Util.ChunkLoader)
 local Chunks = require(Root.Content.Chunks)
+
+-- Expeditions started on this server; varies the seed per entry.
+local entryCount = 0
 local ScenarioCore = require(Root.Util.ScenarioCore)
 local Scenarios = require(Root.Content.Scenarios)
 local Constants = require(Root.Core.Constants)
@@ -805,7 +808,13 @@ function ExpeditionSystem.requestEnter(player: Player, ...: any): ()
 	local worldId = decision.WorldId :: string
 	-- THE LEADER'S SEED, for everyone. That is what "the same instance with
 	-- the same parameters" means: one world, one map, one timer.
-	local seed = ExpeditionCore.seedFor(player.UserId, profile.TotalRolls, worldId)
+	-- Mixed with a per-server entry count so re-entering the SAME roll still
+	-- gives a new map. Without it a debug-forced roll never advances
+	-- TotalRolls and every test entry rebuilt the identical layout. The seed
+	-- is still logged, so any map remains rebuildable from its log line.
+	entryCount += 1
+	local seed = (ExpeditionCore.seedFor(player.UserId, profile.TotalRolls, worldId) + entryCount * 104729)
+		% 2147483647
 
 	-- Who actually goes. The leader always; each member only if they are
 	-- still here, not already somewhere, and -- in place -- has a body to
