@@ -18,8 +18,10 @@ What it guarantees, and checks before it will export (`validate()`):
 * Every piece is ONE mesh object whose bounding box is exactly
   256 x 256 (footprint) x 256 (height: keel tip at -96, crown at +160).
   ChunkLoader sets `mesh.Size = SizeX, SizeY, SizeZ`, so a piece whose box is
-  any other size is STRETCHED to fit. The four corner beacons pin X/Y; the
-  keel apex and one 160-stud spire pin Z.
+  any other size is STRETCHED to fit. Four edge pins (edge_pins()) hold X/Y
+  and the bottom at -96; one 160-stud landmark per piece holds the top.
+* Nothing that floats clips anything, and nothing that floats comes within
+  FLOAT_EDGE_MARGIN of the tile edge -- so neighbours' floats never meet.
 * The origin is the centre of the footprint, on the walking surface (z = 0).
 * Every opening's deck top is at z = 0, and every opening of one Kind has the
   same width: SKYWAY 40 studs, ASCENT 72 studs.
