@@ -170,7 +170,12 @@ local GameConfig = {
 		-- inside each socket's mouth (Inset studs), cast from Height above the
 		-- walk plane, must land within Tolerance of it. Visual only -- the
 		-- layout and its randomness are decided before this runs.
-		SocketProbe = { Inset = 6, Height = 20, Tolerance = 3 },
+		-- Tolerance 6: the kit reference puts the SKYWAY deck at 0..3.2, so 3
+		-- sat on the edge of rejecting a correct turn.
+		SocketProbe = { Inset = 6, Height = 20, Tolerance = 6 },
+		-- No piece more than this many times per map (caps excepted), and never
+		-- twice in a row. Owner-directed 2026-09-23: repeats read as messy.
+		MaxRepeats = 2,
 
 		-- === Scenario layer (build spec §7.3) ====================
 		-- RESTORED 2026-09-23. This block was silently deleted by merge

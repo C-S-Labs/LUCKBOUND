@@ -248,6 +248,7 @@ local function buildStage(worldId: string, seed: number, origin: Vector3, stageN
 		-- silence. A dial that is read nowhere is not a dial.
 		IncludeSide = GameConfig.Expedition.IncludeSide,
 		BranchLength = GameConfig.Expedition.BranchLength,
+		MaxRepeats = GameConfig.Expedition.MaxRepeats,
 	}, function(attempt)
 		return ExpeditionCore.streamFor(seed, attempt)
 	end, GameConfig.Expedition.AssemblyAttempts)

@@ -140,6 +140,8 @@ export type AssembleOptions = {
 	-- 0 or nil caps the mouth where it stands, which is what every layout did
 	-- before 2026-09-23.
 	BranchLength: number?,
+	-- Cap on placements of any one non-CAP piece, on top of its MaxPerLayout.
+	MaxRepeats: number?,
 }
 
 --- Builds a layout: ENTRY → PathLength connective/combat chunks → BOSS,
@@ -221,8 +223,15 @@ function ChunkCore.assemble(
 	end
 
 	local function allowed(chunk: any): boolean
+		local n = used[chunk.Id] or 0
 		local cap = chunk.MaxPerLayout
-		return cap == nil or (used[chunk.Id] or 0) < cap
+		if cap ~= nil and n >= cap then
+			return false
+		end
+		-- Variety: no piece more than MaxRepeats times. Caps are exempt --
+		-- a map needs as many as it has loose ends.
+		local repeats = options.MaxRepeats
+		return repeats == nil or chunk.Role == "CAP" or n < repeats
 	end
 
 	local function collides(p: any, chunk: any): boolean
@@ -307,7 +316,8 @@ function ChunkCore.assemble(
 					plausible = true
 				end
 			end
-			if allowed(c) and plausible then
+			-- Never the same piece twice in a row.
+			if allowed(c) and plausible and c.Id ~= openChunk.Id then
 				table.insert(candidates, c)
 			end
 		end
@@ -449,7 +459,7 @@ function ChunkCore.assemble(
 					local c = WeightedRandom.pick(middle, function(x)
 						return x.Weight
 					end, nextNumber)
-					if c and allowed(c) then
+					if c and allowed(c) and c.Id ~= fromC.Id then
 						local p, arrived = ChunkCore.placeAgainst(c, at, branchIndex)
 						if p and not collides(p, c) then
 							record(p, c)
