@@ -34,51 +34,86 @@ local ENTRIES: { [string]: AssetEntry } = {
 	-- === Verdant Valley chunk kit ================================
 	-- Placeholder entries so the chunk library below is complete and
 	-- testable before a single mesh exists.
+	-- === Verdant Valley chunk kit ================================
+	-- DELIVERED AND UPLOADED 2026-09-22. The modeller returned .rbxmx models,
+	-- each one Model wrapping a single MeshPart that already carries a real
+	-- rbxassetid -- so the meshes were uploaded on their side and these ids
+	-- are all the integration needs. ChunkLoader calls CreateMeshPartAsync on
+	-- them directly; the .rbxmx files are kept in assets/rbxm/chunks/ as
+	-- provenance and a re-import path, NOT as the load route.
+	--
+	-- Every piece measures 256 x 256. Heights differ per piece and are
+	-- recorded as SizeY in Content/Chunks/VerdantValley.luau.
+	--
+	-- VV_CHUNK_GROVE IS MISSING from this delivery -- 11 pieces, not 12. It
+	-- was the only WIDE provider, so its absence would have made the kit
+	-- unassemblable; WIDE now sits on Ruins, Waterfall and Ridge Overlook
+	-- instead, which is the variety fix that was owed anyway.
 	VV_CHUNK_ENTRY = {
-		AssetId = "",
-		Status = "PLACEHOLDER",
-		Source = "assets/source/worlds/verdant_valley/chunk_entry.blend",
-		Notes = "Entry clearing. One exit socket, wide, gentle.",
+		AssetId = "rbxassetid://109348763234820",
+		Status = "UPLOADED",
+		Source = "assets/rbxm/chunks/entry.rbxmx",
+		Notes = "Arrival. One opening, south. 60.4 studs tall.",
 	},
 	VV_CHUNK_PATH_STRAIGHT = {
-		AssetId = "",
-		Status = "PLACEHOLDER",
-		Source = "assets/source/worlds/verdant_valley/chunk_path_straight.blend",
+		AssetId = "rbxassetid://120564645668062",
+		Status = "UPLOADED",
+		Source = "assets/rbxm/chunks/path_straight.rbxmx",
+		Notes = "Connective forest path, north-south.",
 	},
-	VV_CHUNK_PATH_BEND = {
-		AssetId = "",
-		Status = "PLACEHOLDER",
-		Source = "assets/source/worlds/verdant_valley/chunk_path_bend.blend",
+	VV_CHUNK_MEADOW_A = {
+		AssetId = "rbxassetid://129906508861393",
+		Status = "UPLOADED",
+		Source = "assets/rbxm/chunks/meadow_a.rbxmx",
+		Notes = "Open ground, north-south. Long sightlines.",
 	},
-	VV_CHUNK_MEADOW = {
-		AssetId = "",
-		Status = "PLACEHOLDER",
-		Source = "assets/source/worlds/verdant_valley/chunk_meadow.blend",
-		Notes = "Widest sightlines. Forest Wolf pack encounters.",
+	VV_CHUNK_MEADOW_B = {
+		AssetId = "rbxassetid://126497104831594",
+		Status = "UPLOADED",
+		Source = "assets/rbxm/chunks/meadow_b.rbxmx",
+		Notes = "Open ground, east-west.",
 	},
-	VV_CHUNK_STREAM = {
-		AssetId = "",
-		Status = "PLACEHOLDER",
-		Source = "assets/source/worlds/verdant_valley/chunk_stream.blend",
-		Notes = "Stream crossing. Thorn Goblin camps on both banks.",
+	VV_CHUNK_STREAM_CROSSING = {
+		AssetId = "rbxassetid://100033248306049",
+		Status = "UPLOADED",
+		Source = "assets/rbxm/chunks/stream_crossing.rbxmx",
+		Notes = "Water and a crossing, north-south.",
 	},
-	VV_CHUNK_GROVE = {
-		AssetId = "",
-		Status = "PLACEHOLDER",
-		Source = "assets/source/worlds/verdant_valley/chunk_grove.blend",
-		Notes = "Dense cover, narrow sightlines. Elder Treants.",
+	VV_CHUNK_FERN_HOLLOW = {
+		AssetId = "rbxassetid://70675226143466",
+		Status = "UPLOADED",
+		Source = "assets/rbxm/chunks/fern_hollow.rbxmx",
+		Notes = "Sunken and overgrown. East + north. 6-stud skirt, not 4.",
 	},
-	VV_CHUNK_HOLLOW = {
-		AssetId = "",
-		Status = "PLACEHOLDER",
-		Source = "assets/source/worlds/verdant_valley/chunk_hollow.blend",
-		Notes = "Optional side pocket -- the §6 checklist item for this world.",
+	VV_CHUNK_MUSHROOM_GLEN = {
+		AssetId = "rbxassetid://137378616554385",
+		Status = "UPLOADED",
+		Source = "assets/rbxm/chunks/mushroom_glen.rbxmx",
+		Notes = "Bright and strange. A bend, west + south.",
+	},
+	VV_CHUNK_RUINS = {
+		AssetId = "rbxassetid://94180951428623",
+		Status = "UPLOADED",
+		Source = "assets/rbxm/chunks/ruins.rbxmx",
+		Notes = "Something was here before you. West + north(WIDE).",
+	},
+	VV_CHUNK_WATERFALL = {
+		AssetId = "rbxassetid://134351347864323",
+		Status = "UPLOADED",
+		Source = "assets/rbxm/chunks/waterfall.rbxmx",
+		Notes = "Landmark. East(WIDE) + south.",
+	},
+	VV_CHUNK_RIDGE_OVERLOOK = {
+		AssetId = "rbxassetid://89335064445927",
+		Status = "UPLOADED",
+		Source = "assets/rbxm/chunks/ridge_overlook.rbxmx",
+		Notes = "High ground and a view. West + east(WIDE).",
 	},
 	VV_CHUNK_BOSS_CLEARING = {
-		AssetId = "",
-		Status = "PLACEHOLDER",
-		Source = "assets/source/worlds/verdant_valley/chunk_boss_clearing.blend",
-		Notes = "60-stud circular arena ringed by 6 oversized trees.",
+		AssetId = "rbxassetid://94890260474505",
+		Status = "UPLOADED",
+		Source = "assets/rbxm/chunks/boss_clearing.rbxmx",
+		Notes = "The arena. One opening, south, WIDE only.",
 	},
 
 	-- === Hub prefabs =============================================

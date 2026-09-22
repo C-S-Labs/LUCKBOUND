@@ -248,12 +248,15 @@ function ChunkLoader.build(
 		-- certifies the layout as collision-free, because it only ever sees
 		-- centre +/- half-size.
 		--
-		-- VERTICALLY THE TWO SIDES DISAGREE TODAY. Setting mesh.Size and
-		-- CFrame puts the BOUNDING BOX CENTRE at placed.Y, while
-		-- docs/CHUNK_AUTHORING.md asks the modeller for a GROUND-LEVEL origin
-		-- -- which is the intuitive thing to author and the thing the blockout
-		-- already assumes. A GroundOffsetY on the chunk schema is what closes
-		-- that, and it is owed before the first mesh is uploaded. STATUS.md.
+		-- VERTICALLY, GroundOffsetY closes the gap between the two sides.
+		-- Setting mesh.Size and CFrame puts the BOUNDING BOX CENTRE wherever
+		-- the CFrame says, but a layout's Y is the WALKING SURFACE -- that is
+		-- what the blockout floor has always meant, and a ground-level origin
+		-- is what CHUNK_AUTHORING asks the modeller for. GroundOffsetY is the
+		-- studs from the bottom of the piece's box up to its walk plane, so
+		-- lifting the mesh by (SizeY/2 - GroundOffsetY) lands the ground on
+		-- the layout plane. Absent, it defaults to SizeY/2, which is the
+		-- bounding-box centre and the behaviour every caller had before.
 		--
 		-- Nothing here can detect a wrong origin: it is invisible metadata in
 		-- an FBX, the same class of failure that produced the "register a
@@ -261,10 +264,16 @@ function ChunkLoader.build(
 		local centre = origin + Vector3.new(placed.X, placed.Y, placed.Z)
 		local cframe = CFrame.new(centre) * CFrame.Angles(0, math.rad(placed.Yaw), 0)
 
+		-- The mesh hangs off the layout plane by its own skirt depth; the
+		-- blockout below does not, because its floor IS the walk plane.
+		local groundOffset = chunk.GroundOffsetY or chunk.SizeY / 2
+		local meshCFrame = CFrame.new(centre + Vector3.new(0, chunk.SizeY / 2 - groundOffset, 0))
+			* CFrame.Angles(0, math.rad(placed.Yaw), 0)
+
 		local mesh = tryMesh(
 			chunk.AssetKey,
 			Vector3.new(chunk.SizeX, chunk.SizeY, chunk.SizeZ),
-			cframe,
+			meshCFrame,
 			folder
 		)
 

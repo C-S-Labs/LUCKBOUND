@@ -16,6 +16,8 @@ local Crossroads = __require("Crossroads")
 local UITheme = __require("UITheme")
 local AssetManifest = __require("AssetManifest")
 local ChunkCore = __require("ChunkCore")
+local ScenarioCore = __require("ScenarioCore")
+local Scenarios = __require("Scenarios")
 local ExpeditionCore = __require("ExpeditionCore")
 local Chunks = __require("Chunks")
 local Menu = __require("Menu")
@@ -890,8 +892,13 @@ do
 	local uploaded, placeholder = AssetManifest.summary()
 	check("manifest reports its status", uploaded + placeholder > 0,
 		string.format("%d uploaded, %d placeholder", uploaded, placeholder))
+	-- HUB_FATE_ENGINE rather than a chunk key: the Verdant Valley kit was
+	-- uploaded 2026-09-22, so its keys resolve now. A prefab entry stays
+	-- PLACEHOLDER by design -- it is a Model read by NAME, never a mesh id.
 	check("a placeholder resolves to nil so the loader falls back to primitives",
-		AssetManifest.assetId("VV_CHUNK_ENTRY") == nil)
+		AssetManifest.assetId("HUB_FATE_ENGINE") == nil)
+	check("an uploaded key resolves to its mesh id",
+		AssetManifest.assetId("VV_CHUNK_ENTRY") ~= nil)
 	check("an unknown key does not exist", not AssetManifest.exists("NOT_A_REAL_ASSET"))
 
 	-- Every chunk must name an asset that exists, or the kit is broken.
@@ -934,7 +941,37 @@ do
 	local lib = ChunkCore.libraryFor(Chunks, "VERDANT_VALLEY")
 	check("Verdant Valley has an ENTRY chunk", lib.ENTRY and #lib.ENTRY == 1)
 	check("Verdant Valley has a BOSS chunk", lib.BOSS and #lib.BOSS == 1)
-	check("Verdant Valley has a SIDE pocket (§6 checklist)", lib.SIDE and #lib.SIDE >= 1)
+	-- Blueprint §6 asks each world for an optional side pocket. Verdant Valley
+	-- CANNOT have one yet and this test says so honestly rather than passing
+	-- on a piece that never appears: every delivered chunk has exactly two
+	-- openings, the critical path spends both, so no seed leaves a spare
+	-- socket for a branch to hang off. It needs a three-opening piece. The
+	-- guard below is what stops that becoming a silent no-op again.
+	check("a SIDE pocket needs a 3-socket piece to hang off, and the schema says so",
+		(function()
+			local fake = {
+				A = { Id = "A", WorldId = "W", Role = "ENTRY", AssetKey = "VV_CHUNK_ENTRY",
+					SizeX = 1, SizeY = 1, SizeZ = 1, Weight = 1,
+					Sockets = { { Id = "a", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 } } },
+				B = { Id = "B", WorldId = "W", Role = "BOSS", AssetKey = "VV_CHUNK_ENTRY",
+					SizeX = 1, SizeY = 1, SizeZ = 1, Weight = 1,
+					Sockets = { { Id = "a", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 } } },
+				C = { Id = "C", WorldId = "W", Role = "PATH", AssetKey = "VV_CHUNK_ENTRY",
+					SizeX = 1, SizeY = 1, SizeZ = 1, Weight = 1,
+					Sockets = {
+						{ Id = "a", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 },
+						{ Id = "b", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 90 } } },
+				D = { Id = "D", WorldId = "W", Role = "SIDE", AssetKey = "VV_CHUNK_ENTRY",
+					SizeX = 1, SizeY = 1, SizeZ = 1, Weight = 1,
+					Sockets = { { Id = "a", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 } } },
+			}
+			local ok = Schema.validateChunks(fake, AssetManifest)
+			return not ok
+		end)())
+
+	-- And the real kit is free of that trap, because it declares no SIDE.
+	check("the real chunk library has no unreachable SIDE pocket",
+		(lib.SIDE == nil or #lib.SIDE == 0))
 	-- Pieces must be sized against the character, not against the old hub.
 	local CHARH = GameConfig.Scale.CharacterHeight
 	local smallest = math.huge
@@ -973,36 +1010,67 @@ do
 	check("layouts contain entry, connective pieces and a boss arena",
 		roleSeen.ENTRY and roleSeen.BOSS and (roleSeen.PATH or roleSeen.COMBAT))
 
-	-- The arena approach must be the Grove every time -- it is the only WIDE
-	-- provider, and WIDE is what the arena accepts. Blueprint §3.2.
-	local approachAlwaysGrove = true
+	-- THE ARENA IS ALWAYS APPROACHED THROUGH A PIECE THAT OFFERS ITS KIND.
+	--
+	-- This used to assert `penultimate == "VV_GROVE"`, which passed for the
+	-- right reason and the wrong shape: the Grove was simply the only WIDE
+	-- provider at the time. The kit now has three, so the literal broke while
+	-- the property it stood for is untouched -- exactly the failure build spec
+	-- §623 records ("assert relationships, not literals"). Asserted generically
+	-- it also survives the next kit, which will not have a Grove at all.
+	local arenaKinds = {}
+	for _, c in Chunks do
+		if c.Role == "BOSS" then
+			for _, sk in c.Sockets do arenaKinds[sk.Kind] = true end
+		end
+	end
+	local approachAlwaysOffersArenaKind = true
+	local approachesSeen = {}
 	for trial = 1, 60 do
 		local okA, layout = ChunkCore.assembleWithRetry(Chunks,
 			{ WorldId = "VERDANT_VALLEY", PathLength = 4 },
 			function(a) return lcg(trial * 611953 + a) end, 5)
 		if okA then
 			local penultimate = layout.Chunks[#layout.Chunks - 1]
-			if penultimate.ChunkId ~= "VV_GROVE" then approachAlwaysGrove = false end
+			approachesSeen[penultimate.ChunkId] = true
+			local offers = false
+			for _, sk in Chunks[penultimate.ChunkId].Sockets do
+				if arenaKinds[sk.Kind] then offers = true end
+			end
+			if not offers then approachAlwaysOffersArenaKind = false end
 		end
 	end
-	check("the Grove always gates the boss arena (emergent from socket Kinds)",
-		approachAlwaysGrove)
+	check("the arena is always approached through a piece offering its Kind",
+		approachAlwaysOffersArenaKind)
 
-	-- A reserved piece must never be spent mid-path.
-	local groveOnlyOnce = true
+	-- The other half, and the reason three providers exist: the gate must not
+	-- also be a rut. One provider satisfies the assertion above on every seed
+	-- AND makes every map end identically.
+	local distinctApproaches = 0
+	for _ in approachesSeen do distinctApproaches += 1 end
+	check("and the approach is not the same piece every seed",
+		distinctApproaches > 1, string.format("%d distinct", distinctApproaches))
+
+	-- MaxPerLayout holds for EVERY capped piece, not one chosen piece.
+	local capRespected, capBroken = true, nil
 	for trial = 1, 60 do
 		local okA, layout = ChunkCore.assembleWithRetry(Chunks,
 			{ WorldId = "VERDANT_VALLEY", PathLength = 6 },
 			function(a) return lcg(trial * 15485863 + a) end, 5)
 		if okA then
-			local n = 0
+			local counts = {}
 			for _, c in layout.Chunks do
-				if c.ChunkId == "VV_GROVE" then n += 1 end
+				counts[c.ChunkId] = (counts[c.ChunkId] or 0) + 1
 			end
-			if n ~= 1 then groveOnlyOnce = false end
+			for id, n in counts do
+				local cap = Chunks[id].MaxPerLayout
+				if cap and n > cap then
+					capRespected, capBroken = false, string.format("%s x%d (cap %d)", id, n, cap)
+				end
+			end
 		end
 	end
-	check("MaxPerLayout is respected", groveOnlyOnce)
+	check("MaxPerLayout is respected", capRespected, capBroken)
 
 	-- Determinism: the same seed must always produce the same map, so an
 	-- expedition can be reproduced for debugging or exploit investigation.
@@ -1043,8 +1111,207 @@ do
 	local bossChunk = Chunks.VV_BOSS_CLEARING
 	check("the boss arena only accepts a WIDE approach",
 		bossChunk.Sockets[1].Kind == "WIDE", bossChunk.Sockets[1].Kind)
-	check("the Grove is the only piece offering a WIDE exit",
-		Chunks.VV_GROVE.Sockets[2].Kind == "WIDE")
+	-- The arena Kind must be offered by at least one NON-boss piece, or the
+	-- path can never reach the arena and every seed fails. This too used to
+	-- name the Grove; it is the supply of the Kind that matters, not which
+	-- piece supplies it.
+	local wideProviders = {}
+	for id, c in Chunks do
+		if c.Role ~= "BOSS" then
+			for _, sk in c.Sockets do
+				if sk.Kind == "WIDE" then table.insert(wideProviders, id) end
+			end
+		end
+	end
+	check("at least one non-boss piece offers the arena's Kind",
+		#wideProviders >= 1, table.concat(wideProviders, ", "))
+
+	-- A LOOK AT WHAT IT ACTUALLY BUILDS.
+	-- Informational, like the Ethereal Scape traverse line. A pass/fail says
+	-- the rules hold; it does not say whether the maps read as varied, and
+	-- that is the question the kit exists to answer.
+	do
+		local shapesSeen, approachCount, pieceCount = {}, {}, {}
+		local trials, ok = 200, 0
+		for trial = 1, trials do
+			local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+				{ WorldId = "VERDANT_VALLEY", PathLength = 5 },
+				function(a) return lcg(trial * 2654435761 + a) end, 5)
+			if okA then
+				ok += 1
+				local ids = {}
+				for _, c in layout.Chunks do
+					table.insert(ids, c.ChunkId)
+					pieceCount[c.ChunkId] = (pieceCount[c.ChunkId] or 0) + 1
+				end
+				shapesSeen[table.concat(ids, ">")] = true
+				local approach = layout.Chunks[#layout.Chunks - 1].ChunkId
+				approachCount[approach] = (approachCount[approach] or 0) + 1
+			end
+		end
+		local distinct = 0
+		for _ in shapesSeen do distinct += 1 end
+		print(string.format("        Verdant Valley: %d/%d seeds assembled, %d distinct layouts",
+			ok, trials, distinct))
+		local parts = {}
+		for id, n in approachCount do
+			table.insert(parts, string.format("%s %d%%", id, math.floor(n / ok * 100 + 0.5)))
+		end
+		table.sort(parts)
+		print("        arena approach: " .. table.concat(parts, "  "))
+
+		-- Every piece the kit declares should be reachable by SOME seed. One
+		-- that never appears is content nobody will ever see, and is worth
+		-- knowing about rather than discovering in a playtest.
+		local never = {}
+		for id, c in Chunks do
+			if c.WorldId == "VERDANT_VALLEY" and not pieceCount[id] then
+				table.insert(never, string.format("%s (%s)", id, c.Role))
+			end
+		end
+		table.sort(never)
+		check("every piece appears in some layout", #never == 0,
+			"never placed: " .. table.concat(never, ", "))
+	end
+
+	-- === The scenario layer (build spec §7.2) =====================
+	-- ChunkCore says WHERE pieces go; ScenarioCore says WHAT HAPPENS in them.
+	-- Both are pure, so a whole run's structure is inspectable in CI.
+	group("Scenario assignment: what happens, decided apart from where")
+
+	local function planFor(trial: number, pathLength: number?)
+		local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+			{ WorldId = "VERDANT_VALLEY", PathLength = pathLength or 5 },
+			function(a) return lcg(trial * 7919 + a) end, 5)
+		if not okA then return nil end
+		layout.Seed = trial
+		local okS, plan = ScenarioCore.assign(layout, Chunks, Scenarios, {
+			FateInterventionChance = GameConfig.Expedition.FateInterventionChance,
+			RecentMemory = GameConfig.Expedition.ScenarioRecentMemory,
+			EscalateFrom = GameConfig.Expedition.ScenarioEscalateFrom,
+		}, function() return lcg(trial * 104729 + 1)() end)
+		return okS and plan or nil
+	end
+
+	check("the scenario library validates", (Schema.validateScenarios(Scenarios, Chunks)))
+
+	-- Every placeable chunk must be able to host SOMETHING, or a run walks
+	-- through empty rooms.
+	local unhostable = {}
+	for id, c in Chunks do
+		if c.Role == "PATH" or c.Role == "COMBAT" or c.Role == "SIDE" then
+			if #ScenarioCore.compatible(c, c.Role, Scenarios) == 0 then
+				table.insert(unhostable, id)
+			end
+		end
+	end
+	check("every placeable chunk can host at least one scenario", #unhostable == 0,
+		table.concat(unhostable, ", "))
+
+	-- Compatibility is DELIBERATE, not universal (brief §3). If every chunk
+	-- accepted every scenario the metadata would be decoration.
+	local everyChunkTakesEverything = true
+	for id, c in Chunks do
+		if c.Role == "COMBAT" or c.Role == "PATH" then
+			local n = #ScenarioCore.compatible(c, c.Role, Scenarios)
+			local total = 0
+			for _ in Scenarios do total += 1 end
+			if n < total then everyChunkTakesEverything = false end
+		end
+	end
+	check("compatibility is deliberate -- no chunk hosts every scenario",
+		not everyChunkTakesEverything)
+
+	do
+		local plans, bands = 0, { ORDINARY = 0, UNCOMMON = 0, RARE = 0 }
+		local backToBack, fateTouched, comboCounts = 0, 0, {}
+		local scenariosSeen = {}
+		for trial = 1, 300 do
+			local plan = planFor(trial)
+			if plan then
+				plans += 1
+				local last = nil
+				for _, st in plan.Steps do
+					if st.ScenarioId then
+						bands[st.Band] += 1
+						scenariosSeen[st.ScenarioId] = true
+						if st.FateTouched then fateTouched += 1 end
+						if last == st.ScenarioId then backToBack += 1 end
+						last = st.ScenarioId
+						local key = st.ChunkId .. ":" .. st.ScenarioId
+						comboCounts[key] = (comboCounts[key] or 0) + 1
+					end
+				end
+			end
+		end
+
+		check("every seed produces a scenario plan", plans == 300, string.format("%d/300", plans))
+
+		-- Brief §8: never the same scenario twice in a row.
+		check("the same scenario never lands twice running", backToBack == 0,
+			string.format("%d back-to-back", backToBack))
+
+		-- Brief §5: structured, not uniform. Ordinary is the backbone.
+		local total = bands.ORDINARY + bands.UNCOMMON + bands.RARE
+		check("ordinary scenarios are the backbone, not an equal share",
+			bands.ORDINARY > total * 0.4,
+			string.format("O %d  U %d  R %d", bands.ORDINARY, bands.UNCOMMON, bands.RARE))
+		check("rare scenarios stay rare but do occur",
+			bands.RARE > 0 and bands.RARE < total * 0.2,
+			string.format("%d of %d", bands.RARE, total))
+
+		-- Every scenario the library declares should be reachable in practice,
+		-- not merely in principle. One that never appears is dead content.
+		local unseen = {}
+		for id in Scenarios do
+			if not scenariosSeen[id] then table.insert(unseen, id) end
+		end
+		table.sort(unseen)
+		check("every scenario in the library actually occurs", #unseen == 0,
+			"never seen: " .. table.concat(unseen, ", "))
+
+		-- Brief §7: the whole point. Physical pieces x scenarios should give
+		-- far more distinct rooms than there are pieces.
+		local distinctCombos = 0
+		for _ in comboCounts do distinctCombos += 1 end
+		local pieceCount = 0
+		for _, c in Chunks do
+			if c.WorldId == "VERDANT_VALLEY" then pieceCount += 1 end
+		end
+		check("chunk x scenario multiplies the content well past the piece count",
+			distinctCombos > pieceCount * 2,
+			string.format("%d combinations from %d pieces", distinctCombos, pieceCount))
+		print(string.format("        scenario layer: %d distinct chunk/scenario rooms from %d pieces",
+			distinctCombos, pieceCount))
+		print(string.format("        bands: ordinary %d  uncommon %d  rare %d  (fate touched %d)",
+			bands.ORDINARY, bands.UNCOMMON, bands.RARE, fateTouched))
+	end
+
+	-- Determinism, same as the layout half: a run must be reproducible from
+	-- its seed or it cannot be debugged.
+	do
+		local a, b = planFor(42), planFor(42)
+		local same = a ~= nil and b ~= nil and #a.Steps == #b.Steps
+		if same then
+			for i, st in a.Steps do
+				if st.ScenarioId ~= b.Steps[i].ScenarioId then same = false end
+			end
+		end
+		check("the same seed produces the same scenario plan", same)
+	end
+
+	-- ENTRY and BOSS are deliberately left alone -- arrival should be calm and
+	-- the arena is already the biggest thing in the run.
+	do
+		local plan = planFor(7)
+		local touchedEnds = false
+		for _, st in plan.Steps do
+			if (st.Role == "ENTRY" or st.Role == "BOSS") and st.ScenarioId ~= nil then
+				touchedEnds = true
+			end
+		end
+		check("arrival and the arena are left without a scenario", not touchedEnds)
+	end
 
 	-- Geometry helpers ----------------------------------------------
 	local placed = { X = 10, Y = 0, Z = 20, Yaw = 90 }

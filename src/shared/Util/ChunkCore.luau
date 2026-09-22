@@ -161,9 +161,23 @@ function ChunkCore.assemble(
 	local placed: { any } = {}
 	local used: { [string]: number } = {}
 
+	-- Which sockets each placement has already spent, keyed by its index in
+	-- `placed`. The critical path spends at most two per piece -- one to
+	-- arrive, one to leave -- and whatever is left over is where an optional
+	-- pocket can hang. Without this the spare sockets are unknowable after the
+	-- fact, which is why IncludeSide sat unimplemented for so long.
+	local spent: { [number]: { [string]: boolean } } = {}
+
 	local function record(p: any, chunk: any)
 		table.insert(placed, p)
+		spent[#placed] = {}
 		used[chunk.Id] = (used[chunk.Id] or 0) + 1
+	end
+
+	local function spend(socketId: string?)
+		if socketId and spent[#placed] then
+			spent[#placed][socketId] = true
+		end
 	end
 
 	local function allowed(chunk: any): boolean
@@ -196,6 +210,7 @@ function ChunkCore.assemble(
 		return false, `entry chunk '{entry.Id}' has no sockets`
 	end
 	local open = ChunkCore.worldSocket(openPlacement, openChunk, openSocketDef)
+	spend(openSocketDef.Id)
 
 	-- Which socket kinds the boss arena will accept. The final path chunk has
 	-- to offer one of them, or the layout dead-ends at the arena door.
@@ -257,7 +272,7 @@ function ChunkCore.assemble(
 			return false, `ran out of usable chunks at step {i}`
 		end
 
-		local chosen, placement, nextSocket
+		local chosen, placement, nextSocket, arrivedOn
 		-- Several attempts: a piece may not match the open socket's Kind, may
 		-- have no usable exit, or may collide with something already placed.
 		for _ = 1, 24 do
@@ -269,7 +284,7 @@ function ChunkCore.assemble(
 				if p and not collides(p, c) then
 					local exit = exitFor(c, consumed.Id, isFinalStep)
 					if exit then
-						chosen, placement, nextSocket = c, p, exit
+						chosen, placement, nextSocket, arrivedOn = c, p, exit, consumed
 						break
 					end
 				end
@@ -287,6 +302,8 @@ function ChunkCore.assemble(
 				`no chunk could be placed at step {i} while {where} (open socket Kind '{open.Kind}'): nothing matched, or every candidate collided`
 		end
 		record(placement, chosen)
+		spend(arrivedOn and arrivedOn.Id)
+		spend(nextSocket.Id)
 
 		openChunk, openPlacement = chosen, placement
 		open = ChunkCore.worldSocket(openPlacement, openChunk, nextSocket)
@@ -306,6 +323,60 @@ function ChunkCore.assemble(
 		return false, "boss arena collides with the path"
 	end
 	record(bossPlacement, boss)
+
+	-- === The optional side pocket ================================
+	-- Hung off a socket the critical path did not spend. This is what
+	-- IncludeSide has always promised and never done -- the field was declared
+	-- and nothing read it, so every SIDE piece in every kit validated, passed
+	-- its tests and was never once placed.
+	--
+	-- It is deliberately best-effort: a pocket that will not fit is a pocket
+	-- this seed does not get, never a failed expedition. The critical path is
+	-- already complete and valid by the time we get here, and refusing the
+	-- whole layout because an OPTIONAL branch collided would trade something
+	-- that matters for something that does not.
+	if options.IncludeSide ~= false then
+		local sides = byRole.SIDE or {}
+		if #sides > 0 then
+			-- Every unspent socket on every placed piece, as a flat list so
+			-- one pick chooses both the host and the socket.
+			local spare = {}
+			for index, p in placed do
+				local hostChunk = chunks[p.ChunkId]
+				for _, sock in hostChunk.Sockets do
+					if not (spent[index] and spent[index][sock.Id]) then
+						table.insert(spare, { Placement = p, Chunk = hostChunk, Socket = sock })
+					end
+				end
+			end
+
+			-- Shuffled by the same seeded stream, so which pocket a seed gets
+			-- is reproducible like everything else here.
+			for i = #spare, 2, -1 do
+				local j = math.floor(nextNumber() * i) + 1
+				spare[i], spare[j] = spare[j], spare[i]
+			end
+
+			local pocketPlaced = false
+			for _, slot in spare do
+				if pocketPlaced then
+					break
+				end
+				local openSide = ChunkCore.worldSocket(slot.Placement, slot.Chunk, slot.Socket)
+				for _, side in sides do
+					if allowed(side) then
+						local p = ChunkCore.placeAgainst(side, openSide, #placed)
+						if p and not collides(p, side) then
+							p.Index = #placed
+							record(p, side)
+							pocketPlaced = true
+							break
+						end
+					end
+				end
+			end
+		end
+	end
 
 	return true,
 		{

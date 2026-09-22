@@ -21,6 +21,7 @@ local Cinematics = require(Root.Content.Hub.Cinematics)
 local Codes = require(Root.Content.Codes)
 local Palettes = require(Root.Content.Hub.Palettes)
 local Events = require(Root.Content.Events)
+local Scenarios = require(Root.Content.Scenarios)
 
 local Systems = script.Systems
 local SaveSystem = require(Systems.SaveSystem)
@@ -57,7 +58,19 @@ Root:SetAttribute(
 
 -- 1. Fail fast on malformed content, before any player can arrive.
 step("validating content")
-Schema.validateAll(Worlds, GameConfig, Crossroads, Chunks, AssetManifest, Menu, Codes, Cinematics, Palettes, Events)
+Schema.validateAll(
+	Worlds,
+	GameConfig,
+	Crossroads,
+	Chunks,
+	AssetManifest,
+	Menu,
+	Codes,
+	Cinematics,
+	Palettes,
+	Events,
+	Scenarios
+)
 
 do
 	local uploaded, placeholder = AssetManifest.summary()
