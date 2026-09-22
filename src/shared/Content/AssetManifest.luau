@@ -235,6 +235,24 @@ local ENTRIES: { [string]: AssetEntry } = {
 		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
 		Notes = "chunk_boss_clearing.fbx -- The Crown Spire arena.",
 	},
+	SC_CHUNK_CAP_CRUMBLING = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "chunk_cap_crumbling.fbx -- A CAP: the skyway breaks off, its far half falling away, the Fallen Tower leaning over the gap.",
+	},
+	SC_CHUNK_CAP_OVERLOOK = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "chunk_cap_overlook.fbx -- A CAP: the skyway ends at a railed round overlook with a light obelisk and telescopes.",
+	},
+	SC_CHUNK_CAP_SEALED_GATE = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "chunk_cap_sealed_gate.fbx -- A CAP: a citadel gate that stays shut.",
+	},
 
 	-- === Hub prefabs =============================================
 	-- Authored pieces of the Crossroads, synced to ServerStorage by Rojo and
