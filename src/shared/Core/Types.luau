@@ -144,6 +144,7 @@ export type ChunkRole =
 	| "PATH" -- connective tissue
 	| "COMBAT" -- encounter space
 	| "SIDE" -- optional branch, off the critical path
+	| "CAP" -- a dead end authored as one, closing an opening the path left unused
 	| "BOSS" -- exactly one per layout; the destination
 
 --- A connection point on a chunk. Two sockets may join only if their Kind

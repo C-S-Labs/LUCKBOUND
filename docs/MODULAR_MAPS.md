@@ -36,13 +36,13 @@ It is the same combinatorial philosophy as Master Spec §14
 |---|---|
 | `Content/AssetManifest.luau` | ✅ logical name → asset id |
 | `Content/Chunks/VerdantValley` | ✅ 8 pieces |
-| `Content/Chunks/SkyCitadel` | ✅ 19 pieces, **FBXs exported** — [`SKY_CITADEL.md`](SKY_CITADEL.md) |
+| `Content/Chunks/SkyCitadel` | ✅ 22 pieces incl. 3 caps, **FBXs exported** — [`SKY_CITADEL.md`](SKY_CITADEL.md) |
 | `Util/PrebuiltLoader.luau` | ✅ the other route: one authored scene, cloned |
 | `Util/ChunkCore.luau` | ✅ seeded assembly, pure and headless |
 | `Util/ChunkLoader.luau` | ✅ Layout → Instances, with a mesh/blockout seam |
 | `Util/Schema.validateChunks` | ✅ boot-time validation |
 | `Systems/ExpeditionSystem` | ✅ builds a map on entry — build spec §7.1 |
-| Actual meshes | ⏳ all 27 are `PLACEHOLDER`; Sky Citadel's 19 are exported as FBX |
+| Actual meshes | ⏳ all 30 are `PLACEHOLDER`; Sky Citadel's 22 are exported as FBX |
 
 Every asset key is a placeholder, so `assetId()` returns `nil` and the loader
 falls back to primitives. **Layouts are assembled, validated, tested AND walked
@@ -81,7 +81,8 @@ than inferring it from a test name.
 ```
 
 **Roles:** `ENTRY` (exactly one), `PATH`, `COMBAT`, `SIDE` (optional branch),
-`BOSS` (exactly one).
+`BOSS` (exactly one), `CAP` (a one-socket dead end that closes an unused
+opening — see *Exits, side pockets and caps*).
 
 **Sockets** are connection points. `Facing` is degrees on a quarter-turn grid:
 `0 = -Z (north)`, `90 = +X`, `180 = +Z`, `270 = -X`. Offsets are local to the
@@ -154,7 +155,7 @@ the grammar. The next kit (Emberfall) is the real second data point.
 
 ---
 
-## Exits and side pockets — changed 2026-09-22
+## Exits, side pockets and caps — changed 2026-09-22
 
 Two behaviours that were documented as debt are now built, because the Sky
 Citadel kit needed them to make an intersection mean anything:
@@ -169,6 +170,12 @@ Citadel kit needed them to make an intersection mean anything:
   `GameConfig.Expedition.IncludeSide` is the switch; the expedition passes it.
   Verdant Valley's Hollow — authored, validated and never placed until now —
   is placed off the Meadow's west socket.
+- **Caps close every other opening.** If a world has `CAP` chunks (exactly one
+  socket each; validation rejects more), every socket still open after the
+  path, arena and pocket gets one. A socket no cap fits fails the attempt and
+  the next seed is tried — so a capped world never ships a mouth onto nothing.
+  Sky Citadel has three caps; Verdant Valley has none yet and keeps the old
+  behaviour.
 
 ## Assembly
 

@@ -33,6 +33,38 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 47 — 2026-09-22 — Sky Citadel: caps, so no path leads to nothing
+
+**Branch:** `claude/sky-citadel-kit-expansion` (PR #37, stacked on #35) · **Tests:** 600 passing (594 + 6)
+
+### Done
+- Owner-directed: *"I don't want any paths to lead to 'nothing', unless that
+  specific chunk is a dead end, crumbling bridge, etc."* The only leak was the
+  crossroads: four mouths, the path uses two, the pocket sometimes a third.
+- **New `CAP` role** (Types, Schema -- exactly one socket -- and a blockout
+  colour) and **three caps**: a span that breaks off with the Fallen Tower
+  leaning over it, a railed overlook, a gate that stays shut.
+- **`ChunkCore` caps every open socket** after the path, arena and pocket, or
+  fails the attempt so the next seed is tried. Worlds without caps unchanged.
+- Test: in 400 Sky Citadel maps (with and without the pocket) every socket of
+  every placed piece meets another head-on; assembly still >= 190/200.
+- The review chain shows the crossroads fully closed: lookout east, sealed
+  gate west. 22 FBXs exported and re-imported at 256^3.
+
+### Decisions made
+- **Three caps, unlimited per layout** -- a map needs at most two, and the two
+  ends of one crossroads can differ.
+- **An unfillable socket rejects the seed** rather than shipping an open mouth.
+  Retries absorb it (same >= 190/200 bar as before).
+- **Verdant Valley gets no caps here** -- it has no art; its caps come with it.
+
+### Next
+1. Merge #35, then #37.
+2. Studio: import one FBX -- 256^3? vertex colours?
+3. Loader: `GroundOffsetY` (32), `CollisionFidelity`.
+
+---
+
 ## Session 46 — 2026-09-22 — Sky Citadel: variety, turns, an intersection, and four more
 
 **Branch:** `claude/sky-citadel-kit-expansion` (PR #37, stacked on #35) · **Tests:** 594 passing (586 + 8)

@@ -153,6 +153,14 @@ export type AssembleOptions = {
 --- it. This is what makes an intersection mean something: the path takes one
 --- branch, the pocket can sit on another.
 ---
+--- CAPS (owner-directed 2026-09-22: "I don't want any paths to lead to
+--- nothing"). If the world has CAP chunks -- one-socket dead ends authored as
+--- dead ends: a crumbling bridge, an overlook, a sealed gate -- then every
+--- socket still open after the path, arena and pocket gets one. A socket that
+--- no cap can fill fails the attempt, and assembleWithRetry tries the next
+--- seed: in a capped world a layout never ships an opening onto nothing. A
+--- world with no CAP chunks keeps the old behaviour.
+---
 --- Returns ok, layout-or-error. Failure is a normal outcome, not an error:
 --- a kit whose sockets cannot reach the boss is a content bug, and the caller
 --- should reject the seed rather than ship a broken expedition.
@@ -367,11 +375,55 @@ function ChunkCore.assemble(
 			end, nextNumber)
 			if side and allowed(side) then
 				local at = ChunkCore.worldSocket(spare.Placement, spare.Chunk, spare.Socket)
-				local p = ChunkCore.placeAgainst(side, at, options.PathLength + 2)
+				local p, arrived = ChunkCore.placeAgainst(side, at, options.PathLength + 2)
 				if p and not collides(p, side) then
 					record(p, side)
+					consumedBy[p][arrived.Id] = true
+					consumedBy[spare.Placement][spare.Socket.Id] = true
 					break
 				end
+			end
+		end
+	end
+
+	local caps = byRole.CAP
+	if caps and #caps > 0 then
+		-- Snapshot: caps are one-socket pieces, so they never add openings.
+		local open = {}
+		for _, p in placed do
+			local chunk = chunks[p.ChunkId]
+			for _, s in chunk.Sockets do
+				if not consumedBy[p][s.Id] and not isBossKind(s.Kind) then
+					table.insert(open, { Placement = p, Chunk = chunk, Socket = s })
+				end
+			end
+		end
+		for n, spare in open do
+			-- Try every cap once, in a seeded order weighted by Weight.
+			local pool = table.clone(caps)
+			local capped = false
+			while #pool > 0 and not capped do
+				local cap = WeightedRandom.pick(pool, function(c)
+					return c.Weight
+				end, nextNumber)
+				if not cap then
+					break
+				end
+				table.remove(pool, table.find(pool, cap) :: number)
+				if allowed(cap) then
+					local at = ChunkCore.worldSocket(spare.Placement, spare.Chunk, spare.Socket)
+					local p, arrived = ChunkCore.placeAgainst(cap, at, options.PathLength + 2 + n)
+					if p and not collides(p, cap) then
+						record(p, cap)
+						consumedBy[p][arrived.Id] = true
+						consumedBy[spare.Placement][spare.Socket.Id] = true
+						capped = true
+					end
+				end
+			end
+			if not capped then
+				return false,
+					`socket '{spare.Socket.Id}' on '{spare.Chunk.Id}' opens onto nothing and no CAP chunk fits there`
 			end
 		end
 	end

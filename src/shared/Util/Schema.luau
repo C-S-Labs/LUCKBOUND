@@ -232,7 +232,7 @@ end
 function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boolean, { string })
 	local errors = {}
 	local VALID_ROLES =
-		{ ENTRY = true, PATH = true, COMBAT = true, SIDE = true, BOSS = true }
+		{ ENTRY = true, PATH = true, COMBAT = true, SIDE = true, BOSS = true, CAP = true }
 	local QUARTER = { [0] = true, [90] = true, [180] = true, [270] = true }
 
 	local perWorld: { [string]: { [string]: number } } = {}
@@ -285,6 +285,10 @@ function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boole
 			-- Anything on the critical path needs a way in AND a way out.
 			if (chunk.Role == "PATH" or chunk.Role == "COMBAT") and #chunk.Sockets < 2 then
 				table.insert(errors, `{label}: {chunk.Role} chunks need at least 2 sockets, or the path dead-ends`)
+			end
+			-- A cap closes exactly one opening; a second socket would open a new one.
+			if chunk.Role == "CAP" and #chunk.Sockets ~= 1 then
+				table.insert(errors, `{label}: CAP chunks need exactly 1 socket, got {#chunk.Sockets}`)
 			end
 		end
 

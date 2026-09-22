@@ -209,9 +209,9 @@ the brief asks for.
 
 ---
 
-## The kit — 19 pieces
+## The kit — 22 pieces
 
-All nineteen are exactly **256 × 256 × 256**: footprint ±128, bottom at −96,
+All twenty-two are exactly **256 × 256 × 256**: footprint ±128, bottom at −96,
 crown at +160. Origin at the centre of the footprint on the walk plane.
 
 ### Variety: five axes, mixed differently on every piece
@@ -253,6 +253,9 @@ Every landmark reaches exactly +160: it pins the top of the bounding box.
 | `chunk_spire_court_b` | COMBAT (gate-court, rare) | S · N `ASCENT` | long octagon + **raised nave** | checker | railing | twin cones | turbine | 5,020 |
 | `chunk_side_lookout` | SIDE | S | small 12-gon | pale rays | railing | crystal roots | signal mast | 2,396 |
 | `chunk_boss_clearing` | BOSS | S `ASCENT` | round arena | inlaid rings | parapet | engine | Crown Spire | 5,744 |
+| `chunk_cap_crumbling` | **CAP** | S | a span that **breaks off** | white | railing, one bent | spine | **Fallen Tower** (leaning) | 1,640 |
+| `chunk_cap_overlook` | **CAP** | S | railed round terrace | pale rays | railing | crystal roots | light obelisk | 2,880 |
+| `chunk_cap_sealed_gate` | **CAP** | S | walled islet | checker | parapet | ziggurat | spire behind a **shut gate** | 3,406 |
 
 Weights and `MaxPerLayout` are in `Content/Chunks/SkyCitadel.luau`. Every
 COMBAT piece, the crossroads and the lookout are once per layout.
@@ -281,14 +284,45 @@ can only be used for loot, and then it dead-ends."* Three changes answer it:
   switches it; the expedition passes it. It also means **Verdant Valley's
   Hollow is placed for the first time** — asserted.
 
-An intersection's fourth mouth still faces the sky when the lookout takes
-another branch or none; per the brief it reads as a skyway carrying on out of
-sight.
+### No opening onto nothing: the caps
+
+Owner-directed: *"I don't want any paths to lead to 'nothing', unless that
+specific chunk is a dead end, crumbling bridge, etc."*
+
+A **CAP** is a new role: a one-socket piece authored as an ending. There are
+three, each a different kind of ending — a span that **breaks off** over a
+drop, with its far half falling away and the Fallen Tower leaning over the
+gap; a railed **overlook** with telescopes and a light obelisk; and a citadel
+**gate that stays shut**, sealed doors behind a force field.
+
+After the path, the arena and the side pocket are placed, `ChunkCore` puts a
+cap on **every socket still open**. If some socket cannot take any cap
+(everything collides), the attempt fails and the next seed is tried. So in a
+world that has caps, a map never ships an opening onto nothing — asserted over
+200 seeds each with and without the side pocket, by checking that every socket
+of every placed piece meets another piece's socket head-on at the same point.
+A world without caps keeps the old behaviour; Verdant Valley has none yet, so
+its Meadow's west mouth can still face nothing when the Hollow is not there.
+
+**How many of each** (why this is enough): only the crossroads has more
+sockets than the path uses, so a map needs at most **two** caps (three spare
+mouths minus the pocket); the three caps are unlimited per layout and equally
+weighted, so the two ends of one crossroads can differ. Every other piece has
+exactly the sockets it uses.
+
+| Role | Pieces | Notes |
+|---|---|---|
+| ENTRY | 1 | always the first piece |
+| PATH | 8 | 4 straights, 1 broken span, 1 aviary, the crossroads, 2 bends (1 each way) |
+| COMBAT | 8 | 4 straight decks, 2 turning decks (1 each way), 2 gate-courts |
+| SIDE | 1 | the lookout, on a spare mouth |
+| CAP | 3 | dead ends authored as dead ends |
+| BOSS | 1 | always the last piece on the path |
 
 Review renders, `assets/source/worlds/sky_citadel/renders/`:
 
-- `kit_overview.jpg` — all nineteen on the review grid, rows of four
-- `preview_chain.jpg` — entry → **crossroads** (with the lookout on its east
+- `kit_overview.jpg` — all twenty-two on the review grid, rows of four (the caps are row 6)
+- `preview_chain.jpg` — entry → **crossroads** (its west mouth closed by the sealed-gate cap, the lookout on its east
   branch) → shattered span → **west bend** → archive → Hall of Winds → arena
 - `preview_corner.jpg`, `preview_corner_top.jpg` — four pieces at four yaws
   meeting at one corner: the beacon check
@@ -329,6 +363,15 @@ reaching `CROWN_TOP`, and pick a combination of the five axes no neighbour has.
 ---
 
 ## Hand pass
+
+### 2026-09-22 — the caps
+
+| Check | Result |
+|---|---|
+| **Floating objects** | The crumbling span's falling half is eight scattered fragments, each placed only where the checker accepts it. |
+| **Edges** | `preview_chain.jpg`: the crossroads now has no free mouth — lookout east, sealed gate west. Test: in 400 generated maps, every socket meets another. |
+| **Scale** | The gate's doors are 22 tall, the force field 18 — a wall, not a door you could step round. The overlook's railing is waist height all the way round. |
+| **Reads as an ending** | Checked on the ground shots: the gate is plainly shut, the span plainly broken, the overlook plainly a place to stop and look. |
 
 ### 2026-09-22 — variety, turns, the intersection, and four more
 
