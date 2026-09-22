@@ -316,6 +316,15 @@ function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boole
 			end
 		end
 
+		-- Off the quarter-turn grid the art meets the layout at an angle no
+		-- socket can join, and every piece in the kit is wrong at once.
+		if chunk.MeshYawOffset ~= nil and not QUARTER[chunk.MeshYawOffset] then
+			table.insert(
+				errors,
+				`{label}: MeshYawOffset must be 0, 90, 180 or 270 (got {tostring(chunk.MeshYawOffset)})`
+			)
+		end
+
 		if not manifest.exists(chunk.AssetKey) then
 			table.insert(
 				errors,

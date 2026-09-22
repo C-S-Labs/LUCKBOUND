@@ -84,8 +84,21 @@ local function tryMesh(assetKey: string, size: Vector3, cframe: CFrame, parent: 
 		return nil
 	end
 
+	-- COLLISION FIDELITY IS SET AT CREATION, NOT AFTER.
+	--
+	-- A MeshPart defaults to a coarse hull, and for a 256-cubed piece with a
+	-- spire on it that hull is close to the whole box: the player walks on an
+	-- invisible shell high above the deck, which is what the first Studio walk
+	-- found (2026-09-23). PreciseConvexDecomposition is the only fidelity that
+	-- follows a railed deck, an arch and a gap, and it has to be passed HERE --
+	-- assigning it afterwards does not re-cook the collision geometry.
+	--
+	-- Cost is paid once per piece at load, on static anchored geometry, for the
+	-- handful of chunks one expedition places.
 	local ok, meshPart = pcall(function()
-		return AssetService:CreateMeshPartAsync(id)
+		return AssetService:CreateMeshPartAsync(id, {
+			CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
+		})
 	end)
 	if not ok or not meshPart then
 		warn(`[ChunkLoader] asset '{assetKey}' ({id}) failed to load; using blockout`)
@@ -290,8 +303,20 @@ function ChunkLoader.build(
 		-- The mesh hangs off the layout plane by its own skirt depth; the
 		-- blockout below does not, because its floor IS the walk plane.
 		local groundOffset = chunk.GroundOffsetY or chunk.SizeY / 2
+		-- MeshYawOffset turns the ART, never the layout. A kit is authored in
+		-- Blender with its own idea of which way is north, and the FBX axis
+		-- conversion can land that anywhere on the quarter-turn grid. Sockets,
+		-- collision and the whole layout stay in LAYOUT space; only the mesh
+		-- is spun to agree with them, so a wrong value is one number to change
+		-- and can never desync the map from the geometry it was checked with.
+		--
+		-- A 256-cubed piece gives the error nowhere to show: the bounding box
+		-- is identical at every yaw, so nothing before this point can detect
+		-- it. It shows up as bridges that do not meet, which is what the first
+		-- Studio walk of the Sky Citadel kit found (2026-09-23).
+		local meshYaw = placed.Yaw + (chunk.MeshYawOffset or 0)
 		local meshCFrame = CFrame.new(centre + Vector3.new(0, chunk.SizeY / 2 - groundOffset, 0))
-			* CFrame.Angles(0, math.rad(placed.Yaw), 0)
+			* CFrame.Angles(0, math.rad(meshYaw), 0)
 
 		local mesh = tryMesh(
 			chunk.AssetKey,
