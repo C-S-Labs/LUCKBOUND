@@ -345,8 +345,13 @@ for _, chunk in CHUNKS do
 	end
 	-- Crumbling-span cap and Aether Springs: still wrong at 180 or 0, so these
 	-- are off by a quarter turn from the rest of the kit rather than a half.
-	if c.Id == "SC_CAP_CRUMBLING" or c.Id == "SC_AETHER_SPRINGS" then
+	if c.Id == "SC_CAP_CRUMBLING" then
 		c.MeshYawOffset = 90
+	end
+	-- Aether Springs was still wrong at 90; try the other quarter turn.
+	-- Spire Court (the boss gateway) was still wrong at the kit-wide 180.
+	if c.Id == "SC_AETHER_SPRINGS" or c.Id == "SC_SPIRE_COURT" or c.Id == "SC_SPIRE_COURT_B" then
+		c.MeshYawOffset = 270
 	end
 	table.insert(out, c)
 end
