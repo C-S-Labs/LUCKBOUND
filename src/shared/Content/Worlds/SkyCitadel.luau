@@ -9,7 +9,7 @@
 -- halos, violet-roofed turrets, azure seams of light. Owner-directed
 -- 2026-09-22.
 --
--- ITS MAP IS A CHUNK KIT: Content/Chunks/SkyCitadel.luau, four pieces so far,
+-- ITS MAP IS A CHUNK KIT: Content/Chunks/SkyCitadel.luau, twelve pieces,
 -- connected by SKYWAY (connective) and ASCENT (arena-only). Every piece is a
 -- PLACEHOLDER in the manifest, so the expedition builds as blockout until the
 -- FBXs are uploaded.

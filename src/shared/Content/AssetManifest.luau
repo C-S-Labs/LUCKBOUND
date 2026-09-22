@@ -114,6 +114,54 @@ local ENTRIES: { [string]: AssetEntry } = {
 		Notes = "chunk_boss_clearing.fbx -- round arena, obelisk ring, the "
 			.. "Crown Spire. Opening: south ASCENT.",
 	},
+	SC_CHUNK_PATH_BEND = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "chunk_path_bend.fbx -- a skyway turning round the Spired Keep. Openings: south and east SKYWAY.",
+	},
+	SC_CHUNK_PATH_SKYPORT = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "chunk_path_skyport.fbx -- skiff dock: landing pad, crane, moored skiff. Openings: north and south SKYWAY.",
+	},
+	SC_CHUNK_PATH_HOOPS = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "chunk_path_hoops.fbx -- a bare span through three floating rings. Openings: north and south SKYWAY.",
+	},
+	SC_CHUNK_GARDEN_TERRACE = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "chunk_garden_terrace.fbx -- hedges, reflecting pool, pergola, gazebo. Openings: north and south SKYWAY.",
+	},
+	SC_CHUNK_OBSERVATORY = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "chunk_observatory.fbx -- dome and mast, dish array, orrery. Openings: north and south SKYWAY.",
+	},
+	SC_CHUNK_ARMORY = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "chunk_armory.fbx -- sparring ring, targets, racks, barracks, forge. Openings: north and south SKYWAY.",
+	},
+	SC_CHUNK_SIDE_VAULT = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "chunk_side_vault.fbx -- the side pocket: a sealed treasury. Opening: south SKYWAY.",
+	},
+	SC_CHUNK_SPIRE_COURT_B = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "chunk_spire_court_b.fbx -- the Hall of Winds: colonnades, turbines, Moon Gate. Openings: south SKYWAY, north ASCENT.",
+	},
 
 	-- === Hub prefabs =============================================
 	-- Authored pieces of the Crossroads, synced to ServerStorage by Rojo and

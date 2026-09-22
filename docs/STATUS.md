@@ -176,7 +176,7 @@ exists.**
 
 ### Test suite
 
-**582 tests, all passing.** (8 added 2026-09-22 for the Sky Citadel kit.) Headless — no Roblox required. 136 of them arrived
+**586 tests, all passing.** (12 added 2026-09-22 for the Sky Citadel kit.) Headless — no Roblox required. 136 of them arrived
 with the player UI and the live palette: the menu reducer, travel authorisation, code redemption,
 settings validation, the stamina curve and the coyote window.
 
@@ -362,7 +362,7 @@ survive a rescale and a literal does not.
 | **`GroundOffsetY` — the loader needs a ground-level origin and does not have one** | **High** | `ChunkLoader` sets `mesh.Size = (SizeX, SizeY, SizeZ)` and puts that box's **centre** at the layout Y, while the blockout puts the **walking surface** there. The first version of the brief closed the gap by requiring the art to centre its walk plane inside `SizeY` — 170 studs of ground body under the player's feet at `SizeY = 340`. That was the wrong side to bend: **`CHUNK_AUTHORING.md` now asks for a ground-level origin**, which is what an artist would author anyway and what the blockout already assumes. The loader owes a `GroundOffsetY` on the chunk schema to consume it. **This is now a prerequisite for the first mesh upload**, not deferrable debt — nothing is uploaded yet, so there is time, but a piece imported before it lands will sit half-sunk. |
 | **Portal plane is still above head height** | Medium | You reach the prompt and the rig springs from the floor, but the walk-through *plane* sits inside the inner ring, ~30 studs up. Blueprint §1.3's concentric rings make that inherent. Irrelevant once the rig is authored in Blender. |
 | **18% of rolls land on a world with no map** | **High** | Emberfall 15%, Astral Reach 3%. Refused politely at the Gate; printed as a boot warning and asserted by test. Both need only a chunk kit. **Sky Citadel left this list 2026-09-22** — `docs/SKY_CITADEL.md` is its section, `Content/Chunks/SkyCitadel.luau` its kit. |
-| **A chunk mesh is stretched to its declared size** | **High** | Found 2026-09-22 generating the Sky Citadel kit. `ChunkLoader.tryMesh` sets `mesh.Size = (SizeX, SizeY, SizeZ)`, so a mesh whose bounding box is not exactly that box is **silently distorted** — a round arena that does not reach the tile corners would be stretched into them. Sky Citadel works round it by pinning every piece to exactly 256³ (corner beacons, keel apex at −96, a spire at +160). The brief does not say this, and Verdant Valley's `SizeY = 340` is a guess the first mesh will not match. Either the brief says "fill the box" or the loader sizes the mesh from its own bounds and uses `SizeX/Y/Z` only for collision rejection. |
+| **A chunk mesh is stretched to its declared size** | **High** | Found 2026-09-22 generating the Sky Citadel kit. `ChunkLoader.tryMesh` sets `mesh.Size = (SizeX, SizeY, SizeZ)`, so a mesh whose bounding box is not exactly that box is **silently distorted** — a round arena that does not reach the tile corners would be stretched into them. Sky Citadel works round it by pinning every piece to exactly 256³ (edge pins at −96, a landmark at +160). The brief does not say this, and Verdant Valley's `SizeY = 340` is a guess the first mesh will not match. Either the brief says "fill the box" or the loader sizes the mesh from its own bounds and uses `SizeX/Y/Z` only for collision rejection. |
 | **Chunk colour on a single MeshPart is unverified** | **High** | A chunk loads as one `MeshPart` via `CreateMeshPartAsync`, so it has one `Color`; the hub's paint-by-part-name does not exist for chunks. Sky Citadel bakes its palette into **vertex colours** as well as material slots. Whether Studio keeps vertex colours on the imported MeshPart is the first thing to check on import. If not: a multi-part `.rbxmx` delivery (a loader change) or one colour per piece. |
 | **Chunk collision is default fidelity on one mesh** | Medium | `tryMesh` sets `CanCollide = true` and nothing else, so railings, parapets and gate arches seal into coarse hulls — the invisible-wall failure `ART_DIRECTION.md` documents for the hub. `CreateMeshPartAsync` takes a `CollisionFidelity` option; chunks should pass `PreciseConvexDecomposition`. |
 | **Expedition spawn uses the mesh's top, not its ground** | Medium | `entryPosition` is the surface's top face. With a mesh that is the bounding-box top: +160 for a Sky Citadel piece, so a 128-stud drop onto the landing pad (the entry keeps (0, 0) clear for exactly this). Fixed by the same `GroundOffsetY` that fixes the placement. |
@@ -385,7 +385,7 @@ survive a rescale and a literal does not.
 | `UNCOMMON` colour unsanctioned | Medium | Now shipping — see above |
 | Chunk collision is XZ-only | Medium | Blocks any kit that climbs. `MODULAR_MAPS.md` |
 | No pathfinding validation | Medium | Non-overlapping ≠ walkable between. Addendum §A4 step 4 |
-| All 12 chunks are `PLACEHOLDER` | Expected | Blockout is deliberate; upload is a per-piece change. **Sky Citadel's four have FBXs exported** (`assets/export/worlds/sky_citadel/`), not yet uploaded |
+| All 20 chunks are `PLACEHOLDER` | Expected | Blockout is deliberate; upload is a per-piece change. **Sky Citadel's twelve have FBXs exported** (`assets/export/worlds/sky_citadel/`), not yet uploaded |
 | **Ethereal Scape: one whole map, not eight chunks** | Decided 2026-09-17 | The art is a composed traverse and cannot be shuffled — evidence in `assets/rbxm/maps/README.md`. Wired: `assets/rbxm/maps/` → `ServerStorage.LuckboundMaps` → `PrebuiltLoader`. **Walked in Studio 2026-09-17** — v1 at `Scale = 0.1` read too small, modeller re-delivered at play scale, now `Scale = 1.0`. |
 | UI needs resize/layout pass | Cosmetic | Owner-flagged. The new hub UI is built to `UITheme`'s scale/offset caps from the start; the older three screens are not |
 | ~~The hub is twice player scale~~ | **Fixed 2026-09-21, unwalked** | Halved through one number, `HubLayout.WorldScale = 0.5`. Counters are now 3.0 studs and railings 3.35 against a ~5-stud player. WalkSpeed 32 → 24 with it. **Nobody has walked the half-size hub** — judge the plaza, the district distances and whether 24 feels right |
@@ -466,7 +466,7 @@ two design decisions.
 7. **`UNCOMMON`'s colour needs blessing.** On screen inside the first minute.
 8. **A chunk kit for Emberfall** — 15pp off the "no map" number.
 9. **Placeholder text, UI pass** — unchanged.
-10. **Sky Citadel** — art direction and 4 pieces done 2026-09-22 (`SKY_CITADEL.md`). Next: import `chunk_entry.fbx` into Studio and measure it (256³; do the vertex colours survive?), then the loader fixes above, then 8–12 more pieces — `chunk_path_bend` first, since no current socket turns.
+10. **Sky Citadel** — art direction and a **12-piece kit** done 2026-09-22 (`SKY_CITADEL.md`), inside the 12–16 target. Next: import `chunk_entry.fbx` into Studio and measure it (256³; do the vertex colours survive?), then the loader fixes above.
 
 ### When expeditions move to a separate place
 

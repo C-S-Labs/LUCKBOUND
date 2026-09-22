@@ -33,6 +33,55 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 45 — 2026-09-22 — Sky Citadel: eight more pieces, and floats that cannot clip
+
+**Branch:** `claude/sky-citadel-kit-expansion` (stacked on PR #35) · **Tests:** 586 passing (582 + 4)
+
+### Done
+- **Eight new pieces**, owner-directed, each a different reason to be there
+  and each bringing new props: `chunk_path_bend` (the first quarter turn),
+  `chunk_path_skyport` (skiff dock, crane, landing pad), `chunk_path_hoops`
+  (a bare span through three floating rings, between satellite islands),
+  `chunk_garden_terrace`, `chunk_observatory` (dome, dishes, orrery),
+  `chunk_armory` (racks, targets, forge, barracks), `chunk_side_vault` (the
+  world's SIDE pocket) and `chunk_spire_court_b` (the Hall of Winds — a rare
+  second gate-court with a Moon Gate). **12 pieces**, inside the 12–16 target.
+- **Floating objects cannot clip** — owner-directed: identical flush corner
+  beacons fused into one block where four tiles met. Every float and every
+  large solid is now registered as it is built, and `validate()` refuses to
+  export a piece where a float touches another float, a solid or a deck, or
+  comes within 4 studs of the tile edge (so neighbours' floats are always ≥ 8
+  apart, at any rotation). Tested against planted faults.
+- **Corner beacons vary**: three styles, and per-corner size, height, turn and
+  inset, seeded by piece name, each placed only where the checker accepts it.
+- **Edge pins** took over the beacons' other job — holding each mesh's box to
+  exactly 256 × 256 — as four 0.3-stud pins at the keel line.
+- All 12 exported and re-imported at 256³; the bend's openings verified at FBX
+  +Z (south) and +X (east). Review renders now include a chain through the
+  bend and four pieces meeting at a corner.
+- Content: 8 chunk entries, 8 manifest placeholders. Tests: two gate-courts,
+  the SIDE pocket, the 12–16 count, layouts that turn.
+
+### Decisions made
+- **Two ASCENT providers, not one.** The rare Hall of Winds shares the Spire
+  Court's role; the reserved-Kind rule still guarantees a gate-court before the
+  arena.
+- **No west bend yet.** `exitFor` takes the first socket, so it would add no
+  variety until that is fixed.
+- **Sky Citadel's assembly bar is ≥ 190/200 seeds**, like Verdant Valley's:
+  a path that turns can fold back on itself.
+
+### Stopped at
+Twelve FBXs exported, nothing uploaded; PR stacked on #35.
+
+### Next
+1. Merge #35, then this.
+2. Import `chunk_entry.fbx` into Studio: 256³? vertex colours?
+3. Loader: `GroundOffsetY` (32), `CollisionFidelity`, a random exit pick,
+   `IncludeSide`.
+
+---
+
 ## Session 44 — 2026-09-22 — Sky Citadel: art direction and the first generated kit
 
 **Branch:** `claude/sky-citadel-chunk-kit` · **Tests:** 582 passing (574 + 8)

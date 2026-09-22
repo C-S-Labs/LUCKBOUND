@@ -12,26 +12,31 @@
 -- "Starting a different world". Deliberately disjoint from Verdant Valley's
 -- PATH/WIDE; a test asserts the two sets never overlap.
 --   SKYWAY  connective. A 40-stud bridge deck, walk plane at the origin.
---   ASCENT  arena-only. A 72-stud grand approach with glowing kerbs. The
---           Spire Court is the only piece that offers one, so it gates the
---           arena on every seed -- the same emergent rule as VV's Grove.
+--   ASCENT  arena-only. A 72-stud grand approach with glowing kerbs. Only
+--           the two gate-courts offer one (the Spire Court, and the rarer
+--           Hall of Winds), so a gate-court precedes the arena on every seed
+--           -- the same emergent rule as VV's Grove.
 --
 -- Sockets: Facing is degrees, 0 = -Z (north), 90 = +X, 180 = +Z (south),
 -- 270 = -X. Offsets are local to the piece, before rotation.
 --
 -- SIZE: 256 x 256 x 256 for EVERY piece, and that is exact rather than
 -- nominal. ChunkLoader sets mesh.Size = (SizeX, SizeY, SizeZ), so a mesh
--- whose bounding box differs is stretched to fit. The generator pins the box:
--- corner beacons touch the tile edges, the keel apex is at -96, and one spire
--- per piece reaches +160. The walk plane (the Blender origin) therefore sits
+-- whose bounding box differs is stretched to fit, and a Roblox MeshPart
+-- pivots on its box centre, so a lopsided box moves the piece. The generator
+-- pins the box: four 0.3-stud pins at the edge midpoints at z = -96 (they
+-- only ever touch a neighbour's pin face to face), and one landmark per piece
+-- reaching +160. The corner beacons used to do the pinning; since
+-- 2026-09-22 they are free-floating and placed differently on every piece. The walk plane (the Blender origin) therefore sits
 -- 32 studs BELOW the bounding-box centre -- the number GroundOffsetY will
 -- need when the loader grows it (STATUS.md, High). Until then an uploaded
 -- piece would sit 32 studs too LOW -- its walk plane at -32 while the socket
 -- markers and the neighbouring blockout sit at 0. Nothing is uploaded yet.
 --
--- FIRST DELIVERY is the four-piece minimum (ENTRY, PATH_STRAIGHT, the grove-
--- role COURT, BOSS). The 12-16 target arrives as variants once these four
--- have been through the pipeline once.
+-- 12 PIECES (2026-09-22): the first four (ENTRY, PATH_STRAIGHT, the grove-role
+-- COURT, BOSS) plus eight that vary the roles -- a bend, two more paths, three
+-- combat decks, the world's SIDE pocket, and a rare second gate-court. Within
+-- the 12-16 target.
 
 local function socket(id: string, kind: string, x: number, z: number, facing: number)
 	return { Id = id, Kind = kind, OffsetX = x, OffsetY = 0, OffsetZ = z, Facing = facing }
@@ -85,6 +90,97 @@ local CHUNKS = {
 		MaxPerLayout = 1,
 		EnemyTags = {},
 		Tags = { "arena" },
+	},
+	-- === Kit expansion, 2026-09-22 ==================================
+	{
+		Id = "SC_PATH_BEND",
+		Role = "PATH" :: any,
+		AssetKey = "SC_CHUNK_PATH_BEND",
+		-- The quarter turn: a skyway round the Spired Keep. The first piece
+		-- whose sockets are not opposite, so the first that makes a layout
+		-- turn.
+		Sockets = { socket("south", "SKYWAY", 0, 128, 180), socket("east", "SKYWAY", 128, 0, 90) },
+		Weight = 25,
+		EnemyTags = {},
+		Tags = { "turn" },
+	},
+	{
+		Id = "SC_PATH_SKYPORT",
+		Role = "PATH" :: any,
+		AssetKey = "SC_CHUNK_PATH_SKYPORT",
+		-- A skiff dock off the skyway: landing pad, crane, a moored skiff.
+		Sockets = { socket("south", "SKYWAY", 0, 128, 180), socket("north", "SKYWAY", 0, -128, 0) },
+		Weight = 20,
+		EnemyTags = {},
+		Tags = { "bridge", "dock" },
+	},
+	{
+		Id = "SC_PATH_HOOPS",
+		Role = "PATH" :: any,
+		AssetKey = "SC_CHUNK_PATH_HOOPS",
+		-- A bare span through three floating rings, between two satellites.
+		Sockets = { socket("south", "SKYWAY", 0, 128, 180), socket("north", "SKYWAY", 0, -128, 0) },
+		Weight = 20,
+		EnemyTags = {},
+		Tags = { "bridge", "narrow", "exposed" },
+	},
+	{
+		Id = "SC_GARDEN_TERRACE",
+		Role = "COMBAT" :: any,
+		AssetKey = "SC_CHUNK_GARDEN_TERRACE",
+		-- Hedged avenue, reflecting pool, pergola, gazebo.
+		Sockets = { socket("south", "SKYWAY", 0, 128, 180), socket("north", "SKYWAY", 0, -128, 0) },
+		Weight = 20,
+		MaxPerLayout = 1,
+		EnemyTags = {},
+		Tags = { "open", "garden" },
+	},
+	{
+		Id = "SC_OBSERVATORY",
+		Role = "COMBAT" :: any,
+		AssetKey = "SC_CHUNK_OBSERVATORY",
+		-- Dome and mast, a dish array, an orrery over a star-map floor.
+		Sockets = { socket("south", "SKYWAY", 0, 128, 180), socket("north", "SKYWAY", 0, -128, 0) },
+		Weight = 15,
+		MaxPerLayout = 1,
+		EnemyTags = {},
+		Tags = { "open", "landmark" },
+	},
+	{
+		Id = "SC_ARMORY",
+		Role = "COMBAT" :: any,
+		AssetKey = "SC_CHUNK_ARMORY",
+		-- A training yard: sparring ring, targets, racks, barracks, forge.
+		Sockets = { socket("south", "SKYWAY", 0, 128, 180), socket("north", "SKYWAY", 0, -128, 0) },
+		Weight = 15,
+		MaxPerLayout = 1,
+		EnemyTags = {},
+		Tags = { "open", "yard" },
+	},
+	{
+		Id = "SC_SIDE_VAULT",
+		Role = "SIDE" :: any,
+		AssetKey = "SC_CHUNK_SIDE_VAULT",
+		-- The world's side pocket (Biome Blueprint §6): a sealed treasury.
+		-- Declared, validated, and -- like VV_HOLLOW -- never placed until
+		-- ChunkCore consumes IncludeSide (STATUS.md).
+		Sockets = { socket("south", "SKYWAY", 0, 128, 180) },
+		Weight = 100,
+		MaxPerLayout = 1,
+		EnemyTags = {},
+		Tags = { "optional", "risk-reward" },
+	},
+	{
+		Id = "SC_SPIRE_COURT_B",
+		Role = "COMBAT" :: any,
+		AssetKey = "SC_CHUNK_SPIRE_COURT_B",
+		-- The Hall of Winds: colonnades, turbines, the Moon Gate. The rare
+		-- alternative to the Spire Court -- the other ASCENT provider.
+		Sockets = { socket("south", "SKYWAY", 0, 128, 180), socket("north", "ASCENT", 0, -128, 0) },
+		Weight = 8,
+		MaxPerLayout = 1,
+		EnemyTags = {},
+		Tags = { "open", "gate-to-boss", "rare" },
 	},
 }
 

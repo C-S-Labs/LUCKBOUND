@@ -1047,8 +1047,8 @@ do
 
 	-- Sky Citadel: the second kit, with its own vocabulary ------------
 	-- docs/SKY_CITADEL.md. SKYWAY is connective; ASCENT is arena-only and
-	-- offered by the Spire Court alone, so the court must gate the arena on
-	-- every seed without anything hard-coding it.
+	-- offered only by the two gate-courts, so a gate-court must precede the
+	-- arena on every seed without anything hard-coding it.
 	do
 		local scLib = ChunkCore.libraryFor(Chunks, "SKY_CITADEL")
 		check("Sky Citadel has one ENTRY and one BOSS",
@@ -1081,9 +1081,19 @@ do
 				end
 			end
 		end
-		check("the Spire Court is the only piece offering an ASCENT exit",
-			#ascentProviders == 1 and ascentProviders[1] == "SC_SPIRE_COURT",
+		table.sort(ascentProviders)
+		check("only the two gate-courts offer an ASCENT exit",
+			#ascentProviders == 2 and ascentProviders[1] == "SC_SPIRE_COURT"
+				and ascentProviders[2] == "SC_SPIRE_COURT_B",
 			table.concat(ascentProviders, ", "))
+		check("Sky Citadel has its SIDE pocket (Blueprint §6)",
+			scLib.SIDE and #scLib.SIDE == 1 and scLib.SIDE[1].Id == "SC_SIDE_VAULT")
+		local scCount = 0
+		for _, c in Chunks do
+			if c.WorldId == "SKY_CITADEL" then scCount += 1 end
+		end
+		check("Sky Citadel's kit is within the 12-16 target", scCount >= 12 and scCount <= 16,
+			tostring(scCount))
 
 		-- The generator pins every mesh to exactly 256^3, because ChunkLoader
 		-- stretches a mesh to SizeX/Y/Z. Declared size must match that box.
@@ -1095,21 +1105,31 @@ do
 		end
 		check("every Sky Citadel piece declares the 256^3 box its mesh is built to", sized)
 
-		local built, courtGates = 0, true
+		local built, courtGates, turned, allValid = 0, true, false, true
+		local GATE_COURTS = { SC_SPIRE_COURT = true, SC_SPIRE_COURT_B = true }
 		for trial = 1, 200 do
 			local okA, layout = ChunkCore.assembleWithRetry(Chunks,
-				{ WorldId = "SKY_CITADEL", PathLength = 4 },
+				{ WorldId = "SKY_CITADEL", PathLength = 5 },
 				function(a) return lcg(trial * 7307 + a * 31) end, 5)
 			if okA then
 				built += 1
 				local okV = ChunkCore.validateLayout(layout, Chunks)
+				if not okV then allValid = false end
 				local penultimate = layout.Chunks[#layout.Chunks - 1]
-				if not okV or penultimate.ChunkId ~= "SC_SPIRE_COURT" then courtGates = false end
+				if not GATE_COURTS[penultimate.ChunkId] then courtGates = false end
+				for _, c in layout.Chunks do
+					if c.Yaw ~= 0 then turned = true end
+				end
 			end
 		end
-		check("Sky Citadel assembles a valid map on every seed", built == 200,
+		-- Same bar as Verdant Valley's: a path that turns can fold back on
+		-- itself, so a handful of seeds needing more than 5 attempts is the
+		-- grammar working, not failing (MODULAR_MAPS.md, "Retries").
+		check("Sky Citadel assembles a map on nearly every seed", built >= 190,
 			string.format("%d/200", built))
-		check("the Spire Court always gates the Crown Spire arena", courtGates)
+		check("every assembled Sky Citadel layout is valid", allValid)
+		check("a gate-court always precedes the Crown Spire arena", courtGates)
+		check("the bend piece makes some layouts turn", turned)
 	end
 
 	-- Geometry helpers ----------------------------------------------
