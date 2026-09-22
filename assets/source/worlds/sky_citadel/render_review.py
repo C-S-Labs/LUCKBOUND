@@ -14,11 +14,13 @@ SkyCitadel.luau): a warm low morning sun, pale blue sky fill, no fog. Blender's
 studio default makes flat-shaded work look washed out -- ART_DIRECTION.md says
 to author for the game's light, so this is that.
 
-Also builds a PREVIEW CHAIN -- the four pieces joined the way the generator
-would join them (entry -> path -> path -> court -> arena) -- as linked
-duplicates in a collection that is never exported. Every socket in this first
-kit faces north or south, so every join is at yaw 0; once a bend piece exists
-this chain should include a quarter turn. It is the "place a
+Also builds two previews from linked duplicates, never exported:
+
+* PREVIEW CHAIN -- a map the grammar allows, joined as the generator joins it,
+  including the bend's quarter turn. The "place a copy beside itself and look
+  at the join" check from CHUNK_AUTHORING.md.
+* PREVIEW CORNER -- four pieces meeting at one corner at four different yaws,
+  so the corner beacons can be seen not to clip. It is the "place a
 copy beside itself and look at the join" check from CHUNK_AUTHORING.md.
 """
 
@@ -87,25 +89,60 @@ def render(path):
     bpy.ops.render.render(write_still=True)
 
 
-def build_chain(pieces):
-    """entry at the origin, north (+Y) through path, court, arena. The court
-    and arena are the only pieces whose sockets differ in Kind, so this is the
-    one order the grammar allows for a 4-piece kit."""
-    coll = bpy.data.collections.get("PreviewChain_NotExported")
+def _preview(pieces, coll_name, placements):
+    """Linked duplicates (they share the piece's mesh) in a collection that is
+    never exported. placements: (piece name, (x, y), yaw degrees)."""
+    coll = bpy.data.collections.get(coll_name)
     if coll:
         for o in list(coll.objects):
             bpy.data.objects.remove(o, do_unlink=True)
     else:
-        coll = bpy.data.collections.new("PreviewChain_NotExported")
+        coll = bpy.data.collections.new(coll_name)
         bpy.context.scene.collection.children.link(coll)
-    base = Vector((0, -1400, 0))
-    for i, name in enumerate(["chunk_entry", "chunk_path_straight", "chunk_path_straight",
-                              "chunk_spire_court", "chunk_boss_clearing"]):
-        src = pieces[name]
-        dup = bpy.data.objects.new("CHAIN_%d_%s" % (i, name), src.data)
-        dup.location = base + Vector((0, 256 * i, 0))
+    for i, (name, (x, y), yaw) in enumerate(placements):
+        dup = bpy.data.objects.new("%s_%d_%s" % (coll_name[:5], i, name), pieces[name].data)
+        dup.location = (x, y, 0)
+        dup.rotation_euler = (0, 0, math.radians(yaw))
         coll.objects.link(dup)
-    return coll, base
+    return coll
+
+
+CHAIN_BASE = Vector((0, -3200, 0))
+
+
+def build_chain(pieces):
+    """A map the grammar allows, joined as the generator joins it: entry ->
+    crossroads (straight on) -> shattered span -> west bend -> archive ->
+    Hall of Winds -> arena, with the side lookout hung off the crossroads'
+    spare east socket. Pieces after the bend are turned a quarter (yaw +90) so
+    their south SKYWAY meets the bend's west one; the lookout is turned -90
+    so its only socket faces the crossroads."""
+    b = CHAIN_BASE
+    return _preview(pieces, "PreviewChain_NotExported", [
+        ("chunk_entry", (b.x, b.y), 0),
+        ("chunk_crossroads", (b.x, b.y + 256), 0),
+        ("chunk_side_lookout", (b.x + 256, b.y + 256), -90),
+        ("chunk_path_shattered", (b.x, b.y + 512), 0),
+        ("chunk_path_bend_west", (b.x, b.y + 768), 0),
+        ("chunk_archive", (b.x - 256, b.y + 768), 90),
+        ("chunk_spire_court_b", (b.x - 512, b.y + 768), 90),
+        ("chunk_boss_clearing", (b.x - 768, b.y + 768), 90),
+    ])
+
+
+CORNER = Vector((2000, -3200, 0))
+
+
+def build_corner(pieces):
+    """Four pieces meeting at one corner, each at a different yaw: the case
+    where identical flush beacons used to fuse into one block."""
+    c = CORNER
+    return _preview(pieces, "PreviewCorner_NotExported", [
+        ("chunk_armory", (c.x - 128, c.y - 128), 0),
+        ("chunk_observatory", (c.x + 128, c.y - 128), 90),
+        ("chunk_path_straight", (c.x + 128, c.y + 128), 180),
+        ("chunk_garden_terrace", (c.x - 128, c.y + 128), 270),
+    ])
 
 
 def main():
@@ -124,38 +161,32 @@ def main():
         pieces = {o.name: o for o in bpy.data.objects if o.get("kit") == "SKY_CITADEL"}
     written = []
 
-    # hide the reference people from the per-piece hero shots? No -- keep
-    # them: the 5-stud figure IS the scale check.
-    for name, obj in pieces.items():
-        c = obj.location
-        look_at(cam, c + Vector((210, -250, 150)), c + Vector((0, 0, 20)))
+    def shot(name, eye, target, lens=35):
+        look_at(cam, eye, target)
+        cam.data.lens = lens
         path = os.path.join(OUT, name + ".jpg")
         render(path)
         written.append(path)
-        # ground-level view: what a player sees
-        look_at(cam, c + Vector((0, -150, 8)), c + Vector((0, 0, 14)))
-        cam.data.lens = 24
-        path = os.path.join(OUT, name + "_ground.jpg")
-        render(path)
-        cam.data.lens = 35
-        written.append(path)
 
-    coll, base = build_chain(pieces)
-    look_at(cam, base + Vector((520, 200, 420)), base + Vector((0, 560, 0)))
-    cam.data.lens = 28
-    path = os.path.join(OUT, "preview_chain.jpg")
-    render(path)
-    cam.data.lens = 35
-    written.append(path)
+    # The 5-stud reference figure stays in every shot: it IS the scale check.
+    for name, obj in pieces.items():
+        c = obj.location
+        shot(name, c + Vector((210, -250, 150)), c + Vector((0, 0, 20)))
+        shot(name + "_ground", c + Vector((0, -150, 8)), c + Vector((0, 0, 14)), lens=24)
 
-    # the whole review row
-    first = min(o.location.x for o in pieces.values())
-    last = max(o.location.x for o in pieces.values())
-    mid = (first + last) / 2
-    look_at(cam, Vector((mid, -1100, 520)), Vector((mid, 0, 0)))
-    path = os.path.join(OUT, "kit_overview.jpg")
-    render(path)
-    written.append(path)
+    build_chain(pieces)
+    b = CHAIN_BASE
+    shot("preview_chain", b + Vector((520, -420, 760)), b + Vector((-300, 480, 0)), lens=22)
+
+    build_corner(pieces)
+    c = CORNER
+    shot("preview_corner", c + Vector((70, -90, 60)), c + Vector((0, 0, 4)), lens=24)
+    shot("preview_corner_top", c + Vector((0, -1, 520)), c, lens=35)
+
+    xs = [o.location.x for o in pieces.values()]
+    ys = [o.location.y for o in pieces.values()]
+    mid = Vector(((min(xs) + max(xs)) / 2, (min(ys) + max(ys)) / 2, 0))
+    shot("kit_overview", mid + Vector((0, -1900, 1650)), mid, lens=30)
     return written
 
 
