@@ -10,7 +10,9 @@
 --       Routing these through the server would add a remote round trip to
 --       change something the client is going to change anyway.
 --
---   SERVER (DebugSystem)  /roll /enter /leave
+--   SERVER (DebugSystem)  /roll /enter /leave /event /endevents /ledger
+--                         /keychance /vaultchance /boss /givekey /takekey /keys
+--                         (the last six are temporary loot testing tools)
 --       Roll results, expedition entry and Fate awards. The client must not
 --       be trusted with any of them, debug build or not -- an exploiter does
 --       not care that a flag was meant for testing.
@@ -324,6 +326,26 @@ function DebugCommands.init(): ()
 	end))
 	table.insert(HELP, register("ledger", "/ledger <ID> -- how many uniques are left", function(args)
 		remote("ledger", args)
+	end))
+
+	-- LOOT AND VAULT KEYS (build spec §7.5) -- temporary testing tools.
+	table.insert(HELP, register("keychance", "/keychance <0-1|reset> -- vault key drop chance", function(args)
+		remote("keychance", args)
+	end))
+	table.insert(HELP, register("vaultchance", "/vaultchance <0-1|reset> -- treasury spawn chance", function(args)
+		remote("vaultchance", args)
+	end))
+	table.insert(HELP, register("boss", "act as if you defeated this map's boss", function()
+		remote("boss", {})
+	end))
+	table.insert(HELP, register("givekey", "/givekey [KEY_ID] -- give yourself a vault key", function(args)
+		remote("givekey", args)
+	end))
+	table.insert(HELP, register("takekey", "remove your vault keys", function()
+		remote("takekey", {})
+	end))
+	table.insert(HELP, register("keys", "your keys and any testing overrides", function()
+		remote("keys", {})
 	end))
 
 	table.insert(HELP, register("worlds", "list rollable world ids", function()

@@ -154,6 +154,9 @@ export type AssembleOptions = {
 	BranchLength: number?,
 	-- Cap on placements of any one non-CAP piece, on top of its MaxPerLayout.
 	MaxRepeats: number?,
+	-- Chunk Id -> a SpawnChance to use instead of the chunk's own. Developer
+	-- testing only (/vaultchance); nil in play.
+	SpawnOverrides: { [string]: number }?,
 }
 
 --- Builds a layout: ENTRY → PathLength connective/combat chunks → BOSS,
@@ -198,9 +201,18 @@ function ChunkCore.assemble(
 	-- so "in one map in five" means placed, not merely eligible.
 	local won: { [string]: boolean } = {}
 	local chancy = {}
+	local overrides = options.SpawnOverrides or {}
+	local function chanceOf(c: any): number?
+		local o = overrides[c.Id]
+		return if o ~= nil then o else c.SpawnChance
+	end
 	for _, list in byRole do
 		for _, c in list do
-			if c.SpawnChance ~= nil and c.SpawnChance < 1 then
+			local chance = chanceOf(c)
+			if chance ~= nil and chance >= 1 and c.SpawnChance ~= nil then
+				-- Forced in by an override: preferred, and no draw spent.
+				won[c.Id] = true
+			elseif chance ~= nil and chance < 1 then
 				table.insert(chancy, c)
 			end
 		end
@@ -211,7 +223,7 @@ function ChunkCore.assemble(
 		end)
 		local absent = {}
 		for _, c in chancy do
-			if nextNumber() >= c.SpawnChance then
+			if nextNumber() >= (chanceOf(c) :: number) then
 				absent[c.Id] = true
 			else
 				won[c.Id] = true

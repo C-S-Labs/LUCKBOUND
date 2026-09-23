@@ -5565,6 +5565,29 @@ do
 	local share = withVault / math.max(built, 1)
 	check("the treasury appears in about one map in five (12-28%)", share >= 0.12 and share <= 0.28,
 		string.format("%.1f%% of %d maps", share * 100, built))
+	-- /vaultchance (a temporary testing command) overrides it per map.
+	local function vaultShare(override)
+		local n, ok = 0, 0
+		for trial = 1, 100 do
+			local okA, layout = ChunkCore.assembleWithRetry(Chunks, {
+				WorldId = "SKY_CITADEL", PathLength = GameConfig.Expedition.PathLength,
+				BranchLength = GameConfig.Expedition.BranchLength, MaxRepeats = GameConfig.Expedition.MaxRepeats,
+				IncludeSide = true, SpawnOverrides = { SC_VAULT_TURN = override },
+			}, function(a) return lcg(trial * 3319 + a * 17) end, 5)
+			if okA then
+				ok += 1
+				for _, c in layout.Chunks do
+					if c.ChunkId == "SC_VAULT_TURN" then n += 1 break end
+				end
+			end
+		end
+		return n / math.max(ok, 1), ok
+	end
+	local always, builtA = vaultShare(1)
+	local never = vaultShare(0)
+	check("a spawn override of 1 puts the treasury in (nearly) every map", always >= 0.9 and builtA >= 95,
+		string.format("%.0f%% of %d", always * 100, builtA))
+	check("a spawn override of 0 keeps it out of every map", never == 0)
 	local okSC, errsSC = Schema.validateChunks({ X = {
 		Id = "X", WorldId = "W", Role = "BOSS", AssetKey = "VV_CHUNK_ENTRY", Weight = 1, SpawnChance = 1.5,
 		SizeX = 1, SizeY = 1, SizeZ = 1, Sockets = {} } }, AssetManifest)

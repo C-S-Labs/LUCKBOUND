@@ -25,6 +25,7 @@ local GameConfig = require(Root.Core.GameConfig)
 local Net = require(Root.Core.Net)
 local Worlds = require(Root.Content.Worlds)
 local Events = require(Root.Content.Events)
+local Fixtures = require(Root.Content.Fixtures)
 
 local DebugSystem = {}
 
@@ -32,6 +33,7 @@ local FateSystem
 local ExpeditionSystem
 local EventSystem
 local LedgerSystem
+local LootSystem
 
 --- Who is allowed to run a command. Studio is the everyday case; the creator
 --- check is what makes this safe to leave wired up on a published test place.
@@ -175,6 +177,108 @@ COMMANDS.leave = function(player: Player, _args: { string }): (boolean, string)
 	return true, "returned to the Crossroads"
 end
 
+-- === loot and vault keys (build spec §7.5) ============================
+-- TEMPORARY testing tools (owner, 2026-09-23: "these will be removed later").
+-- They change session state only -- nothing here edits content or config.
+
+local function parseChance(arg: string?): (boolean, number?, string?)
+	if arg == nil then
+		return false, nil, nil
+	end
+	if string.lower(arg) == "reset" then
+		return true, nil, nil
+	end
+	local n = tonumber(arg)
+	if n == nil or n < 0 or n > 1 then
+		return false, nil, "give a number from 0 to 1, or 'reset'"
+	end
+	return true, n, nil
+end
+
+--- /keychance <0-1 | reset> -- the vault key's drop chance, for this session.
+COMMANDS.keychance = function(_player: Player, args: { string }): (boolean, string)
+	local ok, n, err = parseChance(args[1])
+	if not ok then
+		return false, err or "usage: /keychance <0-1 | reset>"
+	end
+	LootSystem.setKeyChanceOverride(n)
+	return true,
+		if n
+			then `vault key drop chance is now {n * 100}% (this session)`
+			else "vault key drop chance back to content"
+end
+
+--- /vaultchance <0-1 | reset> -- how often the treasury (any piece holding a
+--- vault) spawns, for maps built from now on.
+COMMANDS.vaultchance = function(_player: Player, args: { string }): (boolean, string)
+	local ok, n, err = parseChance(args[1])
+	if not ok then
+		return false, err or "usage: /vaultchance <0-1 | reset>"
+	end
+	local ids = {}
+	for _, set in Fixtures do
+		for chunkId, rows in set.Placements do
+			for _, row in rows do
+				if row.Kind == "VAULT" then
+					ExpeditionSystem.setSpawnOverride(chunkId, n)
+					table.insert(ids, chunkId)
+					break
+				end
+			end
+		end
+	end
+	table.sort(ids)
+	return true,
+		if n
+			then `{table.concat(ids, ", ")} now spawns {n * 100}% of the time (next map on)`
+			else `{table.concat(ids, ", ")} back to its own spawn chance`
+end
+
+--- /boss -- act as if you just defeated your map's boss (repeatable).
+COMMANDS.boss = function(player: Player, _args: { string }): (boolean, string)
+	return LootSystem.triggerBoss(player)
+end
+
+--- /givekey [KEY_ID] -- give yourself a vault key (the Sky Citadel one by default).
+COMMANDS.givekey = function(player: Player, args: { string }): (boolean, string)
+	local defs = LootSystem.keyDefinitions()
+	local id = args[1] and string.upper(args[1]) or "SKY_CITADEL_VAULT_KEY"
+	if not defs[id] then
+		local ids = {}
+		for key in defs do
+			table.insert(ids, key)
+		end
+		table.sort(ids)
+		return false, "usage: /givekey [KEY_ID] -- " .. table.concat(ids, ", ")
+	end
+	return LootSystem.giveKey(player, id)
+end
+
+--- /takekey -- remove every key you hold.
+COMMANDS.takekey = function(player: Player, _args: { string }): (boolean, string)
+	return LootSystem.takeKeys(player)
+end
+
+--- /keys -- the keys you hold, and any testing overrides in force.
+COMMANDS.keys = function(player: Player, _args: { string }): (boolean, string)
+	local held = {}
+	for id, n in LootSystem.keysOf(player) do
+		table.insert(held, `{id} x{n}`)
+	end
+	table.sort(held)
+	local overrides = {}
+	local kc = LootSystem.keyChanceOverride()
+	if kc then
+		table.insert(overrides, `key chance {kc * 100}%`)
+	end
+	for chunkId, n in ExpeditionSystem.spawnOverrides() do
+		table.insert(overrides, `{chunkId} spawn {n * 100}%`)
+	end
+	return true,
+		`keys: {if #held > 0 then table.concat(held, ", ") else "none"}`
+			.. ` | overrides: {if #overrides > 0 then table.concat(overrides, ", ") else "none"}`
+end
+
 function DebugSystem.handle(player: Player, name: any, args: any): ()
 	if not mayCommand(player) then
 		return -- silent: an unauthorised caller learns nothing
@@ -213,12 +317,14 @@ function DebugSystem.init(
 	fateSystem: any,
 	expeditionSystem: any,
 	eventSystem: any,
-	ledgerSystem: any
+	ledgerSystem: any,
+	lootSystem: any
 ): ()
 	FateSystem = fateSystem
 	ExpeditionSystem = expeditionSystem
 	EventSystem = eventSystem
 	LedgerSystem = ledgerSystem
+	LootSystem = lootSystem
 
 	if not GameConfig.Debug.AllowCommands then
 		print("[DebugSystem] commands disabled (GameConfig.Debug.AllowCommands)")

@@ -33,6 +33,35 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 58 — 2026-09-23 — Temporary loot testing commands
+
+**Tests:** 790 passing.
+
+### Done
+- Owner asked for chat commands to test loot and keys, "removed later":
+  - `/keychance <0-1|reset>` and `/vaultchance <0-1|reset>` override the key
+    drop chance and the treasury's spawn chance for the session.
+  - `/boss` fires the boss stand-in on demand.
+  - `/givekey [KEY_ID]`, `/takekey` and `/keys` manage and show your keys.
+  - Server-side in `DebugSystem`, with the same gates as `/roll` (Studio or
+    place creator, `Debug.AllowCommands`); registered in `DebugCommands` so
+    they appear in `/help`.
+- Supporting seams, each marked DEVELOPER TESTING ONLY:
+  - `ChunkCore` `SpawnOverrides` option. An override of 1 forces the piece in
+    with no draw; tests check 1 means (nearly) always and 0 means never.
+  - `ExpeditionSystem.setSpawnOverride`.
+  - `LootSystem` key-chance override, `triggerBoss`, `giveKey`, `takeKeys`.
+- `docs/TESTING.md` §2.5 and Test T use them.
+
+### Next
+1. Owner walks Test T with the commands.
+2. **When removing them:** delete the six `COMMANDS` entries and their
+   `DebugCommands` aliases, the "developer testing only" block in
+   `LootSystem`, `ExpeditionSystem.setSpawnOverride`/`spawnOverrides`, and
+   `SpawnOverrides` in `ChunkCore` together with its test.
+
+---
+
 ## Session 57 — 2026-09-23 — Re-import live; the vault becomes per player
 
 **Tests:** 788 passing.

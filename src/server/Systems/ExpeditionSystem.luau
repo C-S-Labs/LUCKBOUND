@@ -113,6 +113,10 @@ local manifestFailed = false
 local hostGroup: Group? = nil
 
 local manifestMap: MemoryStoreHashMap? = nil
+
+-- DEVELOPER TESTING ONLY (/vaultchance): chunk Id -> SpawnChance override for
+-- every map built from now on. Empty in play. Remove with the debug commands.
+local spawnOverrides: { [string]: number } = {}
 local function manifestStore(): MemoryStoreHashMap?
 	if manifestMap then
 		return manifestMap
@@ -257,6 +261,7 @@ local function buildStage(worldId: string, seed: number, origin: Vector3, stageN
 		IncludeSide = GameConfig.Expedition.IncludeSide,
 		BranchLength = GameConfig.Expedition.BranchLength,
 		MaxRepeats = GameConfig.Expedition.MaxRepeats,
+		SpawnOverrides = spawnOverrides,
 	}, function(attempt)
 		return ExpeditionCore.streamFor(seed, attempt)
 	end, GameConfig.Expedition.AssemblyAttempts)
@@ -652,6 +657,16 @@ end
 
 function ExpeditionSystem.isActive(player: Player): boolean
 	return active[player.UserId] ~= nil or launching[player.UserId] == true
+end
+
+--- DEVELOPER TESTING ONLY. Overrides a chunk's SpawnChance for maps built
+--- from now on; nil restores the content's own value.
+function ExpeditionSystem.setSpawnOverride(chunkId: string, chance: number?): ()
+	spawnOverrides[chunkId] = chance
+end
+
+function ExpeditionSystem.spawnOverrides(): { [string]: number }
+	return spawnOverrides
 end
 
 function ExpeditionSystem.isHosting(): boolean

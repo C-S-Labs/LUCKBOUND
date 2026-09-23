@@ -163,6 +163,12 @@ where the `[Roll]` and `[Expedition]` lines already are.
 | `/roll <WORLD_ID>` | **server** | Force your next destination. No argument lists the valid ids. |
 | `/enter` | **server** | Enter your destination from anywhere — skips the distance check only. |
 | `/leave` | **server** | End the current expedition (counts as RETURNED, so it pays Fate). |
+| `/keychance <0-1\|reset>` | **server** | *Temporary (§7.5 testing).* Override the vault key's drop chance for this session. `1` = always drops. |
+| `/vaultchance <0-1\|reset>` | **server** | *Temporary.* Override how often the treasury spawns, for maps built from now on. `1` = every map, `0` = never. |
+| `/boss` | **server** | *Temporary.* Act as if you just defeated your map's boss: rolls the boss pool and the key. Repeatable. |
+| `/givekey [KEY_ID]` | **server** | *Temporary.* Give yourself a vault key (Sky Citadel's by default). Max one still applies. |
+| `/takekey` | **server** | *Temporary.* Remove every key you hold. |
+| `/keys` | **server** | *Temporary.* Your keys, and any testing overrides in force. |
 | `/help` | client | List all of the above. |
 
 **Why the split.** Your own character's velocity, speed and CFrame are already
@@ -692,15 +698,14 @@ Live since the second re-import. Turn on `/fly` for speed.
    through it.
 4. **Birds in the aviary.** ✅ Pass: wings beat together while each bird
    circles. No wing floats loose from its bird.
-5. **Find a map with the treasury** (about one in five; reroll until the
-   `/leave`/roll loop shows `SC_VAULT_TURN` in the map summary, or look for the
-   round door). **Try the vault first.** ✅ Pass: **UNLOCK — Sky Citadel Vault
+5. **Find a map with the treasury** (about one in five). To skip the luck:
+   `/vaultchance 1` in the hub, then `/roll SKY_CITADEL` and `/enter`. **Try the vault first.** ✅ Pass: **UNLOCK — Sky Citadel Vault
    Key**; holding it says *"Locked. It needs a Sky Citadel Vault Key."*
 6. **Walk into the boss arena** (the stand-in for defeating the boss).
    ✅ Pass: about 1 time in 5, **in any Sky Citadel map, treasury or not**,
    every party member gets *"You found a Sky Citadel Vault Key!"*.
-   To test the key without luck, set `Loot.VaultKey.DropChance = 1` in
-   `Content/Worlds/SkyCitadel.luau` for the session.
+   To test without luck: `/keychance 1`, then `/boss` (or walk in), then
+   `/keys` to see it.
 7. **Unlock the vault with one player only** (party of 2, both holding a
    key). ✅ Pass, for the player who used it: the round door spins twice, then
    sinks into the wall; *"Sky Citadel Vault Key used. The vault opens."*; their

@@ -142,7 +142,7 @@ HubUISystem.init(SaveSystem, ProgressionSystem, ExpeditionSystem)
 -- 8. Developer commands. Last of the systems on purpose: nothing above may
 -- depend on it, so deleting it before launch breaks nothing.
 step("DebugSystem")
-DebugSystem.init(FateSystem, ExpeditionSystem, EventSystem, LedgerSystem)
+DebugSystem.init(FateSystem, ExpeditionSystem, EventSystem, LedgerSystem, LootSystem)
 
 -- 9. Hub. Generated from Content/Hub/Crossroads data, and skipped entirely if
 -- Workspace already contains a hand-built Crossroads -- authored geometry
