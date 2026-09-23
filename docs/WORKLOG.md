@@ -48,6 +48,15 @@ meshes land on their sockets at all four yaws.
 roll #1 was always seed 1704274940. Now mixed with `Random.new()` entropy per
 entry; still logged, still rebuildable.
 
+**Verified in Studio (owner walk, two sessions, four maps):** seeds 853936282,
+1736455857, 463688731, 975105030 — all distinct, roll #1 differs per session.
+All four maps correct in orientation and placement. Every piece type measured
+facing 180 at maximum score (11 per one-socket piece, 22 per two, 44 for the
+crossroads) with no probe warnings — the kit was uniformly authored all along,
+and the per-piece variation was only ever the convention bug. Both maps built
+on attempt 1, 0 blockout, scenarios assigned. **Sky Citadel generation is
+done.**
+
 ---
 
 ## Session 49 — 2026-09-23 — Walk-driven fixes to the Sky Citadel run
