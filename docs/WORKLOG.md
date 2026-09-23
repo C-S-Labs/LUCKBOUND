@@ -35,7 +35,7 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ## Session 52 — 2026-09-23 — Clouds with shape; scenery separation becomes a rule
 
-**Tests:** 717 passing (was 710).
+**Tests:** 720 passing (was 710).
 
 **First look at the ambience (owner walk):** sunrise and the sea read well; the
 clouds looked like flat discs. Each was a single ellipsoid.
@@ -63,8 +63,15 @@ cloud's height, and a heaped cumulus in the 150-down layer could rise ~240.
 Every world with a `CloudSea` now needs a `CloudCeiling` (studs below the walk
 plane no cloud may cross); `layoutClouds` lowers any cloud whose tallest piece
 would cross it. Sky Citadel: ceiling 130 against keels at 96, near layer moved
-to 200. A test measures every cloud top over 40 seeds. **Sky Citadel's look is
-done** until the scenery re-export.
+to 200. A test measures every cloud top over 40 seeds.
+
+**Then: more cloud detail** (owner's partner). Lobed bases (2–3 ellipsoids, so
+no clean oval outline), `Tufts` on each billow (the cauliflower texture), an
+optional soft `Rim` shell on high graphics, per-piece tone jitter, 2–4
+overlapping wisp streaks. Far layers now move at `FarLayerHz` (20) instead of
+every frame, which pays for it. Measured: ~670 parts high, ~200 Automatic, ~80
+low; a test holds Automatic under 400. **Sky Citadel's look is done** until the
+scenery re-export.
 
 **Next:** the Sky Citadel re-export. The first step is ours: change
 `build_sky_citadel_kit.py` to build props as separate `prop_*` objects, gather

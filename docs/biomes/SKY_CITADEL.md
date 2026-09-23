@@ -199,7 +199,7 @@ Emberfall; full morning sun, as a second Ethereal Scape.**
 | `Atmosphere` | density 0.3, warm `Color`, cobalt `Decay`, glare 0.7 | the gradient sky; replaces fog |
 | `Sky` | sun 16°, 300 stars | a big dawn sun, stars fading |
 | `Bloom`, `SunRays`, `Grade` | restrained | glow on the white and gold, faint rays, a slight warm grade |
-| `CloudSea` | three layers, 200 / 330 / 520 studs down, under a `CloudCeiling` of 130 (keels reach 96) | near: heaped sunlit cumulus with lavender undersides. Middle: broad, flatter, cooler banks. Deep: long pale wisps, almost still. Different speeds and headings give parallax |
+| `CloudSea` | three layers, 200 / 330 / 520 studs down, under a `CloudCeiling` of 130 (keels reach 96) | near: heaped sunlit cumulus with lavender undersides, tufted and rimmed (~14 pieces a cloud at full graphics; the whole sea ~670 parts high, ~200 Automatic, ~80 low). Middle: broad, flatter, cooler banks. Deep: long pale wisps, almost still. Different speeds and headings give parallax |
 | `Motes` | sparse, slow, gold | high air catching the light |
 
 **What the walks showed before this was fixed:** a purple dusk. That was never

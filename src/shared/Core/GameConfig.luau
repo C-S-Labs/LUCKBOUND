@@ -847,6 +847,9 @@ local GameConfig = {
 		-- The least a manual graphics level can scale ambience to. Level 1 still
 		-- gets a thin sea rather than none: an empty void reads as a bug.
 		QualityFloor = 0.3,
+		-- How often cloud layers beyond the nearest are moved, per second. They
+		-- are far away and slow, so full frame rate buys nothing visible.
+		FarLayerHz = 20,
 	},
 }
 

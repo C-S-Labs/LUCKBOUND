@@ -87,6 +87,12 @@ function AmbienceCore.layoutClouds(
 	local half = layer.Radius
 	local mix = layer.Mix or DEFAULT_MIX
 	local maxBillows = math.max(0, math.floor((layer.Billows or 0) * billowScale + 0.5))
+	-- Tufts are the finest detail, so they thin first: below full quality a
+	-- billow carries fewer, and on low graphics none.
+	local maxTufts = math.max(0, math.floor((layer.Tufts or 0) * billowScale * billowScale + 0.5))
+	-- The soft outer shell is pure polish; only devices drawing most of the
+	-- sea draw it.
+	local rim = layer.Rim == true and billowScale >= 0.75
 	for _ = 1, count do
 		local size = layer.SizeMin + (layer.SizeMax - layer.SizeMin) * nextNumber()
 		local style = pickStyle(mix, nextNumber())
@@ -103,39 +109,87 @@ function AmbienceCore.layoutClouds(
 				Width = w,
 				Height = h,
 				Length = l,
-				Shade = shade, -- 0 = fully lit top colour, 1 = the underside shade
+				-- 0 = fully lit top colour, 1 = the underside shade. Jittered a
+				-- little so no two pieces of one cloud are quite the same tone.
+				Shade = math.clamp(shade + (nextNumber() - 0.5) * 0.16, 0, 1),
 				Fade = fade, -- extra transparency on top of the layer's
 			})
 		end
 
 		local baseH = size * layer.Thickness
 		if style == "Wisp" then
-			add(0, 0, 0, size * 1.6, baseH * 0.35, size * (0.3 + 0.2 * nextNumber()), 0.3, 0.35)
-			if nextNumber() < 0.5 then
-				add(size * 0.4, baseH * 0.1, size * 0.12, size * 1.1, baseH * 0.25, size * 0.25, 0.2, 0.45)
+			-- Several thin streaks laid slightly across one another: a wisp is
+			-- the one cloud that should read as brushed rather than heaped.
+			local streaks = 2 + math.floor(nextNumber() * 3)
+			for i = 1, streaks do
+				local along = (i - (streaks + 1) / 2) * size * 0.35
+				add(
+					along,
+					(nextNumber() - 0.5) * baseH * 0.3,
+					(nextNumber() - 0.5) * size * 0.25,
+					size * (1.1 + 0.6 * nextNumber()),
+					baseH * (0.2 + 0.15 * nextNumber()),
+					size * (0.2 + 0.15 * nextNumber()),
+					0.25,
+					0.3 + 0.2 * nextNumber()
+				)
 			end
 		else
 			local flat = style == "Stratus"
 			local baseW = size * (if flat then 1.4 else 1)
 			local baseL = size * (if flat then 0.9 else 0.7 + 0.5 * nextNumber())
 			local baseTall = if flat then baseH * 0.6 else baseH
-			add(0, 0, 0, baseW, baseTall, baseL, 1, 0)
+			-- A LOBED base -- two or three overlapping ellipsoids -- so the
+			-- outline seen from above is irregular instead of one clean oval.
+			local lobes = 2 + math.floor(nextNumber() * 2)
+			for i = 1, lobes do
+				local t = (i - (lobes + 1) / 2) / lobes
+				add(
+					t * baseW * 0.45,
+					(nextNumber() - 0.5) * baseTall * 0.15,
+					(nextNumber() - 0.5) * baseL * 0.3,
+					baseW * (0.62 + 0.2 * nextNumber()),
+					baseTall * (0.85 + 0.2 * nextNumber()),
+					baseL * (0.7 + 0.25 * nextNumber()),
+					1,
+					0
+				)
+			end
 			local n = if flat
 				then math.min(maxBillows, 1 + math.floor(nextNumber() * 2))
 				else math.max(if maxBillows > 0 then 1 else 0, math.floor(maxBillows * (0.5 + 0.5 * nextNumber()) + 0.5))
 			for _ = 1, n do
 				local w = size * (if flat then 0.3 + 0.2 * nextNumber() else 0.3 + 0.3 * nextNumber())
 				local h = w * (if flat then 0.35 else 0.6 + 0.3 * nextNumber())
-				add(
-					(nextNumber() * 2 - 1) * baseW * 0.32,
-					baseTall * 0.25 + h * (if flat then 0.1 else 0.2 + 0.2 * nextNumber()),
-					(nextNumber() * 2 - 1) * baseL * 0.28,
-					w,
-					h,
-					w * (0.8 + 0.4 * nextNumber()),
-					0.15 * nextNumber(),
-					0
-				)
+				local bx = (nextNumber() * 2 - 1) * baseW * 0.32
+				local by = baseTall * 0.25 + h * (if flat then 0.1 else 0.2 + 0.2 * nextNumber())
+				local bz = (nextNumber() * 2 - 1) * baseL * 0.28
+				add(bx, by, bz, w, h, w * (0.8 + 0.4 * nextNumber()), 0.15 * nextNumber(), 0)
+				-- TUFTS: small round puffs on the billow's upper surface. This
+				-- is the cauliflower texture that separates a cumulus from a
+				-- pile of balls.
+				if not flat then
+					local tufts = math.floor(maxTufts * (0.4 + 0.6 * nextNumber()) + 0.5)
+					for _ = 1, tufts do
+						local tw = w * (0.28 + 0.22 * nextNumber())
+						local ang = nextNumber() * math.pi * 2
+						local reach = w * 0.3 * nextNumber()
+						add(
+							bx + math.cos(ang) * reach,
+							by + h * (0.25 + 0.15 * nextNumber()),
+							bz + math.sin(ang) * reach,
+							tw,
+							tw * (0.7 + 0.25 * nextNumber()),
+							tw * (0.85 + 0.3 * nextNumber()),
+							0.05 * nextNumber(),
+							0
+						)
+					end
+				end
+			end
+			-- A faint oversized shell: blurs the hard ellipsoid edge into haze.
+			if rim then
+				add(0, baseTall * 0.15, 0, baseW * 1.18, baseTall * 1.35, baseL * 1.15, 0.4, 0.55)
 			end
 		end
 
@@ -210,6 +264,12 @@ function AmbienceCore.validate(environment: any, label: string): { string }
 				checkRange(errors, `{l}.Transparency`, layer.Transparency, 0, 1)
 				if layer.Billows ~= nil then
 					checkRange(errors, `{l}.Billows`, layer.Billows, 0, 12)
+				end
+				if layer.Tufts ~= nil then
+					checkRange(errors, `{l}.Tufts`, layer.Tufts, 0, 6)
+				end
+				if layer.Rim ~= nil and type(layer.Rim) ~= "boolean" then
+					table.insert(errors, `{l}.Rim must be true or false`)
 				end
 				if layer.Mix ~= nil then
 					local sum = 0

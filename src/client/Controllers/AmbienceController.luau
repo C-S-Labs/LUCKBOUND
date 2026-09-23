@@ -53,6 +53,9 @@ type Layer = {
 	Offset: { any },
 	DriftX: number,
 	DriftZ: number,
+	-- Seconds since this layer was last moved; far layers are moved at
+	-- GameConfig.Ambience.FarLayerHz rather than every frame.
+	Pending: number,
 }
 
 local setAside: { { Instance: Instance, Parent: Instance? } } = {}
@@ -146,7 +149,7 @@ local function buildCloudSea(env: any, floorY: number, scale: number, folder: In
 		end, env.CloudCeiling)
 		local shade = def.Shade or def.Color
 		local layer: Layer =
-			{ Def = def, Clouds = clouds, Parts = {}, Owner = {}, Offset = {}, DriftX = 0, DriftZ = 0 }
+			{ Def = def, Clouds = clouds, Parts = {}, Owner = {}, Offset = {}, DriftX = 0, DriftZ = 0, Pending = 0 }
 		for _, cloud in clouds do
 			-- Built once: a cloud's heading never changes, only where it is.
 			cloud.Rot = CFrame.Angles(0, cloud.Yaw, 0)
@@ -224,11 +227,23 @@ local function step(dt: number, floorY: number)
 		return
 	end
 	local focus = camera.CFrame.Position
-	for _, layer in layers do
+	local farInterval = 1 / GameConfig.Ambience.FarLayerHz
+	for index, layer in layers do
 		local def = layer.Def
 		local heading = math.rad(def.Heading)
 		layer.DriftX += math.sin(heading) * def.Speed * dt
 		layer.DriftZ -= math.cos(heading) * def.Speed * dt
+		-- The first layer is the one beside the player and moves every frame.
+		-- The rest are far off and drift a few studs a second; moving them
+		-- twenty times a second is indistinguishable and a fraction of the
+		-- cost, which is what pays for the extra detail up close.
+		if index > 1 then
+			layer.Pending += dt
+			if layer.Pending < farInterval then
+				continue
+			end
+			layer.Pending = 0
+		end
 		-- Wrap each CLOUD's centre once, then hang its pieces off it, so a
 		-- cluster crosses the seam whole instead of splitting in two.
 		local centres = {}

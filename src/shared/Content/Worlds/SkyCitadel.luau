@@ -78,7 +78,7 @@ return {
 			-- NEAR: the heaped, sunlit cumulus the islands hang just above.
 			{
 				Depth = 200,
-				Count = 34,
+				Count = 30,
 				Radius = 1600,
 				Speed = 7,
 				Heading = 80,
@@ -86,6 +86,8 @@ return {
 				SizeMax = 340,
 				Thickness = 0.3,
 				Billows = 6,
+				Tufts = 3,
+				Rim = true,
 				Mix = { Cumulus = 0.7, Stratus = 0.2, Wisp = 0.1 },
 				Color = Color3.fromRGB(255, 238, 228), -- sunlit tops, faintly gold
 				Shade = Color3.fromRGB(196, 176, 206), -- lavender undersides
@@ -102,6 +104,8 @@ return {
 				SizeMax = 520,
 				Thickness = 0.22,
 				Billows = 4,
+				Tufts = 1,
+				Rim = true,
 				Mix = { Cumulus = 0.35, Stratus = 0.5, Wisp = 0.15 },
 				Color = Color3.fromRGB(236, 214, 226),
 				Shade = Color3.fromRGB(150, 146, 196),
