@@ -616,7 +616,9 @@ def tower(p, x, y, r, H, roof_h=None, roof=True):
         box(p, "PaleAlloy", x + math.cos(a) * ap, y + math.sin(a) * ap, H + 4.2,
             1.6, edge * 0.55, 2.4, rz=45 * k)
     if not roof:
-        frustum(p, "PaleAlloy", 8, r * 1.05, r * 1.05, H + 2, H + 3, x, y)   # a flat roof to stand a spire on
+        # a flat roof to stand a spire on -- a hair above the ring round it,
+        # whose top it would otherwise share (and flicker against)
+        frustum(p, "PaleAlloy", 8, r * 1.05, r * 1.05, H + 2, H + 3.1, x, y)
         return
     rh = roof_h if roof_h is not None else r * 2.4
     frustum(p, "CitadelViolet", 8, r * 0.9, 0, H + 3, H + 3 + rh, x, y)
@@ -644,9 +646,10 @@ def gate(p, cx, cy, width, height, depth=8.0, pylon=10.0):
         px = cx + s * (width / 2 + pylon / 2)
         box(p, "PaleAlloy", px, cy, (height + cap_top) / 2, pylon + 1, depth + 1, cap_top - height)
         frustum(p, "PaleAlloy", 4, pylon * 0.72, 0, cap_top, cap_top + pylon * 1.6, px, cy, rot=45)
-    # A touch shallower than the pylons, so its faces are not coplanar with
-    # theirs (they z-fought: a flickering dark band under each capital).
-    box(p, "PaleAlloy", cx, cy, height - 2, 2 * span, depth - 0.6, 4)
+    # A touch shallower than the pylons AND ending a stud inside them, so none
+    # of its faces is coplanar with theirs. Flush, they z-fought: a flickering
+    # dark band under each capital, front and back first, then the ends.
+    box(p, "PaleAlloy", cx, cy, height - 2, 2 * span - 2, depth - 0.6, 4)
     box(p, "AzureDim", cx, cy, height - 4.3, width, depth * 0.5, 0.6)
     tilt = 16.0
     L = span / math.cos(math.radians(tilt))
@@ -1272,13 +1275,28 @@ def vault_door(p, x, y, z, R=8.0, fixture=False):
     if fixture:
         with as_fixture(p, "VAULT", xf(x, y, z)):
             with fixture_part(p, "Door"):
-                _vault_door(p, x, y, z, R)
+                _vault_door(p, x, y, z, R, flush=True)
     else:
         _vault_door(p, x, y, z, R)
 
 
-def _vault_door(p, x, y, z, R):
-    frustum(p, "DeepAlloy", 12, R, R, 0, 1.2, M=xf(x, y, z, rx=90))
+def vault_door_rim(R):
+    """How far a vault door reaches from its axis: its gold ring's outer edge
+    (torus radius R + 0.3, square tube 0.55 turned 45 degrees)."""
+    return R + 0.3 + 0.55 * math.cos(math.radians(45))
+
+
+VAULT_SIDES = 24   # the treasury door's plate and its tunnel share this, and their phase
+
+
+def _vault_door(p, x, y, z, R, flush=False):
+    if flush:
+        # A full plate out to the gold rim, 24-sided and in phase with the
+        # tunnel behind it, so a closed door leaves only a hairline seam.
+        frustum(p, "DeepAlloy", VAULT_SIDES, vault_door_rim(R), vault_door_rim(R), 0, 1.2,
+                M=xf(x, y, z, rx=90))
+    else:
+        frustum(p, "DeepAlloy", 12, R, R, 0, 1.2, M=xf(x, y, z, rx=90))
     frustum(p, "PaleAlloy", 12, R * 0.7, R * 0.7, 1.2, 1.6, M=xf(x, y, z, rx=90))
     torus(p, "SunGold", R + 0.3, 0.55, x, y - 1.2, z, n=16, rx=90)
     for k in range(4):
@@ -1286,16 +1304,70 @@ def _vault_door(p, x, y, z, R):
     crystal(p, "SunGold", x, y - 2.0, z, 0.9, 0.9, 0.9)
 
 
+def half_barrel(p, mat, x0, x1, cy, cz, r, n=8):
+    """Half a cylinder lying along X: flat side down at z = cz, curved top of
+    radius r, from x0 to x1. A chest's rounded lid."""
+    arc = [(cy + r * math.cos(math.pi * i / n), cz + r * math.sin(math.pi * i / n)) for i in range(n + 1)]
+    verts = [(x0, y_, z_) for y_, z_ in arc] + [(x1, y_, z_) for y_, z_ in arc]
+    m = n + 1
+    faces = [[i, i + 1, m + i + 1, m + i] for i in range(n)]
+    faces.append([0, m, 2 * m - 1, m - 1])                 # the flat underside
+    faces.append(list(reversed(range(m))))                 # the x0 end
+    faces.append(list(range(m, 2 * m)))                    # the x1 end
+    p.add(verts, faces, mat, Matrix.Identity(4))
+
+
+def hinge_knuckle(p, x, y, z, length, r=0.13):
+    """A hinge barrel lying along X, centred at (x, y, z)."""
+    frustum(p, "SunGold", 8, r, r, -length / 2, length / 2, M=xf(x, y, z, ry=90))
+
+
+CHEST_HINGE = (0.0, 1.1, 1.6)   # the lid's hinge line: back top edge, along X
+
+
 def chest(p, x, y, rz=0.0):
-    """A treasure chest -- a FIXTURE (convention 7): body and lid are separate
-    meshes so the lid can swing open on its back edge. The lock faces -Y."""
+    """A treasure chest -- a FIXTURE (convention 7). Two meshes: a hollow body
+    with treasure inside, and a rounded lid that swings back on two real
+    hinges along CHEST_HINGE. The lock faces -Y.
+
+    Owner, 2026-09-23: "add slightly more detail to make the feeling of
+    opening them actually mean something" -- so opening one shows gold."""
+    hx, hy, hz = CHEST_HINGE
     with frame(p, xf(x, y, 0, rz)):
         with as_fixture(p, "CHEST", Matrix.Identity(4)):
             with fixture_part(p, "Body"):
-                box(p, "DeepAlloy", 0, 0, 0.8, 3.2, 2.0, 1.6)
-                box(p, "AzureNeon", 0, -1.05, 1.3, 0.6, 0.15, 0.6)
-            with fixture_part(p, "Lid", hinge=(0, 1.1, 1.6)):
-                box(p, "SunGold", 0, 0, 1.85, 3.4, 2.2, 0.5)
+                box(p, "DeepAlloy", 0, 0, 0.1, 3.5, 2.3, 0.2)             # plinth
+                box(p, "DeepAlloy", 0, -0.9, 0.9, 3.2, 0.2, 1.4)          # front wall
+                box(p, "DeepAlloy", 0, 0.9, 0.9, 3.2, 0.2, 1.4)           # back wall
+                for sx in (-1, 1):
+                    box(p, "DeepAlloy", sx * 1.5, 0, 0.9, 0.2, 1.6, 1.4)  # end walls
+                box(p, "VaultDark", 0, 0, 0.95, 2.8, 1.6, 0.1)            # the dark floor inside
+                for sx in (-1, 1):                                        # gold corner caps
+                    for sy in (-1, 1):
+                        box(p, "SunGold", sx * 1.58, sy * 0.98, 0.93, 0.22, 0.22, 1.46)
+                box(p, "SunGold", 0, -1.03, 1.52, 3.0, 0.06, 0.12)        # rim trim, front
+                box(p, "SunGold", 0, -1.04, 1.28, 0.7, 0.08, 0.62)        # lock plate
+                box(p, "AzureNeon", 0, -1.09, 1.22, 0.14, 0.04, 0.3)      # keyhole
+                # the treasure: stacked coins, nuggets and a gem
+                for cx_, cy_, n_ in ((-0.8, -0.2, 3), (-0.2, 0.3, 2), (0.6, -0.1, 4), (1.0, 0.4, 1)):
+                    for k in range(n_):
+                        box(p, "SunGold", cx_ + 0.03 * k, cy_, 1.06 + 0.12 * k, 0.5, 0.5, 0.1, rz=17 * k)
+                for cx_, cy_ in ((-0.3, -0.4), (0.2, 0.1), (-1.0, 0.4)):
+                    crystal(p, "SunGold", cx_, cy_, 1.12, 0.3, 0.3, 0.12, n=5)
+                crystal(p, "AzureNeon", 0.1, 0.2, 1.3, 0.28, 0.6, 0.3, n=6)
+                for sx in (-1, 1):                                        # hinge leaves and knuckles
+                    box(p, "SunGold", sx * 0.9, 1.03, 1.35, 0.6, 0.06, 0.45)
+                    for side in (-1, 1):
+                        hinge_knuckle(p, sx * 0.9 + side * 0.24, hy, hz, 0.18)
+            with fixture_part(p, "Lid", hinge=CHEST_HINGE):
+                box(p, "SunGold", 0, 0, 1.7, 3.4, 2.2, 0.2)               # rim
+                half_barrel(p, "DeepAlloy", -1.6, 1.6, 0, 1.8, 1.02)      # rounded top
+                for sx in (-1, 1):                                        # gold straps over it
+                    half_barrel(p, "SunGold", sx * 0.9 - 0.15, sx * 0.9 + 0.15, 0, 1.8, 1.07)
+                box(p, "SunGold", 0, -1.13, 1.62, 0.4, 0.08, 0.5)         # clasp over the lock
+                for sx in (-1, 1):                                        # hinge leaves and knuckles
+                    box(p, "SunGold", sx * 0.9, 1.13, 1.95, 0.3, 0.06, 0.5)
+                    hinge_knuckle(p, sx * 0.9, hy, hz, 0.28)
 
 
 def crystal_cluster(p, x, y, seed, scale=1.0):
@@ -1814,8 +1886,6 @@ def ramp(p, x, y, w, L, h, facing, mat="PaleAlloy"):
     v = [(-hw, 0, 0), (hw, 0, 0), (hw, L, 0), (-hw, L, 0), (hw, L, h), (-hw, L, h)]
     f = [(0, 3, 2, 1), (0, 1, 4, 5), (2, 3, 5, 4), (1, 2, 4), (0, 5, 3)]
     p.add(v, f, mat, xf(x, y, 0, rz))
-    for sx in (-1, 1):
-        box(p, "AzureDim", 0, 0, 0, 0.3, 0.3, 0.3)   # (no-op spacer kept tiny)
     with frame(p, xf(x, y, 0, rz)):
         for sx in (-1, 1):
             box(p, "AzureDim", sx * (hw - 0.3), L / 2, h / 2 * 0.5 + 0.2, 0.3, L, 0.3, rx=-math.degrees(math.atan2(h, L)))
@@ -2206,8 +2276,14 @@ def build_vault_turn():
     # open and slides back into the dark (FixtureCore.doorRecess), so the
     # tunnel must be wider than the door (7.85 to its gold rim) and deeper
     # than the slide.
+    door_r = 7.0
+    # The tunnel's corners on the door plate's, 0.11 wider: a closed door
+    # shows a hairline seam, and the tunnel's flats (r cos 7.5 deg) still clear
+    # the door's rim, so it slides in without touching.
+    tunnel_r = vault_door_rim(door_r) + 0.11
+    assert tunnel_r * math.cos(math.pi / VAULT_SIDES) > vault_door_rim(door_r), "the door must fit its tunnel"
     holed_block(p, "CitadelWhite", kx - 16, kx + 16, ky - 12, ky + 12, 1.5, 20,
-                cx=kx, cz=10.75, r=8.3, depth=12)
+                cx=kx, cz=10.75, r=tunnel_r, depth=12, n=VAULT_SIDES)
     torus(p, "SunGold", 6.2, 0.25, kx, ky - 12 + 11.7, 10.75, n=16, rx=90)  # a glint at the back
     box_span(p, "PaleAlloy", kx - 17, kx + 17, ky - 13, ky + 13, 20, 21.5)
     box_span(p, "CitadelWhite", kx - 12, kx + 12, ky - 8, ky + 8, 21.5, 24)
@@ -2215,7 +2291,7 @@ def build_vault_turn():
         box_span(p, "AzureDim", kx + sx * 16 - 0.2, kx + sx * 16 + 0.2, ky - 6, ky + 6, 5, 15)
     tower(p, kx - 16, ky - 12, 3.2, 22)
     tower(p, kx + 16, ky - 12, 3.2, 22)
-    vault_door(p, kx, ky - 12, 10.75, R=7.0, fixture=True)
+    vault_door(p, kx, ky - 12, 10.75, R=door_r, fixture=True)
     spire(p, kx, ky + 2, 3.8, CROWN_TOP, fins=False, z0=24)
     for x, rz in ((-28, 10), (-20, -6), (-12, 4)):
         chest(p, x, 10, rz=rz)
@@ -2591,7 +2667,8 @@ def cascade_tower(p, x, y, top=CROWN_TOP):
     tiers = [(24, 12.0), (50, 10.0), (76, 8.0), (100, 6.2), (122, 4.6)]
     for i, (z, r) in enumerate(tiers):
         frustum(p, "PaleAlloy", 12, r * 0.35, r, z - 2.4, z, x, y)
-        frustum(p, "SunGold", 12, r, r, z - 0.4, z, x, y)
+        # the gold lip stands a hair proud of its bowl, so their tops differ
+        frustum(p, "SunGold", 12, r, r, z - 0.4, z + 0.06, x, y)
         frustum(p, "SkyGlass", 12, r * 0.9, r * 0.9, z, z + 0.2, x, y)
         lower = tiers[i - 1] if i else (1.3, 14.0)
         frustum(p, "SkyGlass", 12, lower[1] * 0.82, r * 0.96, lower[0] + 0.2, z - 2.4, x, y)

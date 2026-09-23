@@ -291,6 +291,12 @@ at the back, as one closed shell so the lining faces inward. The door (radius
 `validate()` now also checks that everything grounded stands wholly on its
 deck (`ground_report`).
 
+**Chests** are a hollow body with treasure inside (gold coins, nuggets, a gem)
+and a rounded, strapped lid on two real hinges along `CHEST_HINGE`, the same
+line the lid pivots on in game. **The vault door** is a full plate out to its
+gold rim, seated in a tunnel 0.11 wider: closed, it shows only a hairline
+seam.
+
 The aviary's 15 birds circle the cage as one flock, their wings beating
 (separate `prop_bird_wing_*` meshes, `Wing` class). Every bird's full circle is
 proven clear of trees, bars and the other birds (`clear_bird_orbits`), which
