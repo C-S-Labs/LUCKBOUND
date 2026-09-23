@@ -371,6 +371,8 @@ export type ExpeditionPayload = {
 	Rarity: RarityKey,
 	Flavor: string,
 	Environment: Environment,
+	-- The scenario atmosphere this run drew (Content/Atmospheres), nil for the world's own.
+	Atmosphere: string?,
 	DurationSeconds: number,
 	RemainingSeconds: number,
 	ServerNow: number,

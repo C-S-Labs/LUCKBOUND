@@ -62,6 +62,8 @@ local Net = require(Root.Core.Net)
 local PortalRig = require(Root.Util.PortalRig)
 local PrebuiltLoader = require(Root.Util.PrebuiltLoader)
 local Worlds = require(Root.Content.Worlds)
+local Atmospheres = require(Root.Content.Atmospheres)
+local AmbienceCore = require(Root.Core.AmbienceCore)
 
 local ExpeditionSystem = {}
 
@@ -87,7 +89,36 @@ type Group = {
 	PartySize: number,
 	Members: { [number]: boolean },
 	Arrivals: number,
+	-- The scenario atmosphere this run drew (nil = the world's own air), and
+	-- the Environment it makes: the world's, overlaid.
+	AtmosphereId: string?,
+	Environment: any,
 }
+
+-- /atmosphere: nil draws from the seed; "BASE" forces the world's own air;
+-- a profile id forces that profile. Studio testing only (DebugSystem).
+local forcedAtmosphere: string? = nil
+
+local function atmosphereFor(worldId: string, seed: number): (string?, any)
+	local world = Worlds[worldId]
+	local set = Atmospheres[worldId]
+	local cfg = GameConfig.Ambience.Atmospheres
+	if not set or not cfg or not cfg.Enabled then
+		return nil, world.Environment
+	end
+	local id
+	if forcedAtmosphere == "BASE" then
+		id = nil
+	elseif forcedAtmosphere and set.Profiles[forcedAtmosphere] then
+		id = forcedAtmosphere
+	else
+		id = AmbienceCore.pickAtmosphere(seed, set, cfg.BaseWeight)
+	end
+	if not id then
+		return nil, world.Environment
+	end
+	return id, AmbienceCore.overlay(world.Environment, set.Profiles[id].Environment)
+end
 
 type Active = {
 	Group: Group,
@@ -409,7 +440,13 @@ local function newGroup(
 		PartySize = partySize,
 		Members = {},
 		Arrivals = 0,
+		AtmosphereId = nil,
+		Environment = world.Environment,
 	}
+	group.AtmosphereId, group.Environment = atmosphereFor(worldId, seed)
+	if group.AtmosphereId then
+		print(`[ExpeditionSystem] {worldId} seed {seed}: atmosphere {group.AtmosphereId}`)
+	end
 	table.insert(groups, group)
 	-- Chests, the vault, the forcefield, and the boss stand-in (§7.5). Handed
 	-- the group's own Members table, so whoever is on the map when something
@@ -465,8 +502,11 @@ local function placeMember(player: Player, group: Group): boolean
 		WorldId = group.WorldId,
 		Name = world.Name,
 		Rarity = world.Rarity,
-		Flavor = world.Flavor,
-		Environment = world.Environment,
+		Flavor = if group.AtmosphereId
+			then Atmospheres[group.WorldId].Profiles[group.AtmosphereId].Flavor
+			else world.Flavor,
+		Environment = group.Environment,
+		Atmosphere = group.AtmosphereId,
 		DurationSeconds = group.Duration,
 		RemainingSeconds = remaining,
 		ServerNow = os.time(),
@@ -1156,6 +1196,41 @@ function ExpeditionSystem.bindGatePrompt(): ()
 	prompt.Triggered:Connect(function(player)
 		ExpeditionSystem.requestEnter(player)
 	end)
+end
+
+--- /atmosphere support. `id` is a profile id, "BASE", or "RANDOM" (draw from
+--- the seed again). Applies to the NEXT expedition, and at once to the
+--- caller's current one if they are in it. -> ok, message
+function ExpeditionSystem.setAtmosphere(player: Player, id: string): (boolean, string)
+	id = string.upper(id)
+	local state = active[player.UserId]
+	local worldId = if state then state.Group.WorldId else "SKY_CITADEL"
+	local set = Atmospheres[worldId]
+	if id ~= "BASE" and id ~= "RANDOM" and not (set and set.Profiles[id]) then
+		local ids = {}
+		for key in (set and set.Profiles or {}) do
+			table.insert(ids, key)
+		end
+		table.sort(ids)
+		return false, "usage: /atmosphere <BASE | RANDOM | " .. table.concat(ids, " | ") .. ">"
+	end
+	forcedAtmosphere = if id == "RANDOM" then nil else id
+	if not state then
+		return true, `next expedition: atmosphere {id}`
+	end
+	local group = state.Group
+	group.AtmosphereId, group.Environment = atmosphereFor(group.WorldId, group.Seed)
+	for userId in group.Members do
+		local member = Players:GetPlayerByUserId(userId)
+		if member then
+			Net.get("Expedition_Atmosphere"):FireClient(member, {
+				Environment = group.Environment,
+				Atmosphere = group.AtmosphereId,
+				FloorY = group.FloorY,
+			})
+		end
+	end
+	return true, `atmosphere now {group.AtmosphereId or "BASE"} (and for the next expedition)`
 end
 
 return ExpeditionSystem

@@ -327,4 +327,60 @@ function AmbienceCore.validate(environment: any, label: string): { string }
 	return errors
 end
 
+
+-- Blocks that MERGE key by key when an atmosphere overrides an Environment;
+-- every other table (CloudSea, Canopy, Weather...) is a LIST and replaces whole.
+local MERGED_BLOCKS = { Atmosphere = true, Sky = true, Bloom = true, SunRays = true, Grade = true, Motes = true }
+
+--- A scenario atmosphere applied over a world's Environment. Scalars and
+--- colours replace; the blocks above merge key by key; lists replace whole;
+--- `false` removes a block. Neither input is changed.
+function AmbienceCore.overlay(base: any, profile: any): any
+	local out = {}
+	for k, v in base or {} do
+		out[k] = v
+	end
+	for k, v in profile or {} do
+		if v == false then
+			out[k] = nil
+		elseif MERGED_BLOCKS[k] and type(v) == "table" and type(out[k]) == "table" then
+			local merged = {}
+			for bk, bv in out[k] do
+				merged[bk] = bv
+			end
+			for bk, bv in v do
+				merged[bk] = bv
+			end
+			out[k] = merged
+		else
+			out[k] = v
+		end
+	end
+	return out
+end
+
+--- Which atmosphere a run draws from its seed: a profile id, or nil for the
+--- world's own. `baseWeight` is the world's own share against 1 per profile.
+--- Pure and deterministic: the same seed always draws the same air.
+function AmbienceCore.pickAtmosphere(seed: number, set: any, baseWeight: number): string?
+	if type(set) ~= "table" or type(set.Profiles) ~= "table" then
+		return nil
+	end
+	local ids = {}
+	for id in set.Profiles do
+		table.insert(ids, id)
+	end
+	table.sort(ids)
+	local total = baseWeight + #ids
+	if total <= 0 then
+		return nil
+	end
+	local roll = ((math.floor(seed) % 2147483629) * 48271 + 11) % 2147483647
+	local pick = roll % total
+	if pick < baseWeight then
+		return nil
+	end
+	return ids[pick - baseWeight + 1]
+end
+
 return AmbienceCore

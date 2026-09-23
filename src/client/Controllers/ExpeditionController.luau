@@ -132,13 +132,26 @@ function ExpeditionController.init(): ()
 		notify()
 		print(
 			string.format(
-				"[Expedition] entered %s -- seed %d, %s, %ds",
+				"[Expedition] entered %s (%s) -- seed %d, %s, %ds",
 				payload.Name,
+				payload.Atmosphere or "base air",
 				payload.Seed,
 				payload.MapSummary,
 				payload.DurationSeconds
 			)
 		)
+	end)
+
+	-- /atmosphere in Studio: the run's air replaced while it is running.
+	Net.get("Expedition_Atmosphere").OnClientEvent:Connect(function(payload)
+		if not active or type(payload) ~= "table" then
+			return
+		end
+		ChunkLoader.applyEnvironment(Lighting, payload.Environment)
+		AmbienceController.enter(payload.Environment, payload.FloorY or active.FloorY or 0)
+		active.Environment = payload.Environment
+		active.Atmosphere = payload.Atmosphere
+		print(`[Expedition] atmosphere -> {payload.Atmosphere or "BASE"}`)
 	end)
 
 	Net.get("Expedition_TimerSync").OnClientEvent:Connect(function(payload)

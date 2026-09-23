@@ -1458,8 +1458,8 @@ do
 	-- arena on every seed without anything hard-coding it.
 	do
 		local scLib = ChunkCore.libraryFor(Chunks, "SKY_CITADEL")
-		check("Sky Citadel has one ENTRY and one BOSS",
-			scLib.ENTRY and #scLib.ENTRY == 1 and scLib.BOSS and #scLib.BOSS == 1)
+		check("Sky Citadel has one ENTRY and two BOSS arenas (Crown Spire, Prism Arena)",
+			scLib.ENTRY and #scLib.ENTRY == 1 and scLib.BOSS and #scLib.BOSS == 2)
 		check("the Crown Spire arena only accepts an ASCENT approach",
 			Chunks.SC_BOSS_CLEARING.Sockets[1].Kind == "ASCENT")
 
@@ -1493,8 +1493,8 @@ do
 			#ascentProviders == 2 and ascentProviders[1] == "SC_SPIRE_COURT"
 				and ascentProviders[2] == "SC_SPIRE_COURT_B",
 			table.concat(ascentProviders, ", "))
-		check("Sky Citadel has its SIDE pocket (Blueprint §6)",
-			scLib.SIDE and #scLib.SIDE == 1 and scLib.SIDE[1].Id == "SC_SIDE_LOOKOUT")
+		check("Sky Citadel has its SIDE pockets (Blueprint §6)",
+			scLib.SIDE and #scLib.SIDE == 4 and Chunks.SC_SIDE_LOOKOUT.Role == "SIDE")
 		local scCount = 0
 		for _, c in Chunks do
 			if c.WorldId == "SKY_CITADEL" then scCount += 1 end
@@ -1669,7 +1669,10 @@ do
 			if c.WorldId == "SKY_CITADEL" then
 				scIds += 1
 				if not AssetManifest.isUploaded(c.AssetKey) then
-					notUploaded = notUploaded or id
+					local e = AssetManifest.ENTRIES[c.AssetKey]
+					if not (e and e.Status == "PLACEHOLDER") then
+						notUploaded = notUploaded or id
+					end
 				end
 				-- ChunkLoader sets mesh.Size = (SizeX, SizeY, SizeZ) outright,
 				-- so a piece whose declared box is not the delivered box is
@@ -1680,8 +1683,9 @@ do
 				end
 			end
 		end
-		check("Sky Citadel declares 22 pieces", scIds == 22, tostring(scIds))
-		check("every Sky Citadel piece resolves to an uploaded mesh",
+		check("Sky Citadel declares 36 pieces", scIds == 36, tostring(scIds))
+		-- The 14 of 2026-09-23 build as blockout until the 36-piece upload.
+		check("every Sky Citadel piece resolves to an uploaded mesh or a declared placeholder",
 			notUploaded == nil, notUploaded)
 		check("every Sky Citadel piece is declared at the delivered 256 cubed",
 			wrongSize == nil, wrongSize)
@@ -5625,6 +5629,37 @@ do
 			Attach = 1, Hinge = { 0, 0, 0 } } } } } }
 	local okW = Schema.validateProps(badWing, Chunks, Worlds)
 	check("a wing on anything but a bird is a boot error", not okW)
+end
+
+-- === Scenario atmospheres ===========================================
+group("Scenario atmospheres: one per run, from the seed")
+do
+	local Atmospheres = __require("Atmospheres")
+	local set = Atmospheres.SKY_CITADEL
+	check("Sky Citadel ships its seven scenario atmospheres", set ~= nil and set.Profiles.SIEGE ~= nil
+		and set.Profiles.AETHER_SURGE ~= nil)
+	local seen, stable = {}, true
+	for seed = 1, 900 do
+		local id = AmbienceCore.pickAtmosphere(seed, set, 2)
+		seen[id or "BASE"] = true
+		if AmbienceCore.pickAtmosphere(seed, set, 2) ~= id then stable = false end
+	end
+	local n = 0
+	for _ in seen do n += 1 end
+	check("every atmosphere (and the plain air) turns up across seeds", n == 8, tostring(n))
+	check("the same seed always draws the same air", stable)
+	local base = { Brightness = 2, Atmosphere = { Density = 0.3, Haze = 1 }, CloudSea = { 1, 2 }, Motes = { Rate = 1 } }
+	local o = AmbienceCore.overlay(base, { Brightness = 3, Atmosphere = { Haze = 2 }, CloudSea = { 9 }, Motes = false })
+	check("an atmosphere replaces scalars, merges blocks, replaces lists, removes on false",
+		o.Brightness == 3 and o.Atmosphere.Density == 0.3 and o.Atmosphere.Haze == 2 and #o.CloudSea == 1
+		and o.Motes == nil and base.Atmosphere.Haze == 1)
+	local bad = nil
+	local World = Worlds.SKY_CITADEL
+	for id, prof in set.Profiles do
+		local errs = AmbienceCore.validate(AmbienceCore.overlay(World.Environment, prof.Environment), id)
+		if #errs > 0 then bad = bad or (id .. ": " .. errs[1]) end
+	end
+	check("every atmosphere over Sky Citadel's air is a valid Environment", bad == nil, bad)
 end
 
 -- === summary ========================================================
