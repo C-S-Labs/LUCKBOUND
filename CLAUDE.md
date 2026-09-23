@@ -35,7 +35,7 @@ declaration that is unread and NOT in that register is a defect, not a
 decision.** Add a row before adding a reserved field.
 
 Then `docs/` has the rest: `MODULAR_MAPS.md`, `CHUNK_AUTHORING.md`,
-`TESTING.md`, `ART_DIRECTION.md`, `biomes/SKY_CITADEL.md`,
+`TESTING.md`, `ART_DIRECTION.md`, `biomes/SKY_CITADEL.md`, `WEAPONS.md`,
 `BLUEPRINT_RECONCILIATION.md`, `TOOLCHAIN_ACCESS.md`, `PLAYER_UI.md`,
 `PLAYER_ABILITIES.md`, `EVENTS.md`.
 

@@ -33,6 +33,44 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 63 — 2026-09-23 — Weapons: the contract and the build prompt
+
+**Tests:** 790 passing.
+
+### Done
+- **`docs/WEAPONS.md`** (new, canonical). The weapon types were in no repo
+  doc, so the owner chose them. It records:
+  - **Types:** Sword, Greatsword, Dagger, Hammer, Staff, Bow, Gauntlets
+    (a pair).
+  - **Per type:** 2 Common, 2 Uncommon, 1 Rare, 1 Epic. Legendary and Mythic
+    are designed one by one, later, and may span several meshes.
+  - **A rarity ladder with checkable rules:** triangle targets of 1.2k, 2k,
+    3.5k and 6k; a hard cap of 10k per mesh; must-have and must-not-have per
+    tier; and tricks reserved for Legendary.
+  - **Rig rule** (owner: "all pieces that could possibly be animated should
+    be modular"): one skinned mesh per weapon, and every movable piece its own
+    closed shell and bone, with the pivot at its hinge and rigid weights. A
+    fixed bone vocabulary per type, and non-deforming `Fx_` sockets for
+    effects.
+  - **Orientation, names, paths and export settings.**
+    `assets/{source,export}/items/weapons/sky_citadel/`, one FBX per type.
+- **`docs/SKY_CITADEL_WEAPONS_BLENDER_PROMPT.md`**: the copy-paste prompt
+  for a terminal Claude Code session with the Blender MCP.
+  - Creative brief from the citadel's motifs; build via a generator script,
+    like the kit.
+  - Validation that refuses export on any breach, and re-import verification.
+  - A manifest of names and future Ids.
+  - Checkpoints: plan first, then stop after the swords.
+  - Forbidden: touching any other file, Roblox, animations, Legendary or
+    Mythic, and commits.
+
+### Next
+1. The owner runs the prompt locally, and reviews the swords in Blender.
+2. When the FBXs are imported, wire the weapons into content (not started;
+   combat and items are still §7-excluded beyond §7.5).
+
+---
+
 ## Session 62 — 2026-09-23 — Fourth re-import wired in
 
 **Tests:** 790 passing.
