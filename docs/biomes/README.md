@@ -64,7 +64,7 @@ schema.
 | `Atmosphere` | the sky's gradient and haze. **Owns the haze:** Roblox ignores `FogStart`/`FogEnd` while one exists |
 | `Sky` | sun and moon size, star count |
 | `Bloom`, `SunRays`, `Grade` | post-effects: glow, god rays, colour grade |
-| `CloudSea` | layers of drifting cloud below the map, wrapped round the camera so they never run out. Each cloud is a cluster — a lobed, shaded base with lit billows, `Tufts` on the billows, and optionally a soft `Rim` shell — of one of three kinds (`Mix`: `Cumulus`, `Stratus`, `Wisp`), each turned its own way and tone-jittered. **`CloudCeiling` is required with it:** studs below the walk plane no cloud may rise above — set it below the kit's deepest keel so clouds never touch the map |
+| `CloudSea` | layers of drifting cloud below the map, wrapped round the camera so they never run out. Each cloud is a cluster — a flat, lobed, shaded base with squashed lit billows and `Tufts` heaped on top — of one of three kinds (`Mix`: `Cumulus`, `Stratus`, `Wisp`), each turned its own way and tone-jittered. **Keep clouds opaque** (`Transparency` ≈ 0): see-through clouds show every inner shape and read as bubbles; the Atmosphere's haze supplies the softness. `Material` picks the finish from `AmbienceCore.CLOUD_MATERIALS`. **`CloudCeiling` is required with it:** studs below the walk plane no cloud may rise above — set it below the kit's deepest keel so clouds never touch the map |
 | `Motes` | faint particles on the air around the camera |
 
 **The world owns the scene.** On entry every sky, atmosphere and post-effect

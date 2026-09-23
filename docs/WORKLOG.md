@@ -35,7 +35,7 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ## Session 52 — 2026-09-23 — Clouds with shape; scenery separation becomes a rule
 
-**Tests:** 720 passing (was 710).
+**Tests:** 723 passing (was 710).
 
 **First look at the ambience (owner walk):** sunrise and the sea read well; the
 clouds looked like flat discs. Each was a single ellipsoid.
@@ -70,8 +70,18 @@ no clean oval outline), `Tufts` on each billow (the cauliflower texture), an
 optional soft `Rim` shell on high graphics, per-piece tone jitter, 2–4
 overlapping wisp streaks. Far layers now move at `FarLayerHz` (20) instead of
 every frame, which pays for it. Measured: ~670 parts high, ~200 Automatic, ~80
-low; a test holds Automatic under 400. **Sky Citadel's look is done** until the
-scenery re-export.
+low; a test holds Automatic under 400.
+
+**Then: "are we blowing bubbles or making clouds"** (owner's partner, fair).
+The bubble read came from translucency — every inner ellipsoid showed through
+the one in front — plus the `Rim` shell (a translucent dome, literally a
+bubble) and near-spherical pieces. Fixed: near and middle layers **opaque**
+(the sunrise Atmosphere's haze supplies distance softness), `Rim` removed
+entirely, bases flattened so cumulus heap upward from a flat bottom, billows
+and tufts squashed. A per-layer `Material` knob (matte options only; Glass and
+Neon refused) lets the finish be tried in Studio without code. Tests assert
+heaped clouds are solid and flat-bottomed. **Sky Citadel's look is done** until
+the scenery re-export.
 
 **Next:** the Sky Citadel re-export. The first step is ours: change
 `build_sky_citadel_kit.py` to build props as separate `prop_*` objects, gather

@@ -73,9 +73,12 @@ export type CloudLayer = {
 	Shade: Color3?, -- undersides; defaults to Color
 	Billows: number?, -- puffs heaped on a cumulus at full quality; 0 = flat clouds
 	Tufts: number?, -- small puffs on each billow's top at full quality (the cauliflower texture)
-	Rim: boolean?, -- a faint oversized shell that softens each cloud's edge; high graphics only
+	-- Surface finish, one of AmbienceCore.CLOUD_MATERIALS; defaults to SmoothPlastic.
+	Material: string?,
 	-- Relative weights of the three cloud kinds; defaults to mostly cumulus.
 	Mix: { Cumulus: number?, Stratus: number?, Wisp: number? }?,
+	-- Keep near 0. Softness comes from the Atmosphere's haze over distance;
+	-- see-through clouds show their inner shapes and read as bubbles.
 	Transparency: number,
 }
 

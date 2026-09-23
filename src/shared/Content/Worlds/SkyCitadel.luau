@@ -87,11 +87,13 @@ return {
 				Thickness = 0.3,
 				Billows = 6,
 				Tufts = 3,
-				Rim = true,
 				Mix = { Cumulus = 0.7, Stratus = 0.2, Wisp = 0.1 },
 				Color = Color3.fromRGB(255, 238, 228), -- sunlit tops, faintly gold
 				Shade = Color3.fromRGB(196, 176, 206), -- lavender undersides
-				Transparency = 0.08,
+				-- OPAQUE. Translucent clouds showed every inner shape through
+				-- the one in front and read as bubbles; the sunrise haze
+				-- softens distance instead.
+				Transparency = 0,
 			},
 			-- MIDDLE: broad banks, flatter and cooler, drifting a little across.
 			{
@@ -105,11 +107,10 @@ return {
 				Thickness = 0.22,
 				Billows = 4,
 				Tufts = 1,
-				Rim = true,
 				Mix = { Cumulus = 0.35, Stratus = 0.5, Wisp = 0.15 },
 				Color = Color3.fromRGB(236, 214, 226),
 				Shade = Color3.fromRGB(150, 146, 196),
-				Transparency = 0.05,
+				Transparency = 0,
 			},
 			-- DEEP: long pale streaks far below, almost still. Depth, not detail.
 			{
@@ -125,7 +126,7 @@ return {
 				Mix = { Stratus = 0.3, Wisp = 0.7 },
 				Color = Color3.fromRGB(206, 196, 232),
 				Shade = Color3.fromRGB(140, 140, 190),
-				Transparency = 0.2,
+				Transparency = 0.1,
 			},
 		},
 		-- Sparse, slow, sunlit motes: high-altitude air catching the light.

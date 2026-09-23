@@ -161,7 +161,7 @@ local function buildCloudSea(env: any, floorY: number, scale: number, folder: In
 				part.CanQuery = false
 				part.CanTouch = false
 				part.CastShadow = false
-				part.Material = Enum.Material.SmoothPlastic
+				part.Material = (Enum.Material :: any)[def.Material or "SmoothPlastic"]
 				-- Lit billows take the layer's colour, the base its underside
 				-- shade: that one gradient is most of what reads as volume.
 				part.Color = def.Color:Lerp(shade, piece.Shade)
