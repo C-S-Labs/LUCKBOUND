@@ -383,7 +383,7 @@ function ChunkCore.assemble(
 		return c.Weight
 	end, nextNumber)
 	assert(boss, "no boss chunk could be picked")
-	local bossPlacement = ChunkCore.placeAgainst(boss, open, options.PathLength + 1)
+	local bossPlacement, bossArrived = ChunkCore.placeAgainst(boss, open, options.PathLength + 1)
 	if not bossPlacement then
 		return false,
 			`boss chunk '{boss.Id}' cannot attach to a '{open.Kind}' socket -- the path must end on a socket the arena accepts`
@@ -392,6 +392,7 @@ function ChunkCore.assemble(
 		return false, "boss arena collides with the path"
 	end
 	record(bossPlacement, boss)
+	consumedBy[bossPlacement][(bossArrived :: any).Id] = true
 
 	if options.IncludeSide and byRole.SIDE and #byRole.SIDE > 0 then
 		local spares = {}
@@ -445,6 +446,19 @@ function ChunkCore.assemble(
 	--
 	-- A spur never takes a socket Kind the arena accepts -- that Kind is
 	-- reserved for the approach, and spending it here would strand the boss.
+	--
+	-- Nor may a spur take a PIECE with such a socket (a gate court): entered
+	-- from the side, its arena mouth is left facing the sky, and the cap pass
+	-- rightly never caps an arena Kind. That shipped once (Spire Court B on a
+	-- branch, 2026-09-23).
+	local function hasBossKind(chunk: any): boolean
+		for _, s in chunk.Sockets do
+			if isBossKind(s.Kind) then
+				return true
+			end
+		end
+		return false
+	end
 	local branchLength = options.BranchLength or 0
 	if branchLength > 0 and #middle > 0 then
 		local frontier = {}
@@ -471,7 +485,7 @@ function ChunkCore.assemble(
 					local c = WeightedRandom.pick(middle, function(x)
 						return x.Weight
 					end, nextNumber)
-					if c and allowed(c) and c.Id ~= fromC.Id then
+					if c and allowed(c) and c.Id ~= fromC.Id and not hasBossKind(c) then
 						local p, arrived = ChunkCore.placeAgainst(c, at, branchIndex)
 						if p and not collides(p, c) then
 							record(p, c)
@@ -539,6 +553,19 @@ function ChunkCore.assemble(
 			if not capped then
 				return false,
 					`socket '{spare.Socket.Id}' on '{spare.Chunk.Id}' opens onto nothing and no CAP chunk fits there`
+			end
+		end
+	end
+
+	-- The promise, checked rather than assumed: in a capped world, no mouth of
+	-- any placed piece is left open. Failing here costs one retry on another
+	-- seed; passing it silently cost a walkway into the abyss.
+	if caps and #caps > 0 then
+		for _, p in placed do
+			for _, s in chunks[p.ChunkId].Sockets do
+				if not consumedBy[p][s.Id] then
+					return false, `socket '{s.Id}' on '{p.ChunkId}' was left open onto nothing`
+				end
 			end
 		end
 	end
