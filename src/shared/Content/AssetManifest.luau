@@ -146,7 +146,7 @@ local ENTRIES: { [string]: AssetEntry } = {
 		Notes = "The gatehouse pier: a skyway under an arch between two turrets.",
 	},
 	SC_CHUNK_PATH_SKYPORT = {
-		AssetId = "rbxassetid://129824471904377",
+		AssetId = "rbxassetid://97823485530679",
 		Status = "UPLOADED",
 		Source = "assets/rbxm/chunks/sky_citadel/SC_STRUCTURE.rbxmx",
 		Notes = "A plank pier with a dock islet off it: hazard pad, crane, a moored skiff.",
@@ -176,7 +176,7 @@ local ENTRIES: { [string]: AssetEntry } = {
 		Notes = "THE INTERSECTION.",
 	},
 	SC_CHUNK_PATH_BEND = {
-		AssetId = "rbxassetid://130182514069927",
+		AssetId = "rbxassetid://103830108646516",
 		Status = "UPLOADED",
 		Source = "assets/rbxm/chunks/sky_citadel/SC_STRUCTURE.rbxmx",
 		Notes = "Turns right round the Spired Keep.",
@@ -188,13 +188,13 @@ local ENTRIES: { [string]: AssetEntry } = {
 		Notes = "Turns left on a dark engine-deck, the lighthouse on its own islet.",
 	},
 	SC_CHUNK_VAULT_TURN = {
-		AssetId = "rbxassetid://97462335999053",
+		AssetId = "rbxassetid://83599782664535",
 		Status = "UPLOADED",
 		Source = "assets/rbxm/chunks/sky_citadel/SC_STRUCTURE.rbxmx",
 		Notes = "The treasury, passed THROUGH on a right turn.",
 	},
 	SC_CHUNK_AETHER_SPRINGS = {
-		AssetId = "rbxassetid://102061616688369",
+		AssetId = "rbxassetid://98664852040715",
 		Status = "UPLOADED",
 		Source = "assets/rbxm/chunks/sky_citadel/SC_STRUCTURE.rbxmx",
 		Notes = "Terraced pools and the Cascade Tower, water falling off the east rim; turns left.",
@@ -206,7 +206,7 @@ local ENTRIES: { [string]: AssetEntry } = {
 		Notes = "The hanging gardens: three islets, the Sky Tree, a pool, a gazebo.",
 	},
 	SC_CHUNK_OBSERVATORY = {
-		AssetId = "rbxassetid://91126473338423",
+		AssetId = "rbxassetid://137275239773001",
 		Status = "UPLOADED",
 		Source = "assets/rbxm/chunks/sky_citadel/SC_STRUCTURE.rbxmx",
 		Notes = "A night-dark deck of stars: dome and mast, an orrery, dishes on a raised deck.",
@@ -224,13 +224,13 @@ local ENTRIES: { [string]: AssetEntry } = {
 		Notes = "A roofed hall of shelves and ribbed vaults, floating tomes, the clock tower.",
 	},
 	SC_CHUNK_SPIRE_COURT = {
-		AssetId = "rbxassetid://75112635006302",
+		AssetId = "rbxassetid://73274586569303",
 		Status = "UPLOADED",
 		Source = "assets/rbxm/chunks/sky_citadel/SC_STRUCTURE.rbxmx",
 		Notes = "Gate-court: the Sky Fountain and the Ascent Gate.",
 	},
 	SC_CHUNK_SPIRE_COURT_B = {
-		AssetId = "rbxassetid://130512313419396",
+		AssetId = "rbxassetid://133454898065149",
 		Status = "UPLOADED",
 		Source = "assets/rbxm/chunks/sky_citadel/SC_STRUCTURE.rbxmx",
 		Notes = "Gate-court, rare: the Hall of Winds and its Moon Gate.",

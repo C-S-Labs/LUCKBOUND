@@ -33,6 +33,26 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 62 — 2026-09-23 — Fourth re-import wired in
+
+**Tests:** 790 passing.
+
+### Done
+- The owner's re-import of the session-61 export is wired in: new
+  `SC_STRUCTURE.rbxmx` and `SC_PROP_LIBRARY.rbxmx`.
+- Structure ids changed for exactly the seven edited pieces: aether_springs,
+  observatory, path_bend, path_skyport, spire_court, spire_court_b,
+  vault_turn.
+- In the library, only the chest body, chest lid and vault door changed.
+
+### Next
+- A copy-paste prompt for weapon creation in Blender (MCP, owner-run): 6 per
+  weapon type, Common to Epic.
+- **The weapon types are not in any repo doc.** Only the `Weapon` slot exists,
+  plus "sword" as an example. Asked the owner for the list.
+
+---
+
 ## Session 61 — 2026-09-23 — Seamless vault, real chests, a stray-cube and flicker sweep
 
 **Tests:** 790 passing.
