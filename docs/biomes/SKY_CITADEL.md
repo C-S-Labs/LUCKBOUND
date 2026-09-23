@@ -250,6 +250,34 @@ our side, exactly as Verdant Valley arrived. The files are kept in
 `Content/AssetManifest.luau` are the load route, and `ChunkLoader` calls
 `CreateMeshPartAsync` on them.
 
+**Re-imported the same day with the scenery split out** (`CHUNK_AUTHORING.md`
+convention 6). The generator now writes two FBXs, and the owner imported each
+once:
+- `SC_STRUCTURE.rbxmx`: one Model of 22 structure-only MeshParts, whose ids
+  replaced the originals in the manifest.
+- `assets/rbxm/props/SC_PROP_LIBRARY.rbxmx`: 22 prop kinds.
+
+168 placements of those props live in `Content/Props/SkyCitadel.luau`. A check
+of the generator confirms that the structure geometry is vertex-for-vertex the
+same as the saved `.blend`, so the scenery split changed nothing a player walks
+on.
+
+**Props and their motion:**
+
+| Prop | Motion |
+|---|---|
+| crystal, pylon, tome | Hover |
+| beacon, lintel | Float |
+| hoop | Roll: slow, in its own plane only |
+| keel ring | Spin |
+| skiff | Moored |
+| debris | Tumble |
+| bird | Bird |
+
+The aviary's 15 birds circle the cage as one flock. Every bird's full circle is
+proven clear of trees, bars and the other birds (`clear_bird_orbits`), which
+lifted two birds, by 1 and 11 studs.
+
 Two numbers were **read off the delivered meshes rather than trusted**:
 
 - every piece measures exactly 256³, which is what the content declares and

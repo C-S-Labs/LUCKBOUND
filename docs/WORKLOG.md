@@ -33,6 +33,54 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 54 — 2026-09-23 — Sky Citadel re-imported; props live, each moving like what it is
+
+**Tests:** 753 passing (was 739).
+
+### Done
+- **Owner re-imported Sky Citadel as two files**, one import each:
+  - `SC_STRUCTURE.rbxmx`: 22 MeshParts, all exactly 256³. It now lives in
+    `assets/rbxm/chunks/sky_citadel/` and replaces the 22 per-piece files.
+    The manifest's 22 `SC_CHUNK_*` ids were swapped to the new meshes.
+  - `SC_PROP_LIBRARY.rbxmx`: 22 MeshParts named `prop_*`, in
+    `assets/rbxm/props/`.
+  - Every placement's Size matches its library mesh's proportions (checked),
+    so nothing is drawn squashed.
+- **The imported structure is vertex-for-vertex the saved `.blend`**, checked
+  after the generator changes below, so no re-import is needed for them.
+- **Motion rebuilt so each prop moves like what it is** (owner: hoops must
+  not sway; crystals must not stretch):
+  - `PropCore.motion` returns lift, turn, tilt and orbit, with no size term.
+  - Bob and spin are about true vertical; tilt is about the prop's own axes.
+  - Hoops only roll in their own plane (120 s per turn).
+  - Keel rings only spin.
+  - Crystals, pylons and tomes hover.
+  - The skiff gets a new `Moored` class: slight rock at the dock.
+  - Birds circle the aviary centre as one rigid flock, nose first and banked,
+    instead of each looping 16 studs round its own spot, which would have
+    gone through the bars.
+- **Generator: `clear_bird_orbits`** proves each bird's full circle clear, bob
+  included, of solids, other floats and other birds, and keeps caged birds
+  inside the dome. It runs after `finish()` so the beacon placement doesn't
+  reshuffle. Two birds were lifted, by 1 and 11 studs. Only
+  `Content/Props/SkyCitadel.luau` was regenerated; the FBXs are unchanged.
+- `Ambience.Props.Enabled = true`.
+
+### Decisions made
+- Birds share one orbit angle (no per-bird phase). That rigid flock is what
+  makes clear-at-rest mean clear-forever. Bird bob (0.5) stays at or under the
+  generator's proven clearance (0.6); a test pins it.
+
+### Stopped at
+Props live, unwalked. Owner to run `TESTING.md` Test S.
+
+### Next
+1. Walk Test S. If props sit right but face wrong, or birds fly backwards, the
+   importer turn (`fix` in `PropController`) is the one line to look at.
+2. Then the next biome kit, following convention 6 from the start.
+
+---
+
 ## Session 53 — 2026-09-23 — Scenery split out of Sky Citadel; import pipeline ready
 
 **Tests:** 739 passing (was 725).

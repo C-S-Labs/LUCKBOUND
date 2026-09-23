@@ -854,25 +854,29 @@ local GameConfig = {
 		-- AMBIENT SCENERY (CHUNK_AUTHORING.md convention 6): the props a kit
 		-- ships apart from its pieces, placed and animated on each client.
 		Props = {
-			-- OFF until a world's re-exported structure is live. The old meshes
-			-- still have their floating props baked in, so drawing the separate
-			-- ones too would show every crystal twice. Turned on in the same
-			-- change that swaps in the new structure asset ids.
-			Enabled = false,
+			-- On since Sky Citadel's structure-only meshes went live
+			-- (2026-09-23). A world still on meshes with its props baked in
+			-- must have no Content/Props file, or every crystal shows twice.
+			Enabled = true,
 			-- The quality scale a detail tier needs: tier 1 always, tier 2 on
 			-- anything above low graphics, tier 3 only on high.
 			TierMinQuality = { 0, 0.45, 0.8 },
 			-- Props farther than this from the camera hold still. Nobody can
 			-- see a crystal bob from a kilometre away, and moving it costs.
 			AnimateRadius = 700,
-			-- Motion per animation class. Periods in seconds, distances in
-			-- studs, Rock in radians.
-			Float = { Amplitude = 1.4, Period = 7 },
-			Hover = { Amplitude = 0.8, Period = 6, SpinPeriod = 26 },
-			Spin = { Period = 34 },
-			Roll = { Period = 48 },
-			Tumble = { Amplitude = 0.9, Period = 11, Rock = 0.25 },
-			Bird = { Radius = 16, Period = 14, Bob = 1.2 },
+			-- Motion per animation class (PropCore.ANIMS says which prop gets
+			-- which). Periods in seconds, distances in studs, angles in
+			-- radians. Deliberately small and slow: scenery, not spectacle.
+			Float = { Amplitude = 0.8, Period = 8 },
+			Hover = { Amplitude = 0.6, Period = 7, SpinPeriod = 40 },
+			Spin = { Period = 90 },
+			-- A hoop over the path only turns in its own plane, and slowly.
+			Roll = { Period = 120 },
+			Moored = { Amplitude = 0.35, Period = 6, Rock = 0.04 },
+			Tumble = { Amplitude = 0.7, Period = 11, Rock = 0.15 },
+			-- One lap of the flock. Bob must stay <= the generator's BIRD_BOB
+			-- (0.6), the clearance every bird's circle was proven with.
+			Bird = { Period = 36, Bob = 0.5, Bank = 0.25 },
 		},
 	},
 }

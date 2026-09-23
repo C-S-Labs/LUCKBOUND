@@ -212,9 +212,9 @@ def oriented(p, rz):
 # every device; 2 only above low graphics. The runtime reads both from the
 # generated placements -- see src/shared/Content/Props/.
 PROP_KINDS = {
-    "floating crystal": ("crystal", "Float", 2),
+    "floating crystal": ("crystal", "Hover", 2),
     "anti-grav pylon": ("pylon", "Hover", 1),
-    "skiff": ("skiff", "Float", 1),
+    "skiff": ("skiff", "Moored", 1),
     "hoop": ("hoop", "Roll", 1),
     "keel ring": ("keel_ring", "Spin", 1),
     "corner beacon": ("beacon", "Float", 1),
@@ -2238,6 +2238,66 @@ def scatter_floats(p, label, count, sampler, maker, tries=60, anchor=None):
     return placed
 
 
+# A bird does not hover at its spot: in the game it circles the vertical axis
+# through its piece's centre, at its own radius and height (PropCore "Bird"),
+# bobbing by up to BIRD_BOB. That whole circle must be as clear as the spot
+# was, so any bird whose circle would clip something is lifted until it does
+# not (or, failing that, dropped). Keep BIRD_BOB >= GameConfig.Ambience.Props.Bird.Bob.
+BIRD_BOB = 0.6
+BIRD_LIFT_MAX = 12.0
+
+
+def bird_orbit_clear(p, shape):
+    _, x, y, r, z0, z1 = shape
+    d, a0 = math.hypot(x, y), math.atan2(y, x)
+    others = [s for label, s in p.floats if label != "bird"]
+    for k in range(120):
+        a = a0 + k * math.tau / 120
+        probe = ("cyl", d * math.cos(a), d * math.sin(a), r, z0 - BIRD_BOB, z1 + BIRD_BOB)
+        if not shape_fits_tile(probe):
+            return False
+        if any(shapes_clash(probe, s) for _, s in p.solids) or any(shapes_clash(probe, s) for s in others):
+            return False
+        if any(shape_over_slab(probe, sl) for sl in p.slabs):
+            return False
+    return True
+
+
+def bird_flock_clear(p, i, shape):
+    """Every bird circles at the same angular speed, so the flock turns as one
+    rigid body: two birds clear of each other at rest stay clear all the way
+    round. Only their bobs differ, so the margin is both bobs."""
+    _, x, y, r, z0, z1 = shape
+    probe = ("cyl", x, y, r, z0 - 2 * BIRD_BOB, z1 + 2 * BIRD_BOB)
+    return not any(shapes_clash(probe, s) for j, (label, s) in enumerate(p.floats)
+                   if label == "bird" and j != i)
+
+
+def clear_bird_orbits(p, fits=lambda d, z1: True):
+    """`fits(radius, top)` is the piece's own limit on a lifted bird -- the
+    aviary's keeps a caged bird inside its dome."""
+    birds = [i for i, (label, _) in enumerate(p.floats) if label == "bird"]
+    props = [prop for prop in p.props if prop["label"] == "bird"]
+    assert len(birds) == len(props), "every bird float is one bird prop"
+    for i, prop in zip(birds, props):
+        _, x, y, r, z0, z1 = p.floats[i][1]
+        d = math.hypot(x, y)
+
+        def ok(lift):
+            moved = ("cyl", x, y, r, z0 + lift, z1 + lift)
+            return (z0 + lift - BIRD_BOB > 2.0 and fits(d, z1 + lift + BIRD_BOB)
+                    and bird_orbit_clear(p, moved) and bird_flock_clear(p, i, moved))
+
+        # nearest first: 0, +1, -1, +2, -2, ...
+        steps = [0.0] + [sgn * k for k in range(1, int(BIRD_LIFT_MAX) + 1) for sgn in (1.0, -1.0)]
+        lift = next((dz for dz in steps if ok(dz)), None)
+        if lift is None:
+            raise RuntimeError("%s: no clear orbit for the bird at (%.1f, %.1f)" % (p.name, x, y))
+        if lift:
+            p.floats[i] = ("bird", ("cyl", x, y, r, z0 + lift, z1 + lift))
+            prop["matrix"] = Matrix.Translation((0, 0, lift)) @ prop["matrix"]
+
+
 def bird(p, x, y, z, rz, mat):
     """A low-poly bird in flight: a glass body, two raised wings, a tail."""
     with frame(p, xf(x, y, z, rz)):
@@ -2556,6 +2616,10 @@ def build_path_aviary():
     scatter_floats(p, "bird", 10, inside_cage, bird)
     scatter_floats(p, "bird", 5, outside_cage, bird)
     finish(p)
+    # After finish(): the beacons were fitted round the birds' first spots, so
+    # moving a bird any earlier would reshuffle them. Raising one only ever
+    # clears space.
+    clear_bird_orbits(p, fits=lambda d, top: d >= RC or d + 3 <= math.sqrt(max(RC * RC - top * top, 0.0)))
     return p
 
 
