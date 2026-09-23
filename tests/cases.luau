@@ -5136,6 +5136,30 @@ do
 	for _, cl in AmbienceCore.layoutClouds(layer, 60, 1, lcg(7)) do highParts += #cl.Parts end
 	check("low graphics draws fewer cloud pieces than high", lowParts < highParts,
 		string.format("%d vs %d", lowParts, highParts))
+	-- THE CEILING. Owner walk: heaped cumulus climbed up through the islands.
+	-- Measured from the geometry: for every cloud in every layer, its tallest
+	-- piece's top must stay at or below CloudCeiling under the walk plane.
+	do
+		local env = Worlds.SKY_CITADEL.Environment
+		local worst, clear = -math.huge, true
+		for seed = 1, 40 do
+			for _, def in env.CloudSea do
+				for _, cl in AmbienceCore.layoutClouds(def, def.Count, 1, lcg(seed * 31 + def.Depth), env.CloudCeiling) do
+					for _, piece in cl.Parts do
+						-- top relative to the walk plane (negative = below it)
+						local top = -def.Depth + cl.Y + piece.DY + piece.Height / 2
+						worst = math.max(worst, top)
+						if top > -env.CloudCeiling + 0.001 then clear = false end
+					end
+				end
+			end
+		end
+		check("no cloud ever rises above the ceiling under the islands", clear,
+			string.format("highest cloud top %.1f studs vs ceiling -%d", worst, env.CloudCeiling))
+		check("Sky Citadel's ceiling clears its deepest keel (96 below the deck)", env.CloudCeiling > 96)
+		check("a cloud sea with no ceiling is a boot error",
+			#AmbienceCore.validate({ CloudSea = env.CloudSea }, "X") > 0)
+	end
 	check("an unknown cloud kind is a boot error",
 		#AmbienceCore.validate({ CloudSea = { { Depth = 1, Count = 1, Radius = 100, Speed = 1, SizeMin = 1,
 			SizeMax = 2, Thickness = 0.5, Transparency = 0, Mix = { Anvil = 1 } } } }, "X") > 0)

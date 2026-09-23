@@ -143,7 +143,7 @@ local function buildCloudSea(env: any, floorY: number, scale: number, folder: In
 		local count = AmbienceCore.scaledCount(def.Count, scale)
 		local clouds = AmbienceCore.layoutClouds(def, count, scale, function()
 			return random:NextNumber()
-		end)
+		end, env.CloudCeiling)
 		local shade = def.Shade or def.Color
 		local layer: Layer =
 			{ Def = def, Clouds = clouds, Parts = {}, Owner = {}, Offset = {}, DriftX = 0, DriftZ = 0 }

@@ -71,10 +71,13 @@ return {
 		-- Three layers, each with its own character, drifting at different
 		-- speeds for parallax. Clouds are clusters (a shaded base, lit billows
 		-- heaped on top) of three kinds -- see AmbienceCore.layoutClouds.
+		-- Every piece's keel hangs to 96 below the deck; 130 keeps a clear
+		-- band of sky between the islands and the tallest cloud.
+		CloudCeiling = 130,
 		CloudSea = {
 			-- NEAR: the heaped, sunlit cumulus the islands hang just above.
 			{
-				Depth = 150,
+				Depth = 200,
 				Count = 34,
 				Radius = 1600,
 				Speed = 7,

@@ -71,7 +71,18 @@ end
 ---
 --- billowScale (0..1, from graphics quality) trims billows before it trims
 --- clouds: a low-end device keeps the same sea, less heaped.
-function AmbienceCore.layoutClouds(layer: any, count: number, billowScale: number, nextNumber: () -> number): { any }
+---
+--- ceiling is how far below the walk plane no cloud may rise -- the kit's
+--- deepest keel plus a margin. Any cloud whose tallest billow would cross it
+--- is lowered until it does not. Without it a heaped cumulus in the near layer
+--- climbed up through the islands.
+function AmbienceCore.layoutClouds(
+	layer: any,
+	count: number,
+	billowScale: number,
+	nextNumber: () -> number,
+	ceiling: number?
+): { any }
 	local clouds = {}
 	local half = layer.Radius
 	local mix = layer.Mix or DEFAULT_MIX
@@ -128,11 +139,22 @@ function AmbienceCore.layoutClouds(layer: any, count: number, billowScale: numbe
 			end
 		end
 
+		-- A little vertical scatter, so the sea has a surface, not a floor --
+		-- then held under the ceiling. Y is relative to the layer's plane
+		-- (Depth below the walk plane), so the cloud's top sits at
+		-- Y + top - Depth relative to the walk plane.
+		local y = (nextNumber() * 2 - 1) * baseH * 0.5
+		if ceiling then
+			local top = 0
+			for _, piece in parts do
+				top = math.max(top, piece.DY + piece.Height / 2)
+			end
+			y = math.min(y, layer.Depth - ceiling - top)
+		end
 		table.insert(clouds, {
 			X = (nextNumber() * 2 - 1) * half,
 			Z = (nextNumber() * 2 - 1) * half,
-			-- A little vertical scatter, so the sea has a surface, not a floor.
-			Y = (nextNumber() * 2 - 1) * baseH * 0.5,
+			Y = y,
 			Yaw = yaw,
 			Style = style,
 			Parts = parts,
@@ -166,12 +188,19 @@ function AmbienceCore.validate(environment: any, label: string): { string }
 
 	local sea = environment.CloudSea
 	if sea ~= nil then
+		-- A sea needs a ceiling: without one nothing stops a cloud rising
+		-- through the map.
+		checkRange(errors, `{label}.CloudCeiling`, environment.CloudCeiling, 0, 5000)
 		if type(sea) ~= "table" or #sea == 0 then
 			table.insert(errors, `{label}.CloudSea must be a non-empty list of layers`)
 		else
 			for i, layer in sea do
 				local l = `{label}.CloudSea[{i}]`
 				checkRange(errors, `{l}.Depth`, layer.Depth, 1, 5000)
+				if type(layer.Depth) == "number" and type(environment.CloudCeiling) == "number"
+					and layer.Depth <= environment.CloudCeiling then
+					table.insert(errors, `{l}.Depth must be below CloudCeiling ({environment.CloudCeiling})`)
+				end
 				checkRange(errors, `{l}.Count`, layer.Count, 1, 400)
 				checkRange(errors, `{l}.Radius`, layer.Radius, 64, 10000)
 				checkRange(errors, `{l}.Speed`, layer.Speed, 0, 200)
