@@ -33,6 +33,50 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 61 — 2026-09-23 — Seamless vault, real chests, a stray-cube and flicker sweep
+
+**Tests:** 790 passing.
+
+### Done
+- **Vault seam closed.**
+  - The fixture door's back plate is now a 24-sided disc out to its gold rim
+    (`vault_door_rim`, 7.69), in phase with the tunnel.
+  - The tunnel is the rim + 0.11. A closed door leaves a hairline seam, and
+    the tunnel's flats (7.73) still clear the rim, so the door slides in
+    untouched; the generator asserts this.
+  - The sealed gate's decorative door is unchanged.
+- **Chests rebuilt** (`chest`, with new `half_barrel` and `hinge_knuckle`):
+  - Body: a hollow box with a dark floor, gold corner caps, rim trim, a lock
+    plate and a glowing keyhole, and treasure inside (coin stacks, nuggets, a
+    gem).
+  - Lid: a rounded barrel with two gold straps, a rim and a clasp over the
+    lock.
+  - Two real hinges on `CHEST_HINGE`: knuckles alternate body/lid, and the
+    hinge line is exactly the lid's pivot in game.
+  - Rendered closed, open and from behind.
+- **Stray cubes** (owner screenshot): `ramp()` had a leftover "no-op spacer"
+  loop placing two 0.3-stud AzureDim cubes at the centre of every piece with
+  a ramp (Aether Springs, Observatory, Spire Court B). Deleted.
+- **Ascent Gate outer edges:** the lintel's end faces were flush with the
+  pylons' outer faces (z-fight). The lintel now ends a stud inside them.
+- **Coplanar-face sweep over every piece** (same-facing, overlapping,
+  different colours). Real ones fixed:
+  - The flat-roofed towers (Path Bend, Skyport): the roof disc sat flush with
+    its ring.
+  - The Cascade Tower's gold lips were flush with their bowls.
+  - The rest were hidden contact faces or bounding-box false positives
+    (compass-rose triangles).
+- Structure changed in: path_skyport, path_bend, vault_turn, aether_springs,
+  observatory, spire_court, spire_court_b. Library: the chest body, chest lid
+  and vault door changed.
+
+### Next
+1. Owner re-imports; I swap the ids.
+2. Then weapons, via the Blender MCP, to the owner's list (not started, as
+   asked).
+
+---
+
 ## Session 60 — 2026-09-23 — Third re-import wired in
 
 **Tests:** 790 passing.
