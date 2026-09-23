@@ -35,7 +35,7 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ## Session 52 — 2026-09-23 — Clouds with shape; scenery separation becomes a rule
 
-**Tests:** 714 passing (was 710).
+**Tests:** 717 passing (was 710).
 
 **First look at the ambience (owner walk):** sunrise and the sea read well; the
 clouds looked like flat discs. Each was a single ellipsoid.
@@ -57,6 +57,14 @@ separately as a prop library plus per-piece placements. Written as
 separate named objects, and **names now matter**.
 
 **Owner confirmed** the `.rbxmx` export plugin lives in the place (not the repo).
+
+**Then: clouds climbed into the islands** (owner walk). Nothing capped a
+cloud's height, and a heaped cumulus in the 150-down layer could rise ~240.
+Every world with a `CloudSea` now needs a `CloudCeiling` (studs below the walk
+plane no cloud may cross); `layoutClouds` lowers any cloud whose tallest piece
+would cross it. Sky Citadel: ceiling 130 against keels at 96, near layer moved
+to 200. A test measures every cloud top over 40 seeds. **Sky Citadel's look is
+done** until the scenery re-export.
 
 **Next:** the Sky Citadel re-export. The first step is ours: change
 `build_sky_citadel_kit.py` to build props as separate `prop_*` objects, gather

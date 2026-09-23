@@ -53,6 +53,9 @@ export type Environment = {
 	-- Drifting layers of cloud under the map, wrapped around the camera so a
 	-- few dozen puffs pave an endless sea. Counts scale with graphics quality.
 	CloudSea: { CloudLayer }?,
+	-- Studs below the walk plane no cloud may rise above. Required with a
+	-- CloudSea; set it below the kit's deepest keel so clouds never touch the map.
+	CloudCeiling: number?,
 	-- Faint particles drifting past the camera. Rate scales with quality.
 	Motes: { Rate: number, Lifetime: number, Color: Color3, Size: number, Speed: number }?,
 }
