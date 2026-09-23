@@ -33,6 +33,33 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 55 — 2026-09-23 — A gate court on a branch left a walkway into the abyss
+
+**Tests:** 753 passing.
+
+### Done
+- **Owner walk found Spire Court B's ASCENT mouth facing the sky.**
+  - Cause: branch spurs pick from every PATH/COMBAT piece, gate courts
+    included. Entered from the side, a gate court keeps its arena-Kind mouth,
+    and the cap pass (correctly) never caps an arena Kind.
+  - Fix: spurs refuse any piece carrying an arena-Kind socket.
+- **Backstop:** in a capped world, `assemble` now fails the attempt, and
+  retries on another seed, if any socket of any placed piece is unconsumed.
+  That needed the boss's arrival socket recorded as consumed, which it never
+  had been.
+- **Why the tests missed it:** the "every opening meets another piece" test
+  assembled with PathLength 5 and no branches. It now uses the game's own
+  `Expedition` settings, and it reproduced the exact failure
+  (`SC_SPIRE_COURT_B.north`) before the fix.
+
+### Next
+- The owner proposed interactive chests, a pulsing forcefield on the sealed
+  gate, flapping birds, and a vault opened by a boss-dropped key. Loot, keys
+  and boss drops are §7-excluded, so they need a written amendment first.
+  Awaiting the owner's go-ahead; the plan is in the session reply.
+
+---
+
 ## Session 54 — 2026-09-23 — Sky Citadel re-imported; props live, each moving like what it is
 
 **Tests:** 753 passing (was 739).

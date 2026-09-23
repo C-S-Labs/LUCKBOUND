@@ -1783,7 +1783,12 @@ do
 			local built, leaks, firstLeak, capsSeen = 0, 0, nil, 0
 			for trial = 1, 200 do
 				local okA, layout = ChunkCore.assembleWithRetry(Chunks,
-					{ WorldId = "SKY_CITADEL", PathLength = 5, IncludeSide = includeSide },
+					-- The game's own settings, branches included: a spur is where
+					-- a gate court once slipped in and left its ASCENT mouth
+					-- facing the sky, uncapped, because this test grew none.
+					{ WorldId = "SKY_CITADEL", PathLength = GameConfig.Expedition.PathLength,
+						BranchLength = GameConfig.Expedition.BranchLength,
+						MaxRepeats = GameConfig.Expedition.MaxRepeats, IncludeSide = includeSide },
 					function(a) return lcg(trial * 4561 + a * 13) end, 5)
 				if okA then
 					built += 1
