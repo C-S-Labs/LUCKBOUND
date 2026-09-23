@@ -897,11 +897,6 @@ local GameConfig = {
 		ArenaCheckSeconds = 0.5,
 		ArenaRadiusFraction = 0.45,
 		ArenaBelowStuds = 20,
-		-- Who gives up a key when the vault opens: "OPENER" (only the player
-		-- who used it) or "ALL_HOLDERS" (every member present holding one --
-		-- the party opened it with the party's key). Everyone present gets
-		-- their own loot either way.
-		VaultConsumes = "ALL_HOLDERS",
 		-- Prompts on chests and the vault.
 		PromptDistance = 10,
 		PromptHoldSeconds = 0.6,

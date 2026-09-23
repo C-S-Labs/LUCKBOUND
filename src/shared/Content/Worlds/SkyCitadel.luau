@@ -24,9 +24,10 @@ return {
 	Name = "Sky Citadel",
 	-- LOOT (build spec §7.5). Which pool each source rolls, and the world's
 	-- vault key. Pools live in Content/LootPools/SkyCitadel.luau (empty until
-	-- the loot pools are designed). The key drops from the boss -- until
-	-- bosses exist, on first reaching the arena (GameConfig.Loot
-	-- .BossDefeatStandIn) -- only in a map with the treasury in it.
+	-- the loot pools are designed). The key drops only from THIS world's boss
+	-- -- until bosses exist, on first reaching the arena (GameConfig.Loot
+	-- .BossDefeatStandIn) -- in any Sky Citadel map, treasury or not, and is
+	-- kept for the vault met later. The vault opens per player, per key.
 	Loot = {
 		Chest = "SC_CHEST",
 		Vault = "SC_VAULT",

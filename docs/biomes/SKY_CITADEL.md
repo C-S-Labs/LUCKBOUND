@@ -274,7 +274,7 @@ on.
 | debris | Tumble |
 | bird | Bird |
 
-| chest (5), vault door, forcefield | **fixtures** (convention 7, build spec §7.5): server-placed, collidable, opened once per party |
+| chest (5), vault door, forcefield | **fixtures** (convention 7, build spec §7.5): server-placed, collidable; chests open once per party, the vault once per player who uses a key |
 
 The aviary's 15 birds circle the cage as one flock, their wings beating
 (separate `prop_bird_wing_*` meshes, `Wing` class). Every bird's full circle is

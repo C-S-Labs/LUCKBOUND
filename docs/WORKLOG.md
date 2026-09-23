@@ -33,6 +33,41 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 57 — 2026-09-23 — Re-import live; the vault becomes per player
+
+**Tests:** 788 passing.
+
+### Done
+- **Owner's second re-import wired in.**
+  - `SC_STRUCTURE.rbxmx`: 22 pieces at 256³. Only 3 ids changed (lookout,
+    treasury, sealed gate); Roblox reused the ids of the 19 pieces whose
+    meshes were byte-identical.
+  - `SC_PROP_LIBRARY.rbxmx`: 28 meshes, names exact, including `fix_*` and
+    `prop_bird_wing_*`.
+- **Key and vault rules revised by the owner:**
+  - The key drops in **any Sky Citadel map**, treasury or not, so it can be
+    kept for a later run. It stays world-specific: only the Sky Citadel
+    boss drops the Sky Citadel Vault Key, and other worlds declare their
+    own.
+  - **The vault is per player.** Using your own key opens it for you alone:
+    your key is spent, your loot, and your screen shows the door open.
+    Chests stay once per party.
+  - Implementation: `LootSystem.openVault` keeps a per-model set of openers.
+    `Loot_Result` carries `Fixture` to the opener only, and
+    `FixtureController` swings that player's door and hides that player's
+    prompt locally.
+  - Removed: `KeyCore.mapHasVault` and `GameConfig.Loot.VaultConsumes`.
+  - Spec §7.5 rules rewritten, with the revision noted.
+
+### Stopped at
+All live. Owner to walk Test T.
+
+### Next
+1. Test T.
+2. Loot pool design (contents, and what an ItemId is).
+
+---
+
 ## Session 56 — 2026-09-23 — Loot, fixtures and vault keys (build spec §7.5)
 
 **Tests:** 788 passing (was 753).

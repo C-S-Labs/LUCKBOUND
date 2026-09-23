@@ -5466,8 +5466,13 @@ do
 	end
 	check("five chests, one vault door, one forcefield", chests == 5 and kinds.VAULT == 1 and kinds.FORCEFIELD == 1)
 	check("every chest lid hinges on its back edge, inside its piece", lidsHinged)
-	check("the vault is in the treasury",
-		fx.Placements.SC_VAULT_TURN ~= nil and KeyCore.mapHasVault({ "SC_VAULT_TURN" }, fx))
+	local vaultIn = nil
+	for chunkId, rows in fx.Placements do
+		for _, row in rows do
+			if row.Kind == "VAULT" then vaultIn = chunkId end
+		end
+	end
+	check("the vault is in the treasury", vaultIn == "SC_VAULT_TURN")
 	check("the forcefield is on the sealed gate", fx.Placements.SC_CAP_SEALED_GATE ~= nil)
 
 	local staleF = { SKY_CITADEL = { Id = "SKY_CITADEL", Library = { "fix_x" }, Placements = {
@@ -5521,8 +5526,17 @@ do
 	check("no modifiers leaves the base chance", KeyCore.dropChance(0.2, {}) == 0.2)
 	check("the chance is clamped to 0..1", KeyCore.dropChance(0.2, { { KeyChanceDelta = -1 } }) == 0
 		and KeyCore.dropChance(0.9, { { KeyChanceDelta = 0.5 } }) == 1)
-	check("no key is offered in a map without a vault", not KeyCore.mapHasVault({ "SC_ENTRY", "SC_BOSS_CLEARING" }, fx)
-		and not KeyCore.mapHasVault({ "SC_VAULT_TURN" }, nil))
+	-- A key belongs to its world: only that world's boss drops it (owner,
+	-- 2026-09-23 -- "it is a SKY CITADEL VAULT KEY").
+	local ownKeys, keyIds = true, {}
+	for worldId, w in Worlds do
+		local k = w.Loot and w.Loot.VaultKey
+		if k then
+			if string.sub(k.Id, 1, #worldId + 1) ~= worldId .. "_" or keyIds[k.Id] then ownKeys = false end
+			keyIds[k.Id] = true
+		end
+	end
+	check("every world's vault key is its own, named for its world", ownKeys and keyIds.SKY_CITADEL_VAULT_KEY)
 	local keys = {}
 	local first = KeyCore.grant(keys, "SKY_CITADEL_VAULT_KEY", loot.MaxKeysPerKind)
 	local second = KeyCore.grant(keys, "SKY_CITADEL_VAULT_KEY", loot.MaxKeysPerKind)
@@ -5531,8 +5545,7 @@ do
 	check("using a key takes it to zero", KeyCore.spend(keys, "SKY_CITADEL_VAULT_KEY")
 		and KeyCore.count(keys, "SKY_CITADEL_VAULT_KEY") == 0 and keys.SKY_CITADEL_VAULT_KEY == nil)
 	check("with no key the vault stays shut", not KeyCore.spend(keys, "SKY_CITADEL_VAULT_KEY"))
-	check("a vault consumes keys by a known rule",
-		loot.VaultConsumes == "OPENER" or loot.VaultConsumes == "ALL_HOLDERS")
+	check("the vault's per-player rule leaves no party-wide switch behind", loot.VaultConsumes == nil)
 
 	-- The treasury is in about one map in five.
 	local withVault, built = 0, 0

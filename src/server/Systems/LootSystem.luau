@@ -2,12 +2,16 @@
 -- Loot, fixtures and vault keys on an expedition map. Build spec §7.5.
 --
 -- Owner-directed 2026-09-23:
---   * Chests and the vault open ONCE PER PARTY, and every member present
---     gets their OWN randomised loot. The same goes for the boss.
---   * The vault needs the world's key. The key drops from the boss (for now,
---     on first reaching the arena -- bosses are still §7-excluded) at the
---     world's DropChance, ONLY in a map that has a vault, once per party; if
---     it drops, every member present gets one.
+--   * Chests open ONCE PER PARTY, and every member present gets their OWN
+--     randomised loot. The same goes for the boss.
+--   * Each world's vault needs THAT world's key (Loot.VaultKey), which drops
+--     only from that world's boss (for now, on first reaching the arena --
+--     bosses are still §7-excluded) at its DropChance, once per party, in any
+--     map of that world, treasury or not. If it drops, every member present
+--     gets one.
+--   * The vault is PER PLAYER: whoever uses their key opens it for
+--     themselves -- only their key is spent, only they get its loot, and
+--     only their screen shows the door open. Chests stay once per party.
 --   * Keys are saved to the profile and carried home, one of each kind at
 --     most. Using one takes it back to zero.
 --
@@ -210,13 +214,24 @@ local function openChest(model: Model, world: any, members: { [number]: boolean 
 	rollFor(presentMembers(members), world.Loot and world.Loot.Chest, "CHEST")
 end
 
-local function openVault(player: Player, model: Model, world: any, members: { [number]: boolean })
+-- Who has opened which vault. A vault is PER PLAYER (owner, 2026-09-23):
+-- each player who uses their own key opens it for themselves -- their key,
+-- their loot, their door swinging open on their screen -- and a party member
+-- who keeps their key sees it shut. Weak keys, so a destroyed map lets go.
+local vaultOpenedBy: { [Model]: { [number]: boolean } } = setmetatable({}, { __mode = "k" }) :: any
+
+local function openVault(player: Player, model: Model, world: any)
 	local key = world.Loot and world.Loot.VaultKey
 	if not key then
 		return
 	end
+	local opened = vaultOpenedBy[model] or {}
+	vaultOpenedBy[model] = opened
+	if opened[player.UserId] then
+		return
+	end
 	local keys = keysOf(player)
-	if not keys or KeyCore.count(keys, key.Id) <= 0 then
+	if not keys or not KeyCore.spend(keys, key.Id) then
 		local now = os.clock()
 		if now - (lastRefusal[player.UserId] or 0) >= GameConfig.Loot.RefusalCooldownSeconds then
 			lastRefusal[player.UserId] = now
@@ -228,29 +243,27 @@ local function openVault(player: Player, model: Model, world: any, members: { [n
 		return
 	end
 
-	markOpened(model)
-	local present = presentMembers(members)
-	local spenders = if GameConfig.Loot.VaultConsumes == "OPENER" then { player } else present
-	local spent: { [Player]: any } = {}
-	for _, member in spenders do
-		local memberKeys = keysOf(member)
-		if memberKeys and KeyCore.spend(memberKeys, key.Id) then
-			SaveSystem.markDirty(member)
-			spent[member] = { KeySpent = { Id = key.Id, Name = key.Name } }
-		end
-	end
-	rollFor(present, world.Loot.Vault, "VAULT", spent)
+	opened[player.UserId] = true
+	SaveSystem.markDirty(player)
+	-- Only this player's roll, and the vault named so their client -- and only
+	-- theirs -- swings the door open and drops its prompt.
+	rollFor({ player }, world.Loot.Vault, "VAULT", {
+		[player] = { KeySpent = { Id = key.Id, Name = key.Name }, Fixture = model },
+	})
 end
 
 -- === the boss (stand-in) =============================================
 
-local function bossDefeated(worldId: string, chunkIds: { string }, members: { [number]: boolean })
+local function bossDefeated(worldId: string, members: { [number]: boolean })
 	local world = Worlds[worldId]
 	local present = presentMembers(members)
 	rollFor(present, world.Loot and world.Loot.Boss, "BOSS")
 
 	local key = world.Loot and world.Loot.VaultKey
-	if not key or not KeyCore.mapHasVault(chunkIds, Fixtures[worldId]) then
+	-- A world's key drops only from THAT world's boss (it is that world's
+	-- Loot.VaultKey), but in every map of it, treasury or not (owner,
+	-- 2026-09-23): the key is kept for the vault you meet later.
+	if not key then
 		return
 	end
 	-- World modifiers are still §7-excluded; the list they will fill is here
@@ -321,7 +334,6 @@ function LootSystem.attach(stage: Instance, worldId: string, members: { [number]
 	local world = Worlds[worldId]
 	local set = Fixtures[worldId]
 	local cfg = GameConfig.Loot
-	local chunkIds = {}
 	local arena: Instance? = nil
 	local lib = library()
 	local missing: { [string]: boolean } = {}
@@ -334,7 +346,6 @@ function LootSystem.attach(stage: Instance, worldId: string, members: { [number]
 		if type(chunkId) ~= "string" then
 			continue
 		end
-		table.insert(chunkIds, chunkId)
 		if chunkFolder:GetAttribute("Role") == "BOSS" then
 			arena = chunkFolder
 		end
@@ -362,6 +373,8 @@ function LootSystem.attach(stage: Instance, worldId: string, members: { [number]
 				prompt.RequiresLineOfSight = false
 				prompt.Parent = model.PrimaryPart
 				prompt.Triggered:Connect(function(player)
+					-- A chest's Opened is the party's; a vault's is per player
+					-- (openVault keeps it).
 					if model:GetAttribute("Opened") or not members[player.UserId] then
 						return
 					end
@@ -371,7 +384,7 @@ function LootSystem.attach(stage: Instance, worldId: string, members: { [number]
 					if row.Kind == "CHEST" then
 						openChest(model, world, members)
 					else
-						openVault(player, model, world, members)
+						openVault(player, model, world)
 					end
 				end)
 			end
@@ -396,7 +409,7 @@ function LootSystem.attach(stage: Instance, worldId: string, members: { [number]
 		watchArena(stage, arena :: Instance, function()
 			if not done then
 				done = true
-				bossDefeated(worldId, chunkIds, members)
+				bossDefeated(worldId, members)
 			end
 		end, members)
 	end
