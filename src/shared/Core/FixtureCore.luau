@@ -39,8 +39,8 @@ function FixtureCore.doorSpin(elapsed: number, cfg: any): number
 	return math.pi * 2 * cfg.DoorTurns * smooth(elapsed / cfg.DoorSeconds)
 end
 
---- How far a vault door has swung back into its wall once the spin is done
---- (studs along its axis), so an open vault reads as open.
+--- How far a vault door has slid back into the tunnel behind it once the
+--- spin is done (studs along its axis), so an open vault reads as open.
 function FixtureCore.doorRecess(elapsed: number, cfg: any): number
 	return cfg.DoorRecess * smooth((elapsed - cfg.DoorSeconds) / cfg.DoorRecessSeconds)
 end

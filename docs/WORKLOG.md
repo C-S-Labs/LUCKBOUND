@@ -33,6 +33,42 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 59 — 2026-09-23 — The vault gets an inside; three seams fixed
+
+**Tests:** 790 passing.
+
+### Done
+- **Vault interior (owner chose option B, a real opening).**
+  - `holed_block` builds the treasury keep with a round hole (r 8.3) and a
+    tunnel 12 deep, lined in a new `VaultDark` palette entry, with a gold ring
+    at the back.
+  - Everything is one closed shell with shared edge vertices. The first cut
+    had T-junctions, so the normal recalculation turned the lining the wrong
+    way (all 49 faces); checked numerically after the fix: all inward.
+  - Vault door shrunk to R 7 (the tunnel must fit the wall height) and raised
+    to z 10.75.
+  - `DoorRecess` is 6 (door thickness 2.9), so the door ends inside the dark.
+  - Rendered headless in Cycles to check it by eye.
+- **Ascent Gate (Spire Court):** the pyramid caps rose through the roof
+  beams. Each pylon now has a capital the beam end is buried in, with the
+  pyramid on top. The lintel is 0.6 shallower, since it was coplanar with the
+  pylons and z-fought (a dark band in the render).
+- **Off-deck objects:**
+  - Treasury crystal cluster moved (-48,44) → (-50,18).
+  - Path Straight spires moved to (±27, ±16) and slimmed to r 4.
+  - Entry towers inset to (±51, -43).
+  - New `ground_report` in `validate()`: every tower, spire and crystal
+    cluster must stand wholly on a deck.
+- Structure changed in exactly four pieces: entry, Path Straight, treasury,
+  Spire Court. Props placements are unchanged; the fixtures file changes only
+  the vault door's size and height.
+
+### Next
+1. Owner re-imports both files; I swap the ids.
+2. Test T step 7 (the tunnel) and a look at the gate and the spires.
+
+---
+
 ## Session 58 — 2026-09-23 — Temporary loot testing commands
 
 **Tests:** 790 passing.

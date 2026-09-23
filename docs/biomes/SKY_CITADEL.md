@@ -276,6 +276,21 @@ on.
 
 | chest (5), vault door, forcefield | **fixtures** (convention 7, build spec §7.5): server-placed, collidable; chests open once per party, the vault once per player who uses a key |
 
+**The treasury's vault is a real opening.** `holed_block` builds the keep
+with a round tunnel 12 deep behind the door, lined `VaultDark` with a gold ring
+at the back, as one closed shell so the lining faces inward. The door (radius
+7, down from 8 so the tunnel fits the wall) spins, then slides 6 studs into it.
+
+**Fixed on the same walk:**
+- a crystal cluster that stood beside the treasury on thin air;
+- Path Straight's two spires, half off the pier;
+- the entry towers' bases, overhanging the plaza edge;
+- the Ascent Gate's pyramids rising through the roof beams (they now sit on
+  capitals the beams run into), and its lintel z-fighting the pylons.
+
+`validate()` now also checks that everything grounded stands wholly on its
+deck (`ground_report`).
+
 The aviary's 15 birds circle the cage as one flock, their wings beating
 (separate `prop_bird_wing_*` meshes, `Wing` class). Every bird's full circle is
 proven clear of trees, bars and the other birds (`clear_bird_orbits`), which

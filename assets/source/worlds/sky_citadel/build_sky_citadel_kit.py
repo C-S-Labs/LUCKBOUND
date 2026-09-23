@@ -84,6 +84,7 @@ PALETTE = {
     "CitadelViolet": ((138, 96, 210), False),  # roofs and banners
     "SkyGlass": ((178, 222, 242), False),      # floating crystals, fountain water
     "Verdure": ((96, 156, 124), False),        # clipped topiary in planters
+    "VaultDark": ((16, 16, 24), False),        # the inside of the treasury vault
 }
 MAT_ORDER = list(PALETTE.keys())
 
@@ -622,19 +623,30 @@ def tower(p, x, y, r, H, roof_h=None, roof=True):
     crystal(p, "SunGold", x, y, H + 3 + rh + 1.2, 0.8, 1.6, 1.2)
 
 
+CAPITAL_H = 6.5   # a gate pylon's capital: tall enough to swallow the roof beam's end
+
+
 def gate(p, cx, cy, width, height, depth=8.0, pylon=10.0):
     """A futurist castle gate. The opening spans cx +/- width/2, passage along Y."""
     span_ = width / 2 + pylon + 1
     p.solid_box("gate", cx - span_, cx + span_, cy - depth / 2 - 1, cy + depth / 2 + 1,
-                0, height + math.tan(math.radians(16)) * span_ + 9)
+                0, max(height + math.tan(math.radians(16)) * span_ + 9, height + CAPITAL_H + pylon * 1.6))
     for s in (-1, 1):
         px = cx + s * (width / 2 + pylon / 2)
         box(p, "PaleAlloy", px, cy, 1.5, pylon + 2, depth + 2, 3)
         box(p, "CitadelWhite", px, cy, height / 2, pylon, depth, height)
         box(p, "AzureDim", cx + s * (width / 2 - 0.1), cy, height * 0.42, 0.8, depth * 0.5, height * 0.72)
-        frustum(p, "PaleAlloy", 4, pylon * 0.72, 0, height, height + pylon * 1.6, px, cy, rot=45)
     span = width / 2 + pylon
-    box(p, "PaleAlloy", cx, cy, height - 2, 2 * span, depth, 4)
+    # Each pylon ends in a capital the roof beam's end is buried in, and the
+    # pyramid sits ON it -- it used to rise straight through the beam.
+    cap_top = height + CAPITAL_H
+    for s in (-1, 1):
+        px = cx + s * (width / 2 + pylon / 2)
+        box(p, "PaleAlloy", px, cy, (height + cap_top) / 2, pylon + 1, depth + 1, cap_top - height)
+        frustum(p, "PaleAlloy", 4, pylon * 0.72, 0, cap_top, cap_top + pylon * 1.6, px, cy, rot=45)
+    # A touch shallower than the pylons, so its faces are not coplanar with
+    # theirs (they z-fought: a flickering dark band under each capital).
+    box(p, "PaleAlloy", cx, cy, height - 2, 2 * span, depth - 0.6, 4)
     box(p, "AzureDim", cx, cy, height - 4.3, width, depth * 0.5, 0.6)
     tilt = 16.0
     L = span / math.cos(math.radians(tilt))
@@ -1176,6 +1188,82 @@ def flower_bed(p, x, y, lx=8.0, ly=3.0, seed=0):
         mat = rng.choice(("SunGold", "CitadelViolet", "SkyGlass"))
         crystal(p, mat, x - lx / 2 + 0.6 + i * (lx - 1.2) / max(1, int(lx) - 1),
                 y + rng.uniform(-ly / 4, ly / 4), 1.6, 0.35, 0.5, 0.3)
+
+
+def holed_block(p, mat, x0, x1, y0, y1, z0, z1, cx, cz, r, depth, n=24, lining="VaultDark"):
+    """A solid block whose south (-Y) face has a round hole of radius r at
+    (cx, cz), opening into a tunnel `depth` deep, lined in `lining` and closed
+    at the back -- the inside of a vault. Built as ONE closed shell with
+    shared vertices, so to_object's normal recalculation turns the lining to
+    face into the tunnel, where it can be seen."""
+    assert cz - r > z0 + 0.5 and cz + r < z1 - 0.5, "the hole must sit inside the block"
+    assert cx - r > x0 + 0.5 and cx + r < x1 - 0.5, "the hole must sit inside the block"
+    assert depth < (y1 - y0) - 0.5, "the tunnel must end inside the block"
+    verts, faces, fmat = [], [], []
+
+    def V(x, y, z):
+        verts.append((x, y, z))
+        return len(verts) - 1
+
+    c = {(i, j, k): V(x, y, z)
+         for i, x in enumerate((x0, x1)) for j, y in enumerate((y0, y1)) for k, z in enumerate((z0, z1))}
+    side_faces = []  # filled in below, once the front edge's vertices exist
+    def angle(x, z):
+        return math.atan2(z - cz, x - cx) % (2 * math.pi)
+
+    corners = sorted(((angle(x, z), idx) for (x, z), idx in (
+        ((x0, z0), c[0, 0, 0]), ((x1, z0), c[1, 0, 0]), ((x1, z1), c[1, 0, 1]), ((x0, z1), c[0, 0, 1]))))
+
+    def to_rect(a):
+        dx, dz = math.cos(a), math.sin(a)
+        t = min(t for t in (
+            (x1 - cx) / dx if dx > 1e-9 else math.inf, (x0 - cx) / dx if dx < -1e-9 else math.inf,
+            (z1 - cz) / dz if dz > 1e-9 else math.inf, (z0 - cz) / dz if dz < -1e-9 else math.inf))
+        return cx + dx * t, cz + dz * t
+
+    angles = [2 * math.pi * i / n + math.pi / n for i in range(n)]  # never on an axis or a corner
+    ring_f = [V(cx + r * math.cos(a), y0, cz + r * math.sin(a)) for a in angles]
+    ring_b = [V(cx + r * math.cos(a), y0 + depth, cz + r * math.sin(a)) for a in angles]
+    rect = [V(to_rect(a)[0], y0, to_rect(a)[1]) for a in angles]
+
+    # The four side faces share their front edge with the wall face, so that
+    # edge must carry the same vertices -- otherwise the shell has T-junctions,
+    # is not closed, and the normal recalculation orients the wall, tunnel and
+    # back as a separate open sheet (they came out facing inward).
+    def on(pred, key, reverse=False):
+        pts = [i for i in rect if pred(verts[i])]
+        return sorted(pts, key=lambda i: key(verts[i]), reverse=reverse)
+
+    eps = 1e-6
+    bottom = on(lambda v: abs(v[2] - z0) < eps, lambda v: v[0])
+    east = on(lambda v: abs(v[0] - x1) < eps, lambda v: v[2])
+    top = on(lambda v: abs(v[2] - z1) < eps, lambda v: v[0], reverse=True)
+    west = on(lambda v: abs(v[0] - x0) < eps, lambda v: v[2], reverse=True)
+    side_faces += [
+        [c[0, 1, 0], c[1, 1, 0], c[1, 1, 1], c[0, 1, 1]],                       # back
+        [c[0, 0, 0]] + bottom + [c[1, 0, 0], c[1, 1, 0], c[0, 1, 0]],           # bottom
+        [c[1, 0, 0]] + east + [c[1, 0, 1], c[1, 1, 1], c[1, 1, 0]],             # east
+        [c[1, 0, 1]] + top + [c[0, 0, 1], c[0, 1, 1], c[1, 1, 1]],              # top
+        [c[0, 0, 1]] + west + [c[0, 0, 0], c[0, 1, 0], c[0, 1, 1]],             # west
+    ]
+    for f in side_faces:
+        faces.append(f)
+        fmat.append(mat)
+    for i in range(n):
+        j = (i + 1) % n
+        a0, a1 = angles[i], angles[j] if j else angles[j] + 2 * math.pi
+        between = [idx for ang, idx in corners if a0 < ang < a1 or a0 < ang + 2 * math.pi < a1]
+        faces.append([ring_f[i], rect[i]] + between + [rect[j], ring_f[j]])  # the wall face
+        fmat.append(mat)
+        faces.append([ring_f[i], ring_f[j], ring_b[j], ring_b[i]])           # the tunnel
+        fmat.append(lining)
+    faces.append(list(ring_b))                                               # the back
+    fmat.append(lining)
+
+    base = len(p.verts)
+    p.verts.extend(p.base @ Vector(v) for v in verts)
+    p.faces.extend([base + i for i in f] for f in faces)
+    p.fmat.extend(fmat)
 
 
 def vault_door(p, x, y, z, R=8.0, fixture=False):
@@ -1764,8 +1852,8 @@ def build_entry():
 
     spire(p, -50, 30, 7, CROWN_TOP, extra_halos=1)    # the Beacon
     spire(p, 50, 30, 6, 118)
-    tower(p, -54, -46, 9, 30)
-    tower(p, 54, -46, 9, 30)
+    tower(p, -51, -43, 9, 30)   # inset: at (+-54, -46) their bases overhung the edge
+    tower(p, 51, -43, 9, 30)
     banner(p, -26, apo - 8)
     banner(p, 26, apo - 8)
     for x, y in ((-30, -26), (30, -26), (-30, 14), (30, 14)):
@@ -1806,8 +1894,10 @@ def build_path_straight():
         box(p, "CitadelWhite", s_ * 13, 0, 37.2, 27.5, 5.6, 3, ry=s_ * 16)
     crystal(p, "SunGold", 0, 0, 45.5, 2.0, 3.6, 2.2)
 
-    spire(p, -30, -24, 5, CROWN_TOP)
-    spire(p, 30, 24, 4.5, 104, fins=False)
+    # Pulled onto the deck: at (+-30, +-24) half of each base hung over the
+    # hexagon's edge. Slimmer so they clear the gatehouse towers.
+    spire(p, -27, -16, 4, CROWN_TOP)
+    spire(p, 27, 16, 4, 104, fins=False)
     for x, y in ((17, 62), (-17, 102), (-17, -62), (17, -102)):
         lamp(p, x, y)
     banner(p, -24, 22)
@@ -2112,20 +2202,26 @@ def build_vault_turn():
     kx, ky = -22, 30
     p.solid_box("vault keep", kx - 19, kx + 19, ky - 15, ky + 15, 0, 26)
     box_span(p, "PaleAlloy", kx - 18, kx + 18, ky - 14, ky + 14, 0, 1.5)
-    box_span(p, "CitadelWhite", kx - 16, kx + 16, ky - 12, ky + 12, 1.5, 20)
+    # The keep's body, with the vault's tunnel behind its door: the door spins
+    # open and slides back into the dark (FixtureCore.doorRecess), so the
+    # tunnel must be wider than the door (7.85 to its gold rim) and deeper
+    # than the slide.
+    holed_block(p, "CitadelWhite", kx - 16, kx + 16, ky - 12, ky + 12, 1.5, 20,
+                cx=kx, cz=10.75, r=8.3, depth=12)
+    torus(p, "SunGold", 6.2, 0.25, kx, ky - 12 + 11.7, 10.75, n=16, rx=90)  # a glint at the back
     box_span(p, "PaleAlloy", kx - 17, kx + 17, ky - 13, ky + 13, 20, 21.5)
     box_span(p, "CitadelWhite", kx - 12, kx + 12, ky - 8, ky + 8, 21.5, 24)
     for sx in (-1, 1):
         box_span(p, "AzureDim", kx + sx * 16 - 0.2, kx + sx * 16 + 0.2, ky - 6, ky + 6, 5, 15)
     tower(p, kx - 16, ky - 12, 3.2, 22)
     tower(p, kx + 16, ky - 12, 3.2, 22)
-    vault_door(p, kx, ky - 12, 10, fixture=True)
+    vault_door(p, kx, ky - 12, 10.75, R=7.0, fixture=True)
     spire(p, kx, ky + 2, 3.8, CROWN_TOP, fins=False, z0=24)
     for x, rz in ((-28, 10), (-20, -6), (-12, 4)):
         chest(p, x, 10, rz=rz)
     for x, y, r in ((-36, 6, 2.2), (-6, 8, 1.6)):
         frustum(p, "SunGold", 8, r, r * 0.3, 0, r * 0.9, x, y)
-    crystal_cluster(p, -48, 44, seed=11, scale=1.2)
+    crystal_cluster(p, -50, 18, seed=11, scale=1.2)  # was (-48, 44): off the deck
     crystal_cluster(p, 20, 44, seed=12)
     crystal_cluster(p, -44, -30, seed=13, scale=0.9)
     obelisk(p, 30, -30, h=16)
@@ -3004,6 +3100,46 @@ def float_report(p):
 PIECES_BY_NAME = {}
 
 
+# Things that stand ON a deck, and the fraction of their registered solid
+# radius that is their actual base. The registered radius is a clearance
+# (a spire's includes its halo), so the base is what must be on the deck.
+GROUNDED_BASE = {
+    "tower": 1.15 / 1.25,
+    "spire": 1.5 / 1.9,
+    "crystal cluster": 0.85,
+}
+
+
+def _inside(pt, poly):
+    x, y = pt
+    inside = False
+    for i in range(len(poly)):
+        (x1, y1), (x2, y2) = poly[i], poly[(i + 1) % len(poly)]
+        if (y1 > y) != (y2 > y) and x < (x2 - x1) * (y - y1) / (y2 - y1) + x1:
+            inside = not inside
+    return inside
+
+
+def ground_report(p):
+    """Everything that stands on a deck has its whole base on one: the check
+    that would have caught the crystal cluster growing out of thin air
+    behind the treasury, and the spires hanging half off the gatehouse pier
+    (owner walk, 2026-09-23)."""
+    problems = []
+    polys = [w for w, _, _ in p.slabs]
+    for label, shape in p.solids:
+        factor = GROUNDED_BASE.get(label)
+        if factor is None or shape[0] != "cyl" or shape[4] > 0.5:
+            continue
+        _, x, y, r, _, _ = shape
+        base = r * factor
+        rim = [(x + base * math.cos(a), y + base * math.sin(a))
+               for a in (2 * math.pi * k / 16 for k in range(16))]
+        if not all(any(_inside(q, poly) for poly in polys) for q in rim):
+            problems.append("%s at (%.0f, %.0f) is not wholly on its deck" % (label, x, y))
+    return problems
+
+
 def validate(objs):
     report, ok = [], True
     for obj in objs:
@@ -3015,8 +3151,10 @@ def validate(objs):
         centre_xy = ((mn.x + mx.x) / 2, (mn.y + mx.y) / 2)
         p = PIECES_BY_NAME.get(obj.name)
         float_problems = float_report(p) if p else ["no build record"]
+        ground_problems = ground_report(p) if p else ["no build record"]
         checks = {
             "floats clear (no clipping, inside the tile)": not float_problems,
+            "everything grounded stands on its deck": not ground_problems,
             "footprint 256x256": abs(size.x - 256) < 0.01 and abs(size.y - 256) < 0.01,
             "height 256 (-96..+160)": abs(mn.z - KEEL_BOTTOM) < 0.01 and abs(mx.z - CROWN_TOP) < 0.01,
             "origin centred": abs(centre_xy[0]) < 0.01 and abs(centre_xy[1]) < 0.01,
@@ -3034,6 +3172,7 @@ def validate(objs):
             "failed": [k for k, v in checks.items() if not v],
             "floats": len(p.floats) if p else 0,
             "float_problems": float_problems[:6],
+            "ground_problems": ground_problems[:6],
         })
     return ok, report
 
