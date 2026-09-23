@@ -161,7 +161,7 @@ local function calibrateYaw(chunk: any, placed: any, origin: Vector3, meshPos: V
 	for turn = 0, 3 do
 		-- The hint first, so a tie keeps it.
 		local k = (hint + turn * 90) % 360
-		mesh.CFrame = CFrame.new(meshPos) * CFrame.Angles(0, math.rad(placed.Yaw + k), 0)
+		mesh.CFrame = CFrame.new(meshPos) * CFrame.Angles(0, ChunkCore.yawRadians(placed.Yaw + k), 0)
 		local hits = 0
 		for _, socket in chunk.Sockets do
 			local ws = ChunkCore.worldSocket(placed, chunk, socket)
@@ -406,7 +406,6 @@ function ChunkLoader.build(
 		-- an FBX, the same class of failure that produced the "register a
 		-- prefab from a NAMED PART, not from its pivot" rule for the hub.
 		local centre = origin + Vector3.new(placed.X, placed.Y, placed.Z)
-		local cframe = CFrame.new(centre) * CFrame.Angles(0, math.rad(placed.Yaw), 0)
 
 		-- The mesh hangs off the layout plane by its own skirt depth; the
 		-- blockout below does not, because its floor IS the walk plane.
@@ -424,7 +423,7 @@ function ChunkLoader.build(
 		-- Studio walk of the Sky Citadel kit found (2026-09-23).
 		local meshYaw = placed.Yaw + (chunk.MeshYawOffset or 0)
 		local meshCFrame = CFrame.new(centre + Vector3.new(0, chunk.SizeY / 2 - groundOffset, 0))
-			* CFrame.Angles(0, math.rad(meshYaw), 0)
+			* CFrame.Angles(0, ChunkCore.yawRadians(meshYaw), 0)
 
 		local mesh = tryMesh(
 			chunk.AssetKey,
@@ -437,7 +436,7 @@ function ChunkLoader.build(
 		if mesh then
 			local meshPos = meshCFrame.Position
 			local k = calibrateYaw(chunk, placed, origin, meshPos, mesh)
-			mesh.CFrame = CFrame.new(meshPos) * CFrame.Angles(0, math.rad(placed.Yaw + k), 0)
+			mesh.CFrame = CFrame.new(meshPos) * CFrame.Angles(0, ChunkCore.yawRadians(placed.Yaw + k), 0)
 			usedMeshes += 1
 			surface = mesh
 		else

@@ -46,8 +46,13 @@ local ChunkCore = require(Root.Util.ChunkCore)
 local ChunkLoader = require(Root.Util.ChunkLoader)
 local Chunks = require(Root.Content.Chunks)
 
--- Expeditions started on this server; varies the seed per entry.
-local entryCount = 0
+-- Fresh entropy per expedition. Random.new() with no argument seeds itself
+-- from the engine's entropy source, so no two sessions share a sequence --
+-- which the roll-count seed alone could not promise: in Studio, with no
+-- persistence, TotalRolls starts at the same value every session and roll
+-- #1 always built seed 1704274940. The seed is still logged on entry, so
+-- any map can still be rebuilt exactly from its log line.
+local seedSource = Random.new()
 local ScenarioCore = require(Root.Util.ScenarioCore)
 local Scenarios = require(Root.Content.Scenarios)
 local Constants = require(Root.Core.Constants)
@@ -809,13 +814,12 @@ function ExpeditionSystem.requestEnter(player: Player, ...: any): ()
 	local worldId = decision.WorldId :: string
 	-- THE LEADER'S SEED, for everyone. That is what "the same instance with
 	-- the same parameters" means: one world, one map, one timer.
-	-- Mixed with a per-server entry count so re-entering the SAME roll still
-	-- gives a new map. Without it a debug-forced roll never advances
-	-- TotalRolls and every test entry rebuilt the identical layout. The seed
-	-- is still logged, so any map remains rebuildable from its log line.
-	entryCount += 1
-	local seed = (ExpeditionCore.seedFor(player.UserId, profile.TotalRolls, worldId) + entryCount * 104729)
-		% 2147483647
+	-- Mixed with fresh entropy (seedSource above): every entry, every
+	-- session, every player gets a new map.
+	local seed = (ExpeditionCore.seedFor(player.UserId, profile.TotalRolls, worldId) + seedSource:NextInteger(
+		1,
+		2147483646
+	)) % 2147483647
 
 	-- Who actually goes. The leader always; each member only if they are
 	-- still here, not already somewhere, and -- in place -- has a body to
