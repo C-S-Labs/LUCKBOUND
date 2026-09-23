@@ -33,6 +33,34 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 64 — 2026-09-23 — Sky Citadel: 36 pieces, props split, seven scenario kits
+**Merged:** —   **Tests:** not run (no `src/` change)   **Head:** branch `claude/sky-citadel-scenarios`
+
+### Done
+- Backed up the 22-piece kit: tag `sky-citadel-kit-22-backup` plus a folder copy.
+- Base kit 22 → 36: fourteen pieces, each with a gameplay job (traversal,
+  combat, resource, discovery, alternate route, NPC, a second arena).
+- Interactive set dressing lifted into props with an `Interact` field.
+- `build_sky_citadel_scenarios.py`: seven scenario kits × 36 pieces, one shared
+  125-kind prop library, and per-kit gameplay anchors. All validated, exported
+  and re-import-verified; renders reviewed.
+
+### Decisions made
+- Owner: roll → world → modifiers → scenario → unique changes; a roll must be
+  entered once (leaving counts); the Fate tree may earn better odds but never
+  guarantees or forbids an outcome, with bad-luck protection.
+- Owner: scenario kits are full kits per scenario built from the base geometry;
+  props and chunks strictly separate, and every interactable is a prop.
+
+### Stopped at
+The first art pass is done. No `src/` wiring. Unmooring is the weakest kit.
+
+### Next
+The owner reviews `sky_citadel_scenarios.blend`; then, with approval, the code
+steps in `SKY_CITADEL.md` › *Scenario kits* › *What is not built yet*.
+
+---
+
 ## Session 63 — 2026-09-23 — Weapons: the contract and the build prompt
 
 **Tests:** 790 passing.

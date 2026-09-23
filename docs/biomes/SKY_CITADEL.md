@@ -557,6 +557,115 @@ content. They are recorded in `STATUS.md`.
 
 ---
 
+## Scenario kits — the Fate laboratory (2026-09-23)
+
+**Owner-directed.** The Fate Engine is moving from "which world" to "what
+situation": roll → world → modifiers → special scenario → unique changes.
+Sky Citadel is the laboratory for whether that works. The test is not "do the
+maps look different after five rolls" but **"after 20–30 expeditions, did I
+approach them differently because of what Fate gave me?"**
+
+**Backup of the 22-piece kit:** git tag `sky-citadel-kit-22-backup`, and a full
+copy in `C:\Dev\backups\sky_citadel_kit_22_2026-09-23` on the owner's machine.
+
+### The base kit: 22 → 36 pieces
+
+The 22 are unchanged as places (a vertex-for-vertex comparison against the
+backup generator matched all 22 before the prop change below). Fourteen new,
+each with a job so Fate has levers:
+
+| Piece | Role | Its job |
+|---|---|---|
+| `chunk_path_colonnade` | PATH | connective corridor, cover |
+| `chunk_path_long_span` | PATH | traversal, exposure — a dangerous crossing |
+| `chunk_path_lantern_row` | PATH | connective, event lighting |
+| `chunk_path_tower_bend` | PATH (S+W) | a turn round a watchtower |
+| `chunk_path_tee` | PATH (S+E+W) | **alternate routes** — a second junction |
+| `chunk_parade_ground` | COMBAT | combat-heavy, siege, occupation |
+| `chunk_turbine_hall` | COMBAT | event space (wind) |
+| `chunk_lighthouse_point` | COMBAT | landmark, discovery |
+| `chunk_sky_tree_grove` | COMBAT | resource-rich |
+| `chunk_dockside` | COMBAT | NPC presence, trade, boarding |
+| `chunk_side_chapel` | SIDE | shrine / discovery |
+| `chunk_side_garden` | SIDE | resource side pocket |
+| `chunk_side_reliquary` | SIDE | rare discovery, risk-reward |
+| `chunk_prism_arena` | BOSS | a second arena, so the boss room varies |
+
+### Props and chunks are separate — including everything interactive
+
+Owner direction: **anything that can animate or be interacted with is a prop,
+never part of the structure mesh.** On top of the floating props, the kit now
+lifts lamps, light pillars, braziers, banners, crates, containers, holo
+pedestals, telescopes, targets and weapon/shield racks into props. Each
+placement carries an `Interact` field (`Lightable`, `Breakable`, `Loot`,
+`Activate`, `Use`, `Hit` …) with a default per kind (`PROP_INTERACT`) that a
+scenario may override. Chests, the vault door and forcefields stay fixtures.
+**This changes the 22 structure meshes** (the lamps and crates left them): they
+need re-importing with the new props before the next walk.
+
+### Seven scenario kits
+
+`build_sky_citadel_scenarios.py` executes the kit script as a module and builds
+all 36 pieces again per scenario through `SCENARIO_HOOK` (called in `finish()`;
+`None` for the base kit). The walkable geometry is the base kit's own — the
+player knows the place — and the scenario changes what is on it:
+
+| Scenario | Situation | Props it adds (interaction) |
+|---|---|---|
+| **Unmooring** | anti-grav failing | drifting fragments, listing crystals, dead lights (`Repair`) |
+| **Siege** | raiders occupy the citadel | tents (`Loot`), barricades (`Destroy`), fires (`Hazard`), rust-sailed skiffs (`Board`) |
+| **Lockdown** | defences turned hostile | sentinel pylons (`Destroy`), forcefield fixtures at every opening, consoles (`Override`) |
+| **Stormhawk** | a raptor nests and dives | the nest (`Event`), feathers (`Pickup`) |
+| **Rime** | frozen at altitude | snow drifts, ice spikes (`Break`), braziers as warmth (`Lightable`) |
+| **Reclaimed** | abandoned and overgrown | overgrowth (`Cut`), dead lights, abandoned stores (`Loot`) |
+| **Aether Surge** | crystal growth erupts | aether clusters and shards (`Harvest`), pedestals (`Attune`) |
+
+Surface changes (recolours, cracks, scorch, moss, snow) stay in the structure.
+
+**Gameplay anchors** — what makes a kit a Fate lever rather than scenery. Every
+scenario piece records `RESOURCE`, `DISCOVERY`, `ENEMY_POST`, `NPC_POST` and
+`EVENT` spots, and one `BLOCKER` per opening (a prop the run may enable to close
+that socket, which is what makes alternate routes). Written to
+`assets/export/worlds/sky_citadel/scenarios/<scenario>/Anchors_<scenario>.luau`:
+183–338 anchors per kit.
+
+**Outputs** (under `assets/export/worlds/sky_citadel/`):
+
+| File | What |
+|---|---|
+| `sky_citadel_structure.fbx` / `sky_citadel_props.fbx` | base kit: 36 pieces / 61 prop kinds |
+| `staged_luau/` | base placements + fixtures, **staged, not yet in `src/`** (the new pieces have no asset ids) |
+| `scenarios/<s>/sky_citadel_<s>_structure.fbx` | 36 pieces each, re-imported and measured 256³ |
+| `scenarios/sky_citadel_scenario_props.fbx` | 125 prop kinds shared by all seven |
+| `scenarios/Props_Scenarios.luau`, `Fixtures_Scenarios.luau` | placements, with `Interact` |
+
+`assets/source/worlds/sky_citadel/sky_citadel_scenarios.blend` holds the base
+kit and all seven in rows, with a `Preview_Props_NotExported` collection that
+draws every prop in place for review.
+
+**Upload cost was designed down.** Each dressing kind is one fixed shape drawn
+at a size, with its turn on the placement, so 288 pieces share 125 prop meshes
+(an early pass produced 459).
+
+### What is not built yet — code, pending the owner's approval
+
+Nothing in `src/` reads any of this yet. In order:
+1. `Content/Chunks/SkyCitadel.luau` entries for the 14 new pieces (and asset
+   ids once uploaded); scenario variants as `<ID>__<SCENARIO>`.
+2. `FateCore`: after the world draw, draw modifiers and a scenario profile.
+3. `ChunkLoader` / `ChunkCore`: load the rolled scenario's variant set; honour
+   `BLOCKER` anchors when a profile closes a socket.
+4. The prop runtime: an `Interact` handler per kind, and the `Blocker`,
+   `Pulse`, `Flicker` and `Sway` animation classes.
+5. Opportunity / Presence / Event systems that read the anchors.
+
+**Honest read of the art:** Siege, Lockdown, Rime, Reclaimed, Aether Surge and
+Stormhawk read as different situations at a glance. **Unmooring is the
+weakest** — cracks and listing floats are subtle at piece scale; it wants a
+structural change (a tilted or displaced deck section) in a later pass.
+
+---
+
 ## Render headless
 
 Rendering through the Blender MCP bridge inside the interactive session crashed

@@ -447,6 +447,14 @@ survive a rescale and a literal does not.
 
 ## 5. Next session — pick up here
 
+> **2026-09-23: Sky Citadel became the Fate laboratory.** The base kit is 36
+> pieces, interactive dressing is now props with an `Interact` field, and
+> seven scenario kits (Unmooring, Siege, Lockdown, Stormhawk, Rime, Reclaimed,
+> Aether Surge) are exported with gameplay anchors. **None of it is wired into
+> `src/` yet**, and the 22 original structure meshes need re-importing (their
+> lamps and crates became props). `docs/biomes/SKY_CITADEL.md` › *Scenario
+> kits* lists the outputs and the code steps awaiting approval.
+
 > **2026-09-23: the Sky Citadel kit is uploaded and unwalked.** `TESTING.md`
 > Test Q is the first time any of those 22 meshes will be stood on, and it is
 > where `GroundOffsetY`, the joins and the vertex colours stop being claims.
