@@ -30,6 +30,7 @@ local LocomotionCore = __require("LocomotionCore")
 local ThemeCore = __require("ThemeCore")
 local Palettes = __require("Palettes")
 local EventCore = __require("EventCore")
+local AmbienceCore = __require("AmbienceCore")
 
 -- === tiny harness ===================================================
 local passed, failed = 0, 0
@@ -5093,6 +5094,55 @@ do
 		not Schema.validateConfig(cfg({ Expedition = { InstanceMode = "WARP" } }), Worlds)
 	)
 	check("the Party panel is live", HubMenuCore.panelById(Menu, "PARTY").Status == "LIVE")
+end
+
+-- === Ambience ==========================================================
+group("World ambience")
+do
+	local cfg = GameConfig.Ambience
+	check("Automatic graphics gets the middling scale", AmbienceCore.qualityScale(0, cfg) == cfg.AutomaticQuality)
+	check("graphics level 10 draws everything", AmbienceCore.qualityScale(10, cfg) == 1)
+	check("graphics level 1 is floored, not empty", AmbienceCore.qualityScale(1, cfg) == cfg.QualityFloor)
+	check("a scaled count never drops below one", AmbienceCore.scaledCount(3, 0.01) == 1)
+
+	-- THE INFINITE TRICK: wrap keeps every puff inside the square around the
+	-- camera, however far it has drifted.
+	local wrapped = true
+	for _, v in { -5000, -1601, -1600, 0, 1599, 1600, 7777 } do
+		local w = AmbienceCore.wrap(v, 1600)
+		if w < -1600 or w >= 1600 then wrapped = false end
+	end
+	check("a drifted puff always wraps back into the camera's square", wrapped)
+	check("wrap moves a puff by whole spans only", AmbienceCore.wrap(1700, 1600) == -1500)
+
+	local layer = Worlds.SKY_CITADEL.Environment.CloudSea[1]
+	local a = AmbienceCore.layoutPuffs(layer, 40, lcg(99))
+	local b = AmbienceCore.layoutPuffs(layer, 40, lcg(99))
+	local inside, same = true, true
+	for i, p in a do
+		if math.abs(p.X) > layer.Radius or math.abs(p.Z) > layer.Radius then inside = false end
+		if p.Width < layer.SizeMin or p.Width > layer.SizeMax then inside = false end
+		if p.X ~= b[i].X or p.Width ~= b[i].Width then same = false end
+	end
+	check("cloud puffs lie inside their layer's square and size range", inside)
+	check("the same stream lays out the same sea", same)
+
+	check("Sky Citadel's ambience validates", #AmbienceCore.validate(Worlds.SKY_CITADEL.Environment, "SC") == 0)
+	check("a world with no ambience is valid", #AmbienceCore.validate({}, "X") == 0)
+	check("a half-declared cloud layer is a boot error",
+		#AmbienceCore.validate({ CloudSea = { { Depth = 100 } } }, "X") > 0)
+	check("an atmosphere denser than 1 is a boot error",
+		#AmbienceCore.validate({ Atmosphere = { Density = 2, Haze = 1, Glare = 0 } }, "X") > 0)
+	-- Sky Citadel owns a slot of the day no other world holds.
+	local clocks, clash = {}, false
+	for id, w in Worlds do
+		local t = w.Environment.ClockTime
+		for other, t2 in clocks do
+			if math.abs(t - t2) < 1 then clash = true end
+		end
+		clocks[id] = t
+	end
+	check("no two worlds share an hour of the day", not clash)
 end
 
 -- === summary ========================================================

@@ -75,6 +75,7 @@ type Group = {
 	Seed: number,
 	Slot: number?, -- IN_PLACE only; a host has the whole server
 	Stage: Model,
+	FloorY: number, -- the map's walk plane; the client's cloud sea hangs below it
 	EntryPosition: Vector3,
 	Summary: string,
 	Duration: number,
@@ -232,6 +233,7 @@ local function buildStage(worldId: string, seed: number, origin: Vector3, stageN
 		end
 		return {
 			Stage = built.Model,
+			FloorY = origin.Y,
 			EntryPosition = built.EntryPosition,
 			ReturnPosition = built.ReturnPosition,
 			Summary = string.format(
@@ -324,6 +326,9 @@ local function buildStage(worldId: string, seed: number, origin: Vector3, stageN
 
 	return {
 		Stage = result.Model,
+		-- The layout plane: every chunk's walk surface sits at origin.Y. The
+		-- client hangs its cloud sea below this.
+		FloorY = origin.Y,
 		EntryPosition = result.EntryPosition,
 		ReturnPosition = result.ReturnPosition,
 		ScenarioPlan = if planOk then plan else nil,
@@ -389,6 +394,7 @@ local function newGroup(
 		Seed = seed,
 		Slot = slot,
 		Stage = built.Stage,
+		FloorY = built.FloorY,
 		EntryPosition = built.EntryPosition,
 		Summary = built.Summary,
 		Duration = ExpeditionCore.durationFor(world, GameConfig),
@@ -455,6 +461,7 @@ local function placeMember(player: Player, group: Group): boolean
 		Seed = group.Seed,
 		MapSummary = group.Summary,
 		PartySize = group.PartySize,
+		FloorY = group.FloorY,
 	})
 
 	print(

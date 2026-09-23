@@ -26,8 +26,8 @@ So the split is:
 Six sections. A world is ready to be built when all six are filled in.
 
 1. **Identity** — rarity, roll weight, one paragraph on what the place is.
-2. **Palette and light** — the colours and lighting values, and where they live
-   in content.
+2. **Palette, light and ambience** — the colours, lighting values and the
+   world's mood, all as data in its `Environment` (see *Ambience* below).
 3. **The kinds of place** — the list of piece types the world is made of, what
    each is for, and **what each can support** (the scenario compatibility that
    decides what can happen there). Together these are what decide variety: the
@@ -44,6 +44,35 @@ support and the generator decides per run what actually happens there, so 11
 pieces can be 50 distinct rooms.
 
 None of that is construction detail. It is the design the construction serves.
+
+### Ambience — a world's mood is data
+
+Added 2026-09-23. Every block is optional in a world's `Environment`; the
+client's `AmbienceController` draws what is declared, `AmbienceCore.validate`
+refuses a half-declared block at boot, and `Types.Environment` is the full
+schema.
+
+| Block | What it does |
+|---|---|
+| `ClockTime`, `Brightness`, `Ambient…`, `ColorShiftTop/Bottom`, `ExposureCompensation` | the light itself — sun height, how warm lit faces go, how cool shadows go |
+| `Atmosphere` | the sky's gradient and haze. **Owns the haze:** Roblox ignores `FogStart`/`FogEnd` while one exists |
+| `Sky` | sun and moon size, star count |
+| `Bloom`, `SunRays`, `Grade` | post-effects: glow, god rays, colour grade |
+| `CloudSea` | layers of drifting cloud below the map, wrapped round the camera so they never run out |
+| `Motes` | faint particles on the air around the camera |
+
+**The world owns the scene.** On entry every sky, atmosphere and post-effect
+already in `Lighting` is set aside and the world's replace them — in the
+finished game the expedition is its own server (build spec §7.2), so there is
+nothing to preserve. The set-aside exists only so a Studio `/leave` hands the
+hub back intact.
+
+**Pick an hour nobody else has.** Each world holds its own time of day, and a
+test refuses two worlds within an hour of each other: Sky Citadel 6.4 (sunrise),
+Verdant Valley 13, Ethereal Scape 15, Emberfall 18, Astral Reach 0.
+
+**Quality scales it.** Cloud and mote counts follow the player's graphics
+setting (`GameConfig.Ambience`); level 1 still gets a thin sea, never none.
 
 ---
 

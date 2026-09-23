@@ -835,6 +835,19 @@ local GameConfig = {
 
 		LogEveryRoll = true,
 	},
+
+	-- A world's ambience (its Environment's Atmosphere, CloudSea, Motes and
+	-- post-effects), drawn client-side by AmbienceController. The dials here are
+	-- about the DEVICE, not the world: how much of the ambience to draw.
+	Ambience = {
+		-- Scale used when the player's graphics are on Automatic, which does not
+		-- report what the engine chose. Middling, because the devices left on
+		-- Automatic are mostly the phones this protects.
+		AutomaticQuality = 0.6,
+		-- The least a manual graphics level can scale ambience to. Level 1 still
+		-- gets a thin sea rather than none: an empty void reads as a bug.
+		QualityFloor = 0.3,
+	},
 }
 
 return deepFreeze(GameConfig)
