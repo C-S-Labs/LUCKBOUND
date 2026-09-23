@@ -211,6 +211,12 @@ never by world:
   end in a `CAP`; no piece more than `MaxRepeats` times, never twice in a row;
   a new seed on every entry.
 
+**Ambient scenery ships separately.** Floating, flying and glowing decoration
+is never merged into a piece; it arrives as a prop library plus per-piece
+placements (`CHUNK_AUTHORING.md` convention 6) so it can animate and scale with
+graphics. The loader for it is the next thing built; Sky Citadel is the first
+kit to be re-exported this way.
+
 A new kit therefore needs only its content file: sockets with `Kind` and
 `Width`, `GroundOffsetY`, and a few `CAP` pieces if any piece has a spare mouth.
 

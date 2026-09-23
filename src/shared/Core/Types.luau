@@ -66,7 +66,11 @@ export type CloudLayer = {
 	SizeMin: number,
 	SizeMax: number,
 	Thickness: number, -- height as a fraction of width
-	Color: Color3,
+	Color: Color3, -- lit tops
+	Shade: Color3?, -- undersides; defaults to Color
+	Billows: number?, -- puffs heaped on a cumulus at full quality; 0 = flat clouds
+	-- Relative weights of the three cloud kinds; defaults to mostly cumulus.
+	Mix: { Cumulus: number?, Stratus: number?, Wisp: number? }?,
 	Transparency: number,
 }
 

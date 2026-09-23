@@ -199,7 +199,7 @@ Emberfall; full morning sun, as a second Ethereal Scape.**
 | `Atmosphere` | density 0.3, warm `Color`, cobalt `Decay`, glare 0.7 | the gradient sky; replaces fog |
 | `Sky` | sun 16°, 300 stars | a big dawn sun, stars fading |
 | `Bloom`, `SunRays`, `Grade` | restrained | glow on the white and gold, faint rays, a slight warm grade |
-| `CloudSea` | two layers, 150 and 380 studs down | a near warm sea the islands hang over, a far bluer one for depth, drifting at different speeds for parallax |
+| `CloudSea` | three layers, 150 / 330 / 520 studs down | near: heaped sunlit cumulus with lavender undersides. Middle: broad, flatter, cooler banks. Deep: long pale wisps, almost still. Different speeds and headings give parallax |
 | `Motes` | sparse, slow, gold | high air catching the light |
 
 **What the walks showed before this was fixed:** a purple dusk. That was never
@@ -208,8 +208,8 @@ exists Roblox ignores fog entirely, so every world wore the hub's haze. The
 ambience now sets the hub's scene aside on entry.
 
 **What cannot move yet:** the floating shards, rings and birds are baked into
-each piece's single mesh. Animating them needs them exported as separate
-objects — see the owner's re-export plan in `WORKLOG.md` (session 51).
+each piece's single mesh. They are the first kit to be re-exported under
+`CHUNK_AUTHORING.md` convention 6 (structure and ambient scenery separate).
 
 ---
 

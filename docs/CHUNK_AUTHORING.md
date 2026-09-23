@@ -16,7 +16,7 @@ constraints, and a piece that satisfies them is correct however it looks.
 
 ---
 
-## The five conventions
+## The six conventions
 
 ### 1. One metre is one stud
 
@@ -79,15 +79,65 @@ cross a piece's boundary or depend on what is beside it. No tree overhanging the
 edge, no bridge cut to one specific gap, nothing that only reads because of what
 happened to be next to it in the authoring scene.
 
-### 5. One file per piece
+### 5. Every piece is its own object, named for what it is
 
-Export each piece on its own, as its own FBX — not the collection, not the whole
-scene. Each one is uploaded separately and the game recombines them, so they
-have to arrive as separate meshes.
+Each piece must reach Roblox as **its own mesh**. The game uploads and places
+them separately and recombines them per run.
 
-Name the file for the piece it is rather than a number — `chunk_meadow`,
-`chunk_ruins`, `chunk_waterfall`. Names *inside* the file do not matter to us at
-all; nothing reads them.
+You may export them **one FBX per piece, or all of them in one FBX** as
+separate objects. Roblox's 3D Importer turns a multi-object FBX into one Model
+with a MeshPart per object, and centres each mesh on its own bounds, which is
+the convention the loader uses. One file is less work; either is correct.
+**Do not join the pieces into one object.**
+
+**Names matter.** The object name becomes the part name and is how a piece is
+matched to its content entry. Name for what the piece is — `chunk_meadow`,
+`chunk_ruins`, `chunk_waterfall` — never a number.
+
+### 6. Structure and ambient scenery are separate — every kit, every biome
+
+**Adopted 2026-09-23, owner-directed. Applies to every kit from now on**, so no
+biome has to be re-exported to get animated or scalable scenery later.
+
+A piece is two different kinds of thing, and they are delivered differently:
+
+| | Structure | Ambient scenery |
+|---|---|---|
+| **What** | everything walked on, collided with, or that makes the place what it is: decks, floors, walls, bridges, stairs, keels, cliffs, landmarks, trees, rocks, buildings | everything that floats, drifts, flies, spins, glows or is there only for mood, never blocking the player: floating crystals and shards, floating books, rings, birds and drones, lanterns, falling leaves, embers |
+| **Delivered as** | part of the piece's mesh (convention 5) | **not** merged into the piece; one copy of each *kind*, plus a list of where it goes |
+| **Drawn by** | the server, with collision | each player's device only, no collision, animated, and thinned out on low graphics |
+
+**How to deliver ambient scenery:**
+
+1. **Author each kind once**, as its own object named `prop_<what>` —
+   `prop_crystal_a`, `prop_crystal_b`, `prop_book`, `prop_bird`. A variant is a
+   new name. A crystal used 200 times across the kit is still **one** object.
+2. **Collect one copy of each** into a collection named `PropLibrary` and
+   export that collection as **one FBX**, objects kept separate. Import it with
+   the 3D Importer (one Model, one MeshPart per prop), then save it as one
+   `.rbxmx` with the export plugin in the place.
+3. **Where they go is data, not geometry.** For each piece, a list of props:
+   name, position, rotation and scale **relative to the piece's origin**, an
+   animation class and a detail tier. A generated kit's script writes this list
+   for you. For a hand-placed kit, place props as linked duplicates, and a
+   Blender script reads them out of the scene.
+4. **Animation class** per placement: `Static`, `Float` (slow bob), `Spin`,
+   `Orbit`, `Bird` (flies a loop), `Glow` (pulses). **Detail tier** 1–3:
+   1 shows on every device, 3 is dense extra shown only on high graphics.
+
+**Why:**
+- it's the only way scenery can move
+- detail can scale with each player's graphics
+- each kind of prop is uploaded once instead of baked into 22 meshes
+- floating clutter stops inflating each piece's collision
+
+**Keep the size pins.** With the scenery removed, the structure mesh must still
+fill the piece's declared box exactly (for Sky Citadel, 256³: tiny pins at the
+bottom corners, the landmark reaching the top). `ChunkLoader` sets every mesh to
+its declared size, so a piece that shrank would be stretched.
+
+**Rigid props only for now.** A bird that flies a path is fine. Flapping wings
+need the wings as separate parts or a rigged mesh, which is a later polish.
 
 ---
 

@@ -38,6 +38,12 @@ Six sections. A world is ready to be built when all six are filled in.
 6. **Piece size and count** — how big a piece is in this world, and how many
    the kit wants.
 
+**And one delivery rule for every biome:** ambient scenery (floating crystals,
+books, birds, lanterns, embers — anything that drifts, flies, glows or exists
+only for mood) is **never merged into the pieces**. It ships as a separate prop
+library plus per-piece placements, so it can animate and scale with graphics.
+[`CHUNK_AUTHORING.md`](../CHUNK_AUTHORING.md) convention 6 has the how.
+
 A world is *varied* when §3 and §4 multiply well. Build spec §7.3 has the
 generation pipeline; the short version is that a chunk declares what it can
 support and the generator decides per run what actually happens there, so 11
@@ -58,7 +64,7 @@ schema.
 | `Atmosphere` | the sky's gradient and haze. **Owns the haze:** Roblox ignores `FogStart`/`FogEnd` while one exists |
 | `Sky` | sun and moon size, star count |
 | `Bloom`, `SunRays`, `Grade` | post-effects: glow, god rays, colour grade |
-| `CloudSea` | layers of drifting cloud below the map, wrapped round the camera so they never run out |
+| `CloudSea` | layers of drifting cloud below the map, wrapped round the camera so they never run out. Each cloud is a cluster — a shaded base with lit billows — of one of three kinds (`Mix`: `Cumulus`, `Stratus`, `Wisp`), each turned its own way |
 | `Motes` | faint particles on the air around the camera |
 
 **The world owns the scene.** On entry every sky, atmosphere and post-effect

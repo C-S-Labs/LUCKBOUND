@@ -5116,17 +5116,29 @@ do
 	check("wrap moves a puff by whole spans only", AmbienceCore.wrap(1700, 1600) == -1500)
 
 	local layer = Worlds.SKY_CITADEL.Environment.CloudSea[1]
-	local a = AmbienceCore.layoutPuffs(layer, 40, lcg(99))
-	local b = AmbienceCore.layoutPuffs(layer, 40, lcg(99))
-	local inside, same = true, true
-	for i, p in a do
-		if math.abs(p.X) > layer.Radius or math.abs(p.Z) > layer.Radius then inside = false end
-		if p.Width < layer.SizeMin or p.Width > layer.SizeMax then inside = false end
-		if p.X ~= b[i].X or p.Width ~= b[i].Width then same = false end
+	local a = AmbienceCore.layoutClouds(layer, 60, 1, lcg(99))
+	local b = AmbienceCore.layoutClouds(layer, 60, 1, lcg(99))
+	local inside, same, kinds, bounded = true, true, {}, true
+	for i, cl in a do
+		if math.abs(cl.X) > layer.Radius or math.abs(cl.Z) > layer.Radius then inside = false end
+		if cl.X ~= b[i].X or #cl.Parts ~= #b[i].Parts then same = false end
+		if #cl.Parts < 1 or #cl.Parts > layer.Billows + 2 then bounded = false end
+		kinds[cl.Style] = true
 	end
-	check("cloud puffs lie inside their layer's square and size range", inside)
+	check("clouds lie inside their layer's square", inside)
 	check("the same stream lays out the same sea", same)
-
+	check("every cloud has at least one piece and no more than its billows allow", bounded)
+	check("a layer's mix produces more than one kind of cloud",
+		(kinds.Cumulus and 1 or 0) + (kinds.Stratus and 1 or 0) + (kinds.Wisp and 1 or 0) >= 2)
+	-- Low quality trims billows before clouds: the same sea, less heaped.
+	local lowParts, highParts = 0, 0
+	for _, cl in AmbienceCore.layoutClouds(layer, 60, 0.3, lcg(7)) do lowParts += #cl.Parts end
+	for _, cl in AmbienceCore.layoutClouds(layer, 60, 1, lcg(7)) do highParts += #cl.Parts end
+	check("low graphics draws fewer cloud pieces than high", lowParts < highParts,
+		string.format("%d vs %d", lowParts, highParts))
+	check("an unknown cloud kind is a boot error",
+		#AmbienceCore.validate({ CloudSea = { { Depth = 1, Count = 1, Radius = 100, Speed = 1, SizeMin = 1,
+			SizeMax = 2, Thickness = 0.5, Transparency = 0, Mix = { Anvil = 1 } } } }, "X") > 0)
 	check("Sky Citadel's ambience validates", #AmbienceCore.validate(Worlds.SKY_CITADEL.Environment, "SC") == 0)
 	check("a world with no ambience is valid", #AmbienceCore.validate({}, "X") == 0)
 	check("a half-declared cloud layer is a boot error",
