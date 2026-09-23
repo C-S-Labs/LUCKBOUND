@@ -391,27 +391,91 @@ local function buildPlumes(pl: any, root: Instance, map: Map, rng: Random)
 	end
 end
 
+local function beam(a0: Attachment, a1: Attachment, props: { [string]: any }): Beam
+	local b = Instance.new("Beam")
+	b.Attachment0, b.Attachment1 = a0, a1
+	b.FaceCamera = true
+	b.LightEmission = 1
+	b.LightInfluence = 0
+	b.Segments = 20
+	for k, v in props do
+		(b :: any)[k] = v
+	end
+	b.Parent = a0.Parent
+	return b
+end
+
+local function anchorAt(root: Instance, pos: Vector3): (Part, Attachment)
+	local p = part({ Name = "AuroraAnchor", Transparency = 1, Size = Vector3.new(1, 1, 1), CFrame = CFrame.new(pos) }, root)
+	local a = Instance.new("Attachment")
+	a.Parent = p
+	return p, a
+end
+
 local function buildAurora(au: any, root: Instance, map: Map)
+	-- Soft curtains of light, not slabs: Beams (glowing, see-through ribbons)
+	-- strung along arcs high over the map, rippling, fed by thin streams from
+	-- slowly turning prisms below them.
 	if type(au) ~= "table" then
 		return
 	end
-	local items = {}
-	for i = 1, num(au.Count, 3) do
-		local c = part({ Name = "Aurora", Material = Enum.Material.Neon,
-			Color = col(au.Color, Color3.fromRGB(168, 118, 255)):Lerp(col(au.Tip, Color3.fromRGB(110, 236, 255)), i / 4),
-			Transparency = num(au.Transparency, 0.5), Size = Vector3.new(num(au.Length, 1900) * 0.5, num(au.Drop, 240), 3) },
-			root)
-		table.insert(items, { Curtain = c, Prism = prop("atm_aurora_prism", 26, root), Angle = i * 2.1 })
+	local base = col(au.Color, Color3.fromRGB(168, 118, 255))
+	local tip = col(au.Tip, Color3.fromRGB(110, 236, 255))
+	local span = math.max(map.Max.X - map.Min.X, map.Max.Z - map.Min.Z)
+	local curtains, prisms = {}, {}
+	for i = 1, num(au.Count, 3) + 1 do
+		local heading = i * 2.3
+		local height = map.Floor + 330 + i * 35
+		local points = {}
+		for k = 0, 6 do
+			local f = k / 6
+			local a = heading + (f - 0.5) * 1.3
+			local r = span * 0.45 + 120 + math.sin(f * math.pi) * 90
+			local anchor, att = anchorAt(root, map.Centre + Vector3.new(math.cos(a) * r, height - map.Floor, math.sin(a) * r))
+			table.insert(points, { Part = anchor, Att = att, A = a, R = r, H = height, F = f })
+		end
+		local beams = {}
+		for k = 1, #points - 1 do
+			table.insert(beams, beam(points[k].Att, points[k + 1].Att, {
+				Width0 = 70 + 40 * math.sin(k), Width1 = 70 + 40 * math.sin(k + 1),
+				Color = ColorSequence.new(base:Lerp(tip, (k - 1) / 6), base:Lerp(tip, k / 6)),
+				Transparency = NumberSequence.new({
+					NumberSequenceKeypoint.new(0, 0.55), NumberSequenceKeypoint.new(0.5, num(au.Transparency, 0.5) + 0.15),
+					NumberSequenceKeypoint.new(1, 0.55) }),
+			}))
+		end
+		table.insert(curtains, { Points = points, Beams = beams, Phase = i * 1.7 })
+		-- a prism under the curtain, streaming light up into it
+		local pr = prop("atm_aurora_prism", 22, root)
+		local mid = points[4]
+		local pbase = map.Centre + Vector3.new(math.cos(mid.A) * (mid.R - 60), 230, math.sin(mid.A) * (mid.R - 60))
+		local _, pa = anchorAt(root, pbase)
+		for k = 2, 6, 2 do
+			beam(pa, points[k].Att, { Width0 = 3, Width1 = 10, Color = ColorSequence.new(tip, base),
+				Transparency = NumberSequence.new(0.35, 0.8) })
+		end
+		table.insert(prisms, { Part = pr, Pos = pbase, Phase = i })
 	end
 	local started = os.clock()
 	table.insert(conns, RunService.Heartbeat:Connect(function()
-		local t = (os.clock() - started) * num(au.Speed, 0.2)
-		for i, it in items do
-			local cf = CFrame.new(map.Centre + Vector3.new(0, 260 + math.sin(t + i) * 20, 0))
-				* CFrame.Angles(0, it.Angle + math.sin(t * 0.5 + i) * 0.2, 0) * CFrame.new(0, 0, 320 + i * 90)
-			it.Curtain.CFrame = cf
-			if it.Prism then
-				it.Prism.CFrame = cf * CFrame.new(-it.Curtain.Size.X / 2, 0, 0) * CFrame.Angles(0, t, 0)
+		local t = (os.clock() - started) * num(au.Speed, 0.2) * 3
+		for _, c in curtains do
+			for _, p in c.Points do
+				-- the curtain ripples: each point rises, falls and sways on its own phase
+				local wave = math.sin(t + p.F * 5 + c.Phase)
+				local a = p.A + math.sin(t * 0.3 + c.Phase) * 0.04
+				p.Part.CFrame = CFrame.new(map.Centre + Vector3.new(math.cos(a) * (p.R + wave * 25),
+					p.H - map.Floor + wave * 18, math.sin(a) * (p.R + wave * 25)))
+			end
+			for k, b in c.Beams do
+				b.CurveSize0 = math.sin(t * 0.8 + k + c.Phase) * 40
+				b.CurveSize1 = -math.sin(t * 0.8 + k + 1 + c.Phase) * 40
+			end
+		end
+		for _, pr in prisms do
+			if pr.Part then
+				pr.Part.CFrame = CFrame.new(pr.Pos + Vector3.new(0, math.sin(t + pr.Phase) * 4, 0))
+					* CFrame.Angles(0, t * 0.5 + pr.Phase, 0)
 			end
 		end
 	end))

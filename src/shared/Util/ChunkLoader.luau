@@ -445,8 +445,14 @@ function ChunkLoader.build(
 		local meshCFrame = CFrame.new(centre + Vector3.new(0, chunk.SizeY / 2 - groundOffset, 0))
 			* CFrame.Angles(0, ChunkCore.yawRadians(meshYaw), 0)
 
+		-- The run's atmosphere recolours the map: a recoloured copy of this
+		-- piece (same geometry, that scenario's palette) when it is uploaded.
+		local assetKey = chunk.AssetKey
+		if layout.Atmosphere and AssetManifest.isUploaded(assetKey .. "__" .. layout.Atmosphere) then
+			assetKey = assetKey .. "__" .. layout.Atmosphere
+		end
 		local mesh = tryMesh(
-			chunk.AssetKey,
+			assetKey,
 			Vector3.new(chunk.SizeX, chunk.SizeY, chunk.SizeZ),
 			meshCFrame,
 			folder
