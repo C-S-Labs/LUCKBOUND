@@ -33,6 +33,24 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 60 — 2026-09-23 — Third re-import wired in
+
+**Tests:** 790 passing.
+
+### Done
+- The owner's re-import of the session-59 export is wired in: new
+  `SC_STRUCTURE.rbxmx` and `SC_PROP_LIBRARY.rbxmx`.
+- Structure ids changed for exactly the four edited pieces (entry, Path
+  Straight, Spire Court, treasury); every other piece kept its id.
+- In the library, only `fix_vault_door_a` changed (15.38 x 15.38 x 2.9, the
+  R 7 door).
+
+### Next
+1. Owner walks the vault tunnel (Test T step 7), the Ascent Gate caps, Path
+   Straight's spires and the entry towers.
+
+---
+
 ## Session 59 — 2026-09-23 — The vault gets an inside; three seams fixed
 
 **Tests:** 790 passing.
