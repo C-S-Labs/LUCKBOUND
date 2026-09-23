@@ -43,7 +43,7 @@ K["PALETTE"].update({
     "Bark": ((92, 70, 52), False), "Moss": ((70, 112, 66), False), "MossLight": ((118, 160, 86), False),
     "AetherBloom": ((190, 150, 255), True), "Pearl": ((236, 228, 246), False), "Gunmetal": ((70, 76, 88), False),
     "Steel": ((104, 112, 126), False), "Hazard": ((232, 188, 40), False), "StormStone": ((140, 148, 164), False),
-    "StormSlate": ((84, 92, 110), False), "Bone": ((226, 220, 200), False),
+    "StormSlate": ((84, 92, 110), False), "Bone": ((226, 220, 200), False), "Frost": ((196, 214, 232), False),
 })
 K["MAT_ORDER"] = list(K["PALETTE"].keys())
 
@@ -245,8 +245,144 @@ def atm_broken_ring(p):
         crystal(p, "AzureNeon", math.cos(r) * 14, math.sin(r) * 14, 0, 0.5, 1.8, 1.8, n=5)
 
 
+
+# ==========================================================================
+# SPIRE LIGHTS -- mounted on the map's own spire and tower tops at run time;
+# each scenario's light pulses there instead of the whole screen (owner
+# playtest: "the pulsing red ... gives the feeling that the player is taking
+# damage"). Built standing on z = 0, the mount point.
+# ==========================================================================
+
+def atm_alarm_beacon(p):            # Lockdown
+    frustum(p, "Gunmetal", 8, 1.6, 1.3, 0, 1.2, 0, 0)
+    frustum(p, "Steel", 8, 1.0, 1.0, 1.2, 1.6, 0, 0)
+    frustum(p, "AlarmRed", 12, 1.0, 0.0, 1.6, 3.4, 0, 0)
+    for k in range(6):
+        a = math.radians(60 * k)
+        tube(p, "Gunmetal", [(math.cos(a) * 1.15, math.sin(a) * 1.15, 1.4), (math.cos(a) * 0.3, math.sin(a) * 0.3, 3.6)],
+             [0.1, 0.1], n=3)
+    frustum(p, "Gunmetal", 6, 0.35, 0.2, 3.4, 3.9, 0, 0)
+
+
+def atm_signal_fire(p):             # Siege
+    frustum(p, "Gunmetal", 6, 0.3, 0.3, 0, 1.4, 0, 0)
+    frustum(p, "RaiderRust", 8, 0.8, 1.8, 1.4, 2.6, 0, 0)
+    for k in range(7):
+        a = math.radians(51 * k)
+        crystal(p, "EmberGlow", math.cos(a) * 0.7, math.sin(a) * 0.7, 2.3, 0.5, 1.6 + (k % 3) * 0.7, 0.2, n=5, rz=k * 20)
+    crystal(p, "EmberGlow", 0, 0, 2.3, 0.7, 3.2, 0.2, n=5)
+    for k in range(3):
+        a = math.radians(120 * k + 30)
+        tube(p, "Bark", [(math.cos(a) * 1.7, math.sin(a) * 1.7, 2.4), (math.cos(a) * 2.6, math.sin(a) * 2.6, 4.8)],
+             [0.12, 0.06], n=3)
+
+
+def atm_lightning_rod(p):           # Stormhawk
+    frustum(p, "Gunmetal", 6, 1.1, 0.8, 0, 0.8, 0, 0)
+    frustum(p, "Steel", 6, 0.25, 0.08, 0.8, 9.0, 0, 0)
+    for k in range(4):
+        torus(p, "Hazard", 0.32 - k * 0.04, 0.08, 0, 0, 2.2 + k * 1.6, n=10)
+    crystal(p, "Hazard", 0, 0, 9.0, 0.15, 0.6, 0.1, n=4)
+
+
+def atm_frost_lantern(p):           # Rime
+    frustum(p, "Steel", 6, 0.8, 0.6, 0, 0.8, 0, 0)
+    crystal(p, "Ice", 0, 0, 2.2, 1.1, 1.8, 1.4, n=6)
+    frustum(p, "Snow", 8, 1.5, 0.2, 3.6, 4.4, 0, 0)
+    for k in range(6):
+        a = math.radians(60 * k)
+        crystal(p, "Ice", math.cos(a) * 1.25, math.sin(a) * 1.25, 3.7, 0.12, 0.01, 1.2, n=4)
+
+
+def atm_glow_bloom(p):              # Reclaimed
+    tube(p, "Moss", [(0, 0, 0), (0.3, 0.2, 1.5), (0, 0, 2.6)], [0.25, 0.2, 0.18], n=5)
+    for k in range(6):
+        a = math.radians(60 * k)
+        with frame(p, xf(math.cos(a) * 0.4, math.sin(a) * 0.4, 2.6, math.degrees(a), 0, 60)):
+            box(p, "MossLight", 0, 0, 0.8, 0.9, 0.1, 1.8)
+    orb(p, "EmberGlow", 0, 0, 2.9, 0.55, n=8)
+    for k in range(3):
+        a = math.radians(120 * k)
+        with frame(p, xf(math.cos(a) * 0.2, math.sin(a) * 0.2, 0.6, math.degrees(a), 0, 70)):
+            box(p, "Moss", 0, 0, 0.6, 0.7, 0.08, 1.4)
+
+
+def atm_aether_node(p):             # Aether Surge
+    torus(p, "Pearl", 0.72, 0.18, 0, 0, 0.4, n=12)
+    frustum(p, "Pearl", 6, 0.6, 0.5, 0, 0.8, 0, 0)
+    crystal(p, "AetherBloom", 0, 0, 0.8, 0.8, 3.6, 0.3, n=6)
+    for k in range(3):
+        a = math.radians(120 * k)
+        with frame(p, xf(math.cos(a) * 0.4, math.sin(a) * 0.4, 0.8, math.degrees(a), 0, 30)):
+            crystal(p, "Pearl", 0, 0, 0, 0.35, 1.8, 0.2, n=5)
+
+
+def atm_stabilizer_beacon(p):       # Unmooring
+    frustum(p, "Steel", 8, 1.2, 1.0, 0, 0.6, 0, 0)
+    frustum(p, "Gunmetal", 8, 0.3, 0.3, 0.6, 3.6, 0, 0)
+    torus(p, "AzureNeon", 1.3, 0.2, 0, 0, 2.4, n=14)
+    for k in range(3):
+        a = math.radians(120 * k)
+        tube(p, "Steel", [(0, 0, 2.4), (math.cos(a) * 1.3, math.sin(a) * 1.3, 2.4)], [0.08, 0.08], n=3)
+    orb(p, "AzureNeon", 0, 0, 4.0, 0.5, n=8)
+
+
+# ==========================================================================
+# FLYERS -- roam the map on random paths, above the crowns or below the keels
+# (never through a chunk). Built centred on the origin, nose along +x.
+# ==========================================================================
+
+def atm_raider_glider(p):           # Siege
+    box(p, "Bark", 0, 0, 0, 5.0, 0.8, 0.8)
+    for s in (-1, 1):
+        with frame(p, xf(-0.4, s * 3.2, 0.2, 0, s * -8, 0)):
+            box(p, "RaiderRust", 0, 0, 0, 3.4, 5.6, 0.12)
+            box(p, "Bark", 1.6, 0, 0, 0.3, 5.8, 0.3)
+    box(p, "Twig", -1.0, 0, -1.3, 0.3, 0.3, 2.2)
+    box(p, "Soot", -1.0, 0, -2.4, 1.2, 0.8, 0.8)
+    crystal(p, "EmberGlow", -2.8, 0, 0, 0.4, 0.2, 0.2, n=4)
+
+
+def atm_ice_wisp(p):                # Rime
+    crystal(p, "Ice", 0, 0, 0, 1.4, 2.2, 2.2, n=6)
+    for k in range(4):
+        a = math.radians(90 * k + 45)
+        with frame(p, xf(0, 0, 0, math.degrees(a), 0, 90)):
+            crystal(p, "Frost", 0, 0, 1.2, 0.35, 2.6, 0.2, n=4)
+    torus(p, "Snow", 1.5, 0.15, 0, 0, 0, n=12)
+
+
+def atm_moth(p):                    # Reclaimed
+    lump(p, "Bark", [(0, -1.6), (0.45, -0.8), (0.55, 0.3), (0.35, 1.2), (0, 1.6)], n=6, seed="moth", jitter=0.05)
+    for s in (-1, 1):
+        with frame(p, xf(0, s * 0.4, 0.3, 0, s * 12, 0)):
+            box(p, "MossLight", 0.2, s * 1.9, 0, 2.6, 3.6, 0.08)
+            orb(p, "EmberGlow", 0.4, s * 2.2, 0.05, 0.4, n=6)
+
+
+def atm_aether_wisp(p):             # Aether Surge
+    orb(p, "AetherBloom", 0, 0, 0, 1.0, n=8)
+    for k in range(5):
+        a = math.radians(72 * k)
+        with frame(p, xf(0, 0, 0, math.degrees(a), 0, 90)):
+            crystal(p, "Pearl", 0, 0, 0.8, 0.25, 1.4, 0.1, n=4)
+    torus(p, "Pearl", 1.5, 0.1, 0, 0, 0, n=12, rx=30)
+
+
+def atm_repair_drone(p):            # Unmooring
+    box(p, "PaleAlloy", 0, 0, 0, 3.0, 2.2, 1.4)
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            tube(p, "Steel", [(0, 0, 0.4), (sx * 2.2, sy * 1.8, 0.6)], [0.14, 0.14], n=3)
+            torus(p, "AzureNeon", 0.8, 0.1, sx * 2.2, sy * 1.8, 0.6, n=10)
+            frustum(p, "Gunmetal", 6, 0.2, 0.2, 0.3, 0.9, sx * 2.2, sy * 1.8)
+    tube(p, "Hazard", [(0.8, 0, -0.6), (1.6, 0, -1.8), (2.0, 0, -2.6)], [0.12, 0.1, 0.08], n=3)
+    frustum(p, "AzureNeon", 8, 0.35, 0.35, -0.8, -0.6, -0.6, 0)
+
 PROPS = [atm_security_probe, atm_dome_pylon, atm_burning_wreck, atm_wreck_stern, atm_storm_conductor,
-         atm_stormhawk, atm_ice_floe, atm_seed_pod, atm_aurora_prism, atm_falling_masonry, atm_broken_ring]
+         atm_stormhawk, atm_ice_floe, atm_seed_pod, atm_aurora_prism, atm_falling_masonry, atm_broken_ring,
+         atm_alarm_beacon, atm_signal_fire, atm_lightning_rod, atm_frost_lantern, atm_glow_bloom, atm_aether_node,
+         atm_stabilizer_beacon, atm_raider_glider, atm_ice_wisp, atm_moth, atm_aether_wisp, atm_repair_drone]
 
 
 def build(collection, mats):

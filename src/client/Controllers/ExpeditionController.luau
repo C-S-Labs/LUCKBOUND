@@ -136,7 +136,7 @@ function ExpeditionController.init(): ()
 		-- Sky, atmosphere, grade, cloud sea, motes: the rest of the world's look.
 		AmbienceController.enter(payload.Environment, payload.FloorY or 0)
 		-- The scenario atmosphere's weather, pulses, flashes and sky pieces.
-		AtmosphereEffects.enter(payload.Environment, mapCentre(payload.FloorY or 0), payload.StageName)
+		AtmosphereEffects.enter(payload.Environment, mapCentre(payload.FloorY or 0), payload.StageName, payload.Atmosphere)
 		-- Waits for the map to replicate, so it must not hold up the rest.
 		task.spawn(PropController.enter, payload.WorldId, payload.StageName)
 		active = payload
@@ -161,7 +161,7 @@ function ExpeditionController.init(): ()
 		end
 		ChunkLoader.applyEnvironment(Lighting, payload.Environment)
 		AmbienceController.enter(payload.Environment, payload.FloorY or active.FloorY or 0)
-		AtmosphereEffects.enter(payload.Environment, mapCentre(payload.FloorY or active.FloorY or 0), active.StageName)
+		AtmosphereEffects.enter(payload.Environment, mapCentre(payload.FloorY or active.FloorY or 0), active.StageName, payload.Atmosphere)
 		active.Environment = payload.Environment
 		active.Atmosphere = payload.Atmosphere
 		print(`[Expedition] atmosphere -> {payload.Atmosphere or "BASE"}`)
