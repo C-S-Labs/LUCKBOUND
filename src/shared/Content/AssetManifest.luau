@@ -265,6 +265,90 @@ local ENTRIES: { [string]: AssetEntry } = {
 		Source = "assets/rbxm/chunks/sky_citadel/SC_STRUCTURE.rbxmx",
 		Notes = "A CAP: a citadel gate that stays shut.",
 	},
+	SC_CHUNK_PATH_COLONNADE = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "The colonnade walk. Awaiting the 36-piece upload.",
+	},
+	SC_CHUNK_PATH_LONG_SPAN = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "A long bare span over the drop. Awaiting the 36-piece upload.",
+	},
+	SC_CHUNK_PATH_LANTERN_ROW = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "The lantern row. Awaiting the 36-piece upload.",
+	},
+	SC_CHUNK_PATH_TOWER_BEND = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "Turns left round the watchtower. Awaiting the 36-piece upload.",
+	},
+	SC_CHUNK_PATH_TEE = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "The tee junction. Awaiting the 36-piece upload.",
+	},
+	SC_CHUNK_PARADE_GROUND = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "The parade ground. Awaiting the 36-piece upload.",
+	},
+	SC_CHUNK_TURBINE_HALL = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "The turbine hall. Awaiting the 36-piece upload.",
+	},
+	SC_CHUNK_LIGHTHOUSE_POINT = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "Lighthouse point. Awaiting the 36-piece upload.",
+	},
+	SC_CHUNK_SKY_TREE_GROVE = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "The sky tree grove. Awaiting the 36-piece upload.",
+	},
+	SC_CHUNK_DOCKSIDE = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "The dockside yard. Awaiting the 36-piece upload.",
+	},
+	SC_CHUNK_SIDE_CHAPEL = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "The chapel of winds. Awaiting the 36-piece upload.",
+	},
+	SC_CHUNK_SIDE_GARDEN = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "A hanging garden. Awaiting the 36-piece upload.",
+	},
+	SC_CHUNK_SIDE_RELIQUARY = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "The reliquary. Awaiting the 36-piece upload.",
+	},
+	SC_CHUNK_PRISM_ARENA = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/source/worlds/sky_citadel/sky_citadel_kit.blend",
+		Notes = "The Prism Arena. Awaiting the 36-piece upload.",
+	},
 
 	-- === Hub prefabs =============================================
 	-- Authored pieces of the Crossroads, synced to ServerStorage by Rojo and

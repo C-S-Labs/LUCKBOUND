@@ -27,6 +27,7 @@ local REMOTES = {
 	"UI_Acknowledge", -- C->S
 	"Expedition_RequestEnter", -- C->S, no payload; cooldown + distance guarded
 	"Expedition_Started", -- S->C, ExpeditionPayload
+	"Expedition_Atmosphere", -- S->C, { Environment, Atmosphere, FloorY }; a forced atmosphere mid-run (/atmosphere)
 	"Expedition_Ended", -- S->C, ExpeditionEndPayload
 	"Expedition_TimerSync", -- S->C, { RemainingSeconds, ServerNow }
 	-- The hub menu. Three requests and two facts; everything else the menu

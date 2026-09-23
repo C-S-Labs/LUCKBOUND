@@ -42,6 +42,14 @@ from contextlib import contextmanager
 import bmesh
 import bpy
 from mathutils import Euler, Matrix, Vector
+from mathutils.bvhtree import BVHTree
+
+# Checks on the real mesh (detached parts, clipping) and the face tagging they
+# rely on: caller_tag() names the builder that made each face.
+FRAMEWORK = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "_framework")
+exec(open(os.path.join(FRAMEWORK, "geometry_checks.py"), encoding="utf-8").read(), globals())
+# The detail pass every prop mesh goes through before export (prop_detail.py).
+exec(open(os.path.join(FRAMEWORK, "prop_detail.py"), encoding="utf-8").read(), globals())
 
 # --------------------------------------------------------------------------
 # Kit-wide numbers. Every one of these is mirrored in
@@ -146,6 +154,7 @@ class Piece:
         self.verts = []
         self.faces = []
         self.fmat = []
+        self.ftag = []      # per face: the builder that made it (geometry_checks)
         self.base = Matrix.Identity(4)
         self.solids = []
         self.floats = []
@@ -170,6 +179,7 @@ class Piece:
         self.verts.extend(W @ Vector(v) for v in verts)
         self.faces.extend([base + i for i in f] for f in faces)
         self.fmat.extend([mat] * len(faces))
+        self.ftag.extend([caller_tag(2)] * len(faces))
 
     def world_box(self, x0, x1, y0, y1, z0, z1):
         pts = [self.base @ Vector((x, y, z)) for x in (x0, x1) for y in (y0, y1) for z in (z0, z1)]
@@ -232,6 +242,11 @@ PROP_KINDS = {
     "floating tome": ("tome", "Hover", 2),
     "bird": ("bird", "Bird", 2),
     "drifting lintel": ("lintel", "Float", 1),
+    # the citadel's anti-grav accents, lifted out of the structure by
+    # geometry_checks.settle: halos round spires and pedestals, crystals
+    # hovering over obelisks and altars, an orrery's rings
+    "hover halo": ("halo", "Float", 1),
+    "hover crystal": ("accent", "Hover", 1),
 }
 # Parts that move relative to their prop, by as_attached() label: library base
 # name and the animation that moves them.
@@ -261,6 +276,7 @@ def _slice(p, v0, f0, inv):
     del p.verts[v0:]
     del p.faces[f0:]
     del p.fmat[f0:]
+    del p.ftag[f0:]
     return verts, faces, mats
 
 
@@ -401,6 +417,101 @@ def crystal(p, mat, cx, cy, cz, r, up, down, n=4, rz=0.0):
     p.add(verts, faces, mat, xf(cx, cy, cz, rz))
 
 
+def tube(p, mat, pts, radii, n=5):
+    """One continuous tube through a list of points -- a root, a vine, a
+    rope -- its radius per point (0 at the last makes a tip). Each ring is
+    carried along the path (parallel transport), so the tube never twists."""
+    pts = [Vector(q) for q in pts]
+    if len(pts) < 2:
+        return
+    tans = []
+    for i in range(len(pts)):
+        a = pts[max(i - 1, 0)]
+        b = pts[min(i + 1, len(pts) - 1)]
+        t = b - a
+        tans.append(t.normalized() if t.length > 1e-9 else Vector((0, 0, 1)))
+    u = tans[0].cross(Vector((0, 0, 1)) if abs(tans[0].z) < 0.9 else Vector((1, 0, 0))).normalized()
+    verts, faces, rings = [], [], []
+    for i, (c, t) in enumerate(zip(pts, tans)):
+        u = (u - t * u.dot(t))
+        u = u.normalized() if u.length > 1e-9 else t.orthogonal().normalized()
+        v = t.cross(u)
+        r = radii[i]
+        if r <= 1e-6:
+            verts.append(tuple(c))
+            rings.append([len(verts) - 1])
+            continue
+        ring = []
+        for k in range(n):
+            a = 2 * math.pi * k / n
+            q = c + (u * math.cos(a) + v * math.sin(a)) * r
+            verts.append(tuple(q))
+            ring.append(len(verts) - 1)
+        rings.append(ring)
+    for A, B in zip(rings, rings[1:]):
+        if len(B) == 1:
+            faces += [(A[k], A[(k + 1) % n], B[0]) for k in range(n)]
+        else:
+            faces += [(A[k], A[(k + 1) % n], B[(k + 1) % n], B[k]) for k in range(n)]
+    if len(rings[0]) > 1:
+        faces.append(tuple(reversed(rings[0])))
+    if len(rings[-1]) > 1:
+        faces.append(tuple(rings[-1]))
+    p.add(verts, faces, mat, Matrix.Identity(4))
+
+
+def poly_radius(r, n, rot, theta_deg):
+    """Distance from the axis to the side of a regular n-gon of circumradius r
+    (vertices at rot + 360/n * k, as frustum() builds them), along theta."""
+    step = 360.0 / n
+    local = ((theta_deg - rot - step / 2) % step) - step / 2
+    return r * math.cos(math.radians(step / 2)) / math.cos(math.radians(local))
+
+
+def face_dist(bvh, x, y, z, a_deg, reach=40.0):
+    """How far the piece's surface is from the vertical axis through (x, y),
+    at height z along bearing a: found by casting in from outside, so it is
+    right however the thing there was turned when it was built."""
+    d = Vector((math.cos(math.radians(a_deg)), math.sin(math.radians(a_deg)), 0.0))
+    o = Vector((x, y, z)) + d * reach
+    hit = bvh.ray_cast(o, -d, reach)
+    return None if hit[0] is None else reach - hit[3]
+
+
+def piece_bvh(p):
+    return BVHTree.FromPolygons([tuple(v) for v in p.verts], [tuple(f) for f in p.faces])
+
+
+def hang_clear(bvh, x, y, ztop, L, r):
+    """Nothing under (x, y) from just below ztop down L, across a radius r:
+    room for a thing to hang there without passing through the piece."""
+    for dx, dy in ((0, 0), (r, 0), (-r, 0), (0, r), (0, -r)):
+        hit = bvh.ray_cast(Vector((x + dx, y + dy, ztop - 0.2)), Vector((0, 0, -1)), L + 0.5)
+        if hit[0] is not None:
+            return False
+    return True
+
+
+def path_clear(bvh, a, b, r=0.0):
+    """A straight run from a to b (and, with r, four parallel runs round it)
+    meets nothing."""
+    a, b = Vector(a), Vector(b)
+    d = b - a
+    L = d.length
+    if L < 1e-6:
+        return True
+    d.normalize()
+    offs = [Vector((0, 0, 0))]
+    if r > 0:
+        u = d.orthogonal().normalized()
+        v = d.cross(u)
+        offs += [u * r, -u * r, v * r, -v * r]
+    for o in offs:
+        if bvh.ray_cast(a + o, d, L)[0] is not None:
+            return False
+    return True
+
+
 def slab(p, mat, pts, z0, z1):
     """Convex polygon (CCW, XY) extruded from z0 to z1."""
     p.slab_area(pts)
@@ -459,6 +570,7 @@ def keel(p, pts, profile, centre=(0.0, 0.0)):
     p.verts.extend(p.base @ Vector(v) for v in verts)
     p.faces.extend([base + i for i in f] for f in faces)
     p.fmat.extend(mats)
+    p.ftag.extend([caller_tag(1)] * len(faces))
 
 
 def standard_keel(p, pts):
@@ -819,8 +931,16 @@ def corner_beacons(p):
     at least FLOAT_EDGE_MARGIN inside the tile (so it can never touch a
     neighbour's), clear of every other float, solid and deck. A corner with no
     legal spot after 60 tries goes without; nothing depends on the beacons any
-    more -- edge_pins() pins the bounding box instead."""
+    more -- edge_pins() pins the bounding box instead.
+
+    A scenario hook may set p.beacon_drop (0..1): the share of corners that go
+    without, drawn from its own stream; the base kit never sets it, so its
+    beacons are unchanged."""
+    drop = getattr(p, "beacon_drop", 0.0)
+    drop_rng = random.Random("beacons " + p.name)
     for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1)):
+        if drop and drop_rng.random() < drop:
+            continue
         for _ in range(60):
             style = p.rng.choice(BEACON_STYLES)
             k = p.rng.uniform(0.75, 1.3)
@@ -1029,6 +1149,9 @@ def dome(p, x, y, R, drum_h=8.0):
 
 
 def telescope(p, x, y, z, rz, elev=40.0):
+    # One elevation for every telescope: a different angle baked into the mesh
+    # made a different mesh for each (owner, 2026-09-23). The turn varies.
+    elev = 40.0
     with frame(p, xf(x, y, z, rz)):
         M = xf(rx=-(90 - elev))
         frustum(p, "DeepAlloy", 8, 2.4, 2.0, 0, 6, M=M)
@@ -1267,6 +1390,7 @@ def holed_block(p, mat, x0, x1, y0, y1, z0, z1, cx, cz, r, depth, n=24, lining="
     p.verts.extend(p.base @ Vector(v) for v in verts)
     p.faces.extend([base + i for i in f] for f in faces)
     p.fmat.extend(fmat)
+    p.ftag.extend([caller_tag(1)] * len(faces))
 
 
 def vault_door(p, x, y, z, R=8.0, fixture=False):
@@ -1724,17 +1848,48 @@ def ring_keel(p, pts, R):
             torus(p, "PaleAlloy", rr + 1.2, 0.5, 0, 0, z, n=24)
 
 
-def vines(p, pts, seed, count=10):
-    """Green strands hanging from a deck's rim -- garden islands only."""
+def vines(p, pts, seed, count=10, mats=("Verdure",)):
+    """Strands hanging from a deck's rim. Each grows out of the slab's side
+    (its top buried in it), just outside the edge, and swings a little as it
+    falls; a strand goes only where the air below is clear all the way down,
+    so none passes through a keel sloping in under the deck."""
     rng = random.Random(seed)
+    bvh = piece_bvh(p)
     n = len(pts)
-    for _ in range(count):
+    cx, cy = sum(q[0] for q in pts) / n, sum(q[1] for q in pts) / n
+    placed = 0
+    for _ in range(count * 4):
+        if placed >= count:
+            break
         i = rng.randrange(n)
         (ax, ay), (bx, by) = pts[i], pts[(i + 1) % n]
-        t = rng.uniform(0.2, 0.8)
-        x, y = ax + (bx - ax) * t, ay + (by - ay) * t
+        L2 = math.hypot(bx - ax, by - ay) or 1.0
+        t = rng.uniform(0.15, 0.85)
+        ex, ey = ax + (bx - ax) * t, ay + (by - ay) * t
+        nx, ny = (by - ay) / L2, -(bx - ax) / L2               # outward normal
+        if (ex - cx) * nx + (ey - cy) * ny < 0:
+            nx, ny = -nx, -ny
+        r = rng.uniform(0.35, 0.5)
+        x, y = ex + nx * r * 0.6, ey + ny * r * 0.6
         L = rng.uniform(6, 18)
-        box(p, "Verdure", x * 0.985, y * 0.985, -DECK_T - L / 2, 0.8, 0.8, L)
+        if not hang_clear(bvh, x + nx * 0.6, y + ny * 0.6, -DECK_T, L + 1, r + 0.3):
+            continue
+        k = max(3, int(L / 3))
+        path, radii = [], []
+        sway = rng.uniform(0, 2 * math.pi)
+        for j in range(k + 1):
+            f = j / k
+            out = 0.6 * f + 0.4 * math.sin(sway + f * 4)
+            path.append((x + nx * out, y + ny * out, -0.8 - (DECK_T - 0.8 + L) * f))
+            radii.append(r * (1.0 - 0.6 * f))
+        tube(p, rng.choice(mats), path, radii, n=4)
+        for j in range(1, k):                                   # a leaf or two along it
+            if rng.random() < 0.6:
+                q = path[j]
+                a = rng.uniform(0, 360)
+                box(p, rng.choice(mats), q[0] + nx * 0.15, q[1] + ny * 0.15, q[2], 1.1, 0.12, 0.7, rz=a,
+                    rx=rng.uniform(-30, 30))
+        placed += 1
 
 
 # ---- lights ----------------------------------------------------------------
@@ -3023,11 +3178,539 @@ def build_cap_sealed_gate():
     return p
 
 
+# A scenario kit (build_sky_citadel_scenarios.py) sets this to a function
+# that dresses each piece -- props, blockers, recolours -- before the beacons
+# fit round everything. None for the base kit, which is then unchanged.
+SCENARIO_HOOK = None
+
+
+def kit_tags():
+    """Every builder name in the kit: a face tagged with one of these is the
+    base kit's; any other tag is a scenario's addition (geometry_checks)."""
+    return {n for n, v in globals().items() if callable(v)} | {"?"}
+
+
+SETTLE_LOG = []
+
+
 def finish(p):
-    """Every piece ends here: beacons last (they fit round everything else),
-    then the bounding-box pins."""
+    """Every piece ends here: its parts settled (attached, or lifted into
+    animated props -- geometry_checks.settle), the scenario's dressing if one
+    is set, beacons last (they fit round everything else), then the
+    bounding-box pins."""
+    settle(p, kit_tags(), SETTLE_LOG)
+    if SCENARIO_HOOK is not None:
+        SCENARIO_HOOK(p)
     corner_beacons(p)
     edge_pins(p)
+
+
+
+# --------------------------------------------------------------------------
+# The 2026-09-23 expansion: fourteen more pieces, 22 -> 36, for the Fate
+# profiles (docs/biomes/SKY_CITADEL.md > Scenario kits). The first 22 are
+# untouched; these follow the same rules and draw from the same props.
+# --------------------------------------------------------------------------
+
+
+def _south(p, apo, w=SKYWAY_W):
+    skyway_deck(p, -HALF, -apo, -HALF + 0.4, -apo - 1)
+
+
+def _north(p, apo):
+    skyway_deck(p, apo, HALF, apo + 1, HALF - 0.4)
+
+
+def _east(p, apo):
+    skyway_deck_x(p, apo, HALF, apo + 1, HALF - 0.4)
+
+
+def _west(p, apo):
+    with oriented(p, 90):
+        skyway_deck(p, apo, HALF, apo + 1, HALF - 0.4)
+
+
+def build_path_colonnade():
+    p = Piece("chunk_path_colonnade", "PATH | N + S SKYWAY -- the colonnade walk")
+    h = 110.0
+    pts = chamfer_rect(30, h, 8)
+    island(p, pts, "PaleAlloy")
+    standard_keel(p, pts)
+    floor_planks(p, -12, 12, -h + 2, h - 2, "CitadelWhite", step=5, width=2.4)
+    _north(p, h)
+    _south(p, h)
+    edge_ring(p, pts, [("N", SKYWAY_W), ("S", SKYWAY_W), ("W", 12, 40)], "kerb")
+    colonnade(p, -22, -86, 86, 7, H=24)
+    colonnade(p, 22, -86, 86, 7, H=24)
+    for y in (-60, -20, 20, 60):
+        lamp(p, -12, y, h=7)
+        lamp(p, 12, y, h=7)
+    # the west islet carries the landmark spire, reached by a short bridge
+    ipts = moved(ngon(8, 22), -80, 40)
+    island(p, ipts)
+    crystal_root_keel(p, ipts, seed="colonnade islet", centre=(-80, 40), count=5)
+    bridge_x(p, -80 + 22 * math.cos(math.radians(22.5)), -30, 40, w=12)
+    edge_ring(p, ipts, [("E", 12)], "railing")
+    spire(p, -80, 40, 6, CROWN_TOP, extra_halos=1)
+    anti_grav_pylon(p, 76, -60, 8)
+    float_crystal(p, "SkyGlass", 72, 62, 24, 2.4, 5, 4)
+    finish(p)
+    return p
+
+
+def build_path_long_span():
+    p = Piece("chunk_path_long_span", "PATH | N + S SKYWAY -- a long bare span over the drop")
+    skyway_deck(p, -HALF, HALF, -HALF + 0.4, HALF - 0.4)
+    for y in range(-112, 113, 16):
+        for s in (-1, 1):
+            box(p, "AzureDim", s * 6, y, 0.05, 8, 1.0, 0.25, rz=s * 30)
+    for yc in (-64, 64):
+        frustum(p, "HullSlate", 8, 8, 6, -DECK_T + 0.5, -18, 0, yc)
+        frustum(p, "AzureDim", 8, 6.2, 6.2, -18, -21, 0, yc)
+        frustum(p, "DeepAlloy", 8, 6, 0, -21, -56, 0, yc)
+    for y in (-96, 0, 96):
+        light_pillar(p, 17, y, h=5)
+        light_pillar(p, -17, y, h=5)
+    ipts = moved(ngon(8, 20), -76, -30)
+    island(p, ipts)
+    crystal_root_keel(p, ipts, seed="span islet w", centre=(-76, -30), count=5)
+    edge_ring(p, ipts, [], "parapet")
+    banner_mast(p, -76, -30)
+    jpts = moved(ngon(6, 18, rot=0), 74, 50)
+    island(p, jpts, "PaleAlloy")
+    crystal_root_keel(p, jpts, seed="span islet e", centre=(74, 50), count=4)
+    edge_ring(p, jpts, [], "railing")
+    turbine(p, 74, 50, 40, 10)
+    anti_grav_pylon(p, 66, -72, 6)
+    anti_grav_pylon(p, -64, 74, 10)
+    finish(p)
+    return p
+
+
+def build_path_lantern_row():
+    p = Piece("chunk_path_lantern_row", "PATH | N + S SKYWAY -- the lantern row")
+    R = 56.0
+    pts = ngon(12, R)
+    apo = R * math.cos(math.radians(15))
+    island(p, pts)
+    stepped_keel(p, pts, steps=4)
+    floor_radial(p, 0, 0, 14, 48, 12, "PaleAlloy", width=1.4)
+    torus(p, "AzureDim", 14, 0.3, 0, 0, 0.05, n=16)
+    _north(p, apo)
+    _south(p, apo)
+    edge_ring(p, pts, [("N", SKYWAY_W), ("S", SKYWAY_W)], "parapet")
+    for y in (-40, -24, -8, 8, 24, 40):
+        brazier(p, -14, y)
+        brazier(p, 14, y)
+    light_obelisk(p, -34, 0)
+    light_obelisk(p, 34, 0, top=110)
+    for x in (-40, 40):
+        bench(p, x, 22, rz=90)
+        planter(p, x, -24)
+    float_crystal(p, "SkyGlass", -70, 60, 26, 2.4, 5.5, 4)
+    float_crystal(p, "SkyGlass", 70, -62, 20, 2.2, 5, 4)
+    finish(p)
+    return p
+
+
+def build_path_tower_bend():
+    p = Piece("chunk_path_tower_bend", "PATH | S + W SKYWAY -- turns left round the watchtower")
+    R = 60.0
+    pts = ngon(8, R)
+    apo = R * math.cos(math.radians(22.5))
+    island(p, pts, "PaleAlloy")
+    shallow_hull(p, pts)
+    floor_checker(p, pts, "CitadelWhite", tile=10, margin=4,
+                  keep=lambda x, y: math.hypot(x - 26, y - 26) > 18)
+    _south(p, apo)
+    _west(p, apo)
+    edge_ring(p, pts, [("S", SKYWAY_W), ("W", SKYWAY_W)], "parapet")
+    tower(p, 26, 26, 14, 56, roof=False)
+    spire(p, 26, 26, 5.5, CROWN_TOP, fins=False, z0=59)
+    for x, y in ((-30, -30), (8, -40), (-40, 8)):
+        brazier(p, x, y)
+    banner(p, 4, 34, rz=0)
+    banner(p, 34, 4, rz=90)
+    crate(p, 44, -20, 3.0, rz=12)
+    crate(p, 46, -17, 2.6, rz=-8)
+    planter(p, -20, 40)
+    anti_grav_pylon(p, 74, 74, 6)
+    float_crystal(p, "SkyGlass", -72, -70, 22, 2.4, 5.5, 4)
+    finish(p)
+    return p
+
+
+def build_path_tee():
+    p = Piece("chunk_path_tee", "PATH | S + E + W SKYWAY -- the tee junction")
+    R = 56.0
+    pts = ngon(8, R)
+    apo = R * math.cos(math.radians(22.5))
+    island(p, pts)
+    standard_keel(p, pts)
+    compass_rose(p, 0, -6, 24, 7)
+    torus(p, "SunGold", 30, 0.25, 0, -6, 0.05, n=24)
+    _south(p, apo)
+    _east(p, apo)
+    _west(p, apo)
+    edge_ring(p, pts, [("S", SKYWAY_W), ("E", SKYWAY_W), ("W", SKYWAY_W)], "kerb")
+    banner_mast(p, 0, 34)
+    tower(p, -26, 26, 8, 36)
+    tower(p, 26, 26, 8, 36)
+    for x, y, rz in ((-26, -44, 180), (44, -26, -90), (-44, -26, 90)):
+        banner(p, x, y, rz=rz, h=10)
+    lamp(p, -16, 10)
+    lamp(p, 16, 10)
+    float_crystal(p, "SkyGlass", 66, 64, 24, 2.4, 5, 4)
+    float_crystal(p, "SkyGlass", -66, 66, 30, 2.2, 5, 4)
+    finish(p)
+    return p
+
+
+def build_parade_ground():
+    p = Piece("chunk_parade_ground", "COMBAT | N + S SKYWAY -- the parade ground")
+    h, c = 96.0, 20.0
+    pts = chamfer_rect(h, h, c)
+    island(p, pts)
+    stepped_keel(p, pts, steps=5)
+    floor_grid(p, pts, "PaleAlloy", step=16, w=0.8, margin=6)
+    border_band(p, pts, width=6)
+    _north(p, h)
+    _south(p, h)
+    edge_ring(p, pts, [("N", SKYWAY_W), ("S", SKYWAY_W)], "parapet")
+    barracks(p, -72, 0, lx=48, ly=14, rz=90)
+    for y in (-30, -10, 10, 30):
+        target(p, 70, y, rz=-90)
+    weapon_rack(p, 56, -54, rz=0)
+    shield_rack(p, 56, 54, rz=180)
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            tower(p, sx * 74, sy * 74, 8, 40)
+    spire(p, 44, 70, 6, CROWN_TOP, extra_halos=1)
+    for y in (-60, 60):
+        banner(p, -30, y)
+        banner(p, 30, y)
+    float_crystal(p, "SkyGlass", -40, 70, 28, 2.4, 5, 4)
+    finish(p)
+    return p
+
+
+def build_turbine_hall():
+    p = Piece("chunk_turbine_hall", "COMBAT | N + S SKYWAY -- the turbine hall")
+    pts = chamfer_rect(60, 100, 12)
+    island(p, pts, "PaleAlloy")
+    engine_keel(p, pts, R=56)
+    floor_planks(p, -16, 16, -98, 98, "CitadelWhite", step=6, width=3.0)
+    _north(p, 100)
+    _south(p, 100)
+    edge_ring(p, pts, [("N", SKYWAY_W), ("S", SKYWAY_W)], "railing")
+    turbine(p, 40, 36, 96, 17, needle_to=CROWN_TOP)
+    turbine(p, -40, -36, 48, 13)
+    turbine(p, -40, 50, 34, 10)
+    with frame(p, xf(0, -6, 0)):
+        p.solid("wind altar", 0, 0, 10.5, 0, 4)
+        frustum(p, "PaleAlloy", 8, 10, 9, 0, 1.2, 0, 0)
+        frustum(p, "DeepAlloy", 8, 6, 5, 1.2, 3.2, 0, 0)
+        torus(p, "AzureNeon", 7.5, 0.3, 0, 0, 3.4, n=16)
+    for y in (-80, 80):
+        light_pillar(p, -24, y)
+        light_pillar(p, 24, y)
+    crate(p, 44, -64, 3.0, rz=8)
+    crate(p, 44, -60, 2.6, z=3.0, rz=-12)
+    float_crystal(p, "SkyGlass", -86, 0, 26, 2.4, 5.5, 4)
+    finish(p)
+    return p
+
+
+def build_lighthouse_point():
+    p = Piece("chunk_lighthouse_point", "COMBAT | N + S SKYWAY -- lighthouse point")
+    R = 72.0
+    pts = ngon(8, R)
+    apo = R * math.cos(math.radians(22.5))
+    island(p, pts)
+    ring_keel(p, pts, 60)
+    floor_radial(p, 0, 0, 20, 60, 16, "PaleAlloy", width=1.2)
+    border_band(p, pts, width=5)
+    _north(p, apo)
+    _south(p, apo)
+    edge_ring(p, pts, [("N", SKYWAY_W), ("S", SKYWAY_W)], "railing")
+    lighthouse(p, 40, 16)
+    crystal_cluster(p, -42, 30, seed=31)
+    crystal_cluster(p, -38, -34, seed=32, scale=0.8)
+    for x, y in ((-20, 40), (20, -40), (-50, 0)):
+        brazier(p, x, y)
+    bench(p, 30, -30, rz=-45)
+    bench(p, -26, -10, rz=90)
+    crate(p, 52, -24, 3.0, rz=20)
+    anti_grav_pylon(p, -86, 70, 6)
+    float_crystal(p, "SkyGlass", 88, -70, 22, 2.4, 5.5, 4)
+    finish(p)
+    return p
+
+
+def build_sky_tree_grove():
+    p = Piece("chunk_sky_tree_grove", "COMBAT | N + S SKYWAY -- the sky tree grove")
+    pts = chamfer_rect(74, 96, 16)
+    island(p, pts)
+    crystal_root_keel(p, pts, seed="grove roots", count=9)
+    vines(p, pts, "grove vines", 12)
+    floor_checker(p, pts, "Verdure", tile=9, margin=4,
+                  keep=lambda x, y: abs(x) > 14 and math.hypot(x + 34, y - 30) > 14)
+    _north(p, 96)
+    _south(p, 96)
+    edge_ring(p, pts, [("N", SKYWAY_W), ("S", SKYWAY_W)], "hedge")
+    sky_tree(p, -34, 30)
+    sky_tree(p, 40, -40, top=96)
+    for y in (-72, -50, 50, 72):
+        topiary_orb(p, -22, y, r=2.2)
+        topiary_orb(p, 22, y, r=2.2)
+    pool(p, 44, 44, 16, 24)
+    hedge(p, 20, 20, 20, 64)
+    bench(p, 56, 10, rz=90)
+    float_crystal(p, "SkyGlass", -84, -70, 24, 2.4, 5, 4)
+    finish(p)
+    return p
+
+
+def build_dockside():
+    p = Piece("chunk_dockside", "COMBAT | N + S SKYWAY -- the dockside yard")
+    pts = chamfer_rect(40, 100, 8)
+    island(p, pts, "PaleAlloy")
+    stepped_keel(p, pts, steps=4)
+    floor_planks(p, -34, 34, -96, 96, "CitadelWhite", step=7, width=3.4)
+    _north(p, 100)
+    _south(p, 100)
+    edge_ring(p, pts, [("N", SKYWAY_W), ("S", SKYWAY_W), ("E", 12, -10)], "railing")
+    for (x, y, r) in ((-24, -60, 0), (-24, -30, 0), (-24, 40, 0), (24, 60, 0)):
+        container(p, x, y, rz=r + 90)
+    container(p, -24, -45, rz=90, mat="CitadelViolet")
+    crate(p, 20, -70, 3.0, rz=10)
+    crate(p, 22, -66, 2.6, z=3.0, rz=-6)
+    crate(p, 26, 20, 3.2, rz=30)
+    dpts = moved(ngon(12, 30), 80, -10)
+    island(p, dpts, "HullSlate")
+    engine_keel(p, dpts, centre=(80, -10), R=30)
+    bridge_x(p, 40, 80 - 30 * math.cos(math.radians(15)), -10, w=12)
+    edge_ring(p, dpts, [("W", 12)], "kerb")
+    hazard_pad(p, 78, -14, 14)
+    signal_mast(p, 96, 6)
+    crane(p, 90, -30, rz=-20)
+    skiff(p, -80, 20, -2.2, rz=90)
+    finish(p)
+    return p
+
+
+def build_side_chapel():
+    p = Piece("chunk_side_chapel", "SIDE | one opening: south SKYWAY -- the chapel of winds")
+    R = 46.0
+    pts = ngon(12, R)
+    apo = R * math.cos(math.radians(15))
+    island(p, pts)
+    crystal_root_keel(p, pts, seed="chapel roots", count=8)
+    floor_radial(p, 0, 0, 8, 38, 12, "PaleAlloy", width=1.2)
+    _south(p, apo)
+    edge_ring(p, pts, [("S", 24)], "parapet")
+    dome(p, 0, 18, 13)
+    spire(p, -30, 16, 4, CROWN_TOP, fins=False)
+    torus(p, "AzureNeon", 6, 0.3, 0, -12, 0.4, n=16)
+    for k in range(3):
+        a = math.radians(90 + 120 * k)
+        float_crystal(p, "SkyGlass", 6 * math.cos(a), -12 + 6 * math.sin(a), 9 + 2 * k, 1.2, 3, 2.4)
+    chest(p, 24, 4, rz=-30)
+    chest(p, 20, -14, rz=10)
+    brazier(p, -16, -26)
+    brazier(p, 16, -26)
+    finish(p)
+    return p
+
+
+def build_side_garden():
+    p = Piece("chunk_side_garden", "SIDE | one opening: south SKYWAY -- a hanging garden")
+    R = 48.0
+    pts = ngon(12, R)
+    apo = R * math.cos(math.radians(15))
+    island(p, pts)
+    crystal_root_keel(p, pts, seed="side garden roots", count=8)
+    vines(p, pts, "side garden vines", 10)
+    floor_checker(p, pts, "Verdure", tile=8, margin=3,
+                  keep=lambda x, y: math.hypot(x, y - 20) > 12)
+    _south(p, apo)
+    edge_ring(p, pts, [("S", 24)], "hedge")
+    sky_tree(p, 0, 20)
+    pergola(p, -30, -30, 0, width=8, h=7)
+    for k, (x, y) in enumerate(((28, -16), (30, 8), (-34, 14))):
+        flower_bed(p, x, y, lx=6, seed=k + 10)
+    chest(p, 12, -24, rz=15)
+    bench(p, -10, -30, rz=0)
+    finish(p)
+    return p
+
+
+def build_side_reliquary():
+    p = Piece("chunk_side_reliquary", "SIDE | one opening: south SKYWAY -- the reliquary")
+    R = 46.0
+    pts = ngon(8, R)
+    apo = R * math.cos(math.radians(22.5))
+    island(p, pts, "DeepAlloy")
+    engine_keel(p, pts, R=42)
+    border_band(p, pts, width=5)
+    torus(p, "SunGold", 20, 0.3, 0, 6, 0.05, n=24)
+    _south(p, apo)
+    edge_ring(p, pts, [("S", 24)], "kerb")
+    light_obelisk(p, 0, 26)
+    for x in (-24, 24):
+        holo_pedestal(p, x, 16)
+    for k, x in enumerate((-12, 0, 12)):
+        chest(p, x, -4, rz=(k - 1) * 12)
+    crystal_cluster(p, -30, -16, seed=41)
+    crystal_cluster(p, 30, -16, seed=42, scale=0.8)
+    brazier(p, -14, -30)
+    brazier(p, 14, -30)
+    finish(p)
+    return p
+
+
+def build_prism_arena():
+    """The Prism Arena -- the second boss arena, built to share nothing with
+    the Crown Spire's clearing but its role (owner, 2026-09-23: "boss_clearing
+    and prism_arena ... look almost exactly the same"). A hexagon, not a
+    circle; kerbs, not a parapet; no turrets and no obelisk ring. The fight is
+    round a raised dais under a tripod of three crystal blades that meet at the
+    crown, with three prism pylons standing off in the corners."""
+    p = Piece("chunk_prism_arena", "BOSS | one opening: south ASCENT -- the Prism Arena")
+    R = 110.0
+    pts = ngon(6, R, rot=0)                   # flat edges north and south
+    chord_y = min(q[1] for q in pts)
+    island(p, pts, "PaleAlloy")
+    ring_keel(p, pts, 62)
+    ascent_deck(p, -HALF, chord_y)
+    edge_ring(p, pts, [("S", ASCENT_W)], "kerb")
+    # the floor: a ring of triangles in two colours round the dais
+    cx, cy = 0.0, 12.0
+    for k in range(24):
+        a0, a1, a2 = (math.radians(15 * k + d) for d in (0, 7.5, 15))
+        r1, r2 = (40, 78) if k % 2 == 0 else (78, 40)
+        tri_panel(p, "SkyGlass" if k % 2 == 0 else "AzureDim",
+                  (cx + math.cos(a0) * r1, cy + math.sin(a0) * r1),
+                  (cx + math.cos(a1) * r2, cy + math.sin(a1) * r2),
+                  (cx + math.cos(a2) * r1, cy + math.sin(a2) * r1), z=0.06)
+    torus(p, "AzureDim", 84, 0.35, cx, cy, 0.05, n=36)
+    # the dais, ramped north and south
+    dais = moved(ngon(6, 30, rot=0), cx, cy)
+    terrace(p, dais, 3.0, "CitadelWhite")
+    ap = 30 * math.cos(math.radians(30))
+    ramp(p, cx, cy - ap - 14, 16, 14, 3.0, "N")
+    ramp(p, cx, cy + ap + 14, 16, 14, 3.0, "S")
+    # the crown: three crystal blades leaning in from the dais to one apex
+    top = CROWN_TOP
+    apex = top - 8.0
+    p.solid("prism tripod", cx, cy, 22, 3, top)
+    legs = []
+    for k in range(3):
+        a = math.radians(90 + 120 * k + 60)
+        lx, ly = cx + math.cos(a) * 19, cy + math.sin(a) * 19
+        legs.append((lx, ly))
+        frustum(p, "DeepAlloy", 6, 3.2, 2.8, 3.0, 4.2, lx, ly)
+        tube(p, "SkyGlass", [(lx, ly, 3.5), (cx + (lx - cx) * 0.02, cy + (ly - cy) * 0.02, apex)], [2.2, 0.9], n=5)
+    for z, mat in ((58, "SunGold"), (102, "AzureNeon")):
+        f = (z - 3.5) / (apex - 3.5)
+        torus(p, mat, 19 * (1 - f) + 0.3, 0.55, cx, cy, z, n=24)
+    crystal(p, "SunGold", cx, cy, apex, 1.8, top - apex, 1.8, n=6)
+    # three prism pylons standing off round the arena
+    for k in range(3):
+        a = math.radians(30 + 120 * k)
+        px, py = cx + math.cos(a) * 62, cy + math.sin(a) * 62 * 0.95
+        p.solid("prism pylon", px, py, 4.6, 0, 32)
+        frustum(p, "DeepAlloy", 6, 4.4, 3.8, 0, 1.6, px, py)
+        crystal(p, "SkyGlass", px, py, 1.4, 3.0, 28, 0.2, n=6, rz=k * 20)
+        for s in (-1, 1):
+            with frame(p, xf(px + s * 2.4, py, 1.0, 0, 0, s * 18)):
+                crystal(p, "CitadelViolet", 0, 0, 0, 1.2, 10, 0.3, n=5)
+    # the mouth: two crystal gateposts either side of the approach
+    for s in (-1, 1):
+        gx, gy = s * 42, chord_y + 9
+        p.solid("gatepost", gx, gy, 3.6, 0, 22)
+        frustum(p, "DeepAlloy", 6, 3.4, 3.0, 0, 1.4, gx, gy)
+        crystal(p, "SkyGlass", gx, gy, 1.2, 2.2, 19, 0.2, n=6)
+        banner(p, s * 28, chord_y + 8)
+    for k in range(6):
+        a = math.radians(60 * k)
+        light_pillar(p, math.cos(a) * 94, math.sin(a) * 94 * 0.95 + 2)
+    for k in range(3):
+        a = math.radians(90 + 120 * k)
+        float_crystal(p, "SkyGlass", cx + math.cos(a) * 48, cy + math.sin(a) * 48, 40, 3.0, 7, 5)
+    finish(p)
+    return p
+
+
+NEW_BUILDERS = [
+    build_path_colonnade, build_path_long_span, build_path_lantern_row, build_path_tower_bend,
+    build_path_tee, build_parade_ground, build_turbine_hall, build_lighthouse_point,
+    build_sky_tree_grove, build_dockside, build_side_chapel, build_side_garden,
+    build_side_reliquary, build_prism_arena,
+]
+
+
+# --------------------------------------------------------------------------
+# INTERACTIVE SET DRESSING AS PROPS -- owner-directed 2026-09-23. Anything a
+# player could use, break, light, loot or that a scenario could change is a
+# prop, not part of the structure mesh, so the game can animate it and wire
+# interaction to it. The structure keeps only what you walk on and its paint.
+# Each helper below is wrapped so every call lands as one placed prop.
+# `PROP_INTERACT` is the default interaction; a scenario kit may override it
+# per placement (prop["interact"]).
+# --------------------------------------------------------------------------
+
+PROP_KINDS.update({
+    "lamp": ("lamp", "Static", 1),
+    "light pillar": ("light_pillar", "Static", 1),
+    "brazier": ("brazier", "Flicker", 1),
+    "banner": ("banner", "Sway", 2),
+    "crate": ("crate", "Static", 1),
+    "container": ("container", "Static", 1),
+    "holo pedestal": ("holo_pedestal", "Static", 1),
+    "telescope": ("telescope", "Static", 2),
+    "target": ("target", "Static", 1),
+    "weapon rack": ("weapon_rack", "Static", 1),
+    "shield rack": ("shield_rack", "Static", 1),
+})
+PROP_INTERACT = {
+    "brazier": "Lightable",
+    "crate": "Breakable",
+    "container": "Loot",
+    "holo pedestal": "Activate",
+    "telescope": "Use",
+    "target": "Hit",
+    "weapon rack": "Loot",
+    "shield rack": "Loot",
+}
+
+
+def _lifted(fn, label):
+    import inspect
+    sig = inspect.signature(fn)
+
+    def wrapper(p, *args, **kwargs):
+        bound = sig.bind(p, *args, **kwargs)
+        bound.apply_defaults()
+        a = bound.arguments
+        anchor = xf(a["x"], a["y"], a.get("z") or 0.0, a.get("rz") or 0.0)
+        with as_prop(p, label, anchor):
+            fn(p, *args, **kwargs)
+    wrapper.__wrapped__ = fn
+    return wrapper
+
+
+lamp = _lifted(lamp, "lamp")
+light_pillar = _lifted(light_pillar, "light pillar")
+brazier = _lifted(brazier, "brazier")
+banner = _lifted(banner, "banner")
+crate = _lifted(crate, "crate")
+container = _lifted(container, "container")
+holo_pedestal = _lifted(holo_pedestal, "holo pedestal")
+telescope = _lifted(telescope, "telescope")
+target = _lifted(target, "target")
+weapon_rack = _lifted(weapon_rack, "weapon rack")
+shield_rack = _lifted(shield_rack, "shield rack")
 
 
 BUILDERS = [
@@ -3043,7 +3726,7 @@ BUILDERS = [
     build_spire_court, build_spire_court_b, build_boss_clearing,
     # row 6: the caps -- dead ends authored as dead ends
     build_cap_crumbling, build_cap_overlook, build_cap_sealed_gate,
-]
+] + NEW_BUILDERS   # rows 7-10: the 2026-09-23 expansion
 
 
 # --------------------------------------------------------------------------
@@ -3229,9 +3912,11 @@ def validate(objs):
         p = PIECES_BY_NAME.get(obj.name)
         float_problems = float_report(p) if p else ["no build record"]
         ground_problems = ground_report(p) if p else ["no build record"]
+        geo_problems = geometry_faults(p, kit_tags()) if p else ["no build record"]
         checks = {
             "floats clear (no clipping, inside the tile)": not float_problems,
             "everything grounded stands on its deck": not ground_problems,
+            "every part attached, nothing clipping (real mesh)": not geo_problems,
             "footprint 256x256": abs(size.x - 256) < 0.01 and abs(size.y - 256) < 0.01,
             "height 256 (-96..+160)": abs(mn.z - KEEL_BOTTOM) < 0.01 and abs(mx.z - CROWN_TOP) < 0.01,
             "origin centred": abs(centre_xy[0]) < 0.01 and abs(centre_xy[1]) < 0.01,
@@ -3250,6 +3935,7 @@ def validate(objs):
             "floats": len(p.floats) if p else 0,
             "float_problems": float_problems[:6],
             "ground_problems": ground_problems[:6],
+            "geometry_problems": geo_problems[:6],
         })
     return ok, report
 
@@ -3328,43 +4014,68 @@ def _bounds(vs):
     return mn, mx
 
 
-def prop_library(pieces):
+# How far one mesh may be stretched to serve another copy: the spread of the
+# per-axis size ratios, as a log. 0.45 ~ one axis up to 1.57x the others.
+STRETCH = 0.45
+
+
+def _stretchable(a, b):
+    logs = [math.log(max(b[i], 0.05) / max(a[i], 0.05)) for i in range(3)]
+    return max(logs) - min(logs) <= STRETCH
+
+
+# Library bases the detail pass leaves as built: the warships are detailed by
+# hand (sky_citadel_ships.py), fixture parts carry collision and hinges.
+NO_DETAIL = {"raider_warship", "chest_body", "chest_lid", "vault_door", "forcefield"}
+
+
+def prop_library(pieces, prefix="prop_", fix_prefix="fix_"):
     """Merge identical shapes into one library entry each -- props, the parts
     attached to them, and fixture parts alike -- and record every copy.
 
-    Two shapes share an entry when their geometry is the same up to size: the
-    shape is compared after scaling it into a unit box, in 5% steps. Every
-    copy keeps its own size, so a large and a small crystal of the same cut are
-    one mesh drawn at two sizes -- which is what keeps the upload count small.
+    ONE MESH PER PROP (owner, 2026-09-23: "tell the script to orient them
+    accordingly upon placement"). Two copies share a mesh when they were built
+    the same way -- the same builder, the same faces, the same colours -- and
+    their proportions are within STRETCH of each other: a banner 12 tall and one
+    14 tall are one mesh, each copy drawn at its own size and turn. Only a real
+    difference makes a second mesh: another colour scheme (a scenario's
+    palette), or proportions far enough apart that stretching would show (a
+    keel ring twice as wide is not a stretched small one).
+
+    `prefix` / `fix_prefix` start every mesh name: the base kit's are prop_ and
+    fix_ (the live game's names); the scenario kits pass their own, so a
+    scenario's crate can never share a name with the base kit's different one.
 
     Returns (kinds, prop placements, fixture placements).
     """
-    kinds, counters = {}, {}
+    groups, counters, order = {}, {}, []
 
     def kind_of(base, verts, faces, mats):
         mn, mx = _bounds(verts)
         size, centre = mx - mn, (mn + mx) / 2
-
-        def unit(v, i):
-            # 5% steps: shapes whose proportions differ by less than that
-            # share a mesh. Each copy is drawn at its own exact size, so
-            # the only error is in interior proportions, never the outline.
-            return round((v[i] - centre[i]) / size[i] * 20) / 20 if size[i] > 1e-6 else 0.0
-
-        key = (base,
-               tuple((unit(v, 0), unit(v, 1), unit(v, 2)) for v in verts),
-               tuple(tuple(f) for f in faces),
-               tuple(mats))
-        kind = kinds.get(key)
+        key = (base, tuple(tuple(f) for f in faces), tuple(mats))
+        kind = next((k for k in groups.get(key, ()) if _stretchable(k["size"], size)), None)
         if kind is None:
             counters[base] = counters.get(base, 0) + 1
+            is_prop = base.startswith("prop_")
+            stem = base[5:] if is_prop else base[4:]
+            name = "%s%s_%s" % (prefix if is_prop else fix_prefix, stem, _letters(counters[base]))
+            kverts, kfaces, kmats = [v - centre for v in verts], faces, mats
+            if stem not in NO_DETAIL:
+                # finished before export (prop_detail.py), inside its own box,
+                # so every copy's Size still fits it
+                radius = max(math.hypot(v.x, v.y) for v in kverts)
+                kverts, kfaces, kmats = detail(kverts, kfaces, kmats, name, radius)
             kind = {
-                "name": "%s_%s" % (base, _letters(counters[base])),
-                "verts": [v - centre for v in verts],
-                "faces": faces,
-                "mats": mats,
+                "name": name,
+                "verts": kverts,
+                "faces": kfaces,
+                "mats": kmats,
+                "is_prop": is_prop,
+                "size": size.copy(),
             }
-            kinds[key] = kind
+            groups.setdefault(key, []).append(kind)
+            order.append(kind)
         return kind, size, centre
 
     def game_size(size):
@@ -3380,13 +4091,20 @@ def prop_library(pieces):
             world = prop["matrix"]
             pos = _TO_GAME @ (world @ centre)
             rot = _TO_GAME @ world.to_3x3() @ _TO_GAME.transposed()
+            alts = []
+            for averts, afaces, amats in prop.get("alts", ()):
+                akind, asize, acentre = kind_of("prop_" + base, averts, afaces, amats)
+                apos = _TO_GAME @ (world @ acentre)
+                alts.append({"prop": akind["name"], "pos": [apos.x, apos.y, apos.z], "size": game_size(asize)})
             rows.append({
                 "prop": kind["name"],
                 "anim": anim,
                 "tier": tier,
+                "interact": prop.get("interact", PROP_INTERACT.get(prop["label"])),
                 "pos": [pos.x, pos.y, pos.z],
                 "rot": [rot[r][c] for r in range(3) for c in range(3)],
                 "size": game_size(size),
+                "alts": alts,
             })
             body = len(rows)  # 1-based, as Luau will index it
             for att in prop["attached"]:
@@ -3426,7 +4144,7 @@ def prop_library(pieces):
             frows.append({"kind": fx["kind"], "pos": [origin.x, origin.y, origin.z],
                           "rot": [rot[r][c] for r in range(3) for c in range(3)], "parts": parts})
         fixtures[p.name] = frows
-    return list(kinds.values()), placements, fixtures
+    return order, placements, fixtures
 
 
 def props_to_objects(kinds, mats, collection):
@@ -3473,7 +4191,7 @@ def write_props_luau(kinds, placements, path=None):
         "	Library = {",
     ]
     for kind in kinds:
-        if kind["name"].startswith("prop_"):
+        if kind.get("is_prop", kind["name"].startswith("prop_")):
             out.append('		"%s",' % kind["name"])
     out.append("	},")
     out.append("	Placements = {")
@@ -3484,8 +4202,15 @@ def write_props_luau(kinds, placements, path=None):
         out.append("		%s = {" % _content_id(piece_name))
         for r in rows:
             extra = ""
+            if r.get("interact"):
+                extra += ', Interact = "%s"' % r["interact"]
             if "attach" in r:
-                extra = ", Attach = %d, Hinge = { %s }" % (r["attach"], ", ".join(num(v) for v in r["hinge"]))
+                extra += ", Attach = %d, Hinge = { %s }" % (r["attach"], ", ".join(num(v) for v in r["hinge"]))
+            if r.get("alts"):
+                extra += ", Alt = { %s }" % ", ".join(
+                    '{ Prop = "%s", P = { %s }, S = { %s } }' % (a["prop"], ", ".join(num(v) for v in a["pos"]),
+                                                              ", ".join(num(v) for v in a["size"]))
+                    for a in r["alts"])
             out.append('			{ Prop = "%s", Anim = "%s", Tier = %d, P = { %s }, R = { %s }, S = { %s }%s },' % (
                 r["prop"], r["anim"], r["tier"],
                 ", ".join(num(v) for v in r["pos"]),
@@ -3527,7 +4252,7 @@ def write_fixtures_luau(kinds, fixtures, path=None):
         "	Library = {",
     ]
     for kind in kinds:
-        if kind["name"].startswith("fix_"):
+        if not kind.get("is_prop", not kind["name"].startswith("fix_")):
             out.append('		"%s",' % kind["name"])
     out.append("	},")
     out.append("	Placements = {")
@@ -3600,6 +4325,12 @@ def verify_exports(paths):
     return results
 
 
+# The generated placement files normally land in src/. Set to a folder to
+# stage them there instead -- used while new pieces are waiting for asset ids,
+# so src/ never refers to a mesh the game cannot load yet.
+LUAU_STAGE_DIR = None
+
+
 def main(export=False, save=True):
     pieces, objs = build_kit()
     ok, report = validate(objs)
@@ -3622,13 +4353,18 @@ def main(export=False, save=True):
         structure = next(v for v in verified if v["file"] == STRUCTURE_FBX)
         wrong = {k: v for k, v in structure["sizes"].items() if any(abs(c - 256) > 0.01 for c in v)}
         if structure["meshes"] != len(objs) or wrong:
-            raise RuntimeError("structure export did not come back 22 x 256^3: %r" % wrong)
+            raise RuntimeError("structure export did not come back %d x 256^3: %r" % (len(objs), wrong))
         props = next(v for v in verified if v["file"] == PROPS_FBX)
         if props["meshes"] != len(kinds):
             raise RuntimeError("prop export came back with %d meshes, expected %d" % (props["meshes"], len(kinds)))
         out["exported"] = verified
-        out["placements"] = write_props_luau(kinds, placements)
-        out["fixtures"] = write_fixtures_luau(kinds, fixtures)
+        stage = LUAU_STAGE_DIR
+        if stage:
+            os.makedirs(stage, exist_ok=True)
+        out["placements"] = write_props_luau(
+            kinds, placements, os.path.join(stage, "Props_SkyCitadel.luau") if stage else None)
+        out["fixtures"] = write_fixtures_luau(
+            kinds, fixtures, os.path.join(stage, "Fixtures_SkyCitadel.luau") if stage else None)
     if save:
         # Only the kit, its prop library and the scale figures are saved. The
         # joined-map and corner previews are duplicates of kit pieces and read

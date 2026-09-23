@@ -78,6 +78,13 @@ COMMANDS.roll = function(player: Player, args: { string }): (boolean, string)
 	return FateSystem.forceRoll(player, string.upper(worldId))
 end
 
+--- /atmosphere <BASE | RANDOM | ID> -- force a scenario atmosphere (Content/
+--- Atmospheres) on your current expedition at once, and on the next one.
+--- RANDOM goes back to drawing from the seed. No argument lists the ids.
+COMMANDS.atmosphere = function(player: Player, args: { string }): (boolean, string)
+	return ExpeditionSystem.setAtmosphere(player, args[1] or "?")
+end
+
 --- /event <ID> -- start an authored event from Content/Events.
 ---
 --- THE ONLY WAY TO TEST A 1-IN-A-TRILLION EVENT. A Catalyst Star should

@@ -853,6 +853,11 @@ local GameConfig = {
 
 		-- AMBIENT SCENERY (CHUNK_AUTHORING.md convention 6): the props a kit
 		-- ships apart from its pieces, placed and animated on each client.
+		-- Scenario atmospheres (Content/Atmospheres): each run draws one from its
+		-- seed, or keeps the world's own air. BaseWeight is the world's own share
+		-- against 1 per profile (2 with seven profiles = 2 in 9 runs plain).
+		-- /atmosphere forces one in Studio.
+		Atmospheres = { Enabled = true, BaseWeight = 2 },
 		Props = {
 			-- On since Sky Citadel's structure-only meshes went live
 			-- (2026-09-23). A world still on meshes with its props baked in

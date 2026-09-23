@@ -320,6 +320,167 @@ local CHUNKS = {
 		EnemyTags = {},
 		Tags = { "dead-end", "gate" },
 	},
+	-- === The 2026-09-23 expansion: 14 more pieces (22 -> 36) ==========
+	-- PLACEHOLDER meshes until the 36-piece upload: they build as blockout,
+	-- so every layout still generates; the upload swaps them in by AssetKey.
+	{
+		Id = "SC_PATH_COLONNADE",
+		Role = "PATH" :: any,
+		AssetKey = "SC_CHUNK_PATH_COLONNADE",
+		-- The colonnade walk.
+		Sockets = { socket("north", "SKYWAY", 0, -128, 0), socket("south", "SKYWAY", 0, 128, 180) },
+		Supports = { Combat = true, Ambush = true },
+		Weight = 22,
+		EnemyTags = {},
+		Tags = { "bridge", "colonnade" },
+	},
+	{
+		Id = "SC_PATH_LONG_SPAN",
+		Role = "PATH" :: any,
+		AssetKey = "SC_CHUNK_PATH_LONG_SPAN",
+		-- A long bare span over the drop.
+		Sockets = { socket("north", "SKYWAY", 0, -128, 0), socket("south", "SKYWAY", 0, 128, 180) },
+		Supports = { Traversal = true, Ambush = true },
+		Weight = 18,
+		EnemyTags = {},
+		Tags = { "bridge", "exposed" },
+	},
+	{
+		Id = "SC_PATH_LANTERN_ROW",
+		Role = "PATH" :: any,
+		AssetKey = "SC_CHUNK_PATH_LANTERN_ROW",
+		-- The lantern row.
+		Sockets = { socket("north", "SKYWAY", 0, -128, 0), socket("south", "SKYWAY", 0, 128, 180) },
+		Supports = { Combat = true, Event = true },
+		Weight = 20,
+		EnemyTags = {},
+		Tags = { "bridge", "lit" },
+	},
+	{
+		Id = "SC_PATH_TOWER_BEND",
+		Role = "PATH" :: any,
+		AssetKey = "SC_CHUNK_PATH_TOWER_BEND",
+		-- Turns left round the watchtower.
+		Sockets = { socket("south", "SKYWAY", 0, 128, 180), socket("west", "SKYWAY", -128, 0, 270) },
+		Supports = { Combat = true, Ambush = true },
+		Weight = 20,
+		EnemyTags = {},
+		Tags = { "turn" },
+	},
+	{
+		Id = "SC_PATH_TEE",
+		Role = "PATH" :: any,
+		AssetKey = "SC_CHUNK_PATH_TEE",
+		-- The tee junction.
+		Sockets = { socket("south", "SKYWAY", 0, 128, 180), socket("east", "SKYWAY", 128, 0, 90), socket("west", "SKYWAY", -128, 0, 270) },
+		Supports = { Combat = true, Event = true },
+		Weight = 14,
+		MaxPerLayout = 1,
+		EnemyTags = {},
+		Tags = { "intersection" },
+	},
+	{
+		Id = "SC_PARADE_GROUND",
+		Role = "COMBAT" :: any,
+		AssetKey = "SC_CHUNK_PARADE_GROUND",
+		-- The parade ground.
+		Sockets = { socket("north", "SKYWAY", 0, -128, 0), socket("south", "SKYWAY", 0, 128, 180) },
+		Supports = { Combat = true, Event = true },
+		Weight = 20,
+		EnemyTags = {},
+		Tags = { "open", "wide" },
+	},
+	{
+		Id = "SC_TURBINE_HALL",
+		Role = "COMBAT" :: any,
+		AssetKey = "SC_CHUNK_TURBINE_HALL",
+		-- The turbine hall.
+		Sockets = { socket("north", "SKYWAY", 0, -128, 0), socket("south", "SKYWAY", 0, 128, 180) },
+		Supports = { Combat = true, Puzzle = true },
+		Weight = 18,
+		EnemyTags = {},
+		Tags = { "machinery" },
+	},
+	{
+		Id = "SC_LIGHTHOUSE_POINT",
+		Role = "COMBAT" :: any,
+		AssetKey = "SC_CHUNK_LIGHTHOUSE_POINT",
+		-- Lighthouse point.
+		Sockets = { socket("north", "SKYWAY", 0, -128, 0), socket("south", "SKYWAY", 0, 128, 180) },
+		Supports = { Combat = true, Shrine = true },
+		Weight = 18,
+		EnemyTags = {},
+		Tags = { "landmark" },
+	},
+	{
+		Id = "SC_SKY_TREE_GROVE",
+		Role = "COMBAT" :: any,
+		AssetKey = "SC_CHUNK_SKY_TREE_GROVE",
+		-- The sky tree grove.
+		Sockets = { socket("north", "SKYWAY", 0, -128, 0), socket("south", "SKYWAY", 0, 128, 180) },
+		Supports = { Combat = true, Treasure = true },
+		Weight = 18,
+		EnemyTags = {},
+		Tags = { "garden" },
+	},
+	{
+		Id = "SC_DOCKSIDE",
+		Role = "COMBAT" :: any,
+		AssetKey = "SC_CHUNK_DOCKSIDE",
+		-- The dockside yard.
+		Sockets = { socket("north", "SKYWAY", 0, -128, 0), socket("south", "SKYWAY", 0, 128, 180) },
+		Supports = { Combat = true, Treasure = true },
+		Weight = 18,
+		EnemyTags = {},
+		Tags = { "dock" },
+	},
+	{
+		Id = "SC_SIDE_CHAPEL",
+		Role = "SIDE" :: any,
+		AssetKey = "SC_CHUNK_SIDE_CHAPEL",
+		-- The chapel of winds.
+		Sockets = { socket("south", "SKYWAY", 0, 128, 180) },
+		Supports = { Shrine = true, Secret = true },
+		Weight = 60,
+		MaxPerLayout = 1,
+		EnemyTags = {},
+		Tags = { "optional" },
+	},
+	{
+		Id = "SC_SIDE_GARDEN",
+		Role = "SIDE" :: any,
+		AssetKey = "SC_CHUNK_SIDE_GARDEN",
+		-- A hanging garden.
+		Sockets = { socket("south", "SKYWAY", 0, 128, 180) },
+		Supports = { Treasure = true, Secret = true },
+		Weight = 60,
+		MaxPerLayout = 1,
+		EnemyTags = {},
+		Tags = { "optional" },
+	},
+	{
+		Id = "SC_SIDE_RELIQUARY",
+		Role = "SIDE" :: any,
+		AssetKey = "SC_CHUNK_SIDE_RELIQUARY",
+		-- The reliquary.
+		Sockets = { socket("south", "SKYWAY", 0, 128, 180) },
+		Supports = { Treasure = true, Shrine = true },
+		Weight = 60,
+		MaxPerLayout = 1,
+		EnemyTags = {},
+		Tags = { "optional", "risk-reward" },
+	},
+	{
+		Id = "SC_PRISM_ARENA",
+		Role = "BOSS" :: any,
+		AssetKey = "SC_CHUNK_PRISM_ARENA",
+		-- The Prism Arena.
+		Sockets = { socket("south", "ASCENT", 0, 128, 180) },
+		Weight = 1,
+		MaxPerLayout = 1,
+		EnemyTags = {},
+		Tags = { "arena" },
+	},
 }
 
 local out = {}

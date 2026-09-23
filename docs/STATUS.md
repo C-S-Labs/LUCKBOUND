@@ -447,6 +447,12 @@ survive a rescale and a literal does not.
 
 ## 5. Next session — pick up here
 
+> **2026-09-23: Sky Citadel is 36 pieces; atmospheres are live.** The 14 new
+> pieces build as blockout until the upload (`assets/export/worlds/sky_citadel/IMPORT_36.md`).
+> Every run draws one of seven scenario atmospheres from its seed, or the base
+> air (`GameConfig.Ambience.Atmospheres`). In Studio: `/atmosphere <ID|BASE|RANDOM>`.
+> The scenario kits themselves are saved, not live: tag `sky-citadel-scenarios-v1`.
+
 > **2026-09-23: the Sky Citadel kit is uploaded and unwalked.** `TESTING.md`
 > Test Q is the first time any of those 22 meshes will be stood on, and it is
 > where `GroundOffsetY`, the joins and the vertex colours stop being claims.
