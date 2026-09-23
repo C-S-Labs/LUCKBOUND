@@ -6,46 +6,26 @@ Run inside Blender (headless is the tested route):
 
 WHAT A SCENARIO KIT IS
 The same 36 pieces as the base kit (build_sky_citadel_kit.py, executed here as
-a module and never edited by this file), built again with a SCENARIO_HOOK that
-changes them for one Fate profile. The walkable layout is the base kit's own,
-so "I know this place" survives; what is happening on it does not.
+a module and never edited by this file), rebuilt through a SCENARIO_HOOK that
+changes their ARCHITECTURE for one Fate profile: palette, structure (crumbling,
+additions, loosened islets), surface paint, and the few props that are part of
+the architecture (a moored warship, forcefields at the openings).
 
-A hook does four things:
-  1. STRUCTURE  crumbling (breached walls, broken tower tops, islets coming
-                loose), whole-surface looks (snow on every upward face, moss on
-                wall tops, violet seams), and surface paint (cracks, scorch,
-                moss carpets, glowing fissures). Stays in the structure mesh.
-  2. PROPS      everything that can animate or be interacted with -- a large
-                vocabulary per scenario, two or three variants of most things.
-                Each variant is one fixed shape placed at a size, so every copy
-                shares one library mesh. Each carries an `Interact` the game
-                wires (`PROP_INTERACT`, overridable per placement).
-  3. BLOCKERS   one per opening, a prop the run may enable to close that socket.
-  4. ANCHORS    RESOURCE / DISCOVERY / ENEMY_POST / NPC_POST / EVENT spots the
-                Fate systems place things on (Anchors_<scenario>.luau).
-
-HOW THINGS ARE PLACED (owner direction 2026-09-23: nothing floats by accident,
-and no two chunks are dressed alike)
-* Every grounded prop is ray-cast onto the real walk surface, and its whole
-  footprint must be flat deck: nothing hovers, nothing sinks into a terrace,
-  nothing hangs over an edge.
-* Each scenario has its own spatial logic -- moss creeps along the foot of the
-  walls and up the turrets, snow piles against the lee of the walls from a
-  per-piece wind, aether erupts from one to three epicentres, raiders make one
-  camp and face their defences at the openings -- and every piece draws its own
-  density, wind, epicentres and camp site.
-* The only things that float are the ones meant to (drifting fragments, drones,
-  feathers on the wind, aether shards, moored warships), and they pass the
-  kit's own float rules.
+PROPS ARE NOT BAKED INTO CHUNKS (owner direction, 2026-09-23)
+A chunk ships no dressing. It ships SPAWN POINTS -- where a prop could stand,
+ray-cast on the real deck, never in the walking line -- and the game scatters
+props from the prop library (sky_citadel_props.py) when a map is generated,
+seeded by the run, so no two runs dress a chunk alike and nothing is placed
+twice. scatter_core.py is the algorithm; src/shared/Core/ScatterCore.luau is its
+exact twin in the game. The .blend previews two seeds of a run.
 
 Outputs (under assets/export/worlds/sky_citadel/scenarios/):
     <scenario>/sky_citadel_<scenario>_structure.fbx   36 meshes, each at the origin
-    sky_citadel_scenario_props.fbx                    every prop kind, all scenarios
-    Props_Scenarios.luau / Fixtures_Scenarios.luau    placements (staged, not in src/)
-    <scenario>/Anchors_<scenario>.luau
-and assets/source/worlds/sky_citadel/sky_citadel_scenarios.blend: the base kit
-plus one collection per scenario, a row each, with every prop drawn in place in
-Preview_Props_NotExported.
+    sky_citadel_scenario_props.fbx                    fixed architecture props
+    sky_citadel_scatter_props.fbx                     the scatter library + blockers
+    Props_Scenarios.luau / Fixtures_Scenarios.luau    fixed placements (staged)
+    <scenario>/Anchors_<scenario>.luau                gameplay anchors + blockers
+and, in the game, src/shared/Content/Scatter/SkyCitadel/ (kinds, pools, points).
 """
 
 import math
@@ -60,9 +40,12 @@ HERE = os.path.dirname(os.path.abspath(__file__)) if "__file__" in globals() els
 KIT_PATH = os.path.join(HERE, "build_sky_citadel_kit.py")
 K = {"__name__": "sky_citadel_kit", "__file__": KIT_PATH}
 exec(open(KIT_PATH, encoding="utf-8").read(), K)
+SC = {"__name__": "scatter_core"}
+exec(open(os.path.join(HERE, "scatter_core.py"), encoding="utf-8").read(), SC)
 
 REPO = K["REPO"]
 SCEN_EXPORT = os.path.join(REPO, "assets", "export", "worlds", "sky_citadel", "scenarios")
+SCATTER_LUAU = os.path.join(REPO, "src", "shared", "Content", "Scatter", "SkyCitadel")
 BLEND_OUT = os.path.join(HERE, "sky_citadel_scenarios.blend")
 
 HALF, DECK_T, CROWN_TOP = K["HALF"], K["DECK_T"], K["CROWN_TOP"]
@@ -70,318 +53,62 @@ box, frustum, crystal, torus = K["box"], K["frustum"], K["crystal"], K["torus"]
 xf, frame, as_prop, as_fixture, fixture_part = K["xf"], K["frame"], K["as_prop"], K["as_fixture"], K["fixture_part"]
 shapes_clash, free_for_float, _inside = K["shapes_clash"], K["free_for_float"], K["_inside"]
 I4 = Matrix.Identity(4)
+PREVIEW_SEEDS = (20260923, 7)
 
 # --------------------------------------------------------------------------
-# Palette additions, in the kit's style. Added to the module's own PALETTE
-# only here, so the base kit's materials are unchanged when it runs alone.
+# Palette additions, in the kit's style. Only in this module's copy of the
+# kit, so the base kit's own materials are unchanged when it runs alone.
 # --------------------------------------------------------------------------
 EXTRA_PALETTE = {
-    "Soot": ((40, 38, 48), False),          # cracks, char, keels
-    "Char": ((64, 54, 52), False),          # burnt ground, scorched cloth
+    "Soot": ((40, 38, 48), False),
+    "Char": ((64, 54, 52), False),
     "Snow": ((244, 248, 255), False),
-    "Frost": ((196, 214, 232), False),      # frosted white stone
-    "FrostDeep": ((150, 172, 198), False),  # frosted alloy
+    "Frost": ((196, 214, 232), False),
+    "FrostDeep": ((150, 172, 198), False),
     "Ice": ((150, 200, 230), False),
-    "AlarmRed": ((255, 70, 80), True),      # lockdown: small emissive
-    "AlarmDim": ((170, 50, 64), True),      # lockdown: large emissive
-    "EmberGlow": ((255, 150, 60), True),    # fire, raider drives
+    "AlarmRed": ((255, 70, 80), True),
+    "AlarmDim": ((170, 50, 64), True),
+    "EmberGlow": ((255, 150, 60), True),
     "Smoke": ((104, 104, 116), False),
-    "RaiderRust": ((158, 74, 52), False),   # raider hulls, sails, tents
-    "Twig": ((110, 90, 70), False),         # nests, planks, ship decks
-    "Bark": ((92, 70, 52), False),          # trunks, roots, logs
+    "RaiderRust": ((158, 74, 52), False),
+    "Twig": ((110, 90, 70), False),
+    "Bark": ((92, 70, 52), False),
     "Bone": ((226, 220, 200), False),
     "Moss": ((70, 112, 66), False),
     "MossLight": ((118, 160, 86), False),
-    "AetherBloom": ((190, 150, 255), True),   # aether: small emissive
-    "AetherDim": ((120, 90, 190), True),      # aether: large emissive
+    "AetherBloom": ((190, 150, 255), True),
+    "AetherDim": ((120, 90, 190), True),
+    "Steel": ((104, 112, 126), False),
+    "Gunmetal": ((70, 76, 88), False),
+    "Hazard": ((232, 188, 40), False),
+    "Pearl": ((236, 228, 246), False),
+    "Lavender": ((178, 160, 214), False),
+    "Weathered": ((178, 176, 162), False),
+    "Lichen": ((136, 148, 112), False),
+    "Scorched": ((128, 118, 112), False),
+    "StormStone": ((140, 148, 164), False),
+    "StormSlate": ((84, 92, 110), False),
+    "Plating": ((150, 156, 168), False),
 }
 K["PALETTE"].update(EXTRA_PALETTE)
 K["MAT_ORDER"] = list(K["PALETTE"].keys())
 
-# label -> (library base name, animation class, detail tier)
 K["PROP_KINDS"].update({
-    # floating, on purpose
-    "drifting fragment": ("fragment", "Tumble", 1),
-    "storm feather": ("feather", "Tumble", 2),
-    "aether shard": ("aether_shard", "Hover", 1),
-    "security drone": ("drone", "Hover", 1),
     "raider warship": ("warship", "Moored", 1),
-    # grounded
+    "gangway": ("gangway", "Static", 1),
     "blocker": ("blocker", "Blocker", 1),
     "rubble": ("rubble", "Static", 1),
     "fallen roof": ("fallen_roof", "Static", 1),
-    "gangway": ("gangway", "Static", 1),
-    "raider tent": ("raider_tent", "Static", 1),
-    "raider yurt": ("raider_yurt", "Static", 1),
-    "stake wall": ("stake_wall", "Static", 1),
-    "barricade": ("barricade", "Static", 1),
-    "barrel": ("barrel", "Static", 1),
-    "loot pile": ("loot_pile", "Static", 1),
-    "campfire": ("campfire", "Flicker", 1),
-    "bonfire": ("bonfire", "Flicker", 1),
-    "raider banner": ("raider_banner", "Sway", 2),
-    "ballista": ("ballista", "Static", 1),
     "sentinel pylon": ("sentinel", "Static", 1),
-    "sentinel turret": ("turret", "Static", 1),
-    "alarm post": ("alarm_post", "Strobe", 1),
-    "laser fence": ("laser_fence", "Pulse", 1),
-    "console": ("console", "Static", 1),
-    "nest": ("nest", "Static", 1),
-    "egg shells": ("egg_shells", "Static", 2),
-    "bone pile": ("bone_pile", "Static", 2),
-    "fallen feather": ("fallen_feather", "Static", 2),
-    "snow drift": ("snow_drift", "Static", 2),
-    "ice spikes": ("ice_spikes", "Static", 1),
-    "frost crystals": ("frost_crystals", "Static", 2),
-    "frozen figure": ("frozen_figure", "Static", 1),
-    "moss mound": ("moss_mound", "Static", 2),
-    "bush": ("bush", "Sway", 2),
-    "fern": ("fern", "Sway", 2),
-    "flowers": ("flowers", "Sway", 2),
-    "sapling": ("sapling", "Sway", 1),
-    "mushrooms": ("mushrooms", "Static", 2),
-    "aether cluster": ("aether_cluster", "Pulse", 1),
-    "aether geode": ("aether_geode", "Pulse", 1),
-    "stabilizer": ("stabilizer", "Pulse", 1),
-    "hazard beacon": ("hazard_beacon", "Strobe", 1),
 })
-K["PROP_INTERACT"].update({
-    "blocker": "Blocker",
-    "raider warship": "Board",
-    "raider tent": "Loot", "raider yurt": "Loot", "loot pile": "Loot",
-    "barricade": "Destroy", "stake wall": "Destroy", "barrel": "Breakable",
-    "campfire": "Hazard", "bonfire": "Hazard", "ballista": "Use",
-    "sentinel pylon": "Destroy", "sentinel turret": "Destroy", "security drone": "Destroy",
-    "laser fence": "Hazard", "console": "Override",
-    "nest": "Event", "egg shells": "Pickup", "bone pile": "Loot",
-    "fallen feather": "Pickup", "storm feather": "Pickup",
-    "ice spikes": "Break", "frost crystals": "Break", "frozen figure": "Break",
-    "bush": "Cut", "sapling": "Cut", "flowers": "Pickup", "mushrooms": "Harvest",
-    "aether cluster": "Harvest", "aether geode": "Harvest", "aether shard": "Harvest",
-    "stabilizer": "Repair",
-})
+K["PROP_INTERACT"].update({"raider warship": "Board", "blocker": "Blocker", "sentinel pylon": "Destroy"})
 
 SCENARIOS = ["unmooring", "siege", "lockdown", "stormhawk", "rime", "reclaimed", "aether_surge"]
 
 
 # ==========================================================================
-# Reading a finished piece
+# Shared geometry helpers
 # ==========================================================================
-
-def openings(p):
-    head = p.notes.split("--")[0].upper()
-    found = set()
-    for word, d in (("NORTH", "N"), ("SOUTH", "S"), ("EAST", "E"), ("WEST", "W")):
-        if word in head:
-            found.add(d)
-    for token in head.replace("|", " ").replace("+", " ").replace(",", " ").split():
-        if token in ("N", "S", "E", "W"):
-            found.add(token)
-    return found
-
-
-def role(p):
-    return p.notes.split("|")[0].strip().split()[0]
-
-
-def mouth(d, inset=10.0):
-    return {"N": (0, HALF - inset, 0), "S": (0, -HALF + inset, 0),
-            "E": (HALF - inset, 0, 90), "W": (-HALF + inset, 0, 90)}[d]
-
-
-def deck_polys(p):
-    return [w for w, _, _ in p.slabs]
-
-
-def in_corridor(p, x, y, half=20.0):
-    """The walking line between openings stays clear of dressing."""
-    o = openings(p)
-    if o & {"N", "S"} and abs(x) < half:
-        if ("N" in o and y > -half) or ("S" in o and y < half):
-            return True
-    if o & {"E", "W"} and abs(y) < half:
-        if ("E" in o and x > -half) or ("W" in o and x < half):
-            return True
-    return False
-
-
-def poly_area(poly):
-    return abs(sum(poly[i][0] * poly[(i + 1) % len(poly)][1] - poly[(i + 1) % len(poly)][0] * poly[i][1]
-                   for i in range(len(poly)))) / 2
-
-
-def edge_dist(poly, x, y):
-    best = 1e9
-    n = len(poly)
-    for i in range(n):
-        (ax, ay), (bx, by) = poly[i], poly[(i + 1) % n]
-        dx, dy = bx - ax, by - ay
-        L2 = dx * dx + dy * dy or 1e-9
-        t = max(0.0, min(1.0, ((x - ax) * dx + (y - ay) * dy) / L2))
-        best = min(best, math.hypot(x - (ax + dx * t), y - (ay + dy * t)))
-    return best
-
-
-class Ground:
-    """The piece's real surface, for honest placement."""
-
-    def __init__(self, p):
-        self.bvh = BVHTree.FromPolygons([tuple(v) for v in p.verts], [tuple(f) for f in p.faces])
-
-    def z_at(self, x, y, top=14.0):
-        hit = self.bvh.ray_cast(Vector((x, y, top)), Vector((0, 0, -1)), 60.0)
-        if hit[0] is None:
-            return None
-        return hit[0].z, abs(hit[1].z)
-
-    def flat(self, x, y, r, tol=0.3):
-        """The surface height if the whole disc of radius r is flat deck."""
-        h = self.z_at(x, y)
-        if h is None or h[1] < 0.95 or not (-1.0 < h[0] < 8.0):
-            return None
-        z0 = h[0]
-        for k in range(10):
-            a = 2 * math.pi * k / 10
-            for f in (0.5, 1.0):
-                hk = self.z_at(x + math.cos(a) * r * f, y + math.sin(a) * r * f)
-                if hk is None or abs(hk[0] - z0) > tol or hk[1] < 0.95:
-                    return None
-        return z0
-
-
-class Ctx:
-    """Everything a hook needs about one piece -- decks, surface, openings, a
-    per-piece random stream -- and the tools that place things honestly."""
-
-    def __init__(self, p, scenario):
-        self.p = p
-        self.scenario = scenario
-        self.rng = random.Random("%s|%s" % (p.name, scenario))
-        self.open = openings(p)
-        # the aviary's birds circle low over its decks, and the kit proves every
-        # orbit clear afterwards (clear_bird_orbits): nothing tall, nothing afloat
-        self.flat_only = "aviary" in p.name
-        # per-piece character, so no two pieces are dressed alike
-        self.density = self.rng.uniform(0.7, 1.35)
-        self.wind = self.rng.uniform(0, 2 * math.pi)
-        self.refresh()
-
-    def refresh(self):
-        self.polys = deck_polys(self.p)
-        self.areas = [poly_area(q) for q in self.polys]
-        self.ground = Ground(self.p)
-
-    def n(self, lo, hi):
-        return max(0, int(round(self.rng.uniform(lo, hi) * self.density)))
-
-    # ---- candidate points ----------------------------------------------
-    def uniform(self):
-        if not self.polys:
-            return None
-        poly = self.rng.choices(self.polys, weights=self.areas)[0]
-        xs, ys = [q[0] for q in poly], [q[1] for q in poly]
-        return self.rng.uniform(min(xs), max(xs)), self.rng.uniform(min(ys), max(ys))
-
-    def edge(self, d0, d1, facing=None):
-        """A point d0..d1 in from a deck edge -- the foot of a wall -- and the
-        edge's angle. With `facing`, only edges whose outside faces that way."""
-        edges = []
-        for poly in self.polys:
-            n = len(poly)
-            cx, cy = sum(q[0] for q in poly) / n, sum(q[1] for q in poly) / n
-            for i in range(n):
-                (ax, ay), (bx, by) = poly[i], poly[(i + 1) % n]
-                L = math.hypot(bx - ax, by - ay)
-                if L < 4:
-                    continue
-                nx, ny = (by - ay) / L, -(bx - ax) / L
-                mx, my = (ax + bx) / 2, (ay + by) / 2
-                if (cx - mx) * nx + (cy - my) * ny < 0:
-                    nx, ny = -nx, -ny                      # inward
-                if facing is not None and -(nx * math.cos(facing) + ny * math.sin(facing)) < 0.35:
-                    continue
-                edges.append((ax, ay, bx, by, nx, ny, L))
-        if not edges:
-            return None
-        ax, ay, bx, by, nx, ny, L = self.rng.choices(edges, weights=[e[6] for e in edges])[0]
-        t = self.rng.uniform(0.08, 0.92)
-        d = self.rng.uniform(d0, d1)
-        return ax + (bx - ax) * t + nx * d, ay + (by - ay) * t + ny * d, math.degrees(math.atan2(by - ay, bx - ax))
-
-    def near(self, cx, cy, r0, r1):
-        a = self.rng.uniform(0, 2 * math.pi)
-        d = r0 + (r1 - r0) * math.sqrt(self.rng.random())
-        return cx + math.cos(a) * d, cy + math.sin(a) * d
-
-    # ---- the test every grounded prop passes --------------------------------
-    def spot(self, x, y, r, h, corridor=True):
-        if corridor and in_corridor(self.p, x, y):
-            return None
-        z0 = self.ground.flat(x, y, r)
-        if z0 is None:
-            return None
-        shape = ("cyl", x, y, r, z0, z0 + h)
-        if any(shapes_clash(shape, s, gap=0.8) for _, s in self.p.solids + self.p.floats):
-            return None
-        return z0
-
-    def claim(self, label, x, y, r, z0, h):
-        self.p.solid(label, x, y, r, z0, z0 + h)
-
-    def put(self, label, shape_fn, r, h, where, s=1.0, rz=None, tries=60, corridor=True, interact=None):
-        """Try `where()` candidates until one fits; place the prop there."""
-        if self.flat_only and h * s > 1.0:
-            return None
-        for _ in range(tries):
-            c = where()
-            if c is None:
-                return None
-            x, y = c[0], c[1]
-            if rz is not None:
-                turn = rz
-            elif len(c) > 2:
-                turn = c[2]
-            else:
-                turn = self.rng.uniform(0, 360)
-            z0 = self.spot(x, y, r * s, h * s, corridor)
-            if z0 is None:
-                continue
-            self.claim(label, x, y, r * s, z0, h * s)
-            place(self.p, label, x, y, z0, turn, s, shape_fn)
-            if interact is not None:
-                self.p.props[-1]["interact"] = interact
-            return x, y, z0
-        return None
-
-    def air(self, label, r, h, above, around=None, tries=60):
-        """A spot `above` studs over the real surface, clear by the float rules."""
-        if self.flat_only:
-            return None
-        for _ in range(tries):
-            if around:
-                x, y = self.near(*around)
-            else:
-                x, y = self.rng.uniform(-HALF + 12, HALF - 12), self.rng.uniform(-HALF + 12, HALF - 12)
-            g = self.ground.z_at(x, y)
-            if g is None:
-                continue
-            z = g[0] + self.rng.uniform(*above)
-            shape = ("cyl", x, y, r, z - h / 2, z + h / 2)
-            if free_for_float(self.p, shape):
-                self.p.float_(label, x, y, r, z - h / 2, z + h / 2)
-                return x, y, z
-        return None
-
-
-def place(p, label, x, y, z, rz, s, shape):
-    """One prop: anchored at (x, y, z) turned rz, drawn at scale s. The scale
-    goes into the geometry and the turn into the placement, so every copy of a
-    shape shares one library mesh."""
-    with frame(p, xf(x, y, z, rz)):
-        with as_prop(p, label, I4):
-            with frame(p, Matrix.Diagonal((s, s, s, 1.0))):
-                shape(p)
-
 
 def add_faces(p, verts, faces, mats, M=I4):
     """Like Piece.add, but one material per face."""
@@ -429,15 +156,6 @@ def blot(p, mat, x, y, r, seed, z=0.04, h=0.05, n=9, jitter=0.35, sx=1.0, rz=0.0
         lump(p, mat, [(r, z), (r, z + h)], n=n, seed=seed, jitter=jitter, sx=sx)
 
 
-def row(builder, xs):
-    """A blocker: one shape repeated across the 40-stud opening."""
-    def shape(p):
-        for x in xs:
-            with frame(p, xf(x, 0, 0)):
-                builder(p)
-    return shape
-
-
 def crack(p, x, y, rng, L=None, w=1.0, mat="Soot", branches=1):
     L = L or rng.uniform(18, 34)
     a = rng.uniform(0, 360)
@@ -452,31 +170,178 @@ def crack(p, x, y, rng, L=None, w=1.0, mat="Soot", branches=1):
         px, py = px + dx, py + dy
 
 
-def clear_disc(ctx, x, y, r):
-    return ctx.ground.flat(x, y, r, tol=0.2) is not None and \
-        not any(shapes_clash(("cyl", x, y, r, 0, 0.3), s, gap=0.2) for _, s in ctx.p.solids)
+# The prop library: families of seeded variants (see its docstring).
+exec(open(os.path.join(HERE, "sky_citadel_props.py"), encoding="utf-8").read(), globals())
 
 
-def surface_crack(ctx, L, w=1.0, mat="Soot", near=None):
-    """A crack reserves its whole reach on flat deck, so it cannot leave it."""
+# ==========================================================================
+# Reading a finished piece
+# ==========================================================================
+
+def openings(p):
+    head = p.notes.split("--")[0].upper()
+    found = set()
+    for word, d in (("NORTH", "N"), ("SOUTH", "S"), ("EAST", "E"), ("WEST", "W")):
+        if word in head:
+            found.add(d)
+    for token in head.replace("|", " ").replace("+", " ").replace(",", " ").split():
+        if token in ("N", "S", "E", "W"):
+            found.add(token)
+    return found
+
+
+def role(p):
+    return p.notes.split("|")[0].strip().split()[0]
+
+
+def mouth(d, inset=10.0):
+    return {"N": (0, HALF - inset, 0), "S": (0, -HALF + inset, 0),
+            "E": (HALF - inset, 0, 90), "W": (-HALF + inset, 0, 90)}[d]
+
+
+def deck_polys(p):
+    return [w for w, _, _ in p.slabs]
+
+
+def in_corridor(p, x, y, half=20.0, o=None):
+    """The walking line between openings, which no prop may ever stand in."""
+    o = openings(p) if o is None else o
+    if o & {"N", "S"} and abs(x) < half:
+        if ("N" in o and y > -half) or ("S" in o and y < half):
+            return True
+    if o & {"E", "W"} and abs(y) < half:
+        if ("E" in o and x > -half) or ("W" in o and x < half):
+            return True
+    return False
+
+
+def poly_area(poly):
+    return abs(sum(poly[i][0] * poly[(i + 1) % len(poly)][1] - poly[(i + 1) % len(poly)][0] * poly[i][1]
+                   for i in range(len(poly)))) / 2
+
+
+def edge_near(poly, x, y):
+    """(distance to the polygon's nearest edge, that edge's inward normal)."""
+    best, nrm = 1e9, (0.0, 0.0)
+    n = len(poly)
+    cx, cy = sum(q[0] for q in poly) / n, sum(q[1] for q in poly) / n
+    for i in range(n):
+        (ax, ay), (bx, by) = poly[i], poly[(i + 1) % n]
+        dx, dy = bx - ax, by - ay
+        L2 = dx * dx + dy * dy or 1e-9
+        t = max(0.0, min(1.0, ((x - ax) * dx + (y - ay) * dy) / L2))
+        d = math.hypot(x - (ax + dx * t), y - (ay + dy * t))
+        if d < best:
+            L = math.sqrt(L2)
+            nx, ny = dy / L, -dx / L
+            if (cx - (ax + bx) / 2) * nx + (cy - (ay + by) / 2) * ny < 0:
+                nx, ny = -nx, -ny
+            best, nrm = d, (nx, ny)
+    return best, nrm
+
+
+def edge_dist(poly, x, y):
+    return edge_near(poly, x, y)[0]
+
+
+class Ground:
+    """The piece's real surface."""
+
+    def __init__(self, p):
+        self.bvh = BVHTree.FromPolygons([tuple(v) for v in p.verts], [tuple(f) for f in p.faces])
+
+    def z_at(self, x, y, top=14.0):
+        hit = self.bvh.ray_cast(Vector((x, y, top)), Vector((0, 0, -1)), 60.0)
+        if hit[0] is None:
+            return None
+        return hit[0].z, abs(hit[1].z)
+
+    def up(self, x, y, z):
+        hit = self.bvh.ray_cast(Vector((x, y, z + 0.5)), Vector((0, 0, 1)), 60.0)
+        return 60.0 if hit[0] is None else hit[0].z - z
+
+    def flat(self, x, y, r, tol=0.3):
+        h = self.z_at(x, y)
+        if h is None or h[1] < 0.95 or not (-1.0 < h[0] < 8.0):
+            return None
+        z0 = h[0]
+        for k in range(10):
+            a = 2 * math.pi * k / 10
+            for f in (0.5, 1.0):
+                hk = self.z_at(x + math.cos(a) * r * f, y + math.sin(a) * r * f)
+                if hk is None or abs(hk[0] - z0) > tol or hk[1] < 0.95:
+                    return None
+        return z0
+
+
+class Ctx:
+    """What a structure hook needs about one piece."""
+
+    def __init__(self, p, scenario):
+        self.p = p
+        self.scenario = scenario
+        self.rng = random.Random("%s|%s" % (p.name, scenario))
+        self.open = openings(p)
+        self.flat_only = "aviary" in p.name      # birds circle low there; keep it clear
+        self.refresh()
+
+    def refresh(self):
+        self.polys = deck_polys(self.p)
+        self.areas = [poly_area(q) for q in self.polys]
+        self.ground = Ground(self.p)
+
+    def uniform(self):
+        if not self.polys:
+            return None
+        poly = self.rng.choices(self.polys, weights=self.areas)[0]
+        xs, ys = [q[0] for q in poly], [q[1] for q in poly]
+        return self.rng.uniform(min(xs), max(xs)), self.rng.uniform(min(ys), max(ys))
+
+    def near(self, cx, cy, r0, r1):
+        a = self.rng.uniform(0, 2 * math.pi)
+        d = r0 + (r1 - r0) * math.sqrt(self.rng.random())
+        return cx + math.cos(a) * d, cy + math.sin(a) * d
+
+    def clear(self, x, y, r, h=0.3, corridor=True):
+        """Flat deck of radius r, clear of everything registered."""
+        if corridor and in_corridor(self.p, x, y, o=self.open):
+            return None
+        z0 = self.ground.flat(x, y, r, tol=0.2)
+        if z0 is None:
+            return None
+        if any(shapes_clash(("cyl", x, y, r, z0, z0 + h), s, gap=0.5) for _, s in self.p.solids + self.p.floats):
+            return None
+        return z0
+
+
+def place(p, label, x, y, z, rz, s, shape):
+    """A fixed prop (architecture): anchored at (x, y, z), turned rz, scale s
+    in the geometry so copies of a shape share one mesh."""
+    with frame(p, xf(x, y, z, rz)):
+        with as_prop(p, label, I4):
+            with frame(p, Matrix.Diagonal((s, s, s, 1.0))):
+                shape(p)
+
+
+def surface_crack(ctx, L, w=1.0, mat="Soot"):
     for _ in range(40):
-        c = near() if near else ctx.uniform()
+        c = ctx.uniform()
         if c is None:
             return
-        if clear_disc(ctx, c[0], c[1], L * 1.02):   # a crack can wander its full length
+        if ctx.clear(c[0], c[1], L * 1.02, corridor=False) is not None:
             crack(ctx.p, c[0], c[1], ctx.rng, L=L, w=w, mat=mat)
             return
 
 
-def surface_blot(ctx, mat, r, where, sx=1.0, n=9, jitter=0.35):
+def surface_blot(ctx, mat, r, where=None, sx=1.0, n=9, jitter=0.35):
     for _ in range(40):
-        c = where()
+        c = (where or ctx.uniform)()
         if c is None:
             return
-        if not clear_disc(ctx, c[0], c[1], r * max(sx, 1.0)):
+        if ctx.clear(c[0], c[1], r * max(sx, 1.0), corridor=False) is None:
             continue
         blot(ctx.p, mat, c[0], c[1], r, "blot %s %.1f %.1f" % (ctx.p.name, c[0], c[1]), sx=sx, n=n, jitter=jitter,
-             rz=c[2] if len(c) > 2 else ctx.rng.uniform(0, 180))
+             rz=ctx.rng.uniform(0, 180))
         return
 
 
@@ -485,7 +350,6 @@ def surface_blot(ctx, mat, r, where, sx=1.0, n=9, jitter=0.35):
 # ==========================================================================
 
 def shells(p):
-    """Connected pieces of the soup, each with its faces, verts and box."""
     parent = list(range(len(p.verts)))
 
     def find(a):
@@ -514,7 +378,6 @@ def shells(p):
 
 
 def remove_faces(p, drop):
-    """Delete faces (and the vertices only they used), keeping p.up in step."""
     drop = set(drop)
     keep = [i for i in range(len(p.faces)) if i not in drop]
     newidx = {old: new for new, old in enumerate(keep)}
@@ -528,9 +391,8 @@ def remove_faces(p, drop):
     p.fmat = fmat
 
 
-def breach_walls(ctx, count):
-    """Knock gaps in the parapets and railings, rubble fallen inside and a
-    broken chunk of rim hanging from the deck's edge beneath each gap."""
+def breach_walls(ctx, count, rubble=True):
+    """Knock gaps in the parapets and railings; a chunk of rim hangs below."""
     if ctx.flat_only or count <= 0:
         return []
     p = ctx.p
@@ -552,9 +414,8 @@ def breach_walls(ctx, count):
         cx, cy = centre["c"].x, centre["c"].y
         if any(math.hypot(cx - a, cy - b) < 30 for a, b in done):
             continue
-        R = ctx.rng.uniform(6, 12)
-        hit = [s for s in rim if math.hypot(s["c"].x - cx, s["c"].y - cy) < R]
-        for s in hit:
+        R_ = ctx.rng.uniform(6, 12)
+        for s in [s for s in rim if math.hypot(s["c"].x - cx, s["c"].y - cy) < R_]:
             drop += s["faces"]
             rim.remove(s)
         done.append((cx, cy))
@@ -564,30 +425,32 @@ def breach_walls(ctx, count):
     for cx, cy in done:
         box(p, "CitadelWhite", cx, cy, -DECK_T - 1.2, 5, 3, 3.2, rz=ctx.rng.uniform(0, 90), rx=ctx.rng.uniform(-18, 18))
     ctx.refresh()
-    for cx, cy in done:
-        poly = min(ctx.polys, key=lambda q: edge_dist(q, cx, cy))
-        n = len(poly)
-        mx, my = sum(q[0] for q in poly) / n, sum(q[1] for q in poly) / n
-        L = math.hypot(mx - cx, my - cy) or 1
-        for k in range(ctx.rng.randint(2, 3)):
-            d = 5 + 4 * k
-            tx, ty = cx + (mx - cx) / L * d, cy + (my - cy) / L * d
-            ctx.put("rubble", RUBBLE[ctx.rng.randrange(len(RUBBLE))], 3.2, 3.0,
-                    lambda: ctx.near(tx, ty, 0, 3), s=ctx.rng.uniform(0.8, 1.3), corridor=False)
+    if rubble:
+        for cx, cy in done:
+            poly = min(ctx.polys, key=lambda q: edge_dist(q, cx, cy))
+            n = len(poly)
+            mx, my = sum(q[0] for q in poly) / n, sum(q[1] for q in poly) / n
+            L = math.hypot(mx - cx, my - cy) or 1
+            tx, ty = cx + (mx - cx) / L * 6, cy + (my - cy) / L * 6
+            z0 = ctx.clear(tx, ty, 3.4, corridor=False)
+            if z0 is not None:
+                p.solid("rubble", tx, ty, 3.4, z0, z0 + 3)
+                place(p, "rubble", tx, ty, z0, ctx.rng.uniform(0, 360), 1.0, lambda q: f_rubble(q, 1))
     return done
 
 
-def crumble_tower(ctx):
-    """Break the top off one turret: its walk and roof go, a jagged rim is
-    left, and the roof lies where it fell. Never a turret carrying a spire."""
+def crumble_tower(ctx, fallen=True, cut=None):
+    """Break the top off one turret: walk and roof go, a jagged rim is left,
+    and the roof lies where it fell. Never a turret carrying a spire. With
+    `cut` (0..1) the shaft is snapped that far up instead of at its walk."""
     if ctx.flat_only:
         return False
     p = ctx.p
     towers = [s for lab, s in p.solids if lab == "tower" and s[0] == "cyl"]
     ctx.rng.shuffle(towers)
     sh = shells(p)
-    for (_, x, y, R, z0, z1) in towers:
-        r = R / 1.25
+    for (_, x, y, R_, z0, z1) in towers:
+        r = R_ / 1.25
         H = z1 - 6 - 2.4 * r
         near = [s for s in sh if math.hypot(s["c"].x - x, s["c"].y - y) < r * 1.3]
         if any(s["max"].z >= CROWN_TOP - 0.01 or s["max"].z > z1 + 1.0 for s in near):
@@ -595,27 +458,48 @@ def crumble_tower(ctx):
         top = [s for s in near if s["min"].z >= H - 0.5]
         if not top:
             continue
-        remove_faces(p, [fi for s in top for fi in s["faces"]])
-        for k in range(10):   # the jagged rim of the break
+        drop = [fi for s in top for fi in s["faces"]]
+        Hc = H
+        if cut is not None:
+            # snap the shaft itself: squash its top ring of verts down to the cut
+            Hc = max(8.0, H * cut)
+            for s in near:
+                if s["min"].z < H - 0.5 and s["max"].z > Hc:
+                    if s["max"].z - s["min"].z > 6:       # the shaft
+                        for v in s["verts"]:
+                            if p.verts[v].z > Hc:
+                                p.verts[v] = Vector((p.verts[v].x, p.verts[v].y, Hc))
+                    else:                                  # a window slit above the break
+                        drop += s["faces"]
+        remove_faces(p, drop)
+        for k in range(10):
             a = math.radians(36 * k + ctx.rng.uniform(-8, 8))
             hgt = ctx.rng.uniform(0.8, 4.5)
-            box(p, "CitadelWhite", x + math.cos(a) * r * 0.86, y + math.sin(a) * r * 0.86, H + hgt / 2 - 0.3,
+            box(p, "CitadelWhite", x + math.cos(a) * r * 0.86, y + math.sin(a) * r * 0.86, Hc + hgt / 2 - 0.3,
                 r * 0.55, 1.0, hgt, rz=math.degrees(a) + 90, rx=ctx.rng.uniform(-10, 10))
-        box(p, "Soot", x, y, H - 0.4, r * 1.5, r * 1.5, 0.3, rz=22.5)
+        box(p, "Soot", x, y, Hc - 0.4, r * 1.5, r * 1.5, 0.3, rz=22.5)
         ctx.refresh()
-        ctx.put("fallen roof", shape_fallen_roof, 6.5, 5.5, lambda: ctx.near(x, y, r * 1.8, r * 3.4),
-                s=r / 6.0, corridor=False)
-        for _ in range(2):
-            ctx.put("rubble", RUBBLE[ctx.rng.randrange(len(RUBBLE))], 3.2, 3.0,
-                    lambda: ctx.near(x, y, r * 1.3, r * 2.6), s=ctx.rng.uniform(0.9, 1.4), corridor=False)
+        if fallen:
+            for _ in range(40):
+                tx, ty = ctx.near(x, y, r * 1.8, r * 3.4)
+                z0 = ctx.clear(tx, ty, 6.5 * r / 6.0, corridor=True)
+                if z0 is not None:
+                    p.solid("fallen roof", tx, ty, 6.5 * r / 6.0, z0, z0 + 6)
+                    place(p, "fallen roof", tx, ty, z0, ctx.rng.uniform(0, 360), r / 6.0, shape_fallen_roof)
+                    break
         return True
     return False
 
 
+def shape_fallen_roof(p):
+    with frame(p, xf(0, 0, 2.6, 0, 0, 78)):
+        frustum(p, "CitadelViolet", 8, 5.4, 0, -2, 12)
+    crystal(p, "SunGold", 12.5, 0, 1.0, 0.8, 1.6, 1.0)
+
+
 def loosen_islet(ctx):
-    """Unmooring: one of the piece's own islets has come loose -- sunk a little
-    and tilted, so its bridge no longer meets it. Everything on it goes with it.
-    Never the main deck, and never an islet holding the crown landmark."""
+    """One of the piece's own low islets has come loose: sunk and tilted, its
+    bridge no longer meeting it, everything on it gone with it."""
     if ctx.flat_only or len(ctx.polys) < 2:
         return False
     p = ctx.p
@@ -629,19 +513,29 @@ def loosen_islet(ctx):
         cx, cy = sum(q[0] for q in poly) / n, sum(q[1] for q in poly) / n
         grow = [(cx + (q[0] - cx) * 1.08, cy + (q[1] - cy) * 1.08) for q in poly]
         group = [s for s in sh if _inside((s["c"].x, s["c"].y), grow)]
-        # only low islets come loose: a tall landmark tipping would leave the
-        # piece's 256-stud box, and the crown must stay where it is
-        if any(s["max"].z > 60 or s["min"].z < -80 for s in group):
+        if not group or any(s["max"].z > 60 for s in group):
             continue
+        # a keel reaching the bottom of the box stays where it is: the islet
+        # lifts off it instead of sinking, so the break shows as open air
+        deep = [s for s in group if s["min"].z < -80]
+        group = [s for s in group if s["min"].z >= -80]
+        vs = sorted({v for s in group for v in s["verts"]})
         axis = ctx.rng.uniform(0, 360)
-        tilt = ctx.rng.uniform(4, 7)
-        M = xf(cx, cy, -ctx.rng.uniform(2.0, 3.5)) @ xf(rz=axis) @ xf(rx=tilt) @ xf(rz=-axis) @ xf(-cx, -cy, 0)
-        moved = set()
-        for s in group:
-            for v in s["verts"]:
-                if v not in moved:
-                    p.verts[v] = M @ p.verts[v]
-                    moved.add(v)
+        tilt, sink = ctx.rng.uniform(6, 10), ctx.rng.uniform(4.0, 7.0)
+        if deep:
+            sink = -sink
+        M = None
+        for _try in range(4):   # as far as the piece's box allows: its keel must stay above -96
+            T = xf(cx, cy, -sink) @ xf(rz=axis) @ xf(rx=tilt) @ xf(rz=-axis) @ xf(-cx, -cy, 0)
+            pts = [T @ p.verts[v] for v in vs]
+            if min(q.z for q in pts) > -95.5 and max(max(abs(q.x), abs(q.y)) for q in pts) < HALF - 0.5:
+                M = T
+                break
+            tilt, sink = tilt * 0.6, sink * 0.6
+        if M is None or tilt < 2.5:
+            continue
+        for v in vs:
+            p.verts[v] = M @ p.verts[v]
         for prop in p.props:
             t = prop["matrix"].translation
             if _inside((t.x, t.y), grow):
@@ -667,8 +561,7 @@ def face_normal(p, f):
 
 
 def tops(p, zmin=0.4):
-    """Faces that are the upward top of their shell, above the floor: wall
-    copings, rail tops, tower walks, lintels -- where snow and moss settle."""
+    """Faces that are the upward top of their shell above the floor."""
     out = []
     for si, s in enumerate(shells(p)):
         if s["max"].z < zmin:
@@ -692,55 +585,29 @@ def recolour(p, mapping, fraction=1.0, rng=None, props_too=True):
 
 
 def topple(ctx, labels, chance):
-    """Knock standing props over: laid on their side, resting on the deck."""
+    """Knock standing architecture props over, resting on the deck."""
     for prop in ctx.p.props:
         if prop["label"] not in labels or ctx.rng.random() > chance:
             continue
         t = prop["matrix"].translation
-        R = (xf(rz=ctx.rng.uniform(0, 360)) @ xf(rx=90)).to_3x3()
-        pts = [R @ v for v in prop["verts"]]
+        Rm = (xf(rz=ctx.rng.uniform(0, 360)) @ xf(rx=90)).to_3x3()
+        pts = [Rm @ v for v in prop["verts"]]
         reach = max(math.hypot(q.x, q.y) for q in pts)
         z0 = ctx.ground.flat(t.x, t.y, reach + 0.5, tol=0.3)
         if z0 is None or any(shapes_clash(("cyl", t.x, t.y, reach, z0, z0 + 2), s, gap=0.3)
                              for lab, s in ctx.p.solids if lab not in ("tower", "spire")):
             continue
-        prop["matrix"] = Matrix.Translation((t.x, t.y, z0 - min(q.z for q in pts))) @ R.to_4x4()
+        prop["matrix"] = Matrix.Translation((t.x, t.y, z0 - min(q.z for q in pts))) @ Rm.to_4x4()
         if prop["label"] in ("lamp", "light pillar"):
             prop["interact"] = "Repair"
 
 
 # ==========================================================================
-# The prop vocabulary. Every shape is built at the origin on z = 0 and is
-# fixed (any randomness seeded by its own name), so a shape is one mesh.
+# Architecture props: the few things that ARE the scenario's architecture
 # ==========================================================================
 
-def _rubble(seed, n):
-    def shape(p):
-        rng = random.Random(seed)
-        for k in range(n):
-            sx, sy, sz = rng.uniform(1.2, 3.0), rng.uniform(1.0, 2.4), rng.uniform(0.8, 1.8)
-            a = rng.uniform(0, 2 * math.pi)
-            d = rng.uniform(0, 1.8)
-            box(p, rng.choice(("CitadelWhite", "CitadelWhite", "PaleAlloy")), math.cos(a) * d, math.sin(a) * d,
-                sz / 2 + (0.6 if k > n // 2 else 0), sx, sy, sz, rz=rng.uniform(0, 90), rx=rng.uniform(-12, 12))
-    return shape
-
-
-RUBBLE = [_rubble("rubble a", 5), _rubble("rubble b", 7), _rubble("rubble c", 4)]
-
-
-def shape_fallen_roof(p):
-    with frame(p, xf(0, 0, 2.6, 0, 0, 78)):
-        frustum(p, "CitadelViolet", 8, 5.4, 0, -2, 12)
-    crystal(p, "SunGold", 12.5, 0, 1.0, 0.8, 1.6, 1.0)
-
-
-# ---- siege ---------------------------------------------------------------
-
 def shape_warship(p):
-    """A raider warship, ~72 long: rust hull, two masts, tattered sails, a
-    stern castle, a ram, and ember drives -- the raiders' answer to the
-    citadel's azure. Prow toward +X; the frame's z = 0 is its deck."""
+    """A raider warship, ~72 long. Prow toward +X; the frame's z = 0 is its deck."""
     xs = [-34, -28, -16, 0, 14, 24, 31, 36]
     ws = [5.6, 7.4, 8.2, 8.2, 7.6, 5.8, 3.2, 0.0]
     ds = [6.0, 8.5, 9.5, 9.5, 9.0, 7.5, 4.5, 1.5]
@@ -776,11 +643,11 @@ def shape_warship(p):
         box(p, "DeepAlloy", mx, 0, h * 0.9, 0.6, 17, 0.6)
         box(p, "DeepAlloy", mx, 0, h * 0.45, 0.6, 15, 0.6)
         box(p, "RaiderRust", mx + 0.4, 0, h * 0.675, 0.3, 15.5, h * 0.42)
-        box(p, "Char", mx + 0.45, -4, h * 0.5, 0.3, 3.0, 2.2, rx=12)            # a patched tear
+        box(p, "Char", mx + 0.45, -4, h * 0.5, 0.3, 3.0, 2.2, rx=12)
     box(p, "RaiderRust", -6, 0, 31.5, 0.3, 0.3, 3.0)
-    box(p, "RaiderRust", -6, 2.2, 32.4, 0.2, 4.4, 1.6)                          # the pennant
+    box(p, "RaiderRust", -6, 2.2, 32.4, 0.2, 4.4, 1.6)
     with frame(p, xf(35.5, 0, -1.6, 0, 0, 90)):
-        frustum(p, "Soot", 4, 1.9, 0.0, 0, 7.0, rot=45)                         # the ram
+        frustum(p, "Soot", 4, 1.9, 0.0, 0, 7.0, rot=45)
     for sy in (-3.2, 3.2):
         with frame(p, xf(-34.5, sy, -3.4, 0, 0, -90)):
             frustum(p, "DeepAlloy", 8, 2.0, 1.6, 0, 3.0)
@@ -799,426 +666,8 @@ def shape_gangway(p):
             box(p, "DeepAlloy", gx, sy, -0.1 - gx * 0.1, 0.2, 0.2, 1.1)
 
 
-def shape_tent(p):
-    box(p, "RaiderRust", 0, -2.2, 2.6, 10, 0.4, 6.4, rx=-35)
-    box(p, "RaiderRust", 0, 2.2, 2.6, 10, 0.4, 6.4, rx=35)
-    box(p, "DeepAlloy", 0, 0, 5.3, 10.6, 0.6, 0.6)
-    box(p, "Char", 5.05, 0, 1.6, 0.2, 2.2, 3.0)            # the door flap
-    for sx in (-5.2, 5.2):
-        frustum(p, "DeepAlloy", 4, 0.3, 0.3, 0, 5.6, sx, 0)
-
-
-def shape_yurt(p):
-    frustum(p, "RaiderRust", 8, 4.2, 4.0, 0, 3.0)
-    frustum(p, "Char", 8, 4.6, 0.6, 3.0, 5.6)
-    frustum(p, "DeepAlloy", 8, 0.7, 0.3, 5.6, 7.0)
-    box(p, "Twig", 4.0, 0, 1.2, 0.6, 2.0, 2.4)
-
-
-def shape_stake_wall(p):
-    for k in range(7):
-        with frame(p, xf(-6 + 2 * k, 0, 0, 0, -18 + (k % 2) * 6, 0)):
-            frustum(p, "Twig", 4, 0.35, 0.0, 0, 4.2 + (k % 3) * 0.5, rot=45)
-    box(p, "Bark", 0, 0.6, 1.2, 14, 0.4, 0.4)
-    box(p, "Bark", 0, 0.9, 2.4, 14, 0.4, 0.4)
-
-
-def shape_barricade(p):
-    box(p, "PaleAlloy", -3, 0, 1.3, 3, 3, 2.6)
-    box(p, "PaleAlloy", 3, 0, 1.3, 3, 3, 2.6, rz=8)
-    box(p, "RaiderRust", 0, 0.4, 2.8, 9, 0.5, 1.2, rx=10)
-    box(p, "Twig", 0, -0.8, 1.0, 8, 0.3, 1.8, rx=-20)
-
-
-def shape_barrels(p):
-    for (x, y, z) in ((0, 0, 0), (1.9, 0.4, 0), (0.9, 1.7, 0), (1.0, 0.7, 2.2)):
-        frustum(p, "RaiderRust", 8, 0.9, 0.9, z, z + 2.1, x, y)
-        for hz in (0.35, 1.75):
-            frustum(p, "DeepAlloy", 8, 0.95, 0.95, z + hz, z + hz + 0.15, x, y)
-
-
-def shape_loot(p):
-    box(p, "Twig", 0, 0, 0.7, 3.4, 2.2, 1.4)
-    box(p, "DeepAlloy", 0, 0, 0.7, 3.5, 2.3, 0.3)
-    rng = random.Random("loot")
-    for k in range(9):
-        a = rng.uniform(0, 2 * math.pi)
-        d = rng.uniform(1.8, 3.2)
-        crystal(p, "SunGold", math.cos(a) * d, math.sin(a) * d, 0.25, rng.uniform(0.3, 0.6), 0.5, 0.25, n=5)
-    crystal(p, "SunGold", 0, 0, 1.9, 0.9, 1.0, 0.5, n=6)
-
-
-def shape_campfire(p):
-    blot(p, "Char", 0, 0, 2.6, "campfire char", h=0.04)
-    for k in range(8):
-        a = math.radians(45 * k)
-        box(p, "HullSlate", math.cos(a) * 2.2, math.sin(a) * 2.2, 0.35, 0.9, 0.7, 0.7, rz=45 * k)
-    for k in range(3):
-        box(p, "Bark", 0, 0, 0.35 + 0.1 * k, 3.2, 0.5, 0.5, rz=60 * k)
-    for k, (a, h) in enumerate(((0.3, 2.2), (2.3, 1.5), (4.2, 1.9), (5.5, 1.2))):
-        crystal(p, "EmberGlow", math.cos(a) * 0.5, math.sin(a) * 0.5, 0.5, 0.45, h, 0.01, n=4, rz=30 * k)
-
-
-def shape_bonfire(p):
-    shape_campfire(p)
-    for k in range(4):   # the smoke column, leaning downwind, thinning as it climbs
-        lump(p, "Smoke", [(1.6 + k * 0.5, 0), (1.9 + k * 0.6, 1.4 + k * 0.3), (0, 2.6 + k * 0.5)], n=7,
-             seed="smoke %d" % k, cx=0.9 * k, cy=0.2 * k, cz=3.0 + k * 3.0)
-
-
-def shape_raider_banner(p):
-    frustum(p, "DeepAlloy", 6, 0.3, 0.25, 0, 11, 0, 0)
-    box(p, "DeepAlloy", 1.6, 0, 10.5, 3.6, 0.3, 0.3)
-    box(p, "RaiderRust", 1.6, 0, 8.0, 3.2, 0.2, 4.6)
-    box(p, "RaiderRust", 2.6, 0, 5.2, 1.2, 0.2, 1.2)          # the torn tail
-    crystal(p, "Bone", 0, 0, 11.4, 0.5, 0.8, 0.3)
-
-
-def shape_ballista(p):
-    box(p, "DeepAlloy", 0, 0, 0.6, 3.2, 3.2, 1.2)
-    frustum(p, "DeepAlloy", 6, 0.6, 0.5, 1.2, 2.6, 0, 0)
-    with frame(p, xf(0, 0, 2.8, 0, -12, 0)):
-        box(p, "Twig", 1.0, 0, 0, 5.2, 0.6, 0.6)
-        box(p, "Twig", 1.4, 0, 0, 0.5, 6.4, 0.5)
-        box(p, "RaiderRust", 3.8, 0, 0.1, 2.4, 0.25, 0.25)
-
-
-# ---- lockdown ---------------------------------------------------------------
-
-def shape_sentinel(p):
-    frustum(p, "DeepAlloy", 6, 1.8, 1.4, 0, 1.2, 0, 0)
-    frustum(p, "PaleAlloy", 4, 1.1, 0.7, 1.2, 7.5, 0, 0, rot=45)
-    crystal(p, "AlarmRed", 0, 0, 8.6, 0.9, 1.3, 1.0, n=4)
-
-
-def shape_turret(p):
-    frustum(p, "DeepAlloy", 8, 2.4, 2.0, 0, 1.4)
-    frustum(p, "PaleAlloy", 8, 1.2, 1.0, 1.4, 3.4)
-    lump(p, "PaleAlloy", [(2.0, 3.4), (1.8, 4.6), (1.0, 5.5), (0, 5.8)], n=8, seed="turret dome", jitter=0.0)
-    box(p, "DeepAlloy", 2.4, 0, 4.4, 3.2, 0.7, 0.7)
-    crystal(p, "AlarmRed", 1.6, 0, 5.0, 0.35, 0.45, 0.3, n=4)
-
-
-def shape_alarm_post(p):
-    frustum(p, "DeepAlloy", 6, 0.9, 0.7, 0, 0.6)
-    frustum(p, "PaleAlloy", 6, 0.35, 0.3, 0.6, 7.5)
-    frustum(p, "DeepAlloy", 6, 0.8, 0.8, 7.5, 7.8)
-    crystal(p, "AlarmRed", 0, 0, 8.6, 0.7, 1.0, 0.8, n=6)
-    frustum(p, "DeepAlloy", 6, 0.8, 0.2, 9.6, 10.2)
-
-
-def shape_laser_fence(p):
-    for x in (-4, 4):
-        frustum(p, "DeepAlloy", 4, 0.7, 0.5, 0, 5, x, 0, rot=45)
-        crystal(p, "AlarmRed", x, 0, 5.4, 0.4, 0.6, 0.3, n=4)
-    for z in (1.2, 2.6, 4.0):
-        box(p, "AlarmRed", 0, 0, z, 7.6, 0.12, 0.12)
-
-
-def shape_console(p):
-    box(p, "DeepAlloy", 0, 0, 0.6, 2.4, 1.6, 1.2)
-    box(p, "PaleAlloy", 0, 0, 1.6, 2.2, 1.2, 0.8, rx=-25)
-    box(p, "AlarmDim", 0, -0.35, 2.05, 1.8, 0.1, 0.6, rx=-25)
-    for k in range(3):
-        box(p, "AlarmRed", -0.6 + 0.6 * k, 0.4, 1.3, 0.3, 0.3, 0.15)
-
-
-def shape_drone(p):
-    lump(p, "DeepAlloy", [(0.5, -0.9), (1.1, -0.3), (1.1, 0.3), (0.5, 0.9)], n=8, seed="drone", jitter=0.0)
-    torus(p, "PaleAlloy", 1.4, 0.15, 0, 0, 0, n=12)
-    crystal(p, "AlarmRed", 1.0, 0, 0, 0.3, 0.35, 0.3, n=4)
-
-
-# ---- stormhawk --------------------------------------------------------------
-
-def shape_nest(p):
-    R = 7.0
-    for k in range(20):
-        a = 18 * k
-        box(p, "Twig", math.cos(math.radians(a)) * R, math.sin(math.radians(a)) * R, 1.0 + (k % 3) * 0.35,
-            7.5, 0.6, 0.6, rz=a + 90 + (k % 3 - 1) * 14, rx=(k % 2) * 16 - 8)
-    for k in range(12):
-        a = 30 * k + 9
-        box(p, "Bark", math.cos(math.radians(a)) * (R + 1.2), math.sin(math.radians(a)) * (R + 1.2), 0.5,
-            6.0, 0.5, 0.5, rz=a + 70, rx=10)
-    frustum(p, "Twig", 10, R - 1.5, R + 0.5, 0.0, 1.2, 0, 0)
-    for k in range(3):
-        a = math.radians(120 * k + 20)
-        lump(p, "Bone", [(0.8, 1.2), (1.0, 1.9), (0.6, 2.7), (0, 3.0)], n=7, seed="egg %d" % k, jitter=0.05,
-             cx=math.cos(a) * 1.5, cy=math.sin(a) * 1.5)
-
-
-def shape_eggshells(p):
-    for k, (x, y) in enumerate(((0, 0), (1.3, 0.6), (0.4, 1.4))):
-        lump(p, "Bone", [(0.9, 0), (0.95, 0.5), (0.7, 0.9)], n=7, seed="shell %d" % k, jitter=0.25, cx=x, cy=y)
-
-
-def shape_bones(p):
-    rng = random.Random("bones")
-    for k in range(7):
-        box(p, "Bone", rng.uniform(-2, 2), rng.uniform(-1.5, 1.5), 0.25, rng.uniform(1.8, 3.4), 0.4, 0.4,
-            rz=rng.uniform(0, 180))
-    lump(p, "Bone", [(0.9, 0), (1.1, 0.8), (0.8, 1.4), (0, 1.6)], n=7, seed="skull", jitter=0.12, cx=1.4, cy=-0.8)
-
-
-def shape_fallen_feather(p):
-    box(p, "DeepAlloy", 0, 0, 0.08, 6.0, 1.0, 0.14)
-    box(p, "SunGold", 2.1, 0, 0.1, 1.8, 1.05, 0.14)
-    box(p, "DeepAlloy", 0.5, 1.2, 0.08, 4.0, 0.8, 0.14, rz=18)
-
-
-# ---- rime -----------------------------------------------------------------
-
-def _drift(seed, sx):
-    def shape(p):
-        lump(p, "Snow", [(3.0, 0), (2.6, 1.1), (1.6, 2.1), (0, 2.6)], n=8, seed=seed, jitter=0.28, sx=sx)
-    return shape
-
-
-DRIFTS = [_drift("drift a", 2.0), _drift("drift b", 1.4), _drift("drift c", 2.6)]
-
-
-def _ice(seed, n):
-    def shape(p):
-        rng = random.Random(seed)
-        for k in range(n):
-            a = rng.uniform(0, 2 * math.pi)
-            d = 0 if k == 0 else rng.uniform(0.8, 2.2)
-            lean = rng.uniform(-14, 14) if k else 0.0
-            with frame(p, xf(math.cos(a) * d, math.sin(a) * d, 0, rng.uniform(0, 72), lean, lean * 0.6)):
-                crystal(p, "Ice", 0, 0, 0, rng.uniform(0.5, 1.1) * (1.4 if k == 0 else 1.0),
-                        rng.uniform(2.5, 6.0) * (1.6 if k == 0 else 1.0), 0.01, n=5)
-    return shape
-
-
-ICE_SPIKES = [_ice("ice a", 5), _ice("ice b", 3), _ice("ice c", 7)]
-FROST = _ice("frost a", 4)
-
-
-def shape_frozen_figure(p):
-    lump(p, "Ice", [(2.2, 0), (2.4, 2.0), (1.8, 4.2), (0.9, 5.4), (0, 5.8)], n=7, seed="ice block", jitter=0.15)
-    box(p, "DeepAlloy", 0.9, 1.9, 4.6, 0.8, 0.8, 0.9)                       # a head breaking the surface
-    box(p, "DeepAlloy", -1.7, 1.2, 3.4, 0.5, 0.5, 2.2, rx=30, ry=-20)       # a reaching arm
-    crystal(p, "SunGold", 1.9, -1.2, 2.2, 0.3, 0.5, 0.3)                    # something gold, frozen in
-
-
-# ---- reclaimed --------------------------------------------------------------
-
-def _moss(seed):
-    def shape(p):
-        lump(p, "Moss", [(3.2, 0), (3.0, 0.4), (2.0, 0.9), (0, 1.1)], n=9, seed=seed, jitter=0.3, sx=1.3)
-        lump(p, "MossLight", [(1.6, 0.5), (1.4, 1.1), (0, 1.5)], n=7, seed=seed + " top", jitter=0.3, cx=0.8, cy=0.3)
-        lump(p, "MossLight", [(1.0, 0.2), (0.8, 0.7), (0, 0.9)], n=6, seed=seed + " side", jitter=0.3, cx=-2.4, cy=-0.6)
-    return shape
-
-
-MOSS = [_moss("moss a"), _moss("moss b"), _moss("moss c")]
-
-
-def _bush(seed, lobes):
-    def shape(p):
-        rng = random.Random(seed)
-        for k in range(lobes):
-            a = rng.uniform(0, 2 * math.pi)
-            d = 0 if k == 0 else rng.uniform(0.9, 1.8)
-            r = rng.uniform(1.2, 1.9)
-            lump(p, "Moss" if k % 2 else "Verdure", [(r * 0.6, 0), (r, r * 0.7), (r * 0.8, r * 1.4), (0, r * 1.7)],
-                 n=7, seed="%s %d" % (seed, k), jitter=0.2, cx=math.cos(a) * d, cy=math.sin(a) * d,
-                 cz=0 if k == 0 else rng.uniform(0, 0.6))
-    return shape
-
-
-BUSHES = [_bush("bush a", 4), _bush("bush b", 3), _bush("bush c", 6)]
-
-
-def shape_fern(p):
-    for k in range(9):
-        with frame(p, xf(0, 0, 0.2, 40 * k)):
-            box(p, "MossLight" if k % 2 else "Verdure", 1.4, 0, 0.9, 3.0, 0.5, 0.12, ry=-38)
-
-
-def shape_flowers(p):
-    rng = random.Random("flowers")
-    blot(p, "Moss", 0, 0, 2.0, "flower bed", h=0.1)
-    for k in range(10):
-        a = rng.uniform(0, 2 * math.pi)
-        d = rng.uniform(0, 1.8)
-        x, y = math.cos(a) * d, math.sin(a) * d
-        frustum(p, "Verdure", 4, 0.08, 0.06, 0.1, 0.9, x, y)
-        crystal(p, rng.choice(("SunGold", "CitadelViolet", "Snow")), x, y, 1.0, 0.3, 0.2, 0.15, n=5)
-
-
-def shape_sapling(p):
-    frustum(p, "Bark", 6, 0.6, 0.35, 0, 5.5)
-    box(p, "Bark", 0.8, 0, 4.2, 2.0, 0.3, 0.3, ry=-40)
-    lump(p, "Verdure", [(1.8, 4.6), (2.6, 6.0), (2.0, 7.6), (0, 8.4)], n=8, seed="sapling crown", jitter=0.2)
-    lump(p, "Moss", [(1.2, 5.2), (1.6, 6.0), (0, 7.0)], n=7, seed="sapling side", jitter=0.2, cx=1.6, cy=0.4)
-
-
-def shape_mushrooms(p):
-    for k, (x, y, h, r) in enumerate(((0, 0, 1.6, 1.0), (1.1, 0.5, 1.0, 0.6), (-0.8, 0.9, 1.3, 0.7),
-                                       (0.3, -1.0, 0.8, 0.5))):
-        frustum(p, "Bone", 6, r * 0.3, r * 0.25, 0, h, x, y)
-        lump(p, "Snow" if k % 2 else "CitadelViolet", [(r, h), (r * 0.8, h + r * 0.4), (0, h + r * 0.6)], n=7,
-             seed="cap %d" % k, jitter=0.1, cx=x, cy=y)
-
-
-def roots(ctx, count):
-    """Roots crawling in across the deck from its edge -- surface, structure."""
-    for _ in range(count):
-        c = ctx.edge(0.5, 1.5)
-        if c is None:
-            return
-        x, y, a = c
-        heading = a + 90 + ctx.rng.uniform(-35, 35)
-        # point the root inward
-        if not any(_inside((x + math.cos(math.radians(heading)) * 3, y + math.sin(math.radians(heading)) * 3), q)
-                   for q in ctx.polys):
-            heading += 180
-        for k in range(ctx.rng.randint(3, 6)):
-            L = ctx.rng.uniform(2.5, 4.5)
-            nx, ny = x + math.cos(math.radians(heading)) * L, y + math.sin(math.radians(heading)) * L
-            mx, my = (x + nx) / 2, (y + ny) / 2
-            if not clear_disc(ctx, mx, my, 0.8):
-                break
-            box(ctx.p, "Bark", mx, my, 0.22, L + 0.4, 0.55 - 0.06 * k, 0.4, rz=heading)
-            heading += ctx.rng.uniform(-30, 30)
-            x, y = nx, ny
-
-
-def ivy(ctx, chance=0.7):
-    """Ivy climbing the turrets, pressed to their walls (structure)."""
-    for lab, s in list(ctx.p.solids):
-        if lab != "tower" or s[0] != "cyl" or ctx.rng.random() > chance:
-            continue
-        _, x, y, R, z0, z1 = s
-        r = R / 1.25
-        Hbody = z1 - 6 - 2.4 * r
-        H = min(Hbody - 1, ctx.rng.uniform(12, 30))
-        for _k in range(ctx.rng.randint(2, 4)):
-            a = ctx.rng.uniform(0, 2 * math.pi)
-            for j in range(int((H - 3) / 2.2)):
-                z = 4.2 + j * 2.2
-                rr = r * (1.0 - 0.06 * z / max(Hbody, 1)) + 0.2
-                aj = a + ctx.rng.uniform(-0.08, 0.08)
-                box(ctx.p, "Moss" if j % 3 else "MossLight", x + math.cos(aj) * rr, y + math.sin(aj) * rr, z,
-                    ctx.rng.uniform(1.2, 2.6), 0.3, 2.4, rz=math.degrees(aj) + 90)
-
-
-# ---- aether -------------------------------------------------------------------
-
-def _aether(seed, n, tall, spread, outward):
-    def shape(p):
-        rng = random.Random(seed)
-        for k in range(n):
-            a = rng.uniform(0, 2 * math.pi)
-            d = 0 if k == 0 else rng.uniform(0.6, spread)
-            tilt = outward * (d / spread) * 28
-            with frame(p, xf(math.cos(a) * d, math.sin(a) * d, 0, math.degrees(a), 0, tilt)):
-                crystal(p, "AetherBloom" if k % 2 == 0 else "SkyGlass", 0, 0, 0,
-                        rng.uniform(0.6, 1.1) * (1.5 if k == 0 else 1.0),
-                        rng.uniform(2.5, 5.0) * (tall if k == 0 else 1.0), 0.01, n=5)
-    return shape
-
-
-AETHER = [_aether("aether a", 6, 2.2, 2.2, 1.0), _aether("aether b", 9, 1.3, 3.0, 1.6),
-          _aether("aether c", 4, 3.4, 1.6, 0.6)]
-
-
-def shape_geode(p):
-    blot(p, "AetherDim", 0, 0, 2.4, "geode core", h=0.12)
-    for k in range(9):
-        a = 40 * k
-        with frame(p, xf(math.cos(math.radians(a)) * 2.6, math.sin(math.radians(a)) * 2.6, 0, a, 0, 32)):
-            crystal(p, "AetherBloom" if k % 2 else "SkyGlass", 0, 0, 0, 0.6, 2.6 + (k % 3) * 0.8, 0.01, n=5)
-
-
-# ---- unmooring ----------------------------------------------------------------
-
-def shape_stabilizer(p):
-    frustum(p, "DeepAlloy", 8, 2.2, 1.8, 0, 1.2)
-    frustum(p, "PaleAlloy", 8, 0.8, 0.7, 1.2, 7.0)
-    for z in (2.6, 4.2, 5.8):
-        torus(p, "AzureDim", 1.6, 0.25, 0, 0, z, n=12)
-    crystal(p, "AzureNeon", 0, 0, 8.0, 0.9, 1.6, 1.0, n=6)
-
-
-def shape_hazard_beacon(p):
-    frustum(p, "DeepAlloy", 4, 0.8, 0.6, 0, 0.5, rot=45)
-    frustum(p, "SunGold", 4, 0.3, 0.3, 0.5, 4.0, rot=45)
-    crystal(p, "EmberGlow", 0, 0, 4.6, 0.5, 0.8, 0.5, n=4)
-
-
-def shape_fragment(p):
-    box(p, "CitadelWhite", 0, 0, 0, 7.0, 4.2, 2.2)
-    box(p, "AzureDim", 0, 0, -1.3, 4, 2.5, 0.6)
-    frustum(p, "HullSlate", 5, 2.0, 0, -1.4, -5, 0, 0)
-
-
-# ==========================================================================
-# Anchors and blockers
-# ==========================================================================
-
-def add_anchor(p, kind, x, y, z=0.0, note=""):
-    p.anchors.append({"kind": kind, "pos": (x, y, z), "note": note})
-
-
-def anchors_on_decks(ctx, kinds, notes=None):
-    counts = {"COMBAT": {"ENEMY_POST": 4, "RESOURCE": 2, "EVENT": 1},
-              "PATH": {"ENEMY_POST": 1, "RESOURCE": 1},
-              "SIDE": {"DISCOVERY": 2, "RESOURCE": 2},
-              "CAP": {"DISCOVERY": 1, "RESOURCE": 1},
-              "BOSS": {"EVENT": 2},
-              "ENTRY": {"NPC_POST": 2}}.get(role(ctx.p), {})
-    notes = notes or {}
-    for kind, n in counts.items():
-        for _ in range(kinds.get(kind, n)):
-            for _t in range(40):
-                c = ctx.uniform()
-                if c is None:
-                    break
-                z0 = ctx.spot(c[0], c[1], 2.0, 3.0)
-                if z0 is not None:
-                    ctx.claim("anchor " + kind.lower(), c[0], c[1], 2.0, z0, 3.0)
-                    add_anchor(ctx.p, kind, c[0], c[1], z0, notes.get(kind, ""))
-                    break
-    for d in sorted(ctx.open):
-        x, y, _ = mouth(d)
-        add_anchor(ctx.p, "BLOCKER", x, y, note=d)
-
-
-def reserve_blockers(p):
-    for d in openings(p):
-        x, y, _ = mouth(d)
-        p.solid("blocker", x, y, 8, 0, 14)
-
-
-def blockers(ctx, shape):
-    """One per opening, as a prop: the run decides which sockets it closes.
-    Every blocker of a scenario is the same shape."""
-    for d in ctx.open:
-        x, y, rz = mouth(d)
-        with frame(ctx.p, xf(x, y, 0, rz)):
-            with as_prop(ctx.p, "blocker", I4):
-                shape(ctx.p)
-
-
-def float_prop(ctx, label, shape, r, h, above, around=None, tilt=0.0):
-    at = ctx.air(label, r, h, above, around)
-    if at:
-        x, y, z = at
-        with frame(ctx.p, xf(x, y, z, ctx.rng.uniform(0, 360), rx=ctx.rng.uniform(-tilt, tilt))):
-            with as_prop(ctx.p, label, I4):
-                shape(ctx.p)
-    return at
-
-
-# ==========================================================================
-# The seven hooks
-# ==========================================================================
-
 def warship(ctx, n=1):
-    """Moor raider warships alongside the decks, gangway to the rail -- only
+    """Moor raider warships alongside the decks, a gangway to the rail -- only
     where one really fits, by the kit's own float rules, clear of skyways."""
     p = ctx.p
     if ctx.flat_only or not ctx.polys:
@@ -1235,8 +684,6 @@ def warship(ctx, n=1):
             along = ctx.rng.uniform(-44, 44)
             gap = ctx.rng.uniform(3.0, 6.0)
             sgn = 1 if side in ("E", "N") else -1
-            # the hull runs along the deck edge (its prow is +X in its own
-            # frame); its guns reach 10.4 either side of the keel line
             if side in ("E", "W"):
                 edge = max(xs) if side == "E" else min(xs)
                 cx, cy, rz = edge + (gap + 10.8) * sgn, along, 90
@@ -1253,8 +700,6 @@ def warship(ctx, n=1):
                 behind = (cx, rail[1] - 6.0 * sgn)
             if blocked or not free_for_float(p, shape):
                 continue
-            # the deck behind the rail must be real, flat deck; the gangway then
-            # rests on whatever the rail is -- wall top, kerb or open edge
             z0 = ctx.ground.flat(behind[0], behind[1], 3.0)
             top = ctx.ground.z_at(rail[0], rail[1])
             if z0 is None or top is None or top[1] < 0.9 or not (z0 - 0.5 < top[0] < z0 + 4.0):
@@ -1262,61 +707,17 @@ def warship(ctx, n=1):
             p.floats.append(("raider warship", shape))
             place(p, "raider warship", cx, cy, z0 - 1.2, rz + ctx.rng.choice((0, 180)), 1.0, shape_warship)
             to_ship = math.degrees(math.atan2(cy - rail[1], cx - rail[0]))
-            place(p, "gangway", rail[0] - math.cos(math.radians(to_ship)) * 1.5,
-                  rail[1] - math.sin(math.radians(to_ship)) * 1.5, top[0], to_ship, 1.0, shape_gangway)
+            gx0 = rail[0] - math.cos(math.radians(to_ship)) * 1.5
+            gy0 = rail[1] - math.sin(math.radians(to_ship)) * 1.5
+            place(p, "gangway", gx0, gy0, top[0], to_ship, 1.0, shape_gangway)
+            p.solid("gangway", gx0, gy0, 2.0, z0, z0 + 3)
             placed += 1
             break
     return placed
 
 
-def dress_siege(ctx):
-    p, rng = ctx.p, ctx.rng
-    breach_walls(ctx, rng.randint(1, 2))
-    if rng.random() < 0.6:
-        crumble_tower(ctx)
-    for _ in range(ctx.n(4, 7)):   # ragged burns, with the camp's fires nearby
-        surface_blot(ctx, "Char", rng.uniform(1.8, 3.6), ctx.uniform, sx=rng.uniform(1.0, 1.5), n=11, jitter=0.5)
-    if role(p) in ("COMBAT", "PATH", "BOSS", "ENTRY"):
-        warship(ctx, n=2 if role(p) == "COMBAT" and rng.random() < 0.35 else 1)
-    camp = None   # the raiders' camp: one site per piece, everything round it
-    for _ in range(60):
-        c = ctx.uniform()
-        if c and not in_corridor(p, c[0], c[1]) and ctx.ground.flat(c[0], c[1], 6.0) is not None:
-            camp = c
-            break
-    if camp:
-        cx, cy = camp
-        ctx.put("bonfire", shape_bonfire, 2.8, 16.0, lambda: ctx.near(cx, cy, 0, 4), s=1.3, corridor=False)
-        for _ in range(ctx.n(2, 4)):
-            ctx.put("raider tent", shape_tent, 5.6, 5.8, lambda: ctx.near(cx, cy, 8, 22))
-        for _ in range(ctx.n(0, 2)):
-            ctx.put("raider yurt", shape_yurt, 4.8, 7.0, lambda: ctx.near(cx, cy, 8, 24))
-        for _ in range(ctx.n(2, 4)):
-            ctx.put("barrel", shape_barrels, 2.4, 4.4, lambda: ctx.near(cx, cy, 4, 16))
-        ctx.put("loot pile", shape_loot, 3.4, 2.6, lambda: ctx.near(cx, cy, 3, 10))
-        ctx.put("raider banner", shape_raider_banner, 1.2, 12.0, lambda: ctx.near(cx, cy, 5, 12))
-    for _ in range(ctx.n(2, 4)):
-        ctx.put("campfire", shape_campfire, 2.8, 3.0, ctx.uniform)
-    for d in ctx.open:   # defences face the openings
-        mx, my, _ = mouth(d, inset=60)
-        turn = 0 if d in ("N", "S") else 90
-        ctx.put("stake wall", shape_stake_wall, 7.2, 5.0, lambda: ctx.near(mx, my, 6, 26), rz=turn + rng.uniform(-15, 15))
-        ctx.put("barricade", shape_barricade, 5.0, 3.2, lambda: ctx.near(mx, my, 4, 24), rz=turn + rng.uniform(-25, 25))
-    for _ in range(ctx.n(0, 2)):
-        ctx.put("ballista", shape_ballista, 2.8, 4.0, lambda: ctx.edge(4, 10))
-    for prop in p.props:
-        if prop["label"] in ("crate", "container"):
-            prop["interact"] = "Loot"
-    topple(ctx, ("banner", "lamp", "crate"), 0.3)
-    recolour(p, {"CitadelViolet": "Char"}, fraction=0.35, rng=rng, props_too=False)
-    blockers(ctx, lambda p: (shape_stake_wall(p), row(shape_barrels, (-12, 10))(p)))
-    anchors_on_decks(ctx, {"ENEMY_POST": 6, "NPC_POST": 2},
-                     {"NPC_POST": "citadel defenders hold here, or a captive to free"})
-
-
-def dress_lockdown(ctx):
-    p, rng = ctx.p, ctx.rng
-    recolour(p, {"AzureNeon": "AlarmRed", "AzureDim": "AlarmDim"})
+def forcefields(ctx):
+    p = ctx.p
     for d in ctx.open:
         x, y, rz = mouth(d, inset=14)
         p.solid("lockdown field", x, y, 22, 0, 20)
@@ -1328,253 +729,430 @@ def dress_lockdown(ctx):
                 with as_prop(p, "sentinel pylon", xf(sx, 0, 0)):
                     frustum(p, "PaleAlloy", 4, 1.4, 1.2, 0, 19, sx, 0, rot=45)
                     crystal(p, "AlarmRed", sx, 0, 20.5, 0.8, 1.4, 0.8)
-                p.props[-1]["interact"] = "Destroy"
-    for d in ctx.open:   # red warning chevrons painted toward every opening
-        for k in range(3):
-            mx, my, turn = mouth(d, inset=40 + 9 * k)
-            if ctx.ground.flat(mx, my, 6.0, tol=0.2) is None:
-                continue
-            for sd in (-1, 1):
-                box(p, "AlarmDim", mx + (sd * 3.5 if turn == 0 else 0), my + (sd * 3.5 if turn else 0), 0.07,
-                    8, 1.0, 0.06, rz=turn + sd * 30)
-    for _ in range(ctx.n(2, 4)):
-        ctx.put("sentinel turret", shape_turret, 2.6, 6.0, lambda: ctx.edge(5, 14))
-    for _ in range(ctx.n(1, 3)):
-        ctx.put("sentinel pylon", shape_sentinel, 2.0, 9.0, ctx.uniform)
-    for _ in range(ctx.n(2, 4)):
-        ctx.put("alarm post", shape_alarm_post, 1.0, 10.3, lambda: ctx.edge(2, 6))
-    for _ in range(ctx.n(1, 3)):
-        ctx.put("laser fence", shape_laser_fence, 4.6, 5.6, lambda: ctx.edge(6, 18))
-    ctx.put("console", shape_console, 1.6, 2.6, ctx.uniform)
-    for _ in range(ctx.n(1, 3)):
-        float_prop(ctx, "security drone", shape_drone, 1.6, 2.4, (9, 14))
-    for prop in p.props:
-        if prop["label"] == "holo pedestal":
-            prop["interact"] = "Override"
-    anchors_on_decks(ctx, {"ENEMY_POST": 5, "EVENT": 2},
-                     {"EVENT": "a field generator: shut it down to open the fields"})
 
 
-def dress_stormhawk(ctx):
-    p, rng = ctx.p, ctx.rng
-    if role(p) in ("COMBAT", "BOSS", "SIDE"):
-        nest_at = ctx.put("nest", shape_nest, 9.5, 3.5, ctx.uniform, s=rng.uniform(1.6, 2.1))
-        if nest_at:
-            nx, ny, nz = nest_at
-            add_anchor(p, "EVENT", nx, ny, nz, "the stormhawk's nest: it dives here")
-            for _ in range(ctx.n(2, 4)):
-                ctx.put("bone pile", shape_bones, 2.8, 1.6, lambda: ctx.near(nx, ny, 22, 36))
-            ctx.put("egg shells", shape_eggshells, 1.8, 1.0, lambda: ctx.near(nx, ny, 20, 30))
-    for _ in range(ctx.n(2, 4)):   # claw gouges: three parallel furrows
-        for _t in range(40):
-            c = ctx.uniform()
-            if c is None or not clear_disc(ctx, c[0], c[1], 7.0):
-                continue
-            a = rng.uniform(0, 180)
-            for k in (-1, 0, 1):
-                ox, oy = -math.sin(math.radians(a)) * k * 1.6, math.cos(math.radians(a)) * k * 1.6
-                box(p, "Soot", c[0] + ox, c[1] + oy, 0.07, 11 - abs(k) * 2, 0.7, 0.06, rz=a)
-            break
-    for _ in range(ctx.n(2, 4)):   # lightning glass: fulgurite cracks that glow
-        surface_crack(ctx, rng.uniform(16, 30), w=0.8, mat="AzureNeon")
-    for _ in range(ctx.n(3, 6)):
-        ctx.put("fallen feather", shape_fallen_feather, 3.2, 0.3, ctx.uniform, corridor=False)
-    for _ in range(ctx.n(2, 4)):
-        float_prop(ctx, "storm feather", shape_fallen_feather, 3.2, 2.0, (7, 13), tilt=30)
-    topple(ctx, ("lamp", "light pillar", "banner"), 0.35)
-    blockers(ctx, lambda p: (frustum(p, "DeepAlloy", 6, 1.2, 0.8, 0, 14, -8, 0, M=xf(z=1.2, ry=86)),
-                             [box(p, "Twig", k * 4 - 8, 1, 0.4, 5, 0.5, 0.5, rz=k * 40) for k in range(5)]))
-    anchors_on_decks(ctx, {"RESOURCE": 2}, {"RESOURCE": "stormhawk feathers"})
+# ==========================================================================
+# Blockers and anchors
+# ==========================================================================
 
-
-def dress_rime(ctx):
-    p, rng = ctx.p, ctx.rng
-    # the whole citadel frosts blue-grey, so what is white is snow
-    recolour(p, {"CitadelWhite": "Frost", "PaleAlloy": "FrostDeep", "Verdure": "Snow", "AzureDim": "Ice",
-                 "SkyGlass": "Ice"}, props_too=False)
-    recolour(p, {"CitadelViolet": "Snow"}, fraction=0.45, rng=rng, props_too=False)
-    for fi, _si in tops(p):   # snow settles on every upward face above the floor
-        p.fmat[fi] = "Snow"
-    for _ in range(ctx.n(8, 14)):   # drifts against the lee of the walls, from this piece's wind
-        ctx.put("snow drift", DRIFTS[rng.randrange(3)], 4.2, 2.6, lambda: ctx.edge(3, 7, facing=ctx.wind),
-                s=rng.uniform(1.0, 2.0), corridor=False)
-    for _ in range(ctx.n(3, 6)):
-        ctx.put("snow drift", DRIFTS[rng.randrange(3)], 4.2, 2.6, ctx.uniform, s=rng.uniform(0.6, 1.1))
-    for _ in range(ctx.n(6, 10)):   # snow lying across the open deck
-        surface_blot(ctx, "Snow", rng.uniform(4, 9), ctx.uniform, sx=rng.uniform(1.0, 1.8))
-    for _ in range(ctx.n(2, 4)):
-        ctx.put("ice spikes", ICE_SPIKES[rng.randrange(3)], 3.2, 9.0, ctx.uniform, s=rng.uniform(1.2, 2.4))
-    for _ in range(ctx.n(2, 5)):
-        ctx.put("frost crystals", FROST, 2.8, 5.0, lambda: ctx.edge(2, 5), s=rng.uniform(0.6, 1.0))
-    if role(p) in ("SIDE", "CAP", "COMBAT") and rng.random() < 0.6:
-        at = ctx.put("frozen figure", shape_frozen_figure, 2.6, 6.0, ctx.uniform)
-        if at:
-            add_anchor(p, "DISCOVERY", at[0], at[1], at[2], "someone frozen in the ice, holding something gold")
-    for prop in p.props:
-        if prop["label"] == "brazier":
-            prop["interact"] = "Lightable"
-    for poly in ctx.polys:   # icicles along the deck rims
-        n = len(poly)
-        cx, cy = sum(q[0] for q in poly) / n, sum(q[1] for q in poly) / n
-        for _ in range(max(6, 2 * n)):
-            i = rng.randrange(n)
-            (ax, ay), (bx, by) = poly[i], poly[(i + 1) % n]
-            t = rng.uniform(0.1, 0.9)
-            x, y = ax + (bx - ax) * t, ay + (by - ay) * t
-            x, y = x + (cx - x) * 0.02, y + (cy - y) * 0.02
-            crystal(p, "Ice", x, y, -DECK_T + 0.05, rng.uniform(0.4, 0.8), 0.01, rng.uniform(2.5, 8), n=4)
-    blockers(ctx, row(ICE_SPIKES[2], (-12, -4, 4, 12)))
-    anchors_on_decks(ctx, {"RESOURCE": 1, "DISCOVERY": 1}, {"DISCOVERY": "something frozen in the ice"})
-
-
-def dress_reclaimed(ctx):
-    p, rng = ctx.p, ctx.rng
-    recolour(p, {"AzureNeon": "DeepAlloy", "AzureDim": "HullSlate"}, props_too=False)
-    by_shell = {}
-    for fi, si in tops(p):   # moss on the tops of walls and rails, by whole runs
-        by_shell.setdefault(si, []).append(fi)
-    for fl in by_shell.values():
-        if rng.random() < 0.45:
-            m = rng.choice(("Moss", "MossLight"))
-            for fi in fl:
-                p.fmat[fi] = m
-    breach_walls(ctx, rng.randint(0, 2))
-    if rng.random() < 0.4:
-        crumble_tower(ctx)
-    for poly in ctx.polys:
-        K["vines"](p, poly, "reclaimed %s %d" % (p.name, len(poly)), count=max(8, 2 * len(poly)))
-    ivy(ctx, chance=rng.uniform(0.4, 0.9))
-    for _ in range(ctx.n(8, 14)):   # moss creeps along the foot of every wall
-        surface_blot(ctx, rng.choice(("Moss", "MossLight")), rng.uniform(2.5, 5.0), lambda: ctx.edge(1.5, 5),
-                     sx=rng.uniform(1.4, 2.4))
-    for _ in range(ctx.n(6, 10)):
-        ctx.put("moss mound", MOSS[rng.randrange(3)], 4.2, 1.6, lambda: ctx.edge(2, 7), s=rng.uniform(0.7, 1.4),
-                corridor=False)
-    for _ in range(ctx.n(4, 7)):
-        ctx.put("bush", BUSHES[rng.randrange(3)], 3.2, 3.6, lambda: ctx.edge(3, 10), s=rng.uniform(1.0, 1.8))
-    for _ in range(ctx.n(3, 6)):
-        ctx.put("fern", shape_fern, 2.6, 2.0, lambda: ctx.edge(2, 8), s=rng.uniform(0.9, 1.5), corridor=False)
-    for _ in range(ctx.n(2, 4)):
-        ctx.put("flowers", shape_flowers, 2.2, 1.3, ctx.uniform, corridor=False)
-    for _ in range(ctx.n(1, 3)):
-        ctx.put("sapling", shape_sapling, 3.0, 8.5, ctx.uniform, s=rng.uniform(1.0, 1.6))
-    for _ in range(ctx.n(1, 3)):
-        ctx.put("mushrooms", shape_mushrooms, 1.8, 2.4, lambda: ctx.edge(2, 6), s=rng.uniform(1.0, 1.8))
-    roots(ctx, ctx.n(2, 5))
-    for _ in range(ctx.n(2, 4)):
-        surface_crack(ctx, rng.uniform(14, 26))
-    for prop in p.props:
-        if prop["label"] in ("lamp", "light pillar", "brazier", "holo pedestal"):
-            prop["interact"] = None
-        if prop["label"] in ("crate", "container"):
-            prop["interact"] = "Loot"
-    topple(ctx, ("lamp", "banner", "light pillar"), 0.3)
-    blockers(ctx, row(BUSHES[2], (-12, -4, 4, 12)))
-    anchors_on_decks(ctx, {"RESOURCE": 3, "DISCOVERY": 1}, {"RESOURCE": "wild growth: herbs and seeds"})
-
-
-def dress_aether_surge(ctx):
-    p, rng = ctx.p, ctx.rng
-    recolour(p, {"AzureNeon": "AetherBloom", "AzureDim": "AetherDim"}, props_too=True)
-    centres = []   # one to three epicentres; the surge breaks out and fades outward
-    for _ in range(rng.randint(1, 3)):
-        for _t in range(40):
-            c = ctx.uniform()
-            # an epicentre may be anywhere flat; the crystals keep off the walking line
-            if c and ctx.ground.flat(c[0], c[1], 6.0) is not None and \
-                    all(math.hypot(c[0] - a, c[1] - b) > 40 for a, b in centres):
-                centres.append(c)
-                break
-    for cx, cy in centres:
-        for _k in range(rng.randint(4, 7)):   # glowing fissures radiate from it
-            a = math.radians(rng.uniform(0, 360))
-            L = rng.uniform(14, 34)
-            mx, my = cx + math.cos(a) * (5 + L / 2), cy + math.sin(a) * (5 + L / 2)
-            if clear_disc(ctx, mx, my, L * 0.5):
-                box(p, "AetherDim", mx, my, 0.07, L, 1.0, 0.06, rz=math.degrees(a))
-        big = ctx.put("aether cluster", AETHER[rng.randrange(3)], 2.6, 8.0, lambda: ctx.near(cx, cy, 0, 3),
-                      s=rng.uniform(2.8, 3.8))
-        if big:
-            add_anchor(p, "RESOURCE", big[0], big[1], big[2], "the surge's heart: the richest aether")
-        for _ in range(ctx.n(4, 8)):
-            d0 = rng.uniform(8, 34)
-            at = ctx.put("aether cluster", AETHER[rng.randrange(3)], 2.6, 8.0,
-                         lambda: ctx.near(cx, cy, d0 - 3, d0 + 3), s=max(0.8, 2.6 - d0 / 18))
-            if at and rng.random() < 0.4:
-                add_anchor(p, "RESOURCE", at[0], at[1], at[2], "aether crystal")
-        ctx.put("aether geode", shape_geode, 3.2, 3.2, lambda: ctx.near(cx, cy, 10, 30), s=rng.uniform(1.0, 1.6))
-        for _ in range(rng.randint(2, 4)):   # shards thrown up round the epicentre
-            float_prop(ctx, "aether shard", lambda p: crystal(p, "AetherBloom", 0, 0, 0, 1.4, 4.5, 3.5, n=5),
-                       2.0, 8.0, (14, 22), around=(cx, cy, 8, 20), tilt=20)
-    for prop in p.props:
-        if prop["label"] == "holo pedestal":
-            prop["interact"] = "Attune"
-    blockers(ctx, row(AETHER[1], (-12, -4, 4, 12)))
-    anchors_on_decks(ctx, {"DISCOVERY": 2, "RESOURCE": 1}, {"DISCOVERY": "the surge has uncovered something old"})
-
-
-def dress_unmooring(ctx):
-    p, rng = ctx.p, ctx.rng
-    loosen_islet(ctx)
-    breach_walls(ctx, rng.randint(1, 3))
-    if rng.random() < 0.5:
-        crumble_tower(ctx)
-    recolour(p, {"AzureDim": "DeepAlloy", "AzureNeon": "DeepAlloy"}, fraction=0.5, rng=rng, props_too=False)
-    for _ in range(ctx.n(4, 7)):
-        surface_crack(ctx, rng.uniform(20, 38), w=1.3)
-    for _ in range(ctx.n(2, 4)):   # the seams leak light where the deck has split
-        surface_crack(ctx, rng.uniform(14, 26), w=0.7, mat="AzureNeon")
-    for prop in p.props:
-        if prop["label"] in ("floating crystal", "anti-grav pylon"):
-            prop["matrix"] = prop["matrix"] @ xf(rx=rng.uniform(12, 28), ry=rng.uniform(-15, 15))
-    topple(ctx, ("lamp", "light pillar", "crate"), 0.3)
-    for prop in p.props:
-        if prop["label"] in ("lamp", "light pillar") and prop.get("interact") is None:
-            prop["interact"] = "Repair"
-    at = ctx.put("stabilizer", shape_stabilizer, 2.4, 9.6, ctx.uniform)
-    if at:
-        add_anchor(p, "EVENT", at[0], at[1], at[2], "a failing stabiliser: repair it before the deck lets go")
-    for _ in range(ctx.n(2, 4)):
-        ctx.put("hazard beacon", shape_hazard_beacon, 1.0, 5.2, lambda: ctx.edge(3, 8))
-    for _ in range(ctx.n(2, 4)):
-        ctx.put("rubble", RUBBLE[rng.randrange(3)], 3.2, 3.0, ctx.uniform, s=rng.uniform(0.8, 1.3))
-    for _ in range(ctx.n(3, 6)):   # pieces of the citadel drifting off, on purpose
-        for _t in range(60):
-            if ctx.flat_only:
-                break
-            x, y = rng.uniform(-HALF + 12, HALF - 12), rng.uniform(-HALF + 12, HALF - 12)
-            z = rng.uniform(-14, 10)
-            if not any(edge_dist(q, x, y) < 30 for q in ctx.polys):
-                continue
-            if not free_for_float(p, ("cyl", x, y, 5.0, z - 5, z + 1.5)):
-                continue
-            p.float_("drifting fragment", x, y, 5.0, z - 5, z + 1.5)
-            with frame(p, xf(x, y, z, rng.uniform(0, 90), rx=rng.uniform(-20, 20))):
-                with as_prop(p, "drifting fragment", I4):
-                    shape_fragment(p)
-            break
-    blockers(ctx, row(RUBBLE[1], (-11, -2, 8)))
-    anchors_on_decks(ctx, {"RESOURCE": 2}, {"RESOURCE": "exposed aether core -- harvesting speeds the collapse"})
-
-
-HOOKS = {
-    "unmooring": dress_unmooring, "siege": dress_siege, "lockdown": dress_lockdown,
-    "stormhawk": dress_stormhawk, "rime": dress_rime, "reclaimed": dress_reclaimed,
-    "aether_surge": dress_aether_surge,
+BLOCKER_SHAPES = {
+    "unmooring": lambda p: _row(p, lambda q: f_rubble(q, 3), (-11, -2, 8)),
+    "siege": lambda p: _row(p, lambda q: f_stake_wall(q, 1), (-6, 7)),
+    "stormhawk": lambda p: (frustum(p, "DeepAlloy", 6, 1.2, 0.8, 0, 14, -8, 0, M=xf(z=1.2, ry=86)),
+                            _row(p, lambda q: f_fallen_feather(q, 0), (-6, 4))),
+    "rime": lambda p: _row(p, lambda q: f_ice(q, 2), (-12, -4, 4, 12)),
+    "reclaimed": lambda p: _row(p, lambda q: f_bush(q, 2), (-12, -4, 4, 12)),
+    "aether_surge": lambda p: _row(p, lambda q: f_aether(q, 1), (-12, -4, 4, 12)),
 }
+
+
+def _row(p, shape, xs):
+    for x in xs:
+        with frame(p, xf(x, 0, 0)):
+            shape(p)
+
+
+def reserve_blockers(p):
+    for d in openings(p):
+        x, y, _ = mouth(d)
+        p.solid("blocker", x, y, 8, 0, 14)
+
+
+def build_blockers(ctx):
+    """One per opening. NOT a placement: the run enables a blocker only when a
+    Fate profile closes that socket, so they are listed with the anchors and
+    never drawn by default."""
+    shape = BLOCKER_SHAPES.get(ctx.scenario)
+    if shape is None:
+        return
+    for d in sorted(ctx.open):
+        x, y, rz = mouth(d)
+        before = len(ctx.p.props)
+        with frame(ctx.p, xf(x, y, 0, rz)):
+            with as_prop(ctx.p, "blocker", I4):
+                shape(ctx.p)
+        prop = ctx.p.props.pop(before)
+        prop["socket"] = d
+        ctx.p.blockers.append(prop)
+
+
+def add_anchor(p, kind, x, y, z=0.0, note=""):
+    p.anchors.append({"kind": kind, "pos": (x, y, z), "note": note})
+
+
+ANCHOR_NOTES = {
+    "unmooring": {"RESOURCE": "exposed aether core -- harvesting speeds the collapse",
+                  "EVENT": "a failing stabiliser: repair it before the deck lets go"},
+    "siege": {"NPC_POST": "citadel defenders hold here, or a captive to free"},
+    "lockdown": {"EVENT": "a field generator: shut it down to open the fields"},
+    "stormhawk": {"EVENT": "the stormhawk dives here", "RESOURCE": "stormhawk feathers"},
+    "rime": {"DISCOVERY": "something frozen in the ice"},
+    "reclaimed": {"RESOURCE": "wild growth: herbs and seeds"},
+    "aether_surge": {"RESOURCE": "the surge's richest aether", "DISCOVERY": "the surge has uncovered something old"},
+}
+ANCHOR_EXTRA = {
+    "unmooring": {"RESOURCE": 2, "EVENT": 1}, "siege": {"ENEMY_POST": 6, "NPC_POST": 2},
+    "lockdown": {"ENEMY_POST": 5, "EVENT": 2}, "stormhawk": {"RESOURCE": 2, "EVENT": 1},
+    "rime": {"RESOURCE": 1, "DISCOVERY": 1}, "reclaimed": {"RESOURCE": 3, "DISCOVERY": 1},
+    "aether_surge": {"DISCOVERY": 2, "RESOURCE": 2},
+}
+
+
+def anchors_on_decks(ctx):
+    counts = {"COMBAT": {"ENEMY_POST": 4, "RESOURCE": 2, "EVENT": 1},
+              "PATH": {"ENEMY_POST": 1, "RESOURCE": 1},
+              "SIDE": {"DISCOVERY": 2, "RESOURCE": 2},
+              "CAP": {"DISCOVERY": 1, "RESOURCE": 1},
+              "BOSS": {"EVENT": 2},
+              "ENTRY": {"NPC_POST": 2}}.get(role(ctx.p), {})
+    extra = ANCHOR_EXTRA.get(ctx.scenario, {})
+    notes = ANCHOR_NOTES.get(ctx.scenario, {})
+    for kind, n in counts.items():
+        for _ in range(extra.get(kind, n)):
+            for _t in range(40):
+                c = ctx.uniform()
+                if c is None:
+                    break
+                z0 = ctx.clear(c[0], c[1], 2.0, 3.0)
+                if z0 is not None:
+                    ctx.p.solid("anchor " + kind.lower(), c[0], c[1], 2.0, z0, z0 + 3.0)
+                    add_anchor(ctx.p, kind, c[0], c[1], z0, notes.get(kind, ""))
+                    break
+    for d in sorted(ctx.open):
+        x, y, _ = mouth(d)
+        add_anchor(ctx.p, "BLOCKER", x, y, note=d)
+
+
+# ==========================================================================
+# The seven structure hooks (architecture only -- props are scattered)
+# ==========================================================================
+# Filled in by sky_citadel_structures.py below; each is fn(ctx).
+STRUCTURES = {}
+exec(open(os.path.join(HERE, "sky_citadel_structures.py"), encoding="utf-8").read(), globals())
 
 
 def make_hook(scenario):
     def hook(p):
         p.anchors = []
+        p.blockers = []
         reserve_blockers(p)
-        HOOKS[scenario](Ctx(p, scenario))
-        # A prop's vertices come back from world space through its placement's
-        # inverse, which leaves last-digit noise; rounding it away lets every
-        # copy of a shape match, so a shape stays one library mesh.
-        for prop in p.props:
+        ctx = Ctx(p, scenario)
+        STRUCTURES[scenario](ctx)
+        LOOKS[scenario](ctx)
+        ctx.refresh()
+        build_blockers(ctx)
+        anchors_on_decks(ctx)
+        for prop in p.props + p.blockers:   # last-digit noise off, so copies share a mesh
             prop["verts"] = [Vector((round(v.x, 4), round(v.y, 4), round(v.z, 4))) for v in prop["verts"]]
     return hook
+
+
+# ==========================================================================
+# Spawn points: where the game may stand a scattered prop on this piece
+# ==========================================================================
+
+RING_RADII = (1.5, 2.5, 3.5, 5.0, 6.5, 8.0, 10.0, 12.0, 15.0)
+FOOT_LABELS = ("tower", "spire", "turbine", "lighthouse", "light obelisk", "banner mast", "signal mast",
+               "tree trunk", "colonnade", "dome", "obelisk")
+
+
+def _footprints(p):
+    """2D obstacles on or near the deck: (kind, shape-or-bounds, z0, z1)."""
+    obs = []
+    for lab, s in p.solids:
+        obs.append((lab, s))
+    for prop in p.props:
+        pts = [prop["matrix"] @ v for v in prop["verts"]]
+        if not pts:
+            continue
+        mn = Vector((min(v.x for v in pts), min(v.y for v in pts), min(v.z for v in pts)))
+        mx = Vector((max(v.x for v in pts), max(v.y for v in pts), max(v.z for v in pts)))
+        obs.append(("prop " + prop["label"], ("box", mn.x - 0.5, mx.x + 0.5, mn.y - 0.5, mx.y + 0.5, mn.z, mx.z)))
+    for fx in p.fixtures:
+        for part in fx["parts"]:
+            pts = [fx["matrix"] @ v for v in part["verts"]]
+            mn = Vector((min(v.x for v in pts), min(v.y for v in pts), min(v.z for v in pts)))
+            mx = Vector((max(v.x for v in pts), max(v.y for v in pts), max(v.z for v in pts)))
+            obs.append(("fixture", ("box", mn.x - 0.5, mx.x + 0.5, mn.y - 0.5, mx.y + 0.5, mn.z, mx.z)))
+    return obs
+
+
+def _clearance(shape, x, y):
+    """Distance from (x, y) to the footprint (negative inside)."""
+    if shape[0] == "cyl":
+        return math.hypot(x - shape[1], y - shape[2]) - shape[3]
+    _, x0, x1, y0, y1 = shape[:5]
+    dx = max(x0 - x, 0.0, x - x1)
+    dy = max(y0 - y, 0.0, y - y1)
+    if dx == 0 and dy == 0:
+        return -min(x - x0, x1 - x, y - y0, y1 - y)
+    return math.hypot(dx, dy)
+
+
+def spawn_points(p):
+    """-> (encoded ground points, encoded air points, count)."""
+    ground = Ground(p)
+    o = openings(p)
+    polys = deck_polys(p)
+    obs = _footprints(p)
+    feet = [s for lab, s in p.solids if s[0] == "cyl" and lab in FOOT_LABELS]
+    G, O = SC["GRID"], SC["ORIGIN"]
+    enc, n = [], 0
+    for gz in range(0, 43):
+        for gx in range(0, 43):
+            x, y = O + G * gx, O + G * gz
+            if abs(x) > HALF - 4 or abs(y) > HALF - 4 or in_corridor(p, x, y, o=o):
+                continue
+            h = ground.z_at(x, y)
+            if h is None or h[1] < 0.95 or not (-1.0 < h[0] < 8.0):
+                continue
+            z = h[0]
+            # obstacles standing in the prop's height band
+            rob = 99.0
+            for lab, s in obs:
+                sz0, sz1 = (s[4], s[5]) if s[0] == "cyl" else (s[5], s[6])
+                if sz1 < z + 0.2 or sz0 > z + 6.0:
+                    continue
+                rob = min(rob, _clearance(s, x, y))
+            if rob < 1.5:
+                continue
+            r = 0.0
+            for rad in RING_RADII:
+                if rad > rob:
+                    break
+                ok = True
+                for k in range(12):
+                    a = 2 * math.pi * k / 12
+                    qx, qy = x + math.cos(a) * rad, y + math.sin(a) * rad
+                    if in_corridor(p, qx, qy, o=o):
+                        ok = False
+                        break
+                    hk = ground.z_at(qx, qy)
+                    if hk is None or hk[1] < 0.95 or abs(hk[0] - z) > 0.3:
+                        ok = False
+                        break
+                if not ok:
+                    break
+                r = rad
+            if r < 1.5:
+                continue
+            # headroom: structure above, or anything afloat over this spot
+            head = ground.up(x, y, z)
+            for lab, s in p.floats:
+                if (_clearance(s, x, y) < 1.0) and (s[4] if s[0] == "cyl" else s[5]) > z:
+                    head = min(head, (s[4] if s[0] == "cyl" else s[5]) - z)
+            wall, direction = 0, 0
+            if polys:
+                d, (nx, ny) = min((edge_near(q, x, y) for q in polys), key=lambda t: t[0])
+                if d < SC["WALL"]:
+                    wall = 1
+                    direction = int(round(math.degrees(math.atan2(ny, nx)) / 45.0)) % 8
+            tower = int(any(math.hypot(x - s[1], y - s[2]) < s[3] + 6 for s in feet))
+            enc.append(SC["encode_point"](gx, gz, z, int(r), wall, direction, tower, int(min(head, 30) // 2)))
+            n += 1
+    air = []
+    A = SC["AIR_GRID"]
+    for gz in range(0, 16):
+        for gx in range(0, 16):
+            x, y = O + A * gx, O + A * gz
+            if abs(x) > HALF - 12 or abs(y) > HALF - 12:
+                continue
+            h = ground.z_at(x, y, top=60)
+            if h is None:
+                if not polys or min(edge_dist(q, x, y) for q in polys) > 26:
+                    continue
+                base = 0.0
+            else:
+                base = h[0]
+            lo, hi = None, None
+            for zz in range(int(base) + 8, int(base) + 26, 2):
+                ok = free_for_float(p, ("cyl", x, y, SC["AIR_R"], zz - 4, zz + 4))
+                if ok and lo is None:
+                    lo = zz
+                if ok:
+                    hi = zz
+                elif lo is not None:
+                    break
+            if lo is not None and hi - lo >= 2:
+                air.append(SC["encode_air"](gx, gz, lo, hi))
+    return "".join(enc), "".join(air), n
+
+
+# ==========================================================================
+# Prop library and pools
+# ==========================================================================
+
+def _letters(n):
+    s = ""
+    while True:
+        s = chr(97 + n % 26) + s
+        n = n // 26 - 1
+        if n < 0:
+            return s
+
+
+def build_library():
+    """Every family variant built once at the origin: its mesh soup and its
+    measured footprint. -> {kind name: {...}}"""
+    lib = {}
+    for fam in FAMILIES.values():
+        for v in range(fam["n"]):
+            name = "prop_%s_%s" % (fam["name"], _letters(v))
+            shell = K["Piece"](name, "scatter")
+            shell.cur_family = fam
+            with as_prop(shell, "scatter", I4):
+                fam["fn"](shell, v)
+            prop = shell.props[0]
+            verts = [Vector((round(q.x, 4), round(q.y, 4), round(q.z, 4))) for q in prop["verts"]]
+            mn = Vector((min(q.x for q in verts), min(q.y for q in verts), min(q.z for q in verts)))
+            mx = Vector((max(q.x for q in verts), max(q.y for q in verts), max(q.z for q in verts)))
+            radius = max(math.hypot(q.x, q.y) for q in verts) + 0.3
+            centre = (mn + mx) / 2
+            lib[name] = {
+                "family": fam["name"], "verts": verts, "faces": prop["faces"], "mats": prop["mats"],
+                "R": round(radius, 2), "H": round(mx.z, 2), "min": mn, "max": mx, "centre": centre,
+                "anim": fam["anim"], "tier": fam["tier"], "interact": fam["interact"], "air": fam["air"],
+            }
+    return lib
+
+
+def kinds_of(family, lib):
+    return sorted(k for k, v in lib.items() if v["family"] == family)
+
+
+def single(family, weight=None, rule=None, scale=None, align=None):
+    fam = FAMILIES[family]
+    return {"Family": family, "Weight": weight if weight is not None else fam["weight"],
+            "Rule": rule or fam["rule"], "Scale": list(scale or fam["scale"]), "Align": align or fam["align"]}
+
+
+def member(family, count, ring, rule=None, scale=None, align=None):
+    e = single(family, 1, rule, scale, align)
+    e.update({"Count": list(count), "Ring": list(ring)})
+    return e
+
+
+# Groups make a run coherent: a raider camp, a nest site, an epicentre. Singles
+# fill in around them. Density is per mille; PointsPer is how many spawn
+# points each prop is budgeted (fewer props on small pieces, never a wall).
+POOLS = {
+    "base": {"Density": [500, 1100], "PointsPer": 34, "Min": 0, "Max": 14,
+             "Groups": [
+                 {"Id": "Supplies", "Chance": 45, "Core": single("supply_crates"),
+                  "Members": [member("casks", (1, 2), (4, 10)), member("hand_cart", (0, 1), (5, 12)),
+                              member("toolkit", (0, 1), (3, 8))]},
+                 {"Id": "Garden", "Chance": 35, "Core": single("planter", rule="Open"),
+                  "Members": [member("flowers", (1, 3), (4, 12)), member("statue", (0, 1), (8, 16))]}],
+             "Singles": [single("supply_crates", 3), single("casks", 2), single("planter", 2), single("lantern", 3),
+                         single("statue", 1), single("flowers", 2), single("console", 1)],
+             "Air": []},
+    "siege": {"Density": [700, 1300], "PointsPer": 24, "Min": 2, "Max": 30,
+              "Groups": [
+                  {"Id": "RaiderCamp", "Chance": 75, "Core": single("bonfire", scale=(1100, 1400)),
+                   "Members": [member("raider_tent", (2, 4), (8, 22)), member("barrels", (1, 3), (4, 14)),
+                               member("loot_pile", (0, 1), (3, 10)), member("raider_banner", (1, 2), (5, 14)),
+                               member("prisoner_cage", (0, 1), (8, 18)), member("trophy_pike", (0, 2), (6, 16)),
+                               member("campfire", (0, 1), (14, 26))]},
+                  {"Id": "Checkpoint", "Chance": 55, "Core": single("barricade"),
+                   "Members": [member("stake_wall", (1, 2), (6, 14), align="Random"),
+                               member("raider_crates", (1, 2), (4, 10)), member("ballista", (0, 1), (6, 14))]},
+                  {"Id": "Scrapyard", "Chance": 35, "Core": single("scrap_heap", scale=(1100, 1500)),
+                   "Members": [member("scrap_wall", (1, 2), (5, 12)), member("broken_rail", (0, 2), (4, 10)),
+                               member("hand_cart", (0, 1), (4, 10))]}],
+              "Singles": [single("barrels", 3), single("raider_crates", 3), single("campfire", 2),
+                          single("raider_banner", 2), single("rubble", 2), single("scrap_heap", 1),
+                          single("supply_crates", 1), single("trophy_pike", 1)],
+              "Air": []},
+    "lockdown": {"Density": [600, 1200], "PointsPer": 26, "Min": 2, "Max": 26,
+                 "Groups": [
+                     {"Id": "DefencePost", "Chance": 70, "Core": single("sentinel_turret"),
+                      "Members": [member("laser_fence", (1, 2), (5, 12)), member("barrier_block", (2, 3), (4, 12)),
+                                  member("alarm_post", (0, 1), (3, 9))]},
+                     {"Id": "Checkpoint", "Chance": 50, "Core": single("console"),
+                      "Members": [member("barrier_block", (1, 3), (4, 10)), member("security_crate", (1, 2), (4, 10)),
+                                  member("floor_emitter", (0, 1), (6, 12))]},
+                     {"Id": "Watch", "Chance": 35, "Core": single("searchlight"),
+                      "Members": [member("cable_spool", (1, 2), (3, 8)), member("toolkit", (0, 1), (3, 8))]}],
+                 "Singles": [single("barrier_block", 3), single("sentinel_pylon", 2), single("alarm_post", 2),
+                             single("security_crate", 2), single("floor_emitter", 2), single("laser_fence", 1),
+                             single("cable_spool", 1)],
+                 "Air": [{"Family": "drone", "Count": [1, 3]}]},
+    "stormhawk": {"Density": [600, 1200], "PointsPer": 28, "Min": 2, "Max": 22,
+                  "Groups": [
+                      {"Id": "NestSite", "Chance": 60, "Core": single("nest"),
+                       "Members": [member("bone_pile", (2, 4), (16, 34)), member("egg_shells", (1, 2), (14, 28)),
+                                   member("fallen_feather", (2, 5), (10, 32)), member("rubble", (0, 2), (14, 30))]},
+                      {"Id": "StrikeSite", "Chance": 50, "Core": single("lightning_rod"),
+                       "Members": [member("smashed_crate", (1, 2), (4, 12)), member("fallen_feather", (1, 3), (4, 14)),
+                                   member("pillar_segment", (0, 1), (6, 14))]}],
+                  "Singles": [single("fallen_feather", 4), single("bone_pile", 2), single("smashed_crate", 2),
+                              single("rubble", 2), single("perch", 1), single("mossy_rock", 1), single("loot_pile", 1)],
+                  "Air": [{"Family": "storm_feather", "Count": [1, 4]}]},
+    "rime": {"Density": [700, 1300], "PointsPer": 22, "Min": 3, "Max": 30,
+             "Groups": [
+                 {"Id": "Camp", "Chance": 45, "Core": single("warming_brazier"),
+                  "Members": [member("frozen_crate", (1, 2), (4, 10)), member("snow_drift", (1, 3), (6, 16), rule="Any"),
+                              member("campfire", (0, 1), (8, 16))]},
+                 {"Id": "IceField", "Chance": 60, "Core": single("ice_spikes", scale=(2000, 2600)),
+                  "Members": [member("ice_spikes", (2, 4), (6, 18), scale=(900, 1600)),
+                              member("ice_boulder", (1, 2), (6, 16)), member("frost_crystals", (1, 3), (4, 12), rule="Any")]},
+                 {"Id": "FrozenFind", "Chance": 30, "Core": single("frozen_figure"),
+                  "Members": [member("icicle_pile", (1, 2), (4, 10), rule="Any")]}],
+             "Singles": [single("snow_drift", 8), single("ice_spikes", 2), single("frost_crystals", 3),
+                         single("ice_boulder", 2), single("icicle_pile", 2)],
+             "Air": []},
+    "reclaimed": {"Density": [700, 1300], "PointsPer": 20, "Min": 3, "Max": 34,
+                  "Groups": [
+                      {"Id": "Grove", "Chance": 65, "Core": single("sapling", scale=(1300, 1700)),
+                       "Members": [member("bush", (2, 4), (5, 14)), member("fern", (2, 4), (3, 10), rule="Any"),
+                                   member("flowers", (1, 2), (4, 12)), member("grass_tuft", (2, 5), (3, 12))]},
+                      {"Id": "MossBank", "Chance": 60, "Core": single("moss_mound", scale=(1200, 1500)),
+                       "Members": [member("moss_mound", (1, 3), (4, 12), scale=(700, 1000)),
+                                   member("mushrooms", (0, 2), (3, 8), rule="Any"), member("grass_tuft", (1, 3), (3, 8))]},
+                      {"Id": "Ruin", "Chance": 40, "Core": single("pillar_segment"),
+                       "Members": [member("rubble", (1, 2), (4, 12)), member("overgrown_crate", (0, 1), (4, 10), rule="Any"),
+                                   member("fallen_log", (0, 1), (6, 14)), member("stump", (0, 1), (6, 14))]}],
+                  "Singles": [single("moss_mound", 5), single("bush", 4), single("grass_tuft", 4), single("fern", 3),
+                              single("mossy_rock", 2), single("mushrooms", 2), single("stump", 1),
+                              single("smashed_crate", 1), single("statue", 1)],
+                  "Air": []},
+    "aether_surge": {"Density": [700, 1300], "PointsPer": 24, "Min": 3, "Max": 28,
+                     "Groups": [
+                         {"Id": "Epicentre", "Chance": 85, "Core": single("aether_cluster", scale=(2600, 3400)),
+                          "Members": [member("aether_cluster", (3, 6), (8, 30), scale=(900, 1800)),
+                                      member("crystal_rubble", (1, 3), (6, 20)), member("aether_geode", (0, 1), (10, 26)),
+                                      member("glow_pool", (0, 1), (8, 20))]},
+                         {"Id": "Resonance", "Chance": 40, "Core": single("resonator"),
+                          "Members": [member("aether_cluster", (1, 3), (5, 12), scale=(800, 1300))]}],
+                     "Singles": [single("aether_cluster", 4), single("crystal_rubble", 3), single("aether_geode", 1),
+                                 single("glow_pool", 1)],
+                     "Air": [{"Family": "aether_shard", "Count": [2, 4]}, {"Family": "floating_rock", "Count": [0, 2]}]},
+    "unmooring": {"Density": [600, 1200], "PointsPer": 26, "Min": 2, "Max": 24,
+                  "Groups": [
+                      {"Id": "CollapseSite", "Chance": 65, "Core": single("rubble", scale=(1300, 1600)),
+                       "Members": [member("rubble", (1, 3), (4, 12), scale=(700, 1100)),
+                                   member("broken_rail", (1, 2), (4, 12)), member("pillar_segment", (0, 1), (6, 14)),
+                                   member("cracked_plate", (0, 1), (6, 16))]},
+                      {"Id": "RepairPost", "Chance": 50, "Core": single("stabilizer"),
+                       "Members": [member("hazard_beacon", (1, 3), (4, 12)), member("toolkit", (0, 1), (3, 8)),
+                                   member("cable_spool", (0, 1), (3, 8))]}],
+                  "Singles": [single("rubble", 3), single("hazard_beacon", 3), single("broken_rail", 2),
+                              single("cracked_plate", 2), single("supply_crates", 1), single("scrap_heap", 1)],
+                  "Air": [{"Family": "fragment", "Count": [1, 3]}, {"Family": "floating_rock", "Count": [0, 2]}]},
+}
+
+
+def resolve_pool(pool, lib):
+    """Expand family names into kind lists, for scatter_core and the game."""
+    def entry(e):
+        out = dict(e)
+        out["Kinds"] = kinds_of(e["Family"], lib)
+        return out
+    return {"Density": pool["Density"], "PointsPer": pool["PointsPer"], "Min": pool["Min"], "Max": pool["Max"],
+            "Groups": [{"Id": g["Id"], "Chance": g["Chance"], "Core": entry(g["Core"]),
+                        "Members": [entry(m) for m in g["Members"]]} for g in pool["Groups"]],
+            "Singles": [entry(s) for s in pool["Singles"]],
+            "Air": [{"Kinds": kinds_of(a["Family"], lib), "Count": a["Count"]} for a in pool["Air"]]}
 
 
 # ==========================================================================
@@ -1595,8 +1173,9 @@ def build_set(scenario, mats, row_i):
         if scenario:
             p.name = "%s__%s" % (p.name, scenario)
         if not hasattr(p, "anchors"):
-            p.anchors = []
+            p.anchors, p.blockers = [], []
         K["PIECES_BY_NAME"][p.name] = p
+        p.spawn, p.air, p.nspawn = spawn_points(p)
         obj = K["to_object"](p, mats, coll)
         obj["scenario"] = scenario or "base"
         obj.location = (i * ROW, -row_i * ROW * 1.25, 0)
@@ -1606,23 +1185,50 @@ def build_set(scenario, mats, row_i):
     return pieces, objs
 
 
-def preview_props(pieces, objs, mats, coll):
-    """Review only: every prop and fixture drawn in place on its piece, in a
-    collection that is never exported."""
-    n = 0
+def _kind_mesh(name, k, mats):
+    me = bpy.data.meshes.get("lib_" + name)
+    if me:
+        return me
+    shell = K["Piece"]("lib_" + name, "library")
+    shell.verts, shell.faces, shell.fmat = list(k["verts"]), k["faces"], k["mats"]
+    obj = K["to_object"](shell, mats, bpy.context.scene.collection)
+    me = obj.data
+    bpy.data.objects.remove(obj, do_unlink=True)
+    return me
+
+
+def preview_fixed(pieces, objs, mats, coll):
+    """Every fixed (architecture) prop and fixture drawn in place."""
     for p, obj in zip(pieces, objs):
         parts = [(prop["matrix"], prop["verts"], prop["faces"], prop["mats"]) for prop in p.props]
         for fx in p.fixtures:
             parts += [(fx["matrix"], part["verts"], part["faces"], part["mats"]) for part in fx["parts"]]
         for i, (M, verts, faces, fmats) in enumerate(parts):
-            shell = K["Piece"]("%s__prop%03d" % (p.name, i), "preview")
+            shell = K["Piece"]("%s__fixed%03d" % (p.name, i), "preview")
             shell.verts, shell.faces, shell.fmat = list(verts), faces, fmats
             o = K["to_object"](shell, mats, coll)
             o.matrix_world = obj.matrix_world @ M
             o.parent = obj
             o.matrix_parent_inverse = obj.matrix_world.inverted()
-            n += 1
-    return n
+
+
+def preview_scatter(pieces, objs, pool, lib, mats, coll, seed):
+    """One run's scatter, exactly as the game would place it for this seed."""
+    total = 0
+    for p, obj in zip(pieces, objs):
+        # the key a chunk copy standing at the layout's origin gets in the game
+        # (ScatterCore.keyFor), so the preview IS that run's scatter
+        rows = SC["scatter"](p.spawn, p.air, pool, lib, seed, K["_content_id"](p.name) + "@0,0")
+        for i, r in enumerate(rows):
+            me = _kind_mesh(r["kind"], lib[r["kind"]], mats)
+            o = bpy.data.objects.new("%s__s%d_%03d" % (p.name, seed % 1000, i), me)
+            coll.objects.link(o)
+            o.matrix_world = obj.matrix_world @ xf(r["x"], r["y"], r["z"], r["yaw"]) @ \
+                Matrix.Diagonal((r["scale"], r["scale"], r["scale"], 1.0))
+            o.parent = obj
+            o.matrix_parent_inverse = obj.matrix_world.inverted()
+        total += len(rows)
+    return total
 
 
 def write_anchors(path, scenario, pieces):
@@ -1631,8 +1237,8 @@ def write_anchors(path, scenario, pieces):
         "-- GENERATED by assets/source/worlds/sky_citadel/build_sky_citadel_scenarios.py.",
         "-- Do not edit by hand. Gameplay anchors for the '%s' scenario kit:" % scenario,
         "-- where the Fate systems may place resources, discoveries, enemy and NPC",
-        "-- posts, events, and which sockets a run may block. Positions are in the",
-        "-- chunk's local studs (x east, y up, z south), like the prop placements.",
+        "-- posts and events, and the blocker each socket may be closed with. Positions",
+        "-- are the chunk's local studs (x east, y up, z south), like the prop placements.",
         "return {",
     ]
     for p in pieces:
@@ -1648,37 +1254,184 @@ def write_anchors(path, scenario, pieces):
     return sum(len(p.anchors) for p in pieces)
 
 
-def main(export=False, save=True, preview=True):
+# ---- the game's scatter data -----------------------------------------------------
+
+def _lua(v, ind=""):
+    if isinstance(v, dict):
+        inner = ", ".join("%s = %s" % (k, _lua(x)) for k, x in v.items())
+        return "{ %s }" % inner
+    if isinstance(v, (list, tuple)):
+        return "{ %s }" % ", ".join(_lua(x) for x in v)
+    if isinstance(v, bool):
+        return "true" if v else "false"
+    if isinstance(v, str):
+        return '"%s"' % v
+    if isinstance(v, float):
+        return ("%.3f" % v).rstrip("0").rstrip(".")
+    if v is None:
+        return "nil"
+    return str(v)
+
+
+def write_scatter_luau(lib, pools, sets):
+    """src/shared/Content/Scatter/SkyCitadel/: init.luau (kinds, pools) and
+    one Points_<Set>.luau per set of pieces."""
+    os.makedirs(SCATTER_LUAU, exist_ok=True)
+    to_game = K["_TO_GAME"]
+    lines = [
+        "--!strict",
+        "-- GENERATED by assets/source/worlds/sky_citadel/build_sky_citadel_scenarios.py.",
+        "-- Do not edit by hand. Sky Citadel's scatter: the prop library the game",
+        "-- scatters at map generation (Kinds), the pools each set draws from (Pools),",
+        "-- and per chunk the spawn points it may use (the Points_* children).",
+        "-- ScatterCore reads it; scatter_core.py is the same algorithm in the kit.",
+        "",
+        "local Points = {}",
+        "for _, module in script:GetChildren() do",
+        "\tif module:IsA(\"ModuleScript\") then",
+        "\t\tfor id, row in require(module) :: any do",
+        "\t\t\tPoints[id] = row",
+        "\t\tend",
+        "\tend",
+        "end",
+        "",
+        "return {",
+        '\tId = "SKY_CITADEL",',
+        "\tGrid = %d, Origin = %d, AirGrid = %d, Gap = %s," % (SC["GRID"], SC["ORIGIN"], SC["AIR_GRID"], _lua(SC["GAP"])),
+        "\tKinds = {",
+    ]
+    for name in sorted(lib):
+        k = lib[name]
+        size = to_game @ (k["max"] - k["min"])
+        off = to_game @ k["centre"]
+        lines.append("\t\t%s = { R = %s, H = %s, Anim = \"%s\", Tier = %d%s, Size = { %s }, Offset = { %s } }," % (
+            name, _lua(float(k["R"])), _lua(float(k["H"])), k["anim"], k["tier"],
+            (', Interact = "%s"' % k["interact"]) if k["interact"] else "",
+            ", ".join(_lua(abs(float(c))) for c in size), ", ".join(_lua(float(c)) for c in off)))
+    lines.append("\t},")
+    lines.append("\tPools = {")
+    for set_name, pool in pools.items():
+        lines.append("\t\t%s = %s," % (set_name.title().replace("_", ""), _lua(pool)))
+    lines.append("\t},")
+    lines.append("\tPoints = Points,")
+    lines.append("}")
+    with open(os.path.join(SCATTER_LUAU, "init.luau"), "w", encoding="utf-8", newline="\n") as f:
+        f.write("\n".join(lines) + "\n")
+    for set_name, pieces in sets.items():
+        out = ["--!strict", "-- GENERATED. Spawn points per chunk: see scatter_core.py for the encoding.", "return {"]
+        for p in pieces:
+            out.append('\t["%s"] = { Pool = "%s", Ground = "%s", Air = "%s" },' % (
+                K["_content_id"](p.name), set_name.title().replace("_", ""), p.spawn, p.air))
+        out.append("}")
+        with open(os.path.join(SCATTER_LUAU, "Points_%s.luau" % set_name.title().replace("_", "")), "w",
+                  encoding="utf-8", newline="\n") as f:
+            f.write("\n".join(out) + "\n")
+
+
+PARITY = os.path.join(REPO, "tests", "scatter_parity.luau")
+
+
+def write_parity(lib, pools, sets):
+    """tests/scatter_parity.luau: a few real chunks' spawn points, the pools and
+    kinds they use, and what scatter_core.py placed for some seeds and keys.
+    The Luau suite runs ScatterCore on the same input and must match it."""
+    picks = []
+    for set_name, pieces in sets.items():
+        for i in (1, 9, 23):
+            if i < len(pieces) and pieces[i].spawn:
+                picks.append((set_name, pieces[i]))
+    used_pools = sorted({sn for sn, _ in picks})
+    lines = [
+        "--!strict",
+        "-- GENERATED by assets/source/worlds/sky_citadel/build_sky_citadel_scenarios.py",
+        "-- (write_parity). scatter_core.py's placements for real Sky Citadel chunks:",
+        "-- ScatterCore must reproduce every one (tests/cases.luau, 'Scatter').",
+        "return {",
+        "\tSet = {",
+        "\t\tGrid = %d, Origin = %d, AirGrid = %d, Gap = %s," % (SC["GRID"], SC["ORIGIN"], SC["AIR_GRID"], _lua(SC["GAP"])),
+        "\t\tKinds = {",
+    ]
+    for name in sorted(lib):
+        k = lib[name]
+        lines.append("\t\t\t%s = { R = %s, H = %s, Anim = \"%s\", Tier = %d, Size = { 1, 1, 1 }, Offset = { 0, 0, 0 } }," % (
+            name, _lua(float(k["R"])), _lua(float(k["H"])), k["anim"], k["tier"]))
+    lines.append("\t\t},")
+    lines.append("\t\tPools = {")
+    for sn in used_pools:
+        lines.append("\t\t\t%s = %s," % (sn.title().replace("_", ""), _lua(pools[sn])))
+    lines.append("\t\t},")
+    lines.append("\t\tPoints = {")
+    for sn, pc in picks:
+        lines.append('\t\t\t["%s"] = { Pool = "%s", Ground = "%s", Air = "%s" },' % (
+            K["_content_id"](pc.name), sn.title().replace("_", ""), pc.spawn, pc.air))
+    lines.append("\t\t},")
+    lines.append("\t},")
+    lines.append("\tCases = {")
+    total = 0
+    for sn, pc in picks:
+        cid = K["_content_id"](pc.name)
+        for seed, key in ((20260923, cid + "@0,0"), (7, cid + "@-256,512"), (4000000000, cid + "@1024,-768")):
+            rows = SC["scatter"](pc.spawn, pc.air, pools[sn], lib, seed, key)
+            total += len(rows)
+            lines.append('\t\t{ Chunk = "%s", Seed = %d, Key = "%s", Expect = {' % (cid, seed, key))
+            for r in rows:
+                lines.append('\t\t\t{ "%s", %.4f, %.4f, %.4f, %d, %.4f },' % (
+                    r["kind"], r["x"], r["y"], r["z"], r["yaw"], r["scale"]))
+            lines.append("\t\t} },")
+    lines.append("\t},")
+    lines.append("}")
+    with open(PARITY, "w", encoding="utf-8", newline="\n") as f:
+        f.write("\n".join(lines) + "\n")
+    return total
+
+
+def main(export=False, save=True, preview=True, sets_only=None):
     K["reset_scene"]()
     mats = K["ensure_materials"]()
+    lib = build_library()
+    pools = {k: resolve_pool(v, lib) for k, v in POOLS.items()}
     report, all_pieces, sets = {}, [], {}
-    prev = bpy.data.collections.new("Preview_Props_NotExported")
-    bpy.context.scene.collection.children.link(prev)
+    fixed = bpy.data.collections.new("Preview_FixedProps")
+    bpy.context.scene.collection.children.link(fixed)
+    scat = [bpy.data.collections.new("Preview_Scatter_Seed_%d" % s) for s in PREVIEW_SEEDS]
+    for c in scat:
+        bpy.context.scene.collection.children.link(c)
     for row_i, scen in enumerate([None] + SCENARIOS):
+        if sets_only and (scen or "base") not in sets_only:
+            continue
         pieces, objs = build_set(scen, mats, row_i)
         bpy.context.view_layer.update()
+        set_name = scen or "base"
+        counts = []
         if preview:
-            preview_props(pieces, objs, mats, prev)
+            preview_fixed(pieces, objs, mats, fixed)
+            for c, s in zip(scat, PREVIEW_SEEDS):
+                counts.append(preview_scatter(pieces, objs, pools[set_name], lib, mats, c, s))
         ok, rep = K["validate"](objs)
-        report[scen or "base"] = {"ok": ok, "failed": [(r["piece"], r["failed"], r["float_problems"][:2],
-                                                         r["ground_problems"][:2]) for r in rep if not r["ok"]],
-                                  "tris_max": max(r["tris"] for r in rep),
-                                  "props": sum(len(p.props) for p in pieces)}
-        sets[scen] = (pieces, objs)
+        report[set_name] = {"ok": ok, "failed": [(r["piece"], r["failed"], r["float_problems"][:2],
+                                                   r["ground_problems"][:2]) for r in rep if not r["ok"]],
+                            "tris_max": max(r["tris"] for r in rep),
+                            "fixed_props": sum(len(p.props) for p in pieces),
+                            "spawn_points": sum(p.nspawn for p in pieces),
+                            "scattered": counts}
+        sets[set_name] = (pieces, objs)
         if scen:
             all_pieces += pieces
-    kinds, placements, fixtures = K["prop_library"](all_pieces)
-    lib = bpy.data.collections.new("ScenarioPropLibrary")
-    bpy.context.scene.collection.children.link(lib)
-    prop_objs = K["props_to_objects"](kinds, mats, lib)
-    for o in prop_objs:
-        o.location.y -= (len(SCENARIOS) + 2) * ROW * 1.25
-    out = {"report": report, "prop_kinds": len(kinds)}
+    # the second seed starts hidden: switch collections to compare two runs
+    if len(scat) > 1:
+        bpy.context.view_layer.layer_collection.children[scat[1].name].hide_viewport = True
+    out = {"report": report, "kinds": len(lib)}
     if export:
         bad = {k: v["failed"] for k, v in report.items() if not v["ok"]}
         if bad:
             raise RuntimeError("validation failed; not exporting: %r" % bad)
         os.makedirs(SCEN_EXPORT, exist_ok=True)
+        kinds, placements, fixtures = K["prop_library"](all_pieces)
+        libc = bpy.data.collections.new("ScenarioPropLibrary")
+        bpy.context.scene.collection.children.link(libc)
+        prop_objs = K["props_to_objects"](kinds, mats, libc)
+        for o in prop_objs:
+            o.location.y -= (len(SCENARIOS) + 2) * ROW * 1.25
         paths, anchors = [], {}
         for scen in SCENARIOS:
             pieces, objs = sets[scen]
@@ -1690,17 +1443,51 @@ def main(export=False, save=True, preview=True):
             anchors[scen] = write_anchors(os.path.join(d, "Anchors_%s.luau" % scen), scen, pieces)
         props_path = os.path.join(SCEN_EXPORT, "sky_citadel_scenario_props.fbx")
         K["_export_selected"](prop_objs, props_path)
-        verified = K["verify_exports"](paths + [props_path])
-        for v in verified[:-1]:
+        # the scatter library: every variant, plus every scenario's blocker shape
+        scatter_objs = []
+        sc_coll = bpy.data.collections.new("ScatterLibrary")
+        bpy.context.scene.collection.children.link(sc_coll)
+        for i, name in enumerate(sorted(lib)):
+            k = lib[name]
+            shell = K["Piece"](name, "scatter")
+            shell.verts = [v - k["centre"] for v in k["verts"]]
+            shell.faces, shell.fmat = k["faces"], k["mats"]
+            o = K["to_object"](shell, mats, sc_coll)
+            o.location = ((i % 16) * 30.0, -(len(SCENARIOS) + 4) * ROW * 1.25 - (i // 16) * 30.0, 0)
+            scatter_objs.append(o)
+        blockers = {}
+        for scen in SCENARIOS:
+            for p in sets[scen][0]:
+                if p.blockers and scen not in blockers:
+                    b = p.blockers[0]
+                    shell = K["Piece"]("prop_blocker_%s" % scen, "blocker")
+                    pts = b["verts"]
+                    mn = Vector((min(q.x for q in pts), min(q.y for q in pts), min(q.z for q in pts)))
+                    mx = Vector((max(q.x for q in pts), max(q.y for q in pts), max(q.z for q in pts)))
+                    shell.verts = [q - (mn + mx) / 2 for q in pts]
+                    shell.faces, shell.fmat = b["faces"], b["mats"]
+                    o = K["to_object"](shell, mats, sc_coll)
+                    o.location = (len(blockers) * 40.0, -(len(SCENARIOS) + 7) * ROW * 1.25, 0)
+                    scatter_objs.append(o)
+                    blockers[scen] = o.name
+        scatter_path = os.path.join(SCEN_EXPORT, "sky_citadel_scatter_props.fbx")
+        K["_export_selected"](scatter_objs, scatter_path)
+        verified = K["verify_exports"](paths + [props_path, scatter_path])
+        for v in verified[:len(paths)]:
             wrong = {k: s for k, s in v["sizes"].items() if any(abs(c - 256) > 0.01 for c in s)}
             if v["meshes"] != len(K["BUILDERS"]) or wrong:
                 raise RuntimeError("%s did not come back %d x 256^3: %r" % (v["file"], len(K["BUILDERS"]), wrong))
-        if verified[-1]["meshes"] != len(kinds):
-            raise RuntimeError("scenario prop export came back with %d meshes" % verified[-1]["meshes"])
+        if verified[-2]["meshes"] != len(kinds):
+            raise RuntimeError("scenario prop export came back with %d meshes" % verified[-2]["meshes"])
+        if verified[-1]["meshes"] != len(scatter_objs):
+            raise RuntimeError("scatter export came back with %d meshes" % verified[-1]["meshes"])
         out["exported"] = [(v["file"], v["meshes"]) for v in verified]
         out["anchors"] = anchors
         out["placements"] = K["write_props_luau"](kinds, placements, os.path.join(SCEN_EXPORT, "Props_Scenarios.luau"))
         out["fixtures"] = K["write_fixtures_luau"](kinds, fixtures, os.path.join(SCEN_EXPORT, "Fixtures_Scenarios.luau"))
+        write_scatter_luau(lib, pools, {k: v[0] for k, v in sets.items()})
+        out["parity_rows"] = write_parity(lib, pools, {k: v[0] for k, v in sets.items()})
+        out["fixed_kinds"] = len(kinds)
     if save:
         bpy.ops.wm.save_as_mainfile(filepath=BLEND_OUT)
     return out

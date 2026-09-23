@@ -186,7 +186,7 @@ exists.**
 
 ### Test suite
 
-**788 tests, all passing.** 35 arrived with loot, fixtures and vault keys (build spec §7.5). 28 arrived with ambient props (placements inside their pieces, tiers, and what each kind of prop may and may not do). 65 arrived with parties and expedition instances (§7.2), and the scenario layer (§7.3) added its own: compatibility, pacing bands, anti-repetition and determinism. Headless — no Roblox required. 136 of them arrived
+**810 tests, all passing.** 20 arrived with the prop scatter (parity with the kit's Python twin, spacing, budgets, determinism). 35 arrived with loot, fixtures and vault keys (build spec §7.5). 28 arrived with ambient props (placements inside their pieces, tiers, and what each kind of prop may and may not do). 65 arrived with parties and expedition instances (§7.2), and the scenario layer (§7.3) added its own: compatibility, pacing bands, anti-repetition and determinism. Headless — no Roblox required. 136 of them arrived
 with the player UI and the live palette: the menu reducer, travel authorisation, code redemption,
 settings validation, the stamina curve and the coyote window.
 
@@ -446,6 +446,12 @@ survive a rescale and a literal does not.
 ---
 
 ## 5. Next session — pick up here
+
+> **2026-09-23: scenery is scattered per run.** Chunks ship spawn points;
+> `ScatterCore` dresses each chunk from its scenario's pool, seeded by the
+> run, and `PropController` draws it. Import
+> `assets/export/worlds/sky_citadel/scenarios/sky_citadel_scatter_props.fbx`
+> into `LuckboundProps` to see it. `SKY_CITADEL.md` › *Third pass*.
 
 > **2026-09-23: Sky Citadel became the Fate laboratory.** The base kit is 36
 > pieces, interactive dressing is now props with an `Interact` field, and

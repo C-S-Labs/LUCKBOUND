@@ -620,7 +620,7 @@ player knows the place — and the scenario changes what is on it:
 | **Reclaimed** | abandoned and overgrown | moss on the tops of walls and rails and carpeting the foot of every wall; ivy up the turrets; moss mounds, bushes (`Cut`), ferns, flowers (`Pickup`), saplings (`Cut`), mushrooms (`Harvest`), roots crawling in from the edges; vines off every rim; breaches and a broken turret on some pieces; dead lights |
 | **Aether Surge** | crystal growth erupts | every seam violet; one to three **epicentres** per piece, each a giant cluster with glowing fissures radiating out and smaller clusters thinning with distance (`Harvest`), a geode, and shards thrown up round it |
 
-### How dressing is placed (second pass, 2026-09-23)
+### How dressing is placed (second pass, 2026-09-23) — superseded by the third pass below
 
 The owner's walk of the first pass found upside-down tents, flat squares for
 moss, the same scatter in every scenario, and skiffs too small to matter. The
@@ -658,7 +658,9 @@ that socket, which is what makes alternate routes). Written to
 | `staged_luau/` | base placements + fixtures, **staged, not yet in `src/`** (the new pieces have no asset ids) |
 | `scenarios/<s>/sky_citadel_<s>_structure.fbx` | 36 pieces each, re-imported and measured 256³ |
 | `scenarios/sky_citadel_scenario_props.fbx` | 164 prop kinds shared by all seven |
-| `scenarios/Props_Scenarios.luau`, `Fixtures_Scenarios.luau` | placements, with `Interact` |
+| `scenarios/Props_Scenarios.luau`, `Fixtures_Scenarios.luau` | fixed (architecture) placements, with `Interact` |
+| `scenarios/sky_citadel_scatter_props.fbx` | the scatter library: every variant plus each scenario's blocker, pivoted on its box centre |
+| `src/shared/Content/Scatter/SkyCitadel/` | **live**: kinds, pools, and every piece's spawn points (base and all seven) |
 
 `assets/source/worlds/sky_citadel/sky_citadel_scenarios.blend` holds the base
 kit and all seven in rows, with a `Preview_Props_NotExported` collection that
@@ -667,16 +669,101 @@ draws every prop in place for review.
 **Upload cost was designed down.** 288 scenario pieces share 164 prop meshes
 (an early pass produced 459).
 
+### Third pass — structure per scenario, scenery scattered per run (2026-09-23)
+
+The owner's walk of the second pass: the same props on every piece, standing in
+uniform walls that blocked paths, every chunk carrying its biome's whole prop
+list, too few props for variety, and scenarios that differed only in dressing.
+Two changes answer it.
+
+**1. Chunks ship no dressing. The game scatters it per run.** A chunk now ships
+*spawn points*: one every 6 studs, ray-cast onto its real deck, never in the
+walking line between openings, each recording its height, how much flat deck is
+clear round it, whether it is against a wall (and which way the wall faces),
+whether it is at a tower's foot, and its headroom. They are packed six
+characters a point (`scatter_core.py` documents the layout); about 200 per
+piece. When a map is generated, `ScatterCore.luau` draws that run's scenery
+from the scenario's **pool**:
+
+- **Groups** — a core prop and members in a ring round it (a raider camp: a
+  bonfire, tents, barrels, a loot pile, a prisoner cage, trophy pikes). Each
+  group rolls its own chance, so a piece has a camp in some runs and not others.
+- **Singles** — weighted picks to fill up to the run's density, each with a
+  placement rule: `Wall` (backed against a parapet, turned to face out from it),
+  `Open` (clear deck), `Base` (at a tower's foot), `Lee` (against the wall
+  downwind of this run's wind), `Any`.
+- **Air** — things that drift, in bands the kit proved clear of every float.
+
+Every prop keeps its footprint plus a 1-stud gap clear of every other, needs
+flat deck under all of it and headroom over it, and the density is itself
+rolled per run — so props never form walls, the corridor is never touched, and
+one piece is sparse in one run and busy in the next. **The seed is the stage's
+`Seed`; the key is the chunk id plus where it stands**, so two copies of a piece
+in one run differ, every client in a party draws the same scene, and the server
+sends nothing.
+
+The kit previews exactly this in Blender. `scatter_core.py` is the Python twin
+of `ScatterCore.luau`: every decision is integer maths on the same 32-bit
+generator (mulberry32 seeded by FNV-1a), so a seed places the same props in
+both. `tests/scatter_parity.luau` is written by the export from the Python
+side, and the suite requires the Luau side to reproduce all of it.
+
+**The library:** 73 parametric families, ~200 variants, each built once and
+shared by every placement (`sky_citadel_props.py`). Per pool:
+
+| Pool | Groups | What it draws from |
+|---|---|---|
+| Base | Supplies, Garden | crates, casks, hand carts, toolkits, planters, lanterns, statues, flowers, consoles — sparse; the base kit keeps its own fixed props |
+| Siege | RaiderCamp, Checkpoint, Scrapyard | bonfires, tents, barrels, loot piles, banners, prisoner cages, trophy pikes, barricades, stake and scrap walls, ballistae, scrap heaps |
+| Lockdown | DefencePost, Checkpoint, Watch | sentinel turrets and pylons, laser fences, barrier blocks, alarm posts, consoles, security crates, floor emitters, searchlights, cable spools |
+| Stormhawk | NestSite, StrikeSite | nests, bone piles, egg shells, feathers, lightning rods, smashed crates, perches, fallen pillar segments |
+| Rime | Camp, IceField, FrozenFind | warming braziers, frozen crates, snow drifts, ice spikes and boulders, frost crystals, icicle piles, frozen figures |
+| Reclaimed | Grove, MossBank, Ruin | saplings, bushes, ferns, flowers, grass, moss mounds, mushrooms, fallen logs, stumps, overgrown crates, mossy rocks |
+| Aether Surge | Epicentre, Resonance | crystal clusters, geodes, crystal rubble, glow pools, resonators |
+| Unmooring | CollapseSite, RepairPost | rubble, broken rails, cracked plates, pillar segments, stabilisers, hazard beacons |
+
+Kinds carry an animation class. `Sway` (grass, vines, banners) rocks about the
+prop's centre; `Pulse`, `Flicker` and `Strobe` are light classes that do not
+move — named so a later light pass can find them.
+
+**2. Each scenario rebuilds the architecture, not just the dressing.**
+`sky_citadel_structures.py` holds one hook per scenario, each drawing from the
+piece's own random stream, so a piece differs between scenarios and two pieces
+of one scenario differ from each other:
+
+| Scenario | The structure |
+|---|---|
+| Unmooring | an islet loosened and tilted off its bridge, turrets leaning, buckled deck plates, fallen roofs; beacons drifted off |
+| Siege | raider watchtowers, palisades replacing parapet runs, rust-red roofs, scorched floors, warships moored alongside; beacons shot down |
+| Lockdown | gunmetal and plating, blast walls, armoured turrets, alarm-red lighting |
+| Stormhawk | spires snapped partway up, a nest crowning a turret, claw rakes down the shafts and gouges across the deck; storm-stone palette |
+| Rime | icicle rings under every turret roof, frozen falls pouring off the rims far down the keel, ice pillars, snow banked against the walls, snow on every top |
+| Reclaimed | a great tree through the deck, roots hanging from the keel, ruined turrets, moss on the tops |
+| Aether Surge | crystal eruptions through the deck with glowing veins, crystal growing out of the turrets and hanging under the island, crystal rocks adrift |
+
+The base kit's own fixed props (lamps, banners, crates, corner beacons,
+floating crystals) are thinned per scenario, each for its own reason, so a
+scenario's piece is not the base piece with things added. The walking line and
+the crown landmark are never touched, and the validator holds every piece to
+256³, floats clear and everything grounded; the heaviest is 8,892 triangles.
+
+**Honest read:** pieces with room (courts, gardens, docks, arenas) now read as
+their scenario in silhouette. The crossing and the straight skyways are mostly
+walking line, so there the scenario shows in the keel, the rims, the palette
+and the few spots off the corridor. Scatter on the base set is deliberately
+sparse.
+
 ### What is not built yet — code, pending the owner's approval
 
-Nothing in `src/` reads any of this yet. In order:
+The scatter is live in `src/` (`PropController` draws it for the base kit's
+chunks once the scatter library is imported). Nothing else here is. In order:
 1. `Content/Chunks/SkyCitadel.luau` entries for the 14 new pieces (and asset
    ids once uploaded); scenario variants as `<ID>__<SCENARIO>`.
 2. `FateCore`: after the world draw, draw modifiers and a scenario profile.
 3. `ChunkLoader` / `ChunkCore`: load the rolled scenario's variant set; honour
    `BLOCKER` anchors when a profile closes a socket.
-4. The prop runtime: an `Interact` handler per kind, and the `Blocker`,
-   `Pulse`, `Flicker` and `Sway` animation classes.
+4. The prop runtime: an `Interact` handler per kind, and the `Blocker` class
+   (`Sway` moves now; `Pulse`, `Flicker`, `Strobe` await a light pass).
 5. Opportunity / Presence / Event systems that read the anchors.
 
 **Honest read of the art (second pass):** every kit now reads as its own

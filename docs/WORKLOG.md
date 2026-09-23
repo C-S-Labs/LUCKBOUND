@@ -33,6 +33,56 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 66 — 2026-09-23 — Sky Citadel: scenery scattered per run, structure per scenario
+**Merged:** —   **Tests:** 810 passing   **Head:** branch `claude/sky-citadel-scenarios`
+
+### Done
+- Owner walk of the polish pass: the same props on every piece in uniform walls
+  across paths, every chunk carrying the biome's whole prop list, too few
+  props, scenarios differing only in dressing. Split chunks from scenery.
+- **Spawn points instead of dressing.** Every piece ships ~200 packed points
+  (ray-cast deck spots off the walking line, with clearance, wall side, tower
+  foot, headroom) plus air bands for floats.
+- **`Core/ScatterCore.luau`** draws a run's scenery from a scenario's pool
+  (groups round a core, weighted singles with placement rules, air), seeded by
+  the stage's `Seed` and keyed by chunk id and position. Every prop keeps its
+  footprint + 1 stud clear; density is rolled per run.
+- **`scatter_core.py`** is its exact twin (integer decisions on mulberry32);
+  the .blend previews two seeds (`Preview_Scatter_Seed_*`, the second hidden).
+  The export writes `tests/scatter_parity.luau`; Luau reproduces all 264 rows.
+- **`PropController`** appends scattered rows after the fixed ones, behind
+  `GameConfig.Ambience.Props.Scatter`. `Content/Scatter/SkyCitadel/` is
+  generated (kinds, pools, points for the base kit and all seven scenarios).
+- Prop library: 73 families, 200 variants (`sky_citadel_props.py`).
+- **Structure per scenario** (`sky_citadel_structures.py`): loosened islets and
+  leaning turrets, raider watchtowers and palisades, blast walls and plating,
+  snapped spires and a crown nest, frozen falls and ice pillars, a great tree
+  and keel roots, crystal eruptions through the deck. Base fixed props and
+  corner beacons thinned per scenario (`p.beacon_drop`, new in the kit).
+- `PropCore`: `Sway` moves; `Pulse`, `Flicker`, `Strobe` are known,
+  motionless light classes.
+- `tests/build_suite.py` rebuilds folder-shaped content modules (an init that
+  gathers its children), so the shipped scatter data is tested too.
+
+### Decisions made
+- Scenery is client-side and seeded; the server sends none of it.
+- The key is `chunkId@floor(X),floor(Z)` of the chunk's centre, so two copies
+  of a piece in one run are dressed differently.
+- The base set's pool is sparse on purpose; its fixed props stay.
+
+### Stopped at
+All eight sets valid (heaviest 8,892 tris). Scatter is live in code but draws
+only once `sky_citadel_scatter_props.fbx` is imported into
+`ReplicatedStorage.LuckboundProps`; until then `PropController` warns once with
+the missing names.
+
+### Next
+1. Import the scatter library and walk a Sky Citadel run: two runs, same chunk.
+2. Owner decisions pending: the Fate steps in `SKY_CITADEL.md` › *What is not
+   built yet*.
+
+---
+
 ## Session 65 — 2026-09-23 — Sky Citadel scenario kits: the polish pass
 **Merged:** —   **Tests:** not run (no `src/` change)   **Head:** branch `claude/sky-citadel-scenarios`
 

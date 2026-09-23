@@ -10,6 +10,12 @@
 --   ReplicatedStorage.LuckboundProps   the imported prop libraries (Rojo,
 --                                      assets/rbxm/props), searched by NAME
 --   Content/Props/<World>.luau         generated placements per chunk id
+--                                      (the architecture's own props: lamps,
+--                                      doors, banners -- the same every run)
+--   Content/Scatter/<World>            spawn points and pools; ScatterCore
+--                                      draws this run's scenery from them,
+--                                      seeded by the stage's Seed, so every
+--                                      client in a party sees the same scene
 --   each chunk folder's attributes     ChunkId, Centre, Yaw (ChunkLoader)
 
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -22,8 +28,10 @@ local ChunkCore = require(Root.Util.ChunkCore)
 local Constants = require(Root.Core.Constants)
 local GameConfig = require(Root.Core.GameConfig)
 local PropCore = require(Root.Core.PropCore)
+local ScatterCore = require(Root.Core.ScatterCore)
 local Chunks = require(Root.Content.Chunks)
 local Props = require(Root.Content.Props)
+local Scatter = require(Root.Content.Scatter)
 
 local PropController = {}
 
@@ -132,7 +140,8 @@ function PropController.enter(worldId: string, stageName: string?)
 	PropController.leave()
 	local cfg = GameConfig.Ambience.Props
 	local set = Props[worldId]
-	if not cfg.Enabled or not set or not stageName then
+	local scatter = if cfg.Scatter then Scatter[worldId] else nil
+	if not cfg.Enabled or not (set or scatter) or not stageName then
 		return
 	end
 	local lib = library()
@@ -156,12 +165,28 @@ function PropController.enter(worldId: string, stageName: string?)
 	startedAt = os.clock()
 	local missing: { [string]: boolean } = {}
 	local index = 0
+	-- The run's seed: the same on every client, different every run.
+	local seed = stage:GetAttribute("Seed")
+	seed = if type(seed) == "number" then seed else 0
 
 	for _, chunkFolder in stage:GetChildren() do
 		local chunkId = chunkFolder:GetAttribute("ChunkId")
 		local centre = chunkFolder:GetAttribute("Centre")
 		local yaw = chunkFolder:GetAttribute("Yaw")
-		local rows = chunkId and set.Placements[chunkId]
+		local rows: { any }? = nil
+		if chunkId and typeof(centre) == "Vector3" then
+			local fixed = set and set.Placements[chunkId]
+			-- Scattered rows come after the fixed ones, so a wing's Attach
+			-- (a row index) still finds its bird.
+			local scattered = if scatter
+				then ScatterCore.rowsFor(scatter, chunkId, seed, ScatterCore.keyFor(chunkId, centre.X, centre.Z))
+				else {}
+			if fixed or #scattered > 0 then
+				local all = table.clone(fixed or {})
+				table.move(scattered, 1, #scattered, #all + 1, all)
+				rows = all
+			end
+		end
 		if rows and typeof(centre) == "Vector3" and type(yaw) == "number" then
 			local chunk = Chunks[chunkId]
 			-- The piece's layout frame: where the generator put it and which

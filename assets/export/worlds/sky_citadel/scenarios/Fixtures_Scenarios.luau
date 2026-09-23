@@ -23,12 +23,12 @@ return {
 			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_ARCHIVE__LOCKDOWN = {
-			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
+			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_ARMORY__LOCKDOWN = {
-			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
+			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_BOSS_CLEARING__LOCKDOWN = {
 			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
@@ -62,37 +62,37 @@ return {
 			{ Kind = "FORCEFIELD", P = { 0, 9, -22.3 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 0, 0 }, S = { 30, 18, 0.6 } } } },
 		},
 		SC_CROSSROADS__LOCKDOWN = {
+			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { -114, 0, 0 }, R = { 0, 0, 1, 0, 1, 0, -1, 0, 0 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { 114, 0, 0 }, R = { 0, 0, 1, 0, 1, 0, -1, 0, 0 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
-			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_DOCKSIDE__LOCKDOWN = {
-			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
+			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_ENTRY__LOCKDOWN = {
 			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_GARDEN_TERRACE__LOCKDOWN = {
-			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
+			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_LIGHTHOUSE_POINT__LOCKDOWN = {
-			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
+			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_OBSERVATORY__LOCKDOWN = {
-			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
+			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_PARADE_GROUND__LOCKDOWN = {
-			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
+			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_PATH_AVIARY__LOCKDOWN = {
-			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
+			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_PATH_BEND__LOCKDOWN = {
 			{ Kind = "FORCEFIELD", P = { 114, 0, 0 }, R = { 0, 0, 1, 0, 1, 0, -1, 0, 0 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
@@ -103,32 +103,32 @@ return {
 			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_PATH_COLONNADE__LOCKDOWN = {
-			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
+			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_PATH_HOOPS__LOCKDOWN = {
-			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
+			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_PATH_LANTERN_ROW__LOCKDOWN = {
-			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
+			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_PATH_LONG_SPAN__LOCKDOWN = {
-			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
+			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_PATH_SHATTERED__LOCKDOWN = {
-			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
+			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_PATH_SKYPORT__LOCKDOWN = {
-			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
+			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_PATH_STRAIGHT__LOCKDOWN = {
-			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
+			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_PATH_TEE__LOCKDOWN = {
 			{ Kind = "FORCEFIELD", P = { -114, 0, 0 }, R = { 0, 0, 1, 0, 1, 0, -1, 0, 0 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
@@ -259,20 +259,20 @@ return {
 			{ Kind = "CHEST", P = { 12, 0, 4 }, R = { 0.978, 0, 0.208, 0, 1, 0, -0.208, 0, 0.978 }, Parts = { { Mesh = "fix_chest_body_a", Role = "Body", P = { 0, 0.95, -0.035 }, S = { 3.5, 1.9, 2.37 } }, { Mesh = "fix_chest_lid_a", Role = "Lid", P = { 0, 2.12, -0.025 }, S = { 3.4, 1.5, 2.39 }, Hinge = { 0, -0.52, -1.075 } } } },
 		},
 		SC_SKY_TREE_GROVE__LOCKDOWN = {
-			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
+			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_SPIRE_COURT__LOCKDOWN = {
-			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
+			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_SPIRE_COURT_B__LOCKDOWN = {
-			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
+			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_TURBINE_HALL__LOCKDOWN = {
-			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 			{ Kind = "FORCEFIELD", P = { 0, 0, -114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
+			{ Kind = "FORCEFIELD", P = { 0, 0, 114 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_forcefield_a", Role = "Field", P = { 0, 9, 0 }, S = { 40, 18, 0.6 } } } },
 		},
 		SC_VAULT_TURN__AETHER_SURGE = {
 			{ Kind = "VAULT", P = { -22, 10.75, -18 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = { { Mesh = "fix_vault_door_a", Role = "Door", P = { 0, 0, 1.45 }, S = { 15.378, 15.378, 2.9 } } } },

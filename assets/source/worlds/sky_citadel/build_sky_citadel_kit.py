@@ -819,8 +819,16 @@ def corner_beacons(p):
     at least FLOAT_EDGE_MARGIN inside the tile (so it can never touch a
     neighbour's), clear of every other float, solid and deck. A corner with no
     legal spot after 60 tries goes without; nothing depends on the beacons any
-    more -- edge_pins() pins the bounding box instead."""
+    more -- edge_pins() pins the bounding box instead.
+
+    A scenario hook may set p.beacon_drop (0..1): the share of corners that go
+    without, drawn from its own stream; the base kit never sets it, so its
+    beacons are unchanged."""
+    drop = getattr(p, "beacon_drop", 0.0)
+    drop_rng = random.Random("beacons " + p.name)
     for sx, sy in ((-1, -1), (1, -1), (1, 1), (-1, 1)):
+        if drop and drop_rng.random() < drop:
+            continue
         for _ in range(60):
             style = p.rng.choice(BEACON_STYLES)
             k = p.rng.uniform(0.75, 1.3)

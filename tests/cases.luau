@@ -5627,6 +5627,166 @@ do
 	check("a wing on anything but a bird is a boot error", not okW)
 end
 
+-- === Prop scatter (ScatterCore) ======================================
+group("Prop scatter: scenery drawn per run from spawn points")
+do
+	local ScatterCore = __require("ScatterCore")
+	local Parity = __require("ScatterParity")
+	local Scatter = __require("Scatter")
+
+	-- The generator: exact 32-bit maths, or no two clients agree.
+	check("imul is exact 32-bit multiplication",
+		ScatterCore.imul(0xFFFFFFFF, 0xFFFFFFFF) == 1 and ScatterCore.imul(123456789, 987654321) == 4227814277)
+	check("hash is FNV-1a", ScatterCore.hash("") == 2166136261 and ScatterCore.hash("a") == 3826002220)
+	local r = ScatterCore.rng(ScatterCore.hash("12345|SC_ENTRY@0,0"))
+	local a1, a2, a3 = ScatterCore.next(r), ScatterCore.next(r), ScatterCore.next(r)
+	check("mulberry32 matches the kit's generator", a1 == 945266154 and a2 == 2972573482 and a3 == 661340513,
+		string.format("%d %d %d", a1, a2, a3))
+
+	-- Parity: the kit previews a run in Blender with scatter_core.py; the game
+	-- must place exactly what the preview showed.
+	local cases, rows, mismatch = 0, 0, nil
+	for _, case in Parity.Cases do
+		cases += 1
+		local got = ScatterCore.scatter(Parity.Set, Parity.Set.Points[case.Chunk], case.Seed, case.Key)
+		if #got ~= #case.Expect then
+			mismatch = mismatch or string.format("%s seed %d: %d placements, kit had %d", case.Chunk, case.Seed, #got, #case.Expect)
+		else
+			for i, e in case.Expect do
+				local g = got[i]
+				rows += 1
+				if g.kind ~= e[1] or math.abs(g.x - e[2]) > 1e-3 or math.abs(g.y - e[3]) > 1e-3
+					or math.abs(g.z - e[4]) > 1e-3 or g.yaw ~= e[5] or math.abs(g.scale - e[6]) > 1e-4 then
+					mismatch = mismatch or string.format("%s seed %d row %d: %s %.3f,%.3f,%.3f %d vs %s %.3f,%.3f,%.3f %d",
+						case.Chunk, case.Seed, i, g.kind, g.x, g.y, g.z, g.yaw, e[1], e[2], e[3], e[4], e[5])
+				end
+			end
+		end
+	end
+	check("ScatterCore reproduces the kit's scatter exactly", mismatch == nil and cases > 0 and rows > 50,
+		mismatch or string.format("%d cases, %d rows", cases, rows))
+
+	-- The shipped data.
+	local set = Scatter.SKY_CITADEL
+	check("Sky Citadel ships scatter data", set ~= nil)
+	if set then
+		local badKind, badPool, count = nil, nil, 0
+		for poolName, pool in set.Pools do
+			local entries = {}
+			for _, g in pool.Groups do
+				table.insert(entries, g.Core)
+				for _, m in g.Members do table.insert(entries, m) end
+			end
+			for _, s in pool.Singles do table.insert(entries, s) end
+			for _, a in pool.Air do table.insert(entries, a) end
+			for _, e in entries do
+				for _, k in e.Kinds do
+					if not set.Kinds[k] then badKind = badKind or (poolName .. ": " .. k) end
+				end
+			end
+		end
+		for id, pts in set.Points do
+			count += 1
+			if not set.Pools[pts.Pool] then badPool = badPool or id end
+		end
+		check("every pool draws only kinds in the library", badKind == nil, badKind)
+		check("every chunk's points name a pool that exists", badPool == nil and count > 0, badPool)
+		local badAnim = nil
+		for name, k in set.Kinds do
+			if not PropCore.ANIMS[k.Anim] then badAnim = badAnim or (name .. " " .. k.Anim) end
+		end
+		check("every scattered kind moves by a known class", badAnim == nil, badAnim)
+
+		-- Every chunk the game ships has points to scatter on. (The kit has
+		-- more pieces than ship: the 14 added 2026-09-23 wait on a mesh upload.)
+		local missing = nil
+		for id, chunk in Chunks do
+			local pts = set.Points[id]
+			if chunk.WorldId == "SKY_CITADEL" and not (pts and pts.Pool == "Base") then
+				missing = missing or id
+			end
+		end
+		check("every shipping Sky Citadel chunk has base scatter points", missing == nil, missing)
+
+		-- Per chunk, across seeds: inside its own piece, spaced, in budget,
+		-- and different run to run.
+		local outside, crowded, over, same, total, chunks = nil, nil, nil, 0, 0, 0
+		for id, pts in set.Points do
+			local pool = set.Pools[pts.Pool]
+			local airMax = 0
+			for _, a in pool.Air do airMax += a.Count[2] end
+			local first = nil
+			for _, seed in { 1, 99991, 20260923 } do
+				local key = ScatterCore.keyFor(id, 256, -512)
+				local got = ScatterCore.scatter(set, pts, seed, key)
+				total += #got
+				local ground = {}
+				for _, p in got do
+					if math.abs(p.x) > 128 or math.abs(p.y) > 128 or p.z < -96 or p.z > 160 then
+						outside = outside or string.format("%s %s at %.1f,%.1f,%.1f", id, p.kind, p.x, p.y, p.z)
+					end
+					if not p.air then table.insert(ground, p) end
+				end
+				if #ground > pool.Max or #got > pool.Max + airMax then
+					over = over or string.format("%s: %d", id, #got)
+				end
+				for i = 1, #ground do
+					for j = i + 1, #ground do
+						local p, q = ground[i], ground[j]
+						local dx, dz = (p.gx - q.gx) * set.Grid, (p.gz - q.gz) * set.Grid
+						local lim = set.Kinds[p.kind].R * p.scale + set.Kinds[q.kind].R * q.scale + set.Gap
+						if dx * dx + dz * dz < lim * lim - 1e-6 then
+							crowded = crowded or string.format("%s: %s and %s", id, p.kind, q.kind)
+						end
+					end
+				end
+				if seed == 1 then
+					first = got
+				elseif seed == 99991 and #got > 0 and first and #first == #got then
+					local diff = false
+					for i, p in got do
+						if p.kind ~= first[i].kind or p.x ~= first[i].x then diff = true end
+					end
+					if not diff then same += 1 end
+				end
+			end
+			-- deterministic: the same seed and key twice is the same scene
+			local a = ScatterCore.scatter(set, pts, 42, id .. "@0,0")
+			local b = ScatterCore.scatter(set, pts, 42, id .. "@0,0")
+			local eq = #a == #b
+			for i = 1, math.min(#a, #b) do
+				if a[i].kind ~= b[i].kind or a[i].x ~= b[i].x or a[i].yaw ~= b[i].yaw then eq = false end
+			end
+			if not eq then over = over or (id .. " is not deterministic") end
+			chunks += 1
+		end
+		check("every scattered prop stays inside its own piece", outside == nil, outside)
+		check("scattered props never crowd each other", crowded == nil, crowded)
+		check("a chunk's scatter keeps to its pool's budget and is deterministic", over == nil, over)
+		check("two runs dress the same chunk differently", same * 10 < chunks,
+			string.format("%d of %d chunks identical across seeds", same, chunks))
+		check("the scatter actually places things", total > chunks * 3, string.format("%d over %d chunks", total, chunks))
+	end
+
+	-- Rows: kit axes (x east, y north, z up) to the layout frame (x east, y
+	-- up, z south), the mesh's centre offset turned with the prop.
+	local fake = { Kinds = { k = { R = 1, H = 1, Anim = "Static", Tier = 1, Size = { 2, 4, 6 }, Offset = { 1, 2, 0 } } } }
+	local row = ScatterCore.toRow(fake, { kind = "k", x = 10, y = 20, z = 3, yaw = 90, scale = 2, gx = 0, gz = 0, air = false })
+	local near = function(u, v) return math.abs(u - v) < 1e-9 end
+	-- offset (1,2,0)*2 turned 90 degrees about up: game x = 2*cos, z = -2*sin
+	check("a scattered row lands at its anchor plus its turned centre offset",
+		near(row.P[1], 10) and near(row.P[2], 7) and near(row.P[3], -22), string.format("%.3f %.3f %.3f", row.P[1], row.P[2], row.P[3]))
+	check("a scattered row's rotation is a turn about up, and its size is scaled",
+		near(row.R[1], 0) and near(row.R[3], 1) and near(row.R[7], -1) and row.R[5] == 1 and row.S[3] == 12)
+	check("the key tells chunk copies apart by where they stand",
+		ScatterCore.keyFor("SC_ENTRY", -255.5, 512.9) == "SC_ENTRY@-256,512")
+	check("scatter is on", GameConfig.Ambience.Props.Scatter == true)
+	local sway = PropCore.motion("Sway", 1.3, 0.2, GameConfig.Ambience.Props)
+	check("swaying scenery rocks but never lifts", sway.lift == 0 and math.abs(sway.tiltX) <= 0.031 and sway.tiltX ~= 0)
+	local pulse = PropCore.motion("Pulse", 1.3, 0.2, GameConfig.Ambience.Props)
+	check("a pulsing crystal stays on its deck", pulse.lift == 0 and pulse.turn == 0)
+end
+
 -- === summary ========================================================
 print(string.format("\n%s\n%d passed, %d failed, %d total", string.rep("=", 60),
 	passed, failed, passed + failed))
