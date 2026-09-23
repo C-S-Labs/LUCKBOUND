@@ -633,6 +633,21 @@ these are all claims about what the meshes actually do.
 Report `PathLength` feel here too: this is the first walk that can say whether
 the route is too short, too long, or about right.
 
+### Test R — a world's ambience ⭐ NEW (5 min)
+
+1. **Roll Sky Citadel and enter.** ✅ Pass: **sunrise**, not the purple dusk of
+   earlier walks: a low gold sun, white faces lit gold, shadows blue-violet, a
+   cobalt-to-rose sky, a few fading stars.
+2. **Look down off an edge.** ✅ Pass: a sea of cloud below — a nearer warm
+   layer and a farther bluer one — drifting slowly, at different speeds.
+3. **Fly (`/fly`) a long way in one direction.** ✅ Pass: the sea never runs
+   out; puffs keep appearing ahead of you.
+4. **Look around at head height.** ✅ Pass: faint gold motes drifting past.
+5. **Drop Roblox graphics to 1, leave, re-enter.** ✅ Pass: a visibly thinner
+   sea and fewer motes, but never none. Frame rate should hold on low.
+6. **`/leave`.** ✅ Pass: the hub looks exactly as it did before (its purple
+   sky back, no clouds left behind).
+
 ### Test E — a tampered client is rejected (1 min)
 
 From the **client** console:

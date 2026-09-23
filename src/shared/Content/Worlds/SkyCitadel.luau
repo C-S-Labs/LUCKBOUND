@@ -26,17 +26,78 @@ return {
 	EnabledInPhase = 1,
 	Environment = {
 		SkyId = nil,
-		-- Deliberately the brightest world in the prototype: you are above the
-		-- weather, in open sun. Reads as a relief against Emberfall's ash and
-		-- Astral Reach's void.
-		AmbientColor = Color3.fromRGB(140, 160, 200),
-		OutdoorAmbientColor = Color3.fromRGB(170, 185, 215),
-		ColorShiftTop = Color3.fromRGB(255, 235, 190),
-		FogColor = Color3.fromRGB(225, 235, 250),
-		FogStart = 150,
-		FogEnd = 700,
-		Brightness = 3,
-		ClockTime = 7,
+		-- SUNRISE ABOVE THE CLOUD SEA (chosen 2026-09-23). The citadel is white
+		-- and futurist, and the one light that makes white architecture read
+		-- as both clean and precious is a low sun: gold on every face that
+		-- turns east, cool blue in every shadow, and a sky that runs from deep
+		-- cobalt overhead to rose at the horizon.
+		--
+		-- It is also the one slot no other world holds. Verdant Valley is
+		-- midday, Ethereal Scape is a white afternoon (15:00) and the brightest
+		-- world by design, Emberfall is an ash-red dusk (18:00), Astral Reach
+		-- is the void at midnight. Dusk here would have read as a paler
+		-- Emberfall; full morning sun, as a second Ethereal Scape.
+		AmbientColor = Color3.fromRGB(118, 124, 168),
+		OutdoorAmbientColor = Color3.fromRGB(150, 150, 196),
+		ColorShiftTop = Color3.fromRGB(255, 196, 140), -- sunlit faces go gold
+		ColorShiftBottom = Color3.fromRGB(84, 104, 176), -- shadowed faces go blue
+		-- Fog values are inert while the Atmosphere below exists (Roblox rule),
+		-- and are kept only as the fallback look if it is ever removed.
+		FogColor = Color3.fromRGB(236, 206, 196),
+		FogStart = 400,
+		FogEnd = 2600,
+		Brightness = 2.6,
+		ExposureCompensation = 0.15,
+		ClockTime = 6.4,
+
+		Atmosphere = {
+			Density = 0.3,
+			Offset = 0.12,
+			Color = Color3.fromRGB(255, 212, 176), -- warm horizon band
+			Decay = Color3.fromRGB(96, 104, 196), -- cobalt overhead
+			Glare = 0.7,
+			Haze = 1.4,
+		},
+		Sky = { SunAngularSize = 16, StarCount = 300 }, -- the last stars fading
+		Bloom = { Intensity = 0.7, Size = 26, Threshold = 0.9 },
+		SunRays = { Intensity = 0.1, Spread = 0.7 },
+		Grade = {
+			Brightness = 0.02,
+			Contrast = 0.08,
+			Saturation = 0.06,
+			Tint = Color3.fromRGB(255, 246, 238),
+		},
+
+		-- Two layers, for parallax: a near, brighter, faster sea the islands
+		-- hang just above, and a far, slower, bluer one that gives it depth.
+		CloudSea = {
+			{
+				Depth = 150,
+				Count = 70,
+				Radius = 1600,
+				Speed = 7,
+				Heading = 80,
+				SizeMin = 140,
+				SizeMax = 340,
+				Thickness = 0.26,
+				Color = Color3.fromRGB(255, 232, 222),
+				Transparency = 0.12,
+			},
+			{
+				Depth = 380,
+				Count = 50,
+				Radius = 2400,
+				Speed = 3,
+				Heading = 80,
+				SizeMin = 260,
+				SizeMax = 560,
+				Thickness = 0.2,
+				Color = Color3.fromRGB(206, 196, 232),
+				Transparency = 0.04,
+			},
+		},
+		-- Sparse, slow, sunlit motes: high-altitude air catching the light.
+		Motes = { Rate = 6, Lifetime = 9, Color = Color3.fromRGB(255, 236, 200), Size = 0.35, Speed = 3 },
 	},
 	MusicId = nil,
 	Enemies = {},

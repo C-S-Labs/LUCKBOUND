@@ -33,6 +33,62 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 51 — 2026-09-23 — World ambience, and Sky Citadel's sunrise
+
+**Tests:** 710 passing (was 697).
+
+### The dusk was never Sky Citadel's
+
+Every walk showed a purple dusk. `HubBuilder` puts an `Atmosphere`, a `Sky` and
+a `BloomEffect` in `Lighting`; entering an expedition only rewrote plain
+Lighting properties; and **while an Atmosphere exists Roblox ignores
+`FogStart`/`FogEnd`**. So every world wore the hub's haze, and its own fog did
+nothing.
+
+### Built
+
+- **`Core/AmbienceCore`** (pure, tested): graphics-quality scaling, the wrap
+  that makes a finite set of puffs an endless sea, seeded cloud layout,
+  validation of every ambience block (wired into `Schema.validateWorlds`).
+- **`Controllers/AmbienceController`** (client): on entry sets aside whatever
+  scene objects `Lighting` holds and builds the world's — sky, atmosphere,
+  bloom, sun rays, grade — plus a drifting multi-layer cloud sea moved with
+  `BulkMoveTo`, and motes. On leave, destroys its own and restores what it set
+  aside (Studio only matters here; in the finished game the expedition is its
+  own server, §7.2, owner-confirmed as the intent).
+- **`FloorY`** added to `Expedition_Started` so the sea hangs under the map.
+- **Sky Citadel: sunrise above the cloud sea**, ClockTime 6.4. Chosen because
+  white futurist architecture reads best under a low sun, and because it is the
+  one hour no other world holds (a test now refuses two worlds within an hour).
+
+### The owner's re-export offer — recommended, and how
+
+Separating each piece into **structure** and **detail** is worth doing. It
+enables animation and makes graphics-scaled detail possible. The plan:
+
+1. **Structure mesh per piece** — deck, walls, keel, landmark, bridges. Keeps
+   collision, keeps the facing probe's evidence (decks at the openings), and
+   **must keep the 256³ pins** (edge pins at −96, landmark to +160) or
+   `ChunkLoader`, which sets `mesh.Size` to the declared box, will stretch it.
+2. **A small shared prop library, not per-piece clutter.** Shards, rings,
+   birds, lamps and pillars repeat across the kit. Each distinct prop is
+   uploaded **once**; pieces place instances of it. Fewer uploads, less memory,
+   and identical meshes batch-render.
+3. **Placements as data.** `build_sky_citadel_kit.py` already places every prop
+   procedurally, so it can write a placements file per piece (prop, local
+   CFrame, animation class, detail tier) instead of merging them into the mesh.
+   That becomes a content file; no per-piece detail exports.
+4. **Detail is client-side.** Props carry no gameplay, so the server never
+   builds or replicates them. Each client places them at its own detail tier
+   (1 = essential, 3 = dense) and animates by class — `Float`, `Spin`, `Orbit`,
+   `Bird`, `Glow` — only within a radius of the camera.
+
+Next session's first step: read the generator script and make it emit the
+separated structure and the placements file; then the owner runs it, exports
+structure FBXs plus one FBX per prop, and bulk-imports.
+
+---
+
 ## Session 50 — 2026-09-23 — The real rotation bug, and real seeds
 
 **Root cause of every misfacing since the kit landed:** `ChunkCore` turns north

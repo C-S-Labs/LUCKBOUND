@@ -21,6 +21,7 @@ local Constants = require(Root.Core.Constants)
 local EventCore = require(Root.Core.EventCore)
 local Net = require(Root.Core.Net)
 local Worlds = require(Root.Content.Worlds)
+local AmbienceController = require(script.Parent.AmbienceController)
 
 local ExpeditionController = {}
 
@@ -121,6 +122,8 @@ function ExpeditionController.init(): ()
 			snapshotHubLighting()
 		end
 		ChunkLoader.applyEnvironment(Lighting, payload.Environment)
+		-- Sky, atmosphere, grade, cloud sea, motes: the rest of the world's look.
+		AmbienceController.enter(payload.Environment, payload.FloorY or 0)
 		active = payload
 		startedAtClock = os.clock()
 		notify()
@@ -146,6 +149,7 @@ function ExpeditionController.init(): ()
 		-- An ABORTED payload is a refusal at the door, not the end of an
 		-- expedition: there is no lighting to restore and no state to clear.
 		if payload.Reason ~= "ABORTED" then
+			AmbienceController.leave()
 			restoreHubLighting()
 			active = nil
 			notify()
@@ -159,6 +163,7 @@ function ExpeditionController.init(): ()
 	RunService.Heartbeat:Connect(function()
 		if active and ExpeditionController.remaining() <= 0 then
 			active = nil
+			AmbienceController.leave()
 			restoreHubLighting()
 			notify()
 		end

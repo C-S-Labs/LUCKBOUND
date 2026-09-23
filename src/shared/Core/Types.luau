@@ -32,6 +32,42 @@ export type Environment = {
 	FogEnd: number,
 	Brightness: number,
 	ClockTime: number,
+	-- AMBIENCE. Every block below is optional and read by AmbienceController on
+	-- the client; AmbienceCore.validate checks them at boot. A world with none
+	-- keeps plain Lighting. Where an Atmosphere is declared it OWNS the haze:
+	-- Roblox ignores FogStart/FogEnd whenever an Atmosphere exists.
+	ExposureCompensation: number?,
+	ColorShiftBottom: Color3?,
+	Atmosphere: {
+		Density: number,
+		Offset: number?,
+		Color: Color3,
+		Decay: Color3,
+		Glare: number,
+		Haze: number,
+	}?,
+	Sky: { SunAngularSize: number?, MoonAngularSize: number?, StarCount: number? }?,
+	Bloom: { Intensity: number, Size: number, Threshold: number }?,
+	SunRays: { Intensity: number, Spread: number }?,
+	Grade: { Brightness: number, Contrast: number, Saturation: number, Tint: Color3 }?,
+	-- Drifting layers of cloud under the map, wrapped around the camera so a
+	-- few dozen puffs pave an endless sea. Counts scale with graphics quality.
+	CloudSea: { CloudLayer }?,
+	-- Faint particles drifting past the camera. Rate scales with quality.
+	Motes: { Rate: number, Lifetime: number, Color: Color3, Size: number, Speed: number }?,
+}
+
+export type CloudLayer = {
+	Depth: number, -- studs below the walk plane
+	Count: number, -- puffs at full quality
+	Radius: number, -- half-width of the square the layer paves around the camera
+	Speed: number, -- drift, studs per second
+	Heading: number, -- drift direction, degrees, 0 = -Z
+	SizeMin: number,
+	SizeMax: number,
+	Thickness: number, -- height as a fraction of width
+	Color: Color3,
+	Transparency: number,
 }
 
 --- Per-modifier palette overrides. Blueprint §3.5: modifiers re-tint a world
@@ -329,6 +365,10 @@ export type ExpeditionPayload = {
 	-- world has no chunks, and a field that means nothing for half the worlds
 	-- is a field that gets misread.
 	MapSummary: string,
+	-- The map's walk plane, in world Y. What the client's ambience hangs its
+	-- cloud sea below; on an expedition server there is nothing else to
+	-- measure it from.
+	FloorY: number,
 }
 
 export type ExpeditionEndPayload = {

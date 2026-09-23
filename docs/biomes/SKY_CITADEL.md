@@ -180,13 +180,36 @@ edge, so two neighbours' pins meet face to face and never interpenetrate; 96
 studs under the deck and a third of a stud across, they are invisible in play.
 The +160 crown is still pinned by one landmark per piece.
 
-### Lighting
+### Lighting and ambience — sunrise above the cloud sea
 
-`Content/Worlds/SkyCitadel.luau`'s `Environment` was invented before this
-direction existed, and it happens to suit it: `ClockTime 7`, brightness 3, warm
-top light, pale fog. **Left unchanged** — worth retuning only after a piece has
-been seen in Studio. The review renders approximate it (warm low sun, blue sky
-fill, no fog).
+**Chosen 2026-09-23.** The citadel is white and futurist, and the light that
+makes white architecture read as both clean and precious is a **low sun**: gold
+on every face that turns east, cool blue in every shadow, a sky running from
+cobalt overhead to rose at the horizon, and the last few stars still out.
+
+It is also the one hour nobody else holds. Verdant Valley is midday, Ethereal
+Scape a white afternoon and deliberately the brightest world, Emberfall an
+ash-red dusk, Astral Reach midnight. **Dusk here would have read as a paler
+Emberfall; full morning sun, as a second Ethereal Scape.**
+
+| | Value | Why |
+|---|---|---|
+| `ClockTime` | 6.4 | the sun just clear of the horizon — long raking light |
+| `ColorShiftTop` / `Bottom` | gold / cobalt | the warm-lit, cool-shadowed split that sells the hour |
+| `Atmosphere` | density 0.3, warm `Color`, cobalt `Decay`, glare 0.7 | the gradient sky; replaces fog |
+| `Sky` | sun 16°, 300 stars | a big dawn sun, stars fading |
+| `Bloom`, `SunRays`, `Grade` | restrained | glow on the white and gold, faint rays, a slight warm grade |
+| `CloudSea` | two layers, 150 and 380 studs down | a near warm sea the islands hang over, a far bluer one for depth, drifting at different speeds for parallax |
+| `Motes` | sparse, slow, gold | high air catching the light |
+
+**What the walks showed before this was fixed:** a purple dusk. That was never
+Sky Citadel's look — the hub's `Atmosphere` stayed in `Lighting`, and while one
+exists Roblox ignores fog entirely, so every world wore the hub's haze. The
+ambience now sets the hub's scene aside on entry.
+
+**What cannot move yet:** the floating shards, rings and birds are baked into
+each piece's single mesh. Animating them needs them exported as separate
+objects — see the owner's re-export plan in `WORKLOG.md` (session 51).
 
 ---
 

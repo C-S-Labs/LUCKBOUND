@@ -5,6 +5,7 @@
 
 local Constants = require(script.Parent.Parent.Core.Constants)
 local EventCore = require(script.Parent.Parent.Core.EventCore)
+local AmbienceCore = require(script.Parent.Parent.Core.AmbienceCore)
 
 local Schema = {}
 
@@ -96,6 +97,10 @@ function Schema.validateWorlds(worlds: { [string]: any }): (boolean, { string })
 			end
 			if type(world.MapPathLength) == "number" and world.MapPathLength < 1 then
 				table.insert(errors, `World '{key}': MapPathLength must be >= 1`)
+			end
+			-- Ambience: optional per world, complete when present.
+			for _, e in AmbienceCore.validate(world.Environment, `World '{key}'.Environment`) do
+				table.insert(errors, e)
 			end
 		end
 	end
