@@ -32,6 +32,10 @@ function ProfileSchema.default(now: number): any
 		-- list, because the only question ever asked of it is "has this one
 		-- been used", and a list answers that in O(n) for no benefit.
 		RedeemedCodes = {},
+		-- Vault keys carried between expeditions (build spec §7.5): key Id ->
+		-- how many, never more than GameConfig.Loot.MaxKeysPerKind. Kept
+		-- apart from Inventory, which is still §7-excluded and unshaped.
+		Keys = {},
 		Settings = SettingsCore.defaults(),
 		LastSeenAt = now,
 		CreatedAt = now,
@@ -48,6 +52,20 @@ ProfileSchema.MIGRATIONS = {
 	[1] = function(profile: any): any
 		profile.RedeemedCodes = profile.RedeemedCodes or {}
 		profile.Settings = SettingsCore.sanitise(profile.Settings)
+		return profile
+	end,
+	-- v2 -> v3: vault keys (build spec §7.5). Additive; a profile that somehow
+	-- already had a Keys table keeps only its well-formed entries.
+	[2] = function(profile: any): any
+		local keys = {}
+		if type(profile.Keys) == "table" then
+			for id, n in profile.Keys do
+				if type(id) == "string" and type(n) == "number" and n >= 1 then
+					keys[id] = math.floor(n)
+				end
+			end
+		end
+		profile.Keys = keys
 		return profile
 	end,
 } :: { [number]: (any) -> any }

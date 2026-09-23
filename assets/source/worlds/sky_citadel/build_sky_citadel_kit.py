@@ -64,6 +64,7 @@ SOURCE_DIR = os.path.join(REPO, "assets", "source", "worlds", "sky_citadel")
 EXPORT_DIR = os.path.join(REPO, "assets", "export", "worlds", "sky_citadel")
 # The generated placements the game reads (CHUNK_AUTHORING.md convention 6).
 PROPS_LUAU = os.path.join(REPO, "src", "shared", "Content", "Props", "SkyCitadel.luau")
+FIXTURES_LUAU = os.path.join(REPO, "src", "shared", "Content", "Fixtures", "SkyCitadel.luau")
 STRUCTURE_FBX = "sky_citadel_structure.fbx"
 PROPS_FBX = "sky_citadel_props.fbx"
 
@@ -154,6 +155,13 @@ class Piece:
         # convention 6). Each entry is one placed prop, its geometry in its own
         # local frame; export_props() merges identical shapes into a library.
         self.props = []
+        # Interactive pieces pulled out the same way (convention 7): chests,
+        # the vault door, the forcefield. Placed by the SERVER, with collision.
+        self.fixtures = []
+        self._fixture = None
+        # Parts of the prop being built that move on their own (a bird's
+        # wings); as_prop() collects them into its prop on exit.
+        self._attach = []
 
     def add(self, verts, faces, mat, M):
         base = len(self.verts)
@@ -224,10 +232,35 @@ PROP_KINDS = {
     "bird": ("bird", "Bird", 2),
     "drifting lintel": ("lintel", "Float", 1),
 }
+# Parts that move relative to their prop, by as_attached() label: library base
+# name and the animation that moves them.
+ATTACH_KINDS = {
+    "bird wing": ("bird_wing", "Wing"),
+}
+# Fixture parts, by (fixture kind, part role): library base name.
+FIXTURE_PARTS = {
+    ("CHEST", "Body"): "chest_body",
+    ("CHEST", "Lid"): "chest_lid",
+    ("VAULT", "Door"): "vault_door",
+    ("FORCEFIELD", "Field"): "forcefield",
+}
 # Deliberately NOT props: the Arcane Prism and the Sundered Spire's crown.
 # Each is the landmark that reaches CROWN_TOP and holds its piece's bounding
 # box at 256 -- lifting it out would shrink the piece, and ChunkLoader would
 # stretch it back.
+
+
+def _slice(p, v0, f0, inv):
+    """Cut everything added since (v0, f0) out of the piece, returned in the
+    frame `inv` maps into."""
+    assert not any(i >= f0 for i in p.up), "a prop or fixture must not contain floor panels"
+    verts = [inv @ v for v in p.verts[v0:]]
+    faces = [[i - v0 for i in f] for f in p.faces[f0:]]
+    mats = p.fmat[f0:]
+    del p.verts[v0:]
+    del p.faces[f0:]
+    del p.fmat[f0:]
+    return verts, faces, mats
 
 
 @contextmanager
@@ -237,18 +270,57 @@ def as_prop(p, label, anchor):
     turn) relative to the current build frame; its geometry is stored relative
     to that, which is what lets two copies of the same thing share one mesh."""
     frame_at_entry = p.base.copy()
+    outer_attach, p._attach = p._attach, []
     v0, f0 = len(p.verts), len(p.faces)
     yield
-    assert not any(i >= f0 for i in p.up), "a prop must not contain floor panels"
     world = frame_at_entry @ anchor
     inv = world.inverted()
-    verts = [inv @ v for v in p.verts[v0:]]
-    faces = [[i - v0 for i in f] for f in p.faces[f0:]]
-    mats = p.fmat[f0:]
-    del p.verts[v0:]
-    del p.faces[f0:]
-    del p.fmat[f0:]
-    p.props.append({"label": label, "matrix": world, "verts": verts, "faces": faces, "mats": mats})
+    verts, faces, mats = _slice(p, v0, f0, inv)
+    attached = [{"label": a["label"], "verts": [inv @ v for v in a["verts"]], "faces": a["faces"],
+                 "mats": a["mats"], "hinge": inv @ a["hinge"]} for a in p._attach]
+    p._attach = outer_attach
+    p.props.append({"label": label, "matrix": world, "verts": verts, "faces": faces, "mats": mats,
+                    "attached": attached})
+
+
+@contextmanager
+def as_attached(p, label, hinge):
+    """Part of the prop being built that moves relative to it -- a bird's wing.
+    It becomes its own library mesh, placed relative to its prop and turned
+    about `hinge` (a point in the current build frame) at run time."""
+    frame_at_entry = p.base.copy()
+    v0, f0 = len(p.verts), len(p.faces)
+    yield
+    verts, faces, mats = _slice(p, v0, f0, Matrix.Identity(4))
+    p._attach.append({"label": label, "verts": verts, "faces": faces, "mats": mats,
+                      "hinge": frame_at_entry @ Vector(hinge)})
+
+
+@contextmanager
+def as_fixture(p, kind, anchor):
+    """An interactive thing (convention 7): built from fixture_part() blocks,
+    placed by the server, with collision. `kind` is what the game does with it
+    (CHEST, VAULT, FORCEFIELD); `anchor` is its frame, as for as_prop."""
+    fx = {"kind": kind, "matrix": p.base.copy() @ anchor, "parts": []}
+    outer, p._fixture = p._fixture, fx
+    yield
+    p._fixture = outer
+    p.fixtures.append(fx)
+
+
+@contextmanager
+def fixture_part(p, role, hinge=None):
+    """One mesh of the fixture being built. A part that moves names its
+    `hinge`, a point in the current build frame."""
+    fx = p._fixture
+    assert fx is not None, "fixture_part() outside as_fixture()"
+    frame_at_entry = p.base.copy()
+    v0, f0 = len(p.verts), len(p.faces)
+    yield
+    inv = fx["matrix"].inverted()
+    verts, faces, mats = _slice(p, v0, f0, inv)
+    h = inv @ (frame_at_entry @ Vector(hinge)) if hinge is not None else None
+    fx["parts"].append({"role": role, "verts": verts, "faces": faces, "mats": mats, "hinge": h})
 
 
 def box(p, mat, cx, cy, cz, sx, sy, sz, rz=0.0, rx=0.0, ry=0.0):
@@ -1106,8 +1178,18 @@ def flower_bed(p, x, y, lx=8.0, ly=3.0, seed=0):
                 y + rng.uniform(-ly / 4, ly / 4), 1.6, 0.35, 0.5, 0.3)
 
 
-def vault_door(p, x, y, z, R=8.0):
-    """A round vault door set into a south-facing (-Y) wall at y."""
+def vault_door(p, x, y, z, R=8.0, fixture=False):
+    """A round vault door set into a south-facing (-Y) wall at y. As a
+    fixture it is the treasury's door, which spins open for a key."""
+    if fixture:
+        with as_fixture(p, "VAULT", xf(x, y, z)):
+            with fixture_part(p, "Door"):
+                _vault_door(p, x, y, z, R)
+    else:
+        _vault_door(p, x, y, z, R)
+
+
+def _vault_door(p, x, y, z, R):
     frustum(p, "DeepAlloy", 12, R, R, 0, 1.2, M=xf(x, y, z, rx=90))
     frustum(p, "PaleAlloy", 12, R * 0.7, R * 0.7, 1.2, 1.6, M=xf(x, y, z, rx=90))
     torus(p, "SunGold", R + 0.3, 0.55, x, y - 1.2, z, n=16, rx=90)
@@ -1117,10 +1199,15 @@ def vault_door(p, x, y, z, R=8.0):
 
 
 def chest(p, x, y, rz=0.0):
+    """A treasure chest -- a FIXTURE (convention 7): body and lid are separate
+    meshes so the lid can swing open on its back edge. The lock faces -Y."""
     with frame(p, xf(x, y, 0, rz)):
-        box(p, "DeepAlloy", 0, 0, 0.8, 3.2, 2.0, 1.6)
-        box(p, "SunGold", 0, 0, 1.85, 3.4, 2.2, 0.5)
-        box(p, "AzureNeon", 0, -1.05, 1.3, 0.6, 0.15, 0.6)
+        with as_fixture(p, "CHEST", Matrix.Identity(4)):
+            with fixture_part(p, "Body"):
+                box(p, "DeepAlloy", 0, 0, 0.8, 3.2, 2.0, 1.6)
+                box(p, "AzureNeon", 0, -1.05, 1.3, 0.6, 0.15, 0.6)
+            with fixture_part(p, "Lid", hinge=(0, 1.1, 1.6)):
+                box(p, "SunGold", 0, 0, 1.85, 3.4, 2.2, 0.5)
 
 
 def crystal_cluster(p, x, y, seed, scale=1.0):
@@ -2032,7 +2119,7 @@ def build_vault_turn():
         box_span(p, "AzureDim", kx + sx * 16 - 0.2, kx + sx * 16 + 0.2, ky - 6, ky + 6, 5, 15)
     tower(p, kx - 16, ky - 12, 3.2, 22)
     tower(p, kx + 16, ky - 12, 3.2, 22)
-    vault_door(p, kx, ky - 12, 10)
+    vault_door(p, kx, ky - 12, 10, fixture=True)
     spire(p, kx, ky + 2, 3.8, CROWN_TOP, fins=False, z0=24)
     for x, rz in ((-28, 10), (-20, -6), (-12, 4)):
         chest(p, x, 10, rz=rz)
@@ -2304,8 +2391,11 @@ def bird(p, x, y, z, rz, mat):
         crystal(p, mat, 0, 0, 0, 0.8, 1.2, 0.9, n=4, rz=45)
         frustum(p, mat, 4, 0.7, 0, 0, 2.2, M=xf(0.6, 0, 0, ry=90))
         frustum(p, "SunGold", 4, 0.3, 0, 0, 0.8, M=xf(2.7, 0, 0, ry=90))
+        # Wings apart from the body, hinged at the root, so they can flap.
+        # The root of a wing raised 24 degrees sits at y = 0.44, z = -0.15.
         for s in (-1, 1):
-            box(p, "PaleAlloy", 0, s * 1.9, 0.5, 1.6, 3.2, 0.15, rx=s * 24)
+            with as_attached(p, "bird wing", (0, s * 0.44, -0.15)):
+                box(p, "PaleAlloy", 0, s * 1.9, 0.5, 1.6, 3.2, 0.15, rx=s * 24)
         box(p, mat, -1.8, 0, 0.1, 1.4, 1.1, 0.15)
     return ("cyl", x, y, 3.4, z - 1.2, z + 1.9)
 
@@ -2743,7 +2833,10 @@ def build_cap_sealed_gate():
     for k in (-1, 1):
         box(p, "AzureNeon", 0, 27.6, 11, 30, 0.3, 0.6, ry=k * 35)
     # a force field in front: you can see there is more, and you cannot go
-    box_span(p, "SkyGlass", -15, 15, 22, 22.6, 0, 18)
+    # A fixture, so it can shimmer and still block (convention 7).
+    with as_fixture(p, "FORCEFIELD", xf(0, 22.3, 9)):
+        with fixture_part(p, "Field"):
+            box_span(p, "SkyGlass", -15, 15, 22, 22.6, 0, 18)
     for x in (-16, 16):
         frustum(p, "PaleAlloy", 4, 1.4, 1.2, 0, 19, x, 22.3, rot=45)
         crystal(p, "AzureNeon", x, 22.3, 20.5, 0.8, 1.4, 0.8)
@@ -3020,42 +3113,54 @@ def _bounds(vs):
 
 
 def prop_library(pieces):
-    """Merge identical prop shapes into one library entry each, and record
-    every copy's placement.
+    """Merge identical shapes into one library entry each -- props, the parts
+    attached to them, and fixture parts alike -- and record every copy.
 
-    Two props share an entry when their geometry is the same up to size: the
+    Two shapes share an entry when their geometry is the same up to size: the
     shape is compared after scaling it into a unit box, in 5% steps. Every
     copy keeps its own size, so a large and a small crystal of the same cut are
     one mesh drawn at two sizes -- which is what keeps the upload count small.
+
+    Returns (kinds, prop placements, fixture placements).
     """
-    kinds, placements, counters = {}, {}, {}
+    kinds, counters = {}, {}
+
+    def kind_of(base, verts, faces, mats):
+        mn, mx = _bounds(verts)
+        size, centre = mx - mn, (mn + mx) / 2
+
+        def unit(v, i):
+            # 5% steps: shapes whose proportions differ by less than that
+            # share a mesh. Each copy is drawn at its own exact size, so
+            # the only error is in interior proportions, never the outline.
+            return round((v[i] - centre[i]) / size[i] * 20) / 20 if size[i] > 1e-6 else 0.0
+
+        key = (base,
+               tuple((unit(v, 0), unit(v, 1), unit(v, 2)) for v in verts),
+               tuple(tuple(f) for f in faces),
+               tuple(mats))
+        kind = kinds.get(key)
+        if kind is None:
+            counters[base] = counters.get(base, 0) + 1
+            kind = {
+                "name": "%s_%s" % (base, _letters(counters[base])),
+                "verts": [v - centre for v in verts],
+                "faces": faces,
+                "mats": mats,
+            }
+            kinds[key] = kind
+        return kind, size, centre
+
+    def game_size(size):
+        # the game's axes: width (x), height (blender z), depth (blender y)
+        return [size.x, size.z, size.y]
+
+    placements, fixtures = {}, {}
     for p in pieces:
         rows = []
         for prop in p.props:
             base, anim, tier = PROP_KINDS[prop["label"]]
-            mn, mx = _bounds(prop["verts"])
-            size, centre = mx - mn, (mn + mx) / 2
-
-            def unit(v, i):
-                # 5% steps: shapes whose proportions differ by less than that
-                # share a mesh. Each copy is drawn at its own exact size, so
-                # the only error is in interior proportions, never the outline.
-                return round((v[i] - centre[i]) / size[i] * 20) / 20 if size[i] > 1e-6 else 0.0
-
-            key = (base,
-                   tuple((unit(v, 0), unit(v, 1), unit(v, 2)) for v in prop["verts"]),
-                   tuple(tuple(f) for f in prop["faces"]),
-                   tuple(prop["mats"]))
-            kind = kinds.get(key)
-            if kind is None:
-                counters[base] = counters.get(base, 0) + 1
-                kind = {
-                    "name": "prop_%s_%s" % (base, _letters(counters[base])),
-                    "verts": [v - centre for v in prop["verts"]],
-                    "faces": prop["faces"],
-                    "mats": prop["mats"],
-                }
-                kinds[key] = kind
+            kind, size, centre = kind_of("prop_" + base, prop["verts"], prop["faces"], prop["mats"])
             world = prop["matrix"]
             pos = _TO_GAME @ (world @ centre)
             rot = _TO_GAME @ world.to_3x3() @ _TO_GAME.transposed()
@@ -3065,11 +3170,47 @@ def prop_library(pieces):
                 "tier": tier,
                 "pos": [pos.x, pos.y, pos.z],
                 "rot": [rot[r][c] for r in range(3) for c in range(3)],
-                # the game's axes: width (x), height (blender z), depth (blender y)
-                "size": [size.x, size.z, size.y],
+                "size": game_size(size),
             })
+            body = len(rows)  # 1-based, as Luau will index it
+            for att in prop["attached"]:
+                abase, aanim = ATTACH_KINDS[att["label"]]
+                akind, asize, acentre = kind_of("prop_" + abase, att["verts"], att["faces"], att["mats"])
+                # Relative to the body part's own frame: its centre, its axes.
+                local = _TO_GAME @ (acentre - centre)
+                hinge = _TO_GAME @ (att["hinge"] - acentre)
+                rows.append({
+                    "prop": akind["name"],
+                    "anim": aanim,
+                    "tier": tier,
+                    "pos": [local.x, local.y, local.z],
+                    "rot": [1, 0, 0, 0, 1, 0, 0, 0, 1],
+                    "size": game_size(asize),
+                    "attach": body,
+                    "hinge": [hinge.x, hinge.y, hinge.z],
+                })
         placements[p.name] = rows
-    return list(kinds.values()), placements
+
+        frows = []
+        for fx in p.fixtures:
+            world = fx["matrix"]
+            origin = _TO_GAME @ world.translation
+            rot = _TO_GAME @ world.to_3x3() @ _TO_GAME.transposed()
+            parts = []
+            for part in fx["parts"]:
+                base = FIXTURE_PARTS[(fx["kind"], part["role"])]
+                pkind, psize, pcentre = kind_of("fix_" + base, part["verts"], part["faces"], part["mats"])
+                local = _TO_GAME @ pcentre
+                row = {"mesh": pkind["name"], "role": part["role"],
+                       "pos": [local.x, local.y, local.z], "size": game_size(psize)}
+                if part["hinge"] is not None:
+                    h = _TO_GAME @ (part["hinge"] - pcentre)
+                    row["hinge"] = [h.x, h.y, h.z]
+                parts.append(row)
+            frows.append({"kind": fx["kind"], "pos": [origin.x, origin.y, origin.z],
+                          "rot": [rot[r][c] for r in range(3) for c in range(3)], "parts": parts})
+        fixtures[p.name] = frows
+    return list(kinds.values()), placements, fixtures
 
 
 def props_to_objects(kinds, mats, collection):
@@ -3116,7 +3257,8 @@ def write_props_luau(kinds, placements, path=None):
         "	Library = {",
     ]
     for kind in kinds:
-        out.append('		"%s",' % kind["name"])
+        if kind["name"].startswith("prop_"):
+            out.append('		"%s",' % kind["name"])
     out.append("	},")
     out.append("	Placements = {")
     for piece_name in sorted(placements):
@@ -3125,11 +3267,67 @@ def write_props_luau(kinds, placements, path=None):
             continue
         out.append("		%s = {" % _content_id(piece_name))
         for r in rows:
-            out.append('			{ Prop = "%s", Anim = "%s", Tier = %d, P = { %s }, R = { %s }, S = { %s } },' % (
+            extra = ""
+            if "attach" in r:
+                extra = ", Attach = %d, Hinge = { %s }" % (r["attach"], ", ".join(num(v) for v in r["hinge"]))
+            out.append('			{ Prop = "%s", Anim = "%s", Tier = %d, P = { %s }, R = { %s }, S = { %s }%s },' % (
                 r["prop"], r["anim"], r["tier"],
                 ", ".join(num(v) for v in r["pos"]),
                 ", ".join(num(v) for v in r["rot"]),
-                ", ".join(num(v) for v in r["size"])))
+                ", ".join(num(v) for v in r["size"]), extra))
+        out.append("		},")
+    out.append("	},")
+    out.append("}")
+    with open(path, "w", newline="\n") as fh:
+        fh.write("\n".join(out) + "\n")
+    return path
+
+
+def write_fixtures_luau(kinds, fixtures, path=None):
+    path = path or FIXTURES_LUAU
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+
+    def num(v):
+        r = round(v, 3)
+        return "0" if r == 0 else ("%g" % r)
+
+    def vec(vs):
+        return ", ".join(num(v) for v in vs)
+
+    out = [
+        "--!strict",
+        "-- GENERATED by assets/source/worlds/sky_citadel/build_sky_citadel_kit.py.",
+        "-- Do not edit by hand: re-run the script. CHUNK_AUTHORING.md convention 7.",
+        "--",
+        "-- Sky Citadel's fixtures: the interactive things (chests, the vault door,",
+        "-- the sealed gate's forcefield), placed by the SERVER with collision.",
+        "-- Library names the MeshParts in the imported prop library (fix_*). Each",
+        "-- placement's P/R is the fixture's frame in the piece's layout frame (origin",
+        "-- on the walk plane, -Z north); each part's P is its centre in that frame",
+        "-- and Hinge, where present, the point it turns about, from its centre.",
+        "",
+        "return {",
+        '	Id = "SKY_CITADEL", -- the world these fixtures furnish',
+        "	Library = {",
+    ]
+    for kind in kinds:
+        if kind["name"].startswith("fix_"):
+            out.append('		"%s",' % kind["name"])
+    out.append("	},")
+    out.append("	Placements = {")
+    for piece_name in sorted(fixtures):
+        rows = fixtures[piece_name]
+        if not rows:
+            continue
+        out.append("		%s = {" % _content_id(piece_name))
+        for r in rows:
+            parts = []
+            for part in r["parts"]:
+                hinge = ", Hinge = { %s }" % vec(part["hinge"]) if "hinge" in part else ""
+                parts.append('{ Mesh = "%s", Role = "%s", P = { %s }, S = { %s }%s }' % (
+                    part["mesh"], part["role"], vec(part["pos"]), vec(part["size"]), hinge))
+            out.append('			{ Kind = "%s", P = { %s }, R = { %s }, Parts = { %s } },' % (
+                r["kind"], vec(r["pos"]), vec(r["rot"]), ", ".join(parts)))
         out.append("		},")
     out.append("	},")
     out.append("}")
@@ -3189,7 +3387,7 @@ def verify_exports(paths):
 def main(export=False, save=True):
     pieces, objs = build_kit()
     ok, report = validate(objs)
-    kinds, placements = prop_library(pieces)
+    kinds, placements, fixtures = prop_library(pieces)
     lib = bpy.data.collections.new("PropLibrary")
     bpy.context.scene.collection.children.link(lib)
     prop_objs = props_to_objects(kinds, ensure_materials(), lib)
@@ -3198,6 +3396,7 @@ def main(export=False, save=True):
         "pieces": report,
         "prop_kinds": len(kinds),
         "props_placed": sum(len(r) for r in placements.values()),
+        "fixtures_placed": sum(len(r) for r in fixtures.values()),
     }
     if export:
         if not ok:
@@ -3213,6 +3412,7 @@ def main(export=False, save=True):
             raise RuntimeError("prop export came back with %d meshes, expected %d" % (props["meshes"], len(kinds)))
         out["exported"] = verified
         out["placements"] = write_props_luau(kinds, placements)
+        out["fixtures"] = write_fixtures_luau(kinds, fixtures)
     if save:
         # Only the kit, its prop library and the scale figures are saved. The
         # joined-map and corner previews are duplicates of kit pieces and read

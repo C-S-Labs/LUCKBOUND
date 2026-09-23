@@ -170,6 +170,9 @@ local CHUNKS = {
 		Supports = { Puzzle = true, Treasure = true, Secret = true, Combat = true, MiniBoss = true },
 		Weight = 14,
 		MaxPerLayout = 1,
+		-- In about one map in five (owner, 2026-09-23). The vault key only
+		-- drops in a map that has this piece (build spec §7.5).
+		SpawnChance = 0.2,
 		EnemyTags = {},
 		Tags = { "turn", "right", "loot" },
 	},

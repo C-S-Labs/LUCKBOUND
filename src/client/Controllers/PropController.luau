@@ -37,10 +37,27 @@ type Placed = {
 	Phase: number,
 	Heading: number, -- birds only: PropCore.birdHeading
 	Position: Vector3, -- where it rests, for the animate-radius test
+	-- Wings only: the bird this rides on, and the root it flaps about.
+	Body: Placed?,
+	Hinge: Vector3?,
+	-- This frame's pose before the importer's turn, so a wing can ride on it.
+	Pose: CFrame?,
 }
 
 -- The one place motion becomes a CFrame; PropCore.motion documents the order.
-local function pose(p: Placed, m: any): CFrame
+-- Returns the pose BEFORE the importer's turn (Fix), which is applied last.
+local function rawPose(p: Placed, m: any): CFrame
+	if p.Anim == "Wing" then
+		-- On its bird's pose this frame, turned about its root. Both wings take
+		-- the body's phase, so they beat together (see enter).
+		local body = (p.Body :: Placed).Pose :: CFrame
+		local h = p.Hinge :: Vector3
+		return body
+			* CFrame.new(p.Offset)
+			* CFrame.new(h)
+			* CFrame.Angles(PropCore.wingAngle(m.flap, p.Offset.Z), 0, 0)
+			* CFrame.new(-h)
+	end
 	if p.Anim == "Bird" then
 		-- The flock circles the piece's own vertical axis. A bird's authored
 		-- rotation was only a random yaw, so it is replaced by its heading,
@@ -50,14 +67,18 @@ local function pose(p: Placed, m: any): CFrame
 			* CFrame.new(p.Offset + Vector3.new(0, m.lift, 0))
 			* CFrame.Angles(0, p.Heading, 0)
 			* CFrame.Angles(-m.bank, 0, 0)
-			* p.Fix
 	end
 	return p.Layout
 		* CFrame.new(p.Offset + Vector3.new(0, m.lift, 0))
 		* CFrame.Angles(0, m.turn, 0)
 		* p.Rot
 		* CFrame.Angles(m.tiltX, 0, m.tiltZ)
-		* p.Fix
+end
+
+local function pose(p: Placed, m: any): CFrame
+	local raw = rawPose(p, m)
+	p.Pose = raw
+	return raw * p.Fix
 end
 
 local folder: Folder? = nil
@@ -89,7 +110,11 @@ local function step()
 	for _, p in placed do
 		if p.Anim ~= "Static" then
 			local d = p.Position - focus
-			if d:Dot(d) <= radius2 then
+			-- A wing moves only when its bird did this frame.
+			local near = if p.Body
+				then (p.Body :: Placed).Pose ~= nil and d:Dot(d) <= radius2
+				else d:Dot(d) <= radius2
+			if near then
 				table.insert(parts, p.Part)
 				table.insert(cframes, pose(p, PropCore.motion(p.Anim, t, p.Phase, cfg)))
 			end
@@ -148,8 +173,16 @@ function PropController.enter(worldId: string, stageName: string?)
 			-- own frame.
 			local fix =
 				CFrame.Angles(0, ChunkCore.yawRadians((chunk and chunk.MeshYawOffset) or 0), 0)
-			for _, row in rows do
+			-- This piece's placed entries by row, so a wing can find its bird.
+			local byRow: { [number]: Placed } = {}
+			for rowIndex, row in rows do
 				index += 1
+				-- A wing needs its bird drawn; a wing whose bird was not (tier,
+				-- or a missing mesh) is simply not drawn either.
+				local body = if row.Attach then byRow[row.Attach] else nil
+				if row.Attach and not body then
+					continue
+				end
 				if PropCore.tierShown(row.Tier, scale, cfg) then
 					local source = lib:FindFirstChild(row.Prop, true)
 					if source and source:IsA("BasePart") then
@@ -180,23 +213,27 @@ function PropController.enter(worldId: string, stageName: string?)
 							),
 							Fix = fix,
 							Anim = row.Anim,
-							Phase = PropCore.phase(index),
+							-- A wing beats in time with its own bird.
+							Phase = if body then body.Phase else PropCore.phase(index),
 							Heading = PropCore.birdHeading(row.P[1], row.P[3]),
-							Position = layout * Vector3.new(row.P[1], row.P[2], row.P[3]),
+							Position = if body
+								then body.Position
+								else layout * Vector3.new(row.P[1], row.P[2], row.P[3]),
+							Body = body,
+							Hinge = if row.Hinge
+								then Vector3.new(row.Hinge[1], row.Hinge[2], row.Hinge[3])
+								else nil,
 						}
 						-- At rest is motion at t = 0 for a bird (its heading, not
-						-- its authored yaw), and the authored pose for the rest.
-						part.CFrame = pose(
-							entry,
-							PropCore.motion(
-								if row.Anim == "Bird" then "Bird" else "Static",
-								0,
-								0,
-								cfg
-							)
-						)
+						-- its authored yaw) and its wings, and the authored pose
+						-- for the rest.
+						local restAnim = if row.Anim == "Bird" or row.Anim == "Wing"
+							then row.Anim
+							else "Static"
+						part.CFrame = pose(entry, PropCore.motion(restAnim, 0, 0, cfg))
 						part.Parent = holder
 						table.insert(placed, entry)
+						byRow[rowIndex] = entry
 					else
 						missing[row.Prop] = true
 					end

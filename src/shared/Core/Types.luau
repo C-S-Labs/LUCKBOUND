@@ -104,6 +104,7 @@ export type WorldDefinition = {
 	-- RESERVED: see docs/RESERVED.md -- per-world music, blocked on audio.
 	MusicId: string?,
 	Enemies: { string },
+	Loot: any?, -- build spec §7.5; Schema.validateLoot owns its shape
 	-- RESERVED: see docs/RESERVED.md -- the four below are blocked by build
 	-- spec §7 (combat, items, discoveries) or by audio not existing yet.
 	BossId: string?,
@@ -228,6 +229,9 @@ export type ChunkDefinition = {
 	Sockets: { ChunkSocket },
 	Weight: number, -- selection weight within its Role
 	MaxPerLayout: number?, -- nil = unlimited
+	-- Chance (0..1] this piece is in a layout's library at all; nil = always.
+	-- One seeded draw per layout (build spec §7.5). The Sky Citadel treasury.
+	SpawnChance: number?,
 	-- Studs from the BOTTOM of the piece's bounding box up to its walking
 	-- surface. ChunkLoader lifts the mesh by (SizeY/2 - GroundOffsetY) so the
 	-- ground lands on the layout plane; nil means "the walk plane is the box

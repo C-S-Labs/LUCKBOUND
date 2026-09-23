@@ -26,6 +26,9 @@ PropCore.ANIMS = {
 	Moored = true, -- a boat at a dock: a small bob and a slight rock along its keel
 	Tumble = true, -- debris adrift: a bob, a mild rock, a slow turn
 	Bird = true, -- the flock circles its piece's centre, nose along the path
+	-- A bird's wing: rides on the Bird row it names (Attach) and flaps about
+	-- its Hinge. Never on its own.
+	Wing = true,
 }
 
 --- Whether a placement of this detail tier is drawn at this quality scale
@@ -48,11 +51,13 @@ end
 ---          * translate(P + (0, lift, 0))
 ---          * turnAbout(vertical, turn) * R * Angles(tiltX, 0, tiltZ)
 ---
+--- A Wing row instead rides on its bird's pose (see PropCore.wingAngle).
+---
 --- lift is studs; every angle is radians. `orbit` is only non-zero for
 --- birds, whose own rotation R is replaced by `heading`/`bank` (see
 --- PropCore.birdHeading). There is deliberately no scale term.
 function PropCore.motion(anim: string, t: number, phase: number, cfg: any)
-	local m = { lift = 0, turn = 0, tiltX = 0, tiltZ = 0, orbit = 0, bank = 0 }
+	local m = { lift = 0, turn = 0, tiltX = 0, tiltZ = 0, orbit = 0, bank = 0, flap = 0 }
 	local tau = math.pi * 2
 	local c = cfg[anim]
 	if anim == "Static" or c == nil then
@@ -87,6 +92,10 @@ function PropCore.motion(anim: string, t: number, phase: number, cfg: any)
 		-- generator proves each bird's full circle clear (clear_bird_orbits).
 		m.orbit = tau * t / c.Period
 		m.bank = c.Bank
+	elseif anim == "Wing" then
+		-- Up and down about the hinge. The controller passes the BODY's phase,
+		-- so a bird's two wings beat together, and mirrors it per side.
+		m.flap = c.Amplitude * math.sin(tau * t / c.Period + offset)
 	end
 	return m
 end
@@ -99,6 +108,14 @@ function PropCore.birdHeading(x: number, z: number): number
 	-- d/dθ of Ry(θ)·(x, 0, z) at θ = 0 is (z, 0, -x); Ry(h)·(1, 0, 0) is
 	-- (cos h, 0, -sin h). Equal when cos h = z/r and sin h = x/r.
 	return math.atan2(x, z)
+end
+
+--- The angle to turn a wing about its hinge (radians, about the bird's own
+--- X, its nose axis) for a flap value and the wing's side. A wing on the -Z
+--- side rises for a positive turn about X; one on +Z for a negative one --
+--- so this makes both rise together.
+function PropCore.wingAngle(flap: number, wingZ: number): number
+	return if wingZ < 0 then flap else -flap
 end
 
 return PropCore

@@ -189,6 +189,49 @@ function ChunkCore.assemble(
 ): (boolean, any)
 	local byRole = ChunkCore.libraryFor(chunks, options.WorldId)
 
+	-- SPAWN CHANCE (build spec §7.5). A piece with SpawnChance is in this
+	-- layout's library only if one seeded draw says so -- the treasury is in
+	-- about one map in five. Drawn once per such piece, in Id order, BEFORE
+	-- anything else, and only when a world has one: a kit without the field
+	-- consumes no numbers, so its seeds build exactly what they always did.
+	-- A piece that wins its draw is then strongly preferred wherever it fits,
+	-- so "in one map in five" means placed, not merely eligible.
+	local won: { [string]: boolean } = {}
+	local chancy = {}
+	for _, list in byRole do
+		for _, c in list do
+			if c.SpawnChance ~= nil and c.SpawnChance < 1 then
+				table.insert(chancy, c)
+			end
+		end
+	end
+	if #chancy > 0 then
+		table.sort(chancy, function(a, b)
+			return a.Id < b.Id
+		end)
+		local absent = {}
+		for _, c in chancy do
+			if nextNumber() >= c.SpawnChance then
+				absent[c.Id] = true
+			else
+				won[c.Id] = true
+			end
+		end
+		for role, list in byRole do
+			local kept = {}
+			for _, c in list do
+				if not absent[c.Id] then
+					table.insert(kept, c)
+				end
+			end
+			byRole[role] = kept
+		end
+	end
+
+	local function weightOf(c: any): number
+		return if won[c.Id] then c.Weight * 1000 else c.Weight
+	end
+
 	local entries = byRole.ENTRY
 	local bosses = byRole.BOSS
 	if not entries or #entries == 0 then
@@ -345,9 +388,7 @@ function ChunkCore.assemble(
 		-- Several attempts: a piece may not match the open socket's Kind, may
 		-- have no usable exit, or may collide with something already placed.
 		for _ = 1, 24 do
-			local c = WeightedRandom.pick(candidates, function(x)
-				return x.Weight
-			end, nextNumber)
+			local c = WeightedRandom.pick(candidates, weightOf, nextNumber)
 			if c then
 				local p, consumed = ChunkCore.placeAgainst(c, open, i)
 				if p and not collides(p, c) then
@@ -482,9 +523,7 @@ function ChunkCore.assemble(
 				local at = ChunkCore.worldSocket(fromP, fromC, fromS)
 				local grown = false
 				for _ = 1, 12 do
-					local c = WeightedRandom.pick(middle, function(x)
-						return x.Weight
-					end, nextNumber)
+					local c = WeightedRandom.pick(middle, weightOf, nextNumber)
 					if c and allowed(c) and c.Id ~= fromC.Id and not hasBossKind(c) then
 						local p, arrived = ChunkCore.placeAgainst(c, at, branchIndex)
 						if p and not collides(p, c) then

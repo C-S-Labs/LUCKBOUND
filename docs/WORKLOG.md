@@ -33,6 +33,63 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 56 — 2026-09-23 — Loot, fixtures and vault keys (build spec §7.5)
+
+**Tests:** 788 passing (was 753).
+
+### Done
+- **§7.5 amendment written.** It opens the loot machinery, fixtures, vault
+  keys, chunk `SpawnChance` and a boss stand-in. Combat, bosses, world
+  modifiers and what drops all stay excluded. The owner's rules are recorded
+  there verbatim:
+  - Once per party, own loot for each member.
+  - The key drops at 20%, one roll per party, and is shared by everyone
+    present.
+  - The key is only rolled in a map that has a vault; the vault is in about
+    one map in five.
+  - Keys are kept, max 1 per kind.
+  - Modifiers move the key chance, not the vault's.
+- **Generator:**
+  - `as_fixture`/`fixture_part` pull out 5 chests (body plus hinged lid), the
+    treasury's vault door and the sealed gate's forcefield.
+  - `as_attached` splits each bird's wings off (30 wings).
+  - Library 28 meshes (22 + 2 wing + 4 fixture), one props FBX still.
+  - Structure changed ONLY in lookout, vault_turn and sealed_gate, and only
+    by removal (48/222/8 verts), checked against the saved `.blend`.
+  - Writes `Content/Fixtures/SkyCitadel.luau`.
+- **Runtime:**
+  - Pure cores: `LootCore`, `KeyCore`, `FixtureCore`.
+  - `LootSystem` (server): places fixtures, handles prompts, rolls loot per
+    player, spends and grants keys, runs the arena stand-in.
+  - `FixtureController` (client): lid swing, vault spin and recess,
+    forcefield breathing.
+  - `PropController`: wings ride their bird and flap.
+  - Remote `Loot_Result` (§4 row added); profile schema v3 (`Keys`);
+    `SpawnChance` on `SC_VAULT_TURN` = 0.2, which the test measures at 20.2%.
+- Loot pools `SC_CHEST`/`SC_VAULT`/`SC_BOSS` exist with empty `Entries`
+  (owner deferred contents). `docs/RESERVED.md` lists the slots.
+
+### Decisions made
+- **Vault key consumption:** `ALL_HOLDERS` by default (the party's key is
+  spent from everyone present who holds one); `OPENER` is one config switch
+  away. The owner said "one per party", and this reads it literally.
+  **Worth confirming with the owner.**
+- The opener must personally hold a key.
+
+### Stopped at
+Waiting on the owner's re-import (same two files). Until then the old meshes
+show the chests baked in, no fixtures spawn (LootSystem warns about missing
+`fix_*`), and birds draw their old winged body slightly squashed with no
+separate wings.
+
+### Next
+1. Swap the 22 structure ids from the new `SC_STRUCTURE.rbxmx`, and commit the
+   new `SC_PROP_LIBRARY.rbxmx`.
+2. Owner walks Test T.
+3. Loot pool design (contents, and what an ItemId is).
+
+---
+
 ## Session 55 — 2026-09-23 — A gate court on a branch left a walkway into the abyss
 
 **Tests:** 753 passing.

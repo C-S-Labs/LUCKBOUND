@@ -15,6 +15,7 @@ local TweenService = game:GetService("TweenService")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local UITheme = require(Root.Core.UITheme)
+local Net = require(Root.Core.Net)
 local UIKit = require(script.Parent.UIKit)
 
 local ExpeditionController = require(script.Parent.Parent.Controllers.ExpeditionController)
@@ -146,8 +147,8 @@ function ExpeditionHud.init(): ()
 
 		local color = UITheme.rarityColor(state.Rarity)
 		worldLabel.Text = string.upper(state.Name)
-		worldLabel.TextColor3 = color
-		;(banner:FindFirstChild("RarityStroke") :: UIStroke).Color = color
+		worldLabel.TextColor3 = color;
+		(banner:FindFirstChild("RarityStroke") :: UIStroke).Color = color
 		banner.Visible = true
 	end)
 
@@ -164,6 +165,34 @@ function ExpeditionHud.init(): ()
 			showToast(`Expedition complete  ·  +{payload.FateAwarded} Fate`)
 		end
 	end
+
+	-- Loot, fixtures and vault keys (build spec §7.5): what THIS player got.
+	-- Pools are empty until the loot pools are designed, so an opening with
+	-- no drops says so plainly rather than pretending.
+	Net.get("Loot_Result").OnClientEvent:Connect(function(payload)
+		if payload.Message then
+			showToast(payload.Message)
+		elseif payload.KeyGained then
+			showToast(`You found a {payload.KeyGained.Name}!`)
+		elseif payload.Drops and #payload.Drops > 0 then
+			local parts = {}
+			for _, drop in payload.Drops do
+				table.insert(
+					parts,
+					if drop.Count > 1 then `{drop.ItemId} x{drop.Count}` else drop.ItemId
+				)
+			end
+			showToast(table.concat(parts, "  ·  "))
+		elseif payload.Source == "CHEST" then
+			showToast("The chest is empty -- for now.")
+		elseif payload.Source == "VAULT" then
+			showToast(
+				if payload.KeySpent
+					then `{payload.KeySpent.Name} used. The vault opens.`
+					else "The vault opens."
+			)
+		end
+	end)
 
 	RunService.Heartbeat:Connect(function()
 		if banner.Visible then

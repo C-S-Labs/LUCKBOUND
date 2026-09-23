@@ -274,7 +274,10 @@ on.
 | debris | Tumble |
 | bird | Bird |
 
-The aviary's 15 birds circle the cage as one flock. Every bird's full circle is
+| chest (5), vault door, forcefield | **fixtures** (convention 7, build spec §7.5): server-placed, collidable, opened once per party |
+
+The aviary's 15 birds circle the cage as one flock, their wings beating
+(separate `prop_bird_wing_*` meshes, `Wing` class). Every bird's full circle is
 proven clear of trees, bars and the other birds (`clear_bird_orbits`), which
 lifted two birds, by 1 and 11 studs.
 
