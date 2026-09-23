@@ -87,7 +87,7 @@ return {
 				Thickness = 0.3,
 				Billows = 6,
 				Tufts = 3,
-				Mix = { Cumulus = 0.7, Stratus = 0.2, Wisp = 0.1 },
+				Mix = { Cumulus = 0.8, Stratus = 0.2 },
 				Color = Color3.fromRGB(255, 238, 228), -- sunlit tops, faintly gold
 				Shade = Color3.fromRGB(196, 176, 206), -- lavender undersides
 				-- OPAQUE. Translucent clouds showed every inner shape through
@@ -107,12 +107,15 @@ return {
 				Thickness = 0.22,
 				Billows = 4,
 				Tufts = 1,
-				Mix = { Cumulus = 0.35, Stratus = 0.5, Wisp = 0.15 },
+				Mix = { Cumulus = 0.5, Stratus = 0.5 },
 				Color = Color3.fromRGB(236, 214, 226),
 				Shade = Color3.fromRGB(150, 146, 196),
 				Transparency = 0,
 			},
-			-- DEEP: long pale streaks far below, almost still. Depth, not detail.
+			-- DEEP: low lumpy banks far below, almost still. Depth, not detail.
+			-- No wisps anywhere in this world: the citadel is LOOKED DOWN ON,
+			-- and from above a wisp is a long flat oval -- "we aren't frying
+			-- eggs" (owner walk).
 			{
 				Depth = 520,
 				Count = 18,
@@ -123,7 +126,7 @@ return {
 				SizeMax = 800,
 				Thickness = 0.12,
 				Billows = 0,
-				Mix = { Stratus = 0.3, Wisp = 0.7 },
+				Mix = { Stratus = 1 },
 				Color = Color3.fromRGB(206, 196, 232),
 				Shade = Color3.fromRGB(140, 140, 190),
 				Transparency = 0.1,
