@@ -137,7 +137,13 @@ local yawCache: { [string]: number } = {}
 ---
 --- Ties keep the declared MeshYawOffset: a straight or a four-way reads the
 --- same at two or four turns, and for those any of them connects.
-local function calibrateYaw(chunk: any, placed: any, origin: Vector3, meshPos: Vector3, mesh: BasePart): number
+local function calibrateYaw(
+	chunk: any,
+	placed: any,
+	origin: Vector3,
+	meshPos: Vector3,
+	mesh: BasePart
+): number
 	local cached = yawCache[chunk.AssetKey]
 	if cached ~= nil then
 		return cached
@@ -161,7 +167,8 @@ local function calibrateYaw(chunk: any, placed: any, origin: Vector3, meshPos: V
 	for turn = 0, 3 do
 		-- The hint first, so a tie keeps it.
 		local k = (hint + turn * 90) % 360
-		mesh.CFrame = CFrame.new(meshPos) * CFrame.Angles(0, ChunkCore.yawRadians(placed.Yaw + k), 0)
+		mesh.CFrame = CFrame.new(meshPos)
+			* CFrame.Angles(0, ChunkCore.yawRadians(placed.Yaw + k), 0)
 		local hits = 0
 		for _, socket in chunk.Sockets do
 			local ws = ChunkCore.worldSocket(placed, chunk, socket)
@@ -169,7 +176,11 @@ local function calibrateYaw(chunk: any, placed: any, origin: Vector3, meshPos: V
 			local inward = Vector3.new(centre.X - mouth.X, 0, centre.Z - mouth.Z).Unit
 			local centreProbe = mouth + inward * probe.Inset
 			local function deckAt(point: Vector3): boolean
-				local hit = Workspace:Raycast(point + Vector3.new(0, probe.Height, 0), Vector3.new(0, -probe.Height * 2, 0), params)
+				local hit = Workspace:Raycast(
+					point + Vector3.new(0, probe.Height, 0),
+					Vector3.new(0, -probe.Height * 2, 0),
+					params
+				)
 				return hit ~= nil and math.abs(hit.Position.Y - mouth.Y) <= probe.Tolerance
 			end
 			-- Deck at the mouth's centre is the main evidence. A declared Width
@@ -181,7 +192,8 @@ local function calibrateYaw(chunk: any, placed: any, origin: Vector3, meshPos: V
 			if deckAt(centreProbe) then
 				hits += 1
 				if socket.Width then
-					local across = Vector3.new(-inward.Z, 0, inward.X) * (socket.Width / 2 - probe.EdgeMargin)
+					local across = Vector3.new(-inward.Z, 0, inward.X)
+						* (socket.Width / 2 - probe.EdgeMargin)
 					if deckAt(centreProbe + across) and deckAt(centreProbe - across) then
 						hits += 10
 					end
@@ -200,7 +212,11 @@ local function calibrateYaw(chunk: any, placed: any, origin: Vector3, meshPos: V
 			if not socketAt[facing] then
 				local dir = CFrame.Angles(0, -math.rad(facing), 0).LookVector
 				local edge = centre + dir * (chunk.SizeX / 2 - probe.Inset)
-				local hit = Workspace:Raycast(edge + Vector3.new(0, probe.Height, 0), Vector3.new(0, -probe.Height * 2, 0), params)
+				local hit = Workspace:Raycast(
+					edge + Vector3.new(0, probe.Height, 0),
+					Vector3.new(0, -probe.Height * 2, 0),
+					params
+				)
 				if hit and math.abs(hit.Position.Y - centre.Y) <= probe.Tolerance then
 					hits -= 5
 				end
@@ -368,6 +384,10 @@ function ChunkLoader.build(
 		folder.Name = `{placed.Index}_{placed.ChunkId}`
 		folder:SetAttribute("Role", placed.Role)
 		folder:SetAttribute("Yaw", placed.Yaw)
+		-- What the client's PropController needs to dress this piece: which
+		-- piece it is, and where its walk-plane centre sits in the world.
+		folder:SetAttribute("ChunkId", placed.ChunkId)
+		folder:SetAttribute("Centre", origin + Vector3.new(placed.X, placed.Y, placed.Z))
 
 		-- The scenario for this room, when the layout carries a plan (build
 		-- spec §7.3). Written as attributes rather than through a new channel
@@ -436,7 +456,8 @@ function ChunkLoader.build(
 		if mesh then
 			local meshPos = meshCFrame.Position
 			local k = calibrateYaw(chunk, placed, origin, meshPos, mesh)
-			mesh.CFrame = CFrame.new(meshPos) * CFrame.Angles(0, ChunkCore.yawRadians(placed.Yaw + k), 0)
+			mesh.CFrame = CFrame.new(meshPos)
+				* CFrame.Angles(0, ChunkCore.yawRadians(placed.Yaw + k), 0)
 			usedMeshes += 1
 			surface = mesh
 		else

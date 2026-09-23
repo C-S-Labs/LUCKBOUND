@@ -22,6 +22,7 @@ local EventCore = require(Root.Core.EventCore)
 local Net = require(Root.Core.Net)
 local Worlds = require(Root.Content.Worlds)
 local AmbienceController = require(script.Parent.AmbienceController)
+local PropController = require(script.Parent.PropController)
 
 local ExpeditionController = {}
 
@@ -124,6 +125,8 @@ function ExpeditionController.init(): ()
 		ChunkLoader.applyEnvironment(Lighting, payload.Environment)
 		-- Sky, atmosphere, grade, cloud sea, motes: the rest of the world's look.
 		AmbienceController.enter(payload.Environment, payload.FloorY or 0)
+		-- Waits for the map to replicate, so it must not hold up the rest.
+		task.spawn(PropController.enter, payload.WorldId, payload.StageName)
 		active = payload
 		startedAtClock = os.clock()
 		notify()
@@ -150,6 +153,7 @@ function ExpeditionController.init(): ()
 		-- expedition: there is no lighting to restore and no state to clear.
 		if payload.Reason ~= "ABORTED" then
 			AmbienceController.leave()
+			PropController.leave()
 			restoreHubLighting()
 			active = nil
 			notify()
@@ -164,6 +168,7 @@ function ExpeditionController.init(): ()
 		if active and ExpeditionController.remaining() <= 0 then
 			active = nil
 			AmbienceController.leave()
+			PropController.leave()
 			restoreHubLighting()
 			notify()
 		end

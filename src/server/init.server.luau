@@ -15,6 +15,7 @@ local Schema = require(Root.Util.Schema)
 local Worlds = require(Root.Content.Worlds)
 local AssetManifest = require(Root.Content.AssetManifest)
 local Chunks = require(Root.Content.Chunks)
+local Props = require(Root.Content.Props)
 local Crossroads = require(Root.Content.Hub.Crossroads)
 local Menu = require(Root.Content.Hub.Menu)
 local Cinematics = require(Root.Content.Hub.Cinematics)
@@ -70,6 +71,7 @@ Schema.validateAll({
 	palettes = Palettes,
 	events = Events,
 	scenarios = Scenarios,
+	props = Props,
 })
 
 do
