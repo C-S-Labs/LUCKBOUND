@@ -667,6 +667,100 @@ draws every prop in place for review.
 **Upload cost was designed down.** 288 scenario pieces share 164 prop meshes
 (an early pass produced 459).
 
+### Scenario atmospheres (2026-09-23)
+
+**Owner-directed:** each scenario gets its own air, not just its own props.
+The kits change what is ON the citadel; the atmosphere changes the hour, the
+sky, the haze, the cloud sea under the islands and the weather past the
+camera. **A scenario should be readable from the sky before the player has
+looked at a single prop.**
+
+Every profile keeps three things so the world stays Sky Citadel: the white
+citadel, the cloud sea **below**, and an hour near sunrise (5.5–7.6). None
+lands on another world's slot (Emberfall's ash-red dusk, Astral Reach's
+midnight, Ethereal Scape's white afternoon, Verdant Valley's midday).
+
+| Scenario | Hour | The air | Sky and haze | Cloud sea | Weather and effects |
+|---|---|---|---|---|---|
+| **Unmooring** | 6.9 | the same dawn gone *wrong*: drained, hard white sun, sickly | sage-grey horizon under a slate sky; flat, desaturated, contrasty grade | **risen**: the near layer is 50 studs closer (ceiling 112) and heaped high; the middle layer runs the **opposite way** (vertigo) | grit drifting **up**; fragments falling past the islands (`Debris`); an irregular brown-out (`Pulse`, Flicker) |
+| **Siege** | 6.4 | the base hour through smoke | swollen orange sun, ochre horizon, **slate-cobalt overhead** (what keeps it off Emberfall), strong sun shafts | near tops stained, sooty undersides; a layer of **dark smoke banks** just under the keels | embers rising and ash drifting downwind; **five burning districts** on the horizon (`Plumes`) |
+| **Lockdown** | 5.5 | **before sunrise**, the only one: a deep blue hour, stars out, so every alarm-red light owns the frame | thin mauve horizon, cobalt-black zenith; heavy bloom | tops catch the blue hour, **undersides catch the alarms** (red-violet shade) | a red **aegis dome** over the whole map (`Dome`, ForceField); six **searchlights** sweeping up from under the islands; the grade **beats red** with the alarm (`Pulse`) |
+| **Stormhawk** | 6.4 | the sunrise swallowed by the raptor's storm | steel-grey haze, no stars, shafts through gaps | churning, darker, fast; **lit from inside by lightning** | a thunderhead **roof** overhead (`Canopy`, +520, clear of the +160 crown); wind-driven **rain**; lightning every 4–11 s with bolts into the sea (`Flashes`) |
+| **Rime** | 7.0 | crisp, still, blinding cold | pale sun wearing a **halo**, ice-pale horizon, cyan in every shadow, strong glare and bloom; clear rather than hazy (what keeps it off Ethereal Scape) | **frozen**: flatter banks in Roblox's `Snow` finish, barely moving | snowfall on the wind; diamond dust glittering (`Motes`) |
+| **Reclaimed** | 7.6 | later, softer, humid: years after anyone left | milky gold haze, teal shadows, broad god rays, a faded grade; dim bloom (dead lights) | closer and softer (depth 180), warm tops | pollen and seed-fluff hanging in the air; a few petals |
+| **Aether Surge** | 6.2 | a dawn gone violet, the sun on the horizon | magenta horizon, indigo overhead **with stars showing through** | **glowing violet from underneath** | **aurora curtains** (`Aurora`); discharge flickering inside the sea (`Flashes`, glow only); sparks rising; the grade **breathes** with the crystals (`Pulse`, Sine) |
+
+Each profile also carries a one-line `Flavor` for the arrival card
+("The citadel has decided you are the intruder.").
+
+**One source of numbers.** `assets/source/worlds/sky_citadel/sky_citadel_atmospheres.py`
+holds all seven as data, validates them with a line-for-line port of
+`AmbienceCore.validate` plus checks for the new blocks (including: no cloud
+ceiling within 12 studs of the keels, nothing overhead below the crown), and
+writes them as Luau:
+
+```
+python assets/source/worlds/sky_citadel/sky_citadel_atmospheres.py
+```
+
+→ `assets/export/worlds/sky_citadel/scenarios/Environments_Scenarios.luau`,
+**staged like `Props_Scenarios.luau`: nothing in `src/` reads it yet.**
+
+**How a profile applies** (the rule the runtime should implement): a profile
+is an **override** of `Worlds/SkyCitadel.luau`'s `Environment`, the same idea
+as the Blueprint's `ModifierOverride`. Scalars and colours replace; blocks
+(`Atmosphere`, `Sky`, `Bloom`, `SunRays`, `Grade`, `Motes`) merge key by key;
+lists (`CloudSea`, `Canopy`, `Weather`) replace whole; `false` removes a block.
+
+**Proposed `Environment` blocks.** Five of the seven profiles need things
+`Types.Environment` cannot say. Each block is generic, so any world can use it
+(Emberfall's ash is `Weather`, Astral Reach could wear `Aurora`), and each is
+optional:
+
+| Block | What it draws | Roblox form | Used by |
+|---|---|---|---|
+| `Weather` | directional particle streams (snow, rain, embers, pollen); `Direction`, `Spread`, `Streak`, `Emission`, `Box` | one `ParticleEmitter` each on the motes anchor, `EmissionDirection` + `Acceleration` | Unmooring, Siege, Stormhawk, Rime, Reclaimed, Aether |
+| `Pulse` | the grade oscillating: `Sine`, `Beat` or `Flicker` | lerp the `ColorCorrectionEffect.TintColor` per frame | Unmooring, Lockdown, Aether |
+| `Flashes` | lightning: a brightness spike, a lit cloud layer, optional bolts | tween `Lighting.Brightness`; a `PointLight` in a near cloud; neon bolt parts for `Duration` | Stormhawk, Aether |
+| `Canopy` | cloud layers **above** the map (`Height`, not `Depth`) | the cloud sea's own code with the sign flipped | Stormhawk |
+| `Plumes` | far smoke columns rising from below the horizon, leaning downwind, ember glow at the root | stacked sphere parts at fixed bearings, never wrapped | Siege |
+| `Debris` | fragments falling past the islands into the sea | a small pooled set of parts, recycled at the sea | Unmooring |
+| `Aurora` | curtains of light high in the sky | `Beam`s between attachment pairs, textured, `LightEmission` 1 | Aether |
+| `Searchlights` | beams sweeping the sky from a ring under the islands | `Beam`s rotated per frame | Lockdown |
+| `Dome` | a shield bubble over the map | one sphere, `ForceField` material | Lockdown |
+
+**Preview.** `build_sky_citadel_atmosphere.py` (headless) builds
+`sky_citadel_atmosphere.blend`, **one Blender scene per profile** (the base
+plus the seven; switch scenes to switch atmospheres). Each scene joins nine
+pieces of that scenario's kit into a map the grammar allows, **linked** from
+`sky_citadel_scenarios.blend` (so the file is 1.4 MB and always shows the
+current kit), and hangs the profile round it. The cloud sea is
+`AmbienceCore.layoutClouds` ported line for line; the sun sits where Roblox
+puts it for the `ClockTime` at the default latitude; haze is the Mist pass
+tinted by `Atmosphere.Color`; grade, bloom and sun rays are compositor nodes.
+**Judge hue and mood here; judge brightness in Studio.**
+
+```
+blender -b --factory-startup --python assets/source/worlds/sky_citadel/build_sky_citadel_atmosphere.py
+blender -b --factory-startup --python assets/source/worlds/sky_citadel/build_sky_citadel_atmosphere.py -- --only rime --no-save
+```
+
+Renders: `renders/atmosphere/<profile>_{vista,deck,sea}.jpg`: over the map,
+a player on the crossroads, and out past the west edge looking into the sun.
+Also `_flash` (Stormhawk, Aether) and `_pulse` (Unmooring, Lockdown, Aether)
+for the moments. Contact sheets: `sheet_vista.jpg`, `sheet_deck.jpg`,
+`sheet_sea.jpg`, `sheet_moments.jpg` (made with Pillow, which Blender's own
+Python lacks; the script skips them there).
+
+**Honest read.** All seven are distinct from the base and from each other at a
+glance, even as thumbnails. The weakest is **Reclaimed**: its haze and pollen
+are right, but at the vista range it reads as "a hazy morning" more than
+"abandoned"; the overgrowth on the kit does that work up close. **Lockdown's
+dome** is the boldest call and the one most worth seeing in Studio: the real
+`ForceField` material shimmers, and the Blender cells only approximate it.
+Unmooring's falling debris is small at the vista range by design; it is meant
+to be noticed from the deck edge.
+
 ### What is not built yet — code, pending the owner's approval
 
 Nothing in `src/` reads any of this yet. In order:
@@ -678,6 +772,11 @@ Nothing in `src/` reads any of this yet. In order:
 4. The prop runtime: an `Interact` handler per kind, and the `Blocker`,
    `Pulse`, `Flicker` and `Sway` animation classes.
 5. Opportunity / Presence / Event systems that read the anchors.
+6. **Scenario atmospheres:** apply the rolled profile from
+   `Environments_Scenarios.luau` over the world's `Environment` on entry, by
+   the override rule above. Extend `Types.Environment`, `AmbienceCore.validate`
+   and `AmbienceController` with the nine proposed blocks (each with a row in
+   `RESERVED.md` until it is read), scaled by graphics quality like the cloud sea.
 
 **Honest read of the art (second pass):** every kit now reads as its own
 situation at a glance. The quietest are the small connective pieces, where

@@ -33,6 +33,46 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 66 — 2026-09-23 — Sky Citadel: an atmosphere for each scenario
+**Merged:** —   **Tests:** not run (no `src/` change)   **Head:** branch `claude/sky-citadel-scenario-atmosphere` (off `claude/sky-citadel-scenarios`, PR #72)
+
+### Done
+- Seven scenario atmospheres: hour, sky, haze, grade, a cloud sea of their own
+  and weather. Unmooring (risen and counter-sliding sea, falling debris, grit
+  rising), Siege (dawn through smoke, burning districts, embers), Lockdown
+  (blue hour, red aegis dome, searchlights, alarm pulse), Stormhawk
+  (thunderhead roof, rain, lightning in the sea), Rime (haloed sun, frozen
+  Snow-finish sea, snowfall), Reclaimed (humid gold haze, pollen), Aether
+  Surge (violet dawn, aurora, the sea glowing from below). Each has a `Flavor`.
+- `sky_citadel_atmospheres.py`: the one source of numbers, a validator
+  (a port of `AmbienceCore.validate` plus the new blocks), and the Luau
+  writer → `scenarios/Environments_Scenarios.luau` (staged, not in `src/`).
+- `build_sky_citadel_atmosphere.py` → `sky_citadel_atmosphere.blend`: one
+  scene per profile, kit linked (not copied), the cloud sea ported line for
+  line from `AmbienceCore.layoutClouds`. 33 review renders plus 4 contact
+  sheets in `renders/atmosphere/`.
+
+### Decisions made
+- A scenario profile is an OVERRIDE of the world's Environment (scalars
+  replace, blocks merge, lists replace, `false` removes), like `ModifierOverride`.
+- Every profile stays near sunrise (5.5–7.6) with the sea below, so no scenario
+  lands on another world's hour.
+- Nine new optional `Environment` blocks are PROPOSED, not built:
+  Weather, Pulse, Flashes, Canopy, Plumes, Debris, Aurora, Searchlights, Dome.
+  All generic. No `src/` change without the owner's approval.
+
+### Stopped at
+Art and data done; `SKY_CITADEL.md` › *Scenario atmospheres*. Nothing wired.
+
+### Next
+1. The owner reviews `renders/atmosphere/sheet_*.jpg` or the scenes in
+   `sky_citadel_atmosphere.blend`.
+2. With approval: the nine blocks in `Types` / `AmbienceCore` /
+   `AmbienceController`, and applying the rolled profile on entry
+   (`SKY_CITADEL.md` › *What is not built yet*, item 6).
+
+---
+
 ## Session 65 — 2026-09-23 — Sky Citadel scenario kits: the polish pass
 **Merged:** —   **Tests:** not run (no `src/` change)   **Head:** branch `claude/sky-citadel-scenarios`
 
