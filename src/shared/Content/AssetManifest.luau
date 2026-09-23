@@ -134,13 +134,13 @@ local ENTRIES: { [string]: AssetEntry } = {
 	-- Untextured: TextureID is null on every piece and the look is the mesh's
 	-- own vertex colour plus Color3. docs/biomes/SKY_CITADEL.md.
 	SC_CHUNK_ENTRY = {
-		AssetId = "rbxassetid://120510959711724",
+		AssetId = "rbxassetid://118690929991425",
 		Status = "UPLOADED",
 		Source = "assets/rbxm/chunks/sky_citadel/SC_STRUCTURE.rbxmx",
 		Notes = "Octagonal arrival plaza under the Beacon.",
 	},
 	SC_CHUNK_PATH_STRAIGHT = {
-		AssetId = "rbxassetid://82324585399200",
+		AssetId = "rbxassetid://104197869487362",
 		Status = "UPLOADED",
 		Source = "assets/rbxm/chunks/sky_citadel/SC_STRUCTURE.rbxmx",
 		Notes = "The gatehouse pier: a skyway under an arch between two turrets.",
@@ -188,7 +188,7 @@ local ENTRIES: { [string]: AssetEntry } = {
 		Notes = "Turns left on a dark engine-deck, the lighthouse on its own islet.",
 	},
 	SC_CHUNK_VAULT_TURN = {
-		AssetId = "rbxassetid://102211770801015",
+		AssetId = "rbxassetid://97462335999053",
 		Status = "UPLOADED",
 		Source = "assets/rbxm/chunks/sky_citadel/SC_STRUCTURE.rbxmx",
 		Notes = "The treasury, passed THROUGH on a right turn.",
@@ -224,7 +224,7 @@ local ENTRIES: { [string]: AssetEntry } = {
 		Notes = "A roofed hall of shelves and ribbed vaults, floating tomes, the clock tower.",
 	},
 	SC_CHUNK_SPIRE_COURT = {
-		AssetId = "rbxassetid://125974575286640",
+		AssetId = "rbxassetid://75112635006302",
 		Status = "UPLOADED",
 		Source = "assets/rbxm/chunks/sky_citadel/SC_STRUCTURE.rbxmx",
 		Notes = "Gate-court: the Sky Fountain and the Ascent Gate.",

@@ -2,7 +2,7 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Model" referent="RBX67535A40868548BB8E36180C647819D8">
+	<Item class="Model" referent="RBX70DE61B1F48B46B8A974483AAFBDAD13">
 		<Properties>
 			<token name="LevelOfDetail">0</token>
 			<CoordinateFrame name="ModelMeshCFrame">
@@ -32,9 +32,9 @@
 			<SharedString name="SlimHash">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			<OptionalCoordinateFrame name="WorldPivotData">
 				<CFrame>
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -46,15 +46,15 @@
 					<R22>1</R22>
 				</CFrame>
 			</OptionalCoordinateFrame>
-			<BinaryString name="AttributesSerialize"><![CDATA[AQAAAA4AAABSQlhfUmVpbXBvcnRJZAIkAAAAMWQ3NTRhNjEtYzA3MC00OTY3LTg5ZGYtNTEw
-YjBmOTI3ZDRl]]></BinaryString>
+			<BinaryString name="AttributesSerialize"><![CDATA[AQAAAA4AAABSQlhfUmVpbXBvcnRJZAIkAAAAZmQwMzdkMmItYzgxMS00YmQyLWFkYzEtMTc5
+NDQxMjc5OTI1]]></BinaryString>
 			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 			<bool name="DefinesCapabilities">false</bool>
 			<string name="Name">sky_citadel_props</string>
 			<int64 name="SourceAssetId">-1</int64>
 			<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 		</Properties>
-		<Item class="MeshPart" referent="RBX241E41A0F1A74BE6B78F829A6E854408">
+		<Item class="MeshPart" referent="RBX9100424B0423487589CF9A7A6802A54E">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -105,9 +105,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -189,7 +189,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX6FD5708E7BCE46BF80AC2CF396A3E959">
+		<Item class="MeshPart" referent="RBX55BE7AB1D1B048149D695CDE3A4B361D">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -240,9 +240,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -324,7 +324,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXC6E4ACBA507241B98532E47768E178F3">
+		<Item class="MeshPart" referent="RBX430820D2851140CF8DD33F66C97D5BC1">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -375,9 +375,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -459,14 +459,14 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX0FB005AFCAEF49EEAE32D98FEEAD174B">
+		<Item class="MeshPart" referent="RBXE56BB546B8E94D318DF7528F85D19B3E">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
 				<bool name="HasSkinnedMesh">false</bool>
 				<Vector3 name="InitialSize">
-					<X>17.3778152</X>
-					<Y>17.3778191</Y>
+					<X>15.3778162</X>
+					<Y>15.3778181</Y>
 					<Z>2.89999962</Z>
 				</Vector3>
 				<Vector3 name="JointOffset">
@@ -474,7 +474,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://90265745375134</url></Content>
+				<Content name="MeshId"><url>rbxassetid://112915220440388</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -482,23 +482,23 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="AeroMeshData">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 				<token name="FluidFidelityInternal">0</token>
 				<bool name="InertiaMigrated">false</bool>
-				<SharedString name="PhysicalConfigData">patec3z2XCrcqPlFVooVag==</SharedString>
+				<SharedString name="PhysicalConfigData">Bv0NHJdhDHFvFB7t13rEYA==</SharedString>
 				<Vector3 name="UnscaledCofm">
-					<X>7.51152811e-08</X>
-					<Y>2.59827686e-07</Y>
-					<Z>0.674792469</Z>
+					<X>5.32983563e-07</X>
+					<Y>-2.99143181e-07</Y>
+					<Z>0.666088521</Z>
 				</Vector3>
 				<Vector3 name="UnscaledVolInertiaDiags">
-					<X>4908.23096</X>
-					<Y>4908.23047</Y>
-					<Z>9694.53027</Z>
+					<X>2988.13623</X>
+					<Y>2988.13672</Y>
+					<Z>5880.08887</Z>
 				</Vector3>
 				<Vector3 name="UnscaledVolInertiaOffDiags">
-					<X>-5.77639184e-06</X>
-					<Y>-1.07435762e-05</Y>
-					<Z>0.000121943936</Z>
+					<X>-1.02479789e-05</X>
+					<Y>5.50744653e-06</Y>
+					<Z>3.50246555e-05</Z>
 				</Vector3>
-				<float name="UnscaledVolume">302.566315</float>
+				<float name="UnscaledVolume">235.689987</float>
 				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
@@ -510,9 +510,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -582,8 +582,8 @@ YjBmOTI3ZDRl]]></BinaryString>
 					<Z>0</Z>
 				</Vector3>
 				<Vector3 name="size">
-					<X>17.3778152</X>
-					<Y>17.3778191</Y>
+					<X>15.3778162</X>
+					<Y>15.3778181</Y>
 					<Z>2.89999962</Z>
 				</Vector3>
 				<BinaryString name="AttributesSerialize"></BinaryString>
@@ -594,7 +594,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX980CDF532C6B45E29BE1BDF5C4B6B2FC">
+		<Item class="MeshPart" referent="RBX71EB36001C414079A08A517D6B4CAC9D">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -645,9 +645,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -729,7 +729,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXFC636CFDEFE042F5B4232D5029B3A5B1">
+		<Item class="MeshPart" referent="RBX7EA2447AF34C4D4D8E6AE95E15E215B7">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -780,9 +780,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -864,7 +864,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXBDD4DFEEC2034FC7A15FB34A1D7A52CF">
+		<Item class="MeshPart" referent="RBXD13E73C00097410F9C170D383B9D6147">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -915,9 +915,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -999,7 +999,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXB89B47561FDC4EDE85A7C016E5ECE41D">
+		<Item class="MeshPart" referent="RBXB3B43D53FB684BE09B6A1153C3402682">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1050,9 +1050,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -1134,7 +1134,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX52487653E9DB42FE8C38553CACAEA55F">
+		<Item class="MeshPart" referent="RBX4EF0F756FE9C4D68B6736D1BA2EF03C9">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1185,9 +1185,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -1269,7 +1269,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXDEA81E94747842418A69C8AED032D936">
+		<Item class="MeshPart" referent="RBX1DB44129892F4F33B1FC74B55D8D9C08">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1320,9 +1320,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -1404,7 +1404,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX2F0B7CD1DE2443F5BDDE1293434146E6">
+		<Item class="MeshPart" referent="RBX15D38D6B91244E448C5F027DD6F3DBA2">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1455,9 +1455,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -1539,7 +1539,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXC7A2B56FB0784F3192EDD8D91339A462">
+		<Item class="MeshPart" referent="RBXF10D0AB4609C48D6A5059B687479A6B2">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1590,9 +1590,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -1674,7 +1674,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX036D5099223E4261AC5632D2D48403A5">
+		<Item class="MeshPart" referent="RBXC0284B0EEDF04FA78E9E1CFA0F3A1882">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1725,9 +1725,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -1809,7 +1809,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXA784648912DB44BD956C33EF9A1D0CC4">
+		<Item class="MeshPart" referent="RBXA4FFE18562C24737B74442DFE1B18C40">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1860,9 +1860,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -1944,7 +1944,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXA7C82BC056F940EF82671B33A314A2C0">
+		<Item class="MeshPart" referent="RBX0A5C597AE7DA4CA58943A7DEABEAF6A2">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1995,9 +1995,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2079,7 +2079,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX4A03AEDCE44F43769F3801C889AB4406">
+		<Item class="MeshPart" referent="RBX6355234FDD824E989F4C67DA2BCAD5D4">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -2130,9 +2130,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2214,7 +2214,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXFB3A0F586746460BA77B17F3747C5ADC">
+		<Item class="MeshPart" referent="RBXA0DAAE67C0144AC18CA6C446877D800D">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -2265,9 +2265,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2349,7 +2349,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXD5A67535292C482E99F704A3DE2923D3">
+		<Item class="MeshPart" referent="RBXE943AD73E26D4289B8D1D78B08D6D3FF">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -2400,9 +2400,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2484,7 +2484,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXD727CDCCCA8743CB91A3B8837F477403">
+		<Item class="MeshPart" referent="RBX45B7CC8E71C34E99A16C0CDF2578D474">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -2535,9 +2535,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2619,7 +2619,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXBB9DD692DAFA483BBB60578F68DBBECF">
+		<Item class="MeshPart" referent="RBX21760D44B51740C5922B578F210C69A2">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -2670,9 +2670,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2754,7 +2754,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX858CF28F1DE842E3B1C4E6F6F83B6121">
+		<Item class="MeshPart" referent="RBXE95231D56AE54505925BE54C253F7563">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -2805,9 +2805,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2889,7 +2889,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX76F99E8C418F457089032A169B029E29">
+		<Item class="MeshPart" referent="RBXD58A284D7EDB48AD95232315AD688CBE">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -2940,9 +2940,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3024,7 +3024,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX53862551362B48C8884231550E17DE47">
+		<Item class="MeshPart" referent="RBX77219BFD4A7B4E07B877FF205855B9C6">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -3075,9 +3075,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3159,7 +3159,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXDA27DA9AD7904263A72E9CDFB535FB51">
+		<Item class="MeshPart" referent="RBX3CEC522D39C0401CBBAD576FD761D17D">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -3210,9 +3210,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3294,7 +3294,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX07A13B120EDE446EA0BC9BD58FE58E07">
+		<Item class="MeshPart" referent="RBXAEE399EB8868442D94E04866A9524769">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -3345,9 +3345,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3429,7 +3429,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX0A37DB04A0E746108BA8C1B1112E40E6">
+		<Item class="MeshPart" referent="RBX56FCD2FA7A6947CB9AF6A4981BDE97D7">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -3480,9 +3480,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3564,7 +3564,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX5120C96CB9FF4E3587BAD37851E594B4">
+		<Item class="MeshPart" referent="RBX331E56ED00B8496CBEEACC8A8527AD22">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -3615,9 +3615,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3699,7 +3699,7 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXA3FF9EC79E1E4A96ABE70473A3B1048E">
+		<Item class="MeshPart" referent="RBXE6E11E71243247A398A1B70F3239BA61">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -3750,9 +3750,9 @@ YjBmOTI3ZDRl]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>8.04989433</X>
-					<Y>-109.153557</Y>
-					<Z>-66.3679199</Z>
+					<X>65.4824982</X>
+					<Y>-95.1402512</Y>
+					<Z>55.1758461</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3836,6 +3836,82 @@ YjBmOTI3ZDRl]]></BinaryString>
 		</Item>
 	</Item>
 	<SharedStrings>
+		<SharedString md5="Bv0NHJdhDHFvFB7t13rEYA==">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
+S2Inet7RZfimi3XYuxMQJY92ZD6jQnQ=</SharedString>
 		<SharedString md5="BwVpFr3zVDq73R1ki94hkQ==">Q1NHUEhTCAAAAAIAKLUv/WCYEG1HAMpOMBNCMNxWB+v6gIlkXE3MVB9UmKAvOC21EihYAoei
 vjhVQBZFhPSdqtKAJnr4JHDoOqerJ+fph6/RBIXzjtz/7jrT93oHLQEgAR8Bi8yudF0TZPeF
 4VTp3tymshNDiETA6M3aVKnX5oxyYKVQIOdhO/xGY2fvHndWSr2p78erV1sFjYQ7SB3+J8pp
@@ -4341,88 +4417,6 @@ bz3V/stuoSMElm1hwO/wFn9zZ3OLiDzHE8W/+aPMRdzBTjUdK3u64ffArIsgk4l9t/eZuH+y
 we7W9I63sBHqY/t/F2Zks7DAdD4/5ZcgXhKTF9R6rzDWSvvFTuEJC1B1b/6sP5dxzoZuAVxP
 z0lwxZ6P94vZzNCIre7jf0u+hF4CxK6szhOE34L9UJb7kk3dJBUv0KPjR95Tj4MuFH/waMRL
 +yfq3AurePRntBdhD6ah7VNW//HgepV3ik27yBA5tY75vxfBAsCfugNHzGOB2dbHBw==</SharedString>
-		<SharedString md5="patec3z2XCrcqPlFVooVag==">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
-Ywi/iRcs6MCbQfvGkIs=</SharedString>
 		<SharedString md5="spIDrsUOAem8Y1CvOUEhcg==">Q1NHUEhTCAAAAAIAKLUv/WBEDQU6APQ8FQAAACEBAADuFijHAwAAfIwN4cHAoOMmwUBBbVeV
 4lVUi8KzdZVSVKF429VZqqoUf1tWdeHCpVUU3rNuOU+qlYuivPjJblXytqqq+SxUget3zVYU
 CgXU+jbrthOleO0qCvfZW3Splgou4H7lqW2hqr93W0u1oPB+vtRTFW6hFE+tnkWzQN1ubkFp
