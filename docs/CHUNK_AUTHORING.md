@@ -135,6 +135,7 @@ A piece is two different kinds of thing, and they are delivered differently:
    | `Moored` | small bob, slight rock along the keel | boats at a dock |
    | `Tumble` | bob, mild rock, slow turn | debris, rubble |
    | `Bird` | the piece's flock circles its centre, nose first, banked | birds |
+   | `Wing` | flaps about its hinge, riding on its bird | a bird's wings (see below) |
 
    Rules every class keeps (tested): **nothing ever changes size**; bob and
    spin are about true vertical whatever the prop's tilt; rock and roll are
@@ -175,8 +176,43 @@ fill the piece's declared box exactly (for Sky Citadel, 256³: tiny pins at the
 bottom corners, the landmark reaching the top). `ChunkLoader` sets every mesh to
 its declared size, so a piece that shrank would be stretched.
 
-**Rigid props only for now.** A bird that flies a path is fine. Flapping wings
-need the wings as separate parts or a rigged mesh, which is a later polish.
+**Moving parts of a prop are their own meshes.** A bird's wings are built
+inside `as_attached(p, "bird wing", hinge)` within the bird's `as_prop` block.
+Each becomes a library mesh placed relative to its bird (`Attach` = the bird's
+row, `Hinge` = the wing's root), and the `Wing` class flaps it about that root
+while the bird flies. Use the same pattern for anything else that moves on
+its prop.
+
+### 7. Interactive things are fixtures — chests, doors, forcefields
+
+**Adopted 2026-09-23, owner-directed (build spec §7.5).** Anything a player
+opens, uses or cannot pass is neither structure nor ambient scenery:
+
+| | Props (convention 6) | Fixtures |
+|---|---|---|
+| **Examples** | crystals, birds, tomes | chests, the vault door, a sealed gate's forcefield |
+| **Drawn by** | each client, no collision | the **server**, with collision, replicated |
+| **State** | none | opened once per party (`Opened`, `OpenedAt`) |
+| **Content** | `Content/Props/<World>.luau` | `Content/Fixtures/<World>.luau` |
+
+**How to deliver them:**
+1. Build each inside `as_fixture(p, KIND, anchor)`, with one `fixture_part(p,
+   Role, hinge?)` block per separately moving mesh. The kinds are in
+   `FixtureCore.KINDS`:
+
+   | Kind | Parts |
+   |---|---|
+   | `CHEST` | `Body` + `Lid` (the lid needs a hinge on its back edge) |
+   | `VAULT` | `Door`, which spins about its own axis |
+   | `FORCEFIELD` | `Field`, which breathes between translucent levels and always blocks |
+
+2. The kit script dedupes fixture parts into the **same library** as the props,
+   named `fix_*`, so the re-import is still two files.
+3. Keep the lock or door face on the side the player approaches from, and keep
+   the parts that stand still (the chest body, the field) solid: they collide.
+   Moving parts do not.
+4. A fixture's loot comes from the world's `Loot` block
+   (`Content/Worlds/<World>.luau`), never from the kit.
 
 ---
 

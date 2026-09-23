@@ -15,6 +15,7 @@ local StateController = require(Controllers.StateController)
 local ProximityController = require(Controllers.ProximityController)
 local ExpeditionController = require(Controllers.ExpeditionController)
 local PartyController = require(Controllers.PartyController)
+local FixtureController = require(Controllers.FixtureController)
 local LocomotionController = require(Controllers.LocomotionController)
 local EventController = require(Controllers.EventController)
 local ThemeController = require(Controllers.ThemeController)
@@ -45,6 +46,8 @@ ProximityController.init()
 -- but a player rejoining mid-expedition gets the banner without a frame gap.
 ExpeditionHud.init()
 ExpeditionController.init()
+-- Chests, the vault and forcefields move on each client (build spec §7.5).
+FixtureController.init()
 -- Before the menu, which draws the party panel from it.
 PartyController.init()
 -- The live palette, before any screen is built: EventController holds what is

@@ -33,6 +33,11 @@ local EventCore = __require("EventCore")
 local AmbienceCore = __require("AmbienceCore")
 local PropCore = __require("PropCore")
 local Props = __require("Props")
+local Fixtures = __require("Fixtures")
+local LootPools = __require("LootPools")
+local FixtureCore = __require("FixtureCore")
+local LootCore = __require("LootCore")
+local KeyCore = __require("KeyCore")
 
 -- === tiny harness ===================================================
 local passed, failed = 0, 0
@@ -159,6 +164,8 @@ do
 			events = Events,
 			scenarios = Scenarios,
 			props = Props,
+			fixtures = Fixtures,
+			lootPools = LootPools,
 		})
 	end)
 	check("the real content bundle passes boot validation", bootOk, tostring(bootErr))
@@ -469,7 +476,15 @@ do
 	local legacy = { SchemaVersion = 1, FatePoints = 900, FateLevel = 4 }
 	local upgraded, steps = ProfileSchema.migrate(legacy, now)
 	check("a v1 profile migrates to the current version", upgraded.SchemaVersion == ProfileSchema.CURRENT)
-	check("exactly one migration ran", steps == 1)
+	check("a v1 profile runs every migration to the current version", steps == ProfileSchema.CURRENT - 1)
+
+	-- v2 -> v3 added vault keys (build spec §7.5).
+	local v2 = { SchemaVersion = 2, FatePoints = 10, Keys = { GOOD_KEY = 1, BAD = "x", [5] = 1, ZERO = 0 } }
+	local v3, v3steps = ProfileSchema.migrate(v2, now)
+	check("a v2 profile gains Keys in one step", v3.SchemaVersion == 3 and v3steps == ProfileSchema.CURRENT - 2)
+	check("migrating keys keeps only well-formed entries",
+		v3.Keys.GOOD_KEY == 1 and v3.Keys.BAD == nil and v3.Keys[5] == nil and v3.Keys.ZERO == nil)
+	check("a new profile starts with no keys", next(ProfileSchema.default(now).Keys) == nil)
 	check("the migration keeps what was there", upgraded.FatePoints == 900 and upgraded.FateLevel == 4)
 	check("the migration adds RedeemedCodes", type(upgraded.RedeemedCodes) == "table")
 	check("the migration adds a full settings table",
@@ -5285,7 +5300,14 @@ do
 		end
 	end
 	check("every prop sits inside its own piece", inside, worst)
-	check("every floating object became a prop (168 from the kit)", count == 168, tostring(count))
+	local wings = 0
+	for _, rows in set.Placements do
+		for _, row in rows do
+			if row.Anim == "Wing" then wings += 1 end
+		end
+	end
+	check("every floating object became a prop (168 from the kit)", count - wings == 168, tostring(count - wings))
+	check("every bird has two wings of its own (15 birds, 30 wings)", wings == 30, tostring(wings))
 
 	-- A placement's rotation is a real rotation: orthonormal, no scale or
 	-- mirror hiding in it (a mirrored prop turns inside out in Roblox).
@@ -5347,7 +5369,7 @@ do
 	local function noScale(m)
 		for key in m do
 			if key ~= "lift" and key ~= "turn" and key ~= "tiltX" and key ~= "tiltZ" and key ~= "orbit"
-				and key ~= "bank" then
+				and key ~= "bank" and key ~= "flap" then
 				return false
 			end
 		end
@@ -5412,6 +5434,161 @@ do
 	local okB, errsB = Schema.validateProps(bad, Chunks, Worlds)
 	check("a stale placement is a boot error (unknown prop, animation, tier)", not okB and #errsB >= 3,
 		tostring(#errsB))
+end
+
+-- === Loot, fixtures and vault keys (build spec §7.5) ===================
+group("Loot, fixtures and vault keys (§7.5)")
+do
+	local loot = GameConfig.Loot
+	local fx = Fixtures.SKY_CITADEL
+	check("Sky Citadel ships its fixtures", fx ~= nil and #fx.Library == 4)
+	local okF, errsF = Schema.validateFixtures(Fixtures, Chunks, Worlds)
+	check("the generated fixtures validate", okF, table.concat(errsF, "; "))
+
+	local kinds, chests, lidsHinged = {}, 0, true
+	for chunkId, rows in fx.Placements do
+		for _, row in rows do
+			kinds[row.Kind] = (kinds[row.Kind] or 0) + 1
+			if row.Kind == "CHEST" then
+				chests += 1
+				for _, part in row.Parts do
+					-- The lid swings on its BACK edge (-Z; the lock faces +Z),
+					-- at its underside -- so it opens, not flips about its middle.
+					if part.Role == "Lid" and not (part.Hinge and part.Hinge[3] < 0 and part.Hinge[2] < 0) then
+						lidsHinged = false
+					end
+				end
+			end
+			if math.abs(row.P[1]) > 128 or math.abs(row.P[3]) > 128 then
+				lidsHinged = false
+			end
+		end
+	end
+	check("five chests, one vault door, one forcefield", chests == 5 and kinds.VAULT == 1 and kinds.FORCEFIELD == 1)
+	check("every chest lid hinges on its back edge, inside its piece", lidsHinged)
+	check("the vault is in the treasury",
+		fx.Placements.SC_VAULT_TURN ~= nil and KeyCore.mapHasVault({ "SC_VAULT_TURN" }, fx))
+	check("the forcefield is on the sealed gate", fx.Placements.SC_CAP_SEALED_GATE ~= nil)
+
+	local staleF = { SKY_CITADEL = { Id = "SKY_CITADEL", Library = { "fix_x" }, Placements = {
+		SC_ENTRY = {
+			{ Kind = "TRAPDOOR", P = { 0, 0, 0 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = {} },
+			{ Kind = "CHEST", P = { 0, 0, 0 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
+				Parts = { { Mesh = "fix_missing", Role = "Body", P = { 0, 0, 0 }, S = { 1, 1, 1 } } } },
+		} } } }
+	local okS, errsS = Schema.validateFixtures(staleF, Chunks, Worlds)
+	check("a stale fixture is a boot error (unknown kind, missing mesh, missing lid)", not okS and #errsS >= 3,
+		table.concat(errsS, "; "))
+
+	-- Pools: empty on purpose, but real and wired.
+	local okL, errsL = Schema.validateLoot(LootPools, Worlds)
+	check("loot pools and every world's Loot block validate", okL, table.concat(errsL, "; "))
+	local world = Worlds.SKY_CITADEL
+	check("Sky Citadel names a chest, vault and boss pool", LootPools[world.Loot.Chest] ~= nil
+		and LootPools[world.Loot.Vault] ~= nil and LootPools[world.Loot.Boss] ~= nil)
+	check("the vault key drops at 20% before modifiers", world.Loot.VaultKey.DropChance == 0.20)
+	local badPools = { BAD = { Id = "BAD", WorldId = "SKY_CITADEL", Rolls = 0,
+		Entries = { { ItemId = "lowercase", Weight = 0, Min = 3, Max = 1 } } } }
+	local okB, errsB = Schema.validateLoot(badPools, {})
+	check("a malformed pool is a boot error", not okB and #errsB >= 4, table.concat(errsB, "; "))
+
+	-- Rolling.
+	local empty = { Id = "E", WorldId = "W", Rolls = 3, Entries = {} }
+	check("an empty pool rolls nothing (the slot, until pools are designed)", #LootCore.roll(empty, lcg(1)) == 0)
+	local pool = { Id = "P", WorldId = "W", Rolls = 4, Entries = {
+		{ ItemId = "GEM", Weight = 1, Min = 2, Max = 5 }, { ItemId = "COIN", Weight = 3 } } }
+	local inRange, draws = true, 0
+	for seed = 1, 200 do
+		for _, d in LootCore.roll(pool, lcg(seed)) do
+			draws += 1
+			if d.ItemId == "GEM" and (d.Count < 2 or d.Count > 5) then inRange = false end
+			if d.ItemId == "COIN" and d.Count ~= 1 then inRange = false end
+		end
+	end
+	check("each roll draws Rolls items, each within its count range", inRange and draws == 800, tostring(draws))
+	local shares = LootCore.rollForAll(pool, { 11, 22, 33 }, function(userId) return lcg(userId * 7919) end)
+	local function sig(list)
+		local out = {}
+		for _, d in list do table.insert(out, d.ItemId .. d.Count) end
+		return table.concat(out, ",")
+	end
+	check("every party member gets their own share", shares[11] and shares[22] and shares[33]
+		and not (sig(shares[11]) == sig(shares[22]) and sig(shares[22]) == sig(shares[33])))
+
+	-- Keys.
+	check("a modifier moves the key chance (20% - 5% = 15%)",
+		math.abs(KeyCore.dropChance(0.2, { { KeyChanceDelta = -0.05 } }) - 0.15) < 1e-9)
+	check("no modifiers leaves the base chance", KeyCore.dropChance(0.2, {}) == 0.2)
+	check("the chance is clamped to 0..1", KeyCore.dropChance(0.2, { { KeyChanceDelta = -1 } }) == 0
+		and KeyCore.dropChance(0.9, { { KeyChanceDelta = 0.5 } }) == 1)
+	check("no key is offered in a map without a vault", not KeyCore.mapHasVault({ "SC_ENTRY", "SC_BOSS_CLEARING" }, fx)
+		and not KeyCore.mapHasVault({ "SC_VAULT_TURN" }, nil))
+	local keys = {}
+	local first = KeyCore.grant(keys, "SKY_CITADEL_VAULT_KEY", loot.MaxKeysPerKind)
+	local second = KeyCore.grant(keys, "SKY_CITADEL_VAULT_KEY", loot.MaxKeysPerKind)
+	check("a player holds at most one of each key", first and not second and keys.SKY_CITADEL_VAULT_KEY == 1)
+	check("a different kind of key is its own slot", KeyCore.grant(keys, "OTHER_VAULT_KEY", loot.MaxKeysPerKind))
+	check("using a key takes it to zero", KeyCore.spend(keys, "SKY_CITADEL_VAULT_KEY")
+		and KeyCore.count(keys, "SKY_CITADEL_VAULT_KEY") == 0 and keys.SKY_CITADEL_VAULT_KEY == nil)
+	check("with no key the vault stays shut", not KeyCore.spend(keys, "SKY_CITADEL_VAULT_KEY"))
+	check("a vault consumes keys by a known rule",
+		loot.VaultConsumes == "OPENER" or loot.VaultConsumes == "ALL_HOLDERS")
+
+	-- The treasury is in about one map in five.
+	local withVault, built = 0, 0
+	for trial = 1, 400 do
+		local okA, layout = ChunkCore.assembleWithRetry(Chunks, {
+			WorldId = "SKY_CITADEL", PathLength = GameConfig.Expedition.PathLength,
+			BranchLength = GameConfig.Expedition.BranchLength, MaxRepeats = GameConfig.Expedition.MaxRepeats,
+			IncludeSide = true,
+		}, function(a) return lcg(trial * 7717 + a * 31) end, 5)
+		if okA then
+			built += 1
+			for _, c in layout.Chunks do
+				if c.ChunkId == "SC_VAULT_TURN" then withVault += 1 break end
+			end
+		end
+	end
+	local share = withVault / math.max(built, 1)
+	check("the treasury appears in about one map in five (12-28%)", share >= 0.12 and share <= 0.28,
+		string.format("%.1f%% of %d maps", share * 100, built))
+	local okSC, errsSC = Schema.validateChunks({ X = {
+		Id = "X", WorldId = "W", Role = "BOSS", AssetKey = "VV_CHUNK_ENTRY", Weight = 1, SpawnChance = 1.5,
+		SizeX = 1, SizeY = 1, SizeZ = 1, Sockets = {} } }, AssetManifest)
+	local both = 0
+	for _, e in errsSC do
+		if string.find(e, "SpawnChance", 1, true) then both += 1 end
+	end
+	check("SpawnChance is refused out of range and on an arena", not okSC and both >= 2, table.concat(errsSC, "; "))
+
+	-- How opened fixtures move.
+	local f = loot.Fixture
+	check("a lid starts shut and ends open", FixtureCore.lidAngle(0, f) == 0
+		and math.abs(FixtureCore.lidAngle(f.LidSeconds * 3, f) + f.LidAngle) < 1e-9)
+	check("the vault door spins its turns, then sinks in",
+		math.abs(FixtureCore.doorSpin(f.DoorSeconds, f) - math.pi * 2 * f.DoorTurns) < 1e-9
+		and FixtureCore.doorRecess(f.DoorSeconds * 0.5, f) == 0
+		and math.abs(FixtureCore.doorRecess(f.DoorSeconds + f.DoorRecessSeconds, f) - f.DoorRecess) < 1e-9)
+	local within = true
+	for t = 0, 20, 0.13 do
+		local tr = FixtureCore.fieldTransparency(t, 0.3, f)
+		if tr < f.MinTransparency - 1e-9 or tr > f.MaxTransparency + 1e-9 then within = false end
+	end
+	check("the forcefield breathes but never vanishes or goes solid",
+		within and f.MinTransparency > 0 and f.MaxTransparency < 1)
+	check("only chests and vaults take a prompt", FixtureCore.OPENABLE.CHEST and FixtureCore.OPENABLE.VAULT
+		and not FixtureCore.OPENABLE.FORCEFIELD)
+
+	-- Wings.
+	check("a bird's two wings rise together",
+		PropCore.wingAngle(0.3, -1) > 0 and PropCore.wingAngle(0.3, 1) < 0
+		and PropCore.wingAngle(0.3, -1) == -PropCore.wingAngle(0.3, 1))
+	local badWing = { SKY_CITADEL = { Id = "SKY_CITADEL", Library = { "w" }, Placements = { SC_ENTRY = {
+		{ Prop = "w", Anim = "Float", Tier = 1, P = { 0, 0, 0 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, S = { 1, 1, 1 } },
+		{ Prop = "w", Anim = "Wing", Tier = 1, P = { 0, 0, 0 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, S = { 1, 1, 1 },
+			Attach = 1, Hinge = { 0, 0, 0 } } } } } }
+	local okW = Schema.validateProps(badWing, Chunks, Worlds)
+	check("a wing on anything but a bird is a boot error", not okW)
 end
 
 -- === summary ========================================================

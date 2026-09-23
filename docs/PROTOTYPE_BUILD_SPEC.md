@@ -134,7 +134,8 @@ ServerStorage/
 0.  Server kind -> ReplicatedStorage.Luckbound:SetAttribute("ServerKind")  (§7.2)
 6.  FateSystem.init(SaveSystem, ProgressionSystem, EventSystem)
 6b. PartySystem.init()                                                   (§7.2)
-7.  ExpeditionSystem.init(SaveSystem, ProgressionSystem, PartySystem)
+6c. LootSystem.init(SaveSystem)                                          (§7.5)
+7.  ExpeditionSystem.init(SaveSystem, ProgressionSystem, PartySystem, LootSystem)
 8.  DebugSystem.init(FateSystem, ExpeditionSystem)   -- developer commands
 9.  HubBuilder.build()        -- lighting always; geometry only if absent
 10. ExpeditionSystem.bindGatePrompt()  -- attaches to geometry step 9 creates
@@ -453,6 +454,7 @@ Created by `Core/Net.luau` and nowhere else.
 | `Player_Ready` | RemoteEvent | C→S | *(none)* | once per join; a second is ignored |
 | `Party_Request` | RemoteEvent | C→S | `{Action, TargetUserId?}` | `PartyCore.parseRequest` (known action, integer UserId) + target must be in this server + 40/min (§7.2) |
 | `Party_Sync` | RemoteEvent | S→C | party snapshot, invites, players here, `Message?` | — |
+| `Loot_Result` | RemoteEvent | S→C | `{Source, Drops, KeyGained?, KeySpent?, Message?}` | per player; opening is a server-side `ProximityPrompt` (§7.5) |
 | `Debug_Command` | RemoteEvent | C→S | `{Name, Args}` | **Studio or place creator, + `Debug.AllowCommands`** |
 | `Debug_Reply` | RemoteEvent | S→C | `{Ok, Text}` | — |
 
@@ -640,6 +642,7 @@ Four lessons worth keeping:
 | **§7.2** | Parties, and expeditions as their own server | 2026-09-22 |
 | **§7.3** | The scenario layer | 2026-09-22 |
 | **§7.4** | Caps: sealing the sockets a layout leaves open | 2026-09-23 |
+| **§7.5** | Loot, fixtures and vault keys | 2026-09-23 |
 
 **Two branches once claimed §7.2 simultaneously**, each green on its own, and
 the collision was caught by hand during a merge. An amendment number is
@@ -647,7 +650,7 @@ allocated by adding a row here in the same change that writes the amendment.
 
 Listed so no agent "helpfully" adds them:
 
-Combat of any kind · enemies · bosses · loot · inventory · equipment · the Discovery Book · ~~expedition entry or exit~~ *(see §7.1)* · world modifiers · AFK/idle · trading · leaderboards · monetisation · Fatebreaks beyond the announcement banner · audio beyond a single roll SFX.
+Combat of any kind · enemies · bosses · loot *(its machinery, chests, the vault and its key: see §7.5; what drops is still undecided)* · inventory *(except vault keys, §7.5)* · equipment · the Discovery Book · ~~expedition entry or exit~~ *(see §7.1)* · world modifiers · AFK/idle · trading · leaderboards · monetisation · Fatebreaks beyond the announcement banner · audio beyond a single roll SFX.
 
 If a task seems to require one of these, the task is wrong. Raise it; do not implement it.
 
@@ -1006,3 +1009,71 @@ the finished geometry rather than from the assembler's own bookkeeping, and
 assembly still succeeds on at least 190 of 200 seeds.
 
 ---
+
+---
+
+## 7.5 Amendment: loot, fixtures and vault keys, opened 2026-09-23
+
+**Owner-directed**, after a Studio walk of Sky Citadel: chests that can be
+opened, a forcefield that reads as a forcefield, and a vault door that spins
+open for a key that drops from the boss. The owner answered the design
+questions directly, and this amendment records the answers as the rules.
+
+### What was opened, and what was not
+
+| | |
+|---|---|
+| ✅ **Fixtures**: interactive, collidable things placed by the server (chests, a vault door, a forcefield) | `Content/Fixtures`, `LootSystem`, `FixtureController`, `CHUNK_AUTHORING.md` convention 7 |
+| ✅ **Loot machinery**: pools, a roll per player, the network fact that reports it | `Content/LootPools`, `LootCore`, remote `Loot_Result` |
+| ✅ **Vault keys**, the one thing a player carries: saved to the profile (schema v3, `Keys`) | `KeyCore`, `ProfileSchema` |
+| ✅ **Chunk `SpawnChance`**: a piece in only some maps | `ChunkCore`: the treasury is in about one map in five |
+| ✅ A **boss stand-in**: "the boss is defeated" = a party member first stands in the arena | `GameConfig.Loot.BossDefeatStandIn` |
+| ❌ **What drops.** Every pool ships with empty `Entries` | the owner deferred the contents until the loot pools are designed |
+| ❌ What an **ItemId** is (inventory item, currency) and where it is stored | `docs/RESERVED.md`; `LootSystem.grantDrops` is the one seam |
+| ❌ Combat, enemies, a real **boss** | still excluded; the stand-in is replaced when bosses exist |
+| ❌ **World modifiers** | still excluded; `KeyCore.dropChance` takes their list so they can plug in |
+
+### The rules (owner, 2026-09-23)
+
+1. **Once per party, loot for each.** A chest, the vault and the boss open once
+   for the party on that map. Every member present gets their **own** roll, so
+   two players at one chest get different loot.
+2. **The vault needs the world's key.** The player who uses it must hold one.
+   `GameConfig.Loot.VaultConsumes` says whose key is spent: `ALL_HOLDERS`
+   (default: the party's key, everyone present holding one) or `OPENER`.
+3. **The key drops from the boss**, at the world's `Loot.VaultKey.DropChance`
+   (20% for Sky Citadel). There is **one roll per party**; if it hits, every
+   member present gets a key.
+4. **No vault, no key.** The key is only rolled in a map that has a VAULT
+   fixture in it (`KeyCore.mapHasVault`).
+5. **The vault itself is in about one map in five** (`SpawnChance = 0.2` on
+   `SC_VAULT_TURN`). A piece that wins its seeded draw is then strongly
+   preferred, so "one in five" means placed, not merely eligible. A test
+   measures it at 20.2% over 400 maps.
+6. **Keys are kept.** They are saved, carried home and brought back.
+   **At most one of each kind** (`MaxKeysPerKind = 1`); a second find leaves
+   you with one. Using it takes you to zero.
+7. **Modifiers move the key chance, never the vault's.** A hypothetical
+   "Shattered" modifier with `KeyChanceDelta = -0.05` turns 20% into 15%.
+
+### Trust (CLAUDE.md rule 5)
+
+- **No request remote.** Opening is a `ProximityPrompt`, whose `Triggered` fires
+  on the server with the player, the same as the Gate and the return portal.
+- **The server re-checks every trigger:** the player is a member of that map's
+  group, they are within `PromptDistance + PromptSlackStuds`, and the fixture is
+  not already open.
+- **Every roll** (loot, the key) is drawn on `LootSystem`'s own `Random`.
+- **The client only animates.** It reads `Opened`/`OpenedAt`, which the server
+  sets, and moves the lid or door locally. Moving parts do not collide on the
+  server, so a local pose can never open a path.
+
+### Why fixtures are not props
+
+Props (convention 6) are drawn by each client, with no collision and no state.
+A chest must open once for the party, the vault must check a key, and a
+forcefield must block, and all three are server facts. So fixtures get their
+own content (`Content/Fixtures/<World>.luau`, generated by the kit script) and
+their own system. They share the prop library file, so a re-import is still
+two files.
+

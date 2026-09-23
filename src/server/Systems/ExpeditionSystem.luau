@@ -2,11 +2,11 @@
 -- Expedition entry, generation and return. Build spec §7.1, and §7.2 for
 -- parties and expeditions as their own server.
 --
--- WHAT THIS DELIBERATELY IS NOT: there is no combat, no loot, no enemies and
--- no boss here. Build spec §7 excludes all of those and they stay excluded.
--- This system answers one question and no others -- can a player (or a
--- party) roll a world, walk through the portal, and arrive in a map that was
--- generated for them? Everything past that is still Phase 2 proper.
+-- WHAT THIS DELIBERATELY IS NOT: there is no combat, no enemies and no boss
+-- here; build spec §7 still excludes them. Loot, chests, the vault and its key
+-- (§7.5) are LootSystem's: this file hands it each map as it is built, and
+-- otherwise answers one question -- can a player (or a party) roll a world,
+-- walk through the portal, and arrive in a map that was generated for them?
 --
 -- ExpeditionCore owns every decision; this file owns remotes, geometry,
 -- teleports and timers. If you find yourself writing an `if worldId ==` in
@@ -68,6 +68,7 @@ local ExpeditionSystem = {}
 local SaveSystem
 local ProgressionSystem
 local PartySystem
+local LootSystem
 
 -- One map and everyone on it.
 type Group = {
@@ -405,6 +406,12 @@ local function newGroup(
 		Arrivals = 0,
 	}
 	table.insert(groups, group)
+	-- Chests, the vault, the forcefield, and the boss stand-in (§7.5). Handed
+	-- the group's own Members table, so whoever is on the map when something
+	-- opens is who shares it.
+	if LootSystem then
+		LootSystem.attach(built.Stage, worldId, group.Members)
+	end
 	return group
 end
 
@@ -1041,10 +1048,16 @@ function ExpeditionSystem.startHost(): ()
 	end)
 end
 
-function ExpeditionSystem.init(saveSystem: any, progressionSystem: any, partySystem: any?): ()
+function ExpeditionSystem.init(
+	saveSystem: any,
+	progressionSystem: any,
+	partySystem: any?,
+	lootSystem: any?
+): ()
 	SaveSystem = saveSystem
 	ProgressionSystem = progressionSystem
 	PartySystem = partySystem
+	LootSystem = lootSystem
 
 	-- Lighting is a shared service. The server never touches it -- each client
 	-- dresses its own screen from the Environment in Expedition_Started, which

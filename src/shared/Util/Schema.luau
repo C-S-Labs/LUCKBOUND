@@ -7,6 +7,7 @@ local Constants = require(script.Parent.Parent.Core.Constants)
 local EventCore = require(script.Parent.Parent.Core.EventCore)
 local AmbienceCore = require(script.Parent.Parent.Core.AmbienceCore)
 local PropCore = require(script.Parent.Parent.Core.PropCore)
+local FixtureCore = require(script.Parent.Parent.Core.FixtureCore)
 
 local Schema = {}
 
@@ -27,6 +28,9 @@ local WORLD_SPEC: { [string]: FieldSpec } = {
 	Enemies = field("table"),
 	BossId = field("string", true),
 	LootTableId = field("string", true),
+	-- Build spec §7.5: which pool each source rolls, and the world's vault key.
+	-- Supersedes LootTableId for a world that adopts it.
+	Loot = field("table", true),
 	DiscoveryTableId = field("string", true),
 	Modifiers = field("table"),
 	ModifierOverrides = field("table", true),
@@ -322,6 +326,23 @@ function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boole
 		end
 		if type(chunk.Weight) ~= "number" or chunk.Weight <= 0 then
 			table.insert(errors, `{label}: Weight must be positive`)
+		end
+		if
+			chunk.SpawnChance ~= nil
+			and (
+				type(chunk.SpawnChance) ~= "number"
+				or chunk.SpawnChance <= 0
+				or chunk.SpawnChance > 1
+			)
+		then
+			table.insert(errors, `{label}: SpawnChance must be in (0, 1]`)
+		end
+		if
+			chunk.SpawnChance ~= nil
+			and (chunk.Role == "ENTRY" or chunk.Role == "BOSS" or chunk.Role == "CAP")
+		then
+			-- A map cannot go without its entry, its arena or its dead ends.
+			table.insert(errors, `{label}: a {chunk.Role} chunk cannot have a SpawnChance`)
 		end
 		for _, dim in { "SizeX", "SizeY", "SizeZ" } do
 			if type(chunk[dim]) ~= "number" or chunk[dim] <= 0 then
@@ -1053,6 +1074,18 @@ function Schema.validateProps(props: any, chunks: any, worlds: any): (boolean, {
 				if type(row.Tier) ~= "number" or row.Tier < 1 or row.Tier > 3 then
 					table.insert(errors, `{at}: Tier must be 1, 2 or 3`)
 				end
+				-- A wing rides on a bird placed before it, and nothing else rides.
+				if row.Anim == "Wing" then
+					local body = type(row.Attach) == "number" and rows[row.Attach]
+					if not body or row.Attach >= i or body.Anim ~= "Bird" then
+						table.insert(errors, `{at}: a Wing must Attach to an earlier Bird row`)
+					end
+					if type(row.Hinge) ~= "table" or #row.Hinge ~= 3 then
+						table.insert(errors, `{at}: a Wing needs a Hinge of 3 numbers`)
+					end
+				elseif row.Attach ~= nil then
+					table.insert(errors, `{at}: only a Wing may Attach`)
+				end
 				if
 					type(row.P) ~= "table"
 					or #row.P ~= 3
@@ -1070,6 +1103,156 @@ function Schema.validateProps(props: any, chunks: any, worlds: any): (boolean, {
 						end
 					end
 				end
+			end
+		end
+	end
+	return #errors == 0, errors
+end
+
+--- Validates every world's fixtures (CHUNK_AUTHORING.md convention 7). Like
+--- props the file is generated, so the likely fault is a stale one.
+function Schema.validateFixtures(fixtures: any, chunks: any, worlds: any): (boolean, { string })
+	local errors = {}
+	local function vec(t: any, n: number): boolean
+		if type(t) ~= "table" or #t ~= n then
+			return false
+		end
+		for _, v in t do
+			if type(v) ~= "number" then
+				return false
+			end
+		end
+		return true
+	end
+	for worldId, set in fixtures do
+		local label = `Fixtures '{worldId}'`
+		if worlds[worldId] == nil then
+			table.insert(errors, `{label}: no such world`)
+		end
+		local library = {}
+		for _, name in set.Library or {} do
+			library[name] = true
+		end
+		for chunkId, rows in set.Placements or {} do
+			local chunk = chunks[chunkId]
+			if chunk == nil then
+				table.insert(errors, `{label}: placements for unknown chunk '{chunkId}'`)
+			elseif chunk.WorldId ~= worldId then
+				table.insert(errors, `{label}: chunk '{chunkId}' belongs to {chunk.WorldId}`)
+			end
+			for i, row in rows do
+				local at = `{label}.{chunkId}[{i}]`
+				local roles = FixtureCore.KINDS[row.Kind]
+				if not roles then
+					table.insert(errors, `{at}: unknown fixture kind '{tostring(row.Kind)}'`)
+					continue
+				end
+				if not vec(row.P, 3) or not vec(row.R, 9) then
+					table.insert(errors, `{at}: P and R must hold 3 and 9 numbers`)
+				end
+				local seen = {}
+				for _, part in row.Parts or {} do
+					if not roles[part.Role] then
+						table.insert(
+							errors,
+							`{at}: a {row.Kind} has no '{tostring(part.Role)}' part`
+						)
+					end
+					seen[part.Role] = true
+					if not library[part.Mesh] then
+						table.insert(
+							errors,
+							`{at}: mesh '{tostring(part.Mesh)}' is not in the library`
+						)
+					end
+					if not vec(part.P, 3) or not vec(part.S, 3) then
+						table.insert(errors, `{at}: a part's P and S must hold 3 numbers each`)
+					end
+					if part.Hinge ~= nil and not vec(part.Hinge, 3) then
+						table.insert(errors, `{at}: a Hinge must hold 3 numbers`)
+					end
+				end
+				for role in roles do
+					if not seen[role] then
+						table.insert(errors, `{at}: a {row.Kind} needs its '{role}' part`)
+					end
+				end
+				if row.Kind == "CHEST" then
+					for _, part in row.Parts or {} do
+						if part.Role == "Lid" and part.Hinge == nil then
+							table.insert(errors, `{at}: a chest lid needs a Hinge`)
+						end
+					end
+				end
+			end
+		end
+	end
+	return #errors == 0, errors
+end
+
+--- Validates loot pools and every world's Loot block (build spec §7.5).
+--- Empty pools are valid -- the owner deferred their contents.
+function Schema.validateLoot(pools: any, worlds: any): (boolean, { string })
+	local errors = {}
+	for key, pool in pools do
+		local label = `Loot pool '{key}'`
+		if pool.Id ~= key then
+			table.insert(errors, `{label}: Id must match its registry key`)
+		end
+		if worlds[pool.WorldId] == nil then
+			table.insert(errors, `{label}: unknown world '{tostring(pool.WorldId)}'`)
+		end
+		if type(pool.Rolls) ~= "number" or pool.Rolls < 1 or pool.Rolls % 1 ~= 0 then
+			table.insert(errors, `{label}: Rolls must be a whole number, at least 1`)
+		end
+		if type(pool.Entries) ~= "table" then
+			table.insert(errors, `{label}: Entries must be a list (it may be empty)`)
+			continue
+		end
+		for i, e in pool.Entries do
+			local at = `{label}.Entries[{i}]`
+			if type(e.ItemId) ~= "string" or not string.match(e.ItemId, "^[A-Z][A-Z0-9_]*$") then
+				table.insert(errors, `{at}: ItemId must be UPPER_SNAKE`)
+			end
+			if type(e.Weight) ~= "number" or e.Weight <= 0 then
+				table.insert(errors, `{at}: Weight must be positive`)
+			end
+			local lo, hi = e.Min or 1, e.Max or e.Min or 1
+			if type(lo) ~= "number" or type(hi) ~= "number" or lo < 1 or hi < lo then
+				table.insert(errors, `{at}: need 1 <= Min <= Max`)
+			end
+		end
+	end
+	for worldId, world in worlds do
+		local loot = world.Loot
+		if loot == nil then
+			continue
+		end
+		local label = `World '{worldId}'.Loot`
+		for _, source in { "Chest", "Vault", "Boss" } do
+			local id = loot[source]
+			if id ~= nil then
+				local pool = pools[id]
+				if pool == nil then
+					table.insert(errors, `{label}.{source}: no loot pool '{tostring(id)}'`)
+				elseif pool.WorldId ~= worldId then
+					table.insert(errors, `{label}.{source}: pool '{id}' belongs to {pool.WorldId}`)
+				end
+			end
+		end
+		local key = loot.VaultKey
+		if key ~= nil then
+			if type(key.Id) ~= "string" or not string.match(key.Id, "^[A-Z][A-Z0-9_]*$") then
+				table.insert(errors, `{label}.VaultKey: Id must be UPPER_SNAKE`)
+			end
+			if type(key.Name) ~= "string" then
+				table.insert(errors, `{label}.VaultKey: needs a Name`)
+			end
+			if type(key.DropChance) ~= "number" or key.DropChance < 0 or key.DropChance > 1 then
+				table.insert(errors, `{label}.VaultKey: DropChance must be in [0, 1]`)
+			end
+			if loot.Vault == nil then
+				table.insert(errors, `{label}: a VaultKey with no Vault pool opens onto nothing`)
 			end
 		end
 	end
@@ -1160,6 +1343,18 @@ local VALIDATORS: { { Kind: string, Required: boolean?, Run: (any) -> (boolean, 
 		Kind = "props",
 		Run = function(c)
 			return Schema.validateProps(c.props, c.chunks or {}, c.worlds)
+		end,
+	},
+	{
+		Kind = "fixtures",
+		Run = function(c)
+			return Schema.validateFixtures(c.fixtures, c.chunks or {}, c.worlds)
+		end,
+	},
+	{
+		Kind = "lootPools",
+		Run = function(c)
+			return Schema.validateLoot(c.lootPools, c.worlds)
 		end,
 	},
 }

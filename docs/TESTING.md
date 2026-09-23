@@ -676,6 +676,38 @@ Live since the re-import (structure-only meshes, prop library in the repo).
    never none.
 6. **`/leave`.** ✅ Pass: no props left behind in the hub.
 
+### Test T — chests, the vault and its key ⭐ NEW (10 min) — **after the re-import**
+
+Needs the new structure ids and the new prop library (with its `fix_*` meshes)
+live. Turn on `/fly` for speed.
+
+1. **Walk up to a chest** (the lookout on a branch, or the treasury).
+   ✅ Pass: an **OPEN** prompt. Hold it: the lid swings back on its hinge, and
+   a toast says *"The chest is empty -- for now."* (pools are empty by design).
+   The prompt is gone and the chest stays open.
+2. **A second player in the party** (3-client Studio session, same party)
+   walks to the same chest. ✅ Pass: already open, no prompt. Both players got
+   the toast when it opened (each their own roll).
+3. **The sealed gate** (a dead end). ✅ Pass: the forcefield in front of the
+   doors is see-through and slowly brightens and fades. You cannot walk
+   through it.
+4. **Birds in the aviary.** ✅ Pass: wings beat together while each bird
+   circles. No wing floats loose from its bird.
+5. **Find a map with the treasury** (about one in five; reroll until the
+   `/leave`/roll loop shows `SC_VAULT_TURN` in the map summary, or look for the
+   round door). **Try the vault first.** ✅ Pass: **UNLOCK — Sky Citadel Vault
+   Key**; holding it says *"Locked. It needs a Sky Citadel Vault Key."*
+6. **Walk into the boss arena** (the stand-in for defeating the boss).
+   ✅ Pass: in a treasury map, 1 time in 5 every party member gets *"You found
+   a Sky Citadel Vault Key!"*. **In a map without the treasury, never.**
+   To test the key without luck, set `Loot.VaultKey.DropChance = 1` in
+   `Content/Worlds/SkyCitadel.luau` for the session.
+7. **Go back and unlock the vault.** ✅ Pass: the round door spins twice, then
+   sinks into the wall; *"Sky Citadel Vault Key used. The vault opens."* Nobody
+   in the party can open it again.
+8. **`/leave` with an unused key, then come back.** ✅ Pass (published place):
+   the key is still yours. You never hold two.
+
 ### Test E — a tampered client is rejected (1 min)
 
 From the **client** console:

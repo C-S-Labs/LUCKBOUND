@@ -169,7 +169,9 @@ local Constants = {
 
 	-- v2 added RedeemedCodes and Settings, for the hub menu's Codes and
 	-- Settings panels. ProfileSchema.MIGRATIONS[1] fills both in.
-	CURRENT_SCHEMA_VERSION = 2,
+	-- v3 added Keys, the vault keys a player carries (build spec §7.5).
+	-- ProfileSchema.MIGRATIONS[2] fills it in.
+	CURRENT_SCHEMA_VERSION = 3,
 }
 
 return deepFreeze(Constants)

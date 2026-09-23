@@ -47,6 +47,11 @@ local REMOTES = {
 	-- together from a stream of deltas.
 	"Party_Request", -- C->S, { Action, TargetUserId? }; PartyCore.parseRequest + 40/min
 	"Party_Sync", -- S->C, party snapshot + invites + players here + optional Message
+	-- Loot, fixtures and vault keys (build spec §7.5). Opening a chest or the
+	-- vault needs NO request remote: the fixture's ProximityPrompt.Triggered
+	-- fires on the server with the player, as the Gate and return portal do.
+	-- This one fact tells each player what THEY got.
+	"Loot_Result", -- S->C, { Source, Drops, KeyGained?, KeySpent?, Message? }
 	-- Developer tooling. These two always EXIST but are inert unless
 	-- GameConfig.Debug.AllowCommands is true -- DebugSystem does not connect a
 	-- handler otherwise, so an unguarded remote is not left listening.

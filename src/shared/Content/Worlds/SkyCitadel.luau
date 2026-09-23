@@ -14,13 +14,29 @@
 -- PLACEHOLDER in the manifest, so the expedition builds as blockout until the
 -- FBXs are uploaded.
 --
--- Enemies, boss and loot tables are still empty -- the kit makes the world
--- enterable, not playable. The Environment below predates the art direction;
+-- Enemies and the boss are still absent, and the loot pools are empty slots
+-- (build spec §7.5) -- the kit makes the world enterable, not yet playable.
+-- The Environment below predates the art direction;
 -- it happens to suit it (warm morning sun above the weather) and is left as-is
 -- until a piece has been seen in Studio.
 return {
 	Id = "SKY_CITADEL",
 	Name = "Sky Citadel",
+	-- LOOT (build spec §7.5). Which pool each source rolls, and the world's
+	-- vault key. Pools live in Content/LootPools/SkyCitadel.luau (empty until
+	-- the loot pools are designed). The key drops from the boss -- until
+	-- bosses exist, on first reaching the arena (GameConfig.Loot
+	-- .BossDefeatStandIn) -- only in a map with the treasury in it.
+	Loot = {
+		Chest = "SC_CHEST",
+		Vault = "SC_VAULT",
+		Boss = "SC_BOSS",
+		VaultKey = {
+			Id = "SKY_CITADEL_VAULT_KEY",
+			Name = "Sky Citadel Vault Key",
+			DropChance = 0.20,
+		},
+	},
 	Rarity = "EPIC",
 	RollWeight = 400, -- canonical full-game weight, build spec §3.1
 	EnabledInPhase = 1,

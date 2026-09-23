@@ -16,6 +16,8 @@ local Worlds = require(Root.Content.Worlds)
 local AssetManifest = require(Root.Content.AssetManifest)
 local Chunks = require(Root.Content.Chunks)
 local Props = require(Root.Content.Props)
+local Fixtures = require(Root.Content.Fixtures)
+local LootPools = require(Root.Content.LootPools)
 local Crossroads = require(Root.Content.Hub.Crossroads)
 local Menu = require(Root.Content.Hub.Menu)
 local Cinematics = require(Root.Content.Hub.Cinematics)
@@ -35,6 +37,7 @@ local HubBuilder = require(Systems.HubBuilder)
 local HubUISystem = require(Systems.HubUISystem)
 local LedgerSystem = require(Systems.LedgerSystem)
 local PartySystem = require(Systems.PartySystem)
+local LootSystem = require(Systems.LootSystem)
 
 -- Boot progress is printed at every stage. A server that stops partway now
 -- names the step it stopped on, instead of going silent and leaving you to
@@ -72,6 +75,8 @@ Schema.validateAll({
 	events = Events,
 	scenarios = Scenarios,
 	props = Props,
+	fixtures = Fixtures,
+	lootPools = LootPools,
 })
 
 do
@@ -123,8 +128,12 @@ FateSystem.init(SaveSystem, ProgressionSystem, EventSystem)
 -- and PartySystem needs nothing from anyone.
 step("PartySystem")
 PartySystem.init()
+-- Loot, fixtures and vault keys (build spec §7.5). Before ExpeditionSystem,
+-- which hands it every map it builds.
+step("LootSystem")
+LootSystem.init(SaveSystem)
 step("ExpeditionSystem")
-ExpeditionSystem.init(SaveSystem, ProgressionSystem, PartySystem)
+ExpeditionSystem.init(SaveSystem, ProgressionSystem, PartySystem, LootSystem)
 -- The hub menu's server half: travel, codes and settings. It takes
 -- ExpeditionSystem only to ask one question -- "is this player in the hub?"
 -- -- which is also the menu's entire visibility rule.

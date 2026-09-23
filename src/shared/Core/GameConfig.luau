@@ -877,6 +877,49 @@ local GameConfig = {
 			-- One lap of the flock. Bob must stay <= the generator's BIRD_BOB
 			-- (0.6), the clearance every bird's circle was proven with.
 			Bird = { Period = 36, Bob = 0.5, Bank = 0.25 },
+			-- A wingbeat: radians each way from the modelled pose, and seconds.
+			Wing = { Amplitude = 0.45, Period = 0.7 },
+		},
+	},
+	-- Loot, fixtures and vault keys (build spec §7.5, owner-directed
+	-- 2026-09-23). What drops is content (Content/LootPools); these are the
+	-- rules around it.
+	Loot = {
+		-- Keys a player may hold of any one kind. Using one takes it to zero.
+		MaxKeysPerKind = 1,
+		-- Until bosses exist (still §7-excluded), "the boss is defeated" means
+		-- a party member first stands in the arena. Turn off to make the key
+		-- and the boss pool unreachable, as they will be until then.
+		BossDefeatStandIn = true,
+		-- Seconds between checks for someone standing in the arena, how much of
+		-- the arena piece's width counts as "in it", and how far below its
+		-- deck a player still counts (a jump off the edge does not).
+		ArenaCheckSeconds = 0.5,
+		ArenaRadiusFraction = 0.45,
+		ArenaBelowStuds = 20,
+		-- Who gives up a key when the vault opens: "OPENER" (only the player
+		-- who used it) or "ALL_HOLDERS" (every member present holding one --
+		-- the party opened it with the party's key). Everyone present gets
+		-- their own loot either way.
+		VaultConsumes = "ALL_HOLDERS",
+		-- Prompts on chests and the vault.
+		PromptDistance = 10,
+		PromptHoldSeconds = 0.6,
+		-- The server re-checks distance with this much slack for lag.
+		PromptSlackStuds = 6,
+		-- A locked vault says so at most this often per player.
+		RefusalCooldownSeconds = 1,
+		-- How opened and shimmering fixtures move (FixtureCore).
+		Fixture = {
+			LidAngle = 1.9, -- radians the lid swings back
+			LidSeconds = 0.8,
+			DoorTurns = 2, -- the vault's dial spins home twice
+			DoorSeconds = 2.4,
+			DoorRecess = 2.5, -- studs it then sinks into its wall
+			DoorRecessSeconds = 0.8,
+			PulsePeriod = 3.2, -- the forcefield's slow breath
+			MinTransparency = 0.35,
+			MaxTransparency = 0.7,
 		},
 	},
 }
