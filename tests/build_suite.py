@@ -28,6 +28,7 @@ PURE_MODULES = [
     ("ExpeditionCore",   "src/shared/Core/ExpeditionCore.luau"),
     ("PartyCore",        "src/shared/Core/PartyCore.luau"),
     ("AmbienceCore",     "src/shared/Core/AmbienceCore.luau"),
+    ("PropCore",         "src/shared/Core/PropCore.luau"),
     ("Schema",           "src/shared/Util/Schema.luau"),
     ("UITheme",          "src/shared/Core/UITheme.luau"),
     ("Crossroads",       "src/shared/Content/Hub/Crossroads.luau"),

@@ -31,6 +31,8 @@ local ThemeCore = __require("ThemeCore")
 local Palettes = __require("Palettes")
 local EventCore = __require("EventCore")
 local AmbienceCore = __require("AmbienceCore")
+local PropCore = __require("PropCore")
+local Props = __require("Props")
 
 -- === tiny harness ===================================================
 local passed, failed = 0, 0
@@ -156,6 +158,7 @@ do
 			palettes = Palettes,
 			events = Events,
 			scenarios = Scenarios,
+			props = Props,
 		})
 	end)
 	check("the real content bundle passes boot validation", bootOk, tostring(bootErr))
@@ -5250,6 +5253,83 @@ do
 		clocks[id] = t
 	end
 	check("no two worlds share an hour of the day", not clash)
+end
+
+-- === Ambient scenery (props) ============================================
+group("Ambient scenery: props apart from pieces")
+do
+	local cfg = GameConfig.Ambience.Props
+	local set = Props.SKY_CITADEL
+	check("Sky Citadel ships a prop library and placements", set ~= nil and #set.Library > 0)
+
+	local okP, errsP = Schema.validateProps(Props, Chunks, Worlds)
+	check("the generated placements validate", okP, table.concat(errsP, "; "))
+
+	-- Every prop sits inside its own piece: within the 256 footprint, between
+	-- the keel line and the crown. A prop outside would float over a
+	-- NEIGHBOUR's island, whatever the seed.
+	local inside, count, worst = true, 0, nil
+	for chunkId, rows in set.Placements do
+		for _, row in rows do
+			count += 1
+			local x, y, z = row.P[1], row.P[2], row.P[3]
+			if math.abs(x) > 128 or math.abs(z) > 128 or y < -96 or y > 160 then
+				inside = false
+				worst = worst or string.format("%s %s at (%.0f, %.0f, %.0f)", chunkId, row.Prop, x, y, z)
+			end
+		end
+	end
+	check("every prop sits inside its own piece", inside, worst)
+	check("every floating object became a prop (168 from the kit)", count == 168, tostring(count))
+
+	-- A placement's rotation is a real rotation: orthonormal, no scale or
+	-- mirror hiding in it (a mirrored prop turns inside out in Roblox).
+	local orthonormal = true
+	for _, rows in set.Placements do
+		for _, row in rows do
+			local r = row.R
+			local c1 = { r[1], r[4], r[7] }
+			local c2 = { r[2], r[5], r[8] }
+			local c3 = { r[3], r[6], r[9] }
+			local function dot(a, b) return a[1] * b[1] + a[2] * b[2] + a[3] * b[3] end
+			local det = r[1] * (r[5] * r[9] - r[6] * r[8]) - r[2] * (r[4] * r[9] - r[6] * r[7])
+				+ r[3] * (r[4] * r[8] - r[5] * r[7])
+			if math.abs(dot(c1, c1) - 1) > 0.01 or math.abs(dot(c2, c2) - 1) > 0.01
+				or math.abs(dot(c1, c2)) > 0.01 or math.abs(dot(c2, c3)) > 0.01 or math.abs(det - 1) > 0.01 then
+				orthonormal = false
+			end
+		end
+	end
+	check("every prop rotation is a pure rotation", orthonormal)
+
+	check("tier 1 shows even on the lowest graphics", PropCore.tierShown(1, GameConfig.Ambience.QualityFloor, cfg))
+	check("tier 2 is dropped on the lowest graphics", not PropCore.tierShown(2, GameConfig.Ambience.QualityFloor, cfg))
+	check("tier 2 shows on Automatic graphics", PropCore.tierShown(2, GameConfig.Ambience.AutomaticQuality, cfg))
+
+	-- Motion stays bounded and repeats: a crystal bobs within its amplitude
+	-- forever rather than drifting off.
+	local bounded, periodic = true, true
+	for t = 0, 60, 0.37 do
+		local m = PropCore.motion("Float", t, 0.3, cfg)
+		if math.abs(m.dy) > cfg.Float.Amplitude + 1e-9 then bounded = false end
+		local later = PropCore.motion("Float", t + cfg.Float.Period, 0.3, cfg)
+		if math.abs(later.dy - m.dy) > 1e-6 then periodic = false end
+	end
+	check("a floating prop bobs within its amplitude", bounded)
+	check("a floating prop's bob repeats every period", periodic)
+	local bird = PropCore.motion("Bird", 3, 0.1, cfg)
+	check("a bird circles at its configured radius", bird.orbitRadius == cfg.Bird.Radius)
+	local still = PropCore.motion("Static", 5, 0.5, cfg)
+	check("a static prop does not move",
+		still.dy == 0 and still.yaw == 0 and still.roll == 0 and still.orbitRadius == 0)
+	check("neighbouring props move out of step", PropCore.phase(1) ~= PropCore.phase(2))
+
+	local bad = { SKY_CITADEL = { Id = "SKY_CITADEL", Library = { "prop_x" }, Placements = {
+		SC_ENTRY = { { Prop = "prop_missing", Anim = "Wobble", Tier = 7, P = { 0, 0, 0 },
+			R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, S = { 1, 1, 1 } } } } } }
+	local okB, errsB = Schema.validateProps(bad, Chunks, Worlds)
+	check("a stale placement is a boot error (unknown prop, animation, tier)", not okB and #errsB >= 3,
+		tostring(#errsB))
 end
 
 -- === summary ========================================================

@@ -121,9 +121,30 @@ A piece is two different kinds of thing, and they are delivered differently:
    animation class and a detail tier. A generated kit's script writes this list
    for you. For a hand-placed kit, place props as linked duplicates, and a
    Blender script reads them out of the scene.
-4. **Animation class** per placement: `Static`, `Float` (slow bob), `Spin`,
-   `Orbit`, `Bird` (flies a loop), `Glow` (pulses). **Detail tier** 1–3:
-   1 shows on every device, 3 is dense extra shown only on high graphics.
+4. **Animation class** per placement, one of `PropCore.ANIMS`: `Static`,
+   `Float` (slow bob), `Hover` (bob plus a slow turn), `Spin`, `Roll` (turns on
+   its own axis, like a hoop), `Tumble` (debris: bob and rock), `Bird` (circles
+   its spot). **Detail tier** 1–3: 1 shows on every device, 3 is dense extra
+   shown only on high graphics (`GameConfig.Ambience.Props.TierMinQuality`).
+5. **Where it lands in the repo.** Placements are
+   `src/shared/Content/Props/<World>.luau` (`Id` = the world, `Library`,
+   `Placements`), validated at boot by `Schema.validateProps`. The library
+   `.rbxmx` goes in `assets/rbxm/props/` and Rojo mounts it as
+   `ReplicatedStorage.LuckboundProps`; `PropController` clones by name, so a
+   renamed MeshPart is a missing prop (it warns, naming it).
+
+**A generated kit does all of this from its script.** Sky Citadel's
+`build_sky_citadel_kit.py` builds each prop inside `as_prop(...)`, dedupes
+shapes into a library (22 kinds from 168 placements), and writes exactly two
+FBXs, `sky_citadel_structure.fbx` (22 pieces) and `sky_citadel_props.fbx` (one
+of each prop), plus `Content/Props/SkyCitadel.luau`. Its `main()` refuses to
+finish unless both files re-import with the right object counts and sizes.
+
+**Placement maths (for the next kit).** Placements are written in the layout
+frame (Blender x, y, z → game x, z, −y). The importer turns every mesh by the
+piece's measured `MeshYawOffset`, so `PropController` applies that same turn
+last, on the prop's own rotation. Keep `MeshYawOffset` accurate and props land
+where they were authored.
 
 **Why:**
 - it's the only way scenery can move

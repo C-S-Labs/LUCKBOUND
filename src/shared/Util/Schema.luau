@@ -6,6 +6,7 @@
 local Constants = require(script.Parent.Parent.Core.Constants)
 local EventCore = require(script.Parent.Parent.Core.EventCore)
 local AmbienceCore = require(script.Parent.Parent.Core.AmbienceCore)
+local PropCore = require(script.Parent.Parent.Core.PropCore)
 
 local Schema = {}
 
@@ -59,13 +60,13 @@ local function validateOne(
 
 		if rule.kind == "rarity" then
 			if type(value) ~= "string" or Constants.RARITY[value] == nil then
-				table.insert(errors, `{label}: field '{key}' is not a known rarity (got {tostring(value)})`)
+				table.insert(
+					errors,
+					`{label}: field '{key}' is not a known rarity (got {tostring(value)})`
+				)
 			end
 		elseif type(value) ~= rule.kind then
-			table.insert(
-				errors,
-				`{label}: field '{key}' expected {rule.kind}, got {type(value)}`
-			)
+			table.insert(errors, `{label}: field '{key}' expected {rule.kind}, got {type(value)}`)
 		end
 	end
 
@@ -87,7 +88,10 @@ function Schema.validateWorlds(worlds: { [string]: any }): (boolean, { string })
 
 		if type(world) == "table" then
 			if world.Id ~= key then
-				table.insert(errors, `World '{key}': Id field is '{tostring(world.Id)}' -- must match its registry key`)
+				table.insert(
+					errors,
+					`World '{key}': Id field is '{tostring(world.Id)}' -- must match its registry key`
+				)
 			end
 			if type(world.RollWeight) == "number" and world.RollWeight < 0 then
 				table.insert(errors, `World '{key}': RollWeight must not be negative`)
@@ -130,7 +134,10 @@ function Schema.validateConfig(config: any, worlds: { [string]: any }): (boolean
 	if config.Fate.PrototypeWeights then
 		for worldId in config.Fate.PrototypeWeights do
 			if not worlds[worldId] then
-				table.insert(errors, `GameConfig.Fate.PrototypeWeights names unknown world '{worldId}'`)
+				table.insert(
+					errors,
+					`GameConfig.Fate.PrototypeWeights names unknown world '{worldId}'`
+				)
 			end
 		end
 	end
@@ -142,7 +149,10 @@ function Schema.validateConfig(config: any, worlds: { [string]: any }): (boolean
 		end
 	end
 	if enabled == 0 then
-		table.insert(errors, `no world has EnabledInPhase <= CurrentPhase ({config.CurrentPhase}) -- roll pool would be empty`)
+		table.insert(
+			errors,
+			`no world has EnabledInPhase <= CurrentPhase ({config.CurrentPhase}) -- roll pool would be empty`
+		)
 	end
 
 	-- Scenario-layer pacing dials (build spec §7.3). Required, not optional:
@@ -162,14 +172,22 @@ function Schema.validateConfig(config: any, worlds: { [string]: any }): (boolean
 	if type(config.Expedition.FateInterventionChance) == "number" then
 		local c = config.Expedition.FateInterventionChance
 		if c < 0 or c > 1 then
-			table.insert(errors, `GameConfig.Expedition.FateInterventionChance must be a 0..1 probability, got {c}`)
+			table.insert(
+				errors,
+				`GameConfig.Expedition.FateInterventionChance must be a 0..1 probability, got {c}`
+			)
 		end
 	end
 
 	-- Expeditions as their own server, and parties (build spec §7.2).
 	local mode = config.Expedition.InstanceMode
 	if mode ~= "AUTO" and mode ~= "TELEPORT" and mode ~= "IN_PLACE" then
-		table.insert(errors, `GameConfig.Expedition.InstanceMode must be AUTO, TELEPORT or IN_PLACE, got {tostring(mode)}`)
+		table.insert(
+			errors,
+			`GameConfig.Expedition.InstanceMode must be AUTO, TELEPORT or IN_PLACE, got {tostring(
+				mode
+			)}`
+		)
 	end
 	local party = config.Party
 	if type(party) ~= "table" then
@@ -177,7 +195,10 @@ function Schema.validateConfig(config: any, worlds: { [string]: any }): (boolean
 	else
 		-- A party of one is a player; two is the smallest party there is.
 		if type(party.MaxSize) ~= "number" or party.MaxSize < 2 then
-			table.insert(errors, `GameConfig.Party.MaxSize must be at least 2, got {tostring(party.MaxSize)}`)
+			table.insert(
+				errors,
+				`GameConfig.Party.MaxSize must be at least 2, got {tostring(party.MaxSize)}`
+			)
 		end
 		if type(party.InviteExpirySeconds) ~= "number" or party.InviteExpirySeconds <= 0 then
 			table.insert(errors, "GameConfig.Party.InviteExpirySeconds must be positive")
@@ -254,7 +275,10 @@ function Schema.validateHub(hub: any): (boolean, { string })
 			if type(district.Kind) ~= "string" then
 				table.insert(errors, `{label} is missing Kind (HubBuilder dispatches on it)`)
 			end
-			if district.Pillars ~= nil and (type(district.Pillars) ~= "number" or district.Pillars < 0) then
+			if
+				district.Pillars ~= nil
+				and (type(district.Pillars) ~= "number" or district.Pillars < 0)
+			then
 				table.insert(errors, `{label} Pillars must be >= 0`)
 			end
 			-- A ROUND platform is drawn from PlatformRadius, so declaring the
@@ -285,7 +309,10 @@ function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boole
 		local label = `Chunk '{key}'`
 
 		if chunk.Id ~= key then
-			table.insert(errors, `{label}: Id is '{tostring(chunk.Id)}' -- must match its registry key`)
+			table.insert(
+				errors,
+				`{label}: Id is '{tostring(chunk.Id)}' -- must match its registry key`
+			)
 		end
 		if not VALID_ROLES[chunk.Role] then
 			table.insert(errors, `{label}: unknown Role '{tostring(chunk.Role)}'`)
@@ -326,7 +353,9 @@ function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boole
 		if chunk.MeshYawOffset ~= nil and not QUARTER[chunk.MeshYawOffset] then
 			table.insert(
 				errors,
-				`{label}: MeshYawOffset must be 0, 90, 180 or 270 (got {tostring(chunk.MeshYawOffset)})`
+				`{label}: MeshYawOffset must be 0, 90, 180 or 270 (got {tostring(
+					chunk.MeshYawOffset
+				)})`
 			)
 		end
 
@@ -352,7 +381,10 @@ function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boole
 					end
 				end
 				if not any then
-					table.insert(errors, `{label}: Supports declares nothing, so no scenario can be placed here`)
+					table.insert(
+						errors,
+						`{label}: Supports declares nothing, so no scenario can be placed here`
+					)
 				end
 			end
 		end
@@ -369,18 +401,26 @@ function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boole
 				if not QUARTER[socket.Facing] then
 					table.insert(
 						errors,
-						`{label}: socket '{socket.Id}' Facing must be 0, 90, 180 or 270 (got {tostring(socket.Facing)})`
+						`{label}: socket '{socket.Id}' Facing must be 0, 90, 180 or 270 (got {tostring(
+							socket.Facing
+						)})`
 					)
 				end
 			end
 
 			-- Anything on the critical path needs a way in AND a way out.
 			if (chunk.Role == "PATH" or chunk.Role == "COMBAT") and #chunk.Sockets < 2 then
-				table.insert(errors, `{label}: {chunk.Role} chunks need at least 2 sockets, or the path dead-ends`)
+				table.insert(
+					errors,
+					`{label}: {chunk.Role} chunks need at least 2 sockets, or the path dead-ends`
+				)
 			end
 			-- A cap closes exactly one opening; a second socket would open a new one.
 			if chunk.Role == "CAP" and #chunk.Sockets ~= 1 then
-				table.insert(errors, `{label}: CAP chunks need exactly 1 socket, got {#chunk.Sockets}`)
+				table.insert(
+					errors,
+					`{label}: CAP chunks need exactly 1 socket, got {#chunk.Sockets}`
+				)
 			end
 		end
 
@@ -412,7 +452,11 @@ function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boole
 		if (counts.SIDE or 0) > 0 then
 			local hasSpare = false
 			for _, chunk in chunks do
-				if chunk.WorldId == worldId and type(chunk.Sockets) == "table" and #chunk.Sockets >= 3 then
+				if
+					chunk.WorldId == worldId
+					and type(chunk.Sockets) == "table"
+					and #chunk.Sockets >= 3
+				then
 					hasSpare = true
 				end
 			end
@@ -533,10 +577,7 @@ function Schema.validateMaps(
 		end
 
 		if kitted[key] then
-			table.insert(
-				errors,
-				`World '{key}' has BOTH a chunk kit and a PrebuiltMap -- pick one`
-			)
+			table.insert(errors, `World '{key}' has BOTH a chunk kit and a PrebuiltMap -- pick one`)
 		end
 
 		-- MapPathLength only means something to the assembler. Left on a
@@ -589,7 +630,10 @@ function Schema.validateHubMenu(menu: any, config: any): (boolean, { string })
 			)
 		end
 		if not VALID_STATUS[panel.Status] then
-			table.insert(errors, `{label}: Status must be LIVE or PREVIEW, got {tostring(panel.Status)}`)
+			table.insert(
+				errors,
+				`{label}: Status must be LIVE or PREVIEW, got {tostring(panel.Status)}`
+			)
 		end
 		if type(panel.Id) == "string" then
 			if seenPanel[panel.Id] then
@@ -668,14 +712,20 @@ function Schema.validateCodes(codes: any): (boolean, { string })
 			continue
 		end
 		if definition.Id ~= key then
-			table.insert(errors, `{label}: Id '{tostring(definition.Id)}' must match its registry key`)
+			table.insert(
+				errors,
+				`{label}: Id '{tostring(definition.Id)}' must match its registry key`
+			)
 		end
 		if type(definition.Code) ~= "string" or definition.Code == "" then
 			table.insert(errors, `{label}: 'Code' must be a non-empty string`)
 		else
 			local normalised = (string.upper(definition.Code):gsub("[^%w]", ""))
 			if seenText[normalised] then
-				table.insert(errors, `{label}: '{definition.Code}' collides with code '{seenText[normalised]}'`)
+				table.insert(
+					errors,
+					`{label}: '{definition.Code}' collides with code '{seenText[normalised]}'`
+				)
 			end
 			seenText[normalised] = key
 		end
@@ -696,7 +746,10 @@ end
 --- The loading screen's camera tour. A shot with a zero or negative radius
 --- puts the camera inside its own subject, which renders as a grey screen --
 --- indistinguishable, to a player, from the game failing to load at all.
-function Schema.validateCinematics(cinematics: any, worlds: { [string]: any }): (boolean, { string })
+function Schema.validateCinematics(
+	cinematics: any,
+	worlds: { [string]: any }
+): (boolean, { string })
 	local errors = {}
 
 	local shots = if type(cinematics) == "table" then cinematics.Shots else nil
@@ -838,10 +891,16 @@ function Schema.validateEvents(events: any, worlds: { [string]: any }): (boolean
 		end
 
 		if not TIERS[event.Tier] then
-			table.insert(errors, `{label}: Tier must be AMBIENT, MODIFIER or WORLD (got {tostring(event.Tier)})`)
+			table.insert(
+				errors,
+				`{label}: Tier must be AMBIENT, MODIFIER or WORLD (got {tostring(event.Tier)})`
+			)
 		end
 		if not EventCore.isValidScope(event.Scope) then
-			table.insert(errors, `{label}: Scope must be GLOBAL, SERVER or BIOME (got {tostring(event.Scope)})`)
+			table.insert(
+				errors,
+				`{label}: Scope must be GLOBAL, SERVER or BIOME (got {tostring(event.Scope)})`
+			)
 		end
 		if event.Scope == "BIOME" then
 			if type(event.WorldId) ~= "string" or worlds[event.WorldId] == nil then
@@ -892,7 +951,11 @@ function Schema.validateEvents(events: any, worlds: { [string]: any }): (boolean
 				-- A placeholder nobody substitutes reaches the player as raw
 				-- braces, which is the sort of thing that ships.
 				for placeholder in string.gmatch(event.Announcement.Text, "{(%w+)}") do
-					if placeholder ~= "player" and placeholder ~= "event" and placeholder ~= "remaining" then
+					if
+						placeholder ~= "player"
+						and placeholder ~= "event"
+						and placeholder ~= "remaining"
+					then
 						table.insert(
 							errors,
 							`{label}: Announcement.Text uses unknown placeholder '{placeholder}'`
@@ -957,51 +1020,148 @@ end
 --- `required` marks the kinds a server cannot start without. The rest are
 --- optional so partial bundles -- which tests build constantly -- validate
 --- only what they actually supply.
+--- Validates every world's ambient-scenery placements (CHUNK_AUTHORING.md
+--- convention 6). The file is generated, so the likeliest fault is a stale
+--- one: a placement on a piece that was renamed, or a prop name the library
+--- no longer has.
+function Schema.validateProps(props: any, chunks: any, worlds: any): (boolean, { string })
+	local errors = {}
+	for worldId, set in props do
+		local label = `Props '{worldId}'`
+		if worlds[worldId] == nil then
+			table.insert(errors, `{label}: no such world`)
+		end
+		local library = {}
+		for _, name in set.Library or {} do
+			library[name] = true
+		end
+		for chunkId, rows in set.Placements or {} do
+			local chunk = chunks[chunkId]
+			if chunk == nil then
+				table.insert(errors, `{label}: placements for unknown chunk '{chunkId}'`)
+			elseif chunk.WorldId ~= worldId then
+				table.insert(errors, `{label}: chunk '{chunkId}' belongs to {chunk.WorldId}`)
+			end
+			for i, row in rows do
+				local at = `{label}.{chunkId}[{i}]`
+				if not library[row.Prop] then
+					table.insert(errors, `{at}: prop '{tostring(row.Prop)}' is not in the library`)
+				end
+				if not PropCore.ANIMS[row.Anim] then
+					table.insert(errors, `{at}: unknown animation '{tostring(row.Anim)}'`)
+				end
+				if type(row.Tier) ~= "number" or row.Tier < 1 or row.Tier > 3 then
+					table.insert(errors, `{at}: Tier must be 1, 2 or 3`)
+				end
+				if
+					type(row.P) ~= "table"
+					or #row.P ~= 3
+					or type(row.R) ~= "table"
+					or #row.R ~= 9
+					or type(row.S) ~= "table"
+					or #row.S ~= 3
+				then
+					table.insert(errors, `{at}: P, R and S must hold 3, 9 and 3 numbers`)
+				else
+					for _, v in row.S do
+						if v <= 0 then
+							table.insert(errors, `{at}: every size must be positive`)
+							break
+						end
+					end
+				end
+			end
+		end
+	end
+	return #errors == 0, errors
+end
+
 local VALIDATORS: { { Kind: string, Required: boolean?, Run: (any) -> (boolean, { string }) } } = {
-	{ Kind = "worlds", Required = true, Run = function(c)
-		return Schema.validateWorlds(c.worlds)
-	end },
-	{ Kind = "config", Required = true, Run = function(c)
-		return Schema.validateConfig(c.config, c.worlds)
-	end },
-	{ Kind = "hub", Run = function(c)
-		return Schema.validateHub(c.hub)
-	end },
-	{ Kind = "scenarios", Run = function(c)
-		return Schema.validateScenarios(c.scenarios, c.chunks)
-	end },
-	{ Kind = "chunks", Run = function(c)
-		if c.manifest == nil then
-			return true, {}
-		end
-		return Schema.validateChunks(c.chunks, c.manifest)
-	end },
-	{ Kind = "chunks", Run = function(c)
-		-- The other half of the chunk story: which ROUTE each world takes to
-		-- a map. Separate entry because it reads worlds as well.
-		if c.manifest == nil then
-			return true, {}
-		end
-		return Schema.validateMaps(c.worlds, c.chunks, c.manifest)
-	end },
-	{ Kind = "menu", Run = function(c)
-		return Schema.validateHubMenu(c.menu, c.config)
-	end },
-	{ Kind = "codes", Run = function(c)
-		return Schema.validateCodes(c.codes)
-	end },
-	{ Kind = "cinematics", Run = function(c)
-		return Schema.validateCinematics(c.cinematics)
-	end },
-	{ Kind = "palettes", Run = function(c)
-		if c.menu == nil then
-			return true, {}
-		end
-		return Schema.validatePalettes(c.palettes, c.menu)
-	end },
-	{ Kind = "events", Run = function(c)
-		return Schema.validateEvents(c.events, c.worlds)
-	end },
+	{
+		Kind = "worlds",
+		Required = true,
+		Run = function(c)
+			return Schema.validateWorlds(c.worlds)
+		end,
+	},
+	{
+		Kind = "config",
+		Required = true,
+		Run = function(c)
+			return Schema.validateConfig(c.config, c.worlds)
+		end,
+	},
+	{
+		Kind = "hub",
+		Run = function(c)
+			return Schema.validateHub(c.hub)
+		end,
+	},
+	{
+		Kind = "scenarios",
+		Run = function(c)
+			return Schema.validateScenarios(c.scenarios, c.chunks)
+		end,
+	},
+	{
+		Kind = "chunks",
+		Run = function(c)
+			if c.manifest == nil then
+				return true, {}
+			end
+			return Schema.validateChunks(c.chunks, c.manifest)
+		end,
+	},
+	{
+		Kind = "chunks",
+		Run = function(c)
+			-- The other half of the chunk story: which ROUTE each world takes to
+			-- a map. Separate entry because it reads worlds as well.
+			if c.manifest == nil then
+				return true, {}
+			end
+			return Schema.validateMaps(c.worlds, c.chunks, c.manifest)
+		end,
+	},
+	{
+		Kind = "menu",
+		Run = function(c)
+			return Schema.validateHubMenu(c.menu, c.config)
+		end,
+	},
+	{
+		Kind = "codes",
+		Run = function(c)
+			return Schema.validateCodes(c.codes)
+		end,
+	},
+	{
+		Kind = "cinematics",
+		Run = function(c)
+			return Schema.validateCinematics(c.cinematics)
+		end,
+	},
+	{
+		Kind = "palettes",
+		Run = function(c)
+			if c.menu == nil then
+				return true, {}
+			end
+			return Schema.validatePalettes(c.palettes, c.menu)
+		end,
+	},
+	{
+		Kind = "events",
+		Run = function(c)
+			return Schema.validateEvents(c.events, c.worlds)
+		end,
+	},
+	{
+		Kind = "props",
+		Run = function(c)
+			return Schema.validateProps(c.props, c.chunks or {}, c.worlds)
+		end,
+	},
 }
 
 --- Validates a bundle of content and RAISES on any error, because a server
@@ -1014,7 +1174,10 @@ function Schema.validateAll(content: { [string]: any }): ()
 		local supplied = content[entry.Kind]
 		if supplied == nil then
 			if entry.Required then
-				table.insert(allErrors, `content bundle is missing '{entry.Kind}', which is required to boot`)
+				table.insert(
+					allErrors,
+					`content bundle is missing '{entry.Kind}', which is required to boot`
+				)
 			end
 			continue
 		end
@@ -1025,12 +1188,8 @@ function Schema.validateAll(content: { [string]: any }): ()
 	end
 
 	if #allErrors > 0 then
-		error(
-			"LUCKBOUND content validation failed:\n  - " .. table.concat(allErrors, "\n  - "),
-			0
-		)
+		error("LUCKBOUND content validation failed:\n  - " .. table.concat(allErrors, "\n  - "), 0)
 	end
 end
-
 
 return Schema

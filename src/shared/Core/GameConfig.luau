@@ -850,6 +850,30 @@ local GameConfig = {
 		-- How often cloud layers beyond the nearest are moved, per second. They
 		-- are far away and slow, so full frame rate buys nothing visible.
 		FarLayerHz = 20,
+
+		-- AMBIENT SCENERY (CHUNK_AUTHORING.md convention 6): the props a kit
+		-- ships apart from its pieces, placed and animated on each client.
+		Props = {
+			-- OFF until a world's re-exported structure is live. The old meshes
+			-- still have their floating props baked in, so drawing the separate
+			-- ones too would show every crystal twice. Turned on in the same
+			-- change that swaps in the new structure asset ids.
+			Enabled = false,
+			-- The quality scale a detail tier needs: tier 1 always, tier 2 on
+			-- anything above low graphics, tier 3 only on high.
+			TierMinQuality = { 0, 0.45, 0.8 },
+			-- Props farther than this from the camera hold still. Nobody can
+			-- see a crystal bob from a kilometre away, and moving it costs.
+			AnimateRadius = 700,
+			-- Motion per animation class. Periods in seconds, distances in
+			-- studs, Rock in radians.
+			Float = { Amplitude = 1.4, Period = 7 },
+			Hover = { Amplitude = 0.8, Period = 6, SpinPeriod = 26 },
+			Spin = { Period = 34 },
+			Roll = { Period = 48 },
+			Tumble = { Amplitude = 0.9, Period = 11, Rock = 0.25 },
+			Bird = { Radius = 16, Period = 14, Bob = 1.2 },
+		},
 	},
 }
 

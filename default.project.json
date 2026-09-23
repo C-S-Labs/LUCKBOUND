@@ -6,6 +6,9 @@
       "$className": "ReplicatedStorage",
       "Luckbound": {
         "$path": "src/shared"
+      },
+      "LuckboundProps": {
+        "$path": "assets/rbxm/props"
       }
     },
     "ServerScriptService": {

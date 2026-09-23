@@ -462,6 +462,9 @@ local function placeMember(player: Player, group: Group): boolean
 		MapSummary = group.Summary,
 		PartySize = group.PartySize,
 		FloorY = group.FloorY,
+		-- The map's model, by name, so the client can find its own pieces
+		-- among several groups' maps in one Studio server.
+		StageName = group.Stage.Name,
 	})
 
 	print(

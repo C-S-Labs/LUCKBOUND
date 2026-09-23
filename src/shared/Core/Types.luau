@@ -381,6 +381,8 @@ export type ExpeditionPayload = {
 	-- cloud sea below; on an expedition server there is nothing else to
 	-- measure it from.
 	FloorY: number,
+	-- The map model's name under Workspace's expedition stage folder.
+	StageName: string,
 }
 
 export type ExpeditionEndPayload = {

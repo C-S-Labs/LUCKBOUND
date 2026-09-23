@@ -57,10 +57,15 @@ ASCENT_W = 72.0         # arena-only opening width
 REVIEW_GAP = 128.0      # half a piece of clear air between pieces on review
 TRI_LIMIT = 10000
 
+PROPS_LUAU = None  # set below, once REPO is known
 REPO = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..")) \
     if "__file__" in globals() else r"C:\Dev\LUCKBOUND_v1.0"
 SOURCE_DIR = os.path.join(REPO, "assets", "source", "worlds", "sky_citadel")
 EXPORT_DIR = os.path.join(REPO, "assets", "export", "worlds", "sky_citadel")
+# The generated placements the game reads (CHUNK_AUTHORING.md convention 6).
+PROPS_LUAU = os.path.join(REPO, "src", "shared", "Content", "Props", "SkyCitadel.luau")
+STRUCTURE_FBX = "sky_citadel_structure.fbx"
+PROPS_FBX = "sky_citadel_props.fbx"
 
 # --------------------------------------------------------------------------
 # Palette. docs/biomes/SKY_CITADEL.md explains each role. sRGB 0-255.
@@ -145,6 +150,10 @@ class Piece:
         self.slabs = []
         self.up = set()     # single-sided floor panels: forced to face up
         self.rng = random.Random(name)   # seeded by name: rebuilds are identical
+        # Ambient scenery pulled OUT of the piece's mesh (CHUNK_AUTHORING.md
+        # convention 6). Each entry is one placed prop, its geometry in its own
+        # local frame; export_props() merges identical shapes into a library.
+        self.props = []
 
     def add(self, verts, faces, mat, M):
         base = len(self.verts)
@@ -189,6 +198,57 @@ def oriented(p, rz):
         yield
     finally:
         p.base = saved
+
+
+# --------------------------------------------------------------------------
+# AMBIENT SCENERY -- CHUNK_AUTHORING.md convention 6, owner-directed 2026-09-23.
+# Floating things are built exactly as before, but inside `as_prop` their
+# geometry is lifted out of the piece's mesh and kept as a separate prop, so
+# the game can animate it and thin it out on low graphics. Validation is
+# untouched: the float's box is still registered and still checked.
+# --------------------------------------------------------------------------
+
+# label -> (library base name, animation class, detail tier). Tier 1 shows on
+# every device; 2 only above low graphics. The runtime reads both from the
+# generated placements -- see src/shared/Content/Props/.
+PROP_KINDS = {
+    "floating crystal": ("crystal", "Float", 2),
+    "anti-grav pylon": ("pylon", "Hover", 1),
+    "skiff": ("skiff", "Float", 1),
+    "hoop": ("hoop", "Roll", 1),
+    "keel ring": ("keel_ring", "Spin", 1),
+    "corner beacon": ("beacon", "Float", 1),
+    "span debris": ("debris", "Tumble", 2),
+    "falling span": ("debris", "Tumble", 2),
+    "floating tome": ("tome", "Hover", 2),
+    "bird": ("bird", "Bird", 2),
+    "drifting lintel": ("lintel", "Float", 1),
+}
+# Deliberately NOT props: the Arcane Prism and the Sundered Spire's crown.
+# Each is the landmark that reaches CROWN_TOP and holds its piece's bounding
+# box at 256 -- lifting it out would shrink the piece, and ChunkLoader would
+# stretch it back.
+
+
+@contextmanager
+def as_prop(p, label, anchor):
+    """Everything built inside this block becomes ONE placed prop instead of
+    part of the piece's mesh. `anchor` is the prop's own frame (position and
+    turn) relative to the current build frame; its geometry is stored relative
+    to that, which is what lets two copies of the same thing share one mesh."""
+    frame_at_entry = p.base.copy()
+    v0, f0 = len(p.verts), len(p.faces)
+    yield
+    assert not any(i >= f0 for i in p.up), "a prop must not contain floor panels"
+    world = frame_at_entry @ anchor
+    inv = world.inverted()
+    verts = [inv @ v for v in p.verts[v0:]]
+    faces = [[i - v0 for i in f] for f in p.faces[f0:]]
+    mats = p.fmat[f0:]
+    del p.verts[v0:]
+    del p.faces[f0:]
+    del p.fmat[f0:]
+    p.props.append({"label": label, "matrix": world, "verts": verts, "faces": faces, "mats": mats})
 
 
 def box(p, mat, cx, cy, cz, sx, sy, sz, rz=0.0, rx=0.0, ry=0.0):
@@ -607,7 +667,8 @@ def float_crystal(p, mat, x, y, z, r, up, down, n=6, rz=0.0):
     """A crystal that hangs in the air on purpose. Registered, so validate()
     can prove it clips into nothing -- not a neighbour, not a spire."""
     p.float_("floating crystal", x, y, r, z - down, z + up)
-    crystal(p, mat, x, y, z, r, up, down, n=n, rz=rz)
+    with as_prop(p, "floating crystal", xf(x, y, z, rz)):
+        crystal(p, mat, x, y, z, r, up, down, n=n, rz=rz)
 
 
 def holo_pedestal(p, x, y):
@@ -628,9 +689,10 @@ def obelisk(p, x, y, h=26.0):
 
 def anti_grav_pylon(p, x, y, z):
     p.float_("anti-grav pylon", x, y, 8.8, z - 10, z + 14)
-    crystal(p, "SkyGlass", x, y, z, 5.0, 14.0, 10.0, n=6)
-    torus(p, "AzureNeon", 7.0, 0.4, x, y, z, n=16)
-    torus(p, "DeepAlloy", 8.2, 0.6, x, y, z - 3.0, n=16)
+    with as_prop(p, "anti-grav pylon", xf(x, y, z)):
+        crystal(p, "SkyGlass", x, y, z, 5.0, 14.0, 10.0, n=6)
+        torus(p, "AzureNeon", 7.0, 0.4, x, y, z, n=16)
+        torus(p, "DeepAlloy", 8.2, 0.6, x, y, z - 3.0, n=16)
 
 
 def _beacon_post(p, x, y, z, k, rz):
@@ -684,7 +746,12 @@ def corner_beacons(p):
             r, z0, z1 = style(probe, x, y, z, k, rz)
             shape = ("cyl", x, y, r, z0, z1)
             if free_for_float(p, shape):
-                style(p, x, y, z, k, rz)
+                # Built at the origin, unturned, INSIDE its own frame: the
+                # same style and size then has identical geometry wherever it
+                # sits and however it is turned, so every copy shares a mesh.
+                with frame(p, xf(x, y, z, rz)):
+                    with as_prop(p, "corner beacon", Matrix.Identity(4)):
+                        style(p, 0, 0, 0, k, 0)
                 p.floats.append(("corner beacon", shape))
                 break
 
@@ -816,19 +883,20 @@ def skiff(p, x, y, z, rz=0.0):
     """A moored sky-skiff: white hull, violet sails, azure drive. Floats."""
     with frame(p, xf(x, y, z, rz)):
         p.float_box("skiff", -13.5, 16, -6, 6, -4.5, 13)
-        hull = xf(ry=90)
-        frustum(p, "CitadelWhite", 6, 3.4, 3.4, -8, 8, M=hull)
-        frustum(p, "CitadelWhite", 6, 3.4, 0, 8, 15, M=hull)
-        frustum(p, "PaleAlloy", 6, 3.4, 2.0, -8, -12, M=hull)
-        frustum(p, "AzureNeon", 6, 1.8, 1.8, -12, -13, M=hull)
-        box(p, "PaleAlloy", 0, 0, 3.3, 20, 4.2, 0.6)
-        box(p, "SunGold", 14, 0, 0, 2.0, 0.6, 0.6)
-        frustum(p, "DeepAlloy", 6, 0.35, 0.3, 3.3, 12.5, 2, 0)
-        box(p, "CitadelViolet", 2, 0, 8.4, 7.5, 0.3, 6.5)
-        box(p, "CitadelViolet", -6, 0, 6.2, 4.5, 0.3, 4.0)
-        for sy in (-1, 1):
-            box(p, "DeepAlloy", -4, sy * 4.4, 0.6, 6, 2.4, 0.5, rx=sy * 20)
-            box(p, "AzureDim", -4, sy * 5.5, 0.2, 5, 0.4, 0.4)
+        with as_prop(p, "skiff", Matrix.Identity(4)):
+            hull = xf(ry=90)
+            frustum(p, "CitadelWhite", 6, 3.4, 3.4, -8, 8, M=hull)
+            frustum(p, "CitadelWhite", 6, 3.4, 0, 8, 15, M=hull)
+            frustum(p, "PaleAlloy", 6, 3.4, 2.0, -8, -12, M=hull)
+            frustum(p, "AzureNeon", 6, 1.8, 1.8, -12, -13, M=hull)
+            box(p, "PaleAlloy", 0, 0, 3.3, 20, 4.2, 0.6)
+            box(p, "SunGold", 14, 0, 0, 2.0, 0.6, 0.6)
+            frustum(p, "DeepAlloy", 6, 0.35, 0.3, 3.3, 12.5, 2, 0)
+            box(p, "CitadelViolet", 2, 0, 8.4, 7.5, 0.3, 6.5)
+            box(p, "CitadelViolet", -6, 0, 6.2, 4.5, 0.3, 4.0)
+            for sy in (-1, 1):
+                box(p, "DeepAlloy", -4, sy * 4.4, 0.6, 6, 2.4, 0.5, rx=sy * 20)
+                box(p, "AzureDim", -4, sy * 5.5, 0.2, 5, 0.4, 0.4)
 
 
 def crane(p, x, y, rz=0.0, h=22.0):
@@ -846,11 +914,12 @@ def crane(p, x, y, rz=0.0, h=22.0):
 def hoop(p, y, R=34.0, zc=6.0):
     """A great floating ring the skyway passes through."""
     p.float_box("hoop", -R - 2, R + 2, y - 2, y + 2, zc - R - 2, zc + R + 2)
-    torus(p, "PaleAlloy", R, 1.6, 0, y, zc, n=28, rx=90)
-    torus(p, "AzureNeon", R - 2.2, 0.35, 0, y, zc, n=28, rx=90)
-    for k in range(4):
-        a = math.radians(45 + 90 * k)
-        crystal(p, "SunGold", math.cos(a) * (R + 1.2), y, zc + math.sin(a) * (R + 1.2), 1.2, 2.2, 2.2)
+    with as_prop(p, "hoop", xf(0, y, zc)):
+        torus(p, "PaleAlloy", R, 1.6, 0, y, zc, n=28, rx=90)
+        torus(p, "AzureNeon", R - 2.2, 0.35, 0, y, zc, n=28, rx=90)
+        for k in range(4):
+            a = math.radians(45 + 90 * k)
+            crystal(p, "SunGold", math.cos(a) * (R + 1.2), y, zc + math.sin(a) * (R + 1.2), 1.2, 2.2, 2.2)
 
 
 def dome(p, x, y, R, drum_h=8.0):
@@ -1403,8 +1472,9 @@ def ring_keel(p, pts, R):
     standard_keel(p, pts)
     for z, rr in ((-50, R * 0.62), (-72, R * 0.38)):
         p.float_("keel ring", 0, 0, rr + 1.2, z - 1.2, z + 1.2)
-        torus(p, "AzureNeon", rr, 0.6, 0, 0, z, n=24)
-        torus(p, "PaleAlloy", rr + 1.2, 0.5, 0, 0, z, n=24)
+        with as_prop(p, "keel ring", xf(0, 0, z)):
+            torus(p, "AzureNeon", rr, 0.6, 0, 0, z, n=24)
+            torus(p, "PaleAlloy", rr + 1.2, 0.5, 0, 0, z, n=24)
 
 
 def vines(p, pts, seed, count=10):
@@ -2148,9 +2218,11 @@ def build_boss_clearing():
 # --------------------------------------------------------------------------
 
 
-def scatter_floats(p, label, count, sampler, maker, tries=60):
+def scatter_floats(p, label, count, sampler, maker, tries=60, anchor=None):
     """Place up to `count` floating things, each only where validate() will
-    accept it: probe the shape first, build only if the spot is free."""
+    accept it: probe the shape first, build only if the spot is free.
+    Each becomes a prop; `anchor` maps the sampled args to its frame, and
+    defaults to position (args 0-2) and turn (arg 3)."""
     placed = 0
     for _ in range(count * tries):
         if placed >= count:
@@ -2158,7 +2230,9 @@ def scatter_floats(p, label, count, sampler, maker, tries=60):
         args = sampler(p.rng)
         shape = maker(Piece("_probe", ""), *args)
         if free_for_float(p, shape):
-            maker(p, *args)
+            frame_ = anchor(args) if anchor else xf(args[0], args[1], args[2], args[3])
+            with as_prop(p, label, frame_):
+                maker(p, *args)
             p.floats.append((label, shape))
             placed += 1
     return placed
@@ -2303,7 +2377,7 @@ def build_path_shattered():
     scatter_floats(p, "span debris", 7,
                    lambda r: (r.uniform(-60, 60) * r.choice((-1, 1)) + r.choice((-38, 38)), r.uniform(-90, 90),
                               r.uniform(-22, 18), r.uniform(0, 90), r.uniform(4, 9)),
-                   debris)
+                   debris, anchor=lambda a: xf(a[0], a[1], a[2], a[3], rx=a[4] * 3))
 
     # the Sundered Spire: its crown hangs, cut clean, above its own stump
     wpts = moved(ngon(6, 21, rot=0), -74, 18)
@@ -2337,8 +2411,9 @@ def build_path_shattered():
         box(p, "CitadelWhite", 74 + sx * 8, -44, 10, 4, 4, 20)
         crystal(p, "CitadelWhite", 74 + sx * 8, -44, 20, 2.2, 2.5, 0.2, n=4)
     p.float_box("drifting lintel", 62, 86, -48, -40, 26, 33)
-    box(p, "PaleAlloy", 74, -44, 29, 20, 4.4, 3.6, rz=8, ry=-6)
-    crystal(p, "SunGold", 74, -44, 32, 1.2, 2.2, 0.8)
+    with as_prop(p, "drifting lintel", xf(74, -44, 29)):
+        box(p, "PaleAlloy", 74, -44, 29, 20, 4.4, 3.6, rz=8, ry=-6)
+        crystal(p, "SunGold", 74, -44, 32, 1.2, 2.2, 0.8)
     finish(p)
     return p
 
@@ -2530,7 +2605,7 @@ def build_cap_crumbling():
     scatter_floats(p, "falling span", 8,
                    lambda r: (r.uniform(-30, 30), r.uniform(-2, 60), r.uniform(-70, -8), r.uniform(0, 90),
                               r.uniform(5, 11)),
-                   debris)
+                   debris, anchor=lambda a: xf(a[0], a[1], a[2], a[3], rx=a[4] * 3))
     # the Fallen Tower: a spire on a rock, leaning out over the gap
     rpts = moved(ngon(7, 20), -76, 52)
     island(p, rpts, "HullSlate")
@@ -2807,7 +2882,10 @@ def validate(objs):
 
 
 # --------------------------------------------------------------------------
-# Export -- one FBX per piece, parked at the origin
+# Export -- TWO files (CHUNK_AUTHORING.md conventions 5 and 6):
+#   sky_citadel_structure.fbx  every piece, each its own object, at the origin
+#   sky_citadel_props.fbx      one object per distinct kind of ambient prop
+# plus the generated placements file the game reads.
 # --------------------------------------------------------------------------
 
 
@@ -2824,23 +2902,176 @@ def _ui_override(**extra):
     return bpy.context.temp_override(**extra)
 
 
-def export_kit(objs):
-    os.makedirs(EXPORT_DIR, exist_ok=True)
-    written = []
-    for obj in objs:
-        saved = obj.location.copy()
-        obj.location = (0, 0, 0)
-        bpy.context.view_layer.update()
-        bpy.ops.object.select_all(action="DESELECT")
-        obj.select_set(True)
-        bpy.context.view_layer.objects.active = obj
-        path = os.path.join(EXPORT_DIR, obj.name + ".fbx")
-        with _ui_override(selected_objects=[obj], active_object=obj, object=obj):
-            _export_fbx(path)
-        obj.location = saved
-        written.append(path)
+def _export_selected(objs, path):
+    saved = [o.location.copy() for o in objs]
+    for o in objs:
+        o.location = (0, 0, 0)
     bpy.context.view_layer.update()
-    return written
+    bpy.ops.object.select_all(action="DESELECT")
+    for o in objs:
+        o.select_set(True)
+    bpy.context.view_layer.objects.active = objs[0]
+    with _ui_override(selected_objects=list(objs), active_object=objs[0], object=objs[0]):
+        _export_fbx(path)
+    for o, loc in zip(objs, saved):
+        o.location = loc
+    bpy.context.view_layer.update()
+
+
+def export_kit(objs, prop_objs):
+    os.makedirs(EXPORT_DIR, exist_ok=True)
+    # Per-piece files from before convention 6 still carry the props merged
+    # in; leaving them beside the new files invites importing the wrong one.
+    for name in os.listdir(EXPORT_DIR):
+        if name.startswith("chunk_") and name.endswith(".fbx"):
+            os.remove(os.path.join(EXPORT_DIR, name))
+    structure = os.path.join(EXPORT_DIR, STRUCTURE_FBX)
+    props = os.path.join(EXPORT_DIR, PROPS_FBX)
+    _export_selected(objs, structure)
+    _export_selected(prop_objs, props)
+    return [structure, props]
+
+
+# --------------------------------------------------------------------------
+# The prop library: every placed prop, grouped by SHAPE
+# --------------------------------------------------------------------------
+
+# Blender piece space (+Y north, Z up) to the game's layout space (-Z north,
+# Y up): (x, y, z) -> (x, z, -y). The same mapping the content's sockets use.
+_TO_GAME = Matrix(((1, 0, 0), (0, 0, 1), (0, -1, 0)))
+
+
+def _letters(n):
+    out = ""
+    while n > 0:
+        n, r = divmod(n - 1, 26)
+        out = chr(97 + r) + out
+    return out
+
+
+def _bounds(vs):
+    mn = Vector((min(v.x for v in vs), min(v.y for v in vs), min(v.z for v in vs)))
+    mx = Vector((max(v.x for v in vs), max(v.y for v in vs), max(v.z for v in vs)))
+    return mn, mx
+
+
+def prop_library(pieces):
+    """Merge identical prop shapes into one library entry each, and record
+    every copy's placement.
+
+    Two props share an entry when their geometry is the same up to size: the
+    shape is compared after scaling it into a unit box, in 5% steps. Every
+    copy keeps its own size, so a large and a small crystal of the same cut are
+    one mesh drawn at two sizes -- which is what keeps the upload count small.
+    """
+    kinds, placements, counters = {}, {}, {}
+    for p in pieces:
+        rows = []
+        for prop in p.props:
+            base, anim, tier = PROP_KINDS[prop["label"]]
+            mn, mx = _bounds(prop["verts"])
+            size, centre = mx - mn, (mn + mx) / 2
+
+            def unit(v, i):
+                # 5% steps: shapes whose proportions differ by less than that
+                # share a mesh. Each copy is drawn at its own exact size, so
+                # the only error is in interior proportions, never the outline.
+                return round((v[i] - centre[i]) / size[i] * 20) / 20 if size[i] > 1e-6 else 0.0
+
+            key = (base,
+                   tuple((unit(v, 0), unit(v, 1), unit(v, 2)) for v in prop["verts"]),
+                   tuple(tuple(f) for f in prop["faces"]),
+                   tuple(prop["mats"]))
+            kind = kinds.get(key)
+            if kind is None:
+                counters[base] = counters.get(base, 0) + 1
+                kind = {
+                    "name": "prop_%s_%s" % (base, _letters(counters[base])),
+                    "verts": [v - centre for v in prop["verts"]],
+                    "faces": prop["faces"],
+                    "mats": prop["mats"],
+                }
+                kinds[key] = kind
+            world = prop["matrix"]
+            pos = _TO_GAME @ (world @ centre)
+            rot = _TO_GAME @ world.to_3x3() @ _TO_GAME.transposed()
+            rows.append({
+                "prop": kind["name"],
+                "anim": anim,
+                "tier": tier,
+                "pos": [pos.x, pos.y, pos.z],
+                "rot": [rot[r][c] for r in range(3) for c in range(3)],
+                # the game's axes: width (x), height (blender z), depth (blender y)
+                "size": [size.x, size.z, size.y],
+            })
+        placements[p.name] = rows
+    return list(kinds.values()), placements
+
+
+def props_to_objects(kinds, mats, collection):
+    objs = []
+    for i, kind in enumerate(kinds):
+        shell = Piece(kind["name"], "prop")
+        shell.verts = list(kind["verts"])
+        shell.faces = kind["faces"]
+        shell.fmat = kind["mats"]
+        obj = to_object(shell, mats, collection)
+        obj["kit"] = "SKY_CITADEL_PROP"
+        # a grid for review; export parks every one at the origin
+        obj.location = ((i % 8) * 60.0, -1400.0 - (i // 8) * 60.0, 0)
+        objs.append(obj)
+    return objs
+
+
+def _content_id(piece_name):
+    # chunk_path_bend -> SC_PATH_BEND: the ids in Content/Chunks/SkyCitadel.luau
+    return "SC_" + piece_name[len("chunk_"):].upper()
+
+
+def write_props_luau(kinds, placements, path=None):
+    path = path or PROPS_LUAU
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+
+    def num(v):
+        r = round(v, 3)
+        return "0" if r == 0 else ("%g" % r)
+
+    out = [
+        "--!strict",
+        "-- GENERATED by assets/source/worlds/sky_citadel/build_sky_citadel_kit.py.",
+        "-- Do not edit by hand: re-run the script. CHUNK_AUTHORING.md convention 6.",
+        "--",
+        "-- Sky Citadel's ambient scenery: which props exist (Library -- each is a",
+        "-- MeshPart of that name in the imported prop library) and where every copy",
+        "-- goes on each piece (Placements). Positions and rotations are in the",
+        "-- piece's layout frame (origin on the walk plane, -Z north); Size is the",
+        "-- copy's own size, so one mesh serves every size of the same shape.",
+        "",
+        "return {",
+        '	Id = "SKY_CITADEL", -- the world these props dress',
+        "	Library = {",
+    ]
+    for kind in kinds:
+        out.append('		"%s",' % kind["name"])
+    out.append("	},")
+    out.append("	Placements = {")
+    for piece_name in sorted(placements):
+        rows = placements[piece_name]
+        if not rows:
+            continue
+        out.append("		%s = {" % _content_id(piece_name))
+        for r in rows:
+            out.append('			{ Prop = "%s", Anim = "%s", Tier = %d, P = { %s }, R = { %s }, S = { %s } },' % (
+                r["prop"], r["anim"], r["tier"],
+                ", ".join(num(v) for v in r["pos"]),
+                ", ".join(num(v) for v in r["rot"]),
+                ", ".join(num(v) for v in r["size"])))
+        out.append("		},")
+    out.append("	},")
+    out.append("}")
+    with open(path, "w", newline="\n") as fh:
+        fh.write("\n".join(out) + "\n")
+    return path
 
 
 def _export_fbx(path):
@@ -2864,9 +3095,10 @@ def _export_fbx(path):
 
 
 def verify_exports(paths):
-    """Re-import every FBX into a throwaway scene and measure it. A 256 piece
-    must come back 256 -- this is the millimetre check from CHUNK_AUTHORING.md,
-    done here rather than trusted."""
+    """Re-import each FBX into a throwaway scene and measure EVERY object in it.
+    A structure piece must come back 256 on every axis -- the millimetre check
+    from CHUNK_AUTHORING.md, done here rather than trusted -- and a prop file
+    must come back with one object per library entry."""
     results = []
     coll = bpy.data.collections.new("_fbx_verify")
     bpy.context.scene.collection.children.link(coll)
@@ -2876,15 +3108,13 @@ def verify_exports(paths):
             with _ui_override():
                 bpy.ops.import_scene.fbx(filepath=path)
             new = [o for o in bpy.data.objects if o not in before and o.type == "MESH"]
-            pts = [o.matrix_world @ v.co for o in new for v in o.data.vertices]
-            mn = [min(p[i] for p in pts) for i in range(3)]
-            mx = [max(p[i] for p in pts) for i in range(3)]
-            results.append({
-                "file": os.path.basename(path),
-                "meshes": len(new),
-                "size": [round(mx[i] - mn[i], 3) for i in range(3)],
-                "min_z": round(mn[2], 3),
-            })
+            sizes = {}
+            for o in new:
+                pts = [o.matrix_world @ v.co for v in o.data.vertices]
+                mn = [min(p[i] for p in pts) for i in range(3)]
+                mx = [max(p[i] for p in pts) for i in range(3)]
+                sizes[o.name] = [round(mx[i] - mn[i], 3) for i in range(3)]
+            results.append({"file": os.path.basename(path), "meshes": len(new), "sizes": sizes})
             for o in new:
                 bpy.data.objects.remove(o, do_unlink=True)
     finally:
@@ -2895,16 +3125,34 @@ def verify_exports(paths):
 def main(export=False, save=True):
     pieces, objs = build_kit()
     ok, report = validate(objs)
-    out = {"valid": ok, "pieces": report}
+    kinds, placements = prop_library(pieces)
+    lib = bpy.data.collections.new("PropLibrary")
+    bpy.context.scene.collection.children.link(lib)
+    prop_objs = props_to_objects(kinds, ensure_materials(), lib)
+    out = {
+        "valid": ok,
+        "pieces": report,
+        "prop_kinds": len(kinds),
+        "props_placed": sum(len(r) for r in placements.values()),
+    }
     if export:
         if not ok:
             raise RuntimeError("validation failed; not exporting: %r" % report)
-        paths = export_kit(objs)
-        out["exported"] = verify_exports(paths)
+        paths = export_kit(objs, prop_objs)
+        verified = verify_exports(paths)
+        structure = next(v for v in verified if v["file"] == STRUCTURE_FBX)
+        wrong = {k: v for k, v in structure["sizes"].items() if any(abs(c - 256) > 0.01 for c in v)}
+        if structure["meshes"] != len(objs) or wrong:
+            raise RuntimeError("structure export did not come back 22 x 256^3: %r" % wrong)
+        props = next(v for v in verified if v["file"] == PROPS_FBX)
+        if props["meshes"] != len(kinds):
+            raise RuntimeError("prop export came back with %d meshes, expected %d" % (props["meshes"], len(kinds)))
+        out["exported"] = verified
+        out["placements"] = write_props_luau(kinds, placements)
     if save:
-        # Only the kit and the scale figures are saved. The joined-map and
-        # corner previews are duplicates of kit pieces and read as extra
-        # pieces in the scene, so they exist only for render_review.py.
+        # Only the kit, its prop library and the scale figures are saved. The
+        # joined-map and corner previews are duplicates of kit pieces and read
+        # as extra pieces in the scene, so they exist only for render_review.py.
         os.makedirs(SOURCE_DIR, exist_ok=True)
         bpy.ops.wm.save_as_mainfile(filepath=os.path.join(SOURCE_DIR, "sky_citadel_kit.blend"))
     return out

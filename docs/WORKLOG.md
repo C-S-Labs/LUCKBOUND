@@ -33,6 +33,44 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 53 — 2026-09-23 — Scenery split out of Sky Citadel; import pipeline ready
+
+**Tests:** 739 passing (was 725).
+
+### Done
+- **Generator** (`build_sky_citadel_kit.py`): every floating thing is built
+  inside `as_prop(...)`, stored in its anchor's frame, deduped by normalised
+  shape into **22 prop kinds from 168 placements**. The script now writes two
+  FBXs only, `sky_citadel_structure.fbx` (22 `chunk_*` meshes, still 256³
+  each) and `sky_citadel_props.fbx` (22 `prop_*` meshes), plus
+  `Content/Props/SkyCitadel.luau`. The 22 per-piece FBXs are deleted. The
+  Arcane Prism and spire crowns stay structure: they hold each piece's height.
+- **Runtime:** `Content/Props` registry, pure `PropCore` (tiers, motion),
+  `Schema.validateProps` at boot, `ChunkLoader` stamps `ChunkId`/`Centre` on
+  each placed piece, payload carries `StageName`, `PropController` clones from
+  `ReplicatedStorage.LuckboundProps` (Rojo → `assets/rbxm/props/`), places,
+  animates near the camera, tears down on leave.
+- Docs: CHUNK_AUTHORING convention 6 (anim classes as built, repo layout,
+  placement maths), STATUS row, TESTING Test S.
+
+### Decisions made
+- `GameConfig.Ambience.Props.Enabled = false` until the new structure AssetIds
+  are live — with the old baked meshes every prop would show twice.
+- Prop rotation gets the piece's `MeshYawOffset` applied last (the importer
+  turns meshes by it). Untested in Studio; if props land mirrored/rotated, that
+  one line in `PropController` is where to look.
+
+### Stopped at
+Waiting on the owner's import: `sky_citadel_structure.rbxmx` and
+`SC_PROP_LIBRARY.rbxmx`.
+
+### Next
+1. Swap the 22 Sky Citadel manifest AssetIds to the new structure meshes.
+2. Commit the library to `assets/rbxm/props/SC_PROP_LIBRARY.rbxmx`.
+3. `Props.Enabled = true`; owner walks Test S.
+
+---
+
 ## Session 52 — 2026-09-23 — Clouds with shape; scenery separation becomes a rule
 
 **Tests:** 725 passing (was 710).

@@ -648,6 +648,23 @@ the route is too short, too long, or about right.
 6. **`/leave`.** ✅ Pass: the hub looks exactly as it did before (its purple
    sky back, no clouds left behind).
 
+### Test S — Sky Citadel's floating scenery ⭐ NEW (5 min) — **after the re-import**
+
+Needs the new structure ids live and `Ambience.Props.Enabled = true`.
+
+1. **Roll Sky Citadel and enter.** ✅ Pass: floating crystals, beacons, rings,
+   debris, tomes and birds on and around the islands — each **once** (no
+   doubled crystal baked into the deck underneath it).
+2. **Watch one for ten seconds.** ✅ Pass: crystals bob, hoops roll, keel rings
+   spin, debris tumbles gently, birds circle. Nothing drifts off its island.
+3. **Walk into a floating crystal.** ✅ Pass: you pass through it (props have
+   no collision); the deck under you still collides normally.
+4. **Output window.** ✅ Pass: no `[PropController] prop library is missing` warning.
+   If one appears, it names MeshParts that were renamed or not imported.
+5. **Graphics 1, leave, re-enter.** ✅ Pass: fewer props (tier 2 dropped),
+   never none.
+6. **`/leave`.** ✅ Pass: no props left behind in the hub.
+
 ### Test E — a tampered client is rejected (1 min)
 
 From the **client** console:
