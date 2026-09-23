@@ -19,6 +19,7 @@
 
 local AssetService = game:GetService("AssetService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
@@ -146,9 +147,13 @@ local function calibrateYaw(chunk: any, placed: any, origin: Vector3, meshPos: V
 	params.FilterType = Enum.RaycastFilterType.Include
 	params.FilterDescendantsInstances = { mesh }
 
-	-- Spatial queries only see the live world.
+	-- Spatial queries only see the live world, and a freshly cooked precise
+	-- collision hull is not guaranteed to be queryable until physics has
+	-- stepped once. Probing before that is what made the result differ from
+	-- server to server.
 	local home = mesh.Parent
 	mesh.Parent = Workspace
+	RunService.Heartbeat:Wait()
 
 	local centre = origin + Vector3.new(placed.X, placed.Y, placed.Z)
 	local hint = chunk.MeshYawOffset or 0
@@ -183,6 +188,24 @@ local function calibrateYaw(chunk: any, placed: any, origin: Vector3, meshPos: V
 				end
 			end
 		end
+		-- NEGATIVE evidence: an edge with NO declared socket must have no
+		-- walkway reaching it. Large square decks (gate-courts, springs, the
+		-- arena) can put deck near several edges, and positive evidence alone
+		-- tied at more than one turn and fell back to the hint.
+		local socketAt: { [number]: boolean } = {}
+		for _, socket in chunk.Sockets do
+			socketAt[(socket.Facing + placed.Yaw) % 360] = true
+		end
+		for facing = 0, 270, 90 do
+			if not socketAt[facing] then
+				local dir = CFrame.Angles(0, -math.rad(facing), 0).LookVector
+				local edge = centre + dir * (chunk.SizeX / 2 - probe.Inset)
+				local hit = Workspace:Raycast(edge + Vector3.new(0, probe.Height, 0), Vector3.new(0, -probe.Height * 2, 0), params)
+				if hit and math.abs(hit.Position.Y - centre.Y) <= probe.Tolerance then
+					hits -= 5
+				end
+			end
+		end
 		if hits > bestHits then
 			best, bestHits = k, hits
 		end
@@ -195,6 +218,7 @@ local function calibrateYaw(chunk: any, placed: any, origin: Vector3, meshPos: V
 				.. `(best {bestHits} at {best}); the art may not match its declared openings`
 		)
 	end
+	print(`[ChunkLoader] {chunk.AssetKey} faces {best} (score {bestHits})`)
 	yawCache[chunk.AssetKey] = best
 	return best
 end
