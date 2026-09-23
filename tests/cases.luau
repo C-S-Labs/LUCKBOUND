@@ -5787,6 +5787,35 @@ do
 	check("a pulsing crystal stays on its deck", pulse.lift == 0 and pulse.turn == 0)
 end
 
+-- === Fixed props with alternates (a moored ship is one of five) ======
+group("Prop alternates: one of several per run")
+do
+	local ScatterCore = __require("ScatterCore")
+	local seen, stable, inRange = {}, true, true
+	for seed = 1, 400 do
+		local k = ScatterCore.pick(seed, "SC_DOCKSIDE__SIEGE@0,0", 3, 5)
+		if k < 0 or k > 4 then inRange = false end
+		if ScatterCore.pick(seed, "SC_DOCKSIDE__SIEGE@0,0", 3, 5) ~= k then stable = false end
+		seen[k] = true
+	end
+	local count = 0
+	for _ in seen do count += 1 end
+	check("an alternate is picked in range, the same on every client", inRange and stable)
+	check("over runs, every one of five ships gets its turn", count == 5, tostring(count))
+	check("a row with no alternates always draws itself", ScatterCore.pick(9, "k", 1, 1) == 0)
+
+	local good = { SKY_CITADEL = { Id = "SKY_CITADEL", Library = { "ship_a", "ship_b" }, Placements = { SC_ENTRY = {
+		{ Prop = "ship_a", Anim = "Moored", Tier = 1, P = { 0, 0, 0 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, S = { 1, 1, 1 },
+			Alt = { { Prop = "ship_b", P = { 0, 1, 0 }, S = { 2, 2, 2 } } } } } } } }
+	local okA, errsA = Schema.validateProps(good, Chunks, Worlds)
+	check("a row with a valid alternate validates", okA, table.concat(errsA, "; "))
+	local bad = { SKY_CITADEL = { Id = "SKY_CITADEL", Library = { "ship_a" }, Placements = { SC_ENTRY = {
+		{ Prop = "ship_a", Anim = "Moored", Tier = 1, P = { 0, 0, 0 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, S = { 1, 1, 1 },
+			Alt = { { Prop = "ship_missing", P = { 0, 1, 0 }, S = { 2, 2, 2 } } } } } } } }
+	local okB = Schema.validateProps(bad, Chunks, Worlds)
+	check("an alternate that is not in the library is a boot error", not okB)
+end
+
 -- === summary ========================================================
 print(string.format("\n%s\n%d passed, %d failed, %d total", string.rep("=", 60),
 	passed, failed, passed + failed))

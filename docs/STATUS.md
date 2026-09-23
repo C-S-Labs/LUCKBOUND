@@ -186,7 +186,7 @@ exists.**
 
 ### Test suite
 
-**810 tests, all passing.** 20 arrived with the prop scatter (parity with the kit's Python twin, spacing, budgets, determinism). 35 arrived with loot, fixtures and vault keys (build spec §7.5). 28 arrived with ambient props (placements inside their pieces, tiers, and what each kind of prop may and may not do). 65 arrived with parties and expedition instances (§7.2), and the scenario layer (§7.3) added its own: compatibility, pacing bands, anti-repetition and determinism. Headless — no Roblox required. 136 of them arrived
+**815 tests, all passing.** 5 arrived with prop alternates (the five ships). 20 arrived with the prop scatter (parity with the kit's Python twin, spacing, budgets, determinism). 35 arrived with loot, fixtures and vault keys (build spec §7.5). 28 arrived with ambient props (placements inside their pieces, tiers, and what each kind of prop may and may not do). 65 arrived with parties and expedition instances (§7.2), and the scenario layer (§7.3) added its own: compatibility, pacing bands, anti-repetition and determinism. Headless — no Roblox required. 136 of them arrived
 with the player UI and the live palette: the menu reducer, travel authorisation, code redemption,
 settings validation, the stamina curve and the coyote window.
 
@@ -446,6 +446,14 @@ survive a rescale and a literal does not.
 ---
 
 ## 5. Next session — pick up here
+
+> **2026-09-23: Sky Citadel is ready to import.** 0 detached parts and 0
+> clipping over all 324 pieces (the validator now reads the real mesh), five
+> raider ships drawn one per run, every prop through a detail pass.
+> `assets/export/worlds/sky_citadel/IMPORT_MANIFEST.md` lists every mesh. To
+> test: (1) import the FBX files listed there; (2) wire the 36-piece kit and
+> its staged placements into `src/` with the asset ids; (3) a debug pin that
+> forces one scenario kit, so each can be walked before (4) the Fate rework.
 
 > **2026-09-23: scenery is scattered per run.** Chunks ship spawn points;
 > `ScatterCore` dresses each chunk from its scenario's pool, seeded by the

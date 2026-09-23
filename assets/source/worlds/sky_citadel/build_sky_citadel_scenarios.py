@@ -52,6 +52,8 @@ HALF, DECK_T, CROWN_TOP = K["HALF"], K["DECK_T"], K["CROWN_TOP"]
 box, frustum, crystal, torus = K["box"], K["frustum"], K["crystal"], K["torus"]
 xf, frame, as_prop, as_fixture, fixture_part = K["xf"], K["frame"], K["as_prop"], K["as_fixture"], K["fixture_part"]
 shapes_clash, free_for_float, _inside = K["shapes_clash"], K["free_for_float"], K["_inside"]
+tube, poly_radius, piece_bvh, hang_clear, path_clear, face_dist = (
+    K["tube"], K["poly_radius"], K["piece_bvh"], K["hang_clear"], K["path_clear"], K["face_dist"])
 I4 = Matrix.Identity(4)
 PREVIEW_SEEDS = (20260923, 7)
 
@@ -384,11 +386,73 @@ def remove_faces(p, drop):
     p.up = {newidx[i] for i in p.up if i in newidx}
     faces = [p.faces[i] for i in keep]
     fmat = [p.fmat[i] for i in keep]
+    p.ftag = [p.ftag[i] for i in keep] if len(p.ftag) == len(p.faces) else p.ftag
     used = sorted({v for f in faces for v in f})
     vmap = {old: new for new, old in enumerate(used)}
     p.verts = [p.verts[i] for i in used]
     p.faces = [[vmap[v] for v in f] for f in faces]
     p.fmat = fmat
+
+
+def _cut_box(p, s, lo, hi, ox, oy, tx, ty):
+    """A box-shaped rim part (a rail bar, a kerb) crossing [lo, hi] along the
+    rim: replaced by the pieces of it outside that stretch."""
+    vs = sorted(s["verts"])
+    ts = {v: (p.verts[v].x - ox) * tx + (p.verts[v].y - oy) * ty for v in vs}
+    tmin, tmax = min(ts.values()), max(ts.values())
+    mid = (tmin + tmax) / 2
+    f0 = s["faces"]
+    tag = p.ftag[f0[0]] if len(p.ftag) == len(p.faces) else "?"
+    mats = [p.fmat[fi] for fi in f0]
+    remap = {v: i for i, v in enumerate(vs)}
+    faces = [[remap[v] for v in p.faces[fi]] for fi in f0]
+    for keep_low in (True, False):
+        end = lo if keep_low else hi
+        if keep_low and end - tmin < 0.8:
+            continue
+        if not keep_low and tmax - end < 0.8:
+            continue
+        verts = []
+        for v in vs:
+            q = p.verts[v].copy()
+            moving = ts[v] > mid if keep_low else ts[v] < mid
+            if moving:
+                q = q + Vector((tx, ty, 0)) * (end - ts[v])
+            verts.append(q)
+        n0 = len(p.faces)
+        p.add([tuple(q) for q in verts], faces, mats[0], I4)
+        for k, m in enumerate(mats):
+            p.fmat[n0 + k] = m
+            p.ftag[n0 + k] = tag
+    return f0
+
+
+def clear_rim(ctx, ox, oy, tx, ty, nx, ny, t0, t1, band=3.0, margin=1.5):
+    """Open a gap in a deck's rim between t0 and t1 along the line through
+    (ox, oy) with tangent (tx, ty): every parapet block, rail post and kerb in
+    the stretch goes, and a rail bar or kerb running on past it is cut clean
+    at the gap -- never left hanging where its posts were."""
+    p = ctx.p
+    lo, hi = t0 - margin, t1 + margin
+    drop = []
+    for sh in shells(p):
+        if sh["min"].z < -0.8 or sh["max"].z > 7.5 or sh["max"].z < 0.35 or sh["max"].z - sh["min"].z < 0.3:
+            continue
+        pts = [p.verts[v] for v in sh["verts"]]
+        ds = [(q.x - ox) * nx + (q.y - oy) * ny for q in pts]
+        if min(ds) < -band or max(ds) > band:
+            continue
+        ts = [(q.x - ox) * tx + (q.y - oy) * ty for q in pts]
+        if max(ts) < lo or min(ts) > hi:
+            continue
+        if min(ts) >= lo and max(ts) <= hi:
+            drop += sh["faces"]
+        elif len(sh["verts"]) == 8 and len(sh["faces"]) == 6:
+            drop += _cut_box(p, sh, lo, hi, ox, oy, tx, ty)
+        else:
+            drop += sh["faces"]
+    remove_faces(p, drop)
+    ctx.refresh()
 
 
 def breach_walls(ctx, count, rubble=True):
@@ -406,7 +470,7 @@ def breach_walls(ctx, count, rubble=True):
             continue
         if any(edge_dist(q, cx, cy) < 3.5 for q in ctx.polys):
             rim.append(s)
-    drop, done = [], []
+    done, gaps = [], []
     for _ in range(count * 3):
         if not rim or len(done) >= count:
             break
@@ -415,13 +479,15 @@ def breach_walls(ctx, count, rubble=True):
         if any(math.hypot(cx - a, cy - b) < 30 for a, b in done):
             continue
         R_ = ctx.rng.uniform(6, 12)
-        for s in [s for s in rim if math.hypot(s["c"].x - cx, s["c"].y - cy) < R_]:
-            drop += s["faces"]
-            rim.remove(s)
+        poly = min(ctx.polys, key=lambda q: edge_dist(q, cx, cy))
+        _d, (nx, ny) = edge_near(poly, cx, cy)
+        gaps.append((cx, cy, -ny, nx, nx, ny, R_))
+        rim = [s for s in rim if math.hypot(s["c"].x - cx, s["c"].y - cy) >= R_]
         done.append((cx, cy))
-    if not drop:
+    if not done:
         return []
-    remove_faces(p, drop)
+    for cx, cy, tx, ty, nx, ny, R_ in gaps:
+        clear_rim(ctx, cx, cy, tx, ty, nx, ny, -R_, R_, margin=0.0)
     for cx, cy in done:
         box(p, "CitadelWhite", cx, cy, -DECK_T - 1.2, 5, 3, 3.2, rz=ctx.rng.uniform(0, 90), rx=ctx.rng.uniform(-18, 18))
     ctx.refresh()
@@ -606,64 +672,27 @@ def topple(ctx, labels, chance):
 # Architecture props: the few things that ARE the scenario's architecture
 # ==========================================================================
 
-def shape_warship(p):
-    """A raider warship, ~72 long. Prow toward +X; the frame's z = 0 is its deck."""
-    xs = [-34, -28, -16, 0, 14, 24, 31, 36]
-    ws = [5.6, 7.4, 8.2, 8.2, 7.6, 5.8, 3.2, 0.0]
-    ds = [6.0, 8.5, 9.5, 9.5, 9.0, 7.5, 4.5, 1.5]
-    prof = [(-1.0, 0.0), (-0.92, -0.45), (-0.5, -0.85), (0.0, -1.0), (0.5, -0.85), (0.92, -0.45), (1.0, 0.0)]
-    verts, faces, mats, rings = [], [], [], []
-    for x, w, d in zip(xs, ws, ds):
-        s = len(verts)
-        if w <= 1e-6:
-            verts.append((x, 0.0, -0.6))
-        else:
-            verts += [(x, fy * w, fz * d) for fy, fz in prof]
-        rings.append(list(range(s, len(verts))))
-    band = {0: "RaiderRust", 5: "RaiderRust", 1: "DeepAlloy", 4: "DeepAlloy", 2: "Soot", 3: "Soot", 6: "Twig"}
-    n = len(prof)
-    for A, B in zip(rings, rings[1:]):
-        for j in range(n):
-            j2 = (j + 1) % n
-            faces.append((A[j], A[j2], B[0]) if len(B) == 1 else (A[j], A[j2], B[j2], B[j]))
-            mats.append(band[j])
-    faces.append(tuple(reversed(rings[0])))
-    mats.append("RaiderRust")
-    add_faces(p, verts, faces, mats)
-    for sy in (-1, 1):
-        box(p, "Twig", 0, sy * 7.4, 0.6, 50, 0.5, 1.2)
-    box(p, "RaiderRust", -24, 0, 3.0, 12, 12.5, 6)
-    box(p, "Twig", -24, 0, 6.2, 12.6, 13.1, 0.5)
-    for sy in (-1, 1):
-        for x in (-28, -24, -20):
-            box(p, "EmberGlow", x, sy * 6.3, 3.4, 1.6, 0.2, 1.4)
-    for mx, h in ((-6, 30.0), (14, 26.0)):
-        frustum(p, "DeepAlloy", 8, 0.9, 0.5, 0, h, mx, 0)
-        frustum(p, "Twig", 8, 1.8, 1.8, h * 0.78, h * 0.78 + 1.2, mx, 0)
-        box(p, "DeepAlloy", mx, 0, h * 0.9, 0.6, 17, 0.6)
-        box(p, "DeepAlloy", mx, 0, h * 0.45, 0.6, 15, 0.6)
-        box(p, "RaiderRust", mx + 0.4, 0, h * 0.675, 0.3, 15.5, h * 0.42)
-        box(p, "Char", mx + 0.45, -4, h * 0.5, 0.3, 3.0, 2.2, rx=12)
-    box(p, "RaiderRust", -6, 0, 31.5, 0.3, 0.3, 3.0)
-    box(p, "RaiderRust", -6, 2.2, 32.4, 0.2, 4.4, 1.6)
-    with frame(p, xf(35.5, 0, -1.6, 0, 0, 90)):
-        frustum(p, "Soot", 4, 1.9, 0.0, 0, 7.0, rot=45)
-    for sy in (-3.2, 3.2):
-        with frame(p, xf(-34.5, sy, -3.4, 0, 0, -90)):
-            frustum(p, "DeepAlloy", 8, 2.0, 1.6, 0, 3.0)
-            frustum(p, "EmberGlow", 8, 1.5, 1.5, 3.0, 3.4)
-    for sy in (-1, 1):
-        for gx in (-8, 2, 12):
-            with frame(p, xf(gx, sy * 7.8, 1.3, 0, sy * -90, 0)):
-                frustum(p, "DeepAlloy", 8, 0.55, 0.45, 0, 2.6)
-
-
-def shape_gangway(p):
-    box(p, "Twig", 5, 0, -0.55, 10, 3.2, 0.35, ry=6)
+def shape_gangway(p, L=10.0):
+    """A plank bridge from the rail down onto a moored ship's deck, L long."""
+    drop = math.radians(6)
+    box(p, "Twig", L / 2, 0, -0.55 - math.sin(drop) * L / 2, L, 3.2, 0.35, ry=6)
     for sy in (-1.5, 1.5):
-        box(p, "DeepAlloy", 5, sy, 0.35, 10, 0.2, 0.2, ry=6)
-        for gx in (1, 5, 9):
-            box(p, "DeepAlloy", gx, sy, -0.1 - gx * 0.1, 0.2, 0.2, 1.1)
+        box(p, "DeepAlloy", L / 2, sy, 0.35 - math.sin(drop) * L / 2, L, 0.2, 0.2, ry=6)
+        for gx in (1, L / 2, L - 1):
+            box(p, "DeepAlloy", gx, sy, -0.1 - math.sin(drop) * gx, 0.2, 0.2, 1.1)
+
+
+_SHIP_CACHE = {}
+
+
+def ship_geometry(i):
+    """Design i built once, in its own frame: (verts, faces, mats)."""
+    if i not in _SHIP_CACHE:
+        q = K["Piece"]("_ship_%d" % i, "ship")
+        SHIPS[i](q)
+        _SHIP_CACHE[i] = ([Vector((round(v.x, 4), round(v.y, 4), round(v.z, 4))) for v in q.verts],
+                          [list(f) for f in q.faces], list(q.fmat))
+    return _SHIP_CACHE[i]
 
 
 def warship(ctx, n=1):
@@ -687,29 +716,40 @@ def warship(ctx, n=1):
             if side in ("E", "W"):
                 edge = max(xs) if side == "E" else min(xs)
                 cx, cy, rz = edge + (gap + 10.8) * sgn, along, 90
-                shape = ("box", cx - 10.8, cx + 10.8, cy - 44, cy + 44, -11.0, 34.0)
                 blocked = side in ctx.open and abs(cy) < 66
                 rail = (cx - (gap + 12.3) * sgn, cy)
                 behind = (rail[0] - 6.0 * sgn, cy)
             else:
                 edge = max(ys) if side == "N" else min(ys)
                 cx, cy, rz = along, edge + (gap + 10.8) * sgn, 0
-                shape = ("box", cx - 44, cx + 44, cy - 10.8, cy + 10.8, -11.0, 34.0)
                 blocked = side in ctx.open and abs(cx) < 66
                 rail = (cx, cy - (gap + 12.3) * sgn)
                 behind = (cx, rail[1] - 6.0 * sgn)
-            if blocked or not free_for_float(p, shape):
+            if blocked:
                 continue
             z0 = ctx.ground.flat(behind[0], behind[1], 3.0)
             top = ctx.ground.z_at(rail[0], rail[1])
             if z0 is None or top is None or top[1] < 0.9 or not (z0 - 0.5 < top[0] < z0 + 4.0):
                 continue
+            # the berth: room for every one of the five designs (SHIP_ENVELOPE)
+            zb = z0 - 1.2
+            if side in ("E", "W"):
+                shape = ("box", cx - 10.8, cx + 10.8, cy - 44, cy + 44, zb - 11.0, zb + 33.6)
+            else:
+                shape = ("box", cx - 44, cx + 44, cy - 10.8, cy + 10.8, zb - 11.0, zb + 33.6)
+            if not free_for_float(p, shape):
+                continue
             p.floats.append(("raider warship", shape))
-            place(p, "raider warship", cx, cy, z0 - 1.2, rz + ctx.rng.choice((0, 180)), 1.0, shape_warship)
+            # one of the five ships moors here in the preview; the game draws
+            # any of them per run (the row's Alt list, PropController)
+            primary = ctx.rng.randrange(len(SHIPS))
+            place(p, "raider warship", cx, cy, zb, rz + ctx.rng.choice((0, 180)), 1.0, SHIPS[primary])
+            p.props[-1]["alts"] = [ship_geometry(i) for i in range(len(SHIPS)) if i != primary]
             to_ship = math.degrees(math.atan2(cy - rail[1], cx - rail[0]))
             gx0 = rail[0] - math.cos(math.radians(to_ship)) * 1.5
             gy0 = rail[1] - math.sin(math.radians(to_ship)) * 1.5
-            place(p, "gangway", gx0, gy0, top[0], to_ship, 1.0, shape_gangway)
+            L = gap + 6.6                              # rail to the ship's boarding rail, and onto it
+            place(p, "gangway", gx0, gy0, top[0], to_ship, 1.0, lambda q, L=L: shape_gangway(q, L))
             p.solid("gangway", gx0, gy0, 2.0, z0, z0 + 3)
             placed += 1
             break
@@ -821,6 +861,8 @@ def anchors_on_decks(ctx):
     for d in sorted(ctx.open):
         x, y, _ = mouth(d)
         add_anchor(ctx.p, "BLOCKER", x, y, note=d)
+        if BLOCKER_SHAPES.get(ctx.scenario):
+            ctx.p.anchors[-1]["mesh"] = "scn_prop_blocker_%s" % ctx.scenario
 
 
 # ==========================================================================
@@ -828,6 +870,7 @@ def anchors_on_decks(ctx):
 # ==========================================================================
 # Filled in by sky_citadel_structures.py below; each is fn(ctx).
 STRUCTURES = {}
+exec(open(os.path.join(HERE, "sky_citadel_ships.py"), encoding="utf-8").read(), globals())
 exec(open(os.path.join(HERE, "sky_citadel_structures.py"), encoding="utf-8").read(), globals())
 
 
@@ -839,6 +882,11 @@ def make_hook(scenario):
         ctx = Ctx(p, scenario)
         STRUCTURES[scenario](ctx)
         LOOKS[scenario](ctx)
+        # the scenario's own parts: attached or gone, and none through a rail
+        tags = K["kit_tags"]()
+        K["settle"](p, tags, K["SETTLE_LOG"], scenario=True)
+        K["unclip"](p, tags, K["SETTLE_LOG"])
+        K["settle"](p, tags, K["SETTLE_LOG"], scenario=True)
         ctx.refresh()
         build_blockers(ctx)
         anchors_on_decks(ctx)
@@ -997,12 +1045,15 @@ def build_library():
     lib = {}
     for fam in FAMILIES.values():
         for v in range(fam["n"]):
-            name = "prop_%s_%s" % (fam["name"], _letters(v))
+            name = "sct_%s_%s" % (fam["name"], _letters(v))      # sct_: scattered (never a fixed prop's name)
             shell = K["Piece"](name, "scatter")
             shell.cur_family = fam
             with as_prop(shell, "scatter", I4):
                 fam["fn"](shell, v)
             prop = shell.props[0]
+            r0 = max(math.hypot(q.x, q.y) for q in prop["verts"])
+            dv, df, dm = K["detail"](prop["verts"], prop["faces"], prop["mats"], name, r0)
+            prop = {"verts": dv, "faces": df, "mats": dm}
             verts = [Vector((round(q.x, 4), round(q.y, 4), round(q.z, 4))) for q in prop["verts"]]
             mn = Vector((min(q.x for q in verts), min(q.y for q in verts), min(q.z for q in verts)))
             mx = Vector((max(q.x for q in verts), max(q.y for q in verts), max(q.z for q in verts)))
@@ -1245,8 +1296,9 @@ def write_anchors(path, scenario, pieces):
         lines.append('\t["%s"] = {' % K["_content_id"](p.name))
         for a in p.anchors:
             x, y, z = a["pos"]
-            lines.append('\t\t{ Kind = "%s", Pos = { %.2f, %.2f, %.2f }, Note = %s },'
-                         % (a["kind"], x, z, -y, '"%s"' % a["note"].replace('"', "'")))
+            mesh = (', Mesh = "%s"' % a["mesh"]) if a.get("mesh") else ""
+            lines.append('\t\t{ Kind = "%s", Pos = { %.2f, %.2f, %.2f }, Note = %s%s },'
+                         % (a["kind"], x, z, -y, '"%s"' % a["note"].replace('"', "'"), mesh))
         lines.append("\t},")
     lines.append("}")
     with open(path, "w", encoding="utf-8", newline="\n") as f:
@@ -1329,6 +1381,140 @@ def write_scatter_luau(lib, pools, sets):
 
 
 PARITY = os.path.join(REPO, "tests", "scatter_parity.luau")
+MANIFEST = os.path.join(REPO, "assets", "export", "worlds", "sky_citadel", "IMPORT_MANIFEST.md")
+MANIFEST_JSON = os.path.join(REPO, "assets", "export", "worlds", "sky_citadel", "import_manifest.json")
+
+
+def _tri_count(verts_faces):
+    return sum(len(f) - 2 for f in verts_faces)
+
+
+def write_manifest(sets, objs_by_set, kinds, placements, fixtures, lib, blockers):
+    """IMPORT_MANIFEST.md + import_manifest.json: every mesh in every FBX the
+    Sky Citadel exports, what it is, and which game data names it -- so an
+    import can be checked name by name."""
+    import json
+    base_props = []
+    staged = os.path.join(REPO, "assets", "export", "worlds", "sky_citadel", "staged_luau", "Props_SkyCitadel.luau")
+    if os.path.exists(staged):
+        import re
+        body = open(staged, encoding="utf-8").read()
+        lib_block = body.split("Library = {", 1)[1].split("},", 1)[0]
+        base_props = re.findall(r'"([^"]+)"', lib_block)
+    kits = []
+    for set_name, pieces in sets.items():
+        objs = objs_by_set[set_name]
+        rows = []
+        for p, o in zip(pieces, objs):
+            rows.append({"mesh": p.name, "id": K["_content_id"](p.name), "role": role(p),
+                         "openings": "".join(sorted(openings(p))), "tris": len(o.data.polygons) and
+                         sum(len(f.vertices) - 2 for f in o.data.polygons)})
+        fbx = ("sky_citadel_structure.fbx" if set_name == "base"
+               else "scenarios/%s/sky_citadel_%s_structure.fbx" % (set_name, set_name))
+        kits.append({"set": set_name, "fbx": fbx, "pieces": rows})
+    usage = {}
+    for piece, rows in placements.items():
+        for r in rows:
+            u = usage.setdefault(r["prop"], {"anim": r["anim"], "tier": r["tier"], "interact": r.get("interact"),
+                                             "copies": 0})
+            u["copies"] += 1
+            for a in r.get("alts", ()):
+                ua = usage.setdefault(a["prop"], {"anim": r["anim"], "tier": r["tier"],
+                                                  "interact": r.get("interact"), "copies": 0, "alternate": True})
+                ua["copies"] += 1
+    fixed = []
+    for k in kinds:
+        u = usage.get(k["name"], {})
+        fixed.append({"mesh": k["name"], "kind": "prop" if k.get("is_prop") else "fixture",
+                      "anim": u.get("anim", "-"), "tier": u.get("tier", "-"), "interact": u.get("interact") or "-",
+                      "copies": u.get("copies", 0), "alternate": bool(u.get("alternate")),
+                      "tris": _tri_count(k["faces"])})
+    scatter = []
+    for name in sorted(lib):
+        k = lib[name]
+        fam = FAMILIES[k["family"]]
+        scatter.append({"mesh": name, "family": k["family"], "sets": ",".join(fam["sets"]), "anim": k["anim"],
+                        "tier": k["tier"], "interact": k["interact"] or "-", "tris": _tri_count(k["faces"])})
+    data = {"kits": kits, "base_props": base_props, "scenario_props": fixed, "scatter_props": scatter,
+            "blockers": blockers}
+    with open(MANIFEST_JSON, "w", encoding="utf-8", newline="\n") as f:
+        json.dump(data, f, indent=1)
+
+    L = []
+    L.append("# Sky Citadel -- import manifest")
+    L.append("")
+    L.append("GENERATED by `assets/source/worlds/sky_citadel/build_sky_citadel_scenarios.py` on every export.")
+    L.append("Do not edit by hand. The same data, machine-readable: `import_manifest.json`.")
+    L.append("")
+    L.append("Every mesh name below is what the game looks up. Import each FBX so its objects become")
+    L.append("MeshParts **named exactly as listed**; nothing here is renamed on import.")
+    L.append("")
+    L.append("## What to import, and where")
+    L.append("")
+    L.append("| File (under `assets/export/worlds/sky_citadel/`) | Meshes | Goes to | Named in |")
+    L.append("|---|---|---|---|")
+    L.append("| `sky_citadel_structure.fbx` | %d chunk pieces | the chunk library (as the 22 today) | "
+             "`Content/Chunks/SkyCitadel.luau` (`Mesh`/asset ids -- 14 pieces not yet listed) |"
+             % len(sets["base"]))
+    L.append("| `sky_citadel_props.fbx` | %d | `ReplicatedStorage.LuckboundProps` | "
+             "`staged_luau/Props_SkyCitadel.luau` -> replaces `Content/Props/SkyCitadel.luau` |" % len(base_props))
+    for kit in kits:
+        if kit["set"] != "base":
+            L.append("| `%s` | %d chunk pieces | the chunk library, as a variant set | "
+                     "`scenarios/%s/Anchors_%s.luau` (ids `<BASE>__%s`) |"
+                     % (kit["fbx"], len(kit["pieces"]), kit["set"], kit["set"], kit["set"].upper()))
+    L.append("| `scenarios/sky_citadel_scenario_props.fbx` | %d | `ReplicatedStorage.LuckboundProps` | "
+             "`scenarios/Props_Scenarios.luau`, `Fixtures_Scenarios.luau` |" % len(kinds))
+    L.append("| `scenarios/sky_citadel_scatter_props.fbx` | %d | `ReplicatedStorage.LuckboundProps` | "
+             "`src/shared/Content/Scatter/SkyCitadel/` (live) |" % (len(lib) + len(blockers)))
+    L.append("")
+    L.append("Name families never overlap, so all three prop files can share one folder:")
+    L.append("`prop_*`/`fix_*` base kit (the live names), `scn_prop_*`/`scn_fix_*` scenario kits,")
+    L.append("`sct_*` scattered scenery, `scn_prop_blocker_<scenario>` the route blockers.")
+    L.append("")
+    L.append("## Chunk pieces")
+    L.append("")
+    L.append("Role and openings are what the generator matches on (`N/S/E/W` sockets).")
+    L.append("Scenario pieces share their base piece's sockets exactly; only what stands on them differs.")
+    L.append("")
+    for kit in kits:
+        L.append("### %s -- `%s`" % (kit["set"], kit["fbx"]))
+        L.append("")
+        L.append("| Mesh | Content id | Role | Openings | Tris |")
+        L.append("|---|---|---|---|---|")
+        for r in kit["pieces"]:
+            L.append("| `%s` | `%s` | %s | %s | %s |" % (r["mesh"], r["id"], r["role"], r["openings"] or "-", r["tris"]))
+        L.append("")
+    L.append("## Scenario fixed props and fixtures -- `scenarios/sky_citadel_scenario_props.fbx`")
+    L.append("")
+    L.append("`Alternate` = a version the game may draw in place of a row's own mesh (the five raider ships).")
+    L.append("")
+    L.append("| Mesh | Kind | Anim | Tier | Interact | Copies | Alternate | Tris |")
+    L.append("|---|---|---|---|---|---|---|---|")
+    for r in fixed:
+        L.append("| `%s` | %s | %s | %s | %s | %d | %s | %d |" % (r["mesh"], r["kind"], r["anim"], r["tier"],
+                                                              r["interact"], r["copies"],
+                                                              "yes" if r["alternate"] else "", r["tris"]))
+    L.append("")
+    L.append("## Scattered scenery -- `scenarios/sky_citadel_scatter_props.fbx`")
+    L.append("")
+    L.append("| Mesh | Family | Sets | Anim | Tier | Interact | Tris |")
+    L.append("|---|---|---|---|---|---|---|")
+    for r in scatter:
+        L.append("| `%s` | %s | %s | %s | %s | %s | %d |" % (r["mesh"], r["family"], r["sets"], r["anim"], r["tier"],
+                                                          r["interact"], r["tris"]))
+    L.append("")
+    L.append("Route blockers (one per scenario, placed only when a run closes a socket; see each kit's")
+    L.append("`Anchors_<scenario>.luau`, `Kind = \"BLOCKER\"`, `Mesh = ...`): " +
+             ", ".join("`%s`" % b for b in sorted(blockers.values())))
+    L.append("")
+    L.append("## Base kit props -- `sky_citadel_props.fbx`")
+    L.append("")
+    L.append(", ".join("`%s`" % n for n in base_props) or "(run the base kit export first)")
+    L.append("")
+    with open(MANIFEST, "w", encoding="utf-8", newline="\n") as f:
+        f.write("\n".join(L) + "\n")
+    return MANIFEST
 
 
 def write_parity(lib, pools, sets):
@@ -1409,7 +1595,8 @@ def main(export=False, save=True, preview=True, sets_only=None):
                 counts.append(preview_scatter(pieces, objs, pools[set_name], lib, mats, c, s))
         ok, rep = K["validate"](objs)
         report[set_name] = {"ok": ok, "failed": [(r["piece"], r["failed"], r["float_problems"][:2],
-                                                   r["ground_problems"][:2]) for r in rep if not r["ok"]],
+                                                   r["ground_problems"][:2], r["geometry_problems"][:3])
+                                                  for r in rep if not r["ok"]],
                             "tris_max": max(r["tris"] for r in rep),
                             "fixed_props": sum(len(p.props) for p in pieces),
                             "spawn_points": sum(p.nspawn for p in pieces),
@@ -1426,7 +1613,7 @@ def main(export=False, save=True, preview=True, sets_only=None):
         if bad:
             raise RuntimeError("validation failed; not exporting: %r" % bad)
         os.makedirs(SCEN_EXPORT, exist_ok=True)
-        kinds, placements, fixtures = K["prop_library"](all_pieces)
+        kinds, placements, fixtures = K["prop_library"](all_pieces, prefix="scn_prop_", fix_prefix="scn_fix_")
         libc = bpy.data.collections.new("ScenarioPropLibrary")
         bpy.context.scene.collection.children.link(libc)
         prop_objs = K["props_to_objects"](kinds, mats, libc)
@@ -1460,7 +1647,7 @@ def main(export=False, save=True, preview=True, sets_only=None):
             for p in sets[scen][0]:
                 if p.blockers and scen not in blockers:
                     b = p.blockers[0]
-                    shell = K["Piece"]("prop_blocker_%s" % scen, "blocker")
+                    shell = K["Piece"]("scn_prop_blocker_%s" % scen, "blocker")
                     pts = b["verts"]
                     mn = Vector((min(q.x for q in pts), min(q.y for q in pts), min(q.z for q in pts)))
                     mx = Vector((max(q.x for q in pts), max(q.y for q in pts), max(q.z for q in pts)))
@@ -1486,6 +1673,8 @@ def main(export=False, save=True, preview=True, sets_only=None):
         out["placements"] = K["write_props_luau"](kinds, placements, os.path.join(SCEN_EXPORT, "Props_Scenarios.luau"))
         out["fixtures"] = K["write_fixtures_luau"](kinds, fixtures, os.path.join(SCEN_EXPORT, "Fixtures_Scenarios.luau"))
         write_scatter_luau(lib, pools, {k: v[0] for k, v in sets.items()})
+        out["manifest"] = write_manifest({k: v[0] for k, v in sets.items()}, {k: v[1] for k, v in sets.items()},
+                                         kinds, placements, fixtures, lib, blockers)
         out["parity_rows"] = write_parity(lib, pools, {k: v[0] for k, v in sets.items()})
         out["fixed_kinds"] = len(kinds)
     if save:

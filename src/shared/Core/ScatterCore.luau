@@ -362,6 +362,16 @@ function ScatterCore.rowsFor(set: any, chunkId: string, seed: number, key: strin
 	return rows
 end
 
+--- Which of n versions of a fixed prop this run draws (0 = the row's own,
+--- k = its Alt[k]): the same on every client, different run to run and
+--- berth to berth. A moored raider ship is one of five this way.
+function ScatterCore.pick(seed: number, key: string, row: number, n: number): number
+	if n <= 1 then
+		return 0
+	end
+	return ScatterCore.hash(string.format("%d|%s|%d", seed, key, row)) % n
+end
+
 --- The key that tells two copies of a chunk in one run apart: where it sits.
 function ScatterCore.keyFor(chunkId: string, x: number, z: number): string
 	return string.format("%s@%d,%d", chunkId, math.floor(x), math.floor(z))

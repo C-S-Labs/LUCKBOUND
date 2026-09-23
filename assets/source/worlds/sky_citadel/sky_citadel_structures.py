@@ -114,6 +114,13 @@ def towers(ctx):
     return out
 
 
+def wall_at(r, H, z, a_deg):
+    """Distance from a turret's axis to its wall's face at height z and
+    bearing a: the kit's shaft tapers r -> 0.94 r from z = 3 to H."""
+    rr = r - 0.06 * r * max(0.0, min(1.0, (z - 3.0) / max(H - 3.0, 1.0)))
+    return poly_radius(rr, 8, 22.5, a_deg)
+
+
 def tower_shells(ctx, x, y, r, above=-0.5):
     return [q for q in shells(ctx.p) if math.hypot(q["c"].x - x, q["c"].y - y) < r * 1.35 and q["min"].z >= above]
 
@@ -148,8 +155,7 @@ def rim_run(ctx, span):
     if len(run) < 2:
         return None
     t0, t1 = min(t for _, t in run), max(t for _, t in run)
-    remove_faces(p, [fi for s, _ in run for fi in s["faces"]])
-    ctx.refresh()
+    clear_rim(ctx, sx, sy, tx, ty, nrm[0], nrm[1], t0, t1)
     ax, ay = sx + tx * t0, sy + ty * t0
     bx, by = sx + tx * t1, sy + ty * t1
     return ax, ay, bx, by, nrm[0], nrm[1]
@@ -177,14 +183,29 @@ def lean_group(ctx, group, cx, cy, deg, axis_deg, drop=0.0):
 
 
 def crystal_spire(p, x, y, z, rng, tall, spread, n, mats=("AetherBloom", "Pearl", "SkyGlass"), down=False):
-    """A formation of crystals erupting from one point (or hanging, if down)."""
+    """A formation of crystals erupting from one point (or hanging, if down).
+    Every crystal's whole length is checked against the piece: one that would
+    run through a wall, a rail or a keel is leaned less, then shortened, then
+    left out."""
+    bvh = piece_bvh(p)
+    sgn = -1 if down else 1
     for k in range(n):
         a = rng.uniform(0, 2 * math.pi)
         d = 0 if k == 0 else rng.uniform(0.3, 1.0) * spread
         tilt = (d / max(spread, 0.1)) * rng.uniform(14, 34)
         h = tall * (1.0 if k == 0 else rng.uniform(0.3, 0.7))
         w = max(1.2, h * rng.uniform(0.14, 0.22))
-        with frame(p, xf(x + math.cos(a) * d, y + math.sin(a) * d, z, math.degrees(a), 0, tilt * (-1 if down else 1))):
+        bx, by = x + math.cos(a) * d, y + math.sin(a) * d
+        for _try in range(3):
+            M = xf(bx, by, z, math.degrees(a), 0, tilt * sgn)
+            tip = M @ Vector((0, 0, h * sgn))
+            start = M @ Vector((0, 0, min(2.0, h * 0.3) * sgn))
+            if path_clear(bvh, start, tip, w * 0.5):
+                break
+            tilt, h = tilt * 0.5, h * 0.75
+        else:
+            continue
+        with frame(p, M):
             if down:
                 crystal(p, mats[k % len(mats)], 0, 0, 0, w, 0.01, h, n=5)
             else:
@@ -269,13 +290,15 @@ def s_unmooring(ctx):
 def palisade(p, run, rng):
     ax, ay, bx, by, nx, ny = run
     a = math.degrees(math.atan2(by - ay, bx - ax))
+    # stakes on the rim line, a hair's lean either way; the two rails lashed
+    # across their inner faces, so every stake is held by both
     for x, y in along(run, 1.7):
         h = rng.uniform(5.0, 7.0)
-        with frame(p, xf(x + nx * 0.8, y + ny * 0.8, 0, a, rng.uniform(-10, -4), rng.uniform(-4, 4))):
+        with frame(p, xf(x + nx * 0.8, y + ny * 0.8, -0.2, a, rng.uniform(-3, 3), rng.uniform(-4, 4))):
             frustum(p, "Twig", 4, 0.5, 0.0, 0, h, rot=45)
     L = math.hypot(bx - ax, by - ay)
     for z in (1.4, 3.4):
-        box(p, "Bark", (ax + bx) / 2 + nx * 1.4, (ay + by) / 2 + ny * 1.4, z, L + 1.2, 0.5, 0.5, rz=a)
+        box(p, "Bark", (ax + bx) / 2 + nx * 1.1, (ay + by) / 2 + ny * 1.1, z, max(2.0, L - 0.4), 0.5, 0.5, rz=a)
 
 
 def watchtower(p, x, y, z0, rng):
@@ -315,16 +338,23 @@ def s_siege(ctx):
     if rng.random() < 0.6:
         crumble_tower(ctx)
     for (x, y, r, H, z1) in towers(ctx)[: rng.randint(1, 3)]:
-        # rust plates bolted over the white, raider banners down the walls
+        # rust plates bolted flat onto the white, a raider banner hung from the
+        # walk's rim -- each set against the wall's real face on its bearing
+        bvh = piece_bvh(p)
         for k in range(rng.randint(3, 6)):
-            a = rng.uniform(0, 2 * math.pi)
+            a = rng.uniform(0, 360)
             z = rng.uniform(4, H * 0.85)
-            box(p, "RaiderRust", x + math.cos(a) * (r * 0.97 + 0.15), y + math.sin(a) * (r * 0.97 + 0.15), z,
-                0.35, rng.uniform(3, 5), rng.uniform(3, 6), rz=math.degrees(a), ry=rng.uniform(-6, 6))
-        a = rng.uniform(0, 2 * math.pi)
+            d = face_dist(bvh, x, y, z, a)
+            if d is None or d > r * 1.3:
+                continue
+            box(p, "RaiderRust", x + math.cos(math.radians(a)) * (d + 0.1), y + math.sin(math.radians(a)) * (d + 0.1),
+                z, 0.35, rng.uniform(2.0, 3.0), rng.uniform(3, 6), rz=a)
+        a = rng.uniform(0, 360)
         L = min(H - 4, rng.uniform(9, 16))
-        box(p, "RaiderRust", x + math.cos(a) * (r * 1.2 + 0.25), y + math.sin(a) * (r * 1.2 + 0.25), H + 1 - L / 2,
-            0.2, 3.2, L, rz=math.degrees(a))
+        d = face_dist(bvh, x, y, H + 2.5, a)
+        if d is not None and d < r * 1.4 and rng.random() < 0.8:
+            box(p, "RaiderRust", x + math.cos(math.radians(a)) * (d + 0.06), y + math.sin(math.radians(a)) * (d + 0.06),
+                H + 2.8 - L / 2, 0.2, 3.2, L, rz=a)
     for _ in range(rng.randint(0, 2) if role(p) in ("COMBAT", "BOSS") else rng.randint(0, 1)):
         at = site(ctx, 6.0, 30.0, label="watchtower")
         if at:
@@ -343,8 +373,8 @@ def s_siege(ctx):
 def blast_wall(p, run):
     ax, ay, bx, by, nx, ny = run
     a = math.degrees(math.atan2(by - ay, bx - ax))
-    L = math.hypot(bx - ax, by - ay) + 2.0
-    cx, cy = (ax + bx) / 2 + nx * 0.6, (ay + by) / 2 + ny * 0.6
+    L = max(4.0, math.hypot(bx - ax, by - ay) - 1.0)     # inside its gap, clear of the next edge's wall
+    cx, cy = (ax + bx) / 2 + nx * 0.9, (ay + by) / 2 + ny * 0.9
     box(p, "Steel", cx, cy, 2.9, L, 1.4, 5.8, rz=a)
     box(p, "Hazard", cx + nx * 0.72, cy + ny * 0.72, 1.2, L, 0.06, 0.6, rz=a)
     box(p, "AlarmRed", cx, cy, 5.9, L - 0.6, 0.4, 0.2, rz=a)
@@ -365,12 +395,13 @@ def s_lockdown(ctx):
     for (x, y, r, H, z1) in towers(ctx)[: rng.randint(1, 4)]:
         # an armoured sleeve over the lower shaft, red band at its top
         top = H * rng.uniform(0.45, 0.7)
-        frustum(p, "Gunmetal", 8, r * 1.12, r * 1.06, 0.2, top, x, y)
+        frustum(p, "Gunmetal", 8, r * 1.12, r * 1.06, -0.3, top, x, y)
         frustum(p, "AlarmRed", 8, r * 1.1, r * 1.1, top - 0.8, top - 0.3, x, y)
         for k in range(4):
-            a = math.radians(45 + 90 * k)
-            box(p, "Hazard", x + math.cos(a) * r * 1.1, y + math.sin(a) * r * 1.1, top * 0.5, 0.2, 1.2, top * 0.9,
-                rz=math.degrees(a))
+            a = 90 * k
+            d = poly_radius(r * 1.09, 8, 22.5, a) + 0.05
+            box(p, "Hazard", x + math.cos(math.radians(a)) * d, y + math.sin(math.radians(a)) * d, top * 0.5,
+                0.2, 1.2, top * 0.9, rz=a)
     for _ in range(rng.randint(0, 2)):
         at = site(ctx, 2.6, 30.0, label="sensor mast")
         if at:
@@ -380,7 +411,7 @@ def s_lockdown(ctx):
             frustum(p, "Steel", 6, 0.45, 0.3, z0 + 1.2, z0 + h, x, y)
             with frame(p, xf(x, y, z0 + h - 2, rng.uniform(0, 360), 0, 35)):
                 frustum(p, "Steel", 8, 2.6, 0.6, 0, 1.2)
-            crystal(p, "AlarmRed", x, y, z0 + h + 0.8, 0.5, 0.9, 0.5, n=4)
+            crystal(p, "AlarmRed", x, y, z0 + h + 0.35, 0.5, 0.9, 0.5, n=4)
     # warning chevrons painted toward every opening
     for d in ctx.open:
         for k in range(3):
@@ -434,20 +465,25 @@ def crown_nest(ctx):
         if not roof:
             continue
         remove_faces(p, [fi for q in roof for fi in q["faces"]])
+        # the nest rests on what is left of the turret's top, its bowl sunk
+        # into the crenellations
+        left = tower_shells(ctx, x, y, r, above=H - 1.0)
+        top = max((q["max"].z for q in left), default=H + 3.0)
         R_ = r * 1.5
-        z = H + 3.0
+        z = top - 0.2
+        frustum(p, "Twig", 10, R_ - 1.5, R_ + 0.4, z - 0.8, z + 0.8, x, y)
         for k in range(26):
             a = 360 / 26 * k + rng.uniform(-5, 5)
-            box(p, "Twig", x + math.cos(math.radians(a)) * R_, y + math.sin(math.radians(a)) * R_, z + (k % 3) * 0.5,
-                R_ * 0.9, 0.7, 0.7, rz=a + 90 + rng.uniform(-18, 18), rx=rng.uniform(-14, 14))
+            box(p, "Twig", x + math.cos(math.radians(a)) * R_, y + math.sin(math.radians(a)) * R_,
+                z + 0.4 + (k % 3) * 0.35, R_ * 0.9, 0.7, 0.7, rz=a + 90 + rng.uniform(-18, 18),
+                rx=rng.uniform(-10, 10))
         for k in range(16):
             a = 360 / 16 * k + 11
-            box(p, "Bark", x + math.cos(math.radians(a)) * (R_ + 1.2), y + math.sin(math.radians(a)) * (R_ + 1.2),
-                z - 0.8, R_ * 0.8, 0.6, 0.6, rz=a + 70, rx=18)
-        frustum(p, "Twig", 10, R_ - 1.5, R_ + 0.4, z - 0.6, z + 0.8, x, y)
+            box(p, "Bark", x + math.cos(math.radians(a)) * (R_ - 0.3), y + math.sin(math.radians(a)) * (R_ - 0.3),
+                z - 0.3, R_ * 0.8, 0.6, 0.6, rz=a + 70, rx=18)
         for k in range(3):
             a = math.radians(120 * k + 30)
-            lump(p, "Bone", [(1.0, z + 0.8), (1.25, z + 1.8), (0.8, z + 2.9), (0, z + 3.3)], n=7,
+            lump(p, "Bone", [(1.0, z + 0.5), (1.25, z + 1.5), (0.8, z + 2.6), (0, z + 3.0)], n=7,
                  seed="crown egg %d" % k, jitter=0.05, cx=x + math.cos(a) * 2.0, cy=y + math.sin(a) * 2.0)
         add_anchor(p, "EVENT", x, y, z, "the stormhawk's nest crowns this turret: it dives from here")
         ctx.refresh()
@@ -464,15 +500,25 @@ def s_stormhawk(ctx):
         crown_nest(ctx)
     for (x, y, r, H, z1) in towers(ctx)[: rng.randint(1, 3)]:
         # claw rakes down the shaft
-        a = rng.uniform(0, 2 * math.pi)
+        # claw rakes down the shaft, flat on one of its faces
+        bvh = piece_bvh(p)
+        a = rng.uniform(0, 360)
         z = rng.uniform(8, max(9, H * 0.7))
         for k in (-1, 0, 1):
-            b = a + k * 0.16
-            box(p, "Soot", x + math.cos(b) * (r * 0.97 + 0.1), y + math.sin(b) * (r * 0.97 + 0.1), z - k * 0.8,
-                0.25, 0.7, rng.uniform(6, 10), rz=math.degrees(b), rx=rng.uniform(18, 26))
-        if rng.random() < 0.5 and H + 16 < CROWN_TOP - 10:
-            frustum(p, "SunGold", 5, 0.35, 0.1, H + 3, H + rng.uniform(10, 15), x + r * 0.6, y)
-            torus(p, "AzureNeon", 0.8, 0.12, x + r * 0.6, y, H + 8, n=8)
+            b = a + k * 4.0
+            d = face_dist(bvh, x, y, z - k * 0.8, b)
+            if d is None or d > r * 1.3:
+                continue
+            box(p, "Soot", x + math.cos(math.radians(b)) * (d + 0.06), y + math.sin(math.radians(b)) * (d + 0.06),
+                z - k * 0.8, 0.25, 0.7, rng.uniform(6, 10), rz=b, rx=rng.uniform(18, 26))
+        # a lightning rod on the roof, if the roof is still there
+        roof = tower_shells(ctx, x, y, r, above=H + 2.9)
+        rh = z1 - H - 6
+        if roof and rng.random() < 0.5 and rh > 4:
+            zb = H + 3 + rh * (1 - 0.6 / 0.9) - 0.4
+            if zb + 9 < CROWN_TOP - 10:
+                frustum(p, "SunGold", 5, 0.35, 0.1, zb, zb + rng.uniform(7, 10), x + r * 0.6, y)
+                torus(p, "AzureNeon", 0.8, 0.12, x + r * 0.6, y, zb + 4, n=8)
     for _ in range(rng.randint(2, 4)):
         surface_crack(ctx, rng.uniform(16, 30), w=0.8, mat="AzureNeon")
     for _ in range(rng.randint(2, 4)):          # claw gouges across the deck
@@ -515,30 +561,52 @@ def frozen_fall(ctx):
         with frame(p, xf(ex - nx * 0.8, ey - ny * 0.8, -DECK_T - L * 0.22, a)):
             lump(p, "Ice", [(0.01, -L * 0.25), (1.0, -L * 0.05), (1.0, L * 0.15), (0.01, L * 0.22)], n=6,
                  seed="sheet %s" % p.name, jitter=0.15, sx=1.3, sy=w * 0.9)
+        # a curtain of long icicles growing out of the sheet's face
+        bvh = piece_bvh(p)
         k = int(w * 1.4)
         for i in range(k):
             t = (i + 0.5) / k * 2 - 1
             reach = L * (1.0 - 0.6 * abs(t)) * rng.uniform(0.6, 1.0)
-            cx = ex - nx * (1.5 + rng.uniform(0, 1.5)) + tx * t * w
-            cy = ey - ny * (1.5 + rng.uniform(0, 1.5)) + ty * t * w
-            crystal(p, "Ice" if i % 3 else "SkyGlass", cx, cy, -DECK_T + 0.5, rng.uniform(0.8, 1.6), 0.5, reach, n=5,
+            out = 0.9 + rng.uniform(0, 0.6)
+            cx = ex - nx * out + tx * t * w * 0.85
+            cy = ey - ny * out + ty * t * w * 0.85
+            top = -DECK_T - rng.uniform(0.5, L * 0.12)
+            if not path_clear(bvh, (cx - nx * 0.6, cy - ny * 0.6, top - 1.0), (cx - nx * 0.6, cy - ny * 0.6,
+                                                                              top - reach), 0.4):
+                continue
+            crystal(p, "Ice" if i % 3 else "SkyGlass", cx, cy, top, rng.uniform(0.8, 1.4), 0.5, reach, n=5,
                     rz=rng.uniform(0, 72))
         p.solid("frozen fall", ex, ey, w, -L - 4, 1)
         return True
     return False
 
 
-def icicle_ring(p, x, y, R_, z, rng, n=16):
+def icicle_ring(ctx, x, y, r, H, rng, n=16):
+    """Icicles hung from the underside of a turret's walk ring: each grows
+    out of the ring's outer face (the kit's DeepAlloy band, H+2..H+3, an
+    octagon of radius 1.2 r) and falls clear of the flare beneath it."""
+    p = ctx.p
+    bvh = piece_bvh(p)
     for k in range(n):
-        a = 2 * math.pi * k / n + rng.uniform(-0.1, 0.1)
-        crystal(p, "Ice", x + math.cos(a) * R_, y + math.sin(a) * R_, z, rng.uniform(0.25, 0.5), 0.01,
-                rng.uniform(1.5, 6.5), n=4)
+        a = 360.0 * k / n + rng.uniform(-4, 4)
+        ri = rng.uniform(0.25, 0.45)
+        band = face_dist(bvh, x, y, H + 2.5, a)
+        if band is None or band > r * 1.35:
+            continue
+        d = band + ri * 0.6
+        cx, cy = x + math.cos(math.radians(a)) * d, y + math.sin(math.radians(a)) * d
+        L = rng.uniform(1.5, 6.5)
+        if not hang_clear(bvh, cx + math.cos(math.radians(a)) * 0.3, cy + math.sin(math.radians(a)) * 0.3,
+                          H + 2.0, L, ri):
+            continue
+        crystal(p, "Ice", cx, cy, H + 2.2, ri, 0.01, L + 0.2, n=4, rz=a)
 
 
 def s_rime(ctx):
     p, rng = ctx.p, ctx.rng
     for (x, y, r, H, z1) in towers(ctx):
-        icicle_ring(p, x, y, r * 1.2, H + 2.0, rng, n=int(10 + r * 1.5))
+        if tower_shells(ctx, x, y, r, above=H + 1.9):
+            icicle_ring(ctx, x, y, r, H, rng, n=int(10 + r * 1.5))
     for _ in range(rng.randint(1, 3) if role(p) != "SIDE" else rng.randint(0, 1)):
         frozen_fall(ctx)
     for _ in range(rng.randint(1, 3)):
@@ -546,7 +614,14 @@ def s_rime(ctx):
         if at:
             crystal_spire(p, at[0], at[1], at[2], rng, rng.uniform(14, 36), 3.2, rng.randint(3, 6),
                           mats=("Ice", "SkyGlass", "Snow"))
-    for _ in range(rng.randint(1, 3)):          # snow banked up against the walls
+    snow_banks(ctx, rng.randint(1, 3))
+    rim_icicles(ctx)
+
+
+def snow_banks(ctx, count):
+    """Snow banked up against the walls (it may bury a rail's foot: snow does)."""
+    p, rng = ctx.p, ctx.rng
+    for _ in range(count):
         c = None
         for _t in range(40):
             c = ctx.uniform()
@@ -566,16 +641,34 @@ def s_rime(ctx):
                      jitter=0.2, sx=L / 6)
             p.solid("snow bank", ex, ey, L / 2, 0, 3)
             break
-    for poly in ctx.polys:                      # icicles along the deck rims
+
+
+def rim_icicles(ctx):
+    """Icicles along the deck rims: each grows out of the slab's side, just
+    outside the edge, and only where the air beneath is clear -- where a keel
+    runs flush under the rim there are none, rather than icicles through it."""
+    p, rng = ctx.p, ctx.rng
+    bvh = piece_bvh(p)
+    for poly in ctx.polys:
         n = len(poly)
         cx, cy = sum(q[0] for q in poly) / n, sum(q[1] for q in poly) / n
-        for _ in range(max(6, 2 * n)):
+        for _ in range(max(10, 3 * n)):
             i = rng.randrange(n)
             (ax, ay), (bx, by) = poly[i], poly[(i + 1) % n]
+            Le = math.hypot(bx - ax, by - ay) or 1.0
+            ox, oy = (by - ay) / Le, -(bx - ax) / Le
+            if ((ax + bx) / 2 - cx) * ox + ((ay + by) / 2 - cy) * oy < 0:
+                ox, oy = -ox, -oy
             t = rng.uniform(0.1, 0.9)
-            x, y = ax + (bx - ax) * t, ay + (by - ay) * t
-            x, y = x + (cx - x) * 0.02, y + (cy - y) * 0.02
-            crystal(p, "Ice", x, y, -DECK_T + 0.05, rng.uniform(0.4, 0.8), 0.01, rng.uniform(2.5, 8), n=4)
+            ex, ey = ax + (bx - ax) * t, ay + (by - ay) * t
+            if in_corridor(p, ex, ey, half=21, o=ctx.open) and max(abs(ex), abs(ey)) > HALF - 30:
+                continue                        # not across a skyway's mouth
+            ri = rng.uniform(0.4, 0.75)
+            x, y = ex + ox * ri * 0.6, ey + oy * ri * 0.6
+            L = rng.uniform(2.5, 8)
+            if not hang_clear(bvh, x + ox * 0.35, y + oy * 0.35, -DECK_T + 0.1, L + 0.5, ri):
+                continue
+            crystal(p, "Ice", x, y, -DECK_T + 1.0, ri, 0.01, L + 1.0, n=4, rz=math.degrees(math.atan2(oy, ox)))
 
 
 # ==========================================================================
@@ -642,20 +735,40 @@ def keel_roots(ctx, n):
             if in_corridor(p, ex, ey, half=26, o=ctx.open):
                 continue
             L = rng.uniform(14, 34)
-            shape = ("box", ex - 5, ex + 5, ey - 5, ey + 5, -L - 3, 0)
+            shape = ("box", ex - 7, ex + 7, ey - 7, ey + 7, -L - 3, 0)
             if not hang_ok(ctx, shape):
                 continue
-            z = -DECK_T
-            x, y = ex + nx * 1.2, ey + ny * 1.2
-            for j in range(5):
-                seg = L / 5
-                nxp = x + nx * rng.uniform(0.5, 2.5) + rng.uniform(-1.5, 1.5)
-                nyp = y + ny * rng.uniform(0.5, 2.5) + rng.uniform(-1.5, 1.5)
-                with frame(p, xf((x + nxp) / 2, (y + nyp) / 2, z - seg / 2)):
-                    frustum(p, "Bark", 5, 1.2 - 0.18 * j, 1.0 - 0.18 * j, -seg / 2 - 0.3, seg / 2 + 0.3)
+            # out of the slab's side, over the lip, then down and away from
+            # the keel: one continuous root, as far as the air is clear
+            bvh = piece_bvh(p)
+            ox, oy = -nx, -ny                  # outward
+            tx, ty = -oy, ox
+            pts = [(ex - ox * 0.6, ey - oy * 0.6, -0.9), (ex + ox * 0.7, ey + oy * 0.7, -1.4)]
+            x, y, z = pts[-1]
+            for j in range(6):
+                seg = L / 6
+                nxp = x + ox * rng.uniform(0.6, 2.2) + tx * rng.uniform(-1.4, 1.4)
+                nyp = y + oy * rng.uniform(0.6, 2.2) + ty * rng.uniform(-1.4, 1.4)
+                if not path_clear(bvh, (x + ox * 1.0, y + oy * 1.0, z - 0.8), (nxp + ox * 1.0, nyp + oy * 1.0, z - seg),
+                                  0.0):
+                    break
                 x, y, z = nxp, nyp, z - seg
-            p.solid("keel root", ex, ey, 5, -L - 3, 0)
+                pts.append((x, y, z))
+            if len(pts) < 4:
+                continue
+            k = len(pts)
+            radii = [1.25 - 1.0 * j / (k - 1) for j in range(k - 1)] + [0.0]
+            tube(p, "Bark", pts, radii, n=6)
+            p.solid("keel root", ex, ey, 7, -L - 3, 0)
             break
+
+
+def overgrown_rim(p, run, rng):
+    """Where a parapet fell, a hedge grew along the lip."""
+    ax, ay, bx, by, nx, ny = run
+    for x, y in along(run, 3.0):
+        lump(p, rng.choice(("Moss", "Verdure")), [(1.8, -0.2), (2.0, 1.4), (1.4, 2.6), (0, 3.0)], n=6,
+             seed="hedge %.1f %.1f" % (x, y), jitter=0.3, cx=x + nx * 1.6, cy=y + ny * 1.6)
 
 
 def s_reclaimed(ctx):
@@ -669,14 +782,13 @@ def s_reclaimed(ctx):
         if run:
             ax, ay, bx, by, nx, ny = run
             a = math.degrees(math.atan2(by - ay, bx - ax))
-            for x, y in along(run, 3.0):
-                lump(p, rng.choice(("Moss", "Verdure")), [(1.8, 0), (2.0, 1.4), (1.4, 2.6), (0, 3.0)], n=6,
-                     seed="hedge %.1f %.1f" % (x, y), jitter=0.3, cx=x + nx * 1.2, cy=y + ny * 1.2)
+            overgrown_rim(p, run, rng)
     if role(p) in ("COMBAT", "BOSS", "SIDE") or rng.random() < 0.4:
         great_tree(ctx)
     keel_roots(ctx, rng.randint(1, 3))
     for poly in ctx.polys:
-        K["vines"](p, poly, "reclaimed %s %d" % (p.name, len(poly)), count=max(8, 2 * len(poly)))
+        K["vines"](p, poly, "reclaimed %s %d" % (p.name, len(poly)), count=max(8, 2 * len(poly)),
+                   mats=("Verdure", "Moss", "MossLight"))
     for _ in range(rng.randint(6, 12)):         # moss carpets at the foot of the walls
         c = None
         for _t in range(30):
@@ -701,6 +813,10 @@ def s_reclaimed(ctx):
 # ==========================================================================
 # AETHER SURGE -- crystal erupting through the citadel
 # ==========================================================================
+
+def hang_crystals(p, x, y, z, rng, tall):
+    crystal_spire(p, x, y, z, rng, tall, 3.0, rng.randint(3, 6), down=True)
+
 
 def s_aether_surge(ctx):
     p, rng = ctx.p, ctx.rng
@@ -741,7 +857,7 @@ def s_aether_surge(ctx):
         shape = ("box", c[0] - 6, c[0] + 6, c[1] - 6, c[1] + 6, zb - tall - 2, zb + 1)
         if not hang_ok(ctx, shape):
             continue
-        crystal_spire(p, c[0], c[1], zb + 0.5, rng, tall, 3.0, rng.randint(3, 6), down=True)
+        hang_crystals(p, c[0], c[1], zb + 0.5, rng, tall)
         p.solid("keel crystal", c[0], c[1], 6, zb - tall - 2, zb + 1)
     # crystal rocks adrift round the piece, on purpose
     for _ in range(rng.randint(1, 3)):

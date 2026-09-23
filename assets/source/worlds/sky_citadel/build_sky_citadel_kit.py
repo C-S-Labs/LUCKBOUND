@@ -42,6 +42,15 @@ from contextlib import contextmanager
 import bmesh
 import bpy
 from mathutils import Euler, Matrix, Vector
+from mathutils.bvhtree import BVHTree
+
+# Checks on the real mesh (detached parts, clipping) and the face tagging they
+# rely on: caller_tag() names the builder that made each face.
+exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "geometry_checks.py"),
+          encoding="utf-8").read(), globals())
+# The detail pass every prop mesh goes through before export (prop_detail.py).
+exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "prop_detail.py"),
+          encoding="utf-8").read(), globals())
 
 # --------------------------------------------------------------------------
 # Kit-wide numbers. Every one of these is mirrored in
@@ -146,6 +155,7 @@ class Piece:
         self.verts = []
         self.faces = []
         self.fmat = []
+        self.ftag = []      # per face: the builder that made it (geometry_checks)
         self.base = Matrix.Identity(4)
         self.solids = []
         self.floats = []
@@ -170,6 +180,7 @@ class Piece:
         self.verts.extend(W @ Vector(v) for v in verts)
         self.faces.extend([base + i for i in f] for f in faces)
         self.fmat.extend([mat] * len(faces))
+        self.ftag.extend([caller_tag(2)] * len(faces))
 
     def world_box(self, x0, x1, y0, y1, z0, z1):
         pts = [self.base @ Vector((x, y, z)) for x in (x0, x1) for y in (y0, y1) for z in (z0, z1)]
@@ -232,6 +243,11 @@ PROP_KINDS = {
     "floating tome": ("tome", "Hover", 2),
     "bird": ("bird", "Bird", 2),
     "drifting lintel": ("lintel", "Float", 1),
+    # the citadel's anti-grav accents, lifted out of the structure by
+    # geometry_checks.settle: halos round spires and pedestals, crystals
+    # hovering over obelisks and altars, an orrery's rings
+    "hover halo": ("halo", "Float", 1),
+    "hover crystal": ("accent", "Hover", 1),
 }
 # Parts that move relative to their prop, by as_attached() label: library base
 # name and the animation that moves them.
@@ -261,6 +277,7 @@ def _slice(p, v0, f0, inv):
     del p.verts[v0:]
     del p.faces[f0:]
     del p.fmat[f0:]
+    del p.ftag[f0:]
     return verts, faces, mats
 
 
@@ -401,6 +418,101 @@ def crystal(p, mat, cx, cy, cz, r, up, down, n=4, rz=0.0):
     p.add(verts, faces, mat, xf(cx, cy, cz, rz))
 
 
+def tube(p, mat, pts, radii, n=5):
+    """One continuous tube through a list of points -- a root, a vine, a
+    rope -- its radius per point (0 at the last makes a tip). Each ring is
+    carried along the path (parallel transport), so the tube never twists."""
+    pts = [Vector(q) for q in pts]
+    if len(pts) < 2:
+        return
+    tans = []
+    for i in range(len(pts)):
+        a = pts[max(i - 1, 0)]
+        b = pts[min(i + 1, len(pts) - 1)]
+        t = b - a
+        tans.append(t.normalized() if t.length > 1e-9 else Vector((0, 0, 1)))
+    u = tans[0].cross(Vector((0, 0, 1)) if abs(tans[0].z) < 0.9 else Vector((1, 0, 0))).normalized()
+    verts, faces, rings = [], [], []
+    for i, (c, t) in enumerate(zip(pts, tans)):
+        u = (u - t * u.dot(t))
+        u = u.normalized() if u.length > 1e-9 else t.orthogonal().normalized()
+        v = t.cross(u)
+        r = radii[i]
+        if r <= 1e-6:
+            verts.append(tuple(c))
+            rings.append([len(verts) - 1])
+            continue
+        ring = []
+        for k in range(n):
+            a = 2 * math.pi * k / n
+            q = c + (u * math.cos(a) + v * math.sin(a)) * r
+            verts.append(tuple(q))
+            ring.append(len(verts) - 1)
+        rings.append(ring)
+    for A, B in zip(rings, rings[1:]):
+        if len(B) == 1:
+            faces += [(A[k], A[(k + 1) % n], B[0]) for k in range(n)]
+        else:
+            faces += [(A[k], A[(k + 1) % n], B[(k + 1) % n], B[k]) for k in range(n)]
+    if len(rings[0]) > 1:
+        faces.append(tuple(reversed(rings[0])))
+    if len(rings[-1]) > 1:
+        faces.append(tuple(rings[-1]))
+    p.add(verts, faces, mat, Matrix.Identity(4))
+
+
+def poly_radius(r, n, rot, theta_deg):
+    """Distance from the axis to the side of a regular n-gon of circumradius r
+    (vertices at rot + 360/n * k, as frustum() builds them), along theta."""
+    step = 360.0 / n
+    local = ((theta_deg - rot - step / 2) % step) - step / 2
+    return r * math.cos(math.radians(step / 2)) / math.cos(math.radians(local))
+
+
+def face_dist(bvh, x, y, z, a_deg, reach=40.0):
+    """How far the piece's surface is from the vertical axis through (x, y),
+    at height z along bearing a: found by casting in from outside, so it is
+    right however the thing there was turned when it was built."""
+    d = Vector((math.cos(math.radians(a_deg)), math.sin(math.radians(a_deg)), 0.0))
+    o = Vector((x, y, z)) + d * reach
+    hit = bvh.ray_cast(o, -d, reach)
+    return None if hit[0] is None else reach - hit[3]
+
+
+def piece_bvh(p):
+    return BVHTree.FromPolygons([tuple(v) for v in p.verts], [tuple(f) for f in p.faces])
+
+
+def hang_clear(bvh, x, y, ztop, L, r):
+    """Nothing under (x, y) from just below ztop down L, across a radius r:
+    room for a thing to hang there without passing through the piece."""
+    for dx, dy in ((0, 0), (r, 0), (-r, 0), (0, r), (0, -r)):
+        hit = bvh.ray_cast(Vector((x + dx, y + dy, ztop - 0.2)), Vector((0, 0, -1)), L + 0.5)
+        if hit[0] is not None:
+            return False
+    return True
+
+
+def path_clear(bvh, a, b, r=0.0):
+    """A straight run from a to b (and, with r, four parallel runs round it)
+    meets nothing."""
+    a, b = Vector(a), Vector(b)
+    d = b - a
+    L = d.length
+    if L < 1e-6:
+        return True
+    d.normalize()
+    offs = [Vector((0, 0, 0))]
+    if r > 0:
+        u = d.orthogonal().normalized()
+        v = d.cross(u)
+        offs += [u * r, -u * r, v * r, -v * r]
+    for o in offs:
+        if bvh.ray_cast(a + o, d, L)[0] is not None:
+            return False
+    return True
+
+
 def slab(p, mat, pts, z0, z1):
     """Convex polygon (CCW, XY) extruded from z0 to z1."""
     p.slab_area(pts)
@@ -459,6 +571,7 @@ def keel(p, pts, profile, centre=(0.0, 0.0)):
     p.verts.extend(p.base @ Vector(v) for v in verts)
     p.faces.extend([base + i for i in f] for f in faces)
     p.fmat.extend(mats)
+    p.ftag.extend([caller_tag(1)] * len(faces))
 
 
 def standard_keel(p, pts):
@@ -1275,6 +1388,7 @@ def holed_block(p, mat, x0, x1, y0, y1, z0, z1, cx, cz, r, depth, n=24, lining="
     p.verts.extend(p.base @ Vector(v) for v in verts)
     p.faces.extend([base + i for i in f] for f in faces)
     p.fmat.extend(fmat)
+    p.ftag.extend([caller_tag(1)] * len(faces))
 
 
 def vault_door(p, x, y, z, R=8.0, fixture=False):
@@ -1732,17 +1846,48 @@ def ring_keel(p, pts, R):
             torus(p, "PaleAlloy", rr + 1.2, 0.5, 0, 0, z, n=24)
 
 
-def vines(p, pts, seed, count=10):
-    """Green strands hanging from a deck's rim -- garden islands only."""
+def vines(p, pts, seed, count=10, mats=("Verdure",)):
+    """Strands hanging from a deck's rim. Each grows out of the slab's side
+    (its top buried in it), just outside the edge, and swings a little as it
+    falls; a strand goes only where the air below is clear all the way down,
+    so none passes through a keel sloping in under the deck."""
     rng = random.Random(seed)
+    bvh = piece_bvh(p)
     n = len(pts)
-    for _ in range(count):
+    cx, cy = sum(q[0] for q in pts) / n, sum(q[1] for q in pts) / n
+    placed = 0
+    for _ in range(count * 4):
+        if placed >= count:
+            break
         i = rng.randrange(n)
         (ax, ay), (bx, by) = pts[i], pts[(i + 1) % n]
-        t = rng.uniform(0.2, 0.8)
-        x, y = ax + (bx - ax) * t, ay + (by - ay) * t
+        L2 = math.hypot(bx - ax, by - ay) or 1.0
+        t = rng.uniform(0.15, 0.85)
+        ex, ey = ax + (bx - ax) * t, ay + (by - ay) * t
+        nx, ny = (by - ay) / L2, -(bx - ax) / L2               # outward normal
+        if (ex - cx) * nx + (ey - cy) * ny < 0:
+            nx, ny = -nx, -ny
+        r = rng.uniform(0.35, 0.5)
+        x, y = ex + nx * r * 0.6, ey + ny * r * 0.6
         L = rng.uniform(6, 18)
-        box(p, "Verdure", x * 0.985, y * 0.985, -DECK_T - L / 2, 0.8, 0.8, L)
+        if not hang_clear(bvh, x + nx * 0.6, y + ny * 0.6, -DECK_T, L + 1, r + 0.3):
+            continue
+        k = max(3, int(L / 3))
+        path, radii = [], []
+        sway = rng.uniform(0, 2 * math.pi)
+        for j in range(k + 1):
+            f = j / k
+            out = 0.6 * f + 0.4 * math.sin(sway + f * 4)
+            path.append((x + nx * out, y + ny * out, -0.8 - (DECK_T - 0.8 + L) * f))
+            radii.append(r * (1.0 - 0.6 * f))
+        tube(p, rng.choice(mats), path, radii, n=4)
+        for j in range(1, k):                                   # a leaf or two along it
+            if rng.random() < 0.6:
+                q = path[j]
+                a = rng.uniform(0, 360)
+                box(p, rng.choice(mats), q[0] + nx * 0.15, q[1] + ny * 0.15, q[2], 1.1, 0.12, 0.7, rz=a,
+                    rx=rng.uniform(-30, 30))
+        placed += 1
 
 
 # ---- lights ----------------------------------------------------------------
@@ -3037,9 +3182,21 @@ def build_cap_sealed_gate():
 SCENARIO_HOOK = None
 
 
+def kit_tags():
+    """Every builder name in the kit: a face tagged with one of these is the
+    base kit's; any other tag is a scenario's addition (geometry_checks)."""
+    return {n for n, v in globals().items() if callable(v)} | {"?"}
+
+
+SETTLE_LOG = []
+
+
 def finish(p):
-    """Every piece ends here: the scenario's dressing if one is set, beacons
-    last (they fit round everything else), then the bounding-box pins."""
+    """Every piece ends here: its parts settled (attached, or lifted into
+    animated props -- geometry_checks.settle), the scenario's dressing if one
+    is set, beacons last (they fit round everything else), then the
+    bounding-box pins."""
+    settle(p, kit_tags(), SETTLE_LOG)
     if SCENARIO_HOOK is not None:
         SCENARIO_HOOK(p)
     corner_beacons(p)
@@ -3707,9 +3864,11 @@ def validate(objs):
         p = PIECES_BY_NAME.get(obj.name)
         float_problems = float_report(p) if p else ["no build record"]
         ground_problems = ground_report(p) if p else ["no build record"]
+        geo_problems = geometry_faults(p, kit_tags()) if p else ["no build record"]
         checks = {
             "floats clear (no clipping, inside the tile)": not float_problems,
             "everything grounded stands on its deck": not ground_problems,
+            "every part attached, nothing clipping (real mesh)": not geo_problems,
             "footprint 256x256": abs(size.x - 256) < 0.01 and abs(size.y - 256) < 0.01,
             "height 256 (-96..+160)": abs(mn.z - KEEL_BOTTOM) < 0.01 and abs(mx.z - CROWN_TOP) < 0.01,
             "origin centred": abs(centre_xy[0]) < 0.01 and abs(centre_xy[1]) < 0.01,
@@ -3728,6 +3887,7 @@ def validate(objs):
             "floats": len(p.floats) if p else 0,
             "float_problems": float_problems[:6],
             "ground_problems": ground_problems[:6],
+            "geometry_problems": geo_problems[:6],
         })
     return ok, report
 
@@ -3806,7 +3966,12 @@ def _bounds(vs):
     return mn, mx
 
 
-def prop_library(pieces):
+# Library bases the detail pass leaves as built: the warships are detailed by
+# hand (sky_citadel_ships.py), fixture parts carry collision and hinges.
+NO_DETAIL = {"raider_warship", "chest_body", "chest_lid", "vault_door", "forcefield"}
+
+
+def prop_library(pieces, prefix="prop_", fix_prefix="fix_"):
     """Merge identical shapes into one library entry each -- props, the parts
     attached to them, and fixture parts alike -- and record every copy.
 
@@ -3814,6 +3979,10 @@ def prop_library(pieces):
     shape is compared after scaling it into a unit box, in 5% steps. Every
     copy keeps its own size, so a large and a small crystal of the same cut are
     one mesh drawn at two sizes -- which is what keeps the upload count small.
+
+    `prefix` / `fix_prefix` start every mesh name: the base kit's are prop_ and
+    fix_ (the live game's names); the scenario kits pass their own, so a
+    scenario's crate can never share a name with the base kit's different one.
 
     Returns (kinds, prop placements, fixture placements).
     """
@@ -3836,11 +4005,21 @@ def prop_library(pieces):
         kind = kinds.get(key)
         if kind is None:
             counters[base] = counters.get(base, 0) + 1
+            is_prop = base.startswith("prop_")
+            stem = base[5:] if is_prop else base[4:]
+            name = "%s%s_%s" % (prefix if is_prop else fix_prefix, stem, _letters(counters[base]))
+            kverts, kfaces, kmats = [v - centre for v in verts], faces, mats
+            if stem not in NO_DETAIL:
+                # finished before export (prop_detail.py), inside its own box,
+                # so every copy's Size still fits it
+                radius = max(math.hypot(v.x, v.y) for v in kverts)
+                kverts, kfaces, kmats = detail(kverts, kfaces, kmats, name, radius)
             kind = {
-                "name": "%s_%s" % (base, _letters(counters[base])),
-                "verts": [v - centre for v in verts],
-                "faces": faces,
-                "mats": mats,
+                "name": name,
+                "verts": kverts,
+                "faces": kfaces,
+                "mats": kmats,
+                "is_prop": is_prop,
             }
             kinds[key] = kind
         return kind, size, centre
@@ -3858,6 +4037,11 @@ def prop_library(pieces):
             world = prop["matrix"]
             pos = _TO_GAME @ (world @ centre)
             rot = _TO_GAME @ world.to_3x3() @ _TO_GAME.transposed()
+            alts = []
+            for averts, afaces, amats in prop.get("alts", ()):
+                akind, asize, acentre = kind_of("prop_" + base, averts, afaces, amats)
+                apos = _TO_GAME @ (world @ acentre)
+                alts.append({"prop": akind["name"], "pos": [apos.x, apos.y, apos.z], "size": game_size(asize)})
             rows.append({
                 "prop": kind["name"],
                 "anim": anim,
@@ -3866,6 +4050,7 @@ def prop_library(pieces):
                 "pos": [pos.x, pos.y, pos.z],
                 "rot": [rot[r][c] for r in range(3) for c in range(3)],
                 "size": game_size(size),
+                "alts": alts,
             })
             body = len(rows)  # 1-based, as Luau will index it
             for att in prop["attached"]:
@@ -3952,7 +4137,7 @@ def write_props_luau(kinds, placements, path=None):
         "	Library = {",
     ]
     for kind in kinds:
-        if kind["name"].startswith("prop_"):
+        if kind.get("is_prop", kind["name"].startswith("prop_")):
             out.append('		"%s",' % kind["name"])
     out.append("	},")
     out.append("	Placements = {")
@@ -3967,6 +4152,11 @@ def write_props_luau(kinds, placements, path=None):
                 extra += ', Interact = "%s"' % r["interact"]
             if "attach" in r:
                 extra += ", Attach = %d, Hinge = { %s }" % (r["attach"], ", ".join(num(v) for v in r["hinge"]))
+            if r.get("alts"):
+                extra += ", Alt = { %s }" % ", ".join(
+                    '{ Prop = "%s", P = { %s }, S = { %s } }' % (a["prop"], ", ".join(num(v) for v in a["pos"]),
+                                                              ", ".join(num(v) for v in a["size"]))
+                    for a in r["alts"])
             out.append('			{ Prop = "%s", Anim = "%s", Tier = %d, P = { %s }, R = { %s }, S = { %s }%s },' % (
                 r["prop"], r["anim"], r["tier"],
                 ", ".join(num(v) for v in r["pos"]),
@@ -4008,7 +4198,7 @@ def write_fixtures_luau(kinds, fixtures, path=None):
         "	Library = {",
     ]
     for kind in kinds:
-        if kind["name"].startswith("fix_"):
+        if not kind.get("is_prop", not kind["name"].startswith("fix_")):
             out.append('		"%s",' % kind["name"])
     out.append("	},")
     out.append("	Placements = {")

@@ -753,12 +753,90 @@ walking line, so there the scenario shows in the keel, the rims, the palette
 and the few spots off the corridor. Scatter on the base set is deliberately
 sparse.
 
+### Fourth pass — attached, unclipped, five ships, finished props (2026-09-23)
+
+Owner's walk of the third pass: parts clipping into each other in the chunks
+themselves, parts (the icicles) floating beside the chunk instead of joined to
+it, one raider ship everywhere, and props too plain — "aiming for 2500-5000
+tris will add more detail".
+
+**The validator now reads the real mesh (`geometry_checks.py`).** The old checks
+reasoned about the boxes each builder registers, so an icicle a stud off its
+rim, or a palisade through a rail, passed. Every face is now tagged with the
+builder that made it, and `validate()` adds one check on the mesh itself:
+*every part attached, nothing clipping*. It fails a piece when:
+- a cluster of parts touches nothing (floating) and is not a registered float,
+  an islet, or a walkable stepping plate;
+- a scenario's part passes through a base-kit part it may not be sunk into. A
+  crystal may grow out of a turret, a root out of a keel, an icicle out of the
+  slab it hangs from; nothing may pass through a rail, a parapet, a hedge or a
+  bench. Hanging parts may touch only what they hang from; freestanding builds
+  (palisades, watchtowers, blast walls, heaved plates) only the deck.
+
+**Fixed at the source, then settled.** Icicles hang from the turret's real
+eave band and grow out of the slab's side, only where the air below is clear.
+Frozen falls' curtains grow out of their ice sheet. Keel roots and vines are
+single continuous tubes, run only through clear air. Rim gaps are cut cleanly:
+a rail bar running past a breach is trimmed at the gap instead of being left
+hanging. Palisades are lashed to their stakes. Plates, banners and claw rakes
+are placed on the tower's actual face (by ray cast, whatever the tower's
+turn). The stormhawk's nest sits on the turret's remaining top. After every
+build, `settle()` snaps anything within 1.5 studs into contact, and in scenario
+pieces drops what cannot be attached. `unclip()` drops whole scenario builds
+that still clip. Measured over all 324 pieces: **0 detached, 0 clipping.**
+
+**The base kit's anti-grav accents are props now.** Spire halos, crystals
+hovering over obelisks, the orrery's rings, the fountain's and altar's rings,
+the belfry crystal: all were structure floating beside the piece. They are
+lifted into animated props (`hover halo` Float, `hover crystal` Hover), so
+they move and read as deliberate. Parts that merely missed their support (a
+sign 0.15 off its wall, the lighthouse lantern a stud above its floor, a crane
+beam over its mast) are snapped on.
+
+**Five raider warships** (`sky_citadel_ships.py`), 2,900–5,200 triangles each,
+all inside one berth envelope with the boarding rail in one place:
+
+| Ship | What it is | Tris |
+|---|---|---|
+| Reaver | patched galleon: two masts of square sail, stern castle, gun deck, ram | 5,238 |
+| Corsair | lean hull under a patched gas envelope on cables, tail fins, twin props | 3,664 |
+| Dreadnought | scrap ironclad: armour courses, two turrets, smokestacks, spiked ram, bridge | 3,484 |
+| Wing Clipper | knife hull, lateen sail, bat-wing sails, sponsons | 2,894 |
+| Raider Barge | twin hulls under one deck: prisoner cage, loot crane, tents, war banner | 3,760 |
+
+Each berth shows one in the preview and carries the other four as `Alt` on its
+placement row. `PropController` draws one per run (`ScatterCore.pick`, seeded
+by the run and the berth), so the same dock holds a different ship in
+different runs. Gangways are cut to each berth's gap.
+
+**Every prop is finished before export (`prop_detail.py`)**, shell by shell by
+material: hard parts (metal, timber, stone) get bevelled edges, organic parts
+(moss, snow, foliage, bone, smoke) are subdivided and noised, crystals are
+sub-faceted. The budget follows size: large props 2,500–5,000 triangles,
+medium ~900–2,500, small (a feather, a shard) under 900, since detail nobody can
+see is only load. Scatter library: 200 meshes, median ~1,300, 63 in the
+2,500–5,000 band; scenario fixed props: 357 meshes, median ~1,700. The
+warships are hand-detailed and skipped.
+
+**Names never collide.** The game finds a prop by name, and the base and
+scenario libraries used to number theirs independently (two different
+`prop_crate_a`). Now: `prop_*`/`fix_*` base kit (the live names, unchanged),
+`scn_prop_*`/`scn_fix_*` scenario kits, `sct_*` scattered scenery,
+`scn_prop_blocker_<scenario>` the route blockers (each `BLOCKER` anchor names
+its mesh). **`assets/export/worlds/sky_citadel/IMPORT_MANIFEST.md`** (and
+`import_manifest.json`) is written by every export: each FBX, each mesh in it,
+what it is (content id, role, openings; or family, animation, tier,
+interaction, triangles) and which data file names it.
+
 ### What is not built yet — code, pending the owner's approval
 
 The scatter is live in `src/` (`PropController` draws it for the base kit's
 chunks once the scatter library is imported). Nothing else here is. In order:
 1. `Content/Chunks/SkyCitadel.luau` entries for the 14 new pieces (and asset
-   ids once uploaded); scenario variants as `<ID>__<SCENARIO>`.
+   ids once uploaded); scenario variants as `<ID>__<SCENARIO>`. Promote
+   `staged_luau/Props_SkyCitadel.luau` and `Fixtures_SkyCitadel.luau` into `src/`
+   in the same change: the base structure meshes changed (halos became props),
+   so the new meshes and the new placements must go live together.
 2. `FateCore`: after the world draw, draw modifiers and a scenario profile.
 3. `ChunkLoader` / `ChunkCore`: load the rolled scenario's variant set; honour
    `BLOCKER` anchors when a profile closes a socket.

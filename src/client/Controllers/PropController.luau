@@ -200,8 +200,20 @@ function PropController.enter(worldId: string, stageName: string?)
 				CFrame.Angles(0, ChunkCore.yawRadians((chunk and chunk.MeshYawOffset) or 0), 0)
 			-- This piece's placed entries by row, so a wing can find its bird.
 			local byRow: { [number]: Placed } = {}
-			for rowIndex, row in rows do
+			local chunkKey = ScatterCore.keyFor(chunkId, centre.X, centre.Z)
+			for rowIndex, row0 in rows do
 				index += 1
+				-- A row with alternates (a moored ship) draws one of them this
+				-- run: its own mesh, size and centre, the row's own turn.
+				local row = row0
+				if row0.Alt then
+					local k = ScatterCore.pick(seed, chunkKey, rowIndex, #row0.Alt + 1)
+					if k > 0 then
+						local alt = row0.Alt[k]
+						row = table.clone(row0)
+						row.Prop, row.P, row.S = alt.Prop, alt.P, alt.S
+					end
+				end
 				-- A wing needs its bird drawn; a wing whose bird was not (tier,
 				-- or a missing mesh) is simply not drawn either.
 				local body = if row.Attach then byRow[row.Attach] else nil
