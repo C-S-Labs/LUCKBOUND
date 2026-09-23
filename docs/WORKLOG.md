@@ -33,6 +33,28 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 65 — 2026-09-23 — Sky Citadel scenario kits: the polish pass
+**Merged:** —   **Tests:** not run (no `src/` change)   **Head:** branch `claude/sky-citadel-scenarios`
+
+### Done
+- Owner walk found upside-down tents, flat-square moss, the same scatter in
+  every kit, small skiffs, and no crumbling. Rebuilt the scenario dressing:
+  ray-cast grounding with a flat-footprint test; scenario-specific placement
+  varied per piece; ~50 new prop shapes (raider warships with gangways, camps,
+  turrets, drones, nests, drifts, moss, ivy, aether epicentres…); structural
+  crumbling (breaches, broken turrets, loose islets); whole-surface looks
+  (snow on every upward face, moss on copings).
+- 164 prop meshes shared by all seven kits; every piece validated and every
+  FBX re-imported.
+
+### Stopped at
+Art second pass done, pushed to PR #72. No `src/` wiring.
+
+### Next
+Owner reviews `sky_citadel_scenarios.blend`; a Studio walk for prop scale.
+
+---
+
 ## Session 64 — 2026-09-23 — Sky Citadel: 36 pieces, props split, seven scenario kits
 **Merged:** —   **Tests:** not run (no `src/` change)   **Head:** branch `claude/sky-citadel-scenarios`
 

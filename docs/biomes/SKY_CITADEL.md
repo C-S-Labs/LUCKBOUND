@@ -610,24 +610,45 @@ all 36 pieces again per scenario through `SCENARIO_HOOK` (called in `finish()`;
 `None` for the base kit). The walkable geometry is the base kit's own — the
 player knows the place — and the scenario changes what is on it:
 
-| Scenario | Situation | Props it adds (interaction) |
+| Scenario | Situation | What changes |
 |---|---|---|
-| **Unmooring** | anti-grav failing | drifting fragments, listing crystals, dead lights (`Repair`) |
-| **Siege** | raiders occupy the citadel | tents (`Loot`), barricades (`Destroy`), fires (`Hazard`), rust-sailed skiffs (`Board`) |
-| **Lockdown** | defences turned hostile | sentinel pylons (`Destroy`), forcefield fixtures at every opening, consoles (`Override`) |
-| **Stormhawk** | a raptor nests and dives | the nest (`Event`), feathers (`Pickup`) |
-| **Rime** | frozen at altitude | snow drifts, ice spikes (`Break`), braziers as warmth (`Lightable`) |
-| **Reclaimed** | abandoned and overgrown | overgrowth (`Cut`), dead lights, abandoned stores (`Loot`) |
-| **Aether Surge** | crystal growth erupts | aether clusters and shards (`Harvest`), pedestals (`Attune`) |
+| **Unmooring** | anti-grav failing | a low islet comes loose (sunk 2–3.5, tilted 4–7°, its bridge no longer meets it); walls breached with rubble and hanging rim chunks; a turret's top broken off, its roof fallen; dark and glowing cracks; toppled lamps (`Repair`); stabilisers (`Repair`, an EVENT anchor); hazard beacons; drifting fragments |
+| **Siege** | raiders occupy the citadel | **raider warships (~72 long) moored alongside with gangways to the rail** (`Board`) on 24 of 36 pieces; one camp per piece — bonfire with a smoke column, tents and yurts (`Loot`), barrels (`Breakable`), a loot pile, a raider banner; stake walls and barricades facing the openings (`Destroy`); ballistae (`Use`); campfires (`Hazard`); breached walls, a broken turret; ragged burns |
+| **Lockdown** | defences turned hostile | every light alarm-red; forcefield fixtures at every opening with emitter posts (`Destroy`); turrets and pylons (`Destroy`); alarm posts; laser fences (`Hazard`); a console (`Override`); patrolling drones (`Destroy`); red chevrons painted toward the openings |
+| **Stormhawk** | a raptor nests and dives | a great nest with eggs (`Event` anchor), bone piles (`Loot`) and shells round it; claw gouges; glowing fulgurite cracks; feathers on the deck and on the wind (`Pickup`); lamps and banners knocked over |
+| **Rime** | frozen at altitude | the whole citadel frosted blue-grey with **snow on every upward face**; drifts piled against the lee of the walls from a per-piece wind; snow lying across the deck; ice spikes and frost crystals (`Break`); icicles along every rim; a frozen figure holding something gold (`Break`, a DISCOVERY anchor); braziers as warmth (`Lightable`) |
+| **Reclaimed** | abandoned and overgrown | moss on the tops of walls and rails and carpeting the foot of every wall; ivy up the turrets; moss mounds, bushes (`Cut`), ferns, flowers (`Pickup`), saplings (`Cut`), mushrooms (`Harvest`), roots crawling in from the edges; vines off every rim; breaches and a broken turret on some pieces; dead lights |
+| **Aether Surge** | crystal growth erupts | every seam violet; one to three **epicentres** per piece, each a giant cluster with glowing fissures radiating out and smaller clusters thinning with distance (`Harvest`), a geode, and shards thrown up round it |
 
-Surface changes (recolours, cracks, scorch, moss, snow) stay in the structure.
+### How dressing is placed (second pass, 2026-09-23)
+
+The owner's walk of the first pass found upside-down tents, flat squares for
+moss, the same scatter in every scenario, and skiffs too small to matter. The
+second pass rebuilt the dressing on four rules:
+
+- **Honest grounding.** Every grounded prop is ray-cast onto the real surface
+  and its whole footprint must be flat deck — nothing floats, nothing sinks into
+  a terrace, nothing overhangs an edge. Cracks reserve their full reach.
+- **Scenario-specific placement, varied per piece.** Moss hugs walls and tower
+  bases; snow piles on the lee side from each piece's own wind; aether erupts
+  from epicentres; raiders make one camp and face the openings. Each piece
+  draws its own density, wind, epicentres and camp site.
+- **A big vocabulary, one mesh per shape.** ~50 new prop shapes, most with two
+  or three variants. Each is fixed and placed at a size with its turn on the
+  placement; prop vertices are rounded after extraction so copies match.
+  All seven kits share **164 prop meshes** across 6,600+ placements.
+- **Crumbling is structural.** Wall runs are removed shell by shell, turret tops
+  come off (never one carrying a spire or the crown), and islets are moved as a
+  whole with everything on them. The validator still holds every piece to
+  256³, floats clear and everything grounded on a deck; the heaviest scenario
+  piece is 8,178 triangles.
 
 **Gameplay anchors** — what makes a kit a Fate lever rather than scenery. Every
 scenario piece records `RESOURCE`, `DISCOVERY`, `ENEMY_POST`, `NPC_POST` and
 `EVENT` spots, and one `BLOCKER` per opening (a prop the run may enable to close
 that socket, which is what makes alternate routes). Written to
 `assets/export/worlds/sky_citadel/scenarios/<scenario>/Anchors_<scenario>.luau`:
-183–338 anchors per kit.
+196–289 anchors per kit.
 
 **Outputs** (under `assets/export/worlds/sky_citadel/`):
 
@@ -636,15 +657,14 @@ that socket, which is what makes alternate routes). Written to
 | `sky_citadel_structure.fbx` / `sky_citadel_props.fbx` | base kit: 36 pieces / 61 prop kinds |
 | `staged_luau/` | base placements + fixtures, **staged, not yet in `src/`** (the new pieces have no asset ids) |
 | `scenarios/<s>/sky_citadel_<s>_structure.fbx` | 36 pieces each, re-imported and measured 256³ |
-| `scenarios/sky_citadel_scenario_props.fbx` | 125 prop kinds shared by all seven |
+| `scenarios/sky_citadel_scenario_props.fbx` | 164 prop kinds shared by all seven |
 | `scenarios/Props_Scenarios.luau`, `Fixtures_Scenarios.luau` | placements, with `Interact` |
 
 `assets/source/worlds/sky_citadel/sky_citadel_scenarios.blend` holds the base
 kit and all seven in rows, with a `Preview_Props_NotExported` collection that
 draws every prop in place for review.
 
-**Upload cost was designed down.** Each dressing kind is one fixed shape drawn
-at a size, with its turn on the placement, so 288 pieces share 125 prop meshes
+**Upload cost was designed down.** 288 scenario pieces share 164 prop meshes
 (an early pass produced 459).
 
 ### What is not built yet — code, pending the owner's approval
@@ -659,10 +679,11 @@ Nothing in `src/` reads any of this yet. In order:
    `Pulse`, `Flicker` and `Sway` animation classes.
 5. Opportunity / Presence / Event systems that read the anchors.
 
-**Honest read of the art:** Siege, Lockdown, Rime, Reclaimed, Aether Surge and
-Stormhawk read as different situations at a glance. **Unmooring is the
-weakest** — cracks and listing floats are subtle at piece scale; it wants a
-structural change (a tilted or displaced deck section) in a later pass.
+**Honest read of the art (second pass):** every kit now reads as its own
+situation at a glance. The quietest are the small connective pieces, where
+there is little deck to dress — a deliberate trade, since the walking line stays
+clear. Worth a walk in Studio before a third pass: the scale of camp props and
+drifts under a real character.
 
 ---
 
