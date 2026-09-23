@@ -1405,6 +1405,53 @@ def _tri_count(verts_faces):
     return sum(len(f) - 2 for f in verts_faces)
 
 
+# ---- the grouped export: two files, everything in folders ---------------------
+
+IMPORT_DIR = os.path.join(REPO, "assets", "export", "worlds", "sky_citadel", "import")
+CHUNKS_FBX = "SkyCitadel_Chunks.fbx"
+PROPS_FBX = "SkyCitadel_Props.fbx"
+
+
+def export_grouped(path, root, groups):
+    """One FBX: an empty `root`, a child empty per group, and each group's
+    meshes under it at the origin -- so the import is ONE Model holding one
+    folder per set, every MeshPart keeping its own name."""
+    made, saved = [], []
+    top = bpy.data.objects.new(root, None)
+    bpy.context.scene.collection.objects.link(top)
+    made.append(top)
+    for gname, objs in groups:
+        g = bpy.data.objects.new(gname, None)
+        bpy.context.scene.collection.objects.link(g)
+        g.parent = top
+        made.append(g)
+        for o in objs:
+            saved.append((o, o.parent, o.location.copy(), o.matrix_parent_inverse.copy()))
+            o.parent = g
+            o.matrix_parent_inverse.identity()
+            o.location = (0, 0, 0)
+    bpy.context.view_layer.update()
+    sel = made + [o for _, objs in groups for o in objs]
+    bpy.ops.object.select_all(action="DESELECT")
+    for o in sel:
+        o.select_set(True)
+    bpy.context.view_layer.objects.active = top
+    with K["_ui_override"](selected_objects=sel, active_object=top, object=top):
+        bpy.ops.export_scene.fbx(filepath=path, use_selection=True, object_types={"EMPTY", "MESH"},
+                                 axis_forward="-Z", axis_up="Y", global_scale=1.0, apply_unit_scale=True,
+                                 apply_scale_options="FBX_SCALE_ALL", bake_space_transform=True,
+                                 use_mesh_modifiers=True, mesh_smooth_type="FACE", colors_type="SRGB",
+                                 add_leaf_bones=False, bake_anim=False, path_mode="AUTO")
+    for o, par, loc, inv in saved:
+        o.parent = par
+        o.matrix_parent_inverse = inv
+        o.location = loc
+    for o in made:
+        bpy.data.objects.remove(o, do_unlink=True)
+    bpy.context.view_layer.update()
+    return path
+
+
 # ---- the import contract: what the owner imports, names and hands back -------
 
 WORLD_ID = "SKY_CITADEL"
@@ -1415,13 +1462,7 @@ INCOMING = "assets/rbxm/incoming/sky_citadel"
 def model_files(sets):
     """(fbx under assets/export/worlds/sky_citadel/, model name to save it as).
     The model name is the .rbxmx file name AND the name of the Model inside."""
-    out = [("sky_citadel_structure.fbx", "%s_STRUCTURE_BASE" % WORLD_TAG)]
-    for s in SCENARIOS:
-        out.append(("scenarios/%s/sky_citadel_%s_structure.fbx" % (s, s), "%s_STRUCTURE_%s" % (WORLD_TAG, s.upper())))
-    out += [("sky_citadel_props.fbx", "%s_PROPS_BASE" % WORLD_TAG),
-            ("scenarios/sky_citadel_scenario_props.fbx", "%s_PROPS_SCENARIOS" % WORLD_TAG),
-            ("scenarios/sky_citadel_scatter_props.fbx", "%s_PROPS_SCATTER" % WORLD_TAG)]
-    return out
+    return [("import/" + CHUNKS_FBX, "SkyCitadel_Chunks"), ("import/" + PROPS_FBX, "SkyCitadel_Props")]
 
 
 def write_registry(sets, blockers):
@@ -1442,16 +1483,18 @@ def write_registry(sets, blockers):
          "--   Environment   the key in Environments_Scenarios.luau (its atmosphere)",
          "return {",
          '	WorldId = "%s",' % WORLD_ID,
-         '	Base = { Model = "%s_STRUCTURE_BASE", Props = "%s_PROPS_BASE", ScatterPool = "Base" },'
-         % (WORLD_TAG, WORLD_TAG),
-         '	PropModels = { "%s_PROPS_BASE", "%s_PROPS_SCENARIOS", "%s_PROPS_SCATTER" },' % ((WORLD_TAG,) * 3),
+         "\t-- Chunk meshes: SkyCitadel_Chunks/<Model>/<mesh>. Props: SkyCitadel_Props/<folder>/<mesh>.",
+         '\tChunkModel = "SkyCitadel_Chunks",',
+         '\tPropModel = "SkyCitadel_Props",',
+         '\tPropFolders = { "Base", "Scenarios", "Scatter" },',
+         '\tBase = { Model = "Base", ScatterPool = "Base" },',
          "	Kits = {"]
     base_ids = [K["_content_id"](p.name) for p in sets["base"]]
     for s in SCENARIOS:
         key = s.upper()
         L.append("		%s = {" % key)
         L.append('			Name = "%s",' % s.replace("_", " ").title())
-        L.append('			Model = "%s_STRUCTURE_%s",' % (WORLD_TAG, key))
+        L.append('\t\t\tModel = "%s",' % s.title().replace("_", ""))
         L.append('			ScatterPool = "%s",' % s.title().replace("_", ""))
         L.append('			Props = "Props_Scenarios",')
         L.append('			Anchors = "Anchors_%s",' % s)
@@ -1478,14 +1521,18 @@ def write_import_steps(sets):
          "",
          "GENERATED on every export. Follow top to bottom. Nothing else is needed.",
          "",
-         "## 1. Import into Roblox Studio (one file at a time)",
+         "Two files: every chunk in one, every prop in the other. Each imports as one Model",
+         "with a folder per set inside (chunks: Base + the seven scenarios; props: Base,",
+         "Scenarios, Scatter).",
          "",
-         "For **each row** below:",
+         "## 1. Import into Roblox Studio (twice)",
          "",
-         "1. Studio: **File > Import 3D**. Pick the FBX from `C:\\Dev\\luckbound\\assets\\export\\worlds\\sky_citadel\\`.",
+         "For **each of the two rows** below:",
+         "",
+         "1. Studio: **File > Import 3D**. Pick the FBX from `C:\\Dev\\luckbound\\assets\\export\\worlds\\sky_citadel\\import\\`.",
          "2. Import settings: **Anchored ON**, **Merge Meshes OFF** (every object must stay its own MeshPart),",
          "   **Rig: none**. Leave names alone.",
-         "3. It lands as one Model in Workspace. **Rename that Model** to the name in the right column.",
+         "3. It lands as one Model in Workspace. Check its name matches the right column (rename if not).",
          "4. Right-click the Model > **Save to File...** > type **.rbxmx** > save it into",
          "   `C:\\Dev\\luckbound\\%s\\` with that same name." % INCOMING.replace("/", "\\"),
          "5. Delete the Model from Workspace before the next row.",
@@ -1493,7 +1540,7 @@ def write_import_steps(sets):
          "| # | Import this FBX | Save the Model as |",
          "|---|---|---|"]
     for i, (fbx, name) in enumerate(files, 1):
-        L.append("| %d | `%s` | `%s.rbxmx` |" % (i, fbx.replace("/", "\\"), name))
+        L.append("| %d | `%s` | `%s.rbxmx` |" % (i, fbx.split("/")[-1], name))
     L += ["",
           "**Never rename a MeshPart inside a Model.** Their names are how the game finds them",
           "(every one is listed in `IMPORT_MANIFEST.md`).",
@@ -1805,6 +1852,31 @@ def main(export=False, save=True, preview=True, sets_only=None):
         out["placements"] = K["write_props_luau"](kinds, placements, os.path.join(SCEN_EXPORT, "Props_Scenarios.luau"))
         out["fixtures"] = K["write_fixtures_luau"](kinds, fixtures, os.path.join(SCEN_EXPORT, "Fixtures_Scenarios.luau"))
         write_scatter_luau(lib, pools, {k: v[0] for k, v in sets.items()})
+        # the two files the owner imports: every chunk, every prop, in folders
+        os.makedirs(IMPORT_DIR, exist_ok=True)
+        base_pieces, base_objs = sets["base"]
+        bkinds, bplace, bfix = K["prop_library"](base_pieces)
+        bcoll = bpy.data.collections.new("BasePropLibrary")
+        bpy.context.scene.collection.children.link(bcoll)
+        base_prop_objs = K["props_to_objects"](bkinds, mats, bcoll)
+        stage = os.path.join(REPO, "assets", "export", "worlds", "sky_citadel", "staged_luau")
+        os.makedirs(stage, exist_ok=True)
+        K["write_props_luau"](bkinds, bplace, os.path.join(stage, "Props_SkyCitadel.luau"))
+        K["write_fixtures_luau"](bkinds, bfix, os.path.join(stage, "Fixtures_SkyCitadel.luau"))
+        chunk_groups = [("Base", base_objs)] + [(s.title().replace("_", ""), sets[s][1]) for s in SCENARIOS]
+        export_grouped(os.path.join(IMPORT_DIR, CHUNKS_FBX), "SkyCitadel_Chunks", chunk_groups)
+        export_grouped(os.path.join(IMPORT_DIR, PROPS_FBX), "SkyCitadel_Props",
+                       [("Base", base_prop_objs), ("Scenarios", prop_objs), ("Scatter", scatter_objs)])
+        vg = K["verify_exports"]([os.path.join(IMPORT_DIR, CHUNKS_FBX), os.path.join(IMPORT_DIR, PROPS_FBX)])
+        n_chunks = sum(len(objs) for _, objs in chunk_groups)
+        n_props = len(base_prop_objs) + len(prop_objs) + len(scatter_objs)
+        if vg[0]["meshes"] != n_chunks or vg[1]["meshes"] != n_props:
+            raise RuntimeError("grouped export came back %r, expected %d chunks, %d props"
+                               % ([(v["file"], v["meshes"]) for v in vg], n_chunks, n_props))
+        wrong = {k: s for k, s in vg[0]["sizes"].items() if any(abs(c - 256) > 0.01 for c in s)}
+        if wrong:
+            raise RuntimeError("grouped chunks not 256^3: %r" % list(wrong)[:5])
+        out["grouped"] = [(v["file"], v["meshes"]) for v in vg]
         out["registry"] = write_registry({k: v[0] for k, v in sets.items()}, blockers)
         out["steps"] = write_import_steps({k: v[0] for k, v in sets.items()})
         out["manifest"] = write_manifest({k: v[0] for k, v in sets.items()}, {k: v[1] for k, v in sets.items()},

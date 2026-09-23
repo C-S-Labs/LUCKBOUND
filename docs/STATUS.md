@@ -449,7 +449,8 @@ survive a rescale and a literal does not.
 ## 5. Next session — pick up here
 
 > **2026-09-23: import Sky Citadel by `assets/export/worlds/sky_citadel/IMPORT_STEPS.md`.**
-> 11 FBX files, 11 model names, one hand-back folder. Each scenario kit now has
+> Two FBX files in `import/` (every chunk; every prop), each one Model with a folder
+> per set. Backup before import: tag `sky-citadel-pre-import-backup`. Each scenario kit now has
 > its own architecture, not a recolour; props are one mesh per construction;
 > the scenario atmospheres are merged and linked (`ScenarioKits.luau`). The
 > framework for the next two worlds: `docs/WORLD_KIT_FRAMEWORK.md`.

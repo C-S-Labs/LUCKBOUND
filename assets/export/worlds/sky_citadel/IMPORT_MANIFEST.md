@@ -10,17 +10,8 @@ MeshParts **named exactly as listed**; nothing here is renamed on import.
 
 | FBX | Saved as (in `assets/rbxm/incoming/sky_citadel/`) |
 |---|---|
-| `sky_citadel_structure.fbx` | `SC_STRUCTURE_BASE.rbxmx` |
-| `scenarios/unmooring/sky_citadel_unmooring_structure.fbx` | `SC_STRUCTURE_UNMOORING.rbxmx` |
-| `scenarios/siege/sky_citadel_siege_structure.fbx` | `SC_STRUCTURE_SIEGE.rbxmx` |
-| `scenarios/lockdown/sky_citadel_lockdown_structure.fbx` | `SC_STRUCTURE_LOCKDOWN.rbxmx` |
-| `scenarios/stormhawk/sky_citadel_stormhawk_structure.fbx` | `SC_STRUCTURE_STORMHAWK.rbxmx` |
-| `scenarios/rime/sky_citadel_rime_structure.fbx` | `SC_STRUCTURE_RIME.rbxmx` |
-| `scenarios/reclaimed/sky_citadel_reclaimed_structure.fbx` | `SC_STRUCTURE_RECLAIMED.rbxmx` |
-| `scenarios/aether_surge/sky_citadel_aether_surge_structure.fbx` | `SC_STRUCTURE_AETHER_SURGE.rbxmx` |
-| `sky_citadel_props.fbx` | `SC_PROPS_BASE.rbxmx` |
-| `scenarios/sky_citadel_scenario_props.fbx` | `SC_PROPS_SCENARIOS.rbxmx` |
-| `scenarios/sky_citadel_scatter_props.fbx` | `SC_PROPS_SCATTER.rbxmx` |
+| `import/SkyCitadel_Chunks.fbx` | `SkyCitadel_Chunks.rbxmx` |
+| `import/SkyCitadel_Props.fbx` | `SkyCitadel_Props.rbxmx` |
 
 ## What each file holds, and where it goes after the check
 

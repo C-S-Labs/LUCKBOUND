@@ -11,12 +11,15 @@
 --   Environment   the key in Environments_Scenarios.luau (its atmosphere)
 return {
 	WorldId = "SKY_CITADEL",
-	Base = { Model = "SC_STRUCTURE_BASE", Props = "SC_PROPS_BASE", ScatterPool = "Base" },
-	PropModels = { "SC_PROPS_BASE", "SC_PROPS_SCENARIOS", "SC_PROPS_SCATTER" },
+	-- Chunk meshes: SkyCitadel_Chunks/<Model>/<mesh>. Props: SkyCitadel_Props/<folder>/<mesh>.
+	ChunkModel = "SkyCitadel_Chunks",
+	PropModel = "SkyCitadel_Props",
+	PropFolders = { "Base", "Scenarios", "Scatter" },
+	Base = { Model = "Base", ScatterPool = "Base" },
 	Kits = {
 		UNMOORING = {
 			Name = "Unmooring",
-			Model = "SC_STRUCTURE_UNMOORING",
+			Model = "Unmooring",
 			ScatterPool = "Unmooring",
 			Props = "Props_Scenarios",
 			Anchors = "Anchors_unmooring",
@@ -63,7 +66,7 @@ return {
 		},
 		SIEGE = {
 			Name = "Siege",
-			Model = "SC_STRUCTURE_SIEGE",
+			Model = "Siege",
 			ScatterPool = "Siege",
 			Props = "Props_Scenarios",
 			Anchors = "Anchors_siege",
@@ -110,7 +113,7 @@ return {
 		},
 		LOCKDOWN = {
 			Name = "Lockdown",
-			Model = "SC_STRUCTURE_LOCKDOWN",
+			Model = "Lockdown",
 			ScatterPool = "Lockdown",
 			Props = "Props_Scenarios",
 			Anchors = "Anchors_lockdown",
@@ -156,7 +159,7 @@ return {
 		},
 		STORMHAWK = {
 			Name = "Stormhawk",
-			Model = "SC_STRUCTURE_STORMHAWK",
+			Model = "Stormhawk",
 			ScatterPool = "Stormhawk",
 			Props = "Props_Scenarios",
 			Anchors = "Anchors_stormhawk",
@@ -203,7 +206,7 @@ return {
 		},
 		RIME = {
 			Name = "Rime",
-			Model = "SC_STRUCTURE_RIME",
+			Model = "Rime",
 			ScatterPool = "Rime",
 			Props = "Props_Scenarios",
 			Anchors = "Anchors_rime",
@@ -250,7 +253,7 @@ return {
 		},
 		RECLAIMED = {
 			Name = "Reclaimed",
-			Model = "SC_STRUCTURE_RECLAIMED",
+			Model = "Reclaimed",
 			ScatterPool = "Reclaimed",
 			Props = "Props_Scenarios",
 			Anchors = "Anchors_reclaimed",
@@ -297,7 +300,7 @@ return {
 		},
 		AETHER_SURGE = {
 			Name = "Aether Surge",
-			Model = "SC_STRUCTURE_AETHER_SURGE",
+			Model = "AetherSurge",
 			ScatterPool = "AetherSurge",
 			Props = "Props_Scenarios",
 			Anchors = "Anchors_aether_surge",
