@@ -676,10 +676,9 @@ Live since the re-import (structure-only meshes, prop library in the repo).
    never none.
 6. **`/leave`.** ✅ Pass: no props left behind in the hub.
 
-### Test T — chests, the vault and its key ⭐ NEW (10 min) — **after the re-import**
+### Test T — chests, the vault and its key ⭐ NEW (10 min)
 
-Needs the new structure ids and the new prop library (with its `fix_*` meshes)
-live. Turn on `/fly` for speed.
+Live since the second re-import. Turn on `/fly` for speed.
 
 1. **Walk up to a chest** (the lookout on a branch, or the treasury).
    ✅ Pass: an **OPEN** prompt. Hold it: the lid swings back on its hinge, and
@@ -698,13 +697,16 @@ live. Turn on `/fly` for speed.
    round door). **Try the vault first.** ✅ Pass: **UNLOCK — Sky Citadel Vault
    Key**; holding it says *"Locked. It needs a Sky Citadel Vault Key."*
 6. **Walk into the boss arena** (the stand-in for defeating the boss).
-   ✅ Pass: in a treasury map, 1 time in 5 every party member gets *"You found
-   a Sky Citadel Vault Key!"*. **In a map without the treasury, never.**
+   ✅ Pass: about 1 time in 5, **in any Sky Citadel map, treasury or not**,
+   every party member gets *"You found a Sky Citadel Vault Key!"*.
    To test the key without luck, set `Loot.VaultKey.DropChance = 1` in
    `Content/Worlds/SkyCitadel.luau` for the session.
-7. **Go back and unlock the vault.** ✅ Pass: the round door spins twice, then
-   sinks into the wall; *"Sky Citadel Vault Key used. The vault opens."* Nobody
-   in the party can open it again.
+7. **Unlock the vault with one player only** (party of 2, both holding a
+   key). ✅ Pass, for the player who used it: the round door spins twice, then
+   sinks into the wall; *"Sky Citadel Vault Key used. The vault opens."*; their
+   prompt is gone. ✅ Pass, for the other player: the door is **still shut**,
+   their prompt still there, and they still have their key. They can open it
+   for themselves with it, or keep it.
 8. **`/leave` with an unused key, then come back.** ✅ Pass (published place):
    the key is still yours. You never hold two.
 

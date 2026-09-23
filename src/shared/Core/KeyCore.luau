@@ -1,9 +1,11 @@
 --!strict
 -- The pure half of vault keys (build spec §7.5). Owner-directed 2026-09-23:
 --
---   * A world's key drops from its boss, at the world's DropChance (20% for
---     Sky Citadel), and ONLY in a map that actually has a vault in it.
+--   * A world's key (its Loot.VaultKey) drops only from THAT world's boss, at
+--     its DropChance (20% for Sky Citadel), in every map of the world whether
+--     or not the vault spawned -- so it can be kept for a later run.
 --   * One roll per party. If it drops, every member present gets one.
+--   * The vault is per player: using your key opens it for you alone.
 --   * Keys are kept: saved to the profile, carried home, brought back.
 --   * At most one of each kind of key per player (GameConfig.Loot
 --     .MaxKeysPerKind). Using it takes it back to zero.
@@ -25,23 +27,6 @@ function KeyCore.dropChance(base: number, modifiers: { any }?): number
 		chance += (m.KeyChanceDelta or 0)
 	end
 	return math.clamp(chance, 0, 1)
-end
-
---- Whether a map offers its world's key at all: only if some placed piece
---- has a VAULT fixture. `chunkIds` are the pieces in the map; `fixtures` is
---- the world's Content/Fixtures set (or nil).
-function KeyCore.mapHasVault(chunkIds: { string }, fixtures: any?): boolean
-	if not fixtures then
-		return false
-	end
-	for _, chunkId in chunkIds do
-		for _, row in fixtures.Placements[chunkId] or {} do
-			if row.Kind == "VAULT" then
-				return true
-			end
-		end
-	end
-	return false
 end
 
 --- How many of this key the player holds.

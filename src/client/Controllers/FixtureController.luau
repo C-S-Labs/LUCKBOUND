@@ -1,10 +1,16 @@
 --!strict
 -- The client half of fixtures (build spec §7.5, CHUNK_AUTHORING.md
 -- convention 7): how they MOVE. LootSystem places them on the server and
--- decides everything -- whether a chest is open, who gets what. This file only
--- watches the Opened attribute the server sets and animates from the moment
--- it did (OpenedAt, server time), so a player arriving late sees an open chest
--- already open, not opening.
+-- decides everything -- whether a chest is open, who gets what.
+--
+-- A CHEST is the party's: this file watches the Opened attribute the server
+-- sets and animates from the moment it did (OpenedAt, server time), so a
+-- player arriving late sees an open chest already open, not opening.
+--
+-- A VAULT is each player's own (owner, 2026-09-23): it opens only on the
+-- screen of the player who used their key. The server says so to that player
+-- alone, in their Loot_Result (Fixture = the vault), and this file swings the
+-- door and hides the prompt locally. Everyone else still sees it shut.
 --
 -- Also the forcefield's slow breath, which is purely a look: the field keeps
 -- colliding on the server whatever its transparency here.
@@ -18,7 +24,12 @@ local FixtureCore = require(Root.Core.FixtureCore)
 local GameConfig = require(Root.Core.GameConfig)
 local PropCore = require(Root.Core.PropCore)
 
+local Net = require(Root.Core.Net)
+
 local FixtureController = {}
+
+-- Vaults this player opened, and when (server time).
+local openedHere: { [Instance]: number } = {}
 
 type Tracked = {
 	Model: Model,
@@ -48,10 +59,12 @@ local function animate(t: Tracked, now: number)
 		end
 		return
 	end
-	if not model:GetAttribute("Opened") then
+	local openedAt: any = if t.Kind == "VAULT"
+		then openedHere[model]
+		else model:GetAttribute("OpenedAt")
+	if openedAt == nil or (t.Kind ~= "VAULT" and not model:GetAttribute("Opened")) then
 		return
 	end
-	local openedAt = model:GetAttribute("OpenedAt")
 	local elapsed = now - (if type(openedAt) == "number" then openedAt else now)
 	if t.Kind == "CHEST" then
 		local lid = model:FindFirstChild("Lid")
@@ -95,6 +108,7 @@ local function track(model: Instance)
 	model.AncestryChanged:Connect(function(_, parent)
 		if parent == nil then
 			tracked[model] = nil
+			openedHere[model] = nil
 		end
 	end)
 end
@@ -110,6 +124,19 @@ function FixtureController.init(): ()
 		if d:IsA("Model") then
 			-- Attributes arrive with the instance, but give replication a beat.
 			task.defer(track, d)
+		end
+	end)
+	Net.get("Loot_Result").OnClientEvent:Connect(function(payload)
+		local vault = payload.Fixture
+		if payload.Source == "VAULT" and payload.KeySpent and typeof(vault) == "Instance" then
+			openedHere[vault] = Workspace:GetServerTimeNow()
+			-- The prompt is the server's and everyone's; hiding it here hides
+			-- it for this player only.
+			for _, d in vault:GetDescendants() do
+				if d:IsA("ProximityPrompt") then
+					d.Enabled = false
+				end
+			end
 		end
 	end)
 	RunService.RenderStepped:Connect(function()

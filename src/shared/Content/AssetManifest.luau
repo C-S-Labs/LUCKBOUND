@@ -188,7 +188,7 @@ local ENTRIES: { [string]: AssetEntry } = {
 		Notes = "Turns left on a dark engine-deck, the lighthouse on its own islet.",
 	},
 	SC_CHUNK_VAULT_TURN = {
-		AssetId = "rbxassetid://106964891513292",
+		AssetId = "rbxassetid://102211770801015",
 		Status = "UPLOADED",
 		Source = "assets/rbxm/chunks/sky_citadel/SC_STRUCTURE.rbxmx",
 		Notes = "The treasury, passed THROUGH on a right turn.",
@@ -236,7 +236,7 @@ local ENTRIES: { [string]: AssetEntry } = {
 		Notes = "Gate-court, rare: the Hall of Winds and its Moon Gate.",
 	},
 	SC_CHUNK_SIDE_LOOKOUT = {
-		AssetId = "rbxassetid://117112807905892",
+		AssetId = "rbxassetid://75404312322696",
 		Status = "UPLOADED",
 		Source = "assets/rbxm/chunks/sky_citadel/SC_STRUCTURE.rbxmx",
 		Notes = "The world's SIDE pocket: a lookout and a loot cache, hung off a spare socket (a crossroads branch, typically) when IncludeSide is on.",
@@ -260,7 +260,7 @@ local ENTRIES: { [string]: AssetEntry } = {
 		Notes = "A CAP: the skyway ends at a railed round overlook with a light obelisk and telescopes.",
 	},
 	SC_CHUNK_CAP_SEALED_GATE = {
-		AssetId = "rbxassetid://83676519696797",
+		AssetId = "rbxassetid://90475036826865",
 		Status = "UPLOADED",
 		Source = "assets/rbxm/chunks/sky_citadel/SC_STRUCTURE.rbxmx",
 		Notes = "A CAP: a citadel gate that stays shut.",

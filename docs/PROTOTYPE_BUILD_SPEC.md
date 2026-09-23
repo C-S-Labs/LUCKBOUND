@@ -1023,7 +1023,7 @@ questions directly, and this amendment records the answers as the rules.
 
 | | |
 |---|---|
-| ✅ **Fixtures**: interactive, collidable things placed by the server (chests, a vault door, a forcefield) | `Content/Fixtures`, `LootSystem`, `FixtureController`, `CHUNK_AUTHORING.md` convention 7 |
+| ✅ **Fixtures**: interactive, collidable things placed by the server (chests, a vault door, a forcefield). A chest's state is the party's; a vault's is each player's | `Content/Fixtures`, `LootSystem`, `FixtureController`, `CHUNK_AUTHORING.md` convention 7 |
 | ✅ **Loot machinery**: pools, a roll per player, the network fact that reports it | `Content/LootPools`, `LootCore`, remote `Loot_Result` |
 | ✅ **Vault keys**, the one thing a player carries: saved to the profile (schema v3, `Keys`) | `KeyCore`, `ProfileSchema` |
 | ✅ **Chunk `SpawnChance`**: a piece in only some maps | `ChunkCore`: the treasury is in about one map in five |
@@ -1035,17 +1035,22 @@ questions directly, and this amendment records the answers as the rules.
 
 ### The rules (owner, 2026-09-23)
 
-1. **Once per party, loot for each.** A chest, the vault and the boss open once
-   for the party on that map. Every member present gets their **own** roll, so
-   two players at one chest get different loot.
-2. **The vault needs the world's key.** The player who uses it must hold one.
-   `GameConfig.Loot.VaultConsumes` says whose key is spent: `ALL_HOLDERS`
-   (default: the party's key, everyone present holding one) or `OPENER`.
-3. **The key drops from the boss**, at the world's `Loot.VaultKey.DropChance`
-   (20% for Sky Citadel). There is **one roll per party**; if it hits, every
-   member present gets a key.
-4. **No vault, no key.** The key is only rolled in a map that has a VAULT
-   fixture in it (`KeyCore.mapHasVault`).
+1. **Chests and the boss: once per party, loot for each.** They open once for
+   the party on that map. Every member present gets their **own** roll, so two
+   players at one chest get different loot.
+2. **The vault is per player.** Each player who uses **their own** key opens it
+   for themselves. Only their key is spent, only they roll its loot, and the
+   door opens only on their screen. A party member who keeps their key sees it
+   shut and can open it with their key, or not.
+3. **A world's key drops only from that world's boss**, from its own
+   `Loot.VaultKey` (the Sky Citadel Vault Key, from the Sky Citadel boss), at
+   its `DropChance` (20%). There is **one roll per party**; if it hits, every
+   member present gets a key. Other worlds' vaults or locked rooms declare
+   their own keys.
+4. **The key drops in every map of its world, treasury or not.** It is kept for
+   the vault met on a later run.
+   *(Revised the same day: the first cut rolled the key only in maps that had a
+   vault, and spent every holder's key when the party opened it.)*
 5. **The vault itself is in about one map in five** (`SpawnChance = 0.2` on
    `SC_VAULT_TURN`). A piece that wins its seeded draw is then strongly
    preferred, so "one in five" means placed, not merely eligible. A test
@@ -1064,8 +1069,10 @@ questions directly, and this amendment records the answers as the rules.
   group, they are within `PromptDistance + PromptSlackStuds`, and the fixture is
   not already open.
 - **Every roll** (loot, the key) is drawn on `LootSystem`'s own `Random`.
-- **The client only animates.** It reads `Opened`/`OpenedAt`, which the server
-  sets, and moves the lid or door locally. Moving parts do not collide on the
+- **The client only animates.** For a chest it reads `Opened`/`OpenedAt`, which
+  the server sets. For the vault it waits for its own `Loot_Result` naming the
+  vault, which the server sends only after spending that player's key. Either
+  way it moves the lid or door locally. Moving parts do not collide on the
   server, so a local pose can never open a path.
 
 ### Why fixtures are not props

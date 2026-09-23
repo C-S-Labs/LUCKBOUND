@@ -192,7 +192,7 @@ opens, uses or cannot pass is neither structure nor ambient scenery:
 |---|---|---|
 | **Examples** | crystals, birds, tomes | chests, the vault door, a sealed gate's forcefield |
 | **Drawn by** | each client, no collision | the **server**, with collision, replicated |
-| **State** | none | opened once per party (`Opened`, `OpenedAt`) |
+| **State** | none | a chest opens once per party; a vault opens per player, per key |
 | **Content** | `Content/Props/<World>.luau` | `Content/Fixtures/<World>.luau` |
 
 **How to deliver them:**
