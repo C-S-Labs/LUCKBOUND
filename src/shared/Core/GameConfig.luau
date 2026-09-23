@@ -172,7 +172,9 @@ local GameConfig = {
 		-- layout and its randomness are decided before this runs.
 		-- Tolerance 6: the kit reference puts the SKYWAY deck at 0..3.2, so 3
 		-- sat on the edge of rejecting a correct turn.
-		SocketProbe = { Inset = 6, Height = 20, Tolerance = 6, EdgeMargin = 8 },
+		-- Inset 2: a bridge reaches the tile edge; an island deck usually stops
+		-- short of it, so probing right at the edge is what separates them.
+		SocketProbe = { Inset = 2, Height = 20, Tolerance = 6, EdgeMargin = 8 },
 		-- No piece more than this many times per map (caps excepted), and never
 		-- twice in a row. Owner-directed 2026-09-23: repeats read as messy.
 		MaxRepeats = 2,
