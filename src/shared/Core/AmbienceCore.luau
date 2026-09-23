@@ -36,25 +36,109 @@ function AmbienceCore.wrap(offset: number, half: number): number
 	return ((offset + half) % span + span) % span - half
 end
 
---- Seeded puff positions and sizes for one cloud layer, in the layer's own
---- square around the camera. nextNumber is any 0..1 stream, so the caller owns
---- the Random and the layout is reproducible.
-function AmbienceCore.layoutPuffs(layer: any, count: number, nextNumber: () -> number): { any }
-	local puffs = {}
+-- The mix a layer uses when it declares none: mostly heaped cumulus, some flat
+-- stratus banks, a few thin wisps.
+local DEFAULT_MIX = { Cumulus = 0.55, Stratus = 0.3, Wisp = 0.15 }
+
+local function pickStyle(mix: any, roll: number): string
+	local total = 0
+	for _, w in mix do
+		total += w
+	end
+	local acc = 0
+	for _, name in { "Cumulus", "Stratus", "Wisp" } do
+		acc += (mix[name] or 0) / total
+		if roll <= acc then
+			return name
+		end
+	end
+	return "Cumulus"
+end
+
+--- Seeded clouds for one layer. A cloud is a CLUSTER -- a wide shaded base
+--- with rounder, lit billows heaped on top -- which is what makes a sea read
+--- as cloud rather than as a field of discs. Three kinds, so no two stretches
+--- of sea look alike:
+---
+---   Cumulus  a base and several billows; the tall, heaped kind
+---   Stratus  a broad, flat bank with one or two low swells
+---   Wisp     a thin, pale streak with nothing heaped on it
+---
+--- Each cloud is turned to its own heading, so the ellipsoids do not all line
+--- up with the world axes. Part offsets are returned already rotated, relative
+--- to the cloud's centre, so the whole cluster wraps round the camera as one
+--- and never splits across the seam.
+---
+--- billowScale (0..1, from graphics quality) trims billows before it trims
+--- clouds: a low-end device keeps the same sea, less heaped.
+function AmbienceCore.layoutClouds(layer: any, count: number, billowScale: number, nextNumber: () -> number): { any }
+	local clouds = {}
 	local half = layer.Radius
+	local mix = layer.Mix or DEFAULT_MIX
+	local maxBillows = math.max(0, math.floor((layer.Billows or 0) * billowScale + 0.5))
 	for _ = 1, count do
-		local width = layer.SizeMin + (layer.SizeMax - layer.SizeMin) * nextNumber()
-		table.insert(puffs, {
+		local size = layer.SizeMin + (layer.SizeMax - layer.SizeMin) * nextNumber()
+		local style = pickStyle(mix, nextNumber())
+		local yaw = nextNumber() * math.pi * 2
+		local c, sn = math.cos(yaw), math.sin(yaw)
+		local parts = {}
+		local function add(dx: number, dy: number, dz: number, w: number, h: number, l: number, shade: number, fade: number)
+			-- Rotate the offset about Y by the cloud's heading, the same way
+			-- CFrame.Angles(0, yaw, 0) will turn the part itself.
+			table.insert(parts, {
+				DX = dx * c + dz * sn,
+				DY = dy,
+				DZ = -dx * sn + dz * c,
+				Width = w,
+				Height = h,
+				Length = l,
+				Shade = shade, -- 0 = fully lit top colour, 1 = the underside shade
+				Fade = fade, -- extra transparency on top of the layer's
+			})
+		end
+
+		local baseH = size * layer.Thickness
+		if style == "Wisp" then
+			add(0, 0, 0, size * 1.6, baseH * 0.35, size * (0.3 + 0.2 * nextNumber()), 0.3, 0.35)
+			if nextNumber() < 0.5 then
+				add(size * 0.4, baseH * 0.1, size * 0.12, size * 1.1, baseH * 0.25, size * 0.25, 0.2, 0.45)
+			end
+		else
+			local flat = style == "Stratus"
+			local baseW = size * (if flat then 1.4 else 1)
+			local baseL = size * (if flat then 0.9 else 0.7 + 0.5 * nextNumber())
+			local baseTall = if flat then baseH * 0.6 else baseH
+			add(0, 0, 0, baseW, baseTall, baseL, 1, 0)
+			local n = if flat
+				then math.min(maxBillows, 1 + math.floor(nextNumber() * 2))
+				else math.max(if maxBillows > 0 then 1 else 0, math.floor(maxBillows * (0.5 + 0.5 * nextNumber()) + 0.5))
+			for _ = 1, n do
+				local w = size * (if flat then 0.3 + 0.2 * nextNumber() else 0.3 + 0.3 * nextNumber())
+				local h = w * (if flat then 0.35 else 0.6 + 0.3 * nextNumber())
+				add(
+					(nextNumber() * 2 - 1) * baseW * 0.32,
+					baseTall * 0.25 + h * (if flat then 0.1 else 0.2 + 0.2 * nextNumber()),
+					(nextNumber() * 2 - 1) * baseL * 0.28,
+					w,
+					h,
+					w * (0.8 + 0.4 * nextNumber()),
+					0.15 * nextNumber(),
+					0
+				)
+			end
+		end
+
+		table.insert(clouds, {
 			X = (nextNumber() * 2 - 1) * half,
 			Z = (nextNumber() * 2 - 1) * half,
-			-- A little vertical scatter, so the sea has a surface and not a floor.
-			Y = (nextNumber() * 2 - 1) * layer.Thickness * width * 0.5,
-			Width = width,
-			Length = width * (0.6 + 0.8 * nextNumber()),
-			Height = width * layer.Thickness,
+			-- A little vertical scatter, so the sea has a surface, not a floor.
+			Y = (nextNumber() * 2 - 1) * baseH * 0.5,
+			Yaw = yaw,
+			Style = style,
+			Parts = parts,
 		})
 	end
-	return puffs
+	return clouds
 end
 
 local function checkRange(errors: { string }, label: string, value: any, lo: number, hi: number)
@@ -95,6 +179,21 @@ function AmbienceCore.validate(environment: any, label: string): { string }
 				checkRange(errors, `{l}.SizeMax`, layer.SizeMax, 1, 2000)
 				checkRange(errors, `{l}.Thickness`, layer.Thickness, 0.01, 1)
 				checkRange(errors, `{l}.Transparency`, layer.Transparency, 0, 1)
+				if layer.Billows ~= nil then
+					checkRange(errors, `{l}.Billows`, layer.Billows, 0, 12)
+				end
+				if layer.Mix ~= nil then
+					local sum = 0
+					for key, w in layer.Mix do
+						if key ~= "Cumulus" and key ~= "Stratus" and key ~= "Wisp" then
+							table.insert(errors, `{l}.Mix: unknown cloud kind '{tostring(key)}'`)
+						end
+						sum += if type(w) == "number" then w else 0
+					end
+					if sum <= 0 then
+						table.insert(errors, `{l}.Mix must give at least one kind a positive weight`)
+					end
+				end
 				if type(layer.SizeMin) == "number" and type(layer.SizeMax) == "number"
 					and layer.SizeMin > layer.SizeMax then
 					table.insert(errors, `{l}: SizeMin is larger than SizeMax`)

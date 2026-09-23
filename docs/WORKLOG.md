@@ -33,6 +33,38 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 52 — 2026-09-23 — Clouds with shape; scenery separation becomes a rule
+
+**Tests:** 714 passing (was 710).
+
+**First look at the ambience (owner walk):** sunrise and the sea read well; the
+clouds looked like flat discs. Each was a single ellipsoid.
+
+**Clouds are clusters now** (`AmbienceCore.layoutClouds`): a shaded base with
+lit billows heaped on top, in three kinds (`Cumulus`, `Stratus`, `Wisp`) mixed
+per layer, each turned to its own heading. A cluster wraps round the camera as
+one, so it never splits across the seam. Low graphics trims billows before
+clouds: the same sea, less heaped. Sky Citadel now has three layers: heaped
+sunlit cumulus near, flatter cooler banks in the middle, long pale wisps deep.
+New per-layer fields: `Shade`, `Billows`, `Mix`.
+
+**Owner-directed rule, every biome from now on:** structure (walked on, collided
+with, defines the place, including trees and buildings) stays in the piece
+mesh; ambient scenery (floating crystals, books, birds, lanterns, embers) ships
+separately as a prop library plus per-piece placements. Written as
+`CHUNK_AUTHORING.md` convention 6, with pointers from `biomes/README.md` and
+`MODULAR_MAPS.md`. Convention 5 is relaxed: all pieces may come in one FBX as
+separate named objects, and **names now matter**.
+
+**Owner confirmed** the `.rbxmx` export plugin lives in the place (not the repo).
+
+**Next:** the Sky Citadel re-export. The first step is ours: change
+`build_sky_citadel_kit.py` to build props as separate `prop_*` objects, gather
+one of each into `PropLibrary`, and write per-piece placements. Then the owner
+exports two FBXs, and we build the prop loader and animation controller.
+
+---
+
 ## Session 51 — 2026-09-23 — World ambience, and Sky Citadel's sunrise
 
 **Tests:** 710 passing (was 697).

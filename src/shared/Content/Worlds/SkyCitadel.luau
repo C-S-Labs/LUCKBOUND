@@ -68,32 +68,57 @@ return {
 			Tint = Color3.fromRGB(255, 246, 238),
 		},
 
-		-- Two layers, for parallax: a near, brighter, faster sea the islands
-		-- hang just above, and a far, slower, bluer one that gives it depth.
+		-- Three layers, each with its own character, drifting at different
+		-- speeds for parallax. Clouds are clusters (a shaded base, lit billows
+		-- heaped on top) of three kinds -- see AmbienceCore.layoutClouds.
 		CloudSea = {
+			-- NEAR: the heaped, sunlit cumulus the islands hang just above.
 			{
 				Depth = 150,
-				Count = 70,
+				Count = 34,
 				Radius = 1600,
 				Speed = 7,
 				Heading = 80,
-				SizeMin = 140,
+				SizeMin = 150,
 				SizeMax = 340,
-				Thickness = 0.26,
-				Color = Color3.fromRGB(255, 232, 222),
-				Transparency = 0.12,
+				Thickness = 0.3,
+				Billows = 6,
+				Mix = { Cumulus = 0.7, Stratus = 0.2, Wisp = 0.1 },
+				Color = Color3.fromRGB(255, 238, 228), -- sunlit tops, faintly gold
+				Shade = Color3.fromRGB(196, 176, 206), -- lavender undersides
+				Transparency = 0.08,
 			},
+			-- MIDDLE: broad banks, flatter and cooler, drifting a little across.
 			{
-				Depth = 380,
-				Count = 50,
-				Radius = 2400,
-				Speed = 3,
-				Heading = 80,
-				SizeMin = 260,
-				SizeMax = 560,
-				Thickness = 0.2,
+				Depth = 330,
+				Count = 30,
+				Radius = 2200,
+				Speed = 4,
+				Heading = 95,
+				SizeMin = 240,
+				SizeMax = 520,
+				Thickness = 0.22,
+				Billows = 4,
+				Mix = { Cumulus = 0.35, Stratus = 0.5, Wisp = 0.15 },
+				Color = Color3.fromRGB(236, 214, 226),
+				Shade = Color3.fromRGB(150, 146, 196),
+				Transparency = 0.05,
+			},
+			-- DEEP: long pale streaks far below, almost still. Depth, not detail.
+			{
+				Depth = 520,
+				Count = 18,
+				Radius = 2800,
+				Speed = 2,
+				Heading = 70,
+				SizeMin = 400,
+				SizeMax = 800,
+				Thickness = 0.12,
+				Billows = 0,
+				Mix = { Stratus = 0.3, Wisp = 0.7 },
 				Color = Color3.fromRGB(206, 196, 232),
-				Transparency = 0.04,
+				Shade = Color3.fromRGB(140, 140, 190),
+				Transparency = 0.2,
 			},
 		},
 		-- Sparse, slow, sunlit motes: high-altitude air catching the light.

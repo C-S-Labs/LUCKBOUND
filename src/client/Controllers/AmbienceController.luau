@@ -45,8 +45,12 @@ local EXTRA_PROPERTIES = { "ExposureCompensation", "ColorShift_Bottom" }
 
 type Layer = {
 	Def: any,
+	Clouds: { any },
+	-- Flat, parallel arrays so one BulkMoveTo moves the whole layer: every
+	-- part, the cloud it belongs to, and its offset from that cloud's centre.
 	Parts: { BasePart },
-	Puffs: { any },
+	Owner: { any },
+	Offset: { any },
 	DriftX: number,
 	DriftZ: number,
 }
@@ -137,32 +141,43 @@ end
 local function buildCloudSea(env: any, floorY: number, scale: number, folder: Instance)
 	for _, def in env.CloudSea or {} do
 		local count = AmbienceCore.scaledCount(def.Count, scale)
-		local puffs = AmbienceCore.layoutPuffs(def, count, function()
+		local clouds = AmbienceCore.layoutClouds(def, count, scale, function()
 			return random:NextNumber()
 		end)
-		local parts = {}
-		for _, puff in puffs do
-			local part = Instance.new("Part")
-			part.Name = "Cloud"
-			part.Anchored = true
-			part.CanCollide = false
-			part.CanQuery = false
-			part.CanTouch = false
-			part.CastShadow = false
-			part.Material = Enum.Material.SmoothPlastic
-			part.Color = def.Color
-			part.Transparency = def.Transparency
-			part.Size = Vector3.new(puff.Width, puff.Height, puff.Length)
-			-- A SpecialMesh sphere takes the part's non-uniform size, so each
-			-- puff is a soft ellipsoid rather than a ball or a block.
-			local mesh = Instance.new("SpecialMesh")
-			mesh.MeshType = Enum.MeshType.Sphere
-			mesh.Parent = part
-			part.CFrame = CFrame.new(puff.X, floorY - def.Depth + puff.Y, puff.Z)
-			part.Parent = folder
-			table.insert(parts, part)
+		local shade = def.Shade or def.Color
+		local layer: Layer =
+			{ Def = def, Clouds = clouds, Parts = {}, Owner = {}, Offset = {}, DriftX = 0, DriftZ = 0 }
+		for _, cloud in clouds do
+			-- Built once: a cloud's heading never changes, only where it is.
+			cloud.Rot = CFrame.Angles(0, cloud.Yaw, 0)
+			for _, piece in cloud.Parts do
+				local part = Instance.new("Part")
+				part.Name = `Cloud{cloud.Style}`
+				part.Anchored = true
+				part.CanCollide = false
+				part.CanQuery = false
+				part.CanTouch = false
+				part.CastShadow = false
+				part.Material = Enum.Material.SmoothPlastic
+				-- Lit billows take the layer's colour, the base its underside
+				-- shade: that one gradient is most of what reads as volume.
+				part.Color = def.Color:Lerp(shade, piece.Shade)
+				part.Transparency = math.clamp(def.Transparency + piece.Fade, 0, 0.95)
+				part.Size = Vector3.new(piece.Width, piece.Height, piece.Length)
+				-- A SpecialMesh sphere takes the part's non-uniform size, so each
+				-- piece is a soft ellipsoid rather than a ball or a block.
+				local mesh = Instance.new("SpecialMesh")
+				mesh.MeshType = Enum.MeshType.Sphere
+				mesh.Parent = part
+				part.CFrame = CFrame.new(cloud.X + piece.DX, floorY - def.Depth + cloud.Y + piece.DY, cloud.Z + piece.DZ)
+					* CFrame.Angles(0, cloud.Yaw, 0)
+				part.Parent = folder
+				table.insert(layer.Parts, part)
+				table.insert(layer.Owner, cloud)
+				table.insert(layer.Offset, piece)
+			end
 		end
-		table.insert(layers, { Def = def, Parts = parts, Puffs = puffs, DriftX = 0, DriftZ = 0 })
+		table.insert(layers, layer)
 	end
 end
 
@@ -214,11 +229,21 @@ local function step(dt: number, floorY: number)
 		local heading = math.rad(def.Heading)
 		layer.DriftX += math.sin(heading) * def.Speed * dt
 		layer.DriftZ -= math.cos(heading) * def.Speed * dt
+		-- Wrap each CLOUD's centre once, then hang its pieces off it, so a
+		-- cluster crosses the seam whole instead of splitting in two.
+		local centres = {}
+		for _, cloud in layer.Clouds do
+			centres[cloud] = Vector3.new(
+				focus.X + AmbienceCore.wrap(cloud.X + layer.DriftX - focus.X, def.Radius),
+				floorY - def.Depth + cloud.Y,
+				focus.Z + AmbienceCore.wrap(cloud.Z + layer.DriftZ - focus.Z, def.Radius)
+			)
+		end
 		local cframes = table.create(#layer.Parts)
-		for i, puff in layer.Puffs do
-			local x = focus.X + AmbienceCore.wrap(puff.X + layer.DriftX - focus.X, def.Radius)
-			local z = focus.Z + AmbienceCore.wrap(puff.Z + layer.DriftZ - focus.Z, def.Radius)
-			cframes[i] = CFrame.new(x, floorY - def.Depth + puff.Y, z)
+		for i, cloud in layer.Owner do
+			local centre = centres[cloud]
+			local piece = layer.Offset[i]
+			cframes[i] = CFrame.new(centre.X + piece.DX, centre.Y + piece.DY, centre.Z + piece.DZ) * cloud.Rot
 		end
 		Workspace:BulkMoveTo(layer.Parts, cframes, Enum.BulkMoveMode.FireCFrameChanged)
 	end
