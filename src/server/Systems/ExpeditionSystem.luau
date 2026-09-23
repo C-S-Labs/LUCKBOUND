@@ -1203,6 +1203,9 @@ end
 --- caller's current one if they are in it. -> ok, message
 function ExpeditionSystem.setAtmosphere(player: Player, id: string): (boolean, string)
 	id = string.upper(id)
+	if id == "AETHER" then
+		id = "AETHER_SURGE"
+	end
 	local state = active[player.UserId]
 	local worldId = if state then state.Group.WorldId else "SKY_CITADEL"
 	local set = Atmospheres[worldId]
