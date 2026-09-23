@@ -5122,7 +5122,8 @@ do
 	for i, cl in a do
 		if math.abs(cl.X) > layer.Radius or math.abs(cl.Z) > layer.Radius then inside = false end
 		if cl.X ~= b[i].X or #cl.Parts ~= #b[i].Parts then same = false end
-		if #cl.Parts < 1 or #cl.Parts > layer.Billows + 2 then bounded = false end
+		-- lobes (<=3) + billows + a tuft allowance per billow + the rim
+		if #cl.Parts < 1 or #cl.Parts > 3 + layer.Billows * (1 + layer.Tufts) + 1 then bounded = false end
 		kinds[cl.Style] = true
 	end
 	check("clouds lie inside their layer's square", inside)
@@ -5136,6 +5137,29 @@ do
 	for _, cl in AmbienceCore.layoutClouds(layer, 60, 1, lcg(7)) do highParts += #cl.Parts end
 	check("low graphics draws fewer cloud pieces than high", lowParts < highParts,
 		string.format("%d vs %d", lowParts, highParts))
+	-- The detail pass: at full quality a heaped cumulus carries tufts and a
+	-- rim, so it is far more than a base and a few balls.
+	local richest = 0
+	for _, cl in AmbienceCore.layoutClouds(layer, 60, 1, lcg(11)) do
+		if cl.Style == "Cumulus" then richest = math.max(richest, #cl.Parts) end
+	end
+	check("a full-quality cumulus is built from many pieces", richest >= 12, tostring(richest))
+	local noRim = true
+	for _, cl in AmbienceCore.layoutClouds(layer, 60, 0.5, lcg(11)) do
+		for _, piece in cl.Parts do
+			if piece.Fade >= 0.55 and cl.Style ~= "Wisp" then noRim = false end
+		end
+	end
+	check("mid graphics skips the soft rim", noRim)
+	-- The budget that matters on a phone: Automatic graphics.
+	local autoParts = 0
+	for _, def in Worlds.SKY_CITADEL.Environment.CloudSea do
+		local n = AmbienceCore.scaledCount(def.Count, GameConfig.Ambience.AutomaticQuality)
+		for _, cl in AmbienceCore.layoutClouds(def, n, GameConfig.Ambience.AutomaticQuality, lcg(5)) do
+			autoParts += #cl.Parts
+		end
+	end
+	check("the whole sea stays within budget on Automatic graphics", autoParts <= 400, tostring(autoParts))
 	-- THE CEILING. Owner walk: heaped cumulus climbed up through the islands.
 	-- Measured from the geometry: for every cloud in every layer, its tallest
 	-- piece's top must stay at or below CloudCeiling under the walk plane.
