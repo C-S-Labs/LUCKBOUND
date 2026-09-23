@@ -348,6 +348,10 @@ local function buildStage(worldId: string, seed: number, origin: Vector3, stageN
 		)
 	end
 
+	-- The atmosphere this run draws, known before the map is built: each
+	-- chunk is then built from its recoloured mesh for that atmosphere, when
+	-- one is uploaded (AssetKey .. "__" .. atmosphere id).
+	layout.Atmosphere = (atmosphereFor(worldId, seed))
 	local result = ChunkLoader.build(layout, Chunks, origin, stageFolder(), stageName)
 
 	local scenarioSummary = "no plan"
