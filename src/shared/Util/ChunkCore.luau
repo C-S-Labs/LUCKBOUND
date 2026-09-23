@@ -30,6 +30,18 @@ local function rotate(x: number, z: number, yaw: number): (number, number)
 	end
 end
 
+--- A layout yaw as the angle Roblox's CFrame.Angles(0, angle, 0) needs.
+---
+--- THE TWO TURN OPPOSITE WAYS. `rotate` above turns north into EAST at yaw 90
+--- (clockwise seen from above), which is where every socket is placed.
+--- CFrame.Angles(0, +90deg, 0) turns north into WEST. Feeding it the layout
+--- yaw directly turned every mesh at yaw 90 or 270 half a turn away from its
+--- own sockets -- right at 0 and 180, wrong at 90 and 270, so whether a piece
+--- came out wrong depended on the seed. Every mesh CFrame goes through here.
+function ChunkCore.yawRadians(yaw: number): number
+	return -math.rad(yaw)
+end
+
 local function norm(deg: number): number
 	return ((deg % 360) + 360) % 360
 end

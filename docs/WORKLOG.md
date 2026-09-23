@@ -33,6 +33,23 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 50 — 2026-09-23 — The real rotation bug, and real seeds
+
+**Root cause of every misfacing since the kit landed:** `ChunkCore` turns north
+→ east at yaw 90; `CFrame.Angles(0, +90°, 0)` turns north → west. Meshes at
+yaw 90/270 sat half a turn from their own sockets; 0/180 were fine. That is why
+errors followed the seed, why every per-piece guess flip-flopped, and why the
+facing probe (which cached one placement's correction) scored perfectly and
+was still wrong elsewhere. Every mesh CFrame now goes through
+`ChunkCore.yawRadians`; a test applies Roblox's rotation formula and checks
+meshes land on their sockets at all four yaws.
+
+**Seeds:** roll-count seeds repeat across Studio sessions (no persistence), so
+roll #1 was always seed 1704274940. Now mixed with `Random.new()` entropy per
+entry; still logged, still rebuildable.
+
+---
+
 ## Session 49 — 2026-09-23 — Walk-driven fixes to the Sky Citadel run
 
 **Tests:** 696 passing · PRs #42–#50, all merged.

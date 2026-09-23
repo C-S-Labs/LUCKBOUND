@@ -1809,6 +1809,27 @@ do
 			table.concat(errCap, "; "))
 	end
 
+	-- THE ROTATION CONVENTION. ChunkCore turns north into east at yaw 90;
+	-- Roblox's CFrame.Angles turns north into west. A mesh CFrame built from
+	-- the raw layout yaw was therefore half a turn from its own sockets at 90
+	-- and 270. This applies Roblox's own rotation formula to yawRadians and
+	-- checks it lands every socket where worldSocket says it is.
+	do
+		local agree = true
+		for _, yaw in { 0, 90, 180, 270 } do
+			local th = ChunkCore.yawRadians(yaw)
+			for _, off in { { 0, -128 }, { 128, 0 }, { 0, 128 }, { -128, 0 } } do
+				-- CFrame.Angles(0, th, 0) applied to (x, 0, z):
+				local rx = off[1] * math.cos(th) + off[2] * math.sin(th)
+				local rz = -off[1] * math.sin(th) + off[2] * math.cos(th)
+				local ws = ChunkCore.worldSocket({ X = 0, Y = 0, Z = 0, Yaw = yaw }, nil,
+					{ Id = "s", Kind = "K", OffsetX = off[1], OffsetY = 0, OffsetZ = off[2], Facing = 0 })
+				if math.abs(rx - ws.X) > 0.01 or math.abs(rz - ws.Z) > 0.01 then agree = false end
+			end
+		end
+		check("a mesh turned by yawRadians lands on its own sockets at every yaw", agree)
+	end
+
 	-- Geometry helpers ----------------------------------------------
 	local placed = { X = 10, Y = 0, Z = 20, Yaw = 90 }
 	local sock = { Id = "s", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = -48, Facing = 0 }
