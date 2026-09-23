@@ -23,6 +23,7 @@ local Net = require(Root.Core.Net)
 local Worlds = require(Root.Content.Worlds)
 local AmbienceController = require(script.Parent.AmbienceController)
 local PropController = require(script.Parent.PropController)
+local AtmosphereEffects = require(script.Parent.AtmosphereEffects)
 
 local ExpeditionController = {}
 
@@ -103,6 +104,15 @@ local function labelGateFor(worldId: string?)
 	prompt.ActionText = if world then "ENTER" else "NO DESTINATION"
 end
 
+-- Where the map is: the player's own position at entry, on the walk plane.
+-- The sky pieces (dome, searchlights, plumes) are centred on it.
+local function mapCentre(floorY: number): Vector3
+	local character = game:GetService("Players").LocalPlayer.Character
+	local root = character and character:FindFirstChild("HumanoidRootPart") :: BasePart?
+	local p = if root then root.Position else Vector3.zero
+	return Vector3.new(p.X, floorY, p.Z)
+end
+
 function ExpeditionController.init(): ()
 	-- Snapshot after the hub's own lighting has been applied by HubBuilder,
 	-- not before: capturing Studio's defaults would restore the wrong world.
@@ -125,6 +135,8 @@ function ExpeditionController.init(): ()
 		ChunkLoader.applyEnvironment(Lighting, payload.Environment)
 		-- Sky, atmosphere, grade, cloud sea, motes: the rest of the world's look.
 		AmbienceController.enter(payload.Environment, payload.FloorY or 0)
+		-- The scenario atmosphere's weather, pulses, flashes and sky pieces.
+		AtmosphereEffects.enter(payload.Environment, mapCentre(payload.FloorY or 0))
 		-- Waits for the map to replicate, so it must not hold up the rest.
 		task.spawn(PropController.enter, payload.WorldId, payload.StageName)
 		active = payload
@@ -149,6 +161,7 @@ function ExpeditionController.init(): ()
 		end
 		ChunkLoader.applyEnvironment(Lighting, payload.Environment)
 		AmbienceController.enter(payload.Environment, payload.FloorY or active.FloorY or 0)
+		AtmosphereEffects.enter(payload.Environment, mapCentre(payload.FloorY or active.FloorY or 0))
 		active.Environment = payload.Environment
 		active.Atmosphere = payload.Atmosphere
 		print(`[Expedition] atmosphere -> {payload.Atmosphere or "BASE"}`)
@@ -166,6 +179,7 @@ function ExpeditionController.init(): ()
 		-- expedition: there is no lighting to restore and no state to clear.
 		if payload.Reason ~= "ABORTED" then
 			AmbienceController.leave()
+			AtmosphereEffects.leave()
 			PropController.leave()
 			restoreHubLighting()
 			active = nil
@@ -181,6 +195,7 @@ function ExpeditionController.init(): ()
 		if active and ExpeditionController.remaining() <= 0 then
 			active = nil
 			AmbienceController.leave()
+			AtmosphereEffects.leave()
 			PropController.leave()
 			restoreHubLighting()
 			notify()

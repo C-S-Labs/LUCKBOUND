@@ -10,7 +10,7 @@
 --       Routing these through the server would add a remote round trip to
 --       change something the client is going to change anyway.
 --
---   SERVER (DebugSystem)  /roll /enter /leave /event /endevents /ledger
+--   SERVER (DebugSystem)  /roll /enter /leave /atmosphere /event /endevents /ledger
 --                         /keychance /vaultchance /boss /givekey /takekey /keys
 --                         (the last six are temporary loot testing tools)
 --       Roll results, expedition entry and Fate awards. The client must not
@@ -320,6 +320,9 @@ function DebugCommands.init(): ()
 	-- A server command with no client alias is not a command.
 	table.insert(HELP, register("event", "/event <ID> -- start a live event", function(args)
 		remote("event", args)
+	end))
+	table.insert(HELP, register("atmosphere", "/atmosphere <ID|BASE|RANDOM> -- force a scenario atmosphere", function(args)
+		remote("atmosphere", args)
 	end))
 	table.insert(HELP, register("endevents", "stop every live event", function()
 		remote("endevents", {})
