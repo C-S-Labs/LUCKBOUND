@@ -121,10 +121,28 @@ A piece is two different kinds of thing, and they are delivered differently:
    animation class and a detail tier. A generated kit's script writes this list
    for you. For a hand-placed kit, place props as linked duplicates, and a
    Blender script reads them out of the scene.
-4. **Animation class** per placement, one of `PropCore.ANIMS`: `Static`,
-   `Float` (slow bob), `Hover` (bob plus a slow turn), `Spin`, `Roll` (turns on
-   its own axis, like a hoop), `Tumble` (debris: bob and rock), `Bird` (circles
-   its spot). **Detail tier** 1–3: 1 shows on every device, 3 is dense extra
+4. **Animation class** per placement, one of `PropCore.ANIMS`. Pick the one
+   that is true to the object (owner, 2026-09-23: "the animations have to make
+   sense for what they are"):
+
+   | Class | Motion | Use for |
+   |---|---|---|
+   | `Static` | none | anything that should just hang there |
+   | `Float` | slow bob only | beacons, a drifting stone |
+   | `Hover` | gentle bob plus a slow turn about vertical | crystals, pylons, books |
+   | `Spin` | slow turn about vertical, nothing else | rings round a keel or a tower |
+   | `Roll` | very slow turn **in its own plane**, no bob or sway | rings a path passes through |
+   | `Moored` | small bob, slight rock along the keel | boats at a dock |
+   | `Tumble` | bob, mild rock, slow turn | debris, rubble |
+   | `Bird` | the piece's flock circles its centre, nose first, banked | birds |
+
+   Rules every class keeps (tested): **nothing ever changes size**; bob and
+   spin are about true vertical whatever the prop's tilt; rock and roll are
+   about the prop's own axes. A `Bird` circles the vertical axis through its
+   piece's centre at its own radius and height, and the whole flock turns as
+   one. So **the generator must prove each bird's full circle clear**, as Sky
+   Citadel's `clear_bird_orbits` does. A spot that is merely clear at rest is
+   not enough. **Detail tier** 1–3: 1 shows on every device, 3 is dense extra
    shown only on high graphics (`GameConfig.Ambience.Props.TierMinQuality`).
 5. **Where it lands in the repo.** Placements are
    `src/shared/Content/Props/<World>.luau` (`Id` = the world, `Library`,

@@ -5306,22 +5306,99 @@ do
 	check("tier 2 is dropped on the lowest graphics", not PropCore.tierShown(2, GameConfig.Ambience.QualityFloor, cfg))
 	check("tier 2 shows on Automatic graphics", PropCore.tierShown(2, GameConfig.Ambience.AutomaticQuality, cfg))
 
-	-- Motion stays bounded and repeats: a crystal bobs within its amplitude
-	-- forever rather than drifting off.
-	local bounded, periodic = true, true
-	for t = 0, 60, 0.37 do
-		local m = PropCore.motion("Float", t, 0.3, cfg)
-		if math.abs(m.dy) > cfg.Float.Amplitude + 1e-9 then bounded = false end
-		local later = PropCore.motion("Float", t + cfg.Float.Period, 0.3, cfg)
-		if math.abs(later.dy - m.dy) > 1e-6 then periodic = false end
+	-- Each kind of thing moves the way that thing would. Which prop gets
+	-- which class is content; these pin what the classes mean.
+	local animOf = {}
+	for _, rows in set.Placements do
+		for _, row in rows do
+			local kind = string.match(row.Prop, "^prop_(.-)_%a+$") or row.Prop
+			animOf[kind] = animOf[kind] or {}
+			animOf[kind][row.Anim] = true
+		end
 	end
-	check("a floating prop bobs within its amplitude", bounded)
-	check("a floating prop's bob repeats every period", periodic)
-	local bird = PropCore.motion("Bird", 3, 0.1, cfg)
-	check("a bird circles at its configured radius", bird.orbitRadius == cfg.Bird.Radius)
+	local function only(kind, anim)
+		local n = 0
+		for a in animOf[kind] or {} do
+			n += 1
+			if a ~= anim then return false end
+		end
+		return n == 1
+	end
+	check("hoops over the path only roll in their own plane", only("hoop", "Roll"))
+	check("rings round a keel only turn about vertical", only("keel_ring", "Spin"))
+	check("floating crystals hover (bob and turn), nothing more", only("crystal", "Hover"))
+	check("the moored skiff rocks at its mooring", only("skiff", "Moored"))
+	check("birds fly as birds", only("bird", "Bird"))
+
+	-- Sweep every class over two minutes and hold it to its promise.
+	local tau = math.pi * 2
+	local function sweep(anim, test)
+		for t = 0, 120, 0.37 do
+			local m = PropCore.motion(anim, t, 0.3, cfg)
+			if not test(m, t) then return false end
+		end
+		return true
+	end
+	local function noScale(m)
+		for key in m do
+			if key ~= "lift" and key ~= "turn" and key ~= "tiltX" and key ~= "tiltZ" and key ~= "orbit"
+				and key ~= "bank" then
+				return false
+			end
+		end
+		return true
+	end
+	local all = true
+	for anim in PropCore.ANIMS do
+		all = all and sweep(anim, noScale)
+	end
+	check("no motion has a size term: nothing grows or shrinks", all)
+	check("a hoop neither bobs, sways nor turns off its plane", sweep("Roll", function(m)
+		return m.lift == 0 and m.turn == 0 and m.tiltX == 0 and m.orbit == 0
+	end))
+	local rollRate = (PropCore.motion("Roll", 1, 0, cfg).tiltZ - PropCore.motion("Roll", 0, 0, cfg).tiltZ)
+	check("a hoop takes at least a minute per turn", rollRate > 0 and tau / rollRate >= 60, tostring(tau / rollRate))
+	check("a keel ring only turns", sweep("Spin", function(m)
+		return m.lift == 0 and m.tiltX == 0 and m.tiltZ == 0 and m.orbit == 0
+	end))
+	check("a hovering crystal bobs within its amplitude and never tilts", sweep("Hover", function(m)
+		return math.abs(m.lift) <= cfg.Hover.Amplitude + 1e-9 and m.tiltX == 0 and m.tiltZ == 0
+	end))
+	check("a floating prop only bobs, within its amplitude", sweep("Float", function(m)
+		return math.abs(m.lift) <= cfg.Float.Amplitude + 1e-9 and m.turn == 0 and m.tiltX == 0 and m.tiltZ == 0
+	end))
+	check("a moored skiff rocks only slightly (under 5 degrees)", sweep("Moored", function(m)
+		return math.abs(m.tiltX) < math.rad(5) and math.abs(m.tiltZ) < math.rad(5) and m.turn == 0
+	end))
+	check("debris rocks mildly (under 15 degrees)", sweep("Tumble", function(m)
+		return math.abs(m.tiltX) < math.rad(15) and math.abs(m.tiltZ) < math.rad(15)
+	end))
+	check("every bob repeats: nothing drifts away over time", sweep("Float", function(m, t)
+		return math.abs(PropCore.motion("Float", t + cfg.Float.Period, 0.3, cfg).lift - m.lift) < 1e-6
+	end))
 	local still = PropCore.motion("Static", 5, 0.5, cfg)
 	check("a static prop does not move",
-		still.dy == 0 and still.yaw == 0 and still.roll == 0 and still.orbitRadius == 0)
+		still.lift == 0 and still.turn == 0 and still.tiltX == 0 and still.tiltZ == 0 and still.orbit == 0)
+
+	-- Birds: the flock turns as one (no per-bird phase in the orbit), so birds
+	-- the generator placed clear of each other stay clear; and the bob stays
+	-- inside the clearance the generator proved each circle with (0.6).
+	check("the flock circles as one rigid body",
+		PropCore.motion("Bird", 7, 0.1, cfg).orbit == PropCore.motion("Bird", 7, 0.9, cfg).orbit)
+	check("a bird's bob fits the clearance its circle was proven with", cfg.Bird.Bob <= 0.6)
+	-- Heading: the nose (+X) along the direction of travel, at several spots.
+	local headingOk = true
+	for _, spot in { { 10, 0 }, { 0, 10 }, { -7, 3 }, { 4, -9 } } do
+		local x, z = spot[1], spot[2]
+		local h = PropCore.birdHeading(x, z)
+		local nose = { math.cos(h), -math.sin(h) } -- Ry(h) * (1, 0, 0), as (x, z)
+		local travel = { z, -x } -- d/dθ of Ry(θ) * (x, 0, z)
+		local len = math.sqrt(x * x + z * z)
+		if math.abs(nose[1] - travel[1] / len) > 1e-9 or math.abs(nose[2] - travel[2] / len) > 1e-9 then
+			headingOk = false
+		end
+	end
+	check("a bird flies nose first", headingOk)
 	check("neighbouring props move out of step", PropCore.phase(1) ~= PropCore.phase(2))
 
 	local bad = { SKY_CITADEL = { Id = "SKY_CITADEL", Library = { "prop_x" }, Placements = {

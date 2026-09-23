@@ -648,15 +648,26 @@ the route is too short, too long, or about right.
 6. **`/leave`.** ✅ Pass: the hub looks exactly as it did before (its purple
    sky back, no clouds left behind).
 
-### Test S — Sky Citadel's floating scenery ⭐ NEW (5 min) — **after the re-import**
+### Test S — Sky Citadel's floating scenery ⭐ NEW (5 min)
 
-Needs the new structure ids live and `Ambience.Props.Enabled = true`.
+Live since the re-import (structure-only meshes, prop library in the repo).
 
 1. **Roll Sky Citadel and enter.** ✅ Pass: floating crystals, beacons, rings,
    debris, tomes and birds on and around the islands — each **once** (no
    doubled crystal baked into the deck underneath it).
-2. **Watch one for ten seconds.** ✅ Pass: crystals bob, hoops roll, keel rings
-   spin, debris tumbles gently, birds circle. Nothing drifts off its island.
+2. **Watch for twenty seconds.** ✅ Pass:
+   - Crystals bob gently and turn slowly. They never stretch or squash.
+   - The hoops over the skyway neither bob nor sway; they only turn, very
+     slowly, in their own plane.
+   - The keel rings under the islands only turn.
+   - The skiff at the dock rocks slightly.
+   - Debris drifts.
+   - The aviary's birds circle the cage together, nose first, without passing
+     through the bars or the trees.
+
+   Nothing drifts off its island. **If birds fly backwards or props face
+   the wrong way, screenshot it:** that is the importer turn
+   (`PropController`'s `fix`), one line.
 3. **Walk into a floating crystal.** ✅ Pass: you pass through it (props have
    no collision); the deck under you still collides normally.
 4. **Output window.** ✅ Pass: no `[PropController] prop library is missing` warning.

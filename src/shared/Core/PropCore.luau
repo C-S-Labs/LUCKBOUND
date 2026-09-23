@@ -4,6 +4,14 @@
 -- client's PropController turns this into MeshParts and CFrames.
 --
 -- PURE: no Roblox types, so the motion is testable headlessly.
+--
+-- THE RULES EVERY MOTION KEEPS:
+--   * Nothing ever changes size. A prop's Size is set once, at placement.
+--   * Bobbing is along true vertical and spinning is about true vertical,
+--     whatever the prop's own tilt -- a tilted crystal must not wander.
+--   * Tilting (rock, roll) is about the prop's OWN axes, so a ring rolls in
+--     its own plane and a skiff rocks along its keel.
+--   * Every motion is small, slow and periodic: scenery, not spectacle.
 
 local PropCore = {}
 
@@ -11,12 +19,13 @@ local PropCore = {}
 -- because each is behaviour -- adding one means writing its motion below.
 PropCore.ANIMS = {
 	Static = true, -- never moves
-	Float = true, -- slow bob up and down
-	Hover = true, -- a gentler bob while turning slowly
-	Spin = true, -- turns about its vertical axis
-	Roll = true, -- turns about its own Z (a ring's axis)
-	Tumble = true, -- a slow lopsided rock, like debris adrift
-	Bird = true, -- circles its placed spot, facing along its path
+	Float = true, -- a slow bob up and down (beacons, a drifting lintel)
+	Hover = true, -- a gentle bob while turning slowly about vertical (crystals, tomes)
+	Spin = true, -- turns slowly about vertical, nothing else (rings round a keel)
+	Roll = true, -- turns slowly in its own plane, about its own Z (hoops over a path)
+	Moored = true, -- a boat at a dock: a small bob and a slight rock along its keel
+	Tumble = true, -- debris adrift: a bob, a mild rock, a slow turn
+	Bird = true, -- the flock circles its piece's centre, nose along the path
 }
 
 --- Whether a placement of this detail tier is drawn at this quality scale
@@ -33,38 +42,63 @@ function PropCore.phase(index: number): number
 	return x - math.floor(x)
 end
 
---- How a prop is displaced at time t. Returns the pieces the controller
---- composes, in this order:
----   CFrame.Angles(0, orbitAngle, 0) * CFrame.new(0, dy, orbitRadius)
----     * CFrame.Angles(pitch, yaw, roll)
---- applied in the prop's placement frame. Angles are radians.
+--- How a prop is displaced at time t, as the controller composes it:
+---
+---   layout * [orbit about the piece's vertical axis]
+---          * translate(P + (0, lift, 0))
+---          * turnAbout(vertical, turn) * R * Angles(tiltX, 0, tiltZ)
+---
+--- lift is studs; every angle is radians. `orbit` is only non-zero for
+--- birds, whose own rotation R is replaced by `heading`/`bank` (see
+--- PropCore.birdHeading). There is deliberately no scale term.
 function PropCore.motion(anim: string, t: number, phase: number, cfg: any)
-	local m = { dy = 0, pitch = 0, yaw = 0, roll = 0, orbitAngle = 0, orbitRadius = 0 }
+	local m = { lift = 0, turn = 0, tiltX = 0, tiltZ = 0, orbit = 0, bank = 0 }
 	local tau = math.pi * 2
 	local c = cfg[anim]
 	if anim == "Static" or c == nil then
 		return m
 	end
 	local offset = phase * tau
-	if anim == "Float" or anim == "Hover" or anim == "Tumble" then
-		m.dy = c.Amplitude * math.sin(tau * t / c.Period + offset)
+	if
+		anim == "Float"
+		or anim == "Hover"
+		or anim == "Tumble"
+		or anim == "Moored"
+		or anim == "Bird"
+	then
+		m.lift = (c.Amplitude or c.Bob) * math.sin(tau * t / c.Period + offset)
 	end
 	if anim == "Hover" then
-		m.yaw = tau * t / c.SpinPeriod + offset
+		m.turn = tau * t / c.SpinPeriod + offset
 	elseif anim == "Spin" then
-		m.yaw = tau * t / c.Period + offset
+		m.turn = tau * t / c.Period + offset
 	elseif anim == "Roll" then
-		m.roll = tau * t / c.Period + offset
+		m.tiltZ = tau * t / c.Period + offset
+	elseif anim == "Moored" then
+		m.tiltX = c.Rock * math.sin(tau * t / (c.Period * 1.4) + offset)
+		m.tiltZ = c.Rock * 0.4 * math.sin(tau * t / (c.Period * 1.9) + offset * 2)
 	elseif anim == "Tumble" then
-		m.pitch = c.Rock * math.sin(tau * t / (c.Period * 1.3) + offset)
-		m.roll = c.Rock * math.cos(tau * t / (c.Period * 0.9) + offset * 2)
-		m.yaw = tau * t / (c.Period * 4) + offset
+		m.tiltX = c.Rock * math.sin(tau * t / (c.Period * 1.3) + offset)
+		m.tiltZ = c.Rock * math.cos(tau * t / (c.Period * 0.9) + offset * 2)
+		m.turn = tau * t / (c.Period * 4) + offset
 	elseif anim == "Bird" then
-		m.orbitAngle = tau * t / c.Period + offset
-		m.orbitRadius = c.Radius
-		m.dy = c.Bob * math.sin(tau * t / (c.Period * 0.37) + offset)
+		-- One angle for the whole flock, no per-bird phase: the flock turns as
+		-- a rigid body, so birds clear of each other at rest stay clear. The
+		-- generator proves each bird's full circle clear (clear_bird_orbits).
+		m.orbit = tau * t / c.Period
+		m.bank = c.Bank
 	end
 	return m
+end
+
+--- The yaw (radians, CFrame.Angles convention about vertical) that points a
+--- bird's nose -- its own +X -- along its circle, for a bird at (x, z) in its
+--- piece's layout frame circling the vertical axis through the origin with
+--- a growing orbit angle. Added to the orbit angle itself at draw time.
+function PropCore.birdHeading(x: number, z: number): number
+	-- d/dθ of Ry(θ)·(x, 0, z) at θ = 0 is (z, 0, -x); Ry(h)·(1, 0, 0) is
+	-- (cos h, 0, -sin h). Equal when cos h = z/r and sin h = x/r.
+	return math.atan2(x, z)
 end
 
 return PropCore

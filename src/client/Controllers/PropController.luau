@@ -29,11 +29,36 @@ local PropController = {}
 
 type Placed = {
 	Part: BasePart,
-	Base: CFrame, -- the prop's placement frame, before motion
-	Fix: CFrame, -- the importer's turn, applied after motion (see enter)
+	Layout: CFrame, -- the piece's layout frame (centre, turned by its yaw)
+	Offset: Vector3, -- the prop's position in that frame
+	Rot: CFrame, -- the prop's own rotation, no translation
+	Fix: CFrame, -- the importer's turn, applied last (see enter)
 	Anim: string,
 	Phase: number,
+	Heading: number, -- birds only: PropCore.birdHeading
+	Position: Vector3, -- where it rests, for the animate-radius test
 }
+
+-- The one place motion becomes a CFrame; PropCore.motion documents the order.
+local function pose(p: Placed, m: any): CFrame
+	if p.Anim == "Bird" then
+		-- The flock circles the piece's own vertical axis. A bird's authored
+		-- rotation was only a random yaw, so it is replaced by its heading,
+		-- banked into the turn (its inside is its -Z; see birdHeading).
+		return p.Layout
+			* CFrame.Angles(0, m.orbit, 0)
+			* CFrame.new(p.Offset + Vector3.new(0, m.lift, 0))
+			* CFrame.Angles(0, p.Heading, 0)
+			* CFrame.Angles(-m.bank, 0, 0)
+			* p.Fix
+	end
+	return p.Layout
+		* CFrame.new(p.Offset + Vector3.new(0, m.lift, 0))
+		* CFrame.Angles(0, m.turn, 0)
+		* p.Rot
+		* CFrame.Angles(m.tiltX, 0, m.tiltZ)
+		* p.Fix
+end
 
 local folder: Folder? = nil
 local placed: { Placed } = {}
@@ -63,18 +88,10 @@ local function step()
 	local parts, cframes = {}, {}
 	for _, p in placed do
 		if p.Anim ~= "Static" then
-			local d = p.Base.Position - focus
+			local d = p.Position - focus
 			if d:Dot(d) <= radius2 then
-				local m = PropCore.motion(p.Anim, t, p.Phase, cfg)
 				table.insert(parts, p.Part)
-				table.insert(
-					cframes,
-					p.Base
-						* CFrame.Angles(0, m.orbitAngle, 0)
-						* CFrame.new(0, m.dy, m.orbitRadius)
-						* CFrame.Angles(m.pitch, m.yaw, m.roll)
-						* p.Fix
-				)
+				table.insert(cframes, pose(p, PropCore.motion(p.Anim, t, p.Phase, cfg)))
 			end
 		end
 	end
@@ -143,11 +160,14 @@ function PropController.enter(worldId: string, stageName: string?)
 						part.CanTouch = false
 						part.Size = Vector3.new(row.S[1], row.S[2], row.S[3])
 						local r = row.R
-						local base = layout
-							* CFrame.new(
-								row.P[1],
-								row.P[2],
-								row.P[3],
+						local entry: Placed = {
+							Part = part,
+							Layout = layout,
+							Offset = Vector3.new(row.P[1], row.P[2], row.P[3]),
+							Rot = CFrame.new(
+								0,
+								0,
+								0,
 								r[1],
 								r[2],
 								r[3],
@@ -157,16 +177,26 @@ function PropController.enter(worldId: string, stageName: string?)
 								r[7],
 								r[8],
 								r[9]
-							)
-						part.CFrame = base * fix
-						part.Parent = holder
-						table.insert(placed, {
-							Part = part,
-							Base = base,
+							),
 							Fix = fix,
 							Anim = row.Anim,
 							Phase = PropCore.phase(index),
-						})
+							Heading = PropCore.birdHeading(row.P[1], row.P[3]),
+							Position = layout * Vector3.new(row.P[1], row.P[2], row.P[3]),
+						}
+						-- At rest is motion at t = 0 for a bird (its heading, not
+						-- its authored yaw), and the authored pose for the rest.
+						part.CFrame = pose(
+							entry,
+							PropCore.motion(
+								if row.Anim == "Bird" then "Bird" else "Static",
+								0,
+								0,
+								cfg
+							)
+						)
+						part.Parent = holder
+						table.insert(placed, entry)
 					else
 						missing[row.Prop] = true
 					end

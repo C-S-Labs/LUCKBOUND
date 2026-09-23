@@ -38,7 +38,7 @@ return {
 		SC_AETHER_SPRINGS = {
 			{
 				Prop = "prop_crystal_a",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { 56, 22.5, -60 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -186,7 +186,7 @@ return {
 		SC_ARMORY = {
 			{
 				Prop = "prop_crystal_a",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { 84, 26.5, 2 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -228,7 +228,7 @@ return {
 		SC_BOSS_CLEARING = {
 			{
 				Prop = "prop_crystal_b",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { 21.213, 53, -91.213 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -236,7 +236,7 @@ return {
 			},
 			{
 				Prop = "prop_crystal_b",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { -21.213, 53, -91.213 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -244,7 +244,7 @@ return {
 			},
 			{
 				Prop = "prop_crystal_b",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { -21.213, 53, -48.787 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -252,7 +252,7 @@ return {
 			},
 			{
 				Prop = "prop_crystal_b",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { 21.213, 53, -48.787 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -260,7 +260,7 @@ return {
 			},
 			{
 				Prop = "prop_crystal_a",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { 50.912, 37, -50.912 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -268,7 +268,7 @@ return {
 			},
 			{
 				Prop = "prop_crystal_a",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { -50.912, 37, -50.912 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -276,7 +276,7 @@ return {
 			},
 			{
 				Prop = "prop_crystal_a",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { -50.912, 37, 50.912 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -284,7 +284,7 @@ return {
 			},
 			{
 				Prop = "prop_crystal_a",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { 50.912, 37, 50.912 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -432,7 +432,7 @@ return {
 			},
 			{
 				Prop = "prop_crystal_a",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { -64, 22.75, 40 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -474,7 +474,7 @@ return {
 		SC_CAP_SEALED_GATE = {
 			{
 				Prop = "prop_crystal_c",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { 70, 24.5, -70 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -550,7 +550,7 @@ return {
 		SC_ENTRY = {
 			{
 				Prop = "prop_crystal_a",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { -34, 20.5, -50 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -558,7 +558,7 @@ return {
 			},
 			{
 				Prop = "prop_crystal_a",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { 34, 26.25, -50 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -600,7 +600,7 @@ return {
 		SC_GARDEN_TERRACE = {
 			{
 				Prop = "prop_crystal_a",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { -86, 16.5, -26 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -658,7 +658,7 @@ return {
 			},
 			{
 				Prop = "prop_crystal_a",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { -66, 22.75, 60 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -710,7 +710,7 @@ return {
 				Prop = "prop_bird_a",
 				Anim = "Bird",
 				Tier = 2,
-				P = { 0.937, 23.317, 21.237 },
+				P = { 0.937, 24.317, 21.237 },
 				R = { 0.874, 0, 0.486, 0, 1, 0, -0.486, 0, 0.874 },
 				S = { 6, 2.119, 6.784 },
 			},
@@ -718,7 +718,7 @@ return {
 				Prop = "prop_bird_a",
 				Anim = "Bird",
 				Tier = 2,
-				P = { -4.916, 18.872, 25.777 },
+				P = { -4.916, 29.872, 25.777 },
 				R = { 0.483, 0, 0.876, 0, 1, 0, -0.876, 0, 0.483 },
 				S = { 6, 2.119, 6.784 },
 			},
@@ -862,7 +862,7 @@ return {
 			},
 			{
 				Prop = "prop_crystal_a",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { -64, 18.75, 60 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -904,7 +904,7 @@ return {
 		SC_PATH_BEND_WEST = {
 			{
 				Prop = "prop_crystal_b",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { 70, 22.75, -70 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -912,7 +912,7 @@ return {
 			},
 			{
 				Prop = "prop_crystal_a",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { -70, 30.5, 72 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -1126,7 +1126,7 @@ return {
 		SC_PATH_SKYPORT = {
 			{
 				Prop = "prop_skiff_a",
-				Anim = "Float",
+				Anim = "Moored",
 				Tier = 1,
 				P = { 117, 2.578, -1 },
 				R = { 0, 0, 1, 0, 1, 0, -1, 0, 0 },
@@ -1142,7 +1142,7 @@ return {
 			},
 			{
 				Prop = "prop_crystal_b",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { -64, 22.75, -56 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -1234,7 +1234,7 @@ return {
 		SC_SIDE_LOOKOUT = {
 			{
 				Prop = "prop_crystal_a",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { -24, 34.75, -16 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -1276,7 +1276,7 @@ return {
 		SC_SPIRE_COURT = {
 			{
 				Prop = "prop_crystal_a",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { -66, 30.75, -58 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -1284,7 +1284,7 @@ return {
 			},
 			{
 				Prop = "prop_crystal_a",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { 66, 24.5, -58 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -1326,7 +1326,7 @@ return {
 		SC_SPIRE_COURT_B = {
 			{
 				Prop = "prop_crystal_a",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { 0, 15.5, 16 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -1334,7 +1334,7 @@ return {
 			},
 			{
 				Prop = "prop_crystal_a",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { -6.928, 18.5, 28 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -1342,7 +1342,7 @@ return {
 			},
 			{
 				Prop = "prop_crystal_a",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { 6.928, 21.5, 28 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
@@ -1384,7 +1384,7 @@ return {
 		SC_VAULT_TURN = {
 			{
 				Prop = "prop_crystal_c",
-				Anim = "Float",
+				Anim = "Hover",
 				Tier = 2,
 				P = { 40, 24.5, -46 },
 				R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
