@@ -910,8 +910,10 @@ local GameConfig = {
 			LidSeconds = 0.8,
 			DoorTurns = 2, -- the vault's dial spins home twice
 			DoorSeconds = 2.4,
-			DoorRecess = 2.5, -- studs it then sinks into its wall
-			DoorRecessSeconds = 0.8,
+			-- Studs it then slides back into the vault's dark tunnel (12 deep in
+			-- the treasury): past its own 2.9 thickness, so it ends inside.
+			DoorRecess = 6,
+			DoorRecessSeconds = 1.5,
 			PulsePeriod = 3.2, -- the forcefield's slow breath
 			MinTransparency = 0.35,
 			MaxTransparency = 0.7,

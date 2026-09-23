@@ -81,8 +81,8 @@ local function animate(t: Tracked, now: number)
 	elseif t.Kind == "VAULT" then
 		local door = model:FindFirstChild("Door")
 		if door and door:IsA("BasePart") then
-			-- Spin about its own axis, then sink back into the wall (its -Z;
-			-- the door's face looks out along +Z).
+			-- Spin about its own axis, then slide back into the vault's dark
+			-- tunnel behind it (its -Z; the door's face looks out along +Z).
 			local cf = partPose(
 				door,
 				CFrame.new(0, 0, -FixtureCore.doorRecess(elapsed, cfg))

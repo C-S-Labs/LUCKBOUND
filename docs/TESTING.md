@@ -708,7 +708,9 @@ Live since the second re-import. Turn on `/fly` for speed.
    `/keys` to see it.
 7. **Unlock the vault with one player only** (party of 2, both holding a
    key). ✅ Pass, for the player who used it: the round door spins twice, then
-   sinks into the wall; *"Sky Citadel Vault Key used. The vault opens."*; their
+   slides back into a dark round tunnel with a gold ring glinting at its far
+   end (look in: no gaps, no white showing through, the door never clips the
+   tunnel's sides); *"Sky Citadel Vault Key used. The vault opens."*; their
    prompt is gone. ✅ Pass, for the other player: the door is **still shut**,
    their prompt still there, and they still have their key. They can open it
    for themselves with it, or keep it.
