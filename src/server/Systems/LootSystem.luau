@@ -50,6 +50,12 @@ local rng = Random.new()
 -- Refused vault attempts, so holding E on a locked door does not flood toasts.
 local lastRefusal: { [number]: number } = {}
 
+-- DEVELOPER TESTING ONLY (/keychance, /boss). Remove with the debug commands.
+local keyChanceOverride: number? = nil
+-- Every furnished map, so /boss can find the one a player is on.
+local maps: { { Stage: Instance, WorldId: string, Members: { [number]: boolean }, Boss: () -> () } } =
+	{}
+
 local function library(): Instance?
 	return ReplicatedStorage:FindFirstChild("LuckboundProps")
 end
@@ -269,7 +275,7 @@ local function bossDefeated(worldId: string, members: { [number]: boolean })
 	-- World modifiers are still §7-excluded; the list they will fill is here
 	-- so they can move the chance without touching this file.
 	local modifiers = {}
-	local chance = KeyCore.dropChance(key.DropChance, modifiers)
+	local chance = keyChanceOverride or KeyCore.dropChance(key.DropChance, modifiers)
 	-- ONE roll for the party.
 	if rng:NextNumber() >= chance then
 		return
@@ -404,6 +410,20 @@ function LootSystem.attach(stage: Instance, worldId: string, members: { [number]
 		warn(`[LootSystem] fixture meshes missing from the library: {table.concat(names, ", ")}`)
 	end
 
+	table.insert(maps, {
+		Stage = stage,
+		WorldId = worldId,
+		Members = members,
+		Boss = function()
+			bossDefeated(worldId, members)
+		end,
+	})
+	for i = #maps, 1, -1 do
+		if maps[i].Stage.Parent == nil then
+			table.remove(maps, i)
+		end
+	end
+
 	if cfg.BossDefeatStandIn and arena then
 		local done = false
 		watchArena(stage, arena :: Instance, function()
@@ -413,6 +433,69 @@ function LootSystem.attach(stage: Instance, worldId: string, members: { [number]
 			end
 		end, members)
 	end
+end
+
+-- === developer testing only (DebugSystem) ============================
+-- Everything below exists for the /keychance, /boss, /givekey, /takekey and
+-- /keys commands, and goes when they do.
+
+function LootSystem.setKeyChanceOverride(chance: number?): ()
+	keyChanceOverride = chance
+end
+
+function LootSystem.keyChanceOverride(): number?
+	return keyChanceOverride
+end
+
+--- Fires the boss stand-in for the map this player is on, as if the boss had
+--- just been defeated. Repeatable, unlike the real one.
+function LootSystem.triggerBoss(player: Player): (boolean, string)
+	for _, map in maps do
+		if map.Stage.Parent and map.Members[player.UserId] then
+			map.Boss()
+			return true, `boss stand-in fired on {map.WorldId}`
+		end
+	end
+	return false, "you are not on an expedition map"
+end
+
+--- Every world's vault key, by Id.
+function LootSystem.keyDefinitions(): { [string]: any }
+	local out = {}
+	for _, world in Worlds do
+		local key = world.Loot and world.Loot.VaultKey
+		if key then
+			out[key.Id] = key
+		end
+	end
+	return out
+end
+
+function LootSystem.giveKey(player: Player, keyId: string): (boolean, string)
+	local key = LootSystem.keyDefinitions()[keyId]
+	local keys = keysOf(player)
+	if not key or not keys then
+		return false, `no key '{keyId}', or your profile is not loaded`
+	end
+	if not KeyCore.grant(keys, key.Id, GameConfig.Loot.MaxKeysPerKind) then
+		return false, `you already hold the maximum {key.Name}`
+	end
+	SaveSystem.markDirty(player)
+	return true, `gave you a {key.Name}`
+end
+
+function LootSystem.takeKeys(player: Player): (boolean, string)
+	local profile = SaveSystem.get(player)
+	if not profile then
+		return false, "your profile is not loaded"
+	end
+	profile.Keys = {}
+	SaveSystem.markDirty(player)
+	return true, "removed all your keys"
+end
+
+function LootSystem.keysOf(player: Player): { [string]: number }
+	return keysOf(player) or {}
 end
 
 function LootSystem.init(saveSystem: any): ()

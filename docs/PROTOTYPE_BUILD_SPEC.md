@@ -136,7 +136,7 @@ ServerStorage/
 6b. PartySystem.init()                                                   (§7.2)
 6c. LootSystem.init(SaveSystem)                                          (§7.5)
 7.  ExpeditionSystem.init(SaveSystem, ProgressionSystem, PartySystem, LootSystem)
-8.  DebugSystem.init(FateSystem, ExpeditionSystem)   -- developer commands
+8.  DebugSystem.init(FateSystem, ExpeditionSystem, EventSystem, LedgerSystem, LootSystem)   -- developer commands
 9.  HubBuilder.build()        -- lighting always; geometry only if absent
 10. ExpeditionSystem.bindGatePrompt()  -- attaches to geometry step 9 creates
     -- or, on an expedition server, ExpeditionSystem.startHost() (§7.2)
