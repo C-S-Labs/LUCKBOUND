@@ -186,7 +186,7 @@ exists.**
 
 ### Test suite
 
-**720 tests, all passing.** 65 arrived with parties and expedition instances (§7.2), and the scenario layer (§7.3) added its own: compatibility, pacing bands, anti-repetition and determinism. Headless — no Roblox required. 136 of them arrived
+**723 tests, all passing.** 65 arrived with parties and expedition instances (§7.2), and the scenario layer (§7.3) added its own: compatibility, pacing bands, anti-repetition and determinism. Headless — no Roblox required. 136 of them arrived
 with the player UI and the live palette: the menu reducer, travel authorisation, code redemption,
 settings validation, the stamina curve and the coyote window.
 

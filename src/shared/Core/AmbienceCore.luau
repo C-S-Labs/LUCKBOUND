@@ -36,6 +36,17 @@ function AmbienceCore.wrap(offset: number, half: number): number
 	return ((offset + half) % span + span) % span - half
 end
 
+-- Finishes a cloud layer may use. Matte ones exist to be tried against the
+-- default in Studio; Glass and Neon are deliberately absent -- a cloud that is
+-- see-through or self-lit reads as a bubble or a lamp, not a cloud.
+AmbienceCore.CLOUD_MATERIALS = {
+	SmoothPlastic = true,
+	Plastic = true,
+	Sand = true,
+	Fabric = true,
+	Snow = true,
+}
+
 -- The mix a layer uses when it declares none: mostly heaped cumulus, some flat
 -- stratus banks, a few thin wisps.
 local DEFAULT_MIX = { Cumulus = 0.55, Stratus = 0.3, Wisp = 0.15 }
@@ -90,9 +101,6 @@ function AmbienceCore.layoutClouds(
 	-- Tufts are the finest detail, so they thin first: below full quality a
 	-- billow carries fewer, and on low graphics none.
 	local maxTufts = math.max(0, math.floor((layer.Tufts or 0) * billowScale * billowScale + 0.5))
-	-- The soft outer shell is pure polish; only devices drawing most of the
-	-- sea draw it.
-	local rim = layer.Rim == true and billowScale >= 0.75
 	for _ = 1, count do
 		local size = layer.SizeMin + (layer.SizeMax - layer.SizeMin) * nextNumber()
 		local style = pickStyle(mix, nextNumber())
@@ -138,7 +146,9 @@ function AmbienceCore.layoutClouds(
 			local flat = style == "Stratus"
 			local baseW = size * (if flat then 1.4 else 1)
 			local baseL = size * (if flat then 0.9 else 0.7 + 0.5 * nextNumber())
-			local baseTall = if flat then baseH * 0.6 else baseH
+			-- Cumulus sit on a FLAT, squashed base and heap upward; a round base
+			-- hanging below the billows is what made them read as bubbles.
+			local baseTall = if flat then baseH * 0.5 else baseH * 0.6
 			-- A LOBED base -- two or three overlapping ellipsoids -- so the
 			-- outline seen from above is irregular instead of one clean oval.
 			local lobes = 2 + math.floor(nextNumber() * 2)
@@ -160,7 +170,8 @@ function AmbienceCore.layoutClouds(
 				else math.max(if maxBillows > 0 then 1 else 0, math.floor(maxBillows * (0.5 + 0.5 * nextNumber()) + 0.5))
 			for _ = 1, n do
 				local w = size * (if flat then 0.3 + 0.2 * nextNumber() else 0.3 + 0.3 * nextNumber())
-				local h = w * (if flat then 0.35 else 0.6 + 0.3 * nextNumber())
+				-- Squashed, not spherical: a billow is wider than it is tall.
+				local h = w * (if flat then 0.3 else 0.5 + 0.2 * nextNumber())
 				local bx = (nextNumber() * 2 - 1) * baseW * 0.32
 				local by = baseTall * 0.25 + h * (if flat then 0.1 else 0.2 + 0.2 * nextNumber())
 				local bz = (nextNumber() * 2 - 1) * baseL * 0.28
@@ -179,17 +190,13 @@ function AmbienceCore.layoutClouds(
 							by + h * (0.25 + 0.15 * nextNumber()),
 							bz + math.sin(ang) * reach,
 							tw,
-							tw * (0.7 + 0.25 * nextNumber()),
+							tw * (0.55 + 0.2 * nextNumber()),
 							tw * (0.85 + 0.3 * nextNumber()),
 							0.05 * nextNumber(),
 							0
 						)
 					end
 				end
-			end
-			-- A faint oversized shell: blurs the hard ellipsoid edge into haze.
-			if rim then
-				add(0, baseTall * 0.15, 0, baseW * 1.18, baseTall * 1.35, baseL * 1.15, 0.4, 0.55)
 			end
 		end
 
@@ -268,8 +275,8 @@ function AmbienceCore.validate(environment: any, label: string): { string }
 				if layer.Tufts ~= nil then
 					checkRange(errors, `{l}.Tufts`, layer.Tufts, 0, 6)
 				end
-				if layer.Rim ~= nil and type(layer.Rim) ~= "boolean" then
-					table.insert(errors, `{l}.Rim must be true or false`)
+				if layer.Material ~= nil and not AmbienceCore.CLOUD_MATERIALS[layer.Material] then
+					table.insert(errors, `{l}.Material '{tostring(layer.Material)}' is not an allowed cloud material`)
 				end
 				if layer.Mix ~= nil then
 					local sum = 0

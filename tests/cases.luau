@@ -5122,8 +5122,8 @@ do
 	for i, cl in a do
 		if math.abs(cl.X) > layer.Radius or math.abs(cl.Z) > layer.Radius then inside = false end
 		if cl.X ~= b[i].X or #cl.Parts ~= #b[i].Parts then same = false end
-		-- lobes (<=3) + billows + a tuft allowance per billow + the rim
-		if #cl.Parts < 1 or #cl.Parts > 3 + layer.Billows * (1 + layer.Tufts) + 1 then bounded = false end
+		-- lobes (<=3) + billows + a tuft allowance per billow
+		if #cl.Parts < 1 or #cl.Parts > 3 + layer.Billows * (1 + layer.Tufts) then bounded = false end
 		kinds[cl.Style] = true
 	end
 	check("clouds lie inside their layer's square", inside)
@@ -5137,20 +5137,44 @@ do
 	for _, cl in AmbienceCore.layoutClouds(layer, 60, 1, lcg(7)) do highParts += #cl.Parts end
 	check("low graphics draws fewer cloud pieces than high", lowParts < highParts,
 		string.format("%d vs %d", lowParts, highParts))
-	-- The detail pass: at full quality a heaped cumulus carries tufts and a
-	-- rim, so it is far more than a base and a few balls.
+	-- The detail pass: at full quality a heaped cumulus carries tufts, so it
+	-- is far more than a base and a few balls.
 	local richest = 0
 	for _, cl in AmbienceCore.layoutClouds(layer, 60, 1, lcg(11)) do
 		if cl.Style == "Cumulus" then richest = math.max(richest, #cl.Parts) end
 	end
 	check("a full-quality cumulus is built from many pieces", richest >= 12, tostring(richest))
-	local noRim = true
-	for _, cl in AmbienceCore.layoutClouds(layer, 60, 0.5, lcg(11)) do
+	-- NOT BUBBLES. Owner's partner: "are we blowing bubbles or making clouds".
+	-- A see-through heaped cloud shows every inner shape through the one in
+	-- front; the only pieces allowed any extra transparency are wisp streaks,
+	-- and the near and middle layers are opaque outright.
+	local solid = true
+	for _, cl in AmbienceCore.layoutClouds(layer, 60, 1, lcg(11)) do
 		for _, piece in cl.Parts do
-			if piece.Fade >= 0.55 and cl.Style ~= "Wisp" then noRim = false end
+			if piece.Fade > 0 and cl.Style ~= "Wisp" then solid = false end
 		end
 	end
-	check("mid graphics skips the soft rim", noRim)
+	check("heaped and banked clouds are solid, not see-through", solid)
+	check("Sky Citadel's near and middle cloud layers are opaque",
+		Worlds.SKY_CITADEL.Environment.CloudSea[1].Transparency == 0
+			and Worlds.SKY_CITADEL.Environment.CloudSea[2].Transparency == 0)
+	-- Flat-bottomed: no billow or tuft hangs below its cloud's base.
+	local flatBottom = true
+	for _, cl in AmbienceCore.layoutClouds(layer, 60, 1, lcg(13)) do
+		if cl.Style == "Cumulus" then
+			local baseBottom = math.huge
+			for i, piece in cl.Parts do
+				if piece.Shade > 0.5 then baseBottom = math.min(baseBottom, piece.DY - piece.Height / 2) end
+			end
+			for _, piece in cl.Parts do
+				if piece.Shade <= 0.5 and piece.DY - piece.Height / 2 < baseBottom - 1 then flatBottom = false end
+			end
+		end
+	end
+	check("a cumulus heaps upward from a flat base", flatBottom)
+	check("an unlisted cloud material is a boot error",
+		#AmbienceCore.validate({ CloudCeiling = 10, CloudSea = { { Depth = 100, Count = 1, Radius = 100, Speed = 1,
+			SizeMin = 1, SizeMax = 2, Thickness = 0.5, Transparency = 0, Material = "Glass" } } }, "X") > 0)
 	-- The budget that matters on a phone: Automatic graphics.
 	local autoParts = 0
 	for _, def in Worlds.SKY_CITADEL.Environment.CloudSea do
