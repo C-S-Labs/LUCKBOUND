@@ -5172,6 +5172,29 @@ do
 		end
 	end
 	check("a cumulus heaps upward from a flat base", flatBottom)
+	-- NOT EGGS. From above, any piece much wider than it is tall reads as a
+	-- flat oval -- a fried egg's white. No piece in Sky Citadel's sea may have
+	-- a footprint more than three times its height.
+	local pancake, worstRatio = false, 0
+	for seed = 1, 20 do
+		for _, def in Worlds.SKY_CITADEL.Environment.CloudSea do
+			for _, cl in AmbienceCore.layoutClouds(def, def.Count, 1, lcg(seed * 7 + def.Depth)) do
+				for _, piece in cl.Parts do
+					local ratio = math.max(piece.Width, piece.Length) / piece.Height
+					worstRatio = math.max(worstRatio, ratio)
+					if ratio > 3 then pancake = true end
+				end
+			end
+		end
+	end
+	check("no cloud piece is a flat pancake (footprint over 3x its height)", not pancake,
+		string.format("worst %.2f", worstRatio))
+	check("Sky Citadel, looked down on, uses no wisps", (function()
+		for _, def in Worlds.SKY_CITADEL.Environment.CloudSea do
+			if def.Mix and def.Mix.Wisp then return false end
+		end
+		return true
+	end)())
 	check("an unlisted cloud material is a boot error",
 		#AmbienceCore.validate({ CloudCeiling = 10, CloudSea = { { Depth = 100, Count = 1, Radius = 100, Speed = 1,
 			SizeMin = 1, SizeMax = 2, Thickness = 0.5, Transparency = 0, Material = "Glass" } } }, "X") > 0)

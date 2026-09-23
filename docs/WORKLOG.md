@@ -35,7 +35,7 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ## Session 52 — 2026-09-23 — Clouds with shape; scenery separation becomes a rule
 
-**Tests:** 723 passing (was 710).
+**Tests:** 725 passing (was 710).
 
 **First look at the ambience (owner walk):** sunrise and the sea read well; the
 clouds looked like flat discs. Each was a single ellipsoid.
@@ -80,8 +80,14 @@ bubble) and near-spherical pieces. Fixed: near and middle layers **opaque**
 entirely, bases flattened so cumulus heap upward from a flat bottom, billows
 and tufts squashed. A per-layer `Material` knob (matte options only; Glass and
 Neon refused) lets the finish be tried in Studio without code. Tests assert
-heaped clouds are solid and flat-bottomed. **Sky Citadel's look is done** until
-the scenery re-export.
+heaped clouds are solid and flat-bottomed.
+
+**Then: "we aren't frying eggs."** Stratus was one wide flat base with a round
+puff on it (from above: the white and the yolk), wisps were long flat ovals,
+and cumulus bases stuck out past their billows as a pale rim. Banks are now
+rows of lumpy puffs, cumulus bases sit under their billows, and Sky Citadel
+uses no wisps. A test refuses any piece whose footprint exceeds 3x its height.
+**Sky Citadel's look is done** until the scenery re-export.
 
 **Next:** the Sky Citadel re-export. The first step is ours: change
 `build_sky_citadel_kit.py` to build props as separate `prop_*` objects, gather
