@@ -884,6 +884,8 @@ local GameConfig = {
 			Bird = { Period = 36, Bob = 0.5, Bank = 0.25 },
 			-- A wingbeat: radians each way from the modelled pose, and seconds.
 			Wing = { Amplitude = 0.45, Period = 0.7 },
+			-- Banners rocking in the wind: radians each way about the centre.
+			Sway = { Angle = 0.03, Period = 5 },
 		},
 	},
 	-- Loot, fixtures and vault keys (build spec §7.5, owner-directed

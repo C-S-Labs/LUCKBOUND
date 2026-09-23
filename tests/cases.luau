@@ -5310,7 +5310,7 @@ do
 			if row.Anim == "Wing" then wings += 1 end
 		end
 	end
-	check("every floating object became a prop (168 from the kit)", count - wings == 168, tostring(count - wings))
+	check("every prop the 36-piece kit placed is here (497)", count - wings == 497, tostring(count - wings))
 	check("every bird has two wings of its own (15 birds, 30 wings)", wings == 30, tostring(wings))
 
 	-- A placement's rotation is a real rotation: orthonormal, no scale or
@@ -5468,7 +5468,7 @@ do
 			end
 		end
 	end
-	check("five chests, one vault door, one forcefield", chests == 5 and kinds.VAULT == 1 and kinds.FORCEFIELD == 1)
+	check("eleven chests (the 36-piece kit), one vault door, one forcefield", chests == 11 and kinds.VAULT == 1 and kinds.FORCEFIELD == 1)
 	check("every chest lid hinges on its back edge, inside its piece", lidsHinged)
 	local vaultIn = nil
 	for chunkId, rows in fx.Placements do
