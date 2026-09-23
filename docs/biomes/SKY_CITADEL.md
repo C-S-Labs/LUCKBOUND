@@ -557,6 +557,450 @@ content. They are recorded in `STATUS.md`.
 
 ---
 
+## Scenario kits — the Fate laboratory (2026-09-23)
+
+**Owner-directed.** The Fate Engine is moving from "which world" to "what
+situation": roll → world → modifiers → special scenario → unique changes.
+Sky Citadel is the laboratory for whether that works. The test is not "do the
+maps look different after five rolls" but **"after 20–30 expeditions, did I
+approach them differently because of what Fate gave me?"**
+
+**Backup of the 22-piece kit:** git tag `sky-citadel-kit-22-backup`, and a full
+copy in `C:\Dev\backups\sky_citadel_kit_22_2026-09-23` on the owner's machine.
+
+### The base kit: 22 → 36 pieces
+
+The 22 are unchanged as places (a vertex-for-vertex comparison against the
+backup generator matched all 22 before the prop change below). Fourteen new,
+each with a job so Fate has levers:
+
+| Piece | Role | Its job |
+|---|---|---|
+| `chunk_path_colonnade` | PATH | connective corridor, cover |
+| `chunk_path_long_span` | PATH | traversal, exposure — a dangerous crossing |
+| `chunk_path_lantern_row` | PATH | connective, event lighting |
+| `chunk_path_tower_bend` | PATH (S+W) | a turn round a watchtower |
+| `chunk_path_tee` | PATH (S+E+W) | **alternate routes** — a second junction |
+| `chunk_parade_ground` | COMBAT | combat-heavy, siege, occupation |
+| `chunk_turbine_hall` | COMBAT | event space (wind) |
+| `chunk_lighthouse_point` | COMBAT | landmark, discovery |
+| `chunk_sky_tree_grove` | COMBAT | resource-rich |
+| `chunk_dockside` | COMBAT | NPC presence, trade, boarding |
+| `chunk_side_chapel` | SIDE | shrine / discovery |
+| `chunk_side_garden` | SIDE | resource side pocket |
+| `chunk_side_reliquary` | SIDE | rare discovery, risk-reward |
+| `chunk_prism_arena` | BOSS | a second arena, so the boss room varies |
+
+### Props and chunks are separate — including everything interactive
+
+Owner direction: **anything that can animate or be interacted with is a prop,
+never part of the structure mesh.** On top of the floating props, the kit now
+lifts lamps, light pillars, braziers, banners, crates, containers, holo
+pedestals, telescopes, targets and weapon/shield racks into props. Each
+placement carries an `Interact` field (`Lightable`, `Breakable`, `Loot`,
+`Activate`, `Use`, `Hit` …) with a default per kind (`PROP_INTERACT`) that a
+scenario may override. Chests, the vault door and forcefields stay fixtures.
+**This changes the 22 structure meshes** (the lamps and crates left them): they
+need re-importing with the new props before the next walk.
+
+### Seven scenario kits
+
+`build_sky_citadel_scenarios.py` executes the kit script as a module and builds
+all 36 pieces again per scenario through `SCENARIO_HOOK` (called in `finish()`;
+`None` for the base kit). The walkable geometry is the base kit's own — the
+player knows the place — and the scenario changes what is on it:
+
+| Scenario | Situation | What changes |
+|---|---|---|
+| **Unmooring** | anti-grav failing | a low islet comes loose (sunk 2–3.5, tilted 4–7°, its bridge no longer meets it); walls breached with rubble and hanging rim chunks; a turret's top broken off, its roof fallen; dark and glowing cracks; toppled lamps (`Repair`); stabilisers (`Repair`, an EVENT anchor); hazard beacons; drifting fragments |
+| **Siege** | raiders occupy the citadel | **raider warships (~72 long) moored alongside with gangways to the rail** (`Board`) on 24 of 36 pieces; one camp per piece — bonfire with a smoke column, tents and yurts (`Loot`), barrels (`Breakable`), a loot pile, a raider banner; stake walls and barricades facing the openings (`Destroy`); ballistae (`Use`); campfires (`Hazard`); breached walls, a broken turret; ragged burns |
+| **Lockdown** | defences turned hostile | every light alarm-red; forcefield fixtures at every opening with emitter posts (`Destroy`); turrets and pylons (`Destroy`); alarm posts; laser fences (`Hazard`); a console (`Override`); patrolling drones (`Destroy`); red chevrons painted toward the openings |
+| **Stormhawk** | a raptor nests and dives | a great nest with eggs (`Event` anchor), bone piles (`Loot`) and shells round it; claw gouges; glowing fulgurite cracks; feathers on the deck and on the wind (`Pickup`); lamps and banners knocked over |
+| **Rime** | frozen at altitude | the whole citadel frosted blue-grey with **snow on every upward face**; drifts piled against the lee of the walls from a per-piece wind; snow lying across the deck; ice spikes and frost crystals (`Break`); icicles along every rim; a frozen figure holding something gold (`Break`, a DISCOVERY anchor); braziers as warmth (`Lightable`) |
+| **Reclaimed** | abandoned and overgrown | moss on the tops of walls and rails and carpeting the foot of every wall; ivy up the turrets; moss mounds, bushes (`Cut`), ferns, flowers (`Pickup`), saplings (`Cut`), mushrooms (`Harvest`), roots crawling in from the edges; vines off every rim; breaches and a broken turret on some pieces; dead lights |
+| **Aether Surge** | crystal growth erupts | every seam violet; one to three **epicentres** per piece, each a giant cluster with glowing fissures radiating out and smaller clusters thinning with distance (`Harvest`), a geode, and shards thrown up round it |
+
+### How dressing is placed (second pass, 2026-09-23) — superseded by the third pass below
+
+The owner's walk of the first pass found upside-down tents, flat squares for
+moss, the same scatter in every scenario, and skiffs too small to matter. The
+second pass rebuilt the dressing on four rules:
+
+- **Honest grounding.** Every grounded prop is ray-cast onto the real surface
+  and its whole footprint must be flat deck — nothing floats, nothing sinks into
+  a terrace, nothing overhangs an edge. Cracks reserve their full reach.
+- **Scenario-specific placement, varied per piece.** Moss hugs walls and tower
+  bases; snow piles on the lee side from each piece's own wind; aether erupts
+  from epicentres; raiders make one camp and face the openings. Each piece
+  draws its own density, wind, epicentres and camp site.
+- **A big vocabulary, one mesh per shape.** ~50 new prop shapes, most with two
+  or three variants. Each is fixed and placed at a size with its turn on the
+  placement; prop vertices are rounded after extraction so copies match.
+  All seven kits share **164 prop meshes** across 6,600+ placements.
+- **Crumbling is structural.** Wall runs are removed shell by shell, turret tops
+  come off (never one carrying a spire or the crown), and islets are moved as a
+  whole with everything on them. The validator still holds every piece to
+  256³, floats clear and everything grounded on a deck; the heaviest scenario
+  piece is 8,178 triangles.
+
+**Gameplay anchors** — what makes a kit a Fate lever rather than scenery. Every
+scenario piece records `RESOURCE`, `DISCOVERY`, `ENEMY_POST`, `NPC_POST` and
+`EVENT` spots, and one `BLOCKER` per opening (a prop the run may enable to close
+that socket, which is what makes alternate routes). Written to
+`assets/export/worlds/sky_citadel/scenarios/<scenario>/Anchors_<scenario>.luau`:
+196–289 anchors per kit.
+
+**Outputs** (under `assets/export/worlds/sky_citadel/`):
+
+| File | What |
+|---|---|
+| `sky_citadel_structure.fbx` / `sky_citadel_props.fbx` | base kit: 36 pieces / 61 prop kinds |
+| `staged_luau/` | base placements + fixtures, **staged, not yet in `src/`** (the new pieces have no asset ids) |
+| `scenarios/<s>/sky_citadel_<s>_structure.fbx` | 36 pieces each, re-imported and measured 256³ |
+| `scenarios/sky_citadel_scenario_props.fbx` | 164 prop kinds shared by all seven |
+| `scenarios/Props_Scenarios.luau`, `Fixtures_Scenarios.luau` | fixed (architecture) placements, with `Interact` |
+| `scenarios/sky_citadel_scatter_props.fbx` | the scatter library: every variant plus each scenario's blocker, pivoted on its box centre |
+| `src/shared/Content/Scatter/SkyCitadel/` | **live**: kinds, pools, and every piece's spawn points (base and all seven) |
+
+`assets/source/worlds/sky_citadel/sky_citadel_scenarios.blend` holds the base
+kit and all seven in rows, with a `Preview_Props_NotExported` collection that
+draws every prop in place for review.
+
+**Upload cost was designed down.** 288 scenario pieces share 164 prop meshes
+(an early pass produced 459).
+
+### Third pass — structure per scenario, scenery scattered per run (2026-09-23)
+
+The owner's walk of the second pass: the same props on every piece, standing in
+uniform walls that blocked paths, every chunk carrying its biome's whole prop
+list, too few props for variety, and scenarios that differed only in dressing.
+Two changes answer it.
+
+**1. Chunks ship no dressing. The game scatters it per run.** A chunk now ships
+*spawn points*: one every 6 studs, ray-cast onto its real deck, never in the
+walking line between openings, each recording its height, how much flat deck is
+clear round it, whether it is against a wall (and which way the wall faces),
+whether it is at a tower's foot, and its headroom. They are packed six
+characters a point (`scatter_core.py` documents the layout); about 200 per
+piece. When a map is generated, `ScatterCore.luau` draws that run's scenery
+from the scenario's **pool**:
+
+- **Groups** — a core prop and members in a ring round it (a raider camp: a
+  bonfire, tents, barrels, a loot pile, a prisoner cage, trophy pikes). Each
+  group rolls its own chance, so a piece has a camp in some runs and not others.
+- **Singles** — weighted picks to fill up to the run's density, each with a
+  placement rule: `Wall` (backed against a parapet, turned to face out from it),
+  `Open` (clear deck), `Base` (at a tower's foot), `Lee` (against the wall
+  downwind of this run's wind), `Any`.
+- **Air** — things that drift, in bands the kit proved clear of every float.
+
+Every prop keeps its footprint plus a 1-stud gap clear of every other, needs
+flat deck under all of it and headroom over it, and the density is itself
+rolled per run — so props never form walls, the corridor is never touched, and
+one piece is sparse in one run and busy in the next. **The seed is the stage's
+`Seed`; the key is the chunk id plus where it stands**, so two copies of a piece
+in one run differ, every client in a party draws the same scene, and the server
+sends nothing.
+
+The kit previews exactly this in Blender. `scatter_core.py` is the Python twin
+of `ScatterCore.luau`: every decision is integer maths on the same 32-bit
+generator (mulberry32 seeded by FNV-1a), so a seed places the same props in
+both. `tests/scatter_parity.luau` is written by the export from the Python
+side, and the suite requires the Luau side to reproduce all of it.
+
+**The library:** 73 parametric families, ~200 variants, each built once and
+shared by every placement (`sky_citadel_props.py`). Per pool:
+
+| Pool | Groups | What it draws from |
+|---|---|---|
+| Base | Supplies, Garden | crates, casks, hand carts, toolkits, planters, lanterns, statues, flowers, consoles — sparse; the base kit keeps its own fixed props |
+| Siege | RaiderCamp, Checkpoint, Scrapyard | bonfires, tents, barrels, loot piles, banners, prisoner cages, trophy pikes, barricades, stake and scrap walls, ballistae, scrap heaps |
+| Lockdown | DefencePost, Checkpoint, Watch | sentinel turrets and pylons, laser fences, barrier blocks, alarm posts, consoles, security crates, floor emitters, searchlights, cable spools |
+| Stormhawk | NestSite, StrikeSite | nests, bone piles, egg shells, feathers, lightning rods, smashed crates, perches, fallen pillar segments |
+| Rime | Camp, IceField, FrozenFind | warming braziers, frozen crates, snow drifts, ice spikes and boulders, frost crystals, icicle piles, frozen figures |
+| Reclaimed | Grove, MossBank, Ruin | saplings, bushes, ferns, flowers, grass, moss mounds, mushrooms, fallen logs, stumps, overgrown crates, mossy rocks |
+| Aether Surge | Epicentre, Resonance | crystal clusters, geodes, crystal rubble, glow pools, resonators |
+| Unmooring | CollapseSite, RepairPost | rubble, broken rails, cracked plates, pillar segments, stabilisers, hazard beacons |
+
+Kinds carry an animation class. `Sway` (grass, vines, banners) rocks about the
+prop's centre; `Pulse`, `Flicker` and `Strobe` are light classes that do not
+move — named so a later light pass can find them.
+
+**2. Each scenario rebuilds the architecture, not just the dressing.**
+`sky_citadel_structures.py` holds one hook per scenario, each drawing from the
+piece's own random stream, so a piece differs between scenarios and two pieces
+of one scenario differ from each other:
+
+| Scenario | The structure |
+|---|---|
+| Unmooring | an islet loosened and tilted off its bridge, turrets leaning, buckled deck plates, fallen roofs; beacons drifted off |
+| Siege | raider watchtowers, palisades replacing parapet runs, rust-red roofs, scorched floors, warships moored alongside; beacons shot down |
+| Lockdown | gunmetal and plating, blast walls, armoured turrets, alarm-red lighting |
+| Stormhawk | spires snapped partway up, a nest crowning a turret, claw rakes down the shafts and gouges across the deck; storm-stone palette |
+| Rime | icicle rings under every turret roof, frozen falls pouring off the rims far down the keel, ice pillars, snow banked against the walls, snow on every top |
+| Reclaimed | a great tree through the deck, roots hanging from the keel, ruined turrets, moss on the tops |
+| Aether Surge | crystal eruptions through the deck with glowing veins, crystal growing out of the turrets and hanging under the island, crystal rocks adrift |
+
+The base kit's own fixed props (lamps, banners, crates, corner beacons,
+floating crystals) are thinned per scenario, each for its own reason, so a
+scenario's piece is not the base piece with things added. The walking line and
+the crown landmark are never touched, and the validator holds every piece to
+256³, floats clear and everything grounded; the heaviest is 8,892 triangles.
+
+**Honest read:** pieces with room (courts, gardens, docks, arenas) now read as
+their scenario in silhouette. The crossing and the straight skyways are mostly
+walking line, so there the scenario shows in the keel, the rims, the palette
+and the few spots off the corridor. Scatter on the base set is deliberately
+sparse.
+
+### Fourth pass — attached, unclipped, five ships, finished props (2026-09-23)
+
+Owner's walk of the third pass: parts clipping into each other in the chunks
+themselves, parts (the icicles) floating beside the chunk instead of joined to
+it, one raider ship everywhere, and props too plain — "aiming for 2500-5000
+tris will add more detail".
+
+**The validator now reads the real mesh (`geometry_checks.py`).** The old checks
+reasoned about the boxes each builder registers, so an icicle a stud off its
+rim, or a palisade through a rail, passed. Every face is now tagged with the
+builder that made it, and `validate()` adds one check on the mesh itself:
+*every part attached, nothing clipping*. It fails a piece when:
+- a cluster of parts touches nothing (floating) and is not a registered float,
+  an islet, or a walkable stepping plate;
+- a scenario's part passes through a base-kit part it may not be sunk into. A
+  crystal may grow out of a turret, a root out of a keel, an icicle out of the
+  slab it hangs from; nothing may pass through a rail, a parapet, a hedge or a
+  bench. Hanging parts may touch only what they hang from; freestanding builds
+  (palisades, watchtowers, blast walls, heaved plates) only the deck.
+
+**Fixed at the source, then settled.** Icicles hang from the turret's real
+eave band and grow out of the slab's side, only where the air below is clear.
+Frozen falls' curtains grow out of their ice sheet. Keel roots and vines are
+single continuous tubes, run only through clear air. Rim gaps are cut cleanly:
+a rail bar running past a breach is trimmed at the gap instead of being left
+hanging. Palisades are lashed to their stakes. Plates, banners and claw rakes
+are placed on the tower's actual face (by ray cast, whatever the tower's
+turn). The stormhawk's nest sits on the turret's remaining top. After every
+build, `settle()` snaps anything within 1.5 studs into contact, and in scenario
+pieces drops what cannot be attached. `unclip()` drops whole scenario builds
+that still clip. Measured over all 324 pieces: **0 detached, 0 clipping.**
+
+**The base kit's anti-grav accents are props now.** Spire halos, crystals
+hovering over obelisks, the orrery's rings, the fountain's and altar's rings,
+the belfry crystal: all were structure floating beside the piece. They are
+lifted into animated props (`hover halo` Float, `hover crystal` Hover), so
+they move and read as deliberate. Parts that merely missed their support (a
+sign 0.15 off its wall, the lighthouse lantern a stud above its floor, a crane
+beam over its mast) are snapped on.
+
+**Five raider warships** (`sky_citadel_ships.py`), 2,900–5,200 triangles each,
+all inside one berth envelope with the boarding rail in one place:
+
+| Ship | What it is | Tris |
+|---|---|---|
+| Reaver | patched galleon: two masts of square sail, stern castle, gun deck, ram | 5,238 |
+| Corsair | lean hull under a patched gas envelope on cables, tail fins, twin props | 3,664 |
+| Dreadnought | scrap ironclad: armour courses, two turrets, smokestacks, spiked ram, bridge | 3,484 |
+| Wing Clipper | knife hull, lateen sail, bat-wing sails, sponsons | 2,894 |
+| Raider Barge | twin hulls under one deck: prisoner cage, loot crane, tents, war banner | 3,760 |
+
+Each berth shows one in the preview and carries the other four as `Alt` on its
+placement row. `PropController` draws one per run (`ScatterCore.pick`, seeded
+by the run and the berth), so the same dock holds a different ship in
+different runs. Gangways are cut to each berth's gap.
+
+**Every prop is finished before export (`prop_detail.py`)**, shell by shell by
+material: hard parts (metal, timber, stone) get bevelled edges, organic parts
+(moss, snow, foliage, bone, smoke) are subdivided and noised, crystals are
+sub-faceted. The budget follows size: large props 2,500–5,000 triangles,
+medium ~900–2,500, small (a feather, a shard) under 900, since detail nobody can
+see is only load. Scatter library: 200 meshes, median ~1,300, 63 in the
+2,500–5,000 band; scenario fixed props: 357 meshes, median ~1,700. The
+warships are hand-detailed and skipped.
+
+**Names never collide.** The game finds a prop by name, and the base and
+scenario libraries used to number theirs independently (two different
+`prop_crate_a`). Now: `prop_*`/`fix_*` base kit (the live names, unchanged),
+`scn_prop_*`/`scn_fix_*` scenario kits, `sct_*` scattered scenery,
+`scn_prop_blocker_<scenario>` the route blockers (each `BLOCKER` anchor names
+its mesh). **`assets/export/worlds/sky_citadel/IMPORT_MANIFEST.md`** (and
+`import_manifest.json`) is written by every export: each FBX, each mesh in it,
+what it is (content id, role, openings; or family, animation, tier,
+interaction, triangles) and which data file names it.
+
+### Scenario atmospheres (2026-09-23)
+
+**Owner-directed:** each scenario gets its own air, not just its own props.
+The kits change what is ON the citadel; the atmosphere changes the hour, the
+sky, the haze, the cloud sea under the islands and the weather past the
+camera. **A scenario should be readable from the sky before the player has
+looked at a single prop.**
+
+Every profile keeps three things so the world stays Sky Citadel: the white
+citadel, the cloud sea **below**, and an hour near sunrise (5.5–7.6). None
+lands on another world's slot (Emberfall's ash-red dusk, Astral Reach's
+midnight, Ethereal Scape's white afternoon, Verdant Valley's midday).
+
+| Scenario | Hour | The air | Sky and haze | Cloud sea | Weather and effects |
+|---|---|---|---|---|---|
+| **Unmooring** | 6.9 | the same dawn gone *wrong*: drained, hard white sun, sickly | sage-grey horizon under a slate sky; flat, desaturated, contrasty grade | **risen**: the near layer is 50 studs closer (ceiling 112) and heaped high; the middle layer runs the **opposite way** (vertigo) | grit drifting **up**; fragments falling past the islands (`Debris`); an irregular brown-out (`Pulse`, Flicker) |
+| **Siege** | 6.4 | the base hour through smoke | swollen orange sun, ochre horizon, **slate-cobalt overhead** (what keeps it off Emberfall), strong sun shafts | near tops stained, sooty undersides; a layer of **dark smoke banks** just under the keels | embers rising and ash drifting downwind; **five burning districts** on the horizon (`Plumes`) |
+| **Lockdown** | 5.5 | **before sunrise**, the only one: a deep blue hour, stars out, so every alarm-red light owns the frame | thin mauve horizon, cobalt-black zenith; heavy bloom | tops catch the blue hour, **undersides catch the alarms** (red-violet shade) | a red **aegis dome** over the whole map (`Dome`, ForceField); six **searchlights** sweeping up from under the islands; the grade **beats red** with the alarm (`Pulse`) |
+| **Stormhawk** | 6.4 | the sunrise swallowed by the raptor's storm | steel-grey haze, no stars, shafts through gaps | churning, darker, fast; **lit from inside by lightning** | a thunderhead **roof** overhead (`Canopy`, +520, clear of the +160 crown); wind-driven **rain**; lightning every 4–11 s with bolts into the sea (`Flashes`) |
+| **Rime** | 7.0 | crisp, still, blinding cold | pale sun wearing a **halo**, ice-pale horizon, cyan in every shadow, strong glare and bloom; clear rather than hazy (what keeps it off Ethereal Scape) | **frozen**: flatter banks in Roblox's `Snow` finish, barely moving | snowfall on the wind; diamond dust glittering (`Motes`) |
+| **Reclaimed** | 7.6 | later, softer, humid: years after anyone left | milky gold haze, teal shadows, broad god rays, a faded grade; dim bloom (dead lights) | closer and softer (depth 180), warm tops | pollen and seed-fluff hanging in the air; a few petals |
+| **Aether Surge** | 6.2 | a dawn gone violet, the sun on the horizon | magenta horizon, indigo overhead **with stars showing through** | **glowing violet from underneath** | **aurora curtains** (`Aurora`); discharge flickering inside the sea (`Flashes`, glow only); sparks rising; the grade **breathes** with the crystals (`Pulse`, Sine) |
+
+Each profile also carries a one-line `Flavor` for the arrival card
+("The citadel has decided you are the intruder.").
+
+**One source of numbers.** `assets/source/worlds/sky_citadel/sky_citadel_atmospheres.py`
+holds all seven as data, validates them with a line-for-line port of
+`AmbienceCore.validate` plus checks for the new blocks (including: no cloud
+ceiling within 12 studs of the keels, nothing overhead below the crown), and
+writes them as Luau:
+
+```
+python assets/source/worlds/sky_citadel/sky_citadel_atmospheres.py
+```
+
+→ `assets/export/worlds/sky_citadel/scenarios/Environments_Scenarios.luau`,
+**staged like `Props_Scenarios.luau`: nothing in `src/` reads it yet.**
+
+**How a profile applies** (the rule the runtime should implement): a profile
+is an **override** of `Worlds/SkyCitadel.luau`'s `Environment`, the same idea
+as the Blueprint's `ModifierOverride`. Scalars and colours replace; blocks
+(`Atmosphere`, `Sky`, `Bloom`, `SunRays`, `Grade`, `Motes`) merge key by key;
+lists (`CloudSea`, `Canopy`, `Weather`) replace whole; `false` removes a block.
+
+**Proposed `Environment` blocks.** Five of the seven profiles need things
+`Types.Environment` cannot say. Each block is generic, so any world can use it
+(Emberfall's ash is `Weather`, Astral Reach could wear `Aurora`), and each is
+optional:
+
+| Block | What it draws | Roblox form | Used by |
+|---|---|---|---|
+| `Weather` | directional particle streams (snow, rain, embers, pollen); `Direction`, `Spread`, `Streak`, `Emission`, `Box` | one `ParticleEmitter` each on the motes anchor, `EmissionDirection` + `Acceleration` | Unmooring, Siege, Stormhawk, Rime, Reclaimed, Aether |
+| `Pulse` | the grade oscillating: `Sine`, `Beat` or `Flicker` | lerp the `ColorCorrectionEffect.TintColor` per frame | Unmooring, Lockdown, Aether |
+| `Flashes` | lightning: a brightness spike, a lit cloud layer, optional bolts | tween `Lighting.Brightness`; a `PointLight` in a near cloud; neon bolt parts for `Duration` | Stormhawk, Aether |
+| `Canopy` | cloud layers **above** the map (`Height`, not `Depth`) | the cloud sea's own code with the sign flipped | Stormhawk |
+| `Plumes` | far smoke columns rising from below the horizon, leaning downwind, ember glow at the root | stacked sphere parts at fixed bearings, never wrapped | Siege |
+| `Debris` | fragments falling past the islands into the sea | a small pooled set of parts, recycled at the sea | Unmooring |
+| `Aurora` | curtains of light high in the sky | `Beam`s between attachment pairs, textured, `LightEmission` 1 | Aether |
+| `Searchlights` | beams sweeping the sky from a ring under the islands | `Beam`s rotated per frame | Lockdown |
+| `Dome` | a shield bubble over the map | one sphere, `ForceField` material | Lockdown |
+
+**Preview.** `build_sky_citadel_atmosphere.py` (headless) builds
+`sky_citadel_atmosphere.blend`, **one Blender scene per profile** (the base
+plus the seven; switch scenes to switch atmospheres). Each scene joins nine
+pieces of that scenario's kit into a map the grammar allows, **linked** from
+`sky_citadel_scenarios.blend` (so the file is 1.4 MB and always shows the
+current kit), and hangs the profile round it. The cloud sea is
+`AmbienceCore.layoutClouds` ported line for line; the sun sits where Roblox
+puts it for the `ClockTime` at the default latitude; haze is the Mist pass
+tinted by `Atmosphere.Color`; grade, bloom and sun rays are compositor nodes.
+**Judge hue and mood here; judge brightness in Studio.**
+
+```
+blender -b --factory-startup --python assets/source/worlds/sky_citadel/build_sky_citadel_atmosphere.py
+blender -b --factory-startup --python assets/source/worlds/sky_citadel/build_sky_citadel_atmosphere.py -- --only rime --no-save
+```
+
+Renders: `renders/atmosphere/<profile>_{vista,deck,sea}.jpg`: over the map,
+a player on the crossroads, and out past the west edge looking into the sun.
+Also `_flash` (Stormhawk, Aether) and `_pulse` (Unmooring, Lockdown, Aether)
+for the moments. Contact sheets: `sheet_vista.jpg`, `sheet_deck.jpg`,
+`sheet_sea.jpg`, `sheet_moments.jpg` (made with Pillow, which Blender's own
+Python lacks; the script skips them there).
+
+**Honest read.** All seven are distinct from the base and from each other at a
+glance, even as thumbnails. The weakest is **Reclaimed**: its haze and pollen
+are right, but at the vista range it reads as "a hazy morning" more than
+"abandoned"; the overgrowth on the kit does that work up close. **Lockdown's
+dome** is the boldest call and the one most worth seeing in Studio: the real
+`ForceField` material shimmers, and the Blender cells only approximate it.
+Unmooring's falling debris is small at the vista range by design; it is meant
+to be noticed from the deck edge.
+
+### Fifth pass — every scenario in its own architecture, one mesh per prop (2026-09-23)
+
+Owner: *"a lot of the chunks are straight copy and paste designs but recolored
+... Pieces can be similar, but identical defeats the entire purpose"*, and
+*"why ... duplicate so many already existing props? ... tell the script to
+orient them accordingly upon placement."*
+
+**Scenario architecture (`sky_citadel_styles.py`).** While a scenario's pieces
+are built, the base builders' vocabulary is swapped for the scenario's own. The
+base builder still places things, so sockets, walk lines, the box and every
+registered footprint are unchanged:
+
+| Scenario | Towers | Spires | Crown landmark | Rims | Floors |
+|---|---|---|---|---|---|
+| Siege | raider keeps: stone stump, timber hoard, rust roof | scaffolded, crow's nest, banner | war totem: cross-trees, hanging cages, trophies | palisades, scrap walls | scattered planks, a burnt brand |
+| Lockdown | armoured bunkers with a gun turret | sensor masts, stacked dishes | aegis pylon: braced lattice, emitter rings, beacon | blast walls, laser fences | hazard plating, a targeting reticle |
+| Stormhawk | sheared stumps, their roofs fallen against them | struck stone drums, fulgurite spurs | roost pinnacle: heaped boulders, iron rod | storm-worn walls, bent rails | slate slabs, strike scars |
+| Rime | encased in ice sheaths, snow-capped | ice needles, snow collars | frost obelisk skirted with icicles | drifted walls, iced rails | frost tiles, a snowflake |
+| Reclaimed | ruins with a tree grown through the top, ivy | ivy-choked, halo gone | world tree | mossy ruin walls, wild hedges | moss tiles, moss over the rose |
+| Aether Surge | burst open by crystal | solid crystal | resonance crystal, girdled | crystal-studded walls, shard fences | crystal lattice, a hexagram |
+| Unmooring | split: the top floats on an anti-grav ring (a prop) | sleeves round a glowing tension core | tethered beacon | shifted blocks, sagging rails | offset tiles, a fault through the rose |
+
+Obelisks and crystal clusters have a version per scenario too. Every part
+registers the solid the base part did, is tagged as that part, and draws its
+randomness from the piece and the spot. The structure hooks (camps,
+eruptions, frozen falls) run on top, budget-guarded to stay under 10k.
+
+**Prism Arena rebuilt** so it shares nothing with the Boss Clearing but its role:
+a hexagon with kerbs instead of a parapeted circle, a raised dais, a tripod of
+three crystal blades meeting at the crown, three prism pylons, no turrets.
+
+**One mesh per prop.** Copies built the same way (same builder, faces and
+colours) share a mesh, drawn at each copy's own size and turn, unless their
+proportions are too far apart to stretch (`STRETCH`). Before, 5% size steps and
+rotation noise split them. Scatter variants that differed only by noise are
+dropped. Result: base props 72 → **40**, scenario props 357 → **188** (a banner
+is one mesh per scenario colour scheme), scatter 206 → **186**.
+
+**Linked to the atmospheres.** The scenario-atmosphere branch is merged:
+`Environments_Scenarios.luau` (one environment per scenario) now ships with the
+kits. `scenarios/ScenarioKits.luau` is generated with them and ties each scenario
+to its chunk ids, structure model, scatter pool, props, anchors, blocker and
+environment key.
+
+**The framework is saved** for Verdant Valley and Emberfall:
+`docs/WORLD_KIT_FRAMEWORK.md`, shared code in `assets/source/worlds/_framework/`.
+
+**Import:** `assets/export/worlds/sky_citadel/IMPORT_STEPS.md`: eleven FBX files,
+eleven model names, one hand-back folder (`assets/rbxm/incoming/sky_citadel/`).
+
+### What is not built yet — code, pending the owner's approval
+
+The scatter is live in `src/` (`PropController` draws it for the base kit's
+chunks once the scatter library is imported). Nothing else here is. In order:
+1. `Content/Chunks/SkyCitadel.luau` entries for the 14 new pieces (and asset
+   ids once uploaded); scenario variants as `<ID>__<SCENARIO>`. Promote
+   `staged_luau/Props_SkyCitadel.luau` and `Fixtures_SkyCitadel.luau` into `src/`
+   in the same change: the base structure meshes changed (halos became props),
+   so the new meshes and the new placements must go live together.
+2. `FateCore`: after the world draw, draw modifiers and a scenario profile.
+3. `ChunkLoader` / `ChunkCore`: load the rolled scenario's variant set; honour
+   `BLOCKER` anchors when a profile closes a socket.
+4. The prop runtime: an `Interact` handler per kind, and the `Blocker` class
+   (`Sway` moves now; `Pulse`, `Flicker`, `Strobe` await a light pass).
+5. Opportunity / Presence / Event systems that read the anchors.
+6. **Scenario atmospheres:** apply the rolled profile from
+   `Environments_Scenarios.luau` over the world's `Environment` on entry, by
+   the override rule above. Extend `Types.Environment`, `AmbienceCore.validate`
+   and `AmbienceController` with the nine proposed blocks (each with a row in
+   `RESERVED.md` until it is read), scaled by graphics quality like the cloud sea.
+
+**Honest read of the art (second pass):** every kit now reads as its own
+situation at a glance. The quietest are the small connective pieces, where
+there is little deck to dress — a deliberate trade, since the walking line stays
+clear. Worth a walk in Studio before a third pass: the scale of camp props and
+drifts under a real character.
+
+---
+
 ## Render headless
 
 Rendering through the Blender MCP bridge inside the interactive session crashed

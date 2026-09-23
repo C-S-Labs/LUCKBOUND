@@ -1,0 +1,5618 @@
+{
+ "kits": [
+  {
+   "set": "base",
+   "fbx": "sky_citadel_structure.fbx",
+   "pieces": [
+    {
+     "mesh": "chunk_entry",
+     "id": "SC_ENTRY",
+     "role": "ENTRY",
+     "openings": "N",
+     "tris": 3906
+    },
+    {
+     "mesh": "chunk_path_straight",
+     "id": "SC_PATH_STRAIGHT",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 2382
+    },
+    {
+     "mesh": "chunk_path_skyport",
+     "id": "SC_PATH_SKYPORT",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 3000
+    },
+    {
+     "mesh": "chunk_path_hoops",
+     "id": "SC_PATH_HOOPS",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 2122
+    },
+    {
+     "mesh": "chunk_path_shattered",
+     "id": "SC_PATH_SHATTERED",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 1826
+    },
+    {
+     "mesh": "chunk_path_aviary",
+     "id": "SC_PATH_AVIARY",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 5196
+    },
+    {
+     "mesh": "chunk_crossroads",
+     "id": "SC_CROSSROADS",
+     "role": "PATH",
+     "openings": "ENSW",
+     "tris": 2422
+    },
+    {
+     "mesh": "chunk_side_lookout",
+     "id": "SC_SIDE_LOOKOUT",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 1548
+    },
+    {
+     "mesh": "chunk_path_bend",
+     "id": "SC_PATH_BEND",
+     "role": "PATH",
+     "openings": "ES",
+     "tris": 2172
+    },
+    {
+     "mesh": "chunk_path_bend_west",
+     "id": "SC_PATH_BEND_WEST",
+     "role": "PATH",
+     "openings": "SW",
+     "tris": 3256
+    },
+    {
+     "mesh": "chunk_vault_turn",
+     "id": "SC_VAULT_TURN",
+     "role": "COMBAT",
+     "openings": "ES",
+     "tris": 2910
+    },
+    {
+     "mesh": "chunk_aether_springs",
+     "id": "SC_AETHER_SPRINGS",
+     "role": "COMBAT",
+     "openings": "SW",
+     "tris": 2644
+    },
+    {
+     "mesh": "chunk_garden_terrace",
+     "id": "SC_GARDEN_TERRACE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 6144
+    },
+    {
+     "mesh": "chunk_observatory",
+     "id": "SC_OBSERVATORY",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 3718
+    },
+    {
+     "mesh": "chunk_armory",
+     "id": "SC_ARMORY",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 3882
+    },
+    {
+     "mesh": "chunk_archive",
+     "id": "SC_ARCHIVE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 7242
+    },
+    {
+     "mesh": "chunk_spire_court",
+     "id": "SC_SPIRE_COURT",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 5442
+    },
+    {
+     "mesh": "chunk_spire_court_b",
+     "id": "SC_SPIRE_COURT_B",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 3968
+    },
+    {
+     "mesh": "chunk_boss_clearing",
+     "id": "SC_BOSS_CLEARING",
+     "role": "BOSS",
+     "openings": "S",
+     "tris": 4620
+    },
+    {
+     "mesh": "chunk_cap_crumbling",
+     "id": "SC_CAP_CRUMBLING",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 856
+    },
+    {
+     "mesh": "chunk_cap_overlook",
+     "id": "SC_CAP_OVERLOOK",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 1708
+    },
+    {
+     "mesh": "chunk_cap_sealed_gate",
+     "id": "SC_CAP_SEALED_GATE",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 2750
+    },
+    {
+     "mesh": "chunk_path_colonnade",
+     "id": "SC_PATH_COLONNADE",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 3446
+    },
+    {
+     "mesh": "chunk_path_long_span",
+     "id": "SC_PATH_LONG_SPAN",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 2528
+    },
+    {
+     "mesh": "chunk_path_lantern_row",
+     "id": "SC_PATH_LANTERN_ROW",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 2022
+    },
+    {
+     "mesh": "chunk_path_tower_bend",
+     "id": "SC_PATH_TOWER_BEND",
+     "role": "PATH",
+     "openings": "SW",
+     "tris": 2118
+    },
+    {
+     "mesh": "chunk_path_tee",
+     "id": "SC_PATH_TEE",
+     "role": "PATH",
+     "openings": "ESW",
+     "tris": 2074
+    },
+    {
+     "mesh": "chunk_parade_ground",
+     "id": "SC_PARADE_GROUND",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 3924
+    },
+    {
+     "mesh": "chunk_turbine_hall",
+     "id": "SC_TURBINE_HALL",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 2450
+    },
+    {
+     "mesh": "chunk_lighthouse_point",
+     "id": "SC_LIGHTHOUSE_POINT",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 2208
+    },
+    {
+     "mesh": "chunk_sky_tree_grove",
+     "id": "SC_SKY_TREE_GROVE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 4676
+    },
+    {
+     "mesh": "chunk_dockside",
+     "id": "SC_DOCKSIDE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 2840
+    },
+    {
+     "mesh": "chunk_side_chapel",
+     "id": "SC_SIDE_CHAPEL",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 1934
+    },
+    {
+     "mesh": "chunk_side_garden",
+     "id": "SC_SIDE_GARDEN",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 2926
+    },
+    {
+     "mesh": "chunk_side_reliquary",
+     "id": "SC_SIDE_RELIQUARY",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 1546
+    },
+    {
+     "mesh": "chunk_prism_arena",
+     "id": "SC_PRISM_ARENA",
+     "role": "BOSS",
+     "openings": "S",
+     "tris": 1650
+    }
+   ]
+  },
+  {
+   "set": "unmooring",
+   "fbx": "scenarios/unmooring/sky_citadel_unmooring_structure.fbx",
+   "pieces": [
+    {
+     "mesh": "chunk_entry__unmooring",
+     "id": "SC_ENTRY__UNMOORING",
+     "role": "ENTRY",
+     "openings": "N",
+     "tris": 6020
+    },
+    {
+     "mesh": "chunk_path_straight__unmooring",
+     "id": "SC_PATH_STRAIGHT__UNMOORING",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 4068
+    },
+    {
+     "mesh": "chunk_path_skyport__unmooring",
+     "id": "SC_PATH_SKYPORT__UNMOORING",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 5240
+    },
+    {
+     "mesh": "chunk_path_hoops__unmooring",
+     "id": "SC_PATH_HOOPS__UNMOORING",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 3450
+    },
+    {
+     "mesh": "chunk_path_shattered__unmooring",
+     "id": "SC_PATH_SHATTERED__UNMOORING",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 1800
+    },
+    {
+     "mesh": "chunk_path_aviary__unmooring",
+     "id": "SC_PATH_AVIARY__UNMOORING",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 5868
+    },
+    {
+     "mesh": "chunk_crossroads__unmooring",
+     "id": "SC_CROSSROADS__UNMOORING",
+     "role": "PATH",
+     "openings": "ENSW",
+     "tris": 3106
+    },
+    {
+     "mesh": "chunk_side_lookout__unmooring",
+     "id": "SC_SIDE_LOOKOUT__UNMOORING",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 3228
+    },
+    {
+     "mesh": "chunk_path_bend__unmooring",
+     "id": "SC_PATH_BEND__UNMOORING",
+     "role": "PATH",
+     "openings": "ES",
+     "tris": 3088
+    },
+    {
+     "mesh": "chunk_path_bend_west__unmooring",
+     "id": "SC_PATH_BEND_WEST__UNMOORING",
+     "role": "PATH",
+     "openings": "SW",
+     "tris": 5158
+    },
+    {
+     "mesh": "chunk_vault_turn__unmooring",
+     "id": "SC_VAULT_TURN__UNMOORING",
+     "role": "COMBAT",
+     "openings": "ES",
+     "tris": 4202
+    },
+    {
+     "mesh": "chunk_aether_springs__unmooring",
+     "id": "SC_AETHER_SPRINGS__UNMOORING",
+     "role": "COMBAT",
+     "openings": "SW",
+     "tris": 5660
+    },
+    {
+     "mesh": "chunk_garden_terrace__unmooring",
+     "id": "SC_GARDEN_TERRACE__UNMOORING",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 9302
+    },
+    {
+     "mesh": "chunk_observatory__unmooring",
+     "id": "SC_OBSERVATORY__UNMOORING",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 4768
+    },
+    {
+     "mesh": "chunk_armory__unmooring",
+     "id": "SC_ARMORY__UNMOORING",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 6994
+    },
+    {
+     "mesh": "chunk_archive__unmooring",
+     "id": "SC_ARCHIVE__UNMOORING",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 9870
+    },
+    {
+     "mesh": "chunk_spire_court__unmooring",
+     "id": "SC_SPIRE_COURT__UNMOORING",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 9444
+    },
+    {
+     "mesh": "chunk_spire_court_b__unmooring",
+     "id": "SC_SPIRE_COURT_B__UNMOORING",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 5018
+    },
+    {
+     "mesh": "chunk_boss_clearing__unmooring",
+     "id": "SC_BOSS_CLEARING__UNMOORING",
+     "role": "BOSS",
+     "openings": "S",
+     "tris": 8148
+    },
+    {
+     "mesh": "chunk_cap_crumbling__unmooring",
+     "id": "SC_CAP_CRUMBLING__UNMOORING",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 2180
+    },
+    {
+     "mesh": "chunk_cap_overlook__unmooring",
+     "id": "SC_CAP_OVERLOOK__UNMOORING",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 3140
+    },
+    {
+     "mesh": "chunk_cap_sealed_gate__unmooring",
+     "id": "SC_CAP_SEALED_GATE__UNMOORING",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 4584
+    },
+    {
+     "mesh": "chunk_path_colonnade__unmooring",
+     "id": "SC_PATH_COLONNADE__UNMOORING",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 6152
+    },
+    {
+     "mesh": "chunk_path_long_span__unmooring",
+     "id": "SC_PATH_LONG_SPAN__UNMOORING",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 3862
+    },
+    {
+     "mesh": "chunk_path_lantern_row__unmooring",
+     "id": "SC_PATH_LANTERN_ROW__UNMOORING",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 4786
+    },
+    {
+     "mesh": "chunk_path_tower_bend__unmooring",
+     "id": "SC_PATH_TOWER_BEND__UNMOORING",
+     "role": "PATH",
+     "openings": "SW",
+     "tris": 3180
+    },
+    {
+     "mesh": "chunk_path_tee__unmooring",
+     "id": "SC_PATH_TEE__UNMOORING",
+     "role": "PATH",
+     "openings": "ESW",
+     "tris": 4840
+    },
+    {
+     "mesh": "chunk_parade_ground__unmooring",
+     "id": "SC_PARADE_GROUND__UNMOORING",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 7002
+    },
+    {
+     "mesh": "chunk_turbine_hall__unmooring",
+     "id": "SC_TURBINE_HALL__UNMOORING",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 3518
+    },
+    {
+     "mesh": "chunk_lighthouse_point__unmooring",
+     "id": "SC_LIGHTHOUSE_POINT__UNMOORING",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 3912
+    },
+    {
+     "mesh": "chunk_sky_tree_grove__unmooring",
+     "id": "SC_SKY_TREE_GROVE__UNMOORING",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 7442
+    },
+    {
+     "mesh": "chunk_dockside__unmooring",
+     "id": "SC_DOCKSIDE__UNMOORING",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 5638
+    },
+    {
+     "mesh": "chunk_side_chapel__unmooring",
+     "id": "SC_SIDE_CHAPEL__UNMOORING",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 3618
+    },
+    {
+     "mesh": "chunk_side_garden__unmooring",
+     "id": "SC_SIDE_GARDEN__UNMOORING",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 4356
+    },
+    {
+     "mesh": "chunk_side_reliquary__unmooring",
+     "id": "SC_SIDE_RELIQUARY__UNMOORING",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 3636
+    },
+    {
+     "mesh": "chunk_prism_arena__unmooring",
+     "id": "SC_PRISM_ARENA__UNMOORING",
+     "role": "BOSS",
+     "openings": "S",
+     "tris": 4604
+    }
+   ]
+  },
+  {
+   "set": "siege",
+   "fbx": "scenarios/siege/sky_citadel_siege_structure.fbx",
+   "pieces": [
+    {
+     "mesh": "chunk_entry__siege",
+     "id": "SC_ENTRY__SIEGE",
+     "role": "ENTRY",
+     "openings": "N",
+     "tris": 5760
+    },
+    {
+     "mesh": "chunk_path_straight__siege",
+     "id": "SC_PATH_STRAIGHT__SIEGE",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 3734
+    },
+    {
+     "mesh": "chunk_path_skyport__siege",
+     "id": "SC_PATH_SKYPORT__SIEGE",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 3970
+    },
+    {
+     "mesh": "chunk_path_hoops__siege",
+     "id": "SC_PATH_HOOPS__SIEGE",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 2498
+    },
+    {
+     "mesh": "chunk_path_shattered__siege",
+     "id": "SC_PATH_SHATTERED__SIEGE",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 2368
+    },
+    {
+     "mesh": "chunk_path_aviary__siege",
+     "id": "SC_PATH_AVIARY__SIEGE",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 5812
+    },
+    {
+     "mesh": "chunk_crossroads__siege",
+     "id": "SC_CROSSROADS__SIEGE",
+     "role": "PATH",
+     "openings": "ENSW",
+     "tris": 3060
+    },
+    {
+     "mesh": "chunk_side_lookout__siege",
+     "id": "SC_SIDE_LOOKOUT__SIEGE",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 2688
+    },
+    {
+     "mesh": "chunk_path_bend__siege",
+     "id": "SC_PATH_BEND__SIEGE",
+     "role": "PATH",
+     "openings": "ES",
+     "tris": 2428
+    },
+    {
+     "mesh": "chunk_path_bend_west__siege",
+     "id": "SC_PATH_BEND_WEST__SIEGE",
+     "role": "PATH",
+     "openings": "SW",
+     "tris": 4518
+    },
+    {
+     "mesh": "chunk_vault_turn__siege",
+     "id": "SC_VAULT_TURN__SIEGE",
+     "role": "COMBAT",
+     "openings": "ES",
+     "tris": 4248
+    },
+    {
+     "mesh": "chunk_aether_springs__siege",
+     "id": "SC_AETHER_SPRINGS__SIEGE",
+     "role": "COMBAT",
+     "openings": "SW",
+     "tris": 4414
+    },
+    {
+     "mesh": "chunk_garden_terrace__siege",
+     "id": "SC_GARDEN_TERRACE__SIEGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 9822
+    },
+    {
+     "mesh": "chunk_observatory__siege",
+     "id": "SC_OBSERVATORY__SIEGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 4490
+    },
+    {
+     "mesh": "chunk_armory__siege",
+     "id": "SC_ARMORY__SIEGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 6368
+    },
+    {
+     "mesh": "chunk_archive__siege",
+     "id": "SC_ARCHIVE__SIEGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 9116
+    },
+    {
+     "mesh": "chunk_spire_court__siege",
+     "id": "SC_SPIRE_COURT__SIEGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 8590
+    },
+    {
+     "mesh": "chunk_spire_court_b__siege",
+     "id": "SC_SPIRE_COURT_B__SIEGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 6028
+    },
+    {
+     "mesh": "chunk_boss_clearing__siege",
+     "id": "SC_BOSS_CLEARING__SIEGE",
+     "role": "BOSS",
+     "openings": "S",
+     "tris": 7520
+    },
+    {
+     "mesh": "chunk_cap_crumbling__siege",
+     "id": "SC_CAP_CRUMBLING__SIEGE",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 1178
+    },
+    {
+     "mesh": "chunk_cap_overlook__siege",
+     "id": "SC_CAP_OVERLOOK__SIEGE",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 2354
+    },
+    {
+     "mesh": "chunk_cap_sealed_gate__siege",
+     "id": "SC_CAP_SEALED_GATE__SIEGE",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 4706
+    },
+    {
+     "mesh": "chunk_path_colonnade__siege",
+     "id": "SC_PATH_COLONNADE__SIEGE",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 5118
+    },
+    {
+     "mesh": "chunk_path_long_span__siege",
+     "id": "SC_PATH_LONG_SPAN__SIEGE",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 2912
+    },
+    {
+     "mesh": "chunk_path_lantern_row__siege",
+     "id": "SC_PATH_LANTERN_ROW__SIEGE",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 3644
+    },
+    {
+     "mesh": "chunk_path_tower_bend__siege",
+     "id": "SC_PATH_TOWER_BEND__SIEGE",
+     "role": "PATH",
+     "openings": "SW",
+     "tris": 3088
+    },
+    {
+     "mesh": "chunk_path_tee__siege",
+     "id": "SC_PATH_TEE__SIEGE",
+     "role": "PATH",
+     "openings": "ESW",
+     "tris": 3706
+    },
+    {
+     "mesh": "chunk_parade_ground__siege",
+     "id": "SC_PARADE_GROUND__SIEGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 7358
+    },
+    {
+     "mesh": "chunk_turbine_hall__siege",
+     "id": "SC_TURBINE_HALL__SIEGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 4482
+    },
+    {
+     "mesh": "chunk_lighthouse_point__siege",
+     "id": "SC_LIGHTHOUSE_POINT__SIEGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 2910
+    },
+    {
+     "mesh": "chunk_sky_tree_grove__siege",
+     "id": "SC_SKY_TREE_GROVE__SIEGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 7308
+    },
+    {
+     "mesh": "chunk_dockside__siege",
+     "id": "SC_DOCKSIDE__SIEGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 4150
+    },
+    {
+     "mesh": "chunk_side_chapel__siege",
+     "id": "SC_SIDE_CHAPEL__SIEGE",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 3158
+    },
+    {
+     "mesh": "chunk_side_garden__siege",
+     "id": "SC_SIDE_GARDEN__SIEGE",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 4420
+    },
+    {
+     "mesh": "chunk_side_reliquary__siege",
+     "id": "SC_SIDE_RELIQUARY__SIEGE",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 2704
+    },
+    {
+     "mesh": "chunk_prism_arena__siege",
+     "id": "SC_PRISM_ARENA__SIEGE",
+     "role": "BOSS",
+     "openings": "S",
+     "tris": 4150
+    }
+   ]
+  },
+  {
+   "set": "lockdown",
+   "fbx": "scenarios/lockdown/sky_citadel_lockdown_structure.fbx",
+   "pieces": [
+    {
+     "mesh": "chunk_entry__lockdown",
+     "id": "SC_ENTRY__LOCKDOWN",
+     "role": "ENTRY",
+     "openings": "N",
+     "tris": 4578
+    },
+    {
+     "mesh": "chunk_path_straight__lockdown",
+     "id": "SC_PATH_STRAIGHT__LOCKDOWN",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 3906
+    },
+    {
+     "mesh": "chunk_path_skyport__lockdown",
+     "id": "SC_PATH_SKYPORT__LOCKDOWN",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 5220
+    },
+    {
+     "mesh": "chunk_path_hoops__lockdown",
+     "id": "SC_PATH_HOOPS__LOCKDOWN",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 2744
+    },
+    {
+     "mesh": "chunk_path_shattered__lockdown",
+     "id": "SC_PATH_SHATTERED__LOCKDOWN",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 3162
+    },
+    {
+     "mesh": "chunk_path_aviary__lockdown",
+     "id": "SC_PATH_AVIARY__LOCKDOWN",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 6226
+    },
+    {
+     "mesh": "chunk_crossroads__lockdown",
+     "id": "SC_CROSSROADS__LOCKDOWN",
+     "role": "PATH",
+     "openings": "ENSW",
+     "tris": 3266
+    },
+    {
+     "mesh": "chunk_side_lookout__lockdown",
+     "id": "SC_SIDE_LOOKOUT__LOCKDOWN",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 3040
+    },
+    {
+     "mesh": "chunk_path_bend__lockdown",
+     "id": "SC_PATH_BEND__LOCKDOWN",
+     "role": "PATH",
+     "openings": "ES",
+     "tris": 3182
+    },
+    {
+     "mesh": "chunk_path_bend_west__lockdown",
+     "id": "SC_PATH_BEND_WEST__LOCKDOWN",
+     "role": "PATH",
+     "openings": "SW",
+     "tris": 5030
+    },
+    {
+     "mesh": "chunk_vault_turn__lockdown",
+     "id": "SC_VAULT_TURN__LOCKDOWN",
+     "role": "COMBAT",
+     "openings": "ES",
+     "tris": 3698
+    },
+    {
+     "mesh": "chunk_aether_springs__lockdown",
+     "id": "SC_AETHER_SPRINGS__LOCKDOWN",
+     "role": "COMBAT",
+     "openings": "SW",
+     "tris": 4576
+    },
+    {
+     "mesh": "chunk_garden_terrace__lockdown",
+     "id": "SC_GARDEN_TERRACE__LOCKDOWN",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 8010
+    },
+    {
+     "mesh": "chunk_observatory__lockdown",
+     "id": "SC_OBSERVATORY__LOCKDOWN",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 4862
+    },
+    {
+     "mesh": "chunk_armory__lockdown",
+     "id": "SC_ARMORY__LOCKDOWN",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 4914
+    },
+    {
+     "mesh": "chunk_archive__lockdown",
+     "id": "SC_ARCHIVE__LOCKDOWN",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 9152
+    },
+    {
+     "mesh": "chunk_spire_court__lockdown",
+     "id": "SC_SPIRE_COURT__LOCKDOWN",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 7522
+    },
+    {
+     "mesh": "chunk_spire_court_b__lockdown",
+     "id": "SC_SPIRE_COURT_B__LOCKDOWN",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 5120
+    },
+    {
+     "mesh": "chunk_boss_clearing__lockdown",
+     "id": "SC_BOSS_CLEARING__LOCKDOWN",
+     "role": "BOSS",
+     "openings": "S",
+     "tris": 5392
+    },
+    {
+     "mesh": "chunk_cap_crumbling__lockdown",
+     "id": "SC_CAP_CRUMBLING__LOCKDOWN",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 1536
+    },
+    {
+     "mesh": "chunk_cap_overlook__lockdown",
+     "id": "SC_CAP_OVERLOOK__LOCKDOWN",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 2914
+    },
+    {
+     "mesh": "chunk_cap_sealed_gate__lockdown",
+     "id": "SC_CAP_SEALED_GATE__LOCKDOWN",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 3676
+    },
+    {
+     "mesh": "chunk_path_colonnade__lockdown",
+     "id": "SC_PATH_COLONNADE__LOCKDOWN",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 5730
+    },
+    {
+     "mesh": "chunk_path_long_span__lockdown",
+     "id": "SC_PATH_LONG_SPAN__LOCKDOWN",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 3548
+    },
+    {
+     "mesh": "chunk_path_lantern_row__lockdown",
+     "id": "SC_PATH_LANTERN_ROW__LOCKDOWN",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 3618
+    },
+    {
+     "mesh": "chunk_path_tower_bend__lockdown",
+     "id": "SC_PATH_TOWER_BEND__LOCKDOWN",
+     "role": "PATH",
+     "openings": "SW",
+     "tris": 2566
+    },
+    {
+     "mesh": "chunk_path_tee__lockdown",
+     "id": "SC_PATH_TEE__LOCKDOWN",
+     "role": "PATH",
+     "openings": "ESW",
+     "tris": 3818
+    },
+    {
+     "mesh": "chunk_parade_ground__lockdown",
+     "id": "SC_PARADE_GROUND__LOCKDOWN",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 5066
+    },
+    {
+     "mesh": "chunk_turbine_hall__lockdown",
+     "id": "SC_TURBINE_HALL__LOCKDOWN",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 3756
+    },
+    {
+     "mesh": "chunk_lighthouse_point__lockdown",
+     "id": "SC_LIGHTHOUSE_POINT__LOCKDOWN",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 3212
+    },
+    {
+     "mesh": "chunk_sky_tree_grove__lockdown",
+     "id": "SC_SKY_TREE_GROVE__LOCKDOWN",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 5696
+    },
+    {
+     "mesh": "chunk_dockside__lockdown",
+     "id": "SC_DOCKSIDE__LOCKDOWN",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 5458
+    },
+    {
+     "mesh": "chunk_side_chapel__lockdown",
+     "id": "SC_SIDE_CHAPEL__LOCKDOWN",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 2740
+    },
+    {
+     "mesh": "chunk_side_garden__lockdown",
+     "id": "SC_SIDE_GARDEN__LOCKDOWN",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 3532
+    },
+    {
+     "mesh": "chunk_side_reliquary__lockdown",
+     "id": "SC_SIDE_RELIQUARY__LOCKDOWN",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 3296
+    },
+    {
+     "mesh": "chunk_prism_arena__lockdown",
+     "id": "SC_PRISM_ARENA__LOCKDOWN",
+     "role": "BOSS",
+     "openings": "S",
+     "tris": 3462
+    }
+   ]
+  },
+  {
+   "set": "stormhawk",
+   "fbx": "scenarios/stormhawk/sky_citadel_stormhawk_structure.fbx",
+   "pieces": [
+    {
+     "mesh": "chunk_entry__stormhawk",
+     "id": "SC_ENTRY__STORMHAWK",
+     "role": "ENTRY",
+     "openings": "N",
+     "tris": 4534
+    },
+    {
+     "mesh": "chunk_path_straight__stormhawk",
+     "id": "SC_PATH_STRAIGHT__STORMHAWK",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 3078
+    },
+    {
+     "mesh": "chunk_path_skyport__stormhawk",
+     "id": "SC_PATH_SKYPORT__STORMHAWK",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 4262
+    },
+    {
+     "mesh": "chunk_path_hoops__stormhawk",
+     "id": "SC_PATH_HOOPS__STORMHAWK",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 2426
+    },
+    {
+     "mesh": "chunk_path_shattered__stormhawk",
+     "id": "SC_PATH_SHATTERED__STORMHAWK",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 2138
+    },
+    {
+     "mesh": "chunk_path_aviary__stormhawk",
+     "id": "SC_PATH_AVIARY__STORMHAWK",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 5680
+    },
+    {
+     "mesh": "chunk_crossroads__stormhawk",
+     "id": "SC_CROSSROADS__STORMHAWK",
+     "role": "PATH",
+     "openings": "ENSW",
+     "tris": 3316
+    },
+    {
+     "mesh": "chunk_side_lookout__stormhawk",
+     "id": "SC_SIDE_LOOKOUT__STORMHAWK",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 2264
+    },
+    {
+     "mesh": "chunk_path_bend__stormhawk",
+     "id": "SC_PATH_BEND__STORMHAWK",
+     "role": "PATH",
+     "openings": "ES",
+     "tris": 2450
+    },
+    {
+     "mesh": "chunk_path_bend_west__stormhawk",
+     "id": "SC_PATH_BEND_WEST__STORMHAWK",
+     "role": "PATH",
+     "openings": "SW",
+     "tris": 4112
+    },
+    {
+     "mesh": "chunk_vault_turn__stormhawk",
+     "id": "SC_VAULT_TURN__STORMHAWK",
+     "role": "COMBAT",
+     "openings": "ES",
+     "tris": 3280
+    },
+    {
+     "mesh": "chunk_aether_springs__stormhawk",
+     "id": "SC_AETHER_SPRINGS__STORMHAWK",
+     "role": "COMBAT",
+     "openings": "SW",
+     "tris": 4288
+    },
+    {
+     "mesh": "chunk_garden_terrace__stormhawk",
+     "id": "SC_GARDEN_TERRACE__STORMHAWK",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 7970
+    },
+    {
+     "mesh": "chunk_observatory__stormhawk",
+     "id": "SC_OBSERVATORY__STORMHAWK",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 4338
+    },
+    {
+     "mesh": "chunk_armory__stormhawk",
+     "id": "SC_ARMORY__STORMHAWK",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 4982
+    },
+    {
+     "mesh": "chunk_archive__stormhawk",
+     "id": "SC_ARCHIVE__STORMHAWK",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 8848
+    },
+    {
+     "mesh": "chunk_spire_court__stormhawk",
+     "id": "SC_SPIRE_COURT__STORMHAWK",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 6808
+    },
+    {
+     "mesh": "chunk_spire_court_b__stormhawk",
+     "id": "SC_SPIRE_COURT_B__STORMHAWK",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 4792
+    },
+    {
+     "mesh": "chunk_boss_clearing__stormhawk",
+     "id": "SC_BOSS_CLEARING__STORMHAWK",
+     "role": "BOSS",
+     "openings": "S",
+     "tris": 5290
+    },
+    {
+     "mesh": "chunk_cap_crumbling__stormhawk",
+     "id": "SC_CAP_CRUMBLING__STORMHAWK",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 1468
+    },
+    {
+     "mesh": "chunk_cap_overlook__stormhawk",
+     "id": "SC_CAP_OVERLOOK__STORMHAWK",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 2604
+    },
+    {
+     "mesh": "chunk_cap_sealed_gate__stormhawk",
+     "id": "SC_CAP_SEALED_GATE__STORMHAWK",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 3628
+    },
+    {
+     "mesh": "chunk_path_colonnade__stormhawk",
+     "id": "SC_PATH_COLONNADE__STORMHAWK",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 5280
+    },
+    {
+     "mesh": "chunk_path_long_span__stormhawk",
+     "id": "SC_PATH_LONG_SPAN__STORMHAWK",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 3038
+    },
+    {
+     "mesh": "chunk_path_lantern_row__stormhawk",
+     "id": "SC_PATH_LANTERN_ROW__STORMHAWK",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 3426
+    },
+    {
+     "mesh": "chunk_path_tower_bend__stormhawk",
+     "id": "SC_PATH_TOWER_BEND__STORMHAWK",
+     "role": "PATH",
+     "openings": "SW",
+     "tris": 2302
+    },
+    {
+     "mesh": "chunk_path_tee__stormhawk",
+     "id": "SC_PATH_TEE__STORMHAWK",
+     "role": "PATH",
+     "openings": "ESW",
+     "tris": 3386
+    },
+    {
+     "mesh": "chunk_parade_ground__stormhawk",
+     "id": "SC_PARADE_GROUND__STORMHAWK",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 4936
+    },
+    {
+     "mesh": "chunk_turbine_hall__stormhawk",
+     "id": "SC_TURBINE_HALL__STORMHAWK",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 3664
+    },
+    {
+     "mesh": "chunk_lighthouse_point__stormhawk",
+     "id": "SC_LIGHTHOUSE_POINT__STORMHAWK",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 3076
+    },
+    {
+     "mesh": "chunk_sky_tree_grove__stormhawk",
+     "id": "SC_SKY_TREE_GROVE__STORMHAWK",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 6432
+    },
+    {
+     "mesh": "chunk_dockside__stormhawk",
+     "id": "SC_DOCKSIDE__STORMHAWK",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 4468
+    },
+    {
+     "mesh": "chunk_side_chapel__stormhawk",
+     "id": "SC_SIDE_CHAPEL__STORMHAWK",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 2686
+    },
+    {
+     "mesh": "chunk_side_garden__stormhawk",
+     "id": "SC_SIDE_GARDEN__STORMHAWK",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 3766
+    },
+    {
+     "mesh": "chunk_side_reliquary__stormhawk",
+     "id": "SC_SIDE_RELIQUARY__STORMHAWK",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 2814
+    },
+    {
+     "mesh": "chunk_prism_arena__stormhawk",
+     "id": "SC_PRISM_ARENA__STORMHAWK",
+     "role": "BOSS",
+     "openings": "S",
+     "tris": 3366
+    }
+   ]
+  },
+  {
+   "set": "rime",
+   "fbx": "scenarios/rime/sky_citadel_rime_structure.fbx",
+   "pieces": [
+    {
+     "mesh": "chunk_entry__rime",
+     "id": "SC_ENTRY__RIME",
+     "role": "ENTRY",
+     "openings": "N",
+     "tris": 5072
+    },
+    {
+     "mesh": "chunk_path_straight__rime",
+     "id": "SC_PATH_STRAIGHT__RIME",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 4222
+    },
+    {
+     "mesh": "chunk_path_skyport__rime",
+     "id": "SC_PATH_SKYPORT__RIME",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 5834
+    },
+    {
+     "mesh": "chunk_path_hoops__rime",
+     "id": "SC_PATH_HOOPS__RIME",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 2902
+    },
+    {
+     "mesh": "chunk_path_shattered__rime",
+     "id": "SC_PATH_SHATTERED__RIME",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 4308
+    },
+    {
+     "mesh": "chunk_path_aviary__rime",
+     "id": "SC_PATH_AVIARY__RIME",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 6834
+    },
+    {
+     "mesh": "chunk_crossroads__rime",
+     "id": "SC_CROSSROADS__RIME",
+     "role": "PATH",
+     "openings": "ENSW",
+     "tris": 3106
+    },
+    {
+     "mesh": "chunk_side_lookout__rime",
+     "id": "SC_SIDE_LOOKOUT__RIME",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 3528
+    },
+    {
+     "mesh": "chunk_path_bend__rime",
+     "id": "SC_PATH_BEND__RIME",
+     "role": "PATH",
+     "openings": "ES",
+     "tris": 3856
+    },
+    {
+     "mesh": "chunk_path_bend_west__rime",
+     "id": "SC_PATH_BEND_WEST__RIME",
+     "role": "PATH",
+     "openings": "SW",
+     "tris": 5454
+    },
+    {
+     "mesh": "chunk_vault_turn__rime",
+     "id": "SC_VAULT_TURN__RIME",
+     "role": "COMBAT",
+     "openings": "ES",
+     "tris": 4090
+    },
+    {
+     "mesh": "chunk_aether_springs__rime",
+     "id": "SC_AETHER_SPRINGS__RIME",
+     "role": "COMBAT",
+     "openings": "SW",
+     "tris": 4598
+    },
+    {
+     "mesh": "chunk_garden_terrace__rime",
+     "id": "SC_GARDEN_TERRACE__RIME",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 9628
+    },
+    {
+     "mesh": "chunk_observatory__rime",
+     "id": "SC_OBSERVATORY__RIME",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 6166
+    },
+    {
+     "mesh": "chunk_armory__rime",
+     "id": "SC_ARMORY__RIME",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 5590
+    },
+    {
+     "mesh": "chunk_archive__rime",
+     "id": "SC_ARCHIVE__RIME",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 8982
+    },
+    {
+     "mesh": "chunk_spire_court__rime",
+     "id": "SC_SPIRE_COURT__RIME",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 7502
+    },
+    {
+     "mesh": "chunk_spire_court_b__rime",
+     "id": "SC_SPIRE_COURT_B__RIME",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 6932
+    },
+    {
+     "mesh": "chunk_boss_clearing__rime",
+     "id": "SC_BOSS_CLEARING__RIME",
+     "role": "BOSS",
+     "openings": "S",
+     "tris": 6376
+    },
+    {
+     "mesh": "chunk_cap_crumbling__rime",
+     "id": "SC_CAP_CRUMBLING__RIME",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 1236
+    },
+    {
+     "mesh": "chunk_cap_overlook__rime",
+     "id": "SC_CAP_OVERLOOK__RIME",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 3460
+    },
+    {
+     "mesh": "chunk_cap_sealed_gate__rime",
+     "id": "SC_CAP_SEALED_GATE__RIME",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 4134
+    },
+    {
+     "mesh": "chunk_path_colonnade__rime",
+     "id": "SC_PATH_COLONNADE__RIME",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 5590
+    },
+    {
+     "mesh": "chunk_path_long_span__rime",
+     "id": "SC_PATH_LONG_SPAN__RIME",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 3858
+    },
+    {
+     "mesh": "chunk_path_lantern_row__rime",
+     "id": "SC_PATH_LANTERN_ROW__RIME",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 3314
+    },
+    {
+     "mesh": "chunk_path_tower_bend__rime",
+     "id": "SC_PATH_TOWER_BEND__RIME",
+     "role": "PATH",
+     "openings": "SW",
+     "tris": 2946
+    },
+    {
+     "mesh": "chunk_path_tee__rime",
+     "id": "SC_PATH_TEE__RIME",
+     "role": "PATH",
+     "openings": "ESW",
+     "tris": 3800
+    },
+    {
+     "mesh": "chunk_parade_ground__rime",
+     "id": "SC_PARADE_GROUND__RIME",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 6090
+    },
+    {
+     "mesh": "chunk_turbine_hall__rime",
+     "id": "SC_TURBINE_HALL__RIME",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 5280
+    },
+    {
+     "mesh": "chunk_lighthouse_point__rime",
+     "id": "SC_LIGHTHOUSE_POINT__RIME",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 4322
+    },
+    {
+     "mesh": "chunk_sky_tree_grove__rime",
+     "id": "SC_SKY_TREE_GROVE__RIME",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 6466
+    },
+    {
+     "mesh": "chunk_dockside__rime",
+     "id": "SC_DOCKSIDE__RIME",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 6422
+    },
+    {
+     "mesh": "chunk_side_chapel__rime",
+     "id": "SC_SIDE_CHAPEL__RIME",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 3102
+    },
+    {
+     "mesh": "chunk_side_garden__rime",
+     "id": "SC_SIDE_GARDEN__RIME",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 4198
+    },
+    {
+     "mesh": "chunk_side_reliquary__rime",
+     "id": "SC_SIDE_RELIQUARY__RIME",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 2834
+    },
+    {
+     "mesh": "chunk_prism_arena__rime",
+     "id": "SC_PRISM_ARENA__RIME",
+     "role": "BOSS",
+     "openings": "S",
+     "tris": 3562
+    }
+   ]
+  },
+  {
+   "set": "reclaimed",
+   "fbx": "scenarios/reclaimed/sky_citadel_reclaimed_structure.fbx",
+   "pieces": [
+    {
+     "mesh": "chunk_entry__reclaimed",
+     "id": "SC_ENTRY__RECLAIMED",
+     "role": "ENTRY",
+     "openings": "N",
+     "tris": 6312
+    },
+    {
+     "mesh": "chunk_path_straight__reclaimed",
+     "id": "SC_PATH_STRAIGHT__RECLAIMED",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 5022
+    },
+    {
+     "mesh": "chunk_path_skyport__reclaimed",
+     "id": "SC_PATH_SKYPORT__RECLAIMED",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 5638
+    },
+    {
+     "mesh": "chunk_path_hoops__reclaimed",
+     "id": "SC_PATH_HOOPS__RECLAIMED",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 3668
+    },
+    {
+     "mesh": "chunk_path_shattered__reclaimed",
+     "id": "SC_PATH_SHATTERED__RECLAIMED",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 5012
+    },
+    {
+     "mesh": "chunk_path_aviary__reclaimed",
+     "id": "SC_PATH_AVIARY__RECLAIMED",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 6810
+    },
+    {
+     "mesh": "chunk_crossroads__reclaimed",
+     "id": "SC_CROSSROADS__RECLAIMED",
+     "role": "PATH",
+     "openings": "ENSW",
+     "tris": 4340
+    },
+    {
+     "mesh": "chunk_side_lookout__reclaimed",
+     "id": "SC_SIDE_LOOKOUT__RECLAIMED",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 4146
+    },
+    {
+     "mesh": "chunk_path_bend__reclaimed",
+     "id": "SC_PATH_BEND__RECLAIMED",
+     "role": "PATH",
+     "openings": "ES",
+     "tris": 3412
+    },
+    {
+     "mesh": "chunk_path_bend_west__reclaimed",
+     "id": "SC_PATH_BEND_WEST__RECLAIMED",
+     "role": "PATH",
+     "openings": "SW",
+     "tris": 5440
+    },
+    {
+     "mesh": "chunk_vault_turn__reclaimed",
+     "id": "SC_VAULT_TURN__RECLAIMED",
+     "role": "COMBAT",
+     "openings": "ES",
+     "tris": 5252
+    },
+    {
+     "mesh": "chunk_aether_springs__reclaimed",
+     "id": "SC_AETHER_SPRINGS__RECLAIMED",
+     "role": "COMBAT",
+     "openings": "SW",
+     "tris": 6420
+    },
+    {
+     "mesh": "chunk_garden_terrace__reclaimed",
+     "id": "SC_GARDEN_TERRACE__RECLAIMED",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 9332
+    },
+    {
+     "mesh": "chunk_observatory__reclaimed",
+     "id": "SC_OBSERVATORY__RECLAIMED",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 5756
+    },
+    {
+     "mesh": "chunk_armory__reclaimed",
+     "id": "SC_ARMORY__RECLAIMED",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 6580
+    },
+    {
+     "mesh": "chunk_archive__reclaimed",
+     "id": "SC_ARCHIVE__RECLAIMED",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 9720
+    },
+    {
+     "mesh": "chunk_spire_court__reclaimed",
+     "id": "SC_SPIRE_COURT__RECLAIMED",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 9030
+    },
+    {
+     "mesh": "chunk_spire_court_b__reclaimed",
+     "id": "SC_SPIRE_COURT_B__RECLAIMED",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 5654
+    },
+    {
+     "mesh": "chunk_boss_clearing__reclaimed",
+     "id": "SC_BOSS_CLEARING__RECLAIMED",
+     "role": "BOSS",
+     "openings": "S",
+     "tris": 7848
+    },
+    {
+     "mesh": "chunk_cap_crumbling__reclaimed",
+     "id": "SC_CAP_CRUMBLING__RECLAIMED",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 1844
+    },
+    {
+     "mesh": "chunk_cap_overlook__reclaimed",
+     "id": "SC_CAP_OVERLOOK__RECLAIMED",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 3238
+    },
+    {
+     "mesh": "chunk_cap_sealed_gate__reclaimed",
+     "id": "SC_CAP_SEALED_GATE__RECLAIMED",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 4206
+    },
+    {
+     "mesh": "chunk_path_colonnade__reclaimed",
+     "id": "SC_PATH_COLONNADE__RECLAIMED",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 6578
+    },
+    {
+     "mesh": "chunk_path_long_span__reclaimed",
+     "id": "SC_PATH_LONG_SPAN__RECLAIMED",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 3862
+    },
+    {
+     "mesh": "chunk_path_lantern_row__reclaimed",
+     "id": "SC_PATH_LANTERN_ROW__RECLAIMED",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 4452
+    },
+    {
+     "mesh": "chunk_path_tower_bend__reclaimed",
+     "id": "SC_PATH_TOWER_BEND__RECLAIMED",
+     "role": "PATH",
+     "openings": "SW",
+     "tris": 3248
+    },
+    {
+     "mesh": "chunk_path_tee__reclaimed",
+     "id": "SC_PATH_TEE__RECLAIMED",
+     "role": "PATH",
+     "openings": "ESW",
+     "tris": 4624
+    },
+    {
+     "mesh": "chunk_parade_ground__reclaimed",
+     "id": "SC_PARADE_GROUND__RECLAIMED",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 7566
+    },
+    {
+     "mesh": "chunk_turbine_hall__reclaimed",
+     "id": "SC_TURBINE_HALL__RECLAIMED",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 5940
+    },
+    {
+     "mesh": "chunk_lighthouse_point__reclaimed",
+     "id": "SC_LIGHTHOUSE_POINT__RECLAIMED",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 4778
+    },
+    {
+     "mesh": "chunk_sky_tree_grove__reclaimed",
+     "id": "SC_SKY_TREE_GROVE__RECLAIMED",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 8246
+    },
+    {
+     "mesh": "chunk_dockside__reclaimed",
+     "id": "SC_DOCKSIDE__RECLAIMED",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 6860
+    },
+    {
+     "mesh": "chunk_side_chapel__reclaimed",
+     "id": "SC_SIDE_CHAPEL__RECLAIMED",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 4350
+    },
+    {
+     "mesh": "chunk_side_garden__reclaimed",
+     "id": "SC_SIDE_GARDEN__RECLAIMED",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 4570
+    },
+    {
+     "mesh": "chunk_side_reliquary__reclaimed",
+     "id": "SC_SIDE_RELIQUARY__RECLAIMED",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 4600
+    },
+    {
+     "mesh": "chunk_prism_arena__reclaimed",
+     "id": "SC_PRISM_ARENA__RECLAIMED",
+     "role": "BOSS",
+     "openings": "S",
+     "tris": 4600
+    }
+   ]
+  },
+  {
+   "set": "aether_surge",
+   "fbx": "scenarios/aether_surge/sky_citadel_aether_surge_structure.fbx",
+   "pieces": [
+    {
+     "mesh": "chunk_entry__aether_surge",
+     "id": "SC_ENTRY__AETHER_SURGE",
+     "role": "ENTRY",
+     "openings": "N",
+     "tris": 4392
+    },
+    {
+     "mesh": "chunk_path_straight__aether_surge",
+     "id": "SC_PATH_STRAIGHT__AETHER_SURGE",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 3004
+    },
+    {
+     "mesh": "chunk_path_skyport__aether_surge",
+     "id": "SC_PATH_SKYPORT__AETHER_SURGE",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 4274
+    },
+    {
+     "mesh": "chunk_path_hoops__aether_surge",
+     "id": "SC_PATH_HOOPS__AETHER_SURGE",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 2588
+    },
+    {
+     "mesh": "chunk_path_shattered__aether_surge",
+     "id": "SC_PATH_SHATTERED__AETHER_SURGE",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 2546
+    },
+    {
+     "mesh": "chunk_path_aviary__aether_surge",
+     "id": "SC_PATH_AVIARY__AETHER_SURGE",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 5632
+    },
+    {
+     "mesh": "chunk_crossroads__aether_surge",
+     "id": "SC_CROSSROADS__AETHER_SURGE",
+     "role": "PATH",
+     "openings": "ENSW",
+     "tris": 3052
+    },
+    {
+     "mesh": "chunk_side_lookout__aether_surge",
+     "id": "SC_SIDE_LOOKOUT__AETHER_SURGE",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 2518
+    },
+    {
+     "mesh": "chunk_path_bend__aether_surge",
+     "id": "SC_PATH_BEND__AETHER_SURGE",
+     "role": "PATH",
+     "openings": "ES",
+     "tris": 2534
+    },
+    {
+     "mesh": "chunk_path_bend_west__aether_surge",
+     "id": "SC_PATH_BEND_WEST__AETHER_SURGE",
+     "role": "PATH",
+     "openings": "SW",
+     "tris": 4274
+    },
+    {
+     "mesh": "chunk_vault_turn__aether_surge",
+     "id": "SC_VAULT_TURN__AETHER_SURGE",
+     "role": "COMBAT",
+     "openings": "ES",
+     "tris": 3684
+    },
+    {
+     "mesh": "chunk_aether_springs__aether_surge",
+     "id": "SC_AETHER_SPRINGS__AETHER_SURGE",
+     "role": "COMBAT",
+     "openings": "SW",
+     "tris": 4596
+    },
+    {
+     "mesh": "chunk_garden_terrace__aether_surge",
+     "id": "SC_GARDEN_TERRACE__AETHER_SURGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 8950
+    },
+    {
+     "mesh": "chunk_observatory__aether_surge",
+     "id": "SC_OBSERVATORY__AETHER_SURGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 4660
+    },
+    {
+     "mesh": "chunk_armory__aether_surge",
+     "id": "SC_ARMORY__AETHER_SURGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 5334
+    },
+    {
+     "mesh": "chunk_archive__aether_surge",
+     "id": "SC_ARCHIVE__AETHER_SURGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 9272
+    },
+    {
+     "mesh": "chunk_spire_court__aether_surge",
+     "id": "SC_SPIRE_COURT__AETHER_SURGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 6420
+    },
+    {
+     "mesh": "chunk_spire_court_b__aether_surge",
+     "id": "SC_SPIRE_COURT_B__AETHER_SURGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 5444
+    },
+    {
+     "mesh": "chunk_boss_clearing__aether_surge",
+     "id": "SC_BOSS_CLEARING__AETHER_SURGE",
+     "role": "BOSS",
+     "openings": "S",
+     "tris": 5746
+    },
+    {
+     "mesh": "chunk_cap_crumbling__aether_surge",
+     "id": "SC_CAP_CRUMBLING__AETHER_SURGE",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 1202
+    },
+    {
+     "mesh": "chunk_cap_overlook__aether_surge",
+     "id": "SC_CAP_OVERLOOK__AETHER_SURGE",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 2410
+    },
+    {
+     "mesh": "chunk_cap_sealed_gate__aether_surge",
+     "id": "SC_CAP_SEALED_GATE__AETHER_SURGE",
+     "role": "CAP",
+     "openings": "S",
+     "tris": 3820
+    },
+    {
+     "mesh": "chunk_path_colonnade__aether_surge",
+     "id": "SC_PATH_COLONNADE__AETHER_SURGE",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 5192
+    },
+    {
+     "mesh": "chunk_path_long_span__aether_surge",
+     "id": "SC_PATH_LONG_SPAN__AETHER_SURGE",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 3064
+    },
+    {
+     "mesh": "chunk_path_lantern_row__aether_surge",
+     "id": "SC_PATH_LANTERN_ROW__AETHER_SURGE",
+     "role": "PATH",
+     "openings": "NS",
+     "tris": 3152
+    },
+    {
+     "mesh": "chunk_path_tower_bend__aether_surge",
+     "id": "SC_PATH_TOWER_BEND__AETHER_SURGE",
+     "role": "PATH",
+     "openings": "SW",
+     "tris": 2392
+    },
+    {
+     "mesh": "chunk_path_tee__aether_surge",
+     "id": "SC_PATH_TEE__AETHER_SURGE",
+     "role": "PATH",
+     "openings": "ESW",
+     "tris": 3154
+    },
+    {
+     "mesh": "chunk_parade_ground__aether_surge",
+     "id": "SC_PARADE_GROUND__AETHER_SURGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 5246
+    },
+    {
+     "mesh": "chunk_turbine_hall__aether_surge",
+     "id": "SC_TURBINE_HALL__AETHER_SURGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 3764
+    },
+    {
+     "mesh": "chunk_lighthouse_point__aether_surge",
+     "id": "SC_LIGHTHOUSE_POINT__AETHER_SURGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 2966
+    },
+    {
+     "mesh": "chunk_sky_tree_grove__aether_surge",
+     "id": "SC_SKY_TREE_GROVE__AETHER_SURGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 6580
+    },
+    {
+     "mesh": "chunk_dockside__aether_surge",
+     "id": "SC_DOCKSIDE__AETHER_SURGE",
+     "role": "COMBAT",
+     "openings": "NS",
+     "tris": 4726
+    },
+    {
+     "mesh": "chunk_side_chapel__aether_surge",
+     "id": "SC_SIDE_CHAPEL__AETHER_SURGE",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 2818
+    },
+    {
+     "mesh": "chunk_side_garden__aether_surge",
+     "id": "SC_SIDE_GARDEN__AETHER_SURGE",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 3992
+    },
+    {
+     "mesh": "chunk_side_reliquary__aether_surge",
+     "id": "SC_SIDE_RELIQUARY__AETHER_SURGE",
+     "role": "SIDE",
+     "openings": "S",
+     "tris": 2828
+    },
+    {
+     "mesh": "chunk_prism_arena__aether_surge",
+     "id": "SC_PRISM_ARENA__AETHER_SURGE",
+     "role": "BOSS",
+     "openings": "S",
+     "tris": 3600
+    }
+   ]
+  }
+ ],
+ "base_props": [
+  "prop_banner_a",
+  "prop_lamp_a",
+  "prop_holo_pedestal_a",
+  "prop_crate_a",
+  "prop_crystal_a",
+  "prop_beacon_a",
+  "prop_beacon_b",
+  "prop_beacon_c",
+  "prop_pylon_a",
+  "prop_halo_a",
+  "prop_container_a",
+  "prop_skiff_a",
+  "prop_hoop_a",
+  "prop_light_pillar_a",
+  "prop_accent_a",
+  "prop_debris_a",
+  "prop_lintel_a",
+  "prop_bird_a",
+  "prop_bird_wing_a",
+  "prop_bird_b",
+  "prop_bird_c",
+  "prop_brazier_a",
+  "prop_telescope_a",
+  "prop_crystal_b",
+  "prop_keel_ring_a",
+  "prop_keel_ring_b",
+  "prop_halo_b",
+  "prop_target_a",
+  "prop_weapon_rack_a",
+  "prop_shield_rack_a",
+  "prop_tome_a",
+  "prop_accent_b",
+  "prop_accent_c",
+  "prop_halo_c",
+  "prop_accent_d",
+  "prop_container_b"
+ ],
+ "scenario_props": [
+  {
+   "mesh": "scn_prop_segment_a",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 19,
+   "alternate": false,
+   "tris": 3152
+  },
+  {
+   "mesh": "scn_prop_banner_a",
+   "kind": "prop",
+   "anim": "Sway",
+   "tier": 2,
+   "interact": "-",
+   "copies": 26,
+   "alternate": false,
+   "tris": 1036
+  },
+  {
+   "mesh": "scn_prop_lamp_a",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "copies": 50,
+   "alternate": false,
+   "tris": 596
+  },
+  {
+   "mesh": "scn_prop_holo_pedestal_a",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Activate",
+   "copies": 27,
+   "alternate": false,
+   "tris": 1408
+  },
+  {
+   "mesh": "scn_prop_crate_a",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Breakable",
+   "copies": 54,
+   "alternate": false,
+   "tris": 1176
+  },
+  {
+   "mesh": "scn_prop_crystal_a",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 2,
+   "interact": "-",
+   "copies": 194,
+   "alternate": false,
+   "tris": 588
+  },
+  {
+   "mesh": "scn_prop_rubble_a",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "copies": 85,
+   "alternate": false,
+   "tris": 1316
+  },
+  {
+   "mesh": "scn_prop_debris_a",
+   "kind": "prop",
+   "anim": "Tumble",
+   "tier": 2,
+   "interact": "-",
+   "copies": 114,
+   "alternate": false,
+   "tris": 2684
+  },
+  {
+   "mesh": "scn_prop_beacon_a",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 243,
+   "alternate": false,
+   "tris": 3436
+  },
+  {
+   "mesh": "scn_prop_beacon_b",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 177,
+   "alternate": false,
+   "tris": 3144
+  },
+  {
+   "mesh": "scn_prop_segment_b",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 2,
+   "alternate": false,
+   "tris": 3152
+  },
+  {
+   "mesh": "scn_prop_pylon_a",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "-",
+   "copies": 36,
+   "alternate": false,
+   "tris": 4204
+  },
+  {
+   "mesh": "scn_prop_beacon_c",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 221,
+   "alternate": false,
+   "tris": 2544
+  },
+  {
+   "mesh": "scn_prop_container_a",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 18,
+   "alternate": false,
+   "tris": 3056
+  },
+  {
+   "mesh": "scn_prop_skiff_a",
+   "kind": "prop",
+   "anim": "Moored",
+   "tier": 1,
+   "interact": "-",
+   "copies": 2,
+   "alternate": false,
+   "tris": 2828
+  },
+  {
+   "mesh": "scn_prop_hoop_a",
+   "kind": "prop",
+   "anim": "Roll",
+   "tier": 1,
+   "interact": "-",
+   "copies": 6,
+   "alternate": false,
+   "tris": 4448
+  },
+  {
+   "mesh": "scn_prop_light_pillar_a",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "copies": 84,
+   "alternate": false,
+   "tris": 500
+  },
+  {
+   "mesh": "scn_prop_segment_c",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 11,
+   "alternate": false,
+   "tris": 1272
+  },
+  {
+   "mesh": "scn_prop_debris_b",
+   "kind": "prop",
+   "anim": "Tumble",
+   "tier": 2,
+   "interact": "-",
+   "copies": 30,
+   "alternate": false,
+   "tris": 2292
+  },
+  {
+   "mesh": "scn_prop_lintel_a",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 1528
+  },
+  {
+   "mesh": "scn_prop_bird_a",
+   "kind": "prop",
+   "anim": "Bird",
+   "tier": 2,
+   "interact": "-",
+   "copies": 30,
+   "alternate": false,
+   "tris": 934
+  },
+  {
+   "mesh": "scn_prop_bird_wing_a",
+   "kind": "prop",
+   "anim": "Wing",
+   "tier": 2,
+   "interact": "-",
+   "copies": 210,
+   "alternate": false,
+   "tris": 764
+  },
+  {
+   "mesh": "scn_prop_bird_b",
+   "kind": "prop",
+   "anim": "Bird",
+   "tier": 2,
+   "interact": "-",
+   "copies": 15,
+   "alternate": false,
+   "tris": 992
+  },
+  {
+   "mesh": "scn_prop_bird_c",
+   "kind": "prop",
+   "anim": "Bird",
+   "tier": 2,
+   "interact": "-",
+   "copies": 9,
+   "alternate": false,
+   "tris": 992
+  },
+  {
+   "mesh": "scn_prop_brazier_a",
+   "kind": "prop",
+   "anim": "Flicker",
+   "tier": 1,
+   "interact": "Lightable",
+   "copies": 94,
+   "alternate": false,
+   "tris": 1232
+  },
+  {
+   "mesh": "scn_prop_telescope_a",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Use",
+   "copies": 13,
+   "alternate": false,
+   "tris": 3056
+  },
+  {
+   "mesh": "scn_fix_chest_body_a",
+   "kind": "fixture",
+   "anim": "-",
+   "tier": "-",
+   "interact": "-",
+   "copies": 0,
+   "alternate": false,
+   "tris": 454
+  },
+  {
+   "mesh": "scn_fix_chest_lid_a",
+   "kind": "fixture",
+   "anim": "-",
+   "tier": "-",
+   "interact": "-",
+   "copies": 0,
+   "alternate": false,
+   "tris": 200
+  },
+  {
+   "mesh": "scn_fix_vault_door_a",
+   "kind": "fixture",
+   "anim": "-",
+   "tier": "-",
+   "interact": "-",
+   "copies": 0,
+   "alternate": false,
+   "tris": 320
+  },
+  {
+   "mesh": "scn_prop_keel_ring_a",
+   "kind": "prop",
+   "anim": "Spin",
+   "tier": 1,
+   "interact": "-",
+   "copies": 6,
+   "alternate": false,
+   "tris": 3456
+  },
+  {
+   "mesh": "scn_prop_keel_ring_b",
+   "kind": "prop",
+   "anim": "Spin",
+   "tier": 1,
+   "interact": "-",
+   "copies": 6,
+   "alternate": false,
+   "tris": 3456
+  },
+  {
+   "mesh": "scn_prop_halo_a",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 2980
+  },
+  {
+   "mesh": "scn_prop_target_a",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Hit",
+   "copies": 14,
+   "alternate": false,
+   "tris": 1744
+  },
+  {
+   "mesh": "scn_prop_weapon_rack_a",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 15,
+   "alternate": false,
+   "tris": 1176
+  },
+  {
+   "mesh": "scn_prop_shield_rack_a",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 3,
+   "alternate": false,
+   "tris": 1128
+  },
+  {
+   "mesh": "scn_prop_tome_a",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 2,
+   "interact": "-",
+   "copies": 14,
+   "alternate": false,
+   "tris": 940
+  },
+  {
+   "mesh": "scn_prop_accent_a",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "-",
+   "copies": 6,
+   "alternate": false,
+   "tris": 1148
+  },
+  {
+   "mesh": "scn_prop_accent_b",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 3200
+  },
+  {
+   "mesh": "scn_prop_halo_b",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 9,
+   "alternate": false,
+   "tris": 3200
+  },
+  {
+   "mesh": "scn_prop_halo_c",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 3456
+  },
+  {
+   "mesh": "scn_prop_crystal_b",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 2,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 1148
+  },
+  {
+   "mesh": "scn_fix_forcefield_a",
+   "kind": "fixture",
+   "anim": "-",
+   "tier": "-",
+   "interact": "-",
+   "copies": 0,
+   "alternate": false,
+   "tris": 12
+  },
+  {
+   "mesh": "scn_prop_container_b",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 7,
+   "alternate": false,
+   "tris": 3056
+  },
+  {
+   "mesh": "scn_prop_banner_b",
+   "kind": "prop",
+   "anim": "Sway",
+   "tier": 2,
+   "interact": "-",
+   "copies": 20,
+   "alternate": false,
+   "tris": 1036
+  },
+  {
+   "mesh": "scn_prop_lamp_b",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "copies": 13,
+   "alternate": false,
+   "tris": 596
+  },
+  {
+   "mesh": "scn_prop_holo_pedestal_b",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Activate",
+   "copies": 5,
+   "alternate": false,
+   "tris": 1408
+  },
+  {
+   "mesh": "scn_prop_fallen_roof_a",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "copies": 7,
+   "alternate": false,
+   "tris": 1784
+  },
+  {
+   "mesh": "scn_prop_warship_a",
+   "kind": "prop",
+   "anim": "Moored",
+   "tier": 1,
+   "interact": "Board",
+   "copies": 25,
+   "alternate": false,
+   "tris": 2894
+  },
+  {
+   "mesh": "scn_prop_warship_b",
+   "kind": "prop",
+   "anim": "Moored",
+   "tier": 1,
+   "interact": "Board",
+   "copies": 25,
+   "alternate": true,
+   "tris": 5238
+  },
+  {
+   "mesh": "scn_prop_warship_c",
+   "kind": "prop",
+   "anim": "Moored",
+   "tier": 1,
+   "interact": "Board",
+   "copies": 25,
+   "alternate": true,
+   "tris": 3664
+  },
+  {
+   "mesh": "scn_prop_warship_d",
+   "kind": "prop",
+   "anim": "Moored",
+   "tier": 1,
+   "interact": "Board",
+   "copies": 25,
+   "alternate": true,
+   "tris": 3484
+  },
+  {
+   "mesh": "scn_prop_warship_e",
+   "kind": "prop",
+   "anim": "Moored",
+   "tier": 1,
+   "interact": "Board",
+   "copies": 25,
+   "alternate": true,
+   "tris": 3760
+  },
+  {
+   "mesh": "scn_prop_gangway_a",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "copies": 25,
+   "alternate": false,
+   "tris": 2700
+  },
+  {
+   "mesh": "scn_prop_pylon_b",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "-",
+   "copies": 12,
+   "alternate": false,
+   "tris": 4204
+  },
+  {
+   "mesh": "scn_prop_skiff_b",
+   "kind": "prop",
+   "anim": "Moored",
+   "tier": 1,
+   "interact": "-",
+   "copies": 2,
+   "alternate": false,
+   "tris": 2828
+  },
+  {
+   "mesh": "scn_prop_hoop_b",
+   "kind": "prop",
+   "anim": "Roll",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 4448
+  },
+  {
+   "mesh": "scn_prop_light_pillar_b",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "copies": 26,
+   "alternate": false,
+   "tris": 500
+  },
+  {
+   "mesh": "scn_prop_debris_c",
+   "kind": "prop",
+   "anim": "Tumble",
+   "tier": 2,
+   "interact": "-",
+   "copies": 15,
+   "alternate": false,
+   "tris": 2292
+  },
+  {
+   "mesh": "scn_prop_bird_d",
+   "kind": "prop",
+   "anim": "Bird",
+   "tier": 2,
+   "interact": "-",
+   "copies": 4,
+   "alternate": false,
+   "tris": 992
+  },
+  {
+   "mesh": "scn_prop_brazier_b",
+   "kind": "prop",
+   "anim": "Flicker",
+   "tier": 1,
+   "interact": "Lightable",
+   "copies": 47,
+   "alternate": false,
+   "tris": 1232
+  },
+  {
+   "mesh": "scn_prop_keel_ring_c",
+   "kind": "prop",
+   "anim": "Spin",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 3456
+  },
+  {
+   "mesh": "scn_prop_keel_ring_d",
+   "kind": "prop",
+   "anim": "Spin",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 3456
+  },
+  {
+   "mesh": "scn_prop_halo_d",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 2980
+  },
+  {
+   "mesh": "scn_prop_target_b",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Hit",
+   "copies": 7,
+   "alternate": false,
+   "tris": 1744
+  },
+  {
+   "mesh": "scn_prop_shield_rack_b",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 3,
+   "alternate": false,
+   "tris": 1128
+  },
+  {
+   "mesh": "scn_prop_tome_b",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 2,
+   "interact": "-",
+   "copies": 9,
+   "alternate": false,
+   "tris": 940
+  },
+  {
+   "mesh": "scn_prop_accent_c",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "-",
+   "copies": 2,
+   "alternate": false,
+   "tris": 1148
+  },
+  {
+   "mesh": "scn_prop_accent_d",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 3200
+  },
+  {
+   "mesh": "scn_prop_halo_e",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 3200
+  },
+  {
+   "mesh": "scn_prop_accent_e",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 1278
+  },
+  {
+   "mesh": "scn_prop_halo_f",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 904
+  },
+  {
+   "mesh": "scn_prop_container_c",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 1,
+   "alternate": false,
+   "tris": 3056
+  },
+  {
+   "mesh": "scn_prop_banner_c",
+   "kind": "prop",
+   "anim": "Sway",
+   "tier": 2,
+   "interact": "-",
+   "copies": 22,
+   "alternate": false,
+   "tris": 1036
+  },
+  {
+   "mesh": "scn_prop_lamp_c",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "copies": 28,
+   "alternate": false,
+   "tris": 596
+  },
+  {
+   "mesh": "scn_prop_holo_pedestal_c",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Activate",
+   "copies": 9,
+   "alternate": false,
+   "tris": 1408
+  },
+  {
+   "mesh": "scn_prop_crate_b",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Breakable",
+   "copies": 10,
+   "alternate": false,
+   "tris": 1176
+  },
+  {
+   "mesh": "scn_prop_sentinel_a",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Destroy",
+   "copies": 130,
+   "alternate": false,
+   "tris": 376
+  },
+  {
+   "mesh": "scn_prop_pylon_c",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "-",
+   "copies": 12,
+   "alternate": false,
+   "tris": 4204
+  },
+  {
+   "mesh": "scn_prop_container_d",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 6,
+   "alternate": false,
+   "tris": 3056
+  },
+  {
+   "mesh": "scn_prop_skiff_c",
+   "kind": "prop",
+   "anim": "Moored",
+   "tier": 1,
+   "interact": "-",
+   "copies": 2,
+   "alternate": false,
+   "tris": 2828
+  },
+  {
+   "mesh": "scn_prop_hoop_c",
+   "kind": "prop",
+   "anim": "Roll",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 4448
+  },
+  {
+   "mesh": "scn_prop_light_pillar_c",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "copies": 47,
+   "alternate": false,
+   "tris": 500
+  },
+  {
+   "mesh": "scn_prop_debris_d",
+   "kind": "prop",
+   "anim": "Tumble",
+   "tier": 2,
+   "interact": "-",
+   "copies": 15,
+   "alternate": false,
+   "tris": 2292
+  },
+  {
+   "mesh": "scn_prop_lintel_b",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 1528
+  },
+  {
+   "mesh": "scn_prop_bird_e",
+   "kind": "prop",
+   "anim": "Bird",
+   "tier": 2,
+   "interact": "-",
+   "copies": 6,
+   "alternate": false,
+   "tris": 934
+  },
+  {
+   "mesh": "scn_prop_bird_f",
+   "kind": "prop",
+   "anim": "Bird",
+   "tier": 2,
+   "interact": "-",
+   "copies": 5,
+   "alternate": false,
+   "tris": 992
+  },
+  {
+   "mesh": "scn_prop_bird_g",
+   "kind": "prop",
+   "anim": "Bird",
+   "tier": 2,
+   "interact": "-",
+   "copies": 4,
+   "alternate": false,
+   "tris": 992
+  },
+  {
+   "mesh": "scn_prop_telescope_b",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Use",
+   "copies": 5,
+   "alternate": false,
+   "tris": 3056
+  },
+  {
+   "mesh": "scn_prop_brazier_c",
+   "kind": "prop",
+   "anim": "Flicker",
+   "tier": 1,
+   "interact": "Lightable",
+   "copies": 27,
+   "alternate": false,
+   "tris": 1232
+  },
+  {
+   "mesh": "scn_prop_crystal_c",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 2,
+   "interact": "-",
+   "copies": 2,
+   "alternate": false,
+   "tris": 1148
+  },
+  {
+   "mesh": "scn_prop_keel_ring_e",
+   "kind": "prop",
+   "anim": "Spin",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 3456
+  },
+  {
+   "mesh": "scn_prop_keel_ring_f",
+   "kind": "prop",
+   "anim": "Spin",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 3456
+  },
+  {
+   "mesh": "scn_prop_halo_g",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 2980
+  },
+  {
+   "mesh": "scn_prop_target_c",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Hit",
+   "copies": 7,
+   "alternate": false,
+   "tris": 1744
+  },
+  {
+   "mesh": "scn_prop_weapon_rack_b",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 5,
+   "alternate": false,
+   "tris": 1176
+  },
+  {
+   "mesh": "scn_prop_shield_rack_c",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 3,
+   "alternate": false,
+   "tris": 1128
+  },
+  {
+   "mesh": "scn_prop_tome_c",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 2,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 940
+  },
+  {
+   "mesh": "scn_prop_accent_f",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "-",
+   "copies": 2,
+   "alternate": false,
+   "tris": 1148
+  },
+  {
+   "mesh": "scn_prop_accent_g",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 3200
+  },
+  {
+   "mesh": "scn_prop_halo_h",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 3200
+  },
+  {
+   "mesh": "scn_prop_halo_i",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 3456
+  },
+  {
+   "mesh": "scn_prop_container_e",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 1,
+   "alternate": false,
+   "tris": 3056
+  },
+  {
+   "mesh": "scn_prop_banner_d",
+   "kind": "prop",
+   "anim": "Sway",
+   "tier": 2,
+   "interact": "-",
+   "copies": 25,
+   "alternate": false,
+   "tris": 1036
+  },
+  {
+   "mesh": "scn_prop_lamp_d",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "copies": 18,
+   "alternate": false,
+   "tris": 596
+  },
+  {
+   "mesh": "scn_prop_crate_c",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Breakable",
+   "copies": 15,
+   "alternate": false,
+   "tris": 1176
+  },
+  {
+   "mesh": "scn_prop_skiff_d",
+   "kind": "prop",
+   "anim": "Moored",
+   "tier": 1,
+   "interact": "-",
+   "copies": 2,
+   "alternate": false,
+   "tris": 2566
+  },
+  {
+   "mesh": "scn_prop_hoop_d",
+   "kind": "prop",
+   "anim": "Roll",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 4448
+  },
+  {
+   "mesh": "scn_prop_light_pillar_d",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "copies": 47,
+   "alternate": false,
+   "tris": 500
+  },
+  {
+   "mesh": "scn_prop_debris_e",
+   "kind": "prop",
+   "anim": "Tumble",
+   "tier": 2,
+   "interact": "-",
+   "copies": 15,
+   "alternate": false,
+   "tris": 2116
+  },
+  {
+   "mesh": "scn_prop_lintel_c",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 1528
+  },
+  {
+   "mesh": "scn_prop_bird_h",
+   "kind": "prop",
+   "anim": "Bird",
+   "tier": 2,
+   "interact": "-",
+   "copies": 4,
+   "alternate": false,
+   "tris": 992
+  },
+  {
+   "mesh": "scn_prop_brazier_d",
+   "kind": "prop",
+   "anim": "Flicker",
+   "tier": 1,
+   "interact": "Lightable",
+   "copies": 47,
+   "alternate": false,
+   "tris": 1232
+  },
+  {
+   "mesh": "scn_prop_telescope_c",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Use",
+   "copies": 5,
+   "alternate": false,
+   "tris": 3056
+  },
+  {
+   "mesh": "scn_prop_crystal_d",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 2,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 1148
+  },
+  {
+   "mesh": "scn_prop_keel_ring_g",
+   "kind": "prop",
+   "anim": "Spin",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 3456
+  },
+  {
+   "mesh": "scn_prop_keel_ring_h",
+   "kind": "prop",
+   "anim": "Spin",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 3456
+  },
+  {
+   "mesh": "scn_prop_target_d",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Hit",
+   "copies": 7,
+   "alternate": false,
+   "tris": 1744
+  },
+  {
+   "mesh": "scn_prop_weapon_rack_c",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 5,
+   "alternate": false,
+   "tris": 1176
+  },
+  {
+   "mesh": "scn_prop_shield_rack_d",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 3,
+   "alternate": false,
+   "tris": 1128
+  },
+  {
+   "mesh": "scn_prop_tome_d",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 2,
+   "interact": "-",
+   "copies": 9,
+   "alternate": false,
+   "tris": 1280
+  },
+  {
+   "mesh": "scn_prop_halo_j",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 720
+  },
+  {
+   "mesh": "scn_prop_container_f",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 1,
+   "alternate": false,
+   "tris": 3056
+  },
+  {
+   "mesh": "scn_prop_banner_e",
+   "kind": "prop",
+   "anim": "Sway",
+   "tier": 2,
+   "interact": "-",
+   "copies": 37,
+   "alternate": false,
+   "tris": 1036
+  },
+  {
+   "mesh": "scn_prop_skiff_e",
+   "kind": "prop",
+   "anim": "Moored",
+   "tier": 1,
+   "interact": "-",
+   "copies": 2,
+   "alternate": false,
+   "tris": 2828
+  },
+  {
+   "mesh": "scn_prop_accent_h",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "-",
+   "copies": 11,
+   "alternate": false,
+   "tris": 428
+  },
+  {
+   "mesh": "scn_prop_bird_i",
+   "kind": "prop",
+   "anim": "Bird",
+   "tier": 2,
+   "interact": "-",
+   "copies": 8,
+   "alternate": false,
+   "tris": 992
+  },
+  {
+   "mesh": "scn_prop_crystal_e",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 2,
+   "interact": "-",
+   "copies": 4,
+   "alternate": false,
+   "tris": 1148
+  },
+  {
+   "mesh": "scn_prop_shield_rack_e",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 3,
+   "alternate": false,
+   "tris": 1128
+  },
+  {
+   "mesh": "scn_prop_accent_i",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 348
+  },
+  {
+   "mesh": "scn_prop_container_g",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 1,
+   "alternate": false,
+   "tris": 3056
+  },
+  {
+   "mesh": "scn_prop_banner_f",
+   "kind": "prop",
+   "anim": "Sway",
+   "tier": 2,
+   "interact": "-",
+   "copies": 20,
+   "alternate": false,
+   "tris": 1264
+  },
+  {
+   "mesh": "scn_prop_lamp_e",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "copies": 11,
+   "alternate": false,
+   "tris": 500
+  },
+  {
+   "mesh": "scn_prop_holo_pedestal_d",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Activate",
+   "copies": 7,
+   "alternate": false,
+   "tris": 1408
+  },
+  {
+   "mesh": "scn_prop_crate_d",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Breakable",
+   "copies": 8,
+   "alternate": false,
+   "tris": 1020
+  },
+  {
+   "mesh": "scn_prop_pylon_d",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "-",
+   "copies": 12,
+   "alternate": false,
+   "tris": 4204
+  },
+  {
+   "mesh": "scn_prop_container_h",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 3,
+   "alternate": false,
+   "tris": 2880
+  },
+  {
+   "mesh": "scn_prop_skiff_f",
+   "kind": "prop",
+   "anim": "Moored",
+   "tier": 1,
+   "interact": "-",
+   "copies": 2,
+   "alternate": false,
+   "tris": 2524
+  },
+  {
+   "mesh": "scn_prop_hoop_e",
+   "kind": "prop",
+   "anim": "Roll",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 3040
+  },
+  {
+   "mesh": "scn_prop_light_pillar_e",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "copies": 25,
+   "alternate": false,
+   "tris": 350
+  },
+  {
+   "mesh": "scn_prop_debris_f",
+   "kind": "prop",
+   "anim": "Tumble",
+   "tier": 2,
+   "interact": "-",
+   "copies": 15,
+   "alternate": false,
+   "tris": 2292
+  },
+  {
+   "mesh": "scn_prop_lintel_d",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 980
+  },
+  {
+   "mesh": "scn_prop_bird_j",
+   "kind": "prop",
+   "anim": "Bird",
+   "tier": 2,
+   "interact": "-",
+   "copies": 6,
+   "alternate": false,
+   "tris": 1152
+  },
+  {
+   "mesh": "scn_prop_bird_k",
+   "kind": "prop",
+   "anim": "Bird",
+   "tier": 2,
+   "interact": "-",
+   "copies": 5,
+   "alternate": false,
+   "tris": 1152
+  },
+  {
+   "mesh": "scn_prop_bird_l",
+   "kind": "prop",
+   "anim": "Bird",
+   "tier": 2,
+   "interact": "-",
+   "copies": 4,
+   "alternate": false,
+   "tris": 1290
+  },
+  {
+   "mesh": "scn_prop_telescope_d",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Use",
+   "copies": 5,
+   "alternate": false,
+   "tris": 3184
+  },
+  {
+   "mesh": "scn_prop_brazier_e",
+   "kind": "prop",
+   "anim": "Flicker",
+   "tier": 1,
+   "interact": "Lightable",
+   "copies": 17,
+   "alternate": false,
+   "tris": 1040
+  },
+  {
+   "mesh": "scn_prop_crystal_f",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 2,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 1148
+  },
+  {
+   "mesh": "scn_prop_fallen_roof_b",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "copies": 9,
+   "alternate": false,
+   "tris": 1412
+  },
+  {
+   "mesh": "scn_prop_keel_ring_i",
+   "kind": "prop",
+   "anim": "Spin",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 4800
+  },
+  {
+   "mesh": "scn_prop_keel_ring_j",
+   "kind": "prop",
+   "anim": "Spin",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 4800
+  },
+  {
+   "mesh": "scn_prop_halo_k",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 2980
+  },
+  {
+   "mesh": "scn_prop_target_e",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Hit",
+   "copies": 7,
+   "alternate": false,
+   "tris": 1264
+  },
+  {
+   "mesh": "scn_prop_weapon_rack_d",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 5,
+   "alternate": false,
+   "tris": 1456
+  },
+  {
+   "mesh": "scn_prop_shield_rack_f",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 3,
+   "alternate": false,
+   "tris": 912
+  },
+  {
+   "mesh": "scn_prop_tome_e",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 2,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 1280
+  },
+  {
+   "mesh": "scn_prop_accent_j",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "-",
+   "copies": 2,
+   "alternate": false,
+   "tris": 1148
+  },
+  {
+   "mesh": "scn_prop_accent_k",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 3200
+  },
+  {
+   "mesh": "scn_prop_halo_l",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 3200
+  },
+  {
+   "mesh": "scn_prop_halo_m",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 3456
+  },
+  {
+   "mesh": "scn_prop_container_i",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 1,
+   "alternate": false,
+   "tris": 3056
+  },
+  {
+   "mesh": "scn_prop_banner_g",
+   "kind": "prop",
+   "anim": "Sway",
+   "tier": 2,
+   "interact": "-",
+   "copies": 37,
+   "alternate": false,
+   "tris": 1036
+  },
+  {
+   "mesh": "scn_prop_lamp_f",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "copies": 28,
+   "alternate": false,
+   "tris": 524
+  },
+  {
+   "mesh": "scn_prop_holo_pedestal_e",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Activate",
+   "copies": 9,
+   "alternate": false,
+   "tris": 1504
+  },
+  {
+   "mesh": "scn_prop_crate_e",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Breakable",
+   "copies": 20,
+   "alternate": false,
+   "tris": 1176
+  },
+  {
+   "mesh": "scn_prop_crystal_g",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 2,
+   "interact": "-",
+   "copies": 88,
+   "alternate": false,
+   "tris": 588
+  },
+  {
+   "mesh": "scn_prop_pylon_e",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "-",
+   "copies": 12,
+   "alternate": false,
+   "tris": 3308
+  },
+  {
+   "mesh": "scn_prop_container_j",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 6,
+   "alternate": false,
+   "tris": 3056
+  },
+  {
+   "mesh": "scn_prop_skiff_g",
+   "kind": "prop",
+   "anim": "Moored",
+   "tier": 1,
+   "interact": "-",
+   "copies": 2,
+   "alternate": false,
+   "tris": 3678
+  },
+  {
+   "mesh": "scn_prop_hoop_f",
+   "kind": "prop",
+   "anim": "Roll",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 3328
+  },
+  {
+   "mesh": "scn_prop_light_pillar_f",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "copies": 47,
+   "alternate": false,
+   "tris": 420
+  },
+  {
+   "mesh": "scn_prop_debris_g",
+   "kind": "prop",
+   "anim": "Tumble",
+   "tier": 2,
+   "interact": "-",
+   "copies": 15,
+   "alternate": false,
+   "tris": 1940
+  },
+  {
+   "mesh": "scn_prop_lintel_e",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 1528
+  },
+  {
+   "mesh": "scn_prop_bird_m",
+   "kind": "prop",
+   "anim": "Bird",
+   "tier": 2,
+   "interact": "-",
+   "copies": 5,
+   "alternate": false,
+   "tris": 992
+  },
+  {
+   "mesh": "scn_prop_brazier_f",
+   "kind": "prop",
+   "anim": "Flicker",
+   "tier": 1,
+   "interact": "Lightable",
+   "copies": 47,
+   "alternate": false,
+   "tris": 924
+  },
+  {
+   "mesh": "scn_prop_telescope_e",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Use",
+   "copies": 5,
+   "alternate": false,
+   "tris": 3056
+  },
+  {
+   "mesh": "scn_prop_keel_ring_k",
+   "kind": "prop",
+   "anim": "Spin",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 4800
+  },
+  {
+   "mesh": "scn_prop_keel_ring_l",
+   "kind": "prop",
+   "anim": "Spin",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 4800
+  },
+  {
+   "mesh": "scn_prop_halo_n",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 3268
+  },
+  {
+   "mesh": "scn_prop_target_f",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Hit",
+   "copies": 7,
+   "alternate": false,
+   "tris": 1424
+  },
+  {
+   "mesh": "scn_prop_weapon_rack_e",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 5,
+   "alternate": false,
+   "tris": 1176
+  },
+  {
+   "mesh": "scn_prop_shield_rack_g",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 3,
+   "alternate": false,
+   "tris": 1128
+  },
+  {
+   "mesh": "scn_prop_tome_f",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 2,
+   "interact": "-",
+   "copies": 9,
+   "alternate": false,
+   "tris": 1112
+  },
+  {
+   "mesh": "scn_prop_accent_l",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "-",
+   "copies": 2,
+   "alternate": false,
+   "tris": 588
+  },
+  {
+   "mesh": "scn_prop_accent_m",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 3200
+  },
+  {
+   "mesh": "scn_prop_halo_o",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 3200
+  },
+  {
+   "mesh": "scn_prop_halo_p",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 3456
+  },
+  {
+   "mesh": "scn_prop_halo_q",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 1,
+   "alternate": false,
+   "tris": 384
+  },
+  {
+   "mesh": "scn_prop_container_k",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "copies": 1,
+   "alternate": false,
+   "tris": 3056
+  }
+ ],
+ "scatter_props": [
+  {
+   "mesh": "sct_aether_cluster_a",
+   "family": "aether_cluster",
+   "sets": "aether_surge",
+   "anim": "Pulse",
+   "tier": 1,
+   "interact": "Harvest",
+   "tris": 2940
+  },
+  {
+   "mesh": "sct_aether_cluster_b",
+   "family": "aether_cluster",
+   "sets": "aether_surge",
+   "anim": "Pulse",
+   "tier": 1,
+   "interact": "Harvest",
+   "tris": 3240
+  },
+  {
+   "mesh": "sct_aether_cluster_c",
+   "family": "aether_cluster",
+   "sets": "aether_surge",
+   "anim": "Pulse",
+   "tier": 1,
+   "interact": "Harvest",
+   "tris": 1000
+  },
+  {
+   "mesh": "sct_aether_cluster_d",
+   "family": "aether_cluster",
+   "sets": "aether_surge",
+   "anim": "Pulse",
+   "tier": 1,
+   "interact": "Harvest",
+   "tris": 2520
+  },
+  {
+   "mesh": "sct_aether_cluster_e",
+   "family": "aether_cluster",
+   "sets": "aether_surge",
+   "anim": "Pulse",
+   "tier": 1,
+   "interact": "Harvest",
+   "tris": 1080
+  },
+  {
+   "mesh": "sct_aether_cluster_f",
+   "family": "aether_cluster",
+   "sets": "aether_surge",
+   "anim": "Pulse",
+   "tier": 1,
+   "interact": "Harvest",
+   "tris": 2750
+  },
+  {
+   "mesh": "sct_aether_geode_a",
+   "family": "aether_geode",
+   "sets": "aether_surge",
+   "anim": "Pulse",
+   "tier": 1,
+   "interact": "Harvest",
+   "tris": 2786
+  },
+  {
+   "mesh": "sct_aether_geode_b",
+   "family": "aether_geode",
+   "sets": "aether_surge",
+   "anim": "Pulse",
+   "tier": 1,
+   "interact": "Harvest",
+   "tris": 3536
+  },
+  {
+   "mesh": "sct_aether_shard_a",
+   "family": "aether_shard",
+   "sets": "aether_surge",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "Harvest",
+   "tris": 360
+  },
+  {
+   "mesh": "sct_aether_shard_b",
+   "family": "aether_shard",
+   "sets": "aether_surge",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "Harvest",
+   "tris": 360
+  },
+  {
+   "mesh": "sct_aether_shard_c",
+   "family": "aether_shard",
+   "sets": "aether_surge",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "Harvest",
+   "tris": 980
+  },
+  {
+   "mesh": "sct_alarm_post_a",
+   "family": "alarm_post",
+   "sets": "lockdown",
+   "anim": "Strobe",
+   "tier": 2,
+   "interact": "-",
+   "tris": 812
+  },
+  {
+   "mesh": "sct_ballista_a",
+   "family": "ballista",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Use",
+   "tris": 3236
+  },
+  {
+   "mesh": "sct_ballista_b",
+   "family": "ballista",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Use",
+   "tris": 3792
+  },
+  {
+   "mesh": "sct_barrels_a",
+   "family": "barrels",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Breakable",
+   "tris": 660
+  },
+  {
+   "mesh": "sct_barrels_b",
+   "family": "barrels",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Breakable",
+   "tris": 1320
+  },
+  {
+   "mesh": "sct_barrels_c",
+   "family": "barrels",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Breakable",
+   "tris": 2640
+  },
+  {
+   "mesh": "sct_barricade_a",
+   "family": "barricade",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Destroy",
+   "tris": 2292
+  },
+  {
+   "mesh": "sct_barricade_b",
+   "family": "barricade",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Destroy",
+   "tris": 3056
+  },
+  {
+   "mesh": "sct_barricade_c",
+   "family": "barricade",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Destroy",
+   "tris": 2564
+  },
+  {
+   "mesh": "sct_barrier_block_a",
+   "family": "barrier_block",
+   "sets": "lockdown",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 1176
+  },
+  {
+   "mesh": "sct_barrier_block_b",
+   "family": "barrier_block",
+   "sets": "lockdown",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 1284
+  },
+  {
+   "mesh": "sct_bone_pile_a",
+   "family": "bone_pile",
+   "sets": "stormhawk",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Loot",
+   "tris": 3460
+  },
+  {
+   "mesh": "sct_bone_pile_b",
+   "family": "bone_pile",
+   "sets": "stormhawk",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Loot",
+   "tris": 3024
+  },
+  {
+   "mesh": "sct_bone_pile_c",
+   "family": "bone_pile",
+   "sets": "stormhawk",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Loot",
+   "tris": 1864
+  },
+  {
+   "mesh": "sct_bonfire_a",
+   "family": "bonfire",
+   "sets": "siege",
+   "anim": "Flicker",
+   "tier": 1,
+   "interact": "Hazard",
+   "tris": 4080
+  },
+  {
+   "mesh": "sct_broken_rail_a",
+   "family": "broken_rail",
+   "sets": "unmooring,siege",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "-",
+   "tris": 1200
+  },
+  {
+   "mesh": "sct_broken_rail_b",
+   "family": "broken_rail",
+   "sets": "unmooring,siege",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "-",
+   "tris": 2940
+  },
+  {
+   "mesh": "sct_broken_rail_c",
+   "family": "broken_rail",
+   "sets": "unmooring,siege",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "-",
+   "tris": 2568
+  },
+  {
+   "mesh": "sct_bush_a",
+   "family": "bush",
+   "sets": "reclaimed",
+   "anim": "Sway",
+   "tier": 1,
+   "interact": "Cut",
+   "tris": 1336
+  },
+  {
+   "mesh": "sct_bush_b",
+   "family": "bush",
+   "sets": "reclaimed",
+   "anim": "Sway",
+   "tier": 1,
+   "interact": "Cut",
+   "tris": 1002
+  },
+  {
+   "mesh": "sct_bush_c",
+   "family": "bush",
+   "sets": "reclaimed",
+   "anim": "Sway",
+   "tier": 1,
+   "interact": "Cut",
+   "tris": 912
+  },
+  {
+   "mesh": "sct_bush_d",
+   "family": "bush",
+   "sets": "reclaimed",
+   "anim": "Sway",
+   "tier": 1,
+   "interact": "Cut",
+   "tris": 1540
+  },
+  {
+   "mesh": "sct_bush_e",
+   "family": "bush",
+   "sets": "reclaimed",
+   "anim": "Sway",
+   "tier": 1,
+   "interact": "Cut",
+   "tris": 1172
+  },
+  {
+   "mesh": "sct_cable_spool_a",
+   "family": "cable_spool",
+   "sets": "lockdown,unmooring",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "-",
+   "tris": 1428
+  },
+  {
+   "mesh": "sct_cable_spool_b",
+   "family": "cable_spool",
+   "sets": "lockdown,unmooring",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "-",
+   "tris": 1428
+  },
+  {
+   "mesh": "sct_campfire_a",
+   "family": "campfire",
+   "sets": "siege,rime",
+   "anim": "Flicker",
+   "tier": 1,
+   "interact": "Lightable",
+   "tris": 1852
+  },
+  {
+   "mesh": "sct_campfire_b",
+   "family": "campfire",
+   "sets": "siege,rime",
+   "anim": "Flicker",
+   "tier": 1,
+   "interact": "Lightable",
+   "tris": 4192
+  },
+  {
+   "mesh": "sct_casks_a",
+   "family": "casks",
+   "sets": "base",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Breakable",
+   "tris": 660
+  },
+  {
+   "mesh": "sct_casks_b",
+   "family": "casks",
+   "sets": "base",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Breakable",
+   "tris": 1320
+  },
+  {
+   "mesh": "sct_casks_c",
+   "family": "casks",
+   "sets": "base",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Breakable",
+   "tris": 1980
+  },
+  {
+   "mesh": "sct_console_a",
+   "family": "console",
+   "sets": "lockdown,base",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Override",
+   "tris": 648
+  },
+  {
+   "mesh": "sct_console_b",
+   "family": "console",
+   "sets": "lockdown,base",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Override",
+   "tris": 1316
+  },
+  {
+   "mesh": "sct_console_c",
+   "family": "console",
+   "sets": "lockdown,base",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Override",
+   "tris": 1080
+  },
+  {
+   "mesh": "sct_cracked_plate_a",
+   "family": "cracked_plate",
+   "sets": "unmooring",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 2292
+  },
+  {
+   "mesh": "sct_crystal_rubble_a",
+   "family": "crystal_rubble",
+   "sets": "aether_surge",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "-",
+   "tris": 900
+  },
+  {
+   "mesh": "sct_crystal_rubble_b",
+   "family": "crystal_rubble",
+   "sets": "aether_surge",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "-",
+   "tris": 1080
+  },
+  {
+   "mesh": "sct_crystal_rubble_c",
+   "family": "crystal_rubble",
+   "sets": "aether_surge",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "-",
+   "tris": 1260
+  },
+  {
+   "mesh": "sct_drone_a",
+   "family": "drone",
+   "sets": "lockdown",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "Destroy",
+   "tris": 164
+  },
+  {
+   "mesh": "sct_drone_b",
+   "family": "drone",
+   "sets": "lockdown",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "Destroy",
+   "tris": 1456
+  },
+  {
+   "mesh": "sct_egg_shells_a",
+   "family": "egg_shells",
+   "sets": "stormhawk",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Pickup",
+   "tris": 1000
+  },
+  {
+   "mesh": "sct_egg_shells_b",
+   "family": "egg_shells",
+   "sets": "stormhawk",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Pickup",
+   "tris": 1500
+  },
+  {
+   "mesh": "sct_fallen_feather_a",
+   "family": "fallen_feather",
+   "sets": "stormhawk",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Pickup",
+   "tris": 900
+  },
+  {
+   "mesh": "sct_fallen_feather_b",
+   "family": "fallen_feather",
+   "sets": "stormhawk",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Pickup",
+   "tris": 1176
+  },
+  {
+   "mesh": "sct_fallen_feather_c",
+   "family": "fallen_feather",
+   "sets": "stormhawk",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Pickup",
+   "tris": 1020
+  },
+  {
+   "mesh": "sct_fallen_log_a",
+   "family": "fallen_log",
+   "sets": "reclaimed",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 2416
+  },
+  {
+   "mesh": "sct_fallen_log_b",
+   "family": "fallen_log",
+   "sets": "reclaimed",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 2564
+  },
+  {
+   "mesh": "sct_fern_a",
+   "family": "fern",
+   "sets": "reclaimed",
+   "anim": "Sway",
+   "tier": 2,
+   "interact": "-",
+   "tris": 1344
+  },
+  {
+   "mesh": "sct_fern_b",
+   "family": "fern",
+   "sets": "reclaimed",
+   "anim": "Sway",
+   "tier": 2,
+   "interact": "-",
+   "tris": 972
+  },
+  {
+   "mesh": "sct_fern_c",
+   "family": "fern",
+   "sets": "reclaimed",
+   "anim": "Sway",
+   "tier": 2,
+   "interact": "-",
+   "tris": 3300
+  },
+  {
+   "mesh": "sct_floating_rock_a",
+   "family": "floating_rock",
+   "sets": "aether_surge,unmooring",
+   "anim": "Tumble",
+   "tier": 1,
+   "interact": "-",
+   "tris": 1300
+  },
+  {
+   "mesh": "sct_floating_rock_b",
+   "family": "floating_rock",
+   "sets": "aether_surge,unmooring",
+   "anim": "Tumble",
+   "tier": 1,
+   "interact": "-",
+   "tris": 1016
+  },
+  {
+   "mesh": "sct_floor_emitter_a",
+   "family": "floor_emitter",
+   "sets": "lockdown",
+   "anim": "Pulse",
+   "tier": 1,
+   "interact": "Hazard",
+   "tris": 1304
+  },
+  {
+   "mesh": "sct_flowers_a",
+   "family": "flowers",
+   "sets": "reclaimed,base",
+   "anim": "Sway",
+   "tier": 2,
+   "interact": "Pickup",
+   "tris": 1434
+  },
+  {
+   "mesh": "sct_flowers_b",
+   "family": "flowers",
+   "sets": "reclaimed,base",
+   "anim": "Sway",
+   "tier": 2,
+   "interact": "Pickup",
+   "tris": 1434
+  },
+  {
+   "mesh": "sct_flowers_c",
+   "family": "flowers",
+   "sets": "reclaimed,base",
+   "anim": "Sway",
+   "tier": 2,
+   "interact": "Pickup",
+   "tris": 1884
+  },
+  {
+   "mesh": "sct_flowers_d",
+   "family": "flowers",
+   "sets": "reclaimed,base",
+   "anim": "Sway",
+   "tier": 2,
+   "interact": "Pickup",
+   "tris": 1434
+  },
+  {
+   "mesh": "sct_fragment_a",
+   "family": "fragment",
+   "sets": "unmooring",
+   "anim": "Tumble",
+   "tier": 1,
+   "interact": "-",
+   "tris": 2164
+  },
+  {
+   "mesh": "sct_frost_crystals_a",
+   "family": "frost_crystals",
+   "sets": "rime",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Break",
+   "tris": 1152
+  },
+  {
+   "mesh": "sct_frost_crystals_b",
+   "family": "frost_crystals",
+   "sets": "rime",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Break",
+   "tris": 360
+  },
+  {
+   "mesh": "sct_frost_crystals_c",
+   "family": "frost_crystals",
+   "sets": "rime",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Break",
+   "tris": 432
+  },
+  {
+   "mesh": "sct_frozen_crate_a",
+   "family": "frozen_crate",
+   "sets": "rime",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Break",
+   "tris": 1336
+  },
+  {
+   "mesh": "sct_frozen_crate_b",
+   "family": "frozen_crate",
+   "sets": "rime",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Break",
+   "tris": 1046
+  },
+  {
+   "mesh": "sct_frozen_figure_a",
+   "family": "frozen_figure",
+   "sets": "rime",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Break",
+   "tris": 1024
+  },
+  {
+   "mesh": "sct_frozen_figure_b",
+   "family": "frozen_figure",
+   "sets": "rime",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Break",
+   "tris": 1420
+  },
+  {
+   "mesh": "sct_glow_pool_a",
+   "family": "glow_pool",
+   "sets": "aether_surge",
+   "anim": "Pulse",
+   "tier": 1,
+   "interact": "-",
+   "tris": 3112
+  },
+  {
+   "mesh": "sct_grass_tuft_a",
+   "family": "grass_tuft",
+   "sets": "reclaimed",
+   "anim": "Sway",
+   "tier": 2,
+   "interact": "-",
+   "tris": 432
+  },
+  {
+   "mesh": "sct_grass_tuft_b",
+   "family": "grass_tuft",
+   "sets": "reclaimed",
+   "anim": "Sway",
+   "tier": 2,
+   "interact": "-",
+   "tris": 1296
+  },
+  {
+   "mesh": "sct_grass_tuft_c",
+   "family": "grass_tuft",
+   "sets": "reclaimed",
+   "anim": "Sway",
+   "tier": 2,
+   "interact": "-",
+   "tris": 1620
+  },
+  {
+   "mesh": "sct_grass_tuft_d",
+   "family": "grass_tuft",
+   "sets": "reclaimed",
+   "anim": "Sway",
+   "tier": 2,
+   "interact": "-",
+   "tris": 1944
+  },
+  {
+   "mesh": "sct_hand_cart_a",
+   "family": "hand_cart",
+   "sets": "base,siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "tris": 3124
+  },
+  {
+   "mesh": "sct_hand_cart_b",
+   "family": "hand_cart",
+   "sets": "base,siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "tris": 3312
+  },
+  {
+   "mesh": "sct_hazard_beacon_a",
+   "family": "hazard_beacon",
+   "sets": "unmooring",
+   "anim": "Strobe",
+   "tier": 2,
+   "interact": "-",
+   "tris": 320
+  },
+  {
+   "mesh": "sct_hazard_beacon_b",
+   "family": "hazard_beacon",
+   "sets": "unmooring",
+   "anim": "Strobe",
+   "tier": 2,
+   "interact": "-",
+   "tris": 428
+  },
+  {
+   "mesh": "sct_ice_boulder_a",
+   "family": "ice_boulder",
+   "sets": "rime",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 948
+  },
+  {
+   "mesh": "sct_ice_boulder_b",
+   "family": "ice_boulder",
+   "sets": "rime",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 948
+  },
+  {
+   "mesh": "sct_ice_spikes_a",
+   "family": "ice_spikes",
+   "sets": "rime",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Break",
+   "tris": 1250
+  },
+  {
+   "mesh": "sct_ice_spikes_b",
+   "family": "ice_spikes",
+   "sets": "rime",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Break",
+   "tris": 1080
+  },
+  {
+   "mesh": "sct_ice_spikes_c",
+   "family": "ice_spikes",
+   "sets": "rime",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Break",
+   "tris": 1120
+  },
+  {
+   "mesh": "sct_ice_spikes_d",
+   "family": "ice_spikes",
+   "sets": "rime",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Break",
+   "tris": 1000
+  },
+  {
+   "mesh": "sct_ice_spikes_e",
+   "family": "ice_spikes",
+   "sets": "rime",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Break",
+   "tris": 960
+  },
+  {
+   "mesh": "sct_icicle_pile_a",
+   "family": "icicle_pile",
+   "sets": "rime",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Break",
+   "tris": 1200
+  },
+  {
+   "mesh": "sct_icicle_pile_b",
+   "family": "icicle_pile",
+   "sets": "rime",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Break",
+   "tris": 1152
+  },
+  {
+   "mesh": "sct_lantern_a",
+   "family": "lantern",
+   "sets": "base",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "-",
+   "tris": 540
+  },
+  {
+   "mesh": "sct_laser_fence_a",
+   "family": "laser_fence",
+   "sets": "lockdown",
+   "anim": "Pulse",
+   "tier": 1,
+   "interact": "Hazard",
+   "tris": 2996
+  },
+  {
+   "mesh": "sct_lightning_rod_a",
+   "family": "lightning_rod",
+   "sets": "stormhawk",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 164
+  },
+  {
+   "mesh": "sct_lightning_rod_b",
+   "family": "lightning_rod",
+   "sets": "stormhawk",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 1560
+  },
+  {
+   "mesh": "sct_loot_pile_a",
+   "family": "loot_pile",
+   "sets": "siege,stormhawk",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "tris": 2784
+  },
+  {
+   "mesh": "sct_loot_pile_b",
+   "family": "loot_pile",
+   "sets": "siege,stormhawk",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "tris": 3552
+  },
+  {
+   "mesh": "sct_loot_pile_c",
+   "family": "loot_pile",
+   "sets": "siege,stormhawk",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "tris": 4296
+  },
+  {
+   "mesh": "sct_moss_mound_a",
+   "family": "moss_mound",
+   "sets": "reclaimed",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "-",
+   "tris": 3150
+  },
+  {
+   "mesh": "sct_moss_mound_b",
+   "family": "moss_mound",
+   "sets": "reclaimed",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "-",
+   "tris": 3342
+  },
+  {
+   "mesh": "sct_moss_mound_c",
+   "family": "moss_mound",
+   "sets": "reclaimed",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "-",
+   "tris": 2596
+  },
+  {
+   "mesh": "sct_mossy_rock_a",
+   "family": "mossy_rock",
+   "sets": "reclaimed,stormhawk",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 1410
+  },
+  {
+   "mesh": "sct_mossy_rock_b",
+   "family": "mossy_rock",
+   "sets": "reclaimed,stormhawk",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 2852
+  },
+  {
+   "mesh": "sct_mushrooms_a",
+   "family": "mushrooms",
+   "sets": "reclaimed",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Harvest",
+   "tris": 964
+  },
+  {
+   "mesh": "sct_mushrooms_b",
+   "family": "mushrooms",
+   "sets": "reclaimed",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Harvest",
+   "tris": 1168
+  },
+  {
+   "mesh": "sct_mushrooms_c",
+   "family": "mushrooms",
+   "sets": "reclaimed",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Harvest",
+   "tris": 230
+  },
+  {
+   "mesh": "sct_nest_a",
+   "family": "nest",
+   "sets": "stormhawk",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Event",
+   "tris": 4188
+  },
+  {
+   "mesh": "sct_nest_b",
+   "family": "nest",
+   "sets": "stormhawk",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Event",
+   "tris": 4468
+  },
+  {
+   "mesh": "sct_overgrown_crate_a",
+   "family": "overgrown_crate",
+   "sets": "reclaimed",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "tris": 1430
+  },
+  {
+   "mesh": "sct_overgrown_crate_b",
+   "family": "overgrown_crate",
+   "sets": "reclaimed",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "tris": 1044
+  },
+  {
+   "mesh": "sct_perch_a",
+   "family": "perch",
+   "sets": "stormhawk",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 3000
+  },
+  {
+   "mesh": "sct_perch_b",
+   "family": "perch",
+   "sets": "stormhawk",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 3536
+  },
+  {
+   "mesh": "sct_pillar_segment_a",
+   "family": "pillar_segment",
+   "sets": "unmooring,reclaimed,stormhawk",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 1208
+  },
+  {
+   "mesh": "sct_pillar_segment_b",
+   "family": "pillar_segment",
+   "sets": "unmooring,reclaimed,stormhawk",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 2580
+  },
+  {
+   "mesh": "sct_planter_a",
+   "family": "planter",
+   "sets": "base",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 970
+  },
+  {
+   "mesh": "sct_planter_b",
+   "family": "planter",
+   "sets": "base",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 1346
+  },
+  {
+   "mesh": "sct_planter_c",
+   "family": "planter",
+   "sets": "base",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 2818
+  },
+  {
+   "mesh": "sct_prisoner_cage_a",
+   "family": "prisoner_cage",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Open",
+   "tris": 1512
+  },
+  {
+   "mesh": "sct_prisoner_cage_b",
+   "family": "prisoner_cage",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Open",
+   "tris": 1594
+  },
+  {
+   "mesh": "sct_raider_banner_a",
+   "family": "raider_banner",
+   "sets": "siege",
+   "anim": "Sway",
+   "tier": 2,
+   "interact": "-",
+   "tris": 920
+  },
+  {
+   "mesh": "sct_raider_banner_b",
+   "family": "raider_banner",
+   "sets": "siege",
+   "anim": "Sway",
+   "tier": 2,
+   "interact": "-",
+   "tris": 920
+  },
+  {
+   "mesh": "sct_raider_banner_c",
+   "family": "raider_banner",
+   "sets": "siege",
+   "anim": "Sway",
+   "tier": 2,
+   "interact": "-",
+   "tris": 1026
+  },
+  {
+   "mesh": "sct_raider_crates_a",
+   "family": "raider_crates",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "tris": 900
+  },
+  {
+   "mesh": "sct_raider_crates_b",
+   "family": "raider_crates",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "tris": 2568
+  },
+  {
+   "mesh": "sct_raider_crates_c",
+   "family": "raider_crates",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "tris": 2700
+  },
+  {
+   "mesh": "sct_raider_tent_a",
+   "family": "raider_tent",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "tris": 2568
+  },
+  {
+   "mesh": "sct_raider_tent_b",
+   "family": "raider_tent",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "tris": 2568
+  },
+  {
+   "mesh": "sct_raider_tent_c",
+   "family": "raider_tent",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "tris": 3424
+  },
+  {
+   "mesh": "sct_raider_tent_d",
+   "family": "raider_tent",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "tris": 3008
+  },
+  {
+   "mesh": "sct_resonator_a",
+   "family": "resonator",
+   "sets": "aether_surge",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "Attune",
+   "tris": 1264
+  },
+  {
+   "mesh": "sct_resonator_b",
+   "family": "resonator",
+   "sets": "aether_surge",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "Attune",
+   "tris": 1264
+  },
+  {
+   "mesh": "sct_rubble_a",
+   "family": "rubble",
+   "sets": "unmooring,siege,stormhawk,reclaimed",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 940
+  },
+  {
+   "mesh": "sct_rubble_b",
+   "family": "rubble",
+   "sets": "unmooring,siege,stormhawk,reclaimed",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 1316
+  },
+  {
+   "mesh": "sct_rubble_c",
+   "family": "rubble",
+   "sets": "unmooring,siege,stormhawk,reclaimed",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 1200
+  },
+  {
+   "mesh": "sct_rubble_d",
+   "family": "rubble",
+   "sets": "unmooring,siege,stormhawk,reclaimed",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 2700
+  },
+  {
+   "mesh": "sct_rubble_e",
+   "family": "rubble",
+   "sets": "unmooring,siege,stormhawk,reclaimed",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 1128
+  },
+  {
+   "mesh": "sct_sapling_a",
+   "family": "sapling",
+   "sets": "reclaimed",
+   "anim": "Sway",
+   "tier": 1,
+   "interact": "Cut",
+   "tris": 1062
+  },
+  {
+   "mesh": "sct_sapling_b",
+   "family": "sapling",
+   "sets": "reclaimed",
+   "anim": "Sway",
+   "tier": 1,
+   "interact": "Cut",
+   "tris": 3634
+  },
+  {
+   "mesh": "sct_scrap_heap_a",
+   "family": "scrap_heap",
+   "sets": "siege,unmooring",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "tris": 1128
+  },
+  {
+   "mesh": "sct_scrap_heap_b",
+   "family": "scrap_heap",
+   "sets": "siege,unmooring",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "tris": 1504
+  },
+  {
+   "mesh": "sct_scrap_heap_c",
+   "family": "scrap_heap",
+   "sets": "siege,unmooring",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "tris": 1080
+  },
+  {
+   "mesh": "sct_scrap_wall_a",
+   "family": "scrap_wall",
+   "sets": "siege,unmooring",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Destroy",
+   "tris": 2996
+  },
+  {
+   "mesh": "sct_scrap_wall_b",
+   "family": "scrap_wall",
+   "sets": "siege,unmooring",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Destroy",
+   "tris": 3424
+  },
+  {
+   "mesh": "sct_scrap_wall_c",
+   "family": "scrap_wall",
+   "sets": "siege,unmooring",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Destroy",
+   "tris": 2700
+  },
+  {
+   "mesh": "sct_searchlight_a",
+   "family": "searchlight",
+   "sets": "lockdown",
+   "anim": "Spin",
+   "tier": 1,
+   "interact": "-",
+   "tris": 1132
+  },
+  {
+   "mesh": "sct_searchlight_b",
+   "family": "searchlight",
+   "sets": "lockdown",
+   "anim": "Spin",
+   "tier": 1,
+   "interact": "-",
+   "tris": 1324
+  },
+  {
+   "mesh": "sct_security_crate_a",
+   "family": "security_crate",
+   "sets": "lockdown",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "tris": 900
+  },
+  {
+   "mesh": "sct_security_crate_b",
+   "family": "security_crate",
+   "sets": "lockdown",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Loot",
+   "tris": 940
+  },
+  {
+   "mesh": "sct_sentinel_pylon_a",
+   "family": "sentinel_pylon",
+   "sets": "lockdown",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Destroy",
+   "tris": 1048
+  },
+  {
+   "mesh": "sct_sentinel_pylon_b",
+   "family": "sentinel_pylon",
+   "sets": "lockdown",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Destroy",
+   "tris": 1096
+  },
+  {
+   "mesh": "sct_sentinel_turret_a",
+   "family": "sentinel_turret",
+   "sets": "lockdown",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Destroy",
+   "tris": 3002
+  },
+  {
+   "mesh": "sct_sentinel_turret_b",
+   "family": "sentinel_turret",
+   "sets": "lockdown",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Destroy",
+   "tris": 3302
+  },
+  {
+   "mesh": "sct_sentinel_turret_c",
+   "family": "sentinel_turret",
+   "sets": "lockdown",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Destroy",
+   "tris": 3602
+  },
+  {
+   "mesh": "sct_smashed_crate_a",
+   "family": "smashed_crate",
+   "sets": "stormhawk,unmooring,reclaimed",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Loot",
+   "tris": 1128
+  },
+  {
+   "mesh": "sct_smashed_crate_b",
+   "family": "smashed_crate",
+   "sets": "stormhawk,unmooring,reclaimed",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Loot",
+   "tris": 1316
+  },
+  {
+   "mesh": "sct_snow_drift_a",
+   "family": "snow_drift",
+   "sets": "rime",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "-",
+   "tris": 2014
+  },
+  {
+   "mesh": "sct_snow_drift_b",
+   "family": "snow_drift",
+   "sets": "rime",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "-",
+   "tris": 3090
+  },
+  {
+   "mesh": "sct_stabilizer_a",
+   "family": "stabilizer",
+   "sets": "unmooring",
+   "anim": "Pulse",
+   "tier": 1,
+   "interact": "Repair",
+   "tris": 3188
+  },
+  {
+   "mesh": "sct_stabilizer_b",
+   "family": "stabilizer",
+   "sets": "unmooring",
+   "anim": "Pulse",
+   "tier": 1,
+   "interact": "Repair",
+   "tris": 4400
+  },
+  {
+   "mesh": "sct_stake_wall_a",
+   "family": "stake_wall",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Destroy",
+   "tris": 3126
+  },
+  {
+   "mesh": "sct_stake_wall_b",
+   "family": "stake_wall",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Destroy",
+   "tris": 2844
+  },
+  {
+   "mesh": "sct_stake_wall_c",
+   "family": "stake_wall",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Destroy",
+   "tris": 2796
+  },
+  {
+   "mesh": "sct_statue_a",
+   "family": "statue",
+   "sets": "base,reclaimed",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Use",
+   "tris": 1132
+  },
+  {
+   "mesh": "sct_statue_b",
+   "family": "statue",
+   "sets": "base,reclaimed",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Use",
+   "tris": 994
+  },
+  {
+   "mesh": "sct_statue_c",
+   "family": "statue",
+   "sets": "base,reclaimed",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Use",
+   "tris": 1320
+  },
+  {
+   "mesh": "sct_storm_feather_a",
+   "family": "storm_feather",
+   "sets": "stormhawk",
+   "anim": "Tumble",
+   "tier": 2,
+   "interact": "Pickup",
+   "tris": 1176
+  },
+  {
+   "mesh": "sct_stump_a",
+   "family": "stump",
+   "sets": "reclaimed",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 928
+  },
+  {
+   "mesh": "sct_stump_b",
+   "family": "stump",
+   "sets": "reclaimed",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "tris": 928
+  },
+  {
+   "mesh": "sct_supply_crates_a",
+   "family": "supply_crates",
+   "sets": "base,siege,unmooring",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Breakable",
+   "tris": 900
+  },
+  {
+   "mesh": "sct_supply_crates_b",
+   "family": "supply_crates",
+   "sets": "base,siege,unmooring",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Breakable",
+   "tris": 2568
+  },
+  {
+   "mesh": "sct_supply_crates_c",
+   "family": "supply_crates",
+   "sets": "base,siege,unmooring",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Breakable",
+   "tris": 1128
+  },
+  {
+   "mesh": "sct_supply_crates_d",
+   "family": "supply_crates",
+   "sets": "base,siege,unmooring",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "Breakable",
+   "tris": 3424
+  },
+  {
+   "mesh": "sct_toolkit_a",
+   "family": "toolkit",
+   "sets": "base,unmooring,lockdown",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Loot",
+   "tris": 376
+  },
+  {
+   "mesh": "sct_toolkit_b",
+   "family": "toolkit",
+   "sets": "base,unmooring,lockdown",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "Loot",
+   "tris": 1136
+  },
+  {
+   "mesh": "sct_trophy_pike_a",
+   "family": "trophy_pike",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "-",
+   "tris": 620
+  },
+  {
+   "mesh": "sct_trophy_pike_b",
+   "family": "trophy_pike",
+   "sets": "siege",
+   "anim": "Static",
+   "tier": 2,
+   "interact": "-",
+   "tris": 340
+  },
+  {
+   "mesh": "sct_warming_brazier_a",
+   "family": "warming_brazier",
+   "sets": "rime",
+   "anim": "Flicker",
+   "tier": 1,
+   "interact": "Lightable",
+   "tris": 820
+  },
+  {
+   "mesh": "sct_warming_brazier_b",
+   "family": "warming_brazier",
+   "sets": "rime",
+   "anim": "Flicker",
+   "tier": 1,
+   "interact": "Lightable",
+   "tris": 2688
+  }
+ ],
+ "blockers": {
+  "unmooring": "scn_prop_blocker_unmooring",
+  "siege": "scn_prop_blocker_siege",
+  "stormhawk": "scn_prop_blocker_stormhawk",
+  "rime": "scn_prop_blocker_rime",
+  "reclaimed": "scn_prop_blocker_reclaimed",
+  "aether_surge": "scn_prop_blocker_aether_surge"
+ }
+}

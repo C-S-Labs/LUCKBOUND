@@ -1068,6 +1068,14 @@ function Schema.validateProps(props: any, chunks: any, worlds: any): (boolean, {
 				if not library[row.Prop] then
 					table.insert(errors, `{at}: prop '{tostring(row.Prop)}' is not in the library`)
 				end
+				for k, alt in row.Alt or {} do
+					if not library[alt.Prop] then
+						table.insert(errors, `{at}: alternate {k} '{tostring(alt.Prop)}' is not in the library`)
+					end
+					if type(alt.P) ~= "table" or #alt.P ~= 3 or type(alt.S) ~= "table" or #alt.S ~= 3 then
+						table.insert(errors, `{at}: alternate {k} needs P and S, three numbers each`)
+					end
+				end
 				if not PropCore.ANIMS[row.Anim] then
 					table.insert(errors, `{at}: unknown animation '{tostring(row.Anim)}'`)
 				end

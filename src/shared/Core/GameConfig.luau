@@ -858,6 +858,10 @@ local GameConfig = {
 			-- (2026-09-23). A world still on meshes with its props baked in
 			-- must have no Content/Props file, or every crystal shows twice.
 			Enabled = true,
+			-- Scatter each run's scenery from Content/Scatter (spawn points +
+			-- pools, ScatterCore) on top of the fixed placements. Off draws
+			-- only the fixed architecture props.
+			Scatter = true,
 			-- The quality scale a detail tier needs: tier 1 always, tier 2 on
 			-- anything above low graphics, tier 3 only on high.
 			TierMinQuality = { 0, 0.45, 0.8 },
@@ -879,6 +883,10 @@ local GameConfig = {
 			Bird = { Period = 36, Bob = 0.5, Bank = 0.25 },
 			-- A wingbeat: radians each way from the modelled pose, and seconds.
 			Wing = { Amplitude = 0.45, Period = 0.7 },
+			-- Scattered grass, vines and banners rocking in the wind: radians
+			-- each way about the prop's centre. Small, or a tall one's foot
+			-- visibly slides.
+			Sway = { Angle = 0.03, Period = 5 },
 		},
 	},
 	-- Loot, fixtures and vault keys (build spec §7.5, owner-directed

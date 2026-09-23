@@ -29,6 +29,15 @@ PropCore.ANIMS = {
 	-- A bird's wing: rides on the Bird row it names (Attach) and flaps about
 	-- its Hinge. Never on its own.
 	Wing = true,
+	-- Scattered scenery (Content/Scatter): a slight rock in the wind about its
+	-- own centre (grass, vines, banners, hanging chains).
+	Sway = true,
+	-- Light classes: they do not MOVE (a crystal cluster stays on its deck).
+	-- Named so a later light pass can find them -- aether that breathes
+	-- (Pulse), a failing lamp (Flicker), an alarm beacon (Strobe).
+	Pulse = true,
+	Flicker = true,
+	Strobe = true,
 }
 
 --- Whether a placement of this detail tier is drawn at this quality scale
@@ -92,6 +101,9 @@ function PropCore.motion(anim: string, t: number, phase: number, cfg: any)
 		-- generator proves each bird's full circle clear (clear_bird_orbits).
 		m.orbit = tau * t / c.Period
 		m.bank = c.Bank
+	elseif anim == "Sway" then
+		m.tiltX = c.Angle * math.sin(tau * t / c.Period + offset)
+		m.tiltZ = c.Angle * 0.6 * math.sin(tau * t / (c.Period * 1.7) + offset * 2)
 	elseif anim == "Wing" then
 		-- Up and down about the hinge. The controller passes the BODY's phase,
 		-- so a bird's two wings beat together, and mirrors it per side.
