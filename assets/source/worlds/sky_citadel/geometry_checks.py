@@ -300,10 +300,10 @@ _KEELS = {"keel", "standard_keel", "stepped_keel", "shallow_hull", "twin_keel", 
           "engine_keel", "ring_keel"}
 HANG_FROM = {
     "icicle_ring": {"tower"},
-    "rim_icicles": DECKS | {"_edge_kerb", "slab", "build_path_shattered"},
-    "frozen_fall": DECKS | {"_edge_kerb", "rim_icicles", "build_path_shattered"},
-    "keel_roots": DECKS | {"_edge_kerb"},
-    "vines": DECKS | {"_edge_kerb", "build_path_shattered"},
+    "rim_icicles": DECKS | {"_edge_kerb", "edge_ring", "slab", "build_path_shattered"},
+    "frozen_fall": DECKS | {"_edge_kerb", "edge_ring", "rim_icicles", "build_path_shattered"},
+    "keel_roots": DECKS | {"_edge_kerb", "edge_ring"},
+    "vines": DECKS | {"_edge_kerb", "edge_ring", "build_path_shattered"},
     "hang_crystals": _KEELS | DECKS,
 }
 # Scenario parts that may bury what they meet: snow drifts over a rail's foot,

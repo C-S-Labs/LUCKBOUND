@@ -1150,6 +1150,9 @@ def dome(p, x, y, R, drum_h=8.0):
 
 
 def telescope(p, x, y, z, rz, elev=40.0):
+    # One elevation for every telescope: a different angle baked into the mesh
+    # made a different mesh for each (owner, 2026-09-23). The turn varies.
+    elev = 40.0
     with frame(p, xf(x, y, z, rz)):
         M = xf(rx=-(90 - elev))
         frustum(p, "DeepAlloy", 8, 2.4, 2.0, 0, 6, M=M)
@@ -3568,28 +3571,74 @@ def build_side_reliquary():
 
 
 def build_prism_arena():
+    """The Prism Arena -- the second boss arena, built to share nothing with
+    the Crown Spire's clearing but its role (owner, 2026-09-23: "boss_clearing
+    and prism_arena ... look almost exactly the same"). A hexagon, not a
+    circle; kerbs, not a parapet; no turrets and no obelisk ring. The fight is
+    round a raised dais under a tripod of three crystal blades that meet at the
+    crown, with three prism pylons standing off in the corners."""
     p = Piece("chunk_prism_arena", "BOSS | one opening: south ASCENT -- the Prism Arena")
-    R = 112.0
-    ring = ngon(12, R)
-    chord_y = -math.sqrt(R * R - (ASCENT_W / 2) ** 2)
-    pts = [v for v in ring if v[1] > chord_y + 0.01]
-    pts += [(-ASCENT_W / 2, chord_y), (ASCENT_W / 2, chord_y)]
-    pts.sort(key=lambda v: math.atan2(v[1], v[0]))
+    R = 110.0
+    pts = ngon(6, R, rot=0)                   # flat edges north and south
+    chord_y = min(q[1] for q in pts)
     island(p, pts, "PaleAlloy")
-    stepped_keel(p, pts, steps=6)
-    border_band(p, pts, width=8.0)
+    ring_keel(p, pts, 62)
     ascent_deck(p, -HALF, chord_y)
-    edge_ring(p, pts, [("S", ASCENT_W)], "railing")
-    floor_radial(p, 0, 30, 30, 90, 24, "CitadelWhite", width=1.6)
-    torus(p, "AzureDim", 50, 0.35, 0, 30, 0.05, n=32)
-    compass_rose(p, 0, 30, 26, 8)
-    arcane_prism(p, 0, 40)
-    for k in range(8):
-        a = math.radians(22.5 + 45 * k)
-        light_pillar(p, math.cos(a) * 76, 30 + math.sin(a) * 76 * 0.8)
-    for sx in (-1, 1):
-        tower(p, sx * 56, -80, 8, 40)
-        banner(p, sx * 40, -88)
+    edge_ring(p, pts, [("S", ASCENT_W)], "kerb")
+    # the floor: a ring of triangles in two colours round the dais
+    cx, cy = 0.0, 12.0
+    for k in range(24):
+        a0, a1, a2 = (math.radians(15 * k + d) for d in (0, 7.5, 15))
+        r1, r2 = (40, 78) if k % 2 == 0 else (78, 40)
+        tri_panel(p, "SkyGlass" if k % 2 == 0 else "AzureDim",
+                  (cx + math.cos(a0) * r1, cy + math.sin(a0) * r1),
+                  (cx + math.cos(a1) * r2, cy + math.sin(a1) * r2),
+                  (cx + math.cos(a2) * r1, cy + math.sin(a2) * r1), z=0.06)
+    torus(p, "AzureDim", 84, 0.35, cx, cy, 0.05, n=36)
+    # the dais, ramped north and south
+    dais = moved(ngon(6, 30, rot=0), cx, cy)
+    terrace(p, dais, 3.0, "CitadelWhite")
+    ap = 30 * math.cos(math.radians(30))
+    ramp(p, cx, cy - ap - 14, 16, 14, 3.0, "N")
+    ramp(p, cx, cy + ap + 14, 16, 14, 3.0, "S")
+    # the crown: three crystal blades leaning in from the dais to one apex
+    top = CROWN_TOP
+    apex = top - 8.0
+    p.solid("prism tripod", cx, cy, 22, 3, top)
+    legs = []
+    for k in range(3):
+        a = math.radians(90 + 120 * k + 60)
+        lx, ly = cx + math.cos(a) * 19, cy + math.sin(a) * 19
+        legs.append((lx, ly))
+        frustum(p, "DeepAlloy", 6, 3.2, 2.8, 3.0, 4.2, lx, ly)
+        tube(p, "SkyGlass", [(lx, ly, 3.5), (cx + (lx - cx) * 0.02, cy + (ly - cy) * 0.02, apex)], [2.2, 0.9], n=5)
+    for z, mat in ((58, "SunGold"), (102, "AzureNeon")):
+        f = (z - 3.5) / (apex - 3.5)
+        torus(p, mat, 19 * (1 - f) + 0.3, 0.55, cx, cy, z, n=24)
+    crystal(p, "SunGold", cx, cy, apex, 1.8, top - apex, 1.8, n=6)
+    # three prism pylons standing off round the arena
+    for k in range(3):
+        a = math.radians(30 + 120 * k)
+        px, py = cx + math.cos(a) * 62, cy + math.sin(a) * 62 * 0.95
+        p.solid("prism pylon", px, py, 4.6, 0, 32)
+        frustum(p, "DeepAlloy", 6, 4.4, 3.8, 0, 1.6, px, py)
+        crystal(p, "SkyGlass", px, py, 1.4, 3.0, 28, 0.2, n=6, rz=k * 20)
+        for s in (-1, 1):
+            with frame(p, xf(px + s * 2.4, py, 1.0, 0, 0, s * 18)):
+                crystal(p, "CitadelViolet", 0, 0, 0, 1.2, 10, 0.3, n=5)
+    # the mouth: two crystal gateposts either side of the approach
+    for s in (-1, 1):
+        gx, gy = s * 42, chord_y + 9
+        p.solid("gatepost", gx, gy, 3.6, 0, 22)
+        frustum(p, "DeepAlloy", 6, 3.4, 3.0, 0, 1.4, gx, gy)
+        crystal(p, "SkyGlass", gx, gy, 1.2, 2.2, 19, 0.2, n=6)
+        banner(p, s * 28, chord_y + 8)
+    for k in range(6):
+        a = math.radians(60 * k)
+        light_pillar(p, math.cos(a) * 94, math.sin(a) * 94 * 0.95 + 2)
+    for k in range(3):
+        a = math.radians(90 + 120 * k)
+        float_crystal(p, "SkyGlass", cx + math.cos(a) * 48, cy + math.sin(a) * 48, 40, 3.0, 7, 5)
     finish(p)
     return p
 
@@ -3966,6 +4015,16 @@ def _bounds(vs):
     return mn, mx
 
 
+# How far one mesh may be stretched to serve another copy: the spread of the
+# per-axis size ratios, as a log. 0.45 ~ one axis up to 1.57x the others.
+STRETCH = 0.45
+
+
+def _stretchable(a, b):
+    logs = [math.log(max(b[i], 0.05) / max(a[i], 0.05)) for i in range(3)]
+    return max(logs) - min(logs) <= STRETCH
+
+
 # Library bases the detail pass leaves as built: the warships are detailed by
 # hand (sky_citadel_ships.py), fixture parts carry collision and hinges.
 NO_DETAIL = {"raider_warship", "chest_body", "chest_lid", "vault_door", "forcefield"}
@@ -3975,10 +4034,14 @@ def prop_library(pieces, prefix="prop_", fix_prefix="fix_"):
     """Merge identical shapes into one library entry each -- props, the parts
     attached to them, and fixture parts alike -- and record every copy.
 
-    Two shapes share an entry when their geometry is the same up to size: the
-    shape is compared after scaling it into a unit box, in 5% steps. Every
-    copy keeps its own size, so a large and a small crystal of the same cut are
-    one mesh drawn at two sizes -- which is what keeps the upload count small.
+    ONE MESH PER PROP (owner, 2026-09-23: "tell the script to orient them
+    accordingly upon placement"). Two copies share a mesh when they were built
+    the same way -- the same builder, the same faces, the same colours -- and
+    their proportions are within STRETCH of each other: a banner 12 tall and one
+    14 tall are one mesh, each copy drawn at its own size and turn. Only a real
+    difference makes a second mesh: another colour scheme (a scenario's
+    palette), or proportions far enough apart that stretching would show (a
+    keel ring twice as wide is not a stretched small one).
 
     `prefix` / `fix_prefix` start every mesh name: the base kit's are prop_ and
     fix_ (the live game's names); the scenario kits pass their own, so a
@@ -3986,23 +4049,13 @@ def prop_library(pieces, prefix="prop_", fix_prefix="fix_"):
 
     Returns (kinds, prop placements, fixture placements).
     """
-    kinds, counters = {}, {}
+    groups, counters, order = {}, {}, []
 
     def kind_of(base, verts, faces, mats):
         mn, mx = _bounds(verts)
         size, centre = mx - mn, (mn + mx) / 2
-
-        def unit(v, i):
-            # 5% steps: shapes whose proportions differ by less than that
-            # share a mesh. Each copy is drawn at its own exact size, so
-            # the only error is in interior proportions, never the outline.
-            return round((v[i] - centre[i]) / size[i] * 20) / 20 if size[i] > 1e-6 else 0.0
-
-        key = (base,
-               tuple((unit(v, 0), unit(v, 1), unit(v, 2)) for v in verts),
-               tuple(tuple(f) for f in faces),
-               tuple(mats))
-        kind = kinds.get(key)
+        key = (base, tuple(tuple(f) for f in faces), tuple(mats))
+        kind = next((k for k in groups.get(key, ()) if _stretchable(k["size"], size)), None)
         if kind is None:
             counters[base] = counters.get(base, 0) + 1
             is_prop = base.startswith("prop_")
@@ -4020,8 +4073,10 @@ def prop_library(pieces, prefix="prop_", fix_prefix="fix_"):
                 "faces": kfaces,
                 "mats": kmats,
                 "is_prop": is_prop,
+                "size": size.copy(),
             }
-            kinds[key] = kind
+            groups.setdefault(key, []).append(kind)
+            order.append(kind)
         return kind, size, centre
 
     def game_size(size):
@@ -4090,7 +4145,7 @@ def prop_library(pieces, prefix="prop_", fix_prefix="fix_"):
             frows.append({"kind": fx["kind"], "pos": [origin.x, origin.y, origin.z],
                           "rot": [rot[r][c] for r in range(3) for c in range(3)], "parts": parts})
         fixtures[p.name] = frows
-    return list(kinds.values()), placements, fixtures
+    return order, placements, fixtures
 
 
 def props_to_objects(kinds, mats, collection):

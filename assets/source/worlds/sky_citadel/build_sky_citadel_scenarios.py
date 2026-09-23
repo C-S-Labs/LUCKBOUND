@@ -871,6 +871,7 @@ def anchors_on_decks(ctx):
 # Filled in by sky_citadel_structures.py below; each is fn(ctx).
 STRUCTURES = {}
 exec(open(os.path.join(HERE, "sky_citadel_ships.py"), encoding="utf-8").read(), globals())
+exec(open(os.path.join(HERE, "sky_citadel_styles.py"), encoding="utf-8").read(), globals())
 exec(open(os.path.join(HERE, "sky_citadel_structures.py"), encoding="utf-8").read(), globals())
 
 
@@ -1044,13 +1045,22 @@ def build_library():
     measured footprint. -> {kind name: {...}}"""
     lib = {}
     for fam in FAMILIES.values():
+        kept = []       # (faces, mats, size) of the variants this family keeps
         for v in range(fam["n"]):
-            name = "sct_%s_%s" % (fam["name"], _letters(v))      # sct_: scattered (never a fixed prop's name)
-            shell = K["Piece"](name, "scatter")
+            shell = K["Piece"]("%s/%d" % (fam["name"], v), "scatter")
             shell.cur_family = fam
             with as_prop(shell, "scatter", I4):
                 fam["fn"](shell, v)
             prop = shell.props[0]
+            # A variant built the same way as one already kept, in proportions
+            # the game's own scale and turn cover, is not a new prop: drop it
+            # (owner, 2026-09-23 -- no near-duplicates in the library).
+            vmn, vmx = K["_bounds"](prop["verts"])
+            sig = (tuple(tuple(f) for f in prop["faces"]), tuple(prop["mats"]))
+            if any(s == sig and K["_stretchable"](sz, vmx - vmn) for s, sz in kept):
+                continue
+            kept.append((sig, vmx - vmn))
+            name = "sct_%s_%s" % (fam["name"], _letters(len(kept) - 1))   # sct_: scattered, never a fixed prop
             r0 = max(math.hypot(q.x, q.y) for q in prop["verts"])
             dv, df, dm = K["detail"](prop["verts"], prop["faces"], prop["mats"], name, r0)
             prop = {"verts": dv, "faces": df, "mats": dm}
@@ -1220,7 +1230,13 @@ def build_set(scenario, mats, row_i):
     bpy.context.scene.collection.children.link(coll)
     pieces, objs = [], []
     for i, builder in enumerate(K["BUILDERS"]):
-        p = builder()
+        if scenario:
+            # the scenario's own architecture: its towers, spires, crowns,
+            # rims and floors in place of the base kit's (sky_citadel_styles.py)
+            with styled(scenario):
+                p = builder()
+        else:
+            p = builder()
         if scenario:
             p.name = "%s__%s" % (p.name, scenario)
         if not hasattr(p, "anchors"):

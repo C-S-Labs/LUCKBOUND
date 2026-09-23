@@ -26,6 +26,10 @@ The rules every hook keeps (the kit's validator checks them after):
 # Tools for building on a finished piece
 # ==========================================================================
 
+def piece_tris(p):
+    return sum(len(f) - 2 for f in p.faces)
+
+
 def palette(p, mapping, fraction=1.0, rng=None, props=True):
     recolour(p, mapping, fraction=fraction, rng=rng, props_too=props)
 
@@ -783,11 +787,16 @@ def s_reclaimed(ctx):
             ax, ay, bx, by, nx, ny = run
             a = math.degrees(math.atan2(by - ay, bx - ax))
             overgrown_rim(p, run, rng)
-    if role(p) in ("COMBAT", "BOSS", "SIDE") or rng.random() < 0.4:
+    # the heavy growth goes on only while the piece has room under 10k tris:
+    # the reclaimed architecture itself (ruined towers, trees) spends most of it
+    if (role(p) in ("COMBAT", "BOSS", "SIDE") or rng.random() < 0.4) and piece_tris(p) < 8200:
         great_tree(ctx)
-    keel_roots(ctx, rng.randint(1, 3))
+    if piece_tris(p) < 8800:
+        keel_roots(ctx, rng.randint(1, 3))
     for poly in ctx.polys:
-        K["vines"](p, poly, "reclaimed %s %d" % (p.name, len(poly)), count=max(8, 2 * len(poly)),
+        if piece_tris(p) > 8600:
+            break
+        K["vines"](p, poly, "reclaimed %s %d" % (p.name, len(poly)), count=max(4, len(poly) // 2),
                    mats=("Verdure", "Moss", "MossLight"))
     for _ in range(rng.randint(6, 12)):         # moss carpets at the foot of the walls
         c = None
