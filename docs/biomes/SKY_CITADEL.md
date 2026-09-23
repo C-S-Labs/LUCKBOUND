@@ -922,6 +922,56 @@ dome** is the boldest call and the one most worth seeing in Studio: the real
 Unmooring's falling debris is small at the vista range by design; it is meant
 to be noticed from the deck edge.
 
+### Fifth pass — every scenario in its own architecture, one mesh per prop (2026-09-23)
+
+Owner: *"a lot of the chunks are straight copy and paste designs but recolored
+... Pieces can be similar, but identical defeats the entire purpose"*, and
+*"why ... duplicate so many already existing props? ... tell the script to
+orient them accordingly upon placement."*
+
+**Scenario architecture (`sky_citadel_styles.py`).** While a scenario's pieces
+are built, the base builders' vocabulary is swapped for the scenario's own. The
+base builder still places things, so sockets, walk lines, the box and every
+registered footprint are unchanged:
+
+| Scenario | Towers | Spires | Crown landmark | Rims | Floors |
+|---|---|---|---|---|---|
+| Siege | raider keeps: stone stump, timber hoard, rust roof | scaffolded, crow's nest, banner | war totem: cross-trees, hanging cages, trophies | palisades, scrap walls | scattered planks, a burnt brand |
+| Lockdown | armoured bunkers with a gun turret | sensor masts, stacked dishes | aegis pylon: braced lattice, emitter rings, beacon | blast walls, laser fences | hazard plating, a targeting reticle |
+| Stormhawk | sheared stumps, their roofs fallen against them | struck stone drums, fulgurite spurs | roost pinnacle: heaped boulders, iron rod | storm-worn walls, bent rails | slate slabs, strike scars |
+| Rime | encased in ice sheaths, snow-capped | ice needles, snow collars | frost obelisk skirted with icicles | drifted walls, iced rails | frost tiles, a snowflake |
+| Reclaimed | ruins with a tree grown through the top, ivy | ivy-choked, halo gone | world tree | mossy ruin walls, wild hedges | moss tiles, moss over the rose |
+| Aether Surge | burst open by crystal | solid crystal | resonance crystal, girdled | crystal-studded walls, shard fences | crystal lattice, a hexagram |
+| Unmooring | split: the top floats on an anti-grav ring (a prop) | sleeves round a glowing tension core | tethered beacon | shifted blocks, sagging rails | offset tiles, a fault through the rose |
+
+Obelisks and crystal clusters have a version per scenario too. Every part
+registers the solid the base part did, is tagged as that part, and draws its
+randomness from the piece and the spot. The structure hooks (camps,
+eruptions, frozen falls) run on top, budget-guarded to stay under 10k.
+
+**Prism Arena rebuilt** so it shares nothing with the Boss Clearing but its role:
+a hexagon with kerbs instead of a parapeted circle, a raised dais, a tripod of
+three crystal blades meeting at the crown, three prism pylons, no turrets.
+
+**One mesh per prop.** Copies built the same way (same builder, faces and
+colours) share a mesh, drawn at each copy's own size and turn, unless their
+proportions are too far apart to stretch (`STRETCH`). Before, 5% size steps and
+rotation noise split them. Scatter variants that differed only by noise are
+dropped. Result: base props 72 → **40**, scenario props 357 → **188** (a banner
+is one mesh per scenario colour scheme), scatter 206 → **186**.
+
+**Linked to the atmospheres.** The scenario-atmosphere branch is merged:
+`Environments_Scenarios.luau` (one environment per scenario) now ships with the
+kits. `scenarios/ScenarioKits.luau` is generated with them and ties each scenario
+to its chunk ids, structure model, scatter pool, props, anchors, blocker and
+environment key.
+
+**The framework is saved** for Verdant Valley and Emberfall:
+`docs/WORLD_KIT_FRAMEWORK.md`, shared code in `assets/source/worlds/_framework/`.
+
+**Import:** `assets/export/worlds/sky_citadel/IMPORT_STEPS.md`: eleven FBX files,
+eleven model names, one hand-back folder (`assets/rbxm/incoming/sky_citadel/`).
+
 ### What is not built yet — code, pending the owner's approval
 
 The scatter is live in `src/` (`PropController` draws it for the base kit's

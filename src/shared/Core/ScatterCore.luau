@@ -8,7 +8,7 @@
 -- two runs dress a chunk alike, nothing is placed twice, and every client in a
 -- party draws the same scene without the server sending a single prop.
 --
--- TWIN: assets/source/worlds/sky_citadel/scatter_core.py is this algorithm in
+-- TWIN: assets/source/worlds/_framework/scatter_core.py is this algorithm in
 -- the kit, which previews a seed in Blender. KEEP THEM IN STEP. Every decision
 -- is integer maths on the same 32-bit generator (mulberry32), so a seed gives
 -- the same scatter in both; floats appear only in what is output.

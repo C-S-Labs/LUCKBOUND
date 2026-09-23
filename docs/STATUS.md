@@ -448,6 +448,12 @@ survive a rescale and a literal does not.
 
 ## 5. Next session — pick up here
 
+> **2026-09-23: import Sky Citadel by `assets/export/worlds/sky_citadel/IMPORT_STEPS.md`.**
+> 11 FBX files, 11 model names, one hand-back folder. Each scenario kit now has
+> its own architecture, not a recolour; props are one mesh per construction;
+> the scenario atmospheres are merged and linked (`ScenarioKits.luau`). The
+> framework for the next two worlds: `docs/WORLD_KIT_FRAMEWORK.md`.
+
 > **2026-09-23: Sky Citadel is ready to import.** 0 detached parts and 0
 > clipping over all 324 pieces (the validator now reads the real mesh), five
 > raider ships drawn one per run, every prop through a detail pass.

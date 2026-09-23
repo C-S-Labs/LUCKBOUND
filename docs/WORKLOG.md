@@ -33,6 +33,28 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 68 — 2026-09-23 — Sky Citadel: scenario architecture, one mesh per prop, atmospheres linked
+**Merged:** —   **Tests:** 815 passing   **Head:** branch `claude/sky-citadel-scenarios`
+
+### Done
+- `sky_citadel_styles.py`: each scenario's own towers, spires, crown landmarks,
+  rims, floors, obelisks and crystal clusters, swapped in while its pieces are
+  built (`styled()`); same registered footprints, tagged as the base parts.
+- Prism Arena rebuilt (hexagon, dais, crystal tripod crown, prism pylons).
+- One mesh per prop construction (`STRETCH`); near-duplicate scatter variants
+  dropped. Base props 72 → 40, scenario 357 → 188, scatter 206 → 186.
+- Merged `claude/sky-citadel-scenario-atmosphere`; `ScenarioKits.luau` links
+  every scenario's chunks, model, pool, props, anchors, blocker, environment.
+- `IMPORT_STEPS.md` generated: 11 FBX → 11 named `.rbxmx` in
+  `assets/rbxm/incoming/sky_citadel/`.
+- Framework saved: `docs/WORLD_KIT_FRAMEWORK.md`, `assets/source/worlds/_framework/`.
+- All eight sets validate (heaviest 9,870 tris); re-exported.
+
+### Stopped at
+Ready for the owner's import (`IMPORT_STEPS.md`).
+
+---
+
 ## Session 67 — 2026-09-23 — Sky Citadel: nothing floating, nothing clipping, five ships, finished props
 **Merged:** —   **Tests:** 815 passing   **Head:** branch `claude/sky-citadel-scenarios`
 

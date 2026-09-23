@@ -254,7 +254,7 @@
      "id": "SC_PRISM_ARENA",
      "role": "BOSS",
      "openings": "S",
-     "tris": 3166
+     "tris": 1650
     }
    ]
   },
@@ -267,252 +267,252 @@
      "id": "SC_ENTRY__UNMOORING",
      "role": "ENTRY",
      "openings": "N",
-     "tris": 3978
+     "tris": 6020
     },
     {
      "mesh": "chunk_path_straight__unmooring",
      "id": "SC_PATH_STRAIGHT__UNMOORING",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2586
+     "tris": 4068
     },
     {
      "mesh": "chunk_path_skyport__unmooring",
      "id": "SC_PATH_SKYPORT__UNMOORING",
      "role": "PATH",
      "openings": "NS",
-     "tris": 3240
+     "tris": 5240
     },
     {
      "mesh": "chunk_path_hoops__unmooring",
      "id": "SC_PATH_HOOPS__UNMOORING",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2134
+     "tris": 3450
     },
     {
      "mesh": "chunk_path_shattered__unmooring",
      "id": "SC_PATH_SHATTERED__UNMOORING",
      "role": "PATH",
      "openings": "NS",
-     "tris": 1536
+     "tris": 1800
     },
     {
      "mesh": "chunk_path_aviary__unmooring",
      "id": "SC_PATH_AVIARY__UNMOORING",
      "role": "PATH",
      "openings": "NS",
-     "tris": 5484
+     "tris": 5868
     },
     {
      "mesh": "chunk_crossroads__unmooring",
      "id": "SC_CROSSROADS__UNMOORING",
      "role": "PATH",
      "openings": "ENSW",
-     "tris": 2614
+     "tris": 3106
     },
     {
      "mesh": "chunk_side_lookout__unmooring",
      "id": "SC_SIDE_LOOKOUT__UNMOORING",
      "role": "SIDE",
      "openings": "S",
-     "tris": 1934
+     "tris": 3228
     },
     {
      "mesh": "chunk_path_bend__unmooring",
      "id": "SC_PATH_BEND__UNMOORING",
      "role": "PATH",
      "openings": "ES",
-     "tris": 2822
+     "tris": 3088
     },
     {
      "mesh": "chunk_path_bend_west__unmooring",
      "id": "SC_PATH_BEND_WEST__UNMOORING",
      "role": "PATH",
      "openings": "SW",
-     "tris": 4096
+     "tris": 5158
     },
     {
      "mesh": "chunk_vault_turn__unmooring",
      "id": "SC_VAULT_TURN__UNMOORING",
      "role": "COMBAT",
      "openings": "ES",
-     "tris": 3248
+     "tris": 4202
     },
     {
      "mesh": "chunk_aether_springs__unmooring",
      "id": "SC_AETHER_SPRINGS__UNMOORING",
      "role": "COMBAT",
      "openings": "SW",
-     "tris": 3930
+     "tris": 5660
     },
     {
      "mesh": "chunk_garden_terrace__unmooring",
      "id": "SC_GARDEN_TERRACE__UNMOORING",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 6686
+     "tris": 9302
     },
     {
      "mesh": "chunk_observatory__unmooring",
      "id": "SC_OBSERVATORY__UNMOORING",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4296
+     "tris": 4768
     },
     {
      "mesh": "chunk_armory__unmooring",
      "id": "SC_ARMORY__UNMOORING",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4568
+     "tris": 6994
     },
     {
      "mesh": "chunk_archive__unmooring",
      "id": "SC_ARCHIVE__UNMOORING",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 7880
+     "tris": 9870
     },
     {
      "mesh": "chunk_spire_court__unmooring",
      "id": "SC_SPIRE_COURT__UNMOORING",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 6704
+     "tris": 9444
     },
     {
      "mesh": "chunk_spire_court_b__unmooring",
      "id": "SC_SPIRE_COURT_B__UNMOORING",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4438
+     "tris": 5018
     },
     {
      "mesh": "chunk_boss_clearing__unmooring",
      "id": "SC_BOSS_CLEARING__UNMOORING",
      "role": "BOSS",
      "openings": "S",
-     "tris": 5822
+     "tris": 8148
     },
     {
      "mesh": "chunk_cap_crumbling__unmooring",
      "id": "SC_CAP_CRUMBLING__UNMOORING",
      "role": "CAP",
      "openings": "S",
-     "tris": 856
+     "tris": 2180
     },
     {
      "mesh": "chunk_cap_overlook__unmooring",
      "id": "SC_CAP_OVERLOOK__UNMOORING",
      "role": "CAP",
      "openings": "S",
-     "tris": 1732
+     "tris": 3140
     },
     {
      "mesh": "chunk_cap_sealed_gate__unmooring",
      "id": "SC_CAP_SEALED_GATE__UNMOORING",
      "role": "CAP",
      "openings": "S",
-     "tris": 3326
+     "tris": 4584
     },
     {
      "mesh": "chunk_path_colonnade__unmooring",
      "id": "SC_PATH_COLONNADE__UNMOORING",
      "role": "PATH",
      "openings": "NS",
-     "tris": 3434
+     "tris": 6152
     },
     {
      "mesh": "chunk_path_long_span__unmooring",
      "id": "SC_PATH_LONG_SPAN__UNMOORING",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2504
+     "tris": 3862
     },
     {
      "mesh": "chunk_path_lantern_row__unmooring",
      "id": "SC_PATH_LANTERN_ROW__UNMOORING",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2300
+     "tris": 4786
     },
     {
      "mesh": "chunk_path_tower_bend__unmooring",
      "id": "SC_PATH_TOWER_BEND__UNMOORING",
      "role": "PATH",
      "openings": "SW",
-     "tris": 2708
+     "tris": 3180
     },
     {
      "mesh": "chunk_path_tee__unmooring",
      "id": "SC_PATH_TEE__UNMOORING",
      "role": "PATH",
      "openings": "ESW",
-     "tris": 2818
+     "tris": 4840
     },
     {
      "mesh": "chunk_parade_ground__unmooring",
      "id": "SC_PARADE_GROUND__UNMOORING",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 5222
+     "tris": 7002
     },
     {
      "mesh": "chunk_turbine_hall__unmooring",
      "id": "SC_TURBINE_HALL__UNMOORING",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 3304
+     "tris": 3518
     },
     {
      "mesh": "chunk_lighthouse_point__unmooring",
      "id": "SC_LIGHTHOUSE_POINT__UNMOORING",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 3014
+     "tris": 3912
     },
     {
      "mesh": "chunk_sky_tree_grove__unmooring",
      "id": "SC_SKY_TREE_GROVE__UNMOORING",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 5530
+     "tris": 7442
     },
     {
      "mesh": "chunk_dockside__unmooring",
      "id": "SC_DOCKSIDE__UNMOORING",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 3452
+     "tris": 5638
     },
     {
      "mesh": "chunk_side_chapel__unmooring",
      "id": "SC_SIDE_CHAPEL__UNMOORING",
      "role": "SIDE",
      "openings": "S",
-     "tris": 2006
+     "tris": 3618
     },
     {
      "mesh": "chunk_side_garden__unmooring",
      "id": "SC_SIDE_GARDEN__UNMOORING",
      "role": "SIDE",
      "openings": "S",
-     "tris": 3612
+     "tris": 4356
     },
     {
      "mesh": "chunk_side_reliquary__unmooring",
      "id": "SC_SIDE_RELIQUARY__UNMOORING",
      "role": "SIDE",
      "openings": "S",
-     "tris": 1944
+     "tris": 3636
     },
     {
      "mesh": "chunk_prism_arena__unmooring",
      "id": "SC_PRISM_ARENA__UNMOORING",
      "role": "BOSS",
      "openings": "S",
-     "tris": 4404
+     "tris": 4604
     }
    ]
   },
@@ -525,252 +525,252 @@
      "id": "SC_ENTRY__SIEGE",
      "role": "ENTRY",
      "openings": "N",
-     "tris": 4202
+     "tris": 5760
     },
     {
      "mesh": "chunk_path_straight__siege",
      "id": "SC_PATH_STRAIGHT__SIEGE",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2772
+     "tris": 3734
     },
     {
      "mesh": "chunk_path_skyport__siege",
      "id": "SC_PATH_SKYPORT__SIEGE",
      "role": "PATH",
      "openings": "NS",
-     "tris": 3734
+     "tris": 3970
     },
     {
      "mesh": "chunk_path_hoops__siege",
      "id": "SC_PATH_HOOPS__SIEGE",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2228
+     "tris": 2498
     },
     {
      "mesh": "chunk_path_shattered__siege",
      "id": "SC_PATH_SHATTERED__SIEGE",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2070
+     "tris": 2368
     },
     {
      "mesh": "chunk_path_aviary__siege",
      "id": "SC_PATH_AVIARY__SIEGE",
      "role": "PATH",
      "openings": "NS",
-     "tris": 5520
+     "tris": 5812
     },
     {
      "mesh": "chunk_crossroads__siege",
      "id": "SC_CROSSROADS__SIEGE",
      "role": "PATH",
      "openings": "ENSW",
-     "tris": 2582
+     "tris": 3060
     },
     {
      "mesh": "chunk_side_lookout__siege",
      "id": "SC_SIDE_LOOKOUT__SIEGE",
      "role": "SIDE",
      "openings": "S",
-     "tris": 2100
+     "tris": 2688
     },
     {
      "mesh": "chunk_path_bend__siege",
      "id": "SC_PATH_BEND__SIEGE",
      "role": "PATH",
      "openings": "ES",
-     "tris": 2346
+     "tris": 2428
     },
     {
      "mesh": "chunk_path_bend_west__siege",
      "id": "SC_PATH_BEND_WEST__SIEGE",
      "role": "PATH",
      "openings": "SW",
-     "tris": 3472
+     "tris": 4518
     },
     {
      "mesh": "chunk_vault_turn__siege",
      "id": "SC_VAULT_TURN__SIEGE",
      "role": "COMBAT",
      "openings": "ES",
-     "tris": 3576
+     "tris": 4248
     },
     {
      "mesh": "chunk_aether_springs__siege",
      "id": "SC_AETHER_SPRINGS__SIEGE",
      "role": "COMBAT",
      "openings": "SW",
-     "tris": 3190
+     "tris": 4414
     },
     {
      "mesh": "chunk_garden_terrace__siege",
      "id": "SC_GARDEN_TERRACE__SIEGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 6754
+     "tris": 9822
     },
     {
      "mesh": "chunk_observatory__siege",
      "id": "SC_OBSERVATORY__SIEGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4878
+     "tris": 4490
     },
     {
      "mesh": "chunk_armory__siege",
      "id": "SC_ARMORY__SIEGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4626
+     "tris": 6368
     },
     {
      "mesh": "chunk_archive__siege",
      "id": "SC_ARCHIVE__SIEGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 7362
+     "tris": 9116
     },
     {
      "mesh": "chunk_spire_court__siege",
      "id": "SC_SPIRE_COURT__SIEGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 6780
+     "tris": 8590
     },
     {
      "mesh": "chunk_spire_court_b__siege",
      "id": "SC_SPIRE_COURT_B__SIEGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 5124
+     "tris": 6028
     },
     {
      "mesh": "chunk_boss_clearing__siege",
      "id": "SC_BOSS_CLEARING__SIEGE",
      "role": "BOSS",
      "openings": "S",
-     "tris": 5788
+     "tris": 7520
     },
     {
      "mesh": "chunk_cap_crumbling__siege",
      "id": "SC_CAP_CRUMBLING__SIEGE",
      "role": "CAP",
      "openings": "S",
-     "tris": 856
+     "tris": 1178
     },
     {
      "mesh": "chunk_cap_overlook__siege",
      "id": "SC_CAP_OVERLOOK__SIEGE",
      "role": "CAP",
      "openings": "S",
-     "tris": 2282
+     "tris": 2354
     },
     {
      "mesh": "chunk_cap_sealed_gate__siege",
      "id": "SC_CAP_SEALED_GATE__SIEGE",
      "role": "CAP",
      "openings": "S",
-     "tris": 3312
+     "tris": 4706
     },
     {
      "mesh": "chunk_path_colonnade__siege",
      "id": "SC_PATH_COLONNADE__SIEGE",
      "role": "PATH",
      "openings": "NS",
-     "tris": 3534
+     "tris": 5118
     },
     {
      "mesh": "chunk_path_long_span__siege",
      "id": "SC_PATH_LONG_SPAN__SIEGE",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2660
+     "tris": 2912
     },
     {
      "mesh": "chunk_path_lantern_row__siege",
      "id": "SC_PATH_LANTERN_ROW__SIEGE",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2294
+     "tris": 3644
     },
     {
      "mesh": "chunk_path_tower_bend__siege",
      "id": "SC_PATH_TOWER_BEND__SIEGE",
      "role": "PATH",
      "openings": "SW",
-     "tris": 2262
+     "tris": 3088
     },
     {
      "mesh": "chunk_path_tee__siege",
      "id": "SC_PATH_TEE__SIEGE",
      "role": "PATH",
      "openings": "ESW",
-     "tris": 2350
+     "tris": 3706
     },
     {
      "mesh": "chunk_parade_ground__siege",
      "id": "SC_PARADE_GROUND__SIEGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4926
+     "tris": 7358
     },
     {
      "mesh": "chunk_turbine_hall__siege",
      "id": "SC_TURBINE_HALL__SIEGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 3570
+     "tris": 4482
     },
     {
      "mesh": "chunk_lighthouse_point__siege",
      "id": "SC_LIGHTHOUSE_POINT__SIEGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 2486
+     "tris": 2910
     },
     {
      "mesh": "chunk_sky_tree_grove__siege",
      "id": "SC_SKY_TREE_GROVE__SIEGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 5724
+     "tris": 7308
     },
     {
      "mesh": "chunk_dockside__siege",
      "id": "SC_DOCKSIDE__SIEGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 3024
+     "tris": 4150
     },
     {
      "mesh": "chunk_side_chapel__siege",
      "id": "SC_SIDE_CHAPEL__SIEGE",
      "role": "SIDE",
      "openings": "S",
-     "tris": 2608
+     "tris": 3158
     },
     {
      "mesh": "chunk_side_garden__siege",
      "id": "SC_SIDE_GARDEN__SIEGE",
      "role": "SIDE",
      "openings": "S",
-     "tris": 3126
+     "tris": 4420
     },
     {
      "mesh": "chunk_side_reliquary__siege",
      "id": "SC_SIDE_RELIQUARY__SIEGE",
      "role": "SIDE",
      "openings": "S",
-     "tris": 2196
+     "tris": 2704
     },
     {
      "mesh": "chunk_prism_arena__siege",
      "id": "SC_PRISM_ARENA__SIEGE",
      "role": "BOSS",
      "openings": "S",
-     "tris": 3934
+     "tris": 4150
     }
    ]
   },
@@ -783,252 +783,252 @@
      "id": "SC_ENTRY__LOCKDOWN",
      "role": "ENTRY",
      "openings": "N",
-     "tris": 4138
+     "tris": 4578
     },
     {
      "mesh": "chunk_path_straight__lockdown",
      "id": "SC_PATH_STRAIGHT__LOCKDOWN",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2466
+     "tris": 3906
     },
     {
      "mesh": "chunk_path_skyport__lockdown",
      "id": "SC_PATH_SKYPORT__LOCKDOWN",
      "role": "PATH",
      "openings": "NS",
-     "tris": 3244
+     "tris": 5220
     },
     {
      "mesh": "chunk_path_hoops__lockdown",
      "id": "SC_PATH_HOOPS__LOCKDOWN",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2398
+     "tris": 2744
     },
     {
      "mesh": "chunk_path_shattered__lockdown",
      "id": "SC_PATH_SHATTERED__LOCKDOWN",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2086
+     "tris": 3162
     },
     {
      "mesh": "chunk_path_aviary__lockdown",
      "id": "SC_PATH_AVIARY__LOCKDOWN",
      "role": "PATH",
      "openings": "NS",
-     "tris": 5340
+     "tris": 6226
     },
     {
      "mesh": "chunk_crossroads__lockdown",
      "id": "SC_CROSSROADS__LOCKDOWN",
      "role": "PATH",
      "openings": "ENSW",
-     "tris": 2710
+     "tris": 3266
     },
     {
      "mesh": "chunk_side_lookout__lockdown",
      "id": "SC_SIDE_LOOKOUT__LOCKDOWN",
      "role": "SIDE",
      "openings": "S",
-     "tris": 1660
+     "tris": 3040
     },
     {
      "mesh": "chunk_path_bend__lockdown",
      "id": "SC_PATH_BEND__LOCKDOWN",
      "role": "PATH",
      "openings": "ES",
-     "tris": 2384
+     "tris": 3182
     },
     {
      "mesh": "chunk_path_bend_west__lockdown",
      "id": "SC_PATH_BEND_WEST__LOCKDOWN",
      "role": "PATH",
      "openings": "SW",
-     "tris": 3280
+     "tris": 5030
     },
     {
      "mesh": "chunk_vault_turn__lockdown",
      "id": "SC_VAULT_TURN__LOCKDOWN",
      "role": "COMBAT",
      "openings": "ES",
-     "tris": 3190
+     "tris": 3698
     },
     {
      "mesh": "chunk_aether_springs__lockdown",
      "id": "SC_AETHER_SPRINGS__LOCKDOWN",
      "role": "COMBAT",
      "openings": "SW",
-     "tris": 2864
+     "tris": 4576
     },
     {
      "mesh": "chunk_garden_terrace__lockdown",
      "id": "SC_GARDEN_TERRACE__LOCKDOWN",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 6388
+     "tris": 8010
     },
     {
      "mesh": "chunk_observatory__lockdown",
      "id": "SC_OBSERVATORY__LOCKDOWN",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4062
+     "tris": 4862
     },
     {
      "mesh": "chunk_armory__lockdown",
      "id": "SC_ARMORY__LOCKDOWN",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4342
+     "tris": 4914
     },
     {
      "mesh": "chunk_archive__lockdown",
      "id": "SC_ARCHIVE__LOCKDOWN",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 7462
+     "tris": 9152
     },
     {
      "mesh": "chunk_spire_court__lockdown",
      "id": "SC_SPIRE_COURT__LOCKDOWN",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 6110
+     "tris": 7522
     },
     {
      "mesh": "chunk_spire_court_b__lockdown",
      "id": "SC_SPIRE_COURT_B__LOCKDOWN",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4216
+     "tris": 5120
     },
     {
      "mesh": "chunk_boss_clearing__lockdown",
      "id": "SC_BOSS_CLEARING__LOCKDOWN",
      "role": "BOSS",
      "openings": "S",
-     "tris": 4804
+     "tris": 5392
     },
     {
      "mesh": "chunk_cap_crumbling__lockdown",
      "id": "SC_CAP_CRUMBLING__LOCKDOWN",
      "role": "CAP",
      "openings": "S",
-     "tris": 928
+     "tris": 1536
     },
     {
      "mesh": "chunk_cap_overlook__lockdown",
      "id": "SC_CAP_OVERLOOK__LOCKDOWN",
      "role": "CAP",
      "openings": "S",
-     "tris": 1744
+     "tris": 2914
     },
     {
      "mesh": "chunk_cap_sealed_gate__lockdown",
      "id": "SC_CAP_SEALED_GATE__LOCKDOWN",
      "role": "CAP",
      "openings": "S",
-     "tris": 2954
+     "tris": 3676
     },
     {
      "mesh": "chunk_path_colonnade__lockdown",
      "id": "SC_PATH_COLONNADE__LOCKDOWN",
      "role": "PATH",
      "openings": "NS",
-     "tris": 3582
+     "tris": 5730
     },
     {
      "mesh": "chunk_path_long_span__lockdown",
      "id": "SC_PATH_LONG_SPAN__LOCKDOWN",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2796
+     "tris": 3548
     },
     {
      "mesh": "chunk_path_lantern_row__lockdown",
      "id": "SC_PATH_LANTERN_ROW__LOCKDOWN",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2402
+     "tris": 3618
     },
     {
      "mesh": "chunk_path_tower_bend__lockdown",
      "id": "SC_PATH_TOWER_BEND__LOCKDOWN",
      "role": "PATH",
      "openings": "SW",
-     "tris": 2374
+     "tris": 2566
     },
     {
      "mesh": "chunk_path_tee__lockdown",
      "id": "SC_PATH_TEE__LOCKDOWN",
      "role": "PATH",
      "openings": "ESW",
-     "tris": 2498
+     "tris": 3818
     },
     {
      "mesh": "chunk_parade_ground__lockdown",
      "id": "SC_PARADE_GROUND__LOCKDOWN",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4308
+     "tris": 5066
     },
     {
      "mesh": "chunk_turbine_hall__lockdown",
      "id": "SC_TURBINE_HALL__LOCKDOWN",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 2710
+     "tris": 3756
     },
     {
      "mesh": "chunk_lighthouse_point__lockdown",
      "id": "SC_LIGHTHOUSE_POINT__LOCKDOWN",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 2468
+     "tris": 3212
     },
     {
      "mesh": "chunk_sky_tree_grove__lockdown",
      "id": "SC_SKY_TREE_GROVE__LOCKDOWN",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4972
+     "tris": 5696
     },
     {
      "mesh": "chunk_dockside__lockdown",
      "id": "SC_DOCKSIDE__LOCKDOWN",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 3124
+     "tris": 5458
     },
     {
      "mesh": "chunk_side_chapel__lockdown",
      "id": "SC_SIDE_CHAPEL__LOCKDOWN",
      "role": "SIDE",
      "openings": "S",
-     "tris": 2166
+     "tris": 2740
     },
     {
      "mesh": "chunk_side_garden__lockdown",
      "id": "SC_SIDE_GARDEN__LOCKDOWN",
      "role": "SIDE",
      "openings": "S",
-     "tris": 3074
+     "tris": 3532
     },
     {
      "mesh": "chunk_side_reliquary__lockdown",
      "id": "SC_SIDE_RELIQUARY__LOCKDOWN",
      "role": "SIDE",
      "openings": "S",
-     "tris": 1770
+     "tris": 3296
     },
     {
      "mesh": "chunk_prism_arena__lockdown",
      "id": "SC_PRISM_ARENA__LOCKDOWN",
      "role": "BOSS",
      "openings": "S",
-     "tris": 3486
+     "tris": 3462
     }
    ]
   },
@@ -1041,252 +1041,252 @@
      "id": "SC_ENTRY__STORMHAWK",
      "role": "ENTRY",
      "openings": "N",
-     "tris": 4108
+     "tris": 4534
     },
     {
      "mesh": "chunk_path_straight__stormhawk",
      "id": "SC_PATH_STRAIGHT__STORMHAWK",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2624
+     "tris": 3078
     },
     {
      "mesh": "chunk_path_skyport__stormhawk",
      "id": "SC_PATH_SKYPORT__STORMHAWK",
      "role": "PATH",
      "openings": "NS",
-     "tris": 3168
+     "tris": 4262
     },
     {
      "mesh": "chunk_path_hoops__stormhawk",
      "id": "SC_PATH_HOOPS__STORMHAWK",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2122
+     "tris": 2426
     },
     {
      "mesh": "chunk_path_shattered__stormhawk",
      "id": "SC_PATH_SHATTERED__STORMHAWK",
      "role": "PATH",
      "openings": "NS",
-     "tris": 1826
+     "tris": 2138
     },
     {
      "mesh": "chunk_path_aviary__stormhawk",
      "id": "SC_PATH_AVIARY__STORMHAWK",
      "role": "PATH",
      "openings": "NS",
-     "tris": 5364
+     "tris": 5680
     },
     {
      "mesh": "chunk_crossroads__stormhawk",
      "id": "SC_CROSSROADS__STORMHAWK",
      "role": "PATH",
      "openings": "ENSW",
-     "tris": 2878
+     "tris": 3316
     },
     {
      "mesh": "chunk_side_lookout__stormhawk",
      "id": "SC_SIDE_LOOKOUT__STORMHAWK",
      "role": "SIDE",
      "openings": "S",
-     "tris": 1620
+     "tris": 2264
     },
     {
      "mesh": "chunk_path_bend__stormhawk",
      "id": "SC_PATH_BEND__STORMHAWK",
      "role": "PATH",
      "openings": "ES",
-     "tris": 2340
+     "tris": 2450
     },
     {
      "mesh": "chunk_path_bend_west__stormhawk",
      "id": "SC_PATH_BEND_WEST__STORMHAWK",
      "role": "PATH",
      "openings": "SW",
-     "tris": 3556
+     "tris": 4112
     },
     {
      "mesh": "chunk_vault_turn__stormhawk",
      "id": "SC_VAULT_TURN__STORMHAWK",
      "role": "COMBAT",
      "openings": "ES",
-     "tris": 3868
+     "tris": 3280
     },
     {
      "mesh": "chunk_aether_springs__stormhawk",
      "id": "SC_AETHER_SPRINGS__STORMHAWK",
      "role": "COMBAT",
      "openings": "SW",
-     "tris": 3040
+     "tris": 4288
     },
     {
      "mesh": "chunk_garden_terrace__stormhawk",
      "id": "SC_GARDEN_TERRACE__STORMHAWK",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 6408
+     "tris": 7970
     },
     {
      "mesh": "chunk_observatory__stormhawk",
      "id": "SC_OBSERVATORY__STORMHAWK",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 3886
+     "tris": 4338
     },
     {
      "mesh": "chunk_armory__stormhawk",
      "id": "SC_ARMORY__STORMHAWK",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4700
+     "tris": 4982
     },
     {
      "mesh": "chunk_archive__stormhawk",
      "id": "SC_ARCHIVE__STORMHAWK",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 7506
+     "tris": 8848
     },
     {
      "mesh": "chunk_spire_court__stormhawk",
      "id": "SC_SPIRE_COURT__STORMHAWK",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 6430
+     "tris": 6808
     },
     {
      "mesh": "chunk_spire_court_b__stormhawk",
      "id": "SC_SPIRE_COURT_B__STORMHAWK",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4040
+     "tris": 4792
     },
     {
      "mesh": "chunk_boss_clearing__stormhawk",
      "id": "SC_BOSS_CLEARING__STORMHAWK",
      "role": "BOSS",
      "openings": "S",
-     "tris": 5842
+     "tris": 5290
     },
     {
      "mesh": "chunk_cap_crumbling__stormhawk",
      "id": "SC_CAP_CRUMBLING__STORMHAWK",
      "role": "CAP",
      "openings": "S",
-     "tris": 856
+     "tris": 1468
     },
     {
      "mesh": "chunk_cap_overlook__stormhawk",
      "id": "SC_CAP_OVERLOOK__STORMHAWK",
      "role": "CAP",
      "openings": "S",
-     "tris": 1852
+     "tris": 2604
     },
     {
      "mesh": "chunk_cap_sealed_gate__stormhawk",
      "id": "SC_CAP_SEALED_GATE__STORMHAWK",
      "role": "CAP",
      "openings": "S",
-     "tris": 3592
+     "tris": 3628
     },
     {
      "mesh": "chunk_path_colonnade__stormhawk",
      "id": "SC_PATH_COLONNADE__STORMHAWK",
      "role": "PATH",
      "openings": "NS",
-     "tris": 3590
+     "tris": 5280
     },
     {
      "mesh": "chunk_path_long_span__stormhawk",
      "id": "SC_PATH_LONG_SPAN__STORMHAWK",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2528
+     "tris": 3038
     },
     {
      "mesh": "chunk_path_lantern_row__stormhawk",
      "id": "SC_PATH_LANTERN_ROW__STORMHAWK",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2094
+     "tris": 3426
     },
     {
      "mesh": "chunk_path_tower_bend__stormhawk",
      "id": "SC_PATH_TOWER_BEND__STORMHAWK",
      "role": "PATH",
      "openings": "SW",
-     "tris": 2286
+     "tris": 2302
     },
     {
      "mesh": "chunk_path_tee__stormhawk",
      "id": "SC_PATH_TEE__STORMHAWK",
      "role": "PATH",
      "openings": "ESW",
-     "tris": 3048
+     "tris": 3386
     },
     {
      "mesh": "chunk_parade_ground__stormhawk",
      "id": "SC_PARADE_GROUND__STORMHAWK",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 5110
+     "tris": 4936
     },
     {
      "mesh": "chunk_turbine_hall__stormhawk",
      "id": "SC_TURBINE_HALL__STORMHAWK",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 2942
+     "tris": 3664
     },
     {
      "mesh": "chunk_lighthouse_point__stormhawk",
      "id": "SC_LIGHTHOUSE_POINT__STORMHAWK",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 2568
+     "tris": 3076
     },
     {
      "mesh": "chunk_sky_tree_grove__stormhawk",
      "id": "SC_SKY_TREE_GROVE__STORMHAWK",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 5108
+     "tris": 6432
     },
     {
      "mesh": "chunk_dockside__stormhawk",
      "id": "SC_DOCKSIDE__STORMHAWK",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 3296
+     "tris": 4468
     },
     {
      "mesh": "chunk_side_chapel__stormhawk",
      "id": "SC_SIDE_CHAPEL__STORMHAWK",
      "role": "SIDE",
      "openings": "S",
-     "tris": 2078
+     "tris": 2686
     },
     {
      "mesh": "chunk_side_garden__stormhawk",
      "id": "SC_SIDE_GARDEN__STORMHAWK",
      "role": "SIDE",
      "openings": "S",
-     "tris": 3226
+     "tris": 3766
     },
     {
      "mesh": "chunk_side_reliquary__stormhawk",
      "id": "SC_SIDE_RELIQUARY__STORMHAWK",
      "role": "SIDE",
      "openings": "S",
-     "tris": 1714
+     "tris": 2814
     },
     {
      "mesh": "chunk_prism_arena__stormhawk",
      "id": "SC_PRISM_ARENA__STORMHAWK",
      "role": "BOSS",
      "openings": "S",
-     "tris": 4196
+     "tris": 3366
     }
    ]
   },
@@ -1299,252 +1299,252 @@
      "id": "SC_ENTRY__RIME",
      "role": "ENTRY",
      "openings": "N",
-     "tris": 4660
+     "tris": 5072
     },
     {
      "mesh": "chunk_path_straight__rime",
      "id": "SC_PATH_STRAIGHT__RIME",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2906
+     "tris": 4222
     },
     {
      "mesh": "chunk_path_skyport__rime",
      "id": "SC_PATH_SKYPORT__RIME",
      "role": "PATH",
      "openings": "NS",
-     "tris": 3544
+     "tris": 5834
     },
     {
      "mesh": "chunk_path_hoops__rime",
      "id": "SC_PATH_HOOPS__RIME",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2362
+     "tris": 2902
     },
     {
      "mesh": "chunk_path_shattered__rime",
      "id": "SC_PATH_SHATTERED__RIME",
      "role": "PATH",
      "openings": "NS",
-     "tris": 3436
+     "tris": 4308
     },
     {
      "mesh": "chunk_path_aviary__rime",
      "id": "SC_PATH_AVIARY__RIME",
      "role": "PATH",
      "openings": "NS",
-     "tris": 5492
+     "tris": 6834
     },
     {
      "mesh": "chunk_crossroads__rime",
      "id": "SC_CROSSROADS__RIME",
      "role": "PATH",
      "openings": "ENSW",
-     "tris": 2566
+     "tris": 3106
     },
     {
      "mesh": "chunk_side_lookout__rime",
      "id": "SC_SIDE_LOOKOUT__RIME",
      "role": "SIDE",
      "openings": "S",
-     "tris": 2096
+     "tris": 3528
     },
     {
      "mesh": "chunk_path_bend__rime",
      "id": "SC_PATH_BEND__RIME",
      "role": "PATH",
      "openings": "ES",
-     "tris": 2626
+     "tris": 3856
     },
     {
      "mesh": "chunk_path_bend_west__rime",
      "id": "SC_PATH_BEND_WEST__RIME",
      "role": "PATH",
      "openings": "SW",
-     "tris": 3842
+     "tris": 5454
     },
     {
      "mesh": "chunk_vault_turn__rime",
      "id": "SC_VAULT_TURN__RIME",
      "role": "COMBAT",
      "openings": "ES",
-     "tris": 3290
+     "tris": 4090
     },
     {
      "mesh": "chunk_aether_springs__rime",
      "id": "SC_AETHER_SPRINGS__RIME",
      "role": "COMBAT",
      "openings": "SW",
-     "tris": 3068
+     "tris": 4598
     },
     {
      "mesh": "chunk_garden_terrace__rime",
      "id": "SC_GARDEN_TERRACE__RIME",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 6842
+     "tris": 9628
     },
     {
      "mesh": "chunk_observatory__rime",
      "id": "SC_OBSERVATORY__RIME",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4236
+     "tris": 6166
     },
     {
      "mesh": "chunk_armory__rime",
      "id": "SC_ARMORY__RIME",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4478
+     "tris": 5590
     },
     {
      "mesh": "chunk_archive__rime",
      "id": "SC_ARCHIVE__RIME",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 7480
+     "tris": 8982
     },
     {
      "mesh": "chunk_spire_court__rime",
      "id": "SC_SPIRE_COURT__RIME",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 6564
+     "tris": 7502
     },
     {
      "mesh": "chunk_spire_court_b__rime",
      "id": "SC_SPIRE_COURT_B__RIME",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4332
+     "tris": 6932
     },
     {
      "mesh": "chunk_boss_clearing__rime",
      "id": "SC_BOSS_CLEARING__RIME",
      "role": "BOSS",
      "openings": "S",
-     "tris": 5486
+     "tris": 6376
     },
     {
      "mesh": "chunk_cap_crumbling__rime",
      "id": "SC_CAP_CRUMBLING__RIME",
      "role": "CAP",
      "openings": "S",
-     "tris": 1024
+     "tris": 1236
     },
     {
      "mesh": "chunk_cap_overlook__rime",
      "id": "SC_CAP_OVERLOOK__RIME",
      "role": "CAP",
      "openings": "S",
-     "tris": 2198
+     "tris": 3460
     },
     {
      "mesh": "chunk_cap_sealed_gate__rime",
      "id": "SC_CAP_SEALED_GATE__RIME",
      "role": "CAP",
      "openings": "S",
-     "tris": 3330
+     "tris": 4134
     },
     {
      "mesh": "chunk_path_colonnade__rime",
      "id": "SC_PATH_COLONNADE__RIME",
      "role": "PATH",
      "openings": "NS",
-     "tris": 3710
+     "tris": 5590
     },
     {
      "mesh": "chunk_path_long_span__rime",
      "id": "SC_PATH_LONG_SPAN__RIME",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2878
+     "tris": 3858
     },
     {
      "mesh": "chunk_path_lantern_row__rime",
      "id": "SC_PATH_LANTERN_ROW__RIME",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2382
+     "tris": 3314
     },
     {
      "mesh": "chunk_path_tower_bend__rime",
      "id": "SC_PATH_TOWER_BEND__RIME",
      "role": "PATH",
      "openings": "SW",
-     "tris": 2532
+     "tris": 2946
     },
     {
      "mesh": "chunk_path_tee__rime",
      "id": "SC_PATH_TEE__RIME",
      "role": "PATH",
      "openings": "ESW",
-     "tris": 2754
+     "tris": 3800
     },
     {
      "mesh": "chunk_parade_ground__rime",
      "id": "SC_PARADE_GROUND__RIME",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 5148
+     "tris": 6090
     },
     {
      "mesh": "chunk_turbine_hall__rime",
      "id": "SC_TURBINE_HALL__RIME",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 2866
+     "tris": 5280
     },
     {
      "mesh": "chunk_lighthouse_point__rime",
      "id": "SC_LIGHTHOUSE_POINT__RIME",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 2720
+     "tris": 4322
     },
     {
      "mesh": "chunk_sky_tree_grove__rime",
      "id": "SC_SKY_TREE_GROVE__RIME",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4966
+     "tris": 6466
     },
     {
      "mesh": "chunk_dockside__rime",
      "id": "SC_DOCKSIDE__RIME",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 3392
+     "tris": 6422
     },
     {
      "mesh": "chunk_side_chapel__rime",
      "id": "SC_SIDE_CHAPEL__RIME",
      "role": "SIDE",
      "openings": "S",
-     "tris": 2300
+     "tris": 3102
     },
     {
      "mesh": "chunk_side_garden__rime",
      "id": "SC_SIDE_GARDEN__RIME",
      "role": "SIDE",
      "openings": "S",
-     "tris": 3248
+     "tris": 4198
     },
     {
      "mesh": "chunk_side_reliquary__rime",
      "id": "SC_SIDE_RELIQUARY__RIME",
      "role": "SIDE",
      "openings": "S",
-     "tris": 1772
+     "tris": 2834
     },
     {
      "mesh": "chunk_prism_arena__rime",
      "id": "SC_PRISM_ARENA__RIME",
      "role": "BOSS",
      "openings": "S",
-     "tris": 4100
+     "tris": 3562
     }
    ]
   },
@@ -1557,252 +1557,252 @@
      "id": "SC_ENTRY__RECLAIMED",
      "role": "ENTRY",
      "openings": "N",
-     "tris": 5474
+     "tris": 6312
     },
     {
      "mesh": "chunk_path_straight__reclaimed",
      "id": "SC_PATH_STRAIGHT__RECLAIMED",
      "role": "PATH",
      "openings": "NS",
-     "tris": 3146
+     "tris": 5022
     },
     {
      "mesh": "chunk_path_skyport__reclaimed",
      "id": "SC_PATH_SKYPORT__RECLAIMED",
      "role": "PATH",
      "openings": "NS",
-     "tris": 6162
+     "tris": 5638
     },
     {
      "mesh": "chunk_path_hoops__reclaimed",
      "id": "SC_PATH_HOOPS__RECLAIMED",
      "role": "PATH",
      "openings": "NS",
-     "tris": 3808
+     "tris": 3668
     },
     {
      "mesh": "chunk_path_shattered__reclaimed",
      "id": "SC_PATH_SHATTERED__RECLAIMED",
      "role": "PATH",
      "openings": "NS",
-     "tris": 8304
+     "tris": 5012
     },
     {
      "mesh": "chunk_path_aviary__reclaimed",
      "id": "SC_PATH_AVIARY__RECLAIMED",
      "role": "PATH",
      "openings": "NS",
-     "tris": 6758
+     "tris": 6810
     },
     {
      "mesh": "chunk_crossroads__reclaimed",
      "id": "SC_CROSSROADS__RECLAIMED",
      "role": "PATH",
      "openings": "ENSW",
-     "tris": 3922
+     "tris": 4340
     },
     {
      "mesh": "chunk_side_lookout__reclaimed",
      "id": "SC_SIDE_LOOKOUT__RECLAIMED",
      "role": "SIDE",
      "openings": "S",
-     "tris": 3220
+     "tris": 4146
     },
     {
      "mesh": "chunk_path_bend__reclaimed",
      "id": "SC_PATH_BEND__RECLAIMED",
      "role": "PATH",
      "openings": "ES",
-     "tris": 3836
+     "tris": 3412
     },
     {
      "mesh": "chunk_path_bend_west__reclaimed",
      "id": "SC_PATH_BEND_WEST__RECLAIMED",
      "role": "PATH",
      "openings": "SW",
-     "tris": 6100
+     "tris": 5440
     },
     {
      "mesh": "chunk_vault_turn__reclaimed",
      "id": "SC_VAULT_TURN__RECLAIMED",
      "role": "COMBAT",
      "openings": "ES",
-     "tris": 4848
+     "tris": 5252
     },
     {
      "mesh": "chunk_aether_springs__reclaimed",
      "id": "SC_AETHER_SPRINGS__RECLAIMED",
      "role": "COMBAT",
      "openings": "SW",
-     "tris": 5216
+     "tris": 6420
     },
     {
      "mesh": "chunk_garden_terrace__reclaimed",
      "id": "SC_GARDEN_TERRACE__RECLAIMED",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 9506
+     "tris": 9332
     },
     {
      "mesh": "chunk_observatory__reclaimed",
      "id": "SC_OBSERVATORY__RECLAIMED",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 5736
+     "tris": 5756
     },
     {
      "mesh": "chunk_armory__reclaimed",
      "id": "SC_ARMORY__RECLAIMED",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 6424
+     "tris": 6580
     },
     {
      "mesh": "chunk_archive__reclaimed",
      "id": "SC_ARCHIVE__RECLAIMED",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 9770
+     "tris": 9720
     },
     {
      "mesh": "chunk_spire_court__reclaimed",
      "id": "SC_SPIRE_COURT__RECLAIMED",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 7668
+     "tris": 9030
     },
     {
      "mesh": "chunk_spire_court_b__reclaimed",
      "id": "SC_SPIRE_COURT_B__RECLAIMED",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 5254
+     "tris": 5654
     },
     {
      "mesh": "chunk_boss_clearing__reclaimed",
      "id": "SC_BOSS_CLEARING__RECLAIMED",
      "role": "BOSS",
      "openings": "S",
-     "tris": 7106
+     "tris": 7848
     },
     {
      "mesh": "chunk_cap_crumbling__reclaimed",
      "id": "SC_CAP_CRUMBLING__RECLAIMED",
      "role": "CAP",
      "openings": "S",
-     "tris": 1804
+     "tris": 1844
     },
     {
      "mesh": "chunk_cap_overlook__reclaimed",
      "id": "SC_CAP_OVERLOOK__RECLAIMED",
      "role": "CAP",
      "openings": "S",
-     "tris": 3444
+     "tris": 3238
     },
     {
      "mesh": "chunk_cap_sealed_gate__reclaimed",
      "id": "SC_CAP_SEALED_GATE__RECLAIMED",
      "role": "CAP",
      "openings": "S",
-     "tris": 3730
+     "tris": 4206
     },
     {
      "mesh": "chunk_path_colonnade__reclaimed",
      "id": "SC_PATH_COLONNADE__RECLAIMED",
      "role": "PATH",
      "openings": "NS",
-     "tris": 5702
+     "tris": 6578
     },
     {
      "mesh": "chunk_path_long_span__reclaimed",
      "id": "SC_PATH_LONG_SPAN__RECLAIMED",
      "role": "PATH",
      "openings": "NS",
-     "tris": 4256
+     "tris": 3862
     },
     {
      "mesh": "chunk_path_lantern_row__reclaimed",
      "id": "SC_PATH_LANTERN_ROW__RECLAIMED",
      "role": "PATH",
      "openings": "NS",
-     "tris": 4504
+     "tris": 4452
     },
     {
      "mesh": "chunk_path_tower_bend__reclaimed",
      "id": "SC_PATH_TOWER_BEND__RECLAIMED",
      "role": "PATH",
      "openings": "SW",
-     "tris": 3404
+     "tris": 3248
     },
     {
      "mesh": "chunk_path_tee__reclaimed",
      "id": "SC_PATH_TEE__RECLAIMED",
      "role": "PATH",
      "openings": "ESW",
-     "tris": 3456
+     "tris": 4624
     },
     {
      "mesh": "chunk_parade_ground__reclaimed",
      "id": "SC_PARADE_GROUND__RECLAIMED",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 6024
+     "tris": 7566
     },
     {
      "mesh": "chunk_turbine_hall__reclaimed",
      "id": "SC_TURBINE_HALL__RECLAIMED",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 5076
+     "tris": 5940
     },
     {
      "mesh": "chunk_lighthouse_point__reclaimed",
      "id": "SC_LIGHTHOUSE_POINT__RECLAIMED",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4820
+     "tris": 4778
     },
     {
      "mesh": "chunk_sky_tree_grove__reclaimed",
      "id": "SC_SKY_TREE_GROVE__RECLAIMED",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 6942
+     "tris": 8246
     },
     {
      "mesh": "chunk_dockside__reclaimed",
      "id": "SC_DOCKSIDE__RECLAIMED",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 6906
+     "tris": 6860
     },
     {
      "mesh": "chunk_side_chapel__reclaimed",
      "id": "SC_SIDE_CHAPEL__RECLAIMED",
      "role": "SIDE",
      "openings": "S",
-     "tris": 3666
+     "tris": 4350
     },
     {
      "mesh": "chunk_side_garden__reclaimed",
      "id": "SC_SIDE_GARDEN__RECLAIMED",
      "role": "SIDE",
      "openings": "S",
-     "tris": 5414
+     "tris": 4570
     },
     {
      "mesh": "chunk_side_reliquary__reclaimed",
      "id": "SC_SIDE_RELIQUARY__RECLAIMED",
      "role": "SIDE",
      "openings": "S",
-     "tris": 3734
+     "tris": 4600
     },
     {
      "mesh": "chunk_prism_arena__reclaimed",
      "id": "SC_PRISM_ARENA__RECLAIMED",
      "role": "BOSS",
      "openings": "S",
-     "tris": 6240
+     "tris": 4600
     }
    ]
   },
@@ -1815,252 +1815,252 @@
      "id": "SC_ENTRY__AETHER_SURGE",
      "role": "ENTRY",
      "openings": "N",
-     "tris": 3966
+     "tris": 4392
     },
     {
      "mesh": "chunk_path_straight__aether_surge",
      "id": "SC_PATH_STRAIGHT__AETHER_SURGE",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2522
+     "tris": 3004
     },
     {
      "mesh": "chunk_path_skyport__aether_surge",
      "id": "SC_PATH_SKYPORT__AETHER_SURGE",
      "role": "PATH",
      "openings": "NS",
-     "tris": 3030
+     "tris": 4274
     },
     {
      "mesh": "chunk_path_hoops__aether_surge",
      "id": "SC_PATH_HOOPS__AETHER_SURGE",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2122
+     "tris": 2588
     },
     {
      "mesh": "chunk_path_shattered__aether_surge",
      "id": "SC_PATH_SHATTERED__AETHER_SURGE",
      "role": "PATH",
      "openings": "NS",
-     "tris": 1826
+     "tris": 2546
     },
     {
      "mesh": "chunk_path_aviary__aether_surge",
      "id": "SC_PATH_AVIARY__AETHER_SURGE",
      "role": "PATH",
      "openings": "NS",
-     "tris": 5246
+     "tris": 5632
     },
     {
      "mesh": "chunk_crossroads__aether_surge",
      "id": "SC_CROSSROADS__AETHER_SURGE",
      "role": "PATH",
      "openings": "ENSW",
-     "tris": 2502
+     "tris": 3052
     },
     {
      "mesh": "chunk_side_lookout__aether_surge",
      "id": "SC_SIDE_LOOKOUT__AETHER_SURGE",
      "role": "SIDE",
      "openings": "S",
-     "tris": 1788
+     "tris": 2518
     },
     {
      "mesh": "chunk_path_bend__aether_surge",
      "id": "SC_PATH_BEND__AETHER_SURGE",
      "role": "PATH",
      "openings": "ES",
-     "tris": 2312
+     "tris": 2534
     },
     {
      "mesh": "chunk_path_bend_west__aether_surge",
      "id": "SC_PATH_BEND_WEST__AETHER_SURGE",
      "role": "PATH",
      "openings": "SW",
-     "tris": 3266
+     "tris": 4274
     },
     {
      "mesh": "chunk_vault_turn__aether_surge",
      "id": "SC_VAULT_TURN__AETHER_SURGE",
      "role": "COMBAT",
      "openings": "ES",
-     "tris": 3190
+     "tris": 3684
     },
     {
      "mesh": "chunk_aether_springs__aether_surge",
      "id": "SC_AETHER_SPRINGS__AETHER_SURGE",
      "role": "COMBAT",
      "openings": "SW",
-     "tris": 2884
+     "tris": 4596
     },
     {
      "mesh": "chunk_garden_terrace__aether_surge",
      "id": "SC_GARDEN_TERRACE__AETHER_SURGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 6254
+     "tris": 8950
     },
     {
      "mesh": "chunk_observatory__aether_surge",
      "id": "SC_OBSERVATORY__AETHER_SURGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4008
+     "tris": 4660
     },
     {
      "mesh": "chunk_armory__aether_surge",
      "id": "SC_ARMORY__AETHER_SURGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4092
+     "tris": 5334
     },
     {
      "mesh": "chunk_archive__aether_surge",
      "id": "SC_ARCHIVE__AETHER_SURGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 7482
+     "tris": 9272
     },
     {
      "mesh": "chunk_spire_court__aether_surge",
      "id": "SC_SPIRE_COURT__AETHER_SURGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 5652
+     "tris": 6420
     },
     {
      "mesh": "chunk_spire_court_b__aether_surge",
      "id": "SC_SPIRE_COURT_B__AETHER_SURGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4308
+     "tris": 5444
     },
     {
      "mesh": "chunk_boss_clearing__aether_surge",
      "id": "SC_BOSS_CLEARING__AETHER_SURGE",
      "role": "BOSS",
      "openings": "S",
-     "tris": 4890
+     "tris": 5746
     },
     {
      "mesh": "chunk_cap_crumbling__aether_surge",
      "id": "SC_CAP_CRUMBLING__AETHER_SURGE",
      "role": "CAP",
      "openings": "S",
-     "tris": 946
+     "tris": 1202
     },
     {
      "mesh": "chunk_cap_overlook__aether_surge",
      "id": "SC_CAP_OVERLOOK__AETHER_SURGE",
      "role": "CAP",
      "openings": "S",
-     "tris": 1758
+     "tris": 2410
     },
     {
      "mesh": "chunk_cap_sealed_gate__aether_surge",
      "id": "SC_CAP_SEALED_GATE__AETHER_SURGE",
      "role": "CAP",
      "openings": "S",
-     "tris": 3080
+     "tris": 3820
     },
     {
      "mesh": "chunk_path_colonnade__aether_surge",
      "id": "SC_PATH_COLONNADE__AETHER_SURGE",
      "role": "PATH",
      "openings": "NS",
-     "tris": 3486
+     "tris": 5192
     },
     {
      "mesh": "chunk_path_long_span__aether_surge",
      "id": "SC_PATH_LONG_SPAN__AETHER_SURGE",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2528
+     "tris": 3064
     },
     {
      "mesh": "chunk_path_lantern_row__aether_surge",
      "id": "SC_PATH_LANTERN_ROW__AETHER_SURGE",
      "role": "PATH",
      "openings": "NS",
-     "tris": 2092
+     "tris": 3152
     },
     {
      "mesh": "chunk_path_tower_bend__aether_surge",
      "id": "SC_PATH_TOWER_BEND__AETHER_SURGE",
      "role": "PATH",
      "openings": "SW",
-     "tris": 2168
+     "tris": 2392
     },
     {
      "mesh": "chunk_path_tee__aether_surge",
      "id": "SC_PATH_TEE__AETHER_SURGE",
      "role": "PATH",
      "openings": "ESW",
-     "tris": 2224
+     "tris": 3154
     },
     {
      "mesh": "chunk_parade_ground__aether_surge",
      "id": "SC_PARADE_GROUND__AETHER_SURGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4114
+     "tris": 5246
     },
     {
      "mesh": "chunk_turbine_hall__aether_surge",
      "id": "SC_TURBINE_HALL__AETHER_SURGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 2710
+     "tris": 3764
     },
     {
      "mesh": "chunk_lighthouse_point__aether_surge",
      "id": "SC_LIGHTHOUSE_POINT__AETHER_SURGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 2348
+     "tris": 2966
     },
     {
      "mesh": "chunk_sky_tree_grove__aether_surge",
      "id": "SC_SKY_TREE_GROVE__AETHER_SURGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 4836
+     "tris": 6580
     },
     {
      "mesh": "chunk_dockside__aether_surge",
      "id": "SC_DOCKSIDE__AETHER_SURGE",
      "role": "COMBAT",
      "openings": "NS",
-     "tris": 3020
+     "tris": 4726
     },
     {
      "mesh": "chunk_side_chapel__aether_surge",
      "id": "SC_SIDE_CHAPEL__AETHER_SURGE",
      "role": "SIDE",
      "openings": "S",
-     "tris": 2114
+     "tris": 2818
     },
     {
      "mesh": "chunk_side_garden__aether_surge",
      "id": "SC_SIDE_GARDEN__AETHER_SURGE",
      "role": "SIDE",
      "openings": "S",
-     "tris": 3096
+     "tris": 3992
     },
     {
      "mesh": "chunk_side_reliquary__aether_surge",
      "id": "SC_SIDE_RELIQUARY__AETHER_SURGE",
      "role": "SIDE",
      "openings": "S",
-     "tris": 1766
+     "tris": 2828
     },
     {
      "mesh": "chunk_prism_arena__aether_surge",
      "id": "SC_PRISM_ARENA__AETHER_SURGE",
      "role": "BOSS",
      "openings": "S",
-     "tris": 3386
+     "tris": 3600
     }
    ]
   }
@@ -2078,71 +2078,49 @@
   "prop_halo_a",
   "prop_container_a",
   "prop_skiff_a",
-  "prop_crystal_b",
   "prop_hoop_a",
   "prop_light_pillar_a",
   "prop_accent_a",
-  "prop_halo_b",
-  "prop_light_pillar_b",
   "prop_debris_a",
-  "prop_debris_b",
-  "prop_debris_c",
-  "prop_debris_d",
   "prop_lintel_a",
   "prop_bird_a",
   "prop_bird_wing_a",
-  "prop_bird_wing_b",
   "prop_bird_b",
   "prop_bird_c",
-  "prop_halo_c",
-  "prop_banner_b",
-  "prop_banner_c",
-  "prop_banner_d",
-  "prop_banner_e",
   "prop_brazier_a",
   "prop_telescope_a",
-  "prop_telescope_b",
-  "prop_banner_f",
-  "prop_banner_g",
-  "prop_banner_h",
-  "prop_banner_i",
-  "prop_crystal_c",
-  "prop_halo_d",
-  "prop_light_pillar_c",
+  "prop_crystal_b",
   "prop_keel_ring_a",
   "prop_keel_ring_b",
-  "prop_telescope_c",
-  "prop_halo_e",
+  "prop_halo_b",
   "prop_target_a",
   "prop_weapon_rack_a",
   "prop_shield_rack_a",
   "prop_tome_a",
   "prop_accent_b",
   "prop_accent_c",
+  "prop_halo_c",
   "prop_accent_d",
-  "prop_banner_j",
-  "prop_debris_e",
-  "prop_debris_f",
-  "prop_halo_f",
-  "prop_telescope_d",
-  "prop_telescope_e",
-  "prop_lamp_b",
-  "prop_light_pillar_d",
-  "prop_accent_e",
-  "prop_target_b",
-  "prop_keel_ring_c",
-  "prop_keel_ring_d",
-  "prop_container_b",
-  "prop_light_pillar_e"
+  "prop_container_b"
  ],
  "scenario_props": [
+  {
+   "mesh": "scn_prop_segment_a",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 19,
+   "alternate": false,
+   "tris": 3152
+  },
   {
    "mesh": "scn_prop_banner_a",
    "kind": "prop",
    "anim": "Sway",
    "tier": 2,
    "interact": "-",
-   "copies": 14,
+   "copies": 26,
    "alternate": false,
    "tris": 1036
   },
@@ -2151,8 +2129,8 @@
    "kind": "prop",
    "anim": "Static",
    "tier": 1,
-   "interact": "Repair",
-   "copies": 34,
+   "interact": "-",
+   "copies": 50,
    "alternate": false,
    "tris": 596
   },
@@ -2172,7 +2150,7 @@
    "anim": "Static",
    "tier": 1,
    "interact": "Breakable",
-   "copies": 52,
+   "copies": 54,
    "alternate": false,
    "tris": 1176
   },
@@ -2182,9 +2160,19 @@
    "anim": "Hover",
    "tier": 2,
    "interact": "-",
-   "copies": 135,
+   "copies": 194,
    "alternate": false,
    "tris": 588
+  },
+  {
+   "mesh": "scn_prop_rubble_a",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "copies": 85,
+   "alternate": false,
+   "tris": 1316
   },
   {
    "mesh": "scn_prop_debris_a",
@@ -2192,37 +2180,7 @@
    "anim": "Tumble",
    "tier": 2,
    "interact": "-",
-   "copies": 13,
-   "alternate": false,
-   "tris": 2684
-  },
-  {
-   "mesh": "scn_prop_debris_b",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 14,
-   "alternate": false,
-   "tris": 2684
-  },
-  {
-   "mesh": "scn_prop_debris_c",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 17,
-   "alternate": false,
-   "tris": 2684
-  },
-  {
-   "mesh": "scn_prop_debris_d",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 17,
+   "copies": 114,
    "alternate": false,
    "tris": 2684
   },
@@ -2247,6 +2205,16 @@
    "tris": 3144
   },
   {
+   "mesh": "scn_prop_segment_b",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 2,
+   "alternate": false,
+   "tris": 3152
+  },
+  {
    "mesh": "scn_prop_pylon_a",
    "kind": "prop",
    "anim": "Hover",
@@ -2255,36 +2223,6 @@
    "copies": 36,
    "alternate": false,
    "tris": 4204
-  },
-  {
-   "mesh": "scn_prop_halo_a",
-   "kind": "prop",
-   "anim": "Float",
-   "tier": 1,
-   "interact": "-",
-   "copies": 8,
-   "alternate": false,
-   "tris": 3200
-  },
-  {
-   "mesh": "scn_prop_rubble_a",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "copies": 70,
-   "alternate": false,
-   "tris": 1316
-  },
-  {
-   "mesh": "scn_prop_debris_e",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 25,
-   "alternate": false,
-   "tris": 1044
   },
   {
    "mesh": "scn_prop_beacon_c",
@@ -2317,36 +2255,6 @@
    "tris": 2828
   },
   {
-   "mesh": "scn_prop_crystal_b",
-   "kind": "prop",
-   "anim": "Hover",
-   "tier": 2,
-   "interact": "-",
-   "copies": 53,
-   "alternate": false,
-   "tris": 588
-  },
-  {
-   "mesh": "scn_prop_debris_f",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 25,
-   "alternate": false,
-   "tris": 2684
-  },
-  {
-   "mesh": "scn_prop_debris_g",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 20,
-   "alternate": false,
-   "tris": 2684
-  },
-  {
    "mesh": "scn_prop_hoop_a",
    "kind": "prop",
    "anim": "Roll",
@@ -2362,77 +2270,27 @@
    "anim": "Static",
    "tier": 1,
    "interact": "-",
-   "copies": 24,
+   "copies": 84,
    "alternate": false,
    "tris": 500
   },
   {
-   "mesh": "scn_prop_accent_a",
-   "kind": "prop",
-   "anim": "Hover",
-   "tier": 1,
-   "interact": "-",
-   "copies": 33,
-   "alternate": false,
-   "tris": 428
-  },
-  {
-   "mesh": "scn_prop_halo_b",
+   "mesh": "scn_prop_segment_c",
    "kind": "prop",
    "anim": "Float",
    "tier": 1,
    "interact": "-",
-   "copies": 26,
+   "copies": 11,
    "alternate": false,
-   "tris": 3200
+   "tris": 1272
   },
   {
-   "mesh": "scn_prop_light_pillar_b",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "copies": 59,
-   "alternate": false,
-   "tris": 500
-  },
-  {
-   "mesh": "scn_prop_debris_h",
+   "mesh": "scn_prop_debris_b",
    "kind": "prop",
    "anim": "Tumble",
    "tier": 2,
    "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 2292
-  },
-  {
-   "mesh": "scn_prop_debris_i",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 10,
-   "alternate": false,
-   "tris": 2292
-  },
-  {
-   "mesh": "scn_prop_debris_j",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 6,
-   "alternate": false,
-   "tris": 2292
-  },
-  {
-   "mesh": "scn_prop_debris_k",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
+   "copies": 30,
    "alternate": false,
    "tris": 2292
   },
@@ -2462,17 +2320,7 @@
    "anim": "Wing",
    "tier": 2,
    "interact": "-",
-   "copies": 105,
-   "alternate": false,
-   "tris": 764
-  },
-  {
-   "mesh": "scn_prop_bird_wing_b",
-   "kind": "prop",
-   "anim": "Wing",
-   "tier": 2,
-   "interact": "-",
-   "copies": 105,
+   "copies": 210,
    "alternate": false,
    "tris": 764
   },
@@ -2497,36 +2345,6 @@
    "tris": 992
   },
   {
-   "mesh": "scn_prop_halo_c",
-   "kind": "prop",
-   "anim": "Float",
-   "tier": 1,
-   "interact": "-",
-   "copies": 6,
-   "alternate": false,
-   "tris": 3200
-  },
-  {
-   "mesh": "scn_prop_banner_b",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_c",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
    "mesh": "scn_prop_brazier_a",
    "kind": "prop",
    "anim": "Flicker",
@@ -2542,17 +2360,7 @@
    "anim": "Static",
    "tier": 2,
    "interact": "Use",
-   "copies": 3,
-   "alternate": false,
-   "tris": 3056
-  },
-  {
-   "mesh": "scn_prop_telescope_b",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "Use",
-   "copies": 3,
+   "copies": 13,
    "alternate": false,
    "tris": 3056
   },
@@ -2577,36 +2385,6 @@
    "tris": 200
   },
   {
-   "mesh": "scn_prop_banner_d",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_crystal_c",
-   "kind": "prop",
-   "anim": "Hover",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 1148
-  },
-  {
-   "mesh": "scn_prop_halo_d",
-   "kind": "prop",
-   "anim": "Float",
-   "tier": 1,
-   "interact": "-",
-   "copies": 3,
-   "alternate": false,
-   "tris": 3200
-  },
-  {
    "mesh": "scn_fix_vault_door_a",
    "kind": "fixture",
    "anim": "-",
@@ -2622,7 +2400,7 @@
    "anim": "Spin",
    "tier": 1,
    "interact": "-",
-   "copies": 2,
+   "copies": 6,
    "alternate": false,
    "tris": 3456
   },
@@ -2632,22 +2410,12 @@
    "anim": "Spin",
    "tier": 1,
    "interact": "-",
-   "copies": 2,
+   "copies": 6,
    "alternate": false,
    "tris": 3456
   },
   {
-   "mesh": "scn_prop_telescope_c",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "Use",
-   "copies": 3,
-   "alternate": false,
-   "tris": 3056
-  },
-  {
-   "mesh": "scn_prop_halo_e",
+   "mesh": "scn_prop_halo_a",
    "kind": "prop",
    "anim": "Float",
    "tier": 1,
@@ -2662,7 +2430,7 @@
    "anim": "Static",
    "tier": 1,
    "interact": "Hit",
-   "copies": 6,
+   "copies": 14,
    "alternate": false,
    "tris": 1744
   },
@@ -2692,9 +2460,19 @@
    "anim": "Hover",
    "tier": 2,
    "interact": "-",
-   "copies": 17,
+   "copies": 14,
    "alternate": false,
    "tris": 940
+  },
+  {
+   "mesh": "scn_prop_accent_a",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "-",
+   "copies": 6,
+   "alternate": false,
+   "tris": 1148
   },
   {
    "mesh": "scn_prop_accent_b",
@@ -2704,60 +2482,20 @@
    "interact": "-",
    "copies": 3,
    "alternate": false,
-   "tris": 1148
+   "tris": 3200
   },
   {
-   "mesh": "scn_prop_accent_c",
+   "mesh": "scn_prop_halo_b",
    "kind": "prop",
-   "anim": "Hover",
+   "anim": "Float",
    "tier": 1,
    "interact": "-",
-   "copies": 3,
+   "copies": 9,
    "alternate": false,
    "tris": 3200
   },
   {
-   "mesh": "scn_prop_accent_d",
-   "kind": "prop",
-   "anim": "Hover",
-   "tier": 1,
-   "interact": "-",
-   "copies": 3,
-   "alternate": false,
-   "tris": 1148
-  },
-  {
-   "mesh": "scn_prop_banner_e",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 7,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_debris_l",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 4,
-   "alternate": false,
-   "tris": 2292
-  },
-  {
-   "mesh": "scn_prop_debris_m",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 6,
-   "alternate": false,
-   "tris": 2292
-  },
-  {
-   "mesh": "scn_prop_halo_f",
+   "mesh": "scn_prop_halo_c",
    "kind": "prop",
    "anim": "Float",
    "tier": 1,
@@ -2767,24 +2505,14 @@
    "tris": 3456
   },
   {
-   "mesh": "scn_prop_telescope_d",
+   "mesh": "scn_prop_crystal_b",
    "kind": "prop",
-   "anim": "Static",
+   "anim": "Hover",
    "tier": 2,
-   "interact": "Use",
-   "copies": 3,
+   "interact": "-",
+   "copies": 1,
    "alternate": false,
-   "tris": 3056
-  },
-  {
-   "mesh": "scn_prop_telescope_e",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "Use",
-   "copies": 3,
-   "alternate": false,
-   "tris": 3056
+   "tris": 1148
   },
   {
    "mesh": "scn_fix_forcefield_a",
@@ -2797,66 +2525,6 @@
    "tris": 12
   },
   {
-   "mesh": "scn_prop_lamp_b",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "copies": 14,
-   "alternate": false,
-   "tris": 596
-  },
-  {
-   "mesh": "scn_prop_accent_e",
-   "kind": "prop",
-   "anim": "Hover",
-   "tier": 1,
-   "interact": "-",
-   "copies": 3,
-   "alternate": false,
-   "tris": 300
-  },
-  {
-   "mesh": "scn_prop_banner_f",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_target_b",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "Hit",
-   "copies": 8,
-   "alternate": false,
-   "tris": 1744
-  },
-  {
-   "mesh": "scn_prop_keel_ring_c",
-   "kind": "prop",
-   "anim": "Spin",
-   "tier": 1,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 3456
-  },
-  {
-   "mesh": "scn_prop_keel_ring_d",
-   "kind": "prop",
-   "anim": "Spin",
-   "tier": 1,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 3456
-  },
-  {
    "mesh": "scn_prop_container_b",
    "kind": "prop",
    "anim": "Static",
@@ -2867,14 +2535,24 @@
    "tris": 3056
   },
   {
-   "mesh": "scn_prop_banner_g",
+   "mesh": "scn_prop_banner_b",
    "kind": "prop",
    "anim": "Sway",
    "tier": 2,
    "interact": "-",
-   "copies": 8,
+   "copies": 20,
    "alternate": false,
    "tris": 1036
+  },
+  {
+   "mesh": "scn_prop_lamp_b",
+   "kind": "prop",
+   "anim": "Static",
+   "tier": 1,
+   "interact": "-",
+   "copies": 13,
+   "alternate": false,
+   "tris": 596
   },
   {
    "mesh": "scn_prop_holo_pedestal_b",
@@ -2882,7 +2560,7 @@
    "anim": "Static",
    "tier": 1,
    "interact": "Activate",
-   "copies": 8,
+   "copies": 5,
    "alternate": false,
    "tris": 1408
   },
@@ -2902,9 +2580,9 @@
    "anim": "Moored",
    "tier": 1,
    "interact": "Board",
-   "copies": 24,
+   "copies": 25,
    "alternate": false,
-   "tris": 3664
+   "tris": 2894
   },
   {
    "mesh": "scn_prop_warship_b",
@@ -2912,7 +2590,7 @@
    "anim": "Moored",
    "tier": 1,
    "interact": "Board",
-   "copies": 24,
+   "copies": 25,
    "alternate": true,
    "tris": 5238
   },
@@ -2922,9 +2600,9 @@
    "anim": "Moored",
    "tier": 1,
    "interact": "Board",
-   "copies": 24,
+   "copies": 25,
    "alternate": true,
-   "tris": 3484
+   "tris": 3664
   },
   {
    "mesh": "scn_prop_warship_d",
@@ -2932,9 +2610,9 @@
    "anim": "Moored",
    "tier": 1,
    "interact": "Board",
-   "copies": 24,
+   "copies": 25,
    "alternate": true,
-   "tris": 2894
+   "tris": 3484
   },
   {
    "mesh": "scn_prop_warship_e",
@@ -2942,7 +2620,7 @@
    "anim": "Moored",
    "tier": 1,
    "interact": "Board",
-   "copies": 24,
+   "copies": 25,
    "alternate": true,
    "tris": 3760
   },
@@ -2952,19 +2630,9 @@
    "anim": "Static",
    "tier": 1,
    "interact": "-",
-   "copies": 3,
+   "copies": 25,
    "alternate": false,
    "tris": 2700
-  },
-  {
-   "mesh": "scn_prop_lamp_c",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "copies": 6,
-   "alternate": false,
-   "tris": 596
   },
   {
    "mesh": "scn_prop_pylon_b",
@@ -2977,16 +2645,6 @@
    "tris": 4204
   },
   {
-   "mesh": "scn_prop_halo_g",
-   "kind": "prop",
-   "anim": "Float",
-   "tier": 1,
-   "interact": "-",
-   "copies": 3,
-   "alternate": false,
-   "tris": 3200
-  },
-  {
    "mesh": "scn_prop_skiff_b",
    "kind": "prop",
    "anim": "Moored",
@@ -2995,16 +2653,6 @@
    "copies": 2,
    "alternate": false,
    "tris": 2828
-  },
-  {
-   "mesh": "scn_prop_gangway_b",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "copies": 5,
-   "alternate": false,
-   "tris": 2700
   },
   {
    "mesh": "scn_prop_hoop_b",
@@ -3017,104 +2665,24 @@
    "tris": 4448
   },
   {
-   "mesh": "scn_prop_light_pillar_c",
+   "mesh": "scn_prop_light_pillar_b",
    "kind": "prop",
    "anim": "Static",
    "tier": 1,
    "interact": "-",
-   "copies": 10,
+   "copies": 26,
    "alternate": false,
    "tris": 500
   },
   {
-   "mesh": "scn_prop_accent_f",
+   "mesh": "scn_prop_debris_c",
    "kind": "prop",
-   "anim": "Hover",
-   "tier": 1,
-   "interact": "-",
-   "copies": 11,
-   "alternate": false,
-   "tris": 428
-  },
-  {
-   "mesh": "scn_prop_halo_h",
-   "kind": "prop",
-   "anim": "Float",
-   "tier": 1,
-   "interact": "-",
-   "copies": 9,
-   "alternate": false,
-   "tris": 3200
-  },
-  {
-   "mesh": "scn_prop_gangway_c",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 2700
-  },
-  {
-   "mesh": "scn_prop_light_pillar_d",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
+   "anim": "Tumble",
+   "tier": 2,
    "interact": "-",
    "copies": 15,
    "alternate": false,
-   "tris": 500
-  },
-  {
-   "mesh": "scn_prop_debris_n",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
    "tris": 2292
-  },
-  {
-   "mesh": "scn_prop_debris_o",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 5,
-   "alternate": false,
-   "tris": 2292
-  },
-  {
-   "mesh": "scn_prop_debris_p",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 3,
-   "alternate": false,
-   "tris": 2292
-  },
-  {
-   "mesh": "scn_prop_debris_q",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 2292
-  },
-  {
-   "mesh": "scn_prop_gangway_d",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "copies": 5,
-   "alternate": false,
-   "tris": 2700
   },
   {
    "mesh": "scn_prop_bird_d",
@@ -3127,56 +2695,6 @@
    "tris": 992
   },
   {
-   "mesh": "scn_prop_halo_i",
-   "kind": "prop",
-   "anim": "Float",
-   "tier": 1,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 3200
-  },
-  {
-   "mesh": "scn_prop_banner_h",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_i",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_j",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_k",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
    "mesh": "scn_prop_brazier_b",
    "kind": "prop",
    "anim": "Flicker",
@@ -3187,97 +2705,27 @@
    "tris": 1232
   },
   {
-   "mesh": "scn_prop_banner_l",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_m",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_n",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_gangway_e",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "copies": 3,
-   "alternate": false,
-   "tris": 2700
-  },
-  {
-   "mesh": "scn_prop_halo_j",
-   "kind": "prop",
-   "anim": "Float",
-   "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3200
-  },
-  {
-   "mesh": "scn_prop_gangway_f",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "copies": 3,
-   "alternate": false,
-   "tris": 2700
-  },
-  {
-   "mesh": "scn_prop_gangway_g",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 2700
-  },
-  {
-   "mesh": "scn_prop_keel_ring_e",
+   "mesh": "scn_prop_keel_ring_c",
    "kind": "prop",
    "anim": "Spin",
    "tier": 1,
    "interact": "-",
-   "copies": 1,
+   "copies": 3,
    "alternate": false,
    "tris": 3456
   },
   {
-   "mesh": "scn_prop_keel_ring_f",
+   "mesh": "scn_prop_keel_ring_d",
    "kind": "prop",
    "anim": "Spin",
    "tier": 1,
    "interact": "-",
-   "copies": 1,
+   "copies": 3,
    "alternate": false,
    "tris": 3456
   },
   {
-   "mesh": "scn_prop_halo_k",
+   "mesh": "scn_prop_halo_d",
    "kind": "prop",
    "anim": "Float",
    "tier": 1,
@@ -3287,12 +2735,12 @@
    "tris": 2980
   },
   {
-   "mesh": "scn_prop_target_c",
+   "mesh": "scn_prop_target_b",
    "kind": "prop",
    "anim": "Static",
    "tier": 1,
    "interact": "Hit",
-   "copies": 3,
+   "copies": 7,
    "alternate": false,
    "tris": 1744
   },
@@ -3317,17 +2765,17 @@
    "tris": 940
   },
   {
-   "mesh": "scn_prop_accent_g",
+   "mesh": "scn_prop_accent_c",
    "kind": "prop",
    "anim": "Hover",
    "tier": 1,
    "interact": "-",
-   "copies": 1,
+   "copies": 2,
    "alternate": false,
    "tris": 1148
   },
   {
-   "mesh": "scn_prop_accent_h",
+   "mesh": "scn_prop_accent_d",
    "kind": "prop",
    "anim": "Hover",
    "tier": 1,
@@ -3337,134 +2785,34 @@
    "tris": 3200
   },
   {
-   "mesh": "scn_prop_accent_i",
+   "mesh": "scn_prop_halo_e",
+   "kind": "prop",
+   "anim": "Float",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 3200
+  },
+  {
+   "mesh": "scn_prop_accent_e",
    "kind": "prop",
    "anim": "Hover",
    "tier": 1,
    "interact": "-",
    "copies": 1,
    "alternate": false,
-   "tris": 1148
+   "tris": 1278
   },
   {
-   "mesh": "scn_prop_banner_o",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 7,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_debris_r",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 2292
-  },
-  {
-   "mesh": "scn_prop_debris_s",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 3,
-   "alternate": false,
-   "tris": 2292
-  },
-  {
-   "mesh": "scn_prop_halo_l",
+   "mesh": "scn_prop_halo_f",
    "kind": "prop",
    "anim": "Float",
    "tier": 1,
    "interact": "-",
    "copies": 1,
    "alternate": false,
-   "tris": 3456
-  },
-  {
-   "mesh": "scn_prop_crystal_d",
-   "kind": "prop",
-   "anim": "Hover",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1148
-  },
-  {
-   "mesh": "scn_prop_lamp_d",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "copies": 4,
-   "alternate": false,
-   "tris": 596
-  },
-  {
-   "mesh": "scn_prop_accent_j",
-   "kind": "prop",
-   "anim": "Hover",
-   "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 300
-  },
-  {
-   "mesh": "scn_prop_gangway_h",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 2700
-  },
-  {
-   "mesh": "scn_prop_target_d",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "Hit",
-   "copies": 4,
-   "alternate": false,
-   "tris": 1744
-  },
-  {
-   "mesh": "scn_prop_keel_ring_g",
-   "kind": "prop",
-   "anim": "Spin",
-   "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3456
-  },
-  {
-   "mesh": "scn_prop_keel_ring_h",
-   "kind": "prop",
-   "anim": "Spin",
-   "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3456
-  },
-  {
-   "mesh": "scn_prop_gangway_i",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 2700
+   "tris": 904
   },
   {
    "mesh": "scn_prop_container_c",
@@ -3477,22 +2825,22 @@
    "tris": 3056
   },
   {
-   "mesh": "scn_prop_banner_p",
+   "mesh": "scn_prop_banner_c",
    "kind": "prop",
    "anim": "Sway",
    "tier": 2,
    "interact": "-",
-   "copies": 13,
+   "copies": 22,
    "alternate": false,
    "tris": 1036
   },
   {
-   "mesh": "scn_prop_lamp_e",
+   "mesh": "scn_prop_lamp_c",
    "kind": "prop",
    "anim": "Static",
    "tier": 1,
    "interact": "-",
-   "copies": 20,
+   "copies": 28,
    "alternate": false,
    "tris": 596
   },
@@ -3512,7 +2860,7 @@
    "anim": "Static",
    "tier": 1,
    "interact": "Breakable",
-   "copies": 11,
+   "copies": 10,
    "alternate": false,
    "tris": 1176
   },
@@ -3535,16 +2883,6 @@
    "copies": 12,
    "alternate": false,
    "tris": 4204
-  },
-  {
-   "mesh": "scn_prop_halo_m",
-   "kind": "prop",
-   "anim": "Float",
-   "tier": 1,
-   "interact": "-",
-   "copies": 3,
-   "alternate": false,
-   "tris": 3200
   },
   {
    "mesh": "scn_prop_container_d",
@@ -3577,82 +2915,22 @@
    "tris": 4448
   },
   {
-   "mesh": "scn_prop_light_pillar_e",
+   "mesh": "scn_prop_light_pillar_c",
    "kind": "prop",
    "anim": "Static",
    "tier": 1,
    "interact": "-",
-   "copies": 14,
+   "copies": 47,
    "alternate": false,
    "tris": 500
   },
   {
-   "mesh": "scn_prop_accent_k",
-   "kind": "prop",
-   "anim": "Hover",
-   "tier": 1,
-   "interact": "-",
-   "copies": 11,
-   "alternate": false,
-   "tris": 428
-  },
-  {
-   "mesh": "scn_prop_halo_n",
-   "kind": "prop",
-   "anim": "Float",
-   "tier": 1,
-   "interact": "-",
-   "copies": 9,
-   "alternate": false,
-   "tris": 3200
-  },
-  {
-   "mesh": "scn_prop_light_pillar_f",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "copies": 35,
-   "alternate": false,
-   "tris": 500
-  },
-  {
-   "mesh": "scn_prop_debris_t",
+   "mesh": "scn_prop_debris_d",
    "kind": "prop",
    "anim": "Tumble",
    "tier": 2,
    "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 2292
-  },
-  {
-   "mesh": "scn_prop_debris_u",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 5,
-   "alternate": false,
-   "tris": 2292
-  },
-  {
-   "mesh": "scn_prop_debris_v",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 3,
-   "alternate": false,
-   "tris": 2292
-  },
-  {
-   "mesh": "scn_prop_debris_w",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
+   "copies": 15,
    "alternate": false,
    "tris": 2292
   },
@@ -3697,34 +2975,14 @@
    "tris": 992
   },
   {
-   "mesh": "scn_prop_halo_o",
+   "mesh": "scn_prop_telescope_b",
    "kind": "prop",
-   "anim": "Float",
-   "tier": 1,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 3200
-  },
-  {
-   "mesh": "scn_prop_banner_q",
-   "kind": "prop",
-   "anim": "Sway",
+   "anim": "Static",
    "tier": 2,
-   "interact": "-",
-   "copies": 1,
+   "interact": "Use",
+   "copies": 5,
    "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_r",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 1036
+   "tris": 3056
   },
   {
    "mesh": "scn_prop_brazier_c",
@@ -3732,62 +2990,12 @@
    "anim": "Flicker",
    "tier": 1,
    "interact": "Lightable",
-   "copies": 23,
+   "copies": 27,
    "alternate": false,
    "tris": 1232
   },
   {
-   "mesh": "scn_prop_telescope_f",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "Use",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3056
-  },
-  {
-   "mesh": "scn_prop_telescope_g",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "Use",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3056
-  },
-  {
-   "mesh": "scn_prop_banner_s",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_t",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_u",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_crystal_e",
+   "mesh": "scn_prop_crystal_c",
    "kind": "prop",
    "anim": "Hover",
    "tier": 2,
@@ -3797,47 +3005,27 @@
    "tris": 1148
   },
   {
-   "mesh": "scn_prop_halo_p",
-   "kind": "prop",
-   "anim": "Float",
-   "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3200
-  },
-  {
-   "mesh": "scn_prop_keel_ring_i",
+   "mesh": "scn_prop_keel_ring_e",
    "kind": "prop",
    "anim": "Spin",
    "tier": 1,
    "interact": "-",
-   "copies": 1,
+   "copies": 3,
    "alternate": false,
    "tris": 3456
   },
   {
-   "mesh": "scn_prop_keel_ring_j",
+   "mesh": "scn_prop_keel_ring_f",
    "kind": "prop",
    "anim": "Spin",
    "tier": 1,
    "interact": "-",
-   "copies": 1,
+   "copies": 3,
    "alternate": false,
    "tris": 3456
   },
   {
-   "mesh": "scn_prop_telescope_h",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "Use",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3056
-  },
-  {
-   "mesh": "scn_prop_halo_q",
+   "mesh": "scn_prop_halo_g",
    "kind": "prop",
    "anim": "Float",
    "tier": 1,
@@ -3847,12 +3035,12 @@
    "tris": 2980
   },
   {
-   "mesh": "scn_prop_target_e",
+   "mesh": "scn_prop_target_c",
    "kind": "prop",
    "anim": "Static",
    "tier": 1,
    "interact": "Hit",
-   "copies": 3,
+   "copies": 7,
    "alternate": false,
    "tris": 1744
   },
@@ -3882,22 +3070,22 @@
    "anim": "Hover",
    "tier": 2,
    "interact": "-",
-   "copies": 4,
+   "copies": 3,
    "alternate": false,
    "tris": 940
   },
   {
-   "mesh": "scn_prop_accent_l",
+   "mesh": "scn_prop_accent_f",
    "kind": "prop",
    "anim": "Hover",
    "tier": 1,
    "interact": "-",
-   "copies": 1,
+   "copies": 2,
    "alternate": false,
    "tris": 1148
   },
   {
-   "mesh": "scn_prop_accent_m",
+   "mesh": "scn_prop_accent_g",
    "kind": "prop",
    "anim": "Hover",
    "tier": 1,
@@ -3907,129 +3095,19 @@
    "tris": 3200
   },
   {
-   "mesh": "scn_prop_accent_n",
-   "kind": "prop",
-   "anim": "Hover",
-   "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1148
-  },
-  {
-   "mesh": "scn_prop_banner_v",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_debris_x",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 2292
-  },
-  {
-   "mesh": "scn_prop_debris_y",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 3,
-   "alternate": false,
-   "tris": 2292
-  },
-  {
-   "mesh": "scn_prop_halo_r",
+   "mesh": "scn_prop_halo_h",
    "kind": "prop",
    "anim": "Float",
    "tier": 1,
    "interact": "-",
-   "copies": 1,
+   "copies": 3,
    "alternate": false,
-   "tris": 3456
+   "tris": 3200
   },
   {
-   "mesh": "scn_prop_telescope_i",
+   "mesh": "scn_prop_halo_i",
    "kind": "prop",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "Use",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3056
-  },
-  {
-   "mesh": "scn_prop_telescope_j",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "Use",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3056
-  },
-  {
-   "mesh": "scn_prop_lamp_f",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "copies": 8,
-   "alternate": false,
-   "tris": 596
-  },
-  {
-   "mesh": "scn_prop_accent_o",
-   "kind": "prop",
-   "anim": "Hover",
-   "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 300
-  },
-  {
-   "mesh": "scn_prop_banner_w",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_target_f",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "Hit",
-   "copies": 4,
-   "alternate": false,
-   "tris": 1744
-  },
-  {
-   "mesh": "scn_prop_keel_ring_k",
-   "kind": "prop",
-   "anim": "Spin",
-   "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3456
-  },
-  {
-   "mesh": "scn_prop_keel_ring_l",
-   "kind": "prop",
-   "anim": "Spin",
+   "anim": "Float",
    "tier": 1,
    "interact": "-",
    "copies": 1,
@@ -4047,22 +3125,22 @@
    "tris": 3056
   },
   {
-   "mesh": "scn_prop_banner_x",
+   "mesh": "scn_prop_banner_d",
    "kind": "prop",
    "anim": "Sway",
    "tier": 2,
    "interact": "-",
-   "copies": 15,
+   "copies": 25,
    "alternate": false,
    "tris": 1036
   },
   {
-   "mesh": "scn_prop_lamp_g",
+   "mesh": "scn_prop_lamp_d",
    "kind": "prop",
    "anim": "Static",
    "tier": 1,
-   "interact": "Repair",
-   "copies": 17,
+   "interact": "-",
+   "copies": 18,
    "alternate": false,
    "tris": 596
   },
@@ -4072,7 +3150,7 @@
    "anim": "Static",
    "tier": 1,
    "interact": "Breakable",
-   "copies": 16,
+   "copies": 15,
    "alternate": false,
    "tris": 1176
   },
@@ -4097,62 +3175,22 @@
    "tris": 4448
   },
   {
-   "mesh": "scn_prop_light_pillar_g",
+   "mesh": "scn_prop_light_pillar_d",
    "kind": "prop",
    "anim": "Static",
    "tier": 1,
    "interact": "-",
-   "copies": 14,
+   "copies": 47,
    "alternate": false,
    "tris": 500
   },
   {
-   "mesh": "scn_prop_light_pillar_h",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "copies": 35,
-   "alternate": false,
-   "tris": 500
-  },
-  {
-   "mesh": "scn_prop_debris_z",
+   "mesh": "scn_prop_debris_e",
    "kind": "prop",
    "anim": "Tumble",
    "tier": 2,
    "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 2116
-  },
-  {
-   "mesh": "scn_prop_debris_aa",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 5,
-   "alternate": false,
-   "tris": 2116
-  },
-  {
-   "mesh": "scn_prop_debris_ab",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 3,
-   "alternate": false,
-   "tris": 2116
-  },
-  {
-   "mesh": "scn_prop_debris_ac",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
+   "copies": 15,
    "alternate": false,
    "tris": 2116
   },
@@ -4177,36 +3215,6 @@
    "tris": 992
   },
   {
-   "mesh": "scn_prop_banner_y",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_z",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_aa",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
    "mesh": "scn_prop_brazier_d",
    "kind": "prop",
    "anim": "Flicker",
@@ -4217,82 +3225,52 @@
    "tris": 1232
   },
   {
-   "mesh": "scn_prop_telescope_k",
+   "mesh": "scn_prop_telescope_c",
    "kind": "prop",
    "anim": "Static",
    "tier": 2,
    "interact": "Use",
-   "copies": 1,
+   "copies": 5,
    "alternate": false,
    "tris": 3056
   },
   {
-   "mesh": "scn_prop_telescope_l",
+   "mesh": "scn_prop_crystal_d",
    "kind": "prop",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "Use",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3056
-  },
-  {
-   "mesh": "scn_prop_banner_ab",
-   "kind": "prop",
-   "anim": "Sway",
+   "anim": "Hover",
    "tier": 2,
    "interact": "-",
    "copies": 1,
    "alternate": false,
-   "tris": 1036
+   "tris": 1148
   },
   {
-   "mesh": "scn_prop_banner_ac",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_keel_ring_m",
+   "mesh": "scn_prop_keel_ring_g",
    "kind": "prop",
    "anim": "Spin",
    "tier": 1,
    "interact": "-",
-   "copies": 1,
+   "copies": 3,
    "alternate": false,
    "tris": 3456
   },
   {
-   "mesh": "scn_prop_keel_ring_n",
+   "mesh": "scn_prop_keel_ring_h",
    "kind": "prop",
    "anim": "Spin",
    "tier": 1,
    "interact": "-",
-   "copies": 1,
+   "copies": 3,
    "alternate": false,
    "tris": 3456
   },
   {
-   "mesh": "scn_prop_telescope_m",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "Use",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3056
-  },
-  {
-   "mesh": "scn_prop_target_g",
+   "mesh": "scn_prop_target_d",
    "kind": "prop",
    "anim": "Static",
    "tier": 1,
    "interact": "Hit",
-   "copies": 3,
+   "copies": 7,
    "alternate": false,
    "tris": 1744
   },
@@ -4327,104 +3305,14 @@
    "tris": 1280
   },
   {
-   "mesh": "scn_prop_banner_ad",
+   "mesh": "scn_prop_halo_j",
    "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 5,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_debris_ad",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 2116
-  },
-  {
-   "mesh": "scn_prop_debris_ae",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 3,
-   "alternate": false,
-   "tris": 2116
-  },
-  {
-   "mesh": "scn_prop_telescope_n",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "Use",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3056
-  },
-  {
-   "mesh": "scn_prop_telescope_o",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "Use",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3056
-  },
-  {
-   "mesh": "scn_prop_crystal_f",
-   "kind": "prop",
-   "anim": "Hover",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1148
-  },
-  {
-   "mesh": "scn_prop_lamp_h",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "copies": 5,
-   "alternate": false,
-   "tris": 596
-  },
-  {
-   "mesh": "scn_prop_target_h",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "Hit",
-   "copies": 4,
-   "alternate": false,
-   "tris": 1744
-  },
-  {
-   "mesh": "scn_prop_keel_ring_o",
-   "kind": "prop",
-   "anim": "Spin",
+   "anim": "Float",
    "tier": 1,
    "interact": "-",
    "copies": 1,
    "alternate": false,
-   "tris": 3456
-  },
-  {
-   "mesh": "scn_prop_keel_ring_p",
-   "kind": "prop",
-   "anim": "Spin",
-   "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3456
+   "tris": 720
   },
   {
    "mesh": "scn_prop_container_f",
@@ -4437,12 +3325,12 @@
    "tris": 3056
   },
   {
-   "mesh": "scn_prop_banner_ae",
+   "mesh": "scn_prop_banner_e",
    "kind": "prop",
    "anim": "Sway",
    "tier": 2,
    "interact": "-",
-   "copies": 19,
+   "copies": 37,
    "alternate": false,
    "tris": 1036
   },
@@ -4457,6 +3345,16 @@
    "tris": 2828
   },
   {
+   "mesh": "scn_prop_accent_h",
+   "kind": "prop",
+   "anim": "Hover",
+   "tier": 1,
+   "interact": "-",
+   "copies": 11,
+   "alternate": false,
+   "tris": 428
+  },
+  {
    "mesh": "scn_prop_bird_i",
    "kind": "prop",
    "anim": "Bird",
@@ -4467,87 +3365,7 @@
    "tris": 992
   },
   {
-   "mesh": "scn_prop_banner_af",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_ag",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_ah",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_ai",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_aj",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_ak",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_al",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_am",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_crystal_g",
+   "mesh": "scn_prop_crystal_e",
    "kind": "prop",
    "anim": "Hover",
    "tier": 2,
@@ -4567,14 +3385,14 @@
    "tris": 1128
   },
   {
-   "mesh": "scn_prop_banner_an",
+   "mesh": "scn_prop_accent_i",
    "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
+   "anim": "Hover",
+   "tier": 1,
    "interact": "-",
-   "copies": 7,
+   "copies": 1,
    "alternate": false,
-   "tris": 1036
+   "tris": 348
   },
   {
    "mesh": "scn_prop_container_g",
@@ -4587,22 +3405,22 @@
    "tris": 3056
   },
   {
-   "mesh": "scn_prop_banner_ao",
+   "mesh": "scn_prop_banner_f",
    "kind": "prop",
    "anim": "Sway",
    "tier": 2,
    "interact": "-",
-   "copies": 11,
+   "copies": 20,
    "alternate": false,
    "tris": 1264
   },
   {
-   "mesh": "scn_prop_lamp_i",
+   "mesh": "scn_prop_lamp_e",
    "kind": "prop",
    "anim": "Static",
    "tier": 1,
    "interact": "-",
-   "copies": 7,
+   "copies": 11,
    "alternate": false,
    "tris": 500
   },
@@ -4612,7 +3430,7 @@
    "anim": "Static",
    "tier": 1,
    "interact": "Activate",
-   "copies": 5,
+   "copies": 7,
    "alternate": false,
    "tris": 1408
   },
@@ -4622,7 +3440,7 @@
    "anim": "Static",
    "tier": 1,
    "interact": "Breakable",
-   "copies": 14,
+   "copies": 8,
    "alternate": false,
    "tris": 1020
   },
@@ -4637,24 +3455,14 @@
    "tris": 4204
   },
   {
-   "mesh": "scn_prop_halo_s",
-   "kind": "prop",
-   "anim": "Float",
-   "tier": 1,
-   "interact": "-",
-   "copies": 3,
-   "alternate": false,
-   "tris": 3200
-  },
-  {
-   "mesh": "scn_prop_fallen_roof_b",
+   "mesh": "scn_prop_container_h",
    "kind": "prop",
    "anim": "Static",
    "tier": 1,
-   "interact": "-",
-   "copies": 11,
+   "interact": "Loot",
+   "copies": 3,
    "alternate": false,
-   "tris": 1412
+   "tris": 2880
   },
   {
    "mesh": "scn_prop_skiff_f",
@@ -4677,82 +3485,22 @@
    "tris": 3040
   },
   {
-   "mesh": "scn_prop_light_pillar_i",
+   "mesh": "scn_prop_light_pillar_e",
    "kind": "prop",
    "anim": "Static",
    "tier": 1,
    "interact": "-",
-   "copies": 8,
+   "copies": 25,
    "alternate": false,
    "tris": 350
   },
   {
-   "mesh": "scn_prop_accent_p",
-   "kind": "prop",
-   "anim": "Hover",
-   "tier": 1,
-   "interact": "-",
-   "copies": 11,
-   "alternate": false,
-   "tris": 428
-  },
-  {
-   "mesh": "scn_prop_halo_t",
-   "kind": "prop",
-   "anim": "Float",
-   "tier": 1,
-   "interact": "-",
-   "copies": 9,
-   "alternate": false,
-   "tris": 3200
-  },
-  {
-   "mesh": "scn_prop_light_pillar_j",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "copies": 19,
-   "alternate": false,
-   "tris": 350
-  },
-  {
-   "mesh": "scn_prop_debris_af",
+   "mesh": "scn_prop_debris_f",
    "kind": "prop",
    "anim": "Tumble",
    "tier": 2,
    "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 2292
-  },
-  {
-   "mesh": "scn_prop_debris_ag",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 5,
-   "alternate": false,
-   "tris": 2292
-  },
-  {
-   "mesh": "scn_prop_debris_ah",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 3,
-   "alternate": false,
-   "tris": 2292
-  },
-  {
-   "mesh": "scn_prop_debris_ai",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
+   "copies": 15,
    "alternate": false,
    "tris": 2292
   },
@@ -4797,34 +3545,14 @@
    "tris": 1290
   },
   {
-   "mesh": "scn_prop_halo_u",
+   "mesh": "scn_prop_telescope_d",
    "kind": "prop",
-   "anim": "Float",
-   "tier": 1,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 3200
-  },
-  {
-   "mesh": "scn_prop_banner_ap",
-   "kind": "prop",
-   "anim": "Sway",
+   "anim": "Static",
    "tier": 2,
-   "interact": "-",
-   "copies": 1,
+   "interact": "Use",
+   "copies": 5,
    "alternate": false,
-   "tris": 1264
-  },
-  {
-   "mesh": "scn_prop_banner_aq",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 1264
+   "tris": 3184
   },
   {
    "mesh": "scn_prop_brazier_e",
@@ -4832,112 +3560,52 @@
    "anim": "Flicker",
    "tier": 1,
    "interact": "Lightable",
-   "copies": 25,
+   "copies": 17,
    "alternate": false,
    "tris": 1040
   },
   {
-   "mesh": "scn_prop_telescope_p",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "Use",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3184
-  },
-  {
-   "mesh": "scn_prop_telescope_q",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "Use",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3184
-  },
-  {
-   "mesh": "scn_prop_banner_ar",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1264
-  },
-  {
-   "mesh": "scn_prop_banner_as",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1264
-  },
-  {
-   "mesh": "scn_prop_banner_at",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1264
-  },
-  {
-   "mesh": "scn_prop_crystal_h",
+   "mesh": "scn_prop_crystal_f",
    "kind": "prop",
    "anim": "Hover",
    "tier": 2,
    "interact": "-",
-   "copies": 2,
+   "copies": 1,
    "alternate": false,
    "tris": 1148
   },
   {
-   "mesh": "scn_prop_halo_v",
-   "kind": "prop",
-   "anim": "Float",
-   "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3200
-  },
-  {
-   "mesh": "scn_prop_keel_ring_q",
-   "kind": "prop",
-   "anim": "Spin",
-   "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 4800
-  },
-  {
-   "mesh": "scn_prop_keel_ring_r",
-   "kind": "prop",
-   "anim": "Spin",
-   "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 4800
-  },
-  {
-   "mesh": "scn_prop_telescope_r",
+   "mesh": "scn_prop_fallen_roof_b",
    "kind": "prop",
    "anim": "Static",
-   "tier": 2,
-   "interact": "Use",
-   "copies": 1,
+   "tier": 1,
+   "interact": "-",
+   "copies": 9,
    "alternate": false,
-   "tris": 3184
+   "tris": 1412
   },
   {
-   "mesh": "scn_prop_halo_w",
+   "mesh": "scn_prop_keel_ring_i",
+   "kind": "prop",
+   "anim": "Spin",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 4800
+  },
+  {
+   "mesh": "scn_prop_keel_ring_j",
+   "kind": "prop",
+   "anim": "Spin",
+   "tier": 1,
+   "interact": "-",
+   "copies": 3,
+   "alternate": false,
+   "tris": 4800
+  },
+  {
+   "mesh": "scn_prop_halo_k",
    "kind": "prop",
    "anim": "Float",
    "tier": 1,
@@ -4947,12 +3615,12 @@
    "tris": 2980
   },
   {
-   "mesh": "scn_prop_target_i",
+   "mesh": "scn_prop_target_e",
    "kind": "prop",
    "anim": "Static",
    "tier": 1,
    "interact": "Hit",
-   "copies": 3,
+   "copies": 7,
    "alternate": false,
    "tris": 1264
   },
@@ -4987,17 +3655,17 @@
    "tris": 1280
   },
   {
-   "mesh": "scn_prop_accent_q",
+   "mesh": "scn_prop_accent_j",
    "kind": "prop",
    "anim": "Hover",
    "tier": 1,
    "interact": "-",
-   "copies": 1,
+   "copies": 2,
    "alternate": false,
    "tris": 1148
   },
   {
-   "mesh": "scn_prop_accent_r",
+   "mesh": "scn_prop_accent_k",
    "kind": "prop",
    "anim": "Hover",
    "tier": 1,
@@ -5007,47 +3675,17 @@
    "tris": 3200
   },
   {
-   "mesh": "scn_prop_accent_s",
+   "mesh": "scn_prop_halo_l",
    "kind": "prop",
-   "anim": "Hover",
+   "anim": "Float",
    "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1148
-  },
-  {
-   "mesh": "scn_prop_banner_au",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 4,
-   "alternate": false,
-   "tris": 1264
-  },
-  {
-   "mesh": "scn_prop_debris_aj",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 2292
-  },
-  {
-   "mesh": "scn_prop_debris_ak",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
    "interact": "-",
    "copies": 3,
    "alternate": false,
-   "tris": 2292
+   "tris": 3200
   },
   {
-   "mesh": "scn_prop_halo_x",
+   "mesh": "scn_prop_halo_m",
    "kind": "prop",
    "anim": "Float",
    "tier": 1,
@@ -5057,112 +3695,32 @@
    "tris": 3456
   },
   {
-   "mesh": "scn_prop_telescope_s",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "Use",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3184
-  },
-  {
-   "mesh": "scn_prop_telescope_t",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "Use",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3184
-  },
-  {
-   "mesh": "scn_prop_lamp_j",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "copies": 4,
-   "alternate": false,
-   "tris": 500
-  },
-  {
-   "mesh": "scn_prop_accent_t",
-   "kind": "prop",
-   "anim": "Hover",
-   "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 300
-  },
-  {
-   "mesh": "scn_prop_banner_av",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1264
-  },
-  {
-   "mesh": "scn_prop_target_j",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "Hit",
-   "copies": 4,
-   "alternate": false,
-   "tris": 1264
-  },
-  {
-   "mesh": "scn_prop_keel_ring_s",
-   "kind": "prop",
-   "anim": "Spin",
-   "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 4800
-  },
-  {
-   "mesh": "scn_prop_keel_ring_t",
-   "kind": "prop",
-   "anim": "Spin",
-   "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 4800
-  },
-  {
-   "mesh": "scn_prop_container_h",
+   "mesh": "scn_prop_container_i",
    "kind": "prop",
    "anim": "Static",
    "tier": 1,
    "interact": "Loot",
-   "copies": 2,
+   "copies": 1,
    "alternate": false,
-   "tris": 2880
+   "tris": 3056
   },
   {
-   "mesh": "scn_prop_banner_aw",
+   "mesh": "scn_prop_banner_g",
    "kind": "prop",
    "anim": "Sway",
    "tier": 2,
    "interact": "-",
-   "copies": 19,
+   "copies": 37,
    "alternate": false,
    "tris": 1036
   },
   {
-   "mesh": "scn_prop_lamp_k",
+   "mesh": "scn_prop_lamp_f",
    "kind": "prop",
    "anim": "Static",
    "tier": 1,
    "interact": "-",
-   "copies": 20,
+   "copies": 28,
    "alternate": false,
    "tris": 524
   },
@@ -5187,12 +3745,12 @@
    "tris": 1176
   },
   {
-   "mesh": "scn_prop_crystal_i",
+   "mesh": "scn_prop_crystal_g",
    "kind": "prop",
    "anim": "Hover",
    "tier": 2,
    "interact": "-",
-   "copies": 87,
+   "copies": 88,
    "alternate": false,
    "tris": 588
   },
@@ -5207,17 +3765,7 @@
    "tris": 3308
   },
   {
-   "mesh": "scn_prop_halo_y",
-   "kind": "prop",
-   "anim": "Float",
-   "tier": 1,
-   "interact": "-",
-   "copies": 3,
-   "alternate": false,
-   "tris": 3200
-  },
-  {
-   "mesh": "scn_prop_container_i",
+   "mesh": "scn_prop_container_j",
    "kind": "prop",
    "anim": "Static",
    "tier": 1,
@@ -5247,82 +3795,22 @@
    "tris": 3328
   },
   {
-   "mesh": "scn_prop_light_pillar_k",
+   "mesh": "scn_prop_light_pillar_f",
    "kind": "prop",
    "anim": "Static",
    "tier": 1,
    "interact": "-",
-   "copies": 14,
+   "copies": 47,
    "alternate": false,
    "tris": 420
   },
   {
-   "mesh": "scn_prop_accent_u",
-   "kind": "prop",
-   "anim": "Hover",
-   "tier": 1,
-   "interact": "-",
-   "copies": 11,
-   "alternate": false,
-   "tris": 392
-  },
-  {
-   "mesh": "scn_prop_halo_z",
-   "kind": "prop",
-   "anim": "Float",
-   "tier": 1,
-   "interact": "-",
-   "copies": 9,
-   "alternate": false,
-   "tris": 3200
-  },
-  {
-   "mesh": "scn_prop_light_pillar_l",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "copies": 35,
-   "alternate": false,
-   "tris": 420
-  },
-  {
-   "mesh": "scn_prop_debris_al",
+   "mesh": "scn_prop_debris_g",
    "kind": "prop",
    "anim": "Tumble",
    "tier": 2,
    "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1940
-  },
-  {
-   "mesh": "scn_prop_debris_am",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 5,
-   "alternate": false,
-   "tris": 1940
-  },
-  {
-   "mesh": "scn_prop_debris_an",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 3,
-   "alternate": false,
-   "tris": 1940
-  },
-  {
-   "mesh": "scn_prop_debris_ao",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
+   "copies": 15,
    "alternate": false,
    "tris": 1940
   },
@@ -5347,56 +3835,6 @@
    "tris": 992
   },
   {
-   "mesh": "scn_prop_halo_aa",
-   "kind": "prop",
-   "anim": "Float",
-   "tier": 1,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 3200
-  },
-  {
-   "mesh": "scn_prop_banner_ax",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_ay",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_az",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_ba",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
    "mesh": "scn_prop_brazier_f",
    "kind": "prop",
    "anim": "Flicker",
@@ -5407,107 +3845,37 @@
    "tris": 924
   },
   {
-   "mesh": "scn_prop_telescope_u",
+   "mesh": "scn_prop_telescope_e",
    "kind": "prop",
    "anim": "Static",
    "tier": 2,
    "interact": "Use",
-   "copies": 1,
+   "copies": 5,
    "alternate": false,
    "tris": 3056
   },
   {
-   "mesh": "scn_prop_telescope_v",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "Use",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3056
-  },
-  {
-   "mesh": "scn_prop_banner_bb",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_bc",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_bd",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_banner_be",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_halo_ab",
-   "kind": "prop",
-   "anim": "Float",
-   "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3200
-  },
-  {
-   "mesh": "scn_prop_keel_ring_u",
+   "mesh": "scn_prop_keel_ring_k",
    "kind": "prop",
    "anim": "Spin",
    "tier": 1,
    "interact": "-",
-   "copies": 1,
+   "copies": 3,
    "alternate": false,
    "tris": 4800
   },
   {
-   "mesh": "scn_prop_keel_ring_v",
+   "mesh": "scn_prop_keel_ring_l",
    "kind": "prop",
    "anim": "Spin",
    "tier": 1,
    "interact": "-",
-   "copies": 1,
+   "copies": 3,
    "alternate": false,
    "tris": 4800
   },
   {
-   "mesh": "scn_prop_telescope_w",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "Use",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3056
-  },
-  {
-   "mesh": "scn_prop_halo_ac",
+   "mesh": "scn_prop_halo_n",
    "kind": "prop",
    "anim": "Float",
    "tier": 1,
@@ -5517,12 +3885,12 @@
    "tris": 3268
   },
   {
-   "mesh": "scn_prop_target_k",
+   "mesh": "scn_prop_target_f",
    "kind": "prop",
    "anim": "Static",
    "tier": 1,
    "interact": "Hit",
-   "copies": 3,
+   "copies": 7,
    "alternate": false,
    "tris": 1424
   },
@@ -5557,17 +3925,17 @@
    "tris": 1112
   },
   {
-   "mesh": "scn_prop_accent_v",
+   "mesh": "scn_prop_accent_l",
    "kind": "prop",
    "anim": "Hover",
    "tier": 1,
    "interact": "-",
-   "copies": 1,
+   "copies": 2,
    "alternate": false,
    "tris": 588
   },
   {
-   "mesh": "scn_prop_accent_w",
+   "mesh": "scn_prop_accent_m",
    "kind": "prop",
    "anim": "Hover",
    "tier": 1,
@@ -5577,47 +3945,17 @@
    "tris": 3200
   },
   {
-   "mesh": "scn_prop_accent_x",
+   "mesh": "scn_prop_halo_o",
    "kind": "prop",
-   "anim": "Hover",
+   "anim": "Float",
    "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 588
-  },
-  {
-   "mesh": "scn_prop_banner_bf",
-   "kind": "prop",
-   "anim": "Sway",
-   "tier": 2,
-   "interact": "-",
-   "copies": 7,
-   "alternate": false,
-   "tris": 1036
-  },
-  {
-   "mesh": "scn_prop_debris_ap",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "-",
-   "copies": 2,
-   "alternate": false,
-   "tris": 1940
-  },
-  {
-   "mesh": "scn_prop_debris_aq",
-   "kind": "prop",
-   "anim": "Tumble",
-   "tier": 2,
    "interact": "-",
    "copies": 3,
    "alternate": false,
-   "tris": 1940
+   "tris": 3200
   },
   {
-   "mesh": "scn_prop_halo_ad",
+   "mesh": "scn_prop_halo_p",
    "kind": "prop",
    "anim": "Float",
    "tier": 1,
@@ -5627,77 +3965,17 @@
    "tris": 3456
   },
   {
-   "mesh": "scn_prop_telescope_x",
+   "mesh": "scn_prop_halo_q",
    "kind": "prop",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "Use",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3056
-  },
-  {
-   "mesh": "scn_prop_telescope_y",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "Use",
-   "copies": 1,
-   "alternate": false,
-   "tris": 3056
-  },
-  {
-   "mesh": "scn_prop_lamp_l",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "copies": 8,
-   "alternate": false,
-   "tris": 524
-  },
-  {
-   "mesh": "scn_prop_accent_y",
-   "kind": "prop",
-   "anim": "Hover",
+   "anim": "Float",
    "tier": 1,
    "interact": "-",
    "copies": 1,
    "alternate": false,
-   "tris": 300
+   "tris": 384
   },
   {
-   "mesh": "scn_prop_target_l",
-   "kind": "prop",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "Hit",
-   "copies": 4,
-   "alternate": false,
-   "tris": 1424
-  },
-  {
-   "mesh": "scn_prop_keel_ring_w",
-   "kind": "prop",
-   "anim": "Spin",
-   "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 4800
-  },
-  {
-   "mesh": "scn_prop_keel_ring_x",
-   "kind": "prop",
-   "anim": "Spin",
-   "tier": 1,
-   "interact": "-",
-   "copies": 1,
-   "alternate": false,
-   "tris": 4800
-  },
-  {
-   "mesh": "scn_prop_container_j",
+   "mesh": "scn_prop_container_k",
    "kind": "prop",
    "anim": "Static",
    "tier": 1,
@@ -5817,15 +4095,6 @@
    "tris": 812
   },
   {
-   "mesh": "sct_alarm_post_b",
-   "family": "alarm_post",
-   "sets": "lockdown",
-   "anim": "Strobe",
-   "tier": 2,
-   "interact": "-",
-   "tris": 812
-  },
-  {
    "mesh": "sct_ballista_a",
    "family": "ballista",
    "sets": "siege",
@@ -5908,15 +4177,6 @@
   },
   {
    "mesh": "sct_barrier_block_b",
-   "family": "barrier_block",
-   "sets": "lockdown",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "tris": 1176
-  },
-  {
-   "mesh": "sct_barrier_block_c",
    "family": "barrier_block",
    "sets": "lockdown",
    "anim": "Static",
@@ -6132,15 +4392,6 @@
    "tris": 2292
   },
   {
-   "mesh": "sct_cracked_plate_b",
-   "family": "cracked_plate",
-   "sets": "unmooring",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "tris": 2292
-  },
-  {
    "mesh": "sct_crystal_rubble_a",
    "family": "crystal_rubble",
    "sets": "aether_surge",
@@ -6228,15 +4479,6 @@
    "anim": "Static",
    "tier": 2,
    "interact": "Pickup",
-   "tris": 2292
-  },
-  {
-   "mesh": "sct_fallen_feather_d",
-   "family": "fallen_feather",
-   "sets": "stormhawk",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "Pickup",
    "tris": 1020
   },
   {
@@ -6312,15 +4554,6 @@
    "tris": 1304
   },
   {
-   "mesh": "sct_floor_emitter_b",
-   "family": "floor_emitter",
-   "sets": "lockdown",
-   "anim": "Pulse",
-   "tier": 1,
-   "interact": "Hazard",
-   "tris": 1304
-  },
-  {
    "mesh": "sct_flowers_a",
    "family": "flowers",
    "sets": "reclaimed,base",
@@ -6358,24 +4591,6 @@
   },
   {
    "mesh": "sct_fragment_a",
-   "family": "fragment",
-   "sets": "unmooring",
-   "anim": "Tumble",
-   "tier": 1,
-   "interact": "-",
-   "tris": 2164
-  },
-  {
-   "mesh": "sct_fragment_b",
-   "family": "fragment",
-   "sets": "unmooring",
-   "anim": "Tumble",
-   "tier": 1,
-   "interact": "-",
-   "tris": 2164
-  },
-  {
-   "mesh": "sct_fragment_c",
    "family": "fragment",
    "sets": "unmooring",
    "anim": "Tumble",
@@ -6448,15 +4663,6 @@
   },
   {
    "mesh": "sct_glow_pool_a",
-   "family": "glow_pool",
-   "sets": "aether_surge",
-   "anim": "Pulse",
-   "tier": 1,
-   "interact": "-",
-   "tris": 3112
-  },
-  {
-   "mesh": "sct_glow_pool_b",
    "family": "glow_pool",
    "sets": "aether_surge",
    "anim": "Pulse",
@@ -6555,15 +4761,6 @@
    "tris": 948
   },
   {
-   "mesh": "sct_ice_boulder_c",
-   "family": "ice_boulder",
-   "sets": "rime",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "tris": 948
-  },
-  {
    "mesh": "sct_ice_spikes_a",
    "family": "ice_spikes",
    "sets": "rime",
@@ -6636,25 +4833,7 @@
    "tris": 540
   },
   {
-   "mesh": "sct_lantern_b",
-   "family": "lantern",
-   "sets": "base",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "-",
-   "tris": 540
-  },
-  {
    "mesh": "sct_laser_fence_a",
-   "family": "laser_fence",
-   "sets": "lockdown",
-   "anim": "Pulse",
-   "tier": 1,
-   "interact": "Hazard",
-   "tris": 2996
-  },
-  {
-   "mesh": "sct_laser_fence_b",
    "family": "laser_fence",
    "sets": "lockdown",
    "anim": "Pulse",
@@ -6732,25 +4911,7 @@
    "anim": "Static",
    "tier": 2,
    "interact": "-",
-   "tris": 3150
-  },
-  {
-   "mesh": "sct_moss_mound_d",
-   "family": "moss_mound",
-   "sets": "reclaimed",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "-",
    "tris": 2596
-  },
-  {
-   "mesh": "sct_moss_mound_e",
-   "family": "moss_mound",
-   "sets": "reclaimed",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "-",
-   "tris": 3150
   },
   {
    "mesh": "sct_mossy_rock_a",
@@ -6769,15 +4930,6 @@
    "tier": 1,
    "interact": "-",
    "tris": 2852
-  },
-  {
-   "mesh": "sct_mossy_rock_c",
-   "family": "mossy_rock",
-   "sets": "reclaimed,stormhawk",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "-",
-   "tris": 1410
   },
   {
    "mesh": "sct_mushrooms_a",
@@ -7092,15 +5244,6 @@
    "anim": "Sway",
    "tier": 1,
    "interact": "Cut",
-   "tris": 1062
-  },
-  {
-   "mesh": "sct_sapling_c",
-   "family": "sapling",
-   "sets": "reclaimed",
-   "anim": "Sway",
-   "tier": 1,
-   "interact": "Cut",
    "tris": 3634
   },
   {
@@ -7212,15 +5355,6 @@
    "tris": 1096
   },
   {
-   "mesh": "sct_sentinel_pylon_c",
-   "family": "sentinel_pylon",
-   "sets": "lockdown",
-   "anim": "Static",
-   "tier": 1,
-   "interact": "Destroy",
-   "tris": 1048
-  },
-  {
    "mesh": "sct_sentinel_turret_a",
    "family": "sentinel_turret",
    "sets": "lockdown",
@@ -7276,33 +5410,6 @@
   },
   {
    "mesh": "sct_snow_drift_b",
-   "family": "snow_drift",
-   "sets": "rime",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "-",
-   "tris": 2014
-  },
-  {
-   "mesh": "sct_snow_drift_c",
-   "family": "snow_drift",
-   "sets": "rime",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "-",
-   "tris": 2014
-  },
-  {
-   "mesh": "sct_snow_drift_d",
-   "family": "snow_drift",
-   "sets": "rime",
-   "anim": "Static",
-   "tier": 2,
-   "interact": "-",
-   "tris": 2014
-  },
-  {
-   "mesh": "sct_snow_drift_e",
    "family": "snow_drift",
    "sets": "rime",
    "anim": "Static",
@@ -7384,15 +5491,6 @@
   },
   {
    "mesh": "sct_storm_feather_a",
-   "family": "storm_feather",
-   "sets": "stormhawk",
-   "anim": "Tumble",
-   "tier": 2,
-   "interact": "Pickup",
-   "tris": 1176
-  },
-  {
-   "mesh": "sct_storm_feather_b",
    "family": "storm_feather",
    "sets": "stormhawk",
    "anim": "Tumble",

@@ -46,11 +46,10 @@ from mathutils.bvhtree import BVHTree
 
 # Checks on the real mesh (detached parts, clipping) and the face tagging they
 # rely on: caller_tag() names the builder that made each face.
-exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "geometry_checks.py"),
-          encoding="utf-8").read(), globals())
+FRAMEWORK = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "_framework")
+exec(open(os.path.join(FRAMEWORK, "geometry_checks.py"), encoding="utf-8").read(), globals())
 # The detail pass every prop mesh goes through before export (prop_detail.py).
-exec(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "prop_detail.py"),
-          encoding="utf-8").read(), globals())
+exec(open(os.path.join(FRAMEWORK, "prop_detail.py"), encoding="utf-8").read(), globals())
 
 # --------------------------------------------------------------------------
 # Kit-wide numbers. Every one of these is mirrored in
