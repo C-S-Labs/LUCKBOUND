@@ -224,7 +224,11 @@ def district_deck(p, floor, rim_gaps, keel_glow):
 
 # Openings in a district's curb, local degrees (CCW from +X): toward the hub
 # (-Y = 270) and the two promenade arcs (east 0, west 180).
-DISTRICT_GAPS = [(270, 12), (0, 8), (180, 8)]
+# The promenade reaches a district 10.5 degrees off its east-west axis (the ring
+# circle crosses the deck edge there), so the side openings are centred on that.
+RING_ENTRY = math.degrees(math.atan2(-(DISTRICT_AT - DISTRICT_AT * math.cos(2 * math.asin(DISTRICT_R / 2 / DISTRICT_AT))),
+                                     DISTRICT_AT * math.sin(2 * math.asin(DISTRICT_R / 2 / DISTRICT_AT))))
+DISTRICT_GAPS = [(270, 12), (RING_ENTRY, 9.5), (180 - RING_ENTRY, 9.5)]
 
 
 # =============================================================================
@@ -235,7 +239,8 @@ def build_platform():
     p = Piece("HUB_PLATFORM", "plaza + bridges + promenade ring + keel")
     # --- the plaza --------------------------------------------------------------
     frustum(p, "Plaza", 16, PLAZA_R, PLAZA_R, -4, 0)
-    sector(p, "Gold", PLAZA_R - 4.5, PLAZA_R, 0, 0.7, 0, 360, 32)                  # curb
+    # the curb, open at the four bridge mouths so the walk onto a bridge is flush
+    ring_with_gaps(p, "Gold", PLAZA_R - 4.5, PLAZA_R, 0, 0.7, [(0, 6.8), (90, 6.8), (180, 6.8), (270, 6.8)], 8)
     sector(p, "Marble", RESERVE_R, RESERVE_R + 2.5, 0, 0.25, 0, 360, 32)           # the Engine's dais ring
     sector(p, "Inlay", RESERVE_R + 6.0, RESERVE_R + 7.2, 0, 0.06, 0, 360, 32)      # inner inlay
     sector(p, "Inlay", 64.0, 65.2, 0, 0.06, 0, 360, 32)                            # middle inlay
@@ -268,7 +273,7 @@ def build_platform():
     for k in range(4):
         with frame(p, xf(rz=90 * k)):
             y0, y1 = PLAZA_R - 3, DISTRICT_AT - DISTRICT_R + 4
-            box(p, "Walkway", 0, (y0 + y1) / 2, -1.5, BRIDGE_W, y1 - y0, 3)
+            box(p, "Walkway", 0, (y0 + y1) / 2, -1.25, BRIDGE_W, y1 - y0, 2.5)   # flush on its spine
             for s in (-1, 1):
                 box(p, "Gold", s * (BRIDGE_W / 2 - 0.6), (y0 + y1) / 2 + 2, 0.4, 1.2, y1 - y0 - 4, 0.8)
                 for yy in (y0 + 6, y1 - 6):                                    # gateposts at each end
@@ -278,18 +283,24 @@ def build_platform():
             # under the bridge: a spine, not a wall
             K["spine"](p, "Basalt", y0 + 2, y1 - 2, BRIDGE_W / 2 - 1, 16)
     # --- the promenade ring: the four arcs between districts, and the overlooks -
-    half = math.degrees(math.asin((DISTRICT_R - 3) / DISTRICT_AT))
+    half = math.degrees(math.asin((DISTRICT_R - 3) / DISTRICT_AT))       # where the curbs stop
+    deep = math.degrees(math.asin((DISTRICT_R - 10) / DISTRICT_AT))      # the slab runs on under the deck
     for k in range(4):
         a0, a1 = 90 * k + half, 90 * (k + 1) - half
-        sector(p, "Walkway", DISTRICT_AT - RING_W / 2, DISTRICT_AT + RING_W / 2, -3, 0, a0, a1, 10)
-        for r in (DISTRICT_AT - RING_W / 2 + 0.6, DISTRICT_AT + RING_W / 2 - 0.6):
-            sector(p, "Gold", r - 0.6, r + 0.6, 0, 0.8, a0 + 1.5, a1 - 1.5, 10)
+        sector(p, "Walkway", DISTRICT_AT - RING_W / 2, DISTRICT_AT + RING_W / 2, -3, 0, 90 * k + deep,
+               90 * (k + 1) - deep, 12)
+        r_in, r_out = DISTRICT_AT - RING_W / 2 + 0.6, DISTRICT_AT + RING_W / 2 - 0.6
+        sector(p, "Gold", r_in - 0.6, r_in + 0.6, 0, 0.8, a0 + 1.5, a1 - 1.5, 10)
+        mid = 45 + 90 * k                                  # the outer curb opens onto the overlook
+        sector(p, "Gold", r_out - 0.6, r_out + 0.6, 0, 0.8, a0 + 1.5, mid - 3.2, 5)
+        sector(p, "Gold", r_out - 0.6, r_out + 0.6, 0, 0.8, mid + 3.2, a1 - 1.5, 5)
         sector(p, "Basalt", DISTRICT_AT - 5, DISTRICT_AT + 5, -9, -3, a0, a1, 10)
         # the overlook on the diagonal, on the outside of the ring
         am = math.radians(45 + 90 * k)
         ox, oy = math.cos(am) * (DISTRICT_AT + 18), math.sin(am) * (DISTRICT_AT + 18)
         frustum(p, "Walkway", 12, 16, 16, -3, 0, ox, oy)
-        sector(p, "Gold", 15, 16, 0, 1.0, 0, 360, 24, ox, oy)
+        md = 45 + 90 * k                                   # its curb opens back onto the ring
+        sector(p, "Gold", 15, 16, 0, 1.0, md - 180 + 72, md + 180 - 72, 16, ox, oy)
         frustum(p, "Basalt", 12, 15, 4, -26, -3, ox, oy)
         pylon_beacon(p, ox + math.cos(am) * 6, oy + math.sin(am) * 6, 30.0, ("Shard", "Violet", "Rose", "Shard")[k])
         anchor(p, f"Overlook{k + 1}", ox, oy, 0)
@@ -396,7 +407,7 @@ def build_hall():
         sector(p, "Gold", 29, 30.5, DISTRICT_TOP + 2.0, DISTRICT_TOP + 2.3, 0, 180, 10, 0, 12)
         box(p, "BasaltLight", 0, 11.2, DISTRICT_TOP + 1.0, 60, 1.6, 2.0)
         for s in range(3):                                           # steps up to the stage
-            box(p, "MarbleDim", 0, 10.4 - s * 1.2, DISTRICT_TOP + 0.35 + s * 0.6, 20, 1.2, 0.7 + s * 1.2)
+            box(p, "MarbleDim", 0, 9.8 - s * 1.2, DISTRICT_TOP + 0.35 + s * 0.6, 20, 1.2, 0.7 + s * 1.2)
         # the five champion obelisks, on an arc at the back of the stage
         for i, a in enumerate((150, 120, 90, 60, 30)):
             ox, oy = math.cos(math.radians(a)) * 22, 12 + math.sin(math.radians(a)) * 22
@@ -406,19 +417,19 @@ def build_hall():
         # the colonnade: a half ring of columns carrying an entablature
         R, H = 66.0, 30.0
         for k in range(13):
-            a = math.radians(-10 + 200 * k / 12)
+            a = math.radians(180 * k / 12)          # 0..180: clear of the ring's entry lanes
             x, y = math.cos(a) * R, math.sin(a) * R + 4
             frustum(p, "MarbleDim", 8, 3.0, 3.0, DISTRICT_TOP, DISTRICT_TOP + 2.0, x, y)
             frustum(p, "Marble", 8, 2.1, 1.8, DISTRICT_TOP + 2.0, H - 2.0, x, y)
             frustum(p, "Gold", 8, 1.9, 3.0, H - 2.0, H, x, y)
             if k < 12:                                               # a banner between each pair
-                b = math.radians(-10 + 200 * (k + 0.5) / 12)
+                b = math.radians(180 * (k + 0.5) / 12)
                 bx, by = math.cos(b) * (R - 0.4), math.sin(b) * (R - 0.4) + 4
                 box(p, "Canvas" if k % 2 else "Basalt", bx, by, H - 9.5, 8.0, 0.4, 14.0,
                     rz=math.degrees(b) + 90)
                 crystal(p, "Gold", bx, by, H - 17.0, 1.2, 0.6, 2.2, n=4, rz=math.degrees(b))
-        sector(p, "Basalt", R - 3.4, R + 3.4, H, H + 3.2, -12, 192, 20, 0, 4)
-        sector(p, "Gold", R - 3.5, R + 3.5, H + 3.2, H + 3.8, -12, 192, 20, 0, 4)
+        sector(p, "Basalt", R - 3.4, R + 3.4, H, H + 3.2, -2.5, 182.5, 20, 0, 4)
+        sector(p, "Gold", R - 3.5, R + 3.5, H + 3.2, H + 3.8, -2.5, 182.5, 20, 0, 4)
         # two champions guarding the approach
         statue(p, -24, -56, 180, 1)
         statue(p, 24, -56, 180, -1)
@@ -519,7 +530,7 @@ def build_archives():
                 box(b, "Marble", 1.3, 0, 0, 2.6, 3.4, 0.35, ry=-12)
                 box(b, rng.choice(("Book1", "Book2", "Book3")), 0, 0, -0.4, 5.6, 3.6, 0.3)
         # the approach: steps onto the rotunda and two lamps
-        box(p, "MarbleDim", 0, -39, DISTRICT_TOP + 0.4, 22, 4, 0.8)
+        sector(p, "MarbleDim", 48, 51.5, DISTRICT_TOP, DISTRICT_TOP + 0.4, 0, 360, 24, 0, 10)   # a half step all round
         for s in (-1, 1):
             lamp(p, s * 16, -46, 12.0, "Shard")
         anchor(p, "ArchivePrompt", 0, -40, DISTRICT_TOP)
@@ -646,8 +657,8 @@ def build_shop():
             frustum(p, "BasaltLight", 6, 0.5, 0.35, DISTRICT_TOP + 1.5, DISTRICT_TOP + 24, mx_, my_)
             crystal(p, ("Rose", "Shard", "Violet")[k % 3], mx_, my_, DISTRICT_TOP + 25.5, 0.8, 1.6, 1.0, n=5)
             with frame(p, xf(mx_, my_, DISTRICT_TOP + 18, deg + 90)):
-                box(p, ("Canvas", "CanvasTeal")[k % 2], 2.6, 0, 0, 5.0, 0.2, 7.5)
-                crystal(p, "Gold", 2.6, 0, -4.6, 0.8, 0.4, 1.4, n=4)
+                box(p, ("Canvas", "CanvasTeal")[k % 2], 3.0, 0, 0, 5.0, 0.2, 7.5)
+                crystal(p, "Gold", 3.0, 0, -4.7, 0.8, 0.5, 1.4, n=4)
         # the stalls, a ring of six, open toward the middle
         for i, a in enumerate((-10, 30, 70, 110, 150, 190)):
             ar = math.radians(a)
@@ -657,14 +668,14 @@ def build_shop():
                   STALL_LINES[i], random.Random(f"stall{i}"))
             anchor(p, f"Stall{i + 1}", math.cos(ar) * 38, math.sin(ar) * 38, DISTRICT_TOP)
         # the entrance arch, facing the hub
-        for s in (-1, 1):
-            frustum(p, "Basalt", 4, 3.4, 3.0, DISTRICT_TOP, DISTRICT_TOP + 2.0, s * 11, -64, rot=45)
-            frustum(p, "Marble", 4, 2.4, 2.0, DISTRICT_TOP + 2.0, DISTRICT_TOP + 20, s * 11, -64, rot=45)
-            frustum(p, "Gold", 4, 2.6, 2.8, DISTRICT_TOP + 20, DISTRICT_TOP + 21, s * 11, -64, rot=45)
-        torus_arc(p, "Gold", 11, 1.2, 0, -64, DISTRICT_TOP + 21, 0, 180, n=12, m=4, rx=90)
-        box(p, "Basalt", 0, -64, DISTRICT_TOP + 27.5, 14, 1.2, 4.2)                # the sign
-        box(p, "GoldBright", 0, -64.7, DISTRICT_TOP + 27.5, 12.4, 0.2, 3.0)
-        crystal(p, "Rose", 0, -64, DISTRICT_TOP + 34, 1.8, 3.4, 2.4, n=6)          # keystone
+        for s in (-1, 1):                              # pylons outside the bridge's 24-stud lanes
+            frustum(p, "Basalt", 4, 3.4, 3.0, DISTRICT_TOP, DISTRICT_TOP + 2.0, s * 15.5, -64, rot=45)
+            frustum(p, "Marble", 4, 2.4, 2.0, DISTRICT_TOP + 2.0, DISTRICT_TOP + 20, s * 15.5, -64, rot=45)
+            frustum(p, "Gold", 4, 2.6, 2.8, DISTRICT_TOP + 20, DISTRICT_TOP + 21, s * 15.5, -64, rot=45)
+        torus_arc(p, "Gold", 15.5, 1.2, 0, -64, DISTRICT_TOP + 21, 0, 180, n=14, m=4, rx=90)
+        box(p, "Basalt", 0, -64, DISTRICT_TOP + 24.4, 13, 1.2, 4.0)                # the sign, inside the arch
+        box(p, "GoldBright", 0, -64.7, DISTRICT_TOP + 24.4, 11.4, 0.2, 2.8)
+        crystal(p, "Rose", 0, -64, DISTRICT_TOP + 40, 1.8, 3.4, 2.4, n=6)          # keystone
         # lanterns on posts round the market
         for k in range(6):
             a = math.radians(10 + 60 * k)
@@ -699,10 +710,12 @@ def rack(p, x, y, rz):
 
 def target(p, x, y, rz):
     with frame(p, xf(x, y, DISTRICT_TOP, rz)):
-        box(p, "Wood", 0, 0, 3.0, 0.6, 0.6, 6)
+        box(p, "Wood", 0, 0, 4.5, 0.6, 0.6, 9)                       # the post runs up behind the board
         with frame(p, xf(0, -0.4, 7.2, 0, 90)):
+            z = 0.0                                                   # rings stacked, never overlapping
             for r, m in ((3.0, "Marble"), (2.1, "Canvas"), (1.2, "Marble"), (0.5, "Gold")):
-                frustum(p, m, 12, r, r, 0, 0.3 + (3.0 - r) * 0.05)
+                frustum(p, m, 12, r, r, z, z + 0.3)
+                z += 0.3
 
 
 def build_training():
@@ -715,8 +728,8 @@ def build_training():
         sector(p, "Gold", 22, 23.6, DISTRICT_TOP, DISTRICT_TOP + 0.3, 0, 360, 24, 0, 8)
         sector(p, "Inlay", 10, 10.8, DISTRICT_TOP, DISTRICT_TOP + 0.08, 0, 360, 24, 0, 8)
         # the yard wall: low, open to the hub and the promenade
-        ring_with_gaps(p, "BasaltLight", 68, 71, DISTRICT_TOP, DISTRICT_TOP + 3.4, [(270, 16), (0, 10), (180, 10)], 8)
-        ring_with_gaps(p, "Gold", 67.8, 71.2, DISTRICT_TOP + 3.4, DISTRICT_TOP + 3.8, [(270, 16), (0, 10), (180, 10)], 8)
+        ring_with_gaps(p, "BasaltLight", 68, 71, DISTRICT_TOP, DISTRICT_TOP + 3.4, [(270, 16), (RING_ENTRY + 1, 13), (179 - RING_ENTRY, 13)], 8)
+        ring_with_gaps(p, "Gold", 67.8, 71.2, DISTRICT_TOP + 3.4, DISTRICT_TOP + 3.8, [(270, 16), (RING_ENTRY + 1, 13), (179 - RING_ENTRY, 13)], 8)
         for k in range(8):                                            # braziers
             a = math.radians(22.5 + 45 * k)
             if abs(((math.degrees(a) - 270) + 180) % 360 - 180) < 20:
