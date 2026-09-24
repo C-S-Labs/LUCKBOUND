@@ -111,3 +111,14 @@ the place. The old authored shell and the blockout remain the fallback, and
 - **Sky:** the backdrop and orbiters are random per server, set up in
   `GameConfig.HubLayout.V2`. Orbiters carry `Detail` 1–3, and the client
   hides the ones above its graphics quality.
+
+## The sky beyond (2026-09-24)
+
+`crossroads_sky.fbx` → `assets/rbxm/prefabs/HUB_SKY.rbxmx`:
+- **Cloud banks (3):** built from the same puffs and colours as the cloud props, cloned into a two-layer cloud sea under the hub that drifts slowly.
+- **Moon:** placed in the sky and made to glow by the game.
+- **Ringed planet.**
+- **Celestial ring:** a basalt and gold ring above the Engine, turning slowly, with its runes as a separate mesh that pulses between cyan and violet.
+
+The far range reuses the backdrop chunks, larger and darker. Placement is set in
+`GameConfig.HubLayout.V2` (CloudSea, FarRange, Moon, Planet, Ring).

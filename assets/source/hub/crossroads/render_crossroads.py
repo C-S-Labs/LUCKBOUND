@@ -113,7 +113,7 @@ def render_all(groups, engine_blend, engine_scale, out):
     person(0, 160.5, 0.5)
     hub = groups["Hub"]
     hub = hub + groups["Animated"]
-    others = groups["Backdrop"] + groups["Orbiters"]
+    others = groups["Backdrop"] + groups["Orbiters"] + groups.get("Sky", [])
     for o in others:
         o.hide_render = True
     shot("01_overview", (420, -520, 360), (0, 0, -20), 26, out)
@@ -166,3 +166,17 @@ def render_all(groups, engine_blend, engine_scale, out):
         x += w + 25
     shot("14_ships", (x / 2, -520, 120), (x / 2, 0, 10), 22, out)
     shot("15_carrier", (ships[-2].location.x + 160, -190, 90), (ships[-2].location.x, 0, 20), 28, out)
+    for o in bpy.data.objects:
+        o.hide_render = True
+    x = 0.0
+    for o in groups.get("Sky", []):
+        o.hide_render = False
+        cs = [Vector(c) for c in o.bound_box]
+        c = sum(cs, Vector()) / 8
+        w = o.dimensions.x
+        o.location = (x + w / 2 - c.x, -c.y, -c.z)
+        x += w + 60
+    for n in ("Hub_Sun", "Hub_Fill"):
+        if bpy.data.objects.get(n):
+            bpy.data.objects[n].hide_render = False
+    shot("16_sky", (x / 2, -1500, 500), (x / 2, 0, 0), 26, out)

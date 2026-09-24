@@ -182,6 +182,8 @@ function SkyTraffic.init(): ()
 		end
 
 		local flyers: { Flyer } = {}
+		-- the cloud sea turns slowly round the hub, each bank at its own pace
+		local drifters: { { Part: BasePart, Centre: Vector3, Rate: number } } = {}
 		local adopted: { [Instance]: boolean } = {}
 		-- ONE PROP OR ISLAND, whenever it arrives. Called for everything already
 		-- here and again for anything that streams in later, so a late arrival
@@ -191,7 +193,12 @@ function SkyTraffic.init(): ()
 				return
 			end
 			adopted[d] = true
-			if d:GetAttribute("Backdrop") then
+			if d:GetAttribute("Drift") then
+				if d.LocalTransparencyModifier < 1 then
+					table.insert(drifters, { Part = d, Centre = d:GetAttribute("DriftCentre") :: Vector3,
+						Rate = d:GetAttribute("Drift") :: number })
+				end
+			elseif d:GetAttribute("Backdrop") then
 				table.insert(rocks, { Part = d, Pos = d.Position, Radius = math.max(d.Size.X, d.Size.Z) * 0.5 })
 				table.insert(solids, d)
 				castParams.FilterDescendantsInstances = solids
@@ -270,6 +277,11 @@ function SkyTraffic.init(): ()
 		RunService.Heartbeat:Connect(function(dt)
 			elapsed += dt
 			dt = math.min(dt, 0.1)
+			for _, c in drifters do
+				local cf = c.Part.CFrame
+				local rel = cf.Position - c.Centre
+				c.Part.CFrame = CFrame.new(c.Centre) * CFrame.Angles(0, c.Rate * dt, 0) * CFrame.new(rel) * cf.Rotation
+			end
 			for i, f in flyers do
 				-- DOCKING: big ships only, now and then
 				if f.Radius >= BIG and f.Faces then

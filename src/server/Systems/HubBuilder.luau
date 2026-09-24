@@ -162,7 +162,8 @@ local function applyLighting()
 	Lighting.EnvironmentSpecularScale = 1
 
 	local sky = Lighting:FindFirstChildOfClass("Sky") or Instance.new("Sky")
-	sky.StarCount = 3000
+	sky.StarCount = theme.StarCount or 3000
+	sky.SunAngularSize = theme.SunAngularSize or 21
 	sky.Parent = Lighting
 
 	local atmosphere = Lighting:FindFirstChildOfClass("Atmosphere") or Instance.new("Atmosphere")
@@ -179,6 +180,21 @@ local function applyLighting()
 	bloom.Size = 24
 	bloom.Threshold = 0.9
 	bloom.Parent = Lighting
+
+	if theme.SunRays then
+		local rays = Lighting:FindFirstChildOfClass("SunRaysEffect") or Instance.new("SunRaysEffect")
+		rays.Intensity = theme.SunRays.Intensity
+		rays.Spread = theme.SunRays.Spread
+		rays.Parent = Lighting
+	end
+	if theme.Grade then
+		local grade = Lighting:FindFirstChildOfClass("ColorCorrectionEffect") or Instance.new("ColorCorrectionEffect")
+		grade.Brightness = theme.Grade.Brightness
+		grade.Contrast = theme.Grade.Contrast
+		grade.Saturation = theme.Grade.Saturation
+		grade.TintColor = theme.Grade.Tint
+		grade.Parent = Lighting
+	end
 end
 
 -- === the contract ====================================================
