@@ -47,6 +47,7 @@ type Flyer = {
 	Yaw: number,
 	Bank: number,
 	Rng: Random,
+	Subs: { any },
 }
 
 local function waypoint(f: Flyer, fromAngle: number): Vector3
@@ -105,7 +106,23 @@ function SkyTraffic.init(): ()
 					Yaw = rng:NextNumber(0, math.pi * 2),
 					Bank = 0,
 					Rng = rng,
+					Subs = {},
 				}
+				for _, c in d:GetChildren() do
+					if c:IsA("BasePart") and c:GetAttribute("SubKind") then
+						table.insert(f.Subs, {
+							Part = c,
+							Kind = c:GetAttribute("SubKind"),
+							Offset = c:GetAttribute("SubOffset") :: Vector3,
+							Hinge = c:GetAttribute("SubHinge") :: Vector3,
+							Axis = c:GetAttribute("SubAxis") :: Vector3,
+							Amp = (c:GetAttribute("SubAmp") :: number?) or 0.3,
+							Rate = (c:GetAttribute("SubRate") :: number?) or 1,
+							Phase = ((c:GetAttribute("SubPhase") :: number?) or 0) + rng:NextNumber(0, 1),
+							Alpha = c.Transparency,
+						})
+					end
+				end
 				f.Target = waypoint(f, angleOf(f, f.Pos))
 				table.insert(flyers, f)
 			end
@@ -181,6 +198,20 @@ function SkyTraffic.init(): ()
 					cf = CFrame.new(at) * CFrame.Angles(0, f.Yaw, 0)
 				end
 				f.Part.CFrame = cf
+				-- the moving pieces: propellers spin, fins and flukes swing about
+				-- their joints, flames and lift crystals flicker
+				for _, s in f.Subs do
+					local rel = CFrame.new(s.Offset)
+					if s.Kind == "Spin" or s.Kind == "Flap" then
+						local angle = if s.Kind == "Spin"
+							then elapsed * s.Rate + s.Phase
+							else math.sin(elapsed * s.Rate * math.pi * 2 + s.Phase) * s.Amp
+						rel = CFrame.new(s.Hinge) * CFrame.fromAxisAngle(s.Axis, angle) * CFrame.new(s.Offset - s.Hinge)
+					elseif s.Kind == "Flicker" then
+						s.Part.Transparency = s.Alpha + 0.35 * (0.5 + 0.5 * math.sin(elapsed * s.Rate * math.pi * 2 + s.Phase))
+					end
+					s.Part.CFrame = cf * rel
+				end
 			end
 		end)
 	end)

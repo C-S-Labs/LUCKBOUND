@@ -2,8 +2,9 @@
  "pieces": {
   "HUB_PLATFORM": {
    "group": "Hub",
-   "tris": 6552,
+   "tris": 6456,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     0.0,
@@ -20,6 +21,7 @@
    "group": "Hub",
    "tris": 2984,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     0.0,
@@ -36,6 +38,7 @@
    "group": "Hub",
    "tris": 3918,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     0.0,
@@ -50,8 +53,9 @@
   },
   "HUB_ARCHIVES": {
    "group": "Hub",
-   "tris": 6992,
+   "tris": 6968,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     218.769,
@@ -66,8 +70,9 @@
   },
   "HUB_SHOP": {
    "group": "Hub",
-   "tris": 3896,
+   "tris": 3752,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     0.0,
@@ -82,8 +87,9 @@
   },
   "HUB_TRAINING_GROUNDS": {
    "group": "Hub",
-   "tris": 4868,
+   "tris": 4676,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     -218.769,
@@ -96,10 +102,147 @@
     96.9
    ]
   },
+  "anim_lamp_glow_1": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "sub": null,
+   "host": "HUB_PLATFORM",
+   "centre": [
+    100.703,
+    41.712,
+    13.7
+   ],
+   "size": [
+    1.6,
+    1.386,
+    2.6
+   ]
+  },
+  "anim_lamp_glow_2": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "sub": null,
+   "host": "HUB_PLATFORM",
+   "centre": [
+    41.712,
+    100.703,
+    13.7
+   ],
+   "size": [
+    1.6,
+    1.386,
+    2.6
+   ]
+  },
+  "anim_lamp_glow_3": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "sub": null,
+   "host": "HUB_PLATFORM",
+   "centre": [
+    -41.712,
+    100.703,
+    13.7
+   ],
+   "size": [
+    1.6,
+    1.386,
+    2.6
+   ]
+  },
+  "anim_lamp_glow_4": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "sub": null,
+   "host": "HUB_PLATFORM",
+   "centre": [
+    -100.703,
+    41.712,
+    13.7
+   ],
+   "size": [
+    1.6,
+    1.386,
+    2.6
+   ]
+  },
+  "anim_lamp_glow_5": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "sub": null,
+   "host": "HUB_PLATFORM",
+   "centre": [
+    -100.703,
+    -41.712,
+    13.7
+   ],
+   "size": [
+    1.6,
+    1.386,
+    2.6
+   ]
+  },
+  "anim_lamp_glow_6": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "sub": null,
+   "host": "HUB_PLATFORM",
+   "centre": [
+    -41.712,
+    -100.703,
+    13.7
+   ],
+   "size": [
+    1.6,
+    1.386,
+    2.6
+   ]
+  },
+  "anim_lamp_glow_7": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "sub": null,
+   "host": "HUB_PLATFORM",
+   "centre": [
+    41.712,
+    -100.703,
+    13.7
+   ],
+   "size": [
+    1.6,
+    1.386,
+    2.6
+   ]
+  },
+  "anim_lamp_glow_8": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "sub": null,
+   "host": "HUB_PLATFORM",
+   "centre": [
+    100.703,
+    -41.712,
+    13.7
+   ],
+   "size": [
+    1.6,
+    1.386,
+    2.6
+   ]
+  },
   "anim_keel_core_1": {
    "group": "Animated",
    "tris": 16,
    "anim": "Bob",
+   "sub": null,
    "host": "HUB_PLATFORM",
    "centre": [
     67.882,
@@ -116,6 +259,7 @@
    "group": "Animated",
    "tris": 96,
    "anim": "Spin",
+   "sub": null,
    "host": "HUB_PLATFORM",
    "centre": [
     67.882,
@@ -132,6 +276,7 @@
    "group": "Animated",
    "tris": 16,
    "anim": "Bob",
+   "sub": null,
    "host": "HUB_PLATFORM",
    "centre": [
     -67.882,
@@ -148,6 +293,7 @@
    "group": "Animated",
    "tris": 96,
    "anim": "Spin",
+   "sub": null,
    "host": "HUB_PLATFORM",
    "centre": [
     -67.882,
@@ -164,6 +310,7 @@
    "group": "Animated",
    "tris": 16,
    "anim": "Bob",
+   "sub": null,
    "host": "HUB_PLATFORM",
    "centre": [
     -67.882,
@@ -180,6 +327,7 @@
    "group": "Animated",
    "tris": 96,
    "anim": "Spin",
+   "sub": null,
    "host": "HUB_PLATFORM",
    "centre": [
     -67.882,
@@ -196,6 +344,7 @@
    "group": "Animated",
    "tris": 16,
    "anim": "Bob",
+   "sub": null,
    "host": "HUB_PLATFORM",
    "centre": [
     67.882,
@@ -212,6 +361,7 @@
    "group": "Animated",
    "tris": 96,
    "anim": "Spin",
+   "sub": null,
    "host": "HUB_PLATFORM",
    "centre": [
     67.882,
@@ -228,6 +378,7 @@
    "group": "Animated",
    "tris": 84,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_PLATFORM",
    "centre": [
     171.12,
@@ -244,6 +395,7 @@
    "group": "Animated",
    "tris": 84,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_PLATFORM",
    "centre": [
     -171.12,
@@ -260,6 +412,7 @@
    "group": "Animated",
    "tris": 84,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_PLATFORM",
    "centre": [
     -171.12,
@@ -276,6 +429,7 @@
    "group": "Animated",
    "tris": 84,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_PLATFORM",
    "centre": [
     171.12,
@@ -288,10 +442,79 @@
     7.0
    ]
   },
+  "anim_engine_wisp_1": {
+   "group": "Animated",
+   "tris": 84,
+   "anim": "SpinBob",
+   "sub": null,
+   "host": "HUB_PLATFORM",
+   "centre": [
+    33.941,
+    33.941,
+    44.3
+   ],
+   "size": [
+    5.38,
+    5.38,
+    5.4
+   ]
+  },
+  "anim_engine_wisp_2": {
+   "group": "Animated",
+   "tris": 84,
+   "anim": "SpinBob",
+   "sub": null,
+   "host": "HUB_PLATFORM",
+   "centre": [
+    -33.941,
+    33.941,
+    44.3
+   ],
+   "size": [
+    5.38,
+    5.38,
+    5.4
+   ]
+  },
+  "anim_engine_wisp_3": {
+   "group": "Animated",
+   "tris": 84,
+   "anim": "SpinBob",
+   "sub": null,
+   "host": "HUB_PLATFORM",
+   "centre": [
+    -33.941,
+    -33.941,
+    44.3
+   ],
+   "size": [
+    5.38,
+    5.38,
+    5.4
+   ]
+  },
+  "anim_engine_wisp_4": {
+   "group": "Animated",
+   "tris": 84,
+   "anim": "SpinBob",
+   "sub": null,
+   "host": "HUB_PLATFORM",
+   "centre": [
+    33.941,
+    -33.941,
+    44.3
+   ],
+   "size": [
+    5.38,
+    5.38,
+    5.4
+   ]
+  },
   "anim_thruster_flame_1": {
    "group": "Animated",
    "tris": 16,
    "anim": "Flicker",
+   "sub": null,
    "host": "HUB_LEVITATOR",
    "centre": [
     52.661,
@@ -308,6 +531,7 @@
    "group": "Animated",
    "tris": 16,
    "anim": "Flicker",
+   "sub": null,
    "host": "HUB_LEVITATOR",
    "centre": [
     21.813,
@@ -324,6 +548,7 @@
    "group": "Animated",
    "tris": 16,
    "anim": "Flicker",
+   "sub": null,
    "host": "HUB_LEVITATOR",
    "centre": [
     -21.813,
@@ -340,6 +565,7 @@
    "group": "Animated",
    "tris": 16,
    "anim": "Flicker",
+   "sub": null,
    "host": "HUB_LEVITATOR",
    "centre": [
     -52.661,
@@ -356,6 +582,7 @@
    "group": "Animated",
    "tris": 16,
    "anim": "Flicker",
+   "sub": null,
    "host": "HUB_LEVITATOR",
    "centre": [
     -52.661,
@@ -372,6 +599,7 @@
    "group": "Animated",
    "tris": 16,
    "anim": "Flicker",
+   "sub": null,
    "host": "HUB_LEVITATOR",
    "centre": [
     -21.813,
@@ -388,6 +616,7 @@
    "group": "Animated",
    "tris": 16,
    "anim": "Flicker",
+   "sub": null,
    "host": "HUB_LEVITATOR",
    "centre": [
     21.813,
@@ -404,6 +633,7 @@
    "group": "Animated",
    "tris": 16,
    "anim": "Flicker",
+   "sub": null,
    "host": "HUB_LEVITATOR",
    "centre": [
     52.661,
@@ -420,6 +650,7 @@
    "group": "Animated",
    "tris": 320,
    "anim": "Spin",
+   "sub": null,
    "host": "HUB_LEVITATOR",
    "centre": [
     0.0,
@@ -436,6 +667,7 @@
    "group": "Animated",
    "tris": 320,
    "anim": "Spin",
+   "sub": null,
    "host": "HUB_LEVITATOR",
    "centre": [
     0.0,
@@ -452,6 +684,7 @@
    "group": "Animated",
    "tris": 320,
    "anim": "Spin",
+   "sub": null,
    "host": "HUB_LEVITATOR",
    "centre": [
     0.0,
@@ -468,6 +701,7 @@
    "group": "Animated",
    "tris": 16,
    "anim": "Bob",
+   "sub": null,
    "host": "HUB_HALL_OF_CHAMPIONS",
    "centre": [
     0.0,
@@ -484,6 +718,7 @@
    "group": "Animated",
    "tris": 96,
    "anim": "Spin",
+   "sub": null,
    "host": "HUB_HALL_OF_CHAMPIONS",
    "centre": [
     0.0,
@@ -500,6 +735,7 @@
    "group": "Animated",
    "tris": 12,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_HALL_OF_CHAMPIONS",
    "centre": [
     -19.053,
@@ -516,6 +752,7 @@
    "group": "Animated",
    "tris": 12,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_HALL_OF_CHAMPIONS",
    "centre": [
     -11.0,
@@ -532,6 +769,7 @@
    "group": "Animated",
    "tris": 12,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_HALL_OF_CHAMPIONS",
    "centre": [
     0.0,
@@ -548,6 +786,7 @@
    "group": "Animated",
    "tris": 12,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_HALL_OF_CHAMPIONS",
    "centre": [
     11.0,
@@ -564,6 +803,7 @@
    "group": "Animated",
    "tris": 12,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_HALL_OF_CHAMPIONS",
    "centre": [
     19.053,
@@ -580,6 +820,7 @@
    "group": "Animated",
    "tris": 312,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_HALL_OF_CHAMPIONS",
    "centre": [
     0.0,
@@ -596,6 +837,7 @@
    "group": "Animated",
    "tris": 144,
    "anim": "Spin",
+   "sub": null,
    "host": "HUB_HALL_OF_CHAMPIONS",
    "centre": [
     0.0,
@@ -612,6 +854,7 @@
    "group": "Animated",
    "tris": 12,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_HALL_OF_CHAMPIONS",
    "centre": [
     0.0,
@@ -628,6 +871,7 @@
    "group": "Animated",
    "tris": 16,
    "anim": "Bob",
+   "sub": null,
    "host": "HUB_ARCHIVES",
    "centre": [
     218.0,
@@ -644,6 +888,7 @@
    "group": "Animated",
    "tris": 96,
    "anim": "Spin",
+   "sub": null,
    "host": "HUB_ARCHIVES",
    "centre": [
     218.0,
@@ -660,6 +905,7 @@
    "group": "Animated",
    "tris": 12,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_ARCHIVES",
    "centre": [
     228.0,
@@ -676,6 +922,7 @@
    "group": "Animated",
    "tris": 108,
    "anim": "Spin",
+   "sub": null,
    "host": "HUB_ARCHIVES",
    "centre": [
     228.0,
@@ -692,6 +939,7 @@
    "group": "Animated",
    "tris": 204,
    "anim": "Spin",
+   "sub": null,
    "host": "HUB_ARCHIVES",
    "centre": [
     228.0,
@@ -708,6 +956,7 @@
    "group": "Animated",
    "tris": 228,
    "anim": "Spin",
+   "sub": null,
    "host": "HUB_ARCHIVES",
    "centre": [
     228.0,
@@ -724,6 +973,7 @@
    "group": "Animated",
    "tris": 252,
    "anim": "Spin",
+   "sub": null,
    "host": "HUB_ARCHIVES",
    "centre": [
     228.4,
@@ -740,6 +990,7 @@
    "group": "Animated",
    "tris": 36,
    "anim": "Bob",
+   "sub": null,
    "host": "HUB_ARCHIVES",
    "centre": [
     236.188,
@@ -756,6 +1007,7 @@
    "group": "Animated",
    "tris": 36,
    "anim": "Bob",
+   "sub": null,
    "host": "HUB_ARCHIVES",
    "centre": [
     249.76,
@@ -772,6 +1024,7 @@
    "group": "Animated",
    "tris": 36,
    "anim": "Bob",
+   "sub": null,
    "host": "HUB_ARCHIVES",
    "centre": [
     250.619,
@@ -788,6 +1041,7 @@
    "group": "Animated",
    "tris": 36,
    "anim": "Bob",
+   "sub": null,
    "host": "HUB_ARCHIVES",
    "centre": [
     238.185,
@@ -804,6 +1058,7 @@
    "group": "Animated",
    "tris": 36,
    "anim": "Bob",
+   "sub": null,
    "host": "HUB_ARCHIVES",
    "centre": [
     219.812,
@@ -820,6 +1075,7 @@
    "group": "Animated",
    "tris": 36,
    "anim": "Bob",
+   "sub": null,
    "host": "HUB_ARCHIVES",
    "centre": [
     206.21,
@@ -836,6 +1092,7 @@
    "group": "Animated",
    "tris": 36,
    "anim": "Bob",
+   "sub": null,
    "host": "HUB_ARCHIVES",
    "centre": [
     205.372,
@@ -852,6 +1109,7 @@
    "group": "Animated",
    "tris": 36,
    "anim": "Bob",
+   "sub": null,
    "host": "HUB_ARCHIVES",
    "centre": [
     217.842,
@@ -864,10 +1122,45 @@
     1.293
    ]
   },
+  "anim_lamp_glow_9": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "sub": null,
+   "host": "HUB_ARCHIVES",
+   "centre": [
+    172.0,
+    16.0,
+    14.7
+   ],
+   "size": [
+    1.386,
+    1.6,
+    2.6
+   ]
+  },
+  "anim_lamp_glow_10": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "sub": null,
+   "host": "HUB_ARCHIVES",
+   "centre": [
+    172.0,
+    -16.0,
+    14.7
+   ],
+   "size": [
+    1.386,
+    1.6,
+    2.6
+   ]
+  },
   "anim_keel_core_7": {
    "group": "Animated",
    "tris": 16,
    "anim": "Bob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     0.0,
@@ -884,6 +1177,7 @@
    "group": "Animated",
    "tris": 96,
    "anim": "Spin",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     0.0,
@@ -900,6 +1194,7 @@
    "group": "Animated",
    "tris": 324,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     0.0,
@@ -916,6 +1211,7 @@
    "group": "Animated",
    "tris": 144,
    "anim": "Spin",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     0.0,
@@ -932,6 +1228,7 @@
    "group": "Animated",
    "tris": 144,
    "anim": "Spin",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     0.0,
@@ -948,6 +1245,7 @@
    "group": "Animated",
    "tris": 96,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     -41.651,
@@ -964,6 +1262,7 @@
    "group": "Animated",
    "tris": 96,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     -41.13,
@@ -980,6 +1279,7 @@
    "group": "Animated",
    "tris": 96,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     -40.609,
@@ -996,6 +1296,7 @@
    "group": "Animated",
    "tris": 96,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     -40.088,
@@ -1008,10 +1309,28 @@
     2.8
    ]
   },
+  "anim_stall_lantern_1": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "Flicker",
+   "sub": null,
+   "host": "HUB_SHOP",
+   "centre": [
+    -38.408,
+    -211.228,
+    7.95
+   ],
+   "size": [
+    1.316,
+    1.379,
+    1.5
+   ]
+  },
   "anim_ware_sword_1": {
    "group": "Animated",
    "tris": 56,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     -33.69,
@@ -1028,6 +1347,7 @@
    "group": "Animated",
    "tris": 94,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     -35.19,
@@ -1044,6 +1364,7 @@
    "group": "Animated",
    "tris": 82,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     -36.69,
@@ -1060,6 +1381,7 @@
    "group": "Animated",
    "tris": 56,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     -38.19,
@@ -1072,10 +1394,28 @@
     5.6
    ]
   },
+  "anim_stall_lantern_2": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "Flicker",
+   "sub": null,
+   "host": "HUB_SHOP",
+   "centre": [
+    -33.775,
+    -237.5,
+    7.95
+   ],
+   "size": [
+    1.4,
+    1.212,
+    1.5
+   ]
+  },
   "anim_ware_gem_1": {
    "group": "Animated",
    "tris": 28,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     -9.965,
@@ -1092,6 +1432,7 @@
    "group": "Animated",
    "tris": 32,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     -12.784,
@@ -1108,6 +1449,7 @@
    "group": "Animated",
    "tris": 32,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     -15.603,
@@ -1124,6 +1466,7 @@
    "group": "Animated",
    "tris": 30,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     -18.422,
@@ -1136,10 +1479,28 @@
     2.4
    ]
   },
+  "anim_stall_lantern_3": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "Flicker",
+   "sub": null,
+   "host": "HUB_SHOP",
+   "centre": [
+    -13.339,
+    -254.648,
+    7.95
+   ],
+   "size": [
+    1.316,
+    1.379,
+    1.5
+   ]
+  },
   "anim_ware_scroll_1": {
    "group": "Animated",
    "tris": 56,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     18.422,
@@ -1156,6 +1517,7 @@
    "group": "Animated",
    "tris": 36,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     15.619,
@@ -1172,6 +1534,7 @@
    "group": "Animated",
    "tris": 56,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     12.784,
@@ -1188,6 +1551,7 @@
    "group": "Animated",
    "tris": 36,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     9.981,
@@ -1200,10 +1564,28 @@
     0.85
    ]
   },
+  "anim_stall_lantern_4": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "Flicker",
+   "sub": null,
+   "host": "HUB_SHOP",
+   "centre": [
+    13.339,
+    -254.648,
+    7.95
+   ],
+   "size": [
+    1.316,
+    1.379,
+    1.5
+   ]
+  },
   "anim_ware_helm_1": {
    "group": "Animated",
    "tris": 88,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     38.19,
@@ -1220,6 +1602,7 @@
    "group": "Animated",
    "tris": 72,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     36.69,
@@ -1236,6 +1619,7 @@
    "group": "Animated",
    "tris": 88,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     35.19,
@@ -1252,6 +1636,7 @@
    "group": "Animated",
    "tris": 72,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     33.69,
@@ -1264,10 +1649,28 @@
     2.8
    ]
   },
+  "anim_stall_lantern_5": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "Flicker",
+   "sub": null,
+   "host": "HUB_SHOP",
+   "centre": [
+    33.775,
+    -237.5,
+    7.95
+   ],
+   "size": [
+    1.4,
+    1.212,
+    1.5
+   ]
+  },
   "anim_ware_charm_1": {
    "group": "Animated",
    "tris": 88,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     40.088,
@@ -1284,6 +1687,7 @@
    "group": "Animated",
    "tris": 88,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     40.609,
@@ -1300,6 +1704,7 @@
    "group": "Animated",
    "tris": 88,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     41.13,
@@ -1316,6 +1721,7 @@
    "group": "Animated",
    "tris": 88,
    "anim": "SpinBob",
+   "sub": null,
    "host": "HUB_SHOP",
    "centre": [
     41.651,
@@ -1328,10 +1734,130 @@
     1.6
    ]
   },
+  "anim_stall_lantern_6": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "Flicker",
+   "sub": null,
+   "host": "HUB_SHOP",
+   "centre": [
+    38.408,
+    -211.228,
+    7.95
+   ],
+   "size": [
+    1.316,
+    1.379,
+    1.5
+   ]
+  },
+  "anim_lamp_glow_11": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "sub": null,
+   "host": "HUB_SHOP",
+   "centre": [
+    -64.997,
+    -229.461,
+    11.7
+   ],
+   "size": [
+    1.6,
+    1.386,
+    2.6
+   ]
+  },
+  "anim_lamp_glow_12": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "sub": null,
+   "host": "HUB_SHOP",
+   "centre": [
+    -22.573,
+    -280.02,
+    11.7
+   ],
+   "size": [
+    1.6,
+    1.386,
+    2.6
+   ]
+  },
+  "anim_lamp_glow_13": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "sub": null,
+   "host": "HUB_SHOP",
+   "centre": [
+    42.424,
+    -268.559,
+    11.7
+   ],
+   "size": [
+    1.6,
+    1.386,
+    2.6
+   ]
+  },
+  "anim_lamp_glow_14": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "sub": null,
+   "host": "HUB_SHOP",
+   "centre": [
+    64.997,
+    -206.539,
+    11.7
+   ],
+   "size": [
+    1.6,
+    1.386,
+    2.6
+   ]
+  },
+  "anim_lamp_glow_15": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "sub": null,
+   "host": "HUB_SHOP",
+   "centre": [
+    22.573,
+    -155.98,
+    11.7
+   ],
+   "size": [
+    1.6,
+    1.386,
+    2.6
+   ]
+  },
+  "anim_lamp_glow_16": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "sub": null,
+   "host": "HUB_SHOP",
+   "centre": [
+    -42.424,
+    -167.441,
+    11.7
+   ],
+   "size": [
+    1.6,
+    1.386,
+    2.6
+   ]
+  },
   "anim_keel_core_8": {
    "group": "Animated",
    "tris": 16,
    "anim": "Bob",
+   "sub": null,
    "host": "HUB_TRAINING_GROUNDS",
    "centre": [
     -218.0,
@@ -1348,6 +1874,7 @@
    "group": "Animated",
    "tris": 96,
    "anim": "Spin",
+   "sub": null,
    "host": "HUB_TRAINING_GROUNDS",
    "centre": [
     -218.0,
@@ -1360,10 +1887,164 @@
     0.606
    ]
   },
+  "anim_brazier_flame_1": {
+   "group": "Animated",
+   "tris": 24,
+   "anim": "Flicker",
+   "sub": null,
+   "host": "HUB_TRAINING_GROUNDS",
+   "centre": [
+    -242.007,
+    58.415,
+    9.6
+   ],
+   "size": [
+    2.964,
+    2.979,
+    2.8
+   ]
+  },
+  "anim_brazier_flame_2": {
+   "group": "Animated",
+   "tris": 24,
+   "anim": "Flicker",
+   "sub": null,
+   "host": "HUB_TRAINING_GROUNDS",
+   "centre": [
+    -276.103,
+    24.32,
+    9.6
+   ],
+   "size": [
+    2.964,
+    2.979,
+    2.8
+   ]
+  },
+  "anim_brazier_flame_3": {
+   "group": "Animated",
+   "tris": 24,
+   "anim": "Flicker",
+   "sub": null,
+   "host": "HUB_TRAINING_GROUNDS",
+   "centre": [
+    -276.103,
+    -23.898,
+    9.6
+   ],
+   "size": [
+    2.964,
+    2.979,
+    2.8
+   ]
+  },
+  "anim_brazier_flame_4": {
+   "group": "Animated",
+   "tris": 24,
+   "anim": "Flicker",
+   "sub": null,
+   "host": "HUB_TRAINING_GROUNDS",
+   "centre": [
+    -242.007,
+    -57.994,
+    9.6
+   ],
+   "size": [
+    2.964,
+    2.979,
+    2.8
+   ]
+  },
+  "anim_brazier_flame_5": {
+   "group": "Animated",
+   "tris": 24,
+   "anim": "Flicker",
+   "sub": null,
+   "host": "HUB_TRAINING_GROUNDS",
+   "centre": [
+    -193.789,
+    -57.994,
+    9.6
+   ],
+   "size": [
+    2.964,
+    2.979,
+    2.8
+   ]
+  },
+  "anim_brazier_flame_6": {
+   "group": "Animated",
+   "tris": 24,
+   "anim": "Flicker",
+   "sub": null,
+   "host": "HUB_TRAINING_GROUNDS",
+   "centre": [
+    -159.694,
+    -23.898,
+    9.6
+   ],
+   "size": [
+    2.964,
+    2.979,
+    2.8
+   ]
+  },
+  "anim_brazier_flame_7": {
+   "group": "Animated",
+   "tris": 24,
+   "anim": "Flicker",
+   "sub": null,
+   "host": "HUB_TRAINING_GROUNDS",
+   "centre": [
+    -159.694,
+    24.32,
+    9.6
+   ],
+   "size": [
+    2.964,
+    2.979,
+    2.8
+   ]
+  },
+  "anim_brazier_flame_8": {
+   "group": "Animated",
+   "tris": 24,
+   "anim": "Flicker",
+   "sub": null,
+   "host": "HUB_TRAINING_GROUNDS",
+   "centre": [
+    -193.789,
+    58.415,
+    9.6
+   ],
+   "size": [
+    2.964,
+    2.979,
+    2.8
+   ]
+  },
+  "anim_training_emblem_1": {
+   "group": "Animated",
+   "tris": 168,
+   "anim": "SpinBob",
+   "sub": null,
+   "host": "HUB_TRAINING_GROUNDS",
+   "centre": [
+    -226.0,
+    -0.0,
+    33.848
+   ],
+   "size": [
+    0.5,
+    11.25,
+    12.729
+   ]
+  },
   "HUB_BACKDROP_PEAKS": {
    "group": "Backdrop",
    "tris": 3394,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     11.986,
@@ -1380,6 +2061,7 @@
    "group": "Backdrop",
    "tris": 3688,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     -3.079,
@@ -1396,6 +2078,7 @@
    "group": "Backdrop",
    "tris": 3550,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     -5.964,
@@ -1410,8 +2093,9 @@
   },
   "hubprop_isle_shrine": {
    "group": "Orbiters",
-   "tris": 1354,
+   "tris": 1342,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     -0.717,
@@ -1428,6 +2112,7 @@
    "group": "Orbiters",
    "tris": 1220,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     -1.441,
@@ -1444,6 +2129,7 @@
    "group": "Orbiters",
    "tris": 1128,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     -0.395,
@@ -1458,88 +2144,358 @@
   },
   "hubprop_ship_sloop": {
    "group": "Orbiters",
-   "tris": 472,
+   "tris": 448,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     1.25,
     0.0,
-    5.5
+    6.574
    ],
    "size": [
     21.3,
     9.6,
-    21.8
+    19.651
+   ]
+  },
+  "hubprop_ship_sloop__lift_1": {
+   "group": "Orbiters",
+   "tris": 24,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_ship_sloop",
+    "kind": "Flicker",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "amp": 0.3,
+    "rate": 1.6,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    0.0,
+    0.0,
+    -3.95
+   ],
+   "size": [
+    12.4,
+    2.078,
+    2.9
    ]
   },
   "hubprop_ship_cutter": {
    "group": "Orbiters",
-   "tris": 504,
+   "tris": 396,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     1.46,
     0.0,
-    -0.925
+    0.187
    ],
    "size": [
     25.68,
     25.707,
-    9.75
+    7.526
+   ]
+  },
+  "hubprop_ship_cutter__rotor_1": {
+   "group": "Orbiters",
+   "tris": 66,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_ship_cutter",
+    "kind": "Spin",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     -10.5,
+     -2.4,
+     0.8
+    ],
+    "amp": 0.3,
+    "rate": 7.0,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    -9.805,
+    -2.4,
+    1.183
+   ],
+   "size": [
+    1.69,
+    4.196,
+    3.633
+   ]
+  },
+  "hubprop_ship_cutter__rotor_2": {
+   "group": "Orbiters",
+   "tris": 66,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_ship_cutter",
+    "kind": "Spin",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     -10.5,
+     2.4,
+     0.8
+    ],
+    "amp": 0.3,
+    "rate": 7.0,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    -9.805,
+    2.4,
+    1.183
+   ],
+   "size": [
+    1.69,
+    4.196,
+    3.633
+   ]
+  },
+  "hubprop_ship_cutter__lift_1": {
+   "group": "Orbiters",
+   "tris": 36,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_ship_cutter",
+    "kind": "Flicker",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "amp": 0.3,
+    "rate": 1.6,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    0.0,
+    0.0,
+    -4.35
+   ],
+   "size": [
+    16.4,
+    2.078,
+    2.9
    ]
   },
   "hubprop_ship_trawler": {
    "group": "Orbiters",
-   "tris": 506,
+   "tris": 470,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     0.5,
     3.021,
-    2.4
+    2.45
    ],
    "size": [
     21.0,
     13.559,
-    17.2
+    17.1
+   ]
+  },
+  "hubprop_ship_trawler__lift_1": {
+   "group": "Orbiters",
+   "tris": 36,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_ship_trawler",
+    "kind": "Flicker",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "amp": 0.3,
+    "rate": 1.6,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    0.0,
+    0.0,
+    -4.75
+   ],
+   "size": [
+    14.4,
+    2.078,
+    2.9
    ]
   },
   "hubprop_ship_cog": {
    "group": "Orbiters",
-   "tris": 1180,
+   "tris": 1108,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     -0.32,
     0.0,
-    6.2
+    7.245
    ],
    "size": [
     27.04,
     10.722,
-    26.0
+    23.909
+   ]
+  },
+  "hubprop_ship_cog__rotor_1": {
+   "group": "Orbiters",
+   "tris": 66,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_ship_cog",
+    "kind": "Spin",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     -12.8,
+     0.0,
+     0.8
+    ],
+    "amp": 0.3,
+    "rate": 7.0,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    -11.965,
+    0.0,
+    1.253
+   ],
+   "size": [
+    1.97,
+    4.958,
+    4.294
+   ]
+  },
+  "hubprop_ship_cog__lift_1": {
+   "group": "Orbiters",
+   "tris": 36,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_ship_cog",
+    "kind": "Flicker",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "amp": 0.3,
+    "rate": 1.6,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    0.0,
+    0.0,
+    -5.35
+   ],
+   "size": [
+    18.4,
+    2.078,
+    2.9
    ]
   },
   "hubprop_ship_yacht": {
    "group": "Orbiters",
-   "tris": 666,
+   "tris": 630,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     2.15,
     0.0,
-    6.3
+    7.265
    ],
    "size": [
     28.3,
     8.62,
-    24.2
+    22.269
+   ]
+  },
+  "hubprop_ship_yacht__lift_1": {
+   "group": "Orbiters",
+   "tris": 36,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_ship_yacht",
+    "kind": "Flicker",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "amp": 0.3,
+    "rate": 1.6,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    0.0,
+    0.0,
+    -4.35
+   ],
+   "size": [
+    18.4,
+    2.078,
+    2.9
    ]
   },
   "hubprop_ship_galleon": {
    "group": "Orbiters",
-   "tris": 3126,
+   "tris": 2994,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     7.053,
@@ -1548,14 +2504,114 @@
    ],
    "size": [
     122.105,
-    51.442,
+    42.772,
     142.0
+   ]
+  },
+  "hubprop_ship_galleon__rotor_1": {
+   "group": "Orbiters",
+   "tris": 66,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_ship_galleon",
+    "kind": "Spin",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     -32.0,
+     -20.0,
+     3.0
+    ],
+    "amp": 0.3,
+    "rate": 3.5,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    -29.975,
+    -20.0,
+    4.045
+   ],
+   "size": [
+    4.35,
+    11.442,
+    9.909
+   ]
+  },
+  "hubprop_ship_galleon__rotor_2": {
+   "group": "Orbiters",
+   "tris": 66,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_ship_galleon",
+    "kind": "Spin",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     -32.0,
+     20.0,
+     3.0
+    ],
+    "amp": 0.3,
+    "rate": 3.5,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    -29.975,
+    20.0,
+    4.045
+   ],
+   "size": [
+    4.35,
+    11.442,
+    9.909
+   ]
+  },
+  "hubprop_ship_galleon__lift_1": {
+   "group": "Orbiters",
+   "tris": 60,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_ship_galleon",
+    "kind": "Flicker",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "amp": 0.3,
+    "rate": 1.6,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    0.0,
+    0.0,
+    -15.15
+   ],
+   "size": [
+    74.4,
+    2.078,
+    2.9
    ]
   },
   "hubprop_ship_carrier": {
    "group": "Orbiters",
-   "tris": 3550,
+   "tris": 3358,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     12.301,
@@ -1564,14 +2620,279 @@
    ],
    "size": [
     207.398,
-    93.163,
+    86.0,
     146.0
+   ]
+  },
+  "hubprop_ship_carrier__rotor_1": {
+   "group": "Orbiters",
+   "tris": 66,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_ship_carrier",
+    "kind": "Spin",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     -87.0,
+     -38.0,
+     6.0
+    ],
+    "amp": 0.3,
+    "rate": 3.5,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    -83.925,
+    -38.0,
+    7.568
+   ],
+   "size": [
+    6.45,
+    17.163,
+    14.864
+   ]
+  },
+  "hubprop_ship_carrier__glow_1": {
+   "group": "Orbiters",
+   "tris": 12,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_ship_carrier",
+    "kind": "Flicker",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "amp": 0.3,
+    "rate": 3.0,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    -69.5,
+    -38.0,
+    6.0
+   ],
+   "size": [
+    5.0,
+    4.33,
+    0.4
+   ]
+  },
+  "hubprop_ship_carrier__rotor_2": {
+   "group": "Orbiters",
+   "tris": 66,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_ship_carrier",
+    "kind": "Spin",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     -59.0,
+     -38.0,
+     6.0
+    ],
+    "amp": 0.3,
+    "rate": 3.5,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    -55.925,
+    -38.0,
+    7.568
+   ],
+   "size": [
+    6.45,
+    17.163,
+    14.864
+   ]
+  },
+  "hubprop_ship_carrier__glow_2": {
+   "group": "Orbiters",
+   "tris": 12,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_ship_carrier",
+    "kind": "Flicker",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "amp": 0.3,
+    "rate": 3.0,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    -41.5,
+    -38.0,
+    6.0
+   ],
+   "size": [
+    5.0,
+    4.33,
+    0.4
+   ]
+  },
+  "hubprop_ship_carrier__rotor_3": {
+   "group": "Orbiters",
+   "tris": 66,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_ship_carrier",
+    "kind": "Spin",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     -87.0,
+     38.0,
+     6.0
+    ],
+    "amp": 0.3,
+    "rate": 3.5,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    -83.925,
+    38.0,
+    7.568
+   ],
+   "size": [
+    6.45,
+    17.163,
+    14.864
+   ]
+  },
+  "hubprop_ship_carrier__glow_3": {
+   "group": "Orbiters",
+   "tris": 12,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_ship_carrier",
+    "kind": "Flicker",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "amp": 0.3,
+    "rate": 3.0,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    -69.5,
+    38.0,
+    6.0
+   ],
+   "size": [
+    5.0,
+    4.33,
+    0.4
+   ]
+  },
+  "hubprop_ship_carrier__rotor_4": {
+   "group": "Orbiters",
+   "tris": 66,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_ship_carrier",
+    "kind": "Spin",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     -59.0,
+     38.0,
+     6.0
+    ],
+    "amp": 0.3,
+    "rate": 3.5,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    -55.925,
+    38.0,
+    7.568
+   ],
+   "size": [
+    6.45,
+    17.163,
+    14.864
+   ]
+  },
+  "hubprop_ship_carrier__glow_4": {
+   "group": "Orbiters",
+   "tris": 12,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_ship_carrier",
+    "kind": "Flicker",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "amp": 0.3,
+    "rate": 3.0,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    -41.5,
+    38.0,
+    6.0
+   ],
+   "size": [
+    5.0,
+    4.33,
+    0.4
    ]
   },
   "hubprop_cloud_a": {
    "group": "Orbiters",
    "tris": 288,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     6.517,
@@ -1588,6 +2909,7 @@
    "group": "Orbiters",
    "tris": 192,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     -1.001,
@@ -1602,24 +2924,59 @@
   },
   "hubprop_crystal_cluster": {
    "group": "Orbiters",
-   "tris": 178,
+   "tris": 82,
    "anim": null,
+   "sub": null,
+   "host": null,
+   "centre": [
+    -0.393,
+    -0.016,
+    2.0
+   ],
+   "size": [
+    7.602,
+    7.939,
+    20.0
+   ]
+  },
+  "hubprop_crystal_cluster__ring_1": {
+   "group": "Orbiters",
+   "tris": 96,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_crystal_cluster",
+    "kind": "Spin",
+    "axis": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "hinge": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "amp": 0.3,
+    "rate": 0.9,
+    "phase": 0.0
+   },
    "host": null,
    "centre": [
     0.0,
     0.0,
-    2.0
+    0.0
    ],
    "size": [
     13.3,
     12.676,
-    20.0
+    5.037
    ]
   },
   "hubprop_rune_ring": {
    "group": "Orbiters",
    "tris": 704,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     0.0,
@@ -1634,8 +2991,9 @@
   },
   "hubprop_sky_lantern": {
    "group": "Orbiters",
-   "tris": 68,
+   "tris": 60,
    "anim": null,
+   "sub": null,
    "host": null,
    "centre": [
     0.0,
@@ -1648,36 +3006,269 @@
     5.3
    ]
   },
-  "hubprop_sky_whale": {
+  "hubprop_sky_lantern__flame_1": {
    "group": "Orbiters",
-   "tris": 1918,
+   "tris": 8,
    "anim": null,
+   "sub": {
+    "parent": "hubprop_sky_lantern",
+    "kind": "Flicker",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "amp": 0.3,
+    "rate": 4.0,
+    "phase": 0.0
+   },
    "host": null,
    "centre": [
-    -11.023,
+    0.0,
+    0.0,
+    1.9
+   ],
+   "size": [
+    1.2,
+    1.2,
+    1.4
+   ]
+  },
+  "hubprop_sky_whale": {
+   "group": "Orbiters",
+   "tris": 1654,
+   "anim": null,
+   "sub": null,
+   "host": null,
+   "centre": [
+    -4.0,
     0.0,
     2.903
    ],
    "size": [
-    98.045,
-    54.646,
+    84.0,
+    23.09,
     32.713
+   ]
+  },
+  "hubprop_sky_whale__flipper_1": {
+   "group": "Orbiters",
+   "tris": 58,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_sky_whale",
+    "kind": "Flap",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     14.0,
+     -9.5,
+     -5.0
+    ],
+    "amp": 0.32,
+    "rate": 0.35,
+    "phase": 3.14159
+   },
+   "host": null,
+   "centre": [
+    6.054,
+    -17.724,
+    -7.596
+   ],
+   "size": [
+    20.577,
+    19.197,
+    10.153
+   ]
+  },
+  "hubprop_sky_whale__flipper_2": {
+   "group": "Orbiters",
+   "tris": 58,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_sky_whale",
+    "kind": "Flap",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     14.0,
+     9.5,
+     -5.0
+    ],
+    "amp": 0.32,
+    "rate": 0.35,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    6.054,
+    17.724,
+    -7.603
+   ],
+   "size": [
+    20.577,
+    19.197,
+    10.165
+   ]
+  },
+  "hubprop_sky_whale__fluke_1": {
+   "group": "Orbiters",
+   "tris": 136,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_sky_whale",
+    "kind": "Flap",
+    "axis": [
+     0.0,
+     1.0,
+     0.0
+    ],
+    "hinge": [
+     -42.0,
+     0.0,
+     0.0
+    ],
+    "amp": 0.28,
+    "rate": 0.3,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    -51.143,
+    0.005,
+    0.634
+   ],
+   "size": [
+    17.805,
+    34.168,
+    5.431
+   ]
+  },
+  "hubprop_sky_whale__spout_1": {
+   "group": "Orbiters",
+   "tris": 12,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_sky_whale",
+    "kind": "Flicker",
+    "axis": [
+     1.0,
+     0.0,
+     0.0
+    ],
+    "hinge": [
+     0.0,
+     0.0,
+     0.0
+    ],
+    "amp": 0.3,
+    "rate": 0.5,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    22.0,
+    0.0,
+    14.4
+   ],
+   "size": [
+    1.6,
+    1.386,
+    2.4
    ]
   },
   "hubprop_waystone": {
    "group": "Orbiters",
-   "tris": 228,
+   "tris": 36,
    "anim": null,
+   "sub": null,
+   "host": null,
+   "centre": [
+    0.0,
+    -0.081,
+    0.0
+   ],
+   "size": [
+    3.677,
+    3.838,
+    26.0
+   ]
+  },
+  "hubprop_waystone__ring_1": {
+   "group": "Orbiters",
+   "tris": 96,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_waystone",
+    "kind": "Spin",
+    "axis": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "hinge": [
+     0.0,
+     0.0,
+     3.0
+    ],
+    "amp": 0.3,
+    "rate": 0.8,
+    "phase": 0.0
+   },
    "host": null,
    "centre": [
     0.0,
     0.0,
-    0.0
+    3.0
    ],
    "size": [
     10.3,
+    4.011,
+    9.857
+   ]
+  },
+  "hubprop_waystone__ring_2": {
+   "group": "Orbiters",
+   "tris": 96,
+   "anim": null,
+   "sub": {
+    "parent": "hubprop_waystone",
+    "kind": "Spin",
+    "axis": [
+     0.0,
+     0.0,
+     1.0
+    ],
+    "hinge": [
+     0.0,
+     0.0,
+     -3.0
+    ],
+    "amp": 0.3,
+    "rate": -0.6,
+    "phase": 0.0
+   },
+   "host": null,
+   "centre": [
+    0.0,
+    0.0,
+    -3.0
+   ],
+   "size": [
+    6.8,
     12.7,
-    26.0
+    11.258
    ]
   }
  },

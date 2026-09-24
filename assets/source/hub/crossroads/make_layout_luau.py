@@ -40,10 +40,33 @@ def main():
     for group, key in (("Backdrop", "Backdrop"), ("Orbiters", "Orbiters")):
         out.append(f"\t{key} = {{")
         for name, p in sorted(d["pieces"].items()):
-            if p["group"] == group:
+            if p["group"] == group and not p.get("sub"):
                 s = p["size"]
                 out.append(f'\t\t{name} = {{ Size = Vector3.new({s[0]:.1f}, {s[2]:.1f}, {s[1]:.1f}) }},')
         out.append("\t},")
+
+    # A sky prop's moving pieces, in the prop's own frame AS IMPORTED (the
+    # importer's half turn negates X and Z): each piece's centre and hinge as
+    # offsets from the body's centre, and its axis.
+    def local(c, body):
+        dx, dy, dz = c[0] - body[0], c[2] - body[2], -(c[1] - body[1])
+        return (-dx, dy, -dz)
+
+    out.append("\tOrbiterParts = {")
+    for name, p in sorted(d["pieces"].items()):
+        sub = p.get("sub")
+        if p["group"] != "Orbiters" or not sub:
+            continue
+        body = d["pieces"][sub["parent"]]["centre"]
+        o, h = local(p["centre"], body), local(sub["hinge"], body)
+        ax = sub["axis"]
+        axis = (-ax[0], ax[2], ax[1])
+        out.append(f'\t\t{name} = {{ Parent = "{sub["parent"]}", Kind = "{sub["kind"]}", '
+                   f'Offset = Vector3.new({o[0]:.3f}, {o[1]:.3f}, {o[2]:.3f}), '
+                   f'Hinge = Vector3.new({h[0]:.3f}, {h[1]:.3f}, {h[2]:.3f}), '
+                   f'Axis = Vector3.new({axis[0]:.4f}, {axis[1]:.4f}, {axis[2]:.4f}), '
+                   f'Amp = {sub["amp"]}, Rate = {sub["rate"]}, Phase = {sub["phase"]} }},')
+    out.append("\t},")
     out.append("\tAnchors = {")
     for name, c in sorted(d["anchors"].items()):
         out.append(f"\t\t{name} = {v3(c)},")

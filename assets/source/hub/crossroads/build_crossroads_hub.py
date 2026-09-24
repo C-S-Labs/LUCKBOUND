@@ -111,6 +111,27 @@ ANIM = []               # animated parts: each its own mesh, in hub coordinates
 _ANIM_N = {}
 
 
+SUBS = []               # moving pieces of sky props, each its own mesh
+_SUB_N = {}
+
+
+def part_of(p, suffix, kind, axis=(1, 0, 0), hinge=(0, 0, 0), amp=0.3, rate=1.0, phase=0.0):
+    """A moving piece of a sky prop (a propeller, a flipper, a flame), split
+    out as its own mesh named <prop>__<suffix>_<n>. The client moves it with
+    the prop and animates it about `hinge` (prop coordinates) on `axis`:
+    Spin (continuous, rate rad/s), Flap (swing, amp rad at rate Hz) or Flicker."""
+    key = (p.name, suffix)
+    _SUB_N[key] = _SUB_N.get(key, 0) + 1
+    q = Piece(f"{p.name}__{suffix}_{_SUB_N[key]}", kind)
+    q.base = p.base.copy()
+    h = p.base @ Vector(hinge)
+    ax = (p.base.to_3x3() @ Vector(axis)).normalized()
+    q.meta = {"parent": p.name, "kind": kind, "axis": [round(v, 4) for v in ax],
+              "hinge": [round(v, 3) for v in h], "amp": amp, "rate": rate, "phase": phase}
+    SUBS.append(q)
+    return q
+
+
 def anim(p, name, kind):
     """A part that MOVES in game, split out of its host mesh (the prop-grouping
     scheme): its own mesh, named anim_<name>_<n>, built in the host's current
@@ -177,7 +198,7 @@ def lamp(p, x, y, h=10.0, glow="Cosmic"):
     frustum(p, "Basalt", 8, 1.3, 1.0, 0, 1.0, x, y)
     frustum(p, "BasaltLight", 6, 0.45, 0.35, 1.0, h, x, y)
     frustum(p, "Gold", 8, 0.9, 1.2, h, h + 0.6, x, y)
-    crystal(p, glow, x, y, h + 1.8, 0.8, 1.4, 1.2, n=6)
+    crystal(anim(p, "lamp_glow", "SpinBob"), glow, x, y, h + 2.6, 0.8, 1.4, 1.2, n=6)
 
 
 def pylon_beacon(p, x, y, h=30.0, glow="Shard"):
@@ -304,6 +325,12 @@ def build_platform():
         frustum(p, "Basalt", 12, 15, 4, -26, -3, ox, oy)
         pylon_beacon(p, ox + math.cos(am) * 6, oy + math.sin(am) * 6, 30.0, ("Shard", "Violet", "Rose", "Shard")[k])
         anchor(p, f"Overlook{k + 1}", ox, oy, 0)
+    # four wisps drifting round the Engine, above its shards
+    for k in range(4):
+        a = math.radians(45 + 90 * k)
+        w = anim(p, "engine_wisp", "SpinBob")
+        crystal(w, ("Shard", "Violet", "Rose", "Shard")[k], math.cos(a) * 48, math.sin(a) * 48, 44, 1.6, 3.0, 2.4, n=6)
+        torus(w, "Gold", 2.6, 0.18, math.cos(a) * 48, math.sin(a) * 48, 44, n=12, m=3)
     anchor(p, "EngineCentre", 0, 0, 0)
     return p
 
@@ -619,7 +646,7 @@ def stall(p, x, y, facing, roof, line=None, rng=None):
         box(p, "Wood", 7.8, -1, 1.2, 2.4, 2.4, 2.4, rz=18)            # crates
         box(p, "Wood", 8.3, 1.4, 1.0, 2.0, 2.0, 2.0, rz=-10)
         tube(p, "Iron", [(0, -4.6, 10.2), (0, -5.0, 8.4)], [0.12, 0.12], n=3)   # a lantern
-        crystal(p, "Ember", 0, -5.0, 7.6, 0.7, 0.6, 0.9, n=6)
+        crystal(anim(p, "stall_lantern", "Flicker"), "Ember", 0, -5.0, 7.6, 0.7, 0.6, 0.9, n=6)
 
 
 def build_shop():
@@ -692,8 +719,9 @@ def build_shop():
 def brazier(p, x, y):
     frustum(p, "Iron", 6, 1.2, 0.8, DISTRICT_TOP, DISTRICT_TOP + 6, x, y)
     frustum(p, "Iron", 8, 1.2, 2.6, DISTRICT_TOP + 6, DISTRICT_TOP + 7.6, x, y)
+    f = anim(p, "brazier_flame", "Flicker")
     for k in range(3):
-        crystal(p, "Ember", x + math.cos(k * 2.1) * 0.8, y + math.sin(k * 2.1) * 0.8, DISTRICT_TOP + 7.4,
+        crystal(f, "Ember", x + math.cos(k * 2.1) * 0.8, y + math.sin(k * 2.1) * 0.8, DISTRICT_TOP + 7.9,
                 0.9, 2.6 - k * 0.5, 0.2, n=4, rz=k * 40)
 
 
@@ -761,6 +789,13 @@ def build_training():
             frustum(p, "Canvas", 4, 9.5, 0.8, 33, 41, rot=45)
             box(p, "Canvas", 0, -6.2, 18, 5, 0.4, 12)                # a banner down the face
             crystal(p, "Ember", 0, 0, 44, 1.2, 2.4, 1.6, n=6)
+        # above the sparring ring: crossed blades, turning on nothing
+        with frame(p, xf(0, 8, 34)):
+            e = anim(p, "training_emblem", "SpinBob")
+            for sgn in (-1, 1):
+                box(e, "MarbleDim", 0, 0, 0, 0.6, 0.3, 14, ry=sgn * 30)
+                box(e, "Gold", sgn * -3.2, 0, -5.4, 3.6, 0.5, 0.5, ry=sgn * 30)
+            torus(e, "Ember", 5.5, 0.25, 0, 0, 0, n=20, m=3, rx=90)
         # the gong
         with frame(p, xf(0, 62, DISTRICT_TOP)):
             for s in (-7, 7):
@@ -1080,16 +1115,21 @@ def envelope(p, L, R, z, mat="Canvas", x0=0.0, ribs=True):
 def prop_rotor(p, x, y, z, r, axis="x"):
     rot = (0, 0, 90) if axis == "x" else (0, 0, 0)
     frustum(p, "Iron", 8, r * 0.25, r * 0.25, -r * 0.4, r * 0.4, M=xf(x, y, z, rot[0], rot[1], rot[2]))
+    # the blades turn: their own mesh, spun about the hub's axis
+    q = part_of(p, "rotor", "Spin", axis=(1, 0, 0) if axis == "x" else (0, 0, 1), hinge=(x, y, z),
+                rate=7.0 if r < 4 else 3.5)
     for k in range(3):
         a = 120 * k
-        with frame(p, xf(x, y, z, 0, a if axis == "x" else 0, 0 if axis == "x" else 0)):
-            box(p, "Wood", 0, 0, r * 0.55, 0.3, r * 0.35, r * 0.9)
+        with frame(q, xf(x, y, z, 0, a if axis == "x" else 0, 0 if axis == "x" else 0)):
+            box(q, "Wood", 0, 0, r * 0.55, 0.3, r * 0.35, r * 0.9)
+        frustum(q, "Gold", 6, r * 0.12, 0, r * 0.4, r * 0.7, M=xf(x, y, z, rot[0], rot[1], rot[2]))
 
 
 def lift_crystals(p, x0, x1, z, n=3, col="Shard"):
+    q = part_of(p, "lift", "Flicker", rate=1.6)
     for k in range(n):
         x = x0 + (x1 - x0) * k / max(1, n - 1)
-        crystal(p, col, x, 0, z, 1.2, 0.3, 2.6, n=6)
+        crystal(q, col, x, 0, z, 1.2, 0.3, 2.6, n=6)
 
 
 def prop_ship_sloop():
@@ -1262,7 +1302,7 @@ def prop_ship_carrier():
             tube(p, "Basalt", [(x, s * 22, 0), (x, s * 38, 6)], [1.6, 1.4], n=6)
             frustum(p, "Iron", 10, 5, 4, -8, 8, M=xf(x, s * 38, 6, 0, 0, 90))
             prop_rotor(p, x - 9, s * 38, 6, 9)
-            crystal(p, "Cosmic", x + 8.5, s * 38, 6, 2.5, 0.2, 0.2, n=6)
+            crystal(part_of(p, "glow", "Flicker", rate=3.0), "Cosmic", x + 8.5, s * 38, 6, 2.5, 0.2, 0.2, n=6)
     # the prow ram and the carrier's great lift stones in a row under the keel
     frustum(p, "Gold", 6, 4, 0, 96, 116, M=xf(0, 0, -6, 0, 0, 90))
     for k in range(5):
@@ -1292,14 +1332,17 @@ def prop_sky_whale():
         orb(p, "WhaleBelly", 24, s * 10.2, 1.2, 1.3, n=8)
         orb(p, "Shard", 25, s * 10.9, 1.3, 0.6, n=6)
     # pectoral flippers: long, jointed, swept back
+    for s in (-1, 1):                                                  # flippers: they row
+        q = part_of(p, "flipper", "Flap", axis=(1, 0, 0), hinge=(14, s * 9.5, -5), amp=0.32, rate=0.35,
+                    phase=0.0 if s > 0 else 3.14159)
+        tube(q, "Whale", [(14, s * 10, -5), (6, s * 20, -9), (-4, s * 27, -12)], [3.0, 2.0, 0.4], n=6)
+        tube(q, "WhaleBelly", [(13, s * 10.4, -6.2), (5.5, s * 20.2, -10), (-4, s * 27, -12.4)], [2.0, 1.2, 0.3], n=5)
+    # the tail stock and flukes: one piece, sweeping up and down
+    q = part_of(p, "fluke", "Flap", axis=(0, 1, 0), hinge=(-42, 0, 0), amp=0.28, rate=0.3)
     for s in (-1, 1):
-        tube(p, "Whale", [(14, s * 10, -5), (6, s * 20, -9), (-4, s * 27, -12)], [3.0, 2.0, 0.4], n=6)
-        tube(p, "WhaleBelly", [(13, s * 10.4, -6.2), (5.5, s * 20.2, -10), (-4, s * 27, -12.4)], [2.0, 1.2, 0.3], n=5)
-    # the tail stock and flukes
-    for s in (-1, 1):
-        tube(p, "Whale", [(-44, 0, 0), (-50, s * 8, 1), (-56, s * 15, 2.4), (-60, s * 17, 3)], [2.2, 1.8, 1.0, 0.1], n=5)
-        tube(p, "Whale", [(-46, 0, 0), (-54, s * 6, 0.6), (-58, s * 11, 1.8)], [1.6, 1.2, 0.4], n=5)
-    box(p, "Whale", -48, 0, 0, 6, 12, 1.2)
+        tube(q, "Whale", [(-44, 0, 0), (-50, s * 8, 1), (-56, s * 15, 2.4), (-60, s * 17, 3)], [2.2, 1.8, 1.0, 0.1], n=5)
+        tube(q, "Whale", [(-46, 0, 0), (-54, s * 6, 0.6), (-58, s * 11, 1.8)], [1.6, 1.2, 0.4], n=5)
+    box(q, "Whale", -48, 0, 0, 6, 12, 1.2)
     # a dorsal ridge of crystal and barnacle stones
     rng = random.Random("whale crystals")
     for k in range(11):
@@ -1313,7 +1356,7 @@ def prop_sky_whale():
         r = 12.5 - abs(x) * 0.08
         orb(p, "MarbleDim", x, math.sin(a) * r * 0.82, math.cos(a) * r - 0.4, rng.uniform(0.4, 0.8), n=5)
     # a blowhole mist crystal
-    crystal(p, "Cloud", 22, 0, 13.4, 0.8, 2.2, 0.2, n=6)
+    crystal(part_of(p, "spout", "Flicker", rate=0.5), "Cloud", 22, 0, 13.4, 0.8, 2.2, 0.2, n=6)
     return p
 
 
@@ -1337,7 +1380,7 @@ def prop_crystal_cluster():
         a = rng.uniform(0, 2 * math.pi)
         crystal(p, rng.choice(("Violet", "Rose", "Shard")), math.cos(a) * 3, math.sin(a) * 3, rng.uniform(-3, 3),
                 rng.uniform(1, 2), rng.uniform(4, 8), rng.uniform(2, 4), n=5, rz=rng.uniform(0, 90))
-    torus(p, "Gold", 6.5, 0.3, 0, 0, 0, n=16, m=3, rx=20)
+    torus(part_of(p, "ring", "Spin", axis=(0, 0, 1), rate=0.9), "Gold", 6.5, 0.3, 0, 0, 0, n=16, m=3, rx=20)
     return p
 
 
@@ -1356,7 +1399,7 @@ def prop_sky_lantern():
     frustum(p, "Rose", 6, 1.8, 2.4, 0, 4.2)
     frustum(p, "Rose", 6, 2.4, 1.2, 4.2, 5.0)
     frustum(p, "Gold", 6, 1.9, 1.9, -0.3, 0)
-    crystal(p, "Ember", 0, 0, 1.6, 0.6, 1.0, 0.4, n=4)
+    crystal(part_of(p, "flame", "Flicker", rate=4.0), "Ember", 0, 0, 1.6, 0.6, 1.0, 0.4, n=4)
     return p
 
 
@@ -1366,8 +1409,10 @@ def prop_waystone():
     frustum(p, "Gold", 4, 1.6, 0, 10, 13, rot=45)
     frustum(p, "Gold", 4, 2.6, 0, -10, -13, rot=45)
     box(p, "Cosmic", 0, -1.9, 2, 1.2, 0.2, 9)
-    torus(p, "Gold", 5, 0.3, 0, 0, 3, n=16, m=3, rx=70)
-    torus(p, "Gold", 6.2, 0.3, 0, 0, -3, n=16, m=3, ry=60)
+    torus(part_of(p, "ring", "Spin", axis=(0, 0, 1), hinge=(0, 0, 3), rate=0.8), "Gold", 5, 0.3, 0, 0, 3, n=16, m=3,
+          rx=70)
+    torus(part_of(p, "ring", "Spin", axis=(0, 0, 1), hinge=(0, 0, -3), rate=-0.6), "Gold", 6.2, 0.3, 0, 0, -3, n=16,
+          m=3, ry=60)
     return p
 
 
@@ -1393,6 +1438,7 @@ def build_all():
         bpy.context.scene.collection.children.link(coll)
         objs = []
         for b in builders:
+            before = len(SUBS)
             p = b()
             n = tris(p)
             o = K["to_object"](p, mats, coll)
@@ -1400,6 +1446,12 @@ def build_all():
             o["tris"] = n
             print(f"PIECE {p.name:28s} {n:6d} tris {'OVER' if n > TRI_LIMIT else 'ok'}")
             objs.append(o)
+            for q in SUBS[before:]:
+                so = K["to_object"](q, mats, coll)
+                so["kit"] = "CROSSROADS"
+                so["tris"] = tris(q)
+                so["sub"] = json.dumps(q.meta)
+                objs.append(so)
         groups[gname] = objs
         if gname == "Hub":                                            # the parts that move
             acoll = bpy.data.collections.new("Crossroads_Animated")
@@ -1462,6 +1514,7 @@ def export(groups):
             mn = [min(c[i] for c in cs) for i in range(3)]
             mx = [max(c[i] for c in cs) for i in range(3)]
             layout["pieces"][o.name] = {"group": gname, "tris": o["tris"], "anim": o.get("anim"),
+                                        "sub": json.loads(o["sub"]) if o.get("sub") else None,
                                         "host": o.get("host"),
                                         "centre": [round((a + b) / 2, 3) for a, b in zip(mn, mx)],
                                         "size": [round(b - a, 3) for a, b in zip(mn, mx)]}

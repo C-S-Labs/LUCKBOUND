@@ -205,6 +205,31 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 			-- 1 always shown, 2 medium graphics and up, 3 high only.
 			p:SetAttribute("Detail", if k == 1 then entry.Detail else math.min(3, entry.Detail + (k > 2 and 1 or 0)))
 			p.Parent = sky
+			-- its moving pieces (propellers, flippers, flames), hung off the
+			-- body; SkyTraffic moves them with it and animates each one
+			for subName, sub in V2.OrbiterParts do
+				if sub.Parent ~= src.Name then
+					continue
+				end
+				local sp = lib:FindFirstChild(subName, true)
+				if not (sp and sp:IsA("BasePart")) then
+					continue
+				end
+				local q = sp:Clone()
+				q.Anchored, q.CanCollide, q.CanQuery, q.CanTouch = true, false, false, false
+				q.Size = sp.Size * s
+				q:SetAttribute("Wander", true) -- so HubEffects leaves it to SkyTraffic
+				q:SetAttribute("Detail", p:GetAttribute("Detail"))
+				q:SetAttribute("SubKind", sub.Kind)
+				q:SetAttribute("SubOffset", sub.Offset * s)
+				q:SetAttribute("SubHinge", sub.Hinge * s)
+				q:SetAttribute("SubAxis", sub.Axis)
+				q:SetAttribute("SubAmp", sub.Amp)
+				q:SetAttribute("SubRate", sub.Rate)
+				q:SetAttribute("SubPhase", sub.Phase)
+				q.CFrame = p.CFrame * CFrame.new(sub.Offset * s)
+				q.Parent = p
+			end
 			n += 1
 		end
 	end
