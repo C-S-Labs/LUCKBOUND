@@ -45,16 +45,27 @@ local Theme = {
 	-- more ambient fill and exposure; the purple night stays.
 	Ambient = Color3.fromRGB(104, 96, 132),
 	OutdoorAmbient = Color3.fromRGB(138, 128, 172),
-	ColorShiftTop = Color3.fromRGB(90, 70, 140),
-	ColorShiftBottom = Color3.fromRGB(30, 25, 50),
-	FogColor = Color3.fromRGB(30, 25, 50),
+	-- AIR, NOT WATER (owner, 2026-09-24: "it makes it seem as if the place is
+	-- underwater"). The haze was thick and tinted the same deep blue-purple as
+	-- everything else, so the whole view sat in murk. Now a thin lavender haze
+	-- with a warm dusk decay, a warmer colour shift and the sun a little
+	-- higher: still a purple dusk, but open sky.
+	ColorShiftTop = Color3.fromRGB(214, 184, 236),
+	ColorShiftBottom = Color3.fromRGB(70, 58, 104),
+	FogColor = Color3.fromRGB(96, 80, 128),
+	AtmosphereDensity = 0.2,
+	AtmosphereOffset = 0.2,
+	AtmosphereHaze = 0.6,
+	AtmosphereGlare = 0.35,
+	AtmosphereColor = Color3.fromRGB(200, 186, 230),
+	AtmosphereDecay = Color3.fromRGB(150, 110, 150),
 	-- Fog must reach past the distant islands or the world looks boxed in --
 	-- the blueprint's 150/500 was sized to a 120-stud hub.
 	FogStart = 700,
 	FogEnd = 4400,
 	Brightness = 3.1,
 	ExposureCompensation = 0.4,
-	ClockTime = 4.5,
+	ClockTime = 5.7,
 
 	-- Hub materials and accents.
 	Marble = Color3.fromRGB(226, 221, 234),
