@@ -48,15 +48,37 @@ type Flyer = {
 	Bank: number,
 	Rng: Random,
 	Subs: { any },
+	BestDist: number,
+	StuckFor: number,
 }
+
+local rocks: { { Pos: Vector3, Radius: number } } = {}
 
 local function waypoint(f: Flyer, fromAngle: number): Vector3
 	local b = f.Band
 	-- onward round the hub most of the time, now and then back the other way
 	local turn = if f.Rng:NextNumber() < 0.18 then -f.Rng:NextNumber(0.4, 1.2) else f.Rng:NextNumber(0.3, 1.1)
 	local a = fromAngle + turn * (if f.Phase > 0 then 1 else -1)
-	local r = f.Rng:NextNumber(b.RMin, b.RMax)
-	return Vector3.new(b.Centre.X + math.cos(a) * r, f.Rng:NextNumber(b.YMin, b.YMax), b.Centre.Z + math.sin(a) * r)
+	-- never a point inside a mountain's clearance: a waypoint there can only
+	-- be circled, never reached (what froze the big ships)
+	local p = b.Centre
+	for _ = 1, 10 do
+		local r = f.Rng:NextNumber(b.RMin, b.RMax)
+		p = Vector3.new(b.Centre.X + math.cos(a) * r, f.Rng:NextNumber(b.YMin, b.YMax), b.Centre.Z + math.sin(a) * r)
+		local clear = true
+		for _, rock in rocks do
+			if (p - rock.Pos).Magnitude < rock.Radius + f.Radius + 60 then
+				clear = false
+				break
+			end
+		end
+		if clear then
+			break
+		end
+		a += f.Rng:NextNumber(0.2, 0.6)
+	end
+	f.BestDist, f.StuckFor = math.huge, 0
+	return p
 end
 
 local function angleOf(f: Flyer, p: Vector3): number
@@ -76,7 +98,6 @@ function SkyTraffic.init(): ()
 		task.wait(2) -- let HubEffects mark what this device hides
 
 		local flyers: { Flyer } = {}
-		local rocks: { { Pos: Vector3, Radius: number } } = {}
 		for _, d in sky:GetChildren() do
 			if not d:IsA("BasePart") then
 				continue
@@ -107,6 +128,8 @@ function SkyTraffic.init(): ()
 					Bank = 0,
 					Rng = rng,
 					Subs = {},
+					BestDist = math.huge,
+					StuckFor = 0,
 				}
 				for _, c in d:GetChildren() do
 					if c:IsA("BasePart") and c:GetAttribute("SubKind") then
@@ -143,8 +166,15 @@ function SkyTraffic.init(): ()
 				f.Speed += (f.SpeedGoal - f.Speed) * math.min(1, dt * 0.3)
 
 				local to = f.Target - f.Pos
-				if to.Magnitude < 40 then
-					f.Target = waypoint(f, angleOf(f, f.Pos))
+				-- arrived (a big ship counts as arrived sooner), or no closer for
+				-- a while: pick somewhere else
+				if to.Magnitude < f.BestDist - 1 then
+					f.BestDist, f.StuckFor = to.Magnitude, 0
+				else
+					f.StuckFor += dt
+				end
+				if to.Magnitude < math.max(40, f.Radius) or f.StuckFor > 6 then
+					f.Target = waypoint(f, angleOf(f, f.Pos) + (if f.StuckFor > 6 then math.pi * 0.5 else 0))
 					to = f.Target - f.Pos
 				end
 				local steer = to.Unit * f.Speed
@@ -179,7 +209,8 @@ function SkyTraffic.init(): ()
 				end
 
 				local want = if steer.Magnitude > 0.01 then steer.Unit * f.Speed else f.Vel
-				f.Vel = f.Vel:Lerp(want, math.min(1, dt * 0.8))
+				-- big hulls turn slower than skiffs, but they do turn
+				f.Vel = f.Vel:Lerp(want, math.min(1, dt * math.clamp(40 / f.Radius, 0.25, 1.2)))
 				f.Pos += f.Vel * dt
 
 				local bob = math.sin(elapsed * 0.5 + f.Phase) * f.Bob
