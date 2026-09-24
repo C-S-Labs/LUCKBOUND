@@ -1,0 +1,105 @@
+# LUCKBOUND - Sky Citadel BASIC enemy: Lantern Wisp (close range, low hover at chest height).
+# An ember spirit bound inside a brass lantern cage from the Lantern Row. Attacks: cage swing (the cage swings
+# on its bail like a flail), ember burst (windup: flame swells + brightens). Pops in a flare on death.
+# ~1.2 m tall incl. tail, hovers so the cage sits at sword height. Budget < 10k tris (target ~2-3k).
+# Glow is split into its own mesh (for the flicker / windup brighten in Studio).
+import bpy, bmesh, math
+from mathutils import Matrix, Euler, Vector
+
+NAME = "LanternWisp"
+OFFSET = (5.0, 0.0, -0.45)          # where it stands in the shared Sky Citadel enemy scene
+KIT = FW + r"\enemy_kit.py"
+
+BONES = [
+    ("Root", (0, 0, 1.00), (0, 0, 1.20), None),
+    ("Body", (0, 0, 1.20), (0, 0, 1.55), "Root"),
+    ("Cage", (0, 0, 2.02), (0, 0, 1.50), "Body"),          # pivots at the bail: swing attack
+    ("Flame", (0, 0, 1.35), (0, 0, 1.75), "Cage"),
+    ("Tail1", (0, 0, 1.22), (0, 0.03, 1.00), "Cage"),
+    ("Tail2", (0, 0.03, 1.00), (0, 0.08, 0.80), "Tail1"),
+    ("Tail3", (0, 0.08, 0.80), (0, 0.15, 0.62), "Tail2"),
+    ("VFX_Core", (0, 0, 1.50), (0, -0.15, 1.50), "Flame"),
+]
+BIDX = {b[0]: i for i, b in enumerate(BONES)}
+PIECES = {}; PIECE = "Body"; PARTLOG = []; BREAK = False; XF = None
+exec(open(KIT).read())
+
+MATS = [
+    mat("LW_Brass", (0.62, 0.44, 0.18), 1.0, 0.22),
+    mat("LW_BrassDark", (0.30, 0.20, 0.08), 1.0, 0.3),
+    mat("LW_Soot", (0.03, 0.028, 0.03), 0.3, 0.35),
+    mat("LW_Core", (1.0, 0.7, 0.3), 0.0, 0.3, (1.0, 0.55, 0.1), 1.6),
+    mat("LW_Spare", (0.5, 0.5, 0.5), 0.0, 0.3),
+    mat("LW_Flame", (0.95, 0.22, 0.0), 0.0, 0.3, (1.0, 0.22, 0.0), 0.9),
+]
+PATINA, BRONZE, IRON, IVORY, CLOTH, GLOW = range(6)
+BRASS, DARK, SOOT, CORE = PATINA, BRONZE, IRON, IVORY
+
+# ---- lantern crown + bail ----
+loft("Cage", BRASS, [(1.88, .17, .17), (1.92, .18, .18), (1.97, .13, .13), (2.02, .06, .06), (2.05, .02, .02)], N=20, sub=1)
+loft("Cage", DARK, [(1.905, .185, .185), (1.925, .185, .185)], N=20)
+for k in range(8):   # crown vents
+    a = k*math.pi/4
+    box("Cage", SOOT, (0.12*math.cos(a), 0.12*math.sin(a), 1.965), (0.035, 0.012, 0.02), rot=(0.6, 0, a + math.pi/2), bev=0.004, segs=1)
+pts = [Vector((0.09*math.cos(t), 0, 2.02 + 0.10*math.sin(t))) for t in [math.pi*i/8 for i in range(9)]]
+for a_, b_ in zip(pts, pts[1:]):
+    tube("Cage", DARK, tuple(a_), tuple(b_), 0.012, 0.012, N=6)                       # bail loop
+sph("Cage", BRASS, (0, 0, 2.12), 0.022, u=10, v=6)
+# ---- cage: 6 curved bars between top and bottom rings ----
+loft("Cage", BRASS, [(1.86, .165, .165), (1.89, .17, .17)], N=24)
+loft("Cage", BRASS, [(1.22, .11, .11), (1.26, .12, .12)], N=24)
+for k in range(6):
+    a = k*math.pi/3 + math.pi/6
+    prof = [(1.88, .16), (1.72, .21), (1.52, .215), (1.36, .17), (1.25, .115)]
+    ps = [Vector((r*math.cos(a), r*math.sin(a), z)) for z, r in prof]
+    for p0, p1 in zip(ps, ps[1:]):
+        tube("Cage", DARK, tuple(p0), tuple(p1), 0.014, 0.014, N=6)
+    for p in ps[1:-1]:
+        sph("Cage", BRASS, tuple(p), 0.02, u=8, v=6)                                   # rivets
+# ---- base: soot bowl + drip spike ----
+loft("Cage", SOOT, [(1.26, .11, .11), (1.20, .09, .09), (1.14, .04, .04)], N=16, sub=1)
+loft("Cage", BRASS, [(1.14, .035, .035), (1.06, .004, .004)], N=10)
+# ---- the ember spirit: teardrop flame, bright core, dark slit eyes ----
+loft("Flame", GLOW, [(1.30, .03, .03), (1.36, .10, .10), (1.48, .13, .12), (1.60, .10, .09), (1.72, .05, .04),
+                     (1.80, .008, .008)], N=16, sub=1)
+sph("VFX_Core", CORE, (0, -0.02, 1.47), 0.06, u=12, v=8)
+for s in (1, -1):
+    box("Flame", SOOT, (0.045*s, -0.118, 1.53), (0.05, 0.03, 0.018), rot=(0, 0.35*s, 0), bev=0.004, segs=1)
+# ---- ember tail trailing below the cage ----
+loft("Tail1", GLOW, [(1.14, .05, .05), (1.02, .045, .04, 2, 0, .02)], N=12, sub=1)
+loft("Tail2", GLOW, [(1.05, .04, .035, 2, 0, .02), (0.82, .03, .025, 2, 0, .07)], N=12, sub=1)
+loft("Tail3", GLOW, [(0.85, .025, .02, 2, 0, .07), (0.62, .003, .003, 2, 0, .15)], N=10, sub=1)
+# ---- orbiting ember motes ----
+for k in range(3):
+    a = k*2*math.pi/3
+    gem("Body", GLOW, (0.34*math.cos(a), 0.34*math.sin(a), 1.45 + 0.08*k), 0.02, 0.03, sides=5)
+
+# ---- assemble: body + glow meshes on one rig, placed at OFFSET ----
+arm_data = bpy.data.armatures.new(NAME + "_Rig")
+rig = bpy.data.objects.new(NAME + "_Rig", arm_data)
+coll = bpy.context.scene.collection
+coll.objects.link(rig)
+bpy.context.view_layer.objects.active = rig
+bpy.ops.object.mode_set(mode='EDIT')
+eb = {}
+for n, h, t, p in BONES:
+    b = arm_data.edit_bones.new(n); b.head, b.tail = h, t
+    if p: b.parent = eb[p]
+    eb[n] = b
+bpy.ops.object.mode_set(mode='OBJECT')
+arm_data.display_type = 'STICK'
+bm = PIECES.pop("Body")
+glow = bm.copy()
+bmesh.ops.delete(glow, geom=[f for f in glow.faces if f.material_index not in (GLOW, CORE)], context='FACES')
+bmesh.ops.delete(bm, geom=[f for f in bm.faces if f.material_index in (GLOW, CORE)], context='FACES')
+PARTS = []
+for nm, b_ in ((f"{NAME}_Body", bm), (f"{NAME}_Glow", glow)):
+    me = bpy.data.meshes.new(nm); b_.to_mesh(me); b_.free()
+    for m in MATS: me.materials.append(m)
+    o = bpy.data.objects.new(nm, me)
+    for b in BONES: o.vertex_groups.new(name=b[0])
+    coll.objects.link(o); o.parent = rig
+    o.modifiers.new("Armature", 'ARMATURE').object = rig
+    PARTS.append(o)
+    print(f"PIECE {nm}: {sum(len(p.vertices) - 2 for p in me.polygons)} tris")
+rig.location = OFFSET

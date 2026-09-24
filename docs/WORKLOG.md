@@ -33,6 +33,45 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 67 — 2026-09-24 — Enemy framework + Sky Citadel enemies (first world with enemies)
+**Merged:** none (this PR)   **Tests:** n/a (Blender assets + docs; no src/ change)   **Head:** branch claude/enemy-framework
+
+### Done
+- `docs/ENEMY_FRAMEWORK.md`: one build order, tier rules, archetypes, moveset fairness rules, VFX system, Studio data model
+  and a new-biome checklist, all shared by every biome.
+- `assets/source/enemies/_framework/`: one headless runner (`run.py`) plus shared modules:
+  - `enemy_kit`: modelling and assembly
+  - `humanoid`: R15 body and rig
+  - `pose_fix`: real weapon grip, finger wrap, off-hand IK, arm clearance, grounding
+  - `anim_core`: actions, combat markers, fairness checks, direction-safe posing
+  - `validate`, `render`, `preview`, `export`
+  - A staged `EnemyDef.template.luau`
+- `assets/source/enemies/sky_citadel/`: all 16 enemies (10 basic, 3 minibosses, 3 bosses) behind `manifest.py`.
+  - All 16 pass validation: < 10k tris per mesh, R15 bones, fingers on minibosses and bosses, nothing below the floor.
+  - Rootbound Warden and Skyport Hauler were raised 1-2.5 cm off the floor. Spring Eel is marked `sunk` because it emerges from the ground by design.
+- Winged Sentinel (Boss 3):
+  - Final v5 model with the Aether Lance.
+  - Studio-grade poses: true grip and no clipping.
+  - Actions `Idle_Guard`, `P2_Transition` and `P1_Lunge`. P1_Lunge is the first moveset action, with Tell/HitStart/HitEnd/RecoverStart markers.
+  - Moveset `WS_MOVESET.md` (approved by the owner).
+- FBX for all 16 enemies and 3 Sentinel actions: `assets/export/enemies/sky_citadel/`.
+
+### Decisions made
+- Every biome reuses `_framework/`; a biome only adds a manifest, model scripts, action files and moveset sheets.
+- Every attack action must carry the combat markers; `anim_core.end()` enforces tell >= 8 f and recovery >= 18 f.
+- Attacks must not depend on scenario-only map features (e.g. the Sentinel's lightning is its own Aether Fork).
+- Attack animations are in place; the Studio AI drives root motion between markers.
+
+### Stopped at
+The Sentinel has 1 of about 17 moveset actions. No Studio wiring yet: `src/` changes need the owner's approval.
+
+### Next
+1. The remaining Winged Sentinel actions from `WS_MOVESET.md`.
+2. Owner OK on `EnemyDef` / `EnemyService` / `BossService` wiring in `src/`.
+3. Movesets and actions for the other 2 bosses and 3 minibosses; archetype actions for the basics.
+
+---
+
 ## Session 66 — 2026-09-24 — Verdant Valley 30-piece kit: export, sockets, loader
 **Merged:** —   **Tests:** 807 passing   **Head:** branch claude/verdant-valley-30-kit
 
