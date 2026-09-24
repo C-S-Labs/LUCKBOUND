@@ -2,77 +2,1369 @@
  "pieces": {
   "HUB_PLATFORM": {
    "group": "Hub",
-   "tris": 7644,
+   "tris": 6748,
+   "anim": null,
+   "host": null,
    "centre": [
     0.0,
     0.0,
-    -46.38
+    -25.0
    ],
    "size": [
     424.737,
     424.737,
-    175.76
+    114.0
+   ]
+  },
+  "HUB_LEVITATOR": {
+   "group": "Hub",
+   "tris": 2908,
+   "anim": null,
+   "host": null,
+   "centre": [
+    0.0,
+    0.0,
+    -175.042
+   ],
+   "size": [
+    372.471,
+    372.471,
+    289.916
    ]
   },
   "HUB_HALL_OF_CHAMPIONS": {
    "group": "Hub",
-   "tris": 4566,
+   "tris": 3926,
+   "anim": null,
+   "host": null,
    "centre": [
     0.0,
     218.587,
-    -11.66
+    -5.25
    ],
    "size": [
     158.443,
     158.099,
-    138.32
+    89.5
    ]
   },
   "HUB_ARCHIVES": {
    "group": "Hub",
-   "tris": 8020,
+   "tris": 6816,
+   "anim": null,
+   "host": null,
    "centre": [
     218.587,
     0.0,
-    -1.11
+    6.547
    ],
    "size": [
     158.099,
     158.443,
-    159.42
+    113.095
    ]
   },
   "HUB_SHOP": {
    "group": "Hub",
-   "tris": 4852,
+   "tris": 3888,
+   "anim": null,
+   "host": null,
    "centre": [
     0.0,
     -218.587,
-    -21.46
+    -6.05
    ],
    "size": [
     158.443,
     158.099,
-    118.72
+    87.9
    ]
   },
   "HUB_TRAINING_GROUNDS": {
    "group": "Hub",
-   "tris": 5004,
+   "tris": 4892,
+   "anim": null,
+   "host": null,
    "centre": [
     -218.587,
     0.0,
-    -16.96
+    -1.55
    ],
    "size": [
     158.099,
     158.443,
-    127.72
+    96.9
+   ]
+  },
+  "anim_keel_core_1": {
+   "group": "Animated",
+   "tris": 16,
+   "anim": "Bob",
+   "host": "HUB_PLATFORM",
+   "centre": [
+    67.882,
+    67.882,
+    -50.95
+   ],
+   "size": [
+    9.816,
+    9.816,
+    26.1
+   ]
+  },
+  "anim_keel_core_ring_1": {
+   "group": "Animated",
+   "tris": 96,
+   "anim": "Spin",
+   "host": "HUB_PLATFORM",
+   "centre": [
+    67.882,
+    67.882,
+    -47.1
+   ],
+   "size": [
+    13.85,
+    13.85,
+    0.606
+   ]
+  },
+  "anim_keel_core_2": {
+   "group": "Animated",
+   "tris": 16,
+   "anim": "Bob",
+   "host": "HUB_PLATFORM",
+   "centre": [
+    -67.882,
+    67.882,
+    -50.95
+   ],
+   "size": [
+    9.816,
+    9.816,
+    26.1
+   ]
+  },
+  "anim_keel_core_ring_2": {
+   "group": "Animated",
+   "tris": 96,
+   "anim": "Spin",
+   "host": "HUB_PLATFORM",
+   "centre": [
+    -67.882,
+    67.882,
+    -47.1
+   ],
+   "size": [
+    13.85,
+    13.85,
+    0.606
+   ]
+  },
+  "anim_keel_core_3": {
+   "group": "Animated",
+   "tris": 16,
+   "anim": "Bob",
+   "host": "HUB_PLATFORM",
+   "centre": [
+    -67.882,
+    -67.882,
+    -50.95
+   ],
+   "size": [
+    9.816,
+    9.816,
+    26.1
+   ]
+  },
+  "anim_keel_core_ring_3": {
+   "group": "Animated",
+   "tris": 96,
+   "anim": "Spin",
+   "host": "HUB_PLATFORM",
+   "centre": [
+    -67.882,
+    -67.882,
+    -47.1
+   ],
+   "size": [
+    13.85,
+    13.85,
+    0.606
+   ]
+  },
+  "anim_keel_core_4": {
+   "group": "Animated",
+   "tris": 16,
+   "anim": "Bob",
+   "host": "HUB_PLATFORM",
+   "centre": [
+    67.882,
+    -67.882,
+    -50.95
+   ],
+   "size": [
+    9.816,
+    9.816,
+    26.1
+   ]
+  },
+  "anim_keel_core_ring_4": {
+   "group": "Animated",
+   "tris": 96,
+   "anim": "Spin",
+   "host": "HUB_PLATFORM",
+   "centre": [
+    67.882,
+    -67.882,
+    -47.1
+   ],
+   "size": [
+    13.85,
+    13.85,
+    0.606
+   ]
+  },
+  "anim_beacon_shard_1": {
+   "group": "Animated",
+   "tris": 84,
+   "anim": "SpinBob",
+   "host": "HUB_PLATFORM",
+   "centre": [
+    171.12,
+    171.12,
+    38.0
+   ],
+   "size": [
+    5.38,
+    5.38,
+    7.0
+   ]
+  },
+  "anim_beacon_shard_2": {
+   "group": "Animated",
+   "tris": 84,
+   "anim": "SpinBob",
+   "host": "HUB_PLATFORM",
+   "centre": [
+    -171.12,
+    171.12,
+    38.0
+   ],
+   "size": [
+    5.38,
+    5.38,
+    7.0
+   ]
+  },
+  "anim_beacon_shard_3": {
+   "group": "Animated",
+   "tris": 84,
+   "anim": "SpinBob",
+   "host": "HUB_PLATFORM",
+   "centre": [
+    -171.12,
+    -171.12,
+    38.0
+   ],
+   "size": [
+    5.38,
+    5.38,
+    7.0
+   ]
+  },
+  "anim_beacon_shard_4": {
+   "group": "Animated",
+   "tris": 84,
+   "anim": "SpinBob",
+   "host": "HUB_PLATFORM",
+   "centre": [
+    171.12,
+    -171.12,
+    38.0
+   ],
+   "size": [
+    5.38,
+    5.38,
+    7.0
+   ]
+  },
+  "anim_thruster_flame_1": {
+   "group": "Animated",
+   "tris": 16,
+   "anim": "Flicker",
+   "host": "HUB_LEVITATOR",
+   "centre": [
+    52.661,
+    21.813,
+    -151.45
+   ],
+   "size": [
+    6.0,
+    6.0,
+    22.1
+   ]
+  },
+  "anim_thruster_flame_2": {
+   "group": "Animated",
+   "tris": 16,
+   "anim": "Flicker",
+   "host": "HUB_LEVITATOR",
+   "centre": [
+    21.813,
+    52.661,
+    -151.45
+   ],
+   "size": [
+    6.0,
+    6.0,
+    22.1
+   ]
+  },
+  "anim_thruster_flame_3": {
+   "group": "Animated",
+   "tris": 16,
+   "anim": "Flicker",
+   "host": "HUB_LEVITATOR",
+   "centre": [
+    -21.813,
+    52.661,
+    -151.45
+   ],
+   "size": [
+    6.0,
+    6.0,
+    22.1
+   ]
+  },
+  "anim_thruster_flame_4": {
+   "group": "Animated",
+   "tris": 16,
+   "anim": "Flicker",
+   "host": "HUB_LEVITATOR",
+   "centre": [
+    -52.661,
+    21.813,
+    -151.45
+   ],
+   "size": [
+    6.0,
+    6.0,
+    22.1
+   ]
+  },
+  "anim_thruster_flame_5": {
+   "group": "Animated",
+   "tris": 16,
+   "anim": "Flicker",
+   "host": "HUB_LEVITATOR",
+   "centre": [
+    -52.661,
+    -21.813,
+    -151.45
+   ],
+   "size": [
+    6.0,
+    6.0,
+    22.1
+   ]
+  },
+  "anim_thruster_flame_6": {
+   "group": "Animated",
+   "tris": 16,
+   "anim": "Flicker",
+   "host": "HUB_LEVITATOR",
+   "centre": [
+    -21.813,
+    -52.661,
+    -151.45
+   ],
+   "size": [
+    6.0,
+    6.0,
+    22.1
+   ]
+  },
+  "anim_thruster_flame_7": {
+   "group": "Animated",
+   "tris": 16,
+   "anim": "Flicker",
+   "host": "HUB_LEVITATOR",
+   "centre": [
+    21.813,
+    -52.661,
+    -151.45
+   ],
+   "size": [
+    6.0,
+    6.0,
+    22.1
+   ]
+  },
+  "anim_thruster_flame_8": {
+   "group": "Animated",
+   "tris": 16,
+   "anim": "Flicker",
+   "host": "HUB_LEVITATOR",
+   "centre": [
+    52.661,
+    -21.813,
+    -151.45
+   ],
+   "size": [
+    6.0,
+    6.0,
+    22.1
+   ]
+  },
+  "anim_gyro_ring_1": {
+   "group": "Animated",
+   "tris": 320,
+   "anim": "Spin",
+   "host": "HUB_LEVITATOR",
+   "centre": [
+    0.0,
+    0.0,
+    -180.0
+   ],
+   "size": [
+    105.98,
+    105.98,
+    1.98
+   ]
+  },
+  "anim_gyro_ring_2": {
+   "group": "Animated",
+   "tris": 320,
+   "anim": "Spin",
+   "host": "HUB_LEVITATOR",
+   "centre": [
+    0.0,
+    0.0,
+    -180.0
+   ],
+   "size": [
+    93.98,
+    90.885,
+    27.808
+   ]
+  },
+  "anim_gyro_ring_3": {
+   "group": "Animated",
+   "tris": 320,
+   "anim": "Spin",
+   "host": "HUB_LEVITATOR",
+   "centre": [
+    0.0,
+    0.0,
+    -180.0
+   ],
+   "size": [
+    78.3,
+    81.131,
+    23.45
+   ]
+  },
+  "anim_keel_core_5": {
+   "group": "Animated",
+   "tris": 16,
+   "anim": "Bob",
+   "host": "HUB_HALL_OF_CHAMPIONS",
+   "centre": [
+    0.0,
+    218.0,
+    -68.12
+   ],
+   "size": [
+    25.13,
+    25.13,
+    25.4
+   ]
+  },
+  "anim_keel_core_ring_5": {
+   "group": "Animated",
+   "tris": 96,
+   "anim": "Spin",
+   "host": "HUB_HALL_OF_CHAMPIONS",
+   "centre": [
+    0.0,
+    218.0,
+    -64.375
+   ],
+   "size": [
+    34.91,
+    34.91,
+    0.606
+   ]
+  },
+  "anim_obelisk_crystal_1": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "host": "HUB_HALL_OF_CHAMPIONS",
+   "centre": [
+    -19.053,
+    241.0,
+    32.2
+   ],
+   "size": [
+    2.4,
+    2.078,
+    4.4
+   ]
+  },
+  "anim_obelisk_crystal_2": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "host": "HUB_HALL_OF_CHAMPIONS",
+   "centre": [
+    -11.0,
+    249.053,
+    32.2
+   ],
+   "size": [
+    2.4,
+    2.078,
+    4.4
+   ]
+  },
+  "anim_obelisk_crystal_3": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "host": "HUB_HALL_OF_CHAMPIONS",
+   "centre": [
+    0.0,
+    252.0,
+    38.2
+   ],
+   "size": [
+    2.4,
+    2.078,
+    4.4
+   ]
+  },
+  "anim_obelisk_crystal_4": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "host": "HUB_HALL_OF_CHAMPIONS",
+   "centre": [
+    11.0,
+    249.053,
+    32.2
+   ],
+   "size": [
+    2.4,
+    2.078,
+    4.4
+   ]
+  },
+  "anim_obelisk_crystal_5": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "host": "HUB_HALL_OF_CHAMPIONS",
+   "centre": [
+    19.053,
+    241.0,
+    32.2
+   ],
+   "size": [
+    2.4,
+    2.078,
+    4.4
+   ]
+  },
+  "anim_hall_crown_1": {
+   "group": "Animated",
+   "tris": 312,
+   "anim": "SpinBob",
+   "host": "HUB_HALL_OF_CHAMPIONS",
+   "centre": [
+    0.0,
+    232.0,
+    53.582
+   ],
+   "size": [
+    26.2,
+    26.2,
+    4.436
+   ]
+  },
+  "anim_hall_halo_1": {
+   "group": "Animated",
+   "tris": 144,
+   "anim": "Spin",
+   "host": "HUB_HALL_OF_CHAMPIONS",
+   "centre": [
+    0.0,
+    232.0,
+    48.0
+   ],
+   "size": [
+    32.3,
+    32.3,
+    0.52
+   ]
+  },
+  "anim_hall_heart_1": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "host": "HUB_HALL_OF_CHAMPIONS",
+   "centre": [
+    0.0,
+    232.0,
+    52.0
+   ],
+   "size": [
+    6.0,
+    5.196,
+    11.0
+   ]
+  },
+  "anim_keel_core_6": {
+   "group": "Animated",
+   "tris": 16,
+   "anim": "Bob",
+   "host": "HUB_ARCHIVES",
+   "centre": [
+    218.0,
+    0.0,
+    -68.12
+   ],
+   "size": [
+    25.13,
+    25.13,
+    25.4
+   ]
+  },
+  "anim_keel_core_ring_6": {
+   "group": "Animated",
+   "tris": 96,
+   "anim": "Spin",
+   "host": "HUB_ARCHIVES",
+   "centre": [
+    218.0,
+    0.0,
+    -64.375
+   ],
+   "size": [
+    34.91,
+    34.91,
+    0.606
+   ]
+  },
+  "anim_oculus_crystal_1": {
+   "group": "Animated",
+   "tris": 12,
+   "anim": "SpinBob",
+   "host": "HUB_ARCHIVES",
+   "centre": [
+    228.0,
+    -0.0,
+    72.6
+   ],
+   "size": [
+    5.196,
+    6.0,
+    12.0
+   ]
+  },
+  "anim_orrery_sun_1": {
+   "group": "Animated",
+   "tris": 108,
+   "anim": "Spin",
+   "host": "HUB_ARCHIVES",
+   "centre": [
+    228.0,
+    -0.0,
+    17.3
+   ],
+   "size": [
+    5.2,
+    4.945,
+    5.2
+   ]
+  },
+  "anim_orrery_ring_1": {
+   "group": "Animated",
+   "tris": 204,
+   "anim": "Spin",
+   "host": "HUB_ARCHIVES",
+   "centre": [
+    228.0,
+    -0.371,
+    17.3
+   ],
+   "size": [
+    14.637,
+    15.991,
+    5.124
+   ]
+  },
+  "anim_orrery_ring_2": {
+   "group": "Animated",
+   "tris": 228,
+   "anim": "Spin",
+   "host": "HUB_ARCHIVES",
+   "centre": [
+    228.0,
+    0.57,
+    17.3
+   ],
+   "size": [
+    22.832,
+    24.111,
+    6.656
+   ]
+  },
+  "anim_orrery_ring_3": {
+   "group": "Animated",
+   "tris": 252,
+   "anim": "Spin",
+   "host": "HUB_ARCHIVES",
+   "centre": [
+    228.4,
+    0.0,
+    17.3
+   ],
+   "size": [
+    31.0,
+    27.73,
+    12.6
+   ]
+  },
+  "anim_archive_book_1": {
+   "group": "Animated",
+   "tris": 36,
+   "anim": "Bob",
+   "host": "HUB_ARCHIVES",
+   "centre": [
+    236.188,
+    -22.496,
+    13.239
+   ],
+   "size": [
+    6.495,
+    5.302,
+    1.508
+   ]
+  },
+  "anim_archive_book_2": {
+   "group": "Animated",
+   "tris": 36,
+   "anim": "Bob",
+   "host": "HUB_ARCHIVES",
+   "centre": [
+    249.76,
+    -10.147,
+    18.245
+   ],
+   "size": [
+    5.635,
+    6.599,
+    1.073
+   ]
+  },
+  "anim_archive_book_3": {
+   "group": "Animated",
+   "tris": 36,
+   "anim": "Bob",
+   "host": "HUB_ARCHIVES",
+   "centre": [
+    250.619,
+    8.233,
+    23.238
+   ],
+   "size": [
+    5.295,
+    6.492,
+    1.594
+   ]
+  },
+  "anim_archive_book_4": {
+   "group": "Animated",
+   "tris": 36,
+   "anim": "Bob",
+   "host": "HUB_ARCHIVES",
+   "centre": [
+    238.185,
+    21.842,
+    13.235
+   ],
+   "size": [
+    6.58,
+    5.594,
+    1.834
+   ]
+  },
+  "anim_archive_book_5": {
+   "group": "Animated",
+   "tris": 36,
+   "anim": "Bob",
+   "host": "HUB_ARCHIVES",
+   "centre": [
+    219.812,
+    22.497,
+    18.239
+   ],
+   "size": [
+    6.495,
+    5.302,
+    1.502
+   ]
+  },
+  "anim_archive_book_6": {
+   "group": "Animated",
+   "tris": 36,
+   "anim": "Bob",
+   "host": "HUB_ARCHIVES",
+   "centre": [
+    206.21,
+    10.161,
+    23.241
+   ],
+   "size": [
+    5.64,
+    6.602,
+    1.359
+   ]
+  },
+  "anim_archive_book_7": {
+   "group": "Animated",
+   "tris": 36,
+   "anim": "Bob",
+   "host": "HUB_ARCHIVES",
+   "centre": [
+    205.372,
+    -8.236,
+    13.237
+   ],
+   "size": [
+    5.286,
+    6.489,
+    1.673
+   ]
+  },
+  "anim_archive_book_8": {
+   "group": "Animated",
+   "tris": 36,
+   "anim": "Bob",
+   "host": "HUB_ARCHIVES",
+   "centre": [
+    217.842,
+    -21.783,
+    18.242
+   ],
+   "size": [
+    6.602,
+    5.641,
+    1.293
+   ]
+  },
+  "anim_keel_core_7": {
+   "group": "Animated",
+   "tris": 16,
+   "anim": "Bob",
+   "host": "HUB_SHOP",
+   "centre": [
+    0.0,
+    -218.0,
+    -68.12
+   ],
+   "size": [
+    25.13,
+    25.13,
+    25.4
+   ]
+  },
+  "anim_keel_core_ring_7": {
+   "group": "Animated",
+   "tris": 96,
+   "anim": "Spin",
+   "host": "HUB_SHOP",
+   "centre": [
+    0.0,
+    -218.0,
+    -64.375
+   ],
+   "size": [
+    34.91,
+    34.91,
+    0.606
+   ]
+  },
+  "anim_shop_coin_1": {
+   "group": "Animated",
+   "tris": 324,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    0.0,
+    -218.0,
+    28.5
+   ],
+   "size": [
+    13.849,
+    1.8,
+    13.849
+   ]
+  },
+  "anim_shop_ring_1": {
+   "group": "Animated",
+   "tris": 144,
+   "anim": "Spin",
+   "host": "HUB_SHOP",
+   "centre": [
+    0.0,
+    -218.0,
+    21.5
+   ],
+   "size": [
+    18.3,
+    18.3,
+    0.52
+   ]
+  },
+  "anim_shop_ring_2": {
+   "group": "Animated",
+   "tris": 144,
+   "anim": "Spin",
+   "host": "HUB_SHOP",
+   "centre": [
+    0.0,
+    -218.0,
+    19.5
+   ],
+   "size": [
+    23.2,
+    23.2,
+    0.346
+   ]
+  },
+  "anim_ware_potion_1": {
+   "group": "Animated",
+   "tris": 96,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    -41.651,
+    -215.225,
+    5.8
+   ],
+   "size": [
+    1.464,
+    1.464,
+    2.8
+   ]
+  },
+  "anim_ware_potion_2": {
+   "group": "Animated",
+   "tris": 96,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    -41.13,
+    -212.271,
+    5.8
+   ],
+   "size": [
+    1.464,
+    1.464,
+    2.8
+   ]
+  },
+  "anim_ware_potion_3": {
+   "group": "Animated",
+   "tris": 96,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    -40.609,
+    -209.316,
+    5.8
+   ],
+   "size": [
+    1.464,
+    1.464,
+    2.8
+   ]
+  },
+  "anim_ware_potion_4": {
+   "group": "Animated",
+   "tris": 96,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    -40.088,
+    -206.362,
+    5.8
+   ],
+   "size": [
+    1.464,
+    1.464,
+    2.8
+   ]
+  },
+  "anim_ware_sword_1": {
+   "group": "Animated",
+   "tris": 56,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    -33.69,
+    -242.647,
+    7.2
+   ],
+   "size": [
+    1.386,
+    1.709,
+    5.6
+   ]
+  },
+  "anim_ware_staff_1": {
+   "group": "Animated",
+   "tris": 94,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    -35.19,
+    -240.049,
+    7.05
+   ],
+   "size": [
+    1.386,
+    1.6,
+    5.3
+   ]
+  },
+  "anim_ware_bow_1": {
+   "group": "Animated",
+   "tris": 82,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    -36.69,
+    -237.353,
+    6.769
+   ],
+   "size": [
+    1.386,
+    1.796,
+    4.738
+   ]
+  },
+  "anim_ware_sword_2": {
+   "group": "Animated",
+   "tris": 56,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    -38.19,
+    -234.853,
+    7.2
+   ],
+   "size": [
+    1.386,
+    1.709,
+    5.6
+   ]
+  },
+  "anim_ware_gem_1": {
+   "group": "Animated",
+   "tris": 28,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    -9.965,
+    -258.536,
+    5.6
+   ],
+   "size": [
+    1.379,
+    1.316,
+    2.4
+   ]
+  },
+  "anim_ware_gem_2": {
+   "group": "Animated",
+   "tris": 32,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    -12.784,
+    -257.51,
+    5.6
+   ],
+   "size": [
+    1.379,
+    1.316,
+    2.4
+   ]
+  },
+  "anim_ware_gem_3": {
+   "group": "Animated",
+   "tris": 32,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    -15.603,
+    -256.484,
+    5.6
+   ],
+   "size": [
+    1.379,
+    1.316,
+    2.4
+   ]
+  },
+  "anim_ware_gem_4": {
+   "group": "Animated",
+   "tris": 30,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    -18.422,
+    -255.458,
+    5.6
+   ],
+   "size": [
+    1.379,
+    1.316,
+    2.4
+   ]
+  },
+  "anim_ware_scroll_1": {
+   "group": "Animated",
+   "tris": 56,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    18.422,
+    -255.458,
+    4.9
+   ],
+   "size": [
+    1.976,
+    1.397,
+    0.924
+   ]
+  },
+  "anim_ware_tome_1": {
+   "group": "Animated",
+   "tris": 36,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    15.619,
+    -256.468,
+    4.8
+   ],
+   "size": [
+    2.168,
+    1.869,
+    0.85
+   ]
+  },
+  "anim_ware_scroll_2": {
+   "group": "Animated",
+   "tris": 56,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    12.784,
+    -257.51,
+    4.9
+   ],
+   "size": [
+    1.976,
+    1.397,
+    0.924
+   ]
+  },
+  "anim_ware_tome_2": {
+   "group": "Animated",
+   "tris": 36,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    9.981,
+    -258.52,
+    4.8
+   ],
+   "size": [
+    2.168,
+    1.869,
+    0.85
+   ]
+  },
+  "anim_ware_helm_1": {
+   "group": "Animated",
+   "tris": 88,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    38.19,
+    -234.853,
+    5.8
+   ],
+   "size": [
+    1.983,
+    1.983,
+    2.8
+   ]
+  },
+  "anim_ware_shield_1": {
+   "group": "Animated",
+   "tris": 72,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    36.69,
+    -237.451,
+    5.9
+   ],
+   "size": [
+    1.539,
+    2.426,
+    2.8
+   ]
+  },
+  "anim_ware_helm_2": {
+   "group": "Animated",
+   "tris": 88,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    35.19,
+    -240.049,
+    5.8
+   ],
+   "size": [
+    1.983,
+    1.983,
+    2.8
+   ]
+  },
+  "anim_ware_shield_2": {
+   "group": "Animated",
+   "tris": 72,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    33.69,
+    -242.647,
+    5.9
+   ],
+   "size": [
+    1.539,
+    2.426,
+    2.8
+   ]
+  },
+  "anim_ware_charm_1": {
+   "group": "Animated",
+   "tris": 88,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    40.088,
+    -206.362,
+    5.785
+   ],
+   "size": [
+    1.182,
+    1.212,
+    2.771
+   ]
+  },
+  "anim_ware_ring_1": {
+   "group": "Animated",
+   "tris": 88,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    40.609,
+    -209.316,
+    5.2
+   ],
+   "size": [
+    0.985,
+    1.015,
+    1.6
+   ]
+  },
+  "anim_ware_charm_2": {
+   "group": "Animated",
+   "tris": 88,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    41.13,
+    -212.271,
+    5.785
+   ],
+   "size": [
+    1.182,
+    1.212,
+    2.771
+   ]
+  },
+  "anim_ware_ring_2": {
+   "group": "Animated",
+   "tris": 88,
+   "anim": "SpinBob",
+   "host": "HUB_SHOP",
+   "centre": [
+    41.651,
+    -215.225,
+    5.2
+   ],
+   "size": [
+    0.985,
+    1.015,
+    1.6
+   ]
+  },
+  "anim_keel_core_8": {
+   "group": "Animated",
+   "tris": 16,
+   "anim": "Bob",
+   "host": "HUB_TRAINING_GROUNDS",
+   "centre": [
+    -218.0,
+    0.0,
+    -68.12
+   ],
+   "size": [
+    25.13,
+    25.13,
+    25.4
+   ]
+  },
+  "anim_keel_core_ring_8": {
+   "group": "Animated",
+   "tris": 96,
+   "anim": "Spin",
+   "host": "HUB_TRAINING_GROUNDS",
+   "centre": [
+    -218.0,
+    0.0,
+    -64.375
+   ],
+   "size": [
+    34.91,
+    34.91,
+    0.606
    ]
   },
   "HUB_BACKDROP_PEAKS": {
    "group": "Backdrop",
    "tris": 3394,
+   "anim": null,
+   "host": null,
    "centre": [
     11.986,
     -10.628,
@@ -87,6 +1379,8 @@
   "HUB_BACKDROP_MESA": {
    "group": "Backdrop",
    "tris": 3688,
+   "anim": null,
+   "host": null,
    "centre": [
     -3.079,
     14.898,
@@ -101,6 +1395,8 @@
   "HUB_BACKDROP_SPIRES": {
    "group": "Backdrop",
    "tris": 3550,
+   "anim": null,
+   "host": null,
    "centre": [
     -5.964,
     -11.192,
@@ -115,6 +1411,8 @@
   "hubprop_isle_shrine": {
    "group": "Orbiters",
    "tris": 1354,
+   "anim": null,
+   "host": null,
    "centre": [
     -0.717,
     0.239,
@@ -129,6 +1427,8 @@
   "hubprop_isle_grove": {
    "group": "Orbiters",
    "tris": 1220,
+   "anim": null,
+   "host": null,
    "centre": [
     -1.441,
     0.849,
@@ -143,6 +1443,8 @@
   "hubprop_isle_ruin": {
    "group": "Orbiters",
    "tris": 1128,
+   "anim": null,
+   "host": null,
    "centre": [
     -0.395,
     0.671,
@@ -157,6 +1459,8 @@
   "hubprop_airship": {
    "group": "Orbiters",
    "tris": 416,
+   "anim": null,
+   "host": null,
    "centre": [
     1.0,
     0.0,
@@ -171,6 +1475,8 @@
   "hubprop_skiff": {
    "group": "Orbiters",
    "tris": 108,
+   "anim": null,
+   "host": null,
    "centre": [
     0.35,
     0.016,
@@ -185,6 +1491,8 @@
   "hubprop_cloud_a": {
    "group": "Orbiters",
    "tris": 288,
+   "anim": null,
+   "host": null,
    "centre": [
     6.517,
     -1.648,
@@ -199,6 +1507,8 @@
   "hubprop_cloud_b": {
    "group": "Orbiters",
    "tris": 192,
+   "anim": null,
+   "host": null,
    "centre": [
     -1.001,
     1.752,
@@ -213,6 +1523,8 @@
   "hubprop_crystal_cluster": {
    "group": "Orbiters",
    "tris": 178,
+   "anim": null,
+   "host": null,
    "centre": [
     0.0,
     0.0,
@@ -227,6 +1539,8 @@
   "hubprop_rune_ring": {
    "group": "Orbiters",
    "tris": 704,
+   "anim": null,
+   "host": null,
    "centre": [
     0.0,
     0.0,
@@ -241,6 +1555,8 @@
   "hubprop_sky_lantern": {
    "group": "Orbiters",
    "tris": 68,
+   "anim": null,
+   "host": null,
    "centre": [
     0.0,
     0.0,
@@ -255,6 +1571,8 @@
   "hubprop_sky_whale": {
    "group": "Orbiters",
    "tris": 250,
+   "anim": null,
+   "host": null,
    "centre": [
     -6.0,
     0.0,
@@ -269,6 +1587,8 @@
   "hubprop_waystone": {
    "group": "Orbiters",
    "tris": 228,
+   "anim": null,
+   "host": null,
    "centre": [
     0.0,
     0.0,
@@ -306,6 +1626,11 @@
    0.0,
    0.0,
    0.0
+  ],
+  "LevitatorHeart": [
+   0.0,
+   0.0,
+   -170.0
   ],
   "Obelisk1": [
    -19.05,

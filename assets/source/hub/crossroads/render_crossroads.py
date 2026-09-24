@@ -112,6 +112,7 @@ def render_all(groups, engine_blend, engine_scale, out):
         person(math.cos(a) * 105, math.sin(a) * 105)
     person(0, 160.5, 0.5)
     hub = groups["Hub"]
+    hub = hub + groups["Animated"]
     others = groups["Backdrop"] + groups["Orbiters"]
     for o in others:
         o.hide_render = True
@@ -124,6 +125,8 @@ def render_all(groups, engine_blend, engine_scale, out):
     shot("07_training_west", (-92, 30, 20), (-205, 0, 6), 24, out)
     shot("08_underside", (380, -380, -260), (0, 0, -60), 26, out)
     shot("09_promenade", (150, 150, 6), (0, 200, 8), 24, out)
+    shot("12_levitator", (260, -300, -150), (0, 0, -130), 26, out)
+    shot("13_stall", (-8, -178, 7), (-40, -208, 4), 28, out)
     for o in hub:
         o.hide_render = True
     for n in ("REF_Engine",):
