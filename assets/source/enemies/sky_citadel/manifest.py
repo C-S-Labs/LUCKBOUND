@@ -1,7 +1,8 @@
 # Sky Citadel enemy manifest: the ONE place that lists this biome's enemies for the framework runner.
 # Copy this file for a new biome and fill in its roster; nothing else in _framework needs to change.
 #   tier:  basic | miniboss | boss        (drives validation + detail expectations, see docs/ENEMY_FRAMEWORK.md)
-#   body:  humanoid (R15 names, humanoid.py) | creature (custom bones)
+#   body:  joint profile -> _framework/bodies/<body>.py (or <biome>/bodies/<body>.py):
+#          humanoid (R15 elbows/knees/grips) | creature (no joint rules) | any custom profile (e.g. "finned")
 #   role:  combat archetype id (shared Studio behaviour, see docs/ENEMY_FRAMEWORK.md "Archetypes")
 #   extras: extra build scripts run after the body (unique boss weapon, etc.)
 WORLD = "sky_citadel"

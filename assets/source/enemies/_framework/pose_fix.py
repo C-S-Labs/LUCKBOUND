@@ -1,9 +1,13 @@
-# Pose clean-up pass for the Winged Sentinel (run at the end of every pose / anim key):
+# HUMANOID BODY PROFILE (loaded only for manifest body="humanoid"; see bodies/). Joint + grip rules for R15 figures:
 #   grip()      - seats the haft in the palm and wraps every finger + thumb around it (no finger penetrates the haft)
 #   hand_on()   - places the off hand on the haft (IK wrist + palm orientation) then wraps it
 #   clear_arm() - swings an arm (pole / abduction) until it no longer intersects torso / waist / legs
 #   ground()    - drops/lifts the root so the lowest point of the body + lance sits exactly on the floor
 import bpy, math
+if globals().get("BODY", "humanoid") != "humanoid":
+    raise RuntimeError("pose_fix.py is the HUMANOID joint profile (hinge elbows/knees, human shoulders, hand grips). "
+                       f"This enemy's body is '{BODY}': use its own profile in bodies/ (see bodies/_TEMPLATE.py).")
+exec(open(FW + r"\pose_common.py").read(), globals())
 PREFIX = globals().get("PREFIX") or NAME + "_"
 from mathutils import Matrix, Vector
 from mathutils.bvhtree import BVHTree
@@ -142,18 +146,6 @@ def hand_on(side, u, away):
         pb = P[f"{side}Hand"]; pb.matrix = Matrix.Translation(RW.to_3x3().inverted() @ err) @ pb.matrix; _upd()
     wrap(side)
 # ---------------- collision helpers ----------------
-def _tree(pn):
-    o = bpy.data.objects.get(PREFIX + pn)
-    if o is None: return None
-    dg = bpy.context.evaluated_depsgraph_get(); oe = o.evaluated_get(dg); m = oe.to_mesh()
-    t = BVHTree.FromPolygons([o.matrix_world @ v.co for v in m.vertices], [tuple(p.vertices) for p in m.polygons])
-    oe.to_mesh_clear(); return t
-def hits(a, others=("Torso", "Waist", "LegLeft", "LegRight")):
-    _upd(); ta = _tree(a); n = 0
-    for b in others:
-        tb = _tree(b)
-        if ta and tb: n += len(ta.overlap(tb))
-    return n
 def clear_arm(side, base_hits=0, step=0.06, maxit=14):
     """Abduct the upper arm (and let the forearm follow) until it no longer cuts into the body."""
     s = 1 if side == "Left" else -1; ua = P[f"{side}UpperArm"]
@@ -162,16 +154,6 @@ def clear_arm(side, base_hits=0, step=0.06, maxit=14):
         hl = ua.head.copy(); ax = RW.to_3x3().inverted() @ Vector((0, 1, 0))
         ua.matrix = Matrix.Translation(hl) @ Matrix.Rotation(-step*s, 4, ax) @ Matrix.Translation(-hl) @ ua.matrix
     return False
-def ground(extra=()):
-    _upd(); dg = bpy.context.evaluated_depsgraph_get(); minz = 1e9
-    for o in list(PARTS) + list(extra):
-        if o.hide_render or "_Break" in o.name: continue
-        oe = o.evaluated_get(dg); m = oe.to_mesh()
-        if len(m.vertices): minz = min(minz, min((o.matrix_world @ v.co).z for v in m.vertices))
-        oe.to_mesh_clear()
-    r_ = P["HumanoidRootNode"]; r_.location = r_.location + Vector((0, -minz, 0)); _upd()
-# ---------------- joint sanity (natural hinges, wrists, shoulders) ----------------
-HINGES = {"LeftLowerArm": "arm", "RightLowerArm": "arm", "LeftLowerLeg": "leg", "RightLowerLeg": "leg"}
 def _dir(bn): _upd(); pb = P[bn]; return (RW.to_3x3() @ (pb.tail - pb.head)).normalized()
 def joint_report(tag=""):
     """Angles in degrees. Elbow/knee: signed flex (negative = hyperextended / bent the wrong way).

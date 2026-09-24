@@ -15,7 +15,7 @@
 import bpy, math
 from mathutils import Matrix, Vector, Euler
 P = rig.pose.bones
-CLIP_PIECES = ("ArmLeft", "ArmRight", "Lance", "BladeL", "BladeR")   # checked vs Torso/Waist/Legs each key
+CLIP_PIECES = globals().get("CLIP_PIECES", ())   # from the body profile (bodies/<body>.py)
 REQUIRED_ATTACK_MARKERS = ("Tell", "HitStart", "HitEnd", "RecoverStart")
 _ACT = {}
 def reset_pose():
@@ -83,8 +83,7 @@ def end(ease="BEZIER"):
             if not worst: break
             for f, c in worst:                        # corrective breakdown key: swing the offending arm clear here
                 bpy.context.scene.frame_set(f)
-                sides = {"Left" if ("Left" in k or k == "BladeL") else "Right" for k in c}
-                for sd in sides: clear_arm(sd, step=0.05, maxit=12)
+                for k in c: fix_clip(k)                   # body profile decides how to clear its own limbs
                 _key_all(f); _ACT["keys"].append(f)
         print(f"ANIM tween scan {_ACT['name']}: " + ("clean" if not worst else f"still clipping {worst}"))
         bpy.context.scene.frame_set(1)

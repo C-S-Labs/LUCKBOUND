@@ -38,6 +38,12 @@ exec(open(os.path.join(HERE, ENTRY["script"])).read(), G)   # builds rig + PARTS
 for extra in ENTRY.get("extras", []):                         # e.g. the boss's unique weapon
     exec(open(os.path.join(HERE, extra)).read(), G)
 PREFIX = NAME + "_"
+BODY = ENTRY.get("body", "humanoid")                         # selects the joint profile: bodies/<BODY>.py
+def _body_profile():
+    for d in (os.path.join(HERE, "bodies"), os.path.join(FW, "bodies")):
+        f = os.path.join(d, BODY + ".py")
+        if os.path.exists(f): return f
+    raise SystemExit(f"no body profile '{BODY}' (add bodies/{BODY}.py, see _framework/bodies/_TEMPLATE.py)")
 
 def _run(fw_file):
     exec(open(os.path.join(FW, fw_file)).read(), G)
@@ -52,6 +58,7 @@ if "--anims" in STEPS:
     want = STEPS[STEPS.index("--anims") + 1]
     adir = os.path.join(HERE, "anims", EID)
     names = sorted(f[:-3] for f in os.listdir(adir) if f.endswith(".py") and not f.startswith("_")) if want == "all" else want.split(",")
+    exec(open(_body_profile()).read(), G)                    # joint rules for THIS body type only
     _run("anim_core.py"); _run("export.py")
     for a in names:
         reset_pose()

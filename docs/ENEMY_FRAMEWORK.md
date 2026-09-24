@@ -13,7 +13,9 @@ assets/source/enemies/
     run.py                    the one headless entry point (validate / render / export / anims / preview / save)
     enemy_kit.py              procedural modelling helpers + assemble() (pieces, glow split, rig, vertex groups)
     humanoid.py               R15-named humanoid body + rig generator (fingers optional)
-    pose_fix.py               grip / finger-wrap / off-hand IK / arm-clearance / grounding solvers
+    pose_common.py            body-agnostic: clipping counts + grounding (every body)
+    pose_fix.py               HUMANOID profile only: hinge elbows/knees, shoulders, grips, finger wrap, off-hand IK
+    bodies/                   joint profiles: humanoid.py, creature.py, _TEMPLATE.py (fish/fins/tentacles/... copy this)
     anim_core.py              action builder, combat markers + fairness checks, direction-safe posing helpers
     validate.py               tri budget, rig and tier rules, floor check, overlap report
     render.py / preview.py    standard review renders (auto-framed) / per-key action frames
@@ -98,6 +100,14 @@ Combat markers (Studio reads these through `AnimationTrack:GetMarkerReachedSigna
 - `HitStart` / `HitEnd`: the hitbox is live between them
 - `RecoverStart`: the punish window opens (glow dims)
 - Optional triggers: `Impact`, `Footstep`, `WingBeat`, `VFX_<name>`
+
+### Body profiles: joint rules are per body type, never global
+The manifest's `body` picks a joint profile. `run.py` loads `<biome>/bodies/<body>.py` if it exists, otherwise `_framework/bodies/<body>.py`:
+- **`humanoid`:** the R15 rules in `pose_fix.py`: hinge elbows and knees, shoulder limits, natural elbow direction, palm grips. `pose_fix.py` refuses to load for any other body.
+- **`creature`:** no joint rules; only the body-agnostic checks from `pose_common.py` (clipping, grounding).
+- **Custom bodies:** copy `bodies/_TEMPLATE.py`. For example, a fish boss with fins holding a trident gets `"body": "finned"`, with its own joint ranges, clip pieces and its own `wield()` (such as a fin wrap). It never inherits the humanoid elbows.
+
+`anim_core` only calls the profile's hooks (`CLIP_PIECES`, `joint_report`, `fix_clip`), so it works for every body.
 
 ### Animation quality (enforced by anim_core; the actions ARE the Studio animations)
 - **Solved in-betweens:** build attacks with `param_keys`. Each key is a set of pose *parameters* (grip point, weapon
