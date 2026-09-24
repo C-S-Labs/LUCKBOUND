@@ -560,7 +560,7 @@ Owner-stated direction, not yet built. When it happens:
 
 - Code: `C:\Dev\luckbound` (not OneDrive — must stay outside it)
 - Place: `LUCKBOUND_dev.rbxl`, local, unpublished
-- Rojo CLI 7.6.0 via Rokit; Studio plugin 7.7.0
+- Rojo CLI 7.7.0 via Rokit (7.6.0 could not read `HUB_BACKDROP.rbxm`); Studio plugin 7.7.0
 - **Unpublished means no DataStores.** Expected; the server runs in volatile
   mode and says so. Publishing is what enables saving.
 

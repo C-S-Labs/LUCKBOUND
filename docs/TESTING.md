@@ -128,7 +128,7 @@ only ever proven by Test C2 in Studio. If you are about to put a decision in
 
 ```bash
 # once
-rokit install          # rojo 7.6.0, stylua, selene from rokit.toml
+rokit install          # rojo 7.7.0, stylua, selene from rokit.toml
 rojo plugin install    # skip if the Studio plugin is already installed
 
 # every session

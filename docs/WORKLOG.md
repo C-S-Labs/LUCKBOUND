@@ -58,8 +58,8 @@ untested against real meshes.
 
 ### Next
 - Drop a real biome kit in and read the `[ChunkAutoKit]` report.
-- Pre-existing: `rojo build` fails on `assets/rbxm/prefabs/HUB_BACKDROP.rbxm`
-  (MeshPart.Tags type mismatch) on main too.
+- Fixed in the same PR: `rojo build` failed on `assets/rbxm/prefabs/HUB_BACKDROP.rbxm`
+  (MeshPart.Tags type mismatch) under Rojo 7.6.0; rokit.toml now pins 7.7.0.
 
 ---
 

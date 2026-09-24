@@ -88,7 +88,7 @@ PATH too — restart the whole app, not just the tab.
 ```powershell
 rokit --version        # confirm it is on PATH
 cd C:\Dev\luckbound
-rokit install          # reads rokit.toml: rojo 7.6.0 + stylua + selene
+rokit install          # reads rokit.toml: rojo 7.7.0 + stylua + selene
 rojo serve
 ```
 
@@ -121,7 +121,7 @@ install never happened; `True` means it is only a PATH problem.
 
 Rokit is only a version manager, and StyLua/Selene are linters CI already runs.
 **The one tool you actually need is Rojo.** Download `rojo-win64.zip` from the
-[Rojo 7.6.0 release](https://github.com/rojo-rbx/rojo/releases/tag/v7.6.0), drop
+[Rojo 7.7.0 release](https://github.com/rojo-rbx/rojo/releases/tag/v7.7.0), drop
 `rojo.exe` in the repo folder, and run `.\rojo.exe serve` (the `.\` is required
 in PowerShell).
 
