@@ -33,6 +33,40 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 64 — 2026-09-23 — Sky Citadel atmospheres finished; file audit
+**Merged:** PR #79–#85   **Tests:** 795 passing
+
+### Done
+- Atmospheres: Aether aurora rebuilt as Beam curtains fed by prisms. Recolours
+  are real meshes: 36 pieces × 7 scenarios (`SC_CHUNK_<X>__<SCENARIO>`), and
+  ChunkLoader swaps one in for the run's atmosphere. The first recolour export
+  nested the meshes under empties and they imported on their side; it's now
+  exported as seven flat FBX files.
+- `ExpeditionSystem.scanAnchors` scans the whole map on the server (the client
+  only streams nearby chunks) for rod/light peaks and walkway points, sent as
+  `payload.Anchors`. Lockdown probes route across the whole map over a
+  walkway graph. Stormhawk lightning is slower, spread out and dimmer. Flyers
+  fly nose-first. The Rime sun is toned down. The Lockdown forcefield is 0.45
+  transparent with neon seams (it was invisible at 0.86).
+- `/enter <seed>` replays a map.
+- File audit: chunk kits now live in `assets/rbxm/chunks/<world>/` (Verdant
+  Valley moved into `verdant_valley/`, SC recolours into `sky_citadel/`).
+  `rbxm/maps/` holds whole prebuilt maps only. Removed duplicates, the retired
+  22 per-piece SC files, the staged luau copies and IMPORT_36.md. Everything
+  untracked was backed up first to `C:\Dev\backups\luckbound-audit-2026-09-23`.
+  The design PDF moved to `docs/design/`.
+- `tools/sync_asset_ids.py <world> [--write]` copies MeshIds from saved
+  `.rbxmx` into AssetManifest by MeshPart name. `docs/PARTNER_SETUP.md` covers
+  testing a world on someone else's Studio place.
+
+### Next
+1. The partner's Verdant Valley `.rbxmx` → `assets/rbxm/chunks/verdant_valley/`,
+   then run `sync_asset_ids.py verdant_valley --write`.
+2. Deferred: weapons, the scenario architecture kits (tag
+   `sky-citadel-scenarios-v1`), the Fate engine rework (ask first).
+
+---
+
 ## Session 63 — 2026-09-23 — Weapons: the contract and the build prompt
 
 **Tests:** 790 passing.

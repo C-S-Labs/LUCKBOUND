@@ -588,6 +588,6 @@ Studio → open `LUCKBOUND_dev` → Rojo panel **Connect** → **Accept** → **
 | `../assets/README.md` | Blender → Roblox asset workflow |
 | `ADDENDUM_ASSET_PIPELINE.md` | Future asset/procgen architecture — target design |
 | `MASTER_DESIGN.md` | **The design source of truth** — the game, Fate, worlds, the generation layers, what is built vs planned |
-| `../LUCKBOUND_...v0.1 (1).pdf` | Original vision. **Authoritative on intent.** |
+| `design/LUCKBOUND_MGD_Original_v0.1.pdf` | Original vision. **Authoritative on intent.** |
 
 `CLAUDE.md` in the repo root holds the rules every AI agent must follow.

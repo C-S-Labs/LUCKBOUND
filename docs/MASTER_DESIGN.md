@@ -14,7 +14,7 @@ relate, and what is built versus planned.
 
 | Layer | Document |
 |---|---|
-| **Intent** | `../LUCKBOUND_..._v0.1 (1).pdf` — the original vision |
+| **Intent** | `design/LUCKBOUND_MGD_Original_v0.1.pdf` — the original vision |
 | **Design** | **this file** |
 | **Architecture** | `PROTOTYPE_BUILD_SPEC.md` — canonical, schemas and remotes |
 | **Order of work** | `DEVELOPMENT_PLAN.md` |
