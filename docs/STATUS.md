@@ -142,6 +142,11 @@ expedition walking must stay under 35% of expedition duration.
 
 ### Modular map system
 
+**Drop-in chunk kits (2026-09-24, not walked).** A world with no
+`Content/Chunks` module gets its kit from the `.rbxmx` files in
+`assets/rbxm/chunks/<world>/`, measured at boot. `docs/CHUNK_DROP_IN.md`.
+
+
 Added 2026-09-16. `assets/` holds Blender sources; `AssetManifest` maps logical
 names to Roblox asset ids; `Content/Chunks/` holds authored pieces; `ChunkCore`
 assembles them into a seeded, collision-free, deterministic layout; and

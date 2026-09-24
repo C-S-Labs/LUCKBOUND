@@ -1941,6 +1941,14 @@ function AssetManifest.isUploaded(key: string): boolean
 	return AssetManifest.assetId(key) ~= nil
 end
 
+--- Adds an entry at runtime. Only for drop-in chunk kits (server/Systems/
+--- ChunkAutoKit), whose ids come from the delivered .rbxmx rather than from
+--- this file. Refuses to overwrite a hand-written entry.
+function AssetManifest.register(key: string, entry: AssetEntry)
+	assert(ENTRIES[key] == nil, `asset key '{key}' is already in the manifest`)
+	ENTRIES[key] = entry
+end
+
 --- Counts by status. Printed at boot so it is obvious how much of the kit is
 --- still placeholder geometry.
 function AssetManifest.summary(): (number, number)

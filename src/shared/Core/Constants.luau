@@ -99,6 +99,9 @@ local Constants = {
 		-- Authored hub props, same idea as MAPS_FOLDER but for pieces of the
 		-- Crossroads rather than whole worlds.
 		PREFABS_FOLDER = "LuckboundPrefabs",
+		-- Drop-in chunk kits: assets/rbxm/chunks/<world>/*.rbxmx, synced to
+		-- ServerStorage. See server/Systems/ChunkAutoKit.
+		CHUNK_KITS_FOLDER = "LuckboundChunkKits",
 		MAP_ENTRY_ANCHOR = "EntryAnchor",
 		MAP_RETURN_ANCHOR = "ReturnAnchor",
 	},

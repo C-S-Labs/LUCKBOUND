@@ -33,6 +33,36 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 65 — 2026-09-24 — Drop-in chunk kits
+**Merged:** —   **Tests:** 807 passing   **Head:** branch claude/chunk-autoload
+
+### Done
+- Owner asked for chunk sets to be importable without code: drop the `.rbxmx`
+  in `assets/rbxm/chunks/<world>/` and it just works. Built `ChunkAutoKit`
+  (server, boot step before validation) and `ChunkKitCore` (pure, tested).
+  Pieces are measured by ray-probe; roles come from names; see
+  `docs/CHUNK_DROP_IN.md`.
+- `assets/rbxm/chunks` now syncs to `ServerStorage.LuckboundChunkKits`.
+- `AssetManifest.register` for runtime-only entries.
+
+### Decisions made
+- Hand-written kits win; a drop-in folder for Sky Citadel / Verdant Valley
+  is ignored (and says so at boot).
+- Auto sockets are Kind PATH, the arena's is GATE; pieces named `*gate*`, or
+  half the two-opening COMBAT pieces, carry the gate. ChunkCore reserves the
+  arena's Kind for the final step, so one Kind for everything cannot assemble.
+
+### Stopped at
+Not walked in Studio. The probe (edge deck + head-height clearance) is
+untested against real meshes.
+
+### Next
+- Drop a real biome kit in and read the `[ChunkAutoKit]` report.
+- Pre-existing: `rojo build` fails on `assets/rbxm/prefabs/HUB_BACKDROP.rbxm`
+  (MeshPart.Tags type mismatch) on main too.
+
+---
+
 ## Session 64 — 2026-09-23 — Sky Citadel atmospheres finished; file audit
 **Merged:** PR #79–#85   **Tests:** 795 passing
 

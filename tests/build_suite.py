@@ -23,6 +23,7 @@ PURE_MODULES = [
     ("EventCore",        "src/shared/Core/EventCore.luau"),
     ("AssetManifest",    "src/shared/Content/AssetManifest.luau"),
     ("ChunkCore",        "src/shared/Util/ChunkCore.luau"),
+    ("ChunkKitCore",     "src/shared/Util/ChunkKitCore.luau"),
     ("Scenarios",        "src/shared/Content/Scenarios/init.luau"),
     ("ScenarioCore",     "src/shared/Util/ScenarioCore.luau"),
     ("ExpeditionCore",   "src/shared/Core/ExpeditionCore.luau"),
