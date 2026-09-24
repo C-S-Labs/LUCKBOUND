@@ -393,6 +393,59 @@ local GameConfig = {
 		-- platform edge is now 400 + 160 = 560 against a 575-stud plaza.
 		ZoneRingRadius = 400 * WORLD_SCALE, -- centre of hub → centre of a compass zone
 
+		-- THE CROSSROADS v2 (2026-09-23). Used when HUB_CROSSROADS_V2 is in the
+		-- place; the old authored shell and the blockout remain the fallback.
+		-- Positions come from Content/Hub/CrossroadsV2 (its districts sit at
+		-- 218, not ZoneRingRadius, which still describes the old shell).
+		V2 = {
+			Enabled = true,
+			DeckHeight = 0.5, -- a district's floor above the plaza
+			SignLift = 34, -- a district's name, above its deck
+			-- Labels in the new hub; the zone ids stay as they are.
+			Names = {
+				HALL_OF_LEGENDS = "Hall of Champions",
+				DISCOVERY_ARCHIVE = "Archives",
+				EXPEDITION_GATE = "Shop",
+				TRAINING_GROUNDS = "Training Grounds",
+			},
+			Backdrop = {
+				Count = 12,
+				RadiusMin = 1150,
+				RadiusMax = 1700,
+				HeightMin = -260,
+				HeightMax = 40,
+				ScaleMin = 0.8,
+				ScaleMax = 1.35,
+			},
+			-- Drawn at random per server. Detail: 1 on every device, 2 from
+			-- medium graphics, 3 high only (extra copies step up one level).
+			-- Speed is studs/second along the orbit.
+			Orbiters = {
+				{ Names = { "hubprop_ship_sloop", "hubprop_ship_cutter", "hubprop_ship_trawler",
+					"hubprop_ship_cog", "hubprop_ship_yacht" }, Min = 4, Max = 7, Detail = 1,
+					RadiusMin = 360, RadiusMax = 620, HeightMin = -40, HeightMax = 90,
+					SpeedMin = 14, SpeedMax = 26, Faces = true, Bob = 2 },
+				{ Names = { "hubprop_ship_galleon", "hubprop_ship_carrier" }, Min = 1, Max = 2, Detail = 2,
+					RadiusMin = 750, RadiusMax = 1000, HeightMin = 60, HeightMax = 200,
+					SpeedMin = 8, SpeedMax = 14, Faces = true, Bob = 3 },
+				{ Names = { "hubprop_sky_whale" }, Min = 1, Max = 2, Detail = 2,
+					RadiusMin = 500, RadiusMax = 900, HeightMin = -120, HeightMax = 40,
+					SpeedMin = 6, SpeedMax = 10, Faces = true, Bob = 6, ScaleMin = 1, ScaleMax = 1.6 },
+				{ Names = { "hubprop_isle_shrine", "hubprop_isle_grove", "hubprop_isle_ruin" }, Min = 4, Max = 6,
+					Detail = 1, RadiusMin = 380, RadiusMax = 700, HeightMin = -90, HeightMax = 60,
+					SpeedMin = 2, SpeedMax = 4, Bob = 3, ScaleMin = 0.9, ScaleMax = 1.5 },
+				{ Names = { "hubprop_cloud_a", "hubprop_cloud_b" }, Min = 8, Max = 12, Detail = 2,
+					RadiusMin = 330, RadiusMax = 900, HeightMin = -160, HeightMax = 120,
+					SpeedMin = 3, SpeedMax = 6, ScaleMin = 0.8, ScaleMax = 2.2 },
+				{ Names = { "hubprop_crystal_cluster", "hubprop_waystone", "hubprop_rune_ring" }, Min = 4, Max = 7,
+					Detail = 2, RadiusMin = 330, RadiusMax = 600, HeightMin = -60, HeightMax = 100,
+					SpeedMin = 3, SpeedMax = 6, Bob = 2 },
+				{ Names = { "hubprop_sky_lantern" }, Min = 10, Max = 18, Detail = 3,
+					RadiusMin = 320, RadiusMax = 500, HeightMin = 10, HeightMax = 110,
+					SpeedMin = 3, SpeedMax = 5, Bob = 1.5 },
+			},
+		},
+
 		Anchors = {
 			FATE_ENGINE = Vector3.new(0, 0, 0),
 			HALL_OF_LEGENDS = Vector3.new(0, 0, -400 * WORLD_SCALE), -- north

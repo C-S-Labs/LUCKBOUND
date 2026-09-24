@@ -21,10 +21,20 @@ local GameConfig = require(Root.Core.GameConfig)
 local Layout = require(Root.Content.Hub.Crossroads)
 local PortalRig = require(Root.Util.PortalRig)
 local PrefabLoader = require(Root.Util.PrefabLoader)
+local HubV2 = require(script.Parent.HubV2)
+local V2Layout = require(Root.Content.Hub.CrossroadsV2)
 
 local HubBuilder = {}
 
 local Anchors = GameConfig.HubLayout.Anchors
+
+-- Which v2 district mesh stands at each compass zone.
+local V2_PIECE = {
+	HALL_OF_LEGENDS = "HUB_HALL_OF_CHAMPIONS",
+	DISCOVERY_ARCHIVE = "HUB_ARCHIVES",
+	EXPEDITION_GATE = "HUB_SHOP",
+	TRAINING_GROUNDS = "HUB_TRAINING_GROUNDS",
+}
 
 local function part(props: { [string]: any }, parent: Instance): Part
 	local p = Instance.new("Part")
@@ -1225,7 +1235,10 @@ function HubBuilder.build(): Model
 	-- AUTHORED ART WINS, one piece at a time. With a shell present the plaza,
 	-- the districts, the walkways and the skyline all come from it; without
 	-- one, every line below builds exactly what it built before.
-	local shell = buildShell(hub)
+	-- THE CROSSROADS v2 when its art is in the place; else the old shell;
+	-- else the blockout.
+	local v2 = if GameConfig.HubLayout.V2.Enabled then HubV2.build(hub, Anchors.FATE_ENGINE) else nil
+	local shell = v2 or buildShell(hub)
 
 	if not shell then
 		-- Lower plaza ring the raised walkways sit above.
@@ -1264,7 +1277,7 @@ function HubBuilder.build(): Model
 		-- has to be placed is the Expedition Gate's prompt -- see below.
 		local deckTop
 		if shell then
-			deckTop = Layout.Shell.DeckHeight
+			deckTop = if v2 then GameConfig.HubLayout.V2.DeckHeight else Layout.Shell.DeckHeight
 
 			-- NO GATE ANCHOR, AND NO ENTER PROMPT. Owner-directed after the
 			-- first authored walk: a "Verdant Valley / ENTER" prompt standing
@@ -1284,17 +1297,20 @@ function HubBuilder.build(): Model
 			buildWalkway(zone, centre, hub)
 		end
 
-		local lift = if shell then Layout.Shell.SignLift else 12
+		local lift = if v2 then GameConfig.HubLayout.V2.SignLift elseif shell then Layout.Shell.SignLift else 12
+		-- v2: the label floats over the district's own centre, 218 out.
+		local at = if v2 then Anchors.FATE_ENGINE + (V2Layout.Pieces[V2_PIECE[zone.Id]] or { Centre = anchor }).Centre * Vector3.new(1, 0, 1) else anchor
 		local sign = part({
 			Name = "Sign",
 			Size = Vector3.new(4, 1, 1),
-			Position = Vector3.new(anchor.X, deckTop + lift, anchor.Z),
+			Position = Vector3.new(at.X, deckTop + lift, at.Z),
 			Transparency = 1,
 			CanCollide = false,
 		}, model)
 		-- Every zone is labelled so a tester can name where they are without
 		-- being told. Master Spec §20's success criterion depends on it.
-		label(zone.Name, zone.Accent, UDim2.fromScale(24, 5), sign, 320)
+		label(if v2 then GameConfig.HubLayout.V2.Names[zone.Id] or zone.Name else zone.Name, zone.Accent,
+			UDim2.fromScale(24, 5), sign, 320)
 	end
 
 	if not shell then
@@ -1303,7 +1319,11 @@ function HubBuilder.build(): Model
 
 	-- The horizon is independent of the shell: it is the one piece that can
 	-- stand behind either build without looking wrong.
-	buildBackdrop(hub)
+	if v2 then
+		HubV2.buildSky(hub, Anchors.FATE_ENGINE)
+	else
+		buildBackdrop(hub)
+	end
 
 	buildSpawn(hub)
 
