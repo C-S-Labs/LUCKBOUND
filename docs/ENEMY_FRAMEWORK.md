@@ -54,9 +54,10 @@ Basics usually skip steps 4 and 6 (their moves come from shared **archetypes**, 
 
 ## 2. Tiers: what "done" means
 
-| | Basic | Miniboss | Boss |
+| | Basic | Miniboss | Boss (Epic / Legendary) |
 |---|---|---|---|
-| Tris | < 10k per mesh (usually one body + one glow) | < 10k per mesh | < 10k **per piece**; split into as many pieces as needed |
+| Tris (total) | **10-12.5k** target (more than one mesh if needed), with real character | up to **35k** | Epic up to **75k**; Legendary up to **100k** (owner, 2026-09-24) |
+| Every mesh | < 10k tris (Studio limit) | < 10k | < 10k per piece |
 | Detail | clean silhouette, 1 readable gimmick | noticeably more than a basic: trims, layered plates | **dramatically** more: layered armour, flow lines, inner body for phase 2 |
 | Rig | R15 or simple creature chain | R15 + finger bones | R15 + finger bones + extra chains (wings, capes, jaws) |
 | Weapon | socket only (shared weapon meshes) | socket or simple unique | unique weapon, own bones (opening parts, halo, etc.) |

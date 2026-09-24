@@ -4,7 +4,8 @@
 # Soft report: piece-vs-piece overlaps (designed joins such as neck-in-collar also show up; read them, don't chase zero).
 import bpy
 from mathutils.bvhtree import BVHTree
-TRI_CAP = 10000
+TRI_CAP = 10000                                   # Studio per-mesh limit: split bigger enemies into pieces
+TIER_BUDGET = {"basic": (10000, 12500), "miniboss": (None, 35000), "boss": (None, 75000), "legendary": (None, 100000)}
 R15 = ["HumanoidRootNode", "LowerTorso", "UpperTorso", "Head"]
 _fails = []
 _dg = bpy.context.evaluated_depsgraph_get()
@@ -21,6 +22,10 @@ for o in _meshes:
         _minz = min(_minz, min(p.z for p in v))
         _trees[o.name[len(PREFIX):]] = BVHTree.FromPolygons(v, [tuple(p.vertices) for p in m.polygons])
     oe.to_mesh_clear()
+_total = sum(sum(len(p.vertices) - 2 for p in o.data.polygons) for o in _meshes)
+_lo, _hi = TIER_BUDGET.get(TIER, (None, None))
+if _hi and _total > _hi: _fails.append(f"{_total} tris over the {TIER} budget {_hi}")
+if _lo and _total < _lo: print(f"VALIDATE note: {_total} tris is under the {TIER} target {_lo}-{_hi} (room for more character)")
 _bones = {b.name for b in rig.data.bones}
 _humanoid = ENTRY.get("body", "humanoid") == "humanoid"
 if _humanoid:
