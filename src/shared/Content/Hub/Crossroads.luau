@@ -53,12 +53,20 @@ local Theme = {
 	ColorShiftTop = Color3.fromRGB(214, 184, 236),
 	ColorShiftBottom = Color3.fromRGB(70, 58, 104),
 	FogColor = Color3.fromRGB(96, 80, 128),
-	AtmosphereDensity = 0.2,
-	AtmosphereOffset = 0.2,
-	AtmosphereHaze = 0.6,
-	AtmosphereGlare = 0.35,
-	AtmosphereColor = Color3.fromRGB(200, 186, 230),
-	AtmosphereDecay = Color3.fromRGB(150, 110, 150),
+	-- CHARACTER PASS (owner, 2026-09-24): the offset pushes the haze off
+	-- what is near and lays it on what is far, so the islands, the far range
+	-- and the cloud sea stack into distinct layers; the glare puts a warm halo
+	-- round the low sun; rays and a gentle warm grade finish it.
+	AtmosphereDensity = 0.24,
+	AtmosphereOffset = 0.38,
+	AtmosphereHaze = 0.9,
+	AtmosphereGlare = 0.55,
+	AtmosphereColor = Color3.fromRGB(204, 186, 232),
+	AtmosphereDecay = Color3.fromRGB(176, 122, 150),
+	SunRays = { Intensity = 0.07, Spread = 0.7 },
+	Grade = { Brightness = 0.02, Contrast = 0.08, Saturation = 0.12, Tint = Color3.fromRGB(255, 244, 248) },
+	StarCount = 5000,
+	SunAngularSize = 14,
 	-- Fog must reach past the distant islands or the world looks boxed in --
 	-- the blueprint's 150/500 was sized to a 120-stud hub.
 	FogStart = 700,

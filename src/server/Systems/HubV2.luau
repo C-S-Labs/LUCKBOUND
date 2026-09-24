@@ -230,6 +230,9 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 		end
 	end
 
+	-- THE SKY BEYOND: cloud sea, far range, moon, planet, the ring overhead.
+	HubV2.buildBeyond(sky, origin, prefabs, chunks, rng)
+
 	-- Orbiters: which ones, how many, and at what detail level.
 	local lib = props and props:FindFirstChild("HUB_ORBITERS")
 	if not lib then
@@ -299,6 +302,97 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 		end
 	end
 	print(`[HubV2] sky: {#chunks > 0 and cfg.Backdrop.Count or 0} backdrop chunk(s), {n} orbiter(s)`)
+end
+
+local function still(p: BasePart, cf: CFrame, parent: Instance)
+	p.Anchored, p.CanCollide, p.CanQuery, p.CanTouch, p.CastShadow = true, false, false, false, false
+	p.CFrame = cf
+	p.Parent = parent
+end
+
+--- The sky beyond the islands: the cloud sea, the far range, the moon, the
+--- ringed planet and the celestial ring above the Engine.
+function HubV2.buildBeyond(sky: Instance, origin: Vector3, prefabs: Instance?, chunks: { MeshPart }, rng: Random)
+	local lib = prefabs and prefabs:FindFirstChild("HUB_SKY")
+	local c = cfg
+	if lib then
+		-- the cloud sea: the cloud props' puffs as banks, in two drifting layers
+		local banks = {}
+		for _, n in { "hubsky_cloudbank_a", "hubsky_cloudbank_b", "hubsky_cloudbank_c" } do
+			local b = lib:FindFirstChild(n, true)
+			if b and b:IsA("MeshPart") then
+				table.insert(banks, b)
+			end
+		end
+		for _, layer in c.CloudSea do
+			for _ = 1, (if #banks > 0 then layer.Count else 0) do
+				local src = banks[rng:NextInteger(1, #banks)]
+				local p = src:Clone()
+				p.Size = src.Size * rng:NextNumber(layer.ScaleMin, layer.ScaleMax)
+				local a, r = rng:NextNumber(0, math.pi * 2), math.sqrt(rng:NextNumber()) * layer.RadiusMax
+				still(p, CFrame.new(origin + Vector3.new(math.cos(a) * r, layer.Y + rng:NextNumber(-20, 20), math.sin(a) * r))
+					* CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), 0), sky)
+				p:SetAttribute("Drift", layer.Drift * rng:NextNumber(0.7, 1.3))
+				p:SetAttribute("DriftCentre", origin)
+				if layer.Detail then
+					p:SetAttribute("Detail", layer.Detail)
+				end
+			end
+		end
+		-- the moon: a glowing disc through the haze
+		local moon = lib:FindFirstChild("hubsky_moon", true)
+		if moon and moon:IsA("MeshPart") then
+			local m = c.Moon
+			local p = moon:Clone()
+			p.Size = moon.Size * m.Scale
+			p.Material = Enum.Material.Neon
+			p.Color = m.Color
+			local az, el = math.rad(m.Azimuth), math.rad(m.Elevation)
+			still(p, CFrame.new(origin + Vector3.new(math.cos(az) * math.cos(el), math.sin(el), math.sin(az) * math.cos(el))
+				* m.Distance), sky)
+		end
+		-- the ringed planet, low on the far horizon
+		local planet = lib:FindFirstChild("hubsky_planet", true)
+		if planet and planet:IsA("MeshPart") then
+			local m = c.Planet
+			local p = planet:Clone()
+			p.Size = planet.Size * m.Scale
+			local az, el = math.rad(m.Azimuth), math.rad(m.Elevation)
+			still(p, CFrame.new(origin + Vector3.new(math.cos(az) * math.cos(el), math.sin(el), math.sin(az) * math.cos(el))
+				* m.Distance) * CFrame.Angles(0.2, 0.6, 0.15), sky)
+		end
+		-- the celestial ring above the Engine, its runes pulsing between colours
+		for _, n in { "hubsky_ring", "hubsky_ring_glyphs" } do
+			local src = lib:FindFirstChild(n, true)
+			if src and src:IsA("MeshPart") then
+				local p = src:Clone()
+				still(p, CFrame.new(origin + Vector3.new(0, c.Ring.Height, 0)), sky)
+				p:SetAttribute("SpinSpeed", c.Ring.Spin)
+				p:SetAttribute("SpinAxis", "Y")
+				p:SetAttribute("SpinJitter", 0)
+				if n == "hubsky_ring_glyphs" then
+					p.Material = Enum.Material.Neon
+					p:SetAttribute("ColorA", c.Ring.GlyphA)
+					p:SetAttribute("ColorB", c.Ring.GlyphB)
+					p:SetAttribute("ColorSeconds", 9)
+				end
+			end
+		end
+	else
+		warn("[HubV2] ServerStorage.LuckboundPrefabs.HUB_SKY missing -- no cloud sea, moon or ring")
+	end
+	-- the far range: the backdrop chunks again, huge and darkened, on the horizon
+	local f = c.FarRange
+	for i = 1, (if #chunks > 0 then f.Count else 0) do
+		local src = chunks[rng:NextInteger(1, #chunks)]
+		local p = src:Clone()
+		p.Size = src.Size * rng:NextNumber(f.ScaleMin, f.ScaleMax)
+		p.Color = f.Tint
+		local a = (i + rng:NextNumber(-0.4, 0.4)) / f.Count * math.pi * 2
+		local r = rng:NextNumber(f.RadiusMin, f.RadiusMax)
+		still(p, CFrame.new(origin + Vector3.new(math.cos(a) * r, rng:NextNumber(f.HeightMin, f.HeightMax), math.sin(a) * r))
+			* CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), 0), sky)
+	end
 end
 
 return HubV2

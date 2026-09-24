@@ -3270,6 +3270,125 @@
     12.7,
     11.258
    ]
+  },
+  "hubsky_cloudbank_a": {
+   "group": "Sky",
+   "tris": 4704,
+   "anim": null,
+   "sub": null,
+   "host": null,
+   "centre": [
+    -5.498,
+    -18.563,
+    5.787
+   ],
+   "size": [
+    596.988,
+    342.887,
+    37.057
+   ]
+  },
+  "hubsky_cloudbank_b": {
+   "group": "Sky",
+   "tris": 3408,
+   "anim": null,
+   "sub": null,
+   "host": null,
+   "centre": [
+    -13.841,
+    -15.351,
+    4.687
+   ],
+   "size": [
+    469.84,
+    300.759,
+    35.017
+   ]
+  },
+  "hubsky_cloudbank_c": {
+   "group": "Sky",
+   "tris": 1920,
+   "anim": null,
+   "sub": null,
+   "host": null,
+   "centre": [
+    -7.732,
+    -4.234,
+    5.275
+   ],
+   "size": [
+    333.398,
+    262.665,
+    36.638
+   ]
+  },
+  "hubsky_moon": {
+   "group": "Sky",
+   "tris": 1088,
+   "anim": null,
+   "sub": null,
+   "host": null,
+   "centre": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "size": [
+    200.0,
+    200.0,
+    200.0
+   ]
+  },
+  "hubsky_planet": {
+   "group": "Sky",
+   "tris": 2252,
+   "anim": null,
+   "sub": null,
+   "host": null,
+   "centre": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "size": [
+    402.0,
+    382.819,
+    200.0
+   ]
+  },
+  "hubsky_ring": {
+   "group": "Sky",
+   "tris": 1984,
+   "anim": null,
+   "sub": null,
+   "host": null,
+   "centre": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "size": [
+    380.121,
+    380.121,
+    16.0
+   ]
+  },
+  "hubsky_ring_glyphs": {
+   "group": "Sky",
+   "tris": 768,
+   "anim": null,
+   "sub": null,
+   "host": null,
+   "centre": [
+    0.0,
+    0.0,
+    7.5
+   ],
+   "size": [
+    363.936,
+    363.936,
+    0.6
+   ]
   }
  },
  "anchors": {

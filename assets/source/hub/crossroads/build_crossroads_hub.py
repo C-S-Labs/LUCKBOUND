@@ -1417,6 +1417,90 @@ def prop_waystone():
 
 
 # =============================================================================
+#  THE SKY: the cloud sea under the hub, the moon, the ringed planet and the
+#  celestial ring above the Engine (owner, 2026-09-24). The cloud banks are
+#  built exactly as the cloud props are -- the same lump puffs, the same two
+#  tones -- so the sea and the drifting clouds read as one weather.
+# =============================================================================
+
+def cloud_bank(name, seed, w, d, step=42.0):
+    """A wide, flat bank of the same puffs the cloud props are made of --
+    packed on a jittered grid so they overlap into one mass, smaller and
+    lower toward the rim so the edge breaks up like a real bank."""
+    p = Piece(name, "a cloud-sea bank: flat, wide, the cloud props' puffs")
+    rng = random.Random(seed)
+    k = 0
+    y = -d / 2
+    while y <= d / 2:
+        x = -w / 2 + (step / 2 if int((y + d / 2) / step) % 2 else 0)
+        while x <= w / 2:
+            px, py = x + rng.uniform(-12, 12), y + rng.uniform(-12, 12)
+            edge = min(1.0, math.hypot(px / (w / 2), py / (d / 2)))
+            if edge < 1.0 or rng.random() < 0.3:
+                r = rng.uniform(34, 50) * (1.0 - 0.5 * edge)
+                z = rng.uniform(-3, 8) * (1.0 - edge)
+                lump(p, "Cloud", [(0, z - r * 0.28), (r * 0.9, z - r * 0.2), (r, z), (r * 0.72, z + r * 0.32),
+                                  (0, z + r * 0.48)], 8, f"{seed}{k}", 0.15, px, py, sy=0.8,
+                     bands=["CloudShade", "Cloud", "Cloud", "Cloud"])
+                k += 1
+            x += step
+        y += step * 0.85
+    return p
+
+
+def sphere(p, mat_for_lat, R, n=28, rings=16, cx=0.0, cy=0.0, cz=0.0):
+    """A proper UV sphere, its faces coloured by latitude (-1 south .. 1 north)."""
+    prof = [(R * math.sin(math.pi * k / rings), -R * math.cos(math.pi * k / rings)) for k in range(rings + 1)]
+    bands = [mat_for_lat(-math.cos(math.pi * (k + 0.5) / rings)) for k in range(rings)]
+    lump(p, "Snow", prof, n, "sphere" + str(R), 0.0, cx, cy, bands=bands)
+
+
+def sky_moon():
+    p = Piece("hubsky_moon", "a pale moon; the game makes it glow")
+    sphere(p, lambda lat: "Snow" if abs(lat) > 0.25 or lat > 0.1 else "Cloud", 100, n=32, rings=18)
+    return p
+
+
+def sky_planet():
+    p = Piece("hubsky_planet", "a ringed planet, violet, softly banded")
+    bands = ("Canvas", "Violet", "Canvas", "Rose", "Canvas", "Violet", "Canvas", "Canvas", "Violet")
+    sphere(p, lambda lat: bands[min(8, int((lat + 1) / 2 * 9))], 100, n=32, rings=18)
+    for R, w, mat in ((150, 18, "Cloud"), (178, 10, "Rose"), (196, 5, "Cloud")):
+        with frame(p, xf(rx=18)):
+            sector(p, mat, R, R + w, -0.8, 0.8, 0, 360, 48)
+    return p
+
+
+def sky_ring():
+    p = Piece("hubsky_ring", "the celestial ring above the Engine: basalt and gold")
+    R = 180.0
+    torus(p, "Basalt", R, 7, 0, 0, 0, n=64, m=6)
+    torus(p, "Gold", R - 9, 1.5, 0, 0, 0, n=64, m=4)
+    torus(p, "Gold", R + 9, 1.5, 0, 0, 0, n=64, m=4)
+    for k in range(16):                                           # clamps, like the Engine's ring feet
+        a = math.radians(22.5 * k)
+        box(p, "BasaltLight", math.cos(a) * R, math.sin(a) * R, 0, 10, 18, 16, rz=22.5 * k)
+    return p
+
+
+def sky_ring_glyphs():
+    p = Piece("hubsky_ring_glyphs", "the celestial ring's runes: the game makes them glow")
+    R = 180.0
+    for k in range(32):
+        a = math.radians(11.25 * k + 5.6)
+        with frame(p, xf(math.cos(a) * R, math.sin(a) * R, 7.5, math.degrees(a))):
+            box(p, "Cosmic", 0, 0, 0, 3, 7, 0.6)
+            box(p, "Cosmic", 0, 3, 0, 5, 1.2, 0.6)
+    return p
+
+
+SKY_BUILDERS = (lambda: cloud_bank("hubsky_cloudbank_a", "cba", 560, 320),
+                lambda: cloud_bank("hubsky_cloudbank_b", "cbb", 440, 280),
+                lambda: cloud_bank("hubsky_cloudbank_c", "cbc", 320, 220),
+                sky_moon, sky_planet, sky_ring, sky_ring_glyphs)
+
+
+# =============================================================================
 #  Build, check, export, render
 # =============================================================================
 
@@ -1433,7 +1517,8 @@ def build_all():
     bpy.ops.wm.read_factory_settings(use_empty=True)
     mats = K["ensure_materials"]()
     groups = {}
-    for gname, builders in (("Hub", HUB_BUILDERS), ("Backdrop", BACKDROP_BUILDERS), ("Orbiters", PROP_BUILDERS)):
+    for gname, builders in (("Hub", HUB_BUILDERS), ("Backdrop", BACKDROP_BUILDERS), ("Orbiters", PROP_BUILDERS),
+                            ("Sky", SKY_BUILDERS)):
         coll = bpy.data.collections.new("Crossroads_" + gname)
         bpy.context.scene.collection.children.link(coll)
         objs = []
@@ -1493,7 +1578,8 @@ def check(groups):
 def export(groups):
     os.makedirs(EXPORT_DIR, exist_ok=True)
     files = {"Hub": "crossroads_hub.fbx", "Animated": "crossroads_animated.fbx",
-             "Backdrop": "crossroads_backdrop.fbx", "Orbiters": "crossroads_orbiters.fbx"}
+             "Backdrop": "crossroads_backdrop.fbx", "Orbiters": "crossroads_orbiters.fbx",
+             "Sky": "crossroads_sky.fbx"}
     layout = {"pieces": {}, "anchors": ANCHORS, "note": "Blender coords (x, y north, z up), studs. "
               "Roblox = (x, z, -y). Bounding-box centre = where the MeshPart's Position goes."}
     for gname, objs in groups.items():
