@@ -182,13 +182,20 @@ function SkyTraffic.init(): ()
 		end
 
 		local flyers: { Flyer } = {}
-		for _, d in sky:GetChildren() do
-			if not d:IsA("BasePart") then
-				continue
+		local adopted: { [Instance]: boolean } = {}
+		-- ONE PROP OR ISLAND, whenever it arrives. Called for everything already
+		-- here and again for anything that streams in later, so a late arrival
+		-- flies (or is steered round) like the rest instead of sitting still.
+		local function adopt(d: Instance, late: boolean)
+			if adopted[d] or not d:IsA("BasePart") then
+				return
 			end
+			adopted[d] = true
 			if d:GetAttribute("Backdrop") then
 				table.insert(rocks, { Part = d, Pos = d.Position, Radius = math.max(d.Size.X, d.Size.Z) * 0.5 })
 				table.insert(solids, d)
+				castParams.FilterDescendantsInstances = solids
+				overlapParams.FilterDescendantsInstances = solids
 			elseif d:GetAttribute("Wander") and d.LocalTransparencyModifier < 1 then
 				local r = d:GetAttribute("WanderRadius") :: Vector2
 				local h = d:GetAttribute("WanderHeight") :: Vector2
@@ -240,13 +247,23 @@ function SkyTraffic.init(): ()
 					end
 				end
 				table.insert(flyers, f)
+				if late then
+					f.Target = waypoint(f, angleOf(f, f.Pos))
+				end
 			end
+		end
+		for _, d in sky:GetChildren() do
+			adopt(d, false)
 		end
 		castParams.FilterDescendantsInstances = solids
 		overlapParams.FilterDescendantsInstances = solids
 		for _, f in flyers do
 			f.Target = waypoint(f, angleOf(f, f.Pos))
 		end
+		sky.ChildAdded:Connect(function(d)
+			task.wait(0.5) -- let its moving pieces arrive with it
+			adopt(d, true)
+		end)
 		print(string.format("[SkyTraffic] %d flyer(s), %d island(s), %d solid group(s)", #flyers, #rocks, #solids))
 
 		local elapsed = 0

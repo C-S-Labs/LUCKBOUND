@@ -196,8 +196,12 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 	local prefabs = ServerStorage:FindFirstChild(Constants.NAMES.PREFABS_FOLDER)
 	local props = ReplicatedStorage:FindFirstChild("LuckboundProps")
 	local rng = Random.new()
-	local sky = Instance.new("Folder")
+	-- A Model that is never streamed out: every client gets the whole sky, not
+	-- just the side it spawned facing (the far side used to arrive late and
+	-- sit still -- owner, 2026-09-24: "it favored one side over the other").
+	local sky = Instance.new("Model")
 	sky.Name = "Sky"
+	sky.ModelStreamingMode = Enum.ModelStreamingMode.Persistent
 	sky.Parent = hub
 
 	-- Backdrop: floating mountains in a ring, each a random chunk, turn, size and height.
