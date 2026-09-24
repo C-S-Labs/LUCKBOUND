@@ -332,6 +332,9 @@ at their openings. It never looks inside the file.
 So the parts that have to be predictable are exactly the five above. Everything
 else it places as-is.
 
+For a new biome you do not need to write any code: name the pieces and drop
+the file in. See `CHUNK_DROP_IN.md`.
+
 ---
 
 ## If something here fights the art

@@ -38,11 +38,12 @@ local HubUISystem = require(Systems.HubUISystem)
 local LedgerSystem = require(Systems.LedgerSystem)
 local PartySystem = require(Systems.PartySystem)
 local LootSystem = require(Systems.LootSystem)
+local ChunkAutoKit = require(Systems.ChunkAutoKit)
 
 -- Boot progress is printed at every stage. A server that stops partway now
 -- names the step it stopped on, instead of going silent and leaving you to
 -- guess -- which is what a yielding call in a system's init() looks like.
-local TOTAL_STEPS = 14
+local TOTAL_STEPS = 15
 local stepNumber = 0
 local function step(name: string)
 	stepNumber += 1
@@ -59,6 +60,12 @@ Root:SetAttribute(
 	Constants.SERVER_KIND_ATTRIBUTE,
 	if isExpeditionServer then Constants.SERVER_KIND_EXPEDITION else Constants.SERVER_KIND_HUB
 )
+
+-- 1a. Drop-in chunk kits: a world whose only kit is a delivered .rbxmx in
+-- assets/rbxm/chunks/<world>/ is measured and registered here, BEFORE
+-- validation, so a bad drop is caught by the same checks as a typed kit.
+step("drop-in chunk kits")
+ChunkAutoKit.load(Chunks, Worlds, AssetManifest)
 
 -- 1. Fail fast on malformed content, before any player can arrive.
 step("validating content")

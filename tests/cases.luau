@@ -16,6 +16,7 @@ local Crossroads = __require("Crossroads")
 local UITheme = __require("UITheme")
 local AssetManifest = __require("AssetManifest")
 local ChunkCore = __require("ChunkCore")
+local ChunkKitCore = __require("ChunkKitCore")
 local ScenarioCore = __require("ScenarioCore")
 local Scenarios = __require("Scenarios")
 local ExpeditionCore = __require("ExpeditionCore")
@@ -5660,6 +5661,96 @@ do
 		if #errs > 0 then bad = bad or (id .. ": " .. errs[1]) end
 	end
 	check("every atmosphere over Sky Citadel's air is a valid Environment", bad == nil, bad)
+end
+
+-- === drop-in chunk kits (ChunkKitCore) ==============================
+-- A world whose only kit is a delivered .rbxmx: the server measures each
+-- mesh and ChunkKitCore turns the measurements into a kit. The question is
+-- the same one the hand-written kits answer: does it ASSEMBLE?
+do
+	group("Drop-in chunk kits")
+	check("folder name -> world id", ChunkKitCore.worldIdFor("sky_citadel") == "SKY_CITADEL"
+		and ChunkKitCore.worldIdFor("Astral Reach") == "ASTRAL_REACH")
+	check("role from name", ChunkKitCore.roleFor("chunk_entry") == "ENTRY"
+		and ChunkKitCore.roleFor("chunk_boss_clearing") == "BOSS"
+		and ChunkKitCore.roleFor("chunk_prism_arena") == "BOSS"
+		and ChunkKitCore.roleFor("chunk_side_chapel") == "SIDE"
+		and ChunkKitCore.roleFor("chunk_cap_sealed_gate") == "CAP"
+		and ChunkKitCore.roleFor("chunk_path_tee") == "PATH"
+		and ChunkKitCore.roleFor("chunk_meadow_a") == "COMBAT")
+	check("a Role attribute beats the name", ChunkKitCore.roleFor("chunk_meadow", "side") == "SIDE")
+	check("Openings text parses", table.concat(ChunkKitCore.parseFacings("n, s,W"), ",") == "0,180,270")
+
+	local function piece(name, facings, attrs)
+		local openings = {}
+		for _, f in facings do table.insert(openings, { Facing = f, OffsetY = 0 }) end
+		return { Name = name, SizeX = 256, SizeY = 60, SizeZ = 256, GroundOffsetY = 4,
+			Openings = openings, Attributes = attrs or {} }
+	end
+	local N, E, S, W = 0, 90, 180, 270
+	local pieces = {
+		piece("chunk_entry", { S }),
+		piece("chunk_path_straight", { N, S }),
+		piece("chunk_path_bend", { N, E }),
+		piece("chunk_path_bend_west", { S, W }),
+		piece("chunk_path_tee", { S, E, W }),
+		piece("chunk_meadow", { N, S }),
+		piece("chunk_ruins", { E, W }),
+		piece("chunk_crossroads", { N, E, S, W }),
+		piece("chunk_side_shrine", { S }),
+		piece("chunk_cap_cliff", { N }),
+		piece("chunk_boss_clearing", { N, S }),
+		piece("chunk_ruins__ashfall", { E, W }),
+		piece("chunk_blank", {}),
+	}
+	local defs, report, problems = ChunkKitCore.build("DROPIN_TEST", pieces)
+	local byId = {}
+	for _, d in defs do byId[d.Id] = d end
+	check("recolour variants are not pieces", byId.DROPIN_TEST_RUINS__ASHFALL == nil and #defs == 11, tostring(#defs))
+	check("a piece with no openings is reported, not registered",
+		byId.DROPIN_TEST_BLANK == nil and #problems == 1, table.concat(problems, "; "))
+	check("the arena keeps one opening, and it is a gate",
+		#byId.DROPIN_TEST_BOSS_CLEARING.Sockets == 1
+		and byId.DROPIN_TEST_BOSS_CLEARING.Sockets[1].Kind == "GATE"
+		and byId.DROPIN_TEST_BOSS_CLEARING.Sockets[1].Facing == S)
+	local gates = 0
+	for _, d in defs do
+		if d.Role ~= "BOSS" then
+			for _, s in d.Sockets do if s.Kind == "GATE" then gates += 1 end end
+		end
+	end
+	check("some ordinary piece leads into the arena", gates >= 1, tostring(gates))
+	local tee = {}
+	for _, s in byId.DROPIN_TEST_PATH_TEE.Sockets do tee[s.Id] = s end
+	check("sockets sit on the edge midpoints",
+		tee.E.OffsetX == 128 and tee.E.OffsetZ == 0 and tee.S.OffsetZ == 128 and tee.W.OffsetX == -128 and tee.N == nil)
+	check("the report names every role", string.find(report[1], "1 entry", 1, true) ~= nil, report[1])
+
+	local merged = table.clone(Chunks)
+	for _, d in defs do
+		merged[d.Id] = d
+		if not AssetManifest.exists(d.AssetKey) then
+			AssetManifest.register(d.AssetKey, { AssetId = "rbxassetid://1", Status = "UPLOADED", Source = "test" })
+		end
+	end
+	local okS, errS = Schema.validateChunks(merged, AssetManifest)
+	check("a drop-in kit passes the same validation as a typed one", okS, errS and table.concat(errS, "; "))
+
+	local built, bad = 0, nil
+	for trial = 1, 200 do
+		local okA, layout = ChunkCore.assembleWithRetry(merged, {
+			WorldId = "DROPIN_TEST", PathLength = 5, IncludeSide = true,
+			BranchLength = GameConfig.Expedition.BranchLength, MaxRepeats = GameConfig.Expedition.MaxRepeats,
+		}, function(a) return ExpeditionCore.streamFor(trial * 7919, a) end, GameConfig.Expedition.AssemblyAttempts)
+		if okA then
+			built += 1
+			local okV, errV = ChunkCore.validateLayout(layout, merged)
+			if not okV then bad = bad or table.concat(errV, ", ") end
+		else
+			bad = bad or tostring(layout)
+		end
+	end
+	check("a drop-in kit assembles on nearly every seed", built >= 190, string.format("%d/200 -- %s", built, tostring(bad)))
 end
 
 -- === summary ========================================================

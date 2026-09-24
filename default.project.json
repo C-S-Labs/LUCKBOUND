@@ -33,6 +33,9 @@
       },
       "LuckboundPrefabs": {
         "$path": "assets/rbxm/prefabs"
+      },
+      "LuckboundChunkKits": {
+        "$path": "assets/rbxm/chunks"
       }
     }
   }
