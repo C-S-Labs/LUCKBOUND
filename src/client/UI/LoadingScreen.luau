@@ -217,7 +217,19 @@ end
 --- itself done, and opened the screen onto grey boxes.
 local function preloadAll(crossroads: Instance)
 	local queue: { Instance } = {}
+	-- the hub's own pieces load first: they are what the player lands on
+	local v2 = crossroads:FindFirstChild("CrossroadsV2")
+	if v2 then
+		for _, c in v2:GetChildren() do
+			if c:IsA("MeshPart") then
+				table.insert(queue, c)
+			end
+		end
+	end
 	for _, d in crossroads:GetDescendants() do
+		if table.find(queue, d) then
+			continue
+		end
 		if d:IsA("MeshPart") or d:IsA("Decal") or d:IsA("Texture") then
 			table.insert(queue, d)
 		end
@@ -269,6 +281,22 @@ local function watchProgress()
 		local arrival = if target and target > 0
 			then math.clamp(arrived / (target * 0.95), 0, 1)
 			else math.clamp(settledFor / loading.HubSettleSeconds, 0, 1)
+		-- THE HUB ITSELF FIRST. Six big meshes are a sliver of the part count,
+		-- so 95% of parts could arrive without any of them. When the v2 hub is
+		-- in, it is not "arrived" until every one of its pieces is here.
+		local v2 = crossroads and crossroads:FindFirstChild("CrossroadsV2")
+		local wanted = v2 and v2:GetAttribute("PieceCount") :: number?
+		if wanted then
+			local have = 0
+			for _, c in (v2 :: Instance):GetChildren() do
+				if c:IsA("MeshPart") then
+					have += 1
+				end
+			end
+			if have < wanted then
+				arrival = math.min(arrival, 0.9 * have / wanted)
+			end
+		end
 		local arrivalDone = arrival >= 1 or (arrived >= loading.MinimumHubInstances and settledFor >= loading.HubSettleSeconds * 2)
 
 		if arrivalDone and not preloadStarted and crossroads then

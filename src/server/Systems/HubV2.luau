@@ -41,7 +41,8 @@ end
 -- fidelity would fill every arch and doorway, and CollisionFidelity cannot be
 -- set on a clone at run time -- so walkable pieces are made fresh from their
 -- MeshId at PreciseConvexDecomposition, as ChunkLoader does for biome chunks.
-local function walkable(src: MeshPart): MeshPart
+local function walkable(src: MeshPart): MeshPart?
+	-- the imported copy is only a stand-in when this fails, so say so loudly
 	local ok, made = pcall(function()
 		return AssetService:CreateMeshPartAsync(src.MeshId, {
 			CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
@@ -54,8 +55,8 @@ local function walkable(src: MeshPart): MeshPart
 		made.Material = src.Material
 		return made
 	end
-	warn(`[HubV2] {src.Name}: precise collision failed to build; using the imported hull`)
-	return src:Clone()
+	warn(`[HubV2] {src.Name}: precise collision failed to build ({tostring(made)}); keeping the imported hull`)
+	return nil
 end
 
 local function place(p: BasePart, centre: Vector3, collide: boolean, parent: Instance)
@@ -88,6 +89,12 @@ function HubV2.build(hub: Instance, origin: Vector3): Model?
 	model.Parent = hub
 
 	local placed, missing = 0, {}
+	local pieceCount = 0
+	for _ in V2.Pieces do
+		pieceCount += 1
+	end
+	-- the loading screen waits for this many hub pieces before anything else
+	model:SetAttribute("PieceCount", pieceCount)
 	for name, info in V2.Pieces do
 		local src = template("HUB_CROSSROADS_V2", prefabs, name)
 		if not src then
@@ -96,8 +103,22 @@ function HubV2.build(hub: Instance, origin: Vector3): Model?
 		end
 		-- The levitator hangs under everything and is never stood on.
 		local collide = name ~= "HUB_LEVITATOR"
-		local p = if collide then walkable(src) else src:Clone()
+		-- SHOWN AT ONCE, SOLID LATER. The imported piece goes in straight
+		-- away so the hub is never missing; the precise-collision copy is
+		-- built in the background and swapped in when it is ready. Building
+		-- it inline held the whole hub back (and hid it) while Roblox made
+		-- six collision hulls one after another.
+		local p = src:Clone()
 		place(p, origin + info.Centre, collide, model)
+		if collide then
+			task.spawn(function()
+				local solid = walkable(src)
+				if solid and p.Parent then
+					place(solid, p.CFrame.Position, true, model)
+					p:Destroy()
+				end
+			end)
+		end
 		placed += 1
 	end
 
