@@ -70,6 +70,41 @@ local function place(p: BasePart, centre: Vector3, collide: boolean, parent: Ins
 end
 
 -- How the game animates each kind (HubEffects reads these attributes).
+-- GLOW THAT LIGHTS (owner, 2026-09-24: "lanterns and glowing parts should emit
+-- just a little bit of light"). A small PointLight on each glowing piece, by
+-- name; colour from what it is. Kept short-ranged and dim: there are dozens.
+local LIGHTS: { { string | Color3 | number } } = {
+	{ "lamp_glow", Color3.fromRGB(124, 245, 224), 14, 0.9 },
+	{ "brazier_flame", Color3.fromRGB(255, 160, 80), 22, 1.4 },
+	{ "stall_lantern", Color3.fromRGB(255, 170, 90), 14, 1.0 },
+	{ "engine_wisp", Color3.fromRGB(180, 150, 255), 18, 1.0 },
+	{ "beacon_shard", Color3.fromRGB(147, 235, 255), 22, 1.2 },
+	{ "keel_core_", Color3.fromRGB(147, 235, 255), 40, 1.2 },
+	{ "obelisk_crystal", Color3.fromRGB(200, 170, 255), 14, 0.8 },
+	{ "hall_heart", Color3.fromRGB(255, 170, 220), 26, 1.2 },
+	{ "oculus_crystal", Color3.fromRGB(147, 235, 255), 26, 1.2 },
+	{ "shop_coin", Color3.fromRGB(255, 210, 120), 24, 1.2 },
+	{ "training_emblem", Color3.fromRGB(255, 160, 80), 18, 0.9 },
+	{ "thruster_flame", Color3.fromRGB(147, 235, 255), 30, 1.4 },
+	{ "__flame", Color3.fromRGB(255, 160, 80), 12, 0.9 },
+	{ "__lift", Color3.fromRGB(147, 235, 255), 14, 0.7 },
+	{ "__glow", Color3.fromRGB(124, 245, 224), 20, 1.0 },
+}
+
+local function addLight(p: BasePart)
+	for _, l in LIGHTS do
+		if string.find(p.Name, l[1] :: string, 1, true) then
+			local light = Instance.new("PointLight")
+			light.Color = l[2] :: Color3
+			light.Range = l[3] :: number
+			light.Brightness = l[4] :: number
+			light.Shadows = false
+			light.Parent = p
+			return
+		end
+	end
+end
+
 local KIND_ATTRS: { [string]: { [string]: any } } = {
 	Spin = { SpinSpeed = 0.5, SpinAxis = "Y" },
 	Bob = { BobStuds = 1.2, BobSeconds = 4.5 },
@@ -133,6 +168,7 @@ function HubV2.build(hub: Instance, origin: Vector3): Model?
 		end
 		local p = src:Clone()
 		place(p, origin + info.Centre, false, moving)
+		addLight(p)
 		local attrs = KIND_ATTRS[info.Kind]
 		if attrs then
 			for k, v in attrs do
@@ -250,6 +286,7 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 				q:SetAttribute("SubPhase", sub.Phase)
 				q.CFrame = p.CFrame * CFrame.new(sub.Offset * s)
 				q.Parent = p
+				addLight(q)
 			end
 			n += 1
 		end

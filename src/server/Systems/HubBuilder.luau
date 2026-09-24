@@ -166,10 +166,12 @@ local function applyLighting()
 	sky.Parent = Lighting
 
 	local atmosphere = Lighting:FindFirstChildOfClass("Atmosphere") or Instance.new("Atmosphere")
-	atmosphere.Density = 0.3
-	atmosphere.Haze = 2
-	atmosphere.Color = theme.ColorShiftTop
-	atmosphere.Decay = theme.FogColor
+	atmosphere.Density = theme.AtmosphereDensity or 0.3
+	atmosphere.Offset = theme.AtmosphereOffset or 0
+	atmosphere.Haze = theme.AtmosphereHaze or 2
+	atmosphere.Glare = theme.AtmosphereGlare or 0
+	atmosphere.Color = theme.AtmosphereColor or theme.ColorShiftTop
+	atmosphere.Decay = theme.AtmosphereDecay or theme.FogColor
 	atmosphere.Parent = Lighting
 
 	local bloom = Lighting:FindFirstChildOfClass("BloomEffect") or Instance.new("BloomEffect")
