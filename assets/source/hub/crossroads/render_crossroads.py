@@ -153,3 +153,16 @@ def render_all(groups, engine_blend, engine_scale, out):
     rows = (len(orb) + cols - 1) // cols
     cx, cy = cell * (cols - 1) / 2, -cell * (rows - 1) / 2
     shot("11_orbiters", (cx + 60, cy - 330, 260), (cx, cy, 0), 28, out)
+    for o in orb:
+        o.hide_render = True
+    ships = [o for o in orb if "ship" in o.name or "whale" in o.name]
+    x = 0.0
+    for o in ships:
+        o.hide_render = False
+        cs = [Vector(c) for c in o.bound_box]
+        c = sum(cs, Vector()) / 8
+        w = o.dimensions.x
+        o.location = (x + w / 2 - c.x, -c.y, -c.z)
+        x += w + 25
+    shot("14_ships", (x / 2, -520, 120), (x / 2, 0, 10), 22, out)
+    shot("15_carrier", (ships[-2].location.x + 160, -190, 90), (ships[-2].location.x, 0, 20), 28, out)

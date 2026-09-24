@@ -313,8 +313,7 @@ def build_levitator():
         tube(p, "Basalt", [(math.cos(a) * 26, math.sin(a) * 26, -60), (math.cos(a) * 44, math.sin(a) * 44, -95),
                            (math.cos(a) * 56, math.sin(a) * 56, zc)], [3.2, 2.8, 3.4], n=6)
         box(p, "Gold", math.cos(a) * 44, math.sin(a) * 44, -95, 7.5, 7.5, 1.2, rz=math.degrees(a))
-    frustum(p, "Basalt", 24, 60, 60, zc - 3, zc + 3)                  # the cradle: a ring deck
-    frustum(p, "Basalt", 24, 48, 48, zc - 3.01, zc + 3.01)            # (inner edge, overdrawn below)
+    # the cradle: an OPEN ring, so the heart rises through it touching nothing
     sector(p, "Basalt", 48, 60, zc - 3, zc + 3, 0, 360, 32)
     sector(p, "Gold", 59, 61, zc + 3, zc + 4, 0, 360, 32)
     sector(p, "Cosmic", 60.5, 61.2, zc - 1.5, zc + 1.5, 0, 360, 32)
@@ -327,8 +326,13 @@ def build_levitator():
         crystal(anim(p, "thruster_flame", "Flicker"), ("Shard", "Violet")[k % 2], x, y, zc - 20.5, 3.0, 0.1, 22, n=8)
     # the heart
     crystal(p, "Shard", 0, 0, zc - 50, 34, 60, 150, n=8, rz=11)
-    frustum(p, "Gold", 8, 12, 14, zc + 18, zc + 22)                   # the cap it hangs from
+    frustum(p, "Gold", 8, 12, 14, zc + 18, zc + 22)                   # the cap above it, on the stem
     tube(p, "Iron", [(0, 0, -82), (0, 0, zc + 22)], [5, 5], n=8)
+    sector(p, "Gold", 30, 34, zc + 12, zc + 14, 0, 360, 24)            # a hollow halo round the tip
+    for k in range(4):
+        a = math.radians(45 + 90 * k)
+        tube(p, "Iron", [(math.cos(a) * 32, math.sin(a) * 32, zc + 13), (math.cos(a) * 48, math.sin(a) * 48, zc)],
+             [0.9, 0.9], n=5)
     for R, rx, ry, col in ((52, 0, 0, "Gold"), (46, 16, 0, "GoldBright"), (40, 0, -16, "Cosmic")):
         torus(anim(p, "gyro_ring", "Spin"), col, R, 1.4 if col != "Cosmic" else 0.8, 0, 0, zc - 60, n=40, m=4,
               rx=rx, ry=ry)
@@ -1001,45 +1005,302 @@ def prop_isle_ruin():
     return p
 
 
-def prop_airship():
-    p = Piece("hubprop_airship", "a trade galleon under a gas envelope; bow along +X")
-    lump(p, "Wood", [(0, -30), (3.5, -26), (6.5, -16), (7.5, 0), (7, 16), (4, 26), (0, 32)], 10, "hull", 0.02,
-         sy=0.8, bands=["Wood", "Wood", "Gold", "Wood", "Wood", "Wood"])
-    for q in p.verts:                               # the lathe runs along Z: lay it along X, keel down
-        q.x, q.z = q.z, q.x
-    for i in range(len(p.verts)):
+# ---- Ships and the whale ---------------------------------------------------------
+# Every vessel's bow points along +X, keel down, deck at z ~ 0. The server picks
+# a random handful per hub instance; low graphics settings pick fewer.
+
+def lathe_x(p, mat, profile, n, seed, sy=0.8, flat_top=None, x0=0.0, z0=0.0, jitter=0.02, bands=None):
+    """A lathe laid along X (profile: (radius, x)). flat_top squashes everything
+    above the waterline into a deck line; returns nothing, edits in place."""
+    start = len(p.verts)
+    lump(p, mat, profile, n, seed, jitter, sy=sy, bands=bands)
+    for i in range(start, len(p.verts)):
         v = p.verts[i]
-        if v.z > 0.5:
-            v.z = 0.5 + (v.z - 0.5) * 0.35           # flatten the top into a deck
-    box(p, "Wood", 0, 0, 1.4, 52, 9.4, 0.6)                                     # deck
-    box(p, "Gold", 0, 0, 2.1, 54, 10.2, 0.4)
-    lump(p, "Canvas", [(0, -34), (6, -30), (10, -18), (11, 0), (10, 18), (6, 30), (0, 36)], 12, "envelope",
-         0.0, sy=1.0)
-    for q in p.verts[-(12 * 5 + 2):]:
-        q.x, q.z = q.z, q.x + 26
-    for x in (-18, 0, 18):                                                     # rigging
+        x, z = v.z, v.x
+        if flat_top is not None and z > flat_top:
+            z = flat_top                              # a flat deck line: nothing bulges over the deck
+        v.x, v.z = x + x0, z + z0
+
+
+def rails(p, x0, x1, half_w, z, step=3.0, h=1.4):
+    x = x0
+    while x <= x1:
         for s in (-1, 1):
-            tube(p, "Iron", [(x, s * 4, 2), (x, s * 7, 17)], [0.2, 0.2], n=3)
-    for s in (-1, 1):                                                          # side sails
-        box(p, "Marble", -4, s * 12, 7, 18, 0.4, 9, rx=s * 20)
-        frustum(p, "Iron", 6, 1.2, 1.2, -2, 2, M=xf(-30, s * 6, 3, 0, 0, 90))  # propellers
-        box(p, "BasaltLight", -32.4, s * 6, 3, 0.4, 1.0, 7)
-    box(p, "Basalt", -24, 0, 5, 10, 7, 6)                                      # the cabin
-    box(p, "Gold", -24, 0, 8.3, 11, 8, 0.6)
-    crystal(p, "Ember", 30, 0, 3, 0.8, 1.2, 1.2, n=6)                         # bow lantern
+            box(p, "Gold", x, s * half_w, z + h / 2, 0.25, 0.25, h)
+        x += step
+    for s in (-1, 1):
+        box(p, "Gold", (x0 + x1) / 2, s * half_w, z + h, x1 - x0, 0.25, 0.25)
+
+
+def sail(p, mat, x, z0, h, w, belly=1.2, rz=0.0):
+    """A square sail bellied forward: three panels on a curve, with yards."""
+    with frame(p, xf(x, 0, 0, rz)):
+        for k, (dy0, dy1) in enumerate(((-w / 2, -w / 6), (-w / 6, w / 6), (w / 6, w / 2))):
+            bx = belly * (0.6 if k != 1 else 1.0)
+            box(p, mat, bx, (dy0 + dy1) / 2, z0 + h / 2, 0.25, dy1 - dy0 + 0.05, h)
+        box(p, "Wood", 0.2, 0, z0 + h + 0.3, 0.5, w + 1.5, 0.5)
+        box(p, "Wood", 0.2, 0, z0 - 0.3, 0.5, w + 1.0, 0.4)
+
+
+def mast(p, x, h, sails_=((0.25, 0.45), (0.62, 0.3)), w=10.0, mat="Marble", crow=True):
+    tube(p, "Wood", [(x, 0, 0), (x, 0, h)], [0.55, 0.35], n=6)
+    for f0, fh in sails_:
+        sail(p, mat, x + 0.8, h * f0, h * fh, w * (1.0 - f0 * 0.5))
+    if crow:
+        frustum(p, "Wood", 8, 1.4, 1.6, h * 0.8, h * 0.8 + 1.0, x, 0)
+    crystal(p, "Shard", x, 0, h + 1.2, 0.5, 1.2, 0.3, n=5)
+    tube(p, "Canvas", [(x, 0, h - 0.5), (x - 4, 0, h - 1.5)], [0.3, 0.05], n=3)  # pennant
+
+
+def envelope(p, L, R, z, mat="Canvas", x0=0.0, ribs=True):
+    lathe_x(p, mat, [(0, -L / 2), (R * 0.55, -L * 0.42), (R * 0.9, -L * 0.25), (R, 0), (R * 0.92, L * 0.25),
+                     (R * 0.6, L * 0.42), (0, L / 2)], 14, "env" + str(L), sy=1.0, x0=x0, z0=z, jitter=0.0)
+    if ribs:
+        for t in (-0.3, -0.1, 0.1, 0.3):
+            rr = R * (1 - abs(t) * 1.2) + 0.15
+            torus(p, "Gold", rr, 0.2, x0 + t * L, 0, z, n=16, m=3, ry=90)
+    for s in (-1, 1):                                              # tail fins
+        box(p, mat, x0 - L * 0.44, s * R * 0.55, z, L * 0.12, R * 0.9, 0.3, rz=s * 8)
+    box(p, mat, x0 - L * 0.44, 0, z + R * 0.55, L * 0.12, 0.3, R * 0.9)
+
+
+def prop_rotor(p, x, y, z, r, axis="x"):
+    rot = (0, 0, 90) if axis == "x" else (0, 0, 0)
+    frustum(p, "Iron", 8, r * 0.25, r * 0.25, -r * 0.4, r * 0.4, M=xf(x, y, z, rot[0], rot[1], rot[2]))
+    for k in range(3):
+        a = 120 * k
+        with frame(p, xf(x, y, z, 0, a if axis == "x" else 0, 0 if axis == "x" else 0)):
+            box(p, "Wood", 0, 0, r * 0.55, 0.3, r * 0.35, r * 0.9)
+
+
+def lift_crystals(p, x0, x1, z, n=3, col="Shard"):
+    for k in range(n):
+        x = x0 + (x1 - x0) * k / max(1, n - 1)
+        crystal(p, col, x, 0, z, 1.2, 0.3, 2.6, n=6)
+
+
+def prop_ship_sloop():
+    p = Piece("hubprop_ship_sloop", "small: a one-masted courier sloop")
+    lathe_x(p, "Wood", [(0, -9), (2.2, -7), (3.2, -2), (3.3, 3), (2.4, 8), (0, 11)], 12, "sloop", flat_top=0.4,
+            bands=["Wood", "Wood", "Gold", "Wood", "Wood"])
+    box(p, "Wood", 0.5, 0, 0.6, 17, 4.6, 0.3)
+    rails(p, -7, 8, 2.1, 0.75, 2.5, 1.0)
+    mast(p, 1.5, 14, ((0.2, 0.55),), w=9)
+    box(p, "Wood", -8.6, 0, -0.8, 1.6, 0.3, 3.2)                  # rudder
+    crystal(p, "Rose", 11.4, 0, 0.6, 0.5, 0.4, 0.9, n=5)           # figurehead
+    lift_crystals(p, -5, 5, -2.8, 2)
     return p
 
 
-def prop_skiff():
-    p = Piece("hubprop_skiff", "small courier skiff with a sail; bow along +X")
-    lump(p, "Wood", [(0, -9), (2.2, -6), (2.8, 0), (2.2, 6), (0, 10)], 8, "skiff", 0.02, sy=0.8)
-    for q in p.verts:
-        q.x, q.z = q.z, q.x * 0.6
-    box(p, "Wood", 0, 0, 1.0, 15, 3.4, 0.3)
-    tube(p, "Wood", [(1, 0, 1), (1, 0, 13)], [0.3, 0.2], n=4)
-    box(p, "Marble", -1.6, 0, 7.5, 5.4, 0.25, 9.5)
-    box(p, "Gold", -1.6, 0, 12.4, 6, 0.4, 0.4)
-    crystal(p, "Shard", -8.5, 0, 0.4, 0.8, 0.6, 1.4, n=6)                      # the lift crystal at the stern
+def prop_ship_cutter():
+    p = Piece("hubprop_ship_cutter", "small: a patrol cutter with wing-sails and twin rotors")
+    lathe_x(p, "Basalt", [(0, -11), (2.6, -9), (3.6, -3), (3.6, 4), (2.2, 10), (0, 13)], 12, "cutter", flat_top=0.5,
+            bands=["Basalt", "Basalt", "Gold", "Basalt", "Basalt"])
+    box(p, "BasaltLight", 0, 0, 0.7, 20, 5.4, 0.3)
+    box(p, "Basalt", -3, 0, 2.2, 6, 4, 3)                          # wheelhouse
+    box(p, "Gold", -3, 0, 3.8, 6.4, 4.4, 0.3)
+    box(p, "Shard", -0.1, 0, 2.6, 0.2, 3.2, 1.2)                   # its window
+    for s in (-1, 1):                                              # wing-sails
+        with frame(p, xf(-1, s * 3.2, 1.0, 0, s * -20)):
+            box(p, "Canvas", 0, s * 5, 0, 9, 10, 0.25)
+            box(p, "Gold", 4.6, s * 5, 0, 0.4, 10.4, 0.4)
+        prop_rotor(p, -10.5, s * 2.4, 0.8, 2.2)
+    rails(p, 1, 10, 2.4, 0.85, 3.0, 0.9)
+    tube(p, "Iron", [(10, 0, 1), (13.5, 0, 1.4)], [0.35, 0.25], n=5)     # a bow lamp
+    crystal(p, "Ember", 13.8, 0, 1.4, 0.5, 0.4, 0.4, n=6)
+    lift_crystals(p, -7, 7, -3.2, 3, "Violet")
+    return p
+
+
+def prop_ship_trawler():
+    p = Piece("hubprop_ship_trawler", "small: a cloud-trawler with a boom and hanging nets")
+    lathe_x(p, "Wood", [(0, -10), (3, -8), (4.2, -2), (4.2, 4), (3.2, 9), (0, 11)], 12, "trawler", flat_top=0.5,
+            sy=0.9, bands=["Wood", "Wood", "CanvasTeal", "Wood", "Wood"])
+    box(p, "Wood", 0, 0, 0.7, 18, 6.6, 0.3)
+    box(p, "Wood", -5, 0, 2.4, 5, 5, 3.4)                          # cabin
+    frustum(p, "CanvasTeal", 4, 4.2, 0.6, 4.1, 6.2, -5, 0, rot=45)
+    tube(p, "Iron", [(-6, 1.5, 4), (-6, 1.5, 7.5)], [0.4, 0.4], n=6)      # stovepipe
+    tube(p, "Wood", [(3, 0, 0.8), (3, 0, 11)], [0.4, 0.3], n=6)            # mast
+    tube(p, "Wood", [(3, 0, 9), (3, 8, 5)], [0.25, 0.2], n=4)              # the boom, out to starboard
+    for k in range(5):                                                     # the net, hanging
+        t = k / 4
+        tube(p, "Cloud", [(1.5 + t * 3, 8, 5), (1.8 + t * 2.6, 8.4, 0), (2.5 + t, 8.2, -4)], [0.12, 0.12, 0.1], n=3)
+    orb(p, "Cloud", 3, 8.2, -4.5, 1.6, n=6)                                # a catch of cloud
+    crate_ = [(6, 1.8), (7.4, -1.6), (-1, -2.2)]
+    for x, y in crate_:
+        box(p, "Wood", x, y, 1.6, 1.8, 1.8, 1.8, rz=x * 7)
+    rails(p, 1, 9, 3.1, 0.85, 2.6, 0.9)
+    lift_crystals(p, -6, 6, -3.6, 3)
+    return p
+
+
+def prop_ship_cog():
+    p = Piece("hubprop_ship_cog", "small: a merchant cog under a small gas envelope")
+    lathe_x(p, "Wood", [(0, -12), (3.4, -10), (4.8, -3), (4.8, 4), (3.6, 10), (0, 13)], 14, "cog", flat_top=0.6,
+            sy=0.85, bands=["Wood", "Wood", "Wood", "Wood", "Wood", "Wood"])
+    box(p, "Wood", 0, 0, 0.8, 22, 7.4, 0.3)
+    box(p, "Wood", -8, 0, 2.6, 5, 7, 3.6)                          # sterncastle
+    box(p, "Gold", -8, 0, 4.5, 5.4, 7.4, 0.3)
+    rails(p, -10, -5.6, 3.4, 4.6, 1.5, 0.9)
+    envelope(p, 22, 5.2, 14, "Canvas", 1)
+    for x in (-6, 1, 8):
+        for s in (-1, 1):
+            tube(p, "Iron", [(x, s * 3.2, 1), (x, s * 4.2, 9.4)], [0.15, 0.15], n=3)
+    for k, (x, y) in enumerate(((2, 1.5), (4.5, -1.8), (6.8, 1.2), (0, -1.6))):   # cargo
+        box(p, ("Wood", "CanvasTeal", "Wood", "Canvas")[k], x, y, 1.8, 2.2, 2.2, 2.0, rz=k * 13)
+    rails(p, -4, 10, 3.4, 0.95, 2.8, 1.0)
+    prop_rotor(p, -12.8, 0, 0.8, 2.6)
+    crystal(p, "Ember", 12.6, 0, 1.8, 0.6, 0.5, 0.5, n=6)
+    lift_crystals(p, -8, 8, -4.2, 3)
+    return p
+
+
+def prop_ship_yacht():
+    p = Piece("hubprop_ship_yacht", "small: a noble's pleasure yacht, white and gold, rose sails")
+    lathe_x(p, "Marble", [(0, -12), (2.6, -10), (3.8, -4), (3.8, 3), (2.6, 10), (0, 15)], 14, "yacht", flat_top=0.5,
+            bands=["Marble", "Marble", "Gold", "Marble", "Marble"])
+    box(p, "Walkway", 0.5, 0, 0.7, 23, 5.6, 0.3)
+    frustum(p, "Marble", 8, 3.2, 3.2, 0.8, 3.2, -6, 0)             # a round pavilion aft
+    frustum(p, "Canvas", 8, 4.0, 0.4, 3.2, 6.2, -6, 0)
+    crystal(p, "Rose", -6, 0, 6.8, 0.4, 0.8, 0.2, n=4)
+    mast(p, 3, 16, ((0.22, 0.32), (0.58, 0.28)), w=8, mat="Rose")
+    rails(p, -1, 12, 2.4, 0.85, 2.4, 1.0)
+    for s in (-1, 1):
+        torus_arc(p, "Gold", 2.2, 0.2, 14, s * 0.2, 1.5, 0, 180, n=6, m=3, rx=90)   # bow scrolls
+    crystal(p, "Shard", 15.6, 0, 1.2, 0.6, 0.5, 1.1, n=6)
+    lift_crystals(p, -8, 8, -3.2, 3, "Rose")
+    return p
+
+
+def prop_ship_galleon():
+    p = Piece("hubprop_ship_galleon", "LARGE: a three-masted sky galleon, twin envelopes, 120 studs")
+    lathe_x(p, "Wood", [(0, -52), (9, -46), (15, -30), (17, -8), (16.5, 14), (13, 34), (6, 50), (0, 60)], 18,
+            "galleon", flat_top=2.0, sy=0.75, bands=["Wood", "Wood", "Wood", "Wood", "Wood", "Wood", "Wood"])
+    box(p, "Wood", 2, 0, 2.4, 100, 24, 0.5)
+    for s in (-1, 1):
+        box(p, "Gold", 2, s * 12.6, 0.4, 96, 0.3, 0.6)
+    # sterncastle, three decks of windows
+    box(p, "Wood", -42, 0, 7.5, 18, 22, 10)
+    box(p, "Gold", -42, 0, 12.8, 19, 23, 0.6)
+    for k in range(5):
+        box(p, "Ember", -51.2, -8 + k * 4, 6.5, 0.3, 2.0, 2.4)
+        box(p, "Ember", -51.2, -8 + k * 4, 10, 0.3, 2.0, 1.6)
+    rails(p, -50, -34, 10.5, 13.1, 3, 1.2)
+    box(p, "Wood", -52, 0, -2, 4, 1, 12)                              # rudder
+    # forecastle
+    box(p, "Wood", 40, 0, 4.6, 14, 18, 4.4)
+    box(p, "Gold", 40, 0, 6.9, 14.6, 18.6, 0.5)
+    tube(p, "Wood", [(46, 0, 5), (68, 0, 12)], [0.8, 0.4], n=6)       # bowsprit
+    crystal(p, "Rose", 60, 0, 3, 1.6, 2.4, 3.2, n=6)                  # figurehead
+    for x, h in ((-20, 58), (6, 70), (30, 52)):
+        mast(p, x, h, ((0.18, 0.26), (0.47, 0.22), (0.72, 0.16)), w=30)
+    envelope(p, 96, 16, 92, "Canvas", 4)                              # the envelope above the masts
+    # rigging from masts to rails
+    for x, h in ((-20, 58), (6, 70), (30, 52)):
+        for s in (-1, 1):
+            tube(p, "Iron", [(x, 0, h * 0.95), (x - 6, s * 11.5, 3)], [0.15, 0.15], n=3)
+            tube(p, "Iron", [(x, 0, h), (x, 0, 76)], [0.2, 0.2], n=3)
+    # gun ports and lanterns along both sides
+    for k in range(9):
+        x = -32 + k * 8
+        for s in (-1, 1):
+            box(p, "Basalt", x, s * 12.3, -1.5, 3, 0.4, 2.2)
+            box(p, "Gold", x, s * 12.4, -1.5, 3.4, 0.2, 0.3)
+    rails(p, -32, 32, 11.5, 2.4, 4, 1.4)
+    for s in (-1, 1):                                                 # side rotors on outriggers
+        tube(p, "Iron", [(-30, s * 11, 1), (-30, s * 20, 3)], [0.6, 0.5], n=5)
+        prop_rotor(p, -32, s * 20, 3, 6)
+    lift_crystals(p, -36, 36, -14, 5)
+    crystal(p, "Shard", 0, 0, -20, 5, 0.5, 14, n=8)                   # the keel stone
+    return p
+
+
+def prop_ship_carrier():
+    p = Piece("hubprop_ship_carrier", "LARGE: a sky-carrier: an armoured flagship with a flight deck, 200 studs")
+    lathe_x(p, "Basalt", [(0, -90), (16, -84), (26, -60), (30, -20), (30, 30), (24, 70), (10, 96), (0, 108)], 20,
+            "carrier", flat_top=3.0, sy=0.7, bands=["Basalt", "Basalt", "BasaltLight", "BasaltLight", "Basalt", "Basalt",
+                                                    "Basalt"])
+    box(p, "Walkway", 10, 0, 3.4, 170, 36, 0.6)                     # the flight deck
+    box(p, "Inlay", 10, 0, 3.75, 150, 1.2, 0.1)
+    for k in range(9):
+        box(p, "Gold", -60 + k * 18, 0, 3.8, 5, 0.6, 0.1)
+    # the island: a stepped tower off to port
+    for k, (w, h) in enumerate(((34, 10), (26, 9), (18, 8), (10, 10))):
+        z = 4 + sum(hh for _, hh in ((34, 10), (26, 9), (18, 8), (10, 10))[:k])
+        box(p, ("Basalt", "BasaltLight", "Basalt", "BasaltLight")[k], -30 + k * 2, -12, z + h / 2, w, 10 - k, h)
+        box(p, "Gold", -30 + k * 2, -12, z + h + 0.2, w + 0.4, 10.4 - k, 0.4)
+        box(p, "Shard", -30 + k * 2 + w / 2 + 0.05, -12, z + h * 0.6, 0.2, 7 - k, h * 0.3)
+    tube(p, "Iron", [(-26, -12, 41), (-26, -12, 60)], [0.8, 0.4], n=6)
+    crystal(p, "Shard", -26, -12, 62, 1.6, 3, 1, n=6)
+    torus(p, "Gold", 4, 0.4, -26, -12, 52, n=12, m=3)
+    # the envelope: one long armoured gas-bag above everything
+    envelope(p, 180, 24, 80, "Basalt", 0)
+    for x in (-60, -20, 20, 60):
+        for s in (-1, 1):
+            tube(p, "Iron", [(x, s * 16, 4), (x, s * 18, 58)], [0.8, 0.6], n=5)
+    # turrets, fore and aft
+    for x in (60, -70):
+        frustum(p, "BasaltLight", 10, 6, 5, 4, 8, x, 12)
+        frustum(p, "Gold", 10, 5, 5, 8, 8.6, x, 12)
+        tube(p, "Iron", [(x, 12, 7), (x + (10 if x > 0 else -10), 12, 8.5)], [0.9, 0.7], n=6)
+    # engine nacelles: four big rotors aft on pylons
+    for s in (-1, 1):
+        for x in (-78, -50):
+            tube(p, "Basalt", [(x, s * 22, 0), (x, s * 38, 6)], [1.6, 1.4], n=6)
+            frustum(p, "Iron", 10, 5, 4, -8, 8, M=xf(x, s * 38, 6, 0, 0, 90))
+            prop_rotor(p, x - 9, s * 38, 6, 9)
+            crystal(p, "Cosmic", x + 8.5, s * 38, 6, 2.5, 0.2, 0.2, n=6)
+    # the prow ram and the carrier's great lift stones in a row under the keel
+    frustum(p, "Gold", 6, 4, 0, 96, 116, M=xf(0, 0, -6, 0, 0, 90))
+    for k in range(5):
+        crystal(p, ("Shard", "Violet")[k % 2], -64 + k * 32, 0, -24, 6, 0.5, 18, n=8)
+    for k in range(12):                                             # portholes, both sides
+        for s in (-1, 1):
+            orb(p, "Ember", -70 + k * 13, s * 29.6, -4, 1.1, n=6)
+    return p
+
+
+def prop_sky_whale():
+    p = Piece("hubprop_sky_whale", "a sky whale, head along +X, crystals grown on its back")
+    body = [(0, -46), (2.2, -42), (4.5, -36), (7.5, -28), (10.5, -18), (12.8, -8), (13.6, 2), (13.4, 12),
+            (12.2, 21), (10.0, 28), (7.2, 33), (4.0, 36.5), (0, 38)]
+    lathe_x(p, "Whale", body, 16, "whale2", sy=0.82, jitter=0.02)
+    for i, f in enumerate(p.faces):                                    # pale throat and belly, with grooves
+        zc = sum(p.verts[j].z for j in f) / len(f)
+        xc = sum(p.verts[j].x for j in f) / len(f)
+        if zc < -4.5:
+            p.fmat[i] = "WhaleBelly"
+            if xc > 8 and (int(sum(p.verts[j].y for j in f) / len(f) * 1.2) % 2 == 0):
+                p.fmat[i] = "CloudShade"
+    # the mouth line and eyes
+    tube(p, "RockDeep", [(37, 0, -2.2), (30, 8.2, -3.2), (18, 11.4, -3.8)], [0.25, 0.25, 0.15], n=4)
+    tube(p, "RockDeep", [(37, 0, -2.2), (30, -8.2, -3.2), (18, -11.4, -3.8)], [0.25, 0.25, 0.15], n=4)
+    for s in (-1, 1):
+        orb(p, "WhaleBelly", 24, s * 10.2, 1.2, 1.3, n=8)
+        orb(p, "Shard", 25, s * 10.9, 1.3, 0.6, n=6)
+    # pectoral flippers: long, jointed, swept back
+    for s in (-1, 1):
+        tube(p, "Whale", [(14, s * 10, -5), (6, s * 20, -9), (-4, s * 27, -12)], [3.0, 2.0, 0.4], n=6)
+        tube(p, "WhaleBelly", [(13, s * 10.4, -6.2), (5.5, s * 20.2, -10), (-4, s * 27, -12.4)], [2.0, 1.2, 0.3], n=5)
+    # the tail stock and flukes
+    for s in (-1, 1):
+        tube(p, "Whale", [(-44, 0, 0), (-50, s * 8, 1), (-56, s * 15, 2.4), (-60, s * 17, 3)], [2.2, 1.8, 1.0, 0.1], n=5)
+        tube(p, "Whale", [(-46, 0, 0), (-54, s * 6, 0.6), (-58, s * 11, 1.8)], [1.6, 1.2, 0.4], n=5)
+    box(p, "Whale", -48, 0, 0, 6, 12, 1.2)
+    # a dorsal ridge of crystal and barnacle stones
+    rng = random.Random("whale crystals")
+    for k in range(11):
+        x = -30 + k * 5.5
+        zt = 12.6 - abs(x - 4) * 0.12
+        crystal(p, ("Shard", "Violet", "Rose")[k % 3], x, rng.uniform(-1.5, 1.5), zt, 1.0 + (k % 3) * 0.4,
+                3 + (k % 4) * 1.4, 1.2, n=5, rz=k * 20)
+    for k in range(18):
+        a = rng.uniform(-1.2, 1.2)
+        x = rng.uniform(-30, 30)
+        r = 12.5 - abs(x) * 0.08
+        orb(p, "MarbleDim", x, math.sin(a) * r * 0.82, math.cos(a) * r - 0.4, rng.uniform(0.4, 0.8), n=5)
+    # a blowhole mist crystal
+    crystal(p, "Cloud", 22, 0, 13.4, 0.8, 2.2, 0.2, n=6)
     return p
 
 
@@ -1086,26 +1347,6 @@ def prop_sky_lantern():
     return p
 
 
-def prop_sky_whale():
-    p = Piece("hubprop_sky_whale", "a sky whale; head along +X")
-    lump(p, "Whale", [(0, -44), (3, -36), (9, -22), (12, -4), (12.5, 8), (10, 22), (5, 32), (0, 36)], 12, "whale",
-         0.03, sy=0.85, bands=["Whale", "Whale", "Whale", "Whale", "Whale", "Whale", "Whale"])
-    n0 = len(p.faces)
-    for q in p.verts:
-        q.x, q.z = q.z, q.x
-    for i, f in enumerate(p.faces):                  # the belly, pale
-        if sum(p.verts[j].z for j in f) / len(f) < -4:
-            p.fmat[i] = "WhaleBelly"
-    for s in (-1, 1):                                                  # flippers
-        box(p, "Whale", 14, s * 14, -5, 10, 12, 1.2, rz=s * 30, rx=s * 15)
-    box(p, "Whale", -44, 0, 0, 8, 26, 1.2, rz=0)                      # the flukes
-    for s in (-1, 1):
-        crystal(p, "Shard", 22, s * 8.6, 3, 0.9, 0.6, 0.6, n=5)        # eyes
-    for k in range(5):                                                 # crystals grown on its back
-        crystal(p, ("Shard", "Violet")[k % 2], -8 + k * 6, (k % 2 - 0.5) * 3, 11, 1.4, 4 + k % 3, 1.0, n=5)
-    return p
-
-
 def prop_waystone():
     p = Piece("hubprop_waystone", "a drifting waystone circled by gold rings")
     frustum(p, "Basalt", 4, 2.6, 1.6, -10, 10, rot=45)
@@ -1123,7 +1364,9 @@ def prop_waystone():
 
 HUB_BUILDERS = (build_platform, build_levitator, build_hall, build_archives, build_shop, build_training)
 BACKDROP_BUILDERS = (build_backdrop_peaks, build_backdrop_mesa, build_backdrop_spires)
-PROP_BUILDERS = (prop_isle_shrine, prop_isle_grove, prop_isle_ruin, prop_airship, prop_skiff,
+PROP_BUILDERS = (prop_isle_shrine, prop_isle_grove, prop_isle_ruin,
+                 prop_ship_sloop, prop_ship_cutter, prop_ship_trawler, prop_ship_cog, prop_ship_yacht,
+                 prop_ship_galleon, prop_ship_carrier,
                  lambda: cloud("hubprop_cloud_a", "ca", 6), lambda: cloud("hubprop_cloud_b", "cb", 4),
                  prop_crystal_cluster, prop_rune_ring, prop_sky_lantern, prop_sky_whale, prop_waystone)
 

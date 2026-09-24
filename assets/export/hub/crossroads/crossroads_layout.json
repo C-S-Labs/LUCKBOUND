@@ -18,7 +18,7 @@
   },
   "HUB_LEVITATOR": {
    "group": "Hub",
-   "tris": 2908,
+   "tris": 2984,
    "anim": null,
    "host": null,
    "centre": [
@@ -1456,36 +1456,116 @@
     62.778
    ]
   },
-  "hubprop_airship": {
+  "hubprop_ship_sloop": {
    "group": "Orbiters",
-   "tris": 416,
+   "tris": 472,
    "anim": null,
    "host": null,
    "centre": [
-    1.0,
+    1.25,
     0.0,
-    14.699
+    5.5
    ],
    "size": [
-    70.0,
-    27.454,
-    44.603
+    21.3,
+    9.6,
+    21.8
    ]
   },
-  "hubprop_skiff": {
+  "hubprop_ship_cutter": {
    "group": "Orbiters",
-   "tris": 108,
+   "tris": 504,
    "anim": null,
    "host": null,
    "centre": [
-    0.35,
-    0.016,
-    5.644
+    1.46,
+    0.0,
+    -0.925
    ],
    "size": [
-    19.3,
-    4.513,
-    14.712
+    25.68,
+    25.707,
+    9.75
+   ]
+  },
+  "hubprop_ship_trawler": {
+   "group": "Orbiters",
+   "tris": 506,
+   "anim": null,
+   "host": null,
+   "centre": [
+    0.5,
+    3.021,
+    2.4
+   ],
+   "size": [
+    21.0,
+    13.559,
+    17.2
+   ]
+  },
+  "hubprop_ship_cog": {
+   "group": "Orbiters",
+   "tris": 1180,
+   "anim": null,
+   "host": null,
+   "centre": [
+    -0.32,
+    0.0,
+    6.2
+   ],
+   "size": [
+    27.04,
+    10.722,
+    26.0
+   ]
+  },
+  "hubprop_ship_yacht": {
+   "group": "Orbiters",
+   "tris": 666,
+   "anim": null,
+   "host": null,
+   "centre": [
+    2.15,
+    0.0,
+    6.3
+   ],
+   "size": [
+    28.3,
+    8.62,
+    24.2
+   ]
+  },
+  "hubprop_ship_galleon": {
+   "group": "Orbiters",
+   "tris": 3126,
+   "anim": null,
+   "host": null,
+   "centre": [
+    7.053,
+    0.0,
+    37.0
+   ],
+   "size": [
+    122.105,
+    51.442,
+    142.0
+   ]
+  },
+  "hubprop_ship_carrier": {
+   "group": "Orbiters",
+   "tris": 3550,
+   "anim": null,
+   "host": null,
+   "centre": [
+    12.301,
+    0.0,
+    31.0
+   ],
+   "size": [
+    207.398,
+    93.163,
+    146.0
    ]
   },
   "hubprop_cloud_a": {
@@ -1570,18 +1650,18 @@
   },
   "hubprop_sky_whale": {
    "group": "Orbiters",
-   "tris": 250,
+   "tris": 1918,
    "anim": null,
    "host": null,
    "centre": [
-    -6.0,
+    -11.023,
     0.0,
-    2.077
+    2.903
    ],
    "size": [
-    84.0,
-    43.307,
-    29.847
+    98.045,
+    54.646,
+    32.713
    ]
   },
   "hubprop_waystone": {
