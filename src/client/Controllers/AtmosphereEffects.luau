@@ -30,7 +30,7 @@ local AtmosphereEffects = {}
 -- Per scenario: the light on the spires, the flyers, and how they behave.
 local SCENARIO = {
 	LOCKDOWN = { Light = "atm_alarm_beacon", Glow = Color3.fromRGB(255, 60, 70), Shape = "Beat", Period = 1.6,
-		Flyer = "atm_security_probe", Count = 8, Size = 7, Speed = 26, Beams = true },
+		Flyer = "atm_security_probe", Count = 8, Size = 7, Speed = 22, Beams = true, Patrol = true },
 	SIEGE = { Light = "atm_signal_fire", Glow = Color3.fromRGB(255, 140, 60), Shape = "Flicker", Period = 0.4,
 		Flyer = "atm_raider_glider", Count = 6, Size = 12, Speed = 38 },
 	STORMHAWK = { Light = "atm_lightning_rod", Glow = Color3.fromRGB(200, 220, 255), Shape = "Strike",
@@ -99,18 +99,29 @@ end
 
 -- ---- The map: its extent and its spire tops -----------------------------------------
 
-type Map = { Stage: Instance?, Centre: Vector3, Min: Vector3, Max: Vector3, Floor: number, Tips: { Vector3 } }
+type Map = { Stage: Instance?, Centre: Vector3, Min: Vector3, Max: Vector3, Floor: number, Tips: { Vector3 },
+	Path: { Vector3 } }
 
-local function readMap(stageName: string?, centre: Vector3): Map
+local function readMap(stageName: string?, centre: Vector3, anchors: any): Map
 	local floorY = centre.Y
 	local map: Map = { Stage = nil, Centre = centre, Min = centre - Vector3.new(300, 0, 300),
-		Max = centre + Vector3.new(300, 0, 300), Floor = floorY, Tips = {} }
+		Max = centre + Vector3.new(300, 0, 300), Floor = floorY, Tips = {}, Path = {} }
 	local stages = Workspace:FindFirstChild("ExpeditionStage")
 	local stage = stages and stageName and stages:FindFirstChild(stageName)
+	map.Stage = stage
+	-- The server scanned the whole map (ExpeditionSystem.scanAnchors). Use
+	-- that: this client only holds the chunks streamed in round the player,
+	-- which is why lightning and spire lights once gathered at the spawn.
+	if type(anchors) == "table" and typeof(anchors.Min) == "Vector3" then
+		map.Min, map.Max = anchors.Min, anchors.Max
+		map.Centre = (anchors.Min + anchors.Max) * 0.5
+		map.Tips = anchors.Tips or {}
+		map.Path = anchors.Path or {}
+		return map
+	end
 	if not stage then
 		return map
 	end
-	map.Stage = stage
 	local minX, minZ, maxX, maxZ = math.huge, math.huge, -math.huge, -math.huge
 	local params = RaycastParams.new()
 	params.FilterType = Enum.RaycastFilterType.Include
@@ -182,7 +193,7 @@ local function buildLights(cfg: any, map: Map, root: Instance, lights: { any })
 		if not p then
 			return
 		end
-		p.CFrame = CFrame.new(tip + Vector3.new(0, p.Size.Y / 2 - 0.3, 0))
+		p.CFrame = CFrame.new(tip + Vector3.new(0, p.Size.Y / 2 - 0.8, 0)) -- seated into the stone, not on it
 		local glow = part({ Name = "Glow", Shape = Enum.PartType.Ball, Material = Enum.Material.Neon, Color = cfg.Glow,
 			Size = Vector3.new(1.4, 1.4, 1.4), CFrame = CFrame.new(tip + Vector3.new(0, p.Size.Y * 0.75, 0)),
 			Transparency = 0.2 }, root)
@@ -208,7 +219,7 @@ end
 -- ---- Flyers ------------------------------------------------------------------------
 
 type Mover = { Part: BasePart, Pos: Vector3, Vel: Vector3, Target: Vector3, Low: boolean, Speed: number,
-	Beam: BasePart?, Wobble: number }
+	Beam: BasePart?, Wobble: number, Patrol: boolean? }
 
 local function newMover(p: BasePart, map: Map, rng: Random, low: boolean, speed: number): Mover
 	local y = band(map, rng, low)
@@ -218,20 +229,44 @@ local function newMover(p: BasePart, map: Map, rng: Random, low: boolean, speed:
 		Beam = nil, Wobble = rng:NextNumber(0, 10) }
 end
 
+-- A patrol point: over the walkway, low enough to sweep it with the beam.
+-- The next one is chosen NEAR the last, so a patrol follows the path instead
+-- of cutting across open air.
+local function patrolPoint(map: Map, rng: Random, from: Vector3?): Vector3
+	local path = map.Path
+	local pick = path[rng:NextInteger(1, #path)]
+	if from then
+		local near = {}
+		for _, p in path do
+			local d = (Vector3.new(p.X - from.X, 0, p.Z - from.Z)).Magnitude
+			if d > 30 and d < 110 then
+				table.insert(near, p)
+			end
+		end
+		if #near > 0 then
+			pick = near[rng:NextInteger(1, #near)]
+		end
+	end
+	return pick + Vector3.new(0, rng:NextNumber(30, 44), 0)
+end
+
 local function stepMover(m: Mover, map: Map, rng: Random, dt: number)
 	local to = m.Target - m.Pos
-	if to.Magnitude < 25 then
-		m.Target = randomIn(map, rng, band(map, rng, m.Low), 40)
+	if to.Magnitude < (if m.Patrol then 8 else 25) then
+		m.Target = if m.Patrol then patrolPoint(map, rng, m.Target) else randomIn(map, rng, band(map, rng, m.Low), 40)
 		to = m.Target - m.Pos
 	end
 	-- steer: turn the velocity toward the waypoint a little each frame
 	local want = to.Unit * m.Speed
-	m.Vel = m.Vel:Lerp(want, math.clamp(dt * 0.6, 0, 1))
+	m.Vel = m.Vel:Lerp(want, math.clamp(dt * (if m.Patrol then 2 else 0.6), 0, 1))
 	m.Pos += m.Vel * dt
 	local fwd = if m.Vel.Magnitude > 0.1 then m.Vel.Unit else Vector3.new(1, 0, 0)
 	local bank = math.clamp(fwd:Cross(to.Unit).Y * 2, -0.5, 0.5)
-	-- the meshes are nose-along-+X; lookAt faces -Z, so turn them a quarter
-	m.Part.CFrame = CFrame.lookAt(m.Pos, m.Pos + fwd) * CFrame.Angles(0, math.rad(90), 0) * CFrame.Angles(bank, 0, 0)
+	-- lookAt faces -Z; a quarter turn puts the nose in front. It was +90,
+	-- which flew them tail-first (owner, 2026-09-23).
+	local flat = Vector3.new(fwd.X, 0, fwd.Z)
+	local look = if flat.Magnitude > 0.05 then flat.Unit else Vector3.new(1, 0, 0)
+	m.Part.CFrame = CFrame.lookAt(m.Pos, m.Pos + look) * CFrame.Angles(0, math.rad(-90), 0) * CFrame.Angles(bank, 0, 0)
 end
 
 local function buildFlyers(cfg: any, map: Map, root: Instance, rng: Random, movers: { Mover }, beamColour: Color3)
@@ -244,6 +279,11 @@ local function buildFlyers(cfg: any, map: Map, root: Instance, rng: Random, move
 			return
 		end
 		local m = newMover(p, map, rng, cfg.Low == true or (not cfg.Beams and i % 3 == 0), cfg.Speed)
+		if cfg.Patrol and #map.Path > 0 then
+			m.Patrol = true
+			m.Pos = patrolPoint(map, rng, nil)
+			m.Target = patrolPoint(map, rng, m.Pos)
+		end
 		if cfg.Beams then
 			-- a scanning beam out of the probe's lens, down onto the map: slim,
 			-- each its own width and shade
@@ -564,23 +604,23 @@ end
 
 -- ---- Enter / leave ------------------------------------------------------------------
 
-local last: { Env: any, Centre: Vector3, Stage: string?, Id: string? }? = nil
+local last: { Env: any, Centre: Vector3, Stage: string?, Id: string?, Anchors: any }? = nil
 
 --- Draws the atmosphere round the map. `atmosphereId` names the scenario
 --- (Content/Atmospheres key), nil for the world's own air.
-function AtmosphereEffects.enter(env: any, centre: Vector3, stageName: string?, atmosphereId: string?)
+function AtmosphereEffects.enter(env: any, centre: Vector3, stageName: string?, atmosphereId: string?, anchors: any?)
 	AtmosphereEffects.leave()
 	if type(env) ~= "table" then
 		return
 	end
-	last = { Env = env, Centre = centre, Stage = stageName, Id = atmosphereId }
+	last = { Env = env, Centre = centre, Stage = stageName, Id = atmosphereId, Anchors = anchors }
 	table.clear(missing)
 	local root = Instance.new("Folder")
 	root.Name = "LuckboundAtmosphere"
 	root.Parent = Workspace
 	folder = root
 	local rng = Random.new()
-	local map = readMap(stageName, centre)
+	local map = readMap(stageName, centre, anchors)
 	local cfg = atmosphereId and SCENARIO[atmosphereId]
 
 	buildWeather(env.Weather, root)
@@ -647,17 +687,20 @@ function AtmosphereEffects.enter(env: any, centre: Vector3, stageName: string?, 
 				if restrike > 0 then
 					restrike -= 1
 				else
-					restrike = rng:NextInteger(0, 2) -- a strike flickers 1-3 times
-					nextStrike = now + rng:NextNumber(0.6, 3.2)
+					restrike = if rng:NextNumber() < 0.6 then 0 else rng:NextInteger(1, 2) -- flickers 1-3 times
+					-- about twice the old wait, and far more uneven: lulls, then a burst
+					nextStrike = now + (if rng:NextNumber() < 0.25 then rng:NextNumber(0.4, 1.2) else rng:NextNumber(2, 9))
 				end
-				for _ = 1, rng:NextInteger(1, 3) do
-					local target = if #lights > 0 then lights[rng:NextInteger(1, #lights)].Tip
+				for _ = 1, if rng:NextNumber() < 0.7 then 1 else 2 do
+					-- anywhere on the map: a rod, or now and then the path itself
+					local target = if #lights > 0 and rng:NextNumber() < 0.7 then lights[rng:NextInteger(1, #lights)].Tip
+						elseif #map.Path > 0 then map.Path[rng:NextInteger(1, #map.Path)]
 						else randomIn(map, rng, map.Floor, 0)
 					bolt(target + Vector3.new(rng:NextNumber(-120, 120), 650, rng:NextNumber(-120, 120)), target, rng, root,
 						colour, rng:NextNumber(1.5, 3), bolts)
 					local pl = Instance.new("PointLight")
-					pl.Range = 90
-					pl.Brightness = 10
+					pl.Range = 80
+					pl.Brightness = 5
 					pl.Color = colour
 					pl.Parent = bolts[#bolts]
 				end
@@ -666,7 +709,7 @@ function AtmosphereEffects.enter(env: any, centre: Vector3, stageName: string?, 
 			local lit = now < boltUntil
 			Lighting.Brightness = (baseBrightness :: number) + (if lit then num(flashes.Brightness, 2.5) else 0)
 			if grade then
-				grade.Brightness = if lit then 0.18 else 0
+				grade.Brightness = if lit then 0.08 else 0
 				grade.TintColor = if lit then Color3.new(1, 1, 1):Lerp(colour, 0.3) else Color3.new(1, 1, 1)
 			end
 			if not lit and restrike == 0 and #bolts > 0 and now > boltUntil + 0.15 then
@@ -717,7 +760,7 @@ end
 function AtmosphereEffects.setTint(on: boolean): string
 	AtmosphereEffects.tintEnabled = on
 	if last then
-		AtmosphereEffects.enter(last.Env, last.Centre, last.Stage, last.Id)
+		AtmosphereEffects.enter(last.Env, last.Centre, last.Stage, last.Id, last.Anchors)
 	end
 	return if on then "chunk tint ON (MeshPart.Color from the atmosphere)" else "chunk tint OFF"
 end

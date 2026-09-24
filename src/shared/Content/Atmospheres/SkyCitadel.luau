@@ -548,7 +548,7 @@ local PROFILES = {
 				IntervalMax = 11,
 				Duration = 0.18,
 				Color = Color3.fromRGB(210, 222, 255),
-				Brightness = 2.5,
+				Brightness = 1.2, -- was 2.5: still lifts the scene, no longer blinding
 				Bolts = 2,
 				Layer = 1,
 			},
@@ -562,28 +562,28 @@ local PROFILES = {
 			OutdoorAmbientColor = Color3.fromRGB(170, 194, 232),
 			ColorShiftTop = Color3.fromRGB(242, 238, 255),
 			ColorShiftBottom = Color3.fromRGB(108, 150, 214),
-			Brightness = 3.0,
+			Brightness = 2.2, -- was 3.0: the low sun washed the map out (owner, 2026-09-23)
 			ExposureCompensation = 0.0,
-			ClockTime = 7.0,
+			ClockTime = 8.0, -- the sun a little higher, out of the eye line
 			Atmosphere = {
 				Density = 0.33,
 				Offset = 0.25,
 				Color = Color3.fromRGB(214, 232, 248),
 				Decay = Color3.fromRGB(104, 146, 212),
-				Glare = 1.6,
+				Glare = 0.6,
 				Haze = 0.9,
 			},
 			Sky = {
-				SunAngularSize = 24,
+				SunAngularSize = 14,
 				StarCount = 60,
 			},
 			Bloom = {
-				Intensity = 0.9,
+				Intensity = 0.5,
 				Size = 32,
-				Threshold = 0.82,
+				Threshold = 0.95,
 			},
 			SunRays = {
-				Intensity = 0.14,
+				Intensity = 0.06,
 				Spread = 0.5,
 			},
 			Grade = {
