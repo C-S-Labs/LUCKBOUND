@@ -396,7 +396,9 @@ local PROFILES = {
 			Dome = {
 				Radius = 1100,
 				Color = Color3.fromRGB(255, 64, 76),
-				Transparency = 0.86,
+				-- was 0.86: invisible from the path (owner, 2026-09-23)
+				Transparency = 0.45,
+				SeamTransparency = 0.35,
 				Material = "ForceField",
 			},
 			Searchlights = {

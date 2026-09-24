@@ -28,16 +28,35 @@ re-uploading a mesh is a one-line change in one file.
 
 ```
 assets/
-  source/        .blend files — authoring only, never consumed by the game
-    worlds/<world_id>/     chunk pieces for that biome
-      ethereal_scape/        aether_environment_refined.blend — 8 islands,
-                             a sky temple, and an R6 rig for scale checking
-    props/                 shared set dressing
-    characters/            enemies, bosses
-    discoveries/           collectible objects
-  export/        .fbx ready to upload — mirror source/'s paths
-  rbxm/          baked .rbxm / .rbxmx models (see below)
+  source/                    authoring files -- never read by the game
+    worlds/<world_id>/         .blend + build_*.py scripts that make the kit
+    worlds/_framework/         shared Python for every kit (checks, scatter)
+    items/weapons/<world_id>/  weapon sources
+  export/                    .fbx ready for Studio's 3D Importer (mirrors source/)
+    worlds/<world_id>/         <world>_structure.fbx, <world>_props.fbx, ...
+    worlds/<world_id>/import/  extra import batches (e.g. SC_RECOLOR_<SCENARIO>.fbx)
+    items/weapons/<world_id>/
+  rbxm/                      models saved from Studio (.rbxmx)
+    chunks/<world_id>/         imported chunk kits. RECORDS ONLY: the game loads
+                               chunks by the asset ids in AssetManifest, not from
+                               these files. Keep them: they carry the ids, and
+                               tools/sync_asset_ids.py reads them.
+    props/                     prop libraries -> ReplicatedStorage.LuckboundProps
+                               (loaded at runtime, by MeshPart name)
+    maps/                      WHOLE prebuilt maps only -> ServerStorage.LuckboundMaps
+    prefabs/                   hub pieces -> ServerStorage.LuckboundPrefabs
 ```
+
+| Folder | Synced by Rojo? | File names |
+|---|---|---|
+| `rbxm/chunks/<world>/` | no | anything; the MeshPart inside is named `chunk_<piece>` |
+| `rbxm/props/` | yes | `<PREFIX>_PROP_LIBRARY.rbxmx`, `<PREFIX>_ATMOSPHERE_PROPS.rbxmx` |
+| `rbxm/maps/` | yes | the manifest key, e.g. `ES_ENVIRONMENT_FULL.rbxmx` |
+| `rbxm/prefabs/` | yes | the manifest key, e.g. `HUB_CROSSROADS.rbxmx` |
+
+World prefixes: `SC` Sky Citadel, `VV` Verdant Valley, `ES` Ethereal Scape.
+**Never put a chunk kit in `maps/`**: everything there is copied into the
+place, so a stray kit costs memory and does nothing.
 
 ---
 
@@ -46,8 +65,10 @@ assets/
 1. **Author** in Blender → `assets/source/worlds/<world_id>/<name>.blend`
 2. **Export FBX** → `assets/export/worlds/<world_id>/<name>.fbx` (same relative path)
 3. **Upload** via Studio's 3D Importer or the Open Cloud Assets API
-4. **Record** the returned id in `src/shared/Content/AssetManifest.luau` and flip
-   `Status` from `"PLACEHOLDER"` to `"UPLOADED"`
+4. **Save** the imported Model as `.rbxmx` into `assets/rbxm/chunks/<world_id>/`
+5. **Record** the ids: `python tools/sync_asset_ids.py <world_id> --write` copies
+   every MeshId into `src/shared/Content/AssetManifest.luau` and marks it
+   `"UPLOADED"` (without `--write` it only shows what would change)
 
 A `PLACEHOLDER` entry is legal and validates fine — `assetId()` returns `nil`
 and the loader falls back to primitive geometry, exactly like the `MeshId` seam

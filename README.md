@@ -24,18 +24,19 @@ Next up: Phase 2 — expedition entry, combat, loot, Discovery Book.
 | [`docs/MODULAR_MAPS.md`](docs/MODULAR_MAPS.md) | The chunk system: how biome maps assemble from authored pieces |
 | [`docs/CHUNK_AUTHORING.md`](docs/CHUNK_AUTHORING.md) | Modelling a chunk: the engine contract, universal to every world |
 | [`docs/biomes/`](docs/biomes/) | One design schema per biome — what each world is made of |
-| [`assets/README.md`](assets/README.md) | Blender → Roblox asset workflow |
+| [`assets/README.md`](assets/README.md) | Blender → Roblox asset workflow, and **where every file goes** |
+| [`docs/PARTNER_SETUP.md`](docs/PARTNER_SETUP.md) | Testing a world (e.g. Verdant Valley) on your own Studio place |
 | [`docs/ART_DIRECTION.md`](docs/ART_DIRECTION.md) | How to describe the look so it becomes code |
 | [`docs/TOOLCHAIN_ACCESS.md`](docs/TOOLCHAIN_ACCESS.md) | Rojo, Rokit, Studio MCP, Blender, assets |
 | [`docs/ADDENDUM_ASSET_PIPELINE.md`](docs/ADDENDUM_ASSET_PIPELINE.md) | Future asset/procgen architecture — **out of scope for now** |
 | [`docs/MASTER_DESIGN.md`](docs/MASTER_DESIGN.md) | **The design source of truth** — what the game is, and what is built vs planned |
-| `LUCKBOUND_..._v0.1 (1).pdf` | The original vision. **Authoritative on intent** — kept unchanged |
+| [`docs/design/LUCKBOUND_MGD_Original_v0.1.pdf`](docs/design/LUCKBOUND_MGD_Original_v0.1.pdf) | The original vision. **Authoritative on intent** — kept unchanged |
 | [`CLAUDE.md`](CLAUDE.md) | Rules every AI agent on this project must follow |
 
 ## Quick start
 
 ```bash
-./tests/run.sh         # 208 headless tests, no Studio needed
+./tests/run.sh         # the headless suite (795 tests), no Studio needed
 
 rokit install          # rojo 7.6.0, stylua, selene
 rojo plugin install    # Studio plugin

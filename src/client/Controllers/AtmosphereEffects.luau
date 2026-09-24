@@ -468,6 +468,14 @@ local function buildDome(d: any, root: Instance, map: Map)
 				Transparency = num(d.Transparency, 0.86),
 				Size = Vector3.new(2 * math.pi * rr / segs * 1.05, R * (e1 - e0) * 1.03, 1),
 				CFrame = CFrame.lookAt(pos, centre) }, root)
+			-- a glowing seam along each ring's lower edge: the shell reads as a
+			-- lattice from the path even where the forcefield sheen is faint
+			local seamR = R * math.cos(e0)
+			local seamPos = centre + Vector3.new(math.cos(a) * seamR, R * math.sin(e0), math.sin(a) * seamR)
+			part({ Name = "DomeSeam", Material = Enum.Material.Neon, Color = col(d.Color, Color3.fromRGB(255, 64, 76)),
+				Transparency = num(d.SeamTransparency, 0.35),
+				Size = Vector3.new(2 * math.pi * seamR / segs * 1.02, 2.5, 2.5),
+				CFrame = CFrame.lookAt(seamPos, centre + Vector3.new(0, R * math.sin(e0), 0)) }, root)
 		end
 	end
 	for i = 1, 6 do
