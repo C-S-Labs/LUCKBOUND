@@ -33,6 +33,32 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 66 — 2026-09-24 — Verdant Valley 30-piece kit: export, sockets, loader
+**Merged:** —   **Tests:** 807 passing   **Head:** branch claude/verdant-valley-30-kit
+
+### Done
+- New `assets/source/worlds/verdant_valley/export_verdant_valley_kit.py` (headless). It takes the delivered 30-piece `.blend` and, for each piece:
+  - joins it into one mesh, centred on the origin at ground level
+  - bakes material colours to vertex colour
+  - **measures the sockets** off the geometry
+  - checks the engine contract
+  Then it exports one FBX (`assets/export/worlds/verdant_valley/verdant_valley_structure.fbx`), re-imports it to verify, and generates the Content/Chunks module and the manifest block.
+- Swapped `Content/Chunks/VerdantValley.luau` to the generated 30-piece kit and added 30 `PLACEHOLDER` manifest keys. The old 11 keys stay.
+- Four VV tests were pinned to the old kit (`#ENTRY == 1`, no SIDE, "penultimate is the approach", `Chunks.VV_BOSS_CLEARING`). They now assert the relationship instead. The coverage test passes `IncludeSide` as the expedition does.
+
+### Decisions made
+- The file's socket labels were a mirror (N = −Y, E = +X), so they were discarded. Geometry is the truth.
+- The kit stays on a hand-written module (not drop-in), to keep the `WIDE` arena gate.
+
+### Stopped at
+FBX exported, not yet uploaded. Every new key is `PLACEHOLDER`, so **VV draws blockouts until upload**. Don't merge before the ids are wired.
+
+### Next
+1. Owner imports the FBX, saves the `.rbxmx`, and re-runs the script with `--ids` (see `IMPORT_STEPS.md`).
+2. Walk it in Studio. Check the `calibrateYaw` log for every piece.
+
+---
+
 ## Session 65 — 2026-09-24 — Drop-in chunk kits
 **Merged:** —   **Tests:** 807 passing   **Head:** branch claude/chunk-autoload
 

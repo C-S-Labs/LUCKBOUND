@@ -1,0 +1,1427 @@
+[
+ {
+  "num": "01",
+  "title": "Sunwash Fork",
+  "name": "chunk_path_sunwash_fork",
+  "role": "PATH",
+  "meta": {
+   "Supports": [
+    "Ambush",
+    "Combat",
+    "Traversal"
+   ],
+   "Weight": 20,
+   "EnemyTags": [
+    "MOSS_SLIME",
+    "FOREST_WOLF"
+   ],
+   "Tags": [
+    "junction",
+    "sunlit"
+   ]
+  },
+  "id": "VV_PATH_SUNWASH_FORK",
+  "key": "VV_CHUNK_PATH_SUNWASH_FORK",
+  "size": [
+   256.0,
+   76.272,
+   256.0
+  ],
+  "ground": 40.0,
+  "tris": 8520,
+  "pads": {
+   "N": 46.5,
+   "S": 46.5,
+   "E": 46.5,
+   "W": 0.0
+  },
+  "sockets": [
+   [
+    "N",
+    "PATH"
+   ],
+   [
+    "E",
+    "PATH"
+   ],
+   [
+    "S",
+    "PATH"
+   ]
+  ],
+  "materials": 11
+ },
+ {
+  "num": "02",
+  "title": "Cutbank Ford",
+  "name": "chunk_cutbank_ford",
+  "role": "COMBAT",
+  "meta": {
+   "Supports": [
+    "Ambush",
+    "Combat",
+    "Event",
+    "Traversal"
+   ],
+   "Weight": 20,
+   "MaxPerLayout": 1,
+   "EnemyTags": [
+    "THORN_GOBLIN"
+   ],
+   "Tags": [
+    "water",
+    "ford"
+   ]
+  },
+  "id": "VV_CUTBANK_FORD",
+  "key": "VV_CHUNK_CUTBANK_FORD",
+  "size": [
+   256.0,
+   76.2,
+   256.0
+  ],
+  "ground": 44.0,
+  "tris": 8662,
+  "pads": {
+   "N": 47.5,
+   "S": 47.0,
+   "E": 0.0,
+   "W": 0.0
+  },
+  "sockets": [
+   [
+    "N",
+    "PATH"
+   ],
+   [
+    "S",
+    "PATH"
+   ]
+  ],
+  "materials": 13
+ },
+ {
+  "num": "03",
+  "title": "Windward Ridge",
+  "name": "chunk_windward_ridge_gate",
+  "role": "COMBAT",
+  "meta": {
+   "Supports": [
+    "Ambush",
+    "Combat",
+    "MiniBoss",
+    "Shrine",
+    "Traversal"
+   ],
+   "Weight": 25,
+   "MaxPerLayout": 1,
+   "EnemyTags": [
+    "ELDER_TREANT"
+   ],
+   "Tags": [
+    "gate-to-boss",
+    "high-ground"
+   ]
+  },
+  "id": "VV_WINDWARD_RIDGE_GATE",
+  "key": "VV_CHUNK_WINDWARD_RIDGE_GATE",
+  "size": [
+   256.0,
+   106.177,
+   256.0
+  ],
+  "ground": 50.0,
+  "tris": 7448,
+  "pads": {
+   "N": 0.0,
+   "S": 0.0,
+   "E": 52.5,
+   "W": 46.5
+  },
+  "sockets": [
+   [
+    "E",
+    "WIDE"
+   ],
+   [
+    "W",
+    "PATH"
+   ]
+  ],
+  "materials": 11
+ },
+ {
+  "num": "04",
+  "title": "Forgotten Orchard",
+  "name": "chunk_forgotten_orchard_gate",
+  "role": "COMBAT",
+  "meta": {
+   "Supports": [
+    "Combat",
+    "Secret",
+    "Shrine",
+    "Treasure"
+   ],
+   "Weight": 25,
+   "MaxPerLayout": 1,
+   "EnemyTags": [
+    "FOREST_WOLF",
+    "ELDER_TREANT"
+   ],
+   "Tags": [
+    "gate-to-boss",
+    "turn"
+   ]
+  },
+  "id": "VV_FORGOTTEN_ORCHARD_GATE",
+  "key": "VV_CHUNK_FORGOTTEN_ORCHARD_GATE",
+  "size": [
+   256.0,
+   70.73,
+   256.0
+  ],
+  "ground": 42.0,
+  "tris": 7880,
+  "pads": {
+   "N": 0.0,
+   "S": 52.5,
+   "E": 0.0,
+   "W": 46.5
+  },
+  "sockets": [
+   [
+    "S",
+    "WIDE"
+   ],
+   [
+    "W",
+    "PATH"
+   ]
+  ],
+  "materials": 13
+ },
+ {
+  "num": "05",
+  "title": "Longgrass Meadow",
+  "name": "chunk_longgrass_meadow",
+  "role": "COMBAT",
+  "meta": {
+   "Supports": [
+    "Ambush",
+    "Combat",
+    "MiniBoss",
+    "Treasure"
+   ],
+   "Weight": 30,
+   "EnemyTags": [
+    "FOREST_WOLF"
+   ],
+   "Tags": [
+    "open",
+    "pack-combat"
+   ]
+  },
+  "id": "VV_LONGGRASS_MEADOW",
+  "key": "VV_CHUNK_LONGGRASS_MEADOW",
+  "size": [
+   256.0,
+   68.445,
+   256.0
+  ],
+  "ground": 35.0,
+  "tris": 7600,
+  "pads": {
+   "N": 46.5,
+   "S": 46.5,
+   "E": 0.0,
+   "W": 0.0
+  },
+  "sockets": [
+   [
+    "N",
+    "PATH"
+   ],
+   [
+    "S",
+    "PATH"
+   ]
+  ],
+  "materials": 12
+ },
+ {
+  "num": "06",
+  "title": "Shaded Grove",
+  "name": "chunk_shaded_grove",
+  "role": "COMBAT",
+  "meta": {
+   "Supports": [
+    "Ambush",
+    "Combat",
+    "Secret"
+   ],
+   "Weight": 25,
+   "EnemyTags": [
+    "ELDER_TREANT",
+    "MOSS_SLIME"
+   ],
+   "Tags": [
+    "enclosed",
+    "shade"
+   ]
+  },
+  "id": "VV_SHADED_GROVE",
+  "key": "VV_CHUNK_SHADED_GROVE",
+  "size": [
+   256.0,
+   77.154,
+   256.0
+  ],
+  "ground": 37.0,
+  "tris": 8508,
+  "pads": {
+   "N": 0.0,
+   "S": 0.0,
+   "E": 46.5,
+   "W": 46.5
+  },
+  "sockets": [
+   [
+    "E",
+    "PATH"
+   ],
+   [
+    "W",
+    "PATH"
+   ]
+  ],
+  "materials": 10
+ },
+ {
+  "num": "07",
+  "title": "Fern Hollow",
+  "name": "chunk_fern_hollow",
+  "role": "COMBAT",
+  "meta": {
+   "Supports": [
+    "Ambush",
+    "Combat",
+    "Puzzle",
+    "Secret",
+    "Treasure"
+   ],
+   "Weight": 20,
+   "EnemyTags": [
+    "THORN_GOBLIN"
+   ],
+   "Tags": [
+    "enclosed",
+    "risk-reward"
+   ]
+  },
+  "id": "VV_FERN_HOLLOW",
+  "key": "VV_CHUNK_FERN_HOLLOW",
+  "size": [
+   256.0,
+   74.607,
+   256.0
+  ],
+  "ground": 39.0,
+  "tris": 8708,
+  "pads": {
+   "N": 46.5,
+   "S": 46.5,
+   "E": 0.0,
+   "W": 0.0
+  },
+  "sockets": [
+   [
+    "N",
+    "PATH"
+   ],
+   [
+    "S",
+    "PATH"
+   ]
+  ],
+  "materials": 10
+ },
+ {
+  "num": "08",
+  "title": "Cliff Passage",
+  "name": "chunk_path_cliff_passage",
+  "role": "PATH",
+  "meta": {
+   "Supports": [
+    "Ambush",
+    "Combat",
+    "Traversal"
+   ],
+   "Weight": 30,
+   "EnemyTags": [
+    "FOREST_WOLF"
+   ],
+   "Tags": [
+    "cliff",
+    "narrow"
+   ]
+  },
+  "id": "VV_PATH_CLIFF_PASSAGE",
+  "key": "VV_CHUNK_PATH_CLIFF_PASSAGE",
+  "size": [
+   256.0,
+   99.435,
+   256.0
+  ],
+  "ground": 41.0,
+  "tris": 9730,
+  "pads": {
+   "N": 0.0,
+   "S": 27.5,
+   "E": 46.5,
+   "W": 46.5
+  },
+  "sockets": [
+   [
+    "E",
+    "PATH"
+   ],
+   [
+    "W",
+    "PATH"
+   ]
+  ],
+  "materials": 9
+ },
+ {
+  "num": "09",
+  "title": "Stone Sentinels",
+  "name": "chunk_stone_sentinels",
+  "role": "COMBAT",
+  "meta": {
+   "Supports": [
+    "Combat",
+    "Event",
+    "Puzzle",
+    "Shrine"
+   ],
+   "Weight": 20,
+   "MaxPerLayout": 1,
+   "EnemyTags": [
+    "MOSS_SLIME",
+    "THORN_GOBLIN"
+   ],
+   "Tags": [
+    "landmark",
+    "stones"
+   ]
+  },
+  "id": "VV_STONE_SENTINELS",
+  "key": "VV_CHUNK_STONE_SENTINELS",
+  "size": [
+   256.0,
+   76.474,
+   256.0
+  ],
+  "ground": 43.0,
+  "tris": 7716,
+  "pads": {
+   "N": 46.5,
+   "S": 46.5,
+   "E": 0.0,
+   "W": 0.0
+  },
+  "sockets": [
+   [
+    "N",
+    "PATH"
+   ],
+   [
+    "S",
+    "PATH"
+   ]
+  ],
+  "materials": 10
+ },
+ {
+  "num": "10",
+  "title": "Mossbound Ruins",
+  "name": "chunk_mossbound_ruins",
+  "role": "COMBAT",
+  "meta": {
+   "Supports": [
+    "Combat",
+    "Event",
+    "Puzzle",
+    "Secret",
+    "Treasure"
+   ],
+   "Weight": 20,
+   "MaxPerLayout": 1,
+   "EnemyTags": [
+    "THORN_GOBLIN",
+    "ELDER_TREANT"
+   ],
+   "Tags": [
+    "ruin"
+   ]
+  },
+  "id": "VV_MOSSBOUND_RUINS",
+  "key": "VV_CHUNK_MOSSBOUND_RUINS",
+  "size": [
+   256.0,
+   68.381,
+   256.0
+  ],
+  "ground": 35.0,
+  "tris": 7904,
+  "pads": {
+   "N": 10.5,
+   "S": 11.0,
+   "E": 46.5,
+   "W": 46.5
+  },
+  "sockets": [
+   [
+    "E",
+    "PATH"
+   ],
+   [
+    "W",
+    "PATH"
+   ]
+  ],
+  "materials": 11
+ },
+ {
+  "num": "11",
+  "title": "Ancient Oak",
+  "name": "chunk_ancient_oak",
+  "role": "COMBAT",
+  "meta": {
+   "Supports": [
+    "Combat",
+    "Event",
+    "MiniBoss",
+    "Shrine"
+   ],
+   "Weight": 15,
+   "MaxPerLayout": 1,
+   "EnemyTags": [
+    "ELDER_TREANT"
+   ],
+   "Tags": [
+    "landmark"
+   ]
+  },
+  "id": "VV_ANCIENT_OAK",
+  "key": "VV_CHUNK_ANCIENT_OAK",
+  "size": [
+   256.0,
+   92.96,
+   256.0
+  ],
+  "ground": 37.0,
+  "tris": 7832,
+  "pads": {
+   "N": 46.5,
+   "S": 46.5,
+   "E": 0.0,
+   "W": 0.0
+  },
+  "sockets": [
+   [
+    "N",
+    "PATH"
+   ],
+   [
+    "S",
+    "PATH"
+   ]
+  ],
+  "materials": 11
+ },
+ {
+  "num": "12",
+  "title": "Wetland Pools",
+  "name": "chunk_wetland_pools",
+  "role": "COMBAT",
+  "meta": {
+   "Supports": [
+    "Ambush",
+    "Combat",
+    "Event",
+    "Traversal"
+   ],
+   "Weight": 20,
+   "EnemyTags": [
+    "THORN_GOBLIN",
+    "MOSS_SLIME"
+   ],
+   "Tags": [
+    "water"
+   ]
+  },
+  "id": "VV_WETLAND_POOLS",
+  "key": "VV_CHUNK_WETLAND_POOLS",
+  "size": [
+   256.0,
+   72.247,
+   256.0
+  ],
+  "ground": 39.0,
+  "tris": 9604,
+  "pads": {
+   "N": 0.0,
+   "S": 0.0,
+   "E": 46.5,
+   "W": 46.5
+  },
+  "sockets": [
+   [
+    "E",
+    "PATH"
+   ],
+   [
+    "W",
+    "PATH"
+   ]
+  ],
+  "materials": 11
+ },
+ {
+  "num": "13",
+  "title": "Narrow Pass",
+  "name": "chunk_path_narrow_pass",
+  "role": "PATH",
+  "meta": {
+   "Supports": [
+    "Ambush",
+    "Combat",
+    "Traversal"
+   ],
+   "Weight": 35,
+   "EnemyTags": [
+    "FOREST_WOLF"
+   ],
+   "Tags": [
+    "narrow"
+   ]
+  },
+  "id": "VV_PATH_NARROW_PASS",
+  "key": "VV_CHUNK_PATH_NARROW_PASS",
+  "size": [
+   256.0,
+   77.262,
+   256.0
+  ],
+  "ground": 41.0,
+  "tris": 7862,
+  "pads": {
+   "N": 46.5,
+   "S": 46.5,
+   "E": 0.0,
+   "W": 0.0
+  },
+  "sockets": [
+   [
+    "N",
+    "PATH"
+   ],
+   [
+    "S",
+    "PATH"
+   ]
+  ],
+  "materials": 13
+ },
+ {
+  "num": "14",
+  "title": "Blossom Terrace",
+  "name": "chunk_blossom_terrace",
+  "role": "COMBAT",
+  "meta": {
+   "Supports": [
+    "Combat",
+    "Event",
+    "Shrine",
+    "Treasure"
+   ],
+   "Weight": 20,
+   "EnemyTags": [
+    "MOSS_SLIME"
+   ],
+   "Tags": [
+    "terrace",
+    "blossom"
+   ]
+  },
+  "id": "VV_BLOSSOM_TERRACE",
+  "key": "VV_CHUNK_BLOSSOM_TERRACE",
+  "size": [
+   256.0,
+   80.419,
+   256.0
+  ],
+  "ground": 43.0,
+  "tris": 8140,
+  "pads": {
+   "N": 17.0,
+   "S": 17.0,
+   "E": 46.5,
+   "W": 46.5
+  },
+  "sockets": [
+   [
+    "E",
+    "PATH"
+   ],
+   [
+    "W",
+    "PATH"
+   ]
+  ],
+  "materials": 14
+ },
+ {
+  "num": "15",
+  "title": "Rock Garden",
+  "name": "chunk_rock_garden",
+  "role": "COMBAT",
+  "meta": {
+   "Supports": [
+    "Ambush",
+    "Combat",
+    "Puzzle",
+    "Secret"
+   ],
+   "Weight": 20,
+   "EnemyTags": [
+    "THORN_GOBLIN"
+   ],
+   "Tags": [
+    "cover"
+   ]
+  },
+  "id": "VV_ROCK_GARDEN",
+  "key": "VV_CHUNK_ROCK_GARDEN",
+  "size": [
+   256.0,
+   65.396,
+   256.0
+  ],
+  "ground": 35.0,
+  "tris": 7560,
+  "pads": {
+   "N": 46.5,
+   "S": 46.5,
+   "E": 0.0,
+   "W": 0.0
+  },
+  "sockets": [
+   [
+    "N",
+    "PATH"
+   ],
+   [
+    "S",
+    "PATH"
+   ]
+  ],
+  "materials": 10
+ },
+ {
+  "num": "16",
+  "title": "Crystal Spring",
+  "name": "chunk_crystal_spring_gate",
+  "role": "COMBAT",
+  "meta": {
+   "Supports": [
+    "Combat",
+    "Event",
+    "Secret",
+    "Shrine"
+   ],
+   "Weight": 25,
+   "MaxPerLayout": 1,
+   "EnemyTags": [
+    "ELDER_TREANT"
+   ],
+   "Tags": [
+    "gate-to-boss",
+    "water"
+   ]
+  },
+  "id": "VV_CRYSTAL_SPRING_GATE",
+  "key": "VV_CHUNK_CRYSTAL_SPRING_GATE",
+  "size": [
+   256.0,
+   69.408,
+   256.0
+  ],
+  "ground": 37.0,
+  "tris": 8264,
+  "pads": {
+   "N": 21.5,
+   "S": 21.0,
+   "E": 52.5,
+   "W": 46.5
+  },
+  "sockets": [
+   [
+    "E",
+    "WIDE"
+   ],
+   [
+    "W",
+    "PATH"
+   ]
+  ],
+  "materials": 12
+ },
+ {
+  "num": "17",
+  "title": "Overgrown Causeway",
+  "name": "chunk_overgrown_causeway_gate",
+  "role": "COMBAT",
+  "meta": {
+   "Supports": [
+    "Ambush",
+    "Combat",
+    "Traversal"
+   ],
+   "Weight": 25,
+   "MaxPerLayout": 1,
+   "EnemyTags": [
+    "FOREST_WOLF",
+    "ELDER_TREANT"
+   ],
+   "Tags": [
+    "gate-to-boss"
+   ]
+  },
+  "id": "VV_OVERGROWN_CAUSEWAY_GATE",
+  "key": "VV_CHUNK_OVERGROWN_CAUSEWAY_GATE",
+  "size": [
+   256.0,
+   72.271,
+   256.0
+  ],
+  "ground": 39.0,
+  "tris": 7772,
+  "pads": {
+   "N": 52.5,
+   "S": 46.5,
+   "E": 0.0,
+   "W": 0.0
+  },
+  "sockets": [
+   [
+    "N",
+    "WIDE"
+   ],
+   [
+    "S",
+    "PATH"
+   ]
+  ],
+  "materials": 11
+ },
+ {
+  "num": "18",
+  "title": "High Ledge",
+  "name": "chunk_high_ledge_gate",
+  "role": "COMBAT",
+  "meta": {
+   "Supports": [
+    "Ambush",
+    "Combat",
+    "MiniBoss",
+    "Traversal"
+   ],
+   "Weight": 25,
+   "MaxPerLayout": 1,
+   "EnemyTags": [
+    "ELDER_TREANT"
+   ],
+   "Tags": [
+    "gate-to-boss",
+    "high-ground"
+   ]
+  },
+  "id": "VV_HIGH_LEDGE_GATE",
+  "key": "VV_CHUNK_HIGH_LEDGE_GATE",
+  "size": [
+   256.0,
+   82.309,
+   256.0
+  ],
+  "ground": 41.0,
+  "tris": 7328,
+  "pads": {
+   "N": 0.0,
+   "S": 0.0,
+   "E": 52.5,
+   "W": 46.5
+  },
+  "sockets": [
+   [
+    "E",
+    "WIDE"
+   ],
+   [
+    "W",
+    "PATH"
+   ]
+  ],
+  "materials": 10
+ },
+ {
+  "num": "19",
+  "title": "Cliff Overlook",
+  "name": "chunk_cliff_overlook_gate",
+  "role": "COMBAT",
+  "meta": {
+   "Supports": [
+    "Combat",
+    "MiniBoss",
+    "Shrine",
+    "Traversal"
+   ],
+   "Weight": 25,
+   "MaxPerLayout": 1,
+   "EnemyTags": [
+    "ELDER_TREANT"
+   ],
+   "Tags": [
+    "gate-to-boss",
+    "vista"
+   ]
+  },
+  "id": "VV_CLIFF_OVERLOOK_GATE",
+  "key": "VV_CHUNK_CLIFF_OVERLOOK_GATE",
+  "size": [
+   256.0,
+   84.096,
+   256.0
+  ],
+  "ground": 43.0,
+  "tris": 7670,
+  "pads": {
+   "N": 52.5,
+   "S": 46.5,
+   "E": 0.0,
+   "W": 0.0
+  },
+  "sockets": [
+   [
+    "N",
+    "WIDE"
+   ],
+   [
+    "S",
+    "PATH"
+   ]
+  ],
+  "materials": 14
+ },
+ {
+  "num": "20",
+  "title": "Deep Clearing",
+  "name": "chunk_deep_clearing",
+  "role": "COMBAT",
+  "meta": {
+   "Supports": [
+    "Ambush",
+    "Combat",
+    "MiniBoss",
+    "Treasure"
+   ],
+   "Weight": 20,
+   "EnemyTags": [
+    "FOREST_WOLF"
+   ],
+   "Tags": [
+    "open",
+    "junction"
+   ]
+  },
+  "id": "VV_DEEP_CLEARING",
+  "key": "VV_CHUNK_DEEP_CLEARING",
+  "size": [
+   256.0,
+   67.458,
+   256.0
+  ],
+  "ground": 35.0,
+  "tris": 8132,
+  "pads": {
+   "N": 46.5,
+   "S": 46.5,
+   "E": 46.5,
+   "W": 0.0
+  },
+  "sockets": [
+   [
+    "N",
+    "PATH"
+   ],
+   [
+    "E",
+    "PATH"
+   ],
+   [
+    "S",
+    "PATH"
+   ]
+  ],
+  "materials": 12
+ },
+ {
+  "num": "21",
+  "title": "Split Meadow",
+  "name": "chunk_path_split_meadow",
+  "role": "PATH",
+  "meta": {
+   "Supports": [
+    "Ambush",
+    "Combat",
+    "Traversal"
+   ],
+   "Weight": 20,
+   "EnemyTags": [
+    "FOREST_WOLF",
+    "MOSS_SLIME"
+   ],
+   "Tags": [
+    "junction"
+   ]
+  },
+  "id": "VV_PATH_SPLIT_MEADOW",
+  "key": "VV_CHUNK_PATH_SPLIT_MEADOW",
+  "size": [
+   256.0,
+   70.635,
+   256.0
+  ],
+  "ground": 37.0,
+  "tris": 8184,
+  "pads": {
+   "N": 46.5,
+   "S": 0.0,
+   "E": 46.5,
+   "W": 46.5
+  },
+  "sockets": [
+   [
+    "N",
+    "PATH"
+   ],
+   [
+    "E",
+    "PATH"
+   ],
+   [
+    "W",
+    "PATH"
+   ]
+  ],
+  "materials": 12
+ },
+ {
+  "num": "22",
+  "title": "Mushroom Glen",
+  "name": "chunk_mushroom_glen",
+  "role": "COMBAT",
+  "meta": {
+   "Supports": [
+    "Combat",
+    "Event",
+    "Puzzle",
+    "Secret",
+    "Shrine"
+   ],
+   "Weight": 18,
+   "MaxPerLayout": 1,
+   "EnemyTags": [
+    "THORN_GOBLIN",
+    "MOSS_SLIME"
+   ],
+   "Tags": [
+    "strange",
+    "junction"
+   ]
+  },
+  "id": "VV_MUSHROOM_GLEN",
+  "key": "VV_CHUNK_MUSHROOM_GLEN",
+  "size": [
+   256.0,
+   72.627,
+   256.0
+  ],
+  "ground": 39.0,
+  "tris": 9536,
+  "pads": {
+   "N": 46.5,
+   "S": 46.5,
+   "E": 46.5,
+   "W": 0.0
+  },
+  "sockets": [
+   [
+    "N",
+    "PATH"
+   ],
+   [
+    "E",
+    "PATH"
+   ],
+   [
+    "S",
+    "PATH"
+   ]
+  ],
+  "materials": 13
+ },
+ {
+  "num": "23",
+  "title": "Crossroads Copse",
+  "name": "chunk_path_crossroads_copse",
+  "role": "PATH",
+  "meta": {
+   "Supports": [
+    "Ambush",
+    "Combat",
+    "Traversal"
+   ],
+   "Weight": 12,
+   "MaxPerLayout": 1,
+   "EnemyTags": [
+    "FOREST_WOLF"
+   ],
+   "Tags": [
+    "junction",
+    "four-way"
+   ]
+  },
+  "id": "VV_PATH_CROSSROADS_COPSE",
+  "key": "VV_CHUNK_PATH_CROSSROADS_COPSE",
+  "size": [
+   256.0,
+   72.987,
+   256.0
+  ],
+  "ground": 41.0,
+  "tris": 8500,
+  "pads": {
+   "N": 46.5,
+   "S": 46.5,
+   "E": 46.5,
+   "W": 46.5
+  },
+  "sockets": [
+   [
+    "N",
+    "PATH"
+   ],
+   [
+    "E",
+    "PATH"
+   ],
+   [
+    "S",
+    "PATH"
+   ],
+   [
+    "W",
+    "PATH"
+   ]
+  ],
+  "materials": 11
+ },
+ {
+  "num": "24",
+  "title": "Cave Mouth",
+  "name": "chunk_cap_cave_mouth",
+  "role": "CAP",
+  "meta": {
+   "Supports": [
+    "Secret",
+    "Treasure"
+   ],
+   "Weight": 1,
+   "EnemyTags": [
+    "MOSS_SLIME"
+   ],
+   "Tags": [
+    "dead-end",
+    "cave"
+   ]
+  },
+  "id": "VV_CAP_CAVE_MOUTH",
+  "key": "VV_CHUNK_CAP_CAVE_MOUTH",
+  "size": [
+   256.0,
+   81.047,
+   256.0
+  ],
+  "ground": 37.15,
+  "tris": 9970,
+  "pads": {
+   "N": 46.5,
+   "S": 0.0,
+   "E": 0.0,
+   "W": 0.0
+  },
+  "sockets": [
+   [
+    "N",
+    "PATH"
+   ]
+  ],
+  "materials": 24
+ },
+ {
+  "num": "25",
+  "title": "Dawn Meadow",
+  "name": "chunk_entry_dawn_meadow",
+  "role": "ENTRY",
+  "meta": {
+   "Weight": 1,
+   "MaxPerLayout": 1,
+   "EnemyTags": [
+    "MOSS_SLIME"
+   ],
+   "Tags": [
+    "tutorial",
+    "low-density"
+   ]
+  },
+  "id": "VV_ENTRY_DAWN_MEADOW",
+  "key": "VV_CHUNK_ENTRY_DAWN_MEADOW",
+  "size": [
+   256.0,
+   63.775,
+   256.0
+  ],
+  "ground": 34.882,
+  "tris": 9058,
+  "pads": {
+   "N": 46.5,
+   "S": 0.0,
+   "E": 0.0,
+   "W": 0.0
+  },
+  "sockets": [
+   [
+    "N",
+    "PATH"
+   ]
+  ],
+  "materials": 15
+ },
+ {
+  "num": "26",
+  "title": "Woodland Refuge",
+  "name": "chunk_entry_woodland_refuge",
+  "role": "ENTRY",
+  "meta": {
+   "Weight": 1,
+   "MaxPerLayout": 1,
+   "EnemyTags": [
+    "MOSS_SLIME"
+   ],
+   "Tags": [
+    "tutorial",
+    "low-density"
+   ]
+  },
+  "id": "VV_ENTRY_WOODLAND_REFUGE",
+  "key": "VV_CHUNK_ENTRY_WOODLAND_REFUGE",
+  "size": [
+   256.0,
+   68.771,
+   256.0
+  ],
+  "ground": 37.905,
+  "tris": 9416,
+  "pads": {
+   "N": 46.5,
+   "S": 0.0,
+   "E": 0.0,
+   "W": 0.0
+  },
+  "sockets": [
+   [
+    "N",
+    "PATH"
+   ]
+  ],
+  "materials": 17
+ },
+ {
+  "num": "27",
+  "title": "Verdant Valley BOSS Sanctuary",
+  "name": "chunk_boss_sanctuary",
+  "role": "BOSS",
+  "meta": {
+   "Weight": 1,
+   "MaxPerLayout": 1,
+   "EnemyTags": [],
+   "Tags": [
+    "arena"
+   ]
+  },
+  "id": "VV_BOSS_SANCTUARY",
+  "key": "VV_CHUNK_BOSS_SANCTUARY",
+  "size": [
+   384.0,
+   113.672,
+   256.0
+  ],
+  "ground": 48.0,
+  "tris": 8706,
+  "pads": {
+   "N": 52.5,
+   "S": 0.0,
+   "E": 0.0,
+   "W": 0.0
+  },
+  "sockets": [
+   [
+    "N",
+    "WIDE"
+   ]
+  ],
+  "materials": 11
+ },
+ {
+  "num": "28",
+  "title": "Treasure Hollow",
+  "name": "chunk_side_treasure_hollow",
+  "role": "SIDE",
+  "meta": {
+   "Supports": [
+    "Secret",
+    "Treasure"
+   ],
+   "Weight": 1,
+   "MaxPerLayout": 1,
+   "EnemyTags": [
+    "THORN_GOBLIN"
+   ],
+   "Tags": [
+    "pocket",
+    "treasure"
+   ]
+  },
+  "id": "VV_SIDE_TREASURE_HOLLOW",
+  "key": "VV_CHUNK_SIDE_TREASURE_HOLLOW",
+  "size": [
+   256.0,
+   69.003,
+   256.0
+  ],
+  "ground": 32.0,
+  "tris": 7288,
+  "pads": {
+   "N": 46.5,
+   "S": 0.0,
+   "E": 0.0,
+   "W": 0.0
+  },
+  "sockets": [
+   [
+    "N",
+    "PATH"
+   ]
+  ],
+  "materials": 13
+ },
+ {
+  "num": "29",
+  "title": "Warden's Clearing",
+  "name": "chunk_side_wardens_clearing",
+  "role": "SIDE",
+  "meta": {
+   "Supports": [
+    "Combat",
+    "MiniBoss"
+   ],
+   "Weight": 1,
+   "MaxPerLayout": 1,
+   "EnemyTags": [
+    "FOREST_WOLF",
+    "ELDER_TREANT"
+   ],
+   "Tags": [
+    "pocket",
+    "mini-boss"
+   ]
+  },
+  "id": "VV_SIDE_WARDENS_CLEARING",
+  "key": "VV_CHUNK_SIDE_WARDENS_CLEARING",
+  "size": [
+   256.0,
+   72.085,
+   256.0
+  ],
+  "ground": 34.0,
+  "tris": 7300,
+  "pads": {
+   "N": 46.5,
+   "S": 0.0,
+   "E": 0.0,
+   "W": 0.0
+  },
+  "sockets": [
+   [
+    "N",
+    "PATH"
+   ]
+  ],
+  "materials": 12
+ },
+ {
+  "num": "30",
+  "title": "Forgotten Trial",
+  "name": "chunk_side_forgotten_trial",
+  "role": "SIDE",
+  "meta": {
+   "Supports": [
+    "Puzzle",
+    "Treasure"
+   ],
+   "Weight": 1,
+   "MaxPerLayout": 1,
+   "EnemyTags": [
+    "MOSS_SLIME"
+   ],
+   "Tags": [
+    "pocket",
+    "puzzle"
+   ]
+  },
+  "id": "VV_SIDE_FORGOTTEN_TRIAL",
+  "key": "VV_CHUNK_SIDE_FORGOTTEN_TRIAL",
+  "size": [
+   256.0,
+   58.987,
+   256.0
+  ],
+  "ground": 37.0,
+  "tris": 7292,
+  "pads": {
+   "N": 46.5,
+   "S": 0.0,
+   "E": 0.0,
+   "W": 0.0
+  },
+  "sockets": [
+   [
+    "N",
+    "PATH"
+   ]
+  ],
+  "materials": 12
+ }
+]
