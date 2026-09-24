@@ -180,3 +180,9 @@ def render_all(groups, engine_blend, engine_scale, out):
         if bpy.data.objects.get(n):
             bpy.data.objects[n].hide_render = False
     shot("16_sky", (x / 2, -1500, 500), (x / 2, 0, 0), 26, out)
+    ring = [o for o in groups.get("Sky", []) if o.name.startswith("hubsky_ring")]
+    for o in groups.get("Sky", []):
+        o.hide_render = o not in ring
+    for o in ring:
+        o.location = (0, 0, 0)
+    shot("17_heart", (0, -330, 170), (0, 0, 0), 30, out)

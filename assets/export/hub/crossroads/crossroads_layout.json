@@ -3389,6 +3389,91 @@
     363.936,
     0.6
    ]
+  },
+  "hubsky_ring_spokes": {
+   "group": "Sky",
+   "tris": 1632,
+   "anim": null,
+   "sub": null,
+   "host": null,
+   "centre": [
+    0.0,
+    0.0,
+    0.669
+   ],
+   "size": [
+    344.0,
+    344.0,
+    7.995
+   ]
+  },
+  "hubsky_ring_core": {
+   "group": "Sky",
+   "tris": 48,
+   "anim": null,
+   "sub": null,
+   "host": null,
+   "centre": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "size": [
+    42.0,
+    42.0,
+    88.0
+   ]
+  },
+  "hubsky_ring_gyro_a": {
+   "group": "Sky",
+   "tris": 368,
+   "anim": null,
+   "sub": null,
+   "host": null,
+   "centre": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "size": [
+    106.263,
+    94.887,
+    51.885
+   ]
+  },
+  "hubsky_ring_gyro_b": {
+   "group": "Sky",
+   "tris": 368,
+   "anim": null,
+   "sub": null,
+   "host": null,
+   "centre": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "size": [
+    134.263,
+    104.306,
+    88.036
+   ]
+  },
+  "hubsky_ring_constellation": {
+   "group": "Sky",
+   "tris": 416,
+   "anim": null,
+   "sub": null,
+   "host": null,
+   "centre": [
+    3.551,
+    9.983,
+    -3.982
+   ],
+   "size": [
+    308.133,
+    265.576,
+    9.088
+   ]
   }
  },
  "anchors": {

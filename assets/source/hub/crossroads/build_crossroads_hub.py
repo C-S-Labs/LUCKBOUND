@@ -1494,10 +1494,68 @@ def sky_ring_glyphs():
     return p
 
 
+def sky_ring_spokes():
+    """Eight slim spokes from the ring to a hub collar, with gold nodes: the
+    ring becomes a wheel. Turns with the ring."""
+    p = Piece("hubsky_ring_spokes", "spokes and hub collar of the celestial ring")
+    R = 180.0
+    torus(p, "Basalt", 30, 3.5, 0, 0, 0, n=32, m=5)                  # the collar the spokes meet
+    torus(p, "Gold", 30, 1.0, 0, 0, 3.8, n=32, m=3)
+    for k in range(8):
+        a = math.radians(45 * k)
+        c, s_ = math.cos(a), math.sin(a)
+        tube(p, "Basalt", [(c * 33, s_ * 33, 0), (c * (R - 8), s_ * (R - 8), 0)], [1.6, 1.2], n=6)
+        for t in (0.42, 0.72):
+            orb(p, "Gold", c * (33 + (R - 41) * t), s_ * (33 + (R - 41) * t), 0, 3.2, n=6)
+    return p
+
+
+def sky_ring_core():
+    """The heart: a faceted star-crystal the game makes glow."""
+    p = Piece("hubsky_ring_core", "the celestial heart's star-crystal")
+    crystal(p, "Shard", 0, 0, 0, 21, 44, 44, n=8)
+    for k in range(4):                                             # a second star, turned
+        crystal(p, "Shard", 0, 0, 0, 9, 30, 30, n=4, rz=22.5 + 90 * k)
+    return p
+
+
+def sky_ring_gyro(name, R, tilt):
+    p = Piece(name, "a gyroscope ring round the celestial heart")
+    torus(p, "GoldBright", R, 1.6, 0, 0, 0, n=40, m=4, rx=tilt)
+    for k in range(4):                                             # little rune-studs round it
+        a = math.radians(90 * k + 45)
+        with frame(p, xf(rx=tilt)):
+            box(p, "Cosmic", math.cos(a) * R, math.sin(a) * R, 0, 4, 4, 4, rz=45)
+    return p
+
+
+def sky_ring_constellation():
+    """A faint web of stars and lines across the inside of the ring; the game
+    makes it glow and pulse."""
+    p = Piece("hubsky_ring_constellation", "constellation lines inside the celestial ring")
+    rng = random.Random("constellation")
+    stars = []
+    for k in range(22):
+        a = rng.uniform(0, 2 * math.pi)
+        r = rng.uniform(50, 160)
+        stars.append((math.cos(a) * r, math.sin(a) * r, rng.uniform(-6, -2)))
+    for x, y, z in stars:
+        crystal(p, "Cosmic", x, y, z, 2.2, 2.6, 2.6, n=4)
+    for i, a in enumerate(stars):                                   # join each to its nearest
+        near = sorted(stars, key=lambda b: (a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2)[1:3]
+        for b in near:
+            if (i + len(near)) % 3 != 0:
+                tube(p, "Cosmic", [a, b], [0.35, 0.35], n=3)
+    return p
+
+
 SKY_BUILDERS = (lambda: cloud_bank("hubsky_cloudbank_a", "cba", 560, 320),
                 lambda: cloud_bank("hubsky_cloudbank_b", "cbb", 440, 280),
                 lambda: cloud_bank("hubsky_cloudbank_c", "cbc", 320, 220),
-                sky_moon, sky_planet, sky_ring, sky_ring_glyphs)
+                sky_moon, sky_planet, sky_ring, sky_ring_glyphs, sky_ring_spokes, sky_ring_core,
+                lambda: sky_ring_gyro("hubsky_ring_gyro_a", 52, 28),
+                lambda: sky_ring_gyro("hubsky_ring_gyro_b", 66, -40),
+                sky_ring_constellation)
 
 
 # =============================================================================
