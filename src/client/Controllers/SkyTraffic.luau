@@ -183,7 +183,12 @@ function SkyTraffic.init(): ()
 
 		local flyers: { Flyer } = {}
 		-- the cloud sea turns slowly round the hub, each bank at its own pace
-		local drifters: { { Part: BasePart, Centre: Vector3, Rate: number } } = {}
+		-- Each bank keeps its layer's direction but has its own character: its
+		-- pace swells and slackens on its own cycle, it eases in and out from the
+		-- hub, rises and sinks a little, and turns slowly on the spot.
+		local drifters: { any } = {}
+		-- the celestial ring and its runes
+		local spinners: { any } = {}
 		local adopted: { [Instance]: boolean } = {}
 		-- ONE PROP OR ISLAND, whenever it arrives. Called for everything already
 		-- here and again for anything that streams in later, so a late arrival
@@ -193,10 +198,31 @@ function SkyTraffic.init(): ()
 				return
 			end
 			adopted[d] = true
-			if d:GetAttribute("Drift") then
+			if d:GetAttribute("SkySpin") then
+				table.insert(spinners, { Part = d, Base = d.CFrame, Rate = d:GetAttribute("SkySpin") :: number,
+					A = d:GetAttribute("SkyColorA"), B = d:GetAttribute("SkyColorB"),
+					Seconds = (d:GetAttribute("SkyColorSeconds") :: number?) or 9 })
+			elseif d:GetAttribute("Drift") then
 				if d.LocalTransparencyModifier < 1 then
-					table.insert(drifters, { Part = d, Centre = d:GetAttribute("DriftCentre") :: Vector3,
-						Rate = d:GetAttribute("Drift") :: number })
+					local centre = d:GetAttribute("DriftCentre") :: Vector3
+					local rel = d.Position - centre
+					local r = Random.new((d:GetAttribute("DriftSeed") :: number?) or 1)
+					table.insert(drifters, {
+						Part = d,
+						Centre = centre,
+						Rate = d:GetAttribute("Drift") :: number,
+						Angle = math.atan2(rel.Z, rel.X),
+						Radius = Vector3.new(rel.X, 0, rel.Z).Magnitude,
+						Y = rel.Y,
+						Rot = d.CFrame.Rotation,
+						Yaw = 0,
+						-- its own cycles
+						PacePeriod = r:NextNumber(40, 110), PaceAmp = r:NextNumber(0.3, 0.7),
+						InPeriod = r:NextNumber(60, 160), InAmp = r:NextNumber(15, 55),
+						UpPeriod = r:NextNumber(25, 70), UpAmp = r:NextNumber(3, 10),
+						YawRate = r:NextNumber(-0.012, 0.012),
+						Phase = r:NextNumber(0, math.pi * 2),
+					})
 				end
 			elseif d:GetAttribute("Backdrop") then
 				table.insert(rocks, { Part = d, Pos = d.Position, Radius = math.max(d.Size.X, d.Size.Z) * 0.5 })
@@ -278,9 +304,20 @@ function SkyTraffic.init(): ()
 			elapsed += dt
 			dt = math.min(dt, 0.1)
 			for _, c in drifters do
-				local cf = c.Part.CFrame
-				local rel = cf.Position - c.Centre
-				c.Part.CFrame = CFrame.new(c.Centre) * CFrame.Angles(0, c.Rate * dt, 0) * CFrame.new(rel) * cf.Rotation
+				local pace = 1 + math.sin(elapsed * math.pi * 2 / c.PacePeriod + c.Phase) * c.PaceAmp
+				c.Angle -= c.Rate * pace * dt
+				c.Yaw += c.YawRate * dt
+				local r = c.Radius + math.sin(elapsed * math.pi * 2 / c.InPeriod + c.Phase) * c.InAmp
+				local y = c.Y + math.sin(elapsed * math.pi * 2 / c.UpPeriod + c.Phase * 1.7) * c.UpAmp
+				c.Part.CFrame = CFrame.new(c.Centre + Vector3.new(math.cos(c.Angle) * r, y, math.sin(c.Angle) * r))
+					* CFrame.Angles(0, c.Yaw, 0) * c.Rot
+			end
+			for _, s in spinners do
+				s.Part.CFrame = s.Base * CFrame.Angles(0, elapsed * s.Rate, 0)
+				if s.A and s.B then
+					local t = (math.sin(elapsed * math.pi * 2 / s.Seconds) + 1) / 2
+					s.Part.Color = (s.A :: Color3):Lerp(s.B :: Color3, t)
+				end
 			end
 			for i, f in flyers do
 				-- DOCKING: big ships only, now and then

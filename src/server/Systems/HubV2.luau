@@ -333,6 +333,7 @@ function HubV2.buildBeyond(sky: Instance, origin: Vector3, prefabs: Instance?, c
 				still(p, CFrame.new(origin + Vector3.new(math.cos(a) * r, layer.Y + rng:NextNumber(-20, 20), math.sin(a) * r))
 					* CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), 0), sky)
 				p:SetAttribute("Drift", layer.Drift * rng:NextNumber(0.7, 1.3))
+				p:SetAttribute("DriftSeed", rng:NextInteger(1, 1e6))
 				p:SetAttribute("DriftCentre", origin)
 				if layer.Detail then
 					p:SetAttribute("Detail", layer.Detail)
@@ -367,14 +368,15 @@ function HubV2.buildBeyond(sky: Instance, origin: Vector3, prefabs: Instance?, c
 			if src and src:IsA("MeshPart") then
 				local p = src:Clone()
 				still(p, CFrame.new(origin + Vector3.new(0, c.Ring.Height, 0)), sky)
-				p:SetAttribute("SpinSpeed", c.Ring.Spin)
-				p:SetAttribute("SpinAxis", "Y")
-				p:SetAttribute("SpinJitter", 0)
+				-- driven by SkyTraffic, not HubEffects: HubEffects skips anything
+				-- beyond its animation distance, and the ring is 430 studs up
+				p:SetAttribute("SkySpin", c.Ring.Spin)
 				if n == "hubsky_ring_glyphs" then
 					p.Material = Enum.Material.Neon
-					p:SetAttribute("ColorA", c.Ring.GlyphA)
-					p:SetAttribute("ColorB", c.Ring.GlyphB)
-					p:SetAttribute("ColorSeconds", 9)
+					p.Color = c.Ring.GlyphA
+					p:SetAttribute("SkyColorA", c.Ring.GlyphA)
+					p:SetAttribute("SkyColorB", c.Ring.GlyphB)
+					p:SetAttribute("SkyColorSeconds", 9)
 				end
 			end
 		end

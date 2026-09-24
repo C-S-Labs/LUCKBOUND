@@ -428,7 +428,7 @@ local GameConfig = {
 			FarRange = { Count = 14, RadiusMin = 3200, RadiusMax = 4600, HeightMin = -520, HeightMax = -120,
 				ScaleMin = 2.2, ScaleMax = 3.2, Tint = Color3.fromRGB(116, 104, 150) },
 			Moon = { Azimuth = 40, Elevation = 26, Distance = 4200, Scale = 6.5, Color = Color3.fromRGB(240, 230, 252) },
-			Planet = { Azimuth = 205, Elevation = 11, Distance = 4700, Scale = 5 },
+			Planet = { Azimuth = 205, Elevation = 32, Distance = 4700, Scale = 5 },
 			Ring = { Height = 430, Spin = 0.04, GlyphA = Color3.fromRGB(124, 245, 224), GlyphB = Color3.fromRGB(182, 131, 255) },
 			-- Drawn at random per server. Detail: 1 on every device, 2 from
 			-- medium graphics, 3 high only (extra copies step up one level).
