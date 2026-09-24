@@ -107,6 +107,21 @@ DISTRICTS = {           # name: (centre, rz that turns local -Y toward the hub)
     "HUB_TRAINING_GROUNDS": ((-DISTRICT_AT, 0.0), 90.0),
 }
 ANCHORS = {}            # named points for gameplay (prompts, dummies, obelisks), hub coords
+ANIM = []               # animated parts: each its own mesh, in hub coordinates
+_ANIM_N = {}
+
+
+def anim(p, name, kind):
+    """A part that MOVES in game, split out of its host mesh (the prop-grouping
+    scheme): its own mesh, named anim_<name>_<n>, built in the host's current
+    frame. kind is how the game animates it: Spin, Bob, SpinBob, Flicker."""
+    _ANIM_N[name] = _ANIM_N.get(name, 0) + 1
+    q = Piece(f"anim_{name}_{_ANIM_N[name]}", kind)
+    q.base = p.base.copy()
+    q.kind = kind
+    q.host = p.name
+    ANIM.append(q)
+    return q
 
 
 def tris(p):
@@ -173,14 +188,16 @@ def pylon_beacon(p, x, y, h=30.0, glow="Shard"):
     for z in (h * 0.35, h * 0.7):
         frustum(p, "Gold", 4, 2.4 - z / h * 1.2 + 0.3, 2.4 - z / h * 1.2 + 0.3, z, z + 0.7, x, y, rot=45)
     frustum(p, "Gold", 4, 1.4, 0, h, h + 2.0, x, y, rot=45)
-    crystal(p, glow, x, y, h + 7.5, 1.8, 4.0, 3.0, n=6, rz=20)
-    torus(p, "Cosmic", 2.6, 0.18, x, y, h + 7.5, n=12, m=3)
+    a = anim(p, "beacon_shard", "SpinBob")
+    crystal(a, glow, x, y, h + 7.5, 1.8, 4.0, 3.0, n=6, rz=20)
+    torus(a, "Cosmic", 2.6, 0.18, x, y, h + 7.5, n=12, m=3)
 
 
 def hanging_core(p, x, y, z, r, down, glow="Shard"):
     """The levitation core under a keel, echoing the Engine's LevitationCore."""
-    crystal(p, glow, x, y, z, r, 0.1, down, n=8, rz=11)
-    torus(p, "Cosmic", r * 1.35, 0.35, x, y, z - down * 0.35, n=16, m=3)
+    a = anim(p, "keel_core", "Bob")
+    crystal(a, glow, x, y, z, r, 0.1, down, n=8, rz=11)
+    torus(anim(p, "keel_core_ring", "Spin"), "Cosmic", r * 1.35, 0.35, x, y, z - down * 0.35, n=16, m=3)
 
 
 def stepped_keel(p, x, y, R, n, depth, glow="Shard", core=True):
@@ -243,10 +260,10 @@ def build_platform():
         a = math.radians(22.5 + 45 * k)
         lamp(p, math.cos(a) * (PLAZA_R - 9), math.sin(a) * (PLAZA_R - 9), 11.0)
     # --- the plaza's keel: the Engine's generator, scaled up and inverted -----
-    stepped_keel(p, 0, 0, PLAZA_R, 16, 78, "Shard")
+    stepped_keel(p, 0, 0, PLAZA_R, 16, 78, "Shard", core=False)   # HUB_LEVITATOR hangs here
     for k in range(4):
         a = math.radians(45 + 90 * k)
-        hanging_core(p, math.cos(a) * 70, math.sin(a) * 70, -30, 5.0, 26, ("Violet", "Rose")[k % 2])
+        hanging_core(p, math.cos(a) * 96, math.sin(a) * 96, -38, 5.0, 26, ("Violet", "Rose")[k % 2])
     # --- the four bridges ---------------------------------------------------------
     for k in range(4):
         with frame(p, xf(rz=90 * k)):
@@ -281,6 +298,58 @@ def build_platform():
 
 
 # =============================================================================
+#  HUB_LEVITATOR -- what holds the whole Crossroads in the sky
+# =============================================================================
+
+def build_levitator():
+    """Under the plaza: a cradle hung from the plaza keel, a great crystal heart
+    inside three gyroscope rings (animated), eight thrusters firing light down,
+    and four conduits reaching out to hold the districts. The Engine's
+    LevitationCore, grown to carry a city."""
+    p = Piece("HUB_LEVITATOR", "cradle, crystal heart, thrusters, district conduits")
+    zc = -120.0                                                       # the cradle ring
+    for k in range(4):                                                # struts from the plaza keel
+        a = math.radians(45 + 90 * k)
+        tube(p, "Basalt", [(math.cos(a) * 26, math.sin(a) * 26, -60), (math.cos(a) * 44, math.sin(a) * 44, -95),
+                           (math.cos(a) * 56, math.sin(a) * 56, zc)], [3.2, 2.8, 3.4], n=6)
+        box(p, "Gold", math.cos(a) * 44, math.sin(a) * 44, -95, 7.5, 7.5, 1.2, rz=math.degrees(a))
+    frustum(p, "Basalt", 24, 60, 60, zc - 3, zc + 3)                  # the cradle: a ring deck
+    frustum(p, "Basalt", 24, 48, 48, zc - 3.01, zc + 3.01)            # (inner edge, overdrawn below)
+    sector(p, "Basalt", 48, 60, zc - 3, zc + 3, 0, 360, 32)
+    sector(p, "Gold", 59, 61, zc + 3, zc + 4, 0, 360, 32)
+    sector(p, "Cosmic", 60.5, 61.2, zc - 1.5, zc + 1.5, 0, 360, 32)
+    for k in range(8):                                                # thrusters round the cradle
+        a = math.radians(22.5 + 45 * k)
+        x, y = math.cos(a) * 57, math.sin(a) * 57
+        frustum(p, "Iron", 8, 4.2, 5.2, zc - 14, zc - 3, x, y)
+        frustum(p, "Gold", 8, 5.4, 5.4, zc - 15, zc - 14, x, y)
+        frustum(p, "Basalt", 8, 5.0, 3.2, zc - 19, zc - 15, x, y)
+        crystal(anim(p, "thruster_flame", "Flicker"), ("Shard", "Violet")[k % 2], x, y, zc - 20.5, 3.0, 0.1, 22, n=8)
+    # the heart
+    crystal(p, "Shard", 0, 0, zc - 50, 34, 60, 150, n=8, rz=11)
+    frustum(p, "Gold", 8, 12, 14, zc + 18, zc + 22)                   # the cap it hangs from
+    tube(p, "Iron", [(0, 0, -82), (0, 0, zc + 22)], [5, 5], n=8)
+    for R, rx, ry, col in ((52, 0, 0, "Gold"), (46, 16, 0, "GoldBright"), (40, 0, -16, "Cosmic")):
+        torus(anim(p, "gyro_ring", "Spin"), col, R, 1.4 if col != "Cosmic" else 0.8, 0, 0, zc - 60, n=40, m=4,
+              rx=rx, ry=ry)
+    # conduits out to the districts, meeting each district's keel
+    for k in range(4):
+        a = math.radians(90 * k)
+        c, s_ = math.cos(a), math.sin(a)
+        pts = [(c * 60, s_ * 60, zc), (c * 110, s_ * 110, zc + 10), (c * 160, s_ * 160, -60),
+               (c * (DISTRICT_AT - 34), s_ * (DISTRICT_AT - 34), -32)]
+        tube(p, "Basalt", pts, [3.6, 3.2, 3.0, 3.4], n=6)
+        tube(p, "Cosmic", [(q[0], q[1], q[2] - 3.4) for q in pts[:3]], [0.7, 0.6, 0.5], n=4)
+        for t in (0.35, 0.7):
+            x = c * (60 + 100 * t)
+            y = s_ * (60 + 100 * t)
+            z = zc + 10 + (-60 - zc - 10) * max(0, (t - 0.5) * 2) if t > 0.5 else zc + 20 * t
+            torus(p, "Gold", 4.4, 0.8, x, y, z, n=12, m=4, rx=90, ry=0)
+    anchor(p, "LevitatorHeart", 0, 0, zc - 50)
+    return p
+
+
+# =============================================================================
 #  HALL OF CHAMPIONS (north) -- where the leaderboards stand
 # =============================================================================
 
@@ -305,7 +374,7 @@ def obelisk(p, x, y, h=24.0, glow="Shard"):
     frustum(p, "Gold", 4, 4.3, 4.3, 2.5, 3.0, x, y, rot=45)
     frustum(p, "Basalt", 4, 3.0, 2.1, 3.0, h, x, y, rot=45)
     frustum(p, "Gold", 4, 2.1, 0, h, h + 3.0, x, y, rot=45)
-    crystal(p, glow, x, y, h + 8.0, 1.2, 2.4, 2.0, n=6)
+    crystal(anim(p, "obelisk_crystal", "SpinBob"), glow, x, y, h + 8.0, 1.2, 2.4, 2.0, n=6)
 
 
 def build_hall():
@@ -351,13 +420,14 @@ def build_hall():
         statue(p, 24, -56, 180, -1)
         # above the stage, on nothing: the laurel crown
         with frame(p, xf(0, 14, 52)):
-            torus(p, "GoldBright", 12, 0.9, 0, 0, 0, n=24, m=4)
+            c = anim(p, "hall_crown", "SpinBob")
+            torus(c, "GoldBright", 12, 0.9, 0, 0, 0, n=24, m=4)
             for k in range(20):
                 a = math.radians(360 * k / 20)
-                crystal(p, "Gold", math.cos(a) * 12, math.sin(a) * 12, 0.6, 1.1, 3.2, 0.6, n=3,
+                crystal(c, "Gold", math.cos(a) * 12, math.sin(a) * 12, 0.6, 1.1, 3.2, 0.6, n=3,
                         rz=math.degrees(a))
-            torus(p, "Cosmic", 16, 0.3, 0, 0, -4, n=24, m=3)
-            crystal(p, "Rose", 0, 0, 0, 3.0, 5.5, 5.5, n=6)
+            torus(anim(p, "hall_halo", "Spin"), "Cosmic", 16, 0.3, 0, 0, -4, n=24, m=3)
+            crystal(anim(p, "hall_heart", "SpinBob"), "Rose", 0, 0, 0, 3.0, 5.5, 5.5, n=6)
         anchor(p, "HallPrompt", 0, -40, DISTRICT_TOP)
         anchor(p, "HallStage", 0, 12, DISTRICT_TOP + 2.0)
     return p
@@ -406,7 +476,7 @@ def build_archives():
             tube(p, "Gold", [(math.cos(a) * (r + 0.6), 10 + math.sin(a) * (r + 0.6), z) for r, z in prof],
                  [0.7, 0.7, 0.6, 0.5, 0.4], n=4)
         torus(p, "Gold", 8.4, 0.7, 0, 10, zd + 27, n=16, m=4)            # the oculus
-        crystal(p, "Shard", 0, 10, zd + 36, 3.0, 7.0, 5.0, n=6)            # floats above it
+        crystal(anim(p, "oculus_crystal", "SpinBob"), "Shard", 0, 10, zd + 36, 3.0, 7.0, 5.0, n=6)
         # shelves: the back five bays, between the columns
         for k in range(5):
             a = 90 + (k - 2) * 45
@@ -426,21 +496,24 @@ def build_archives():
         frustum(p, "BasaltLight", 6, 1.6, 1.2, z0 + 1.2, z0 + 6, 0, 10)
         frustum(p, "Gold", 8, 2.6, 3.2, z0 + 6, z0 + 6.6, 0, 10)
         with frame(p, xf(0, 10, z0 + 16)):
-            orb(p, "GoldBright", 0, 0, 0, 2.6, n=10)
-            torus(p, "Gold", 7.5, 0.25, 0, 0, 0, n=24, m=3, rx=18)
-            torus(p, "Gold", 11.5, 0.25, 0, 0, 0, n=28, m=3, rx=-12, ry=10)
-            torus(p, "Cosmic", 15.0, 0.2, 0, 0, 0, n=32, m=3, ry=24)
-            orb(p, "Violet", 7.5, 0, 2.2, 1.0, n=6)
-            orb(p, "Shard", -8.0, 7.5, -1.4, 1.3, n=6)
-            orb(p, "Rose", 3.0, -14.6, 5.0, 0.9, n=6)
+            orb(anim(p, "orrery_sun", "Spin"), "GoldBright", 0, 0, 0, 2.6, n=10)
+            # each ring carries its planet: spinning the ring moves the planet
+            r1, r2, r3 = (anim(p, "orrery_ring", "Spin") for _ in range(3))
+            torus(r1, "Gold", 7.5, 0.25, 0, 0, 0, n=24, m=3, rx=18)
+            orb(r1, "Violet", 7.5, 0, 0, 1.0, n=6)
+            torus(r2, "Gold", 11.5, 0.25, 0, 0, 0, n=28, m=3, rx=-12, ry=10)
+            orb(r2, "Shard", -11.5, 0, 0, 1.3, n=6)
+            torus(r3, "Cosmic", 15.0, 0.2, 0, 0, 0, n=32, m=3, ry=24)
+            orb(r3, "Rose", 0, 15.0, 0, 0.9, n=6)
         # open books drifting round the rotunda
         for k in range(8):
             a = math.radians(360 * k / 8 + 20)
             x, y, z = math.cos(a) * 24, 10 + math.sin(a) * 24, z0 + 12 + (k % 3) * 5
             with frame(p, xf(x, y, z, math.degrees(a) + 90, rng.uniform(-15, 15))):
-                box(p, "Marble", -1.3, 0, 0, 2.6, 3.4, 0.35, ry=12)
-                box(p, "Marble", 1.3, 0, 0, 2.6, 3.4, 0.35, ry=-12)
-                box(p, rng.choice(("Book1", "Book2", "Book3")), 0, 0, -0.4, 5.6, 3.6, 0.3)
+                b = anim(p, "archive_book", "Bob")
+                box(b, "Marble", -1.3, 0, 0, 2.6, 3.4, 0.35, ry=12)
+                box(b, "Marble", 1.3, 0, 0, 2.6, 3.4, 0.35, ry=-12)
+                box(b, rng.choice(("Book1", "Book2", "Book3")), 0, 0, -0.4, 5.6, 3.6, 0.3)
         # the approach: steps onto the rotunda and two lamps
         box(p, "MarbleDim", 0, -39, DISTRICT_TOP + 0.4, 22, 4, 0.8)
         for s in (-1, 1):
@@ -454,7 +527,68 @@ def build_archives():
 #  SHOP (south) -- the market ring round a fountain
 # =============================================================================
 
-def stall(p, x, y, facing, roof):
+def ware(p, kind, x, rng):
+    """One item for sale, on the counter top (local z 3.8), its own animated
+    mesh so the game can turn it on its stand. Stalls sell different things."""
+    q = anim(p, "ware_" + kind, "SpinBob")
+    z = 3.9
+    y = -2.5
+    if kind == "potion":
+        col = rng.choice(("Rose", "Violet", "Shard", "Ember"))
+        frustum(q, col, 8, 0.75, 0.75, z, z + 1.4, x, y)
+        frustum(q, col, 8, 0.75, 0.3, z + 1.4, z + 1.9, x, y)
+        frustum(q, "MarbleDim", 6, 0.3, 0.3, z + 1.9, z + 2.5, x, y)
+        frustum(q, "Wood", 6, 0.36, 0.36, z + 2.5, z + 2.8, x, y)
+    elif kind == "sword":
+        frustum(q, "Basalt", 6, 0.8, 0.6, z, z + 0.4, x, y)
+        box(q, "MarbleDim", x, y, z + 3.3, 0.35, 0.12, 4.6)
+        box(q, "Gold", x, y, z + 1.1, 1.8, 0.3, 0.3)
+        box(q, "Wood", x, y, z + 0.7, 0.25, 0.25, 0.8)
+    elif kind == "staff":
+        frustum(q, "Basalt", 6, 0.8, 0.6, z, z + 0.4, x, y)
+        tube(q, "Wood", [(x, y, z + 0.4), (x, y, z + 3.8)], [0.18, 0.15], n=5)
+        crystal(q, rng.choice(("Shard", "Violet")), x, y, z + 4.5, 0.5, 0.8, 0.5, n=5)
+        torus(q, "Gold", 0.5, 0.08, x, y, z + 3.9, n=8, m=3)
+    elif kind == "bow":
+        frustum(q, "Basalt", 6, 0.8, 0.6, z, z + 0.4, x, y)
+        torus_arc(q, "Wood", 2.2, 0.15, x - 1.2, y, z + 2.6, -70, 70, n=8, m=3, rx=90)
+        box(q, "Marble", x + 0.85, y, z + 2.6, 0.05, 0.05, 4.1)
+    elif kind == "gem":
+        frustum(q, "Gold", 6, 0.7, 0.5, z, z + 0.5, x, y)
+        crystal(q, rng.choice(("Shard", "Violet", "Rose")), x, y, z + 1.2, 0.6, 1.2, 0.6, n=rng.choice((4, 5, 6)))
+    elif kind == "scroll":
+        frustum(q, "Marble", 8, 0.45, 0.45, -0.9, 0.9, M=xf(x, y, z + 0.5, 0, 0, 90))
+        frustum(q, "Gold", 8, 0.5, 0.5, -0.12, 0.12, M=xf(x, y, z + 0.5, 0, 0, 90))
+    elif kind == "tome":
+        box(q, rng.choice(("Book1", "Book2", "Book3")), x, y, z + 0.4, 1.8, 1.3, 0.8)
+        box(q, "Marble", x + 0.06, y, z + 0.4, 1.6, 1.2, 0.6)
+        box(q, "Gold", x - 0.85, y, z + 0.4, 0.15, 1.35, 0.85)
+    elif kind == "helm":
+        frustum(q, "Basalt", 6, 0.9, 0.7, z, z + 0.4, x, y)
+        frustum(q, "Iron", 8, 0.9, 1.0, z + 0.4, z + 1.3, x, y)
+        frustum(q, "Iron", 8, 1.0, 0.3, z + 1.3, z + 2.3, x, y)
+        box(q, "Canvas", x, y, z + 2.5, 0.2, 1.4, 0.6)
+    elif kind == "shield":
+        frustum(q, "Iron", 10, 1.4, 1.4, -0.12, 0.12, M=xf(x, y, z + 1.5, 0, 90))
+        frustum(q, "Gold", 10, 0.5, 0.2, 0.12, 0.35, M=xf(x, y, z + 1.5, 0, 90))
+    elif kind == "charm":
+        frustum(q, "Basalt", 6, 0.6, 0.4, z, z + 1.6, x, y)
+        torus(q, "Gold", 0.55, 0.1, x, y, z + 2.2, n=10, m=3, rx=90)
+        crystal(q, rng.choice(("Rose", "Shard")), x, y, z + 1.6, 0.25, 0.1, 0.45, n=4)
+    elif kind == "ring":
+        frustum(q, "Basalt", 6, 0.5, 0.45, z, z + 0.4, x, y)
+        torus(q, "GoldBright", 0.45, 0.1, x, y, z + 0.9, n=10, m=3, rx=90)
+        crystal(q, "Violet", x, y, z + 1.4, 0.18, 0.2, 0.12, n=4)
+
+
+# What each stall sells (owner, 2026-09-23: "include variation in whats
+# visibly on sale"). Four wares on each counter, from its line.
+STALL_LINES = (("potion", "potion", "potion", "potion"), ("sword", "staff", "bow", "sword"),
+               ("gem", "gem", "gem", "gem"), ("scroll", "tome", "scroll", "tome"),
+               ("helm", "shield", "helm", "shield"), ("charm", "ring", "charm", "ring"))
+
+
+def stall(p, x, y, facing, roof, line=None, rng=None):
     with frame(p, xf(x, y, DISTRICT_TOP, facing)):
         box(p, "Wood", 0, -2.5, 1.9, 13, 3.4, 3.8)                  # counter
         box(p, "Gold", 0, -4.1, 3.9, 13.4, 0.5, 0.3)
@@ -465,8 +599,8 @@ def stall(p, x, y, facing, roof):
         frustum(p, roof, 4, 10.6, 2.2, 10.0, 15.5, 0, 0.2, rot=45)    # hipped roof
         frustum(p, "Gold", 4, 10.8, 10.8, 9.6, 10.0, 0, 0.2, rot=45)
         frustum(p, "Gold", 4, 2.4, 0, 15.5, 17.5, 0, 0.2, rot=45)
-        for i, g in enumerate(("Shard", "Violet", "Rose", "Gold")):  # goods on the counter
-            crystal(p, g, -4.5 + i * 3, -2.5, 4.3, 0.6, 1.4, 0.3, n=5)
+        for i, kind in enumerate(line):                                # the wares, animated
+            ware(p, kind, -4.5 + i * 3, rng)
         box(p, "Wood", 7.8, -1, 1.2, 2.4, 2.4, 2.4, rz=18)            # crates
         box(p, "Wood", 8.3, 1.4, 1.0, 2.0, 2.0, 2.0, rz=-10)
         tube(p, "Iron", [(0, -4.6, 10.2), (0, -5.0, 8.4)], [0.12, 0.12], n=3)   # a lantern
@@ -493,12 +627,13 @@ def build_shop():
         frustum(p, "Water", 8, 3.0, 3.0, DISTRICT_TOP + 15.6, DISTRICT_TOP + 15.7)
         # the coin of fortune, turning above the water on nothing
         with frame(p, xf(0, 0, DISTRICT_TOP + 28, 0, 90)):
-            frustum(p, "GoldBright", 24, 6.5, 6.5, -0.7, 0.7)
-            torus(p, "Gold", 6.5, 0.6, 0, 0, 0, n=24, m=4)
-            frustum(p, "Gold", 6, 2.2, 2.2, 0.7, 0.9)
-            frustum(p, "Gold", 6, 2.2, 2.2, -0.9, -0.7)
-        torus(p, "Cosmic", 9.0, 0.3, 0, 0, DISTRICT_TOP + 21, n=24, m=3)
-        torus(p, "Rose", 11.5, 0.2, 0, 0, DISTRICT_TOP + 19, n=24, m=3)
+            c = anim(p, "shop_coin", "SpinBob")
+            frustum(c, "GoldBright", 24, 6.5, 6.5, -0.7, 0.7)
+            torus(c, "Gold", 6.5, 0.6, 0, 0, 0, n=24, m=4)
+            frustum(c, "Gold", 6, 2.2, 2.2, 0.7, 0.9)
+            frustum(c, "Gold", 6, 2.2, 2.2, -0.9, -0.7)
+        torus(anim(p, "shop_ring", "Spin"), "Cosmic", 9.0, 0.3, 0, 0, DISTRICT_TOP + 21, n=24, m=3)
+        torus(anim(p, "shop_ring", "Spin"), "Rose", 11.5, 0.2, 0, 0, DISTRICT_TOP + 19, n=24, m=3)
         # banner masts between the stalls
         for k, deg in enumerate((10, 50, 90, 130, 170, 210)):
             a = math.radians(deg)
@@ -512,7 +647,10 @@ def build_shop():
         # the stalls, a ring of six, open toward the middle
         for i, a in enumerate((-10, 30, 70, 110, 150, 190)):
             ar = math.radians(a)
-            stall(p, math.cos(ar) * 44, math.sin(ar) * 44, a - 90 + 180, ("Canvas", "CanvasTeal")[i % 2])
+            # facing a - 90 turns the counter (local -Y) toward the fountain; it
+            # was a + 90, which showed the fountain each stall's back wall
+            stall(p, math.cos(ar) * 44, math.sin(ar) * 44, a - 90, ("Canvas", "CanvasTeal")[i % 2],
+                  STALL_LINES[i], random.Random(f"stall{i}"))
             anchor(p, f"Stall{i + 1}", math.cos(ar) * 38, math.sin(ar) * 38, DISTRICT_TOP)
         # the entrance arch, facing the hub
         for s in (-1, 1):
@@ -983,7 +1121,7 @@ def prop_waystone():
 #  Build, check, export, render
 # =============================================================================
 
-HUB_BUILDERS = (build_platform, build_hall, build_archives, build_shop, build_training)
+HUB_BUILDERS = (build_platform, build_levitator, build_hall, build_archives, build_shop, build_training)
 BACKDROP_BUILDERS = (build_backdrop_peaks, build_backdrop_mesa, build_backdrop_spires)
 PROP_BUILDERS = (prop_isle_shrine, prop_isle_grove, prop_isle_ruin, prop_airship, prop_skiff,
                  lambda: cloud("hubprop_cloud_a", "ca", 6), lambda: cloud("hubprop_cloud_b", "cb", 4),
@@ -1007,24 +1145,54 @@ def build_all():
             print(f"PIECE {p.name:28s} {n:6d} tris {'OVER' if n > TRI_LIMIT else 'ok'}")
             objs.append(o)
         groups[gname] = objs
+        if gname == "Hub":                                            # the parts that move
+            acoll = bpy.data.collections.new("Crossroads_Animated")
+            bpy.context.scene.collection.children.link(acoll)
+            aobjs = []
+            for q in ANIM:
+                o = K["to_object"](q, mats, acoll)
+                o["kit"] = "CROSSROADS"
+                o["tris"] = tris(q)
+                o["anim"] = q.kind
+                o["host"] = q.host
+                aobjs.append(o)
+            groups["Animated"] = aobjs
+            print(f"ANIMATED {len(aobjs)} parts, {sum(o['tris'] for o in aobjs)} tris")
     return groups
 
 
 def check(groups):
     over = [(o.name, o["tris"]) for objs in groups.values() for o in objs if o["tris"] > TRI_LIMIT]
+    # CLIPPING: a moving part must touch nothing (it turns and bobs), and no two
+    # moving parts may touch each other.
+    from mathutils.bvhtree import BVHTree
+    dg = bpy.context.evaluated_depsgraph_get()
+    trees = {o.name: BVHTree.FromObject(o, dg) for o in groups["Hub"] + groups["Animated"]}
+    hits = []
+    anims = groups["Animated"]
+    for i, a in enumerate(anims):
+        for o in groups["Hub"] + anims[i + 1:]:
+            if o is a:
+                continue
+            if trees[a.name].overlap(trees[o.name]):
+                hits.append((a.name, o.name))
+    for h in hits:
+        print("CLIP", *h)
+    print(f"CLIP CHECK: {len(hits)} overlaps")
     return over
 
 
 def export(groups):
     os.makedirs(EXPORT_DIR, exist_ok=True)
-    files = {"Hub": "crossroads_hub.fbx", "Backdrop": "crossroads_backdrop.fbx", "Orbiters": "crossroads_orbiters.fbx"}
+    files = {"Hub": "crossroads_hub.fbx", "Animated": "crossroads_animated.fbx",
+             "Backdrop": "crossroads_backdrop.fbx", "Orbiters": "crossroads_orbiters.fbx"}
     layout = {"pieces": {}, "anchors": ANCHORS, "note": "Blender coords (x, y north, z up), studs. "
               "Roblox = (x, z, -y). Bounding-box centre = where the MeshPart's Position goes."}
     for gname, objs in groups.items():
         path = os.path.join(EXPORT_DIR, files[gname])
         # Hub pieces keep their hub coordinates (they assemble where they land);
         # backdrop and orbiters are exported at their own origin.
-        if gname == "Hub":
+        if gname in ("Hub", "Animated"):
             bpy.ops.object.select_all(action="DESELECT")
             for o in objs:
                 o.select_set(True)
@@ -1037,7 +1205,8 @@ def export(groups):
             cs = [o.matrix_world @ Vector(c) for c in o.bound_box]
             mn = [min(c[i] for c in cs) for i in range(3)]
             mx = [max(c[i] for c in cs) for i in range(3)]
-            layout["pieces"][o.name] = {"group": gname, "tris": o["tris"],
+            layout["pieces"][o.name] = {"group": gname, "tris": o["tris"], "anim": o.get("anim"),
+                                        "host": o.get("host"),
                                         "centre": [round((a + b) / 2, 3) for a, b in zip(mn, mx)],
                                         "size": [round(b - a, 3) for a, b in zip(mn, mx)]}
         print("EXPORTED", path)

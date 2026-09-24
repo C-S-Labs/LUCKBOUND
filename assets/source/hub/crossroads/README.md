@@ -43,11 +43,31 @@ in `assets/export/hub/crossroads/crossroads_layout.json`.
 | File | Meshes |
 |---|---|
 | `crossroads_hub.fbx` | `HUB_PLATFORM` (7.6k), `HUB_HALL_OF_CHAMPIONS` (4.6k), `HUB_ARCHIVES` (8.0k), `HUB_SHOP` (4.9k), `HUB_TRAINING_GROUNDS` (5.0k). All in **hub coordinates**, so they assemble where they land. |
+| `crossroads_hub.fbx` (also) | `HUB_LEVITATOR` (2.9k): under the plaza, a cradle, a great crystal heart and eight thrusters, with conduits out to every district. It is what keeps the whole hub in the sky. |
+| `crossroads_animated.fbx` | **79 `anim_*` meshes** (6.2k tris in all), in hub coordinates: every part that moves, split out of its host mesh the way the Sky Citadel props are. Each one's `anim` (Spin / Bob / SpinBob / Flicker) and `host` are in the layout JSON. They include: beacon shards, keel cores and rings, obelisk crystals, the crown, halo and heart, the oculus crystal, the orrery (a sun plus three rings, each carrying its planet), the floating books, the coin and fountain rings, the thruster flames, the three gyroscope rings, and **every ware for sale**. |
 | `crossroads_backdrop.fbx` | `HUB_BACKDROP_PEAKS`, `_MESA`, `_SPIRES` (3.4–3.7k each), 390–720 studs tall, to be cloned round the hub |
 | `crossroads_orbiters.fbx` | 12 `hubprop_*`: three small isles (shrine, grove, ruin), airship, skiff, two clouds, crystal cluster, rune ring, sky lantern, sky whale, waystone |
 
 The hub pieces are the same in every server. The backdrop and orbiters are
 placed at random by the server.
+
+## Shop wares
+
+Each stall sells its own line, four items per counter, and every item is an animated mesh (`anim_ware_<kind>_<n>`):
+
+| Stall | Line |
+|---|---|
+| 1 | potions |
+| 2 | weapons: sword, staff, bow |
+| 3 | gems |
+| 4 | scrolls and tomes |
+| 5 | armour: helms, shields |
+| 6 | charms and rings |
+
+## Checks
+
+`build_crossroads_hub.py` runs a clipping scan every build (`CLIP CHECK`). No
+moving part may touch a static mesh or another moving part. The count is 0.
 
 ## Gameplay anchors
 
@@ -64,10 +84,11 @@ their stands.
 
 ## Import
 
-1. In Studio's 3D Importer, import each FBX, keeping the object names. Use the
+1. In Studio's 3D Importer, import each FBX (hub, animated, backdrop, orbiters), keeping the object names. Use the
    same settings as the Sky Citadel kit: no parent empties, 1 unit = 1 stud.
 2. Save as follows:
    - the hub → `assets/rbxm/prefabs/HUB_CROSSROADS_V2.rbxmx`
+   - the animated parts → `assets/rbxm/prefabs/HUB_ANIMATED.rbxmx`
    - the backdrop → `assets/rbxm/prefabs/HUB_BACKDROP_V2.rbxmx`
    - the orbiters → `assets/rbxm/props/HUB_ORBITERS.rbxmx`
 3. Then the wiring follows: HubBuilder places the five pieces from the layout,
