@@ -35,6 +35,7 @@ local SkyTraffic = {}
 
 local CLEARANCE = 18 -- studs kept between two props
 local SCAN_EVERY = 0.15 -- seconds between one prop's path checks
+local MAX_CAST = 1000 -- Roblox refuses a shapecast longer than 1024 studs
 local BIG = 45 -- a prop this big (half its diagonal) is a big ship and may dock
 local TURN_PER_SIZE = 3 -- turning radius = this x the prop's half-diagonal
 local TURN_MIN, TURN_MAX = 12, 320
@@ -325,7 +326,7 @@ function SkyTraffic.init(): ()
 				if f.ScanIn <= 0 and f.Mode ~= "docked" then
 					f.ScanIn = SCAN_EVERY
 					f.Avoid = Vector3.zero
-					local reach = math.max(f.Speed, 8) * 3 + f.TurnRadius * 1.5 + f.Radius
+					local reach = math.min(math.max(f.Speed, 8) * 3 + f.TurnRadius * 1.5 + f.Radius, MAX_CAST)
 					local r = math.clamp(f.Radius * 0.7, 2, 200)
 					local hit = Workspace:Spherecast(f.Pos - f.Dir * r * 0.5, r, f.Dir * reach, castParams)
 					if hit then
@@ -337,7 +338,11 @@ function SkyTraffic.init(): ()
 						f.Avoid = (side.Unit + Vector3.yAxis * 0.6).Unit * (0.5 + urgency * 2.5)
 						-- if the waypoint is behind the obstacle, choose another now
 						if urgency > 0.4 and f.Mode == "fly" then
-							if Workspace:Spherecast(f.Pos, r, f.Target - f.Pos, castParams) then
+							local toTarget = f.Target - f.Pos
+							if toTarget.Magnitude > MAX_CAST then
+								toTarget = toTarget.Unit * MAX_CAST -- only the stretch that matters now
+							end
+							if toTarget.Magnitude > 1 and Workspace:Spherecast(f.Pos, r, toTarget, castParams) then
 								f.Target = waypoint(f, angleOf(f, f.Pos) + math.pi * 0.35)
 							end
 						end
