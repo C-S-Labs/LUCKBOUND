@@ -291,6 +291,9 @@ function HubEffects.init(): ()
 				part.LocalTransparencyModifier = 1
 				return
 			end
+			if part:GetAttribute("Wander") then
+				return -- SkyTraffic moves these
+			end
 			if part:GetAttribute("IsFeaturedShard") then
 				table.insert(shards, part)
 			end

@@ -43,7 +43,7 @@ end
 -- MeshId at PreciseConvexDecomposition, as ChunkLoader does for biome chunks.
 local function walkable(src: MeshPart): MeshPart
 	local ok, made = pcall(function()
-		return AssetService:CreateMeshPartAsync(src.MeshID, {
+		return AssetService:CreateMeshPartAsync(src.MeshId, {
 			CollisionFidelity = Enum.CollisionFidelity.PreciseConvexDecomposition,
 		})
 	end)
@@ -161,6 +161,7 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 			p.Anchored, p.CanCollide, p.CanQuery, p.CanTouch = true, false, false, false
 			p.CFrame = CFrame.new(origin + Vector3.new(math.cos(a) * r, rng:NextNumber(b.HeightMin, b.HeightMax), math.sin(a) * r))
 				* CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), 0)
+			p:SetAttribute("Backdrop", true)
 			p.Parent = sky
 		end
 	end
@@ -188,18 +189,19 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 			local height = origin.Y + rng:NextNumber(entry.HeightMin, entry.HeightMax)
 			local phase = rng:NextNumber(0, math.pi * 2)
 			p.CFrame = CFrame.new(origin + Vector3.new(math.cos(phase) * radius, height - origin.Y, math.sin(phase) * radius))
-			p:SetAttribute("OrbitCentre", origin)
-			p:SetAttribute("OrbitRadius", radius)
-			p:SetAttribute("OrbitHeight", height)
-			p:SetAttribute("OrbitPhase", phase)
-			-- Speed in radians/second: about the same stud speed at any radius,
-			-- some flying the other way round.
-			local dir = if rng:NextNumber() < 0.3 then -1 else 1
-			p:SetAttribute("OrbitSpeed", dir * rng:NextNumber(entry.SpeedMin, entry.SpeedMax) / radius)
-			-- Ships' noses point along the imported -X, so a quarter turn faces
-			-- them along their path; the reverse way round needs the opposite.
-			p:SetAttribute("OrbitYaw", if entry.Faces then (if dir > 0 then 90 else -90) else rng:NextNumber(0, 360))
-			p:SetAttribute("OrbitBob", entry.Bob or 0)
+			-- WANDERERS, not orbiters (owner, 2026-09-24): each one is moved by
+			-- the client's SkyTraffic on its own course, at its own changing
+			-- speed, inside its band, steering clear of the hub, the backdrop
+			-- and every other prop. The server only says where it may go.
+			p:SetAttribute("Wander", true)
+			p:SetAttribute("WanderCentre", origin)
+			p:SetAttribute("WanderRadius", Vector2.new(entry.RadiusMin, entry.RadiusMax))
+			p:SetAttribute("WanderHeight", Vector2.new(origin.Y + entry.HeightMin, origin.Y + entry.HeightMax))
+			p:SetAttribute("WanderSpeed", Vector2.new(entry.SpeedMin, entry.SpeedMax))
+			p:SetAttribute("WanderFaces", entry.Faces == true)
+			p:SetAttribute("WanderBob", entry.Bob or 0)
+			p:SetAttribute("WanderSeed", rng:NextInteger(1, 1e6))
+			local _ = radius + height + phase
 			-- 1 always shown, 2 medium graphics and up, 3 high only.
 			p:SetAttribute("Detail", if k == 1 then entry.Detail else math.min(3, entry.Detail + (k > 2 and 1 or 0)))
 			p.Parent = sky

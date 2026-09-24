@@ -779,7 +779,7 @@ local GameConfig = {
 		-- ...and never trap. If replication stalls, the Play button lights up
 		-- anyway rather than holding the player hostage to a count that may
 		-- never complete.
-		MaximumSeconds = 25,
+		MaximumSeconds = 45, -- the v2 hub is several hundred meshes
 
 		-- WHAT "LOADED" MEANS. Not a count -- a SETTLE.
 		--
