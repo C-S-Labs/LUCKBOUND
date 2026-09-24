@@ -15,7 +15,7 @@ points the manifest at their own ids. The tool below does that for you.
 ## One-time setup
 
 ```bash
-git clone https://github.com/sgame1028/LUCKBOUND.git
+git clone https://github.com/C-S-Labs/LUCKBOUND.git
 cd LUCKBOUND
 rokit install              # rojo, stylua, selene (versions pinned in rokit.toml)
 rojo serve                 # then, in Studio: Rojo plugin -> Connect
