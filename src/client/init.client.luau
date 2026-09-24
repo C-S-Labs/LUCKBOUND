@@ -11,6 +11,7 @@ local Controllers = script.Controllers
 local UI = script.UI
 
 local HubEffects = require(Controllers.HubEffects)
+local SkyTraffic = require(Controllers.SkyTraffic)
 local StateController = require(Controllers.StateController)
 local ProximityController = require(Controllers.ProximityController)
 local ExpeditionController = require(Controllers.ExpeditionController)
@@ -40,6 +41,7 @@ StateController.init()
 -- the moment it appears.
 SettingsController.init()
 HubEffects.init()
+SkyTraffic.init()
 ProximityController.init()
 -- The HUD before the controller: the controller fires state immediately to
 -- every listener, so a HUD that subscribes afterwards would miss nothing --

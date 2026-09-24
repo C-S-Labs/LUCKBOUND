@@ -41,8 +41,10 @@ local Theme = {
 	-- light to raise. Moving to 4.5 puts the sun just above it -- a low, raking
 	-- pre-dawn light that still reads as night, keeps the purple sky, and gives
 	-- the marble something to catch.
-	Ambient = Color3.fromRGB(72, 66, 96),
-	OutdoorAmbient = Color3.fromRGB(96, 88, 128),
+	-- v2 brightness pass (owner, 2026-09-24: "the map is quite dark"):
+	-- more ambient fill and exposure; the purple night stays.
+	Ambient = Color3.fromRGB(104, 96, 132),
+	OutdoorAmbient = Color3.fromRGB(138, 128, 172),
 	ColorShiftTop = Color3.fromRGB(90, 70, 140),
 	ColorShiftBottom = Color3.fromRGB(30, 25, 50),
 	FogColor = Color3.fromRGB(30, 25, 50),
@@ -50,8 +52,8 @@ local Theme = {
 	-- the blueprint's 150/500 was sized to a 120-stud hub.
 	FogStart = 700,
 	FogEnd = 4400,
-	Brightness = 2.6,
-	ExposureCompensation = 0.15,
+	Brightness = 3.1,
+	ExposureCompensation = 0.4,
 	ClockTime = 4.5,
 
 	-- Hub materials and accents.

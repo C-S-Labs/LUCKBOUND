@@ -195,38 +195,42 @@ local function countHub(): number
 end
 
 local preloadDone = false
+local preloadTotal, preloadLoaded = 0, 0
 
-local function preloadInBatches()
-	local crossroads = Workspace:FindFirstChild(Constants.NAMES.CROSSROADS)
-	if not crossroads then
-		preloadDone = true
-		return
+-- THE PART COUNT THE SERVER PUBLISHED, when there is one. HubBuilder sets
+-- PartCount on the Crossroads last, so "arrived >= PartCount" is a real
+-- barrier rather than a guess. The v2 hub is several hundred meshes plus a
+-- sky full of props, so this matters far more than it did for the old hub.
+local function countParts(crossroads: Instance): number
+	local n = 0
+	for _, d in crossroads:GetDescendants() do
+		if d:IsA("BasePart") then
+			n += 1
+		end
 	end
+	return n
+end
 
+--- PHASE TWO: once the hub has arrived, preload every mesh in it and count
+--- them in as they finish. Started AFTER arrival, so it preloads what is
+--- actually there -- the first version snapshotted an empty hub, declared
+--- itself done, and opened the screen onto grey boxes.
+local function preloadAll(crossroads: Instance)
 	local queue: { Instance } = {}
-	for _, descendant in crossroads:GetDescendants() do
-		if descendant:IsA("MeshPart") or descendant:IsA("Decal") or descendant:IsA("Texture") then
-			table.insert(queue, descendant)
+	for _, d in crossroads:GetDescendants() do
+		if d:IsA("MeshPart") or d:IsA("Decal") or d:IsA("Texture") then
+			table.insert(queue, d)
 		end
 	end
-
-	-- In batches, because PreloadAsync on several hundred meshes at once
-	-- blocks this thread for as long as it takes and the progress bar would
-	-- sit still through all of it.
-	local batch: { Instance } = {}
-	for _, instance in queue do
-		table.insert(batch, instance)
-		if #batch >= GameConfig.Loading.PreloadBatchSize then
-			pcall(ContentProvider.PreloadAsync, ContentProvider, batch)
-			batch = {}
-			if finished then
-				preloadDone = true
-				return
-			end
+	preloadTotal = #queue
+	local size = GameConfig.Loading.PreloadBatchSize
+	for start = 1, #queue, size do
+		if finished then
+			break
 		end
-	end
-	if #batch > 0 then
+		local batch = table.move(queue, start, math.min(start + size - 1, #queue), 1, {})
 		pcall(ContentProvider.PreloadAsync, ContentProvider, batch)
+		preloadLoaded += #batch
 	end
 	preloadDone = true
 end
@@ -244,55 +248,48 @@ end
 
 local function watchProgress()
 	local loading = GameConfig.Loading
-	task.spawn(preloadInBatches)
-
-	-- REPLICATION IS JUDGED BY ITS SHAPE, NOT BY A COUNT. Instances arrive,
-	-- then they stop arriving. Waiting for a specific number meant guessing
-	-- how many parts the hub has -- and the guess was 380 against a hub that
-	-- builds 357, so the bar stuck at 94% and every player was told loading
-	-- had taken longer than usual. Watching it settle needs no number and
-	-- survives the art changing.
-	local lastCount = -1
-	local settledFor = 0
+	local lastCount, settledFor = -1, 0
+	local preloadStarted = false
 
 	while not ready and not finished do
 		local elapsed = os.clock() - startedAt
-		local arrived = countHub()
+		local crossroads = Workspace:FindFirstChild(Constants.NAMES.CROSSROADS)
+		local arrived = if crossroads then countParts(crossroads) else 0
+		local target = crossroads and crossroads:GetAttribute("PartCount") :: number?
 
-		if arrived == lastCount and arrived >= loading.MinimumHubInstances then
+		if arrived == lastCount and arrived > 0 then
 			settledFor += loading.HubPollSeconds
 		else
 			settledFor = 0
 		end
 		lastCount = arrived
 
-		-- Two halves: the hub showing up at all, then it holding still. The
-		-- bar reaches 1 exactly when replication has settled, so it never
-		-- sits full while the screen refuses to open -- the single most
-		-- annoying thing a loading bar can do.
-		local arrivalProgress = math.clamp(arrived / loading.MinimumHubInstances, 0, 1) * 0.5
-		local settleProgress = math.clamp(settledFor / loading.HubSettleSeconds, 0, 1) * 0.5
-		local replicated = arrivalProgress + settleProgress
-		local timeProgress = math.clamp(elapsed / loading.MinimumSeconds, 0, 1)
+		-- Arrival: against the published count when there is one (95%, as a
+		-- streamed far-off prop may never come), else by holding still.
+		local arrival = if target and target > 0
+			then math.clamp(arrived / (target * 0.95), 0, 1)
+			else math.clamp(settledFor / loading.HubSettleSeconds, 0, 1)
+		local arrivalDone = arrival >= 1 or (arrived >= loading.MinimumHubInstances and settledFor >= loading.HubSettleSeconds * 2)
 
-		local shown = math.min(replicated, timeProgress)
+		if arrivalDone and not preloadStarted and crossroads then
+			preloadStarted = true
+			task.spawn(preloadAll, crossroads)
+		end
+		local preload = if preloadDone then 1 elseif preloadTotal > 0 then preloadLoaded / preloadTotal else 0
+
+		local shown = math.min(arrival * 0.4 + preload * 0.6, math.clamp(elapsed / loading.MinimumSeconds, 0, 1))
 		UIKit.tween(progressFill, UITheme.Motion.Normal, { Size = UDim2.fromScale(shown, 1) })
-		statusLabel.Text = string.format("Building the Crossroads…  %d%%", math.floor(shown * 100))
+		statusLabel.Text = if not arrivalDone
+			then string.format("Raising the Crossroads…  %d%%", math.floor(shown * 100))
+			else string.format("Lighting the sky…  %d%%", math.floor(shown * 100))
 
-		local replicationDone = settledFor >= loading.HubSettleSeconds
 		if elapsed >= loading.MaximumSeconds then
-			-- SAY WHAT WAS ACTUALLY MISSING. The first time this fired, the
-			-- message told nobody anything and the cause -- a hub that never
-			-- replicated because a player with no character has nothing to
-			-- stream around -- took a walk and a code read to find. A
-			-- timeout that names what it was waiting for is the difference
-			-- between a bug report and a diagnosis.
 			warn(string.format(
-				"[LoadingScreen] timed out: %d instances, settled %.1fs of %.1fs, preload %s",
-				arrived, settledFor, loading.HubSettleSeconds, tostring(preloadDone)
+				"[LoadingScreen] timed out: %d of %s parts, preload %d/%d",
+				arrived, tostring(target), preloadLoaded, preloadTotal
 			))
 			setReady("Taking longer than usual — you can go in now.")
-		elseif replicationDone and preloadDone and elapsed >= loading.MinimumSeconds then
+		elseif arrivalDone and preloadDone and elapsed >= loading.MinimumSeconds then
 			setReady("Ready.")
 		end
 
