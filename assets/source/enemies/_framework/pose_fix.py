@@ -145,3 +145,66 @@ def ground(extra=()):
         if len(m.vertices): minz = min(minz, min((o.matrix_world @ v.co).z for v in m.vertices))
         oe.to_mesh_clear()
     r_ = P["HumanoidRootNode"]; r_.location = r_.location + Vector((0, -minz, 0)); _upd()
+# ---------------- joint sanity (natural hinges, wrists, shoulders) ----------------
+HINGES = {"LeftLowerArm": "arm", "RightLowerArm": "arm", "LeftLowerLeg": "leg", "RightLowerLeg": "leg"}
+def _dir(bn): _upd(); pb = P[bn]; return (RW.to_3x3() @ (pb.tail - pb.head)).normalized()
+def joint_report(tag=""):
+    """Angles in degrees. Elbow/knee: signed flex (negative = hyperextended / bent the wrong way).
+       Wrist: angle between forearm and hand. Returns list of problems."""
+    out, bad = [], []
+    for side in ("Left", "Right"):
+        ua, la, hd = _dir(f"{side}UpperArm"), _dir(f"{side}LowerArm"), _dir(f"{side}Hand")
+        body_fwd = (RW.to_3x3() @ (_rest_rot("UpperTorso") @ Vector((0, -1, 0)))).normalized()
+        el = math.degrees(ua.angle(la)); n = ua.cross(la)
+        # a natural elbow folds the forearm toward the front/inside of the upper arm
+        side_ax = (RW.to_3x3() @ (_rest_rot(f"{side}UpperArm") @ Vector((1, 0, 0)))).normalized()
+        wr = math.degrees(la.angle(hd))
+        out.append(f"{side[0]}elbow {el:.0f} {side[0]}wrist {wr:.0f}")
+        if wr > 50: bad.append(f"{side} wrist {wr:.0f}°")
+        ul, ll = _dir(f"{side}UpperLeg"), _dir(f"{side}LowerLeg")
+        kn = math.degrees(ul.angle(ll)); kdir = ul.cross(ll).dot((RW.to_3x3() @ (_rest_rot(f"{side}UpperLeg") @ Vector((1, 0, 0)))).normalized())
+        out.append(f"{side[0]}knee {kn:.0f}{'!' if kn > 5 and kdir < 0 else ''}")
+    print(f"JOINTS {tag}: " + " ".join(out) + ("  BAD: " + ", ".join(bad) if bad else ""))
+    return bad
+
+def wield(D, C, side="Right", pole_off=(0.5, 0.35, -0.6)):
+    """Natural one-hand weapon hold: the haft runs along world direction D through world point C (in the palm).
+       The hand stays in line with the forearm (the haft sits across the palm, so the forearm is solved to be well
+       off the haft axis) and the elbow points out/down/back via the pole, so nothing bends unnaturally.
+       Solves: forearm -> hand frame -> IK wrist target, iterated; then seats and wraps the lance."""
+    D = Vector(D).normalized(); C = Vector(C); s = 1 if side == "Left" else -1
+    ua, la = f"{side}UpperArm", f"{side}LowerArm"
+    sh = RW @ P[ua].head
+    chain = [ua] + [c.name for c in P[ua].children_recursive]      # arm + hand + fingers + weapon sockets
+    keep = {b_: P[b_].matrix.copy() for b_ in chain}
+    def _restore():
+        for b_ in chain: P[b_].matrix = keep[b_]; _upd()
+    best = None
+    for po in (pole_off, (0.8, 0.1, -0.3), (0.6, 0.6, -0.2), (0.9, -0.2, -0.5), (0.3, 0.7, -0.7)):
+        _restore()
+        _wield_once(D, C, side, s, ua, la, sh + Vector((po[0]*s, po[1], po[2])))
+        sc = hits("Arm" + side) + 3*joint_penalty(side)
+        if best is None or sc < best[0]: best = (sc, po)
+        if sc == 0: break
+    _restore()
+    _wield_once(D, C, side, s, ua, la, sh + Vector((best[1][0]*s, best[1][1], best[1][2])))
+def joint_penalty(side):
+    fa, hd = _dir(f"{side}LowerArm"), _dir(f"{side}Hand")
+    return max(0.0, math.degrees(fa.angle(hd)) - 35)
+def _wield_once(D, C, side, s, ua, la, pole):
+    for sgn in (1, -1):
+        for _ in range(4):
+            fa = _dir(la)
+            hd = (fa - D*fa.dot(D))
+            if hd.length < 1e-3: hd = Vector((0, 0, -1)) - D*D.z
+            hd.normalize(); n = D.cross(hd)*sgn
+            wr = C - n*SEAT_N - hd*SEAT_D
+            _ik(la, tuple(RW.inverted() @ wr), tuple(RW.inverted() @ pole)); _bake([ua, la])
+        orient_hand(side, n, hd)
+        if _dir("Weapon_R").dot(D) > 0.5 or side != "Right": break
+    if side == "Right":
+        G0, GA = haft(); q = GA.rotation_difference(D)
+        wb = P["Weapon_R"]; h = wb.head.copy(); Rl = RW.to_3x3().inverted() @ q.to_matrix() @ RW.to_3x3()
+        wb.matrix = Matrix.Translation(h) @ Rl.to_4x4() @ Matrix.Translation(-h) @ wb.matrix; _upd()
+        grip_lance()
+    wrap(side)

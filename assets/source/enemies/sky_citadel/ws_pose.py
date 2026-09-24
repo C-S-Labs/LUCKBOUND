@@ -25,5 +25,6 @@ hb = P["RightHand"]; h = hb.head.copy()
 hb.matrix = Matrix.Translation(h) @ q.to_matrix().to_4x4() @ Matrix.Translation(-h) @ hb.matrix
 exec(open(FW + r"\pose_fix.py").read())
 grip_lance(); wrap("Right")
+_C = seat_point("Right"); wield(want, _C)          # re-solve the arm so the wrist stays in line (natural hold)
 clear_arm("Right"); clear_arm("Left")
 ground(globals().get("LANCE_OBJS", []))

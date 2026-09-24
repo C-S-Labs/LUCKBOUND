@@ -1,48 +1,36 @@
 # P1_Lunge (WS_MOVESET P1 #1 "Dash Lunge"): 12 f tell, 6 f active, 24 f recovery. 44 f @ 30 fps.
 # In place: the Studio AI moves the root (dash ~6 m along the lunge line between HitStart and HitEnd, overshoot 2 m).
-#   f1  ready stance            f8  coil (sinks, lance drawn back high, wings lift)   f12 tell peak (wings flared)
-#   f15 full thrust (arm + torso extended forward, lance level, wings swept back)     f19 hit ends, overextended
-#   f26 stumble-through (head down, wings droop = visible opening)                     f44 back to ready stance
+# Built with param_keys: every 2nd frame is a fully SOLVED pose (natural one-hand hold via wield(), clear arms, grounded),
+# so in-betweens never bend a joint the wrong way or pass a limb through the body.
+#   f1 ready  f8 coil (sink back, lance drawn beside the hip, wings lift)  f12 tell peak (wings flare)
+#   f15 thrust (lean in, arm driven out low, lance level)  f19 hit ends  f26 stumble-through (opening)  f44 ready
 BASE = open(HERE + r"\ws_pose.py").read()
 LO = globals().get("LANCE_OBJS", [])
 FWD, UP = Vector((0, -1, 0)), Vector((0, 0, 1))
-def stance():
+exec(BASE, G)                                                     # measure the ready stance once
+_SH = world("RightUpperArm")
+C0 = seat_point("Right") - _SH                                    # ready grip, relative to the shoulder
+D0 = Vector((0.12, -1.0, -0.08)).normalized()                     # ready lance direction (ws_pose "want")
+def pose(p):
     exec(BASE, G)
-def coil():
-    stance()
-    rot_dir("UpperTorso", 0.12, "Head", -FWD)                     # rock back
-    sh = world("RightUpperArm")
-    reach("Right", sh + Vector((-0.32, 0.28, -0.3)))             # draw the lance back beside the hip
-    aim_weapon((0.05, -1, 0.08))
-    rot_dir("WingL", 0.2, "WingL_Tip", UP); rot_dir("WingR", 0.2, "WingR_Tip", UP)
+    if p["lean"]: rot_dir("UpperTorso", abs(p["lean"]), "Head", FWD if p["lean"] > 0 else -FWD)
+    if p["head"]: rot_dir("Head", p["head"], "Head", FWD)
+    if p["wup"]: rot_dir("WingL", abs(p["wup"]), "WingL_Tip", UP if p["wup"] > 0 else -UP); rot_dir("WingR", abs(p["wup"]), "WingR_Tip", UP if p["wup"] > 0 else -UP)
+    if p["wback"]: rot_dir("WingL", p["wback"], "WingL_Tip", -FWD); rot_dir("WingR", p["wback"], "WingR_Tip", -FWD)
+    if p["wflare"]: rot_dir("WingL", p["wflare"], "WingL_Tip", Vector((1, 0, 0.3))); rot_dir("WingR", p["wflare"], "WingR_Tip", Vector((-1, 0, 0.3)))
+    if p["larm"]: rot_dir("LeftUpperArm", p["larm"], "LeftHand", -FWD); clear_arm("Left")
+    wield(p["D"], world("RightUpperArm") + Vector(p["C"]))
     ground(LO)
-def tell():
-    coil()
-    rot_dir("WingL", 0.25, "WingL_Tip", Vector((1, 0, 0.3))); rot_dir("WingR", 0.25, "WingR_Tip", Vector((-1, 0, 0.3)))
-    ground(LO)
-def thrust():
-    stance()
-    rot_dir("UpperTorso", 0.3, "Head", FWD)                        # lean into it
-    sh = world("RightUpperArm")
-    reach("Right", sh + Vector((0.05, -0.62, -0.18)))             # arm driven straight out in front
-    aim_weapon((0.02, -1, 0.0))
-    rot_dir("LeftUpperArm", 0.5, "LeftHand", -FWD)                # off arm swings back for balance
-    clear_arm("Left")
-    rot_dir("WingL", 0.3, "WingL_Tip", -FWD); rot_dir("WingR", 0.3, "WingR_Tip", -FWD)
-    ground(LO)
-def overextend():
-    thrust()
-    rot_dir("UpperTorso", 0.1, "Head", FWD); rot_dir("Head", 0.12, "Head", FWD)
-    ground(LO)
-def stumble():
-    stance()
-    rot_dir("UpperTorso", 0.32, "Head", FWD); rot_dir("Head", 0.3, "Head", FWD)
-    sh = world("RightUpperArm")
-    reach("Right", sh + Vector((0.0, -0.4, -0.5)))                # lance tip sagging toward the floor
-    aim_weapon((0.0, -1, -0.35))
-    rot_dir("WingL", 0.3, "WingL_Tip", -UP); rot_dir("WingR", 0.3, "WingR_Tip", -UP)
-    ground(LO)
+def P_(C, D, lean=0.0, head=0.0, wup=0.0, wback=0.0, wflare=0.0, larm=0.0):
+    return dict(C=Vector(C), D=Vector(D).normalized(), lean=lean, head=head, wup=wup, wback=wback, wflare=wflare, larm=larm)
+READY  = P_(C0, D0)
+COIL   = P_((-0.34, 0.2, -0.72), (0.05, -1, 0.12), lean=-0.12, wup=0.2)
+TELL   = P_((-0.36, 0.24, -0.7), (0.05, -1, 0.14), lean=-0.14, wup=0.2, wflare=0.25)
+THRUST = P_((0.02, -0.82, -0.62), (0.02, -1, 0.02), lean=0.3, wback=0.3, larm=0.5)
+OVER   = P_((0.02, -0.86, -0.66), (0.02, -1, -0.02), lean=0.4, head=0.12, wback=0.3, larm=0.5)
+STUMB  = P_((0.0, -0.6, -0.85), (0.0, -1, -0.4), lean=0.32, head=0.3, wup=-0.3, larm=0.2)
 begin("P1_Lunge", 44)
-key(1, stance); key(8, coil); key(12, tell); key(15, thrust); key(19, overextend); key(26, stumble); key(44, stance)
+param_keys([(1, READY), (8, COIL), (12, TELL), (15, THRUST), (19, OVER), (26, STUMB), (44, READY)], pose,
+           step=2, arcs={"C": (-0.12, 0.0, 0.0)})                  # the hand swings slightly OUT around the hip
 mark("Tell", 1); mark("VFX_WingFlare", 10); mark("HitStart", 13); mark("HitEnd", 19); mark("RecoverStart", 20)
 end()

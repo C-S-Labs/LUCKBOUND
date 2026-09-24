@@ -99,6 +99,17 @@ Combat markers (Studio reads these through `AnimationTrack:GetMarkerReachedSigna
 - `RecoverStart`: the punish window opens (glow dims)
 - Optional triggers: `Impact`, `Footstep`, `WingBeat`, `VFX_<name>`
 
+### Animation quality (enforced by anim_core; the actions ARE the Studio animations)
+- **Solved in-betweens:** build attacks with `param_keys`. Each key is a set of pose *parameters* (grip point, weapon
+  direction, lean, wing angles), and every 2nd frame is re-solved from the eased parameters. In-betweens are real solved poses, not
+  rotation interpolation, so no elbow or wrist flips.
+- **Natural weapon hold:** use `pose_fix.wield(dir, point)`. The haft lies across the palm with the hand in line with the forearm,
+  and the elbow is pole-driven outward. It tries several elbow poles and keeps the one with no clipping and the straightest wrist.
+- **Quaternion keys:** keys are stored as quaternions (shortest path).
+- **Scan and correct:** every action is scanned on every other frame for limb or weapon clipping (and corrective keys are added).
+  Every key logs its joint angles, and a wrist bent over 50° is flagged.
+- **In place:** attacks are animated in place, and the AI moves the root between markers.
+
 ## 5. VFX (one shared system)
 - **Attachments:** the socket bones become Attachments: `Weapon_R`, weapon tip, `VFX_Core`, `VFX_Eye`, wing tips and feet.
 - **Emitters:** `ParticleEmitter`, `Trail` and `Beam` objects hang off those attachments and are switched on and off by the combat markers.
