@@ -363,6 +363,65 @@ function HubV2.buildBeyond(sky: Instance, origin: Vector3, prefabs: Instance?, c
 				* m.Distance) * CFrame.Angles(0.2, 0.6, 0.15), sky)
 		end
 		-- the celestial ring above the Engine, its runes pulsing between colours
+		-- the ring's heart: spokes and constellation turn with it, the star-core
+		-- counter-turns, the two gyroscopes precess at their own rates
+		local HEART = {
+			hubsky_ring_spokes = { Spin = c.Ring.Spin },
+			hubsky_ring_constellation = { Spin = c.Ring.Spin, Neon = true, Alpha = 0.3,
+				A = c.Ring.GlyphA, B = c.Ring.GlyphB, Seconds = 14 },
+			hubsky_ring_core = { Spin = -0.12, Neon = true, A = Color3.fromRGB(147, 235, 255),
+				B = Color3.fromRGB(236, 220, 255), Seconds = 6 },
+			hubsky_ring_gyro_a = { Spin = 0.22 },
+			hubsky_ring_gyro_b = { Spin = -0.16 },
+		}
+		for n, h in HEART do
+			local src = lib:FindFirstChild(n, true)
+			if src and src:IsA("MeshPart") then
+				local p = src:Clone()
+				still(p, CFrame.new(origin + Vector3.new(0, c.Ring.Height, 0)), sky)
+				p:SetAttribute("SkySpin", h.Spin)
+				if h.Neon then
+					p.Material = Enum.Material.Neon
+					p.Transparency = h.Alpha or 0
+					p.Color = h.A
+					p:SetAttribute("SkyColorA", h.A)
+					p:SetAttribute("SkyColorB", h.B)
+					p:SetAttribute("SkyColorSeconds", h.Seconds)
+				end
+				if n == "hubsky_ring_core" then
+					local light = Instance.new("PointLight")
+					light.Color, light.Range, light.Brightness, light.Shadows = h.A, 60, 2, false
+					light.Parent = p
+				end
+			end
+		end
+		-- a beam of light from above the Engine's portal up into the heart
+		do
+			local function anchorAt(y: number): Attachment
+				local a = Instance.new("Part")
+				a.Name = "HeartBeamAnchor"
+				a.Size = Vector3.one
+				a.Transparency = 1
+				still(a, CFrame.new(origin + Vector3.new(0, y, 0)), sky)
+				local att = Instance.new("Attachment")
+				att.Parent = a
+				return att
+			end
+			local beam = Instance.new("Beam")
+			beam.Attachment0 = anchorAt(c.Ring.BeamFrom)
+			beam.Attachment1 = anchorAt(c.Ring.Height - 20)
+			beam.FaceCamera = true
+			beam.LightEmission = 1
+			beam.LightInfluence = 0
+			beam.Width0, beam.Width1 = 4, 12
+			beam.Color = ColorSequence.new(c.Ring.GlyphA, c.Ring.GlyphB)
+			beam.Transparency = NumberSequence.new({
+				NumberSequenceKeypoint.new(0, 1),
+				NumberSequenceKeypoint.new(0.25, 0.75),
+				NumberSequenceKeypoint.new(1, 0.45),
+			})
+			beam.Parent = beam.Attachment0.Parent
+		end
 		for _, n in { "hubsky_ring", "hubsky_ring_glyphs" } do
 			local src = lib:FindFirstChild(n, true)
 			if src and src:IsA("MeshPart") then
