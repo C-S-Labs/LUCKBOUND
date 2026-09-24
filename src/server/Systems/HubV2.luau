@@ -145,6 +145,8 @@ function HubV2.build(hub: Instance, origin: Vector3): Model?
 		-- six collision hulls one after another.
 		local p = src:Clone()
 		place(p, origin + info.Centre, collide, model)
+		-- queryable even where not solid: sky props look ahead against it
+		p.CanQuery = true
 		if collide then
 			task.spawn(function()
 				local solid = walkable(src)
@@ -215,7 +217,8 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 			p.Size = src.Size * s
 			local a = (i + rng:NextNumber(-0.35, 0.35)) / b.Count * math.pi * 2
 			local r = rng:NextNumber(b.RadiusMin, b.RadiusMax)
-			p.Anchored, p.CanCollide, p.CanQuery, p.CanTouch = true, false, false, false
+			-- not solid, but queryable: sky props steer round it and dock beside it
+			p.Anchored, p.CanCollide, p.CanQuery, p.CanTouch = true, false, true, false
 			p.CFrame = CFrame.new(origin + Vector3.new(math.cos(a) * r, rng:NextNumber(b.HeightMin, b.HeightMax), math.sin(a) * r))
 				* CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), 0)
 			p:SetAttribute("Backdrop", true)
