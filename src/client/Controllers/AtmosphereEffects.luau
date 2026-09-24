@@ -219,7 +219,7 @@ end
 -- ---- Flyers ------------------------------------------------------------------------
 
 type Mover = { Part: BasePart, Pos: Vector3, Vel: Vector3, Target: Vector3, Low: boolean, Speed: number,
-	Beam: BasePart?, Wobble: number, Patrol: boolean? }
+	Beam: BasePart?, Wobble: number, Patrol: boolean?, Route: { number }?, At: number? }
 
 local function newMover(p: BasePart, map: Map, rng: Random, low: boolean, speed: number): Mover
 	local y = band(map, rng, low)
@@ -229,31 +229,108 @@ local function newMover(p: BasePart, map: Map, rng: Random, low: boolean, speed:
 		Beam = nil, Wobble = rng:NextNumber(0, 10) }
 end
 
--- A patrol point: over the walkway, low enough to sweep it with the beam.
--- The next one is chosen NEAR the last, so a patrol follows the path instead
--- of cutting across open air.
-local function patrolPoint(map: Map, rng: Random, from: Vector3?): Vector3
-	local path = map.Path
-	local pick = path[rng:NextInteger(1, #path)]
-	if from then
-		local near = {}
-		for _, p in path do
-			local d = (Vector3.new(p.X - from.X, 0, p.Z - from.Z)).Magnitude
-			if d > 30 and d < 110 then
-				table.insert(near, p)
+-- PATROLS cross the whole map. The walkway points (from the server's scan)
+-- are joined into a graph: two points link when they are close along the
+-- path. A probe picks a destination anywhere on the map, follows the
+-- shortest chain of links there, then picks another -- so it sweeps back and
+-- forth over every chunk instead of pacing round the one it spawned on.
+local graph: { { number } } = {}
+
+local function buildGraph(path: { Vector3 })
+	table.clear(graph)
+	for i = 1, #path do
+		graph[i] = {}
+	end
+	-- the tightest radius that joins the whole walkway: grow until one piece
+	for _, radius in { 45, 60, 80, 110 } do
+		for i = 1, #path do
+			table.clear(graph[i])
+			for k = 1, #path do
+				if k ~= i then
+					local a, b = path[i], path[k]
+					if (Vector3.new(a.X - b.X, (a.Y - b.Y) * 2, a.Z - b.Z)).Magnitude <= radius then
+						table.insert(graph[i], k)
+					end
+				end
 			end
 		end
-		if #near > 0 then
-			pick = near[rng:NextInteger(1, #near)]
+		local seen, queue, n = { [1] = true }, { 1 }, 1
+		local head = 1
+		while head <= #queue do
+			for _, k in graph[queue[head]] do
+				if not seen[k] then
+					seen[k] = true
+					n += 1
+					table.insert(queue, k)
+				end
+			end
+			head += 1
+		end
+		if n >= #path then
+			return
 		end
 	end
-	return pick + Vector3.new(0, rng:NextNumber(30, 44), 0)
+end
+
+-- shortest chain of links from one walkway point to another (breadth first)
+local function route(from: number, to: number): { number }?
+	local prev, queue, head = { [from] = from }, { from }, 1
+	while head <= #queue do
+		local at = queue[head]
+		head += 1
+		if at == to then
+			local out = {}
+			while at ~= from do
+				table.insert(out, 1, at)
+				at = prev[at]
+			end
+			return out
+		end
+		for _, k in graph[at] do
+			if prev[k] == nil then
+				prev[k] = at
+				table.insert(queue, k)
+			end
+		end
+	end
+	return nil
+end
+
+local function hover(map: Map, i: number, rng: Random): Vector3
+	return map.Path[i] + Vector3.new(0, rng:NextNumber(30, 44), 0)
+end
+
+-- next leg: a far destination, somewhere else on the map
+local function newRoute(m: Mover, map: Map, rng: Random)
+	local here = m.At or rng:NextInteger(1, #map.Path)
+	for _ = 1, 8 do
+		local goal = rng:NextInteger(1, #map.Path)
+		local a, b = map.Path[here], map.Path[goal]
+		if (Vector3.new(a.X - b.X, 0, a.Z - b.Z)).Magnitude > 250 or #map.Path < 20 then
+			local r = route(here, goal)
+			if r and #r > 0 then
+				m.Route = r
+				return
+			end
+		end
+	end
+	m.Route = { rng:NextInteger(1, #map.Path) }
 end
 
 local function stepMover(m: Mover, map: Map, rng: Random, dt: number)
 	local to = m.Target - m.Pos
-	if to.Magnitude < (if m.Patrol then 8 else 25) then
-		m.Target = if m.Patrol then patrolPoint(map, rng, m.Target) else randomIn(map, rng, band(map, rng, m.Low), 40)
+	if to.Magnitude < (if m.Patrol then 10 else 25) then
+		if m.Patrol then
+			local r = m.Route
+			if not r or #r == 0 then
+				newRoute(m, map, rng)
+				r = m.Route
+			end
+			m.At = table.remove(r :: { number }, 1)
+			m.Target = hover(map, m.At :: number, rng)
+		else
+			m.Target = randomIn(map, rng, band(map, rng, m.Low), 40)
+		end
 		to = m.Target - m.Pos
 	end
 	-- steer: turn the velocity toward the waypoint a little each frame
@@ -279,10 +356,12 @@ local function buildFlyers(cfg: any, map: Map, root: Instance, rng: Random, move
 			return
 		end
 		local m = newMover(p, map, rng, cfg.Low == true or (not cfg.Beams and i % 3 == 0), cfg.Speed)
-		if cfg.Patrol and #map.Path > 0 then
+		if cfg.Patrol and #map.Path > 1 then
 			m.Patrol = true
-			m.Pos = patrolPoint(map, rng, nil)
-			m.Target = patrolPoint(map, rng, m.Pos)
+			m.At = rng:NextInteger(1, #map.Path)
+			m.Pos = hover(map, m.At :: number, rng)
+			m.Target = m.Pos
+			newRoute(m, map, rng)
 		end
 		if cfg.Beams then
 			-- a scanning beam out of the probe's lens, down onto the map: slim,
@@ -633,6 +712,7 @@ function AtmosphereEffects.enter(env: any, centre: Vector3, stageName: string?, 
 
 	local lights, movers = {}, {}
 	buildLights(cfg, map, root, lights)
+	buildGraph(map.Path)
 	buildFlyers(cfg, map, root, rng, movers, if cfg then cfg.Glow else Color3.new(1, 0, 0))
 	if cfg and cfg.Drift then
 		for i = 1, 6 do
