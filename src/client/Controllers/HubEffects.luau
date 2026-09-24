@@ -276,7 +276,21 @@ function HubEffects.init(): ()
 			Z = Vector3.zAxis,
 		}
 
+		-- GRAPHICS DENSITY. Sky orbiters carry Detail 1-3; a part above what
+		-- this device's graphics quality allows is hidden locally and never
+		-- animated. Automatic (0) counts as high.
+		local quality = 10
+		pcall(function()
+			quality = UserSettings().GameSettings.SavedQualityLevel.Value
+		end)
+		local allowed = if quality == 0 or quality >= 7 then 3 elseif quality >= 4 then 2 else 1
+
 		local function consider(part: BasePart)
+			local detail = part:GetAttribute("Detail") :: number?
+			if detail and detail > allowed then
+				part.LocalTransparencyModifier = 1
+				return
+			end
 			if part:GetAttribute("IsFeaturedShard") then
 				table.insert(shards, part)
 			end
@@ -509,12 +523,17 @@ function HubEffects.init(): ()
 				local height = shelf:GetAttribute("OrbitHeight") :: number
 				local centre = shelf:GetAttribute("OrbitCentre") :: Vector3?
 				if centre then
-					local angle = elapsed * speed
+					-- OrbitPhase spreads a set round the circle; OrbitYaw turns a
+					-- ship to face along its path; OrbitBob lifts it gently.
+					local phase = (shelf:GetAttribute("OrbitPhase") :: number?) or 0
+					local yaw = math.rad((shelf:GetAttribute("OrbitYaw") :: number?) or 0)
+					local bob = (shelf:GetAttribute("OrbitBob") :: number?) or 0
+					local angle = elapsed * speed + phase
 					shelf.CFrame = CFrame.new(
 						centre.X + math.cos(angle) * radius,
-						height,
+						height + math.sin(elapsed * 0.6 + phase) * bob,
 						centre.Z + math.sin(angle) * radius
-					) * CFrame.Angles(0, -angle, 0)
+					) * CFrame.Angles(0, -angle + yaw, 0)
 				end
 			end
 		end)
