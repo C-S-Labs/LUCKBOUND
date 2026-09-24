@@ -169,9 +169,14 @@ end
 --- /enter -- start the expedition for your current destination, wherever you
 --- are standing. The distance check is the thing being bypassed; everything
 --- else (kit present, not already running, a slot free) still applies, because
---- skipping those would test a path the game does not have.
-COMMANDS.enter = function(player: Player, _args: { string }): (boolean, string)
-	return ExpeditionSystem.forceEnter(player)
+--- skipping those would test a path the game does not have. `/enter <seed>`
+--- rebuilds that exact map (every entry prints its seed) to compare a fix.
+COMMANDS.enter = function(player: Player, args: { string }): (boolean, string)
+	local seed = args[1] and tonumber(args[1])
+	if args[1] and not seed then
+		return false, "the seed must be a number"
+	end
+	return ExpeditionSystem.forceEnter(player, if seed then math.floor(seed) else nil)
 end
 
 --- /leave -- end the current expedition and go home. Counts as RETURNED, so
