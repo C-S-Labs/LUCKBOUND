@@ -51,7 +51,7 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 - The kit stays on a hand-written module (not drop-in), to keep the `WIDE` arena gate.
 
 ### Stopped at
-FBX exported, not yet uploaded. Every new key is `PLACEHOLDER`, so **VV draws blockouts until upload**. Don't merge before the ids are wired.
+FBX exported, not yet uploaded. Uploaded 2026-09-24; all 30 ids wired from the saved .rbxmx.
 
 ### Next
 1. Owner imports the FBX, saves the `.rbxmx`, and re-runs the script with `--ids` (see `IMPORT_STEPS.md`).
