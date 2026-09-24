@@ -1,0 +1,422 @@
+{
+ "pieces": {
+  "HUB_PLATFORM": {
+   "group": "Hub",
+   "tris": 7644,
+   "centre": [
+    0.0,
+    0.0,
+    -46.38
+   ],
+   "size": [
+    424.737,
+    424.737,
+    175.76
+   ]
+  },
+  "HUB_HALL_OF_CHAMPIONS": {
+   "group": "Hub",
+   "tris": 4566,
+   "centre": [
+    0.0,
+    218.587,
+    -11.66
+   ],
+   "size": [
+    158.443,
+    158.099,
+    138.32
+   ]
+  },
+  "HUB_ARCHIVES": {
+   "group": "Hub",
+   "tris": 8020,
+   "centre": [
+    218.587,
+    0.0,
+    -1.11
+   ],
+   "size": [
+    158.099,
+    158.443,
+    159.42
+   ]
+  },
+  "HUB_SHOP": {
+   "group": "Hub",
+   "tris": 4852,
+   "centre": [
+    0.0,
+    -218.587,
+    -21.46
+   ],
+   "size": [
+    158.443,
+    158.099,
+    118.72
+   ]
+  },
+  "HUB_TRAINING_GROUNDS": {
+   "group": "Hub",
+   "tris": 5004,
+   "centre": [
+    -218.587,
+    0.0,
+    -16.96
+   ],
+   "size": [
+    158.099,
+    158.443,
+    127.72
+   ]
+  },
+  "HUB_BACKDROP_PEAKS": {
+   "group": "Backdrop",
+   "tris": 3394,
+   "centre": [
+    11.986,
+    -10.628,
+    30.0
+   ],
+   "size": [
+    386.128,
+    396.283,
+    620.0
+   ]
+  },
+  "HUB_BACKDROP_MESA": {
+   "group": "Backdrop",
+   "tris": 3688,
+   "centre": [
+    -3.079,
+    14.898,
+    -54.969
+   ],
+   "size": [
+    535.138,
+    523.031,
+    425.939
+   ]
+  },
+  "HUB_BACKDROP_SPIRES": {
+   "group": "Backdrop",
+   "tris": 3550,
+   "centre": [
+    -5.964,
+    -11.192,
+    140.0
+   ],
+   "size": [
+    282.837,
+    336.889,
+    720.0
+   ]
+  },
+  "hubprop_isle_shrine": {
+   "group": "Orbiters",
+   "tris": 1354,
+   "centre": [
+    -0.717,
+    0.239,
+    -9.033
+   ],
+   "size": [
+    48.969,
+    48.127,
+    51.066
+   ]
+  },
+  "hubprop_isle_grove": {
+   "group": "Orbiters",
+   "tris": 1220,
+   "centre": [
+    -1.441,
+    0.849,
+    -8.0
+   ],
+   "size": [
+    57.997,
+    55.421,
+    60.0
+   ]
+  },
+  "hubprop_isle_ruin": {
+   "group": "Orbiters",
+   "tris": 1128,
+   "centre": [
+    -0.395,
+    0.671,
+    -4.611
+   ],
+   "size": [
+    52.958,
+    51.729,
+    62.778
+   ]
+  },
+  "hubprop_airship": {
+   "group": "Orbiters",
+   "tris": 416,
+   "centre": [
+    1.0,
+    0.0,
+    14.699
+   ],
+   "size": [
+    70.0,
+    27.454,
+    44.603
+   ]
+  },
+  "hubprop_skiff": {
+   "group": "Orbiters",
+   "tris": 108,
+   "centre": [
+    0.35,
+    0.016,
+    5.644
+   ],
+   "size": [
+    19.3,
+    4.513,
+    14.712
+   ]
+  },
+  "hubprop_cloud_a": {
+   "group": "Orbiters",
+   "tris": 288,
+   "centre": [
+    6.517,
+    -1.648,
+    6.206
+   ],
+   "size": [
+    78.03,
+    30.208,
+    22.58
+   ]
+  },
+  "hubprop_cloud_b": {
+   "group": "Orbiters",
+   "tris": 192,
+   "centre": [
+    -1.001,
+    1.752,
+    6.263
+   ],
+   "size": [
+    90.57,
+    31.548,
+    20.812
+   ]
+  },
+  "hubprop_crystal_cluster": {
+   "group": "Orbiters",
+   "tris": 178,
+   "centre": [
+    0.0,
+    0.0,
+    2.0
+   ],
+   "size": [
+    13.3,
+    12.676,
+    20.0
+   ]
+  },
+  "hubprop_rune_ring": {
+   "group": "Orbiters",
+   "tris": 704,
+   "centre": [
+    0.0,
+    0.0,
+    0.522
+   ],
+   "size": [
+    63.677,
+    63.677,
+    4.156
+   ]
+  },
+  "hubprop_sky_lantern": {
+   "group": "Orbiters",
+   "tris": 68,
+   "centre": [
+    0.0,
+    0.0,
+    2.35
+   ],
+   "size": [
+    4.157,
+    4.8,
+    5.3
+   ]
+  },
+  "hubprop_sky_whale": {
+   "group": "Orbiters",
+   "tris": 250,
+   "centre": [
+    -6.0,
+    0.0,
+    2.077
+   ],
+   "size": [
+    84.0,
+    43.307,
+    29.847
+   ]
+  },
+  "hubprop_waystone": {
+   "group": "Orbiters",
+   "tris": 228,
+   "centre": [
+    0.0,
+    0.0,
+    0.0
+   ],
+   "size": [
+    10.3,
+    12.7,
+    26.0
+   ]
+  }
+ },
+ "anchors": {
+  "Overlook1": [
+   166.88,
+   166.88,
+   0.0
+  ],
+  "Overlook2": [
+   -166.88,
+   166.88,
+   0.0
+  ],
+  "Overlook3": [
+   -166.88,
+   -166.88,
+   0.0
+  ],
+  "Overlook4": [
+   166.88,
+   -166.88,
+   0.0
+  ],
+  "EngineCentre": [
+   0.0,
+   0.0,
+   0.0
+  ],
+  "Obelisk1": [
+   -19.05,
+   241.0,
+   2.5
+  ],
+  "Obelisk2": [
+   -11.0,
+   249.05,
+   2.5
+  ],
+  "Obelisk3": [
+   0.0,
+   252.0,
+   2.5
+  ],
+  "Obelisk4": [
+   11.0,
+   249.05,
+   2.5
+  ],
+  "Obelisk5": [
+   19.05,
+   241.0,
+   2.5
+  ],
+  "HallPrompt": [
+   0.0,
+   178.0,
+   0.5
+  ],
+  "HallStage": [
+   0.0,
+   230.0,
+   2.5
+  ],
+  "ArchivePrompt": [
+   178.0,
+   0.0,
+   0.5
+  ],
+  "ArchiveOrrery": [
+   228.0,
+   -0.0,
+   7.9
+  ],
+  "Stall1": [
+   -37.42,
+   -211.4,
+   0.5
+  ],
+  "Stall2": [
+   -32.91,
+   -237.0,
+   0.5
+  ],
+  "Stall3": [
+   -13.0,
+   -253.71,
+   0.5
+  ],
+  "Stall4": [
+   13.0,
+   -253.71,
+   0.5
+  ],
+  "Stall5": [
+   32.91,
+   -237.0,
+   0.5
+  ],
+  "Stall6": [
+   37.42,
+   -211.4,
+   0.5
+  ],
+  "ShopPrompt": [
+   -0.0,
+   -178.0,
+   0.5
+  ],
+  "ShopFountain": [
+   0.0,
+   -218.0,
+   0.5
+  ],
+  "Dummy1": [
+   -252.0,
+   -28.0,
+   1.1
+  ],
+  "Dummy2": [
+   -262.0,
+   -0.0,
+   1.1
+  ],
+  "Dummy3": [
+   -252.0,
+   28.0,
+   1.1
+  ],
+  "BossDummy": [
+   -226.0,
+   -0.0,
+   1.1
+  ],
+  "TrainingPrompt": [
+   -178.0,
+   0.0,
+   0.5
+  ]
+ },
+ "note": "Blender coords (x, y north, z up), studs. Roblox = (x, z, -y). Bounding-box centre = where the MeshPart's Position goes."
+}
