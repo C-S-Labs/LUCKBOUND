@@ -187,3 +187,38 @@ distinct layouts in 200 seeds.
   request for the modeller, not a code change.
 - **Encounter and reward configuration.** A plan says a room is an Ambush;
   nothing spawns it. Build spec §7 still excludes that.
+
+---
+
+## 8. The 30-piece base kit (2026-09-24)
+
+The kit was redelivered as 30 pieces in one `.blend`, laid out 5 × 6. It is exported and wired by
+`assets/source/worlds/verdant_valley/export_verdant_valley_kit.py`. That folder's
+[`IMPORT_STEPS.md`](../../assets/source/worlds/verdant_valley/IMPORT_STEPS.md) has the piece table and upload steps.
+
+- **The sockets were redone from the geometry.** The .blend's own socket labels put N on Blender −Y but E on +X.
+  That is a mirror, not a rotation, so on the bends (Orchard, the six gates) no turn of the mesh could match them.
+  The script ray-casts each edge for the flat mouth pad instead (48 studs wide = `PATH`, 52 = `WIDE`).
+  It refuses to export if a measurement disagrees with its table.
+  After the N/S flip, every piece's openings matched what the art intended.
+- **Roles.** 2 ENTRY (Dawn Meadow, Woodland Refuge), 1 BOSS (Sanctuary, 384 × 256),
+  1 CAP (Cave Mouth), 3 SIDE (Treasure Hollow, Warden's Clearing, Forgotten Trial),
+  6 PATH, 17 COMBAT.
+  **Six pieces offer `WIDE`**, so a run's arena approach is spread evenly between them.
+  Five pieces are 3- or 4-way junctions, so side pockets now actually attach.
+  That closes §7's "Verdant Valley cannot host a SIDE pocket".
+- **Names follow `CHUNK_DROP_IN.md`** (`chunk_entry_*`, `chunk_side_*`, `chunk_cap_*`, `chunk_path_*`, `*_gate`),
+  so the same FBX would also load as a drop-in kit.
+  The hand-written module is kept because drop-in collapses every opening to one Kind,
+  and that would lose the `WIDE` gate.
+- **Engine contract, checked by the script:**
+  - every footprint is exactly 256 (the boss 384 × 256), centred on the origin
+  - every mouth sits at ground height 0 ± 0.35
+  - 7,288–9,970 triangles per piece, under the 10k cap
+  - material colours are baked to vertex colour (one mesh per piece)
+  - `MeshYawOffset = 180`, the half turn Sky Citadel's identical export landed at;
+    `calibrateYaw` measures the real turn per piece
+- **Supports, EnemyTags and Weights are proposals.** They are read from each piece's theme and live in the script's `EXPECTED` table.
+- 200/200 seeds assemble into 200 distinct layouts, and every one of the 30 pieces appears.
+  **Not yet uploaded or walked in Studio.**
+

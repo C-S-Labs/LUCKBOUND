@@ -984,7 +984,7 @@ do
 
 	-- Assembly ------------------------------------------------------
 	local lib = ChunkCore.libraryFor(Chunks, "VERDANT_VALLEY")
-	check("Verdant Valley has an ENTRY chunk", lib.ENTRY and #lib.ENTRY == 1)
+	check("Verdant Valley has an ENTRY chunk", lib.ENTRY and #lib.ENTRY >= 1)
 	check("Verdant Valley has a BOSS chunk", lib.BOSS and #lib.BOSS == 1)
 	-- Blueprint §6 asks each world for an optional side pocket. Verdant Valley
 	-- CANNOT have one yet and this test says so honestly rather than passing
@@ -1014,9 +1014,15 @@ do
 			return not ok
 		end)())
 
-	-- And the real kit is free of that trap, because it declares no SIDE.
+	-- And the real kit is free of that trap: a SIDE pocket is declared only
+	-- alongside a piece with a spare (third) socket to hang it off. The 30-piece
+	-- kit (2026-09-24) has three pockets and five 3-4 way junctions.
+	local hasJunction = false
+	for _, c in Chunks do
+		if c.WorldId == "VERDANT_VALLEY" and #c.Sockets >= 3 then hasJunction = true end
+	end
 	check("the real chunk library has no unreachable SIDE pocket",
-		(lib.SIDE == nil or #lib.SIDE == 0))
+		(lib.SIDE == nil or #lib.SIDE == 0) or hasJunction)
 	-- Pieces must be sized against the character, not against the old hub.
 	local CHARH = GameConfig.Scale.CharacterHeight
 	local smallest = math.huge
@@ -1076,13 +1082,35 @@ do
 			{ WorldId = "VERDANT_VALLEY", PathLength = 4 },
 			function(a) return lcg(trial * 611953 + a) end, 5)
 		if okA then
-			local penultimate = layout.Chunks[#layout.Chunks - 1]
-			approachesSeen[penultimate.ChunkId] = true
-			local offers = false
-			for _, sk in Chunks[penultimate.ChunkId].Sockets do
-				if arenaKinds[sk.Kind] then offers = true end
+			-- The approach is the piece JOINED to the arena's mouth -- not the
+			-- one before it in the list, which caps and side pockets (placed
+			-- after the arena) make a different piece.
+			local boss
+			for _, p in layout.Chunks do
+				if p.Role == "BOSS" then boss = p end
 			end
-			if not offers then approachAlwaysOffersArenaKind = false end
+			local mouth = ChunkCore.worldSocket(boss, Chunks[boss.ChunkId], Chunks[boss.ChunkId].Sockets[1])
+			local approach
+			for _, p in layout.Chunks do
+				if p ~= boss then
+					for _, sk in Chunks[p.ChunkId].Sockets do
+						local ws = ChunkCore.worldSocket(p, Chunks[p.ChunkId], sk)
+						if math.abs(ws.X - mouth.X) < 0.5 and math.abs(ws.Z - mouth.Z) < 0.5 then
+							approach = p
+						end
+					end
+				end
+			end
+			if approach == nil then
+				approachAlwaysOffersArenaKind = false
+			else
+				approachesSeen[approach.ChunkId] = true
+				local offers = false
+				for _, sk in Chunks[approach.ChunkId].Sockets do
+					if arenaKinds[sk.Kind] then offers = true end
+				end
+				if not offers then approachAlwaysOffersArenaKind = false end
+			end
 		end
 	end
 	check("the arena is always approached through a piece offering its Kind",
@@ -1153,7 +1181,10 @@ do
 		string.format("%d distinct layouts", distinct))
 
 	-- Socket Kind is what stops a footpath opening onto the boss arena.
-	local bossChunk = Chunks.VV_BOSS_CLEARING
+	local bossChunk
+	for _, c in Chunks do
+		if c.WorldId == "VERDANT_VALLEY" and c.Role == "BOSS" then bossChunk = c end
+	end
 	check("the boss arena only accepts a WIDE approach",
 		bossChunk.Sockets[1].Kind == "WIDE", bossChunk.Sockets[1].Kind)
 	-- The arena Kind must be offered by at least one NON-boss piece, or the
@@ -1180,7 +1211,9 @@ do
 		local trials, ok = 200, 0
 		for trial = 1, trials do
 			local okA, layout = ChunkCore.assembleWithRetry(Chunks,
-				{ WorldId = "VERDANT_VALLEY", PathLength = 5 },
+				-- IncludeSide as the expedition passes it, so side pockets count.
+				{ WorldId = "VERDANT_VALLEY", PathLength = 5,
+					IncludeSide = GameConfig.Expedition.IncludeSide },
 				function(a) return lcg(trial * 2654435761 + a) end, 5)
 			if okA then
 				ok += 1
@@ -1190,8 +1223,14 @@ do
 					pieceCount[c.ChunkId] = (pieceCount[c.ChunkId] or 0) + 1
 				end
 				shapesSeen[table.concat(ids, ">")] = true
-				local approach = layout.Chunks[#layout.Chunks - 1].ChunkId
-				approachCount[approach] = (approachCount[approach] or 0) + 1
+				-- The arena is placed straight after its approach; caps and a
+				-- side pocket may follow it in the list.
+				for i, c in layout.Chunks do
+					if c.Role == "BOSS" then
+						local approach = layout.Chunks[i - 1].ChunkId
+						approachCount[approach] = (approachCount[approach] or 0) + 1
+					end
+				end
 			end
 		end
 		local distinct = 0
@@ -1874,7 +1913,10 @@ do
 	check("stacked chunks do overlap", ChunkCore.overlaps(a, box, a, box))
 
 	-- A kit missing a boss must fail cleanly, not error.
-	local partial = { E = Chunks.VV_ENTRY }
+	local partial = {}
+	for id, c in Chunks do
+		if c.WorldId == "VERDANT_VALLEY" and c.Role == "ENTRY" then partial[id] = c end
+	end
 	local okP, errP = ChunkCore.assemble(partial,
 		{ WorldId = "VERDANT_VALLEY", PathLength = 2 }, lcg(1))
 	check("an incomplete kit fails cleanly with a reason", not okP and type(errP) == "string", tostring(errP))
