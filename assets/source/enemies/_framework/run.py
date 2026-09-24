@@ -62,3 +62,5 @@ if "--anims" in STEPS:
             preview(a)
 if "--save" in STEPS:
     bpy.ops.wm.save_as_mainfile(filepath=os.path.join(OUT_DIR, f"{NAME}.blend"))
+if os.environ.get("POST"):                                  # ad-hoc review/debug script run after all steps
+    exec(open(os.environ["POST"]).read(), G)

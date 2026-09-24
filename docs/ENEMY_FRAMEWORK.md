@@ -105,6 +105,11 @@ Combat markers (Studio reads these through `AnimationTrack:GetMarkerReachedSigna
   rotation interpolation, so no elbow or wrist flips.
 - **Natural weapon hold:** use `pose_fix.wield(dir, point)`. The haft lies across the palm with the hand in line with the forearm,
   and the elbow is pole-driven outward. It tries several elbow poles and keeps the one with no clipping and the straightest wrist.
+- **Anatomical arms** (`pose_fix.arm_to`): an analytic two-bone solver, not free IK.
+  - Shoulder: a ball joint.
+  - Elbow: a true hinge on local X that folds toward the front of the upper arm, so the elbow points back/down. Range 0-150°, never hyperextended.
+  - Elbow placement: tucked by the ribs first. The solver penalises a sideways "chicken wing" (upper arm raised over 40°) and the arm going behind the body (over 45°).
+  - Grip: the haft crosses the palm diagonally (about 55° to the hand axis), as with a real spear grip.
 - **Quaternion keys:** keys are stored as quaternions (shortest path).
 - **Scan and correct:** every action is scanned on every other frame for limb or weapon clipping (and corrective keys are added).
   Every key logs its joint angles, and a wrist bent over 50° is flagged.

@@ -61,11 +61,36 @@ def wrap(side):
         _wrap_bone(f"{side}{f}1", G0, GA, HAFT_R + FING_R)
         _wrap_bone(f"{side}{f}2", G0, GA, HAFT_R + FING_R*0.8)
     _upd()
+# Anatomical hinges (humanoid.py / R15 rigs: every limb bone's local X is the side-to-side axis at rest).
+#   elbow: flexes the forearm toward the FRONT of the upper arm  -> local X in [-150 deg, 0]  (never past straight)
+#   knee : flexes the shin toward the BACK of the thigh           -> local X in [0, 150 deg]
+#   Both are single-axis: no sideways bend, no twist. Forearm twist lives in the wrist/hand (visually identical).
+HINGE_RANGE = {"LowerArm": (-2.62, 0.0), "LowerLeg": (0.0, 2.62)}
+def setup_hinges():
+    for side in ("Left", "Right"):
+        for part, (lo, hi) in HINGE_RANGE.items():
+            pb = P.get(f"{side}{part}")
+            if pb is None: continue
+            pb.lock_ik_y = True; pb.lock_ik_z = True
+            pb.use_ik_limit_x = True; pb.ik_min_x = lo; pb.ik_max_x = hi
+            pb.ik_stretch = 0.0
+def hinge_errors():
+    """Non-hinge motion left in elbows/knees (radians): sideways/twist, or bent the wrong way."""
+    out = []
+    for side in ("Left", "Right"):
+        for part, (lo, hi) in HINGE_RANGE.items():
+            pb = P.get(f"{side}{part}")
+            if pb is None: continue
+            e = pb.matrix_basis.to_euler('XYZ')
+            if abs(e.y) > 0.06 or abs(e.z) > 0.06: out.append(f"{side}{part} off-axis y{e.y:.2f} z{e.z:.2f}")
+            if not (lo - 0.03 <= e.x <= hi + 0.03): out.append(f"{side}{part} out of range x{e.x:.2f}")
+    return out
 def _ik(bone, target, pole=None):
     for c in list(P[bone].constraints):
         if c.type == 'IK': P[bone].constraints.remove(c)
     e = bpy.data.objects.new(f"IK_{bone}", None); bpy.context.scene.collection.objects.link(e); e.location = target
-    c = P[bone].constraints.new('IK'); c.target = e; c.chain_count = 2
+    setup_hinges()
+    c = P[bone].constraints.new('IK'); c.target = e; c.chain_count = 2; c.iterations = 800
     if pole is not None:
         pe = bpy.data.objects.new(f"POLE_{bone}", None); bpy.context.scene.collection.objects.link(pe); pe.location = pole
         c.pole_target = pe; c.pole_angle = -math.pi/2
@@ -164,6 +189,7 @@ def joint_report(tag=""):
         ul, ll = _dir(f"{side}UpperLeg"), _dir(f"{side}LowerLeg")
         kn = math.degrees(ul.angle(ll)); kdir = ul.cross(ll).dot((RW.to_3x3() @ (_rest_rot(f"{side}UpperLeg") @ Vector((1, 0, 0)))).normalized())
         out.append(f"{side[0]}knee {kn:.0f}{'!' if kn > 5 and kdir < 0 else ''}")
+    bad += hinge_errors()
     print(f"JOINTS {tag}: " + " ".join(out) + ("  BAD: " + ", ".join(bad) if bad else ""))
     return bad
 
@@ -180,14 +206,22 @@ def wield(D, C, side="Right", pole_off=(0.5, 0.35, -0.6)):
     def _restore():
         for b_ in chain: P[b_].matrix = keep[b_]; _upd()
     best = None
-    for po in (pole_off, (0.8, 0.1, -0.3), (0.6, 0.6, -0.2), (0.9, -0.2, -0.5), (0.3, 0.7, -0.7)):
+    # natural elbow directions first: back + down, tucked near the ribs; flaring out is a last resort
+    for po in ((0.3, 0.6, -0.75), (0.2, 0.8, -0.55), (0.45, 0.45, -0.75), (0.1, 0.5, -0.85), (0.6, 0.5, -0.6)):
         _restore()
         _wield_once(D, C, side, s, ua, la, sh + Vector((po[0]*s, po[1], po[2])))
-        sc = hits("Arm" + side) + 3*joint_penalty(side)
+        sc = hits("Arm" + side) + 3*joint_penalty(side) + 2*abduction_penalty(side)
         if best is None or sc < best[0]: best = (sc, po)
-        if sc == 0: break
+        if sc < 1: break
     _restore()
     _wield_once(D, C, side, s, ua, la, sh + Vector((best[1][0]*s, best[1][1], best[1][2])))
+def abduction_penalty(side):
+    """Degrees the upper arm is raised out to the side beyond 40 deg (a 'chicken wing' elbow)."""
+    s = 1 if side == "Left" else -1; ua = _dir(f"{side}UpperArm")
+    lat = math.degrees(math.atan2(ua.x*s, -ua.z)) if ua.z < 0.2 else 90.0
+    lat_pen = max(0.0, lat - 40)
+    back = math.degrees(math.atan2(ua.y, -ua.z)) if ua.z < 0.2 else 90.0   # shoulder extension (arm behind body)
+    return lat_pen + 2*max(0.0, back - 45)
 def joint_penalty(side):
     fa, hd = _dir(f"{side}LowerArm"), _dir(f"{side}Hand")
     return max(0.0, math.degrees(fa.angle(hd)) - 35)
@@ -202,6 +236,59 @@ def _wield_once(D, C, side, s, ua, la, pole):
             _ik(la, tuple(RW.inverted() @ wr), tuple(RW.inverted() @ pole)); _bake([ua, la])
         orient_hand(side, n, hd)
         if _dir("Weapon_R").dot(D) > 0.5 or side != "Right": break
+    if side == "Right":
+        G0, GA = haft(); q = GA.rotation_difference(D)
+        wb = P["Weapon_R"]; h = wb.head.copy(); Rl = RW.to_3x3().inverted() @ q.to_matrix() @ RW.to_3x3()
+        wb.matrix = Matrix.Translation(h) @ Rl.to_4x4() @ Matrix.Translation(-h) @ wb.matrix; _upd()
+        grip_lance()
+    wrap(side)
+
+# ---------------- analytic arm (how a real arm works) ----------------
+# shoulder = ball joint; elbow = hinge (local X) that folds the forearm toward the FRONT of the upper arm, so the elbow
+# itself points BACK/DOWN/OUT; the hand grips a haft DIAGONALLY across the palm (~55 deg to the hand axis) and the wrist
+# may deviate ~25 deg. Bones are set directly (no IK solver guesswork), so the hinge is exact every frame.
+GRIP_DIAG = math.radians(55)
+def arm_to(side, W, elbow_dir=None):
+    """Place UpperArm/LowerArm so the wrist lands on world W with the elbow pointing along elbow_dir (world)."""
+    s = 1 if side == "Left" else -1
+    ua, la = f"{side}UpperArm", f"{side}LowerArm"
+    L1 = rig.data.bones[ua].length; L2 = rig.data.bones[la].length
+    _upd(); S = RW @ P[ua].head; W = Vector(W)
+    d = W - S; dist = min(max(d.length, abs(L1 - L2) + 1e-3), L1 + L2 - 1e-4)
+    u = d.normalized(); W = S + u*dist
+    e = Vector(elbow_dir if elbow_dir is not None else (0.45*s, 0.55, -0.7)).normalized()
+    v = e - u*e.dot(u)
+    if v.length < 1e-4: v = Vector((0, 1, 0)) - u*u.y
+    v.normalize()
+    a = (L1*L1 - L2*L2 + dist*dist)/(2*dist); h = math.sqrt(max(L1*L1 - a*a, 0.0))
+    E = S + u*a + v*h
+    Ri = RW.to_3x3().inverted()
+    def frame(head, tail, back):
+        y = (tail - head).normalized(); z = (back - y*back.dot(y)).normalized(); x = y.cross(z)
+        M = Matrix((x, y, z)).transposed()
+        M4 = (Ri @ M).to_4x4(); M4.translation = RW.inverted() @ head
+        return M4
+    P[ua].matrix = frame(S, E, v); _upd()
+    zl = (P[ua].matrix.to_3x3() @ Vector((1, 0, 0)))                  # shared hinge axis (armature space)
+    y2 = (W - E).normalized(); x2 = (RW.to_3x3() @ zl).normalized(); z2 = x2.cross(y2)
+    M2 = (Ri @ Matrix((x2, y2, z2)).transposed()).to_4x4(); M2.translation = RW.inverted() @ E
+    P[la].matrix = M2; _upd()
+    return E
+def _wield_once(D, C, side, s, ua, la, pole):
+    elbow_dir = (pole - (RW @ P[ua].head)).normalized()
+    for sgn in (1, -1):
+        for _ in range(5):
+            fa = _dir(la)
+            perp = fa - D*fa.dot(D)
+            if perp.length < 1e-3: perp = Vector((0, 0, -1)) - D*D.z
+            perp.normalize()
+            hd = (D*math.cos(GRIP_DIAG) + perp*math.sin(GRIP_DIAG)).normalized()   # haft diagonal across the palm
+            if D.dot(fa) < 0: hd = (-D*math.cos(GRIP_DIAG) + perp*math.sin(GRIP_DIAG)).normalized()
+            n = D.cross(hd).normalized()*sgn
+            wr = C - n*SEAT_N - hd*SEAT_D
+            arm_to(side, wr, elbow_dir)
+        orient_hand(side, n, hd)
+        if _dir("Weapon_R").dot(D) > 0.0 or side != "Right": break
     if side == "Right":
         G0, GA = haft(); q = GA.rotation_difference(D)
         wb = P["Weapon_R"]; h = wb.head.copy(); Rl = RW.to_3x3().inverted() @ q.to_matrix() @ RW.to_3x3()

@@ -24,13 +24,13 @@ def pose(p):
 def P_(C, D, lean=0.0, head=0.0, wup=0.0, wback=0.0, wflare=0.0, larm=0.0):
     return dict(C=Vector(C), D=Vector(D).normalized(), lean=lean, head=head, wup=wup, wback=wback, wflare=wflare, larm=larm)
 READY  = P_(C0, D0)
-COIL   = P_((-0.34, 0.2, -0.72), (0.05, -1, 0.12), lean=-0.12, wup=0.2)
-TELL   = P_((-0.36, 0.24, -0.7), (0.05, -1, 0.14), lean=-0.14, wup=0.2, wflare=0.25)
+COIL   = P_((-0.17, 0.14, -0.88), (0.05, -1, 0.12), lean=-0.12, wup=0.2)
+TELL   = P_((-0.18, 0.16, -0.86), (0.05, -1, 0.14), lean=-0.14, wup=0.2, wflare=0.25)
 THRUST = P_((0.02, -0.82, -0.62), (0.02, -1, 0.02), lean=0.3, wback=0.3, larm=0.5)
 OVER   = P_((0.02, -0.86, -0.66), (0.02, -1, -0.02), lean=0.4, head=0.12, wback=0.3, larm=0.5)
 STUMB  = P_((0.0, -0.6, -0.85), (0.0, -1, -0.4), lean=0.32, head=0.3, wup=-0.3, larm=0.2)
 begin("P1_Lunge", 44)
 param_keys([(1, READY), (8, COIL), (12, TELL), (15, THRUST), (19, OVER), (26, STUMB), (44, READY)], pose,
-           step=2, arcs={"C": (-0.12, 0.0, 0.0)})                  # the hand swings slightly OUT around the hip
+           step=2, arcs={"C": (-0.06, 0.0, 0.0)})                  # the hand swings slightly OUT around the hip
 mark("Tell", 1); mark("VFX_WingFlare", 10); mark("HitStart", 13); mark("HitEnd", 19); mark("RecoverStart", 20)
 end()
