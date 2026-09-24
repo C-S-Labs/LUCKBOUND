@@ -10,8 +10,8 @@ Palettes are the scenario kits' looks (tag sky-citadel-scenarios-v1,
 sky_citadel_structures.py), applied to the base pieces as they are.
 
     blender -b --factory-startup --python build_sky_citadel_recolors.py -- --export
-writes assets/export/worlds/sky_citadel/import/SkyCitadel_Recolors.fbx: one
-model, a folder per scenario, 36 pieces each.
+writes assets/export/worlds/sky_citadel/import/SC_RECOLOR_<SCENARIO>.fbx: seven
+files of 36 bare meshes (no parent empties -- those tipped every piece over).
 """
 
 import math
@@ -55,7 +55,7 @@ LOOKS = {
     "AETHER_SURGE": ({"CitadelWhite": "Pearl", "PaleAlloy": "Lavender", "AzureNeon": "AetherBloom",
                       "AzureDim": "AetherDim", "DeepAlloy": "HullSlate"}, "Pearl", None, None),
 }
-EXPORT = os.path.join(K["REPO"], "assets", "export", "worlds", "sky_citadel", "import", "SkyCitadel_Recolors.fbx")
+EXPORT_DIR = os.path.join(K["REPO"], "assets", "export", "worlds", "sky_citadel", "import")
 
 
 def normal_z(p, f):
@@ -103,35 +103,19 @@ def main(export=False):
         groups.append((scen.title().replace("_", ""), objs))
         print("RECOLOR", scen, len(objs))
     if export:
-        os.makedirs(os.path.dirname(EXPORT), exist_ok=True)
-        made, saved = [], []
-        top = bpy.data.objects.new("SkyCitadel_Recolors", None)
-        bpy.context.scene.collection.objects.link(top)
-        made.append(top)
-        for gname, objs in groups:
-            g = bpy.data.objects.new(gname, None)
-            bpy.context.scene.collection.objects.link(g)
-            g.parent = top
-            made.append(g)
-            for o in objs:
-                o.parent = g
-                o.location = (0, 0, 0)
-        bpy.context.view_layer.update()
-        sel = made + [o for _, objs in groups for o in objs]
-        bpy.ops.object.select_all(action="DESELECT")
-        for o in sel:
-            o.select_set(True)
-        bpy.context.view_layer.objects.active = top
-        with K["_ui_override"](selected_objects=sel, active_object=top, object=top):
-            bpy.ops.export_scene.fbx(filepath=EXPORT, use_selection=True, object_types={"EMPTY", "MESH"},
-                                     axis_forward="-Z", axis_up="Y", global_scale=1.0, apply_unit_scale=True,
-                                     apply_scale_options="FBX_SCALE_ALL", bake_space_transform=True,
-                                     use_mesh_modifiers=True, mesh_smooth_type="FACE", colors_type="SRGB",
-                                     add_leaf_bones=False, bake_anim=False, path_mode="AUTO")
-        v = K["verify_exports"]([EXPORT])[0]
-        wrong = [k for k, s in v["sizes"].items() if any(abs(c - 256) > 0.01 for c in s)]
-        print("EXPORTED", v["file"], v["meshes"], "not 256^3:", wrong[:3])
-
+        # ONE FILE PER SCENARIO, meshes only, exactly as the base kit exports.
+        # The first export parented the meshes under empties; the FBX axis
+        # conversion then turned every piece 90 degrees on its side in Roblox.
+        os.makedirs(EXPORT_DIR, exist_ok=True)
+        for f in os.listdir(EXPORT_DIR):
+            if f.startswith("SkyCitadel_Recolors"):
+                os.remove(os.path.join(EXPORT_DIR, f))
+        for (gname, objs), scen in zip(groups, LOOKS):
+            path = os.path.join(EXPORT_DIR, "SC_RECOLOR_%s.fbx" % scen)
+            K["_export_selected"](objs, path)
+            v = K["verify_exports"]([path])[0]
+            wrong = [k for k, s in v["sizes"].items() if any(abs(c - 256) > 0.01 for c in s)]
+            print("EXPORTED", v["file"], v["meshes"], "not 256^3:", wrong[:3])
 
 if __name__ == "__main__":
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []

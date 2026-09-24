@@ -136,6 +136,8 @@ local launching: { [number]: boolean } = {}
 -- skipped for that call and nothing else. A flag rather than a parameter keeps
 -- requestEnter's signature honest: it is still "the client sends nothing".
 local forcedEntry: { [number]: boolean } = {}
+-- /enter <seed>: replay a map exactly (same chunks, same order). Developer only.
+local forcedSeed: { [number]: number } = {}
 
 -- HOST mode only.
 local hosting = false
@@ -892,10 +894,11 @@ function ExpeditionSystem.requestEnter(player: Player, ...: any): ()
 	-- the same parameters" means: one world, one map, one timer.
 	-- Mixed with fresh entropy (seedSource above): every entry, every
 	-- session, every player gets a new map.
-	local seed = (ExpeditionCore.seedFor(player.UserId, profile.TotalRolls, worldId) + seedSource:NextInteger(
-		1,
-		2147483646
-	)) % 2147483647
+	local seed = forcedSeed[player.UserId]
+		or (ExpeditionCore.seedFor(player.UserId, profile.TotalRolls, worldId) + seedSource:NextInteger(
+			1,
+			2147483646
+		)) % 2147483647
 
 	-- Who actually goes. The leader always; each member only if they are
 	-- still here, not already somewhere, and -- in place -- has a body to
@@ -961,7 +964,7 @@ end
 --- for it, not already running, a free stage slot -- still applies, because
 --- skipping those would exercise a path the game does not actually have and
 --- would prove nothing. Returns ok plus a line to print back.
-function ExpeditionSystem.forceEnter(player: Player): (boolean, string)
+function ExpeditionSystem.forceEnter(player: Player, seed: number?): (boolean, string)
 	if ExpeditionSystem.isActive(player) then
 		return false, "already on an expedition"
 	end
@@ -983,8 +986,10 @@ function ExpeditionSystem.forceEnter(player: Player): (boolean, string)
 	-- point of the command, not something to rate limit.
 	lastEntryAt[player.UserId] = nil
 	forcedEntry[player.UserId] = true
+	forcedSeed[player.UserId] = seed
 	ExpeditionSystem.requestEnter(player)
 	forcedEntry[player.UserId] = nil
+	forcedSeed[player.UserId] = nil
 
 	return ExpeditionSystem.isActive(player),
 		if ExpeditionSystem.isActive(player)
