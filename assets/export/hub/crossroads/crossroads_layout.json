@@ -2,7 +2,7 @@
  "pieces": {
   "HUB_PLATFORM": {
    "group": "Hub",
-   "tris": 6748,
+   "tris": 6552,
    "anim": null,
    "host": null,
    "centre": [
@@ -11,8 +11,8 @@
     -25.0
    ],
    "size": [
-    424.737,
-    424.737,
+    429.958,
+    429.958,
     114.0
    ]
   },
@@ -34,65 +34,65 @@
   },
   "HUB_HALL_OF_CHAMPIONS": {
    "group": "Hub",
-   "tris": 3926,
+   "tris": 3918,
    "anim": null,
    "host": null,
    "centre": [
     0.0,
-    218.587,
+    218.769,
     -5.25
    ],
    "size": [
-    158.443,
-    158.099,
+    159.972,
+    158.463,
     89.5
    ]
   },
   "HUB_ARCHIVES": {
    "group": "Hub",
-   "tris": 6816,
+   "tris": 6992,
    "anim": null,
    "host": null,
    "centre": [
-    218.587,
+    218.769,
     0.0,
     6.547
    ],
    "size": [
-    158.099,
-    158.443,
+    158.463,
+    159.972,
     113.095
    ]
   },
   "HUB_SHOP": {
    "group": "Hub",
-   "tris": 3888,
+   "tris": 3896,
    "anim": null,
    "host": null,
    "centre": [
     0.0,
-    -218.587,
-    -6.05
+    -218.769,
+    -3.05
    ],
    "size": [
-    158.443,
-    158.099,
-    87.9
+    159.972,
+    158.463,
+    93.9
    ]
   },
   "HUB_TRAINING_GROUNDS": {
    "group": "Hub",
-   "tris": 4892,
+   "tris": 4868,
    "anim": null,
    "host": null,
    "centre": [
-    -218.587,
+    -218.769,
     0.0,
     -1.55
    ],
    "size": [
-    158.099,
-    158.443,
+    158.463,
+    159.972,
     96.9
    ]
   },
