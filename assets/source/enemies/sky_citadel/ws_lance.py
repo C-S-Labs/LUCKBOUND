@@ -166,6 +166,7 @@ def _open_local(p, s):
 # (src/shared/Util/WeaponFX); the plasma blade (Beam mesh) + the blade arcs are the CHARGED state (WeaponFX.setCharged).
 # ANCHORS: name -> (lance-local point, parent bone). STRANDS: phase -> list of (anchorA, anchorB). Written to
 # src/shared/Content/LightningRigs.luau so the game knows which points to join.
+ANCHOR_PREFIXES = ("Web", "Arc")   # FX socket bones: export pins a vertex to each so Roblox keeps them
 HU = 1.58          # the storm web rides just behind the blade, round the collar
 HM = LM(HU); _hr = _rnd.Random(404)
 def hp(r, a_, z=0.0): return HM @ Vector((r*math.cos(a_), r*math.sin(a_), z))

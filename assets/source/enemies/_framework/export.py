@@ -36,8 +36,50 @@ def skin_bone_parented():
         if not any(m.type == 'ARMATURE' for m in o.modifiers):
             o.modifiers.new("Armature", 'ARMATURE').object = arm
         print("SKINNED", o.name, "->", bone)
+def pin_anchor_bones():
+    """Roblox's importer drops bones that deform nothing. Anchor bones (lightning / FX sockets: names in
+    ANCHOR_PREFIXES) get the few vertices nearest them (within 4 cm, e.g. the web node sitting on them) bound 100%,
+    so every anchor survives import. They move rigidly with their parent anyway, so nothing visibly deforms."""
+    pref = tuple(globals().get("ANCHOR_PREFIXES", ()))
+    if not pref: return
+    from mathutils.kdtree import KDTree
+    meshes = [o for o in bpy.data.objects if o.type == 'MESH' and o.name.startswith(PREFIX)]
+    pts = []
+    for o in meshes:
+        for v in o.data.vertices: pts.append((o, v.index, o.matrix_world @ v.co))
+    kd = KDTree(len(pts))
+    for i, (_, _, co) in enumerate(pts): kd.insert(co, i)
+    kd.balance()
+    missing = []
+    for b in rig.data.bones:
+        if not b.name.startswith(pref): continue
+        head = rig.matrix_world @ b.head_local
+        parent = b.parent.name if b.parent else None
+        def owns(i):                       # only vertices of meshes skinned to the anchor's own parent bone
+            o, vi, _ = pts[i]
+            g = o.vertex_groups.get(parent) if parent else None
+            if g is None: return False
+            try: return g.weight(vi) > 0.5
+            except RuntimeError: return False
+        hits = [h for h in kd.find_range(head, 0.04) if owns(h[1])][:6]
+        if not hits:
+            near = [h for h in kd.find_n(head, 400) if owns(h[1])]
+            hits = near[:1]
+        if not hits:
+            print("ANCHOR skipped (no mesh on its parent):", b.name); continue
+        for co, i, d in hits:
+            o, vi, _ = pts[i]
+            for g in list(o.vertex_groups):
+                try: g.remove([vi])
+                except RuntimeError: pass
+            vg = o.vertex_groups.get(b.name) or o.vertex_groups.new(name=b.name)
+            vg.add([vi], 1.0, 'REPLACE')
+            if not any(m.type == 'ARMATURE' for m in o.modifiers): o.modifiers.new("Armature", 'ARMATURE').object = rig
+        if hits[0][2] > 0.04: missing.append(b.name)
+    print("ANCHORS pinned", sum(1 for b in rig.data.bones if b.name.startswith(pref)), "far:", missing)
 def export_static():
     skin_bone_parented()
+    pin_anchor_bones()
     bake_vertex_colors()
     _select()
     fp = os.path.join(OUT_DIR, f"{NAME}.fbx")
@@ -46,6 +88,7 @@ def export_static():
     print("EXPORTED", fp)
 def export_action(action):
     skin_bone_parented()
+    pin_anchor_bones()
     bake_vertex_colors()
     _select()
     fp = os.path.join(OUT_DIR, f"{NAME}_{action}.fbx")

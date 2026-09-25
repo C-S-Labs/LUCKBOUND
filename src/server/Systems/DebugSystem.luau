@@ -28,6 +28,7 @@ local Events = require(Root.Content.Events)
 local Fixtures = require(Root.Content.Fixtures)
 local BossPreviews = require(Root.Content.BossPreviews)
 local WeaponFX = require(Root.Util.WeaponFX)
+local ChunkCore = require(Root.Util.ChunkCore)
 
 local DebugSystem = {}
 
@@ -82,17 +83,22 @@ end
 
 --- /showboss <id> [height] -- put a boss PREVIEW (Content/BossPreviews) in the nearest boss arena, facing you,
 --- playing its idle (or held pose). Aesthetic check only: no health, no AI. /clearboss removes it.
-local function nearestArena(from: Vector3): Vector3?
-	local best, bestD = nil, math.huge
+-- The nearest boss arena: its centre and the world direction of its ENTRANCE (the piece's south opening, content
+-- +Z in its layout frame, turned by the chunk's yaw), so a preview can face the way players walk in.
+local function nearestArena(from: Vector3): (Vector3?, Vector3?)
+	local best, bestD, facing = nil, math.huge, nil
 	for _, inst in workspace:GetDescendants() do
 		if inst:GetAttribute("Role") == "BOSS" then
 			local c = inst:GetAttribute("Centre")
 			if typeof(c) == "Vector3" and (c - from).Magnitude < bestD then
+				local yaw = inst:GetAttribute("Yaw")
+				local turn = if type(yaw) == "number" then ChunkCore.yawRadians(yaw) else 0
 				best, bestD = c, (c - from).Magnitude
+				facing = CFrame.Angles(0, turn, 0):VectorToWorldSpace(Vector3.new(0, 0, 1))
 			end
 		end
 	end
-	return best
+	return best, facing
 end
 
 local function groundBelow(p: Vector3, ignore: { Instance }): Vector3
@@ -119,7 +125,24 @@ COMMANDS.bossphase = function(_player: Player, args: { string }): (boolean, stri
 		return false, "usage: /bossphase <1|2> (needs a /showboss preview)"
 	end
 	WeaponFX.setCharged(model :: Model, phase == 2)
-	return true, `preview set to phase {phase} (lightning set + plasma blade)`
+	local on, total = 0, 0
+	for _, d in model:GetDescendants() do
+		if d:IsA("Beam") then
+			total += 1
+			if d.Enabled then
+				on += 1
+			end
+		end
+	end
+	if total == 0 then
+		return false,
+			"no lightning strands on this model - re-import the latest WingedSentinel.fbx (its FX anchor bones are missing)"
+	end
+	return true,
+		`preview set to phase {phase}: {on}/{total} lightning strands on, plasma blade {if phase
+				== 2
+			then "shown"
+			else "hidden"}`
 end
 
 COMMANDS.showboss = function(player: Player, args: { string }): (boolean, string)
@@ -173,14 +196,16 @@ COMMANDS.showboss = function(player: Player, args: { string }): (boolean, string
 		end
 	end
 
-	local arena = nearestArena(root.Position)
+	local arena, entrance = nearestArena(root.Position)
 	local spot = if arena then arena else root.Position + root.CFrame.LookVector * 40
 	local ignore: { Instance } = { model }
 	if player.Character then
 		table.insert(ignore, player.Character)
 	end
 	local ground = groundBelow(spot, ignore)
-	local faceTo = Vector3.new(root.Position.X, ground.Y, root.Position.Z)
+	local faceTo = if entrance
+		then ground + entrance * 50
+		else Vector3.new(root.Position.X, ground.Y, root.Position.Z)
 	local pivot = CFrame.lookAt(
 		ground,
 		if (faceTo - ground).Magnitude > 1 then faceTo else ground + Vector3.new(0, 0, -1)
@@ -192,6 +217,12 @@ COMMANDS.showboss = function(player: Player, args: { string }): (boolean, string
 	model:SetAttribute("LightningRig", def.Model)
 	model.Parent = workspace
 	WeaponFX.apply(model, def.Model) -- web crackle Beams + charge switch, if this boss has a lightning rig
+	local strands = 0
+	for _, d in model:GetDescendants() do
+		if d:IsA("Beam") then
+			strands += 1
+		end
+	end
 
 	local animId = def.Pose or def.Idle
 	if animId and animId ~= "" then
@@ -219,7 +250,8 @@ COMMANDS.showboss = function(player: Player, args: { string }): (boolean, string
 	local anim = if animId and animId ~= ""
 		then "idle playing"
 		else "rest pose (no Idle id set in BossPreviews)"
-	return true, `{id} shown {where} {scale} studs tall; {anim}. /clearboss to remove`
+	return true,
+		`{id} shown {where} {scale} studs tall; {anim}; lightning strands: {strands}. /clearboss to remove`
 end
 
 --- /atmosphere <BASE | RANDOM | ID> -- force a scenario atmosphere (Content/
