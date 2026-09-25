@@ -80,7 +80,7 @@ for side, s in (("Left", 1), ("Right", -1)):
         (f"Wing{side[0]}", (0.17*s, 0.3, 2.64), (0.3*s, 0.42, 2.9), "UpperTorso"),
         (f"Wing{side[0]}_Tip", (0.3*s, 0.42, 2.9), (0.36*s, 0.47, 3.02), f"Wing{side[0]}"),
     ]
-BONES += [("Weapon_R", (-0.57, -0.06, 1.26), (-0.57, -0.32, 1.26), "RightHand"),
+BONES += [("Weapon_R", (-0.459, -0.015, 1.415), (-0.459, -0.275, 1.415), "RightHand"),
           ("Shield_L", (0.66, 0.0, 1.86), (0.8, 0.0, 1.86), "LeftLowerArm")]
 BIDX = {b[0]: i for i, b in enumerate(BONES)}
 
