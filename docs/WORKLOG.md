@@ -33,9 +33,9 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
-## Session 69 — 2026-09-25 — Document animation ids as account/group-scoped
+## Session 70 — 2026-09-25 — Document animation ids as account/group-scoped
 
-**Merged:** —   **Tests:** unchanged (docs/comment only)   **Head:** —
+**Merged:** PR #127   **Tests:** unchanged (docs/comment only)   **Head:** branch `claude/animation-account-scoped-docs`
 
 ### Done
 - A partner playtesting `/showboss winged_sentinel` hit `Animation failed to load` for the Idle id
@@ -61,6 +61,46 @@ publishing.
    lightning texture) under it, and re-point `AssetManifest.luau` / `BossPreviews.luau` / `LightningRigs.luau` at
    the group-owned ids.
 2. Continue the queued Sentinel moveset animations and `EnemyDef` wiring per the prior session's "Next" list.
+
+---
+
+## Session 69 — 2026-09-25 — STATUS correction: Worlds table and walked items
+
+**Merged:** PR #126   **Tests:** n/a (docs only)   **Head:** branch `worktree-status-worlds-update`
+
+### Done
+
+- Owner correction: `docs/archive/STATUS_HISTORY.md`'s "Worlds" table predates Sky Citadel getting a chunk kit and
+  was still showing it as "none — data only" / "no kit". Marked that table **superseded**, pointing to the live one.
+- Added a live Worlds quick-reference table to `docs/STATUS.md` §1:
+  - **Sky Citadel** — 36-piece chunk kit, walked and verified, enterable.
+  - **Ethereal Scape** — one authored prebuilt map, no chunk kit, enterable.
+  - **Verdant Valley** — 30-piece chunk kit, built and walked, but the owner has flagged it for a **revamp pass**
+    (not a rebuild from scratch — the kit works, it needs a quality/variety pass).
+  - Emberfall / Astral Reach / The Unknown unchanged: no kit yet.
+- Owner confirmed **Studio has been walked 100+ times** during this project, each "test" entry in STATUS/archive
+  already the product of one of those walks. Per the owner, several items still flagged `unwalked` in `STATUS.md`
+  §4 have in fact been walked: world ambience, ambient props, loot/fixtures/vault keys, the first-join intro
+  screen, the authored Fate Engine, and the event sky. All six updated to **walked and verified 2026-09-25**.
+- `docs/biomes/VERDANT_VALLEY.md` now notes the kit is walked but flagged for a revamp.
+
+### Decisions made
+
+- The Worlds table lives in `docs/STATUS.md` going forward (not the archive); the archive copy stays as a dated
+  snapshot with a superseded note rather than being rewritten.
+- "Walked and verified" in `STATUS.md` §4 items now reflects the owner's direct confirmation, not a fresh in-session
+  Studio check.
+
+### Stopped at
+
+Docs-only correction pass.
+
+### Next
+
+1. The Verdant Valley revamp pass itself (content work, not yet scoped in detail — owner to specify what the
+   revamp targets: piece count, variety, or a quality bar).
+2. Everything already queued in Session 68's Next list (Sentinel moveset, `EnemyDef` wiring, crossroads chunk pass,
+   hub refinish) is unaffected by this correction.
 
 ---
 

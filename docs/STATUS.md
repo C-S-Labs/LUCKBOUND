@@ -12,8 +12,20 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 - **Phase 1 is complete** (hub, roll, onboarding, saves, UI, sprint and double jump, events). The build spec §7
   amendments that opened later work are §7.1 expedition entry, §7.2 parties as their own server, §7.3 scenarios,
   §7.4 caps and §7.5 loot.
-- **Worlds you can enter:** Verdant Valley (30-piece kit), Sky Citadel (36 pieces, walked, with ambience, props,
-  chests and the vault) and Ethereal Scape (prebuilt map). Emberfall and Astral Reach have no map yet.
+- **Worlds you can enter:** Verdant Valley (30-piece chunk kit — built, **needs a revamp pass**), Sky Citadel
+  (36-piece chunk kit, walked and verified, with ambience, props, chests and the vault) and Ethereal Scape
+  (prebuilt authored map, no chunk kit). Emberfall and Astral Reach have no map yet.
+
+  | Id | Rarity | Weight | Phase | Map | Enterable? |
+  |---|---|---|---|---|---|
+  | `VERDANT_VALLEY` | Common | 6000 (60%) | 1 | chunk kit, 30 pieces — needs a revamp pass | ✅ |
+  | `ETHEREAL_SCAPE` | Uncommon | 1500 (15%) | 1 | authored map, no chunk kit | ✅ |
+  | `EMBERFALL` | Rare | 1500 (15%) | 1 | blueprint written | ❌ no kit |
+  | `SKY_CITADEL` | Epic | 700 (7%) | 1 | chunk kit, 36 pieces — walked and verified | ✅ |
+  | `ASTRAL_REACH` | Mythic | 300 (3%) | 1 | blueprint written | ❌ no kit |
+  | `THE_UNKNOWN` | Unknown | 5 | 3 | none | ❌ no kit |
+
+  (Supersedes the Worlds table in `docs/archive/STATUS_HISTORY.md`, written before Sky Citadel had a kit.)
 - **Enemies:** the framework is built and all 16 Sky Citadel enemies are modelled, rigged and exported. The Winged
   Sentinel (Boss 3) runs in Studio through `/showboss`, with the Aether Lance's lightning and `/bossphase`.
   **Nothing spawns in gameplay yet.** `EnemyDef` + services wait for the owner's OK.
@@ -105,10 +117,10 @@ progression-feel problem.
 | **Unused sockets are never capped** | Medium |
 | **A chunk's mesh origin must be its footprint centre, and nothing enforces it** | **High** |
 | **Runs were a single straight shot** | **Fix pushed 2026-09-23, unproven** |
-| **World ambience** | **Built 2026-09-23, unwalked** |
-| **Ambient props** | **Live 2026-09-23, unwalked** |
-| **Loot, fixtures, vault keys** | **Live 2026-09-23, unwalked** |
-| **Verdant Valley 30-piece kit exported** | **Open 2026-09-24** |
+| **World ambience** | **Built 2026-09-23, walked and verified 2026-09-25** |
+| **Ambient props** | **Live 2026-09-23, walked and verified 2026-09-25** |
+| **Loot, fixtures, vault keys** | **Live 2026-09-23, walked and verified 2026-09-25** |
+| **Verdant Valley 30-piece kit exported** | **Open 2026-09-25 — kit built and walked; needs a revamp pass** |
 | **The Grove did not survive the upload** | Medium |
 | **The scenario layer** | **New 2026-09-22, headless only** |
 | **A brief that specifies the piece gets the piece it specified** | **Process** |
@@ -125,9 +137,9 @@ progression-feel problem.
 | **Trees on the bordering floating islands are malformed** | Low |
 | **The portal's stop has nothing to lead to yet** | **Open** |
 | **The mountain horizon is built, not placed** | Low |
-| **First-join intro screen** | **Built, unwalked** |
+| **First-join intro screen** | **Built, walked and verified 2026-09-25** |
 | **The Engine portal is to become the way into biomes** | **Architecture** |
-| **The authored Fate Engine is wired but unwalked** | **Open** |
+| **The authored Fate Engine is wired** | **Walked and verified 2026-09-25** |
 | **Ethereal Scape's `Scale_Reference` proxy is loose** | Low |
 | **The scene has no `EntryAnchor` / `ReturnAnchor`** | Medium |
 | **Ethereal Scape: one whole map, not eight chunks** | Decided 2026-09-17 |
@@ -135,7 +147,7 @@ progression-feel problem.
 | **Staircase clipping at the walkway junctions** | Medium |
 | **The live menu tint is unseen** | **High** |
 | **Rifts: event-gated dungeons** | **Design** |
-| **The event sky is built and unwalked** | **High** |
+| **The event sky is built** | **Walked and verified 2026-09-25** |
 | **The event catalogue is a proposal, not a plan** | **Design** |
 | **Three panels are designed, not implemented** | Expected |
 | **Five settings are stored and honoured by nothing** | Medium |

@@ -24,7 +24,7 @@ _222 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### assets/README.md
 
-- `assets/README.md` (312) - LUCKBOUND — Assets · 2026-09-23
+- `assets/README.md` (312) - LUCKBOUND — Assets · 2026-09-25
   - `README.md`: The constraint that shapes this folder:7, Layout:27, Adding a mesh — the short version:63, One authored scene: split it, or ship it whole?:84, The question to ask first:100, If it is a kit: one file per piece:122, If it is a map: one file, one entry:151, Scale: check it, do not assume it:161, Uploading a mesh to Roblox:189, 1. Export from Blender:191, 2. Import into Studio:208, 3. Read the asset id:228, 4. Record it in the manifest:233, The scriptable alternative:250, Publishing the PLACE (a different thing entirely):258, The `rbxm/` folder:278, Repository size:295, Modular map pieces:305
 
 ### assets/export
@@ -227,7 +227,7 @@ _222 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/PARTNER_SETUP.md
 
-- `docs/PARTNER_SETUP.md` (102) - Testing a world on your own Studio place · 2026-09-24
+- `docs/PARTNER_SETUP.md` (102) - Testing a world on your own Studio place · 2026-09-25
   - `PARTNER_SETUP.md`: Why you need your own uploads:7, One-time setup:15, Adding your Verdant Valley pieces:27, What goes where:57, Animation and other account-scoped ids:71, Sending changes back:98
 
 ### docs/PLAYER_ABILITIES.md
@@ -257,8 +257,8 @@ _222 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/STATUS.md
 
-- `docs/STATUS.md` (163) - LUCKBOUND — Project Status · 2026-09-25
-  - `STATUS.md`: 1. Where the project stands:10, 2. Next — pick up here:25, 3. Decisions locked in:62, Why true RNG matters downstream:87, 4. Open items (one line each; details are in the archive und:100, 5. Environment:145, Startup:153
+- `docs/STATUS.md` (175) - LUCKBOUND — Project Status · 2026-09-25
+  - `STATUS.md`: 1. Where the project stands:10, 2. Next — pick up here:37, 3. Decisions locked in:74, Why true RNG matters downstream:99, 4. Open items (one line each; details are in the archive und:112, 5. Environment:157, Startup:165
 
 ### docs/TESTING.md
 
@@ -277,22 +277,22 @@ _222 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (5001) - LUCKBOUND — Work Log · 2026-09-25
-  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 69 — 2026-09-25 — Document animation ids as account/:36, Done:40, Decisions made:51, Stopped at:55, Next:59, Session 68 — 2026-09-25 — Chunk detail, boss preview, Aether:67, Done:70, Decisions made:121, Stopped at:132, Next:136, Session 67 — 2026-09-24 — Enemy framework + Sky Citadel enem:144, Done:147, Decisions made:167, Stopped at:173, Next:176, Session 66 — 2026-09-24 — Verdant Valley 30-piece kit: expor:183, Done:186, Decisions made:196, Stopped at:200, Next:203, Session 65 — 2026-09-24 — Drop-in chunk kits:209, Done:212, Decisions made:221, Stopped at:228, Next:232, Session 64 — 2026-09-23 — Sky Citadel atmospheres finished; :239, Done:242, Next:265, Session 63 — 2026-09-23 — Weapons: the contract and the buil:273, Done:277, Next:304, Session 62 — 2026-09-23 — Fourth re-import wired in:311, Done:315, Next:323, ... +355 more
+- `docs/WORKLOG.md` (5041) - LUCKBOUND — Work Log · 2026-09-25
+  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 70 — 2026-09-25 — Document animation ids as account/:36, Done:40, Decisions made:51, Stopped at:55, Next:59, Session 69 — 2026-09-25 — STATUS correction: Worlds table an:67, Done:71, Decisions made:87, Stopped at:94, Next:98, Session 68 — 2026-09-25 — Chunk detail, boss preview, Aether:107, Done:110, Decisions made:161, Stopped at:172, Next:176, Session 67 — 2026-09-24 — Enemy framework + Sky Citadel enem:184, Done:187, Decisions made:207, Stopped at:213, Next:216, Session 66 — 2026-09-24 — Verdant Valley 30-piece kit: expor:223, Done:226, Decisions made:236, Stopped at:240, Next:243, Session 65 — 2026-09-24 — Drop-in chunk kits:249, Done:252, Decisions made:261, Stopped at:268, Next:272, Session 64 — 2026-09-23 — Sky Citadel atmospheres finished; :279, Done:282, Next:305, Session 63 — 2026-09-23 — Weapons: the contract and the buil:313, ... +360 more
 
 ### docs/archive
 
-- `docs/archive/STATUS_HISTORY.md` (633) - STATUS history (archived 2026-09-25) · 2026-09-25
-  - `STATUS_HISTORY.md`: 1. Where the project stands:17, Verified working in Studio:72, Expedition entry — new 2026-09-16:93, World scale — rescaled 2026-09-16, tuned after the first wal:112, Modular map system:147, Test suite:196, 2. What is built:215, Worlds:244, 3. Decisions locked in:272, Why true RNG matters downstream:297, 4. Open items:310, Needs the owner's sign-off:312, What 276 green tests missed — and what now covers it:330, Known debt:369, 5. Next session — pick up here:458, When expeditions move to a separate place:561, Working agreement that emerged this session:581, 6. Environment:591, Startup:599, 7. Document map:611
+- `docs/archive/STATUS_HISTORY.md` (636) - STATUS history (archived 2026-09-25) · 2026-09-25
+  - `STATUS_HISTORY.md`: 1. Where the project stands:17, Verified working in Studio:72, Expedition entry — new 2026-09-16:93, World scale — rescaled 2026-09-16, tuned after the first wal:112, Modular map system:147, Test suite:196, 2. What is built:215, Worlds:244, 3. Decisions locked in:275, Why true RNG matters downstream:300, 4. Open items:313, Needs the owner's sign-off:315, What 276 green tests missed — and what now covers it:333, Known debt:372, 5. Next session — pick up here:461, When expeditions move to a separate place:564, Working agreement that emerged this session:584, 6. Environment:594, Startup:602, 7. Document map:614
 
 ### docs/biomes
 
 - `docs/biomes/README.md` (103) - Biome design schemas · 2026-09-23
   - `README.md`: What a biome schema covers:24, Ambience — a world's mood is data:54, Status:85
-- `docs/biomes/SKY_CITADEL.md` (585) - Sky Citadel — biome design schema · 2026-09-25
-  - `SKY_CITADEL.md`: The look:26, It must not look like Ethereal Scape:47, The palette:61, The set-dressing vocabulary:90, Lighting and ambience — sunrise above the cloud sea:183, The connection vocabulary:216, The kit — 22 pieces:241, Variety: five axes, mixed differently on every piece:319, The shape of a run: turns, one intersection, no dead ends:365, No opening onto nothing: the caps:389, Axes:433, How to change it:440, Hand pass:467, 2026-09-22 — the caps:469, 2026-09-22 — variety, turns, the intersection, and four more:478, 2026-09-22 — the kit expansion:489, 2026-09-22 — the first four:503, Risks before upload — read before importing to Studio:518, Render headless:560, Next:570
-- `docs/biomes/VERDANT_VALLEY.md` (223) - Verdant Valley — biome design schema · 2026-09-25
-  - `VERDANT_VALLEY.md`: 1. Palette and light:14, 2. The kinds of place:36, 3. How pieces connect:68, The consequence worth understanding:81, 4. Inhabitants:97, 5. Piece size and count:117, 6. What each piece can support:137, 7. Settled, and what is still open:164, Settled 2026-09-22, when the kit was delivered:166, Still open:180, 8. The 30-piece base kit (2026-09-24):192
+- `docs/biomes/SKY_CITADEL.md` (601) - Sky Citadel — biome design schema · 2026-09-25
+  - `SKY_CITADEL.md`: The look:26, It must not look like Ethereal Scape:47, The palette:61, The set-dressing vocabulary:90, Lighting and ambience — sunrise above the cloud sea:183, The connection vocabulary:216, The kit — 36 pieces (22 delivered + a 14-piece expansion):241, Variety: five axes, mixed differently on every piece:335, The shape of a run: turns, one intersection, no dead ends:381, No opening onto nothing: the caps:405, Axes:449, How to change it:456, Hand pass:483, 2026-09-22 — the caps:485, 2026-09-22 — variety, turns, the intersection, and four more:494, 2026-09-22 — the kit expansion:505, 2026-09-22 — the first four:519, Risks before upload — read before importing to Studio:534, Render headless:576, Next:586
+- `docs/biomes/VERDANT_VALLEY.md` (224) - Verdant Valley — biome design schema · 2026-09-25
+  - `VERDANT_VALLEY.md`: 1. Palette and light:14, 2. The kinds of place:36, 3. How pieces connect:69, The consequence worth understanding:82, 4. Inhabitants:98, 5. Piece size and count:118, 6. What each piece can support:138, 7. Settled, and what is still open:165, Settled 2026-09-22, when the kit was delivered:167, Still open:181, 8. The 30-piece base kit (2026-09-24):193
 
 ### (root)
 
