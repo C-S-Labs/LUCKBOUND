@@ -16,8 +16,8 @@ MAX_SYMBOLS = 40
 
 
 def tracked():
-    out = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True, check=True).stdout
-    return sorted(p for p in out.splitlines() if p and not p.endswith(".gitkeep") and p != "INDEX_MAP.md")
+    out = subprocess.run(["git", "ls-files", "--cached", "--others", "--exclude-standard"], cwd=ROOT, capture_output=True, text=True, check=True).stdout
+    return sorted(set(p for p in out.splitlines() if p and not p.endswith(".gitkeep") and p != "INDEX_MAP.md" and os.path.exists(os.path.join(ROOT, p))))
 
 
 def read(p):
