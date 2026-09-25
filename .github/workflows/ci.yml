@@ -61,3 +61,20 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           version: 2.0.2
           args: --check src tests
+
+  handoff:
+    # A PR that changes src/ or assets/ must also update docs/STATUS.md or docs/WORKLOG.md, so the handoff never goes
+    # stale. Bypass for trivial PRs: put [skip-status] in the PR title.
+    if: github.event_name == 'pull_request' && !contains(github.event.pull_request.title, '[skip-status]')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Handoff docs updated with the change
+        run: |
+          changed=$(git diff --name-only origin/${{ github.base_ref }}...HEAD)
+          if echo "$changed" | grep -qE '^(src|assets)/' && ! echo "$changed" | grep -qE '^docs/(STATUS|WORKLOG)\.md$'; then
+            echo "::error::This PR changes src/ or assets/ but not docs/STATUS.md or docs/WORKLOG.md (AGENTS.md: Before you finish). Add [skip-status] to the title if trivial."
+            exit 1
+          fi

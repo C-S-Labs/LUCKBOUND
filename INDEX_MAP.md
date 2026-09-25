@@ -13,8 +13,8 @@ _222 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 ### (root)
 
 - `.stylua.toml` (3) · 2026-09-15
-- `AGENTS.md` (156) - LUCKBOUND — Instructions for AI Agents · 2026-09-25
-  - `AGENTS.md`: STEP 0 — read `INDEX.md` before anything else (mandatory):9, Keeping INDEX.md current:26, STEP 1 — then read these three, in this order:32, Token discipline (owner priority):68, BEFORE YOU FINISH — update the handoff:76, The prime directive:104, Hard rules:112, Boot order:123, Style:127, Verify before you merge:134, When you are unsure:154
+- `AGENTS.md` (157) - LUCKBOUND — Instructions for AI Agents · 2026-09-25
+  - `AGENTS.md`: STEP 0 — read `INDEX.md` before anything else (mandatory):9, Keeping INDEX.md current:26, STEP 1 — then read these three, in this order:32, Token discipline (owner priority):68, BEFORE YOU FINISH — update the handoff:76, The prime directive:105, Hard rules:113, Boot order:124, Style:128, Verify before you merge:135, When you are unsure:155
 - `CLAUDE.md` (6) - CLAUDE.md · 2026-09-25
 - `GEMINI.md` (3) - GEMINI.md · 2026-09-25
 - `INDEX.md` (187) - LUCKBOUND — Repository Index · 2026-09-25
@@ -277,12 +277,12 @@ _222 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (4969) - LUCKBOUND — Work Log · 2026-09-25
-  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 68 — 2026-09-25 — Chunk detail, boss preview, Aether:36, Done:39, Decisions made:89, Stopped at:100, Next:104, Session 67 — 2026-09-24 — Enemy framework + Sky Citadel enem:112, Done:115, Decisions made:135, Stopped at:141, Next:144, Session 66 — 2026-09-24 — Verdant Valley 30-piece kit: expor:151, Done:154, Decisions made:164, Stopped at:168, Next:171, Session 65 — 2026-09-24 — Drop-in chunk kits:177, Done:180, Decisions made:189, Stopped at:196, Next:200, Session 64 — 2026-09-23 — Sky Citadel atmospheres finished; :207, Done:210, Next:233, Session 63 — 2026-09-23 — Weapons: the contract and the buil:241, Done:245, Next:272, Session 62 — 2026-09-23 — Fourth re-import wired in:279, Done:283, Next:291, Session 61 — 2026-09-23 — Seamless vault, real chests, a str:299, Done:303, Next:336, Session 60 — 2026-09-23 — Third re-import wired in:343, Done:347, ... +350 more
+- `docs/WORKLOG.md` (4970) - LUCKBOUND — Work Log · 2026-09-25
+  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 68 — 2026-09-25 — Chunk detail, boss preview, Aether:36, Done:39, Decisions made:90, Stopped at:101, Next:105, Session 67 — 2026-09-24 — Enemy framework + Sky Citadel enem:113, Done:116, Decisions made:136, Stopped at:142, Next:145, Session 66 — 2026-09-24 — Verdant Valley 30-piece kit: expor:152, Done:155, Decisions made:165, Stopped at:169, Next:172, Session 65 — 2026-09-24 — Drop-in chunk kits:178, Done:181, Decisions made:190, Stopped at:197, Next:201, Session 64 — 2026-09-23 — Sky Citadel atmospheres finished; :208, Done:211, Next:234, Session 63 — 2026-09-23 — Weapons: the contract and the buil:242, Done:246, Next:273, Session 62 — 2026-09-23 — Fourth re-import wired in:280, Done:284, Next:292, Session 61 — 2026-09-23 — Seamless vault, real chests, a str:300, Done:304, Next:337, Session 60 — 2026-09-23 — Third re-import wired in:344, Done:348, ... +350 more
 
 ### docs/archive
 
-- `docs/archive/STATUS_HISTORY.md` (633) - STATUS history (archived 2026-09-25) · new
+- `docs/archive/STATUS_HISTORY.md` (633) - STATUS history (archived 2026-09-25) · 2026-09-25
   - `STATUS_HISTORY.md`: 1. Where the project stands:17, Verified working in Studio:72, Expedition entry — new 2026-09-16:93, World scale — rescaled 2026-09-16, tuned after the first wal:112, Modular map system:147, Test suite:196, 2. What is built:215, Worlds:244, 3. Decisions locked in:272, Why true RNG matters downstream:297, 4. Open items:310, Needs the owner's sign-off:312, What 276 green tests missed — and what now covers it:330, Known debt:369, 5. Next session — pick up here:458, When expeditions move to a separate place:561, Working agreement that emerged this session:581, 6. Environment:591, Startup:599, 7. Document map:611
 
 ### docs/biomes
