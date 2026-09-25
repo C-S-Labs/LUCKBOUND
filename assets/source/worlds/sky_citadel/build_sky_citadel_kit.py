@@ -696,10 +696,15 @@ def spire(p, x, y, r, H, halo=True, fins=True, extra_halos=0, z0=0.0):
     frustum(p, "PaleAlloy", 8, r * 1.5, r * 1.35, z0, z0 + 4, x, y)
     frustum(p, "DeepAlloy", 8, r * 1.35, r * 1.2, z0 + 4, z0 + 6, x, y)
     h1 = z0 + L * 0.5
-    frustum(p, "CitadelWhite", 8, r, r * 0.78, z0 + 6, h1, x, y)
+    frustum(p, "CitadelWhite", 12, r, r * 0.78, z0 + 6, h1, x, y)
+    for k in range(4):                                    # accent lines up the shaft
+        a = math.radians(45 + 90 * k)
+        for (za, zb, ra, rb) in ((z0 + 7, h1 - 1, r, r * 0.78),):
+            pa = Vector((x + math.cos(a) * ra * 0.985, y + math.sin(a) * ra * 0.985, za)); pb = Vector((x + math.cos(a) * rb * 0.985, y + math.sin(a) * rb * 0.985, zb))
+            tube(p, "CitadelViolet", [tuple(pa), tuple(pb)], [0.3, 0.25], n=4)
     frustum(p, "AzureDim", 8, r * 0.84, r * 0.84, h1, h1 + 2, x, y)
     h2 = z0 + L * 0.78
-    frustum(p, "CitadelWhite", 8, r * 0.78, r * 0.5, h1 + 2, h2, x, y)
+    frustum(p, "CitadelWhite", 12, r * 0.78, r * 0.5, h1 + 2, h2, x, y)
     frustum(p, "SunGold", 8, r * 0.58, r * 0.58, h2, h2 + 2, x, y)
     frustum(p, "PaleAlloy", 8, r * 0.5, 0, h2 + 2, H, x, y)
     if fins:
@@ -720,8 +725,13 @@ def spire(p, x, y, r, H, halo=True, fins=True, extra_halos=0, z0=0.0):
 def tower(p, x, y, r, H, roof_h=None, roof=True):
     """A castle turret: white octagonal shaft, crenellated walk, violet cone."""
     p.solid("tower", x, y, r * 1.25, 0, H + 6 + (roof_h if roof_h is not None else r * 2.4))
-    frustum(p, "PaleAlloy", 8, r * 1.15, r * 1.1, 0, 3, x, y)
-    frustum(p, "CitadelWhite", 8, r, r * 0.94, 3, H, x, y)
+    frustum(p, "PaleAlloy", 12, r * 1.15, r * 1.1, 0, 3, x, y)
+    frustum(p, "CitadelWhite", 12, r, r * 0.94, 3, H, x, y)
+    for k in range(6):                                  # violet accent lines up the shaft (owner-approved detail pass)
+        a = math.radians(30 + 60 * k)
+        rr = r * 0.975
+        box(p, "CitadelViolet", x + math.cos(a) * rr, y + math.sin(a) * rr, (3 + H) / 2, 0.35, 0.35, H - 3.4, rz=60 * k + 30)
+    frustum(p, "SunGold", 12, r * 0.985, r * 0.985, H * 0.35, H * 0.35 + 0.8, x, y)
     apothem = r * 0.97 * math.cos(math.radians(22.5))
     for k in range(4):
         a = math.radians(90 * k)
@@ -741,8 +751,27 @@ def tower(p, x, y, r, H, roof_h=None, roof=True):
         frustum(p, "PaleAlloy", 8, r * 1.05, r * 1.05, H + 2, H + 3.1, x, y)
         return
     rh = roof_h if roof_h is not None else r * 2.4
-    frustum(p, "CitadelViolet", 8, r * 0.9, 0, H + 3, H + 3 + rh, x, y)
-    crystal(p, "SunGold", x, y, H + 3 + rh + 1.2, 0.8, 1.6, 1.2)
+    style = int(abs(x) * 7 + abs(y) * 13 + H) % 4        # neighbours differ; the same tower always gets the same roof
+    z = H + 3
+    if style == 0:                                        # plain cone
+        frustum(p, "CitadelViolet", 12, r * 0.9, 0, z, z + rh, x, y)
+    elif style == 1:                                      # tiered: two cones with a gold collar
+        frustum(p, "CitadelViolet", 12, r * 1.0, r * 0.45, z, z + rh * 0.45, x, y)
+        frustum(p, "SunGold", 12, r * 0.5, r * 0.5, z + rh * 0.45, z + rh * 0.45 + 0.7, x, y)
+        frustum(p, "CitadelViolet", 12, r * 0.55, 0, z + rh * 0.45 + 0.7, z + rh * 1.05, x, y)
+        rh *= 1.05
+    elif style == 2:                                      # flared eave: wide shallow skirt, then a steep needle cone
+        frustum(p, "CitadelViolet", 12, r * 1.25, r * 0.7, z, z + rh * 0.2, x, y)
+        frustum(p, "CitadelViolet", 12, r * 0.7, 0, z + rh * 0.2, z + rh * 1.15, x, y)
+        rh *= 1.15
+    else:                                                 # crowned: short cone ringed by gold spikes, tall needle
+        frustum(p, "CitadelViolet", 12, r * 0.95, r * 0.25, z, z + rh * 0.55, x, y)
+        for k in range(6):
+            a = math.radians(60 * k)
+            frustum(p, "SunGold", 4, 0.35, 0, z + rh * 0.35, z + rh * 0.6, x + math.cos(a) * r * 0.55, y + math.sin(a) * r * 0.55)
+        frustum(p, "PaleAlloy", 6, r * 0.25, 0, z + rh * 0.55, z + rh * 1.1, x, y)
+        rh *= 1.1
+    crystal(p, "SunGold", x, y, z + rh + 1.2, 0.8, 1.6, 1.2)
 
 
 CAPITAL_H = 6.5   # a gate pylon's capital: tall enough to swallow the roof beam's end
@@ -1311,7 +1340,8 @@ def gazebo(p, x, y, r=10.0, h=8.0):
         a = math.radians(22.5 + 45 * k)
         frustum(p, "CitadelWhite", 6, 0.55, 0.5, 0.8, h, x + math.cos(a) * r * 0.9, y + math.sin(a) * r * 0.9)
     frustum(p, "PaleAlloy", 8, r * 1.05, r * 1.1, h, h + 1, x, y)
-    frustum(p, "CitadelViolet", 8, r * 1.1, 0, h + 1, h + 1 + r * 0.9, x, y)
+    frustum(p, "CitadelViolet", 12, r * 1.25, r * 0.6, h + 1, h + 1 + r * 0.2, x, y)
+    frustum(p, "CitadelViolet", 12, r * 0.6, 0, h + 1 + r * 0.2, h + 1 + r * 0.9, x, y)
     crystal(p, "SunGold", x, y, h + 1 + r * 0.9 + 1.0, 0.7, 1.6, 1.0)
 
 
@@ -1541,9 +1571,13 @@ def colonnade(p, x, y0, y1, n, H=28.0):
     for i in range(n):
         yy = y0 + (y1 - y0) * i / (n - 1)
         frustum(p, "PaleAlloy", 8, 3.0, 2.8, 0, 2, x, yy)
-        frustum(p, "CitadelWhite", 8, 2.2, 1.8, 2, H, x, yy)
-        frustum(p, "AzureDim", 8, 2.1, 2.1, H * 0.6, H * 0.6 + 1, x, yy)
-        frustum(p, "PaleAlloy", 8, 1.9, 3.0, H, H + 1.5, x, yy)
+        frustum(p, "CitadelWhite", 12, 2.2, 1.8, 2, H, x, yy)
+        for k in range(4):                                # fluting accent lines
+            a = math.radians(45 + 90 * k)
+            tube(p, "CitadelViolet", [(x + math.cos(a) * 2.15, yy + math.sin(a) * 2.15, 3), (x + math.cos(a) * 1.77, yy + math.sin(a) * 1.77, H - 1)], [0.22, 0.2], n=4)
+        frustum(p, "AzureDim", 12, 2.1, 2.1, H * 0.6, H * 0.6 + 1, x, yy)
+        frustum(p, "SunGold", 12, 1.85, 1.95, H - 0.6, H, x, yy)
+        frustum(p, "PaleAlloy", 12, 1.9, 3.0, H, H + 1.5, x, yy)
     box_span(p, "CitadelWhite", x - 3, x + 3, y0 - 3, y1 + 3, H + 1.5, H + 3.5)
     box_span(p, "AzureDim", x - 3.1, x + 3.1, y0 - 3.1, y1 + 3.1, H + 2.2, H + 2.6)
 
@@ -2728,11 +2762,13 @@ def bird(p, x, y, z, rz, mat):
         crystal(p, mat, 0, 0, 0, 0.8, 1.2, 0.9, n=4, rz=45)
         frustum(p, mat, 4, 0.7, 0, 0, 2.2, M=xf(0.6, 0, 0, ry=90))
         frustum(p, "SunGold", 4, 0.3, 0, 0, 0.8, M=xf(2.7, 0, 0, ry=90))
-        # Wings apart from the body, hinged at the root, so they can flap.
-        # The root of a wing raised 24 degrees sits at y = 0.44, z = -0.15.
+        # Wings: built FLAT and symmetric, root sunk into the body, hinged at the root. Both sides then share one
+        # library mesh CORRECTLY (a translated copy is exact for a symmetric flat wing - the old raised wing was
+        # mirror-asymmetric, so the right wing came out tilted the wrong way and detached). The flap animation
+        # (PropCore Wing, mirrored per side) raises them.
         for s in (-1, 1):
-            with as_attached(p, "bird wing", (0, s * 0.44, -0.15)):
-                box(p, "PaleAlloy", 0, s * 1.9, 0.5, 1.6, 3.2, 0.15, rx=s * 24)
+            with as_attached(p, "bird wing", (0, s * 0.35, 0.45)):
+                box(p, "PaleAlloy", 0, s * 1.95, 0.45, 1.6, 3.5, 0.15)
         box(p, mat, -1.8, 0, 0.1, 1.4, 1.1, 0.15)
     return ("cyl", x, y, 3.4, z - 1.2, z + 1.9)
 
