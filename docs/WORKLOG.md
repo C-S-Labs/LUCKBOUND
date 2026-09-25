@@ -33,6 +33,116 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 74 — 2026-09-25 — Fern Hollow and Mushroom Glen verified
+
+**Merged:** none   **Tests:** owner Studio confirmation   **Head:** branch `socket-fixing`
+
+### Done
+
+- Owner confirmed Fern Hollow and Mushroom Glen both load their intended current assets in Studio.
+
+### Decisions made
+
+- No code or asset change needed.
+
+### Stopped at
+
+Both asset mappings verified in Studio.
+
+### Next
+
+1. Continue the Verdant Valley revamp when scoped.
+
+---
+
+## Session 73 — 2026-09-25 — Verdant Valley asset mapping verified
+
+**Merged:** none   **Tests:** manifest and StyLua checks passed; Selene blocked by API dump access   **Head:** branch `socket-fixing`
+
+### Done
+
+- Confirmed the prior manifest cleanup leaves one canonical Fern Hollow row (`102496516928454`) and one Mushroom Glen row (`74544938107663`), both sourced from `VV_STRUCTURE.rbxmx`; no code change was needed.
+
+### Decisions made
+
+- Treat the earlier socket warnings as symptoms of old mesh resolution; leave calibration untouched.
+
+### Stopped at
+
+Fern Hollow's intended mesh is confirmed in Studio; Mushroom Glen's mesh awaits a Studio check.
+
+### Next
+
+1. Verify Mushroom Glen loads its intended mesh in Studio.
+
+---
+
+## Session 72 — 2026-09-25 — Socket-centre calibration scoring
+
+**Merged:** none   **Tests:** StyLua passed; Selene blocked by API dump access   **Head:** branch `socket-fixing`
+
+### Done
+
+- Recovered centre-hit tracking and reporting from the pre-sync backup in `calibrateYaw`; selection still uses weighted score, now initialized to handle all-negative candidates.
+
+### Decisions made
+
+- Kept the current per-chunk tolerance and omitted backup diagnostics and Boss-specific experiments.
+
+### Stopped at
+
+Code restored; Fern Hollow and Mushroom Glen yaw behavior awaits a Studio check.
+
+### Next
+
+1. Verify both pieces' socket alignment in Studio.
+
+---
+
+## Session 71 — 2026-09-25 — Verdant Valley manifest collision
+
+**Merged:** none   **Tests:** StyLua and manifest checks passed; Selene blocked by API dump access   **Head:** branch `socket-fixing`
+
+### Done
+
+- Removed legacy duplicate `VV_CHUNK_FERN_HOLLOW` and `VV_CHUNK_MUSHROOM_GLEN` manifest rows that overrode the current 30-piece IDs.
+
+### Decisions made
+
+- Keep the existing runtime keys and current `VV_STRUCTURE.rbxmx` source rows.
+
+### Stopped at
+
+Manifest corrected; Studio verification remains pending.
+
+### Next
+
+1. Verify Fern Hollow and Mushroom Glen load their current meshes in Studio.
+
+---
+
+## Session 70 — 2026-09-25 — Per-chunk socket probe tolerance
+
+**Merged:** none   **Tests:** StyLua passed; Selene blocked by API dump access   **Head:** branch `socket-fixing`
+
+### Done
+
+- `ChunkLoader.calibrateYaw` now uses `SocketProbeTolerance` when a chunk declares it, with the configured probe tolerance as the default, for both socket and negative-edge height checks.
+
+### Decisions made
+
+- No change to the default tolerance or chunk content.
+
+### Stopped at
+
+Loader change and formatting check complete; Selene and Studio validation remain pending.
+
+### Next
+
+1. Verify the Verdant Valley Boss Sanctuary socket alignment in Studio.
+
+---
+
 ## Session 69 — 2026-09-25 — STATUS correction: Worlds table and walked items
 
 **Merged:** none (this PR)   **Tests:** n/a (docs only)   **Head:** branch `worktree-status-worlds-update`

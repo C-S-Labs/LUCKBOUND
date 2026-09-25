@@ -348,6 +348,7 @@ local CHUNKS = {
 		AssetKey = "VV_CHUNK_BOSS_SANCTUARY",
 		SizeX = 384, SizeY = 113.67, SizeZ = 256,
 		GroundOffsetY = 48.00,
+		SocketProbeTolerance = 1,
 		Sockets = { socket("north", "WIDE", 0, -128, 0) },
 		Weight = 1,
 		MaxPerLayout = 1,

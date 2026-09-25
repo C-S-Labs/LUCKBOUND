@@ -41,6 +41,7 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 > `CLAUDE.md`/`GEMINI.md` point to it.
 >
 > Legacy Verdant Valley pieces are gone. The kit is `VV_STRUCTURE.rbxmx` (the same shape as `SC_STRUCTURE`).
+> The duplicate Fern Hollow and Mushroom Glen manifest rows were removed on `socket-fixing`; both canonical keys point to the current 30-piece assets in `VV_STRUCTURE.rbxmx`. The owner confirmed both pieces load their intended meshes in Studio on 2026-09-25. Earlier socket warnings were downstream of the wrong assets loading. Boss Sanctuary rotation is verified.
 
 > **2026-09-25: the Winged Sentinel stands in Studio.** Run `/showboss winged_sentinel` in the boss arena: 16 studs,
 > facing the entrance, playing the Idle_Guard animation (`rbxassetid://132590990835909`). The Aether Lance's web is
