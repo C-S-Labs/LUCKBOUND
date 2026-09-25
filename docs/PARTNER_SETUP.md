@@ -68,6 +68,33 @@ See `assets/README.md` → *Layout*. In short:
 Don't put chunks in `assets/rbxm/maps/`. That folder is for whole,
 hand-built maps only.
 
+## Animation and other account-scoped ids
+
+The same restriction applies to **any** `rbxassetid://` in this repo, not just
+chunk meshes: `Content/BossPreviews.luau`'s `Idle`/`Pose` animation ids,
+`Content/LightningRigs.luau`'s texture id, and so on. An asset uploaded to one
+account or group won't load for a client or server running under a different
+account/group — Roblox denies the fetch silently. There's no crash; you just
+get a warning in the output (`Animation failed to load`, or the mesh render
+as a grey block) and the feature quietly does nothing.
+
+If `/showboss` shows the arena but the boss won't play its idle, or logs
+`Animation failed to load` for an id that matches `BossPreviews.luau`, this is
+almost always why — not a code bug. Fix it the same way as a mesh: re-upload
+(or re-publish) the animation under whichever account/group owns the place
+you're testing in, and update the id in `BossPreviews.luau`.
+
+**One important difference from Studio testing:** this per-account
+restriction only bites while assets and the place are owned by *different*
+accounts/groups — which is the normal case in Studio, since each
+collaborator's local `.rbxl` is their own. Once LUCKBOUND is actually
+**published** as a group-owned experience, with every asset also uploaded to
+that same group, any player who joins the live game can load them — group
+*membership* isn't required to play, only to upload/manage assets or open the
+place in Team Create. So this restriction is a Studio/local-testing problem
+you route around per-collaborator now, not something that will affect real
+players later, as long as the place and its assets share one owner.
+
 ## Sending changes back
 
 Work on a branch and open a pull request. Your manifest ids only work in your

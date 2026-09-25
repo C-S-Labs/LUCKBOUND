@@ -24,8 +24,8 @@ _222 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### assets/README.md
 
-- `assets/README.md` (309) - LUCKBOUND — Assets · 2026-09-23
-  - `README.md`: The constraint that shapes this folder:7, Layout:27, Adding a mesh — the short version:63, One authored scene: split it, or ship it whole?:84, The question to ask first:100, If it is a kit: one file per piece:122, If it is a map: one file, one entry:151, Scale: check it, do not assume it:161, Uploading a mesh to Roblox:189, 1. Export from Blender:191, 2. Import into Studio:208, 3. Read the asset id:225, 4. Record it in the manifest:230, The scriptable alternative:247, Publishing the PLACE (a different thing entirely):255, The `rbxm/` folder:275, Repository size:292, Modular map pieces:302
+- `assets/README.md` (312) - LUCKBOUND — Assets · 2026-09-25
+  - `README.md`: The constraint that shapes this folder:7, Layout:27, Adding a mesh — the short version:63, One authored scene: split it, or ship it whole?:84, The question to ask first:100, If it is a kit: one file per piece:122, If it is a map: one file, one entry:151, Scale: check it, do not assume it:161, Uploading a mesh to Roblox:189, 1. Export from Blender:191, 2. Import into Studio:208, 3. Read the asset id:228, 4. Record it in the manifest:233, The scriptable alternative:250, Publishing the PLACE (a different thing entirely):258, The `rbxm/` folder:278, Repository size:295, Modular map pieces:305
 
 ### assets/export
 
@@ -227,8 +227,8 @@ _222 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/PARTNER_SETUP.md
 
-- `docs/PARTNER_SETUP.md` (75) - Testing a world on your own Studio place · 2026-09-24
-  - `PARTNER_SETUP.md`: Why you need your own uploads:7, One-time setup:15, Adding your Verdant Valley pieces:27, What goes where:57, Sending changes back:71
+- `docs/PARTNER_SETUP.md` (102) - Testing a world on your own Studio place · 2026-09-25
+  - `PARTNER_SETUP.md`: Why you need your own uploads:7, One-time setup:15, Adding your Verdant Valley pieces:27, What goes where:57, Animation and other account-scoped ids:71, Sending changes back:98
 
 ### docs/PLAYER_ABILITIES.md
 
@@ -257,8 +257,8 @@ _222 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/STATUS.md
 
-- `docs/STATUS.md` (167) - LUCKBOUND — Project Status · 2026-09-25
-  - `STATUS.md`: 1. Where the project stands:10, 2. Next — pick up here:37, 3. Decisions locked in:66, Why true RNG matters downstream:91, 4. Open items (one line each; details are in the archive und:104, 5. Environment:149, Startup:157
+- `docs/STATUS.md` (175) - LUCKBOUND — Project Status · 2026-09-25
+  - `STATUS.md`: 1. Where the project stands:10, 2. Next — pick up here:37, 3. Decisions locked in:74, Why true RNG matters downstream:99, 4. Open items (one line each; details are in the archive und:112, 5. Environment:157, Startup:165
 
 ### docs/TESTING.md
 
@@ -277,8 +277,8 @@ _222 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (5010) - LUCKBOUND — Work Log · 2026-09-25
-  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 69 — 2026-09-25 — STATUS correction: Worlds table an:36, Done:40, Decisions made:56, Stopped at:63, Next:67, Session 68 — 2026-09-25 — Chunk detail, boss preview, Aether:76, Done:79, Decisions made:130, Stopped at:141, Next:145, Session 67 — 2026-09-24 — Enemy framework + Sky Citadel enem:153, Done:156, Decisions made:176, Stopped at:182, Next:185, Session 66 — 2026-09-24 — Verdant Valley 30-piece kit: expor:192, Done:195, Decisions made:205, Stopped at:209, Next:212, Session 65 — 2026-09-24 — Drop-in chunk kits:218, Done:221, Decisions made:230, Stopped at:237, Next:241, Session 64 — 2026-09-23 — Sky Citadel atmospheres finished; :248, Done:251, Next:274, Session 63 — 2026-09-23 — Weapons: the contract and the buil:282, Done:286, Next:313, Session 62 — 2026-09-23 — Fourth re-import wired in:320, Done:324, Next:332, ... +355 more
+- `docs/WORKLOG.md` (5041) - LUCKBOUND — Work Log · 2026-09-25
+  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 70 — 2026-09-25 — Document animation ids as account/:36, Done:40, Decisions made:51, Stopped at:55, Next:59, Session 69 — 2026-09-25 — STATUS correction: Worlds table an:67, Done:71, Decisions made:87, Stopped at:94, Next:98, Session 68 — 2026-09-25 — Chunk detail, boss preview, Aether:107, Done:110, Decisions made:161, Stopped at:172, Next:176, Session 67 — 2026-09-24 — Enemy framework + Sky Citadel enem:184, Done:187, Decisions made:207, Stopped at:213, Next:216, Session 66 — 2026-09-24 — Verdant Valley 30-piece kit: expor:223, Done:226, Decisions made:236, Stopped at:240, Next:243, Session 65 — 2026-09-24 — Drop-in chunk kits:249, Done:252, Decisions made:261, Stopped at:268, Next:272, Session 64 — 2026-09-23 — Sky Citadel atmospheres finished; :279, Done:282, Next:305, Session 63 — 2026-09-23 — Weapons: the contract and the buil:313, ... +360 more
 
 ### docs/archive
 
@@ -387,7 +387,7 @@ _222 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 - `src/shared/Content/Atmospheres/SkyCitadel.luau` (947) - GENERATED by assets/source/worlds/sky_citadel/sky_citadel_atmospheres.py. · 2026-09-23
   - `SkyCitadel.luau`: UNMOORING:13, SIEGE:138, LOCKDOWN:297, STORMHAWK:415, RIME:559, RECLAIMED:681, AETHER_SURGE:802
 - `src/shared/Content/Atmospheres/init.luau` (16) - Scenario atmospheres per world, keyed by world Id. Each module holds a · 2026-09-23
-- `src/shared/Content/BossPreviews.luau` (32) - Boss PREVIEWS for /showboss (debug only): look at a boss in its arena, in its idle pose/animation, to judge · 2026-09-25
+- `src/shared/Content/BossPreviews.luau` (37) - Boss PREVIEWS for /showboss (debug only): look at a boss in its arena, in its idle pose/animation, to judge · 2026-09-25
 - `src/shared/Content/Chunks/SkyCitadel.luau` (511) - Sky Citadel chunk kit. docs/biomes/SKY_CITADEL.md is the art direction; the pieces · 2026-09-25
   - `SkyCitadel.luau`: socket:45
 - `src/shared/Content/Chunks/VerdantValley.luau` (405) - GENERATED by assets/source/worlds/verdant_valley/export_verdant_valley_kit.py · 2026-09-25

@@ -216,7 +216,10 @@ size and I cannot see why".
 - **Set the Creator correctly** in the importer if this experience is
   group-owned. An asset uploaded to your personal account **will not load in a
   group experience**, and the failure looks like an invisible mesh rather than
-  an error.
+  an error. The same applies to animations uploaded via the Animation Editor
+  (e.g. `Content/BossPreviews.luau`'s `Idle`/`Pose` ids) — wrong creator means
+  a silent `Animation failed to load` warning instead of a visible error. See
+  `docs/PARTNER_SETUP.md` -> "Animation and other account-scoped ids".
 - Materials: FBX carries material *names*, not Blender's node graphs. The
   scene's twelve materials (Aether Mint Grass, Temple Gold, …) will arrive as
   slots you colour in Studio, or you bake them to a texture in Blender first.
