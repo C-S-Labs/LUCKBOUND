@@ -36,6 +36,7 @@ type Placed = {
 	Anim: string,
 	Phase: number,
 	Heading: number, -- birds only: PropCore.birdHeading
+	Radius: number, -- birds only: distance from the piece's axis (turn rate = Speed / Radius)
 	Position: Vector3, -- where it rests, for the animate-radius test
 	-- Wings only: the bird this rides on, and the root it flaps about.
 	Body: Placed?,
@@ -116,7 +117,7 @@ local function step()
 				else d:Dot(d) <= radius2
 			if near then
 				table.insert(parts, p.Part)
-				table.insert(cframes, pose(p, PropCore.motion(p.Anim, t, p.Phase, cfg)))
+				table.insert(cframes, pose(p, PropCore.motion(p.Anim, t, p.Phase, cfg, p.Radius)))
 			end
 		end
 	end
@@ -216,6 +217,7 @@ function PropController.enter(worldId: string, stageName: string?)
 							-- A wing beats in time with its own bird.
 							Phase = if body then body.Phase else PropCore.phase(index),
 							Heading = PropCore.birdHeading(row.P[1], row.P[3]),
+							Radius = math.sqrt(row.P[1] * row.P[1] + row.P[3] * row.P[3]),
 							Position = if body
 								then body.Position
 								else layout * Vector3.new(row.P[1], row.P[2], row.P[3]),

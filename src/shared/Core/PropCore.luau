@@ -63,7 +63,7 @@ end
 --- lift is studs; every angle is radians. `orbit` is only non-zero for
 --- birds, whose own rotation R is replaced by `heading`/`bank` (see
 --- PropCore.birdHeading). There is deliberately no scale term.
-function PropCore.motion(anim: string, t: number, phase: number, cfg: any)
+function PropCore.motion(anim: string, t: number, phase: number, cfg: any, radius: number?)
 	local m = { lift = 0, turn = 0, tiltX = 0, tiltZ = 0, orbit = 0, bank = 0, flap = 0 }
 	local tau = math.pi * 2
 	local c = cfg[anim]
@@ -94,10 +94,17 @@ function PropCore.motion(anim: string, t: number, phase: number, cfg: any)
 		m.tiltZ = c.Rock * math.cos(tau * t / (c.Period * 0.9) + offset * 2)
 		m.turn = tau * t / (c.Period * 4) + offset
 	elseif anim == "Bird" then
-		-- One angle for the whole flock, no per-bird phase: the flock turns as
-		-- a rigid body, so birds clear of each other at rest stay clear. The
-		-- generator proves each bird's full circle clear (clear_bird_orbits).
-		m.orbit = tau * t / c.Period
+		-- Every bird flies at the SAME travel speed (studs/s), so its turn rate
+		-- is Speed / radius: inner birds no longer crawl (owner, 2026-09-24).
+		-- Birds sit on concentric circles, which never cross; the generator
+		-- proves that birds on near circles are separated in height
+		-- (bird_flock_clear), so differing turn rates can never bring two
+		-- together. Without a radius (tests, rest pose) it falls back to Period.
+		if radius and radius > 1 and c.Speed then
+			m.orbit = t * c.Speed / radius
+		else
+			m.orbit = tau * t / c.Period
+		end
 		m.bank = c.Bank
 	elseif anim == "Sway" then
 		m.tiltX = c.Angle * math.sin(tau * t / c.Period + offset)

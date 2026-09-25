@@ -2726,9 +2726,16 @@ def bird_flock_clear(p, i, shape):
     rigid body: two birds clear of each other at rest stay clear all the way
     round. Only their bobs differ, so the margin is both bobs."""
     _, x, y, r, z0, z1 = shape
-    probe = ("cyl", x, y, r, z0 - 2 * BIRD_BOB, z1 + 2 * BIRD_BOB)
-    return not any(shapes_clash(probe, s) for j, (label, s) in enumerate(p.floats)
-                   if label == "bird" and j != i)
+    # Birds now fly at the same SPEED (turn rate = speed / radius, owner 2026-09-24), so two birds' angular
+    # positions drift apart. Circles are concentric and never cross; a pair can only meet if their circles
+    # are closer than the two bird radii. Such pairs must be separated in height (bobs included).
+    d = math.hypot(x, y)
+    for j, (label, s) in enumerate(p.floats):
+        if label != "bird" or j == i: continue
+        _, x2, y2, r2, z02, z12 = s
+        if abs(math.hypot(x2, y2) - d) < r + r2 and not (z0 - 2 * BIRD_BOB >= z12 or z02 >= z1 + 2 * BIRD_BOB):
+            return False
+    return True
 
 
 def clear_bird_orbits(p, fits=lambda d, z1: True):
@@ -2741,19 +2748,23 @@ def clear_bird_orbits(p, fits=lambda d, z1: True):
         _, x, y, r, z0, z1 = p.floats[i][1]
         d = math.hypot(x, y)
 
-        def ok(lift):
-            moved = ("cyl", x, y, r, z0 + lift, z1 + lift)
-            return (z0 + lift - BIRD_BOB > 2.0 and fits(d, z1 + lift + BIRD_BOB)
+        def ok(lift, dr):
+            f = (d + dr) / d if d > 1e-6 else 1.0
+            moved = ("cyl", x * f, y * f, r, z0 + lift, z1 + lift)
+            return (z0 + lift - BIRD_BOB > 2.0 and fits(d + dr, z1 + lift + BIRD_BOB)
                     and bird_orbit_clear(p, moved) and bird_flock_clear(p, i, moved))
 
-        # nearest first: 0, +1, -1, +2, -2, ...
+        # nearest first: lifts 0, +1, -1, ... ; then, if the flock is too crowded, a small radial nudge
         steps = [0.0] + [sgn * k for k in range(1, int(BIRD_LIFT_MAX) + 1) for sgn in (1.0, -1.0)]
-        lift = next((dz for dz in steps if ok(dz)), None)
-        if lift is None:
+        nudges = [0.0] + [sgn * k for k in range(2, 13, 2) for sgn in (1.0, -1.0)]
+        found = next(((dz, dr) for dr in nudges for dz in steps if ok(dz, dr)), None)
+        if found is None:
             raise RuntimeError("%s: no clear orbit for the bird at (%.1f, %.1f)" % (p.name, x, y))
-        if lift:
-            p.floats[i] = ("bird", ("cyl", x, y, r, z0 + lift, z1 + lift))
-            prop["matrix"] = Matrix.Translation((0, 0, lift)) @ prop["matrix"]
+        lift, dr = found
+        if lift or dr:
+            f = (d + dr) / d if d > 1e-6 else 1.0
+            p.floats[i] = ("bird", ("cyl", x * f, y * f, r, z0 + lift, z1 + lift))
+            prop["matrix"] = Matrix.Translation((x * (f - 1), y * (f - 1), lift)) @ prop["matrix"]
 
 
 def bird(p, x, y, z, rz, mat):
