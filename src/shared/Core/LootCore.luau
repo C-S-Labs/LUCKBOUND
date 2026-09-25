@@ -10,7 +10,7 @@
 -- content edit (Content/LootPools/<World>.luau), never a code change.
 --
 -- PURE: no Roblox types, no Random -- the caller's System owns the stream
--- (CLAUDE.md rule 6) and passes a function returning [0, 1).
+-- (AGENTS.md rule 6) and passes a function returning [0, 1).
 
 local LootCore = {}
 

@@ -95,7 +95,7 @@ octagon, and is the first thing an authored mesh should replace.
 ### Training dummies are geometry only
 
 §2.2 wants 3 dummies that "respond to basic attack input" plus a boss dummy with
-a health bar. **Combat is excluded from Phase 1** (build spec §7), and CLAUDE.md
+a health bar. **Combat is excluded from Phase 1** (build spec §7), and AGENTS.md
 rule 8 forbids widening scope. The dummies are built as static rigs carrying
 `IsTrainingDummy` and `Phase = 2` attributes so Phase 2 can find them. No combat
 behaviour is attached. The health bar is Phase 2.
@@ -165,7 +165,7 @@ System.
 
 Declaring both is a boot error. Two routes to one world's map would put a
 choice somewhere downstream, and that is the second competing architecture
-CLAUDE.md rule 1 exists to prevent.
+AGENTS.md rule 1 exists to prevent.
 
 **What this costs:** every run of a prebuilt world is the same map. For a test
 biome with no combat that is nothing; for a world players farm it would be a

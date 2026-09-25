@@ -4,7 +4,7 @@
 -- Everything the menu can ASK for lands here, and everything here follows the
 -- same shape: the client names a thing by Id, this looks that Id up in
 -- Content, and a pure Core decides whether it is allowed. No client-supplied
--- position, amount, cooldown or reward is ever read (CLAUDE.md rule 5) -- the
+-- position, amount, cooldown or reward is ever read (AGENTS.md rule 5) -- the
 -- widest thing a client can say to this system is a destination Id and a
 -- string of at most GameConfig.Codes.MaxLength characters.
 --
@@ -28,7 +28,7 @@ local SettingsCore = require(Root.Core.SettingsCore)
 
 local HubUISystem = {}
 
--- Dependencies are passed into init(). Build spec §1.2 / CLAUDE.md rule 7 --
+-- Dependencies are passed into init(). Build spec §1.2 / AGENTS.md rule 7 --
 -- no System requires another at module scope.
 local SaveSystem: any
 local ProgressionSystem: any

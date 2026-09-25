@@ -140,6 +140,28 @@ The manifest's `body` picks a joint profile. `run.py` loads `<biome>/bodies/<bod
   - **Defeat:** the glow flickers out, then a kneel or collapse, then an upward dissolve, then loot. The player can't be damaged during it.
 - **Budget:** at most about 150 live particles per effect; Neon parts plus particles; one light maximum (the core).
 
+### 5.1 Built so far (2026-09-25)
+
+- **Live weapon lightning (`src/shared/Util/WeaponFX.luau`):**
+  - It's data-driven through `Content/LightningRigs.luau`, which the weapon's Blender script writes (`ws_lance.py`).
+  - The web is real mesh geometry, so it's always visible. Beams join the anchor Bones (`Web*` and `Arc*`).
+  - `setCharged(model, on)` is the charge-up switch: it shows the `*Beam*` blade, slides the halves open and turns
+    on the phase 2 arcs.
+  - The client's `LightningController` bends curves about 8 times a second and re-applies the slide every frame.
+- **Boss preview:** `/showboss <id> [height]`, `/bossphase <1|2>` and `/clearboss` (`DebugSystem`).
+  - Rows live in `Content/BossPreviews.luau`.
+  - The boss is scaled to `Tall` studs, faces the arena entrance and plays its idle.
+- **Export rules learned the hard way (`_framework/export.py`):**
+  - Colours are baked into vertex colours, because a MeshPart has one colour.
+  - Bone-parented meshes are skinned 100% to their bone.
+  - FX anchor bones get one pinned vertex each, because Studio's importer drops bones that deform nothing.
+  - Grips use rotation only (the `Weapon_R` rest sits in the palm), because Roblox mishandles animated bone
+    translation.
+  - Every action keys every bone.
+- **Studio:**
+  - Import with Imported Rig, Custom, Meter, 1.0.
+  - Import animations through the **Clip Editor** (not the legacy Animation Editor).
+
 ## 6. Studio side (data-driven)
 **Staged, not wired:** the owner approves `src/` changes, so this is proposed only.
 

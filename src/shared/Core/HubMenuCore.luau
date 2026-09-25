@@ -9,7 +9,7 @@
 --
 -- The server calls `canTravel` to authorise; the client calls the same
 -- function to grey out a button. One rule, two callers, no drift -- and the
--- client's copy is a courtesy, never the authority (CLAUDE.md rule 5).
+-- client's copy is a courtesy, never the authority (AGENTS.md rule 5).
 
 local Result = require(script.Parent.Result)
 

@@ -569,6 +569,12 @@ Building (no render) through the bridge worked fine.
 
 ## Next
 
+> **2026-09-25:** the kit has had its refinish and detail passes: off-grey support lines on the shaft corners,
+> roof variety, and animated props (orrery rings Spin, turbine rotors Roll). Birds fly at a constant 14 studs/s on
+> radius-aware orbits. `validate()` enforces `boss_sightline`, so nothing blocks the view into the boss arena.
+> The crossroads piece is on hold for its own pass. The items below are the original list.
+
+
 1. **Import one piece into Studio and measure it** — 256 × 256 × 256, and note
    whether the vertex colours survive (risk 3).
 2. Land `GroundOffsetY` and the collision-fidelity option in `ChunkLoader`

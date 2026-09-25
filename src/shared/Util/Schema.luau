@@ -552,7 +552,7 @@ end
 --- A world builds its map EITHER by assembling a chunk kit OR by cloning one
 --- authored scene. Declaring both is not a richer world, it is an ambiguity:
 --- something downstream would have to pick, and picking is exactly the second
---- competing architecture CLAUDE.md rule 1 exists to prevent. So it is a boot
+--- competing architecture AGENTS.md rule 1 exists to prevent. So it is a boot
 --- error, not a warning.
 function Schema.validateMaps(
 	worlds: { [string]: any },

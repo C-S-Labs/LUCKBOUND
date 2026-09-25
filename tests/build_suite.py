@@ -135,7 +135,7 @@ function UDim.new(scale, offset) return { __udim = true, Scale = scale, Offset =
 -- A Vector3 that ADDS like one. The first shim was a plain table, so
 -- `anchor + landing` -- which is how the hub menu states where a traveller
 -- lands -- would have raised in the harness while working in Studio, and the
--- test would have been deleted rather than the bug found. CLAUDE.md: a shim
+-- test would have been deleted rather than the bug found. AGENTS.md: a shim
 -- that does not behave like the real type is worse than no test.
 local Vector3 = {}
 local __v3meta = {}
@@ -166,7 +166,7 @@ Vector3.one = Vector3.new(1, 1, 1)
 -- The first version of this shim built a fresh table on every access, so that
 -- comparison was always false and any test asserting a material silently could
 -- not pass. Same class of bug as the Vector3-as-table shim recorded in
--- CLAUDE.md -- an unfaithful shim is worse than no test. Each item is now
+-- AGENTS.md -- an unfaithful shim is worse than no test. Each item is now
 -- cached, so identity behaves the way the real engine does.
 local Enum = setmetatable({}, { __index = function(t, category)
 	local items = {}

@@ -10,7 +10,7 @@
 --
 -- ExpeditionCore owns every decision; this file owns remotes, geometry,
 -- teleports and timers. If you find yourself writing an `if worldId ==` in
--- here, the schema is wrong -- stop and amend the spec (CLAUDE.md, prime
+-- here, the schema is wrong -- stop and amend the spec (AGENTS.md, prime
 -- directive).
 --
 -- THE THREE WAYS THIS FILE RUNS (§7.2):
