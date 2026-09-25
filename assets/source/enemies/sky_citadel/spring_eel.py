@@ -53,17 +53,38 @@ for s in (1, -1):
 Mj = _frame(Vector(BONES[BIDX["Jaw"]][1]), Vector(BONES[BIDX["Jaw"]][2]) - Vector(BONES[BIDX["Jaw"]][1]), hint=(0, 0, 1))
 loft("Jaw", TEAL, [(0, .07, .035), (0.2, .05, .025), (0.27, .02, .015)], N=12, M=Mj, sub=1)
 loft("Jaw", MOUTH, [(0.02, .055, .01, 2, 0, .03), (0.24, .02, .008, 2, 0, .02)], N=8, M=Mj)
-for f in range(4):
-    for s in (1, -1):
-        blade("Jaw", FANG, tuple(Mj @ Vector((0.04*s, 0.035, 0.06 + f*0.05))), tuple(Mj.to_3x3() @ Vector((0, 1, 0.1))), 0.05, 0.012, 0.008,
-              hint=tuple(Mj.to_3x3() @ Vector((1, 0, 0))), N=4, sub=0)
-        blade("Head", FANG, tuple(Mh @ Vector((0.05*s, -0.04, 0.08 + f*0.05))), tuple(Mh.to_3x3() @ Vector((0, -1, 0.1))), 0.05, 0.012, 0.008,
-              hint=tuple(Mh.to_3x3() @ Vector((1, 0, 0))), N=4, sub=0)
+def fang(bone, M_, base, into, L_, r_):
+    """Curved conical fang rooted IN the gum (base sits inside the mouth lining), hooking back toward the throat."""
+    b0 = M_ @ Vector(base); d0 = (M_.to_3x3() @ Vector(into)).normalized(); back = (M_.to_3x3() @ Vector((0, 0, -1))).normalized()
+    pts_ = [b0 - d0*0.006 + d0*L_*u + back*L_*0.35*u*u for u in (0, 0.5, 1.0)]
+    for j, (p0, p1) in enumerate(zip(pts_, pts_[1:])):
+        tube(bone, FANG, tuple(p0), tuple(p1), r_*(1 - 0.5*j), r_*(0.5 - 0.48*j), N=7)
+for s_ in (1, -1):                                        # upper: 2 big front fangs + 4 graded side teeth; lower mirrors smaller
+    fang("Head", Mh, (0.035*s_, -0.05, 0.27), (0.1*s_, -1, 0), 0.07, 0.012)
+    fang("Jaw", Mj, (0.025*s_, 0.03, 0.22), (0.1*s_, 1, 0), 0.05, 0.01)
+    for f in range(4):
+        fang("Head", Mh, (0.055*s_, -0.045, 0.2 - f*0.045), (0.3*s_, -1, 0), 0.04 - 0.005*f, 0.008)
+        fang("Jaw", Mj, (0.045*s_, 0.028, 0.16 - f*0.04), (0.3*s_, 1, 0), 0.032 - 0.004*f, 0.007)
 # spring ripple ring at the base (glow; separate so Studio can animate/hide it)
 PIECE = "Ripple"
 arc_band("Seg01", GLOW, (0, -0.1), 0.02, 0.0, (.42, .42), (.46, .46), 0, 2*math.pi, 0.02, 40)
 arc_band("Seg01", GLOW, (0, -0.1), 0.015, 0.0, (.6, .6), (.63, .63), 0, 2*math.pi, 0.015, 48)
 PIECE = "Body"
+# ---- submerged body (owner 2026-09-24): two coils arching out of the ground behind the spring = the rest of the eel
+#      travelling underground. Own bones (Hump1/2) so Studio can slide them toward the next spring before it resurfaces.
+for hi, (y0, span, hgt, r0) in enumerate(((0.55, 0.7, 0.32, 0.14), (1.45, 0.55, 0.22, 0.11))):
+    c0 = Vector((0.05*(-1)**hi, y0, 0.0))
+    add_bone(f"Hump{hi + 1}", tuple(c0 + Vector((0, 0, -0.1))), tuple(c0 + Vector((0, 0, 0.2))), "Seg01")
+    arc = [c0 + Vector((0, span*(u - 0.5), -0.06 + (hgt + 0.06)*math.sin(math.pi*u))) for u in [j/10 for j in range(11)]]
+    for j, (p0, p1) in enumerate(zip(arc, arc[1:])):
+        Mf = _frame(p0, p1 - p0, hint=(1, 0, 0)); L = (p1 - p0).length
+        loft(f"Hump{hi + 1}", TEAL, [(-0.01, r0, r0*0.92), (L + 0.01, r0, r0*0.92)], N=14, M=Mf)
+        loft(f"Hump{hi + 1}", GLOW, [(0, .02, .016, 2, 0, -r0*0.9), (L, .02, .016, 2, 0, -r0*0.9)], N=6, M=Mf)
+        if 2 <= j <= 7:
+            blade(f"Hump{hi + 1}", PEARL, tuple(p0.lerp(p1, 0.5) + (Mf.to_3x3() @ Vector((0, r0*0.85, 0)))), tuple(Mf.to_3x3() @ Vector((0, 1, -0.9))),
+                  0.1, 0.045, 0.008, hint=tuple(Mf.to_3x3() @ Vector((1, 0, 0))), N=5, sub=0)
+    for e_ in (arc[0], arc[-1]):                                   # ground ripples where the coil enters/leaves
+        arc_band(f"Hump{hi + 1}", GLOW, (e_.x, e_.y), 0.012, 0.0, (r0*1.5, r0*1.5), (r0*1.7, r0*1.7), 0, 2*math.pi, 0.012, 28)
 exec(open(FW + r"\character_kit.py").read())
 # ---- v2 character pass (2026-09-24), moveset-driven: LUNGE BITE, SPIT, DIVE ----
 # a pearl dorsal fin ridge running the whole spine (reads the lunge arc), glowing lateral spots (visible while it
@@ -79,7 +100,7 @@ hd = pts[-1]
 for sd in (1, -1):
     for g in range(3):                                                       # gill frills
         blade("Head", PEARL, tuple(hd + Vector((0.07*sd, 0.03*g, -0.02))), (sd, 0.5, 0.1 - 0.1*g), 0.1, 0.035, 0.006, hint=(0, 0, 1), N=5, sub=0)
-    wp = [hd + hdir*0.26 + Vector((0.035*sd, 0, -0.03)) + Vector((0.09*sd*u, -0.05*u, -0.12*u*u)) for u in [i/4 for i in range(5)]]
+    wp = [hd + hdir*0.2 + Vector((0.035*sd, 0, -0.03)) + Vector((0.09*sd*u, -0.05*u, -0.12*u*u)) for u in [i/4 for i in range(5)]]
     for a_, b_ in zip(wp, wp[1:]): tube("Head", PEARL, tuple(a_), tuple(b_), 0.006, 0.003, N=5)   # barbels
 PIECE = "Body"
 rig, PARTS = assemble(NAME, OFFSET)
