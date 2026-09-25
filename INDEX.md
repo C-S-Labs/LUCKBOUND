@@ -162,6 +162,8 @@ Blender: `"C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe" -b
   - Add a new top entry to `docs/WORKLOG.md`.
   - Update `docs/STATUS.md`.
   - Run `python tools/gen_index.py` and update §1–§6 here if you added anything new.
+  - Recommend removing the older iterations you left behind, only once tests prove the new version replaces them
+    (`AGENTS.md`, "Before you finish").
 
 ---
 
