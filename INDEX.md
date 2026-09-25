@@ -156,7 +156,7 @@ Blender: `"C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe" -b
   - Branch `claude/<topic>` (or `<agent>/<topic>`), then `gh pr create --fill`, then `gh pr checks --watch`, then
     merge **only when CI is green**, then pull `main`.
   - `git add` new files explicitly.
-- Lint: run `stylua`/`selene` **on changed files only**.
+- Lint: `stylua src tests` before committing. CI enforces it, and `.styluaignore` skips generated files.
 - Don't commit the owner's local `assets/rbxm/prefabs/HUB_SKY.rbxmx` edit; stash it and pop it.
 - Before finishing:
   - Add a new top entry to `docs/WORKLOG.md`.

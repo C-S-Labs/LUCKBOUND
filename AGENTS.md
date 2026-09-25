@@ -130,8 +130,10 @@ could not boot, because `git commit -am` silently skipped a new untracked file.
 
 - `git add` new files explicitly — `-am` stages only tracked ones.
 - Run `./tests/run.sh` before pushing (needs the `luau` CLI; if it is not installed, CI is the test run).
-- Lint ONLY the files you changed (`stylua <files>`, `selene <files>`). Never run StyLua over all of `src/`: it
-  reformats dozens of unrelated files and buries the real diff (this happened once and had to be reverted).
+- Format before committing: `stylua src tests` (StyLua 2.0.2, pinned in `rokit.toml`). The whole codebase was
+  formatted once on 2026-09-25 and **CI now fails any PR that is not StyLua-clean**. Generated content files are
+  listed in `.styluaignore`; never hand-format those, change their generator instead. Run it twice if the second run
+  still changes something (StyLua sometimes needs two passes), and check that comments survived.
 - Never commit `assets/rbxm/prefabs/HUB_SKY.rbxmx` changes you did not make: the owner keeps a local edit there.
   Stash it before switching branches and pop it afterwards.
 - If you added, moved or renamed files, or changed a function signature, run `python tools/gen_index.py` and commit

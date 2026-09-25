@@ -13,8 +13,8 @@ _221 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 ### (root)
 
 - `.stylua.toml` (3)
-- `AGENTS.md` (145) - LUCKBOUND — Instructions for AI Agents
-  - `AGENTS.md`: STEP 0 — read `INDEX.md` before anything else (mandatory):9, Keeping INDEX.md current:26, STEP 1 — then read these three, in this order:32, BEFORE YOU FINISH — update the handoff:67, The prime directive:95, Hard rules:103, Boot order:114, Style:118, Verify before you merge:125, When you are unsure:143
+- `AGENTS.md` (147) - LUCKBOUND — Instructions for AI Agents
+  - `AGENTS.md`: STEP 0 — read `INDEX.md` before anything else (mandatory):9, Keeping INDEX.md current:26, STEP 1 — then read these three, in this order:32, BEFORE YOU FINISH — update the handoff:67, The prime directive:95, Hard rules:103, Boot order:114, Style:118, Verify before you merge:125, When you are unsure:145
 - `CLAUDE.md` (6) - CLAUDE.md
 - `GEMINI.md` (3) - GEMINI.md
 - `INDEX.md` (180) - LUCKBOUND — Repository Index
