@@ -6,6 +6,11 @@
 -- assets/rbxm/bosses/<Model>.rbxmx (Rojo maps that folder to ServerStorage.LuckboundBosses), upload its idle FBX
 -- as an Animation (Animation Editor > Import > From FBX, then publish) and paste the id below. One row per boss.
 --
+-- Animation ids are account/group-scoped like mesh ids (see assets/README.md -> "Set the Creator correctly"):
+-- an Idle uploaded to one account fails silently (no error, animation just never plays) for anyone testing from
+-- a different account or an unpublished place they own. See docs/PARTNER_SETUP.md -> "Animation and other
+-- account-scoped ids" before assuming a boss preview is broken.
+--
 --   Model  : the Model's name inside LuckboundBosses
 --   Idle   : rbxassetid of the looping idle animation ("" = show the bind/rest pose)
 --   Pose   : optional rbxassetid of a held pose (played frozen at its first frame instead of the idle)

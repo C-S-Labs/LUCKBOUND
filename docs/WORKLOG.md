@@ -33,6 +33,37 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 69 — 2026-09-25 — Document animation ids as account/group-scoped
+
+**Merged:** —   **Tests:** unchanged (docs/comment only)   **Head:** —
+
+### Done
+- A partner playtesting `/showboss winged_sentinel` hit `Animation failed to load` for the Idle id
+  (`rbxassetid://132590990835909`) even though it works for the owner. Diagnosed as the same class of bug
+  `assets/README.md` already documents for meshes: an asset uploaded to one account/group fails silently for a
+  client/server running under a different one. `DebugSystem.luau`'s `/showboss` animation-loading code
+  (`LoadAnimation`/`Play`) is correct and untouched.
+- Documented the fix in three places: `docs/PARTNER_SETUP.md` (new "Animation and other account-scoped ids"
+  section, plus a note that publishing under one group with all assets uploaded to that group removes the
+  restriction for real players — group membership isn't needed to play, only to upload/edit), `assets/README.md`
+  ("Set the Creator correctly" now mentions animations, not just meshes), and `BossPreviews.luau`'s header comment.
+
+### Decisions made
+- No code fix needed or made — this is purely an asset-ownership/testing-workflow issue, not a bug in
+  `DebugSystem.luau` or `BossPreviews.luau`.
+
+### Stopped at
+Docs updated; owner still needs to decide when/whether to create the Roblox group and move assets to it before
+publishing.
+
+### Next
+1. When ready to publish, create the group, upload the place and all existing assets (chunks, animations,
+   lightning texture) under it, and re-point `AssetManifest.luau` / `BossPreviews.luau` / `LightningRigs.luau` at
+   the group-owned ids.
+2. Continue the queued Sentinel moveset animations and `EnemyDef` wiring per the prior session's "Next" list.
+
+---
+
 ## Session 68 — 2026-09-25 — Chunk detail, boss preview, Aether Lance lightning, repo audit + INDEX
 **Merged:** PR #106–#119, plus this audit PR   **Tests:** CI green on each merge (prop count 503)   **Head:** branch `claude/audit-cleanup`
 

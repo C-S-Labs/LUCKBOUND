@@ -24,6 +24,14 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 ## 2. Next — pick up here
 
+> **2026-09-25: animation ids are account/group-scoped, documented.** A partner playtesting `/showboss
+> winged_sentinel` in their own place got a silent `Animation failed to load` warning for the Idle id — same class
+> of bug as a mesh uploaded to the wrong account (`assets/README.md` already covered that for meshes). Documented
+> in `docs/PARTNER_SETUP.md` ("Animation and other account-scoped ids") and `BossPreviews.luau`'s header. No code
+> changed — `DebugSystem.luau`'s `/showboss` animation loading is correct; Roblox just denies cross-account asset
+> fetches without raising an error. Once LUCKBOUND is published under one group with all assets uploaded to that
+> same group, this stops affecting real players — it only bites Studio testing across separate accounts/places.
+
 > **2026-09-25: audit + index.** `INDEX.md` is the mandatory first read for every AI agent: a hand-written guide,
 > plus `INDEX_MAP.md`, generated with the exact line of every symbol. `AGENTS.md` holds the agent rules, and
 > `CLAUDE.md`/`GEMINI.md` point to it.
