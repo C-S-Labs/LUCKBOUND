@@ -58,8 +58,7 @@ loft("Head", CRY, [(0.26, .05, .04, 1.3), (0.32, .13, .09, 1.3), (0.48, .11, .08
      M=TR((0, 0, BZ), (math.pi/2, 0, 0)))
 for s, bn in ((1, "MandibleL"), (-1, "MandibleR")):
     blade(bn, RAIN, (0.07*s, -0.5, BZ - 0.05), (0.25*s, -1.0, -0.2), 0.2, 0.035, 0.02, hint=(0, 0, 1), N=4, sub=0)
-    for k in range(3):
-        gem("Head", GLOW, (0.05*s + 0.02*k*s, -0.52 + 0.03*k, BZ + 0.04 + 0.015*k), 0.014, 0.012, rot=(math.pi/2, 0, 0), sides=5)
+
 # ---- six legs: slate joints, crystal segments, sharp crystal feet ----
 for L, s, hip, knee, ankle, foot in LEGS:
     sph(L + "1", SLATE, tuple(hip), 0.05, u=8, v=6)
@@ -96,10 +95,17 @@ for k in range(5):                                                              
 loft("Head", CRY, [(0, .035, .03, 1.4), (0.14, .02, .018, 1.4), (0.2, .003, .003, 1.4)], N=5, M=_frame(Vector((0, -0.42, BZ + 0.06)), Vector((0, -0.6, 1))))   # horn
 for sd in (1, -1):
     blade("Head", SLATE, (0.05*sd, -0.44, BZ + 0.07), (0.7*sd, 0.5, 0.3), 0.12, 0.04, 0.012, hint=(0, 0, 1), N=5, sub=0)      # brow crest
-    blade(("MandibleL" if sd > 0 else "MandibleR"), CRY, (0.1*sd, -0.6, BZ - 0.06), (-0.6*sd, -0.6, 0), 0.07, 0.02, 0.012, hint=(0, 0, 1), N=4, sub=0)
+    md = Vector((0.25*sd, -1.0, -0.2)).normalized(); mp = Vector((0.07*sd, -0.5, BZ - 0.05)) + md*0.11      # barb ON the mandible
+    blade(("MandibleL" if sd > 0 else "MandibleR"), CRY, tuple(mp), (-0.7*sd, -0.5, 0), 0.06, 0.018, 0.012, hint=(0, 0, 1), N=4, sub=0)
 for L, s_, hip, knee, ankle, foot in LEGS:
     blade(L + "2", RAIN, tuple(knee + Vector((0, 0, 0.02))), (0.4*s_, 0, 1), 0.1, 0.03, 0.02, hint=(0, 1, 0), N=4, sub=0)
     loft(L + "1", SLATE, [((knee - hip).length*0.2, .055, .055, 1.4), ((knee - hip).length*0.55, .058, .058, 1.4)], N=8, M=_frame(hip, knee - hip), cap=False)
+exec(open(FW + r"\character_kit.py").read())                                    # eye cluster seated ON the head surface
+T = body_bvh()
+for sd in (1, -1):
+    for k in range(3):
+        q = on_surface(T, (0.05*sd + 0.02*k*sd, -0.52 + 0.03*k, BZ + 0.04 + 0.015*k), (0, -0.42, BZ - 0.01), lift=-0.004)
+        sph("Head", GLOW, tuple(q), 0.014, u=8, v=6)
 # ---- assemble ----
 arm_data = bpy.data.armatures.new(NAME + "_Rig")
 rig = bpy.data.objects.new(NAME + "_Rig", arm_data)
