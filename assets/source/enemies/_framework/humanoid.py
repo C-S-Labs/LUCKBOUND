@@ -2,7 +2,8 @@
 # make_humanoid(H, ...) scales a 1.8 m base skeleton to height H, adds the bones, and builds a plain body
 # (limbs, torso, pelvis, head, hands, feet) from the given material indices. Costume parts go on top.
 def make_humanoid(H=1.8, shoulder=0.21, hip=0.105, bulk=1.0, limb=1.0, m_body=None, m_limb=None, m_skin=None,
-                  head=True, hands=True, fingers=False, torso_secs=None):
+                  head=True, hands=True, fingers=False, torso_secs=None, build_body=True):
+    """build_body=False: bones + joints only (for fully custom, shaped bodies)."""
     k = H/1.8
     def P(x, y, z): return (x*k, y*k, z*k)
     BONES.extend([("HumanoidRootNode", P(0, 0, 0.88), P(0, 0, 0.98), None),
@@ -20,6 +21,8 @@ def make_humanoid(H=1.8, shoulder=0.21, hip=0.105, bulk=1.0, limb=1.0, m_body=No
                       (f"{side}UpperLeg", j["hp"], j["kn"], "LowerTorso"), (f"{side}LowerLeg", j["kn"], j["an"], f"{side}UpperLeg"),
                       (f"{side}Foot", j["an"], j["toe"], f"{side}LowerLeg")])
     BIDX.clear(); BIDX.update({b[0]: i for i, b in enumerate(BONES)})
+    if not build_body:
+        return J, k
     mb = m_body if m_body is not None else PATINA
     ml = m_limb if m_limb is not None else IRON
     ms = m_skin if m_skin is not None else ml
