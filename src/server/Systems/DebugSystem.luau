@@ -148,6 +148,14 @@ COMMANDS.showboss = function(player: Player, args: { string }): (boolean, string
 		if part:IsA("BasePart") then
 			part.Anchored = true
 			part.CanCollide = false
+			-- colours come from the FBX's baked vertex colours; glow meshes (*Glow) glow
+			if string.find(part.Name, "Glow") then
+				part.Material = Enum.Material.Neon
+				part.Color = def.GlowColor or Color3.fromRGB(110, 235, 255)
+			else
+				part.Material = Enum.Material.SmoothPlastic
+				part.Color = Color3.new(1, 1, 1) -- white so the vertex colours show true
+			end
 		end
 	end
 

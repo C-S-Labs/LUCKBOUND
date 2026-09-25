@@ -19,6 +19,7 @@ export type BossPreview = {
 	Pose: string?,
 	Tall: number,
 	Height: number,
+	GlowColor: Color3?, -- Neon colour for the *Glow meshes (default citadel cyan)
 }
 
 return {
