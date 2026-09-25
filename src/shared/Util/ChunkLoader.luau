@@ -149,6 +149,7 @@ local function calibrateYaw(
 		return cached
 	end
 	local probe = GameConfig.Expedition.SocketProbe
+	local tolerance = chunk.SocketProbeTolerance or probe.Tolerance
 	local params = RaycastParams.new()
 	params.FilterType = Enum.RaycastFilterType.Include
 	params.FilterDescendantsInstances = { mesh }
@@ -163,13 +164,13 @@ local function calibrateYaw(
 
 	local centre = origin + Vector3.new(placed.X, placed.Y, placed.Z)
 	local hint = chunk.MeshYawOffset or 0
-	local best, bestHits = hint, -1
+	local best, bestScore, bestCentreHits, mostCentreHits = hint, -math.huge, 0, 0
 	for turn = 0, 3 do
 		-- The hint first, so a tie keeps it.
 		local k = (hint + turn * 90) % 360
 		mesh.CFrame = CFrame.new(meshPos)
 			* CFrame.Angles(0, ChunkCore.yawRadians(placed.Yaw + k), 0)
-		local hits = 0
+		local hits, centreHits = 0, 0
 		for _, socket in chunk.Sockets do
 			local ws = ChunkCore.worldSocket(placed, chunk, socket)
 			local mouth = origin + Vector3.new(ws.X, ws.Y, ws.Z)
@@ -181,7 +182,7 @@ local function calibrateYaw(
 					Vector3.new(0, -probe.Height * 2, 0),
 					params
 				)
-				return hit ~= nil and math.abs(hit.Position.Y - mouth.Y) <= probe.Tolerance
+				return hit ~= nil and math.abs(hit.Position.Y - mouth.Y) <= tolerance
 			end
 			-- Deck at the mouth's centre is the main evidence. A declared Width
 			-- adds a stronger signal on top -- deck just inside both edges --
@@ -189,14 +190,16 @@ local function calibrateYaw(
 			-- required: a piece whose approach is narrower than its Kind (the
 			-- side lookout) still wins on centre hits instead of scoring zero
 			-- at every turn and falling back to the hint.
-			if deckAt(centreProbe) then
+			local centreValid = deckAt(centreProbe)
+			if centreValid then
 				hits += 1
-				if socket.Width then
-					local across = Vector3.new(-inward.Z, 0, inward.X)
-						* (socket.Width / 2 - probe.EdgeMargin)
-					if deckAt(centreProbe + across) and deckAt(centreProbe - across) then
-						hits += 10
-					end
+				centreHits += 1
+			end
+			if socket.Width and centreValid then
+				local across = Vector3.new(-inward.Z, 0, inward.X)
+					* (socket.Width / 2 - probe.EdgeMargin)
+				if deckAt(centreProbe + across) and deckAt(centreProbe - across) then
+					hits += 10
 				end
 			end
 		end
@@ -217,24 +220,27 @@ local function calibrateYaw(
 					Vector3.new(0, -probe.Height * 2, 0),
 					params
 				)
-				if hit and math.abs(hit.Position.Y - centre.Y) <= probe.Tolerance then
+				if hit and math.abs(hit.Position.Y - centre.Y) <= tolerance then
 					hits -= 5
 				end
 			end
 		end
-		if hits > bestHits then
-			best, bestHits = k, hits
+		mostCentreHits = math.max(mostCentreHits, centreHits)
+		if hits > bestScore then
+			best, bestScore, bestCentreHits = k, hits, centreHits
 		end
 	end
 
 	mesh.Parent = home
-	if bestHits < #chunk.Sockets then -- fewer than one centre hit per socket
+	if mostCentreHits < #chunk.Sockets then
 		warn(
 			`[ChunkLoader] {chunk.AssetKey}: no rotation puts deck under all {#chunk.Sockets} sockets `
-				.. `(best {bestHits} at {best}); the art may not match its declared openings`
+				.. `(most centre hits {mostCentreHits}, selected yaw {best} has {bestCentreHits} centre hits and weighted score {bestScore}); the art may not match its declared openings`
 		)
 	end
-	print(`[ChunkLoader] {chunk.AssetKey} faces {best} (score {bestHits})`)
+	print(
+		`[ChunkLoader] {chunk.AssetKey} faces {best} (centre {bestCentreHits}/{#chunk.Sockets}, score {bestScore})`
+	)
 	yawCache[chunk.AssetKey] = best
 	return best
 end

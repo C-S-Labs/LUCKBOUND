@@ -206,7 +206,9 @@ never by world:
 - **Facing is measured, not typed.** `ChunkLoader` tries all four turns of a
   delivered mesh and keeps the one that puts deck under every declared socket,
   cached per `AssetKey`. Declare each socket's `Width` and it also tells a wide
-  mouth from a narrow one. `MeshYawOffset` is only the tie-break hint.
+  mouth from a narrow one. Weighted scoring picks the yaw; the warning checks
+  socket-centre hits separately from width bonuses and edge penalties.
+  `MeshYawOffset` is only the tie-break hint.
 - **Branches, caps, variety.** Spare mouths grow a spur (`BranchLength`) and
   end in a `CAP`; no piece more than `MaxRepeats` times, never twice in a row;
   a new seed on every entry.
