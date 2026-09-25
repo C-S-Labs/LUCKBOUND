@@ -26,6 +26,7 @@ local Net = require(Root.Core.Net)
 local Worlds = require(Root.Content.Worlds)
 local Events = require(Root.Content.Events)
 local Fixtures = require(Root.Content.Fixtures)
+local BossPreviews = require(Root.Content.BossPreviews)
 
 local DebugSystem = {}
 
@@ -76,6 +77,122 @@ COMMANDS.roll = function(player: Player, args: { string }): (boolean, string)
 		return false, "usage: /roll <WORLD_ID> -- " .. table.concat(ids, ", ")
 	end
 	return FateSystem.forceRoll(player, string.upper(worldId))
+end
+
+--- /showboss <id> [scale] -- put a boss PREVIEW (Content/BossPreviews) in the nearest boss arena, facing you,
+--- playing its idle (or held pose). Aesthetic check only: no health, no AI. /clearboss removes it.
+local function nearestArena(from: Vector3): Vector3?
+	local best, bestD = nil, math.huge
+	for _, inst in workspace:GetDescendants() do
+		if inst:GetAttribute("Role") == "BOSS" then
+			local c = inst:GetAttribute("Centre")
+			if typeof(c) == "Vector3" and (c - from).Magnitude < bestD then
+				best, bestD = c, (c - from).Magnitude
+			end
+		end
+	end
+	return best
+end
+
+local function groundBelow(p: Vector3, ignore: { Instance }): Vector3
+	local params = RaycastParams.new()
+	params.FilterType = Enum.RaycastFilterType.Exclude
+	params.FilterDescendantsInstances = ignore
+	local hit = workspace:Raycast(p + Vector3.new(0, 300, 0), Vector3.new(0, -800, 0), params)
+	return if hit then hit.Position else p
+end
+
+COMMANDS.clearboss = function(_player: Player, _args: { string }): (boolean, string)
+	local old = workspace:FindFirstChild("BossPreview")
+	if old then
+		old:Destroy()
+		return true, "boss preview removed"
+	end
+	return false, "no boss preview to remove"
+end
+
+COMMANDS.showboss = function(player: Player, args: { string }): (boolean, string)
+	local id = args[1] and string.lower(args[1])
+	local def = id and BossPreviews[id]
+	if not def then
+		local ids = {}
+		for key in BossPreviews do
+			table.insert(ids, key)
+		end
+		table.sort(ids)
+		return false, "usage: /showboss <id> [scale] -- " .. table.concat(ids, ", ")
+	end
+	local lib = game:GetService("ServerStorage"):FindFirstChild("LuckboundBosses")
+	local template = lib and lib:FindFirstChild(def.Model, true)
+	if not template or not template:IsA("Model") then
+		return false,
+			`model '{def.Model}' not found in ServerStorage.LuckboundBosses (save it to assets/rbxm/bosses/{def.Model}.rbxmx)`
+	end
+	local root = player.Character
+		and player.Character:FindFirstChild("HumanoidRootPart") :: BasePart?
+	if not root then
+		return false, "no character"
+	end
+	COMMANDS.clearboss(player, {})
+
+	local model = (template :: Model):Clone()
+	model.Name = "BossPreview"
+	local scale = tonumber(args[2]) or def.Scale
+	if scale and scale > 0 and math.abs(scale - 1) > 1e-3 then
+		model:ScaleTo(model:GetScale() * scale)
+	end
+	for _, part in model:GetDescendants() do
+		if part:IsA("BasePart") then
+			part.Anchored = true
+			part.CanCollide = false
+		end
+	end
+
+	local arena = nearestArena(root.Position)
+	local spot = if arena then arena else root.Position + root.CFrame.LookVector * 40
+	local ignore: { Instance } = { model }
+	if player.Character then
+		table.insert(ignore, player.Character)
+	end
+	local ground = groundBelow(spot, ignore)
+	local faceTo = Vector3.new(root.Position.X, ground.Y, root.Position.Z)
+	local pivot = CFrame.lookAt(
+		ground,
+		if (faceTo - ground).Magnitude > 1 then faceTo else ground + Vector3.new(0, 0, -1)
+	)
+	local _, size = model:GetBoundingBox()
+	local bottom = model:GetPivot().Position.Y
+		- (select(1, model:GetBoundingBox()).Position.Y - size.Y / 2)
+	model:PivotTo(pivot + Vector3.new(0, bottom + (def.Height or 0), 0))
+	model.Parent = workspace
+
+	local animId = def.Pose or def.Idle
+	if animId and animId ~= "" then
+		local controller = model:FindFirstChildWhichIsA("AnimationController", true)
+			or model:FindFirstChildWhichIsA("Humanoid", true)
+		if not controller then
+			controller = Instance.new("AnimationController")
+			controller.Parent = model
+		end
+		local animator = (controller :: Instance):FindFirstChildOfClass("Animator")
+			or Instance.new("Animator")
+		animator.Parent = controller
+		local anim = Instance.new("Animation")
+		anim.AnimationId = animId
+		local track = (animator :: Animator):LoadAnimation(anim)
+		track.Looped = def.Pose == nil
+		track:Play()
+		if def.Pose then
+			task.delay(0.05, function()
+				track:AdjustSpeed(0)
+			end)
+		end
+	end
+	local where = if arena then "in the boss arena" else "in front of you (no boss arena nearby)"
+	local anim = if animId and animId ~= ""
+		then "idle playing"
+		else "rest pose (no Idle id set in BossPreviews)"
+	return true, `{id} shown {where} at scale {scale}; {anim}. /clearboss to remove`
 end
 
 --- /atmosphere <BASE | RANDOM | ID> -- force a scenario atmosphere (Content/
