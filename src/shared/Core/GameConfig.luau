@@ -948,7 +948,7 @@ local GameConfig = {
 			Tumble = { Amplitude = 0.7, Period = 11, Rock = 0.15 },
 			-- One lap of the flock. Bob must stay <= the generator's BIRD_BOB
 			-- (0.6), the clearance every bird's circle was proven with.
-			Bird = { Period = 36, Bob = 0.5, Bank = 0.25 },
+			Bird = { Period = 36, Speed = 14, Bob = 0.5, Bank = 0.25 }, -- Speed: studs/s, same for every bird
 			-- A wingbeat: radians each way from the modelled pose, and seconds.
 			Wing = { Amplitude = 0.45, Period = 0.7 },
 			-- Banners rocking in the wind: radians each way about the centre.

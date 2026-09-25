@@ -5457,8 +5457,12 @@ do
 	-- Birds: the flock turns as one (no per-bird phase in the orbit), so birds
 	-- the generator placed clear of each other stay clear; and the bob stays
 	-- inside the clearance the generator proved each circle with (0.6).
-	check("the flock circles as one rigid body",
+	check("a bird's orbit ignores its phase (birds never drift off their proven circles)",
 		PropCore.motion("Bird", 7, 0.1, cfg).orbit == PropCore.motion("Bird", 7, 0.9, cfg).orbit)
+	-- Same travel speed at any radius: an inner bird turns faster, covering the same studs.
+	local inner = PropCore.motion("Bird", 10, 0, cfg, 20).orbit * 20
+	local outer = PropCore.motion("Bird", 10, 0, cfg, 80).orbit * 80
+	check("every bird travels at the same speed", math.abs(inner - outer) < 1e-6 and math.abs(inner - cfg.Bird.Speed * 10) < 1e-6)
 	check("a bird's bob fits the clearance its circle was proven with", cfg.Bird.Bob <= 0.6)
 	-- Heading: the nose (+X) along the direction of travel, at several spots.
 	local headingOk = true

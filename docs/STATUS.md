@@ -453,6 +453,11 @@ survive a rescale and a literal does not.
 
 ## 5. Next session — pick up here
 
+> **2026-09-24: enemies have a framework.** `docs/ENEMY_FRAMEWORK.md` +
+> `assets/source/enemies/_framework/` build, validate, pose, animate and export every enemy in every biome.
+> Sky Citadel's 16 enemies are built and exported (`assets/export/enemies/sky_citadel/`); the Winged Sentinel has
+> Idle, the P2 transition and the first moveset attack. Studio wiring (`EnemyDef` + services) awaits the owner's OK.
+
 > **2026-09-23: Sky Citadel is 36 real pieces; atmospheres are live.** All 36
 > meshes uploaded and in `AssetManifest`; props and fixtures switched to the
 > 36-piece placements (`assets/rbxm/props/SC_PROP_LIBRARY.rbxmx`).

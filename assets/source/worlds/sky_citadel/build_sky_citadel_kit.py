@@ -50,6 +50,10 @@ FRAMEWORK = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file_
 exec(open(os.path.join(FRAMEWORK, "geometry_checks.py"), encoding="utf-8").read(), globals())
 # The detail pass every prop mesh goes through before export (prop_detail.py).
 exec(open(os.path.join(FRAMEWORK, "prop_detail.py"), encoding="utf-8").read(), globals())
+# Semi-mid-poly finish (violet trim bevels, cyan wall seams, trim-edged deck plates) -- refinish.py, 2026-09-24.
+exec(open(os.path.join(FRAMEWORK, "refinish.py"), encoding="utf-8").read(), globals())
+REFINISH = True
+REFINISH_LOG = {}
 
 # --------------------------------------------------------------------------
 # Kit-wide numbers. Every one of these is mirrored in
@@ -111,7 +115,8 @@ def ensure_materials():
         bsdf = m.node_tree.nodes.get("Principled BSDF")
         lin = [srgb_to_linear(v) for v in rgb] + [1.0]
         bsdf.inputs["Base Color"].default_value = lin
-        bsdf.inputs["Roughness"].default_value = 0.75
+        bsdf.inputs["Roughness"].default_value = 0.25 if REFINISH else 0.75     # glossy finish (Studio: SmoothPlastic)
+        if REFINISH and "Coat Weight" in bsdf.inputs: bsdf.inputs["Coat Weight"].default_value = 0.5
         emit_in = bsdf.inputs.get("Emission Color") or bsdf.inputs.get("Emission")
         if emissive:
             emit_in.default_value = lin
@@ -247,6 +252,9 @@ PROP_KINDS = {
     # hovering over obelisks and altars, an orrery's rings
     "hover halo": ("halo", "Float", 1),
     "hover crystal": ("accent", "Hover", 1),
+    # landmark moving parts lifted out of the structure (owner, 2026-09-24)
+    "orrery ring": ("orrery_ring", "Spin", 1),
+    "turbine rotor": ("turbine_rotor", "Roll", 1),
 }
 # Parts that move relative to their prop, by as_attached() label: library base
 # name and the animation that moves them.
@@ -688,10 +696,16 @@ def spire(p, x, y, r, H, halo=True, fins=True, extra_halos=0, z0=0.0):
     frustum(p, "PaleAlloy", 8, r * 1.5, r * 1.35, z0, z0 + 4, x, y)
     frustum(p, "DeepAlloy", 8, r * 1.35, r * 1.2, z0 + 4, z0 + 6, x, y)
     h1 = z0 + L * 0.5
-    frustum(p, "CitadelWhite", 8, r, r * 0.78, z0 + 6, h1, x, y)
+    frustum(p, "CitadelWhite", 12, r, r * 0.78, z0 + 6, h1, x, y)
+    for k in range(4):                                    # off-grey support lines on the shaft corners (vertices 15+90k)
+        a = math.radians(15 + 90 * k)
+        ta, tb_ = (z0 + 6.2 - z0 - 6) / (h1 - z0 - 6), 1.0
+        pa = Vector((x + math.cos(a) * r * 0.995, y + math.sin(a) * r * 0.995, z0 + 6.2))
+        pb = Vector((x + math.cos(a) * r * 0.78 * 0.995, y + math.sin(a) * r * 0.78 * 0.995, h1 - 0.1))
+        tube(p, "PaleAlloy", [tuple(pa), tuple(pb)], [0.3, 0.25], n=4)
     frustum(p, "AzureDim", 8, r * 0.84, r * 0.84, h1, h1 + 2, x, y)
     h2 = z0 + L * 0.78
-    frustum(p, "CitadelWhite", 8, r * 0.78, r * 0.5, h1 + 2, h2, x, y)
+    frustum(p, "CitadelWhite", 12, r * 0.78, r * 0.5, h1 + 2, h2, x, y)
     frustum(p, "SunGold", 8, r * 0.58, r * 0.58, h2, h2 + 2, x, y)
     frustum(p, "PaleAlloy", 8, r * 0.5, 0, h2 + 2, H, x, y)
     if fins:
@@ -712,9 +726,14 @@ def spire(p, x, y, r, H, halo=True, fins=True, extra_halos=0, z0=0.0):
 def tower(p, x, y, r, H, roof_h=None, roof=True):
     """A castle turret: white octagonal shaft, crenellated walk, violet cone."""
     p.solid("tower", x, y, r * 1.25, 0, H + 6 + (roof_h if roof_h is not None else r * 2.4))
-    frustum(p, "PaleAlloy", 8, r * 1.15, r * 1.1, 0, 3, x, y)
-    frustum(p, "CitadelWhite", 8, r, r * 0.94, 3, H, x, y)
-    apothem = r * 0.97 * math.cos(math.radians(22.5))
+    frustum(p, "PaleAlloy", 12, r * 1.15, r * 1.1, 0, 3, x, y)
+    frustum(p, "CitadelWhite", 12, r, r * 0.94, 3, H, x, y)
+    for k in range(6):                                  # off-grey support lines ON the shaft's corners (12-gon vertices at 15+30k deg)
+        a = math.radians(15 + 60 * k)                   # every other corner; windows sit on face centres, never a corner
+        tube(p, "PaleAlloy", [(x + math.cos(a) * r * 0.995, y + math.sin(a) * r * 0.995, 3.2),
+                              (x + math.cos(a) * r * 0.94 * 0.995, y + math.sin(a) * r * 0.94 * 0.995, H - 0.2)], [0.32, 0.3], n=4)
+    frustum(p, "SunGold", 12, r * 0.985, r * 0.985, H * 0.35, H * 0.35 + 0.8, x, y)
+    apothem = r * 0.97 * math.cos(math.radians(15))
     for k in range(4):
         a = math.radians(90 * k)
         box(p, "AzureDim", x + math.cos(a) * apothem, y + math.sin(a) * apothem, H * 0.62,
@@ -733,8 +752,27 @@ def tower(p, x, y, r, H, roof_h=None, roof=True):
         frustum(p, "PaleAlloy", 8, r * 1.05, r * 1.05, H + 2, H + 3.1, x, y)
         return
     rh = roof_h if roof_h is not None else r * 2.4
-    frustum(p, "CitadelViolet", 8, r * 0.9, 0, H + 3, H + 3 + rh, x, y)
-    crystal(p, "SunGold", x, y, H + 3 + rh + 1.2, 0.8, 1.6, 1.2)
+    style = int(abs(x) * 7 + abs(y) * 13 + H) % 4        # neighbours differ; the same tower always gets the same roof
+    z = H + 3
+    if style == 0:                                        # plain cone
+        frustum(p, "CitadelViolet", 12, r * 0.9, 0, z, z + rh, x, y)
+    elif style == 1:                                      # tiered: two cones with a gold collar
+        frustum(p, "CitadelViolet", 12, r * 1.0, r * 0.45, z, z + rh * 0.45, x, y)
+        frustum(p, "SunGold", 12, r * 0.5, r * 0.5, z + rh * 0.45, z + rh * 0.45 + 0.7, x, y)
+        frustum(p, "CitadelViolet", 12, r * 0.55, 0, z + rh * 0.45 + 0.7, z + rh * 1.05, x, y)
+        rh *= 1.05
+    elif style == 2:                                      # flared eave: wide shallow skirt, then a steep needle cone
+        frustum(p, "CitadelViolet", 12, r * 1.25, r * 0.7, z, z + rh * 0.2, x, y)
+        frustum(p, "CitadelViolet", 12, r * 0.7, 0, z + rh * 0.2, z + rh * 1.15, x, y)
+        rh *= 1.15
+    else:                                                 # crowned: short cone ringed by gold spikes, tall needle
+        frustum(p, "CitadelViolet", 12, r * 0.95, r * 0.25, z, z + rh * 0.55, x, y)
+        for k in range(6):
+            a = math.radians(60 * k)
+            frustum(p, "SunGold", 4, 0.35, 0, z + rh * 0.35, z + rh * 0.6, x + math.cos(a) * r * 0.55, y + math.sin(a) * r * 0.55)
+        frustum(p, "PaleAlloy", 6, r * 0.25, 0, z + rh * 0.55, z + rh * 1.1, x, y)
+        rh *= 1.1
+    crystal(p, "SunGold", x, y, z + rh + 1.2, 0.8, 1.6, 1.2)
 
 
 CAPITAL_H = 6.5   # a gate pylon's capital: tall enough to swallow the roof beam's end
@@ -1182,11 +1220,12 @@ def orrery(p, x, y):
     frustum(p, "PaleAlloy", 8, 0.7, 0.5, 1.6, 9.6, x, y)
     orb(p, "SunGold", x, y, 11.8, 2.2)
     rings = ((7.0, 14, 0, "SkyGlass", 30), (10.5, -9, 22, "CitadelViolet", 200))
-    for R, rx, ry, pmat, t in rings:
-        torus(p, "AzureNeon", R, 0.2, x, y, 11.8, n=20, rx=rx, ry=ry)
-        v = Euler((math.radians(rx), math.radians(ry), 0), "XYZ").to_matrix() @ Vector(
-            (R * math.cos(math.radians(t)), R * math.sin(math.radians(t)), 0))
-        orb(p, pmat, x + v.x, y + v.y, 11.8 + v.z, 1.1, n=6)
+    for R, rx, ry, pmat, t in rings:                       # each ring + its planet is an animated prop (Spin)
+        with as_prop(p, "orrery ring", xf(x, y, 11.8)):
+            torus(p, "AzureNeon", R, 0.2, x, y, 11.8, n=20, rx=rx, ry=ry)
+            v = Euler((math.radians(rx), math.radians(ry), 0), "XYZ").to_matrix() @ Vector(
+                (R * math.cos(math.radians(t)), R * math.sin(math.radians(t)), 0))
+            orb(p, pmat, x + v.x, y + v.y, 11.8 + v.z, 1.1, n=6)
 
 
 def weapon_rack(p, x, y, rz=0.0):
@@ -1302,7 +1341,8 @@ def gazebo(p, x, y, r=10.0, h=8.0):
         a = math.radians(22.5 + 45 * k)
         frustum(p, "CitadelWhite", 6, 0.55, 0.5, 0.8, h, x + math.cos(a) * r * 0.9, y + math.sin(a) * r * 0.9)
     frustum(p, "PaleAlloy", 8, r * 1.05, r * 1.1, h, h + 1, x, y)
-    frustum(p, "CitadelViolet", 8, r * 1.1, 0, h + 1, h + 1 + r * 0.9, x, y)
+    frustum(p, "CitadelViolet", 12, r * 1.25, r * 0.6, h + 1, h + 1 + r * 0.2, x, y)
+    frustum(p, "CitadelViolet", 12, r * 0.6, 0, h + 1 + r * 0.2, h + 1 + r * 0.9, x, y)
     crystal(p, "SunGold", x, y, h + 1 + r * 0.9 + 1.0, 0.7, 1.6, 1.0)
 
 
@@ -1516,6 +1556,7 @@ def turbine(p, x, y, hub, blade, rz=0.0, needle_to=None):
     frustum(p, "AzureDim", 8, 1.9, 1.9, hub * 0.45, hub * 0.45 + 1.5, x, y)
     with frame(p, xf(x, y, hub, rz)):
         box(p, "PaleAlloy", 0, 0.5, 0, 2.6, 6, 2.6)
+    with as_prop(p, "turbine rotor", xf(x, y, hub, rz)), frame(p, xf(x, y, hub, rz)):   # the rotor turns (Roll)
         frustum(p, "SunGold", 8, 1.3, 0, 3.5, 5.5, M=xf(rx=-90))
         for k in range(3):
             a = 90 + 120 * k
@@ -1531,9 +1572,15 @@ def colonnade(p, x, y0, y1, n, H=28.0):
     for i in range(n):
         yy = y0 + (y1 - y0) * i / (n - 1)
         frustum(p, "PaleAlloy", 8, 3.0, 2.8, 0, 2, x, yy)
-        frustum(p, "CitadelWhite", 8, 2.2, 1.8, 2, H, x, yy)
-        frustum(p, "AzureDim", 8, 2.1, 2.1, H * 0.6, H * 0.6 + 1, x, yy)
-        frustum(p, "PaleAlloy", 8, 1.9, 3.0, H, H + 1.5, x, yy)
+        frustum(p, "CitadelWhite", 12, 2.2, 1.8, 2, H, x, yy)
+        for k in range(4):                                # off-grey support lines on the column corners (vertices 15+90k)
+            a = math.radians(15 + 90 * k)
+            z_a, z_b = 2.2, H - 0.7
+            ra = 2.2 + (1.8 - 2.2) * (z_a - 2) / (H - 2); rb = 2.2 + (1.8 - 2.2) * (z_b - 2) / (H - 2)
+            tube(p, "PaleAlloy", [(x + math.cos(a) * ra * 0.995, yy + math.sin(a) * ra * 0.995, z_a), (x + math.cos(a) * rb * 0.995, yy + math.sin(a) * rb * 0.995, z_b)], [0.2, 0.18], n=4)
+        frustum(p, "AzureDim", 12, 2.1, 2.1, H * 0.6, H * 0.6 + 1, x, yy)
+        frustum(p, "SunGold", 12, 1.85, 1.95, H - 0.6, H, x, yy)
+        frustum(p, "PaleAlloy", 12, 1.9, 3.0, H, H + 1.5, x, yy)
     box_span(p, "CitadelWhite", x - 3, x + 3, y0 - 3, y1 + 3, H + 1.5, H + 3.5)
     box_span(p, "AzureDim", x - 3.1, x + 3.1, y0 - 3.1, y1 + 3.1, H + 2.2, H + 2.6)
 
@@ -2606,7 +2653,7 @@ def build_boss_clearing():
     frustum(p, "DeepAlloy", 8, 24, 23, 1.5, 3, 0, 70)
     spire(p, 0, 70, 13, CROWN_TOP, extra_halos=2)
     for k in range(4):
-        a = math.radians(45 + 90 * k)
+        a = math.radians(60 * k)           # north half only: nothing hangs between the approach and the spire
         float_crystal(p, "SkyGlass", math.cos(a) * 30, 70 + math.sin(a) * 30, 52, 3.2, 7, 5)
     for k in range(12):
         a = 30 * k
@@ -2682,9 +2729,16 @@ def bird_flock_clear(p, i, shape):
     rigid body: two birds clear of each other at rest stay clear all the way
     round. Only their bobs differ, so the margin is both bobs."""
     _, x, y, r, z0, z1 = shape
-    probe = ("cyl", x, y, r, z0 - 2 * BIRD_BOB, z1 + 2 * BIRD_BOB)
-    return not any(shapes_clash(probe, s) for j, (label, s) in enumerate(p.floats)
-                   if label == "bird" and j != i)
+    # Birds now fly at the same SPEED (turn rate = speed / radius, owner 2026-09-24), so two birds' angular
+    # positions drift apart. Circles are concentric and never cross; a pair can only meet if their circles
+    # are closer than the two bird radii. Such pairs must be separated in height (bobs included).
+    d = math.hypot(x, y)
+    for j, (label, s) in enumerate(p.floats):
+        if label != "bird" or j == i: continue
+        _, x2, y2, r2, z02, z12 = s
+        if abs(math.hypot(x2, y2) - d) < r + r2 and not (z0 - 2 * BIRD_BOB >= z12 or z02 >= z1 + 2 * BIRD_BOB):
+            return False
+    return True
 
 
 def clear_bird_orbits(p, fits=lambda d, z1: True):
@@ -2697,19 +2751,23 @@ def clear_bird_orbits(p, fits=lambda d, z1: True):
         _, x, y, r, z0, z1 = p.floats[i][1]
         d = math.hypot(x, y)
 
-        def ok(lift):
-            moved = ("cyl", x, y, r, z0 + lift, z1 + lift)
-            return (z0 + lift - BIRD_BOB > 2.0 and fits(d, z1 + lift + BIRD_BOB)
+        def ok(lift, dr):
+            f = (d + dr) / d if d > 1e-6 else 1.0
+            moved = ("cyl", x * f, y * f, r, z0 + lift, z1 + lift)
+            return (z0 + lift - BIRD_BOB > 2.0 and fits(d + dr, z1 + lift + BIRD_BOB)
                     and bird_orbit_clear(p, moved) and bird_flock_clear(p, i, moved))
 
-        # nearest first: 0, +1, -1, +2, -2, ...
+        # nearest first: lifts 0, +1, -1, ... ; then, if the flock is too crowded, a small radial nudge
         steps = [0.0] + [sgn * k for k in range(1, int(BIRD_LIFT_MAX) + 1) for sgn in (1.0, -1.0)]
-        lift = next((dz for dz in steps if ok(dz)), None)
-        if lift is None:
+        nudges = [0.0] + [sgn * k for k in range(2, 13, 2) for sgn in (1.0, -1.0)]
+        found = next(((dz, dr) for dr in nudges for dz in steps if ok(dz, dr)), None)
+        if found is None:
             raise RuntimeError("%s: no clear orbit for the bird at (%.1f, %.1f)" % (p.name, x, y))
-        if lift:
-            p.floats[i] = ("bird", ("cyl", x, y, r, z0 + lift, z1 + lift))
-            prop["matrix"] = Matrix.Translation((0, 0, lift)) @ prop["matrix"]
+        lift, dr = found
+        if lift or dr:
+            f = (d + dr) / d if d > 1e-6 else 1.0
+            p.floats[i] = ("bird", ("cyl", x * f, y * f, r, z0 + lift, z1 + lift))
+            prop["matrix"] = Matrix.Translation((x * (f - 1), y * (f - 1), lift)) @ prop["matrix"]
 
 
 def bird(p, x, y, z, rz, mat):
@@ -2718,11 +2776,13 @@ def bird(p, x, y, z, rz, mat):
         crystal(p, mat, 0, 0, 0, 0.8, 1.2, 0.9, n=4, rz=45)
         frustum(p, mat, 4, 0.7, 0, 0, 2.2, M=xf(0.6, 0, 0, ry=90))
         frustum(p, "SunGold", 4, 0.3, 0, 0, 0.8, M=xf(2.7, 0, 0, ry=90))
-        # Wings apart from the body, hinged at the root, so they can flap.
-        # The root of a wing raised 24 degrees sits at y = 0.44, z = -0.15.
+        # Wings: built FLAT and symmetric, root sunk into the body, hinged at the root. Both sides then share one
+        # library mesh CORRECTLY (a translated copy is exact for a symmetric flat wing - the old raised wing was
+        # mirror-asymmetric, so the right wing came out tilted the wrong way and detached). The flap animation
+        # (PropCore Wing, mirrored per side) raises them.
         for s in (-1, 1):
-            with as_attached(p, "bird wing", (0, s * 0.44, -0.15)):
-                box(p, "PaleAlloy", 0, s * 1.9, 0.5, 1.6, 3.2, 0.15, rx=s * 24)
+            with as_attached(p, "bird wing", (0, s * 0.35, 0.45)):
+                box(p, "PaleAlloy", 0, s * 1.95, 0.45, 1.6, 3.5, 0.15)
         box(p, mat, -1.8, 0, 0.1, 1.4, 1.1, 0.15)
     return ("cyl", x, y, 3.4, z - 1.2, z + 1.9)
 
@@ -3617,7 +3677,7 @@ def build_prism_arena():
     crystal(p, "SunGold", cx, cy, apex, 1.8, top - apex, 1.8, n=6)
     # three prism pylons standing off round the arena
     for k in range(3):
-        a = math.radians(30 + 120 * k)
+        a = math.radians(90 + 120 * k)     # N, SW, SE: never on the approach (owner 2026-09-24: boss sightline)
         px, py = cx + math.cos(a) * 62, cy + math.sin(a) * 62 * 0.95
         p.solid("prism pylon", px, py, 4.6, 0, 32)
         frustum(p, "DeepAlloy", 6, 4.4, 3.8, 0, 1.6, px, py)
@@ -3760,6 +3820,13 @@ def to_object(p, mats, collection):
     bm.to_mesh(mesh)
     bm.free()
 
+    if REFINISH:
+        class _M: data = mesh
+        REFINISH_LOG[p.name] = refinish_piece(_M, {
+            "trim": MAT_ORDER.index("CitadelViolet"), "edge": MAT_ORDER.index("PaleAlloy"), "glow": MAT_ORDER.index("AzureNeon"), "keel_glow": MAT_ORDER.index("AzureDim"),
+            "walls": [MAT_ORDER.index(n) for n in ("DeepAlloy", "HullSlate", "PaleAlloy") if n in MAT_ORDER],
+            "decks": None}, half=HALF, zmin=KEEL_BOTTOM, zmax=CROWN_TOP, tri_limit=TRI_LIMIT)
+
     col = mesh.color_attributes.new("Col", "BYTE_COLOR", "CORNER")
     for poly in mesh.polygons:
         rgb = PALETTE[MAT_ORDER[poly.material_index]][0]
@@ -3900,6 +3967,22 @@ def ground_report(p):
     return problems
 
 
+def boss_sightline(p):
+    """BOSS pieces: nothing may stand or float in the player's approach - the corridor (ASCENT width) from the
+    south entry straight to the boss landmark, from the deck up to 60 studs (owner, 2026-09-24)."""
+    if not p.notes.startswith("BOSS"): return []
+    tall = max((sh for _, sh in p.solids if sh[0] == "cyl"), key=lambda sh: sh[5])
+    tx, ty, tr = tall[1], tall[2], tall[3]
+    probs = []
+    for kind, items in (("solid", p.solids), ("float", p.floats)):
+        for label, sh in items:
+            if sh[0] != "cyl" or sh is tall: continue
+            x, y, r, z0, z1 = sh[1:6]
+            if z1 < 0.5 or z0 > 60 or y < -HALF or y > ty - tr: continue
+            if abs(x - tx) < ASCENT_W/2 + r: probs.append(f"{label} at ({x:.0f},{y:.0f}) blocks the boss approach")
+    return probs
+
+
 def validate(objs):
     report, ok = [], True
     for obj in objs:
@@ -3917,6 +4000,7 @@ def validate(objs):
             "floats clear (no clipping, inside the tile)": not float_problems,
             "everything grounded stands on its deck": not ground_problems,
             "every part attached, nothing clipping (real mesh)": not geo_problems,
+            "boss approach clear (sightline)": not (boss_sightline(p) if p else []),
             "footprint 256x256": abs(size.x - 256) < 0.01 and abs(size.y - 256) < 0.01,
             "height 256 (-96..+160)": abs(mn.z - KEEL_BOTTOM) < 0.01 and abs(mx.z - CROWN_TOP) < 0.01,
             "origin centred": abs(centre_xy[0]) < 0.01 and abs(centre_xy[1]) < 0.01,
