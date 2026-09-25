@@ -16,8 +16,9 @@ def pose_at(t):
     set_("FauldFront1", 0.02*b); set_("FauldBack1", -0.02*b)
 for f in (1, 31, 61, 91, 121):
     pose_at((f - 1)/120)
-    for n in base:
-        P[n].keyframe_insert("rotation_euler", frame=f)
+    for pb in P:                                   # key EVERY bone: arms, hands, fingers and the lance socket carry the grip pose
+        pb.keyframe_insert("location", frame=f); pb.keyframe_insert("scale", frame=f)
+        pb.keyframe_insert("rotation_quaternion" if pb.rotation_mode == 'QUATERNION' else "rotation_euler", frame=f)
 g = bpy.data.materials["GS_Glow"].node_tree.nodes["Principled BSDF"].inputs["Emission Strength"]
 for f, v in ((1, 2.0), (61, 7.0), (121, 2.0)):
     g.default_value = v; g.keyframe_insert("default_value", frame=f)
