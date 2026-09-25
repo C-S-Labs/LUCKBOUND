@@ -64,12 +64,7 @@ local Theme = {
 	AtmosphereColor = Color3.fromRGB(204, 186, 232),
 	AtmosphereDecay = Color3.fromRGB(176, 122, 150),
 	SunRays = { Intensity = 0.07, Spread = 0.7 },
-	Grade = {
-		Brightness = 0.02,
-		Contrast = 0.08,
-		Saturation = 0.12,
-		Tint = Color3.fromRGB(255, 244, 248),
-	},
+	Grade = { Brightness = 0.02, Contrast = 0.08, Saturation = 0.12, Tint = Color3.fromRGB(255, 244, 248) },
 	StarCount = 5000,
 	SunAngularSize = 14,
 	-- Fog must reach past the distant islands or the world looks boxed in --
@@ -1121,32 +1116,17 @@ local Crossroads = {
 				Material = Enum.Material.SmoothPlastic,
 				CanCollide = true,
 			},
-			Platform_RadialPanels = {
-				Color = Color3.fromRGB(88, 82, 104),
-				Material = Enum.Material.SmoothPlastic,
-			},
-			Platform_ConcentricInlays = {
-				Color = Theme.MarbleTrim,
-				Material = Enum.Material.SmoothPlastic,
-			},
-			Platform_EdgeAccents = {
-				Color = Theme.MarbleTrim,
-				Material = Enum.Material.SmoothPlastic,
-			},
+			Platform_RadialPanels = { Color = Color3.fromRGB(88, 82, 104), Material = Enum.Material.SmoothPlastic },
+			Platform_ConcentricInlays = { Color = Theme.MarbleTrim, Material = Enum.Material.SmoothPlastic },
+			Platform_EdgeAccents = { Color = Theme.MarbleTrim, Material = Enum.Material.SmoothPlastic },
 			Plinth = {
 				Color = Color3.fromRGB(196, 190, 208),
 				Material = Enum.Material.SmoothPlastic,
 				CanCollide = true,
 			},
 			Plinth_SideBand = { Color = Theme.MarbleTrim, Material = Enum.Material.SmoothPlastic },
-			Plinth_TopFiligree = {
-				Color = Theme.MarbleTrim,
-				Material = Enum.Material.SmoothPlastic,
-			},
-			Plinth_CornerButtresses = {
-				Color = Color3.fromRGB(64, 58, 78),
-				Material = Enum.Material.SmoothPlastic,
-			},
+			Plinth_TopFiligree = { Color = Theme.MarbleTrim, Material = Enum.Material.SmoothPlastic },
+			Plinth_CornerButtresses = { Color = Color3.fromRGB(64, 58, 78), Material = Enum.Material.SmoothPlastic },
 			-- Dimmed from the palette's 124,245,224 by Portal.NeonTint. Neon emits at
 			-- full Color and bloom amplifies it; at full value these spokes bled a
 			-- halo across the dais.
@@ -1312,23 +1292,10 @@ local Crossroads = {
 			-- The levitation stack, added by the artist on top of the spec.
 			-- Static geometry: it sells the floating portal and nothing in
 			-- code needs to move it.
-			LevitationGenerator = {
-				Color = Color3.fromRGB(88, 82, 104),
-				Material = Enum.Material.SmoothPlastic,
-				CanCollide = true,
-			},
-			GeneratorVents = {
-				Color = Color3.fromRGB(64, 58, 78),
-				Material = Enum.Material.SmoothPlastic,
-			},
-			GeneratorPanelTrim = {
-				Color = Theme.MarbleTrim,
-				Material = Enum.Material.SmoothPlastic,
-			},
-			GeneratorEmitter = {
-				Color = Color3.fromRGB(68, 135, 123),
-				Material = Enum.Material.Neon,
-			},
+			LevitationGenerator = { Color = Color3.fromRGB(88, 82, 104), Material = Enum.Material.SmoothPlastic, CanCollide = true },
+			GeneratorVents = { Color = Color3.fromRGB(64, 58, 78), Material = Enum.Material.SmoothPlastic },
+			GeneratorPanelTrim = { Color = Theme.MarbleTrim, Material = Enum.Material.SmoothPlastic },
+			GeneratorEmitter = { Color = Color3.fromRGB(68, 135, 123), Material = Enum.Material.Neon },
 			-- The core's second colour. Cyan core over violet coils gives the
 			-- energy stack two tones instead of one flat glow, and both are
 			-- hub palette rather than invented.

@@ -55,8 +55,7 @@ end
 -- Stated on the shared root before anything else, so every client can read
 -- it before it builds a single screen -- the loading screen and the menu
 -- both behave differently on an expedition server.
-local isExpeditionServer =
-	ExpeditionCore.isExpeditionServer(game.PrivateServerId, game.PrivateServerOwnerId)
+local isExpeditionServer = ExpeditionCore.isExpeditionServer(game.PrivateServerId, game.PrivateServerOwnerId)
 Root:SetAttribute(
 	Constants.SERVER_KIND_ATTRIBUTE,
 	if isExpeditionServer then Constants.SERVER_KIND_EXPEDITION else Constants.SERVER_KIND_HUB

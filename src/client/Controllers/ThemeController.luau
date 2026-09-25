@@ -122,8 +122,7 @@ local function evaluate()
 	if root and root:IsA("BasePart") and expedition == nil then
 		-- District only means anything in the hub. Inside a biome the sky is
 		-- that biome's, and the menu is not on screen anyway.
-		districtId =
-			ThemeCore.districtAt(root.Position, Menu, GameConfig.HubMenu.DistrictTintRadius)
+		districtId = ThemeCore.districtAt(root.Position, Menu, GameConfig.HubMenu.DistrictTintRadius)
 	end
 
 	local dominant = EventController.dominant(worldId)

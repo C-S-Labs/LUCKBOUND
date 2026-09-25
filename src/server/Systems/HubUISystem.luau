@@ -86,15 +86,9 @@ local function groundedLanding(destination: any): Vector3
 	params.IgnoreWater = true
 
 	local from = Vector3.new(point.X, point.Y + hub.TeleportProbeHeight, point.Z)
-	local hit = Workspace:Raycast(
-		from,
-		Vector3.new(0, -(hub.TeleportProbeHeight + hub.TeleportProbeDepth), 0),
-		params
-	)
+	local hit = Workspace:Raycast(from, Vector3.new(0, -(hub.TeleportProbeHeight + hub.TeleportProbeDepth), 0), params)
 	if not hit then
-		warn(
-			`[HubUI] no floor under landing for '{destination.Id}' -- using the content point as-is`
-		)
+		warn(`[HubUI] no floor under landing for '{destination.Id}' -- using the content point as-is`)
 		return point
 	end
 
@@ -118,8 +112,8 @@ local function placeCharacter(player: Player, position: Vector3, facingDegrees: 
 
 	-- Compass bearing to a Roblox yaw: GameConfig.HubLayout's mapping is
 	-- NORTH = -Z, so a bearing of 0 looks along -Z, which is a yaw of 180.
-	local yaw = math.rad(180 - facingDegrees);
-	(character :: Model):PivotTo(CFrame.new(position) * CFrame.Angles(0, yaw, 0))
+	local yaw = math.rad(180 - facingDegrees)
+	;(character :: Model):PivotTo(CFrame.new(position) * CFrame.Angles(0, yaw, 0))
 	return true
 end
 
