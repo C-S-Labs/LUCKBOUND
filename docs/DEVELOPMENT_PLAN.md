@@ -212,7 +212,12 @@ In dependency order. Not scheduled here on purpose: the playtest reorders it.
    belong to the item that grants them (`PLAYER_ABILITIES.md` §0), so the item
    schema has to exist before combat can.
 2. **Combat** — enemies, damage, death, the Training Grounds dummies that are
-   already tagged `Phase = 2`.
+   already tagged `Phase = 2`. *Update 2026-09-25:* the **art side** of this has started ahead of the order above.
+   - `ENEMY_FRAMEWORK.md` covers it.
+   - All 16 Sky Citadel enemies are modelled, rigged and exported.
+   - The Winged Sentinel has its first actions, a Studio preview (`/showboss`) and the Aether Lance's lightning
+     (`Util/WeaponFX.luau`).
+   - The gameplay side (`EnemyDef`, AI, damage) is still unbuilt and waits for the owner's OK.
 3. **The Fate Tree** — designed in `PLAYER_ABILITIES.md` §3. Gate it on
    understanding what players actually want more of.
 4. **Rebirth and prestige** — the retention layer. Worth nothing until there is

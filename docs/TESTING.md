@@ -169,6 +169,9 @@ where the `[Roll]` and `[Expedition]` lines already are.
 | `/givekey [KEY_ID]` | **server** | *Temporary.* Give yourself a vault key (Sky Citadel's by default). Max one still applies. |
 | `/takekey` | **server** | *Temporary.* Remove every key you hold. |
 | `/keys` | **server** | *Temporary.* Your keys, and any testing overrides in force. |
+| `/showboss <id> [height]` | **server** | Debug preview: place a boss (a `Content/BossPreviews.luau` row, e.g. `winged_sentinel`) in the nearest boss arena, facing the entrance, scaled to its `Tall` studs, playing its idle. Reports how many lightning strands it has. |
+| `/bossphase <1\|2>` | **server** | Charge the previewed boss's weapon (`2` = plasma blade, open halves, arcs) or rest it (`1`). Reports strands on. |
+| `/clearboss` | **server** | Remove the boss preview. |
 | `/help` | client | List all of the above. |
 
 **Why the split.** Your own character's velocity, speed and CFrame are already

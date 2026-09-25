@@ -176,5 +176,12 @@ about 70 KB). Each symbol line starts with its file name, so a match already sho
 - `Grep pattern="applySlide:" path=INDEX_MAP.md` gives `WeaponFX.applySlide:113`, so open `src/shared/Util/WeaponFX.luau` at line 113.
 - `Grep pattern="ChunkCore" path=INDEX_MAP.md` gives the file and all its functions with their lines.
 
+**Dates:** every file line ends with `· YYYY-MM-DD`, the date of that file's last commit. Use it to spot a stale
+doc (a doc older than the code it describes) without opening either file. Where to find each iteration's details:
+- **why, and what was decided:** `docs/WORKLOG.md` (one dated entry per session)
+- **every change to one file:** `git log --format="%cs %s" -- <path>`; it costs nothing until you run it
+
+Nothing else needs hand-written timestamps.
+
 Regenerate it with `python tools/gen_index.py`. CI fails a PR whose map is stale, and `index.yml` regenerates it on
 `main` after every merge.

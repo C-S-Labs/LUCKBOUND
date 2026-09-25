@@ -178,14 +178,18 @@ System change, the schema is wrong.
 | Live events, scoped and precedence-ordered | solid |
 | Expedition entry, seeded maps, a way home | walkable |
 | Scenario selection | wired into the expedition flow; unwalked |
+| Parties, expeditions on their own server | built; unwalked (TESTING O/P) |
+| Sky Citadel + Verdant Valley chunk kits, ambience, props, chests/vault | uploaded; Sky Citadel walked |
+| Enemy art pipeline + all 16 Sky Citadel enemies (models, rigs, first actions) | built in Blender, not spawned in game (`ENEMY_FRAMEWORK.md`) |
+| Boss preview in Studio + the Aether Lance's live lightning / charge switch | `/showboss`, `/bossphase` (debug) |
 
 | Not built | Needed for |
 |---|---|
-| Combat, enemies, bosses | launch, not the first playtest |
+| Combat: enemy AI, damage, bosses in play (the art exists) | launch, not the first playtest |
 | Items, inventory, loot | launch |
 | Discoveries — findable things | **the first playtest** |
 | Sound, tutorial | the first playtest |
-| Fate Tree, Rebirth, shop, parties, rifts | launch |
+| Fate Tree, Rebirth, shop, rifts | launch |
 
 ---
 
