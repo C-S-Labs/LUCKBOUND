@@ -50,6 +50,10 @@ FRAMEWORK = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file_
 exec(open(os.path.join(FRAMEWORK, "geometry_checks.py"), encoding="utf-8").read(), globals())
 # The detail pass every prop mesh goes through before export (prop_detail.py).
 exec(open(os.path.join(FRAMEWORK, "prop_detail.py"), encoding="utf-8").read(), globals())
+# Semi-mid-poly finish (violet trim bevels, cyan wall seams, trim-edged deck plates) -- refinish.py, 2026-09-24.
+exec(open(os.path.join(FRAMEWORK, "refinish.py"), encoding="utf-8").read(), globals())
+REFINISH = True
+REFINISH_LOG = {}
 
 # --------------------------------------------------------------------------
 # Kit-wide numbers. Every one of these is mirrored in
@@ -111,7 +115,8 @@ def ensure_materials():
         bsdf = m.node_tree.nodes.get("Principled BSDF")
         lin = [srgb_to_linear(v) for v in rgb] + [1.0]
         bsdf.inputs["Base Color"].default_value = lin
-        bsdf.inputs["Roughness"].default_value = 0.75
+        bsdf.inputs["Roughness"].default_value = 0.25 if REFINISH else 0.75     # glossy finish (Studio: SmoothPlastic)
+        if REFINISH and "Coat Weight" in bsdf.inputs: bsdf.inputs["Coat Weight"].default_value = 0.5
         emit_in = bsdf.inputs.get("Emission Color") or bsdf.inputs.get("Emission")
         if emissive:
             emit_in.default_value = lin
@@ -3759,6 +3764,13 @@ def to_object(p, mats, collection):
             face.normal_flip()
     bm.to_mesh(mesh)
     bm.free()
+
+    if REFINISH:
+        class _M: data = mesh
+        REFINISH_LOG[p.name] = refinish_piece(_M, {
+            "trim": MAT_ORDER.index("CitadelViolet"), "glow": MAT_ORDER.index("AzureNeon"),
+            "walls": [MAT_ORDER.index(n) for n in ("DeepAlloy", "HullSlate", "PaleAlloy") if n in MAT_ORDER],
+            "decks": None}, half=HALF, zmin=KEEL_BOTTOM, zmax=CROWN_TOP, tri_limit=TRI_LIMIT)
 
     col = mesh.color_attributes.new("Col", "BYTE_COLOR", "CORNER")
     for poly in mesh.polygons:
