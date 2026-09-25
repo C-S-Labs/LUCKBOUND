@@ -107,7 +107,16 @@ function AmbienceCore.layoutClouds(
 		local yaw = nextNumber() * math.pi * 2
 		local c, sn = math.cos(yaw), math.sin(yaw)
 		local parts = {}
-		local function add(dx: number, dy: number, dz: number, w: number, h: number, l: number, shade: number, fade: number)
+		local function add(
+			dx: number,
+			dy: number,
+			dz: number,
+			w: number,
+			h: number,
+			l: number,
+			shade: number,
+			fade: number
+		)
 			-- Rotate the offset about Y by the cloud's heading, the same way
 			-- CFrame.Angles(0, yaw, 0) will turn the part itself.
 			table.insert(parts, {
@@ -188,9 +197,21 @@ function AmbienceCore.layoutClouds(
 				local w = size * (0.45 + 0.15 * nextNumber())
 				local h = w * (0.4 + 0.1 * nextNumber())
 				baseTall = math.max(baseTall, h)
-				add(t * spread, 0, (nextNumber() - 0.5) * spread * 0.4, w, h, w * (0.8 + 0.3 * nextNumber()), 1, 0)
+				add(
+					t * spread,
+					0,
+					(nextNumber() - 0.5) * spread * 0.4,
+					w,
+					h,
+					w * (0.8 + 0.3 * nextNumber()),
+					1,
+					0
+				)
 			end
-			local n = math.max(if maxBillows > 0 then 1 else 0, math.floor(maxBillows * (0.5 + 0.5 * nextNumber()) + 0.5))
+			local n = math.max(
+				if maxBillows > 0 then 1 else 0,
+				math.floor(maxBillows * (0.5 + 0.5 * nextNumber()) + 0.5)
+			)
 			for _ = 1, n do
 				local w = size * (0.3 + 0.25 * nextNumber())
 				-- Squashed, not spherical: a billow is wider than it is tall.
@@ -279,9 +300,15 @@ function AmbienceCore.validate(environment: any, label: string): { string }
 			for i, layer in sea do
 				local l = `{label}.CloudSea[{i}]`
 				checkRange(errors, `{l}.Depth`, layer.Depth, 1, 5000)
-				if type(layer.Depth) == "number" and type(environment.CloudCeiling) == "number"
-					and layer.Depth <= environment.CloudCeiling then
-					table.insert(errors, `{l}.Depth must be below CloudCeiling ({environment.CloudCeiling})`)
+				if
+					type(layer.Depth) == "number"
+					and type(environment.CloudCeiling) == "number"
+					and layer.Depth <= environment.CloudCeiling
+				then
+					table.insert(
+						errors,
+						`{l}.Depth must be below CloudCeiling ({environment.CloudCeiling})`
+					)
 				end
 				checkRange(errors, `{l}.Count`, layer.Count, 1, 400)
 				checkRange(errors, `{l}.Radius`, layer.Radius, 64, 10000)
@@ -297,7 +324,10 @@ function AmbienceCore.validate(environment: any, label: string): { string }
 					checkRange(errors, `{l}.Tufts`, layer.Tufts, 0, 6)
 				end
 				if layer.Material ~= nil and not AmbienceCore.CLOUD_MATERIALS[layer.Material] then
-					table.insert(errors, `{l}.Material '{tostring(layer.Material)}' is not an allowed cloud material`)
+					table.insert(
+						errors,
+						`{l}.Material '{tostring(layer.Material)}' is not an allowed cloud material`
+					)
 				end
 				if layer.Mix ~= nil then
 					local sum = 0
@@ -308,11 +338,17 @@ function AmbienceCore.validate(environment: any, label: string): { string }
 						sum += if type(w) == "number" then w else 0
 					end
 					if sum <= 0 then
-						table.insert(errors, `{l}.Mix must give at least one kind a positive weight`)
+						table.insert(
+							errors,
+							`{l}.Mix must give at least one kind a positive weight`
+						)
 					end
 				end
-				if type(layer.SizeMin) == "number" and type(layer.SizeMax) == "number"
-					and layer.SizeMin > layer.SizeMax then
+				if
+					type(layer.SizeMin) == "number"
+					and type(layer.SizeMax) == "number"
+					and layer.SizeMin > layer.SizeMax
+				then
 					table.insert(errors, `{l}: SizeMin is larger than SizeMax`)
 				end
 			end
@@ -327,10 +363,10 @@ function AmbienceCore.validate(environment: any, label: string): { string }
 	return errors
 end
 
-
 -- Blocks that MERGE key by key when an atmosphere overrides an Environment;
 -- every other table (CloudSea, Canopy, Weather...) is a LIST and replaces whole.
-local MERGED_BLOCKS = { Atmosphere = true, Sky = true, Bloom = true, SunRays = true, Grade = true, Motes = true }
+local MERGED_BLOCKS =
+	{ Atmosphere = true, Sky = true, Bloom = true, SunRays = true, Grade = true, Motes = true }
 
 --- A scenario atmosphere applied over a world's Environment. Scalars and
 --- colours replace; the blocks above merge key by key; lists replace whole;

@@ -129,7 +129,11 @@ local function buildScene(env: any)
 		}, Lighting)
 	end
 	if env.SunRays then
-		make("SunRaysEffect", { Intensity = env.SunRays.Intensity, Spread = env.SunRays.Spread }, Lighting)
+		make(
+			"SunRaysEffect",
+			{ Intensity = env.SunRays.Intensity, Spread = env.SunRays.Spread },
+			Lighting
+		)
 	end
 	if env.Grade then
 		make("ColorCorrectionEffect", {
@@ -148,8 +152,16 @@ local function buildCloudSea(env: any, floorY: number, scale: number, folder: In
 			return random:NextNumber()
 		end, env.CloudCeiling)
 		local shade = def.Shade or def.Color
-		local layer: Layer =
-			{ Def = def, Clouds = clouds, Parts = {}, Owner = {}, Offset = {}, DriftX = 0, DriftZ = 0, Pending = 0 }
+		local layer: Layer = {
+			Def = def,
+			Clouds = clouds,
+			Parts = {},
+			Owner = {},
+			Offset = {},
+			DriftX = 0,
+			DriftZ = 0,
+			Pending = 0,
+		}
 		for _, cloud in clouds do
 			-- Built once: a cloud's heading never changes, only where it is.
 			cloud.Rot = CFrame.Angles(0, cloud.Yaw, 0)
@@ -172,8 +184,11 @@ local function buildCloudSea(env: any, floorY: number, scale: number, folder: In
 				local mesh = Instance.new("SpecialMesh")
 				mesh.MeshType = Enum.MeshType.Sphere
 				mesh.Parent = part
-				part.CFrame = CFrame.new(cloud.X + piece.DX, floorY - def.Depth + cloud.Y + piece.DY, cloud.Z + piece.DZ)
-					* CFrame.Angles(0, cloud.Yaw, 0)
+				part.CFrame = CFrame.new(
+					cloud.X + piece.DX,
+					floorY - def.Depth + cloud.Y + piece.DY,
+					cloud.Z + piece.DZ
+				) * CFrame.Angles(0, cloud.Yaw, 0)
 				part.Parent = folder
 				table.insert(layer.Parts, part)
 				table.insert(layer.Owner, cloud)
@@ -258,7 +273,8 @@ local function step(dt: number, floorY: number)
 		for i, cloud in layer.Owner do
 			local centre = centres[cloud]
 			local piece = layer.Offset[i]
-			cframes[i] = CFrame.new(centre.X + piece.DX, centre.Y + piece.DY, centre.Z + piece.DZ) * cloud.Rot
+			cframes[i] = CFrame.new(centre.X + piece.DX, centre.Y + piece.DY, centre.Z + piece.DZ)
+				* cloud.Rot
 		end
 		Workspace:BulkMoveTo(layer.Parts, cframes, Enum.BulkMoveMode.FireCFrameChanged)
 	end

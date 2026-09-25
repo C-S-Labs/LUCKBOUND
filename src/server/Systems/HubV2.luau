@@ -55,7 +55,9 @@ local function walkable(src: MeshPart): MeshPart?
 		made.Material = src.Material
 		return made
 	end
-	warn(`[HubV2] {src.Name}: precise collision failed to build ({tostring(made)}); keeping the imported hull`)
+	warn(
+		`[HubV2] {src.Name}: precise collision failed to build ({tostring(made)}); keeping the imported hull`
+	)
 	return nil
 end
 
@@ -185,7 +187,14 @@ function HubV2.build(hub: Instance, origin: Vector3): Model?
 		placed += 1
 	end
 	if #missing > 0 then
-		warn(`[HubV2] {#missing} part(s) not in the imported files: {table.concat(missing, ", ", 1, math.min(#missing, 8))}`)
+		warn(
+			`[HubV2] {#missing} part(s) not in the imported files: {table.concat(
+				missing,
+				", ",
+				1,
+				math.min(#missing, 8)
+			)}`
+		)
 	end
 	print(`[HubV2] Crossroads v2: {placed} parts placed`)
 	return model
@@ -223,8 +232,14 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 			local r = rng:NextNumber(b.RadiusMin, b.RadiusMax)
 			-- not solid, but queryable: sky props steer round it and dock beside it
 			p.Anchored, p.CanCollide, p.CanQuery, p.CanTouch = true, false, true, false
-			p.CFrame = CFrame.new(origin + Vector3.new(math.cos(a) * r, rng:NextNumber(b.HeightMin, b.HeightMax), math.sin(a) * r))
-				* CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), 0)
+			p.CFrame = CFrame.new(
+				origin
+					+ Vector3.new(
+						math.cos(a) * r,
+						rng:NextNumber(b.HeightMin, b.HeightMax),
+						math.sin(a) * r
+					)
+			) * CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), 0)
 			p:SetAttribute("Backdrop", true)
 			p.Parent = sky
 		end
@@ -255,7 +270,14 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 			local radius = rng:NextNumber(entry.RadiusMin, entry.RadiusMax)
 			local height = origin.Y + rng:NextNumber(entry.HeightMin, entry.HeightMax)
 			local phase = rng:NextNumber(0, math.pi * 2)
-			p.CFrame = CFrame.new(origin + Vector3.new(math.cos(phase) * radius, height - origin.Y, math.sin(phase) * radius))
+			p.CFrame = CFrame.new(
+				origin
+					+ Vector3.new(
+						math.cos(phase) * radius,
+						height - origin.Y,
+						math.sin(phase) * radius
+					)
+			)
 			-- WANDERERS, not orbiters (owner, 2026-09-24): each one is moved by
 			-- the client's SkyTraffic on its own course, at its own changing
 			-- speed, inside its band, steering clear of the hub, the backdrop
@@ -263,14 +285,20 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 			p:SetAttribute("Wander", true)
 			p:SetAttribute("WanderCentre", origin)
 			p:SetAttribute("WanderRadius", Vector2.new(entry.RadiusMin, entry.RadiusMax))
-			p:SetAttribute("WanderHeight", Vector2.new(origin.Y + entry.HeightMin, origin.Y + entry.HeightMax))
+			p:SetAttribute(
+				"WanderHeight",
+				Vector2.new(origin.Y + entry.HeightMin, origin.Y + entry.HeightMax)
+			)
 			p:SetAttribute("WanderSpeed", Vector2.new(entry.SpeedMin, entry.SpeedMax))
 			p:SetAttribute("WanderFaces", entry.Faces == true)
 			p:SetAttribute("WanderBob", entry.Bob or 0)
 			p:SetAttribute("WanderSeed", rng:NextInteger(1, 1e6))
 			local _ = radius + height + phase
 			-- 1 always shown, 2 medium graphics and up, 3 high only.
-			p:SetAttribute("Detail", if k == 1 then entry.Detail else math.min(3, entry.Detail + (k > 2 and 1 or 0)))
+			p:SetAttribute(
+				"Detail",
+				if k == 1 then entry.Detail else math.min(3, entry.Detail + (k > 2 and 1 or 0))
+			)
 			p.Parent = sky
 			-- its moving pieces (propellers, flippers, flames), hung off the
 			-- body; SkyTraffic moves them with it and animates each one
@@ -301,18 +329,27 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 			n += 1
 		end
 	end
-	print(`[HubV2] sky: {#chunks > 0 and cfg.Backdrop.Count or 0} backdrop chunk(s), {n} orbiter(s)`)
+	print(
+		`[HubV2] sky: {#chunks > 0 and cfg.Backdrop.Count or 0} backdrop chunk(s), {n} orbiter(s)`
+	)
 end
 
 local function still(p: BasePart, cf: CFrame, parent: Instance)
-	p.Anchored, p.CanCollide, p.CanQuery, p.CanTouch, p.CastShadow = true, false, false, false, false
+	p.Anchored, p.CanCollide, p.CanQuery, p.CanTouch, p.CastShadow =
+		true, false, false, false, false
 	p.CFrame = cf
 	p.Parent = parent
 end
 
 --- The sky beyond the islands: the cloud sea, the far range, the moon, the
 --- ringed planet and the celestial ring above the Engine.
-function HubV2.buildBeyond(sky: Instance, origin: Vector3, prefabs: Instance?, chunks: { MeshPart }, rng: Random)
+function HubV2.buildBeyond(
+	sky: Instance,
+	origin: Vector3,
+	prefabs: Instance?,
+	chunks: { MeshPart },
+	rng: Random
+)
 	local lib = prefabs and prefabs:FindFirstChild("HUB_SKY")
 	local c = cfg
 	if lib then
@@ -329,9 +366,20 @@ function HubV2.buildBeyond(sky: Instance, origin: Vector3, prefabs: Instance?, c
 				local src = banks[rng:NextInteger(1, #banks)]
 				local p = src:Clone()
 				p.Size = src.Size * rng:NextNumber(layer.ScaleMin, layer.ScaleMax)
-				local a, r = rng:NextNumber(0, math.pi * 2), math.sqrt(rng:NextNumber()) * layer.RadiusMax
-				still(p, CFrame.new(origin + Vector3.new(math.cos(a) * r, layer.Y + rng:NextNumber(-20, 20), math.sin(a) * r))
-					* CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), 0), sky)
+				local a, r =
+					rng:NextNumber(0, math.pi * 2), math.sqrt(rng:NextNumber()) * layer.RadiusMax
+				still(
+					p,
+					CFrame.new(
+						origin
+							+ Vector3.new(
+								math.cos(a) * r,
+								layer.Y + rng:NextNumber(-20, 20),
+								math.sin(a) * r
+							)
+					) * CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), 0),
+					sky
+				)
 				p:SetAttribute("Drift", layer.Drift * rng:NextNumber(0.7, 1.3))
 				p:SetAttribute("DriftSeed", rng:NextInteger(1, 1e6))
 				p:SetAttribute("DriftCentre", origin)
@@ -349,8 +397,19 @@ function HubV2.buildBeyond(sky: Instance, origin: Vector3, prefabs: Instance?, c
 			p.Material = Enum.Material.Neon
 			p.Color = m.Color
 			local az, el = math.rad(m.Azimuth), math.rad(m.Elevation)
-			still(p, CFrame.new(origin + Vector3.new(math.cos(az) * math.cos(el), math.sin(el), math.sin(az) * math.cos(el))
-				* m.Distance), sky)
+			still(
+				p,
+				CFrame.new(
+					origin
+						+ Vector3.new(
+								math.cos(az) * math.cos(el),
+								math.sin(el),
+								math.sin(az) * math.cos(el)
+							)
+							* m.Distance
+				),
+				sky
+			)
 		end
 		-- the ringed planet, low on the far horizon
 		local planet = lib:FindFirstChild("hubsky_planet", true)
@@ -359,18 +418,40 @@ function HubV2.buildBeyond(sky: Instance, origin: Vector3, prefabs: Instance?, c
 			local p = planet:Clone()
 			p.Size = planet.Size * m.Scale
 			local az, el = math.rad(m.Azimuth), math.rad(m.Elevation)
-			still(p, CFrame.new(origin + Vector3.new(math.cos(az) * math.cos(el), math.sin(el), math.sin(az) * math.cos(el))
-				* m.Distance) * CFrame.Angles(0.2, 0.6, 0.15), sky)
+			still(
+				p,
+				CFrame.new(
+					origin
+						+ Vector3.new(
+								math.cos(az) * math.cos(el),
+								math.sin(el),
+								math.sin(az) * math.cos(el)
+							)
+							* m.Distance
+				) * CFrame.Angles(0.2, 0.6, 0.15),
+				sky
+			)
 		end
 		-- the celestial ring above the Engine, its runes pulsing between colours
 		-- the ring's heart: spokes and constellation turn with it, the star-core
 		-- counter-turns, the two gyroscopes precess at their own rates
 		local HEART = {
 			hubsky_ring_spokes = { Spin = c.Ring.Spin },
-			hubsky_ring_constellation = { Spin = c.Ring.Spin, Neon = true, Alpha = 0.3,
-				A = c.Ring.GlyphA, B = c.Ring.GlyphB, Seconds = 14 },
-			hubsky_ring_core = { Spin = -0.12, Neon = true, A = Color3.fromRGB(147, 235, 255),
-				B = Color3.fromRGB(236, 220, 255), Seconds = 6 },
+			hubsky_ring_constellation = {
+				Spin = c.Ring.Spin,
+				Neon = true,
+				Alpha = 0.3,
+				A = c.Ring.GlyphA,
+				B = c.Ring.GlyphB,
+				Seconds = 14,
+			},
+			hubsky_ring_core = {
+				Spin = -0.12,
+				Neon = true,
+				A = Color3.fromRGB(147, 235, 255),
+				B = Color3.fromRGB(236, 220, 255),
+				Seconds = 6,
+			},
 			hubsky_ring_gyro_a = { Spin = 0.22 },
 			hubsky_ring_gyro_b = { Spin = -0.16 },
 		}
@@ -451,8 +532,18 @@ function HubV2.buildBeyond(sky: Instance, origin: Vector3, prefabs: Instance?, c
 		p.Color = f.Tint
 		local a = (i + rng:NextNumber(-0.4, 0.4)) / f.Count * math.pi * 2
 		local r = rng:NextNumber(f.RadiusMin, f.RadiusMax)
-		still(p, CFrame.new(origin + Vector3.new(math.cos(a) * r, rng:NextNumber(f.HeightMin, f.HeightMax), math.sin(a) * r))
-			* CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), 0), sky)
+		still(
+			p,
+			CFrame.new(
+				origin
+					+ Vector3.new(
+						math.cos(a) * r,
+						rng:NextNumber(f.HeightMin, f.HeightMax),
+						math.sin(a) * r
+					)
+			) * CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), 0),
+			sky
+		)
 	end
 end
 

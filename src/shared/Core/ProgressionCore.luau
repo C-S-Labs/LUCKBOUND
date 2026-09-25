@@ -43,11 +43,7 @@ end
 
 --- Applies a Fate award to a profile copy. Returns the new point total, new
 --- level, and whether a level-up occurred. Does not mutate `profile`.
-function ProgressionCore.award(
-	profile: any,
-	reason: string,
-	config: any
-): (number, number, boolean)
+function ProgressionCore.award(profile: any, reason: string, config: any): (number, number, boolean)
 	local amount = config.Progression.Rewards[reason]
 	assert(amount, `unknown Fate reward reason: {reason}`)
 
@@ -62,12 +58,11 @@ end
 --- GameConfig reward row per code would put content in the config file.
 --- Negative amounts are refused: taking Fate away is not a reward, and if it
 --- ever becomes a mechanic it needs its own function and its own floor rules.
-function ProgressionCore.grant(
-	profile: any,
-	amount: number,
-	config: any
-): (number, number, boolean)
-	assert(type(amount) == "number" and amount >= 0, `Fate grant must be a non-negative number, got {tostring(amount)}`)
+function ProgressionCore.grant(profile: any, amount: number, config: any): (number, number, boolean)
+	assert(
+		type(amount) == "number" and amount >= 0,
+		`Fate grant must be a non-negative number, got {tostring(amount)}`
+	)
 
 	local newPoints = (profile.FatePoints or 0) + amount
 	local newLevel = ProgressionCore.levelForPoints(newPoints, config)
