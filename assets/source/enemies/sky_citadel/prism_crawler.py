@@ -52,7 +52,7 @@ loft("Body", SLATE, [(-0.24, .15, .06), (0.3, .16, .06)], N=12, M=TR((0, 0, BZ -
 for k in range(4):   # back crystal spines, rainbow edged
     y = -0.12 + k*0.12
     for s in (1, -1):
-        blade("Body", RAIN if k % 2 else CRY, (0.1*s, y, BZ + 0.1), (0.5*s, 0.3, 1.0), 0.18 - 0.02*k, 0.05, 0.03, hint=(0, 1, 0), N=4, sub=0)
+        blade("Body", RAIN if k % 2 else CRY, (0.08*s, y, BZ + 0.05), (0.5*s, 0.3, 1.0), 0.18 - 0.02*k, 0.05, 0.03, hint=(0, 1, 0), N=4, sub=0)
 # ---- head + mandibles + eye cluster ----
 loft("Head", CRY, [(0.26, .05, .04, 1.3), (0.32, .13, .09, 1.3), (0.48, .11, .08, 1.3), (0.56, .03, .03, 1.3)], N=12, sub=1,
      M=TR((0, 0, BZ), (math.pi/2, 0, 0)))
@@ -94,10 +94,10 @@ for k in range(5):                                                              
          M=TR((0, y, BZ + 0.0), (math.pi/2, 0, 0)), keep=lambda c: c.z > BZ + 0.04, fill=False, cap=False)
 loft("Head", CRY, [(0, .035, .03, 1.4), (0.14, .02, .018, 1.4), (0.2, .003, .003, 1.4)], N=5, M=_frame(Vector((0, -0.42, BZ + 0.06)), Vector((0, -0.6, 1))))   # horn
 for sd in (1, -1):
-    blade("Head", SLATE, (0.05*sd, -0.44, BZ + 0.07), (0.7*sd, 0.5, 0.3), 0.12, 0.04, 0.012, hint=(0, 0, 1), N=5, sub=0)      # brow crest
+    blade("Head", SLATE, (0.04*sd, -0.42, BZ + 0.05), (0.7*sd, 0.5, 0.3), 0.12, 0.04, 0.012, hint=(0, 0, 1), N=5, sub=0)      # brow crest
 for L, s_, hip, knee, ankle, foot in LEGS:
-    blade(L + "2", RAIN, tuple(knee + Vector((0, 0, 0.02))), (0.4*s_, 0, 1), 0.1, 0.03, 0.02, hint=(0, 1, 0), N=4, sub=0)
-    loft(L + "1", SLATE, [((knee - hip).length*0.2, .055, .055, 1.4), ((knee - hip).length*0.55, .058, .058, 1.4)], N=8, M=_frame(hip, knee - hip), cap=False)
+    blade(L + "2", RAIN, tuple(knee - Vector((0, 0, 0.01))), (0.4*s_, 0, 1), 0.1, 0.03, 0.02, hint=(0, 1, 0), N=4, sub=0)
+    loft(L + "1", SLATE, [((knee - hip).length*0.2, .041, .041, 1.4), ((knee - hip).length*0.55, .043, .043, 1.4)], N=8, M=_frame(hip, knee - hip), cap=False)
 exec(open(FW + r"\character_kit.py").read())                                    # eye cluster seated ON the head surface
 from mathutils.bvhtree import BVHTree as _B
 _hb = PIECES["Body"]; _hb.verts.index_update()

@@ -17,7 +17,6 @@ J, k = make_humanoid(1.95, shoulder=0.19, hip=0.1, bulk=0.9, limb=0.95, m_body=R
 Z = lambda z: z*k
 # long robe (floor length bell) over the legs, ink hem + trim
 loft("LowerTorso", ROBE, [(Z(1.12), .15*k, .11*k), (Z(0.9), .2*k, .16*k), (Z(0.5), .26*k, .22*k), (Z(0.14), .31*k, .27*k)], N=24, sub=1)
-arc_band("LowerTorso", INK, (0, 0), Z(0.24), Z(0.14), (.292*k, .252*k), (.312*k, .272*k), 0, 2*math.pi, 0.02, 32)
 loft("UpperTorso", ROBE, [(Z(1.12), .16*k, .12*k), (Z(1.36), .2*k, .13*k), (Z(1.5), .16*k, .11*k)], N=20, sub=1)
 # wide sleeves
 for side, s in (("Left", 1), ("Right", -1)):
@@ -31,7 +30,7 @@ loft("Head", ROBE, [(Z(1.49), .15*k, .15*k, 2, 0, .015), (Z(1.62), .13*k, .14*k,
      keep=lambda c: not (c.y < -0.05 and Z(1.55) < c.z < Z(1.76)), fill=True)
 sph("Head", INK, (0, -0.01, Z(1.65)), 0.1*k, scale=(0.9, 0.9, 1.05), u=14, v=10)
 for s in (1, -1):
-    sph("Head", GLOW, (0.035*s*k, -0.09*k, Z(1.67)), 0.013*k, u=8, v=6)
+    sph("Head", GLOW, (0.036*s*k, -0.093*k, Z(1.668)), 0.016*k, scale=(1.5, 0.6, 0.75), rot=(0, 0.35*s, 0), u=12, v=8)   # almond eyes
 arc_band("Head", GOLD, (0, 0.012), Z(1.755), Z(1.768), (.118*k, .133*k), (.116*k, .131*k), -math.pi + 0.35, -0.35, 0.01, 14)
 loft("UpperTorso", INK, [(Z(1.36), .25*k, .16*k, 2.4), (Z(1.46), .22*k, .15*k, 2.4), (Z(1.52), .14*k, .12*k, 2.4)], N=24, sub=1)   # mantle
 arc_band("UpperTorso", GOLD, (0, 0), Z(1.37), Z(1.355), (.25*k, .16*k), (.252*k, .162*k), 0, 2*math.pi, 0.01, 28)

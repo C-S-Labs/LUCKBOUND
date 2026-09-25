@@ -93,17 +93,18 @@ for (x, y) in ((0, -1), (0, 1), (1, 0), (-1, 0)):
     if y > 0 or x:                                                     # back plate + side tassets (tabard covers the front)
         blade("LowerTorso", STONE, tuple(p0 + V((0.02*x*k, 0.02*y*k, 0))), (0.08*x, 0.08*y, -1), 0.22*k, (0.12 if y else 0.1)*k, 0.014*k, hint=(y, -x, 0), N=8, sub=0)
 # split tabard (front) in cloth
-cloth("LowerTorso", "LowerTorso", Z(0.8), BLUE, -.115*k, Z(0.97), Z(0.5), .13*k, .15*k, bow=0.02, teeth=2, depth=0.04*k, rows=6, cols=6)
+cloth("LowerTorso", "LowerTorso", Z(0.8), BLUE, -.098*k, Z(0.985), Z(0.5), .13*k, .15*k, bow=0.02, teeth=2, depth=0.04*k, rows=6, cols=6)
 # helm: tall smooth helm, single V visor slit, swept gold crest fin, cheek guards
 loft("Head", STONE, [(Z(1.53), .062*k, .074*k, 1.8, 0, -0.008*k), (Z(1.6), .078*k, .092*k, 1.8, 0, -0.01*k), (Z(1.67), .08*k, .092*k, 1.9),
                      (Z(1.72), .074*k, .084*k, 2.0), (Z(1.755), .05*k, .058*k, 2.1), (Z(1.77), .012*k, .014*k)], N=24, sub=1)
-loft("Head", STONE, [(Z(1.68), .083*k, .095*k, 1.9), (Z(1.695), .082*k, .094*k, 1.9)], N=24, keep=lambda c: c.y < -0.02*k)   # visor brow
+loft("Head", STONE, [(Z(1.68), .079*k, .09*k, 1.9), (Z(1.695), .078*k, .089*k, 1.9)], N=24, keep=lambda c: c.y < -0.02*k)   # visor brow
 loft("Head", GOLD, [(Z(1.598), .082*k, .096*k, 2.2), (Z(1.607), .082*k, .096*k, 2.2)], N=22, cap=False)
 for s_ in (1, -1):
-    tube("Head", GLOW, (0.0, -0.093*k, Z(1.645)), (0.05*s_*k, -0.083*k, Z(1.672)), 0.0065*k, 0.0065*k, N=6)
+    loft("Head", GLOW, [(0, .011*k, .005*k, 1.6), (0.045*k, .009*k, .004*k, 1.6), (0.058*k, .002*k, .002*k, 1.6)], N=8,
+         M=_frame(Vector((0.012*s_*k, -0.091*k, Z(1.652))), Vector((0.9*s_, 0.2, 0.42)), hint=(0, -1, 0)))           # tapered V eye blades
     blade("Head", STONE, (0.068*s_*k, -0.05*k, Z(1.625)), (0.08*s_, -0.18, -1), 0.1*k, 0.04*k, 0.01*k, hint=(1, 0.3*s_, 0), N=8, sub=0)
 for i, (dy, dz, L_) in enumerate(((-0.03, 0.0, 0.2), (0.0, -0.025, 0.17), (0.03, -0.05, 0.13))):   # swept gold crest
-    blade("Head", GOLD, (0, dy*k, Z(1.765) + dz*k), (0, 1, 0.45 - 0.12*i), L_*k, 0.04*k, 0.008*k, hint=(1, 0, 0), N=8, sub=0)
+    blade("Head", GOLD, (0, dy*k, Z(1.75) + dz*k), (0, 1, 0.45 - 0.12*i), L_*k, 0.04*k, 0.008*k, hint=(1, 0, 0), N=8, sub=0)
 PIECE = "Body"
 add_bone("Weapon_R", V(J["Right"]["hd"]) + V((0, -0.02, 0)), V(J["Right"]["hd"]) + V((0, -0.2, 0)), "RightHand")
 add_bone("Shield_L", V(J["Left"]["el"]).lerp(V(J["Left"]["wr"]), 0.5) + V((0.08, 0, 0)), V(J["Left"]["el"]).lerp(V(J["Left"]["wr"]), 0.5) + V((0.2, 0, 0)), "LeftLowerArm")

@@ -46,7 +46,7 @@ for k in range(10):
     a = k*2*math.pi/10
     if abs(math.sin(a) + 1) < 0.4:   # leave the lens clear at the front
         continue
-    box("Hull", IR, (0.29*math.cos(a), 0.29*math.sin(a), HZ + 0.10), (0.05, 0.02, 0.03), rot=(0, 0, a + math.pi/2), bev=0.005, segs=1)
+    box("Hull", IR, (0.278*math.cos(a), 0.278*math.sin(a), HZ + 0.10), (0.05, 0.02, 0.03), rot=(0, 0, a + math.pi/2), bev=0.005, segs=1)
 loft("Hull", BRASS, [(HZ + 0.24, .07, .07), (HZ + 0.28, .05, .05), (HZ + 0.30, .015, .015)], N=16)
 # ---- cyclops lens (front, -Y) ----
 loft("Lens", BRASS, [(0, .11, .11), (0.03, .12, .12), (0.05, .10, .10)], N=20, M=TR((0, -0.27, HZ + 0.1), (math.pi/2, 0, 0)))
@@ -60,8 +60,12 @@ for L, a, d in ARMS:
     loft("Hull", TEAL, [(c.z - 0.06, .17, .17), (c.z - 0.04, .19, .19), (c.z + 0.05, .19, .19), (c.z + 0.07, .17, .17)],
          N=28, M=TR((c.x, c.y, 0)), cap=False)                                                 # duct (open)
     loft("Hull", IR, [(c.z - 0.045, .165, .165), (c.z + 0.055, .165, .165)], N=28, M=TR((c.x, c.y, 0)), cap=False)
-    loft("Hull", BRASS, [(c.z + 0.065, .195, .195), (c.z + 0.08, .195, .195)], N=28, M=TR((c.x, c.y, 0)), cap=False)
+    loft("Hull", BRASS, [(c.z + 0.048, .192, .192), (c.z + 0.062, .186, .186)], N=28, M=TR((c.x, c.y, 0)), cap=False)
     sph(f"Rotor{L}", BRASS, tuple(c), 0.04, u=10, v=6)
+    tube("Hull", IR, tuple(c - Vector((0, 0, 0.03))), tuple(c - Vector((0, 0, 0.05))), 0.022, 0.022, N=8)       # hub shaft + 3 struts to the duct
+    for k in range(3):
+        b_ = k*2*math.pi/3 + 0.3
+        tube("Hull", IR, tuple(c - Vector((0, 0, 0.045))), tuple(c + Vector((0.168*math.cos(b_), 0.168*math.sin(b_), -0.045))), 0.01, 0.01, N=6)
     for k in range(5):                                                                          # fan blades
         b_ = k*2*math.pi/5
         blade(f"Rotor{L}", TEAL, tuple(c), (math.cos(b_), math.sin(b_), 0.12), 0.15, 0.05, 0.008,
@@ -86,12 +90,20 @@ loft("BladeRing", GLOW, [(RZ - 0.004, .297, .297), (RZ + 0.004, .297, .297)], N=
 #  * BLADE-RING sweep: the belly ring becomes 8 curved scythe blades with glowing edges (reads dangerous from afar).
 #  * SPIN-UP charge tell: top turbine intake with a visible fan + heat vents that glow when it spins up.
 #  * Cyclops lens gets an armoured hood with shutter blades (aggressive "brow").
-for i in range(8):                                                     # scythe blades, flat in the collar plane
+# ENERGY BLADES (owner 2026-09-24): 8 long plasma scythes, each on its own bone (BladeE1-8, child of BladeRing).
+# Built fully extended; Studio animates each bone's scale 0.15 -> 1 as the ring spins up, so the blades UNFOLD / extend
+# outward while spinning (the tell), and retract when it overheats (the opening). Brass emitter at every root.
+for i in range(8):
     a = i*math.pi/4
     d_ = Vector((math.cos(a), math.sin(a), 0)); t_ = Vector((-math.sin(a), math.cos(a), 0))
-    root = d_*0.29 + Vector((0, 0, RZ))
-    blade("BladeRing", BRASS, tuple(root), tuple(d_*0.7 + t_*0.7), 0.24, 0.045, 0.01, hint=(0, 0, 1), N=5, sub=0)
-    tube("BladeRing", GLOW, tuple(root + (d_*0.7 + t_*0.7).normalized()*0.03 + t_*0.012), tuple(root + (d_*0.7 + t_*0.7).normalized()*0.2 + t_*0.008), 0.004, 0.003, N=5)
+    root = d_*0.3 + Vector((0, 0, RZ))
+    dirn = (d_*0.8 + t_*0.6).normalized()
+    add_bone(f"BladeE{i + 1}", tuple(root), tuple(root + dirn*0.2), "BladeRing")
+    box(f"BladeE{i + 1}", BRASS, tuple(root + d_*0.02), (0.05, 0.05, 0.03), rot=(0, 0, a), bev=0.008, segs=1)     # emitter
+    pts_ = [root + dirn*0.04 + dirn*0.7*u + t_*0.12*u*u for u in [j/6 for j in range(7)]]                    # curved scythe
+    for j, (p0, p1) in enumerate(zip(pts_, pts_[1:])):
+        w_ = 0.07*(1 - (j/6)**1.5) + 0.01
+        blade(f"BladeE{i + 1}", GLOW, tuple(p0), tuple(p1 - p0), (p1 - p0).length*1.05, w_, 0.008, hint=(0, 0, 1), N=4, sub=0)
 loft("Hull", TEAL, [(HZ + 0.2, .16, .16), (HZ + 0.26, .15, .15), (HZ + 0.27, .12, .12)], N=24, sub=1)      # top intake cowl
 loft("Hull", IR, [(HZ + 0.262, .118, .118), (HZ + 0.266, .118, .118)], N=24)
 for i in range(7):                                                     # intake fan blades
@@ -101,7 +113,7 @@ sph("Hull", BRASS, (0, 0, HZ + 0.27), 0.03, u=10, v=6)
 for k in range(10):                                                    # heat vents glow (spin-up tell), under the hull vents
     a = k*2*math.pi/10
     if abs(math.sin(a) + 1) < 0.4: continue
-    box("Hull", GLOW, (0.296*math.cos(a), 0.296*math.sin(a), HZ + 0.075), (0.04, 0.012, 0.012), rot=(0, 0, a + math.pi/2), bev=0.003, segs=1)
+    box("Hull", GLOW, (0.286*math.cos(a), 0.286*math.sin(a), HZ + 0.075), (0.04, 0.012, 0.012), rot=(0, 0, a + math.pi/2), bev=0.003, segs=1)
 # lens hood + shutter blades (angled down at the front = mean)
 loft("Lens", BR, [(0.0, .13, .13), (0.07, .135, .135)], N=20, M=_frame(Vector((0, -0.27, HZ + 0.1)), Vector((0, -1, 0)), hint=(0, 0, 1)), keep=lambda c: c.z > HZ + 0.11, fill=False, cap=False)
 for sd in (1, -1):

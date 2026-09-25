@@ -3,6 +3,7 @@
 #                    nothing below the floor (z < -5 mm) in the posed state.
 # Soft report: piece-vs-piece overlaps (designed joins such as neck-in-collar also show up; read them, don't chase zero).
 import bpy
+from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 TRI_CAP = 10000                                   # Studio per-mesh limit: split bigger enemies into pieces
 TIER_BUDGET = {"basic": (10000, 12500), "miniboss": (None, 35000), "boss": (None, 75000), "legendary": (None, 100000)}
@@ -36,6 +37,44 @@ if TIER in ("miniboss", "boss") and _humanoid:
 _ground = 0.0
 if _minz < _ground - 0.005 and not ENTRY.get("sunk"):      # "sunk": emerges from the ground by design
     _fails.append(f"below floor: min z {_minz:.3f}")
+# FLOATING PARTS: every loose mesh island (across ALL of the enemy's meshes, glow included) must touch another
+# island's SURFACE (within 4 mm) or cross it. Reports islands that touch nothing = visibly floating parts.
+import bmesh as _bm
+_V, _F, _own = [], [], []
+_isl_verts = []
+for o in _meshes:
+    if o.hide_render: continue
+    b = _bm.new(); b.from_mesh(o.evaluated_get(_dg).to_mesh()); o.evaluated_get(_dg).to_mesh_clear()
+    b.verts.ensure_lookup_table(); base = len(_V); seen = {}
+    for v in b.verts:
+        if v.index in seen: continue
+        iid = len(_isl_verts); comp = []; stack = [v]
+        while stack:
+            x = stack.pop()
+            if x.index in seen: continue
+            seen[x.index] = iid; comp.append(base + x.index)
+            stack.extend(e.other_vert(x) for e in x.link_edges)
+        _isl_verts.append(comp)
+    _V += [o.matrix_world @ v.co for v in b.verts]
+    for f in b.faces:
+        _F.append(tuple(base + v.index for v in f.verts)); _own.append(seen[f.verts[0].index])
+    b.free()
+_T = BVHTree.FromPolygons(_V, _F)
+_float = []
+for iid, comp in enumerate(_isl_verts):
+    if len(comp) < 4 or len(_isl_verts) < 2: continue
+    ok = False
+    for vi in comp[::max(1, len(comp)//80)]:
+        for (co, n, fi, d) in _T.find_nearest_range(_V[vi], 0.004):
+            if _own[fi] != iid: ok = True; break
+        if ok: break
+    if not ok:
+        mine = [f for f, w in zip(_F, _own) if w == iid]; rest = [f for f, w in zip(_F, _own) if w != iid]
+        if mine and rest and BVHTree.FromPolygons(_V, mine).overlap(BVHTree.FromPolygons(_V, rest)): ok = True
+    if not ok:
+        c = sum((_V[vi] for vi in comp), Vector())/len(comp)
+        _float.append(("island", tuple(round(x, 2) for x in c), len(comp)))
+for f in _float: print(f"VALIDATE floating? {f[0]} part near {f[1]} ({f[2]} verts)")
 _names = sorted(_trees)
 for i, a in enumerate(_names):
     for b in _names[i + 1:]:

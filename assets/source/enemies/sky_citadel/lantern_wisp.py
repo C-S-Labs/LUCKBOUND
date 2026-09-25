@@ -63,8 +63,6 @@ loft("Cage", BRASS, [(1.14, .035, .035), (1.06, .004, .004)], N=10)
 loft("Flame", GLOW, [(1.30, .03, .03), (1.36, .10, .10), (1.48, .13, .12), (1.60, .10, .09), (1.72, .05, .04),
                      (1.80, .008, .008)], N=16, sub=1)
 sph("VFX_Core", CORE, (0, -0.02, 1.47), 0.06, u=12, v=8)
-for s in (1, -1):
-    tube("Flame", SOOT, (0.018*s, -0.123, 1.52), (0.065*s, -0.112, 1.545), 0.009, 0.006, N=6)       # angled slit eyes
 # ---- ember tail trailing below the cage ----
 loft("Tail1", GLOW, [(1.14, .05, .05), (1.02, .045, .04, 2, 0, .02)], N=12, sub=1)
 loft("Tail2", GLOW, [(1.05, .04, .035, 2, 0, .02), (0.82, .03, .025, 2, 0, .07)], N=12, sub=1)
@@ -101,9 +99,6 @@ for sd in (1, -1):                                                     # flame a
     for a_, b_ in zip(arm, arm[1:]):
         tube("Flame", GLOW, tuple(a_), tuple(b_), 0.028, 0.02, N=8)
     gem("Flame", GLOW, tuple(arm[-1]), 0.035, 0.05, rot=(0, 0.6*sd, 0), sides=5)
-m_ = [Vector((0.05*t, -0.124 + 0.012*t*t, 1.462 - 0.022*(1 - t*t))) for t in [i/4 - 1 for i in range(9)]]   # crooked grin
-for a_, b_ in zip(m_, m_[1:]):
-    tube("Flame", SOOT, tuple(a_), tuple(b_), 0.006, 0.006, N=5)
 for k in range(5):                                                     # more ember motes, spiralling
     a = k*2*math.pi/5 + 0.4
     gem("Body", GLOW, (0.3*math.cos(a), 0.3*math.sin(a), 1.3 + 0.1*k), 0.015, 0.025, sides=5)

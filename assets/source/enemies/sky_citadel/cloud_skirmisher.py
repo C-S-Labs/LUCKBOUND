@@ -25,13 +25,14 @@ for side, s_ in (("Left", 1), ("Right", -1)):
                              (f"{side}UpperLeg", j["hp"], j["kn"], (0.066, 0.072, 0.06, 0.046)), (f"{side}LowerLeg", j["kn"], j["an"], (0.048, 0.055, 0.038, 0.031))):
         a_, c_ = V(a_), V(c_); d = c_ - a_; n = d.length
         loft(bone, UNDER, [(0, rs[0]*k, rs[0]*k), (n*0.3, rs[1]*k, rs[1]*k*1.08), (n*0.72, rs[2]*k, rs[2]*k), (n, rs[3]*k, rs[3]*k)], N=12, M=_frame(a_, d))
-        for t in (0.35, 0.6):                                           # cloth wraps
-            loft(bone, WHITE if "Arm" in bone else LEATHER, [(n*t - 0.012*k, rs[1]*k*1.06, rs[1]*k*1.14), (n*t + 0.012*k, rs[1]*k*1.06, rs[1]*k*1.14)], N=12, M=_frame(a_, d), cap=False)
+        for t in (0.3, 0.72):                                           # cloth wraps, sized to the limb at that point
+            rr_ = rs[1] if t < 0.5 else rs[2]
+            loft(bone, WHITE if "Arm" in bone else LEATHER, [(n*t - 0.012*k, rr_*k*1.03, rr_*k*1.08*1.03), (n*t + 0.012*k, rr_*k*1.03, rr_*k*1.08*1.03)], N=12, M=_frame(a_, d), cap=False)
     for bone, p_, r in ((f"{side}UpperArm", j["sh"], 0.05), (f"{side}LowerArm", j["el"], 0.04), (f"{side}UpperLeg", j["hp"], 0.064), (f"{side}LowerLeg", j["kn"], 0.048)):
         sph(bone, UNDER, p_, r*k, u=12, v=8)
     wr, hd = V(j["wr"]), V(j["hd"])
     loft(f"{side}Hand", LEATHER, [(0.0, .03*k, .022*k, 2.4), (0.06*k, .036*k, .024*k, 2.4), (0.13*k, .016*k, .015*k)], N=12, M=_frame(wr, hd - wr, hint=(0, 1, 0)), sub=1)
-    an = V(j["an"])
+    an = V(j["an"]); sph(f"{side}Foot", LEATHER, tuple(an), 0.036*k, u=12, v=8)
     loft(f"{side}Foot", LEATHER, [(0, .042*k, .04*k, 2.4), (0.09*k, .048*k, .038*k, 2.4), (0.19*k, .03*k, .02*k, 2.4), (0.22*k, .01*k, .01*k)], N=12, M=TR((an.x, an.y + 0.045*k, 0.04*k), (math.pi/2, 0, 0)), sub=1)
     for bone, a_, c_, t0, t1, rr, m_ in ((f"{side}LowerArm", j["el"], j["wr"], 0.45, 0.95, (0.046, 0.043, 0.036), BRASS), (f"{side}LowerLeg", j["kn"], j["an"], 0.15, 0.8, (0.058, 0.054, 0.042), LEATHER)):
         a_, c_ = V(a_), V(c_); d = c_ - a_; M_ = _frame(a_ + d*t0, d); L_ = d.length*(t1 - t0)
@@ -43,13 +44,18 @@ PIECE = "Gear"
 loft("UpperTorso", BLUE, [(Z(1.12), .118*k, .088*k, 2.1), (Z(1.25), .132*k, .094*k, 2.1), (Z(1.37), .168*k, .1*k, 2.1), (Z(1.46), .15*k, .092*k, 2.2)], N=20, sub=1, cap=False)
 arc_band("UpperTorso", BRASS, (0, 0), Z(1.468), Z(1.458), (.152*k, .094*k), (.152*k, .094*k), 0, 2*math.pi, 0.008*k, 24)
 T = body_bvh()
-for yy in (-1, 1):
-    flow_line("UpperTorso", LEATHER, [(0.14*k, .07*yy*k, Z(1.44)), (0.05*k, .1*yy*k, Z(1.32)), (-0.06*k, .1*yy*k, Z(1.2)), (-0.12*k, .08*yy*k, Z(1.12))], r=0.012*k, T=T, centre=(0, 0, Z(1.28)))
+band = []                                                             # bandolier: one CLOSED band, left shoulder -> right hip, all the way round
+for i in range(25):
+    a = i*2*math.pi/24
+    z = Z(1.28) + 0.16*k*math.cos(a - math.pi/2*0 )*0 + 0.15*k*math.sin(a + math.pi/4)
+    band.append(on_surface_in(T, (0.3*k*math.cos(a), 0.3*k*math.sin(a), z), (0, 0, z), lift=0.004*k))
+for a_, b_ in zip(band, band[1:]):
+    loft("UpperTorso", LEATHER, [(0, .014*k, .005*k), ((b_ - a_).length, .014*k, .005*k)], N=6, M=_frame(a_, b_ - a_))
 for i in range(3):
     sph("UpperTorso", BRASS, tuple(on_surface(T, (0.09*k - 0.05*i*k, -.1*k, Z(1.36) - 0.06*i*k), (0, 0, Z(1.28)), 0.006*k)), 0.01*k, u=8, v=6)
 arc_band("LowerTorso", LEATHER, (0, 0), Z(1.1), Z(1.06), (.12*k, .088*k), (.122*k, .09*k), 0, 2*math.pi, 0.012*k, 24)
 box("LowerTorso", BRASS, (0, -0.092*k, Z(1.08)), (0.04*k, 0.012*k, 0.032*k), bev=0.004*k, segs=1)
-cloth("LowerTorso", "LowerTorso", Z(0.8), BLUE, -.095*k, Z(1.06), Z(0.72), .16*k, .19*k, bow=0.02, teeth=3, depth=0.05*k, rows=5, cols=6)
+cloth("LowerTorso", "LowerTorso", Z(0.8), BLUE, -.084*k, Z(1.075), Z(0.72), .16*k, .19*k, bow=0.02, teeth=3, depth=0.05*k, rows=5, cols=6)
 # asymmetric brass pauldron on the lead (left) shoulder
 sh = V(J["Left"]["sh"])
 for i, (dz, r, sc) in enumerate(((0.03, 0.09, (1.25, 1.1, 0.6)), (-0.025, 0.08, (1.15, 1.0, 0.48)))):
@@ -57,9 +63,11 @@ for i, (dz, r, sc) in enumerate(((0.03, 0.09, (1.25, 1.1, 0.6)), (-0.025, 0.08, 
 # head: undersuit skull, face wrap, cyan visor slit, wind-cut hood swept back to a point, brass band
 loft("Head", UNDER, [(Z(1.53), .062*k, .07*k), (Z(1.62), .078*k, .088*k), (Z(1.7), .074*k, .084*k), (Z(1.75), .045*k, .05*k), (Z(1.77), .01*k, .01*k)], N=18, sub=1)
 loft("Head", WHITE, [(Z(1.54), .07*k, .078*k), (Z(1.63), .082*k, .09*k)], N=18, keep=lambda c: c.y < 0.02*k)
-tube("Head", GLOW, (-0.045*k, -0.083*k, Z(1.665)), (0.045*k, -0.083*k, Z(1.665)), 0.006*k, 0.006*k, N=6)
-loft("Head", BLUE, [(Z(1.56), .1*k, .105*k, 2, 0, .01*k), (Z(1.66), .102*k, .112*k, 2, 0, .015*k), (Z(1.74), .085*k, .1*k, 2, 0, .03*k),
-                    (Z(1.79), .04*k, .06*k, 2, 0, .06*k), (Z(1.8), .008*k, .01*k, 2, 0, .12*k)], N=20, keep=lambda c: c.y > -0.045*k, fill=False, sub=1)
+for s_ in (1, -1):                                                    # twin visor lenses, angled (focused, alert)
+    loft("Head", GLOW, [(0, .016*k, .007*k, 1.8), (0.03*k, .014*k, .006*k, 1.8), (0.04*k, .004*k, .003*k, 1.8)], N=8,
+         M=_frame(Vector((0.012*s_*k, -0.083*k, Z(1.662))), Vector((s_, 0.25, 0.18)), hint=(0, -1, 0)))
+loft("Head", BLUE, [(Z(1.56), .08*k, .086*k, 2, 0, .006*k), (Z(1.66), .084*k, .094*k, 2, 0, .008*k), (Z(1.74), .077*k, .088*k, 2, 0, .012*k),
+                    (Z(1.785), .04*k, .052*k, 2, 0, .02*k), (Z(1.8), .01*k, .014*k, 2, 0, .03*k)], N=20, keep=lambda c: c.y > -0.045*k, fill=False, sub=1)
 arc_band("Head", BRASS, (0, 0), Z(1.705), Z(1.695), (.078*k, .088*k), (.078*k, .088*k), 0.4, math.pi - 0.4, 0.006*k, 12)
 # scarf at the neck + two streamers trailing back
 loft("UpperTorso", WHITE, [(Z(1.49), .07*k, .068*k), (Z(1.53), .066*k, .064*k)], N=16)
