@@ -77,6 +77,15 @@ Before ending any session where you changed something:
   anything new.
 - **Update the doc that owns the thing you changed** (scale → `ART_DIRECTION`
   and `MODULAR_MAPS`; architecture → the build spec; and so on).
+- **Recommend leftover cleanup: always, at the end of every change and every step** (owner rule).
+  - List the older iterations your change left behind: the files, assets, exports, manifest entries and docs the new
+    version replaces.
+  - Recommend removing them **only once the tests (CI, plus a Studio check where the change is visual) prove the new
+    version can safely replace the old.**
+  - Until then, say what is still pending and keep the old files.
+  - Never delete anything code still references (check `INDEX_MAP.md` / grep first), and never delete files the owner
+    has marked as kept (for example parked recolours).
+  - If nothing was left behind, say so in one line.
 
 Documentation is not an afterthought on this project — it is the only memory
 it has.
