@@ -238,10 +238,26 @@ the brief asks for.
 
 ---
 
-## The kit — 22 pieces
+## The kit — 36 pieces (22 delivered + a 14-piece expansion)
 
-All twenty-two are exactly **256 × 256 × 256**: footprint ±128, bottom at −96,
-crown at +160. Origin at the centre of the footprint on the walk plane.
+The **22 pieces described below** were the original delivered kit — full art,
+uploaded meshes, documented axes. **`SkyCitadel.luau`'s 2026-09-23 expansion
+adds 14 more** (`SC_PATH_COLONNADE`, `SC_PATH_LONG_SPAN`,
+`SC_PATH_LANTERN_ROW`, `SC_PATH_TOWER_BEND`, `SC_PATH_TEE`,
+`SC_PARADE_GROUND`, `SC_TURBINE_HALL`, `SC_LIGHTHOUSE_POINT`,
+`SC_SKY_TREE_GROVE`, `SC_DOCKSIDE`, `SC_SIDE_CHAPEL`, `SC_SIDE_GARDEN`,
+`SC_SIDE_RELIQUARY`, `SC_PRISM_ARENA` — 5 PATH, 5 COMBAT, 3 SIDE, 1 BOSS),
+bringing the kit to **36 pieces total**, which is the number `tests/cases.luau`
+and `STATUS.md` report. Those 14 build as **placeholder blockout meshes**
+(`AssetManifest` entries with `Status = "PLACEHOLDER"`) — they generate and
+walk correctly, but don't yet carry the five-axis art (Shape/Floor/Edge/
+Keel/Landmark) or a finished mesh upload the way the 22 below do. That is a
+mesh-art task, not a design or revamp task: the kit is finished and shipping
+at 36 pieces.
+
+All twenty-two of the original delivery are exactly **256 × 256 × 256**:
+footprint ±128, bottom at −96, crown at +160. Origin at the centre of the
+footprint on the walk plane.
 
 **Delivered and uploaded 2026-09-23**, as `.rbxmx` models each wrapping one
 MeshPart that already carries its `rbxassetid` — so there was no upload step on
