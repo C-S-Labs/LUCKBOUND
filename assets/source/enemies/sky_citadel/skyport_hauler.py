@@ -46,4 +46,29 @@ for a_, b_ in zip(pts, pts[1:]):
     tube("CargoHook", IRONM, tuple(a_), tuple(b_), 0.018*k, 0.018*k, N=6)
 arc_band("LowerTorso", ROPE, (0, 0), Z(1.1), Z(1.04), (.2*k, .15*k), (.21*k, .155*k), 0, 2*math.pi, 0.02, 24)
 add_bone("Weapon_R", Vector(J["Right"]["wr"]) + Vector((0, -0.05, -0.05)), Vector(J["Right"]["wr"]) + Vector((0, -0.25, -0.05)), "RightHand")
+exec(open(FW + r"\character_kit.py").read())
+# ---- v2 character pass (2026-09-24), moveset-driven: GRAB-THROW, SHOULDER CHARGE, STOMP ----
+# a hazard-striped ram plate on the lead shoulder (the charge), a strapped cargo crate on the back, heavy grab
+# gauntlets, stomp boots with iron soles, rivet lines, and a glowing furnace vent under the grille.
+PIECE = "Gear"
+T = body_bvh()
+j = J["Left"]; sh = Vector(j["sh"])
+for i in range(5):                                                           # ram plate: 5 alternating hazard bands
+    blade("LeftUpperArm", BRASS if i % 2 else IRONM, tuple(sh + Vector((0.2*k + 0.02*i*k, -0.02*k, 0.16*k - 0.05*i*k))), (0.7, 0.0, -1), 0.14*k, 0.24*k, 0.022*k, hint=(0, 1, 0), N=8, sub=0)
+cz = Z(1.3); cy = 0.27*k
+box("UpperTorso", TARP, (0, cy, cz), (0.36*k, 0.2*k, 0.3*k), bev=0.012*k, segs=1)                                           # crate
+for dz in (-0.1, 0.1):
+    box("UpperTorso", IRONM, (0, cy, cz + dz*k), (0.37*k, 0.21*k, 0.03*k), bev=0.004*k, segs=1)
+for s in (1, -1):
+    j = J["Left" if s > 0 else "Right"]
+    wr, hd = Vector(j["wr"]), Vector(j["hd"])
+    box(f"{'Left' if s > 0 else 'Right'}Hand", IRONM, tuple(wr.lerp(hd, 0.5)), (0.13*k, 0.14*k, 0.16*k), bev=0.02*k, segs=2)      # grab gauntlet
+    for f in range(3):
+        blade(f"{'Left' if s > 0 else 'Right'}Hand", BRASS, tuple(wr.lerp(hd, 0.85) + Vector(((f - 1)*0.04*k, -0.05*k, 0))), (0, -0.3, -1), 0.08*k, 0.03*k, 0.015*k, hint=(1, 0, 0), N=4, sub=0)
+    an = Vector(j["an"])
+    box(f"{'Left' if s > 0 else 'Right'}Foot", IRONM, (an.x, an.y - 0.05*k, 0.03*k), (0.16*k, 0.28*k, 0.06*k), bev=0.012*k, segs=1)  # stomp sole
+for i in range(5):                                                           # rivet line down the chest plate
+    q = on_surface_in(T, (0.0, -0.3*k, Z(1.42) - 0.06*i*k), (0, 0, Z(1.3)), 0.0)
+    sph("UpperTorso", BRASS, tuple(q), 0.012*k, u=8, v=6)
+PIECE = "Body"
 rig, PARTS = assemble(NAME, OFFSET)

@@ -64,4 +64,22 @@ PIECE = "Ripple"
 arc_band("Seg01", GLOW, (0, -0.1), 0.02, 0.0, (.42, .42), (.46, .46), 0, 2*math.pi, 0.02, 40)
 arc_band("Seg01", GLOW, (0, -0.1), 0.015, 0.0, (.6, .6), (.63, .63), 0, 2*math.pi, 0.015, 48)
 PIECE = "Body"
+exec(open(FW + r"\character_kit.py").read())
+# ---- v2 character pass (2026-09-24), moveset-driven: LUNGE BITE, SPIT, DIVE ----
+# a pearl dorsal fin ridge running the whole spine (reads the lunge arc), glowing lateral spots (visible while it
+# is surfaced = when you can hit it), gill frills + whisker barbels on the head.
+for i in range(2, N):
+    a, b = pts[i], pts[i + 1]; t0 = i/N
+    d = (b - a).normalized(); side = d.cross(Vector((0, 0, 1))).normalized() if abs(d.z) < 0.95 else Vector((1, 0, 0))
+    up = side.cross(d).normalized()
+    blade(f"Seg{i + 1:02d}", PEARL, tuple(a.lerp(b, 0.5) + up*R(t0)*0.85), tuple(up*1.0 - d*0.5), 0.12*(1 - 0.4*t0) + 0.04, 0.05, 0.008, hint=tuple(d), N=5, sub=0)
+    for sd in (1, -1):
+        sph(f"Seg{i + 1:02d}", GLOW, tuple(a.lerp(b, 0.5) + side*sd*R(t0)*0.93), 0.016, scale=(1, 1, 1), u=8, v=6)
+hd = pts[-1]
+for sd in (1, -1):
+    for g in range(3):                                                       # gill frills
+        blade("Head", PEARL, tuple(hd + Vector((0.07*sd, 0.03*g, -0.02))), (sd, 0.5, 0.1 - 0.1*g), 0.1, 0.035, 0.006, hint=(0, 0, 1), N=5, sub=0)
+    wp = [hd + hdir*0.26 + Vector((0.035*sd, 0, -0.03)) + Vector((0.09*sd*u, -0.05*u, -0.12*u*u)) for u in [i/4 for i in range(5)]]
+    for a_, b_ in zip(wp, wp[1:]): tube("Head", PEARL, tuple(a_), tuple(b_), 0.006, 0.003, N=5)   # barbels
+PIECE = "Body"
 rig, PARTS = assemble(NAME, OFFSET)
