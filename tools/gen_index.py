@@ -121,6 +121,9 @@ def main():
     if "--check" in sys.argv:
         if new != old:
             print("INDEX_MAP.md is stale: run `python tools/gen_index.py` and commit the result.")
+            import difflib
+            for d in list(difflib.unified_diff(old.splitlines(), new.splitlines(), lineterm="", n=0))[:40]:
+                print(d)
             sys.exit(1)
         print("INDEX_MAP.md is up to date.")
         return
