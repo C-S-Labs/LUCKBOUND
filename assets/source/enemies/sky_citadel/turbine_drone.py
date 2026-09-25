@@ -13,8 +13,8 @@ HZ = 1.15   # hover height of the hull centre (clamped pose lowers it)
 
 BONES = [("Root", (0, 0, HZ - 0.3), (0, 0, HZ - 0.1), None),
          ("Hull", (0, 0, HZ - 0.1), (0, 0, HZ + 0.25), "Root"),
-         ("Lens", (0, -0.2, HZ), (0, -0.38, HZ), "Hull"),
-         ("BladeRing", (0, 0, HZ - 0.22), (0, 0, HZ - 0.12), "Hull")]
+         ("Lens", (0, -0.2, HZ + 0.08), (0, -0.38, HZ + 0.08), "Hull"),
+         ("BladeRing", (0, 0, HZ - 0.052), (0, 0, HZ + 0.048), "Hull")]
 ARMS = []
 for i, L in enumerate("ABC"):
     a = math.pi/2 + i*2*math.pi/3   # A points back (+Y), B/C forward-sides; lens faces -Y between them
@@ -49,9 +49,9 @@ for k in range(10):
     box("Hull", IR, (0.29*math.cos(a), 0.29*math.sin(a), HZ + 0.10), (0.05, 0.02, 0.03), rot=(0, 0, a + math.pi/2), bev=0.005, segs=1)
 loft("Hull", BRASS, [(HZ + 0.24, .07, .07), (HZ + 0.28, .05, .05), (HZ + 0.30, .015, .015)], N=16)
 # ---- cyclops lens (front, -Y) ----
-loft("Lens", BRASS, [(0, .11, .11), (0.03, .12, .12), (0.05, .10, .10)], N=20, M=TR((0, -0.27, HZ + 0.02), (math.pi/2, 0, 0)))
-loft("Lens", IR, [(0.03, .085, .085), (0.06, .08, .08)], N=20, M=TR((0, -0.27, HZ + 0.02), (math.pi/2, 0, 0)))
-sph("Lens", GLOW, (0, -0.325, HZ + 0.02), 0.06, scale=(1, 0.5, 1), u=16, v=10)
+loft("Lens", BRASS, [(0, .11, .11), (0.03, .12, .12), (0.05, .10, .10)], N=20, M=TR((0, -0.27, HZ + 0.1), (math.pi/2, 0, 0)))
+loft("Lens", IR, [(0.03, .085, .085), (0.06, .08, .08)], N=20, M=TR((0, -0.27, HZ + 0.1), (math.pi/2, 0, 0)))
+sph("Lens", GLOW, (0, -0.325, HZ + 0.1), 0.06, scale=(1, 0.5, 1), u=16, v=10)
 # ---- three arms with ducted rotors ----
 for L, a, d in ARMS:
     side = Vector((-d.y, d.x, 0))
@@ -75,26 +75,23 @@ for L, a, d in ARMS:
     for cl in (-0.6, 0, 0.6):
         dd = (d*math.cos(cl) + side*math.sin(cl)).normalized()
         blade(f"Leg{L}2", BRASS, tuple(f1), tuple(dd*0.8 + Vector((0, 0, -0.5))), 0.09, 0.025, 0.012, hint=(0, 0, 1), N=6, sub=0)
-# ---- belly blade ring (spins in the clamped sweep attack) ----
-loft("BladeRing", IR, [(HZ - 0.23, .10, .10), (HZ - 0.19, .10, .10)], N=20)
-for k in range(8):
-    b_ = k*2*math.pi/8
-    blade("BladeRing", BRASS, (0.09*math.cos(b_), 0.09*math.sin(b_), HZ - 0.21), (math.cos(b_ + 0.5), math.sin(b_ + 0.5), 0),
-          0.22, 0.045, 0.01, hint=(0, 0, 1), N=6, sub=0)
-loft("BladeRing", GLOW, [(HZ - 0.215, .105, .105), (HZ - 0.205, .105, .105)], N=20)
-
+# ---- blade ring: a spinning COLLAR round the hull waist, in the clear band between the rotor arms (above) and the
+#      leg hips (below) - nothing crosses that band, so the ring spins 360 deg without touching arms or legs ----
+RZ = HZ - 0.052
+loft("BladeRing", IR, [(RZ - 0.018, .292, .292), (RZ + 0.018, .292, .292)], N=28)
+loft("BladeRing", GLOW, [(RZ - 0.004, .297, .297), (RZ + 0.004, .297, .297)], N=28, cap=False)
 # ---- v2 character pass (2026-09-24), shaped by the moveset ----
 #  * CLAMP legs are the weak point (breaking them stuns it): heavy armoured legs, 3-prong grip claws, and a glowing
 #    cyan joint core on every knee = "hit here".
 #  * BLADE-RING sweep: the belly ring becomes 8 curved scythe blades with glowing edges (reads dangerous from afar).
 #  * SPIN-UP charge tell: top turbine intake with a visible fan + heat vents that glow when it spins up.
 #  * Cyclops lens gets an armoured hood with shutter blades (aggressive "brow").
-for i in range(8):                                                     # scythe blades on the belly ring
+for i in range(8):                                                     # scythe blades, flat in the collar plane
     a = i*math.pi/4
     d_ = Vector((math.cos(a), math.sin(a), 0)); t_ = Vector((-math.sin(a), math.cos(a), 0))
-    root = d_*0.2 + Vector((0, 0, HZ - 0.19))
-    blade("BladeRing", BRASS, tuple(root), tuple(d_*0.6 + t_*0.8 + Vector((0, 0, -0.08))), 0.22, 0.05, 0.012, hint=(0, 0, 1), N=5, sub=0)
-    tube("BladeRing", GLOW, tuple(root + d_*0.05 + t_*0.06 + Vector((0, 0, -0.012))), tuple(root + (d_*0.6 + t_*0.8).normalized()*0.2 + Vector((0, 0, -0.025))), 0.005, 0.003, N=5)
+    root = d_*0.29 + Vector((0, 0, RZ))
+    blade("BladeRing", BRASS, tuple(root), tuple(d_*0.7 + t_*0.7), 0.24, 0.045, 0.01, hint=(0, 0, 1), N=5, sub=0)
+    tube("BladeRing", GLOW, tuple(root + (d_*0.7 + t_*0.7).normalized()*0.03 + t_*0.012), tuple(root + (d_*0.7 + t_*0.7).normalized()*0.2 + t_*0.008), 0.004, 0.003, N=5)
 loft("Hull", TEAL, [(HZ + 0.2, .16, .16), (HZ + 0.26, .15, .15), (HZ + 0.27, .12, .12)], N=24, sub=1)      # top intake cowl
 loft("Hull", IR, [(HZ + 0.262, .118, .118), (HZ + 0.266, .118, .118)], N=24)
 for i in range(7):                                                     # intake fan blades
@@ -106,9 +103,9 @@ for k in range(10):                                                    # heat ve
     if abs(math.sin(a) + 1) < 0.4: continue
     box("Hull", GLOW, (0.296*math.cos(a), 0.296*math.sin(a), HZ + 0.075), (0.04, 0.012, 0.012), rot=(0, 0, a + math.pi/2), bev=0.003, segs=1)
 # lens hood + shutter blades (angled down at the front = mean)
-loft("Lens", BR, [(0.0, .13, .13), (0.07, .135, .135)], N=20, M=_frame(Vector((0, -0.27, HZ + 0.02)), Vector((0, -1, 0)), hint=(0, 0, 1)), keep=lambda c: c.z > HZ + 0.03, fill=False, cap=False)
+loft("Lens", BR, [(0.0, .13, .13), (0.07, .135, .135)], N=20, M=_frame(Vector((0, -0.27, HZ + 0.1)), Vector((0, -1, 0)), hint=(0, 0, 1)), keep=lambda c: c.z > HZ + 0.11, fill=False, cap=False)
 for sd in (1, -1):
-    blade("Lens", BRASS, (0.02*sd, -0.34, HZ + 0.1), (0.9*sd, -0.1, -0.35), 0.12, 0.03, 0.008, hint=(0, 0, 1), N=6, sub=0)
+    blade("Lens", BRASS, (0.02*sd, -0.34, HZ + 0.18), (0.9*sd, -0.1, -0.35), 0.12, 0.03, 0.008, hint=(0, 0, 1), N=6, sub=0)
 # armoured clamp legs: plates on both segments, glowing knee core (weak point), 3-prong grip claw
 for L, a, d in ARMS:
     k0 = Vector(BONES[BIDX[f"Leg{L}1"]][1]); kn = Vector(BONES[BIDX[f"Leg{L}1"]][2]); ft = Vector(BONES[BIDX[f"Leg{L}2"]][2])
