@@ -282,7 +282,7 @@ _222 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/archive
 
-- `docs/archive/STATUS_HISTORY.md` (633) - STATUS history (archived 2026-09-25) · new
+- `docs/archive/STATUS_HISTORY.md` (633) - STATUS history (archived 2026-09-25) · 2026-09-25
   - `STATUS_HISTORY.md`: 1. Where the project stands:17, Verified working in Studio:72, Expedition entry — new 2026-09-16:93, World scale — rescaled 2026-09-16, tuned after the first wal:112, Modular map system:147, Test suite:196, 2. What is built:215, Worlds:244, 3. Decisions locked in:272, Why true RNG matters downstream:297, 4. Open items:310, Needs the owner's sign-off:312, What 276 green tests missed — and what now covers it:330, Known debt:369, 5. Next session — pick up here:458, When expeditions move to a separate place:561, Working agreement that emerged this session:581, 6. Environment:591, Startup:599, 7. Document map:611
 
 ### docs/biomes
