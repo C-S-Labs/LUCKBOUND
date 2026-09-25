@@ -46,13 +46,16 @@ for side, s in (("Left", 1), ("Right", -1)):
 # =============================== ARMOUR (ivory plate, gold trim, cyan glow) ===============================
 PIECE = "Armour"
 # cuirass: tapered, faceted keel down the centre (n<2 = crisp ridge), open at the arms
-loft("UpperTorso", STONE, [(Z(1.13), .135*k, .098*k, 1.7, 0, -0.004*k), (Z(1.22), .145*k, .108*k, 1.7, 0, -0.008*k),
-                           (Z(1.33), .19*k, .126*k, 1.75, 0, -0.012*k), (Z(1.42), .2*k, .122*k, 1.85, 0, -0.008*k), (Z(1.465), .18*k, .11*k, 2.0)], N=24, sub=1, cap=False)
+loft("UpperTorso", STONE, [(Z(1.13), .135*k, .1*k, 1.7), (Z(1.22), .145*k, .11*k, 1.7),
+                           (Z(1.33), .19*k, .128*k, 1.75), (Z(1.42), .2*k, .125*k, 1.85), (Z(1.465), .18*k, .112*k, 2.0)], N=24, sub=1, cap=False)
+for s_ in (1, -1):   # back: shoulder-blade plates + a gold spine line (reads well now the cape is gone)
+    blade("UpperTorso", STONE, (0.075*s_*k, 0.115*k, Z(1.42)), (0.25*s_, 0.15, -1), 0.2*k, 0.09*k, 0.012*k, hint=(0, 1, 0), N=8, sub=0)
 for z0, r in ((Z(1.13), (.137*k, .1*k)), (Z(1.465), (.182*k, .112*k))):
     arc_band("UpperTorso", GOLD, (0, 0), z0 + 0.006*k, z0 - 0.006*k, r, r, 0, 2*math.pi, 0.01*k, 28)
 T = body_bvh()
 flow_line("UpperTorso", GOLD, [(0, -.14*k, Z(1.16)), (0, -.14*k, Z(1.25)), (0, -.13*k, Z(1.3))], r=0.007*k, T=T, centre=(0, 0, Z(1.25)))
 chest_emblem(k, Z(1.36), -.137*k, GOLD, GLOW, r=0.048)
+flow_line("UpperTorso", GOLD, [(0, .12*k, Z(1.16)), (0, .125*k, Z(1.28)), (0, .122*k, Z(1.4))], r=0.006*k, T=T, centre=(0, 0, Z(1.28)))
 for s_ in (1, -1):
     flow_line("UpperTorso", GOLD, [(0.05*s_*k, -.13*k, Z(1.4)), (0.12*s_*k, -.115*k, Z(1.44)), (0.17*s_*k, -.07*k, Z(1.455))], r=0.006*k, T=T, centre=(0, 0, Z(1.35)))
     flow_line("UpperTorso", GLOW, [(0.07*s_*k, -.11*k, Z(1.17)), (0.12*s_*k, -.1*k, Z(1.24)), (0.15*s_*k, -.085*k, Z(1.33))], r=0.0045*k, T=T, centre=(0, 0, Z(1.25)))
