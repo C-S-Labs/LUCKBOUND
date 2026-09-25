@@ -85,6 +85,7 @@ delete an older entry; if something turned out wrong, say so in a newer one.
       `/clearboss`).
   - Token pass (PR #124): `STATUS.md` was cut from 630 to about 160 lines, and the full version moved to
     `docs/archive/STATUS_HISTORY.md`. The build spec is now on-demand only, and `AGENTS.md` has a "Token discipline" section.
+  - CI `handoff` job (PR #125): a PR changing `src/` or `assets/` must update STATUS or WORKLOG.
 
 ### Decisions made
 - Chunk naming, one scheme for both kits:

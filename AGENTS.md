@@ -80,7 +80,8 @@ Before ending any session where you changed something:
 
 - **Append a `docs/WORKLOG.md` entry at the top** using the template there:
   what you did, what you decided, where you stopped, what comes next.
-- **Update `docs/STATUS.md`** if state changed — test count, what is built,
+- **Update `docs/STATUS.md`** (CI fails a PR touching `src/` or `assets/` that updates neither STATUS nor WORKLOG;
+  `[skip-status]` in the PR title bypasses it for trivial changes) if state changed — test count, what is built,
   open items, next-session priorities.
 - **Update the index**: run `python tools/gen_index.py` (rewrites `INDEX_MAP.md`), and add a line to `INDEX.md` for
   anything new.
