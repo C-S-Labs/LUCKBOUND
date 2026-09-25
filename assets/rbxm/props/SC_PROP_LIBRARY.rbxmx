@@ -2,7 +2,7 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Model" referent="RBX13A724F306724161B0D1AA519CECDAE6">
+	<Item class="Model" referent="RBXF78E14B1B1B248EC9C1C6EE68DC3644D">
 		<Properties>
 			<token name="LevelOfDetail">0</token>
 			<CoordinateFrame name="ModelMeshCFrame">
@@ -32,9 +32,9 @@
 			<SharedString name="SlimHash">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			<OptionalCoordinateFrame name="WorldPivotData">
 				<CFrame>
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.116581</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -46,15 +46,15 @@
 					<R22>1</R22>
 				</CFrame>
 			</OptionalCoordinateFrame>
-			<BinaryString name="AttributesSerialize"><![CDATA[AQAAAA4AAABSQlhfUmVpbXBvcnRJZAIkAAAAMDgwYzhjOTAtZjhlMS00MGZhLWExOGItODAy
-MjM2ZTc0NDMw]]></BinaryString>
+			<BinaryString name="AttributesSerialize"><![CDATA[AQAAAA4AAABSQlhfUmVpbXBvcnRJZAIkAAAAYTg2YWM1OTEtMDc2Ni00NWJlLTllYjAtMDcx
+ZmU1ZjEyZjI0]]></BinaryString>
 			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 			<bool name="DefinesCapabilities">false</bool>
 			<string name="Name">sky_citadel_props</string>
-			<int64 name="SourceAssetId">119800916960978</int64>
+			<int64 name="SourceAssetId">-1</int64>
 			<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 		</Properties>
-		<Item class="MeshPart" referent="RBXFDA5C915875C4C388BA9415BE6CAD1F0">
+		<Item class="MeshPart" referent="RBX0EBFD00060804BECBDDE26EC6731C8A6">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -69,7 +69,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://94561545110138</url></Content>
+				<Content name="MeshId"><url>rbxassetid://112774259380702</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -94,7 +94,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>-0.0223672483</Z>
 				</Vector3>
 				<float name="UnscaledVolume">5.55445147</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -105,9 +105,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -139,7 +139,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -189,7 +189,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX7EA6132A552F422287900589B88E56B0">
+		<Item class="MeshPart" referent="RBXE338027941E9485F885894AB26FB4E1F">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -204,7 +204,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://137386248212112</url></Content>
+				<Content name="MeshId"><url>rbxassetid://96505892773398</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -229,7 +229,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>0.00984660443</Z>
 				</Vector3>
 				<float name="UnscaledVolume">7.70453215</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -240,9 +240,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -274,7 +274,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -324,7 +324,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXE507442948E74BD383D15EDF4CBFB418">
+		<Item class="MeshPart" referent="RBXCF01790A6E0F45479BF0316AF7928258">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -339,7 +339,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://77850390091888</url></Content>
+				<Content name="MeshId"><url>rbxassetid://81230589237602</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -364,7 +364,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>-0</Z>
 				</Vector3>
 				<float name="UnscaledVolume">323.999176</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -375,9 +375,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -409,7 +409,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -459,7 +459,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXBCE2D812223E43538A1DA8DEC585D3D9">
+		<Item class="MeshPart" referent="RBXEDCF5D6DB55144659CA01E9F63F92E46">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -474,7 +474,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://125014948713055</url></Content>
+				<Content name="MeshId"><url>rbxassetid://125002792947281</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -499,7 +499,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>0.000146472332</Z>
 				</Vector3>
 				<float name="UnscaledVolume">279.627289</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -510,9 +510,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -544,7 +544,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -594,7 +594,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXF17EB549E9C64B669D84F2E5B6A710A7">
+		<Item class="MeshPart" referent="RBXA48F3D7721F949E18556D36E48868508">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -609,7 +609,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://84468984716646</url></Content>
+				<Content name="MeshId"><url>rbxassetid://88727933295759</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -634,7 +634,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>1.66442086e-11</Z>
 				</Vector3>
 				<float name="UnscaledVolume">3.94636345</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -645,9 +645,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -679,7 +679,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -729,7 +729,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX53A4B3BB7598477E980DFF3338ACFF42">
+		<Item class="MeshPart" referent="RBX0CC2EB4D7B1746B6806B569F3CB59F05">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -744,7 +744,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://98488002102037</url></Content>
+				<Content name="MeshId"><url>rbxassetid://87434228200615</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -769,7 +769,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>-1.12973284e-08</Z>
 				</Vector3>
 				<float name="UnscaledVolume">24.5896301</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -780,9 +780,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -814,7 +814,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -864,7 +864,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX85F6AAC1975E4E078CDB63FE4DA472B8">
+		<Item class="MeshPart" referent="RBX63813FD8B3F7407B9B1223793AEE73B3">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -879,7 +879,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://114066792558307</url></Content>
+				<Content name="MeshId"><url>rbxassetid://118122020726306</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -904,7 +904,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>-55.8538132</Z>
 				</Vector3>
 				<float name="UnscaledVolume">6.34154463</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -915,9 +915,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -949,7 +949,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>2.38418579e-07</X>
@@ -999,7 +999,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX7D554E584C5D4FAF878710B969A0A654">
+		<Item class="MeshPart" referent="RBXB9E78F54CE344B79BBD0D90EC2AD3C77">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1014,7 +1014,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://119792824000377</url></Content>
+				<Content name="MeshId"><url>rbxassetid://71351360075845</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -1039,7 +1039,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>1.25666877e-09</Z>
 				</Vector3>
 				<float name="UnscaledVolume">2.54798889</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -1050,9 +1050,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -1084,7 +1084,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -1134,7 +1134,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXC78EE20C829D4827B8FFFC4038F67C2C">
+		<Item class="MeshPart" referent="RBX60F5429FF4BE496DBB843F6A7FD79DE7">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1149,7 +1149,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://111425604617075</url></Content>
+				<Content name="MeshId"><url>rbxassetid://81277995119766</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -1174,7 +1174,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>-1.26340416e-09</Z>
 				</Vector3>
 				<float name="UnscaledVolume">10.650773</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -1185,9 +1185,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.6898956</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>34.9815063</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -1219,7 +1219,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -1269,7 +1269,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXFA45B9D7917A4D5391DE1D1DBF6F1DA0">
+		<Item class="MeshPart" referent="RBX97DC446E32794F08827DA82D238638C1">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1284,7 +1284,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://109535134583271</url></Content>
+				<Content name="MeshId"><url>rbxassetid://71505188990669</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -1309,7 +1309,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>1.88658919e-06</Z>
 				</Vector3>
 				<float name="UnscaledVolume">329.830414</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -1320,9 +1320,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.4765167</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1948891</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -1354,7 +1354,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -1404,7 +1404,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX4A974B52948F4A619C3A2647A1208D14">
+		<Item class="MeshPart" referent="RBXD7406BC77017413FA91BD5A3FAA8FFC8">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1419,7 +1419,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://125784059016970</url></Content>
+				<Content name="MeshId"><url>rbxassetid://104576891736567</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -1444,7 +1444,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>-4.31970835</Z>
 				</Vector3>
 				<float name="UnscaledVolume">203.81073</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -1455,9 +1455,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -1489,7 +1489,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-2.38418579e-07</X>
@@ -1539,7 +1539,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX165CABC56213497FB34AAF9BA88F2C49">
+		<Item class="MeshPart" referent="RBX48E77445FD3148EA8D1668023E4FF55D">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1554,7 +1554,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://77283026653124</url></Content>
+				<Content name="MeshId"><url>rbxassetid://121726490687295</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -1579,7 +1579,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>7.30742045e-07</Z>
 				</Vector3>
 				<float name="UnscaledVolume">1255.64062</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -1590,9 +1590,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -1624,7 +1624,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -1674,7 +1674,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXADE89197F0B949B78F203556B869B634">
+		<Item class="MeshPart" referent="RBX9BF945F4EE284EC1A06A95FD8D3CBF36">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1689,7 +1689,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://82141365760621</url></Content>
+				<Content name="MeshId"><url>rbxassetid://103645307192648</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -1714,7 +1714,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>-0.00174137345</Z>
 				</Vector3>
 				<float name="UnscaledVolume">1.88675773</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -1725,9 +1725,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2056046</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8268356</Z>
+					<X>105.730156</X>
+					<Y>35.1165771</Y>
+					<Z>-53.1184959</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -1759,7 +1759,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-0.0776180029</X>
@@ -1809,7 +1809,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXBC5795F68A194779921F76C09B539043">
+		<Item class="MeshPart" referent="RBX45183AA6C3514701B03E0556542F3C0E">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1824,7 +1824,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://75825233203065</url></Content>
+				<Content name="MeshId"><url>rbxassetid://110476048695429</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -1849,7 +1849,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>1.35883464e-08</Z>
 				</Vector3>
 				<float name="UnscaledVolume">1.78597927</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -1860,9 +1860,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2161007</X>
-					<Y>-80.5790329</Y>
-					<Z>98.8312225</Z>
+					<X>105.719658</X>
+					<Y>35.0923691</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -1894,7 +1894,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-0.0671219826</X>
@@ -1944,7 +1944,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXACDA8802507C420698F2E581665F6B29">
+		<Item class="MeshPart" referent="RBXE9E86D265ABF4E1F9C254B08FD19000E">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1959,7 +1959,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://107379629901391</url></Content>
+				<Content name="MeshId"><url>rbxassetid://138722905861199</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -1984,7 +1984,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>-4.65498928e-09</Z>
 				</Vector3>
 				<float name="UnscaledVolume">1.78598058</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -1995,9 +1995,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2161007</X>
-					<Y>-80.5790329</Y>
-					<Z>98.8312225</Z>
+					<X>105.719658</X>
+					<Y>35.0923691</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2029,7 +2029,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-0.0671218634</X>
@@ -2079,7 +2079,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX5ECF45D15B784B4C9420E27CA86861F1">
+		<Item class="MeshPart" referent="RBX11F273DDD2D94CB999F8D2A2C3DF8D27">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -2094,7 +2094,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://101262886279570</url></Content>
+				<Content name="MeshId"><url>rbxassetid://124970580269965</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -2119,7 +2119,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>0.230407164</Z>
 				</Vector3>
 				<float name="UnscaledVolume">0.743965685</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -2130,9 +2130,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2164,7 +2164,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-2.38418579e-07</X>
@@ -2214,7 +2214,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX861D2571E1DA4E1EA085BC51A8E3C795">
+		<Item class="MeshPart" referent="RBX02ECE445AC95430786C78E97C81FEE1D">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -2229,7 +2229,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://82253527475379</url></Content>
+				<Content name="MeshId"><url>rbxassetid://133065710662180</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -2254,7 +2254,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>-1.58645879e-08</Z>
 				</Vector3>
 				<float name="UnscaledVolume">20.6664219</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -2265,9 +2265,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.7718582</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>34.8995438</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2299,7 +2299,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -2349,7 +2349,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX417D3A829C5E496991FC30E69F5BCA3B">
+		<Item class="MeshPart" referent="RBX78A31154777A48518EA913FFAE44ABBE">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -2364,7 +2364,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://79172760238853</url></Content>
+				<Content name="MeshId"><url>rbxassetid://139168911011189</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -2389,7 +2389,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>-1.12421321e-14</Z>
 				</Vector3>
 				<float name="UnscaledVolume">80.4127731</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -2400,9 +2400,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2434,7 +2434,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -2484,7 +2484,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXDF56A696EACD45FCB2F0374A7B5E7986">
+		<Item class="MeshPart" referent="RBXD9FB31FA66C4481F8C59F663A0D07883">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -2499,7 +2499,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://113888200681347</url></Content>
+				<Content name="MeshId"><url>rbxassetid://112874425293872</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -2524,7 +2524,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>2.22881169e-14</Z>
 				</Vector3>
 				<float name="UnscaledVolume">80.4127655</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -2535,9 +2535,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2569,7 +2569,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -2619,7 +2619,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXAF7B7E67A0C44B2EA141B404DFB552EA">
+		<Item class="MeshPart" referent="RBXFF9C9A1AE1234293A4A25C9EB4DE57B1">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -2634,7 +2634,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://117729826254374</url></Content>
+				<Content name="MeshId"><url>rbxassetid://133961006518654</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -2659,7 +2659,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>9.32260917e-08</Z>
 				</Vector3>
 				<float name="UnscaledVolume">34.5965996</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -2670,9 +2670,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2704,7 +2704,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>5.96046448e-08</X>
@@ -2754,7 +2754,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX3E03C5E941D440FDB41939813476437D">
+		<Item class="MeshPart" referent="RBX9C4EBF5281B749FBBF83B02D399DB682">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -2769,7 +2769,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://115131424314270</url></Content>
+				<Content name="MeshId"><url>rbxassetid://95662977836319</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -2794,7 +2794,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>0.231206134</Z>
 				</Vector3>
 				<float name="UnscaledVolume">44.7038269</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -2805,9 +2805,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8479614</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.0973701</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2839,7 +2839,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -2889,7 +2889,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXCECA9C2DCA8446BD9A36C8D6F7D40044">
+		<Item class="MeshPart" referent="RBX8720FA64D2DD4945AEE0BA2B60F593D2">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -2904,7 +2904,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://78672534230099</url></Content>
+				<Content name="MeshId"><url>rbxassetid://133255466071248</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -2929,7 +2929,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>-1.39233591e-09</Z>
 				</Vector3>
 				<float name="UnscaledVolume">27.0586872</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -2940,9 +2940,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.627655</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.0437469</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2974,7 +2974,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -3024,7 +3024,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX5FE3C1D744084946B02461355EF6F1B7">
+		<Item class="MeshPart" referent="RBXC16D718AE94043C5B93B848401BD25B0">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -3039,7 +3039,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://116429059035235</url></Content>
+				<Content name="MeshId"><url>rbxassetid://126381043038350</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -3064,7 +3064,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>-1.54054305e-05</Z>
 				</Vector3>
 				<float name="UnscaledVolume">46.9355011</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -3075,9 +3075,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.2805099</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.3908882</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3109,7 +3109,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -3159,7 +3159,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXE97957F9D24F419094FC35C6002FC7BE">
+		<Item class="MeshPart" referent="RBXBC35E02FB82444E6BBDE96A40A1D3474">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -3174,7 +3174,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://73916595381854</url></Content>
+				<Content name="MeshId"><url>rbxassetid://80690395306238</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -3199,7 +3199,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>-1.2061185e-14</Z>
 				</Vector3>
 				<float name="UnscaledVolume">18.5867329</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -3210,9 +3210,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3244,7 +3244,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -3294,7 +3294,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXBD098CDB1DF743B2A2377F6958BAFE1A">
+		<Item class="MeshPart" referent="RBX14401CE5D05A4B09B20A4BEC53F0ACEB">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -3309,7 +3309,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://127362598116145</url></Content>
+				<Content name="MeshId"><url>rbxassetid://100390759707886</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -3334,7 +3334,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>-19.2596378</Z>
 				</Vector3>
 				<float name="UnscaledVolume">7.4420948</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -3345,9 +3345,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5249634</Y>
-					<Z>98.8312302</Z>
+					<X>105.652534</X>
+					<Y>35.1464348</Y>
+					<Z>-53.1141052</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3379,7 +3379,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -3429,7 +3429,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX82A6233339B04149A4DCC5F1FEF422C6">
+		<Item class="MeshPart" referent="RBX93BDD7604579477E8843E84C165E0493">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -3444,7 +3444,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://111948265266865</url></Content>
+				<Content name="MeshId"><url>rbxassetid://102702872983895</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -3469,7 +3469,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>3.1508057e-07</Z>
 				</Vector3>
 				<float name="UnscaledVolume">11.467083</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -3480,9 +3480,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3514,7 +3514,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -3564,7 +3564,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX4DE78216D0B84C00BE57F3DF0D64121E">
+		<Item class="MeshPart" referent="RBXBA7F7E8CFB664C93B4985A094A86E411">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -3579,7 +3579,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://94401920527184</url></Content>
+				<Content name="MeshId"><url>rbxassetid://105889186238209</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -3604,7 +3604,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>1.55620291e-05</Z>
 				</Vector3>
 				<float name="UnscaledVolume">36.5774651</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -3615,9 +3615,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.7460785</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>34.9253273</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3649,7 +3649,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -3699,7 +3699,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX0B5DD551C5D54F0DBFCB1DB6F15E4D40">
+		<Item class="MeshPart" referent="RBXCF968524B37743879A9A4AF038680142">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -3714,7 +3714,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://108848085094724</url></Content>
+				<Content name="MeshId"><url>rbxassetid://119114966467567</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -3739,7 +3739,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>0.00203262712</Z>
 				</Vector3>
 				<float name="UnscaledVolume">1135.80664</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -3750,9 +3750,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3784,7 +3784,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -3834,7 +3834,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXC539C93FCDA04B4F8AA2B4090019AD35">
+		<Item class="MeshPart" referent="RBXEE45C671068849B0A172DFB94B4DB6B8">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -3849,7 +3849,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://87794532280188</url></Content>
+				<Content name="MeshId"><url>rbxassetid://97291756651071</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -3874,7 +3874,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>1.21603443e-12</Z>
 				</Vector3>
 				<float name="UnscaledVolume">391.621307</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -3885,9 +3885,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3919,7 +3919,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -3969,7 +3969,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX8F65857FB4434DFA8740B529381698D2">
+		<Item class="MeshPart" referent="RBX85FE75776584482FB1F764E2440CF082">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -3984,7 +3984,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://126890865722641</url></Content>
+				<Content name="MeshId"><url>rbxassetid://108093127951308</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -4009,7 +4009,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>1.59405822e-12</Z>
 				</Vector3>
 				<float name="UnscaledVolume">241.444092</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -4020,9 +4020,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -4054,7 +4054,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -4104,7 +4104,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX9FC0EEC866D541E18D08AA5F201D77CE">
+		<Item class="MeshPart" referent="RBXC94962E8E8874BA08FC49581DA0F629D">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -4119,7 +4119,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://95899607988262</url></Content>
+				<Content name="MeshId"><url>rbxassetid://74513918363557</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -4144,7 +4144,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>-2.4740292e-09</Z>
 				</Vector3>
 				<float name="UnscaledVolume">4.34522152</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -4155,9 +4155,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.6985168</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>34.9728889</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -4189,7 +4189,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -4239,7 +4239,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX01B7B4A79DFF413B9B03F8F8082AF62E">
+		<Item class="MeshPart" referent="RBX0AA30BA7F97E498AA58B3688027F36A4">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -4254,7 +4254,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://93979912161191</url></Content>
+				<Content name="MeshId"><url>rbxassetid://139083920401629</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -4279,7 +4279,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>-5.05890307e-09</Z>
 				</Vector3>
 				<float name="UnscaledVolume">4.50434494</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -4290,9 +4290,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.664856</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.0065498</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -4324,7 +4324,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -4374,7 +4374,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXEB9F4E9C233746CC857B8865EAA7E1F8">
+		<Item class="MeshPart" referent="RBXC4BC46AAA8F3405CB453AA05C62FBEB2">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -4389,7 +4389,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://118643674334142</url></Content>
+				<Content name="MeshId"><url>rbxassetid://130360492599468</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -4414,7 +4414,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>-146.996414</Z>
 				</Vector3>
 				<float name="UnscaledVolume">318.260376</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -4425,9 +4425,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.7545471</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>34.9168587</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -4459,7 +4459,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -4509,7 +4509,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXDB6D879E64B0454194E7C28386685571">
+		<Item class="MeshPart" referent="RBXD325E1AF37144164959AE2520C68734D">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -4524,7 +4524,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://104528027171117</url></Content>
+				<Content name="MeshId"><url>rbxassetid://121659151345628</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -4549,7 +4549,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>114.786041</Z>
 				</Vector3>
 				<float name="UnscaledVolume">571.875427</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -4560,9 +4560,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -4594,7 +4594,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -4644,7 +4644,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX0DCFCCDE955C45219570F769D76D827F">
+		<Item class="MeshPart" referent="RBX3AEE2BF176164FABBE0A311086BDF81E">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -4659,7 +4659,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://118970241124476</url></Content>
+				<Content name="MeshId"><url>rbxassetid://90667035988761</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -4684,7 +4684,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>0.385489941</Z>
 				</Vector3>
 				<float name="UnscaledVolume">4.70587969</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -4695,9 +4695,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5587387</Y>
-					<Z>98.7913284</Z>
+					<X>105.652534</X>
+					<Y>35.1126633</Y>
+					<Z>-53.1540031</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -4729,7 +4729,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -4779,7 +4779,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXE61D2E6D8C8649BD858E8499FF132863">
+		<Item class="MeshPart" referent="RBX7F791F3BBE664A3497165D74879E539D">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -4794,7 +4794,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://73955960474380</url></Content>
+				<Content name="MeshId"><url>rbxassetid://137777048053712</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -4819,7 +4819,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>2.34485778e-05</Z>
 				</Vector3>
 				<float name="UnscaledVolume">722.690613</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -4830,9 +4830,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5548248</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1165771</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -4864,7 +4864,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -4914,7 +4914,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXC5DD4FC3AAE84192BD29E43888C58347">
+		<Item class="MeshPart" referent="RBX9B8FFF147E294A0C9A9D3DE21B63D896">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -4929,7 +4929,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://130830269612043</url></Content>
+				<Content name="MeshId"><url>rbxassetid://136259891902173</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -4954,7 +4954,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>1.19185462e-08</Z>
 				</Vector3>
 				<float name="UnscaledVolume">3.69615865</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -4965,9 +4965,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5580444</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.1133614</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -4999,7 +4999,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -5049,7 +5049,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX7265F9DB8DE642E9BC5147782431DB8C">
+		<Item class="MeshPart" referent="RBX20A095B46DF143219463E05531AAB5D2">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -5064,7 +5064,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://111781368315061</url></Content>
+				<Content name="MeshId"><url>rbxassetid://125264906058860</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -5089,7 +5089,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>-3798.7478</Z>
 				</Vector3>
 				<float name="UnscaledVolume">212.041992</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -5100,9 +5100,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.501442</Y>
-					<Z>98.9125671</Z>
+					<X>105.652534</X>
+					<Y>35.16996</Y>
+					<Z>-53.0327644</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -5134,7 +5134,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
@@ -5184,7 +5184,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX90C7A785FDDC4002B3E9CAE10F10255B">
+		<Item class="MeshPart" referent="RBX81D553654CB24EAE868F1A75B88CAB8E">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -5199,7 +5199,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://110021735199490</url></Content>
+				<Content name="MeshId"><url>rbxassetid://103204307953167</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -5224,7 +5224,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>-4.62886796e-08</Z>
 				</Vector3>
 				<float name="UnscaledVolume">1.89392745</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -5235,9 +5235,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.6012421</Y>
-					<Z>98.8312225</Z>
+					<X>105.652534</X>
+					<Y>35.0701599</Y>
+					<Z>-53.114109</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -5269,7 +5269,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-2.38418579e-07</X>
@@ -5319,7 +5319,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX6F7213D011FD4A4DBDAF1EBC11DA8AAE">
+		<Item class="MeshPart" referent="RBXE6F3258290624B09B9FA3515E939E752">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -5334,7 +5334,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Y>0</Y>
 					<Z>0</Z>
 				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://79088900402789</url></Content>
+				<Content name="MeshId"><url>rbxassetid://90720816560202</url></Content>
 				<BinaryString name="PhysicsData"></BinaryString>
 				<token name="RenderFidelity">0</token>
 				<Content name="TextureID"><null></null></Content>
@@ -5359,7 +5359,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 					<Z>0.136550695</Z>
 				</Vector3>
 				<float name="UnscaledVolume">6.32303143</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -5370,9 +5370,9 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-11.2832222</X>
-					<Y>-80.5472641</Y>
-					<Z>98.8313217</Z>
+					<X>105.652534</X>
+					<Y>35.1241379</Y>
+					<Z>-53.1140099</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -5404,7 +5404,7 @@ MjM2ZTc0NDMw]]></BinaryString>
 				<token name="LeftSurfaceInput">0</token>
 				<bool name="Locked">false</bool>
 				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
+				<token name="Material">272</token>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
