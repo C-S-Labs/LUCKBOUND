@@ -197,7 +197,7 @@ _221 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/DEVELOPMENT_PLAN.md
 
-- `docs/DEVELOPMENT_PLAN.md` (296) - LUCKBOUND — Development Plan · 2026-09-22
+- `docs/DEVELOPMENT_PLAN.md` (296) - LUCKBOUND — Development Plan · 2026-09-25
   - `DEVELOPMENT_PLAN.md`: 1. The decision that shapes everything:16, 2. Where we actually are:47, 3. The critical path to a playtest:67, Phase 0 — Clear the deck · **S**:72, Phase 1 — Every roll leads somewhere · **M**:87, Phase 1b — The procedural loop proves itself · **S/M**:128, Phase 2 — Something to do in a world · **M/L**:153, Phase 3 — Make it feel like a game · **M**:168, Phase 4 — The playtest itself · **S** (process, not code):184, Phase 5 — Act on what it says · **?**:199, 4. After the playtest — the long game:207, 5. What we are deliberately NOT doing yet:240, 6. How to work, so we stop jumping around:257, 7. The risks worth naming:277, 8. If you only do four things:289
 
 ### docs/ENEMY_FRAMEWORK.md
@@ -262,7 +262,7 @@ _221 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/TESTING.md
 
-- `docs/TESTING.md` (804) - LUCKBOUND — Testing Guide · 2026-09-23
+- `docs/TESTING.md` (804) - LUCKBOUND — Testing Guide · 2026-09-25
   - `TESTING.md`: 1. Automated tests:8, Coverage:31, The three that matter most:52, A caution about the harness:78, The untested boundary — named, so it cannot be mistaken for :92, 2. Sync to Studio with Rojo:127, 2.5 Developer commands:147, The three gates on the server-side commands:183, 3. Manual Studio pass:201, Test A — the server boots (1 min):203, Test B — validation blocks a bad boot (2 min):236, Test C — the 15-roll arc (5 min):243, Test D — the cooldown holds (1 min):269, Test C2b — entering from the Fate Engine ⭐ NEW (3 min):276, Test C2 — the expedition, end to end ⭐ (6 min):293, Test C3 — the hub is walkable (3 min):359, Test H2 — the half-size world (4 min) ⭐ NEW:373, Test I — the loading screen (3 min) ⭐ NEW:389, Test J — the hub menu (5 min) ⭐ NEW:415, Test K — run and double jump (2 min) ⭐ NEW:455, Test L — the menu follows the world (4 min) ⭐ NEW:468, Test M — an event changes the world (4 min) ⭐ NEW:496, Test N — the ledger holds under a race ⭐ NEW — **two instanc:521, Test O — parties, in Studio ⭐ NEW — **3 clients, 10 min**:546, Test P — the portal opens a new server ⭐ NEW — **published p:584, Test Q — the Sky Citadel kit, in the world ⭐ NEW (8 min):614, Test R — a world's ambience ⭐ NEW (5 min):645, Test S — Sky Citadel's floating scenery ⭐ NEW (5 min):660, Test T — chests, the vault and its key ⭐ NEW (10 min):688, Test E — a tampered client is rejected (1 min):723, Test F — data persists (3 min) — **published places only**:735, Test G — late joiners see a live event ⭐ (5 min):750, Test H — announcements reach everyone, onboarding does not (:779, 4. What to report back:787
 
 ### docs/TOOLCHAIN_ACCESS.md
@@ -286,7 +286,7 @@ _221 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
   - `README.md`: What a biome schema covers:24, Ambience — a world's mood is data:54, Status:85
 - `docs/biomes/SKY_CITADEL.md` (585) - Sky Citadel — biome design schema · 2026-09-25
   - `SKY_CITADEL.md`: The look:26, It must not look like Ethereal Scape:47, The palette:61, The set-dressing vocabulary:90, Lighting and ambience — sunrise above the cloud sea:183, The connection vocabulary:216, The kit — 22 pieces:241, Variety: five axes, mixed differently on every piece:319, The shape of a run: turns, one intersection, no dead ends:365, No opening onto nothing: the caps:389, Axes:433, How to change it:440, Hand pass:467, 2026-09-22 — the caps:469, 2026-09-22 — variety, turns, the intersection, and four more:478, 2026-09-22 — the kit expansion:489, 2026-09-22 — the first four:503, Risks before upload — read before importing to Studio:518, Render headless:560, Next:570
-- `docs/biomes/VERDANT_VALLEY.md` (223) - Verdant Valley — biome design schema · 2026-09-24
+- `docs/biomes/VERDANT_VALLEY.md` (223) - Verdant Valley — biome design schema · 2026-09-25
   - `VERDANT_VALLEY.md`: 1. Palette and light:14, 2. The kinds of place:36, 3. How pieces connect:68, The consequence worth understanding:81, 4. Inhabitants:97, 5. Piece size and count:117, 6. What each piece can support:137, 7. Settled, and what is still open:164, Settled 2026-09-22, when the kit was delivered:166, Still open:180, 8. The 30-piece base kit (2026-09-24):192
 
 ### (root)
