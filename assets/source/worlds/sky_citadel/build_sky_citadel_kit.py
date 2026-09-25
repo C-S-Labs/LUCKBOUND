@@ -252,6 +252,9 @@ PROP_KINDS = {
     # hovering over obelisks and altars, an orrery's rings
     "hover halo": ("halo", "Float", 1),
     "hover crystal": ("accent", "Hover", 1),
+    # landmark moving parts lifted out of the structure (owner, 2026-09-24)
+    "orrery ring": ("orrery_ring", "Spin", 1),
+    "turbine rotor": ("turbine_rotor", "Roll", 1),
 }
 # Parts that move relative to their prop, by as_attached() label: library base
 # name and the animation that moves them.
@@ -1187,11 +1190,12 @@ def orrery(p, x, y):
     frustum(p, "PaleAlloy", 8, 0.7, 0.5, 1.6, 9.6, x, y)
     orb(p, "SunGold", x, y, 11.8, 2.2)
     rings = ((7.0, 14, 0, "SkyGlass", 30), (10.5, -9, 22, "CitadelViolet", 200))
-    for R, rx, ry, pmat, t in rings:
-        torus(p, "AzureNeon", R, 0.2, x, y, 11.8, n=20, rx=rx, ry=ry)
-        v = Euler((math.radians(rx), math.radians(ry), 0), "XYZ").to_matrix() @ Vector(
-            (R * math.cos(math.radians(t)), R * math.sin(math.radians(t)), 0))
-        orb(p, pmat, x + v.x, y + v.y, 11.8 + v.z, 1.1, n=6)
+    for R, rx, ry, pmat, t in rings:                       # each ring + its planet is an animated prop (Spin)
+        with as_prop(p, "orrery ring", xf(x, y, 11.8)):
+            torus(p, "AzureNeon", R, 0.2, x, y, 11.8, n=20, rx=rx, ry=ry)
+            v = Euler((math.radians(rx), math.radians(ry), 0), "XYZ").to_matrix() @ Vector(
+                (R * math.cos(math.radians(t)), R * math.sin(math.radians(t)), 0))
+            orb(p, pmat, x + v.x, y + v.y, 11.8 + v.z, 1.1, n=6)
 
 
 def weapon_rack(p, x, y, rz=0.0):
@@ -1521,6 +1525,7 @@ def turbine(p, x, y, hub, blade, rz=0.0, needle_to=None):
     frustum(p, "AzureDim", 8, 1.9, 1.9, hub * 0.45, hub * 0.45 + 1.5, x, y)
     with frame(p, xf(x, y, hub, rz)):
         box(p, "PaleAlloy", 0, 0.5, 0, 2.6, 6, 2.6)
+    with as_prop(p, "turbine rotor", xf(x, y, hub, rz)), frame(p, xf(x, y, hub, rz)):   # the rotor turns (Roll)
         frustum(p, "SunGold", 8, 1.3, 0, 3.5, 5.5, M=xf(rx=-90))
         for k in range(3):
             a = 90 + 120 * k
