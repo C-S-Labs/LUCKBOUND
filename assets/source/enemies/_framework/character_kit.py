@@ -10,12 +10,26 @@ from mathutils.bvhtree import BVHTree
 def body_bvh():
     """BVH of everything built so far (all pieces) - for placing trim ON the surface."""
     vs, fs = [], []
+    for bm in PIECES.values(): bm.verts.ensure_lookup_table(); bm.verts.index_update()
     for bm in PIECES.values():
         o = len(vs)
         vs += [v.co.copy() for v in bm.verts]
         fs += [tuple(o + v.index for v in f.verts) for f in bm.faces]
     for bm in PIECES.values(): bm.verts.index_update()
     return BVHTree.FromPolygons(vs, fs)
+
+def on_surface_in(T, p, centre, lift=0.0, settle=1.0):
+    """Cast from INSIDE (centre) out through p: the first hit is the body's own skin, never an outer part.
+       settle < 1 pulls the point toward the centre: smoothed (sub=1) surfaces shrink a little after this is placed."""
+    c = Vector(centre); d = (Vector(p) - c)
+    hit = T.ray_cast(c, d.normalized(), 10.0)
+    return (c + (hit[0] - c)*settle + hit[1]*lift) if hit[0] is not None else Vector(p)
+
+def flow_line_in(bone, mi, pts, r=0.006, T=None, centre=None, N=6):
+    P_ = [on_surface_in(T, p, centre, lift=r*0.3) for p in pts]
+    for a, b in zip(P_, P_[1:]): tube(bone, mi, tuple(a), tuple(b), r, r, N=N)
+    for q in P_[1:-1]: sph(bone, mi, tuple(q), r*1.02, u=N, v=4)
+    return P_
 
 def on_surface(T, p, centre, lift=0.004):
     """Project p onto the body surface along the ray from `centre` through p (outside-in), lifted slightly."""

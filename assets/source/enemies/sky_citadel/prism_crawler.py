@@ -99,10 +99,14 @@ for L, s_, hip, knee, ankle, foot in LEGS:
     blade(L + "2", RAIN, tuple(knee + Vector((0, 0, 0.02))), (0.4*s_, 0, 1), 0.1, 0.03, 0.02, hint=(0, 1, 0), N=4, sub=0)
     loft(L + "1", SLATE, [((knee - hip).length*0.2, .055, .055, 1.4), ((knee - hip).length*0.55, .058, .058, 1.4)], N=8, M=_frame(hip, knee - hip), cap=False)
 exec(open(FW + r"\character_kit.py").read())                                    # eye cluster seated ON the head surface
-T = body_bvh()
+from mathutils.bvhtree import BVHTree as _B
+_hb = PIECES["Body"]; _hb.verts.index_update()
+_hv = [v.co.copy() for v in _hb.verts]
+_hf = [tuple(v.index for v in f.verts) for f in _hb.faces if f.calc_center_median().y < -0.3 and f.material_index == CRY]
+T = _B.FromPolygons(_hv, _hf)                                                     # the head's crystal skin only
 for sd in (1, -1):
     for k in range(3):
-        q = on_surface(T, (0.05*sd + 0.02*k*sd, -0.52 + 0.03*k, BZ + 0.04 + 0.015*k), (0, -0.42, BZ - 0.01), lift=-0.004)
+        q = on_surface_in(T, (0.05*sd + 0.02*k*sd, -0.52 + 0.03*k, BZ + 0.04 + 0.015*k), (0, -0.4, BZ - 0.0), lift=-0.006)
         sph("Head", GLOW, tuple(q), 0.014, u=8, v=6)
 # ---- assemble ----
 arm_data = bpy.data.armatures.new(NAME + "_Rig")
