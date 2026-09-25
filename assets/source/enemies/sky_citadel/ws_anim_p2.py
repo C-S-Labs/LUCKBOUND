@@ -20,7 +20,7 @@ def to_euler():
     pass
 def key(frame):
     for pb in P:
-        pb.keyframe_insert("rotation_euler", frame=frame); pb.keyframe_insert("location", frame=frame); pb.keyframe_insert("scale", frame=frame)
+        pb.keyframe_insert("rotation_quaternion" if pb.rotation_mode == "QUATERNION" else "rotation_euler", frame=frame); pb.keyframe_insert("location", frame=frame); pb.keyframe_insert("scale", frame=frame)
 def r(n, x=0, y=0, z=0):
     P[n].rotation_mode = 'XYZ'; P[n].rotation_euler = (x, y, z)
 def add(n, x=0, y=0, z=0):
