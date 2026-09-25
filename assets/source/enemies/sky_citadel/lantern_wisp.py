@@ -64,7 +64,7 @@ loft("Flame", GLOW, [(1.30, .03, .03), (1.36, .10, .10), (1.48, .13, .12), (1.60
                      (1.80, .008, .008)], N=16, sub=1)
 sph("VFX_Core", CORE, (0, -0.02, 1.47), 0.06, u=12, v=8)
 for s in (1, -1):
-    box("Flame", SOOT, (0.045*s, -0.118, 1.53), (0.05, 0.03, 0.018), rot=(0, 0.35*s, 0), bev=0.004, segs=1)
+    tube("Flame", SOOT, (0.018*s, -0.123, 1.52), (0.065*s, -0.112, 1.545), 0.009, 0.006, N=6)       # angled slit eyes
 # ---- ember tail trailing below the cage ----
 loft("Tail1", GLOW, [(1.14, .05, .05), (1.02, .045, .04, 2, 0, .02)], N=12, sub=1)
 loft("Tail2", GLOW, [(1.05, .04, .035, 2, 0, .02), (0.82, .03, .025, 2, 0, .07)], N=12, sub=1)
@@ -73,6 +73,40 @@ loft("Tail3", GLOW, [(0.85, .025, .02, 2, 0, .07), (0.62, .003, .003, 2, 0, .15)
 for k in range(3):
     a = k*2*math.pi/3
     gem("Body", GLOW, (0.34*math.cos(a), 0.34*math.sin(a), 1.45 + 0.08*k), 0.02, 0.03, sides=5)
+
+# ---- v2 character pass (2026-09-24): an ornate citadel lantern with a mischievous flame spirit inside ----
+# spired crown + finial, filigree scrolls on every bar, chain stub on the bail, hanging tassel charms,
+# flame tongues licking out between the bars, flame "arms" gesturing, a grinning mouth, more ember motes.
+loft("Cage", BRASS, [(2.05, .03, .03), (2.09, .045, .045), (2.13, .02, .02), (2.24, .004, .004)], N=12, sub=1)   # spire finial
+for k in range(8):                                                     # crown fins (ornamental)
+    a = k*math.pi/4 + math.pi/8
+    blade("Cage", BRASS, (0.15*math.cos(a), 0.15*math.sin(a), 1.95), (math.cos(a)*0.5, math.sin(a)*0.5, 1.0), 0.09, 0.03, 0.008, hint=(-math.sin(a), math.cos(a), 0), N=6, sub=0)
+for i in range(3):                                                     # chain stub above the bail
+    loft("Cage", DARK, [(-0.004, .02, .012), (0.004, .02, .012)], N=10, M=TR((0, 0, 2.17 + 0.035*i), (0, 0, math.pi/2*i)), cap=False)
+for k in range(6):                                                     # leaf filigree plates on the bars (flat, on the bar)
+    a = k*math.pi/3 + math.pi/6
+    for z, r in ((1.62, .214), (1.44, .205)):
+        c_ = Vector((r*math.cos(a), r*math.sin(a), z))
+        blade("Cage", BRASS, tuple(c_ + Vector((0, 0, 0.04))), (0, 0, -1), 0.08, 0.035, 0.008, hint=(math.cos(a), math.sin(a), 0), N=6, sub=0)
+for k in range(3):                                                     # hanging tassel charms off the base ring
+    a = k*2*math.pi/3
+    c_ = Vector((0.11*math.cos(a), 0.11*math.sin(a), 1.2))
+    tube("Cage", DARK, tuple(c_), tuple(c_ + Vector((0, 0, -0.1))), 0.005, 0.005, N=5)
+    gem("Cage", CORE, tuple(c_ + Vector((0, 0, -0.12))), 0.018, 0.03, rot=(math.pi, 0, 0), sides=5)
+for k in range(6):                                                     # flame tongues licking out between the bars
+    a = k*math.pi/3
+    blade("Flame", GLOW, (0.1*math.cos(a), 0.1*math.sin(a), 1.5 + 0.05*(k % 2)), (math.cos(a), math.sin(a), 0.9), 0.12, 0.04, 0.016, hint=(0, 0, 1), N=6)
+for sd in (1, -1):                                                     # flame arms, one raised (cheeky), one low
+    arm = [Vector((0.09*sd, -0.03, 1.46)), Vector((0.15*sd, -0.02, 1.47 + (0.05 if sd > 0 else -0.04))), Vector((0.185*sd, -0.02, 1.54 + (0.09 if sd > 0 else -0.08)))]
+    for a_, b_ in zip(arm, arm[1:]):
+        tube("Flame", GLOW, tuple(a_), tuple(b_), 0.028, 0.02, N=8)
+    gem("Flame", GLOW, tuple(arm[-1]), 0.035, 0.05, rot=(0, 0.6*sd, 0), sides=5)
+m_ = [Vector((0.05*t, -0.124 + 0.012*t*t, 1.462 - 0.022*(1 - t*t))) for t in [i/4 - 1 for i in range(9)]]   # crooked grin
+for a_, b_ in zip(m_, m_[1:]):
+    tube("Flame", SOOT, tuple(a_), tuple(b_), 0.006, 0.006, N=5)
+for k in range(5):                                                     # more ember motes, spiralling
+    a = k*2*math.pi/5 + 0.4
+    gem("Body", GLOW, (0.3*math.cos(a), 0.3*math.sin(a), 1.3 + 0.1*k), 0.015, 0.025, sides=5)
 
 # ---- assemble: body + glow meshes on one rig, placed at OFFSET ----
 arm_data = bpy.data.armatures.new(NAME + "_Rig")
