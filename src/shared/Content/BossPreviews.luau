@@ -9,17 +9,18 @@
 --   Model  : the Model's name inside LuckboundBosses
 --   Idle   : rbxassetid of the looping idle animation ("" = show the bind/rest pose)
 --   Pose   : optional rbxassetid of a held pose (played frozen at its first frame instead of the idle)
---   Scale  : studs per Blender unit (enemies are authored in metres; ~2.8 puts a 1.8 m human at 5 studs)
+--   Tall   : the boss's standing height in STUDS. /showboss scales the model to this whatever size it imported
+--            at (FBX unit handling varies), so never resize it in Studio. A player is ~5 studs.
 --   Height : how far above the deck the rig's pivot sits (studs, after scaling); 0 if the pivot is at the feet
 
 export type BossPreview = {
 	Model: string,
 	Idle: string,
 	Pose: string?,
-	Scale: number,
+	Tall: number,
 	Height: number,
 }
 
 return {
-	winged_sentinel = { Model = "WingedSentinel", Idle = "", Scale = 2.8, Height = 0 },
+	winged_sentinel = { Model = "WingedSentinel", Idle = "", Tall = 11, Height = 0 }, -- 3.55 m design, ~2x a player
 } :: { [string]: BossPreview }

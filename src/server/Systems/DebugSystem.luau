@@ -79,7 +79,7 @@ COMMANDS.roll = function(player: Player, args: { string }): (boolean, string)
 	return FateSystem.forceRoll(player, string.upper(worldId))
 end
 
---- /showboss <id> [scale] -- put a boss PREVIEW (Content/BossPreviews) in the nearest boss arena, facing you,
+--- /showboss <id> [height] -- put a boss PREVIEW (Content/BossPreviews) in the nearest boss arena, facing you,
 --- playing its idle (or held pose). Aesthetic check only: no health, no AI. /clearboss removes it.
 local function nearestArena(from: Vector3): Vector3?
 	local best, bestD = nil, math.huge
@@ -120,7 +120,7 @@ COMMANDS.showboss = function(player: Player, args: { string }): (boolean, string
 			table.insert(ids, key)
 		end
 		table.sort(ids)
-		return false, "usage: /showboss <id> [scale] -- " .. table.concat(ids, ", ")
+		return false, "usage: /showboss <id> [height in studs] -- " .. table.concat(ids, ", ")
 	end
 	local lib = game:GetService("ServerStorage"):FindFirstChild("LuckboundBosses")
 	local template = lib and lib:FindFirstChild(def.Model, true)
@@ -137,10 +137,13 @@ COMMANDS.showboss = function(player: Player, args: { string }): (boolean, string
 
 	local model = (template :: Model):Clone()
 	model.Name = "BossPreview"
-	local scale = tonumber(args[2]) or def.Scale
-	if scale and scale > 0 and math.abs(scale - 1) > 1e-3 then
-		model:ScaleTo(model:GetScale() * scale)
+	-- Size by target HEIGHT in studs, not a factor: FBX imports arrive at unpredictable scales.
+	local tall = tonumber(args[2]) or def.Tall
+	local _, bbox = model:GetBoundingBox()
+	if tall and tall > 0 and bbox.Y > 1e-3 then
+		model:ScaleTo(model:GetScale() * tall / bbox.Y)
 	end
+	local scale = tall
 	for _, part in model:GetDescendants() do
 		if part:IsA("BasePart") then
 			part.Anchored = true
@@ -192,7 +195,7 @@ COMMANDS.showboss = function(player: Player, args: { string }): (boolean, string
 	local anim = if animId and animId ~= ""
 		then "idle playing"
 		else "rest pose (no Idle id set in BossPreviews)"
-	return true, `{id} shown {where} at scale {scale}; {anim}. /clearboss to remove`
+	return true, `{id} shown {where} {scale} studs tall; {anim}. /clearboss to remove`
 end
 
 --- /atmosphere <BASE | RANDOM | ID> -- force a scenario atmosphere (Content/
