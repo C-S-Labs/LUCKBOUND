@@ -57,7 +57,7 @@ for k in range(4):   # back crystal spines, rainbow edged
 loft("Head", CRY, [(0.26, .05, .04, 1.3), (0.32, .13, .09, 1.3), (0.48, .11, .08, 1.3), (0.56, .03, .03, 1.3)], N=12, sub=1,
      M=TR((0, 0, BZ), (math.pi/2, 0, 0)))
 for s, bn in ((1, "MandibleL"), (-1, "MandibleR")):
-    blade(bn, RAIN, (0.07*s, -0.5, BZ - 0.05), (0.25*s, -1.0, -0.2), 0.2, 0.035, 0.02, hint=(0, 0, 1), N=4, sub=0)
+    blade(bn, RAIN, (0.06*s, -0.44, BZ - 0.02), (0.25*s, -1.0, -0.2), 0.26, 0.035, 0.02, hint=(0, 0, 1), N=4, sub=0)
 
 # ---- six legs: slate joints, crystal segments, sharp crystal feet ----
 for L, s, hip, knee, ankle, foot in LEGS:
@@ -95,8 +95,6 @@ for k in range(5):                                                              
 loft("Head", CRY, [(0, .035, .03, 1.4), (0.14, .02, .018, 1.4), (0.2, .003, .003, 1.4)], N=5, M=_frame(Vector((0, -0.42, BZ + 0.06)), Vector((0, -0.6, 1))))   # horn
 for sd in (1, -1):
     blade("Head", SLATE, (0.05*sd, -0.44, BZ + 0.07), (0.7*sd, 0.5, 0.3), 0.12, 0.04, 0.012, hint=(0, 0, 1), N=5, sub=0)      # brow crest
-    md = Vector((0.25*sd, -1.0, -0.2)).normalized(); mp = Vector((0.07*sd, -0.5, BZ - 0.05)) + md*0.11      # barb ON the mandible
-    blade(("MandibleL" if sd > 0 else "MandibleR"), CRY, tuple(mp), (-0.7*sd, -0.5, 0), 0.06, 0.018, 0.012, hint=(0, 0, 1), N=4, sub=0)
 for L, s_, hip, knee, ankle, foot in LEGS:
     blade(L + "2", RAIN, tuple(knee + Vector((0, 0, 0.02))), (0.4*s_, 0, 1), 0.1, 0.03, 0.02, hint=(0, 1, 0), N=4, sub=0)
     loft(L + "1", SLATE, [((knee - hip).length*0.2, .055, .055, 1.4), ((knee - hip).length*0.55, .058, .058, 1.4)], N=8, M=_frame(hip, knee - hip), cap=False)
