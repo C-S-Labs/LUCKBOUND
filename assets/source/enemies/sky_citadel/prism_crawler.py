@@ -1,5 +1,5 @@
 # LUCKBOUND - Sky Citadel BASIC enemy: Prism Crawler (Prism Arena). Six-legged crystal crawler.
-# Long range but punishable: slowly charges a refracting beam from the prism on its back (long windup, the prism
+# Long range but punishable: raises its crystal tail and charges a refracting beam from the prism stinger (long windup, the prism
 # brightens), fires, then OVERHEATS (vents open, prism dims) -> big punish window. Can burrow into a crystal shell.
 # Clear/aqua crystal with rainbow-edged facets, dark slate carapace joints. Budget < 10k tris.
 # Rig: Root > Body > Prism (aim/tilt), Head, Mandibles L/R, 6 legs x 3 bones.
@@ -16,8 +16,13 @@ BONES = [("Root", (0, 0.1, BZ - 0.2), (0, 0.1, BZ), None),
          ("Head", (0, -0.28, BZ), (0, -0.55, BZ - 0.02), "Body"),
          ("MandibleL", (0.07, -0.5, BZ - 0.05), (0.09, -0.66, BZ - 0.08), "Head"),
          ("MandibleR", (-0.07, -0.5, BZ - 0.05), (-0.09, -0.66, BZ - 0.08), "Head"),
-         ("Prism", (0, 0.05, BZ + 0.15), (0, 0.05, BZ + 0.75), "Body"),
-         ("VFX_Beam", (0, -0.05, BZ + 0.62), (0, -0.4, BZ + 0.62), "Prism")]
+         ]
+TAILP = [Vector((0, 0.34, BZ + 0.02)), Vector((0, 0.5, BZ + 0.2)), Vector((0, 0.52, BZ + 0.45)), Vector((0, 0.38, BZ + 0.64)),
+         Vector((0, 0.16, BZ + 0.72))]
+for i in range(4):
+    BONES.append((f"Tail{i + 1}", tuple(TAILP[i]), tuple(TAILP[i + 1]), "Body" if i == 0 else f"Tail{i}"))
+BONES += [("Prism", tuple(TAILP[4]), tuple(TAILP[4] + Vector((0, -0.18, -0.06))), "Tail4"),
+          ("VFX_Beam", tuple(TAILP[4] + Vector((0, -0.2, -0.06))), tuple(TAILP[4] + Vector((0, -0.5, -0.15))), "Prism")]
 LEGS = []
 for i, (s, y) in enumerate([(s, y) for y in (-0.15, 0.08, 0.3) for s in (1, -1)]):
     L = f"Leg{'L' if s > 0 else 'R'}{i//2 + 1}"
@@ -55,18 +60,6 @@ for s, bn in ((1, "MandibleL"), (-1, "MandibleR")):
     blade(bn, RAIN, (0.07*s, -0.5, BZ - 0.05), (0.25*s, -1.0, -0.2), 0.2, 0.035, 0.02, hint=(0, 0, 1), N=4, sub=0)
     for k in range(3):
         gem("Head", GLOW, (0.05*s + 0.02*k*s, -0.52 + 0.03*k, BZ + 0.04 + 0.015*k), 0.014, 0.012, rot=(math.pi/2, 0, 0), sides=5)
-# ---- the prism: tall hexagonal crystal on the back, glowing core, slate mount with vents ----
-loft("Body", SLATE, [(BZ + 0.08, .14, .14), (BZ + 0.16, .12, .12)], N=6, M=TR((0, 0.05, 0)))
-for k in range(6):
-    a = k*math.pi/3
-    box("Body", SLATE, (0.13*math.cos(a), 0.05 + 0.13*math.sin(a), BZ + 0.12), (0.05, 0.02, 0.04), rot=(0, 0, a + math.pi/2), bev=0.005, segs=1)
-loft("Prism", CRY, [(BZ + 0.15, .10, .10, 2), (BZ + 0.25, .13, .13, 2), (BZ + 0.6, .11, .11, 2), (BZ + 0.78, .01, .01, 2)],
-     N=6, M=TR((0, 0.05, 0)))
-loft("Prism", GLOW, [(BZ + 0.3, .045, .045, 2), (BZ + 0.62, .03, .03, 2)], N=6, M=TR((0, 0.05, 0)))
-for k in range(3):   # small satellite prisms
-    a = k*2*math.pi/3 + 0.3
-    loft("Prism", RAIN, [(BZ + 0.18, .04, .04, 2), (BZ + 0.36, .035, .035, 2), (BZ + 0.44, .005, .005, 2)], N=6,
-         M=TR((0.15*math.cos(a), 0.05 + 0.15*math.sin(a), 0)))
 # ---- six legs: slate joints, crystal segments, sharp crystal feet ----
 for L, s, hip, knee, ankle, foot in LEGS:
     sph(L + "1", SLATE, tuple(hip), 0.05, u=8, v=6)
@@ -76,44 +69,37 @@ for L, s, hip, knee, ankle, foot in LEGS:
     sph(L + "3", SLATE, tuple(ankle), 0.03, u=8, v=6)
     loft(L + "3", RAIN, [(0, .025, .025, 1.5), ((foot - ankle).length, .004, .004, 1.5)], N=5, M=_frame(ankle, foot - ankle))
 
-# ---- v2 character pass (2026-09-24), shaped by the moveset ----
-#  * BEAM CHARGE: three refraction rings float round the prism + lens shards feeding light up it (brighten = tell).
-#  * OVERHEAT: six slate vent flaps round the prism mount with glowing heat slots under them (they open = opening).
-#  * BURROW: overlapping carapace plates down the back that close into a shell; crystal cluster on the tail.
-#  * Predatory head: brow crest, crystal horn, forward-swept mandible barbs.
-for i, (z, r) in enumerate(((BZ + 0.3, 0.2), (BZ + 0.45, 0.17), (BZ + 0.58, 0.14))):     # refraction rings (on Prism)
-    loft("Prism", RAIN, [(-0.008, r, r, 2), (0.008, r, r, 2)], N=6, M=TR((0, 0.05, z), (0, 0, 0.26*i)), cap=False)
-    for k in range(3):
-        a = k*2*math.pi/3 + 0.5*i
-        gem("Prism", GLOW, (r*math.cos(a), 0.05 + r*math.sin(a), z), 0.018, 0.028, rot=(0, 0, a), sides=4)
-for k in range(6):                                                               # vent flaps + heat slots
-    a = k*math.pi/3 + math.pi/6
-    c_ = Vector((0.16*math.cos(a), 0.05 + 0.16*math.sin(a), BZ + 0.1))
-    blade("Body", SLATE, tuple(c_ + Vector((0, 0, 0.03))), (math.cos(a)*0.7, math.sin(a)*0.7, -0.6), 0.1, 0.07, 0.012, hint=(-math.sin(a), math.cos(a), 0), N=5, sub=0)
-    box("Body", GLOW, tuple(c_ + Vector((-0.02*math.cos(a), -0.02*math.sin(a), 0.0))), (0.045, 0.012, 0.012), rot=(0, 0, a + math.pi/2), bev=0.003, segs=1)
-for k in range(5):                                                               # overlapping carapace plates (burrow shell)
-    y = -0.22 + k*0.11
-    loft("Body", SLATE if k % 2 == 0 else CRY, [(-0.04, .2 - 0.012*abs(k - 2), .12, 1.6), (0.04, .21 - 0.012*abs(k - 2), .125, 1.6)], N=10,
-         M=TR((0, y, BZ + 0.02), (math.pi/2, 0, 0)), keep=lambda c: c.z > BZ + 0.05, fill=False, cap=False)
-for k in range(5):                                                               # tail crystal cluster
-    a = k*2*math.pi/5
-    loft("Body", RAIN if k % 2 else CRY, [(0, .03, .03, 1.5), (0.1 + 0.03*(k % 2), .025, .025, 1.5), (0.14 + 0.03*(k % 2), .003, .003, 1.5)], N=5,
-         M=_frame(Vector((0.03*math.cos(a), 0.36 + 0.03*math.sin(a), BZ + 0.02)), Vector((0.5*math.cos(a), 1.0, 0.4 + 0.3*math.sin(a))) ))
-loft("Head", CRY, [(0, .035, .03, 1.4), (0.14, .02, .018, 1.4), (0.2, .003, .003, 1.4)], N=5, M=_frame(Vector((0, -0.42, BZ + 0.07)), Vector((0, -0.6, 1))))   # horn
-for sd in (1, -1):
-    blade("Head", SLATE, (0.05*sd, -0.44, BZ + 0.08), (0.7*sd, 0.5, 0.35), 0.12, 0.04, 0.012, hint=(0, 0, 1), N=5, sub=0)     # brow crest
-    blade(("MandibleL" if sd > 0 else "MandibleR"), CRY, (0.1*sd, -0.6, BZ - 0.06), (-0.6*sd, -0.6, 0), 0.07, 0.02, 0.012, hint=(0, 0, 1), N=4, sub=0)   # barb
-for L, s_, hip, knee, ankle, foot in LEGS:                                       # leg spikes on every knee
-    blade(L + "2", RAIN, tuple(knee + Vector((0, 0, 0.02))), (0.4*s_, 0, 1), 0.1, 0.03, 0.02, hint=(0, 1, 0), N=4, sub=0)
-
-for k in range(6):                                                               # glowing prism edges (charge tell reads outside)
+# ---- v3 (2026-09-24): CRYSTAL SCORPION. Everything attached, nothing floats.
+#  * BEAM: the segmented crystal tail curls over the back and ends in a prism stinger that fires the beam
+#    (tail rises + the stinger's glowing facets brighten = the charge tell).
+#  * OVERHEAT: heat vents along the underside of every tail segment glow, then vent -> the punish window.
+#  * BURROW: overlapping carapace plates down the back close into a shell.
+for i in range(4):                                                               # tail segments (faceted crystal) + slate collars + vents
+    a_, b_ = TAILP[i], TAILP[i + 1]; d_ = b_ - a_; n_ = d_.length; r0 = 0.085 - 0.012*i
+    M_ = _frame(a_, d_, hint=(1, 0, 0))
+    loft(f"Tail{i + 1}", CRY, [(0.0, r0*0.8, r0*0.7, 1.5), (n_*0.35, r0, r0*0.85, 1.5), (n_*0.85, r0*0.85, r0*0.72, 1.5), (n_*1.05, r0*0.7, r0*0.6, 1.5)], N=10, M=M_, sub=1)
+    loft(f"Tail{i + 1}", SLATE, [(n_*0.9, r0*0.9, r0*0.78, 1.5), (n_*1.02, r0*0.88, r0*0.76, 1.5)], N=10, M=M_)
+    loft(f"Tail{i + 1}", GLOW, [(n_*0.84, r0*0.88, r0*0.76, 1.5), (n_*0.9, r0*0.88, r0*0.76, 1.5)], N=10, M=M_, cap=False)   # heat seam (vents)
+    blade(f"Tail{i + 1}", RAIN, tuple(M_ @ Vector((0, r0*0.55, n_*0.5))), tuple(M_.to_3x3() @ Vector((0, 1, 0.4))), 0.09 - 0.012*i, 0.035, 0.02, hint=tuple(M_.to_3x3() @ Vector((1, 0, 0))), N=4, sub=0)
+st = TAILP[4]; sd_ = Vector((0, -0.18, -0.06))                                   # the prism stinger: hex crystal, glowing lens face
+Ms = _frame(st, sd_, hint=(1, 0, 0))
+loft("Prism", SLATE, [(-0.02, .07, .07, 2), (0.02, .065, .065, 2)], N=6, M=Ms)
+loft("Prism", CRY, [(0.0, .055, .055, 2), (0.08, .065, .065, 2), (0.16, .05, .05, 2), (0.2, .03, .03, 2)], N=6, M=Ms)
+loft("Prism", GLOW, [(0.2, .03, .03, 2), (0.205, .03, .03, 2)], N=6, M=Ms)
+for k in range(6):                                                               # glowing facet lines on the stinger
     a = k*math.pi/3
-    c0 = Vector((0.132*math.cos(a), 0.05 + 0.132*math.sin(a), BZ + 0.25)); c1 = Vector((0.112*math.cos(a), 0.05 + 0.112*math.sin(a), BZ + 0.6))
-    tube("Prism", GLOW, tuple(c0), tuple(c1), 0.007, 0.006, N=5)
-    tube("Prism", GLOW, tuple(c1), (0, 0.05, BZ + 0.78), 0.005, 0.002, N=5)
-for L, s_, hip, knee, ankle, foot in LEGS:                                       # slate armour sleeve on each thigh
+    tube("Prism", GLOW, tuple(Ms @ Vector((0.064*math.cos(a), 0.064*math.sin(a), 0.07))), tuple(Ms @ Vector((0.034*math.cos(a), 0.034*math.sin(a), 0.195))), 0.004, 0.003, N=4)
+for k in range(5):                                                               # overlapping carapace plates (burrow shell)
+    y = -0.2 + k*0.11
+    loft("Body", SLATE if k % 2 == 0 else CRY, [(-0.045, .19 - 0.012*abs(k - 2), .125, 1.6), (0.045, .2 - 0.012*abs(k - 2), .13, 1.6)], N=12,
+         M=TR((0, y, BZ + 0.0), (math.pi/2, 0, 0)), keep=lambda c: c.z > BZ + 0.04, fill=False, cap=False)
+loft("Head", CRY, [(0, .035, .03, 1.4), (0.14, .02, .018, 1.4), (0.2, .003, .003, 1.4)], N=5, M=_frame(Vector((0, -0.42, BZ + 0.06)), Vector((0, -0.6, 1))))   # horn
+for sd in (1, -1):
+    blade("Head", SLATE, (0.05*sd, -0.44, BZ + 0.07), (0.7*sd, 0.5, 0.3), 0.12, 0.04, 0.012, hint=(0, 0, 1), N=5, sub=0)      # brow crest
+    blade(("MandibleL" if sd > 0 else "MandibleR"), CRY, (0.1*sd, -0.6, BZ - 0.06), (-0.6*sd, -0.6, 0), 0.07, 0.02, 0.012, hint=(0, 0, 1), N=4, sub=0)
+for L, s_, hip, knee, ankle, foot in LEGS:
+    blade(L + "2", RAIN, tuple(knee + Vector((0, 0, 0.02))), (0.4*s_, 0, 1), 0.1, 0.03, 0.02, hint=(0, 1, 0), N=4, sub=0)
     loft(L + "1", SLATE, [((knee - hip).length*0.2, .055, .055, 1.4), ((knee - hip).length*0.55, .058, .058, 1.4)], N=8, M=_frame(hip, knee - hip), cap=False)
-
 # ---- assemble ----
 arm_data = bpy.data.armatures.new(NAME + "_Rig")
 rig = bpy.data.objects.new(NAME + "_Rig", arm_data)
