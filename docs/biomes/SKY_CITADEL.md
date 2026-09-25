@@ -248,12 +248,12 @@ adds 14 more** (`SC_PATH_COLONNADE`, `SC_PATH_LONG_SPAN`,
 `SC_SKY_TREE_GROVE`, `SC_DOCKSIDE`, `SC_SIDE_CHAPEL`, `SC_SIDE_GARDEN`,
 `SC_SIDE_RELIQUARY`, `SC_PRISM_ARENA` — 5 PATH, 5 COMBAT, 3 SIDE, 1 BOSS),
 bringing the kit to **36 pieces total**, which is the number `tests/cases.luau`
-and `STATUS.md` report. Those 14 build as **placeholder blockout meshes**
-(`AssetManifest` entries with `Status = "PLACEHOLDER"`) — they generate and
-walk correctly, but don't yet carry the five-axis art (Shape/Floor/Edge/
-Keel/Landmark) or a finished mesh upload the way the 22 below do. That is a
-mesh-art task, not a design or revamp task: the kit is finished and shipping
-at 36 pieces.
+and `STATUS.md` report. All 14 are **authored and meshed**, uploaded
+(`AssetManifest` entries at `Status = "UPLOADED"`), and discoverable by the
+procedural chunk loader alongside the original 22 — the full 36-piece kit is
+imported, walks correctly, and is finished. They don't carry the same
+five-axis documentation (Shape/Floor/Edge/Keel/Landmark) below as the
+original 22, since that table predates the expansion.
 
 All twenty-two of the original delivery are exactly **256 × 256 × 256**:
 footprint ±128, bottom at −96, crown at +160. Origin at the centre of the
