@@ -2,7 +2,7 @@
 # stone-and-gold construct knight, ~2.1 m. Role melee_guard: measured 1-2 hit sword combos behind a forearm plate.
 # Detail scheme (shared with the bosses, basic tier): smooth glossy plates that FOLLOW the body, gold trim rims and
 # flow lines, cyan aether glow channels. Nothing clips.
-# Silhouette: broad swept pauldrons, narrow waist, tall crested helm with a single V visor slit, split tabard, short cape.
+# Silhouette: broad swept pauldrons, narrow waist, tall crested helm with a single V visor slit, split tabard (no cape: capes are saved for meaningful mobs).
 # Budget: basic tier 10-12.5k tris, every mesh < 10k (Body / Armour pieces).
 import bpy, bmesh, math
 from mathutils import Matrix, Euler, Vector
@@ -101,7 +101,6 @@ for s_ in (1, -1):
     blade("Head", STONE, (0.068*s_*k, -0.05*k, Z(1.625)), (0.08*s_, -0.18, -1), 0.1*k, 0.04*k, 0.01*k, hint=(1, 0.3*s_, 0), N=8, sub=0)
 for i, (dy, dz, L_) in enumerate(((-0.03, 0.0, 0.2), (0.0, -0.025, 0.17), (0.03, -0.05, 0.13))):   # swept gold crest
     blade("Head", GOLD, (0, dy*k, Z(1.765) + dz*k), (0, 1, 0.45 - 0.12*i), L_*k, 0.04*k, 0.008*k, hint=(1, 0, 0), N=8, sub=0)
-cape(k, Z(1.45), Z(0.62), BLUE, GOLD, width=0.3, y=0.085, bow=0.012)
 PIECE = "Body"
 add_bone("Weapon_R", V(J["Right"]["hd"]) + V((0, -0.02, 0)), V(J["Right"]["hd"]) + V((0, -0.2, 0)), "RightHand")
 add_bone("Shield_L", V(J["Left"]["el"]).lerp(V(J["Left"]["wr"]), 0.5) + V((0.08, 0, 0)), V(J["Left"]["el"]).lerp(V(J["Left"]["wr"]), 0.5) + V((0.2, 0, 0)), "LeftLowerArm")

@@ -66,6 +66,7 @@ Basics usually skip steps 4 and 6 (their moves come from shared **archetypes**, 
 | Actions | Idle, Move, 1-3 attacks, Hit, Death | + stance/phase actions | full list from the moveset sheet |
 
 Owner rules that apply to every tier:
+- **Capes are reserved for meaningful mobs** (bosses and special enemies), not basics.
 - **Materials:** smooth, glossy materials (no mottled noise), in the biome's colours.
 - **No clipping:** nothing clips, in any pose or action.
 - **Looks match speed:** how aggressive an enemy looks matches how fast it attacks.
