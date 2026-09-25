@@ -1,7 +1,7 @@
 name: Index
 
 # After every merge to main: regenerate INDEX_MAP.md (the generated half of the repo index agents read first) and
-# commit it if anything changed. PRs are already held to a current map by ci.yml; this catches direct pushes.
+# commit it if anything changed. PRs are already held to a current map by ci.yml (dates aside); this also writes each file's last-changed date.
 on:
   push:
     branches: [main]
@@ -15,6 +15,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # full history: every file's last-changed date
       - name: Regenerate INDEX_MAP.md
         run: python3 tools/gen_index.py
       - name: Commit if changed

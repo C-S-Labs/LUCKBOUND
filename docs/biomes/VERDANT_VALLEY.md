@@ -40,21 +40,20 @@ deliberately open-ended. Twelve to sixteen distinct kinds of place is the
 target. A new kind of place is welcome at any time and needs no permission —
 it is a piece of content, and adding one changes no System.
 
-Delivered in the 2026-09-22 test kit:
+**The kit as built: 30 pieces** (2026-09-24, PR #105). All pieces are in one file,
+`assets/rbxm/chunks/verdant_valley/VV_STRUCTURE.rbxmx`. The code entries are in `src/shared/Content/Chunks/VerdantValley.luau`
+(ids `VV_<NAME>`, asset keys `VV_CHUNK_<NAME>`), and the exporter is
+`assets/source/worlds/verdant_valley/export_verdant_valley_kit.py`. The 2026-09-22 first-pass test kit
+(`chunk_path_straight`, `chunk_meadow_a`, `chunk_waterfall`…) was retired in the 2026-09-25 audit.
 
-| Piece | What it is |
+| Role | Pieces |
 |---|---|
-| `chunk_entry` | Arrival. Gentle, open, low threat |
-| `chunk_path_straight` | Connective forest path |
-| `chunk_meadow_a` · `chunk_meadow_b` | Open ground, long sightlines, pack fights |
-| `chunk_grove` | Dense old trees, short sightlines |
-| `chunk_stream_crossing` | Water, a crossing, banks to fight across |
-| `chunk_fern_hollow` | Sunken, overgrown, enclosed |
-| `chunk_mushroom_glen` | Strange and bright — the odd one in a normal forest |
-| `chunk_ruins` | Something was here before you |
-| `chunk_waterfall` | Landmark. Somewhere you remember passing |
-| `chunk_ridge_overlook` | High ground, a view out over the rest |
-| `chunk_boss_clearing` | The arena |
+| `ENTRY` (2) | `chunk_entry_dawn_meadow` · `chunk_entry_woodland_refuge` |
+| `PATH` (5) | `chunk_path_sunwash_fork` · `chunk_path_cliff_passage` · `chunk_path_narrow_pass` · `chunk_path_split_meadow` · `chunk_path_crossroads_copse` |
+| `COMBAT` (18) | `chunk_cutbank_ford` · `chunk_windward_ridge_gate` · `chunk_forgotten_orchard_gate` · `chunk_longgrass_meadow` · `chunk_shaded_grove` · `chunk_fern_hollow` · `chunk_stone_sentinels` · `chunk_mossbound_ruins` · `chunk_ancient_oak` · `chunk_wetland_pools` · `chunk_blossom_terrace` · `chunk_rock_garden` · `chunk_crystal_spring_gate` · `chunk_overgrown_causeway_gate` · `chunk_high_ledge_gate` · `chunk_cliff_overlook_gate` · `chunk_deep_clearing` · `chunk_mushroom_glen` |
+| `SIDE` (3) | `chunk_side_treasure_hollow` · `chunk_side_wardens_clearing` · `chunk_side_forgotten_trial` |
+| `CAP` (1) | `chunk_cap_cave_mouth` |
+| `BOSS` (1) | `chunk_boss_sanctuary` |
 
 **Roles are a routing concept, not a design one.** Every piece carries one of
 `ENTRY` / `PATH` / `COMBAT` / `SIDE` / `BOSS` so the assembler knows where it is
