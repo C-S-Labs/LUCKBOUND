@@ -4,6 +4,12 @@
 return {
 	WingedSentinel = {
 		Color = Color3.fromRGB(110, 235, 255),
+		Width = 0.012, -- strand width, metres (scaled to the model)
+		Texture = "", -- lightning strip texture id (assets/textures/lightning_strip.png, once uploaded)
+		TextureSpeed = 2.5,
+		SlideMetres = 0.076, -- how far each blade half slides open when charged
+		-- two anchors and their distance in metres: measures the model scale at run time
+		ScaleRef = { "WebO01", "WebO07", 0.5242 },
 		Phase1 = {
 			{ "WebO01", "WebO02" },
 			{ "WebO02", "WebO03" },

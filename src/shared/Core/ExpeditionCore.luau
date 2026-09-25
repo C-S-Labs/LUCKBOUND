@@ -39,9 +39,7 @@ function ExpeditionCore.destinationFrom(profile: any): string?
 		return nil
 	end
 	local last = history[#history]
-	return if type(last) == "table" and type(last.WorldId) == "string"
-		then last.WorldId
-		else nil
+	return if type(last) == "table" and type(last.WorldId) == "string" then last.WorldId else nil
 end
 
 --- True when `worldId` has at least one chunk, i.e. a map can be assembled.
@@ -86,7 +84,9 @@ function ExpeditionCore.worldsWithoutMaps(
 ): { string }
 	local missing = {}
 	for id, world in worlds do
-		if world.EnabledInPhase <= currentPhase and not ExpeditionCore.hasMap(world, chunks, id) then
+		if
+			world.EnabledInPhase <= currentPhase and not ExpeditionCore.hasMap(world, chunks, id)
+		then
 			table.insert(missing, id)
 		end
 	end
@@ -176,19 +176,21 @@ end
 --- Order matters: cheap and non-revealing checks first. Cooldown and distance
 --- are the anti-spam guards (build spec §3.4) and come before anything that
 --- reads content, so a spamming client costs the server almost nothing.
-function ExpeditionCore.evaluateEntry(opts: {
-	Profile: any,
-	Worlds: { [string]: any },
-	Chunks: { [string]: any },
-	Config: any,
-	Now: number,
-	LastEntryAt: number?,
-	AlreadyActive: boolean,
-	DistanceToGate: number?,
-	FreeSlot: number?,
-	-- From PartyCore.expeditionGroup. nil and "SOLO" mean the same thing.
-	PartyRole: string?,
-}): EntryDecision
+function ExpeditionCore.evaluateEntry(
+	opts: {
+		Profile: any,
+		Worlds: { [string]: any },
+		Chunks: { [string]: any },
+		Config: any,
+		Now: number,
+		LastEntryAt: number?,
+		AlreadyActive: boolean,
+		DistanceToGate: number?,
+		FreeSlot: number?,
+		-- From PartyCore.expeditionGroup. nil and "SOLO" mean the same thing.
+		PartyRole: string?,
+	}
+): EntryDecision
 	local config = opts.Config
 
 	if not config.Expedition.Enabled then
@@ -273,7 +275,10 @@ end
 --- both, and is a hub someone paid for; a public server has neither. So the
 --- owner check is what stops a private server being mistaken for an
 --- expedition and sending its players home.
-function ExpeditionCore.isExpeditionServer(privateServerId: string, privateServerOwnerId: number): boolean
+function ExpeditionCore.isExpeditionServer(
+	privateServerId: string,
+	privateServerOwnerId: number
+): boolean
 	return privateServerId ~= "" and privateServerOwnerId == 0
 end
 
@@ -320,7 +325,11 @@ end
 --- It came from our own server, but through a store, and a half-written or
 --- stale entry must fail here rather than as a nil index halfway through a
 --- map build.
-function ExpeditionCore.validateManifest(manifest: any, worlds: { [string]: any }, chunks: { [string]: any })
+function ExpeditionCore.validateManifest(
+	manifest: any,
+	worlds: { [string]: any },
+	chunks: { [string]: any }
+)
 	if type(manifest) ~= "table" then
 		return false, "manifest missing"
 	end
@@ -334,10 +343,18 @@ function ExpeditionCore.validateManifest(manifest: any, worlds: { [string]: any 
 	if not ExpeditionCore.hasMap(worlds[worldId], chunks, worldId) then
 		return false, `{worldId} has no map`
 	end
-	if type(manifest.Seed) ~= "number" or type(manifest.DurationSeconds) ~= "number" or manifest.DurationSeconds <= 0 then
+	if
+		type(manifest.Seed) ~= "number"
+		or type(manifest.DurationSeconds) ~= "number"
+		or manifest.DurationSeconds <= 0
+	then
 		return false, "bad seed or duration"
 	end
-	if type(manifest.LeaderUserId) ~= "number" or type(manifest.Members) ~= "table" or #manifest.Members == 0 then
+	if
+		type(manifest.LeaderUserId) ~= "number"
+		or type(manifest.Members) ~= "table"
+		or #manifest.Members == 0
+	then
 		return false, "no members"
 	end
 	if not table.find(manifest.Members, manifest.LeaderUserId) then
@@ -349,7 +366,9 @@ end
 --- Only the players the hub sent may stay. Anyone else who reaches a
 --- reserved server is sent home.
 function ExpeditionCore.isManifestMember(manifest: any, userId: number): boolean
-	return type(manifest) == "table" and type(manifest.Members) == "table" and table.find(manifest.Members, userId) ~= nil
+	return type(manifest) == "table"
+		and type(manifest.Members) == "table"
+		and table.find(manifest.Members, userId) ~= nil
 end
 
 --- Where the Nth arrival stands: a small ring around the entry point, so a

@@ -27,6 +27,7 @@ local Worlds = require(Root.Content.Worlds)
 local Events = require(Root.Content.Events)
 local Fixtures = require(Root.Content.Fixtures)
 local BossPreviews = require(Root.Content.BossPreviews)
+local WeaponFX = require(Root.Util.WeaponFX)
 
 local DebugSystem = {}
 
@@ -117,12 +118,7 @@ COMMANDS.bossphase = function(_player: Player, args: { string }): (boolean, stri
 	if not model or (phase ~= 1 and phase ~= 2) then
 		return false, "usage: /bossphase <1|2> (needs a /showboss preview)"
 	end
-	model:SetAttribute("Phase", phase)
-	for _, part in model:GetDescendants() do
-		if part:IsA("BasePart") and string.find(part.Name, "Beam") then
-			part.Transparency = if phase == 2 then 0 else 1
-		end
-	end
+	WeaponFX.setCharged(model :: Model, phase == 2)
 	return true, `preview set to phase {phase} (lightning set + plasma blade)`
 end
 
@@ -193,9 +189,9 @@ COMMANDS.showboss = function(player: Player, args: { string }): (boolean, string
 	local bottom = model:GetPivot().Position.Y
 		- (select(1, model:GetBoundingBox()).Position.Y - size.Y / 2)
 	model:PivotTo(pivot + Vector3.new(0, bottom + (def.Height or 0), 0))
-	model:SetAttribute("LightningRig", def.Model) -- live lightning (Content/LightningRigs), if this boss has a rig
-	model:SetAttribute("Phase", 1)
+	model:SetAttribute("LightningRig", def.Model)
 	model.Parent = workspace
+	WeaponFX.apply(model, def.Model) -- web crackle Beams + charge switch, if this boss has a lightning rig
 
 	local animId = def.Pose or def.Idle
 	if animId and animId ~= "" then

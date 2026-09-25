@@ -215,10 +215,8 @@ local function moveCharacter(player: Player, position: Vector3): boolean
 	local hrp = character and character:FindFirstChild("HumanoidRootPart")
 	if not hrp or not hrp:IsA("BasePart") then
 		return false
-	end
-	-- PivotTo moves the whole rig, not just the root part, which is what stops
-	-- limbs being left behind at the old location for a frame.
-	;(character :: Model):PivotTo(CFrame.new(position))
+	end -- PivotTo moves the whole rig, not just the root part, which is what stops -- limbs being left behind at the old location for a frame.
+	(character :: Model):PivotTo(CFrame.new(position))
 	return true
 end
 
@@ -454,7 +452,11 @@ local function scanAnchors(stage: Instance, floorY: number): any
 		local grid = {}
 		for gx = -124, 124, 8 do
 			for gz = -124, 124, 8 do
-				local r = Workspace:Raycast(Vector3.new(c.X + gx, floorY + 400, c.Z + gz), Vector3.new(0, -800, 0), params)
+				local r = Workspace:Raycast(
+					Vector3.new(c.X + gx, floorY + 400, c.Z + gz),
+					Vector3.new(0, -800, 0),
+					params
+				)
 				if r then
 					table.insert(grid, r)
 				end
@@ -972,10 +974,11 @@ function ExpeditionSystem.requestEnter(player: Player, ...: any): ()
 	-- Mixed with fresh entropy (seedSource above): every entry, every
 	-- session, every player gets a new map.
 	local seed = forcedSeed[player.UserId]
-		or (ExpeditionCore.seedFor(player.UserId, profile.TotalRolls, worldId) + seedSource:NextInteger(
-			1,
-			2147483646
-		)) % 2147483647
+		or (
+				ExpeditionCore.seedFor(player.UserId, profile.TotalRolls, worldId)
+				+ seedSource:NextInteger(1, 2147483646)
+			)
+			% 2147483647
 
 	-- Who actually goes. The leader always; each member only if they are
 	-- still here, not already somewhere, and -- in place -- has a body to
