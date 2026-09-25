@@ -111,6 +111,21 @@ COMMANDS.clearboss = function(_player: Player, _args: { string }): (boolean, str
 	return false, "no boss preview to remove"
 end
 
+COMMANDS.bossphase = function(_player: Player, args: { string }): (boolean, string)
+	local model = workspace:FindFirstChild("BossPreview")
+	local phase = tonumber(args[1])
+	if not model or (phase ~= 1 and phase ~= 2) then
+		return false, "usage: /bossphase <1|2> (needs a /showboss preview)"
+	end
+	model:SetAttribute("Phase", phase)
+	for _, part in model:GetDescendants() do
+		if part:IsA("BasePart") and string.find(part.Name, "Beam") then
+			part.Transparency = if phase == 2 then 0 else 1
+		end
+	end
+	return true, `preview set to phase {phase} (lightning set + plasma blade)`
+end
+
 COMMANDS.showboss = function(player: Player, args: { string }): (boolean, string)
 	local id = args[1] and string.lower(args[1])
 	local def = id and BossPreviews[id]
@@ -178,6 +193,8 @@ COMMANDS.showboss = function(player: Player, args: { string }): (boolean, string
 	local bottom = model:GetPivot().Position.Y
 		- (select(1, model:GetBoundingBox()).Position.Y - size.Y / 2)
 	model:PivotTo(pivot + Vector3.new(0, bottom + (def.Height or 0), 0))
+	model:SetAttribute("LightningRig", def.Model) -- live lightning (Content/LightningRigs), if this boss has a rig
+	model:SetAttribute("Phase", 1)
 	model.Parent = workspace
 
 	local animId = def.Pose or def.Idle

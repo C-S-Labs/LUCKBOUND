@@ -161,41 +161,35 @@ SLIDE = 0.075      # v6: halves slide straight apart, staying parallel to the pl
 def _open_local(p, s):
     h = Vector((0.045*s, 0, 1.73))
     return h + Matrix.Rotation(FAN_ANG*s, 3, 'Y') @ (p - h) + Vector((FAN_PUSH*s, 0, 0))
-PIECE = "Beam"
-for s in (1, -1):                                   # lightning arcs: beam edge -> each slid-open half (P2 only)
-    for k, u in enumerate((1.9, 2.05, 2.2, 2.36, 2.52)):
-        p0 = F @ Vector((0.05*s, 0, u)); p1 = F @ Vector(((0.0015 + SLIDE + 0.004)*s, 0, u + 0.05*(1 if k % 2 else -1)))
-        bolt(BONE, GLOW, p0, p1, segs=4, jit=0.016, r=0.0045)
-PIECE = "Halo"
-HU = 1.58          # v7: the storm web rides just behind the blade, round the collar
+# LIVE LIGHTNING (owner, 2026-09-25): the web and the P2 arcs are no longer modelled. They are drawn at run time by
+# src/client/Controllers/LightningController (jagged strands re-formed ~12x/s) between ANCHOR bones added below.
+# ANCHORS: name -> (lance-local point, parent bone). STRANDS: phase -> list of (anchorA, anchorB). Written to
+# src/shared/Content/LightningRigs.luau so the game knows which points to join.
+HU = 1.58          # the storm web rides just behind the blade, round the collar
 HM = LM(HU); _hr = _rnd.Random(404)
 def hp(r, a_, z=0.0): return HM @ Vector((r*math.cos(a_), r*math.sin(a_), z))
 NS = 12
 ang = [i*2*math.pi/NS + _hr.uniform(-0.08, 0.08) for i in range(NS)]
 rad = {"in": 0.105, "mid": 0.185, "out": 0.26}
 nodes = {k: [hp(r*(1 + _hr.uniform(-0.03, 0.03)), a_) for a_ in ang] for k, r in rad.items()}
-for k in ("out", "mid"):                                        # jagged rings (storm-front loops)
-    for i in range(NS):
-        bolt(BONE, GLOW, nodes[k][i], nodes[k][(i + 1) % NS], segs=3 if k == "mid" else 4, jit=0.014, r=0.006 if k == "out" else 0.004, rn=_hr)
-for i in range(NS):                                             # spokes: inner anchor -> mid -> out (every strike reaches the rim)
-    bolt(BONE, GLOW, nodes["mid"][i], nodes["out"][i], segs=3, jit=0.012, r=0.004, rn=_hr)
+ANCHORS = {}
+for k, tag in (("in", "I"), ("mid", "M"), ("out", "O")):
+    for i, q in enumerate(nodes[k]):
+        ANCHORS[f"Web{tag}{i + 1:02d}"] = (q, "LanceHalo")
+STRANDS = {"Phase1": [], "Phase2": []}
+for tag in ("O", "M"):
+    for i in range(NS): STRANDS["Phase1"].append((f"Web{tag}{i + 1:02d}", f"Web{tag}{(i + 1) % NS + 1:02d}"))
+for i in range(NS):
+    STRANDS["Phase1"].append((f"WebM{i + 1:02d}", f"WebO{i + 1:02d}"))
     if i % 2 == 0:
-        bolt(BONE, GLOW, nodes["in"][i], nodes["mid"][i], segs=3, jit=0.01, r=0.004, rn=_hr)
-    else:                                                       # forks: split strands between neighbouring cells
-        bolt(BONE, GLOW, nodes["mid"][i], hp(0.225, ang[i] + math.pi/NS), segs=2, jit=0.01, r=0.003, rn=_hr)
-for i in range(0, NS, 2):                                       # inner anchor arcs cradle the blade (clear of the edges)
-    bolt(BONE, GLOW, nodes["in"][i], nodes["in"][(i + 2) % NS], segs=4, jit=0.01, r=0.004, rn=_hr)
-for k, r_ in (("out", 0.013), ("mid", 0.01)):                     # violet junction nodes
-    for q in nodes[k]:
-        sph(BONE, BRONZE, tuple(q), r_, u=10, v=6)
-for i in range(0, NS, 2):
-    gem(BONE, GLOW, tuple(nodes["in"][i]), 0.01, 0.008, rot=tuple((HM.to_3x3() @ Vector((0, 0, 1))).to_track_quat('Z', 'X').to_euler()), sides=4)
-# v5 pairing: the lance halo carries the same spiked crown as the Sentinel's helm halo
-for i in range(12):
-    a_ = i*math.pi/6
-    c_ = LM(HU) @ Vector((0.26*math.cos(a_), 0.26*math.sin(a_), 0))
-    blade(BONE, BRONZE if i % 2 == 0 else PATINA, tuple(c_), tuple(LM(HU).to_3x3() @ Vector((math.cos(a_), math.sin(a_), 0))),
-          0.09 if i % 2 == 0 else 0.05, 0.02, 0.008, hint=tuple(LM(HU).to_3x3() @ Vector((0, 0, 1))), N=6, sub=0)
+        STRANDS["Phase1"].append((f"WebI{i + 1:02d}", f"WebM{i + 1:02d}"))
+        STRANDS["Phase1"].append((f"WebI{i + 1:02d}", f"WebI{(i + 2) % NS + 1:02d}"))
+for s in (1, -1):                                   # P2: plasma-blade edge -> each slid-open half's inner edge
+    for k, u in enumerate((1.9, 2.05, 2.2, 2.36, 2.52)):
+        sd = "L" if s > 0 else "R"
+        ANCHORS[f"ArcB{sd}{k + 1}"] = (F @ Vector((0.05*s, 0, u)), BONE)
+        ANCHORS[f"ArcH{sd}{k + 1}"] = (F @ Vector((0.004*s, 0, u + 0.05*(1 if k % 2 else -1))), f"LanceBlade{sd}")
+        STRANDS["Phase2"].append((f"ArcB{sd}{k + 1}", f"ArcH{sd}{k + 1}"))
 PIECE = "Lance"
 
 # ---- assemble the lance object, bone-parented to Weapon_R ----
@@ -211,10 +205,31 @@ eb = rig.data.edit_bones.new("LanceHalo")
 eb.head = rig.matrix_world.inverted() @ (F @ Vector((0, 0, HU)))
 eb.tail = rig.matrix_world.inverted() @ (F @ Vector((0, 0, HU + 0.28)))
 eb.parent = rig.data.edit_bones[BONE]
+for an, (q, parent) in ANCHORS.items():                         # tiny anchor bones (Roblox Bones are Attachments)
+    eb = rig.data.edit_bones.new(an)
+    eb.head = rig.matrix_world.inverted() @ q
+    eb.tail = rig.matrix_world.inverted() @ (q + (F.to_3x3() @ Vector((0, 0, 0.02))))
+    eb.parent = rig.data.edit_bones[parent]
 bpy.ops.object.mode_set(mode='OBJECT')
+import os as _os
+_NL, _T = chr(10), chr(9)
+_dst = _os.path.abspath(_os.path.join(HERE, "..", "..", "..", "..", "src", "shared", "Content", "LightningRigs.luau"))
+_out = ["--!strict",
+        "-- GENERATED by assets/source/enemies/sky_citadel/ws_lance.py - do not edit by hand.",
+        "-- Live-lightning rigs: which anchor Bones each jagged strand joins, per phase (LightningController).",
+        "return {", _T + "WingedSentinel = {", _T*2 + "Color = Color3.fromRGB(110, 235, 255),"]
+for _ph, _lst in STRANDS.items():
+    _out.append(_T*2 + _ph + " = {")
+    _out += [_T*3 + '{ "%s", "%s" },' % (_a, _b) for _a, _b in _lst]
+    _out.append(_T*2 + "},")
+_out += [_T + "},", "}", ""]
+with open(_dst, "w", newline=_NL) as _f:
+    _f.write(_NL.join(_out))
+print("LIGHTNING rig written", _dst, {k: len(v) for k, v in STRANDS.items()})
 LANCE_BONE = {"Lance": BONE, "Beam": BONE, "BladeL": "LanceBladeL", "BladeR": "LanceBladeR", "Halo": "LanceHalo"}
 LANCE_OBJS = []
 for pn in ("Lance", "BladeL", "BladeR", "Beam", "Halo"):
+    if pn not in PIECES: continue                  # the web is live lightning now: no Halo mesh
     body = PIECES[pn]
     glow = body.copy()
     bmesh.ops.delete(glow, geom=[f for f in glow.faces if f.material_index != GLOW], context='FACES')
