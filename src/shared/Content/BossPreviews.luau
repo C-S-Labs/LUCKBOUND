@@ -23,5 +23,5 @@ export type BossPreview = {
 }
 
 return {
-	winged_sentinel = { Model = "WingedSentinel", Idle = "", Tall = 11, Height = 0 }, -- 3.55 m design, ~2x a player
+	winged_sentinel = { Model = "WingedSentinel", Idle = "rbxassetid://132590990835909", Tall = 11, Height = 0 }, -- 3.55 m design, ~2x a player
 } :: { [string]: BossPreview }
