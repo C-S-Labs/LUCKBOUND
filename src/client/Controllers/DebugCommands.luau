@@ -253,7 +253,7 @@ end
 
 -- === registration ====================================================
 
-local function register(alias: string, description: string, handler: (({ string }) -> ()))
+local function register(alias: string, description: string, handler: ({ string }) -> ())
 	local command = Instance.new("TextChatCommand")
 	command.Name = `Luckbound{alias}`
 	command.PrimaryAlias = `/{alias}`
@@ -294,85 +294,166 @@ function DebugCommands.init(): ()
 		return
 	end
 
-	table.insert(HELP, register("fly", "toggle flight", function()
-		toggleFly()
-	end))
-	table.insert(HELP, register("speed", "/speed <n> -- set walk speed", function(args)
-		setSpeed(args[1])
-	end))
-	table.insert(HELP, register("tp", "/tp <place> -- jump to a hub anchor", function(args)
-		teleport(args[1])
-	end))
+	table.insert(
+		HELP,
+		register("fly", "toggle flight", function()
+			toggleFly()
+		end)
+	)
+	table.insert(
+		HELP,
+		register("speed", "/speed <n> -- set walk speed", function(args)
+			setSpeed(args[1])
+		end)
+	)
+	table.insert(
+		HELP,
+		register("tp", "/tp <place> -- jump to a hub anchor", function(args)
+			teleport(args[1])
+		end)
+	)
 
-	table.insert(HELP, register("roll", "/roll <WORLD_ID> -- force a destination", function(args)
-		remote("roll", args)
-	end))
-	table.insert(HELP, register("enter", "/enter [seed] -- enter your destination from anywhere; a seed replays that map", function(args)
-		remote("enter", args)
-	end))
-	table.insert(HELP, register("leave", "end the current expedition", function()
-		remote("leave", {})
-	end))
+	table.insert(
+		HELP,
+		register("roll", "/roll <WORLD_ID> -- force a destination", function(args)
+			remote("roll", args)
+		end)
+	)
+	table.insert(
+		HELP,
+		register(
+			"enter",
+			"/enter [seed] -- enter your destination from anywhere; a seed replays that map",
+			function(args)
+				remote("enter", args)
+			end
+		)
+	)
+	table.insert(
+		HELP,
+		register("leave", "end the current expedition", function()
+			remote("leave", {})
+		end)
+	)
 
 	-- THE EVENT COMMANDS. These existed on the server for two sessions and
 	-- were never registered here, so typing /event sent a chat message and
 	-- nothing else -- which looked exactly like "events do not trigger".
 	-- A server command with no client alias is not a command.
-	table.insert(HELP, register("event", "/event <ID> -- start a live event", function(args)
-		remote("event", args)
-	end))
-	table.insert(HELP, register("atmosphere", "/atmosphere <ID|BASE|RANDOM> -- force a scenario atmosphere", function(args)
-		remote("atmosphere", args)
-	end))
-	table.insert(HELP, register("tint", "/tint <on|off> -- tint the map's meshes by the atmosphere", function(args)
-		local on = string.lower(args[1] or "on") ~= "off"
-		print("[cmd] " .. require(script.Parent.AtmosphereEffects).setTint(on))
-	end))
-	table.insert(HELP, register("endevents", "stop every live event", function()
-		remote("endevents", {})
-	end))
-	table.insert(HELP, register("ledger", "/ledger <ID> -- how many uniques are left", function(args)
-		remote("ledger", args)
-	end))
+	table.insert(
+		HELP,
+		register("event", "/event <ID> -- start a live event", function(args)
+			remote("event", args)
+		end)
+	)
+	table.insert(
+		HELP,
+		register(
+			"atmosphere",
+			"/atmosphere <ID|BASE|RANDOM> -- force a scenario atmosphere",
+			function(args)
+				remote("atmosphere", args)
+			end
+		)
+	)
+	table.insert(
+		HELP,
+		register("tint", "/tint <on|off> -- tint the map's meshes by the atmosphere", function(args)
+			local on = string.lower(args[1] or "on") ~= "off"
+			print("[cmd] " .. require(script.Parent.AtmosphereEffects).setTint(on))
+		end)
+	)
+	table.insert(
+		HELP,
+		register("endevents", "stop every live event", function()
+			remote("endevents", {})
+		end)
+	)
+	table.insert(
+		HELP,
+		register("ledger", "/ledger <ID> -- how many uniques are left", function(args)
+			remote("ledger", args)
+		end)
+	)
 
 	-- LOOT AND VAULT KEYS (build spec §7.5) -- temporary testing tools.
-	table.insert(HELP, register("keychance", "/keychance <0-1|reset> -- vault key drop chance", function(args)
-		remote("keychance", args)
-	end))
-	table.insert(HELP, register("vaultchance", "/vaultchance <0-1|reset> -- treasury spawn chance", function(args)
-		remote("vaultchance", args)
-	end))
-	table.insert(HELP, register("boss", "act as if you defeated this map's boss", function()
-		remote("boss", {})
-	end))
-	table.insert(HELP, register("givekey", "/givekey [KEY_ID] -- give yourself a vault key", function(args)
-		remote("givekey", args)
-	end))
-	table.insert(HELP, register("takekey", "remove your vault keys", function()
-		remote("takekey", {})
-	end))
-	table.insert(HELP, register("keys", "your keys and any testing overrides", function()
-		remote("keys", {})
-	end))
-
-	table.insert(HELP, register("worlds", "list rollable world ids", function()
-		local ids = {}
-		for id, world in Worlds do
-			if world.EnabledInPhase <= GameConfig.CurrentPhase then
-				table.insert(ids, `{id} [{world.Rarity}]`)
+	table.insert(
+		HELP,
+		register("keychance", "/keychance <0-1|reset> -- vault key drop chance", function(args)
+			remote("keychance", args)
+		end)
+	)
+	table.insert(
+		HELP,
+		register("vaultchance", "/vaultchance <0-1|reset> -- treasury spawn chance", function(args)
+			remote("vaultchance", args)
+		end)
+	)
+	table.insert(
+		HELP,
+		register("boss", "act as if you defeated this map's boss", function()
+			remote("boss", {})
+		end)
+	)
+	table.insert(
+		HELP,
+		register(
+			"showboss",
+			"/showboss <id> [scale] -- preview a boss in the nearest boss arena (idle)",
+			function(args)
+				remote("showboss", args)
 			end
-		end
-		table.sort(ids)
-		say(table.concat(ids, ", "))
-	end))
+		)
+	)
+	table.insert(
+		HELP,
+		register("clearboss", "remove the boss preview", function()
+			remote("clearboss", {})
+		end)
+	)
+	table.insert(
+		HELP,
+		register("givekey", "/givekey [KEY_ID] -- give yourself a vault key", function(args)
+			remote("givekey", args)
+		end)
+	)
+	table.insert(
+		HELP,
+		register("takekey", "remove your vault keys", function()
+			remote("takekey", {})
+		end)
+	)
+	table.insert(
+		HELP,
+		register("keys", "your keys and any testing overrides", function()
+			remote("keys", {})
+		end)
+	)
 
-	table.insert(HELP, register("where", "print your position", function()
-		local character = player.Character
-		local pivot = character and character:GetPivot()
-		if pivot then
-			say(string.format("%.0f, %.0f, %.0f", pivot.X, pivot.Y, pivot.Z))
-		end
-	end))
+	table.insert(
+		HELP,
+		register("worlds", "list rollable world ids", function()
+			local ids = {}
+			for id, world in Worlds do
+				if world.EnabledInPhase <= GameConfig.CurrentPhase then
+					table.insert(ids, `{id} [{world.Rarity}]`)
+				end
+			end
+			table.sort(ids)
+			say(table.concat(ids, ", "))
+		end)
+	)
+
+	table.insert(
+		HELP,
+		register("where", "print your position", function()
+			local character = player.Character
+			local pivot = character and character:GetPivot()
+			if pivot then
+				say(string.format("%.0f, %.0f, %.0f", pivot.X, pivot.Y, pivot.Z))
+			end
+		end)
+	)
 
 	register("help", "list commands", function()
 		say("commands: " .. table.concat(HELP, "  |  "))

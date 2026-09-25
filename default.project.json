@@ -36,6 +36,9 @@
       },
       "LuckboundChunkKits": {
         "$path": "assets/rbxm/chunks"
+      },
+      "LuckboundBosses": {
+        "$path": "assets/rbxm/bosses"
       }
     }
   }
