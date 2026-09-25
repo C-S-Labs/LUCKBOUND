@@ -6,7 +6,7 @@
 -- Adding a panel is one row in `Panels`. Adding a destination is one row in
 -- `Destinations`. Neither requires touching the rail, the panel builder, the
 -- teleport system or the server -- and if one ever seems to, the schema is
--- wrong and wants amending rather than special-casing (CLAUDE.md, the prime
+-- wrong and wants amending rather than special-casing (AGENTS.md, the prime
 -- directive).
 --
 -- STATUS is the honest field. "LIVE" means the panel does something today;

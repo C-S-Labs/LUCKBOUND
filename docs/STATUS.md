@@ -1,9 +1,9 @@
 # LUCKBOUND — Project Status
 
-**Last updated:** 2026-09-23 · **Phase 1 complete · expedition entry opened (build spec §7.1) · parties + expeditions as their own server (§7.2) · the scenario layer (§7.3) · caps (§7.4) · both chunk kits uploaded · the hub is authored art · the hub has a UI**
+**Last updated:** 2026-09-25 · **enemy framework + Sky Citadel enemies built · boss preview + live weapon lightning in Studio · repo audit + `INDEX.md`** · **Phase 1 complete · expedition entry opened (build spec §7.1) · parties + expeditions as their own server (§7.2) · the scenario layer (§7.3) · caps (§7.4) · both chunk kits uploaded · the hub is authored art · the hub has a UI**
 
-> **New conversation?** Read `WORKLOG.md`'s top entry first for where the last
-> session stopped, then this file. `CLAUDE.md` has the rules.
+> **New conversation?** Read `INDEX.md` first (the repo map; mandatory for AI agents, see `AGENTS.md`), then
+> `WORKLOG.md`'s top entry for where the last session stopped, then this file. `AGENTS.md` has the rules.
 
 Start here. This is the handoff document: what exists, what is decided, what is
 open, and where to pick up.
@@ -90,7 +90,7 @@ which makes that the strongest possible signal the core premise works.
 
 | | |
 |---|---|
-| Enterable worlds | **Verdant Valley, Ethereal Scape, Sky Citadel** (all three on real meshes since 2026-09-23; no enemies) |
+| Enterable worlds | **Verdant Valley, Ethereal Scape, Sky Citadel** (all three on real meshes since 2026-09-23; enemies built in Blender, not yet spawned in game) |
 | Rollable but NOT enterable | Emberfall (15%), Astral Reach (3%) |
 | Entry point | Expedition Gate `ProximityPrompt`, server-side `Triggered` |
 | Destination | the player's **last roll** — no new state, survives rejoin |
@@ -392,7 +392,7 @@ survive a rescale and a literal does not.
 | **`GroundOffsetY` — done** | **Closed 2026-09-22** | A layout's Y is the walking surface, but setting `mesh.Size`/`CFrame` puts the bounding-box centre there, so every delivered piece would have sat ~20 studs into the floor. `GroundOffsetY` is the studs from the bottom of the box up to the walk plane; absent it defaults to `SizeY/2`, which is the old behaviour exactly. Schema refuses a value outside the piece. |
 | **`IncludeSide` — implemented, and revealed why it never worked** | **Closed 2026-09-22** | Declared and unread since 2026-09-16. Now hangs a pocket off a socket the critical path did not spend, which required tracking spent sockets per placement. Best-effort by design: a pocket that will not fit is a pocket this seed does not get, never a failed expedition. **It also surfaced the real reason no pocket had ever appeared:** every delivered piece has exactly two openings, the path spends both, so no seed leaves a spare socket. A pocket needs a 3-opening piece and this kit has none — `Schema.validateChunks` now refuses that combination rather than letting a SIDE piece validate and never appear. |
 | **The scenario layer** | **New 2026-09-22, headless only** | Build spec §7.3, from the *Procedural Biome Design Brief*. A chunk is physical space; a scenario is what happens inside it. `Content/Scenarios` is the library, chunks declare `Supports`, `Util/ScenarioCore` assigns one per room from the run seed — pure and headless like `ChunkCore`, so pacing is testable in CI. **It spawns nothing:** encounter and reward configuration stay behind the §7 exclusions, deliberately. Measured: **50 distinct chunk/scenario rooms from 11 pieces**, bands at 51/37/11% ordinary/uncommon/rare, Fate touching ~4%. Never walked. |
-| **Two generated PDFs removed** | **Closed 2026-09-22** | `LUCKBOUND_Master_Spec_v0.2.pdf` and `MODELLER_HANDOFF.pdf` were agent-generated binary snapshots that could not be diffed or reviewed, drifted the moment anything shipped, and had begun to contradict the living markdown — a second source of truth, which is what CLAUDE.md rule 1 exists to prevent. Replaced by `MASTER_DESIGN.md` and `CHUNK_AUTHORING.md` + `biomes/`. **The owner's v0.1 PDF at the repository root stays** and remains authoritative on intent. |
+| **Two generated PDFs removed** | **Closed 2026-09-22** | `LUCKBOUND_Master_Spec_v0.2.pdf` and `MODELLER_HANDOFF.pdf` were agent-generated binary snapshots that could not be diffed or reviewed, drifted the moment anything shipped, and had begun to contradict the living markdown — a second source of truth, which is what AGENTS.md rule 1 exists to prevent. Replaced by `MASTER_DESIGN.md` and `CHUNK_AUTHORING.md` + `biomes/`. **The owner's v0.1 PDF at the repository root stays** and remains authoritative on intent. |
 | **A brief that specifies the piece gets the piece it specified** | **Process** | Recorded 2026-09-22 after it happened. The first `CHUNK_AUTHORING.md` was handed to the modeller's AI engine carrying a table of eight footprints (512–1024), a 32-stud flat weld band on every edge, and a 13-item checklist. All three were read as targets: the kit came back at roughly 10× the area with terrain flattened to the boundary and the scatter lost in it, and the better earlier iteration had to be restored from backup. **A number stated in a brief is a number that gets built.** The rewrite states only what breaks the game and says outright that everything else is the modeller's. The general rule for any art brief on this project: **specify the seam, not the piece.** |
 | **FBX exported at 1000× — millimetres, not metres** | **Closed 2026-09-22, in the brief** | The first Verdant Valley batch imported at **256,000 studs** against a declared 256. Exactly 1000×, so the FBX was written in millimetres. The brief now names both settings that have to agree (Blender units Metric/Metres/1.0; FBX Transform → Scale 1.00, Apply Scalings `FBX All`) and, more usefully, tells the modeller to **measure one piece in Studio rather than trust the export** — a 256 piece must read 256. The compensating-factor workaround (FBX export scale 0.001) is named and discouraged, because a compensating factor is a thing someone later removes for looking wrong. |
 | **Kit target raised to 12–16 pieces** | **Content** | Owner-directed 2026-09-22. This file declares 8 — one per role in the Blueprint progression — and the variety of a run is the variety of the kit, so 8 repeats itself. Extra pieces arrive as **variants of existing roles**, not new roles: several meadows, several groves, weighted so one is common and another rare. Entries get added as each piece is authored; declaring chunks with no art would have the blockout drawing pieces nobody meant. **First delivery is 4** — ENTRY, PATH_STRAIGHT, GROVE, BOSS_CLEARING — the smallest set that assembles a complete walkable map. The Grove has to be among them: the WIDE reservation makes it the only piece offering the exit the arena accepts. |
@@ -452,6 +452,28 @@ survive a rescale and a literal does not.
 ---
 
 ## 5. Next session — pick up here
+
+> **2026-09-25: audit + index.** `INDEX.md` is the mandatory first read for every AI agent: a hand-written guide,
+> plus `INDEX_MAP.md`, generated with the exact line of every symbol. `AGENTS.md` holds the agent rules, and
+> `CLAUDE.md`/`GEMINI.md` point to it.
+>
+> Legacy Verdant Valley pieces are gone. The kit is `VV_STRUCTURE.rbxmx` (the same shape as `SC_STRUCTURE`).
+
+> **2026-09-25: the Winged Sentinel stands in Studio.** Run `/showboss winged_sentinel` in the boss arena: 16 studs,
+> facing the entrance, playing the Idle_Guard animation (`rbxassetid://132590990835909`). The Aether Lance's web is
+> geometry plus live Beams; `/bossphase 2` charges the plasma blade.
+>
+> **Owner to verify:** re-import the latest `WingedSentinel.fbx` (with pinned anchors), then check that the strands
+> show (`/showboss` reports the count) and that `/bossphase 2` opens the blade halves.
+>
+> Next for enemies:
+> - The rest of the Sentinel moveset animations (Epic tier and above get weapon animations).
+> - The `EnemyDef` + services wiring, which awaits the owner's OK.
+>
+> Queued:
+> - The crossroads chunk pass.
+> - The hub refinish.
+> - Recolours and scenarios stay parked until after release (files kept).
 
 > **2026-09-24: enemies have a framework.** `docs/ENEMY_FRAMEWORK.md` +
 > `assets/source/enemies/_framework/` build, validate, pose, animate and export every enemy in every biome.
@@ -586,6 +608,8 @@ Studio → open `LUCKBOUND_dev` → Rojo panel **Connect** → **Accept** → **
 
 | Document | Purpose |
 |---|---|
+| `../INDEX.md` / `../INDEX_MAP.md` | **Repo map, read first.** The guide / the generated `symbol:line` map |
+| `ENEMY_FRAMEWORK.md` | How every enemy is built, rigged, animated, exported; weapon FX; `/showboss` |
 | `PROTOTYPE_BUILD_SPEC.md` | **Canonical on architecture.** Schemas, remotes, tasks, §7 exclusions and their amendments |
 | `STATUS.md` | This file — current state and handoff |
 | `TESTING.md` | Running tests, and the Studio manual pass |
@@ -601,4 +625,5 @@ Studio → open `LUCKBOUND_dev` → Rojo panel **Connect** → **Accept** → **
 | `MASTER_DESIGN.md` | **The design source of truth** — the game, Fate, worlds, the generation layers, what is built vs planned |
 | `design/LUCKBOUND_MGD_Original_v0.1.pdf` | Original vision. **Authoritative on intent.** |
 
-`CLAUDE.md` in the repo root holds the rules every AI agent must follow.
+`AGENTS.md` in the repo root holds the rules every AI agent must follow (Claude, ChatGPT/Codex, Gemini, Copilot...);
+`CLAUDE.md`, `GEMINI.md` and `.github/copilot-instructions.md` point to it.

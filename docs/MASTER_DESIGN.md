@@ -7,7 +7,7 @@ relate, and what is built versus planned.
 > `LUCKBOUND_Master_Spec_v0.2.pdf`, a seven-page binary snapshot generated
 > after Phase 1. It could not be diffed, could not be reviewed in a pull
 > request, and drifted the moment anything shipped — a second source of truth
-> competing with the living docs, which is exactly what CLAUDE.md rule 1
+> competing with the living docs, which is exactly what AGENTS.md rule 1
 > exists to prevent. The v0.1 PDF at the repository root stays: it is the
 > owner's original vision and remains **authoritative on intent**. Where this
 > document and v0.1 disagree about what the game is *for*, v0.1 wins.
@@ -217,7 +217,7 @@ never been stress-tested by anyone who did not build it.
 
 ## 7. The rules that protect this
 
-Full list in `CLAUDE.md`. The three that have actually saved the project:
+Full list in `AGENTS.md`. The three that have actually saved the project:
 
 1. **Never create a second version of a module.** CI greps for `_v2`, `_final`,
    `_old` and fails the build.

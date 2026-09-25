@@ -99,7 +99,7 @@ local function playShot(shot: any, index: number)
 	-- Each shot starts from a different bearing so the tour does not read as
 	-- one camera circling one building. Deterministic -- the golden angle
 	-- rather than a random draw, because a loading screen that looks
-	-- different every time reads as unstable, and because CLAUDE.md rule 6
+	-- different every time reads as unstable, and because AGENTS.md rule 6
 	-- forbids math.random anyway.
 	local startAngle = math.rad((index - 1) * 137.5)
 	local sweep = math.rad(loading.ShotArcDegrees)

@@ -5,7 +5,7 @@
 -- The rule it exists to enforce: NO SCREEN INVENTS A NUMBER. Colour, radius,
 -- padding, font and tween length all come from UITheme; behaviour numbers come
 -- from GameConfig. A literal in a UI module is the same violation as a magic
--- number in a System (CLAUDE.md rule 4) -- it is just harder to spot, because
+-- number in a System (AGENTS.md rule 4) -- it is just harder to spot, because
 -- a slightly-wrong shade of purple does not throw.
 --
 -- It also owns the accessibility contract in one place: every tween goes

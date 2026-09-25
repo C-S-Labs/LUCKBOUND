@@ -23,7 +23,7 @@
 -- Trust: nothing here reads a client value. Opening is a ProximityPrompt,
 -- whose Triggered fires on the server with the player; distance and party
 -- membership are re-checked here anyway, and every roll is server-side on
--- this system's own Random (CLAUDE.md rules 5 and 6).
+-- this system's own Random (AGENTS.md rules 5 and 6).
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")

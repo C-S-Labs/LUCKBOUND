@@ -66,7 +66,7 @@ return {
 	--
 	-- A world declares EITHER a chunk kit OR a PrebuiltMap, never both;
 	-- Schema.validateMaps enforces that, because two ways to build one world's
-	-- map is exactly the second competing architecture CLAUDE.md forbids.
+	-- map is exactly the second competing architecture AGENTS.md forbids.
 	PrebuiltMap = {
 		-- Names the AssetManifest entry, which names the Rojo-synced model.
 		AssetKey = "ES_ENVIRONMENT_FULL",

@@ -230,7 +230,7 @@ WorldDefinition = {
 
 Declaring **both is a boot error** (`Schema.validateMaps`). Two routes to one
 world's map is an ambiguity something downstream would have to resolve, and
-resolving it is the second competing architecture CLAUDE.md rule 1 exists to
+resolving it is the second competing architecture AGENTS.md rule 1 exists to
 prevent. Declaring **neither** is legal and means the world is rollable but not
 enterable — printed as a boot warning, refused politely at the Gate.
 
@@ -659,7 +659,7 @@ If a task seems to require one of these, the task is wrong. Raise it; do not imp
 ## 7.1 Amendment: expedition entry, opened 2026-09-16
 
 **Owner-directed.** This is the one item lifted out of §7, and the amendment is
-recorded here rather than made quietly, per CLAUDE.md rule 8.
+recorded here rather than made quietly, per AGENTS.md rule 8.
 
 ### What was opened, and what was not
 
@@ -731,7 +731,7 @@ boot and asserted by test. That is the honest state, not a solved problem:
 **Owner-directed.** Two items the development plan had parked under "not yet"
 (`DEVELOPMENT_PLAN.md` §5: *Parties*, *Expeditions in their own place*) were
 asked for directly, to be testable before the Sky Citadel lands. Recorded here
-rather than made quietly, per CLAUDE.md rule 8. **Combat, loot and enemies
+rather than made quietly, per AGENTS.md rule 8. **Combat, loot and enemies
 remain excluded; nothing here touches them.**
 
 ### What was opened
@@ -824,7 +824,7 @@ courtesy.
 ## 7.3 Amendment: the scenario layer, opened 2026-09-22
 
 **Owner-directed**, from the *Procedural Biome Design Brief*. Recorded here
-rather than made quietly, per CLAUDE.md rule 8 — the same way §7.1 was.
+rather than made quietly, per AGENTS.md rule 8 — the same way §7.1 was.
 
 ### The idea
 
@@ -1061,7 +1061,7 @@ questions directly, and this amendment records the answers as the rules.
 7. **Modifiers move the key chance, never the vault's.** A hypothetical
    "Shattered" modifier with `KeyChanceDelta = -0.05` turns 20% into 15%.
 
-### Trust (CLAUDE.md rule 5)
+### Trust (AGENTS.md rule 5)
 
 - **No request remote.** Opening is a `ProximityPrompt`, whose `Triggered` fires
   on the server with the player, the same as the Gate and the return portal.

@@ -64,7 +64,7 @@ end
 --- Changes a setting: applied locally at once so the UI is never waiting on a
 --- round trip, and sent to the server, which validates it again and is the
 --- one that persists it. A rejected value is simply never saved -- the client
---- is a mirror, not a source (CLAUDE.md rule 5).
+--- is a mirror, not a source (AGENTS.md rule 5).
 function StateController.applySetting(id: string, value: any): boolean
 	local decision = SettingsCore.validate(id, value)
 	if not decision.ok then

@@ -5,7 +5,7 @@
 -- profile, it decides, it awards. The client's code box does no validation at
 -- all beyond emptiness -- it sends the string and shows what comes back.
 -- Anything else would tell a would-be brute-forcer which half of their guess
--- was wrong (CLAUDE.md rule 5).
+-- was wrong (AGENTS.md rule 5).
 
 local Result = require(script.Parent.Result)
 

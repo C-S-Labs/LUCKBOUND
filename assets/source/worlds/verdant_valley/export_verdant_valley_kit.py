@@ -324,7 +324,7 @@ def write_content(out, rows, ids):
         M += [f"\t{r['key']} = {{",
               f'\t\tAssetId = "{aid if aid else "PLACEHOLDER"}",',
               f'\t\tStatus = "{"UPLOADED" if aid else "PLACEHOLDER"}",',
-              '\t\tSource = "assets/rbxm/chunks/verdant_valley/verdant_valley_structure.rbxmx",',
+              '\t\tSource = "assets/rbxm/chunks/verdant_valley/VV_STRUCTURE.rbxmx",',
               f'\t\tNotes = "{r["title"]}. {r["role"]}, opens {"+".join(s for s, _ in r["sockets"])}. '
               f'{r["size"][1]:.1f} studs tall.",',
               "\t},"]

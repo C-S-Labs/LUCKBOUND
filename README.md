@@ -31,7 +31,7 @@ Next up: Phase 2 — expedition entry, combat, loot, Discovery Book.
 | [`docs/ADDENDUM_ASSET_PIPELINE.md`](docs/ADDENDUM_ASSET_PIPELINE.md) | Future asset/procgen architecture — **out of scope for now** |
 | [`docs/MASTER_DESIGN.md`](docs/MASTER_DESIGN.md) | **The design source of truth** — what the game is, and what is built vs planned |
 | [`docs/design/LUCKBOUND_MGD_Original_v0.1.pdf`](docs/design/LUCKBOUND_MGD_Original_v0.1.pdf) | The original vision. **Authoritative on intent** — kept unchanged |
-| [`CLAUDE.md`](CLAUDE.md) | Rules every AI agent on this project must follow |
+| [`AGENTS.md`](AGENTS.md) | Rules every AI agent on this project must follow |
 
 ## Quick start
 
@@ -50,7 +50,7 @@ playtesting, or DataStores fail silently.
 
 **Systems are reusable. Content is data.** Adding a world means adding one file
 under `src/shared/Content/Worlds/` and changing no System. If that isn't true,
-the schema is wrong — see `CLAUDE.md`.
+the schema is wrong — see `AGENTS.md`.
 
 **The roll is true RNG.** No player state — Fate level, points, playtime, spend —
 changes the odds of any world. Fate is a score and unlock stat, never a thumb on

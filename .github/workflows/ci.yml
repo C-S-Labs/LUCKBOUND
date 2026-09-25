@@ -11,6 +11,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      # before Install Luau: that step unpacks binaries into the checkout
+      - name: Repository index is current (INDEX_MAP.md)
+        run: python3 tools/gen_index.py --check
+
       - name: Install Luau
         run: |
           curl -sSL -o luau.zip https://github.com/luau-lang/luau/releases/latest/download/luau-ubuntu.zip
@@ -35,7 +39,7 @@ jobs:
           hits=$(find src -name '*_Final*' -o -name '*_NEW*' -o -name '*_FIXED*' \
                           -o -name '*_v2*' -o -name '*_old*' -o -name '*_backup*')
           if [ -n "$hits" ]; then
-            echo "::error::duplicate-module names found -- see CLAUDE.md rule 1"
+            echo "::error::duplicate-module names found -- see AGENTS.md rule 1"
             echo "$hits"
             exit 1
           fi

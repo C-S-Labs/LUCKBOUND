@@ -8,7 +8,7 @@
 -- WHAT A CLIENT MAY SAY: an action name and, for most actions, a UserId. The
 -- UserId is only an identifier -- it must name a player who is in THIS server
 -- right now, or the request is refused before PartyCore sees it. Nothing
--- else crosses the wire (CLAUDE.md rule 5).
+-- else crosses the wire (AGENTS.md rule 5).
 --
 -- WHERE A PARTY LIVES. In this server's memory, and nowhere else. An
 -- expedition happens on a different server (ExpeditionSystem, §7.2), so the

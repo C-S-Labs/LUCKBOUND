@@ -4,7 +4,7 @@
 --
 -- ChunkLoader turns a generated layout into geometry. This turns ONE AUTHORED
 -- SCENE into geometry. A world declares which it is (WorldDefinition
--- .PrebuiltMap) and nothing downstream branches on a world id -- CLAUDE.md's
+-- .PrebuiltMap) and nothing downstream branches on a world id -- AGENTS.md's
 -- prime directive holds either way, because "generated or authored" is data.
 --
 -- WHY A WORLD WOULD BE AUTHORED
