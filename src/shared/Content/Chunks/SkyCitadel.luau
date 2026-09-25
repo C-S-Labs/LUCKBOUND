@@ -43,7 +43,15 @@
 local WIDTH = { SKYWAY = 40, ASCENT = 72 }
 
 local function socket(id: string, kind: string, x: number, z: number, facing: number)
-	return { Id = id, Kind = kind, OffsetX = x, OffsetY = 0, OffsetZ = z, Facing = facing, Width = WIDTH[kind] }
+	return {
+		Id = id,
+		Kind = kind,
+		OffsetX = x,
+		OffsetY = 0,
+		OffsetZ = z,
+		Facing = facing,
+		Width = WIDTH[kind],
+	}
 end
 
 local CHUNKS = {
@@ -372,7 +380,11 @@ local CHUNKS = {
 		Role = "PATH" :: any,
 		AssetKey = "SC_CHUNK_PATH_TEE",
 		-- The tee junction.
-		Sockets = { socket("south", "SKYWAY", 0, 128, 180), socket("east", "SKYWAY", 128, 0, 90), socket("west", "SKYWAY", -128, 0, 270) },
+		Sockets = {
+			socket("south", "SKYWAY", 0, 128, 180),
+			socket("east", "SKYWAY", 128, 0, 90),
+			socket("west", "SKYWAY", -128, 0, 270),
+		},
 		Supports = { Combat = true, Event = true },
 		Weight = 14,
 		MaxPerLayout = 1,

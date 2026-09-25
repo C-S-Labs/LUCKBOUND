@@ -104,7 +104,11 @@ local function deliver(player: Player, profile: any, world: any, outcome: any, f
 	-- A FORCED roll is not an achievement either, for a stronger reason: a
 	-- developer typing /roll ASTRAL_REACH must not fire a Fatebreak banner at
 	-- everyone. Same rule, same line.
-	if not outcome.IsScripted and not forced and rarity.Order >= Constants.ANNOUNCE_RARITY_ORDER then
+	if
+		not outcome.IsScripted
+		and not forced
+		and rarity.Order >= Constants.ANNOUNCE_RARITY_ORDER
+	then
 		EventSystem.announce({
 			Kind = "ROLL",
 			Text = `{player.Name} rolled {world.Name}!`,

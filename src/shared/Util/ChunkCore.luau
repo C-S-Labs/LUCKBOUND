@@ -108,7 +108,8 @@ function ChunkCore.placeAgainst(chunk: any, openSocket: any, index: number): (an
 					Z = openSocket.Z - oz,
 					Yaw = yaw,
 					Index = index,
-				}, s
+				},
+					s
 			end
 		end
 	end
@@ -621,11 +622,10 @@ function ChunkCore.assemble(
 		end
 	end
 
-	return true,
-		{
-			WorldId = options.WorldId,
-			Chunks = placed,
-		}
+	return true, {
+		WorldId = options.WorldId,
+		Chunks = placed,
+	}
 end
 
 --- Retries assembly across several seeds. A layout can legitimately fail when

@@ -70,7 +70,8 @@ function EventSystem.startLocal(event: any): ()
 		WorldId = event.WorldId,
 		Priority = event.Priority,
 		StartedAt = event.StartedAt or now,
-		EndsAt = (event.StartedAt or now) + (event.Duration or GameConfig.Events.FatebreakDurationSeconds),
+		EndsAt = (event.StartedAt or now)
+			+ (event.Duration or GameConfig.Events.FatebreakDurationSeconds),
 		TriggeredBy = event.TriggeredBy,
 		DiscoveryId = event.DiscoveryId,
 	})
@@ -158,11 +159,7 @@ function EventSystem.trigger(definitionId: string, player: Player?): any
 			return Result.err("a unique event needs a claimant")
 		end
 
-		local claim = LedgerSystem.claim(
-			definition.Unique.LedgerId,
-			definition.Unique.Cap,
-			player
-		)
+		local claim = LedgerSystem.claim(definition.Unique.LedgerId, definition.Unique.Cap, player)
 		if not claim.ok then
 			return Result.err(claim.err)
 		end
@@ -245,7 +242,9 @@ function EventSystem.init(ledgerSystem: any?): ()
 		if ok then
 			print("[EventSystem] cross-server Fatebreaks active")
 		else
-			warn(`[EventSystem] cross-server subscribe unavailable (expected on an unpublished place): {err}`)
+			warn(
+				`[EventSystem] cross-server subscribe unavailable (expected on an unpublished place): {err}`
+			)
 		end
 	end)
 

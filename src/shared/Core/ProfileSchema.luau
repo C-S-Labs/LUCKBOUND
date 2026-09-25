@@ -86,9 +86,7 @@ function ProfileSchema.migrate(stored: any, now: number): (any, number)
 		if not step then
 			-- No path forward from this version. Refuse rather than silently
 			-- serving a profile the systems will misread.
-			error(
-				`no migration from profile schema v{version} to v{version + 1}`
-			)
+			error(`no migration from profile schema v{version} to v{version + 1}`)
 		end
 		profile = step(profile)
 		version += 1

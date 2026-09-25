@@ -29,20 +29,82 @@ local AtmosphereEffects = {}
 
 -- Per scenario: the light on the spires, the flyers, and how they behave.
 local SCENARIO = {
-	LOCKDOWN = { Light = "atm_alarm_beacon", Glow = Color3.fromRGB(255, 60, 70), Shape = "Beat", Period = 1.6,
-		Flyer = "atm_security_probe", Count = 8, Size = 7, Speed = 22, Beams = true, Patrol = true },
-	SIEGE = { Light = "atm_signal_fire", Glow = Color3.fromRGB(255, 140, 60), Shape = "Flicker", Period = 0.4,
-		Flyer = "atm_raider_glider", Count = 6, Size = 12, Speed = 38 },
-	STORMHAWK = { Light = "atm_lightning_rod", Glow = Color3.fromRGB(200, 220, 255), Shape = "Strike",
-		Flyer = "atm_stormhawk", Count = 4, Size = 34, Speed = 44, Lightning = true },
-	RIME = { Light = "atm_frost_lantern", Glow = Color3.fromRGB(150, 220, 255), Shape = "Sine", Period = 5,
-		Flyer = "atm_ice_wisp", Count = 8, Size = 5, Speed = 12, Drift = "atm_ice_floe", DriftSize = 32 },
-	RECLAIMED = { Light = "atm_glow_bloom", Glow = Color3.fromRGB(255, 190, 110), Shape = "Sine", Period = 4,
-		Flyer = "atm_moth", Count = 12, Size = 7, Speed = 14, Drift = "atm_seed_pod", DriftSize = 12 },
-	AETHER_SURGE = { Light = "atm_aether_node", Glow = Color3.fromRGB(190, 140, 255), Shape = "Sine", Period = 3,
-		Flyer = "atm_aether_wisp", Count = 14, Size = 4, Speed = 18 },
-	UNMOORING = { Light = "atm_stabilizer_beacon", Glow = Color3.fromRGB(120, 200, 255), Shape = "Flicker",
-		Period = 0.6, Flyer = "atm_repair_drone", Count = 7, Size = 6, Speed = 20 },
+	LOCKDOWN = {
+		Light = "atm_alarm_beacon",
+		Glow = Color3.fromRGB(255, 60, 70),
+		Shape = "Beat",
+		Period = 1.6,
+		Flyer = "atm_security_probe",
+		Count = 8,
+		Size = 7,
+		Speed = 22,
+		Beams = true,
+		Patrol = true,
+	},
+	SIEGE = {
+		Light = "atm_signal_fire",
+		Glow = Color3.fromRGB(255, 140, 60),
+		Shape = "Flicker",
+		Period = 0.4,
+		Flyer = "atm_raider_glider",
+		Count = 6,
+		Size = 12,
+		Speed = 38,
+	},
+	STORMHAWK = {
+		Light = "atm_lightning_rod",
+		Glow = Color3.fromRGB(200, 220, 255),
+		Shape = "Strike",
+		Flyer = "atm_stormhawk",
+		Count = 4,
+		Size = 34,
+		Speed = 44,
+		Lightning = true,
+	},
+	RIME = {
+		Light = "atm_frost_lantern",
+		Glow = Color3.fromRGB(150, 220, 255),
+		Shape = "Sine",
+		Period = 5,
+		Flyer = "atm_ice_wisp",
+		Count = 8,
+		Size = 5,
+		Speed = 12,
+		Drift = "atm_ice_floe",
+		DriftSize = 32,
+	},
+	RECLAIMED = {
+		Light = "atm_glow_bloom",
+		Glow = Color3.fromRGB(255, 190, 110),
+		Shape = "Sine",
+		Period = 4,
+		Flyer = "atm_moth",
+		Count = 12,
+		Size = 7,
+		Speed = 14,
+		Drift = "atm_seed_pod",
+		DriftSize = 12,
+	},
+	AETHER_SURGE = {
+		Light = "atm_aether_node",
+		Glow = Color3.fromRGB(190, 140, 255),
+		Shape = "Sine",
+		Period = 3,
+		Flyer = "atm_aether_wisp",
+		Count = 14,
+		Size = 4,
+		Speed = 18,
+	},
+	UNMOORING = {
+		Light = "atm_stabilizer_beacon",
+		Glow = Color3.fromRGB(120, 200, 255),
+		Shape = "Flicker",
+		Period = 0.6,
+		Flyer = "atm_repair_drone",
+		Count = 7,
+		Size = 6,
+		Speed = 20,
+	},
 }
 
 local folder: Folder? = nil
@@ -99,13 +161,27 @@ end
 
 -- ---- The map: its extent and its spire tops -----------------------------------------
 
-type Map = { Stage: Instance?, Centre: Vector3, Min: Vector3, Max: Vector3, Floor: number, Tips: { Vector3 },
-	Path: { Vector3 } }
+type Map = {
+	Stage: Instance?,
+	Centre: Vector3,
+	Min: Vector3,
+	Max: Vector3,
+	Floor: number,
+	Tips: { Vector3 },
+	Path: { Vector3 },
+}
 
 local function readMap(stageName: string?, centre: Vector3, anchors: any): Map
 	local floorY = centre.Y
-	local map: Map = { Stage = nil, Centre = centre, Min = centre - Vector3.new(300, 0, 300),
-		Max = centre + Vector3.new(300, 0, 300), Floor = floorY, Tips = {}, Path = {} }
+	local map: Map = {
+		Stage = nil,
+		Centre = centre,
+		Min = centre - Vector3.new(300, 0, 300),
+		Max = centre + Vector3.new(300, 0, 300),
+		Floor = floorY,
+		Tips = {},
+		Path = {},
+	}
 	local stages = Workspace:FindFirstChild("ExpeditionStage")
 	local stage = stages and stageName and stages:FindFirstChild(stageName)
 	map.Stage = stage
@@ -135,7 +211,11 @@ local function readMap(stageName: string?, centre: Vector3, anchors: any): Map
 			local hits = {}
 			for gx = -116, 116, 12 do
 				for gz = -116, 116, 12 do
-					local r = Workspace:Raycast(Vector3.new(c.X + gx, floorY + 175, c.Z + gz), Vector3.new(0, -140, 0), params)
+					local r = Workspace:Raycast(
+						Vector3.new(c.X + gx, floorY + 175, c.Z + gz),
+						Vector3.new(0, -140, 0),
+						params
+					)
 					if r and r.Position.Y > floorY + 35 then
 						table.insert(hits, r.Position)
 					end
@@ -173,13 +253,19 @@ end
 
 local function randomIn(map: Map, rng: Random, y: number, pad: number?): Vector3
 	local p = pad or 0
-	return Vector3.new(rng:NextNumber(map.Min.X - p, map.Max.X + p), y, rng:NextNumber(map.Min.Z - p, map.Max.Z + p))
+	return Vector3.new(
+		rng:NextNumber(map.Min.X - p, map.Max.X + p),
+		y,
+		rng:NextNumber(map.Min.Z - p, map.Max.Z + p)
+	)
 end
 
 -- Flight bands: over every crown (the kit's crowns reach 160 above the deck),
 -- or under every keel (96 below it). A flyer never leaves its band.
 local function band(map: Map, rng: Random, low: boolean): number
-	return if low then map.Floor - rng:NextNumber(115, 170) else map.Floor + rng:NextNumber(178, 250)
+	return if low
+		then map.Floor - rng:NextNumber(115, 170)
+		else map.Floor + rng:NextNumber(178, 250)
 end
 
 -- ---- Lights on the spires ----------------------------------------------------------
@@ -194,15 +280,26 @@ local function buildLights(cfg: any, map: Map, root: Instance, lights: { any })
 			return
 		end
 		p.CFrame = CFrame.new(tip + Vector3.new(0, p.Size.Y / 2 - 0.8, 0)) -- seated into the stone, not on it
-		local glow = part({ Name = "Glow", Shape = Enum.PartType.Ball, Material = Enum.Material.Neon, Color = cfg.Glow,
-			Size = Vector3.new(1.4, 1.4, 1.4), CFrame = CFrame.new(tip + Vector3.new(0, p.Size.Y * 0.75, 0)),
-			Transparency = 0.2 }, root)
+		local glow = part({
+			Name = "Glow",
+			Shape = Enum.PartType.Ball,
+			Material = Enum.Material.Neon,
+			Color = cfg.Glow,
+			Size = Vector3.new(1.4, 1.4, 1.4),
+			CFrame = CFrame.new(tip + Vector3.new(0, p.Size.Y * 0.75, 0)),
+			Transparency = 0.2,
+		}, root)
 		local l = Instance.new("PointLight")
 		l.Color = cfg.Glow
 		l.Range = 40
 		l.Brightness = 2
 		l.Parent = glow
-		table.insert(lights, { Glow = glow, Light = l, Phase = math.random() * 10, Tip = tip + Vector3.new(0, p.Size.Y, 0) })
+		table.insert(lights, {
+			Glow = glow,
+			Light = l,
+			Phase = math.random() * 10,
+			Tip = tip + Vector3.new(0, p.Size.Y, 0),
+		})
 	end
 end
 
@@ -218,15 +315,33 @@ end
 
 -- ---- Flyers ------------------------------------------------------------------------
 
-type Mover = { Part: BasePart, Pos: Vector3, Vel: Vector3, Target: Vector3, Low: boolean, Speed: number,
-	Beam: BasePart?, Wobble: number, Patrol: boolean?, Route: { number }?, At: number? }
+type Mover = {
+	Part: BasePart,
+	Pos: Vector3,
+	Vel: Vector3,
+	Target: Vector3,
+	Low: boolean,
+	Speed: number,
+	Beam: BasePart?,
+	Wobble: number,
+	Patrol: boolean?,
+	Route: { number }?,
+	At: number?,
+}
 
 local function newMover(p: BasePart, map: Map, rng: Random, low: boolean, speed: number): Mover
 	local y = band(map, rng, low)
 	local pos = randomIn(map, rng, y, 40)
-	return { Part = p, Pos = pos, Vel = Vector3.new(rng:NextNumber(-1, 1), 0, rng:NextNumber(-1, 1)).Unit * speed,
-		Target = randomIn(map, rng, band(map, rng, low), 40), Low = low, Speed = speed * rng:NextNumber(0.75, 1.25),
-		Beam = nil, Wobble = rng:NextNumber(0, 10) }
+	return {
+		Part = p,
+		Pos = pos,
+		Vel = Vector3.new(rng:NextNumber(-1, 1), 0, rng:NextNumber(-1, 1)).Unit * speed,
+		Target = randomIn(map, rng, band(map, rng, low), 40),
+		Low = low,
+		Speed = speed * rng:NextNumber(0.75, 1.25),
+		Beam = nil,
+		Wobble = rng:NextNumber(0, 10),
+	}
 end
 
 -- PATROLS cross the whole map. The walkway points (from the server's scan)
@@ -343,10 +458,19 @@ local function stepMover(m: Mover, map: Map, rng: Random, dt: number)
 	-- which flew them tail-first (owner, 2026-09-23).
 	local flat = Vector3.new(fwd.X, 0, fwd.Z)
 	local look = if flat.Magnitude > 0.05 then flat.Unit else Vector3.new(1, 0, 0)
-	m.Part.CFrame = CFrame.lookAt(m.Pos, m.Pos + look) * CFrame.Angles(0, math.rad(-90), 0) * CFrame.Angles(bank, 0, 0)
+	m.Part.CFrame = CFrame.lookAt(m.Pos, m.Pos + look)
+		* CFrame.Angles(0, math.rad(-90), 0)
+		* CFrame.Angles(bank, 0, 0)
 end
 
-local function buildFlyers(cfg: any, map: Map, root: Instance, rng: Random, movers: { Mover }, beamColour: Color3)
+local function buildFlyers(
+	cfg: any,
+	map: Map,
+	root: Instance,
+	rng: Random,
+	movers: { Mover },
+	beamColour: Color3
+)
 	if not cfg or not cfg.Flyer then
 		return
 	end
@@ -355,7 +479,8 @@ local function buildFlyers(cfg: any, map: Map, root: Instance, rng: Random, move
 		if not p then
 			return
 		end
-		local m = newMover(p, map, rng, cfg.Low == true or (not cfg.Beams and i % 3 == 0), cfg.Speed)
+		local m =
+			newMover(p, map, rng, cfg.Low == true or (not cfg.Beams and i % 3 == 0), cfg.Speed)
 		if cfg.Patrol and #map.Path > 1 then
 			m.Patrol = true
 			m.At = rng:NextInteger(1, #map.Path)
@@ -380,23 +505,55 @@ end
 
 -- ---- Lightning --------------------------------------------------------------------
 
-local function bolt(from: Vector3, to: Vector3, rng: Random, root: Instance, colour: Color3, width: number, out: { BasePart })
+local function bolt(
+	from: Vector3,
+	to: Vector3,
+	rng: Random,
+	root: Instance,
+	colour: Color3,
+	width: number,
+	out: { BasePart }
+)
 	local steps = 9
 	local prev = from
 	for i = 1, steps do
 		local f = i / steps
 		local p = from:Lerp(to, f)
 		if i < steps then
-			p += Vector3.new(rng:NextNumber(-22, 22), rng:NextNumber(-6, 6), rng:NextNumber(-22, 22)) * (1 - f * 0.5)
+			p += Vector3.new(
+				rng:NextNumber(-22, 22),
+				rng:NextNumber(-6, 6),
+				rng:NextNumber(-22, 22)
+			) * (1 - f * 0.5)
 		end
-		table.insert(out, part({ Name = "Bolt", Material = Enum.Material.Neon, Color = colour,
-			Size = Vector3.new(width, width, (p - prev).Magnitude + width), CFrame = CFrame.lookAt((prev + p) / 2, p) }, root))
+		table.insert(
+			out,
+			part({
+				Name = "Bolt",
+				Material = Enum.Material.Neon,
+				Color = colour,
+				Size = Vector3.new(width, width, (p - prev).Magnitude + width),
+				CFrame = CFrame.lookAt((prev + p) / 2, p),
+			}, root)
+		)
 		-- a fork now and then, running off and dying out
 		if i > 2 and i < steps - 1 and rng:NextNumber() < 0.3 then
-			local fork = p + Vector3.new(rng:NextNumber(-60, 60), -rng:NextNumber(30, 90), rng:NextNumber(-60, 60))
-			table.insert(out, part({ Name = "Fork", Material = Enum.Material.Neon, Color = colour,
-				Size = Vector3.new(width * 0.5, width * 0.5, (fork - p).Magnitude), CFrame = CFrame.lookAt((p + fork) / 2, fork) },
-				root))
+			local fork = p
+				+ Vector3.new(
+					rng:NextNumber(-60, 60),
+					-rng:NextNumber(30, 90),
+					rng:NextNumber(-60, 60)
+				)
+			table.insert(
+				out,
+				part({
+					Name = "Fork",
+					Material = Enum.Material.Neon,
+					Color = colour,
+					Size = Vector3.new(width * 0.5, width * 0.5, (fork - p).Magnitude),
+					CFrame = CFrame.lookAt((p + fork) / 2, fork),
+				}, root)
+			)
 		end
 		prev = p
 	end
@@ -410,7 +567,11 @@ local function buildWeather(list: any, root: Instance)
 	end
 	local hosts = {}
 	for _, w in list do
-		local host = part({ Name = w.Name or "Weather", Transparency = 1, Size = vec(w.Box, Vector3.new(160, 60, 160)) }, root)
+		local host = part({
+			Name = w.Name or "Weather",
+			Transparency = 1,
+			Size = vec(w.Box, Vector3.new(160, 60, 160)),
+		}, root)
 		local e = Instance.new("ParticleEmitter")
 		e.Rate = num(w.Rate, 20)
 		e.Lifetime = NumberRange.new(num(w.Lifetime, 6) * 0.7, num(w.Lifetime, 6))
@@ -437,14 +598,17 @@ local function buildWeather(list: any, root: Instance)
 		e.Parent = host
 		table.insert(hosts, host)
 	end
-	table.insert(conns, RunService.RenderStepped:Connect(function()
-		local cam = Workspace.CurrentCamera
-		if cam then
-			for _, h in hosts do
-				h.CFrame = CFrame.new(cam.CFrame.Position)
+	table.insert(
+		conns,
+		RunService.RenderStepped:Connect(function()
+			local cam = Workspace.CurrentCamera
+			if cam then
+				for _, h in hosts do
+					h.CFrame = CFrame.new(cam.CFrame.Position)
+				end
 			end
-		end
-	end))
+		end)
+	)
 end
 
 local function buildDome(d: any, root: Instance, map: Map)
@@ -464,25 +628,35 @@ local function buildDome(d: any, root: Instance, map: Map)
 		for j = 0, segs - 1 do
 			local a = (j + 0.5) / segs * 2 * math.pi
 			local pos = centre + Vector3.new(math.cos(a) * rr, R * math.sin(em), math.sin(a) * rr)
-			part({ Name = "DomePanel", Material = mat, Color = col(d.Color, Color3.fromRGB(255, 64, 76)),
+			part({
+				Name = "DomePanel",
+				Material = mat,
+				Color = col(d.Color, Color3.fromRGB(255, 64, 76)),
 				Transparency = num(d.Transparency, 0.86),
 				Size = Vector3.new(2 * math.pi * rr / segs * 1.05, R * (e1 - e0) * 1.03, 1),
-				CFrame = CFrame.lookAt(pos, centre) }, root)
+				CFrame = CFrame.lookAt(pos, centre),
+			}, root)
 			-- a glowing seam along each ring's lower edge: the shell reads as a
 			-- lattice from the path even where the forcefield sheen is faint
 			local seamR = R * math.cos(e0)
-			local seamPos = centre + Vector3.new(math.cos(a) * seamR, R * math.sin(e0), math.sin(a) * seamR)
-			part({ Name = "DomeSeam", Material = Enum.Material.Neon, Color = col(d.Color, Color3.fromRGB(255, 64, 76)),
+			local seamPos = centre
+				+ Vector3.new(math.cos(a) * seamR, R * math.sin(e0), math.sin(a) * seamR)
+			part({
+				Name = "DomeSeam",
+				Material = Enum.Material.Neon,
+				Color = col(d.Color, Color3.fromRGB(255, 64, 76)),
 				Transparency = num(d.SeamTransparency, 0.35),
 				Size = Vector3.new(2 * math.pi * seamR / segs * 1.02, 2.5, 2.5),
-				CFrame = CFrame.lookAt(seamPos, centre + Vector3.new(0, R * math.sin(e0), 0)) }, root)
+				CFrame = CFrame.lookAt(seamPos, centre + Vector3.new(0, R * math.sin(e0), 0)),
+			}, root)
 		end
 	end
 	for i = 1, 6 do
 		local py = prop("atm_dome_pylon", 60, root)
 		if py then
 			local a = i / 6 * 2 * math.pi
-			py.CFrame = CFrame.new(centre + Vector3.new(math.cos(a) * R * 0.97, 30, math.sin(a) * R * 0.97))
+			py.CFrame =
+				CFrame.new(centre + Vector3.new(math.cos(a) * R * 0.97, 30, math.sin(a) * R * 0.97))
 		end
 	end
 end
@@ -494,7 +668,8 @@ local function buildPlumes(pl: any, root: Instance, map: Map, rng: Random)
 	for i = 1, num(pl.Count, 5) do
 		-- wrecks lie OUTSIDE the map, down in the cloud, burning
 		local a = i / num(pl.Count, 5) * 2 * math.pi + rng:NextNumber(-0.3, 0.3)
-		local r = math.max(map.Max.X - map.Min.X, map.Max.Z - map.Min.Z) * 0.5 + rng:NextNumber(180, 420)
+		local r = math.max(map.Max.X - map.Min.X, map.Max.Z - map.Min.Z) * 0.5
+			+ rng:NextNumber(180, 420)
 		local base = map.Centre + Vector3.new(math.cos(a) * r, -110, math.sin(a) * r)
 		local wreck = prop(if i % 2 == 0 then "atm_wreck_stern" else "atm_burning_wreck", 60, root)
 		if wreck then
@@ -508,12 +683,20 @@ local function buildPlumes(pl: any, root: Instance, map: Map, rng: Random)
 		for k = 0, 8 do
 			local f = k / 8
 			local s = w * (0.5 + f * 1.6)
-			part({ Name = "Plume", Shape = Enum.PartType.Ball, Size = Vector3.new(s, s, s),
+			part({
+				Name = "Plume",
+				Shape = Enum.PartType.Ball,
+				Size = Vector3.new(s, s, s),
 				CFrame = CFrame.new(base + Vector3.new(f * h * 0.3, 12 + f * h, f * h * 0.1)),
 				Material = if k == 0 then Enum.Material.Neon else Enum.Material.SmoothPlastic,
-				Color = if k == 0 then col(pl.Glow, Color3.fromRGB(255, 132, 60))
-					else col(pl.Color, Color3.fromRGB(92, 86, 92)):Lerp(col(pl.Shade, Color3.fromRGB(54, 50, 58)), f),
-				Transparency = 0.1 + f * 0.55 }, root)
+				Color = if k == 0
+					then col(pl.Glow, Color3.fromRGB(255, 132, 60))
+					else col(pl.Color, Color3.fromRGB(92, 86, 92)):Lerp(
+						col(pl.Shade, Color3.fromRGB(54, 50, 58)),
+						f
+					),
+				Transparency = 0.1 + f * 0.55,
+			}, root)
 		end
 	end
 end
@@ -533,7 +716,12 @@ local function beam(a0: Attachment, a1: Attachment, props: { [string]: any }): B
 end
 
 local function anchorAt(root: Instance, pos: Vector3): (Part, Attachment)
-	local p = part({ Name = "AuroraAnchor", Transparency = 1, Size = Vector3.new(1, 1, 1), CFrame = CFrame.new(pos) }, root)
+	local p = part({
+		Name = "AuroraAnchor",
+		Transparency = 1,
+		Size = Vector3.new(1, 1, 1),
+		CFrame = CFrame.new(pos),
+	}, root)
 	local a = Instance.new("Attachment")
 	a.Parent = p
 	return p, a
@@ -558,54 +746,78 @@ local function buildAurora(au: any, root: Instance, map: Map)
 			local f = k / 6
 			local a = heading + (f - 0.5) * 1.3
 			local r = span * 0.45 + 120 + math.sin(f * math.pi) * 90
-			local anchor, att = anchorAt(root, map.Centre + Vector3.new(math.cos(a) * r, height - map.Floor, math.sin(a) * r))
+			local anchor, att = anchorAt(
+				root,
+				map.Centre + Vector3.new(math.cos(a) * r, height - map.Floor, math.sin(a) * r)
+			)
 			table.insert(points, { Part = anchor, Att = att, A = a, R = r, H = height, F = f })
 		end
 		local beams = {}
 		for k = 1, #points - 1 do
-			table.insert(beams, beam(points[k].Att, points[k + 1].Att, {
-				Width0 = 70 + 40 * math.sin(k), Width1 = 70 + 40 * math.sin(k + 1),
-				Color = ColorSequence.new(base:Lerp(tip, (k - 1) / 6), base:Lerp(tip, k / 6)),
-				Transparency = NumberSequence.new({
-					NumberSequenceKeypoint.new(0, 0.55), NumberSequenceKeypoint.new(0.5, num(au.Transparency, 0.5) + 0.15),
-					NumberSequenceKeypoint.new(1, 0.55) }),
-			}))
+			table.insert(
+				beams,
+				beam(points[k].Att, points[k + 1].Att, {
+					Width0 = 70 + 40 * math.sin(k),
+					Width1 = 70 + 40 * math.sin(k + 1),
+					Color = ColorSequence.new(base:Lerp(tip, (k - 1) / 6), base:Lerp(tip, k / 6)),
+					Transparency = NumberSequence.new({
+						NumberSequenceKeypoint.new(0, 0.55),
+						NumberSequenceKeypoint.new(0.5, num(au.Transparency, 0.5) + 0.15),
+						NumberSequenceKeypoint.new(1, 0.55),
+					}),
+				})
+			)
 		end
 		table.insert(curtains, { Points = points, Beams = beams, Phase = i * 1.7 })
 		-- a prism under the curtain, streaming light up into it
 		local pr = prop("atm_aurora_prism", 22, root)
 		local mid = points[4]
-		local pbase = map.Centre + Vector3.new(math.cos(mid.A) * (mid.R - 60), 230, math.sin(mid.A) * (mid.R - 60))
+		local pbase = map.Centre
+			+ Vector3.new(math.cos(mid.A) * (mid.R - 60), 230, math.sin(mid.A) * (mid.R - 60))
 		local _, pa = anchorAt(root, pbase)
 		for k = 2, 6, 2 do
-			beam(pa, points[k].Att, { Width0 = 3, Width1 = 10, Color = ColorSequence.new(tip, base),
-				Transparency = NumberSequence.new(0.35, 0.8) })
+			beam(pa, points[k].Att, {
+				Width0 = 3,
+				Width1 = 10,
+				Color = ColorSequence.new(tip, base),
+				Transparency = NumberSequence.new(0.35, 0.8),
+			})
 		end
 		table.insert(prisms, { Part = pr, Pos = pbase, Phase = i })
 	end
 	local started = os.clock()
-	table.insert(conns, RunService.Heartbeat:Connect(function()
-		local t = (os.clock() - started) * num(au.Speed, 0.2) * 3
-		for _, c in curtains do
-			for _, p in c.Points do
-				-- the curtain ripples: each point rises, falls and sways on its own phase
-				local wave = math.sin(t + p.F * 5 + c.Phase)
-				local a = p.A + math.sin(t * 0.3 + c.Phase) * 0.04
-				p.Part.CFrame = CFrame.new(map.Centre + Vector3.new(math.cos(a) * (p.R + wave * 25),
-					p.H - map.Floor + wave * 18, math.sin(a) * (p.R + wave * 25)))
+	table.insert(
+		conns,
+		RunService.Heartbeat:Connect(function()
+			local t = (os.clock() - started) * num(au.Speed, 0.2) * 3
+			for _, c in curtains do
+				for _, p in c.Points do
+					-- the curtain ripples: each point rises, falls and sways on its own phase
+					local wave = math.sin(t + p.F * 5 + c.Phase)
+					local a = p.A + math.sin(t * 0.3 + c.Phase) * 0.04
+					p.Part.CFrame = CFrame.new(
+						map.Centre
+							+ Vector3.new(
+								math.cos(a) * (p.R + wave * 25),
+								p.H - map.Floor + wave * 18,
+								math.sin(a) * (p.R + wave * 25)
+							)
+					)
+				end
+				for k, b in c.Beams do
+					b.CurveSize0 = math.sin(t * 0.8 + k + c.Phase) * 40
+					b.CurveSize1 = -math.sin(t * 0.8 + k + 1 + c.Phase) * 40
+				end
 			end
-			for k, b in c.Beams do
-				b.CurveSize0 = math.sin(t * 0.8 + k + c.Phase) * 40
-				b.CurveSize1 = -math.sin(t * 0.8 + k + 1 + c.Phase) * 40
+			for _, pr in prisms do
+				if pr.Part then
+					pr.Part.CFrame = CFrame.new(
+						pr.Pos + Vector3.new(0, math.sin(t + pr.Phase) * 4, 0)
+					) * CFrame.Angles(0, t * 0.5 + pr.Phase, 0)
+				end
 			end
-		end
-		for _, pr in prisms do
-			if pr.Part then
-				pr.Part.CFrame = CFrame.new(pr.Pos + Vector3.new(0, math.sin(t + pr.Phase) * 4, 0))
-					* CFrame.Angles(0, t * 0.5 + pr.Phase, 0)
-			end
-		end
-	end))
+		end)
+	)
 end
 
 local function buildDebris(db: any, root: Instance, map: Map, rng: Random)
@@ -627,31 +839,36 @@ local function buildDebris(db: any, root: Instance, map: Map, rng: Random)
 	for i = 1, 3 do
 		local r = prop("atm_broken_ring", 28, root)
 		if r then
-			r.CFrame = CFrame.new(randomIn(map, rng, map.Floor - 130 - i * 15, 60)) * CFrame.Angles(math.rad(20 * i), i, 0)
+			r.CFrame = CFrame.new(randomIn(map, rng, map.Floor - 130 - i * 15, 60))
+				* CFrame.Angles(math.rad(20 * i), i, 0)
 		end
 	end
 	local speed, spin, rate = num(db.Speed, 28), math.rad(num(db.Spin, 70)), num(db.Rate, 2.5)
 	local acc = 0
-	table.insert(conns, RunService.Heartbeat:Connect(function(dt)
-		acc += dt * rate
-		for _, d in pool do
-			if d.Y < map.Floor - 600 and acc >= 1 then
-				acc -= 1
-				-- only where nothing of the map is below: debris never falls through a chunk
-				for _ = 1, 6 do
-					local p = randomIn(map, rng, map.Floor + 60, 80)
-					if not Workspace:Raycast(p, Vector3.new(0, -700, 0), params) then
-						d.X, d.Z, d.Y = p.X, p.Z, p.Y
-						break
+	table.insert(
+		conns,
+		RunService.Heartbeat:Connect(function(dt)
+			acc += dt * rate
+			for _, d in pool do
+				if d.Y < map.Floor - 600 and acc >= 1 then
+					acc -= 1
+					-- only where nothing of the map is below: debris never falls through a chunk
+					for _ = 1, 6 do
+						local p = randomIn(map, rng, map.Floor + 60, 80)
+						if not Workspace:Raycast(p, Vector3.new(0, -700, 0), params) then
+							d.X, d.Z, d.Y = p.X, p.Z, p.Y
+							break
+						end
 					end
 				end
+				if d.Y > map.Floor - 600 then
+					d.Y -= speed * dt
+					d.Part.CFrame = CFrame.new(d.X, d.Y, d.Z)
+						* CFrame.Angles(os.clock() * spin, os.clock() * spin * 0.7, 0)
+				end
 			end
-			if d.Y > map.Floor - 600 then
-				d.Y -= speed * dt
-				d.Part.CFrame = CFrame.new(d.X, d.Y, d.Z) * CFrame.Angles(os.clock() * spin, os.clock() * spin * 0.7, 0)
-			end
-		end
-	end))
+		end)
+	)
 end
 
 local function buildCanopy(list: any, root: Instance, map: Map)
@@ -662,10 +879,15 @@ local function buildCanopy(list: any, root: Instance, map: Map)
 	for _, layer in list do
 		for _ = 1, num(layer.Count, 12) do
 			local s = rng:NextNumber(num(layer.SizeMin, 400), num(layer.SizeMax, 700))
-			part({ Name = "Canopy", Shape = Enum.PartType.Ball, Size = Vector3.new(s, s * 0.22, s * 0.8),
+			part({
+				Name = "Canopy",
+				Shape = Enum.PartType.Ball,
+				Size = Vector3.new(s, s * 0.22, s * 0.8),
 				CFrame = CFrame.new(randomIn(map, rng, map.Floor + num(layer.Height, 520), 400)),
-				Color = col(layer.Color, Color3.fromRGB(70, 76, 92)), Material = Enum.Material.SmoothPlastic,
-				Transparency = num(layer.Transparency, 0.1) }, root)
+				Color = col(layer.Color, Color3.fromRGB(70, 76, 92)),
+				Material = Enum.Material.SmoothPlastic,
+				Transparency = num(layer.Transparency, 0.1),
+			}, root)
 		end
 	end
 end
@@ -677,7 +899,11 @@ local function applyTint(env: any, map: Map)
 		end
 	end
 	table.clear(tinted)
-	if not AtmosphereEffects.tintEnabled or typeof(env.ColorShiftTop) ~= "Color3" or not map.Stage then
+	if
+		not AtmosphereEffects.tintEnabled
+		or typeof(env.ColorShiftTop) ~= "Color3"
+		or not map.Stage
+	then
 		return
 	end
 	local tint = Color3.new(1, 1, 1):Lerp(env.ColorShiftTop, 0.35)
@@ -695,7 +921,13 @@ local last: { Env: any, Centre: Vector3, Stage: string?, Id: string?, Anchors: a
 
 --- Draws the atmosphere round the map. `atmosphereId` names the scenario
 --- (Content/Atmospheres key), nil for the world's own air.
-function AtmosphereEffects.enter(env: any, centre: Vector3, stageName: string?, atmosphereId: string?, anchors: any?)
+function AtmosphereEffects.enter(
+	env: any,
+	centre: Vector3,
+	stageName: string?,
+	atmosphereId: string?,
+	anchors: any?
+)
 	AtmosphereEffects.leave()
 	if type(env) ~= "table" then
 		return
@@ -745,69 +977,101 @@ function AtmosphereEffects.enter(env: any, centre: Vector3, stageName: string?, 
 	local boltUntil, nextStrike, restrike = 0, os.clock() + 1, 0
 	local started = os.clock()
 
-	table.insert(conns, RunService.Heartbeat:Connect(function(dt)
-		local t = os.clock() - started
-		for _, m in movers do
-			stepMover(m, map, rng, dt)
-			if m.Beam then
-				-- the beam hangs from the lens and sweeps as the probe moves
-				local len = math.max(40, m.Pos.Y - map.Floor + 10)
-				local tilt = CFrame.Angles(math.sin(t * 0.9 + m.Wobble) * 0.35, 0, math.cos(t * 0.7 + m.Wobble) * 0.35)
-				m.Beam.Size = Vector3.new(m.Beam.Size.X, len, m.Beam.Size.Z)
-				m.Beam.CFrame = CFrame.new(m.Pos + Vector3.new(0, -2, 0)) * tilt * CFrame.new(0, -len / 2, 0)
-			end
-		end
-		if cfg then
-			for _, l in lights do
-				local v = if cfg.Shape == "Strike" then 0.15 else lightLevel(cfg.Shape, t, cfg.Period or 3, l.Phase)
-				l.Light.Brightness = 0.5 + v * 3
-				l.Glow.Transparency = 0.7 - v * 0.6
-			end
-		end
-		if strikes then
-			local now = os.clock()
-			local colour = col(flashes.Color, Color3.fromRGB(210, 222, 255))
-			if now >= nextStrike or (restrike > 0 and now >= boltUntil + 0.06) then
-				for _, b in bolts do
-					b:Destroy()
+	table.insert(
+		conns,
+		RunService.Heartbeat:Connect(function(dt)
+			local t = os.clock() - started
+			for _, m in movers do
+				stepMover(m, map, rng, dt)
+				if m.Beam then
+					-- the beam hangs from the lens and sweeps as the probe moves
+					local len = math.max(40, m.Pos.Y - map.Floor + 10)
+					local tilt = CFrame.Angles(
+						math.sin(t * 0.9 + m.Wobble) * 0.35,
+						0,
+						math.cos(t * 0.7 + m.Wobble) * 0.35
+					)
+					m.Beam.Size = Vector3.new(m.Beam.Size.X, len, m.Beam.Size.Z)
+					m.Beam.CFrame = CFrame.new(m.Pos + Vector3.new(0, -2, 0))
+						* tilt
+						* CFrame.new(0, -len / 2, 0)
 				end
-				table.clear(bolts)
-				if restrike > 0 then
-					restrike -= 1
-				else
-					restrike = if rng:NextNumber() < 0.6 then 0 else rng:NextInteger(1, 2) -- flickers 1-3 times
-					-- about twice the old wait, and far more uneven: lulls, then a burst
-					nextStrike = now + (if rng:NextNumber() < 0.25 then rng:NextNumber(0.4, 1.2) else rng:NextNumber(2, 9))
-				end
-				for _ = 1, if rng:NextNumber() < 0.7 then 1 else 2 do
-					-- anywhere on the map: a rod, or now and then the path itself
-					local target = if #lights > 0 and rng:NextNumber() < 0.7 then lights[rng:NextInteger(1, #lights)].Tip
-						elseif #map.Path > 0 then map.Path[rng:NextInteger(1, #map.Path)]
-						else randomIn(map, rng, map.Floor, 0)
-					bolt(target + Vector3.new(rng:NextNumber(-120, 120), 650, rng:NextNumber(-120, 120)), target, rng, root,
-						colour, rng:NextNumber(1.5, 3), bolts)
-					local pl = Instance.new("PointLight")
-					pl.Range = 80
-					pl.Brightness = 5
-					pl.Color = colour
-					pl.Parent = bolts[#bolts]
-				end
-				boltUntil = now + rng:NextNumber(0.05, 0.12)
 			end
-			local lit = now < boltUntil
-			Lighting.Brightness = (baseBrightness :: number) + (if lit then num(flashes.Brightness, 2.5) else 0)
-			if grade then
-				grade.Brightness = if lit then 0.08 else 0
-				grade.TintColor = if lit then Color3.new(1, 1, 1):Lerp(colour, 0.3) else Color3.new(1, 1, 1)
-			end
-			if not lit and restrike == 0 and #bolts > 0 and now > boltUntil + 0.15 then
-				for _, b in bolts do
-					b:Destroy()
+			if cfg then
+				for _, l in lights do
+					local v = if cfg.Shape == "Strike"
+						then 0.15
+						else lightLevel(cfg.Shape, t, cfg.Period or 3, l.Phase)
+					l.Light.Brightness = 0.5 + v * 3
+					l.Glow.Transparency = 0.7 - v * 0.6
 				end
-				table.clear(bolts)
 			end
-		end
-	end))
+			if strikes then
+				local now = os.clock()
+				local colour = col(flashes.Color, Color3.fromRGB(210, 222, 255))
+				if now >= nextStrike or (restrike > 0 and now >= boltUntil + 0.06) then
+					for _, b in bolts do
+						b:Destroy()
+					end
+					table.clear(bolts)
+					if restrike > 0 then
+						restrike -= 1
+					else
+						restrike = if rng:NextNumber() < 0.6 then 0 else rng:NextInteger(1, 2) -- flickers 1-3 times
+						-- about twice the old wait, and far more uneven: lulls, then a burst
+						nextStrike = now
+							+ (
+								if rng:NextNumber() < 0.25
+									then rng:NextNumber(0.4, 1.2)
+									else rng:NextNumber(2, 9)
+							)
+					end
+					for _ = 1, if rng:NextNumber() < 0.7 then 1 else 2 do
+						-- anywhere on the map: a rod, or now and then the path itself
+						local target = if #lights > 0 and rng:NextNumber() < 0.7
+							then lights[rng:NextInteger(1, #lights)].Tip
+							elseif #map.Path > 0 then map.Path[rng:NextInteger(1, #map.Path)]
+							else randomIn(map, rng, map.Floor, 0)
+						bolt(
+							target
+								+ Vector3.new(
+									rng:NextNumber(-120, 120),
+									650,
+									rng:NextNumber(-120, 120)
+								),
+							target,
+							rng,
+							root,
+							colour,
+							rng:NextNumber(1.5, 3),
+							bolts
+						)
+						local pl = Instance.new("PointLight")
+						pl.Range = 80
+						pl.Brightness = 5
+						pl.Color = colour
+						pl.Parent = bolts[#bolts]
+					end
+					boltUntil = now + rng:NextNumber(0.05, 0.12)
+				end
+				local lit = now < boltUntil
+				Lighting.Brightness = baseBrightness :: number
+					+ (if lit then num(flashes.Brightness, 2.5) else 0)
+				if grade then
+					grade.Brightness = if lit then 0.08 else 0
+					grade.TintColor = if lit
+						then Color3.new(1, 1, 1):Lerp(colour, 0.3)
+						else Color3.new(1, 1, 1)
+				end
+				if not lit and restrike == 0 and #bolts > 0 and now > boltUntil + 0.15 then
+					for _, b in bolts do
+						b:Destroy()
+					end
+					table.clear(bolts)
+				end
+			end
+		end)
+	)
 
 	if next(missing) then
 		local names = {}
@@ -815,7 +1079,12 @@ function AtmosphereEffects.enter(env: any, centre: Vector3, stageName: string?, 
 			table.insert(names, n)
 		end
 		table.sort(names)
-		warn(`[AtmosphereEffects] not in LuckboundProps yet (import sky_citadel_atmosphere_props.fbx): {table.concat(names, ", ")}`)
+		warn(
+			`[AtmosphereEffects] not in LuckboundProps yet (import sky_citadel_atmosphere_props.fbx): {table.concat(
+				names,
+				", "
+			)}`
+		)
 	end
 end
 
