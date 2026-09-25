@@ -399,7 +399,7 @@ function DebugCommands.init(): ()
 		HELP,
 		register(
 			"showboss",
-			"/showboss <id> [scale] -- preview a boss in the nearest boss arena (idle)",
+			"/showboss <id> [height] -- preview a boss in the nearest boss arena (idle)",
 			function(args)
 				remote("showboss", args)
 			end
