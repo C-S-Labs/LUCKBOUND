@@ -50,7 +50,12 @@ end
 
 --- The only tween in the hub UI. `exiting` picks the reverse easing, which is
 --- what stops a panel feeling rubbery on the way out.
-function UIKit.tween(object: Instance, seconds: number, properties: { [string]: any }, exiting: boolean?): Tween
+function UIKit.tween(
+	object: Instance,
+	seconds: number,
+	properties: { [string]: any },
+	exiting: boolean?
+): Tween
 	local motion = UITheme.Motion
 	local info = TweenInfo.new(
 		UIKit.duration(seconds),
@@ -132,7 +137,12 @@ end
 --- a UI was not finished.
 ---
 --- `style` is PRIMARY (gold fill), GHOST (stroke only) or DANGER.
-function UIKit.button(parent: Instance, text: string, style: string?, onClick: (() -> ())?): TextButton
+function UIKit.button(
+	parent: Instance,
+	text: string,
+	style: string?,
+	onClick: (() -> ())?
+): TextButton
 	local button = Instance.new("TextButton")
 	button.AutoButtonColor = false
 	button.BorderSizePixel = 0
@@ -227,7 +237,11 @@ end
 function UIKit.setEnabled(button: TextButton, enabled: boolean): ()
 	button.Active = enabled
 	button.AutoButtonColor = false
-	UIKit.tween(button, UITheme.Motion.Quick, { BackgroundTransparency = if enabled then 0 else 0.55 })
+	UIKit.tween(
+		button,
+		UITheme.Motion.Quick,
+		{ BackgroundTransparency = if enabled then 0 else 0.55 }
+	)
 	button.TextTransparency = if enabled then 0 else 0.4
 end
 
@@ -253,7 +267,12 @@ function UIKit.divider(parent: Instance): Frame
 end
 
 --- A labelled on/off switch.
-function UIKit.toggle(parent: Instance, text: string, value: boolean, onChanged: (boolean) -> ()): Frame
+function UIKit.toggle(
+	parent: Instance,
+	text: string,
+	value: boolean,
+	onChanged: (boolean) -> ()
+): Frame
 	local row = UIKit.surface(parent, "RAISED")
 	row.Size = UDim2.new(1, 0, 0, 44)
 
@@ -342,16 +361,21 @@ function UIKit.slider(
 		onChanged(resolved)
 	end
 
-	readout.Text = string.format("%d%%", math.round((value - min) / math.max(max - min, 1e-6) * 100))
+	readout.Text =
+		string.format("%d%%", math.round((value - min) / math.max(max - min, 1e-6) * 100))
 
 	local dragging = false
 	local function updateFromInput(input: InputObject)
-		local scale = (input.Position.X - track.AbsolutePosition.X) / math.max(track.AbsoluteSize.X, 1)
+		local scale = (input.Position.X - track.AbsolutePosition.X)
+			/ math.max(track.AbsoluteSize.X, 1)
 		setFromScale(scale)
 	end
 
 	track.InputBegan:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		if
+			input.UserInputType == Enum.UserInputType.MouseButton1
+			or input.UserInputType == Enum.UserInputType.Touch
+		then
 			dragging = true
 			updateFromInput(input)
 		end
@@ -359,13 +383,19 @@ function UIKit.slider(
 	track.InputChanged:Connect(function(input)
 		if
 			dragging
-			and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch)
+			and (
+				input.UserInputType == Enum.UserInputType.MouseMovement
+				or input.UserInputType == Enum.UserInputType.Touch
+			)
 		then
 			updateFromInput(input)
 		end
 	end)
 	track.InputEnded:Connect(function(input)
-		if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+		if
+			input.UserInputType == Enum.UserInputType.MouseButton1
+			or input.UserInputType == Enum.UserInputType.Touch
+		then
 			dragging = false
 		end
 	end)

@@ -56,7 +56,8 @@ local function check(name, ok, detail)
 		print(string.format("  PASS  %s", name))
 	else
 		failed += 1
-		local line = string.format("%s / %s%s", currentGroup, name, detail and (" -- " .. detail) or "")
+		local line =
+			string.format("%s / %s%s", currentGroup, name, detail and (" -- " .. detail) or "")
 		table.insert(failures, line)
 		print(string.format("  FAIL  %s%s", name, detail and ("  -- " .. detail) or ""))
 	end
@@ -70,7 +71,9 @@ end
 -- Deterministic PRNG so distribution tests are reproducible across runs.
 local function lcg(seed)
 	local state = seed % 2147483647
-	if state <= 0 then state += 2147483646 end
+	if state <= 0 then
+		state += 2147483646
+	end
 	return function()
 		state = (state * 16807) % 2147483647
 		return (state - 1) / 2147483646
@@ -79,7 +82,9 @@ end
 
 local function profile(overrides)
 	local p = ProfileSchema.default(1700000000)
-	for k, v in overrides or {} do p[k] = v end
+	for k, v in overrides or {} do
+		p[k] = v
+	end
 	return p
 end
 
@@ -89,7 +94,9 @@ local function cfg(overrides)
 	for k, v in GameConfig do
 		if type(v) == "table" then
 			local inner = {}
-			for ik, iv in v do inner[ik] = iv end
+			for ik, iv in v do
+				inner[ik] = iv
+			end
 			c[k] = inner
 		else
 			c[k] = v
@@ -97,7 +104,9 @@ local function cfg(overrides)
 	end
 	for k, v in overrides or {} do
 		if type(v) == "table" and type(c[k]) == "table" then
-			for ik, iv in v do c[k][ik] = iv end
+			for ik, iv in v do
+				c[k][ik] = iv
+			end
 		else
 			c[k] = v
 		end
@@ -115,22 +124,39 @@ do
 	local okc, errsc = Schema.validateConfig(GameConfig, Worlds)
 	check("real GameConfig validates against content", okc, table.concat(errsc, "; "))
 
-	local bad = { BROKEN = { Id = "BROKEN", Name = "x", Rarity = "NOPE", RollWeight = 1,
-		EnabledInPhase = 1, Environment = {}, Enemies = {}, Modifiers = {},
-		DurationSeconds = 1, RecommendedPower = 1, Flavor = "" } }
+	local bad = {
+		BROKEN = {
+			Id = "BROKEN",
+			Name = "x",
+			Rarity = "NOPE",
+			RollWeight = 1,
+			EnabledInPhase = 1,
+			Environment = {},
+			Enemies = {},
+			Modifiers = {},
+			DurationSeconds = 1,
+			RecommendedPower = 1,
+			Flavor = "",
+		},
+	}
 	local okb, errsb = Schema.validateWorlds(bad)
 	check("rejects unknown rarity", not okb and #errsb > 0, table.concat(errsb, "; "))
 
 	local mismatch = {}
-	for k, v in Worlds do mismatch[k] = v end
+	for k, v in Worlds do
+		mismatch[k] = v
+	end
 	mismatch.WRONG_KEY = Worlds.VERDANT_VALLEY
 	local okm, errsm = Schema.validateWorlds(mismatch)
 	check("rejects Id not matching registry key", not okm, table.concat(errsm, "; "))
 
 	local missing = { X = { Id = "X" } }
 	local okmi, errsmi = Schema.validateWorlds(missing)
-	check("reports missing required fields", not okmi and #errsmi >= 5,
-		string.format("%d errors", #errsmi))
+	check(
+		"reports missing required fields",
+		not okmi and #errsmi >= 5,
+		string.format("%d errors", #errsmi)
+	)
 
 	local badCfg = cfg({ Fate = { OnboardingSequence = { "DOES_NOT_EXIST" } } })
 	local okcfg, errscfg = Schema.validateConfig(badCfg, Worlds)
@@ -140,7 +166,9 @@ do
 	local oke = Schema.validateConfig(emptyPool, Worlds)
 	check("catches an empty roll pool", not oke)
 
-	local raised = throws(function() Schema.validateAll({ worlds = bad, config = GameConfig }) end)
+	local raised = throws(function()
+		Schema.validateAll({ worlds = bad, config = GameConfig })
+	end)
 	check("validateAll raises on bad content (server refuses to boot)", raised)
 
 	-- THE WHOLE BUNDLE, exactly as src/server/init.server.luau passes it.
@@ -194,7 +222,9 @@ do
 			end
 			p.TotalRolls += 1
 		end
-		if not allMatched then break end
+		if not allMatched then
+			break
+		end
 	end
 	check("all 15 rolls follow the scripted order, across 120 random streams", allMatched, detail)
 
@@ -207,30 +237,41 @@ do
 
 	-- THE CORE GUARANTEE: a guaranteed Mythic would permanently devalue the
 	-- top tier and the Fatebreak announcement that depends on it.
-	check("onboarding NEVER hands out a Mythic", counts.MYTHIC == nil,
-		string.format("found %d", counts.MYTHIC or 0))
+	check(
+		"onboarding NEVER hands out a Mythic",
+		counts.MYTHIC == nil,
+		string.format("found %d", counts.MYTHIC or 0)
+	)
 	check("onboarding never hands out an Unknown", counts.UNKNOWN == nil)
 
 	check("onboarding peaks on exactly one Epic", counts.EPIC == 1, tostring(counts.EPIC))
 	check("the Epic is Sky Citadel", Worlds[seq[8]].Id == "SKY_CITADEL", seq[8])
-	check("the Epic lands mid-arc, not at the end",
-		seq[8] == "SKY_CITADEL" and #seq > 8)
+	check("the Epic lands mid-arc, not at the end", seq[8] == "SKY_CITADEL" and #seq > 8)
 
-	check("onboarding teaches Common, Rare and Epic",
-		counts.COMMON and counts.RARE and counts.EPIC ~= nil)
+	check(
+		"onboarding teaches Common, Rare and Epic",
+		counts.COMMON and counts.RARE and counts.EPIC ~= nil
+	)
 
 	-- The arc must approximate real odds, or roll 16 feels like a punishment.
 	local commonShare = counts.COMMON / #seq * 100
 	local weights = GameConfig.Fate.PrototypeWeights
 	local totalWeight = 0
-	for _, w in weights do totalWeight += w end
+	for _, w in weights do
+		totalWeight += w
+	end
 	local trueCommonShare = weights.VERDANT_VALLEY / totalWeight * 100
-	check("scripted Common rate is close to the true rate (no cliff at roll 16)",
+	check(
+		"scripted Common rate is close to the true rate (no cliff at roll 16)",
 		math.abs(commonShare - trueCommonShare) < 12,
-		string.format("scripted %.1f%% vs true %.1f%%", commonShare, trueCommonShare))
+		string.format("scripted %.1f%% vs true %.1f%%", commonShare, trueCommonShare)
+	)
 
-	check("the arc ends on a Common so the handover is continuous",
-		Worlds[seq[#seq]].Rarity == "COMMON", Worlds[seq[#seq]].Rarity)
+	check(
+		"the arc ends on a Common so the handover is continuous",
+		Worlds[seq[#seq]].Rarity == "COMMON",
+		Worlds[seq[#seq]].Rarity
+	)
 
 	-- Rares must be spaced, not front-loaded into a parade.
 	local longestCommonRun, run = 0, 0
@@ -242,30 +283,45 @@ do
 			run = 0
 		end
 	end
-	check("no run of more than 3 Commons inside the arc", longestCommonRun <= 3,
-		string.format("longest run %d", longestCommonRun))
+	check(
+		"no run of more than 3 Commons inside the arc",
+		longestCommonRun <= 3,
+		string.format("longest run %d", longestCommonRun)
+	)
 
 	-- Indexed by TotalRolls, so it survives a rejoin mid-arc.
 	local resumed = profile({ TotalRolls = 7 })
 	local outcome = FateCore.roll(Worlds, resumed, GameConfig, lcg(1))
-	check("onboarding resumes correctly after a rejoin", outcome.WorldId == seq[8] and outcome.IsScripted,
-		outcome.WorldId)
+	check(
+		"onboarding resumes correctly after a rejoin",
+		outcome.WorldId == seq[8] and outcome.IsScripted,
+		outcome.WorldId
+	)
 
 	local done = profile({ TotalRolls = #seq })
-	check("onboarding reports finished after the sequence", not FateCore.isOnboarding(done, GameConfig))
-	check("roll 16 is no longer scripted",
-		FateCore.roll(Worlds, done, GameConfig, lcg(5)).IsScripted == false)
+	check(
+		"onboarding reports finished after the sequence",
+		not FateCore.isOnboarding(done, GameConfig)
+	)
+	check(
+		"roll 16 is no longer scripted",
+		FateCore.roll(Worlds, done, GameConfig, lcg(5)).IsScripted == false
+	)
 
 	-- Only the opening tutorial rolls are shortened, not all 15.
 	local fresh = profile()
-	check("roll 1 gets a short tutorial expedition",
+	check(
+		"roll 1 gets a short tutorial expedition",
 		FateCore.expeditionDuration(Worlds.VERDANT_VALLEY, fresh, GameConfig)
-			== GameConfig.Fate.OnboardingExpeditionSeconds)
+			== GameConfig.Fate.OnboardingExpeditionSeconds
+	)
 
 	local past = profile({ TotalRolls = GameConfig.Fate.ShortExpeditionRolls })
-	check("later onboarding rolls run at full expedition length",
+	check(
+		"later onboarding rolls run at full expedition length",
 		FateCore.expeditionDuration(Worlds.VERDANT_VALLEY, past, GameConfig)
-			== Worlds.VERDANT_VALLEY.DurationSeconds)
+			== Worlds.VERDANT_VALLEY.DurationSeconds
+	)
 
 	local tutorialTotal = 0
 	local p = profile()
@@ -273,8 +329,11 @@ do
 		tutorialTotal += FateCore.expeditionDuration(Worlds[seq[i]], p, GameConfig)
 		p.TotalRolls += 1
 	end
-	check("the tutorial expeditions still fit in ~5 minutes",
-		tutorialTotal <= 330, string.format("%ds total", tutorialTotal))
+	check(
+		"the tutorial expeditions still fit in ~5 minutes",
+		tutorialTotal <= 330,
+		string.format("%ds total", tutorialTotal)
+	)
 end
 
 -- === 3. TRUE RNG ====================================================
@@ -293,19 +352,33 @@ do
 
 	local weights = GameConfig.Fate.PrototypeWeights
 	local totalWeight = 0
-	for _, w in weights do totalWeight += w end
+	for _, w in weights do
+		totalWeight += w
+	end
 
 	local worstDrift, worstId = 0, ""
 	for id, w in weights do
 		local expected = w / totalWeight * 100
 		local observed = (counts[id] or 0) / N * 100
 		local drift = math.abs(observed - expected)
-		print(string.format("        %-16s expected %6.2f%%  observed %6.2f%%  drift %.3fpp",
-			id, expected, observed, drift))
-		if drift > worstDrift then worstDrift, worstId = drift, id end
+		print(
+			string.format(
+				"        %-16s expected %6.2f%%  observed %6.2f%%  drift %.3fpp",
+				id,
+				expected,
+				observed,
+				drift
+			)
+		)
+		if drift > worstDrift then
+			worstDrift, worstId = drift, id
+		end
 	end
-	check("observed distribution within 0.5pp of configured weights", worstDrift < 0.5,
-		string.format("worst %s at %.3fpp", worstId, worstDrift))
+	check(
+		"observed distribution within 0.5pp of configured weights",
+		worstDrift < 0.5,
+		string.format("worst %s at %.3fpp", worstId, worstDrift)
+	)
 
 	-- THE CORE GUARANTEE: player state must not tilt the odds.
 	local newbie = profile({ TotalRolls = 15, FateLevel = 1, FatePoints = 0 })
@@ -313,54 +386,77 @@ do
 	local identical = true
 	local a, b = lcg(4242), lcg(4242)
 	for _ = 1, 50000 do
-		if FateCore.roll(Worlds, newbie, GameConfig, a).WorldId
-			~= FateCore.roll(Worlds, veteran, GameConfig, b).WorldId then
+		if
+			FateCore.roll(Worlds, newbie, GameConfig, a).WorldId
+			~= FateCore.roll(Worlds, veteran, GameConfig, b).WorldId
+		then
 			identical = false
 			break
 		end
 	end
-	check("a level-90 player and a level-1 player draw identically (Fate does not tilt odds)", identical)
+	check(
+		"a level-90 player and a level-1 player draw identically (Fate does not tilt odds)",
+		identical
+	)
 
 	for _, id in { "VERDANT_VALLEY", "ETHEREAL_SCAPE", "EMBERFALL", "SKY_CITADEL", "ASTRAL_REACH" } do
-		check(string.format("weight for %s ignores Fate level", id),
+		check(
+			string.format("weight for %s ignores Fate level", id),
 			FateCore.effectiveWeight(Worlds[id], newbie, GameConfig)
-				== FateCore.effectiveWeight(Worlds[id], veteran, GameConfig))
+				== FateCore.effectiveWeight(Worlds[id], veteran, GameConfig)
+		)
 	end
 
 	check("FateInfluencesOdds is off", GameConfig.Fate.FateInfluencesOdds == false)
 
 	-- The dormant ladder still works if it is ever deliberately switched on.
 	local tilted = cfg({ Fate = { FateInfluencesOdds = true } })
-	check("the disabled weighting hook still functions when enabled",
+	check(
+		"the disabled weighting hook still functions when enabled",
 		FateCore.effectiveWeight(Worlds.ASTRAL_REACH, veteran, tilted)
-			> FateCore.effectiveWeight(Worlds.ASTRAL_REACH, newbie, tilted))
+			> FateCore.effectiveWeight(Worlds.ASTRAL_REACH, newbie, tilted)
+	)
 
 	-- Pool order must not depend on hash iteration order.
 	local poolA = FateCore.buildPool(Worlds, 1)
 	local poolB = FateCore.buildPool(Worlds, 1)
 	local stable = #poolA == #poolB
 	for i = 1, #poolA do
-		if poolA[i].Id ~= poolB[i].Id then stable = false end
+		if poolA[i].Id ~= poolB[i].Id then
+			stable = false
+		end
 	end
 	check("roll pool order is stable", stable)
-	check("phase gating excludes Phase 3 content", #FateCore.buildPool(Worlds, 1) == 5,
-		string.format("%d worlds enabled at phase 1", #FateCore.buildPool(Worlds, 1)))
+	check(
+		"phase gating excludes Phase 3 content",
+		#FateCore.buildPool(Worlds, 1) == 5,
+		string.format("%d worlds enabled at phase 1", #FateCore.buildPool(Worlds, 1))
+	)
 	check("THE_UNKNOWN enters the pool at phase 3", #FateCore.buildPool(Worlds, 3) == 6)
 
 	-- Epic must be commoner than Mythic, or the ladder is upside down.
-	check("Epic is more likely than Mythic",
+	check(
+		"Epic is more likely than Mythic",
 		weights.SKY_CITADEL > weights.ASTRAL_REACH,
-		string.format("Epic %d vs Mythic %d", weights.SKY_CITADEL, weights.ASTRAL_REACH))
-	check("prototype weights sum to 10000 so they read as percentages",
-		totalWeight == 10000, tostring(totalWeight))
+		string.format("Epic %d vs Mythic %d", weights.SKY_CITADEL, weights.ASTRAL_REACH)
+	)
+	check(
+		"prototype weights sum to 10000 so they read as percentages",
+		totalWeight == 10000,
+		tostring(totalWeight)
+	)
 	check("Sky Citadel is Epic tier", Worlds.SKY_CITADEL.Rarity == "EPIC")
 
 	-- Same seed, same results: rolls are auditable.
 	local s1, s2 = lcg(777), lcg(777)
 	local same = true
 	for _ = 1, 1000 do
-		if FateCore.roll(Worlds, done, GameConfig, s1).WorldId
-			~= FateCore.roll(Worlds, done, GameConfig, s2).WorldId then same = false end
+		if
+			FateCore.roll(Worlds, done, GameConfig, s1).WorldId
+			~= FateCore.roll(Worlds, done, GameConfig, s2).WorldId
+		then
+			same = false
+		end
 	end
 	check("identical seeds produce identical rolls (auditable)", same)
 end
@@ -370,29 +466,43 @@ group("WeightedRandom")
 
 do
 	local single = { { Id = "ONLY", w = 3 } }
-	check("single-entry pool always returns that entry",
-		WeightedRandom.pick(single, function(e) return e.w end, lcg(1)).Id == "ONLY")
+	check("single-entry pool always returns that entry", WeightedRandom.pick(single, function(e)
+		return e.w
+	end, lcg(1)).Id == "ONLY")
 
 	local zeros = { { w = 0 }, { w = 0 } }
-	check("all-zero weights returns nil",
-		WeightedRandom.pick(zeros, function(e) return e.w end, lcg(1)) == nil)
+	check("all-zero weights returns nil", WeightedRandom.pick(zeros, function(e)
+		return e.w
+	end, lcg(1)) == nil)
 
 	local mixed = { { Id = "A", w = 0 }, { Id = "B", w = 5 } }
 	local everA = false
 	local r = lcg(99)
 	for _ = 1, 5000 do
-		if WeightedRandom.pick(mixed, function(e) return e.w end, r).Id == "A" then everA = true end
+		if WeightedRandom.pick(mixed, function(e)
+			return e.w
+		end, r).Id == "A" then
+			everA = true
+		end
 	end
 	check("zero-weight entries are never picked", not everA)
 
 	-- nextNumber returning exactly 0 and near-1 must both stay in bounds.
 	local pool = { { Id = "A", w = 1 }, { Id = "B", w = 1 } }
-	check("nextNumber() == 0 returns the first entry",
-		WeightedRandom.pick(pool, function(e) return e.w end, function() return 0 end).Id == "A")
-	check("nextNumber() near 1 stays in bounds",
-		WeightedRandom.pick(pool, function(e) return e.w end, function() return 0.9999999 end) ~= nil)
+	check("nextNumber() == 0 returns the first entry", WeightedRandom.pick(pool, function(e)
+		return e.w
+	end, function()
+		return 0
+	end).Id == "A")
+	check("nextNumber() near 1 stays in bounds", WeightedRandom.pick(pool, function(e)
+		return e.w
+	end, function()
+		return 0.9999999
+	end) ~= nil)
 
-	local probs = WeightedRandom.probabilities(pool, function(e) return e.w end)
+	local probs = WeightedRandom.probabilities(pool, function(e)
+		return e.w
+	end)
 	check("probabilities sum to 1", math.abs((probs[pool[1]] + probs[pool[2]]) - 1) < 1e-9)
 end
 
@@ -404,8 +514,12 @@ do
 
 	local monotonic = true
 	for level = 1, 99 do
-		if ProgressionCore.pointsForLevel(level + 1, GameConfig)
-			<= ProgressionCore.pointsForLevel(level, GameConfig) then monotonic = false end
+		if
+			ProgressionCore.pointsForLevel(level + 1, GameConfig)
+			<= ProgressionCore.pointsForLevel(level, GameConfig)
+		then
+			monotonic = false
+		end
 	end
 	check("level cost curve is strictly increasing", monotonic)
 
@@ -418,37 +532,56 @@ do
 			mismatchAt = level
 		end
 	end
-	check("levelForPoints inverts pointsForLevel at every level", inverse,
-		mismatchAt and ("first mismatch at level " .. mismatchAt) or nil)
+	check(
+		"levelForPoints inverts pointsForLevel at every level",
+		inverse,
+		mismatchAt and ("first mismatch at level " .. mismatchAt) or nil
+	)
 
-	check("level is capped at MaxLevel",
-		ProgressionCore.levelForPoints(1e12, GameConfig) == GameConfig.Progression.MaxLevel)
-	check("progress is 1 at max level",
-		ProgressionCore.levelProgress(1e12, GameConfig) == 1)
+	check(
+		"level is capped at MaxLevel",
+		ProgressionCore.levelForPoints(1e12, GameConfig) == GameConfig.Progression.MaxLevel
+	)
+	check("progress is 1 at max level", ProgressionCore.levelProgress(1e12, GameConfig) == 1)
 
 	local mid = ProgressionCore.levelProgress(
-		(ProgressionCore.pointsForLevel(5, GameConfig) + ProgressionCore.pointsForLevel(6, GameConfig)) // 2,
-		GameConfig)
+		(
+			ProgressionCore.pointsForLevel(5, GameConfig)
+			+ ProgressionCore.pointsForLevel(6, GameConfig)
+		) // 2,
+		GameConfig
+	)
 	check("progress between levels is in (0,1)", mid > 0 and mid < 1, tostring(mid))
 
 	local p = profile()
 	local pts, lvl = ProgressionCore.award(p, "BossDefeated", GameConfig)
-	check("BossDefeated grants the configured Fate",
-		pts == GameConfig.Progression.Rewards.BossDefeated, tostring(pts))
+	check(
+		"BossDefeated grants the configured Fate",
+		pts == GameConfig.Progression.Rewards.BossDefeated,
+		tostring(pts)
+	)
 	check("award does not mutate the profile", p.FatePoints == 0)
 	check("award returns a valid level", lvl >= 1)
 
-	local raised = throws(function() ProgressionCore.award(p, "NotAReason", GameConfig) end)
+	local raised = throws(function()
+		ProgressionCore.award(p, "NotAReason", GameConfig)
+	end)
 	check("unknown reward reason raises", raised)
 
 	-- The onboarding arc should visibly move the Fate bar, which is its point.
 	local onboard = profile()
 	local rewards = GameConfig.Progression.Rewards
-	local earned = 3 * (rewards.ExpeditionCompleted + rewards.FirstTimeWorld) + 3 * rewards.BossDefeated
-	check("completing onboarding produces a visible Fate gain",
+	local earned = 3 * (rewards.ExpeditionCompleted + rewards.FirstTimeWorld)
+		+ 3 * rewards.BossDefeated
+	check(
+		"completing onboarding produces a visible Fate gain",
 		ProgressionCore.levelForPoints(earned, GameConfig) > 1,
-		string.format("%d points -> level %d", earned,
-			ProgressionCore.levelForPoints(earned, GameConfig)))
+		string.format(
+			"%d points -> level %d",
+			earned,
+			ProgressionCore.levelForPoints(earned, GameConfig)
+		)
+	)
 end
 
 -- === 6. Profile persistence =========================================
@@ -457,13 +590,20 @@ group("Profile schema & migration")
 do
 	local now = 1700000000
 	local fresh = ProfileSchema.default(now)
-	check("new profile is at the current schema version",
-		fresh.SchemaVersion == Constants.CURRENT_SCHEMA_VERSION)
-	check("new profile starts at Fate level 1 with 0 points",
-		fresh.FateLevel == 1 and fresh.FatePoints == 0 and fresh.TotalRolls == 0)
+	check(
+		"new profile is at the current schema version",
+		fresh.SchemaVersion == Constants.CURRENT_SCHEMA_VERSION
+	)
+	check(
+		"new profile starts at Fate level 1 with 0 points",
+		fresh.FateLevel == 1 and fresh.FatePoints == 0 and fresh.TotalRolls == 0
+	)
 
 	local migrated = ProfileSchema.migrate(nil, now)
-	check("nil stored data yields a default profile", migrated.SchemaVersion == ProfileSchema.CURRENT)
+	check(
+		"nil stored data yields a default profile",
+		migrated.SchemaVersion == ProfileSchema.CURRENT
+	)
 
 	local partial = { SchemaVersion = ProfileSchema.CURRENT, FatePoints = 500 }
 	local filled, applied = ProfileSchema.migrate(partial, now)
@@ -476,40 +616,70 @@ do
 	-- in the wild rather than a hypothetical one.
 	local legacy = { SchemaVersion = 1, FatePoints = 900, FateLevel = 4 }
 	local upgraded, steps = ProfileSchema.migrate(legacy, now)
-	check("a v1 profile migrates to the current version", upgraded.SchemaVersion == ProfileSchema.CURRENT)
-	check("a v1 profile runs every migration to the current version", steps == ProfileSchema.CURRENT - 1)
+	check(
+		"a v1 profile migrates to the current version",
+		upgraded.SchemaVersion == ProfileSchema.CURRENT
+	)
+	check(
+		"a v1 profile runs every migration to the current version",
+		steps == ProfileSchema.CURRENT - 1
+	)
 
 	-- v2 -> v3 added vault keys (build spec §7.5).
-	local v2 = { SchemaVersion = 2, FatePoints = 10, Keys = { GOOD_KEY = 1, BAD = "x", [5] = 1, ZERO = 0 } }
+	local v2 = {
+		SchemaVersion = 2,
+		FatePoints = 10,
+		Keys = { GOOD_KEY = 1, BAD = "x", [5] = 1, ZERO = 0 },
+	}
 	local v3, v3steps = ProfileSchema.migrate(v2, now)
-	check("a v2 profile gains Keys in one step", v3.SchemaVersion == 3 and v3steps == ProfileSchema.CURRENT - 2)
-	check("migrating keys keeps only well-formed entries",
-		v3.Keys.GOOD_KEY == 1 and v3.Keys.BAD == nil and v3.Keys[5] == nil and v3.Keys.ZERO == nil)
+	check(
+		"a v2 profile gains Keys in one step",
+		v3.SchemaVersion == 3 and v3steps == ProfileSchema.CURRENT - 2
+	)
+	check(
+		"migrating keys keeps only well-formed entries",
+		v3.Keys.GOOD_KEY == 1 and v3.Keys.BAD == nil and v3.Keys[5] == nil and v3.Keys.ZERO == nil
+	)
 	check("a new profile starts with no keys", next(ProfileSchema.default(now).Keys) == nil)
-	check("the migration keeps what was there", upgraded.FatePoints == 900 and upgraded.FateLevel == 4)
+	check(
+		"the migration keeps what was there",
+		upgraded.FatePoints == 900 and upgraded.FateLevel == 4
+	)
 	check("the migration adds RedeemedCodes", type(upgraded.RedeemedCodes) == "table")
-	check("the migration adds a full settings table",
-		type(upgraded.Settings) == "table" and upgraded.Settings.MusicVolume ~= nil)
+	check(
+		"the migration adds a full settings table",
+		type(upgraded.Settings) == "table" and upgraded.Settings.MusicVolume ~= nil
+	)
 
 	local future = { SchemaVersion = 99 }
 	local f = ProfileSchema.migrate(future, now)
 	check("a newer-than-known profile is left intact rather than reset", f.SchemaVersion == 99)
 
 	local unmigratable = { SchemaVersion = 0 }
-	local raised = throws(function() ProfileSchema.migrate(unmigratable, now) end)
+	local raised = throws(function()
+		ProfileSchema.migrate(unmigratable, now)
+	end)
 	check("an unmigratable version raises instead of silently resetting", raised)
 
 	-- Roll history is unbounded in memory and must be trimmed before writing.
 	local big = ProfileSchema.default(now)
 	for i = 1, 200 do
-		table.insert(big.RollHistory, { WorldId = "VERDANT_VALLEY", Rarity = "COMMON", Timestamp = i })
+		table.insert(
+			big.RollHistory,
+			{ WorldId = "VERDANT_VALLEY", Rarity = "COMMON", Timestamp = i }
+		)
 	end
 	ProfileSchema.prune(big, GameConfig)
-	check("roll history is pruned to the cap",
-		#big.RollHistory == GameConfig.Fate.RollHistoryCap, tostring(#big.RollHistory))
-	check("pruning keeps the MOST RECENT entries",
+	check(
+		"roll history is pruned to the cap",
+		#big.RollHistory == GameConfig.Fate.RollHistoryCap,
+		tostring(#big.RollHistory)
+	)
+	check(
+		"pruning keeps the MOST RECENT entries",
 		big.RollHistory[#big.RollHistory].Timestamp == 200
-			and big.RollHistory[1].Timestamp == 200 - GameConfig.Fate.RollHistoryCap + 1)
+			and big.RollHistory[1].Timestamp == 200 - GameConfig.Fate.RollHistoryCap + 1
+	)
 end
 
 -- === 7. Late joiners ================================================
@@ -520,20 +690,27 @@ do
 	local t0 = 1700000000
 
 	EventCore.startEvent(state, {
-		Id = "STARFALL_1", Kind = "FATEBREAK", Name = "The Eternal Star",
-		StartedAt = t0, EndsAt = t0 + 300, TriggeredBy = "Sgame1028",
+		Id = "STARFALL_1",
+		Kind = "FATEBREAK",
+		Name = "The Eternal Star",
+		StartedAt = t0,
+		EndsAt = t0 + 300,
+		TriggeredBy = "Sgame1028",
 	})
 
 	-- A player joining 4 minutes into a 5 minute event.
 	local late = EventCore.snapshot(state, t0 + 240, GameConfig)
 	check("late joiner sees the in-progress event", #late.ActiveEvents == 1)
-	check("late joiner gets the correct remaining time",
+	check(
+		"late joiner gets the correct remaining time",
 		late.ActiveEvents[1].RemainingSeconds == 60,
-		tostring(late.ActiveEvents[1] and late.ActiveEvents[1].RemainingSeconds))
-	check("late joiner gets elapsed time for animation sync",
-		late.ActiveEvents[1].ElapsedSeconds == 240)
-	check("late joiner learns who triggered it",
-		late.ActiveEvents[1].TriggeredBy == "Sgame1028")
+		tostring(late.ActiveEvents[1] and late.ActiveEvents[1].RemainingSeconds)
+	)
+	check(
+		"late joiner gets elapsed time for animation sync",
+		late.ActiveEvents[1].ElapsedSeconds == 240
+	)
+	check("late joiner learns who triggered it", late.ActiveEvents[1].TriggeredBy == "Sgame1028")
 
 	-- After it ends, a joiner must NOT see a stale event.
 	local after = EventCore.snapshot(state, t0 + 301, GameConfig)
@@ -546,43 +723,67 @@ do
 	-- Announcement buffer: a joiner should see what just happened.
 	local s2 = EventCore.newState()
 	for i = 1, 20 do
-		EventCore.pushAnnouncement(s2, { Kind = "ROLL", Text = "roll " .. i,
-			Rarity = "MYTHIC", PlayerName = "P" .. i, At = t0 + i }, t0 + i, GameConfig)
+		EventCore.pushAnnouncement(s2, {
+			Kind = "ROLL",
+			Text = "roll " .. i,
+			Rarity = "MYTHIC",
+			PlayerName = "P" .. i,
+			At = t0 + i,
+		}, t0 + i, GameConfig)
 	end
-	check("announcement buffer is capped",
+	check(
+		"announcement buffer is capped",
 		#s2.Announcements == GameConfig.Events.AnnouncementBufferSize,
-		tostring(#s2.Announcements))
-	check("buffer keeps the most recent announcements",
-		s2.Announcements[#s2.Announcements].Text == "roll 20")
+		tostring(#s2.Announcements)
+	)
+	check(
+		"buffer keeps the most recent announcements",
+		s2.Announcements[#s2.Announcements].Text == "roll 20"
+	)
 
 	local snap = EventCore.snapshot(s2, t0 + 20, GameConfig)
-	check("late joiner receives the recent announcement feed",
-		#snap.Announcements == GameConfig.Events.AnnouncementBufferSize)
-	check("announcements carry age so the UI can fade them",
-		snap.Announcements[1].AgeSeconds > 0)
+	check(
+		"late joiner receives the recent announcement feed",
+		#snap.Announcements == GameConfig.Events.AnnouncementBufferSize
+	)
+	check("announcements carry age so the UI can fade them", snap.Announcements[1].AgeSeconds > 0)
 
 	-- Stale announcements must age out, not follow players around forever.
-	local old = EventCore.snapshot(s2, t0 + 20 + GameConfig.Events.AnnouncementBufferMaxAgeSeconds + 1, GameConfig)
+	local old = EventCore.snapshot(
+		s2,
+		t0 + 20 + GameConfig.Events.AnnouncementBufferMaxAgeSeconds + 1,
+		GameConfig
+	)
 	check("announcements older than the max age are dropped", #old.Announcements == 0)
 
 	-- Two players joining at the same moment must see the same thing.
 	local a = EventCore.snapshot(state, t0 + 100, GameConfig)
 	local b = EventCore.snapshot(state, t0 + 100, GameConfig)
-	check("snapshots are consistent between players",
-		#a.ActiveEvents == #b.ActiveEvents and #a.Announcements == #b.Announcements)
+	check(
+		"snapshots are consistent between players",
+		#a.ActiveEvents == #b.ActiveEvents and #a.Announcements == #b.Announcements
+	)
 	check("snapshot carries server time for clock-skew correction", a.ServerNow == t0 + 100)
 
 	-- Concurrent events.
 	local s3 = EventCore.newState()
-	EventCore.startEvent(s3, { Id = "B", Kind = "FATEBREAK", Name = "B", StartedAt = t0, EndsAt = t0 + 100 })
-	EventCore.startEvent(s3, { Id = "A", Kind = "FATEBREAK", Name = "A", StartedAt = t0, EndsAt = t0 + 200 })
+	EventCore.startEvent(
+		s3,
+		{ Id = "B", Kind = "FATEBREAK", Name = "B", StartedAt = t0, EndsAt = t0 + 100 }
+	)
+	EventCore.startEvent(
+		s3,
+		{ Id = "A", Kind = "FATEBREAK", Name = "A", StartedAt = t0, EndsAt = t0 + 200 }
+	)
 	local multi = EventCore.snapshot(s3, t0 + 50, GameConfig)
 	check("multiple concurrent events are all sent", #multi.ActiveEvents == 2)
 	check("event order is stable", multi.ActiveEvents[1].Id == "A")
 
 	local partial = EventCore.snapshot(s3, t0 + 150, GameConfig)
-	check("only the still-running event survives",
-		#partial.ActiveEvents == 1 and partial.ActiveEvents[1].Id == "A")
+	check(
+		"only the still-running event survives",
+		#partial.ActiveEvents == 1 and partial.ActiveEvents[1].Id == "A"
+	)
 end
 
 -- === 8. Hub layout data =============================================
@@ -592,13 +793,17 @@ do
 	local ok, errs = Schema.validateHub(Crossroads)
 	check("real hub layout validates", ok, table.concat(errs, "; "))
 
-	check("all four hub districts are present", #Crossroads.Districts == 4,
-		string.format("got %d", #Crossroads.Districts))
+	check(
+		"all four hub districts are present",
+		#Crossroads.Districts == 4,
+		string.format("got %d", #Crossroads.Districts)
+	)
 
 	local byId = {}
-	for _, d in Crossroads.Districts do byId[d.Id] = d end
-	for _, id in { "HALL_OF_LEGENDS", "DISCOVERY_ARCHIVE", "EXPEDITION_GATE",
-		"TRAINING_GROUNDS" } do
+	for _, d in Crossroads.Districts do
+		byId[d.Id] = d
+	end
+	for _, id in { "HALL_OF_LEGENDS", "DISCOVERY_ARCHIVE", "EXPEDITION_GATE", "TRAINING_GROUNDS" } do
 		check(string.format("district %s exists", id), byId[id] ~= nil)
 	end
 
@@ -609,33 +814,45 @@ do
 	check("Discovery Archive is east (+X)", anchors.DISCOVERY_ARCHIVE.X > 0)
 	check("Expedition Gate is south (+Z)", anchors.EXPEDITION_GATE.Z > 0)
 	check("Training Grounds is west (-X)", anchors.TRAINING_GROUNDS.X < 0)
-	check("Fate Engine is at true centre",
-		anchors.FATE_ENGINE.X == 0 and anchors.FATE_ENGINE.Y == 0 and anchors.FATE_ENGINE.Z == 0)
+	check(
+		"Fate Engine is at true centre",
+		anchors.FATE_ENGINE.X == 0 and anchors.FATE_ENGINE.Y == 0 and anchors.FATE_ENGINE.Z == 0
+	)
 
 	-- Blueprint §7.3: positions are locked in one place, never re-derived.
 	local everyZoneAnchored = true
 	for _, d in Crossroads.Districts do
-		if anchors[d.Id] == nil then everyZoneAnchored = false end
+		if anchors[d.Id] == nil then
+			everyZoneAnchored = false
+		end
 	end
 	check("every zone has a named anchor in GameConfig.HubLayout", everyZoneAnchored)
 
 	-- Blueprint §2.2 proportions, rescaled for a 1200-stud hub. The blueprint's
 	-- absolute numbers were relative to a 120-stud hub; what it was actually
 	-- specifying is the RELATIONSHIPS, and those are what these assert.
-	check("Fate Engine has 6 crystal shards",
-		Crossroads.FateEngine.CrystalShards.Count == 6)
+	check("Fate Engine has 6 crystal shards", Crossroads.FateEngine.CrystalShards.Count == 6)
 	check("Hall of Legends has 5 obelisk slots", byId.HALL_OF_LEGENDS.ObeliskSlots == 5)
-	check("Training Grounds has 3 dummies plus a boss dummy",
-		byId.TRAINING_GROUNDS.DummyCount == 3 and byId.TRAINING_GROUNDS.HasBossDummy)
+	check(
+		"Training Grounds has 3 dummies plus a boss dummy",
+		byId.TRAINING_GROUNDS.DummyCount == 3 and byId.TRAINING_GROUNDS.HasBossDummy
+	)
 	-- The plaza IS the playable diameter -- asserted as the relationship
 	-- rather than as the literal 1150 it used to be, so a world rescale
 	-- cannot leave the two disagreeing and still pass.
-	check("the plaza is exactly the playable diameter the layout promises",
+	check(
+		"the plaza is exactly the playable diameter the layout promises",
 		Crossroads.Plaza.Diameter == GameConfig.HubLayout.HubDiameter,
-		string.format("plaza %.0f, layout %.0f",
-			Crossroads.Plaza.Diameter, GameConfig.HubLayout.HubDiameter))
-	check("the gate processional is wider than a walkway",
-		Crossroads.Bridges.ProcessionalWidth > Crossroads.Bridges.Width)
+		string.format(
+			"plaza %.0f, layout %.0f",
+			Crossroads.Plaza.Diameter,
+			GameConfig.HubLayout.HubDiameter
+		)
+	)
+	check(
+		"the gate processional is wider than a walkway",
+		Crossroads.Bridges.ProcessionalWidth > Crossroads.Bridges.Width
+	)
 
 	-- === SCALE BUDGET =============================================
 	-- A Roblox character is ~5 studs tall. The old hub was 24 characters
@@ -649,14 +866,18 @@ do
 	-- space, and that is what they now ask for. The guard they exist to be is
 	-- unchanged: the ORIGINAL hub was 24 characters across and read as a
 	-- room, and 100 is still four times that.
-	check("the hub reads as a world, not a room (>= 100 characters across)",
+	check(
+		"the hub reads as a world, not a room (>= 100 characters across)",
 		Crossroads.Plaza.Diameter / CHAR >= 100,
-		string.format("%.0f characters", Crossroads.Plaza.Diameter / CHAR))
+		string.format("%.0f characters", Crossroads.Plaza.Diameter / CHAR)
+	)
 
 	for _, d in Crossroads.Districts do
-		check(string.format("%s is at least 20 characters across", d.Id),
+		check(
+			string.format("%s is at least 20 characters across", d.Id),
 			math.min(d.PlatformSize.X, d.PlatformSize.Z) / CHAR >= 20,
-			string.format("%.0f", math.min(d.PlatformSize.X, d.PlatformSize.Z) / CHAR))
+			string.format("%.0f", math.min(d.PlatformSize.X, d.PlatformSize.Z) / CHAR)
+		)
 	end
 
 	-- THE HARD BUDGET: no location may be more than MaxTraversalSeconds away.
@@ -666,25 +887,46 @@ do
 		local anchor = GameConfig.HubLayout.Anchors[d.Id]
 		local flat = math.sqrt(anchor.X * anchor.X + anchor.Z * anchor.Z)
 		local seconds = flat / speed
-		if seconds > worstWalk then worstWalk, worstZone = seconds, d.Id end
+		if seconds > worstWalk then
+			worstWalk, worstZone = seconds, d.Id
+		end
 	end
-	check("no zone is more than the traversal budget away from the Fate Engine",
+	check(
+		"no zone is more than the traversal budget away from the Fate Engine",
 		worstWalk <= GameConfig.Scale.MaxTraversalSeconds,
-		string.format("worst: %s at %.1fs (budget %ds)", worstZone, worstWalk,
-			GameConfig.Scale.MaxTraversalSeconds))
-	check("movement is faster than Roblox's 16 stud/s default, or the hub is a slog",
-		speed > 16, tostring(speed))
+		string.format(
+			"worst: %s at %.1fs (budget %ds)",
+			worstZone,
+			worstWalk,
+			GameConfig.Scale.MaxTraversalSeconds
+		)
+	)
+	check(
+		"movement is faster than Roblox's 16 stud/s default, or the hub is a slog",
+		speed > 16,
+		tostring(speed)
+	)
 
 	-- Scenery must reach well past anything walkable, or the world feels
 	-- boxed in no matter how large the playable area is.
-	check("scenery extends past the playable footprint",
+	check(
+		"scenery extends past the playable footprint",
 		Crossroads.FloatingIslands.MaxRadius > GameConfig.HubLayout.HubDiameter,
-		string.format("%d vs %d", Crossroads.FloatingIslands.MaxRadius,
-			GameConfig.HubLayout.HubDiameter))
-	check("fog reaches far enough to show the distant islands",
+		string.format(
+			"%d vs %d",
+			Crossroads.FloatingIslands.MaxRadius,
+			GameConfig.HubLayout.HubDiameter
+		)
+	)
+	check(
+		"fog reaches far enough to show the distant islands",
 		Crossroads.Theme.FogEnd >= Crossroads.FloatingIslands.MaxRadius * 0.9,
-		string.format("fog %d vs islands %d", Crossroads.Theme.FogEnd,
-			Crossroads.FloatingIslands.MaxRadius))
+		string.format(
+			"fog %d vs islands %d",
+			Crossroads.Theme.FogEnd,
+			Crossroads.FloatingIslands.MaxRadius
+		)
+	)
 
 	-- Geometry must not interpenetrate at the new scale.
 	local engineR = Crossroads.FateEngine.PlatformRadius
@@ -693,36 +935,50 @@ do
 	for _, d in Crossroads.Districts do
 		if d.Height < 100 then
 			local gap = ringR - engineR - math.max(d.PlatformSize.X, d.PlatformSize.Z) / 2
-			if gap < tightest then tightest, tightestZone = gap, d.Id end
+			if gap < tightest then
+				tightest, tightestZone = gap, d.Id
+			end
 		end
 	end
-	check("zone platforms do not overlap the Fate Engine platform",
-		tightest > 0, string.format("tightest gap: %s at %.0f studs", tightestZone, tightest))
+	check(
+		"zone platforms do not overlap the Fate Engine platform",
+		tightest > 0,
+		string.format("tightest gap: %s at %.0f studs", tightestZone, tightest)
+	)
 
 	-- The rig has to grow with the platform or it is a speck on it.
 	local engineRingR = GameConfig.Portal.OuterRingRadius * GameConfig.Portal.FateEngineScale
-	check("the Fate Engine reads as monumental against its platform",
+	check(
+		"the Fate Engine reads as monumental against its platform",
 		engineRingR > engineR * 0.3 and engineRingR < engineR,
-		string.format("ring %.0f vs platform %.0f", engineRingR, engineR))
+		string.format("ring %.0f vs platform %.0f", engineRingR, engineR)
+	)
 	-- This assertion used to carry a `* 2` fudge factor and covered only the
 	-- Engine. Both were wrong: the Gate is the larger rig, and at 12x its
 	-- plinth was 84 studs in radius against a 70-stud prompt -- so a player
 	-- standing ON the plinth was outside the prompt's range and the portal
 	-- could not be used at all. The generalised version is in its own group
 	-- below; this one stays as the Engine's specific case, without the fudge.
-	check("the roll prompt reaches beyond the Engine's plinth",
+	check(
+		"the roll prompt reaches beyond the Engine's plinth",
 		GameConfig.UI.PromptActivationDistance
-			> GameConfig.Portal.PlinthDiameter * GameConfig.Portal.FateEngineScale * 0.5)
-	check("the gate processional is wider than a walkway",
-		Crossroads.Bridges.ProcessionalWidth > Crossroads.Bridges.Width)
+			> GameConfig.Portal.PlinthDiameter * GameConfig.Portal.FateEngineScale * 0.5
+	)
+	check(
+		"the gate processional is wider than a walkway",
+		Crossroads.Bridges.ProcessionalWidth > Crossroads.Bridges.Width
+	)
 
 	-- Every zone must have a builder, or HubBuilder asserts at boot.
-	local KNOWN_KINDS = { AMPHITHEATRE = true, ROTUNDA = true, GATE = true,
-		YARD = true, OBSERVATORY = true }
+	local KNOWN_KINDS =
+		{ AMPHITHEATRE = true, ROTUNDA = true, GATE = true, YARD = true, OBSERVATORY = true }
 	local kindsOk = true
 	local badKind
 	for _, d in Crossroads.Districts do
-		if not KNOWN_KINDS[d.Kind] then kindsOk = false badKind = d.Id end
+		if not KNOWN_KINDS[d.Kind] then
+			kindsOk = false
+			badKind = d.Id
+		end
 	end
 	check("every zone Kind has a builder", kindsOk, badKind)
 
@@ -732,16 +988,25 @@ do
 		and Crossroads.Plaza.MeshId == nil
 		and Crossroads.FloatingIslands.MeshId == nil
 	for _, d in Crossroads.Districts do
-		if rawget(d, "MeshId") ~= nil then seamOk = false end
+		if rawget(d, "MeshId") ~= nil then
+			seamOk = false
+		end
 	end
 	check("every swappable piece exposes a MeshId seam (currently all blockout)", seamOk)
 
-	check("floating islands are deterministic across servers",
-		type(Crossroads.FloatingIslands.Seed) == "number")
-	check("the spawn ring clears the Fate Engine's dais",
+	check(
+		"floating islands are deterministic across servers",
+		type(Crossroads.FloatingIslands.Seed) == "number"
+	)
+	check(
+		"the spawn ring clears the Fate Engine's dais",
 		GameConfig.HubLayout.SpawnRing.Radius > Crossroads.FateEngine.PlatformRadius,
-		string.format("ring %d, dais %d",
-			GameConfig.HubLayout.SpawnRing.Radius, Crossroads.FateEngine.PlatformRadius))
+		string.format(
+			"ring %d, dais %d",
+			GameConfig.HubLayout.SpawnRing.Radius,
+			Crossroads.FateEngine.PlatformRadius
+		)
+	)
 
 	-- Bad hub data must be caught at boot, like any other content.
 	local broken = { Theme = {}, FateEngine = { PlatformRadius = 24 }, Districts = {} }
@@ -750,14 +1015,19 @@ do
 
 	-- Regression guard: this exact bug reached Studio. A Vector3 reports as
 	-- "vector" under type(), so only typeof() can validate it.
-	check("typeof() identifies a Vector3", typeof(Crossroads.FateEngine.AnchorSize) == "Vector3",
-		typeof(Crossroads.FateEngine.AnchorSize))
+	check(
+		"typeof() identifies a Vector3",
+		typeof(Crossroads.FateEngine.AnchorSize) == "Vector3",
+		typeof(Crossroads.FateEngine.AnchorSize)
+	)
 
 	local badAnchor = {
 		Theme = {},
 		FateEngine = {
 			AnchorSize = "not a vector",
-			PlatformRadius = 24, PortalScale = 1.5, CrystalShards = { Count = 6 },
+			PlatformRadius = 24,
+			PortalScale = 1.5,
+			CrystalShards = { Count = 6 },
 		},
 		Districts = { Crossroads.Districts[1] },
 	}
@@ -765,14 +1035,16 @@ do
 	check("rejects a non-Vector3 AnchorSize", not oka, table.concat(errsa, "; "))
 
 	local noKind = {
-		Theme = {}, FateEngine = Crossroads.FateEngine,
+		Theme = {},
+		FateEngine = Crossroads.FateEngine,
 		Districts = { { Id = "X", Name = "X", Angle = 0, Radius = 10 } },
 	}
 	local okk, errsk = Schema.validateHub(noKind)
 	check("rejects a zone with no Kind", not okk, table.concat(errsk, "; "))
 
 	local dupes = {
-		Theme = {}, FateEngine = Crossroads.FateEngine,
+		Theme = {},
+		FateEngine = Crossroads.FateEngine,
 		Districts = { Crossroads.Districts[1], Crossroads.Districts[1] },
 	}
 	local okd, errsd = Schema.validateHub(dupes)
@@ -784,72 +1056,107 @@ group("PortalRig and the rarity colour contract")
 
 do
 	local portal = GameConfig.Portal
-	check("outer ring is radius 9, thickness 1.2",
-		portal.OuterRingRadius == 9 and portal.OuterRingThickness == 1.2)
-	check("inner ring is radius 6.5, thickness 0.6",
-		portal.InnerRingRadius == 6.5 and portal.InnerRingThickness == 0.6)
+	check(
+		"outer ring is radius 9, thickness 1.2",
+		portal.OuterRingRadius == 9 and portal.OuterRingThickness == 1.2
+	)
+	check(
+		"inner ring is radius 6.5, thickness 0.6",
+		portal.InnerRingRadius == 6.5 and portal.InnerRingThickness == 0.6
+	)
 	check("rune ring has 8 plates", portal.RuneCount == 8)
-	check("plinth is 14 studs across, 1.5 tall, octagonal",
-		portal.PlinthDiameter == 14 and portal.PlinthHeight == 1.5 and portal.PlinthSides == 8)
+	check(
+		"plinth is 14 studs across, 1.5 tall, octagonal",
+		portal.PlinthDiameter == 14 and portal.PlinthHeight == 1.5 and portal.PlinthSides == 8
+	)
 	-- Range is a DISTANCE and scales with the world. Brightness does not --
 	-- it moves the OTHER way, because a light that did not move away from a
 	-- surface that came closer is a brighter light (inverse square). Both
 	-- are asserted as relationships rather than as literals, so a rescale
 	-- cannot leave a light reaching twice as far as the thing it lights.
-	check("the point light reaches 24 studs at full world scale",
+	check(
+		"the point light reaches 24 studs at full world scale",
 		portal.LightRange == 24 * GameConfig.HubLayout.WorldScale,
-		string.format("range %.1f", portal.LightRange))
+		string.format("range %.1f", portal.LightRange)
+	)
 
-	check("...and the active flare is brighter than the idle glow, but not by much",
+	check(
+		"...and the active flare is brighter than the idle glow, but not by much",
 		portal.ActiveBrightness > portal.IdleBrightness
 			and portal.ActiveBrightness <= portal.IdleBrightness * 4,
-		string.format("idle %.2f, active %.2f", portal.IdleBrightness, portal.ActiveBrightness))
+		string.format("idle %.2f, active %.2f", portal.IdleBrightness, portal.ActiveBrightness)
+	)
 	check("active particle rate is 40", portal.ActiveParticleRate == 40)
 	check("spin-up spikes particles to 200", portal.SpinUpParticleRate == 200)
-	check("particle lifetime is 1.5-3s",
-		portal.ParticleLifetimeMin == 1.5 and portal.ParticleLifetimeMax == 3)
-	check("plane pulses between 0.3 and 0.7",
-		portal.PlanePulseMin == 0.3 and portal.PlanePulseMax == 0.7)
+	check(
+		"particle lifetime is 1.5-3s",
+		portal.ParticleLifetimeMin == 1.5 and portal.ParticleLifetimeMax == 3
+	)
+	check(
+		"plane pulses between 0.3 and 0.7",
+		portal.PlanePulseMin == 0.3 and portal.PlanePulseMax == 0.7
+	)
 
 	-- The single most important UX beat (master spec §25, blueprint §1.3).
 	check("spin-up is 2.5s and never instant", portal.SpinUpSeconds == 2.5)
 	check("spin-up spins faster than idle", portal.SpinUpSpinSpeed > portal.IdleSpinSpeed)
-	check("the reveal can never beat the spin-up",
-		math.max(GameConfig.UI.RollBuildupSeconds + Constants.RARITY.COMMON.RevealDuration,
-			portal.SpinUpSeconds) >= portal.SpinUpSeconds)
+	check(
+		"the reveal can never beat the spin-up",
+		math.max(
+			GameConfig.UI.RollBuildupSeconds + Constants.RARITY.COMMON.RevealDuration,
+			portal.SpinUpSeconds
+		) >= portal.SpinUpSeconds
+	)
 
 	check("the gate is the larger portal", portal.ExpeditionGateScale > portal.FateEngineScale)
 
 	-- Blueprint §1.1 is declared the single source of truth for rarity colour.
 	local BLUEPRINT = {
-		COMMON = "9E9E9E", RARE = "3E8EF7", EPIC = "B24BF3",
-		MYTHIC = "FF7A1A", LEGENDARY = "FFD447", UNKNOWN = "7CF5E0",
+		COMMON = "9E9E9E",
+		RARE = "3E8EF7",
+		EPIC = "B24BF3",
+		MYTHIC = "FF7A1A",
+		LEGENDARY = "FFD447",
+		UNKNOWN = "7CF5E0",
 	}
 	for key, hex in BLUEPRINT do
-		check(string.format("%s uses blueprint colour #%s", key, hex),
+		check(
+			string.format("%s uses blueprint colour #%s", key, hex),
 			Constants.RARITY[key].Color.hex == hex,
-			tostring(Constants.RARITY[key].Color.hex))
+			tostring(Constants.RARITY[key].Color.hex)
+		)
 	end
 
 	-- Blueprint §4.1/§6: rarity colour is a UI/portal contract; biome palette
 	-- is set dressing and must never bleed into it.
-	check("Emberfall (Rare) carries the Rare colour, not fire orange",
-		Constants.RARITY[Worlds.EMBERFALL.Rarity].Color.hex == "3E8EF7")
-	check("Astral Reach (Mythic) carries Mythic orange",
-		Constants.RARITY[Worlds.ASTRAL_REACH.Rarity].Color.hex == "FF7A1A")
-	check("Verdant Valley (Common) carries Common grey",
-		Constants.RARITY[Worlds.VERDANT_VALLEY.Rarity].Color.hex == "9E9E9E")
+	check(
+		"Emberfall (Rare) carries the Rare colour, not fire orange",
+		Constants.RARITY[Worlds.EMBERFALL.Rarity].Color.hex == "3E8EF7"
+	)
+	check(
+		"Astral Reach (Mythic) carries Mythic orange",
+		Constants.RARITY[Worlds.ASTRAL_REACH.Rarity].Color.hex == "FF7A1A"
+	)
+	check(
+		"Verdant Valley (Common) carries Common grey",
+		Constants.RARITY[Worlds.VERDANT_VALLEY.Rarity].Color.hex == "9E9E9E"
+	)
 	-- Ethereal Scape is the WEAKEST test of this contract in the game, and it
 	-- is worth naming: its meadows are mint green and Uncommon is green, so
 	-- "portal colour came from the rarity table" and "portal colour came from
 	-- the biome" would look the same on screen. It still has to hold.
-	check("Ethereal Scape (Uncommon) carries the Uncommon colour",
-		Constants.RARITY[Worlds.ETHEREAL_SCAPE.Rarity].Color.hex == "5FD97A")
+	check(
+		"Ethereal Scape (Uncommon) carries the Uncommon colour",
+		Constants.RARITY[Worlds.ETHEREAL_SCAPE.Rarity].Color.hex == "5FD97A"
+	)
 
-	check("UITheme derives rarity colours from Constants, not its own table",
-		UITheme.RarityColors.MYTHIC == Constants.RARITY.MYTHIC.Color)
-	check("UITheme is frozen",
-		(throws(function() UITheme.AccentGold = nil end)))
+	check(
+		"UITheme derives rarity colours from Constants, not its own table",
+		UITheme.RarityColors.MYTHIC == Constants.RARITY.MYTHIC.Color
+	)
+	check("UITheme is frozen", (throws(function()
+		UITheme.AccentGold = nil
+	end)))
 end
 
 -- === 10. Biome lighting =============================================
@@ -860,45 +1167,61 @@ do
 	local es = Worlds.ETHEREAL_SCAPE
 
 	for _, w in { vv, ef, ar, es } do
-		check(string.format("%s declares Brightness and FogStart", w.Id),
-			type(w.Environment.Brightness) == "number"
-				and type(w.Environment.FogStart) == "number")
+		check(
+			string.format("%s declares Brightness and FogStart", w.Id),
+			type(w.Environment.Brightness) == "number" and type(w.Environment.FogStart) == "number"
+		)
 	end
 
 	check("Verdant Valley reads as soft midday", vv.Environment.Brightness == 2.5)
 	-- Ethereal Scape stands above the cloud deck, so it is lit from every
 	-- direction at once. If a brighter world is ever added, this is the
 	-- assertion that will notice.
-	check("Ethereal Scape is the brightest world in the game",
+	check(
+		"Ethereal Scape is the brightest world in the game",
 		es.Environment.Brightness == 3.0
 			and es.Environment.Brightness > vv.Environment.Brightness
 			and es.Environment.Brightness > ar.Environment.Brightness,
-		tostring(es.Environment.Brightness))
-	check("Ethereal Scape fog is cloud, so it reaches far rather than closing in",
+		tostring(es.Environment.Brightness)
+	)
+	check(
+		"Ethereal Scape fog is cloud, so it reaches far rather than closing in",
 		es.Environment.FogEnd >= 2000 and es.Environment.FogEnd > vv.Environment.FogEnd,
-		string.format("FogEnd %d", es.Environment.FogEnd))
-	check("Emberfall is the darkest (lava lights it locally)",
+		string.format("FogEnd %d", es.Environment.FogEnd)
+	)
+	check(
+		"Emberfall is the darkest (lava lights it locally)",
 		ef.Environment.Brightness == 1.4
 			and ef.Environment.Brightness < ar.Environment.Brightness
-			and ef.Environment.Brightness < vv.Environment.Brightness)
-	check("Emberfall fog is tightest (ash haze)",
-		ef.Environment.FogEnd == 300 and ef.Environment.FogEnd < vv.Environment.FogEnd)
-	check("Verdant Valley fog is soft, not oppressive",
-		vv.Environment.FogStart == 100 and vv.Environment.FogEnd == 400)
-	check("Astral Reach fog is sparse so void-black hides the edges",
-		ar.Environment.FogEnd >= 600)
+			and ef.Environment.Brightness < vv.Environment.Brightness
+	)
+	check(
+		"Emberfall fog is tightest (ash haze)",
+		ef.Environment.FogEnd == 300 and ef.Environment.FogEnd < vv.Environment.FogEnd
+	)
+	check(
+		"Verdant Valley fog is soft, not oppressive",
+		vv.Environment.FogStart == 100 and vv.Environment.FogEnd == 400
+	)
+	check("Astral Reach fog is sparse so void-black hides the edges", ar.Environment.FogEnd >= 600)
 
 	-- Blueprint §3.5: modifiers re-tint, they do not build new geometry.
 	check("Verdant Valley has ModifierOverrides", vv.ModifierOverrides ~= nil)
-	check("Night modifier darkens rather than adding geometry",
-		vv.ModifierOverrides.NIGHT.Brightness < vv.Environment.Brightness)
+	check(
+		"Night modifier darkens rather than adding geometry",
+		vv.ModifierOverrides.NIGHT.Brightness < vv.Environment.Brightness
+	)
 	check("Night swaps the ambient particle", vv.ModifierOverrides.NIGHT.ParticleId == "FIREFLIES")
 
 	local declared = {}
-	for _, m in vv.Modifiers do declared[m] = true end
+	for _, m in vv.Modifiers do
+		declared[m] = true
+	end
 	local overridesDeclared = true
 	for key in vv.ModifierOverrides do
-		if not declared[key] then overridesDeclared = false end
+		if not declared[key] then
+			overridesDeclared = false
+		end
 	end
 	check("every ModifierOverride names a modifier the world declares", overridesDeclared)
 end
@@ -911,19 +1234,28 @@ do
 	local uniqueOrders = true
 	for key, rarity in Constants.RARITY do
 		check(string.format("rarity %s knows its own key", key), rarity.Key == key)
-		if orders[rarity.Order] then uniqueOrders = false end
+		if orders[rarity.Order] then
+			uniqueOrders = false
+		end
 		orders[rarity.Order] = key
 	end
 	check("rarity orders are unique", uniqueOrders)
-	check("rarer results reveal for longer",
-		Constants.RARITY.UNKNOWN.RevealDuration > Constants.RARITY.COMMON.RevealDuration)
-	check("announce threshold is Mythic or above",
-		Constants.ANNOUNCE_RARITY_ORDER >= Constants.RARITY.MYTHIC.Order)
+	check(
+		"rarer results reveal for longer",
+		Constants.RARITY.UNKNOWN.RevealDuration > Constants.RARITY.COMMON.RevealDuration
+	)
+	check(
+		"announce threshold is Mythic or above",
+		Constants.ANNOUNCE_RARITY_ORDER >= Constants.RARITY.MYTHIC.Order
+	)
 
-	local frozen = throws(function() Constants.RARITY.COMMON.Order = 99 end)
+	local frozen = throws(function()
+		Constants.RARITY.COMMON.Order = 99
+	end)
 	check("Constants are frozen against accidental mutation", frozen)
-	check("GameConfig is frozen against accidental mutation",
-		(throws(function() GameConfig.CurrentPhase = 3 end)))
+	check("GameConfig is frozen against accidental mutation", (throws(function()
+		GameConfig.CurrentPhase = 3
+	end)))
 end
 
 -- === 12. Modular map chunks =========================================
@@ -935,15 +1267,19 @@ do
 	check("the real chunk library validates", ok, table.concat(errs, "; "))
 
 	local uploaded, placeholder = AssetManifest.summary()
-	check("manifest reports its status", uploaded + placeholder > 0,
-		string.format("%d uploaded, %d placeholder", uploaded, placeholder))
+	check(
+		"manifest reports its status",
+		uploaded + placeholder > 0,
+		string.format("%d uploaded, %d placeholder", uploaded, placeholder)
+	)
 	-- HUB_FATE_ENGINE rather than a chunk key: the Verdant Valley kit was
 	-- uploaded 2026-09-22, so its keys resolve now. A prefab entry stays
 	-- PLACEHOLDER by design -- it is a Model read by NAME, never a mesh id.
-	check("a placeholder resolves to nil so the loader falls back to primitives",
-		AssetManifest.assetId("HUB_FATE_ENGINE") == nil)
-	check("an uploaded key resolves to its mesh id",
-		AssetManifest.assetId("VV_CHUNK_ENTRY") ~= nil)
+	check(
+		"a placeholder resolves to nil so the loader falls back to primitives",
+		AssetManifest.assetId("HUB_FATE_ENGINE") == nil
+	)
+	check("an uploaded key resolves to its mesh id", AssetManifest.assetId("VV_CHUNK_ENTRY") ~= nil)
 	check("an unknown key does not exist", not AssetManifest.exists("NOT_A_REAL_ASSET"))
 
 	-- Every chunk must name an asset that exists, or the kit is broken.
@@ -958,26 +1294,56 @@ do
 	check("every chunk's AssetKey is in the manifest", everyAssetKnown, missing)
 
 	local badAsset = {
-		X = { Id = "X", WorldId = "W", Role = "PATH", AssetKey = "NOPE",
-			SizeX = 1, SizeY = 1, SizeZ = 1, Weight = 1,
-			Sockets = { { Id = "a", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 },
-				{ Id = "b", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = 1, Facing = 180 } } },
+		X = {
+			Id = "X",
+			WorldId = "W",
+			Role = "PATH",
+			AssetKey = "NOPE",
+			SizeX = 1,
+			SizeY = 1,
+			SizeZ = 1,
+			Weight = 1,
+			Sockets = {
+				{ Id = "a", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 },
+				{ Id = "b", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = 1, Facing = 180 },
+			},
+		},
 	}
 	local okb, errsb = Schema.validateChunks(badAsset, AssetManifest)
 	check("rejects a chunk naming an unknown asset", not okb, table.concat(errsb, "; "))
 
 	local deadEnd = {
-		D = { Id = "D", WorldId = "W", Role = "PATH", AssetKey = "VV_CHUNK_ENTRY",
-			SizeX = 1, SizeY = 1, SizeZ = 1, Weight = 1,
-			Sockets = { { Id = "a", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 } } },
+		D = {
+			Id = "D",
+			WorldId = "W",
+			Role = "PATH",
+			AssetKey = "VV_CHUNK_ENTRY",
+			SizeX = 1,
+			SizeY = 1,
+			SizeZ = 1,
+			Weight = 1,
+			Sockets = {
+				{ Id = "a", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 },
+			},
+		},
 	}
 	local okd, errsd = Schema.validateChunks(deadEnd, AssetManifest)
 	check("rejects a one-socket PATH chunk as a dead end", not okd, table.concat(errsd, "; "))
 
 	local badFacing = {
-		F = { Id = "F", WorldId = "W", Role = "ENTRY", AssetKey = "VV_CHUNK_ENTRY",
-			SizeX = 1, SizeY = 1, SizeZ = 1, Weight = 1,
-			Sockets = { { Id = "a", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 45 } } },
+		F = {
+			Id = "F",
+			WorldId = "W",
+			Role = "ENTRY",
+			AssetKey = "VV_CHUNK_ENTRY",
+			SizeX = 1,
+			SizeY = 1,
+			SizeZ = 1,
+			Weight = 1,
+			Sockets = {
+				{ Id = "a", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 45 },
+			},
+		},
 	}
 	local okf, errsf = Schema.validateChunks(badFacing, AssetManifest)
 	check("rejects an off-grid socket facing", not okf, table.concat(errsf, "; "))
@@ -992,74 +1358,148 @@ do
 	-- openings, the critical path spends both, so no seed leaves a spare
 	-- socket for a branch to hang off. It needs a three-opening piece. The
 	-- guard below is what stops that becoming a silent no-op again.
-	check("a SIDE pocket needs a 3-socket piece to hang off, and the schema says so",
+	check(
+		"a SIDE pocket needs a 3-socket piece to hang off, and the schema says so",
 		(function()
 			local fake = {
-				A = { Id = "A", WorldId = "W", Role = "ENTRY", AssetKey = "VV_CHUNK_ENTRY",
-					SizeX = 1, SizeY = 1, SizeZ = 1, Weight = 1,
-					Sockets = { { Id = "a", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 } } },
-				B = { Id = "B", WorldId = "W", Role = "BOSS", AssetKey = "VV_CHUNK_ENTRY",
-					SizeX = 1, SizeY = 1, SizeZ = 1, Weight = 1,
-					Sockets = { { Id = "a", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 } } },
-				C = { Id = "C", WorldId = "W", Role = "PATH", AssetKey = "VV_CHUNK_ENTRY",
-					SizeX = 1, SizeY = 1, SizeZ = 1, Weight = 1,
+				A = {
+					Id = "A",
+					WorldId = "W",
+					Role = "ENTRY",
+					AssetKey = "VV_CHUNK_ENTRY",
+					SizeX = 1,
+					SizeY = 1,
+					SizeZ = 1,
+					Weight = 1,
 					Sockets = {
 						{ Id = "a", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 },
-						{ Id = "b", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 90 } } },
-				D = { Id = "D", WorldId = "W", Role = "SIDE", AssetKey = "VV_CHUNK_ENTRY",
-					SizeX = 1, SizeY = 1, SizeZ = 1, Weight = 1,
-					Sockets = { { Id = "a", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 } } },
+					},
+				},
+				B = {
+					Id = "B",
+					WorldId = "W",
+					Role = "BOSS",
+					AssetKey = "VV_CHUNK_ENTRY",
+					SizeX = 1,
+					SizeY = 1,
+					SizeZ = 1,
+					Weight = 1,
+					Sockets = {
+						{ Id = "a", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 },
+					},
+				},
+				C = {
+					Id = "C",
+					WorldId = "W",
+					Role = "PATH",
+					AssetKey = "VV_CHUNK_ENTRY",
+					SizeX = 1,
+					SizeY = 1,
+					SizeZ = 1,
+					Weight = 1,
+					Sockets = {
+						{ Id = "a", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 },
+						{
+							Id = "b",
+							Kind = "P",
+							OffsetX = 0,
+							OffsetY = 0,
+							OffsetZ = 0,
+							Facing = 90,
+						},
+					},
+				},
+				D = {
+					Id = "D",
+					WorldId = "W",
+					Role = "SIDE",
+					AssetKey = "VV_CHUNK_ENTRY",
+					SizeX = 1,
+					SizeY = 1,
+					SizeZ = 1,
+					Weight = 1,
+					Sockets = {
+						{ Id = "a", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 },
+					},
+				},
 			}
 			local ok = Schema.validateChunks(fake, AssetManifest)
 			return not ok
-		end)())
+		end)()
+	)
 
 	-- And the real kit is free of that trap: a SIDE pocket is declared only
 	-- alongside a piece with a spare (third) socket to hang it off. The 30-piece
 	-- kit (2026-09-24) has three pockets and five 3-4 way junctions.
 	local hasJunction = false
 	for _, c in Chunks do
-		if c.WorldId == "VERDANT_VALLEY" and #c.Sockets >= 3 then hasJunction = true end
+		if c.WorldId == "VERDANT_VALLEY" and #c.Sockets >= 3 then
+			hasJunction = true
+		end
 	end
-	check("the real chunk library has no unreachable SIDE pocket",
-		(lib.SIDE == nil or #lib.SIDE == 0) or hasJunction)
+	check(
+		"the real chunk library has no unreachable SIDE pocket",
+		(lib.SIDE == nil or #lib.SIDE == 0) or hasJunction
+	)
 	-- Pieces must be sized against the character, not against the old hub.
 	local CHARH = GameConfig.Scale.CharacterHeight
 	local smallest = math.huge
 	local smallestId
 	for id, c in Chunks do
 		local m = math.min(c.SizeX, c.SizeZ)
-		if m < smallest then smallest, smallestId = m, id end
+		if m < smallest then
+			smallest, smallestId = m, id
+		end
 	end
-	check("the smallest map piece is at least 40 characters across",
-		smallest / CHARH >= 40, string.format("%s at %.0f characters", smallestId, smallest / CHARH))
+	check(
+		"the smallest map piece is at least 40 characters across",
+		smallest / CHARH >= 40,
+		string.format("%s at %.0f characters", smallestId, smallest / CHARH)
+	)
 
-	check("Verdant Valley has connective pieces",
+	check(
+		"Verdant Valley has connective pieces",
 		(#(lib.PATH or {}) + #(lib.COMBAT or {})) >= 4,
-		string.format("%d", #(lib.PATH or {}) + #(lib.COMBAT or {})))
+		string.format("%d", #(lib.PATH or {}) + #(lib.COMBAT or {}))
+	)
 
 	-- THE CORE QUESTION: can it actually build a map out of the pieces?
 	local built, failed = 0, {}
 	local roleSeen = {}
 	for trial = 1, 300 do
-		local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+		local okA, layout = ChunkCore.assembleWithRetry(
+			Chunks,
 			{ WorldId = "VERDANT_VALLEY", PathLength = 5 },
-			function(a) return lcg(trial * 104729 + a * 7919) end, 5)
+			function(a)
+				return lcg(trial * 104729 + a * 7919)
+			end,
+			5
+		)
 		if okA then
 			built += 1
-			for _, c in layout.Chunks do roleSeen[c.Role] = true end
+			for _, c in layout.Chunks do
+				roleSeen[c.Role] = true
+			end
 			local okV, errV = ChunkCore.validateLayout(layout, Chunks)
 			if not okV then
 				table.insert(failed, "trial " .. trial .. ": " .. table.concat(errV, ", "))
 			end
 		end
 	end
-	check("assembles a map from the piece library on nearly every seed", built >= 285,
-		string.format("%d/300 seeds produced a layout within 5 attempts", built))
-	check("every assembled layout is collision-free with one entry and one boss",
-		#failed == 0, failed[1])
-	check("layouts contain entry, connective pieces and a boss arena",
-		roleSeen.ENTRY and roleSeen.BOSS and (roleSeen.PATH or roleSeen.COMBAT))
+	check(
+		"assembles a map from the piece library on nearly every seed",
+		built >= 285,
+		string.format("%d/300 seeds produced a layout within 5 attempts", built)
+	)
+	check(
+		"every assembled layout is collision-free with one entry and one boss",
+		#failed == 0,
+		failed[1]
+	)
+	check(
+		"layouts contain entry, connective pieces and a boss arena",
+		roleSeen.ENTRY and roleSeen.BOSS and (roleSeen.PATH or roleSeen.COMBAT)
+	)
 
 	-- THE ARENA IS ALWAYS APPROACHED THROUGH A PIECE THAT OFFERS ITS KIND.
 	--
@@ -1072,24 +1512,34 @@ do
 	local arenaKinds = {}
 	for _, c in Chunks do
 		if c.Role == "BOSS" then
-			for _, sk in c.Sockets do arenaKinds[sk.Kind] = true end
+			for _, sk in c.Sockets do
+				arenaKinds[sk.Kind] = true
+			end
 		end
 	end
 	local approachAlwaysOffersArenaKind = true
 	local approachesSeen = {}
 	for trial = 1, 60 do
-		local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+		local okA, layout = ChunkCore.assembleWithRetry(
+			Chunks,
 			{ WorldId = "VERDANT_VALLEY", PathLength = 4 },
-			function(a) return lcg(trial * 611953 + a) end, 5)
+			function(a)
+				return lcg(trial * 611953 + a)
+			end,
+			5
+		)
 		if okA then
 			-- The approach is the piece JOINED to the arena's mouth -- not the
 			-- one before it in the list, which caps and side pockets (placed
 			-- after the arena) make a different piece.
 			local boss
 			for _, p in layout.Chunks do
-				if p.Role == "BOSS" then boss = p end
+				if p.Role == "BOSS" then
+					boss = p
+				end
 			end
-			local mouth = ChunkCore.worldSocket(boss, Chunks[boss.ChunkId], Chunks[boss.ChunkId].Sockets[1])
+			local mouth =
+				ChunkCore.worldSocket(boss, Chunks[boss.ChunkId], Chunks[boss.ChunkId].Sockets[1])
 			local approach
 			for _, p in layout.Chunks do
 				if p ~= boss then
@@ -1107,29 +1557,45 @@ do
 				approachesSeen[approach.ChunkId] = true
 				local offers = false
 				for _, sk in Chunks[approach.ChunkId].Sockets do
-					if arenaKinds[sk.Kind] then offers = true end
+					if arenaKinds[sk.Kind] then
+						offers = true
+					end
 				end
-				if not offers then approachAlwaysOffersArenaKind = false end
+				if not offers then
+					approachAlwaysOffersArenaKind = false
+				end
 			end
 		end
 	end
-	check("the arena is always approached through a piece offering its Kind",
-		approachAlwaysOffersArenaKind)
+	check(
+		"the arena is always approached through a piece offering its Kind",
+		approachAlwaysOffersArenaKind
+	)
 
 	-- The other half, and the reason three providers exist: the gate must not
 	-- also be a rut. One provider satisfies the assertion above on every seed
 	-- AND makes every map end identically.
 	local distinctApproaches = 0
-	for _ in approachesSeen do distinctApproaches += 1 end
-	check("and the approach is not the same piece every seed",
-		distinctApproaches > 1, string.format("%d distinct", distinctApproaches))
+	for _ in approachesSeen do
+		distinctApproaches += 1
+	end
+	check(
+		"and the approach is not the same piece every seed",
+		distinctApproaches > 1,
+		string.format("%d distinct", distinctApproaches)
+	)
 
 	-- MaxPerLayout holds for EVERY capped piece, not one chosen piece.
 	local capRespected, capBroken = true, nil
 	for trial = 1, 60 do
-		local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+		local okA, layout = ChunkCore.assembleWithRetry(
+			Chunks,
 			{ WorldId = "VERDANT_VALLEY", PathLength = 6 },
-			function(a) return lcg(trial * 15485863 + a) end, 5)
+			function(a)
+				return lcg(trial * 15485863 + a)
+			end,
+			5
+		)
 		if okA then
 			local counts = {}
 			for _, c in layout.Chunks do
@@ -1147,10 +1613,10 @@ do
 
 	-- Determinism: the same seed must always produce the same map, so an
 	-- expedition can be reproduced for debugging or exploit investigation.
-	local okA, layoutA = ChunkCore.assemble(Chunks,
-		{ WorldId = "VERDANT_VALLEY", PathLength = 2 }, lcg(2026))
-	local okB, layoutB = ChunkCore.assemble(Chunks,
-		{ WorldId = "VERDANT_VALLEY", PathLength = 2 }, lcg(2026))
+	local okA, layoutA =
+		ChunkCore.assemble(Chunks, { WorldId = "VERDANT_VALLEY", PathLength = 2 }, lcg(2026))
+	local okB, layoutB =
+		ChunkCore.assemble(Chunks, { WorldId = "VERDANT_VALLEY", PathLength = 2 }, lcg(2026))
 	check("assembly is deterministic for a given seed", okA and okB)
 	if okA and okB then
 		local same = #layoutA.Chunks == #layoutB.Chunks
@@ -1166,27 +1632,44 @@ do
 	-- Different seeds should not all produce the same map.
 	local shapes = {}
 	for trial = 1, 60 do
-		local okS, l = ChunkCore.assembleWithRetry(Chunks,
+		local okS, l = ChunkCore.assembleWithRetry(
+			Chunks,
 			{ WorldId = "VERDANT_VALLEY", PathLength = 4 },
-			function(a) return lcg(trial * 7919 + a) end, 5)
+			function(a)
+				return lcg(trial * 7919 + a)
+			end,
+			5
+		)
 		if okS then
 			local ids = {}
-			for _, c in l.Chunks do table.insert(ids, c.ChunkId) end
+			for _, c in l.Chunks do
+				table.insert(ids, c.ChunkId)
+			end
 			shapes[table.concat(ids, ">")] = true
 		end
 	end
 	local distinct = 0
-	for _ in shapes do distinct += 1 end
-	check("different seeds produce different maps", distinct > 1,
-		string.format("%d distinct layouts", distinct))
+	for _ in shapes do
+		distinct += 1
+	end
+	check(
+		"different seeds produce different maps",
+		distinct > 1,
+		string.format("%d distinct layouts", distinct)
+	)
 
 	-- Socket Kind is what stops a footpath opening onto the boss arena.
 	local bossChunk
 	for _, c in Chunks do
-		if c.WorldId == "VERDANT_VALLEY" and c.Role == "BOSS" then bossChunk = c end
+		if c.WorldId == "VERDANT_VALLEY" and c.Role == "BOSS" then
+			bossChunk = c
+		end
 	end
-	check("the boss arena only accepts a WIDE approach",
-		bossChunk.Sockets[1].Kind == "WIDE", bossChunk.Sockets[1].Kind)
+	check(
+		"the boss arena only accepts a WIDE approach",
+		bossChunk.Sockets[1].Kind == "WIDE",
+		bossChunk.Sockets[1].Kind
+	)
 	-- The arena Kind must be offered by at least one NON-boss piece, or the
 	-- path can never reach the arena and every seed fails. This too used to
 	-- name the Grove; it is the supply of the Kind that matters, not which
@@ -1195,12 +1678,17 @@ do
 	for id, c in Chunks do
 		if c.Role ~= "BOSS" then
 			for _, sk in c.Sockets do
-				if sk.Kind == "WIDE" then table.insert(wideProviders, id) end
+				if sk.Kind == "WIDE" then
+					table.insert(wideProviders, id)
+				end
 			end
 		end
 	end
-	check("at least one non-boss piece offers the arena's Kind",
-		#wideProviders >= 1, table.concat(wideProviders, ", "))
+	check(
+		"at least one non-boss piece offers the arena's Kind",
+		#wideProviders >= 1,
+		table.concat(wideProviders, ", ")
+	)
 
 	-- A LOOK AT WHAT IT ACTUALLY BUILDS.
 	-- Informational, like the Ethereal Scape traverse line. A pass/fail says
@@ -1210,11 +1698,19 @@ do
 		local shapesSeen, approachCount, pieceCount = {}, {}, {}
 		local trials, ok = 200, 0
 		for trial = 1, trials do
-			local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+			local okA, layout = ChunkCore.assembleWithRetry(
+				Chunks,
 				-- IncludeSide as the expedition passes it, so side pockets count.
-				{ WorldId = "VERDANT_VALLEY", PathLength = 5,
-					IncludeSide = GameConfig.Expedition.IncludeSide },
-				function(a) return lcg(trial * 2654435761 + a) end, 5)
+				{
+					WorldId = "VERDANT_VALLEY",
+					PathLength = 5,
+					IncludeSide = GameConfig.Expedition.IncludeSide,
+				},
+				function(a)
+					return lcg(trial * 2654435761 + a)
+				end,
+				5
+			)
 			if okA then
 				ok += 1
 				local ids = {}
@@ -1234,9 +1730,17 @@ do
 			end
 		end
 		local distinct = 0
-		for _ in shapesSeen do distinct += 1 end
-		print(string.format("        Verdant Valley: %d/%d seeds assembled, %d distinct layouts",
-			ok, trials, distinct))
+		for _ in shapesSeen do
+			distinct += 1
+		end
+		print(
+			string.format(
+				"        Verdant Valley: %d/%d seeds assembled, %d distinct layouts",
+				ok,
+				trials,
+				distinct
+			)
+		)
 		local parts = {}
 		for id, n in approachCount do
 			table.insert(parts, string.format("%s %d%%", id, math.floor(n / ok * 100 + 0.5)))
@@ -1254,8 +1758,11 @@ do
 			end
 		end
 		table.sort(never)
-		check("every piece appears in some layout", #never == 0,
-			"never placed: " .. table.concat(never, ", "))
+		check(
+			"every piece appears in some layout",
+			#never == 0,
+			"never placed: " .. table.concat(never, ", ")
+		)
 	end
 
 	-- === The scenario layer (build spec §7.2) =====================
@@ -1264,16 +1771,25 @@ do
 	group("Scenario assignment: what happens, decided apart from where")
 
 	local function planFor(trial: number, pathLength: number?)
-		local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+		local okA, layout = ChunkCore.assembleWithRetry(
+			Chunks,
 			{ WorldId = "VERDANT_VALLEY", PathLength = pathLength or 5 },
-			function(a) return lcg(trial * 7919 + a) end, 5)
-		if not okA then return nil end
+			function(a)
+				return lcg(trial * 7919 + a)
+			end,
+			5
+		)
+		if not okA then
+			return nil
+		end
 		layout.Seed = trial
 		local okS, plan = ScenarioCore.assign(layout, Chunks, Scenarios, {
 			FateInterventionChance = GameConfig.Expedition.FateInterventionChance,
 			RecentMemory = GameConfig.Expedition.ScenarioRecentMemory,
 			EscalateFrom = GameConfig.Expedition.ScenarioEscalateFrom,
-		}, function() return lcg(trial * 104729 + 1)() end)
+		}, function()
+			return lcg(trial * 104729 + 1)()
+		end)
 		return okS and plan or nil
 	end
 
@@ -1289,8 +1805,11 @@ do
 			end
 		end
 	end
-	check("every placeable chunk can host at least one scenario", #unhostable == 0,
-		table.concat(unhostable, ", "))
+	check(
+		"every placeable chunk can host at least one scenario",
+		#unhostable == 0,
+		table.concat(unhostable, ", ")
+	)
 
 	-- Compatibility is DELIBERATE, not universal (brief §3). If every chunk
 	-- accepted every scenario the metadata would be decoration.
@@ -1299,12 +1818,18 @@ do
 		if c.Role == "COMBAT" or c.Role == "PATH" then
 			local n = #ScenarioCore.compatible(c, c.Role, Scenarios)
 			local total = 0
-			for _ in Scenarios do total += 1 end
-			if n < total then everyChunkTakesEverything = false end
+			for _ in Scenarios do
+				total += 1
+			end
+			if n < total then
+				everyChunkTakesEverything = false
+			end
 		end
 	end
-	check("compatibility is deliberate -- no chunk hosts every scenario",
-		not everyChunkTakesEverything)
+	check(
+		"compatibility is deliberate -- no chunk hosts every scenario",
+		not everyChunkTakesEverything
+	)
 
 	do
 		local plans, bands = 0, { ORDINARY = 0, UNCOMMON = 0, RARE = 0 }
@@ -1319,8 +1844,12 @@ do
 					if st.ScenarioId then
 						bands[st.Band] += 1
 						scenariosSeen[st.ScenarioId] = true
-						if st.FateTouched then fateTouched += 1 end
-						if last == st.ScenarioId then backToBack += 1 end
+						if st.FateTouched then
+							fateTouched += 1
+						end
+						if last == st.ScenarioId then
+							backToBack += 1
+						end
 						last = st.ScenarioId
 						local key = st.ChunkId .. ":" .. st.ScenarioId
 						comboCounts[key] = (comboCounts[key] or 0) + 1
@@ -1332,43 +1861,73 @@ do
 		check("every seed produces a scenario plan", plans == 300, string.format("%d/300", plans))
 
 		-- Brief §8: never the same scenario twice in a row.
-		check("the same scenario never lands twice running", backToBack == 0,
-			string.format("%d back-to-back", backToBack))
+		check(
+			"the same scenario never lands twice running",
+			backToBack == 0,
+			string.format("%d back-to-back", backToBack)
+		)
 
 		-- Brief §5: structured, not uniform. Ordinary is the backbone.
 		local total = bands.ORDINARY + bands.UNCOMMON + bands.RARE
-		check("ordinary scenarios are the backbone, not an equal share",
+		check(
+			"ordinary scenarios are the backbone, not an equal share",
 			bands.ORDINARY > total * 0.4,
-			string.format("O %d  U %d  R %d", bands.ORDINARY, bands.UNCOMMON, bands.RARE))
-		check("rare scenarios stay rare but do occur",
+			string.format("O %d  U %d  R %d", bands.ORDINARY, bands.UNCOMMON, bands.RARE)
+		)
+		check(
+			"rare scenarios stay rare but do occur",
 			bands.RARE > 0 and bands.RARE < total * 0.2,
-			string.format("%d of %d", bands.RARE, total))
+			string.format("%d of %d", bands.RARE, total)
+		)
 
 		-- Every scenario the library declares should be reachable in practice,
 		-- not merely in principle. One that never appears is dead content.
 		local unseen = {}
 		for id in Scenarios do
-			if not scenariosSeen[id] then table.insert(unseen, id) end
+			if not scenariosSeen[id] then
+				table.insert(unseen, id)
+			end
 		end
 		table.sort(unseen)
-		check("every scenario in the library actually occurs", #unseen == 0,
-			"never seen: " .. table.concat(unseen, ", "))
+		check(
+			"every scenario in the library actually occurs",
+			#unseen == 0,
+			"never seen: " .. table.concat(unseen, ", ")
+		)
 
 		-- Brief §7: the whole point. Physical pieces x scenarios should give
 		-- far more distinct rooms than there are pieces.
 		local distinctCombos = 0
-		for _ in comboCounts do distinctCombos += 1 end
+		for _ in comboCounts do
+			distinctCombos += 1
+		end
 		local pieceCount = 0
 		for _, c in Chunks do
-			if c.WorldId == "VERDANT_VALLEY" then pieceCount += 1 end
+			if c.WorldId == "VERDANT_VALLEY" then
+				pieceCount += 1
+			end
 		end
-		check("chunk x scenario multiplies the content well past the piece count",
+		check(
+			"chunk x scenario multiplies the content well past the piece count",
 			distinctCombos > pieceCount * 2,
-			string.format("%d combinations from %d pieces", distinctCombos, pieceCount))
-		print(string.format("        scenario layer: %d distinct chunk/scenario rooms from %d pieces",
-			distinctCombos, pieceCount))
-		print(string.format("        bands: ordinary %d  uncommon %d  rare %d  (fate touched %d)",
-			bands.ORDINARY, bands.UNCOMMON, bands.RARE, fateTouched))
+			string.format("%d combinations from %d pieces", distinctCombos, pieceCount)
+		)
+		print(
+			string.format(
+				"        scenario layer: %d distinct chunk/scenario rooms from %d pieces",
+				distinctCombos,
+				pieceCount
+			)
+		)
+		print(
+			string.format(
+				"        bands: ordinary %d  uncommon %d  rare %d  (fate touched %d)",
+				bands.ORDINARY,
+				bands.UNCOMMON,
+				bands.RARE,
+				fateTouched
+			)
+		)
 	end
 
 	-- === THE INTEGRATION, not just the module ====================
@@ -1383,30 +1942,55 @@ do
 	-- dials the integration reads, by name.
 	do
 		local missing = {}
-		for _, key in { "FateInterventionChance", "ScenarioRecentMemory", "ScenarioEscalateFrom", "ScenarioStreamOffset" } do
+		for _, key in
+			{
+				"FateInterventionChance",
+				"ScenarioRecentMemory",
+				"ScenarioEscalateFrom",
+				"ScenarioStreamOffset",
+			}
+		do
 			if type(GameConfig.Expedition[key]) ~= "number" then
 				table.insert(missing, key)
 			end
 		end
-		check("every pacing dial the expedition flow reads exists in GameConfig",
-			#missing == 0, table.concat(missing, ", "))
-		check("the scenario stream is offset past the assembly attempts",
-			GameConfig.Expedition.ScenarioStreamOffset > GameConfig.Expedition.AssemblyAttempts)
+		check(
+			"every pacing dial the expedition flow reads exists in GameConfig",
+			#missing == 0,
+			table.concat(missing, ", ")
+		)
+		check(
+			"the scenario stream is offset past the assembly attempts",
+			GameConfig.Expedition.ScenarioStreamOffset > GameConfig.Expedition.AssemblyAttempts
+		)
 	end
 
 	-- Bad configuration must be REFUSED, not fatal. A generator that throws
 	-- takes every result after it down with it.
 	do
-		local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+		local okA, layout = ChunkCore.assembleWithRetry(
+			Chunks,
 			{ WorldId = "VERDANT_VALLEY", PathLength = 4 },
-			function(a) return lcg(99 + a) end, 5)
+			function(a)
+				return lcg(99 + a)
+			end,
+			5
+		)
 		local refusedNil = false
 		local threw = false
 		if okA then
 			local fine, res = pcall(function()
-				return { ScenarioCore.assign(layout, Chunks, Scenarios,
-					{ RecentMemory = 6, EscalateFrom = 0.4 } :: any,
-					function() return 0.5 end) }
+				return {
+					ScenarioCore.assign(
+						layout,
+						Chunks,
+						Scenarios,
+						{ RecentMemory = 6, EscalateFrom = 0.4 } :: any,
+						function()
+							return 0.5
+						end
+					),
+				}
 			end)
 			if not fine then
 				threw = true
@@ -1421,12 +2005,19 @@ do
 	-- that shipped first. A kit merged without Supports took main down.
 	do
 		local worldsWithKits = {}
-		for _, c in Chunks do worldsWithKits[c.WorldId] = true end
+		for _, c in Chunks do
+			worldsWithKits[c.WorldId] = true
+		end
 		local failures = {}
 		for worldId in worldsWithKits do
-			local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+			local okA, layout = ChunkCore.assembleWithRetry(
+				Chunks,
 				{ WorldId = worldId, PathLength = 4 },
-				function(a) return lcg(31337 + a) end, 5)
+				function(a)
+					return lcg(31337 + a)
+				end,
+				5
+			)
 			if not okA then
 				table.insert(failures, worldId .. " (no layout)")
 			else
@@ -1435,12 +2026,17 @@ do
 					RecentMemory = GameConfig.Expedition.ScenarioRecentMemory,
 					EscalateFrom = GameConfig.Expedition.ScenarioEscalateFrom,
 				}, lcg(4242))
-				if not okS then table.insert(failures, worldId .. ": " .. tostring(err)) end
+				if not okS then
+					table.insert(failures, worldId .. ": " .. tostring(err))
+				end
 			end
 		end
 		table.sort(failures)
-		check("every world with a chunk kit can be assigned a scenario plan",
-			#failures == 0, table.concat(failures, "; "))
+		check(
+			"every world with a chunk kit can be assigned a scenario plan",
+			#failures == 0,
+			table.concat(failures, "; ")
+		)
 	end
 
 	-- THE SEAM. Scenario selection must not perturb chunk selection, or the
@@ -1448,12 +2044,21 @@ do
 	-- would silently change every map.
 	do
 		local function chunkIds(seed)
-			local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+			local okA, layout = ChunkCore.assembleWithRetry(
+				Chunks,
 				{ WorldId = "VERDANT_VALLEY", PathLength = 5 },
-				function(a) return ExpeditionCore.streamFor(seed, a) end, 5)
-			if not okA then return nil end
+				function(a)
+					return ExpeditionCore.streamFor(seed, a)
+				end,
+				5
+			)
+			if not okA then
+				return nil
+			end
 			local ids = {}
-			for _, c in layout.Chunks do table.insert(ids, c.ChunkId) end
+			for _, c in layout.Chunks do
+				table.insert(ids, c.ChunkId)
+			end
 			-- assign AFTER capturing, using the offset stream the flow uses
 			ScenarioCore.assign(layout, Chunks, Scenarios, {
 				FateInterventionChance = GameConfig.Expedition.FateInterventionChance,
@@ -1462,8 +2067,10 @@ do
 			}, ExpeditionCore.streamFor(seed, GameConfig.Expedition.ScenarioStreamOffset))
 			return table.concat(ids, ">")
 		end
-		check("the scenario stream leaves chunk selection untouched",
-			chunkIds(777) == chunkIds(777))
+		check(
+			"the scenario stream leaves chunk selection untouched",
+			chunkIds(777) == chunkIds(777)
+		)
 	end
 
 	-- Determinism, same as the layout half: a run must be reproducible from
@@ -1473,7 +2080,9 @@ do
 		local same = a ~= nil and b ~= nil and #a.Steps == #b.Steps
 		if same then
 			for i, st in a.Steps do
-				if st.ScenarioId ~= b.Steps[i].ScenarioId then same = false end
+				if st.ScenarioId ~= b.Steps[i].ScenarioId then
+					same = false
+				end
 			end
 		end
 		check("the same seed produces the same scenario plan", same)
@@ -1498,16 +2107,22 @@ do
 	-- arena on every seed without anything hard-coding it.
 	do
 		local scLib = ChunkCore.libraryFor(Chunks, "SKY_CITADEL")
-		check("Sky Citadel has one ENTRY and two BOSS arenas (Crown Spire, Prism Arena)",
-			scLib.ENTRY and #scLib.ENTRY == 1 and scLib.BOSS and #scLib.BOSS == 2)
-		check("the Crown Spire arena only accepts an ASCENT approach",
-			Chunks.SC_BOSS_CLEARING.Sockets[1].Kind == "ASCENT")
+		check(
+			"Sky Citadel has one ENTRY and two BOSS arenas (Crown Spire, Prism Arena)",
+			scLib.ENTRY and #scLib.ENTRY == 1 and scLib.BOSS and #scLib.BOSS == 2
+		)
+		check(
+			"the Crown Spire arena only accepts an ASCENT approach",
+			Chunks.SC_BOSS_CLEARING.Sockets[1].Kind == "ASCENT"
+		)
 
 		local kindsFor = function(worldId)
 			local set = {}
 			for _, c in Chunks do
 				if c.WorldId == worldId then
-					for _, s in c.Sockets do set[s.Kind] = true end
+					for _, s in c.Sockets do
+						set[s.Kind] = true
+					end
 				end
 			end
 			return set
@@ -1515,29 +2130,43 @@ do
 		local vv, sc = kindsFor("VERDANT_VALLEY"), kindsFor("SKY_CITADEL")
 		local shared
 		for k in sc do
-			if vv[k] then shared = k end
+			if vv[k] then
+				shared = k
+			end
 		end
-		check("socket Kinds are per-world: Sky Citadel shares none with Verdant Valley",
-			shared == nil, tostring(shared))
+		check(
+			"socket Kinds are per-world: Sky Citadel shares none with Verdant Valley",
+			shared == nil,
+			tostring(shared)
+		)
 
 		local ascentProviders = {}
 		for id, c in Chunks do
 			if c.WorldId == "SKY_CITADEL" and c.Role ~= "BOSS" then
 				for _, s in c.Sockets do
-					if s.Kind == "ASCENT" then table.insert(ascentProviders, id) end
+					if s.Kind == "ASCENT" then
+						table.insert(ascentProviders, id)
+					end
 				end
 			end
 		end
 		table.sort(ascentProviders)
-		check("only the two gate-courts offer an ASCENT exit",
-			#ascentProviders == 2 and ascentProviders[1] == "SC_SPIRE_COURT"
+		check(
+			"only the two gate-courts offer an ASCENT exit",
+			#ascentProviders == 2
+				and ascentProviders[1] == "SC_SPIRE_COURT"
 				and ascentProviders[2] == "SC_SPIRE_COURT_B",
-			table.concat(ascentProviders, ", "))
-		check("Sky Citadel has its SIDE pockets (Blueprint §6)",
-			scLib.SIDE and #scLib.SIDE == 4 and Chunks.SC_SIDE_LOOKOUT.Role == "SIDE")
+			table.concat(ascentProviders, ", ")
+		)
+		check(
+			"Sky Citadel has its SIDE pockets (Blueprint §6)",
+			scLib.SIDE and #scLib.SIDE == 4 and Chunks.SC_SIDE_LOOKOUT.Role == "SIDE"
+		)
 		local scCount = 0
 		for _, c in Chunks do
-			if c.WorldId == "SKY_CITADEL" then scCount += 1 end
+			if c.WorldId == "SKY_CITADEL" then
+				scCount += 1
+			end
 		end
 		check("Sky Citadel's kit meets the 12-piece minimum", scCount >= 12, tostring(scCount))
 
@@ -1546,19 +2175,32 @@ do
 		for _, c in Chunks do
 			if c.WorldId == "SKY_CITADEL" and #c.Sockets == 2 then
 				local has = {}
-				for _, sk in c.Sockets do has[sk.Id] = true end
-				if has.south and has.east then rights += 1 end
-				if has.south and has.west then lefts += 1 end
+				for _, sk in c.Sockets do
+					has[sk.Id] = true
+				end
+				if has.south and has.east then
+					rights += 1
+				end
+				if has.south and has.west then
+					lefts += 1
+				end
 			end
 		end
-		check("Sky Citadel turns both ways", rights >= 2 and lefts >= 2,
-			string.format("%d right, %d left", rights, lefts))
+		check(
+			"Sky Citadel turns both ways",
+			rights >= 2 and lefts >= 2,
+			string.format("%d right, %d left", rights, lefts)
+		)
 
 		-- Nothing on the critical path dead-ends: every PATH/COMBAT piece has
 		-- a way in and a way out.
 		local deadEnd
 		for id, c in Chunks do
-			if c.WorldId == "SKY_CITADEL" and (c.Role == "PATH" or c.Role == "COMBAT") and #c.Sockets < 2 then
+			if
+				c.WorldId == "SKY_CITADEL"
+				and (c.Role == "PATH" or c.Role == "COMBAT")
+				and #c.Sockets < 2
+			then
 				deadEnd = id
 			end
 		end
@@ -1568,7 +2210,9 @@ do
 		-- stretches a mesh to SizeX/Y/Z. Declared size must match that box.
 		local sized = true
 		for _, c in Chunks do
-			if c.WorldId == "SKY_CITADEL" and (c.SizeX ~= 256 or c.SizeY ~= 256 or c.SizeZ ~= 256) then
+			if
+				c.WorldId == "SKY_CITADEL" and (c.SizeX ~= 256 or c.SizeY ~= 256 or c.SizeZ ~= 256)
+			then
 				sized = false
 			end
 		end
@@ -1577,31 +2221,47 @@ do
 		local built, courtGates, turned, allValid = 0, true, false, true
 		local GATE_COURTS = { SC_SPIRE_COURT = true, SC_SPIRE_COURT_B = true }
 		for trial = 1, 200 do
-			local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+			local okA, layout = ChunkCore.assembleWithRetry(
+				Chunks,
 				{ WorldId = "SKY_CITADEL", PathLength = 5 },
-				function(a) return lcg(trial * 7307 + a * 31) end, 5)
+				function(a)
+					return lcg(trial * 7307 + a * 31)
+				end,
+				5
+			)
 			if okA then
 				built += 1
 				local okV = ChunkCore.validateLayout(layout, Chunks)
-				if not okV then allValid = false end
+				if not okV then
+					allValid = false
+				end
 				-- Caps and the pocket are appended after the arena, so find the
 				-- arena and look at what the path placed just before it.
 				local bossAt
 				for i, c in layout.Chunks do
-					if c.Role == "BOSS" then bossAt = i end
+					if c.Role == "BOSS" then
+						bossAt = i
+					end
 				end
 				local approach = bossAt and layout.Chunks[bossAt - 1]
-				if not approach or not GATE_COURTS[approach.ChunkId] then courtGates = false end
+				if not approach or not GATE_COURTS[approach.ChunkId] then
+					courtGates = false
+				end
 				for _, c in layout.Chunks do
-					if c.Yaw ~= 0 then turned = true end
+					if c.Yaw ~= 0 then
+						turned = true
+					end
 				end
 			end
 		end
 		-- Same bar as Verdant Valley's: a path that turns can fold back on
 		-- itself, so a handful of seeds needing more than 5 attempts is the
 		-- grammar working, not failing (MODULAR_MAPS.md, "Retries").
-		check("Sky Citadel assembles a map on nearly every seed", built >= 190,
-			string.format("%d/200", built))
+		check(
+			"Sky Citadel assembles a map on nearly every seed",
+			built >= 190,
+			string.format("%d/200", built)
+		)
 		check("every assembled Sky Citadel layout is valid", allValid)
 		check("a gate-court always precedes the Crown Spire arena", courtGates)
 		check("the bend piece makes some layouts turn", turned)
@@ -1617,9 +2277,14 @@ do
 		end
 		local exits = {}
 		for trial = 1, 300 do
-			local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+			local okA, layout = ChunkCore.assembleWithRetry(
+				Chunks,
 				{ WorldId = "SKY_CITADEL", PathLength = 5 },
-				function(a) return lcg(trial * 92821 + a * 17) end, 5)
+				function(a)
+					return lcg(trial * 92821 + a * 17)
+				end,
+				5
+			)
 			if okA then
 				for i, c in layout.Chunks do
 					local nxt = layout.Chunks[i + 1]
@@ -1630,9 +2295,14 @@ do
 			end
 		end
 		local nExits = 0
-		for _ in exits do nExits += 1 end
-		check("the crossroads leaves by more than one mouth across seeds", nExits >= 2,
-			string.format("%d distinct exits", nExits))
+		for _ in exits do
+			nExits += 1
+		end
+		check(
+			"the crossroads leaves by more than one mouth across seeds",
+			nExits >= 2,
+			string.format("%d distinct exits", nExits)
+		)
 	end
 
 	-- SIDE pockets (IncludeSide) -- consumed since 2026-09-22 -----------
@@ -1642,23 +2312,35 @@ do
 		local function sidesOver(worldId: string, includeSide: boolean): (number, number, boolean)
 			local withSide, built, allValid = 0, 0, true
 			for trial = 1, 200 do
-				local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+				local okA, layout = ChunkCore.assembleWithRetry(
+					Chunks,
 					{ WorldId = worldId, PathLength = 5, IncludeSide = includeSide },
-					function(a) return lcg(trial * 6151 + a * 3) end, 5)
+					function(a)
+						return lcg(trial * 6151 + a * 3)
+					end,
+					5
+				)
 				if okA then
 					built += 1
 					local okV = ChunkCore.validateLayout(layout, Chunks)
-					if not okV then allValid = false end
+					if not okV then
+						allValid = false
+					end
 					for _, c in layout.Chunks do
-						if c.Role == "SIDE" then withSide += 1 end
+						if c.Role == "SIDE" then
+							withSide += 1
+						end
 					end
 				end
 			end
 			return withSide, built, allValid
 		end
 		local scSides, scBuilt, scValid = sidesOver("SKY_CITADEL", true)
-		check("with IncludeSide, Sky Citadel places its lookout on some seeds", scSides > 0,
-			string.format("%d of %d layouts", scSides, scBuilt))
+		check(
+			"with IncludeSide, Sky Citadel places its lookout on some seeds",
+			scSides > 0,
+			string.format("%d of %d layouts", scSides, scBuilt)
+		)
 		check("layouts with a SIDE pocket are still valid (no overlap, <= 1 pocket)", scValid)
 		-- THE GENERAL PROPERTY, not one world's claim.
 		--
@@ -1673,11 +2355,15 @@ do
 		-- Schema.validateChunks already refuses, so the two halves agree.
 		local pocketable = {}
 		for _, c in Chunks do
-			if #c.Sockets >= 3 then pocketable[c.WorldId] = true end
+			if #c.Sockets >= 3 then
+				pocketable[c.WorldId] = true
+			end
 		end
 		local sideDeclaring = {}
 		for _, c in Chunks do
-			if c.Role == "SIDE" then sideDeclaring[c.WorldId] = true end
+			if c.Role == "SIDE" then
+				sideDeclaring[c.WorldId] = true
+			end
 		end
 		local pocketOk, pocketWhy = true, {}
 		for worldId in sideDeclaring do
@@ -1692,10 +2378,17 @@ do
 				end
 			end
 		end
-		check("every world that declares a SIDE pocket can and does place it",
-			pocketOk, table.concat(pocketWhy, "; "))
+		check(
+			"every world that declares a SIDE pocket can and does place it",
+			pocketOk,
+			table.concat(pocketWhy, "; ")
+		)
 		local offSides = sidesOver("SKY_CITADEL", false)
-		check("without IncludeSide, no SIDE pocket is ever placed", offSides == 0, tostring(offSides))
+		check(
+			"without IncludeSide, no SIDE pocket is ever placed",
+			offSides == 0,
+			tostring(offSides)
+		)
 		check("the expedition turns IncludeSide on", GameConfig.Expedition.IncludeSide == true)
 	end
 
@@ -1719,16 +2412,23 @@ do
 				-- silently STRETCHED into it. Every delivered Sky Citadel mesh
 				-- measures 256 cubed; the content has to keep saying so.
 				if c.SizeX ~= 256 or c.SizeY ~= 256 or c.SizeZ ~= 256 then
-					wrongSize = wrongSize or string.format("%s is %dx%dx%d", id, c.SizeX, c.SizeY, c.SizeZ)
+					wrongSize = wrongSize
+						or string.format("%s is %dx%dx%d", id, c.SizeX, c.SizeY, c.SizeZ)
 				end
 			end
 		end
 		check("Sky Citadel declares 36 pieces", scIds == 36, tostring(scIds))
 		-- The 14 of 2026-09-23 build as blockout until the 36-piece upload.
-		check("every Sky Citadel piece resolves to an uploaded mesh or a declared placeholder",
-			notUploaded == nil, notUploaded)
-		check("every Sky Citadel piece is declared at the delivered 256 cubed",
-			wrongSize == nil, wrongSize)
+		check(
+			"every Sky Citadel piece resolves to an uploaded mesh or a declared placeholder",
+			notUploaded == nil,
+			notUploaded
+		)
+		check(
+			"every Sky Citadel piece is declared at the delivered 256 cubed",
+			wrongSize == nil,
+			wrongSize
+		)
 		-- GroundOffsetY = 96 is the walk plane 96 studs up from the bottom of
 		-- the box. The delivered MeshParts carry PivotOffset.Y = -32, which is
 		-- the same statement from the other side (128 - 32). If the kit is
@@ -1753,15 +2453,42 @@ do
 			end
 		end
 		local distinct = 0
-		for _ in yaws do distinct += 1 end
-		check("Sky Citadel's mesh yaw offsets are one of a small confirmed set",
-			distinct <= 2, string.format("%d distinct values", distinct))
-		check("a mesh yaw offset off the quarter-turn grid is a boot error",
-			not (Schema.validateChunks({
-				Y = { Id = "Y", WorldId = "W", Role = "ENTRY", AssetKey = "VV_CHUNK_ENTRY",
-					SizeX = 1, SizeY = 1, SizeZ = 1, Weight = 1, MeshYawOffset = 45,
-					Sockets = { { Id = "a", Kind = "P", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 } } },
-			}, AssetManifest)))
+		for _ in yaws do
+			distinct += 1
+		end
+		check(
+			"Sky Citadel's mesh yaw offsets are one of a small confirmed set",
+			distinct <= 2,
+			string.format("%d distinct values", distinct)
+		)
+		check(
+			"a mesh yaw offset off the quarter-turn grid is a boot error",
+			not (
+					Schema.validateChunks({
+						Y = {
+							Id = "Y",
+							WorldId = "W",
+							Role = "ENTRY",
+							AssetKey = "VV_CHUNK_ENTRY",
+							SizeX = 1,
+							SizeY = 1,
+							SizeZ = 1,
+							Weight = 1,
+							MeshYawOffset = 45,
+							Sockets = {
+								{
+									Id = "a",
+									Kind = "P",
+									OffsetX = 0,
+									OffsetY = 0,
+									OffsetZ = 0,
+									Facing = 0,
+								},
+							},
+						},
+					}, AssetManifest)
+				)
+		)
 	end
 
 	-- BRANCHES: a spare mouth goes somewhere (owner-directed 2026-09-23) --
@@ -1777,18 +2504,25 @@ do
 					PathLength = GameConfig.Expedition.PathLength,
 					IncludeSide = true,
 					BranchLength = branchLength,
-				}, function(a) return lcg(trial * 2207 + a * 11) end, 5)
+				}, function(a)
+					return lcg(trial * 2207 + a * 11)
+				end, 5)
 				if okA then
 					local hasX = false
 					for _, c in layout.Chunks do
-						if c.ChunkId == "SC_CROSSROADS" then hasX = true end
+						if c.ChunkId == "SC_CROSSROADS" then
+							hasX = true
+						end
 					end
 					if hasX then
 						intersections += 1
 						-- A spur is any piece placed after the arena and the
 						-- pocket that is not itself a cap.
 						for _, c in layout.Chunks do
-							if c.Index > GameConfig.Expedition.PathLength + 2 and c.Role ~= "CAP" then
+							if
+								c.Index > GameConfig.Expedition.PathLength + 2
+								and c.Role ~= "CAP"
+							then
 								grown += 1
 								break
 							end
@@ -1799,10 +2533,16 @@ do
 			return grown, intersections
 		end
 		local grown, intersections = build(GameConfig.Expedition.BranchLength)
-		check("Sky Citadel lays out an intersection on a good share of seeds",
-			intersections > 60, string.format("%d of 200", intersections))
-		check("a branch off an intersection runs before it dead-ends",
-			grown > 0, string.format("%d of %d intersecting layouts grew a spur", grown, intersections))
+		check(
+			"Sky Citadel lays out an intersection on a good share of seeds",
+			intersections > 60,
+			string.format("%d of 200", intersections)
+		)
+		check(
+			"a branch off an intersection runs before it dead-ends",
+			grown > 0,
+			string.format("%d of %d intersecting layouts grew a spur", grown, intersections)
+		)
 		local flat = build(0)
 		check("BranchLength 0 restores capping the mouth where it stands", flat == 0)
 		check("the expedition grows branches", GameConfig.Expedition.BranchLength > 0)
@@ -1819,36 +2559,57 @@ do
 			for _, placed in layout.Chunks do
 				for _, sk in Chunks[placed.ChunkId].Sockets do
 					local w = ChunkCore.worldSocket(placed, nil, sk)
-					table.insert(points, { Id = placed.ChunkId .. "." .. sk.Id, X = w.X, Z = w.Z, F = w.Facing })
+					table.insert(
+						points,
+						{ Id = placed.ChunkId .. "." .. sk.Id, X = w.X, Z = w.Z, F = w.Facing }
+					)
 				end
 			end
 			local open = {}
 			for i, a in points do
 				local met = false
 				for j, b in points do
-					if i ~= j and math.abs(a.X - b.X) < 0.01 and math.abs(a.Z - b.Z) < 0.01
-						and (a.F - b.F) % 360 == 180 then
+					if
+						i ~= j
+						and math.abs(a.X - b.X) < 0.01
+						and math.abs(a.Z - b.Z) < 0.01
+						and (a.F - b.F) % 360 == 180
+					then
 						met = true
 					end
 				end
-				if not met then table.insert(open, a.Id) end
+				if not met then
+					table.insert(open, a.Id)
+				end
 			end
 			return open
 		end
 		local scLib = ChunkCore.libraryFor(Chunks, "SKY_CITADEL")
-		check("Sky Citadel has CAP pieces (dead ends authored as dead ends)",
-			scLib.CAP and #scLib.CAP >= 3, tostring(scLib.CAP and #scLib.CAP))
+		check(
+			"Sky Citadel has CAP pieces (dead ends authored as dead ends)",
+			scLib.CAP and #scLib.CAP >= 3,
+			tostring(scLib.CAP and #scLib.CAP)
+		)
 		for _, includeSide in { true, false } do
 			local built, leaks, firstLeak, capsSeen = 0, 0, nil, 0
 			for trial = 1, 200 do
-				local okA, layout = ChunkCore.assembleWithRetry(Chunks,
+				local okA, layout = ChunkCore.assembleWithRetry(
+					Chunks,
 					-- The game's own settings, branches included: a spur is where
 					-- a gate court once slipped in and left its ASCENT mouth
 					-- facing the sky, uncapped, because this test grew none.
-					{ WorldId = "SKY_CITADEL", PathLength = GameConfig.Expedition.PathLength,
+					{
+						WorldId = "SKY_CITADEL",
+						PathLength = GameConfig.Expedition.PathLength,
 						BranchLength = GameConfig.Expedition.BranchLength,
-						MaxRepeats = GameConfig.Expedition.MaxRepeats, IncludeSide = includeSide },
-					function(a) return lcg(trial * 4561 + a * 13) end, 5)
+						MaxRepeats = GameConfig.Expedition.MaxRepeats,
+						IncludeSide = includeSide,
+					},
+					function(a)
+						return lcg(trial * 4561 + a * 13)
+					end,
+					5
+				)
 				if okA then
 					built += 1
 					local open = openSockets(layout)
@@ -1857,24 +2618,59 @@ do
 						firstLeak = firstLeak or table.concat(open, ", ")
 					end
 					for _, c in layout.Chunks do
-						if c.Role == "CAP" then capsSeen += 1 end
+						if c.Role == "CAP" then
+							capsSeen += 1
+						end
 					end
 				end
 			end
 			local tag = if includeSide then "with" else "without"
-			check(`every opening in a Sky Citadel map meets another piece ({tag} a side pocket)`,
-				leaks == 0, firstLeak)
-			check(`capping still assembles on nearly every seed ({tag} a side pocket)`, built >= 190,
-				string.format("%d/200, %d caps placed", built, capsSeen))
+			check(
+				`every opening in a Sky Citadel map meets another piece ({tag} a side pocket)`,
+				leaks == 0,
+				firstLeak
+			)
+			check(
+				`capping still assembles on nearly every seed ({tag} a side pocket)`,
+				built >= 190,
+				string.format("%d/200, %d caps placed", built, capsSeen)
+			)
 		end
-		local okCap, errCap = Schema.validateChunks({ X = {
-			Id = "X", WorldId = "W", Role = "CAP", AssetKey = "VV_CHUNK_ENTRY", Weight = 1,
-			SizeX = 1, SizeY = 1, SizeZ = 1,
-			Sockets = { { Id = "a", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = 0, Facing = 0 },
-				{ Id = "b", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = 1, Facing = 180 } } } },
-			AssetManifest)
-		check("rejects a CAP with two sockets -- it would open a new mouth", not okCap,
-			table.concat(errCap, "; "))
+		local okCap, errCap = Schema.validateChunks({
+			X = {
+				Id = "X",
+				WorldId = "W",
+				Role = "CAP",
+				AssetKey = "VV_CHUNK_ENTRY",
+				Weight = 1,
+				SizeX = 1,
+				SizeY = 1,
+				SizeZ = 1,
+				Sockets = {
+					{
+						Id = "a",
+						Kind = "PATH",
+						OffsetX = 0,
+						OffsetY = 0,
+						OffsetZ = 0,
+						Facing = 0,
+					},
+					{
+						Id = "b",
+						Kind = "PATH",
+						OffsetX = 0,
+						OffsetY = 0,
+						OffsetZ = 1,
+						Facing = 180,
+					},
+				},
+			},
+		}, AssetManifest)
+		check(
+			"rejects a CAP with two sockets -- it would open a new mouth",
+			not okCap,
+			table.concat(errCap, "; ")
+		)
 	end
 
 	-- THE ROTATION CONVENTION. ChunkCore turns north into east at yaw 90;
@@ -1890,9 +2686,17 @@ do
 				-- CFrame.Angles(0, th, 0) applied to (x, 0, z):
 				local rx = off[1] * math.cos(th) + off[2] * math.sin(th)
 				local rz = -off[1] * math.sin(th) + off[2] * math.cos(th)
-				local ws = ChunkCore.worldSocket({ X = 0, Y = 0, Z = 0, Yaw = yaw }, nil,
-					{ Id = "s", Kind = "K", OffsetX = off[1], OffsetY = 0, OffsetZ = off[2], Facing = 0 })
-				if math.abs(rx - ws.X) > 0.01 or math.abs(rz - ws.Z) > 0.01 then agree = false end
+				local ws = ChunkCore.worldSocket({ X = 0, Y = 0, Z = 0, Yaw = yaw }, nil, {
+					Id = "s",
+					Kind = "K",
+					OffsetX = off[1],
+					OffsetY = 0,
+					OffsetZ = off[2],
+					Facing = 0,
+				})
+				if math.abs(rx - ws.X) > 0.01 or math.abs(rz - ws.Z) > 0.01 then
+					agree = false
+				end
 			end
 		end
 		check("a mesh turned by yawRadians lands on its own sockets at every yaw", agree)
@@ -1902,8 +2706,11 @@ do
 	local placed = { X = 10, Y = 0, Z = 20, Yaw = 90 }
 	local sock = { Id = "s", Kind = "PATH", OffsetX = 0, OffsetY = 0, OffsetZ = -48, Facing = 0 }
 	local ws = ChunkCore.worldSocket(placed, nil, sock)
-	check("a quarter turn rotates a socket offset correctly",
-		ws.X == 58 and ws.Z == 20, string.format("(%d, %d)", ws.X, ws.Z))
+	check(
+		"a quarter turn rotates a socket offset correctly",
+		ws.X == 58 and ws.Z == 20,
+		string.format("(%d, %d)", ws.X, ws.Z)
+	)
 	check("a quarter turn rotates a socket facing correctly", ws.Facing == 90, tostring(ws.Facing))
 
 	local a = { X = 0, Y = 0, Z = 0, Yaw = 0 }
@@ -1915,44 +2722,68 @@ do
 	-- A kit missing a boss must fail cleanly, not error.
 	local partial = {}
 	for id, c in Chunks do
-		if c.WorldId == "VERDANT_VALLEY" and c.Role == "ENTRY" then partial[id] = c end
+		if c.WorldId == "VERDANT_VALLEY" and c.Role == "ENTRY" then
+			partial[id] = c
+		end
 	end
-	local okP, errP = ChunkCore.assemble(partial,
-		{ WorldId = "VERDANT_VALLEY", PathLength = 2 }, lcg(1))
-	check("an incomplete kit fails cleanly with a reason", not okP and type(errP) == "string", tostring(errP))
+	local okP, errP =
+		ChunkCore.assemble(partial, { WorldId = "VERDANT_VALLEY", PathLength = 2 }, lcg(1))
+	check(
+		"an incomplete kit fails cleanly with a reason",
+		not okP and type(errP) == "string",
+		tostring(errP)
+	)
 
-	local okU, errU = ChunkCore.assemble(Chunks,
-		{ WorldId = "NO_SUCH_WORLD", PathLength = 2 }, lcg(1))
+	local okU, errU =
+		ChunkCore.assemble(Chunks, { WorldId = "NO_SUCH_WORLD", PathLength = 2 }, lcg(1))
 	check("an unknown world fails cleanly", not okU and type(errU) == "string", tostring(errU))
 
 	-- An expedition must not be mostly walking. At WalkSpeed 32 and a 720s
 	-- expedition, a path length of 5 spans ~4100 studs -- about 2 minutes of
 	-- traverse, leaving roughly 10 for combat and exploration.
 	do
-		local okF, layoutF = ChunkCore.assembleWithRetry(Chunks,
+		local okF, layoutF = ChunkCore.assembleWithRetry(
+			Chunks,
 			{ WorldId = "VERDANT_VALLEY", PathLength = 5 },
-			function(a) return lcg(104729 + a) end, 5)
+			function(a)
+				return lcg(104729 + a)
+			end,
+			5
+		)
 		check("a path-length-5 expedition assembles", okF)
 		if okF then
 			local w, d = ChunkCore.footprint(layoutF)
 			local span = math.max(w, d)
 			local traverse = span / GameConfig.Scale.WalkSpeed
 			local budget = GameConfig.Expedition.DefaultDurationSeconds
-			check("an expedition is big enough to feel like a world",
+			check(
+				"an expedition is big enough to feel like a world",
 				span > GameConfig.HubLayout.HubDiameter,
-				string.format("%.0f studs vs a %d-stud hub", span, GameConfig.HubLayout.HubDiameter))
-			check("walking is a minority of the expedition, not the whole thing",
+				string.format("%.0f studs vs a %d-stud hub", span, GameConfig.HubLayout.HubDiameter)
+			)
+			check(
+				"walking is a minority of the expedition, not the whole thing",
 				traverse < budget * 0.35,
-				string.format("%.0fs traverse of a %ds expedition (%.0f%%)",
-					traverse, budget, traverse / budget * 100))
+				string.format(
+					"%.0fs traverse of a %ds expedition (%.0f%%)",
+					traverse,
+					budget,
+					traverse / budget * 100
+				)
+			)
 		end
 	end
 
 	-- Retry reports how many attempts it needed, so a kit that is chronically
 	-- hard to assemble is visible rather than silently slow.
-	local okR, _, used = ChunkCore.assembleWithRetry(Chunks,
+	local okR, _, used = ChunkCore.assembleWithRetry(
+		Chunks,
 		{ WorldId = "VERDANT_VALLEY", PathLength = 3 },
-		function(a) return lcg(99 + a) end, 5)
+		function(a)
+			return lcg(99 + a)
+		end,
+		5
+	)
 	check("retry reports its attempt count", okR and used >= 1 and used <= 5, tostring(used))
 end
 
@@ -1972,14 +2803,23 @@ do
 	local JUMP_HEIGHT = 6.3
 
 	local PORTALS = {
-		{ Name = "Fate Engine", Scale = portal.FateEngineScale,
-			Reach = GameConfig.UI.PromptActivationDistance },
-		{ Name = "Expedition Gate", Scale = portal.ExpeditionGateScale,
-			Reach = GameConfig.UI.PromptActivationDistance },
+		{
+			Name = "Fate Engine",
+			Scale = portal.FateEngineScale,
+			Reach = GameConfig.UI.PromptActivationDistance,
+		},
+		{
+			Name = "Expedition Gate",
+			Scale = portal.ExpeditionGateScale,
+			Reach = GameConfig.UI.PromptActivationDistance,
+		},
 		-- The way home out of an expedition is the same rig at a smaller
 		-- scale, and would fail the same way if nobody checked.
-		{ Name = "Return portal", Scale = GameConfig.Expedition.ReturnPortalScale,
-			Reach = GameConfig.Expedition.ReturnPromptDistance },
+		{
+			Name = "Return portal",
+			Scale = GameConfig.Expedition.ReturnPortalScale,
+			Reach = GameConfig.Expedition.ReturnPromptDistance,
+		},
 	}
 
 	-- 1. A PROMPT MUST REACH THE EDGE OF ITS OWN PLINTH.
@@ -2003,18 +2843,25 @@ do
 			string.format("%.1f studs vs a %.1f-stud jump", height, JUMP_HEIGHT)
 		)
 	end
-	check("the plinth height cap is what makes that true at any scale",
+	check(
+		"the plinth height cap is what makes that true at any scale",
 		portal.PlinthHeight * portal.ExpeditionGateScale > portal.MaxPlinthHeight,
-		"the cap is inert -- it should be binding at the Gate's scale")
+		"the cap is inert -- it should be binding at the Gate's scale"
+	)
 
 	-- 3. THE PLAZA IS A FLOOR, NOT A COLUMN.
 	-- It was built as a Part wearing a CylinderMesh, whose axis is Y while
 	-- every caller passed the X convention -- so the 1200-stud plaza became a
 	-- 1200-stud-tall wall and the hub had no ground at all.
-	check("the plaza is a disc, not a column",
+	check(
+		"the plaza is a disc, not a column",
 		Crossroads.Plaza.Thickness < Crossroads.Plaza.Diameter * 0.1,
-		string.format("%d thick vs %d across",
-			Crossroads.Plaza.Thickness, Crossroads.Plaza.Diameter))
+		string.format(
+			"%d thick vs %d across",
+			Crossroads.Plaza.Thickness,
+			Crossroads.Plaza.Diameter
+		)
+	)
 
 	-- 4. WALKWAYS MUST MEET THE PLATFORMS THEY SERVE.
 	-- The half-extent along the APPROACH, not always X. Hall of Legends is
@@ -2026,18 +2873,24 @@ do
 		local mag = math.sqrt(anchor.X * anchor.X + anchor.Z * anchor.Z)
 		if mag > 1 then
 			local dx, dz = anchor.X / mag, anchor.Z / mag
-			local half = math.abs(dx) * d.PlatformSize.X / 2
-				+ math.abs(dz) * d.PlatformSize.Z / 2
+			local half = math.abs(dx) * d.PlatformSize.X / 2 + math.abs(dz) * d.PlatformSize.Z / 2
 			-- Walkway runs from the Engine platform edge to the zone edge.
 			local span = mag - half - Crossroads.FateEngine.PlatformRadius
-			if span < worstGap then worstGap, worstZone = span, d.Id end
+			if span < worstGap then
+				worstGap, worstZone = span, d.Id
+			end
 		end
 	end
-	check("every walkway has a positive span to cross",
-		worstGap > 0, string.format("%s at %.0f studs", worstZone, worstGap))
+	check(
+		"every walkway has a positive span to cross",
+		worstGap > 0,
+		string.format("%s at %.0f studs", worstZone, worstGap)
+	)
 
-	check("walkways overlap both ends rather than butting up to a seam",
-		Crossroads.Bridges.Overlap > 0)
+	check(
+		"walkways overlap both ends rather than butting up to a seam",
+		Crossroads.Bridges.Overlap > 0
+	)
 
 	-- 5. NOTHING HANGS OFF THE EDGE OF THE FLOOR.
 	local plazaRadius = Crossroads.Plaza.Diameter / 2
@@ -2050,9 +2903,11 @@ do
 			worstOverhang, overhangZone = far - plazaRadius, d.Id
 		end
 	end
-	check("no zone platform overhangs the plaza it stands on",
+	check(
+		"no zone platform overhangs the plaza it stands on",
 		worstOverhang <= 0,
-		string.format("%s overhangs by %.0f studs", overhangZone, worstOverhang))
+		string.format("%s overhangs by %.0f studs", overhangZone, worstOverhang)
+	)
 
 	-- 6. THE SPAWN POINTS ARE NOT INSIDE ANYTHING.
 	-- At (0, 8, 250) the old single spawn sat within the processional
@@ -2061,38 +2916,55 @@ do
 	-- rule: every pad must clear the deck it hangs over.
 	local ring = GameConfig.HubLayout.SpawnRing
 	local deckTop = GameConfig.HubLayout.WalkwayRaise + Crossroads.Bridges.Thickness / 2
-	check("every spawn pad is above the walkway deck, not inside it",
+	check(
+		"every spawn pad is above the walkway deck, not inside it",
 		ring.Height > deckTop,
-		string.format("pad Y %.0f vs deck top %.0f", ring.Height, deckTop))
+		string.format("pad Y %.0f vs deck top %.0f", ring.Height, deckTop)
+	)
 
 	-- ...and inside the hub, not out over the plaza edge or off the world.
-	check("the spawn ring is on the plaza, not out in space",
+	check(
+		"the spawn ring is on the plaza, not out in space",
 		ring.Radius < GameConfig.HubLayout.HubDiameter / 2,
-		string.format("ring %d, plaza radius %d",
-			ring.Radius, GameConfig.HubLayout.HubDiameter / 2))
+		string.format("ring %d, plaza radius %d", ring.Radius, GameConfig.HubLayout.HubDiameter / 2)
+	)
 
 	-- ENOUGH PADS TO COVER THE APPROACHES. Four walkways plus four diagonals:
 	-- fewer than eight and some players arrive facing a direction with no
 	-- path, which is a worse first frame than a short walk.
-	check("there are enough spawn pads to cover every approach",
-		ring.Count >= 8 and ring.Count % 4 == 0, tostring(ring.Count))
+	check(
+		"there are enough spawn pads to cover every approach",
+		ring.Count >= 8 and ring.Count % 4 == 0,
+		tostring(ring.Count)
+	)
 
 	-- 6b. THE HUB MUST BE LIT WELL ENOUGH TO READ.
 	-- "Hub is very dark" was open from the first Studio session to the sixth.
 	-- The cause was ClockTime 22 -- the sun below the horizon, so there was no
 	-- key light for Brightness to raise, and raising it only blew out the neon.
 	local theme = Crossroads.Theme
-	check("the hub's key light is above the horizon",
+	check(
+		"the hub's key light is above the horizon",
 		theme.ClockTime > 4 and theme.ClockTime < 20,
-		string.format("ClockTime %.1f", theme.ClockTime))
-	check("the hub is brighter than the darkest biome",
+		string.format("ClockTime %.1f", theme.ClockTime)
+	)
+	check(
+		"the hub is brighter than the darkest biome",
 		theme.Brightness > Worlds.EMBERFALL.Environment.Brightness,
-		string.format("hub %.1f vs Emberfall %.1f",
-			theme.Brightness, Worlds.EMBERFALL.Environment.Brightness))
-	local function lum(c) return (c.r or 0) + (c.g or 0) + (c.b or 0) end
-	check("outdoor fill is brighter than indoor ambient",
+		string.format(
+			"hub %.1f vs Emberfall %.1f",
+			theme.Brightness,
+			Worlds.EMBERFALL.Environment.Brightness
+		)
+	)
+	local function lum(c)
+		return (c.r or 0) + (c.g or 0) + (c.b or 0)
+	end
+	check(
+		"outdoor fill is brighter than indoor ambient",
 		lum(theme.OutdoorAmbient) > lum(theme.Ambient),
-		string.format("%d vs %d", lum(theme.OutdoorAmbient), lum(theme.Ambient)))
+		string.format("%d vs %d", lum(theme.OutdoorAmbient), lum(theme.Ambient))
+	)
 
 	-- 6c. THE CONTRACT PARTS OTHER SYSTEMS LOOK UP BY NAME.
 	-- HubBuilder hands the hub over to authored geometry when it finds one,
@@ -2101,13 +2973,17 @@ do
 	-- ensureContract now re-adds these; it keys off these names and this
 	-- district, so a rename here must not go unnoticed.
 	for _, key in { "CROSSROADS", "FATE_ENGINE", "ROLL_ANCHOR", "GATE_ANCHOR" } do
-		check(string.format("Constants.NAMES.%s is defined", key),
+		check(
+			string.format("Constants.NAMES.%s is defined", key),
 			type(Constants.NAMES[key]) == "string" and #Constants.NAMES[key] > 0,
-			tostring(Constants.NAMES[key]))
+			tostring(Constants.NAMES[key])
+		)
 	end
 	local hasGate = false
 	for _, d in Crossroads.Districts do
-		if d.Id == "EXPEDITION_GATE" then hasGate = true end
+		if d.Id == "EXPEDITION_GATE" then
+			hasGate = true
+		end
 	end
 	check("the EXPEDITION_GATE district exists (ensureContract asserts on it)", hasGate)
 
@@ -2131,8 +3007,11 @@ do
 			table.insert(encroaching, d.Id)
 		end
 	end
-	check("no district reaches into the Fate Engine's platform",
-		#encroaching == 0, table.concat(encroaching, ", "))
+	check(
+		"no district reaches into the Fate Engine's platform",
+		#encroaching == 0,
+		table.concat(encroaching, ", ")
+	)
 end
 
 -- === 13. Ethereal Scape =============================================
@@ -2142,28 +3021,41 @@ do
 	local es = Worlds.ETHEREAL_SCAPE
 	check("Ethereal Scape exists and is Uncommon", es ~= nil and es.Rarity == "UNCOMMON")
 	check("it is rollable in phase 1", es.EnabledInPhase == 1)
-	check("it is in the prototype weight table",
-		GameConfig.Fate.PrototypeWeights.ETHEREAL_SCAPE ~= nil)
-	check("Uncommon sits between Common and Rare in the ladder",
+	check(
+		"it is in the prototype weight table",
+		GameConfig.Fate.PrototypeWeights.ETHEREAL_SCAPE ~= nil
+	)
+	check(
+		"Uncommon sits between Common and Rare in the ladder",
 		Constants.RARITY.COMMON.Order < Constants.RARITY.UNCOMMON.Order
-			and Constants.RARITY.UNCOMMON.Order < Constants.RARITY.RARE.Order)
+			and Constants.RARITY.UNCOMMON.Order < Constants.RARITY.RARE.Order
+	)
 
 	-- It is a TEST biome. Declaring enemies it does not have would be a lie
 	-- the Phase 2 combat work would then have to discover.
-	check("it declares no enemies, boss or loot -- combat is still Phase 2",
-		#es.Enemies == 0 and es.BossId == nil and es.LootTableId == nil)
-	check("its expedition is shorter than the 720s default",
+	check(
+		"it declares no enemies, boss or loot -- combat is still Phase 2",
+		#es.Enemies == 0 and es.BossId == nil and es.LootTableId == nil
+	)
+	check(
+		"its expedition is shorter than the 720s default",
 		es.DurationSeconds < GameConfig.Expedition.DefaultDurationSeconds,
-		string.format("%ds", es.DurationSeconds))
+		string.format("%ds", es.DurationSeconds)
+	)
 
 	-- The onboarding arc must actually hand it out, or a tester waits on a
 	-- 15% draw to see the thing they are trying to test.
 	local onboardingIndex
 	for i, id in GameConfig.Fate.OnboardingSequence do
-		if id == "ETHEREAL_SCAPE" then onboardingIndex = i end
+		if id == "ETHEREAL_SCAPE" then
+			onboardingIndex = i
+		end
 	end
-	check("onboarding guarantees it inside the first five rolls",
-		onboardingIndex ~= nil and onboardingIndex <= 5, tostring(onboardingIndex))
+	check(
+		"onboarding guarantees it inside the first five rolls",
+		onboardingIndex ~= nil and onboardingIndex <= 5,
+		tostring(onboardingIndex)
+	)
 
 	-- The map ------------------------------------------------------
 	-- This world does not assemble a map. It ships one, because the delivered
@@ -2171,12 +3063,16 @@ do
 	-- (see the comment on its PrebuiltMap). The chunk kit that used to live
 	-- here was retired with the scene it never matched.
 	check("Ethereal Scape declares a prebuilt map", type(es.PrebuiltMap) == "table")
-	check("no chunk claims Ethereal Scape any more",
-		not ExpeditionCore.hasKit(Chunks, "ETHEREAL_SCAPE"))
-	check("its AssetKey is in the manifest",
-		AssetManifest.exists(es.PrebuiltMap.AssetKey), tostring(es.PrebuiltMap.AssetKey))
-	check("it declares no MapPathLength -- nothing would read it",
-		es.MapPathLength == nil)
+	check(
+		"no chunk claims Ethereal Scape any more",
+		not ExpeditionCore.hasKit(Chunks, "ETHEREAL_SCAPE")
+	)
+	check(
+		"its AssetKey is in the manifest",
+		AssetManifest.exists(es.PrebuiltMap.AssetKey),
+		tostring(es.PrebuiltMap.AssetKey)
+	)
+	check("it declares no MapPathLength -- nothing would read it", es.MapPathLength == nil)
 
 	-- MEASURED FROM THE DELIVERED FILE, assets/rbxm/maps/ES_ENVIRONMENT_FULL
 	-- .rbxmx, not estimated. Re-delivered at Roblox scale 2026-09-17 after the
@@ -2193,32 +3089,44 @@ do
 
 	local scale = es.PrebuiltMap.Scale
 	local walkSeconds = SCENE_TRAVERSE * scale / GameConfig.Scale.WalkSpeed
-	print(string.format("        Ethereal Scape traverse: %.0f studs, %.0fs one way at scale %.2f",
-		SCENE_TRAVERSE * scale, walkSeconds, scale))
+	print(
+		string.format(
+			"        Ethereal Scape traverse: %.0f studs, %.0fs one way at scale %.2f",
+			SCENE_TRAVERSE * scale,
+			walkSeconds,
+			scale
+		)
+	)
 
 	-- THE RELATIONSHIP THAT MATTERS, and the one a bad Scale breaks in the
 	-- expensive direction. The first delivery walked 642 seconds against a
 	-- 300-second expedition.
-	check("the walk there and back fits inside the expedition with room to spare",
+	check(
+		"the walk there and back fits inside the expedition with room to spare",
 		walkSeconds * 2 < es.DurationSeconds * 0.75,
-		string.format("%.0fs of %ds", walkSeconds * 2, es.DurationSeconds))
+		string.format("%.0fs of %ds", walkSeconds * 2, es.DurationSeconds)
+	)
 
 	-- ...and the other direction, which is how 0.1 failed its playtest: at
 	-- some point an island stops being somewhere you arrive and becomes a
 	-- stepping stone. A district platform in the hub is the yardstick, since
 	-- that is the smallest space in the game a player is meant to stand around
 	-- in.
-	check("an island is at least as roomy as a hub district platform",
+	check(
+		"an island is at least as roomy as a hub district platform",
 		SMALLEST_ISLAND * scale >= GameConfig.HubLayout.ZoneRingRadius * 0.4,
-		string.format("%.0f studs across", SMALLEST_ISLAND * scale))
+		string.format("%.0f studs across", SMALLEST_ISLAND * scale)
+	)
 
 	-- THE SCALE SANITY CHECK THAT GENERALISES. Nothing a person walks through
 	-- should be dozens of person-heights tall. The first delivery's doorway
 	-- was 48; this catches that class of error without pinning a number.
 	local doorHeights = TEMPLE_DOOR_HEIGHT * scale / CHARACTER_HEIGHT
-	check("the temple doorway is grand, not absurd",
+	check(
+		"the temple doorway is grand, not absurd",
 		doorHeights > 1.5 and doorHeights < 20,
-		string.format("%.1f person-heights", doorHeights))
+		string.format("%.1f person-heights", doorHeights)
+	)
 
 	-- Schema: the rules that keep the two routes from blurring -------
 	local function mapErrors(world, chunks)
@@ -2226,27 +3134,40 @@ do
 		return errs
 	end
 	check("the real content validates", #mapErrors(es) == 0, mapErrors(es)[1])
-	check("a world cannot have both a kit and a prebuilt map",
+	check(
+		"a world cannot have both a kit and a prebuilt map",
 		#mapErrors(es, { C = { WorldId = "W" } }) == 1,
-		mapErrors(es, { C = { WorldId = "W" } })[1])
+		mapErrors(es, { C = { WorldId = "W" } })[1]
+	)
 
 	local function variant(changes)
 		local copy = {}
-		for k, v in es do copy[k] = v end
+		for k, v in es do
+			copy[k] = v
+		end
 		local pm = {}
-		for k, v in es.PrebuiltMap do pm[k] = v end
+		for k, v in es.PrebuiltMap do
+			pm[k] = v
+		end
 		for k, v in changes do
-			if k == "MapPathLength" then copy[k] = v else pm[k] = v end
+			if k == "MapPathLength" then
+				copy[k] = v
+			else
+				pm[k] = v
+			end
 		end
 		copy.PrebuiltMap = pm
 		return copy
 	end
-	check("an unknown AssetKey is a boot error",
-		#mapErrors(variant({ AssetKey = "NO_SUCH_ASSET" })) == 1)
-	check("a zero Scale is a boot error",
-		#mapErrors(variant({ Scale = 0 })) == 1)
-	check("a leftover MapPathLength is a boot error",
-		#mapErrors(variant({ MapPathLength = 3 })) == 1)
+	check(
+		"an unknown AssetKey is a boot error",
+		#mapErrors(variant({ AssetKey = "NO_SUCH_ASSET" })) == 1
+	)
+	check("a zero Scale is a boot error", #mapErrors(variant({ Scale = 0 })) == 1)
+	check(
+		"a leftover MapPathLength is a boot error",
+		#mapErrors(variant({ MapPathLength = 3 })) == 1
+	)
 end
 
 -- === 14. Expedition entry ===========================================
@@ -2258,40 +3179,56 @@ do
 	end
 
 	-- Destination ---------------------------------------------------
-	check("a player who has never rolled has no destination",
-		ExpeditionCore.destinationFrom(withRolls({})) == nil)
-	check("the destination is the most recent roll",
-		ExpeditionCore.destinationFrom(withRolls({
-			{ WorldId = "VERDANT_VALLEY", Rarity = "COMMON", Timestamp = 1 },
-			{ WorldId = "ETHEREAL_SCAPE", Rarity = "UNCOMMON", Timestamp = 2 },
-		})) == "ETHEREAL_SCAPE")
-	check("a malformed history entry does not crash the lookup",
-		ExpeditionCore.destinationFrom(withRolls({ "not a table" })) == nil)
+	check(
+		"a player who has never rolled has no destination",
+		ExpeditionCore.destinationFrom(withRolls({})) == nil
+	)
+	check("the destination is the most recent roll", ExpeditionCore.destinationFrom(withRolls({
+		{ WorldId = "VERDANT_VALLEY", Rarity = "COMMON", Timestamp = 1 },
+		{ WorldId = "ETHEREAL_SCAPE", Rarity = "UNCOMMON", Timestamp = 2 },
+	})) == "ETHEREAL_SCAPE")
+	check(
+		"a malformed history entry does not crash the lookup",
+		ExpeditionCore.destinationFrom(withRolls({ "not a table" })) == nil
+	)
 
 	-- The two ways a world gets a map --------------------------------
 	check("Verdant Valley has a kit", ExpeditionCore.hasKit(Chunks, "VERDANT_VALLEY"))
-	check("Ethereal Scape does not -- it ships one instead",
-		not ExpeditionCore.hasKit(Chunks, "ETHEREAL_SCAPE"))
-	check("Ethereal Scape is prebuilt",
-		ExpeditionCore.hasPrebuiltMap(Worlds.ETHEREAL_SCAPE))
-	check("Verdant Valley is not prebuilt",
-		not ExpeditionCore.hasPrebuiltMap(Worlds.VERDANT_VALLEY))
-	check("Sky Citadel has a kit, not a prebuilt map",
+	check(
+		"Ethereal Scape does not -- it ships one instead",
+		not ExpeditionCore.hasKit(Chunks, "ETHEREAL_SCAPE")
+	)
+	check("Ethereal Scape is prebuilt", ExpeditionCore.hasPrebuiltMap(Worlds.ETHEREAL_SCAPE))
+	check(
+		"Verdant Valley is not prebuilt",
+		not ExpeditionCore.hasPrebuiltMap(Worlds.VERDANT_VALLEY)
+	)
+	check(
+		"Sky Citadel has a kit, not a prebuilt map",
 		ExpeditionCore.hasKit(Chunks, "SKY_CITADEL")
-			and not ExpeditionCore.hasPrebuiltMap(Worlds.SKY_CITADEL))
-	check("Emberfall has neither",
+			and not ExpeditionCore.hasPrebuiltMap(Worlds.SKY_CITADEL)
+	)
+	check(
+		"Emberfall has neither",
 		not ExpeditionCore.hasKit(Chunks, "EMBERFALL")
-			and not ExpeditionCore.hasPrebuiltMap(Worlds.EMBERFALL))
+			and not ExpeditionCore.hasPrebuiltMap(Worlds.EMBERFALL)
+	)
 
 	-- BOTH routes count as having a map. This is the assertion that stops a
 	-- prebuilt world being turned away at its own door -- the bug this seam
 	-- would otherwise have shipped with.
-	check("a prebuilt world has a map",
-		ExpeditionCore.hasMap(Worlds.ETHEREAL_SCAPE, Chunks, "ETHEREAL_SCAPE"))
-	check("a kitted world has a map",
-		ExpeditionCore.hasMap(Worlds.VERDANT_VALLEY, Chunks, "VERDANT_VALLEY"))
-	check("a world with neither has no map",
-		not ExpeditionCore.hasMap(Worlds.EMBERFALL, Chunks, "EMBERFALL"))
+	check(
+		"a prebuilt world has a map",
+		ExpeditionCore.hasMap(Worlds.ETHEREAL_SCAPE, Chunks, "ETHEREAL_SCAPE")
+	)
+	check(
+		"a kitted world has a map",
+		ExpeditionCore.hasMap(Worlds.VERDANT_VALLEY, Chunks, "VERDANT_VALLEY")
+	)
+	check(
+		"a world with neither has no map",
+		not ExpeditionCore.hasMap(Worlds.EMBERFALL, Chunks, "EMBERFALL")
+	)
 
 	-- THE DEBT, ASSERTED. Two rollable worlds cannot be entered (three until
 	-- Sky Citadel's kit landed, 2026-09-22). This test
@@ -2299,32 +3236,46 @@ do
 	-- suite and someone has to look at it to change it.
 	local missing = ExpeditionCore.worldsWithoutMaps(Worlds, Chunks, GameConfig.CurrentPhase)
 	print(string.format("        rollable but not enterable: %s", table.concat(missing, ", ")))
-	check("rollable-but-not-enterable worlds are reported, sorted",
+	check(
+		"rollable-but-not-enterable worlds are reported, sorted",
 		#missing == 2 and missing[1] == "ASTRAL_REACH" and missing[2] == "EMBERFALL",
-		table.concat(missing, ", "))
+		table.concat(missing, ", ")
+	)
 
 	-- Map size and duration are content, with a config fallback ------
 	-- No world overrides it today -- Ethereal Scape did until it became
 	-- prebuilt -- but the override is still how a short world gets a short
 	-- map, so it stays tested rather than quietly rotting.
-	check("a world's own MapPathLength wins",
-		ExpeditionCore.pathLengthFor({ MapPathLength = 3 }, GameConfig) == 3)
-	check("a world without one falls back to config",
+	check(
+		"a world's own MapPathLength wins",
+		ExpeditionCore.pathLengthFor({ MapPathLength = 3 }, GameConfig) == 3
+	)
+	check(
+		"a world without one falls back to config",
 		ExpeditionCore.pathLengthFor(Worlds.VERDANT_VALLEY, GameConfig)
-			== GameConfig.Expedition.PathLength)
-	check("duration comes from the world",
-		ExpeditionCore.durationFor(Worlds.ETHEREAL_SCAPE, GameConfig) == 300)
+			== GameConfig.Expedition.PathLength
+	)
+	check(
+		"duration comes from the world",
+		ExpeditionCore.durationFor(Worlds.ETHEREAL_SCAPE, GameConfig) == 300
+	)
 
 	-- Seeding: an expedition must be reproducible from its log line --
 	local s1 = ExpeditionCore.seedFor(12345, 7, "ETHEREAL_SCAPE")
 	local s2 = ExpeditionCore.seedFor(12345, 7, "ETHEREAL_SCAPE")
 	check("the same player, roll and world always seed the same", s1 == s2)
-	check("a different roll number seeds differently",
-		s1 ~= ExpeditionCore.seedFor(12345, 8, "ETHEREAL_SCAPE"))
-	check("a different player seeds differently",
-		s1 ~= ExpeditionCore.seedFor(999, 7, "ETHEREAL_SCAPE"))
-	check("a different world seeds differently",
-		s1 ~= ExpeditionCore.seedFor(12345, 7, "VERDANT_VALLEY"))
+	check(
+		"a different roll number seeds differently",
+		s1 ~= ExpeditionCore.seedFor(12345, 8, "ETHEREAL_SCAPE")
+	)
+	check(
+		"a different player seeds differently",
+		s1 ~= ExpeditionCore.seedFor(999, 7, "ETHEREAL_SCAPE")
+	)
+	check(
+		"a different world seeds differently",
+		s1 ~= ExpeditionCore.seedFor(12345, 7, "VERDANT_VALLEY")
+	)
 
 	local inRange = true
 	for userId = 1, 400 do
@@ -2341,11 +3292,15 @@ do
 	local a1, a2 = ExpeditionCore.streamFor(s1, 1), ExpeditionCore.streamFor(s1, 1)
 	local sameStream = true
 	for _ = 1, 200 do
-		if a1() ~= a2() then sameStream = false end
+		if a1() ~= a2() then
+			sameStream = false
+		end
 	end
 	check("the same seed and attempt produce the same stream", sameStream)
-	check("a retry does not replay the failed attempt",
-		ExpeditionCore.streamFor(s1, 1)() ~= ExpeditionCore.streamFor(s1, 2)())
+	check(
+		"a retry does not replay the failed attempt",
+		ExpeditionCore.streamFor(s1, 1)() ~= ExpeditionCore.streamFor(s1, 2)()
+	)
 
 	-- END TO END: the same player rolling the same world twice must get the
 	-- same map, and two different players must not.
@@ -2353,11 +3308,17 @@ do
 	-- Ethereal Scape no longer goes near it.
 	local function mapFor(userId, rollNumber)
 		local seed = ExpeditionCore.seedFor(userId, rollNumber, "VERDANT_VALLEY")
-		local okM, layout = ChunkCore.assembleWithRetry(Chunks,
+		local okM, layout = ChunkCore.assembleWithRetry(
+			Chunks,
 			{ WorldId = "VERDANT_VALLEY", PathLength = 3 },
-			function(att) return ExpeditionCore.streamFor(seed, att) end,
-			GameConfig.Expedition.AssemblyAttempts)
-		if not okM then return nil end
+			function(att)
+				return ExpeditionCore.streamFor(seed, att)
+			end,
+			GameConfig.Expedition.AssemblyAttempts
+		)
+		if not okM then
+			return nil
+		end
 		local ids = {}
 		for _, c in layout.Chunks do
 			table.insert(ids, string.format("%s@%d,%d,%d", c.ChunkId, c.X, c.Z, c.Yaw))
@@ -2366,16 +3327,22 @@ do
 	end
 
 	local mine = mapFor(555, 20)
-	check("an expedition can be replayed exactly from its seed",
-		mine ~= nil and mine == mapFor(555, 20))
+	check(
+		"an expedition can be replayed exactly from its seed",
+		mine ~= nil and mine == mapFor(555, 20)
+	)
 
 	local distinct = {}
 	for userId = 1, 40 do
 		local m = mapFor(userId * 7919, 20)
-		if m then distinct[m] = true end
+		if m then
+			distinct[m] = true
+		end
 	end
 	local n = 0
-	for _ in distinct do n += 1 end
+	for _ in distinct do
+		n += 1
+	end
 	check("different players get different maps", n > 1, string.format("%d distinct", n))
 
 	-- Timer ---------------------------------------------------------
@@ -2388,14 +3355,21 @@ do
 	occupied[1], occupied[2] = true, true
 	check("occupied slots are skipped", ExpeditionCore.freeSlot(occupied, 4) == 3)
 	occupied[3], occupied[4] = true, true
-	check("a full server returns nil rather than stacking maps",
-		ExpeditionCore.freeSlot(occupied, 4) == nil)
+	check(
+		"a full server returns nil rather than stacking maps",
+		ExpeditionCore.freeSlot(occupied, 4) == nil
+	)
 
 	local x, y, z = ExpeditionCore.stageOffset(3, 12000)
-	check("stages are spaced apart so two maps cannot intersect",
-		x == 24000 and y == 0 and z == 0, string.format("(%d,%d,%d)", x, y, z))
-	check("stage spacing exceeds the widest layout a path length can produce",
-		GameConfig.Expedition.StageSpacing > 8000)
+	check(
+		"stages are spaced apart so two maps cannot intersect",
+		x == 24000 and y == 0 and z == 0,
+		string.format("(%d,%d,%d)", x, y, z)
+	)
+	check(
+		"stage spacing exceeds the widest layout a path length can produce",
+		GameConfig.Expedition.StageSpacing > 8000
+	)
 
 	check("the entry chunk is findable", ExpeditionCore.entryChunk({
 		Chunks = { { Role = "PATH", ChunkId = "A" }, { Role = "ENTRY", ChunkId = "B" } },
@@ -2426,50 +3400,79 @@ do
 	end
 
 	local allowed = decide()
-	check("a player who has rolled a world with a map may enter",
+	check(
+		"a player who has rolled a world with a map may enter",
 		allowed.Allowed and allowed.WorldId == "ETHEREAL_SCAPE",
-		tostring(allowed.Refusal))
+		tostring(allowed.Refusal)
+	)
 
-	check("a player who has not rolled is refused",
-		decide({ Profile = withRolls({}) }).Refusal == "NO_DESTINATION")
-	check("a world with no map is refused at the door, not mid-assembly",
-		decide({ Profile = withRolls({
+	check(
+		"a player who has not rolled is refused",
+		decide({ Profile = withRolls({}) }).Refusal == "NO_DESTINATION"
+	)
+	check("a world with no map is refused at the door, not mid-assembly", decide({
+		Profile = withRolls({
 			{ WorldId = "EMBERFALL", Rarity = "RARE", Timestamp = 1 },
-		}) }).Refusal == "NO_MAP")
-	check("a destination that no longer exists is refused",
-		decide({ Profile = withRolls({
+		}),
+	}).Refusal == "NO_MAP")
+	check("a destination that no longer exists is refused", decide({
+		Profile = withRolls({
 			{ WorldId = "DELETED_WORLD", Rarity = "COMMON", Timestamp = 1 },
-		}) }).Refusal == "UNKNOWN_WORLD")
-	check("you cannot enter an expedition while on one",
-		decide({ AlreadyActive = true }).Refusal == "ALREADY_IN_EXPEDITION")
+		}),
+	}).Refusal == "UNKNOWN_WORLD")
+	check(
+		"you cannot enter an expedition while on one",
+		decide({ AlreadyActive = true }).Refusal == "ALREADY_IN_EXPEDITION"
+	)
 	check("entry is rate limited", decide({ LastEntryAt = 999.5 }).Refusal == "COOLDOWN")
 	check("the cooldown expires", decide({ LastEntryAt = 990 }).Allowed)
-	check("you must be at the Gate",
-		decide({ DistanceToGate = 5000 }).Refusal == "TOO_FAR")
-	check("a missing Gate skips the distance check rather than failing shut",
-		decide({ DistanceToGate = NONE }).Allowed)
-	check("a full server refuses rather than overlapping maps",
-		decide({ FreeSlot = NONE }).Refusal == "SERVER_FULL")
+	check("you must be at the Gate", decide({ DistanceToGate = 5000 }).Refusal == "TOO_FAR")
+	check(
+		"a missing Gate skips the distance check rather than failing shut",
+		decide({ DistanceToGate = NONE }).Allowed
+	)
+	check(
+		"a full server refuses rather than overlapping maps",
+		decide({ FreeSlot = NONE }).Refusal == "SERVER_FULL"
+	)
 
 	local off = cfg({ Expedition = { Enabled = false } })
-	check("the Phase 2 switch closes the door completely",
-		decide({ Config = off }).Refusal == "DISABLED")
+	check(
+		"the Phase 2 switch closes the door completely",
+		decide({ Config = off }).Refusal == "DISABLED"
+	)
 
 	-- The guards must be checked BEFORE anything that reads content, so a
 	-- spamming client never reaches the assembler.
-	check("cooldown outranks having no destination",
-		decide({ Profile = withRolls({}), LastEntryAt = 999.5 }).Refusal == "COOLDOWN")
+	check(
+		"cooldown outranks having no destination",
+		decide({ Profile = withRolls({}), LastEntryAt = 999.5 }).Refusal == "COOLDOWN"
+	)
 
 	-- Silence is the default, for the reason §3.4.3 gives about the roll.
 	local spoken = {}
-	for _, refusal in { "DISABLED", "NO_DESTINATION", "UNKNOWN_WORLD", "NO_MAP",
-		"ALREADY_IN_EXPEDITION", "COOLDOWN", "TOO_FAR", "SERVER_FULL" } do
-		if ExpeditionCore.refusalMessage(refusal) then table.insert(spoken, refusal) end
+	for _, refusal in
+		{
+			"DISABLED",
+			"NO_DESTINATION",
+			"UNKNOWN_WORLD",
+			"NO_MAP",
+			"ALREADY_IN_EXPEDITION",
+			"COOLDOWN",
+			"TOO_FAR",
+			"SERVER_FULL",
+		}
+	do
+		if ExpeditionCore.refusalMessage(refusal) then
+			table.insert(spoken, refusal)
+		end
 	end
 	table.sort(spoken)
-	check("only the two refusals a legitimate player can hit say anything",
+	check(
+		"only the two refusals a legitimate player can hit say anything",
 		#spoken == 2 and spoken[1] == "NO_DESTINATION" and spoken[2] == "NO_MAP",
-		table.concat(spoken, ", "))
+		table.concat(spoken, ", ")
+	)
 end
 
 -- === 20. The authored Fate Engine ===================================
@@ -2480,8 +3483,11 @@ do
 	local prefab = engine.Prefab
 
 	check("the Engine declares a prefab", type(prefab) == "table")
-	check("its AssetKey is in the manifest",
-		AssetManifest.exists(prefab.AssetKey), tostring(prefab.AssetKey))
+	check(
+		"its AssetKey is in the manifest",
+		AssetManifest.exists(prefab.AssetKey),
+		tostring(prefab.AssetKey)
+	)
 	check("its Scale is positive", type(prefab.Scale) == "number" and prefab.Scale > 0)
 
 	-- MEASURED FROM assets/rbxm/prefabs/HUB_FATE_ENGINE.rbxmx as delivered.
@@ -2499,23 +3505,29 @@ do
 	-- its edge (Bridges.Overlap). A prefab scaled wrong either floats short of
 	-- its own walkways or overhangs the plaza.
 	local platform = RAW_PLATFORM * scale
-	check("the authored dais matches the platform radius the hub reserves",
+	check(
+		"the authored dais matches the platform radius the hub reserves",
 		math.abs(platform - engine.PlatformRadius * 2) < engine.PlatformRadius * 0.05,
-		string.format("%.1f studs against %d", platform, engine.PlatformRadius * 2))
+		string.format("%.1f studs against %d", platform, engine.PlatformRadius * 2)
+	)
 
 	-- The plinth cap is a hard rule, not a proportion: a character jumps about
 	-- 7 studs and the Gate once shipped an 18-stud plinth that walled off its
 	-- own portal. Scale can violate it silently.
 	local plinth = RAW_PLINTH_H * scale
-	check("the authored plinth is still a step, not a wall",
+	check(
+		"the authored plinth is still a step, not a wall",
 		plinth <= GameConfig.Portal.MaxPlinthHeight + 0.5,
-		string.format("%.2f studs", plinth))
+		string.format("%.2f studs", plinth)
+	)
 
 	-- The rig must not overhang the floor it stands on -- the same assertion
 	-- the generated rig has always had, applied to the authored one.
-	check("the portal rig fits on its own dais",
+	check(
+		"the portal rig fits on its own dais",
 		RAW_OUTER * scale < engine.PlatformRadius * 2,
-		string.format("ring %.1f, dais %d", RAW_OUTER * scale, engine.PlatformRadius * 2))
+		string.format("ring %.1f, dais %d", RAW_OUTER * scale, engine.PlatformRadius * 2)
+	)
 
 	-- Every part the code drives by name needs a paint rule, or it stays the
 	-- grey Roblox imports it as. Longest matching prefix wins, exactly as
@@ -2548,54 +3560,68 @@ do
 			table.insert(unpainted, name)
 		end
 	end
-	check("every contract part has a paint rule", #unpainted == 0,
-		table.concat(unpainted, ", "))
+	check("every contract part has a paint rule", #unpainted == 0, table.concat(unpainted, ", "))
 
 	-- The counter-rotation is what makes the portal read as a mechanism
 	-- rather than a wheel. Asserting the SIGNS, not the speeds.
 	local outer = styles.OuterRing.Attributes.SpinSpeed
 	local inner = styles.InnerRing.Attributes.SpinSpeed
-	check("the rings counter-rotate", outer * inner < 0,
-		string.format("outer %.2f, inner %.2f", outer, inner))
+	check(
+		"the rings counter-rotate",
+		outer * inner < 0,
+		string.format("outer %.2f, inner %.2f", outer, inner)
+	)
 
-	check("the shards are tagged for the rarity cycle",
-		styles.Shard.Attributes.IsFeaturedShard == true)
+	check(
+		"the shards are tagged for the rarity cycle",
+		styles.Shard.Attributes.IsFeaturedShard == true
+	)
 
 	-- TWO RINGS, NOT THREE. Owner-directed: the inner ring so nearly encases
 	-- the portal that they read as one object, so ring 2 is the inner ring
 	-- AND the aperture, turning as one against the outer frame.
 	local plane = styles.PortalPlane.Attributes.SpinSpeed
-	check("the aperture turns against the outer ring", plane ~= nil and plane * outer < 0,
-		string.format("outer %.2f, plane %s", outer, tostring(plane)))
+	check(
+		"the aperture turns against the outer ring",
+		plane ~= nil and plane * outer < 0,
+		string.format("outer %.2f, plane %s", outer, tostring(plane))
+	)
 
 	-- Identical, not merely similar. Two nested discs at slightly different
 	-- speeds slide against each other, which reads as one of them slipping
 	-- rather than as a mechanism -- worse than either extreme.
-	check("the aperture and the inner ring turn as ONE ring", plane == inner,
-		string.format("plane %.2f, inner %.2f", plane, inner))
+	check(
+		"the aperture and the inner ring turn as ONE ring",
+		plane == inner,
+		string.format("plane %.2f, inner %.2f", plane, inner)
+	)
 
 	-- SAME SPEED IS NOT ENOUGH -- SAME AXLE TOO. SpinAxis defaults to "Y", so
 	-- a part given a ring's speed but no axis turns about the VERTICAL while
 	-- the rings turn about their own Z. That looks exactly like "still not
 	-- connected", and it is what the fourth walk was still seeing after the
 	-- speeds were matched.
-	check("everything in the portal assembly turns about the same axle", (function()
-		local axis = styles.OuterRing.Attributes.SpinAxis
-		for _, name in { "OuterRing", "InnerRing", "PortalPlane" } do
-			local attributes = styles[name].Attributes
-			if attributes.SpinSpeed ~= nil and attributes.SpinAxis ~= axis then
-				return false
+	check(
+		"everything in the portal assembly turns about the same axle",
+		(function()
+			local axis = styles.OuterRing.Attributes.SpinAxis
+			for _, name in { "OuterRing", "InnerRing", "PortalPlane" } do
+				local attributes = styles[name].Attributes
+				if attributes.SpinSpeed ~= nil and attributes.SpinAxis ~= axis then
+					return false
+				end
 			end
-		end
-		return axis ~= nil
-	end)())
+			return axis ~= nil
+		end)()
+	)
 
 	-- THE RINGS SPIN ABOUT THEIR OWN AXLE. A ring is thin along its own Z, so
 	-- Z is the axle; spinning it about Y would tumble it end over end. Two
 	-- playtests reported "no animation" while this was simply not set.
-	check("both rings name Z as their spin axis",
-		styles.OuterRing.Attributes.SpinAxis == "Z"
-			and styles.InnerRing.Attributes.SpinAxis == "Z")
+	check(
+		"both rings name Z as their spin axis",
+		styles.OuterRing.Attributes.SpinAxis == "Z" and styles.InnerRing.Attributes.SpinAxis == "Z"
+	)
 
 	-- SPIN SPEED IS A BAND, and both edges are bugs that shipped. Too slow
 	-- (0.15 rad/s, 42s a revolution) read as "not animated" for two
@@ -2604,41 +3630,49 @@ do
 	for _, name in { "OuterRing", "InnerRing", "Shard" } do
 		local speed = math.abs(styles[name].Attributes.SpinSpeed)
 		local seconds = math.pi * 2 / speed
-		check(`{name} idles rather than racing or sitting still`,
+		check(
+			`{name} idles rather than racing or sitting still`,
 			seconds >= 8 and seconds <= 30,
-			string.format("%.2f rad/s = %.0fs per revolution", speed, seconds))
+			string.format("%.2f rad/s = %.0fs per revolution", speed, seconds)
+		)
 	end
 
 	-- The crystals must not move as one. A single shared style entry is what
 	-- made six of them read as machinery.
-	check("the shards vary per crystal", type(styles.Shard.Vary) == "table"
-		and (styles.Shard.Vary.SpinSpeed or 0) > 0)
+	check(
+		"the shards vary per crystal",
+		type(styles.Shard.Vary) == "table" and (styles.Shard.Vary.SpinSpeed or 0) > 0
+	)
 
 	-- THE VEIL is the surface a player walks through, so it has to be
 	-- walkable and it has to be the thing you look at.
 	local veil = styles.PortalPlane
-	check("the veil is non-colliding -- you walk through a portal",
-		veil.CanCollide == false)
+	check("the veil is non-colliding -- you walk through a portal", veil.CanCollide == false)
 	-- VISIBILITY, not transparency. The first version of this test asserted
 	-- Transparency < 0.35, which was a proxy that stopped meaning anything the
 	-- moment the veil moved from ForceField to Neon -- an emissive surface at
 	-- 0.45 reads far brighter than a shimmer at 0.2. Assert the two things
 	-- that actually make it visible instead.
-	check("the veil is emissive, so it reads against a dark hub",
-		veil.Material == Enum.Material.Neon)
-	check("the veil never fades far enough to vanish",
+	check(
+		"the veil is emissive, so it reads against a dark hub",
+		veil.Material == Enum.Material.Neon
+	)
+	check(
+		"the veil never fades far enough to vanish",
 		veil.Attributes.PulseAlphaMax < 0.7,
-		string.format("peaks at %.2f", veil.Attributes.PulseAlphaMax))
+		string.format("peaks at %.2f", veil.Attributes.PulseAlphaMax)
+	)
 
 	-- The rings must not turn like a motor. Both carry a sway and a rate that
 	-- breathes, which is what separates "suspended" from "bolted on".
 	for _, name in { "OuterRing", "InnerRing" } do
 		local attrs = styles[name].Attributes
-		check(`{name} sways rather than turning perfectly true`,
-			(attrs.WobbleDegrees or 0) > 0 and (attrs.SpinJitter or 0) > 0)
+		check(
+			`{name} sways rather than turning perfectly true`,
+			(attrs.WobbleDegrees or 0) > 0 and (attrs.SpinJitter or 0) > 0
+		)
 	end
-	check("the veil has a breath of its own",
-		veil.Attributes.PulseAlphaMin ~= nil)
+	check("the veil has a breath of its own", veil.Attributes.PulseAlphaMin ~= nil)
 
 	-- THE RINGS MUST NEST, AND STAY NESTED WHILE THEY MOVE. This has broken
 	-- three times: a 6% veil pulse that grew it through its frame, mismatched
@@ -2650,7 +3684,9 @@ do
 	local RAW_INNER, RAW_VEIL = 34.34, 32.82
 
 	local function width(raw, style)
-		return raw * scale * ((style and style.SizeScale) or 1)
+		return raw
+			* scale
+			* ((style and style.SizeScale) or 1)
 			* (1 + ((style and style.Attributes and style.Attributes.PulseScale) or 0))
 	end
 
@@ -2659,17 +3695,25 @@ do
 	local veilW = width(RAW_VEIL, veil)
 
 	-- The clearance floor scales with the world, because the ring does.
-	check("the inner ring clears the outer aperture with room to sway",
+	check(
+		"the inner ring clears the outer aperture with room to sway",
 		(aperture - innerW) / 2 > 1 * GameConfig.HubLayout.WorldScale,
-		string.format("%.2f studs a side", (aperture - innerW) / 2))
-	check("the veil sits inside the ring it fills",
-		veilW < innerW, string.format("veil %.2f, ring %.2f", veilW, innerW))
+		string.format("%.2f studs a side", (aperture - innerW) / 2)
+	)
+	check(
+		"the veil sits inside the ring it fills",
+		veilW < innerW,
+		string.format("veil %.2f, ring %.2f", veilW, innerW)
+	)
 
 	-- ...and the two rings must lean as ONE object. Different wobble periods
 	-- is what let the inner assembly swing out through the outer one.
-	check("both rings share a single sway",
+	check(
+		"both rings share a single sway",
 		styles.OuterRing.Attributes.WobbleDegrees == styles.InnerRing.Attributes.WobbleDegrees
-			and styles.OuterRing.Attributes.WobbleSeconds == styles.InnerRing.Attributes.WobbleSeconds)
+			and styles.OuterRing.Attributes.WobbleSeconds
+				== styles.InnerRing.Attributes.WobbleSeconds
+	)
 
 	-- Nothing in the hub may use a built-in Roblox material. Owner-directed:
 	-- their grain fights flat-shaded low-poly geometry, and Glass in
@@ -2687,56 +3731,80 @@ do
 			table.insert(textured, `{name} ({TEXTURED[style.Material]})`)
 		end
 	end
-	check("no part of the Engine uses a textured Roblox material",
-		#textured == 0, table.concat(textured, ", "))
+	check(
+		"no part of the Engine uses a textured Roblox material",
+		#textured == 0,
+		table.concat(textured, ", ")
+	)
 
 	-- The frame must not emit, or it merges with the aperture it frames.
-	check("the inner ring is matte so the veil reads as the light source",
-		styles.InnerRing.Material ~= Enum.Material.Neon)
+	check(
+		"the inner ring is matte so the veil reads as the light source",
+		styles.InnerRing.Material ~= Enum.Material.Neon
+	)
 
 	-- THE ROLL RAMP. The portal winds up, holds while the result builds, and
 	-- coasts down as the colour lands. Three relationships make that read as
 	-- one gesture rather than three effects that happen to overlap.
 	local portal = GameConfig.Portal
-	check("rolling actually winds the portal up",
-		portal.SpinBoostPeak > 1, string.format("%.1fx", portal.SpinBoostPeak))
-	check("it snaps up and coasts down, not the reverse",
+	check(
+		"rolling actually winds the portal up",
+		portal.SpinBoostPeak > 1,
+		string.format("%.1fx", portal.SpinBoostPeak)
+	)
+	check(
+		"it snaps up and coasts down, not the reverse",
 		portal.SpinRampUpSeconds < portal.SpinWindDownSeconds,
-		string.format("up %.1fs, down %.1fs", portal.SpinRampUpSeconds, portal.SpinWindDownSeconds))
+		string.format("up %.1fs, down %.1fs", portal.SpinRampUpSeconds, portal.SpinWindDownSeconds)
+	)
 	-- The colour is the answer; it must arrive WHILE the rings are still
 	-- slowing. Finishing after them would leave the portal sitting at rest on
 	-- the wrong colour, which is worse than snapping.
-	check("the colour lands before the rings finish slowing",
+	check(
+		"the colour lands before the rings finish slowing",
 		portal.RarityTweenSeconds <= portal.SpinWindDownSeconds,
-		string.format("colour %.1fs, wind-down %.1fs",
-			portal.RarityTweenSeconds, portal.SpinWindDownSeconds))
+		string.format(
+			"colour %.1fs, wind-down %.1fs",
+			portal.RarityTweenSeconds,
+			portal.SpinWindDownSeconds
+		)
+	)
 
 	-- Performance: the animator runs every frame on every client, including
 	-- the phones the §6 checklist budgets for.
-	check("distant parts stop animating",
+	check(
+		"distant parts stop animating",
 		GameConfig.Effects.AnimationDistance > 0
 			and GameConfig.Effects.AnimationDistance < GameConfig.HubLayout.VisualExtent,
-		string.format("%d studs", GameConfig.Effects.AnimationDistance))
-	check("expensive properties are written below frame rate",
+		string.format("%d studs", GameConfig.Effects.AnimationDistance)
+	)
+	check(
+		"expensive properties are written below frame rate",
 		GameConfig.Effects.SlowUpdateSeconds > 1 / 60,
-		string.format("%.3fs", GameConfig.Effects.SlowUpdateSeconds))
+		string.format("%.3fs", GameConfig.Effects.SlowUpdateSeconds)
+	)
 
 	-- WALKWAYS MUST NOT BURY THE DAIS. The deck sits below the dais top, or
 	-- it runs over the platform the Engine stands on and hides it -- which is
 	-- what the second authored playtest reported.
 	local daisTop = engine.PlatformRaise
-	check("walkway decks sit below the dais they meet",
+	check(
+		"walkway decks sit below the dais they meet",
 		GameConfig.HubLayout.WalkwayRaise < daisTop,
-		string.format("deck %.1f against dais top %.1f",
-			GameConfig.HubLayout.WalkwayRaise, daisTop))
+		string.format("deck %.1f against dais top %.1f", GameConfig.HubLayout.WalkwayRaise, daisTop)
+	)
 
 	-- ...and must not bite so far in that there is no dais left to see.
-	check("the walkway overlap leaves most of the dais visible",
+	check(
+		"the walkway overlap leaves most of the dais visible",
 		Crossroads.Bridges.Overlap < engine.PlatformRadius * 0.25,
-		string.format("%d studs into a %d radius",
-			Crossroads.Bridges.Overlap, engine.PlatformRadius))
+		string.format(
+			"%d studs into a %d radius",
+			Crossroads.Bridges.Overlap,
+			engine.PlatformRadius
+		)
+	)
 end
-
 
 -- === 21. The authored Crossroads shell ==============================
 group("The authored Crossroads shell")
@@ -2751,38 +3819,46 @@ do
 	--
 	-- The Fate Engine's shards are deliberately out of scope: they orbit
 	-- because they are part of a machine, not because they are a light.
-	check("no lamp, lantern or finial moves", (function()
-		local moving = {}
-		for name, style in shell.Styles do
-			local isFixture = string.find(name, "Lamp")
-				or string.find(name, "Lantern")
-				or string.find(name, "Finial")
-				or string.find(name, "GatewayCrystals")
-			local attributes = style.Attributes
-			if isFixture and attributes then
-				for _, key in { "SpinSpeed", "BobStuds", "BobSeconds", "WobbleDegrees", "WobbleSeconds" } do
-					if attributes[key] ~= nil then
-						table.insert(moving, `{name}.{key}`)
+	check(
+		"no lamp, lantern or finial moves",
+		(function()
+			local moving = {}
+			for name, style in shell.Styles do
+				local isFixture = string.find(name, "Lamp")
+					or string.find(name, "Lantern")
+					or string.find(name, "Finial")
+					or string.find(name, "GatewayCrystals")
+				local attributes = style.Attributes
+				if isFixture and attributes then
+					for _, key in
+						{ "SpinSpeed", "BobStuds", "BobSeconds", "WobbleDegrees", "WobbleSeconds" }
+					do
+						if attributes[key] ~= nil then
+							table.insert(moving, `{name}.{key}`)
+						end
 					end
 				end
 			end
-		end
-		return #moving == 0, table.concat(moving, ", ")
-	end)())
+			return #moving == 0, table.concat(moving, ", ")
+		end)()
+	)
 
-	check("...but they still pulse, which is what makes them read as lit", (function()
-		local lit = 0
-		for name, style in shell.Styles do
-			if
-				(string.find(name, "Lamp") or string.find(name, "Lantern"))
-				and style.Attributes
-				and style.Attributes.PulseAlphaMax ~= nil
-			then
-				lit += 1
+	check(
+		"...but they still pulse, which is what makes them read as lit",
+		(function()
+			local lit = 0
+			for name, style in shell.Styles do
+				if
+					(string.find(name, "Lamp") or string.find(name, "Lantern"))
+					and style.Attributes
+					and style.Attributes.PulseAlphaMax ~= nil
+				then
+					lit += 1
+				end
 			end
-		end
-		return lit >= 2
-	end)())
+			return lit >= 2
+		end)()
+	)
 	local prefab = shell and shell.Prefab
 
 	check("the hub declares a shell prefab", type(prefab) == "table")
@@ -3085,7 +4161,14 @@ do
 	-- their walkway runs from 20, so every path had 40 studs of bare deck and
 	-- the black edging stopped in mid-air short of the dais.
 	local short = {}
-	for _, key in { "Walkway_North_Edge", "Walkway_East_Edge", "Walkway_West_Edge", "Processional_South_Edge" } do
+	for _, key in
+		{
+			"Walkway_North_Edge",
+			"Walkway_East_Edge",
+			"Walkway_West_Edge",
+			"Processional_South_Edge",
+		}
+	do
 		local style = resolve(key)
 		if
 			not style
@@ -3177,8 +4260,10 @@ do
 	--
 	-- This pins the DELIBERATE gap so it cannot be closed by accident -- if a
 	-- future change puts a gate back on the market, this fails and asks why.
-	check("the authored hub declares no Expedition Gate anchor",
-		Crossroads.Shell.GateAnchorTop == nil)
+	check(
+		"the authored hub declares no Expedition Gate anchor",
+		Crossroads.Shell.GateAnchorTop == nil
+	)
 
 	-- The district itself still exists in content: the EXPEDITION_GATE ->
 	-- SHOP rename is a separate, still-ungated change.
@@ -3199,8 +4284,16 @@ do
 	local ring = backdrop and backdrop.Ring
 
 	check("the hub declares a horizon", type(ring) == "table")
-	check("its AssetKey is in the manifest", AssetManifest.exists(backdrop.AssetKey), tostring(backdrop.AssetKey))
-	check("the chunk it clones has a paint rule", backdrop.Styles[ring.Part] ~= nil, tostring(ring.Part))
+	check(
+		"its AssetKey is in the manifest",
+		AssetManifest.exists(backdrop.AssetKey),
+		tostring(backdrop.AssetKey)
+	)
+	check(
+		"the chunk it clones has a paint rule",
+		backdrop.Styles[ring.Part] ~= nil,
+		tostring(ring.Part)
+	)
 
 	-- Measured from the delivered file: Backdrop_Mountain is 2048 studs
 	-- across at Scale 1.0, so half of it reaches this far from a chunk centre.
@@ -3221,9 +4314,18 @@ do
 	local clearMin = 500 * GameConfig.HubLayout.WorldScale
 	local clearMax = 1000 * GameConfig.HubLayout.WorldScale
 	check(
-		string.format("the mountains stand %.0f-%.0f studs clear of the crossroads edge", clearMin, clearMax),
+		string.format(
+			"the mountains stand %.0f-%.0f studs clear of the crossroads edge",
+			clearMin,
+			clearMax
+		),
 		gap >= clearMin and gap <= clearMax,
-		string.format("%.0f studs of clear sky (near face %.0f, plaza %.0f)", gap, near, plazaRadius)
+		string.format(
+			"%.0f studs of clear sky (near face %.0f, plaza %.0f)",
+			gap,
+			near,
+			plazaRadius
+		)
 	)
 
 	-- ...and clear of the hub's own ground skirt, which is what the ring was
@@ -3271,7 +4373,6 @@ do
 		ring.YawJitterDegrees > 0 and ring.ScaleJitter > 0
 	)
 end
-
 
 -- === 22. The portal's yaw, and the hub's animation budget ============
 group("The portal turns, and the hub breathes")
@@ -3399,210 +4500,292 @@ do
 	check("the shipped menu validates", ok, table.concat(errors, "; "))
 
 	local panels = HubMenuCore.panels(Menu)
-	check("every panel the owner asked for exists", (function()
-		local wanted = { "TRAVEL", "SHOP", "CODES", "SKILLS", "PARTY", "REBIRTH", "SETTINGS" }
-		for _, id in wanted do
-			if not HubMenuCore.panelById(Menu, id) then
-				return false
+	check(
+		"every panel the owner asked for exists",
+		(function()
+			local wanted = { "TRAVEL", "SHOP", "CODES", "SKILLS", "PARTY", "REBIRTH", "SETTINGS" }
+			for _, id in wanted do
+				if not HubMenuCore.panelById(Menu, id) then
+					return false
+				end
 			end
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 
 	-- The owner's order, 2026-09-20. Pinned because it is a deliberate
 	-- grouping (get somewhere, get someone, progression, transactions,
 	-- settings) and alphabetical or add-order drift would undo it silently.
-	check("the rail is in the order the owner set", (function()
-		local wanted = { "TRAVEL", "PARTY", "SKILLS", "REBIRTH", "SHOP", "CODES", "SETTINGS" }
-		for index, id in wanted do
-			if panels[index] == nil or panels[index].Id ~= id then
-				return false
+	check(
+		"the rail is in the order the owner set",
+		(function()
+			local wanted = { "TRAVEL", "PARTY", "SKILLS", "REBIRTH", "SHOP", "CODES", "SETTINGS" }
+			for index, id in wanted do
+				if panels[index] == nil or panels[index].Id ~= id then
+					return false
+				end
 			end
-		end
-		return #panels == #wanted
-	end)())
+			return #panels == #wanted
+		end)()
+	)
 
-	check("panels come back in rail order", (function()
-		for i = 2, #panels do
-			if panels[i - 1].Order > panels[i].Order then
-				return false
+	check(
+		"panels come back in rail order",
+		(function()
+			for i = 2, #panels do
+				if panels[i - 1].Order > panels[i].Order then
+					return false
+				end
 			end
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 
 	-- THE BUG THIS PREVENTS, which reached Studio: content named the collapse
 	-- key "Backslash"; Roblox calls it "BackSlash". Indexing an Enum with a
 	-- name it does not have RAISES rather than returning nil, so every
 	-- keystroke threw and took the panel shortcuts down with it. Checking
 	-- names against a list the suite can see turns that into a boot failure.
-	check("every hotkey is a name Roblox actually has", (function()
-		for _, panel in Menu.Panels do
-			if panel.Hotkey ~= nil and not Constants.HOTKEY_NAMES[panel.Hotkey] then
-				return false
-			end
-		end
-		return Constants.HOTKEY_NAMES[Menu.CollapseHotkey] == true
-	end)())
-
-	check("the collapse key is BackSlash, with the capital S",
-		Menu.CollapseHotkey == "BackSlash")
-
-	check("a misspelled hotkey fails validation", (function()
-		local broken = { Panels = {}, Destinations = Menu.Destinations, CollapseHotkey = "Backslash" }
-		for _, panel in Menu.Panels do
-			table.insert(broken.Panels, panel)
-		end
-		local ok = Schema.validateHubMenu(broken, GameConfig)
-		return not ok
-	end)())
-
-	check("no two panels share a hotkey", (function()
-		local seen = {}
-		for _, panel in Menu.Panels do
-			if panel.Hotkey then
-				if seen[panel.Hotkey] then
+	check(
+		"every hotkey is a name Roblox actually has",
+		(function()
+			for _, panel in Menu.Panels do
+				if panel.Hotkey ~= nil and not Constants.HOTKEY_NAMES[panel.Hotkey] then
 					return false
 				end
-				seen[panel.Hotkey] = true
 			end
-		end
-		return true
-	end)())
+			return Constants.HOTKEY_NAMES[Menu.CollapseHotkey] == true
+		end)()
+	)
+
+	check("the collapse key is BackSlash, with the capital S", Menu.CollapseHotkey == "BackSlash")
+
+	check(
+		"a misspelled hotkey fails validation",
+		(function()
+			local broken =
+				{ Panels = {}, Destinations = Menu.Destinations, CollapseHotkey = "Backslash" }
+			for _, panel in Menu.Panels do
+				table.insert(broken.Panels, panel)
+			end
+			local ok = Schema.validateHubMenu(broken, GameConfig)
+			return not ok
+		end)()
+	)
+
+	check(
+		"no two panels share a hotkey",
+		(function()
+			local seen = {}
+			for _, panel in Menu.Panels do
+				if panel.Hotkey then
+					if seen[panel.Hotkey] then
+						return false
+					end
+					seen[panel.Hotkey] = true
+				end
+			end
+			return true
+		end)()
+	)
 
 	-- The rail is the thing the owner asked not to be overwhelming. A hard
 	-- cap turns "do not add a tenth button" from taste into a failing build.
-	check("the rail stays short enough to read at a glance", #panels <= 8,
-		string.format("%d panels", #panels))
+	check(
+		"the rail stays short enough to read at a glance",
+		#panels <= 8,
+		string.format("%d panels", #panels)
+	)
 
-	check("sorting the result cannot reorder the content table", (function()
-		local first = Menu.Panels[1].Id
-		local copy = HubMenuCore.panels(Menu)
-		table.sort(copy, function(a, b) return a.Order > b.Order end)
-		return Menu.Panels[1].Id == first
-	end)())
+	check(
+		"sorting the result cannot reorder the content table",
+		(function()
+			local first = Menu.Panels[1].Id
+			local copy = HubMenuCore.panels(Menu)
+			table.sort(copy, function(a, b)
+				return a.Order > b.Order
+			end)
+			return Menu.Panels[1].Id == first
+		end)()
+	)
 
 	-- === travel =====================================================
 	local destinations = HubMenuCore.destinations(Menu)
-	check("there are five destinations -- the Engine and the four districts",
-		#destinations == 5, string.format("%d", #destinations))
+	check(
+		"there are five destinations -- the Engine and the four districts",
+		#destinations == 5,
+		string.format("%d", #destinations)
+	)
 
-	check("every destination names a real hub anchor", (function()
-		for _, destination in destinations do
-			if GameConfig.HubLayout.Anchors[destination.AnchorId] == nil then
-				return false
+	check(
+		"every destination names a real hub anchor",
+		(function()
+			for _, destination in destinations do
+				if GameConfig.HubLayout.Anchors[destination.AnchorId] == nil then
+					return false
+				end
 			end
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 
-	check("every district in Content/Hub/Crossroads is reachable", (function()
-		for _, district in Crossroads.Districts do
-			if not HubMenuCore.destinationById(Menu, district.Id) then
-				return false
+	check(
+		"every district in Content/Hub/Crossroads is reachable",
+		(function()
+			for _, district in Crossroads.Districts do
+				if not HubMenuCore.destinationById(Menu, district.Id) then
+					return false
+				end
 			end
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 
-	check("landing points are offsets from the anchor, not absolute positions", (function()
-		for _, destination in destinations do
-			local point = HubMenuCore.landingPoint(destination)
-			local expected = destination.Anchor + destination.Landing
-			if point.X ~= expected.X or point.Y ~= expected.Y or point.Z ~= expected.Z then
-				return false
+	check(
+		"landing points are offsets from the anchor, not absolute positions",
+		(function()
+			for _, destination in destinations do
+				local point = HubMenuCore.landingPoint(destination)
+				local expected = destination.Anchor + destination.Landing
+				if point.X ~= expected.X or point.Y ~= expected.Y or point.Z ~= expected.Z then
+					return false
+				end
 			end
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 
 	-- A landing must not be so far from its anchor that the district it
 	-- names is not the district you arrive in. Platforms run to 320 studs
 	-- across, so half of that is the widest a landing can honestly be.
-	check("a landing stays on the platform it names", (function()
-		for _, destination in destinations do
-			local landing = destination.Landing
-			if math.sqrt(landing.X ^ 2 + landing.Z ^ 2) > 160 then
-				return false
+	check(
+		"a landing stays on the platform it names",
+		(function()
+			for _, destination in destinations do
+				local landing = destination.Landing
+				if math.sqrt(landing.X ^ 2 + landing.Z ^ 2) > 160 then
+					return false
+				end
 			end
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 
-	check("the Fate Engine's landing clears its dais", (function()
-		local engine = HubMenuCore.destinationById(Menu, "FATE_ENGINE")
-		local distance = math.sqrt(engine.Landing.X ^ 2 + engine.Landing.Z ^ 2)
-		-- The authored Platform is ~47 studs across, so anything inside ~24
-		-- would stand the player inside the dais geometry.
-		return distance > 24
-	end)())
+	check(
+		"the Fate Engine's landing clears its dais",
+		(function()
+			local engine = HubMenuCore.destinationById(Menu, "FATE_ENGINE")
+			local distance = math.sqrt(engine.Landing.X ^ 2 + engine.Landing.Z ^ 2)
+			-- The authored Platform is ~47 studs across, so anything inside ~24
+			-- would stand the player inside the dais geometry.
+			return distance > 24
+		end)()
+	)
 
-	check("nobody arrives below the hub floor", (function()
-		for _, destination in destinations do
-			if destination.Landing.Y <= 0 then
-				return false
+	check(
+		"nobody arrives below the hub floor",
+		(function()
+			for _, destination in destinations do
+				if destination.Landing.Y <= 0 then
+					return false
+				end
 			end
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 
 	-- SPAWNING OUT OF EVERY PROMPT'S REACH. Owner-directed: a player was
 	-- offered ROLL before they had pressed PLAY. The spawn ring and the
 	-- prompt reach must not drift back together, because the gap between
 	-- them is where a first-join tutorial lives.
-	check("nobody spawns inside the Fate Engine's prompt", (function()
-		local spawn = GameConfig.HubLayout.SpawnRing.Radius
-		return spawn > GameConfig.UI.PromptActivationDistance
-	end)(), string.format("spawn %.0f, prompt reach %.0f",
-		GameConfig.HubLayout.SpawnRing.Radius, GameConfig.UI.PromptActivationDistance))
+	check(
+		"nobody spawns inside the Fate Engine's prompt",
+		(function()
+			local spawn = GameConfig.HubLayout.SpawnRing.Radius
+			return spawn > GameConfig.UI.PromptActivationDistance
+		end)(),
+		string.format(
+			"spawn %.0f, prompt reach %.0f",
+			GameConfig.HubLayout.SpawnRing.Radius,
+			GameConfig.UI.PromptActivationDistance
+		)
+	)
 
-	check("...nor inside the distance a roll is allowed from",
+	check(
+		"...nor inside the distance a roll is allowed from",
 		GameConfig.HubLayout.SpawnRing.Radius > GameConfig.Fate.MaxRollDistance,
-		string.format("spawn %.0f, roll reach %.0f",
-			GameConfig.HubLayout.SpawnRing.Radius, GameConfig.Fate.MaxRollDistance))
+		string.format(
+			"spawn %.0f, roll reach %.0f",
+			GameConfig.HubLayout.SpawnRing.Radius,
+			GameConfig.Fate.MaxRollDistance
+		)
+	)
 
 	-- ...but still on the plaza, looking at the Engine, rather than out among
 	-- the districts.
-	check("...and still well inside the districts",
+	check(
+		"...and still well inside the districts",
 		GameConfig.HubLayout.SpawnRing.Radius < GameConfig.HubLayout.ZoneRingRadius,
-		string.format("spawn %.0f, districts %.0f",
-			GameConfig.HubLayout.SpawnRing.Radius, GameConfig.HubLayout.ZoneRingRadius))
+		string.format(
+			"spawn %.0f, districts %.0f",
+			GameConfig.HubLayout.SpawnRing.Radius,
+			GameConfig.HubLayout.ZoneRingRadius
+		)
+	)
 
 	-- ENTRY ON THE ENGINE. The portal is enterable from the dais while the
 	-- staircase is still unmodelled, so two prompts now share one platform.
-	check("the entry prompt does not fight the roll prompt for E", (function()
-		local key = GameConfig.Expedition.EntryPromptKey
-		-- A ProximityPrompt defaults to E, which is what ROLL uses, so the
-		-- entry key must be something else -- and something Roblox has.
-		return Constants.HOTKEY_NAMES[key] == true and key ~= "E"
-	end)(), tostring(GameConfig.Expedition.EntryPromptKey))
+	check(
+		"the entry prompt does not fight the roll prompt for E",
+		(function()
+			local key = GameConfig.Expedition.EntryPromptKey
+			-- A ProximityPrompt defaults to E, which is what ROLL uses, so the
+			-- entry key must be something else -- and something Roblox has.
+			return Constants.HOTKEY_NAMES[key] == true and key ~= "E"
+		end)(),
+		tostring(GameConfig.Expedition.EntryPromptKey)
+	)
 
-	check("the entry prompt floats clear of the roll prompt",
-		Crossroads.FateEngine.EntryPromptLift > 0)
+	check(
+		"the entry prompt floats clear of the roll prompt",
+		Crossroads.FateEngine.EntryPromptLift > 0
+	)
 
 	-- ...and both still have to be reachable from the dais they stand on.
 	-- A prompt lifted out of its own range is the bug the Expedition Gate
 	-- shipped with once already.
-	check("both prompts stay inside their own reach from the dais", (function()
-		local engine = Crossroads.FateEngine
-		local top = engine.AnchorHeight + engine.EntryPromptLift
-		return top < GameConfig.UI.PromptActivationDistance
-	end)(), string.format("entry prompt %.1f up, reach %.1f",
-		Crossroads.FateEngine.AnchorHeight + Crossroads.FateEngine.EntryPromptLift,
-		GameConfig.UI.PromptActivationDistance))
+	check(
+		"both prompts stay inside their own reach from the dais",
+		(function()
+			local engine = Crossroads.FateEngine
+			local top = engine.AnchorHeight + engine.EntryPromptLift
+			return top < GameConfig.UI.PromptActivationDistance
+		end)(),
+		string.format(
+			"entry prompt %.1f up, reach %.1f",
+			Crossroads.FateEngine.AnchorHeight + Crossroads.FateEngine.EntryPromptLift,
+			GameConfig.UI.PromptActivationDistance
+		)
+	)
 
 	-- === the visibility rule ========================================
 	check("the menu is visible in the hub", HubMenuCore.isVisible(nil, GameConfig))
-	check("the menu is NOT visible on an expedition",
-		not HubMenuCore.isVisible({ WorldId = "ETHEREAL_SCAPE" }, GameConfig))
-	check("one config flag turns the whole menu off",
-		not HubMenuCore.isVisible(nil, cfg({ HubMenu = { Enabled = false } })))
+	check(
+		"the menu is NOT visible on an expedition",
+		not HubMenuCore.isVisible({ WorldId = "ETHEREAL_SCAPE" }, GameConfig)
+	)
+	check(
+		"one config flag turns the whole menu off",
+		not HubMenuCore.isVisible(nil, cfg({ HubMenu = { Enabled = false } }))
+	)
 
 	-- === the reducer ================================================
 	local state = HubMenuCore.newState(GameConfig, false)
 	check("a desktop rail starts open", state.Collapsed == false)
-	check("a touch rail starts collapsed",
-		HubMenuCore.newState(GameConfig, true).Collapsed == GameConfig.HubMenu.StartCollapsedOnTouch)
+	check(
+		"a touch rail starts collapsed",
+		HubMenuCore.newState(GameConfig, true).Collapsed == GameConfig.HubMenu.StartCollapsedOnTouch
+	)
 
 	state = HubMenuCore.reduce(state, { Kind = "TOGGLE_PANEL", PanelId = "TRAVEL" }, GameConfig)
 	check("toggling a panel opens it", state.OpenPanelId == "TRAVEL")
@@ -3615,22 +4798,29 @@ do
 
 	state = HubMenuCore.reduce(state, { Kind = "OPEN_PANEL", PanelId = "CODES" }, GameConfig)
 	state = HubMenuCore.reduce(state, { Kind = "TOGGLE_COLLAPSE" }, GameConfig)
-	check("collapsing the rail takes the panel with it",
-		state.Collapsed and state.OpenPanelId == nil)
+	check(
+		"collapsing the rail takes the panel with it",
+		state.Collapsed and state.OpenPanelId == nil
+	)
 
 	state = HubMenuCore.reduce(state, { Kind = "TOGGLE_COLLAPSE" }, GameConfig)
 	check("expanding again does not restore the panel", state.OpenPanelId == nil)
 
 	state = HubMenuCore.reduce(state, { Kind = "OPEN_PANEL", PanelId = "TRAVEL" }, GameConfig)
 	state = HubMenuCore.reduce(state, { Kind = "SET_VISIBLE", Visible = false }, GameConfig)
-	check("leaving the hub closes whatever was open",
-		state.Visible == false and state.OpenPanelId == nil)
+	check(
+		"leaving the hub closes whatever was open",
+		state.Visible == false and state.OpenPanelId == nil
+	)
 
-	check("the reducer never mutates the state it was given", (function()
-		local before = HubMenuCore.newState(GameConfig, false)
-		HubMenuCore.reduce(before, { Kind = "OPEN_PANEL", PanelId = "SHOP" }, GameConfig)
-		return before.OpenPanelId == nil
-	end)())
+	check(
+		"the reducer never mutates the state it was given",
+		(function()
+			local before = HubMenuCore.newState(GameConfig, false)
+			HubMenuCore.reduce(before, { Kind = "OPEN_PANEL", PanelId = "SHOP" }, GameConfig)
+			return before.OpenPanelId == nil
+		end)()
+	)
 
 	-- === travel authorisation =======================================
 	local function request(overrides)
@@ -3639,53 +4829,77 @@ do
 			OnExpedition = false,
 			Rolling = false,
 		}
-		for k, v in overrides or {} do r[k] = v end
+		for k, v in overrides or {} do
+			r[k] = v
+		end
 		return r
 	end
 
 	check("a plain request is allowed", HubMenuCore.canTravel(Menu, request(), GameConfig).ok)
 
-	check("a fabricated destination is refused by name", (function()
-		local result = HubMenuCore.canTravel(Menu, request({ DestinationId = "MOON" }), GameConfig)
-		return not result.ok and result.err == "Unknown destination."
-	end)())
+	check(
+		"a fabricated destination is refused by name",
+		(function()
+			local result =
+				HubMenuCore.canTravel(Menu, request({ DestinationId = "MOON" }), GameConfig)
+			return not result.ok and result.err == "Unknown destination."
+		end)()
+	)
 
-	check("a non-string destination is refused rather than resolved", (function()
-		return not HubMenuCore.canTravel(Menu, request({ DestinationId = 5 }), GameConfig).ok
-	end)())
+	check(
+		"a non-string destination is refused rather than resolved",
+		(function()
+			return not HubMenuCore.canTravel(Menu, request({ DestinationId = 5 }), GameConfig).ok
+		end)()
+	)
 
-	check("travel is refused on an expedition",
-		not HubMenuCore.canTravel(Menu, request({ OnExpedition = true }), GameConfig).ok)
+	check(
+		"travel is refused on an expedition",
+		not HubMenuCore.canTravel(Menu, request({ OnExpedition = true }), GameConfig).ok
+	)
 
-	check("travel is refused mid-roll",
-		not HubMenuCore.canTravel(Menu, request({ Rolling = true }), GameConfig).ok)
+	check(
+		"travel is refused mid-roll",
+		not HubMenuCore.canTravel(Menu, request({ Rolling = true }), GameConfig).ok
+	)
 
 	-- NO COOLDOWN, owner-directed. Travelling twice in a row is allowed, and
 	-- the config must not grow a cooldown field by the back door -- a version
 	-- of this that only removed the CHECK would leave the next session to
 	-- find the number and wire it back up.
-	check("travelling twice in a row is allowed",
+	check(
+		"travelling twice in a row is allowed",
 		HubMenuCore.canTravel(Menu, request(), GameConfig).ok
-			and HubMenuCore.canTravel(Menu, request(), GameConfig).ok)
+			and HubMenuCore.canTravel(Menu, request(), GameConfig).ok
+	)
 
-	check("no travel cooldown exists to be checked",
+	check(
+		"no travel cooldown exists to be checked",
 		GameConfig.HubMenu.TeleportCooldownSeconds == nil
-			and HubMenuCore.travelCooldownRemaining == nil)
+			and HubMenuCore.travelCooldownRemaining == nil
+	)
 
 	-- The rate limit is a spam guard, not a cooldown wearing another name: a
 	-- player pressing the button as fast as they can must never meet it.
-	check("the rate limit is far above what a human can press",
+	check(
+		"the rate limit is far above what a human can press",
 		GameConfig.HubMenu.TeleportRequestsPerMinute >= 30,
-		string.format("%d/min", GameConfig.HubMenu.TeleportRequestsPerMinute))
+		string.format("%d/min", GameConfig.HubMenu.TeleportRequestsPerMinute)
+	)
 
 	-- The fade covers the swap, so the player never sees the world change --
 	-- and it is now the ONLY thing between pressing TRAVEL and arriving, so
 	-- it has a ceiling as well as a floor.
 	local timing = HubMenuCore.travelTiming(GameConfig)
-	check("the travel fade is long enough to hide the swap",
-		timing.FadeOut > 0 and timing.Total > timing.FadeOut)
-	check("...and short enough to read as instant",
-		timing.Total <= 0.75, string.format("%.2fs", timing.Total))
+	check(
+		"the travel fade is long enough to hide the swap",
+		timing.FadeOut > 0 and timing.Total > timing.FadeOut
+	)
+	check(
+		"...and short enough to read as instant",
+		timing.Total <= 0.75,
+		string.format("%.2fs", timing.Total)
+	)
 end
 
 -- === the loading screen's shots =====================================
@@ -3700,50 +4914,66 @@ do
 	-- A shot of a biome would be a shot of empty sky: expedition maps are
 	-- built 20000 studs up and only while somebody is inside one. Until
 	-- expeditions move to their own place, every shot must be a hub shot.
-	check("every shot frames geometry that exists while loading", (function()
-		for _, shot in Cinematics.Shots do
-			if shot.WorldId ~= nil then
-				return false
+	check(
+		"every shot frames geometry that exists while loading",
+		(function()
+			for _, shot in Cinematics.Shots do
+				if shot.WorldId ~= nil then
+					return false
+				end
 			end
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 
 	-- THE SHOTS ARE DISTANCES, SO THEY SCALE WITH THE WORLD. When they did
 	-- not, the cameras stayed put while the hub halved underneath them and
 	-- the loading screen framed empty sky with something small in the middle
 	-- -- reported as "the background is not working".
-	check("every shot frames the hub rather than empty sky", (function()
-		local hub = GameConfig.HubLayout.HubDiameter
-		for _, shot in Cinematics.Shots do
-			-- Closer than four hub-widths (so the hub fills something of the
-			-- frame) and further than a tenth of one (so it is not inside a
-			-- building).
-			if shot.Radius > hub * 4 or shot.Radius < hub * 0.1 then
-				return false
+	check(
+		"every shot frames the hub rather than empty sky",
+		(function()
+			local hub = GameConfig.HubLayout.HubDiameter
+			for _, shot in Cinematics.Shots do
+				-- Closer than four hub-widths (so the hub fills something of the
+				-- frame) and further than a tenth of one (so it is not inside a
+				-- building).
+				if shot.Radius > hub * 4 or shot.Radius < hub * 0.1 then
+					return false
+				end
 			end
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 
-	check("no shot puts the camera inside its own subject", (function()
-		for _, shot in Cinematics.Shots do
-			if shot.Radius <= 0 or shot.Height <= 0 then
-				return false
+	check(
+		"no shot puts the camera inside its own subject",
+		(function()
+			for _, shot in Cinematics.Shots do
+				if shot.Radius <= 0 or shot.Height <= 0 then
+					return false
+				end
 			end
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 
 	-- The tour must outlast the minimum hold, or a player on a warm client
 	-- sees the first shot cut mid-move on the way to the Play button.
-	check("one shot outlasts the minimum hold",
+	check(
+		"one shot outlasts the minimum hold",
 		GameConfig.Loading.ShotSeconds >= GameConfig.Loading.MinimumSeconds,
-		string.format("shot %.1fs, hold %.1fs",
-			GameConfig.Loading.ShotSeconds, GameConfig.Loading.MinimumSeconds))
+		string.format(
+			"shot %.1fs, hold %.1fs",
+			GameConfig.Loading.ShotSeconds,
+			GameConfig.Loading.MinimumSeconds
+		)
+	)
 
-	check("the screen can never trap a player",
-		GameConfig.Loading.MaximumSeconds > GameConfig.Loading.MinimumSeconds)
+	check(
+		"the screen can never trap a player",
+		GameConfig.Loading.MaximumSeconds > GameConfig.Loading.MinimumSeconds
+	)
 
 	-- THE BUG THIS REPLACED. The screen waited for a fixed instance count --
 	-- 380, guessed -- against a hub that builds 357. The bar could only ever
@@ -3751,30 +4981,45 @@ do
 	-- told loading had "taken longer than usual". Waiting for replication to
 	-- SETTLE needs no number and survives the art changing, and these assert
 	-- the floor stays a floor rather than creeping back into a target.
-	check("there is no fixed instance target to get wrong",
-		GameConfig.Loading.RequiredHubInstances == nil)
+	check(
+		"there is no fixed instance target to get wrong",
+		GameConfig.Loading.RequiredHubInstances == nil
+	)
 
-	check("the instance floor is far below any hub the game would ship",
+	check(
+		"the instance floor is far below any hub the game would ship",
 		GameConfig.Loading.MinimumHubInstances <= 200,
-		string.format("%d", GameConfig.Loading.MinimumHubInstances))
+		string.format("%d", GameConfig.Loading.MinimumHubInstances)
+	)
 
-	check("the settle window is longer than the poll that measures it",
+	check(
+		"the settle window is longer than the poll that measures it",
 		GameConfig.Loading.HubSettleSeconds > GameConfig.Loading.HubPollSeconds,
-		string.format("settle %.2fs, poll %.2fs",
-			GameConfig.Loading.HubSettleSeconds, GameConfig.Loading.HubPollSeconds))
+		string.format(
+			"settle %.2fs, poll %.2fs",
+			GameConfig.Loading.HubSettleSeconds,
+			GameConfig.Loading.HubPollSeconds
+		)
+	)
 
 	-- The timeout has to leave room for the settle to happen at all, or the
 	-- screen would time out before it could ever succeed.
-	check("the timeout allows for a minimum wait plus a settle",
+	check(
+		"the timeout allows for a minimum wait plus a settle",
 		GameConfig.Loading.MaximumSeconds
-			> GameConfig.Loading.MinimumSeconds + GameConfig.Loading.HubSettleSeconds)
+			> GameConfig.Loading.MinimumSeconds + GameConfig.Loading.HubSettleSeconds
+	)
 
 	-- Reported from Studio as "the camera locks in place". At 26 degrees over
 	-- nine seconds it moved about three degrees a second.
-	check("a shot moves fast enough to be seen moving",
+	check(
+		"a shot moves fast enough to be seen moving",
 		GameConfig.Loading.ShotArcDegrees / GameConfig.Loading.ShotSeconds >= 4,
-		string.format("%.1f deg/s",
-			GameConfig.Loading.ShotArcDegrees / GameConfig.Loading.ShotSeconds))
+		string.format(
+			"%.1f deg/s",
+			GameConfig.Loading.ShotArcDegrees / GameConfig.Loading.ShotSeconds
+		)
+	)
 end
 
 -- === codes ==========================================================
@@ -3785,74 +5030,108 @@ do
 	check("the shipped code list validates", ok, table.concat(errors, "; "))
 
 	check("case does not matter", CodeCore.normalise("LuckBound") == "LUCKBOUND")
-	check("spaces and punctuation do not matter",
-		CodeCore.normalise(" luck-bound ") == "LUCKBOUND")
+	check("spaces and punctuation do not matter", CodeCore.normalise(" luck-bound ") == "LUCKBOUND")
 	check("a non-string normalises to empty", CodeCore.normalise(nil) == "")
 
 	local function freshProfile()
 		return ProfileSchema.default(1700000000)
 	end
 
-	check("a valid code is accepted", CodeCore.redeem(Codes, freshProfile(), "luckbound", 1700000000, GameConfig).ok)
+	check(
+		"a valid code is accepted",
+		CodeCore.redeem(Codes, freshProfile(), "luckbound", 1700000000, GameConfig).ok
+	)
 
-	check("the reward comes from content, never from the caller", (function()
-		local result = CodeCore.redeem(Codes, freshProfile(), "LUCKBOUND", 1700000000, GameConfig)
-		return result.ok and result.value.Fate == Codes.LAUNCH.Fate
-	end)())
+	check(
+		"the reward comes from content, never from the caller",
+		(function()
+			local result =
+				CodeCore.redeem(Codes, freshProfile(), "LUCKBOUND", 1700000000, GameConfig)
+			return result.ok and result.value.Fate == Codes.LAUNCH.Fate
+		end)()
+	)
 
-	check("an unknown code is refused", (function()
-		local result = CodeCore.redeem(Codes, freshProfile(), "NOPE", 1700000000, GameConfig)
-		return not result.ok and result.err == "That code is not valid."
-	end)())
+	check(
+		"an unknown code is refused",
+		(function()
+			local result = CodeCore.redeem(Codes, freshProfile(), "NOPE", 1700000000, GameConfig)
+			return not result.ok and result.err == "That code is not valid."
+		end)()
+	)
 
-	check("an empty code asks for one", (function()
-		local result = CodeCore.redeem(Codes, freshProfile(), "   ", 1700000000, GameConfig)
-		return not result.ok and result.err == "Enter a code."
-	end)())
+	check(
+		"an empty code asks for one",
+		(function()
+			local result = CodeCore.redeem(Codes, freshProfile(), "   ", 1700000000, GameConfig)
+			return not result.ok and result.err == "Enter a code."
+		end)()
+	)
 
 	-- The cap is checked on the RAW string, so a megabyte of punctuation is
 	-- refused before it is normalised rather than after.
-	check("an oversized code is refused before it is processed", (function()
-		local huge = string.rep("!", GameConfig.Codes.MaxLength + 1)
-		return not CodeCore.redeem(Codes, freshProfile(), huge, 1700000000, GameConfig).ok
-	end)())
+	check(
+		"an oversized code is refused before it is processed",
+		(function()
+			local huge = string.rep("!", GameConfig.Codes.MaxLength + 1)
+			return not CodeCore.redeem(Codes, freshProfile(), huge, 1700000000, GameConfig).ok
+		end)()
+	)
 
-	check("the same code cannot be redeemed twice", (function()
-		local profile = freshProfile()
-		local first = CodeCore.redeem(Codes, profile, "LUCKBOUND", 1700000000, GameConfig)
-		CodeCore.record(profile, first.value.Id, 1700000000)
-		local second = CodeCore.redeem(Codes, profile, "luck bound", 1700000000, GameConfig)
-		return not second.ok and second.err == "You have already redeemed that code."
-	end)())
+	check(
+		"the same code cannot be redeemed twice",
+		(function()
+			local profile = freshProfile()
+			local first = CodeCore.redeem(Codes, profile, "LUCKBOUND", 1700000000, GameConfig)
+			CodeCore.record(profile, first.value.Id, 1700000000)
+			local second = CodeCore.redeem(Codes, profile, "luck bound", 1700000000, GameConfig)
+			return not second.ok and second.err == "You have already redeemed that code."
+		end)()
+	)
 
-	check("deciding does not write", (function()
-		local profile = freshProfile()
-		CodeCore.redeem(Codes, profile, "LUCKBOUND", 1700000000, GameConfig)
-		return next(profile.RedeemedCodes) == nil
-	end)())
+	check(
+		"deciding does not write",
+		(function()
+			local profile = freshProfile()
+			CodeCore.redeem(Codes, profile, "LUCKBOUND", 1700000000, GameConfig)
+			return next(profile.RedeemedCodes) == nil
+		end)()
+	)
 
-	check("an expired code says so rather than 'not valid'", (function()
-		local expired = {
-			OLD = { Id = "OLD", Code = "OLDCODE", Fate = 10, Message = "hi", ExpiresAt = 100 },
-		}
-		local result = CodeCore.redeem(expired, freshProfile(), "OLDCODE", 200, GameConfig)
-		return not result.ok and result.err == "That code has expired."
-	end)())
+	check(
+		"an expired code says so rather than 'not valid'",
+		(function()
+			local expired = {
+				OLD = { Id = "OLD", Code = "OLDCODE", Fate = 10, Message = "hi", ExpiresAt = 100 },
+			}
+			local result = CodeCore.redeem(expired, freshProfile(), "OLDCODE", 200, GameConfig)
+			return not result.ok and result.err == "That code has expired."
+		end)()
+	)
 
-	check("codes can be closed with one flag",
-		not CodeCore.redeem(Codes, freshProfile(), "LUCKBOUND", 1700000000,
-			cfg({ Codes = { Enabled = false } })).ok)
+	check(
+		"codes can be closed with one flag",
+		not CodeCore.redeem(
+			Codes,
+			freshProfile(),
+			"LUCKBOUND",
+			1700000000,
+			cfg({ Codes = { Enabled = false } })
+		).ok
+	)
 
-	check("a code grants Fate through the same maths as any other award", (function()
-		local profile = freshProfile()
-		local points, level = ProgressionCore.grant(profile, Codes.TESTER.Fate, GameConfig)
-		return points == Codes.TESTER.Fate and level == ProgressionCore.levelForPoints(points, GameConfig)
-	end)())
+	check(
+		"a code grants Fate through the same maths as any other award",
+		(function()
+			local profile = freshProfile()
+			local points, level = ProgressionCore.grant(profile, Codes.TESTER.Fate, GameConfig)
+			return points == Codes.TESTER.Fate
+				and level == ProgressionCore.levelForPoints(points, GameConfig)
+		end)()
+	)
 
-	check("a negative grant is a programmer error, not a refund",
-		(throws(function()
-			ProgressionCore.grant(freshProfile(), -50, GameConfig)
-		end)))
+	check("a negative grant is a programmer error, not a refund", (throws(function()
+		ProgressionCore.grant(freshProfile(), -50, GameConfig)
+	end)))
 end
 
 -- === settings =======================================================
@@ -3860,24 +5139,29 @@ do
 	group("Player settings")
 
 	local defaults = SettingsCore.defaults()
-	check("every setting in the spec has a default", (function()
-		for _, entry in SettingsCore.SPEC do
-			if defaults[entry.Id] == nil then
-				return false
+	check(
+		"every setting in the spec has a default",
+		(function()
+			for _, entry in SettingsCore.SPEC do
+				if defaults[entry.Id] == nil then
+					return false
+				end
 			end
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 
-	check("a number setting clamps rather than refusing",
-		SettingsCore.validate("MusicVolume", 5).value == 1)
+	check(
+		"a number setting clamps rather than refusing",
+		SettingsCore.validate("MusicVolume", 5).value == 1
+	)
 	check("...at both ends", SettingsCore.validate("MusicVolume", -3).value == 0)
-	check("NaN falls back to the default rather than being stored",
-		SettingsCore.validate("MusicVolume", 0 / 0).value == 0.6)
-	check("a boolean setting refuses a number",
-		not SettingsCore.validate("ReduceMotion", 1).ok)
-	check("an unknown setting is refused",
-		not SettingsCore.validate("GodMode", true).ok)
+	check(
+		"NaN falls back to the default rather than being stored",
+		SettingsCore.validate("MusicVolume", 0 / 0).value == 0.6
+	)
+	check("a boolean setting refuses a number", not SettingsCore.validate("ReduceMotion", 1).ok)
+	check("an unknown setting is refused", not SettingsCore.validate("GodMode", true).ok)
 	check("a non-string id is refused", not SettingsCore.validate(7, true).ok)
 
 	local sanitised = SettingsCore.sanitise({
@@ -3887,29 +5171,37 @@ do
 	})
 	check("sanitising clamps what it can", sanitised.MusicVolume == 1)
 	check("sanitising drops what it cannot", sanitised.GodMode == nil)
-	check("sanitising replaces a bad value with its default",
-		sanitised.ReduceMotion == false)
-	check("sanitising fills in everything missing", (function()
-		for _, entry in SettingsCore.SPEC do
-			if sanitised[entry.Id] == nil then
-				return false
+	check("sanitising replaces a bad value with its default", sanitised.ReduceMotion == false)
+	check(
+		"sanitising fills in everything missing",
+		(function()
+			for _, entry in SettingsCore.SPEC do
+				if sanitised[entry.Id] == nil then
+					return false
+				end
 			end
-		end
-		return true
-	end)())
-	check("anything at all can be sanitised", (function()
-		return SettingsCore.sanitise("nonsense").MusicVolume == 0.6
-	end)())
+			return true
+		end)()
+	)
+	check(
+		"anything at all can be sanitised",
+		(function()
+			return SettingsCore.sanitise("nonsense").MusicVolume == 0.6
+		end)()
+	)
 
-	check("a new profile carries valid settings", (function()
-		local profile = ProfileSchema.default(1700000000)
-		for _, entry in SettingsCore.SPEC do
-			if profile.Settings[entry.Id] == nil then
-				return false
+	check(
+		"a new profile carries valid settings",
+		(function()
+			local profile = ProfileSchema.default(1700000000)
+			for _, entry in SettingsCore.SPEC do
+				if profile.Settings[entry.Id] == nil then
+					return false
+				end
 			end
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 end
 
 -- === movement =======================================================
@@ -3936,181 +5228,274 @@ do
 		return s, elapsed
 	end
 
-	check("a fresh state starts with full stamina",
-		LocomotionCore.staminaFraction(state(), GameConfig) == 1)
+	check(
+		"a fresh state starts with full stamina",
+		LocomotionCore.staminaFraction(state(), GameConfig) == 1
+	)
 
-	check("sprinting is faster than walking", (function()
-		local s = sprintFor(0.5)
-		return LocomotionCore.targetSpeed(s, GameConfig) > GameConfig.Scale.WalkSpeed
-	end)())
+	check(
+		"sprinting is faster than walking",
+		(function()
+			local s = sprintFor(0.5)
+			return LocomotionCore.targetSpeed(s, GameConfig) > GameConfig.Scale.WalkSpeed
+		end)()
+	)
 
 	-- Sprint is a multiplier on the hub's traversal budget, never a second
 	-- speed to keep in step with it.
-	check("sprint speed is derived from the hub's walk speed", (function()
-		local s = sprintFor(0.5)
-		return LocomotionCore.targetSpeed(s, GameConfig)
-			== GameConfig.Scale.WalkSpeed * GameConfig.Locomotion.SprintMultiplier
-	end)())
+	check(
+		"sprint speed is derived from the hub's walk speed",
+		(function()
+			local s = sprintFor(0.5)
+			return LocomotionCore.targetSpeed(s, GameConfig)
+				== GameConfig.Scale.WalkSpeed * GameConfig.Locomotion.SprintMultiplier
+		end)()
+	)
 
-	check("holding sprint while stood still costs nothing", (function()
-		local s = LocomotionCore.step(state(), 1, {
-			WantsSprint = true,
-			Moving = false,
-			Grounded = true,
-			Now = 0,
-		}, GameConfig)
-		return s.Stamina == GameConfig.Locomotion.StaminaMax and not s.Sprinting
-	end)())
-
-	check("stamina drains while sprinting", (function()
-		local s = sprintFor(2)
-		return s.Stamina < GameConfig.Locomotion.StaminaMax
-	end)())
-
-	local drained = sprintFor(GameConfig.Locomotion.StaminaMax / GameConfig.Locomotion.StaminaDrainPerSecond + 0.5)
-	check("a sprint ends when stamina runs out",
-		drained.Stamina == 0 and not drained.Sprinting)
-
-	check("you cannot restart a sprint the instant you run dry",
-		not LocomotionCore.canStartSprint(drained, drained.RegenBlockedUntil - 0.1, GameConfig))
-
-	check("stamina refills once the delay has passed", (function()
-		local s = drained
-		local now = s.RegenBlockedUntil + 0.001
-		for _ = 1, 60 do
-			s = LocomotionCore.step(s, 1 / 60, {
-				WantsSprint = false,
-				Moving = true,
+	check(
+		"holding sprint while stood still costs nothing",
+		(function()
+			local s = LocomotionCore.step(state(), 1, {
+				WantsSprint = true,
+				Moving = false,
 				Grounded = true,
-				Now = now,
+				Now = 0,
 			}, GameConfig)
-			now += 1 / 60
-		end
-		return s.Stamina > 0
-	end)())
+			return s.Stamina == GameConfig.Locomotion.StaminaMax and not s.Sprinting
+		end)()
+	)
 
-	check("stamina never exceeds its maximum", (function()
-		local s = state()
-		for i = 1, 600 do
-			s = LocomotionCore.step(s, 1 / 60, {
-				WantsSprint = false,
-				Moving = true,
-				Grounded = true,
-				Now = i / 60,
-			}, GameConfig)
-		end
-		return s.Stamina == GameConfig.Locomotion.StaminaMax
-	end)())
+	check(
+		"stamina drains while sprinting",
+		(function()
+			local s = sprintFor(2)
+			return s.Stamina < GameConfig.Locomotion.StaminaMax
+		end)()
+	)
 
-	check("a full drain takes the number of seconds the config says it does", (function()
-		local seconds = GameConfig.Locomotion.StaminaMax / GameConfig.Locomotion.StaminaDrainPerSecond
-		-- 8 seconds of sprint. Long enough to cross a district, short enough
-		-- that it is a decision.
-		return seconds >= 5 and seconds <= 12
-	end)())
+	local drained = sprintFor(
+		GameConfig.Locomotion.StaminaMax / GameConfig.Locomotion.StaminaDrainPerSecond + 0.5
+	)
+	check("a sprint ends when stamina runs out", drained.Stamina == 0 and not drained.Sprinting)
+
+	check(
+		"you cannot restart a sprint the instant you run dry",
+		not LocomotionCore.canStartSprint(drained, drained.RegenBlockedUntil - 0.1, GameConfig)
+	)
+
+	check(
+		"stamina refills once the delay has passed",
+		(function()
+			local s = drained
+			local now = s.RegenBlockedUntil + 0.001
+			for _ = 1, 60 do
+				s = LocomotionCore.step(s, 1 / 60, {
+					WantsSprint = false,
+					Moving = true,
+					Grounded = true,
+					Now = now,
+				}, GameConfig)
+				now += 1 / 60
+			end
+			return s.Stamina > 0
+		end)()
+	)
+
+	check(
+		"stamina never exceeds its maximum",
+		(function()
+			local s = state()
+			for i = 1, 600 do
+				s = LocomotionCore.step(s, 1 / 60, {
+					WantsSprint = false,
+					Moving = true,
+					Grounded = true,
+					Now = i / 60,
+				}, GameConfig)
+			end
+			return s.Stamina == GameConfig.Locomotion.StaminaMax
+		end)()
+	)
+
+	check(
+		"a full drain takes the number of seconds the config says it does",
+		(function()
+			local seconds = GameConfig.Locomotion.StaminaMax
+				/ GameConfig.Locomotion.StaminaDrainPerSecond
+			-- 8 seconds of sprint. Long enough to cross a district, short enough
+			-- that it is a decision.
+			return seconds >= 5 and seconds <= 12
+		end)()
+	)
 
 	-- === jumps ======================================================
-	check("the first jump on the ground is the ground jump",
-		LocomotionCore.jumpKind(state(), 0, GameConfig) == "GROUND")
+	check(
+		"the first jump on the ground is the ground jump",
+		LocomotionCore.jumpKind(state(), 0, GameConfig) == "GROUND"
+	)
 
-	check("the second press in the air is the air jump", (function()
-		local s, kind = LocomotionCore.jump(state(), 0, GameConfig)
-		if kind ~= "GROUND" then return false end
-		s = LocomotionCore.step(s, 1 / 60, {
-			WantsSprint = false, Moving = true, Grounded = false, Now = 0.5,
-		}, GameConfig)
-		local _, second = LocomotionCore.jump(s, 0.5, GameConfig)
-		return second == "AIR"
-	end)())
+	check(
+		"the second press in the air is the air jump",
+		(function()
+			local s, kind = LocomotionCore.jump(state(), 0, GameConfig)
+			if kind ~= "GROUND" then
+				return false
+			end
+			s = LocomotionCore.step(s, 1 / 60, {
+				WantsSprint = false,
+				Moving = true,
+				Grounded = false,
+				Now = 0.5,
+			}, GameConfig)
+			local _, second = LocomotionCore.jump(s, 0.5, GameConfig)
+			return second == "AIR"
+		end)()
+	)
 
-	check("there is no third jump", (function()
-		local s, _ = LocomotionCore.jump(state(), 0, GameConfig)
-		s = LocomotionCore.step(s, 1 / 60, {
-			WantsSprint = false, Moving = true, Grounded = false, Now = 0.5,
-		}, GameConfig)
-		local afterAir = select(1, LocomotionCore.jump(s, 0.5, GameConfig))
-		local _, third = LocomotionCore.jump(afterAir, 1.5, GameConfig)
-		return third == nil
-	end)())
+	check(
+		"there is no third jump",
+		(function()
+			local s, _ = LocomotionCore.jump(state(), 0, GameConfig)
+			s = LocomotionCore.step(s, 1 / 60, {
+				WantsSprint = false,
+				Moving = true,
+				Grounded = false,
+				Now = 0.5,
+			}, GameConfig)
+			local afterAir = select(1, LocomotionCore.jump(s, 0.5, GameConfig))
+			local _, third = LocomotionCore.jump(afterAir, 1.5, GameConfig)
+			return third == nil
+		end)()
+	)
 
-	check("one input frame cannot spend two jumps", (function()
-		local s = state()
-		s = LocomotionCore.step(s, 1 / 60, {
-			WantsSprint = false, Moving = true, Grounded = false, Now = 1,
-		}, GameConfig)
-		-- Already past the coyote window, so the first press is the air jump.
-		s.LastGroundedAt = 0
-		local afterFirst, first = LocomotionCore.jump(s, 1, GameConfig)
-		local _, second = LocomotionCore.jump(afterFirst, 1, GameConfig)
-		return first == "AIR" and second == nil
-	end)())
+	check(
+		"one input frame cannot spend two jumps",
+		(function()
+			local s = state()
+			s = LocomotionCore.step(s, 1 / 60, {
+				WantsSprint = false,
+				Moving = true,
+				Grounded = false,
+				Now = 1,
+			}, GameConfig)
+			-- Already past the coyote window, so the first press is the air jump.
+			s.LastGroundedAt = 0
+			local afterFirst, first = LocomotionCore.jump(s, 1, GameConfig)
+			local _, second = LocomotionCore.jump(afterFirst, 1, GameConfig)
+			return first == "AIR" and second == nil
+		end)()
+	)
 
-	check("landing gives the jumps back", (function()
-		local s = state()
-		s.AirJumpsUsed = GameConfig.Locomotion.AirJumps
-		s.GroundJumpSpent = true
-		s = LocomotionCore.step(s, 1 / 60, {
-			WantsSprint = false, Moving = true, Grounded = true, Now = 2,
-		}, GameConfig)
-		return s.AirJumpsUsed == 0 and s.GroundJumpSpent == false
-	end)())
+	check(
+		"landing gives the jumps back",
+		(function()
+			local s = state()
+			s.AirJumpsUsed = GameConfig.Locomotion.AirJumps
+			s.GroundJumpSpent = true
+			s = LocomotionCore.step(s, 1 / 60, {
+				WantsSprint = false,
+				Moving = true,
+				Grounded = true,
+				Now = 2,
+			}, GameConfig)
+			return s.AirJumpsUsed == 0 and s.GroundJumpSpent == false
+		end)()
+	)
 
 	-- THE COYOTE WINDOW. Walking off a walkway and jumping must spend the
 	-- GROUND jump, not the air jump -- otherwise stepping off an edge
 	-- silently costs the player their double jump.
-	check("stepping off an edge still gets the ground jump", (function()
-		local s = state()
-		s = LocomotionCore.step(s, 1 / 60, {
-			WantsSprint = false, Moving = true, Grounded = false,
-			Now = GameConfig.Locomotion.CoyoteTimeSeconds * 0.5,
-		}, GameConfig)
-		return LocomotionCore.jumpKind(s, GameConfig.Locomotion.CoyoteTimeSeconds * 0.5, GameConfig) == "GROUND"
-	end)())
+	check(
+		"stepping off an edge still gets the ground jump",
+		(function()
+			local s = state()
+			s = LocomotionCore.step(s, 1 / 60, {
+				WantsSprint = false,
+				Moving = true,
+				Grounded = false,
+				Now = GameConfig.Locomotion.CoyoteTimeSeconds * 0.5,
+			}, GameConfig)
+			return LocomotionCore.jumpKind(
+				s,
+				GameConfig.Locomotion.CoyoteTimeSeconds * 0.5,
+				GameConfig
+			) == "GROUND"
+		end)()
+	)
 
-	check("...but only for a moment", (function()
-		local s = state()
-		s = LocomotionCore.step(s, 1 / 60, {
-			WantsSprint = false, Moving = true, Grounded = false,
-			Now = GameConfig.Locomotion.CoyoteTimeSeconds * 3,
-		}, GameConfig)
-		return LocomotionCore.jumpKind(s, GameConfig.Locomotion.CoyoteTimeSeconds * 3, GameConfig) == "AIR"
-	end)())
+	check(
+		"...but only for a moment",
+		(function()
+			local s = state()
+			s = LocomotionCore.step(s, 1 / 60, {
+				WantsSprint = false,
+				Moving = true,
+				Grounded = false,
+				Now = GameConfig.Locomotion.CoyoteTimeSeconds * 3,
+			}, GameConfig)
+			return LocomotionCore.jumpKind(
+				s,
+				GameConfig.Locomotion.CoyoteTimeSeconds * 3,
+				GameConfig
+			) == "AIR"
+		end)()
+	)
 
-	check("the coyote window does not hand out an extra jump", (function()
-		local s = state()
-		s = LocomotionCore.step(s, 1 / 60, {
-			WantsSprint = false, Moving = true, Grounded = false,
-			Now = GameConfig.Locomotion.CoyoteTimeSeconds * 0.5,
-		}, GameConfig)
-		local afterGround = select(1, LocomotionCore.jump(s, GameConfig.Locomotion.CoyoteTimeSeconds * 0.5, GameConfig))
-		local afterAir, kind = LocomotionCore.jump(afterGround, 0.4, GameConfig)
-		local _, third = LocomotionCore.jump(afterAir, 1.0, GameConfig)
-		return kind == "AIR" and third == nil
-	end)())
+	check(
+		"the coyote window does not hand out an extra jump",
+		(function()
+			local s = state()
+			s = LocomotionCore.step(s, 1 / 60, {
+				WantsSprint = false,
+				Moving = true,
+				Grounded = false,
+				Now = GameConfig.Locomotion.CoyoteTimeSeconds * 0.5,
+			}, GameConfig)
+			local afterGround = select(
+				1,
+				LocomotionCore.jump(s, GameConfig.Locomotion.CoyoteTimeSeconds * 0.5, GameConfig)
+			)
+			local afterAir, kind = LocomotionCore.jump(afterGround, 0.4, GameConfig)
+			local _, third = LocomotionCore.jump(afterAir, 1.0, GameConfig)
+			return kind == "AIR" and third == nil
+		end)()
+	)
 
-	check("stepping does not mutate the state it was given", (function()
-		local before = state()
-		LocomotionCore.step(before, 1, {
-			WantsSprint = true, Moving = true, Grounded = true, Now = 0,
-		}, GameConfig)
-		return before.Stamina == GameConfig.Locomotion.StaminaMax
-	end)())
+	check(
+		"stepping does not mutate the state it was given",
+		(function()
+			local before = state()
+			LocomotionCore.step(before, 1, {
+				WantsSprint = true,
+				Moving = true,
+				Grounded = true,
+				Now = 0,
+			}, GameConfig)
+			return before.Stamina == GameConfig.Locomotion.StaminaMax
+		end)()
+	)
 
 	-- PHASE SCOPE, PINNED. Movement abilities may not grow combat numbers:
 	-- a sword carries its own damage, and the day this config has a damage
 	-- field is the day that rule quietly broke.
-	check("no player ability config carries a combat number", (function()
-		for key in GameConfig.Locomotion do
-			local lowered = string.lower(key)
-			if string.find(lowered, "damage") or string.find(lowered, "attack")
-				or string.find(lowered, "crit") or string.find(lowered, "dps") then
-				return false
+	check(
+		"no player ability config carries a combat number",
+		(function()
+			for key in GameConfig.Locomotion do
+				local lowered = string.lower(key)
+				if
+					string.find(lowered, "damage")
+					or string.find(lowered, "attack")
+					or string.find(lowered, "crit")
+					or string.find(lowered, "dps")
+				then
+					return false
+				end
 			end
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 end
-
 
 -- === event scope and precedence =====================================
 do
@@ -4126,87 +5511,125 @@ do
 			StartedAt = 1000,
 			EndsAt = 2000,
 		}
-		for k, v in overrides or {} do e[k] = v end
+		for k, v in overrides or {} do
+			e[k] = v
+		end
 		return e
 	end
 
 	check("no events means no dominant event", EventCore.dominant({}) == nil)
 
-	check("one event owns the sky by default",
-		EventCore.dominant({ event({}) }).Id == "E1")
+	check("one event owns the sky by default", EventCore.dominant({ event({}) }).Id == "E1")
 
 	-- Scope outranks priority on purpose: a game-wide event is by definition
 	-- the biggest news on screen, and a local event with a high number must
 	-- not shout over something happening to every player in the game.
-	check("a global event beats a server event", (function()
-		local winner = EventCore.dominant({
-			event({ Id = "LOCAL", Scope = "SERVER", Priority = 99 }),
-			event({ Id = "WORLDWIDE", Scope = "GLOBAL", Priority = 0 }),
-		})
-		return winner.Id == "WORLDWIDE"
-	end)())
+	check(
+		"a global event beats a server event",
+		(function()
+			local winner = EventCore.dominant({
+				event({ Id = "LOCAL", Scope = "SERVER", Priority = 99 }),
+				event({ Id = "WORLDWIDE", Scope = "GLOBAL", Priority = 0 }),
+			})
+			return winner.Id == "WORLDWIDE"
+		end)()
+	)
 
-	check("a server event beats a biome event", (function()
-		local winner = EventCore.dominant({
-			event({ Id = "BIOME", Scope = "BIOME", WorldId = "EMBERFALL", Priority = 50 }),
-			event({ Id = "SERVER", Scope = "SERVER", Priority = 0 }),
-		}, { WorldId = "EMBERFALL" })
-		return winner.Id == "SERVER"
-	end)())
+	check(
+		"a server event beats a biome event",
+		(function()
+			local winner = EventCore.dominant({
+				event({ Id = "BIOME", Scope = "BIOME", WorldId = "EMBERFALL", Priority = 50 }),
+				event({ Id = "SERVER", Scope = "SERVER", Priority = 0 }),
+			}, { WorldId = "EMBERFALL" })
+			return winner.Id == "SERVER"
+		end)()
+	)
 
-	check("priority decides within a scope", (function()
-		local winner = EventCore.dominant({
-			event({ Id = "QUIET", Priority = 1 }),
-			event({ Id = "LOUD", Priority = 9 }),
-		})
-		return winner.Id == "LOUD"
-	end)())
+	check(
+		"priority decides within a scope",
+		(function()
+			local winner = EventCore.dominant({
+				event({ Id = "QUIET", Priority = 1 }),
+				event({ Id = "LOUD", Priority = 9 }),
+			})
+			return winner.Id == "LOUD"
+		end)()
+	)
 
 	-- A tie broken by recency would flip the sky every time an equal event
 	-- started somewhere, and a sky that changes for no visible reason reads
 	-- as a bug rather than as an event.
-	check("a tie goes to the event that has been running longest", (function()
-		local winner = EventCore.dominant({
-			event({ Id = "NEW", StartedAt = 1500 }),
-			event({ Id = "OLD", StartedAt = 1000 }),
-		})
-		return winner.Id == "OLD"
-	end)())
+	check(
+		"a tie goes to the event that has been running longest",
+		(function()
+			local winner = EventCore.dominant({
+				event({ Id = "NEW", StartedAt = 1500 }),
+				event({ Id = "OLD", StartedAt = 1000 }),
+			})
+			return winner.Id == "OLD"
+		end)()
+	)
 
-	check("a total tie is still deterministic", (function()
-		local a = EventCore.dominant({ event({ Id = "B" }), event({ Id = "A" }) })
-		local b = EventCore.dominant({ event({ Id = "A" }), event({ Id = "B" }) })
-		return a.Id == b.Id and a.Id == "A"
-	end)())
+	check(
+		"a total tie is still deterministic",
+		(function()
+			local a = EventCore.dominant({ event({ Id = "B" }), event({ Id = "A" }) })
+			local b = EventCore.dominant({ event({ Id = "A" }), event({ Id = "B" }) })
+			return a.Id == b.Id and a.Id == "A"
+		end)()
+	)
 
 	-- A BIOME event is confined to its world. Someone standing in the hub
 	-- must not get Emberfall's sky.
-	check("a biome event is invisible outside its biome",
-		EventCore.dominant({ event({ Scope = "BIOME", WorldId = "EMBERFALL" }) }, { WorldId = nil }) == nil)
+	check(
+		"a biome event is invisible outside its biome",
+		EventCore.dominant({ event({ Scope = "BIOME", WorldId = "EMBERFALL" }) }, { WorldId = nil })
+			== nil
+	)
 
-	check("...and visible inside it",
-		EventCore.dominant({ event({ Scope = "BIOME", WorldId = "EMBERFALL" }) },
-			{ WorldId = "EMBERFALL" }) ~= nil)
+	check(
+		"...and visible inside it",
+		EventCore.dominant(
+			{ event({ Scope = "BIOME", WorldId = "EMBERFALL" }) },
+			{ WorldId = "EMBERFALL" }
+		) ~= nil
+	)
 
-	check("an unknown scope never owns the sky",
-		EventCore.dominant({ event({ Scope = "EVERYWHERE" }) }) == nil)
+	check(
+		"an unknown scope never owns the sky",
+		EventCore.dominant({ event({ Scope = "EVERYWHERE" }) }) == nil
+	)
 
-	check("every scope the code accepts is one of the three",
-		EventCore.isValidScope("GLOBAL") and EventCore.isValidScope("SERVER")
-			and EventCore.isValidScope("BIOME") and not EventCore.isValidScope("WORLD")
-			and not EventCore.isValidScope(nil))
+	check(
+		"every scope the code accepts is one of the three",
+		EventCore.isValidScope("GLOBAL")
+			and EventCore.isValidScope("SERVER")
+			and EventCore.isValidScope("BIOME")
+			and not EventCore.isValidScope("WORLD")
+			and not EventCore.isValidScope(nil)
+	)
 
 	-- The snapshot is the only thing a client ever sees. A field missing
 	-- from it may as well not exist on the server.
-	check("the snapshot carries scope, world and priority", (function()
-		local state = EventCore.newState()
-		EventCore.startEvent(state, event({
-			Scope = "BIOME", WorldId = "EMBERFALL", Priority = 3, EndsAt = 9999,
-		}))
-		local snap = EventCore.snapshot(state, 1000, GameConfig)
-		local first = snap.ActiveEvents[1]
-		return first.Scope == "BIOME" and first.WorldId == "EMBERFALL" and first.Priority == 3
-	end)())
+	check(
+		"the snapshot carries scope, world and priority",
+		(function()
+			local state = EventCore.newState()
+			EventCore.startEvent(
+				state,
+				event({
+					Scope = "BIOME",
+					WorldId = "EMBERFALL",
+					Priority = 3,
+					EndsAt = 9999,
+				})
+			)
+			local snap = EventCore.snapshot(state, 1000, GameConfig)
+			local first = snap.ActiveEvents[1]
+			return first.Scope == "BIOME" and first.WorldId == "EMBERFALL" and first.Priority == 3
+		end)()
+	)
 end
 
 -- === the live palette ===============================================
@@ -4218,14 +5641,17 @@ do
 
 	local base = ThemeCore.base()
 
-	check("the base palette is UITheme, untouched", (function()
-		for _, token in ThemeCore.TINTABLE do
-			if base[token] ~= UITheme[token] then
-				return false
+	check(
+		"the base palette is UITheme, untouched",
+		(function()
+			for _, token in ThemeCore.TINTABLE do
+				if base[token] ~= UITheme[token] then
+					return false
+				end
 			end
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 
 	-- Every district, every event, and every combination of the two. This is
 	-- the whole point of the resolver being pure: "what does the menu look
@@ -4246,148 +5672,209 @@ do
 	end
 
 	local contexts = everyContext()
-	check("there is more than one palette to check", #contexts > 10,
-		string.format("%d contexts", #contexts))
+	check(
+		"there is more than one palette to check",
+		#contexts > 10,
+		string.format("%d contexts", #contexts)
+	)
 
 	-- RULE 1: only surfaces tint. Gold means "press this", teal means
 	-- "designed, not built", and the seven rarity colours are a contract.
 	-- The Archive's authored accent IS that teal and the Hall's IS that gold,
 	-- so this is a live collision, not a hypothetical one.
-	check("no palette moves a colour that carries a meaning", (function()
-		for _, context in contexts do
-			local palette = ThemeCore.resolve(Palettes, context)
-			for _, token in { "AccentGold", "AccentCool", "AccentWarn",
-				"TextPrimary", "TextSecondary", "TextMuted" } do
-				if palette[token] ~= nil then
-					return false -- a semantic token must not even appear
+	check(
+		"no palette moves a colour that carries a meaning",
+		(function()
+			for _, context in contexts do
+				local palette = ThemeCore.resolve(Palettes, context)
+				for _, token in
+					{
+						"AccentGold",
+						"AccentCool",
+						"AccentWarn",
+						"TextPrimary",
+						"TextSecondary",
+						"TextMuted",
+					}
+				do
+					if palette[token] ~= nil then
+						return false -- a semantic token must not even appear
+					end
+				end
+				for key in Constants.RARITY do
+					if palette[key] ~= nil then
+						return false
+					end
 				end
 			end
-			for key in Constants.RARITY do
-				if palette[key] ~= nil then
+			return true
+		end)()
+	)
+
+	check(
+		"the tintable list is exactly the surfaces",
+		(function()
+			local expected = {
+				PanelColor = true,
+				RailColor = true,
+				RaisedColor = true,
+				ScrimColor = true,
+				StrokeColor = true,
+			}
+			local count = 0
+			for _, token in ThemeCore.TINTABLE do
+				if not expected[token] then
 					return false
 				end
+				count += 1
 			end
-		end
-		return true
-	end)())
-
-	check("the tintable list is exactly the surfaces", (function()
-		local expected = { PanelColor = true, RailColor = true, RaisedColor = true,
-			ScrimColor = true, StrokeColor = true }
-		local count = 0
-		for _, token in ThemeCore.TINTABLE do
-			if not expected[token] then
-				return false
-			end
-			count += 1
-		end
-		return count == 5
-	end)())
+			return count == 5
+		end)()
+	)
 
 	-- RULE 2: text stays readable. This is the test that matters most: a
 	-- Catalyst Star tint that looks magnificent on a panel is also the thing
 	-- that makes the Settings labels vanish, and nobody finds that by eye
 	-- until a player cannot turn the music down.
-	check("every palette keeps the faintest text readable", (function()
-		for _, context in contexts do
-			local palette = ThemeCore.resolve(Palettes, context)
-			for _, token in { "PanelColor", "RailColor", "RaisedColor", "ScrimColor" } do
-				local ratio = ThemeCore.contrast(UITheme.TextMuted, palette[token])
-				if ratio < ThemeCore.CONTRAST_FLOOR then
-					return false
+	check(
+		"every palette keeps the faintest text readable",
+		(function()
+			for _, context in contexts do
+				local palette = ThemeCore.resolve(Palettes, context)
+				for _, token in { "PanelColor", "RailColor", "RaisedColor", "ScrimColor" } do
+					local ratio = ThemeCore.contrast(UITheme.TextMuted, palette[token])
+					if ratio < ThemeCore.CONTRAST_FLOOR then
+						return false
+					end
 				end
 			end
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 
 	-- THE BASE THEME ITSELF MUST CLEAR THE FLOOR. This is what the contrast
 	-- test found first: TextMuted shipped at 3.40:1 against a raised row,
 	-- below AA, before any tint existed. Pinned here so it cannot drift back.
-	check("the untinted theme is readable on every surface", (function()
-		for _, text in { UITheme.TextMuted, UITheme.TextSecondary, UITheme.TextPrimary } do
-			for _, surface in { UITheme.PanelColor, UITheme.RailColor, UITheme.RaisedColor } do
-				if ThemeCore.contrast(text, surface) < ThemeCore.CONTRAST_FLOOR then
-					return false
+	check(
+		"the untinted theme is readable on every surface",
+		(function()
+			for _, text in { UITheme.TextMuted, UITheme.TextSecondary, UITheme.TextPrimary } do
+				for _, surface in { UITheme.PanelColor, UITheme.RailColor, UITheme.RaisedColor } do
+					if ThemeCore.contrast(text, surface) < ThemeCore.CONTRAST_FLOOR then
+						return false
+					end
 				end
 			end
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 
 	-- Clearing the floor is not the same as not making things worse. A tint
 	-- is allowed to cost a little readability; it is not allowed to eat the
 	-- headroom the base design has.
-	check("no tint costs more than a sixth of the base's readability", (function()
-		for _, context in contexts do
-			local palette = ThemeCore.resolve(Palettes, context)
-			for _, token in { "PanelColor", "RailColor", "RaisedColor" } do
-				local before = ThemeCore.contrast(UITheme.TextMuted, UITheme[token])
-				local after = ThemeCore.contrast(UITheme.TextMuted, palette[token])
-				if after < before * 0.84 then
-					return false
+	check(
+		"no tint costs more than a sixth of the base's readability",
+		(function()
+			for _, context in contexts do
+				local palette = ThemeCore.resolve(Palettes, context)
+				for _, token in { "PanelColor", "RailColor", "RaisedColor" } do
+					local before = ThemeCore.contrast(UITheme.TextMuted, UITheme[token])
+					local after = ThemeCore.contrast(UITheme.TextMuted, palette[token])
+					if after < before * 0.84 then
+						return false
+					end
 				end
 			end
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 
 	-- The contrast maths itself, against values with known answers, because a
 	-- floor enforced by a broken ruler is worse than no floor.
-	check("black on white is the maximum ratio",
-		math.abs(ThemeCore.contrast(Color3.new(0, 0, 0), Color3.new(1, 1, 1)) - 21) < 0.01)
-	check("a colour against itself is 1:1",
-		math.abs(ThemeCore.contrast(UITheme.AccentGold, UITheme.AccentGold) - 1) < 1e-6)
-	check("luminance is weighted, not averaged", (function()
-		-- Green reads far brighter than blue at the same channel value. An
-		-- averaging implementation would call these equal and pass palettes
-		-- a player cannot read.
-		local green = ThemeCore.luminance(Color3.new(0, 1, 0))
-		local blue = ThemeCore.luminance(Color3.new(0, 0, 1))
-		return green > blue * 5
-	end)())
+	check(
+		"black on white is the maximum ratio",
+		math.abs(ThemeCore.contrast(Color3.new(0, 0, 0), Color3.new(1, 1, 1)) - 21) < 0.01
+	)
+	check(
+		"a colour against itself is 1:1",
+		math.abs(ThemeCore.contrast(UITheme.AccentGold, UITheme.AccentGold) - 1) < 1e-6
+	)
+	check(
+		"luminance is weighted, not averaged",
+		(function()
+			-- Green reads far brighter than blue at the same channel value. An
+			-- averaging implementation would call these equal and pass palettes
+			-- a player cannot read.
+			local green = ThemeCore.luminance(Color3.new(0, 1, 0))
+			local blue = ThemeCore.luminance(Color3.new(0, 0, 1))
+			return green > blue * 5
+		end)()
+	)
 
 	-- A deliberately absurd palette: the clamp must save it rather than the
 	-- author having to notice.
-	check("an unreadable tint is clamped, not shipped", (function()
-		local awful = {
-			Districts = { { Id = "HALL_OF_LEGENDS", Tint = UITheme.TextMuted, Strength = 1 } },
-			Events = {},
-		}
-		local palette = ThemeCore.resolve(awful, { DistrictId = "HALL_OF_LEGENDS" })
-		return ThemeCore.contrast(UITheme.TextMuted, palette.PanelColor) >= ThemeCore.CONTRAST_FLOOR
-	end)())
+	check(
+		"an unreadable tint is clamped, not shipped",
+		(function()
+			local awful = {
+				Districts = { { Id = "HALL_OF_LEGENDS", Tint = UITheme.TextMuted, Strength = 1 } },
+				Events = {},
+			}
+			local palette = ThemeCore.resolve(awful, { DistrictId = "HALL_OF_LEGENDS" })
+			return ThemeCore.contrast(UITheme.TextMuted, palette.PanelColor)
+				>= ThemeCore.CONTRAST_FLOOR
+		end)()
+	)
 
 	-- RULE 3: the resolver is total. Anything can be asked of it.
-	check("an unknown district resolves to the base palette", (function()
-		local palette = ThemeCore.resolve(Palettes, { DistrictId = "ATLANTIS" })
-		return palette.PanelColor == UITheme.PanelColor
-	end)())
-	check("an unknown event kind does not tint", (function()
-		local palette = ThemeCore.resolve(Palettes, { Event = { Kind = "SOMETHING_NEW" } })
-		return palette.PanelColor == UITheme.PanelColor
-	end)())
-	check("no context at all resolves to the base palette",
-		ThemeCore.resolve(Palettes, {}).PanelColor == UITheme.PanelColor)
+	check(
+		"an unknown district resolves to the base palette",
+		(function()
+			local palette = ThemeCore.resolve(Palettes, { DistrictId = "ATLANTIS" })
+			return palette.PanelColor == UITheme.PanelColor
+		end)()
+	)
+	check(
+		"an unknown event kind does not tint",
+		(function()
+			local palette = ThemeCore.resolve(Palettes, { Event = { Kind = "SOMETHING_NEW" } })
+			return palette.PanelColor == UITheme.PanelColor
+		end)()
+	)
+	check(
+		"no context at all resolves to the base palette",
+		ThemeCore.resolve(Palettes, {}).PanelColor == UITheme.PanelColor
+	)
 
-	check("the Fate Engine is deliberately untinted", (function()
-		-- The centre is where the game's own colour comes from -- the rarity
-		-- on the portal -- and a tint there would compete with it.
-		local palette = ThemeCore.resolve(Palettes, { DistrictId = "FATE_ENGINE" })
-		return palette.PanelColor == UITheme.PanelColor
-	end)())
+	check(
+		"the Fate Engine is deliberately untinted",
+		(function()
+			-- The centre is where the game's own colour comes from -- the rarity
+			-- on the portal -- and a tint there would compete with it.
+			local palette = ThemeCore.resolve(Palettes, { DistrictId = "FATE_ENGINE" })
+			return palette.PanelColor == UITheme.PanelColor
+		end)()
+	)
 
-	check("standing in a district actually changes something", (function()
-		local palette = ThemeCore.resolve(Palettes, { DistrictId = "DISCOVERY_ARCHIVE" })
-		return palette.PanelColor ~= UITheme.PanelColor
-	end)())
+	check(
+		"standing in a district actually changes something",
+		(function()
+			local palette = ThemeCore.resolve(Palettes, { DistrictId = "DISCOVERY_ARCHIVE" })
+			return palette.PanelColor ~= UITheme.PanelColor
+		end)()
+	)
 
-	check("an event beats standing still", (function()
-		local plain = ThemeCore.resolve(Palettes, { DistrictId = "DISCOVERY_ARCHIVE" })
-		local starfall = ThemeCore.resolve(Palettes,
-			{ DistrictId = "DISCOVERY_ARCHIVE", Event = { Kind = "FATEBREAK" } })
-		return plain.PanelColor ~= starfall.PanelColor and starfall.EventKind == "FATEBREAK"
-	end)())
+	check(
+		"an event beats standing still",
+		(function()
+			local plain = ThemeCore.resolve(Palettes, { DistrictId = "DISCOVERY_ARCHIVE" })
+			local starfall = ThemeCore.resolve(
+				Palettes,
+				{ DistrictId = "DISCOVERY_ARCHIVE", Event = { Kind = "FATEBREAK" } }
+			)
+			return plain.PanelColor ~= starfall.PanelColor and starfall.EventKind == "FATEBREAK"
+		end)()
+	)
 
 	-- Bounded drift: a tint may lean the menu, never redesign it. Without a
 	-- ceiling, "subtle district colour" becomes a full reskin one content
@@ -4401,136 +5888,180 @@ do
 		return math.sqrt((a.R - b.R) ^ 2 + (a.G - b.G) ^ 2 + (a.B - b.B) ^ 2)
 	end
 
-	check("no surface wanders far from the base", (function()
-		for _, context in contexts do
-			local palette = ThemeCore.resolve(Palettes, context)
-			for _, token in ThemeCore.TINTABLE do
-				if token ~= "StrokeColor" and drift(palette[token], UITheme[token]) > 0.35 then
+	check(
+		"no surface wanders far from the base",
+		(function()
+			for _, context in contexts do
+				local palette = ThemeCore.resolve(Palettes, context)
+				for _, token in ThemeCore.TINTABLE do
+					if token ~= "StrokeColor" and drift(palette[token], UITheme[token]) > 0.35 then
+						return false
+					end
+				end
+			end
+			return true
+		end)()
+	)
+
+	check(
+		"...and the stroke, while louder, is still bounded",
+		(function()
+			for _, context in contexts do
+				local palette = ThemeCore.resolve(Palettes, context)
+				if drift(palette.StrokeColor, UITheme.StrokeColor) > 0.6 then
 					return false
 				end
 			end
-		end
-		return true
-	end)())
-
-	check("...and the stroke, while louder, is still bounded", (function()
-		for _, context in contexts do
-			local palette = ThemeCore.resolve(Palettes, context)
-			if drift(palette.StrokeColor, UITheme.StrokeColor) > 0.6 then
-				return false
-			end
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 
 	-- THE INVARIANT THE WHOLE APPROACH RESTS ON. A surface takes the hue and
 	-- keeps its own brightness, which is why contrast survives a tint at all.
 	-- If this ever stops holding, every readability test above starts passing
 	-- for the wrong reason.
-	check("a tint changes a surface's colour but not its brightness", (function()
-		for _, context in contexts do
-			local palette = ThemeCore.resolve(Palettes, context)
-			for _, token in { "PanelColor", "RailColor", "RaisedColor", "ScrimColor" } do
-				local before = ThemeCore.luminance(UITheme[token])
-				local after = ThemeCore.luminance(palette[token])
-				if math.abs(after - before) > 0.005 then
-					return false
+	check(
+		"a tint changes a surface's colour but not its brightness",
+		(function()
+			for _, context in contexts do
+				local palette = ThemeCore.resolve(Palettes, context)
+				for _, token in { "PanelColor", "RailColor", "RaisedColor", "ScrimColor" } do
+					local before = ThemeCore.luminance(UITheme[token])
+					local after = ThemeCore.luminance(palette[token])
+					if math.abs(after - before) > 0.005 then
+						return false
+					end
 				end
 			end
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 
 	-- THE WEATHER HAS TO COVER THE THING IT IS WEATHERING. It emitted from a
 	-- one-stud part over the Fate Engine, so an event's motes fell on the
 	-- dais and nowhere else.
-	check("an event's sky layer spans the whole plaza",
+	check(
+		"an event's sky layer spans the whole plaza",
 		GameConfig.Events.SkySpanFactor >= 1
 			and GameConfig.Events.SkySpanFactor * GameConfig.HubLayout.HubDiameter
 				>= GameConfig.HubLayout.HubDiameter,
-		string.format("%.0f studs across a %.0f-stud hub",
+		string.format(
+			"%.0f studs across a %.0f-stud hub",
 			GameConfig.Events.SkySpanFactor * GameConfig.HubLayout.HubDiameter,
-			GameConfig.HubLayout.HubDiameter))
+			GameConfig.HubLayout.HubDiameter
+		)
+	)
 
 	-- ...and it has to start high enough to fall, and be given time to.
-	check("the sky layer starts above head height",
-		GameConfig.Events.SkyHeight * GameConfig.HubLayout.WorldScale > GameConfig.Scale.CharacterHeight * 4)
+	check(
+		"the sky layer starts above head height",
+		GameConfig.Events.SkyHeight * GameConfig.HubLayout.WorldScale
+			> GameConfig.Scale.CharacterHeight * 4
+	)
 
-	check("...and it really does change the colour", (function()
-		-- Guarding the test above from passing trivially: a tint that did
-		-- nothing at all would also preserve luminance perfectly.
-		local palette = ThemeCore.resolve(Palettes,
-			{ DistrictId = "DISCOVERY_ARCHIVE", Event = { Kind = "CATALYST_STAR" } })
-		return drift(palette.PanelColor, UITheme.PanelColor) > 0.01
-	end)())
+	check(
+		"...and it really does change the colour",
+		(function()
+			-- Guarding the test above from passing trivially: a tint that did
+			-- nothing at all would also preserve luminance perfectly.
+			local palette = ThemeCore.resolve(
+				Palettes,
+				{ DistrictId = "DISCOVERY_ARCHIVE", Event = { Kind = "CATALYST_STAR" } }
+			)
+			return drift(palette.PanelColor, UITheme.PanelColor) > 0.01
+		end)()
+	)
 
-	check("resolving twice gives the same answer", (function()
-		local a = ThemeCore.resolve(Palettes, { DistrictId = "EXPEDITION_GATE" })
-		local b = ThemeCore.resolve(Palettes, { DistrictId = "EXPEDITION_GATE" })
-		return a.PanelColor == b.PanelColor and a.RailColor == b.RailColor
-	end)())
+	check(
+		"resolving twice gives the same answer",
+		(function()
+			local a = ThemeCore.resolve(Palettes, { DistrictId = "EXPEDITION_GATE" })
+			local b = ThemeCore.resolve(Palettes, { DistrictId = "EXPEDITION_GATE" })
+			return a.PanelColor == b.PanelColor and a.RailColor == b.RailColor
+		end)()
+	)
 
-	check("resolving does not mutate UITheme", (function()
-		ThemeCore.resolve(Palettes, { DistrictId = "TRAINING_GROUNDS", Event = { Kind = "CATALYST_STAR" } })
-		return UITheme.PanelColor == Color3.fromRGB(24, 19, 40)
-	end)())
+	check(
+		"resolving does not mutate UITheme",
+		(function()
+			ThemeCore.resolve(
+				Palettes,
+				{ DistrictId = "TRAINING_GROUNDS", Event = { Kind = "CATALYST_STAR" } }
+			)
+			return UITheme.PanelColor == Color3.fromRGB(24, 19, 40)
+		end)()
+	)
 
 	-- === where am I standing ========================================
 	local radius = GameConfig.HubMenu.DistrictTintRadius
 
-	check("standing on a district's anchor is standing in it", (function()
-		for _, destination in Menu.Destinations do
-			if ThemeCore.districtAt(destination.Anchor, Menu, radius) ~= destination.Id then
-				return false
-			end
-		end
-		return true
-	end)())
-
-	check("height does not change which district you are in", (function()
-		local hall = HubMenuCore.destinationById(Menu, "HALL_OF_LEGENDS")
-		local aloft = hall.Anchor + Vector3.new(0, 90, 0)
-		return ThemeCore.districtAt(aloft, Menu, radius) == "HALL_OF_LEGENDS"
-	end)())
-
-	check("the open plaza belongs to no district", (function()
-		-- Halfway between the Engine and the Hall, on the diagonal: outside
-		-- every district's reach.
-		local point = Vector3.new(280, 0, -280)
-		return ThemeCore.districtAt(point, Menu, radius) == nil
-	end)())
-
-	-- The radius must not be so wide that two districts overlap, or the menu
-	-- would flicker between them on the boundary.
-	check("no two districts overlap at the tint radius", (function()
-		local anchors = {}
-		for _, destination in Menu.Destinations do
-			table.insert(anchors, destination.Anchor)
-		end
-		for i = 1, #anchors do
-			for j = i + 1, #anchors do
-				local dx = anchors[i].X - anchors[j].X
-				local dz = anchors[i].Z - anchors[j].Z
-				if math.sqrt(dx * dx + dz * dz) < radius then
+	check(
+		"standing on a district's anchor is standing in it",
+		(function()
+			for _, destination in Menu.Destinations do
+				if ThemeCore.districtAt(destination.Anchor, Menu, radius) ~= destination.Id then
 					return false
 				end
 			end
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 
-	check("the tint radius covers the widest platform", (function()
-		-- A player standing on the far edge of the biggest deck must still be
-		-- in that district. Derived from the deck rather than from a literal,
-		-- so it survives a world rescale -- which is exactly what caught it.
-		local widest = 0
-		for _, district in Crossroads.Districts do
-			widest = math.max(widest, district.PlatformSize.X, district.PlatformSize.Z)
-		end
-		return radius > widest / 2
-	end)())
+	check(
+		"height does not change which district you are in",
+		(function()
+			local hall = HubMenuCore.destinationById(Menu, "HALL_OF_LEGENDS")
+			local aloft = hall.Anchor + Vector3.new(0, 90, 0)
+			return ThemeCore.districtAt(aloft, Menu, radius) == "HALL_OF_LEGENDS"
+		end)()
+	)
+
+	check(
+		"the open plaza belongs to no district",
+		(function()
+			-- Halfway between the Engine and the Hall, on the diagonal: outside
+			-- every district's reach.
+			local point = Vector3.new(280, 0, -280)
+			return ThemeCore.districtAt(point, Menu, radius) == nil
+		end)()
+	)
+
+	-- The radius must not be so wide that two districts overlap, or the menu
+	-- would flicker between them on the boundary.
+	check(
+		"no two districts overlap at the tint radius",
+		(function()
+			local anchors = {}
+			for _, destination in Menu.Destinations do
+				table.insert(anchors, destination.Anchor)
+			end
+			for i = 1, #anchors do
+				for j = i + 1, #anchors do
+					local dx = anchors[i].X - anchors[j].X
+					local dz = anchors[i].Z - anchors[j].Z
+					if math.sqrt(dx * dx + dz * dz) < radius then
+						return false
+					end
+				end
+			end
+			return true
+		end)()
+	)
+
+	check(
+		"the tint radius covers the widest platform",
+		(function()
+			-- A player standing on the far edge of the biggest deck must still be
+			-- in that district. Derived from the deck rather than from a literal,
+			-- so it survives a world rescale -- which is exactly what caught it.
+			local widest = 0
+			for _, district in Crossroads.Districts do
+				widest = math.max(widest, district.PlatformSize.X, district.PlatformSize.Z)
+			end
+			return radius > widest / 2
+		end)()
+	)
 end
-
 
 -- === events as content ==============================================
 do
@@ -4539,39 +6070,48 @@ do
 	local ok, errors = Schema.validateEvents(Events, Worlds)
 	check("the shipped events validate", ok, table.concat(errors, "; "))
 
-	check("every tier has a worked example", (function()
-		local seen = {}
-		for _, event in Events do
-			seen[event.Tier] = true
-		end
-		-- MODIFIER has no example yet and that is honest: nothing mechanical
-		-- exists for one to modify until combat does.
-		return seen.AMBIENT and seen.WORLD
-	end)())
+	check(
+		"every tier has a worked example",
+		(function()
+			local seen = {}
+			for _, event in Events do
+				seen[event.Tier] = true
+			end
+			-- MODIFIER has no example yet and that is honest: nothing mechanical
+			-- exists for one to modify until combat does.
+			return seen.AMBIENT and seen.WORLD
+		end)()
+	)
 
 	-- THE RULE THAT PREVENTS AN AURORA FROM LEAVING THE FOG GREEN FOREVER.
 	-- An event may only write lighting properties that something restores,
 	-- and the list it is checked against is the same list the client
 	-- snapshots. Three places agree about one list, by construction.
-	check("no event writes a lighting property nobody restores", (function()
-		for _, event in Events do
-			for field in event.Lighting or {} do
-				if EventCore.LIGHTING_PROPERTIES[field] == nil then
-					return false
+	check(
+		"no event writes a lighting property nobody restores",
+		(function()
+			for _, event in Events do
+				for field in event.Lighting or {} do
+					if EventCore.LIGHTING_PROPERTIES[field] == nil then
+						return false
+					end
 				end
 			end
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 
-	check("the restore list and the content vocabulary are the same set", (function()
-		local tracked = EventCore.trackedLighting()
-		local count = 0
-		for _ in EventCore.LIGHTING_PROPERTIES do
-			count += 1
-		end
-		return #tracked == count
-	end)())
+	check(
+		"the restore list and the content vocabulary are the same set",
+		(function()
+			local tracked = EventCore.trackedLighting()
+			local count = 0
+			for _ in EventCore.LIGHTING_PROPERTIES do
+				count += 1
+			end
+			return #tracked == count
+		end)()
+	)
 
 	local function definition(overrides)
 		local e = {
@@ -4584,7 +6124,9 @@ do
 			DurationSeconds = 60,
 			Announcement = { Text = "{player} did a thing.", Rarity = "RARE" },
 		}
-		for k, v in overrides or {} do e[k] = v end
+		for k, v in overrides or {} do
+			e[k] = v
+		end
 		return { TEST = e }
 	end
 
@@ -4593,74 +6135,125 @@ do
 		return not passed
 	end
 
-	check("a valid definition passes", (function()
-		return (Schema.validateEvents(definition(), Worlds))
-	end)())
+	check(
+		"a valid definition passes",
+		(function()
+			return (Schema.validateEvents(definition(), Worlds))
+		end)()
+	)
 
 	-- === the tier rules (docs/EVENTS.md §4.0) ===
-	check("an AMBIENT event may not grant a unique",
-		rejects({ Tier = "AMBIENT", Unique = { LedgerId = "X", Cap = 1 } }))
-	check("an AMBIENT event may not open a rift",
-		rejects({ Tier = "AMBIENT", Rift = { Enabled = true } }))
-	check("a MODIFIER event may not open a rift either",
-		rejects({ Tier = "MODIFIER", Rift = { Enabled = true } }))
-	check("a WORLD event may do both", (function()
-		return (Schema.validateEvents(
-			definition({ Unique = { LedgerId = "X", Cap = 10 }, Rift = { Enabled = true } }),
-			Worlds
-		))
-	end)())
+	check(
+		"an AMBIENT event may not grant a unique",
+		rejects({ Tier = "AMBIENT", Unique = { LedgerId = "X", Cap = 1 } })
+	)
+	check(
+		"an AMBIENT event may not open a rift",
+		rejects({ Tier = "AMBIENT", Rift = { Enabled = true } })
+	)
+	check(
+		"a MODIFIER event may not open a rift either",
+		rejects({ Tier = "MODIFIER", Rift = { Enabled = true } })
+	)
+	check(
+		"a WORLD event may do both",
+		(function()
+			return (
+				Schema.validateEvents(
+					definition({ Unique = { LedgerId = "X", Cap = 10 }, Rift = { Enabled = true } }),
+					Worlds
+				)
+			)
+		end)()
+	)
 	check("an unknown tier is refused", rejects({ Tier = "LOUD" }))
 
 	-- === scope ===
 	check("an unknown scope is refused", rejects({ Scope = "EVERYWHERE" }))
-	check("a BIOME event must name a real world",
-		rejects({ Scope = "BIOME", WorldId = "NOWHERE" }))
-	check("a BIOME event naming a real world is fine", (function()
-		return (Schema.validateEvents(
-			definition({ Scope = "BIOME", WorldId = "EMBERFALL" }), Worlds))
-	end)())
-	check("only a BIOME event may name a world",
-		rejects({ Scope = "GLOBAL", WorldId = "EMBERFALL" }))
+	check("a BIOME event must name a real world", rejects({ Scope = "BIOME", WorldId = "NOWHERE" }))
+	check(
+		"a BIOME event naming a real world is fine",
+		(function()
+			return (
+				Schema.validateEvents(
+					definition({ Scope = "BIOME", WorldId = "EMBERFALL" }),
+					Worlds
+				)
+			)
+		end)()
+	)
+	check(
+		"only a BIOME event may name a world",
+		rejects({ Scope = "GLOBAL", WorldId = "EMBERFALL" })
+	)
 
 	-- === announcements ===
 	-- A placeholder nobody substitutes reaches the player as raw braces,
 	-- which is exactly the sort of thing that ships.
-	check("an unknown placeholder is refused",
-		rejects({ Announcement = { Text = "{wizard} appears.", Rarity = "RARE" } }))
-	check("the three known placeholders are allowed", (function()
-		return (Schema.validateEvents(definition({
-			Announcement = { Text = "{player} found {event}. {remaining} left.", Rarity = "RARE" },
-		}), Worlds))
-	end)())
-	check("an unknown rarity is refused",
-		rejects({ Announcement = { Text = "hi", Rarity = "SUPREME" } }))
+	check(
+		"an unknown placeholder is refused",
+		rejects({ Announcement = { Text = "{wizard} appears.", Rarity = "RARE" } })
+	)
+	check(
+		"the three known placeholders are allowed",
+		(function()
+			return (
+				Schema.validateEvents(
+					definition({
+						Announcement = {
+							Text = "{player} found {event}. {remaining} left.",
+							Rarity = "RARE",
+						},
+					}),
+					Worlds
+				)
+			)
+		end)()
+	)
+	check(
+		"an unknown rarity is refused",
+		rejects({ Announcement = { Text = "hi", Rarity = "SUPREME" } })
+	)
 
-	check("a lighting property outside the restore list is refused",
-		rejects({ Lighting = { Ambient = Color3.fromRGB(1, 1, 1), GlobalShadows = true } }))
+	check(
+		"a lighting property outside the restore list is refused",
+		rejects({ Lighting = { Ambient = Color3.fromRGB(1, 1, 1), GlobalShadows = true } })
+	)
 	check("a zero-length event is refused", rejects({ DurationSeconds = 0 }))
 
 	-- Substitution itself, since the validator only checks the template.
-	check("announcement placeholders are filled", (function()
-		local text = EventCore.formatAnnouncement("{player} found {event}. {remaining} remain.", {
-			Player = "Ada", Event = "Catalyst Star", Remaining = 9,
-		})
-		return text == "Ada found Catalyst Star. 9 remain."
-	end)())
+	check(
+		"announcement placeholders are filled",
+		(function()
+			local text =
+				EventCore.formatAnnouncement("{player} found {event}. {remaining} remain.", {
+					Player = "Ada",
+					Event = "Catalyst Star",
+					Remaining = 9,
+				})
+			return text == "Ada found Catalyst Star. 9 remain."
+		end)()
+	)
 
-	check("a missing value does not leave braces on screen", (function()
-		local text = EventCore.formatAnnouncement("{player} rolled.", {})
-		return text == "Someone rolled."
-	end)())
+	check(
+		"a missing value does not leave braces on screen",
+		(function()
+			local text = EventCore.formatAnnouncement("{player} rolled.", {})
+			return text == "Someone rolled."
+		end)()
+	)
 
 	-- The Catalyst Star's own shape, since it is the one the whole ledger
 	-- exists for.
-	check("the Catalyst Star is capped at ten, forever",
-		Events.CATALYST_STAR.Unique.Cap == 10)
-	check("...and it is open to everyone once it fires",
-		Events.CATALYST_STAR.OpenToEveryone == true)
-	check("...and it outranks the Fatebreak sky",
-		Events.CATALYST_STAR.Priority > Events.STARFALL.Priority)
+	check("the Catalyst Star is capped at ten, forever", Events.CATALYST_STAR.Unique.Cap == 10)
+	check(
+		"...and it is open to everyone once it fires",
+		Events.CATALYST_STAR.OpenToEveryone == true
+	)
+	check(
+		"...and it outranks the Fatebreak sky",
+		Events.CATALYST_STAR.Priority > Events.STARFALL.Priority
+	)
 end
 
 -- === the scarcity ledger ============================================
@@ -4669,103 +6262,144 @@ do
 
 	local claimant = { UserId = 7, Name = "Ada" }
 
-	check("an empty ledger grants number one", (function()
-		local result = LedgerCore.claim(nil, 10, claimant, 1000)
-		return result.ok and result.value.Claim.Number == 1
-	end)())
+	check(
+		"an empty ledger grants number one",
+		(function()
+			local result = LedgerCore.claim(nil, 10, claimant, 1000)
+			return result.ok and result.value.Claim.Number == 1
+		end)()
+	)
 
-	check("claims number sequentially", (function()
-		local ledger: any = nil
-		for expected = 1, 5 do
-			local result = LedgerCore.claim(ledger, 10, claimant, 1000 + expected)
-			if not result.ok or result.value.Claim.Number ~= expected then
-				return false
+	check(
+		"claims number sequentially",
+		(function()
+			local ledger: any = nil
+			for expected = 1, 5 do
+				local result = LedgerCore.claim(ledger, 10, claimant, 1000 + expected)
+				if not result.ok or result.value.Claim.Number ~= expected then
+					return false
+				end
+				ledger = result.value.Ledger
 			end
-			ledger = result.value.Ledger
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 
 	-- THE WHOLE POINT. When the last one is gone it is gone, on every server,
 	-- forever.
-	check("the cap is absolute", (function()
-		local ledger: any = nil
-		for i = 1, 10 do
-			ledger = LedgerCore.claim(ledger, 10, claimant, 1000 + i).value.Ledger
-		end
-		local eleventh = LedgerCore.claim(ledger, 10, claimant, 2000)
-		return not eleventh.ok and eleventh.err == "EXHAUSTED"
-	end)())
+	check(
+		"the cap is absolute",
+		(function()
+			local ledger: any = nil
+			for i = 1, 10 do
+				ledger = LedgerCore.claim(ledger, 10, claimant, 1000 + i).value.Ledger
+			end
+			local eleventh = LedgerCore.claim(ledger, 10, claimant, 2000)
+			return not eleventh.ok and eleventh.err == "EXHAUSTED"
+		end)()
+	)
 
 	-- UpdateAsync may call the transform more than once for a single claim,
 	-- against a newer value each time. The answer has to be right every time,
 	-- which means reading only the ledger it was handed.
-	check("the transform is pure -- it never mutates what it was given", (function()
-		local ledger = { Claims = { { Number = 1, UserId = 1, Name = "A", At = 0 } } }
-		LedgerCore.claim(ledger, 10, claimant, 1000)
-		return #ledger.Claims == 1
-	end)())
+	check(
+		"the transform is pure -- it never mutates what it was given",
+		(function()
+			local ledger = { Claims = { { Number = 1, UserId = 1, Name = "A", At = 0 } } }
+			LedgerCore.claim(ledger, 10, claimant, 1000)
+			return #ledger.Claims == 1
+		end)()
+	)
 
-	check("re-running the transform on the same input gives the same answer", (function()
-		local ledger = { Claims = { { Number = 1, UserId = 1, Name = "A", At = 0 } } }
-		local first = LedgerCore.claim(ledger, 10, claimant, 1000)
-		local second = LedgerCore.claim(ledger, 10, claimant, 1000)
-		return first.value.Claim.Number == second.value.Claim.Number
-	end)())
+	check(
+		"re-running the transform on the same input gives the same answer",
+		(function()
+			local ledger = { Claims = { { Number = 1, UserId = 1, Name = "A", At = 0 } } }
+			local first = LedgerCore.claim(ledger, 10, claimant, 1000)
+			local second = LedgerCore.claim(ledger, 10, claimant, 1000)
+			return first.value.Claim.Number == second.value.Claim.Number
+		end)()
+	)
 
 	-- A malformed ledger must never LOSE claims: dropping one silently
 	-- re-issues a unique item that already exists in the world.
-	check("a ledger with claims keeps every one of them", (function()
-		local messy = { Claims = {
-			{ Number = 3, UserId = 3, Name = "C", At = 3 },
-			{ Number = 1, UserId = 1, Name = "A", At = 1 },
-			{ Number = 2, UserId = 2, Name = "B", At = 2 },
-		} }
-		local sane = LedgerCore.sanitise(messy)
-		return #sane.Claims == 3 and sane.Claims[1].Number == 1 and sane.Claims[3].Number == 3
-	end)())
+	check(
+		"a ledger with claims keeps every one of them",
+		(function()
+			local messy = {
+				Claims = {
+					{ Number = 3, UserId = 3, Name = "C", At = 3 },
+					{ Number = 1, UserId = 1, Name = "A", At = 1 },
+					{ Number = 2, UserId = 2, Name = "B", At = 2 },
+				},
+			}
+			local sane = LedgerCore.sanitise(messy)
+			return #sane.Claims == 3 and sane.Claims[1].Number == 1 and sane.Claims[3].Number == 3
+		end)()
+	)
 
-	check("an unreadable ledger reads as empty rather than as corrupt", (function()
-		return LedgerCore.issued(LedgerCore.sanitise("nonsense")) == 0
-			and LedgerCore.issued(LedgerCore.sanitise(nil)) == 0
-	end)())
+	check(
+		"an unreadable ledger reads as empty rather than as corrupt",
+		(function()
+			return LedgerCore.issued(LedgerCore.sanitise("nonsense")) == 0
+				and LedgerCore.issued(LedgerCore.sanitise(nil)) == 0
+		end)()
+	)
 
-	check("a claim missing its number is dropped, not trusted", (function()
-		local ledger = LedgerCore.sanitise({ Claims = { { UserId = 1 }, { Number = 1, UserId = 2 } } })
-		return #ledger.Claims == 1
-	end)())
+	check(
+		"a claim missing its number is dropped, not trusted",
+		(function()
+			local ledger =
+				LedgerCore.sanitise({ Claims = { { UserId = 1 }, { Number = 1, UserId = 2 } } })
+			return #ledger.Claims == 1
+		end)()
+	)
 
-	check("a nonsense cap is refused rather than guessed", (function()
-		return not LedgerCore.claim(nil, 0, claimant, 1000).ok
-			and not LedgerCore.claim(nil, -5, claimant, 1000).ok
-	end)())
+	check(
+		"a nonsense cap is refused rather than guessed",
+		(function()
+			return not LedgerCore.claim(nil, 0, claimant, 1000).ok
+				and not LedgerCore.claim(nil, -5, claimant, 1000).ok
+		end)()
+	)
 
-	check("a claimant without a user id is refused",
-		not LedgerCore.claim(nil, 10, { Name = "Nobody" }, 1000).ok)
+	check(
+		"a claimant without a user id is refused",
+		not LedgerCore.claim(nil, 10, { Name = "Nobody" }, 1000).ok
+	)
 
-	check("the claim records who and when", (function()
-		local result = LedgerCore.claim(nil, 10, claimant, 1700000000)
-		local claim = result.value.Claim
-		return claim.UserId == 7 and claim.Name == "Ada" and claim.At == 1700000000
-	end)())
+	check(
+		"the claim records who and when",
+		(function()
+			local result = LedgerCore.claim(nil, 10, claimant, 1700000000)
+			local claim = result.value.Claim
+			return claim.UserId == 7 and claim.Name == "Ada" and claim.At == 1700000000
+		end)()
+	)
 
 	-- Scarcity nobody can see is a rumour. This is what the Hall displays.
-	check("the public summary counts what is left", (function()
-		local ledger: any = nil
-		for i = 1, 3 do
-			ledger = LedgerCore.claim(ledger, 10, claimant, 1000 + i).value.Ledger
-		end
-		local summary = LedgerCore.summary(ledger, 10)
-		return summary.Issued == 3 and summary.Remaining == 7 and #summary.Claims == 3
-	end)())
+	check(
+		"the public summary counts what is left",
+		(function()
+			local ledger: any = nil
+			for i = 1, 3 do
+				ledger = LedgerCore.claim(ledger, 10, claimant, 1000 + i).value.Ledger
+			end
+			local summary = LedgerCore.summary(ledger, 10)
+			return summary.Issued == 3 and summary.Remaining == 7 and #summary.Claims == 3
+		end)()
+	)
 
-	check("remaining never goes negative", (function()
-		local ledger = { Claims = {} }
-		for i = 1, 12 do
-			table.insert(ledger.Claims, { Number = i, UserId = i, Name = "x", At = i })
-		end
-		return LedgerCore.remaining(ledger, 10) == 0
-	end)())
+	check(
+		"remaining never goes negative",
+		(function()
+			local ledger = { Claims = {} }
+			for i = 1, 12 do
+				table.insert(ledger.Claims, { Number = i, UserId = i, Name = "x", At = i })
+			end
+			return LedgerCore.remaining(ledger, 10) == 0
+		end)()
+	)
 end
 
 -- === Parties (build spec §7.2) ======================================
@@ -4774,150 +6408,205 @@ group("Parties: forming, leading and leaving")
 do
 	local C = cfg()
 
-	check("an invite does not create a party", (function()
-		local s = PartyCore.newState()
-		local r = PartyCore.invite(s, 1, 2, 0, C)
-		return r.ok and PartyCore.partyOf(s, 1) == nil and PartyCore.partyOf(s, 2) == nil
-	end)())
+	check(
+		"an invite does not create a party",
+		(function()
+			local s = PartyCore.newState()
+			local r = PartyCore.invite(s, 1, 2, 0, C)
+			return r.ok and PartyCore.partyOf(s, 1) == nil and PartyCore.partyOf(s, 2) == nil
+		end)()
+	)
 
-	check("accepting creates a party led by the inviter", (function()
-		local s = PartyCore.newState()
-		PartyCore.invite(s, 1, 2, 0, C)
-		local r = PartyCore.accept(s, 2, 1, 1, C)
-		local p = PartyCore.partyOf(s, 2)
-		return r.ok and p ~= nil and p.LeaderUserId == 1 and #p.Members == 2 and PartyCore.partyOf(s, 1) == p
-	end)())
+	check(
+		"accepting creates a party led by the inviter",
+		(function()
+			local s = PartyCore.newState()
+			PartyCore.invite(s, 1, 2, 0, C)
+			local r = PartyCore.accept(s, 2, 1, 1, C)
+			local p = PartyCore.partyOf(s, 2)
+			return r.ok
+				and p ~= nil
+				and p.LeaderUserId == 1
+				and #p.Members == 2
+				and PartyCore.partyOf(s, 1) == p
+		end)()
+	)
 
-	check("a declined invite leaves nothing behind", (function()
-		local s = PartyCore.newState()
-		PartyCore.invite(s, 1, 2, 0, C)
-		PartyCore.decline(s, 2, 1)
-		return PartyCore.partyOf(s, 1) == nil and #PartyCore.invitesFor(s, 2, 1) == 0
-	end)())
+	check(
+		"a declined invite leaves nothing behind",
+		(function()
+			local s = PartyCore.newState()
+			PartyCore.invite(s, 1, 2, 0, C)
+			PartyCore.decline(s, 2, 1)
+			return PartyCore.partyOf(s, 1) == nil and #PartyCore.invitesFor(s, 2, 1) == 0
+		end)()
+	)
 
 	check("you cannot invite yourself", not PartyCore.invite(PartyCore.newState(), 1, 1, 0, C).ok)
 
-	check("only the leader invites", (function()
-		local s = PartyCore.newState()
-		PartyCore.invite(s, 1, 2, 0, C)
-		PartyCore.accept(s, 2, 1, 0, C)
-		return not PartyCore.invite(s, 2, 3, 0, C).ok and PartyCore.invite(s, 1, 3, 0, C).ok
-	end)())
+	check(
+		"only the leader invites",
+		(function()
+			local s = PartyCore.newState()
+			PartyCore.invite(s, 1, 2, 0, C)
+			PartyCore.accept(s, 2, 1, 0, C)
+			return not PartyCore.invite(s, 2, 3, 0, C).ok and PartyCore.invite(s, 1, 3, 0, C).ok
+		end)()
+	)
 
-	check("a player already in a party cannot be invited", (function()
-		local s = PartyCore.newState()
-		PartyCore.invite(s, 1, 2, 0, C)
-		PartyCore.accept(s, 2, 1, 0, C)
-		return not PartyCore.invite(s, 5, 2, 0, C).ok
-	end)())
+	check(
+		"a player already in a party cannot be invited",
+		(function()
+			local s = PartyCore.newState()
+			PartyCore.invite(s, 1, 2, 0, C)
+			PartyCore.accept(s, 2, 1, 0, C)
+			return not PartyCore.invite(s, 5, 2, 0, C).ok
+		end)()
+	)
 
-	check("an invite expires", (function()
-		local s = PartyCore.newState()
-		PartyCore.invite(s, 1, 2, 0, C)
-		local late = C.Party.InviteExpirySeconds + 1
-		return not PartyCore.accept(s, 2, 1, late, C).ok and PartyCore.partyOf(s, 2) == nil
-	end)())
+	check(
+		"an invite expires",
+		(function()
+			local s = PartyCore.newState()
+			PartyCore.invite(s, 1, 2, 0, C)
+			local late = C.Party.InviteExpirySeconds + 1
+			return not PartyCore.accept(s, 2, 1, late, C).ok and PartyCore.partyOf(s, 2) == nil
+		end)()
+	)
 
-	check("pruning drops expired invites and names who changed", (function()
-		local s = PartyCore.newState()
-		PartyCore.invite(s, 1, 2, 0, C)
-		local changed = PartyCore.pruneInvites(s, C.Party.InviteExpirySeconds + 1)
-		return #changed == 1 and changed[1] == 2 and s.Invites[2] == nil
-	end)())
+	check(
+		"pruning drops expired invites and names who changed",
+		(function()
+			local s = PartyCore.newState()
+			PartyCore.invite(s, 1, 2, 0, C)
+			local changed = PartyCore.pruneInvites(s, C.Party.InviteExpirySeconds + 1)
+			return #changed == 1 and changed[1] == 2 and s.Invites[2] == nil
+		end)()
+	)
 
-	check("a party stops at MaxSize", (function()
-		local s = PartyCore.newState()
-		for id = 2, C.Party.MaxSize do
-			PartyCore.invite(s, 1, id, 0, C)
-			assert(PartyCore.accept(s, id, 1, 0, C).ok)
-		end
-		return #PartyCore.partyOf(s, 1).Members == C.Party.MaxSize
-			and not PartyCore.invite(s, 1, 99, 0, C).ok
-	end)())
+	check(
+		"a party stops at MaxSize",
+		(function()
+			local s = PartyCore.newState()
+			for id = 2, C.Party.MaxSize do
+				PartyCore.invite(s, 1, id, 0, C)
+				assert(PartyCore.accept(s, id, 1, 0, C).ok)
+			end
+			return #PartyCore.partyOf(s, 1).Members == C.Party.MaxSize
+				and not PartyCore.invite(s, 1, 99, 0, C).ok
+		end)()
+	)
 
-	check("accepting into a party that filled meanwhile is refused", (function()
-		local s = PartyCore.newState()
-		for id = 2, C.Party.MaxSize + 1 do
-			PartyCore.invite(s, 1, id, 0, C)
-		end
-		for id = 2, C.Party.MaxSize do
-			PartyCore.accept(s, id, 1, 0, C)
-		end
-		return not PartyCore.accept(s, C.Party.MaxSize + 1, 1, 0, C).ok
-	end)())
+	check(
+		"accepting into a party that filled meanwhile is refused",
+		(function()
+			local s = PartyCore.newState()
+			for id = 2, C.Party.MaxSize + 1 do
+				PartyCore.invite(s, 1, id, 0, C)
+			end
+			for id = 2, C.Party.MaxSize do
+				PartyCore.accept(s, id, 1, 0, C)
+			end
+			return not PartyCore.accept(s, C.Party.MaxSize + 1, 1, 0, C).ok
+		end)()
+	)
 
-	check("joining clears every other invite you held", (function()
-		local s = PartyCore.newState()
-		PartyCore.invite(s, 1, 3, 0, C)
-		PartyCore.invite(s, 2, 3, 0, C)
-		PartyCore.accept(s, 3, 1, 0, C)
-		return #PartyCore.invitesFor(s, 3, 0) == 0
-	end)())
+	check(
+		"joining clears every other invite you held",
+		(function()
+			local s = PartyCore.newState()
+			PartyCore.invite(s, 1, 3, 0, C)
+			PartyCore.invite(s, 2, 3, 0, C)
+			PartyCore.accept(s, 3, 1, 0, C)
+			return #PartyCore.invitesFor(s, 3, 0) == 0
+		end)()
+	)
 
-	check("an invite from someone who has since joined another party is void", (function()
-		local s = PartyCore.newState()
-		PartyCore.invite(s, 2, 3, 0, C) -- 2 invites 3
-		PartyCore.invite(s, 1, 2, 0, C)
-		PartyCore.accept(s, 2, 1, 0, C) -- 2 joins 1's party as a member
-		return not PartyCore.accept(s, 3, 2, 0, C).ok and PartyCore.partyOf(s, 3) == nil
-	end)())
+	check(
+		"an invite from someone who has since joined another party is void",
+		(function()
+			local s = PartyCore.newState()
+			PartyCore.invite(s, 2, 3, 0, C) -- 2 invites 3
+			PartyCore.invite(s, 1, 2, 0, C)
+			PartyCore.accept(s, 2, 1, 0, C) -- 2 joins 1's party as a member
+			return not PartyCore.accept(s, 3, 2, 0, C).ok and PartyCore.partyOf(s, 3) == nil
+		end)()
+	)
 
-	check("the leader leaving hands the lead to the next member", (function()
-		local s = PartyCore.newState()
-		for id = 2, 3 do
-			PartyCore.invite(s, 1, id, 0, C)
-			PartyCore.accept(s, id, 1, 0, C)
-		end
-		local r = PartyCore.leave(s, 1)
-		local p = PartyCore.partyOf(s, 2)
-		return r.ok and not r.value.Disbanded and r.value.NewLeaderUserId == 2 and p.LeaderUserId == 2
-	end)())
+	check(
+		"the leader leaving hands the lead to the next member",
+		(function()
+			local s = PartyCore.newState()
+			for id = 2, 3 do
+				PartyCore.invite(s, 1, id, 0, C)
+				PartyCore.accept(s, id, 1, 0, C)
+			end
+			local r = PartyCore.leave(s, 1)
+			local p = PartyCore.partyOf(s, 2)
+			return r.ok
+				and not r.value.Disbanded
+				and r.value.NewLeaderUserId == 2
+				and p.LeaderUserId == 2
+		end)()
+	)
 
-	check("a party of one disbands", (function()
-		local s = PartyCore.newState()
-		PartyCore.invite(s, 1, 2, 0, C)
-		PartyCore.accept(s, 2, 1, 0, C)
-		local r = PartyCore.leave(s, 2)
-		return r.value.Disbanded and PartyCore.partyOf(s, 1) == nil and next(s.Parties) == nil
-	end)())
+	check(
+		"a party of one disbands",
+		(function()
+			local s = PartyCore.newState()
+			PartyCore.invite(s, 1, 2, 0, C)
+			PartyCore.accept(s, 2, 1, 0, C)
+			local r = PartyCore.leave(s, 2)
+			return r.value.Disbanded and PartyCore.partyOf(s, 1) == nil and next(s.Parties) == nil
+		end)()
+	)
 
-	check("only the leader kicks, and not themselves", (function()
-		local s = PartyCore.newState()
-		for id = 2, 3 do
-			PartyCore.invite(s, 1, id, 0, C)
-			PartyCore.accept(s, id, 1, 0, C)
-		end
-		return not PartyCore.kick(s, 2, 3).ok
-			and not PartyCore.kick(s, 1, 1).ok
-			and PartyCore.kick(s, 1, 3).ok
-			and PartyCore.partyOf(s, 3) == nil
-	end)())
+	check(
+		"only the leader kicks, and not themselves",
+		(function()
+			local s = PartyCore.newState()
+			for id = 2, 3 do
+				PartyCore.invite(s, 1, id, 0, C)
+				PartyCore.accept(s, id, 1, 0, C)
+			end
+			return not PartyCore.kick(s, 2, 3).ok
+				and not PartyCore.kick(s, 1, 1).ok
+				and PartyCore.kick(s, 1, 3).ok
+				and PartyCore.partyOf(s, 3) == nil
+		end)()
+	)
 
-	check("promote hands over the lead", (function()
-		local s = PartyCore.newState()
-		PartyCore.invite(s, 1, 2, 0, C)
-		PartyCore.accept(s, 2, 1, 0, C)
-		return not PartyCore.promote(s, 2, 1).ok
-			and PartyCore.promote(s, 1, 2).ok
-			and PartyCore.isLeader(s, 2)
-			and not PartyCore.isLeader(s, 1)
-	end)())
+	check(
+		"promote hands over the lead",
+		(function()
+			local s = PartyCore.newState()
+			PartyCore.invite(s, 1, 2, 0, C)
+			PartyCore.accept(s, 2, 1, 0, C)
+			return not PartyCore.promote(s, 2, 1).ok
+				and PartyCore.promote(s, 1, 2).ok
+				and PartyCore.isLeader(s, 2)
+				and not PartyCore.isLeader(s, 1)
+		end)()
+	)
 
-	check("leaving the server removes you and every invite to or from you", (function()
-		local s = PartyCore.newState()
-		for id = 2, 3 do
-			PartyCore.invite(s, 1, id, 0, C)
-			PartyCore.accept(s, id, 1, 0, C)
-		end
-		PartyCore.invite(s, 1, 7, 0, C)
-		local affected = PartyCore.removePlayer(s, 1)
-		local inbox = s.Invites[7]
-		return PartyCore.partyOf(s, 1) == nil
-			and PartyCore.isLeader(s, 2)
-			and (inbox == nil or next(inbox) == nil)
-			and table.find(affected, 7) ~= nil
-			and table.find(affected, 2) ~= nil
-	end)())
+	check(
+		"leaving the server removes you and every invite to or from you",
+		(function()
+			local s = PartyCore.newState()
+			for id = 2, 3 do
+				PartyCore.invite(s, 1, id, 0, C)
+				PartyCore.accept(s, id, 1, 0, C)
+			end
+			PartyCore.invite(s, 1, 7, 0, C)
+			local affected = PartyCore.removePlayer(s, 1)
+			local inbox = s.Invites[7]
+			return PartyCore.partyOf(s, 1) == nil
+				and PartyCore.isLeader(s, 2)
+				and (inbox == nil or next(inbox) == nil)
+				and table.find(affected, 7) ~= nil
+				and table.find(affected, 2) ~= nil
+		end)()
+	)
 end
 
 group("Parties: requests from a client")
@@ -4926,19 +6615,40 @@ do
 	check("an unknown action is refused", not PartyCore.parseRequest({ Action = "EXPLODE" }).ok)
 	check("a non-table payload is refused", not PartyCore.parseRequest("INVITE").ok)
 	check("INVITE needs a target", not PartyCore.parseRequest({ Action = "INVITE" }).ok)
-	check("a fractional UserId is refused", not PartyCore.parseRequest({ Action = "INVITE", TargetUserId = 1.5 }).ok)
-	check("a negative UserId is refused", not PartyCore.parseRequest({ Action = "KICK", TargetUserId = -4 }).ok)
-	check("NaN is refused", not PartyCore.parseRequest({ Action = "KICK", TargetUserId = 0 / 0 }).ok)
-	check("infinity is refused", not PartyCore.parseRequest({ Action = "KICK", TargetUserId = math.huge }).ok)
-	check("a string UserId is refused", not PartyCore.parseRequest({ Action = "KICK", TargetUserId = "12" }).ok)
-	check("LEAVE ignores any target it is sent", (function()
-		local r = PartyCore.parseRequest({ Action = "LEAVE", TargetUserId = 5 })
-		return r.ok and r.value.TargetUserId == nil
-	end)())
-	check("a good INVITE parses", (function()
-		local r = PartyCore.parseRequest({ Action = "INVITE", TargetUserId = 12345 })
-		return r.ok and r.value.Action == "INVITE" and r.value.TargetUserId == 12345
-	end)())
+	check(
+		"a fractional UserId is refused",
+		not PartyCore.parseRequest({ Action = "INVITE", TargetUserId = 1.5 }).ok
+	)
+	check(
+		"a negative UserId is refused",
+		not PartyCore.parseRequest({ Action = "KICK", TargetUserId = -4 }).ok
+	)
+	check(
+		"NaN is refused",
+		not PartyCore.parseRequest({ Action = "KICK", TargetUserId = 0 / 0 }).ok
+	)
+	check(
+		"infinity is refused",
+		not PartyCore.parseRequest({ Action = "KICK", TargetUserId = math.huge }).ok
+	)
+	check(
+		"a string UserId is refused",
+		not PartyCore.parseRequest({ Action = "KICK", TargetUserId = "12" }).ok
+	)
+	check(
+		"LEAVE ignores any target it is sent",
+		(function()
+			local r = PartyCore.parseRequest({ Action = "LEAVE", TargetUserId = 5 })
+			return r.ok and r.value.TargetUserId == nil
+		end)()
+	)
+	check(
+		"a good INVITE parses",
+		(function()
+			local r = PartyCore.parseRequest({ Action = "INVITE", TargetUserId = 12345 })
+			return r.ok and r.value.Action == "INVITE" and r.value.TargetUserId == 12345
+		end)()
+	)
 end
 
 group("Parties: who goes through the portal")
@@ -4952,23 +6662,33 @@ do
 	end
 
 	local solo = PartyCore.expeditionGroup(s, 42)
-	check("a player with no party goes alone", solo.Role == "SOLO" and #solo.Members == 1 and solo.Members[1] == 42)
+	check(
+		"a player with no party goes alone",
+		solo.Role == "SOLO" and #solo.Members == 1 and solo.Members[1] == 42
+	)
 
 	local lead = PartyCore.expeditionGroup(s, 1)
-	check("the leader takes the whole party, leader first",
-		lead.Role == "LEADER" and #lead.Members == 3 and lead.Members[1] == 1)
+	check(
+		"the leader takes the whole party, leader first",
+		lead.Role == "LEADER" and #lead.Members == 3 and lead.Members[1] == 1
+	)
 
 	local member = PartyCore.expeditionGroup(s, 2)
 	check("a member takes nobody", member.Role == "MEMBER" and #member.Members == 0)
 
-	check("the leader after a promote leads first", (function()
-		PartyCore.promote(s, 1, 3)
-		local g = PartyCore.expeditionGroup(s, 3)
-		return g.Role == "LEADER" and g.Members[1] == 3 and #g.Members == 3
-	end)())
+	check(
+		"the leader after a promote leads first",
+		(function()
+			PartyCore.promote(s, 1, 3)
+			local g = PartyCore.expeditionGroup(s, 3)
+			return g.Role == "LEADER" and g.Members[1] == 3 and #g.Members == 3
+		end)()
+	)
 
 	local base = {
-		Profile = profile({ RollHistory = { { WorldId = "VERDANT_VALLEY", Rarity = "COMMON", At = 1 } } }),
+		Profile = profile({
+			RollHistory = { { WorldId = "VERDANT_VALLEY", Rarity = "COMMON", At = 1 } },
+		}),
 		Worlds = Worlds,
 		Chunks = Chunks,
 		Config = GameConfig,
@@ -4982,18 +6702,26 @@ do
 		o.PartyRole = role
 		return ExpeditionCore.evaluateEntry(o)
 	end
-	check("a party member at the portal is refused, and told why", (function()
-		local d = entry("MEMBER")
-		return not d.Allowed and d.Refusal == "NOT_PARTY_LEADER" and ExpeditionCore.refusalMessage(d.Refusal) ~= nil
-	end)())
+	check(
+		"a party member at the portal is refused, and told why",
+		(function()
+			local d = entry("MEMBER")
+			return not d.Allowed
+				and d.Refusal == "NOT_PARTY_LEADER"
+				and ExpeditionCore.refusalMessage(d.Refusal) ~= nil
+		end)()
+	)
 	check("a leader at the portal is allowed", entry("LEADER").Allowed)
 	check("solo is unchanged", entry("SOLO").Allowed and entry(nil).Allowed)
-	check("a member's refusal does not outrank the distance guard", (function()
-		local o = table.clone(base)
-		o.PartyRole = "MEMBER"
-		o.DistanceToGate = 1e9
-		return ExpeditionCore.evaluateEntry(o).Refusal == "TOO_FAR"
-	end)())
+	check(
+		"a member's refusal does not outrank the distance guard",
+		(function()
+			local o = table.clone(base)
+			o.PartyRole = "MEMBER"
+			o.DistanceToGate = 1e9
+			return ExpeditionCore.evaluateEntry(o).Refusal == "TOO_FAR"
+		end)()
+	)
 end
 
 group("Parties: coming home together")
@@ -5001,87 +6729,112 @@ group("Parties: coming home together")
 do
 	local C = cfg()
 
-	check("a party is rebuilt when leader and member are both home", (function()
-		local s = PartyCore.newState()
-		local pending = {
-			[1] = { LeaderUserId = 1, ExpiresAt = 100 },
-			[2] = { LeaderUserId = 1, ExpiresAt = 100 },
-		}
-		local changed = PartyCore.reunite(s, pending, { [1] = true, [2] = true }, 0, C)
-		local p = PartyCore.partyOf(s, 2)
-		return p ~= nil and p.LeaderUserId == 1 and #p.Members == 2 and #changed == 2
-	end)())
-
-	check("a member home before the leader waits for them", (function()
-		local s = PartyCore.newState()
-		local pending = {
-			[1] = { LeaderUserId = 1, ExpiresAt = 100 },
-			[2] = { LeaderUserId = 1, ExpiresAt = 100 },
-		}
-		PartyCore.reunite(s, pending, { [2] = true }, 0, C)
-		local before = PartyCore.partyOf(s, 2)
-		PartyCore.reunite(s, pending, { [1] = true, [2] = true }, 5, C)
-		return before == nil and PartyCore.partyOf(s, 2) ~= nil
-	end)())
-
-	check("a straggler still finds the party after it formed", (function()
-		local s = PartyCore.newState()
-		local pending = {
-			[1] = { LeaderUserId = 1, ExpiresAt = 100 },
-			[2] = { LeaderUserId = 1, ExpiresAt = 100 },
-			[3] = { LeaderUserId = 1, ExpiresAt = 100 },
-		}
-		PartyCore.reunite(s, pending, { [1] = true, [2] = true }, 0, C)
-		PartyCore.reunite(s, pending, { [1] = true, [2] = true, [3] = true }, 10, C)
-		return #PartyCore.partyOf(s, 1).Members == 3
-	end)())
-
-	check("nobody waits past the reunite window", (function()
-		local s = PartyCore.newState()
-		local pending = { [2] = { LeaderUserId = 1, ExpiresAt = 100 } }
-		PartyCore.reunite(s, pending, { [2] = true }, 101, C)
-		return pending[2] == nil
-	end)())
-
-	check("a member who joined another party meanwhile is left alone", (function()
-		local s = PartyCore.newState()
-		PartyCore.invite(s, 9, 2, 0, C)
-		PartyCore.accept(s, 2, 9, 0, C)
-		local pending = {
-			[1] = { LeaderUserId = 1, ExpiresAt = 100 },
-			[2] = { LeaderUserId = 1, ExpiresAt = 100 },
-		}
-		PartyCore.reunite(s, pending, { [1] = true, [2] = true, [9] = true }, 1, C)
-		return PartyCore.partyOf(s, 2).LeaderUserId == 9 and PartyCore.partyOf(s, 1) == nil
-	end)())
-
-	check("the leader leads however the party lands", (function()
-		local function run(order)
+	check(
+		"a party is rebuilt when leader and member are both home",
+		(function()
 			local s = PartyCore.newState()
-			local pending = {}
-			for _, id in { 1, 2, 3 } do
-				pending[id] = { LeaderUserId = 1, ExpiresAt = 100 }
+			local pending = {
+				[1] = { LeaderUserId = 1, ExpiresAt = 100 },
+				[2] = { LeaderUserId = 1, ExpiresAt = 100 },
+			}
+			local changed = PartyCore.reunite(s, pending, { [1] = true, [2] = true }, 0, C)
+			local p = PartyCore.partyOf(s, 2)
+			return p ~= nil and p.LeaderUserId == 1 and #p.Members == 2 and #changed == 2
+		end)()
+	)
+
+	check(
+		"a member home before the leader waits for them",
+		(function()
+			local s = PartyCore.newState()
+			local pending = {
+				[1] = { LeaderUserId = 1, ExpiresAt = 100 },
+				[2] = { LeaderUserId = 1, ExpiresAt = 100 },
+			}
+			PartyCore.reunite(s, pending, { [2] = true }, 0, C)
+			local before = PartyCore.partyOf(s, 2)
+			PartyCore.reunite(s, pending, { [1] = true, [2] = true }, 5, C)
+			return before == nil and PartyCore.partyOf(s, 2) ~= nil
+		end)()
+	)
+
+	check(
+		"a straggler still finds the party after it formed",
+		(function()
+			local s = PartyCore.newState()
+			local pending = {
+				[1] = { LeaderUserId = 1, ExpiresAt = 100 },
+				[2] = { LeaderUserId = 1, ExpiresAt = 100 },
+				[3] = { LeaderUserId = 1, ExpiresAt = 100 },
+			}
+			PartyCore.reunite(s, pending, { [1] = true, [2] = true }, 0, C)
+			PartyCore.reunite(s, pending, { [1] = true, [2] = true, [3] = true }, 10, C)
+			return #PartyCore.partyOf(s, 1).Members == 3
+		end)()
+	)
+
+	check(
+		"nobody waits past the reunite window",
+		(function()
+			local s = PartyCore.newState()
+			local pending = { [2] = { LeaderUserId = 1, ExpiresAt = 100 } }
+			PartyCore.reunite(s, pending, { [2] = true }, 101, C)
+			return pending[2] == nil
+		end)()
+	)
+
+	check(
+		"a member who joined another party meanwhile is left alone",
+		(function()
+			local s = PartyCore.newState()
+			PartyCore.invite(s, 9, 2, 0, C)
+			PartyCore.accept(s, 2, 9, 0, C)
+			local pending = {
+				[1] = { LeaderUserId = 1, ExpiresAt = 100 },
+				[2] = { LeaderUserId = 1, ExpiresAt = 100 },
+			}
+			PartyCore.reunite(s, pending, { [1] = true, [2] = true, [9] = true }, 1, C)
+			return PartyCore.partyOf(s, 2).LeaderUserId == 9 and PartyCore.partyOf(s, 1) == nil
+		end)()
+	)
+
+	check(
+		"the leader leads however the party lands",
+		(function()
+			local function run(order)
+				local s = PartyCore.newState()
+				local pending = {}
+				for _, id in { 1, 2, 3 } do
+					pending[id] = { LeaderUserId = 1, ExpiresAt = 100 }
+				end
+				local present = {}
+				for _, id in order do
+					present[id] = true
+					PartyCore.reunite(s, pending, present, 0, C)
+				end
+				local p = PartyCore.partyOf(s, 1)
+				return p and p.LeaderUserId == 1 and #p.Members == 3
 			end
-			local present = {}
-			for _, id in order do
-				present[id] = true
-				PartyCore.reunite(s, pending, present, 0, C)
-			end
-			local p = PartyCore.partyOf(s, 1)
-			return p and p.LeaderUserId == 1 and #p.Members == 3
-		end
-		return run({ 1, 2, 3 }) and run({ 3, 2, 1 }) and run({ 2, 1, 3 })
-	end)())
+			return run({ 1, 2, 3 }) and run({ 3, 2, 1 }) and run({ 2, 1, 3 })
+		end)()
+	)
 end
 
 group("Expeditions as their own server")
 
 do
-	check("AUTO builds in place in Studio", ExpeditionCore.instanceMode(GameConfig, true) == "IN_PLACE")
-	check("AUTO teleports on a live server", ExpeditionCore.instanceMode(GameConfig, false) == "TELEPORT")
+	check(
+		"AUTO builds in place in Studio",
+		ExpeditionCore.instanceMode(GameConfig, true) == "IN_PLACE"
+	)
+	check(
+		"AUTO teleports on a live server",
+		ExpeditionCore.instanceMode(GameConfig, false) == "TELEPORT"
+	)
 	check(
 		"a forced mode wins over Studio",
-		ExpeditionCore.instanceMode(cfg({ Expedition = { InstanceMode = "TELEPORT" } }), true) == "TELEPORT"
+		ExpeditionCore.instanceMode(cfg({ Expedition = { InstanceMode = "TELEPORT" } }), true)
+			== "TELEPORT"
 	)
 	check("the shipped mode is AUTO", GameConfig.Expedition.InstanceMode == "AUTO")
 
@@ -5109,56 +6862,88 @@ do
 		return m
 	end
 
-	check("a good manifest validates", (ExpeditionCore.validateManifest(manifest(), Worlds, Chunks)))
+	check(
+		"a good manifest validates",
+		(ExpeditionCore.validateManifest(manifest(), Worlds, Chunks))
+	)
 	check("a missing manifest fails", not ExpeditionCore.validateManifest(nil, Worlds, Chunks))
-	check("an unknown world fails", not ExpeditionCore.validateManifest(manifest({ WorldId = "NOWHERE" }), Worlds, Chunks))
-	check("a world with no map fails", not ExpeditionCore.validateManifest(manifest({ WorldId = "THE_UNKNOWN" }), Worlds, Chunks))
-	check("a leader outside the members fails", not ExpeditionCore.validateManifest(manifest({ LeaderUserId = 9 }), Worlds, Chunks))
-	check("an empty party fails", not ExpeditionCore.validateManifest(manifest({ Members = {} }), Worlds, Chunks))
-	check("a zero duration fails", not ExpeditionCore.validateManifest(manifest({ DurationSeconds = 0 }), Worlds, Chunks))
-	check("a future version fails", not ExpeditionCore.validateManifest(manifest({ Version = 2 }), Worlds, Chunks))
+	check(
+		"an unknown world fails",
+		not ExpeditionCore.validateManifest(manifest({ WorldId = "NOWHERE" }), Worlds, Chunks)
+	)
+	check(
+		"a world with no map fails",
+		not ExpeditionCore.validateManifest(manifest({ WorldId = "THE_UNKNOWN" }), Worlds, Chunks)
+	)
+	check(
+		"a leader outside the members fails",
+		not ExpeditionCore.validateManifest(manifest({ LeaderUserId = 9 }), Worlds, Chunks)
+	)
+	check(
+		"an empty party fails",
+		not ExpeditionCore.validateManifest(manifest({ Members = {} }), Worlds, Chunks)
+	)
+	check(
+		"a zero duration fails",
+		not ExpeditionCore.validateManifest(manifest({ DurationSeconds = 0 }), Worlds, Chunks)
+	)
+	check(
+		"a future version fails",
+		not ExpeditionCore.validateManifest(manifest({ Version = 2 }), Worlds, Chunks)
+	)
 
-	check("buildManifest copies the member list", (function()
-		local members = { 1, 2 }
-		local m = ExpeditionCore.buildManifest({
-			WorldId = "VERDANT_VALLEY",
-			Seed = 1,
-			DurationSeconds = 1,
-			LeaderUserId = 1,
-			Members = members,
-			HubPlaceId = 1,
-			HubJobId = "",
-			CreatedAt = 0,
-		})
-		table.insert(members, 3)
-		return #m.Members == 2
-	end)())
+	check(
+		"buildManifest copies the member list",
+		(function()
+			local members = { 1, 2 }
+			local m = ExpeditionCore.buildManifest({
+				WorldId = "VERDANT_VALLEY",
+				Seed = 1,
+				DurationSeconds = 1,
+				LeaderUserId = 1,
+				Members = members,
+				HubPlaceId = 1,
+				HubJobId = "",
+				CreatedAt = 0,
+			})
+			table.insert(members, 3)
+			return #m.Members == 2
+		end)()
+	)
 
 	check(
 		"only listed members may stay",
-		ExpeditionCore.isManifestMember(manifest(), 2) and not ExpeditionCore.isManifestMember(manifest(), 3)
+		ExpeditionCore.isManifestMember(manifest(), 2)
+			and not ExpeditionCore.isManifestMember(manifest(), 3)
 	)
 
-	check("arrivals do not stand inside one another", (function()
-		local seen = {}
-		for i = 1, GameConfig.Party.MaxSize do
-			local x, z = ExpeditionCore.arrivalOffset(i, GameConfig.Expedition.ArrivalSpreadStuds)
-			for _, other in seen do
-				if math.sqrt((other[1] - x) ^ 2 + (other[2] - z) ^ 2) < 3 then
-					return false
+	check(
+		"arrivals do not stand inside one another",
+		(function()
+			local seen = {}
+			for i = 1, GameConfig.Party.MaxSize do
+				local x, z =
+					ExpeditionCore.arrivalOffset(i, GameConfig.Expedition.ArrivalSpreadStuds)
+				for _, other in seen do
+					if math.sqrt((other[1] - x) ^ 2 + (other[2] - z) ^ 2) < 3 then
+						return false
+					end
 				end
+				table.insert(seen, { x, z })
 			end
-			table.insert(seen, { x, z })
-		end
-		return true
-	end)())
+			return true
+		end)()
+	)
 end
 
 group("Party config")
 
 do
 	check("real config validates with Party present", (Schema.validateConfig(GameConfig, Worlds)))
-	check("MaxSize below 2 is a boot error", not Schema.validateConfig(cfg({ Party = { MaxSize = 1 } }), Worlds))
+	check(
+		"MaxSize below 2 is a boot error",
+		not Schema.validateConfig(cfg({ Party = { MaxSize = 1 } }), Worlds)
+	)
 	check(
 		"an unknown InstanceMode is a boot error",
 		not Schema.validateConfig(cfg({ Expedition = { InstanceMode = "WARP" } }), Worlds)
@@ -5170,9 +6955,15 @@ end
 group("World ambience")
 do
 	local cfg = GameConfig.Ambience
-	check("Automatic graphics gets the middling scale", AmbienceCore.qualityScale(0, cfg) == cfg.AutomaticQuality)
+	check(
+		"Automatic graphics gets the middling scale",
+		AmbienceCore.qualityScale(0, cfg) == cfg.AutomaticQuality
+	)
 	check("graphics level 10 draws everything", AmbienceCore.qualityScale(10, cfg) == 1)
-	check("graphics level 1 is floored, not empty", AmbienceCore.qualityScale(1, cfg) == cfg.QualityFloor)
+	check(
+		"graphics level 1 is floored, not empty",
+		AmbienceCore.qualityScale(1, cfg) == cfg.QualityFloor
+	)
 	check("a scaled count never drops below one", AmbienceCore.scaledCount(3, 0.01) == 1)
 
 	-- THE INFINITE TRICK: wrap keeps every puff inside the square around the
@@ -5180,7 +6971,9 @@ do
 	local wrapped = true
 	for _, v in { -5000, -1601, -1600, 0, 1599, 1600, 7777 } do
 		local w = AmbienceCore.wrap(v, 1600)
-		if w < -1600 or w >= 1600 then wrapped = false end
+		if w < -1600 or w >= 1600 then
+			wrapped = false
+		end
 	end
 	check("a drifted puff always wraps back into the camera's square", wrapped)
 	check("wrap moves a puff by whole spans only", AmbienceCore.wrap(1700, 1600) == -1500)
@@ -5190,28 +6983,45 @@ do
 	local b = AmbienceCore.layoutClouds(layer, 60, 1, lcg(99))
 	local inside, same, kinds, bounded = true, true, {}, true
 	for i, cl in a do
-		if math.abs(cl.X) > layer.Radius or math.abs(cl.Z) > layer.Radius then inside = false end
-		if cl.X ~= b[i].X or #cl.Parts ~= #b[i].Parts then same = false end
+		if math.abs(cl.X) > layer.Radius or math.abs(cl.Z) > layer.Radius then
+			inside = false
+		end
+		if cl.X ~= b[i].X or #cl.Parts ~= #b[i].Parts then
+			same = false
+		end
 		-- lobes (<=3) + billows + a tuft allowance per billow
-		if #cl.Parts < 1 or #cl.Parts > 3 + layer.Billows * (1 + layer.Tufts) then bounded = false end
+		if #cl.Parts < 1 or #cl.Parts > 3 + layer.Billows * (1 + layer.Tufts) then
+			bounded = false
+		end
 		kinds[cl.Style] = true
 	end
 	check("clouds lie inside their layer's square", inside)
 	check("the same stream lays out the same sea", same)
 	check("every cloud has at least one piece and no more than its billows allow", bounded)
-	check("a layer's mix produces more than one kind of cloud",
-		(kinds.Cumulus and 1 or 0) + (kinds.Stratus and 1 or 0) + (kinds.Wisp and 1 or 0) >= 2)
+	check(
+		"a layer's mix produces more than one kind of cloud",
+		(kinds.Cumulus and 1 or 0) + (kinds.Stratus and 1 or 0) + (kinds.Wisp and 1 or 0) >= 2
+	)
 	-- Low quality trims billows before clouds: the same sea, less heaped.
 	local lowParts, highParts = 0, 0
-	for _, cl in AmbienceCore.layoutClouds(layer, 60, 0.3, lcg(7)) do lowParts += #cl.Parts end
-	for _, cl in AmbienceCore.layoutClouds(layer, 60, 1, lcg(7)) do highParts += #cl.Parts end
-	check("low graphics draws fewer cloud pieces than high", lowParts < highParts,
-		string.format("%d vs %d", lowParts, highParts))
+	for _, cl in AmbienceCore.layoutClouds(layer, 60, 0.3, lcg(7)) do
+		lowParts += #cl.Parts
+	end
+	for _, cl in AmbienceCore.layoutClouds(layer, 60, 1, lcg(7)) do
+		highParts += #cl.Parts
+	end
+	check(
+		"low graphics draws fewer cloud pieces than high",
+		lowParts < highParts,
+		string.format("%d vs %d", lowParts, highParts)
+	)
 	-- The detail pass: at full quality a heaped cumulus carries tufts, so it
 	-- is far more than a base and a few balls.
 	local richest = 0
 	for _, cl in AmbienceCore.layoutClouds(layer, 60, 1, lcg(11)) do
-		if cl.Style == "Cumulus" then richest = math.max(richest, #cl.Parts) end
+		if cl.Style == "Cumulus" then
+			richest = math.max(richest, #cl.Parts)
+		end
 	end
 	check("a full-quality cumulus is built from many pieces", richest >= 12, tostring(richest))
 	-- NOT BUBBLES. Owner's partner: "are we blowing bubbles or making clouds".
@@ -5221,23 +7031,31 @@ do
 	local solid = true
 	for _, cl in AmbienceCore.layoutClouds(layer, 60, 1, lcg(11)) do
 		for _, piece in cl.Parts do
-			if piece.Fade > 0 and cl.Style ~= "Wisp" then solid = false end
+			if piece.Fade > 0 and cl.Style ~= "Wisp" then
+				solid = false
+			end
 		end
 	end
 	check("heaped and banked clouds are solid, not see-through", solid)
-	check("Sky Citadel's near and middle cloud layers are opaque",
+	check(
+		"Sky Citadel's near and middle cloud layers are opaque",
 		Worlds.SKY_CITADEL.Environment.CloudSea[1].Transparency == 0
-			and Worlds.SKY_CITADEL.Environment.CloudSea[2].Transparency == 0)
+			and Worlds.SKY_CITADEL.Environment.CloudSea[2].Transparency == 0
+	)
 	-- Flat-bottomed: no billow or tuft hangs below its cloud's base.
 	local flatBottom = true
 	for _, cl in AmbienceCore.layoutClouds(layer, 60, 1, lcg(13)) do
 		if cl.Style == "Cumulus" then
 			local baseBottom = math.huge
 			for i, piece in cl.Parts do
-				if piece.Shade > 0.5 then baseBottom = math.min(baseBottom, piece.DY - piece.Height / 2) end
+				if piece.Shade > 0.5 then
+					baseBottom = math.min(baseBottom, piece.DY - piece.Height / 2)
+				end
 			end
 			for _, piece in cl.Parts do
-				if piece.Shade <= 0.5 and piece.DY - piece.Height / 2 < baseBottom - 1 then flatBottom = false end
+				if piece.Shade <= 0.5 and piece.DY - piece.Height / 2 < baseBottom - 1 then
+					flatBottom = false
+				end
 			end
 		end
 	end
@@ -5252,22 +7070,45 @@ do
 				for _, piece in cl.Parts do
 					local ratio = math.max(piece.Width, piece.Length) / piece.Height
 					worstRatio = math.max(worstRatio, ratio)
-					if ratio > 3 then pancake = true end
+					if ratio > 3 then
+						pancake = true
+					end
 				end
 			end
 		end
 	end
-	check("no cloud piece is a flat pancake (footprint over 3x its height)", not pancake,
-		string.format("worst %.2f", worstRatio))
-	check("Sky Citadel, looked down on, uses no wisps", (function()
-		for _, def in Worlds.SKY_CITADEL.Environment.CloudSea do
-			if def.Mix and def.Mix.Wisp then return false end
-		end
-		return true
-	end)())
-	check("an unlisted cloud material is a boot error",
-		#AmbienceCore.validate({ CloudCeiling = 10, CloudSea = { { Depth = 100, Count = 1, Radius = 100, Speed = 1,
-			SizeMin = 1, SizeMax = 2, Thickness = 0.5, Transparency = 0, Material = "Glass" } } }, "X") > 0)
+	check(
+		"no cloud piece is a flat pancake (footprint over 3x its height)",
+		not pancake,
+		string.format("worst %.2f", worstRatio)
+	)
+	check(
+		"Sky Citadel, looked down on, uses no wisps",
+		(function()
+			for _, def in Worlds.SKY_CITADEL.Environment.CloudSea do
+				if def.Mix and def.Mix.Wisp then
+					return false
+				end
+			end
+			return true
+		end)()
+	)
+	check("an unlisted cloud material is a boot error", #AmbienceCore.validate({
+		CloudCeiling = 10,
+		CloudSea = {
+			{
+				Depth = 100,
+				Count = 1,
+				Radius = 100,
+				Speed = 1,
+				SizeMin = 1,
+				SizeMax = 2,
+				Thickness = 0.5,
+				Transparency = 0,
+				Material = "Glass",
+			},
+		},
+	}, "X") > 0)
 	-- The budget that matters on a phone: Automatic graphics.
 	local autoParts = 0
 	for _, def in Worlds.SKY_CITADEL.Environment.CloudSea do
@@ -5276,7 +7117,11 @@ do
 			autoParts += #cl.Parts
 		end
 	end
-	check("the whole sea stays within budget on Automatic graphics", autoParts <= 400, tostring(autoParts))
+	check(
+		"the whole sea stays within budget on Automatic graphics",
+		autoParts <= 400,
+		tostring(autoParts)
+	)
 	-- THE CEILING. Owner walk: heaped cumulus climbed up through the islands.
 	-- Measured from the geometry: for every cloud in every layer, its tallest
 	-- piece's top must stay at or below CloudCeiling under the walk plane.
@@ -5285,37 +7130,76 @@ do
 		local worst, clear = -math.huge, true
 		for seed = 1, 40 do
 			for _, def in env.CloudSea do
-				for _, cl in AmbienceCore.layoutClouds(def, def.Count, 1, lcg(seed * 31 + def.Depth), env.CloudCeiling) do
+				for _, cl in
+					AmbienceCore.layoutClouds(
+						def,
+						def.Count,
+						1,
+						lcg(seed * 31 + def.Depth),
+						env.CloudCeiling
+					)
+				do
 					for _, piece in cl.Parts do
 						-- top relative to the walk plane (negative = below it)
 						local top = -def.Depth + cl.Y + piece.DY + piece.Height / 2
 						worst = math.max(worst, top)
-						if top > -env.CloudCeiling + 0.001 then clear = false end
+						if top > -env.CloudCeiling + 0.001 then
+							clear = false
+						end
 					end
 				end
 			end
 		end
-		check("no cloud ever rises above the ceiling under the islands", clear,
-			string.format("highest cloud top %.1f studs vs ceiling -%d", worst, env.CloudCeiling))
-		check("Sky Citadel's ceiling clears its deepest keel (96 below the deck)", env.CloudCeiling > 96)
-		check("a cloud sea with no ceiling is a boot error",
-			#AmbienceCore.validate({ CloudSea = env.CloudSea }, "X") > 0)
+		check(
+			"no cloud ever rises above the ceiling under the islands",
+			clear,
+			string.format("highest cloud top %.1f studs vs ceiling -%d", worst, env.CloudCeiling)
+		)
+		check(
+			"Sky Citadel's ceiling clears its deepest keel (96 below the deck)",
+			env.CloudCeiling > 96
+		)
+		check(
+			"a cloud sea with no ceiling is a boot error",
+			#AmbienceCore.validate({ CloudSea = env.CloudSea }, "X") > 0
+		)
 	end
-	check("an unknown cloud kind is a boot error",
-		#AmbienceCore.validate({ CloudSea = { { Depth = 1, Count = 1, Radius = 100, Speed = 1, SizeMin = 1,
-			SizeMax = 2, Thickness = 0.5, Transparency = 0, Mix = { Anvil = 1 } } } }, "X") > 0)
-	check("Sky Citadel's ambience validates", #AmbienceCore.validate(Worlds.SKY_CITADEL.Environment, "SC") == 0)
+	check("an unknown cloud kind is a boot error", #AmbienceCore.validate({
+		CloudSea = {
+			{
+				Depth = 1,
+				Count = 1,
+				Radius = 100,
+				Speed = 1,
+				SizeMin = 1,
+				SizeMax = 2,
+				Thickness = 0.5,
+				Transparency = 0,
+				Mix = { Anvil = 1 },
+			},
+		},
+	}, "X") > 0)
+	check(
+		"Sky Citadel's ambience validates",
+		#AmbienceCore.validate(Worlds.SKY_CITADEL.Environment, "SC") == 0
+	)
 	check("a world with no ambience is valid", #AmbienceCore.validate({}, "X") == 0)
-	check("a half-declared cloud layer is a boot error",
-		#AmbienceCore.validate({ CloudSea = { { Depth = 100 } } }, "X") > 0)
-	check("an atmosphere denser than 1 is a boot error",
-		#AmbienceCore.validate({ Atmosphere = { Density = 2, Haze = 1, Glare = 0 } }, "X") > 0)
+	check(
+		"a half-declared cloud layer is a boot error",
+		#AmbienceCore.validate({ CloudSea = { { Depth = 100 } } }, "X") > 0
+	)
+	check(
+		"an atmosphere denser than 1 is a boot error",
+		#AmbienceCore.validate({ Atmosphere = { Density = 2, Haze = 1, Glare = 0 } }, "X") > 0
+	)
 	-- Sky Citadel owns a slot of the day no other world holds.
 	local clocks, clash = {}, false
 	for id, w in Worlds do
 		local t = w.Environment.ClockTime
 		for other, t2 in clocks do
-			if math.abs(t - t2) < 1 then clash = true end
+			if math.abs(t - t2) < 1 then
+				clash = true
+			end
 		end
 		clocks[id] = t
 	end
@@ -5342,7 +7226,8 @@ do
 			local x, y, z = row.P[1], row.P[2], row.P[3]
 			if math.abs(x) > 128 or math.abs(z) > 128 or y < -96 or y > 160 then
 				inside = false
-				worst = worst or string.format("%s %s at (%.0f, %.0f, %.0f)", chunkId, row.Prop, x, y, z)
+				worst = worst
+					or string.format("%s %s at (%.0f, %.0f, %.0f)", chunkId, row.Prop, x, y, z)
 			end
 		end
 	end
@@ -5350,10 +7235,16 @@ do
 	local wings = 0
 	for _, rows in set.Placements do
 		for _, row in rows do
-			if row.Anim == "Wing" then wings += 1 end
+			if row.Anim == "Wing" then
+				wings += 1
+			end
 		end
 	end
-	check("every prop the 36-piece kit placed is here (503: +orrery rings, +turbine rotors)", count - wings == 503, tostring(count - wings))
+	check(
+		"every prop the 36-piece kit placed is here (503: +orrery rings, +turbine rotors)",
+		count - wings == 503,
+		tostring(count - wings)
+	)
 	check("every bird has two wings of its own (15 birds, 30 wings)", wings == 30, tostring(wings))
 
 	-- A placement's rotation is a real rotation: orthonormal, no scale or
@@ -5365,20 +7256,37 @@ do
 			local c1 = { r[1], r[4], r[7] }
 			local c2 = { r[2], r[5], r[8] }
 			local c3 = { r[3], r[6], r[9] }
-			local function dot(a, b) return a[1] * b[1] + a[2] * b[2] + a[3] * b[3] end
-			local det = r[1] * (r[5] * r[9] - r[6] * r[8]) - r[2] * (r[4] * r[9] - r[6] * r[7])
+			local function dot(a, b)
+				return a[1] * b[1] + a[2] * b[2] + a[3] * b[3]
+			end
+			local det = r[1] * (r[5] * r[9] - r[6] * r[8])
+				- r[2] * (r[4] * r[9] - r[6] * r[7])
 				+ r[3] * (r[4] * r[8] - r[5] * r[7])
-			if math.abs(dot(c1, c1) - 1) > 0.01 or math.abs(dot(c2, c2) - 1) > 0.01
-				or math.abs(dot(c1, c2)) > 0.01 or math.abs(dot(c2, c3)) > 0.01 or math.abs(det - 1) > 0.01 then
+			if
+				math.abs(dot(c1, c1) - 1) > 0.01
+				or math.abs(dot(c2, c2) - 1) > 0.01
+				or math.abs(dot(c1, c2)) > 0.01
+				or math.abs(dot(c2, c3)) > 0.01
+				or math.abs(det - 1) > 0.01
+			then
 				orthonormal = false
 			end
 		end
 	end
 	check("every prop rotation is a pure rotation", orthonormal)
 
-	check("tier 1 shows even on the lowest graphics", PropCore.tierShown(1, GameConfig.Ambience.QualityFloor, cfg))
-	check("tier 2 is dropped on the lowest graphics", not PropCore.tierShown(2, GameConfig.Ambience.QualityFloor, cfg))
-	check("tier 2 shows on Automatic graphics", PropCore.tierShown(2, GameConfig.Ambience.AutomaticQuality, cfg))
+	check(
+		"tier 1 shows even on the lowest graphics",
+		PropCore.tierShown(1, GameConfig.Ambience.QualityFloor, cfg)
+	)
+	check(
+		"tier 2 is dropped on the lowest graphics",
+		not PropCore.tierShown(2, GameConfig.Ambience.QualityFloor, cfg)
+	)
+	check(
+		"tier 2 shows on Automatic graphics",
+		PropCore.tierShown(2, GameConfig.Ambience.AutomaticQuality, cfg)
+	)
 
 	-- Each kind of thing moves the way that thing would. Which prop gets
 	-- which class is content; these pin what the classes mean.
@@ -5394,7 +7302,9 @@ do
 		local n = 0
 		for a in animOf[kind] or {} do
 			n += 1
-			if a ~= anim then return false end
+			if a ~= anim then
+				return false
+			end
 		end
 		return n == 1
 	end
@@ -5409,14 +7319,23 @@ do
 	local function sweep(anim, test)
 		for t = 0, 120, 0.37 do
 			local m = PropCore.motion(anim, t, 0.3, cfg)
-			if not test(m, t) then return false end
+			if not test(m, t) then
+				return false
+			end
 		end
 		return true
 	end
 	local function noScale(m)
 		for key in m do
-			if key ~= "lift" and key ~= "turn" and key ~= "tiltX" and key ~= "tiltZ" and key ~= "orbit"
-				and key ~= "bank" and key ~= "flap" then
+			if
+				key ~= "lift"
+				and key ~= "turn"
+				and key ~= "tiltX"
+				and key ~= "tiltZ"
+				and key ~= "orbit"
+				and key ~= "bank"
+				and key ~= "flap"
+			then
 				return false
 			end
 		end
@@ -5427,42 +7346,86 @@ do
 		all = all and sweep(anim, noScale)
 	end
 	check("no motion has a size term: nothing grows or shrinks", all)
-	check("a hoop neither bobs, sways nor turns off its plane", sweep("Roll", function(m)
-		return m.lift == 0 and m.turn == 0 and m.tiltX == 0 and m.orbit == 0
-	end))
-	local rollRate = (PropCore.motion("Roll", 1, 0, cfg).tiltZ - PropCore.motion("Roll", 0, 0, cfg).tiltZ)
-	check("a hoop takes at least a minute per turn", rollRate > 0 and tau / rollRate >= 60, tostring(tau / rollRate))
-	check("a keel ring only turns", sweep("Spin", function(m)
-		return m.lift == 0 and m.tiltX == 0 and m.tiltZ == 0 and m.orbit == 0
-	end))
-	check("a hovering crystal bobs within its amplitude and never tilts", sweep("Hover", function(m)
-		return math.abs(m.lift) <= cfg.Hover.Amplitude + 1e-9 and m.tiltX == 0 and m.tiltZ == 0
-	end))
-	check("a floating prop only bobs, within its amplitude", sweep("Float", function(m)
-		return math.abs(m.lift) <= cfg.Float.Amplitude + 1e-9 and m.turn == 0 and m.tiltX == 0 and m.tiltZ == 0
-	end))
-	check("a moored skiff rocks only slightly (under 5 degrees)", sweep("Moored", function(m)
-		return math.abs(m.tiltX) < math.rad(5) and math.abs(m.tiltZ) < math.rad(5) and m.turn == 0
-	end))
-	check("debris rocks mildly (under 15 degrees)", sweep("Tumble", function(m)
-		return math.abs(m.tiltX) < math.rad(15) and math.abs(m.tiltZ) < math.rad(15)
-	end))
-	check("every bob repeats: nothing drifts away over time", sweep("Float", function(m, t)
-		return math.abs(PropCore.motion("Float", t + cfg.Float.Period, 0.3, cfg).lift - m.lift) < 1e-6
-	end))
+	check(
+		"a hoop neither bobs, sways nor turns off its plane",
+		sweep("Roll", function(m)
+			return m.lift == 0 and m.turn == 0 and m.tiltX == 0 and m.orbit == 0
+		end)
+	)
+	local rollRate = (
+		PropCore.motion("Roll", 1, 0, cfg).tiltZ - PropCore.motion("Roll", 0, 0, cfg).tiltZ
+	)
+	check(
+		"a hoop takes at least a minute per turn",
+		rollRate > 0 and tau / rollRate >= 60,
+		tostring(tau / rollRate)
+	)
+	check(
+		"a keel ring only turns",
+		sweep("Spin", function(m)
+			return m.lift == 0 and m.tiltX == 0 and m.tiltZ == 0 and m.orbit == 0
+		end)
+	)
+	check(
+		"a hovering crystal bobs within its amplitude and never tilts",
+		sweep("Hover", function(m)
+			return math.abs(m.lift) <= cfg.Hover.Amplitude + 1e-9 and m.tiltX == 0 and m.tiltZ == 0
+		end)
+	)
+	check(
+		"a floating prop only bobs, within its amplitude",
+		sweep("Float", function(m)
+			return math.abs(m.lift) <= cfg.Float.Amplitude + 1e-9
+				and m.turn == 0
+				and m.tiltX == 0
+				and m.tiltZ == 0
+		end)
+	)
+	check(
+		"a moored skiff rocks only slightly (under 5 degrees)",
+		sweep("Moored", function(m)
+			return math.abs(m.tiltX) < math.rad(5)
+				and math.abs(m.tiltZ) < math.rad(5)
+				and m.turn == 0
+		end)
+	)
+	check(
+		"debris rocks mildly (under 15 degrees)",
+		sweep("Tumble", function(m)
+			return math.abs(m.tiltX) < math.rad(15) and math.abs(m.tiltZ) < math.rad(15)
+		end)
+	)
+	check(
+		"every bob repeats: nothing drifts away over time",
+		sweep("Float", function(m, t)
+			return math.abs(PropCore.motion("Float", t + cfg.Float.Period, 0.3, cfg).lift - m.lift)
+				< 1e-6
+		end)
+	)
 	local still = PropCore.motion("Static", 5, 0.5, cfg)
-	check("a static prop does not move",
-		still.lift == 0 and still.turn == 0 and still.tiltX == 0 and still.tiltZ == 0 and still.orbit == 0)
+	check(
+		"a static prop does not move",
+		still.lift == 0
+			and still.turn == 0
+			and still.tiltX == 0
+			and still.tiltZ == 0
+			and still.orbit == 0
+	)
 
 	-- Birds: the flock turns as one (no per-bird phase in the orbit), so birds
 	-- the generator placed clear of each other stay clear; and the bob stays
 	-- inside the clearance the generator proved each circle with (0.6).
-	check("a bird's orbit ignores its phase (birds never drift off their proven circles)",
-		PropCore.motion("Bird", 7, 0.1, cfg).orbit == PropCore.motion("Bird", 7, 0.9, cfg).orbit)
+	check(
+		"a bird's orbit ignores its phase (birds never drift off their proven circles)",
+		PropCore.motion("Bird", 7, 0.1, cfg).orbit == PropCore.motion("Bird", 7, 0.9, cfg).orbit
+	)
 	-- Same travel speed at any radius: an inner bird turns faster, covering the same studs.
 	local inner = PropCore.motion("Bird", 10, 0, cfg, 20).orbit * 20
 	local outer = PropCore.motion("Bird", 10, 0, cfg, 80).orbit * 80
-	check("every bird travels at the same speed", math.abs(inner - outer) < 1e-6 and math.abs(inner - cfg.Bird.Speed * 10) < 1e-6)
+	check(
+		"every bird travels at the same speed",
+		math.abs(inner - outer) < 1e-6 and math.abs(inner - cfg.Bird.Speed * 10) < 1e-6
+	)
 	check("a bird's bob fits the clearance its circle was proven with", cfg.Bird.Bob <= 0.6)
 	-- Heading: the nose (+X) along the direction of travel, at several spots.
 	local headingOk = true
@@ -5472,19 +7435,40 @@ do
 		local nose = { math.cos(h), -math.sin(h) } -- Ry(h) * (1, 0, 0), as (x, z)
 		local travel = { z, -x } -- d/dθ of Ry(θ) * (x, 0, z)
 		local len = math.sqrt(x * x + z * z)
-		if math.abs(nose[1] - travel[1] / len) > 1e-9 or math.abs(nose[2] - travel[2] / len) > 1e-9 then
+		if
+			math.abs(nose[1] - travel[1] / len) > 1e-9
+			or math.abs(nose[2] - travel[2] / len) > 1e-9
+		then
 			headingOk = false
 		end
 	end
 	check("a bird flies nose first", headingOk)
 	check("neighbouring props move out of step", PropCore.phase(1) ~= PropCore.phase(2))
 
-	local bad = { SKY_CITADEL = { Id = "SKY_CITADEL", Library = { "prop_x" }, Placements = {
-		SC_ENTRY = { { Prop = "prop_missing", Anim = "Wobble", Tier = 7, P = { 0, 0, 0 },
-			R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, S = { 1, 1, 1 } } } } } }
+	local bad = {
+		SKY_CITADEL = {
+			Id = "SKY_CITADEL",
+			Library = { "prop_x" },
+			Placements = {
+				SC_ENTRY = {
+					{
+						Prop = "prop_missing",
+						Anim = "Wobble",
+						Tier = 7,
+						P = { 0, 0, 0 },
+						R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
+						S = { 1, 1, 1 },
+					},
+				},
+			},
+		},
+	}
 	local okB, errsB = Schema.validateProps(bad, Chunks, Worlds)
-	check("a stale placement is a boot error (unknown prop, animation, tier)", not okB and #errsB >= 3,
-		tostring(#errsB))
+	check(
+		"a stale placement is a boot error (unknown prop, animation, tier)",
+		not okB and #errsB >= 3,
+		tostring(#errsB)
+	)
 end
 
 -- === Loot, fixtures and vault keys (build spec §7.5) ===================
@@ -5505,7 +7489,10 @@ do
 				for _, part in row.Parts do
 					-- The lid swings on its BACK edge (-Z; the lock faces +Z),
 					-- at its underside -- so it opens, not flips about its middle.
-					if part.Role == "Lid" and not (part.Hinge and part.Hinge[3] < 0 and part.Hinge[2] < 0) then
+					if
+						part.Role == "Lid"
+						and not (part.Hinge and part.Hinge[3] < 0 and part.Hinge[2] < 0)
+					then
 						lidsHinged = false
 					end
 				end
@@ -5515,120 +7502,229 @@ do
 			end
 		end
 	end
-	check("eleven chests (the 36-piece kit), one vault door, one forcefield", chests == 11 and kinds.VAULT == 1 and kinds.FORCEFIELD == 1)
+	check(
+		"eleven chests (the 36-piece kit), one vault door, one forcefield",
+		chests == 11 and kinds.VAULT == 1 and kinds.FORCEFIELD == 1
+	)
 	check("every chest lid hinges on its back edge, inside its piece", lidsHinged)
 	local vaultIn = nil
 	for chunkId, rows in fx.Placements do
 		for _, row in rows do
-			if row.Kind == "VAULT" then vaultIn = chunkId end
+			if row.Kind == "VAULT" then
+				vaultIn = chunkId
+			end
 		end
 	end
 	check("the vault is in the treasury", vaultIn == "SC_VAULT_TURN")
 	check("the forcefield is on the sealed gate", fx.Placements.SC_CAP_SEALED_GATE ~= nil)
 
-	local staleF = { SKY_CITADEL = { Id = "SKY_CITADEL", Library = { "fix_x" }, Placements = {
-		SC_ENTRY = {
-			{ Kind = "TRAPDOOR", P = { 0, 0, 0 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, Parts = {} },
-			{ Kind = "CHEST", P = { 0, 0, 0 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
-				Parts = { { Mesh = "fix_missing", Role = "Body", P = { 0, 0, 0 }, S = { 1, 1, 1 } } } },
-		} } } }
+	local staleF = {
+		SKY_CITADEL = {
+			Id = "SKY_CITADEL",
+			Library = { "fix_x" },
+			Placements = {
+				SC_ENTRY = {
+					{
+						Kind = "TRAPDOOR",
+						P = { 0, 0, 0 },
+						R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
+						Parts = {},
+					},
+					{
+						Kind = "CHEST",
+						P = { 0, 0, 0 },
+						R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
+						Parts = {
+							{
+								Mesh = "fix_missing",
+								Role = "Body",
+								P = { 0, 0, 0 },
+								S = { 1, 1, 1 },
+							},
+						},
+					},
+				},
+			},
+		},
+	}
 	local okS, errsS = Schema.validateFixtures(staleF, Chunks, Worlds)
-	check("a stale fixture is a boot error (unknown kind, missing mesh, missing lid)", not okS and #errsS >= 3,
-		table.concat(errsS, "; "))
+	check(
+		"a stale fixture is a boot error (unknown kind, missing mesh, missing lid)",
+		not okS and #errsS >= 3,
+		table.concat(errsS, "; ")
+	)
 
 	-- Pools: empty on purpose, but real and wired.
 	local okL, errsL = Schema.validateLoot(LootPools, Worlds)
 	check("loot pools and every world's Loot block validate", okL, table.concat(errsL, "; "))
 	local world = Worlds.SKY_CITADEL
-	check("Sky Citadel names a chest, vault and boss pool", LootPools[world.Loot.Chest] ~= nil
-		and LootPools[world.Loot.Vault] ~= nil and LootPools[world.Loot.Boss] ~= nil)
+	check(
+		"Sky Citadel names a chest, vault and boss pool",
+		LootPools[world.Loot.Chest] ~= nil
+			and LootPools[world.Loot.Vault] ~= nil
+			and LootPools[world.Loot.Boss] ~= nil
+	)
 	check("the vault key drops at 20% before modifiers", world.Loot.VaultKey.DropChance == 0.20)
-	local badPools = { BAD = { Id = "BAD", WorldId = "SKY_CITADEL", Rolls = 0,
-		Entries = { { ItemId = "lowercase", Weight = 0, Min = 3, Max = 1 } } } }
+	local badPools = {
+		BAD = {
+			Id = "BAD",
+			WorldId = "SKY_CITADEL",
+			Rolls = 0,
+			Entries = { { ItemId = "lowercase", Weight = 0, Min = 3, Max = 1 } },
+		},
+	}
 	local okB, errsB = Schema.validateLoot(badPools, {})
 	check("a malformed pool is a boot error", not okB and #errsB >= 4, table.concat(errsB, "; "))
 
 	-- Rolling.
 	local empty = { Id = "E", WorldId = "W", Rolls = 3, Entries = {} }
-	check("an empty pool rolls nothing (the slot, until pools are designed)", #LootCore.roll(empty, lcg(1)) == 0)
-	local pool = { Id = "P", WorldId = "W", Rolls = 4, Entries = {
-		{ ItemId = "GEM", Weight = 1, Min = 2, Max = 5 }, { ItemId = "COIN", Weight = 3 } } }
+	check(
+		"an empty pool rolls nothing (the slot, until pools are designed)",
+		#LootCore.roll(empty, lcg(1)) == 0
+	)
+	local pool = {
+		Id = "P",
+		WorldId = "W",
+		Rolls = 4,
+		Entries = {
+			{ ItemId = "GEM", Weight = 1, Min = 2, Max = 5 },
+			{ ItemId = "COIN", Weight = 3 },
+		},
+	}
 	local inRange, draws = true, 0
 	for seed = 1, 200 do
 		for _, d in LootCore.roll(pool, lcg(seed)) do
 			draws += 1
-			if d.ItemId == "GEM" and (d.Count < 2 or d.Count > 5) then inRange = false end
-			if d.ItemId == "COIN" and d.Count ~= 1 then inRange = false end
+			if d.ItemId == "GEM" and (d.Count < 2 or d.Count > 5) then
+				inRange = false
+			end
+			if d.ItemId == "COIN" and d.Count ~= 1 then
+				inRange = false
+			end
 		end
 	end
-	check("each roll draws Rolls items, each within its count range", inRange and draws == 800, tostring(draws))
-	local shares = LootCore.rollForAll(pool, { 11, 22, 33 }, function(userId) return lcg(userId * 7919) end)
+	check(
+		"each roll draws Rolls items, each within its count range",
+		inRange and draws == 800,
+		tostring(draws)
+	)
+	local shares = LootCore.rollForAll(pool, { 11, 22, 33 }, function(userId)
+		return lcg(userId * 7919)
+	end)
 	local function sig(list)
 		local out = {}
-		for _, d in list do table.insert(out, d.ItemId .. d.Count) end
+		for _, d in list do
+			table.insert(out, d.ItemId .. d.Count)
+		end
 		return table.concat(out, ",")
 	end
-	check("every party member gets their own share", shares[11] and shares[22] and shares[33]
-		and not (sig(shares[11]) == sig(shares[22]) and sig(shares[22]) == sig(shares[33])))
+	check(
+		"every party member gets their own share",
+		shares[11]
+			and shares[22]
+			and shares[33]
+			and not (sig(shares[11]) == sig(shares[22]) and sig(shares[22]) == sig(shares[33]))
+	)
 
 	-- Keys.
-	check("a modifier moves the key chance (20% - 5% = 15%)",
-		math.abs(KeyCore.dropChance(0.2, { { KeyChanceDelta = -0.05 } }) - 0.15) < 1e-9)
+	check(
+		"a modifier moves the key chance (20% - 5% = 15%)",
+		math.abs(KeyCore.dropChance(0.2, { { KeyChanceDelta = -0.05 } }) - 0.15) < 1e-9
+	)
 	check("no modifiers leaves the base chance", KeyCore.dropChance(0.2, {}) == 0.2)
-	check("the chance is clamped to 0..1", KeyCore.dropChance(0.2, { { KeyChanceDelta = -1 } }) == 0
-		and KeyCore.dropChance(0.9, { { KeyChanceDelta = 0.5 } }) == 1)
+	check(
+		"the chance is clamped to 0..1",
+		KeyCore.dropChance(0.2, { { KeyChanceDelta = -1 } }) == 0
+			and KeyCore.dropChance(0.9, { { KeyChanceDelta = 0.5 } }) == 1
+	)
 	-- A key belongs to its world: only that world's boss drops it (owner,
 	-- 2026-09-23 -- "it is a SKY CITADEL VAULT KEY").
 	local ownKeys, keyIds = true, {}
 	for worldId, w in Worlds do
 		local k = w.Loot and w.Loot.VaultKey
 		if k then
-			if string.sub(k.Id, 1, #worldId + 1) ~= worldId .. "_" or keyIds[k.Id] then ownKeys = false end
+			if string.sub(k.Id, 1, #worldId + 1) ~= worldId .. "_" or keyIds[k.Id] then
+				ownKeys = false
+			end
 			keyIds[k.Id] = true
 		end
 	end
-	check("every world's vault key is its own, named for its world", ownKeys and keyIds.SKY_CITADEL_VAULT_KEY)
+	check(
+		"every world's vault key is its own, named for its world",
+		ownKeys and keyIds.SKY_CITADEL_VAULT_KEY
+	)
 	local keys = {}
 	local first = KeyCore.grant(keys, "SKY_CITADEL_VAULT_KEY", loot.MaxKeysPerKind)
 	local second = KeyCore.grant(keys, "SKY_CITADEL_VAULT_KEY", loot.MaxKeysPerKind)
-	check("a player holds at most one of each key", first and not second and keys.SKY_CITADEL_VAULT_KEY == 1)
-	check("a different kind of key is its own slot", KeyCore.grant(keys, "OTHER_VAULT_KEY", loot.MaxKeysPerKind))
-	check("using a key takes it to zero", KeyCore.spend(keys, "SKY_CITADEL_VAULT_KEY")
-		and KeyCore.count(keys, "SKY_CITADEL_VAULT_KEY") == 0 and keys.SKY_CITADEL_VAULT_KEY == nil)
+	check(
+		"a player holds at most one of each key",
+		first and not second and keys.SKY_CITADEL_VAULT_KEY == 1
+	)
+	check(
+		"a different kind of key is its own slot",
+		KeyCore.grant(keys, "OTHER_VAULT_KEY", loot.MaxKeysPerKind)
+	)
+	check(
+		"using a key takes it to zero",
+		KeyCore.spend(keys, "SKY_CITADEL_VAULT_KEY")
+			and KeyCore.count(keys, "SKY_CITADEL_VAULT_KEY") == 0
+			and keys.SKY_CITADEL_VAULT_KEY == nil
+	)
 	check("with no key the vault stays shut", not KeyCore.spend(keys, "SKY_CITADEL_VAULT_KEY"))
-	check("the vault's per-player rule leaves no party-wide switch behind", loot.VaultConsumes == nil)
+	check(
+		"the vault's per-player rule leaves no party-wide switch behind",
+		loot.VaultConsumes == nil
+	)
 
 	-- The treasury is in about one map in five.
 	local withVault, built = 0, 0
 	for trial = 1, 400 do
 		local okA, layout = ChunkCore.assembleWithRetry(Chunks, {
-			WorldId = "SKY_CITADEL", PathLength = GameConfig.Expedition.PathLength,
-			BranchLength = GameConfig.Expedition.BranchLength, MaxRepeats = GameConfig.Expedition.MaxRepeats,
+			WorldId = "SKY_CITADEL",
+			PathLength = GameConfig.Expedition.PathLength,
+			BranchLength = GameConfig.Expedition.BranchLength,
+			MaxRepeats = GameConfig.Expedition.MaxRepeats,
 			IncludeSide = true,
-		}, function(a) return lcg(trial * 7717 + a * 31) end, 5)
+		}, function(a)
+			return lcg(trial * 7717 + a * 31)
+		end, 5)
 		if okA then
 			built += 1
 			for _, c in layout.Chunks do
-				if c.ChunkId == "SC_VAULT_TURN" then withVault += 1 break end
+				if c.ChunkId == "SC_VAULT_TURN" then
+					withVault += 1
+					break
+				end
 			end
 		end
 	end
 	local share = withVault / math.max(built, 1)
-	check("the treasury appears in about one map in five (12-28%)", share >= 0.12 and share <= 0.28,
-		string.format("%.1f%% of %d maps", share * 100, built))
+	check(
+		"the treasury appears in about one map in five (12-28%)",
+		share >= 0.12 and share <= 0.28,
+		string.format("%.1f%% of %d maps", share * 100, built)
+	)
 	-- /vaultchance (a temporary testing command) overrides it per map.
 	local function vaultShare(override)
 		local n, ok = 0, 0
 		for trial = 1, 100 do
 			local okA, layout = ChunkCore.assembleWithRetry(Chunks, {
-				WorldId = "SKY_CITADEL", PathLength = GameConfig.Expedition.PathLength,
-				BranchLength = GameConfig.Expedition.BranchLength, MaxRepeats = GameConfig.Expedition.MaxRepeats,
-				IncludeSide = true, SpawnOverrides = { SC_VAULT_TURN = override },
-			}, function(a) return lcg(trial * 3319 + a * 17) end, 5)
+				WorldId = "SKY_CITADEL",
+				PathLength = GameConfig.Expedition.PathLength,
+				BranchLength = GameConfig.Expedition.BranchLength,
+				MaxRepeats = GameConfig.Expedition.MaxRepeats,
+				IncludeSide = true,
+				SpawnOverrides = { SC_VAULT_TURN = override },
+			}, function(a)
+				return lcg(trial * 3319 + a * 17)
+			end, 5)
 			if okA then
 				ok += 1
 				for _, c in layout.Chunks do
-					if c.ChunkId == "SC_VAULT_TURN" then n += 1 break end
+					if c.ChunkId == "SC_VAULT_TURN" then
+						n += 1
+						break
+					end
 				end
 			end
 		end
@@ -5636,44 +7732,107 @@ do
 	end
 	local always, builtA = vaultShare(1)
 	local never = vaultShare(0)
-	check("a spawn override of 1 puts the treasury in (nearly) every map", always >= 0.9 and builtA >= 95,
-		string.format("%.0f%% of %d", always * 100, builtA))
+	check(
+		"a spawn override of 1 puts the treasury in (nearly) every map",
+		always >= 0.9 and builtA >= 95,
+		string.format("%.0f%% of %d", always * 100, builtA)
+	)
 	check("a spawn override of 0 keeps it out of every map", never == 0)
-	local okSC, errsSC = Schema.validateChunks({ X = {
-		Id = "X", WorldId = "W", Role = "BOSS", AssetKey = "VV_CHUNK_ENTRY", Weight = 1, SpawnChance = 1.5,
-		SizeX = 1, SizeY = 1, SizeZ = 1, Sockets = {} } }, AssetManifest)
+	local okSC, errsSC = Schema.validateChunks({
+		X = {
+			Id = "X",
+			WorldId = "W",
+			Role = "BOSS",
+			AssetKey = "VV_CHUNK_ENTRY",
+			Weight = 1,
+			SpawnChance = 1.5,
+			SizeX = 1,
+			SizeY = 1,
+			SizeZ = 1,
+			Sockets = {},
+		},
+	}, AssetManifest)
 	local both = 0
 	for _, e in errsSC do
-		if string.find(e, "SpawnChance", 1, true) then both += 1 end
+		if string.find(e, "SpawnChance", 1, true) then
+			both += 1
+		end
 	end
-	check("SpawnChance is refused out of range and on an arena", not okSC and both >= 2, table.concat(errsSC, "; "))
+	check(
+		"SpawnChance is refused out of range and on an arena",
+		not okSC and both >= 2,
+		table.concat(errsSC, "; ")
+	)
 
 	-- How opened fixtures move.
 	local f = loot.Fixture
-	check("a lid starts shut and ends open", FixtureCore.lidAngle(0, f) == 0
-		and math.abs(FixtureCore.lidAngle(f.LidSeconds * 3, f) + f.LidAngle) < 1e-9)
-	check("the vault door spins its turns, then sinks in",
+	check(
+		"a lid starts shut and ends open",
+		FixtureCore.lidAngle(0, f) == 0
+			and math.abs(FixtureCore.lidAngle(f.LidSeconds * 3, f) + f.LidAngle) < 1e-9
+	)
+	check(
+		"the vault door spins its turns, then sinks in",
 		math.abs(FixtureCore.doorSpin(f.DoorSeconds, f) - math.pi * 2 * f.DoorTurns) < 1e-9
-		and FixtureCore.doorRecess(f.DoorSeconds * 0.5, f) == 0
-		and math.abs(FixtureCore.doorRecess(f.DoorSeconds + f.DoorRecessSeconds, f) - f.DoorRecess) < 1e-9)
+			and FixtureCore.doorRecess(f.DoorSeconds * 0.5, f) == 0
+			and math.abs(
+					FixtureCore.doorRecess(f.DoorSeconds + f.DoorRecessSeconds, f) - f.DoorRecess
+				)
+				< 1e-9
+	)
 	local within = true
 	for t = 0, 20, 0.13 do
 		local tr = FixtureCore.fieldTransparency(t, 0.3, f)
-		if tr < f.MinTransparency - 1e-9 or tr > f.MaxTransparency + 1e-9 then within = false end
+		if tr < f.MinTransparency - 1e-9 or tr > f.MaxTransparency + 1e-9 then
+			within = false
+		end
 	end
-	check("the forcefield breathes but never vanishes or goes solid",
-		within and f.MinTransparency > 0 and f.MaxTransparency < 1)
-	check("only chests and vaults take a prompt", FixtureCore.OPENABLE.CHEST and FixtureCore.OPENABLE.VAULT
-		and not FixtureCore.OPENABLE.FORCEFIELD)
+	check(
+		"the forcefield breathes but never vanishes or goes solid",
+		within and f.MinTransparency > 0 and f.MaxTransparency < 1
+	)
+	check(
+		"only chests and vaults take a prompt",
+		FixtureCore.OPENABLE.CHEST
+			and FixtureCore.OPENABLE.VAULT
+			and not FixtureCore.OPENABLE.FORCEFIELD
+	)
 
 	-- Wings.
-	check("a bird's two wings rise together",
-		PropCore.wingAngle(0.3, -1) > 0 and PropCore.wingAngle(0.3, 1) < 0
-		and PropCore.wingAngle(0.3, -1) == -PropCore.wingAngle(0.3, 1))
-	local badWing = { SKY_CITADEL = { Id = "SKY_CITADEL", Library = { "w" }, Placements = { SC_ENTRY = {
-		{ Prop = "w", Anim = "Float", Tier = 1, P = { 0, 0, 0 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, S = { 1, 1, 1 } },
-		{ Prop = "w", Anim = "Wing", Tier = 1, P = { 0, 0, 0 }, R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 }, S = { 1, 1, 1 },
-			Attach = 1, Hinge = { 0, 0, 0 } } } } } }
+	check(
+		"a bird's two wings rise together",
+		PropCore.wingAngle(0.3, -1) > 0
+			and PropCore.wingAngle(0.3, 1) < 0
+			and PropCore.wingAngle(0.3, -1) == -PropCore.wingAngle(0.3, 1)
+	)
+	local badWing = {
+		SKY_CITADEL = {
+			Id = "SKY_CITADEL",
+			Library = { "w" },
+			Placements = {
+				SC_ENTRY = {
+					{
+						Prop = "w",
+						Anim = "Float",
+						Tier = 1,
+						P = { 0, 0, 0 },
+						R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
+						S = { 1, 1, 1 },
+					},
+					{
+						Prop = "w",
+						Anim = "Wing",
+						Tier = 1,
+						P = { 0, 0, 0 },
+						R = { 1, 0, 0, 0, 1, 0, 0, 0, 1 },
+						S = { 1, 1, 1 },
+						Attach = 1,
+						Hinge = { 0, 0, 0 },
+					},
+				},
+			},
+		},
+	}
 	local okW = Schema.validateProps(badWing, Chunks, Worlds)
 	check("a wing on anything but a bird is a boot error", not okW)
 end
@@ -5683,28 +7842,51 @@ group("Scenario atmospheres: one per run, from the seed")
 do
 	local Atmospheres = __require("Atmospheres")
 	local set = Atmospheres.SKY_CITADEL
-	check("Sky Citadel ships its seven scenario atmospheres", set ~= nil and set.Profiles.SIEGE ~= nil
-		and set.Profiles.AETHER_SURGE ~= nil)
+	check(
+		"Sky Citadel ships its seven scenario atmospheres",
+		set ~= nil and set.Profiles.SIEGE ~= nil and set.Profiles.AETHER_SURGE ~= nil
+	)
 	local seen, stable = {}, true
 	for seed = 1, 900 do
 		local id = AmbienceCore.pickAtmosphere(seed, set, 2)
 		seen[id or "BASE"] = true
-		if AmbienceCore.pickAtmosphere(seed, set, 2) ~= id then stable = false end
+		if AmbienceCore.pickAtmosphere(seed, set, 2) ~= id then
+			stable = false
+		end
 	end
 	local n = 0
-	for _ in seen do n += 1 end
+	for _ in seen do
+		n += 1
+	end
 	check("every atmosphere (and the plain air) turns up across seeds", n == 8, tostring(n))
 	check("the same seed always draws the same air", stable)
-	local base = { Brightness = 2, Atmosphere = { Density = 0.3, Haze = 1 }, CloudSea = { 1, 2 }, Motes = { Rate = 1 } }
-	local o = AmbienceCore.overlay(base, { Brightness = 3, Atmosphere = { Haze = 2 }, CloudSea = { 9 }, Motes = false })
-	check("an atmosphere replaces scalars, merges blocks, replaces lists, removes on false",
-		o.Brightness == 3 and o.Atmosphere.Density == 0.3 and o.Atmosphere.Haze == 2 and #o.CloudSea == 1
-		and o.Motes == nil and base.Atmosphere.Haze == 1)
+	local base = {
+		Brightness = 2,
+		Atmosphere = { Density = 0.3, Haze = 1 },
+		CloudSea = { 1, 2 },
+		Motes = { Rate = 1 },
+	}
+	local o = AmbienceCore.overlay(
+		base,
+		{ Brightness = 3, Atmosphere = { Haze = 2 }, CloudSea = { 9 }, Motes = false }
+	)
+	check(
+		"an atmosphere replaces scalars, merges blocks, replaces lists, removes on false",
+		o.Brightness == 3
+			and o.Atmosphere.Density == 0.3
+			and o.Atmosphere.Haze == 2
+			and #o.CloudSea == 1
+			and o.Motes == nil
+			and base.Atmosphere.Haze == 1
+	)
 	local bad = nil
 	local World = Worlds.SKY_CITADEL
 	for id, prof in set.Profiles do
-		local errs = AmbienceCore.validate(AmbienceCore.overlay(World.Environment, prof.Environment), id)
-		if #errs > 0 then bad = bad or (id .. ": " .. errs[1]) end
+		local errs =
+			AmbienceCore.validate(AmbienceCore.overlay(World.Environment, prof.Environment), id)
+		if #errs > 0 then
+			bad = bad or (id .. ": " .. errs[1])
+		end
 	end
 	check("every atmosphere over Sky Citadel's air is a valid Environment", bad == nil, bad)
 end
@@ -5715,23 +7897,41 @@ end
 -- the same one the hand-written kits answer: does it ASSEMBLE?
 do
 	group("Drop-in chunk kits")
-	check("folder name -> world id", ChunkKitCore.worldIdFor("sky_citadel") == "SKY_CITADEL"
-		and ChunkKitCore.worldIdFor("Astral Reach") == "ASTRAL_REACH")
-	check("role from name", ChunkKitCore.roleFor("chunk_entry") == "ENTRY"
-		and ChunkKitCore.roleFor("chunk_boss_clearing") == "BOSS"
-		and ChunkKitCore.roleFor("chunk_prism_arena") == "BOSS"
-		and ChunkKitCore.roleFor("chunk_side_chapel") == "SIDE"
-		and ChunkKitCore.roleFor("chunk_cap_sealed_gate") == "CAP"
-		and ChunkKitCore.roleFor("chunk_path_tee") == "PATH"
-		and ChunkKitCore.roleFor("chunk_meadow_a") == "COMBAT")
+	check(
+		"folder name -> world id",
+		ChunkKitCore.worldIdFor("sky_citadel") == "SKY_CITADEL"
+			and ChunkKitCore.worldIdFor("Astral Reach") == "ASTRAL_REACH"
+	)
+	check(
+		"role from name",
+		ChunkKitCore.roleFor("chunk_entry") == "ENTRY"
+			and ChunkKitCore.roleFor("chunk_boss_clearing") == "BOSS"
+			and ChunkKitCore.roleFor("chunk_prism_arena") == "BOSS"
+			and ChunkKitCore.roleFor("chunk_side_chapel") == "SIDE"
+			and ChunkKitCore.roleFor("chunk_cap_sealed_gate") == "CAP"
+			and ChunkKitCore.roleFor("chunk_path_tee") == "PATH"
+			and ChunkKitCore.roleFor("chunk_meadow_a") == "COMBAT"
+	)
 	check("a Role attribute beats the name", ChunkKitCore.roleFor("chunk_meadow", "side") == "SIDE")
-	check("Openings text parses", table.concat(ChunkKitCore.parseFacings("n, s,W"), ",") == "0,180,270")
+	check(
+		"Openings text parses",
+		table.concat(ChunkKitCore.parseFacings("n, s,W"), ",") == "0,180,270"
+	)
 
 	local function piece(name, facings, attrs)
 		local openings = {}
-		for _, f in facings do table.insert(openings, { Facing = f, OffsetY = 0 }) end
-		return { Name = name, SizeX = 256, SizeY = 60, SizeZ = 256, GroundOffsetY = 4,
-			Openings = openings, Attributes = attrs or {} }
+		for _, f in facings do
+			table.insert(openings, { Facing = f, OffsetY = 0 })
+		end
+		return {
+			Name = name,
+			SizeX = 256,
+			SizeY = 60,
+			SizeZ = 256,
+			GroundOffsetY = 4,
+			Openings = openings,
+			Attributes = attrs or {},
+		}
 	end
 	local N, E, S, W = 0, 90, 180, 270
 	local pieces = {
@@ -5751,60 +7951,114 @@ do
 	}
 	local defs, report, problems = ChunkKitCore.build("DROPIN_TEST", pieces)
 	local byId = {}
-	for _, d in defs do byId[d.Id] = d end
-	check("recolour variants are not pieces", byId.DROPIN_TEST_RUINS__ASHFALL == nil and #defs == 11, tostring(#defs))
-	check("a piece with no openings is reported, not registered",
-		byId.DROPIN_TEST_BLANK == nil and #problems == 1, table.concat(problems, "; "))
-	check("the arena keeps one opening, and it is a gate",
+	for _, d in defs do
+		byId[d.Id] = d
+	end
+	check(
+		"recolour variants are not pieces",
+		byId.DROPIN_TEST_RUINS__ASHFALL == nil and #defs == 11,
+		tostring(#defs)
+	)
+	check(
+		"a piece with no openings is reported, not registered",
+		byId.DROPIN_TEST_BLANK == nil and #problems == 1,
+		table.concat(problems, "; ")
+	)
+	check(
+		"the arena keeps one opening, and it is a gate",
 		#byId.DROPIN_TEST_BOSS_CLEARING.Sockets == 1
-		and byId.DROPIN_TEST_BOSS_CLEARING.Sockets[1].Kind == "GATE"
-		and byId.DROPIN_TEST_BOSS_CLEARING.Sockets[1].Facing == S)
+			and byId.DROPIN_TEST_BOSS_CLEARING.Sockets[1].Kind == "GATE"
+			and byId.DROPIN_TEST_BOSS_CLEARING.Sockets[1].Facing == S
+	)
 	local gates = 0
 	for _, d in defs do
 		if d.Role ~= "BOSS" then
-			for _, s in d.Sockets do if s.Kind == "GATE" then gates += 1 end end
+			for _, s in d.Sockets do
+				if s.Kind == "GATE" then
+					gates += 1
+				end
+			end
 		end
 	end
 	check("some ordinary piece leads into the arena", gates >= 1, tostring(gates))
 	local tee = {}
-	for _, s in byId.DROPIN_TEST_PATH_TEE.Sockets do tee[s.Id] = s end
-	check("sockets sit on the edge midpoints",
-		tee.E.OffsetX == 128 and tee.E.OffsetZ == 0 and tee.S.OffsetZ == 128 and tee.W.OffsetX == -128 and tee.N == nil)
-	check("the report names every role", string.find(report[1], "1 entry", 1, true) ~= nil, report[1])
+	for _, s in byId.DROPIN_TEST_PATH_TEE.Sockets do
+		tee[s.Id] = s
+	end
+	check(
+		"sockets sit on the edge midpoints",
+		tee.E.OffsetX == 128
+			and tee.E.OffsetZ == 0
+			and tee.S.OffsetZ == 128
+			and tee.W.OffsetX == -128
+			and tee.N == nil
+	)
+	check(
+		"the report names every role",
+		string.find(report[1], "1 entry", 1, true) ~= nil,
+		report[1]
+	)
 
 	local merged = table.clone(Chunks)
 	for _, d in defs do
 		merged[d.Id] = d
 		if not AssetManifest.exists(d.AssetKey) then
-			AssetManifest.register(d.AssetKey, { AssetId = "rbxassetid://1", Status = "UPLOADED", Source = "test" })
+			AssetManifest.register(
+				d.AssetKey,
+				{ AssetId = "rbxassetid://1", Status = "UPLOADED", Source = "test" }
+			)
 		end
 	end
 	local okS, errS = Schema.validateChunks(merged, AssetManifest)
-	check("a drop-in kit passes the same validation as a typed one", okS, errS and table.concat(errS, "; "))
+	check(
+		"a drop-in kit passes the same validation as a typed one",
+		okS,
+		errS and table.concat(errS, "; ")
+	)
 
 	local built, bad = 0, nil
 	for trial = 1, 200 do
 		local okA, layout = ChunkCore.assembleWithRetry(merged, {
-			WorldId = "DROPIN_TEST", PathLength = 5, IncludeSide = true,
-			BranchLength = GameConfig.Expedition.BranchLength, MaxRepeats = GameConfig.Expedition.MaxRepeats,
-		}, function(a) return ExpeditionCore.streamFor(trial * 7919, a) end, GameConfig.Expedition.AssemblyAttempts)
+			WorldId = "DROPIN_TEST",
+			PathLength = 5,
+			IncludeSide = true,
+			BranchLength = GameConfig.Expedition.BranchLength,
+			MaxRepeats = GameConfig.Expedition.MaxRepeats,
+		}, function(a)
+			return ExpeditionCore.streamFor(trial * 7919, a)
+		end, GameConfig.Expedition.AssemblyAttempts)
 		if okA then
 			built += 1
 			local okV, errV = ChunkCore.validateLayout(layout, merged)
-			if not okV then bad = bad or table.concat(errV, ", ") end
+			if not okV then
+				bad = bad or table.concat(errV, ", ")
+			end
 		else
 			bad = bad or tostring(layout)
 		end
 	end
-	check("a drop-in kit assembles on nearly every seed", built >= 190, string.format("%d/200 -- %s", built, tostring(bad)))
+	check(
+		"a drop-in kit assembles on nearly every seed",
+		built >= 190,
+		string.format("%d/200 -- %s", built, tostring(bad))
+	)
 end
 
 -- === summary ========================================================
-print(string.format("\n%s\n%d passed, %d failed, %d total", string.rep("=", 60),
-	passed, failed, passed + failed))
+print(
+	string.format(
+		"\n%s\n%d passed, %d failed, %d total",
+		string.rep("=", 60),
+		passed,
+		failed,
+		passed + failed
+	)
+)
 
 if failed > 0 then
 	print("\nFAILURES:")
-	for _, f in failures do print("  - " .. f) end
+	for _, f in failures do
+		print("  - " .. f)
+	end
 	error(string.format("%d test(s) failed", failed), 0)
 end

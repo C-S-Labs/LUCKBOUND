@@ -88,7 +88,8 @@ end
 --- ours to resize, and a UIScale on someone else's ScreenGui is the kind of
 --- thing that breaks in an update.
 local function isOurs(gui: Instance): boolean
-	return gui:IsA("ScreenGui") and string.sub(gui.Name, 1, #Constants.NAMES.ROOT) == Constants.NAMES.ROOT
+	return gui:IsA("ScreenGui")
+		and string.sub(gui.Name, 1, #Constants.NAMES.ROOT) == Constants.NAMES.ROOT
 end
 
 local function scaleFor(gui: ScreenGui): UIScale

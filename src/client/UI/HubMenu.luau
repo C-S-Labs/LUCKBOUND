@@ -182,7 +182,6 @@ local function buildTravel()
 	end
 
 	paragraph("Anywhere in the Crossroads, immediately.", order)
-
 end
 
 --- CODES. The one panel where the client sends a free string, so it is also
@@ -249,9 +248,14 @@ local function buildSettings()
 	local order = 2
 	for _, entry in SettingsCore.ordered() do
 		if entry.Kind == "boolean" then
-			local row = UIKit.toggle(panelBody, entry.Label, StateController.setting(entry.Id) == true, function(value)
-				StateController.applySetting(entry.Id, value)
-			end)
+			local row = UIKit.toggle(
+				panelBody,
+				entry.Label,
+				StateController.setting(entry.Id) == true,
+				function(value)
+					StateController.applySetting(entry.Id, value)
+				end
+			)
 			row.LayoutOrder = order
 		else
 			local row = UIKit.slider(
@@ -321,7 +325,12 @@ local function buildParty()
 		return order
 	end
 
-	section(if inParty then string.format("Your party  %d / %d", #party.Members, party.MaxSize) else "Your party", order)
+	section(
+		if inParty
+			then string.format("Your party  %d / %d", #party.Members, party.MaxSize)
+			else "Your party",
+		order
+	)
 
 	if not inParty then
 		paragraph("You are not in a party. Invite someone below.", nextOrder())
@@ -362,22 +371,27 @@ local function buildParty()
 	if #party.Invites > 0 then
 		section("Invites", nextOrder())
 		for _, invite in party.Invites do
-			partyRow(nextOrder(), PartyController.nameOf(invite.FromUserId), "wants you in their party", {
+			partyRow(
+				nextOrder(),
+				PartyController.nameOf(invite.FromUserId),
+				"wants you in their party",
 				{
-					Text = "ACCEPT",
-					Style = "PRIMARY",
-					Enabled = not inParty,
-					OnClick = function()
-						PartyController.request("ACCEPT", invite.FromUserId)
-					end,
-				},
-				{
-					Text = "DECLINE",
-					OnClick = function()
-						PartyController.request("DECLINE", invite.FromUserId)
-					end,
-				},
-			})
+					{
+						Text = "ACCEPT",
+						Style = "PRIMARY",
+						Enabled = not inParty,
+						OnClick = function()
+							PartyController.request("ACCEPT", invite.FromUserId)
+						end,
+					},
+					{
+						Text = "DECLINE",
+						OnClick = function()
+							PartyController.request("DECLINE", invite.FromUserId)
+						end,
+					},
+				}
+			)
 		end
 	end
 
@@ -539,7 +553,12 @@ local function applyState()
 	arrow.Text = if state.Collapsed then "›" else "‹"
 	local arrowTarget = if state.Collapsed
 		then UDim2.new(0, UITheme.Space.SM, 0.5, 0)
-		else UDim2.new(0, UITheme.RailWidthExpanded + UITheme.Space.MD + UITheme.Space.XS, 0.5, 0)
+		else UDim2.new(
+			0,
+			UITheme.RailWidthExpanded + UITheme.Space.MD + UITheme.Space.XS,
+			0.5,
+			0
+		)
 	UIKit.tween(arrow, UITheme.Motion.Normal, { Position = arrowTarget })
 
 	refreshRailSelection()
@@ -558,7 +577,10 @@ end
 --- gui.Enabled itself, which is how the rail ended up visible behind the
 --- title card -- one of them said "show" without knowing another said "hide".
 local function refreshVisibility()
-	gui.Enabled = state.Visible and not hiddenForRoll and not hiddenForLoading and not onExpeditionServer
+	gui.Enabled = state.Visible
+		and not hiddenForRoll
+		and not hiddenForLoading
+		and not onExpeditionServer
 end
 
 local function setVisible(visible: boolean)

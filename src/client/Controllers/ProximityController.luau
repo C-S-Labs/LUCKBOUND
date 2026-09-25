@@ -105,7 +105,8 @@ function ProximityController.init(): ()
 
 		local nowInRange = false
 		if a and hrp and hrp:IsA("BasePart") then
-			nowInRange = (hrp.Position - a.Position).Magnitude <= GameConfig.UI.PromptActivationDistance
+			nowInRange = (hrp.Position - a.Position).Magnitude
+				<= GameConfig.UI.PromptActivationDistance
 		end
 
 		if nowInRange ~= inRange then

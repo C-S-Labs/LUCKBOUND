@@ -169,7 +169,12 @@ local function build()
 	cardPadding.PaddingRight = UDim.new(0, 20)
 	cardPadding.Parent = card
 
-	local function cardLabel(name: string, height: number, font: Enum.Font, order: number): TextLabel
+	local function cardLabel(
+		name: string,
+		height: number,
+		font: Enum.Font,
+		order: number
+	): TextLabel
 		local l = Instance.new("TextLabel")
 		l.Name = name
 		l.Size = UDim2.new(1, 0, 0, height)
@@ -250,9 +255,7 @@ local function showCard(payload: any, rarity: any)
 	worldLabel.Text = payload.Name
 	worldLabel.TextColor3 = rarity.Color
 	flavorLabel.Text = payload.Flavor
-	rollLabel.Text = if payload.IsTutorialRoll
-		then "GUIDED ROLL"
-		else `ROLL #{payload.RollNumber}`
+	rollLabel.Text = if payload.IsTutorialRoll then "GUIDED ROLL" else `ROLL #{payload.RollNumber}`
 	rollLabel.TextColor3 = UITheme.TextSecondary
 	cardStroke.Color = rarity.Color
 
@@ -299,11 +302,13 @@ local function onRollResult(payload: any)
 	overlay.Visible = true
 	-- 60% dim, per blueprint §1.4 -- the portal spin-up must stay visible
 	-- behind the overlay rather than being hidden by it.
-	TweenService:Create(
-		overlay,
-		TweenInfo.new(0.3, Enum.EasingStyle.Quad),
-		{ BackgroundTransparency = 0.4 }
-	):Play()
+	TweenService
+		:Create(
+			overlay,
+			TweenInfo.new(0.3, Enum.EasingStyle.Quad),
+			{ BackgroundTransparency = 0.4 }
+		)
+		:Play()
 
 	-- The 2.5s portal spin-up runs concurrently with the build-up and must
 	-- complete before the destination banner appears. Blueprint §1.3 calls
@@ -314,10 +319,9 @@ local function onRollResult(payload: any)
 	-- GameConfig.UI.RollBuildupSeconds plus the rarity's own reveal duration,
 	-- so a Mythic keeps you waiting noticeably longer than a Common. Floored
 	-- at the spin-up length so the banner never beats the portal.
-	playBuildup(math.max(
-		GameConfig.UI.RollBuildupSeconds + revealDuration,
-		GameConfig.Portal.SpinUpSeconds
-	))
+	playBuildup(
+		math.max(GameConfig.UI.RollBuildupSeconds + revealDuration, GameConfig.Portal.SpinUpSeconds)
+	)
 
 	showCard(payload, rarity)
 	task.wait(GameConfig.UI.ResultCardHoldSeconds)

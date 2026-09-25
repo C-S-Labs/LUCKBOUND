@@ -150,7 +150,13 @@ return {
 			},
 		},
 		-- Sparse, slow, sunlit motes: high-altitude air catching the light.
-		Motes = { Rate = 6, Lifetime = 9, Color = Color3.fromRGB(255, 236, 200), Size = 0.35, Speed = 3 },
+		Motes = {
+			Rate = 6,
+			Lifetime = 9,
+			Color = Color3.fromRGB(255, 236, 200),
+			Size = 0.35,
+			Speed = 3,
+		},
 	},
 	MusicId = nil,
 	Enemies = {},
