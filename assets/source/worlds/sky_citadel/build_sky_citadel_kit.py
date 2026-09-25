@@ -2611,7 +2611,7 @@ def build_boss_clearing():
     frustum(p, "DeepAlloy", 8, 24, 23, 1.5, 3, 0, 70)
     spire(p, 0, 70, 13, CROWN_TOP, extra_halos=2)
     for k in range(4):
-        a = math.radians(45 + 90 * k)
+        a = math.radians(60 * k)           # north half only: nothing hangs between the approach and the spire
         float_crystal(p, "SkyGlass", math.cos(a) * 30, 70 + math.sin(a) * 30, 52, 3.2, 7, 5)
     for k in range(12):
         a = 30 * k
@@ -3622,7 +3622,7 @@ def build_prism_arena():
     crystal(p, "SunGold", cx, cy, apex, 1.8, top - apex, 1.8, n=6)
     # three prism pylons standing off round the arena
     for k in range(3):
-        a = math.radians(30 + 120 * k)
+        a = math.radians(90 + 120 * k)     # N, SW, SE: never on the approach (owner 2026-09-24: boss sightline)
         px, py = cx + math.cos(a) * 62, cy + math.sin(a) * 62 * 0.95
         p.solid("prism pylon", px, py, 4.6, 0, 32)
         frustum(p, "DeepAlloy", 6, 4.4, 3.8, 0, 1.6, px, py)
@@ -3768,7 +3768,7 @@ def to_object(p, mats, collection):
     if REFINISH:
         class _M: data = mesh
         REFINISH_LOG[p.name] = refinish_piece(_M, {
-            "trim": MAT_ORDER.index("CitadelViolet"), "glow": MAT_ORDER.index("AzureNeon"),
+            "trim": MAT_ORDER.index("CitadelViolet"), "glow": MAT_ORDER.index("AzureNeon"), "keel_glow": MAT_ORDER.index("AzureDim"),
             "walls": [MAT_ORDER.index(n) for n in ("DeepAlloy", "HullSlate", "PaleAlloy") if n in MAT_ORDER],
             "decks": None}, half=HALF, zmin=KEEL_BOTTOM, zmax=CROWN_TOP, tri_limit=TRI_LIMIT)
 
@@ -3912,6 +3912,22 @@ def ground_report(p):
     return problems
 
 
+def boss_sightline(p):
+    """BOSS pieces: nothing may stand or float in the player's approach - the corridor (ASCENT width) from the
+    south entry straight to the boss landmark, from the deck up to 60 studs (owner, 2026-09-24)."""
+    if not p.notes.startswith("BOSS"): return []
+    tall = max((sh for _, sh in p.solids if sh[0] == "cyl"), key=lambda sh: sh[5])
+    tx, ty, tr = tall[1], tall[2], tall[3]
+    probs = []
+    for kind, items in (("solid", p.solids), ("float", p.floats)):
+        for label, sh in items:
+            if sh[0] != "cyl" or sh is tall: continue
+            x, y, r, z0, z1 = sh[1:6]
+            if z1 < 0.5 or z0 > 60 or y < -HALF or y > ty - tr: continue
+            if abs(x - tx) < ASCENT_W/2 + r: probs.append(f"{label} at ({x:.0f},{y:.0f}) blocks the boss approach")
+    return probs
+
+
 def validate(objs):
     report, ok = [], True
     for obj in objs:
@@ -3929,6 +3945,7 @@ def validate(objs):
             "floats clear (no clipping, inside the tile)": not float_problems,
             "everything grounded stands on its deck": not ground_problems,
             "every part attached, nothing clipping (real mesh)": not geo_problems,
+            "boss approach clear (sightline)": not (boss_sightline(p) if p else []),
             "footprint 256x256": abs(size.x - 256) < 0.01 and abs(size.y - 256) < 0.01,
             "height 256 (-96..+160)": abs(mn.z - KEEL_BOTTOM) < 0.01 and abs(mx.z - CROWN_TOP) < 0.01,
             "origin centred": abs(centre_xy[0]) < 0.01 and abs(centre_xy[1]) < 0.01,

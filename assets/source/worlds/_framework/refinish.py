@@ -15,7 +15,7 @@ def refinish_piece(obj, mat_index, half=128.0, zmin=-96.0, zmax=160.0, tri_limit
     def near_edge(v):
         c = v.co
         return abs(abs(c.x) - half) < seam or abs(abs(c.y) - half) < seam or c.z < zmin + seam or c.z > zmax - seam
-    def attempt(min_len, plates):
+    def attempt(min_len, plates, keel=True):
         bm = bmesh.new(); bm.from_mesh(src)
         # 1) glow seams on big vertical wall panels (clear of the tile seams)
         walls = [f for f in bm.faces if f.material_index in mat_index["walls"] and abs(f.normal.z) < 0.3
@@ -23,13 +23,26 @@ def refinish_piece(obj, mat_index, half=128.0, zmin=-96.0, zmax=160.0, tri_limit
         if walls:
             r = bmesh.ops.inset_individual(bm, faces=walls, thickness=glow_border, depth=-glow_depth)
             for f in r["faces"]: f.material_index = mat_index["glow"]
-        # 2) trim-edged plates on big deck slabs (flush)
+        # 2) trim-edged plates on big deck slabs (flush); the biggest decks get an inner INLAY ring (trim + glow line)
         if plates:
             decks = [f for f in bm.faces if f.normal.z > 0.9 and f.calc_area() > 300
                      and (mat_index.get("decks") is None or f.material_index in mat_index["decks"])]
             if decks:
+                big = [f for f in decks if f.calc_area() > 1500]
                 r = bmesh.ops.inset_individual(bm, faces=decks, thickness=plate_border, depth=0.0)
                 for f in r["faces"]: f.material_index = mat_index["trim"]
+                if big:
+                    r = bmesh.ops.inset_individual(bm, faces=big, thickness=5.0, depth=0.0)
+                    r = bmesh.ops.inset_individual(bm, faces=big, thickness=0.45, depth=0.0)
+                    for f in r["faces"]: f.material_index = mat_index["glow"]
+        # 2b) keel hulls (island undersides): stepped ledge + glowing crack line on the big plain faces
+        if keel:
+            hull = [f for f in bm.faces if f.normal.z < 0.2 and f.calc_center_median().z < -6 and f.calc_area() > 250
+                    and not any(near_edge(v) for v in f.verts)]
+            if hull:
+                r = bmesh.ops.inset_individual(bm, faces=hull, thickness=2.2, depth=-1.2)       # stepped ledge
+                r = bmesh.ops.inset_individual(bm, faces=hull, thickness=0.35, depth=0.0)
+                for f in r["faces"]: f.material_index = mat_index.get("keel_glow", mat_index["glow"])
         # 3) trim bevel on long sharp edges, never on seam/extreme edges
         edges = [e for e in bm.edges if len(e.link_faces) == 2 and e.calc_face_angle(0) > math.radians(40)
                  and e.calc_length() > min_len and not any(near_edge(v) for v in e.verts)]
@@ -39,10 +52,10 @@ def refinish_piece(obj, mat_index, half=128.0, zmin=-96.0, zmax=160.0, tri_limit
             for f in r["faces"]: f.material_index = mat_index["trim"]
         tris = sum(len(f.verts) - 2 for f in bm.faces)
         return bm, tris, len(walls), len(edges)
-    for min_len, plates in ((4.0, True), (6.0, True), (6.0, False), (10.0, False), (16.0, False), (1e9, False)):
-        bm, tris, nw, ne = attempt(min_len, plates)
+    for min_len, plates, keel in ((4.0, True, True), (6.0, True, True), (6.0, True, False), (6.0, False, False), (10.0, False, False), (16.0, False, False), (1e9, False, False)):
+        bm, tris, nw, ne = attempt(min_len, plates, keel)
         if tris < tri_limit * 0.97: break
         bm.free()
     for f in bm.faces: f.smooth = False
     bm.to_mesh(obj.data); bm.free(); obj.data.update()
-    return {"tris": tris, "wall_seams": nw, "trim_edges": ne, "plates": plates, "min_edge": min_len}
+    return {"tris": tris, "wall_seams": nw, "trim_edges": ne, "plates": plates, "keel": keel, "min_edge": min_len}
