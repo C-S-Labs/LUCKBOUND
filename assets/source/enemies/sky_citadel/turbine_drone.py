@@ -17,7 +17,7 @@ BONES = [("Root", (0, 0, HZ - 0.3), (0, 0, HZ - 0.1), None),
          ("BladeRing", (0, 0, HZ - 0.22), (0, 0, HZ - 0.12), "Hull")]
 ARMS = []
 for i, L in enumerate("ABC"):
-    a = math.pi/2 + i*2*math.pi/3 + math.pi   # A points back, B/C forward-sides
+    a = math.pi/2 + i*2*math.pi/3   # A points back (+Y), B/C forward-sides; lens faces -Y between them
     d = Vector((math.cos(a), math.sin(a), 0))
     ARMS.append((L, a, d))
     BONES.append((f"Rotor{L}", tuple(d*0.55 + Vector((0, 0, HZ + 0.02))), tuple(d*0.55 + Vector((0, 0, HZ + 0.2))), "Hull"))
@@ -82,6 +82,46 @@ for k in range(8):
     blade("BladeRing", BRASS, (0.09*math.cos(b_), 0.09*math.sin(b_), HZ - 0.21), (math.cos(b_ + 0.5), math.sin(b_ + 0.5), 0),
           0.22, 0.045, 0.01, hint=(0, 0, 1), N=6, sub=0)
 loft("BladeRing", GLOW, [(HZ - 0.215, .105, .105), (HZ - 0.205, .105, .105)], N=20)
+
+# ---- v2 character pass (2026-09-24), shaped by the moveset ----
+#  * CLAMP legs are the weak point (breaking them stuns it): heavy armoured legs, 3-prong grip claws, and a glowing
+#    cyan joint core on every knee = "hit here".
+#  * BLADE-RING sweep: the belly ring becomes 8 curved scythe blades with glowing edges (reads dangerous from afar).
+#  * SPIN-UP charge tell: top turbine intake with a visible fan + heat vents that glow when it spins up.
+#  * Cyclops lens gets an armoured hood with shutter blades (aggressive "brow").
+for i in range(8):                                                     # scythe blades on the belly ring
+    a = i*math.pi/4
+    d_ = Vector((math.cos(a), math.sin(a), 0)); t_ = Vector((-math.sin(a), math.cos(a), 0))
+    root = d_*0.2 + Vector((0, 0, HZ - 0.19))
+    blade("BladeRing", BRASS, tuple(root), tuple(d_*0.6 + t_*0.8 + Vector((0, 0, -0.08))), 0.22, 0.05, 0.012, hint=(0, 0, 1), N=5, sub=0)
+    tube("BladeRing", GLOW, tuple(root + d_*0.05 + t_*0.06 + Vector((0, 0, -0.012))), tuple(root + (d_*0.6 + t_*0.8).normalized()*0.2 + Vector((0, 0, -0.025))), 0.005, 0.003, N=5)
+loft("Hull", TEAL, [(HZ + 0.2, .16, .16), (HZ + 0.26, .15, .15), (HZ + 0.27, .12, .12)], N=24, sub=1)      # top intake cowl
+loft("Hull", IR, [(HZ + 0.262, .118, .118), (HZ + 0.266, .118, .118)], N=24)
+for i in range(7):                                                     # intake fan blades
+    a = i*2*math.pi/7
+    blade("Hull", BRASS, (0, 0, HZ + 0.262), (math.cos(a), math.sin(a), 0.05), 0.11, 0.035, 0.006, hint=(-math.sin(a)*0.5, math.cos(a)*0.5, 1), N=5, sub=0)
+sph("Hull", BRASS, (0, 0, HZ + 0.27), 0.03, u=10, v=6)
+for k in range(10):                                                    # heat vents glow (spin-up tell), under the hull vents
+    a = k*2*math.pi/10
+    if abs(math.sin(a) + 1) < 0.4: continue
+    box("Hull", GLOW, (0.296*math.cos(a), 0.296*math.sin(a), HZ + 0.075), (0.04, 0.012, 0.012), rot=(0, 0, a + math.pi/2), bev=0.003, segs=1)
+# lens hood + shutter blades (angled down at the front = mean)
+loft("Lens", BR, [(0.0, .13, .13), (0.07, .135, .135)], N=20, M=_frame(Vector((0, -0.27, HZ + 0.02)), Vector((0, -1, 0)), hint=(0, 0, 1)), keep=lambda c: c.z > HZ + 0.03, fill=False, cap=False)
+for sd in (1, -1):
+    blade("Lens", BRASS, (0.02*sd, -0.34, HZ + 0.1), (0.9*sd, -0.1, -0.35), 0.12, 0.03, 0.008, hint=(0, 0, 1), N=6, sub=0)
+# armoured clamp legs: plates on both segments, glowing knee core (weak point), 3-prong grip claw
+for L, a, d in ARMS:
+    k0 = Vector(BONES[BIDX[f"Leg{L}1"]][1]); kn = Vector(BONES[BIDX[f"Leg{L}1"]][2]); ft = Vector(BONES[BIDX[f"Leg{L}2"]][2])
+    for bn, p0, p1, w in ((f"Leg{L}1", k0, kn, 0.05), (f"Leg{L}2", kn, ft, 0.042)):
+        dd = p1 - p0
+        loft(bn, BR, [(0.02, w, w*0.7, 2.6), (dd.length*0.5, w*1.1, w*0.75, 2.6), (dd.length*0.9, w*0.7, w*0.55, 2.6)], N=12, M=_frame(p0, dd, hint=(0, 0, 1)), sub=0)
+    sph(f"Leg{L}2", IR, tuple(kn), 0.045, u=12, v=8)
+    loft(f"Leg{L}2", GLOW, [(-0.012, .048, .048), (0.012, .048, .048)], N=16, M=_frame(kn, ft - kn), cap=False)
+    sph(f"Leg{L}2", GLOW, tuple(kn + d*0.035), 0.022, u=10, v=6)
+    for j_ in range(3):
+        b_ = j_*2*math.pi/3 + a
+        pd = Vector((math.cos(b_)*0.6, math.sin(b_)*0.6, -1))
+        blade(f"Leg{L}2", BRASS, tuple(ft + Vector((0, 0, 0.03))), tuple(pd), 0.09, 0.025, 0.012, hint=(0, 0, 1), N=5, sub=0)
 
 # ---- assemble ----
 arm_data = bpy.data.armatures.new(NAME + "_Rig")
