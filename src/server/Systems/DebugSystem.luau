@@ -149,6 +149,9 @@ COMMANDS.showboss = function(player: Player, args: { string }): (boolean, string
 			part.Anchored = true
 			part.CanCollide = false
 			-- colours come from the FBX's baked vertex colours; glow meshes (*Glow) glow
+			if string.find(part.Name, "Beam") then
+				part.Transparency = 1 -- the phase-2 plasma blade: hidden in the phase-1 preview
+			end
 			if string.find(part.Name, "Glow") then
 				part.Material = Enum.Material.Neon
 				part.Color = def.GlowColor or Color3.fromRGB(110, 235, 255)

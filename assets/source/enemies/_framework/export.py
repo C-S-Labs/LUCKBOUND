@@ -23,7 +23,21 @@ def bake_vertex_colors():
             for li in poly.loop_indices:
                 col.data[li].color = c            # linear -> the FBX writer stores it; importer shows it as vertex colour
         me.color_attributes.active_color = col
+def skin_bone_parented():
+    """Meshes PARENTED to a bone (the boss's lance, its blade halves, the halo...) import into Roblox as static parts
+    that ignore animation. Convert each into a SKINNED mesh bound 100% to that bone, so it follows the rig."""
+    for o in bpy.data.objects:
+        if o.type != 'MESH' or not o.name.startswith(PREFIX) or o.parent_type != 'BONE' or o.parent is None: continue
+        arm, bone = o.parent, o.parent_bone
+        mw = o.matrix_world.copy()
+        o.parent_type = 'OBJECT'; o.parent = arm; o.matrix_world = mw
+        vg = o.vertex_groups.get(bone) or o.vertex_groups.new(name=bone)
+        vg.add(range(len(o.data.vertices)), 1.0, 'REPLACE')
+        if not any(m.type == 'ARMATURE' for m in o.modifiers):
+            o.modifiers.new("Armature", 'ARMATURE').object = arm
+        print("SKINNED", o.name, "->", bone)
 def export_static():
+    skin_bone_parented()
     bake_vertex_colors()
     _select()
     fp = os.path.join(OUT_DIR, f"{NAME}.fbx")
@@ -31,6 +45,7 @@ def export_static():
                              bake_anim=False, mesh_smooth_type='FACE', colors_type='SRGB')
     print("EXPORTED", fp)
 def export_action(action):
+    skin_bone_parented()
     bake_vertex_colors()
     _select()
     fp = os.path.join(OUT_DIR, f"{NAME}_{action}.fbx")
