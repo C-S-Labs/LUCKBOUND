@@ -100,10 +100,18 @@ for i in range(8):
     dirn = (d_*0.8 + t_*0.6).normalized()
     add_bone(f"BladeE{i + 1}", tuple(root), tuple(root + dirn*0.2), "BladeRing")
     box(f"BladeE{i + 1}", BRASS, tuple(root + d_*0.02), (0.05, 0.05, 0.03), rot=(0, 0, a), bev=0.008, segs=1)     # emitter
-    pts_ = [root + dirn*0.04 + dirn*0.7*u + t_*0.12*u*u for u in [j/6 for j in range(7)]]                    # curved scythe
-    for j, (p0, p1) in enumerate(zip(pts_, pts_[1:])):
-        w_ = 0.07*(1 - (j/6)**1.5) + 0.01
-        blade(f"BladeE{i + 1}", GLOW, tuple(p0), tuple(p1 - p0), (p1 - p0).length*1.05, w_, 0.008, hint=(0, 0, 1), N=4, sub=0)
+    tb = bmesh.new(); rows = []                                                                             # ONE continuous crescent
+    for j in range(13):
+        u = j/12
+        c_ = root + dirn*(0.04 + 0.7*u) + t_*0.12*u*u
+        tang = (dirn*0.7 + t_*0.24*u).normalized(); nrm = tang.cross(Vector((0, 0, 1))).normalized()
+        w_ = 0.075*math.sin(math.pi*min(1.0, 0.15 + u*0.95))**0.7*(1 - 0.85*u) + 0.004
+        rows.append([tb.verts.new(c_ + nrm*w_), tb.verts.new(c_ + Vector((0, 0, 0.006))), tb.verts.new(c_ - nrm*w_*0.35), tb.verts.new(c_ - Vector((0, 0, 0.006)))])
+    for r0, r1 in zip(rows, rows[1:]):
+        for q in range(4):
+            tb.faces.new((r0[q], r0[(q + 1) % 4], r1[(q + 1) % 4], r1[q]))
+    tb.faces.new(rows[0][::-1]); tb.faces.new(rows[-1])
+    _add(tb, f"BladeE{i + 1}", GLOW, Matrix(), smooth=True)
 loft("Hull", TEAL, [(HZ + 0.2, .16, .16), (HZ + 0.26, .15, .15), (HZ + 0.27, .12, .12)], N=24, sub=1)      # top intake cowl
 loft("Hull", IR, [(HZ + 0.262, .118, .118), (HZ + 0.266, .118, .118)], N=24)
 for i in range(7):                                                     # intake fan blades
