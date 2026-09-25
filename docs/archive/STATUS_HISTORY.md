@@ -243,6 +243,9 @@ that seam is why map generation is testable at all.**
 
 ### Worlds
 
+> **Superseded 2026-09-25** — this snapshot predates Sky Citadel's kit. See `docs/STATUS.md` §1 for the current
+> Worlds table.
+
 | Id | Rarity | Weight | Phase | Biome? | Enterable? |
 |---|---|---|---|---|---|
 | `VERDANT_VALLEY` | Common | 6000 (60%) | 1 | blueprint written | ✅ kit |

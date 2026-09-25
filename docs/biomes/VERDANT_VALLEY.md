@@ -40,7 +40,8 @@ deliberately open-ended. Twelve to sixteen distinct kinds of place is the
 target. A new kind of place is welcome at any time and needs no permission —
 it is a piece of content, and adding one changes no System.
 
-**The kit as built: 30 pieces** (2026-09-24, PR #105). All pieces are in one file,
+**The kit as built: 30 pieces** (2026-09-24, PR #105) — walked in Studio, but the owner has flagged the kit for a
+revamp pass (see `docs/STATUS.md` §4). All pieces are in one file,
 `assets/rbxm/chunks/verdant_valley/VV_STRUCTURE.rbxmx`. The code entries are in `src/shared/Content/Chunks/VerdantValley.luau`
 (ids `VV_<NAME>`, asset keys `VV_CHUNK_<NAME>`), and the exporter is
 `assets/source/worlds/verdant_valley/export_verdant_valley_kit.py`. The 2026-09-22 first-pass test kit
