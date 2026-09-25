@@ -5353,7 +5353,7 @@ do
 			if row.Anim == "Wing" then wings += 1 end
 		end
 	end
-	check("every prop the 36-piece kit placed is here (497)", count - wings == 497, tostring(count - wings))
+	check("every prop the 36-piece kit placed is here (503: +orrery rings, +turbine rotors)", count - wings == 503, tostring(count - wings))
 	check("every bird has two wings of its own (15 birds, 30 wings)", wings == 30, tostring(wings))
 
 	-- A placement's rotation is a real rotation: orthonormal, no scale or
