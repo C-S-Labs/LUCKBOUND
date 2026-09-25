@@ -697,11 +697,12 @@ def spire(p, x, y, r, H, halo=True, fins=True, extra_halos=0, z0=0.0):
     frustum(p, "DeepAlloy", 8, r * 1.35, r * 1.2, z0 + 4, z0 + 6, x, y)
     h1 = z0 + L * 0.5
     frustum(p, "CitadelWhite", 12, r, r * 0.78, z0 + 6, h1, x, y)
-    for k in range(4):                                    # accent lines up the shaft
-        a = math.radians(45 + 90 * k)
-        for (za, zb, ra, rb) in ((z0 + 7, h1 - 1, r, r * 0.78),):
-            pa = Vector((x + math.cos(a) * ra * 0.985, y + math.sin(a) * ra * 0.985, za)); pb = Vector((x + math.cos(a) * rb * 0.985, y + math.sin(a) * rb * 0.985, zb))
-            tube(p, "CitadelViolet", [tuple(pa), tuple(pb)], [0.3, 0.25], n=4)
+    for k in range(4):                                    # off-grey support lines on the shaft corners (vertices 15+90k)
+        a = math.radians(15 + 90 * k)
+        ta, tb_ = (z0 + 6.2 - z0 - 6) / (h1 - z0 - 6), 1.0
+        pa = Vector((x + math.cos(a) * r * 0.995, y + math.sin(a) * r * 0.995, z0 + 6.2))
+        pb = Vector((x + math.cos(a) * r * 0.78 * 0.995, y + math.sin(a) * r * 0.78 * 0.995, h1 - 0.1))
+        tube(p, "PaleAlloy", [tuple(pa), tuple(pb)], [0.3, 0.25], n=4)
     frustum(p, "AzureDim", 8, r * 0.84, r * 0.84, h1, h1 + 2, x, y)
     h2 = z0 + L * 0.78
     frustum(p, "CitadelWhite", 12, r * 0.78, r * 0.5, h1 + 2, h2, x, y)
@@ -727,12 +728,12 @@ def tower(p, x, y, r, H, roof_h=None, roof=True):
     p.solid("tower", x, y, r * 1.25, 0, H + 6 + (roof_h if roof_h is not None else r * 2.4))
     frustum(p, "PaleAlloy", 12, r * 1.15, r * 1.1, 0, 3, x, y)
     frustum(p, "CitadelWhite", 12, r, r * 0.94, 3, H, x, y)
-    for k in range(6):                                  # violet accent lines up the shaft (owner-approved detail pass)
-        a = math.radians(30 + 60 * k)
-        rr = r * 0.975
-        box(p, "CitadelViolet", x + math.cos(a) * rr, y + math.sin(a) * rr, (3 + H) / 2, 0.35, 0.35, H - 3.4, rz=60 * k + 30)
+    for k in range(6):                                  # off-grey support lines ON the shaft's corners (12-gon vertices at 15+30k deg)
+        a = math.radians(15 + 60 * k)                   # every other corner; windows sit on face centres, never a corner
+        tube(p, "PaleAlloy", [(x + math.cos(a) * r * 0.995, y + math.sin(a) * r * 0.995, 3.2),
+                              (x + math.cos(a) * r * 0.94 * 0.995, y + math.sin(a) * r * 0.94 * 0.995, H - 0.2)], [0.32, 0.3], n=4)
     frustum(p, "SunGold", 12, r * 0.985, r * 0.985, H * 0.35, H * 0.35 + 0.8, x, y)
-    apothem = r * 0.97 * math.cos(math.radians(22.5))
+    apothem = r * 0.97 * math.cos(math.radians(15))
     for k in range(4):
         a = math.radians(90 * k)
         box(p, "AzureDim", x + math.cos(a) * apothem, y + math.sin(a) * apothem, H * 0.62,
@@ -1572,9 +1573,11 @@ def colonnade(p, x, y0, y1, n, H=28.0):
         yy = y0 + (y1 - y0) * i / (n - 1)
         frustum(p, "PaleAlloy", 8, 3.0, 2.8, 0, 2, x, yy)
         frustum(p, "CitadelWhite", 12, 2.2, 1.8, 2, H, x, yy)
-        for k in range(4):                                # fluting accent lines
-            a = math.radians(45 + 90 * k)
-            tube(p, "CitadelViolet", [(x + math.cos(a) * 2.15, yy + math.sin(a) * 2.15, 3), (x + math.cos(a) * 1.77, yy + math.sin(a) * 1.77, H - 1)], [0.22, 0.2], n=4)
+        for k in range(4):                                # off-grey support lines on the column corners (vertices 15+90k)
+            a = math.radians(15 + 90 * k)
+            z_a, z_b = 2.2, H - 0.7
+            ra = 2.2 + (1.8 - 2.2) * (z_a - 2) / (H - 2); rb = 2.2 + (1.8 - 2.2) * (z_b - 2) / (H - 2)
+            tube(p, "PaleAlloy", [(x + math.cos(a) * ra * 0.995, yy + math.sin(a) * ra * 0.995, z_a), (x + math.cos(a) * rb * 0.995, yy + math.sin(a) * rb * 0.995, z_b)], [0.2, 0.18], n=4)
         frustum(p, "AzureDim", 12, 2.1, 2.1, H * 0.6, H * 0.6 + 1, x, yy)
         frustum(p, "SunGold", 12, 1.85, 1.95, H - 0.6, H, x, yy)
         frustum(p, "PaleAlloy", 12, 1.9, 3.0, H, H + 1.5, x, yy)
@@ -3820,7 +3823,7 @@ def to_object(p, mats, collection):
     if REFINISH:
         class _M: data = mesh
         REFINISH_LOG[p.name] = refinish_piece(_M, {
-            "trim": MAT_ORDER.index("CitadelViolet"), "glow": MAT_ORDER.index("AzureNeon"), "keel_glow": MAT_ORDER.index("AzureDim"),
+            "trim": MAT_ORDER.index("CitadelViolet"), "edge": MAT_ORDER.index("PaleAlloy"), "glow": MAT_ORDER.index("AzureNeon"), "keel_glow": MAT_ORDER.index("AzureDim"),
             "walls": [MAT_ORDER.index(n) for n in ("DeepAlloy", "HullSlate", "PaleAlloy") if n in MAT_ORDER],
             "decks": None}, half=HALF, zmin=KEEL_BOTTOM, zmax=CROWN_TOP, tri_limit=TRI_LIMIT)
 

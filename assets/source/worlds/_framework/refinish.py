@@ -49,7 +49,7 @@ def refinish_piece(obj, mat_index, half=128.0, zmin=-96.0, zmax=160.0, tri_limit
         if edges:
             r = bmesh.ops.bevel(bm, geom=edges, offset=trim_width/2, offset_type='WIDTH', segments=1,
                                 profile=0.5, affect='EDGES', clamp_overlap=True)
-            for f in r["faces"]: f.material_index = mat_index["trim"]
+            for f in r["faces"]: f.material_index = mat_index.get("edge", mat_index["trim"])   # edge bevels: off-grey
         tris = sum(len(f.verts) - 2 for f in bm.faces)
         return bm, tris, len(walls), len(edges)
     for min_len, plates, keel in ((4.0, True, True), (6.0, True, True), (6.0, True, False), (6.0, False, False), (10.0, False, False), (16.0, False, False), (1e9, False, False)):
