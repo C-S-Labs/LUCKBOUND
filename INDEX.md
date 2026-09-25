@@ -26,8 +26,8 @@
 | 0 | `INDEX.md` | all (this file, ~4k tokens) | the guide; search `INDEX_MAP.md` for exact lines |
 | 1 | `AGENTS.md` | all (short) | the rules; `CLAUDE.md`, `GEMINI.md` and `.github/copilot-instructions.md` point here |
 | 2 | `docs/WORKLOG.md` | **top entry only** | where the last session stopped |
-| 3 | `docs/STATUS.md` | §1 and §5 first; the rest on demand | current state, locked decisions, open items |
-| 4 | `docs/PROTOTYPE_BUILD_SPEC.md` | only the § your task touches (headings in §7 below) | canonical architecture |
+| 3 | `docs/STATUS.md` | all (short, ~2k tokens) | current state, next steps, locked decisions, open items; history is in `docs/archive/STATUS_HISTORY.md` (by section only) |
+| 4 | `docs/PROTOTYPE_BUILD_SPEC.md` | **on demand, one § at a time**, never whole | canonical architecture |
 
 ## 2. Top-level layout and where it lands in Roblox (`default.project.json`)
 

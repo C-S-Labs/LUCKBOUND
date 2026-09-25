@@ -83,6 +83,8 @@ delete an older entry; if something turned out wrong, say so in a newer one.
     - Stale docs were brought current: `biomes/VERDANT_VALLEY` (the real 30-piece kit), `MASTER_DESIGN`
       (built vs not built), `DEVELOPMENT_PLAN` (enemy art started) and `TESTING` (`/showboss`, `/bossphase`,
       `/clearboss`).
+  - Token pass (PR #124): `STATUS.md` was cut from 630 to about 160 lines, and the full version moved to
+    `docs/archive/STATUS_HISTORY.md`. The build spec is now on-demand only, and `AGENTS.md` has a "Token discipline" section.
 
 ### Decisions made
 - Chunk naming, one scheme for both kits:

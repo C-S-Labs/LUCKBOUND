@@ -41,7 +41,8 @@ handoff:
 2. **`docs/STATUS.md`** — current state, decisions already locked in, open
    items with severity. If you are about to relitigate a decision, it is
    probably recorded here as settled.
-3. **`docs/PROTOTYPE_BUILD_SPEC.md`** — the canonical architecture. §7 lists
+3. **`docs/PROTOTYPE_BUILD_SPEC.md`: ON DEMAND ONLY.** Never read it whole (over 1,000 lines). Find the § your task
+   touches in `INDEX_MAP.md` (every heading has its line) and read just that. It is the canonical architecture. §7 lists
    what Phase 1 excludes. **§7.1 (expedition entry), §7.2 (parties and
    expeditions as their own server) and §7.3 (the scenario layer)** are the
    only things lifted out of it, each by a written amendment rather than
@@ -63,6 +64,14 @@ decision.** Add a row before adding a reserved field.
 
 Everything else in `docs/` is listed, with a one-line purpose, in `INDEX.md` §3. Open a doc only when the task
 touches what it owns.
+
+### Token discipline (owner priority)
+
+- Read `WORKLOG.md` top entry only. Read `STATUS.md` (short). Never read `docs/archive/` or large docs whole; read
+  them by section, using the line numbers in `INDEX_MAP.md`.
+- One task per conversation where possible. The handoff files make a fresh session cheap.
+- Renders and screenshots: send one image per change by default, and a contact sheet when comparing several.
+- Fetch CI logs with `--log-failed` and tail them; never dump a whole log.
 
 ## BEFORE YOU FINISH — update the handoff
 
