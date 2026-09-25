@@ -99,8 +99,10 @@ function LocomotionCore.step(state: any, dt: number, input: any, config: any): a
 			updated.RegenBlockedUntil = now + tuning.StaminaRegenDelaySeconds
 		end
 	elseif now >= updated.RegenBlockedUntil then
-		updated.Stamina =
-			math.min(tuning.StaminaMax, updated.Stamina + tuning.StaminaRegenPerSecond * dt)
+		updated.Stamina = math.min(
+			tuning.StaminaMax,
+			updated.Stamina + tuning.StaminaRegenPerSecond * dt
+		)
 	end
 
 	updated.Sprinting = sprinting

@@ -71,9 +71,7 @@ local function buildRing(
 
 	for i = 1, segments do
 		local angle = (i - 1) / segments * math.pi * 2
-		local offset = CFrame.Angles(0, 0, angle)
-			* CFrame.new(radius, 0, 0)
-			* CFrame.Angles(0, 0, math.pi / 2)
+		local offset = CFrame.Angles(0, 0, angle) * CFrame.new(radius, 0, 0) * CFrame.Angles(0, 0, math.pi / 2)
 		local segment = makePart(`Segment{i}`, ring)
 		segment.Size = Vector3.new(thickness, segmentLength, thickness)
 		segment.Color = color
@@ -192,9 +190,7 @@ function PortalRig.build(config: Config, parent: Instance): Model
 		glyph.Material = Enum.Material.Neon
 		glyph.Color = color
 		glyph.Transparency = 0.25
-		glyph.CFrame = rune.CFrame
-			* CFrame.new(0, 0.22 * scale, 0)
-			* CFrame.Angles(0, math.pi / 4, 0)
+		glyph.CFrame = rune.CFrame * CFrame.new(0, 0.22 * scale, 0) * CFrame.Angles(0, math.pi / 4, 0)
 	end
 
 	local emitterAttachment = Instance.new("Attachment")
@@ -335,8 +331,7 @@ local function paint(instance: Instance, prop: string, value: any, seconds: numb
 		(instance :: any)[prop] = value
 		return
 	end
-	TweenService:Create(instance, TweenInfo.new(seconds, Enum.EasingStyle.Quad), { [prop] = value })
-		:Play()
+	TweenService:Create(instance, TweenInfo.new(seconds, Enum.EasingStyle.Quad), { [prop] = value }):Play()
 end
 
 function PortalRig.setRarity(model: Model, rarityKey: string, seconds: number?): ()
@@ -492,10 +487,7 @@ function PortalRig.animate(model: Model): RBXScriptConnection
 	-- turning too slowly to see" is invisible from a screenshot.
 	local report = {}
 	for _, ring in rings do
-		table.insert(
-			report,
-			`{ring.Name}({ring.ClassName}, spin {ring:GetAttribute("SpinSpeed") or "nil"})`
-		)
+		table.insert(report, `{ring.Name}({ring.ClassName}, spin {ring:GetAttribute("SpinSpeed") or "nil"})`)
 	end
 	print(
 		string.format(

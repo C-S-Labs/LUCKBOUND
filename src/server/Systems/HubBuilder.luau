@@ -93,13 +93,7 @@ end
 --- Note it YIELDS: it fetches from Roblox's CDN. That is fine here because
 --- HubBuilder runs during bootstrap, before any player is bound (build spec
 --- §1.2 step 9 of 11), but it is the reason this must not be called per-frame.
-local function meshOrNil(
-	meshId: string?,
-	size: Vector3,
-	cframe: CFrame,
-	name: string,
-	parent: Instance
-): BasePart?
+local function meshOrNil(meshId: string?, size: Vector3, cframe: CFrame, name: string, parent: Instance): BasePart?
 	if not meshId or meshId == "" then
 		return nil
 	end
@@ -122,13 +116,7 @@ local function meshOrNil(
 	return p
 end
 
-local function label(
-	text: string,
-	color: Color3,
-	size: UDim2,
-	parent: BasePart,
-	maxDistance: number
-)
+local function label(text: string, color: Color3, size: UDim2, parent: BasePart, maxDistance: number)
 	local gui = Instance.new("BillboardGui")
 	gui.Size = size
 	gui.AlwaysOnTop = false
@@ -194,15 +182,13 @@ local function applyLighting()
 	bloom.Parent = Lighting
 
 	if theme.SunRays then
-		local rays = Lighting:FindFirstChildOfClass("SunRaysEffect")
-			or Instance.new("SunRaysEffect")
+		local rays = Lighting:FindFirstChildOfClass("SunRaysEffect") or Instance.new("SunRaysEffect")
 		rays.Intensity = theme.SunRays.Intensity
 		rays.Spread = theme.SunRays.Spread
 		rays.Parent = Lighting
 	end
 	if theme.Grade then
-		local grade = Lighting:FindFirstChildOfClass("ColorCorrectionEffect")
-			or Instance.new("ColorCorrectionEffect")
+		local grade = Lighting:FindFirstChildOfClass("ColorCorrectionEffect") or Instance.new("ColorCorrectionEffect")
 		grade.Brightness = theme.Grade.Brightness
 		grade.Contrast = theme.Grade.Contrast
 		grade.Saturation = theme.Grade.Saturation
@@ -316,11 +302,8 @@ local function buildGateAnchor(zone: any, top: Vector3, parent: Instance): BaseP
 			1,
 			zone.PortalScale * GameConfig.HubLayout.GateAnchorSpan
 		),
-		Position = top + Vector3.new(
-			0,
-			GameConfig.Portal.MaxPlinthHeight + GameConfig.HubLayout.GateAnchorLift,
-			0
-		),
+		Position = top
+			+ Vector3.new(0, GameConfig.Portal.MaxPlinthHeight + GameConfig.HubLayout.GateAnchorLift, 0),
 		Transparency = 1,
 		CanCollide = false,
 	}, parent)
@@ -361,8 +344,11 @@ local function buildSpawn(parent: Instance): SpawnLocation
 	local first: SpawnLocation? = nil
 	for i = 1, ring.Count do
 		local angle = (i - 1) / ring.Count * math.pi * 2
-		local position =
-			Vector3.new(math.sin(angle) * ring.Radius, ring.Height, math.cos(angle) * ring.Radius)
+		local position = Vector3.new(
+			math.sin(angle) * ring.Radius,
+			ring.Height,
+			math.cos(angle) * ring.Radius
+		)
 
 		local spawn = Instance.new("SpawnLocation")
 		spawn.Name = `SpawnPad{i}`
@@ -415,8 +401,7 @@ end
 -- turns the shards. A delivery missing one of these still builds -- the rest
 -- of the Engine is fine -- but it warns rather than going quietly dead, which
 -- is the failure the MeshId seam taught us to shout about.
-local ENGINE_CONTRACT =
-	{ "Platform", "Plinth", "OuterRing", "InnerRing", "PortalPlane", "SpotAnchor" }
+local ENGINE_CONTRACT = { "Platform", "Plinth", "OuterRing", "InnerRing", "PortalPlane", "SpotAnchor" }
 do
 	for i = 1, 8 do
 		table.insert(ENGINE_CONTRACT, `Rune{i}`)
@@ -534,15 +519,13 @@ local function buildFateEngine(parent: Instance): Model
 	end
 
 	-- The Engine is the shared PortalRig at 1.5x. Blueprint §2.2.
-	if
-		not meshOrNil(
-			cfg.MeshId,
-			Vector3.new(cfg.PlatformRadius, 40, cfg.PlatformRadius),
-			CFrame.new(base + Vector3.new(0, 20, 0)),
-			"EngineMesh",
-			engine
-		)
-	then
+	if not meshOrNil(
+		cfg.MeshId,
+		Vector3.new(cfg.PlatformRadius, 40, cfg.PlatformRadius),
+		CFrame.new(base + Vector3.new(0, 20, 0)),
+		"EngineMesh",
+		engine
+	) then
 		PortalRig.build({
 			Name = "EngineRig",
 			Position = base + Vector3.new(0, cfg.PlatformRaise, 0),
@@ -566,14 +549,11 @@ local function buildFateEngine(parent: Instance): Model
 		local shard = part({
 			Name = `Shard{i}`,
 			Size = Vector3.new(shardCfg.Size, shardCfg.Size * 2.4, shardCfg.Size),
-			CFrame = CFrame.new(
-				base
-					+ Vector3.new(
-						math.cos(angle) * shardCfg.OrbitRadius,
-						height,
-						math.sin(angle) * shardCfg.OrbitRadius
-					)
-			) * CFrame.Angles(
+			CFrame = CFrame.new(base + Vector3.new(
+				math.cos(angle) * shardCfg.OrbitRadius,
+				height,
+				math.sin(angle) * shardCfg.OrbitRadius
+			)) * CFrame.Angles(
 				shardRng:NextNumber(-0.4, 0.4),
 				shardRng:NextNumber(0, math.pi * 2),
 				shardRng:NextNumber(-0.4, 0.4)
@@ -583,10 +563,7 @@ local function buildFateEngine(parent: Instance): Model
 			CanCollide = false,
 			Transparency = 0.35,
 		}, shards)
-		shard:SetAttribute(
-			"SpinSpeed",
-			shardRng:NextNumber(shardCfg.SpinSpeedMin, shardCfg.SpinSpeedMax)
-		)
+		shard:SetAttribute("SpinSpeed", shardRng:NextNumber(shardCfg.SpinSpeedMin, shardCfg.SpinSpeedMax))
 		shard:SetAttribute("IsFeaturedShard", true)
 	end
 
@@ -658,14 +635,11 @@ local function buildAmphitheatre(zone: any, centre: Vector3, parent: Instance)
 			part({
 				Name = `Tier{tier}_Seat{i}`,
 				Size = Vector3.new(5, 1.6, 4),
-				CFrame = CFrame.new(
-					centre
-						+ Vector3.new(
-							math.cos(angle) * radius,
-							zone.PlatformSize.Y / 2 + tier * 1.6,
-							math.sin(angle) * radius
-						)
-				) * CFrame.Angles(0, -angle, 0),
+				CFrame = CFrame.new(centre + Vector3.new(
+					math.cos(angle) * radius,
+					zone.PlatformSize.Y / 2 + tier * 1.6,
+					math.sin(angle) * radius
+				)) * CFrame.Angles(0, -angle, 0),
 				Color = zone.Color,
 				Material = Enum.Material.SmoothPlastic,
 			}, parent)
@@ -681,8 +655,7 @@ local function buildAmphitheatre(zone: any, centre: Vector3, parent: Instance)
 		local obelisk = part({
 			Name = `Obelisk{slot}`,
 			Size = Vector3.new(3, zone.ObeliskHeight, 3),
-			Position = centre
-				+ Vector3.new(offset, zone.PlatformSize.Y / 2 + zone.ObeliskHeight / 2, -6),
+			Position = centre + Vector3.new(offset, zone.PlatformSize.Y / 2 + zone.ObeliskHeight / 2, -6),
 			Color = zone.Color,
 			Material = Enum.Material.SmoothPlastic,
 		}, obelisks)
@@ -1198,9 +1171,9 @@ local function ensureContract(hub: Instance): ()
 
 	local engine = hub:FindFirstChild(Constants.NAMES.FATE_ENGINE)
 	if not engine then
-		engine = Instance.new("Model");
-		(engine :: Model).Name = Constants.NAMES.FATE_ENGINE;
-		(engine :: Model).Parent = hub
+		engine = Instance.new("Model")
+		;(engine :: Model).Name = Constants.NAMES.FATE_ENGINE
+		;(engine :: Model).Parent = hub
 		table.insert(added, Constants.NAMES.FATE_ENGINE)
 	end
 
@@ -1211,17 +1184,17 @@ local function ensureContract(hub: Instance): ()
 
 	local zones = hub:FindFirstChild("Zones")
 	if not zones then
-		zones = Instance.new("Folder");
-		(zones :: Folder).Name = "Zones";
-		(zones :: Folder).Parent = hub
+		zones = Instance.new("Folder")
+		;(zones :: Folder).Name = "Zones"
+		;(zones :: Folder).Parent = hub
 		table.insert(added, "Zones")
 	end
 
 	local gate = zones:FindFirstChild("EXPEDITION_GATE")
 	if not gate then
-		gate = Instance.new("Model");
-		(gate :: Model).Name = "EXPEDITION_GATE";
-		(gate :: Model).Parent = zones
+		gate = Instance.new("Model")
+		;(gate :: Model).Name = "EXPEDITION_GATE"
+		;(gate :: Model).Parent = zones
 		table.insert(added, "EXPEDITION_GATE")
 	end
 
@@ -1282,9 +1255,7 @@ function HubBuilder.build(): Model
 	-- one, every line below builds exactly what it built before.
 	-- THE CROSSROADS v2 when its art is in the place; else the old shell;
 	-- else the blockout.
-	local v2 = if GameConfig.HubLayout.V2.Enabled
-		then HubV2.build(hub, Anchors.FATE_ENGINE)
-		else nil
+	local v2 = if GameConfig.HubLayout.V2.Enabled then HubV2.build(hub, Anchors.FATE_ENGINE) else nil
 	local shell = v2 or buildShell(hub)
 
 	if not shell then
@@ -1344,16 +1315,9 @@ function HubBuilder.build(): Model
 			buildWalkway(zone, centre, hub)
 		end
 
-		local lift = if v2
-			then GameConfig.HubLayout.V2.SignLift
-			elseif shell then Layout.Shell.SignLift
-			else 12
+		local lift = if v2 then GameConfig.HubLayout.V2.SignLift elseif shell then Layout.Shell.SignLift else 12
 		-- v2: the label floats over the district's own centre, 218 out.
-		local at = if v2
-			then Anchors.FATE_ENGINE
-				+ (V2Layout.Pieces[V2_PIECE[zone.Id]] or { Centre = anchor }).Centre
-					* Vector3.new(1, 0, 1)
-			else anchor
+		local at = if v2 then Anchors.FATE_ENGINE + (V2Layout.Pieces[V2_PIECE[zone.Id]] or { Centre = anchor }).Centre * Vector3.new(1, 0, 1) else anchor
 		local sign = part({
 			Name = "Sign",
 			Size = Vector3.new(4, 1, 1),
@@ -1363,13 +1327,8 @@ function HubBuilder.build(): Model
 		}, model)
 		-- Every zone is labelled so a tester can name where they are without
 		-- being told. Master Spec §20's success criterion depends on it.
-		label(
-			if v2 then GameConfig.HubLayout.V2.Names[zone.Id] or zone.Name else zone.Name,
-			zone.Accent,
-			UDim2.fromScale(24, 5),
-			sign,
-			320
-		)
+		label(if v2 then GameConfig.HubLayout.V2.Names[zone.Id] or zone.Name else zone.Name, zone.Accent,
+			UDim2.fromScale(24, 5), sign, 320)
 	end
 
 	if not shell then
@@ -1414,9 +1373,7 @@ function HubBuilder.build(): Model
 		hub:SetAttribute("PartCount", parts)
 	end
 	hub:SetAttribute("Ready", true)
-	print(
-		`[HubBuilder] built Crossroads: {#Layout.Districts} zones, {#hub:GetDescendants()} instances`
-	)
+	print(`[HubBuilder] built Crossroads: {#Layout.Districts} zones, {#hub:GetDescendants()} instances`)
 	return hub
 end
 

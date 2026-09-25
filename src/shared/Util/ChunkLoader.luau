@@ -448,9 +448,7 @@ function ChunkLoader.build(
 		-- The run's atmosphere recolours the map: a recoloured copy of this
 		-- piece (same geometry, that scenario's palette) when it is uploaded.
 		local assetKey = chunk.AssetKey
-		if
-			layout.Atmosphere and AssetManifest.isUploaded(assetKey .. "__" .. layout.Atmosphere)
-		then
+		if layout.Atmosphere and AssetManifest.isUploaded(assetKey .. "__" .. layout.Atmosphere) then
 			assetKey = assetKey .. "__" .. layout.Atmosphere
 		end
 		local mesh = tryMesh(

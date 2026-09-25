@@ -297,40 +297,25 @@ local function watchProgress()
 				arrival = math.min(arrival, 0.9 * have / wanted)
 			end
 		end
-		local arrivalDone = arrival >= 1
-			or (
-				arrived >= loading.MinimumHubInstances
-				and settledFor >= loading.HubSettleSeconds * 2
-			)
+		local arrivalDone = arrival >= 1 or (arrived >= loading.MinimumHubInstances and settledFor >= loading.HubSettleSeconds * 2)
 
 		if arrivalDone and not preloadStarted and crossroads then
 			preloadStarted = true
 			task.spawn(preloadAll, crossroads)
 		end
-		local preload = if preloadDone
-			then 1
-			elseif preloadTotal > 0 then preloadLoaded / preloadTotal
-			else 0
+		local preload = if preloadDone then 1 elseif preloadTotal > 0 then preloadLoaded / preloadTotal else 0
 
-		local shown = math.min(
-			arrival * 0.4 + preload * 0.6,
-			math.clamp(elapsed / loading.MinimumSeconds, 0, 1)
-		)
+		local shown = math.min(arrival * 0.4 + preload * 0.6, math.clamp(elapsed / loading.MinimumSeconds, 0, 1))
 		UIKit.tween(progressFill, UITheme.Motion.Normal, { Size = UDim2.fromScale(shown, 1) })
 		statusLabel.Text = if not arrivalDone
 			then string.format("Raising the Crossroads…  %d%%", math.floor(shown * 100))
 			else string.format("Lighting the sky…  %d%%", math.floor(shown * 100))
 
 		if elapsed >= loading.MaximumSeconds then
-			warn(
-				string.format(
-					"[LoadingScreen] timed out: %d of %s parts, preload %d/%d",
-					arrived,
-					tostring(target),
-					preloadLoaded,
-					preloadTotal
-				)
-			)
+			warn(string.format(
+				"[LoadingScreen] timed out: %d of %s parts, preload %d/%d",
+				arrived, tostring(target), preloadLoaded, preloadTotal
+			))
 			setReady("Taking longer than usual — you can go in now.")
 		elseif arrivalDone and preloadDone and elapsed >= loading.MinimumSeconds then
 			setReady("Ready.")

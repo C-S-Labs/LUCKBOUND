@@ -206,9 +206,7 @@ function SaveSystem.init(): ()
 		volatileMode = true
 		warn("[SaveSystem] DataStores unavailable; running WITHOUT persistence.")
 		warn("[SaveSystem] Reason: " .. tostring(result))
-		warn(
-			"[SaveSystem] Publish the place and enable Studio Access to API Services to save progress."
-		)
+		warn("[SaveSystem] Publish the place and enable Studio Access to API Services to save progress.")
 		return -- no autosave loop, no BindToClose: there is nothing to write
 	end
 

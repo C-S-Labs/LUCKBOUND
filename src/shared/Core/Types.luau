@@ -3,7 +3,8 @@
 -- This file is the machine-readable copy of build spec §2 and is authoritative
 -- over the prose if the two drift. Types only -- no runtime values live here.
 
-export type RarityKey = "COMMON" | "UNCOMMON" | "RARE" | "EPIC" | "LEGENDARY" | "MYTHIC" | "UNKNOWN"
+export type RarityKey =
+	"COMMON" | "UNCOMMON" | "RARE" | "EPIC" | "LEGENDARY" | "MYTHIC" | "UNKNOWN"
 
 export type Rarity = {
 	Key: RarityKey,

@@ -51,15 +51,7 @@ type Flyer = {
 	NextSpeedChange: number,
 	Radius: number,
 	TurnRadius: number,
-	Band: {
-		Centre: Vector3,
-		RMin: number,
-		RMax: number,
-		YMin: number,
-		YMax: number,
-		SMin: number,
-		SMax: number,
-	},
+	Band: { Centre: Vector3, RMin: number, RMax: number, YMin: number, YMax: number, SMin: number, SMax: number },
 	Faces: boolean,
 	Bob: number,
 	Phase: number,
@@ -107,11 +99,7 @@ local function waypoint(f: Flyer, fromAngle: number): Vector3
 	local p = b.Centre
 	for _ = 1, 10 do
 		local r = f.Rng:NextNumber(b.RMin, b.RMax)
-		p = Vector3.new(
-			b.Centre.X + math.cos(a) * r,
-			f.Rng:NextNumber(b.YMin, b.YMax),
-			b.Centre.Z + math.sin(a) * r
-		)
+		p = Vector3.new(b.Centre.X + math.cos(a) * r, f.Rng:NextNumber(b.YMin, b.YMax), b.Centre.Z + math.sin(a) * r)
 		if not blocked(p, f.Radius + CLEARANCE) then
 			break
 		end
@@ -139,11 +127,8 @@ local function berth(f: Flyer): (Vector3?, Vector3?)
 	out = if out.Magnitude > 1 then out.Unit else Vector3.xAxis
 	local reach = math.max(rock.Part.Size.X, rock.Part.Size.Z) * 0.5
 	for k = 0, 6 do
-		local dir = CFrame.Angles(0, (k % 2 == 0 and 1 or -1) * math.ceil(k / 2) * 0.35, 0)
-			:VectorToWorldSpace(out)
-		local spot = rock.Pos
-			+ dir * (reach + f.Radius * 0.6)
-			+ Vector3.new(0, rock.Part.Size.Y * 0.12, 0)
+		local dir = CFrame.Angles(0, (k % 2 == 0 and 1 or -1) * math.ceil(k / 2) * 0.35, 0):VectorToWorldSpace(out)
+		local spot = rock.Pos + dir * (reach + f.Radius * 0.6) + Vector3.new(0, rock.Part.Size.Y * 0.12, 0)
 		if not blocked(spot, f.Radius * 0.8) then
 			-- moored side-on to the island
 			return spot, dir:Cross(Vector3.yAxis)
@@ -214,14 +199,9 @@ function SkyTraffic.init(): ()
 			end
 			adopted[d] = true
 			if d:GetAttribute("SkySpin") then
-				table.insert(spinners, {
-					Part = d,
-					Base = d.CFrame,
-					Rate = d:GetAttribute("SkySpin") :: number,
-					A = d:GetAttribute("SkyColorA"),
-					B = d:GetAttribute("SkyColorB"),
-					Seconds = (d:GetAttribute("SkyColorSeconds") :: number?) or 9,
-				})
+				table.insert(spinners, { Part = d, Base = d.CFrame, Rate = d:GetAttribute("SkySpin") :: number,
+					A = d:GetAttribute("SkyColorA"), B = d:GetAttribute("SkyColorB"),
+					Seconds = (d:GetAttribute("SkyColorSeconds") :: number?) or 9 })
 			elseif d:GetAttribute("Drift") then
 				if d.LocalTransparencyModifier < 1 then
 					local centre = d:GetAttribute("DriftCentre") :: Vector3
@@ -237,21 +217,15 @@ function SkyTraffic.init(): ()
 						Rot = d.CFrame.Rotation,
 						Yaw = 0,
 						-- its own cycles
-						PacePeriod = r:NextNumber(40, 110),
-						PaceAmp = r:NextNumber(0.3, 0.7),
-						InPeriod = r:NextNumber(60, 160),
-						InAmp = r:NextNumber(15, 55),
-						UpPeriod = r:NextNumber(25, 70),
-						UpAmp = r:NextNumber(3, 10),
+						PacePeriod = r:NextNumber(40, 110), PaceAmp = r:NextNumber(0.3, 0.7),
+						InPeriod = r:NextNumber(60, 160), InAmp = r:NextNumber(15, 55),
+						UpPeriod = r:NextNumber(25, 70), UpAmp = r:NextNumber(3, 10),
 						YawRate = r:NextNumber(-0.012, 0.012),
 						Phase = r:NextNumber(0, math.pi * 2),
 					})
 				end
 			elseif d:GetAttribute("Backdrop") then
-				table.insert(
-					rocks,
-					{ Part = d, Pos = d.Position, Radius = math.max(d.Size.X, d.Size.Z) * 0.5 }
-				)
+				table.insert(rocks, { Part = d, Pos = d.Position, Radius = math.max(d.Size.X, d.Size.Z) * 0.5 })
 				table.insert(solids, d)
 				castParams.FilterDescendantsInstances = solids
 				overlapParams.FilterDescendantsInstances = solids
@@ -272,20 +246,11 @@ function SkyTraffic.init(): ()
 					NextSpeedChange = rng:NextNumber(4, 12),
 					Radius = size,
 					TurnRadius = math.clamp(size * TURN_PER_SIZE, TURN_MIN, TURN_MAX),
-					Band = {
-						Centre = d:GetAttribute("WanderCentre") :: Vector3,
-						RMin = r.X,
-						RMax = r.Y,
-						YMin = h.X,
-						YMax = h.Y,
-						SMin = s.X,
-						SMax = s.Y,
-					},
+					Band = { Centre = d:GetAttribute("WanderCentre") :: Vector3, RMin = r.X, RMax = r.Y,
+						YMin = h.X, YMax = h.Y, SMin = s.X, SMax = s.Y },
 					Faces = d:GetAttribute("WanderFaces") == true,
 					Bob = (d:GetAttribute("WanderBob") :: number?) or 0,
-					Phase = if rng:NextNumber() < 0.3
-						then -rng:NextNumber(0.1, 6)
-						else rng:NextNumber(0.1, 6),
+					Phase = if rng:NextNumber() < 0.3 then -rng:NextNumber(0.1, 6) else rng:NextNumber(0.1, 6),
 					Yaw = rng:NextNumber(0, math.pi * 2),
 					Bank = 0,
 					Rng = rng,
@@ -309,8 +274,7 @@ function SkyTraffic.init(): ()
 							Axis = c:GetAttribute("SubAxis") :: Vector3,
 							Amp = (c:GetAttribute("SubAmp") :: number?) or 0.3,
 							Rate = (c:GetAttribute("SubRate") :: number?) or 1,
-							Phase = ((c:GetAttribute("SubPhase") :: number?) or 0)
-								+ rng:NextNumber(0, 1),
+							Phase = ((c:GetAttribute("SubPhase") :: number?) or 0) + rng:NextNumber(0, 1),
 							Alpha = c.Transparency,
 						})
 					end
@@ -333,31 +297,20 @@ function SkyTraffic.init(): ()
 			task.wait(0.5) -- let its moving pieces arrive with it
 			adopt(d, true)
 		end)
-		print(
-			string.format(
-				"[SkyTraffic] %d flyer(s), %d island(s), %d solid group(s)",
-				#flyers,
-				#rocks,
-				#solids
-			)
-		)
+		print(string.format("[SkyTraffic] %d flyer(s), %d island(s), %d solid group(s)", #flyers, #rocks, #solids))
 
 		local elapsed = 0
 		RunService.Heartbeat:Connect(function(dt)
 			elapsed += dt
 			dt = math.min(dt, 0.1)
 			for _, c in drifters do
-				local pace = 1
-					+ math.sin(elapsed * math.pi * 2 / c.PacePeriod + c.Phase) * c.PaceAmp
+				local pace = 1 + math.sin(elapsed * math.pi * 2 / c.PacePeriod + c.Phase) * c.PaceAmp
 				c.Angle -= c.Rate * pace * dt
 				c.Yaw += c.YawRate * dt
-				local r = c.Radius
-					+ math.sin(elapsed * math.pi * 2 / c.InPeriod + c.Phase) * c.InAmp
-				local y = c.Y
-					+ math.sin(elapsed * math.pi * 2 / c.UpPeriod + c.Phase * 1.7) * c.UpAmp
-				c.Part.CFrame = CFrame.new(
-					c.Centre + Vector3.new(math.cos(c.Angle) * r, y, math.sin(c.Angle) * r)
-				) * CFrame.Angles(0, c.Yaw, 0) * c.Rot
+				local r = c.Radius + math.sin(elapsed * math.pi * 2 / c.InPeriod + c.Phase) * c.InAmp
+				local y = c.Y + math.sin(elapsed * math.pi * 2 / c.UpPeriod + c.Phase * 1.7) * c.UpAmp
+				c.Part.CFrame = CFrame.new(c.Centre + Vector3.new(math.cos(c.Angle) * r, y, math.sin(c.Angle) * r))
+					* CFrame.Angles(0, c.Yaw, 0) * c.Rot
 			end
 			for _, s in spinners do
 				s.Part.CFrame = s.Base * CFrame.Angles(0, elapsed * s.Rate, 0)
@@ -411,10 +364,7 @@ function SkyTraffic.init(): ()
 					-- a big turner counts as arrived from further out: it cannot
 					-- tighten its circle onto a point
 					if to.Magnitude < math.max(40, f.TurnRadius * 0.8) or f.StuckFor > 8 then
-						f.Target = waypoint(
-							f,
-							angleOf(f, f.Pos) + (if f.StuckFor > 8 then math.pi * 0.5 else 0)
-						)
+						f.Target = waypoint(f, angleOf(f, f.Pos) + (if f.StuckFor > 8 then math.pi * 0.5 else 0))
 						to = f.Target - f.Pos
 					end
 				elseif f.Mode == "dock" then
@@ -442,11 +392,9 @@ function SkyTraffic.init(): ()
 				if f.ScanIn <= 0 and f.Mode ~= "docked" then
 					f.ScanIn = SCAN_EVERY
 					f.Avoid = Vector3.zero
-					local reach =
-						math.min(math.max(f.Speed, 8) * 3 + f.TurnRadius * 1.5 + f.Radius, MAX_CAST)
+					local reach = math.min(math.max(f.Speed, 8) * 3 + f.TurnRadius * 1.5 + f.Radius, MAX_CAST)
 					local r = math.clamp(f.Radius * 0.7, 2, 200)
-					local hit =
-						Workspace:Spherecast(f.Pos - f.Dir * r * 0.5, r, f.Dir * reach, castParams)
+					local hit = Workspace:Spherecast(f.Pos - f.Dir * r * 0.5, r, f.Dir * reach, castParams)
 					if hit then
 						local urgency = 1 - math.clamp(hit.Distance / reach, 0, 1)
 						local side = hit.Normal - f.Dir * hit.Normal:Dot(f.Dir)
@@ -460,10 +408,7 @@ function SkyTraffic.init(): ()
 							if toTarget.Magnitude > MAX_CAST then
 								toTarget = toTarget.Unit * MAX_CAST -- only the stretch that matters now
 							end
-							if
-								toTarget.Magnitude > 1
-								and Workspace:Spherecast(f.Pos, r, toTarget, castParams)
-							then
+							if toTarget.Magnitude > 1 and Workspace:Spherecast(f.Pos, r, toTarget, castParams) then
 								f.Target = waypoint(f, angleOf(f, f.Pos) + math.pi * 0.35)
 							end
 						end
@@ -505,16 +450,11 @@ function SkyTraffic.init(): ()
 					end
 					-- bank into the turn, by how hard it is turning
 					local yawRate = prevDir:Cross(f.Dir).Y / math.max(dt, 1e-3)
-					f.Bank += (math.clamp(yawRate * 0.8, -0.3, 0.3) - f.Bank) * math.min(
-						1,
-						dt * 1.5
-					)
+					f.Bank += (math.clamp(yawRate * 0.8, -0.3, 0.3) - f.Bank) * math.min(1, dt * 1.5)
 					f.DockHeading = f.DockHeading:Lerp(fwd.Unit, math.min(1, dt * 0.5))
 					-- the imported meshes' noses point along -X: a quarter turn
 					-- lines them up with lookAt's forward
-					cf = CFrame.lookAt(at, at + f.DockHeading)
-						* CFrame.Angles(0, -math.pi / 2, 0)
-						* CFrame.Angles(f.Bank, 0, 0)
+					cf = CFrame.lookAt(at, at + f.DockHeading) * CFrame.Angles(0, -math.pi / 2, 0) * CFrame.Angles(f.Bank, 0, 0)
 				else
 					f.Yaw += dt * 0.05 * (if f.Phase > 0 then 1 else -1)
 					cf = CFrame.new(at) * CFrame.Angles(0, f.Yaw, 0)
@@ -530,13 +470,9 @@ function SkyTraffic.init(): ()
 						local angle = if s.Kind == "Spin"
 							then elapsed * s.Rate * spin + s.Phase
 							else math.sin(elapsed * s.Rate * math.pi * 2 + s.Phase) * s.Amp
-						rel = CFrame.new(s.Hinge)
-							* CFrame.fromAxisAngle(s.Axis, angle)
-							* CFrame.new(s.Offset - s.Hinge)
+						rel = CFrame.new(s.Hinge) * CFrame.fromAxisAngle(s.Axis, angle) * CFrame.new(s.Offset - s.Hinge)
 					elseif s.Kind == "Flicker" then
-						s.Part.Transparency = s.Alpha
-							+ 0.35
-								* (0.5 + 0.5 * math.sin(elapsed * s.Rate * math.pi * 2 + s.Phase))
+						s.Part.Transparency = s.Alpha + 0.35 * (0.5 + 0.5 * math.sin(elapsed * s.Rate * math.pi * 2 + s.Phase))
 					end
 					s.Part.CFrame = cf * rel
 				end

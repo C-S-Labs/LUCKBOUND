@@ -352,7 +352,7 @@ function HubEffects.init(): ()
 				-- turning at a perfectly constant rate on a perfectly fixed
 				-- axis is the definition of robotic; a degree or two of sway
 				-- is what makes it read as suspended rather than bolted on.
-				Wobble = part:GetAttribute("WobbleDegrees") :: number?,
+				Wobble = (part:GetAttribute("WobbleDegrees") :: number?),
 				WobbleSeconds = (part:GetAttribute("WobbleSeconds") :: number?) or 7,
 				-- Varies the spin rate itself, so it is never metronomic.
 				Jitter = (part:GetAttribute("SpinJitter") :: number?) or 0,
@@ -505,18 +505,15 @@ function HubEffects.init(): ()
 
 				if slow then
 					if a.Pulse then
-						local t = (math.sin(elapsed / a.PulseSeconds * math.pi * 2 + a.Phase) + 1)
-							/ 2
+						local t = (math.sin(elapsed / a.PulseSeconds * math.pi * 2 + a.Phase) + 1) / 2
 						part.Size = a.BaseSize * (1 - a.Pulse + a.Pulse * 2 * t)
 					end
 					if a.AlphaMin then
-						local t = (math.sin(elapsed / a.PulseSeconds * math.pi * 2 + a.Phase) + 1)
-							/ 2
+						local t = (math.sin(elapsed / a.PulseSeconds * math.pi * 2 + a.Phase) + 1) / 2
 						part.Transparency = a.AlphaMin + (a.AlphaMax - a.AlphaMin) * t
 					end
 					if a.ColorA then
-						local t = (math.sin(elapsed / a.ColorSeconds * math.pi * 2 + a.Phase) + 1)
-							/ 2
+						local t = (math.sin(elapsed / a.ColorSeconds * math.pi * 2 + a.Phase) + 1) / 2
 						part.Color = a.ColorA:Lerp(a.ColorB, t)
 					end
 				end
