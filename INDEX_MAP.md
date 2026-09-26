@@ -197,13 +197,13 @@ _223 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/DEVELOPMENT_PLAN.md
 
-- `docs/DEVELOPMENT_PLAN.md` (298) - LUCKBOUND — Development Plan · 2026-09-25
-  - `DEVELOPMENT_PLAN.md`: 1. The decision that shapes everything:16, 2. Where we actually are:47, 3. The critical path to a playtest:67, Phase 0 — Clear the deck · **S**:72, Phase 1 — Every roll leads somewhere · **M**:87, Phase 1b — The procedural loop proves itself · **S/M**:128, Phase 2 — Something to do in a world · **M/L**:153, Phase 3 — Make it feel like a game · **M**:168, Phase 4 — The playtest itself · **S** (process, not code):184, Phase 5 — Act on what it says · **?**:199, 4. After the playtest — the long game:207, 5. What we are deliberately NOT doing yet:242, 6. How to work, so we stop jumping around:259, 7. The risks worth naming:279, 8. If you only do four things:291
+- `docs/DEVELOPMENT_PLAN.md` (300) - LUCKBOUND — Development Plan · 2026-09-25
+  - `DEVELOPMENT_PLAN.md`: 1. The decision that shapes everything:16, 2. Where we actually are:47, 3. The critical path to a playtest:67, Phase 0 — Clear the deck · **S**:72, Phase 1 — Every roll leads somewhere · **M**:87, Phase 1b — The procedural loop proves itself · **S/M**:128, Phase 2 — Something to do in a world · **M/L**:153, Phase 3 — Make it feel like a game · **M**:168, Phase 4 — The playtest itself · **S** (process, not code):184, Phase 5 — Act on what it says · **?**:199, 4. After the playtest — the long game:207, 5. What we are deliberately NOT doing yet:244, 6. How to work, so we stop jumping around:261, 7. The risks worth naming:281, 8. If you only do four things:293
 
 ### docs/ENEMY_AI.md
 
-- `docs/ENEMY_AI.md` (274) - Enemy AI: how every enemy, miniboss and boss thinks, adapts and is tuned · 2026-09-25
-  - `ENEMY_AI.md`: 1. Goals:18, 2. Governing rules:27, 3. Architecture:46, 4. The combat language (shared by items and enemies):66, 4.1 Weapons carry their own moves:82, 5. The map contract:96, 6. World effect palettes:112, 7. Archetypes:123, 8. The decision model (utility AI):142, Fairness guardrails (hard rules, tested):152, 9. Difficulty and rewards:161, The personal adjustment:168, Rewards:179, Win-rate targets:188, 10. Bosses:199, Universal evolution:207, Raid-ready, not raids:218, 11. Tuning and telemetry:223, 12. Order of operations (mandatory):233, Rules for agents:260, 13. Open questions:268
+- `docs/ENEMY_AI.md` (275) - Enemy AI: how every enemy, miniboss and boss thinks, adapts and is tuned · 2026-09-25
+  - `ENEMY_AI.md`: 1. Goals:19, 2. Governing rules:28, 3. Architecture:47, 4. The combat language (shared by items and enemies):67, 4.1 Weapons carry their own moves:83, 5. The map contract:97, 6. World effect palettes:113, 7. Archetypes:124, 8. The decision model (utility AI):143, Fairness guardrails (hard rules, tested):153, 9. Difficulty and rewards:162, The personal adjustment:169, Rewards:180, Win-rate targets:189, 10. Bosses:200, Universal evolution:208, Raid-ready, not raids:219, 11. Tuning and telemetry:224, 12. Order of operations (mandatory):234, Rules for agents:261, 13. Open questions:269
 
 ### docs/ENEMY_FRAMEWORK.md
 
@@ -247,8 +247,8 @@ _223 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/PROTOTYPE_BUILD_SPEC.md
 
-- `docs/PROTOTYPE_BUILD_SPEC.md` (1086) - LUCKBOUND — Prototype Build Specification · 2026-09-25
-  - `PROTOTYPE_BUILD_SPEC.md`: Phase 1: Foundation · v0.1 · AI-Executable:2, 0. What Phase 1 Is:10, Phase 1 Definition of Done:20, 1. Canonical Architecture:43, 1.1 Repository → Roblox Explorer mapping:53, 1.2 Bootstrap order — fixed, not negotiable:124, 2. Type & Data Schemas:178, 2.1 Rarity (Constants):182, 2.2 WorldDefinition:198, 2.3 ItemDefinition / DiscoveryDefinition / EnemyDefinition /:262, 2.4 PlayerProfile — save schema v1:273, 3. The Fate Roll — full specification:295, 3.1 Weights:299, 3.2 First-roll rule:336, 3.3 TRUE RNG — the roll is never weighted by the player:340, 3.3.1 Scripted onboarding — the first 15 rolls:355, 3.4 Server authority and anti-exploit:390, 3.5 Roll sequence (canonical):401, 4. Network Contract:425, Live remotes — this is the complete list:431, Reserved — declared now, implemented in Phase 2/3:492, 4.1 Late joiners — the rule that is easy to get wrong:498, 4.2 Event scope and precedence — added 2026-09-20:508, Universal remote rules:544, 5. Phase 1 Task List — AI-executable:553, 6. Tunables Requiring Your Sign-Off:586, 6.1 Bugs Found Building Phase 1:606, 7. What Phase 1 Deliberately Excludes:635, Amendment index — claim a number here, in the same change:637, 7.1 Amendment: expedition entry, opened 2026-09-16:659, What was opened, and what was not:664, Why it was opened now:678, The switch:687, What it added:693, Anti-exploit, same standard as §3.4:704, The gap this exposes:719, 7.2 Amendment: parties, and expeditions as their own server :729, What was opened:737, The rules:747, How the instance works:761, ... +24 more
+- `docs/PROTOTYPE_BUILD_SPEC.md` (1114) - LUCKBOUND — Prototype Build Specification · 2026-09-25
+  - `PROTOTYPE_BUILD_SPEC.md`: Phase 1: Foundation · v0.1 · AI-Executable:2, 0. What Phase 1 Is:10, Phase 1 Definition of Done:20, 1. Canonical Architecture:43, 1.1 Repository → Roblox Explorer mapping:53, 1.2 Bootstrap order — fixed, not negotiable:124, 2. Type & Data Schemas:178, 2.1 Rarity (Constants):182, 2.2 WorldDefinition:198, 2.3 ItemDefinition / DiscoveryDefinition / EnemyDefinition /:262, 2.4 PlayerProfile — save schema v1:273, 3. The Fate Roll — full specification:295, 3.1 Weights:299, 3.2 First-roll rule:336, 3.3 TRUE RNG — the roll is never weighted by the player:340, 3.3.1 Scripted onboarding — the first 15 rolls:355, 3.4 Server authority and anti-exploit:390, 3.5 Roll sequence (canonical):401, 4. Network Contract:425, Live remotes — this is the complete list:431, Reserved — declared now, implemented in Phase 2/3:492, 4.1 Late joiners — the rule that is easy to get wrong:498, 4.2 Event scope and precedence — added 2026-09-20:508, Universal remote rules:544, 5. Phase 1 Task List — AI-executable:553, 6. Tunables Requiring Your Sign-Off:586, 6.1 Bugs Found Building Phase 1:606, 7. What Phase 1 Deliberately Excludes:635, Amendment index — claim a number here, in the same change:637, 7.1 Amendment: expedition entry, opened 2026-09-16:660, What was opened, and what was not:665, Why it was opened now:679, The switch:688, What it added:694, Anti-exploit, same standard as §3.4:705, The gap this exposes:720, 7.2 Amendment: parties, and expeditions as their own server :730, What was opened:738, The rules:748, How the instance works:762, ... +27 more
 
 ### docs/RESERVED.md
 
@@ -262,8 +262,8 @@ _223 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/STATUS.md
 
-- `docs/STATUS.md` (182) - LUCKBOUND — Project Status · 2026-09-25
-  - `STATUS.md`: 1. Where the project stands:10, 2. Next — pick up here:37, 3. Decisions locked in:81, Why true RNG matters downstream:106, 4. Open items (one line each; details are in the archive und:119, 5. Environment:164, Startup:172
+- `docs/STATUS.md` (188) - LUCKBOUND — Project Status · 2026-09-25
+  - `STATUS.md`: 1. Where the project stands:10, 2. Next — pick up here:37, 3. Decisions locked in:87, Why true RNG matters downstream:112, 4. Open items (one line each; details are in the archive und:125, 5. Environment:170, Startup:178
 
 ### docs/TESTING.md
 
@@ -282,8 +282,8 @@ _223 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (5068) - LUCKBOUND — Work Log · 2026-09-25
-  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 71 — 2026-09-25 — Enemy AI design, weapon movesets, :36, Done:40, Decisions made:44, Stopped at:52, Next:55, Session 70 — 2026-09-25 — Document animation ids as account/:63, Done:67, Decisions made:78, Stopped at:82, Next:86, Session 69 — 2026-09-25 — STATUS correction: Worlds table an:94, Done:98, Decisions made:114, Stopped at:121, Next:125, Session 68 — 2026-09-25 — Chunk detail, boss preview, Aether:134, Done:137, Decisions made:188, Stopped at:199, Next:203, Session 67 — 2026-09-24 — Enemy framework + Sky Citadel enem:211, Done:214, Decisions made:234, Stopped at:240, Next:243, Session 66 — 2026-09-24 — Verdant Valley 30-piece kit: expor:250, Done:253, Decisions made:263, Stopped at:267, Next:270, Session 65 — 2026-09-24 — Drop-in chunk kits:276, Done:279, Decisions made:288, Stopped at:295, ... +365 more
+- `docs/WORKLOG.md` (5101) - LUCKBOUND — Work Log · 2026-09-25
+  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 72 — 2026-09-26 — Reserve §7.6 for enemy AI/combat, :36, Done:40, Decisions made:53, Stopped at:57, Next:60, Session 71 — 2026-09-25 — Enemy AI design, weapon movesets, :69, Done:73, Decisions made:77, Stopped at:85, Next:88, Session 70 — 2026-09-25 — Document animation ids as account/:96, Done:100, Decisions made:111, Stopped at:115, Next:119, Session 69 — 2026-09-25 — STATUS correction: Worlds table an:127, Done:131, Decisions made:147, Stopped at:154, Next:158, Session 68 — 2026-09-25 — Chunk detail, boss preview, Aether:167, Done:170, Decisions made:221, Stopped at:232, Next:236, Session 67 — 2026-09-24 — Enemy framework + Sky Citadel enem:244, Done:247, Decisions made:267, Stopped at:273, Next:276, Session 66 — 2026-09-24 — Verdant Valley 30-piece kit: expor:283, Done:286, Decisions made:296, Stopped at:300, ... +370 more
 
 ### docs/archive
 

@@ -1,8 +1,9 @@
 # Enemy AI: how every enemy, miniboss and boss thinks, adapts and is tuned
 
-> **Status: design only, 2026-09-25.** Nothing here is built, and nothing here may be built yet: combat, enemies and
-> bosses are excluded by build spec §7. Implementation starts with **step 0** of the order of operations (§12), a
-> §7.x amendment the owner approves. Until then this document is a design to agree on, not a task list.
+> **Status: design only, 2026-09-25. Number reserved 2026-09-26.** Nothing here is built, and nothing here may be
+> built yet: combat, enemies and bosses are excluded by build spec §7. §7.6 is now claimed and this doc's module
+> names are locked (spec §7.6), but step 0 is not fully closed — remotes and `GameConfig` blocks are still
+> undecided, deferred to step 1. Until step 0 closes, this document is a design to agree on, not a task list.
 >
 > **Scope, owner-directed 2026-09-25.** This document is **authoritative for enemy behaviour** and supersedes any
 > earlier behaviour scheme: the behaviour column of `ENEMY_FRAMEWORK.md` §3 and the service description in its §6.
@@ -241,7 +242,7 @@ the item schema.
 
 | # | Step | Exit criteria |
 |---|---|---|
-| 0 | **The amendment.** Claim the next §7.x number in the build spec's amendment index; list what it opens (enemies, AI, damage) and what stays excluded; fix module names, remotes (spec §4 first) and `GameConfig` blocks | owner approves the amendment |
+| 0 | **The amendment.** ~~Claim the next §7.x number~~ **done: §7.6, 2026-09-26.** ~~Fix module names~~ **done, spec §7.6.** Still open: remotes (spec §4 first) and `GameConfig` blocks | owner approves the amendment as a whole |
 | 1 | **Contracts:** damage types, status effects, the move format, size classes, marker names, the palette schema, the Fate Engine interface | schemas in `Types` / `Schema`; schema tests pass; `RESERVED.md` rows for anything unread |
 | 2 | **`CombatCore`** (pure) | headless tests: damage, hit resolution, effects, palette enforcement |
 | 3 | **Item combat:** attacks, dodge and timing windows on items, server-resolved | Studio pass; the dodge and reaction timings are written down, because the guardrails depend on them |
