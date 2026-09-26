@@ -36,6 +36,12 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 ## 2. Next — pick up here
 
+> **2026-09-26: §7.6 reserved for enemy AI/combat, module names locked.** Build spec §7.6 now claims the number
+> `ENEMY_AI.md` §12 step 0 asked for, so no other branch can take it. `CombatCore`, `PerceptionCore`, `EnemyAICore`,
+> `DifficultyCore`, `BossCore`, `TelemetryCore`, `EnemyService` and `BossService` are locked as the final module
+> names. **Nothing opens yet** — combat/enemies/bosses stay excluded by §7's list. Remotes and `GameConfig` blocks,
+> the rest of step 0, are deferred to step 1, when the actual schemas exist to design them against.
+
 > **2026-09-25: enemy AI designed, not built.** `docs/ENEMY_AI.md` is now authoritative for enemy behaviour:
 > utility AI over the framework's roles, no difficulty setting (a shared versioned profile plus an invisible,
 > capped personal tempo adjustment), harder play pays extra loot rolls never better odds, universal versioned

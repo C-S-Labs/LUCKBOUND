@@ -33,6 +33,39 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 72 — 2026-09-26 — Reserve §7.6 for enemy AI/combat, lock module names
+
+**Merged:** —   **Tests:** unchanged (docs only)   **Head:** —
+
+### Done
+- Owner asked to claim the amendment number `ENEMY_AI.md` §12 step 0 calls for, to avoid a repeat of the §7.2
+  double-claim `AGENTS.md` already warns about. Added `docs/PROTOTYPE_BUILD_SPEC.md` §7.6 (new row in the
+  amendment index, plus a full §7.6 section) that reserves the number and locks the module names `ENEMY_AI.md` §3
+  proposed (`CombatCore`, `PerceptionCore`, `EnemyAICore`, `DifficultyCore`, `BossCore`, `TelemetryCore`,
+  `EnemyService`, `BossService`).
+- Deliberately scoped this pass to the number and names only, not the rest of step 0 (remotes, `GameConfig`
+  blocks) — those need real design input (e.g. does a player attack need a new client→server remote, and what
+  does it carry) rather than a guess, and are cleaner to decide once step 1's actual schemas exist. Updated
+  `ENEMY_AI.md`'s banner and its §12 step-0 row, `DEVELOPMENT_PLAN.md`, and `STATUS.md` to reflect that step 0 is
+  partially, not fully, closed.
+- Combat/enemies/bosses remain excluded by §7's list; this change opens nothing gameplay-facing.
+
+### Decisions made
+- Split step 0 into "claim + lock names" (done now, cheap and final) vs. "remotes + config" (deferred to step 1)
+  rather than guessing at remotes/config to close the whole step in one pass.
+
+### Stopped at
+§7.6 reserved and documented; no `src/` change.
+
+### Next
+1. When step 1 (contracts: damage types, status effects, move format, size classes, markers, palette schema, Fate
+   Engine interface) is drafted, decide the remotes and `GameConfig` blocks and close out §7.6's step 0 for real.
+2. Everything already queued in Session 71's "Next" list is unaffected.
+
+Leftover cleanup: nothing left behind.
+
+---
+
 ## Session 71 — 2026-09-25 — Enemy AI design, weapon movesets, and build order
 
 **Merged:** PR #128 (pending)   **Tests:** unchanged (docs only)   **Head:** branch `claude/enemy-ai-design`
