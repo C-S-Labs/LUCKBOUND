@@ -33,6 +33,63 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 73 — 2026-09-26 — Ethereal Scape: PrebuiltMap → 30-piece chunk kit + drafted roster
+
+**Merged:** —   **Tests:** rewritten, not run locally (no Luau interpreter in this session)   **Head:** —
+
+### Done
+- Sky Citadel (separate, earlier in this session): replaced Rootbound Warden with a new basic tank, Citadel
+  Bulwark (its grove-root design moved to a new `assets/source/enemies/verdant_valley/` staging folder); revamped
+  Skyport Hauler v4 to fix real clipping (shoulder ram plate through the head, furnace core past the ribs). PR #130.
+- Owner asked for Ethereal Scape's 30-piece chunk kit + a matching enemy roster. Research surfaced that the world
+  was declared as a `PrebuiltMap` (one composed, hand-authored, no-combat traverse) and explicitly documented as a
+  map-generation test biome — not a chunk-kit world. Flagged to the owner before writing any code; owner chose
+  "convert it for real."
+- Wrote `docs/biomes/ETHEREAL_SCAPE.md`: footprint (256³, Sanctum 320²), connection vocabulary (`SPAN`/`COMMUNION`,
+  disjoint from every other world's), the 30-piece table across 5 axes (Shape/Floor/Edge/Keel/Landmark), the
+  palette (read off `aether_environment_refined.blend`'s materials), and a 9-enemy roster design table.
+- Wrote `assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py`: a self-contained procedural generator
+  (own lightweight `Piece`/primitive layer, not Sky Citadel's `geometry_checks.py` framework — that one is tightly
+  coupled to Sky Citadel's own 4,464-line `Piece` class). 30/30 pieces pass bbox/height/tri-budget validation
+  headless; exported to FBX; a review grid rendered.
+- Wrote `src/shared/Content/Chunks/EtherealScape.luau` (30 entries, `SPAN`/`COMMUNION` sockets, roles, weights,
+  `EnemyTags`, `Supports`) and 30 `PLACEHOLDER` entries in `AssetManifest.luau`.
+- **Superseded the PrebuiltMap decision**: `Content/Worlds/EtherealScape.luau` now declares the chunk kit +
+  `MapPathLength = 5` instead of `PrebuiltMap`; the retired `ES_ENVIRONMENT_FULL` manifest entry is kept for
+  provenance/palette reference only.
+- Drafted the roster in `assets/source/enemies/ethereal_scape/` (`ROSTER.md`, `manifest.py`): 5 basic, 3 miniboss,
+  1 boss. Built one basic, Aether Wisp (`hover_melee`, same archetype slot as Sky Citadel's Lantern Wisp), to prove
+  the palette translates to a character. Validated headless, PASS.
+- Rewrote `tests/cases.luau`'s "Ethereal Scape" group and the "two ways a world gets a map" section (§14) for the
+  new reality: kit role counts, the `COMMUNION` reserved-Kind pattern, disjoint socket kinds, `MapPathLength`
+  override — replacing the old PrebuiltMap-scale-measurement assertions. A synthetic prebuilt table keeps that
+  branch of `ExpeditionCore` covered now that no real world uses it.
+- Ran `selene` and `stylua --check` against every edited Luau file (both clean) — the closest available
+  substitute for the real suite, since this session has no local `luau`/`luau-analyze` binary.
+
+### Decisions made
+- Ethereal Scape converts to a full chunk-kit, combat-enabled world (owner-directed, explicit trade-off presented
+  first: convert for real / draft in parallel without touching the world def / wrong-world). Owner picked convert.
+- Kept the original `aether_environment_refined.blend` and its `ES_ENVIRONMENT_FULL` manifest entry as palette/art
+  reference rather than deleting them — nothing else in the repo needs them gone, and they're cheap provenance.
+
+### Stopped at
+This is a **first pass**, the same status Verdant Valley's 30-piece kit started at: geometrically validated, not
+uploaded, not walked in Studio, and — because no local Luau interpreter was available — **`tests/generated_suite.luau`
+has not actually been run against these changes.** `selene`/`stylua` are clean, and the rewritten assertions were
+checked by hand against `ExpeditionCore`/`Schema`'s real signatures, but CI must confirm before merging.
+
+### Next
+1. Run `python3 tests/build_suite.py && luau tests/generated_suite.luau` (or let CI do it) and fix anything the
+   local review missed.
+2. Import one Ethereal Scape piece into Studio and measure it (256³ / 320² footprint, `GroundOffsetY`, whether
+   vertex colour survives) — the same first-import checklist every other kit ran.
+3. Build the remaining 8 roster enemies in the order every other biome's roster grew in: basics, then minibosses,
+   then the boss.
+4. A hand pass per `CHUNK_AUTHORING.md` (floating objects, clipping, scale, edges, origin) once the kit is walkable.
+
+---
+
 ## Session 72 — 2026-09-26 — Reserve §7.6 for enemy AI/combat, lock module names
 
 **Merged:** —   **Tests:** unchanged (docs only)   **Head:** —
