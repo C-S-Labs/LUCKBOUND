@@ -133,6 +133,7 @@ local CHUNKS = {
 			socket("east", "SPAN", 128, 0, 90),
 			socket("west", "SPAN", -128, 0, 270),
 		},
+		Supports = { Combat = true, Traversal = true },
 		Weight = 1,
 		MaxPerLayout = 1,
 		EnemyTags = {},
