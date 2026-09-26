@@ -218,6 +218,8 @@ In dependency order. Not scheduled here on purpose: the playtest reorders it.
    - The Winged Sentinel has its first actions, a Studio preview (`/showboss`) and the Aether Lance's lightning
      (`Util/WeaponFX.luau`).
    - The gameplay side (`EnemyDef`, AI, damage) is still unbuilt and waits for the owner's OK.
+   - *2026-09-25:* the AI design and its mandatory build order are `ENEMY_AI.md` (design only; its step 0 is a §7.x
+     amendment, and items and inventory still come first).
 3. **The Fate Tree** — designed in `PLAYER_ABILITIES.md` §3. Gate it on
    understanding what players actually want more of.
 4. **Rebirth and prestige** — the retention layer. Worth nothing until there is

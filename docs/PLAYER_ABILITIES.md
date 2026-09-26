@@ -24,6 +24,8 @@ combat before combat exists.
 fails the build if `GameConfig.Locomotion` ever grows a field whose name
 contains damage, attack, crit or dps.
 
+How weapon moves are shaped, including unique Legendary movesets, is `ENEMY_AI.md` §4.1.
+
 ---
 
 ## 1. Built: sprint
