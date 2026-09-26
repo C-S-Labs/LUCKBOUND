@@ -202,7 +202,7 @@ _223 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/ENEMY_AI.md
 
-- `docs/ENEMY_AI.md` (274) - Enemy AI: how every enemy, miniboss and boss thinks, adapts and is tuned · new
+- `docs/ENEMY_AI.md` (274) - Enemy AI: how every enemy, miniboss and boss thinks, adapts and is tuned · 2026-09-25
   - `ENEMY_AI.md`: 1. Goals:18, 2. Governing rules:27, 3. Architecture:46, 4. The combat language (shared by items and enemies):66, 4.1 Weapons carry their own moves:82, 5. The map contract:96, 6. World effect palettes:112, 7. Archetypes:123, 8. The decision model (utility AI):142, Fairness guardrails (hard rules, tested):152, 9. Difficulty and rewards:161, The personal adjustment:168, Rewards:179, Win-rate targets:188, 10. Bosses:199, Universal evolution:207, Raid-ready, not raids:218, 11. Tuning and telemetry:223, 12. Order of operations (mandatory):233, Rules for agents:260, 13. Open questions:268
 
 ### docs/ENEMY_FRAMEWORK.md
@@ -237,7 +237,7 @@ _223 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/PLAYER_ABILITIES.md
 
-- `docs/PLAYER_ABILITIES.md` (173) - LUCKBOUND — Player Abilities & Upgrades · 2026-09-20
+- `docs/PLAYER_ABILITIES.md` (173) - LUCKBOUND — Player Abilities & Upgrades · 2026-09-25
   - `PLAYER_ABILITIES.md`: 0. The line this document exists to hold:8, 1. Built: sprint:31, 2. Built: double jump:52, 3. Planned: the Fate Tree:68, FORTUNE — what the roll can reach:84, ENDURANCE — how long you last out there:97, DISCOVERY — what a world yields:108, CRAFT — what your gear becomes:120, Node shapes worth having:130, 4. Planned: movement abilities beyond the two:141, 5. Where these would live:162
 
 ### docs/PLAYER_UI.md
@@ -277,7 +277,7 @@ _223 text files, 169 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WEAPONS.md
 
-- `docs/WEAPONS.md` (152) - LUCKBOUND — Weapons · 2026-09-23
+- `docs/WEAPONS.md` (152) - LUCKBOUND — Weapons · 2026-09-25
   - `WEAPONS.md`: 1. Types:12, 2. Rarity — what each tier must SHOW:26, 3. Style:56, 4. Rig — every weapon is rigged, and every moving part is mo:69, Bone vocabulary:85, 5. Orientation, in Blender:115, 6. Names and files:126
 
 ### docs/WORKLOG.md
