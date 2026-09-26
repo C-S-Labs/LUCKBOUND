@@ -36,6 +36,13 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 ## 2. Next — pick up here
 
+> **2026-09-25: enemy AI designed, not built.** `docs/ENEMY_AI.md` is now authoritative for enemy behaviour:
+> utility AI over the framework's roles, no difficulty setting (a shared versioned profile plus an invisible,
+> capped personal tempo adjustment), harder play pays extra loot rolls never better odds, universal versioned
+> boss evolution with rollback, and weapons carrying their own moves with unique Legendary movesets. It sets a
+> mandatory build order. Nothing is opened: step 0 is a §7.x amendment for the owner to approve, and items and
+> inventory still come first.
+
 > **2026-09-25: animation ids are account/group-scoped, documented.** A partner playtesting `/showboss
 > winged_sentinel` in their own place got a silent `Animation failed to load` warning for the Idle id — same class
 > of bug as a mesh uploaded to the wrong account (`assets/README.md` already covered that for meshes). Documented

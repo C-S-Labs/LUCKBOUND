@@ -4,6 +4,10 @@ Sky Citadel is the first world with enemies, and it is the worked example. Every
 Ethereal Scape, Astral Reach, ...) follows the **same order, the same code and the same rules**. What changes per biome is data:
 a roster manifest, a palette, the model scripts and the action files.
 
+> How an enemy **behaves** is owned by `docs/ENEMY_AI.md`, which is authoritative and supersedes the behaviour
+> column of §3 and the service description in §6 (owner, 2026-09-25). This document still owns how an enemy is
+> **built**: roster, body, rig, animations, markers, tell and recovery rules, VFX, and the `EnemyDef` shape.
+
 It mirrors the world-kit approach: shared code in a `_framework/` folder, and a biome folder that only holds
 biome content.
 
@@ -86,6 +90,8 @@ Every enemy's `role` maps to one server behaviour module. A new biome **re-skins
 | `swarm` | several weak units, leap bites | 16 f after landing |
 | `ambusher` | hidden, springs out, retreats | 28 f after the strike |
 | `miniboss` / `boss` | driven by its moveset sheet | per sheet |
+
+Behaviour for every role (what it scores, how it targets, how it adapts) is `ENEMY_AI.md` §7–§8.
 
 ## 4. Moveset rules (every miniboss and boss; basics inherit these through archetypes)
 The template and worked example is `assets/source/enemies/sky_citadel/WS_MOVESET.md`.
@@ -174,6 +180,9 @@ Each biome gets `src/shared/Content/Enemies/<Biome>.luau` listing `EnemyDef`s. E
 One `EnemyService` (spawning, aggro, archetype dispatch) and one `BossService` (phases, move selection, punish windows) serve
 **every** biome. The world content's `Enemies = {}` / `BossId` fields (for example `Worlds/SkyCitadel.luau`) point at these defs.
 The template is `assets/source/enemies/_framework/EnemyDef.template.luau`.
+
+`EnemyService` and `BossService` behaviour is specified in `ENEMY_AI.md` §3 and §12; the `EnemyDef` shape here is
+unchanged.
 
 ## 7. Starting a new biome (checklist)
 1. `mkdir assets/source/enemies/<biome>`. Copy `sky_citadel/manifest.py` and empty the `ENEMIES` dict.

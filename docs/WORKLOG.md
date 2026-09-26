@@ -33,6 +33,33 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 71 — 2026-09-25 — Enemy AI design, weapon movesets, and build order
+
+**Merged:** PR #TBD   **Tests:** unchanged (docs only)   **Head:** branch `claude/enemy-ai-design`
+
+### Done
+- Wrote `docs/ENEMY_AI.md` from an owner design conversation; linked it from `INDEX.md`, `ENEMY_FRAMEWORK.md`,
+  `WEAPONS.md`, `PLAYER_ABILITIES.md`, `DEVELOPMENT_PLAN.md` and `STATUS.md`.
+
+### Decisions made
+- ENEMY_AI.md supersedes earlier behaviour schemes (framework §3 behaviour, §6 services); no player-facing
+  difficulty setting; personal adjustment driven by performance, never by deaths alone; harder tempo pays more
+  rolls, never better odds (D-8 holds); every clear pays full base rewards; bosses learn universally (versioned,
+  cohort-split, capped, sim-gated, reversible), never per player; enemies use only their world's effect palette and
+  difficulty scales intensity, never type; weapons carry their own moves, types share a base moveset, Legendary and
+  Mythic get unique movesets; solo first, party scaling as data, nothing assumes four players.
+
+### Stopped at
+Design written; no `src/` change; combat still excluded by spec §7.
+
+### Next
+1. Owner review of the win-rate bands, the adjustment cap and the reward gap. 2. Items and inventory stay first;
+   when combat opens, step 0 is the §7.x amendment.
+
+Leftover cleanup: nothing left behind.
+
+---
+
 ## Session 70 — 2026-09-25 — Document animation ids as account/group-scoped
 
 **Merged:** PR #127   **Tests:** unchanged (docs/comment only)   **Head:** branch `claude/animation-account-scoped-docs`

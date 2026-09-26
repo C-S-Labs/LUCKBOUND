@@ -29,6 +29,10 @@ Common to Epic are generated in batches. **Legendary and Mythic are designed
 one at a time, later**, and may be exported in several meshes for their
 higher triangle counts. A batch never contains them.
 
+> **Movesets (owner, 2026-09-25):** every weapon carries its own moves as data (`PLAYER_ABILITIES.md` §0). Weapons
+> of one type share a base moveset; **Legendary and Mythic weapons get unique movesets**, designed one at a time
+> with a moveset sheet like a boss. The move format and fairness rules are `ENEMY_AI.md` §4.
+
 Per type, **2 Common, 2 Uncommon, 1 Rare, 1 Epic**.
 
 Detail and "coolness" rise **deliberately** with rarity. A Common is not ugly:
