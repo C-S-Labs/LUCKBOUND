@@ -35,7 +35,7 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ## Session 71 — 2026-09-25 — Enemy AI design, weapon movesets, and build order
 
-**Merged:** PR #TBD   **Tests:** unchanged (docs only)   **Head:** branch `claude/enemy-ai-design`
+**Merged:** PR #128 (pending)   **Tests:** unchanged (docs only)   **Head:** branch `claude/enemy-ai-design`
 
 ### Done
 - Wrote `docs/ENEMY_AI.md` from an owner design conversation; linked it from `INDEX.md`, `ENEMY_FRAMEWORK.md`,
