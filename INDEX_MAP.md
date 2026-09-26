@@ -73,10 +73,10 @@ _232 text files, 206 binary assets. Regenerate with `python tools/gen_index.py`;
 - `assets/source/enemies/_framework/run.py` (73) - LUCKBOUND enemy framework - single headless entry point for EVERY enemy in EVERY biome. · 2026-09-24
   - `run.py`: _body_profile:42, _run:48
 - `assets/source/enemies/_framework/validate.py` (85) - Enemy validation (run by run.py --validate, or exec'd after any build). Prints VALIDATE lines and a PASS/FAIL summary. · 2026-09-24
-- `assets/source/enemies/ethereal_scape/ROSTER.md` (47) - Ethereal Scape enemy roster (base chunk set only) · new
+- `assets/source/enemies/ethereal_scape/ROSTER.md` (47) - Ethereal Scape enemy roster (base chunk set only) · 2026-09-26
   - `ROSTER.md`: Basic (5):13, Minibosses (3):26, Boss (1):33, Shared scene:38, Build status (2026-09-26): 1/9 built (first pass):42
-- `assets/source/enemies/ethereal_scape/aether_wisp.py` (93) - LUCKBOUND - Ethereal Scape BASIC enemy: Aether Wisp (close range, hover; the tutorial enemy). · new
-- `assets/source/enemies/ethereal_scape/manifest.py` (22) - Ethereal Scape enemy manifest: the ONE place that lists this biome's enemies for the framework runner. · new
+- `assets/source/enemies/ethereal_scape/aether_wisp.py` (93) - LUCKBOUND - Ethereal Scape BASIC enemy: Aether Wisp (close range, hover; the tutorial enemy). · 2026-09-26
+- `assets/source/enemies/ethereal_scape/manifest.py` (22) - Ethereal Scape enemy manifest: the ONE place that lists this biome's enemies for the framework runner. · 2026-09-26
 - `assets/source/enemies/sky_citadel/ROSTER.md` (86) - Sky Citadel enemy roster (base chunk set only) · 2026-09-26
   - `ROSTER.md`: Basic (10):7, Minibosses (3):30, Bosses (3):33, Shared scene:58, Build status (2026-09-26):64
 - `assets/source/enemies/sky_citadel/WS_MOVESET.md` (88) - The Winged Sentinel: moveset (v5 duelist) · 2026-09-24
@@ -151,7 +151,7 @@ _232 text files, 206 binary assets. Regenerate with `python tools/gen_index.py`;
   - `refinish.py`: refinish_piece:11
 - `assets/source/worlds/_framework/scatter_core.py` (232) - The prop scatter -- Python twin of src/shared/Core/ScatterCore.luau. · 2026-09-23
   - `scatter_core.py`: imul:38, fnv:46, Rng:54, encode_point:76, encode_air:84, decode_points:88, decode_air:98, rule_ok:108, scatter:122
-- `assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py` (742) - LUCKBOUND - Ethereal Scape 30-piece base chunk kit. FIRST PASS (2026-09-26), · new
+- `assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py` (742) - LUCKBOUND - Ethereal Scape 30-piece base chunk kit. FIRST PASS (2026-09-26), · 2026-09-26
   - `build_ethereal_scape_kit.py`: make_materials:56, Piece:76, TR:96, box:103, island:118, cone:145, sphere:155, tube:165, pier:194, edge_pins:210, edge_trim:221, keel:246, landmark:273, build_island_piece:326, build_archipelago_piece:346, build_span_piece:375, build_convergence:398, build_boss_arena:410, build_cap_span:425, build_cap_shrine:441, to_object:570, validate_piece:604, footprint_for:631, main:635, export_all:677, render_overview:695
 - `assets/source/worlds/sky_citadel/IMPORT_STEPS.md` (34) - Sky Citadel refinish (2026-09-24): re-import steps · 2026-09-24
   - `IMPORT_STEPS.md`: 1. Chunks (structure):10, 2. Props:20, 3. Recolours (scenario variants):26, 4. Walk it:32
@@ -302,9 +302,9 @@ _232 text files, 206 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/biomes
 
-- `docs/biomes/ETHEREAL_SCAPE.md` (227) - Ethereal Scape — biome design schema · new
+- `docs/biomes/ETHEREAL_SCAPE.md` (227) - Ethereal Scape — biome design schema · 2026-09-26
   - `ETHEREAL_SCAPE.md`: The look:30, The palette:51, The set-dressing vocabulary:76, The connection vocabulary:96, Piece size and count:119, The kit — 30 pieces:130, Enemy roster (drafted here; not yet wired to `Content/Enemie:189, Next:222
-- `docs/biomes/README.md` (109) - Biome design schemas · 2026-09-23
+- `docs/biomes/README.md` (109) - Biome design schemas · 2026-09-26
   - `README.md`: What a biome schema covers:24, Ambience — a world's mood is data:54, Status:85
 - `docs/biomes/SKY_CITADEL.md` (601) - Sky Citadel — biome design schema · 2026-09-25
   - `SKY_CITADEL.md`: The look:26, It must not look like Ethereal Scape:47, The palette:61, The set-dressing vocabulary:90, Lighting and ambience — sunrise above the cloud sea:183, The connection vocabulary:216, The kit — 36 pieces (22 delivered + a 14-piece expansion):241, Variety: five axes, mixed differently on every piece:335, The shape of a run: turns, one intersection, no dead ends:381, No opening onto nothing: the caps:405, Axes:449, How to change it:456, Hand pass:483, 2026-09-22 — the caps:485, 2026-09-22 — variety, turns, the intersection, and four more:494, 2026-09-22 — the kit expansion:505, 2026-09-22 — the first four:519, Risks before upload — read before importing to Studio:534, Render headless:576, Next:586
@@ -399,13 +399,13 @@ _232 text files, 206 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### src/shared
 
-- `src/shared/Content/AssetManifest.luau` (2281) - Logical asset name → Roblox asset id. Addendum §A1. · 2026-09-25
+- `src/shared/Content/AssetManifest.luau` (2281) - Logical asset name → Roblox asset id. Addendum §A1. · 2026-09-26
   - `AssetManifest.luau`: VV_CHUNK_PATH_SUNWASH_FORK:54, VV_CHUNK_CUTBANK_FORD:60, VV_CHUNK_WINDWARD_RIDGE_GATE:66, VV_CHUNK_FORGOTTEN_ORCHARD_GATE:72, VV_CHUNK_LONGGRASS_MEADOW:78, VV_CHUNK_SHADED_GROVE:84, VV_CHUNK_FERN_HOLLOW:90, VV_CHUNK_PATH_CLIFF_PASSAGE:96, VV_CHUNK_STONE_SENTINELS:102, VV_CHUNK_MOSSBOUND_RUINS:108, VV_CHUNK_ANCIENT_OAK:114, VV_CHUNK_WETLAND_POOLS:120, VV_CHUNK_PATH_NARROW_PASS:126, VV_CHUNK_BLOSSOM_TERRACE:132, VV_CHUNK_ROCK_GARDEN:138, VV_CHUNK_CRYSTAL_SPRING_GATE:144, VV_CHUNK_OVERGROWN_CAUSEWAY_GATE:150, VV_CHUNK_HIGH_LEDGE_GATE:156, VV_CHUNK_CLIFF_OVERLOOK_GATE:162, VV_CHUNK_DEEP_CLEARING:168, VV_CHUNK_PATH_SPLIT_MEADOW:174, VV_CHUNK_MUSHROOM_GLEN:180, VV_CHUNK_PATH_CROSSROADS_COPSE:186, VV_CHUNK_CAP_CAVE_MOUTH:192, VV_CHUNK_ENTRY_DAWN_MEADOW:198, VV_CHUNK_ENTRY_WOODLAND_REFUGE:204, VV_CHUNK_BOSS_SANCTUARY:210, VV_CHUNK_SIDE_TREASURE_HOLLOW:216, VV_CHUNK_SIDE_WARDENS_CLEARING:222, VV_CHUNK_SIDE_FORGOTTEN_TRIAL:228, VV_CHUNK_ENTRY:234, VV_CHUNK_FERN_HOLLOW:240, VV_CHUNK_MUSHROOM_GLEN:246, SC_CHUNK_ENTRY:270, SC_CHUNK_PATH_STRAIGHT:276, SC_CHUNK_PATH_SKYPORT:282, SC_CHUNK_PATH_HOOPS:288, SC_CHUNK_PATH_SHATTERED:294, SC_CHUNK_PATH_AVIARY:300, SC_CHUNK_CROSSROADS:306, ... +85 more
 - `src/shared/Content/Atmospheres/SkyCitadel.luau` (947) - GENERATED by assets/source/worlds/sky_citadel/sky_citadel_atmospheres.py. · 2026-09-23
   - `SkyCitadel.luau`: UNMOORING:13, SIEGE:138, LOCKDOWN:297, STORMHAWK:415, RIME:559, RECLAIMED:681, AETHER_SURGE:802
 - `src/shared/Content/Atmospheres/init.luau` (16) - Scenario atmospheres per world, keyed by world Id. Each module holds a · 2026-09-23
 - `src/shared/Content/BossPreviews.luau` (37) - Boss PREVIEWS for /showboss (debug only): look at a boss in its arena, in its idle pose/animation, to judge · 2026-09-25
-- `src/shared/Content/Chunks/EtherealScape.luau` (388) - Ethereal Scape chunk kit. docs/biomes/ETHEREAL_SCAPE.md is the art direction; · 2026-09-17
+- `src/shared/Content/Chunks/EtherealScape.luau` (389) - Ethereal Scape chunk kit. docs/biomes/ETHEREAL_SCAPE.md is the art direction; · 2026-09-26
   - `EtherealScape.luau`: socket:35
 - `src/shared/Content/Chunks/SkyCitadel.luau` (511) - Sky Citadel chunk kit. docs/biomes/SKY_CITADEL.md is the art direction; the pieces · 2026-09-25
   - `SkyCitadel.luau`: socket:45
@@ -434,7 +434,7 @@ _232 text files, 206 binary assets. Regenerate with `python tools/gen_index.py`;
 - `src/shared/Content/Scenarios/init.luau` (139) - SCENARIO LIBRARY -- what can HAPPEN in a chunk, as opposed to what a chunk · 2026-09-22
 - `src/shared/Content/Worlds/AstralReach.luau` (30) - Biome Blueprint §5.3: no fog in the traditional sense -- void-black · 2026-09-15
 - `src/shared/Content/Worlds/Emberfall.luau` (30) - Biome Blueprint §4.3: darker than Verdant Valley -- lava provides · 2026-09-15
-- `src/shared/Content/Worlds/EtherealScape.luau` (71) - Ethereal Scape. The Uncommon tier. · 2026-09-25
+- `src/shared/Content/Worlds/EtherealScape.luau` (71) - Ethereal Scape. The Uncommon tier. · 2026-09-26
 - `src/shared/Content/Worlds/SkyCitadel.luau` (170) - Epic tier. Added so onboarding can peak on an Epic rather than handing every · 2026-09-25
 - `src/shared/Content/Worlds/TheUnknown.luau` (31) - Phase 3. Present so the roll pool, Discovery Book and UI are written against · 2026-09-15
 - `src/shared/Content/Worlds/VerdantValley.luau` (42) - Biome Blueprint §3.3: soft midday, dappled canopy light. · 2026-09-15
@@ -511,7 +511,7 @@ _232 text files, 206 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### tests/cases.luau
 
-- `tests/cases.luau` (8089) - LUCKBOUND test suite. Run: python3 tests/build_suite.py && luau tests/generated_suite.luau · 2026-09-25
+- `tests/cases.luau` (8089) - LUCKBOUND test suite. Run: python3 tests/build_suite.py && luau tests/generated_suite.luau · 2026-09-26
   - `cases.luau`: group:48, check:53, throws:66, lcg:72, profile:83, cfg:91
 
 ### tests/run.sh
