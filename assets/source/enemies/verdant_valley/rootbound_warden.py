@@ -1,12 +1,15 @@
-# LUCKBOUND - Sky Citadel BASIC enemy: Rootbound Warden (close range, heavy; Sky-Tree Grove + gardens).
-# v3 REVAMP (2026-09-24, owner: the v1/v2 barrel body read as a clunky tin can). Now a tall, HUNCHED guardian of
-# BRAIDED ROOTS: narrow braided waist, heavy mossy shoulders, very long arms that nearly drag - a root-claw hand for
-# the GRAB and a fist sealed in old citadel masonry for the ROOT SLAM. Its face is a carved citadel statue mask
-# grown into the wood, amber sap eyes, antler branches in blossom. Slow heavy walk; the slam's recovery is the opening.
+# LUCKBOUND - Verdant Valley BASIC enemy: Rootbound Warden (close range, heavy; Sky-Tree Grove + gardens).
+# MOVED HERE FROM SKY CITADEL (2026-09-26, owner: this braided-root, grove-statue design never fit the citadel -
+# it belongs to Verdant Valley, which this enemy's own original header already called out). Carried over as-is
+# (v3, 2026-09-24 revamp, unchanged): a tall, HUNCHED guardian of BRAIDED ROOTS: narrow braided waist, heavy mossy
+# shoulders, very long arms that nearly drag - a root-claw hand for the GRAB and a fist sealed in old citadel
+# masonry for the ROOT SLAM. Its face is a carved citadel statue mask grown into the wood, amber sap eyes, antler
+# branches in blossom. Slow heavy walk; the slam's recovery is the opening.
 # ~2.6 m. Rig: humanoid (R15) + CrownL/C/R branch bones (sway). Basic tier 10-12.5k.
+# TODO next Verdant Valley pass: re-check palette/proportions once that biome's own palette sheet exists.
 import bpy, bmesh, math
 from mathutils import Matrix, Euler, Vector
-NAME = "RootboundWarden"; OFFSET = (40.0, 0.0, 0.0)
+NAME = "RootboundWarden"; OFFSET = (0.0, 0.0, 0.0)
 BONES = []; BIDX = {}; PIECES = {}; PIECE = "Body"; PARTLOG = []; BREAK = False; XF = None
 exec(open(FW + r"\enemy_kit.py").read()); exec(open(FW + r"\humanoid.py").read()); exec(open(FW + r"\character_kit.py").read())
 MATS = [mat("RW_Bark", (0.30, 0.2, 0.13), 0.0, 0.35), mat("RW_Moss", (0.26, 0.45, 0.2), 0.0, 0.45),

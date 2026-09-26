@@ -15,9 +15,17 @@ Flyers must regularly come into sword range; the player's weapon is the damage s
 6. Prism Crawler (long range: slow charged beam, overheats). BUILT: `prism_crawler.py`, 2.8k tris (body + glow),
    rig Body > Prism (aim) + Head + 2 mandibles + 6 legs x 3 bones; scene x=15
 7. Archive Scribe (long range / support: stays rooted while channelling)
-8. Rootbound Warden (close range, heavy)
+8. Citadel Bulwark (close range, tank; shield block + slam). Replaces Rootbound Warden, 2026-09-26 - its
+   braided-root/grove design never fit the citadel and was moved to `verdant_valley/rootbound_warden.py`.
+   BUILT: `citadel_bulwark.py`, ~10.8k tris (body + armour + glow); wide low-slung graphite/violet/stone
+   guardian with a riveted tower shield strapped to the left forearm (Shield_L socket) and an empty Weapon_R
+   grip for its citadel maul; scene x=40
 9. Spring Eel (medium range, hittable while surfaced)
-10. Skyport Hauler (close range, tank)
+10. Skyport Hauler (close range, tank). v4 REVAMP 2026-09-26 - v3 clipped badly (shoulder ram plate straight
+    through the head, furnace core bulging past the ribs, 3-claw grabbers lost inside oversized round forearms).
+    Rebuilt with a lowered/narrowed shoulder yoke, a recessed sealed furnace core, the shoulder-charge ram as a
+    flush plough wedge instead of a floating disc, and bigger claws with a brass wrist collar. `skyport_hauler.py`,
+    7.4k tris (body + gear + glow), 0 hard-fail clips; scene x=50
 
 ## Minibosses (3)
 - Armory Warden, Orrery Engine, Beacon Keeper
@@ -53,7 +61,7 @@ each in its own collection. Meshes only (loading rigs into the live session cras
 per-enemy files are `scenes/boss_winged_sentinel.blend`, `enemy_lantern_wisp.blend`, `enemy_turbine_drone.blend`.
 Shared build helpers: `work/enemies/enemy_kit.py`.
 
-## Build status (2026-09-24): ALL 16 BUILT, first pass
+## Build status (2026-09-26)
 Palette sheet: `work/enemies/SKY_CITADEL_ENEMY_PALETTE.png`. Shared scene: `scenes/sky_citadel_enemies.blend` (line along +X).
 | x | Enemy | Tier | Script | Tris (body + glow) |
 |---|---|---|---|---|
@@ -65,9 +73,9 @@ Palette sheet: `work/enemies/SKY_CITADEL_ENEMY_PALETTE.png`. Shared scene: `scen
 | 25 | Aviary Harrier | Basic | aviary_harrier.py | 6.3k + 0.2k |
 | 30 | Cloud Skirmisher | Basic | cloud_skirmisher.py | 4.8k |
 | 35 | Archive Scribe | Basic | archive_scribe.py | 7.1k + 0.3k |
-| 40 | Rootbound Warden | Basic | rootbound_warden.py | ~5.2k + 0.3k |
+| 40 | Citadel Bulwark | Basic | citadel_bulwark.py | 10.4k + 0.4k |
 | 45 | Spring Eel | Basic | spring_eel.py | 3.7k + 1.1k |
-| 50 | Skyport Hauler | Basic | skyport_hauler.py | ~5.6k + 0.2k |
+| 50 | Skyport Hauler | Basic | skyport_hauler.py (v4) | 7.3k + 0.1k |
 | 58 | Armory Warden | Miniboss | armory_warden.py | frame 3.7k + plate 6.4k (P2 shed) |
 | 66 | Orrery Engine | Miniboss | orrery_engine.py | 6.8k + 0.6k |
 | 74 | Beacon Keeper | Miniboss | beacon_keeper.py | 6.7k |
