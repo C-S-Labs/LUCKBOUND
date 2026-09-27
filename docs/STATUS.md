@@ -14,14 +14,15 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   §7.4 caps, §7.5 loot and §7.7 universal map generation (2026-09-27).
 - **Worlds you can enter:** Verdant Valley (30-piece chunk kit — built, **needs a revamp pass**), Sky Citadel
   (36-piece chunk kit, walked and verified, with ambience, props, chests and the vault) and Ethereal Scape
-  (**36-piece hybrid kit** — floating isles + temple + meadow, 2 miniboss arenas, 3 backdrop pieces, height
-  variation — on the §7.7 generation blueprint, 2026-09-27, **not yet uploaded or walked**). Emberfall and Astral
+  (**41-piece hybrid kit** — floating isles + temple + meadow, 2 landmarks, 2 miniboss arenas, 6 backdrop
+  pieces with drifting cloud props, height variation — on the §7.7 generation blueprint, 2026-09-27, **not yet
+  uploaded or walked**). Emberfall and Astral
   Reach have no map yet.
 
   | Id | Rarity | Weight | Phase | Map | Enterable? |
   |---|---|---|---|---|---|
   | `VERDANT_VALLEY` | Common | 6000 (60%) | 1 | chunk kit, 30 pieces — needs a revamp pass | ✅ |
-  | `ETHEREAL_SCAPE` | Uncommon | 1500 (15%) | 1 | chunk kit, 36 pieces — hybrid isles/temple, §7.7 blueprint, not uploaded | ✅ |
+  | `ETHEREAL_SCAPE` | Uncommon | 1500 (15%) | 1 | chunk kit, 41 pieces — hybrid isles/temple, §7.7 blueprint, not uploaded | ✅ |
   | `EMBERFALL` | Rare | 1500 (15%) | 1 | blueprint written | ❌ no kit |
   | `SKY_CITADEL` | Epic | 700 (7%) | 1 | chunk kit, 36 pieces — walked and verified | ✅ |
   | `ASTRAL_REACH` | Mythic | 300 (3%) | 1 | blueprint written | ❌ no kit |

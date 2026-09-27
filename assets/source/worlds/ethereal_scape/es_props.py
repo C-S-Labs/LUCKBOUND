@@ -12,7 +12,9 @@ import math
 
 from mathutils import Matrix, Vector
 
-from es_geometry import Piece, frustum, gem, gem2, prism, ring_pts, rod
+import random
+
+from es_geometry import Piece, blob, frustum, gem, gem2, prism, ring_pts, rod
 
 EDGE_MARGIN = 4.0
 
@@ -20,6 +22,11 @@ EDGE_MARGIN = 4.0
 KINDS = {
     "prop_es_cloud_a": ("Float", 1),
     "prop_es_cloud_b": ("Float", 1),
+    # the surround (owner 2026-09-27: the baked cloudbank "looks too unnatural" -- clouds are props now, so
+    # they drift, and every BACKDROP piece arranges them its own way)
+    "prop_es_cumulus_a": ("Float", 1),
+    "prop_es_cumulus_b": ("Float", 1),
+    "prop_es_cumulus_c": ("Float", 1),
     "prop_es_lantern": ("Float", 2),
     "prop_es_shard": ("Hover", 2),
     "prop_es_isle_grove": ("Float", 1),
@@ -37,15 +44,56 @@ def _isle(p, r, top_mat="AetherMintGrass"):
     p.add(verts, [[(i + 1) % 9, i, 9] for i in range(9)], "Cloudstone")
 
 
+def _cloud(p, seed, w, d, h, towers=3, anvil=False):
+    """A natural cloud: a flattened base of wide billows along an ellipse (w x d), then towers of
+    rounder billows heaped on it, each smaller and a little off-centre from the one below -- lumpy,
+    never stacked like stones. `anvil` spreads the top out flat, the cumulonimbus shape."""
+    rng = random.Random(seed)
+    for k in range(max(5, int(w / 9))):
+        a = rng.uniform(0, 6.28)
+        u = rng.uniform(0, 1) ** 0.6
+        x, y = math.cos(a) * w / 2 * u * 0.8, math.sin(a) * d / 2 * u * 0.8
+        r = rng.uniform(0.16, 0.26) * w * (1.1 - 0.5 * u)
+        blob(p, "CloudWhite", x, y, 0, r, r * rng.uniform(0.35, 0.5), n=9, sx=rng.uniform(1.0, 1.4),
+             a0=rng.uniform(0, 6.28), below=r * 0.08)
+    for t in range(towers):
+        tx, ty = rng.uniform(-w, w) * 0.22, rng.uniform(-d, d) * 0.22
+        r = rng.uniform(0.26, 0.34) * min(w, h * 1.4)
+        z = r * 0.15
+        while z < h - r * 0.7 and r > 3:
+            # a tier is a CLUSTER of overlapping billows round the tower's axis -- they merge into one
+            # soft mass instead of reading as stones stacked on stones
+            for _ in range(rng.randint(3, 5)):
+                a = rng.uniform(0, 6.28)
+                off = r * rng.uniform(0.25, 0.7)
+                blob(p, "CloudWhite", tx + math.cos(a) * off, ty + math.sin(a) * off, z + rng.uniform(-0.15, 0.15) * r,
+                     r * rng.uniform(0.6, 0.9), r * rng.uniform(0.55, 0.8), n=10, a0=a, below=r * 0.15)
+            z += r * rng.uniform(0.3, 0.4)
+            r *= rng.uniform(0.84, 0.92)
+            tx += rng.uniform(-r, r) * 0.35
+            ty += rng.uniform(-r, r) * 0.35
+        if anvil:
+            for _ in range(6):
+                a = rng.uniform(0, 6.28)
+                R = rng.uniform(0.15, 0.4) * w
+                rr = rng.uniform(0.18, 0.25) * w
+                blob(p, "CloudWhite", tx + math.cos(a) * R, ty + math.sin(a) * R, z - rr * 0.2, rr, rr * 0.3, n=9,
+                     sx=1.3, a0=a, below=rr * 0.05)
+
+
 def build_kind(kind):
     """Each library mesh, built in its own frame. Returns (verts, faces, mats)."""
     p = Piece(kind, 0, [])
-    if kind == "prop_es_cloud_a":
-        for x, y, r, h in ((0, 0, 9, 6), (8, 2, 7, 5), (-8, -1, 6.5, 4), (3, -5, 6, 3.5)):
-            gem2(p, "CloudWhite", x, y, 0, r, h, r * 0.3, n=6)
-    elif kind == "prop_es_cloud_b":
-        for x, y, r, h in ((0, 0, 11, 5), (12, 3, 8, 4), (-11, 2, 7, 3), (5, -7, 7, 3)):
-            gem2(p, "CloudWhite", x, y, 0, r, h, r * 0.25, n=6)
+    if kind == "prop_es_cloud_a":                       # a small fair-weather puff
+        _cloud(p, 11, 26, 18, 12, towers=1)
+    elif kind == "prop_es_cloud_b":                     # a flat wisp
+        _cloud(p, 12, 38, 16, 6, towers=0)
+    elif kind == "prop_es_cumulus_a":                   # towering cumulus
+        _cloud(p, 21, 64, 52, 78, towers=3)
+    elif kind == "prop_es_cumulus_b":                   # a long low shelf
+        _cloud(p, 22, 120, 44, 24, towers=4)
+    elif kind == "prop_es_cumulus_c":                   # an anvil
+        _cloud(p, 23, 76, 60, 86, towers=1, anvil=True)
     elif kind == "prop_es_lantern":
         frustum(p, "TempleGold", 0, 0, -1.4, 1.2, 0.9, 1.25, n=6)
         gem(p, "PortalGlow", 0, 0, 0, 0.75, 0.9, 0.9, n=6)
@@ -114,6 +162,8 @@ def place_all(p, bvh, spec):
     rng = p.rng
     H = p.H
     tags = set(spec.get("tags", []))
+    if "backdrop" in tags:           # a BACKDROP piece arranges its own clouds (es_pieces.cloud_props)
+        return
     placed = []   # (x, y, z, r)
 
     def ok(x, y, z, r):

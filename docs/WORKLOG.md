@@ -33,6 +33,38 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 86 — 2026-09-27 — Ethereal Scape: Sanctum interior, living clouds, two landmarks, grounded check
+**Merged:** see the PR for this branch   **Tests:** CI   **Branch:** `claude/es-sanctum-clouds-landmarks`
+
+### Done
+- Owner: "I like this design" — then asked for a Sanctum interior pass, more natural cloudbanks, one or two big
+  structures, buildings facing the right way and no floating pillars.
+- **Sanctum interior:** engaged pilasters with gold capitals, crystal sconces, four guardian statues, a patterned
+  floor border and corner mosaics, a coffered gold ceiling, four crystal chandeliers, a crystal ring hung in the
+  lantern, a three-step throne dais (crystal-crested throne, twin braziers), a gold sun disc on the north wall, gold
+  door jambs and open door leaves. All of it outside the validated fight volume; still under 10k tris.
+- **Clouds are props now** (Float, so they drift): `prop_es_cloud_a/b` rebuilt from soft billows and three new
+  cumulus kinds (towering, shelf, anvil), smooth-shaded. Four cloudbank BACKDROP variants — Cloudbank, Cloud Shelf,
+  Cloud Drift, Storm Anvil — each a seeded arrangement of cloud props (heights, sizes, turns vary per copy; the
+  generator also turns each placement). Drift Isles / Crystal Spire use cloud props too.
+- **Two landmarks (384):** the **Sky Aqueduct** (PATH: a stone aqueduct on three piers standing on their own rock
+  isles, arcades, a water channel spilling mid-span, a bell tower) and the **Sky Observatory** (COMBAT: a domed
+  colonnade on a podium, an armillary sphere at the crown, the great telescope, orreries).
+- **Facing:** `es_isles.face()` turns every hut, shrine hall and pavilion toward the road or court it serves (the
+  Reliquary Court's hall had its back to its own court).
+- **Grounded check:** every column, tower, waystone, statue, beacon, lantern, brazier and orrery registers a
+  footing; the validator ray-casts under its base and fails anything not standing on ground. It caught the throne
+  braziers and the chandelier chains on the way.
+- Kit is **41 pieces** (13 PATH, 11 COMBAT, 6 BACKDROP). The map preview now includes every piece's props.
+
+### Stopped at
+Generated, exported, rendered; not uploaded or walked in Studio.
+
+### Next
+1. Upload and walk it; check the drifting cloud props read well under the world's real lighting.
+
+---
+
 ## Session 85 — 2026-09-27 — Ethereal Scape hybrid kit (36) + universal generation (§7.7)
 **Merged:** see the PR for this branch   **Tests:** CI   **Branch:** `claude/es-hybrid-universal-gen`
 

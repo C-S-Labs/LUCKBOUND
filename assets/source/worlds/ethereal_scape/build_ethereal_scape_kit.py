@@ -20,7 +20,7 @@ import sys
 
 import bpy
 import bmesh
-from mathutils import Vector
+from mathutils import Matrix, Vector
 from mathutils.bvhtree import BVHTree
 
 HERE = os.path.dirname(os.path.abspath(__file__))
@@ -66,7 +66,9 @@ JOINTS = {frozenset(("crystal_colossus", "crystal_cluster")), frozenset(("es_san
           frozenset(("landing_isle", "plank_bridge")), frozenset(("landing_isle", "guide_stone")),
           frozenset(("float_isle", "aether_fall")), frozenset(("bridge", "es_cap_broken_bridge")),
           frozenset(("bridge", "guide_stone")), frozenset(("bridge", "stairs")),
-          frozenset(("shrine_hall", "column")), frozenset(("es_rooted_hollow", "great_tree"))}
+          frozenset(("shrine_hall", "column")), frozenset(("es_rooted_hollow", "great_tree")),
+          frozenset(("es_sky_observatory", "stairs")), frozenset(("es_sky_aqueduct", "_arc")),
+          frozenset(("es_sky_aqueduct", "aether_fall"))}
 
 
 # ---------------------------------------------------------------------------
@@ -101,7 +103,7 @@ def to_object(name, verts, faces, fmat, up, mats, coll):
     dropped = len(faces) - len(me.polygons)
     for poly, mname in zip(me.polygons, fmat):
         poly.material_index = G.MAT_ORDER.index(mname)
-        poly.use_smooth = False
+        poly.use_smooth = mname == "CloudWhite"          # clouds are soft; everything else keeps its facets
     bm = bmesh.new()
     bm.from_mesh(me)
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
@@ -263,6 +265,15 @@ def validate(p, obj, dropped, spec):
                     blocked += 1
         if blocked:
             fails.append(f"sanctum hall/door obstructed at {blocked} sample(s)")
+    # GROUNDED (owner 2026-09-27: "all decorative pillars and columns are connected to the ground, not
+    # floating"). Every column, tower, waystone, statue, beacon and lantern post registers its footing;
+    # rays cast down from just under its base, at the centre and round its rim, must meet ground within
+    # 10 studs (a podium can be thick) at 4 of 5 points -- a base half over an isle's edge fails as surely as one in mid-air.
+    for fx, fy, fz, fr, what in p.footings:
+        pts = [(fx, fy)] + [(fx + math.cos(a) * fr * 0.7, fy + math.sin(a) * fr * 0.7) for a in (0.4, 2.0, 3.5, 5.1)]
+        hits = sum(bvh.ray_cast(Vector((qx, qy, fz - 0.6)), Vector((0, 0, -1)), 10.0)[0] is not None for qx, qy in pts)
+        if hits < 4:
+            fails.append(f"floating {what} at ({fx:.0f}, {fy:.0f}, {fz:.0f}): ground under {hits}/5 of its base")
     det, clips = detached(p)
     for tags, c, size in det:
         fails.append(f"detached {tags} at {c} size {size}")
@@ -488,7 +499,7 @@ def chain_preview(objs_by_id, coll):
     return origin, y
 
 
-def map_preview(specs, objs_by_id):
+def map_preview(specs, objs_by_id, pieces_by_id=None, prop_objs=()):
     """A whole assembled map (the §7.7 scheme, es_mapgen.py mirroring ChunkCore) as linked copies in its own
     collection, so the owner can open the .blend and walk a real layout: branches, a miniboss arena, caps,
     rises and descents, and the backdrop ring."""
@@ -517,6 +528,15 @@ def map_preview(specs, objs_by_id):
         o.location = origin + Vector((pl["x"], -pl["z"], pl["y"]))
         o.rotation_euler = (0, 0, -math.radians(pl["yaw"]))
         coll.objects.link(o)
+        lib = {q.name: q for q in prop_objs}
+        pc = pieces_by_id.get(pl["id"]) if pieces_by_id else None
+        rot = Matrix.Rotation(-math.radians(pl["yaw"]), 3, "Z")
+        for prop in (pc.props if pc else []):          # the piece's drifting clouds, lanterns, isles
+            c = bpy.data.objects.new("MAPPROP_" + prop["kind"], lib[prop["kind"]].data)
+            c.location = o.location + rot @ prop["pos"]
+            c.rotation_euler = (0, 0, prop["yaw"] - math.radians(pl["yaw"]))
+            c.scale = (prop["scale"],) * 3
+            coll.objects.link(c)
         counts[pl["role"]] = counts.get(pl["role"], 0) + 1
     print(f"MAP PREVIEW seed {seed}: {len(layout)} pieces " + ", ".join(f"{k} {v}" for k, v in sorted(counts.items())))
     xs = [pl["x"] for pl in layout]
@@ -581,7 +601,8 @@ def main():
 
     preview = None
     if not ONLY:
-        preview = map_preview(specs, {spec["id"]: obj for spec, (p, obj) in ((SPEC_BY_ID[p_.name], (p_, o_)) for p_, o_ in pieces)})
+        preview = map_preview(specs, {spec["id"]: obj for spec, (p, obj) in ((SPEC_BY_ID[p_.name], (p_, o_)) for p_, o_ in pieces)},
+                              {p_.name: p_ for p_, _o in pieces}, prop_objs)
         write_chunks_luau(specs)
         write_props_luau([p for p, _o in pieces])
         print("WROTE", CHUNKS_LUAU)

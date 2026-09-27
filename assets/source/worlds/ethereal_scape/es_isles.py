@@ -67,6 +67,12 @@ def centroid(pts):
     return sum(q[0] for q in pts) / len(pts), sum(q[1] for q in pts) / len(pts)
 
 
+def face(x, y, tx, ty):
+    """The rz that turns a building's FRONT (its door or open side, local -Y in every builder here: the
+    shrine hall's porch, the hut's doorway) toward (tx, ty) -- the road or court it serves."""
+    return math.atan2(ty - y, tx - x) + math.pi / 2
+
+
 # ---------------------------------------------------------------------------
 # isles
 # ---------------------------------------------------------------------------
@@ -213,6 +219,7 @@ def sky_spire(p, x, y, z=FLOOR_Z, r=5.0):
     crystal windows, crowned by a sky-crystal cluster whose tip is EXACTLY the crown. (Not a needle: the
     first pass read as Sky Citadel's spires, which the owner already rejected once.)"""
     p.keepout.append((x, y, r * 2.8))
+    p.footings.append((x, y, z, r * 1.8, "sky_spire"))
     box(p, "Cloudstone", x, y, z + 0.5, r * 4.4, r * 4.4, 2.0)
     box(p, "TempleIvory", x, y, z + 2.2, r * 3.6, r * 3.6, 1.6)
     crown = CROWN_TOP - 20
@@ -239,6 +246,7 @@ def sky_spire(p, x, y, z=FLOOR_Z, r=5.0):
 # ---------------------------------------------------------------------------
 def statue(p, x, y, z=FLOOR_Z, rz=0.0):
     """A robed guardian on a plinth: stepped base, draped body, a gold-crowned head, a raised staff."""
+    p.footings.append((x, y, z, 2.5, "statue"))
     box(p, "Cloudstone", x, y, z + 1.0, 6, 6, 2, rz=rz)
     box(p, "TempleIvory", x, y, z + 2.6, 4.6, 4.6, 1.2, rz=rz)
     frustum(p, "TempleIvory", x, y, z + 3.2, z + 11, 2.2, 1.3, n=8)
