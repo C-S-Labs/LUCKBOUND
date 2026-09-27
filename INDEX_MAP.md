@@ -153,13 +153,13 @@ _237 text files, 240 binary assets. Regenerate with `python tools/gen_index.py`;
   - `scatter_core.py`: imul:38, fnv:46, Rng:54, encode_point:76, encode_air:84, decode_points:88, decode_air:98, rule_ok:108, scatter:122
 - `assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py` (555) - LUCKBOUND - Ethereal Scape 30-piece chunk kit, REVAMP (2026-09-26, owner-directed). · 2026-09-26
   - `build_ethereal_scape_kit.py`: materials:63, to_object:80, mesh_bvh:121, column_tops:126, walk_graph:141, detached:193, validate:207, _num:260, write_chunks_luau:268, write_props_luau:343, export:372, render_setup:400, shot:423, place_prop_copies:433, chain_preview:446, main:467
-- `assets/source/worlds/ethereal_scape/es_features.py` (718) - Ethereal Scape kit -- terrain, architecture and flora builders. · new
+- `assets/source/worlds/ethereal_scape/es_features.py` (718) - Ethereal Scape kit -- terrain, architecture and flora builders. · 2026-09-26
   - `es_features.py`: pins:22, rift_rim:31, near_corridor:46, cloud_floor:57, puff:99, cloud_bank:105, mouth_gap:133, perimeter_banks:139, mesa:168, ramp:201, path:229, flagstones:240, meadow_carpet:259, cloud_tufts:275, mouth:296, guide_stone:326, tree:336, great_tree:352, mushroom:381, blossoms:386, grass_tufts:398, rock:415, column:422, pavilion:444, arch:473, waystone:511, lantern_post:521, bell_tower:531, crystal_cluster:564, crystal_colossus:578, crag:597, aether_pool:630, fountain:638, ruin_wall:648, balustrade:664, hut:684, stairs:706
-- `assets/source/worlds/ethereal_scape/es_geometry.py` (285) - Ethereal Scape kit -- geometry core: palette, the Piece soup, and low-poly primitives. · new
+- `assets/source/worlds/ethereal_scape/es_geometry.py` (285) - Ethereal Scape kit -- geometry core: palette, the Piece soup, and low-poly primitives. · 2026-09-26
   - `es_geometry.py`: name_seed:40, caller_tag:50, Piece:60, rot_z:96, xf:100, _ccw:105, prism:114, ring_pts:127, frustum:132, box:154, _frame:165, rod:178, beam:186, gem:200, gem2:210, blob:228, decal:252, decal_ring:260, decal_strip:279
-- `assets/source/worlds/ethereal_scape/es_pieces.py` (836) - Ethereal Scape kit -- the 30 piece recipes. docs/biomes/ETHEREAL_SCAPE.md has the table. · new
+- `assets/source/worlds/ethereal_scape/es_pieces.py` (836) - Ethereal Scape kit -- the 30 piece recipes. docs/biomes/ETHEREAL_SCAPE.md has the table. · 2026-09-26
   - `es_pieces.py`: base:18, connect:24, hub_plaza:34, scatter:49, plank_bridge:71, aether_fall:108, meadow_dress:137, es_entry:152, es_sanctum:189, es_meadow_walk:318, es_ruin_stair:331, es_rift_bridge:354, es_crystal_field:371, es_lily_terraces:382, es_bend_east_grove:402, es_bend_east_terrace:414, es_bend_west_shrine:426, es_bend_west_falls:437, es_fork_wayshrine:453, es_fork_three_trees:470, es_convergence:484, es_meadow_of_blooms:505, es_terraced_gardens:516, es_crystal_hollow:535, es_fallen_colonnade:547, es_mirror_pool:564, es_shrine_of_winds:578, es_rooted_hollow:591, es_twin_mesas:605, es_temple_gate_a:622, es_temple_gate_b:638, es_side_hermit_grove:661, es_side_crystal_grotto:670, es_side_relic_altar:681, es_cap_broken_bridge:691, es_cap_overlook:706, es_cap_sealed_shrine:720
-- `assets/source/worlds/ethereal_scape/es_props.py` (204) - Ethereal Scape kit -- the ATMOSPHERE: ambient props (CHUNK_AUTHORING.md convention 6). · new
+- `assets/source/worlds/ethereal_scape/es_props.py` (204) - Ethereal Scape kit -- the ATMOSPHERE: ambient props (CHUNK_AUTHORING.md convention 6). · 2026-09-26
   - `es_props.py`: _isle:32, build_kind:40, library:95, _clear:105, place_all:110, game_row:197
 - `assets/source/worlds/sky_citadel/IMPORT_STEPS.md` (34) - Sky Citadel refinish (2026-09-24): re-import steps · 2026-09-24
   - `IMPORT_STEPS.md`: 1. Chunks (structure):10, 2. Props:20, 3. Recolours (scenario variants):26, 4. Walk it:32
@@ -407,7 +407,7 @@ _237 text files, 240 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### src/shared
 
-- `src/shared/Content/AssetManifest.luau` (2128) - Logical asset name → Roblox asset id. Addendum §A1. · 2026-09-26
+- `src/shared/Content/AssetManifest.luau` (2278) - Logical asset name → Roblox asset id. Addendum §A1. · 2026-09-26
   - `AssetManifest.luau`: VV_CHUNK_PATH_SUNWASH_FORK:54, VV_CHUNK_CUTBANK_FORD:60, VV_CHUNK_WINDWARD_RIDGE_GATE:66, VV_CHUNK_FORGOTTEN_ORCHARD_GATE:72, VV_CHUNK_LONGGRASS_MEADOW:78, VV_CHUNK_SHADED_GROVE:84, VV_CHUNK_FERN_HOLLOW:90, VV_CHUNK_PATH_CLIFF_PASSAGE:96, VV_CHUNK_STONE_SENTINELS:102, VV_CHUNK_MOSSBOUND_RUINS:108, VV_CHUNK_ANCIENT_OAK:114, VV_CHUNK_WETLAND_POOLS:120, VV_CHUNK_PATH_NARROW_PASS:126, VV_CHUNK_BLOSSOM_TERRACE:132, VV_CHUNK_ROCK_GARDEN:138, VV_CHUNK_CRYSTAL_SPRING_GATE:144, VV_CHUNK_OVERGROWN_CAUSEWAY_GATE:150, VV_CHUNK_HIGH_LEDGE_GATE:156, VV_CHUNK_CLIFF_OVERLOOK_GATE:162, VV_CHUNK_DEEP_CLEARING:168, VV_CHUNK_PATH_SPLIT_MEADOW:174, VV_CHUNK_MUSHROOM_GLEN:180, VV_CHUNK_PATH_CROSSROADS_COPSE:186, VV_CHUNK_CAP_CAVE_MOUTH:192, VV_CHUNK_ENTRY_DAWN_MEADOW:198, VV_CHUNK_ENTRY_WOODLAND_REFUGE:204, VV_CHUNK_BOSS_SANCTUARY:210, VV_CHUNK_SIDE_TREASURE_HOLLOW:216, VV_CHUNK_SIDE_WARDENS_CLEARING:222, VV_CHUNK_SIDE_FORGOTTEN_TRIAL:228, VV_CHUNK_ENTRY:234, VV_CHUNK_FERN_HOLLOW:240, VV_CHUNK_MUSHROOM_GLEN:246, SC_CHUNK_ENTRY:270, SC_CHUNK_PATH_STRAIGHT:276, SC_CHUNK_PATH_SKYPORT:282, SC_CHUNK_PATH_HOOPS:288, SC_CHUNK_PATH_SHATTERED:294, SC_CHUNK_PATH_AVIARY:300, SC_CHUNK_CROSSROADS:306, ... +85 more
 - `src/shared/Content/Atmospheres/SkyCitadel.luau` (947) - GENERATED by assets/source/worlds/sky_citadel/sky_citadel_atmospheres.py. · 2026-09-23
   - `SkyCitadel.luau`: UNMOORING:13, SIEGE:138, LOCKDOWN:297, STORMHAWK:415, RIME:559, RECLAIMED:681, AETHER_SURGE:802
@@ -437,7 +437,7 @@ _237 text files, 240 binary assets. Regenerate with `python tools/gen_index.py`;
 - `src/shared/Content/LightningRigs.luau` (76) - GENERATED by assets/source/enemies/sky_citadel/ws_lance.py - do not edit by hand. · 2026-09-25
 - `src/shared/Content/LootPools/SkyCitadel.luau` (32) - Sky Citadel's loot pools (build spec §7.5). · 2026-09-23
 - `src/shared/Content/LootPools/init.luau` (16) - Loot pool registry, keyed by pool Id (build spec §7.5). Each module returns · 2026-09-23
-- `src/shared/Content/Props/EtherealScape.luau` (386) - GENERATED by assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py -- do not edit by hand. · new
+- `src/shared/Content/Props/EtherealScape.luau` (386) - GENERATED by assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py -- do not edit by hand. · 2026-09-26
 - `src/shared/Content/Props/SkyCitadel.luau` (660) - GENERATED by assets/source/worlds/sky_citadel/build_sky_citadel_kit.py. · 2026-09-25
 - `src/shared/Content/Props/init.luau` (16) - Ambient-scenery registry: one module per world, keyed by the world's Id. · 2026-09-23
 - `src/shared/Content/Scenarios/init.luau` (139) - SCENARIO LIBRARY -- what can HAPPEN in a chunk, as opposed to what a chunk · 2026-09-22
@@ -520,7 +520,7 @@ _237 text files, 240 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### tests/cases.luau
 
-- `tests/cases.luau` (8127) - LUCKBOUND test suite. Run: python3 tests/build_suite.py && luau tests/generated_suite.luau · 2026-09-26
+- `tests/cases.luau` (8124) - LUCKBOUND test suite. Run: python3 tests/build_suite.py && luau tests/generated_suite.luau · 2026-09-26
   - `cases.luau`: group:48, check:53, throws:66, lcg:72, profile:83, cfg:91
 
 ### tests/run.sh

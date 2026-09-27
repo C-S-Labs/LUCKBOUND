@@ -3126,10 +3126,7 @@ do
 		"the Sanctum arena only accepts a COMMUNION approach",
 		esChunks.ES_SANCTUM.Sockets[1].Kind == "COMMUNION"
 	)
-	check(
-		"the Convergence is a 4-way crossroads",
-		#esChunks.ES_CONVERGENCE.Sockets == 4
-	)
+	check("the Convergence is a 4-way crossroads", #esChunks.ES_CONVERGENCE.Sockets == 4)
 	-- The revamp's intersections (owner: "I see no intersection pieces"): a four-way
 	-- and two three-way forks, so side pockets attach and a run can branch.
 	local junctions = {}
