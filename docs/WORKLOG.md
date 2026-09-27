@@ -61,11 +61,18 @@ delete an older entry; if something turned out wrong, say so in a newer one.
   `prop_es_lotus` (Hover — not a wisp, which is an enemy) and `prop_es_kite` (Sway).
 - 41/41 pieces validate; exported; renders refreshed; close-ups reviewed (patch, tower windows, ray belly, shrine).
 
+- **Owner imported and walked it** (same day): chunks drew as blockout and skyrays flew sideways.
+  - Blockout: the 41 `ES_CHUNK_*` manifest entries were still `AssetId = ""`. Filled from the owner's
+    `assets/rbxm/chunks/ethereal_scape/ES_STRUCTURE.rbxmx` (committed, with `assets/rbxm/props/ES_PROP_LIBRARY.rbxmx`).
+    `tools/sync_asset_ids.py` now maps ES's already-prefixed names (`ES_ENTRY` → `ES_CHUNK_ENTRY`), so next time
+    it is `python tools/sync_asset_ids.py ethereal_scape --write`.
+  - Sideways skyrays: the heading assumes a bird's +X nose; the manta's nose is its −Z, so `Glide` turns it −90°.
+
 ### Stopped at
-Generated, exported, rendered. Not uploaded or walked.
+Imported; ids in the manifest; heading fixed. Awaiting the owner's re-walk.
 
 ### Next
-1. Owner: re-import `ethereal_scape_structure.fbx` **and** `ethereal_scape_props.fbx` — the prop library gained
+1. Owner: re-walk; confirm real chunks load and skyrays fly nose-first. (Original import note:) re-import `ethereal_scape_structure.fbx` **and** `ethereal_scape_props.fbx` — the prop library gained
    `prop_es_petals`, `prop_es_lotus`, `prop_es_kite` and a new `prop_es_skyray` mesh — then walk it. Watch the
    skyrays sweep the map and check 172 studs up reads well under the real lighting (tune `Glide.Altitude`).
 

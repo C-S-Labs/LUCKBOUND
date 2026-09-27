@@ -11,6 +11,7 @@ assets/rbxm/chunks/<world>/ and run:
 Each MeshPart NAME decides the manifest key: <PREFIX>_<NAME UPPERCASE>.
     chunk_entry                     -> VV_CHUNK_ENTRY
     chunk_archive__siege            -> SC_CHUNK_ARCHIVE__SIEGE
+    ES_ENTRY (already prefixed)     -> ES_CHUNK_ENTRY
 Only existing manifest entries are updated (AssetId, Status = "UPLOADED",
 Source). A name with no entry is reported, never invented -- a new chunk also
 needs its Content/Chunks entry, which is design work, not bookkeeping.
@@ -53,6 +54,11 @@ def main(argv):
     changed, same, unknown = 0, 0, []
     for name, (url, f) in sorted(ids.items()):
         key = f"{PREFIX[world]}_{name.upper()}"
+        # Ethereal Scape's pieces are named by their chunk id (ES_ENTRY), not chunk_entry:
+        # ES_ENTRY -> ES_CHUNK_ENTRY
+        pre = PREFIX[world] + "_"
+        if name.upper().startswith(pre):
+            key = f"{pre}CHUNK_{name.upper()[len(pre):]}"
         entry = re.compile(r'(\t%s = \{\n)(.*?)(\n\t\},)' % re.escape(key), re.S)
         m = entry.search(text)
         if not m:

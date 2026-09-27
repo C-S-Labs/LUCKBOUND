@@ -83,6 +83,10 @@ local function rawPose(p: Placed, m: any): CFrame
 			* CFrame.new(out + Vector3.new(0, m.lift, 0))
 			* CFrame.Angles(0, p.Heading, 0)
 			* CFrame.Angles(-m.bank, 0, 0)
+			-- Heading/bank point a nose along +X (a bird's); the skyray's nose is
+			-- its -Z (Blender +Y), so turn it -90° onto +X. Without this they
+			-- flew sideways round their circle (owner, 2026-09-27).
+			* CFrame.Angles(0, -math.pi / 2, 0)
 	end
 	return p.Layout
 		* CFrame.new(p.Offset + Vector3.new(0, m.lift, 0))
