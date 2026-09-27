@@ -151,20 +151,20 @@ _240 text files, 264 binary assets. Regenerate with `python tools/gen_index.py`;
   - `refinish.py`: refinish_piece:11
 - `assets/source/worlds/_framework/scatter_core.py` (232) - The prop scatter -- Python twin of src/shared/Core/ScatterCore.luau. · 2026-09-23
   - `scatter_core.py`: imul:38, fnv:46, Rng:54, encode_point:76, encode_air:84, decode_points:88, decode_air:98, rule_ok:108, scatter:122
-- `assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py` (660) - LUCKBOUND - Ethereal Scape 30-piece chunk kit, REVAMP (2026-09-26, owner-directed). · 2026-09-27
-  - `build_ethereal_scape_kit.py`: materials:77, to_object:94, mesh_bvh:135, column_tops:140, walk_graph:155, detached:208, validate:224, _num:288, write_chunks_luau:296, write_props_luau:379, export:408, render_setup:436, shot:459, place_prop_copies:469, chain_preview:482, map_preview:502, main:548
-- `assets/source/worlds/ethereal_scape/es_features.py` (779) - Ethereal Scape kit -- terrain, architecture and flora builders. · 2026-09-27
-  - `es_features.py`: pins:22, rift_rim:31, declip:54, near_corridor:101, cloud_floor:112, puff:154, cloud_bank:160, mouth_gap:188, perimeter_banks:194, mesa:223, ramp:256, path:284, flagstones:295, meadow_carpet:314, cloud_tufts:330, mouth:351, guide_stone:381, tree:391, great_tree:407, mushroom:436, blossoms:443, grass_tufts:455, rock:472, column:479, pavilion:502, arch:531, waystone:569, lantern_post:580, bell_tower:591, crystal_cluster:625, crystal_colossus:639, crag:658, aether_pool:691, fountain:699, ruin_wall:709, balustrade:725, hut:745, stairs:767
+- `assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py` (668) - LUCKBOUND - Ethereal Scape 30-piece chunk kit, REVAMP (2026-09-26, owner-directed). · 2026-09-27
+  - `build_ethereal_scape_kit.py`: materials:77, to_object:94, mesh_bvh:135, column_tops:140, walk_graph:155, detached:208, validate:224, _num:296, write_chunks_luau:304, write_props_luau:387, export:416, render_setup:444, shot:467, place_prop_copies:477, chain_preview:490, map_preview:510, main:556
+- `assets/source/worlds/ethereal_scape/es_features.py` (822) - Ethereal Scape kit -- terrain, architecture and flora builders. · 2026-09-27
+  - `es_features.py`: pins:22, rift_rim:31, declip:54, near_corridor:101, cloud_floor:112, puff:154, cloud_bank:160, mouth_gap:188, perimeter_banks:194, mesa:223, ramp:256, path:284, flagstones:295, meadow_carpet:314, cloud_tufts:330, mouth:351, guide_stone:381, tree:391, great_tree:407, mushroom:439, mushroom_patch:448, blossoms:478, grass_tufts:490, rock:507, column:514, pavilion:537, arch:566, waystone:604, lantern_post:615, bell_tower:626, crystal_cluster:665, crystal_colossus:679, crag:698, aether_pool:734, fountain:742, ruin_wall:752, balustrade:768, hut:788, stairs:810
 - `assets/source/worlds/ethereal_scape/es_geometry.py` (317) - Ethereal Scape kit -- geometry core: palette, the Piece soup, and low-poly primitives. · 2026-09-27
   - `es_geometry.py`: name_seed:40, caller_tag:50, Piece:60, rot_z:132, xf:136, _ccw:141, prism:150, ring_pts:163, frustum:168, box:187, _frame:198, rod:211, beam:219, gem:233, gem2:243, blob:260, decal:284, decal_ring:292, decal_strip:311
 - `assets/source/worlds/ethereal_scape/es_isles.py` (291) - Ethereal Scape -- the HYBRID kit's building blocks (owner pick, 2026-09-27: "the hybrid for sure"). · 2026-09-27
   - `es_isles.py`: circle:25, rsquare:35, inside:49, centroid:66, face:70, isle:79, cloud_skirt:121, landing:136, bridge:165, stair_link:207, sky_spire:217, statue:247, shrine_hall:262
 - `assets/source/worlds/ethereal_scape/es_mapgen.py` (179) - Ethereal Scape -- a Python mirror of ChunkCore.assemble's §7.7 universal generation, used ONLY to lay out a · 2026-09-27
   - `es_mapgen.py`: norm:9, rotate:13, sockets_of:17, world_socket:26, place_against:31, extent:42, overlaps:46, assemble:52
-- `assets/source/worlds/ethereal_scape/es_pieces.py` (1285) - Ethereal Scape kit -- the 36 HYBRID piece recipes (owner pick 2026-09-27). docs/biomes/ETHEREAL_SCAPE.md · 2026-09-27
-  - `es_pieces.py`: hub_plaza:27, scatter:42, plank_bridge:64, aether_fall:68, meadow_dress:99, web:114, _centre:177, at:184, dress:189, road:221, temple_floor:225, es_entry:239, es_sanctum:279, es_plank_crossing:493, es_grove_isle:507, es_skystair_up:523, es_skystair_down:537, es_bend_east_grove:552, es_bend_east_ascent:562, es_bend_west_falls:575, es_bend_west_shrine:587, es_fork_wayshrine:601, es_fork_three_trees:614, es_fork_twin_span:627, es_convergence:639, es_meadow_of_blooms:662, es_terraced_gardens:672, es_crystal_hollow:686, es_fallen_colonnade:699, es_mirror_pool:714, es_shrine_of_winds:727, es_rooted_hollow:742, es_twin_isles:756, es_temple_gate_a:765, es_temple_gate_b:777, _arc:794, es_sky_aqueduct:807, es_sky_observatory:849, es_miniboss_waystone_ring:935, es_miniboss_reliquary_court:951, ... +15 more
-- `assets/source/worlds/ethereal_scape/es_props.py` (254) - Ethereal Scape kit -- the ATMOSPHERE: ambient props (CHUNK_AUTHORING.md convention 6). · 2026-09-27
-  - `es_props.py`: _isle:39, _cloud:47, build_kind:84, library:143, _clear:153, place_all:158, game_row:247
+- `assets/source/worlds/ethereal_scape/es_pieces.py` (1290) - Ethereal Scape kit -- the 36 HYBRID piece recipes (owner pick 2026-09-27). docs/biomes/ETHEREAL_SCAPE.md · 2026-09-27
+  - `es_pieces.py`: hub_plaza:27, scatter:42, plank_bridge:64, aether_fall:68, meadow_dress:99, web:114, _centre:177, at:184, dress:189, road:221, temple_floor:225, es_entry:239, es_sanctum:279, es_plank_crossing:493, es_grove_isle:507, es_skystair_up:529, es_skystair_down:543, es_bend_east_grove:558, es_bend_east_ascent:566, es_bend_west_falls:579, es_bend_west_shrine:591, es_fork_wayshrine:605, es_fork_three_trees:618, es_fork_twin_span:630, es_convergence:642, es_meadow_of_blooms:665, es_terraced_gardens:675, es_crystal_hollow:689, es_fallen_colonnade:702, es_mirror_pool:717, es_shrine_of_winds:730, es_rooted_hollow:745, es_twin_isles:757, es_temple_gate_a:766, es_temple_gate_b:778, _arc:795, es_sky_aqueduct:808, es_sky_observatory:850, es_miniboss_waystone_ring:936, es_miniboss_reliquary_court:952, ... +15 more
+- `assets/source/worlds/ethereal_scape/es_props.py` (368) - Ethereal Scape kit -- the ATMOSPHERE: ambient props (CHUNK_AUTHORING.md convention 6). · 2026-09-27
+  - `es_props.py`: _isle:44, _cloud:52, _skyray:89, build_kind:168, library:250, _clear:260, place_all:265, game_row:361
 - `assets/source/worlds/ethereal_scape/es_samples.py` (198) - Ethereal Scape -- three DIRECTION SAMPLES for the owner to choose between (2026-09-27). · 2026-09-27
   - `es_samples.py`: float_isle:26, landing_isle:67, sample_floating_isles:88, sample_lush_cloudscape:118, sample_temple_city:152
 - `assets/source/worlds/sky_citadel/IMPORT_STEPS.md` (34) - Sky Citadel refinish (2026-09-24): re-import steps · 2026-09-24
@@ -196,8 +196,8 @@ _240 text files, 264 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/ART_DIRECTION.md
 
-- `docs/ART_DIRECTION.md` (496) - LUCKBOUND — Art Direction Brief · 2026-09-27
-  - `ART_DIRECTION.md`: The approach:7, The mesh seam:25, What exists now:50, The PortalRig:89, What to describe:101, 1. Hub lighting ⭐ (cheapest, highest impact right now):105, 2. The reveal moment ⭐⭐ (the whole game, per §25):114, 3. The Fate Engine:126, 4. Placeholder text:135, 5. Biomes (Phase 2):140, The house style — low poly, one palette:154, No built-in Roblox materials:183, Colour is applied in code, not baked in:206, Collision is part of the paint table, and it is the dangerou:227, The hub palette — the thematic cycle:272, Current defaults:325, Rarity colours — do not deviate:343, How a description becomes code:361, Hub scale vs. the player — measured and APPLIED 2026-09-21:372, What the number would be:394, It was applied on 2026-09-21:407, Why it was not changed in the pass before:437, Replacing the Crossroads later — the drop-in contract:462, What the new delivery has to keep:477, And the one thing to do differently:489
+- `docs/ART_DIRECTION.md` (516) - LUCKBOUND — Art Direction Brief · 2026-09-27
+  - `ART_DIRECTION.md`: The approach:7, The mesh seam:25, What exists now:50, The PortalRig:89, What to describe:101, 1. Hub lighting ⭐ (cheapest, highest impact right now):105, 2. The reveal moment ⭐⭐ (the whole game, per §25):114, 3. The Fate Engine:126, 4. Placeholder text:135, 5. Biomes (Phase 2):140, The house style — low poly, one palette:154, Natural things grow in patches, never in geometry — universa:183, No built-in Roblox materials:203, Colour is applied in code, not baked in:226, Collision is part of the paint table, and it is the dangerou:247, The hub palette — the thematic cycle:292, Current defaults:345, Rarity colours — do not deviate:363, How a description becomes code:381, Hub scale vs. the player — measured and APPLIED 2026-09-21:392, What the number would be:414, It was applied on 2026-09-21:427, Why it was not changed in the pass before:457, Replacing the Crossroads later — the drop-in contract:482, What the new delivery has to keep:497, And the one thing to do differently:509
 
 ### docs/BLUEPRINT_RECONCILIATION.md
 
@@ -306,8 +306,8 @@ _240 text files, 264 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (5580) - LUCKBOUND — Work Log · 2026-09-27
-  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 86 — 2026-09-27 — Ethereal Scape: Sanctum interior, :36, Done:39, Stopped at:60, Next:63, Session 85 — 2026-09-27 — Ethereal Scape hybrid kit (36) + u:68, Done:71, Decisions made:94, Stopped at:99, Next:102, Session 84 — 2026-09-27 — Close berth geometry and final bra:108, Done:111, Decisions made:118, Stopped at:121, Next:124, Session 83 — 2026-09-27 — Dock ships rather than whales:130, Done:133, Decisions made:141, Stopped at:145, Next:148, Session 82 — 2026-09-27 — Fix test-entry return rotation cra:154, Done:157, Decisions made:161, Stopped at:164, Next:167, Session 81 — 2026-09-27 — Catalogue orientation and client s:173, Done:176, Decisions made:182, Stopped at:185, Next:188, Session 80 — 2026-09-27 — Extended test timer and loading in:195, Done:198, Decisions made:203, Stopped at:206, Next:209, ... +462 more
+- `docs/WORKLOG.md` (5618) - LUCKBOUND — Work Log · 2026-09-27
+  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 87 — 2026-09-27 — Ethereal Scape: final polish, map-:36, Done:39, Stopped at:64, Next:67, Session 86 — 2026-09-27 — Ethereal Scape: Sanctum interior, :74, Done:77, Stopped at:98, Next:101, Session 85 — 2026-09-27 — Ethereal Scape hybrid kit (36) + u:106, Done:109, Decisions made:132, Stopped at:137, Next:140, Session 84 — 2026-09-27 — Close berth geometry and final bra:146, Done:149, Decisions made:156, Stopped at:159, Next:162, Session 83 — 2026-09-27 — Dock ships rather than whales:168, Done:171, Decisions made:179, Stopped at:183, Next:186, Session 82 — 2026-09-27 — Fix test-entry return rotation cra:192, Done:195, Decisions made:199, Stopped at:202, Next:205, Session 81 — 2026-09-27 — Catalogue orientation and client s:211, Done:214, Decisions made:220, Stopped at:223, Next:226, Session 80 — 2026-09-27 — Extended test timer and loading in:233, ... +466 more
 
 ### docs/archive
 
@@ -316,8 +316,8 @@ _240 text files, 264 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/biomes
 
-- `docs/biomes/ETHEREAL_SCAPE.md` (200) - Ethereal Scape — biome design schema · 2026-09-27
-  - `ETHEREAL_SCAPE.md`: Direction: the hybrid (owner pick, 2026-09-27):28, The look — and how it differs from Sky Citadel:46, The palette — the original's real values:58, The connection vocabulary:79, Piece size:92, The kit — 41 pieces:102, Generation — build spec §7.7:117, The Sanctum — a structure that houses the boss:125, The atmosphere (props, `CHUNK_AUTHORING.md` convention 6):148, Validation — what `build_ethereal_scape_kit.py` refuses to e:168, Enemy roster:191, Next:196
+- `docs/biomes/ETHEREAL_SCAPE.md` (219) - Ethereal Scape — biome design schema · 2026-09-27
+  - `ETHEREAL_SCAPE.md`: Direction: the hybrid (owner pick, 2026-09-27):28, The look — and how it differs from Sky Citadel:46, The palette — the original's real values:58, The connection vocabulary:79, Piece size:92, The kit — 41 pieces:102, Generation — build spec §7.7:117, The Sanctum — a structure that houses the boss:125, The atmosphere (props, `CHUNK_AUTHORING.md` convention 6):148, Validation — what `build_ethereal_scape_kit.py` refuses to e:183, Enemy roster:210, Next:215
 - `docs/biomes/README.md` (109) - Biome design schemas · 2026-09-26
   - `README.md`: What a biome schema covers:24, Ambience — a world's mood is data:54, Status:85
 - `docs/biomes/SKY_CITADEL.md` (601) - Sky Citadel — biome design schema · 2026-09-25
@@ -352,8 +352,8 @@ _240 text files, 264 binary assets. Regenerate with `python tools/gen_index.py`;
   - `LocomotionController.luau`: buildIndicator:49, updateIndicator:78, playAirJumpEffect:93, onJumpRequest:125, bindCharacter:158, step:173, LocomotionController.init:202, LocomotionController.get:248
 - `src/client/Controllers/PartyController.luau` (135) - The client's picture of its party. Build spec §7.2. · 2026-09-22
   - `PartyController.luau`: PartyController.get:39, PartyController.onChanged:45, PartyController.nameOf:56, PartyController.request:63, announceInvite:67, PartyController.init:102
-- `src/client/Controllers/PropController.luau` (272) - Dresses a generated map with its world's ambient scenery (CHUNK_AUTHORING.md · 2026-09-24
-  - `PropController.luau`: rawPose:50, pose:79, quality:90, library:97, step:101, PropController.enter:132, PropController.leave:260
+- `src/client/Controllers/PropController.luau` (336) - Dresses a generated map with its world's ambient scenery (CHUNK_AUTHORING.md · 2026-09-24
+  - `PropController.luau`: rawPose:52, pose:94, quality:105, library:112, step:116, PropController.enter:148, PropController.leave:324
 - `src/client/Controllers/ProximityController.luau` (123) - Shows the ROLL prompt near the Fate Engine and turns input into a request. · 2026-09-25
   - `ProximityController.luau`: anchor:24, requestRoll:31, ProximityController.setLocked:40, ProximityController.bindPrompt:55, bindProximityPrompt:64, ProximityController.init:91
 - `src/client/Controllers/SettingsController.luau` (158) - SETTINGS, APPLIED. The half that makes the Settings panel mean something. · 2026-09-25
@@ -443,7 +443,7 @@ _240 text files, 264 binary assets. Regenerate with `python tools/gen_index.py`;
 - `src/shared/Content/LightningRigs.luau` (76) - GENERATED by assets/source/enemies/sky_citadel/ws_lance.py - do not edit by hand. · 2026-09-25
 - `src/shared/Content/LootPools/SkyCitadel.luau` (32) - Sky Citadel's loot pools (build spec §7.5). · 2026-09-23
 - `src/shared/Content/LootPools/init.luau` (16) - Loot pool registry, keyed by pool Id (build spec §7.5). Each module returns · 2026-09-23
-- `src/shared/Content/Props/EtherealScape.luau` (555) - GENERATED by assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py -- do not edit by hand. · 2026-09-27
+- `src/shared/Content/Props/EtherealScape.luau` (726) - GENERATED by assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py -- do not edit by hand. · 2026-09-27
 - `src/shared/Content/Props/SkyCitadel.luau` (660) - GENERATED by assets/source/worlds/sky_citadel/build_sky_citadel_kit.py. · 2026-09-25
 - `src/shared/Content/Props/init.luau` (16) - Ambient-scenery registry: one module per world, keyed by the world's Id. · 2026-09-23
 - `src/shared/Content/Scenarios/init.luau` (139) - SCENARIO LIBRARY -- what can HAPPEN in a chunk, as opposed to what a chunk · 2026-09-22
@@ -469,7 +469,7 @@ _240 text files, 264 binary assets. Regenerate with `python tools/gen_index.py`;
 - `src/shared/Core/FixtureCore.luau` (55) - The pure half of fixtures (CHUNK_AUTHORING.md convention 7, build spec · 2026-09-23
   - `FixtureCore.luau`: CHEST:15, VAULT:16, FORCEFIELD:17, smooth:23, FixtureCore.lidAngle:31, FixtureCore.doorSpin:38, FixtureCore.doorRecess:44, FixtureCore.fieldTransparency:50
 - `src/shared/Core/Freeze.luau` (25) - Deep-freeze a content or config table, so a System cannot mutate the data · 2026-09-22
-- `src/shared/Core/GameConfig.luau` (1139) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-09-27
+- `src/shared/Core/GameConfig.luau` (1153) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-09-27
 - `src/shared/Core/HubMenuCore.luau` (190) - THE HUB MENU'S RULES, WITH NO ROBLOX IN THEM. · 2026-09-25
   - `HubMenuCore.luau`: HubMenuCore.panels:20, HubMenuCore.panelById:31, HubMenuCore.destinations:41, HubMenuCore.destinationById:52, HubMenuCore.landingPoint:64, HubMenuCore.isVisible:71, HubMenuCore.newState:80, HubMenuCore.reduce:98, HubMenuCore.canTravel:149, HubMenuCore.travelTiming:180
 - `src/shared/Core/KeyCore.luau` (58) - The pure half of vault keys (build spec §7.5). Owner-directed 2026-09-23: · 2026-09-23
@@ -488,8 +488,8 @@ _240 text files, 264 binary assets. Regenerate with `python tools/gen_index.py`;
   - `ProfileSchema.luau`: ProfileSchema.default:16, ProfileSchema.migrate:75, ProfileSchema.prune:109
 - `src/shared/Core/ProgressionCore.luau` (72) - Pure Fate progression maths. Build spec §2.4 / GameConfig.Progression. · 2026-09-25
   - `ProgressionCore.luau`: ProgressionCore.pointsForLevel:11, ProgressionCore.levelForPoints:19, ProgressionCore.levelProgress:31, ProgressionCore.award:46, ProgressionCore.grant:61
-- `src/shared/Core/PropCore.luau` (166) - The pure half of a world's ambient scenery (CHUNK_AUTHORING.md convention · 2026-09-27
-  - `PropCore.luau`: PropCore.berthOnBox:21, PropCore.tierShown:71, PropCore.phase:78, PropCore.motion:94, PropCore.birdHeading:152, PropCore.wingAngle:162
+- `src/shared/Core/PropCore.luau` (183) - The pure half of a world's ambient scenery (CHUNK_AUTHORING.md convention · 2026-09-27
+  - `PropCore.luau`: PropCore.berthOnBox:21, PropCore.tierShown:75, PropCore.phase:82, PropCore.motion:98, PropCore.birdHeading:169, PropCore.wingAngle:179
 - `src/shared/Core/Result.luau` (14) - Expected-failure convention. Reserve error() for programmer mistakes. · 2026-09-15
   - `Result.luau`: Result.err:10
 - `src/shared/Core/SettingsCore.luau` (166) - PLAYER SETTINGS: the schema, the defaults, and the validator. · 2026-09-20
@@ -526,7 +526,7 @@ _240 text files, 264 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### tests/cases.luau
 
-- `tests/cases.luau` (8460) - LUCKBOUND test suite. Run: python3 tests/build_suite.py && luau tests/generated_suite.luau · 2026-09-27
+- `tests/cases.luau` (8461) - LUCKBOUND test suite. Run: python3 tests/build_suite.py && luau tests/generated_suite.luau · 2026-09-27
   - `cases.luau`: group:48, check:53, throws:66, lcg:72, profile:83, cfg:91
 
 ### tests/run.sh

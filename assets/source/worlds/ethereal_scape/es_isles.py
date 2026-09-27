@@ -219,7 +219,7 @@ def sky_spire(p, x, y, z=FLOOR_Z, r=5.0):
     crystal windows, crowned by a sky-crystal cluster whose tip is EXACTLY the crown. (Not a needle: the
     first pass read as Sky Citadel's spires, which the owner already rejected once.)"""
     p.keepout.append((x, y, r * 2.8))
-    p.footings.append((x, y, z, r * 1.8, "sky_spire"))
+    p.footings.append((x, y, z, r * 2.3, "sky_spire"))   # its WHOLE base plate (half-width 2.2r) must be on ground
     box(p, "Cloudstone", x, y, z + 0.5, r * 4.4, r * 4.4, 2.0)
     box(p, "TempleIvory", x, y, z + 2.2, r * 3.6, r * 3.6, 1.6)
     crown = CROWN_TOP - 20

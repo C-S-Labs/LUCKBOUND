@@ -180,6 +180,26 @@ A textured portal ring is a dead portal ring.
 Ethereal Scape v2 is already built this way, so the hub matching it is what
 makes the game look like one game.
 
+### Natural things grow in patches, never in geometry — universal rule
+
+**Owner-directed, 2026-09-27**, after Ethereal Scape's Three-Trees fork put ten
+identical mushrooms in a perfect circle: *"Right now they plainly just form a
+circle ring … this looks unnatural."* It applies to **every world and every
+kit**:
+
+- Mushrooms, flowers, grass tufts, rocks, crystals and anything else meant to
+  look *grown* are placed as **clumped patches** — a few uneven clumps, each a
+  big parent with smaller offspring — with **size, shape and colour mixed**.
+- **Never** a neat ring, grid or row of identical copies, unless the piece's
+  design *deliberately* calls for one (a fairy ring, a tended crop row, a
+  ceremonial circle of stones). A deliberate one is still made ragged: uneven
+  radius and spacing, a gap, a stray outside the line.
+- Built things (colonnades, waystone circles, balustrades) may be regular —
+  that regularity is what makes them read as built.
+
+Ethereal Scape's `mushroom_patch()` (`es_features.py`) is the reference
+implementation; port it when another world needs the same.
+
 ### No built-in Roblox materials
 
 **Owner-directed, 2026-09-18.** Every surface in the hub is `SmoothPlastic`.

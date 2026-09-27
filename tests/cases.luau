@@ -3297,12 +3297,12 @@ do
 	local hasRay = false
 	for _, rows in esProps.Placements do
 		for _, row in rows do
-			if row.Prop == "prop_es_skyray" and row.Anim == "Bird" then
+			if row.Prop == "prop_es_skyray" and row.Anim == "Glide" then
 				hasRay = true
 			end
 		end
 	end
-	check("skyrays circle the clearings (its own flyer, not Sky Citadel's birds)", hasRay)
+	check("skyrays glide over the whole map (its own flyer, not Sky Citadel's birds)", hasRay)
 
 	-- SPAN and COMMUNION are disjoint from every other world's kind set.
 	local kindsFor = function(worldId)
@@ -7533,6 +7533,7 @@ do
 				and key ~= "orbit"
 				and key ~= "bank"
 				and key ~= "flap"
+				and key ~= "reach"
 			then
 				return false
 			end

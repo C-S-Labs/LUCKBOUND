@@ -12,7 +12,7 @@ from mathutils import Vector
 
 from es_features import (FLOOR_Z, aether_pool, arch, balustrade, bell_tower, blossoms, column, crag, crystal_cluster,
                          crystal_colossus, flagstones, fountain, grass_tufts, great_tree, hut, lantern_post, meadow_carpet,
-                         mesa, mushroom, near_corridor, path, pavilion, pins, puff, ramp, rock, ruin_wall, stairs, tree,
+                         mesa, mushroom, mushroom_patch, near_corridor, path, pavilion, pins, puff, ramp, rock, ruin_wall, stairs, tree,
                          waystone)
 from es_geometry import CROWN_TOP, DIRS, KIND_WIDTH, beam, blob, box, decal, decal_ring, decal_strip, frustum, gem, prism, ring_pts, rod
 from es_isles import (bridge, circle, face, inside, isle, landing, rsquare, shrine_hall, sky_spire, statue)
@@ -511,11 +511,17 @@ def es_grove_isle(p):
     road(p, [(0, -50), (10, -10), (-6, 30), (0, 50)], width=12)
     great_tree(p, -36, 14, trunk=7)
     decal_ring(p, "TempleGold", 34, -28, 9, 10, 0.05, n=12)          # the fairy ring
-    for k in range(9):
-        a = k * 0.7
-        mushroom(p, 34 + math.cos(a) * 11, -28 + math.sin(a) * 11, s=1.3)
-    dress(p, g, trees=7, blossom=60, tufts=20, mush=4, avoid=[(-36, 14, 24), (34, -28, 14)], carpet=True)
-    aether_fall(p, 66, 20, -1.4, (1, 0.1), width=10, drop=70, pool=False)
+    # a DELIBERATE ring (the grove's fairy ring), but ragged the way a real one is: uneven radius,
+    # spacing and size, a gap, the odd offspring outside it (owner 2026-09-27; see mushroom_patch).
+    # The aether-fall sheet off the east rim was removed: it read as a blue banner and clipped the rim.
+    rng = p.rng
+    a = rng.uniform(0, 1)
+    while a < 5.6:
+        rr = 11 + rng.uniform(-1.6, 1.6)
+        mushroom(p, 34 + math.cos(a) * rr, -28 + math.sin(a) * rr, s=rng.uniform(0.8, 1.6), shape=rng.choice((0, 0, 2)))
+        a += rng.uniform(0.5, 0.95)
+    mushroom_patch(p, 48, -38, 4, spread=4, s=(0.5, 1.0))
+    dress(p, g, trees=7, blossom=60, tufts=20, mush=4, avoid=[(-36, 14, 24), (34, -28, 16), (48, -38, 8)], carpet=True)
     for s in (-1, 1):
         lantern_post(p, s * 14, -64 + 10, rz=0 if s > 0 else math.pi)
 
@@ -553,9 +559,7 @@ def es_bend_east_grove(p):
     pins(p)
     n = web(p, {"a": (-18, -28, 44, 0), "perch": (-52, 70, 24, 14)}, [("S", "a"), ("a", "E"), ("a", "perch")])
     great_tree(p, *at(n["perch"], 0, 2), z=14, trunk=6)
-    for k in range(8):
-        a = k * 0.78
-        mushroom(p, -40 + math.cos(a) * 8, -44 + math.sin(a) * 8, s=1.2)
+    mushroom_patch(p, -40, -44, 9, spread=8)
     dress(p, n["a"], trees=5, blossom=40, tufts=14, mush=3, avoid=[(-40, -44, 12)], carpet=True)
 
 
@@ -617,9 +621,8 @@ def es_fork_three_trees(p):
             [("S", "hub"), ("hub", "N"), ("hub", "E"), ("hub", "crag")])
     for k, (dx, dy) in enumerate(((-24, 18), (16, 28), (-26, -22))):
         tree(p, *at(n["hub"], dx, dy), h=34 - k * 3, crown=(TEAL, INDIGO)[k % 2], style=k)
-    for k in range(10):
-        a = k * 0.63
-        mushroom(p, -10 + math.cos(a) * 10, math.sin(a) * 10, s=1.1)
+    # the fork's heart: a natural mushroom patch, not a ring (owner 2026-09-27)
+    mushroom_patch(p, -10, 0, 13, spread=11, s=(0.6, 2.2))
     crag(p, *at(n["crag"], 0, -2), z=-12, r=9, top=CROWN_TOP)
     dress(p, n["hub"], trees=0, blossom=30, tufts=10, mush=0, avoid=[(-10, 0, 14)])
 
@@ -719,9 +722,9 @@ def es_mirror_pool(p):
     balustrade(p, ring_pts(0, 4, 33, 16), 0, closed=True, gaps=((0, -29, 10), (0, 37, 10)))
     for a in (0.8, 2.3, 3.9, 5.5):
         statue(p, math.cos(a) * 46, 4 + math.sin(a) * 46, rz=a + math.pi)
-    sky_spire(p, 48, 44, r=4)
+    sky_spire(p, 56, 4, r=4)          # east, between the statues, its base clear of the rim
     lantern_post(p, *at(n["low"], 0, 4), z=-14)
-    dress(p, n["m"], trees=2, blossom=24, tufts=8, mush=2, avoid=[(0, 4, 40), (48, 44, 12)])
+    dress(p, n["m"], trees=2, blossom=24, tufts=8, mush=2, avoid=[(0, 4, 40), (56, 4, 12)])
 
 
 def es_shrine_of_winds(p):
@@ -746,10 +749,8 @@ def es_rooted_hollow(p):
     for a in (2.4, 3.2, 4.0):
         rod(p, "SoftWood", (22 + math.cos(a) * 8, 8 + math.sin(a) * 8, 20), (22 + math.cos(a) * 44, 8 + math.sin(a) * 44, -0.5),
             3.0, 1.2, n=5)
-    for k in range(14):
-        a = p.rng.uniform(0, 6.28)
-        rr = p.rng.uniform(24, 34)
-        mushroom(p, 22 + math.cos(a) * rr, 8 + math.sin(a) * rr, s=p.rng.uniform(1.0, 2.0))
+    for a in (1.0, 3.6, 5.2):                   # patches in the tree's shade, between its roots
+        mushroom_patch(p, 22 + math.cos(a) * 29, 8 + math.sin(a) * 29, 5, spread=6, s=(0.8, 2.0))
     dress(p, n["r"], trees=3, blossom=30, tufts=10, mush=0, avoid=[(22, 8, 48)], carpet=True)
 
 
@@ -943,8 +944,8 @@ def es_miniboss_waystone_ring(p):
     for k in range(8):
         a = k * math.pi / 4 + math.pi / 8
         waystone(p, math.cos(a) * 64, 6 + math.sin(a) * 64, rz=a, h=18)
-    for s in (-1, 1):
-        sky_spire(p, s * 40, 70, r=4)
+    for s in (-1, 1):             # flanking the ring in the waystones' gaps, their whole base on the isle
+        sky_spire(p, s * 62, 6, r=4)
     lantern_post(p, *at(n["gallery"], 0, 0), z=10)
 
 
@@ -979,12 +980,12 @@ def es_side_hermit_grove(p):
 def es_side_crystal_grotto(p):
     pins(p)
     n = web(p, {"g": (0, -8, 50, 0)}, [("S", "g")])
-    crag(p, 0, 22, r=14, top=CROWN_TOP)
+    crag(p, 0, 10, r=12, top=CROWN_TOP)
     for k in range(6):
         a = 3.4 + k * 0.5
-        crystal_cluster(p, math.cos(a) * 30, 22 + math.sin(a) * 30 + 6, s=1.2, n=4)
-    aether_pool(p, -22, -30, 10)
-    dress(p, n["g"], trees=1, blossom=16, tufts=6, mush=2, avoid=[(0, 22, 34), (-22, -30, 14)])
+        crystal_cluster(p, math.cos(a) * 26, 10 + math.sin(a) * 26 + 4, s=1.2, n=4)
+    aether_pool(p, -22, -34, 9)
+    dress(p, n["g"], trees=1, blossom=16, tufts=6, mush=2, avoid=[(0, 10, 30), (-22, -34, 13)])
 
 
 def es_side_relic_altar(p):
@@ -1024,12 +1025,16 @@ def es_cap_overlook(p):
 def es_cap_sealed_shrine(p):
     pins(p)
     web(p, {"s": (0, -22, 50, 0)}, [("S", "s")])
-    crag(p, 0, 20, r=18, top=CROWN_TOP)
-    box(p, "TempleIvory", 0, 0.5, 9, 18, 3, 18)
-    box(p, "PortalGlow", 0, -1.2, 9, 10, 0.6, 12)
+    # owner 2026-09-27: the crag spilled off the isle and the shrine wall sank into its face. The crag
+    # is slimmer and set back so its whole base is on the isle; the sealed door stands FREE in front,
+    # a clear gap between its back and the rock.
+    crag(p, 0, 4, r=10, top=CROWN_TOP)
+    box(p, "TempleIvory", 0, -24, 9, 18, 3, 18)
+    box(p, "TempleGold", 0, -24, 18.6, 20, 3.6, 1.2)
+    box(p, "PortalGlow", 0, -25.8, 9, 10, 0.6, 12)
     for s in (-1, 1):
-        column(p, s * 12, -3, 0, 18, r=1.8)
-        lantern_post(p, s * 18, -24, rz=0 if s > 0 else math.pi)
+        column(p, s * 12, -27, 0, 18, r=1.8)
+        lantern_post(p, s * 18, -44, rz=0 if s > 0 else math.pi)
 
 
 def es_cap_falls_ledge(p):

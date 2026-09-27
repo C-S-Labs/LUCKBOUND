@@ -33,6 +33,44 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 87 — 2026-09-27 — Ethereal Scape: final polish, map-wide skyrays, natural mushroom patches
+**Merged:** see the PR for this branch   **Tests:** CI   **Branch:** `claude/es-final-polish`
+
+### Done
+- Owner: "this iteration looks fantastic" — one final polish pass before importing and walking it in Studio.
+- **Grove Isle:** the aether-fall sheet off the east rim (it read as a blue banner and clipped the rim) is gone;
+  the fairy ring is now ragged (uneven radius, spacing and size, a gap, a small patch outside it).
+- **Temple Gate A (and every bell tower):** the crystal windows ran through the gold band wrapping the tower;
+  `bell_tower()` now centres them in the highest clear course between bands.
+- **Mushrooms — universal rule** (`ART_DIRECTION.md`, "Natural things grow in patches"): no neat ring, grid or
+  row unless the design deliberately calls for one. `mushroom_patch()` makes uneven clumps of parents and
+  offspring with three shapes and five cap colours; used on the Three-Trees fork, East Grove bend and Rooted Hollow.
+- **Waystone Ring:** the twin beacons stood on the isle's rim; they now flank the ring east and west, well inside.
+  **Mirror Pool's** beacon had the same fault (found by the new check) and moved in too.
+- **Sealed Shrine:** the crag spilled ~11 studs off the isle (`crag(r)` really spreads to ~1.35 r + jitter) and
+  the shrine wall sank into its face. Slimmer crag set back; the sealed door stands free in front of it.
+  **Crystal Grotto's** crag had the same overhang and was moved in.
+- **Overhang check:** the grounded check was 4 of 5 rays at 0.7 r — it passed all of the above. It is now all 9
+  rays at the full radius (+3 studs for big bases, since the gold rim band juts past the floor), beacon footings
+  are the whole base plate, and crags register footings. Verified it fails the old Waystone Ring positions.
+- **Skyrays:** a new `Glide` animation class (src: `PropCore`, `PropController`, `GameConfig.Ambience.Props.Glide`)
+  — rays circle the **map's** centre above every crown, their radius breathing in and out so they sweep every
+  chunk, instead of circling their own chunk. The mesh is rebuilt as a lofted manta read from below: gill slits,
+  mouth, cephalic horns, glowing belly spots and wingtips, pelvic fins, whip tail.
+- **More air variety:** satellite isles thinned (90/55% → 55/30% per kind); new props `prop_es_petals` (Float),
+  `prop_es_lotus` (Hover — not a wisp, which is an enemy) and `prop_es_kite` (Sway).
+- 41/41 pieces validate; exported; renders refreshed; close-ups reviewed (patch, tower windows, ray belly, shrine).
+
+### Stopped at
+Generated, exported, rendered. Not uploaded or walked.
+
+### Next
+1. Owner: re-import `ethereal_scape_structure.fbx` **and** `ethereal_scape_props.fbx` — the prop library gained
+   `prop_es_petals`, `prop_es_lotus`, `prop_es_kite` and a new `prop_es_skyray` mesh — then walk it. Watch the
+   skyrays sweep the map and check 172 studs up reads well under the real lighting (tune `Glide.Altitude`).
+
+---
+
 ## Session 86 — 2026-09-27 — Ethereal Scape: Sanctum interior, living clouds, two landmarks, grounded check
 **Merged:** see the PR for this branch   **Tests:** CI   **Branch:** `claude/es-sanctum-clouds-landmarks`
 

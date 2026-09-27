@@ -156,12 +156,27 @@ placements in `Content/Props/EtherealScape.luau`.
 | `prop_es_cumulus_a/b/c` | Float | towering cumulus, a long shelf, an anvil — arranged by the cloudbank BACKDROP pieces, smooth-shaded |
 | `prop_es_lantern` | Float | sky lanterns rising over shrines, gates, forks, the arrival and the arena |
 | `prop_es_shard` | Hover | crystal pieces and the falls |
-| `prop_es_isle_grove`, `_crystal`, `_ruin` | Float | satellite islets in the tile's outer sky, 100–150 up |
-| `prop_es_skyray` | Bird | manta-like gliders circling each clearing — this world's flyer, not Sky Citadel's birds |
+| `prop_es_isle_grove`, `_crystal`, `_ruin` | Float | satellite islets in the tile's outer sky, 100–150 up — thinned 2026-09-27 (55% / 30% per kind) |
+| `prop_es_petals` | Float | a loose swirl of blossom petals drifting 8–22 up over the meadows |
+| `prop_es_lotus` | Hover | a floating aether lotus (glowing heart, dark pad), 12–30 up; more over shrines, crystal and arenas. Deliberately **not** a wisp — `AETHER_WISP` is an enemy |
+| `prop_es_kite` | Sway | a pilgrim's prayer kite trailing two ribbons, 50–80 up, on ~60% of pieces |
+| `prop_es_skyray` | **Glide** | manta-like gliders that roam the **whole map** — this world's flyer, not Sky Citadel's birds |
 
 Every placement is proven clear of the piece's **real mesh** (BVH), at least 4 studs inside the
-tile and clear of every other prop. **A skyray's whole orbit** is proven clear, not just its
-resting point (48 samples round the circle).
+tile and clear of every other prop.
+
+**Skyrays fly the whole map (owner 2026-09-27).** They were `Bird`s circling their own chunk; now the
+`Glide` class (`PropCore`, `PropController`) re-anchors every skyray on the generated map once all chunks
+are placed: it circles the **map's centre** (the mean of the chunk floors) starting where it was authored,
+its radius breathing in and out by 45% of the map's radius (70 s cycle) so one ray crosses inner and outer
+chunks alike, at `Glide.Altitude` (172) above the **highest** chunk floor plus a 0–40 spread — above every
+crown (160), so no beacon or crag anywhere is in its way. Gliders always animate (they have no fixed spot
+to be near). Tuning is `GameConfig.Ambience.Props.Glide`.
+
+**The skyray is read from below**, so the belly carries the detail: a lofted manta body (domed indigo back
+with a crystal ridge, flatter pale belly), five pairs of gill slits, a wide dark mouth lipped in gold
+between two curled cephalic horns, eyes on the head's flanks, a glowing spot pattern and glowing wingtips,
+pelvic fins and a long whip tail with a small dorsal fin.
 
 ---
 
@@ -177,9 +192,13 @@ on the real mesh, for every piece:
 5. **Mouths:** level ground at the socket's own height across at least 95% of the width.
 6. **Nothing detached.** Sky Citadel's real-mesh `geometry_checks.analyse` is reused.
 7. **No clipping between builders** (a tree through a pavilion, a crystal through a railing). The ground (isle tops, landings) may be stood in. `declip()` removes any cloud, blossom, grass or mushroom that touches a real object (a mushroom's stem and cap go together). A short list of authored joints is allowed (a porch column in its podium). The final build logs **zero** clip notes.
-8. **Grounded:** every column, tower, waystone, statue, beacon, lantern, brazier and orrery stands on ground — rays cast under its base must meet a surface at 4 of 5 points.
+8. **Grounded, no overhang:** every column, tower, waystone, statue, beacon, lantern, brazier, orrery and crag stands on ground — rays cast under its base, at the centre and at **8 points round its full radius** (+3 studs for bases ≥ 4 studs, since the isle's gold rim band juts past its floor), must **all** meet a surface. The old rule (4 of 5 points at 0.7 r) let the Waystone Ring's and Mirror Pool's beacons and the Sealed Shrine's crag hang over their isle's edge (owner 2026-09-27). A beacon's footing is its whole base plate (2.3 r); a crag's is its real base (1.35 r).
 9. **Entry:** the column above the landing and the return-portal pad are open to the sky.
 10. **Sanctum:** the hall and the great door are unobstructed.
+
+**Mushrooms grow in patches** (`mushroom_patch()`, the universal rule in `ART_DIRECTION.md`): uneven clumps
+of parents and offspring, three shapes (classic, tall-slender, squat-broad) and five cap colours. Only the
+Grove Isle's fairy ring is a deliberate ring, and it is ragged.
 
 Every feature registers a **keep-out** footprint, so scattered trees, mushrooms and blossoms never
 land in a pavilion, a tower or a crag. The first revamp pass logged about 40 clip notes; all are fixed.
