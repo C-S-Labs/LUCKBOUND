@@ -19,7 +19,7 @@ _240 text files, 257 binary assets. Regenerate with `python tools/gen_index.py`;
 - `GEMINI.md` (3) - GEMINI.md · 2026-09-25
 - `INDEX.md` (191) - LUCKBOUND — Repository Index · 2026-09-27
   - `INDEX.md`: 1. Read order for a new session:22, 2. Top-level layout and where it lands in Roblox (`default.p:32, 3. Docs: what each one owns:55, 4. "I need to…" → where:79, 5. Asset pipelines (Blender 5.2, headless):105, 6. Conventions and workflow (quick reference; full rules in :151, 7. Exact locations: `INDEX_MAP.md`:174
-- `README.md` (74) - LUCKBOUND · 2026-09-25
+- `README.md` (74) - LUCKBOUND · 2026-09-27
   - `README.md`: Read these first:15, Quick start:36, Two rules that shape everything:49, What's built:61
 
 ### assets/README.md
@@ -151,21 +151,21 @@ _240 text files, 257 binary assets. Regenerate with `python tools/gen_index.py`;
   - `refinish.py`: refinish_piece:11
 - `assets/source/worlds/_framework/scatter_core.py` (232) - The prop scatter -- Python twin of src/shared/Core/ScatterCore.luau. · 2026-09-23
   - `scatter_core.py`: imul:38, fnv:46, Rng:54, encode_point:76, encode_air:84, decode_points:88, decode_air:98, rule_ok:108, scatter:122
-- `assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py` (639) - LUCKBOUND - Ethereal Scape 30-piece chunk kit, REVAMP (2026-09-26, owner-directed). · 2026-09-26
+- `assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py` (639) - LUCKBOUND - Ethereal Scape 30-piece chunk kit, REVAMP (2026-09-26, owner-directed). · 2026-09-27
   - `build_ethereal_scape_kit.py`: materials:75, to_object:92, mesh_bvh:133, column_tops:138, walk_graph:153, detached:206, validate:222, _num:277, write_chunks_luau:285, write_props_luau:368, export:397, render_setup:425, shot:448, place_prop_copies:458, chain_preview:471, map_preview:491, main:528
-- `assets/source/worlds/ethereal_scape/es_features.py` (775) - Ethereal Scape kit -- terrain, architecture and flora builders. · 2026-09-26
+- `assets/source/worlds/ethereal_scape/es_features.py` (775) - Ethereal Scape kit -- terrain, architecture and flora builders. · 2026-09-27
   - `es_features.py`: pins:22, rift_rim:31, declip:54, near_corridor:101, cloud_floor:112, puff:154, cloud_bank:160, mouth_gap:188, perimeter_banks:194, mesa:223, ramp:256, path:284, flagstones:295, meadow_carpet:314, cloud_tufts:330, mouth:351, guide_stone:381, tree:391, great_tree:407, mushroom:436, blossoms:443, grass_tufts:455, rock:472, column:479, pavilion:501, arch:530, waystone:568, lantern_post:578, bell_tower:588, crystal_cluster:621, crystal_colossus:635, crag:654, aether_pool:687, fountain:695, ruin_wall:705, balustrade:721, hut:741, stairs:763
-- `assets/source/worlds/ethereal_scape/es_geometry.py` (316) - Ethereal Scape kit -- geometry core: palette, the Piece soup, and low-poly primitives. · 2026-09-26
+- `assets/source/worlds/ethereal_scape/es_geometry.py` (316) - Ethereal Scape kit -- geometry core: palette, the Piece soup, and low-poly primitives. · 2026-09-27
   - `es_geometry.py`: name_seed:40, caller_tag:50, Piece:60, rot_z:131, xf:135, _ccw:140, prism:149, ring_pts:162, frustum:167, box:186, _frame:197, rod:210, beam:218, gem:232, gem2:242, blob:259, decal:283, decal_ring:291, decal_strip:310
-- `assets/source/worlds/ethereal_scape/es_isles.py` (283) - Ethereal Scape -- the HYBRID kit's building blocks (owner pick, 2026-09-27: "the hybrid for sure"). · new
+- `assets/source/worlds/ethereal_scape/es_isles.py` (283) - Ethereal Scape -- the HYBRID kit's building blocks (owner pick, 2026-09-27: "the hybrid for sure"). · 2026-09-27
   - `es_isles.py`: circle:25, rsquare:35, inside:49, centroid:66, isle:73, cloud_skirt:115, landing:130, bridge:159, stair_link:201, sky_spire:211, statue:240, shrine_hall:254
-- `assets/source/worlds/ethereal_scape/es_mapgen.py` (179) - Ethereal Scape -- a Python mirror of ChunkCore.assemble's §7.7 universal generation, used ONLY to lay out a · new
+- `assets/source/worlds/ethereal_scape/es_mapgen.py` (179) - Ethereal Scape -- a Python mirror of ChunkCore.assemble's §7.7 universal generation, used ONLY to lay out a · 2026-09-27
   - `es_mapgen.py`: norm:9, rotate:13, sockets_of:17, world_socket:26, place_against:31, extent:42, overlaps:46, assemble:52
-- `assets/source/worlds/ethereal_scape/es_pieces.py` (991) - Ethereal Scape kit -- the 36 HYBRID piece recipes (owner pick 2026-09-27). docs/biomes/ETHEREAL_SCAPE.md · 2026-09-26
+- `assets/source/worlds/ethereal_scape/es_pieces.py` (991) - Ethereal Scape kit -- the 36 HYBRID piece recipes (owner pick 2026-09-27). docs/biomes/ETHEREAL_SCAPE.md · 2026-09-27
   - `es_pieces.py`: hub_plaza:25, scatter:40, plank_bridge:62, aether_fall:66, meadow_dress:97, web:112, _centre:175, at:182, dress:187, road:219, temple_floor:223, es_entry:237, es_sanctum:277, es_plank_crossing:400, es_grove_isle:414, es_skystair_up:430, es_skystair_down:444, es_bend_east_grove:459, es_bend_east_ascent:469, es_bend_west_falls:482, es_bend_west_shrine:494, es_fork_wayshrine:508, es_fork_three_trees:521, es_fork_twin_span:534, es_convergence:546, es_meadow_of_blooms:569, es_terraced_gardens:579, es_crystal_hollow:593, es_fallen_colonnade:606, es_mirror_pool:621, es_shrine_of_winds:634, es_rooted_hollow:649, es_twin_isles:663, es_temple_gate_a:672, es_temple_gate_b:684, es_miniboss_waystone_ring:700, es_miniboss_reliquary_court:716, es_side_hermit_grove:733, es_side_crystal_grotto:744, es_side_relic_altar:755, ... +8 more
 - `assets/source/worlds/ethereal_scape/es_props.py` (204) - Ethereal Scape kit -- the ATMOSPHERE: ambient props (CHUNK_AUTHORING.md convention 6). · 2026-09-26
   - `es_props.py`: _isle:32, build_kind:40, library:95, _clear:105, place_all:110, game_row:197
-- `assets/source/worlds/ethereal_scape/es_samples.py` (198) - Ethereal Scape -- three DIRECTION SAMPLES for the owner to choose between (2026-09-27). · new
+- `assets/source/worlds/ethereal_scape/es_samples.py` (198) - Ethereal Scape -- three DIRECTION SAMPLES for the owner to choose between (2026-09-27). · 2026-09-27
   - `es_samples.py`: float_isle:26, landing_isle:67, sample_floating_isles:88, sample_lush_cloudscape:118, sample_temple_city:152
 - `assets/source/worlds/sky_citadel/IMPORT_STEPS.md` (34) - Sky Citadel refinish (2026-09-24): re-import steps · 2026-09-24
   - `IMPORT_STEPS.md`: 1. Chunks (structure):10, 2. Props:20, 3. Recolours (scenario variants):26, 4. Walk it:32
@@ -296,7 +296,7 @@ _240 text files, 257 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/TOOLCHAIN_ACCESS.md
 
-- `docs/TOOLCHAIN_ACCESS.md` (232) - LUCKBOUND — Toolchain & AI Access Setup · 2026-09-15
+- `docs/TOOLCHAIN_ACCESS.md` (232) - LUCKBOUND — Toolchain & AI Access Setup · 2026-09-27
   - `TOOLCHAIN_ACCESS.md`: 0. The one thing to understand first:7, 1. Roblox Studio access — the built-in MCP server:29, Setup (about 3 minutes):33, What it gives the agent (25+ tools, eight categories):44, ⚠️ Security:57, 2. Code sync — Rojo:68, Setup (Windows / PowerShell — verified working):77, Two gotchas that cost real time:128, Keep the code off OneDrive:140, 3. Blender access — Blender MCP:147, Setup:151, Honest expectations:165, 4. Asset sources, ranked by effort:175, 5. Publishing & CI (optional, later):187, 5.1 Publishing — now a real blocker, not optional polish:197, 6. Recommended setup order:210, Sources:226
 
 ### docs/WEAPONS.md
@@ -316,7 +316,7 @@ _240 text files, 257 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/biomes
 
-- `docs/biomes/ETHEREAL_SCAPE.md` (193) - Ethereal Scape — biome design schema · 2026-09-26
+- `docs/biomes/ETHEREAL_SCAPE.md` (193) - Ethereal Scape — biome design schema · 2026-09-27
   - `ETHEREAL_SCAPE.md`: Direction: the hybrid (owner pick, 2026-09-27):28, The look — and how it differs from Sky Citadel:46, The palette — the original's real values:58, The connection vocabulary:79, Piece size:92, The kit — 36 pieces:102, Generation — build spec §7.7:117, The Sanctum — a structure that houses the boss:125, The atmosphere (props, `CHUNK_AUTHORING.md` convention 6):143, Validation — what `build_ethereal_scape_kit.py` refuses to e:162, Enemy roster:184, Next:189
 - `docs/biomes/README.md` (109) - Biome design schemas · 2026-09-26
   - `README.md`: What a biome schema covers:24, Ambience — a world's mood is data:54, Status:85
@@ -419,7 +419,7 @@ _240 text files, 257 binary assets. Regenerate with `python tools/gen_index.py`;
   - `SkyCitadel.luau`: UNMOORING:13, SIEGE:138, LOCKDOWN:297, STORMHAWK:415, RIME:559, RECLAIMED:681, AETHER_SURGE:802
 - `src/shared/Content/Atmospheres/init.luau` (16) - Scenario atmospheres per world, keyed by world Id. Each module holds a · 2026-09-23
 - `src/shared/Content/BossPreviews.luau` (37) - Boss PREVIEWS for /showboss (debug only): look at a boss in its arena, in its idle pose/animation, to judge · 2026-09-25
-- `src/shared/Content/Chunks/EtherealScape.luau` (571) - GENERATED by assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py -- do not edit by hand. · 2026-09-26
+- `src/shared/Content/Chunks/EtherealScape.luau` (571) - GENERATED by assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py -- do not edit by hand. · 2026-09-27
   - `EtherealScape.luau`: socket:17
 - `src/shared/Content/Chunks/SkyCitadel.luau` (511) - Sky Citadel chunk kit. docs/biomes/SKY_CITADEL.md is the art direction; the pieces · 2026-09-25
   - `SkyCitadel.luau`: socket:45
@@ -443,13 +443,13 @@ _240 text files, 257 binary assets. Regenerate with `python tools/gen_index.py`;
 - `src/shared/Content/LightningRigs.luau` (76) - GENERATED by assets/source/enemies/sky_citadel/ws_lance.py - do not edit by hand. · 2026-09-25
 - `src/shared/Content/LootPools/SkyCitadel.luau` (32) - Sky Citadel's loot pools (build spec §7.5). · 2026-09-23
 - `src/shared/Content/LootPools/init.luau` (16) - Loot pool registry, keyed by pool Id (build spec §7.5). Each module returns · 2026-09-23
-- `src/shared/Content/Props/EtherealScape.luau` (475) - GENERATED by assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py -- do not edit by hand. · 2026-09-26
+- `src/shared/Content/Props/EtherealScape.luau` (475) - GENERATED by assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py -- do not edit by hand. · 2026-09-27
 - `src/shared/Content/Props/SkyCitadel.luau` (660) - GENERATED by assets/source/worlds/sky_citadel/build_sky_citadel_kit.py. · 2026-09-25
 - `src/shared/Content/Props/init.luau` (16) - Ambient-scenery registry: one module per world, keyed by the world's Id. · 2026-09-23
 - `src/shared/Content/Scenarios/init.luau` (139) - SCENARIO LIBRARY -- what can HAPPEN in a chunk, as opposed to what a chunk · 2026-09-22
 - `src/shared/Content/Worlds/AstralReach.luau` (30) - Biome Blueprint §5.3: no fog in the traditional sense -- void-black · 2026-09-15
 - `src/shared/Content/Worlds/Emberfall.luau` (30) - Biome Blueprint §4.3: darker than Verdant Valley -- lava provides · 2026-09-15
-- `src/shared/Content/Worlds/EtherealScape.luau` (82) - Ethereal Scape. The Uncommon tier. · 2026-09-26
+- `src/shared/Content/Worlds/EtherealScape.luau` (82) - Ethereal Scape. The Uncommon tier. · 2026-09-27
 - `src/shared/Content/Worlds/SkyCitadel.luau` (170) - Epic tier. Added so onboarding can peak on an Epic rather than handing every · 2026-09-25
 - `src/shared/Content/Worlds/TheUnknown.luau` (31) - Phase 3. Present so the roll pool, Discovery Book and UI are written against · 2026-09-15
 - `src/shared/Content/Worlds/VerdantValley.luau` (42) - Biome Blueprint §3.3: soft midday, dappled canopy light. · 2026-09-15
@@ -469,7 +469,7 @@ _240 text files, 257 binary assets. Regenerate with `python tools/gen_index.py`;
 - `src/shared/Core/FixtureCore.luau` (55) - The pure half of fixtures (CHUNK_AUTHORING.md convention 7, build spec · 2026-09-23
   - `FixtureCore.luau`: CHEST:15, VAULT:16, FORCEFIELD:17, smooth:23, FixtureCore.lidAngle:31, FixtureCore.doorSpin:38, FixtureCore.doorRecess:44, FixtureCore.fieldTransparency:50
 - `src/shared/Core/Freeze.luau` (25) - Deep-freeze a content or config table, so a System cannot mutate the data · 2026-09-22
-- `src/shared/Core/GameConfig.luau` (1137) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-09-27
+- `src/shared/Core/GameConfig.luau` (1139) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-09-27
 - `src/shared/Core/HubMenuCore.luau` (190) - THE HUB MENU'S RULES, WITH NO ROBLOX IN THEM. · 2026-09-25
   - `HubMenuCore.luau`: HubMenuCore.panels:20, HubMenuCore.panelById:31, HubMenuCore.destinations:41, HubMenuCore.destinationById:52, HubMenuCore.landingPoint:64, HubMenuCore.isVisible:71, HubMenuCore.newState:80, HubMenuCore.reduce:98, HubMenuCore.canTravel:149, HubMenuCore.travelTiming:180
 - `src/shared/Core/KeyCore.luau` (58) - The pure half of vault keys (build spec §7.5). Owner-directed 2026-09-23: · 2026-09-23
@@ -496,11 +496,11 @@ _240 text files, 257 binary assets. Regenerate with `python tools/gen_index.py`;
   - `SettingsCore.luau`: specById:88, SettingsCore.ordered:100, SettingsCore.defaults:111, SettingsCore.validate:120, SettingsCore.sanitise:152
 - `src/shared/Core/ThemeCore.luau` (267) - WHAT COLOUR IS THE MENU RIGHT NOW? Pure, so the answer is testable for · 2026-09-20
   - `ThemeCore.luau`: channelLuminance:42, ThemeCore.luminance:52, ThemeCore.contrast:59, toLinear:67, toGamma:71, mix:80, tintPreservingLuminance:101, lerp:133, findDistrict:140, findEvent:152, ThemeCore.base:166, ThemeCore.resolve:184, ThemeCore.enforceContrast:217, ThemeCore.districtAt:243
-- `src/shared/Core/Types.luau` (427) - LUCKBOUND canonical type definitions. · 2026-09-25
+- `src/shared/Core/Types.luau` (427) - LUCKBOUND canonical type definitions. · 2026-09-27
 - `src/shared/Core/UITheme.luau` (160) - Shared GUI design system. Biome Blueprint §1.4. · 2026-09-22
   - `UITheme.luau`: UITheme.corner:108, UITheme.stroke:116, UITheme.rarityColor:125, UITheme.pad:131, UITheme.gradient:145
-- `src/shared/Util/ChunkCore.luau` (971) - Seeded assembly of a map from a chunk library. Addendum §A4. · 2026-09-27
-  - `ChunkCore.luau`: rotate:21, ChunkCore.yawRadians:41, norm:45, ChunkCore.libraryFor:50, socketById:69, ChunkCore.worldSocket:79, ChunkCore.placeAgainst:94, ChunkCore.arrivalSocket:121, ChunkCore.overlaps:133, ChunkCore.assemble:198, ChunkCore.assembleTest:795, ChunkCore.assembleWithRetry:898, ChunkCore.footprint:919, ChunkCore.validateLayout:935
+- `src/shared/Util/ChunkCore.luau` (998) - Seeded assembly of a map from a chunk library. Addendum §A4. · 2026-09-27
+  - `ChunkCore.luau`: rotate:21, ChunkCore.yawRadians:41, norm:45, ChunkCore.libraryFor:50, socketById:69, ChunkCore.worldSocket:79, ChunkCore.placeAgainst:94, ChunkCore.arrivalSocket:121, ChunkCore.overlaps:133, ChunkCore.assemble:198, ChunkCore.assembleTest:822, ChunkCore.assembleWithRetry:925, ChunkCore.footprint:946, ChunkCore.validateLayout:962
 - `src/shared/Util/ChunkKitCore.luau` (362) - Drop-in chunk kits: turns what the server MEASURED on a world's meshes into · 2026-09-24
   - `ChunkKitCore.luau`: PATH:53, COMBAT:54, SIDE:55, ChunkKitCore.worldIdFor:78, ChunkKitCore.isVariant:88, ChunkKitCore.baseName:93, ChunkKitCore.roleFor:99, ChunkKitCore.chunkId:118, ChunkKitCore.assetKey:126, ChunkKitCore.parseFacings:131, parseList:142, socketFor:150, gateOpening:165, ChunkKitCore.build:194
 - `src/shared/Util/ChunkLoader.luau` (542) - Turns a ChunkCore Layout into Roblox geometry. Addendum §A4, step 5. · 2026-09-27
@@ -511,9 +511,9 @@ _240 text files, 257 binary assets. Regenerate with `python tools/gen_index.py`;
   - `PrebuiltLoader.luau`: PrebuiltLoader.source:37, anchorAll:52, anchorPart:65, PrebuiltLoader.build:85
 - `src/shared/Util/PrefabLoader.luau` (394) - Drops an authored .rbxmx into a hub slot. The hub's counterpart to · 2026-09-18
   - `PrefabLoader.luau`: PrefabLoader.source:77, styleFor:85, regroup:99, extendInward:136, PrefabLoader.build:202
-- `src/shared/Util/ScenarioCore.luau` (246) - Assigns a SCENARIO to each placed chunk in a layout. Brief §3/§5/§8, · 2026-09-22
+- `src/shared/Util/ScenarioCore.luau` (246) - Assigns a SCENARIO to each placed chunk in a layout. Brief §3/§5/§8, · 2026-09-27
   - `ScenarioCore.luau`: ScenarioCore.compatible:39, bandMultiplier:68, ScenarioCore.assign:85, ScenarioCore.bandCounts:236
-- `src/shared/Util/Schema.luau` (1433) - Boot-time content validation. Build spec T-107. · 2026-09-25
+- `src/shared/Util/Schema.luau` (1433) - Boot-time content validation. Build spec T-107. · 2026-09-27
   - `Schema.luau`: field:16, validateOne:46, Schema.validateWorlds:87, Schema.validateConfig:139, Schema.validateHub:230, Schema.validateChunks:317, Schema.validateScenarios:546, Schema.validateMaps:600, Schema.validateHubMenu:665, Schema.validateCodes:768, Schema.validateCinematics:813, Schema.validatePalettes:865, Schema.validateEvents:933, Schema.validateProps:1091, Schema.validateFixtures:1157, Schema.validateLoot:1238, Schema.validateAll:1408
 - `src/shared/Util/WeaponFX.luau` (160) - WeaponFX: live lightning + charge state for rigged weapons (first user: the Aether Lance - the Winged Sentinel's · 2026-09-25
   - `WeaponFX.luau`: bones:27, studsPerMetre:38, makeBeam:47, WeaponFX.apply:84, WeaponFX.applySlide:113, WeaponFX.setCharged:142

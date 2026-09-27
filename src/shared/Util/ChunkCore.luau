@@ -380,6 +380,24 @@ function ChunkCore.assemble(
 		return valid[math.clamp(math.floor(nextNumber() * #valid) + 1, 1, #valid)]
 	end
 
+	-- §7.7: a blueprint that requires miniboss arenas needs somewhere to hang
+	-- them -- a spare mouth. A critical path of two-mouth pieces has none, so
+	-- until a junction is placed junctions are favoured, and the last ordinary
+	-- step must be one. Only with a blueprint: legacy layouts draw as before.
+	local needJunction = options.Generation ~= nil and (options.Generation.Minibosses or 0) > 0
+	local function isJunction(c: any): boolean
+		local spare = 0
+		for _, sock in c.Sockets do
+			if not isBossKind(sock.Kind) then
+				spare += 1
+			end
+		end
+		return spare >= 3
+	end
+	local function pathWeight(c: any): number
+		return if needJunction and isJunction(c) then weightOf(c) * 4 else weightOf(c)
+	end
+
 	-- Walk the critical path.
 	for i = 1, options.PathLength do
 		local isFinalStep = i == options.PathLength
@@ -394,7 +412,13 @@ function ChunkCore.assemble(
 				end
 			end
 			-- Never the same piece twice in a row.
-			if allowed(c) and plausible and c.Id ~= openChunk.Id then
+			local forced = needJunction and i == options.PathLength - 1
+			if
+				allowed(c)
+				and plausible
+				and c.Id ~= openChunk.Id
+				and (not forced or isJunction(c))
+			then
 				table.insert(candidates, c)
 			end
 		end
@@ -410,7 +434,7 @@ function ChunkCore.assemble(
 		-- Several attempts: a piece may not match the open socket's Kind, may
 		-- have no usable exit, or may collide with something already placed.
 		for _ = 1, 24 do
-			local c = WeightedRandom.pick(candidates, weightOf, nextNumber)
+			local c = WeightedRandom.pick(candidates, pathWeight, nextNumber)
 			if c then
 				local p, consumed = ChunkCore.placeAgainst(c, open, i)
 				if p and not collides(p, c) then
@@ -434,6 +458,9 @@ function ChunkCore.assemble(
 				`no chunk could be placed at step {i} while {where} (open socket Kind '{open.Kind}'): nothing matched, or every candidate collided`
 		end
 		record(placement, chosen)
+		if isJunction(chosen) then
+			needJunction = false
+		end
 		consumedBy[placement][nextSocket.Id] = true
 		consumedBy[placement][(ChunkCore.arrivalSocket(chosen, open) :: any).Id] = true
 

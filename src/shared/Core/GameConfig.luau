@@ -213,7 +213,9 @@ local GameConfig = {
 		-- A layout can legitimately fail when the path folds back on itself;
 		-- that is seed-dependent, so try a few before rejecting. 5 attempts
 		-- succeeds ~98% of the time -- see docs/MODULAR_MAPS.md.
-		AssemblyAttempts = 5,
+		-- 12 since §7.7 (2026-09-27): a blueprint map is bigger and collides more often.
+		-- Only a FAILED attempt consumes another, so a seed that already built is unchanged.
+		AssemblyAttempts = 12,
 
 		-- ENTRY LIVES ON THE FATE ENGINE. Owner-directed 2026-09-21: the
 		-- staircase up to the portal is not modelled yet, but the teleport
