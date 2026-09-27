@@ -311,6 +311,9 @@ local function buildStage(
 			BranchLength = GameConfig.Expedition.BranchLength,
 			MaxRepeats = GameConfig.Expedition.MaxRepeats,
 			SpawnOverrides = spawnOverrides,
+			-- §7.7: nil for worlds without a blueprint, which keeps their
+			-- layouts exactly what the legacy assembler produced.
+			Generation = world.Generation,
 		}, function(attempt)
 			return ExpeditionCore.streamFor(seed, attempt)
 		end, GameConfig.Expedition.AssemblyAttempts)

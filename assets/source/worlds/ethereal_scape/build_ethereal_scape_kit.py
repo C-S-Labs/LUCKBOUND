@@ -27,34 +27,46 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 sys.path.insert(0, HERE)
 sys.path.insert(0, os.path.join(HERE, "..", "_framework"))
-for m in ("es_geometry", "es_features", "es_pieces", "es_props"):
+for m in ("es_geometry", "es_features", "es_isles", "es_pieces", "es_props", "es_mapgen"):
     sys.modules.pop(m, None)
 import es_geometry as G           # noqa: E402
 import es_features as F           # noqa: E402
 import es_pieces as P             # noqa: E402
 import es_props as PR             # noqa: E402
+import es_mapgen as MG            # noqa: E402
 
 ARGV = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
 DO_EXPORT = "--export" in ARGV
 DO_RENDER = "--render" in ARGV
 ONLY = next((a.split("=", 1)[1].split(",") for a in ARGV if a.startswith("--only=")), None)
+SAMPLES = "--samples" in ARGV          # the direction samples (es_samples.py) instead of the kit
+if SAMPLES:                            # samples never write kit outputs, and render to their own folder
+    ONLY = ["SAMPLES"]
+for m in ("es_samples",):
+    sys.modules.pop(m, None)
 
 EXPORT_DIR = os.path.join(REPO, "assets", "export", "worlds", "ethereal_scape")
-RENDER_DIR = os.path.join(HERE, "renders")
+RENDER_DIR = os.path.join(HERE, "renders", "samples") if "--samples" in ARGV else os.path.join(HERE, "renders")
 CHUNKS_LUAU = os.path.join(REPO, "src", "shared", "Content", "Chunks", "EtherealScape.luau")
 PROPS_LUAU = os.path.join(REPO, "src", "shared", "Content", "Props", "EtherealScape.luau")
 TRI_LIMIT = 10000
 GRID = 560.0
 
 # walkable floor a piece must offer (sq studs), by role
-MIN_WALK = {"ENTRY": 40000, "BOSS": 60000, "PATH": 12000, "COMBAT": 16000, "SIDE": 9000, "CAP": 5000}
-# Soft things -- cloud, grass, blossom -- may lap over anything; that is how cloud and meadow look.
-SOFT_TAGS = {"puff", "cloud_bank", "perimeter_banks", "blossoms", "grass_tufts", "mesa", "crag", "rock", "cloud_floor",
-             "cloud_tufts", "rift_rim", "meadow_carpet", "flagstones"}
+MIN_WALK = {"ENTRY": 40000, "BOSS": 60000, "PATH": 9000, "COMBAT": 14000, "MINIBOSS": 16000, "SIDE": 7000, "CAP": 4000,
+            "BACKDROP": 0}
+# Flat or ground-level things whose contact is never a visible clip. CLOUD IS NOT SOFT any more
+# (owner, 2026-09-27): declip() removes cloud through solids, and anything left is reported.
+SOFT_TAGS = {"mesa", "crag", "rock", "cloud_floor", "meadow_carpet", "flagstones", "pins", "isle", "landing"}
 # Authored joints between two builders -- things built INTO each other on purpose, not clips:
 # crystals growing out of a colossus, a stair set against its podium, planks hanging off a broken span.
 JOINTS = {frozenset(("crystal_colossus", "crystal_cluster")), frozenset(("es_sanctum", "stairs")),
-          frozenset(("plank_bridge", "es_cap_broken_bridge")), frozenset(("es_ruin_stair", "stairs"))}
+          frozenset(("plank_bridge", "es_cap_broken_bridge")), frozenset(("es_ruin_stair", "stairs")),
+          frozenset(("float_isle", "plank_bridge")), frozenset(("stairs", "sample_temple_city")),
+          frozenset(("landing_isle", "plank_bridge")), frozenset(("landing_isle", "guide_stone")),
+          frozenset(("float_isle", "aether_fall")), frozenset(("bridge", "es_cap_broken_bridge")),
+          frozenset(("bridge", "guide_stone")), frozenset(("bridge", "stairs")),
+          frozenset(("shrine_hall", "column")), frozenset(("es_rooted_hollow", "great_tree"))}
 
 
 # ---------------------------------------------------------------------------
@@ -131,7 +143,7 @@ def column_tops(bvh, x, y, z_start=172.0):
         if hit[0] is None:
             break
         loc, nrm = hit[0], hit[1]
-        if abs(nrm.z) > 0.7 and nrm.z > 0 and above - loc.z >= 5.0 and loc.z > -12:
+        if abs(nrm.z) > 0.7 and nrm.z > 0 and above - loc.z >= 5.0 and loc.z > G.KEEL_BOTTOM + 4:
             tops.append(loc.z)
         above = loc.z
         z = loc.z - 0.05
@@ -157,13 +169,14 @@ def walk_graph(p, bvh, step=2.0):
     for card, kind in p.sockets:
         w = G.KIND_WIDTH[kind]
         dx, dy = G.DIRS[card]
+        sz = p.lift.get(card, 0.0)                  # the socket's own height (its OffsetY)
         seeds, total = [], 0
         k = -w / 2 + 3
         while k <= w / 2 - 3:
             total += 1
             x, y = dx * (H - 1.5) + (-dy) * k, dy * (H - 1.5) + dx * k
             c = cell(x, y)
-            zs = [z for z in cells.get(c, []) if abs(z) < 0.5]
+            zs = [z for z in cells.get(c, []) if abs(z - sz) < 0.5]
             if zs:
                 seeds.append((c, zs[0]))
             k += step
@@ -200,7 +213,9 @@ def detached(p):
     r = GC.analyse(p, [], exempt=lambda s: max(s["max"][k] - s["min"][k] for k in range(3)) < 1.0 and s["min"][2] < -95)
     out = [("+".join(tags), c, size) for tags, c, size, _f in r["detached"]]
     clips = [(a, b, where, n) for a, b, where, n, _i, _j in r["clips"]
-             if a not in SOFT_TAGS and b not in SOFT_TAGS and frozenset((a, b)) not in JOINTS]
+             if a not in SOFT_TAGS and b not in SOFT_TAGS and frozenset((a, b)) not in JOINTS
+             and not ({a, b} & F.CLOUD_TAGS and {a, b} & F.CLOUD_MAY_TOUCH)
+             and not {a, b} <= (F.CLOUD_TAGS - {"cloud_tufts"})]      # billows heaped on billows ARE the bank
     return out, clips
 
 
@@ -220,6 +235,8 @@ def validate(p, obj, dropped, spec):
     if dropped:
         fails.append(f"{dropped} degenerate face(s)")
     bvh = mesh_bvh(obj)
+    if spec["role"] == "BACKDROP":               # scenery: never walked, nothing to connect
+        return fails, notes, 0.0, bvh
     mouths, area = walk_graph(p, bvh)
     for card, (cover, reached) in mouths.items():
         if cover < 0.95:
@@ -277,14 +294,17 @@ def write_chunks_luau(specs):
            "-- Sockets: Facing degrees, 0 = -Z (north), 90 = +X, 180 = +Z, 270 = -X; offsets local to the piece.",
            "-- Every box is (2H x 2H) x 256: keel -96, crown +160, walk plane 32 below the box centre.",
            "-- The Entry is 384 square and the Sanctum 512 square; their mouths are the same size as everyone's.",
+           "-- HYBRID (owner pick 2026-09-27): floating isles + temple architecture + meadow dressing. A socket's",
+           "-- OffsetY is its height: rises and descents carry the map up and down. MINIBOSS arenas end side",
+           "-- branches and are NOT the boss arena; BACKDROP pieces have no sockets and ring the map (spec §7.7).",
            "local WIDTH = { SPAN = 44, COMMUNION = 64 }",
            "",
-           "local function socket(id: string, kind: string, x: number, z: number, facing: number)",
+           "local function socket(id: string, kind: string, x: number, z: number, facing: number, y: number?)",
            "\treturn {",
            "\t\tId = id,",
            "\t\tKind = kind,",
            "\t\tOffsetX = x,",
-           "\t\tOffsetY = 0,",
+           "\t\tOffsetY = y or 0, -- a rise or a descent carries the map up or down",
            "\t\tOffsetZ = z,",
            "\t\tFacing = facing,",
            "\t\tWidth = WIDTH[kind],",
@@ -298,16 +318,21 @@ def write_chunks_luau(specs):
         socks = []
         for card, kind in s["sockets"]:
             gx, gz, facing = GAME_SOCKET[card]
-            socks.append('socket("%s", "%s", %d, %d, %d)' % (names[card], kind, gx * H, gz * H, facing))
+            lift = s.get("lift", {}).get(card, 0)
+            socks.append('socket("%s", "%s", %d, %d, %d%s)' % (names[card], kind, gx * H, gz * H, facing,
+                                                             ", %d" % lift if lift else ""))
         out.append("\t{")
         out.append('\t\tId = "%s",' % s["id"])
         out.append('\t\tRole = "%s" :: any,' % s["role"])
         out.append('\t\tAssetKey = "ES_CHUNK_%s",' % s["id"][3:])
         out.append("\t\t-- %s" % s["desc"])
-        out.append("\t\tSockets = {")
-        for sk in socks:
-            out.append("\t\t\t%s," % sk)
-        out.append("\t\t},")
+        if socks:
+            out.append("\t\tSockets = {")
+            for sk in socks:
+                out.append("\t\t\t%s," % sk)
+            out.append("\t\t},")
+        else:
+            out.append("\t\tSockets = {}, -- BACKDROP: surround scenery, ringed round the map by the §7.7 generator")
         if s.get("supports"):
             out.append("\t\tSupports = { %s }," % ", ".join("%s = true" % k for k in s["supports"]))
         out.append("\t\tWeight = %d," % s["weight"])
@@ -446,7 +471,7 @@ def place_prop_copies(pieces, prop_objs, coll):
 def chain_preview(objs_by_id, coll):
     """The CHUNK_AUTHORING 'place a copy beside itself' check, as a real route: entry -> walk ->
     convergence -> gate -> sanctum, joined mouth to mouth."""
-    route = ["ES_ENTRY", "ES_PATH_MEADOW_WALK", "ES_CONVERGENCE", "ES_TEMPLE_GATE_A", "ES_SANCTUM"]
+    route = ["ES_ENTRY", "ES_PATH_GROVE_ISLE", "ES_CONVERGENCE", "ES_TEMPLE_GATE_A", "ES_SANCTUM"]
     y = 0.0
     origin = Vector((0, -6000, 0))
     placed = []
@@ -463,6 +488,42 @@ def chain_preview(objs_by_id, coll):
     return origin, y
 
 
+def map_preview(specs, objs_by_id):
+    """A whole assembled map (the §7.7 scheme, es_mapgen.py mirroring ChunkCore) as linked copies in its own
+    collection, so the owner can open the .blend and walk a real layout: branches, a miniboss arena, caps,
+    rises and descents, and the backdrop ring."""
+    gen = dict(BranchLength=2, Minibosses=1, MaxSides=2, Backdrop=18)
+    layout, best, seed = None, -1, None
+    for sd in range(1, 120):                    # the seed that shows the scheme off best: most branching
+        lay = MG.assemble(specs, 5, gen, sd)
+        if not lay:
+            continue
+        score = sum(pl["role"] in ("CAP", "SIDE", "MINIBOSS") for pl in lay) * 2 +             sum(len(SPEC_BY_ID[pl["id"]]["sockets"]) >= 3 for pl in lay) * 3 +             sum(bool(SPEC_BY_ID[pl["id"]].get("lift")) for pl in lay)
+        if score > best:
+            layout, best, seed = lay, score, sd
+    if not layout:
+        print("MAP PREVIEW: no seed assembled")
+        return None
+    coll = bpy.data.collections.new("MAP_PREVIEW")
+    bpy.context.scene.collection.children.link(coll)
+    origin = Vector((0, 9000, 0))
+    counts = {}
+    if any(pl["id"] not in objs_by_id for pl in layout):
+        print("MAP PREVIEW: a piece failed to build; skipped")
+        return None
+    for pl in layout:
+        src = objs_by_id[pl["id"]]
+        o = bpy.data.objects.new("MAP_" + pl["id"], src.data)
+        o.location = origin + Vector((pl["x"], -pl["z"], pl["y"]))
+        o.rotation_euler = (0, 0, -math.radians(pl["yaw"]))
+        coll.objects.link(o)
+        counts[pl["role"]] = counts.get(pl["role"], 0) + 1
+    print(f"MAP PREVIEW seed {seed}: {len(layout)} pieces " + ", ".join(f"{k} {v}" for k, v in sorted(counts.items())))
+    xs = [pl["x"] for pl in layout]
+    zs = [pl["z"] for pl in layout]
+    return origin + Vector(((min(xs) + max(xs)) / 2, -(min(zs) + max(zs)) / 2, 0)), max(max(xs) - min(xs), max(zs) - min(zs))
+
+
 # ---------------------------------------------------------------------------
 def main():
     for o in list(bpy.data.objects):
@@ -472,12 +533,25 @@ def main():
     mats = materials()
     coll = bpy.context.scene.collection
     specs = [s for s in P.PIECES if not ONLY or s["id"] in ONLY]
+    if SAMPLES:
+        import es_samples
+        specs = [dict(id=s["id"], role="COMBAT", half=128, sockets=[("S", "SPAN"), ("N", "SPAN")], fn=s["fn"],
+                      tags=["shrine"], enemies=[]) for s in es_samples.SAMPLES]
+    global SPEC_BY_ID
+    SPEC_BY_ID = {s["id"]: s for s in specs}
     pieces, objs, rows = [], [], []
     for idx, spec in enumerate(specs):
         p = G.Piece(spec["id"], spec["half"], spec["sockets"])
-        spec["fn"](p)
+        p.lift = dict(spec.get("lift", {}))
+        try:
+            spec["fn"](p)
+        except Exception as e:                  # noqa: BLE001            # a layout mistake in a recipe: report it with the rest
+            rows.append((spec, p, [f"layout: {e}"], [], 0.0))
+            continue
         # last: low billows on whatever open cloud floor is left (never on a path or a feature)
-        F.cloud_tufts(p, 16 if p.H > 150 else 12, (0, 0, p.H * 0.85))
+        if "cloud_floor" in p.ftag:            # only where there IS a cloud floor to lie on
+            F.cloud_tufts(p, 16 if p.H > 150 else 12, (0, 0, p.H * 0.85))
+        p.declipped = F.declip(p)
         obj, dropped = to_object(spec["id"], p.verts, p.faces, p.fmat, p.up, mats, coll)
         fails, notes, area, bvh = validate(p, obj, dropped, spec)
         PR.place_all(p, bvh, spec)
@@ -497,14 +571,17 @@ def main():
     for spec, p, fails, notes, area in rows:
         status = "PASS" if not fails else "FAIL"
         n_fail += bool(fails)
-        print(f"PIECE {spec['id']:26s} {spec['role']:7s} {p.tri_count():5d} tris  walk {area:7.0f}  props {len(p.props):2d}  {status}")
+        print(f"PIECE {spec['id']:26s} {spec['role']:7s} {p.tri_count():5d} tris  walk {area:7.0f}  props {len(p.props):2d}  "
+              f"declipped {getattr(p, 'declipped', 0):3d}  {status}")
         for f in fails:
             print(f"      FAIL {f}")
         for nt in notes[:12]:
             print(f"      note {nt}")
     print(f"=== {len(rows) - n_fail}/{len(rows)} PASS ===")
 
+    preview = None
     if not ONLY:
+        preview = map_preview(specs, {spec["id"]: obj for spec, (p, obj) in ((SPEC_BY_ID[p_.name], (p_, o_)) for p_, o_ in pieces)})
         write_chunks_luau(specs)
         write_props_luau([p for p, _o in pieces])
         print("WROTE", CHUNKS_LUAU)
@@ -520,15 +597,17 @@ def main():
                 os.remove(os.path.join(RENDER_DIR, f))
         place_prop_copies(pieces, prop_objs, coll)
         s, cam = render_setup()
-        for spec, (p, obj) in zip(specs, pieces):
+        for spec, (p, obj) in ((SPEC_BY_ID[p_.name], (p_, o_)) for p_, o_ in pieces):
             H = p.H
             c = obj.location
             k = H / 128
             shot(s, cam, os.path.join(RENDER_DIR, f"{spec['id'].lower()}.jpg"), c + Vector((0, 0, 30 * k)),
                  (230 * k, -300 * k, 210 * k), lens=26)
+            if not p.sockets:                    # a backdrop: no ground shot
+                continue
             card = p.sockets[0][0]
             dx, dy = G.DIRS[card]
-            eye = c + Vector((dx * (H - 20), dy * (H - 20), 6))
+            eye = c + Vector((dx * (H - 20), dy * (H - 20), 6 + p.lift.get(card, 0.0)))
             shot(s, cam, os.path.join(RENDER_DIR, f"{spec['id'].lower()}_ground.jpg"), c + Vector((0, 0, 14)),
                  tuple(eye - (c + Vector((0, 0, 14)))), lens=22)
             if spec["id"] == "ES_SANCTUM":           # the hall the boss lives in, from just inside the door
@@ -536,12 +615,17 @@ def main():
                 shot(s, cam, os.path.join(RENDER_DIR, "es_sanctum_interior.jpg"), tgt,
                      tuple((c + Vector((0, -86, 14))) - tgt), lens=18)
         if not ONLY:
-            byid = {spec["id"]: (obj, spec["half"]) for spec, (p, obj) in zip(specs, pieces)}
+            byid = {spec["id"]: (obj, spec["half"]) for spec, (p, obj) in ((SPEC_BY_ID[p_.name], (p_, o_)) for p_, o_ in pieces)}
             origin, length = chain_preview(byid, coll)
             mid = origin + Vector((0, length / 2, 0))
             shot(s, cam, os.path.join(RENDER_DIR, "preview_chain.jpg"), mid, (900, -700, 900), lens=24, res=(1600, 900))
             grid_c = Vector((2.5 * GRID, 2 * GRID, 0))
             shot(s, cam, os.path.join(RENDER_DIR, "kit_overview.jpg"), grid_c, (0, -2600, 2600), lens=30, res=(1600, 1100))
+            if preview:
+                c, span = preview
+                shot(s, cam, os.path.join(RENDER_DIR, "map_preview.jpg"), c, (span * 0.35, -span * 0.75, span * 0.7), lens=28,
+                     res=(1920, 1080))
+                shot(s, cam, os.path.join(RENDER_DIR, "map_preview_top.jpg"), c, (0, -1, span * 1.25), lens=30, res=(1600, 1600))
         print("RENDERED to", RENDER_DIR)
     if not ONLY:
         bpy.ops.wm.save_as_mainfile(filepath=blend)

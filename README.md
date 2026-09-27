@@ -38,7 +38,7 @@ Next up: Phase 2 — expedition entry, combat, loot, Discovery Book.
 ```bash
 ./tests/run.sh         # the headless suite (795 tests), no Studio needed
 
-rokit install          # rojo 7.6.0, stylua, selene
+rokit install          # rojo 7.7.0, stylua, selene
 rojo plugin install    # Studio plugin
 rojo serve             # then hit Connect in the Rojo plugin inside Studio
 ```

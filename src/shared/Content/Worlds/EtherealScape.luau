@@ -63,9 +63,20 @@ return {
 	-- Shorter than the 720s default (build spec D-7 already flags 720 as
 	-- probably too long).
 	DurationSeconds = 300,
-	-- 30-piece kit, path length 5 -- matches Verdant Valley; retune once a
+	-- 36-piece hybrid kit, path length 5 -- matches Verdant Valley; retune once a
 	-- piece has been walked. See Content/Chunks/EtherealScape.luau.
 	MapPathLength = 5,
+	-- Build spec §7.7 universal generation (owner-directed 2026-09-27): every
+	-- junction mouth is filled; a branch grows up to BranchLength pieces and then
+	-- ENDS -- in a miniboss arena (one per map), a side pocket, or a dead-end cap.
+	-- Miniboss arenas are never the boss arena: the Sanctum still ends the critical
+	-- path. Backdrop pieces (cloud banks, drifting isles, a spire) ring the map.
+	Generation = {
+		BranchLength = 2,
+		Minibosses = 1,
+		MaxSides = 2,
+		Backdrop = 18,
+	},
 	RecommendedPower = 3,
 	Flavor = "Above the weather, and nothing casts a shadow. The ground is a courtesy, and it ends.",
 }

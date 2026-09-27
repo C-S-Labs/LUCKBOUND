@@ -158,6 +158,15 @@ export type AssembleOptions = {
 	-- Chunk Id -> a SpawnChance to use instead of the chunk's own. Developer
 	-- testing only (/vaultchance); nil in play.
 	SpawnOverrides: { [string]: number }?,
+	-- Build spec §7.7 universal generation blueprint (WorldDefinition.Generation).
+	-- nil runs the legacy passes below byte-for-byte, so a world that has not
+	-- opted in assembles exactly the layouts it always did.
+	Generation: {
+		BranchLength: number?,
+		Minibosses: number?,
+		MaxSides: number?,
+		Backdrop: number?,
+	}?,
 }
 
 --- Builds a layout: ENTRY → PathLength connective/combat chunks → BOSS,
@@ -448,7 +457,8 @@ function ChunkCore.assemble(
 	record(bossPlacement, boss)
 	consumedBy[bossPlacement][(bossArrived :: any).Id] = true
 
-	if options.IncludeSide and byRole.SIDE and #byRole.SIDE > 0 then
+	local gen = options.Generation
+	if not gen and options.IncludeSide and byRole.SIDE and #byRole.SIDE > 0 then
 		local spares = {}
 		for _, p in placed do
 			local chunk = chunks[p.ChunkId]
@@ -514,7 +524,7 @@ function ChunkCore.assemble(
 		return false
 	end
 	local branchLength = options.BranchLength or 0
-	if branchLength > 0 and #middle > 0 then
+	if not gen and branchLength > 0 and #middle > 0 then
 		local frontier = {}
 		for _, p in placed do
 			local chunk = chunks[p.ChunkId]
@@ -564,6 +574,96 @@ function ChunkCore.assemble(
 					break
 				end
 			end
+		end
+	end
+
+	-- UNIVERSAL GENERATION (build spec §7.7, owner-directed 2026-09-27:
+	-- "intersections should always be filled. deadends should always end every
+	-- path that doesnt lead to the boss, or miniboss areas").
+	--
+	-- Breadth-first from EVERY spare mouth of every placed piece -- not just the
+	-- first, as the legacy spur did -- so a crossroads is filled on all sides.
+	-- A branch grows ordinary pieces up to BranchLength deep, and then MUST end
+	-- in a MINIBOSS arena (until the blueprint's quota is met), a SIDE pocket
+	-- (up to MaxSides), or -- in the cap pass below -- a CAP. Every mouth a
+	-- grown piece adds joins the queue one level deeper, so depth bounds the
+	-- whole tree and the pass always terminates.
+	if gen then
+		local maxDepth = gen.BranchLength or 0
+		local wantMini = gen.Minibosses or 0
+		local maxSides = gen.MaxSides or 0
+		local minis, sides = 0, 0
+		local index = options.PathLength + 100
+		local queue = {}
+		local function enqueue(p: any, chunk: any, depth: number)
+			for _, s in chunk.Sockets do
+				if not consumedBy[p][s.Id] and not isBossKind(s.Kind) then
+					table.insert(queue, { Placement = p, Chunk = chunk, Socket = s, Depth = depth })
+				end
+			end
+		end
+		for _, p in table.clone(placed) do
+			if p.Role ~= "BOSS" then
+				enqueue(p, chunks[p.ChunkId], 0)
+			end
+		end
+		-- Every piece of `pool` tried once, in seeded weighted order.
+		local function attach(pool: { any }?, from: any): (any?, any?)
+			if not pool or #pool == 0 then
+				return nil, nil
+			end
+			local at = ChunkCore.worldSocket(from.Placement, from.Chunk, from.Socket)
+			local list = table.clone(pool)
+			while #list > 0 do
+				local c = WeightedRandom.pick(list, weightOf, nextNumber)
+				if not c then
+					break
+				end
+				table.remove(list, table.find(list, c) :: number)
+				if allowed(c) and c.Id ~= from.Chunk.Id and not hasBossKind(c) then
+					local p, arrived = ChunkCore.placeAgainst(c, at, index)
+					if p and not collides(p, c) then
+						record(p, c)
+						index += 1
+						consumedBy[p][(arrived :: any).Id] = true
+						consumedBy[from.Placement][from.Socket.Id] = true
+						return p, c
+					end
+				end
+			end
+			return nil, nil
+		end
+		local head = 1
+		while head <= #queue do
+			local item = queue[head]
+			head += 1
+			if not consumedBy[item.Placement][item.Socket.Id] then
+				local grown, grownChunk = nil, nil
+				if item.Depth < maxDepth then
+					grown, grownChunk = attach(middle, item)
+				end
+				if grown then
+					enqueue(grown, grownChunk, item.Depth + 1)
+				else
+					-- The branch ends here: an arena, a pocket, or (below) a cap.
+					local ended = nil
+					if minis < wantMini then
+						ended = attach(byRole.MINIBOSS, item)
+						if ended then
+							minis += 1
+						end
+					end
+					if not ended and sides < maxSides and nextNumber() < 0.5 then
+						ended = attach(byRole.SIDE, item)
+						if ended then
+							sides += 1
+						end
+					end
+				end
+			end
+		end
+		if minis < wantMini then
+			return false, `placed {minis} of {wantMini} MINIBOSS arenas the blueprint requires`
 		end
 	end
 
@@ -622,9 +722,71 @@ function ChunkCore.assemble(
 		end
 	end
 
+	-- BACKDROP (§7.7). Socketless surround scenery -- cloud banks, distant
+	-- isles -- ringed round the finished layout so the playable map never
+	-- ends at a bare horizon. Every free neighbour cell of every walkable
+	-- piece, in placement order, until the blueprint's allowance is spent.
+	-- Drawn AFTER every walkable piece and the open-mouth check, so it can
+	-- never take room a branch needed nor change what a seed builds above.
+	local backdrops = byRole.BACKDROP
+	if gen and (gen.Backdrop or 0) > 0 and backdrops and #backdrops > 0 then
+		local budget = gen.Backdrop :: number
+		local walkable = table.clone(placed)
+		for _, host in walkable do
+			if budget <= 0 then
+				break
+			end
+			local hostChunk = chunks[host.ChunkId]
+			local hx, hz = hostChunk.SizeX / 2, hostChunk.SizeZ / 2
+			if host.Yaw == 90 or host.Yaw == 270 then
+				hx, hz = hz, hx
+			end
+			for _, d in
+				{
+					{ 1, 0 },
+					{ -1, 0 },
+					{ 0, 1 },
+					{ 0, -1 },
+					{ 1, 1 },
+					{ -1, 1 },
+					{ 1, -1 },
+					{ -1, -1 },
+				}
+			do
+				if budget <= 0 then
+					break
+				end
+				local b = WeightedRandom.pick(backdrops, function(c)
+					return c.Weight
+				end, nextNumber)
+				if b then
+					local yaw = math.clamp(math.floor(nextNumber() * 4), 0, 3) * 90
+					local bx, bz = b.SizeX / 2, b.SizeZ / 2
+					if yaw == 90 or yaw == 270 then
+						bx, bz = bz, bx
+					end
+					local p = {
+						ChunkId = b.Id,
+						Role = "BACKDROP",
+						X = host.X + d[1] * (hx + bx),
+						Y = host.Y,
+						Z = host.Z + d[2] * (hz + bz),
+						Yaw = yaw,
+						Index = #placed + 1000,
+					}
+					if not collides(p, b) then
+						record(p, b)
+						budget -= 1
+					end
+				end
+			end
+		end
+	end
+
 	return true, {
 		WorldId = options.WorldId,
 		Chunks = placed,
+		Generation = gen,
 	}
 end
 
@@ -782,8 +944,16 @@ function ChunkCore.validateLayout(layout: any, chunks: { [string]: any }): (bool
 	if roles.BOSS ~= 1 then
 		table.insert(errors, `layout has {roles.BOSS or 0} BOSS chunks, expected exactly 1`)
 	end
-	if (roles.SIDE or 0) > 1 then
-		table.insert(errors, `layout has {roles.SIDE} SIDE pockets, expected at most 1`)
+	-- A §7.7 blueprint sets its own pocket allowance; legacy layouts keep 1.
+	local maxSides = if layout.Generation then layout.Generation.MaxSides or 0 else 1
+	if (roles.SIDE or 0) > maxSides then
+		table.insert(errors, `layout has {roles.SIDE} SIDE pockets, expected at most {maxSides}`)
+	end
+	if layout.Generation and (roles.MINIBOSS or 0) < (layout.Generation.Minibosses or 0) then
+		table.insert(
+			errors,
+			`layout has {roles.MINIBOSS or 0} MINIBOSS arenas, blueprint requires {layout.Generation.Minibosses}`
+		)
 	end
 
 	for i = 1, #layout.Chunks do

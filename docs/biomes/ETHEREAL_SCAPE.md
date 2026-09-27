@@ -2,20 +2,18 @@
 
 The Uncommon world's art direction and its chunk kit.
 
-> **History.** Ethereal Scape shipped as a `PrebuiltMap`: one composed, hand-authored,
-> no-combat traverse (`aether_environment_refined.blend`). On 2026-09-26 it became a 30-piece
-> chunk kit (PR #131). The owner then rejected that first kit on sight: every piece was missing
-> its platform (a geometry bug), it was bland, and it reused Sky Citadel's shape and design
-> language (needle "waystones", obelisks, floating octagon-ish decks). **This document describes
-> the revamp that replaced it, the same day.** The original scene stays in the repo as the
-> palette's source of truth and as art reference.
+> **History.** Ethereal Scape shipped as a `PrebuiltMap` (one hand-authored traverse,
+> `aether_environment_refined.blend`). On 2026-09-26 it became a 30-piece chunk kit, was rejected (no platforms,
+> too close to Sky Citadel), and was revamped as a grounded cloudscape. On 2026-09-27 the owner still wasn't sold,
+> reviewed three direction samples (`renders/samples/`) and chose **the hybrid**. **This document describes the
+> hybrid kit.** The original scene stays in the repo as the palette's source of truth.
 
 | | |
 |---|---|
 | Content | `src/shared/Content/Worlds/EtherealScape.luau`; `Content/Chunks/EtherealScape.luau` and `Content/Props/EtherealScape.luau` (both **generated**) |
-| Generator | `assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py` + `es_geometry.py`, `es_features.py`, `es_pieces.py`, `es_props.py` |
+| Generator | `assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py` + `es_geometry.py`, `es_features.py`, `es_isles.py` (island web), `es_pieces.py` (36 recipes), `es_props.py`, `es_mapgen.py` (preview assembler), `es_samples.py` (the three direction samples, `--samples`) |
 | Exports | `assets/export/worlds/ethereal_scape/ethereal_scape_structure.fbx` (30 objects), `ethereal_scape_props.fbx` (8 prop kinds) |
-| Review renders | `assets/source/worlds/ethereal_scape/renders/` — a hero and a ground shot per piece, the Sanctum's interior, `preview_chain.jpg`, `kit_overview.jpg` |
+| Review renders | `assets/source/worlds/ethereal_scape/renders/` — a hero and a ground shot per piece, the Sanctum's interior, `preview_chain.jpg`, `kit_overview.jpg`, and **`map_preview.jpg` / `map_preview_top.jpg`** — a whole seeded map assembled by the §7.7 scheme (also in the `.blend` as the `MAP_PREVIEW` collection) |
 | Palette reference | `assets/source/worlds/ethereal_scape/aether_environment_refined.blend` |
 | Enemies | `assets/source/enemies/ethereal_scape/` (`ROSTER.md`, `manifest.py`) |
 | Contract | [`CHUNK_AUTHORING.md`](../CHUNK_AUTHORING.md), [`MODULAR_MAPS.md`](../MODULAR_MAPS.md) |
@@ -27,20 +25,23 @@ The `.blend` is an output. Edit the scripts.
 
 ---
 
-## Floating or grounded? Grounded, on walkable cloud
+## Direction: the hybrid (owner pick, 2026-09-27)
 
-The owner asked for this to be decided on purpose, so every biome feels different.
-
-| World | The ground |
+| Sample | Became |
 |---|---|
-| Verdant Valley | a grounded forest valley |
-| Sky Citadel | machined castle islands hanging over a cloud sea, with a void between them |
-| **Ethereal Scape** | **walkable cloud.** The cloud *is* the ground. The original scene's meadow islands become **mesas** rising out of it, clearings are walled by billowing cloud banks, and the only voids are deliberate ones (a rift, a bridge that snaps) |
+| **A · Floating Isles** | **the base.** Every walkable surface is an isle hung in open sky: meadow top, the original's gold rim band, three jagged tiers of rock underneath, hanging roots, a crystal chandelier out of the tip. Isles are joined by gold plank bridges |
+| **C · Temple City** | the architecture of the combat rooms, both miniboss arenas and the Sanctum: ivory flagstone courts, colonnades, shrine halls, statues, bell towers, arches |
+| **B · Lush Cloudscape** | the dressing ON the isles: meadow carpets, groves, blossoms, mushrooms, pools, falls |
 
-Making it float again would have been a second Sky Citadel however different its props. Walking
-*on* the clouds keeps the original art's DNA: meadow islands, gold rims, the temple. It also
-gives the world its own feel: soft, rolling and dreamlike, where Sky Citadel is crisp and
-precipitous. The flavour line still fits: *"The ground is a courtesy, and it ends."*
+How it stays unlike its neighbours: Verdant Valley is grounded forest; Sky Citadel is machined deck plate and
+needle spires over a void. Ethereal Scape's isles are organic, gold-rimmed and rooted, its waymarks are stout
+**aether beacons** (stepped pagodas crowned in crystal — the needle spires of the first hybrid pass read as Sky
+Citadel and were replaced), and its architecture is classical.
+
+**Height variation.** Isles inside a piece stand at their own heights (terraces, perches, sunken pool isles) and
+a piece's **mouths** may too — a socket's `OffsetY` is its height, so the map climbs and falls: the Skystairs
+(±24), the ascent/descent bends (±16), the Twin-Span fork (+10), terraced gardens and twin isles inside pieces.
+Bridges between heights climb at most ~37°, span edge to edge, and lie level on each isle top.
 
 ## The look — and how it differs from Sky Citadel
 
@@ -48,7 +49,7 @@ Read off the original scene, not invented:
 
 | | Ethereal Scape | Sky Citadel |
 |---|---|---|
-| Ground | walkable cloud, meadow carpets, meadow **mesas** with a **gold rim band** and faceted rock flanks | white machined deck plate over a void |
+| Ground | organic **floating isles**: meadow tops, a **gold rim band**, faceted rock undersides with roots and crystal chandeliers, joined by gold plank bridges | white machined deck plate over a void |
 | Verticality | gem-cut **trees**, ancient **great sky trees**, **crystal colossi**, broad rock **crags**, square **bell towers**, the columned **temple** | needle spires with neon halos |
 | Architecture | classical: ivory columns with gold bases and capitals, pavilions with gold hip roofs, arches of voussoirs, squat rune **waystones**, broken colonnades | futurist: octagonal, chamfered turrets and gates |
 | Glow | portal **purple**, small and round (rune bands, lantern cores, blossoms, seals) | azure seams, linear |
@@ -82,11 +83,11 @@ asserts it.
 
 | Kind | Role | Width | What arrives at the edge |
 |---|---|---|---|
-| `SPAN` | connective | **44** | a golden flagstone landing, exactly 44 wide, level at z = 0, flanked by two squat guide stones |
+| `SPAN` | connective | **44** | a golden flagstone landing isle, exactly 44 wide, level at its socket's height, flanked by two squat guide stones |
 | `COMMUNION` | arena-only | **64** | the same landing at 64. Only the two Temple Gates offer one, so a gate always precedes the Sanctum |
 
 **Every mouth is identical at the edge**, whatever the piece does inside, so any two pieces meet
-flagstone to flagstone. Cloud banks always leave the mouth and 17 studs either side open.
+flagstone to flagstone, at any height.
 
 ## Piece size
 
@@ -98,22 +99,32 @@ flagstone to flagstone. Cloud banks always leave the mouth and 17 studs either s
 
 ---
 
-## The kit — 30 pieces
+## The kit — 36 pieces
 
 | Role | Count | Pieces |
 |---|---|---|
-| ENTRY | 1 | **Arrival Meadow** (384): gold mosaic landing ringed by crystal-topped spawn columns; the original's shrine pavilion on a mesa; a great sky tree; the sky above the landing and the south return-portal pad kept clear (both checked) |
-| PATH — straights | 5 | **Meadow Walk** (lantern-lined road, tree mesa) · **Ruin Stair** (up onto a temple terrace, under a colossal ruined gate, down again) · **Rift Bridge** (a gold plank bridge over a torn rift in the cloud, a crag rising out of it) · **Crystal Field** (clusters under a crystal colossus) · **Lily Terraces** (low mesas stepping away, a crag on the highest) |
-| PATH — bends | 4 | **Grove Bend** E (ancient grove, fairy ring) · **Terrace Bend** E (bell-tower mesa up a lantern ramp) · **Shrine Bend** W (waystone-ringed pavilion, bell tower) · **Falls Bend** W (**Aether Falls**: a mesa rim spills glowing water into a pool) |
-| PATH — **intersections** | 3 | **Wayshrine Fork** (3-way: waystone circle, signpost, great tree) · **Three-Trees Fork** (3-way: three ancient trees, a mushroom ring) · **Convergence** (4-way: compass court, fountain, eight lanterns) |
-| COMBAT | 10 | Meadow of Blooms · Terraced Gardens (two garden mesas, soil rows, crag) · Crystal Hollow (pool in a ring of crystals) · Fallen Colonnade (temple floor, half-fallen colonnade, bell tower) · Mirror Pool (balustraded pool on stepping stones) · Shrine of Winds (three pavilions round an orb altar) · Rooted Hollow (a great tree's roots arch over the path) · Twin Mesas (a high plank bridge over the path) · **Temple Gate A** (bell towers flank the arch over the `COMMUNION` road) · **Temple Gate B** (rare: a columned, roofed gate hall the road passes through) |
-| SIDE | 3 | Hermit Grove (a hut under a great tree) · Crystal Grotto · Relic Altar |
-| CAP | 3 | **Broken Bridge** (the plank bridge snaps over a rift; a lone crag in the void) · **Overlook** (balustraded mesa lookout, a sky seat) · **Sealed Shrine** (a door sealed in a crag's face, its seal glowing) |
-| BOSS | 1 | **The Sanctum** (512): see below |
+| ENTRY | 1 | **Arrival Isle** (384): a great chamfered isle — gold mosaic landing ringed by crystal-topped spawn columns, the return-portal pad (kept clear, checked), a shrine terrace, the great sky tree, two perches at +14 and −16 |
+| PATH — straights | 4 | **Plank Crossing** (three isles on plank bridges, the middle one raised) · **Grove Isle** (a great tree, a fairy ring, falls off the rim) · **Skystair Up** (+24) · **Skystair Down** (−24) |
+| PATH — bends | 4 | **Grove Bend** E (great tree on a raised perch) · **Ascent Bend** E (+16, bell tower over the mouth, hut perch) · **Falls Bend** W (−16, aether falls) · **Shrine Bend** W (shrine hall, waystone arc) |
+| PATH — junctions | 4 | **Wayshrine Fork** (S/E/W) · **Three-Trees Fork** (S/N/E) · **Twin-Span Fork** (S/N/W, north mouth +10) · **Convergence** (4-way). §7.7 fills every one of their mouths |
+| COMBAT | 10 | Meadow of Blooms · Terraced Gardens (+10/+20) · Crystal Hollow · Fallen Colonnade (temple) · Mirror Pool (temple) · Shrine of Winds (temple) · Rooted Hollow · Twin Isles (+12) · **Temple Gate A** · **Temple Gate B** (the only `COMMUNION` exits) |
+| **MINIBOSS** | 2 | **Waystone Ring** (the Waystone Sentinel: eight waystones round a gold ring, twin beacons, a gallery perch) · **Reliquary Court** (the Reliquary Keeper: a balustraded temple court before the reliquary hall). One mouth each; only ever at the end of a branch — **never the boss arena** |
+| SIDE | 3 | Hermit Grove · Crystal Grotto · Relic Altar |
+| CAP | 4 | Broken Bridge · Overlook · Sealed Shrine · Falls Ledge |
+| BOSS | 1 | **The Sanctum** (512), on the greatest isle in the sky: see below |
+| **BACKDROP** | 3 | Cloudbank (a towering cumulus) · Drift Isles · Crystal Spire. No sockets, never walked — the generator rings them round the finished map |
+
+## Generation — build spec §7.7
+
+The world declares `Generation = { BranchLength = 2, Minibosses = 1, MaxSides = 2, Backdrop = 18 }`. The
+critical path is unchanged (ENTRY → 5 pieces → a Temple Gate → the Sanctum). Then every spare mouth of every
+piece grows a branch of up to 2 pieces, and every branch **ends** — in a miniboss arena (one per map), a side
+pocket, or a cap; nothing opens onto sky. Last, up to 18 backdrop pieces fill the free cells round the map.
+Sky Citadel and Verdant Valley declare no blueprint and assemble exactly as before.
 
 ### The Sanctum — a structure that houses the boss
 
-- **Approach:** the `COMMUNION` road leads between processional lanterns and meadow gardens to a ceremonial stair.
+- **Approach:** the `COMMUNION` road crosses from the landing onto the isle and runs between processional lanterns, statues and meadow gardens to a ceremonial stair.
 - **The temple:**
   - it stands on a podium, 276 × 264;
   - a **portico** of six columns carries an entablature and a pediment with a purple glow medallion;
@@ -154,12 +165,12 @@ The first kit "passed" with no floors because it only checked the box. These are
 on the real mesh, for every piece:
 
 1. **Box** exactly (2H × 2H) × 256, centred, keel −96, crown +160.
-2. **Under 10,000 triangles.** The heaviest pieces are the Sanctum (~9.9k), the Entry (~9.8k) and the Rift Bridge (~9.7k).
+2. **Under 10,000 triangles.** The hybrid is far lighter: the heaviest are the Sanctum and the Entry (~7k).
 3. **No degenerate faces.** `mesh.validate()` dropping anything fails the piece.
 4. **Walk graph.** This builds a 2-stud heightfield of every walkable surface, with 1.6-stud steps and 5 studs of headroom. It floods from one mouth, and **every other mouth must be reached**.
-5. **Mouths:** level ground at z = 0 across at least 95% of the width.
+5. **Mouths:** level ground at the socket's own height across at least 95% of the width.
 6. **Nothing detached.** Sky Citadel's real-mesh `geometry_checks.analyse` is reused.
-7. **No clipping between builders** (a tree through a pavilion, a crystal through a railing). Soft things (cloud, grass, blossom) may lap over anything. A short list of authored joints is allowed (a stair set against its podium).
+7. **No clipping between builders** (a tree through a pavilion, a crystal through a railing). The ground (isle tops, landings) may be stood in. `declip()` removes any cloud, blossom, grass or mushroom that touches a real object (a mushroom's stem and cap go together). A short list of authored joints is allowed (a porch column in its podium). The final build logs **zero** clip notes.
 8. **Entry:** the column above the landing and the return-portal pad are open to the sky.
 9. **Sanctum:** the hall and the great door are unobstructed.
 
@@ -177,6 +188,6 @@ Unchanged. See `assets/source/enemies/ethereal_scape/ROSTER.md`. Declared per pi
 
 ## Next
 
-1. **Upload and walk it in Studio.** Nothing here has been seen in Studio yet. Measure one piece and confirm vertex colour survives.
+1. **Upload and walk it in Studio.** Nothing here has been seen in Studio yet. Check the socket heights (`OffsetY`) line up across a rise, and that vertex colour survives.
 2. Tune the cloud floor's look under the world's real lighting. Review renders use flat Workbench shading, which greys `CloudWhite`.
 3. Fixtures (chests on the Treasury / Relic Altar, a vault) were not in this pass.
