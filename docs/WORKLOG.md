@@ -33,6 +33,138 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 84 — 2026-09-27 — Close berth geometry and final branch review
+**Merged:** none   **Tests:** 866 passing   **Branch:** `test-command`
+
+### Done
+- Precommit review found the radius-based berth could still overlap an angled island bounding box; obeyed the owner's instruction to stop without committing or pushing. Owner then authorized a close-distance correction and another review/commit/push.
+- Added pure PropCore.berthOnBox geometry: intersect the approach ray with an oriented island face, then offset outward by half ship beam plus clearance/padding. The hull stays 20 studs beyond the face instead of being moved a full mast/length-based radius away.
+- Berth overlap uses the actual oriented ship box; docking approach uses Blockcast instead of the oversized cruise sphere. Ships begin orienting side-on during approach. Ordinary wandering retains sphere avoidance.
+- Added four geometry regressions including actual mesa/carrier dimensions and every cardinal/diagonal direction. Suite 866/0; docking/geometry lint zero errors/warnings, changed-file syntax and formatting checked.
+- Reviewed pending scope: only test command/catalogue, 60-minute timer, loading corrections, requested ship/whale docking, regression tests and required docs/index. No asset edits, owner HUB_SKY edits, temporary outputs or unrelated changes included.
+
+### Decisions made
+- Keep close berths using oriented hull geometry rather than increasing radius-based distance. Live docking observation remains a Studio check; test coverage proves the geometry and eligibility.
+
+### Stopped at
+Prepared for the owner's requested commit and push after final checks. The tool results and session reply record commit hash and push outcome. No merge requested or performed.
+
+### Next
+1. Check origin CI before merging; observe large ship docking/holding/departing in Studio and whales remaining in flight.
+2. Cleanup: no superseded modules/assets/exports or duplicate files. Keep existing and parked assets; nothing from this change needs deletion.
+
+---
+
+## Session 83 — 2026-09-27 — Dock ships rather than whales
+**Merged:** none (local change)   **Tests:** 862 passing
+
+### Done
+- Owner confirmed the catalogue now works, then reported a hub whale docking while large ships did not. Traced eligibility to a size threshold, which admitted scaled whales.
+- Added explicit CanDock to the galleon/carrier orbiter group, published as WanderCanDock by HubV2 and consumed by SkyTraffic. Whales/small ships no longer qualify by size.
+- Corrected berth clearance: old reach + 0.6 ship radius could fail the 0.8 radius overlap query; now the target and overlap query both allow full radius plus clearance.
+- Removed the approach's minimum forward speed, retain steering authority during braking, stop speed on berth arrival, and allow enough no-progress time for large turning circles. Separated docking heading from visual heading so smoothing cannot overwrite the mooring direction.
+- Moved docking timing/distance/slowdown tuning to GameConfig.HubLayout.V2.Docking. Added four assignment regressions; suite 862/0, changed-file syntax/format checks pass, Selene zero errors/warnings/parse errors.
+- Updated art-direction contract, Studio testing instructions, status and generated index.
+
+### Decisions made
+- Docking eligibility is explicit data, not geometry or a hardcoded name check in the controller. Detail 2 visibility remains medium graphics and up.
+- Keep cruise flight behavior; docking approaches alone retain steering authority as speed falls. Scene-dependent obstacle avoidance/berth arrival need Studio verification.
+
+### Stopped at
+Changes local; no commit/push/merge. Owner should restart Play after sync and observe big ships for several minutes. Headless coverage proves assignments, not rendered docking motion.
+
+### Next
+1. Follow TESTING Test C3 sky docking check: large ships approach/hold/depart; whales never hold at berths. Check WanderCanDock attributes.
+2. Cleanup: no older modules/assets/exports replaced or duplicates created; nothing to delete. Keep parked assets.
+
+---
+
+## Session 82 — 2026-09-27 — Fix test-entry return rotation crash
+**Merged:** none (local change)   **Tests:** 858 passing
+
+### Done
+- Owner supplied live Output proving test entry aborted at ChunkLoader:500 with "Argument 3 missing or nil". Fixed my two-argument CFrame.Angles call by supplying the zero Z angle.
+- Checked all five loader CFrame.Angles calls; each now supplies three arguments. Rechecked changed-file formatting and syntax; headless suite remains 858/0. The suite does not execute the Roblox loader, which is why it missed this engine API error.
+
+### Decisions made
+- The log conclusively identifies a loader crash; earlier speculation about orientation/streaming did not identify this failure. Retain the separately useful catalogue orientation and persistence changes, but require a fresh Studio load before claiming resolution.
+
+### Stopped at
+One-line fix applied locally. Awaiting Studio rerun after Rojo sync and Play restart; no commit/push/merge.
+
+### Next
+1. `/roll verdant_valley test` then `/enter`: verify no loader error, all 30 chunks and 60-minute timer.
+2. Cleanup: no replaced files/assets/exports or duplicate modules; nothing to delete.
+
+---
+
+## Session 81 — 2026-09-27 — Catalogue orientation and client streaming
+**Merged:** none (local change)   **Tests:** 858 passing
+
+### Done
+- Owner reports both missing chunks and disconnected/sideways pieces. Located two implementation weaknesses: disconnected pieces kept yaw 0 even when their paths face across the row, and test stages retained ordinary streaming despite the long catalogue line.
+- Fallback placements now choose a quarter turn maximizing east/west sockets, preferring east exits. Rotated footprint width preserves the gap, including rectangular pieces. Test entry's return offset follows its rotation.
+- Test models use ModelStreamingMode.Persistent to retain the complete catalogue in client Explorer and while observing from flight. Confirmed Roblox's streaming contract in official documentation. Normal map streaming unchanged.
+- Four new regression checks cover entry orientation/connection, isolated-piece orientation and rotated rectangular spacing. Headless suite: 858/0; changed-file formatting and syntax checked. Updated owning docs and index.
+
+### Decisions made
+- Retain allowed gaps/open sockets and exact one-of-each coverage. Bends and caps cannot all join into a continuous straight path without filler/repeats. Persistence is limited to developer test stages.
+
+### Stopped at
+Corrections implemented locally; live Studio validation remains pending. The earlier normal-layout screenshot cannot be explained conclusively without command/expedition Output and TestMode attributes; no claim of verified live resolution. No commit/push/merge.
+
+### Next
+1. Restart Play after Rojo sync; run `/roll verdant_valley test` then `/enter`. Check TEST catalogue reports 30, client and server contain all folders, pieces orient along the row, and timer starts at 60 minutes.
+2. If normal assembly still appears, obtain the actual command and expedition Output lines and TestMode value to trace the selection.
+3. Cleanup: no superseded assets/exports/files or duplicate modules; nothing needs deletion.
+
+---
+
+## Session 80 — 2026-09-27 — Extended test timer and loading investigation
+**Merged:** none (local change)   **Tests:** 854 passing
+
+### Done
+- Added owner-requested 60-minute timer via Debug.TestDurationSeconds. In-place test groups and reserved-server manifests use it; normal world durations remain unchanged.
+- Added three duration regression checks. Suite passes 854/0; formatting and changed-file syntax checked.
+- Examined the reported Studio screenshot: index 0, 108–110 and repeated chunks identify normal assembly, not the catalogue generator (which emits consecutive indices 1–N and unique IDs).
+
+### Decisions made
+- Do not assume a mesh-loading defect or change catalogue generation without the command reply, expedition Output line and model TestMode attribute. Requested these from the owner; no response yet.
+
+### Stopped at
+Timer implemented locally. The reported missing-chunk issue remains under investigation, awaiting live Studio evidence. No commit, push or merge.
+
+### Next
+1. Use the pending Output/attribute evidence to trace why that instance ran normal assembly; verify Studio was restarted after Rojo synced updated modules.
+2. Verify the test HUD counts down from 60 minutes and all 30 VV chunk folders appear once.
+3. Cleanup: no superseded files, assets or exports created; nothing needs deletion.
+
+---
+
+## Session 79 — 2026-09-27 — Instance-scoped catalogue test rolls
+**Merged:** none (local change)   **Tests:** 851 passing
+
+### Done
+- Extended the existing `/roll <WORLD_ID>` command with optional `test`, after owner approval of the plan. Normal forced rolls retain their flow; test rolls select catalogue generation on the next entry.
+- Added `ChunkCore.assembleTest`: every current world chunk exactly once, ignoring normal selection probabilities and placement limits. Prefer compatible joins along +X; otherwise separate footprints with a configurable gap. Open sockets are intentional.
+- Bound pending test selection to world and TotalRolls, consume it on build/instance launch, clear on normal forced roll/disconnect, and carry optional validated TestMode through the server manifest. Existing loading/scenarios/ambience remain in use; only the first entry controls arrival and return.
+- Added 34 regression checks for all three kits, scenarios, deterministic coverage, no duplicates/overlap, joins/gaps, roll scoping and manifest compatibility. Suite: 851/0. StyLua check and changed-file syntax check pass. Selene: zero errors/parse errors, five existing warnings.
+- Updated testing guide, modular-map contract, build spec, current status and index.
+
+### Decisions made
+- Retain the usual forced-roll then portal or `/enter` flow; test mode affects one instance, including the leader's party. No saved profile field or remote added.
+- Unjoinable pieces stay on the observation line without extra filler; inspect gaps with `/fly`. Do not enforce normal layout role-count or socket-closure requirements on catalogues.
+
+### Stopped at
+Implemented and checked locally. No commit, push or merge. Studio catalogue/arrival/return and normal generation checks, plus a published reserved-server test, remain pending; headless tests cannot prove mesh or teleport behavior.
+
+### Next
+1. Follow `docs/TESTING.md` §2.5 for each kit; verify ordinary rolls restore normal generation and the reserved server preserves TestMode.
+2. Run origin CI before merging if this change is submitted.
+3. Cleanup: no older implementation, assets or exports were replaced, and no duplicate modules were created. Keep existing assets and parked work; nothing from this change needs deletion.
+
+---
+
 ## Session 78 — 2026-09-27 — Prepare recovery branch for origin
 **Merged:** none   **Tests:** 817 passing   **Branch:** `codex/recover-socket-fixes`
 

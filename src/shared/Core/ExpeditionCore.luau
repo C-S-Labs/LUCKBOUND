@@ -102,7 +102,10 @@ function ExpeditionCore.pathLengthFor(world: any, config: any): number
 	return world.MapPathLength or config.Expedition.PathLength
 end
 
-function ExpeditionCore.durationFor(world: any, config: any): number
+function ExpeditionCore.durationFor(world: any, config: any, testMode: boolean?): number
+	if testMode then
+		return config.Debug.TestDurationSeconds
+	end
 	return world.DurationSeconds or config.Expedition.DefaultDurationSeconds
 end
 
@@ -288,6 +291,15 @@ function ExpeditionCore.placeFor(configuredId: number, currentPlaceId: number): 
 	return if configuredId and configuredId > 0 then configuredId else currentPlaceId
 end
 
+--- Test selection belongs to one roll, never to a world or player forever.
+function ExpeditionCore.isTestDestination(
+	selection: any,
+	worldId: string,
+	rollNumber: number
+): boolean
+	return selection ~= nil and selection.WorldId == worldId and selection.RollNumber == rollNumber
+end
+
 --- EVERYTHING AN EXPEDITION SERVER NEEDS TO BUILD THE SAME MAP.
 ---
 --- Written by the hub to MemoryStore under the reserved server's id, read by
@@ -307,6 +319,7 @@ function ExpeditionCore.buildManifest(opts: {
 	HubPlaceId: number,
 	HubJobId: string,
 	CreatedAt: number,
+	TestMode: boolean?,
 })
 	return {
 		Version = 1,
@@ -318,6 +331,7 @@ function ExpeditionCore.buildManifest(opts: {
 		HubPlaceId = opts.HubPlaceId,
 		HubJobId = opts.HubJobId,
 		CreatedAt = opts.CreatedAt,
+		TestMode = opts.TestMode,
 	}
 end
 
@@ -337,11 +351,17 @@ function ExpeditionCore.validateManifest(
 		return false, `unknown manifest version {tostring(manifest.Version)}`
 	end
 	local worldId = manifest.WorldId
+	if manifest.TestMode ~= nil and type(manifest.TestMode) ~= "boolean" then
+		return false, "bad test mode"
+	end
 	if type(worldId) ~= "string" or not worlds[worldId] then
 		return false, `unknown world {tostring(worldId)}`
 	end
 	if not ExpeditionCore.hasMap(worlds[worldId], chunks, worldId) then
 		return false, `{worldId} has no map`
+	end
+	if manifest.TestMode == true and not ExpeditionCore.hasKit(chunks, worldId) then
+		return false, `{worldId} has no chunk kit for test mode`
 	end
 	if
 		type(manifest.Seed) ~= "number"

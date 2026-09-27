@@ -30,13 +30,15 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local Constants = require(Root.Core.Constants)
+local GameConfig = require(Root.Core.GameConfig)
+local PropCore = require(Root.Core.PropCore)
+local dockCfg = GameConfig.HubLayout.V2.Docking
 
 local SkyTraffic = {}
 
 local CLEARANCE = 18 -- studs kept between two props
 local SCAN_EVERY = 0.15 -- seconds between one prop's path checks
 local MAX_CAST = 1000 -- Roblox refuses a shapecast longer than 1024 studs
-local BIG = 45 -- a prop this big (half its diagonal) is a big ship and may dock
 local TURN_PER_SIZE = 3 -- turning radius = this x the prop's half-diagonal
 local TURN_MIN, TURN_MAX = 12, 320
 
@@ -61,6 +63,7 @@ type Flyer = {
 		SMax: number,
 	},
 	Faces: boolean,
+	CanDock: boolean,
 	Bob: number,
 	Phase: number,
 	Yaw: number,
@@ -75,6 +78,7 @@ type Flyer = {
 	NextDock: number,
 	DockUntil: number,
 	DockHeading: Vector3,
+	FacingDir: Vector3,
 }
 
 local rocks: { Rock } = {}
@@ -137,16 +141,26 @@ local function berth(f: Flyer): (Vector3?, Vector3?)
 	local rock = best :: Rock
 	local out = Vector3.new(f.Pos.X - rock.Pos.X, 0, f.Pos.Z - rock.Pos.Z)
 	out = if out.Magnitude > 1 then out.Unit else Vector3.xAxis
-	local reach = math.max(rock.Part.Size.X, rock.Part.Size.Z) * 0.5
 	for k = 0, 6 do
 		local dir = CFrame.Angles(0, (k % 2 == 0 and 1 or -1) * math.ceil(k / 2) * 0.35, 0)
 			:VectorToWorldSpace(out)
-		local spot = rock.Pos
-			+ dir * (reach + f.Radius * 0.6)
-			+ Vector3.new(0, rock.Part.Size.Y * 0.12, 0)
-		if not blocked(spot, f.Radius * 0.8) then
+		local localDir = rock.Part.CFrame:VectorToObjectSpace(dir)
+		local x, z, nx, nz = PropCore.berthOnBox(
+			rock.Part.Size.X,
+			rock.Part.Size.Z,
+			localDir.X,
+			localDir.Z,
+			f.Part.Size.Z,
+			CLEARANCE + dockCfg.BerthPadding
+		)
+		local spot = rock.Part.CFrame:PointToWorldSpace(Vector3.new(x, rock.Part.Size.Y * 0.12, z))
+		local normal = rock.Part.CFrame:VectorToWorldSpace(Vector3.new(nx, 0, nz))
+		local heading = normal:Cross(Vector3.yAxis).Unit
+		local cf = CFrame.lookAt(spot, spot + heading) * CFrame.Angles(0, -math.pi / 2, 0)
+		local size = f.Part.Size + Vector3.new(CLEARANCE * 2, 0, CLEARANCE * 2)
+		if #Workspace:GetPartBoundsInBox(cf, size, overlapParams) == 0 then
 			-- moored side-on to the island
-			return spot, dir:Cross(Vector3.yAxis)
+			return spot, heading
 		end
 	end
 	return nil, nil
@@ -282,6 +296,7 @@ function SkyTraffic.init(): ()
 						SMax = s.Y,
 					},
 					Faces = d:GetAttribute("WanderFaces") == true,
+					CanDock = d:GetAttribute("WanderCanDock") == true,
 					Bob = (d:GetAttribute("WanderBob") :: number?) or 0,
 					Phase = if rng:NextNumber() < 0.3
 						then -rng:NextNumber(0.1, 6)
@@ -295,9 +310,10 @@ function SkyTraffic.init(): ()
 					Avoid = Vector3.zero,
 					ScanIn = rng:NextNumber(0, SCAN_EVERY),
 					Mode = "fly",
-					NextDock = rng:NextNumber(30, 90),
+					NextDock = rng:NextNumber(dockCfg.InitialDelayMin, dockCfg.InitialDelayMax),
 					DockUntil = 0,
 					DockHeading = Vector3.new(math.cos(a), 0, math.sin(a)),
+					FacingDir = Vector3.new(math.cos(a), 0, math.sin(a)),
 				}
 				for _, c in d:GetChildren() do
 					if c:IsA("BasePart") and c:GetAttribute("SubKind") then
@@ -368,7 +384,7 @@ function SkyTraffic.init(): ()
 			end
 			for i, f in flyers do
 				-- DOCKING: big ships only, now and then
-				if f.Radius >= BIG and f.Faces then
+				if f.CanDock and f.Faces then
 					if f.Mode == "fly" then
 						f.NextDock -= dt
 						if f.NextDock <= 0 then
@@ -377,12 +393,14 @@ function SkyTraffic.init(): ()
 								f.Mode, f.Target, f.DockHeading = "dock", spot, heading :: Vector3
 								f.BestDist, f.StuckFor = math.huge, 0
 							else
-								f.NextDock = f.Rng:NextNumber(20, 40)
+								f.NextDock =
+									f.Rng:NextNumber(dockCfg.RetryDelayMin, dockCfg.RetryDelayMax)
 							end
 						end
 					elseif f.Mode == "docked" and elapsed >= f.DockUntil then
 						f.Mode = "fly"
-						f.NextDock = f.Rng:NextNumber(60, 140)
+						f.NextDock =
+							f.Rng:NextNumber(dockCfg.DepartureDelayMin, dockCfg.DepartureDelayMax)
 						f.Target = waypoint(f, angleOf(f, f.Pos))
 					end
 				end
@@ -396,7 +414,7 @@ function SkyTraffic.init(): ()
 				local to = f.Target - f.Pos
 				local goal = f.SpeedGoal
 				if f.Mode == "dock" then
-					goal = math.min(goal, math.max(3, to.Magnitude * 0.4)) -- ease in to the berth
+					goal = math.min(goal, to.Magnitude * dockCfg.SlowdownRate) -- ease to a stop at the berth
 				elseif f.Mode == "docked" then
 					goal = 0
 				end
@@ -418,16 +436,24 @@ function SkyTraffic.init(): ()
 						to = f.Target - f.Pos
 					end
 				elseif f.Mode == "dock" then
-					if to.Magnitude < 6 then
+					if to.Magnitude < dockCfg.ArrivalDistance then
 						f.Mode = "docked"
-						f.DockUntil = elapsed + f.Rng:NextNumber(12, 25)
+						f.Speed = 0
+						f.DockUntil = elapsed + f.Rng:NextNumber(dockCfg.HoldMin, dockCfg.HoldMax)
 					elseif to.Magnitude < f.BestDist - 1 then
 						f.BestDist, f.StuckFor = to.Magnitude, 0
 					else
 						f.StuckFor += dt
-						if f.StuckFor > 12 then -- could not get in: give up, sail on
+						-- Allow a large ship enough time to turn back toward its berth.
+						local turnAllowance = f.TurnRadius
+							/ f.Band.SMin
+							* dockCfg.ApproachTurnRadians
+						if f.StuckFor > math.max(dockCfg.StuckMinSeconds, turnAllowance) then
 							f.Mode = "fly"
-							f.NextDock = f.Rng:NextNumber(30, 60)
+							f.NextDock = f.Rng:NextNumber(
+								dockCfg.FailedApproachDelayMin,
+								dockCfg.FailedApproachDelayMax
+							)
 							f.Target = waypoint(f, angleOf(f, f.Pos))
 						end
 					end
@@ -445,8 +471,24 @@ function SkyTraffic.init(): ()
 					local reach =
 						math.min(math.max(f.Speed, 8) * 3 + f.TurnRadius * 1.5 + f.Radius, MAX_CAST)
 					local r = math.clamp(f.Radius * 0.7, 2, 200)
-					local hit =
-						Workspace:Spherecast(f.Pos - f.Dir * r * 0.5, r, f.Dir * reach, castParams)
+					local hit
+					if f.Mode == "dock" then
+						-- Match the berth's actual ship box, so a mast/length-derived
+						-- sphere cannot repel a ship from its own clear mooring.
+						hit = Workspace:Blockcast(
+							f.Part.CFrame,
+							f.Part.Size + Vector3.new(CLEARANCE * 2, 0, CLEARANCE * 2),
+							f.Dir * math.min(reach, to.Magnitude),
+							castParams
+						)
+					else
+						hit = Workspace:Spherecast(
+							f.Pos - f.Dir * r * 0.5,
+							r,
+							f.Dir * reach,
+							castParams
+						)
+					end
 					if hit then
 						local urgency = 1 - math.clamp(hit.Distance / reach, 0, 1)
 						local side = hit.Normal - f.Dir * hit.Normal:Dot(f.Dir)
@@ -483,9 +525,14 @@ function SkyTraffic.init(): ()
 					end
 				end
 
-				-- THE TURNING CIRCLE: heading swings at most Speed / TurnRadius per
-				-- second. A standing ship (docked) does not turn at all.
-				local maxTurn = math.max(f.Speed, 1) / f.TurnRadius * dt
+				-- Cruise uses Speed / TurnRadius; berth approach keeps authority
+				-- as it brakes. A docked ship's position remains fixed.
+				-- Keep steering authority while slowing into a berth. Using the
+				-- shrinking approach speed here made ships circle instead of stop.
+				local turnSpeed = if f.Mode == "dock"
+					then math.max(f.Speed, f.SpeedGoal)
+					else math.max(f.Speed, 1)
+				local maxTurn = turnSpeed / f.TurnRadius * dt
 				local prevDir = f.Dir
 				if steer.Magnitude > 1e-3 then
 					f.Dir = turnToward(f.Dir, steer.Unit, maxTurn)
@@ -497,7 +544,7 @@ function SkyTraffic.init(): ()
 				local cf
 				if f.Faces then
 					local fwd = Vector3.new(f.Dir.X, 0, f.Dir.Z)
-					if f.Mode == "docked" then
+					if f.Mode == "dock" or f.Mode == "docked" then
 						fwd = f.DockHeading
 					end
 					if fwd.Magnitude < 1e-3 then
@@ -509,10 +556,10 @@ function SkyTraffic.init(): ()
 						1,
 						dt * 1.5
 					)
-					f.DockHeading = f.DockHeading:Lerp(fwd.Unit, math.min(1, dt * 0.5))
+					f.FacingDir = f.FacingDir:Lerp(fwd.Unit, math.min(1, dt * 0.5))
 					-- the imported meshes' noses point along -X: a quarter turn
 					-- lines them up with lookAt's forward
-					cf = CFrame.lookAt(at, at + f.DockHeading)
+					cf = CFrame.lookAt(at, at + f.FacingDir)
 						* CFrame.Angles(0, -math.pi / 2, 0)
 						* CFrame.Angles(f.Bank, 0, 0)
 				else

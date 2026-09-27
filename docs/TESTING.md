@@ -161,6 +161,7 @@ where the `[Roll]` and `[Expedition]` lines already are.
 | `/where` | client | Print your position. |
 | `/worlds` | client | List rollable world ids with their rarities. |
 | `/roll <WORLD_ID>` | **server** | Force your next destination. No argument lists the valid ids. |
+| `/roll <WORLD_ID> test` | **server** | Force a destination and select a catalogue layout for the next instance: every chunk once on one observation line, including rare pieces and all entry/boss/side/cap variants. |
 | `/enter` | **server** | Enter your destination from anywhere — skips the distance check only. |
 | `/leave` | **server** | End the current expedition (counts as RETURNED, so it pays Fate). |
 | `/keychance <0-1\|reset>` | **server** | *Temporary (§7.5 testing).* Override the vault key's drop chance for this session. `1` = always drops. |
@@ -173,6 +174,26 @@ where the `[Roll]` and `[Expedition]` lines already are.
 | `/bossphase <1\|2>` | **server** | Charge the previewed boss's weapon (`2` = plasma blade, open halves, arcs) or rest it (`1`). Reports strands on. |
 | `/clearboss` | **server** | Remove the boss preview. |
 | `/help` | client | List all of the above. |
+
+**Catalogue check (2026-09-27).** Test instances run for 60 minutes
+(`GameConfig.Debug.TestDurationSeconds = 3600`); normal instances retain their
+world duration. Run `/roll verdant_valley test`, then enter through
+the Fate Engine or `/enter`. The stage has `TestMode = true`; check its chunk folders
+against the current content catalogue (VV: 30, SC: 36, ES: 30). Every Id appears once.
+The first entry remains the arrival and return location even with multiple entry
+variants, and its return offset follows its rotation. Test models use
+`ModelStreamingMode.Persistent`: all 30 folders should exist in **both server and
+client** Explorer, even when flying away from the entry. Straight pieces should
+face along the row; bends and one-socket dead ends cannot all form a continuous
+straight path without repeats. Matching sockets connect where they can stay on the line; incompatible
+pieces are separated by `GameConfig.Debug.TestChunkGap`. Open sockets are intentional;
+use `/fly` to cross gaps and inspect the whole row. Repeat for each available kit.
+Run `/leave`, then `/roll verdant_valley` and enter again: normal seeded assembly,
+branches and caps return. A later ordinary roll also cancels a pending test selection,
+even when it rolls the same world. Test mode is consumed by one successful build or
+instance launch, applies to the leader's whole party, and never edits saved profiles.
+On a published creator-owned test place, also verify the reserved server keeps the
+test flag and returning to the hub does not enable it for later instances.
 
 **Why the split.** Your own character's velocity, speed and CFrame are already
 yours — Roblox gives the client network ownership of its own rig — so routing
@@ -357,6 +378,17 @@ re-entering on the same roll count rebuilds the identical map. Two different
 players never get the same one.
 
 ### Test C3 — the hub is walkable (3 min)
+
+**Sky docking check (2026-09-27).** Restart Play after sync and use medium or
+higher graphics (large ships and whales are Detail 2). Observe the galleon/carrier
+for several minutes: first berth attempt is after 30–90 seconds, travel and wide
+turns take additional time. They should approach a backdrop island with clear
+separation (hull 20 studs beyond the island's bounding face, including angled
+approaches), slow to a stationary hold for 12–25 seconds, face alongside, then
+depart. Watch whales at every spawned scale: they should keep wandering and
+never perform a berth hold. In server Explorer, `WanderCanDock` is true only on
+large ship bodies, false on whales/small ships. Headless tests verify those
+content assignments; live avoidance and mesh-clearance behavior require Studio.
 
 Added after two playtests found geometry that tests could not see. Do this
 before anything else after a scale or layout change.

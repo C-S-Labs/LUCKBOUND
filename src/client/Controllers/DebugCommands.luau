@@ -315,9 +315,13 @@ function DebugCommands.init(): ()
 
 	table.insert(
 		HELP,
-		register("roll", "/roll <WORLD_ID> -- force a destination", function(args)
-			remote("roll", args)
-		end)
+		register(
+			"roll",
+			"/roll <WORLD_ID> [test] -- force a destination; test shows every chunk once",
+			function(args)
+				remote("roll", args)
+			end
+		)
 	)
 	table.insert(
 		HELP,

@@ -241,6 +241,27 @@ is a list of numbers, and that seam is why the rules are testable at all.**
 
 ### Expedition size
 
+**Developer catalogue layout (2026-09-27).** `/roll <WORLD_ID> test` keeps the usual
+forced-roll/entry flow but selects `ChunkCore.assembleTest` for one instance. It uses
+every chunk definition for that world exactly once, independent of role, Weight,
+SpawnChance, MaxPerLayout and normal path/branch/repeat settings. Pieces lie on +X,
+at Y=Z=0, starting with an entry at the origin. Compatible sockets join where a quarter
+turn preserves that line and avoids footprint overlap; otherwise the next piece is
+placed beyond the previous footprint with `GameConfig.Debug.TestChunkGap` spacing.
+Separated pieces (including the first entry) choose a quarter turn that maximizes
+east/west sockets, preferring an east exit, so straight paths face along the row.
+Rotated footprints determine spacing. The loader rotates the test entry's return
+offset and marks test models `ModelStreamingMode.Persistent`, so the full catalogue
+remains present in client Explorer beyond the player's streaming radius. Normal
+maps retain their existing streaming mode. Catalogue persistence deliberately loads
+the full kit for developer inspection; it is scoped to the disposable test stage.
+No filler or automatic caps are added; open sockets and disconnected pieces are
+intentional. Test instances run for `GameConfig.Debug.TestDurationSeconds` (3600,
+60 minutes), including reserved servers; normal world durations are unchanged.
+The existing loader, scenario and ambience pipeline still runs. Only
+the first entry supplies arrival/return positions; all other entry variants remain
+available for inspection. Normal assembly and its validation contract are unchanged.
+
 That layout spans **1536 studs** end to end — about **48 seconds** of walking
 at WalkSpeed 32, roughly 7% of a 720-second expedition. The rest is combat and
 exploration.

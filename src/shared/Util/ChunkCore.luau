@@ -628,6 +628,107 @@ function ChunkCore.assemble(
 	}
 end
 
+--- Developer catalogue: every definition once, on the X axis. Socket joins
+--- are preferred, but coverage never depends on the kit's connection grammar.
+function ChunkCore.assembleTest(
+	chunks: { [string]: any },
+	worldId: string,
+	gap: number
+): (boolean, any)
+	local remaining = {}
+	for _, chunk in chunks do
+		if chunk.WorldId == worldId then
+			table.insert(remaining, chunk)
+		end
+	end
+	table.sort(remaining, function(a, b)
+		if (a.Role == "ENTRY") ~= (b.Role == "ENTRY") then
+			return a.Role == "ENTRY"
+		end
+		return a.Id < b.Id
+	end)
+	if #remaining == 0 then
+		return false, `{worldId} has no chunk kit`
+	end
+	local placed = {}
+	local rightEdge = 0
+	local previous: any = nil
+	local function halfWidth(p: any, chunk: any): number
+		return (if p.Yaw == 90 or p.Yaw == 270 then chunk.SizeZ else chunk.SizeX) / 2
+	end
+	local function rowYaw(chunk: any): number
+		local bestYaw, bestScore = 0, -1
+		for yaw = 0, 270, 90 do
+			local score = 0
+			for _, socket in chunk.Sockets do
+				local facing = norm(socket.Facing + yaw)
+				if facing == 90 or facing == 270 then
+					score += 2
+				end
+				if facing == 90 then
+					score += 1
+				end
+			end
+			if score > bestScore then
+				bestYaw, bestScore = yaw, score
+			end
+		end
+		return bestYaw
+	end
+	while #remaining > 0 do
+		local chosen = 1
+		local candidate: any = nil
+		if previous then
+			local prior = chunks[previous.ChunkId]
+			for i, chunk in remaining do
+				for _, exit in prior.Sockets do
+					local at = ChunkCore.worldSocket(previous, prior, exit)
+					if at.Facing ~= 90 then
+						continue
+					end
+					for _, arrival in chunk.Sockets do
+						local probe = table.clone(chunk)
+						probe.Sockets = { arrival }
+						local p = ChunkCore.placeAgainst(probe, at, #placed + 1)
+						if
+							p
+							and p.Z == 0
+							and p.Y == 0
+							and p.X - halfWidth(p, chunk) >= rightEdge
+						then
+							candidate, chosen = p, i
+							break
+						end
+					end
+					if candidate then
+						break
+					end
+				end
+				if candidate then
+					break
+				end
+			end
+		end
+		local chunk = table.remove(remaining, chosen)
+		local yaw = rowYaw(chunk)
+		local width = halfWidth({ Yaw = yaw }, chunk)
+		local p = candidate
+			or {
+				ChunkId = chunk.Id,
+				Role = chunk.Role,
+				Index = #placed + 1,
+				X = if #placed == 0 then 0 else rightEdge + gap + width,
+				Y = 0,
+				Z = 0,
+				Yaw = yaw,
+			}
+		table.insert(placed, p)
+		rightEdge = p.X + halfWidth(p, chunk)
+		previous = p
+	end
+	return true, { WorldId = worldId, Chunks = placed, TestMode = true }
+end
+
 --- Retries assembly across several seeds. A layout can legitimately fail when
 --- the path folds back and collides with itself, which is seed-dependent, so
 --- the caller should try a few rather than reject the expedition. Returns the

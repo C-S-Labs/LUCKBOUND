@@ -468,6 +468,23 @@ local GameConfig = {
 			-- Drawn at random per server. Detail: 1 on every device, 2 from
 			-- medium graphics, 3 high only (extra copies step up one level).
 			-- Speed is studs/second along the orbit.
+			Docking = {
+				BerthPadding = 2, -- keep the clearance box off the island face
+				InitialDelayMin = 30,
+				InitialDelayMax = 90,
+				RetryDelayMin = 20,
+				RetryDelayMax = 40,
+				FailedApproachDelayMin = 30,
+				FailedApproachDelayMax = 60,
+				DepartureDelayMin = 60,
+				DepartureDelayMax = 140,
+				HoldMin = 12,
+				HoldMax = 25,
+				ArrivalDistance = 6,
+				SlowdownRate = 0.4,
+				StuckMinSeconds = 12,
+				ApproachTurnRadians = math.pi,
+			},
 			Orbiters = {
 				{
 					Names = {
@@ -491,6 +508,7 @@ local GameConfig = {
 				},
 				{
 					Names = { "hubprop_ship_galleon", "hubprop_ship_carrier" },
+					CanDock = true,
 					Min = 1,
 					Max = 2,
 					Detail = 2,
@@ -1010,6 +1028,9 @@ local GameConfig = {
 		-- in depth is not a reason to leave the front door open.
 		AllowCommands = true,
 		AllowForcedRolls = true,
+		-- Space between catalogue pieces that cannot join on the observation line.
+		TestChunkGap = 8,
+		TestDurationSeconds = 3600,
 
 		-- How fast /fly moves, in studs per second.
 		FlySpeed = 120,
