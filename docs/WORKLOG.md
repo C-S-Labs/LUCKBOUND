@@ -33,6 +33,46 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 85 — 2026-09-27 — Ethereal Scape hybrid kit (36) + universal generation (§7.7)
+**Merged:** see the PR for this branch   **Tests:** CI   **Branch:** `claude/es-hybrid-universal-gen`
+
+### Done
+- Owner reviewed three direction samples (A floating isles, B lush cloudscape, C temple city) and chose the
+  **hybrid**: A's floating isles as the base, C's temple architecture for combat rooms, minibosses and the Sanctum,
+  B's meadow dressing on top. The kit was rebuilt around an **island web** (`es_isles.py`, `es_pieces.web()`):
+  named isles at their own heights joined by level or sloped plank bridges, the standard landing on every mouth.
+- **36 pieces** (owner allowed +6): 1 ENTRY, 12 PATH (4 junctions), 10 COMBAT, **2 MINIBOSS**, 3 SIDE, 4 CAP,
+  1 BOSS, **3 BACKDROP**. Height variation: socket `OffsetY` rises and descents (Skystair ±24, ascent bends ±16,
+  Twin-Span fork +10) plus terraced isles inside pieces. 36/36 validate (walk graph, mouths at their own height,
+  nothing detached, box, <10k tris). The needle "sky spires" of the first pass were replaced by stout pagoda
+  **aether beacons** — needles read as Sky Citadel.
+- **Build spec §7.7, universal generation.** Opt-in `WorldDefinition.Generation` blueprint (BranchLength,
+  Minibosses, MaxSides, Backdrop). With it, every spare mouth of every piece grows a branch, and every branch ends
+  in a MINIBOSS arena, a SIDE pocket or a CAP; BACKDROP pieces ring the finished map. New roles MINIBOSS (1 socket,
+  branch terminus, always the MINI_BOSS scenario — never the boss arena) and BACKDROP (0 sockets). Worlds without
+  a blueprint run the legacy passes unchanged — Sky Citadel and Verdant Valley are untouched (VV placement script
+  and chunk file not edited).
+- Geometry fixes found on the way: primitives now emit ONE closed shell (a lone cap face could be flipped by
+  normal recalculation — a bridge deck came out facing down); mushrooms de-clip as one group; sloped bridges span
+  edge to edge with level stubs; the backdrop cumulus loop is bounded (an open loop exhausted memory once).
+- `es_mapgen.py` mirrors the §7.7 assembler in Python; the saved `.blend` has a `MAP_PREVIEW` collection — a whole
+  seeded map — and `renders/map_preview*.jpg`.
+- Rojo: `rokit.toml` already pins 7.7.0; README and TOOLCHAIN_ACCESS no longer say 7.6.0.
+
+### Decisions made
+- Miniboss and boss areas stay distinct (owner): BOSS ends the critical path through the reserved Kind; MINIBOSS is
+  only a branch terminus.
+- Bridges may climb up to ~37 degrees (walk graph and Humanoid both climb it).
+
+### Stopped at
+Kit generated, exported and rendered; not uploaded or walked in Studio.
+
+### Next
+1. Upload the structure/props FBX and walk the hybrid in Studio (sockets with OffsetY are the new thing to verify).
+2. Decide whether Sky Citadel / Verdant Valley adopt a §7.7 blueprint (content change only; VV owner's call).
+
+---
+
 ## Session 84 — 2026-09-27 — Close berth geometry and final branch review
 **Merged:** none   **Tests:** 866 passing   **Branch:** `test-command`
 

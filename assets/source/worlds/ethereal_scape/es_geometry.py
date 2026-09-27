@@ -66,6 +66,9 @@ class Piece:
         self.sockets = sockets             # [(dir, kind)]
         self.verts, self.faces, self.fmat = [], [], []
         self.ftag = []                     # per face: the builder that made it (clip reports)
+        self.fshell = []                   # per face: which primitive call made it (one shell each)
+        self._shell = 0
+        self._grouped = False
         self.slabs = []                    # geometry_checks compatibility (decks are found by area)
         self.up = set()                    # single-sided decals: force +Z
         self.islands = []                  # (cx, cy, r, bottom_z, top_z) for float clearance
@@ -73,6 +76,9 @@ class Piece:
         self.keepout = []                  # (x, y, r): every big feature's footprint; scatter never lands in one
         self.holes = []                    # (x, y, r): open drops in the cloud floor
         self.props = []                    # placed ambient props (convention 6)
+        self.tops = []                     # (outline, z): every isle / landing top -- where dressing may stand
+        self.lift = {}                     # cardinal -> the socket's z (its OffsetY); absent = 0
+        self.nodes = {}                    # named isles of an island web (es_pieces.web)
         self.rng = random.Random(name_seed(pid))
 
     def add(self, verts, faces, mat, M=None):
@@ -82,9 +88,38 @@ class Piece:
         else:
             self.verts.extend(M @ Vector(v) for v in verts)
         self.faces.extend([base + i for i in f] for f in faces)
-        self.fmat.extend([mat] * len(faces))
+        # `mat` may be one material, or one per face (a closed primitive whose top differs from its sides:
+        # ONE vertex set, so normal recalculation sees a closed shell and never flips a lone cap face)
+        self.fmat.extend(list(mat) if isinstance(mat, (list, tuple)) else [mat] * len(faces))
         self.ftag.extend([caller_tag()] * len(faces))
+        self.fshell.extend([self._shell] * len(faces))
+        if not self._grouped:              # inside group(): every add shares one shell id
+            self._shell += 1
         return base
+
+    def group(self, on):
+        """Several primitives that must live or die together (a mushroom's stem and cap): the de-clip pass
+        removes whole shells, so a group is one shell."""
+        if not on:
+            self._shell += 1
+        self._grouped = on
+
+    def drop_shells(self, shells):
+        """Remove whole primitives (every face of each shell id) -- used by the de-clip pass."""
+        shells = set(shells)
+        if not shells:
+            return
+        keep = [i for i, s in enumerate(self.fshell) if s not in shells]
+        remap = {old: new for new, old in enumerate(keep)}
+        self.up = {remap[i] for i in self.up if i in remap}
+        faces = [self.faces[i] for i in keep]
+        self.fmat = [self.fmat[i] for i in keep]
+        self.ftag = [self.ftag[i] for i in keep]
+        self.fshell = [self.fshell[i] for i in keep]
+        used = sorted({v for f in faces for v in f})
+        vmap = {old: new for new, old in enumerate(used)}
+        self.verts = [self.verts[i] for i in used]
+        self.faces = [[vmap[v] for v in f] for f in faces]
 
     def tri_count(self):
         return sum(len(f) - 2 for f in self.faces)
@@ -119,9 +154,9 @@ def prism(p, pts, z0, z1, top, side=None, bottom=None):
     cy = sum(q[1] for q in pts) / n
     verts = [(x, y, z1) for x, y in pts] + [(x, y, z0) for x, y in pts] + [(cx, cy, z1), (cx, cy, z0)]
     ct, cb = 2 * n, 2 * n + 1
-    p.add(verts, [[ct, i, (i + 1) % n] for i in range(n)], top)
-    p.add(verts, [[cb, n + (i + 1) % n, n + i] for i in range(n)], bottom or side or top)
-    p.add(verts, [[i, n + i, n + (i + 1) % n, (i + 1) % n] for i in range(n)], side or top)
+    p.add(verts, [[ct, i, (i + 1) % n] for i in range(n)] + [[cb, n + (i + 1) % n, n + i] for i in range(n)]
+          + [[i, n + i, n + (i + 1) % n, (i + 1) % n] for i in range(n)],
+          [top] * n + [bottom or side or top] * n + [side or top] * n)
 
 
 def ring_pts(cx, cy, r, n, a0=0.0, sx=1.0, sy=1.0):
@@ -145,10 +180,7 @@ def frustum(p, mat, cx, cy, z0, z1, r0, r1, n=8, a0=0.0, top_mat=None, bottom_ma
         side = [[i, (i + 1) % n, n + (i + 1) % n, n + i] for i in range(n)]
         topf = [[n + i for i in range(n)]]
     botf = [list(reversed(range(n)))]
-    p.add(verts, side, mat, M)
-    if topf:
-        p.add(verts, topf, top_mat or mat, M)
-    p.add(verts, botf, bottom_mat or mat, M)
+    p.add(verts, side + topf + botf, [mat] * len(side) + [top_mat or mat] * len(topf) + [bottom_mat or mat], M)
 
 
 def box(p, mat, cx, cy, cz, sx, sy, sz, rz=0.0, top=None, M=None):
@@ -158,8 +190,8 @@ def box(p, mat, cx, cy, cz, sx, sy, sz, rz=0.0, top=None, M=None):
     T = xf(cx, cy, cz, rz)
     if M is not None:
         T = M @ T
-    p.add(v, [[3, 2, 1, 0], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7]], mat, T)
-    p.add(v, [[4, 5, 6, 7]], top or mat, T)
+    p.add(v, [[3, 2, 1, 0], [0, 1, 5, 4], [1, 2, 6, 5], [2, 3, 7, 6], [3, 0, 4, 7], [4, 5, 6, 7]],
+          [mat] * 5 + [top or mat], T)
 
 
 def _frame(a, b):
@@ -203,8 +235,8 @@ def gem(p, mat, cx, cy, cz, r, up, down, n=7, a0=0.0, sx=1.0, sy=1.0, top_mat=No
              for i in range(n)]
     verts += [(cx, cy, cz + up), (cx, cy, cz - down)]
     t, b = n, n + 1
-    p.add(verts, [[i, (i + 1) % n, t] for i in range(n)], top_mat or mat)
-    p.add(verts, [[(i + 1) % n, i, b] for i in range(n)], mat)
+    p.add(verts, [[i, (i + 1) % n, t] for i in range(n)] + [[(i + 1) % n, i, b] for i in range(n)],
+          [top_mat or mat] * n + [mat] * n)
 
 
 def gem2(p, mat, cx, cy, cz, r, up, down, n=7, a0=0.0, belt=0.35, top_mat=None):
@@ -220,9 +252,8 @@ def gem2(p, mat, cx, cy, cz, r, up, down, n=7, a0=0.0, belt=0.35, top_mat=None):
     for i in range(n):
         j = (i + 1) % n
         faces_mid += [[i, j, n + i], [j, n + j, n + i]]
-    p.add(verts, faces_mid, mat)
-    p.add(verts, [[n + i, n + (i + 1) % n, t] for i in range(n)], top_mat or mat)
-    p.add(verts, [[(i + 1) % n, i, b] for i in range(n)], mat)
+    p.add(verts, faces_mid + [[n + i, n + (i + 1) % n, t] for i in range(n)] + [[(i + 1) % n, i, b] for i in range(n)],
+          [mat] * len(faces_mid) + [top_mat or mat] * n + [mat] * n)
 
 
 def blob(p, mat, cx, cy, z, r, h, n=7, a0=0.0, sx=1.0, sy=1.0, below=None):

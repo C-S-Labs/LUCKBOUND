@@ -9,14 +9,17 @@
 -- Sockets: Facing degrees, 0 = -Z (north), 90 = +X, 180 = +Z, 270 = -X; offsets local to the piece.
 -- Every box is (2H x 2H) x 256: keel -96, crown +160, walk plane 32 below the box centre.
 -- The Entry is 384 square and the Sanctum 512 square; their mouths are the same size as everyone's.
+-- HYBRID (owner pick 2026-09-27): floating isles + temple architecture + meadow dressing. A socket's
+-- OffsetY is its height: rises and descents carry the map up and down. MINIBOSS arenas end side
+-- branches and are NOT the boss arena; BACKDROP pieces have no sockets and ring the map (spec §7.7).
 local WIDTH = { SPAN = 44, COMMUNION = 64 }
 
-local function socket(id: string, kind: string, x: number, z: number, facing: number)
+local function socket(id: string, kind: string, x: number, z: number, facing: number, y: number?)
 	return {
 		Id = id,
 		Kind = kind,
 		OffsetX = x,
-		OffsetY = 0,
+		OffsetY = y or 0, -- a rise or a descent carries the map up or down
 		OffsetZ = z,
 		Facing = facing,
 		Width = WIDTH[kind],
@@ -28,7 +31,7 @@ local CHUNKS = {
 		Id = "ES_ENTRY",
 		Role = "ENTRY" :: any,
 		AssetKey = "ES_CHUNK_ENTRY",
-		-- Arrival Meadow: gold mosaic landing, crystal-topped spawn columns, a shrine mesa, a great sky tree.
+		-- Arrival Isle: gold mosaic landing, crystal-topped spawn columns, a shrine terrace, the great sky tree, two perches.
 		Sockets = {
 			socket("north", "SPAN", 0, -192, 0),
 		},
@@ -39,85 +42,70 @@ local CHUNKS = {
 		Size = 384,
 	},
 	{
-		Id = "ES_PATH_MEADOW_WALK",
+		Id = "ES_PATH_PLANK_CROSSING",
 		Role = "PATH" :: any,
-		AssetKey = "ES_CHUNK_PATH_MEADOW_WALK",
-		-- A lantern-lined golden path across a meadow, a great tree and a small tree mesa beside it.
+		AssetKey = "ES_CHUNK_PATH_PLANK_CROSSING",
+		-- Three isles strung on plank bridges, the middle one raised under a pavilion; a spire on a low perch.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
 			socket("north", "SPAN", 0, -128, 0),
 		},
 		Supports = { Combat = true, Traversal = true, Ambush = true },
-		Weight = 26,
-		EnemyTags = { "MEADOW_STAG", "AETHER_WISP" },
-		Tags = { "meadow" },
+		Weight = 24,
+		EnemyTags = { "SKYBORNE_HARRIER", "AETHER_WISP" },
+		Tags = { "bridge", "isles" },
 		Size = 256,
 	},
 	{
-		Id = "ES_PATH_RUIN_STAIR",
+		Id = "ES_PATH_GROVE_ISLE",
 		Role = "PATH" :: any,
-		AssetKey = "ES_CHUNK_PATH_RUIN_STAIR",
-		-- Up onto a ruined temple terrace, under a colossal gate, and down again.
+		AssetKey = "ES_CHUNK_PATH_GROVE_ISLE",
+		-- One broad meadow isle: a great tree, a fairy ring, aether falls pouring off its east rim.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
 			socket("north", "SPAN", 0, -128, 0),
 		},
-		Supports = { Combat = true, Traversal = true, Ambush = true, Secret = true },
-		Weight = 16,
-		EnemyTags = { "TEMPLE_ACOLYTE" },
-		Tags = { "ruin", "stair" },
+		Supports = { Combat = true, Traversal = true, Secret = true },
+		Weight = 20,
+		EnemyTags = { "MEADOW_STAG" },
+		Tags = { "meadow", "grove" },
 		Size = 256,
 	},
 	{
-		Id = "ES_PATH_RIFT_BRIDGE",
+		Id = "ES_PATH_SKYSTAIR_UP",
 		Role = "PATH" :: any,
-		AssetKey = "ES_CHUNK_PATH_RIFT_BRIDGE",
-		-- A gold plank bridge over a rift in the cloud, beside a crag rising from the depths.
+		AssetKey = "ES_CHUNK_PATH_SKYSTAIR_UP",
+		-- A full storey UP (+24): three isles climbing past ruined columns and a great tree to a shrine arch.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
-			socket("north", "SPAN", 0, -128, 0),
+			socket("north", "SPAN", 0, -128, 0, 24),
 		},
 		Supports = { Traversal = true, Ambush = true },
-		Weight = 14,
-		EnemyTags = { "SKYBORNE_HARRIER" },
-		Tags = { "bridge", "rift", "exposed" },
+		Weight = 12,
+		EnemyTags = { "TEMPLE_ACOLYTE" },
+		Tags = { "rise", "isles" },
 		Size = 256,
 	},
 	{
-		Id = "ES_PATH_CRYSTAL_FIELD",
+		Id = "ES_PATH_SKYSTAIR_DOWN",
 		Role = "PATH" :: any,
-		AssetKey = "ES_CHUNK_PATH_CRYSTAL_FIELD",
-		-- A field of sky-crystal clusters under a crystal colossus.
+		AssetKey = "ES_CHUNK_PATH_SKYSTAIR_DOWN",
+		-- A full storey DOWN (-24): three isles stepping into the cloud past a crystal colossus.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
-			socket("north", "SPAN", 0, -128, 0),
+			socket("north", "SPAN", 0, -128, 0, -24),
 		},
-		Supports = { Combat = true, Ambush = true, Secret = true },
-		Weight = 16,
+		Supports = { Traversal = true, Ambush = true, Secret = true },
+		Weight = 12,
 		EnemyTags = { "CRYSTAL_WARDEN" },
-		Tags = { "crystal" },
-		Size = 256,
-	},
-	{
-		Id = "ES_PATH_LILY_TERRACES",
-		Role = "PATH" :: any,
-		AssetKey = "ES_CHUNK_PATH_LILY_TERRACES",
-		-- Low meadow mesas stepping away from the path; a crag rises from the highest.
-		Sockets = {
-			socket("south", "SPAN", 0, 128, 180),
-			socket("north", "SPAN", 0, -128, 0),
-		},
-		Supports = { Combat = true, Traversal = true, Treasure = true },
-		Weight = 14,
-		EnemyTags = { "MEADOW_STAG" },
-		Tags = { "mesa" },
+		Tags = { "descent", "crystal" },
 		Size = 256,
 	},
 	{
 		Id = "ES_PATH_BEND_EAST_GROVE",
 		Role = "PATH" :: any,
 		AssetKey = "ES_CHUNK_PATH_BEND_EAST_GROVE",
-		-- A bend under an ancient grove, a fairy ring of gold mushrooms in the corner.
+		-- A bend on a grove isle, a mushroom ring, a great tree on a raised perch.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
 			socket("east", "SPAN", 128, 0, 90),
@@ -129,25 +117,40 @@ local CHUNKS = {
 		Size = 256,
 	},
 	{
-		Id = "ES_PATH_BEND_EAST_TERRACE",
+		Id = "ES_PATH_BEND_EAST_ASCENT",
 		Role = "PATH" :: any,
-		AssetKey = "ES_CHUNK_PATH_BEND_EAST_TERRACE",
-		-- A bend below a bell-tower mesa reached by a lantern-lit ramp.
+		AssetKey = "ES_CHUNK_PATH_BEND_EAST_ASCENT",
+		-- Bend and climb (+16): a ruin isle, a bell-tower isle over the east mouth, a hermit's hut perch.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
-			socket("east", "SPAN", 128, 0, 90),
+			socket("east", "SPAN", 128, 0, 90, 16),
 		},
 		Supports = { Combat = true, Traversal = true },
-		Weight = 12,
+		Weight = 10,
 		EnemyTags = { "TEMPLE_ACOLYTE" },
-		Tags = { "bend", "mesa" },
+		Tags = { "bend", "rise" },
+		Size = 256,
+	},
+	{
+		Id = "ES_PATH_BEND_WEST_FALLS",
+		Role = "PATH" :: any,
+		AssetKey = "ES_CHUNK_PATH_BEND_WEST_FALLS",
+		-- Bend and descend (-16): aether falls, a spire, a pavilion perch, a pool isle.
+		Sockets = {
+			socket("south", "SPAN", 0, 128, 180),
+			socket("west", "SPAN", -128, 0, 270, -16),
+		},
+		Supports = { Combat = true, Traversal = true, Event = true },
+		Weight = 10,
+		EnemyTags = { "CRYSTAL_WARDEN" },
+		Tags = { "bend", "descent", "falls" },
 		Size = 256,
 	},
 	{
 		Id = "ES_PATH_BEND_WEST_SHRINE",
 		Role = "PATH" :: any,
 		AssetKey = "ES_CHUNK_PATH_BEND_WEST_SHRINE",
-		-- A bend past a waystone-ringed pavilion and a bell tower.
+		-- A bend past a small shrine hall and a waystone arc, a spire over the corner.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
 			socket("west", "SPAN", -128, 0, 270),
@@ -159,33 +162,18 @@ local CHUNKS = {
 		Size = 256,
 	},
 	{
-		Id = "ES_PATH_BEND_WEST_FALLS",
-		Role = "PATH" :: any,
-		AssetKey = "ES_CHUNK_PATH_BEND_WEST_FALLS",
-		-- A bend below Aether Falls: a mesa's rim spills glowing water into a pool.
-		Sockets = {
-			socket("south", "SPAN", 0, 128, 180),
-			socket("west", "SPAN", -128, 0, 270),
-		},
-		Supports = { Combat = true, Traversal = true, Event = true },
-		Weight = 12,
-		EnemyTags = { "CRYSTAL_WARDEN" },
-		Tags = { "bend", "falls" },
-		Size = 256,
-	},
-	{
 		Id = "ES_FORK_WAYSHRINE",
 		Role = "PATH" :: any,
 		AssetKey = "ES_CHUNK_FORK_WAYSHRINE",
-		-- A three-way fork round a waystone circle and a signpost, a great tree behind.
+		-- A three-way fork round a waystone circle and a signpost, a great tree on a perch behind.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
 			socket("east", "SPAN", 128, 0, 90),
 			socket("west", "SPAN", -128, 0, 270),
 		},
 		Supports = { Combat = true, Shrine = true, Event = true },
-		Weight = 4,
-		MaxPerLayout = 1,
+		Weight = 5,
+		MaxPerLayout = 2,
 		EnemyTags = { "AETHER_WISP" },
 		Tags = { "fork" },
 		Size = 256,
@@ -194,24 +182,41 @@ local CHUNKS = {
 		Id = "ES_FORK_THREE_TREES",
 		Role = "PATH" :: any,
 		AssetKey = "ES_CHUNK_FORK_THREE_TREES",
-		-- A three-way fork under three ancient trees and a mushroom ring.
+		-- A three-way fork under three ancient trees and a mushroom ring; a crag isle below.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
 			socket("north", "SPAN", 0, -128, 0),
 			socket("east", "SPAN", 128, 0, 90),
 		},
 		Supports = { Combat = true, Ambush = true },
-		Weight = 4,
-		MaxPerLayout = 1,
+		Weight = 5,
+		MaxPerLayout = 2,
 		EnemyTags = { "MEADOW_STAG" },
 		Tags = { "fork", "grove" },
+		Size = 256,
+	},
+	{
+		Id = "ES_FORK_TWIN_SPAN",
+		Role = "PATH" :: any,
+		AssetKey = "ES_CHUNK_FORK_TWIN_SPAN",
+		-- A fork on two isles: the lower sends a road west, the upper (+10) carries a bell tower and the north mouth.
+		Sockets = {
+			socket("south", "SPAN", 0, 128, 180),
+			socket("north", "SPAN", 0, -128, 0, 10),
+			socket("west", "SPAN", -128, 0, 270),
+		},
+		Supports = { Combat = true, Traversal = true },
+		Weight = 5,
+		MaxPerLayout = 2,
+		EnemyTags = { "SKYBORNE_HARRIER" },
+		Tags = { "fork", "rise" },
 		Size = 256,
 	},
 	{
 		Id = "ES_CONVERGENCE",
 		Role = "PATH" :: any,
 		AssetKey = "ES_CHUNK_CONVERGENCE",
-		-- The crossroads: a compass court with a fountain, eight lanterns, four golden roads.
+		-- The crossroads isle: a compass court with a fountain, eight lanterns, four golden roads.
 		Sockets = {
 			socket("north", "SPAN", 0, -128, 0),
 			socket("south", "SPAN", 0, 128, 180),
@@ -219,7 +224,7 @@ local CHUNKS = {
 			socket("west", "SPAN", -128, 0, 270),
 		},
 		Supports = { Combat = true, Traversal = true, Event = true },
-		Weight = 2,
+		Weight = 3,
 		MaxPerLayout = 1,
 		EnemyTags = {},
 		Tags = { "crossroads" },
@@ -229,12 +234,12 @@ local CHUNKS = {
 		Id = "ES_MEADOW_OF_BLOOMS",
 		Role = "COMBAT" :: any,
 		AssetKey = "ES_CHUNK_MEADOW_OF_BLOOMS",
-		-- An open meadow drifted with glowing blossoms under a great tree.
+		-- An open meadow isle drifted with blossoms under a great tree, a pool and a tree mesa.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
 			socket("north", "SPAN", 0, -128, 0),
 		},
-		Supports = { Combat = true, MiniBoss = true, Ambush = true, Treasure = true },
+		Supports = { Combat = true, Ambush = true, Treasure = true },
 		Weight = 12,
 		EnemyTags = { "MEADOW_STAG" },
 		Tags = { "meadow", "open" },
@@ -244,7 +249,7 @@ local CHUNKS = {
 		Id = "ES_TERRACED_GARDENS",
 		Role = "COMBAT" :: any,
 		AssetKey = "ES_CHUNK_TERRACED_GARDENS",
-		-- Two garden mesas of soil rows and mushrooms, a crag above the higher.
+		-- Garden isles terraced +10 and +20, soil rows and mushrooms, a crag on the highest.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
 			socket("north", "SPAN", 0, -128, 0),
@@ -252,14 +257,14 @@ local CHUNKS = {
 		Supports = { Combat = true, Traversal = true, Puzzle = true },
 		Weight = 10,
 		EnemyTags = { "MEADOW_STAG" },
-		Tags = { "mesa", "garden" },
+		Tags = { "garden", "rise" },
 		Size = 256,
 	},
 	{
 		Id = "ES_CRYSTAL_HOLLOW",
 		Role = "COMBAT" :: any,
 		AssetKey = "ES_CHUNK_CRYSTAL_HOLLOW",
-		-- An aether pool ringed by crystal clusters; a crystal colossus stands over it.
+		-- An aether pool ringed by crystal clusters under a crystal colossus; a shard isle below.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
 			socket("north", "SPAN", 0, -128, 0),
@@ -274,7 +279,7 @@ local CHUNKS = {
 		Id = "ES_FALLEN_COLONNADE",
 		Role = "COMBAT" :: any,
 		AssetKey = "ES_CHUNK_FALLEN_COLONNADE",
-		-- An old temple floor, its colonnade half fallen, its bell tower still standing.
+		-- A temple-floor isle, its colonnade half fallen, statues, a bell tower still standing.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
 			socket("north", "SPAN", 0, -128, 0),
@@ -282,14 +287,14 @@ local CHUNKS = {
 		Supports = { Combat = true, MiniBoss = true, Secret = true },
 		Weight = 10,
 		EnemyTags = { "TEMPLE_ACOLYTE" },
-		Tags = { "ruin" },
+		Tags = { "temple", "ruin" },
 		Size = 256,
 	},
 	{
 		Id = "ES_MIRROR_POOL",
 		Role = "COMBAT" :: any,
 		AssetKey = "ES_CHUNK_MIRROR_POOL",
-		-- A balustraded mirror pool crossed on stepping stones, a crag beyond.
+		-- A balustraded mirror pool watched by four statues, a spire beyond, a lantern perch below.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
 			socket("north", "SPAN", 0, -128, 0),
@@ -297,14 +302,14 @@ local CHUNKS = {
 		Supports = { Combat = true, Puzzle = true, Shrine = true },
 		Weight = 10,
 		EnemyTags = { "TEMPLE_ACOLYTE" },
-		Tags = { "pool" },
+		Tags = { "pool", "temple" },
 		Size = 256,
 	},
 	{
 		Id = "ES_SHRINE_OF_WINDS",
 		Role = "COMBAT" :: any,
 		AssetKey = "ES_CHUNK_SHRINE_OF_WINDS",
-		-- Three pavilions round an orb altar, a bell tower over them.
+		-- A temple court: twin pavilions round an orb altar, a bell tower, a lantern avenue.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
 			socket("north", "SPAN", 0, -128, 0),
@@ -312,14 +317,14 @@ local CHUNKS = {
 		Supports = { Combat = true, Shrine = true, Event = true },
 		Weight = 10,
 		EnemyTags = { "TEMPLE_ACOLYTE" },
-		Tags = { "shrine" },
+		Tags = { "temple", "shrine" },
 		Size = 256,
 	},
 	{
 		Id = "ES_ROOTED_HOLLOW",
 		Role = "COMBAT" :: any,
 		AssetKey = "ES_CHUNK_ROOTED_HOLLOW",
-		-- A great tree whose roots arch over the path, mushrooms in its shade.
+		-- A great tree whose roots arch down across the isle, mushrooms in its shade.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
 			socket("north", "SPAN", 0, -128, 0),
@@ -331,10 +336,10 @@ local CHUNKS = {
 		Size = 256,
 	},
 	{
-		Id = "ES_TWIN_MESAS",
+		Id = "ES_TWIN_ISLES",
 		Role = "COMBAT" :: any,
-		AssetKey = "ES_CHUNK_TWIN_MESAS",
-		-- Two mesas flank the path, joined over it by a high plank bridge.
+		AssetKey = "ES_CHUNK_TWIN_ISLES",
+		-- Two isles joined by a climbing bridge (+12): a spire on the low one, a pavilion on the high.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
 			socket("north", "SPAN", 0, -128, 0),
@@ -342,14 +347,14 @@ local CHUNKS = {
 		Supports = { Combat = true, Traversal = true, MiniBoss = true },
 		Weight = 10,
 		EnemyTags = { "SKYBORNE_HARRIER" },
-		Tags = { "mesa", "bridge" },
+		Tags = { "isles", "bridge", "rise" },
 		Size = 256,
 	},
 	{
 		Id = "ES_TEMPLE_GATE_A",
 		Role = "COMBAT" :: any,
 		AssetKey = "ES_CHUNK_TEMPLE_GATE_A",
-		-- Gate-court: bell towers flank the arch over the COMMUNION road; waystones line it.
+		-- Gate-court: bell towers flank the great arch over the COMMUNION road; waystones line it.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
 			socket("north", "COMMUNION", 0, -128, 0),
@@ -357,14 +362,14 @@ local CHUNKS = {
 		Supports = { Combat = true, MiniBoss = true },
 		Weight = 20,
 		EnemyTags = { "GATEWARDEN" },
-		Tags = { "gate-court" },
+		Tags = { "gate-court", "temple" },
 		Size = 256,
 	},
 	{
 		Id = "ES_TEMPLE_GATE_B",
 		Role = "COMBAT" :: any,
 		AssetKey = "ES_CHUNK_TEMPLE_GATE_B",
-		-- Gate-court, rare: a columned gate hall the road passes through, crystal colossi either side.
+		-- Gate-court, rare: a roofed colonnade the road passes through, crystal colossi either side.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
 			socket("north", "COMMUNION", 0, -128, 0),
@@ -372,14 +377,44 @@ local CHUNKS = {
 		Supports = { Combat = true, MiniBoss = true },
 		Weight = 10,
 		EnemyTags = { "GATEWARDEN" },
-		Tags = { "gate-court", "rare" },
+		Tags = { "gate-court", "temple", "rare" },
+		Size = 256,
+	},
+	{
+		Id = "ES_MINIBOSS_WAYSTONE_RING",
+		Role = "MINIBOSS" :: any,
+		AssetKey = "ES_CHUNK_MINIBOSS_WAYSTONE_RING",
+		-- The Waystone Sentinel's arena: eight waystones round a gold ring, twin spires, a gallery perch.
+		Sockets = {
+			socket("south", "SPAN", 0, 128, 180),
+		},
+		Supports = { MiniBoss = true },
+		Weight = 1,
+		MaxPerLayout = 1,
+		EnemyTags = { "WAYSTONE_SENTINEL" },
+		Tags = { "miniboss", "arena" },
+		Size = 256,
+	},
+	{
+		Id = "ES_MINIBOSS_RELIQUARY_COURT",
+		Role = "MINIBOSS" :: any,
+		AssetKey = "ES_CHUNK_MINIBOSS_RELIQUARY_COURT",
+		-- The Reliquary Keeper's court: a balustraded temple court before the reliquary hall.
+		Sockets = {
+			socket("south", "SPAN", 0, 128, 180),
+		},
+		Supports = { MiniBoss = true },
+		Weight = 1,
+		MaxPerLayout = 1,
+		EnemyTags = { "RELIQUARY_KEEPER" },
+		Tags = { "miniboss", "arena", "temple" },
 		Size = 256,
 	},
 	{
 		Id = "ES_SIDE_HERMIT_GROVE",
 		Role = "SIDE" :: any,
 		AssetKey = "ES_CHUNK_SIDE_HERMIT_GROVE",
-		-- A hermit's hut in a grove under a great tree.
+		-- A hermit's hut and garden under a great tree, a lantern perch.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
 		},
@@ -407,13 +442,13 @@ local CHUNKS = {
 		Id = "ES_SIDE_RELIC_ALTAR",
 		Role = "SIDE" :: any,
 		AssetKey = "ES_CHUNK_SIDE_RELIC_ALTAR",
-		-- A pavilion altar holding a golden orb, a crystal colossus behind.
+		-- A pavilion altar holding a relic, a crystal colossus on a raised isle behind.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
 		},
-		Supports = { Combat = true, Treasure = true, MiniBoss = true },
+		Supports = { Combat = true, Treasure = true },
 		Weight = 6,
-		EnemyTags = { "RELIQUARY_KEEPER" },
+		EnemyTags = {},
 		Tags = { "side", "treasure" },
 		Size = 256,
 	},
@@ -421,7 +456,7 @@ local CHUNKS = {
 		Id = "ES_CAP_BROKEN_BRIDGE",
 		Role = "CAP" :: any,
 		AssetKey = "ES_CHUNK_CAP_BROKEN_BRIDGE",
-		-- A plank bridge that snaps over a rift; a lone crag stands in the void.
+		-- A plank bridge that snaps over the void; a lone crag rises from the depths beyond.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
 		},
@@ -434,7 +469,7 @@ local CHUNKS = {
 		Id = "ES_CAP_OVERLOOK",
 		Role = "CAP" :: any,
 		AssetKey = "ES_CHUNK_CAP_OVERLOOK",
-		-- A balustraded mesa lookout with a sky seat under a great tree.
+		-- A balustraded lookout isle with a sky seat under a great tree.
 		Sockets = {
 			socket("south", "SPAN", 0, 128, 180),
 		},
@@ -457,10 +492,23 @@ local CHUNKS = {
 		Size = 256,
 	},
 	{
+		Id = "ES_CAP_FALLS_LEDGE",
+		Role = "CAP" :: any,
+		AssetKey = "ES_CHUNK_CAP_FALLS_LEDGE",
+		-- A ledge where aether falls pour off the isle's rim, a spire over it.
+		Sockets = {
+			socket("south", "SPAN", 0, 128, 180),
+		},
+		Weight = 1,
+		EnemyTags = {},
+		Tags = { "cap", "dead-end", "falls" },
+		Size = 256,
+	},
+	{
 		Id = "ES_SANCTUM",
 		Role = "BOSS" :: any,
 		AssetKey = "ES_CHUNK_SANCTUM",
-		-- The Sanctum: a grand temple that houses the boss -- portico, crystal windows, an open hall, four towers.
+		-- The Sanctum: the grand temple that houses the boss, on the greatest isle in the sky.
 		Sockets = {
 			socket("south", "COMMUNION", 0, 256, 180),
 		},
@@ -469,6 +517,39 @@ local CHUNKS = {
 		EnemyTags = { "THE_ASCENDANT" },
 		Tags = { "arena" },
 		Size = 512,
+	},
+	{
+		Id = "ES_BACKDROP_CLOUDBANK",
+		Role = "BACKDROP" :: any,
+		AssetKey = "ES_CHUNK_BACKDROP_CLOUDBANK",
+		-- Surround: a towering cumulus over a bank of cloud.
+		Sockets = {}, -- BACKDROP: surround scenery, ringed round the map by the §7.7 generator
+		Weight = 4,
+		EnemyTags = {},
+		Tags = { "backdrop", "cloud" },
+		Size = 256,
+	},
+	{
+		Id = "ES_BACKDROP_DRIFT_ISLES",
+		Role = "BACKDROP" :: any,
+		AssetKey = "ES_CHUNK_BACKDROP_DRIFT_ISLES",
+		-- Surround: small isles drifting at their own heights, one carrying a spire.
+		Sockets = {}, -- BACKDROP: surround scenery, ringed round the map by the §7.7 generator
+		Weight = 3,
+		EnemyTags = {},
+		Tags = { "backdrop", "isles" },
+		Size = 256,
+	},
+	{
+		Id = "ES_BACKDROP_CRYSTAL_SPIRE",
+		Role = "BACKDROP" :: any,
+		AssetKey = "ES_CHUNK_BACKDROP_CRYSTAL_SPIRE",
+		-- Surround: a crystal-ringed crag spire on a sunken isle.
+		Sockets = {}, -- BACKDROP: surround scenery, ringed round the map by the §7.7 generator
+		Weight = 2,
+		EnemyTags = {},
+		Tags = { "backdrop", "crystal" },
+		Size = 256,
 	},
 }
 

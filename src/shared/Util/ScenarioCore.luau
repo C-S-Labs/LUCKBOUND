@@ -32,6 +32,10 @@ export type AssignOptions = {
 
 --- Which scenarios a given placed chunk could host at all.
 --- Compatibility is deliberate, not universal -- brief §3.
+-- Roles whose scenario is decided by the role itself, not drawn: arrival, the
+-- arena, dead ends, §7.7 miniboss arenas and §7.7 backdrop scenery.
+local FIXED_ROLE = { ENTRY = true, BOSS = true, CAP = true, MINIBOSS = true, BACKDROP = true }
+
 function ScenarioCore.compatible(chunk: any, role: string, scenarios: { [string]: any }): { any }
 	local out = {}
 	local supports = chunk.Supports or {}
@@ -112,20 +116,21 @@ function ScenarioCore.assign(
 
 	local assignable = 0
 	for _, placed in layout.Chunks do
-		if placed.Role ~= "ENTRY" and placed.Role ~= "BOSS" and placed.Role ~= "CAP" then
+		if not FIXED_ROLE[placed.Role] then
 			assignable += 1
 		end
 	end
 
 	local seen = 0
 	for _, placed in layout.Chunks do
-		if placed.Role == "ENTRY" or placed.Role == "BOSS" or placed.Role == "CAP" then
+		if FIXED_ROLE[placed.Role] then
 			table.insert(steps, {
 				Index = placed.Index,
 				ChunkId = placed.ChunkId,
 				Role = placed.Role,
-				ScenarioId = nil,
-				Band = nil,
+				-- A §7.7 MINIBOSS arena always hosts its miniboss; the rest host nothing.
+				ScenarioId = if placed.Role == "MINIBOSS" then "MINI_BOSS" else nil,
+				Band = if placed.Role == "MINIBOSS" then "RARE" else nil,
 				FateTouched = false,
 			})
 			continue

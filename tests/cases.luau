@@ -3082,22 +3082,26 @@ do
 	for _ in esChunks do
 		esCount += 1
 	end
-	check("the kit is 30 pieces", esCount == 30, tostring(esCount))
+	check("the kit is 36 pieces", esCount == 36, tostring(esCount))
 	check(
-		"roles match the schema doc: 1 ENTRY, 12 PATH, 10 COMBAT, 3 SIDE, 3 CAP, 1 BOSS",
+		"roles: 1 ENTRY, 12 PATH, 10 COMBAT, 2 MINIBOSS, 3 SIDE, 4 CAP, 1 BOSS, 3 BACKDROP",
 		roleCount.ENTRY == 1
 			and roleCount.PATH == 12
 			and roleCount.COMBAT == 10
+			and roleCount.MINIBOSS == 2
 			and roleCount.SIDE == 3
-			and roleCount.CAP == 3
-			and roleCount.BOSS == 1,
+			and roleCount.CAP == 4
+			and roleCount.BOSS == 1
+			and roleCount.BACKDROP == 3,
 		table.concat({
 			string.format("ENTRY=%d", roleCount.ENTRY or 0),
 			string.format("PATH=%d", roleCount.PATH or 0),
 			string.format("COMBAT=%d", roleCount.COMBAT or 0),
+			string.format("MINIBOSS=%d", roleCount.MINIBOSS or 0),
 			string.format("SIDE=%d", roleCount.SIDE or 0),
 			string.format("CAP=%d", roleCount.CAP or 0),
 			string.format("BOSS=%d", roleCount.BOSS or 0),
+			string.format("BACKDROP=%d", roleCount.BACKDROP or 0),
 		}, " ")
 	)
 
@@ -3127,8 +3131,6 @@ do
 		esChunks.ES_SANCTUM.Sockets[1].Kind == "COMMUNION"
 	)
 	check("the Convergence is a 4-way crossroads", #esChunks.ES_CONVERGENCE.Sockets == 4)
-	-- The revamp's intersections (owner: "I see no intersection pieces"): a four-way
-	-- and two three-way forks, so side pockets attach and a run can branch.
 	local junctions = {}
 	for id, chunk in esChunks do
 		if #chunk.Sockets >= 3 then
@@ -3137,13 +3139,141 @@ do
 	end
 	table.sort(junctions)
 	check(
-		"three junctions: the Convergence and two forks",
-		#junctions == 3
+		"four junctions: the Convergence and three forks",
+		#junctions == 4
 			and junctions[1] == "ES_CONVERGENCE"
 			and junctions[2] == "ES_FORK_THREE_TREES"
-			and junctions[3] == "ES_FORK_WAYSHRINE",
+			and junctions[3] == "ES_FORK_TWIN_SPAN"
+			and junctions[4] == "ES_FORK_WAYSHRINE",
 		table.concat(junctions, ", ")
 	)
+	-- Height variation (owner 2026-09-27): rises and descents carry the map up
+	-- and down through a socket's OffsetY.
+	local lifts = {}
+	for _, chunk in esChunks do
+		for _, s in chunk.Sockets do
+			if s.OffsetY ~= 0 then
+				lifts[s.OffsetY > 0 and "up" or "down"] = true
+			end
+		end
+	end
+	check("the kit climbs and descends (socket OffsetY)", lifts.up == true and lifts.down == true)
+	-- Miniboss and boss areas stay different things (owner 2026-09-27): the
+	-- arena ends the critical path; a miniboss arena only ever ends a branch.
+	for id, chunk in esChunks do
+		if chunk.Role == "MINIBOSS" then
+			check(
+				`{id} is a one-mouth SPAN arena, not a boss arena`,
+				#chunk.Sockets == 1
+					and chunk.Sockets[1].Kind == "SPAN"
+					and chunk.SizeX < esChunks.ES_SANCTUM.SizeX
+			)
+		elseif chunk.Role == "BACKDROP" then
+			check(`{id} is socketless scenery`, #chunk.Sockets == 0)
+		end
+	end
+	check(
+		"the world opts into the §7.7 blueprint",
+		type(es.Generation) == "table" and (es.Generation.Minibosses or 0) >= 1
+	)
+
+	-- §7.7 UNIVERSAL GENERATION, end to end on the real kit.
+	do
+		local genFailures, minis, sides, backdrops, runs = {}, 0, 0, 0, 0
+		for seed = 1, 40 do
+			local okA, layout = ChunkCore.assembleWithRetry(Chunks, {
+				WorldId = "ETHEREAL_SCAPE",
+				PathLength = es.MapPathLength,
+				IncludeSide = GameConfig.Expedition.IncludeSide,
+				BranchLength = GameConfig.Expedition.BranchLength,
+				MaxRepeats = GameConfig.Expedition.MaxRepeats,
+				Generation = es.Generation,
+			}, function(a)
+				return ExpeditionCore.streamFor(seed, a)
+			end, GameConfig.Expedition.AssemblyAttempts)
+			if not okA then
+				table.insert(genFailures, `seed {seed}: {layout}`)
+				continue
+			end
+			runs += 1
+			local okV, errV = ChunkCore.validateLayout(layout, Chunks)
+			if not okV then
+				table.insert(genFailures, `seed {seed}: {table.concat(errV, "; ")}`)
+			end
+			local bosses = 0
+			for _, pl in layout.Chunks do
+				minis += if pl.Role == "MINIBOSS" then 1 else 0
+				sides += if pl.Role == "SIDE" then 1 else 0
+				backdrops += if pl.Role == "BACKDROP" then 1 else 0
+				bosses += if pl.Role == "BOSS" then 1 else 0
+			end
+			if bosses ~= 1 then
+				table.insert(genFailures, `seed {seed}: {bosses} boss arenas`)
+			end
+			local okP, plan = ScenarioCore.assign(layout, Chunks, Scenarios, {
+				FateInterventionChance = GameConfig.Expedition.FateInterventionChance,
+				RecentMemory = GameConfig.Expedition.ScenarioRecentMemory,
+				EscalateFrom = GameConfig.Expedition.ScenarioEscalateFrom,
+			}, ExpeditionCore.streamFor(seed, GameConfig.Expedition.ScenarioStreamOffset))
+			if not okP then
+				table.insert(genFailures, `seed {seed} scenarios: {plan}`)
+			else
+				for _, st in plan.Steps do
+					if st.Role == "MINIBOSS" and st.ScenarioId ~= "MINI_BOSS" then
+						table.insert(
+							genFailures,
+							`seed {seed}: a miniboss arena without its miniboss`
+						)
+					end
+				end
+			end
+		end
+		check(
+			"§7.7: 40 seeds assemble, validate and plan",
+			#genFailures == 0,
+			table.concat(genFailures, " | ")
+		)
+		check(
+			"§7.7: every layout carries its miniboss arena",
+			minis >= runs and runs > 0,
+			`{minis}/{runs}`
+		)
+		check("§7.7: backdrop rings the maps", backdrops >= runs * 4, tostring(backdrops))
+		check("§7.7: side pockets still appear", sides > 0, tostring(sides))
+	end
+
+	-- A world WITHOUT a blueprint is untouched: the legacy passes run exactly.
+	do
+		local function ids(worldId, seed, gen)
+			local okA, layout = ChunkCore.assembleWithRetry(Chunks, {
+				WorldId = worldId,
+				PathLength = 5,
+				IncludeSide = true,
+				BranchLength = GameConfig.Expedition.BranchLength,
+				MaxRepeats = GameConfig.Expedition.MaxRepeats,
+				Generation = gen,
+			}, function(a)
+				return ExpeditionCore.streamFor(seed, a)
+			end, 5)
+			if not okA then
+				return "fail"
+			end
+			local out = {}
+			for _, c in layout.Chunks do
+				table.insert(out, `{c.ChunkId}@{c.X},{c.Z}`)
+			end
+			return table.concat(out, ">")
+		end
+		check(
+			"Verdant Valley and Sky Citadel declare no blueprint",
+			Worlds.VERDANT_VALLEY.Generation == nil and Worlds.SKY_CITADEL.Generation == nil
+		)
+		check(
+			"a nil blueprint is deterministic per seed (legacy path)",
+			ids("VERDANT_VALLEY", 11, nil) == ids("VERDANT_VALLEY", 11, nil)
+				and ids("SKY_CITADEL", 11, nil) == ids("SKY_CITADEL", 11, nil)
+		)
+	end
 	-- Boss and spawn may be bigger than a tile, so long as their mouths are standard.
 	check(
 		"the Sanctum is a 512-stud piece and the Entry 384, both with standard mouths",

@@ -644,6 +644,7 @@ Four lessons worth keeping:
 | **§7.4** | Caps: sealing the sockets a layout leaves open | 2026-09-23 |
 | **§7.5** | Loot, fixtures and vault keys | 2026-09-23 |
 | **§7.6** | Enemy AI and combat — number reserved, nothing opened yet | 2026-09-26 |
+| **§7.7** | Universal map generation: blueprints, filled junctions, miniboss arenas, backdrop | 2026-09-27 |
 
 **Two branches once claimed §7.2 simultaneously**, each green on its own, and
 the collision was caught by hand during a merge. An amendment number is
@@ -1123,3 +1124,56 @@ both are cheap and final — while leaving remotes and config blocks for step 1,
 schemas exist to design them against instead of guessing. Step 0 is not fully closed until those land and the
 owner approves the amendment as a whole; this entry records the part that is.
 
+## 7.7 Amendment: universal map generation, opened 2026-09-27
+
+**Owner-directed**: *"intersections should always be filled. deadends should always end every path that doesnt lead
+to the boss, or miniboss areas … All maps should honestly follow a universal procedural generation scheme and
+blueprints of maps can follow a build spec to cater to this."* With the constraint: *"As long as no maps chunk kits
+procedural generation are altered, and if they are, are fixed."* And: *"miniboss and boss areas should still be
+different."*
+
+### The scheme
+
+One assembler (`ChunkCore.assemble`) serves every world. A world opts in by declaring a **generation blueprint**,
+`WorldDefinition.Generation`:
+
+| Field | Meaning |
+|---|---|
+| `BranchLength` | How many ordinary pieces a branch may grow before it must end |
+| `Minibosses` | MINIBOSS arenas every layout must carry (the attempt fails, and retries, if it cannot) |
+| `MaxSides` | SIDE pockets a layout may carry (legacy layouts: at most 1) |
+| `Backdrop` | How many socketless BACKDROP pieces to ring round the finished map |
+
+With a blueprint, after the critical path (ENTRY → `MapPathLength` pieces → BOSS, unchanged):
+
+1. **Every junction is filled.** Breadth-first from *every* spare mouth of *every* placed piece -- not only the first,
+   as the §7.4 spur did -- so no crossroads has an idle arm.
+2. **Every branch ends.** A branch grows up to `BranchLength` pieces; each leaf then ends in a **MINIBOSS** arena
+   (until the quota is met), a **SIDE** pocket (up to `MaxSides`), or a **CAP**. The §7.4 cap pass and its
+   "no mouth left open" check still run last, so no layout ships a mouth onto nothing.
+3. **Boss and miniboss areas stay distinct.** BOSS is still the only piece on the final socket of the critical path,
+   reached through the reserved arena Kind. MINIBOSS is a separate role: one mouth, an ordinary connective Kind, only
+   ever a branch terminus. Scenario assignment gives it `MINI_BOSS` by role (`ScenarioCore` fixed roles).
+4. **Backdrop.** BACKDROP pieces (no sockets, never walked) fill free neighbour cells round every walkable piece,
+   after the open-mouth check, so they can never take room a branch needed.
+
+### Roles added
+
+| Role | Sockets | Supports | Placed by |
+|---|---|---|---|
+| `MINIBOSS` | exactly 1 | required (`MiniBoss`) | step 2, blueprint worlds only |
+| `BACKDROP` | exactly 0 | none | step 4, blueprint worlds only |
+
+### Existing worlds
+
+A world **without** `Generation` runs the legacy passes byte-for-byte: Sky Citadel and Verdant Valley declare no
+blueprint and their layouts per seed are unchanged (a test asserts it). Verdant Valley's placement script and chunk
+file were not touched. Migrating a world is a content change -- add the blueprint and, if wanted, MINIBOSS/BACKDROP
+pieces -- never an engine change. Ethereal Scape is the first world on the scheme (`Generation = { BranchLength = 2,
+Minibosses = 1, MaxSides = 2, Backdrop = 18 }`).
+
+### Heights
+
+A socket's `OffsetY` has always been honoured by `placeAgainst`; kits may now author rises and descents (Ethereal
+Scape's Skystairs ±24, ascents ±16) and the map climbs and falls with them. The authoring contract is unchanged: every
+mouth is the kind's standard landing, level at its own socket height.

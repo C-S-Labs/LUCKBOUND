@@ -118,8 +118,21 @@ export type WorldDefinition = {
 	-- content, not config: map size is a property of the world, and a world
 	-- with a shorter expedition needs a shorter map or it becomes a corridor.
 	MapPathLength: number?,
+	-- Build spec §7.7 universal generation blueprint. nil keeps the legacy
+	-- assembler path exactly (Sky Citadel, Verdant Valley).
+	Generation: GenerationBlueprint?,
 	RecommendedPower: number,
 	Flavor: string,
+}
+
+--- Build spec §7.7. Every branch grows out of EVERY spare mouth up to
+--- BranchLength pieces and then ends in a MINIBOSS arena, a SIDE pocket or a
+--- CAP -- never an opening onto nothing, never an unfilled intersection.
+export type GenerationBlueprint = {
+	BranchLength: number?, -- max pieces a branch grows before it must end
+	Minibosses: number?, -- MINIBOSS arenas required per layout (0 = none)
+	MaxSides: number?, -- SIDE pockets allowed per layout
+	Backdrop: number?, -- socketless BACKDROP scenery pieces ringed round the map
 }
 
 export type EnemyDefinition = {

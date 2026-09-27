@@ -36,6 +36,8 @@ local WORLD_SPEC: { [string]: FieldSpec } = {
 	ModifierOverrides = field("table", true),
 	DurationSeconds = field("number"),
 	MapPathLength = field("number", true),
+	-- Build spec §7.7: the universal generation blueprint. Opt-in per world.
+	Generation = field("table", true),
 	PrebuiltMap = field("table", true),
 	RecommendedPower = field("number"),
 	Flavor = field("string"),
@@ -105,6 +107,17 @@ function Schema.validateWorlds(worlds: { [string]: any }): (boolean, { string })
 			end
 			if type(world.MapPathLength) == "number" and world.MapPathLength < 1 then
 				table.insert(errors, `World '{key}': MapPathLength must be >= 1`)
+			end
+			if type(world.Generation) == "table" then
+				for _, k in { "BranchLength", "Minibosses", "MaxSides", "Backdrop" } do
+					local v = world.Generation[k]
+					if v ~= nil and (type(v) ~= "number" or v < 0 or v % 1 ~= 0) then
+						table.insert(
+							errors,
+							`World '{key}': Generation.{k} must be a whole number >= 0`
+						)
+					end
+				end
 			end
 			-- Ambience: optional per world, complete when present.
 			for _, e in AmbienceCore.validate(world.Environment, `World '{key}'.Environment`) do
@@ -303,8 +316,17 @@ end
 --- onboarding sequence naming a missing world -- catch it at boot.
 function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boolean, { string })
 	local errors = {}
-	local VALID_ROLES =
-		{ ENTRY = true, PATH = true, COMBAT = true, SIDE = true, BOSS = true, CAP = true }
+	local VALID_ROLES = {
+		ENTRY = true,
+		PATH = true,
+		COMBAT = true,
+		SIDE = true,
+		BOSS = true,
+		CAP = true,
+		MINIBOSS = true,
+		-- §7.7 surround scenery: no sockets, never walked, ringed round a layout.
+		BACKDROP = true,
+	}
 	local QUARTER = { [0] = true, [90] = true, [180] = true, [270] = true }
 
 	local perWorld: { [string]: { [string]: number } } = {}
@@ -339,7 +361,12 @@ function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boole
 		end
 		if
 			chunk.SpawnChance ~= nil
-			and (chunk.Role == "ENTRY" or chunk.Role == "BOSS" or chunk.Role == "CAP")
+			and (
+				chunk.Role == "ENTRY"
+				or chunk.Role == "BOSS"
+				or chunk.Role == "CAP"
+				or chunk.Role == "MINIBOSS"
+			)
 		then
 			-- A map cannot go without its entry, its arena or its dead ends.
 			table.insert(errors, `{label}: a {chunk.Role} chunk cannot have a SpawnChance`)
@@ -391,7 +418,12 @@ function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boole
 		-- none supports nothing, so the generator would have no room to fill
 		-- and the piece would be walked through empty. ENTRY and BOSS are
 		-- exempt: neither is ever assigned a scenario.
-		if chunk.Role == "PATH" or chunk.Role == "COMBAT" or chunk.Role == "SIDE" then
+		if
+			chunk.Role == "PATH"
+			or chunk.Role == "COMBAT"
+			or chunk.Role == "SIDE"
+			or chunk.Role == "MINIBOSS"
+		then
 			if type(chunk.Supports) ~= "table" then
 				table.insert(errors, `{label}: {chunk.Role} chunks need a Supports table`)
 			else
@@ -410,7 +442,11 @@ function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boole
 			end
 		end
 
-		if type(chunk.Sockets) ~= "table" or #chunk.Sockets == 0 then
+		if chunk.Role == "BACKDROP" then
+			if type(chunk.Sockets) ~= "table" or #chunk.Sockets ~= 0 then
+				table.insert(errors, `{label}: BACKDROP chunks are scenery and take no sockets`)
+			end
+		elseif type(chunk.Sockets) ~= "table" or #chunk.Sockets == 0 then
 			table.insert(errors, `{label}: has no sockets, so nothing can connect to it`)
 		else
 			local seen = {}
@@ -441,6 +477,13 @@ function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boole
 				table.insert(
 					errors,
 					`{label}: CAP chunks need exactly 1 socket, got {#chunk.Sockets}`
+				)
+			end
+			-- A miniboss arena ends a branch (build spec §7.7): one way in, no way on.
+			if chunk.Role == "MINIBOSS" and #chunk.Sockets ~= 1 then
+				table.insert(
+					errors,
+					`{label}: MINIBOSS chunks need exactly 1 socket, got {#chunk.Sockets}`
 				)
 			end
 		end

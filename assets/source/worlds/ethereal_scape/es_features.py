@@ -43,6 +43,61 @@ def rift_rim(p, cx, cy, r):
             puff(p, x, y, FLOOR_Z - 3, rng.uniform(*size), rng.uniform(4, 7), rng)
 
 
+CLOUD_TAGS = {"puff", "cloud_bank", "perimeter_banks", "cloud_tufts", "rift_rim"}
+SMALL_TAGS = {"blossoms", "grass_tufts", "mushroom"}
+# what cloud may lap against: rock and the cloud floor itself -- nothing built, nothing growing
+CLOUD_MAY_TOUCH = {"mesa", "crag", "cloud_floor", "pins"}
+# what a flower or a mushroom may stand IN: the ground itself (its stem is sunk a little, on purpose)
+GROUND_TAGS = {"isle", "landing", "mesa", "cloud_floor", "pins", "meadow_carpet", "flagstones", "ramp", "bridge"}
+
+
+def declip(p):
+    """Owner, 2026-09-27: 'a LOT of clipping' -- mostly cloud through objects. Every cloud billow,
+    blossom, grass tuft or mushroom that intersects anything solid (a tree, a tower, a ramp, a
+    column...) is removed outright. Returns how many were dropped."""
+    from mathutils.bvhtree import BVHTree
+    shells = {}
+    for i, (s, t) in enumerate(zip(p.fshell, p.ftag)):
+        shells.setdefault(s, [t, []])[1].append(i)
+
+    def tree_of(fids):
+        vids = sorted({v for i in fids for v in p.faces[i]})
+        m = {v: k for k, v in enumerate(vids)}
+        return BVHTree.FromPolygons([p.verts[v] for v in vids], [[m[v] for v in p.faces[i]] for i in fids])
+
+    def raised(fids):                          # flat decals (paths, carpets, mosaics) never count as solid
+        zs = [p.verts[v].z for i in fids for v in p.faces[i]]
+        return max(zs) - min(zs) > 0.3
+
+    hard = [i for t, f in shells.values() if t not in CLOUD_TAGS | SMALL_TAGS | CLOUD_MAY_TOUCH and raised(f) for i in f]
+    if not hard:
+        return 0
+    solid = tree_of(hard)
+    objects = [i for t, f in shells.values() if t not in CLOUD_TAGS | SMALL_TAGS | GROUND_TAGS and raised(f) for i in f]
+    obj_tree = tree_of(objects) if objects else None
+    drop = {sid for sid, (t, f) in shells.items() if t in CLOUD_TAGS and tree_of(f).overlap(solid)}
+    drop |= {sid for sid, (t, f) in shells.items()
+             if t in SMALL_TAGS and obj_tree is not None and tree_of(f).overlap(obj_tree)}
+    # second tier: scatter buried in cloud, loose tufts merged into banks, blossoms speared by grass
+    clouds = [i for sid, (t, f) in shells.items() if t in CLOUD_TAGS - {"cloud_tufts"} and sid not in drop for i in f]
+    cloud_tree = tree_of(clouds) if clouds else None
+    grass = [i for sid, (t, f) in shells.items() if t in ("grass_tufts", "mushroom") and sid not in drop for i in f]
+    grass_tree = tree_of(grass) if grass else None
+    for sid, (t, f) in shells.items():
+        if sid in drop:
+            continue
+        mine = None
+        if t in SMALL_TAGS | {"cloud_tufts"} and cloud_tree is not None:
+            mine = tree_of(f)
+            if mine.overlap(cloud_tree):
+                drop.add(sid)
+                continue
+        if t == "blossoms" and grass_tree is not None and (mine or tree_of(f)).overlap(grass_tree):
+            drop.add(sid)
+    p.drop_shells(drop)
+    return len(drop)
+
+
 def near_corridor(p, x, y, pad=4.0):
     """Is (x, y) within `pad` of any path, bridge or ramp corridor?"""
     for ax, ay, bx, by, hw in p.corridors:
@@ -379,8 +434,10 @@ def great_tree(p, x, y, z=FLOOR_Z, top=CROWN_TOP, trunk=7.0):
 
 
 def mushroom(p, x, y, z=FLOOR_Z, s=1.0):
+    p.group(True)
     frustum(p, "TempleIvory", x, y, z - 0.2, z + 2.2 * s, 0.45 * s, 0.35 * s, n=5)
     gem(p, "TempleGold", x, y, z + 2.2 * s, 1.5 * s, 1.1 * s, 0.35 * s, n=6)
+    p.group(False)
 
 
 def blossoms(p, cx, cy, r, n, z=FLOOR_Z, avoid=()):
