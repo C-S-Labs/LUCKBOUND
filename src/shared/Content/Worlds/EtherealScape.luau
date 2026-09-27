@@ -1,6 +1,5 @@
 --!strict
--- Ethereal Scape. The Uncommon tier, and the project's first world built from
--- authored art rather than invented numbers.
+-- Ethereal Scape. The Uncommon tier.
 --
 -- SOURCE OF TRUTH FOR THE PALETTE is the Blender scene
 -- assets/source/worlds/ethereal_scape/aether_environment_refined.blend, whose
@@ -9,15 +8,24 @@
 -- Sky Crystal, Portal Glow. Everything below is chosen to light THAT, not to
 -- invent a look the meshes then have to live with.
 --
--- The scene is a sky temple standing above the cloud deck: gold-rimmed meadow
+-- The world is a sky temple standing above the cloud deck: gold-rimmed meadow
 -- islands, bridges between them, and nothing underneath. So the lighting is
 -- the opposite of Emberfall's -- fog here is cloud, and cloud BRIGHTENS the
 -- distance rather than hiding it. This is the brightest world in the game.
 --
--- THIS IS A TESTING BIOME. Enemies, boss and loot tables are deliberately
--- empty: it exists to prove that rolling a world, walking through its portal
--- and generating its map all work. Combat content is not its job and adding
--- some would make it a worse test.
+-- AMENDMENT 2026-09-26, owner-directed: SUPERSEDES the PrebuiltMap decision.
+-- This world shipped as a single composed, hand-authored traverse -- the
+-- original header (kept in git history) called it a deliberate no-combat
+-- map-generation test rig, Enemies/BossId/LootTableId empty on purpose. That
+-- is no longer the shape of this world: it now declares a 30-piece CHUNK KIT
+-- (docs/biomes/ETHEREAL_SCAPE.md, Content/Chunks/EtherealScape.luau) --
+-- the same kind of deliverable as Sky Citadel and Verdant Valley -- and opens
+-- a drafted enemy roster (assets/source/enemies/ethereal_scape/ROSTER.md).
+-- The original scene stays in the repo as the palette's source of truth and
+-- art reference; it is simply no longer what the world loads.
+-- `Schema.validateMaps` enforces a world declares a chunk kit or a
+-- PrebuiltMap, never both, so this change removes PrebuiltMap and adds
+-- MapPathLength in the same edit.
 return {
 	Id = "ETHEREAL_SCAPE",
 	Name = "Ethereal Scape",
@@ -41,51 +49,23 @@ return {
 		ClockTime = 15,
 	},
 	MusicId = nil,
-	-- Empty ON PURPOSE. See the header: this world is the map-generation test
-	-- rig, and Phase 2 combat has not been built.
+	-- Drafted, not yet built as EnemyDefinition content: build spec §7.6
+	-- (enemy AI/combat) is reserved but not opened, and no world's Enemies
+	-- list is populated yet -- Sky Citadel's is empty for the same reason.
+	-- The roster is real design work, recorded ahead of the system that will
+	-- read it: assets/source/enemies/ethereal_scape/ROSTER.md, and declared
+	-- per piece as EnemyTags in Content/Chunks/EtherealScape.luau.
 	Enemies = {},
 	BossId = nil,
 	LootTableId = nil,
 	DiscoveryTableId = nil,
 	Modifiers = { "NORMAL" },
 	-- Shorter than the 720s default (build spec D-7 already flags 720 as
-	-- probably too long). A test biome you walk through in five minutes tells
-	-- you whether generation works; twelve minutes of standing in it does not.
+	-- probably too long).
 	DurationSeconds = 300,
-	-- NO MapPathLength: this world does not assemble a map from chunks. It
-	-- ships one, below.
-	--
-	-- WHY THIS WORLD IS PREBUILT AND VERDANT VALLEY IS NOT
-	-- The delivered art is a COMPOSED traverse, not a set of interchangeable
-	-- pieces. Its eight islands climb monotonically (y 354 -> 761), each of
-	-- the six bridges is cut to its own gap, every bridge landing is authored
-	-- as a matched pair naming the two islands it joins, and the islands grow
-	-- toward the temple (1030x813 -> 1932x1535). Shuffle them and all four of
-	-- those break at once. The socket grammar is not wrong -- this art simply
-	-- is not modular, and pretending otherwise would mean re-authoring it.
-	--
-	-- A world declares EITHER a chunk kit OR a PrebuiltMap, never both;
-	-- Schema.validateMaps enforces that, because two ways to build one world's
-	-- map is exactly the second competing architecture AGENTS.md forbids.
-	PrebuiltMap = {
-		-- Names the AssetManifest entry, which names the Rojo-synced model.
-		AssetKey = "ES_ENVIRONMENT_FULL",
-		-- 1.0: THE DELIVERY IS ALREADY AT PLAY SCALE.
-		--
-		-- The first delivery was not -- it was ~10x oversized, and 0.1 was the
-		-- correction. The owner walked that and found it too small, and the
-		-- modeller re-delivered the scene rebuilt at Roblox scale on
-		-- 2026-09-17. Measured on arrival: a 28-stud tree, a 24-stud waystone,
-		-- a 53-stud temple doorway, 228-428 stud islands, and a 2277-stud walk
-		-- from the arrival shelf to the temple -- 71 seconds one way at
-		-- GameConfig.Scale.WalkSpeed, 142 there and back inside a 300-second
-		-- expedition. Those are the numbers the tests assert against.
-		--
-		-- The field stays even at 1.0. It is the seam that made correcting the
-		-- first delivery a one-line edit instead of a re-export, and the next
-		-- authored world will not arrive at play scale either.
-		Scale = 1.0,
-	},
+	-- 30-piece kit, path length 5 -- matches Verdant Valley; retune once a
+	-- piece has been walked. See Content/Chunks/EtherealScape.luau.
+	MapPathLength = 5,
 	RecommendedPower = 3,
 	Flavor = "Above the weather, and nothing casts a shadow. The ground is a courtesy, and it ends.",
 }

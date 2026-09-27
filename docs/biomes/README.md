@@ -90,12 +90,18 @@ setting (`GameConfig.Ambience`); level 1 still gets a thin sea, never none.
 | **Sky Citadel** | ✅ `SKY_CITADEL.md` — art direction and kit | 22 pieces, delivered and uploaded 2026-09-23 |
 | **Emberfall** | ⏳ Biome Blueprint §3.3, not yet extracted here | none |
 | **Astral Reach** | ⏳ Biome Blueprint §3.5, not yet extracted here | none |
-| **Ethereal Scape** | n/a — ships as a `PrebuiltMap`, not a kit | one authored scene |
+| **Ethereal Scape** | ✅ `ETHEREAL_SCAPE.md` | 30 pieces, generated 2026-09-26, not yet uploaded |
 
 Emberfall and Astral Reach have Biome Blueprint sections already and need
 extracting into this shape — they are now the largest content debt, because
 **Sky Citadel gained a real design and a kit on 2026-09-22, and the kit — 22
 pieces, three of them caps — was delivered and uploaded on 2026-09-23.**
+
+**Amendment 2026-09-26:** Ethereal Scape moved from a `PrebuiltMap` (one
+composed, hand-authored, no-combat scene) to a 30-piece chunk kit — the same
+shape of deliverable as Sky Citadel and Verdant Valley. See
+`ETHEREAL_SCAPE.md`'s header for why, and `Content/Worlds/EtherealScape.luau`
+for the data-side half of the change.
 
 That design lived at `docs/SKY_CITADEL.md` for a day while a stub in this
 folder simultaneously declared the world undesigned: two documents for one

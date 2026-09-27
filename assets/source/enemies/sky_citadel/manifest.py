@@ -16,7 +16,7 @@ ENEMIES = {
     "turbine_drone":    {"script": "turbine_drone.py",    "tier": "basic", "body": "creature", "role": "hover_ranged"},
     "prism_crawler":    {"script": "prism_crawler.py",    "tier": "basic", "body": "creature", "role": "swarm"},
     "archive_scribe":   {"script": "archive_scribe.py",   "tier": "basic", "body": "humanoid", "role": "caster"},
-    "rootbound_warden": {"script": "rootbound_warden.py", "tier": "basic", "body": "humanoid", "role": "brute"},
+    "citadel_bulwark":  {"script": "citadel_bulwark.py",  "tier": "basic", "body": "humanoid", "role": "brute"},
     "spring_eel":       {"script": "spring_eel.py",       "tier": "basic", "body": "creature", "role": "ambusher", "sunk": True},
     "skyport_hauler":   {"script": "skyport_hauler.py",   "tier": "basic", "body": "humanoid", "role": "brute"},
     # ---- minibosses (3) ----

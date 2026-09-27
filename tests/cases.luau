@@ -3015,7 +3015,7 @@ do
 end
 
 -- === 13. Ethereal Scape =============================================
-group("Ethereal Scape (the map-generation test biome)")
+group("Ethereal Scape (30-piece chunk kit, amendment 2026-09-26)")
 
 do
 	local es = Worlds.ETHEREAL_SCAPE
@@ -3031,10 +3031,16 @@ do
 			and Constants.RARITY.UNCOMMON.Order < Constants.RARITY.RARE.Order
 	)
 
-	-- It is a TEST biome. Declaring enemies it does not have would be a lie
-	-- the Phase 2 combat work would then have to discover.
+	-- AMENDMENT 2026-09-26: this world shipped as a PrebuiltMap, declaring no
+	-- enemies/boss/loot on purpose (a map-generation test rig). That is
+	-- superseded -- it now declares a chunk kit like Sky Citadel and Verdant
+	-- Valley, and a drafted-but-not-yet-built enemy roster. Enemies/BossId/
+	-- LootTableId stay empty for the same reason Sky Citadel's do: no world's
+	-- EnemyDefinition content exists yet (build spec §7.6, reserved) -- this
+	-- is no longer a "combat deliberately excluded" statement, just "not
+	-- built yet".
 	check(
-		"it declares no enemies, boss or loot -- combat is still Phase 2",
+		"it still declares no Enemies/BossId/LootTableId -- combat content doesn't exist for ANY world yet",
 		#es.Enemies == 0 and es.BossId == nil and es.LootTableId == nil
 	)
 	check(
@@ -3058,74 +3064,96 @@ do
 	)
 
 	-- The map ------------------------------------------------------
-	-- This world does not assemble a map. It ships one, because the delivered
-	-- art is a COMPOSED traverse rather than a set of interchangeable pieces
-	-- (see the comment on its PrebuiltMap). The chunk kit that used to live
-	-- here was retired with the scene it never matched.
-	check("Ethereal Scape declares a prebuilt map", type(es.PrebuiltMap) == "table")
-	check(
-		"no chunk claims Ethereal Scape any more",
-		not ExpeditionCore.hasKit(Chunks, "ETHEREAL_SCAPE")
-	)
-	check(
-		"its AssetKey is in the manifest",
-		AssetManifest.exists(es.PrebuiltMap.AssetKey),
-		tostring(es.PrebuiltMap.AssetKey)
-	)
-	check("it declares no MapPathLength -- nothing would read it", es.MapPathLength == nil)
+	-- It now assembles a map from a chunk kit, the same shape of deliverable
+	-- as Sky Citadel and Verdant Valley. See docs/biomes/ETHEREAL_SCAPE.md.
+	check("it no longer declares a prebuilt map", es.PrebuiltMap == nil)
+	check("a chunk kit claims Ethereal Scape", ExpeditionCore.hasKit(Chunks, "ETHEREAL_SCAPE"))
+	check("MapPathLength is set (the assembler reads it)", es.MapPathLength == 5)
 
-	-- MEASURED FROM THE DELIVERED FILE, assets/rbxm/maps/ES_ENVIRONMENT_FULL
-	-- .rbxmx, not estimated. Re-delivered at Roblox scale 2026-09-17 after the
-	-- first cut shipped ~10x oversized.
-	--
-	-- A RE-DELIVERY MEANS RE-MEASURING THESE. They are a snapshot of one file,
-	-- and the previous set went stale the moment the modeller sent a new one.
-	-- What they are for is the RELATIONSHIPS below -- none of these tests
-	-- assert that a number is a particular number.
-	local SCENE_TRAVERSE = 2277 -- studs, island 00 centre to island 07 centre
-	local SMALLEST_ISLAND = 228 -- Island_00_Meadow, its widest axis
-	local TEMPLE_DOOR_HEIGHT = 53 -- Temple_Entry_Jamb, floor to head
-	local CHARACTER_HEIGHT = 5 -- what a Roblox R6 character actually is
-
-	local scale = es.PrebuiltMap.Scale
-	local walkSeconds = SCENE_TRAVERSE * scale / GameConfig.Scale.WalkSpeed
-	print(
-		string.format(
-			"        Ethereal Scape traverse: %.0f studs, %.0fs one way at scale %.2f",
-			SCENE_TRAVERSE * scale,
-			walkSeconds,
-			scale
-		)
+	local esChunks = {}
+	local roleCount = {}
+	for id, chunk in Chunks do
+		if chunk.WorldId == "ETHEREAL_SCAPE" then
+			esChunks[id] = chunk
+			roleCount[chunk.Role] = (roleCount[chunk.Role] or 0) + 1
+		end
+	end
+	local esCount = 0
+	for _ in esChunks do
+		esCount += 1
+	end
+	check("the kit is 30 pieces", esCount == 30, tostring(esCount))
+	check(
+		"roles match the schema doc: 1 ENTRY, 8 PATH, 14 COMBAT, 3 SIDE, 3 CAP, 1 BOSS",
+		roleCount.ENTRY == 1
+			and roleCount.PATH == 8
+			and roleCount.COMBAT == 14
+			and roleCount.SIDE == 3
+			and roleCount.CAP == 3
+			and roleCount.BOSS == 1,
+		table.concat({
+			string.format("ENTRY=%d", roleCount.ENTRY or 0),
+			string.format("PATH=%d", roleCount.PATH or 0),
+			string.format("COMBAT=%d", roleCount.COMBAT or 0),
+			string.format("SIDE=%d", roleCount.SIDE or 0),
+			string.format("CAP=%d", roleCount.CAP or 0),
+			string.format("BOSS=%d", roleCount.BOSS or 0),
+		}, " ")
 	)
 
-	-- THE RELATIONSHIP THAT MATTERS, and the one a bad Scale breaks in the
-	-- expensive direction. The first delivery walked 642 seconds against a
-	-- 300-second expedition.
+	-- Reserved-Kind pattern: only the two Temple Gates offer COMMUNION, so one
+	-- always precedes the Sanctum -- same as Sky Citadel's ASCENT gate-courts
+	-- and Verdant Valley's WIDE providers.
+	local communionProviders = {}
+	for id, chunk in esChunks do
+		if chunk.Role ~= "BOSS" then
+			for _, s in chunk.Sockets do
+				if s.Kind == "COMMUNION" then
+					table.insert(communionProviders, id)
+				end
+			end
+		end
+	end
+	table.sort(communionProviders)
 	check(
-		"the walk there and back fits inside the expedition with room to spare",
-		walkSeconds * 2 < es.DurationSeconds * 0.75,
-		string.format("%.0fs of %ds", walkSeconds * 2, es.DurationSeconds)
+		"only the two Temple Gates offer a COMMUNION exit",
+		#communionProviders == 2
+			and communionProviders[1] == "ES_TEMPLE_GATE_A"
+			and communionProviders[2] == "ES_TEMPLE_GATE_B",
+		table.concat(communionProviders, ", ")
+	)
+	check(
+		"the Sanctum arena only accepts a COMMUNION approach",
+		esChunks.ES_SANCTUM.Sockets[1].Kind == "COMMUNION"
+	)
+	check(
+		"the Convergence is the only 4-socket piece (so a SIDE pocket has somewhere to attach)",
+		#esChunks.ES_CONVERGENCE.Sockets == 4
 	)
 
-	-- ...and the other direction, which is how 0.1 failed its playtest: at
-	-- some point an island stops being somewhere you arrive and becomes a
-	-- stepping stone. A district platform in the hub is the yardstick, since
-	-- that is the smallest space in the game a player is meant to stand around
-	-- in.
+	-- SPAN and COMMUNION are disjoint from every other world's kind set.
+	local kindsFor = function(worldId)
+		local kinds = {}
+		for _, chunk in Chunks do
+			if chunk.WorldId == worldId then
+				for _, s in chunk.Sockets do
+					kinds[s.Kind] = true
+				end
+			end
+		end
+		return kinds
+	end
+	local esKinds, scKinds, vvKinds =
+		kindsFor("ETHEREAL_SCAPE"), kindsFor("SKY_CITADEL"), kindsFor("VERDANT_VALLEY")
+	local overlap = false
+	for k in esKinds do
+		if scKinds[k] or vvKinds[k] then
+			overlap = true
+		end
+	end
 	check(
-		"an island is at least as roomy as a hub district platform",
-		SMALLEST_ISLAND * scale >= GameConfig.HubLayout.ZoneRingRadius * 0.4,
-		string.format("%.0f studs across", SMALLEST_ISLAND * scale)
-	)
-
-	-- THE SCALE SANITY CHECK THAT GENERALISES. Nothing a person walks through
-	-- should be dozens of person-heights tall. The first delivery's doorway
-	-- was 48; this catches that class of error without pinning a number.
-	local doorHeights = TEMPLE_DOOR_HEIGHT * scale / CHARACTER_HEIGHT
-	check(
-		"the temple doorway is grand, not absurd",
-		doorHeights > 1.5 and doorHeights < 20,
-		string.format("%.1f person-heights", doorHeights)
+		"Ethereal Scape's socket kinds are disjoint from Sky Citadel's and Verdant Valley's",
+		not overlap
 	)
 
 	-- Schema: the rules that keep the two routes from blurring -------
@@ -3133,41 +3161,22 @@ do
 		local _, errs = Schema.validateMaps({ W = world }, chunks or {}, AssetManifest)
 		return errs
 	end
-	check("the real content validates", #mapErrors(es) == 0, mapErrors(es)[1])
-	check(
-		"a world cannot have both a kit and a prebuilt map",
-		#mapErrors(es, { C = { WorldId = "W" } }) == 1,
-		mapErrors(es, { C = { WorldId = "W" } })[1]
-	)
-
-	local function variant(changes)
-		local copy = {}
-		for k, v in es do
-			copy[k] = v
-		end
-		local pm = {}
-		for k, v in es.PrebuiltMap do
-			pm[k] = v
-		end
-		for k, v in changes do
-			if k == "MapPathLength" then
-				copy[k] = v
-			else
-				pm[k] = v
-			end
-		end
-		copy.PrebuiltMap = pm
-		return copy
-	end
+	check("the real content validates", #mapErrors(es, esChunks) == 0, mapErrors(es, esChunks)[1])
+	check("a world cannot have both a kit and a prebuilt map", #mapErrors({
+		PrebuiltMap = { AssetKey = "ES_ENVIRONMENT_FULL", Scale = 1 },
+	}, { C = { WorldId = "W" } }) == 1)
 	check(
 		"an unknown AssetKey is a boot error",
-		#mapErrors(variant({ AssetKey = "NO_SUCH_ASSET" })) == 1
+		#mapErrors({ PrebuiltMap = { AssetKey = "NO_SUCH_ASSET", Scale = 1 } }) == 1
 	)
-	check("a zero Scale is a boot error", #mapErrors(variant({ Scale = 0 })) == 1)
 	check(
-		"a leftover MapPathLength is a boot error",
-		#mapErrors(variant({ MapPathLength = 3 })) == 1
+		"a zero Scale is a boot error",
+		#mapErrors({ PrebuiltMap = { AssetKey = "ES_ENVIRONMENT_FULL", Scale = 0 } }) == 1
 	)
+	check("a leftover MapPathLength on a prebuilt world is a boot error", #mapErrors({
+		PrebuiltMap = { AssetKey = "ES_ENVIRONMENT_FULL", Scale = 1 },
+		MapPathLength = 3,
+	}) == 1)
 end
 
 -- === 14. Expedition entry ===========================================
@@ -3193,12 +3202,16 @@ do
 	)
 
 	-- The two ways a world gets a map --------------------------------
+	-- Amendment 2026-09-26: Ethereal Scape moved from the prebuilt route to a
+	-- chunk kit, so it now exercises the SAME branch as Verdant Valley and
+	-- Sky Citadel; a synthetic table below stands in for the prebuilt route
+	-- so that branch keeps real coverage.
 	check("Verdant Valley has a kit", ExpeditionCore.hasKit(Chunks, "VERDANT_VALLEY"))
+	check("Ethereal Scape has a kit too, now", ExpeditionCore.hasKit(Chunks, "ETHEREAL_SCAPE"))
 	check(
-		"Ethereal Scape does not -- it ships one instead",
-		not ExpeditionCore.hasKit(Chunks, "ETHEREAL_SCAPE")
+		"Ethereal Scape is no longer prebuilt",
+		not ExpeditionCore.hasPrebuiltMap(Worlds.ETHEREAL_SCAPE)
 	)
-	check("Ethereal Scape is prebuilt", ExpeditionCore.hasPrebuiltMap(Worlds.ETHEREAL_SCAPE))
 	check(
 		"Verdant Valley is not prebuilt",
 		not ExpeditionCore.hasPrebuiltMap(Worlds.VERDANT_VALLEY)
@@ -3214,16 +3227,25 @@ do
 			and not ExpeditionCore.hasPrebuiltMap(Worlds.EMBERFALL)
 	)
 
+	-- A synthetic prebuilt world, since no real world uses that route any
+	-- more -- `hasPrebuiltMap`/`hasMap`'s prebuilt branch still needs cover.
+	local syntheticPrebuilt = { PrebuiltMap = { AssetKey = "ES_ENVIRONMENT_FULL", Scale = 1 } }
+	check(
+		"hasPrebuiltMap recognises the prebuilt route",
+		ExpeditionCore.hasPrebuiltMap(syntheticPrebuilt)
+	)
+
 	-- BOTH routes count as having a map. This is the assertion that stops a
 	-- prebuilt world being turned away at its own door -- the bug this seam
 	-- would otherwise have shipped with.
-	check(
-		"a prebuilt world has a map",
-		ExpeditionCore.hasMap(Worlds.ETHEREAL_SCAPE, Chunks, "ETHEREAL_SCAPE")
-	)
+	check("a prebuilt world has a map", ExpeditionCore.hasMap(syntheticPrebuilt, {}, "SYNTHETIC"))
 	check(
 		"a kitted world has a map",
 		ExpeditionCore.hasMap(Worlds.VERDANT_VALLEY, Chunks, "VERDANT_VALLEY")
+	)
+	check(
+		"Ethereal Scape (now kitted) has a map",
+		ExpeditionCore.hasMap(Worlds.ETHEREAL_SCAPE, Chunks, "ETHEREAL_SCAPE")
 	)
 	check(
 		"a world with neither has no map",
@@ -3243,12 +3265,15 @@ do
 	)
 
 	-- Map size and duration are content, with a config fallback ------
-	-- No world overrides it today -- Ethereal Scape did until it became
-	-- prebuilt -- but the override is still how a short world gets a short
-	-- map, so it stays tested rather than quietly rotting.
+	-- Ethereal Scape is real coverage of the override again, since amendment
+	-- 2026-09-26 gave it MapPathLength back (it had none while prebuilt).
 	check(
 		"a world's own MapPathLength wins",
 		ExpeditionCore.pathLengthFor({ MapPathLength = 3 }, GameConfig) == 3
+	)
+	check(
+		"Ethereal Scape's own MapPathLength wins over config",
+		ExpeditionCore.pathLengthFor(Worlds.ETHEREAL_SCAPE, GameConfig) == 5
 	)
 	check(
 		"a world without one falls back to config",
