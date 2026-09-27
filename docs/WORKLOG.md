@@ -33,6 +33,32 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 88 — 2026-09-27 — Ethereal Scape: walk fixes (Sanctum, Skystair, more fights)
+**Merged:** see the PR for this branch   **Tests:** CI   **Branch:** `claude/es-walk-fixes`
+
+### Done
+- Owner walked the kit in Studio (after `git checkout main` — the clone had been on an old feature branch,
+  which is why the chunks drew as blockout).
+- **Sanctum overhang:** the pediment's base face lay exactly on the entablature's top (z-fighting) and its gold
+  roof was a single-sided sheet that vanished from below. Base sunk into the beam; roof is two solid slabs.
+- **Sanctum doors:** the leaves were flush on the outer wall's face (z-fighting) with their gold rail buried in
+  them. They now swing open INWARD, a stud off the south wall, on three gold hinges (outside they hit the
+  portico columns). Outside the validated fight volume; zero clip notes.
+- **Skystair Up:** the shrine arch stood across the bridge. Removed; a waystone marks the top, off the path.
+- **More fights, scaling with map size:** new §7.7 blueprint field `Generation.CombatShare` (ChunkCore): while
+  COMBAT pieces are under that share of the ordinary (PATH + COMBAT) pieces placed, COMBAT pieces weigh 6× on
+  every pick. Ethereal Scape uses 0.4 (was ~3–4 fights on a ~30-piece map). Schema + type + a test over 40 seeds.
+- **Elevation** already carries between chunks: `ChunkCore` adds each socket's `OffsetY`, so everything after a
+  Skystair Up (+24), an ascent bend (+16) or the Twin-Span fork (+10) is built higher, and after a descent lower.
+- 41/41 validate; exported; renders refreshed.
+
+### Next
+1. Owner: re-import `ethereal_scape_structure.fbx` (Sanctum + Skystair Up changed), save over
+   `assets/rbxm/chunks/ethereal_scape/ES_STRUCTURE.rbxmx`, then `python tools/sync_asset_ids.py ethereal_scape --write`.
+   Props are unchanged. Walk: count the fights on a map.
+
+---
+
 ## Session 87 — 2026-09-27 — Ethereal Scape: final polish, map-wide skyrays, natural mushroom patches
 **Merged:** see the PR for this branch   **Tests:** CI   **Branch:** `claude/es-final-polish`
 

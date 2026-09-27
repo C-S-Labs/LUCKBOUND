@@ -76,6 +76,10 @@ return {
 		Minibosses = 1,
 		MaxSides = 2,
 		Backdrop = 18,
+		-- Owner 2026-09-27 walk: "3/4 enemy fighting chunks for a 30 piece map is
+		-- a little underwhelming". ~40% of the ordinary pieces are fights, so the
+		-- count grows with the map (ChunkCore favours COMBAT until it is met).
+		CombatShare = 0.4,
 	},
 	RecommendedPower = 3,
 	Flavor = "Above the weather, and nothing casts a shadow. The ground is a courtesy, and it ends.",
