@@ -33,6 +33,32 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 75 — 2026-09-26 — Recover socket-fixing on latest main
+**Merged:** none (local review only)   **Tests:** 817 passing on both baseline and recovery   **Head:** `codex/recover-socket-fixes` (base `5090ace`)
+
+### Done
+- Fetched origin; `socket-fixing` remains at `5cdd0f4`. Its only commit absent from main is `5cdd0f4`; recovered it as `bf7907b` onto latest main, preserving PR #132 and all newer enemy/design work.
+- Implementation comparison found missing per-chunk probe tolerance (Boss Sanctuary = 1), centre-hit reporting independent of weighted yaw score, and negative-score initialization. Restored these without changing sockets, placement, or shared defaults.
+- Removed legacy duplicate Fern Hollow/Mushroom Glen manifest rows; canonical IDs are `102496516928454` and `74544938107663`. Restored Cliff Passage ID `72645382202667` (main had `94772076568933`). All new Ethereal Scape manifest entries retained.
+- Restored Rojo 7.7.0 pin (original compatibility fix `7748767`); project paths and chunk-loading/assembly integration already agree between branches and needed no restoration. Current 30-piece VV kit and original socket-geometry work (`f342338`), yaw sign correction (`d308643`), drop-in integration (`dfdfcee`), and boss Rojo mapping (`eb4b704`) are present on main.
+- Only cherry-pick conflicts: WORKLOG and INDEX_MAP. Kept both histories (existing duplicate session numbers retained for provenance) and regenerated the generated index.
+- Headless suite: latest main 817/0, recovery 817/0. Compiled all 107 non-generated Luau files: no syntax errors. No forbidden module names; no duplicate manifest keys; VV_STRUCTURE contains all 30 MeshParts including affected pieces. Rojo 7.7 built the full project into a temporary RBXLX.
+- StyLua 2.0.2 passes on LF-normalized temporary copies; direct Windows checkout check reports 98 files due to existing CRLF checkout line endings. No unrelated formatting edits made. Selene remains blocked fetching the Roblox API dump.
+
+### Decisions made
+- Recover the final socket-fixing implementation, not older backup experiments (`3de5bdd`/`528fa15`): diagnostics, renamed manifest keys and Cliff-only collision proxy were deliberately omitted by the final handoff. Keep backup branches for evidence.
+- No mesh geometry, FBX, or socket locations changed. The previously documented 43 seam-height failures are an established separate baseline, not newly introduced failures. The current headless suite does not reproduce that geometry validation; a fresh Studio comparison remains required.
+
+### Stopped at
+Recovery committed locally for review; no push, PR, or main merge. Studio physics/asset loading cannot be established by headless tests.
+
+### Next
+1. Sync with Rojo 7.7; boot and walk VV Fern Hollow, Mushroom Glen, Cliff Passage (both PATH seams/collision), and Boss Sanctuary (WIDE entrance) at layout yaws 0/90/180/270. Confirm current mesh IDs and centre-hit logs; compare seam-height results with the existing 43-failure baseline using the same setup.
+2. Walk Sky Citadel and current Ethereal Scape blockout to check shared loader behavior; Ethereal Scape mesh upload/walk remains pending from main.
+3. Review recovery diff before any push. Cleanup: no replacement asset exports/files introduced; keep backups and parked assets until CI and Studio prove replacement safe. Obsolete duplicate manifest rows were removed because they actively overrode canonical assets.
+
+---
+
 ## Session 74 — 2026-09-26 — Ethereal Scape revamp: grounded cloudscape, real palette, props
 
 **Merged:** —   **Tests:** updated (CI to confirm)   **Head:** —

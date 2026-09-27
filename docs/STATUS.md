@@ -38,6 +38,8 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 ## 2. Next — pick up here
 
+> **2026-09-26: local socket recovery** on `codex/recover-socket-fixes`, based on main `5090ace`: canonical VV mesh mappings, per-chunk calibration tolerance, centre-hit diagnostics, and Rojo 7.7 restored. Latest main and recovery both pass 817 tests; full Rojo build and Luau syntax pass. Studio four-yaw asset/collision checks remain pending; existing 43 seam-height failures are a separate baseline. New Ethereal Scape and enemy work preserved. No push or main merge.
+
 > **2026-09-26: Ethereal Scape converted from a `PrebuiltMap` to a 30-piece chunk kit, owner-directed.** It shipped
 > as one composed, hand-authored, no-combat traverse (a map-generation test rig). That is superseded:
 > `Content/Worlds/EtherealScape.luau` now declares a chunk kit + `MapPathLength` like Sky Citadel and Verdant
@@ -187,7 +189,7 @@ progression-feel problem.
 
 - Code: `C:\Dev\luckbound` (not OneDrive — must stay outside it)
 - Place: `LUCKBOUND_dev.rbxl`, local, unpublished
-- Rojo CLI 7.6.0 via Rokit; Studio plugin 7.7.0
+- Rojo CLI 7.7.0 via Rokit; Studio plugin 7.7.0
 - **Unpublished means no DataStores.** Expected; the server runs in volatile
   mode and says so. Publishing is what enables saving.
 
