@@ -52,17 +52,22 @@ revamp pass (see `docs/STATUS.md` §4). All pieces are in one file,
 | `ENTRY` (2) | `chunk_entry_dawn_meadow` · `chunk_entry_woodland_refuge` |
 | `PATH` (5) | `chunk_path_sunwash_fork` · `chunk_path_cliff_passage` · `chunk_path_narrow_pass` · `chunk_path_split_meadow` · `chunk_path_crossroads_copse` |
 | `COMBAT` (18) | `chunk_cutbank_ford` · `chunk_windward_ridge_gate` · `chunk_forgotten_orchard_gate` · `chunk_longgrass_meadow` · `chunk_shaded_grove` · `chunk_fern_hollow` · `chunk_stone_sentinels` · `chunk_mossbound_ruins` · `chunk_ancient_oak` · `chunk_wetland_pools` · `chunk_blossom_terrace` · `chunk_rock_garden` · `chunk_crystal_spring_gate` · `chunk_overgrown_causeway_gate` · `chunk_high_ledge_gate` · `chunk_cliff_overlook_gate` · `chunk_deep_clearing` · `chunk_mushroom_glen` |
-| `SIDE` (3) | `chunk_side_treasure_hollow` · `chunk_side_wardens_clearing` · `chunk_side_forgotten_trial` |
-| `CAP` (1) | `chunk_cap_cave_mouth` |
+| `SIDE` (1) | `chunk_side_forgotten_trial` |
+| `CAP` (3) | `chunk_cap_cave_mouth` · `chunk_cap_treasure_hollow` · `chunk_cap_wardens_clearing` |
 | `BOSS` (1) | `chunk_boss_sanctuary` |
 
 **Roles are a routing concept, not a design one.** Every piece carries one of
-`ENTRY` / `PATH` / `COMBAT` / `SIDE` / `BOSS` so the assembler knows where it is
+`ENTRY` / `PATH` / `COMBAT` / `SIDE` / `CAP` / `BOSS` so the assembler knows where it is
 allowed to put it. That is all a role means. A ruin and a mushroom glen can both
 be `COMBAT` and be nothing alike, and the world is more varied for it.
 
 The only counts the engine insists on: **at least one `ENTRY`, at least one
 `BOSS`**, and at least one connective piece. Everything else is free.
+
+**2026-09-27 cap variety:** Treasure Hollow and Warden's Clearing are now caps,
+alongside Cave Mouth; Forgotten Trial remains the optional side pocket. All three
+caps are equally weighted and unlimited per layout, following the owner's corrected
+direction. Their geometry, sockets, scenario support and mesh IDs are unchanged.
 
 ---
 

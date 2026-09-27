@@ -265,7 +265,7 @@ _237 text files, 240 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/PROTOTYPE_BUILD_SPEC.md
 
-- `docs/PROTOTYPE_BUILD_SPEC.md` (1114) - LUCKBOUND — Prototype Build Specification · 2026-09-26
+- `docs/PROTOTYPE_BUILD_SPEC.md` (1116) - LUCKBOUND — Prototype Build Specification · 2026-09-26
   - `PROTOTYPE_BUILD_SPEC.md`: Phase 1: Foundation · v0.1 · AI-Executable:2, 0. What Phase 1 Is:10, Phase 1 Definition of Done:20, 1. Canonical Architecture:43, 1.1 Repository → Roblox Explorer mapping:53, 1.2 Bootstrap order — fixed, not negotiable:124, 2. Type & Data Schemas:178, 2.1 Rarity (Constants):182, 2.2 WorldDefinition:198, 2.3 ItemDefinition / DiscoveryDefinition / EnemyDefinition /:262, 2.4 PlayerProfile — save schema v1:273, 3. The Fate Roll — full specification:295, 3.1 Weights:299, 3.2 First-roll rule:336, 3.3 TRUE RNG — the roll is never weighted by the player:340, 3.3.1 Scripted onboarding — the first 15 rolls:355, 3.4 Server authority and anti-exploit:390, 3.5 Roll sequence (canonical):401, 4. Network Contract:425, Live remotes — this is the complete list:431, Reserved — declared now, implemented in Phase 2/3:492, 4.1 Late joiners — the rule that is easy to get wrong:498, 4.2 Event scope and precedence — added 2026-09-20:508, Universal remote rules:544, 5. Phase 1 Task List — AI-executable:553, 6. Tunables Requiring Your Sign-Off:586, 6.1 Bugs Found Building Phase 1:606, 7. What Phase 1 Deliberately Excludes:635, Amendment index — claim a number here, in the same change:637, 7.1 Amendment: expedition entry, opened 2026-09-16:660, What was opened, and what was not:665, Why it was opened now:679, The switch:688, What it added:694, Anti-exploit, same standard as §3.4:705, The gap this exposes:720, 7.2 Amendment: parties, and expeditions as their own server :730, What was opened:738, The rules:748, How the instance works:762, ... +27 more
 
 ### docs/RESERVED.md
@@ -280,12 +280,12 @@ _237 text files, 240 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/STATUS.md
 
-- `docs/STATUS.md` (206) - LUCKBOUND — Project Status · 2026-09-26
-  - `STATUS.md`: 1. Where the project stands:10, 2. Next — pick up here:39, 3. Decisions locked in:105, Why true RNG matters downstream:130, 4. Open items (one line each; details are in the archive und:143, 5. Environment:188, Startup:196
+- `docs/STATUS.md` (214) - LUCKBOUND — Project Status · 2026-09-26
+  - `STATUS.md`: 1. Where the project stands:10, 2. Next — pick up here:39, 3. Decisions locked in:113, Why true RNG matters downstream:138, 4. Open items (one line each; details are in the archive und:151, 5. Environment:196, Startup:204
 
 ### docs/TESTING.md
 
-- `docs/TESTING.md` (804) - LUCKBOUND — Testing Guide · 2026-09-25
+- `docs/TESTING.md` (804) - LUCKBOUND — Testing Guide · 2026-09-26
   - `TESTING.md`: 1. Automated tests:8, Coverage:31, The three that matter most:52, A caution about the harness:78, The untested boundary — named, so it cannot be mistaken for :92, 2. Sync to Studio with Rojo:127, 2.5 Developer commands:147, The three gates on the server-side commands:183, 3. Manual Studio pass:201, Test A — the server boots (1 min):203, Test B — validation blocks a bad boot (2 min):236, Test C — the 15-roll arc (5 min):243, Test D — the cooldown holds (1 min):269, Test C2b — entering from the Fate Engine ⭐ NEW (3 min):276, Test C2 — the expedition, end to end ⭐ (6 min):293, Test C3 — the hub is walkable (3 min):359, Test H2 — the half-size world (4 min) ⭐ NEW:373, Test I — the loading screen (3 min) ⭐ NEW:389, Test J — the hub menu (5 min) ⭐ NEW:415, Test K — run and double jump (2 min) ⭐ NEW:455, Test L — the menu follows the world (4 min) ⭐ NEW:468, Test M — an event changes the world (4 min) ⭐ NEW:496, Test N — the ledger holds under a race ⭐ NEW — **two instanc:521, Test O — parties, in Studio ⭐ NEW — **3 clients, 10 min**:546, Test P — the portal opens a new server ⭐ NEW — **published p:584, Test Q — the Sky Citadel kit, in the world ⭐ NEW (8 min):614, Test R — a world's ambience ⭐ NEW (5 min):645, Test S — Sky Citadel's floating scenery ⭐ NEW (5 min):660, Test T — chests, the vault and its key ⭐ NEW (10 min):688, Test E — a tampered client is rejected (1 min):723, Test F — data persists (3 min) — **published places only**:735, Test G — late joiners see a live event ⭐ (5 min):750, Test H — announcements reach everyone, onboarding does not (:779, 4. What to report back:787
 
 ### docs/TOOLCHAIN_ACCESS.md
@@ -300,8 +300,8 @@ _237 text files, 240 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (5316) - LUCKBOUND — Work Log · 2026-09-26
-  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 75 — 2026-09-26 — Recover socket-fixing on latest ma:36, Done:39, Decisions made:48, Stopped at:52, Next:55, Session 74 — 2026-09-26 — Ethereal Scape revamp: grounded cl:62, Done:66, Next:71, Session 73 — 2026-09-26 — Ethereal Scape: PrebuiltMap → 30-p:76, Done:80, Decisions made:118, Stopped at:124, Next:130, Session 72 — 2026-09-26 — Reserve §7.6 for enemy AI/combat, :141, Done:145, Decisions made:158, Stopped at:162, Next:165, Session 71 — 2026-09-25 — Enemy AI design, weapon movesets, :174, Done:178, Decisions made:182, Stopped at:190, Next:193, Session 70 — 2026-09-25 — Document animation ids as account/:201, Done:205, Decisions made:216, Stopped at:220, Next:224, Session 74 — 2026-09-25 — Fern Hollow and Mushroom Glen veri:232, Done:236, Decisions made:240, Stopped at:244, Next:248, Session 73 — 2026-09-25 — Verdant Valley asset mapping verif:254, ... +408 more
+- `docs/WORKLOG.md` (5376) - LUCKBOUND — Work Log · 2026-09-26
+  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 78 — 2026-09-27 — Prepare recovery branch for origin:36, Done:39, Decisions made:43, Stopped at:46, Next:49, Session 77 — 2026-09-27 — Remove converted cap placement lim:55, Done:58, Decisions made:63, Stopped at:66, Next:69, Session 76 — 2026-09-27 — Verdant Valley cap variety:75, Done:78, Decisions made:84, Stopped at:87, Next:90, Session 75 — 2026-09-26 — Recover socket-fixing on latest ma:96, Done:99, Decisions made:108, Stopped at:112, Next:115, Session 74 — 2026-09-26 — Ethereal Scape revamp: grounded cl:122, Done:126, Next:131, Session 73 — 2026-09-26 — Ethereal Scape: PrebuiltMap → 30-p:136, Done:140, Decisions made:178, Stopped at:184, Next:190, Session 72 — 2026-09-26 — Reserve §7.6 for enemy AI/combat, :201, Done:205, Decisions made:218, Stopped at:222, Next:225, Session 71 — 2026-09-25 — Enemy AI design, weapon movesets, :234, ... +423 more
 
 ### docs/archive
 
@@ -316,8 +316,8 @@ _237 text files, 240 binary assets. Regenerate with `python tools/gen_index.py`;
   - `README.md`: What a biome schema covers:24, Ambience — a world's mood is data:54, Status:85
 - `docs/biomes/SKY_CITADEL.md` (601) - Sky Citadel — biome design schema · 2026-09-25
   - `SKY_CITADEL.md`: The look:26, It must not look like Ethereal Scape:47, The palette:61, The set-dressing vocabulary:90, Lighting and ambience — sunrise above the cloud sea:183, The connection vocabulary:216, The kit — 36 pieces (22 delivered + a 14-piece expansion):241, Variety: five axes, mixed differently on every piece:335, The shape of a run: turns, one intersection, no dead ends:381, No opening onto nothing: the caps:405, Axes:449, How to change it:456, Hand pass:483, 2026-09-22 — the caps:485, 2026-09-22 — variety, turns, the intersection, and four more:494, 2026-09-22 — the kit expansion:505, 2026-09-22 — the first four:519, Risks before upload — read before importing to Studio:534, Render headless:576, Next:586
-- `docs/biomes/VERDANT_VALLEY.md` (224) - Verdant Valley — biome design schema · 2026-09-25
-  - `VERDANT_VALLEY.md`: 1. Palette and light:14, 2. The kinds of place:36, 3. How pieces connect:69, The consequence worth understanding:82, 4. Inhabitants:98, 5. Piece size and count:118, 6. What each piece can support:138, 7. Settled, and what is still open:165, Settled 2026-09-22, when the kit was delivered:167, Still open:181, 8. The 30-piece base kit (2026-09-24):193
+- `docs/biomes/VERDANT_VALLEY.md` (229) - Verdant Valley — biome design schema · 2026-09-25
+  - `VERDANT_VALLEY.md`: 1. Palette and light:14, 2. The kinds of place:36, 3. How pieces connect:74, The consequence worth understanding:87, 4. Inhabitants:103, 5. Piece size and count:123, 6. What each piece can support:143, 7. Settled, and what is still open:170, Settled 2026-09-22, when the kit was delivered:172, Still open:186, 8. The 30-piece base kit (2026-09-24):198
 
 ### (root)
 
@@ -408,7 +408,7 @@ _237 text files, 240 binary assets. Regenerate with `python tools/gen_index.py`;
 ### src/shared
 
 - `src/shared/Content/AssetManifest.luau` (2266) - Logical asset name → Roblox asset id. Addendum §A1. · 2026-09-26
-  - `AssetManifest.luau`: VV_CHUNK_PATH_SUNWASH_FORK:54, VV_CHUNK_CUTBANK_FORD:60, VV_CHUNK_WINDWARD_RIDGE_GATE:66, VV_CHUNK_FORGOTTEN_ORCHARD_GATE:72, VV_CHUNK_LONGGRASS_MEADOW:78, VV_CHUNK_SHADED_GROVE:84, VV_CHUNK_FERN_HOLLOW:90, VV_CHUNK_PATH_CLIFF_PASSAGE:96, VV_CHUNK_STONE_SENTINELS:102, VV_CHUNK_MOSSBOUND_RUINS:108, VV_CHUNK_ANCIENT_OAK:114, VV_CHUNK_WETLAND_POOLS:120, VV_CHUNK_PATH_NARROW_PASS:126, VV_CHUNK_BLOSSOM_TERRACE:132, VV_CHUNK_ROCK_GARDEN:138, VV_CHUNK_CRYSTAL_SPRING_GATE:144, VV_CHUNK_OVERGROWN_CAUSEWAY_GATE:150, VV_CHUNK_HIGH_LEDGE_GATE:156, VV_CHUNK_CLIFF_OVERLOOK_GATE:162, VV_CHUNK_DEEP_CLEARING:168, VV_CHUNK_PATH_SPLIT_MEADOW:174, VV_CHUNK_MUSHROOM_GLEN:180, VV_CHUNK_PATH_CROSSROADS_COPSE:186, VV_CHUNK_CAP_CAVE_MOUTH:192, VV_CHUNK_ENTRY_DAWN_MEADOW:198, VV_CHUNK_ENTRY_WOODLAND_REFUGE:204, VV_CHUNK_BOSS_SANCTUARY:210, VV_CHUNK_SIDE_TREASURE_HOLLOW:216, VV_CHUNK_SIDE_WARDENS_CLEARING:222, VV_CHUNK_SIDE_FORGOTTEN_TRIAL:228, VV_CHUNK_ENTRY:234, SC_CHUNK_ENTRY:258, SC_CHUNK_PATH_STRAIGHT:264, SC_CHUNK_PATH_SKYPORT:270, SC_CHUNK_PATH_HOOPS:276, SC_CHUNK_PATH_SHATTERED:282, SC_CHUNK_PATH_AVIARY:288, SC_CHUNK_CROSSROADS:294, SC_CHUNK_PATH_BEND:300, SC_CHUNK_PATH_BEND_WEST:306, ... +85 more
+  - `AssetManifest.luau`: VV_CHUNK_PATH_SUNWASH_FORK:54, VV_CHUNK_CUTBANK_FORD:60, VV_CHUNK_WINDWARD_RIDGE_GATE:66, VV_CHUNK_FORGOTTEN_ORCHARD_GATE:72, VV_CHUNK_LONGGRASS_MEADOW:78, VV_CHUNK_SHADED_GROVE:84, VV_CHUNK_FERN_HOLLOW:90, VV_CHUNK_PATH_CLIFF_PASSAGE:96, VV_CHUNK_STONE_SENTINELS:102, VV_CHUNK_MOSSBOUND_RUINS:108, VV_CHUNK_ANCIENT_OAK:114, VV_CHUNK_WETLAND_POOLS:120, VV_CHUNK_PATH_NARROW_PASS:126, VV_CHUNK_BLOSSOM_TERRACE:132, VV_CHUNK_ROCK_GARDEN:138, VV_CHUNK_CRYSTAL_SPRING_GATE:144, VV_CHUNK_OVERGROWN_CAUSEWAY_GATE:150, VV_CHUNK_HIGH_LEDGE_GATE:156, VV_CHUNK_CLIFF_OVERLOOK_GATE:162, VV_CHUNK_DEEP_CLEARING:168, VV_CHUNK_PATH_SPLIT_MEADOW:174, VV_CHUNK_MUSHROOM_GLEN:180, VV_CHUNK_PATH_CROSSROADS_COPSE:186, VV_CHUNK_CAP_CAVE_MOUTH:192, VV_CHUNK_ENTRY_DAWN_MEADOW:198, VV_CHUNK_ENTRY_WOODLAND_REFUGE:204, VV_CHUNK_BOSS_SANCTUARY:210, VV_CHUNK_CAP_TREASURE_HOLLOW:216, VV_CHUNK_CAP_WARDENS_CLEARING:222, VV_CHUNK_SIDE_FORGOTTEN_TRIAL:228, VV_CHUNK_ENTRY:234, SC_CHUNK_ENTRY:258, SC_CHUNK_PATH_STRAIGHT:264, SC_CHUNK_PATH_SKYPORT:270, SC_CHUNK_PATH_HOOPS:276, SC_CHUNK_PATH_SHATTERED:282, SC_CHUNK_PATH_AVIARY:288, SC_CHUNK_CROSSROADS:294, SC_CHUNK_PATH_BEND:300, SC_CHUNK_PATH_BEND_WEST:306, ... +85 more
 - `src/shared/Content/Atmospheres/SkyCitadel.luau` (947) - GENERATED by assets/source/worlds/sky_citadel/sky_citadel_atmospheres.py. · 2026-09-23
   - `SkyCitadel.luau`: UNMOORING:13, SIEGE:138, LOCKDOWN:297, STORMHAWK:415, RIME:559, RECLAIMED:681, AETHER_SURGE:802
 - `src/shared/Content/Atmospheres/init.luau` (16) - Scenario atmospheres per world, keyed by world Id. Each module holds a · 2026-09-23
@@ -417,7 +417,7 @@ _237 text files, 240 binary assets. Regenerate with `python tools/gen_index.py`;
   - `EtherealScape.luau`: socket:14
 - `src/shared/Content/Chunks/SkyCitadel.luau` (511) - Sky Citadel chunk kit. docs/biomes/SKY_CITADEL.md is the art direction; the pieces · 2026-09-25
   - `SkyCitadel.luau`: socket:45
-- `src/shared/Content/Chunks/VerdantValley.luau` (406) - GENERATED by assets/source/worlds/verdant_valley/export_verdant_valley_kit.py · 2026-09-26
+- `src/shared/Content/Chunks/VerdantValley.luau` (404) - GENERATED by assets/source/worlds/verdant_valley/export_verdant_valley_kit.py · 2026-09-26
   - `VerdantValley.luau`: socket:15
 - `src/shared/Content/Chunks/init.luau` (19) - Chunk registry. Each module returns a LIST of chunks -- one file per world's · 2026-09-16
 - `src/shared/Content/Codes.luau` (41) - REDEEMABLE CODES, AS DATA. Adding one is one row; no System changes. · 2026-09-20
