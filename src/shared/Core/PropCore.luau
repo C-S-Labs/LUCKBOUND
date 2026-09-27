@@ -54,6 +54,10 @@ PropCore.ANIMS = {
 	Moored = true, -- a boat at a dock: a small bob and a slight rock along its keel
 	Tumble = true, -- debris adrift: a bob, a mild rock, a slow turn
 	Bird = true, -- the flock circles its piece's centre, nose along the path
+	-- A glider that roams the WHOLE map (Ethereal Scape's skyrays, owner
+	-- 2026-09-27): it circles the generated map's centre above every crown,
+	-- its radius breathing in and out so its path sweeps across every chunk.
+	Glide = true,
 	-- A bird's wing: rides on the Bird row it names (Attach) and flaps about
 	-- its Hinge. Never on its own.
 	Wing = true,
@@ -92,7 +96,7 @@ end
 --- birds, whose own rotation R is replaced by `heading`/`bank` (see
 --- PropCore.birdHeading). There is deliberately no scale term.
 function PropCore.motion(anim: string, t: number, phase: number, cfg: any, radius: number?)
-	local m = { lift = 0, turn = 0, tiltX = 0, tiltZ = 0, orbit = 0, bank = 0, flap = 0 }
+	local m = { lift = 0, turn = 0, tiltX = 0, tiltZ = 0, orbit = 0, bank = 0, flap = 0, reach = 0 }
 	local tau = math.pi * 2
 	local c = cfg[anim]
 	if anim == "Static" or c == nil then
@@ -105,6 +109,7 @@ function PropCore.motion(anim: string, t: number, phase: number, cfg: any, radiu
 		or anim == "Tumble"
 		or anim == "Moored"
 		or anim == "Bird"
+		or anim == "Glide"
 	then
 		m.lift = (c.Amplitude or c.Bob) * math.sin(tau * t / c.Period + offset)
 	end
@@ -133,6 +138,18 @@ function PropCore.motion(anim: string, t: number, phase: number, cfg: any, radiu
 		else
 			m.orbit = tau * t / c.Period
 		end
+		m.bank = c.Bank
+	elseif anim == "Glide" then
+		-- Same constant travel speed as a bird, but round the MAP's centre;
+		-- `reach` (a fraction of the map's radius) swings the circle in and
+		-- out so one glider crosses the inner and outer chunks alike instead
+		-- of tracing one ring. Each glider breathes out of step (phase).
+		if radius and radius > 1 and c.Speed then
+			m.orbit = t * c.Speed / radius
+		else
+			m.orbit = tau * t / c.Period
+		end
+		m.reach = c.Reach * math.sin(tau * t / c.ReachPeriod + offset)
 		m.bank = c.Bank
 	elseif anim == "Sway" then
 		m.tiltX = c.Angle * math.sin(tau * t / c.Period + offset)

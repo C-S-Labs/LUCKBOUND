@@ -37,6 +37,8 @@ type Placed = {
 	Phase: number,
 	Heading: number, -- birds only: PropCore.birdHeading
 	Radius: number, -- birds only: distance from the piece's axis (turn rate = Speed / Radius)
+	-- Gliders only: the map's radius, which `reach` (a fraction) scales.
+	MapRadius: number?,
 	Position: Vector3, -- where it rests, for the animate-radius test
 	-- Wings only: the bird this rides on, and the root it flaps about.
 	Body: Placed?,
@@ -68,6 +70,23 @@ local function rawPose(p: Placed, m: any): CFrame
 			* CFrame.new(p.Offset + Vector3.new(0, m.lift, 0))
 			* CFrame.Angles(0, p.Heading, 0)
 			* CFrame.Angles(-m.bank, 0, 0)
+	end
+	if p.Anim == "Glide" then
+		-- Round the MAP's centre (Layout, set in enter), its radius breathing
+		-- in and out by `reach` but never inside a fifth of the map or past
+		-- its edge. The heading only depends on direction, so it still holds.
+		local mapR = p.MapRadius or p.Radius
+		local r = math.clamp(p.Radius + m.reach * mapR, mapR * 0.2, mapR)
+		local out = if p.Radius > 1 then p.Offset * (r / p.Radius) else p.Offset
+		return p.Layout
+			* CFrame.Angles(0, m.orbit, 0)
+			* CFrame.new(out + Vector3.new(0, m.lift, 0))
+			* CFrame.Angles(0, p.Heading, 0)
+			* CFrame.Angles(-m.bank, 0, 0)
+			-- Heading/bank point a nose along +X (a bird's); the skyray's nose is
+			-- its -Z (Blender +Y), so turn it -90° onto +X. Without this they
+			-- flew sideways round their circle (owner, 2026-09-27).
+			* CFrame.Angles(0, -math.pi / 2, 0)
 	end
 	return p.Layout
 		* CFrame.new(p.Offset + Vector3.new(0, m.lift, 0))
@@ -112,9 +131,10 @@ local function step()
 		if p.Anim ~= "Static" then
 			local d = p.Position - focus
 			-- A wing moves only when its bird did this frame.
+			-- A glider roams the whole map, so it never rests out of range.
 			local near = if p.Body
 				then (p.Body :: Placed).Pose ~= nil and d:Dot(d) <= radius2
-				else d:Dot(d) <= radius2
+				else p.Anim == "Glide" or d:Dot(d) <= radius2
 			if near then
 				table.insert(parts, p.Part)
 				table.insert(cframes, pose(p, PropCore.motion(p.Anim, t, p.Phase, cfg, p.Radius)))
@@ -157,6 +177,10 @@ function PropController.enter(worldId: string, stageName: string?)
 	startedAt = os.clock()
 	local missing: { [string]: boolean } = {}
 	local index = 0
+	-- Gliders are re-anchored on the map once every chunk is known (below).
+	local gliders: { Placed } = {}
+	local floors: { Vector3 } = {}
+	local mapReach = 0
 
 	for _, chunkFolder in stage:GetChildren() do
 		local chunkId = chunkFolder:GetAttribute("ChunkId")
@@ -168,6 +192,9 @@ function PropController.enter(worldId: string, stageName: string?)
 			-- The piece's layout frame: where the generator put it and which
 			-- way it turned it. Placements are authored in exactly this frame.
 			local layout = CFrame.new(centre) * CFrame.Angles(0, ChunkCore.yawRadians(yaw), 0)
+			table.insert(floors, centre)
+			local half = chunk and math.max(chunk.SizeX or 0, chunk.SizeZ or 0) / 2 or 0
+			mapReach = math.max(mapReach, half)
 			-- The importer turns every mesh relative to the Blender axes the
 			-- placements use -- the same turn the kit's MeshYawOffset corrects
 			-- for the structure -- so a prop gets it too, applied last, in its
@@ -229,18 +256,59 @@ function PropController.enter(worldId: string, stageName: string?)
 						-- At rest is motion at t = 0 for a bird (its heading, not
 						-- its authored yaw) and its wings, and the authored pose
 						-- for the rest.
-						local restAnim = if row.Anim == "Bird" or row.Anim == "Wing"
+						local restAnim = if row.Anim == "Bird"
+								or row.Anim == "Wing"
+								or row.Anim == "Glide"
 							then row.Anim
 							else "Static"
 						part.CFrame = pose(entry, PropCore.motion(restAnim, 0, 0, cfg))
 						part.Parent = holder
 						table.insert(placed, entry)
 						byRow[rowIndex] = entry
+						if row.Anim == "Glide" then
+							table.insert(gliders, entry)
+						end
 					else
 						missing[row.Prop] = true
 					end
 				end
 			end
+		end
+	end
+
+	-- Skyrays (owner, 2026-09-27): a glider flies over the WHOLE map, not
+	-- round its own chunk. Its circle is centred on the map (the mean of the
+	-- chunk floors), starts where it was authored, and flies Altitude studs
+	-- above the HIGHEST floor, so no crown anywhere on the map is in its way;
+	-- its authored height (70..140 over its piece) spreads the flock in height.
+	if #gliders > 0 and #floors > 0 then
+		local gcfg = cfg.Glide
+		local sum, top = Vector3.zero, -math.huge
+		for _, c in floors do
+			sum += c
+			top = math.max(top, c.Y)
+		end
+		local mid = sum / #floors
+		local mapR = 0
+		for _, c in floors do
+			mapR = math.max(mapR, Vector3.new(c.X - mid.X, 0, c.Z - mid.Z).Magnitude)
+		end
+		mapR += mapReach
+		for _, g in gliders do
+			local world = g.Layout * g.Offset
+			local band = math.clamp((g.Offset.Y - 70) / 70, 0, 1) * gcfg.Spread
+			g.Layout = CFrame.new(mid.X, top + gcfg.Altitude + band, mid.Z)
+			g.Offset = Vector3.new(world.X - mid.X, 0, world.Z - mid.Z)
+			g.Radius = math.max(g.Offset.Magnitude, mapR * 0.2)
+			if g.Offset.Magnitude < 1 then
+				g.Offset = Vector3.new(g.Radius, 0, 0)
+			end
+			g.Offset = g.Offset.Unit * math.min(g.Radius, mapR)
+			g.Radius = g.Offset.Magnitude
+			g.MapRadius = mapR
+			g.Heading = PropCore.birdHeading(g.Offset.X, g.Offset.Z)
+			g.Position = g.Layout.Position
+			g.Part.CFrame = pose(g, PropCore.motion("Glide", 0, 0, cfg, g.Radius))
 		end
 	end
 

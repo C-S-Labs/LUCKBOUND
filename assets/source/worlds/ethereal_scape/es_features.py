@@ -433,11 +433,46 @@ def great_tree(p, x, y, z=FLOOR_Z, top=CROWN_TOP, trunk=7.0):
     rod(p, "SoftWood", (x, y, z + 92), (x, y, ch - 10), trunk * 0.55, trunk * 0.35, n=6)
 
 
-def mushroom(p, x, y, z=FLOOR_Z, s=1.0):
+MUSH_CAPS = ("TempleGold", "TempleGold", "PortalGlow", "IndigoLeaves", "CloudWhite")
+
+
+def mushroom(p, x, y, z=FLOOR_Z, s=1.0, shape=0, cap="TempleGold"):
+    """shape 0: the classic; 1: tall and slender with a small cap; 2: squat with a broad flat cap."""
+    stem_h, stem_r, cap_r, cap_h = ((2.2, 0.45, 1.5, 1.1), (3.4, 0.32, 1.0, 0.9), (1.2, 0.6, 2.0, 0.8))[shape]
     p.group(True)
-    frustum(p, "TempleIvory", x, y, z - 0.2, z + 2.2 * s, 0.45 * s, 0.35 * s, n=5)
-    gem(p, "TempleGold", x, y, z + 2.2 * s, 1.5 * s, 1.1 * s, 0.35 * s, n=6)
+    frustum(p, "TempleIvory", x, y, z - 0.2, z + stem_h * s, stem_r * s, stem_r * 0.78 * s, n=5)
+    gem(p, cap, x, y, z + stem_h * s, cap_r * s, cap_h * s, 0.35 * s, n=6, a0=(x * 7.3 + y * 3.1) % 1.0)
     p.group(False)
+
+
+def mushroom_patch(p, x, y, n, spread=8.0, z=FLOOR_Z, s=(0.6, 1.8), avoid=()):
+    """UNIVERSAL RULE (owner 2026-09-27): mushrooms grow in natural patches -- never a neat ring or
+    row unless the piece's design deliberately calls for one (a fairy ring, a tended crop row). A patch
+    is two to four clumps of uneven size, each a tight scatter of big parents and small offspring, with
+    shapes and cap colours mixed. Stems keep a stud apart so nothing merges."""
+    rng = p.rng
+    clumps = []
+    for _ in range(rng.randint(2, 4)):
+        a, d = rng.uniform(0, 6.28), spread * rng.uniform(0.0, 0.8)
+        clumps.append((x + math.cos(a) * d, y + math.sin(a) * d, spread * rng.uniform(0.2, 0.45), rng.random()))
+    total = sum(c[3] + 0.3 for c in clumps)
+    stems = []
+    for cx, cy, cr, w in clumps:
+        k = max(1, round(n * (w + 0.3) / total))
+        for j in range(k):
+            for _t in range(12):
+                aa, dd = rng.uniform(0, 6.28), cr * rng.random() ** 0.7
+                mx, my = cx + math.cos(aa) * dd, cy + math.sin(aa) * dd
+                sc = rng.uniform(*s) * (1.0 if j == 0 else rng.uniform(0.45, 0.9))   # a parent, then offspring
+                if any(math.hypot(mx - qx, my - qy) < (sc + qs) * 1.1 + 0.4 for qx, qy, qs in stems):
+                    continue
+                if any(math.hypot(mx - ax, my - ay) < ar for ax, ay, ar in avoid):
+                    continue
+                stems.append((mx, my, sc))
+                shape = rng.choice((0, 0, 1, 2))
+                mushroom(p, mx, my, z=z, s=sc, shape=shape, cap=MUSH_CAPS[rng.randrange(len(MUSH_CAPS))])
+                break
+    return stems
 
 
 def blossoms(p, cx, cy, r, n, z=FLOOR_Z, avoid=()):
@@ -596,15 +631,20 @@ def bell_tower(p, x, y, z=FLOOR_Z, top=CROWN_TOP, w=16.0, rz=0.0):
     body_top = z + (top - z) * 0.64
     box(p, "Cloudstone", x, y, z + 1, w + 4, w + 4, 3, rz=rz)
     box(p, "TempleIvory", x, y, (z + body_top) / 2, w, w, body_top - z, rz=rz)
-    for k in range(1, int((body_top - z) // 22) + 1):
-        box(p, "TempleGold", x, y, z + k * 22, w + 1, w + 1, 1.2, rz=rz)
-    # crystal windows
+    bands = [z + k * 22 for k in range(1, int((body_top - z) // 22) + 1)]
+    for bz in bands:
+        box(p, "TempleGold", x, y, bz, w + 1, w + 1, 1.2, rz=rz)
+    # crystal windows: centred in the highest clear course between the gold bands (owner 2026-09-27:
+    # windows hung at a fixed height ran through the band wrapping the tower)
+    edges = [z + 3] + bands + [body_top]
+    lo, hi = max(((a0, b0) for a0, b0 in zip(edges, edges[1:]) if b0 - a0 >= 8), key=lambda e: e[0])
+    win_h = min(8.0, hi - lo - 0.6 - 3.0)
     c, s = math.cos(rz), math.sin(rz)
     for side in range(4):
         a = rz + side * math.pi / 2
         ox, oy = math.cos(a) * (w / 2 + 0.05), math.sin(a) * (w / 2 + 0.05)
-        box(p, "SkyCrystal", x + ox, y + oy, body_top - 12, 0.4 if side % 2 == 0 else w * 0.3,
-            w * 0.3 if side % 2 == 0 else 0.4, 8, rz=rz)
+        box(p, "SkyCrystal", x + ox, y + oy, (lo + hi) / 2, 0.4 if side % 2 == 0 else w * 0.3,
+            w * 0.3 if side % 2 == 0 else 0.4, win_h, rz=rz)
     bel_top = body_top + (top - z) * 0.14
     for u, v in ((-1, -1), (1, -1), (1, 1), (-1, 1)):
         px, py = x + (u * c - v * s) * (w / 2 - 1.5), y + (u * s + v * c) * (w / 2 - 1.5)
@@ -659,6 +699,9 @@ def crag(p, x, y, z=FLOOR_Z, r=18.0, top=CROWN_TOP, ledges=True):
     """A pinnacle of faceted rock rising out of the cloud, grass on its ledges, a tiny shrine near
     its summit; its apex is EXACTLY `top`."""
     p.keepout.append((x, y, r + 6))
+    # its base really spreads to ~1.35r (+ jitter): that whole footprint must stand on the isle
+    if z > -10:
+        p.footings.append((x, y, z, r * 1.35, "crag"))
     rng = p.rng
     tiers = 7
     prev = None

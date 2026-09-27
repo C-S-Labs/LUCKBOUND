@@ -1090,6 +1090,20 @@ local GameConfig = {
 			-- One lap of the flock. Bob must stay <= the generator's BIRD_BOB
 			-- (0.6), the clearance every bird's circle was proven with.
 			Bird = { Period = 36, Speed = 14, Bob = 0.5, Bank = 0.25 }, -- Speed: studs/s, same for every bird
+			-- Map-wide gliders (skyrays). Reach: the fraction of the map's
+			-- radius the circle breathes in and out by; Altitude: studs above
+			-- the highest chunk floor, clear of every crown (Ethereal Scape's
+			-- CROWN_TOP is 160); Spread: the flock's height band above that.
+			Glide = {
+				Period = 90,
+				Speed = 16,
+				Bob = 1.5,
+				Bank = 0.2,
+				Reach = 0.45,
+				ReachPeriod = 70,
+				Altitude = 172,
+				Spread = 40,
+			},
 			-- A wingbeat: radians each way from the modelled pose, and seconds.
 			Wing = { Amplitude = 0.45, Period = 0.7 },
 			-- Banners rocking in the wind: radians each way about the centre.
