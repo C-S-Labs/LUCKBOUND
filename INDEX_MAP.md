@@ -151,8 +151,8 @@ _232 text files, 206 binary assets. Regenerate with `python tools/gen_index.py`;
   - `refinish.py`: refinish_piece:11
 - `assets/source/worlds/_framework/scatter_core.py` (232) - The prop scatter -- Python twin of src/shared/Core/ScatterCore.luau. · 2026-09-23
   - `scatter_core.py`: imul:38, fnv:46, Rng:54, encode_point:76, encode_air:84, decode_points:88, decode_air:98, rule_ok:108, scatter:122
-- `assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py` (742) - LUCKBOUND - Ethereal Scape 30-piece base chunk kit. FIRST PASS (2026-09-26), · 2026-09-26
-  - `build_ethereal_scape_kit.py`: make_materials:56, Piece:76, TR:96, box:103, island:118, cone:145, sphere:155, tube:165, pier:194, edge_pins:210, edge_trim:221, keel:246, landmark:273, build_island_piece:326, build_archipelago_piece:346, build_span_piece:375, build_convergence:398, build_boss_arena:410, build_cap_span:425, build_cap_shrine:441, to_object:570, validate_piece:604, footprint_for:631, main:635, export_all:677, render_overview:695
+- `assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py` (771) - LUCKBOUND - Ethereal Scape 30-piece base chunk kit. FIRST PASS (2026-09-26), · 2026-09-26
+  - `build_ethereal_scape_kit.py`: make_materials:56, Piece:76, name_seed:96, TR:103, box:110, island:125, cone:150, sphere:160, tube:170, pier:199, edge_pins:215, edge_trim:226, keel:251, landmark:278, build_island_piece:331, build_archipelago_piece:351, build_span_piece:380, build_convergence:403, build_boss_arena:415, build_cap_span:430, build_cap_shrine:446, to_object:575, validate_piece:623, footprint_for:660, main:664, export_all:706, render_overview:724
 - `assets/source/worlds/sky_citadel/IMPORT_STEPS.md` (34) - Sky Citadel refinish (2026-09-24): re-import steps · 2026-09-24
   - `IMPORT_STEPS.md`: 1. Chunks (structure):10, 2. Props:20, 3. Recolours (scenario variants):26, 4. Walk it:32
 - `assets/source/worlds/sky_citadel/build_sky_citadel_atmosphere_props.py` (442) - Sky Citadel ATMOSPHERE PROPS -- the things each scenario atmosphere's · 2026-09-23
@@ -292,8 +292,8 @@ _232 text files, 206 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (5158) - LUCKBOUND — Work Log · 2026-09-26
-  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 73 — 2026-09-26 — Ethereal Scape: PrebuiltMap → 30-p:36, Done:40, Decisions made:70, Stopped at:76, Next:82, Session 72 — 2026-09-26 — Reserve §7.6 for enemy AI/combat, :93, Done:97, Decisions made:110, Stopped at:114, Next:117, Session 71 — 2026-09-25 — Enemy AI design, weapon movesets, :126, Done:130, Decisions made:134, Stopped at:142, Next:145, Session 70 — 2026-09-25 — Document animation ids as account/:153, Done:157, Decisions made:168, Stopped at:172, Next:176, Session 69 — 2026-09-25 — STATUS correction: Worlds table an:184, Done:188, Decisions made:204, Stopped at:211, Next:215, Session 68 — 2026-09-25 — Chunk detail, boss preview, Aether:224, Done:227, Decisions made:278, Stopped at:289, Next:293, Session 67 — 2026-09-24 — Enemy framework + Sky Citadel enem:301, Done:304, Decisions made:324, Stopped at:330, ... +375 more
+- `docs/WORKLOG.md` (5166) - LUCKBOUND — Work Log · 2026-09-26
+  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 73 — 2026-09-26 — Ethereal Scape: PrebuiltMap → 30-p:36, Done:40, Decisions made:78, Stopped at:84, Next:90, Session 72 — 2026-09-26 — Reserve §7.6 for enemy AI/combat, :101, Done:105, Decisions made:118, Stopped at:122, Next:125, Session 71 — 2026-09-25 — Enemy AI design, weapon movesets, :134, Done:138, Decisions made:142, Stopped at:150, Next:153, Session 70 — 2026-09-25 — Document animation ids as account/:161, Done:165, Decisions made:176, Stopped at:180, Next:184, Session 69 — 2026-09-25 — STATUS correction: Worlds table an:192, Done:196, Decisions made:212, Stopped at:219, Next:223, Session 68 — 2026-09-25 — Chunk detail, boss preview, Aether:232, Done:235, Decisions made:286, Stopped at:297, Next:301, Session 67 — 2026-09-24 — Enemy framework + Sky Citadel enem:309, Done:312, Decisions made:332, Stopped at:338, ... +375 more
 
 ### docs/archive
 

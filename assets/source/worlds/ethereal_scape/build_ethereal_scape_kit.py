@@ -93,6 +93,13 @@ class Piece:
         return sum(len(f) - 2 for f in self.faces)
 
 
+def name_seed(name):
+    """Deterministic per-piece seed. Python's hash() is randomised per process,
+    so seeding from it made every rebuild differ."""
+    import zlib
+    return zlib.crc32(name.encode()) % 10000
+
+
 def TR(loc=(0, 0, 0), rz=0.0, rx=0.0, ry=0.0):
     return Matrix.Translation(loc) @ Matrix.Rotation(rz, 4, "Z") @ Matrix.Rotation(rx, 4, "X") @ Matrix.Rotation(ry, 4, "Y")
 
@@ -117,29 +124,27 @@ def box(p, mat, loc, size, rz=0.0, bev=0.0):
 
 def island(p, cx, cy, r, top_z, thickness, floor_mat, side_mat, sides=28, seed=0, wobble=0.06):
     """A round, slightly organic deck: flat floor cap, sloped side wall, capped underside."""
+    # Built as explicit lists, not bmesh: reading .index off freshly created
+    # BMVerts returns stale indices, which silently turned every floor into a
+    # degenerate face that mesh.validate() then deleted (2026-09-26).
     rng = random.Random(seed)
-    bm = bmesh.new()
-    top_ring, bot_ring = [], []
+    verts = []
     for i in range(sides):
         a = 2 * math.pi * i / sides
         rr = r * (1.0 + rng.uniform(-wobble, wobble))
-        x, y = cx + rr * math.cos(a), cy + rr * math.sin(a)
-        top_ring.append(bm.verts.new((x, y, top_z)))
-        bot_ring.append(bm.verts.new((x * 0.94, y * 0.94, top_z - thickness)))
-    bm.verts.ensure_lookup_table()
-    top_faces, side_faces, bot_faces = [], [], []
-    tcap = bm.faces.new(top_ring); top_faces.append([v.index for v in tcap.verts])
-    bcap = bm.faces.new(list(reversed(bot_ring))); bot_faces.append([v.index for v in bcap.verts])
-    for i in range(sides):
-        j = (i + 1) % sides
-        f = bm.faces.new((top_ring[i], top_ring[j], bot_ring[j], bot_ring[i]))
-        side_faces.append([v.index for v in f.verts])
-    bm.verts.ensure_lookup_table()
-    verts = [tuple(v.co) for v in bm.verts]
-    bm.free()
-    p.add(verts, top_faces, floor_mat)
-    p.add(verts, side_faces, side_mat)
-    p.add(verts, bot_faces, "Underside")
+        dx, dy = rr * math.cos(a), rr * math.sin(a)
+        verts.append((cx + dx, cy + dy, top_z))                       # top ring: index 2i
+        verts.append((cx + dx * 0.94, cy + dy * 0.94, top_z - thickness))  # bottom ring: 2i + 1
+    top = [2 * i for i in range(sides)]
+    bot = [2 * i + 1 for i in reversed(range(sides))]
+    sides_f = [[2 * i, 2 * ((i + 1) % sides), 2 * ((i + 1) % sides) + 1, 2 * i + 1] for i in range(sides)]
+    base = len(p.verts)
+    p.verts.extend(Vector(v) for v in verts)
+    for f, m in ([top, floor_mat], [bot, "Underside"]):
+        p.faces.append([base + i for i in f]); p.fmat.append(m)
+    p.up.add(len(p.faces) - 2)                                        # the floor faces up, always
+    for f in sides_f:
+        p.faces.append([base + i for i in f]); p.fmat.append(side_mat)
 
 
 def cone(p, mat, loc, r0, r1, height, sides=12, rz=0.0, rx=0.0, cap_bottom=True, cap_top=True):
@@ -324,7 +329,7 @@ def landmark(p, style, cx, cy, base_z, seed=0):
 # Piece assembly
 # ---------------------------------------------------------------------------
 def build_island_piece(p, spec):
-    seed = abs(hash(p.name)) % 10000
+    seed = name_seed(p.name)
     r = spec.get("radius", 100)
     cx, cy = spec.get("centre", (0, 0))
     edge_pins(p)
@@ -344,7 +349,7 @@ def build_island_piece(p, spec):
 
 
 def build_archipelago_piece(p, spec):
-    seed = abs(hash(p.name)) % 10000
+    seed = name_seed(p.name)
     edge_pins(p)
     islets = spec["islets"]  # list of (cx, cy, r)
     for i, (icx, icy, ir) in enumerate(islets):
@@ -374,7 +379,7 @@ def build_archipelago_piece(p, spec):
 
 def build_span_piece(p, spec):
     """A bare span or stepping-stones: no big deck, just the crossing itself."""
-    seed = abs(hash(p.name)) % 10000
+    seed = name_seed(p.name)
     edge_pins(p)
     kind_a, kind_b = spec["sockets"][0][1], spec["sockets"][1][1]
     if spec["mode"] == "arch":
@@ -396,7 +401,7 @@ def build_span_piece(p, spec):
 
 
 def build_convergence(p, spec):
-    seed = abs(hash(p.name)) % 10000
+    seed = name_seed(p.name)
     edge_pins(p)
     r = 108
     island(p, 0, 0, r, 0.0, 14, spec["floor"], "Cloudstone", seed=seed, sides=32)
@@ -408,7 +413,7 @@ def build_convergence(p, spec):
 
 
 def build_boss_arena(p, spec):
-    seed = abs(hash(p.name)) % 10000
+    seed = name_seed(p.name)
     edge_pins(p)
     r = 130
     island(p, 0, 0, r, 0.0, 16, spec["floor"], "Cloudstone", seed=seed, sides=36, wobble=0.02)
@@ -424,7 +429,7 @@ def build_boss_arena(p, spec):
 
 def build_cap_span(p, spec):
     """A one-socket ending: the causeway simply stops, mid-construction."""
-    seed = abs(hash(p.name)) % 10000
+    seed = name_seed(p.name)
     edge_pins(p)
     cardinal, kind = spec["sockets"][0]
     pier(p, cardinal, kind, spec["floor"], "Cloudstone", inner_r=FOOTPRINT - 60)
@@ -575,7 +580,8 @@ def to_object(p, mats, collection):
     mesh.from_pydata([tuple(v) for v in p.verts], [], p.faces)
     for name in MAT_ORDER:
         mesh.materials.append(mats[name])
-    ok = mesh.validate(verbose=False)
+    mesh.validate(verbose=False)
+    dropped = len(p.faces) - len(mesh.polygons)
     for poly, mname in zip(mesh.polygons, p.fmat):
         poly.material_index = MAT_ORDER.index(mname)
         poly.use_smooth = False
@@ -583,6 +589,13 @@ def to_object(p, mats, collection):
     bm = bmesh.new()
     bm.from_mesh(mesh)
     bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    bm.faces.ensure_lookup_table()
+    if len(bm.faces) == len(p.faces):          # validate() dropped nothing, so indices still line up
+        for i in p.up:
+            f = bm.faces[i]
+            f.normal_update()
+            if f.normal.z < 0:
+                f.normal_flip()
     bm.to_mesh(mesh)
     bm.free()
 
@@ -598,10 +611,16 @@ def to_object(p, mats, collection):
     obj = bpy.data.objects.new(p.name, mesh)
     obj["kit"] = "ETHEREAL_SCAPE"
     collection.objects.link(obj)
-    return obj, ok
+    return obj, dropped
 
 
-def validate_piece(p, obj):
+# Minimum walkable floor (sq studs) per build kind. Spans and caps are narrow by
+# design; everything else is a real island and must have one.
+MIN_WALK = {"span": 3000.0, "cap_span": 2000.0, "archipelago": 8000.0, "island": 10000.0,
+            "convergence": 20000.0, "boss": 30000.0, "cap_shrine": 10000.0}
+
+
+def validate_piece(p, obj, spec, dropped):
     fails = []
     verts = [obj.matrix_world @ v.co for v in obj.data.vertices]
     xs, ys, zs = [v.x for v in verts], [v.y for v in verts], [v.z for v in verts]
@@ -622,6 +641,16 @@ def validate_piece(p, obj):
     cy = (min(ys) + max(ys)) / 2
     if abs(cx) > 2.0 or abs(cy) > 2.0:
         fails.append(f"bbox centre ({cx:.2f},{cy:.2f}) not at origin")
+    # THE CHECK THAT WAS MISSING: the pins alone satisfy every bbox rule above,
+    # so a piece with no floor at all used to PASS. Measure the walkable area:
+    # up-facing faces at the walk plane (z ~ 0, stepping stones sit a stud or two lower).
+    me = obj.data
+    walk = sum(poly.area for poly in me.polygons if poly.normal.z > 0.9 and -4.0 < poly.center.z < 0.5)
+    need = MIN_WALK.get(spec["kind"], 8000.0)
+    if walk < need:
+        fails.append(f"walkable floor {walk:.0f} sq studs < {need:.0f}")
+    if dropped:
+        fails.append(f"mesh.validate() removed {dropped} degenerate face(s) -- geometry bug")
     return fails
 
 
@@ -645,22 +674,22 @@ def main():
         FOOTPRINT = footprint_for(spec)
         p = Piece(spec["id"], spec["sockets"])
         BUILDERS[spec["kind"]](p, spec)
-        obj, mesh_ok = to_object(p, mats, coll)
-        fails = validate_piece(p, obj)
+        obj, dropped = to_object(p, mats, coll)
+        fails = validate_piece(p, obj, spec, dropped)
         row, col = divmod(idx, cols)
         obj.location = (col * GRID_GAP, row * GRID_GAP, 0)
         tris = p.tri_count()
-        results.append((spec["id"], spec["role"], tris, fails, mesh_ok))
+        walk = sum(poly.area for poly in obj.data.polygons if poly.normal.z > 0.9 and -4.0 < poly.center.z < 0.5)
+        results.append((spec["id"], spec["role"], tris, fails, walk))
         FOOTPRINT = 128.0
 
     print("\n=== ETHEREAL SCAPE KIT ===")
     n_fail = 0
-    for name, role, tris, fails, mesh_ok in results:
+    for name, role, tris, fails, walk in results:
         status = "PASS" if not fails else "FAIL"
         if status == "FAIL":
             n_fail += 1
-        warn = "" if mesh_ok else "  (mesh.validate() auto-repaired minor geometry)"
-        print(f"PIECE {name:26s} {role:8s} {tris:5d} tris  {status}" + (f"  :: {'; '.join(fails)}" if fails else "") + warn)
+        print(f"PIECE {name:26s} {role:8s} {tris:5d} tris  floor {walk:7.0f} sq studs  {status}" + (f"  :: {'; '.join(fails)}" if fails else ""))
     print(f"=== {len(results) - n_fail}/{len(results)} PASS ===")
 
     if DO_EXPORT:

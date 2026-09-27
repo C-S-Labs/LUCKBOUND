@@ -66,6 +66,14 @@ delete an older entry; if something turned out wrong, say so in a newer one.
   branch of `ExpeditionCore` covered now that no real world uses it.
 - Ran `selene` and `stylua --check` against every edited Luau file (both clean) — the closest available
   substitute for the real suite, since this session has no local `luau`/`luau-analyze` binary.
+- **Owner caught a real bug on first look in Blender: every piece was missing its island platform.**
+  `island()` read `.index` off freshly created BMVerts (stale until `index_update()`), so every floor cap and
+  cliff wall was degenerate and `mesh.validate()` silently deleted them — only piers, trim, keels and landmarks
+  survived. The old "30/30 PASS" was hollow: the bbox checks are satisfied by the edge pins and landmark alone.
+  Fixed `island()` (explicit vertex lists; underside ring also scaled about the island centre, not the world
+  origin), and `validate_piece()` now **fails** a piece whose walkable floor is under a per-kind minimum, or if
+  `mesh.validate()` drops any face. Also replaced `hash()` seeding (randomised per process) with a crc32 name
+  seed — two rebuilds now diff identical.
 
 ### Decisions made
 - Ethereal Scape converts to a full chunk-kit, combat-enabled world (owner-directed, explicit trade-off presented
