@@ -4,6 +4,7 @@
 -- client's PropController turns this into MeshParts and CFrames.
 --
 -- PURE: no Roblox types, so the motion is testable headlessly.
+-- Also supplies local box geometry for the hub's side-on sky-ship berths.
 --
 -- THE RULES EVERY MOTION KEEPS:
 --   * Nothing ever changes size. A prop's Size is set once, at placement.
@@ -14,6 +15,33 @@
 --   * Every motion is small, slow and periodic: scenery, not spectacle.
 
 local PropCore = {}
+
+--- Side-on berth against an oriented island box. Returns local X/Z and
+--- its outward face normal; spacing is based on ship beam, not its length.
+function PropCore.berthOnBox(
+	sizeX: number,
+	sizeZ: number,
+	outX: number,
+	outZ: number,
+	shipWidth: number,
+	clearance: number
+): (number, number, number, number)
+	local hx, hz = sizeX / 2, sizeZ / 2
+	local tx = if outX ~= 0 then hx / math.abs(outX) else math.huge
+	local tz = if outZ ~= 0 then hz / math.abs(outZ) else math.huge
+	if tx == math.huge and tz == math.huge then
+		return hx + shipWidth / 2 + clearance, 0, 1, 0
+	end
+	local reach = math.min(tx, tz)
+	local x, z = outX * reach, outZ * reach
+	local nx, nz = 0, 0
+	if tx <= tz then
+		nx = if outX >= 0 then 1 else -1
+	else
+		nz = if outZ >= 0 then 1 else -1
+	end
+	return x + nx * (shipWidth / 2 + clearance), z + nz * (shipWidth / 2 + clearance), nx, nz
+end
 
 -- Every animation class a placement may name. Kept here, not in content,
 -- because each is behaviour -- adding one means writing its motion below.

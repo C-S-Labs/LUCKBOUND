@@ -76,9 +76,22 @@ COMMANDS.roll = function(player: Player, args: { string }): (boolean, string)
 			end
 		end
 		table.sort(ids)
-		return false, "usage: /roll <WORLD_ID> -- " .. table.concat(ids, ", ")
+		return false, "usage: /roll <WORLD_ID> [test] -- " .. table.concat(ids, ", ")
 	end
-	return FateSystem.forceRoll(player, string.upper(worldId))
+	if #args > 2 or (args[2] and string.lower(args[2]) ~= "test") then
+		return false, "usage: /roll <WORLD_ID> [test]"
+	end
+	worldId = string.upper(worldId)
+	local testMode = args[2] ~= nil
+	if testMode and not ExpeditionSystem.canTestWorld(worldId) then
+		return false, `{worldId} has no chunk kit for test mode`
+	end
+	local ok, text = FateSystem.forceRoll(player, worldId)
+	if ok then
+		ExpeditionSystem.setTestDestination(player, worldId, testMode)
+	end
+	return ok,
+		text .. (if ok and testMode then " -- next instance: all chunks, test layout" else "")
 end
 
 --- /showboss <id> [height] -- put a boss PREVIEW (Content/BossPreviews) in the nearest boss arena, facing you,

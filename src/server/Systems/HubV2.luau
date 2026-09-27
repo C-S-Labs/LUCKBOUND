@@ -291,6 +291,7 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 			)
 			p:SetAttribute("WanderSpeed", Vector2.new(entry.SpeedMin, entry.SpeedMax))
 			p:SetAttribute("WanderFaces", entry.Faces == true)
+			p:SetAttribute("WanderCanDock", entry.CanDock == true)
 			p:SetAttribute("WanderBob", entry.Bob or 0)
 			p:SetAttribute("WanderSeed", rng:NextInteger(1, 1e6))
 			local _ = radius + height + phase

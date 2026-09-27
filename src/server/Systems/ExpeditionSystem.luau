@@ -140,6 +140,8 @@ local launching: { [number]: boolean } = {}
 local forcedEntry: { [number]: boolean } = {}
 -- /enter <seed>: replay a map exactly (same chunks, same order). Developer only.
 local forcedSeed: { [number]: number } = {}
+-- Bound to a particular roll; a later roll (even of the same world) cancels it.
+local testDestinations: { [number]: { WorldId: string, RollNumber: number } } = {}
 
 -- HOST mode only.
 local hosting = false
@@ -254,7 +256,13 @@ end
 --- world and this function does not change. See ExpeditionCore.hasPrebuiltMap
 --- for why the two routes exist at all. Returns nil on a content failure,
 --- which is loud here and silent to the player.
-local function buildStage(worldId: string, seed: number, origin: Vector3, stageName: string)
+local function buildStage(
+	worldId: string,
+	seed: number,
+	origin: Vector3,
+	stageName: string,
+	testMode: boolean?
+)
 	local world = Worlds[worldId]
 
 	if ExpeditionCore.hasPrebuiltMap(world) then
@@ -287,20 +295,26 @@ local function buildStage(worldId: string, seed: number, origin: Vector3, stageN
 		}
 	end
 
-	local ok, layout, attempts = ChunkCore.assembleWithRetry(Chunks, {
-		WorldId = worldId,
-		PathLength = ExpeditionCore.pathLengthFor(world, GameConfig),
-		-- Was never passed, so GameConfig.Expedition.IncludeSide did nothing:
-		-- ChunkCore treats nil as "on", which happened to match the config's
-		-- value, so a designer turning it off would have been ignored in
-		-- silence. A dial that is read nowhere is not a dial.
-		IncludeSide = GameConfig.Expedition.IncludeSide,
-		BranchLength = GameConfig.Expedition.BranchLength,
-		MaxRepeats = GameConfig.Expedition.MaxRepeats,
-		SpawnOverrides = spawnOverrides,
-	}, function(attempt)
-		return ExpeditionCore.streamFor(seed, attempt)
-	end, GameConfig.Expedition.AssemblyAttempts)
+	local ok, layout, attempts
+	if testMode then
+		ok, layout = ChunkCore.assembleTest(Chunks, worldId, GameConfig.Debug.TestChunkGap)
+		attempts = 1
+	else
+		ok, layout, attempts = ChunkCore.assembleWithRetry(Chunks, {
+			WorldId = worldId,
+			PathLength = ExpeditionCore.pathLengthFor(world, GameConfig),
+			-- Was never passed, so GameConfig.Expedition.IncludeSide did nothing:
+			-- ChunkCore treats nil as "on", which happened to match the config's
+			-- value, so a designer turning it off would have been ignored in
+			-- silence. A dial that is read nowhere is not a dial.
+			IncludeSide = GameConfig.Expedition.IncludeSide,
+			BranchLength = GameConfig.Expedition.BranchLength,
+			MaxRepeats = GameConfig.Expedition.MaxRepeats,
+			SpawnOverrides = spawnOverrides,
+		}, function(attempt)
+			return ExpeditionCore.streamFor(seed, attempt)
+		end, GameConfig.Expedition.AssemblyAttempts)
+	end
 
 	if not ok then
 		-- A kit that cannot assemble is a CONTENT bug, not a player problem.
@@ -379,7 +393,8 @@ local function buildStage(worldId: string, seed: number, origin: Vector3, stageN
 		ReturnPosition = result.ReturnPosition,
 		ScenarioPlan = if planOk then plan else nil,
 		Summary = string.format(
-			"%d chunks (%d mesh, %d blockout)  scenarios %s  attempt %d",
+			(if testMode then "TEST catalogue: " else "")
+				.. "%d chunks (%d mesh, %d blockout)  scenarios %s  attempt %d",
 			#layout.Chunks,
 			result.UsedMeshes,
 			result.FloorCount,
@@ -520,7 +535,11 @@ local function newGroup(
 		FloorY = built.FloorY,
 		EntryPosition = built.EntryPosition,
 		Summary = built.Summary,
-		Duration = ExpeditionCore.durationFor(world, GameConfig),
+		Duration = ExpeditionCore.durationFor(
+			world,
+			GameConfig,
+			built.Stage:GetAttribute("TestMode") == true
+		),
 		StartedAt = nil,
 		LeaderUserId = leaderUserId,
 		PartySize = partySize,
@@ -702,7 +721,8 @@ local function launchInstance(
 	leader: Player,
 	members: { Player },
 	worldId: string,
-	seed: number
+	seed: number,
+	testMode: boolean
 ): boolean
 	local map = manifestStore()
 	if not map then
@@ -726,12 +746,13 @@ local function launchInstance(
 	local record = ExpeditionCore.buildManifest({
 		WorldId = worldId,
 		Seed = seed,
-		DurationSeconds = ExpeditionCore.durationFor(world, GameConfig),
+		DurationSeconds = ExpeditionCore.durationFor(world, GameConfig, testMode),
 		LeaderUserId = leader.UserId,
 		Members = memberIds,
 		HubPlaceId = ExpeditionCore.placeFor(GameConfig.Expedition.HubPlaceId, game.PlaceId),
 		HubJobId = game.JobId,
 		CreatedAt = os.time(),
+		TestMode = if testMode then true else nil,
 	})
 
 	-- Keyed by the destination's own PrivateServerId: that server can read
@@ -782,6 +803,19 @@ local function launchInstance(
 end
 
 -- === the public surface ================================================
+
+function ExpeditionSystem.canTestWorld(worldId: string): boolean
+	return Worlds[worldId] ~= nil
+		and ChunkCore.libraryFor(Chunks, worldId).ENTRY ~= nil
+		and not ExpeditionCore.hasPrebuiltMap(Worlds[worldId])
+end
+
+function ExpeditionSystem.setTestDestination(player: Player, worldId: string, enabled: boolean): ()
+	local profile = SaveSystem.get(player)
+	testDestinations[player.UserId] = if enabled and profile
+		then { WorldId = worldId, RollNumber = profile.TotalRolls }
+		else nil
+end
 
 function ExpeditionSystem.isActive(player: Player): boolean
 	return active[player.UserId] ~= nil or launching[player.UserId] == true
@@ -982,6 +1016,8 @@ function ExpeditionSystem.requestEnter(player: Player, ...: any): ()
 				+ seedSource:NextInteger(1, 2147483646)
 			)
 			% 2147483647
+	local pendingTest = testDestinations[player.UserId]
+	local testMode = ExpeditionCore.isTestDestination(pendingTest, worldId, profile.TotalRolls)
 
 	-- Who actually goes. The leader always; each member only if they are
 	-- still here, not already somewhere, and -- in place -- has a body to
@@ -1005,7 +1041,8 @@ function ExpeditionSystem.requestEnter(player: Player, ...: any): ()
 	end
 
 	if mode == "TELEPORT" then
-		if launchInstance(player, travellers, worldId, seed) then
+		if launchInstance(player, travellers, worldId, seed, testMode) then
+			testDestinations[player.UserId] = nil
 			return
 		end
 		-- Nothing has left yet: reserving or recording failed. Building here
@@ -1020,13 +1057,14 @@ function ExpeditionSystem.requestEnter(player: Player, ...: any): ()
 	local dx, dy, dz = ExpeditionCore.stageOffset(slot, GameConfig.Expedition.StageSpacing)
 	local origin = GameConfig.Expedition.StageOrigin + Vector3.new(dx, dy, dz)
 
-	local built = buildStage(worldId, seed, origin, `{worldId}_{player.UserId}`)
+	local built = buildStage(worldId, seed, origin, `{worldId}_{player.UserId}`, testMode)
 	if not built then
 		return
 	end
 	-- Claimed only once the stage actually exists, so a refused build above
 	-- does not leak a slot for the life of the server.
 	occupiedSlots[slot] = true
+	testDestinations[player.UserId] = nil
 	local stageGroup = newGroup(worldId, seed, built, slot, player.UserId, #travellers)
 
 	for _, traveller in travellers do
@@ -1169,7 +1207,8 @@ function ExpeditionSystem.startHost(): ()
 			record.WorldId,
 			record.Seed,
 			GameConfig.Expedition.StageOrigin,
-			record.WorldId
+			record.WorldId,
+			record.TestMode == true
 		)
 		if not built then
 			manifestFailed = true
@@ -1268,6 +1307,7 @@ function ExpeditionSystem.init(
 		end
 		lastEntryAt[player.UserId] = nil
 		launching[player.UserId] = nil
+		testDestinations[player.UserId] = nil
 	end)
 end
 

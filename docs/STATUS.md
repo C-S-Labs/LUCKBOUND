@@ -38,6 +38,51 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 ## 2. Next — pick up here
 
+> **2026-09-27: close ship berths fixed after precommit review.** Berths now use
+> the island's oriented face and half the ship's beam, with a 20-stud hull gap;
+> overlap/approach checks use the ship box instead of its enclosing sphere.
+> This supersedes the earlier radius-based berth calculation. 866 tests pass,
+> including angled mesa/carrier and all-side clearance regressions; changed docking
+> files lint clean. Studio docking observation remains pending. Owner authorized
+> a final review, commit and push of all related test-command/docking changes.
+
+> **2026-09-27: hub docking corrected locally.** Large galleons/carriers explicitly
+> opt into docking; whales and other orbiters do not, regardless of size. Berths
+> account for full ship radius and clearance. Ships brake to a full stop, retain
+> steering while approaching and have a turn-scaled timeout; docking and visual
+> headings are separate. Docking tunables are in HubLayout.V2.Docking. 862 tests
+> pass; medium/higher graphics Studio docking observation remains pending.
+> Owner confirms the catalogue test environment now works after the loader fix.
+
+> **2026-09-27: catalogue load crash fixed locally.** Owner's Output traced the
+> failure to ChunkLoader's test return-offset rotation: CFrame.Angles was missing
+> its third argument, aborting loading on the first entry. Added the zero Z angle;
+> all five calls in the loader now supply three arguments. Restart Play after sync
+> and rerun the catalogue to verify complete loading in Studio.
+
+> **2026-09-27: catalogue orientation and streaming correction.** Separated chunks
+> now turn their sockets along the observation row, with rotated footprint spacing
+> and return-portal offset. Test stages use Persistent streaming to keep the whole
+> kit in client Explorer; normal streaming stays unchanged. 858 tests pass. Studio
+> verification of all 30 VV folders, orientation and the 60-minute timer remains
+> pending. These address visible weaknesses in the test implementation; the earlier
+> screenshot of normal assembly still needs command/expedition Output evidence.
+
+> **2026-09-27: test timer extended to 60 minutes.** Test instances use 3600 seconds
+> in place and through the reserved-server manifest; normal durations are unchanged.
+> 854 tests pass. Owner's screenshot shows normal assembly (index 0 and 108–110,
+> repeated chunks), rather than catalogue assembly. Awaiting the command/expedition
+> Output replies and model TestMode attribute to distinguish stale Studio code from
+> a lost selection; the reported missing-chunk issue is not yet resolved.
+
+> **2026-09-27: catalogue test roll implemented locally.** `/roll <WORLD_ID> test`
+> selects the next instance's all-chunk observation line; ordinary `/roll` keeps
+> seeded generation. Every current kit definition appears once, including rare
+> pieces and multiple entry/boss variants, with matching joins where possible,
+> configured gaps otherwise, and open sockets allowed. The flag follows the
+> server manifest and is bound to one roll/instance. 851 headless tests pass;
+> Studio catalogue/normal-roll and published teleport checks remain pending.
+
 > **2026-09-27: Verdant Valley cap variety, local change.** Cave Mouth remains a cap;
 > Treasure Hollow and Warden's Clearing are now caps; all three caps are unlimited
 > and equally weighted following the owner's corrected direction. Forgotten Trial is

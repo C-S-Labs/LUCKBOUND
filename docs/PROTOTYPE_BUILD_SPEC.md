@@ -771,6 +771,15 @@ remain excluded; nothing here touches them.**
   HubJobId}` to MemoryStore (`LUCKBOUND_Expeditions_v1`) keyed by the reserved
   server's `PrivateServerId`, which that server can read about itself.
   TeleportData carries only a cosmetic `Kind` hint (skip the title card).
+  Developer `/roll <WORLD_ID> test` adds optional boolean `TestMode` to this
+  server-written manifest. Missing/false retains normal assembly; true selects
+  the one-of-every-chunk catalogue described in `MODULAR_MAPS.md`. Validation rejects
+  nonboolean values and a test world without a kit. The hub stores the pending
+  selection against the leader's world and TotalRolls; a later roll cancels it,
+  and a successful build/instance launch consumes it. No client payload or saved
+  profile field is added; ordinary `/roll <WORLD_ID>` clears the pending selection.
+  Test instances use `Debug.TestDurationSeconds` (3600 seconds) instead of the
+  world's duration, in both in-place groups and the server-written manifest.
 - **Only listed members may stay.** Anyone else reaching the server is sent
   home.
 - **The save hand-off.** `SaveSystem.handOff` saves and releases the session

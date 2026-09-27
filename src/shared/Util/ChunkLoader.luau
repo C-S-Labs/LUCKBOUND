@@ -363,6 +363,12 @@ function ChunkLoader.build(
 	model.Name = name
 	model:SetAttribute("WorldId", layout.WorldId)
 	model:SetAttribute("Seed", layout.Seed)
+	model:SetAttribute("TestMode", layout.TestMode == true)
+	if layout.TestMode then
+		-- A catalogue spans far beyond the player's streaming radius. Keep
+		-- every piece available for inspection, including in client Explorer.
+		model.ModelStreamingMode = Enum.ModelStreamingMode.Persistent
+	end
 
 	local entryPosition = origin
 	local returnPosition = origin
@@ -481,14 +487,20 @@ function ChunkLoader.build(
 
 		buildSocketMarkers(chunk, placed, origin, folder)
 
-		if placed.Role == "ENTRY" then
+		if placed.Role == "ENTRY" and (not layout.TestMode or placed.Index == 1) then
 			local top = surface.Position + Vector3.new(0, surface.Size.Y / 2, 0)
 			entryPosition = top + Vector3.new(0, cfg.SpawnHeight, 0)
 			-- Every kit's entry socket faces away from the arrival point, and
-			-- ChunkCore always places ENTRY unrotated at the layout origin, so
-			-- +Z is reliably "behind the player". A quarter of the chunk back
+			-- Normal assembly places ENTRY unrotated at the layout origin.
+			-- Test entries may face along the row, so their offset rotates too.
+			-- A quarter of the chunk back
 			-- is far enough to be a destination, near enough to be obvious.
-			returnPosition = top + Vector3.new(0, 0, surface.Size.Z * 0.25)
+			local returnOffset = Vector3.new(0, 0, surface.Size.Z * 0.25)
+			if layout.TestMode then
+				returnOffset = CFrame.Angles(0, ChunkCore.yawRadians(placed.Yaw), 0)
+					:VectorToWorldSpace(returnOffset)
+			end
+			returnPosition = top + returnOffset
 		end
 	end
 

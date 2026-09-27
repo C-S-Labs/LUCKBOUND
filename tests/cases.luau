@@ -8104,6 +8104,204 @@ do
 	)
 end
 
+-- Catalogue generation must cover every role/chance without repeats or overlap.
+do
+	for worldId in Worlds do
+		if not ExpeditionCore.hasKit(Chunks, worldId) then
+			continue
+		end
+		local ok, layout = ChunkCore.assembleTest(Chunks, worldId, GameConfig.Debug.TestChunkGap)
+		check(`{worldId} catalogue builds`, ok)
+		if not ok then
+			continue
+		end
+		local seen = {}
+		local complete, unique, linear, separated = true, true, true, true
+		for i, p in layout.Chunks do
+			unique = unique and not seen[p.ChunkId]
+			seen[p.ChunkId] = true
+			linear = linear and p.Z == 0 and p.Y == 0 and p.Index == i
+			for j = 1, i - 1 do
+				local other = layout.Chunks[j]
+				separated = separated
+					and not ChunkCore.overlaps(p, Chunks[p.ChunkId], other, Chunks[other.ChunkId])
+			end
+		end
+		for id, chunk in Chunks do
+			if chunk.WorldId == worldId then
+				complete = complete and seen[id] == true
+			end
+		end
+		check(`{worldId} catalogue includes every chunk`, complete)
+		check(`{worldId} catalogue has zero duplicates`, unique)
+		check(`{worldId} catalogue stays on one line`, linear)
+		check(`{worldId} catalogue has no footprint overlap`, separated)
+		check(
+			`{worldId} catalogue starts at an entry`,
+			layout.Chunks[1].Role == "ENTRY" and layout.Chunks[1].X == 0
+		)
+		local _, again = ChunkCore.assembleTest(Chunks, worldId, GameConfig.Debug.TestChunkGap)
+		local stable = #again.Chunks == #layout.Chunks
+		for i, p in layout.Chunks do
+			local q = again.Chunks[i]
+			stable = stable and p.ChunkId == q.ChunkId and p.X == q.X and p.Yaw == q.Yaw
+		end
+		check(`{worldId} catalogue is deterministic`, stable)
+		local planOk, plan = ScenarioCore.assign(layout, Chunks, Scenarios, {
+			FateInterventionChance = GameConfig.Expedition.FateInterventionChance,
+			RecentMemory = GameConfig.Expedition.ScenarioRecentMemory,
+			EscalateFrom = GameConfig.Expedition.ScenarioEscalateFrom,
+		}, ExpeditionCore.streamFor(1, GameConfig.Expedition.ScenarioStreamOffset))
+		check(
+			`{worldId} catalogue supports existing scenario pipeline`,
+			planOk and #plan.Steps == #layout.Chunks
+		)
+	end
+	check("catalogue rejects a missing kit", not ChunkCore.assembleTest(Chunks, "NOWHERE", 8))
+	check(
+		"test duration is one hour",
+		ExpeditionCore.durationFor(Worlds.VERDANT_VALLEY, GameConfig, true) == 3600
+	)
+	check(
+		"test duration overrides shorter world duration",
+		ExpeditionCore.durationFor({ DurationSeconds = 300 }, GameConfig, true) == 3600
+	)
+	check(
+		"normal world duration remains unchanged",
+		ExpeditionCore.durationFor({ DurationSeconds = 300 }, GameConfig, false) == 300
+	)
+	local selection = { WorldId = "VERDANT_VALLEY", RollNumber = 12 }
+	check(
+		"test flag matches its roll",
+		ExpeditionCore.isTestDestination(selection, "VERDANT_VALLEY", 12)
+	)
+	check(
+		"next roll clears test even for same world",
+		not ExpeditionCore.isTestDestination(selection, "VERDANT_VALLEY", 13)
+	)
+	check(
+		"different world clears test",
+		not ExpeditionCore.isTestDestination(selection, "SKY_CITADEL", 12)
+	)
+	check(
+		"no selection means normal generation",
+		not ExpeditionCore.isTestDestination(nil, "VERDANT_VALLEY", 12)
+	)
+	local opts = {
+		WorldId = "VERDANT_VALLEY",
+		Seed = 1,
+		DurationSeconds = 720,
+		LeaderUserId = 1,
+		Members = { 1 },
+		HubPlaceId = 1,
+		HubJobId = "test",
+		CreatedAt = 1,
+		TestMode = true,
+	}
+	local record = ExpeditionCore.buildManifest(opts)
+	check(
+		"test flag survives server manifest",
+		record.TestMode == true and ExpeditionCore.validateManifest(record, Worlds, Chunks)
+	)
+	record.TestMode = "test"
+	check(
+		"manifest rejects nonboolean test flag",
+		not ExpeditionCore.validateManifest(record, Worlds, Chunks)
+	)
+	record.TestMode = nil
+	check("older manifests remain normal", ExpeditionCore.validateManifest(record, Worlds, Chunks))
+	local function piece(id, role, sockets)
+		return {
+			Id = id,
+			WorldId = "TEST",
+			Role = role,
+			SizeX = 20,
+			SizeZ = 20,
+			Sockets = sockets,
+			SpawnChance = 0,
+		}
+	end
+	local toy = {
+		A = piece(
+			"A",
+			"ENTRY",
+			{ { Id = "out", Kind = "PATH", Facing = 90, OffsetX = 10, OffsetY = 0, OffsetZ = 0 } }
+		),
+		B = piece(
+			"B",
+			"CAP",
+			{ { Id = "in", Kind = "PATH", Facing = 270, OffsetX = -10, OffsetY = 0, OffsetZ = 0 } }
+		),
+		C = piece("C", "SIDE", {}),
+	}
+	local _, line = ChunkCore.assembleTest(toy, "TEST", 8)
+	check(
+		"catalogue joins matching sockets without filler",
+		line.Chunks[2].X == 20 and #line.Chunks == 3
+	)
+	check("incompatible piece uses configured gap", line.Chunks[3].X == 48)
+	toy.A.Sockets[1].Facing = 0
+	toy.A.Sockets[1].OffsetX, toy.A.Sockets[1].OffsetZ = 0, -10
+	local _, rotated = ChunkCore.assembleTest(toy, "TEST", 8)
+	check("catalogue turns north entry toward row", rotated.Chunks[1].Yaw == 90)
+	check("turned entry still connects next piece", rotated.Chunks[2].X == 20)
+	toy.C.SizeX, toy.C.SizeZ = 20, 40
+	toy.C.Sockets =
+		{ { Id = "out", Kind = "OTHER", Facing = 0, OffsetX = 0, OffsetY = 0, OffsetZ = -20 } }
+	local _, rectangular = ChunkCore.assembleTest(toy, "TEST", 8)
+	check("separated pieces face row too", rectangular.Chunks[3].Yaw == 90)
+	check("rotated rectangle keeps gap using rotated width", rectangular.Chunks[3].X == 58)
+end
+
+-- Hub docking is explicit content intent, independent of a prop's size.
+do
+	local docking = {}
+	for _, group in GameConfig.HubLayout.V2.Orbiters do
+		for _, name in group.Names do
+			docking[name] = group.CanDock == true
+		end
+	end
+	check("hub galleons can dock", docking.hubprop_ship_galleon == true)
+	check("hub carriers can dock", docking.hubprop_ship_carrier == true)
+	check("hub whales never dock regardless of scale", docking.hubprop_sky_whale == false)
+	local onlyLargeShips = true
+	for name, enabled in docking do
+		if enabled and name ~= "hubprop_ship_galleon" and name ~= "hubprop_ship_carrier" then
+			onlyLargeShips = false
+		end
+	end
+	check("only large hub ships have docking enabled", onlyLargeShips)
+	local x, z, nx, nz = PropCore.berthOnBox(535.1, 523, 1, 1, 86, 20)
+	check(
+		"diagonal carrier berth selects actual mesa face",
+		nz == 1 and nx == 0 and z == 523 / 2 + 43 + 20
+	)
+	check("diagonal berth keeps ship clearance box outside mesa", z - (86 / 2 + 18) > 523 / 2)
+	check("berth hugs island face rather than full diagonal sphere", z - 523 / 2 == 86 / 2 + 20)
+	local allSides = true
+	for _, dir in
+		{
+			{ 1, 0 },
+			{ -1, 0 },
+			{ 0, 1 },
+			{ 0, -1 },
+			{ 1, 1 },
+			{ -1, 1 },
+			{ 1, -1 },
+			{ -1, -1 },
+			{
+				0,
+				0,
+			},
+		}
+	do
+		local bx, bz, fx, fz = PropCore.berthOnBox(200, 100, dir[1], dir[2], 40, 20)
+		local faceDistance = if fx ~= 0 then bx * fx - 100 else bz * fz - 50
+		allSides = allSides and faceDistance == 40 and math.abs(fx) + math.abs(fz) == 1
+	end
+	check("all berth directions preserve exact beam clearance", allSides)
+end
+
 -- === summary ========================================================
 print(
 	string.format(
