@@ -76,6 +76,7 @@ class Piece:
         self.keepout = []                  # (x, y, r): every big feature's footprint; scatter never lands in one
         self.holes = []                    # (x, y, r): open drops in the cloud floor
         self.props = []                    # placed ambient props (convention 6)
+        self.footings = []                 # (x, y, z, r, what): every standing thing must rest on ground
         self.tops = []                     # (outline, z): every isle / landing top -- where dressing may stand
         self.lift = {}                     # cardinal -> the socket's z (its OffsetY); absent = 0
         self.nodes = {}                    # named isles of an island web (es_pieces.web)

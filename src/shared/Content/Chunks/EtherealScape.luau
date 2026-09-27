@@ -102,6 +102,22 @@ local CHUNKS = {
 		Size = 256,
 	},
 	{
+		Id = "ES_SKY_AQUEDUCT",
+		Role = "PATH" :: any,
+		AssetKey = "ES_CHUNK_SKY_AQUEDUCT",
+		-- Landmark (384): a stone aqueduct carries the road across open sky on three piers and arcades.
+		Sockets = {
+			socket("south", "SPAN", 0, 192, 180),
+			socket("north", "SPAN", 0, -192, 0),
+		},
+		Supports = { Combat = true, Traversal = true, Event = true },
+		Weight = 6,
+		MaxPerLayout = 1,
+		EnemyTags = { "SKYBORNE_HARRIER", "TEMPLE_ACOLYTE" },
+		Tags = { "landmark", "bridge", "falls" },
+		Size = 384,
+	},
+	{
 		Id = "ES_PATH_BEND_EAST_GROVE",
 		Role = "PATH" :: any,
 		AssetKey = "ES_CHUNK_PATH_BEND_EAST_GROVE",
@@ -351,6 +367,22 @@ local CHUNKS = {
 		Size = 256,
 	},
 	{
+		Id = "ES_SKY_OBSERVATORY",
+		Role = "COMBAT" :: any,
+		AssetKey = "ES_CHUNK_SKY_OBSERVATORY",
+		-- Landmark (384): a domed colonnade on a podium, an armillary sphere at its crown, the great telescope.
+		Sockets = {
+			socket("south", "SPAN", 0, 192, 180),
+			socket("north", "SPAN", 0, -192, 0),
+		},
+		Supports = { Combat = true, MiniBoss = true, Puzzle = true, Event = true },
+		Weight = 6,
+		MaxPerLayout = 1,
+		EnemyTags = { "TEMPLE_ACOLYTE", "CRYSTAL_WARDEN" },
+		Tags = { "landmark", "temple", "shrine" },
+		Size = 384,
+	},
+	{
 		Id = "ES_TEMPLE_GATE_A",
 		Role = "COMBAT" :: any,
 		AssetKey = "ES_CHUNK_TEMPLE_GATE_A",
@@ -522,9 +554,42 @@ local CHUNKS = {
 		Id = "ES_BACKDROP_CLOUDBANK",
 		Role = "BACKDROP" :: any,
 		AssetKey = "ES_CHUNK_BACKDROP_CLOUDBANK",
-		-- Surround: a towering cumulus over a bank of cloud.
+		-- Surround: towering cumulus over a low shelf, puffs round their feet (drifting props).
 		Sockets = {}, -- BACKDROP: surround scenery, ringed round the map by the §7.7 generator
-		Weight = 4,
+		Weight = 3,
+		EnemyTags = {},
+		Tags = { "backdrop", "cloud" },
+		Size = 256,
+	},
+	{
+		Id = "ES_BACKDROP_CLOUD_SHELF",
+		Role = "BACKDROP" :: any,
+		AssetKey = "ES_CHUNK_BACKDROP_CLOUD_SHELF",
+		-- Surround: a long layered shelf of cloud, wisps trailing above (drifting props).
+		Sockets = {}, -- BACKDROP: surround scenery, ringed round the map by the §7.7 generator
+		Weight = 3,
+		EnemyTags = {},
+		Tags = { "backdrop", "cloud" },
+		Size = 256,
+	},
+	{
+		Id = "ES_BACKDROP_CLOUD_DRIFT",
+		Role = "BACKDROP" :: any,
+		AssetKey = "ES_CHUNK_BACKDROP_CLOUD_DRIFT",
+		-- Surround: open sky, a loose drift of small clouds at every height (drifting props).
+		Sockets = {}, -- BACKDROP: surround scenery, ringed round the map by the §7.7 generator
+		Weight = 3,
+		EnemyTags = {},
+		Tags = { "backdrop", "cloud" },
+		Size = 256,
+	},
+	{
+		Id = "ES_BACKDROP_STORM_ANVIL",
+		Role = "BACKDROP" :: any,
+		AssetKey = "ES_CHUNK_BACKDROP_STORM_ANVIL",
+		-- Surround: one great anvil cloud with hovering crystal shards in its shadow (props).
+		Sockets = {}, -- BACKDROP: surround scenery, ringed round the map by the §7.7 generator
+		Weight = 1,
 		EnemyTags = {},
 		Tags = { "backdrop", "cloud" },
 		Size = 256,

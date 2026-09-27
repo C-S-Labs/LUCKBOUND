@@ -8,12 +8,14 @@
 # them round a finished map so it never ends at a bare horizon.
 import math
 
+from mathutils import Vector
+
 from es_features import (FLOOR_Z, aether_pool, arch, balustrade, bell_tower, blossoms, column, crag, crystal_cluster,
                          crystal_colossus, flagstones, fountain, grass_tufts, great_tree, hut, lantern_post, meadow_carpet,
                          mesa, mushroom, near_corridor, path, pavilion, pins, puff, ramp, rock, ruin_wall, stairs, tree,
                          waystone)
 from es_geometry import CROWN_TOP, DIRS, KIND_WIDTH, beam, blob, box, decal, decal_ring, decal_strip, frustum, gem, prism, ring_pts, rod
-from es_isles import (bridge, circle, inside, isle, landing, rsquare, shrine_hall, sky_spire, statue)
+from es_isles import (bridge, circle, face, inside, isle, landing, rsquare, shrine_hall, sky_spire, statue)
 
 TEAL, INDIGO = "DeepTealLeaves", "IndigoLeaves"
 
@@ -259,7 +261,7 @@ def es_entry(p):
     # west: a raised shrine terrace (mesa) climbed by a ramp
     mesa(p, -96, 52, 40, top=8)
     ramp(p, (-50, 30), (-66, 38), 12, FLOOR_Z, 8)
-    pavilion(p, -100, 56, 8, 16, 16, 12, rz=0.3)
+    pavilion(p, -100, 56, 8, 16, 16, 12, rz=face(-100, 56, 0, 0))
     # east: the great sky tree (crown pin) over a flower meadow and a pool
     great_tree(p, 100, 70, FLOOR_Z, top=CROWN_TOP, trunk=8)
     blossoms(p, 96, 40, 40, 50, avoid=[(100, 70, 22)])
@@ -307,7 +309,6 @@ def es_sanctum(p):
         y = WY0 + 12
         while y < WY1 - 8:
             box(p, "TempleIvory", sx * (WX + 2.6), y, (z + WH) / 2, 2.6, 4.0, WH - z)
-            box(p, "TempleGold", sx * (WX + 2.6), y, z + 1.0, 3.4, 4.8, 2.0)
             box(p, "TempleGold", sx * (WX + 2.6), y, WH - 1.0, 3.4, 4.8, 2.0)
             if y + 12 < WY1 - 8:
                 box(p, "SkyCrystal", sx * WX, y + 12, 34, T + 0.5, 9, 20)
@@ -373,8 +374,101 @@ def es_sanctum(p):
         a = k * math.pi / 6
         decal_strip(p, "TempleGold", (cx0 + math.cos(a) * 22, cy0 + math.sin(a) * 22),
                     (cx0 + math.cos(a) * 64, cy0 + math.sin(a) * 64), 1.2, z + 0.055)
-    box(p, "TempleIvory", 0, WY1 - 14, z + 0.75, 70, 18, 1.5)
-    box(p, "TempleGold", 0, WY1 - 5, z + 2.5, 30, 3, 5)
+    # --- the interior (owner 2026-09-27: "the sanctum interior needs a polish and detail pass") -----
+    # Everything below keeps out of the fight: the hall is validated clear at |x| <= 109.5,
+    # -85.5 <= y <= 119.5, 8.5 <= z <= 57.5, and the great door's span.
+    IW = WX - T / 2                              # the walls' inner face
+    # engaged pilasters down both side walls and across the north wall, gold bases and capitals
+    for sx in (-1, 1):
+        y = WY0 + 12
+        while y < WY1 - 6:
+            box(p, "TempleIvory", sx * (IW - 1.3), y, (z + WH) / 2, 2.6, 4.0, WH - z)
+            box(p, "TempleGold", sx * (IW - 1.6), y, z + 1.0, 3.2, 5.0, 2.0)
+            box(p, "TempleGold", sx * (IW - 1.6), y, WH - 3.0, 3.2, 5.2, 2.2)
+            y += 24
+    for x in range(-108, 109, 24):
+        if abs(x) > 44:                          # leave the throne wall's centre for the sun disc
+            box(p, "TempleIvory", x, WY1 - T / 2 - 1.3, (z + WH) / 2, 4.0, 2.6, WH - z)
+            box(p, "TempleGold", x, WY1 - T / 2 - 1.6, WH - 3.0, 5.2, 3.2, 2.2)
+    # crystal sconces between the pilasters, set into the side walls
+    for sx in (-1, 1):
+        y = WY0 + 24
+        while y < WY1 - 18:
+            box(p, "TempleGold", sx * (IW - 0.9), y, 24, 1.8, 3.0, 1.2)
+            gem(p, "PortalGlow", sx * (IW - 1.6), y, 25.2, 1.1, 1.6, 1.0, n=6)
+            y += 24
+    # guardian statues standing along the side walls, facing the floor
+    for sx in (-1, 1):
+        for y in (-60, -12, 36, 84):
+            if y in (-12, 84):
+                statue(p, sx * 114, y + 12, z, rz=face(sx * 114, y + 12, 0, y + 12))
+    # a gold-and-ivory border round the floor, and corner mosaics
+    for (ax, ay), (bx, by) in (((-104, -88), (104, -88)), ((104, -88), (104, 116)), ((104, 116), (-104, 116)),
+                               ((-104, 116), (-104, -88))):
+        decal_strip(p, "TempleGold", (ax, ay), (bx, by), 3.0, z + 0.05)
+        decal_strip(p, "SkyCrystal", (ax, ay), (bx, by), 0.8, z + 0.08)
+    for cx, cy in ((-88, -72), (88, -72), (-88, 100), (88, 100)):
+        decal(p, "TempleGold", ring_pts(cx, cy, 9, 8, a0=math.pi / 8), z + 0.05)
+        decal(p, "PortalGlow", ring_pts(cx, cy, 4, 8, a0=math.pi / 8), z + 0.08)
+    # the coffered ceiling: gold beams hung under the roof, broken round the lantern opening
+    for y in range(-84, 133, 24):
+        if abs(y - cy0) < hole + 2:
+            for sx in (-1, 1):
+                beam(p, "TempleGold", (sx * (hole + 2), y, RZ - 1.2), (sx * IW, y, RZ - 1.2), 2.0, 2.4)
+        else:
+            beam(p, "TempleGold", (-IW, y, RZ - 1.2), (IW, y, RZ - 1.2), 2.0, 2.4)
+    for x in (-96, -60, 60, 96):
+        beam(p, "SoftWood", (x, WY0 + T / 2, RZ - 1.0), (x, WY1 - T / 2, RZ - 1.0), 1.6, 2.0)
+    # four crystal chandeliers hung from the coffers (their lowest point stays above the fight)
+    for x in (-60, 60):
+        for y in (cy0 - 72, cy0 + 72):
+            rod(p, "TempleGold", (x, y, RZ - 0.4), (x, y, 60.5), 0.25, 0.25, n=4)   # hung from the x-beam
+            frustum(p, "TempleGold", x, y, 59.4, 60.6, 5.0, 3.2, n=8)
+            for k in range(5):
+                a = k * math.pi * 0.4
+                rod(p, "SkyCrystal", (x + math.cos(a) * 4.0, y + math.sin(a) * 4.0, 59.6),
+                    (x + math.cos(a) * 4.4, y + math.sin(a) * 4.4, 58.2), 0.5, 0.0, n=4)
+            gem(p, "PortalGlow", x, y, 60.0, 1.8, 1.6, 1.4, n=6)
+    # a crystal ring hung inside the lantern, held by four gold rods from its walls
+    for k in range(4):
+        a = k * math.pi / 2 + math.pi / 4
+        rod(p, "TempleGold", (math.cos(a) * (hole - 1.6) * 1.41, cy0 + math.sin(a) * (hole - 1.6) * 1.41, RZ + 22),
+            (math.cos(a) * 16, cy0 + math.sin(a) * 16, RZ + 12), 0.3, 0.3, n=4)
+    for k in range(8):
+        a0, a1 = k * math.pi / 4, (k + 1) * math.pi / 4
+        rod(p, "SkyCrystal", (math.cos(a0) * 16, cy0 + math.sin(a0) * 16, RZ + 12),
+            (math.cos(a1) * 16, cy0 + math.sin(a1) * 16, RZ + 12), 0.8, 0.8, n=4)
+    # --- the throne dais at the north end: three steps, a crystal-backed throne, braziers, a sun disc
+    for k, (w_, d_) in enumerate(((96, 30), (72, 22), (44, 14))):
+        box(p, "TempleIvory" if k % 2 == 0 else "TempleGold", 0, WY1 - T / 2 - d_ / 2 - 0.5, z + 0.6 + k * 1.2, w_, d_, 1.2 + k * 0.0)
+    tz = z + 3.0
+    box(p, "TempleGold", 0, WY1 - 12, tz + 1.5, 12, 7, 3.0)                     # the seat
+    box(p, "TempleIvory", 0, WY1 - 9.5, tz + 8, 12, 2.0, 13)                    # its back
+    gem(p, "SkyCrystal", 0, WY1 - 9.5, tz + 16, 5.0, 9.0, 4.0, n=6)            # a crystal crest rising out of it
+    for sx in (-1, 1):
+        box(p, "TempleGold", sx * 6.8, WY1 - 12, tz + 4.5, 1.6, 7, 3.0)          # armrests
+        bz = z + 2.2                                                           # on the second step
+        frustum(p, "TempleIvory", sx * 30, WY1 - 16, bz, bz + 8, 2.4, 1.8, n=8)  # braziers
+        frustum(p, "TempleGold", sx * 30, WY1 - 16, bz + 8, bz + 10, 1.8, 3.6, n=8)
+        gem(p, "PortalGlow", sx * 30, WY1 - 16, bz + 11.2, 2.4, 3.2, 1.2, n=7)
+        p.footings.append((sx * 30, WY1 - 16, bz + 0.2, 2.0, "brazier"))
+    # the sun disc on the north wall: a gold wheel with crystal rays, fixed to the wall face
+    M_z = 38.0
+    wy = WY1 - T / 2 - 0.4
+    for k in range(8):
+        a = k * math.pi / 4
+        beam(p, "SkyCrystal", (math.cos(a) * 11, wy, M_z + math.sin(a) * 11), (math.cos(a) * 22, wy, M_z + math.sin(a) * 22),
+             1.6, 0.8)
+    for k in range(10):
+        a0, a1 = k * math.pi / 5, (k + 1) * math.pi / 5
+        beam(p, "TempleGold", (math.cos(a0) * 10, wy, M_z + math.sin(a0) * 10), (math.cos(a1) * 10, wy, M_z + math.sin(a1) * 10),
+             2.0, 1.4)
+    box(p, "PortalGlow", 0, wy, M_z, 8, 0.8, 8)
+    # the great door: gold jambs, and its two leaves swung open against the outer wall
+    for sx in (-1, 1):
+        box(p, "TempleGold", sx * (door + 1.2), WY0, 28, 2.4, T + 1.2, 44)
+        box(p, "SoftWood", sx * (door + 16), WY0 - T / 2 - 0.5, 27, 30, 1.0, 40)
+        box(p, "TempleGold", sx * (door + 16), WY0 - T / 2 - 1.1, 27, 22, 0.4, 3)
     for k in range(3):
         y = -142 - k * 26
         for s in (-1, 1):
@@ -385,7 +479,6 @@ def es_sanctum(p):
         crystal_cluster(p, s * 190, -84, s=1.4, n=6)
         tree(p, s * 186, 40, h=30, crown=TEAL, style=1)
         tree(p, s * 186, 110, h=26, crown=INDIGO)
-        tree(p, s * 170, -20, h=22, crown=INDIGO, style=2)
         statue(p, s * 60, -150, rz=math.pi / 2 - s * math.pi / 2)
     for s in (-1, 1):
         meadow_carpet(p, s * 100, -174, 32)
@@ -401,7 +494,7 @@ def es_plank_crossing(p):
     pins(p)
     n = web(p, {"a": (-10, -50, 28, 0), "b": (24, 10, 28, 8), "c": (-8, 62, 24, 0), "perch": (-82, 4, 18, -10)},
             [("S", "a"), ("a", "b"), ("b", "c"), ("c", "N"), ("b", "perch")])
-    pavilion(p, *at(n["b"], 8, 4), 8, 12, 12, 10, rz=0.5)
+    pavilion(p, *at(n["b"], 8, 4), 8, 12, 12, 10, rz=face(*at(n["b"], 8, 4), *at(n["b"])))
     for k, (dx, dy) in enumerate(((-12, -6), (8, 8))):
         tree(p, *at(n["a"], dx, dy), h=20 + k * 4, crown=TEAL if k else INDIGO, style=k)
     dress(p, n["a"], trees=1, blossom=16, tufts=6, mush=2)
@@ -448,7 +541,7 @@ def es_skystair_down(p):
     n = web(p, {"a": (0, -60, 26, 0), "b": (36, 6, 28, -12), "c": (-14, 62, 26, -24)},
             [("S", "a"), ("a", "b"), ("b", "c"), ("c", "N")])
     crystal_colossus(p, *at(n["b"], 10, 2), z=-12, spread=12)
-    pavilion(p, *at(n["c"], -8, 6), -24, 11, 11, 9, rz=0.2, roof="slab")
+    pavilion(p, *at(n["c"], -8, 6), -24, 11, 11, 9, rz=face(*at(n["c"], -8, 6), *at(n["c"])), roof="slab")
     dress(p, n["a"], trees=3, blossom=20, tufts=8, mush=2)
     dress(p, n["c"], trees=1, blossom=12, tufts=6, mush=2, avoid=[(n["c"]["x"] - 8, n["c"]["y"] + 6, 10)])
 
@@ -475,7 +568,7 @@ def es_bend_east_ascent(p):
     for k in range(3):
         column(p, *at(n["a"], 14, -10 + k * 7), 0, 10 + k * 5, broken=True)
     waystone(p, *at(n["a"], -14, -6), rz=0.4)
-    hut(p, *at(n["hut"], 0, 2), z=24, rz=0.5)
+    hut(p, *at(n["hut"], 0, 2), z=24, rz=face(*at(n["hut"], 0, 2), *at(n["a"])))
     dress(p, n["a"], trees=1, blossom=14, tufts=6, mush=2)
 
 
@@ -486,7 +579,7 @@ def es_bend_west_falls(p):
             [("S", "a"), ("a", "b"), ("b", "W"), ("a", "c")])
     aether_fall(p, 38, -38, -1.4, (0.95, -0.3), width=9, drop=60, pool=False)
     sky_spire(p, *at(n["a"], -12, -10), r=4)
-    pavilion(p, *at(n["c"], 2, 2), 10, 11, 11, 9, rz=0.4)
+    pavilion(p, *at(n["c"], 2, 2), 10, 11, 11, 9, rz=face(*at(n["c"], 2, 2), *at(n["a"])))
     aether_pool(p, *at(n["b"], -6, 10), 12, z=-16)
     dress(p, n["b"], trees=2, blossom=18, tufts=6, mush=2, avoid=[(n["b"]["x"] - 6, n["b"]["y"] + 10, 14)])
 
@@ -495,7 +588,7 @@ def es_bend_west_shrine(p):
     pins(p)
     n = web(p, {"a": dict(x=0, y=-2, r=62, z=0, sides=14)}, [("S", "a"), ("a", "W")])
     road(p, [(0, -60), (0, -12), (-12, 0), (-60, 0)], width=12)
-    shrine_hall(p, 22, 22, 0, 22, 18, rz=math.pi * 1.25)
+    shrine_hall(p, 22, 22, 0, 22, 18, rz=face(22, 22, 0, 0))
     sky_spire(p, -30, 32, r=4)
     for a in (4.1, 4.7, 5.3):
         waystone(p, math.cos(a) * 40, -2 + math.sin(a) * 40 + 4, rz=a)
@@ -636,7 +729,7 @@ def es_shrine_of_winds(p):
     n = web(p, {"s": dict(x=0, y=4, r=70, z=0, pts=rsquare(0, 4, 72, 70, 26))}, [("S", "s"), ("s", "N")])
     temple_floor(p, n["s"])
     for sx in (-1, 1):
-        pavilion(p, sx * 40, 4, 0, 14, 14, 11, rz=0.0)
+        pavilion(p, sx * 40, 4, 0, 14, 14, 11, rz=face(sx * 40, 4, 0, 4))
     box(p, "TempleIvory", 0, 4, 1.2, 6, 6, 2.4)
     gem(p, "PortalGlow", 0, 4, 4.8, 2.2, 2.2, 1.8, n=8)
     frustum(p, "TempleGold", 0, 4, 2.4, 3.4, 2.6, 1.6, n=8)
@@ -664,7 +757,7 @@ def es_twin_isles(p):
     pins(p)
     n = web(p, {"a": (-36, -22, 40, 0), "b": (42, 32, 38, 12)}, [("S", "a"), ("a", "b"), ("b", "N")])
     sky_spire(p, *at(n["a"], -18, -8), r=4)
-    pavilion(p, *at(n["b"], 14, 6), 12, 14, 14, 11, rz=0.6)
+    pavilion(p, *at(n["b"], 14, 6), 12, 14, 14, 11, rz=face(*at(n["b"], 14, 6), *at(n["b"])))
     dress(p, n["a"], trees=3, blossom=30, tufts=10, mush=3, avoid=[(n["a"]["x"] - 18, n["a"]["y"] - 8, 12)])
     dress(p, n["b"], trees=2, blossom=20, tufts=6, mush=2, avoid=[(n["b"]["x"] + 14, n["b"]["y"] + 6, 14)])
 
@@ -695,6 +788,148 @@ def es_temple_gate_b(p):
 
 
 # ---------------------------------------------------------------------------
+# LANDMARKS (owner 2026-09-27: "one to two more large structures could be cool"): 384-stud pieces,
+# standard mouths, so they drop into any layout like any other tile
+# ---------------------------------------------------------------------------
+def _arc(p, mat, y0, y1, z_spring, x, w, h, n=8):
+    """A semicircular arch of stone segments under a deck, springing from y0 to y1 at z_spring."""
+    R = (y1 - y0) / 2
+    cy = (y0 + y1) / 2
+    prev = None
+    for k in range(n + 1):
+        a = math.pi * k / n
+        q = (x, cy - math.cos(a) * R, z_spring + math.sin(a) * R * 0.85)
+        if prev:
+            beam(p, mat, prev, q, w, h)
+        prev = q
+
+
+def es_sky_aqueduct(p):
+    """The Sky Aqueduct (384): a stone aqueduct carries the road across open sky between two isles --
+    three piers on their own low rock isles, arcades between them, a channel of sky-crystal water that
+    spills over the side mid-span, parapets and lanterns, a bell tower at the south abutment."""
+    pins(p)
+    n = web(p, {"s": (0, -114, 34, 0), "n": (0, 114, 34, 0), "p1": (0, -46, 12, -70), "p2": (0, 0, 12, -70),
+                "p3": (0, 46, 12, -70)}, [("S", "s"), ("n", "N")], width=24)
+    DW = 26.0
+    # the deck: one long stone span, its ends resting on both isles
+    box(p, "TempleIvory", 0, 0, -1.45, DW, 196, 3.0, top="GoldenPath")
+    for sx in (-1, 1):                               # coping and parapets (gaps every 20 studs)
+        beam(p, "TempleGold", (sx * (DW / 2 - 0.4), -98, -2.6), (sx * (DW / 2 - 0.4), 98, -2.6), 0.9, 0.9)
+        for y0 in range(-90, 90, 20):
+            box(p, "TempleIvory", sx * (DW / 2 - 1.0), y0 + 8, 1.6, 2.0, 14, 3.2)
+            box(p, "TempleGold", sx * (DW / 2 - 1.0), y0 + 8, 3.4, 2.4, 14.4, 0.4)
+    # the water channel along the east side, with a spill over the edge at mid-span
+    decal_strip(p, "SkyCrystal", (DW / 2 - 4.5, -94), (DW / 2 - 4.5, 94), 3.2, 0.08)
+    decal_strip(p, "TempleGold", (DW / 2 - 6.4, -94), (DW / 2 - 6.4, 94), 0.6, 0.1)
+    aether_fall(p, DW / 2 - 1.5, 0, -1.0, (1, 0), width=6, drop=60, pool=False)
+    # piers down to their isles, gold bands; arcades spring between them
+    for y in (-46, 0, 46):
+        box(p, "TempleIvory", 0, y, -36.5, 22, 12, 67)
+        for zz in (-60, -40, -20):
+            box(p, "TempleGold", 0, y, zz, 22.8, 12.8, 1.4)
+        box(p, "TempleGold", 0, y, -4.5, 24, 14, 2.0)
+    for sx in (-1, 1):
+        for y0, y1 in ((-40, -6), (6, 40)):          # arcades between the piers (the end spans rest on the isles)
+            _arc(p, "TempleIvory", y0, y1, -30, sx * (DW / 2 - 3), 3.0, 3.0)
+            for yy in (y0, y1):                      # the arch's feet rest on a corbel in the pier or isle
+                box(p, "TempleIvory", sx * (DW / 2 - 3), yy, -30, 3.4, 3.4, 3.0)
+            beam(p, "TempleIvory", (sx * (DW / 2 - 3), (y0 + y1) / 2, -30 + (y1 - y0) * 0.425 + 1.4),
+                 (sx * (DW / 2 - 3), (y0 + y1) / 2, -3.0), 2.4, 2.4)   # spandrel post up to the deck
+    for y in (-72, -32, 28, 68):                     # in the parapet gaps
+        for sx in (-1, 1):
+            lantern_post(p, sx * (DW / 2 - 1.5), y, rz=math.pi if sx > 0 else 0)
+    bell_tower(p, *at(n["s"], 22, -2), w=12, rz=0.0)
+    waystone(p, *at(n["n"], -18, -4), rz=0.3)
+    waystone(p, *at(n["n"], 18, -4), rz=-0.3)
+    dress(p, n["s"], trees=1, blossom=18, tufts=6, mush=2, avoid=[(22, -116, 16)])
+    dress(p, n["n"], trees=2, blossom=18, tufts=6, mush=2)
+
+
+def es_sky_observatory(p):
+    """The Sky Observatory (384): a round colonnaded hall on a raised podium, climbed from north and
+    south; gold dome ribs rising to an armillary sphere whose crystal tip is the crown; the great
+    telescope under the dome; gardens, statues and orreries round it."""
+    pins(p)
+    n = web(p, {"o": dict(x=0, y=0, r=128, z=0, sides=20, roots=False)}, [("S", "o"), ("o", "N")], width=24)
+    PZ, PR = 4.0, 68.0
+    prism(p, ring_pts(0, 0, PR, 24), -0.5, PZ, "TempleIvory", side="Cloudstone")
+    decal_ring(p, "TempleGold", 0, 0, PR - 3, PR - 1, PZ + 0.05, n=24)
+    decal_ring(p, "PortalGlow", 0, 0, 20, 21.5, PZ + 0.06, n=24)
+    for k in range(12):                              # a star-map inlaid in the floor
+        a = k * math.pi / 6
+        decal_strip(p, "TempleGold", (math.cos(a) * 22, math.sin(a) * 22), (math.cos(a) * 58, math.sin(a) * 58), 0.8, PZ + 0.07)
+    for y0, rz in ((-PR - 8, math.pi / 2), (PR + 8, -math.pi / 2)):
+        stairs(p, 0, y0, 0, PZ, 24, rz)
+    road(p, [(0, -PR - 9), (0, -150)], width=16)
+    road(p, [(0, PR + 9), (0, 150)], width=16)
+    CR, CH = 60.0, 40.0
+    tops = []
+    for k in range(16):
+        a = k * math.pi / 8 + math.pi / 16
+        x, y = math.cos(a) * CR, math.sin(a) * CR
+        column(p, x, y, PZ, CH, r=2.4)
+        tops.append((x, y, PZ + CH))
+    for k in range(16):                              # the entablature ring on the columns
+        a0, a1 = tops[k], tops[(k + 1) % 16]
+        beam(p, "TempleIvory", (a0[0], a0[1], a0[2] + 1.5), (a1[0], a1[1], a1[2] + 1.5), 4.0, 3.0)
+    ez = PZ + CH + 3.0
+    apex = ez + 46.0
+    for k in range(0, 16, 2):                        # eight gold ribs rising to the apex
+        a = k * math.pi / 8 + math.pi / 16
+        prev = None
+        for j in range(7):
+            t = j / 6 * math.pi / 2
+            q = (math.cos(a) * CR * math.cos(t), math.sin(a) * CR * math.cos(t), ez + (apex - ez) * math.sin(t))
+            if prev:
+                beam(p, "TempleGold", prev, q, 2.2, 2.2)
+            prev = q
+    frustum(p, "TempleGold", 0, 0, apex - 3, apex + 2, 6, 3.5, n=8)
+    # the armillary sphere on its mast; the mast's crystal tip is EXACTLY the crown
+    mz = apex + 26
+    rod(p, "TempleGold", (0, 0, apex + 1), (0, 0, CROWN_TOP - 8), 1.0, 0.7, n=6)
+    frustum(p, "SkyCrystal", 0, 0, CROWN_TOP - 8.2, CROWN_TOP, 1.6, 0.0, n=6)
+    gem(p, "PortalGlow", 0, 0, mz, 4.0, 4.0, 4.0, n=8)
+    for tilt, spin in ((0.0, 0.0), (math.pi / 2, 0.0), (math.pi / 2, math.pi / 2), (0.41, 0.8)):
+        prev = None
+        for k in range(17):
+            a = k * math.pi / 8
+            v = (math.cos(a) * 16, math.sin(a) * 16, 0.0)
+            v = (v[0], v[1] * math.cos(tilt), v[1] * math.sin(tilt))
+            v = (v[0] * math.cos(spin) - v[1] * math.sin(spin), v[0] * math.sin(spin) + v[1] * math.cos(spin), v[2])
+            q = (v[0], v[1], mz + v[2])
+            if prev:
+                beam(p, "TempleGold", prev, q, 0.9, 0.9)
+            prev = q
+    for a in (0.0, math.pi / 2, math.pi, 3 * math.pi / 2):   # spokes tie the rings to the mast
+        rod(p, "TempleGold", (0, 0, mz), (math.cos(a) * 16, math.sin(a) * 16, mz), 0.35, 0.35, n=4)
+    # the great telescope on its mount, aimed out between the ribs
+    frustum(p, "TempleIvory", 30, 12, PZ - 0.2, PZ + 6, 5, 3.5, n=8)
+    p.footings.append((30, 12, PZ, 3.5, "telescope"))
+    frustum(p, "TempleGold", 30, 12, PZ + 6, PZ + 8, 3.5, 2.5, n=8)
+    rod(p, "TempleGold", (24, 9, PZ + 5), (44, 19, PZ + 34), 3.2, 2.4, n=10)
+    frustum(p, "SkyCrystal", 44, 19, PZ + 34 - 0.5, PZ + 35.5, 2.6, 2.6, n=10)
+    # round the podium: statues at the stairs, orrery pedestals, lanterns, gardens
+    for sx in (-1, 1):
+        for y in (-PR - 14, PR + 14):
+            statue(p, sx * 18, y, rz=face(sx * 18, y, 0, y + (40 if y < 0 else -40)))
+    for k in range(4):
+        a = k * math.pi / 2 + math.pi / 4
+        x, y = math.cos(a) * 96, math.sin(a) * 96
+        frustum(p, "TempleIvory", x, y, -0.5, 5, 3.2, 2.2, n=8)
+        p.footings.append((x, y, 0, 2.5, "orrery"))
+        p.keepout.append((x, y, 9.0))
+        rod(p, "TempleGold", (x, y, 5), (x, y, 9), 0.3, 0.3, n=4)
+        gem(p, "SkyCrystal", x, y, 10.5, 2.0, 1.8, 1.8, n=8)
+        for j in range(3):
+            b = j * 2.09
+            rod(p, "TempleGold", (x, y, 9.6), (x + math.cos(b) * 4, y + math.sin(b) * 4, 10.2), 0.2, 0.2, n=4)
+            gem(p, "IndigoLeaves" if j else "TempleGold", x + math.cos(b) * 4, y + math.sin(b) * 4, 10.2, 0.8, 0.8, 0.8, n=6)
+        lantern_post(p, math.cos(a + 0.35) * 104, math.sin(a + 0.35) * 104, rz=a)
+    dress(p, n["o"], trees=8, blossom=60, tufts=18, mush=4, avoid=[(0, 0, PR + 12)], carpet=False)
+
+
+# ---------------------------------------------------------------------------
 # MINIBOSS arenas (§7.7): one mouth, a branch always ends at one
 # ---------------------------------------------------------------------------
 def es_miniboss_waystone_ring(p):
@@ -719,7 +954,7 @@ def es_miniboss_reliquary_court(p):
     pins(p)
     n = web(p, {"c": dict(x=0, y=8, r=84, z=0, pts=rsquare(0, 8, 84, 88, 28))}, [("S", "c")])
     temple_floor(p, n["c"])
-    shrine_hall(p, 0, 66, 0, 30, 20, rz=math.pi)
+    shrine_hall(p, 0, 66, 0, 30, 20, rz=face(0, 66, 0, 8))   # its porch opens onto the court
     for a in (0.3, 1.2, 1.95, 2.85):
         statue(p, math.cos(a + math.pi) * 52, 8 + math.sin(a + math.pi) * 40 + 20, rz=a)
     for s in (-1, 1):
@@ -733,7 +968,7 @@ def es_miniboss_reliquary_court(p):
 def es_side_hermit_grove(p):
     pins(p)
     n = web(p, {"g": (0, -16, 48, 0), "perch": (56, 64, 20, 12)}, [("S", "g"), ("g", "perch")])
-    hut(p, 24, -26, rz=0.4)
+    hut(p, 24, -26, rz=face(24, -26, 0, -16))
     great_tree(p, -20, 10, trunk=6)
     for k in range(3):
         decal_strip(p, "PaleGoldSoil", (-30 + k * 6, -40), (-30 + k * 6, -26), 3, 0.03)
@@ -755,7 +990,7 @@ def es_side_crystal_grotto(p):
 def es_side_relic_altar(p):
     pins(p)
     n = web(p, {"a": (0, -12, 48, 0), "col": (60, 62, 24, 10)}, [("S", "a"), ("a", "col")])
-    pavilion(p, -8, 6, 0, 16, 16, 12, rz=0.2)
+    pavilion(p, -8, 6, 0, 16, 16, 12, rz=face(-8, 6, 0, -60))
     crystal_colossus(p, *at(n["col"], 0, 0), z=10, spread=8)
     for s in (-1, 1):
         lantern_post(p, s * 12, -40, rz=0 if s > 0 else math.pi)
@@ -809,30 +1044,77 @@ def es_cap_falls_ledge(p):
 # ---------------------------------------------------------------------------
 # BACKDROP (§7.7): socketless surround scenery, never walked
 # ---------------------------------------------------------------------------
-def _cumulus(p, x, y, z0, top, r):
-    """A towering cumulus: billows stacked narrowing upward, its highest EXACTLY `top`."""
+def _crown_pin(p):
+    """Backdrop pieces are mostly props (drifting clouds), so a 0.3-stud pin marks the crown: the box
+    must still be exactly (2H x 2H) x 256 for the loader to scale it right."""
+    box(p, "CloudWhite", 0, 0, CROWN_TOP - 0.15, 0.3, 0.3, 0.3)
+
+
+def cloud_props(p, plan):
+    """Drop drifting cloud PROPS (es_props: Float) into a backdrop piece. `plan` is a list of
+    (kind, count, (zlo, zhi), (slo, shi)); every copy gets its own seeded spot, height, size and turn,
+    kept inside the tile and the box. Clouds may overlap clouds -- that is how a bank reads -- but never
+    stack dead-centre on one another."""
+    import es_props as PR
+    lib = PR.library()
     rng = p.rng
-    tiers = 6                                   # a FIXED stack (an open-ended loop here once never ended)
-    cap = r * 0.86 ** tiers * 0.8               # the crowning billow's height
-    rr = r
-    for t in range(tiers):
-        z = z0 + (top - cap - z0) * t / tiers
-        for k in range(4):
-            a = k * 1.57 + rng.uniform(-0.4, 0.4)
-            blob(p, "CloudWhite", x + math.cos(a) * rr * 0.55, y + math.sin(a) * rr * 0.55, z, rr * 0.7, rr * 0.6, n=7)
-        rr *= 0.86
-    blob(p, "CloudWhite", x, y, top - cap, cap, cap, n=7)
+    H = p.H
+    got = []
+    for kind, count, (zlo, zhi), (slo, shi) in plan:
+        placed = 0
+        for _ in range(count * 80):
+            if placed >= count:
+                break
+            sc = rng.uniform(slo, shi)
+            size = lib[kind][3] * sc
+            half = max(size.x, size.y) / 2
+            x, y = rng.uniform(-H + half + 4, H - half - 4), rng.uniform(-H + half + 4, H - half - 4)
+            z = rng.uniform(zlo, zhi)
+            if z + size.z / 2 > CROWN_TOP - 1 or z - size.z / 2 < -94:
+                continue
+            if any(math.hypot(x - q[0], y - q[1]) < (half + q[2]) * 0.45 and abs(z - q[3]) < 20 for q in got):
+                continue
+            got.append((x, y, half, z))
+            p.props.append(dict(kind=kind, pos=Vector((x, y, z)), yaw=rng.uniform(0, 6.28), scale=sc, size=size))
+            placed += 1
 
 
 def es_backdrop_cloudbank(p):
+    """Towering: one or two great cumulus over a low shelf, fair-weather puffs round their feet."""
     pins(p)
-    rng = p.rng
-    _cumulus(p, 20, 10, -40, CROWN_TOP, 46)
-    for _ in range(26):
-        a, rr = rng.uniform(0, 6.28), rng.uniform(30, 100)
-        x, y = math.cos(a) * rr, math.sin(a) * rr
-        r = rng.uniform(12, 24)
-        puff(p, max(-100, min(100, x)), max(-100, min(100, y)), rng.uniform(-70, 10), r, r * 0.6, rng)
+    _crown_pin(p)
+    cloud_props(p, [("prop_es_cumulus_a", p.rng.choice((1, 2)), (10, 55), (1.1, 1.7)),
+                    ("prop_es_cumulus_b", 1, (-60, -30), (0.8, 1.05)),
+                    ("prop_es_cloud_a", 5, (-50, 40), (0.8, 1.6)),
+                    ("prop_es_cloud_b", 3, (-70, 90), (0.8, 1.5))])
+
+
+def es_backdrop_cloud_shelf(p):
+    """A long low shelf of stratocumulus, layered at two heights, wisps trailing above."""
+    pins(p)
+    _crown_pin(p)
+    cloud_props(p, [("prop_es_cumulus_b", 3, (-70, -10), (0.8, 1.0)),
+                    ("prop_es_cloud_b", 6, (0, 100), (0.9, 1.8)),
+                    ("prop_es_cloud_a", 2, (-40, 20), (0.8, 1.3))])
+
+
+def es_backdrop_cloud_drift(p):
+    """Open sky: a loose drift of small clouds at every height -- the gaps are the point."""
+    pins(p)
+    _crown_pin(p)
+    cloud_props(p, [("prop_es_cloud_a", 8, (-80, 120), (0.7, 1.9)),
+                    ("prop_es_cloud_b", 6, (-70, 130), (0.8, 2.0))])
+
+
+def es_backdrop_storm_anvil(p):
+    """A single great anvil cloud rising out of the deck, darker sky-crystal lightning shards hovering
+    in its shadow (props), a shelf at its foot."""
+    pins(p)
+    _crown_pin(p)
+    cloud_props(p, [("prop_es_cumulus_c", 1, (20, 40), (1.3, 1.55)),
+                    ("prop_es_cumulus_b", 1, (-75, -45), (0.8, 1.0)),
+                    ("prop_es_cloud_b", 3, (-60, 30), (1.0, 1.6)),
+                    ("prop_es_shard", 4, (-30, 30), (1.2, 2.0))])
 
 
 def es_backdrop_drift_isles(p):
@@ -845,22 +1127,17 @@ def es_backdrop_drift_isles(p):
                  crown=(TEAL, INDIGO)[k])
     isle(p, circle(p, 64, 72, 16), -30, depth=40)
     sky_spire(p, 64, 72, z=-30, r=3.4)
-    for _ in range(10):
-        puff(p, rng.uniform(-100, 100), rng.uniform(-100, 100), rng.uniform(-80, -50), rng.uniform(10, 18), 8, rng)
+    cloud_props(p, [("prop_es_cloud_b", 4, (-85, -60), (1.0, 1.8)), ("prop_es_cloud_a", 3, (60, 120), (0.8, 1.4))])
 
 
 def es_backdrop_crystal_spire(p):
     pins(p)
-    rng = p.rng
     isle(p, circle(p, 0, 0, 40, sides=14), -30, depth=60)
     crag(p, 0, 0, z=-30, r=16, top=CROWN_TOP)
     for k in range(6):
         a = k * 1.05
         crystal_cluster(p, math.cos(a) * 28, math.sin(a) * 28, z=-30, s=1.3, n=4)
-    for _ in range(10):
-        a = rng.uniform(0, 6.28)
-        puff(p, math.cos(a) * rng.uniform(56, 96), math.sin(a) * rng.uniform(56, 96), rng.uniform(-60, 20),
-             rng.uniform(10, 18), 8, rng)
+    cloud_props(p, [("prop_es_cumulus_b", 1, (-85, -70), (0.7, 0.85)), ("prop_es_cloud_a", 4, (-20, 110), (0.8, 1.5))])
 
 
 # ---------------------------------------------------------------------------
@@ -886,6 +1163,10 @@ PIECES = [
     dict(id="ES_PATH_SKYSTAIR_DOWN", role="PATH", half=128, sockets=SN, fn=es_skystair_down, lift={"N": -24},
          weight=12, supports=["Traversal", "Ambush", "Secret"], tags=["descent", "crystal"], enemies=["CRYSTAL_WARDEN"],
          desc="A full storey DOWN (-24): three isles stepping into the cloud past a crystal colossus."),
+    dict(id="ES_SKY_AQUEDUCT", role="PATH", half=192, sockets=SN, fn=es_sky_aqueduct,
+         weight=6, max=1, supports=["Combat", "Traversal", "Event"], tags=["landmark", "bridge", "falls"],
+         enemies=["SKYBORNE_HARRIER", "TEMPLE_ACOLYTE"],
+         desc="Landmark (384): a stone aqueduct carries the road across open sky on three piers and arcades."),
     # PATH -- bends
     dict(id="ES_PATH_BEND_EAST_GROVE", role="PATH", half=128, sockets=[("S", S), ("E", S)], fn=es_bend_east_grove,
          weight=12, supports=["Combat", "Ambush"], tags=["bend", "grove"], enemies=["MEADOW_STAG"],
@@ -937,6 +1218,10 @@ PIECES = [
     dict(id="ES_TWIN_ISLES", role="COMBAT", half=128, sockets=SN, fn=es_twin_isles,
          weight=10, supports=["Combat", "Traversal", "MiniBoss"], tags=["isles", "bridge", "rise"], enemies=["SKYBORNE_HARRIER"],
          desc="Two isles joined by a climbing bridge (+12): a spire on the low one, a pavilion on the high."),
+    dict(id="ES_SKY_OBSERVATORY", role="COMBAT", half=192, sockets=SN, fn=es_sky_observatory,
+         weight=6, max=1, supports=["Combat", "MiniBoss", "Puzzle", "Event"], tags=["landmark", "temple", "shrine"],
+         enemies=["TEMPLE_ACOLYTE", "CRYSTAL_WARDEN"],
+         desc="Landmark (384): a domed colonnade on a podium, an armillary sphere at its crown, the great telescope."),
     dict(id="ES_TEMPLE_GATE_A", role="COMBAT", half=128, sockets=[("S", S), ("N", C)], fn=es_temple_gate_a,
          weight=20, supports=["Combat", "MiniBoss"], tags=["gate-court", "temple"], enemies=["GATEWARDEN"],
          desc="Gate-court: bell towers flank the great arch over the COMMUNION road; waystones line it."),
@@ -979,8 +1264,17 @@ PIECES = [
          desc="The Sanctum: the grand temple that houses the boss, on the greatest isle in the sky."),
     # BACKDROP (§7.7)
     dict(id="ES_BACKDROP_CLOUDBANK", role="BACKDROP", half=128, sockets=[], fn=es_backdrop_cloudbank,
-         weight=4, tags=["backdrop", "cloud"], enemies=[],
-         desc="Surround: a towering cumulus over a bank of cloud."),
+         weight=3, tags=["backdrop", "cloud"], enemies=[],
+         desc="Surround: towering cumulus over a low shelf, puffs round their feet (drifting props)."),
+    dict(id="ES_BACKDROP_CLOUD_SHELF", role="BACKDROP", half=128, sockets=[], fn=es_backdrop_cloud_shelf,
+         weight=3, tags=["backdrop", "cloud"], enemies=[],
+         desc="Surround: a long layered shelf of cloud, wisps trailing above (drifting props)."),
+    dict(id="ES_BACKDROP_CLOUD_DRIFT", role="BACKDROP", half=128, sockets=[], fn=es_backdrop_cloud_drift,
+         weight=3, tags=["backdrop", "cloud"], enemies=[],
+         desc="Surround: open sky, a loose drift of small clouds at every height (drifting props)."),
+    dict(id="ES_BACKDROP_STORM_ANVIL", role="BACKDROP", half=128, sockets=[], fn=es_backdrop_storm_anvil,
+         weight=1, tags=["backdrop", "cloud"], enemies=[],
+         desc="Surround: one great anvil cloud with hovering crystal shards in its shadow (props)."),
     dict(id="ES_BACKDROP_DRIFT_ISLES", role="BACKDROP", half=128, sockets=[], fn=es_backdrop_drift_isles,
          weight=3, tags=["backdrop", "isles"], enemies=[],
          desc="Surround: small isles drifting at their own heights, one carrying a spire."),
@@ -988,4 +1282,4 @@ PIECES = [
          weight=2, tags=["backdrop", "crystal"], enemies=[],
          desc="Surround: a crystal-ringed crag spire on a sunken isle."),
 ]
-assert len(PIECES) == 36
+assert len(PIECES) == 41

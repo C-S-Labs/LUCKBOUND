@@ -3082,17 +3082,17 @@ do
 	for _ in esChunks do
 		esCount += 1
 	end
-	check("the kit is 36 pieces", esCount == 36, tostring(esCount))
+	check("the kit is 41 pieces", esCount == 41, tostring(esCount))
 	check(
-		"roles: 1 ENTRY, 12 PATH, 10 COMBAT, 2 MINIBOSS, 3 SIDE, 4 CAP, 1 BOSS, 3 BACKDROP",
+		"roles: 1 ENTRY, 13 PATH, 11 COMBAT, 2 MINIBOSS, 3 SIDE, 4 CAP, 1 BOSS, 6 BACKDROP",
 		roleCount.ENTRY == 1
-			and roleCount.PATH == 12
-			and roleCount.COMBAT == 10
+			and roleCount.PATH == 13
+			and roleCount.COMBAT == 11
 			and roleCount.MINIBOSS == 2
 			and roleCount.SIDE == 3
 			and roleCount.CAP == 4
 			and roleCount.BOSS == 1
-			and roleCount.BACKDROP == 3,
+			and roleCount.BACKDROP == 6,
 		table.concat({
 			string.format("ENTRY=%d", roleCount.ENTRY or 0),
 			string.format("PATH=%d", roleCount.PATH or 0),
@@ -3146,6 +3146,14 @@ do
 			and junctions[3] == "ES_FORK_TWIN_SPAN"
 			and junctions[4] == "ES_FORK_WAYSHRINE",
 		table.concat(junctions, ", ")
+	)
+	-- Landmarks (owner 2026-09-27): two 384-stud structures with standard mouths.
+	check(
+		"the Aqueduct and the Observatory are 384-stud landmarks with standard SPAN mouths",
+		esChunks.ES_SKY_AQUEDUCT.SizeX == 384
+			and esChunks.ES_SKY_OBSERVATORY.SizeX == 384
+			and esChunks.ES_SKY_AQUEDUCT.Sockets[1].Width == 44
+			and esChunks.ES_SKY_OBSERVATORY.Sockets[1].Width == 44
 	)
 	-- Height variation (owner 2026-09-27): rises and descents carry the map up
 	-- and down through a socket's OffsetY.

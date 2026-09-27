@@ -478,6 +478,7 @@ def rock(p, x, y, z=FLOOR_Z, s=3.0):
 # ---------------------------------------------------------------------------
 def column(p, x, y, z, h, r=2.6, broken=False, drum_fall=False):
     p.keepout.append((x, y, r * 2.2 + (r * 4.5 if drum_fall else 0)))
+    p.footings.append((x, y, z, r * 1.2, "column"))
     rng = p.rng
     box(p, "TempleGold", x, y, z + 0.6, r * 2.6, r * 2.6, 1.2)
     box(p, "TempleIvory", x, y, z + 1.6, r * 2.3, r * 2.3, 0.8)
@@ -567,6 +568,7 @@ def arch(p, x, y, z, span, h, rz=0.0, thick=5.0, ruined=False, top=None):
 
 def waystone(p, x, y, z=FLOOR_Z, rz=0.0, h=18.0):
     p.keepout.append((x, y, 7.0))
+    p.footings.append((x, y, z, 3.5, "waystone"))
     """The original's waystone: a squat tapering rune stone (7.8 x 7.8 x 18) with a glowing band
     and a gold cap -- chunky, never a spire."""
     frustum(p, "Cloudstone", x, y, z - 0.5, z + 1.5, 5.2, 4.8, n=4, a0=rz + 0.785)
@@ -577,6 +579,7 @@ def waystone(p, x, y, z=FLOOR_Z, rz=0.0, h=18.0):
 
 def lantern_post(p, x, y, z=FLOOR_Z, h=9.0, rz=0.0):
     p.keepout.append((x, y, 3.5))
+    p.footings.append((x, y, z, 0.35, "lantern_post"))
     frustum(p, "SoftWood", x, y, z - 0.3, z + h, 0.45, 0.35, n=5)
     ax, ay = x + math.cos(rz) * 2.2, y + math.sin(rz) * 2.2
     beam(p, "SoftWood", (x, y, z + h - 0.4), (ax, ay, z + h - 0.4), 0.5, 0.5)
@@ -589,6 +592,7 @@ def bell_tower(p, x, y, z=FLOOR_Z, top=CROWN_TOP, w=16.0, rz=0.0):
     """A square ivory bell tower: gold bands, an open belfry with a hanging bell, a gold hip roof,
     a sky crystal whose tip is EXACTLY `top`."""
     p.keepout.append((x, y, w * 0.72 + 5))
+    p.footings.append((x, y, z, w * 0.5, "bell_tower"))
     body_top = z + (top - z) * 0.64
     box(p, "Cloudstone", x, y, z + 1, w + 4, w + 4, 3, rz=rz)
     box(p, "TempleIvory", x, y, (z + body_top) / 2, w, w, body_top - z, rz=rz)

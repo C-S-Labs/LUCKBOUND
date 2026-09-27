@@ -99,20 +99,20 @@ flagstone to flagstone, at any height.
 
 ---
 
-## The kit — 36 pieces
+## The kit — 41 pieces
 
 | Role | Count | Pieces |
 |---|---|---|
 | ENTRY | 1 | **Arrival Isle** (384): a great chamfered isle — gold mosaic landing ringed by crystal-topped spawn columns, the return-portal pad (kept clear, checked), a shrine terrace, the great sky tree, two perches at +14 and −16 |
-| PATH — straights | 4 | **Plank Crossing** (three isles on plank bridges, the middle one raised) · **Grove Isle** (a great tree, a fairy ring, falls off the rim) · **Skystair Up** (+24) · **Skystair Down** (−24) |
+| PATH — straights | 5 | **Sky Aqueduct** (384 landmark: a stone aqueduct across open sky on three piers and arcades, a water channel spilling mid-span) · **Plank Crossing** (three isles on plank bridges, the middle one raised) · **Grove Isle** (a great tree, a fairy ring, falls off the rim) · **Skystair Up** (+24) · **Skystair Down** (−24) |
 | PATH — bends | 4 | **Grove Bend** E (great tree on a raised perch) · **Ascent Bend** E (+16, bell tower over the mouth, hut perch) · **Falls Bend** W (−16, aether falls) · **Shrine Bend** W (shrine hall, waystone arc) |
 | PATH — junctions | 4 | **Wayshrine Fork** (S/E/W) · **Three-Trees Fork** (S/N/E) · **Twin-Span Fork** (S/N/W, north mouth +10) · **Convergence** (4-way). §7.7 fills every one of their mouths |
-| COMBAT | 10 | Meadow of Blooms · Terraced Gardens (+10/+20) · Crystal Hollow · Fallen Colonnade (temple) · Mirror Pool (temple) · Shrine of Winds (temple) · Rooted Hollow · Twin Isles (+12) · **Temple Gate A** · **Temple Gate B** (the only `COMMUNION` exits) |
+| COMBAT | 11 | **Sky Observatory** (384 landmark: a domed colonnade on a podium, an armillary sphere at the crown, the great telescope) · Meadow of Blooms · Terraced Gardens (+10/+20) · Crystal Hollow · Fallen Colonnade (temple) · Mirror Pool (temple) · Shrine of Winds (temple) · Rooted Hollow · Twin Isles (+12) · **Temple Gate A** · **Temple Gate B** (the only `COMMUNION` exits) |
 | **MINIBOSS** | 2 | **Waystone Ring** (the Waystone Sentinel: eight waystones round a gold ring, twin beacons, a gallery perch) · **Reliquary Court** (the Reliquary Keeper: a balustraded temple court before the reliquary hall). One mouth each; only ever at the end of a branch — **never the boss arena** |
 | SIDE | 3 | Hermit Grove · Crystal Grotto · Relic Altar |
 | CAP | 4 | Broken Bridge · Overlook · Sealed Shrine · Falls Ledge |
 | BOSS | 1 | **The Sanctum** (512), on the greatest isle in the sky: see below |
-| **BACKDROP** | 3 | Cloudbank (a towering cumulus) · Drift Isles · Crystal Spire. No sockets, never walked — the generator rings them round the finished map |
+| **BACKDROP** | 6 | **Cloudbank** · **Cloud Shelf** · **Cloud Drift** · **Storm Anvil** — each a seeded arrangement of drifting cloud *props* · Drift Isles · Crystal Spire. No sockets, never walked — the generator rings them round the finished map and turns each one |
 
 ## Generation — build spec §7.7
 
@@ -136,6 +136,11 @@ Sky Citadel and Verdant Valley declare no blueprint and assemble exactly as befo
   - a ribbed roof around a central **lantern**: a crystal-windowed clerestory under a gold hip roof.
 - **Corners:** four **towers** with gold cones, whose crystal tips pin the +160 crown.
 
+- **Interior (detail pass 2026-09-27):** engaged pilasters, crystal sconces, guardian statues, a patterned floor
+  border, a coffered gold ceiling with four crystal chandeliers, a crystal ring hung in the lantern, a three-step
+  throne dais with a crystal-crested throne and braziers, a gold sun disc on the north wall, open door leaves.
+  All outside the validated fight volume.
+
 `renders/es_sanctum_interior.jpg` is the hall from just inside the door.
 
 ---
@@ -147,7 +152,8 @@ placements in `Content/Props/EtherealScape.luau`.
 
 | Prop | Anim | Where |
 |---|---|---|
-| `prop_es_cloud_a`, `prop_es_cloud_b` | Float | high over every clearing (70–125 studs; low clouds hung over the paths like rocks) |
+| `prop_es_cloud_a`, `prop_es_cloud_b` | Float | soft billowed puffs and wisps, high over every clearing |
+| `prop_es_cumulus_a/b/c` | Float | towering cumulus, a long shelf, an anvil — arranged by the cloudbank BACKDROP pieces, smooth-shaded |
 | `prop_es_lantern` | Float | sky lanterns rising over shrines, gates, forks, the arrival and the arena |
 | `prop_es_shard` | Hover | crystal pieces and the falls |
 | `prop_es_isle_grove`, `_crystal`, `_ruin` | Float | satellite islets in the tile's outer sky, 100–150 up |
@@ -171,8 +177,9 @@ on the real mesh, for every piece:
 5. **Mouths:** level ground at the socket's own height across at least 95% of the width.
 6. **Nothing detached.** Sky Citadel's real-mesh `geometry_checks.analyse` is reused.
 7. **No clipping between builders** (a tree through a pavilion, a crystal through a railing). The ground (isle tops, landings) may be stood in. `declip()` removes any cloud, blossom, grass or mushroom that touches a real object (a mushroom's stem and cap go together). A short list of authored joints is allowed (a porch column in its podium). The final build logs **zero** clip notes.
-8. **Entry:** the column above the landing and the return-portal pad are open to the sky.
-9. **Sanctum:** the hall and the great door are unobstructed.
+8. **Grounded:** every column, tower, waystone, statue, beacon, lantern, brazier and orrery stands on ground — rays cast under its base must meet a surface at 4 of 5 points.
+9. **Entry:** the column above the landing and the return-portal pad are open to the sky.
+10. **Sanctum:** the hall and the great door are unobstructed.
 
 Every feature registers a **keep-out** footprint, so scattered trees, mushrooms and blossoms never
 land in a pavilion, a tower or a crag. The first revamp pass logged about 40 clip notes; all are fixed.
