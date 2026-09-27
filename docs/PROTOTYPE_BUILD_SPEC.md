@@ -964,11 +964,13 @@ map rather than an edge of the world.
    can take no cap — everything collides — **the attempt fails** and
    `assembleWithRetry` tries the next seed. So a capped world never ships a
    map with an opening onto nothing; it ships a different map instead.
-3. **A world with no `CAP` pieces is unchanged.** Verdant Valley has none, so
-   its Meadow's west mouth can still face nothing when the Hollow is absent.
-4. **Caps are unlimited per layout and equally weighted**, so the two ends of
-   one crossroads can differ. Only the crossroads has more sockets than the
-   path uses, so a map needs at most two.
+3. **A world with no `CAP` pieces is unchanged.** Its unused mouths are not sealed.
+   Verdant Valley's current 30-piece kit has three caps and therefore uses sealing.
+4. **Caps are exempt from the general repeat limit**, but an explicit
+   `MaxPerLayout` still applies when declared. Verdant Valley's Cave Mouth,
+   Treasure Hollow and Warden's Clearing have no per-layout limit and equal
+   weight, following the owner's corrected direction (2026-09-27). Multiple
+   junctions and their spurs can leave several mouths.
 
 ### Why it is a System change and not content
 

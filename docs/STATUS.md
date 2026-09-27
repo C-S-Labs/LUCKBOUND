@@ -38,6 +38,16 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 ## 2. Next — pick up here
 
+> **2026-09-27: Verdant Valley cap variety, local change.** Cave Mouth remains a cap;
+> Treasure Hollow and Warden's Clearing are now caps; all three caps are unlimited
+> and equally weighted following the owner's corrected direction. Forgotten Trial is
+> the sole SIDE chunk. Kit names, generated
+> content, exporter and manifest agree; mesh IDs and geometry are unchanged.
+> 817 tests pass; 400 additional VV layouts close every socket and exercise repeat
+> placements of both converted caps. Studio/Rojo loading and walks remain pending.
+
+> **2026-09-26: local socket recovery** on `codex/recover-socket-fixes`, based on main `5090ace`: canonical VV mesh mappings, per-chunk calibration tolerance, centre-hit diagnostics, and Rojo 7.7 restored. Latest main and recovery both pass 817 tests; full Rojo build and Luau syntax pass. Studio four-yaw asset/collision checks remain pending; existing 43 seam-height failures are a separate baseline. New Ethereal Scape and enemy work preserved. No push or main merge.
+
 > **2026-09-26: Ethereal Scape converted from a `PrebuiltMap` to a 30-piece chunk kit, owner-directed.** It shipped
 > as one composed, hand-authored, no-combat traverse (a map-generation test rig). That is superseded:
 > `Content/Worlds/EtherealScape.luau` now declares a chunk kit + `MapPathLength` like Sky Citadel and Verdant
@@ -77,6 +87,7 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 > `CLAUDE.md`/`GEMINI.md` point to it.
 >
 > Legacy Verdant Valley pieces are gone. The kit is `VV_STRUCTURE.rbxmx` (the same shape as `SC_STRUCTURE`).
+> The duplicate Fern Hollow and Mushroom Glen manifest rows were removed on `socket-fixing`; both canonical keys point to the current 30-piece assets in `VV_STRUCTURE.rbxmx`. The owner confirmed both pieces load their intended meshes in Studio on 2026-09-25. Earlier socket warnings were downstream of the wrong assets loading. Boss Sanctuary rotation is verified.
 
 > **2026-09-25: the Winged Sentinel stands in Studio.** Run `/showboss winged_sentinel` in the boss arena: 16 studs,
 > facing the entrance, playing the Idle_Guard animation (`rbxassetid://132590990835909`). The Aether Lance's web is
@@ -186,7 +197,7 @@ progression-feel problem.
 
 - Code: `C:\Dev\luckbound` (not OneDrive — must stay outside it)
 - Place: `LUCKBOUND_dev.rbxl`, local, unpublished
-- Rojo CLI 7.6.0 via Rokit; Studio plugin 7.7.0
+- Rojo CLI 7.7.0 via Rokit; Studio plugin 7.7.0
 - **Unpublished means no DataStores.** Expected; the server runs in volatile
   mode and says so. Publishing is what enables saving.
 

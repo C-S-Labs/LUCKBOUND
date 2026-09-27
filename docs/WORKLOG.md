@@ -33,6 +33,92 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 78 — 2026-09-27 — Prepare recovery branch for origin
+**Merged:** none   **Tests:** 817 passing   **Branch:** `codex/recover-socket-fixes`
+
+### Done
+- Reviewed the recovery commits and every pending file. Recovery and Rojo integration are already in bf7907b; the recovery audit is dd39e55. Pending changes contain only the owner-requested VV cap conversions and their source/docs/index updates, with no temporary files or unrelated asset edits.
+- Re-ran the headless suite: 817/0. Prepared a separate cap-variety commit and a push of the recovery branch to origin, without rewriting the original socket-fixing branch or merging main.
+
+### Decisions made
+- Preserve the existing recovery commits; commit the cap changes separately so review retains their distinct purpose.
+
+### Stopped at
+Ready to commit and push; the command result in the session records the final hash and push outcome.
+
+### Next
+1. Check origin CI and complete the pending Studio walks before any merge.
+2. Cleanup: no temporary or duplicate files included. Keep earlier Blender/FBX exports and parked assets until CI and Studio confirm replacement is safe.
+
+---
+
+## Session 77 — 2026-09-27 — Remove converted cap placement limits
+**Merged:** none (local change)   **Tests:** 817 passing; 400 additional VV layouts verified
+
+### Done
+- Removed MaxPerLayout = 1 from Treasure Hollow and Warden's Clearing in chunk content and exporter; all three VV caps now have equal weight and no per-layout limit.
+- Updated the biome doc, build spec and current status to reflect the owner's corrected direction. Forgotten Trial's SIDE placement limit remains unchanged.
+- Existing suite passes 817/0. All 400 additional VV layouts assembled with no unmatched sockets; both converted caps repeated within layouts. Total placements: Cave Mouth 218, Treasure Hollow 213, Warden's Clearing 241.
+
+### Decisions made
+- This supersedes Session 76's decision to retain the converted caps' one-per-layout limits, following the owner's correction.
+
+### Stopped at
+Local implementation and headless validation complete; Studio walk and CI remain pending. No push or merge.
+
+### Next
+1. Sync with Rojo and verify the three cap endings and Forgotten Trial in Studio.
+2. Cleanup: no new duplicate files or exports. Keep existing Blender/FBX exports until CI and Studio confirm the updated kit before refreshing or retiring their earlier SIDE names.
+
+---
+
+## Session 76 — 2026-09-27 — Verdant Valley cap variety
+**Merged:** none (local change)   **Tests:** 817 passing; 400 additional VV layouts verified
+
+### Done
+- Converted Treasure Hollow and Warden's Clearing from SIDE to CAP; kept Cave Mouth as CAP and Forgotten Trial as SIDE.
+- Renamed the two kit MeshParts, chunk IDs and manifest keys consistently with the cap naming convention; updated the exporter, import instructions and biome doc. Mesh IDs, geometry, sockets and scenario support are unchanged.
+- Corrected stale §7.4 wording: VV now has caps; caps bypass the general repeat limit but still obey explicit MaxPerLayout.
+- Existing suite passes 817/0. Additional 400 layouts (200 each with/without SIDE) all assembled, had no unmatched sockets, used all three cap types and respected the converted caps' one-per-layout limits.
+
+### Decisions made
+- Preserve MaxPerLayout = 1 on both converted caps exactly as directed. Cave Mouth remains unlimited to seal further leftovers; repeats remain possible.
+
+### Stopped at
+Local implementation and headless validation complete; no push or merge. Studio loading and visual walk pending.
+
+### Next
+1. Sync the renamed kit through Rojo and walk all three cap endings plus Forgotten Trial in Studio.
+2. Cleanup: no duplicate assets or replacement files introduced. The old SIDE names/keys were replaced in place; existing FBX/Blender review exports retain earlier names and should only be refreshed or retired after CI and Studio confirm the updated kit. Keep source art and parked assets.
+
+---
+
+## Session 75 — 2026-09-26 — Recover socket-fixing on latest main
+**Merged:** none (local review only)   **Tests:** 817 passing on both baseline and recovery   **Head:** `codex/recover-socket-fixes` (base `5090ace`)
+
+### Done
+- Fetched origin; `socket-fixing` remains at `5cdd0f4`. Its only commit absent from main is `5cdd0f4`; recovered it as `bf7907b` onto latest main, preserving PR #132 and all newer enemy/design work.
+- Implementation comparison found missing per-chunk probe tolerance (Boss Sanctuary = 1), centre-hit reporting independent of weighted yaw score, and negative-score initialization. Restored these without changing sockets, placement, or shared defaults.
+- Removed legacy duplicate Fern Hollow/Mushroom Glen manifest rows; canonical IDs are `102496516928454` and `74544938107663`. Restored Cliff Passage ID `72645382202667` (main had `94772076568933`). All new Ethereal Scape manifest entries retained.
+- Restored Rojo 7.7.0 pin (original compatibility fix `7748767`); project paths and chunk-loading/assembly integration already agree between branches and needed no restoration. Current 30-piece VV kit and original socket-geometry work (`f342338`), yaw sign correction (`d308643`), drop-in integration (`dfdfcee`), and boss Rojo mapping (`eb4b704`) are present on main.
+- Only cherry-pick conflicts: WORKLOG and INDEX_MAP. Kept both histories (existing duplicate session numbers retained for provenance) and regenerated the generated index.
+- Headless suite: latest main 817/0, recovery 817/0. Compiled all 107 non-generated Luau files: no syntax errors. No forbidden module names; no duplicate manifest keys; VV_STRUCTURE contains all 30 MeshParts including affected pieces. Rojo 7.7 built the full project into a temporary RBXLX.
+- StyLua 2.0.2 passes on LF-normalized temporary copies; direct Windows checkout check reports 98 files due to existing CRLF checkout line endings. No unrelated formatting edits made. Selene remains blocked fetching the Roblox API dump.
+
+### Decisions made
+- Recover the final socket-fixing implementation, not older backup experiments (`3de5bdd`/`528fa15`): diagnostics, renamed manifest keys and Cliff-only collision proxy were deliberately omitted by the final handoff. Keep backup branches for evidence.
+- No mesh geometry, FBX, or socket locations changed. The previously documented 43 seam-height failures are an established separate baseline, not newly introduced failures. The current headless suite does not reproduce that geometry validation; a fresh Studio comparison remains required.
+
+### Stopped at
+Recovery committed locally for review; no push, PR, or main merge. Studio physics/asset loading cannot be established by headless tests.
+
+### Next
+1. Sync with Rojo 7.7; boot and walk VV Fern Hollow, Mushroom Glen, Cliff Passage (both PATH seams/collision), and Boss Sanctuary (WIDE entrance) at layout yaws 0/90/180/270. Confirm current mesh IDs and centre-hit logs; compare seam-height results with the existing 43-failure baseline using the same setup.
+2. Walk Sky Citadel and current Ethereal Scape blockout to check shared loader behavior; Ethereal Scape mesh upload/walk remains pending from main.
+3. Review recovery diff before any push. Cleanup: no replacement asset exports/files introduced; keep backups and parked assets until CI and Studio prove replacement safe. Obsolete duplicate manifest rows were removed because they actively overrode canonical assets.
+
+---
+
 ## Session 74 — 2026-09-26 — Ethereal Scape revamp: grounded cloudscape, real palette, props
 
 **Merged:** —   **Tests:** updated (CI to confirm)   **Head:** —
@@ -200,6 +286,116 @@ publishing.
    lightning texture) under it, and re-point `AssetManifest.luau` / `BossPreviews.luau` / `LightningRigs.luau` at
    the group-owned ids.
 2. Continue the queued Sentinel moveset animations and `EnemyDef` wiring per the prior session's "Next" list.
+
+---
+
+## Session 74 — 2026-09-25 — Fern Hollow and Mushroom Glen verified
+
+**Merged:** none   **Tests:** owner Studio confirmation   **Head:** branch `socket-fixing`
+
+### Done
+
+- Owner confirmed Fern Hollow and Mushroom Glen both load their intended current assets in Studio.
+
+### Decisions made
+
+- No code or asset change needed.
+
+### Stopped at
+
+Both asset mappings verified in Studio.
+
+### Next
+
+1. Continue the Verdant Valley revamp when scoped.
+
+---
+
+## Session 73 — 2026-09-25 — Verdant Valley asset mapping verified
+
+**Merged:** none   **Tests:** manifest and StyLua checks passed; Selene blocked by API dump access   **Head:** branch `socket-fixing`
+
+### Done
+
+- Confirmed the prior manifest cleanup leaves one canonical Fern Hollow row (`102496516928454`) and one Mushroom Glen row (`74544938107663`), both sourced from `VV_STRUCTURE.rbxmx`; no code change was needed.
+
+### Decisions made
+
+- Treat the earlier socket warnings as symptoms of old mesh resolution; leave calibration untouched.
+
+### Stopped at
+
+Fern Hollow's intended mesh is confirmed in Studio; Mushroom Glen's mesh awaits a Studio check.
+
+### Next
+
+1. Verify Mushroom Glen loads its intended mesh in Studio.
+
+---
+
+## Session 72 — 2026-09-25 — Socket-centre calibration scoring
+
+**Merged:** none   **Tests:** StyLua passed; Selene blocked by API dump access   **Head:** branch `socket-fixing`
+
+### Done
+
+- Recovered centre-hit tracking and reporting from the pre-sync backup in `calibrateYaw`; selection still uses weighted score, now initialized to handle all-negative candidates.
+
+### Decisions made
+
+- Kept the current per-chunk tolerance and omitted backup diagnostics and Boss-specific experiments.
+
+### Stopped at
+
+Code restored; Fern Hollow and Mushroom Glen yaw behavior awaits a Studio check.
+
+### Next
+
+1. Verify both pieces' socket alignment in Studio.
+
+---
+
+## Session 71 — 2026-09-25 — Verdant Valley manifest collision
+
+**Merged:** none   **Tests:** StyLua and manifest checks passed; Selene blocked by API dump access   **Head:** branch `socket-fixing`
+
+### Done
+
+- Removed legacy duplicate `VV_CHUNK_FERN_HOLLOW` and `VV_CHUNK_MUSHROOM_GLEN` manifest rows that overrode the current 30-piece IDs.
+
+### Decisions made
+
+- Keep the existing runtime keys and current `VV_STRUCTURE.rbxmx` source rows.
+
+### Stopped at
+
+Manifest corrected; Studio verification remains pending.
+
+### Next
+
+1. Verify Fern Hollow and Mushroom Glen load their current meshes in Studio.
+
+---
+
+## Session 70 — 2026-09-25 — Per-chunk socket probe tolerance
+
+**Merged:** none   **Tests:** StyLua passed; Selene blocked by API dump access   **Head:** branch `socket-fixing`
+
+### Done
+
+- `ChunkLoader.calibrateYaw` now uses `SocketProbeTolerance` when a chunk declares it, with the configured probe tolerance as the default, for both socket and negative-edge height checks.
+
+### Decisions made
+
+- No change to the default tolerance or chunk content.
+
+### Stopped at
+
+Loader change and formatting check complete; Selene and Studio validation remain pending.
+
+### Next
+
+1. Verify the Verdant Valley Boss Sanctuary socket alignment in Studio.
 
 ---
 

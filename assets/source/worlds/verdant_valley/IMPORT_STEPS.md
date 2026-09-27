@@ -67,6 +67,6 @@ Height and ground are in studs; ground is measured from the bottom of the boundi
 | 25 | Dawn Meadow | `chunk_entry_dawn_meadow` | ENTRY | N PATH | 63.8 | 34.88 | 9058 |
 | 26 | Woodland Refuge | `chunk_entry_woodland_refuge` | ENTRY | N PATH | 68.8 | 37.91 | 9416 |
 | 27 | Verdant Valley BOSS Sanctuary | `chunk_boss_sanctuary` | BOSS | N WIDE | 113.7 | 48.00 | 8706 |
-| 28 | Treasure Hollow | `chunk_side_treasure_hollow` | SIDE | N PATH | 69.0 | 32.00 | 7288 |
-| 29 | Warden's Clearing | `chunk_side_wardens_clearing` | SIDE | N PATH | 72.1 | 34.00 | 7300 |
+| 28 | Treasure Hollow | `chunk_cap_treasure_hollow` | CAP | N PATH | 69.0 | 32.00 | 7288 |
+| 29 | Warden's Clearing | `chunk_cap_wardens_clearing` | CAP | N PATH | 72.1 | 34.00 | 7300 |
 | 30 | Forgotten Trial | `chunk_side_forgotten_trial` | SIDE | N PATH | 59.0 | 37.00 | 7292 |

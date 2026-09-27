@@ -3559,7 +3559,7 @@ MjUxOGI1NzAy]]></BinaryString>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 				<bool name="DefinesCapabilities">false</bool>
-				<string name="Name">chunk_side_treasure_hollow</string>
+				<string name="Name">chunk_cap_treasure_hollow</string>
 				<int64 name="SourceAssetId">-1</int64>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
@@ -3694,7 +3694,7 @@ MjUxOGI1NzAy]]></BinaryString>
 				<BinaryString name="AttributesSerialize"></BinaryString>
 				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 				<bool name="DefinesCapabilities">false</bool>
-				<string name="Name">chunk_side_wardens_clearing</string>
+				<string name="Name">chunk_cap_wardens_clearing</string>
 				<int64 name="SourceAssetId">-1</int64>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>

@@ -94,7 +94,7 @@ local ENTRIES: { [string]: AssetEntry } = {
 		Notes = "Fern Hollow. COMBAT, opens N+S. 74.6 studs tall.",
 	},
 	VV_CHUNK_PATH_CLIFF_PASSAGE = {
-		AssetId = "rbxassetid://94772076568933",
+		AssetId = "rbxassetid://72645382202667",
 		Status = "UPLOADED",
 		Source = "assets/rbxm/chunks/verdant_valley/VV_STRUCTURE.rbxmx",
 		Notes = "Cliff Passage. PATH, opens E+W. 99.4 studs tall.",
@@ -213,17 +213,17 @@ local ENTRIES: { [string]: AssetEntry } = {
 		Source = "assets/rbxm/chunks/verdant_valley/VV_STRUCTURE.rbxmx",
 		Notes = "Verdant Valley BOSS Sanctuary. BOSS, opens N. 113.7 studs tall.",
 	},
-	VV_CHUNK_SIDE_TREASURE_HOLLOW = {
+	VV_CHUNK_CAP_TREASURE_HOLLOW = {
 		AssetId = "rbxassetid://112878356332230",
 		Status = "UPLOADED",
 		Source = "assets/rbxm/chunks/verdant_valley/VV_STRUCTURE.rbxmx",
-		Notes = "Treasure Hollow. SIDE, opens N. 69.0 studs tall.",
+		Notes = "Treasure Hollow. CAP, opens N. 69.0 studs tall.",
 	},
-	VV_CHUNK_SIDE_WARDENS_CLEARING = {
+	VV_CHUNK_CAP_WARDENS_CLEARING = {
 		AssetId = "rbxassetid://95197336559180",
 		Status = "UPLOADED",
 		Source = "assets/rbxm/chunks/verdant_valley/VV_STRUCTURE.rbxmx",
-		Notes = "Warden's Clearing. SIDE, opens N. 72.1 studs tall.",
+		Notes = "Warden's Clearing. CAP, opens N. 72.1 studs tall.",
 	},
 	VV_CHUNK_SIDE_FORGOTTEN_TRIAL = {
 		AssetId = "rbxassetid://95689974077956",
@@ -236,18 +236,6 @@ local ENTRIES: { [string]: AssetEntry } = {
 		Status = "UPLOADED",
 		Source = "legacy first-pass VV entry (file removed 2026-09-25); key kept as a test fixture",
 		Notes = "Arrival. One opening, south. 60.4 studs tall.",
-	},
-	VV_CHUNK_FERN_HOLLOW = {
-		AssetId = "rbxassetid://70675226143466",
-		Status = "UPLOADED",
-		Source = "assets/rbxm/chunks/verdant_valley/VV_STRUCTURE.rbxmx",
-		Notes = "Sunken and overgrown. East + north. 6-stud skirt, not 4.",
-	},
-	VV_CHUNK_MUSHROOM_GLEN = {
-		AssetId = "rbxassetid://137378616554385",
-		Status = "UPLOADED",
-		Source = "assets/rbxm/chunks/verdant_valley/VV_STRUCTURE.rbxmx",
-		Notes = "Bright and strange. A bend, west + south.",
 	},
 
 	-- === Sky Citadel chunk kit ===================================
