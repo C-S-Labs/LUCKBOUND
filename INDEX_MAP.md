@@ -540,7 +540,7 @@ _240 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### tools/sync_asset_ids.py
 
-- `tools/sync_asset_ids.py` (91) - Copy uploaded mesh ids out of saved .rbxmx files into AssetManifest.luau. · 2026-09-23
+- `tools/sync_asset_ids.py` (91) - Copy uploaded mesh ids out of saved .rbxmx files into AssetManifest.luau. · 2026-09-27
   - `sync_asset_ids.py`: read_ids:33, main:45
 
 ### Binary assets (by folder)
