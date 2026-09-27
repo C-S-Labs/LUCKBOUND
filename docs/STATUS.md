@@ -20,7 +20,7 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   | Id | Rarity | Weight | Phase | Map | Enterable? |
   |---|---|---|---|---|---|
   | `VERDANT_VALLEY` | Common | 6000 (60%) | 1 | chunk kit, 30 pieces — needs a revamp pass | ✅ |
-  | `ETHEREAL_SCAPE` | Uncommon | 1500 (15%) | 1 | chunk kit, 30 pieces — first pass, not uploaded | ✅ |
+  | `ETHEREAL_SCAPE` | Uncommon | 1500 (15%) | 1 | chunk kit, 30 pieces — revamped (grounded cloudscape, props), not uploaded | ✅ |
   | `EMBERFALL` | Rare | 1500 (15%) | 1 | blueprint written | ❌ no kit |
   | `SKY_CITADEL` | Epic | 700 (7%) | 1 | chunk kit, 36 pieces — walked and verified | ✅ |
   | `ASTRAL_REACH` | Mythic | 300 (3%) | 1 | blueprint written | ❌ no kit |

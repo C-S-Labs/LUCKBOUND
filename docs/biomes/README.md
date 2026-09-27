@@ -90,7 +90,7 @@ setting (`GameConfig.Ambience`); level 1 still gets a thin sea, never none.
 | **Sky Citadel** | ✅ `SKY_CITADEL.md` — art direction and kit | 22 pieces, delivered and uploaded 2026-09-23 |
 | **Emberfall** | ⏳ Biome Blueprint §3.3, not yet extracted here | none |
 | **Astral Reach** | ⏳ Biome Blueprint §3.5, not yet extracted here | none |
-| **Ethereal Scape** | ✅ `ETHEREAL_SCAPE.md` | 30 pieces, generated 2026-09-26, not yet uploaded |
+| **Ethereal Scape** | ✅ `ETHEREAL_SCAPE.md` | 30 pieces, REVAMPED 2026-09-26 (grounded cloudscape), not yet uploaded |
 
 Emberfall and Astral Reach have Biome Blueprint sections already and need
 extracting into this shape — they are now the largest content debt, because
