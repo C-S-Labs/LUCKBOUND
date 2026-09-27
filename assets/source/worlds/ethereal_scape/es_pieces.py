@@ -325,12 +325,14 @@ def es_sanctum(p):
         column(p, cx, WY0 - 8, z, WH - z, r=3.2)
     beam(p, "TempleIvory", (-126, WY0 - 8, WH + 1.5), (126, WY0 - 8, WH + 1.5), 9, 3)
     beam(p, "TempleGold", (-126, WY0 - 12.6, WH + 3.4), (126, WY0 - 12.6, WH + 3.4), 1.0, 1.0)
-    p.add([(-100, WY0 - 12, WH + 3), (100, WY0 - 12, WH + 3), (0, WY0 - 12, WH + 24),
-           (-100, WY0 - 4, WH + 3), (100, WY0 - 4, WH + 3), (0, WY0 - 4, WH + 24)],
-          [[0, 1, 2], [4, 3, 5], [0, 3, 4, 1]], "TempleIvory")
-    p.add([(-104, WY0 - 13, WH + 2.6), (0, WY0 - 13, WH + 25.5), (0, WY0 - 3, WH + 25.5), (-104, WY0 - 3, WH + 2.6),
-           (104, WY0 - 13, WH + 2.6), (104, WY0 - 3, WH + 2.6)],
-          [[0, 1, 2, 3], [1, 4, 5, 2]], "TempleGold")
+    # the pediment: its base is sunk into the entablature (a base face lying ON the beam's top z-fought),
+    # and its roof is two SOLID slabs -- the old single-sided sheet vanished from below (owner 2026-09-27
+    # walk: "faces appearing ... on the roof overhang right above the entrance")
+    p.add([(-100, WY0 - 12, WH + 2.4), (100, WY0 - 12, WH + 2.4), (0, WY0 - 12, WH + 24),
+           (-100, WY0 - 4, WH + 2.4), (100, WY0 - 4, WH + 2.4), (0, WY0 - 4, WH + 24)],
+          [[0, 1, 2], [4, 3, 5]], "TempleIvory")
+    for sx in (-1, 1):
+        beam(p, "TempleGold", (sx * 106, WY0 - 8, WH + 2.4), (0, WY0 - 8, WH + 25.4), 11, 1.6)
     gem(p, "PortalGlow", 0, WY0 - 12.2, WH + 12, 4.0, 3.0, 3.0, n=8)
     RZ = WH
     cx0, cy0 = 0.0, (WY0 + WY1) / 2
@@ -464,11 +466,17 @@ def es_sanctum(p):
         beam(p, "TempleGold", (math.cos(a0) * 10, wy, M_z + math.sin(a0) * 10), (math.cos(a1) * 10, wy, M_z + math.sin(a1) * 10),
              2.0, 1.4)
     box(p, "PortalGlow", 0, wy, M_z, 8, 0.8, 8)
-    # the great door: gold jambs, and its two leaves swung open against the outer wall
+    # the great door: gold jambs, and its two leaves swung open INWARD against the hall's south wall
+    # (outside, a stud off the wall, they ran into the portico's columns)
     for sx in (-1, 1):
         box(p, "TempleGold", sx * (door + 1.2), WY0, 28, 2.4, T + 1.2, 44)
-        box(p, "SoftWood", sx * (door + 16), WY0 - T / 2 - 0.5, 27, 30, 1.0, 40)
-        box(p, "TempleGold", sx * (door + 16), WY0 - T / 2 - 1.1, 27, 22, 0.4, 3)
+        # the leaf stands a stud proud of the wall (flush, its back z-fought the wall's face), hung on
+        # three gold hinges from the jamb, its gold rail seated in its face rather than buried in it
+        ly = WY0 + T / 2 + 1.5
+        box(p, "SoftWood", sx * (door + 16.5), ly, 27, 29, 1.0, 40)
+        box(p, "TempleGold", sx * (door + 16.5), ly + 0.55, 27, 22, 0.5, 3)
+        for hz in (12, 27, 42):
+            box(p, "TempleGold", sx * (door + 2.6), WY0 + T / 2 + 1.0, hz, 2.0, 2.2, 3)
     for k in range(3):
         y = -142 - k * 26
         for s in (-1, 1):
@@ -534,7 +542,9 @@ def es_skystair_up(p):
     for k in range(3):
         column(p, *at(n["a"], 12 + k * 4, 8 - k * 5), 0, 14 + k * 4, broken=k != 1)
     great_tree(p, *at(n["b"], -8, 4), z=12, trunk=6)
-    arch(p, *at(n["c"], -2, 6), 24, 26, 22, rz=math.atan2(40, -14), thick=4)
+    # the shrine arch stood across the bridge (owner 2026-09-27 walk); a waystone marks the top instead,
+    # off the path on the isle's east side
+    waystone(p, *at(n["c"], 15, 4), z=24, rz=0.3, h=14)
     for s in (-1, 1):
         lantern_post(p, *at(n["c"], s * 14, -6), z=24)
     dress(p, n["a"], trees=1, blossom=18, tufts=8, mush=2)

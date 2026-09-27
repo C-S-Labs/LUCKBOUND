@@ -118,6 +118,13 @@ function Schema.validateWorlds(worlds: { [string]: any }): (boolean, { string })
 						)
 					end
 				end
+				local share = world.Generation.CombatShare
+				if share ~= nil and (type(share) ~= "number" or share < 0 or share > 1) then
+					table.insert(
+						errors,
+						`World '{key}': Generation.CombatShare must be a number in 0..1`
+					)
+				end
 			end
 			-- Ambience: optional per world, complete when present.
 			for _, e in AmbienceCore.validate(world.Environment, `World '{key}'.Environment`) do

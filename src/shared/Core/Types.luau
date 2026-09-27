@@ -133,6 +133,7 @@ export type GenerationBlueprint = {
 	Minibosses: number?, -- MINIBOSS arenas required per layout (0 = none)
 	MaxSides: number?, -- SIDE pockets allowed per layout
 	Backdrop: number?, -- socketless BACKDROP scenery pieces ringed round the map
+	CombatShare: number?, -- target share (0..1) of COMBAT among PATH + COMBAT pieces
 }
 
 export type EnemyDefinition = {

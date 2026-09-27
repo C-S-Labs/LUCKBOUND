@@ -3188,6 +3188,7 @@ do
 	-- §7.7 UNIVERSAL GENERATION, end to end on the real kit.
 	do
 		local genFailures, minis, sides, backdrops, runs = {}, 0, 0, 0, 0
+		local ordinary, fights = 0, 0
 		for seed = 1, 40 do
 			local okA, layout = ChunkCore.assembleWithRetry(Chunks, {
 				WorldId = "ETHEREAL_SCAPE",
@@ -3214,6 +3215,8 @@ do
 				sides += if pl.Role == "SIDE" then 1 else 0
 				backdrops += if pl.Role == "BACKDROP" then 1 else 0
 				bosses += if pl.Role == "BOSS" then 1 else 0
+				ordinary += if pl.Role == "PATH" or pl.Role == "COMBAT" then 1 else 0
+				fights += if pl.Role == "COMBAT" then 1 else 0
 			end
 			if bosses ~= 1 then
 				table.insert(genFailures, `seed {seed}: {bosses} boss arenas`)
@@ -3248,6 +3251,12 @@ do
 		)
 		check("§7.7: backdrop rings the maps", backdrops >= runs * 4, tostring(backdrops))
 		check("§7.7: side pockets still appear", sides > 0, tostring(sides))
+		-- CombatShare (owner 2026-09-27: 3-4 fights on a 30-piece map was too few)
+		check(
+			"§7.7: CombatShare makes about 40% of the ordinary pieces fights",
+			ordinary > 0 and fights / ordinary >= 0.3,
+			`{fights}/{ordinary}`
+		)
 	end
 
 	-- A world WITHOUT a blueprint is untouched: the legacy passes run exactly.

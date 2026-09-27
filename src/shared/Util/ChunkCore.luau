@@ -166,6 +166,11 @@ export type AssembleOptions = {
 		Minibosses: number?,
 		MaxSides: number?,
 		Backdrop: number?,
+		-- Target share of COMBAT pieces among the ordinary (PATH + COMBAT)
+		-- pieces placed. While the map is below it, COMBAT pieces are favoured
+		-- (CombatBoost x) on every pick, so the fight count scales with the
+		-- map's size instead of being left to the raw weights.
+		CombatShare: number?,
 	}?,
 }
 
@@ -250,8 +255,22 @@ function ChunkCore.assemble(
 		end
 	end
 
+	-- Ordinary pieces placed so far, and how many of them are COMBAT (for the
+	-- blueprint's CombatShare; see weightOf).
+	local ordinaryPlaced, combatPlaced = 0, 0
+	local combatShare = options.Generation and options.Generation.CombatShare
+	local COMBAT_BOOST = 6
+
 	local function weightOf(c: any): number
-		return if won[c.Id] then c.Weight * 1000 else c.Weight
+		local w = if won[c.Id] then c.Weight * 1000 else c.Weight
+		if
+			combatShare
+			and c.Role == "COMBAT"
+			and combatPlaced < combatShare * math.max(ordinaryPlaced + 1, 1)
+		then
+			w *= COMBAT_BOOST
+		end
+		return w
 	end
 
 	local entries = byRole.ENTRY
@@ -291,6 +310,12 @@ function ChunkCore.assemble(
 		spent[#placed] = {}
 		used[chunk.Id] = (used[chunk.Id] or 0) + 1
 		consumedBy[p] = {}
+		if chunk.Role == "PATH" or chunk.Role == "COMBAT" then
+			ordinaryPlaced += 1
+			if chunk.Role == "COMBAT" then
+				combatPlaced += 1
+			end
+		end
 	end
 
 	local function spend(socketId: string?)

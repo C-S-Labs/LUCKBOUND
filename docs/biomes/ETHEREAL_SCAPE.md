@@ -217,3 +217,12 @@ Unchanged. See `assets/source/enemies/ethereal_scape/ROSTER.md`. Declared per pi
 1. **Upload and walk it in Studio.** Nothing here has been seen in Studio yet. Check the socket heights (`OffsetY`) line up across a rise, and that vertex colour survives.
 2. Tune the cloud floor's look under the world's real lighting. Review renders use flat Workbench shading, which greys `CloudWhite`.
 3. Fixtures (chests on the Treasury / Relic Altar, a vault) were not in this pass.
+
+---
+
+## Generation tuning (2026-09-27 walk)
+
+- **`Generation.CombatShare = 0.4`** — about 40% of the ordinary (PATH + COMBAT) pieces are fights, so the count
+  grows with the map. `ChunkCore` weights COMBAT pieces 6× while the map is under the share.
+- **Elevation:** socket `OffsetY` accumulates, so a climb (Skystair Up +24, East Ascent +16, Twin-Span +10) lifts
+  every piece after it, and a descent lowers them.
