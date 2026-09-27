@@ -33,6 +33,20 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 74 — 2026-09-26 — Ethereal Scape revamp: grounded cloudscape, real palette, props
+
+**Merged:** —   **Tests:** updated (CI to confirm)   **Head:** —
+
+### Done
+- Owner rejected the first kit (no platforms, bland, Sky-Citadel-like). Rebuilt as a GROUNDED cloudscape (walkable cloud, meadow mesas, cloud-bank walls) from the original scene's real palette; 30 pieces incl. 3 intersections, 384 entry, 512 Sanctum temple housing the boss.
+- New generator split into es_geometry/es_features/es_pieces/es_props; atmosphere as props (clouds, lanterns, shards, satellite isles, skyrays); validation adds walk-graph, mouth, detached, clip, entry-sky and sanctum-hall checks. 30/30 pass, 0 clips.
+- See docs/biomes/ETHEREAL_SCAPE.md.
+
+### Next
+1. CI green then merge; reload in Blender; Studio upload + walk.
+
+---
+
 ## Session 73 — 2026-09-26 — Ethereal Scape: PrebuiltMap → 30-piece chunk kit + drafted roster
 
 **Merged:** —   **Tests:** rewritten, not run locally (no Luau interpreter in this session)   **Head:** —

@@ -3084,10 +3084,10 @@ do
 	end
 	check("the kit is 30 pieces", esCount == 30, tostring(esCount))
 	check(
-		"roles match the schema doc: 1 ENTRY, 8 PATH, 14 COMBAT, 3 SIDE, 3 CAP, 1 BOSS",
+		"roles match the schema doc: 1 ENTRY, 12 PATH, 10 COMBAT, 3 SIDE, 3 CAP, 1 BOSS",
 		roleCount.ENTRY == 1
-			and roleCount.PATH == 8
-			and roleCount.COMBAT == 14
+			and roleCount.PATH == 12
+			and roleCount.COMBAT == 10
 			and roleCount.SIDE == 3
 			and roleCount.CAP == 3
 			and roleCount.BOSS == 1,
@@ -3126,10 +3126,45 @@ do
 		"the Sanctum arena only accepts a COMMUNION approach",
 		esChunks.ES_SANCTUM.Sockets[1].Kind == "COMMUNION"
 	)
+	check("the Convergence is a 4-way crossroads", #esChunks.ES_CONVERGENCE.Sockets == 4)
+	-- The revamp's intersections (owner: "I see no intersection pieces"): a four-way
+	-- and two three-way forks, so side pockets attach and a run can branch.
+	local junctions = {}
+	for id, chunk in esChunks do
+		if #chunk.Sockets >= 3 then
+			table.insert(junctions, id)
+		end
+	end
+	table.sort(junctions)
 	check(
-		"the Convergence is the only 4-socket piece (so a SIDE pocket has somewhere to attach)",
-		#esChunks.ES_CONVERGENCE.Sockets == 4
+		"three junctions: the Convergence and two forks",
+		#junctions == 3
+			and junctions[1] == "ES_CONVERGENCE"
+			and junctions[2] == "ES_FORK_THREE_TREES"
+			and junctions[3] == "ES_FORK_WAYSHRINE",
+		table.concat(junctions, ", ")
 	)
+	-- Boss and spawn may be bigger than a tile, so long as their mouths are standard.
+	check(
+		"the Sanctum is a 512-stud piece and the Entry 384, both with standard mouths",
+		esChunks.ES_SANCTUM.SizeX == 512
+			and esChunks.ES_SANCTUM.SizeZ == 512
+			and esChunks.ES_SANCTUM.Sockets[1].Width == 64
+			and esChunks.ES_ENTRY.SizeX == 384
+			and esChunks.ES_ENTRY.Sockets[1].Width == 44
+	)
+	-- The atmosphere is props (CHUNK_AUTHORING.md convention 6), not baked geometry.
+	local esProps = Props.ETHEREAL_SCAPE
+	check("Ethereal Scape ships an atmosphere prop set", esProps ~= nil and #esProps.Library >= 6)
+	local hasRay = false
+	for _, rows in esProps.Placements do
+		for _, row in rows do
+			if row.Prop == "prop_es_skyray" and row.Anim == "Bird" then
+				hasRay = true
+			end
+		end
+	end
+	check("skyrays circle the clearings (its own flyer, not Sky Citadel's birds)", hasRay)
 
 	-- SPAN and COMMUNION are disjoint from every other world's kind set.
 	local kindsFor = function(worldId)
