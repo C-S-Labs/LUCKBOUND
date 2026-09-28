@@ -40,7 +40,7 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   - ~808 tests, updated 2026-09-26 for the Ethereal Scape amendment below (exact count pending the next CI run).
 
 - **Leaderboard + chat panel** (2026-09-27): custom house-style replacements; columns are config data (rank + name
-  today). Needs a Studio walk. See PLAYER_UI §3.7.
+  today). Chat is top-left; opening it collapses the hub rail, which sits lower (RailOffsetY). Needs a Studio walk. See PLAYER_UI §3.7.
 
 ## 2. Next — pick up here
 

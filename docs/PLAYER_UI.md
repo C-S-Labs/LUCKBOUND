@@ -223,7 +223,9 @@ a stat, have the server `player:SetAttribute("FateLevel", n)` and add a config r
 names the attribute to rank by (highest first); while it is unset, rank is alphabetical. Today's columns are rank
 and name only, as the owner asked on 2026-09-27.
 
-**Chat** (`client/UI/ChatPanel.luau`) sits bottom-left, and **/** focuses it. It hides TextChatService's default
+**Chat** (`client/UI/ChatPanel.luau`) sits **top-left**, under Roblox's top bar, and **/** focuses it. Opening it
+collapses the hub rail (`HubMenu.collapse`, wired in `init.client.luau`). The rail sits `GameConfig.HubMenu.RailOffsetY`
+px below centre so the two do not overlap. It hides TextChatService's default
 window and input bar, but messages still go through TextChatService (`RBXGeneral:SendAsync` and `MessageReceived`),
 so filtering, mutes and bubble chat are unchanged. Your name shows in gold, other players' names in secondary text,
 and system lines in AccentCool. After `Chat.FadeAfterSeconds` without activity the panel dims. A place still on

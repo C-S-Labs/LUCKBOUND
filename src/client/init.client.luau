@@ -74,6 +74,8 @@ ChatPanel.init()
 -- The hub menu after the roll UI: it subscribes to FateRoll's rolling signal
 -- so it can get out of the way during a reveal.
 HubMenu.init()
+-- Opening the chat folds the rail away: both live on the left edge.
+ChatPanel.onOpened(HubMenu.collapse)
 -- Movement waits for PLAY. The loading screen holds the character at
 -- WalkSpeed 0, and this controller writes WalkSpeed every frame -- starting it
 -- early would simply undo the hold and let the player walk away from the

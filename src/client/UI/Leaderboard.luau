@@ -20,7 +20,7 @@ local UIKit = require(script.Parent.UIKit)
 local Leaderboard = {}
 
 local CONFIG = GameConfig.Leaderboard
-local HEADER_HEIGHT = 34
+local HEADER_HEIGHT = 40
 
 local player = Players.LocalPlayer
 local panel: Frame

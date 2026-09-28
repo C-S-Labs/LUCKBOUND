@@ -33,6 +33,23 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 92 — 2026-09-27 — Chat to top-left, rail drops and collapses when chat opens
+**Merged:** see the PR for this branch   **Tests:** CI   **Branch:** `claude/chat-top-left`
+
+### Done
+- Owner: chat should stay top-left; move the sidebar down a tad; the sidebar closes when chat opens; slightly more
+  space between PLAYER and the divider. So: the chat is anchored top-left. `GameConfig.HubMenu.RailOffsetY` (90)
+  lowers the rail, arrow and panel. New `HubMenu.collapse()` is fired by `ChatPanel.onOpened`. The leaderboard
+  header grows from 34 to 40px, so the headings no longer touch the divider.
+
+### Stopped at
+Not walked in Studio. Check that the rail clears the chat on small or phone screens, and tune RailOffsetY if not.
+
+### Next
+1. Studio walk of both panels.
+
+---
+
 ## Session 91 — 2026-09-27 — Custom leaderboard + chat panel in the house style
 **Merged:** see the PR for this branch   **Tests:** CI (luau not installed locally)   **Branch:** `claude/leaderboard-chat-ui`
 

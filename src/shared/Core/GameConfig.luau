@@ -883,6 +883,10 @@ local GameConfig = {
 	HubMenu = {
 		Enabled = true,
 
+		-- Pixels the rail sits below the vertical centre, to clear the chat
+		-- window in the top-left corner (GameConfig.Chat).
+		RailOffsetY = 90,
+
 		-- Start collapsed on a phone. The rail plus an open panel is most of a
 		-- portrait screen, and the owner's note was explicit: the HUB must not
 		-- be overwhelming. On desktop the rail is a sliver of a wide screen, so

@@ -25,6 +25,7 @@ local panel: Frame
 local log: ScrollingFrame
 local box: TextBox
 local count = 0
+local openedListeners: { () -> () } = {}
 local lastActivity = 0
 
 local function hex(color: Color3): string
@@ -136,8 +137,9 @@ local function build()
 
 	panel = UIKit.surface(gui, "PANEL")
 	panel.Name = "Panel"
-	panel.AnchorPoint = Vector2.new(0, 1)
-	panel.Position = UDim2.new(0, UITheme.Space.MD, 1, -UITheme.Space.MD)
+	-- Top-left, under Roblox's top bar (IgnoreGuiInset is off). The hub rail
+	-- sits low enough to clear it, and collapses when the chat opens.
+	panel.Position = UDim2.fromOffset(UITheme.Space.MD, UITheme.Space.SM)
 	panel.Size = UDim2.fromOffset(CONFIG.Width, CONFIG.Height)
 	UITheme.pad(panel, UITheme.Space.SM)
 	local constraint = Instance.new("UISizeConstraint")
@@ -167,7 +169,12 @@ local function build()
 			box.Text = box.Text:sub(1, CONFIG.MaxLength)
 		end
 	end)
-	box.Focused:Connect(wake)
+	box.Focused:Connect(function()
+		wake()
+		for _, listener in openedListeners do
+			task.spawn(listener)
+		end
+	end)
 	box.FocusLost:Connect(function(enterPressed)
 		if enterPressed then
 			send()
@@ -175,6 +182,11 @@ local function build()
 		wake()
 	end)
 	panel.MouseEnter:Connect(wake)
+end
+
+--- Fires whenever the player opens the chat to type.
+function ChatPanel.onOpened(listener: () -> ()): ()
+	table.insert(openedListeners, listener)
 end
 
 function ChatPanel.init(): ()
