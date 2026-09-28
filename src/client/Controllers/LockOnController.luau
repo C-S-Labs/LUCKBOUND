@@ -149,6 +149,8 @@ local function release()
 	if camera and camera.CameraType == Enum.CameraType.Scriptable then
 		camera.CameraType = Enum.CameraType.Custom
 	end
+	-- Hand the mouse back (the shoulder camera re-captures it next frame if on).
+	UserInputService.MouseBehavior = Enum.MouseBehavior.Default
 end
 
 --- Every tagged thing in the world, measured from the camera.
@@ -327,6 +329,10 @@ local function update(dt: number)
 
 	camera.CameraType = Enum.CameraType.Scriptable
 	camera.CFrame = cameraCFrame :: CFrame
+	-- The mouse is captured while locked: the camera does not use it, and
+	-- Roblox only reports mouse Delta for a captured mouse, which the
+	-- target-switch flick needs (found on the owner's walk, 2026-09-28).
+	UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
 end
 
 --- `deps` = { Locomotion }. Called once PLAY is pressed, after movement.
@@ -348,6 +354,7 @@ function LockOnController.init(deps: any): ()
 	local mouseTravel = 0
 	local mouseTravelStarted = 0
 	local stickArmed = true
+	local lastMouseX: number? = nil
 	UserInputService.InputChanged:Connect(function(input, processed)
 		if processed or not target then
 			return
@@ -358,7 +365,14 @@ function LockOnController.init(deps: any): ()
 				mouseTravel = 0
 				mouseTravelStarted = now
 			end
-			mouseTravel += input.Delta.X
+			-- Delta when the mouse is captured; the change in position if
+			-- something released it, so the flick works either way.
+			local dx = input.Delta.X
+			if dx == 0 and lastMouseX then
+				dx = input.Position.X - lastMouseX
+			end
+			lastMouseX = input.Position.X
+			mouseTravel += dx
 			local direction = LockOnCore.flick(mouseTravel, tuning.SwitchMousePixels)
 			if direction ~= 0 then
 				mouseTravel = 0

@@ -124,10 +124,20 @@ edge, and a 0.12s buffer so a press just before landing fires on landing.
   camera or a lock-on, the character **keeps facing forward** and rolls the way you
   pressed: front, back, left or right, each with its own animation. Without either,
   it turns to roll the way it is going, so the roll is always "front".
-- **The look, toned down:** faint gold afterimages along the path, a 3° camera
-  widen that settles back, and, for a direction with no clip yet, a procedural
-  tumble (forward, backward, or over the shoulder to either side). Settings:
-  `RollGhost*`, `RollTumble*`, `RollFovKickDegrees`.
+- **The look:** a **discrete burst of wind** where the move starts (owner, replacing
+  afterimages): a pale ring bursts out at the feet and a few short streaks are left
+  behind, gone in 0.3s. There's also a 3° camera widen and, for a direction with no
+  clip yet, a procedural tumble (forward, backward, or over the shoulder to either
+  side). Settings: `RollWind*`, `RollTumble*`, `RollFovKickDegrees`.
+- **Air dash (the jump dash, owner 2026-09-28):** roll pressed **in the air** gives a
+  short horizontal burst (44 studs/s for 0.2s ≈ 9 studs):
+  - it goes the held way, or forward with no direction held;
+  - it holds height, so there is no arc;
+  - once per airtime, refilled on landing;
+  - free in the hub, 18 stamina in an expedition;
+  - it has the same four-direction rule and wind burst as the roll, leans into its
+    direction, and has **no** invulnerable window.
+  Clips: `AirDashForward/Backward/Left/Right`.
 - **The invulnerable window is declared, not applied.** `LocomotionCore.isInvulnerable`
   answers it, and the combat layer will call it when it resolves hits (§7.6).
   Nothing is invulnerable today.

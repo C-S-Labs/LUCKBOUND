@@ -54,6 +54,13 @@ return {
 	-- The backstep (roll pressed with no direction), one-shot.
 	Backstep = "",
 
+	-- The air dash (roll pressed in the air), one per direction relative to
+	-- facing, one-shot, timed to GameConfig.Locomotion.AirDashDurationSeconds.
+	AirDashForward = "",
+	AirDashBackward = "",
+	AirDashLeft = "",
+	AirDashRight = "",
+
 	-- Turning on the spot, one-shot, played when standing and turning fast.
 	TurnLeft = "",
 	TurnRight = "",

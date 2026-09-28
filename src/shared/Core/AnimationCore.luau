@@ -299,6 +299,10 @@ AnimationCore.SLOTS = {
 	"RollLeft",
 	"RollRight",
 	"Backstep",
+	"AirDashForward",
+	"AirDashBackward",
+	"AirDashLeft",
+	"AirDashRight",
 	"TurnLeft",
 	"TurnRight",
 }

@@ -31,7 +31,6 @@ local Workspace = game:GetService("Workspace")
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local AnimationCore = require(Root.Core.AnimationCore)
 local GameConfig = require(Root.Core.GameConfig)
-local UITheme = require(Root.Core.UITheme)
 local PlayerAnimations = require(Root.Content.Animations.Player)
 
 local CharacterAnimator = {}
@@ -89,11 +88,14 @@ local lastFacingYaw: number? = nil
 local landKind = "NONE"
 local landedAt = -math.huge
 
--- The current roll: its direction relative to facing, "BACKSTEP", or nil.
+-- The current roll: "ROLL" / "BACKSTEP" / "AIRDASH", its direction relative
+-- to facing ("FORWARD" / "BACKWARD" / "LEFT" / "RIGHT"), and whether a clip
+-- is playing it (then the procedural layer stays out of the way).
 local rollKind: string? = nil
+local rollRelative = "FORWARD"
+local rollHasClip = false
 local rollStartedAt = 0
 local rollDuration = 1
-local nextGhostAt = 0
 local fovBase: number? = nil
 
 -- === setup ===========================================================
@@ -376,17 +378,35 @@ function CharacterAnimator.onLand(fallSpeed: number, now: number): ()
 	end
 end
 
---- A roll starting. `relative` is "FORWARD" / "BACKWARD" / "LEFT" /
---- "RIGHT" (the roll's direction against facing) or "BACKSTEP".
-function CharacterAnimator.onRoll(relative: string, now: number, duration: number): ()
-	rollKind, rollStartedAt, rollDuration = relative, now, math.max(duration, 1e-3)
-	nextGhostAt = 0
-	local slot = if relative == "BACKSTEP"
+--- Title-cases a direction for a slot name: "FORWARD" -> "Forward".
+local function slotDirection(relative: string): string
+	return string.sub(relative, 1, 1) .. string.lower(string.sub(relative, 2))
+end
+
+local burstWind: (BasePart, Vector3) -> ()
+
+--- A roll, backstep or air dash starting. `kind` is "ROLL" / "BACKSTEP" /
+--- "AIRDASH"; `relative` its direction against facing; `worldDirection`
+--- the way it actually goes, for the wind.
+function CharacterAnimator.onRoll(
+	kind: string,
+	relative: string,
+	now: number,
+	duration: number,
+	worldDirection: Vector3
+): ()
+	rollKind, rollRelative = kind, relative
+	rollStartedAt, rollDuration = now, math.max(duration, 1e-3)
+	local slot = if kind == "BACKSTEP"
 		then "Backstep"
-		else "Roll" .. string.sub(relative, 1, 1) .. string.lower(string.sub(relative, 2))
-	-- A clip for this direction replaces the procedural tumble.
-	if playOneShot(slot, duration) then
-		rollKind = relative .. "_CLIP"
+		elseif kind == "AIRDASH" then "AirDash" .. slotDirection(relative)
+		else "Roll" .. slotDirection(relative)
+	-- A clip for this move replaces the procedural layer.
+	rollHasClip = playOneShot(slot, duration)
+
+	local r = rig
+	if r and GameConfig.Locomotion.RollWind then
+		burstWind(r.Root, worldDirection)
 	end
 
 	local camera = Workspace.CurrentCamera
@@ -399,43 +419,79 @@ end
 
 -- === the roll's look =================================================
 
---- One afterimage: a faint copy of every visible part, left in place.
-local function dropGhost(character: Model)
+-- A pale, faintly blue white: air, not light. Kept apart from gold, which
+-- the game uses for things to press.
+local WIND_COLOR = Color3.fromRGB(226, 238, 255)
+
+local function windPart(size: Vector3, cf: CFrame, transparency: number): Part
+	local part = Instance.new("Part")
+	part.Anchored = true
+	part.CanCollide = false
+	part.CanQuery = false
+	part.CanTouch = false
+	part.CastShadow = false
+	part.Material = Enum.Material.ForceField
+	part.Color = WIND_COLOR
+	part.Transparency = transparency
+	part.Size = size
+	part.CFrame = cf
+	return part
+end
+
+--- A DISCRETE BURST OF WIND where the move starts: a thin ring that bursts
+--- out at the feet, and a few short streaks left behind along the way it
+--- goes. Everything is gone in RollWindSeconds. Owner, 2026-09-28: instead
+--- of afterimages.
+burstWind = function(root: BasePart, worldDirection: Vector3)
 	local tune = GameConfig.Locomotion
+	local seconds = tune.RollWindSeconds
+	local flat = Vector3.new(worldDirection.X, 0, worldDirection.Z)
+	local dir = if flat.Magnitude > 1e-3
+		then flat.Unit
+		else Vector3.new(root.CFrame.LookVector.X, 0, root.CFrame.LookVector.Z).Unit
+	local feet = root.Position - Vector3.new(0, root.Size.Y / 2 + 2, 0)
+
 	local folder = Instance.new("Folder")
-	folder.Name = "LuckboundRollGhost"
-	local info =
-		TweenInfo.new(tune.RollGhostFadeSeconds, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-	for _, part in character:GetDescendants() do
-		if part:IsA("BasePart") and part.Transparency < 1 and part.Name ~= "HumanoidRootPart" then
-			local ok, copy = pcall(function()
-				return part:Clone()
-			end)
-			if ok and copy then
-				for _, child in copy:GetChildren() do
-					if not child:IsA("SpecialMesh") then
-						child:Destroy()
-					end
-				end
-				copy.Anchored = true
-				copy.CanCollide = false
-				copy.CanQuery = false
-				copy.CanTouch = false
-				copy.CastShadow = false
-				copy.Material = Enum.Material.Neon
-				copy.Color = UITheme.AccentGold
-				copy.Transparency = tune.RollGhostTransparency
-				if copy:IsA("MeshPart") then
-					copy.TextureID = ""
-				end
-				copy.CFrame = part.CFrame
-				copy.Parent = folder
-				TweenService:Create(copy, info, { Transparency = 1 }):Play()
-			end
-		end
+	folder.Name = "LuckboundRollWind"
+	local fade = TweenInfo.new(seconds, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
+
+	-- The ring: a very thin cylinder laid flat (a cylinder's axis is its X).
+	local startSize = tune.RollWindRingStartStuds
+	local endSize = tune.RollWindRingEndStuds
+	local ring = windPart(
+		Vector3.new(0.12, startSize, startSize),
+		CFrame.new(feet) * CFrame.Angles(0, 0, math.pi / 2),
+		tune.RollWindTransparency
+	)
+	ring.Shape = Enum.PartType.Cylinder
+	ring.Parent = folder
+	TweenService
+		:Create(ring, fade, { Size = Vector3.new(0.05, endSize, endSize), Transparency = 1 })
+		:Play()
+
+	-- The streaks: thin slivers left behind, drawn out backward as they fade.
+	local right = dir:Cross(Vector3.yAxis)
+	local count = tune.RollWindStreaks
+	for i = 1, count do
+		local across = (i - (count + 1) / 2) * 0.9
+		local height = 0.8 + (i % 2) * 0.9
+		local at = feet + Vector3.new(0, height, 0) + right * across - dir * 1.5
+		local length = tune.RollWindStreakLengthStuds
+		local streak = windPart(
+			Vector3.new(0.08, 0.08, length * 0.4),
+			CFrame.lookAt(at, at + dir),
+			tune.RollWindTransparency
+		)
+		streak.Parent = folder
+		TweenService:Create(streak, fade, {
+			Size = Vector3.new(0.03, 0.03, length),
+			CFrame = CFrame.lookAt(at - dir * length * 0.5, at - dir * length * 0.5 + dir),
+			Transparency = 1,
+		}):Play()
 	end
+
 	folder.Parent = Workspace
-	task.delay(tune.RollGhostFadeSeconds + 0.1, function()
+	task.delay(seconds + 0.1, function()
 		folder:Destroy()
 	end)
 end
@@ -486,8 +542,10 @@ function CharacterAnimator.update(ctx: any, dt: number): ()
 	local acceleration = if dt > 0 then (forwardSpeed - lastForwardSpeed) / dt else 0
 	lastForwardSpeed = forwardSpeed
 
-	local rolling = ctx.Mode == "ROLL"
-	local airborne = ctx.Mode == "AIR"
+	-- An air dash is a roll in the rules but reads as airborne to the body.
+	local airDash = rollKind == "AIRDASH" and ctx.RollMoving
+	local rolling = ctx.Mode == "ROLL" and not airDash
+	local airborne = ctx.Mode == "AIR" or airDash
 	local blend = AnimationCore.smoothAlpha(dt, tune.FadeSeconds)
 	local airBlend = AnimationCore.smoothAlpha(dt, tune.AirFadeSeconds)
 
@@ -570,18 +628,29 @@ function CharacterAnimator.update(ctx: any, dt: number): ()
 	local tumblePitch, tumbleBank, tumbleDip = 0, 0, 0
 	local kind = rollKind
 	if kind and ctx.RollMoving then
-		local progress = (now - rollStartedAt) / rollDuration
-		if kind == "BACKSTEP" then
+		local progress = math.clamp((now - rollStartedAt) / rollDuration, 0, 1)
+		local arc = math.sin(progress * math.pi)
+		if rollHasClip then
+			-- The clip is the whole move.
+		elseif kind == "BACKSTEP" then
 			-- A short hop back: the body leans away and dips.
-			local arc = math.sin(math.clamp(progress, 0, 1) * math.pi)
 			tumblePitch = 0.3 * arc
 			tumbleDip = 0.4 * arc
-		elseif GameConfig.Locomotion.RollTumble and not string.find(kind, "_CLIP", 1, true) then
-			tumblePitch, tumbleBank, tumbleDip = AnimationCore.tumble(kind, progress, GameConfig)
-		end
-		if GameConfig.Locomotion.RollGhosts and now >= nextGhostAt then
-			nextGhostAt = now + GameConfig.Locomotion.RollGhostIntervalSeconds
-			dropGhost(r.Character)
+		elseif kind == "AIRDASH" then
+			-- A lean into the dash's direction, relative to facing.
+			local lean = math.rad(GameConfig.Locomotion.AirDashLeanDegrees) * arc
+			if rollRelative == "FORWARD" then
+				tumblePitch = -lean
+			elseif rollRelative == "BACKWARD" then
+				tumblePitch = lean
+			elseif rollRelative == "LEFT" then
+				tumbleBank = lean
+			else
+				tumbleBank = -lean
+			end
+		elseif GameConfig.Locomotion.RollTumble then
+			tumblePitch, tumbleBank, tumbleDip =
+				AnimationCore.tumble(rollRelative, progress, GameConfig)
 		end
 	elseif kind and not rolling then
 		rollKind = nil

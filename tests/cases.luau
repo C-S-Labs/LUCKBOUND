@@ -5682,12 +5682,70 @@ do
 		end)()
 	)
 
+	-- === the air dash (the jump dash) ==============================
 	check(
-		"no roll in the air",
+		"roll pressed in the air is an air dash",
 		(function()
-			local ok, reason =
-				LocomotionCore.canRoll(frame(state(), 1, { Grounded = false }), 1, EXP)
+			local air = frame(state(), 1, { Grounded = false })
+			local _, kind = LocomotionCore.roll(air, 1, false, EXP)
+			return kind == "AIRDASH"
+		end)()
+	)
+	check(
+		"one air dash per airtime",
+		(function()
+			local air = frame(state(), 1, { Grounded = false })
+			local dashed = LocomotionCore.roll(air, 1, true, EXP)
+			local later = 1 + L.AirDashDurationSeconds + 0.05
+			dashed = frame(dashed, later, { Grounded = false })
+			local ok, reason = LocomotionCore.canRoll(dashed, later, EXP)
 			return not ok and reason == "airborne"
+		end)()
+	)
+	check(
+		"landing gives the air dash back",
+		(function()
+			local air = frame(state(), 1, { Grounded = false })
+			local dashed = LocomotionCore.roll(air, 1, true, EXP)
+			local landed = frame(dashed, 2, { Grounded = true })
+			return landed.AirDashesUsed == 0
+		end)()
+	)
+	check(
+		"an air dash moves at its own speed, then hands straight back to the fall",
+		(function()
+			local air = frame(state(), 1, { Grounded = false })
+			local dashed = LocomotionCore.roll(air, 1, true, EXP)
+			local after = 1 + L.AirDashDurationSeconds + 0.001
+			return LocomotionCore.targetSpeed(dashed, 1.05, EXP) == L.AirDashSpeed
+				and LocomotionCore.mode(dashed, 1.05) == "ROLL"
+				and LocomotionCore.mode(dashed, after) == "AIR"
+		end)()
+	)
+	check(
+		"an air dash costs stamina in an expedition, nothing in the hub",
+		(function()
+			local exp = LocomotionCore.roll(frame(state(), 1, { Grounded = false }), 1, true, EXP)
+			local hubAir = frame(state(HUB), 1, { Grounded = false }, HUB)
+			local hub = LocomotionCore.roll(hubAir, 1, true, HUB)
+			return exp.Stamina == L.StaminaMax - EXP.AirDashStaminaCost
+				and hub.Stamina == L.StaminaMax
+		end)()
+	)
+	check(
+		"an air dash has no invulnerable window",
+		(function()
+			local dashed =
+				LocomotionCore.roll(frame(state(), 1, { Grounded = false }), 1, true, EXP)
+			return not LocomotionCore.isInvulnerable(dashed, 1.05, EXP)
+		end)()
+	)
+	check(
+		"a weapon lock blocks the air dash too",
+		(function()
+			local air = frame(state(), 1, { Grounded = false })
+			local locked = LocomotionCore.lock(air, 1, { DurationSeconds = 1 }, EXP)
+			return not LocomotionCore.canRoll(locked, 1.1, EXP)
 		end)()
 	)
 
@@ -6153,7 +6211,7 @@ do
 	)
 	check(
 		"the roll look stays subtle",
-		L.RollGhostTransparency >= 0.6 and L.RollFovKickDegrees <= 5
+		L.RollWindTransparency >= 0.4 and L.RollWindSeconds <= 0.4 and L.RollFovKickDegrees <= 5
 	)
 
 	-- === turn in place ==============================================

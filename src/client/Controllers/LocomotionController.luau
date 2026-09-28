@@ -119,9 +119,9 @@ end
 
 local function beginRoll(kind: string)
 	local now = os.clock()
-	local relative = "BACKSTEP"
+	local relative = "BACKWARD"
 	local duration = tuning.BackstepDurationSeconds
-	if kind == "ROLL" then
+	if kind == "ROLL" or kind == "AIRDASH" then
 		local held = moveDirection()
 		rollDirection = if held.Magnitude > 0 then held.Unit else facing
 		if not facingHeld() then
@@ -130,12 +130,14 @@ local function beginRoll(kind: string)
 		local forward, right =
 			AnimationCore.localVelocity(facing.X, facing.Z, rollDirection.X, rollDirection.Z)
 		relative = AnimationCore.rollDirection(forward, right)
-		duration = tuning.RollDurationSeconds
+		duration = if kind == "AIRDASH"
+			then tuning.AirDashDurationSeconds
+			else tuning.RollDurationSeconds
 	else
 		-- A backstep keeps facing forward and hops away from it.
 		rollDirection = -facing
 	end
-	CharacterAnimator.onRoll(relative, now, duration)
+	CharacterAnimator.onRoll(kind, relative, now, duration, rollDirection)
 end
 
 local function onJumpPressed()
@@ -364,6 +366,13 @@ local function step(dt: number)
 	end
 	if now >= groundIgnoreUntil then
 		cm.ActiveController = if sensed then ground else air
+	end
+
+	-- The air dash drives the body directly: straight along its direction at
+	-- full speed, holding height. The air controller's steering is too soft
+	-- for a burst, and gravity would bend it into an arc.
+	if state.RollKind == "AIRDASH" and LocomotionCore.rollMoving(state, now) then
+		root.AssemblyLinearVelocity = rollDirection * speed
 	end
 
 	-- === landings ===

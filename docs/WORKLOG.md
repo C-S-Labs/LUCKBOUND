@@ -34,6 +34,30 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 103 — 2026-09-28 — Wind burst, air dash, lock-on switch fix
+**Merged:** see the PR for this branch   **Tests:** 1004 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner's walk: the run animation works)
+- **Roll look:** afterimages replaced by a discrete wind burst: a ForceField ring at the feet expanding and
+  fading, plus streaks left behind (`RollWind*`).
+- **Air dash (jump dash):** roll in the air, once per airtime. It holds height and is driven directly along its
+  direction. There are 4 directional slots (`AirDash*`) plus a procedural lean fallback. Hub free, expedition 18
+  stamina, no i-frames. `LocomotionCore` gains `AirDashesUsed` and kind `"AIRDASH"`. 6 tests.
+- **Lock-on switching bug:** a mouse flick never registered because Roblox reports `InputObject.Delta` only for a
+  captured mouse. The mouse is now captured (LockCenter) while locked and handed back on release, and the flick
+  falls back to the position change.
+- Animation brief, abilities doc and Test K updated.
+
+### Decisions made
+- Owner asked whether Claude can author the animation set; answer and plan are in chat (a KeyframeSequence
+  generator). Awaiting a go-ahead.
+
+### Next
+1. Owner re-walks: the wind burst, the air dash, and lock-on switching.
+2. On a go-ahead: generate the player clips as KeyframeSequences.
+
+---
+
 ## Session 102 — 2026-09-28 — Prep for hand-made player animations
 **Merged:** see the PR for this branch   **Tests:** 998 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 

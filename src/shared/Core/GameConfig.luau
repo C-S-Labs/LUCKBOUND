@@ -1061,6 +1061,7 @@ local GameConfig = {
 				SprintDrainPerSecond = 0,
 				-- A hard landing slows you for this long (see HardLanding*).
 				HardLandingRecoverySeconds = 0.12,
+				AirDashStaminaCost = 0,
 			},
 			EXPEDITION = {
 				-- The middle ground the owner asked for: heavier than the hub,
@@ -1076,6 +1077,7 @@ local GameConfig = {
 				RollStaminaCost = 22,
 				SprintDrainPerSecond = 14,
 				HardLandingRecoverySeconds = 0.3,
+				AirDashStaminaCost = 18,
 			},
 		},
 
@@ -1130,20 +1132,33 @@ local GameConfig = {
 		-- moment it can. Chaining rolls is the feel; mashing is not required.
 		RollBufferSeconds = 0.2,
 
+		-- === AIR DASH (the jump dash) ===
+		-- Roll pressed in the air: a short horizontal burst the held way (or
+		-- forward), holding height for its length, once per airtime.
+		-- Movement only -- no invulnerable window. Owner, 2026-09-28.
+		AirDashes = 1,
+		AirDashSpeed = 44, -- studs/s
+		AirDashDurationSeconds = 0.2, -- ~9 studs
+
 		-- === ROLL LOOK ===
-		-- Toned down after the owner's walk (2026-09-28): a hint of speed, not
-		-- a light show. Afterimages: faint gold copies of the character left
-		-- along the path, one every GhostInterval, each fading over GhostFade.
-		RollGhosts = true,
-		RollGhostIntervalSeconds = 0.09,
-		RollGhostFadeSeconds = 0.2,
-		RollGhostTransparency = 0.78, -- how solid a fresh ghost starts
+		-- A discrete burst of wind, not afterimages (owner, 2026-09-28): a
+		-- pale ring that bursts out at the feet and a few short streaks left
+		-- behind, all gone in a moment. Used for the roll, backstep and dash.
+		RollWind = true,
+		RollWindSeconds = 0.3,
+		RollWindRingStartStuds = 2,
+		RollWindRingEndStuds = 9,
+		RollWindTransparency = 0.5, -- how solid it starts
+		RollWindStreaks = 3,
+		RollWindStreakLengthStuds = 5,
 		-- The procedural roll while there is no clip for that direction: the
 		-- body tumbles forward, backward or sideways, relative to facing,
 		-- dipping this far at its lowest. Drawn locally; other players see
 		-- the clip once one is filled in (Content/Animations/Player.luau).
 		RollTumble = true,
 		RollTumbleDropStuds = 0.9,
+		-- The air dash's procedural lean toward its direction, in degrees.
+		AirDashLeanDegrees = 28,
 		-- The camera widens by this many degrees at the start of a roll and
 		-- settles back over the roll.
 		RollFovKickDegrees = 3,

@@ -514,8 +514,12 @@ The first thing anyone sees.
    sliding backward, report it: the reversed clip didn't take.*
 5. **Press Q while moving, then Q standing still.** ✅ Pass: a ~17-stud roll in
    the direction you held, with the body tumbling forward, gold afterimages along
-   the path and a brief camera widen. Then a short hop backward that keeps you
+   the path and a brief camera widen. *(Superseded: the afterimages are now a wind
+   burst, a pale ring and streaks at the start.)* Then a short hop backward that keeps you
    facing forward, with afterimages and no tumble. In the hub neither costs stamina.
+   **Jump, then press Q in the air (with and without a direction).** ✅ Pass: a
+   short flat burst the held way (forward with none) with a wind burst, once per
+   jump. A second Q before landing does nothing.
    **With Left Ctrl on, press Q with each of W, A, S, D.** ✅ Pass: you keep
    facing forward and roll front, left, back and right, each with its own tumble.
    The afterimages are faint.
@@ -547,7 +551,8 @@ The first thing anyone sees.
 13. **Run away past ~120 studs, or middle-click again.** ✅ Pass: the lock drops
     and the normal camera returns.
 14. **Middle-click with no boss in view.** ✅ Pass: nothing happens.
-15. **`/dummies 5`, then lock on to the middle one and flick the mouse right.**
+15. **`/dummies 5`, then lock on to the middle one and flick the mouse right.** The
+    mouse cursor hides while locked (it's captured).
     ✅ Pass: the diamond moves one pillar right. Flick again: one more. At the end
     of the row a flick right does nothing.
 16. **Gamepad: push the right stick sideways, let it return, push again.** ✅

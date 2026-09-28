@@ -81,6 +81,8 @@ function LocomotionCore.newState(t: any, now: number): any
 		RollStartedAt = 0,
 		RollEndsAt = 0,
 		RollRecoverUntil = 0,
+		-- Air dashes spent since leaving the floor (refilled on landing).
+		AirDashesUsed = 0,
 		-- A roll press that arrived too early, and which kind it asked for.
 		RollBufferedUntil = 0,
 		RollBufferedKind = nil,
@@ -114,7 +116,8 @@ end
 --- (docs/RESERVED.md): the combat layer asks this when it resolves a hit.
 --- Nothing here acts on it.
 function LocomotionCore.isInvulnerable(state: any, now: number, t: any): boolean
-	if not state.RollKind then
+	if not state.RollKind or state.RollKind == "AIRDASH" then
+		-- The air dash is movement only: no invulnerable window.
 		return false
 	end
 	local into = now - state.RollStartedAt
@@ -166,7 +169,14 @@ function LocomotionCore.canRoll(state: any, now: number, t: any): (boolean, stri
 		return false, "rolling"
 	end
 	if not state.Grounded then
-		return false, "airborne"
+		-- In the air the roll button is the AIR DASH, once per airtime.
+		if (state.AirDashesUsed or 0) >= t.AirDashes then
+			return false, "airborne"
+		end
+		if not hasStaminaFor(state, t.AirDashStaminaCost) then
+			return false, "stamina"
+		end
+		return true, nil
 	end
 	if not hasStaminaFor(state, t.RollStaminaCost) then
 		return false, "stamina"
@@ -176,26 +186,36 @@ end
 
 local function startRoll(state: any, now: number, kind: string, t: any): any
 	local updated = table.clone(state)
-	local duration = if kind == "BACKSTEP" then t.BackstepDurationSeconds else t.RollDurationSeconds
-	local cost = if kind == "BACKSTEP"
-		then t.RollStaminaCost * t.BackstepStaminaFraction
-		else t.RollStaminaCost
+	local duration, cost, recovery
+	if kind == "AIRDASH" then
+		-- No recovery: the dash hands straight back to the fall.
+		duration, cost, recovery = t.AirDashDurationSeconds, t.AirDashStaminaCost, 0
+		updated.AirDashesUsed = (state.AirDashesUsed or 0) + 1
+	elseif kind == "BACKSTEP" then
+		duration = t.BackstepDurationSeconds
+		cost = t.RollStaminaCost * t.BackstepStaminaFraction
+		recovery = t.RollRecoverySeconds
+	else
+		duration, cost, recovery = t.RollDurationSeconds, t.RollStaminaCost, t.RollRecoverySeconds
+	end
 	spend(updated, cost, now, t)
 	updated.RollKind = kind
 	updated.RollStartedAt = now
 	updated.RollEndsAt = now + duration
-	updated.RollRecoverUntil = now + duration + t.RollRecoverySeconds
+	updated.RollRecoverUntil = now + duration + recovery
 	updated.RollBufferedUntil = 0
 	updated.RollBufferedKind = nil
 	updated.Sprinting = false
 	return updated
 end
 
---- PRESS ROLL. `hasDirection` = the player is holding a direction (a roll
---- that way) or not (a backstep). Returns the new state and the kind started,
---- or nil. A press during a roll's last moments is buffered, not dropped.
+--- PRESS ROLL. On the ground: a roll the held way (`hasDirection`) or a
+--- backstep (none). In the air: an AIR DASH, once per airtime, the held way
+--- or forward. Returns the new state and the kind started ("ROLL",
+--- "BACKSTEP", "AIRDASH"), or nil. A press during a roll's last moments is
+--- buffered, not dropped.
 function LocomotionCore.roll(state: any, now: number, hasDirection: boolean, t: any): (any, string?)
-	local kind = if hasDirection then "ROLL" else "BACKSTEP"
+	local kind = if not state.Grounded then "AIRDASH" elseif hasDirection then "ROLL" else "BACKSTEP"
 	local ok, reason = LocomotionCore.canRoll(state, now, t)
 	if ok then
 		local updated = startRoll(state, now, kind, t)
@@ -264,6 +284,7 @@ function LocomotionCore.step(state: any, dt: number, input: any, t: any): (any, 
 	-- moment the character left the floor, which the coyote window measures from.
 	if input.Grounded then
 		updated.JumpSpent = false
+		updated.AirDashesUsed = 0
 		updated.LastGroundedAt = now
 	end
 
@@ -342,6 +363,9 @@ function LocomotionCore.targetSpeed(state: any, now: number, t: any): number
 	end
 	if state.RollKind then
 		if now < state.RollEndsAt then
+			if state.RollKind == "AIRDASH" then
+				return t.AirDashSpeed
+			end
 			return if state.RollKind == "BACKSTEP" then t.BackstepSpeed else t.RollSpeed
 		end
 		if now < state.RollRecoverUntil then

@@ -54,6 +54,7 @@ see**, so each one makes the game look better for everyone, not just you.
 | 11 | `Sprint` | loop | ~0.6s cycle | Longer stride, stronger lean and arm drive than Run. Forward only |
 | 12 | `Walk*` (all four) | loop | ~1s cycle | Slow movement: a half-pushed stick or a weapon's crawl. Least visible, so last |
 | 13 | `TurnLeft`, `TurnRight` | one-shot | ~0.3s | A step-and-pivot when turning on the spot |
+| 14 | `AirDashForward/Backward/Left/Right` | one-shot | any (stretched to 0.2s) | A mid-air burst the given way, relative to facing: the body snaps into a streamlined lean, legs trailing, then opens back up to fall. Chest stays forward on the side and back dashes |
 
 ## 3. What the code already adds on top (don't animate these in)
 
@@ -65,7 +66,7 @@ doubles them up:
 - **Landing dip** (0.35 studs soft, 1.0 hard).
 - **Strafe leg-turn** (only while a gait's four directional clips are missing).
 
-The roll tumble and the backstep hop only run for a slot with no clip. As soon as a
+The roll tumble, the backstep hop and the air-dash lean only run for a slot with no clip. As soon as a
 roll direction has a clip, its tumble stops.
 
 ## 4. The loop: author, try, keep
