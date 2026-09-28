@@ -156,7 +156,10 @@ def _resolve_gait(role, overrides):
     L = _leg_len()
     return dict(stride=g.pop("stride_frac")*L, lift=g.pop("lift_frac")*L,
                 bob=g.get("bob_frac", 0.02)*L, sway=g.get("sway_frac", 0.02)*L,
-                hip_twist=g["hip_twist"], torso_twist=g["torso_twist"], arm_swing=g["arm_swing"]), g.get("cadence", 1.0)
+                hip_twist=g["hip_twist"], torso_twist=g["torso_twist"], arm_swing=g["arm_swing"],
+                **{k: v for k, v in overrides.items() if k in POSE_OVERRIDES}), g.get("cadence", 1.0)
+
+POSE_OVERRIDES = ("arm_out", "elbow_bend", "lean", "hip_roll")   # per-enemy pose tweaks passed straight to the pose fns
 
 def build_walk_humanoid(name="Walk", length=32, fps=30, role=None, post=None, **overrides):
     """Builds and keys a full looping walk cycle, scaled to THIS rig's own leg length and the enemy's role (see
@@ -266,7 +269,8 @@ def build_strafe_humanoid(name="Strafe", length=24, fps=30, side_dir=1, role=Non
     g.update(overrides)
     L = _leg_len()
     params = dict(stride=g.get("stride_frac", 0.4)*L*0.7, lift=g.get("lift_frac", 0.12)*L,
-                  bob=g.get("bob_frac", 0.02)*L*0.8, sway=g.get("sway_frac", 0.02)*L)
+                  bob=g.get("bob_frac", 0.02)*L*0.8, sway=g.get("sway_frac", 0.02)*L,
+                  **{k: v for k, v in overrides.items() if k in POSE_OVERRIDES})
     begin(name, length=length, loop=True, fps=fps)
     for f in range(1, length + 1):
         t = (f - 1) / length

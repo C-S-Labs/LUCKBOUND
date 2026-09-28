@@ -40,7 +40,8 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
     from the `.blend`, not the script (see `ASCENDANT_MOVESET.md`).
   - Session 97: baked cloth (`_framework/cloth_core.py`) makes the robe and back scarves hang free and collide
     with the legs and body. Three-joint fingers (`hands_core.py`) close both hands round the staff. The rig is now
-    150 bones, so confirm Studio's importer accepts it.
+    150 bones, so confirm Studio's importer accepts it. Session 98: the free arm clears the robe. The owner will import
+    once, when the boss is finished.
   - Not yet imported in Studio.
   **Nothing spawns in gameplay yet.** `EnemyDef` + services wait for the owner's OK.
 - **Tooling:**

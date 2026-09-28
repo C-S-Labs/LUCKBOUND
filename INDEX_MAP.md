@@ -55,15 +55,15 @@ _271 text files, 381 binary assets. Regenerate with `python tools/gen_index.py`;
   - `humanoid.py`: fix_clip:6
 - `assets/source/enemies/_framework/character_kit.py` (129) - Character kit: reusable HUMANOID dressing for basic enemies (and anything built with humanoid.py). · 2026-09-24
   - `character_kit.py`: body_bvh:10, on_surface_in:21, flow_line_in:28, on_surface:34, flow_line:42, shaped_limbs:51, layered_pauldron:64, gorget:74, faulds:79, cape:95, bracer:101, knee_cop:110, greave:117, chest_emblem:124
-- `assets/source/enemies/_framework/cloth_core.py` (336) - CLOTH_CHAINS core (framework): free-hanging cloth -- robes, skirts, capes, scarves, tassels -- for ANY enemy. · new
+- `assets/source/enemies/_framework/cloth_core.py` (336) - CLOTH_CHAINS core (framework): free-hanging cloth -- robes, skirts, capes, scarves, tassels -- for ANY enemy. · 2026-09-28
   - `cloth_core.py`: _pfx:28, _obj:31, _islands:34, _wco:46, _seg_closest:49, _seg_seg:53, _bone_radius:70, _set_weights:85, _chain_weights:97, _add_bones:112, _skirt:125, _strips:171, build_cloth:223, _anchor_target:238, cloth_bake:241, _lerp_mat:310, _key_chains:314
 - `assets/source/enemies/_framework/enemy_kit.py` (260) - Shared LUCKBOUND enemy-building kit (lofts, plates, blades, gems, cloth, skinning into PIECES). · 2026-09-24
   - `enemy_kit.py`: mat:7, scale_about:19, add_bone:24, _mesh_of:28, _add:44, TR:77, _ring:80, loft:90, arc_band:117, _frame:132, tube:143, blade:147, box:153, sph:166, gem:177, cloth:186, assemble:217
 - `assets/source/enemies/_framework/export.py` (98) - FBX export for Roblox Studio (one static mesh+rig file, then one file per action). · 2026-09-25
   - `export.py`: _select:5, bake_vertex_colors:9, skin_bone_parented:26, pin_anchor_bones:39, export_static:80, export_action:89
-- `assets/source/enemies/_framework/hands_core.py` (61) - HANDS core (framework): three-joint fingers, so a hand can close all the way round a weapon's haft. · new
+- `assets/source/enemies/_framework/hands_core.py` (61) - HANDS core (framework): three-joint fingers, so a hand can close all the way round a weapon's haft. · 2026-09-28
   - `hands_core.py`: add_phalanges:16
-- `assets/source/enemies/_framework/humanoid.py` (68) - Generic LUCKBOUND humanoid body (R15 bone names) for enemy scripts. exec() after enemy_kit.py. · 2026-09-24
+- `assets/source/enemies/_framework/humanoid.py` (68) - Generic LUCKBOUND humanoid body (R15 bone names) for enemy scripts. exec() after enemy_kit.py. · 2026-09-28
   - `humanoid.py`: make_humanoid:4
 - `assets/source/enemies/_framework/lineup.py` (28) - Build every enemy of a tier into ONE review .blend, side by side (each in its own collection, rigged). · 2026-09-24
 - `assets/source/enemies/_framework/pose_common.py` (32) - Body-agnostic pose helpers (every body type): collision counts between pieces and grounding. · 2026-09-24
@@ -74,11 +74,11 @@ _271 text files, 381 binary assets. Regenerate with `python tools/gen_index.py`;
   - `preview.py`: preview:5
 - `assets/source/enemies/_framework/render.py` (41) - Standard review renders for any enemy (EEVEE, AgX, 3-point light, pedestal, 2 m player reference block). · 2026-09-24
   - `render.py`: _look:18
-- `assets/source/enemies/_framework/run.py` (74) - LUCKBOUND enemy framework - single headless entry point for EVERY enemy in EVERY biome. · 2026-09-24
+- `assets/source/enemies/_framework/run.py` (74) - LUCKBOUND enemy framework - single headless entry point for EVERY enemy in EVERY biome. · 2026-09-28
   - `run.py`: _body_profile:42, _run:48
 - `assets/source/enemies/_framework/validate.py` (85) - Enemy validation (run by run.py --validate, or exec'd after any build). Prints VALIDATE lines and a PASS/FAIL summary. · 2026-09-28
-- `assets/source/enemies/_framework/walk_core.py` (277) - WALK CYCLE core (framework, humanoid bodies). A parametric, ANALYTICALLY SOLVED walk loop: every frame's foot · 2026-09-28
-  - `walk_core.py`: _ik2:20, leg_to:54, _rest_foot:58, _leg_phase:61, _wrot:75, _tilt:83, _swing_arm:88, _level_head:102, walk_pose_humanoid:108, _leg_len:137, _resolve_gait:153, build_walk_humanoid:161, strafe_pose_humanoid:177, _quad_leg_len:217, walk_pose_quadruped:221, build_walk_quadruped:240, build_strafe_humanoid:261
+- `assets/source/enemies/_framework/walk_core.py` (281) - WALK CYCLE core (framework, humanoid bodies). A parametric, ANALYTICALLY SOLVED walk loop: every frame's foot · 2026-09-28
+  - `walk_core.py`: _ik2:20, leg_to:54, _rest_foot:58, _leg_phase:61, _wrot:75, _tilt:83, _swing_arm:88, _level_head:102, walk_pose_humanoid:108, _leg_len:137, _resolve_gait:153, build_walk_humanoid:164, strafe_pose_humanoid:180, _quad_leg_len:220, walk_pose_quadruped:224, build_walk_quadruped:243, build_strafe_humanoid:264
 - `assets/source/enemies/ethereal_scape/ASCENDANT_MOVESET.md` (124) - The Ascendant: moveset (v1) · 2026-09-28
   - `ASCENDANT_MOVESET.md`: Phase 1: The Guardian (ivory cuirass intact), 100-55% HP:27, Transition: P2_Transfiguration (70 f, invulnerable, no damag:44, Phase 2: Ascended (inner body exposed, crystal ascendant), 5:53, Fairness rules (every boss, restated):64, Animations:74, VFX plan (Studio):112
 - `assets/source/enemies/ethereal_scape/ROSTER.md` (62) - Ethereal Scape enemy roster (base chunk set only) · 2026-09-28
@@ -93,8 +93,8 @@ _271 text files, 381 binary assets. Regenerate with `python tools/gen_index.py`;
   - `P1_CrescentReap.py`: K:11
 - `assets/source/enemies/ethereal_scape/anims/the_ascendant/StrafeLeft.py` (3) - StrafeLeft (loop): circle to its LEFT around the player (walk_core side-step at the boss gait), staff carried. · 2026-09-28
 - `assets/source/enemies/ethereal_scape/anims/the_ascendant/StrafeRight.py` (3) - StrafeRight (loop): circle to its RIGHT around the player, staff carried. Mirror of StrafeLeft. · 2026-09-28
-- `assets/source/enemies/ethereal_scape/anims/the_ascendant/Walk.py` (8) - Walk (loop): walk_core's solved humanoid walk at the boss gait (ROLE_GAIT["boss"]: shorter, slower, weightier · 2026-09-28
-  - `Walk.py`: carry:4
+- `assets/source/enemies/ethereal_scape/anims/the_ascendant/Walk.py` (9) - Walk (loop): walk_core's solved humanoid walk at the boss gait (ROLE_GAIT["boss"]: shorter, slower, weightier · 2026-09-28
+  - `Walk.py`: carry:5
 - `assets/source/enemies/ethereal_scape/anims/the_ascendant/_asc_pose.py` (105) - Shared posing for every Ascendant action (exec'd at the top of each action file; run.py skips "_" files). · 2026-09-28
   - `_asc_pose.py`: _left_on_staff:12, fix_clip:17, flat_foot:25, ground_body:30, roll_edge:40, stance:54, left_on_haft:71, curl_left:78, staff:84
 - `assets/source/enemies/ethereal_scape/crystal_warden.py` (71) - LUCKBOUND - Ethereal Scape BASIC enemy: Crystal Warden (close range, heavy: brute). · 2026-09-28
@@ -107,8 +107,8 @@ _271 text files, 381 binary assets. Regenerate with `python tools/gen_index.py`;
   - `temple_acolyte.py`: _panel_wfn:29
 - `assets/source/enemies/ethereal_scape/the_ascendant.py` (331) - LUCKBOUND - Ethereal Scape BOSS: The Ascendant (the Sanctum). ~3.5 m (crown tip), ~1.9x a Roblox player. · 2026-09-28
   - `the_ascendant.py`: B:31, seg_loft:61, crystal:65, facet_ball:74, ring_at:78, vein:81, _cui:114, _on_cui:119, ribbon:168, _robe_r:270, _slit:275, robe_panel:278
-- `assets/source/enemies/ethereal_scape/the_ascendant_cloth.py` (17) - LUCKBOUND - The Ascendant's cloth (manifest "extras", after the body and the staff). Data only: the framework's · new
-- `assets/source/enemies/ethereal_scape/the_ascendant_hands.py` (5) - LUCKBOUND - The Ascendant's hands (manifest "extras", before the cloth). Its crystal fingers were built with two · new
+- `assets/source/enemies/ethereal_scape/the_ascendant_cloth.py` (17) - LUCKBOUND - The Ascendant's cloth (manifest "extras", after the body and the staff). Data only: the framework's · 2026-09-28
+- `assets/source/enemies/ethereal_scape/the_ascendant_hands.py` (5) - LUCKBOUND - The Ascendant's hands (manifest "extras", before the cloth). Its crystal fingers were built with two · 2026-09-28
 - `assets/source/enemies/ethereal_scape/the_ascendant_staff.py` (122) - LUCKBOUND - The Ascendant's unique weapon: the Sanctum Staff. Run AFTER the_ascendant.py (manifest "extras"): · 2026-09-28
   - `the_ascendant_staff.py`: W:21, seg:22, sweep:46
 - `assets/source/enemies/sky_citadel/ROSTER.md` (86) - Sky Citadel enemy roster (base chunk set only) · 2026-09-26
@@ -343,8 +343,8 @@ _271 text files, 381 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/STATUS.md
 
-- `docs/STATUS.md` (275) - LUCKBOUND — Project Status · 2026-09-28
-  - `STATUS.md`: 1. Where the project stands:10, 2. Next — pick up here:55, 3. Decisions locked in:174, Why true RNG matters downstream:199, 4. Open items (one line each; details are in the archive und:212, 5. Environment:257, Startup:265
+- `docs/STATUS.md` (276) - LUCKBOUND — Project Status · 2026-09-28
+  - `STATUS.md`: 1. Where the project stands:10, 2. Next — pick up here:56, 3. Decisions locked in:175, Why true RNG matters downstream:200, 4. Open items (one line each; details are in the archive und:213, 5. Environment:258, Startup:266
 
 ### docs/TESTING.md
 
@@ -363,8 +363,8 @@ _271 text files, 381 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (5921) - LUCKBOUND — Work Log · 2026-09-28
-  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 97 — 2026-09-28 — Baked cloth (robe + scarves) and t:36, Done:39, Decisions made:59, Stopped at:63, Next:71, Session 96 — 2026-09-28 — The Ascendant: whole-body locomoti:77, Done:80, Decisions made:105, Stopped at:109, Next:116, Session 95 — 2026-09-28 — The Ascendant (Ethereal Scape boss:123, Done:126, Decisions made:149, Stopped at:154, Next:162, Session 94 — 2026-09-27 — Dev panel grip: visible, and corre:169, Done:172, Next:181, Session 93 — 2026-09-27 — Leaderboard rows: friend / block /:186, Done:189, Next:201, Session 92 — 2026-09-27 — Chat to top-left, rail drops and c:207, Done:210, Stopped at:226, Next:229, Session 91 — 2026-09-27 — Custom leaderboard + chat panel in:234, Done:237, Decisions made:243, Stopped at:250, Next:253, Session 90 — 2026-09-27 — Fix: entering twice while a map lo:260, Done:263, Next:274, Session 89 — 2026-09-27 — Developer panel + command registry:279, ... +505 more
+- `docs/WORKLOG.md` (5943) - LUCKBOUND — Work Log · 2026-09-28
+  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 98 — 2026-09-28 — Robe clears the free arm:36, Done:39, Stopped at:50, Next:54, Session 97 — 2026-09-28 — Baked cloth (robe + scarves) and t:59, Done:62, Decisions made:82, Stopped at:86, Next:93, Session 96 — 2026-09-28 — The Ascendant: whole-body locomoti:99, Done:102, Decisions made:127, Stopped at:131, Next:138, Session 95 — 2026-09-28 — The Ascendant (Ethereal Scape boss:145, Done:148, Decisions made:171, Stopped at:176, Next:184, Session 94 — 2026-09-27 — Dev panel grip: visible, and corre:191, Done:194, Next:203, Session 93 — 2026-09-27 — Leaderboard rows: friend / block /:208, Done:211, Next:223, Session 92 — 2026-09-27 — Chat to top-left, rail drops and c:229, Done:232, Stopped at:248, Next:251, Session 91 — 2026-09-27 — Custom leaderboard + chat panel in:256, Done:259, Decisions made:265, Stopped at:272, Next:275, ... +509 more
 
 ### docs/archive
 

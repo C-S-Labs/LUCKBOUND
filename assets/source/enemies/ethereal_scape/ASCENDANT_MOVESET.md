@@ -84,8 +84,8 @@ All on the one rig (`TheAscendant.fbx`), in place (the AI moves the root between
   - `StrafeLeft` / `StrafeRight`: `build_strafe_humanoid`, both directions, staff carried, in a staggered stance. The
     feet never cross, and the free arm moves smoothly and stays clear of the robe.
 - **Cloth** (`the_ascendant_cloth.py`): the robe is a skirt of 16 chains × 5 bones, pinned under the belt and
-  colliding with both legs; the four back scarves are one 4-bone chain each, colliding with the back, the hips and
-  the legs. Robe-vs-leg overlap below the hips (worst frame) went from 176-298 tris on every frame to 0 in Strafe and
+  colliding with both legs and arms; the four back scarves are one 4-bone chain each, colliding with the back, the
+  hips, the legs and the arms. The free arm hangs at `arm_out` 0.17 so it clears the robe's hip flare. Robe-vs-leg overlap below the hips (worst frame) went from 176-298 tris on every frame to 0 in Strafe and
   Idle, ≤ 4 in Walk and ≤ 14 in the Reap's deepest lunge.
 - **Hands** (`the_ascendant_hands.py`): every finger and thumb has 3 joints, so both hands close round the haft. The
   haft (94 mm across) is thick for the crystal fingers (~155 mm), so a finger wraps about 105°. To wrap further,

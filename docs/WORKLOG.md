@@ -33,6 +33,29 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 98 — 2026-09-28 — Robe clears the free arm
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes   **Branch:** `CloudTesting`
+
+### Done
+- **Correction to Session 97:** the arm colliders were already in `the_ascendant_cloth.py` in `50b4f82`, not
+  pending. The remaining touches happened with them on: the left forearm met the robe's hip flare just under the
+  belt, where the chains are pinned and cannot move aside.
+- **The fix is in the pose, not the cloth.** `walk_core` now passes per-enemy pose overrides (`POSE_OVERRIDES`:
+  `arm_out`, `elbow_bend`, `lean`, `hip_roll`) through to the pose functions. The Ascendant's free arm hangs at
+  `arm_out` 0.17 in Walk and Strafe ×2 (`ARM_OUT` in `Walk.py`).
+- **On the owner's mesh:** arm-vs-body contact is 0 in Walk, Strafe ×2 and Idle. Robe-vs-leg is 0 in Strafe ×2 and
+  Idle, ≤ 4 tris on 4 Walk frames, and ≤ 14 in the Reap's deepest lunge; all of it is at the hip crease under the
+  pinned robe top. Thicker thigh colliders were tried and made no difference, so they were reverted.
+
+### Stopped at
+Pushed. The owner will import once, when the boss is finished (not after each step). Remaining leftovers are in the
+Reap only: the two-hand left-arm graze, the staff at f18, and the wrist at 82°.
+
+### Next
+The owner decides what "finished" still needs before the single Studio import.
+
+---
+
 ## Session 97 — 2026-09-28 — Baked cloth (robe + scarves) and three-joint finger grips
 **Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes (Blender assets + framework)   **Branch:** `CloudTesting`
 
@@ -62,8 +85,7 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ### Stopped at
 Pushed. Open items:
-- The moving robe touches the hanging left arm (≤ 12 tris, 5 frames in StrafeLeft and Walk). The fix is adding the
-  arm bones to both specs' `colliders`; the owner paused that step, so it waits for the owner.
+- The moving robe touches the hanging left arm (≤ 12 tris, 5 frames in StrafeLeft and Walk). Fixed in Session 98.
 - The finger wrap is limited by finger length against the 94 mm haft.
 - 150 bones: confirm the Roblox importer accepts the rig.
 - Beacon Keeper, Spire Regent and Armory Warden gain finger joints on their next re-export.
