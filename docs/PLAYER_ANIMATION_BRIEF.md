@@ -56,6 +56,11 @@ see**, so each one makes the game look better for everyone, not just you.
 | 13 | `TurnLeft`, `TurnRight` | one-shot | ~0.3s | A step-and-pivot when turning on the spot |
 | 14 | `AirDashForward/Backward/Left/Right` | one-shot | any (stretched to 0.2s) | A mid-air burst the given way, relative to facing: the body snaps into a streamlined lean, legs trailing, then opens back up to fall. Chest stays forward on the side and back dashes |
 
+**Diagonals come free.** Four roll clips cover all eight directions: a roll pressed
+north-east plays `RollForward` with the body turned 45° toward the true direction
+(`AnimationCore.rollYaw`). The same applies to the air dash. Don't author diagonal
+clips.
+
 ## 3. What the code already adds on top (don't animate these in)
 
 These layers bend the joints after the clip plays, so building them into the clip

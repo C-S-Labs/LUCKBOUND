@@ -6185,6 +6185,13 @@ do
 			and AnimationCore.rollDirection(0.1, -1) == "LEFT"
 	)
 	check(
+		"four clips cover diagonals: north-east is the forward roll turned 45 degrees right",
+		near(AnimationCore.rollYaw(1, 1), -math.pi / 4)
+			and near(AnimationCore.rollYaw(1, -1), math.pi / 4)
+			and near(AnimationCore.rollYaw(1, 0), 0)
+			and math.abs(AnimationCore.rollYaw(-1, 0.99)) <= math.pi / 4 + 1e-9
+	)
+	check(
 		"a forward tumble turns the front down through one full turn",
 		(function()
 			local mid = AnimationCore.tumble("FORWARD", 0.5, GameConfig)

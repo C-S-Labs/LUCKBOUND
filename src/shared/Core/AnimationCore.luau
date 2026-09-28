@@ -208,6 +208,23 @@ function AnimationCore.rollDirection(forward: number, right: number): string
 	return if right >= 0 then "RIGHT" else "LEFT"
 end
 
+--- A DIAGONAL ROLL with four clips: the yaw (Roblox convention, positive =
+--- left) that turns the body from the nearest clip's direction onto the
+--- true one, at most 45 degrees. A roll pressed north-east plays the
+--- forward roll turned 45 degrees right, so four clips cover all eight
+--- directions and everything between.
+function AnimationCore.rollYaw(forward: number, right: number): number
+	local angle = AnimationCore.moveAngle(forward, right)
+	local snapped = ({
+		FORWARD = 0,
+		RIGHT = math.pi / 2,
+		BACKWARD = math.pi,
+		LEFT = -math.pi / 2,
+	})[AnimationCore.rollDirection(forward, right)]
+	-- A roll to the right of its clip's direction turns the body right.
+	return -AnimationCore.wrap(angle - snapped)
+end
+
 --- THE PROCEDURAL ROLL, for a direction with no clip: (pitch, bank, dip)
 --- for the body at `progress` 0..1 through the roll. Forward tumbles the
 --- front down through a full turn, backward the other way, and the sides

@@ -94,6 +94,8 @@ local landedAt = -math.huge
 local rollKind: string? = nil
 local rollRelative = "FORWARD"
 local rollHasClip = false
+-- Turns the body from the clip's direction onto the true one (diagonals).
+local rollYaw = 0
 local rollStartedAt = 0
 local rollDuration = 1
 local fovBase: number? = nil
@@ -663,7 +665,7 @@ function CharacterAnimator.update(ctx: any, dt: number): ()
 	if r.RootJoint then
 		r.RootJoint.C0 = bend(
 			r.RootC0,
-			CFrame.Angles(0, legYaw, 0)
+			CFrame.Angles(0, legYaw + (if kind and ctx.RollMoving then rollYaw else 0), 0)
 				* CFrame.Angles(leanPitch + tumblePitch, 0, leanBank + tumbleBank),
 			Vector3.new(0, -(dip + tumbleDip), 0)
 		)

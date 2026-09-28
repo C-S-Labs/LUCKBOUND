@@ -120,6 +120,7 @@ end
 local function beginRoll(kind: string)
 	local now = os.clock()
 	local relative = "BACKWARD"
+	local yaw = 0
 	local duration = tuning.BackstepDurationSeconds
 	if kind == "ROLL" or kind == "AIRDASH" then
 		local held = moveDirection()
@@ -130,6 +131,7 @@ local function beginRoll(kind: string)
 		local forward, right =
 			AnimationCore.localVelocity(facing.X, facing.Z, rollDirection.X, rollDirection.Z)
 		relative = AnimationCore.rollDirection(forward, right)
+		yaw = AnimationCore.rollYaw(forward, right)
 		duration = if kind == "AIRDASH"
 			then tuning.AirDashDurationSeconds
 			else tuning.RollDurationSeconds
@@ -137,7 +139,7 @@ local function beginRoll(kind: string)
 		-- A backstep keeps facing forward and hops away from it.
 		rollDirection = -facing
 	end
-	CharacterAnimator.onRoll(kind, relative, now, duration, rollDirection)
+	CharacterAnimator.onRoll(kind, relative, now, duration, rollDirection, yaw)
 end
 
 local function onJumpPressed()

@@ -44,6 +44,12 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
   last framing into the default camera's output each frame. A lock that breaks eases too; a respawn snaps.
 - The air dash has its own clip slots already (`AirDash*`); they go in the animation set.
 
+- **Owner asked:** should there be 8 rolls? No. Four clips plus `AnimationCore.rollYaw` turn the body up to 45°
+  onto the true direction, so diagonals read right (the roll and the air dash).
+- **Owner asked** to condense the tests to 100 or fewer. Not done: the suite runs in about 2s and its output is
+  one line, so it costs almost no usage. ~850 of the tests predate this branch and cover other systems. Going
+  forward, new tests are kept to rules only.
+
 ### Next
 1. Owner re-walks: the streaks and the unlock ease.
 2. Then generate the player animation set (four rolls first).
