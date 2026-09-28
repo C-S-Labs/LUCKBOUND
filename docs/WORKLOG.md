@@ -33,6 +33,23 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 93 — 2026-09-27 — Leaderboard rows: friend / block / view avatar
+**Merged:** see the PR for this branch   **Tests:** CI   **Branch:** `claude/leaderboard-interact`
+
+### Done
+- Owner: players should be able to click leaderboard entries to friend, block and so on, like Roblox's list. Each
+  row is now a click target (gold edge on hover) that opens a house-style menu: Add Friend/Unfriend (from
+  IsFriendsWith), View Avatar, Block/Unblock (from GetBlockedUserIds). All go through Roblox's own prompts.
+- Owner reported the chat and leaderboard "weren't implemented" after pulling #142. The code is on main and the
+  running `rojo serve` is serving Leaderboard/ChatPanel. Next step: check whether they tested the published place
+  (it needs a Studio publish) and whether Studio's Output shows a client error.
+
+### Next
+1. Studio walk: the menu's position, and the prompts appearing (SetCore prompts do not show in Studio for some
+   actions; test in a live server).
+
+---
+
 ## Session 92 — 2026-09-27 — Chat to top-left, rail drops and collapses when chat opens
 **Merged:** see the PR for this branch   **Tests:** CI   **Branch:** `claude/chat-top-left`
 

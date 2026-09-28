@@ -9,6 +9,7 @@
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local GuiService = game:GetService("GuiService")
 local StarterGui = game:GetService("StarterGui")
 local UserInputService = game:GetService("UserInputService")
 
@@ -23,7 +24,10 @@ local CONFIG = GameConfig.Leaderboard
 local HEADER_HEIGHT = 40
 
 local player = Players.LocalPlayer
+local gui: ScreenGui
 local panel: Frame
+local menu: Frame? = nil
+local menuFor: Player? = nil
 local body: ScrollingFrame
 local countLabel: TextLabel
 local open = CONFIG.StartOpen
@@ -117,6 +121,128 @@ local function refresh()
 	)
 end
 
+-- === the player menu ================================================
+-- Click a row for the same actions Roblox's own list offers. Every action is
+-- Roblox's own prompt (SetCore / InspectPlayerFromUserId), so the player
+-- confirms each one in the standard dialog and nothing here can friend or
+-- block anyone by itself.
+
+local MENU_WIDTH = 180
+local MENU_BUTTON_HEIGHT = 34
+
+local function closeMenu()
+	if menu then
+		menu:Destroy()
+		menu = nil
+		menuFor = nil
+	end
+end
+
+local function prompt(core: string, who: Player)
+	closeMenu()
+	local ok, err = pcall(StarterGui.SetCore, StarterGui, core, who)
+	if not ok then
+		warn(`[Leaderboard] {core} failed:`, err)
+	end
+end
+
+local function isBlocked(who: Player): boolean
+	local ok, ids = pcall(StarterGui.GetCore, StarterGui, "GetBlockedUserIds")
+	if ok and type(ids) == "table" then
+		return table.find(ids, who.UserId) ~= nil
+	end
+	return false
+end
+
+local function openMenu(who: Player, row: Frame)
+	if menuFor == who then
+		closeMenu()
+		return
+	end
+	closeMenu()
+	menuFor = who
+
+	-- A clear layer over the screen: any click outside the menu closes it.
+	local scrim = Instance.new("TextButton")
+	scrim.Name = "PlayerMenu"
+	scrim.BackgroundTransparency = 1
+	scrim.Text = ""
+	scrim.Size = UDim2.fromScale(1, 1)
+	scrim.ZIndex = 10
+	scrim.Parent = gui
+	scrim.Activated:Connect(closeMenu)
+	menu = scrim :: any
+
+	local card = UIKit.surface(scrim, "PANEL")
+	card.ZIndex = 11
+	card.AnchorPoint = Vector2.new(1, 0)
+	-- Beside the leaderboard, level with the row that was clicked.
+	card.Position =
+		UDim2.fromOffset(panel.AbsolutePosition.X - UITheme.Space.SM, row.AbsolutePosition.Y)
+	card.Size = UDim2.fromOffset(MENU_WIDTH, 0)
+	card.AutomaticSize = Enum.AutomaticSize.Y
+	UITheme.pad(card, UITheme.Space.SM)
+	UIKit.list(card, UITheme.Space.XS)
+
+	local name = UIKit.label(card, who.DisplayName, 15, "ACCENT")
+	name.Size = UDim2.new(1, 0, 0, 18)
+	name.ZIndex = 12
+	local handle = UIKit.label(card, `@{who.Name}`, 12, "MUTED")
+	handle.Size = UDim2.new(1, 0, 0, 16)
+	handle.LayoutOrder = 1
+	handle.ZIndex = 12
+
+	local order = 2
+	local function action(text: string, style: string?, onClick: () -> ())
+		local b = UIKit.button(card, text, style, onClick)
+		b.Size = UDim2.new(1, 0, 0, MENU_BUTTON_HEIGHT)
+		b.TextSize = 14
+		b.LayoutOrder = order
+		b.ZIndex = 12
+		order += 1
+	end
+
+	if who ~= player then
+		-- IsFriendsWith yields, so its button arrives a moment after the rest
+		-- rather than holding the whole menu back.
+		local friendSlot = order
+		order += 1
+		task.spawn(function()
+			local ok, friends = pcall(player.IsFriendsWith, player, who.UserId)
+			if menuFor ~= who or not card.Parent then
+				return
+			end
+			local saved = order
+			order = friendSlot
+			if ok and friends then
+				action("Unfriend", "GHOST", function()
+					prompt("PromptUnfriend", who)
+				end)
+			else
+				action("Add Friend", "PRIMARY", function()
+					prompt("PromptSendFriendRequest", who)
+				end)
+			end
+			order = saved
+		end)
+	end
+	action("View Avatar", "GHOST", function()
+		closeMenu()
+		pcall(GuiService.InspectPlayerFromUserId, GuiService, who.UserId)
+	end)
+	if who ~= player then
+		if isBlocked(who) then
+			action("Unblock", "GHOST", function()
+				prompt("PromptUnblockPlayer", who)
+			end)
+		else
+			action("Block", "DANGER", function()
+				prompt("PromptBlockPlayer", who)
+			end)
+		end
+	end
+end
+
 local function addRow(who: Player)
 	if rows[who] then
 		return
@@ -140,6 +266,36 @@ local function addRow(who: Player)
 	end
 	cells[1].TextColor3 = if who == player then UITheme.AccentGold else UITheme.TextMuted
 
+	-- The whole row is the click target, with a gold edge on hover so it
+	-- reads as something to press.
+	local hit = Instance.new("TextButton")
+	hit.BackgroundTransparency = 1
+	hit.Text = ""
+	hit.Size = UDim2.fromScale(1, 1)
+	hit.ZIndex = 3
+	hit.Parent = frame
+	local edge = frame:FindFirstChildOfClass("UIStroke")
+	hit.MouseEnter:Connect(function()
+		if edge then
+			UIKit.tween(
+				edge,
+				UITheme.Motion.Instant,
+				{ Color = UITheme.AccentGold, Transparency = 0.3 }
+			)
+		end
+	end)
+	hit.MouseLeave:Connect(function()
+		if edge then
+			UIKit.tween(edge, UITheme.Motion.Quick, {
+				Color = UITheme.StrokeColor,
+				Transparency = UITheme.StrokeTransparency,
+			}, true)
+		end
+	end)
+	hit.Activated:Connect(function()
+		openMenu(who, frame)
+	end)
+
 	rows[who] = {
 		frame = frame,
 		cells = cells,
@@ -151,6 +307,9 @@ end
 local function removeRow(who: Player)
 	local row = rows[who]
 	if row then
+		if menuFor == who then
+			closeMenu()
+		end
 		row.conn:Disconnect()
 		row.frame:Destroy()
 		rows[who] = nil
@@ -161,10 +320,13 @@ end
 local function setOpen(value: boolean)
 	open = value
 	panel.Visible = value
+	if not value then
+		closeMenu()
+	end
 end
 
 local function build()
-	local gui = Instance.new("ScreenGui")
+	gui = Instance.new("ScreenGui")
 	gui.Name = "LuckboundLeaderboard"
 	gui.ResetOnSpawn = false
 	gui.DisplayOrder = 4

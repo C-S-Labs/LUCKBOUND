@@ -217,6 +217,12 @@ every place, not only in the hub.
 CoreGui player list. The header is the flavour name **FATEBOUND**, with a live count beside it ("4 players"), so a
 new player can tell it is the player list without knowing the lore. Your own row is gold.
 
+**Rows are interactive.** Clicking a player opens a small menu beside the list with **Add Friend / Unfriend**,
+**View Avatar** and **Block / Unblock**, the same actions as Roblox's own list. Each one is Roblox's own prompt
+(`StarterGui:SetCore("PromptSendFriendRequest" | "PromptUnfriend" | "PromptBlockPlayer" | "PromptUnblockPlayer")`,
+`GuiService:InspectPlayerFromUserId`), so the player confirms it in the standard dialog. Your own row shows only
+View Avatar. Clicking outside the menu closes it.
+
 **The columns are data.** `GameConfig.Leaderboard.Columns` lists `{ Header, Source, Width }`. `Source` is `"RANK"`,
 `"NAME"`, or the name of any **Player attribute**, and a row redraws whenever that player's attributes change. To add
 a stat, have the server `player:SetAttribute("FateLevel", n)` and add a config row. No UI code changes. `SortBy`
