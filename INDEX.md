@@ -95,6 +95,7 @@
 | player movement (own controller, profiles, stamina, jump, roll, weapon lock) | `Core/LocomotionCore.luau` (rules), `client/Controllers/LocomotionController.luau` (ControllerManager), `GameConfig.Locomotion`; doc `docs/PLAYER_ABILITIES.md` §1–§2.5, §6 |
 | lock-on and its camera | `Core/LockOnCore.luau`, `client/Controllers/LockOnController.luau`, `GameConfig.LockOn`, tag `Constants.NAMES.LOCK_ON_TAG`; doc `PLAYER_ABILITIES.md` §2.6 |
 | stamina bar (later health, charge) | `client/UI/Vitals.luau` |
+| player animation (blending, strafe, lean, head, landings, roll look, sounds) | `Core/AnimationCore.luau`, `client/Controllers/CharacterAnimator.luau`, `GameConfig.CharacterAnimation`; clips in `Content/Animations/Player.luau`; how-to `PLAYER_ABILITIES.md` §2.7 |
 | rolling (Fate) | `Core/FateCore.luau`, `server/Systems/FateSystem.luau`, `client/UI/FateRoll.luau` |
 | parties / teleport | `Core/PartyCore.luau`, `server/Systems/PartySystem.luau`, `client/Controllers/PartyController.luau` |
 | save data | `Core/ProfileSchema.luau`, `server/Systems/SaveSystem.luau` |

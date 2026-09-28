@@ -44,6 +44,11 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 ## 2. Next — pick up here
 
+> **2026-09-28: polished body movement.** `CharacterAnimator` + `AnimationCore`: blended gaits, directional
+> strafe (clips when filled, procedural until then), lean, head look, landings, sounds; rolls in four
+> directions relative to facing. Clip slots in `Content/Animations/Player.luau` (§2.7 has the how-to).
+> 997 tests pass. Studio walk pending.
+
 > **2026-09-28: our own character controller.** Default Roblox movement is off: a `ControllerManager` drives the
 > character from `LocomotionCore`, with HUB (fast) and EXPEDITION (weightier) profiles, one stamina bar, a single
 > jump (the double jump is gone), roll/backstep, and optional lock-on with an over-the-shoulder camera

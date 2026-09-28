@@ -120,14 +120,78 @@ edge, and a 0.12s buffer so a press just before landing fires on landing.
 - A roll pressed in the last 0.2s is buffered, so chained rolls come out clean without
   mashing.
 - Ground only.
-- **The look, with no particles:** gold afterimages of the character are left along
-  the path, and a roll (not a backstep) tumbles the body forward through a full turn
-  with a small dip. The camera widens 7° and settles back over the roll. The tumble
-  is drawn locally, so other players see a slide until there is a roll animation
-  asset. Settings: `RollGhost*`, `RollTumble*`, `RollFovKickDegrees`.
+- **Four directions, relative to facing** (owner, 2026-09-28). With the shoulder
+  camera or a lock-on, the character **keeps facing forward** and rolls the way you
+  pressed: front, back, left or right, each with its own animation. Without either,
+  it turns to roll the way it is going, so the roll is always "front".
+- **The look, toned down:** faint gold afterimages along the path, a 3° camera
+  widen that settles back, and, for a direction with no clip yet, a procedural
+  tumble (forward, backward, or over the shoulder to either side). Settings:
+  `RollGhost*`, `RollTumble*`, `RollFovKickDegrees`.
 - **The invulnerable window is declared, not applied.** `LocomotionCore.isInvulnerable`
   answers it, and the combat layer will call it when it resolves hits (§7.6).
   Nothing is invulnerable today.
+
+## 2.7 Built: how the body moves (`CharacterAnimator`, `AnimationCore`)
+
+Presentation only: it never changes where or how fast a character goes.
+
+- **Blending, not switching.** Idle, walk and run play at once, weighted by speed,
+  so there is no pop between them. Playback rate follows real speed, so the feet
+  don't slide.
+- **Directional movement.** While facing is held (shoulder camera, lock-on),
+  moving sideways or backward reads as a strafe or a backpedal. With a full set of
+  four directional clips for a gait, they blend by direction. Until then, the
+  procedural fallback runs:
+  - the legs turn toward the movement (up to 65°) while the upper body counter-turns;
+  - moving backward plays the forward clip in reverse.
+- **Lean** into acceleration (and further while sprinting), back when braking, and
+  **bank** into turns in proportion to speed.
+- **Head look** toward the lock-on target or where the camera looks. It is clamped,
+  and never snaps round to something behind.
+- **Landings:** a soft or hard dip by fall speed. A hard landing (a real drop, over
+  72 studs/s) also slows movement for a beat: 0.3s in an expedition, 0.12s in the
+  hub.
+- **Turn in place:** standing and turning fast steps the feet.
+- **Sounds:** the Roblox client's built-in running loop (its rate follows speed),
+  jump and land. The default sound script can't run with the state machine off.
+- **One limit:** the procedural layer (legs, lean, head, dip, tumble) bends joints
+  locally, so **other players see only the clips**. Filling the slots below is what
+  makes the polish visible to everyone.
+
+### Adding real animations: where and how
+
+Everything goes in **one file, `src/shared/Content/Animations/Player.luau`**: one slot
+per thing the body does. An empty slot (`""`) uses the fallback; paste an id and
+that slot switches to it. No code changes.
+
+1. **Author** each clip on an **R15** rig:
+   - **In Studio:** the Animation Editor, or Moon Animator. Get a rig from
+     Avatar → Rig Builder → R15, or use your own character.
+   - **Or in Blender**, on an R15-matching armature. Export FBX and import it in
+     the Animation Editor. The repo's enemy pipeline (`assets/source/enemies/_framework/`)
+     can be extended with a player rig if you want these generated like the enemy
+     clips.
+2. **Follow the slot rules:**
+   - **In place:** no root motion. The controller moves the character; the clip
+     only moves the body.
+   - **Loops** (Idle, Walk*/Run*, Sprint, Rise, Fall): seamless. Author walk
+     clips at about 11 studs/s of foot travel, run at about 24 and sprint at about 30
+     (`CharacterAnimation.*ClipSpeed`). Playback is scaled to real speed from those.
+   - **Directions are relative to facing.** `RunLeft` is running left while facing
+     forward. **All four of a gait** (Walk or Run) must be filled before that gait
+     switches over; each roll direction switches on its own.
+   - **One-shots** (JumpStart, Land*, Roll*, Backstep, Turn*): any length. Rolls and
+     the backstep are stretched to the move's real duration (0.5s / 0.32s).
+   - Priority is set by code; the editor's setting doesn't matter.
+3. **Publish** each clip to Roblox under the **group that owns the place** (ids are
+   account/group-scoped; see `PARTNER_SETUP.md`). Copy the id.
+4. **Paste** it as `"rbxassetid://<id>"` into its slot. Sync and press Play. The
+   boot check rejects a typo'd slot name or a malformed id.
+
+The most valuable first clips are `RollForward/Backward/Left/Right` and
+`RunForward/Backward/Left/Right`. They replace the procedural parts other players
+can't see.
 
 ## 2.55 Built: the shoulder camera (our shift lock)
 

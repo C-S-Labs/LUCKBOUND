@@ -503,10 +503,22 @@ The first thing anyone sees.
    nothing in the air (the double jump is gone). The jump is as high as before.
 4. **Walk off a walkway edge and press Space immediately.** ✅ Pass: you still
    jump (the coyote window).
+4b. **Walk, run and stop; turn sharply at speed; jump off something tall.** ✅
+   Pass: no pop between standing, walking and running. The body leans into speed
+   and banks into turns, and the head follows the camera. A normal jump lands
+   with a light dip. A tall drop lands with a deeper dip, a louder thud and a brief
+   slowdown. Footsteps quicken with speed.
+4c. **Left Ctrl (shoulder camera), then walk sideways and backward.** ✅ Pass:
+   sideways, the legs turn toward the movement while the chest stays forward.
+   Backward, the run plays in reverse. *If backward shows a forward run
+   sliding backward, report it: the reversed clip didn't take.*
 5. **Press Q while moving, then Q standing still.** ✅ Pass: a ~17-stud roll in
    the direction you held, with the body tumbling forward, gold afterimages along
    the path and a brief camera widen. Then a short hop backward that keeps you
    facing forward, with afterimages and no tumble. In the hub neither costs stamina.
+   **With Left Ctrl on, press Q with each of W, A, S, D.** ✅ Pass: you keep
+   facing forward and roll front, left, back and right, each with its own tumble.
+   The afterimages are faint.
    *Use `/moveprofile expedition` to feel the expedition weight without entering
    one, and `/stamina 5` to test low stamina.*
 

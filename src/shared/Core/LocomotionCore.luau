@@ -84,6 +84,8 @@ function LocomotionCore.newState(t: any, now: number): any
 		-- A roll press that arrived too early, and which kind it asked for.
 		RollBufferedUntil = 0,
 		RollBufferedKind = nil,
+		-- A hard landing slows movement until this time (see `land`).
+		LandRecoverUntil = 0,
 		-- nil, or the active weapon lock (see `lock`).
 		Lock = nil,
 	}
@@ -346,10 +348,24 @@ function LocomotionCore.targetSpeed(state: any, now: number, t: any): number
 			return 0
 		end
 	end
-	if state.Sprinting then
-		return t.SprintSpeed
+	local speed = if state.Sprinting then t.SprintSpeed else t.WalkSpeed
+	if now < (state.LandRecoverUntil or 0) then
+		speed *= t.HardLandingSpeedMultiplier
 	end
-	return t.WalkSpeed
+	return speed
+end
+
+--- A LANDING at `fallSpeed` studs/s downward. A hard one (past
+--- HardLandingSpeed) slows movement for the profile's recovery time: a real
+--- drop costs a beat, a normal jump costs nothing. Returns the new state and
+--- whether it was hard.
+function LocomotionCore.land(state: any, now: number, fallSpeed: number, t: any): (any, boolean)
+	if fallSpeed < t.HardLandingSpeed or t.HardLandingRecoverySeconds <= 0 then
+		return state, false
+	end
+	local updated = table.clone(state)
+	updated.LandRecoverUntil = now + t.HardLandingRecoverySeconds
+	return updated, true
 end
 
 --- Is the roll still moving the character (as opposed to recovering)?

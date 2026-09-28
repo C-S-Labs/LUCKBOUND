@@ -33,6 +33,8 @@ PURE_MODULES = [
     ("FixtureCore",      "src/shared/Core/FixtureCore.luau"),
     ("LootCore",         "src/shared/Core/LootCore.luau"),
     ("KeyCore",          "src/shared/Core/KeyCore.luau"),
+    ("AnimationCore",    "src/shared/Core/AnimationCore.luau"),
+    ("PlayerAnimations", "src/shared/Content/Animations/Player.luau"),
     ("Schema",           "src/shared/Util/Schema.luau"),
     ("UITheme",          "src/shared/Core/UITheme.luau"),
     ("Crossroads",       "src/shared/Content/Hub/Crossroads.luau"),

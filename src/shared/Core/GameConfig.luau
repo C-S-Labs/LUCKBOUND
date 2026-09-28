@@ -1059,6 +1059,8 @@ local GameConfig = {
 				JumpStaminaCost = 0,
 				RollStaminaCost = 0,
 				SprintDrainPerSecond = 0,
+				-- A hard landing slows you for this long (see HardLanding*).
+				HardLandingRecoverySeconds = 0.12,
 			},
 			EXPEDITION = {
 				-- The middle ground the owner asked for: heavier than the hub,
@@ -1073,6 +1075,7 @@ local GameConfig = {
 				JumpStaminaCost = 10,
 				RollStaminaCost = 22,
 				SprintDrainPerSecond = 14,
+				HardLandingRecoverySeconds = 0.3,
 			},
 		},
 
@@ -1101,6 +1104,12 @@ local GameConfig = {
 		CoyoteTimeSeconds = 0.12,
 		-- A jump pressed this long before landing fires on landing.
 		JumpBufferSeconds = 0.12,
+		-- Coming down faster than this (studs/s) is a hard landing: the body
+		-- absorbs it and movement slows to HardLandingSpeedMultiplier for the
+		-- profile's HardLandingRecoverySeconds. A normal jump lands at ~50,
+		-- so only real drops count.
+		HardLandingSpeed = 72,
+		HardLandingSpeedMultiplier = 0.35,
 
 		-- === ROLL ===
 		-- The Souls verb, adapted: a committed roll with a direction, or a
@@ -1122,20 +1131,22 @@ local GameConfig = {
 		RollBufferSeconds = 0.2,
 
 		-- === ROLL LOOK ===
-		-- Afterimages: fading gold copies of the character left along the
-		-- path, one every GhostInterval, each fading over GhostFade.
+		-- Toned down after the owner's walk (2026-09-28): a hint of speed, not
+		-- a light show. Afterimages: faint gold copies of the character left
+		-- along the path, one every GhostInterval, each fading over GhostFade.
 		RollGhosts = true,
-		RollGhostIntervalSeconds = 0.05,
-		RollGhostFadeSeconds = 0.32,
-		RollGhostTransparency = 0.45, -- how solid a fresh ghost starts
-		-- A forward tumble of the body for a roll (not a backstep), dipping
-		-- this far at its lowest. Drawn locally; other players see the slide
-		-- until LUCKBOUND has a roll animation asset.
+		RollGhostIntervalSeconds = 0.09,
+		RollGhostFadeSeconds = 0.2,
+		RollGhostTransparency = 0.78, -- how solid a fresh ghost starts
+		-- The procedural roll while there is no clip for that direction: the
+		-- body tumbles forward, backward or sideways, relative to facing,
+		-- dipping this far at its lowest. Drawn locally; other players see
+		-- the clip once one is filled in (Content/Animations/Player.luau).
 		RollTumble = true,
-		RollTumbleDropStuds = 1.2,
+		RollTumbleDropStuds = 0.9,
 		-- The camera widens by this many degrees at the start of a roll and
-		-- settles back over the roll: speed you feel, not just see.
-		RollFovKickDegrees = 7,
+		-- settles back over the roll.
+		RollFovKickDegrees = 3,
 
 		-- === SHOULDER CAMERA (our shift lock) ===
 		-- Left Ctrl toggles it: the mouse locks to the centre, the camera
@@ -1158,17 +1169,88 @@ local GameConfig = {
 		JumpGroundIgnoreSeconds = 0.15,
 		-- Ground acceleration during a roll: near-instant, so it bursts.
 		RollAccelerationSeconds = 0.03,
-		-- Speeds the stock walk/run animations were authored at, so their
-		-- playback speed can follow the real speed without foot-sliding.
-		AnimWalkNominalSpeed = 16,
-		AnimRunNominalSpeed = 24,
-		-- Below this horizontal speed the character counts as standing.
-		AnimIdleSpeed = 0.75,
-		-- Crossfade between movement animations.
-		AnimFadeSeconds = 0.15,
 		-- A stage's footprint is grown by this many studs when deciding
 		-- whether the character stands inside it.
 		StageMarginStuds = 20,
+	},
+
+	-- === CHARACTER ANIMATION ===
+	-- How the body reads while it moves: gait blending, directional legs,
+	-- lean, head look, landings, footsteps. Presentation only -- nothing here
+	-- changes where a character goes or how fast. Rules in AnimationCore; the
+	-- clips themselves are Content/Animations/Player.luau.
+	CharacterAnimation = {
+		-- Below this horizontal speed (studs/s) the body stands.
+		IdleSpeed = 0.9,
+		-- Walk -> run crossfade band, in studs/s. Above RunFrom the run clip
+		-- starts to take over; by RunFull it has.
+		RunFrom = 10,
+		RunFull = 15,
+		-- Speeds the clips were authored at, so playback follows the real
+		-- speed without the feet sliding. Stock R15 values.
+		WalkClipSpeed = 11,
+		RunClipSpeed = 24,
+		SprintClipSpeed = 30,
+		-- Playback-rate clamp: past these a clip reads as sped-up footage.
+		MinPlaybackRate = 0.55,
+		MaxPlaybackRate = 1.7,
+		-- Crossfades.
+		FadeSeconds = 0.18,
+		AirFadeSeconds = 0.1,
+		-- Directional blend weights settle over this long, so a change of
+		-- direction flows instead of snapping between clips.
+		DirectionSmoothSeconds = 0.09,
+
+		-- === PROCEDURAL FALLBACK (no directional clips yet) ===
+		-- Strafing: the legs turn toward the movement (up to this far) while
+		-- the upper body counter-turns to keep facing forward.
+		MaxLegYawDegrees = 65,
+		WaistCounterFraction = 0.85,
+		LegYawSmoothSeconds = 0.1,
+		-- Moving backward plays the forward clip in reverse once the move
+		-- direction is this far behind (cosine of the angle, -1 = straight back).
+		BackwardBelowCos = -0.25,
+
+		-- === LEAN ===
+		-- Into acceleration (pitch) and into turns (bank), in degrees.
+		MaxLeanDegrees = 9,
+		LeanPerAcceleration = 0.09, -- degrees per studs/s^2
+		SprintLeanDegrees = 5, -- extra forward lean while sprinting
+		MaxBankDegrees = 11,
+		BankPerTurnRate = 2.4, -- degrees per rad/s, scaled by speed
+		LeanSmoothSeconds = 0.12,
+
+		-- === HEAD LOOK ===
+		-- The head turns toward the lock-on target, or where the camera looks.
+		HeadLook = true,
+		MaxHeadYawDegrees = 55,
+		MaxHeadPitchDegrees = 30,
+		HeadSmoothSeconds = 0.14,
+
+		-- === LANDING ===
+		-- Fall speed (studs/s) above which a landing is shown at all, and the
+		-- dip the body takes (studs) for a soft and a hard one.
+		SoftLandingSpeed = 22,
+		SoftLandingDipStuds = 0.35,
+		HardLandingDipStuds = 1.0,
+		LandingDipSeconds = 0.28,
+
+		-- === TURN IN PLACE ===
+		-- Standing and turning faster than this (rad/s) steps the feet.
+		TurnInPlaceRate = 2.2,
+		TurnInPlaceWeight = 0.55,
+
+		-- === SOUNDS ===
+		-- The Roblox client's built-in character sounds, played by us (the
+		-- default sound script keys off the Humanoid state machine, which is
+		-- off). The running loop's rate follows speed: at RunningSoundSpeed
+		-- studs/s it plays at normal rate.
+		Sounds = true,
+		RunningSoundSpeed = 16,
+		MaxRunningSoundRate = 2.2,
+		RunningVolume = 0.35,
+		JumpVolume = 0.4,
+		LandVolume = 0.5,
 	},
 
 	-- === LOCK-ON ===

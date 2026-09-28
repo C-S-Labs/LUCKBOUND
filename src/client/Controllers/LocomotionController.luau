@@ -6,9 +6,9 @@
 -- Humanoid's state machine is switched off (EvaluateStateMachine = false)
 -- and a ControllerManager drives the character: this file tells it the
 -- direction, speed and facing every frame, switches between its ground and
--- air controllers, and launches jumps itself. The stock Animate script is
--- switched off too; the same stock animation assets are played from here,
--- driven by our speed and mode, until LUCKBOUND has its own.
+-- air controllers, and launches jumps itself. How the BODY reads while it
+-- moves -- clips, blending, lean, head look, the roll's look, sounds -- is
+-- CharacterAnimator's; this file only moves the character.
 --
 -- Player abilities are movement. Everything offensive -- damage, reach,
 -- hit effects -- belongs to the item that grants it, and this controller
@@ -28,14 +28,14 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
-local TweenService = game:GetService("TweenService")
 local Workspace = game:GetService("Workspace")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local Constants = require(Root.Core.Constants)
 local GameConfig = require(Root.Core.GameConfig)
 local LocomotionCore = require(Root.Core.LocomotionCore)
-local UITheme = require(Root.Core.UITheme)
+local AnimationCore = require(Root.Core.AnimationCore)
+local CharacterAnimator = require(script.Parent.CharacterAnimator)
 
 local LocomotionController = {}
 
@@ -54,6 +54,11 @@ local airController: AirController? = nil
 local groundSensor: ControllerPartSensor? = nil
 local groundIgnoreUntil = 0
 
+-- For landings: whether the last frame was grounded, and the downward
+-- speed while airborne.
+local wasGrounded = true
+local airFallSpeed = 0
+
 local wantsSprint = false
 local jumpHeld = false
 local vitals: any = nil
@@ -67,196 +72,6 @@ local lockTarget: Vector3? = nil
 local shoulderCamera = false
 -- Dev overrides (/moveprofile, /stamina): nil = normal behaviour.
 local forcedProfile: string? = nil
-
--- === animation =======================================================
--- The stock assets, played by us. `tracks` is keyed walk/run/idle/jump/fall.
-
-local tracks: { [string]: AnimationTrack } = {}
-local playing: string? = nil
-
-local function loadAnimations(character: Model, hum: Humanoid)
-	tracks = {}
-	playing = nil
-	local animate = character:FindFirstChild("Animate")
-	local animator = hum:FindFirstChildOfClass("Animator")
-	if not animate or not animator then
-		return
-	end
-	if animate:IsA("LocalScript") then
-		animate.Enabled = false
-	end
-	for _, track in animator:GetPlayingAnimationTracks() do
-		track:Stop(0)
-	end
-
-	local function load(key: string, folder: string)
-		local holder = animate:FindFirstChild(folder)
-		local asset = holder and holder:FindFirstChildOfClass("Animation")
-		if asset then
-			local track = animator:LoadAnimation(asset)
-			track.Looped = key ~= "jump"
-			tracks[key] = track
-		end
-	end
-	load("idle", "idle")
-	load("walk", "walk")
-	load("run", "run")
-	load("jump", "jump")
-	load("fall", "fall")
-end
-
-local function playTrack(key: string, speed: number)
-	local track = tracks[key]
-	if not track then
-		return
-	end
-	if playing ~= key then
-		local fade = GameConfig.Locomotion.AnimFadeSeconds
-		local current = playing and tracks[playing]
-		if current then
-			current:Stop(fade)
-		end
-		track:Play(fade)
-		playing = key
-	end
-	track:AdjustSpeed(speed)
-end
-
-local function animate(mode: string, horizontalSpeed: number, now: number)
-	local tune = GameConfig.Locomotion
-	if mode == "AIR" then
-		-- The jump pose for the rise, the fall loop after.
-		if now - state.LastGroundedAt < tune.CoyoteTimeSeconds * 3 and state.JumpSpent then
-			playTrack("jump", 1)
-		else
-			playTrack("fall", 1)
-		end
-	elseif horizontalSpeed < tune.AnimIdleSpeed then
-		playTrack("idle", 1)
-	elseif state.Sprinting or mode == "ROLL" then
-		playTrack("run", horizontalSpeed / tune.AnimRunNominalSpeed)
-	else
-		playTrack("walk", horizontalSpeed / tune.AnimWalkNominalSpeed)
-	end
-end
-
--- === effects =========================================================
-
--- The roll's look: afterimages along the path, a forward tumble of the
--- body, and a small widening of the camera. No particles: the roll should
--- read as the character moving fast, not as a firework at its feet.
-
-local rootJoint: Motor6D? = nil
-local rootJointC0 = CFrame.identity
-local nextGhostAt = 0
-local fovBase: number? = nil
-
---- The joint that holds the body to the root: turning it tumbles the whole
---- body without touching the physics.
-local function findRootJoint(character: Model, root: BasePart): Motor6D?
-	for _, d in character:GetDescendants() do
-		if d:IsA("Motor6D") and d.Part0 == root then
-			return d
-		end
-	end
-	return nil
-end
-
---- One afterimage: a fading gold copy of every visible part, left in place.
-local function dropGhost(character: Model)
-	local tune = GameConfig.Locomotion
-	local folder = Instance.new("Folder")
-	folder.Name = "LuckboundRollGhost"
-	for _, part in character:GetDescendants() do
-		if part:IsA("BasePart") and part.Transparency < 1 and part.Name ~= "HumanoidRootPart" then
-			local ok, copy = pcall(function()
-				return part:Clone()
-			end)
-			if ok and copy then
-				for _, child in copy:GetChildren() do
-					if not child:IsA("SpecialMesh") then
-						child:Destroy()
-					end
-				end
-				copy.Anchored = true
-				copy.CanCollide = false
-				copy.CanQuery = false
-				copy.CanTouch = false
-				copy.CastShadow = false
-				copy.Material = Enum.Material.Neon
-				copy.Color = UITheme.AccentGold
-				copy.Transparency = tune.RollGhostTransparency
-				if copy:IsA("MeshPart") then
-					copy.TextureID = ""
-				end
-				copy.CFrame = part.CFrame
-				copy.Parent = folder
-				TweenService:Create(
-					copy,
-					TweenInfo.new(
-						tune.RollGhostFadeSeconds,
-						Enum.EasingStyle.Quad,
-						Enum.EasingDirection.Out
-					),
-					{ Transparency = 1 }
-				):Play()
-			end
-		end
-	end
-	folder.Parent = Workspace
-	task.delay(tune.RollGhostFadeSeconds + 0.1, function()
-		folder:Destroy()
-	end)
-end
-
-local function startRollLook()
-	local camera = Workspace.CurrentCamera
-	local tune = GameConfig.Locomotion
-	if camera and tune.RollFovKickDegrees > 0 then
-		fovBase = fovBase or camera.FieldOfView
-		camera.FieldOfView = (fovBase :: number) + tune.RollFovKickDegrees
-	end
-	nextGhostAt = 0
-end
-
---- Every frame: ghosts and tumble while a roll moves, everything put back
---- the moment it stops.
-local function updateRollLook(character: Model, now: number)
-	local tune = GameConfig.Locomotion
-	local moving = LocomotionCore.rollMoving(state, now)
-	local joint = rootJoint
-
-	if moving then
-		if tune.RollGhosts and now >= nextGhostAt then
-			nextGhostAt = now + tune.RollGhostIntervalSeconds
-			dropGhost(character)
-		end
-		if joint and tune.RollTumble and state.RollKind == "ROLL" then
-			local progress =
-				math.clamp((now - state.RollStartedAt) / tune.RollDurationSeconds, 0, 1)
-			local dip = math.sin(progress * math.pi) * tune.RollTumbleDropStuds
-			joint.C0 = rootJointC0
-				* CFrame.new(0, -dip, 0)
-				* CFrame.Angles(-progress * 2 * math.pi, 0, 0)
-		end
-	elseif joint and joint.C0 ~= rootJointC0 then
-		joint.C0 = rootJointC0
-	end
-
-	-- The camera eases back from its kick over the roll.
-	local camera = Workspace.CurrentCamera
-	if camera and fovBase then
-		local base = fovBase :: number
-		if moving then
-			local progress =
-				math.clamp((now - state.RollStartedAt) / tune.RollDurationSeconds, 0, 1)
-			camera.FieldOfView = base + tune.RollFovKickDegrees * (1 - progress)
-		else
-			camera.FieldOfView = base
-			fovBase = nil
-		end
-	end
-end
 
 -- === input ===========================================================
 
@@ -292,22 +107,35 @@ local function launchJump(now: number)
 	manager.ActiveController = airController
 	local velocity = root.AssemblyLinearVelocity
 	root.AssemblyLinearVelocity = Vector3.new(velocity.X, tuning.JumpPower, velocity.Z)
+	CharacterAnimator.onJump()
+end
+
+--- Is facing held by something other than the movement (the shoulder
+--- camera or a lock-on)? Then a roll keeps facing and goes the way pressed;
+--- otherwise the character turns to roll the way it is going.
+local function facingHeld(): boolean
+	return shoulderCamera or lockTarget ~= nil
 end
 
 local function beginRoll(kind: string)
-	local character = player.Character
-	if not character then
-		return
-	end
+	local now = os.clock()
+	local relative = "BACKSTEP"
+	local duration = tuning.BackstepDurationSeconds
 	if kind == "ROLL" then
 		local held = moveDirection()
 		rollDirection = if held.Magnitude > 0 then held.Unit else facing
-		facing = rollDirection
+		if not facingHeld() then
+			facing = rollDirection
+		end
+		local forward, right =
+			AnimationCore.localVelocity(facing.X, facing.Z, rollDirection.X, rollDirection.Z)
+		relative = AnimationCore.rollDirection(forward, right)
+		duration = tuning.RollDurationSeconds
 	else
 		-- A backstep keeps facing forward and hops away from it.
 		rollDirection = -facing
 	end
-	startRollLook()
+	CharacterAnimator.onRoll(relative, now, duration)
 end
 
 local function onJumpPressed()
@@ -415,6 +243,7 @@ local function bindCharacter(character: Model)
 	found.HealthChanged:Connect(function(health)
 		if health <= 0 and humanoid == found then
 			humanoid = nil
+			CharacterAnimator.unbind()
 			cm:Destroy()
 			found.EvaluateStateMachine = true
 			found:ChangeState(Enum.HumanoidStateType.Dead)
@@ -433,9 +262,8 @@ local function bindCharacter(character: Model)
 
 	state = LocomotionCore.newState(tuning, os.clock())
 	nextProfileCheck = 0
-	rootJoint = findRootJoint(character, root)
-	rootJointC0 = if rootJoint then rootJoint.C0 else CFrame.identity
-	loadAnimations(character, found)
+	wasGrounded, airFallSpeed = true, 0
+	CharacterAnimator.bind(character, found, root)
 end
 
 local function step(dt: number)
@@ -538,11 +366,27 @@ local function step(dt: number)
 		cm.ActiveController = if sensed then ground else air
 	end
 
+	-- === landings ===
+	-- The downward speed is sampled every airborne frame, because on the
+	-- landing frame itself the floor has already stopped the fall.
 	local velocity = root.AssemblyLinearVelocity
-	animate(mode, Vector3.new(velocity.X, 0, velocity.Z).Magnitude, now)
-	if root.Parent and root.Parent:IsA("Model") then
-		updateRollLook(root.Parent, now)
+	if not grounded then
+		airFallSpeed = math.max(0, -velocity.Y)
+	elseif not wasGrounded then
+		state = LocomotionCore.land(state, now, airFallSpeed, tuning)
+		CharacterAnimator.onLand(airFallSpeed, now)
+		airFallSpeed = 0
 	end
+	wasGrounded = grounded
+
+	CharacterAnimator.update({
+		Now = now,
+		Mode = mode,
+		Sprinting = state.Sprinting,
+		Grounded = grounded,
+		RollMoving = LocomotionCore.rollMoving(state, now),
+		LookAt = lockTarget,
+	}, dt)
 
 	-- The shoulder camera's half: re-applied every frame, because the default
 	-- camera resets the mouse behaviour whenever it likes. The lock-on camera

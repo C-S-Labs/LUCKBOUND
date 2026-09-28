@@ -8,6 +8,7 @@ local EventCore = require(script.Parent.Parent.Core.EventCore)
 local AmbienceCore = require(script.Parent.Parent.Core.AmbienceCore)
 local PropCore = require(script.Parent.Parent.Core.PropCore)
 local FixtureCore = require(script.Parent.Parent.Core.FixtureCore)
+local AnimationCore = require(script.Parent.Parent.Core.AnimationCore)
 
 local Schema = {}
 
@@ -1328,6 +1329,13 @@ local VALIDATORS: { { Kind: string, Required: boolean?, Run: (any) -> (boolean, 
 		Kind = "hub",
 		Run = function(c)
 			return Schema.validateHub(c.hub)
+		end,
+	},
+	{
+		-- The player's animation slots (Content/Animations/Player.luau).
+		Kind = "animations",
+		Run = function(c)
+			return AnimationCore.validateSet(c.animations)
 		end,
 	},
 	{

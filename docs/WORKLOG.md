@@ -34,6 +34,39 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 101 — 2026-09-28 — Polished body movement; directional rolls
+**Merged:** see the PR for this branch   **Tests:** 997 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- **Owner:** movement must read natural and polished, with independent directional and jump animations.
+  New `Core/AnimationCore.luau` (pure, 45+ tests) and `Controllers/CharacterAnimator.luau`: blended
+  idle/walk/run by speed; 4-way directional blend when a gait's clips exist; a procedural strafe fallback
+  (legs turn with a waist counter-turn; backward reverses the clip); lean and bank; head look; soft and hard
+  landing dips; turn in place; built-in running, jump and land sounds.
+- **Content slots:** `Content/Animations/Player.luau` (22 slots: Idle, Walk*/Run* x4, Sprint, JumpStart,
+  Rise, Fall, LandSoft/Hard, Roll x4, Backstep, Turn L/R), validated at boot (`Schema` "animations").
+- **Owner:** rolls keep facing when facing is held (shoulder camera or lock-on) and play by direction
+  (front/back/left/right). A per-direction procedural tumble applies until clips exist. The roll look is toned
+  down: ghosts at 0.78 transparency every 0.09s, a 3° FOV kick, a smaller dip.
+- **Movement rule:** a hard landing (>72 studs/s) slows movement briefly (`LocomotionCore.land`; hub 0.12s,
+  expedition 0.3s).
+- `LocomotionController` now only moves the character; all presentation moved to `CharacterAnimator`.
+- `PLAYER_ABILITIES.md` §2.7 covers where and how to add real clips.
+
+### Decisions made
+- Procedural layers are local-only (Motor6D.C0). Real clips are the way to make the polish visible to other
+  players; there's no new remote.
+- The UI revamp is a separate branch (one task per branch).
+
+### Stopped at
+Needs a Studio walk: `TESTING.md` Test K 4b, 4c and 5.
+
+### Next
+1. Owner walks it. Author the roll and run directional clips first.
+2. UI revamp on its own branch.
+
+---
+
 ## Session 100 — 2026-09-28 — Walk feedback: no ice, hub stamina, shoulder camera, roll look
 **Merged:** see the PR for this branch   **Tests:** 950 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 

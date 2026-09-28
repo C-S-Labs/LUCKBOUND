@@ -29,6 +29,8 @@ local CodeCore = __require("CodeCore")
 local SettingsCore = __require("SettingsCore")
 local LocomotionCore = __require("LocomotionCore")
 local LockOnCore = __require("LockOnCore")
+local AnimationCore = __require("AnimationCore")
+local PlayerAnimations = __require("PlayerAnimations")
 local ThemeCore = __require("ThemeCore")
 local Palettes = __require("Palettes")
 local EventCore = __require("EventCore")
@@ -5842,6 +5844,321 @@ do
 				return true
 			end
 			return clean(GameConfig.Locomotion)
+		end)()
+	)
+end
+
+-- === character animation ==========================================
+do
+	group("Character animation")
+
+	local A = GameConfig.CharacterAnimation
+	local L = GameConfig.Locomotion
+	local EXP = LocomotionCore.tuning(GameConfig, "EXPEDITION")
+	local HUB = LocomotionCore.tuning(GameConfig, "HUB")
+	local function near(a, b)
+		return math.abs(a - b) < 1e-6
+	end
+
+	-- === the content ================================================
+	check(
+		"the shipped animation set passes its boot check",
+		(AnimationCore.validateSet(PlayerAnimations))
+	)
+	check(
+		"a typo'd slot is a boot error",
+		(function()
+			local copy = table.clone(PlayerAnimations)
+			copy.RollFoward = ""
+			return not AnimationCore.validateSet(copy)
+		end)()
+	)
+	check(
+		"a malformed id is a boot error",
+		(function()
+			local copy = table.clone(PlayerAnimations)
+			copy.Idle = "12345"
+			return not AnimationCore.validateSet(copy)
+		end)()
+	)
+	check(
+		"a missing slot is a boot error",
+		(function()
+			local copy = table.clone(PlayerAnimations)
+			copy.Idle = nil
+			return not AnimationCore.validateSet(copy)
+		end)()
+	)
+	check(
+		"a directional gait switches to clips only when all four are filled",
+		(function()
+			local set = {
+				RunForward = "rbxassetid://1",
+				RunBackward = "rbxassetid://2",
+				RunLeft = "rbxassetid://3",
+			}
+			local partial = AnimationCore.hasDirectionalSet(set, "Run")
+			set.RunRight = "rbxassetid://4"
+			return not partial and AnimationCore.hasDirectionalSet(set, "Run")
+		end)()
+	)
+	check(
+		"an empty slot falls back",
+		AnimationCore.slot({ Idle = "" }, "Idle") == nil
+			and AnimationCore.slot({ Idle = "rbxassetid://9" }, "Idle") == "rbxassetid://9"
+	)
+
+	-- === direction ==================================================
+	check(
+		"moving along your facing is forward",
+		(function()
+			local f, r = AnimationCore.localVelocity(0, -1, 0, -10)
+			return near(f, 10) and near(r, 0)
+		end)()
+	)
+	check(
+		"moving to your right is right",
+		(function()
+			-- Facing -Z, the right is +X.
+			local f, r = AnimationCore.localVelocity(0, -1, 10, 0)
+			return near(f, 0) and near(r, 10)
+		end)()
+	)
+	check("straight ahead is angle 0", near(AnimationCore.moveAngle(1, 0), 0))
+	check("right is +pi/2", near(AnimationCore.moveAngle(0, 1), math.pi / 2))
+	check("wrap keeps angles in (-pi, pi]", near(AnimationCore.wrap(3 * math.pi / 2), -math.pi / 2))
+
+	check(
+		"a pure direction is all one clip",
+		(function()
+			local w = AnimationCore.directionalWeights(math.pi / 2)
+			return near(w.Right, 1) and near(w.Forward, 0) and near(w.Left, 0)
+		end)()
+	)
+	check(
+		"a diagonal splits between its neighbours, and weights sum to 1",
+		(function()
+			local w = AnimationCore.directionalWeights(-math.pi / 4)
+			return near(w.Forward, 0.5)
+				and near(w.Left, 0.5)
+				and near(w.Forward + w.Backward + w.Left + w.Right, 1)
+		end)()
+	)
+
+	-- === the procedural strafe ======================================
+	check(
+		"strafing right turns the legs right, within the limit",
+		(function()
+			local reverse, yaw = AnimationCore.procedural(math.pi / 2, GameConfig)
+			return not reverse and near(yaw, -math.rad(A.MaxLegYawDegrees))
+		end)()
+	)
+	check(
+		"a gentle right diagonal turns the legs by the angle itself",
+		(function()
+			local reverse, yaw = AnimationCore.procedural(math.rad(30), GameConfig)
+			return not reverse and near(yaw, -math.rad(30))
+		end)()
+	)
+	check(
+		"straight back plays the clip in reverse with the legs straight",
+		(function()
+			local reverse, yaw = AnimationCore.procedural(math.pi, GameConfig)
+			return reverse and near(yaw, 0)
+		end)()
+	)
+	check(
+		"backing off to the right turns the legs from behind, never through 180",
+		(function()
+			local reverse, yaw = AnimationCore.procedural(math.rad(150), GameConfig)
+			return reverse
+				and math.abs(yaw) <= math.rad(A.MaxLegYawDegrees) + 1e-9
+				and near(yaw, math.rad(30))
+		end)()
+	)
+
+	-- === gait =======================================================
+	check("walking pace is the walk clip", AnimationCore.runBlend(A.RunFrom - 1, GameConfig) == 0)
+	check("running pace is the run clip", AnimationCore.runBlend(A.RunFull + 1, GameConfig) == 1)
+	check(
+		"between them it crossfades",
+		(function()
+			local b = AnimationCore.runBlend((A.RunFrom + A.RunFull) / 2, GameConfig)
+			return b > 0.4 and b < 0.6
+		end)()
+	)
+	check(
+		"both profiles walk at a pace that reads as a run (no half-speed shuffle)",
+		HUB.WalkSpeed >= A.RunFull and EXP.WalkSpeed >= A.RunFull
+	)
+	check(
+		"playback follows speed, within the clamp",
+		near(AnimationCore.playbackRate(A.RunClipSpeed, A.RunClipSpeed, GameConfig), 1)
+			and AnimationCore.playbackRate(1000, A.RunClipSpeed, GameConfig) == A.MaxPlaybackRate
+			and AnimationCore.playbackRate(0.01, A.RunClipSpeed, GameConfig)
+				== A.MinPlaybackRate
+	)
+	check(
+		"the running sound quickens with speed, and is capped",
+		AnimationCore.runningSoundRate(A.RunningSoundSpeed, GameConfig) == 1
+			and AnimationCore.runningSoundRate(10000, GameConfig) == A.MaxRunningSoundRate
+	)
+
+	-- === lean =======================================================
+	check(
+		"accelerating leans forward (front down), braking leans back",
+		(function()
+			local forward = AnimationCore.lean(50, 0, 1, false, GameConfig)
+			local braking = AnimationCore.lean(-50, 0, 1, false, GameConfig)
+			return forward < 0 and braking > 0
+		end)()
+	)
+	check(
+		"a sprint leans further forward",
+		(function()
+			local run = AnimationCore.lean(0, 0, 1, false, GameConfig)
+			local sprint = AnimationCore.lean(0, 0, 1, true, GameConfig)
+			return sprint < run
+		end)()
+	)
+	check(
+		"turning left banks left, and the bank is capped",
+		(function()
+			local _, bank = AnimationCore.lean(0, 100, 1, false, GameConfig)
+			return bank > 0 and near(bank, math.rad(A.MaxBankDegrees))
+		end)()
+	)
+	check(
+		"standing still never banks",
+		select(2, AnimationCore.lean(0, 5, 0, false, GameConfig)) == 0
+	)
+
+	-- === head =======================================================
+	check(
+		"the head turns toward something to the left",
+		(function()
+			local yaw = AnimationCore.headLook(-1, 0, -1, GameConfig)
+			return yaw > 0
+		end)()
+	)
+	check(
+		"the head looks up at something above, within the limit",
+		(function()
+			local _, pitch = AnimationCore.headLook(0, 10, -1, GameConfig)
+			return near(pitch, math.rad(A.MaxHeadPitchDegrees))
+		end)()
+	)
+	check(
+		"the head never snaps round to something behind it",
+		(function()
+			local yaw, pitch = AnimationCore.headLook(0.2, 0, 1, GameConfig)
+			return yaw == 0 and pitch == 0
+		end)()
+	)
+
+	-- === landing ====================================================
+	check(
+		"a step down is no landing at all",
+		AnimationCore.landing(A.SoftLandingSpeed - 1, GameConfig) == "NONE"
+	)
+	check("a normal jump lands soft", AnimationCore.landing(L.JumpPower, GameConfig) == "SOFT")
+	check("a real drop lands hard", AnimationCore.landing(L.HardLandingSpeed, GameConfig) == "HARD")
+	check(
+		"the landing dip goes down, comes back up, and ends",
+		(function()
+			local peak = AnimationCore.landingDip("HARD", A.LandingDipSeconds * 0.2, GameConfig)
+			local late = AnimationCore.landingDip("HARD", A.LandingDipSeconds * 0.9, GameConfig)
+			local done = AnimationCore.landingDip("HARD", A.LandingDipSeconds, GameConfig)
+			return near(peak, A.HardLandingDipStuds) and late > 0 and late < peak and done == 0
+		end)()
+	)
+	check(
+		"a hard landing dips further than a soft one",
+		AnimationCore.landingDip("HARD", A.LandingDipSeconds * 0.2, GameConfig)
+			> AnimationCore.landingDip("SOFT", A.LandingDipSeconds * 0.2, GameConfig)
+	)
+	check(
+		"a hard landing slows movement for a beat in an expedition",
+		(function()
+			local s = LocomotionCore.newState(EXP, 0)
+			local landed, hard = LocomotionCore.land(s, 0, L.HardLandingSpeed + 1, EXP)
+			return hard
+				and LocomotionCore.targetSpeed(landed, 0.01, EXP) < EXP.WalkSpeed
+				and LocomotionCore.targetSpeed(
+						landed,
+						EXP.HardLandingRecoverySeconds + 0.01,
+						EXP
+					)
+					== EXP.WalkSpeed
+		end)()
+	)
+	check(
+		"a normal jump's landing costs nothing",
+		(function()
+			local s = LocomotionCore.newState(EXP, 0)
+			local _, hard = LocomotionCore.land(s, 0, L.JumpPower, EXP)
+			return not hard
+		end)()
+	)
+	check(
+		"the hub recovers from a hard landing faster than an expedition",
+		HUB.HardLandingRecoverySeconds < EXP.HardLandingRecoverySeconds
+	)
+
+	-- === the roll ===================================================
+	check(
+		"a roll's direction is taken relative to facing",
+		AnimationCore.rollDirection(1, 0.2) == "FORWARD"
+			and AnimationCore.rollDirection(-1, 0.2) == "BACKWARD"
+			and AnimationCore.rollDirection(0.1, 1) == "RIGHT"
+			and AnimationCore.rollDirection(0.1, -1) == "LEFT"
+	)
+	check(
+		"a forward tumble turns the front down through one full turn",
+		(function()
+			local mid = AnimationCore.tumble("FORWARD", 0.5, GameConfig)
+			local finish = AnimationCore.tumble("FORWARD", 1, GameConfig)
+			return mid < 0 and near(finish, -2 * math.pi)
+		end)()
+	)
+	check(
+		"a backward tumble turns the other way",
+		AnimationCore.tumble("BACKWARD", 0.5, GameConfig) > 0
+	)
+	check(
+		"side rolls bank toward the side pressed",
+		select(2, AnimationCore.tumble("LEFT", 0.5, GameConfig)) > 0
+			and select(2, AnimationCore.tumble("RIGHT", 0.5, GameConfig)) < 0
+	)
+	check(
+		"a tumble dips mid-roll and lands upright at the end",
+		(function()
+			local _, _, midDip = AnimationCore.tumble("LEFT", 0.5, GameConfig)
+			local _, _, endDip = AnimationCore.tumble("LEFT", 1, GameConfig)
+			return near(midDip, L.RollTumbleDropStuds) and near(endDip, 0)
+		end)()
+	)
+	check(
+		"the roll look stays subtle",
+		L.RollGhostTransparency >= 0.6 and L.RollFovKickDegrees <= 5
+	)
+
+	-- === turn in place ==============================================
+	check(
+		"standing and turning fast steps the feet",
+		AnimationCore.turnInPlace(0, A.TurnInPlaceRate + 1, GameConfig) > 0
+	)
+	check(
+		"moving never counts as turning in place",
+		AnimationCore.turnInPlace(10, 10, GameConfig) == 0
+	)
+
+	check(
+		"smoothing does not depend on the frame rate",
+		(function()
+			local one = AnimationCore.smoothAlpha(1 / 30, 0.1)
+			local two = AnimationCore.smoothAlpha(1 / 60, 0.1)
+			return math.abs((1 - one) - (1 - two) ^ 2) < 1e-9
 		end)()
 	)
 end
