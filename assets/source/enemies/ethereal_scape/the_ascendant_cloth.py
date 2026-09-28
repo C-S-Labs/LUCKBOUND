@@ -10,7 +10,7 @@ LEGS = ["LeftUpperLeg", "LeftLowerLeg", "RightUpperLeg", "RightLowerLeg"]
 ARMS = ["LeftUpperArm", "LeftLowerArm", "LeftHand", "RightUpperArm", "RightLowerArm", "RightHand"]
 build_cloth([
     dict(name="Robe", kind="skirt", meshes=["Waist"], anchor="LowerTorso", top=1.8, keep_above=1.6, sectors=16, segments=5,
-         replace=["LeftUpperLeg", "RightUpperLeg"], colliders=LEGS + ARMS, stiff_top=0.45, stiff_tip=0.12,
+         replace=["LeftUpperLeg", "RightUpperLeg"], colliders=LEGS, stiff_top=0.45, stiff_tip=0.12,
          ring_stretch=1.4),                              # the front slit lets the panels part round a raised knee
     dict(name="Scarf", kind="strips", meshes=["Ribbons", "RibbonsGlow"], segments=4, join=0.05,
          colliders=["UpperTorso", "LowerTorso"] + LEGS + ARMS, radius={"LowerTorso": 0.26}, stiff_top=0.25, stiff_tip=0.03),

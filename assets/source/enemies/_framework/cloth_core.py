@@ -238,7 +238,7 @@ def build_cloth(specs):
 def _anchor_target(ch, M):
     return [M @ p for p in ch["local"]]
 
-def cloth_bake(substeps=6, iters=4, loops=3, preroll=30, gravity=9.81, damping=0.12, margin=0.08):
+def cloth_bake(substeps=6, iters=4, loops=3, preroll=30, gravity=9.81, damping=0.12, margin=0.08, friction=0.15):
     """Simulate every CLOTH_CHAINS chain over the rig's current action and key the chain bones (quaternion keys on every
        frame). Looping actions (anim_core _ACT['loop']) run `loops` cycles and keep the last, so the loop is seamless;
        one-shots pre-roll on frame 1 first so the cloth starts settled."""
@@ -278,9 +278,10 @@ def cloth_bake(substeps=6, iters=4, loops=3, preroll=30, gravity=9.81, damping=0
                     x[k] = x[k].lerp(T[k], s/substeps*2)
             cols = [((C_prev[c][0].lerp(C_now[c][0], u), C_prev[c][1].lerp(C_now[c][1], u)), r) for c, r in
                     {c: r for ch in CLOTH_CHAINS for c, r in ch["colliders"]}.items()]
+            touched = set()
             for _ in range(iters):
                 for ci, ch in enumerate(CLOTH_CHAINS):
-                    x = X[ci]; K = len(ch["bones"]); Lk = ch["len"]
+                    x, xp = X[ci], Xp[ci]; K = len(ch["bones"]); Lk = ch["len"]
                     for k in range(K):                                 # segment lengths (root pinned)
                         d = x[k + 1] - x[k]; l = d.length or 1e-9; e = (l - Lk[k])/l
                         if k == 0: x[1] = x[1] - d*e
@@ -292,8 +293,11 @@ def cloth_bake(substeps=6, iters=4, loops=3, preroll=30, gravity=9.81, damping=0
                             dv = c1 - c2; dl = dv.length
                             if dl < R:
                                 n = dv/dl if dl > 1e-6 else Vector((0, -1, 0)); push = n*(R - dl)
-                                if k == 0: x[1] = x[1] + push*(1.0 if s > 0 else 0.0)
-                                else: x[k] = x[k] + push*(1 - s); x[k + 1] = x[k + 1] + push*s
+                                if k == 0: w = [(1, s)]            # contact near the pinned root: no lever kick
+                                else: w = [(k, 1 - s), (k + 1, s)]
+                                for j, wj in w:
+                                    x[j] = x[j] + push*wj
+                                    if wj > 0.2: touched.add((ci, j))
                 if any(ch["ring"] for ch in CLOTH_CHAINS):                    # skirt ring: neighbours keep their spacing
                     for spec_name in {ch["spec"]["name"] for ch in CLOTH_CHAINS if ch["ring"]}:
                         ring = [(ci, ch) for ci, ch in enumerate(CLOTH_CHAINS) if ch["ring"] and ch["spec"]["name"] == spec_name]
@@ -303,6 +307,10 @@ def cloth_bake(substeps=6, iters=4, loops=3, preroll=30, gravity=9.81, damping=0
                                 lo, hi = r0*0.8, r0*ca["spec"].get("ring_stretch", 1.15)
                                 if l < lo or l > hi:
                                     e = (l - (lo if l < lo else hi))/l*0.5; X[ia][k] = X[ia][k] + d*e; X[ib][k] = X[ib][k] - d*e
+            # friction: a point resting on a collider keeps only a little of its speed. Without it, cloth lying on a
+            # leg bounces off every substep and shivers (the "spazzing" flare just below the hips).
+            for ci, j in touched:
+                X[ci][j], Xp[ci][j] = X[ci][j], X[ci][j] - (X[ci][j] - Xp[ci][j])*friction
         A_prev, C_prev = A_now, C_now
         if si >= keep_from: rec.append((f, [[p.copy() for p in x] for x in X]))
     _key_chains(rec)
