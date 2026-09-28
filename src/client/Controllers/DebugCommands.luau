@@ -670,7 +670,19 @@ CLIENT.animslot = function(args)
 		end
 		return
 	end
-	local id = args[2] or ""
+	-- A slot alone describes that slot; clearing needs an explicit "".
+	if not args[2] then
+		local wanted = string.lower(args[1])
+		for _, line in animator.describeSlots() do
+			if string.lower(string.match(line, "^[^:]+") or "") == wanted then
+				say(line)
+				return
+			end
+		end
+		fail(`unknown slot '{args[1]}' (/animslot lists them all)`)
+		return
+	end
+	local id = args[2]
 	if id == '""' then
 		id = ""
 	end
