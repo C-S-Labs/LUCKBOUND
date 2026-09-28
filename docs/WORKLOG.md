@@ -49,7 +49,8 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 - Owner's partner cannot see the rotating constellation above the Fate Engine. Cause: `HubV2` clones
   `hubsky_ring_constellation` / `_spokes` / `_core` / `_gyro_a/b` from the HUB_SKY prefab, and those meshes exist
   only in the owner's uncommitted local `assets/rbxm/prefabs/HUB_SKY.rbxmx`. origin/main's copy lacks them, and
-  HubV2 silently skips missing meshes. Fix: the owner commits that local prefab (it uses uploaded rbxassetids).
+  HubV2 silently skips missing meshes. Fixed: with the owner's go-ahead, their local prefab (12 new MeshParts on
+  uploaded rbxassetids) is committed in this PR.
 
 ### Stopped at
 Not walked in Studio. Check that the rail clears the chat on small or phone screens, and tune RailOffsetY if not.
