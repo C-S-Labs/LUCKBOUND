@@ -291,6 +291,7 @@ end
 -- === wiring ==========================================================
 
 local function bindCharacter(character: Model)
+	manager = nil
 	local found = character:WaitForChild("Humanoid", 10)
 	local root = character:WaitForChild("HumanoidRootPart", 10)
 	if not found or not found:IsA("Humanoid") or not root or not root:IsA("BasePart") then
@@ -462,6 +463,7 @@ end
 
 --- `deps` = { Vitals }. Called once PLAY is pressed.
 function LocomotionController.init(deps: any): ()
+	print("[Locomotion] init")
 	vitals = deps and deps.Vitals
 
 	local playerScripts = player:WaitForChild("PlayerScripts")
@@ -472,10 +474,22 @@ function LocomotionController.init(deps: any): ()
 		controls = module:GetControls()
 	end
 
-	if player.Character then
-		task.spawn(bindCharacter, player.Character)
+	-- A failure here would otherwise leave the character on Roblox's default
+	-- movement with no sign anything went wrong: say so, loudly, either way.
+	local function bindLoud(character: Model)
+		local bound, err = pcall(bindCharacter, character)
+		if not bound then
+			warn(`[Locomotion] controller FAILED to bind; default movement is running: {err}`)
+		elseif manager then
+			print(`[Locomotion] controller bound (profile {profileId})`)
+		else
+			warn("[Locomotion] controller did not bind: no Humanoid or HumanoidRootPart")
+		end
 	end
-	player.CharacterAdded:Connect(bindCharacter)
+	if player.Character then
+		task.spawn(bindLoud, player.Character)
+	end
+	player.CharacterAdded:Connect(bindLoud)
 
 	UserInputService.InputBegan:Connect(function(input, processed)
 		if processed then
