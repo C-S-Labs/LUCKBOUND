@@ -493,15 +493,22 @@ The first thing anyone sees.
    the bottom centre, both always visible. Output shows `[Locomotion] controller
    bound`. *If the character slides in the idle pose, the stock animations did not
    load: report the Output.*
-2. **Hold Shift and run.** ✅ Pass: you speed up smoothly and the gold bar
-   drains. Let go: it refills.
+2. **Hold Shift and run, then let go.** ✅ Pass: you reach speed and stop
+   almost at once, with no sliding. In the hub the gold bar never drains
+   (unlimited stamina).
+2b. **Press Left Ctrl.** ✅ Pass: the mouse locks to the centre, the camera sits
+   over the right shoulder, and the character turns with the camera. Ctrl again
+   turns it off.
 3. **Press Space on the ground, then again in the air.** ✅ Pass: one jump, and
    nothing in the air (the double jump is gone). The jump is as high as before.
 4. **Walk off a walkway edge and press Space immediately.** ✅ Pass: you still
    jump (the coyote window).
 5. **Press Q while moving, then Q standing still.** ✅ Pass: a ~17-stud roll in
-   the direction you held, then a short hop backward that keeps you facing forward.
-   Both show a gold burst. In the hub neither costs stamina.
+   the direction you held, with the body tumbling forward, gold afterimages along
+   the path and a brief camera widen. Then a short hop backward that keeps you
+   facing forward, with afterimages and no tumble. In the hub neither costs stamina.
+   *Use `/moveprofile expedition` to feel the expedition weight without entering
+   one, and `/stamina 5` to test low stamina.*
 
 **In an expedition** (any world, via the Fate Engine or `/roll`):
 

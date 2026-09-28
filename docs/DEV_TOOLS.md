@@ -29,7 +29,7 @@ place goes public.
 |---|---|
 | World & Map | `/roll <world> [test]`, `/enter [seed]`, `/leave`, `/seed`, `/worlds` |
 | Chunks | `/chunks [on/off]` (bounds + labels; red = blockout), `/chunklist`, `/chunktp <chunk>` |
-| Player | `/fly`, `/noclip`, `/speed [n]`, `/tp <place>`, `/where`, `/god`, `/heal`, `/respawn` |
+| Player | `/fly`, `/noclip`, `/speed [n]`, `/tp <place>`, `/where`, `/god`, `/heal`, `/respawn`, `/moveprofile [hub/expedition/auto]` (force a movement feel), `/stamina [percent]` |
 | Fate & Loot | `/boss`, `/givekey [key]`, `/takekey`, `/keys`, `/keychance`, `/vaultchance`, `/ledger` |
 | Events | `/event <id>`, `/endevents` |
 | Ambience | `/atmosphere <id>`, `/tint`, `/props on/off`, `/clock <hour>` |

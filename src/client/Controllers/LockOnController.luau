@@ -383,6 +383,7 @@ function LockOnController.init(deps: any): ()
 
 	-- After the default camera has run, so ours is the one that shows.
 	RunService:BindToRenderStep("LuckboundLockOn", Enum.RenderPriority.Camera.Value + 1, update)
+	print("[LockOn] ready: middle mouse / R3 to lock (needs a target: /dummies or /showboss)")
 end
 
 return LockOnController

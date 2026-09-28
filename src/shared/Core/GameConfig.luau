@@ -1045,26 +1045,29 @@ local GameConfig = {
 			HUB = {
 				SpeedScale = 1, -- 32 studs/s
 				SprintMultiplier = 1.55, -- ~50
-				AccelerationSeconds = 0.2,
-				DecelerationSeconds = 0.3,
+				-- Short on purpose: long ramps read as sliding on ice (owner's
+				-- first Studio walk, 2026-09-28).
+				AccelerationSeconds = 0.08,
+				DecelerationSeconds = 0.05,
 				-- Radians/s the character turns toward where it is going.
 				-- High in the hub: nobody wants to wait for a turn in a lobby.
 				TurnRate = 18,
 				-- Moving in the air steers at this fraction of ground control.
 				AirControl = 0.8,
-				-- Stamina costs. The hub keeps sprint's cost (it is what makes
-				-- a sprint a decision) and waives the rest.
+				-- Stamina is unlimited in the hub, and only there (owner,
+				-- 2026-09-28): nothing costs anything.
 				JumpStaminaCost = 0,
 				RollStaminaCost = 0,
-				SprintDrainPerSecond = 12.5,
+				SprintDrainPerSecond = 0,
 			},
 			EXPEDITION = {
 				-- The middle ground the owner asked for: heavier than the hub,
 				-- lighter than a Souls game. ~22 walking, ~34 sprinting.
 				SpeedScale = 0.7,
 				SprintMultiplier = 1.5,
-				AccelerationSeconds = 0.3,
-				DecelerationSeconds = 0.22,
+				-- Weight comes from turning and costs, not from sliding.
+				AccelerationSeconds = 0.12,
+				DecelerationSeconds = 0.08,
 				TurnRate = 10,
 				AirControl = 0.45,
 				JumpStaminaCost = 10,
@@ -1117,7 +1120,28 @@ local GameConfig = {
 		-- A roll pressed this long before the current one ends comes out the
 		-- moment it can. Chaining rolls is the feel; mashing is not required.
 		RollBufferSeconds = 0.2,
-		RollEffect = true,
+
+		-- === ROLL LOOK ===
+		-- Afterimages: fading gold copies of the character left along the
+		-- path, one every GhostInterval, each fading over GhostFade.
+		RollGhosts = true,
+		RollGhostIntervalSeconds = 0.05,
+		RollGhostFadeSeconds = 0.32,
+		RollGhostTransparency = 0.45, -- how solid a fresh ghost starts
+		-- A forward tumble of the body for a roll (not a backstep), dipping
+		-- this far at its lowest. Drawn locally; other players see the slide
+		-- until LUCKBOUND has a roll animation asset.
+		RollTumble = true,
+		RollTumbleDropStuds = 1.2,
+		-- The camera widens by this many degrees at the start of a roll and
+		-- settles back over the roll: speed you feel, not just see.
+		RollFovKickDegrees = 7,
+
+		-- === SHOULDER CAMERA (our shift lock) ===
+		-- Left Ctrl toggles it: the mouse locks to the centre, the camera
+		-- sits over the right shoulder, and the character faces where the
+		-- camera looks. Not Shift, which is sprint.
+		ShoulderCameraOffset = 1.75, -- studs right
 
 		-- === WEAPON LOCK ===
 		-- The longest any weapon move may hold movement, however long it asks

@@ -138,6 +138,41 @@ local COMMANDS: { Command } = {
 		Summary = "Toggle walking through geometry (pairs well with /fly).",
 	},
 	{
+		Name = "moveprofile",
+		Category = "PLAYER",
+		Side = "CLIENT",
+		Summary = "Force the hub or expedition movement feel (auto = normal).",
+		Args = {
+			{
+				Name = "profile",
+				Type = "choice",
+				Options = { "hub", "expedition", "auto" },
+				Optional = true,
+			},
+		},
+	},
+	{
+		Name = "stamina",
+		Category = "PLAYER",
+		Side = "CLIENT",
+		Summary = "Set stamina to a percent (no value prints it).",
+		Args = {
+			{
+				Name = "percent",
+				Type = "number",
+				Optional = true,
+				Min = 0,
+				Max = 100,
+				Suggest = { "0", "10", "50", "100" },
+			},
+		},
+		Presets = {
+			{ Label = "Empty", Args = { "0" } },
+			{ Label = "Sliver", Args = { "5" } },
+			{ Label = "Full", Args = { "100" } },
+		},
+	},
+	{
 		Name = "speed",
 		Category = "PLAYER",
 		Side = "CLIENT",

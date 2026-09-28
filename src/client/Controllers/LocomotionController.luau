@@ -28,6 +28,7 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
 local Workspace = game:GetService("Workspace")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
@@ -62,6 +63,10 @@ local vitals: any = nil
 local facing = Vector3.new(0, 0, -1)
 local rollDirection = Vector3.zero
 local lockTarget: Vector3? = nil
+-- Our shift lock, toggled with Left Ctrl.
+local shoulderCamera = false
+-- Dev overrides (/moveprofile, /stamina): nil = normal behaviour.
+local forcedProfile: string? = nil
 
 -- === animation =======================================================
 -- The stock assets, played by us. `tracks` is keyed walk/run/idle/jump/fall.
@@ -137,36 +142,120 @@ end
 
 -- === effects =========================================================
 
---- A burst of light at the feet on a roll. An ability nobody can see reads
---- as a physics glitch.
-local function playBurstEffect(character: Model)
-	if not GameConfig.Locomotion.RollEffect then
-		return
+-- The roll's look: afterimages along the path, a forward tumble of the
+-- body, and a small widening of the camera. No particles: the roll should
+-- read as the character moving fast, not as a firework at its feet.
+
+local rootJoint: Motor6D? = nil
+local rootJointC0 = CFrame.identity
+local nextGhostAt = 0
+local fovBase: number? = nil
+
+--- The joint that holds the body to the root: turning it tumbles the whole
+--- body without touching the physics.
+local function findRootJoint(character: Model, root: BasePart): Motor6D?
+	for _, d in character:GetDescendants() do
+		if d:IsA("Motor6D") and d.Part0 == root then
+			return d
+		end
 	end
-	local root = character:FindFirstChild("HumanoidRootPart")
-	if not root or not root:IsA("BasePart") then
-		return
+	return nil
+end
+
+--- One afterimage: a fading gold copy of every visible part, left in place.
+local function dropGhost(character: Model)
+	local tune = GameConfig.Locomotion
+	local folder = Instance.new("Folder")
+	folder.Name = "LuckboundRollGhost"
+	for _, part in character:GetDescendants() do
+		if part:IsA("BasePart") and part.Transparency < 1 and part.Name ~= "HumanoidRootPart" then
+			local ok, copy = pcall(function()
+				return part:Clone()
+			end)
+			if ok and copy then
+				for _, child in copy:GetChildren() do
+					if not child:IsA("SpecialMesh") then
+						child:Destroy()
+					end
+				end
+				copy.Anchored = true
+				copy.CanCollide = false
+				copy.CanQuery = false
+				copy.CanTouch = false
+				copy.CastShadow = false
+				copy.Material = Enum.Material.Neon
+				copy.Color = UITheme.AccentGold
+				copy.Transparency = tune.RollGhostTransparency
+				if copy:IsA("MeshPart") then
+					copy.TextureID = ""
+				end
+				copy.CFrame = part.CFrame
+				copy.Parent = folder
+				TweenService:Create(
+					copy,
+					TweenInfo.new(
+						tune.RollGhostFadeSeconds,
+						Enum.EasingStyle.Quad,
+						Enum.EasingDirection.Out
+					),
+					{ Transparency = 1 }
+				):Play()
+			end
+		end
 	end
-
-	local attachment = Instance.new("Attachment")
-	attachment.Position = Vector3.new(0, -2.6, 0)
-	attachment.Parent = root
-
-	local ring = Instance.new("ParticleEmitter")
-	ring.Texture = "rbxasset://textures/particles/sparkles_main.dds"
-	ring.Color = ColorSequence.new(UITheme.AccentGold)
-	ring.Lifetime = NumberRange.new(0.3, 0.5)
-	ring.Rate = 0
-	ring.Speed = NumberRange.new(8, 12)
-	ring.SpreadAngle = Vector2.new(180, 180)
-	ring.Size = NumberSequence.new(0.5)
-	ring.Parent = attachment
-	ring:Emit(14)
-
-	-- Clean up after the longest particle can possibly live, never sooner.
-	task.delay(1, function()
-		attachment:Destroy()
+	folder.Parent = Workspace
+	task.delay(tune.RollGhostFadeSeconds + 0.1, function()
+		folder:Destroy()
 	end)
+end
+
+local function startRollLook()
+	local camera = Workspace.CurrentCamera
+	local tune = GameConfig.Locomotion
+	if camera and tune.RollFovKickDegrees > 0 then
+		fovBase = fovBase or camera.FieldOfView
+		camera.FieldOfView = (fovBase :: number) + tune.RollFovKickDegrees
+	end
+	nextGhostAt = 0
+end
+
+--- Every frame: ghosts and tumble while a roll moves, everything put back
+--- the moment it stops.
+local function updateRollLook(character: Model, now: number)
+	local tune = GameConfig.Locomotion
+	local moving = LocomotionCore.rollMoving(state, now)
+	local joint = rootJoint
+
+	if moving then
+		if tune.RollGhosts and now >= nextGhostAt then
+			nextGhostAt = now + tune.RollGhostIntervalSeconds
+			dropGhost(character)
+		end
+		if joint and tune.RollTumble and state.RollKind == "ROLL" then
+			local progress =
+				math.clamp((now - state.RollStartedAt) / tune.RollDurationSeconds, 0, 1)
+			local dip = math.sin(progress * math.pi) * tune.RollTumbleDropStuds
+			joint.C0 = rootJointC0
+				* CFrame.new(0, -dip, 0)
+				* CFrame.Angles(-progress * 2 * math.pi, 0, 0)
+		end
+	elseif joint and joint.C0 ~= rootJointC0 then
+		joint.C0 = rootJointC0
+	end
+
+	-- The camera eases back from its kick over the roll.
+	local camera = Workspace.CurrentCamera
+	if camera and fovBase then
+		local base = fovBase :: number
+		if moving then
+			local progress =
+				math.clamp((now - state.RollStartedAt) / tune.RollDurationSeconds, 0, 1)
+			camera.FieldOfView = base + tune.RollFovKickDegrees * (1 - progress)
+		else
+			camera.FieldOfView = base
+			fovBase = nil
+		end
+	end
 end
 
 -- === input ===========================================================
@@ -218,7 +307,7 @@ local function beginRoll(kind: string)
 		-- A backstep keeps facing forward and hops away from it.
 		rollDirection = -facing
 	end
-	playBurstEffect(character)
+	startRollLook()
 end
 
 local function onJumpPressed()
@@ -270,7 +359,7 @@ local function refreshProfile(now: number)
 		return
 	end
 	nextProfileCheck = now + GameConfig.Locomotion.ProfileCheckSeconds
-	local wanted = LocomotionCore.profileFor(insideStage(root.Position))
+	local wanted = forcedProfile or LocomotionCore.profileFor(insideStage(root.Position))
 	if wanted ~= profileId then
 		profileId = wanted
 		tuning = LocomotionCore.tuning(GameConfig, profileId)
@@ -344,6 +433,8 @@ local function bindCharacter(character: Model)
 
 	state = LocomotionCore.newState(tuning, os.clock())
 	nextProfileCheck = 0
+	rootJoint = findRootJoint(character, root)
+	rootJointC0 = if rootJoint then rootJoint.C0 else CFrame.identity
 	loadAnimations(character, found)
 end
 
@@ -409,6 +500,15 @@ local function step(dt: number)
 			end
 		end
 	end
+	-- Shoulder camera (our shift lock): face where the camera looks.
+	local camera = Workspace.CurrentCamera
+	if shoulderCamera and not lockTarget and mode ~= "ROLL" and camera then
+		local look = camera.CFrame.LookVector
+		local flat = Vector3.new(look.X, 0, look.Z)
+		if flat.Magnitude > 1e-3 then
+			facing = flat.Unit
+		end
+	end
 	local target = lockTarget
 	if target and mode ~= "ROLL" and not state.Sprinting then
 		local toTarget = Vector3.new(target.X - root.Position.X, 0, target.Z - root.Position.Z)
@@ -440,6 +540,20 @@ local function step(dt: number)
 
 	local velocity = root.AssemblyLinearVelocity
 	animate(mode, Vector3.new(velocity.X, 0, velocity.Z).Magnitude, now)
+	if root.Parent and root.Parent:IsA("Model") then
+		updateRollLook(root.Parent, now)
+	end
+
+	-- The shoulder camera's half: re-applied every frame, because the default
+	-- camera resets the mouse behaviour whenever it likes. The lock-on camera
+	-- owns the view while a lock is held.
+	if shoulderCamera and not lockTarget then
+		UserInputService.MouseBehavior = Enum.MouseBehavior.LockCenter
+		hum.CameraOffset = Vector3.new(GameConfig.Locomotion.ShoulderCameraOffset, 0, 0)
+	elseif hum.CameraOffset ~= Vector3.zero then
+		hum.CameraOffset = Vector3.zero
+		UserInputService.MouseBehavior = Enum.MouseBehavior.Default
+	end
 
 	if vitals then
 		vitals.setStamina(LocomotionCore.staminaFraction(state, tuning), now, dt)
@@ -492,6 +606,14 @@ function LocomotionController.init(deps: any): ()
 	end, true, Enum.KeyCode.Q, Enum.KeyCode.ButtonB)
 	ContextActionService:SetTitle("LuckboundRoll", "Roll")
 
+	-- Our shift lock. Left Ctrl, because Shift is sprint.
+	ContextActionService:BindAction("LuckboundShoulderCamera", function(_, inputState)
+		if inputState == Enum.UserInputState.Begin then
+			shoulderCamera = not shoulderCamera
+		end
+		return Enum.ContextActionResult.Pass
+	end, false, Enum.KeyCode.LeftControl)
+
 	RunService.Heartbeat:Connect(step)
 end
 
@@ -517,6 +639,23 @@ end
 --- Releases a weapon lock early. RESERVED alongside `lock`.
 function LocomotionController.unlock(): ()
 	state = LocomotionCore.unlock(state)
+end
+
+--- DEV: force a movement profile ("HUB" / "EXPEDITION"), or nil for the
+--- normal inside-a-stage rule. For /moveprofile.
+function LocomotionController.forceProfile(id: string?): ()
+	forcedProfile = id
+	nextProfileCheck = 0
+end
+
+--- DEV: set stamina to a fraction of the bar. For /stamina.
+function LocomotionController.setStamina(fraction: number): ()
+	state.Stamina = math.clamp(fraction, 0, 1) * tuning.StaminaMax
+end
+
+--- The active profile id, for the dev panel.
+function LocomotionController.profile(): string
+	return profileId
 end
 
 --- Where the lock-on target is, or nil. Set every frame by LockOnController;

@@ -271,8 +271,8 @@ _250 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/PLAYER_ABILITIES.md
 
-- `docs/PLAYER_ABILITIES.md` (292) - LUCKBOUND — Player Abilities & Upgrades · 2026-09-28
-  - `PLAYER_ABILITIES.md`: 0. The line this document exists to hold:11, 1. Built: our own character controller:34, 2. Built: two profiles, one stamina bar:58, 2.5 Built: jump, roll and backstep:98, 2.6 Built: lock-on (optional):122, 3. Planned: the Fate Tree:154, FORTUNE — what the roll can reach:170, ENDURANCE — how long you last out there:183, DISCOVERY — what a world yields:194, CRAFT — what your gear becomes:206, Node shapes worth having:216, 4. Planned: movement abilities beyond the two:227, 5. Where these would live:248, 6. How fighting drives movement (the weapon contract):263
+- `docs/PLAYER_ABILITIES.md` (311) - LUCKBOUND — Player Abilities & Upgrades · 2026-09-28
+  - `PLAYER_ABILITIES.md`: 0. The line this document exists to hold:11, 1. Built: our own character controller:34, 2. Built: two profiles, one stamina bar:58, 2.5 Built: jump, roll and backstep:103, 2.55 Built: the shoulder camera (our shift lock):132, 2.6 Built: lock-on (optional):141, 3. Planned: the Fate Tree:173, FORTUNE — what the roll can reach:189, ENDURANCE — how long you last out there:202, DISCOVERY — what a world yields:213, CRAFT — what your gear becomes:225, Node shapes worth having:235, 4. Planned: movement abilities beyond the two:246, 5. Where these would live:267, 6. How fighting drives movement (the weapon contract):282
 
 ### docs/PLAYER_UI.md
 
@@ -301,8 +301,8 @@ _250 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/TESTING.md
 
-- `docs/TESTING.md` (875) - LUCKBOUND — Testing Guide · 2026-09-28
-  - `TESTING.md`: 1. Automated tests:8, Coverage:31, The three that matter most:52, A caution about the harness:78, The untested boundary — named, so it cannot be mistaken for :92, 2. Sync to Studio with Rojo:127, 2.5 Developer commands:147, The three gates on the server-side commands:204, 3. Manual Studio pass:222, Test A — the server boots (1 min):224, Test B — validation blocks a bad boot (2 min):257, Test C — the 15-roll arc (5 min):264, Test D — the cooldown holds (1 min):290, Test C2b — entering from the Fate Engine ⭐ NEW (3 min):297, Test C2 — the expedition, end to end ⭐ (6 min):314, Test C3 — the hub is walkable (3 min):380, Test H2 — the half-size world (4 min) ⭐ NEW:405, Test I — the loading screen (3 min) ⭐ NEW:421, Test J — the hub menu (5 min) ⭐ NEW:447, Test K — movement, stamina and lock-on (10 min) ⭐ NEW:487, Test L — the menu follows the world (4 min) ⭐ NEW:539, Test M — an event changes the world (4 min) ⭐ NEW:567, Test N — the ledger holds under a race ⭐ NEW — **two instanc:592, Test O — parties, in Studio ⭐ NEW — **3 clients, 10 min**:617, Test P — the portal opens a new server ⭐ NEW — **published p:655, Test Q — the Sky Citadel kit, in the world ⭐ NEW (8 min):685, Test R — a world's ambience ⭐ NEW (5 min):716, Test S — Sky Citadel's floating scenery ⭐ NEW (5 min):731, Test T — chests, the vault and its key ⭐ NEW (10 min):759, Test E — a tampered client is rejected (1 min):794, Test F — data persists (3 min) — **published places only**:806, Test G — late joiners see a live event ⭐ (5 min):821, Test H — announcements reach everyone, onboarding does not (:850, 4. What to report back:858
+- `docs/TESTING.md` (882) - LUCKBOUND — Testing Guide · 2026-09-28
+  - `TESTING.md`: 1. Automated tests:8, Coverage:31, The three that matter most:52, A caution about the harness:78, The untested boundary — named, so it cannot be mistaken for :92, 2. Sync to Studio with Rojo:127, 2.5 Developer commands:147, The three gates on the server-side commands:204, 3. Manual Studio pass:222, Test A — the server boots (1 min):224, Test B — validation blocks a bad boot (2 min):257, Test C — the 15-roll arc (5 min):264, Test D — the cooldown holds (1 min):290, Test C2b — entering from the Fate Engine ⭐ NEW (3 min):297, Test C2 — the expedition, end to end ⭐ (6 min):314, Test C3 — the hub is walkable (3 min):380, Test H2 — the half-size world (4 min) ⭐ NEW:405, Test I — the loading screen (3 min) ⭐ NEW:421, Test J — the hub menu (5 min) ⭐ NEW:447, Test K — movement, stamina and lock-on (10 min) ⭐ NEW:487, Test L — the menu follows the world (4 min) ⭐ NEW:546, Test M — an event changes the world (4 min) ⭐ NEW:574, Test N — the ledger holds under a race ⭐ NEW — **two instanc:599, Test O — parties, in Studio ⭐ NEW — **3 clients, 10 min**:624, Test P — the portal opens a new server ⭐ NEW — **published p:662, Test Q — the Sky Citadel kit, in the world ⭐ NEW (8 min):692, Test R — a world's ambience ⭐ NEW (5 min):723, Test S — Sky Citadel's floating scenery ⭐ NEW (5 min):738, Test T — chests, the vault and its key ⭐ NEW (10 min):766, Test E — a tampered client is rejected (1 min):801, Test F — data persists (3 min) — **published places only**:813, Test G — late joiners see a live event ⭐ (5 min):828, Test H — announcements reach everyone, onboarding does not (:857, 4. What to report back:865
 
 ### docs/TOOLCHAIN_ACCESS.md
 
@@ -316,8 +316,8 @@ _250 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (5933) - LUCKBOUND — Work Log · 2026-09-28
-  - `WORKLOG.md`: Template:16, Session N — YYYY-MM-DD — <short title>:19, Done:22, Decisions made:25, Stopped at:28, Next:31, Session 99 — 2026-09-28 — First Studio walk: controller neve:37, Done:40, Decisions made:49, Stopped at:52, Next:55, Session 98 — 2026-09-28 — Lock-on switching, charge scope:60, Done:63, Decisions made:72, Stopped at:77, Next:80, Session 97 — 2026-09-28 — Own character controller, roll, st:85, Done:90, Decisions made (owner, this session):107, Stopped at:115, Next:119, Session 96 — 2026-09-28 — Movement state machine: sprint-jum:126, Done:129, Decisions made:141, Stopped at:148, Next:151, Session 95 — 2026-09-28 — Git workflow: implementation vs in:157, Done:160, Decisions made:168, Stopped at:173, Next:176, Session 94 — 2026-09-27 — Dev panel grip: visible, and corre:181, Done:184, Next:193, Session 93 — 2026-09-27 — Leaderboard rows: friend / block /:198, Done:201, Next:213, Session 92 — 2026-09-27 — Chat to top-left, rail drops and c:219, Done:222, Stopped at:238, ... +515 more
+- `docs/WORKLOG.md` (5957) - LUCKBOUND — Work Log · 2026-09-28
+  - `WORKLOG.md`: Template:16, Session N — YYYY-MM-DD — <short title>:19, Done:22, Decisions made:25, Stopped at:28, Next:31, Session 100 — 2026-09-28 — Walk feedback: no ice, hub stamin:37, Done (owner feedback from the second Studio walk):40, Stopped at:52, Next:55, Session 99 — 2026-09-28 — First Studio walk: controller neve:61, Done:64, Decisions made:73, Stopped at:76, Next:79, Session 98 — 2026-09-28 — Lock-on switching, charge scope:84, Done:87, Decisions made:96, Stopped at:101, Next:104, Session 97 — 2026-09-28 — Own character controller, roll, st:109, Done:114, Decisions made (owner, this session):131, Stopped at:139, Next:143, Session 96 — 2026-09-28 — Movement state machine: sprint-jum:150, Done:153, Decisions made:165, Stopped at:172, Next:175, Session 95 — 2026-09-28 — Git workflow: implementation vs in:181, Done:184, Decisions made:192, Stopped at:197, Next:200, Session 94 — 2026-09-27 — Dev panel grip: visible, and corre:205, Done:208, Next:217, Session 93 — 2026-09-27 — Leaderboard rows: friend / block /:222, Done:225, ... +519 more
 
 ### docs/archive
 
@@ -346,8 +346,8 @@ _250 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
   - `AmbienceController.luau`: quality:72, make:79, setAsideScene:89, buildScene:98, buildCloudSea:148, buildMotes:202, step:239, AmbienceController.enter:288, AmbienceController.leave:310
 - `src/client/Controllers/AtmosphereEffects.luau` (1125) - The scenario atmospheres' effects (Content/Atmospheres), drawn round the · 2026-09-25
   - `AtmosphereEffects.luau`: LOCKDOWN:32, SIEGE:44, STORMHAWK:54, RIME:64, RECLAIMED:76, AETHER_SURGE:88, UNMOORING:98, num:118, col:121, vec:124, part:128, prop:144, readMap:174, randomIn:254, band:265, buildLights:273, lightLevel:306, newMover:332, buildGraph:354, route:391, hover:414, newRoute:419, stepMover:435, buildFlyers:466, bolt:508, buildWeather:564, buildDome:614, buildPlumes:664, beam:704, anchorAt:718, buildAurora:730, buildDebris:823, buildCanopy:874, applyTint:895, AtmosphereEffects.enter:924, AtmosphereEffects.leave:1091, AtmosphereEffects.setTint:1117
-- `src/client/Controllers/DebugCommands.luau` (861) - Developer commands, client half. Testing tooling, not a feature. · 2026-09-27
-  - `DebugCommands.luau`: DebugCommands.onOutput:49, emit:53, say:67, fail:71, stopFlying:82, startFlying:98, toggleFly:172, setSpeed:185, teleport:227, currentStage:271, currentChunks:300, toggleNoclip:332, setOverlay:376, setStats:438, setProps:489, sorted:512, DebugCommands.sources:594, DebugCommands.describeChunk:599, onOff:610, DebugCommands.bindPanel:618, DebugCommands.run:774, DebugCommands.runLine:801, DebugCommands.init:808
+- `src/client/Controllers/DebugCommands.luau` (896) - Developer commands, client half. Testing tooling, not a feature. · 2026-09-27
+  - `DebugCommands.luau`: DebugCommands.onOutput:49, emit:53, say:67, fail:71, stopFlying:82, startFlying:98, toggleFly:172, setSpeed:185, teleport:227, currentStage:271, currentChunks:300, toggleNoclip:332, setOverlay:376, setStats:438, setProps:489, sorted:512, DebugCommands.sources:594, DebugCommands.describeChunk:599, onOff:610, DebugCommands.bindPanel:618, locomotion:632, DebugCommands.run:809, DebugCommands.runLine:836, DebugCommands.init:843
 - `src/client/Controllers/EventController.luau` (167) - The client's mirror of what is happening to the world. Build spec §4.1. · 2026-09-24
   - `EventController.luau`: list:40, notify:51, EventController.active:59, EventController.dominant:66, EventController.onChanged:70, apply:81, EventController.init:135
 - `src/client/Controllers/ExpeditionController.luau` (222) - Client side of an expedition: lighting, the local countdown, and the Gate's · 2026-09-25
@@ -358,10 +358,10 @@ _250 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
   - `HubEffects.luau`: smoothstep:47, stepYaw:54, lockYawToSlot:82, hashName:99, findRigs:107, HubEffects.spinUpForRoll:123, HubEffects.settle:142, cycleFeaturedRarity:163, HubEffects.init:188
 - `src/client/Controllers/LightningController.luau` (52) - LightningController: makes WeaponFX crackle Beams (tag "CrackleBeam") re-shape now and then by bending their curves · 2026-09-25
   - `LightningController.luau`: LightningController.init:18
-- `src/client/Controllers/LockOnController.luau` (388) - LOCK-ON: an optional target lock with an over-the-shoulder camera. · 2026-09-28
+- `src/client/Controllers/LockOnController.luau` (389) - LOCK-ON: an optional target lock with an over-the-shoulder camera. · 2026-09-28
   - `LockOnController.luau`: pivotOf:45, centreOf:54, aimPoint:64, playerRoot:72, visible:82, showMarker:92, release:137, measure:155, lockOnto:187, acquire:208, LockOnController.switch:221, toggle:255, update:265, LockOnController.init:333
-- `src/client/Controllers/LocomotionController.luau` (528) - PLAYER MOVEMENT: walk, sprint, jump, roll and backstep, on our own · 2026-09-28
-  - `LocomotionController.luau`: loadAnimations:72, playTrack:103, animate:120, playBurstEffect:142, moveDirection:181, launchJump:197, beginRoll:208, onJumpPressed:224, onRollPressed:233, insideStage:246, refreshProfile:267, bindCharacter:283, step:350, LocomotionController.init:451, LocomotionController.get:500, LocomotionController.mode:506, LocomotionController.lock:513, LocomotionController.unlock:518, LocomotionController.setLockTarget:524
+- `src/client/Controllers/LocomotionController.luau` (667) - PLAYER MOVEMENT: walk, sprint, jump, roll and backstep, on our own · 2026-09-28
+  - `LocomotionController.luau`: loadAnimations:77, playTrack:108, animate:125, findRootJoint:156, dropGhost:166, startRollLook:212, updateRollLook:224, moveDirection:270, launchJump:286, beginRoll:297, onJumpPressed:313, onRollPressed:322, insideStage:335, refreshProfile:356, bindCharacter:372, step:441, LocomotionController.init:565, LocomotionController.get:622, LocomotionController.mode:628, LocomotionController.lock:635, LocomotionController.unlock:640, LocomotionController.forceProfile:646, LocomotionController.setStamina:652, LocomotionController.profile:657, LocomotionController.setLockTarget:663
 - `src/client/Controllers/PartyController.luau` (135) - The client's picture of its party. Build spec §7.2. · 2026-09-24
   - `PartyController.luau`: PartyController.get:39, PartyController.onChanged:45, PartyController.nameOf:56, PartyController.request:63, announceInvite:67, PartyController.init:102
 - `src/client/Controllers/PropController.luau` (340) - Dresses a generated map with its world's ambient scenery (CHUNK_AUTHORING.md · 2026-09-27
@@ -448,7 +448,7 @@ _250 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 - `src/shared/Content/Chunks/init.luau` (19) - Chunk registry. Each module returns a LIST of chunks -- one file per world's · 2026-09-24
 - `src/shared/Content/Codes.luau` (41) - REDEEMABLE CODES, AS DATA. Adding one is one row; no System changes. · 2026-09-24
   - `Codes.luau`: LAUNCH:18, FIRSTROLL:25, TESTER:32
-- `src/shared/Content/DevCommands.luau` (375) - THE DEVELOPER COMMAND REGISTRY. Testing tooling, not a feature. · 2026-09-28
+- `src/shared/Content/DevCommands.luau` (410) - THE DEVELOPER COMMAND REGISTRY. Testing tooling, not a feature. · 2026-09-28
 - `src/shared/Content/Events/AuroraVeil.luau` (47) - AURORA VEIL -- weather, and nothing but weather. · 2026-09-24
 - `src/shared/Content/Events/CatalystStar.luau` (62) - THE CATALYST STAR — one of ten that will ever exist. · 2026-09-24
 - `src/shared/Content/Events/Starfall.luau` (55) - STARFALL — the Fatebreak sky. Master Spec §12. · 2026-09-24
@@ -492,7 +492,7 @@ _250 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 - `src/shared/Core/FixtureCore.luau` (55) - The pure half of fixtures (CHUNK_AUTHORING.md convention 7, build spec · 2026-09-24
   - `FixtureCore.luau`: CHEST:15, VAULT:16, FORCEFIELD:17, smooth:23, FixtureCore.lidAngle:31, FixtureCore.doorSpin:38, FixtureCore.doorRecess:44, FixtureCore.fieldTransparency:50
 - `src/shared/Core/Freeze.luau` (25) - Deep-freeze a content or config table, so a System cannot mutate the data · 2026-09-24
-- `src/shared/Core/GameConfig.luau` (1342) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-09-28
+- `src/shared/Core/GameConfig.luau` (1366) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-09-28
 - `src/shared/Core/HubMenuCore.luau` (190) - THE HUB MENU'S RULES, WITH NO ROBLOX IN THEM. · 2026-09-25
   - `HubMenuCore.luau`: HubMenuCore.panels:20, HubMenuCore.panelById:31, HubMenuCore.destinations:41, HubMenuCore.destinationById:52, HubMenuCore.landingPoint:64, HubMenuCore.isVisible:71, HubMenuCore.newState:80, HubMenuCore.reduce:98, HubMenuCore.canTravel:149, HubMenuCore.travelTiming:180
 - `src/shared/Core/KeyCore.luau` (58) - The pure half of vault keys (build spec §7.5). Owner-directed 2026-09-23: · 2026-09-24
@@ -522,7 +522,7 @@ _250 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 - `src/shared/Core/ThemeCore.luau` (267) - WHAT COLOUR IS THE MENU RIGHT NOW? Pure, so the answer is testable for · 2026-09-24
   - `ThemeCore.luau`: channelLuminance:42, ThemeCore.luminance:52, ThemeCore.contrast:59, toLinear:67, toGamma:71, mix:80, tintPreservingLuminance:101, lerp:133, findDistrict:140, findEvent:152, ThemeCore.base:166, ThemeCore.resolve:184, ThemeCore.enforceContrast:217, ThemeCore.districtAt:243
 - `src/shared/Core/Types.luau` (428) - LUCKBOUND canonical type definitions. · 2026-09-27
-- `src/shared/Core/UITheme.luau` (163) - Shared GUI design system. Biome Blueprint §1.4. · 2026-09-24
+- `src/shared/Core/UITheme.luau` (163) - Shared GUI design system. Biome Blueprint §1.4. · 2026-09-28
   - `UITheme.luau`: UITheme.corner:111, UITheme.stroke:119, UITheme.rarityColor:128, UITheme.pad:134, UITheme.gradient:148
 - `src/shared/Util/ChunkCore.luau` (1023) - Seeded assembly of a map from a chunk library. Addendum §A4. · 2026-09-27
   - `ChunkCore.luau`: rotate:21, ChunkCore.yawRadians:41, norm:45, ChunkCore.libraryFor:50, socketById:69, ChunkCore.worldSocket:79, ChunkCore.placeAgainst:94, ChunkCore.arrivalSocket:121, ChunkCore.overlaps:133, ChunkCore.assemble:203, ChunkCore.assembleTest:847, ChunkCore.assembleWithRetry:950, ChunkCore.footprint:971, ChunkCore.validateLayout:987
@@ -551,7 +551,7 @@ _250 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### tests/cases.luau
 
-- `tests/cases.luau` (8812) - LUCKBOUND test suite. Run: python3 tests/build_suite.py && luau tests/generated_suite.luau · 2026-09-28
+- `tests/cases.luau` (8827) - LUCKBOUND test suite. Run: python3 tests/build_suite.py && luau tests/generated_suite.luau · 2026-09-28
   - `cases.luau`: group:49, check:54, throws:67, lcg:73, profile:84, cfg:92
 
 ### tests/run.sh

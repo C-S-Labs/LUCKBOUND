@@ -34,6 +34,30 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 100 — 2026-09-28 — Walk feedback: no ice, hub stamina, shoulder camera, roll look
+**Merged:** see the PR for this branch   **Tests:** 950 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner feedback from the second Studio walk)
+- **Sliding on ice:** ramps cut to 0.08/0.05s (hub) and 0.12/0.08s (expedition), pinned by a test.
+- **Hub stamina unlimited**, and only there (`SprintDrainPerSecond = 0`, all costs 0). Tested.
+- **Shift lock:** our own shoulder camera on Left Ctrl (mouse lock-centre, `CameraOffset`, face the camera).
+  Roblox's shift lock needs the PlayerModule, which this place lacks.
+- **Roll look:** particles removed. Gold neon afterimages, a local forward tumble via the root joint's C0, and
+  a 7° FOV kick easing back.
+- **Lock-on** prints `[LockOn] ready…` on start. It was never reached before the PlayerModule fix, and it needs
+  a target (`/dummies`).
+- **Dev commands** (owner: every new command goes in the registry): `/moveprofile hub|expedition|auto` and
+  `/stamina [percent]`, both CLIENT, category PLAYER. `DEV_TOOLS.md` updated.
+
+### Stopped at
+Awaiting the owner's re-walk.
+
+### Next
+1. Owner re-walks Test K.
+2. A real roll animation asset, so other players see the tumble.
+
+---
+
 ## Session 99 — 2026-09-28 — First Studio walk: controller never started; fixed
 **Merged:** see the PR for this branch   **Tests:** 947 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 

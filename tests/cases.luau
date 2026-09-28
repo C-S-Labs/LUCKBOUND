@@ -5470,6 +5470,21 @@ do
 		"the hub waives roll and jump costs",
 		HUB.RollStaminaCost == 0 and HUB.JumpStaminaCost == 0
 	)
+	check(
+		"stamina is unlimited in the hub: a long sprint costs nothing",
+		(function()
+			local s = sprintFor(30, nil, HUB)
+			return s.Stamina == L.StaminaMax and s.Sprinting
+		end)()
+	)
+	check("...and only in the hub", EXP.SprintDrainPerSecond > 0 and EXP.RollStaminaCost > 0)
+	check(
+		"short ramps: nothing slides like ice",
+		HUB.AccelerationSeconds <= 0.15
+			and HUB.DecelerationSeconds <= 0.15
+			and EXP.AccelerationSeconds <= 0.15
+			and EXP.DecelerationSeconds <= 0.15
+	)
 
 	-- === stamina ====================================================
 	check(

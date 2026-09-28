@@ -65,8 +65,13 @@ stands inside a loaded expedition stage, HUB otherwise.
 |---|---|---|
 | Walk / sprint | 32 / ~50 studs/s | ~22 / ~34 studs/s |
 | Turn rate | 18 rad/s (snappy) | 10 rad/s (weight) |
+| Speed-up / slow-down | 0.08s / 0.05s | 0.12s / 0.08s |
 | Air control | 0.8 | 0.45 |
-| Jump / roll cost | free | 10 / 22 stamina |
+| Stamina | **unlimited**: nothing costs anything | sprint 14/s, jump 10, roll 22 |
+
+Ramps are short in both profiles. The first Studio walk felt like sliding on
+ice with longer ones, so weight comes from turning and costs, never from
+sliding. Stamina is unlimited in the hub, and only there (owner, 2026-09-28).
 
 The owner asked for a middle ground between the hub's lightness and a Souls
 game's weight: that is the expedition column.
@@ -115,9 +120,23 @@ edge, and a 0.12s buffer so a press just before landing fires on landing.
 - A roll pressed in the last 0.2s is buffered, so chained rolls come out clean without
   mashing.
 - Ground only.
+- **The look, with no particles:** gold afterimages of the character are left along
+  the path, and a roll (not a backstep) tumbles the body forward through a full turn
+  with a small dip. The camera widens 7° and settles back over the roll. The tumble
+  is drawn locally, so other players see a slide until there is a roll animation
+  asset. Settings: `RollGhost*`, `RollTumble*`, `RollFovKickDegrees`.
 - **The invulnerable window is declared, not applied.** `LocomotionCore.isInvulnerable`
   answers it, and the combat layer will call it when it resolves hits (§7.6).
   Nothing is invulnerable today.
+
+## 2.55 Built: the shoulder camera (our shift lock)
+
+**Left Ctrl** toggles it. The mouse locks to the centre, the camera shifts 1.75
+studs over the right shoulder, and the character faces where the camera looks.
+Roblox's own shift lock can't work here: it lives in the PlayerModule (absent in
+this place) and turns the character through the Humanoid, which our controller now
+does itself. It isn't on Shift, which is sprint. Lock-on takes the camera over while
+a lock is held.
 
 ## 2.6 Built: lock-on (optional)
 

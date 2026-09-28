@@ -34,7 +34,7 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   Scape has a drafted 9-enemy roster (1 basic built: Aether Wisp) under `assets/source/enemies/ethereal_scape/`.
   **Nothing spawns in gameplay yet.** `EnemyDef` + services wait for the owner's OK.
 - **Tooling:**
-  - **Developer panel + command registry** (2026-09-27): F4 in Studio; 40 commands, all clickable, autocomplete; see `docs/DEV_TOOLS.md`.
+  - **Developer panel + command registry** (2026-09-27): F4 in Studio; 42 commands, all clickable, autocomplete; see `docs/DEV_TOOLS.md`.
   - `INDEX.md` + `INDEX_MAP.md` give the repo map, and CI keeps the map current.
   - StyLua is enforced.
   - ~808 tests, updated 2026-09-26 for the Ethereal Scape amendment below (exact count pending the next CI run).
