@@ -83,6 +83,14 @@ All on the one rig (`TheAscendant.fbx`), in place (the AI moves the root between
     whole-body: bob, sway, hip roll, a counter-rotating chest, a level head and a free left arm swing.
   - `StrafeLeft` / `StrafeRight`: `build_strafe_humanoid`, both directions, staff carried, in a staggered stance. The
     feet never cross, and the free arm moves smoothly and stays clear of the robe.
+- **Cloth** (`the_ascendant_cloth.py`): the robe is a skirt of 16 chains × 5 bones, pinned under the belt and
+  colliding with both legs; the four back scarves are one 4-bone chain each, colliding with the back, the hips and
+  the legs. Robe-vs-leg overlap below the hips (worst frame) went from 176-298 tris on every frame to 0 in Strafe and
+  Idle, ≤ 4 in Walk and ≤ 14 in the Reap's deepest lunge.
+- **Hands** (`the_ascendant_hands.py`): every finger and thumb has 3 joints, so both hands close round the haft. The
+  haft (94 mm across) is thick for the crystal fingers (~155 mm), so a finger wraps about 105°. To wrap further,
+  lengthen the fingers or thin the grip.
+- The rig is 150 bones: 44 body, 96 cloth, 10 extra finger joints.
 - **The shipped FBXs come from the owner's hand-edited `TheAscendant.blend`**, not from `the_ascendant.py`. The owner
   cleaned up the chest and moved the centre crystal by hand, and removed `BreakawayGlow`. Re-running
   `run.py --export` / `--anims` rebuilds the scripted chest and would overwrite that edit. Build the actions with the

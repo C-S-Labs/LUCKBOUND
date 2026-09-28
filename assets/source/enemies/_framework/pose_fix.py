@@ -41,30 +41,55 @@ def grip_lance():
     wb = P["Weapon_R"]
     wb.matrix = Matrix.Translation(RW.to_3x3().inverted() @ delta) @ wb.matrix
     _upd()
-def _wrap_bone(bn, G0, GA, target):
-    """Rotate bone about the axis that swings its tail toward the haft; pick the angle whose samples never enter the
-       haft and whose tail lies closest to 'target' distance from the axis."""
-    _upd(); pb = P[bn]
-    h = RW @ pb.head; t = RW @ pb.tail
-    foot = G0 + GA*(h - G0).dot(GA)
-    ax = (t - h).cross(foot - h)
-    if ax.length < 1e-6: return
-    ax.normalize(); best = None
-    for k in range(-30, 49):                         # search both ways: curl in, or back out if already inside
-        a = k*0.05
-        tt = h + Matrix.Rotation(a, 3, ax) @ (t - h)
-        if not all(_dax(h + (tt - h)*f, G0, GA) >= HAFT_R + FING_R*0.9 for f in (0.25, 0.5, 0.75, 1.0)): continue
-        sc = abs(_dax(tt, G0, GA) - target) + 0.01*abs(a)
-        if best is None or sc < best[0]: best = (sc, a)
-    if best is None or best[1] == 0: return
-    A = RW.to_3x3().inverted() @ ax; hl = pb.head.copy()
-    pb.matrix = Matrix.Translation(hl) @ Matrix.Rotation(best[1], 4, A.normalized()) @ Matrix.Translation(-hl) @ pb.matrix
+def _curl(bn, G0, GA, sign=None, max_a=1.9, step=0.04):
+    """Flex one finger joint about the haft axis (made perpendicular to the bone) through its head: curl until the
+       tail touches the haft surface, never letting the phalanx enter it. A phalanx already inside is opened first.
+       sign: curl direction, fixed per finger by its first joint (the way that brings the tip toward the haft)."""
+    _upd(); pb = P[bn]; h = RW @ pb.head; t = RW @ pb.tail; d = (t - h).normalized()
+    ax = GA - d*GA.dot(d)
+    if ax.length < 1e-4: return sign
+    ax.normalize(); R = HAFT_R + FING_R
+    at = lambda a: h + Matrix.Rotation(a, 3, ax) @ (t - h)
+    ok = lambda a: all(_dax(h + (at(a) - h)*f, G0, GA) >= HAFT_R + FING_R*0.9 for f in (0.25, 0.5, 0.75, 1.0))
+    if sign is None: sign = 1 if _dax(at(0.2), G0, GA) < _dax(at(-0.2), G0, GA) else -1
+    a = 0.0
+    while not ok(sign*a) and a > -1.0: a -= step                 # starts inside the haft: open until clear
+    while a + step <= max_a and ok(sign*(a + step)):
+        a += step
+        if _dax(at(sign*a), G0, GA) <= R: break                   # tip on the haft surface: this joint is closed
+    if abs(a) > 1e-6:
+        A = (RW.to_3x3().inverted() @ ax).normalized(); hl = pb.head.copy()
+        pb.matrix = Matrix.Translation(hl) @ Matrix.Rotation(sign*a, 4, A) @ Matrix.Translation(-hl) @ pb.matrix
+    return sign
 def wrap(side):
+    """Close the hand round the haft: every finger (and the thumb, from the other side) curls joint by joint, each
+       joint until its tip meets the haft. Works with 2- or 3-joint fingers (hands_core.add_phalanges adds the 3rd);
+       with 3 joints a finger wraps most of the way round."""
     G0, GA = haft()
     for f in ("Index", "Middle", "Ring", "Pinky", "Thumb"):
-        _wrap_bone(f"{side}{f}1", G0, GA, HAFT_R + FING_R)
-        _wrap_bone(f"{side}{f}2", G0, GA, HAFT_R + FING_R*0.8)
+        sign = None
+        for k in (1, 2, 3):
+            bn = f"{side}{f}{k}"
+            if bn not in P: break
+            if f == "Thumb" and k == 1: _oppose(bn, G0, GA); continue
+            sign = _curl(bn, G0, GA, sign, max_a=1.9 if k < 3 else 1.5)
     _upd()
+def _oppose(bn, G0, GA, step=0.04, max_a=1.6):
+    """Thumb base: swing it toward the haft (about the axis that carries its tip straight at the haft) until its tip
+       rests on the far side of the haft from the fingers; the thumb's outer joints then curl round like a finger."""
+    _upd(); pb = P[bn]; h = RW @ pb.head; t = RW @ pb.tail
+    foot = G0 + GA*(h - G0).dot(GA); ax = (t - h).cross(foot - h)
+    if ax.length < 1e-6: return
+    ax.normalize(); R = HAFT_R + FING_R
+    at = lambda a: h + Matrix.Rotation(a, 3, ax) @ (t - h)
+    ok = lambda a: all(_dax(h + (at(a) - h)*f, G0, GA) >= HAFT_R + FING_R*0.9 for f in (0.25, 0.5, 0.75, 1.0))
+    a = 0.0
+    while a + step <= max_a and ok(a + step):
+        a += step
+        if _dax(at(a), G0, GA) <= R: break
+    if a > 0:
+        A = (RW.to_3x3().inverted() @ ax).normalized(); hl = pb.head.copy()
+        pb.matrix = Matrix.Translation(hl) @ Matrix.Rotation(a, 4, A) @ Matrix.Translation(-hl) @ pb.matrix
 # Anatomical hinges (humanoid.py / R15 rigs: every limb bone's local X is the side-to-side axis at rest).
 #   elbow: flexes the forearm toward the FRONT of the upper arm  -> local X in [-150 deg, 0]  (never past straight)
 #   knee : flexes the shin toward the BACK of the thigh           -> local X in [0, 150 deg]

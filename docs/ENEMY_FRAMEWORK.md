@@ -153,6 +153,29 @@ Every locomotion or idle cycle moves the whole body, in this order each frame (`
 6. **Arms:** swung from the shoulder about world axes, never raw Euler (the bone's roll decides where a raw Euler goes),
    held clear of the torso, with the elbow flexing through the swing.
 
+### Cloth: robes, skirts, capes, scarves (`_framework/cloth_core.py`)
+Roblox plays bone keys and has no cloth solver, so cloth is **baked**. A cloth piece gets its own chains of bones. A
+verlet simulation runs over every action (gravity, damping, a pull back toward the piece's own shape, and capsule
+collision with the listed bones), and `run.py` keys the result onto the chains after each action (`cloth_bake()`).
+Collision is with the enemy's own body only; players still collide with the enemy's normal hitbox.
+- An enemy describes its cloth as data in an extras script: `build_cloth([dict(name=, kind="skirt"|"strips",
+  meshes=, colliders=, ...)])`. See `ethereal_scape/the_ascendant_cloth.py`.
+- `skirt`: a ring of `sectors` chains hanging from `top` to the hem. Put `top` above the hip joints, hidden under a
+  belt if there is one: a ring pinned below the hips cannot open for a thigh raised in a deep crouch. `keep_above`
+  keeps belts rigid. `ring_stretch` lets a slit robe part round a knee.
+- `strips`: one chain per strip. Islands closer than `join` form one strip (for example a scarf, its glow and its tip).
+- Islands smaller than `rigid_size` (hem spikes, tassels) ride the cloth rigidly.
+- Each vertex takes at most 4 bone influences (the Roblox limit). Looping actions are simulated for 3 cycles and keep
+  the last one, so the loop is seamless.
+
+### Hands: three joints per finger (`_framework/hands_core.py`, `pose_fix.wrap`)
+A grip closes the hand round the haft. Each finger joint curls about the haft axis until its tip meets the haft
+surface, never passing through it. The thumb first swings onto the haft (opposition), then curls the other way.
+- `humanoid.make_humanoid(fingers=True)` builds three-joint fingers and thumbs.
+- A custom hand with two-joint fingers opts in with `add_phalanges()` in an extras script. It splits each second
+  segment's bone, cuts a ring of vertices into the finger at the new joint, and re-weights the finger.
+- How far a finger can wrap depends on its length against the haft's circumference; the code cannot change that.
+
 Strafes keep a staggered fighting stance (left foot forward). The foot gap never drops below 70% of the rest stance, and
 the knees point slightly out, so the legs never meet or cross. An idle breathes and slowly shifts weight between the
 feet, and the hips, chest, weapon and head ride that shift.

@@ -33,6 +33,47 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 97 — 2026-09-28 — Baked cloth (robe + scarves) and three-joint finger grips
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes (Blender assets + framework)   **Branch:** `CloudTesting`
+
+### Done
+- **`_framework/cloth_core.py`** (new, owner's request): free-hanging cloth for any enemy.
+  - It builds bone chains on a cloth piece (`skirt` = a ring of chains; `strips` = one chain per scarf) and re-skins
+    the piece onto them, with at most 4 influences per vertex.
+  - It simulates each action (verlet, gravity, damping, shape pull, capsule collision with the listed bones, ring
+    spacing for skirts) and keys the chains.
+  - `run.py` calls `cloth_bake()` after each action.
+  - The chain list is `CLOTH_CHAINS`: `CLOTH` is already every enemy's material-slot constant.
+- **The Ascendant** (`the_ascendant_cloth.py`, manifest extras): the robe is 16 × 5 bones, pinned at z 1.8 under the
+  belt, with belt islands above 1.6 kept rigid and `ring_stretch` 1.4. The scarves are 4 × 4.
+  - Robe-vs-leg overlap below the hips, worst frame, rigid → cloth: Strafe 176 → 0, Idle 29 → 0, Walk 189 → 4,
+    Reap 298 → 14.
+  - The scarves never clip, and the loop seams are no bigger than a normal frame step.
+- **`_framework/hands_core.py`** (new): `add_phalanges()` splits each finger's second bone into two, cuts a vertex
+  ring at the new joint and re-weights the finger. `humanoid.make_humanoid(fingers=True)` now builds three joints.
+- **`pose_fix.wrap`** was rewritten. Each joint curls about the haft axis until its tip meets the haft surface, and the
+  thumb opposes first (`_oppose`). The old per-bone search (`_wrap_bone`) is removed. Finger wrap is now 101-108°
+  (was 94-99°), and the thumb now reaches the haft (it stayed 111 mm off the axis).
+- Exported onto the owner's mesh: 150 bones, rest offset 0 against the pipeline, 21,300 tris.
+
+### Decisions made
+- The cloth is baked in Blender (owner's choice); a live Roblox solver can reuse the same bones later.
+- Cloth collides only with the enemy's own bones. Player collision is the normal hitbox.
+
+### Stopped at
+Pushed. Open items:
+- The moving robe touches the hanging left arm (≤ 12 tris, 5 frames in StrafeLeft and Walk). The fix is adding the
+  arm bones to both specs' `colliders`; the owner paused that step, so it waits for the owner.
+- The finger wrap is limited by finger length against the 94 mm haft.
+- 150 bones: confirm the Roblox importer accepts the rig.
+- Beacon Keeper, Spire Regent and Armory Warden gain finger joints on their next re-export.
+
+### Next
+1. Owner: import the FBXs in Studio; check the robe, the scarves and the grips.
+2. The owner decides on the arm colliders for the cloth.
+
+---
+
 ## Session 96 — 2026-09-28 — The Ascendant: whole-body locomotion, arm spasm and leg-cross fixes
 **Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes (Blender assets + framework)   **Branch:** `CloudTesting`
 

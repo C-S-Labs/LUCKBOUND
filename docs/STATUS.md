@@ -38,6 +38,9 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   - 2026-09-28 (Session 96): all five actions were rebuilt as whole-body motion and exported onto the owner's
     hand-edited `.blend` mesh. The strafe arm spasm, legs crossing and the Reap's hand spin are fixed. The FBXs come
     from the `.blend`, not the script (see `ASCENDANT_MOVESET.md`).
+  - Session 97: baked cloth (`_framework/cloth_core.py`) makes the robe and back scarves hang free and collide
+    with the legs and body. Three-joint fingers (`hands_core.py`) close both hands round the staff. The rig is now
+    150 bones, so confirm Studio's importer accepts it.
   - Not yet imported in Studio.
   **Nothing spawns in gameplay yet.** `EnemyDef` + services wait for the owner's OK.
 - **Tooling:**

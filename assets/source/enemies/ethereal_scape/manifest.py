@@ -19,5 +19,5 @@ ENEMIES = {
     "gatewarden":        {"script": "gatewarden.py",        "tier": "miniboss", "body": "humanoid", "role": "miniboss"},    # NOT BUILT YET
     # ---- boss (1) ----
     "the_ascendant":     {"script": "the_ascendant.py",     "tier": "boss", "body": "humanoid", "role": "boss",
-                          "extras": ["the_ascendant_staff.py"], "moveset": "ASCENDANT_MOVESET.md"},
+                          "extras": ["the_ascendant_staff.py", "the_ascendant_hands.py", "the_ascendant_cloth.py"], "moveset": "ASCENDANT_MOVESET.md"},
 }

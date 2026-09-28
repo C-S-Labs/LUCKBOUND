@@ -63,6 +63,7 @@ if "--anims" in STEPS:
     for a in names:
         reset_pose()
         exec(open(os.path.join(adir, a + ".py")).read(), G)
+        if G.get("CLOTH_CHAINS"): cloth_bake()                      # enemies with cloth extras (cloth_core.py)
         export_action(a)
         if "--preview" in STEPS:
             if "preview" not in G: _run("preview.py")
