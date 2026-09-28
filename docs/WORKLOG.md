@@ -44,6 +44,12 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 - Owner: "toggles the chat window by clicking on the default roblox chat icon". Roblox hides that icon when the
   default window is disabled and exposes no click event, so a house-style chat button now sits in the top bar
   (GuiService.TopbarInset) and toggles the panel. Showing the chat also collapses the rail.
+- Owner: dev menu should resize by dragging a corner. `DevPanel.luau` now has a bottom-right grip that resizes the
+  panel, from `GameConfig.Debug.PanelMinWidth/Height` up to the viewport. The old fixed MaxSize is gone.
+- Owner's partner cannot see the rotating constellation above the Fate Engine. Cause: `HubV2` clones
+  `hubsky_ring_constellation` / `_spokes` / `_core` / `_gyro_a/b` from the HUB_SKY prefab, and those meshes exist
+  only in the owner's uncommitted local `assets/rbxm/prefabs/HUB_SKY.rbxmx`. origin/main's copy lacks them, and
+  HubV2 silently skips missing meshes. Fix: the owner commits that local prefab (it uses uploaded rbxassetids).
 
 ### Stopped at
 Not walked in Studio. Check that the rail clears the chat on small or phone screens, and tune RailOffsetY if not.

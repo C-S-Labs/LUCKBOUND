@@ -226,8 +226,8 @@ _246 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/DEV_TOOLS.md
 
-- `docs/DEV_TOOLS.md` (64) - Developer tools — commands and the dev panel · 2026-09-27
-  - `DEV_TOOLS.md`: Using it:8, Commands:25, Adding a command:39, Where it lives:57
+- `docs/DEV_TOOLS.md` (65) - Developer tools — commands and the dev panel · 2026-09-27
+  - `DEV_TOOLS.md`: Using it:8, Commands:26, Adding a command:40, Where it lives:58
 
 ### docs/ENEMY_AI.md
 
@@ -311,8 +311,8 @@ _246 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (5743) - LUCKBOUND — Work Log · 2026-09-27
-  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 92 — 2026-09-27 — Chat to top-left, rail drops and c:36, Done:39, Stopped at:48, Next:51, Session 91 — 2026-09-27 — Custom leaderboard + chat panel in:56, Done:59, Decisions made:65, Stopped at:72, Next:75, Session 90 — 2026-09-27 — Fix: entering twice while a map lo:82, Done:85, Next:96, Session 89 — 2026-09-27 — Developer panel + command registry:101, Done:104, Next:123, Session 88 — 2026-09-27 — Ethereal Scape: walk fixes (Sanctu:128, Done:131, Next:147, Session 87 — 2026-09-27 — Ethereal Scape: final polish, map-:154, Done:157, Stopped at:189, Next:192, Session 86 — 2026-09-27 — Ethereal Scape: Sanctum interior, :199, Done:202, Stopped at:223, Next:226, Session 85 — 2026-09-27 — Ethereal Scape hybrid kit (36) + u:231, Done:234, Decisions made:257, Stopped at:262, Next:265, Session 84 — 2026-09-27 — Close berth geometry and final bra:271, Done:274, Decisions made:281, ... +484 more
+- `docs/WORKLOG.md` (5749) - LUCKBOUND — Work Log · 2026-09-27
+  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 92 — 2026-09-27 — Chat to top-left, rail drops and c:36, Done:39, Stopped at:54, Next:57, Session 91 — 2026-09-27 — Custom leaderboard + chat panel in:62, Done:65, Decisions made:71, Stopped at:78, Next:81, Session 90 — 2026-09-27 — Fix: entering twice while a map lo:88, Done:91, Next:102, Session 89 — 2026-09-27 — Developer panel + command registry:107, Done:110, Next:129, Session 88 — 2026-09-27 — Ethereal Scape: walk fixes (Sanctu:134, Done:137, Next:153, Session 87 — 2026-09-27 — Ethereal Scape: final polish, map-:160, Done:163, Stopped at:195, Next:198, Session 86 — 2026-09-27 — Ethereal Scape: Sanctum interior, :205, Done:208, Stopped at:229, Next:232, Session 85 — 2026-09-27 — Ethereal Scape hybrid kit (36) + u:237, Done:240, Decisions made:263, Stopped at:268, Next:271, Session 84 — 2026-09-27 — Close berth geometry and final bra:277, Done:280, Decisions made:287, ... +484 more
 
 ### docs/archive
 
@@ -373,8 +373,8 @@ _246 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
   - `ThemeController.luau`: ThemeController.register:50, ThemeController.palette:59, ThemeController.onChanged:63, differs:74, repaint:83, evaluate:111, ThemeController.district:151, ThemeController.init:155
 - `src/client/UI/ChatPanel.luau` (319) - The chat window, in the house style. Replaces TextChatService's default · 2026-09-27
   - `ChatPanel.luau`: hex:34, wake:40, fade:51, addLine:66, onMessage:101, send:116, notifyOpened:134, setShown:142, buildToggle:160, build:215, ChatPanel.onOpened:270, ChatPanel.init:274
-- `src/client/UI/DevPanel.luau` (629) - THE DEVELOPER PANEL. Testing tooling, not a feature: it exists only when · 2026-09-27
-  - `DevPanel.luau`: chip:64, grid:72, scroller:87, log:102, clearLog:129, runLine:139, runCommand:155, hideSuggestions:165, drawSuggestions:171, refreshSuggestions:216, accept:227, valueLabel:239, buildCard:249, paintTabs:384, showCategory:392, toggle:412, build:421, DevPanel.init:616
+- `src/client/UI/DevPanel.luau` (696) - THE DEVELOPER PANEL. Testing tooling, not a feature: it exists only when · 2026-09-27
+  - `DevPanel.luau`: chip:64, grid:72, scroller:87, log:102, clearLog:129, runLine:139, runCommand:155, hideSuggestions:165, drawSuggestions:171, refreshSuggestions:216, accept:227, valueLabel:239, buildCard:249, paintTabs:384, showCategory:392, toggle:412, build:421, DevPanel.init:683
 - `src/client/UI/ExpeditionHud.luau` (206) - The expedition banner: where you are, how long is left, and what happened · 2026-09-23
   - `ExpeditionHud.luau`: build:35, showToast:121, ExpeditionHud.init:139
 - `src/client/UI/FateRoll.luau` (360) - The roll: prompt, build-up, reveal, result card. Build spec T-115. · 2026-09-25
@@ -483,7 +483,7 @@ _246 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 - `src/shared/Core/FixtureCore.luau` (55) - The pure half of fixtures (CHUNK_AUTHORING.md convention 7, build spec · 2026-09-23
   - `FixtureCore.luau`: CHEST:15, VAULT:16, FORCEFIELD:17, smooth:23, FixtureCore.lidAngle:31, FixtureCore.doorSpin:38, FixtureCore.doorRecess:44, FixtureCore.fieldTransparency:50
 - `src/shared/Core/Freeze.luau` (25) - Deep-freeze a content or config table, so a System cannot mutate the data · 2026-09-22
-- `src/shared/Core/GameConfig.luau` (1210) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-09-27
+- `src/shared/Core/GameConfig.luau` (1213) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-09-27
 - `src/shared/Core/HubMenuCore.luau` (190) - THE HUB MENU'S RULES, WITH NO ROBLOX IN THEM. · 2026-09-25
   - `HubMenuCore.luau`: HubMenuCore.panels:20, HubMenuCore.panelById:31, HubMenuCore.destinations:41, HubMenuCore.destinationById:52, HubMenuCore.landingPoint:64, HubMenuCore.isVisible:71, HubMenuCore.newState:80, HubMenuCore.reduce:98, HubMenuCore.canTravel:149, HubMenuCore.travelTiming:180
 - `src/shared/Core/KeyCore.luau` (58) - The pure half of vault keys (build spec §7.5). Owner-directed 2026-09-23: · 2026-09-23

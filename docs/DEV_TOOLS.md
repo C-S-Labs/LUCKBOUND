@@ -7,7 +7,8 @@ place goes public.
 
 ## Using it
 
-- **Panel:** press **F4** (`GameConfig.Debug.PanelKey`), click the **DEV** button top-right, or type `/panel`.
+- **Panel:** press **F4** (`GameConfig.Debug.PanelKey`), click the **DEV** button top-right, or type `/panel`. Drag the header to move it, and drag the
+  **◢ grip in the bottom-right corner** to resize it (minimum `GameConfig.Debug.PanelMinWidth/Height`).
   - **Category tabs** down the left: World & Map, Chunks, Player, Fate & Loot, Events, Ambience,
     Bosses, Diagnostics, General.
   - **A card per command.** Click an argument's picker to choose from its live values (world ids,

@@ -437,8 +437,9 @@ local function build()
 	window.Position = UDim2.new(1, -S.MD, 0, 46)
 	window.Size = UDim2.fromOffset(WIDTH, HEIGHT)
 	window.Visible = false
+	-- A floor, not a ceiling: the corner grip below lets the window grow.
 	local limit = Instance.new("UISizeConstraint")
-	limit.MaxSize = Vector2.new(WIDTH, HEIGHT)
+	limit.MinSize = Vector2.new(GameConfig.Debug.PanelMinWidth, GameConfig.Debug.PanelMinHeight)
 	limit.Parent = window
 	UITheme.pad(window, S.MD)
 
@@ -450,8 +451,12 @@ local function build()
 	local title = UIKit.label(header, "DEVELOPER", 18, "ACCENT")
 	title.Size = UDim2.new(1, -90, 1, 0)
 	title.Font = UITheme.HeaderFont
-	local hint =
-		UIKit.label(header, `{GameConfig.Debug.PanelKey} to toggle . drag to move`, 12, "MUTED")
+	local hint = UIKit.label(
+		header,
+		`{GameConfig.Debug.PanelKey} to toggle . drag to move . corner to resize`,
+		12,
+		"MUTED"
+	)
 	hint.Position = UDim2.fromOffset(130, 0)
 	hint.Size = UDim2.new(1, -230, 1, 0)
 	local close = UIKit.button(header, "Close", "GHOST", toggle)
@@ -490,6 +495,68 @@ local function build()
 			or input.UserInputType == Enum.UserInputType.Touch
 		then
 			dragFrom = nil
+		end
+	end)
+
+	-- Corner grip: drag the bottom-right corner to resize. The window is
+	-- anchored top-right, so growing it wider also moves the right edge by
+	-- the same amount, which keeps the grip under the cursor.
+	local grip = Instance.new("TextButton")
+	grip.Name = "ResizeGrip"
+	grip.AutoButtonColor = false
+	grip.BackgroundTransparency = 1
+	grip.Text = "◢"
+	grip.TextSize = 16
+	grip.Font = UITheme.LabelFont
+	grip.TextColor3 = UITheme.TextMuted
+	grip.AnchorPoint = Vector2.new(1, 1)
+	grip.Position = UDim2.new(1, S.MD - S.XS, 1, S.MD - S.XS)
+	grip.Size = UDim2.fromOffset(20, 20)
+	grip.ZIndex = 5
+	grip.Parent = window
+	grip.MouseEnter:Connect(function()
+		grip.TextColor3 = UITheme.AccentGold
+	end)
+	grip.MouseLeave:Connect(function()
+		grip.TextColor3 = UITheme.TextMuted
+	end)
+
+	local resizeFrom: Vector2? = nil
+	local startSize: Vector2 = Vector2.zero
+	local startRight: UDim2 = window.Position
+	grip.InputBegan:Connect(function(input)
+		if
+			input.UserInputType == Enum.UserInputType.MouseButton1
+			or input.UserInputType == Enum.UserInputType.Touch
+		then
+			resizeFrom = Vector2.new(input.Position.X, input.Position.Y)
+			startSize = window.AbsoluteSize
+			startRight = window.Position
+		end
+	end)
+	UserInputService.InputChanged:Connect(function(input)
+		if
+			resizeFrom
+			and (
+				input.UserInputType == Enum.UserInputType.MouseMovement
+				or input.UserInputType == Enum.UserInputType.Touch
+			)
+		then
+			local viewport = workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize
+				or Vector2.new(WIDTH, HEIGHT)
+			local d = Vector2.new(input.Position.X, input.Position.Y) - resizeFrom
+			local w = math.clamp(startSize.X + d.X, GameConfig.Debug.PanelMinWidth, viewport.X)
+			local h = math.clamp(startSize.Y + d.Y, GameConfig.Debug.PanelMinHeight, viewport.Y)
+			window.Size = UDim2.fromOffset(w, h)
+			window.Position = startRight + UDim2.fromOffset(w - startSize.X, 0)
+		end
+	end)
+	UserInputService.InputEnded:Connect(function(input)
+		if
+			input.UserInputType == Enum.UserInputType.MouseButton1
+			or input.UserInputType == Enum.UserInputType.Touch
+		then
+			resizeFrom = nil
 		end
 	end)
 
