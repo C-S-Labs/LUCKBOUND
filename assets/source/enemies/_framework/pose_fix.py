@@ -211,6 +211,8 @@ def joint_report(tag=""):
     print(f"JOINTS {tag}: " + " ".join(out) + ("  BAD: " + ", ".join(bad) if bad else ""))
     return bad
 
+_LAST_POLE = {}
+STICKY = 40.0
 def wield(D, C, side="Right", pole_off=(0.5, 0.35, -0.6)):
     """Natural one-hand weapon hold: the haft runs along world direction D through world point C (in the palm).
        The hand stays in line with the forearm (the haft sits across the palm, so the forearm is solved to be well
@@ -224,13 +226,16 @@ def wield(D, C, side="Right", pole_off=(0.5, 0.35, -0.6)):
     def _restore():
         for b_ in chain: P[b_].matrix = keep[b_]; _upd()
     best = None
-    # natural elbow directions first: back + down, tucked near the ribs; flaring out is a last resort
+    # natural elbow directions first: back + down, tucked near the ribs; flaring out is a last resort.
+    # Sticky: the pole the previous solve used wins unless another is clearly better, so consecutive frames of an
+    # animation never flick the elbow between two near-equal poles (a ~14 deg flare for one frame).
+    last = _LAST_POLE.get(side)
     for po in ((0.3, 0.6, -0.75), (0.2, 0.8, -0.55), (0.45, 0.45, -0.75), (0.1, 0.5, -0.85), (0.6, 0.5, -0.6)):
         _restore()
         _wield_once(D, C, side, s, ua, la, sh + Vector((po[0]*s, po[1], po[2])))
-        sc = hits("Arm" + side) + 3*joint_penalty(side) + 2*abduction_penalty(side)
+        sc = hits("Arm" + side) + 3*joint_penalty(side) + 2*abduction_penalty(side) - (STICKY if po == last else 0)
         if best is None or sc < best[0]: best = (sc, po)
-        if sc < 1: break
+    _LAST_POLE[side] = best[1]
     _restore()
     _wield_once(D, C, side, s, ua, la, sh + Vector((best[1][0]*s, best[1][1], best[1][2])))
 def abduction_penalty(side):

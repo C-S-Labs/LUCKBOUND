@@ -33,6 +33,25 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 99 — 2026-09-28 — Right-elbow flare fixed
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes   **Branch:** `CloudTesting`
+
+### Done
+- The owner saw the right elbow flare out around Walk f15. `pose_fix.wield` re-picked its elbow pole from 5
+  candidates on every frame, and near-ties flipped to the last-resort "flare" pole for 1-2 frames (the elbow moved
+  10 cm out and back).
+- The pole is now sticky (`_LAST_POLE`, `STICKY` 40): consecutive solves keep the previous pole unless another is
+  clearly better.
+- Right elbow turn per frame: Walk and Strafe ×2 went from 14° to ≤ 1°, with no new clipping.
+- Re-exported the FBXs and gave the owner `TheAscendant_fixed.blend`: their mesh, the 150-bone rig and all 5 actions,
+  saved as a separate file. The owner's own `.blend` is untouched.
+
+### Stopped at
+The Reap still flicks the elbow at f31-32 (14°, a held pose). It is left until the owner decides on the left-hand
+design (a two-handed weapon would rework the Reap's grips).
+
+---
+
 ## Session 98 — 2026-09-28 — Robe clears the free arm
 **Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes   **Branch:** `CloudTesting`
 

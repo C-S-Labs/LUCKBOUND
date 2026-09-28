@@ -68,8 +68,8 @@ _271 text files, 381 binary assets. Regenerate with `python tools/gen_index.py`;
 - `assets/source/enemies/_framework/lineup.py` (28) - Build every enemy of a tier into ONE review .blend, side by side (each in its own collection, rigged). · 2026-09-24
 - `assets/source/enemies/_framework/pose_common.py` (32) - Body-agnostic pose helpers (every body type): collision counts between pieces and grounding. · 2026-09-24
   - `pose_common.py`: _upd:10, _tree:11, hits:17, ground:23
-- `assets/source/enemies/_framework/pose_fix.py` (315) - HUMANOID BODY PROFILE (loaded only for manifest body="humanoid"; see bodies/). Joint + grip rules for R15 figures: · 2026-09-28
-  - `pose_fix.py`: _upd:18, _rest_rot:19, haft:21, _dax:24, _palm:27, seat_point:34, grip_lance:37, _curl:44, wrap:64, _oppose:77, setup_hinges:98, hinge_errors:106, _ik:117, _bake:127, orient_hand:136, hand_on:146, clear_arm:185, _dir:193, joint_report:194, wield:214, abduction_penalty:236, joint_penalty:243, _wield_once:246, arm_to:269, _wield_once:295
+- `assets/source/enemies/_framework/pose_fix.py` (320) - HUMANOID BODY PROFILE (loaded only for manifest body="humanoid"; see bodies/). Joint + grip rules for R15 figures: · 2026-09-28
+  - `pose_fix.py`: _upd:18, _rest_rot:19, haft:21, _dax:24, _palm:27, seat_point:34, grip_lance:37, _curl:44, wrap:64, _oppose:77, setup_hinges:98, hinge_errors:106, _ik:117, _bake:127, orient_hand:136, hand_on:146, clear_arm:185, _dir:193, joint_report:194, wield:216, abduction_penalty:241, joint_penalty:248, _wield_once:251, arm_to:274, _wield_once:300
 - `assets/source/enemies/_framework/preview.py` (11) - Render chosen frames of the current action (for review). Env FRAMES="1,8,12,15,19,26,44" (default: every key). · 2026-09-24
   - `preview.py`: preview:5
 - `assets/source/enemies/_framework/render.py` (41) - Standard review renders for any enemy (EEVEE, AgX, 3-point light, pedestal, 2 m player reference block). · 2026-09-24
@@ -363,8 +363,8 @@ _271 text files, 381 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (5943) - LUCKBOUND — Work Log · 2026-09-28
-  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 98 — 2026-09-28 — Robe clears the free arm:36, Done:39, Stopped at:50, Next:54, Session 97 — 2026-09-28 — Baked cloth (robe + scarves) and t:59, Done:62, Decisions made:82, Stopped at:86, Next:93, Session 96 — 2026-09-28 — The Ascendant: whole-body locomoti:99, Done:102, Decisions made:127, Stopped at:131, Next:138, Session 95 — 2026-09-28 — The Ascendant (Ethereal Scape boss:145, Done:148, Decisions made:171, Stopped at:176, Next:184, Session 94 — 2026-09-27 — Dev panel grip: visible, and corre:191, Done:194, Next:203, Session 93 — 2026-09-27 — Leaderboard rows: friend / block /:208, Done:211, Next:223, Session 92 — 2026-09-27 — Chat to top-left, rail drops and c:229, Done:232, Stopped at:248, Next:251, Session 91 — 2026-09-27 — Custom leaderboard + chat panel in:256, Done:259, Decisions made:265, Stopped at:272, Next:275, ... +509 more
+- `docs/WORKLOG.md` (5962) - LUCKBOUND — Work Log · 2026-09-28
+  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 99 — 2026-09-28 — Right-elbow flare fixed:36, Done:39, Stopped at:49, Session 98 — 2026-09-28 — Robe clears the free arm:55, Done:58, Stopped at:69, Next:73, Session 97 — 2026-09-28 — Baked cloth (robe + scarves) and t:78, Done:81, Decisions made:101, Stopped at:105, Next:112, Session 96 — 2026-09-28 — The Ascendant: whole-body locomoti:118, Done:121, Decisions made:146, Stopped at:150, Next:157, Session 95 — 2026-09-28 — The Ascendant (Ethereal Scape boss:164, Done:167, Decisions made:190, Stopped at:195, Next:203, Session 94 — 2026-09-27 — Dev panel grip: visible, and corre:210, Done:213, Next:222, Session 93 — 2026-09-27 — Leaderboard rows: friend / block /:227, Done:230, Next:242, Session 92 — 2026-09-27 — Chat to top-left, rail drops and c:248, Done:251, Stopped at:267, Next:270, Session 91 — 2026-09-27 — Custom leaderboard + chat panel in:275, Done:278, ... +512 more
 
 ### docs/archive
 
