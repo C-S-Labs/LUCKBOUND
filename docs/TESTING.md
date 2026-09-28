@@ -530,9 +530,10 @@ The first thing anyone sees.
 
 6. **Stand in the map.** ✅ Pass: you move noticeably slower than in the hub,
    and turning has weight.
-7. **Roll three times in a row, pressing Q again just before each lands.** ✅
-   Pass: the rolls chain cleanly, without mashing. Each takes a chunk out of the
-   bar, and a pale strip shows the chunk before it drains away.
+7. **Mash Q during a roll, then press it once after the roll ends.** ✅ Pass: the
+   mashing does nothing (no queued roll); the single press after rolls again. Each
+   roll takes a chunk out of the bar, and a pale strip shows the chunk before it
+   drains away.
 8. **Roll until the bar is empty, then press Q.** ✅ Pass: the last roll happens
    even on a sliver of stamina; with the bar empty nothing happens, and it waits
    about a second before refilling. The fill is amber when low.
