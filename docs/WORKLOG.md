@@ -61,6 +61,10 @@ delete an older entry; if something turned out wrong, say so in a newer one.
   running `rojo serve` is serving Leaderboard/ChatPanel. Next step: check whether they tested the published place
   (it needs a Studio publish) and whether Studio's Output shows a client error.
 
+- Owner: "fuck" went through the chat unfiltered. Cause: ChatPanel rendered the sender's local `Sending` echo,
+  which carries the raw text. It now renders only `TextChatMessageStatus.Success` (filtered). Studio never filters
+  chat at all, so verify in a live server.
+
 ### Next
 1. Studio walk: the menu's position, and the prompts appearing (SetCore prompts do not show in Studio for some
    actions; test in a live server).

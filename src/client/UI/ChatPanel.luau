@@ -99,6 +99,14 @@ local function addLine(text: string)
 end
 
 local function onMessage(message: TextChatMessage)
+	-- FILTERED TEXT ONLY. The sender's client gets each message twice: first
+	-- a local "Sending" echo carrying the RAW text, then the server's result
+	-- with the filtered text. Showing anything but Success would put
+	-- unfiltered words on screen (a Roblox ToS problem). Studio never filters
+	-- at all, so test filtering in a live server.
+	if message.Status ~= Enum.TextChatMessageStatus.Success then
+		return
+	end
 	local source = message.TextSource
 	if source == nil then
 		-- System messages (joins, command feedback) read as information.

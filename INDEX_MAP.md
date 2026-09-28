@@ -311,8 +311,8 @@ _246 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (5784) - LUCKBOUND — Work Log · 2026-09-27
-  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 94 — 2026-09-27 — Dev panel grip: visible, and corre:36, Done:39, Next:48, Session 93 — 2026-09-27 — Leaderboard rows: friend / block /:53, Done:56, Next:64, Session 92 — 2026-09-27 — Chat to top-left, rail drops and c:70, Done:73, Stopped at:89, Next:92, Session 91 — 2026-09-27 — Custom leaderboard + chat panel in:97, Done:100, Decisions made:106, Stopped at:113, Next:116, Session 90 — 2026-09-27 — Fix: entering twice while a map lo:123, Done:126, Next:137, Session 89 — 2026-09-27 — Developer panel + command registry:142, Done:145, Next:164, Session 88 — 2026-09-27 — Ethereal Scape: walk fixes (Sanctu:169, Done:172, Next:188, Session 87 — 2026-09-27 — Ethereal Scape: final polish, map-:195, Done:198, Stopped at:230, Next:233, Session 86 — 2026-09-27 — Ethereal Scape: Sanctum interior, :240, Done:243, Stopped at:264, Next:267, Session 85 — 2026-09-27 — Ethereal Scape hybrid kit (36) + u:272, Done:275, ... +490 more
+- `docs/WORKLOG.md` (5788) - LUCKBOUND — Work Log · 2026-09-27
+  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 94 — 2026-09-27 — Dev panel grip: visible, and corre:36, Done:39, Next:48, Session 93 — 2026-09-27 — Leaderboard rows: friend / block /:53, Done:56, Next:68, Session 92 — 2026-09-27 — Chat to top-left, rail drops and c:74, Done:77, Stopped at:93, Next:96, Session 91 — 2026-09-27 — Custom leaderboard + chat panel in:101, Done:104, Decisions made:110, Stopped at:117, Next:120, Session 90 — 2026-09-27 — Fix: entering twice while a map lo:127, Done:130, Next:141, Session 89 — 2026-09-27 — Developer panel + command registry:146, Done:149, Next:168, Session 88 — 2026-09-27 — Ethereal Scape: walk fixes (Sanctu:173, Done:176, Next:192, Session 87 — 2026-09-27 — Ethereal Scape: final polish, map-:199, Done:202, Stopped at:234, Next:237, Session 86 — 2026-09-27 — Ethereal Scape: Sanctum interior, :244, Done:247, Stopped at:268, Next:271, Session 85 — 2026-09-27 — Ethereal Scape hybrid kit (36) + u:276, Done:279, ... +490 more
 
 ### docs/archive
 
@@ -371,8 +371,8 @@ _246 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
   - `StateController.luau`: notify:31, StateController.get:37, StateController.onChanged:41, StateController.setting:55, StateController.applySetting:68, StateController.init:79
 - `src/client/Controllers/ThemeController.luau` (178) - THE LIVE PALETTE, APPLIED. · 2026-09-25
   - `ThemeController.luau`: ThemeController.register:50, ThemeController.palette:59, ThemeController.onChanged:63, differs:74, repaint:83, evaluate:111, ThemeController.district:151, ThemeController.init:155
-- `src/client/UI/ChatPanel.luau` (319) - The chat window, in the house style. Replaces TextChatService's default · 2026-09-27
-  - `ChatPanel.luau`: hex:34, wake:40, fade:51, addLine:66, onMessage:101, send:116, notifyOpened:134, setShown:142, buildToggle:160, build:215, ChatPanel.onOpened:270, ChatPanel.init:274
+- `src/client/UI/ChatPanel.luau` (327) - The chat window, in the house style. Replaces TextChatService's default · 2026-09-27
+  - `ChatPanel.luau`: hex:34, wake:40, fade:51, addLine:66, onMessage:101, send:124, notifyOpened:142, setShown:150, buildToggle:168, build:223, ChatPanel.onOpened:278, ChatPanel.init:282
 - `src/client/UI/DevPanel.luau` (730) - THE DEVELOPER PANEL. Testing tooling, not a feature: it exists only when · 2026-09-27
   - `DevPanel.luau`: chip:64, grid:72, scroller:87, log:102, clearLog:129, runLine:139, runCommand:155, hideSuggestions:165, drawSuggestions:171, refreshSuggestions:216, accept:227, valueLabel:239, buildCard:249, paintTabs:384, showCategory:392, toggle:412, build:421, DevPanel.init:717
 - `src/client/UI/ExpeditionHud.luau` (206) - The expedition banner: where you are, how long is left, and what happened · 2026-09-23
