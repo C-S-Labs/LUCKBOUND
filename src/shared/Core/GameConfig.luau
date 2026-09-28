@@ -1049,9 +1049,6 @@ local GameConfig = {
 				-- first Studio walk, 2026-09-28).
 				AccelerationSeconds = 0.08,
 				DecelerationSeconds = 0.05,
-				-- Radians/s the character turns toward where it is going.
-				-- High in the hub: nobody wants to wait for a turn in a lobby.
-				TurnRate = 18,
 				-- Moving in the air steers at this fraction of ground control.
 				AirControl = 0.8,
 				-- Stamina is unlimited in the hub, and only there (owner,
@@ -1068,10 +1065,9 @@ local GameConfig = {
 				-- lighter than a Souls game. ~22 walking, ~34 sprinting.
 				SpeedScale = 0.7,
 				SprintMultiplier = 1.59, -- 16.8 -> ~26.7 (owner: +1.5 studs/s)
-				-- Weight comes from turning and costs, not from sliding.
+				-- Weight comes from costs and the ramps, not from sliding.
 				AccelerationSeconds = 0.12,
 				DecelerationSeconds = 0.08,
-				TurnRate = 10,
 				AirControl = 0.45,
 				JumpStaminaCost = 10,
 				RollStaminaCost = 22,
@@ -1172,11 +1168,6 @@ local GameConfig = {
 		-- The camera widens by this many degrees at the start of a roll and
 		-- settles back over the roll.
 		RollFovKickDegrees = 3,
-
-		-- While facing is held (shoulder camera, lock-on) the body turns this
-		-- fast, rad/s: effectively instantly, so it never lags a quick camera
-		-- turn (owner: the lag caused bugs when turning fast).
-		HeldFacingTurnRate = 1000,
 
 		-- === SHOULDER CAMERA (our shift lock) ===
 		-- Left Ctrl toggles it: the mouse locks to the centre, the camera

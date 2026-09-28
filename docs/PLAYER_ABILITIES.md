@@ -40,9 +40,9 @@ direction, speed and facing every frame and launches jumps itself. The stock
 Animate script is off too: the same stock animation assets are played by the
 controller from our speed and mode, until LUCKBOUND has its own animations.
 
-**Held facing turns instantly.** With the shoulder camera or a lock-on, the body turns at
-`HeldFacingTurnRate` (effectively instant) so it never lags a quick camera turn. Free running keeps the
-profile's turn rate.
+**No turning delay, in any mode** (owner). The facing is written to the root directly every frame
+rather than turned by the controller's torque, which lagged fast camera swings and put rolls off-aim.
+The per-profile `TurnRate` is gone.
 
 **Only the root collides.** Every other body part has collisions off (re-applied every frame), so a
 clip turning the torso through the floor can't push the physics. That push was a camera shake during rolls.
@@ -71,7 +71,6 @@ stands inside a loaded expedition stage, HUB otherwise.
 | | Hub | Expedition |
 |---|---|---|
 | Walk / sprint | 32 / ~50 studs/s | ~22 / ~34 studs/s |
-| Turn rate | 18 rad/s (snappy) | 10 rad/s (weight) |
 | Speed-up / slow-down | 0.08s / 0.05s | 0.12s / 0.08s |
 | Air control | 0.8 | 0.45 |
 | Stamina | **unlimited**: nothing costs anything | sprint 14/s, jump 10, roll 22 |
@@ -387,6 +386,33 @@ a velocity itself. It talks to movement through two things only:
 That is where weapon types get their feel: light weapons allow cancels, heavy
 ones root and commit. The timing windows themselves come from the animation
 markers (`ENEMY_AI.md` §4), not from here.
+
+### 6.1 Weapon stances: how holding a weapon changes the body (design, owner question 2026-09-28)
+
+A sword, a greatsword and bare hands should move differently. The framework handles this as **layers**, so
+no weapon needs a second movement system:
+
+- **Legs and locomotion stay shared.** The run, strafe, rolls, jump and landings are the same for everyone.
+  They are the Movement layer.
+- **A weapon adds a STANCE:** looping **upper-body-only** clips (arms, and a little torso) at the **Action**
+  priority: a grip for idle, one for running, one for sprinting. Roblox blends per joint, so the stance takes
+  the arms while the legs keep running underneath. A greatsword's two-handed carry and a dagger's low guard
+  are just different stance clips.
+- **Whole-body moves override the stance.** Rolls, backstep and air dash sit at **Action2** (already set), so
+  the body rolls and then settles back into the grip.
+- **Attacks sit on top** (Action3/4), from the weapon's moveset (`ENEMY_AI.md` §4.1).
+- **A stance may also override whole slots** when a weapon changes the gait (a greatsword's heavier `RunForward`,
+  an idle with the blade planted). Same slot names, looked up in the stance first.
+- **Weight on movement** goes through the existing weapon hook: a stance can carry a small speed multiplier,
+  applied like `lock`'s `SpeedMultiplier`, so the numbers stay on the weapon (`PLAYER_ABILITIES.md` §0).
+- **Unarmed is simply no stance:** what exists today.
+
+As data: one file per weapon TYPE, `Content/Animations/Stances/<TYPE>.luau` (Sword, Greatsword, Dagger,
+Hammer, Staff, Bow, Gauntlets), holding stance clip slots and optional slot overrides. Legendary or Mythic
+weapons with unique movesets may carry their own. The generator can author the stance clips like the rest.
+
+**When:** with items and equipping (`DEVELOPMENT_PLAN.md`: items before combat). The priority ladder is already
+in place so nothing built now has to move.
 
 **What stays out of this layer, for good:** damage, hitboxes, applying i-frames, lunges
 that deal damage, knockback. A lunge is a weapon move that locks with

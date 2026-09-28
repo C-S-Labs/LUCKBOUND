@@ -303,7 +303,18 @@ function CharacterAnimator.bind(character: Model, hum: Humanoid, root: BasePart)
 	do
 		local id = AnimationCore.slot(set, name)
 		if id then
-			local track = loadTrack(animator, id, Enum.AnimationPriority.Action, false)
+			-- PRIORITY LADDER (room for weapons, PLAYER_ABILITIES.md §6.1):
+			-- Idle < Movement (locomotion) < Action (a weapon's grip, later;
+			-- landings and the take-off now) < Action2 (rolls, backstep, air
+			-- dash: whole-body moves that override a grip) < Action3/4
+			-- (weapon attacks, later).
+			local wholeBody = string.sub(name, 1, 4) == "Roll"
+				or name == "Backstep"
+				or string.sub(name, 1, 7) == "AirDash"
+			local priority = if wholeBody
+				then Enum.AnimationPriority.Action2
+				else Enum.AnimationPriority.Action
+			local track = loadTrack(animator, id, priority, false)
 			if track then
 				oneShots[name] = track
 			end

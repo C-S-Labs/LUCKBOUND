@@ -34,6 +34,23 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 110 — 2026-09-28 — Instant facing (real fix); weapon stance design
+**Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- **Turning still lagged** (owner). A higher `BaseTurnSpeed` wasn't enough: the controller turns via a torque.
+  The facing is now written to the root's CFrame directly every frame (angular velocity cleared), in every mode.
+  The profile `TurnRate`s and `HeldFacingTurnRate` are removed.
+- **Owner asked how weapon poses fit:** the design is written in `PLAYER_ABILITIES.md` §6.1. Stances are
+  upper-body clips at Action over shared locomotion. Whole-body moves (rolls, backstep, air dash) now load at
+  **Action2**; attacks go at Action3/4. Per-type stance files come later, with items.
+
+### Next
+1. Owner re-walks: fast camera swings while running, rolling and with the shoulder camera.
+2. Remaining clips; the PR.
+
+---
+
 ## Session 109 — 2026-09-28 — Roll speed shape, 18 studs, instant held facing
 **Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 

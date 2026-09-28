@@ -39,6 +39,10 @@ local CharacterAnimator = require(script.Parent.CharacterAnimator)
 
 local LocomotionController = {}
 
+-- The controller's own turn speed: high enough never to lag the facing this
+-- file writes to the root directly. Not a tunable -- "instant" is the design.
+local TURN_INSTANT = 1000
+
 local player = Players.LocalPlayer
 
 local profileId = "HUB"
@@ -235,7 +239,9 @@ local function bindCharacter(character: Model)
 	cm.RootPart = root
 	cm.GroundSensor = sensor
 	cm.BaseMoveSpeed = 0
-	cm.BaseTurnSpeed = tuning.TurnRate
+	-- Turning is done by setting the root's facing directly (see step);
+	-- the controller must not fight it with a slower turn of its own.
+	cm.BaseTurnSpeed = TURN_INSTANT
 
 	local ground = Instance.new("GroundController")
 	ground.GroundOffset = found.HipHeight
@@ -375,10 +381,19 @@ local function step(dt: number)
 	cm.MovingDirection = direction
 	cm.FacingDirection = facing
 	cm.BaseMoveSpeed = speed
-	-- Held facing turns instantly; free running keeps its weighty turn.
-	cm.BaseTurnSpeed = if facingHeld()
-		then GameConfig.Locomotion.HeldFacingTurnRate
-		else tuning.TurnRate
+
+	-- NO TURNING DELAY, in any mode (owner, 2026-09-28). The controller turns
+	-- the body with a torque, which lags a fast camera swing however high its
+	-- turn speed is set; that lag put the body, and every roll aimed from it,
+	-- somewhere the player was no longer looking. So the facing is written to
+	-- the root directly, every frame, and the spin the torque had built up is
+	-- cleared.
+	local position = root.Position
+	local currentLook = root.CFrame.LookVector
+	if Vector3.new(currentLook.X, 0, currentLook.Z).Unit:Dot(facing) < 0.99999 then
+		root.CFrame = CFrame.lookAt(position, position + facing)
+		root.AssemblyAngularVelocity = Vector3.zero
+	end
 
 	local ground = groundController
 	local air = airController
