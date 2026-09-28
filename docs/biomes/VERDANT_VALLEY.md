@@ -47,6 +47,11 @@ revamp pass (see `docs/STATUS.md` §4). All pieces are in one file,
 `assets/source/worlds/verdant_valley/export_verdant_valley_kit.py`. The 2026-09-22 first-pass test kit
 (`chunk_path_straight`, `chunk_meadow_a`, `chunk_waterfall`…) was retired in the 2026-09-25 audit.
 
+The current collision prototype uses the joined Stone Sentinels visual art and
+a separate segmented walk-surface FBX derived from the reviewed Blender scene.
+It is not active until its Studio-imported collision model is saved in the
+chunk kit; other 29 pieces retain their existing collision.
+
 | Role | Pieces |
 |---|---|
 | `ENTRY` (2) | `chunk_entry_dawn_meadow` · `chunk_entry_woodland_refuge` |

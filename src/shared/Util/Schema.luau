@@ -413,6 +413,12 @@ function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boole
 				)})`
 			)
 		end
+		if
+			chunk.CollisionTemplate ~= nil
+			and (type(chunk.CollisionTemplate) ~= "string" or chunk.CollisionTemplate == "")
+		then
+			table.insert(errors, `{label}: CollisionTemplate must be a nonempty model name`)
+		end
 
 		if not manifest.exists(chunk.AssetKey) then
 			table.insert(

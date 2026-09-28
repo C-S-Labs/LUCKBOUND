@@ -18,14 +18,39 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   pieces with drifting cloud props, height variation — on the §7.7 generation blueprint, 2026-09-27; final
   polish pass done (map-wide skyrays, natural mushroom patches, overhang check) — **not yet uploaded or walked**). Emberfall and Astral
   Reach have no map yet.
-- **Verdant Valley cleanup test branch:** `codex/vv-cleanup-testing` contains the reviewed 30-mesh Blender scene,
+- **Verdant Valley baseline:** `codex/vv-stone-walk-collision` starts from the
+  pre-separation `ce0f29f` commit. The authoritative art is
+  `assets/source/worlds/verdant_valley/verdant_valley_30_cleanup_review.blend`;
+  the joined `VV_STRUCTURE.rbxmx` remains the visible kit. The failed full
+  separation activation is preserved on `codex/vv-full-separation-reference`.
+  The reviewed scene and baseline contain the reviewed 30-mesh Blender scene,
   validated FBX, Studio-imported `VV_STRUCTURE.rbxmx`, and synced mesh IDs. All 30 imported names and dimensions
   match the export report. The saved kit now records PreciseConvexDecomposition on all 30 MeshParts;
   the runtime loader already requests that fidelity. The visual Studio walk and
   in-experience asset-access check remain open before merge. Floating collision
-  and visible terrain gaps in the owner's walk remain unresolved; the joined
-  terrain needs collision visualization and likely Blender mesh separation or
-  surface repair.
+  and visible terrain gaps in the owner's walk remain unresolved.
+- **Stone Sentinels collision prototype:** A new generator derives 202 thin,
+  16-stud walk-surface tiles from the current connected terrain body. It
+  excludes 80 detached art components and leaves steep/open spans unbridged.
+  Blender checks: 203 FBX meshes reimported including the origin marker; 2,893
+  of 2,965 4-stud samples hit the custom surface, including 353/356 in the
+  north approach; maximum sampled height deviation is 0.245 stud before the
+  intentional 0.35-stud lowering. The loader is isolated to Stone Sentinels
+  and disables joined visual collision only when the imported model is present.
+  Studio imported and prepared all 202 parts. On a temporary assembled chunk,
+  the joined visual's collision was off and all 253 reference rays hit at each
+  of four yaws with maximum 0.351-stud error. A character walked about 95
+  studs along the central route while grounded and at full health. The
+  saved model is `assets/rbxm/chunks/verdant_valley/VV_STONE_SENTINELS_COLLISION.rbxmx`.
+  XML inspection found 202 unique MeshIds and names, explicit precise fidelity
+  on all parts, and a zero pivot. Rojo reloaded it: 94 north-approach rays all
+  hit within 0.351 stud; a character walked to the north mouth grounded and
+  at full health. Three deliberately omitted steep north-edge samples produced
+  no Roblox collision hit, so the pilot did not bridge those openings. An
+  owner visual walk at the exact prior failure spot and a
+  two-client check remain before any kit-wide rollout.
+  The owner requested that this prototype remain local until newer repository
+  versions are reconciled; no push or PR has been made.
 - **Overgrown Causeway split pilot (2026-09-28):** the reviewed joined mesh was
   separated into one connected terrain mesh (256 × 43.5 × 256) and one static
   scenery mesh containing 88 detached trees, rocks, ruins and moss components.
@@ -53,8 +78,10 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   `assets/export/worlds/verdant_valley/`. The two former side-named cap meshes
   now use `chunk_cap_*` in the candidate. Exporter checks geometry conservation,
   colors, socket openings and FBX reimport; the candidate Luau suite passes.
-  **The new meshes are uploaded but not active.** MeshId/content wiring and
-  Studio collision walks remain before replacing the current kit.
+  **Failed historical candidate, not the desired baseline.** The owner walk
+  found invisible collision floors over lower terrain across the kit because
+  each remaining terrain mesh was still large and concave. Do not activate or
+  roll this candidate out; retain it only for diagnostics and tooling.
 
   | Id | Rarity | Weight | Phase | Map | Enterable? |
   |---|---|---|---|---|---|

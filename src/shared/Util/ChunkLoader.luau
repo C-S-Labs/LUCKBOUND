@@ -20,6 +20,7 @@
 local AssetService = game:GetService("AssetService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+local ServerStorage = game:GetService("ServerStorage")
 local Workspace = game:GetService("Workspace")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
@@ -30,6 +31,53 @@ local GameConfig = require(Root.Core.GameConfig)
 local Props = require(Root.Content.Props)
 
 local ChunkLoader = {}
+
+-- Prototype only: a named model in the Verdant Valley kit holds the small,
+-- authored walk colliders. The import sets its pivot to the chunk origin.
+local function attachWalkCollision(
+	chunk: any,
+	centre: Vector3,
+	visual: BasePart,
+	folder: Instance
+): boolean
+	local templateName = chunk.CollisionTemplate
+	if not templateName then
+		return false
+	end
+	local kits = ServerStorage:FindFirstChild("LuckboundChunkKits")
+	local template = kits and kits:FindFirstChild(templateName, true)
+	if not template or not template:IsA("Model") then
+		warn(
+			`[ChunkLoader] collision template '{templateName}' is missing; keeping visual collision`
+		)
+		return false
+	end
+	local collision = template:Clone()
+	collision.Name = "WalkCollision"
+	collision:PivotTo(CFrame.new(centre) * visual.CFrame.Rotation)
+	local count = 0
+	for _, descendant in collision:GetDescendants() do
+		if descendant:IsA("BasePart") then
+			descendant.Anchored = true
+			descendant.CanCollide = true
+			descendant.CanQuery = true
+			descendant.CanTouch = false
+			descendant.Transparency = if RunService:IsStudio() then 0.7 else 1
+			count += 1
+		end
+	end
+	if count == 0 then
+		collision:Destroy()
+		warn(`[ChunkLoader] collision template '{templateName}' is empty; keeping visual collision`)
+		return false
+	end
+	collision.Parent = folder
+	visual.CanCollide = false
+	visual.CanQuery = false
+	visual.CanTouch = false
+	folder:SetAttribute("WalkCollisionPieces", count)
+	return true
+end
 
 -- Blockout colours by Role. Not art direction -- these exist so a tester can
 -- read the shape of a generated map at a glance and say "entry, two paths, a
@@ -547,6 +595,7 @@ function ChunkLoader.build(
 				* CFrame.Angles(0, ChunkCore.yawRadians(placed.Yaw + k), 0)
 			usedMeshes += 1
 			surface = mesh
+			attachWalkCollision(chunk, centre, mesh, folder)
 		else
 			surface = buildBlockout(chunk, placed, centre, folder)
 			floorCount += 1

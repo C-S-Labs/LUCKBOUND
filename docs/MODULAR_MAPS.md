@@ -336,6 +336,13 @@ not content count.
 
 ## The geometry contract
 
+**Verdant Valley collision pilot:** Stone Sentinels may name a separate
+`CollisionTemplate` model. Its pivot is the chunk walk-plane origin; its small
+MeshParts rotate with the calibrated visual art. Only when the model exists
+does the loader disable the joined visual mesh's collision. The pilot is
+specific to that chunk and must pass Studio raycasts and traversal before
+any kit-wide use. See the Verdant Valley import steps.
+
 The layout rules above are about *data*. The rules below are about the *art*,
 and they are the ones that are expensive to discover late.
 

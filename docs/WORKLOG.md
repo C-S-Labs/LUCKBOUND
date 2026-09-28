@@ -33,6 +33,29 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 106 — 2026-09-28 — Stone Sentinels walk collider pilot
+**Merged:** none   **Tests:** 908 headless passed; Blender FBX reimport 203 meshes; Studio 253/253 rays at four yaws   **Branch:** `codex/vv-stone-walk-collision`
+
+### Done
+- Preserved the failed full-separation working tree on `codex/vv-full-separation-reference`, then resumed from the pre-separation `ce0f29f` baseline. Verified `verdant_valley_30_cleanup_review.blend` is the current joined art source (SHA-256 `a915fbb0c76e4fdfe6fca211e4113c66583a036a8fa6a428620fe10caf3382fe`). No Blender source or visible kit was overwritten.
+- Generated a Stone Sentinels-only FBX with 202 small walk colliders and a disposable origin marker. Added a guarded content/loader path: the joined visual mesh loses collision only when the imported collider model exists.
+- Imported and prepared the FBX in Studio. The temporary runtime chunk attached 202 colliders with joined visual collision off. At four rotations, Roblox raycasts hit all 253 Blender reference points with maximum 0.351-stud height difference. A character walked about 95 studs along the central route, grounded and at full health.
+- Saved `VV_STONE_SENTINELS_COLLISION.rbxmx` with 202 unique MeshIds/names and a zero pivot. Studio's save omitted fidelity, so added explicit precise-fidelity XML tokens to all 202 parts. Rojo reloaded the saved model; 94 north-approach rays all hit within 0.351 stud, three intentionally omitted steep north-edge points had no collision hit, and a character walked to the north mouth grounded at full health. Removed temporary Workspace and stage copies.
+- Ran 908 headless tests, Rojo build, Blender FBX reimport and manifold checks, and format checks on changed handwritten Luau files.
+
+### Decisions made
+- Use the reviewed current joined art as visual baseline. Keep the failed separation assets only as reference; do not roll the collider across the kit before a saved-model reload and owner walk.
+
+### Stopped at
+The isolated Stone Sentinels prototype is integrated and its sampled collision is validated in Studio. The owner's visual walk at the exact earlier failure point and a two-client check remain before kit-wide rollout. The owner requested no push yet because newer repository versions must be merged first; both prototype and full-separation reference branches remain local.
+
+### Next
+1. Reconcile newer repository versions into this local prototype branch before any push or PR, when the owner requests it.
+2. Owner visually walk Stone Sentinels at the exact earlier invisible-floor location and check slopes, drop-offs, and lower terrain; run a two-client check.
+3. If those pass, consider the next terrain piece. Do not roll out kit-wide based on this one pilot alone. Keep superseded separation outputs until CI and owner checks prove they can be removed.
+
+---
+
 ## Session 103 — 2026-09-28 — Import separated Verdant Valley meshes to staged RBXMX
 **Merged:** none   **Tests:** Studio import 30 terrain + 66 props; RBXMX XML/name/ID checks   **Branch:** `codex/vv-cleanup-testing`
 
