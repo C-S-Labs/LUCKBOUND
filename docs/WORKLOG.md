@@ -33,6 +33,25 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 90 — 2026-09-27 — Fix: entering twice while a map loads built two maps
+**Merged:** see the PR for this branch   **Tests:** suite passing (local)   **Branch:** `claude/enter-lock`
+
+### Done
+- Owner: "/enter twice while loading … loads both maps into the set. Is this just with the command?"
+- Cause: `isActive()` only turns true once the stage is built, and building yields while meshes load. `/enter`
+  clears the entry cooldown, so a second one mid-load built a second map. **Not only the command:** the Gate's
+  cooldown is 2 s and a build takes longer, so pressing the Gate prompt again mid-load could do it too, and a
+  party member mid-build wasn't counted as busy.
+- Fix (`ExpeditionSystem`): an `entering` lock from the accepted entry until the stage is built and everyone is
+  placed, covering the leader and every traveller. `requestEnter` drops a request while one is in flight;
+  `/enter` answers "a map is already loading". The lock is released through a `pcall`, so a failed build never
+  strands anyone. New `ExpeditionSystem.isEntering(player)`.
+
+### Next
+1. Owner: `/enter` twice quickly, and the Gate prompt twice during a load — one map each time.
+
+---
+
 ## Session 89 — 2026-09-27 — Developer panel + command registry
 **Merged:** see the PR for this branch   **Tests:** 902 passing (run locally)   **Branch:** `claude/dev-console`
 
