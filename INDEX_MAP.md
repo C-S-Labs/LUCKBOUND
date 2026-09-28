@@ -226,7 +226,7 @@ _244 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/DEV_TOOLS.md
 
-- `docs/DEV_TOOLS.md` (64) - Developer tools — commands and the dev panel · new
+- `docs/DEV_TOOLS.md` (64) - Developer tools — commands and the dev panel · 2026-09-27
   - `DEV_TOOLS.md`: Using it:8, Commands:25, Adding a command:39, Where it lives:57
 
 ### docs/ENEMY_AI.md
@@ -371,7 +371,7 @@ _244 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
   - `StateController.luau`: notify:31, StateController.get:37, StateController.onChanged:41, StateController.setting:55, StateController.applySetting:68, StateController.init:79
 - `src/client/Controllers/ThemeController.luau` (178) - THE LIVE PALETTE, APPLIED. · 2026-09-25
   - `ThemeController.luau`: ThemeController.register:50, ThemeController.palette:59, ThemeController.onChanged:63, differs:74, repaint:83, evaluate:111, ThemeController.district:151, ThemeController.init:155
-- `src/client/UI/DevPanel.luau` (629) - THE DEVELOPER PANEL. Testing tooling, not a feature: it exists only when · new
+- `src/client/UI/DevPanel.luau` (629) - THE DEVELOPER PANEL. Testing tooling, not a feature: it exists only when · 2026-09-27
   - `DevPanel.luau`: chip:64, grid:72, scroller:87, log:102, clearLog:129, runLine:139, runCommand:155, hideSuggestions:165, drawSuggestions:171, refreshSuggestions:216, accept:227, valueLabel:239, buildCard:249, paintTabs:384, showCategory:392, toggle:412, build:421, DevPanel.init:616
 - `src/client/UI/ExpeditionHud.luau` (206) - The expedition banner: where you are, how long is left, and what happened · 2026-09-23
   - `ExpeditionHud.luau`: build:35, showToast:121, ExpeditionHud.init:139
@@ -383,9 +383,9 @@ _244 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
   - `HubMenu.luau`: say:79, travelTo:108, clearBody:133, section:141, paragraph:148, buildTravel:158, buildCodes:190, buildSettings:245, partyRow:281, buildParty:316, buildPreview:434, SHOP:456, SKILLS:461, REBIRTH:466, buildPanelBody:473, railRestingPosition:497, panelRestingPosition:507, refreshRailSelection:514, applyPanelVisibility:525, applyState:546, dispatch:568, refreshVisibility:579, setVisible:586, buildRail:596, buildArrow:672, buildPanel:694, build:740, keyCodeNamed:783, bindHotkeys:796, HubMenu.init:841
 - `src/client/UI/LoadingScreen.luau` (664) - THE FIRST THING ANYONE SEES. Owner-directed (STATUS §4, "First-join intro · 2026-09-25
   - `LoadingScreen.luau`: LoadingScreen.onFinished:66, LoadingScreen.isFinished:74, playableShots:83, playShot:94, runTour:160, countHub:189, countParts:204, preloadAll:218, setReady:250, watchProgress:261, holdCharacter:348, releaseCharacter:362, pointCameraAtCharacter:392, releaseCamera:411, finish:430, build:491, passingThrough:616, LoadingScreen.init:626
-- `src/client/UI/UIKit.luau` (480) - THE WIDGET LIBRARY. Every hub screen is built from these, so there is one · 2026-09-25
+- `src/client/UI/UIKit.luau` (480) - THE WIDGET LIBRARY. Every hub screen is built from these, so there is one · 2026-09-27
   - `UIKit.luau`: UIKit.formatClock:35, UIKit.reduceMotion:40, UIKit.duration:44, UIKit.tween:53, UIKit.surface:78, UIKit.label:110, UIKit.button:140, UIKit.setEnabled:237, UIKit.list:249, UIKit.divider:259, UIKit.toggle:270, UIKit.slider:319, UIKit.textbox:408, UIKit.previewBadge:441, UIKit.revealFrom:464
-- `src/client/init.client.luau` (84) - The only LocalScript. Build spec T-117. · 2026-09-25
+- `src/client/init.client.luau` (84) - The only LocalScript. Build spec T-117. · 2026-09-27
 
 ### src/server
 
@@ -435,7 +435,7 @@ _244 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 - `src/shared/Content/Chunks/init.luau` (19) - Chunk registry. Each module returns a LIST of chunks -- one file per world's · 2026-09-16
 - `src/shared/Content/Codes.luau` (41) - REDEEMABLE CODES, AS DATA. Adding one is one row; no System changes. · 2026-09-20
   - `Codes.luau`: LAUNCH:18, FIRSTROLL:25, TESTER:32
-- `src/shared/Content/DevCommands.luau` (368) - THE DEVELOPER COMMAND REGISTRY. Testing tooling, not a feature. · new
+- `src/shared/Content/DevCommands.luau` (368) - THE DEVELOPER COMMAND REGISTRY. Testing tooling, not a feature. · 2026-09-27
 - `src/shared/Content/Events/AuroraVeil.luau` (47) - AURORA VEIL -- weather, and nothing but weather. · 2026-09-20
 - `src/shared/Content/Events/CatalystStar.luau` (62) - THE CATALYST STAR — one of ten that will ever exist. · 2026-09-20
 - `src/shared/Content/Events/Starfall.luau` (55) - STARFALL — the Fatebreak sky. Master Spec §12. · 2026-09-20
@@ -468,7 +468,7 @@ _244 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
   - `CodeCore.luau`: CodeCore.normalise:16, CodeCore.find:24, CodeCore.hasRedeemed:37, CodeCore.redeem:51, CodeCore.record:94
 - `src/shared/Core/Constants.luau` (210) - Frozen enums and lookup tables. Build spec §2.1. · 2026-09-25
   - `Constants.luau`: COMMON:24, UNCOMMON:31, RARE:38, EPIC:45, LEGENDARY:52, MYTHIC:59, UNKNOWN:66, SLOTS:81, NAMES:84, HOTKEY_NAMES:120, DATASTORE:177
-- `src/shared/Core/DevCore.luau` (267) - The pure half of the developer tools: parsing a command line, checking the · new
+- `src/shared/Core/DevCore.luau` (267) - The pure half of the developer tools: parsing a command line, checking the · 2026-09-27
   - `DevCore.luau`: DevCore.parse:36, DevCore.index:51, DevCore.usage:60, DevCore.options:69, DevCore.check:89, startsWith:115, DevCore.complete:123, DevCore.validate:205
 - `src/shared/Core/EventCore.luau` (257) - Pure live-event state. Build spec §4.1. · 2026-09-20
   - `EventCore.luau`: EventCore.trackedLighting:73, EventCore.formatAnnouncement:84, EventCore.newState:91, EventCore.expire:97, EventCore.startEvent:111, EventCore.isValidScope:128, EventCore.dominant:149, EventCore.pushAnnouncement:191, EventCore.snapshot:219
@@ -531,7 +531,7 @@ _244 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### tests/build_suite.py
 
-- `tests/build_suite.py` (253) - Bundles the real src/ modules + tests/cases.luau into one runnable Luau file. · 2026-09-25
+- `tests/build_suite.py` (253) - Bundles the real src/ modules + tests/cases.luau into one runnable Luau file. · 2026-09-27
   - `build_suite.py`: transform:59, main:199
 
 ### tests/cases.luau
