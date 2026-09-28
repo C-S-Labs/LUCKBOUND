@@ -1044,7 +1044,7 @@ local GameConfig = {
 		Profiles = {
 			HUB = {
 				SpeedScale = 1, -- 32 studs/s
-				SprintMultiplier = 1.55, -- ~50
+				SprintMultiplier = 1.61, -- 24 -> ~38.6 (owner: +1.5 studs/s)
 				-- Short on purpose: long ramps read as sliding on ice (owner's
 				-- first Studio walk, 2026-09-28).
 				AccelerationSeconds = 0.08,
@@ -1067,7 +1067,7 @@ local GameConfig = {
 				-- The middle ground the owner asked for: heavier than the hub,
 				-- lighter than a Souls game. ~22 walking, ~34 sprinting.
 				SpeedScale = 0.7,
-				SprintMultiplier = 1.5,
+				SprintMultiplier = 1.59, -- 16.8 -> ~26.7 (owner: +1.5 studs/s)
 				-- Weight comes from turning and costs, not from sliding.
 				AccelerationSeconds = 0.12,
 				DecelerationSeconds = 0.08,
@@ -1121,7 +1121,7 @@ local GameConfig = {
 		-- Slower and further after the owner's walk with the first clips
 		-- (2026-09-28): a short, quick roll read as unrefined.
 		RollDurationSeconds = 0.65,
-		RollSpeed = 37, -- studs/s -> ~24 studs (owner: a little further)
+		RollSpeed = 34, -- studs/s -> ~22 studs (owner-tuned 2026-09-28)
 		RollRecoverySeconds = 0.12, -- after the roll, before the next action
 		-- The body blends out of a roll clip into standing or running over
 		-- this long, instead of dropping out of it (owner, 2026-09-28).
