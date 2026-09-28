@@ -34,6 +34,30 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 98 — 2026-09-28 — Lock-on switching, charge scope
+**Merged:** see the PR for this branch   **Tests:** 947 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- Lock-on target switching: `LockOnCore.switch` (nearest on that side, with a minimum offset) and `flick`.
+  `LockOnController` handles a mouse flick, a right-stick flick (rest re-arm) and a touch Next button while
+  locked. Tunables are in `GameConfig.LockOn` (Switch*).
+- `/dummies [count]` dev command (DebugSystem + DevCommands registry): tagged pillars for testing lock-on.
+- `WEAPONS.md` §2 "Charge": owner rule. The charge bar shows only for weapons with a charge. Epic: charge plus
+  small stat buffs. Legendary: charge alters the moveset briefly. Common–Rare: none.
+- Docs: `PLAYER_ABILITIES.md` §2.6, `TESTING.md` Test K steps 15–17, `DEV_TOOLS.md`.
+
+### Decisions made
+- Switching follows the Souls convention (flick sideways), adapted for mouse and touch.
+- Mythic charge is unscoped: open question for the owner.
+
+### Stopped at
+Test K (17 steps) needs a Studio walk.
+
+### Next
+See Session 97's list.
+
+---
+
 ## Session 97 — 2026-09-28 — Own character controller, roll, stamina, lock-on
 **Merged:** see the PR for this branch   **Tests:** 940 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 

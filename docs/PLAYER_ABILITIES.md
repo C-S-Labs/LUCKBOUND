@@ -89,8 +89,10 @@ damage and attack speed belong to the weapon and combat layers.
 **The bar** (`client/UI/Vitals.luau`) is house style: a panel-coloured track with
 the theme stroke, fully rounded, and a gold fill under the panel gradient that
 turns amber when low. A pale lag bar behind the fill holds the old value for a
-beat and then drains, so a spend reads as a chunk taken out. Health and weapon
-charge will be more rows from the same `bar` function when weapons land.
+beat and then drains, so a spend reads as a chunk taken out. Health will be
+another row from the same `bar` function when weapons land. So will **charge**, but
+only while an Epic or Legendary weapon with a charge is equipped (`WEAPONS.md` §2,
+"Charge").
 
 ## 2.5 Built: jump, roll and backstep
 
@@ -134,6 +136,15 @@ takes the best target in view; press again to release.
 - **Movement while locked:** the character strafes facing the target. Sprinting
   turns back to face the run, as in Souls, and a roll goes the held direction.
 - **Marker:** a small gold diamond on the aim point.
+- **Switching targets:** while locked, flick the mouse sideways (60px within
+  0.25s) or the right stick past 0.7, or tap **Next** on touch. The lock moves to
+  the **nearest target on that side** as the camera sees it: one step, never across
+  the room. If there's nothing that way, the lock stays put. The stick must return
+  to rest before the next flick, and switches are at least 0.3s apart. The locked
+  camera ignores the mouse and right stick, so neither gesture is taken from
+  anything else (`LockOnCore.switch`).
+- **Testing without enemies:** `/dummies [count]` puts plain tagged pillars in an arc
+  in front of you, and `/dummies 0` clears them.
 
 All numbers: `GameConfig.Locomotion` and `GameConfig.LockOn`.
 

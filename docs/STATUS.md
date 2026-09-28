@@ -34,7 +34,7 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   Scape has a drafted 9-enemy roster (1 basic built: Aether Wisp) under `assets/source/enemies/ethereal_scape/`.
   **Nothing spawns in gameplay yet.** `EnemyDef` + services wait for the owner's OK.
 - **Tooling:**
-  - **Developer panel + command registry** (2026-09-27): F4 in Studio; 39 commands, all clickable, autocomplete; see `docs/DEV_TOOLS.md`.
+  - **Developer panel + command registry** (2026-09-27): F4 in Studio; 40 commands, all clickable, autocomplete; see `docs/DEV_TOOLS.md`.
   - `INDEX.md` + `INDEX_MAP.md` give the repo map, and CI keeps the map current.
   - StyLua is enforced.
   - ~808 tests, updated 2026-09-26 for the Ethereal Scape amendment below (exact count pending the next CI run).
@@ -48,7 +48,8 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 > character from `LocomotionCore`, with HUB (fast) and EXPEDITION (weightier) profiles, one stamina bar, a single
 > jump (the double jump is gone), roll/backstep, and optional lock-on with an over-the-shoulder camera
 > (`LockOnCore`, `LockOnController`). There is a new stamina bar (`UI/Vitals`). 940 tests pass. **Studio walk
-> pending:** `TESTING.md` Test K, all 14 steps.
+> pending:** `TESTING.md` Test K, all 17 steps. Lock-on switching (mouse/stick flick, touch Next) and `/dummies`
+> were added the same day; charge is scoped to Epic/Legendary weapons only (`WEAPONS.md` §2).
 
 > **2026-09-27: close ship berths fixed after precommit review.** Berths now use
 > the island's oriented face and half the ship's beam, with a 20-stud hull gap;

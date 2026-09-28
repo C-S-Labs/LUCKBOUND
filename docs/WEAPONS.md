@@ -53,6 +53,24 @@ Reserved for Legendary and above, so Epic never cheapens them: **gold used as a
 main surface** (not a trim), a weapon that visibly **breaks apart** (a blade
 floating in segments), and **full-length particle-style ornament**.
 
+### Charge — Epic and Legendary only (owner, 2026-09-28)
+
+**Charge is a rarity reward, not a baseline.** Only certain weapons have a charge
+option at all, and the charge bar is **visible only while a weapon with a charge
+is equipped**. Every other weapon shows no charge UI.
+
+| Tier | Charge |
+|---|---|
+| Common, Uncommon, Rare | **None.** No charge, no bar |
+| **Epic** | Charge only; a charged state grants **small stat buffs** (for example damage or attack speed), with no new moves |
+| **Legendary** | Charge **alters the moveset for a short duration**: the charged state swaps in the weapon's unique charged moves, then reverts |
+| Mythic | *Not yet scoped (open question for the owner)* |
+
+A charge makes a weapon slightly stronger, and that is the point: it rewards
+getting rarer weapons. Charge numbers and charged moves live on the weapon as data
+(`ENEMY_AI.md` §4.1), never on the player. The bar is a row in
+`client/UI/Vitals.luau`, built only for a weapon whose data declares a charge.
+
 ## 3. Style
 
 The house style (`ART_DIRECTION.md`) and the island kit's palette

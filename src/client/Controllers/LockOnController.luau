@@ -21,6 +21,7 @@ local ContextActionService = game:GetService("ContextActionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
 local Workspace = game:GetService("Workspace")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
@@ -134,6 +135,9 @@ end
 -- === taking and dropping =============================================
 
 local function release()
+	if target and UserInputService.TouchEnabled then
+		ContextActionService:UnbindAction("LuckboundLockNext")
+	end
 	target = nil
 	cameraCFrame = nil
 	outOfSightSeconds = 0
@@ -147,28 +151,24 @@ local function release()
 	end
 end
 
-local function acquire()
-	local root = playerRoot()
-	local camera = Workspace.CurrentCamera
-	if not root or not camera then
-		return
-	end
+--- Every tagged thing in the world, measured from the camera.
+local function measure(camera: Camera, root: BasePart): { any }
 	local look = camera.CFrame.LookVector
-
+	local right = camera.CFrame.RightVector
 	local candidates = {}
 	for _, tagged in CollectionService:GetTagged(Constants.NAMES.LOCK_ON_TAG) do
 		if tagged:IsDescendantOf(Workspace) then
 			local centre = centreOf(tagged)
 			if centre then
 				local toTarget = centre - camera.CFrame.Position
-				local angle = if toTarget.Magnitude > 1e-3
-					then math.acos(math.clamp(look:Dot(toTarget.Unit), -1, 1))
-					else 0
+				local unit = if toTarget.Magnitude > 1e-3 then toTarget.Unit else look
 				table.insert(candidates, {
 					Instance = tagged,
 					Centre = centre,
 					Distance = (centre - root.Position).Magnitude,
-					AngleRadians = angle,
+					AngleRadians = math.acos(math.clamp(look:Dot(unit), -1, 1)),
+					-- How far right of the camera's centre line, for switching.
+					Side = right:Dot(unit),
 					Visible = visible(
 						camera.CFrame.Position,
 						centre,
@@ -178,17 +178,78 @@ local function acquire()
 			end
 		end
 	end
+	return candidates
+end
 
-	local best = LockOnCore.pick(candidates, GameConfig)
-	if not best then
+local lastSwitchAt = 0
+
+--- Takes (or moves) the lock onto a measured candidate.
+local function lockOnto(candidate: any, camera: Camera)
+	local first = target == nil
+	target = candidate.Instance
+	local pivot = pivotOf(candidate.Instance)
+	aimOffset = if pivot then pivot:ToObjectSpace(CFrame.new(candidate.Centre)) else CFrame.identity
+	outOfSightSeconds = 0
+	if first then
+		cameraCFrame = camera.CFrame
+	end
+	showMarker(candidate.Instance)
+	if first and UserInputService.TouchEnabled then
+		ContextActionService:BindAction("LuckboundLockNext", function(_, inputState)
+			if inputState == Enum.UserInputState.Begin then
+				LockOnController.switch(1)
+			end
+			return Enum.ContextActionResult.Pass
+		end, true)
+		ContextActionService:SetTitle("LuckboundLockNext", "Next")
+	end
+end
+
+local function acquire()
+	local root = playerRoot()
+	local camera = Workspace.CurrentCamera
+	if not root or not camera then
 		return
 	end
-	target = best.Instance
-	local pivot = pivotOf(best.Instance)
-	aimOffset = if pivot then pivot:ToObjectSpace(CFrame.new(best.Centre)) else CFrame.identity
-	outOfSightSeconds = 0
-	cameraCFrame = camera.CFrame
-	showMarker(best.Instance)
+	local best = LockOnCore.pick(measure(camera, root), GameConfig)
+	if best then
+		lockOnto(best, camera)
+	end
+end
+
+--- Moves the lock one target to the right (1) or left (-1), if there is one.
+function LockOnController.switch(direction: number): ()
+	local held = target
+	local root = playerRoot()
+	local camera = Workspace.CurrentCamera
+	local now = os.clock()
+	if not held or not root or not camera then
+		return
+	end
+	if now - lastSwitchAt < GameConfig.LockOn.SwitchCooldownSeconds then
+		return
+	end
+
+	local candidates = measure(camera, root)
+	local currentSide = 0
+	for _, c in candidates do
+		if c.Instance == held then
+			currentSide = c.Side
+		end
+	end
+	local others = {}
+	for _, c in candidates do
+		if c.Instance ~= held then
+			c.Offset = c.Side - currentSide
+			table.insert(others, c)
+		end
+	end
+
+	local nextTarget = LockOnCore.switch(others, direction, GameConfig)
+	if nextTarget then
+		lastSwitchAt = now
+		lockOnto(nextTarget, camera)
+	end
 end
 
 local function toggle()
@@ -279,6 +340,43 @@ function LockOnController.init(deps: any): ()
 		return Enum.ContextActionResult.Pass
 	end, true, Enum.UserInputType.MouseButton3, Enum.KeyCode.ButtonR3)
 	ContextActionService:SetTitle("LuckboundLockOn", "Lock")
+
+	-- SWITCHING: a sideways flick of the mouse or right stick while locked.
+	-- The locked camera ignores both, so neither gesture is taken from
+	-- anything else. Touch gets a Next button while locked (see lockOnto).
+	local tuning = GameConfig.LockOn
+	local mouseTravel = 0
+	local mouseTravelStarted = 0
+	local stickArmed = true
+	UserInputService.InputChanged:Connect(function(input, processed)
+		if processed or not target then
+			return
+		end
+		if input.UserInputType == Enum.UserInputType.MouseMovement then
+			local now = os.clock()
+			if now - mouseTravelStarted > tuning.SwitchMouseWindowSeconds then
+				mouseTravel = 0
+				mouseTravelStarted = now
+			end
+			mouseTravel += input.Delta.X
+			local direction = LockOnCore.flick(mouseTravel, tuning.SwitchMousePixels)
+			if direction ~= 0 then
+				mouseTravel = 0
+				LockOnController.switch(direction)
+			end
+		elseif input.KeyCode == Enum.KeyCode.Thumbstick2 then
+			local x = input.Position.X
+			if math.abs(x) < tuning.SwitchStickRest then
+				stickArmed = true
+			elseif stickArmed then
+				local direction = LockOnCore.flick(x, tuning.SwitchStickThreshold)
+				if direction ~= 0 then
+					stickArmed = false
+					LockOnController.switch(direction)
+				end
+			end
+		end
+	end)
 
 	-- A new character (death, respawn, teleport) starts unlocked.
 	player.CharacterAdded:Connect(release)

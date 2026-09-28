@@ -1176,6 +1176,19 @@ local GameConfig = {
 		-- The camera never sits closer to the player than this after a wall
 		-- pulls it in.
 		CameraMinDistance = 3,
+
+		-- === SWITCHING TARGETS ===
+		-- While locked, flick the mouse or the right stick sideways (or tap
+		-- Next on touch) to move the lock one target that way.
+		SwitchMousePixels = 60, -- sideways mouse travel that counts as a flick
+		SwitchMouseWindowSeconds = 0.25, -- ...if it happens within this long
+		SwitchStickThreshold = 0.7, -- right-stick X past this is a flick
+		SwitchStickRest = 0.3, -- and it must return inside this before the next
+		SwitchCooldownSeconds = 0.3, -- between two switches
+		-- A candidate must sit at least this far to the side (in the camera's
+		-- unit-direction space) to count as "that way", so two enemies stood
+		-- almost in line do not flip-flop.
+		SwitchMinOffset = 0.02,
 	},
 
 	Debug = {
@@ -1208,6 +1221,14 @@ local GameConfig = {
 		-- the skybox and require a rejoin.
 		MinWalkSpeed = 1,
 		MaxWalkSpeed = 500,
+
+		-- /dummies: plain lock-on targets for testing lock-on and switching
+		-- before any enemy spawns. An arc in front of the player.
+		DummyDefaultCount = 3,
+		DummyMaxCount = 6,
+		DummyDistanceStuds = 30,
+		DummySpacingStuds = 14,
+		DummyHeightStuds = 8,
 
 		LogEveryRoll = true,
 	},

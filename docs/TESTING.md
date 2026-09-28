@@ -484,7 +484,7 @@ The first thing anyone sees.
 10. **On a phone (or Studio's device emulator).** ✅ Pass: the rail starts
     collapsed, the panel is readable, and nothing is cut off at the edges.
 
-### Test K — movement, stamina and lock-on (8 min) ⭐ NEW
+### Test K — movement, stamina and lock-on (10 min) ⭐ NEW
 
 **In the hub:**
 
@@ -526,6 +526,13 @@ The first thing anyone sees.
 13. **Run away past ~120 studs, or middle-click again.** ✅ Pass: the lock drops
     and the normal camera returns.
 14. **Middle-click with no boss in view.** ✅ Pass: nothing happens.
+15. **`/dummies 5`, then lock on to the middle one and flick the mouse right.**
+    ✅ Pass: the diamond moves one pillar right. Flick again: one more. At the end
+    of the row a flick right does nothing.
+16. **Gamepad: push the right stick sideways, let it return, push again.** ✅
+    Pass: one pillar per push, never two from one push.
+17. **Touch (device emulator): lock on.** ✅ Pass: a Next button appears. Tapping
+    it moves the lock, and it disappears when the lock drops. `/dummies 0` clears.
 
 ### Test L — the menu follows the world (4 min) ⭐ NEW
 

@@ -33,7 +33,7 @@ place goes public.
 | Fate & Loot | `/boss`, `/givekey [key]`, `/takekey`, `/keys`, `/keychance`, `/vaultchance`, `/ledger` |
 | Events | `/event <id>`, `/endevents` |
 | Ambience | `/atmosphere <id>`, `/tint`, `/props on/off`, `/clock <hour>` |
-| Bosses | `/showboss <boss> [height]`, `/bossphase <1/2>`, `/clearboss` |
+| Bosses | `/showboss <boss> [height]`, `/bossphase <1/2>`, `/clearboss`, `/dummies [count]` (lock-on targets; 0 clears) |
 | Diagnostics | `/stats [on/off]` (FPS, ping, memory, instances), `/assets` (which chunks drew as blockout) |
 | General | `/panel`, `/help`, `/clear` |
 

@@ -5885,6 +5885,49 @@ do
 		LockOnCore.aimHeight(100, 0, GameConfig) == T.MaxAimHeight
 			and LockOnCore.aimHeight(3, 0, GameConfig) == 3
 	)
+	-- === switching ==================================================
+	local function side(id, offset, distance, isVisible)
+		return { Id = id, Offset = offset, Distance = distance or 20, Visible = isVisible ~= false }
+	end
+	check(
+		"a flick right moves to the nearest target on the right",
+		LockOnCore.switch(
+			{ side("far", 0.6), side("near", 0.2), side("left", -0.1) },
+			1,
+			GameConfig
+		).Id == "near"
+	)
+	check(
+		"a flick left moves left",
+		LockOnCore.switch({ side("right", 0.2), side("left", -0.3) }, -1, GameConfig).Id == "left"
+	)
+	check(
+		"nothing that way keeps the current lock",
+		LockOnCore.switch({ side("left", -0.3) }, 1, GameConfig) == nil
+	)
+	check(
+		"two targets almost in line do not flip-flop",
+		LockOnCore.switch({ side("inline", T.SwitchMinOffset * 0.5) }, 1, GameConfig) == nil
+	)
+	check(
+		"switching skips hidden and out-of-range targets",
+		LockOnCore.switch(
+			{ side("hidden", 0.1, 20, false), side("far", 0.15, T.Range + 1), side("ok", 0.5) },
+			1,
+			GameConfig
+		).Id == "ok"
+	)
+	check(
+		"a flick needs the full threshold, either way",
+		LockOnCore.flick(T.SwitchMousePixels, T.SwitchMousePixels) == 1
+			and LockOnCore.flick(-T.SwitchMousePixels, T.SwitchMousePixels) == -1
+			and LockOnCore.flick(T.SwitchMousePixels - 1, T.SwitchMousePixels) == 0
+	)
+	check(
+		"the stick must return to rest before a second flick",
+		T.SwitchStickRest < T.SwitchStickThreshold
+	)
+
 	check(
 		"camera smoothing does not depend on the frame rate",
 		(function()
@@ -8671,7 +8714,7 @@ do
 	check(
 		"dev registry: the SERVER commands are exactly DebugSystem's",
 		table.concat(server, ",")
-			== "atmosphere,boss,bossphase,clearboss,endevents,enter,event,givekey,god,heal,keychance,keys,leave,ledger,respawn,roll,showboss,takekey,vaultchance"
+			== "atmosphere,boss,bossphase,clearboss,dummies,endevents,enter,event,givekey,god,heal,keychance,keys,leave,ledger,respawn,roll,showboss,takekey,vaultchance"
 	)
 
 	-- a broken registry is caught

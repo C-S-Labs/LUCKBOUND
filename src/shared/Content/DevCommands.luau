@@ -325,6 +325,13 @@ local COMMANDS: { Command } = {
 		Side = "SERVER",
 		Summary = "Remove the boss preview.",
 	},
+	{
+		Name = "dummies",
+		Category = "BOSSES",
+		Side = "SERVER",
+		Summary = "Spawn lock-on dummies in front of you (0 clears them).",
+		Args = { { Name = "count", Type = "number", Optional = true, Suggest = { "0", "3", "6" } } },
+	},
 
 	-- === DIAGNOSTICS ===================================================
 	{

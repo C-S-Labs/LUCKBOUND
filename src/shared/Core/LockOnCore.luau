@@ -33,6 +33,41 @@ function LockOnCore.pick(candidates: { any }, config: any): any?
 	return best
 end
 
+--- SWITCHES to the next target to one side of the current one, or nil if
+--- there is none that way.
+---
+---   candidates = { { Id, Distance, Offset, Visible }, ... }
+---
+--- Offset is how far the candidate sits to the right of the CURRENT target
+--- as the camera sees it (negative = left); the current target itself is
+--- left out by the caller. `direction` is 1 (right) or -1 (left). The
+--- nearest one that way wins: a flick moves one step, never across the room.
+function LockOnCore.switch(candidates: { any }, direction: number, config: any): any?
+	local tuning = config.LockOn
+	local best, bestOffset = nil, math.huge
+	for _, c in candidates do
+		local along = c.Offset * direction
+		if c.Visible and c.Distance <= tuning.Range and along > tuning.SwitchMinOffset then
+			if along < bestOffset then
+				best, bestOffset = c, along
+			end
+		end
+	end
+	return best
+end
+
+--- A flick: the input has moved at least `threshold` since it was last at
+--- rest. Returns 1, -1 or 0. Used for both the mouse (accumulated pixels)
+--- and the right stick (its X axis), so the two feel the same.
+function LockOnCore.flick(amount: number, threshold: number): number
+	if amount >= threshold then
+		return 1
+	elseif amount <= -threshold then
+		return -1
+	end
+	return 0
+end
+
 --- Should a held lock drop? `outOfSightSeconds` is how long the target has
 --- been continuously hidden. Returns (drop, reason).
 function LockOnCore.shouldBreak(
