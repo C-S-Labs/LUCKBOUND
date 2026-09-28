@@ -43,9 +43,12 @@ controller from our speed and mode, until LUCKBOUND has its own animations.
 **Turning** (owner, 2026-09-28). The facing is written to the root directly every frame, never turned by
 the controller's torque, which lagged. There are two kinds of turn:
 - **Camera-driven turns (shoulder camera) and a roll's start are instant.** A lag here put rolls off-aim.
-- **Every other turn is a quick, smooth rotation** (`TurnDegreesPerSecond`, 900°/s): a new movement direction,
-  turning toward a lock-on target, and the return after a roll. Changing direction never snaps between the
-  eight WASD directions.
+- **Every other turn is a smooth rotation**: a new movement direction, turning toward a lock-on target,
+  and the return after a roll. It turns at 480°/s (`TurnDegreesPerSecond`), up to 2.5× that for a full
+  reversal (`ReversalTurnBoost`).
+- **Free-camera running goes where the body faces**, not along the raw key. The eight WASD directions
+  become smooth curves, and the feet never slide sideways under a turning body. Strafing (shoulder camera,
+  lock-on) and rolls keep their own direction.
 
 **Only the root collides.** Every other body part has collisions off (re-applied every frame), so a
 clip turning the torso through the floor can't push the physics. That push was a camera shake during rolls.
@@ -155,6 +158,9 @@ edge, and a 0.12s buffer so a press just before landing fires on landing.
 
 Presentation only: it never changes where or how fast a character goes.
 
+- **No foot sliding.** The generator measures each gait clip's real foot speed
+  (`Content/Animations/GroundSpeeds.luau`, generated), and each direction plays at body speed ÷ its own foot
+  speed.
 - **Blending, not switching.** Idle, walk and run play at once, weighted by speed,
   so there is no pop between them. Playback rate follows real speed, so the feet
   don't slide.

@@ -395,10 +395,25 @@ local function step(dt: number)
 		bodyFacing = facing
 		snapFacing = false
 	else
-		local maxTurn = math.rad(GameConfig.Locomotion.TurnDegreesPerSecond) * dt
+		local tune = GameConfig.Locomotion
+		local gap = math.acos(math.clamp(bodyFacing:Dot(facing), -1, 1)) / math.pi -- 0..1
+		local maxTurn = math.rad(tune.TurnDegreesPerSecond)
+			* (1 + gap * tune.ReversalTurnBoost)
+			* dt
 		local x, z =
 			LocomotionCore.turnToward(bodyFacing.X, bodyFacing.Z, facing.X, facing.Z, maxTurn)
 		bodyFacing = Vector3.new(x, 0, z)
+	end
+
+	-- FREE RUNNING GOES WHERE THE BODY FACES (owner, 2026-09-28). With the
+	-- free camera the keys only give eight directions; moving along the
+	-- turning body instead of the raw key makes every change of direction a
+	-- smooth curve, and the feet never slide sideways under a body that is
+	-- still turning. Strafing (shoulder camera, lock-on) and rolls keep their
+	-- own direction.
+	if not facingHeld() and mode ~= "ROLL" and moving then
+		direction = bodyFacing * held.Magnitude
+		cm.MovingDirection = direction
 	end
 
 	cm.FacingDirection = bodyFacing

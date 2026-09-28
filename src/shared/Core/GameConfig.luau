@@ -1172,7 +1172,10 @@ local GameConfig = {
 		-- looked. Every other turn -- to a new movement direction, toward a
 		-- lock-on target, back after a roll -- is a quick smooth rotation at
 		-- this rate, so changing direction never snaps (owner, 2026-09-28).
-		TurnDegreesPerSecond = 900,
+		TurnDegreesPerSecond = 480,
+		-- A bigger change of direction turns faster, up to this multiple for a
+		-- full reversal, so turning back is a quick pivot, not a wide circle.
+		ReversalTurnBoost = 1.5,
 
 		-- === SHOULDER CAMERA (our shift lock) ===
 		-- Left Ctrl toggles it: the mouse locks to the centre, the camera
@@ -1219,7 +1222,7 @@ local GameConfig = {
 		SprintClipSpeed = 30,
 		-- Playback-rate clamp: past these a clip reads as sped-up footage.
 		MinPlaybackRate = 0.55,
-		MaxPlaybackRate = 1.7,
+		MaxPlaybackRate = 2.5,
 		-- Crossfades.
 		FadeSeconds = 0.18,
 		AirFadeSeconds = 0.1,

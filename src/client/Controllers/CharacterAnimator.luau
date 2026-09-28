@@ -34,6 +34,8 @@ local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local AnimationCore = require(Root.Core.AnimationCore)
 local GameConfig = require(Root.Core.GameConfig)
 local PlayerAnimations = require(Root.Content.Animations.Player)
+-- Measured foot speed of each generated gait clip (tools/gen_player_anims.py).
+local GroundSpeeds = require(Root.Content.Animations.GroundSpeeds)
 
 local CharacterAnimator = {}
 
@@ -650,7 +652,14 @@ function CharacterAnimator.update(ctx: any, dt: number): ()
 	end
 	if r.DirectionalRun then
 		for _, d in AnimationCore.DIRECTIONS do
-			setWeight("Run" .. d, runWeight * direction[d], blend, runRate)
+			-- Each direction at its own measured foot speed, so no direction slides.
+			local clipSpeed = GroundSpeeds["Run" .. d] or tune.RunClipSpeed
+			setWeight(
+				"Run" .. d,
+				runWeight * direction[d],
+				blend,
+				AnimationCore.playbackRate(speed, clipSpeed, GameConfig)
+			)
 		end
 	else
 		setWeight("Run", runWeight, blend, runRate * sign)

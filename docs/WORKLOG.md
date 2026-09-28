@@ -34,6 +34,24 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 112 — 2026-09-28 — Free-camera turns curve; no foot slide
+**Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner)
+- **Free camera still snapped to 8 directions:** free running now moves along the turning body
+  (`direction = bodyFacing * input`), and the body turns at 480°/s, boosted up to 2.5× for reversals.
+  Direction changes are curves. The shoulder camera and rolls are unchanged.
+- **Sliding while running:** the run clip's feet covered ~11 studs/s but it was played as if 24. The generator
+  now measures each looping gait clip's planted-foot speed into the generated
+  `Content/Animations/GroundSpeeds.luau` (in `.styluaignore`). `CharacterAnimator` plays each run direction at
+  body speed ÷ its own speed. Strides were lengthened (forward 16.5, back 14.3, sides 10.0 studs/s);
+  `MaxPlaybackRate` is now 2.5.
+
+### Next
+1. Owner's final walk, then the PR.
+
+---
+
 ## Session 111 — 2026-09-28 — Final pre-PR fixes: smooth turns, no roll queue
 **Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 

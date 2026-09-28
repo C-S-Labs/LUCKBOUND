@@ -10,3 +10,4 @@ src/shared/Content/LightningRigs.luau
 src/shared/Content/Props/EtherealScape.luau
 src/shared/Content/Props/SkyCitadel.luau
 tests/generated_suite.luau
+src/shared/Content/Animations/GroundSpeeds.luau
