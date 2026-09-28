@@ -34,6 +34,30 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 102 — 2026-09-28 — Prep for hand-made player animations
+**Merged:** see the PR for this branch   **Tests:** 998 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- `docs/PLAYER_ANIMATION_BRIEF.md`: a spec per slot (type, length, what it must read as), the order to make
+  them (rolls, then run directions, then idle, and so on), what the code adds on top (don't animate it in), and
+  the try-it loop.
+- `/animslot [slot] [id]` (CLIENT, registry): swaps a clip into a slot live and rebuilds the tracks. With no
+  arguments it lists each slot's source; `""` clears. `CharacterAnimator.overrideSlot`/`describeSlots`. A test
+  keeps its slot list equal to `AnimationCore.SLOTS`.
+
+### Decisions made (owner)
+- The UI revamp starts on its own branch only **after** the moveset is confirmed. One task at a time.
+
+### Stopped at
+Owner is asleep. Next session: author the player animations together.
+
+### Next
+1. Owner walks Test K (4b, 4c, 5) to confirm the moveset.
+2. Author clips in the brief's order, trying each with `/animslot`, then paste into `Content/Animations/Player.luau`.
+3. Then: a PR for this branch; then the UI revamp on a new branch.
+
+---
+
 ## Session 101 — 2026-09-28 — Polished body movement; directional rolls
 **Merged:** see the PR for this branch   **Tests:** 997 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 

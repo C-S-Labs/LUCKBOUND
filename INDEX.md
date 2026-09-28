@@ -70,6 +70,7 @@
 | `docs/ENEMY_AI.md` | how enemies behave: utility AI, difficulty, boss evolution, weapon movesets, tuning, and the mandatory build order (design only; authoritative for behaviour) |
 | `docs/ART_DIRECTION.md` | the look, scale, palette rules |
 | `docs/WEAPONS.md` | weapon design and rarity rules |
+| `docs/PLAYER_ANIMATION_BRIEF.md` | what to animate for the player: every clip slot, its spec, the order to make them, and the `/animslot` try-it loop |
 | `docs/PLAYER_UI.md` / `docs/PLAYER_ABILITIES.md` / `docs/EVENTS.md` | hub UI / player movement, stamina, lock-on and the weapon-movement contract / live events |
 | `docs/TOOLCHAIN_ACCESS.md` / `docs/PARTNER_SETUP.md` | Rojo, Studio, Blender setup / testing on your own place |
 | `docs/ADDENDUM_ASSET_PIPELINE.md` | future asset and procgen architecture (target, not built) |

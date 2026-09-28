@@ -5908,6 +5908,19 @@ do
 			and AnimationCore.slot({ Idle = "rbxassetid://9" }, "Idle") == "rbxassetid://9"
 	)
 
+	check(
+		"the /animslot command offers exactly the real slots",
+		(function()
+			for _, c in __require("DevCommands").Commands do
+				if c.Name == "animslot" then
+					return table.concat(c.Args[1].Options, ",")
+						== table.concat(AnimationCore.SLOTS, ",")
+				end
+			end
+			return false
+		end)()
+	)
+
 	-- === direction ==================================================
 	check(
 		"moving along your facing is forward",

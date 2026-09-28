@@ -662,6 +662,25 @@ CLIENT.stamina = function(args)
 	locomotion().setStamina(math.clamp(value, 0, 100) / 100)
 	say(`stamina set to {math.clamp(value, 0, 100)}%`)
 end
+CLIENT.animslot = function(args)
+	local animator = require(script.Parent.CharacterAnimator)
+	if not args[1] then
+		for _, line in animator.describeSlots() do
+			say(line)
+		end
+		return
+	end
+	local id = args[2] or ""
+	if id == '""' then
+		id = ""
+	end
+	local ok, message = animator.overrideSlot(args[1], id)
+	if ok then
+		say(message)
+	else
+		fail(message)
+	end
+end
 CLIENT.speed = function(args)
 	setSpeed(args[1])
 end

@@ -72,6 +72,11 @@ type Rig = {
 
 local rig: Rig? = nil
 
+-- DEV: slot overrides set live with /animslot, so a freshly uploaded clip
+-- can be tried in Play without editing Content/Animations/Player.luau.
+-- Cleared on rejoin; the content file is what ships.
+local overrides: { [string]: string } = {}
+
 -- Smoothed procedural state.
 local legYaw = 0
 local leanPitch = 0
@@ -183,7 +188,11 @@ function CharacterAnimator.bind(character: Model, hum: Humanoid, root: BasePart)
 		end
 	end
 
-	local set = PlayerAnimations
+	-- The shipped set, with any live /animslot overrides on top.
+	local set = table.clone(PlayerAnimations)
+	for name, id in overrides do
+		set[name] = id
+	end
 	local directionalWalk = AnimationCore.hasDirectionalSet(set, "Walk")
 	local directionalRun = AnimationCore.hasDirectionalSet(set, "Run")
 
@@ -641,6 +650,54 @@ function CharacterAnimator.update(ctx: any, dt: number): ()
 			running:Stop()
 		end
 	end
+end
+
+--- DEV: override one slot live ("" clears the override) and rebuild the
+--- character's tracks. Returns (ok, message) for the dev command.
+function CharacterAnimator.overrideSlot(name: string, id: string): (boolean, string)
+	-- Typed by hand, a slot name's case should not matter.
+	local found: string? = nil
+	for _, slot in AnimationCore.SLOTS do
+		if string.lower(slot) == string.lower(name) then
+			found = slot
+		end
+	end
+	if not found then
+		return false, `unknown slot '{name}' (see /animslot with no arguments)`
+	end
+	name = found
+	if id ~= "" then
+		if string.match(id, "^%d+$") then
+			id = "rbxassetid://" .. id
+		end
+		if not string.match(id, "^rbxassetid://%d+$") then
+			return false, `'{id}' is not an animation id (a number, or rbxassetid://number)`
+		end
+		overrides[name] = id
+	else
+		overrides[name] = nil
+	end
+	local r = rig
+	if r then
+		CharacterAnimator.bind(r.Character, r.Humanoid, r.Root)
+	end
+	return true,
+		if id == ""
+			then `{name}: back to the shipped slot`
+			else `{name} = {id} (live only; paste it into Content/Animations/Player.luau to keep it)`
+end
+
+--- DEV: every slot and where it currently comes from, for /animslot.
+function CharacterAnimator.describeSlots(): { string }
+	local lines = {}
+	for _, name in AnimationCore.SLOTS do
+		local source = if overrides[name]
+			then `override {overrides[name]}`
+			elseif AnimationCore.slot(PlayerAnimations, name) then `clip {PlayerAnimations[name]}`
+			else "fallback"
+		table.insert(lines, `{name}: {source}`)
+	end
+	return lines
 end
 
 return CharacterAnimator
