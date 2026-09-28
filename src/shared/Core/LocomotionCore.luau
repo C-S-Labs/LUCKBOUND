@@ -83,9 +83,6 @@ function LocomotionCore.newState(t: any, now: number): any
 		RollRecoverUntil = 0,
 		-- Air dashes spent since leaving the floor (refilled on landing).
 		AirDashesUsed = 0,
-		-- A roll press that arrived too early, and which kind it asked for.
-		RollBufferedUntil = 0,
-		RollBufferedKind = nil,
 		-- A hard landing slows movement until this time (see `land`).
 		LandRecoverUntil = 0,
 		-- nil, or the active weapon lock (see `lock`).
@@ -168,7 +165,7 @@ function LocomotionCore.canRoll(state: any, now: number, t: any): (boolean, stri
 	if state.RollKind and now < state.RollRecoverUntil then
 		return false, "rolling"
 	end
-	if not state.Grounded then
+	if not LocomotionCore.onFloor(state, now, t) then
 		-- In the air the roll button is the AIR DASH, once per airtime.
 		if (state.AirDashesUsed or 0) >= t.AirDashes then
 			return false, "airborne"
@@ -203,8 +200,6 @@ local function startRoll(state: any, now: number, kind: string, t: any): any
 	updated.RollStartedAt = now
 	updated.RollEndsAt = now + duration
 	updated.RollRecoverUntil = now + duration + recovery
-	updated.RollBufferedUntil = 0
-	updated.RollBufferedKind = nil
 	updated.Sprinting = false
 	return updated
 end
@@ -215,27 +210,22 @@ end
 --- "BACKSTEP", "AIRDASH"), or nil. A press during a roll's last moments is
 --- buffered, not dropped.
 function LocomotionCore.roll(state: any, now: number, hasDirection: boolean, t: any): (any, string?)
-	-- A moment off the floor (a bump mid-roll, the lip of a step) is not
-	-- "in the air": the press is a roll, held until the feet are down.
-	local airborne = not state.Grounded and now - state.LastGroundedAt > t.AirDashMinAirSeconds
+	local airborne = not LocomotionCore.onFloor(state, now, t)
 	local kind = if airborne then "AIRDASH" elseif hasDirection then "ROLL" else "BACKSTEP"
-	local ok, reason = LocomotionCore.canRoll(state, now, t)
-	if ok and (airborne or state.Grounded) then
-		local updated = startRoll(state, now, kind, t)
-		return updated, kind
+	-- NO QUEUE (owner, 2026-09-28): a press that cannot roll now -- during a
+	-- roll, its recovery, a lock -- is ignored, not remembered. The next roll
+	-- needs a fresh press after this one has fully finished.
+	if not LocomotionCore.canRoll(state, now, t) then
+		return state, nil
 	end
-	-- QUEUED, never dropped (owner, 2026-09-28): a press during a roll, or in
-	-- that brief moment off the floor, comes out as soon as the move can
-	-- start -- after the current one has fully played, animation and all.
-	-- One queued press at most; mashing does not stack rolls.
-	if reason == "rolling" or (not state.Grounded and not airborne) then
-		local updated = table.clone(state)
-		local readyAt = if reason == "rolling" then state.RollRecoverUntil else now
-		updated.RollBufferedUntil = readyAt + t.RollBufferSeconds
-		updated.RollBufferedKind = kind
-		return updated, nil
-	end
-	return state, nil
+	return startRoll(state, now, kind, t), kind
+end
+
+--- On the floor for rolling purposes: grounded, or off it for no longer than
+--- AirDashMinAirSeconds (a bump mid-roll, the lip of a step). Such a moment
+--- is not "in the air", so the press is a roll, never an air dash.
+function LocomotionCore.onFloor(state: any, now: number, t: any): boolean
+	return state.Grounded or now - state.LastGroundedAt <= t.AirDashMinAirSeconds
 end
 
 --- WHAT DOES PRESSING JUMP DO RIGHT NOW? true if it jumps.
@@ -302,17 +292,7 @@ function LocomotionCore.step(state: any, dt: number, input: any, t: any): (any, 
 		updated.RollKind = nil
 	end
 
-	-- === BUFFERED PRESSES ===
-	if updated.RollBufferedKind and now <= updated.RollBufferedUntil then
-		local needsGround = updated.RollBufferedKind ~= "AIRDASH"
-		if LocomotionCore.canRoll(updated, now, t) and (updated.Grounded or not needsGround) then
-			local kind = updated.RollBufferedKind
-			updated = startRoll(updated, now, kind, t)
-			events.Rolled = kind
-		end
-	elseif updated.RollBufferedKind then
-		updated.RollBufferedKind = nil
-	end
+	-- === BUFFERED JUMP ===
 	if
 		not events.Rolled
 		and updated.JumpBufferedUntil > 0
@@ -486,6 +466,22 @@ function LocomotionCore.unlock(state: any): any
 	local updated = table.clone(state)
 	updated.Lock = nil
 	return updated
+end
+
+--- TURNING: rotates a flat direction (x, z) toward a target direction by at
+--- most `maxRadians`, keeping it unit length. Returns the new (x, z).
+function LocomotionCore.turnToward(
+	x: number,
+	z: number,
+	targetX: number,
+	targetZ: number,
+	maxRadians: number
+): (number, number)
+	local current = math.atan2(z, x)
+	local target = math.atan2(targetZ, targetX)
+	local delta = (target - current + math.pi) % (2 * math.pi) - math.pi
+	local angle = current + math.clamp(delta, -maxRadians, maxRadians)
+	return math.cos(angle), math.sin(angle)
 end
 
 --- Which profile applies: EXPEDITION inside a loaded stage, HUB otherwise.

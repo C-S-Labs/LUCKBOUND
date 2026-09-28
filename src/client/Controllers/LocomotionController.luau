@@ -78,6 +78,11 @@ local vitals: any = nil
 -- direction during a roll, the lock-on target while one is held.
 local facing = Vector3.new(0, 0, -1)
 local rollDirection = Vector3.zero
+-- The facing actually on the body: follows `facing` instantly for camera
+-- turns, smoothly for everything else (see step).
+local bodyFacing = Vector3.new(0, 0, -1)
+-- Set when a roll starts: the body turns to its direction at once.
+local snapFacing = false
 local lockTarget: Vector3? = nil
 -- Our shift lock, toggled with Left Ctrl.
 local shoulderCamera = false
@@ -138,6 +143,7 @@ local function beginRoll(kind: string)
 		rollDirection = if held.Magnitude > 0 then held.Unit else facing
 		if not facingHeld() then
 			facing = rollDirection
+			snapFacing = true
 		end
 		local forward, right =
 			AnimationCore.localVelocity(facing.X, facing.Z, rollDirection.X, rollDirection.Z)
@@ -276,6 +282,7 @@ local function bindCharacter(character: Model)
 		facing = Vector3.new(0, 0, -1)
 	end
 	facing = facing.Unit
+	bodyFacing = facing
 
 	state = LocomotionCore.newState(tuning, os.clock())
 	nextProfileCheck = 0
@@ -379,19 +386,31 @@ local function step(dt: number)
 	end
 
 	cm.MovingDirection = direction
-	cm.FacingDirection = facing
+	-- === turning ===
+	-- Camera-driven (shoulder camera) and a roll's start: instant. Anything
+	-- else -- a new movement direction, a lock-on target, the return after a
+	-- roll -- a quick smooth turn, so changing direction never snaps.
+	local cameraDriven = shoulderCamera and not lockTarget and mode ~= "ROLL"
+	if cameraDriven or snapFacing then
+		bodyFacing = facing
+		snapFacing = false
+	else
+		local maxTurn = math.rad(GameConfig.Locomotion.TurnDegreesPerSecond) * dt
+		local x, z =
+			LocomotionCore.turnToward(bodyFacing.X, bodyFacing.Z, facing.X, facing.Z, maxTurn)
+		bodyFacing = Vector3.new(x, 0, z)
+	end
+
+	cm.FacingDirection = bodyFacing
 	cm.BaseMoveSpeed = speed
 
-	-- NO TURNING DELAY, in any mode (owner, 2026-09-28). The controller turns
-	-- the body with a torque, which lags a fast camera swing however high its
-	-- turn speed is set; that lag put the body, and every roll aimed from it,
-	-- somewhere the player was no longer looking. So the facing is written to
-	-- the root directly, every frame, and the spin the torque had built up is
-	-- cleared.
+	-- The facing is written to the root directly, every frame: the
+	-- controller's own torque lags, and a lag put rolls off-aim. Whatever
+	-- spin the torque had built up is cleared.
 	local position = root.Position
 	local currentLook = root.CFrame.LookVector
-	if Vector3.new(currentLook.X, 0, currentLook.Z).Unit:Dot(facing) < 0.99999 then
-		root.CFrame = CFrame.lookAt(position, position + facing)
+	if Vector3.new(currentLook.X, 0, currentLook.Z).Unit:Dot(bodyFacing) < 0.99999 then
+		root.CFrame = CFrame.lookAt(position, position + bodyFacing)
 		root.AssemblyAngularVelocity = Vector3.zero
 	end
 

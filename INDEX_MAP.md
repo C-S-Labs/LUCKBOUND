@@ -271,8 +271,8 @@ _255 text files, 285 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/PLAYER_ABILITIES.md
 
-- `docs/PLAYER_ABILITIES.md` (420) - LUCKBOUND — Player Abilities & Upgrades · 2026-09-28
-  - `PLAYER_ABILITIES.md`: 0. The line this document exists to hold:11, 1. Built: our own character controller:34, 2. Built: two profiles, one stamina bar:65, 2.5 Built: jump, roll and backstep:109, 2.7 Built: how the body moves (`CharacterAnimator`, `Animati:151, Adding real animations: where and how:178, 2.55 Built: the shoulder camera (our shift lock):212, 2.6 Built: lock-on (optional):221, 3. Planned: the Fate Tree:255, FORTUNE — what the roll can reach:271, ENDURANCE — how long you last out there:284, DISCOVERY — what a world yields:295, CRAFT — what your gear becomes:307, Node shapes worth having:317, 4. Planned: movement abilities beyond the two:328, 5. Where these would live:349, 6. How fighting drives movement (the weapon contract):364, 6.1 Weapon stances: how holding a weapon changes the body (d:390
+- `docs/PLAYER_ABILITIES.md` (423) - LUCKBOUND — Player Abilities & Upgrades · 2026-09-28
+  - `PLAYER_ABILITIES.md`: 0. The line this document exists to hold:11, 1. Built: our own character controller:34, 2. Built: two profiles, one stamina bar:68, 2.5 Built: jump, roll and backstep:112, 2.7 Built: how the body moves (`CharacterAnimator`, `Animati:154, Adding real animations: where and how:181, 2.55 Built: the shoulder camera (our shift lock):215, 2.6 Built: lock-on (optional):224, 3. Planned: the Fate Tree:258, FORTUNE — what the roll can reach:274, ENDURANCE — how long you last out there:287, DISCOVERY — what a world yields:298, CRAFT — what your gear becomes:310, Node shapes worth having:320, 4. Planned: movement abilities beyond the two:331, 5. Where these would live:352, 6. How fighting drives movement (the weapon contract):367, 6.1 Weapon stances: how holding a weapon changes the body (d:393
 
 ### docs/PLAYER_ANIMATION_BRIEF.md
 
@@ -321,8 +321,8 @@ _255 text files, 285 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (6178) - LUCKBOUND — Work Log · 2026-09-28
-  - `WORKLOG.md`: Template:16, Session N — YYYY-MM-DD — <short title>:19, Done:22, Decisions made:25, Stopped at:28, Next:31, Session 110 — 2026-09-28 — Instant facing (real fix); weapon:37, Done:40, Next:48, Session 109 — 2026-09-28 — Roll speed shape, 18 studs, insta:54, Done (owner):57, Next:67, Session 108 — 2026-09-28 — Steering out, roll blends out, sh:72, Done (owner):75, Next:85, Session 107 — 2026-09-28 — Roll polish: floor contact, dista:91, Done (owner: "everything else I really like"):94, Next:103, Session 106 — 2026-09-28 — Longer roll; the second batch of :109, Done:112, Next:121, Session 105 — 2026-09-28 — Roll queueing; generated roll ani:129, Done:132, Decisions made:144, Next:148, Session 104 — 2026-09-28 — Walk feedback: no ring, stronger :155, Done (owner's walk: wind, air dash and lock-on all work):158, Next:171, Session 103 — 2026-09-28 — Wind burst, air dash, lock-on swi:177, Done (owner's walk: the run animation works):180, Decisions made:191, Next:195, Session 102 — 2026-09-28 — Prep for hand-made player animati:201, Done:204, Decisions made (owner):212, Stopped at:215, Next:218, Session 101 — 2026-09-28 — Polished body movement; direction:225, Done:228, Decisions made:244, ... +555 more
+- `docs/WORKLOG.md` (6196) - LUCKBOUND — Work Log · 2026-09-28
+  - `WORKLOG.md`: Template:16, Session N — YYYY-MM-DD — <short title>:19, Done:22, Decisions made:25, Stopped at:28, Next:31, Session 111 — 2026-09-28 — Final pre-PR fixes: smooth turns,:37, Done (owner's last notes before the PR):40, Next:50, Session 110 — 2026-09-28 — Instant facing (real fix); weapon:55, Done:58, Next:66, Session 109 — 2026-09-28 — Roll speed shape, 18 studs, insta:72, Done (owner):75, Next:85, Session 108 — 2026-09-28 — Steering out, roll blends out, sh:90, Done (owner):93, Next:103, Session 107 — 2026-09-28 — Roll polish: floor contact, dista:109, Done (owner: "everything else I really like"):112, Next:121, Session 106 — 2026-09-28 — Longer roll; the second batch of :127, Done:130, Next:139, Session 105 — 2026-09-28 — Roll queueing; generated roll ani:147, Done:150, Decisions made:162, Next:166, Session 104 — 2026-09-28 — Walk feedback: no ring, stronger :173, Done (owner's walk: wind, air dash and lock-on all work):176, Next:189, Session 103 — 2026-09-28 — Wind burst, air dash, lock-on swi:195, Done (owner's walk: the run animation works):198, Decisions made:209, Next:213, Session 102 — 2026-09-28 — Prep for hand-made player animati:219, Done:222, Decisions made (owner):230, Stopped at:233, Next:236, ... +558 more
 
 ### docs/archive
 
@@ -367,8 +367,8 @@ _255 text files, 285 binary assets. Regenerate with `python tools/gen_index.py`;
   - `LightningController.luau`: LightningController.init:18
 - `src/client/Controllers/LockOnController.luau` (442) - LOCK-ON: an optional target lock with an over-the-shoulder camera. · 2026-09-28
   - `LockOnController.luau`: pivotOf:45, centreOf:54, aimPoint:64, playerRoot:72, visible:82, showMarker:92, release:144, measure:171, lockOnto:203, acquire:224, LockOnController.switch:237, toggle:271, easeBack:286, update:303, LockOnController.init:376
-- `src/client/Controllers/LocomotionController.luau` (563) - PLAYER MOVEMENT: walk, sprint, jump, roll and backstep, on our own · 2026-09-28
-  - `LocomotionController.luau`: moveDirection:96, launchJump:112, facingHeld:127, beginRoll:131, onJumpPressed:156, onRollPressed:165, insideStage:178, refreshProfile:199, bindCharacter:215, step:297, LocomotionController.init:461, LocomotionController.get:518, LocomotionController.mode:524, LocomotionController.lock:531, LocomotionController.unlock:536, LocomotionController.forceProfile:542, LocomotionController.setStamina:548, LocomotionController.profile:553, LocomotionController.setLockTarget:559
+- `src/client/Controllers/LocomotionController.luau` (582) - PLAYER MOVEMENT: walk, sprint, jump, roll and backstep, on our own · 2026-09-28
+  - `LocomotionController.luau`: moveDirection:101, launchJump:117, facingHeld:132, beginRoll:136, onJumpPressed:162, onRollPressed:171, insideStage:184, refreshProfile:205, bindCharacter:221, step:304, LocomotionController.init:480, LocomotionController.get:537, LocomotionController.mode:543, LocomotionController.lock:550, LocomotionController.unlock:555, LocomotionController.forceProfile:561, LocomotionController.setStamina:567, LocomotionController.profile:572, LocomotionController.setLockTarget:578
 - `src/client/Controllers/PartyController.luau` (135) - The client's picture of its party. Build spec §7.2. · 2026-09-24
   - `PartyController.luau`: PartyController.get:39, PartyController.onChanged:45, PartyController.nameOf:56, PartyController.request:63, announceInvite:67, PartyController.init:102
 - `src/client/Controllers/PropController.luau` (340) - Dresses a generated map with its world's ambient scenery (CHUNK_AUTHORING.md · 2026-09-27
@@ -502,7 +502,7 @@ _255 text files, 285 binary assets. Regenerate with `python tools/gen_index.py`;
 - `src/shared/Core/FixtureCore.luau` (55) - The pure half of fixtures (CHUNK_AUTHORING.md convention 7, build spec · 2026-09-24
   - `FixtureCore.luau`: CHEST:15, VAULT:16, FORCEFIELD:17, smooth:23, FixtureCore.lidAngle:31, FixtureCore.doorSpin:38, FixtureCore.doorRecess:44, FixtureCore.fieldTransparency:50
 - `src/shared/Core/Freeze.luau` (25) - Deep-freeze a content or config table, so a System cannot mutate the data · 2026-09-24
-- `src/shared/Core/GameConfig.luau` (1472) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-09-28
+- `src/shared/Core/GameConfig.luau` (1477) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-09-28
 - `src/shared/Core/HubMenuCore.luau` (190) - THE HUB MENU'S RULES, WITH NO ROBLOX IN THEM. · 2026-09-25
   - `HubMenuCore.luau`: HubMenuCore.panels:20, HubMenuCore.panelById:31, HubMenuCore.destinations:41, HubMenuCore.destinationById:52, HubMenuCore.landingPoint:64, HubMenuCore.isVisible:71, HubMenuCore.newState:80, HubMenuCore.reduce:98, HubMenuCore.canTravel:149, HubMenuCore.travelTiming:180
 - `src/shared/Core/KeyCore.luau` (58) - The pure half of vault keys (build spec §7.5). Owner-directed 2026-09-23: · 2026-09-24
@@ -511,8 +511,8 @@ _255 text files, 285 binary assets. Regenerate with `python tools/gen_index.py`;
   - `LedgerCore.luau`: LedgerCore.newLedger:36, LedgerCore.sanitise:45, LedgerCore.issued:69, LedgerCore.remaining:73, LedgerCore.claim:86, LedgerCore.summary:121
 - `src/shared/Core/LockOnCore.luau` (108) - LOCK-ON RULES: which target a press picks, and when a lock drops. No · 2026-09-28
   - `LockOnCore.luau`: LockOnCore.pick:18, LockOnCore.switch:45, LockOnCore.flick:62, LockOnCore.shouldBreak:73, LockOnCore.aimHeight:95, LockOnCore.smoothAlpha:101
-- `src/shared/Core/LocomotionCore.luau` (497) - MOVEMENT RULES: one state machine for everything a player does to get · 2026-09-28
-  - `LocomotionCore.luau`: LocomotionCore.tuning:37, LocomotionCore.newState:64, activeLock:96, LocomotionCore.mode:105, LocomotionCore.isInvulnerable:118, spend:132, hasStaminaFor:143, LocomotionCore.canStartSprint:150, LocomotionCore.canRoll:163, startRoll:187, LocomotionCore.roll:217, LocomotionCore.canJump:245, LocomotionCore.jump:265, LocomotionCore.step:283, LocomotionCore.targetSpeed:368, LocomotionCore.land:399, LocomotionCore.rollSpeedShape:412, LocomotionCore.rollPeakSpeed:437, LocomotionCore.rollMoving:442, LocomotionCore.staminaFraction:447, LocomotionCore.lock:467, LocomotionCore.unlock:482, LocomotionCore.profileFor:493
+- `src/shared/Core/LocomotionCore.luau` (493) - MOVEMENT RULES: one state machine for everything a player does to get · 2026-09-28
+  - `LocomotionCore.luau`: LocomotionCore.tuning:37, LocomotionCore.newState:64, activeLock:93, LocomotionCore.mode:102, LocomotionCore.isInvulnerable:115, spend:129, hasStaminaFor:140, LocomotionCore.canStartSprint:147, LocomotionCore.canRoll:160, startRoll:184, LocomotionCore.roll:212, LocomotionCore.onFloor:227, LocomotionCore.canJump:235, LocomotionCore.jump:255, LocomotionCore.step:273, LocomotionCore.targetSpeed:348, LocomotionCore.land:379, LocomotionCore.rollSpeedShape:392, LocomotionCore.rollPeakSpeed:417, LocomotionCore.rollMoving:422, LocomotionCore.staminaFraction:427, LocomotionCore.lock:447, LocomotionCore.unlock:462, LocomotionCore.turnToward:473, LocomotionCore.profileFor:489
 - `src/shared/Core/LootCore.luau` (73) - The pure half of loot (build spec §7.5): what a pool yields, for whom. · 2026-09-25
   - `LootCore.luau`: LootCore.roll:35, LootCore.rollForAll:61
 - `src/shared/Core/Net.luau` (114) - The ONLY place RemoteEvents are created or looked up. Build spec §4. · 2026-09-24
@@ -561,7 +561,7 @@ _255 text files, 285 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### tests/cases.luau
 
-- `tests/cases.luau` (9263) - LUCKBOUND test suite. Run: python3 tests/build_suite.py && luau tests/generated_suite.luau · 2026-09-28
+- `tests/cases.luau` (9249) - LUCKBOUND test suite. Run: python3 tests/build_suite.py && luau tests/generated_suite.luau · 2026-09-28
   - `cases.luau`: group:51, check:56, throws:69, lcg:75, profile:86, cfg:94
 
 ### tests/run.sh

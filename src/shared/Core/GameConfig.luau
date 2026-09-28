@@ -1131,9 +1131,6 @@ local GameConfig = {
 		BackstepInvulnerableFrom = 0.02,
 		BackstepInvulnerableTo = 0.16,
 		BackstepStaminaFraction = 0.6, -- of the profile's RollStaminaCost
-		-- A roll pressed this long before the current one ends comes out the
-		-- moment it can. Chaining rolls is the feel; mashing is not required.
-		RollBufferSeconds = 0.2,
 
 		-- === AIR DASH (the jump dash) ===
 		-- Roll pressed in the air: a short horizontal burst the held way (or
@@ -1168,6 +1165,14 @@ local GameConfig = {
 		-- The camera widens by this many degrees at the start of a roll and
 		-- settles back over the roll.
 		RollFovKickDegrees = 3,
+
+		-- === TURNING ===
+		-- Turns that follow the CAMERA (shoulder camera) are instant: a lag
+		-- there put the body, and rolls aimed from it, off where the player
+		-- looked. Every other turn -- to a new movement direction, toward a
+		-- lock-on target, back after a roll -- is a quick smooth rotation at
+		-- this rate, so changing direction never snaps (owner, 2026-09-28).
+		TurnDegreesPerSecond = 900,
 
 		-- === SHOULDER CAMERA (our shift lock) ===
 		-- Left Ctrl toggles it: the mouse locks to the centre, the camera

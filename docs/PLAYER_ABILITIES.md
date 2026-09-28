@@ -40,9 +40,12 @@ direction, speed and facing every frame and launches jumps itself. The stock
 Animate script is off too: the same stock animation assets are played by the
 controller from our speed and mode, until LUCKBOUND has its own animations.
 
-**No turning delay, in any mode** (owner). The facing is written to the root directly every frame
-rather than turned by the controller's torque, which lagged fast camera swings and put rolls off-aim.
-The per-profile `TurnRate` is gone.
+**Turning** (owner, 2026-09-28). The facing is written to the root directly every frame, never turned by
+the controller's torque, which lagged. There are two kinds of turn:
+- **Camera-driven turns (shoulder camera) and a roll's start are instant.** A lag here put rolls off-aim.
+- **Every other turn is a quick, smooth rotation** (`TurnDegreesPerSecond`, 900°/s): a new movement direction,
+  turning toward a lock-on target, and the return after a roll. Changing direction never snaps between the
+  eight WASD directions.
 
 **Only the root collides.** Every other body part has collisions off (re-applied every frame), so a
 clip turning the torso through the floor can't push the physics. That push was a camera shake during rolls.
@@ -123,8 +126,8 @@ edge, and a 0.12s buffer so a press just before landing fires on landing.
 | Invulnerable window | 0.05–0.44s in | 0.02–0.16s in |
 
 - A roll is a commitment: no jump, sprint or second roll until it recovers.
-- A roll pressed in the last 0.2s is buffered, so chained rolls come out clean without
-  mashing.
+- **No queue:** a press during a roll (or its recovery) is ignored. The next roll needs a fresh press after
+  this one has fully finished (owner).
 - Ground only.
 - **Four directions, relative to facing** (owner, 2026-09-28). With the shoulder
   camera or a lock-on, the character **keeps facing forward** and rolls the way you

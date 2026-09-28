@@ -34,6 +34,24 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 111 — 2026-09-28 — Final pre-PR fixes: smooth turns, no roll queue
+**Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner's last notes before the PR)
+- **Snapping between 8 directions** and **snapping back to the target after a roll:** the last fix made every
+  turn instant. Now only camera-driven turns (the shoulder camera) and a roll's start are instant; movement-
+  direction changes, lock-on facing and the post-roll return rotate smoothly at `TurnDegreesPerSecond` (900).
+  The body facing (`bodyFacing`) is tracked separately from the desired facing. `LocomotionCore.turnToward`
+  + a test.
+- **No roll queue:** presses during a roll or its recovery are ignored; a fresh press is needed after it
+  finishes. `RollBufferSeconds` and the buffered fields are removed. A brief moment off the floor
+  (`onFloor`) still counts as the floor, so it rolls instead of air-dashing.
+
+### Next
+1. Owner's final walk, then open the PR.
+
+---
+
 ## Session 110 — 2026-09-28 — Instant facing (real fix); weapon stance design
 **Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 

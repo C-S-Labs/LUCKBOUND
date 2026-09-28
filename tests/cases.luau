@@ -5759,49 +5759,35 @@ do
 	)
 
 	check(
-		"a roll pressed near the end of the last one comes out when it can",
+		"no queue: a press during a roll is ignored, and a fresh press after it rolls",
 		(function()
 			local s = LocomotionCore.roll(state(), 0, true, EXP)
-			local ends = s.RollRecoverUntil
-			local _, kind = LocomotionCore.roll(s, ends - L.RollBufferSeconds * 0.5, true, EXP)
-			s = select(1, LocomotionCore.roll(s, ends - L.RollBufferSeconds * 0.5, true, EXP))
-			local _, events = LocomotionCore.step(s, 1 / 60, {
-				WantsSprint = false,
-				Moving = true,
-				Grounded = true,
-				Now = ends + 0.01,
-			}, EXP)
-			return kind == nil and events.Rolled == "ROLL"
-		end)()
-	)
-
-	check(
-		"mashing during a roll queues exactly one more, which plays after it",
-		(function()
-			local s = LocomotionCore.roll(state(), 0, true, EXP)
-			s = select(1, LocomotionCore.roll(s, 0.05, true, EXP))
-			s = select(1, LocomotionCore.roll(s, 0.1, true, EXP))
-			local mid, early = LocomotionCore.step(s, 1 / 60, {
-				WantsSprint = false,
-				Moving = true,
-				Grounded = true,
-				Now = 0.3,
-			}, EXP)
-			local _, later = LocomotionCore.step(mid, 1 / 60, {
+			local mashed, kind = LocomotionCore.roll(s, 0.1, true, EXP)
+			local _, events = LocomotionCore.step(mashed, 1 / 60, {
 				WantsSprint = false,
 				Moving = true,
 				Grounded = true,
 				Now = s.RollRecoverUntil + 0.01,
 			}, EXP)
-			return early.Rolled == nil and later.Rolled == "ROLL"
+			local _, fresh = LocomotionCore.roll(mashed, s.RollRecoverUntil + 0.02, true, EXP)
+			return kind == nil and events.Rolled == nil and fresh == "ROLL"
 		end)()
 	)
 	check(
-		"a moment off the floor is a roll that waits, not an air dash",
+		"a moment off the floor still rolls, never air-dashes",
 		(function()
 			local bump = frame(state(), L.AirDashMinAirSeconds * 0.5, { Grounded = false })
-			local s, kind = LocomotionCore.roll(bump, L.AirDashMinAirSeconds * 0.5, true, EXP)
-			return kind == nil and s.RollBufferedKind == "ROLL"
+			local _, kind = LocomotionCore.roll(bump, L.AirDashMinAirSeconds * 0.5, true, EXP)
+			return kind == "ROLL"
+		end)()
+	)
+	check(
+		"turning is a smooth rotation capped per frame, not a snap",
+		(function()
+			local x, z = LocomotionCore.turnToward(1, 0, 0, 1, math.rad(10))
+			local fx, fz = LocomotionCore.turnToward(1, 0, 0.99, 0.14, math.rad(10))
+			return math.abs(math.atan2(z, x) - math.rad(10)) < 1e-9
+				and math.abs(math.atan2(fz, fx) - math.atan2(0.14, 0.99)) < 1e-9
 		end)()
 	)
 
