@@ -23,6 +23,7 @@ local ThemeController = require(Controllers.ThemeController)
 local SkyController = require(Controllers.SkyController)
 local SettingsController = require(Controllers.SettingsController)
 local DebugCommands = require(Controllers.DebugCommands)
+local DevPanel = require(UI.DevPanel)
 local LightningController = require(Controllers.LightningController)
 local FateRoll = require(UI.FateRoll)
 local GlobalAnnouncements = require(UI.GlobalAnnouncements)
@@ -78,5 +79,6 @@ end)
 
 -- Last: developer tooling must never be load-bearing for anything above it.
 DebugCommands.init()
+DevPanel.init()
 
 print("[LUCKBOUND] client ready")

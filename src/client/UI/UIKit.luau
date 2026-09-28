@@ -403,6 +403,38 @@ function UIKit.slider(
 	return row
 end
 
+--- A text field in the house style: a raised surface holding a TextBox that
+--- picks up a gold stroke while focused. Returns the surface and the box.
+function UIKit.textbox(parent: Instance, placeholder: string, size: number?): (Frame, TextBox)
+	local frame = UIKit.surface(parent, "RAISED")
+	frame.Size = UDim2.new(1, 0, 0, 38)
+
+	local box = Instance.new("TextBox")
+	box.BackgroundTransparency = 1
+	box.ClearTextOnFocus = false
+	box.Font = UITheme.BodyFont
+	box.PlaceholderText = placeholder
+	box.PlaceholderColor3 = UITheme.TextMuted
+	box.Text = ""
+	box.TextColor3 = UITheme.TextPrimary
+	box.TextSize = size or 15
+	box.TextXAlignment = Enum.TextXAlignment.Left
+	box.Position = UDim2.fromOffset(UITheme.Space.MD, 0)
+	box.Size = UDim2.new(1, -UITheme.Space.MD * 2, 1, 0)
+	box.Parent = frame
+
+	local focus = UITheme.stroke(frame, UITheme.AccentGold, 1)
+	focus.Transparency = 1
+	box.Focused:Connect(function()
+		UIKit.tween(focus, UITheme.Motion.Quick, { Transparency = 0.2 })
+	end)
+	box.FocusLost:Connect(function()
+		UIKit.tween(focus, UITheme.Motion.Quick, { Transparency = 1 }, true)
+	end)
+
+	return frame, box
+end
+
 --- A "not built yet" strip. Every PREVIEW panel wears one, because a designed
 --- screen with placeholder data and no label is indistinguishable from a
 --- broken screen with real data.

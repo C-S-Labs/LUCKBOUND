@@ -1,35 +1,36 @@
 --!strict
--- Developer chat commands. Testing tooling, not a feature.
+-- Developer commands, client half. Testing tooling, not a feature.
 --
--- THE SPLIT, and it is not arbitrary: a command lives on whichever side
--- already has authority over what it changes.
+-- WHAT RUNS WHERE is decided by the registry (Content/DevCommands), one entry
+-- per command. A command lives on whichever side already has authority over
+-- what it changes:
+--   CLIENT -- this file's CLIENT table: your own character's movement and
+--             CFrame (Roblox gives the client ownership of its own rig), your
+--             camera, and what this client draws (overlays, props, clock)
+--   SERVER -- Systems/DebugSystem: rolls, entry, loot, health, events. The
+--             client only ASKS; the server checks who is asking.
 --
---   HERE (client)  /fly /speed /tp /where /worlds /help
---       Your own character's velocity, walk speed and CFrame are already
---       yours -- Roblox gives the client network ownership of its own rig.
---       Routing these through the server would add a remote round trip to
---       change something the client is going to change anyway.
---
---   SERVER (DebugSystem)  /roll /enter /leave /atmosphere /event /endevents /ledger
---                         /keychance /vaultchance /boss /givekey /takekey /keys
---                         (the last six are temporary loot testing tools)
---       Roll results, expedition entry and Fate awards. The client must not
---       be trusted with any of them, debug build or not -- an exploiter does
---       not care that a flag was meant for testing.
---
--- Commands are registered as TextChatCommand instances, so Roblox's own chat
--- autocompletes them and they behave like every other slash command. That
--- requires TextChatService (the modern chat); a place still on the legacy
--- chat gets a clear warning instead of silent nothing.
+-- Every registry entry is registered as a TextChatCommand, so Roblox's chat
+-- autocompletes the names; the dev panel (UI/DevPanel) runs the same entries
+-- through DebugCommands.run and autocompletes argument values too
+-- (Core/DevCore). That requires TextChatService (the modern chat); a place on
+-- the legacy chat still gets the panel, and a warning.
 
+local Lighting = game:GetService("Lighting")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
+local Stats = game:GetService("Stats")
 local TextChatService = game:GetService("TextChatService")
 local UserInputService = game:GetService("UserInputService")
 local Workspace = game:GetService("Workspace")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
+local BossPreviews = require(Root.Content.BossPreviews)
+local Constants = require(Root.Core.Constants)
+local DevCommands = require(Root.Content.DevCommands)
+local DevCore = require(Root.Core.DevCore)
+local Events = require(Root.Content.Events)
 local GameConfig = require(Root.Core.GameConfig)
 local Net = require(Root.Core.Net)
 local Worlds = require(Root.Content.Worlds)
@@ -39,17 +40,18 @@ local DebugCommands = {}
 local player = Players.LocalPlayer
 
 -- === output ==========================================================
--- Replies go to BOTH the Output window and the chat, and the second half was
--- missing for a long time. Output is where the rest of the diagnostics live,
--- which is right in Studio -- but in a running client nobody can see it, so a
--- command that failed and a command that was never registered looked
--- identical: nothing happened. That is exactly how /event went unnoticed.
---
--- DisplaySystemMessage rather than SendAsync: this is the game answering the
--- player, not the player saying something to the server.
-local function say(text: string)
-	print(`[cmd] {text}`)
+-- Replies go to the Output window, the chat AND every listener (the dev
+-- panel's log). Output alone was invisible in a running client, so a command
+-- that failed and one that was never registered looked identical.
+local listeners: { (string, boolean) -> () } = {}
 
+--- The panel subscribes here to show every reply, client or server.
+function DebugCommands.onOutput(fn: (string, boolean) -> ()): ()
+	table.insert(listeners, fn)
+end
+
+local function emit(text: string, ok: boolean)
+	print(`[cmd] {text}`)
 	local channels = TextChatService:FindFirstChild("TextChannels")
 	local general = channels and channels:FindFirstChild("RBXGeneral")
 	if general and general:IsA("TextChannel") then
@@ -57,6 +59,17 @@ local function say(text: string)
 			general:DisplaySystemMessage(`[cmd] {text}`)
 		end)
 	end
+	for _, fn in listeners do
+		task.spawn(fn, text, ok)
+	end
+end
+
+local function say(text: string)
+	emit(text, true)
+end
+
+local function fail(text: string)
+	emit(text, false)
 end
 
 -- === flight ==========================================================
@@ -251,33 +264,545 @@ local function teleport(where: string?)
 	say(`teleported to {key}`)
 end
 
--- === registration ====================================================
+-- === the current map =================================================
+-- ChunkLoader builds Workspace.ExpeditionStage.<stage> (WorldId, Seed) with a
+-- folder per chunk (Index, ChunkId, Role, Centre, Blockout).
 
-local function register(alias: string, description: string, handler: ({ string }) -> ())
-	local command = Instance.new("TextChatCommand")
-	command.Name = `Luckbound{alias}`
-	command.PrimaryAlias = `/{alias}`
-	command.AutocompleteVisible = true
-	command.Parent = TextChatService:WaitForChild("TextChatCommands")
-
-	command.Triggered:Connect(function(_source, text)
-		local args = {}
-		for word in string.gmatch(text, "%S+") do
-			table.insert(args, word)
+local function currentStage(): Instance?
+	local stages = Workspace:FindFirstChild(Constants.NAMES.EXPEDITION_STAGE)
+	if not stages then
+		return nil
+	end
+	local root = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+	local best, bestD = nil, math.huge
+	for _, stage in stages:GetChildren() do
+		if stage:GetAttribute("Seed") ~= nil then
+			local d = 0
+			if root and root:IsA("BasePart") and stage:IsA("Model") then
+				d = (stage:GetPivot().Position - root.Position).Magnitude
+			end
+			if d < bestD then
+				best, bestD = stage, d
+			end
 		end
-		table.remove(args, 1) -- drop the alias itself
-		handler(args)
-	end)
-
-	return description
+	end
+	return best
 end
 
-local HELP: { string } = {}
+type ChunkInfo = {
+	Index: number,
+	Id: string,
+	Role: string,
+	Centre: Vector3,
+	Blockout: boolean,
+}
 
---- Sends a server-side command. The client never decides the outcome; it only
---- asks, and DebugSystem checks who is asking.
-local function remote(name: string, args: { string })
-	Net.get("Debug_Command"):FireServer(name, args)
+local function currentChunks(): { ChunkInfo }
+	local out: { ChunkInfo } = {}
+	local stage = currentStage()
+	if not stage then
+		return out
+	end
+	for _, folder in stage:GetDescendants() do
+		local id = folder:GetAttribute("ChunkId")
+		local centre = folder:GetAttribute("Centre")
+		if type(id) == "string" and typeof(centre) == "Vector3" then
+			local index = folder:GetAttribute("Index")
+			table.insert(out, {
+				Index = if type(index) == "number"
+					then index
+					else tonumber(string.match(folder.Name, "^(%d+)_")) or 0,
+				Id = id,
+				Role = tostring(folder:GetAttribute("Role") or "?"),
+				Centre = centre,
+				Blockout = folder:GetAttribute("Blockout") == true,
+			})
+		end
+	end
+	table.sort(out, function(a, b)
+		return a.Index < b.Index
+	end)
+	return out
+end
+
+-- === noclip ============================================================
+
+local noclip: RBXScriptConnection? = nil
+
+local function toggleNoclip()
+	if noclip then
+		noclip:Disconnect()
+		noclip = nil
+		local character = player.Character
+		local root = character and character:FindFirstChild("HumanoidRootPart")
+		if root and root:IsA("BasePart") then
+			root.CanCollide = true
+		end
+		say("noclip OFF")
+		return
+	end
+	-- Stepped runs before physics: the humanoid re-enables collision on its
+	-- parts, so it has to be switched off every frame.
+	noclip = RunService.Stepped:Connect(function()
+		local character = player.Character
+		if not character then
+			return
+		end
+		for _, part in character:GetDescendants() do
+			if part:IsA("BasePart") and part.CanCollide then
+				part.CanCollide = false
+			end
+		end
+	end)
+	say("noclip ON")
+end
+
+-- === chunk overlay ======================================================
+
+local overlay: Folder? = nil
+
+local ROLE_COLOURS: { [string]: Color3 } = {
+	ENTRY = Color3.fromRGB(120, 220, 140),
+	PATH = Color3.fromRGB(150, 180, 230),
+	COMBAT = Color3.fromRGB(240, 120, 100),
+	MINIBOSS = Color3.fromRGB(240, 170, 80),
+	BOSS = Color3.fromRGB(230, 80, 200),
+	SIDE = Color3.fromRGB(210, 210, 120),
+	CAP = Color3.fromRGB(160, 160, 160),
+	BACKDROP = Color3.fromRGB(110, 110, 130),
+}
+local BLOCKOUT_COLOUR = Color3.fromRGB(255, 60, 60)
+
+local function setOverlay(on: boolean)
+	if overlay then
+		overlay:Destroy()
+		overlay = nil
+	end
+	if not on then
+		say("chunk overlay OFF")
+		return
+	end
+	local list = currentChunks()
+	if #list == 0 then
+		fail("no map loaded -- /enter first")
+		return
+	end
+	local Chunks = require(Root.Content.Chunks) :: any
+	local holder = Instance.new("Folder")
+	holder.Name = "LuckboundChunkOverlay"
+	for _, c in list do
+		local def = Chunks[c.Id]
+		local colour = if c.Blockout
+			then BLOCKOUT_COLOUR
+			else (ROLE_COLOURS[c.Role] or Color3.new(1, 1, 1))
+		local anchor = Instance.new("Part")
+		anchor.Anchored = true
+		anchor.CanCollide = false
+		anchor.CanQuery = false
+		anchor.CanTouch = false
+		anchor.Transparency = 1
+		anchor.Size = Vector3.new((def and def.SizeX) or 256, 4, (def and def.SizeZ) or 256)
+		anchor.CFrame = CFrame.new(c.Centre)
+		anchor.Parent = holder
+		local box = Instance.new("SelectionBox")
+		box.Adornee = anchor
+		box.Color3 = colour
+		box.LineThickness = 0.6
+		box.Parent = anchor
+		local tag = Instance.new("BillboardGui")
+		tag.Adornee = anchor
+		tag.AlwaysOnTop = true
+		tag.Size = UDim2.fromOffset(260, 44)
+		tag.StudsOffsetWorldSpace = Vector3.new(0, GameConfig.Debug.ChunkLabelHeight, 0)
+		tag.Parent = anchor
+		local text = Instance.new("TextLabel")
+		text.BackgroundTransparency = 1
+		text.Size = UDim2.fromScale(1, 1)
+		text.Font = Enum.Font.GothamBold
+		text.TextScaled = true
+		text.TextStrokeTransparency = 0.3
+		text.TextColor3 = colour
+		text.Text = `#{c.Index} {c.Id}\n{c.Role}{if c.Blockout then " - BLOCKOUT" else ""}`
+		text.Parent = tag
+	end
+	holder.Parent = Workspace
+	overlay = holder
+	say(`chunk overlay ON ({#list} chunks; red = blockout)`)
+end
+
+-- === stats overlay ======================================================
+
+local statsGui: ScreenGui? = nil
+local statsConn: RBXScriptConnection? = nil
+
+local function setStats(on: boolean)
+	if statsConn then
+		statsConn:Disconnect()
+		statsConn = nil
+	end
+	if statsGui then
+		statsGui:Destroy()
+		statsGui = nil
+	end
+	if not on then
+		say("stats OFF")
+		return
+	end
+	local gui = Instance.new("ScreenGui")
+	gui.Name = "LuckboundStats"
+	gui.ResetOnSpawn = false
+	gui.DisplayOrder = 60
+	local label = Instance.new("TextLabel")
+	label.BackgroundColor3 = Color3.new(0, 0, 0)
+	label.BackgroundTransparency = 0.45
+	label.Position = UDim2.new(0.5, -160, 0, 6)
+	label.Size = UDim2.fromOffset(320, 24)
+	label.Font = Enum.Font.Code
+	label.TextSize = 14
+	label.TextColor3 = Color3.new(1, 1, 1)
+	label.Parent = gui
+	gui.Parent = player:WaitForChild("PlayerGui")
+	statsGui = gui
+	local frames, since = 0, os.clock()
+	statsConn = RunService.RenderStepped:Connect(function()
+		frames += 1
+		local now = os.clock()
+		if now - since >= 0.5 then
+			local fps = frames / (now - since)
+			frames, since = 0, now
+			label.Text = string.format(
+				"%d fps  %d ms  %d MB  %d inst",
+				fps,
+				math.floor(player:GetNetworkPing() * 2000),
+				math.floor(Stats:GetTotalMemoryUsageMb()),
+				Stats.InstanceCount
+			)
+		end
+	end)
+	say("stats ON")
+end
+
+-- === props ==============================================================
+
+local hiddenProps: Instance? = nil
+
+local function setProps(on: boolean)
+	if on then
+		if hiddenProps then
+			hiddenProps.Parent = Workspace
+			hiddenProps = nil
+			say("props shown")
+		else
+			say("props are already shown")
+		end
+		return
+	end
+	local folder = Workspace:FindFirstChild("LuckboundProps")
+	if not folder then
+		fail("no props drawn right now")
+		return
+	end
+	folder.Parent = nil
+	hiddenProps = folder
+	say("props hidden (/props on brings them back)")
+end
+
+-- === argument sources (DevCore.SOURCES) ================================
+
+local function sorted(t: { string }): { string }
+	table.sort(t)
+	return t
+end
+
+local SOURCES: { [string]: any } = {
+	WORLDS = function()
+		local ids = {}
+		for id, world in Worlds do
+			if world.EnabledInPhase <= GameConfig.CurrentPhase then
+				table.insert(ids, id)
+			end
+		end
+		return sorted(ids)
+	end,
+	EVENTS = function()
+		local ids = {}
+		for id in Events do
+			table.insert(ids, id)
+		end
+		return sorted(ids)
+	end,
+	ATMOSPHERES = function()
+		local ids = {}
+		local ok, Atmospheres = pcall(require, Root.Content.Atmospheres)
+		if ok then
+			for _, set in Atmospheres :: any do
+				for id in set.Profiles or {} do
+					if not table.find(ids, id) then
+						table.insert(ids, id)
+					end
+				end
+			end
+		end
+		sorted(ids)
+		table.insert(ids, 1, "RANDOM")
+		table.insert(ids, 1, "BASE")
+		return ids
+	end,
+	BOSSES = function()
+		local ids = {}
+		for id in BossPreviews do
+			table.insert(ids, id)
+		end
+		return sorted(ids)
+	end,
+	KEYS = function()
+		local ids = {}
+		for _, world in Worlds do
+			local key = world.Loot and world.Loot.VaultKey
+			if key then
+				table.insert(ids, key.Id)
+			end
+		end
+		return sorted(ids)
+	end,
+	LEDGERS = function()
+		local ids = {}
+		for _, def in Events do
+			if def.Unique then
+				table.insert(ids, def.Unique.LedgerId)
+			end
+		end
+		return sorted(ids)
+	end,
+	DESTINATIONS = function()
+		local ids = {}
+		for alias in DESTINATIONS do
+			table.insert(ids, alias)
+		end
+		return sorted(ids)
+	end,
+	CHUNKS = function()
+		local ids = {}
+		for _, c in currentChunks() do
+			table.insert(ids, `{c.Index}`)
+		end
+		return ids
+	end,
+}
+
+--- For the panel and autocomplete: source name -> list (or function).
+function DebugCommands.sources(): { [string]: any }
+	return SOURCES
+end
+
+--- A chunk index as the panel's picker shows it: "#3 ES_TEMPLE_GATE_A (COMBAT)".
+function DebugCommands.describeChunk(index: string): string
+	for _, c in currentChunks() do
+		if `{c.Index}` == index then
+			return `#{c.Index} {c.Id} ({c.Role})`
+		end
+	end
+	return index
+end
+
+-- === CLIENT commands (registry Side = "CLIENT") ========================
+
+local function onOff(v: string?): boolean
+	return v == nil or string.lower(v) ~= "off"
+end
+
+local panelToggle: (() -> ())? = nil
+local panelClear: (() -> ())? = nil
+
+--- The panel hands in its toggle and clear so /panel and /clear reach it.
+function DebugCommands.bindPanel(toggle: () -> (), clear: () -> ()): ()
+	panelToggle, panelClear = toggle, clear
+end
+
+local CLIENT: { [string]: ({ string }) -> () } = {}
+
+CLIENT.fly = function()
+	toggleFly()
+end
+CLIENT.noclip = function()
+	toggleNoclip()
+end
+CLIENT.speed = function(args)
+	setSpeed(args[1])
+end
+CLIENT.tp = function(args)
+	teleport(args[1])
+end
+CLIENT.where = function()
+	local character = player.Character
+	if not character then
+		fail("no character yet")
+		return
+	end
+	local pivot = character:GetPivot()
+	say(string.format("%.0f, %.0f, %.0f", pivot.X, pivot.Y, pivot.Z))
+end
+CLIENT.worlds = function()
+	local ids = {}
+	for id, world in Worlds do
+		if world.EnabledInPhase <= GameConfig.CurrentPhase then
+			table.insert(ids, `{id} [{world.Rarity}]`)
+		end
+	end
+	say(table.concat(sorted(ids), ", "))
+end
+CLIENT.seed = function()
+	local stage = currentStage()
+	if not stage then
+		fail("no map loaded")
+		return
+	end
+	local seed = stage:GetAttribute("Seed")
+	say(`{stage:GetAttribute("WorldId")} seed {seed} -- /enter {seed} replays it`)
+end
+CLIENT.chunks = function(args)
+	setOverlay(if args[1] then onOff(args[1]) else overlay == nil)
+end
+CLIENT.chunklist = function()
+	local list = currentChunks()
+	if #list == 0 then
+		fail("no map loaded")
+		return
+	end
+	local roles: { [string]: number } = {}
+	local lines = {}
+	for _, c in list do
+		roles[c.Role] = (roles[c.Role] or 0) + 1
+		table.insert(lines, `#{c.Index} {c.Id}{if c.Blockout then " [BLOCKOUT]" else ""}`)
+	end
+	local counts = {}
+	for role, n in roles do
+		table.insert(counts, `{role} {n}`)
+	end
+	say(`{#list} chunks ({table.concat(sorted(counts), ", ")}): {table.concat(lines, " | ")}`)
+end
+CLIENT.chunktp = function(args)
+	local want = args[1]
+	for _, c in currentChunks() do
+		if `{c.Index}` == want or string.upper(c.Id) == string.upper(want) then
+			local character = player.Character
+			if not character then
+				fail("no character yet")
+				return
+			end
+			character:PivotTo(CFrame.new(c.Centre + Vector3.new(0, 20, 0)))
+			say(`teleported to #{c.Index} {c.Id} ({c.Role})`)
+			return
+		end
+	end
+	fail(`no chunk '{want}' on this map -- /chunklist`)
+end
+CLIENT.tint = function(args)
+	say(require(script.Parent.AtmosphereEffects).setTint(onOff(args[1])))
+end
+CLIENT.props = function(args)
+	setProps(onOff(args[1]))
+end
+CLIENT.clock = function(args)
+	local hour = tonumber(args[1])
+	if not hour then
+		say(`clock is {string.format("%.1f", Lighting.ClockTime)}`)
+		return
+	end
+	Lighting.ClockTime = math.clamp(hour, 0, 24)
+	say(`clock {Lighting.ClockTime} (local only; a sky system may set it back)`)
+end
+CLIENT.stats = function(args)
+	setStats(if args[1] then onOff(args[1]) else statsGui == nil)
+end
+CLIENT.assets = function()
+	local list = currentChunks()
+	if #list == 0 then
+		fail("no map loaded")
+		return
+	end
+	local missing = {}
+	for _, c in list do
+		if c.Blockout then
+			table.insert(missing, `#{c.Index} {c.Id}`)
+		end
+	end
+	if #missing == 0 then
+		say(`all {#list} chunks drew their meshes`)
+	else
+		fail(
+			`{#missing}/{#list} chunks are BLOCKOUT (no uploaded AssetId in AssetManifest): `
+				.. table.concat(missing, ", ")
+		)
+	end
+end
+CLIENT.panel = function()
+	if panelToggle then
+		panelToggle()
+	else
+		fail("the dev panel is not loaded")
+	end
+end
+CLIENT.clear = function()
+	if panelClear then
+		panelClear()
+	end
+end
+CLIENT.help = function()
+	local byCat: { [string]: { string } } = {}
+	for _, c in DevCommands.Commands do
+		byCat[c.Category] = byCat[c.Category] or {}
+		table.insert(byCat[c.Category], "/" .. c.Name)
+	end
+	for _, cat in DevCommands.Categories do
+		if byCat[cat.Id] then
+			say(`{cat.Label}: {table.concat(byCat[cat.Id], " ")}`)
+		end
+	end
+	say(`{GameConfig.Debug.PanelKey} or the DEV button opens the panel`)
+end
+
+DebugCommands.CLIENT = CLIENT
+
+-- === running a command ==================================================
+
+local byName = DevCore.index(DevCommands)
+
+--- Runs a registry command by name, from chat or the panel. Required
+--- arguments and literal choices are checked here, so a typo is explained
+--- before anything is sent.
+function DebugCommands.run(name: string, args: { string }): ()
+	local command = byName[string.lower(name)]
+	if not command then
+		fail(`unknown command /{name} -- /help`)
+		return
+	end
+	local problem = DevCore.check(command, args, SOURCES)
+	if problem then
+		fail(problem)
+		return
+	end
+	if command.Side == "CLIENT" then
+		local handler = CLIENT[command.Name]
+		if not handler then
+			fail(`/{command.Name} has no client handler`)
+			return
+		end
+		local ok, err = pcall(handler, args)
+		if not ok then
+			fail(`/{command.Name} errored: {err}`)
+		end
+	else
+		Net.get("Debug_Command"):FireServer(command.Name, args)
+	end
+end
+
+--- Runs a whole typed line ("/roll SKY_CITADEL test").
+function DebugCommands.runLine(line: string): ()
+	local name, args = DevCore.parse(line)
+	if name then
+		DebugCommands.run(name, args)
+	end
 end
 
 function DebugCommands.init(): ()
@@ -285,187 +810,37 @@ function DebugCommands.init(): ()
 		return
 	end
 
-	if TextChatService.ChatVersion ~= Enum.ChatVersion.TextChatService then
-		warn(
-			"[DebugCommands] this place uses the legacy chat, so slash commands "
-				.. "cannot be registered. Set TextChatService.ChatVersion to "
-				.. "TextChatService in Studio to enable /fly, /speed, /tp and /roll."
-		)
-		return
+	-- a CLIENT entry with no handler is a button that does nothing
+	for _, c in DevCommands.Commands do
+		if c.Side == "CLIENT" and not CLIENT[c.Name] then
+			warn(`[DebugCommands] registry lists CLIENT /{c.Name} but there is no handler`)
+		end
 	end
 
-	table.insert(
-		HELP,
-		register("fly", "toggle flight", function()
-			toggleFly()
-		end)
-	)
-	table.insert(
-		HELP,
-		register("speed", "/speed <n> -- set walk speed", function(args)
-			setSpeed(args[1])
-		end)
-	)
-	table.insert(
-		HELP,
-		register("tp", "/tp <place> -- jump to a hub anchor", function(args)
-			teleport(args[1])
-		end)
-	)
-
-	table.insert(
-		HELP,
-		register(
-			"roll",
-			"/roll <WORLD_ID> [test] -- force a destination; test shows every chunk once",
-			function(args)
-				remote("roll", args)
-			end
+	if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
+		local folder = TextChatService:WaitForChild("TextChatCommands")
+		for _, c in DevCommands.Commands do
+			local command = Instance.new("TextChatCommand")
+			command.Name = `Luckbound{c.Name}`
+			command.PrimaryAlias = `/{c.Name}`
+			command.AutocompleteVisible = true
+			command.Parent = folder
+			command.Triggered:Connect(function(_source, text)
+				local _, args = DevCore.parse(text)
+				DebugCommands.run(c.Name, args)
+			end)
+		end
+	else
+		warn(
+			"[DebugCommands] this place uses the legacy chat, so slash commands cannot be "
+				.. "registered -- the dev panel still works. Set TextChatService.ChatVersion "
+				.. "to TextChatService to type them in chat."
 		)
-	)
-	table.insert(
-		HELP,
-		register(
-			"enter",
-			"/enter [seed] -- enter your destination from anywhere; a seed replays that map",
-			function(args)
-				remote("enter", args)
-			end
-		)
-	)
-	table.insert(
-		HELP,
-		register("leave", "end the current expedition", function()
-			remote("leave", {})
-		end)
-	)
-
-	-- THE EVENT COMMANDS. These existed on the server for two sessions and
-	-- were never registered here, so typing /event sent a chat message and
-	-- nothing else -- which looked exactly like "events do not trigger".
-	-- A server command with no client alias is not a command.
-	table.insert(
-		HELP,
-		register("event", "/event <ID> -- start a live event", function(args)
-			remote("event", args)
-		end)
-	)
-	table.insert(
-		HELP,
-		register(
-			"atmosphere",
-			"/atmosphere <ID|BASE|RANDOM> -- force a scenario atmosphere",
-			function(args)
-				remote("atmosphere", args)
-			end
-		)
-	)
-	table.insert(
-		HELP,
-		register("tint", "/tint <on|off> -- tint the map's meshes by the atmosphere", function(args)
-			local on = string.lower(args[1] or "on") ~= "off"
-			print("[cmd] " .. require(script.Parent.AtmosphereEffects).setTint(on))
-		end)
-	)
-	table.insert(
-		HELP,
-		register("endevents", "stop every live event", function()
-			remote("endevents", {})
-		end)
-	)
-	table.insert(
-		HELP,
-		register("ledger", "/ledger <ID> -- how many uniques are left", function(args)
-			remote("ledger", args)
-		end)
-	)
-
-	-- LOOT AND VAULT KEYS (build spec §7.5) -- temporary testing tools.
-	table.insert(
-		HELP,
-		register("keychance", "/keychance <0-1|reset> -- vault key drop chance", function(args)
-			remote("keychance", args)
-		end)
-	)
-	table.insert(
-		HELP,
-		register("vaultchance", "/vaultchance <0-1|reset> -- treasury spawn chance", function(args)
-			remote("vaultchance", args)
-		end)
-	)
-	table.insert(
-		HELP,
-		register("boss", "act as if you defeated this map's boss", function()
-			remote("boss", {})
-		end)
-	)
-	table.insert(
-		HELP,
-		register(
-			"showboss",
-			"/showboss <id> [height] -- preview a boss in the nearest boss arena (idle)",
-			function(args)
-				remote("showboss", args)
-			end
-		)
-	)
-	table.insert(
-		HELP,
-		register("clearboss", "remove the boss preview", function()
-			remote("clearboss", {})
-		end)
-	)
-	table.insert(
-		HELP,
-		register("givekey", "/givekey [KEY_ID] -- give yourself a vault key", function(args)
-			remote("givekey", args)
-		end)
-	)
-	table.insert(
-		HELP,
-		register("takekey", "remove your vault keys", function()
-			remote("takekey", {})
-		end)
-	)
-	table.insert(
-		HELP,
-		register("keys", "your keys and any testing overrides", function()
-			remote("keys", {})
-		end)
-	)
-
-	table.insert(
-		HELP,
-		register("worlds", "list rollable world ids", function()
-			local ids = {}
-			for id, world in Worlds do
-				if world.EnabledInPhase <= GameConfig.CurrentPhase then
-					table.insert(ids, `{id} [{world.Rarity}]`)
-				end
-			end
-			table.sort(ids)
-			say(table.concat(ids, ", "))
-		end)
-	)
-
-	table.insert(
-		HELP,
-		register("where", "print your position", function()
-			local character = player.Character
-			local pivot = character and character:GetPivot()
-			if pivot then
-				say(string.format("%.0f, %.0f, %.0f", pivot.X, pivot.Y, pivot.Z))
-			end
-		end)
-	)
-
-	register("help", "list commands", function()
-		say("commands: " .. table.concat(HELP, "  |  "))
-	end)
+	end
 
 	Net.get("Debug_Reply").OnClientEvent:Connect(function(payload)
 		if type(payload) == "table" and type(payload.Text) == "string" then
-			say((if payload.Ok then "" else "FAILED: ") .. payload.Text)
+			emit(payload.Text, payload.Ok == true)
 		end
 	end)
 
@@ -478,7 +853,7 @@ function DebugCommands.init(): ()
 		end
 	end)
 
-	say("developer commands ready -- /help")
+	say(`developer commands ready -- /help, or {GameConfig.Debug.PanelKey} for the panel`)
 end
 
 DebugCommands.DESTINATIONS = DESTINATIONS

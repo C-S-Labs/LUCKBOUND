@@ -8450,6 +8450,114 @@ do
 	check("all berth directions preserve exact beam clearance", allSides)
 end
 
+-- === developer command registry (Content/DevCommands, Core/DevCore) ====
+do
+	local DevCore = __require("DevCore")
+	local DevCommands = __require("DevCommands")
+	local errors = DevCore.validate(DevCommands)
+	check("dev registry: every entry is well-formed", #errors == 0, table.concat(errors, " | "))
+
+	local used = {}
+	for _, c in DevCommands.Commands do
+		used[c.Category] = true
+	end
+	local empty = {}
+	for _, cat in DevCommands.Categories do
+		if not used[cat.Id] then
+			table.insert(empty, cat.Id)
+		end
+	end
+	check("dev registry: no empty category tab", #empty == 0, table.concat(empty, ", "))
+
+	-- the SERVER half must match DebugSystem's handlers (checked again at boot)
+	local server = {}
+	for _, c in DevCommands.Commands do
+		if c.Side == "SERVER" then
+			table.insert(server, c.Name)
+		end
+	end
+	table.sort(server)
+	check(
+		"dev registry: the SERVER commands are exactly DebugSystem's",
+		table.concat(server, ",")
+			== "atmosphere,boss,bossphase,clearboss,endevents,enter,event,givekey,god,heal,keychance,keys,leave,ledger,respawn,roll,showboss,takekey,vaultchance"
+	)
+
+	-- a broken registry is caught
+	local bad = DevCore.validate({
+		Categories = { { Id = "A", Label = "A" } },
+		Commands = {
+			{ Name = "x", Category = "A", Side = "CLIENT", Summary = "x" },
+			{ Name = "x", Category = "B", Side = "BOTH", Summary = "" },
+			{
+				Name = "y",
+				Category = "A",
+				Side = "SERVER",
+				Summary = "y",
+				Args = {
+					{ Name = "a", Type = "choice", Source = "NOPE" },
+					{ Name = "b", Type = "text", Optional = true },
+					{ Name = "c", Type = "text" },
+				},
+			},
+		},
+	})
+	check(
+		"dev registry: validation catches duplicates, bad sides, sources, arg order",
+		#bad >= 5,
+		tostring(#bad)
+	)
+
+	-- parsing
+	local name, args = DevCore.parse("  /Roll  sky_citadel   test ")
+	check(
+		"dev parse: name lowered, args kept",
+		name == "roll" and #args == 2 and args[1] == "sky_citadel"
+	)
+
+	-- autocomplete: names
+	local sug = DevCore.complete("/sh", DevCommands, {})
+	check("dev complete: /sh offers /showboss first", sug[1] ~= nil and sug[1].Text == "/showboss ")
+	local all = DevCore.complete("", DevCommands, {}, 100)
+	check("dev complete: an empty bar lists every command", #all == #DevCommands.Commands)
+	local inner = DevCore.complete("/chunk", DevCommands, {})
+	check("dev complete: prefix matches", #inner == 3, tostring(#inner))
+
+	-- autocomplete: argument values, from a source (list or function) and literal options
+	local sources = {
+		WORLDS = { "ETHEREAL_SCAPE", "SKY_CITADEL", "VERDANT_VALLEY" },
+		CHUNKS = function()
+			return { "1", "2", "12" }
+		end,
+	}
+	local w = DevCore.complete("/roll s", DevCommands, sources)
+	check(
+		"dev complete: /roll s -> SKY_CITADEL, keeps the next argument open",
+		#w == 1 and w[1].Text == "/roll SKY_CITADEL "
+	)
+	local m = DevCore.complete("/roll SKY_CITADEL ", DevCommands, sources)
+	check(
+		"dev complete: second argument offers 'test'",
+		#m == 1 and m[1].Text == "/roll SKY_CITADEL test"
+	)
+	local c = DevCore.complete("/chunktp 1", DevCommands, sources)
+	check("dev complete: live sources are called", #c == 2)
+	local n = DevCore.complete("/enter ", DevCommands, sources)
+	check("dev complete: a number argument gives a hint, not a line", #n == 1 and n[1].Text == nil)
+
+	-- checking arguments before sending
+	local byName = DevCore.index(DevCommands)
+	check("dev check: missing required argument", DevCore.check(byName.roll, {}) ~= nil)
+	check("dev check: literal choice enforced", DevCore.check(byName.bossphase, { "3" }) ~= nil)
+	check(
+		"dev check: literal choice case-insensitive",
+		DevCore.check(byName.tint, { "OFF" }) == nil
+	)
+	check("dev check: numbers enforced", DevCore.check(byName.enter, { "abc" }) ~= nil)
+	check("dev check: optional arguments may be left off", DevCore.check(byName.enter, {}) == nil)
+	check("dev usage", DevCore.usage(byName.showboss) == "/showboss <boss> [height]")
+end
+
 -- === summary ========================================================
 print(
 	string.format(

@@ -33,6 +33,33 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 89 — 2026-09-27 — Developer panel + command registry
+**Merged:** see the PR for this branch   **Tests:** 902 passing (run locally)   **Branch:** `claude/dev-console`
+
+### Done
+- Owner: "an extensive developer testing/debugging menu (commands AND gui interface) … everything clickable …
+  auto complete … easily expandable and categorized." Guide: `docs/DEV_TOOLS.md`.
+- **One registry** (`Content/DevCommands.luau`): 39 commands in 9 categories, each with side, summary, typed
+  arguments and one-click presets. Chat registration, the panel and autocomplete all read it.
+- **`Core/DevCore.luau`** (pure, tested): parse, argument check, registry validation, autocomplete of names
+  and argument values from live sources (worlds, events, atmospheres, bosses, keys, ledgers, hub places, the
+  current map's chunks).
+- **`UI/DevPanel.luau`**: F4 / DEV button / `/panel`. Category tabs, a card per command with clickable pickers,
+  presets and Run, a command bar with an autocomplete dropdown (Tab/click, Up/Down, history), an output log,
+  a draggable window. Built only from UIKit/UITheme; added `UIKit.textbox` for every screen to use.
+- **New commands:** `/noclip`, `/seed`, `/chunks` (bounds + labels, red = blockout), `/chunklist`,
+  `/chunktp`, `/props`, `/clock`, `/stats`, `/assets`, `/panel`, `/clear` (client); `/god`, `/heal`,
+  `/respawn` (server). ChunkLoader now tags each chunk folder with `Index` and `Blockout`.
+- Gates unchanged: `AllowCommands`, then Studio or the creator on the server; the panel applies the same
+  check before it builds. Boot warns on any registry entry without a handler (and the reverse).
+- Roblox's default chat can't show argument suggestions (its input bar isn't scriptable), so chat
+  autocompletes names and the panel's bar does arguments.
+
+### Next
+1. Owner: pull, press Play, press F4. Walk each tab.
+
+---
+
 ## Session 88 — 2026-09-27 — Ethereal Scape: walk fixes (Sanctum, Skystair, more fights)
 **Merged:** see the PR for this branch   **Tests:** CI   **Branch:** `claude/es-walk-fixes`
 
