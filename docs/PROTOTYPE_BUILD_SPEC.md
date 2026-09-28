@@ -1202,9 +1202,13 @@ makes what a run pays depend on how it ended. Branch `agent/expedition-portal`.
 
    Loot is rolled **at boss defeat**, for each player present (existing `LootSystem` boss roll, §7.5), not at exit,
    so staying or leaving cannot change it.
-5. The party ready toggle and the host-starts-run flow belong to the **Fate engine rework**, not this branch. This
+5. **Both portals are authored Blender meshes** (owner, 2026-09-28), 10k to 25k triangles each, in the Fate Engine's
+   named-part contract (`assets/source/portals/`). "Rigged" means separate named parts that code spins, tints and
+   opens, the same as the Engine; the exit's iris `Blade1..8` slide outward to open. Until the owner imports the
+   FBXs to Studio, the `PortalRig` blockout is the fallback, so the game never has a missing portal.
+6. The party ready toggle and the host-starts-run flow belong to the **Fate engine rework**, not this branch. This
    branch only leaves the payout seam (`payoutFor`) and the entry seam (`ExpeditionSystem.requestEnter`) it plugs into.
-6. **The hub Expedition Gate (the Crossroads `GATE` zone) is removed.** Entry has been at the Fate Engine
+7. **The hub Expedition Gate (the Crossroads `GATE` zone) is removed.** Entry has been at the Fate Engine
    (`Expedition.EntryAtEngine`) since before this amendment; the `GateAnchor` *name* stays because `ExpeditionSystem`
    finds the entry prompt by it.
 
@@ -1247,7 +1251,8 @@ Fate engine's logic and UI: all unchanged and still excluded.
 
 1. Spec + index row (this section).
 2. `ExpeditionCore.payoutFor` + `GameConfig` values + tests (pure, no Roblox).
-3. `PortalRig` flush seating + opening sequence, with tests for the geometry.
+3. The two portal meshes: Blender generator, `.blend` and FBX, triangle budget check (done); owner imports to Studio.
+3b. Code: load the prefab with the `PortalRig` blockout as fallback, seat it flush, drive the opening sequence.
 4. Entrance portal: rename, flush, always open, routes through the payout.
 5. Exit portal: build closed, open on the boss event, gradual spawn, payout.
 6. Remove the hub `GATE` zone and its tests; keep `GateAnchor`.
