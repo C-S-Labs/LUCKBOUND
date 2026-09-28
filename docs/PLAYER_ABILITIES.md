@@ -111,10 +111,10 @@ edge, and a 0.12s buffer so a press just before landing fires on landing.
 
 | | Roll (a direction held) | Backstep (no direction) |
 |---|---|---|
-| Movement | 34 studs/s for 0.5s ≈ 17 studs, the held direction | 26 studs/s for 0.32s ≈ 8 studs, away from facing |
+| Movement | 31 studs/s for 0.65s ≈ 20 studs, the held direction (slowed and lengthened after the owner's walk) | 26 studs/s for 0.32s ≈ 8 studs, away from facing |
 | Cost | the profile's roll cost | 60% of it |
 | Recovery | 0.12s standstill after | same |
-| Invulnerable window | 0.04–0.34s in | 0.02–0.16s in |
+| Invulnerable window | 0.05–0.44s in | 0.02–0.16s in |
 
 - A roll is a commitment: no jump, sprint or second roll until it recovers.
 - A roll pressed in the last 0.2s is buffered, so chained rolls come out clean without

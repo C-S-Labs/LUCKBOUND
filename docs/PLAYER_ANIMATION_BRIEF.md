@@ -41,9 +41,9 @@ see**, so each one makes the game look better for everyone, not just you.
 
 | # | Slot(s) | Type | Length | What it must read as |
 |---|---|---|---|---|
-| 1 | `RollForward` | one-shot | any (stretched to 0.5s) | A committed shoulder roll: gather low, tuck, roll over one shoulder, come up already moving. Ends upright and balanced, ready to run |
-| 2 | `RollLeft`, `RollRight` | one-shot | any (stretched to 0.5s) | A sideways evasive roll or dive-roll. Keep the chest facing forward (the lock-on case); the body goes sideways. Mirror images of each other |
-| 3 | `RollBackward` | one-shot | any (stretched to 0.5s) | A backward roll that ends facing forward, not a backflip. Low and quick |
+| 1 | `RollForward` | one-shot | any (stretched to 0.65s) | A committed shoulder roll: gather low, tuck, roll over one shoulder, come up already moving. Ends upright and balanced, ready to run |
+| 2 | `RollLeft`, `RollRight` | one-shot | any (stretched to 0.65s) | A sideways evasive roll or dive-roll. Keep the chest facing forward (the lock-on case); the body goes sideways. Mirror images of each other |
+| 3 | `RollBackward` | one-shot | any (stretched to 0.65s) | A backward roll that ends facing forward, not a backflip. Low and quick |
 | 4 | `RunForward` | loop | ~0.7–0.8s cycle | The main on-foot gait in both profiles. Athletic, forward-driven, arms countering the legs. This is what players see most |
 | 5 | `RunLeft`, `RunRight`, `RunBackward` | loop | match `RunForward` | Side-step or crossover runs, and a backpedal. Chest forward, head level. **All four Run slots must be filled** before directional running switches on |
 | 6 | `Idle` | loop | 3–5s | Breathing, weight on one leg, a small look around. Alive, not restless |
@@ -92,8 +92,11 @@ syncs to `ReplicatedStorage.LuckboundAnimations`.
 - **To change one:** edit its key poses in the generator and re-run. The file header
   explains the axes.
 
-Done so far: `RollForward`, `RollBackward`, `RollLeft`, `RollRight` (the right is the
-left mirrored).
+Done so far (19 clips): the four rolls (slowed to 0.65s after the owner's walk);
+`RunForward/Backward/Left/Right` (directional running is now on); `Idle`, `Backstep`,
+`JumpStart`, `Rise`, `Fall`, `LandSoft`, `LandHard`; and the four `AirDash*`. Still to
+make: `Sprint`, the four `Walk*` and `TurnLeft/Right`. Until then, sprint uses the
+run and walking uses the stock walk.
 
 ## 4. The loop: author, try, keep
 

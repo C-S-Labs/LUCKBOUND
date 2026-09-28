@@ -412,8 +412,10 @@ function CharacterAnimator.onLand(fallSpeed: number, now: number): ()
 	if kind == "NONE" then
 		return
 	end
-	landKind, landedAt = kind, now
-	playOneShot(if kind == "HARD" then "LandHard" else "LandSoft")
+	-- A landing clip carries its own absorb; the procedural dip stands down
+	-- so the body does not drop twice.
+	local clip = playOneShot(if kind == "HARD" then "LandHard" else "LandSoft")
+	landKind, landedAt = if clip then "NONE" else kind, now
 	local r = rig
 	if r and r.Land then
 		r.Land.Volume = GameConfig.CharacterAnimation.LandVolume

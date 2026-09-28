@@ -34,6 +34,26 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 106 — 2026-09-28 — Longer roll; the second batch of generated clips
+**Merged:** see the PR for this branch   **Tests:** 1007 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- **Owner:** the rolls "look much better" but were a bit fast and short. The roll is now 0.65s at 31 studs/s
+  (~20 studs, was ~17); the i-frame window is 0.05–0.44s and the clips were regenerated at 0.65s.
+- **Generator:** loop support (periodic Catmull-Rom across the seam), `shift_phase` (second step = first
+  mirrored), `time_reversed`.
+- **15 new clips:** Run Forward/Backward/Left/Right (directional running now on), Idle, Backstep, JumpStart,
+  Rise, Fall, LandSoft, LandHard, AirDash x4. Checked in stick-figure previews.
+- The procedural landing dip stands down while a landing clip plays.
+
+### Next
+1. Owner: pull, restart `rojo serve`, and judge the new clips (run in all directions with Left Ctrl, jump and
+   land from height, air dash, idle).
+2. Remaining clips: Sprint, Walk x4, Turn L/R.
+3. Then open the PR; then the UI branch.
+
+---
+
 ## Session 105 — 2026-09-28 — Roll queueing; generated roll animations
 **Merged:** see the PR for this branch   **Tests:** 1007 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 

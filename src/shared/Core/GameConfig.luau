@@ -1118,11 +1118,13 @@ local GameConfig = {
 		-- quick backstep when no direction is held. The movement half only:
 		-- the invulnerable window is DECLARED here and read by the combat
 		-- layer when it opens (RESERVED, docs/RESERVED.md).
-		RollDurationSeconds = 0.5,
-		RollSpeed = 34, -- studs/s -> ~17 studs
+		-- Slower and further after the owner's walk with the first clips
+		-- (2026-09-28): a short, quick roll read as unrefined.
+		RollDurationSeconds = 0.65,
+		RollSpeed = 31, -- studs/s -> ~20 studs
 		RollRecoverySeconds = 0.12, -- after the roll, before the next action
-		RollInvulnerableFrom = 0.04, -- seconds into the roll
-		RollInvulnerableTo = 0.34,
+		RollInvulnerableFrom = 0.05, -- seconds into the roll
+		RollInvulnerableTo = 0.44,
 		BackstepDurationSeconds = 0.32,
 		BackstepSpeed = 26, -- ~8 studs
 		BackstepInvulnerableFrom = 0.02,

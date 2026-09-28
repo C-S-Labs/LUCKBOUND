@@ -195,8 +195,10 @@ def channel(key, part):
     return tuple(float(v) for v in out)
 
 
-def sample(keys, part, u):
-    """The part's six numbers at fraction u (0..1) of the clip."""
+def sample(keys, part, u, loop=False):
+    """The part's six numbers at fraction u (0..1) of the clip. A LOOP's
+    curve wraps round (its last key must equal its first), so the motion
+    flows through the seam instead of easing to a stop there."""
     times = [k["t"] for k in keys]
     if u <= times[0]:
         return channel(keys[0], part)
@@ -204,11 +206,30 @@ def sample(keys, part, u):
         return channel(keys[-1], part)
     i = max(j for j in range(len(times) - 1) if times[j] <= u)
     t = (u - times[i]) / (times[i + 1] - times[i])
-    p0 = channel(keys[max(i - 1, 0)], part)
-    p1 = channel(keys[i], part)
-    p2 = channel(keys[i + 1], part)
-    p3 = channel(keys[min(i + 2, len(keys) - 1)], part)
+    n = len(keys)
+    if loop:
+        # Neighbours across the seam: before key 0 is the second-to-last key
+        # (the last one duplicates key 0), after the last is key 1.
+        before = keys[i - 1] if i > 0 else keys[n - 2]
+        after = keys[i + 2] if i + 2 < n else keys[1]
+    else:
+        before = keys[max(i - 1, 0)]
+        after = keys[min(i + 2, n - 1)]
+    p0, p1, p2, p3 = channel(before, part), channel(keys[i], part), channel(keys[i + 1], part), channel(after, part)
     return tuple(catmull_rom(p0[c], p1[c], p2[c], p3[c], t) for c in range(6))
+
+
+def time_reversed(keys):
+    """The same keys played backward (a backpedal from a run)."""
+    return [{"t": round(1 - k["t"], 6), "pose": k["pose"]} for k in reversed(keys)]
+
+
+def shift_phase(keys_half, mirror_fn):
+    """A full cycle from its first half: the second half is the first half
+    mirrored (left and right swap), so a run's two steps match exactly."""
+    first = keys_half
+    second = [{"t": 0.5 + k["t"], "pose": mirror_fn([k])[0]["pose"]} for k in keys_half]
+    return first + second + [{"t": 1.0, "pose": keys_half[0]["pose"]}]
 
 
 def mirror(keys):
@@ -304,13 +325,223 @@ ROLL_LEFT = [
     {"t": 1.00, "pose": with_root(ready(-8), rz=360)},
 ]
 
+
+# === running =================================================================
+# One step is half the cycle; the other step is the same step mirrored, so the
+# two sides always match. Phase 0: left foot planted ahead, right leg driving
+# back, right arm forward. Phase 0.25: passing, the right knee coming through
+# high. The ground-contact solver plants the lowest foot, which gives the body
+# its bob for free.
+
+
+def run_step(lean=-12, stride=1.0, arms=1.0, knee_lift=1.0, twist=6):
+    s, a, k = stride, arms, knee_lift
+    contact = {
+        "UpperTorso": (lean, -twist * a, 0),
+        "Head": (-lean * 0.6, twist * a * 0.8, 0),
+        "LeftUpperLeg": (38 * s, 0, 0),
+        "LeftLowerLeg": (-12,),
+        "LeftFoot": (-10,),
+        "RightUpperLeg": (-28 * s, 0, 0),
+        "RightLowerLeg": (-45 * s,),
+        "RightFoot": (20,),
+        "RightUpperArm": (40 * a, 0, 8),
+        "RightLowerArm": (75,),
+        "LeftUpperArm": (-35 * a, 0, -8),
+        "LeftLowerArm": (55,),
+    }
+    passing = {
+        "UpperTorso": (lean - 2, 0, 0),
+        "Head": (-(lean - 2) * 0.6,),
+        "LeftUpperLeg": (4 * s, 0, 0),
+        "LeftLowerLeg": (-22,),
+        "RightUpperLeg": (58 * s * k, 0, 0),
+        "RightLowerLeg": (-105 * k,),
+        "RightFoot": (15,),
+        "RightUpperArm": (5 * a, 0, 8),
+        "RightLowerArm": (80,),
+        "LeftUpperArm": (0, 0, -8),
+        "LeftLowerArm": (70,),
+    }
+    return [{"t": 0.0, "pose": contact}, {"t": 0.25, "pose": passing}]
+
+
+RUN_FORWARD = shift_phase(run_step(), mirror)
+# The backpedal: a shorter, upright cycle played backward, weight kept over the
+# heels, arms low.
+RUN_BACKWARD = time_reversed(shift_phase(run_step(lean=6, stride=0.7, arms=0.5, knee_lift=0.7, twist=3), mirror))
+
+
+def strafe_step(lean_side=-9):
+    """Moving RIGHT while facing forward: a quick side-step. The right leg
+    reaches out, the left follows in; the body leans into the direction and
+    the hips turn a touch toward it. (+Z moves a right limb outward.)"""
+    apart = {
+        "LowerTorso": (0, -8, lean_side),
+        "UpperTorso": (-8, 6, -lean_side * 0.6),
+        "Head": (4, 2, -lean_side * 0.4),
+        "RightUpperLeg": (10, 0, 28),
+        "RightLowerLeg": (-18,),
+        "RightFoot": (0, 0, -12),
+        "LeftUpperLeg": (-6, 0, -16),
+        "LeftLowerLeg": (-30,),
+        "LeftFoot": (0, 0, 10),
+        "RightUpperArm": (20, 0, 22),
+        "RightLowerArm": (60,),
+        "LeftUpperArm": (15, 0, -14),
+        "LeftLowerArm": (65,),
+    }
+    together = {
+        "LowerTorso": (0, -8, lean_side),
+        "UpperTorso": (-8, 6, -lean_side * 0.6),
+        "Head": (4, 2, -lean_side * 0.4),
+        "RightUpperLeg": (30, 0, 4),
+        "RightLowerLeg": (-70,),
+        "LeftUpperLeg": (4, 0, 6),
+        "LeftLowerLeg": (-18,),
+        "RightUpperArm": (10, 0, 14),
+        "RightLowerArm": (65,),
+        "LeftUpperArm": (22, 0, -10),
+        "LeftLowerArm": (60,),
+    }
+    return [
+        {"t": 0.0, "pose": apart},
+        {"t": 0.5, "pose": together},
+        {"t": 1.0, "pose": apart},
+    ]
+
+
+RUN_RIGHT = strafe_step()
+RUN_LEFT = mirror(RUN_RIGHT)
+
+# === standing ================================================================
+
+IDLE = [
+    {
+        "t": 0.0,
+        "pose": {
+            "LowerTorso": (0, 0, 1.5),
+            "UpperTorso": (-3, 2, -1.5),
+            "Head": (2, -3, 0),
+            "LeftUpperArm": (4, 0, -6),
+            "RightUpperArm": (6, 0, 6),
+            "LeftLowerArm": (14,),
+            "RightLowerArm": (12,),
+            "LeftUpperLeg": (4, 0, -3),
+            "RightUpperLeg": (-2, 0, 5),
+            "LeftLowerLeg": (-8,),
+        },
+    },
+    {
+        "t": 0.5,
+        "pose": {
+            "LowerTorso": (0, 0, -1),
+            "UpperTorso": (-1, -2, 1),
+            "Head": (-1, 6, 0),
+            "LeftUpperArm": (6, 0, -5),
+            "RightUpperArm": (4, 0, 7),
+            "LeftLowerArm": (10,),
+            "RightLowerArm": (16,),
+            "LeftUpperLeg": (1, 0, -3),
+            "RightUpperLeg": (2, 0, 4),
+            "RightLowerLeg": (-6,),
+        },
+    },
+]
+IDLE.append({"t": 1.0, "pose": IDLE[0]["pose"]})
+
+# The backstep: dip, push off, land a step back with the guard up, facing
+# forward throughout.
+_GUARD = {"LeftUpperArm": (45, 0, -12), "RightUpperArm": (55, 0, 12), "LeftLowerArm": (95,), "RightLowerArm": (100,)}
+BACKSTEP = [
+    {"t": 0.0, "pose": ready(-4)},
+    {"t": 0.25, "pose": {**_GUARD, "UpperTorso": (-12,), "LeftUpperLeg": (35,), "RightUpperLeg": (25,), "LeftLowerLeg": (-60,), "RightLowerLeg": (-55,)}},
+    {"t": 0.55, "pose": {**_GUARD, "UpperTorso": (8,), "Head": (-6,), "LeftUpperLeg": (25,), "RightUpperLeg": (-20,), "LeftLowerLeg": (-20,), "RightLowerLeg": (-35,)}},
+    {"t": 0.8, "pose": {**_GUARD, "UpperTorso": (-6,), "LeftUpperLeg": (30,), "RightUpperLeg": (15,), "LeftLowerLeg": (-50,), "RightLowerLeg": (-45,)}},
+    {"t": 1.0, "pose": ready(-6)},
+]
+
+# === in the air ==============================================================
+
+JUMP_START = [
+    {"t": 0.0, "pose": ready(-4)},
+    {"t": 0.35, "pose": {"UpperTorso": (-18,), "LeftUpperLeg": (38,), "RightUpperLeg": (32,), "LeftLowerLeg": (-65,), "RightLowerLeg": (-60,), "LeftUpperArm": (-35, 0, -8), "RightUpperArm": (-35, 0, 8), "LeftLowerArm": (20,), "RightLowerArm": (20,)}},
+    {"t": 1.0, "pose": {"UpperTorso": (-4,), "LeftUpperLeg": (-4,), "RightUpperLeg": (12,), "LeftLowerLeg": (-8,), "RightLowerLeg": (-30,), "LeftUpperArm": (70, 0, -14), "RightUpperArm": (60, 0, 14), "LeftLowerArm": (30,), "RightLowerArm": (35,)}},
+]
+
+_RISE = {"UpperTorso": (-4,), "LeftUpperLeg": (30,), "LeftLowerLeg": (-60,), "RightUpperLeg": (8,), "RightLowerLeg": (-25,), "LeftUpperArm": (55, 0, -20), "RightUpperArm": (45, 0, 22), "LeftLowerArm": (35,), "RightLowerArm": (40,)}
+RISE = [
+    {"t": 0.0, "pose": _RISE},
+    {"t": 0.5, "pose": {**_RISE, "LeftUpperLeg": (34,), "RightUpperLeg": (12,), "LeftUpperArm": (60, 0, -24), "RightUpperArm": (50, 0, 26)}},
+    {"t": 1.0, "pose": _RISE},
+]
+
+_FALL = {"UpperTorso": (-6,), "Head": (-8,), "LeftUpperLeg": (14, 0, -8), "LeftLowerLeg": (-22,), "RightUpperLeg": (-6, 0, 10), "RightLowerLeg": (-35,), "LeftUpperArm": (25, 0, -62), "RightUpperArm": (15, 0, 68), "LeftLowerArm": (25,), "RightLowerArm": (20,)}
+FALL = [
+    {"t": 0.0, "pose": _FALL},
+    {"t": 0.5, "pose": {**_FALL, "LeftUpperArm": (15, 0, -70), "RightUpperArm": (25, 0, 60), "LeftUpperLeg": (6, 0, -8), "RightUpperLeg": (2, 0, 10)}},
+    {"t": 1.0, "pose": _FALL},
+]
+
+# Landings plant the feet (grounded) and let the knees take the weight. The
+# controller's own landing dip stands down while a landing clip plays.
+LAND_SOFT = [
+    {"t": 0.0, "pose": {"UpperTorso": (-6,), "LeftUpperLeg": (10,), "RightUpperLeg": (6,), "LeftLowerLeg": (-12,), "RightLowerLeg": (-10,), "LeftUpperArm": (25, 0, -20), "RightUpperArm": (20, 0, 22)}},
+    {"t": 0.35, "pose": {"UpperTorso": (-20,), "Head": (8,), "LeftUpperLeg": (42,), "RightUpperLeg": (36,), "LeftLowerLeg": (-72,), "RightLowerLeg": (-66,), "LeftUpperArm": (30, 0, -18), "RightUpperArm": (28, 0, 18), "LeftLowerArm": (35,), "RightLowerArm": (35,)}},
+    {"t": 1.0, "pose": ready(-6)},
+]
+LAND_HARD = [
+    {"t": 0.0, "pose": {"UpperTorso": (-8,), "LeftUpperLeg": (14,), "RightUpperLeg": (8,), "LeftLowerLeg": (-16,), "RightLowerLeg": (-12,), "LeftUpperArm": (30, 0, -30), "RightUpperArm": (30, 0, 30)}},
+    {"t": 0.3, "pose": {"UpperTorso": (-42,), "Head": (22,), "LeftUpperLeg": (95,), "RightUpperLeg": (70, 0, 10), "LeftLowerLeg": (-125,), "RightLowerLeg": (-110,), "RightUpperArm": (70, 0, 18), "RightLowerArm": (15,), "LeftUpperArm": (20, 0, -35), "LeftLowerArm": (40,)}},
+    {"t": 0.6, "pose": {"UpperTorso": (-30,), "Head": (14,), "LeftUpperLeg": (70,), "RightUpperLeg": (50, 0, 6), "LeftLowerLeg": (-100,), "RightLowerLeg": (-85,), "RightUpperArm": (40, 0, 16), "RightLowerArm": (35,), "LeftUpperArm": (15, 0, -25), "LeftLowerArm": (40,)}},
+    {"t": 1.0, "pose": ready(-8)},
+]
+
+# The air dash: the body snaps into a streamlined lean toward the dash, limbs
+# trailing, then opens back up to fall. Forward and backward here; the sides
+# from the forward dash turned onto the side and its mirror.
+AIRDASH_FORWARD = [
+    {"t": 0.0, "pose": _FALL},
+    {"t": 0.3, "pose": {"LowerTorso": (-38,), "UpperTorso": (-10,), "Head": (30,), "LeftUpperLeg": (-15,), "RightUpperLeg": (-25,), "LeftLowerLeg": (-35,), "RightLowerLeg": (-50,), "LeftUpperArm": (-45, 0, -20), "RightUpperArm": (-45, 0, 20), "LeftLowerArm": (10,), "RightLowerArm": (10,)}},
+    {"t": 0.7, "pose": {"LowerTorso": (-30,), "UpperTorso": (-8,), "Head": (26,), "LeftUpperLeg": (-10,), "RightUpperLeg": (-22,), "LeftLowerLeg": (-40,), "RightLowerLeg": (-55,), "LeftUpperArm": (-40, 0, -24), "RightUpperArm": (-40, 0, 24), "LeftLowerArm": (15,), "RightLowerArm": (15,)}},
+    {"t": 1.0, "pose": _FALL},
+]
+AIRDASH_BACKWARD = [
+    {"t": 0.0, "pose": _FALL},
+    {"t": 0.3, "pose": {"LowerTorso": (24,), "UpperTorso": (-12,), "Head": (-10,), "LeftUpperLeg": (45,), "RightUpperLeg": (35,), "LeftLowerLeg": (-40,), "RightLowerLeg": (-30,), "LeftUpperArm": (55, 0, -15), "RightUpperArm": (55, 0, 15), "LeftLowerArm": (50,), "RightLowerArm": (50,)}},
+    {"t": 0.7, "pose": {"LowerTorso": (20,), "UpperTorso": (-10,), "Head": (-8,), "LeftUpperLeg": (40,), "RightUpperLeg": (30,), "LeftLowerLeg": (-45,), "RightLowerLeg": (-35,), "LeftUpperArm": (50, 0, -20), "RightUpperArm": (50, 0, 20), "LeftLowerArm": (55,), "RightLowerArm": (55,)}},
+    {"t": 1.0, "pose": _FALL},
+]
+AIRDASH_LEFT = [
+    {"t": 0.0, "pose": _FALL},
+    {"t": 0.3, "pose": {"LowerTorso": (0, 0, 34), "UpperTorso": (-6, 0, 6), "Head": (0, 0, -18), "LeftUpperLeg": (0, 0, 8), "RightUpperLeg": (0, 0, 22), "LeftLowerLeg": (-25,), "RightLowerLeg": (-45,), "LeftUpperArm": (10, 0, -35), "RightUpperArm": (10, 0, 75), "LeftLowerArm": (30,), "RightLowerArm": (10,)}},
+    {"t": 0.7, "pose": {"LowerTorso": (0, 0, 28), "UpperTorso": (-6, 0, 5), "Head": (0, 0, -15), "LeftUpperLeg": (0, 0, 6), "RightUpperLeg": (0, 0, 20), "LeftLowerLeg": (-28,), "RightLowerLeg": (-48,), "LeftUpperArm": (10, 0, -40), "RightUpperArm": (10, 0, 70), "LeftLowerArm": (30,), "RightLowerArm": (15,)}},
+    {"t": 1.0, "pose": _FALL},
+]
+
 CLIPS = {
     # "grounded": the ground-contact solver sets the root height every frame,
     # so the keys' own root heights are only hints.
-    "RollForward": {"keys": ROLL_FORWARD, "length": 0.5, "loop": False, "grounded": True},
-    "RollBackward": {"keys": ROLL_BACKWARD, "length": 0.5, "loop": False, "grounded": True},
-    "RollLeft": {"keys": ROLL_LEFT, "length": 0.5, "loop": False, "grounded": True},
-    "RollRight": {"keys": mirror(ROLL_LEFT), "length": 0.5, "loop": False, "grounded": True},
+    "RollForward": {"keys": ROLL_FORWARD, "length": 0.65, "loop": False, "grounded": True},
+    "RollBackward": {"keys": ROLL_BACKWARD, "length": 0.65, "loop": False, "grounded": True},
+    "RollLeft": {"keys": ROLL_LEFT, "length": 0.65, "loop": False, "grounded": True},
+    "RollRight": {"keys": mirror(ROLL_LEFT), "length": 0.65, "loop": False, "grounded": True},
+    # Run cycles: authored at GameConfig.CharacterAnimation.RunClipSpeed.
+    "RunForward": {"keys": RUN_FORWARD, "length": 0.6, "loop": True, "grounded": True},
+    "RunBackward": {"keys": RUN_BACKWARD, "length": 0.62, "loop": True, "grounded": True},
+    "RunRight": {"keys": RUN_RIGHT, "length": 0.42, "loop": True, "grounded": True},
+    "RunLeft": {"keys": RUN_LEFT, "length": 0.42, "loop": True, "grounded": True},
+    "Idle": {"keys": IDLE, "length": 4.0, "loop": True, "grounded": True},
+    "Backstep": {"keys": BACKSTEP, "length": 0.32, "loop": False, "grounded": True},
+    "JumpStart": {"keys": JUMP_START, "length": 0.2, "loop": False},
+    "Rise": {"keys": RISE, "length": 0.8, "loop": True},
+    "Fall": {"keys": FALL, "length": 0.9, "loop": True},
+    "LandSoft": {"keys": LAND_SOFT, "length": 0.24, "loop": False, "grounded": True},
+    "LandHard": {"keys": LAND_HARD, "length": 0.5, "loop": False, "grounded": True},
+    "AirDashForward": {"keys": AIRDASH_FORWARD, "length": 0.2, "loop": False},
+    "AirDashBackward": {"keys": AIRDASH_BACKWARD, "length": 0.2, "loop": False},
+    "AirDashLeft": {"keys": AIRDASH_LEFT, "length": 0.2, "loop": False},
+    "AirDashRight": {"keys": mirror(AIRDASH_LEFT), "length": 0.2, "loop": False},
 }
 
 
@@ -359,7 +590,7 @@ def build(name, clip):
     body = []
     for f in range(frames):
         u = f / (frames - 1)
-        values = {p: sample(clip["keys"], p, u) for p in PARTS}
+        values = {p: sample(clip["keys"], p, u, clip["loop"]) for p in PARTS}
         if clip.get("grounded"):
             values = ground(values)
         time = u * clip["length"]
@@ -397,13 +628,15 @@ def check(name, clip):
         for part in key["pose"]:
             if part not in PARTS:
                 errors.append(f"unknown part {part}")
+    if clip["loop"] and keys[0]["pose"] != keys[-1]["pose"]:
+        errors.append("a loop's last key must equal its first")
     start, end = sample(keys, "LowerTorso", 0), sample(keys, "LowerTorso", 1)
     for c in range(3):
         if abs(((end[c] - start[c]) + 180) % 360 - 180) > 1e-6:
             errors.append("the root must end upright (a whole number of turns)")
             break
     for c in range(3, 6):
-        if abs(end[c] - start[c]) > 1e-6:
+        if not clip.get("grounded") and abs(end[c] - start[c]) > 1e-6:
             errors.append("the root must end where it began (no drift)")
             break
     return [f"{name}: {e}" for e in errors]
