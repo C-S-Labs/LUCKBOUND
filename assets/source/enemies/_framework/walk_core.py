@@ -8,6 +8,8 @@
 # Usage from an action file (<world>/anims/<enemy_id>/Walk.py):
 #   exec(open(FW + r"\walk_core.py").read())
 #   build_walk_humanoid()                       # defaults suit a normal humanoid stride
+#   build_walk_humanoid(role="boss", post=fn)   # post(t) runs after each solved frame: e.g. a boss re-solves its
+#                                               # weapon arm so it CARRIES the weapon instead of swinging it
 #
 # Convention (matches every enemy body script in this repo): character faces -Y, +Z is up, +X is the character's
 # left. A walk cycle is built IN PLACE (feet cycle fore/aft under a stationary pelvis) -- Studio's own movement
@@ -18,11 +20,11 @@ from mathutils import Vector, Matrix
 def _ik2(ua, la, W, knee_dir=None):
     """Generic analytic 2-bone solve: place bone `ua` (upper segment) so bone `la` (lower segment)'s TAIL lands on
        world W, hinge flexing toward knee_dir (world). `ua` is oriented via a law-of-cosines elbow-plane solve (the
-       same one arm_to() uses); `la` is then set with a PURE local hinge rotation (rot()), so its sign always
-       matches that bone's own HINGE_RANGE by construction, whatever body/leg-count it's used for."""
+       same one arm_to() uses) without twisting it about its own axis; `la` is then set as a PURE hinge about the
+       upper bone's local X, so the tail lands exactly on W whatever body/leg-count it's used for."""
     L1 = rig.data.bones[ua].length; L2 = rig.data.bones[la].length
     _upd(); S = RW @ P[ua].head; W = Vector(W)
-    d = W - S; dist = min(max(d.length, abs(L1 - L2) + 1e-3), L1 + L2 - 1e-4)
+    d = W - S; dist = min(max(d.length, abs(L1 - L2) + 1e-3), (L1 + L2)*0.995)   # never locked straight / hyperextended
     u = d.normalized(); W = S + u*dist
     e = Vector(knee_dir if knee_dir is not None else (0.0, -1.0, 0.2)).normalized()
     v = e - u*e.dot(u)
@@ -36,9 +38,16 @@ def _ik2(ua, la, W, knee_dir=None):
         M = Matrix((x, y, z)).transposed()
         M4 = (Ri @ M).to_4x4(); M4.translation = RW.inverted() @ head
         return M4
-    P[ua].matrix = frame(S, E, v); _upd()
-    interior = math.acos(max(-1.0, min(1.0, (L1*L1 + L2*L2 - dist*dist) / (2*L1*L2))))
-    rot(la, x=math.pi - interior, add=False)
+    # Frame the upper bone with its local Z on whichever side of the bend plane its CURRENT Z already is, so the
+    # solve never twists the thigh 180 deg about its own axis (anything weighted to it -- robes, tassets -- would
+    # flip to the far side). Then place the lower bone explicitly onto W about the SAME local X axis: a pure hinge
+    # that always lands on the target, whichever way this body's rest rolls point (same approach as arm_to()).
+    zc = RW.to_3x3() @ P[ua].matrix.to_3x3().col[2]
+    P[ua].matrix = frame(S, E, v if v.dot(zc) >= 0 else -v); _upd()
+    x2 = (RW.to_3x3() @ P[ua].matrix.to_3x3().col[0]).normalized(); y2 = (W - E).normalized()
+    z2 = x2.cross(y2).normalized(); x2 = y2.cross(z2)
+    M2 = (Ri @ Matrix((x2, y2, z2)).transposed()).to_4x4(); M2.translation = RW.inverted() @ E
+    P[la].matrix = M2
     _upd()
     return E
 
@@ -98,15 +107,17 @@ def _resolve_gait(role, overrides):
     return dict(stride=g.pop("stride_frac")*L, lift=g.pop("lift_frac")*L,
                 hip_twist=g["hip_twist"], torso_twist=g["torso_twist"], arm_swing=g["arm_swing"]), g.get("cadence", 1.0)
 
-def build_walk_humanoid(name="Walk", length=32, fps=30, role=None, **overrides):
+def build_walk_humanoid(name="Walk", length=32, fps=30, role=None, post=None, **overrides):
     """Builds and keys a full looping walk cycle, scaled to THIS rig's own leg length and the enemy's role (see
-       ROLE_GAIT) -- a boss and a basic both walk naturally with zero per-enemy tuning unless you want to override."""
+       ROLE_GAIT) -- a boss and a basic both walk naturally with zero per-enemy tuning unless you want to override.
+       post(t), optional: called after each frame's walk pose (same phase t) to override the upper body, e.g. hold a
+       weapon; the legs stay solved by the walk."""
     params, cadence = _resolve_gait(role, overrides)
     length = max(8, round(length / cadence))
     begin(name, length=length, loop=True, fps=fps)
     for f in range(1, length + 1):
         t = (f - 1) / length
-        key(f, lambda t=t: walk_pose_humanoid(t, **params))
+        key(f, lambda t=t: (walk_pose_humanoid(t, **params), post(t) if post else None))
     mark("Footstep", 1); mark("Footstep", length // 2 + 1)
     ok = end()
     print(f"WALK {name}: hinge check -> {hinge_errors() if 'hinge_errors' in globals() else 'n/a'}")
@@ -175,9 +186,10 @@ def build_walk_quadruped(name="Walk", length=24, fps=30, gait="trot", role=None,
     print(f"WALK {name} (quadruped/{gait}): hinge check -> {hinge_errors() if 'hinge_errors' in globals() else 'n/a'}")
     return ok
 
-def build_strafe_humanoid(name="Strafe", length=24, fps=30, side_dir=1, role=None, **overrides):
+def build_strafe_humanoid(name="Strafe", length=24, fps=30, side_dir=1, role=None, post=None, **overrides):
     """Looping side-step cycle for circling/spacing behaviour. side_dir=+1 (circle left) or -1 (circle right) --
-       export both as separate Studio animations (StrafeLeft/StrafeRight) and blend by input direction."""
+       export both as separate Studio animations (StrafeLeft/StrafeRight) and blend by input direction.
+       post(t): as build_walk_humanoid (e.g. keep the weapon held while circling)."""
     g = dict(ROLE_GAIT.get(role or "default", ROLE_GAIT["default"]))
     g.update(overrides)
     L = _leg_len()
@@ -185,7 +197,7 @@ def build_strafe_humanoid(name="Strafe", length=24, fps=30, side_dir=1, role=Non
     begin(name, length=length, loop=True, fps=fps)
     for f in range(1, length + 1):
         t = (f - 1) / length
-        key(f, lambda t=t: strafe_pose_humanoid(t, side_dir=side_dir, **params))
+        key(f, lambda t=t: (strafe_pose_humanoid(t, side_dir=side_dir, **params), post(t) if post else None))
     mark("Footstep", 1); mark("Footstep", length // 2 + 1)
     ok = end()
     print(f"STRAFE {name}: hinge check -> {hinge_errors() if 'hinge_errors' in globals() else 'n/a'}")

@@ -33,6 +33,52 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 95 — 2026-09-28 — The Ascendant (Ethereal Scape boss): body, Sanctum Staff, moveset, first actions
+**Merged:** see the PR for `CloudTesting`   **Tests:** no `src/` changes (Blender assets only)   **Branch:** `CloudTesting`
+
+### Done
+- **Body** `ethereal_scape/the_ascendant.py`: ~3.5 m boss in the ES language (gold slit mask, crystal extremities,
+  teal/mint ribbons, no halo). The robe is a front-slit two-panel robe, each panel rigged waist→own thigh.
+  - The P2 cuirass is a `Breakaway` piece.
+  - Pieces are named for the humanoid clip scan.
+  - Validate PASS, ~18.5k tris, nothing floating.
+- **Weapon** `the_ascendant_staff.py` (manifest `extras`): the **Sanctum Staff**, weapon type **Staff** (owner: the
+  boss weapon must fit an existing `WEAPONS.md` class so it can drop). Crescent crystal head, portal-eye core.
+- **Moveset** `ASCENDANT_MOVESET.md`: sweeps and portal steps (the Sentinel's opposite), P1/transition/P2, fairness
+  rules, VFX plan.
+- **Actions** `anims/the_ascendant/`:
+  - `Idle_Guard` (clean).
+  - `P1_CrescentReap`: Tell 3, HitStart 17, HitEnd 22, RecoverStart 23, 60 f, so a 14 f tell and a 37 f recovery;
+    `anim_core` OK.
+  - `Walk` (boss gait), `StrafeLeft`, `StrafeRight`.
+  - The shared helper is `_asc_pose.py`.
+- **Framework fixes** (`_framework/walk_core.py`):
+  - `_ik2` twisted the thigh 180° and folded the shin toward the knee side, so the ankle missed its target by up to
+    0.8 m and anything weighted to the thigh flipped. It now keeps the bone's twist, places the shin as a pure
+    hinge on the target, and caps reach at 99.5% (no hyperextension).
+  - New optional `post=` hook on the walk/strafe builders (carry a weapon while walking).
+- The owner rejected the upward "mohawk" crown; it is now temple horns + a shard cascade down the back of the skull.
+
+### Decisions made
+- Boss weapons are one of the `WEAPONS.md` types. The Ascendant's is a Staff.
+- Built in a cloud container with pip `bpy` 5.0.1 (the repo targets 5.2). A scratch launcher maps the scripts' `\`
+  paths; the repo scripts are unchanged Windows-style.
+
+### Stopped at
+Body, moveset doc and the five actions are built and exported.
+
+Known leftovers:
+- Small staff clip at the Reap's f19 (22 tris).
+- Left wrist 50–80° on the Reap's return to guard.
+- The carried staff in Walk/Strafe grazed the robe; a wider carry was the last change, **re-check it**.
+
+### Next
+1. Owner: review renders (`ethereal_scape/renders/the_ascendant_*`), import `TheAscendant.fbx` + actions in Studio.
+2. Re-export the Temple Acolyte / Meadow Stag Walk & Strafe with the fixed `_ik2` (their FBXs used the old solver).
+3. Remaining Ascendant actions per `ASCENDANT_MOVESET.md`; the player-drop staff export (`wpn_es_staff_legendary_a`).
+
+---
+
 ## Session 94 — 2026-09-27 — Dev panel grip: visible, and correct under Interface size
 **Merged:** see the PR for this branch   **Tests:** CI   **Branch:** `claude/devpanel-grip`
 

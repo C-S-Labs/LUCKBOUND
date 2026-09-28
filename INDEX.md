@@ -136,6 +136,13 @@ Blender: `"C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe" -b
   - `ROSTER.md` is the roster.
   - `WS_MOVESET.md` is the Winged Sentinel moveset.
   - `ws_*.py` are the Winged Sentinel's pose, animation and lance scripts.
+- Ethereal Scape roster: `assets/source/enemies/ethereal_scape/`.
+  - `ROSTER.md` is the roster (with its design language).
+  - The boss is `the_ascendant.py` + `the_ascendant_staff.py` (a Staff-class weapon), and `ASCENDANT_MOVESET.md`
+    is its moveset.
+  - Actions are in `anims/<id>/`; `_`-prefixed files there are shared helpers.
+- Locomotion: `_framework/walk_core.py` (`build_walk_humanoid` / `build_strafe_humanoid`, `ROLE_GAIT`, `post=`
+  weapon-carry hook).
 - Budgets: basic 10–12.5k tris, miniboss ≤35k, epic boss ~75k, legendary ~100k, and every mesh under 10k.
 - Exports go to `assets/export/enemies/sky_citadel/`.
 

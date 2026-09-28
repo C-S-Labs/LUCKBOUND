@@ -18,5 +18,6 @@ ENEMIES = {
     "reliquary_keeper":  {"script": "reliquary_keeper.py",  "tier": "miniboss", "body": "humanoid", "role": "miniboss"},    # NOT BUILT YET
     "gatewarden":        {"script": "gatewarden.py",        "tier": "miniboss", "body": "humanoid", "role": "miniboss"},    # NOT BUILT YET
     # ---- boss (1) ----
-    "the_ascendant":     {"script": "the_ascendant.py",     "tier": "boss", "body": "humanoid", "role": "boss"},            # NOT BUILT YET
+    "the_ascendant":     {"script": "the_ascendant.py",     "tier": "boss", "body": "humanoid", "role": "boss",
+                          "extras": ["the_ascendant_staff.py"], "moveset": "ASCENDANT_MOVESET.md"},
 }
