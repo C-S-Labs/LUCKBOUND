@@ -869,6 +869,8 @@ local GameConfig = {
 		FadeAfterSeconds = 8,
 		FadedTransparency = 0.75,
 		MaxLength = 200,
+		-- The top-bar button that shows and hides the window.
+		ToggleGlyph = "💬",
 	},
 
 	-- === THE HUB MENU =================================================

@@ -41,6 +41,9 @@ delete an older entry; if something turned out wrong, say so in a newer one.
   space between PLAYER and the divider. So: the chat is anchored top-left. `GameConfig.HubMenu.RailOffsetY` (90)
   lowers the rail, arrow and panel. New `HubMenu.collapse()` is fired by `ChatPanel.onOpened`. The leaderboard
   header grows from 34 to 40px, so the headings no longer touch the divider.
+- Owner: "toggles the chat window by clicking on the default roblox chat icon". Roblox hides that icon when the
+  default window is disabled and exposes no click event, so a house-style chat button now sits in the top bar
+  (GuiService.TopbarInset) and toggles the panel. Showing the chat also collapses the rail.
 
 ### Stopped at
 Not walked in Studio. Check that the rail clears the chat on small or phone screens, and tune RailOffsetY if not.

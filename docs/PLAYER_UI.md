@@ -225,7 +225,10 @@ and name only, as the owner asked on 2026-09-27.
 
 **Chat** (`client/UI/ChatPanel.luau`) sits **top-left**, under Roblox's top bar, and **/** focuses it. Opening it
 collapses the hub rail (`HubMenu.collapse`, wired in `init.client.luau`). The rail sits `GameConfig.HubMenu.RailOffsetY`
-px below centre so the two do not overlap. It hides TextChatService's default
+px below centre so the two do not overlap. A **chat button in the top bar** (right after Roblox's own buttons,
+placed from `GuiService.TopbarInset`) shows and hides the window, and **/** reopens a hidden window. It is our
+button rather than Roblox's chat icon: Roblox removes that icon once the default window is off, and exposes no
+click hook for it. It hides TextChatService's default
 window and input bar, but messages still go through TextChatService (`RBXGeneral:SendAsync` and `MessageReceived`),
 so filtering, mutes and bubble chat are unchanged. Your name shows in gold, other players' names in secondary text,
 and system lines in AccentCool. After `Chat.FadeAfterSeconds` without activity the panel dims. A place still on

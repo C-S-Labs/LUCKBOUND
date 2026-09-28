@@ -6,6 +6,7 @@
 -- default window: this module only takes over when it can do so safely.
 
 local Players = game:GetService("Players")
+local GuiService = game:GetService("GuiService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TextChatService = game:GetService("TextChatService")
 local UserInputService = game:GetService("UserInputService")
@@ -26,6 +27,8 @@ local log: ScrollingFrame
 local box: TextBox
 local count = 0
 local openedListeners: { () -> () } = {}
+local toggleButton: TextButton
+local shown = true
 local lastActivity = 0
 
 local function hex(color: Color3): string
@@ -128,6 +131,87 @@ local function send()
 	end
 end
 
+local function notifyOpened()
+	for _, listener in openedListeners do
+		task.spawn(listener)
+	end
+end
+
+--- Shows or hides the whole window. Hidden chat still receives messages, so
+--- reopening it shows what was said meanwhile.
+local function setShown(value: boolean)
+	shown = value
+	panel.Visible = value
+	UIKit.tween(toggleButton, UITheme.Motion.Quick, {
+		TextTransparency = if value then 0 else 0.45,
+	})
+	if value then
+		wake()
+		notifyOpened()
+	else
+		box:ReleaseFocus()
+	end
+end
+
+--- OUR OWN CHAT BUTTON IN ROBLOX'S TOP BAR. Roblox removes its chat icon
+--- once the default window is disabled, and offers no hook for clicks on it,
+--- so the toggle is a button of ours placed in the free space that
+--- GuiService.TopbarInset reports, right after Roblox's own buttons.
+local function buildToggle()
+	local gui = Instance.new("ScreenGui")
+	gui.Name = "LuckboundChatToggle"
+	gui.ResetOnSpawn = false
+	gui.IgnoreGuiInset = true
+	gui.ScreenInsets = Enum.ScreenInsets.None
+	gui.DisplayOrder = 3
+	gui.Parent = player:WaitForChild("PlayerGui")
+
+	toggleButton = Instance.new("TextButton")
+	toggleButton.Name = "ChatToggle"
+	toggleButton.AutoButtonColor = false
+	toggleButton.BorderSizePixel = 0
+	toggleButton.BackgroundColor3 = UITheme.PanelColor
+	toggleButton.BackgroundTransparency = UITheme.PanelTransparency
+	toggleButton.Font = UITheme.LabelFont
+	toggleButton.Text = CONFIG.ToggleGlyph
+	toggleButton.TextColor3 = UITheme.AccentGold
+	toggleButton.TextScaled = true
+	toggleButton.Parent = gui
+	UITheme.corner(toggleButton, UDim.new(1, 0))
+	local stroke = UITheme.stroke(toggleButton)
+	stroke.Transparency = UITheme.StrokeTransparency
+	UITheme.pad(toggleButton, UITheme.Space.XS)
+
+	local function place()
+		local inset = GuiService.TopbarInset
+		local size = math.max(inset.Height - UITheme.Space.SM, 1)
+		toggleButton.Size = UDim2.fromOffset(size, size)
+		toggleButton.Position = UDim2.fromOffset(
+			inset.Min.X + UITheme.Space.XS,
+			inset.Min.Y + (inset.Height - size) / 2
+		)
+	end
+	place()
+	GuiService:GetPropertyChangedSignal("TopbarInset"):Connect(place)
+
+	toggleButton.MouseEnter:Connect(function()
+		UIKit.tween(toggleButton, UITheme.Motion.Instant, {
+			BackgroundColor3 = UITheme.PanelColor:Lerp(UITheme.AccentGold, 0.16),
+		})
+	end)
+	toggleButton.MouseLeave:Connect(function()
+		UIKit.tween(
+			toggleButton,
+			UITheme.Motion.Quick,
+			{ BackgroundColor3 = UITheme.PanelColor },
+			true
+		)
+	end)
+	toggleButton.Activated:Connect(function()
+		setShown(not shown)
+	end)
+end
+
 local function build()
 	local gui = Instance.new("ScreenGui")
 	gui.Name = "LuckboundChat"
@@ -171,9 +255,7 @@ local function build()
 	end)
 	box.Focused:Connect(function()
 		wake()
-		for _, listener in openedListeners do
-			task.spawn(listener)
-		end
+		notifyOpened()
 	end)
 	box.FocusLost:Connect(function(enterPressed)
 		if enterPressed then
@@ -204,12 +286,16 @@ function ChatPanel.init(): ()
 	end
 
 	build()
+	buildToggle()
 	TextChatService.MessageReceived:Connect(onMessage)
 
 	local focusKey = (Enum.KeyCode :: any)[CONFIG.FocusKey]
 	UserInputService.InputBegan:Connect(function(input, processed)
 		if not processed and input.KeyCode == focusKey then
 			-- Deferred, or the "/" that opened the box lands inside it.
+			if not shown then
+				setShown(true)
+			end
 			task.defer(function()
 				box:CaptureFocus()
 			end)
