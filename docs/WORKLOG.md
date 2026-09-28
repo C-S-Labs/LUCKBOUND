@@ -34,6 +34,32 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 105 — 2026-09-28 — Roll queueing; generated roll animations
+**Merged:** see the PR for this branch   **Tests:** 1007 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- **Owner:** spamming Q sometimes skipped the animation. Now any press during a roll is **queued** (one at most)
+  and plays after the current roll fully finishes. Being off the floor for under `AirDashMinAirSeconds` (0.12s,
+  a bump mid-roll) makes a roll wait for the feet instead of turning into an air dash. 2 tests.
+- **Animations, owner's go-ahead: Claude authors them.** New `tools/gen_player_anims.py` builds KeyframeSequences
+  from key poses (Catmull-Rom between keys, baked at 30fps, a ground-contact solver for rolls, mirroring for the
+  other side). Output is in `assets/rbxm/animations/`, and Rojo maps it to `ReplicatedStorage.LuckboundAnimations`.
+- `CharacterAnimator` registers generated clips via `KeyframeSequenceProvider` **in Studio only** and fills empty
+  slots with them. They ship by being saved to Roblox and pasted into the content file.
+- First four clips: `RollForward`, `RollBackward`, `RollLeft`, `RollRight`, checked in stick-figure previews
+  (contact constant through the roll).
+
+### Decisions made
+- Tests: the owner asked to condense them to 100 or fewer. The suite runs in about 2s and prints one line, so it
+  costs little; ~850 predate this branch. New tests are kept to one per rule.
+
+### Next
+1. Owner: pull, re-sync (a new Rojo folder: restart `rojo serve`), roll in all four directions with the
+   shoulder camera on, and judge the clips.
+2. Then: run directions, idle, backstep, jump and land, air dash.
+
+---
+
 ## Session 104 — 2026-09-28 — Walk feedback: no ring, stronger streaks, lock-on eases out
 **Merged:** see the PR for this branch   **Tests:** 1005 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 

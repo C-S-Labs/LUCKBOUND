@@ -74,6 +74,27 @@ doubles them up:
 The roll tumble, the backstep hop and the air-dash lean only run for a slot with no clip. As soon as a
 roll direction has a clip, its tumble stops.
 
+## 3.5 Generated clips (how these are being made)
+
+The clips are **generated**, not hand-keyed in Studio: `python tools/gen_player_anims.py`
+builds each one as a KeyframeSequence from a few key poses in that file, with
+smooth curves between keys and a **ground-contact solver** that keeps a rolling
+body on the floor. Output goes to `assets/rbxm/animations/<Slot>.rbxmx`, which Rojo
+syncs to `ReplicatedStorage.LuckboundAnimations`.
+
+- **In Studio they play at once, with no upload:** `CharacterAnimator` registers each
+  one for a temporary id in any slot the content file leaves `""`. `/animslot` lists
+  them as "generated (Studio preview)".
+- **To ship one:** in Explorer, right-click the KeyframeSequence under
+  `ReplicatedStorage.LuckboundAnimations` → **Save to Roblox** (under the owning
+  group), then paste the id into its slot. Outside Studio, a clip plays only once
+  its id is in the slot.
+- **To change one:** edit its key poses in the generator and re-run. The file header
+  explains the axes.
+
+Done so far: `RollForward`, `RollBackward`, `RollLeft`, `RollRight` (the right is the
+left mirrored).
+
 ## 4. The loop: author, try, keep
 
 1. Author the clip and **publish** it to the group. Copy the numeric id.

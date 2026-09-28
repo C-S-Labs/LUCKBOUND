@@ -24,7 +24,9 @@
 -- The roll's look -- faint afterimages and a small camera widen -- lives
 -- here too, toned down on the owner's first walk (2026-09-28).
 
+local KeyframeSequenceProvider = game:GetService("KeyframeSequenceProvider")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
 local TweenService = game:GetService("TweenService")
 local Workspace = game:GetService("Workspace")
 
@@ -70,6 +72,7 @@ type Rig = {
 }
 
 local rig: Rig? = nil
+local generatedIds: () -> { [string]: string }
 
 -- DEV: slot overrides set live with /animslot, so a freshly uploaded clip
 -- can be tried in Play without editing Content/Animations/Player.luau.
@@ -159,6 +162,39 @@ local function stockId(animate: Instance?, folder: string): string?
 	return nil
 end
 
+-- GENERATED CLIPS (tools/gen_player_anims.py), synced by Rojo into
+-- ReplicatedStorage.LuckboundAnimations as KeyframeSequences. In Studio each
+-- is registered for a temporary id so it plays with no upload, in any slot
+-- the content file leaves "". Outside Studio registration is refused and
+-- the slot falls back as before -- a clip ships by being saved to Roblox
+-- and pasted into Content/Animations/Player.luau.
+local generated: { [string]: string }? = nil
+
+generatedIds = function(): { [string]: string }
+	if generated then
+		return generated
+	end
+	local found: { [string]: string } = {}
+	generated = found
+	local folder = ReplicatedStorage:FindFirstChild("LuckboundAnimations")
+	if not folder or not RunService:IsStudio() then
+		return found
+	end
+	for _, sequence in folder:GetChildren() do
+		if sequence:IsA("KeyframeSequence") and table.find(AnimationCore.SLOTS, sequence.Name) then
+			local ok, id = pcall(function()
+				return KeyframeSequenceProvider:RegisterKeyframeSequence(sequence)
+			end)
+			if ok and type(id) == "string" then
+				found[sequence.Name] = id
+			else
+				warn(`[CharacterAnimator] could not register generated clip {sequence.Name}: {id}`)
+			end
+		end
+	end
+	return found
+end
+
 --- Called by LocomotionController once it has taken the character over.
 function CharacterAnimator.bind(character: Model, hum: Humanoid, root: BasePart): ()
 	CharacterAnimator.unbind()
@@ -192,8 +228,14 @@ function CharacterAnimator.bind(character: Model, hum: Humanoid, root: BasePart)
 		end
 	end
 
-	-- The shipped set, with any live /animslot overrides on top.
+	-- The shipped set; generated clips fill its empty slots (Studio only);
+	-- live /animslot overrides go on top.
 	local set = table.clone(PlayerAnimations)
+	for name, id in generatedIds() do
+		if not AnimationCore.slot(set, name) then
+			set[name] = id
+		end
+	end
 	for name, id in overrides do
 		set[name] = id
 	end
@@ -755,6 +797,7 @@ function CharacterAnimator.describeSlots(): { string }
 		local source = if overrides[name]
 			then `override {overrides[name]}`
 			elseif AnimationCore.slot(PlayerAnimations, name) then `clip {PlayerAnimations[name]}`
+			elseif generatedIds()[name] then "generated (Studio preview)"
 			else "fallback"
 		table.insert(lines, `{name}: {source}`)
 	end

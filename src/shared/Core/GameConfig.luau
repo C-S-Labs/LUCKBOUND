@@ -1137,6 +1137,9 @@ local GameConfig = {
 		-- forward), holding height for its length, once per airtime.
 		-- Movement only -- no invulnerable window. Owner, 2026-09-28.
 		AirDashes = 1,
+		-- Off the floor for less than this is not "in the air": a roll press
+		-- then waits for the feet instead of becoming an air dash.
+		AirDashMinAirSeconds = 0.12,
 		AirDashSpeed = 44, -- studs/s
 		AirDashDurationSeconds = 0.2, -- ~9 studs
 

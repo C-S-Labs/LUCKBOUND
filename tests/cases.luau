@@ -5776,11 +5776,32 @@ do
 	)
 
 	check(
-		"a roll pressed early in the last one is dropped, not queued",
+		"mashing during a roll queues exactly one more, which plays after it",
 		(function()
 			local s = LocomotionCore.roll(state(), 0, true, EXP)
-			local after = LocomotionCore.roll(s, 0.05, true, EXP)
-			return after.RollBufferedKind == nil
+			s = select(1, LocomotionCore.roll(s, 0.05, true, EXP))
+			s = select(1, LocomotionCore.roll(s, 0.1, true, EXP))
+			local mid, early = LocomotionCore.step(s, 1 / 60, {
+				WantsSprint = false,
+				Moving = true,
+				Grounded = true,
+				Now = 0.3,
+			}, EXP)
+			local _, later = LocomotionCore.step(mid, 1 / 60, {
+				WantsSprint = false,
+				Moving = true,
+				Grounded = true,
+				Now = s.RollRecoverUntil + 0.01,
+			}, EXP)
+			return early.Rolled == nil and later.Rolled == "ROLL"
+		end)()
+	)
+	check(
+		"a moment off the floor is a roll that waits, not an air dash",
+		(function()
+			local bump = frame(state(), L.AirDashMinAirSeconds * 0.5, { Grounded = false })
+			local s, kind = LocomotionCore.roll(bump, L.AirDashMinAirSeconds * 0.5, true, EXP)
+			return kind == nil and s.RollBufferedKind == "ROLL"
 		end)()
 	)
 

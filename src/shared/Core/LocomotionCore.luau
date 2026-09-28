@@ -215,15 +215,23 @@ end
 --- "BACKSTEP", "AIRDASH"), or nil. A press during a roll's last moments is
 --- buffered, not dropped.
 function LocomotionCore.roll(state: any, now: number, hasDirection: boolean, t: any): (any, string?)
-	local kind = if not state.Grounded then "AIRDASH" elseif hasDirection then "ROLL" else "BACKSTEP"
+	-- A moment off the floor (a bump mid-roll, the lip of a step) is not
+	-- "in the air": the press is a roll, held until the feet are down.
+	local airborne = not state.Grounded and now - state.LastGroundedAt > t.AirDashMinAirSeconds
+	local kind = if airborne then "AIRDASH" elseif hasDirection then "ROLL" else "BACKSTEP"
 	local ok, reason = LocomotionCore.canRoll(state, now, t)
-	if ok then
+	if ok and (airborne or state.Grounded) then
 		local updated = startRoll(state, now, kind, t)
 		return updated, kind
 	end
-	if reason == "rolling" and state.RollRecoverUntil - now <= t.RollBufferSeconds then
+	-- QUEUED, never dropped (owner, 2026-09-28): a press during a roll, or in
+	-- that brief moment off the floor, comes out as soon as the move can
+	-- start -- after the current one has fully played, animation and all.
+	-- One queued press at most; mashing does not stack rolls.
+	if reason == "rolling" or (not state.Grounded and not airborne) then
 		local updated = table.clone(state)
-		updated.RollBufferedUntil = state.RollRecoverUntil + t.RollBufferSeconds
+		local readyAt = if reason == "rolling" then state.RollRecoverUntil else now
+		updated.RollBufferedUntil = readyAt + t.RollBufferSeconds
 		updated.RollBufferedKind = kind
 		return updated, nil
 	end
@@ -296,7 +304,8 @@ function LocomotionCore.step(state: any, dt: number, input: any, t: any): (any, 
 
 	-- === BUFFERED PRESSES ===
 	if updated.RollBufferedKind and now <= updated.RollBufferedUntil then
-		if LocomotionCore.canRoll(updated, now, t) then
+		local needsGround = updated.RollBufferedKind ~= "AIRDASH"
+		if LocomotionCore.canRoll(updated, now, t) and (updated.Grounded or not needsGround) then
 			local kind = updated.RollBufferedKind
 			updated = startRoll(updated, now, kind, t)
 			events.Rolled = kind

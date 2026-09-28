@@ -44,12 +44,13 @@
 | `assets/rbxm/prefabs/` | hub art (`HUB_*`); V1 and V2 are both still referenced by code | `ServerStorage.LuckboundPrefabs` |
 | `assets/rbxm/maps/` | prebuilt whole maps (`ES_ENVIRONMENT_FULL` = Ethereal Scape) | `ServerStorage.LuckboundMaps` |
 | `assets/rbxm/bosses/` | imported boss rigs for `/showboss` (`WingedSentinel`) | `ServerStorage.LuckboundBosses` |
+| `assets/rbxm/animations/` | generated player clips (KeyframeSequences, from `tools/gen_player_anims.py`); Studio plays them unuploaded | `ReplicatedStorage.LuckboundAnimations` |
 | `assets/source/` | Blender sources + headless Python generators (never loaded by the game) | — |
 | `assets/export/` | FBX outputs from the generators, which get uploaded or imported into Studio | — |
 | `assets/textures/` | source images uploaded as Roblox textures (`lightning_strip.png` → id in `LightningRigs`) | — |
 | `docs/` | design, spec, status, worklog, briefs | — |
 | `tests/` | `cases.luau` (the tests), `build_suite.py` (assembles `generated_suite.luau`, git-ignored), `run.sh` | — |
-| `tools/` | `gen_index.py` (writes `INDEX_MAP.md`), `sync_asset_ids.py` (asset ids → `AssetManifest`) | — |
+| `tools/` | `gen_index.py` (writes `INDEX_MAP.md`), `sync_asset_ids.py` (asset ids → `AssetManifest`), `gen_player_anims.py` (player animation clips) | — |
 | `.github/workflows/` | `ci.yml` (syntax, forbidden names, tests, index check), `index.yml` (regenerate index on `main`) | — |
 
 ## 3. Docs: what each one owns
