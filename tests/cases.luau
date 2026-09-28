@@ -7027,6 +7027,63 @@ do
 	)
 end
 
+group("Expedition payout (build spec §7.8)")
+do
+	local full = GameConfig.Progression.Rewards.ExpeditionCompleted
+	local function payout(outcome)
+		return ExpeditionCore.payoutFor(outcome, full, GameConfig)
+	end
+
+	check(
+		"a death is not a run that ended in a reward",
+		ExpeditionCore.outcomeFor("DIED", true) == "NONE"
+	)
+	check("an aborted entry pays nothing", ExpeditionCore.outcomeFor("ABORTED", false) == "NONE")
+	check(
+		"leaving with the boss standing is EARLY",
+		ExpeditionCore.outcomeFor("RETURNED", false) == "EARLY"
+	)
+	check(
+		"the timer with the boss standing is EARLY",
+		ExpeditionCore.outcomeFor("COMPLETED", false) == "EARLY"
+	)
+	check(
+		"leaving after the boss is CLEARED",
+		ExpeditionCore.outcomeFor("RETURNED", true) == "CLEARED"
+	)
+	check(
+		"the timer after the boss is CLEARED",
+		ExpeditionCore.outcomeFor("COMPLETED", true) == "CLEARED"
+	)
+
+	check("a cleared run pays the full Fate", payout("CLEARED").Fate == full)
+	check("a cleared run keeps its loot", payout("CLEARED").Loot == true)
+	check(
+		"an early run pays less than a cleared one",
+		payout("EARLY").Fate < payout("CLEARED").Fate
+	)
+	check("an early run pays some Fate", payout("EARLY").Fate > 0)
+	check("an early run gets no loot", payout("EARLY").Loot == false)
+	check("a death pays nothing", payout("NONE").Fate == 0 and payout("NONE").Loot == false)
+	check(
+		"XP is reserved and zero on every outcome",
+		payout("CLEARED").Xp == 0 and payout("EARLY").Xp == 0
+	)
+
+	local fraction = GameConfig.Expedition.EarlyExitFraction
+	check("the early fraction is strictly between none and full", fraction > 0 and fraction < 1)
+	check(
+		"the early payout never rounds up to the full award",
+		ExpeditionCore.payoutFor("EARLY", 1, { Expedition = { EarlyExitFraction = 0.99 } }).Fate
+			== 0
+	)
+	check(
+		"the early fraction is read from config",
+		ExpeditionCore.payoutFor("EARLY", 100, { Expedition = { EarlyExitFraction = 0.25 } }).Fate
+			== 25
+	)
+end
+
 group("Expeditions as their own server")
 
 do

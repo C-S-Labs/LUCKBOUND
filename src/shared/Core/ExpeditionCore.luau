@@ -259,6 +259,52 @@ function ExpeditionCore.refusalMessage(refusal: EntryRefusal): string?
 	return nil
 end
 
+-- === HOW A RUN ENDED, AND WHAT IT PAYS (build spec §7.8) ================
+
+export type Outcome =
+	"CLEARED" -- the boss fell before the player left, by any door or the timer
+	| "EARLY" -- left, or timed out, with the boss still standing
+	| "NONE" -- died, or the run was aborted
+
+export type Payout = {
+	Fate: number,
+	-- RESERVED (docs/RESERVED.md): there is no XP system yet, so this is
+	-- always 0 until the Fate engine rework gives it a reader.
+	Xp: number,
+	-- Whether the boss roll is granted. Loot is rolled at boss defeat, not at
+	-- the door, so this only records that a CLEARED run keeps what it rolled.
+	Loot: boolean,
+}
+
+--- The outcome of one player's run. `reason` is the `ExpeditionSystem.finish`
+--- reason; `bossCleared` is the group's own fact, set by the server when the
+--- boss fell. Leaving through the entrance after the boss is still CLEARED:
+--- the exit portal is a convenience, not the condition.
+function ExpeditionCore.outcomeFor(reason: string, bossCleared: boolean): Outcome
+	if reason == "DIED" or reason == "ABORTED" then
+		return "NONE"
+	end
+	return if bossCleared then "CLEARED" else "EARLY"
+end
+
+--- What an outcome pays. `fullFate` is the Fate a complete run is worth
+--- (`Progression.Rewards.ExpeditionCompleted`); an EARLY run gets
+--- `Expedition.EarlyExitFraction` of it, rounded down so it never rounds up
+--- to a full award. The one place that answers the question, so the Fate
+--- engine rework changes this function and nothing else.
+function ExpeditionCore.payoutFor(outcome: Outcome, fullFate: number, config: any): Payout
+	if outcome == "CLEARED" then
+		return { Fate = fullFate, Xp = 0, Loot = true }
+	elseif outcome == "EARLY" then
+		return {
+			Fate = math.floor(fullFate * config.Expedition.EarlyExitFraction),
+			Xp = 0,
+			Loot = false,
+		}
+	end
+	return { Fate = 0, Xp = 0, Loot = false }
+end
+
 -- === EXPEDITIONS AS THEIR OWN SERVER (build spec §7.2) ================
 
 --- "TELEPORT" or "IN_PLACE". AUTO teleports everywhere except Studio, where

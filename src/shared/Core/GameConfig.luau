@@ -149,6 +149,10 @@ local GameConfig = {
 		DefaultDurationSeconds = 720,
 		ReturnGraceSeconds = 10,
 
+		-- Build spec §7.8. What a run pays when the boss was NOT cleared, as a
+		-- fraction of the full Fate award. Placeholder for playtest tuning.
+		EarlyExitFraction = 0.5,
+
 		-- Generated maps are built high above the hub rather than beside it.
 		-- The hub's scenery reaches HubLayout.VisualExtent (4000 studs) in the
 		-- X/Z plane, so anything at ground level would be visible from the
