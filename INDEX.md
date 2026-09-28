@@ -40,7 +40,7 @@
 | `src/server/` | `init.server.luau` (fixed boot order) + `Systems/*System.luau` | `ServerScriptService.LuckboundServer` |
 | `src/client/` | `init.client.luau` + `Controllers/` (behaviour) + `UI/` (screens) | `StarterPlayerScripts.LuckboundClient` |
 | `assets/rbxm/chunks/` | chunk kit models: `sky_citadel/SC_STRUCTURE.rbxmx` (+ parked `SC_RECOLORS`), `verdant_valley/VV_STRUCTURE.rbxmx` | `ServerStorage.LuckboundChunkKits` |
-| `assets/rbxm/props/` | client prop libraries (`SC_PROP_LIBRARY`, `HUB_ORBITERS`, parked `SC_ATMOSPHERE_PROPS`) | `ReplicatedStorage.LuckboundProps` |
+| `assets/rbxm/props/` | prop libraries used by client ambience and server solid scenery (`SC_PROP_LIBRARY`, `HUB_ORBITERS`, parked `SC_ATMOSPHERE_PROPS`) | `ReplicatedStorage.LuckboundProps` |
 | `assets/rbxm/prefabs/` | hub art (`HUB_*`); V1 and V2 are both still referenced by code | `ServerStorage.LuckboundPrefabs` |
 | `assets/rbxm/maps/` | prebuilt whole maps (`ES_ENVIRONMENT_FULL` = Ethereal Scape) | `ServerStorage.LuckboundMaps` |
 | `assets/rbxm/bosses/` | imported boss rigs for `/showboss` (`WingedSentinel`) | `ServerStorage.LuckboundBosses` |
@@ -50,6 +50,7 @@
 | `docs/` | design, spec, status, worklog, briefs | — |
 | `tests/` | `cases.luau` (the tests), `build_suite.py` (assembles `generated_suite.luau`, git-ignored), `run.sh` | — |
 | `tools/` | `gen_index.py` (writes `INDEX_MAP.md`), `sync_asset_ids.py` (asset ids → `AssetManifest`) | — |
+| `rokit.toml` | pinned local CLI tools: Rojo, StyLua, Selene and Luau | — |
 | `.github/workflows/` | `ci.yml` (syntax, forbidden names, tests, index check), `index.yml` (regenerate index on `main`) | — |
 
 ## 3. Docs: what each one owns
@@ -87,7 +88,7 @@
 | chunk map generation | `src/shared/Util/ChunkCore.luau` (layout, `yawRadians`), `ChunkLoader.luau` (placement), `ChunkKitCore.luau`, `src/server/Systems/ExpeditionSystem.luau` |
 | a world's chunk pieces | `src/shared/Content/Chunks/SkyCitadel.luau`, `VerdantValley.luau` (ids `SC_*` / `VV_*`, `AssetKey = "<W>_CHUNK_*"`) |
 | asset ids | `src/shared/Content/AssetManifest.luau` (`tools/sync_asset_ids.py` fills them in) |
-| floating props, birds | `Content/Props/SkyCitadel.luau` (generated), `Core/PropCore.luau`, `client/Controllers/PropController.luau` |
+| props: ambient / solid | `Content/Props/`, `Core/PropCore.luau`, `client/Controllers/PropController.luau` / `Util/ChunkLoader.luau` |
 | chests, vault, gates | `Content/Fixtures/`, `Core/FixtureCore.luau`, `client/Controllers/FixtureController.luau`, `server/Systems/LootSystem.luau` |
 | world sky / fog / atmospheres | `Content/Worlds/*.luau` (`Environment`), `Content/Atmospheres/`, `client/Controllers/AmbienceController.luau` |
 | rolling (Fate) | `Core/FateCore.luau`, `server/Systems/FateSystem.luau`, `client/UI/FateRoll.luau` |
@@ -120,7 +121,15 @@ Blender: `"C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe" -b
 - Verdant Valley: the 30-piece kit exporter is `export_verdant_valley_kit.py` in the same world folder pattern; its
   output is `VV_STRUCTURE.rbxmx`. The cleanup testing source is
   `verdant_valley_30_cleanup_review.blend`; `--joined-scene --out-fbx` exports
-  its reviewed meshes without regenerating or renaming them (see `IMPORT_STEPS.md`).
+  its reviewed meshes without regenerating them. `--split-causeway` preserves
+  the tested Causeway pilot. `--split-all` writes `verdant_valley_separated.blend`
+  with 30 `Terrain` meshes and 66 tagged `PropLibrary` meshes, plus terrain/prop
+  FBXs and candidate content under `assets/export/worlds/verdant_valley/`.
+  Studio-imported `VV_STRUCTURE.rbxmx`, `VV_PROP_LIBRARY.rbxmx`, and `ids.json`
+  are staged there too (96 uploaded MeshIds). Candidates remain staged until
+  collision walks pass; the live
+  MeshIds and `Content/Props/VerdantValley.luau` still use the pilot (see
+  `IMPORT_STEPS.md`).
 - Naming convention:
   - The kit file is `<W>_STRUCTURE.rbxmx`, with W = `SC` or `VV`.
   - Pieces inside it are named `chunk_<name>`.

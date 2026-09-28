@@ -1352,6 +1352,12 @@ do
 	local lib = ChunkCore.libraryFor(Chunks, "VERDANT_VALLEY")
 	check("Verdant Valley has an ENTRY chunk", lib.ENTRY and #lib.ENTRY >= 1)
 	check("Verdant Valley has a BOSS chunk", lib.BOSS and #lib.BOSS == 1)
+	local wetland = Chunks.VV_WETLAND_POOLS
+	local east, west = wetland.Sockets[1], wetland.Sockets[2]
+	check(
+		"Wetland Pools keeps both visible mouths at the common route height",
+		east.Id == "east" and west.Id == "west" and east.OffsetY == 0 and west.OffsetY == 0
+	)
 	-- Blueprint §6 asks each world for an optional side pocket. Verdant Valley
 	-- CANNOT have one yet and this test says so honestly rather than passing
 	-- on a piece that never appears: every delivered chunk has exactly two
@@ -7422,6 +7428,33 @@ do
 
 	local okP, errsP = Schema.validateProps(Props, Chunks, Worlds)
 	check("the generated placements validate", okP, table.concat(errsP, "; "))
+	local vv = Props.VERDANT_VALLEY
+	check(
+		"Verdant Valley Causeway scenery opts into collision",
+		vv ~= nil and vv.Placements.VV_OVERGROWN_CAUSEWAY_GATE[1].Collide == true
+	)
+	local noCollisionFlag = table.clone(vv.Placements.VV_OVERGROWN_CAUSEWAY_GATE[1])
+	noCollisionFlag.Collide = nil
+	local sample = {
+		VERDANT_VALLEY = {
+			Id = "VERDANT_VALLEY",
+			Library = vv.Library,
+			Placements = { VV_OVERGROWN_CAUSEWAY_GATE = { noCollisionFlag } },
+		},
+	}
+	local okDefault = Schema.validateProps(sample, Chunks, Worlds)
+	check("prop collision flag is optional", okDefault)
+	noCollisionFlag.Collide = "true"
+	local okInvalid = Schema.validateProps(sample, Chunks, Worlds)
+	check("prop collision flag rejects non-booleans", not okInvalid)
+	noCollisionFlag.Collide = true
+	noCollisionFlag.Anim = "Float"
+	local okMovingSolid = Schema.validateProps(sample, Chunks, Worlds)
+	check("solid props must be static", not okMovingSolid)
+	noCollisionFlag.Anim = "Static"
+	noCollisionFlag.Tier = 2
+	local okHiddenSolid = Schema.validateProps(sample, Chunks, Worlds)
+	check("solid props must show at every quality", not okHiddenSolid)
 
 	-- Every prop sits inside its own piece: within the 256 footprint, between
 	-- the keel line and the crown. A prop outside would float over a

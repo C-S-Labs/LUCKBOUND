@@ -1124,6 +1124,12 @@ function Schema.validateProps(props: any, chunks: any, worlds: any): (boolean, {
 				if type(row.Tier) ~= "number" or row.Tier < 1 or row.Tier > 3 then
 					table.insert(errors, `{at}: Tier must be 1, 2 or 3`)
 				end
+				if row.Collide ~= nil and type(row.Collide) ~= "boolean" then
+					table.insert(errors, `{at}: Collide must be a boolean`)
+				end
+				if row.Collide == true and (row.Anim ~= "Static" or row.Tier ~= 1) then
+					table.insert(errors, `{at}: solid props must be Static and Tier 1`)
+				end
 				-- A wing rides on a bird placed before it, and nothing else rides.
 				if row.Anim == "Wing" then
 					local body = type(row.Attach) == "number" and rows[row.Attach]

@@ -27,6 +27,7 @@ local AssetManifest = require(Root.Content.AssetManifest)
 local ChunkCore = require(Root.Util.ChunkCore)
 local Constants = require(Root.Core.Constants)
 local GameConfig = require(Root.Core.GameConfig)
+local Props = require(Root.Content.Props)
 
 local ChunkLoader = {}
 
@@ -298,6 +299,69 @@ local function buildBlockout(chunk: any, placed: any, centre: Vector3, parent: I
 	return floor
 end
 
+-- Solid prop rows are structure: the server places one anchored part per row
+-- under the replicated chunk folder. The same placement data still drives
+-- ambient rows on clients, but a client must never clone a solid row again.
+local function buildSolidProps(
+	worldId: string,
+	chunkId: string,
+	centre: Vector3,
+	yaw: number,
+	artYawOffset: number,
+	parent: Instance
+)
+	local set = Props[worldId]
+	local rows = set and set.Placements[chunkId]
+	if not rows then
+		return
+	end
+	local lib = ReplicatedStorage:FindFirstChild("LuckboundProps")
+	local layout = CFrame.new(centre) * CFrame.Angles(0, ChunkCore.yawRadians(yaw), 0)
+	local fix = CFrame.Angles(0, ChunkCore.yawRadians(artYawOffset), 0)
+	for index, row in rows do
+		if row.Collide == true then
+			local source = lib and lib:FindFirstChild(row.Prop, true)
+			if not (source and source:IsA("BasePart")) then
+				warn(
+					`[ChunkLoader] solid prop '{row.Prop}' missing from LuckboundProps for {chunkId}`
+				)
+				continue
+			end
+			local mesh = source:Clone()
+			if
+				mesh:IsA("MeshPart")
+				and mesh.CollisionFidelity ~= Enum.CollisionFidelity.PreciseConvexDecomposition
+			then
+				warn(`[ChunkLoader] solid prop '{row.Prop}' needs precise collision fidelity`)
+			end
+			mesh.Name = `SolidProp_{index}_{row.Prop}`
+			mesh.Anchored = true
+			mesh.CanCollide = true
+			mesh.CanQuery = true
+			mesh.CanTouch = true
+			mesh.Size = Vector3.new(row.S[1], row.S[2], row.S[3])
+			local r = row.R
+			mesh.CFrame = layout
+				* CFrame.new(
+					row.P[1],
+					row.P[2],
+					row.P[3],
+					r[1],
+					r[2],
+					r[3],
+					r[4],
+					r[5],
+					r[6],
+					r[7],
+					r[8],
+					r[9]
+				)
+				* fix
+			mesh.Parent = parent
+		end
+	end
+end
+
 -- Kind -> a stable, well-separated hue. A lookup table would have to grow
 -- every time a world invents a vocabulary, so this derives the colour instead.
 --
@@ -474,9 +538,11 @@ function ChunkLoader.build(
 		)
 
 		local surface: BasePart
+		local artYawOffset = chunk.MeshYawOffset or 0
 		if mesh then
 			local meshPos = meshCFrame.Position
 			local k = calibrateYaw(chunk, placed, origin, meshPos, mesh)
+			artYawOffset = k
 			mesh.CFrame = CFrame.new(meshPos)
 				* CFrame.Angles(0, ChunkCore.yawRadians(placed.Yaw + k), 0)
 			usedMeshes += 1
@@ -487,6 +553,7 @@ function ChunkLoader.build(
 		end
 		-- read by the dev panel's /assets and /chunks: which pieces had no mesh
 		folder:SetAttribute("Blockout", mesh == nil)
+		buildSolidProps(layout.WorldId, placed.ChunkId, centre, placed.Yaw, artYawOffset, folder)
 
 		buildSocketMarkers(chunk, placed, origin, folder)
 

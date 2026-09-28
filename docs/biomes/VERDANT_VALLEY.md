@@ -69,6 +69,15 @@ alongside Cave Mouth; Forgotten Trial remains the optional side pocket. All thre
 caps are equally weighted and unlimited per layout, following the owner's corrected
 direction. Their geometry, sockets, scenario support and mesh IDs are unchanged.
 
+**2026-09-28 separated candidate:** the reviewed 30-piece source has been
+partitioned into 30 connected terrain meshes and 66 tagged prop meshes in
+`verdant_valley_separated.blend`. Props use `prop_*` names; the two former
+`chunk_side_*` cap meshes use their current `chunk_cap_*` names. Solid scenery
+and detached walkable surfaces are server placements; water, foliage and small
+details remain client ambience. New FBXs and candidate placement/size tables
+are staged under `assets/export/worlds/verdant_valley/`. No new IDs or live
+chunk sizes are active until Studio import and collision walks pass.
+
 ---
 
 ## 3. How pieces connect
@@ -83,6 +92,12 @@ Verdant Valley's connection types:
 Openings are centred on an edge midpoint and are 42–50 studs across in the
 delivered kit. A piece may have an opening on any side it leaves open, and no
 opening on a side the art closes.
+
+Wetland Pools' reviewed Blender mesh has both mouth surfaces at the same
+walk-plane height. Keep both socket `OffsetY` values at zero: unequal values
+move every later chunk vertically. Studio raycasts on the uploaded MeshPart can
+hit its convex collision hull above the visible path; check the visible mesh
+and collision separately before changing socket positions.
 
 ### The consequence worth understanding
 

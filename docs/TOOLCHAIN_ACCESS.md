@@ -88,18 +88,25 @@ PATH too — restart the whole app, not just the tab.
 ```powershell
 rokit --version        # confirm it is on PATH
 cd C:\Dev\luckbound
-rokit install          # reads rokit.toml: rojo 7.7.0 + stylua + selene
+rokit install          # reads rokit.toml: Rojo, StyLua, Selene and Luau
 rojo serve
 ```
 
 Expect a **trust prompt** on first install — Rokit asks before running each tool.
-Say yes to all three; it remembers per tool. If it errors instead of prompting:
+Say yes to all four; it remembers per tool. If it errors instead of prompting:
 
 ```powershell
 rokit trust rojo-rbx/rojo
 rokit trust JohnnyMorganz/StyLua
 rokit trust Kampfkarren/selene
+rokit trust luau-lang/luau
 ```
+
+`rokit list` confirms the pinned Luau version. The official `luau` executable
+does not implement `--version`; use `luau -h` to check that it launches. Run
+the headless tests with `./tests/run.sh` in a Bash environment, or assemble
+`tests/generated_suite.luau` with `python3 tests/build_suite.py` and run it
+with `luau tests/generated_suite.luau`.
 
 In Studio: **Rojo** panel → **Connect** → **Accept** the sync preview (Rojo 7.7+
 asks before touching the place). Then edit a file → save → it appears instantly.
@@ -120,10 +127,11 @@ install never happened; `True` means it is only a PATH problem.
 #### Escape hatch
 
 Rokit is only a version manager, and StyLua/Selene are linters CI already runs.
-**The one tool you actually need is Rojo.** Download `rojo-win64.zip` from the
+For Studio code sync, the one tool you need is Rojo. Download `rojo-win64.zip` from the
 [Rojo 7.7.0 release](https://github.com/rojo-rbx/rojo/releases/tag/v7.7.0), drop
 `rojo.exe` in the repo folder, and run `.\rojo.exe serve` (the `.\` is required
 in PowerShell).
+For local headless tests, install the official Luau CLI as well.
 
 ### Two gotchas that cost real time
 

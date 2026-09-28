@@ -3,8 +3,8 @@
 -- convention 6): floating crystals, beacons, birds, tomes and the rest, which
 -- ship apart from the pieces so they can move and be thinned on low graphics.
 --
--- Client-only by design. Props carry no gameplay, so the server never builds
--- or replicates them; each device places its own at its own detail tier.
+-- Client-only ambient rows are placed at each device's detail tier. Solid
+-- rows are built by ChunkLoader on the server and skipped here.
 --
 -- Where things come from:
 --   ReplicatedStorage.LuckboundProps   the imported prop libraries (Rojo,
@@ -205,6 +205,10 @@ function PropController.enter(worldId: string, stageName: string?)
 			local byRow: { [number]: Placed } = {}
 			for rowIndex, row in rows do
 				index += 1
+				-- The server builds solid rows under this chunk folder.
+				if row.Collide == true then
+					continue
+				end
 				-- A wing needs its bird drawn; a wing whose bird was not (tier,
 				-- or a missing mesh) is simply not drawn either.
 				local body = if row.Attach then byRow[row.Attach] else nil

@@ -16,7 +16,7 @@ constraints, and a piece that satisfies them is correct however it looks.
 
 ---
 
-## The six conventions
+## The eight conventions
 
 ### 1. One metre is one stud
 
@@ -105,7 +105,7 @@ A piece is two different kinds of thing, and they are delivered differently:
 |---|---|---|
 | **What** | everything walked on, collided with, or that makes the place what it is: decks, floors, walls, bridges, stairs, keels, cliffs, landmarks, trees, rocks, buildings | everything that floats, drifts, flies, spins, glows or is there only for mood, never blocking the player: floating crystals and shards, floating books, rings, birds and drones, lanterns, falling leaves, embers |
 | **Delivered as** | part of the piece's mesh (convention 5) | **not** merged into the piece; one copy of each *kind*, plus a list of where it goes |
-| **Drawn by** | the server, with collision | each player's device only, no collision, animated, and thinned out on low graphics |
+| **Drawn by** | the server, with collision | each player's device; noncolliding by default, animated, and thinned out on low graphics |
 
 **How to deliver ambient scenery:**
 
@@ -171,6 +171,12 @@ where they were authored.
 - each kind of prop is uploaded once instead of baked into 22 meshes
 - floating clutter stops inflating each piece's collision
 
+**Verdant Valley Causeway pilot (2026-09-27):** the joined mesh made trees,
+loose rocks, ruin fragments and moss part of a single complex collision
+decomposition. The separated scenery is exported as a solid prop using
+convention 8. Its server-owned collision still needs a Studio walk before activation;
+the library has not been saved into the game yet.
+
 **Keep the size pins.** With the scenery removed, the structure mesh must still
 fill the piece's declared box exactly (for Sky Citadel, 256³: tiny pins at the
 bottom corners, the landmark reaching the top). `ChunkLoader` sets every mesh to
@@ -186,12 +192,12 @@ its prop.
 ### 7. Interactive things are fixtures — chests, doors, forcefields
 
 **Adopted 2026-09-23, owner-directed (build spec §7.5).** Anything a player
-opens, uses or cannot pass is neither structure nor ambient scenery:
+opens, uses or that has shared state is a fixture:
 
 | | Props (convention 6) | Fixtures |
 |---|---|---|
 | **Examples** | crystals, birds, tomes | chests, the vault door, a sealed gate's forcefield |
-| **Drawn by** | each client, no collision | the **server**, with collision, replicated |
+| **Drawn by** | each client; collision only when opted in | the **server**, with collision, replicated |
 | **State** | none | a chest opens once per party; a vault opens per player, per key |
 | **Content** | `Content/Props/<World>.luau` | `Content/Fixtures/<World>.luau` |
 
@@ -213,6 +219,27 @@ opens, uses or cannot pass is neither structure nor ambient scenery:
    Moving parts do not.
 4. A fixture's loot comes from the world's `Loot` block
    (`Content/Worlds/<World>.luau`), never from the kit.
+
+### 8. Solid decoration
+
+Prop placement rows may set `Collide = true` for static scenery players should
+be blocked by, such as trees, rocks and ruins. The field is optional and defaults
+to `false`; existing Sky Citadel and Ethereal Scape placements remain
+noncolliding. `ChunkLoader` places solid rows under the replicated expedition
+stage with collision; `PropController` skips them. Solid rows must be `Static`
+and Tier 1. Keep floating and ambient objects noncolliding.
+
+In Blender, keep each `prop_*` object in `PropLibrary` and set its custom
+property `solid` to a boolean: `True` for chunk-attached solid scenery,
+`False` or absent for ambient objects. The Verdant Valley exporter reads this
+tag and writes `Collide = true` or `false` into generated placement rows.
+Keep terrain as `chunk_*` and separated meshes as `prop_*`. Use the tag, not
+the name, to express collision. Detached walkable surfaces may be solid prop
+rows too; their source geometry must still meet the route at every socket.
+
+Solid rows currently use the visible prop mesh for collision. Check its
+collision decomposition in Studio at all quarter turns before relying on it
+to bound a route; a later asset pass may use a separate collision shape.
 
 ---
 

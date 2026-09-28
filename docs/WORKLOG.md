@@ -33,6 +33,243 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 103 — 2026-09-28 — Import separated Verdant Valley meshes to staged RBXMX
+**Merged:** none   **Tests:** Studio import 30 terrain + 66 props; RBXMX XML/name/ID checks   **Branch:** `codex/vv-cleanup-testing`
+
+### Done
+- Imported both separated FBXs in the LUCKBOUND Studio place and saved staged `VV_STRUCTURE.rbxmx` and `VV_PROP_LIBRARY.rbxmx` under `assets/export/worlds/verdant_valley/`, outside Rojo's active asset folders.
+- Anchored all 96 MeshParts. Set precise collision on 30 terrain and 37 solid props; kept 29 ambient props noncolliding. Confirmed 96 unique names and MeshIds, including the separated Causeway prop; saved `ids.json` for later activation.
+- Added explicit `CollisionFidelity = 3` XML entries to the staged RBXMX files because this Studio save omitted the property despite showing precise fidelity in memory. Cleared the temporary imported models from Workspace after saving.
+
+### Decisions made
+- Keep the existing live `VV_STRUCTURE.rbxmx`, its uploaded IDs, and pilot content until the whole separated kit passes in-game visual and collision walks. Staged RBXMX and IDs do not activate any new mesh.
+
+### Stopped at
+Studio conversion is complete. Candidate size/placement and new IDs still need to be wired together, followed by visual and collision walks of all chunks and multiplayer replication checks.
+
+### Next
+1. Activate the staged RBXMX files, candidate chunk sizes/prop placements, and all 96 MeshIds as one change.
+2. Walk all 30 pieces at four rotations, with collision visualization and multiplayer checks; focus on Wetland Pools, Cliff Passage, Cutbank Ford, and Causeway.
+3. Retire the older joined assets only after CI and Studio checks pass and references are gone.
+
+---
+
+## Session 102 — 2026-09-28 — Separate remaining Verdant Valley scenery in Blender
+**Merged:** none   **Tests:** 30 terrain and 66 prop FBX reimports; candidate Luau suite 908 passing, 0 failing   **Branch:** `codex/vv-cleanup-testing`
+
+### Done
+- Extended the reviewed-scene exporter with `--split-all`. The saved `verdant_valley_separated.blend` has a `Terrain` collection of 30 connected `chunk_*` meshes and a `PropLibrary` of 66 `prop_*` meshes: 37 tagged `solid = True`, 29 tagged `False`.
+- Kept the tested Causeway split. Gave the two cap pieces canonical `chunk_cap_*` output names while leaving the reviewed source names alone. Wetland Pools' three detached walkable islands and Cliff Passage's path are separate solid surface props; water, foliage and small effects are ambient.
+- Staged terrain/prop FBXs, `split_report.json`, and candidate chunk/prop Luau under `assets/export/worlds/verdant_valley/`. The active IDs, chunk sizes, prop content and saved RBXMX are unchanged.
+- Verified source geometry partition with exact vertex/polygon totals, all 30 terrain socket openings, color attributes, FBX reimport dimensions, a saved Blender scene with 30/66 named objects and boolean tags, and a candidate 908/908 headless Luau run.
+
+### Decisions made
+- Keep the reviewed joined kit and current uploads available until the separated meshes pass Studio collision and visual walks. Use `solid` tags for collision semantics; names identify terrain versus prop roles.
+
+### Stopped at
+The Blender and generated-data candidates are ready. New mesh uploads, RBXMX conversion, MeshId wiring and full Studio collision checks remain before live activation.
+
+### Next
+1. Import both candidate FBXs in Studio, save new terrain and prop RBXMX models, and collect MeshIds; confirm the imported props retain the generated local bounds and names.
+2. Activate the candidate chunk sizes, prop placements and MeshIds together, then walk all 30 pieces at four rotations with collision visualization, paying special attention to Wetland Pools, Cliff Passage and Cutbank Ford.
+3. Only after CI and the Studio walk pass, retire old joined exports/assets that code no longer references.
+
+---
+
+## Session 101 — 2026-09-28 — Revert Wetland Pools route drop
+**Merged:** none   **Tests:** 908 passing, 0 failing; Blender mouth-height probe   **Branch:** `codex/vv-cleanup-testing`
+
+### Done
+- Inspected the owner's restarted run: Shaded Grove is at layout Y 20000, Wetland Pools at 19997.5, and every following chunk begins at 19997.95. This is the drop created by Session 100's unequal socket offsets.
+- Inspected the reviewed Blender mesh directly with a triangle BVH. Both Wetland Pools mouth surfaces are essentially at zero height (about 0.001 stud at the edge), so the earlier Studio raycasts measured a raised collision hull rather than the visible art.
+- Restored both Wetland Pools socket offsets to zero in content and exporter. Replaced the mistaken regression test and corrected the biome/status handoff.
+- Ran the assembled Luau suite: 908 passing, 0 failing.
+
+### Decisions made
+- Keep the visible route level. Diagnose the original hovering or seam impression against collision visualization before changing the mesh or its socket positions again.
+
+### Stopped at
+The owner's active Play run still holds the offset content loaded at start. Restart after Rojo sync to see the restored placement. The original Wetland Pools collision-hull discrepancy remains open.
+
+### Next
+1. Restart and confirm Shaded Grove, Wetland Pools and following chunks share the same layout Y and the visible path remains level.
+2. Inspect the Wetland Pools collision hull and consider separating its walk surface from scenery only if that confirms the original issue.
+
+---
+
+## Session 100 — 2026-09-28 — Align Wetland Pools socket heights
+**Merged:** none   **Tests:** 909 passing, 0 failing; temporary Studio seam probe   **Branch:** `codex/vv-cleanup-testing`
+
+### Done
+- Inspected the owner's two seam screenshots and measured Wetland Pools in the running LUCKBOUND place. At its two center mouths the existing mesh sits about 2.74 and 0.44 studs above the zero-height socket plane.
+- Added measured per-mouth socket heights to Verdant Valley content and its exporter. With the art half-turn, layout east uses 2.5 studs and layout west 0.45; both joins now move with the existing mesh without replacing its asset.
+- A disposable three-chunk Studio probe found center seam differences of about 0.07 and 0.02 stud after the placement change. The wetland lip slopes across its width; outer samples still differ by up to about 0.84 stud at one join. The probe was destroyed.
+
+### Decisions made
+- Keep the current mesh and correct the placement data first. A future mesh edit could flatten the remaining lateral slope if it is visible in a fresh walk.
+
+### Stopped at
+The owner's current Play session uses the old module state. A restarted Verdant Valley run and visual walk are needed to confirm the saved data change at both ends and at other rotations.
+
+### Next
+1. Restart the Studio run after Rojo sync and inspect Wetland Pools from both approaches. If the remaining sloped lip is visible, flatten that part of the source mesh and reimport it.
+2. Continue the separate Causeway collision pilot without retiring its old asset yet.
+
+---
+
+## Session 99 — 2026-09-28 — Server-owned Causeway collision pilot
+**Merged:** none   **Tests:** 907 passing, 0 failing; temporary Studio four-yaw walk   **Branch:** `codex/vv-cleanup-testing`
+
+### Done
+- `ChunkLoader` now clones `Collide = true` prop rows under each replicated chunk using the existing mesh placement transform. `PropController` skips those rows and retains client-only noncolliding behavior for absent/false rows.
+- Schema now requires solid props to be static and Tier 1. Updated authoring and import instructions.
+- In a temporary LUCKBOUND Play stage, loaded both separated Causeway mesh IDs with precise collision, built four yaw variants, confirmed the server props reached the client without client duplicates, sampled the center path, walked a character along the central route in all four rotations, and verified a side obstacle stopped movement. Stopping Play discarded the temporary stage and source.
+
+### Decisions made
+- For this pilot the separated scenery MeshPart serves as both visual and collider. No custom proxies or new RemoteEvent were added. The old Causeway asset remains live.
+
+### Stopped at
+The prop library is not saved into the place or repository. The live Causeway terrain still uses its old MeshId and dimensions. One server and one client were observed; a two-client local server test and broader geometry inspection remain open before activation.
+
+### Next
+1. Save the precise-collision scenery MeshPart in the prop library, then update the live Causeway terrain MeshId and dimensions together.
+2. Run a two-client Studio session and inspect/walk the activated Causeway at all four rotations, including side obstacles and terrain holes, before retiring the old asset.
+
+---
+
+## Session 98 — 2026-09-28 — Pin and verify Luau CLI
+**Merged:** none   **Tests:** 905 passing, 0 failing   **Branch:** `codex/vv-cleanup-testing`
+
+### Done
+- Added official `luau-lang/luau@0.740.0` to `rokit.toml` beside Rojo, StyLua and Selene, then installed it through Rokit.
+- Assembled and ran the headless Luau suite: 905 passing, 0 failing. Updated toolchain instructions and status.
+
+### Decisions made
+- The official CLI does not support `luau --version`; `rokit list` reports the pinned version, and `luau -h` checks that it launches.
+
+### Stopped at
+The Luau toolchain is ready. The Verdant Valley prop library import and Studio collision walk remain pending.
+
+### Next
+1. Import the Causeway prop library and complete the four-turn collision walk in the LUCKBOUND place.
+
+## Session 97 — 2026-09-27 — Opt-in solid prop placements
+**Merged:** none   **Tests:** Blender FBX re-import and changed-file StyLua check passed; Luau suite assembled, CLI unavailable   **Branch:** `codex/vv-cleanup-testing`
+
+### Done
+- Added optional boolean `Collide` validation and made the prop controller apply it to collision, query and touch. Missing fields remain noncolliding for Sky Citadel and Ethereal Scape.
+- Added a Verdant Valley props export pass. The Causeway split tags its scenery `solid = True`; the Blender run regenerated `Content/Props/VerdantValley.luau` with `Collide = true` and verified the FBX re-import.
+- Documented convention 8 and added validator regression checks.
+
+### Decisions made
+- Solid props use client-local collision. This pilot remains unactivated until its library is imported and an in-game collision walk passes at low quality and all quarter-turns.
+
+### Stopped at
+The Causeway prop library is still unsaved in the game. Terrain and prop MeshIds are staged; the old Causeway asset remains live.
+
+### Next
+1. Import and save the prop library, update the Causeway terrain asset and size together, then walk collision at all four turns.
+2. Extend the `solid` tagging to each Verdant Valley `PropLibrary` object when the separate CCBlender prop scene is delivered.
+
+## Session 96 — 2026-09-27 — Causeway Studio staging and collision correction
+**Merged:** none   **Tests:** Studio MCP MeshPart inspection and terrain socket/path raycasts   **Branch:** `codex/vv-cleanup-testing`
+
+### Done
+- Inspected both new FBX imports in Studio `Place1`: terrain `rbxassetid://135752326695082`, scenery `rbxassetid://125768281462238`; sizes match the export report.
+- Aligned the scenery to the terrain's pivot (14.59 studs above it), anchored both MeshParts, and set PreciseConvexDecomposition. Terrain raycasts hit at 21 sampled path points, including both socket mouths.
+- Corrected the initial noncolliding-prop assumption after the owner clarified that players can reach the scenery. Staged scenery now has `CanCollide`, `CanQuery`, and `CanTouch` on.
+
+### Decisions made
+- Do not activate this as a client prop. `PropController` forces all props noncolliding and creates them locally; reachable scenery needs server-owned collision. A chunk content/schema amendment for a secondary structure MeshPart is required before loader wiring.
+- Keep the old Causeway MeshId and RBXMX untouched until a full in-game collision walk passes.
+
+### Stopped at
+Staged meshes are configured in Studio but not saved as RBXMX or activated. Studio is still blank `Place1`, without the LUCKBOUND runtime. The 88-component scenery mesh may still have awkward collision and needs a walk test.
+
+### Next
+1. Agree on a generic server-side secondary structure mesh schema for chunk content, then implement and validate it before activating the pilot.
+2. Save the imported meshes to RBXMX and run the four-yaw Causeway collision walk in the LUCKBOUND place, preserving the old asset until it passes.
+
+## Session 95 — 2026-09-27 — Studio MCP handshake and Luau verification
+**Merged:** none   **Tests:** MCP 28-tool discovery, read-only Luau, disposable MeshPart property check   **Branch:** `codex/vv-cleanup-testing`
+
+### Done
+- After the owner enabled Studio MCP, the official server exposed 28 tools and listed the open Studio instance.
+- Executed read-only Luau in Edit mode and confirmed the open place is blank `Place1` with zero MeshParts.
+- Created an unparented disposable MeshPart, set and read collision flags, and destroyed it. No Workspace content or Verdant Valley asset was changed. An attempted CollisionFidelity assignment on this mesh read back as Box, so imported mesh fidelity still needs verification in Studio.
+
+### Decisions made
+- Keep the old Causeway mesh active until the owner imports the two pilot FBXs and the project place passes collision validation.
+
+### Stopped at
+The MCP connection works. The open Studio place is not LUCKBOUND, and the Causeway FBXs have not been imported.
+
+### Next
+1. Owner opens the LUCKBOUND place and manually imports the terrain and scenery FBXs listed in `assets/source/worlds/verdant_valley/IMPORT_STEPS.md`.
+2. Use Studio MCP to inspect the imported MeshParts, configure the terrain and noncolliding prop, save RBXMX, update IDs and loader content, then run the Causeway collision walk.
+
+## Session 94 — 2026-09-27 — Codex Roblox Studio MCP connection
+**Merged:** none   **Tests:** configuration parse and local MCP handshake passed   **Branch:** `codex/vv-cleanup-testing`
+
+### Done
+- Added the official local Roblox Studio MCP command to Codex's user configuration. The existing Blender MCP entry remains enabled.
+- Verified the Studio MCP proxy starts and responds to the MCP initialize request. It currently advertises zero tools, so Luau and place inspection could not yet be exercised.
+- Identified the required Studio-side step: Assistant → Manage MCP Servers → Enable Studio as MCP server. Codex must refresh its MCP connections after that.
+
+### Decisions made
+- No Open Cloud credential or upload service was added. No Verdant Valley asset or active place content was changed.
+
+### Stopped at
+Waiting for Studio's MCP server toggle and a refreshed Codex connection. The Causeway FBXs remain unimported.
+
+### Next
+1. Enable Studio as MCP server, refresh Codex, and verify `list_roblox_studios`, read-only Luau, MeshPart inspection, and a disposable collision-property check.
+2. After the owner manually imports the Causeway terrain and prop FBXs, configure those new MeshParts and run the existing collision validation before replacing the old assets.
+
+## Session 93 — 2026-09-27 — Overgrown Causeway scenery split pilot
+**Merged:** none   **Tests:** 30 structure + 1 terrain + 1 prop FBX reimports passed   **Branch:** `codex/vv-cleanup-testing`
+
+### Done
+- Followed the owner's direction to pilot a Sky Citadel-style scenery split on Overgrown Causeway only.
+- Added `--split-causeway` to the reviewed-scene exporter. It keeps the largest connected ground/cliff component and exports the other 88 disconnected components as one static, noncolliding client prop. Source Blender scene is unchanged; geometry and vertex-color checks passed.
+- Re-exported the full 30-piece structure FBX plus single Causeway terrain and scenery FBXs. Added the Verdant Valley prop placement content and import instructions.
+
+### Decisions made
+- The pilot's trees, loose rocks, ruins and moss are visual, nonblocking props. Anything meant to block or carry players must stay server structure.
+- Do not activate the new Causeway terrain size until its new MeshId is uploaded; the current runtime still uses the previous mesh. The prop library is also awaiting Studio import.
+
+### Stopped at
+The pilot assets and content are prepared, but no Studio upload or in-experience collision walk has occurred. Computer-use approval review rejected control of the open Roblox Studio window, so the old Causeway MeshId remains live.
+
+### Next
+1. Import the two single-mesh FBXs in Studio, save the prop library and Causeway MeshPart, then sync its new MeshId and terrain `SizeY = 43.5` together.
+2. Walk Overgrown Causeway in all four orientations with collision fidelity visible; check prop alignment and mesh asset access.
+3. Only if the pilot improves collision, extend the split to other affected chunks. Check the separate visible terrain holes independently.
+
+---
+
+## Session 92 — 2026-09-27 — Verdant Valley collision and visible gap review
+**Merged:** none   **Tests:** 30/30 saved MeshParts checked   **Branch:** `codex/vv-cleanup-testing`
+
+### Done
+- Reviewed the owner's Studio screenshots of floating collision over paths and visible terrain gaps.
+- Set PreciseConvexDecomposition on every saved Verdant Valley MeshPart in `VV_STRUCTURE.rbxmx` and updated the import instructions.
+- Confirmed `ChunkLoader.tryMesh` already requests PreciseConvexDecomposition for runtime chunks, so the saved-kit change alone cannot resolve collision observed during expedition play.
+
+### Decisions made
+- Do not place blind invisible collision patches over the reported locations. Precise collision remains an approximation for the joined terrain, and the screenshots do not identify chunk-local coordinates.
+- Keep Blender source and exports unchanged in this pass, per the owner's request. Terrain/decor separation or dedicated collision meshes, and mesh face repair, are follow-up work if Studio collision visualization confirms them.
+
+### Stopped at
+The saved Studio model has the best available standard collision fidelity. A live Studio collision-overlay and geometry check is still needed; the current environment did not expose an automatable Studio session.
+
+### Next
+1. In Studio, enable Collision fidelity visualization on a generated Verdant Valley map and identify the affected chunk names and surfaces.
+2. If the overlay still bridges paths or floats above terrain, rebuild those pieces with separated visual/collision geometry in Blender and reimport.
+3. Inspect gaps from both sides to distinguish reversed faces from missing faces, then repair the affected mesh in Blender.
+
+---
+
 ## Session 91 — 2026-09-27 — Verdant Valley cleanup kit export test
 **Merged:** none   **Tests:** 30/30 FBX and Studio model checks passed   **Branch:** `codex/vv-cleanup-testing`
 

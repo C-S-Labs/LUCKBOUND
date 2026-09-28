@@ -24,6 +24,100 @@ preserved; the ID sync maps them to the existing CAP manifest keys.
 Keep the older base source and exports until this branch has passed a Studio
 walk and asset-access check in the game experience.
 
+## Full terrain/prop separation candidate (2026-09-28)
+
+The reviewed joined scene can now be split across all 30 chunks:
+
+```
+blender -b --factory-startup assets/source/worlds/verdant_valley/verdant_valley_30_cleanup_review.blend --python assets/source/worlds/verdant_valley/export_verdant_valley_kit.py -- --joined-scene --split-all --out-fbx assets/export/worlds/verdant_valley/verdant_valley_terrain.fbx
+```
+
+This writes `verdant_valley_separated.blend` with a `Terrain` collection (30
+`chunk_*` objects) and a `PropLibrary` collection (66 `prop_*` objects). The
+prop objects carry Blender `solid` boolean tags: 37 solid surfaces/scenery and
+29 noncolliding ambient meshes. Wetland Pools' three detached walkable islands
+are separate solid surface props, and Cliff Passage's detached path is a solid
+surface prop. The established Causeway scenery remains one solid prop.
+
+The FBXs are `verdant_valley_terrain.fbx` and `verdant_valley_props.fbx` under
+`assets/export/worlds/verdant_valley/`. `VerdantValleyChunksCandidate.luau` and
+`VerdantValleyPropsCandidate.luau` in that folder stage the new sizes and
+placements. `split_report.json` lists each prop and tag. The exporter checks
+mesh names, vertex colors, terrain footprints, socket openings, polygon/vertex
+conservation, and FBX reimport dimensions. The two old source `chunk_side_*`
+cap names become `chunk_cap_*` in the separated output to match current content.
+
+**These are candidates, not live assets.** Import both FBXs in Studio, set
+`PreciseConvexDecomposition` on terrain and solid scenery, save new RBXMX
+models, and collect every new MeshId. Only then replace the active chunk sizes,
+prop content, prop library and manifest IDs together. Check the imported
+positions and walk all 30 chunks at all quarter turns, especially Wetland Pools,
+Cliff Passage and the detached bridge at Cutbank Ford. Keep the existing
+`VV_STRUCTURE.rbxmx`, source review blend, uploaded MeshIds and pilot prop
+content until that check passes. The separated Blender export alone cannot
+prove Roblox's collision decomposition.
+
+**Studio conversion completed 2026-09-28:** Both FBXs were uploaded through the
+3D Importer. The staged `assets/export/worlds/verdant_valley/VV_STRUCTURE.rbxmx`
+has 30 anchored terrain MeshParts; `VV_PROP_LIBRARY.rbxmx` has 66 anchored
+prop MeshParts (37 colliding, 29 ambient/noncolliding). The saved files contain
+96 unique uploaded MeshIds, collected in `ids.json` beside them. Precise
+collision fidelity is explicit in the XML for all terrain and solid props.
+These RBXMX files are outside Rojo's live asset folders; the imported Workspace
+models were removed after saving. The current joined kit is still active.
+
+## Overgrown Causeway terrain/scenery pilot
+
+The owner's collision overlay shows severe hulls on Overgrown Causeway. Export
+the reviewed scene with `--split-causeway` added to the joined-scene command
+above. This creates:
+
+- `assets/export/worlds/verdant_valley/verdant_valley_causeway_terrain.fbx`:
+  only the connected ground/cliff mesh, still named
+  `chunk_overgrown_causeway_gate` (256 × 43.5 × 256).
+- `assets/export/worlds/verdant_valley/verdant_valley_props.fbx`:
+  `prop_overgrown_causeway_scenery`, containing the 88 detached tree, loose
+  rock, ruin and moss components. The owner clarified that reachable scenery
+  must collide. The exporter tags this static staging mesh `solid = True`
+  and generates a placement with `Collide = true`.
+- The full 30-piece `verdant_valley_structure.fbx`, with only Causeway changed.
+  `causeway_split_report.json` records the prop placement and new terrain size.
+
+Import the **single terrain FBX** in Studio and upload its MeshPart under the
+same name. Import the **single prop FBX**, set its MeshPart's
+`CollisionFidelity` to `PreciseConvexDecomposition`, and save its model as
+`assets/rbxm/props/VV_PROP_LIBRARY.rbxmx`, and keep the MeshPart name. Replace
+Causeway's MeshPart in `VV_STRUCTURE.rbxmx` and sync its new MeshId to
+`AssetManifest.luau`; keep the other 29 ids. At that same time set
+`VV_OVERGROWN_CAUSEWAY_GATE.SizeY = 43.5` in
+`Content/Chunks/VerdantValley.luau`, retaining `GroundOffsetY = 39`. These
+changes must land together: the old asset stretched to the new size, or the
+new asset stretched to the old size, would misplace the walk surface.
+
+The prop library is not yet saved into the live place. Until it is, the new
+prop content has no visible scenery. The separated Causeway passed a temporary
+four-rotation Studio walk, but the normal expedition still uses the old joined
+MeshId. Keep that old uploaded mesh until the replacement is saved and passes
+an activated expedition walk. The pilot does not repair visible missing terrain
+faces elsewhere.
+
+**Studio staging check (2026-09-27):** Both FBXs were imported into a blank
+`Place1` and received MeshIds: terrain `rbxassetid://135752326695082`, scenery
+`rbxassetid://125768281462238`. Studio's importer placed the scenery 15.253
+studs above its intended relation to the terrain. Its Y position was corrected
+so the scenery centre is 14.59 studs above the terrain pivot; the horizontal
+offset already matched the importer turn. Terrain is anchored, colliding, and
+`PreciseConvexDecomposition`. After the owner's correction, scenery is also
+anchored with `CanCollide`, `CanQuery`, and `CanTouch` on and
+`PreciseConvexDecomposition`. Studio raycasts hit the terrain at the sampled path centre
+and both socket mouths. These staged MeshParts have **not** been saved as RBXMX
+or activated in the loader; the existing Causeway asset is still live. Before
+activation, save the prop library, update the terrain MeshId and size together,
+and run a full in-game walk. `ChunkLoader` now places the `Collide = true`
+scenery under the server-built stage; clients do not make duplicate copies.
+The temporary pilot showed usable collision on its sampled route and one side
+obstacle; complete geometry coverage and a two-client run remain open.
+
 ## 1. Import to Studio
 
 1. Studio → **3D Importer** → `assets/export/worlds/verdant_valley/verdant_valley_structure.fbx`.
@@ -32,6 +126,18 @@ walk and asset-access check in the game experience.
    A piece reading 1000× too big means the FBX was written in millimetres (see `CHUNK_AUTHORING.md`).
 3. Right-click the Model → *Save to File* →
    `assets/rbxm/chunks/verdant_valley/VV_STRUCTURE.rbxmx`.
+4. Set **CollisionFidelity = PreciseConvexDecomposition** on all 30 MeshParts before
+   saving. The checked-in test kit has this setting. The runtime loader also
+   requests precise collision when creating chunks from uploaded MeshIds.
+   In Studio, turn on **Collision fidelity** in the viewport Visualization
+   Options and walk the generated map. Precise decomposition still approximates
+   large, concave, joined terrain meshes; if collision floats above a path or
+   seals a gap, split the terrain from high rocks, trees and cliffs or author
+   simpler collision geometry in Blender before reimporting.
+5. Inspect the visible terrain gaps from both sides. If a face appears from
+   below only, check its normal or winding in Blender; if absent from both
+   sides, repair the mesh surface there. Do not cover unexplained gaps with
+   invisible Studio parts, which could hide a bad export.
 
 ## 2. Wire the asset ids
 

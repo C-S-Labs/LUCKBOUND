@@ -1,6 +1,6 @@
 # LUCKBOUND — Project Status
 
-**Last updated:** 2026-09-25 · slimmed for token use. The full previous version, with every closed item and walk
+**Last updated:** 2026-09-28 · slimmed for token use. The full previous version, with every closed item and walk
 report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an item below points to it.
 
 > **New conversation?** Read `INDEX.md` → `AGENTS.md` → the top entry of `docs/WORKLOG.md` → this file.
@@ -20,7 +20,41 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   Reach have no map yet.
 - **Verdant Valley cleanup test branch:** `codex/vv-cleanup-testing` contains the reviewed 30-mesh Blender scene,
   validated FBX, Studio-imported `VV_STRUCTURE.rbxmx`, and synced mesh IDs. All 30 imported names and dimensions
-  match the export report; the visual Studio walk and in-experience asset-access check remain open before merge.
+  match the export report. The saved kit now records PreciseConvexDecomposition on all 30 MeshParts;
+  the runtime loader already requests that fidelity. The visual Studio walk and
+  in-experience asset-access check remain open before merge. Floating collision
+  and visible terrain gaps in the owner's walk remain unresolved; the joined
+  terrain needs collision visualization and likely Blender mesh separation or
+  surface repair.
+- **Overgrown Causeway split pilot (2026-09-28):** the reviewed joined mesh was
+  separated into one connected terrain mesh (256 × 43.5 × 256) and one static
+  scenery mesh containing 88 detached trees, rocks, ruins and moss components.
+  Both mesh IDs load in the LUCKBOUND Studio place with precise collision. The
+  `Collide` opt-in now builds static Tier 1 scenery on the server under the
+  replicated chunk; the client skips those rows. A temporary four-yaw stage
+  confirmed server-to-client replication with no duplicate client prop, sampled
+  path raycasts, character traversal at all four rotations, and an obstacle
+  stopping the character. This is a pilot check, not complete geometry coverage.
+  A saved prop library, live `SizeY`/MeshId update, and two-client Studio test
+  remain pending. Other 29 chunks and the old live Causeway asset are unchanged.
+- **Wetland Pools joins (2026-09-28):** the temporary per-mouth socket-height
+  change was reverted after the owner's next walk showed the route beyond
+  Wetland Pools dropping by about two studs. The reviewed Blender mesh has
+  both visible mouths at the same height; the higher Studio raycast hits were
+  on its collision hull. Both socket offsets are zero again. Restart the live
+  run to verify the restored route level, then inspect the collision hull
+  separately. No mesh asset was replaced.
+- **Full Verdant Valley separation candidate (2026-09-28):** Blender now has
+  `verdant_valley_separated.blend` with 30 connected terrain objects and 66
+  `prop_*` objects (37 solid, 29 ambient). Both FBXs were imported in Studio;
+  staged `VV_STRUCTURE.rbxmx` and `VV_PROP_LIBRARY.rbxmx` contain all 96 named
+  MeshParts and uploaded MeshIds, with anchored parts and precise collision on
+  terrain and solid props. `ids.json`, a split report, and candidate chunk/prop content are staged under
+  `assets/export/worlds/verdant_valley/`. The two former side-named cap meshes
+  now use `chunk_cap_*` in the candidate. Exporter checks geometry conservation,
+  colors, socket openings and FBX reimport; the candidate Luau suite passes.
+  **The new meshes are uploaded but not active.** MeshId/content wiring and
+  Studio collision walks remain before replacing the current kit.
 
   | Id | Rarity | Weight | Phase | Map | Enterable? |
   |---|---|---|---|---|---|
@@ -37,10 +71,12 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   Scape has a drafted 9-enemy roster (1 basic built: Aether Wisp) under `assets/source/enemies/ethereal_scape/`.
   **Nothing spawns in gameplay yet.** `EnemyDef` + services wait for the owner's OK.
 - **Tooling:**
+  - **Luau CLI (2026-09-28):** official `luau-lang/luau@0.740.0` is pinned in `rokit.toml` and installed locally. The assembled headless suite passes: 905/905. The CLI has no `--version` option; `rokit list` confirms the pin.
+  - **Codex Studio MCP (2026-09-28):** connected to the LUCKBOUND place; a temporary Play stage supported the Causeway pilot check. Stopping Play discarded the test stage and temporary prop source.
   - **Developer panel + command registry** (2026-09-27): F4 in Studio; 39 commands, all clickable, autocomplete; see `docs/DEV_TOOLS.md`.
   - `INDEX.md` + `INDEX_MAP.md` give the repo map, and CI keeps the map current.
   - StyLua is enforced.
-  - ~808 tests, updated 2026-09-26 for the Ethereal Scape amendment below (exact count pending the next CI run).
+  - 908 headless tests passing locally as of 2026-09-28.
 
 ## 2. Next — pick up here
 
