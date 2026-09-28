@@ -90,6 +90,7 @@
 | floating props, birds | `Content/Props/SkyCitadel.luau` (generated), `Core/PropCore.luau`, `client/Controllers/PropController.luau` |
 | chests, vault, gates | `Content/Fixtures/`, `Core/FixtureCore.luau`, `client/Controllers/FixtureController.luau`, `server/Systems/LootSystem.luau` |
 | world sky / fog / atmospheres | `Content/Worlds/*.luau` (`Environment`), `Content/Atmospheres/`, `client/Controllers/AmbienceController.luau` |
+| leaderboard / chat UI | `client/UI/Leaderboard.luau`, `client/UI/ChatPanel.luau`; columns + tunables in `Core/GameConfig.luau` (`Leaderboard`, `Chat`); doc `docs/PLAYER_UI.md` §3.7 |
 | rolling (Fate) | `Core/FateCore.luau`, `server/Systems/FateSystem.luau`, `client/UI/FateRoll.luau` |
 | parties / teleport | `Core/PartyCore.luau`, `server/Systems/PartySystem.luau`, `client/Controllers/PartyController.luau` |
 | save data | `Core/ProfileSchema.luau`, `server/Systems/SaveSystem.luau` |

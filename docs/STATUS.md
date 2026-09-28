@@ -39,6 +39,9 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   - StyLua is enforced.
   - ~808 tests, updated 2026-09-26 for the Ethereal Scape amendment below (exact count pending the next CI run).
 
+- **Leaderboard + chat panel** (2026-09-27): custom house-style replacements; columns are config data (rank + name
+  today). Needs a Studio walk. See PLAYER_UI §3.7.
+
 ## 2. Next — pick up here
 
 > **2026-09-27: close ship berths fixed after precommit review.** Berths now use

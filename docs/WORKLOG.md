@@ -33,6 +33,32 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 91 — 2026-09-27 — Custom leaderboard + chat panel in the house style
+**Merged:** see the PR for this branch   **Tests:** CI (luau not installed locally)   **Branch:** `claude/leaderboard-chat-ui`
+
+### Done
+- Owner asked for a custom leaderboard and chat panel that match the game's GUI. New `client/UI/Leaderboard.luau`
+  (top-right, Tab toggles, replaces the CoreGui player list) and `client/UI/ChatPanel.luau` (bottom-left, / focuses,
+  built on TextChatService, and fades when idle). Both use UIKit surfaces and UITheme tokens. Wired into
+  `init.client.luau`. Tunables are in `GameConfig.Leaderboard` / `GameConfig.Chat`. Doc: PLAYER_UI §3.7.
+
+### Decisions made
+- Owner: "should be easily modifiable, as there will be more attributes… name alone is fine, and perhaps rank".
+  So the columns are a data list (`RANK` / `NAME` / any Player attribute). There is no server change yet: a future
+  stat is `SetAttribute` on the server plus one config row.
+- Owner likes "FATEBOUND" but finds it undescriptive, so the title stays FATEBOUND with a "N players" count beside it.
+- Chat keeps TextChatService underneath, so Roblox moderation and filtering still apply.
+
+### Stopped at
+Code done and lint-clean. It has not been walked in Studio yet.
+
+### Next
+1. Studio check: the panel positions against the hub rail and the mobile controls, and that `/` commands still
+   fire through the custom input (SendAsync should trigger TextChatCommands; confirm this).
+2. When a stat should show, set the attribute server-side and add a column.
+
+---
+
 ## Session 90 — 2026-09-27 — Fix: entering twice while a map loads built two maps
 **Merged:** see the PR for this branch   **Tests:** suite passing (local)   **Branch:** `claude/enter-lock`
 

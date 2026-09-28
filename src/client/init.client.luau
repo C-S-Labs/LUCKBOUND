@@ -27,6 +27,8 @@ local DevPanel = require(UI.DevPanel)
 local LightningController = require(Controllers.LightningController)
 local FateRoll = require(UI.FateRoll)
 local GlobalAnnouncements = require(UI.GlobalAnnouncements)
+local Leaderboard = require(UI.Leaderboard)
+local ChatPanel = require(UI.ChatPanel)
 local ExpeditionHud = require(UI.ExpeditionHud)
 local HubMenu = require(UI.HubMenu)
 local LoadingScreen = require(UI.LoadingScreen)
@@ -66,6 +68,9 @@ ThemeController.init()
 SkyController.init()
 FateRoll.init()
 GlobalAnnouncements.init()
+-- House-style player list and chat window, in place of the Roblox defaults.
+Leaderboard.init()
+ChatPanel.init()
 -- The hub menu after the roll UI: it subscribes to FateRoll's rolling signal
 -- so it can get out of the way during a reveal.
 HubMenu.init()
