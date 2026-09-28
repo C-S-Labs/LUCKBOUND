@@ -48,7 +48,8 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ### Decisions made
 - Switching follows the Souls convention (flick sideways), adapted for mouse and touch.
-- Mythic charge is unscoped: open question for the owner.
+- Mythic charge (owner): Legendary's charge in two stages, with an awakening finisher at stage 2
+  (`WEAPONS.md` §2). Rejected: an act-filled charge and movement tech. Open: a party buff on release.
 
 ### Stopped at
 Test K (17 steps) needs a Studio walk.

@@ -64,7 +64,22 @@ is equipped**. Every other weapon shows no charge UI.
 | Common, Uncommon, Rare | **None.** No charge, no bar |
 | **Epic** | Charge only; a charged state grants **small stat buffs** (for example damage or attack speed), with no new moves |
 | **Legendary** | Charge **alters the moveset for a short duration**: the charged state swaps in the weapon's unique charged moves, then reverts |
-| Mythic | *Not yet scoped (open question for the owner)* |
+| **Mythic** | Legendary's charge **in two stages** (below) |
+
+**Mythic: the two-stage charge (owner, 2026-09-28).** Stage 1 is a Legendary's:
+the moveset changes for a short duration. Holding the charge through stage 1
+reaches stage 2, an **awakening**: one signature finisher that spends the charge.
+The choice is the point: cash in early, or push for the finisher.
+
+- Decided against: a charge that fills only from a signature act (would annoy the
+  player), and charged-only movement tech (underwhelming).
+- **Open:** a small party buff when a charge is released. The owner is undecided;
+  if it is taken, keep it brief and modest so it rewards grouping without
+  making the wielder dominant.
+- Guardrails: the Mythic's edge is the charge, not raw stats (base stats at most a
+  little above Legendary). Every charged move has a readable tell (`ENEMY_AI.md`
+  §4.1). Mythics must stay inside the win-rate bands in simulation (`ENEMY_AI.md`
+  §12 step 8).
 
 A charge makes a weapon slightly stronger, and that is the point: it rewards
 getting rarer weapons. Charge numbers and charged moves live on the weapon as data

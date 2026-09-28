@@ -226,7 +226,7 @@ _250 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/DEV_TOOLS.md
 
-- `docs/DEV_TOOLS.md` (65) - Developer tools — commands and the dev panel · 2026-09-27
+- `docs/DEV_TOOLS.md` (65) - Developer tools — commands and the dev panel · 2026-09-28
   - `DEV_TOOLS.md`: Using it:8, Commands:26, Adding a command:40, Where it lives:58
 
 ### docs/ENEMY_AI.md
@@ -311,13 +311,13 @@ _250 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WEAPONS.md
 
-- `docs/WEAPONS.md` (170) - LUCKBOUND — Weapons · 2026-09-25
-  - `WEAPONS.md`: 1. Types:12, 2. Rarity — what each tier must SHOW:26, Charge — Epic and Legendary only (owner, 2026-09-28):56, 3. Style:74, 4. Rig — every weapon is rigged, and every moving part is mo:87, Bone vocabulary:103, 5. Orientation, in Blender:133, 6. Names and files:144
+- `docs/WEAPONS.md` (185) - LUCKBOUND — Weapons · 2026-09-28
+  - `WEAPONS.md`: 1. Types:12, 2. Rarity — what each tier must SHOW:26, Charge — Epic and Legendary only (owner, 2026-09-28):56, 3. Style:89, 4. Rig — every weapon is rigged, and every moving part is mo:102, Bone vocabulary:118, 5. Orientation, in Blender:148, 6. Names and files:159
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (5909) - LUCKBOUND — Work Log · 2026-09-28
-  - `WORKLOG.md`: Template:16, Session N — YYYY-MM-DD — <short title>:19, Done:22, Decisions made:25, Stopped at:28, Next:31, Session 98 — 2026-09-28 — Lock-on switching, charge scope:37, Done:40, Decisions made:49, Stopped at:53, Next:56, Session 97 — 2026-09-28 — Own character controller, roll, st:61, Done:66, Decisions made (owner, this session):83, Stopped at:91, Next:95, Session 96 — 2026-09-28 — Movement state machine: sprint-jum:102, Done:105, Decisions made:117, Stopped at:124, Next:127, Session 95 — 2026-09-28 — Git workflow: implementation vs in:133, Done:136, Decisions made:144, Stopped at:149, Next:152, Session 94 — 2026-09-27 — Dev panel grip: visible, and corre:157, Done:160, Next:169, Session 93 — 2026-09-27 — Leaderboard rows: friend / block /:174, Done:177, Next:189, Session 92 — 2026-09-27 — Chat to top-left, rail drops and c:195, Done:198, Stopped at:214, Next:217, Session 91 — 2026-09-27 — Custom leaderboard + chat panel in:222, Done:225, Decisions made:231, Stopped at:238, ... +510 more
+- `docs/WORKLOG.md` (5910) - LUCKBOUND — Work Log · 2026-09-28
+  - `WORKLOG.md`: Template:16, Session N — YYYY-MM-DD — <short title>:19, Done:22, Decisions made:25, Stopped at:28, Next:31, Session 98 — 2026-09-28 — Lock-on switching, charge scope:37, Done:40, Decisions made:49, Stopped at:54, Next:57, Session 97 — 2026-09-28 — Own character controller, roll, st:62, Done:67, Decisions made (owner, this session):84, Stopped at:92, Next:96, Session 96 — 2026-09-28 — Movement state machine: sprint-jum:103, Done:106, Decisions made:118, Stopped at:125, Next:128, Session 95 — 2026-09-28 — Git workflow: implementation vs in:134, Done:137, Decisions made:145, Stopped at:150, Next:153, Session 94 — 2026-09-27 — Dev panel grip: visible, and corre:158, Done:161, Next:170, Session 93 — 2026-09-27 — Leaderboard rows: friend / block /:175, Done:178, Next:190, Session 92 — 2026-09-27 — Chat to top-left, rail drops and c:196, Done:199, Stopped at:215, Next:218, Session 91 — 2026-09-27 — Custom leaderboard + chat panel in:223, Done:226, Decisions made:232, Stopped at:239, ... +510 more
 
 ### docs/archive
 
@@ -448,7 +448,7 @@ _250 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 - `src/shared/Content/Chunks/init.luau` (19) - Chunk registry. Each module returns a LIST of chunks -- one file per world's · 2026-09-24
 - `src/shared/Content/Codes.luau` (41) - REDEEMABLE CODES, AS DATA. Adding one is one row; no System changes. · 2026-09-24
   - `Codes.luau`: LAUNCH:18, FIRSTROLL:25, TESTER:32
-- `src/shared/Content/DevCommands.luau` (375) - THE DEVELOPER COMMAND REGISTRY. Testing tooling, not a feature. · 2026-09-27
+- `src/shared/Content/DevCommands.luau` (375) - THE DEVELOPER COMMAND REGISTRY. Testing tooling, not a feature. · 2026-09-28
 - `src/shared/Content/Events/AuroraVeil.luau` (47) - AURORA VEIL -- weather, and nothing but weather. · 2026-09-24
 - `src/shared/Content/Events/CatalystStar.luau` (62) - THE CATALYST STAR — one of ten that will ever exist. · 2026-09-24
 - `src/shared/Content/Events/Starfall.luau` (55) - STARFALL — the Fatebreak sky. Master Spec §12. · 2026-09-24
