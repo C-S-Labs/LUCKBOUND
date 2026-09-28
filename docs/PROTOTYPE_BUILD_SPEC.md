@@ -645,6 +645,7 @@ Four lessons worth keeping:
 | **§7.5** | Loot, fixtures and vault keys | 2026-09-23 |
 | **§7.6** | Enemy AI and combat — number reserved, nothing opened yet | 2026-09-26 |
 | **§7.7** | Universal map generation: blueprints, filled junctions, miniboss arenas, backdrop | 2026-09-27 |
+| **§7.8** | Expedition portals: entrance, boss-gated exit, outcome-based rewards | 2026-09-28 |
 
 **Two branches once claimed §7.2 simultaneously**, each green on its own, and
 the collision was caught by hand during a merge. An amendment number is
@@ -1177,3 +1178,78 @@ Minibosses = 1, MaxSides = 2, Backdrop = 18 }`).
 A socket's `OffsetY` has always been honoured by `placeAgainst`; kits may now author rises and descents (Ethereal
 Scape's Skystairs ±24, ascents ±16) and the map climbs and falls with them. The authoring contract is unchanged: every
 mouth is the kind's standard landing, level at its own socket height.
+
+## 7.8 Amendment: expedition portals — entrance, boss-gated exit, outcome rewards, opened 2026-09-28
+
+**Owner-directed.** Replaces the prototype Expedition Gate's role and the single "RETURN" portal with two doors, and
+makes what a run pays depend on how it ended. Branch `agent/expedition-portal`.
+
+### The rules (owner, 2026-09-28)
+
+1. **Entrance portal** (today's `ReturnPortal`, renamed `EntrancePortal`) stands on the ENTRY chunk and is **always
+   open**. A player may leave through it at any time.
+2. **Exit portal** stands on the BOSS chunk where the boss stood. It is **closed until the boss is defeated**, then
+   spawns gradually (spin-up, then open). Players may leave through it or stay until the timer ends.
+3. **Both portals are flush**: part of the chunk, standing on the walk surface, never floating above it.
+4. **Outcomes decide the payout** (`ExpeditionCore.payoutFor`, pure, server-decided):
+
+   | Outcome | Loot | Fate / XP |
+   |---|---|---|
+   | Boss cleared, then any exit: exit portal, entrance portal, or timer | the boss roll (once per player, at defeat) | full |
+   | Left through the entrance, boss **not** cleared | none | **reduced** (`GameConfig.Expedition.EarlyExitFraction`) |
+   | Timer ran out, boss not cleared | none | reduced |
+   | Died | none | none (unchanged) |
+
+   Loot is rolled **at boss defeat**, for each player present (existing `LootSystem` boss roll, §7.5), not at exit,
+   so staying or leaving cannot change it.
+5. The party ready toggle and the host-starts-run flow belong to the **Fate engine rework**, not this branch. This
+   branch only leaves the payout seam (`payoutFor`) and the entry seam (`ExpeditionSystem.requestEnter`) it plugs into.
+6. **The hub Expedition Gate (the Crossroads `GATE` zone) is removed.** Entry has been at the Fate Engine
+   (`Expedition.EntryAtEngine`) since before this amendment; the `GateAnchor` *name* stays because `ExpeditionSystem`
+   finds the entry prompt by it.
+
+### Where a portal stands, without touching any chunk kit
+
+Defaults are derived from geometry the loader already has: the entrance at the ENTRY chunk's centre, the exit at the
+BOSS chunk's centre (`Centre` attribute, until `BossService` supplies the boss's real position). Each is then
+**raycast down onto the chunk's walk surface** and the plinth is seated on the hit, so it is flush whatever the kit's
+floor height. A world may override either spot with an optional content file `Content/Portals/<World>.luau`
+(`{ Entrance = { Chunk, Offset }, Exit = { Chunk, Offset } }`, same pattern as `Content/Fixtures`). **No existing chunk
+definition changes.** A world with no file gets the defaults.
+
+### What it adds
+
+| | |
+|---|---|
+| `Core/ExpeditionCore.luau` | `payoutFor(outcome, cfg)`; `ExitState` (LOCKED / OPENING / OPEN) as pure data |
+| `Util/PortalRig.luau` | a `Flush` option (plinth seated on the surface); an opening sequence for the exit |
+| `Systems/ExpeditionSystem.luau` | build both portals, gate the exit on the boss event, route every leave through `finish(player, outcome)` |
+| `Systems/LootSystem.luau` | tells `ExpeditionSystem` when the boss falls (the existing `bossDefeated` seam) |
+| `Core/GameConfig.luau` | `Expedition`: `EarlyExitFraction`, `ExitOpenSeconds`, portal scales and prompt distances |
+| remotes | **none.** Both portals are server-side `ProximityPrompt`s; every trigger is re-checked for group membership, distance and portal state (§7.1 standard) |
+
+### Findings from reading the code (2026-09-28)
+
+- **There is Fate but no XP.** `ProgressionSystem` awards `FatePoints` only. The payout carries an `Xp` field so the
+  rework can fill it; it is unread today and gets a `docs/RESERVED.md` row. Until XP exists, "reduced Fate and XP"
+  means reduced Fate.
+- Today `RETURNED` and `COMPLETED` pay **the same full award**, so leaving at once pays as much as clearing the
+  world. This amendment ends that.
+- The boss is still the §7.5 **stand-in** (a party member first stands in the arena); the exit portal opens on that
+  event and will open on the real boss's death when `BossService` exists (§7.6).
+
+### Not opened
+
+Combat, enemies, real bosses, what drops (pools still empty), world modifiers, the party ready toggle, and the
+Fate engine's logic and UI: all unchanged and still excluded.
+
+### Build order
+
+1. Spec + index row (this section).
+2. `ExpeditionCore.payoutFor` + `GameConfig` values + tests (pure, no Roblox).
+3. `PortalRig` flush seating + opening sequence, with tests for the geometry.
+4. Entrance portal: rename, flush, always open, routes through the payout.
+5. Exit portal: build closed, open on the boss event, gradual spawn, payout.
+6. Remove the hub `GATE` zone and its tests; keep `GateAnchor`.
+7. Docs (`STATUS`, `WORKLOG`, `RESERVED`, `INDEX.md`, `TESTING.md` Studio pass), `stylua`, `gen_index.py`.
+
