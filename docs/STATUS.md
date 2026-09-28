@@ -51,6 +51,20 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   two-client check remain before any kit-wide rollout.
   The owner requested that this prototype remain local until newer repository
   versions are reconciled; no push or PR has been made.
+- **Stone Sentinels collider optimization:** On local branch
+  `codex/vv-stone-collision-merge`, compatible adjacent 16-stud tiles from the
+  same reviewed Blender scene collapse from 202 to 118 MeshParts (41.6% fewer).
+  The original RBXMX remains as the known-good reference. The merged asset has
+  118 unique uploaded meshes, a zero pivot, and explicit precise collision;
+  Stone Sentinels alone now selects it through `CollisionTemplate`. Studio
+  raycasts against the saved asset at four yaws hit 253/253 visible-surface
+  samples with mean/p95/max height errors of 0.315/0.350/0.351 stud (original:
+  0.333/0.350/0.351); all three cliff probes remained open. A 4-stud grid
+  had 2,933 shared hits, 1,036 shared misses, zero one-sided hits, and at most
+  0.220 stud height difference between colliders. A temporary loader build
+  confirmed 118 pieces active with the visual mesh collision and queries off.
+  An in-game character walk and owner visual check at the former invisible
+  floor remain pending. Do not extend this optimization across the kit yet.
 - **Overgrown Causeway split pilot (2026-09-28):** the reviewed joined mesh was
   separated into one connected terrain mesh (256 × 43.5 × 256) and one static
   scenery mesh containing 88 detached trees, rocks, ruins and moss components.

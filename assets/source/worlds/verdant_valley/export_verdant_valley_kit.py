@@ -291,7 +291,7 @@ def write_content(out, rows, ids):
         L.append(f'\t\tRole = "{r["role"]}" :: any,')
         L.append(f'\t\tAssetKey = "{r["key"]}",')
         if r["id"] == "VV_STONE_SENTINELS":
-            L.append('\t\tCollisionTemplate = "VV_STONE_SENTINELS_COLLISION",')
+            L.append('\t\tCollisionTemplate = "VV_STONE_SENTINELS_COLLISION_MERGED",')
         L.append(f"\t\tSizeX = {sx:g}, SizeY = {r['size'][1]:.2f}, SizeZ = {sz:g},")
         L.append(f"\t\tGroundOffsetY = {r['ground']:.2f},")
         socks = ", ".join(socket_line(s, k, sx / 2, sz / 2) for s, k in r["sockets"])

@@ -121,7 +121,7 @@ local CHUNKS = {
 		Id = "VV_STONE_SENTINELS",
 		Role = "COMBAT" :: any,
 		AssetKey = "VV_CHUNK_STONE_SENTINELS",
-		CollisionTemplate = "VV_STONE_SENTINELS_COLLISION",
+		CollisionTemplate = "VV_STONE_SENTINELS_COLLISION_MERGED",
 		SizeX = 256, SizeY = 76.47, SizeZ = 256,
 		GroundOffsetY = 43.00,
 		Sockets = { socket("north", "PATH", 0, -128, 0), socket("south", "PATH", 0, 128, 180) },

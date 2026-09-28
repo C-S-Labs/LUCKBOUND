@@ -65,6 +65,40 @@ walked from the interior to the north mouth while grounded and at full health.
 The temporary stage and Workspace copy were removed. The owner's visual walk
 at the exact previously bad spot and a two-client check remain before rollout.
 
+**Compatible-patch optimization (2026-09-28):** Run the same generator with
+`--merge-compatible` to write `stone_sentinels_walk_collision_merged.fbx`, its
+JSON report, and `StoneSentinelsMergedValidation.luau`. This starts with the
+same 202 walk tiles and joins only complete adjacent tiles whose combined
+height field fits a plane within 0.22 stud and whose slope differs by at most
+0.04. It retains the sampled top surface rather than replacing it with the
+fitted plane. Open and steep tile boundaries remain separate. The result has
+118 collision meshes (84 fewer, 41.6% reduction), including a 96 × 32-stud
+smooth patch and two 32 × 64-stud path patches. A 2-stud Blender grid found no
+coverage or height differences from the original collider.
+
+In Studio, import the merged FBX at scale 1.0, set `CollisionOrigin` as the
+model's `PrimaryPart`, pivot to `CFrame.new()`, clear `PrimaryPart`, remove the
+marker, and set `WorldPivot = CFrame.new()`. Name the model
+`VV_STONE_SENTINELS_COLLISION_MERGED`. Anchor and enable collision/query on all
+118 walk MeshParts, disable touch, and set `PreciseConvexDecomposition`. Keep
+the original `VV_STONE_SENTINELS_COLLISION.rbxmx` unchanged as the reference.
+Save the merged model as
+`assets/rbxm/chunks/verdant_valley/VV_STONE_SENTINELS_COLLISION_MERGED.rbxmx`.
+
+**Merged Studio raycasts:** At each of four quarter turns, both colliders hit
+all 253 Blender reference points; the original mean/p95/max absolute height
+errors were 0.333/0.350/0.351 stud, and the merged errors were
+0.315/0.350/0.351 stud. No point exceeded 1 stud, and none of the three known
+cliff/open probes produced a hit. A separate 4-stud grid found 2,933 shared
+hits, 1,036 shared misses, zero one-sided hits, and at most 0.220 stud
+collision-height difference between the models. The saved RBXMX was reloaded
+through Rojo with 118 unique MeshIds and names,
+a zero pivot, and explicit precise fidelity on all pieces. The four-yaw
+reference raycast results stayed the same. The Stone Sentinels content entry
+now names the merged model; the 202-piece asset remains in the kit folder as
+the known-good rollback. An in-game character walk and owner visual check at
+the previous invisible-floor location remain pending.
+
 The reviewed, joined 30-mesh scene is `verdant_valley_30_cleanup_review.blend`.
 Export it without regenerating terrain or changing the scene's `chunk_*` names:
 

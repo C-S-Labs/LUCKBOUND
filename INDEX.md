@@ -125,8 +125,9 @@ Blender: `"C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe" -b
   visual kit is the baseline. The failed separation test is retained on
   `codex/vv-full-separation-reference`. `build_stone_walk_collision.py` derives
   a segmented Stone Sentinels collider FBX, report and Studio raycast script
-  from the reviewed scene. The Studio-imported
-  `VV_STONE_SENTINELS_COLLISION.rbxmx` is live for that chunk only; the loader
+  from the reviewed scene. Its `--merge-compatible` mode joins smooth adjacent
+  cells; `VV_STONE_SENTINELS_COLLISION_MERGED.rbxmx` is live for that chunk,
+  while the original 202-piece RBXMX remains the known-good reference. The loader
   keeps visual collision if the model is missing. See `IMPORT_STEPS.md`.
 - Naming convention:
   - The kit file is `<W>_STRUCTURE.rbxmx`, with W = `SC` or `VV`.

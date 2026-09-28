@@ -33,6 +33,28 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 107 — 2026-09-28 — Merge compatible Stone Sentinels collider cells
+**Merged:** none   **Tests:** 908 headless passed; Rojo build; Studio 253/253 rays at four yaws and 4-stud coverage grid   **Branch:** `codex/vv-stone-collision-merge`
+
+### Done
+- Preserved the 202-piece Stone Sentinels collider, its FBX, report, and RBXMX. Added `--merge-compatible` to the generator using the same reviewed Blender scene and 4-stud sampled top surface. It joins only complete adjacent tiles when a common plane has at most 0.22-stud height residual and 0.04 slope difference; it retains original heights in each joined patch.
+- Generated and imported a 118-piece merged FBX (84 fewer parts, 41.6% reduction). The longest smooth patch spans 96 × 32 studs; two 32 × 64-stud patches cover the central path. Blender's 2-stud grid found no surface-height or coverage changes. All pieces passed manifold and FBX reimport checks.
+- Compared the original and merged collision in Studio at four yaws: both hit all 253 visible-terrain references per yaw with no >1-stud errors or hits on three cliff/open probes. Original mean/p95/max absolute errors: 0.333/0.350/0.351 studs; merged: 0.315/0.350/0.351. A separate 4-stud grid found 2,933 shared hits, 1,036 shared misses, no one-sided hits, and a maximum 0.220-stud collision-height difference.
+- Saved the merged RBXMX with 118 unique uploaded MeshIds/names, a zero pivot, and explicit precise collision fidelity. Rojo reload retained the same raycast results. Changed only Stone Sentinels' `CollisionTemplate` to the merged model; a temporary loader build confirmed 118 active collider parts and the joined visual mesh's collision/query disabled. Removed the temporary Workspace import.
+- Ran 908 headless tests and a Rojo build. Did not push or create a PR, per owner instruction.
+
+### Decisions made
+- Keep the original 202-piece RBXMX as the known-good rollback and keep this optimization isolated to Stone Sentinels. Do not change the current reviewed visual art or deploy the failed full-separation architecture.
+
+### Stopped at
+The merged asset is selected locally and raycast-validated. An in-game character walk and owner visual inspection at the earlier invisible-floor spot remain before broader rollout. Newer repository versions must be reconciled before any push.
+
+### Next
+1. Walk Stone Sentinels in the game, especially the central path, depressions, north drop-off, and the earlier invisible-floor location; obtain the owner's visual confirmation and run a two-client check.
+2. Reconcile newer repo versions before any push or PR. Retain the original collider and separation diagnostics until CI plus Studio checks prove cleanup safe.
+
+---
+
 ## Session 106 — 2026-09-28 — Stone Sentinels walk collider pilot
 **Merged:** none   **Tests:** 908 headless passed; Blender FBX reimport 203 meshes; Studio 253/253 rays at four yaws   **Branch:** `codex/vv-stone-walk-collision`
 
