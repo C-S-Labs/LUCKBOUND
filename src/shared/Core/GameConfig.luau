@@ -869,6 +869,8 @@ local GameConfig = {
 		FadeAfterSeconds = 8,
 		FadedTransparency = 0.75,
 		MaxLength = 200,
+		-- The top-bar button that shows and hides the window.
+		ToggleGlyph = "💬",
 	},
 
 	-- === THE HUB MENU =================================================
@@ -882,6 +884,10 @@ local GameConfig = {
 	-- and the server agree on what "in the hub" means.
 	HubMenu = {
 		Enabled = true,
+
+		-- Pixels the rail sits below the vertical centre, to clear the chat
+		-- window in the top-left corner (GameConfig.Chat).
+		RailOffsetY = 90,
 
 		-- Start collapsed on a phone. The rail plus an open panel is most of a
 		-- portrait screen, and the owner's note was explicit: the HUB must not
@@ -1085,6 +1091,9 @@ local GameConfig = {
 		-- output lines it keeps, and how many autocomplete rows it shows.
 		PanelKey = "F4", -- an Enum.KeyCode name (a string: GameConfig loads headless)
 		PanelLogLines = 120,
+		-- The dev panel resizes from its corner grip, down to this floor.
+		PanelMinWidth = 460,
+		PanelMinHeight = 380,
 		PanelSuggestions = 10,
 		ChunkLabelHeight = 40, -- studs above a chunk's centre for its /chunks label
 		-- Guard rails on /speed, so a typo does not launch the character into

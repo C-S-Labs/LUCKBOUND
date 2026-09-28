@@ -33,6 +33,33 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 92 — 2026-09-27 — Chat to top-left, rail drops and collapses when chat opens
+**Merged:** see the PR for this branch   **Tests:** CI   **Branch:** `claude/chat-top-left`
+
+### Done
+- Owner: chat should stay top-left; move the sidebar down a tad; the sidebar closes when chat opens; slightly more
+  space between PLAYER and the divider. So: the chat is anchored top-left. `GameConfig.HubMenu.RailOffsetY` (90)
+  lowers the rail, arrow and panel. New `HubMenu.collapse()` is fired by `ChatPanel.onOpened`. The leaderboard
+  header grows from 34 to 40px, so the headings no longer touch the divider.
+- Owner: "toggles the chat window by clicking on the default roblox chat icon". Roblox hides that icon when the
+  default window is disabled and exposes no click event, so a house-style chat button now sits in the top bar
+  (GuiService.TopbarInset) and toggles the panel. Showing the chat also collapses the rail.
+- Owner: dev menu should resize by dragging a corner. `DevPanel.luau` now has a bottom-right grip that resizes the
+  panel, from `GameConfig.Debug.PanelMinWidth/Height` up to the viewport. The old fixed MaxSize is gone.
+- Owner's partner cannot see the rotating constellation above the Fate Engine. Cause: `HubV2` clones
+  `hubsky_ring_constellation` / `_spokes` / `_core` / `_gyro_a/b` from the HUB_SKY prefab, and those meshes exist
+  only in the owner's uncommitted local `assets/rbxm/prefabs/HUB_SKY.rbxmx`. origin/main's copy lacks them, and
+  HubV2 silently skips missing meshes. Fixed: with the owner's go-ahead, their local prefab (12 new MeshParts on
+  uploaded rbxassetids) is committed in this PR.
+
+### Stopped at
+Not walked in Studio. Check that the rail clears the chat on small or phone screens, and tune RailOffsetY if not.
+
+### Next
+1. Studio walk of both panels.
+
+---
+
 ## Session 91 — 2026-09-27 — Custom leaderboard + chat panel in the house style
 **Merged:** see the PR for this branch   **Tests:** CI (luau not installed locally)   **Branch:** `claude/leaderboard-chat-ui`
 

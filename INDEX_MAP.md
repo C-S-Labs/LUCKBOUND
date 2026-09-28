@@ -226,8 +226,8 @@ _246 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/DEV_TOOLS.md
 
-- `docs/DEV_TOOLS.md` (64) - Developer tools — commands and the dev panel · 2026-09-27
-  - `DEV_TOOLS.md`: Using it:8, Commands:25, Adding a command:39, Where it lives:57
+- `docs/DEV_TOOLS.md` (65) - Developer tools — commands and the dev panel · 2026-09-27
+  - `DEV_TOOLS.md`: Using it:8, Commands:26, Adding a command:40, Where it lives:58
 
 ### docs/ENEMY_AI.md
 
@@ -271,8 +271,8 @@ _246 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/PLAYER_UI.md
 
-- `docs/PLAYER_UI.md` (262) - LUCKBOUND — Player UI · 2026-09-27
-  - `PLAYER_UI.md`: 1. The shape of it:11, 2. The loading screen:38, 3. The hub menu:73, It is only in the Crossroads:75, The arrow:87, The panels:98, Travel, precisely:115, 3.5 The live tint:135, How it reaches the screen:168, Events:178, 3.6 What each setting actually does:192, 3.7 Leaderboard and chat:211, 4. The design system:232, 5. Known gaps:250
+- `docs/PLAYER_UI.md` (267) - LUCKBOUND — Player UI · 2026-09-27
+  - `PLAYER_UI.md`: 1. The shape of it:11, 2. The loading screen:38, 3. The hub menu:73, It is only in the Crossroads:75, The arrow:87, The panels:98, Travel, precisely:115, 3.5 The live tint:135, How it reaches the screen:168, Events:178, 3.6 What each setting actually does:192, 3.7 Leaderboard and chat:211, 4. The design system:237, 5. Known gaps:255
 
 ### docs/PROTOTYPE_BUILD_SPEC.md
 
@@ -311,8 +311,8 @@ _246 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (5723) - LUCKBOUND — Work Log · 2026-09-27
-  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 91 — 2026-09-27 — Custom leaderboard + chat panel in:36, Done:39, Decisions made:45, Stopped at:52, Next:55, Session 90 — 2026-09-27 — Fix: entering twice while a map lo:62, Done:65, Next:76, Session 89 — 2026-09-27 — Developer panel + command registry:81, Done:84, Next:103, Session 88 — 2026-09-27 — Ethereal Scape: walk fixes (Sanctu:108, Done:111, Next:127, Session 87 — 2026-09-27 — Ethereal Scape: final polish, map-:134, Done:137, Stopped at:169, Next:172, Session 86 — 2026-09-27 — Ethereal Scape: Sanctum interior, :179, Done:182, Stopped at:203, Next:206, Session 85 — 2026-09-27 — Ethereal Scape hybrid kit (36) + u:211, Done:214, Decisions made:237, Stopped at:242, Next:245, Session 84 — 2026-09-27 — Close berth geometry and final bra:251, Done:254, Decisions made:261, Stopped at:264, Next:267, Session 83 — 2026-09-27 — Dock ships rather than whales:273, Done:276, ... +480 more
+- `docs/WORKLOG.md` (5750) - LUCKBOUND — Work Log · 2026-09-27
+  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 92 — 2026-09-27 — Chat to top-left, rail drops and c:36, Done:39, Stopped at:55, Next:58, Session 91 — 2026-09-27 — Custom leaderboard + chat panel in:63, Done:66, Decisions made:72, Stopped at:79, Next:82, Session 90 — 2026-09-27 — Fix: entering twice while a map lo:89, Done:92, Next:103, Session 89 — 2026-09-27 — Developer panel + command registry:108, Done:111, Next:130, Session 88 — 2026-09-27 — Ethereal Scape: walk fixes (Sanctu:135, Done:138, Next:154, Session 87 — 2026-09-27 — Ethereal Scape: final polish, map-:161, Done:164, Stopped at:196, Next:199, Session 86 — 2026-09-27 — Ethereal Scape: Sanctum interior, :206, Done:209, Stopped at:230, Next:233, Session 85 — 2026-09-27 — Ethereal Scape hybrid kit (36) + u:238, Done:241, Decisions made:264, Stopped at:269, Next:272, Session 84 — 2026-09-27 — Close berth geometry and final bra:278, Done:281, Decisions made:288, ... +484 more
 
 ### docs/archive
 
@@ -371,25 +371,25 @@ _246 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
   - `StateController.luau`: notify:31, StateController.get:37, StateController.onChanged:41, StateController.setting:55, StateController.applySetting:68, StateController.init:79
 - `src/client/Controllers/ThemeController.luau` (178) - THE LIVE PALETTE, APPLIED. · 2026-09-25
   - `ThemeController.luau`: ThemeController.register:50, ThemeController.palette:59, ThemeController.onChanged:63, differs:74, repaint:83, evaluate:111, ThemeController.district:151, ThemeController.init:155
-- `src/client/UI/ChatPanel.luau` (221) - The chat window, in the house style. Replaces TextChatService's default · 2026-09-27
-  - `ChatPanel.luau`: hex:30, wake:36, fade:47, addLine:62, onMessage:97, send:112, build:130, ChatPanel.init:180
-- `src/client/UI/DevPanel.luau` (629) - THE DEVELOPER PANEL. Testing tooling, not a feature: it exists only when · 2026-09-27
-  - `DevPanel.luau`: chip:64, grid:72, scroller:87, log:102, clearLog:129, runLine:139, runCommand:155, hideSuggestions:165, drawSuggestions:171, refreshSuggestions:216, accept:227, valueLabel:239, buildCard:249, paintTabs:384, showCategory:392, toggle:412, build:421, DevPanel.init:616
+- `src/client/UI/ChatPanel.luau` (319) - The chat window, in the house style. Replaces TextChatService's default · 2026-09-27
+  - `ChatPanel.luau`: hex:34, wake:40, fade:51, addLine:66, onMessage:101, send:116, notifyOpened:134, setShown:142, buildToggle:160, build:215, ChatPanel.onOpened:270, ChatPanel.init:274
+- `src/client/UI/DevPanel.luau` (696) - THE DEVELOPER PANEL. Testing tooling, not a feature: it exists only when · 2026-09-27
+  - `DevPanel.luau`: chip:64, grid:72, scroller:87, log:102, clearLog:129, runLine:139, runCommand:155, hideSuggestions:165, drawSuggestions:171, refreshSuggestions:216, accept:227, valueLabel:239, buildCard:249, paintTabs:384, showCategory:392, toggle:412, build:421, DevPanel.init:683
 - `src/client/UI/ExpeditionHud.luau` (206) - The expedition banner: where you are, how long is left, and what happened · 2026-09-23
   - `ExpeditionHud.luau`: build:35, showToast:121, ExpeditionHud.init:139
 - `src/client/UI/FateRoll.luau` (360) - The roll: prompt, build-up, reveal, result card. Build spec T-115. · 2026-09-25
   - `FateRoll.luau`: setRolling:46, corner:55, stroke:59, build:63, playBuildup:209, showCard:243, hideAll:273, onRollResult:292, FateRoll.onRollingChanged:337, FateRoll.init:348
 - `src/client/UI/GlobalAnnouncements.luau` (245) - Server-wide banners and live-event display. Build spec T-116 and §4.1. · 2026-09-22
   - `GlobalAnnouncements.luau`: build:35, isSuppressed:126, showBanner:136, setActiveEvent:199, GlobalAnnouncements.init:224
-- `src/client/UI/HubMenu.luau` (931) - THE HUB MENU: the side rail, its panels, and the arrow that hides it. · 2026-09-25
-  - `HubMenu.luau`: say:79, travelTo:108, clearBody:133, section:141, paragraph:148, buildTravel:158, buildCodes:190, buildSettings:245, partyRow:281, buildParty:316, buildPreview:434, SHOP:456, SKILLS:461, REBIRTH:466, buildPanelBody:473, railRestingPosition:497, panelRestingPosition:507, refreshRailSelection:514, applyPanelVisibility:525, applyState:546, dispatch:568, refreshVisibility:579, setVisible:586, buildRail:596, buildArrow:672, buildPanel:694, build:740, keyCodeNamed:783, bindHotkeys:796, HubMenu.init:841
+- `src/client/UI/HubMenu.luau` (945) - THE HUB MENU: the side rail, its panels, and the arrow that hides it. · 2026-09-27
+  - `HubMenu.luau`: say:79, travelTo:108, clearBody:133, section:141, paragraph:148, buildTravel:158, buildCodes:190, buildSettings:245, partyRow:281, buildParty:316, buildPreview:434, SHOP:456, SKILLS:461, REBIRTH:466, buildPanelBody:473, railRestingPosition:501, panelRestingPosition:511, refreshRailSelection:518, applyPanelVisibility:529, applyState:550, dispatch:572, refreshVisibility:583, setVisible:590, buildRail:600, buildArrow:676, buildPanel:698, build:744, keyCodeNamed:787, bindHotkeys:800, HubMenu.init:845, HubMenu.collapse:937
 - `src/client/UI/Leaderboard.luau` (252) - The player list, in the house style. Replaces Roblox's CoreGui one. · 2026-09-27
   - `Leaderboard.luau`: layCells:34, cellText:74, sortedPlayers:84, refresh:99, addRow:120, removeRow:151, setOpen:161, build:166, Leaderboard.init:220
 - `src/client/UI/LoadingScreen.luau` (664) - THE FIRST THING ANYONE SEES. Owner-directed (STATUS §4, "First-join intro · 2026-09-25
   - `LoadingScreen.luau`: LoadingScreen.onFinished:66, LoadingScreen.isFinished:74, playableShots:83, playShot:94, runTour:160, countHub:189, countParts:204, preloadAll:218, setReady:250, watchProgress:261, holdCharacter:348, releaseCharacter:362, pointCameraAtCharacter:392, releaseCamera:411, finish:430, build:491, passingThrough:616, LoadingScreen.init:626
 - `src/client/UI/UIKit.luau` (480) - THE WIDGET LIBRARY. Every hub screen is built from these, so there is one · 2026-09-27
   - `UIKit.luau`: UIKit.formatClock:35, UIKit.reduceMotion:40, UIKit.duration:44, UIKit.tween:53, UIKit.surface:78, UIKit.label:110, UIKit.button:140, UIKit.setEnabled:237, UIKit.list:249, UIKit.divider:259, UIKit.toggle:270, UIKit.slider:319, UIKit.textbox:408, UIKit.previewBadge:441, UIKit.revealFrom:464
-- `src/client/init.client.luau` (89) - The only LocalScript. Build spec T-117. · 2026-09-27
+- `src/client/init.client.luau` (91) - The only LocalScript. Build spec T-117. · 2026-09-27
 
 ### src/server
 
@@ -483,7 +483,7 @@ _246 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 - `src/shared/Core/FixtureCore.luau` (55) - The pure half of fixtures (CHUNK_AUTHORING.md convention 7, build spec · 2026-09-23
   - `FixtureCore.luau`: CHEST:15, VAULT:16, FORCEFIELD:17, smooth:23, FixtureCore.lidAngle:31, FixtureCore.doorSpin:38, FixtureCore.doorRecess:44, FixtureCore.fieldTransparency:50
 - `src/shared/Core/Freeze.luau` (25) - Deep-freeze a content or config table, so a System cannot mutate the data · 2026-09-22
-- `src/shared/Core/GameConfig.luau` (1204) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-09-27
+- `src/shared/Core/GameConfig.luau` (1213) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-09-27
 - `src/shared/Core/HubMenuCore.luau` (190) - THE HUB MENU'S RULES, WITH NO ROBLOX IN THEM. · 2026-09-25
   - `HubMenuCore.luau`: HubMenuCore.panels:20, HubMenuCore.panelById:31, HubMenuCore.destinations:41, HubMenuCore.destinationById:52, HubMenuCore.landingPoint:64, HubMenuCore.isVisible:71, HubMenuCore.newState:80, HubMenuCore.reduce:98, HubMenuCore.canTravel:149, HubMenuCore.travelTiming:180
 - `src/shared/Core/KeyCore.luau` (58) - The pure half of vault keys (build spec §7.5). Owner-directed 2026-09-23: · 2026-09-23

@@ -494,21 +494,25 @@ end
 
 -- === the rail =======================================================
 
+-- The rail, its arrow and its panel sit this far below centre, which leaves
+-- the top-left corner clear for the chat window.
+local RAIL_OFFSET_Y = GameConfig.HubMenu.RailOffsetY
+
 local function railRestingPosition(): UDim2
 	if state.Collapsed then
 		-- Off the left edge entirely, leaving only the arrow. "Hide the side
 		-- panel" was the ask, and a rail shrunk to a strip of glyphs is still
 		-- a rail on the screen.
-		return UDim2.new(0, -UITheme.RailWidthExpanded - UITheme.Space.LG, 0.5, 0)
+		return UDim2.new(0, -UITheme.RailWidthExpanded - UITheme.Space.LG, 0.5, RAIL_OFFSET_Y)
 	end
-	return UDim2.new(0, UITheme.Space.MD, 0.5, 0)
+	return UDim2.new(0, UITheme.Space.MD, 0.5, RAIL_OFFSET_Y)
 end
 
 local function panelRestingPosition(): UDim2
 	local left = if state.Collapsed
 		then UITheme.Space.LG * 2
 		else UITheme.RailWidthExpanded + UITheme.Space.MD * 2
-	return UDim2.new(0, left, 0.5, 0)
+	return UDim2.new(0, left, 0.5, RAIL_OFFSET_Y)
 end
 
 local function refreshRailSelection()
@@ -552,12 +556,12 @@ local function applyState()
 	-- the obvious thing to press.
 	arrow.Text = if state.Collapsed then "›" else "‹"
 	local arrowTarget = if state.Collapsed
-		then UDim2.new(0, UITheme.Space.SM, 0.5, 0)
+		then UDim2.new(0, UITheme.Space.SM, 0.5, RAIL_OFFSET_Y)
 		else UDim2.new(
 			0,
 			UITheme.RailWidthExpanded + UITheme.Space.MD + UITheme.Space.XS,
 			0.5,
-			0
+			RAIL_OFFSET_Y
 		)
 	UIKit.tween(arrow, UITheme.Motion.Normal, { Position = arrowTarget })
 
@@ -926,6 +930,16 @@ function HubMenu.init(): ()
 			unsubscribe()
 		end
 	end)
+end
+
+--- Collapses the rail and closes any open panel. The chat calls this when it
+--- opens, so the two never stack on the left edge at once.
+function HubMenu.collapse(): ()
+	if rail == nil then
+		return
+	end
+	dispatch({ Kind = "CLOSE_PANEL" })
+	dispatch({ Kind = "SET_COLLAPSED", Collapsed = true })
 end
 
 return HubMenu
