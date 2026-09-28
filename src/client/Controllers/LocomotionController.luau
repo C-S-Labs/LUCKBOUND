@@ -319,6 +319,17 @@ local function step(dt: number)
 	-- === direction and facing ===
 	local direction: Vector3
 	if LocomotionCore.rollMoving(state, now) then
+		-- The roll bends gently toward where the player holds now, so turning
+		-- the camera mid-roll carries it round (owner, 2026-09-28).
+		if moving and state.RollKind ~= "BACKSTEP" then
+			local maxTurn = math.rad(GameConfig.Locomotion.RollSteerDegreesPerSecond) * dt
+			local x, z =
+				LocomotionCore.steer(rollDirection.X, rollDirection.Z, held.X, held.Z, maxTurn)
+			rollDirection = Vector3.new(x, 0, z)
+			if not facingHeld() then
+				facing = rollDirection
+			end
+		end
 		direction = rollDirection
 	elseif mode == "ROLL" then
 		direction = Vector3.zero

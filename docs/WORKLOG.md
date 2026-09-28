@@ -34,6 +34,24 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 107 — 2026-09-28 — Roll polish: floor contact, distance, steering
+**Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner: "everything else I really like")
+- **Rolls clipped the floor:** the generator's ground solver treated the body as lines through the joints.
+  It now accounts for part thickness (`RADIUS`, extra torso and head points) plus 0.1 of clearance; clips
+  regenerated.
+- **Further:** the roll goes ~24 studs (37 studs/s x 0.65s) and the air dash ~11.5 (52 x 0.22).
+- **Follows the camera:** a moving roll or air dash steers toward the held (camera-relative) direction at up to
+  `RollSteerDegreesPerSecond` (110). `LocomotionCore.steer` + 1 test. Owner to confirm this is what they meant.
+- `/animslot <slot>` alone now describes that slot instead of clearing it.
+
+### Next
+1. Owner walks the rolls again (floor contact, distance, steering).
+2. Remaining clips: Sprint, Walk x4, Turn L/R. Then the PR.
+
+---
+
 ## Session 106 — 2026-09-28 — Longer roll; the second batch of generated clips
 **Merged:** see the PR for this branch   **Tests:** 1007 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 

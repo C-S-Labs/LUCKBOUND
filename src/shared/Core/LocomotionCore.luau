@@ -451,6 +451,24 @@ function LocomotionCore.unlock(state: any): any
 	return updated
 end
 
+--- STEERING: turns a flat direction (x, z) toward a target direction by at
+--- most `maxRadians`, keeping it unit length. Returns the new (x, z). Used to
+--- let a roll bend gently toward where the player now holds.
+function LocomotionCore.steer(
+	x: number,
+	z: number,
+	targetX: number,
+	targetZ: number,
+	maxRadians: number
+): (number, number)
+	local current = math.atan2(z, x)
+	local target = math.atan2(targetZ, targetX)
+	local delta = (target - current + math.pi) % (2 * math.pi) - math.pi
+	local turn = math.clamp(delta, -maxRadians, maxRadians)
+	local angle = current + turn
+	return math.cos(angle), math.sin(angle)
+end
+
 --- Which profile applies: EXPEDITION inside a loaded stage, HUB otherwise.
 --- Kept here so the rule is one line anyone can test.
 function LocomotionCore.profileFor(insideStage: boolean): string

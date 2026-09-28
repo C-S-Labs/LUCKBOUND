@@ -5805,6 +5805,16 @@ do
 		end)()
 	)
 
+	check(
+		"a roll steers toward the held way, but only so far per frame",
+		(function()
+			local x, z = LocomotionCore.steer(1, 0, 0, 1, math.rad(10))
+			local fx, fz = LocomotionCore.steer(1, 0, 0.99, 0.14, math.rad(10))
+			return math.abs(math.atan2(z, x) - math.rad(10)) < 1e-9
+				and math.abs(math.atan2(fz, fx) - math.atan2(0.14, 0.99)) < 1e-9
+		end)()
+	)
+
 	-- The invulnerable window is declared for the combat layer (RESERVED).
 	check(
 		"a roll is invulnerable only inside its window",

@@ -1121,7 +1121,10 @@ local GameConfig = {
 		-- Slower and further after the owner's walk with the first clips
 		-- (2026-09-28): a short, quick roll read as unrefined.
 		RollDurationSeconds = 0.65,
-		RollSpeed = 31, -- studs/s -> ~20 studs
+		RollSpeed = 37, -- studs/s -> ~24 studs (owner: a little further)
+		-- A roll steers gently toward the held direction (which follows the
+		-- camera) at up to this many degrees per second; not a free turn.
+		RollSteerDegreesPerSecond = 110,
 		RollRecoverySeconds = 0.12, -- after the roll, before the next action
 		RollInvulnerableFrom = 0.05, -- seconds into the roll
 		RollInvulnerableTo = 0.44,
@@ -1142,8 +1145,8 @@ local GameConfig = {
 		-- Off the floor for less than this is not "in the air": a roll press
 		-- then waits for the feet instead of becoming an air dash.
 		AirDashMinAirSeconds = 0.12,
-		AirDashSpeed = 44, -- studs/s
-		AirDashDurationSeconds = 0.2, -- ~9 studs
+		AirDashSpeed = 52, -- studs/s
+		AirDashDurationSeconds = 0.22, -- ~11.5 studs
 
 		-- === ROLL LOOK ===
 		-- A discrete burst of wind, not afterimages (owner, 2026-09-28): short

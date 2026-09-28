@@ -138,6 +138,37 @@ TIPS = {
 }
 PARENT = {child: parent for parent, children in TREE.items() for child in children}
 
+# THICKNESS. A body is not a stick figure: each joint point is the centre of a
+# part about this many studs thick, so a torso lying flat reaches the floor
+# half its depth below its centre line. Without this the first roll clips
+# sank ~0.5 studs into the floor (owner's walk, 2026-09-28).
+RADIUS = {
+    "LowerTorso": 0.55,
+    "UpperTorso": 0.55,
+    "Head": 0.6,
+    "LeftUpperArm": 0.35,
+    "RightUpperArm": 0.35,
+    "LeftLowerArm": 0.32,
+    "RightLowerArm": 0.32,
+    "LeftHand": 0.3,
+    "RightHand": 0.3,
+    "LeftUpperLeg": 0.4,
+    "RightUpperLeg": 0.4,
+    "LeftLowerLeg": 0.35,
+    "RightLowerLeg": 0.35,
+    "LeftFoot": 0.3,
+    "RightFoot": 0.3,
+}
+# Extra points inside a part that can touch the floor on their own: the
+# shoulders' outer edge and the head's centre.
+EXTRA_POINTS = {
+    "UpperTorso": [(0, 1.3, 0.45), (0, 1.3, -0.45), (0, 0.4, 0.45), (0, 0.4, -0.45)],
+    "LowerTorso": [(0, 0.1, 0.45), (0, 0.1, -0.45)],
+    "Head": [(0, 0.55, 0)],
+}
+# A little air between the body and the floor at the lowest point.
+CLEARANCE = 0.1
+
 
 def matvec(m, v):
     return [sum(m[i][k] * v[k] for k in range(3)) for i in range(3)]
@@ -157,10 +188,13 @@ def lowest_point(values):
         pos = [pos0[i] + d for i, d in enumerate(matvec(rot0, offset))]
         rot = matmul(rot0, euler_xyz(rx, ry, rz))
         world[part] = (rot, pos)
-        lowest = min(lowest, pos[1])
+        r = RADIUS[part]
+        lowest = min(lowest, pos[1] - r)
         if part in TIPS:
             tip = matvec(rot, TIPS[part])
-            lowest = min(lowest, pos[1] + tip[1])
+            lowest = min(lowest, pos[1] + tip[1] - r)
+        for point in EXTRA_POINTS.get(part, []):
+            lowest = min(lowest, pos[1] + matvec(rot, point)[1] - r)
     return lowest
 
 
@@ -177,6 +211,9 @@ def ground(values):
         STANDING_LOWEST = lowest_point({p: NEUTRAL for p in PARTS})
     rx, ry, rz, tx, _, tz = values["LowerTorso"]
     lift = STANDING_LOWEST - lowest_point(values)
+    # Standing is exact; anything else keeps a hair of air under it.
+    if lift > 1e-6:
+        lift += CLEARANCE
     values["LowerTorso"] = (rx, ry, rz, tx, lift, tz)
     return values
 
