@@ -35,6 +35,9 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   - Built so far: its basics, and its boss **The Ascendant** (2026-09-28).
   - The Ascendant has a body, a Staff-class weapon, `ASCENDANT_MOVESET.md`, and Idle, Crescent Reap, Walk and
     Strafe ×2 exported.
+  - 2026-09-28 (Session 96): all five actions were rebuilt as whole-body motion and exported onto the owner's
+    hand-edited `.blend` mesh. The strafe arm spasm, legs crossing and the Reap's hand spin are fixed. The FBXs come
+    from the `.blend`, not the script (see `ASCENDANT_MOVESET.md`).
   - Not yet imported in Studio.
   **Nothing spawns in gameplay yet.** `EnemyDef` + services wait for the owner's OK.
 - **Tooling:**

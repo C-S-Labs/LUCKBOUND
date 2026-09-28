@@ -76,10 +76,20 @@ All on the one rig (`TheAscendant.fbx`), in place (the AI moves the root between
 `Weapon_R` with rotation-only keys.
 
 - **Built** (`anims/the_ascendant/`):
-  - `Idle_Guard`: 120 f loop, high guard, breathing, crystal fingers flexing.
-  - `P1_CrescentReap`: 60 f, full combat markers.
-  - `Walk`: `walk_core.build_walk_humanoid(role="boss")`, the staff carried upright via the new `post=` hook.
-  - `StrafeLeft` / `StrafeRight`: `build_strafe_humanoid`, both directions, staff carried.
+  - `Idle_Guard`: 120 f loop, high guard, two breaths and a slow weight shift foot to foot (hips, chest, staff, head).
+  - `P1_CrescentReap`: 60 f, full combat markers. In the recovery the off hand lets go of the haft (48-52), changes its
+    grip while it is off (52-54) and re-grips for the guard (54-60), so the hand never spins on the haft.
+  - `Walk`: `walk_core.build_walk_humanoid(role="boss")`, the staff carried upright via the `post=` hook. It is
+    whole-body: bob, sway, hip roll, a counter-rotating chest, a level head and a free left arm swing.
+  - `StrafeLeft` / `StrafeRight`: `build_strafe_humanoid`, both directions, staff carried, in a staggered stance. The
+    feet never cross, and the free arm moves smoothly and stays clear of the robe.
+- **The shipped FBXs come from the owner's hand-edited `TheAscendant.blend`**, not from `the_ascendant.py`. The owner
+  cleaned up the chest and moved the centre crystal by hand, and removed `BreakawayGlow`. Re-running
+  `run.py --export` / `--anims` rebuilds the scripted chest and would overwrite that edit. Build the actions with the
+  runner, then export them onto the `.blend`'s mesh (as Session 96 did) until the script matches the edit.
+- **Known leftovers:** the left upper arm grazes the chest while two-handing the staff low in the recovery (up to 48
+  tris, frames 20-58, steady, no jerk). The staff grazes the waist on sweep frame 18 (20 tris). The wrist reaches 82°
+  in the lift at frames 46-49.
 - **To build:**
   - Phase 1: `P1_RisingCrescent`, `P1_PortalStep`, `P1_Lattice`, `P1_CrownFlare`, `P1_Stagger`
   - Transition: `P2_Transfiguration`

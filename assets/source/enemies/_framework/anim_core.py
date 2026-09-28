@@ -53,29 +53,41 @@ def key(frame, pose_fn):
 def _key_all(frame):
     """Key every bone as a QUATERNION (shortest-path interpolation: limbs don't swing wide through the body)."""
     bpy.context.view_layer.update()
-    for pb in P:
-        q = pb.matrix_basis.to_quaternion(); loc = pb.matrix_basis.to_translation()
-        pb.rotation_mode = 'QUATERNION'; pb.rotation_quaternion = q; pb.location = loc
+    pose = [(pb, pb.matrix_basis.to_quaternion(), pb.matrix_basis.to_translation()) for pb in P]
+    rig.animation_data.action = _ACT["act"]           # posing ran detached (see reset_keep_action)
+    curves = {}
+    for fc in _fcurves(_ACT["act"]):
+        if fc.data_path.endswith(".rotation_quaternion"): curves[(fc.data_path, fc.array_index)] = fc
+    for pb, q, loc in pose:
+        # q and -q are the same rotation, but the curves interpolate per component: a key with the opposite sign to
+        # its neighbours makes the limb whip the long way round between them. Match the sign already on the curve.
+        dp = f'pose.bones["{pb.name}"].rotation_quaternion'
+        ref = [curves[(dp, i)].evaluate(frame) for i in range(4) if (dp, i) in curves]
+        if len(ref) == 4 and sum(a*b for a, b in zip(ref, q)) < 0: q.negate()
+        pb.rotation_mode = 'QUATERNION'; pb.rotation_quaternion = q; pb.location = loc; pb.scale = (1, 1, 1)
         pb.keyframe_insert("location", frame=frame); pb.keyframe_insert("rotation_quaternion", frame=frame)
         pb.keyframe_insert("scale", frame=frame)
 def reset_keep_action():
-    act = rig.animation_data.action
+    """Rest pose with the action DETACHED until _key_all: while attached, every view-layer update re-applies the
+       keyed location of the scene's current frame, so additive root moves (move_root) stacked up frame to frame."""
+    rig.animation_data.action = None
     for pb in P:
         for c in list(pb.constraints): pb.constraints.remove(c)
         pb.rotation_mode = 'XYZ'; pb.location = (0, 0, 0); pb.rotation_euler = (0, 0, 0)
         pb.rotation_quaternion = (1, 0, 0, 0); pb.scale = (1, 1, 1)
-    rig.animation_data.action = None; bpy.context.view_layer.update(); rig.animation_data.action = act
+    bpy.context.view_layer.update()
 def mark(name, frame):
     _ACT["act"].pose_markers.new(name).frame = frame
+def _fcurves(act):
+    return list(act.fcurves) if hasattr(act, "fcurves") else [fc for l in act.layers for s in l.strips for cb in s.channelbags for fc in cb.fcurves]
 def end(ease="BEZIER"):
     act = _ACT["act"]
-    fcs = act.fcurves if hasattr(act, "fcurves") else [fc for l in act.layers for s in l.strips for cb in s.channelbags for fc in cb.fcurves]
-    for fc in fcs:
+    for fc in _fcurves(act):
         for kp in fc.keyframe_points: kp.interpolation = ease
     if "hits" in G:                                   # scan the IN-BETWEEN frames too (interpolation can bend/clip)
         for _pass in range(3):
             worst = []
-            for f in range(1, _ACT["length"] + 1, 2):
+            for f in range(1, _ACT["length"] + 1):   # every frame: fixing only odd frames makes a dense clip flicker
                 bpy.context.scene.frame_set(f)
                 c = {pc: hits(pc) for pc in CLIP_PIECES if bpy.data.objects.get(PREFIX + pc)}
                 c = {k: v for k, v in c.items() if v}

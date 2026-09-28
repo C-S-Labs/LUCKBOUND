@@ -118,27 +118,38 @@ def orient_hand(side, n_w, hd_w):
     pb = P[f"{side}Hand"]; hl = pb.head.copy()
     pb.matrix = Matrix.Translation(hl) @ R.to_4x4() @ Matrix.Translation(-hl) @ pb.matrix
     _upd()
-def hand_on(side, u, away):
-    """Off hand grips the haft at distance u from the grip centre. 'away' = world direction the palm comes FROM."""
+def hand_on(side, u, away, grip=None):
+    """Off hand grips the haft at distance u from the grip centre. 'away' = world direction the palm comes FROM.
+       grip: +1/-1 fixes the wrap handedness (see below)."""
     G0, GA = haft(); C = G0 + GA*u
     a = Vector(away); a = (a - GA*a.dot(GA)).normalized()          # palm normal points from hand to haft = -a
-    n_w = -a; hd_w = GA.cross(n_w).normalized()
-    if hd_w.z > 0: hd_w = -hd_w                                      # fingers hang downward-ish round the haft
-    wr = C - n_w*SEAT_N - hd_w*SEAT_D
+    n_w = -a; hd0 = GA.cross(n_w).normalized()
     s = 1 if side == "Left" else -1
     ua = f"{side}UpperArm"
-    sh = RW @ P[ua].head; axis = (wr - sh).normalized(); ref = axis.orthogonal().normalized()
+    sh = RW @ P[ua].head
     rest = {b_: P[b_].matrix.copy() for b_ in (ua, f"{side}LowerArm", f"{side}Hand")}
-    best = None
-    for k in range(12):                              # swing the elbow round the shoulder->wrist line; keep the cleanest
-        pole = sh + (wr - sh)*0.5 + (Matrix.Rotation(k*math.pi/6, 3, axis) @ ref)*0.6
+    def _restore():
         for b_ in rest: P[b_].matrix = rest[b_]; _upd()
-        _ik(f"{side}LowerArm", tuple(RW.inverted() @ wr), tuple(RW.inverted() @ pole)); _bake([ua, f"{side}LowerArm"])
-        err = ((RW @ P[f"{side}LowerArm"].tail) - wr).length
-        sc = hits("Arm" + side) + 1000*err + (5 if (RW.to_3x3() @ (P[ua].tail - P[ua].head)).dot(Vector((s, 0, 0))) < -0.2 else 0)
-        if best is None or sc < best[0]: best = (sc, pole)
-    for b_ in rest: P[b_].matrix = rest[b_]; _upd()
-    _ik(f"{side}LowerArm", tuple(RW.inverted() @ wr), tuple(RW.inverted() @ best[1])); _bake([ua, f"{side}LowerArm"])
+    def _place(hd_w):
+        """Solve the arm for fingers wrapping along hd_w; returns (score, pole) of the cleanest elbow."""
+        wr = C - n_w*SEAT_N - hd_w*SEAT_D
+        axis = (wr - sh).normalized(); ref = axis.orthogonal().normalized()
+        best = None
+        for k in range(12):                          # swing the elbow round the shoulder->wrist line; keep the cleanest
+            pole = sh + (wr - sh)*0.5 + (Matrix.Rotation(k*math.pi/6, 3, axis) @ ref)*0.6
+            _restore()
+            _ik(f"{side}LowerArm", tuple(RW.inverted() @ wr), tuple(RW.inverted() @ pole)); _bake([ua, f"{side}LowerArm"])
+            err = ((RW @ P[f"{side}LowerArm"].tail) - wr).length
+            sc = hits("Arm" + side) + 1000*err + (5 if (RW.to_3x3() @ (P[ua].tail - P[ua].head)).dot(Vector((s, 0, 0))) < -0.2 else 0)
+            if best is None or sc < best[0]: best = (sc, pole)
+        _restore()
+        _ik(f"{side}LowerArm", tuple(RW.inverted() @ wr), tuple(RW.inverted() @ best[1])); _bake([ua, f"{side}LowerArm"])
+        return best, wr
+    # Which way the fingers wrap (+/-hd0) is the grip's handedness. A held grip never changes it, and with it fixed
+    # hd_w follows the haft continuously. grip=+1/-1 fixes it (use this in any ANIMATED two-hand hold); grip=None
+    # keeps the single-pose rule "fingers hang down", which flips sign on an upright haft (a ~160 deg hand spin).
+    hd_w = hd0*grip if grip else (hd0 if hd0.z <= 0 else -hd0)
+    _, wr = _place(hd_w)
     orient_hand(side, n_w, hd_w)
     # correct residual wrist error by nudging the whole off hand onto the seat
     _upd(); err = C - seat_point(side)

@@ -61,28 +61,78 @@ def _rest_foot(side):
 def _leg_phase(side, t):
     return t if side == "Right" else (t + 0.5) % 1.0
 
+# WHOLE-BODY RULE (owner): a locomotion cycle animates the entire body, never legs or arms alone. Every frame keys,
+# in this order (the legs hang off the pelvis, so the pelvis moves BEFORE the feet are solved onto the floor):
+#   1. root: vertical bob (low at each double-support) + lateral sway over the stance foot
+#   2. pelvis: yaw toward the forward leg + roll (swing-side hip drops)
+#   3. legs: solved onto world foot targets computed from the REST feet, so the planted foot never slides
+#   4. chest: counter-yaw and counter-roll against the pelvis, plus lean in the direction of travel
+#   5. neck/head: cancel what the spine did, so the head stays level and facing forward
+#   6. arms: swing from the shoulder about WORLD axes (never raw Euler: a bone's roll decides where a raw Euler
+#      rotation goes), held clear of the torso, elbow flexing with the swing
+FWD_W, LEFT_W, UP_W = Vector((0, -1, 0)), Vector((1, 0, 0)), Vector((0, 0, 1))
+
+def _wrot(bone, axis, ang):
+    """Rotate `bone` (and everything parented to it) by `ang` about a WORLD axis through its head.
+       +ang about UP_W turns the face toward the character's left; about -FWD_W... see the callers."""
+    if abs(ang) < 1e-7: return
+    _upd(); pb = P[bone]; h = pb.head.copy()
+    a = (RW.to_3x3().inverted() @ Vector(axis)).normalized()
+    pb.matrix = Matrix.Translation(h) @ Matrix.Rotation(ang, 4, a) @ Matrix.Translation(-h) @ pb.matrix; _upd()
+
+def _tilt(bone, ang_side, ang_fwd=0.0):
+    """Tilt a spine bone: ang_side > 0 moves its top toward the character's LEFT, ang_fwd > 0 leans it forward."""
+    _wrot(bone, Vector((0, 1, 0)), ang_side)        # about +Y: +Z swings toward +X (left)
+    _wrot(bone, Vector((1, 0, 0)), ang_fwd)         # about +X: +Z swings toward -Y (forward)
+
+def _swing_arm(side, fwd=0.0, out=0.0, elbow=0.0):
+    """Upper arm swung from the shoulder: fwd > 0 carries the hand forward, out > 0 carries it away from the body
+       (both radians, about world axes, so the result does not depend on the bone's roll). elbow > 0 flexes the
+       forearm forward, as a pure hinge in the arm's swing plane."""
+    s = 1 if side == "Left" else -1
+    ua, la = f"{side}UpperArm", f"{side}LowerArm"
+    _wrot(ua, Vector((1, 0, 0)), fwd)                # about +X: a hanging arm's hand goes toward -Y (forward)
+    _wrot(ua, Vector((0, 1, 0)), -s*out)             # about +Y: hand goes toward +X for the left arm
+    if la in P and abs(elbow) > 1e-7:
+        _upd(); d = (P[la].tail - P[la].head).normalized()
+        ax = d.cross(RW.to_3x3().inverted() @ FWD_W)
+        if ax.length > 1e-4:
+            _wrot(la, RW.to_3x3() @ ax.normalized(), elbow)
+
+def _level_head(chest_yaw, chest_side, chest_fwd, keep=0.75):
+    """Neck/head counter the chest so the gaze stays level and forward (keep = fraction of the chest motion cancelled)."""
+    if "Neck" not in P: return
+    _wrot("Neck", UP_W, -chest_yaw*keep)
+    _tilt("Neck", -chest_side*keep, -chest_fwd*keep*0.5)
+
 def walk_pose_humanoid(t, stride=0.32, lift=0.10, hip_twist=0.14, torso_twist=0.11, arm_swing=0.55,
-                        elbow_bend=-0.28, lean=0.06):
-    """t in [0,1): phase through one full stride cycle. Legs are SOLVED (leg_to); torso/hip/arms are direct FK --
-       a walking arm swing and pelvis sway don't need combat-grade IK, just a natural sinusoidal drive."""
+                        elbow_bend=0.28, lean=0.06, bob=0.03, sway=0.03, hip_roll=0.05, arm_out=0.10):
+    """t in [0,1): phase through one full stride cycle. Whole body, in the WHOLE-BODY RULE order above. Legs are
+       SOLVED (leg_to); spine and arms are driven about world axes."""
+    foot0 = {s: _rest_foot(s) for s in ("Left", "Right")}             # before the root moves: feet stay put in world
+    c2 = math.cos(4*math.pi*t)                                          # two contacts per cycle (t = 0 and 0.5)
+    stance = math.sin(2*math.pi*t)                                      # > 0: right foot is the stance foot
+    move_root(x=-sway*stance, y_up=-bob*0.5*(1 + c2))                   # low at contact, weight over the stance foot
+    hip_z = hip_twist*math.sin(2*math.pi*t)                             # pelvis leads with whichever leg is forward
+    _wrot("LowerTorso", UP_W, hip_z)
+    _tilt("LowerTorso", hip_roll*stance)                                # swing-side hip drops
     for side in ("Left", "Right"):
         tp = _leg_phase(side, t)
-        fwd = (stride/2)*math.cos(2*math.pi*tp)                       # + = foot forward (heel-strike side of the cycle)
-        up = lift*max(0.0, math.sin(2*math.pi*(tp - 0.5)))            # lifts only during this foot's swing half
-        foot0 = _rest_foot(side)
-        target = foot0 + Vector((0, -fwd, up))                        # -Y = forward
-        knee_dir = (0.0, -1.0, 0.15 + 0.5*(up/max(lift, 1e-6)))       # knee pushes forward more while the foot is lifted
+        fwd = (stride/2)*math.cos(2*math.pi*tp)                        # + = foot forward (heel-strike side of the cycle)
+        up = lift*max(0.0, math.sin(2*math.pi*(tp - 0.5)))             # lifts only during this foot's swing half
+        target = foot0[side] + Vector((0, -fwd, up))                   # -Y = forward
+        knee_dir = (0.0, -1.0, 0.15 + 0.5*(up/max(lift, 1e-6)))        # knee pushes forward more while the foot is lifted
         leg_to(side, target, knee_dir)
-    hip_z = hip_twist*math.sin(2*math.pi*t)                            # pelvis leads with whichever leg is forward
-    rot("LowerTorso", z=hip_z, add=False)
-    rot("UpperTorso", z=-hip_z*(torso_twist/max(hip_twist, 1e-6)), x=-lean, add=False)   # shoulders counter-rotate
+    chest_yaw = -hip_z*(torso_twist/max(hip_twist, 1e-6)) - hip_z       # net shoulders counter-rotate against the hips
+    chest_side = -hip_roll*stance*1.4                                   # chest rights itself over the dropped hip
+    _wrot("UpperTorso", UP_W, chest_yaw)
+    _tilt("UpperTorso", chest_side, lean + 0.25*lean*c2)                # a touch more lean on each push-off
+    _level_head(chest_yaw + hip_z, chest_side + hip_roll*stance, lean)
     for side in ("Left", "Right"):
-        other_leg = "Right" if side == "Left" else "Left"               # contralateral: arm swings with the OPPOSITE leg
-        tp = _leg_phase(other_leg, t)
-        ang = arm_swing*math.cos(2*math.pi*tp)
-        rot(f"{side}UpperArm", x=ang, add=False)
-        if f"{side}LowerArm" in P:
-            rot(f"{side}LowerArm", x=elbow_bend, add=False)
+        other_leg = "Right" if side == "Left" else "Left"                # contralateral: arm swings with the OPPOSITE leg
+        sw = math.cos(2*math.pi*_leg_phase(other_leg, t))              # +1 = arm fully forward
+        _swing_arm(side, fwd=arm_swing*sw, out=arm_out,
+                   elbow=elbow_bend*(1.0 + 0.6*max(0.0, sw)))           # forearm flexes more on the forward swing
 
 def _leg_len(side="Right"):
     return rig.data.bones[f"{side}UpperLeg"].length + rig.data.bones[f"{side}LowerLeg"].length
@@ -105,6 +155,7 @@ def _resolve_gait(role, overrides):
     g.update(overrides)
     L = _leg_len()
     return dict(stride=g.pop("stride_frac")*L, lift=g.pop("lift_frac")*L,
+                bob=g.get("bob_frac", 0.02)*L, sway=g.get("sway_frac", 0.02)*L,
                 hip_twist=g["hip_twist"], torso_twist=g["torso_twist"], arm_swing=g["arm_swing"]), g.get("cadence", 1.0)
 
 def build_walk_humanoid(name="Walk", length=32, fps=30, role=None, post=None, **overrides):
@@ -123,20 +174,41 @@ def build_walk_humanoid(name="Walk", length=32, fps=30, role=None, post=None, **
     print(f"WALK {name}: hinge check -> {hinge_errors() if 'hinge_errors' in globals() else 'n/a'}")
     return ok
 
-def strafe_pose_humanoid(t, side_dir=1, stride=0.24, lift=0.10, lean=0.08, arm_out=0.25):
-    """One phase of a lateral side-step / shuffle (circling the player, Dark-Souls-style spacing -- not a static
-       stand). side_dir: +1 steps toward the character's left, -1 toward its right. Both feet shuffle the same
-       way, offset in phase, so the whole body translates-in-place sideways without crossing the legs."""
-    for side in ("Left", "Right"):
-        tp = _leg_phase(side, t)
-        shift = side_dir*(stride/2)*math.cos(2*math.pi*tp)
-        up = lift*max(0.0, math.sin(2*math.pi*(tp - 0.5)))
-        foot0 = _rest_foot(side)
-        leg_to(side, foot0 + Vector((shift, 0, up)), (side_dir*0.3, -1.0, 0.2))
-    rot("UpperTorso", y=side_dir*lean, add=False)
+def strafe_pose_humanoid(t, side_dir=1, stride=0.24, lift=0.10, lean=0.08, arm_out=0.10, arm_swing=0.12,
+                         elbow_bend=0.22, bob=0.025, sway=0.03, hip_roll=0.05, hip_twist=0.04, min_gap=0.70,
+                         stagger=0.35):
+    """One phase of a lateral side-step (circling the player, Dark-Souls-style spacing). side_dir: +1 steps toward
+       the character's left, -1 toward its right. Whole body, in the WHOLE-BODY RULE order above.
+       The feet swing in antiphase, so their gap is rest - 2*amplitude at its closest; the amplitude is capped so the
+       gap never drops below min_gap x the rest stance width (the feet never meet or cross), and the knees point
+       forward and slightly OUT, away from each other. stagger (x the rest stance width) keeps a fighter's staggered
+       stance, left foot forward: at the closest gap the shins pass BESIDE each other instead of meeting."""
+    foot0 = {s: _rest_foot(s) for s in ("Left", "Right")}
+    rest_gap = abs(foot0["Left"].x - foot0["Right"].x)
+    amp = min(stride/2, rest_gap*(1.0 - min_gap)/2)
+    c2 = math.cos(4*math.pi*t)
+    stance = math.sin(2*math.pi*t)                                      # > 0: right foot is the stance foot
+    move_root(x=-sway*stance, y_up=-bob*0.5*(1 + c2))
+    _wrot("LowerTorso", UP_W, hip_twist*side_dir*stance)                # hips open slightly toward the lead step
+    _tilt("LowerTorso", hip_roll*stance)
     for side in ("Left", "Right"):
         s = 1 if side == "Left" else -1
-        rot(f"{side}UpperArm", z=-side_dir*arm_out*s, add=False)
+        tp = _leg_phase(side, t)
+        shift = side_dir*amp*math.cos(2*math.pi*tp)
+        up = lift*max(0.0, math.sin(2*math.pi*(tp - 0.5)))
+        stag = -s*stagger*rest_gap/2                                    # -Y = forward: left foot ahead, right behind
+        leg_to(side, foot0[side] + Vector((shift, stag, up)), (0.25*s, -1.0, 0.2 + 0.4*(up/max(lift, 1e-6))))
+    chest_side = side_dir*lean - hip_roll*stance*1.4                    # lean into the travel, right over the dropped hip
+    chest_yaw = -hip_twist*side_dir*stance*1.5
+    _wrot("UpperTorso", UP_W, chest_yaw)
+    _tilt("UpperTorso", chest_side, 0.03 + 0.02*c2)
+    _level_head(chest_yaw + hip_twist*side_dir*stance, chest_side + hip_roll*stance, 0.03)
+    for side in ("Left", "Right"):
+        s = 1 if side == "Left" else -1
+        lead = 1.0 if s == side_dir else 0.0                            # the arm on the travel side opens a little more
+        _swing_arm(side, fwd=arm_swing*math.cos(2*math.pi*t + (0 if s > 0 else math.pi)),
+                   out=arm_out*(1.0 + 0.5*lead) + 0.04*max(0.0, s*stance),
+                   elbow=elbow_bend*(1.0 + 0.3*c2))
 
 # ---------------- quadruped gait (creature bodies, e.g. Meadow Stag) ----------------
 # No fixed bone-naming convention needed: pass whatever leg names the enemy script already uses (they must each
@@ -193,7 +265,8 @@ def build_strafe_humanoid(name="Strafe", length=24, fps=30, side_dir=1, role=Non
     g = dict(ROLE_GAIT.get(role or "default", ROLE_GAIT["default"]))
     g.update(overrides)
     L = _leg_len()
-    params = dict(stride=g.get("stride_frac", 0.4)*L*0.7, lift=g.get("lift_frac", 0.12)*L)
+    params = dict(stride=g.get("stride_frac", 0.4)*L*0.7, lift=g.get("lift_frac", 0.12)*L,
+                  bob=g.get("bob_frac", 0.02)*L*0.8, sway=g.get("sway_frac", 0.02)*L)
     begin(name, length=length, loop=True, fps=fps)
     for f in range(1, length + 1):
         t = (f - 1) / length

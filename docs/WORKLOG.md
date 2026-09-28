@@ -33,6 +33,52 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 96 — 2026-09-28 — The Ascendant: whole-body locomotion, arm spasm and leg-cross fixes
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes (Blender assets + framework)   **Branch:** `CloudTesting`
+
+### Done
+- **Owner's `.blend` saved first** (`e29dd92`): a hand chest cleanup, the centre crystal moved, `BreakawayGlow`
+  removed. The rig is identical to the script's (44 bones, zero rest offset); the mesh is 21.2k tris.
+- **The spasming arm had two causes, both framework bugs:**
+  - `anim_core.end` scanned only odd frames. A clip present on every frame was "fixed" on odd frames only, so the arm
+    flipped every frame (the hand jumped 33 cm). It now scans every frame.
+  - `_key_all` could key q where its neighbours held -q, and the limb whipped the long way round. Keys now take the
+    curve's sign.
+- **Root drift:** while posing, the attached action re-applied the keyed root location, so `move_root` stacked up
+  (0.5 m over a Walk loop). Posing now runs with the action detached until `_key_all`.
+- **`walk_core` is whole-body** (the owner's rule, now in `ENEMY_FRAMEWORK.md`):
+  - Root bob and sway, pelvis yaw and roll, a counter-rotating chest, a level head, and world-axis arm swings with
+    elbow flex.
+  - The pelvis now moves before the feet are solved, so planted feet no longer slide.
+- **Strafe legs:** the feet's antiphase amplitude is capped (gap ≥ 70% of the stance), the knees point out, and a
+  staggered stance (left foot forward) clears the shins. Leg-vs-leg overlap is zero; before, the feet crossed by 7 cm.
+- **The Reap's left-hand spin:** `hand_on` picked the finger wrap per frame ("fingers down"), which flips on an
+  upright haft (a 160° spin at f51). It now takes `grip=±1`. The Reap releases the hand at 48-52, swaps the wrap at
+  52-54 and re-grips at 54-60 (`_asc_pose.staff(free=)`). `_asc_pose.fix_clip` never pulls a gripping hand.
+- **Staff arcs** (C and D) plus a `LIFT` key cut the sweep's waist clip from 122 tris to 20 (f18 only).
+- **Idle_Guard:** a slow weight shift and two breaths; the chest moves 4 cm and the head 8 cm (it was nearly static).
+- **Exported onto the owner's mesh:** the 6 FBXs were written by `export.py` from the `.blend` plus the rebuilt
+  actions. The `.blend` itself was not re-saved: it was written by Blender 5.2, and pip `bpy` 5.0.1 warns of data loss.
+  On the owner's mesh, Walk, Idle and Strafe ×2 are clean.
+
+### Decisions made
+- The Ascendant's FBXs come from the owner's `.blend` until `the_ascendant.py` reproduces the chest edit.
+- The tri budget stays at 21.2k; the owner allowed 85-90k, but no fix needed it.
+
+### Stopped at
+Pushed. Known leftovers:
+- The left upper arm grazes the chest in the Reap recovery (≤ 48 tris, steady).
+- The staff grazes the waist at f18 (20 tris).
+- The wrist reaches 82° at f46-49.
+- The `VFX_Core` bone sits 6.5 cm from the nearest torso-glow vertex after the crystal move.
+
+### Next
+1. Owner: import the 6 FBXs in Studio; check the arm in both strafes and the Reap's re-grip.
+2. Port the chest edit into `the_ascendant.py` (or keep exporting from the `.blend`); move `VFX_Core` if the crystal moved.
+3. Re-export the Temple Acolyte's Walk/Strafe (it shares `walk_core`, which is now whole-body) and review it.
+
+---
+
 ## Session 95 — 2026-09-28 — The Ascendant (Ethereal Scape boss): body, Sanctum Staff, moveset, first actions
 **Merged:** see the PR for `CloudTesting`   **Tests:** no `src/` changes (Blender assets only)   **Branch:** `CloudTesting`
 
