@@ -826,6 +826,51 @@ local GameConfig = {
 		PromptActivationDistance = 70 * WORLD_SCALE, -- reach scales with the world
 	},
 
+	-- === LEADERBOARD ==================================================
+	-- Replaces Roblox's player list with one in the house style
+	-- (client/UI/Leaderboard.luau). THE COLUMNS ARE DATA: adding a stat is
+	-- one row here plus the server setting that Player attribute. No UI code
+	-- changes. Source is "RANK" (position in the sorted list), "NAME"
+	-- (display name), or the name of any Player attribute. Width is pixels;
+	-- a Width of 0 means "take the space that is left" (use it once).
+	Leaderboard = {
+		Enabled = true,
+		ToggleKey = "Tab", -- an Enum.KeyCode name
+		StartOpen = true,
+		-- The flavour name, explained by the count beside it ("4 players"),
+		-- so a new player reads what the panel is without being told the lore.
+		Title = "FATEBOUND",
+		CountSingular = "player",
+		CountPlural = "players",
+		Width = 260,
+		RowHeight = 30,
+		MaxVisibleRows = 10,
+		-- The attribute to sort by, highest first. nil sorts by display name,
+		-- which is what "rank" means until a real stat exists.
+		SortBy = nil :: string?,
+		Columns = {
+			{ Header = "#", Source = "RANK", Width = 34 },
+			{ Header = "PLAYER", Source = "NAME", Width = 0 },
+			-- e.g. { Header = "LVL", Source = "FateLevel", Width = 44 },
+		},
+	},
+
+	-- === CHAT =========================================================
+	-- A chat window in the house style (client/UI/ChatPanel.luau). It sits on
+	-- TextChatService, so Roblox's filtering and moderation still apply; only
+	-- the default window and input bar are hidden. Bubble chat is untouched.
+	Chat = {
+		Enabled = true,
+		FocusKey = "Slash", -- an Enum.KeyCode name
+		Width = 380,
+		Height = 220,
+		MaxMessages = 60,
+		-- Idle seconds before the panel dims to let the world through.
+		FadeAfterSeconds = 8,
+		FadedTransparency = 0.75,
+		MaxLength = 200,
+	},
+
 	-- === THE HUB MENU =================================================
 	-- The side rail, its panels, and the travel network. Behaviour only --
 	-- every colour, radius, pad and tween length is a UITheme token, so a
