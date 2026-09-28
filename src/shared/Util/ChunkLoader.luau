@@ -399,6 +399,7 @@ function ChunkLoader.build(
 		-- What the client's PropController needs to dress this piece: which
 		-- piece it is, and where its walk-plane centre sits in the world.
 		folder:SetAttribute("ChunkId", placed.ChunkId)
+		folder:SetAttribute("Index", placed.Index)
 		folder:SetAttribute("Centre", origin + Vector3.new(placed.X, placed.Y, placed.Z))
 
 		-- The scenario for this room, when the layout carries a plan (build
@@ -484,6 +485,8 @@ function ChunkLoader.build(
 			surface = buildBlockout(chunk, placed, centre, folder)
 			floorCount += 1
 		end
+		-- read by the dev panel's /assets and /chunks: which pieces had no mesh
+		folder:SetAttribute("Blockout", mesh == nil)
 
 		buildSocketMarkers(chunk, placed, origin, folder)
 

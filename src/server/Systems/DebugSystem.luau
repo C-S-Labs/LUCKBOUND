@@ -29,6 +29,7 @@ local Fixtures = require(Root.Content.Fixtures)
 local BossPreviews = require(Root.Content.BossPreviews)
 local WeaponFX = require(Root.Util.WeaponFX)
 local ChunkCore = require(Root.Util.ChunkCore)
+local DevCommands = require(Root.Content.DevCommands)
 
 local DebugSystem = {}
 
@@ -480,6 +481,57 @@ COMMANDS.keys = function(player: Player, _args: { string }): (boolean, string)
 			.. ` | overrides: {if #overrides > 0 then table.concat(overrides, ", ") else "none"}`
 end
 
+-- === player (dev panel, 2026-09-27) ===================================
+-- Health is server-owned: a client setting its own Health does not replicate.
+
+local godMode: { [number]: RBXScriptConnection } = {}
+
+local function humanoidOf(player: Player): Humanoid?
+	return player.Character and player.Character:FindFirstChildOfClass("Humanoid")
+end
+
+--- /god -- toggle invulnerability: health snaps back to full on every change.
+COMMANDS.god = function(player: Player, _args: { string }): (boolean, string)
+	local held = godMode[player.UserId]
+	if held then
+		held:Disconnect()
+		godMode[player.UserId] = nil
+		return true, "god mode OFF"
+	end
+	local humanoid = humanoidOf(player)
+	if not humanoid then
+		return false, "no character"
+	end
+	humanoid.Health = humanoid.MaxHealth
+	godMode[player.UserId] = humanoid.HealthChanged:Connect(function()
+		if humanoid.Health < humanoid.MaxHealth and humanoid.Health > 0 then
+			humanoid.Health = humanoid.MaxHealth
+		end
+	end)
+	return true, "god mode ON (until you toggle it or respawn)"
+end
+
+--- /heal -- full health.
+COMMANDS.heal = function(player: Player, _args: { string }): (boolean, string)
+	local humanoid = humanoidOf(player)
+	if not humanoid then
+		return false, "no character"
+	end
+	humanoid.Health = humanoid.MaxHealth
+	return true, `healed to {math.floor(humanoid.MaxHealth)}`
+end
+
+--- /respawn -- a fresh character, placed wherever the game places one.
+COMMANDS.respawn = function(player: Player, _args: { string }): (boolean, string)
+	local held = godMode[player.UserId]
+	if held then
+		held:Disconnect()
+		godMode[player.UserId] = nil
+	end
+	player:LoadCharacter()
+	return true, "respawned"
+end
+
 function DebugSystem.handle(player: Player, name: any, args: any): ()
 	if not mayCommand(player) then
 		return -- silent: an unauthorised caller learns nothing
@@ -536,6 +588,13 @@ function DebugSystem.init(
 		DebugSystem.handle(player, name, args)
 	end)
 
+	-- The registry (Content/DevCommands) is what chat and the dev panel offer;
+	-- a SERVER entry with no handler is a button that does nothing, and a
+	-- handler with no entry is a command nobody can find. Say so loudly.
+	for _, problem in DebugSystem.registryProblems() do
+		warn(`[DebugSystem] {problem}`)
+	end
+
 	local names = {}
 	for name in COMMANDS do
 		table.insert(names, "/" .. name)
@@ -545,6 +604,27 @@ function DebugSystem.init(
 		`[DebugSystem] DEVELOPER COMMANDS ARE ON ({table.concat(names, " ")}) -- `
 			.. "Studio or place creator only. Turn GameConfig.Debug.AllowCommands off before going public."
 	)
+end
+
+--- Mismatches between the registry's SERVER entries and COMMANDS.
+function DebugSystem.registryProblems(): { string }
+	local problems = {}
+	local listed = {}
+	for _, c in DevCommands.Commands do
+		if c.Side == "SERVER" then
+			listed[c.Name] = true
+			if not COMMANDS[c.Name] then
+				table.insert(problems, `registry lists SERVER /{c.Name} but there is no handler`)
+			end
+		end
+	end
+	for name in COMMANDS do
+		if not listed[name] then
+			table.insert(problems, `handler /{name} is not in Content/DevCommands`)
+		end
+	end
+	table.sort(problems)
+	return problems
 end
 
 DebugSystem.COMMANDS = COMMANDS

@@ -46,6 +46,8 @@ PURE_MODULES = [
     ("ThemeCore",        "src/shared/Core/ThemeCore.luau"),
     ("Palettes",         "src/shared/Content/Hub/Palettes.luau"),
     ("LedgerCore",       "src/shared/Core/LedgerCore.luau"),
+    ("DevCore",          "src/shared/Core/DevCore.luau"),
+    ("DevCommands",      "src/shared/Content/DevCommands.luau"),
 ]
 
 # Folders already bundled verbatim through PURE_MODULES must not also be

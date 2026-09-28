@@ -1036,6 +1036,12 @@ local GameConfig = {
 
 		-- How fast /fly moves, in studs per second.
 		FlySpeed = 120,
+		-- The developer panel (UI/DevPanel): the key that opens it, how many
+		-- output lines it keeps, and how many autocomplete rows it shows.
+		PanelKey = "F4", -- an Enum.KeyCode name (a string: GameConfig loads headless)
+		PanelLogLines = 120,
+		PanelSuggestions = 10,
+		ChunkLabelHeight = 40, -- studs above a chunk's centre for its /chunks label
 		-- Guard rails on /speed, so a typo does not launch the character into
 		-- the skybox and require a rejoin.
 		MinWalkSpeed = 1,
