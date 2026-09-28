@@ -140,6 +140,13 @@ local launching: { [number]: boolean } = {}
 local forcedEntry: { [number]: boolean } = {}
 -- /enter <seed>: replay a map exactly (same chunks, same order). Developer only.
 local forcedSeed: { [number]: number } = {}
+-- Players whose entry is IN FLIGHT: from the moment an entry is accepted until
+-- its stage is built and they are placed (or it fails). isActive() only turns
+-- true once the stage exists, and building yields while meshes load -- so
+-- without this a second request during the load (a second /enter, or the Gate
+-- prompt pressed again after its 2 s cooldown) built a SECOND map (owner,
+-- 2026-09-27). Covers the leader and every traveller.
+local entering: { [number]: boolean } = {}
 -- Bound to a particular roll; a later roll (even of the same world) cancels it.
 local testDestinations: { [number]: { WorldId: string, RollNumber: number } } = {}
 
@@ -958,7 +965,7 @@ end
 ---
 --- `player` is whoever walked into the portal. If they lead a party, the
 --- party comes too, on this player's roll; if they are a member, nobody goes.
-function ExpeditionSystem.requestEnter(player: Player, ...: any): ()
+local function enterGuarded(locked: { [number]: boolean }, player: Player, ...: any): ()
 	-- The client sends nothing. A payload means a tampered client.
 	if select("#", ...) > 0 then
 		warn(
@@ -1034,13 +1041,18 @@ function ExpeditionSystem.requestEnter(player: Player, ...: any): ()
 		if not member then
 			continue
 		end
-		local busy = ExpeditionSystem.isActive(member)
+		local busy = ExpeditionSystem.isActive(member) or entering[userId] == true
 		local noBody = mode == "IN_PLACE" and member.Character == nil
 		if busy or noBody or not SaveSystem.get(member) then
 			tell(member, worldId, "Your party went through the portal without you.")
 		else
 			table.insert(travellers, member)
 		end
+	end
+
+	for _, traveller in travellers do
+		entering[traveller.UserId] = true
+		locked[traveller.UserId] = true
 	end
 
 	if mode == "TELEPORT" then
@@ -1088,9 +1100,37 @@ end
 --- for it, not already running, a free stage slot -- still applies, because
 --- skipping those would exercise a path the game does not actually have and
 --- would prove nothing. Returns ok plus a line to print back.
+--- The Gate's remote and /enter both come here. One entry at a time per
+--- player: a request while one is in flight is dropped, and the lock is
+--- always released -- even if the build errors -- so nobody is stuck.
+function ExpeditionSystem.requestEnter(player: Player, ...: any): ()
+	if entering[player.UserId] then
+		return
+	end
+	entering[player.UserId] = true
+	-- exactly the players THIS entry locks (the leader, then its travellers),
+	-- so releasing never touches another entry built at the same time
+	local locked: { [number]: boolean } = { [player.UserId] = true }
+	local ok, err = pcall(enterGuarded, locked, player, ...)
+	for userId in locked do
+		entering[userId] = nil
+	end
+	if not ok then
+		warn(`[ExpeditionSystem] entry for {player.Name} failed: {err}`)
+	end
+end
+
+--- Whether an entry is being built for this player right now.
+function ExpeditionSystem.isEntering(player: Player): boolean
+	return entering[player.UserId] == true
+end
+
 function ExpeditionSystem.forceEnter(player: Player, seed: number?): (boolean, string)
 	if ExpeditionSystem.isActive(player) then
 		return false, "already on an expedition"
+	end
+	if entering[player.UserId] then
+		return false, "a map is already loading -- wait for it"
 	end
 
 	local profile = SaveSystem.get(player)
