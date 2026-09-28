@@ -438,10 +438,9 @@ local function windPart(size: Vector3, cf: CFrame, transparency: number): Part
 	return part
 end
 
---- A DISCRETE BURST OF WIND where the move starts: a thin ring that bursts
---- out at the feet, and a few short streaks left behind along the way it
---- goes. Everything is gone in RollWindSeconds. Owner, 2026-09-28: instead
---- of afterimages.
+--- A DISCRETE BURST OF WIND where the move starts: short streaks of air
+--- left behind along the way it goes, stretching out and fading within
+--- RollWindSeconds. Owner, 2026-09-28: instead of afterimages; no ground ring.
 burstWind = function(root: BasePart, worldDirection: Vector3)
 	local tune = GameConfig.Locomotion
 	local seconds = tune.RollWindSeconds
@@ -449,43 +448,34 @@ burstWind = function(root: BasePart, worldDirection: Vector3)
 	local dir = if flat.Magnitude > 1e-3
 		then flat.Unit
 		else Vector3.new(root.CFrame.LookVector.X, 0, root.CFrame.LookVector.Z).Unit
-	local feet = root.Position - Vector3.new(0, root.Size.Y / 2 + 2, 0)
+	local right = dir:Cross(Vector3.yAxis)
+	local centre = root.Position
 
 	local folder = Instance.new("Folder")
 	folder.Name = "LuckboundRollWind"
 	local fade = TweenInfo.new(seconds, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
 
-	-- The ring: a very thin cylinder laid flat (a cylinder's axis is its X).
-	local startSize = tune.RollWindRingStartStuds
-	local endSize = tune.RollWindRingEndStuds
-	local ring = windPart(
-		Vector3.new(0.12, startSize, startSize),
-		CFrame.new(feet) * CFrame.Angles(0, 0, math.pi / 2),
-		tune.RollWindTransparency
-	)
-	ring.Shape = Enum.PartType.Cylinder
-	ring.Parent = folder
-	TweenService
-		:Create(ring, fade, { Size = Vector3.new(0.05, endSize, endSize), Transparency = 1 })
-		:Play()
-
-	-- The streaks: thin slivers left behind, drawn out backward as they fade.
-	local right = dir:Cross(Vector3.yAxis)
+	-- Streaks spread across the body's width and height, staggered front to
+	-- back so they read as a gust rather than a row of sticks.
 	local count = tune.RollWindStreaks
+	local length = tune.RollWindStreakLengthStuds
+	local thick = tune.RollWindStreakThickness
 	for i = 1, count do
-		local across = (i - (count + 1) / 2) * 0.9
-		local height = 0.8 + (i % 2) * 0.9
-		local at = feet + Vector3.new(0, height, 0) + right * across - dir * 1.5
-		local length = tune.RollWindStreakLengthStuds
+		local f = (i - 1) / math.max(count - 1, 1) -- 0..1 across
+		local across = (f - 0.5) * 2.4
+		local height = -1.6 + ((i * 0.618) % 1) * 3.0
+		local back = 0.8 + ((i * 0.382) % 1) * 1.6
+		local at = centre + Vector3.new(0, height, 0) + right * across - dir * back
 		local streak = windPart(
-			Vector3.new(0.08, 0.08, length * 0.4),
+			Vector3.new(thick, thick, length * 0.35),
 			CFrame.lookAt(at, at + dir),
 			tune.RollWindTransparency
 		)
 		streak.Parent = folder
+		local tail = at - dir * length * 0.6
 		TweenService:Create(streak, fade, {
-			Size = Vector3.new(0.03, 0.03, length),
-			CFrame = CFrame.lookAt(at - dir * length * 0.5, at - dir * length * 0.5 + dir),
+			Size = Vector3.new(thick * 0.3, thick * 0.3, length),
+			CFrame = CFrame.lookAt(tail, tail + dir),
 			Transparency = 1,
 		}):Play()
 	end

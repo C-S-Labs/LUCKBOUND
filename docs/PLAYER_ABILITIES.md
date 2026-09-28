@@ -125,8 +125,8 @@ edge, and a 0.12s buffer so a press just before landing fires on landing.
   pressed: front, back, left or right, each with its own animation. Without either,
   it turns to roll the way it is going, so the roll is always "front".
 - **The look:** a **discrete burst of wind** where the move starts (owner, replacing
-  afterimages): a pale ring bursts out at the feet and a few short streaks are left
-  behind, gone in 0.3s. There's also a 3° camera widen and, for a direction with no
+  afterimages): five short streaks of air left behind, stretching out and fading
+  within 0.32s. The ground ring was removed after the owner's walk ("too much"). There's also a 3° camera widen and, for a direction with no
   clip yet, a procedural tumble (forward, backward, or over the shoulder to either
   side). Settings: `RollWind*`, `RollTumble*`, `RollFovKickDegrees`.
 - **Air dash (the jump dash, owner 2026-09-28):** roll pressed **in the air** gives a
@@ -223,6 +223,8 @@ takes the best target in view; press again to release.
 - **Choice:** the target nearest the camera's look beats the one merely nearest the
   player (`LockOnCore.pick`). Range 90 studs, within 60° of the camera's look, in sight.
 - **Drops:** past 120 studs, out of sight for 1.5s, or the target is gone.
+- **Letting go eases back:** the view blends from the lock's framing back to the
+  normal (or shoulder) camera over 0.4s instead of snapping (owner, 2026-09-28).
 - **Camera:** behind and over the right shoulder (11 studs back, 2.4 right), looking
   past the player toward the target. The aim is capped 9 studs above the player, so
   a tall boss never pulls the camera into the sky. Walls pull the camera in, and

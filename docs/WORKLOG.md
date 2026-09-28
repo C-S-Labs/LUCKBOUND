@@ -34,6 +34,22 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 104 — 2026-09-28 — Walk feedback: no ring, stronger streaks, lock-on eases out
+**Merged:** see the PR for this branch   **Tests:** 1005 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner's walk: wind, air dash and lock-on all work)
+- The wind burst's ground ring is removed (owner: too much). There are now 5 streaks, more solid (0.35), longer
+  (7 studs) and staggered.
+- Lock-on release eases the camera back over `LockOn.ReleaseBlendSeconds` (0.4s) by blending from the lock's
+  last framing into the default camera's output each frame. A lock that breaks eases too; a respawn snaps.
+- The air dash has its own clip slots already (`AirDash*`); they go in the animation set.
+
+### Next
+1. Owner re-walks: the streaks and the unlock ease.
+2. Then generate the player animation set (four rolls first).
+
+---
+
 ## Session 103 — 2026-09-28 — Wind burst, air dash, lock-on switch fix
 **Merged:** see the PR for this branch   **Tests:** 1004 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 

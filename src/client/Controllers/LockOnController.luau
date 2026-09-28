@@ -134,7 +134,21 @@ end
 
 -- === taking and dropping =============================================
 
-local function release()
+-- The camera's ease back after a release: where it was when the lock let
+-- go, and when. nil = not easing.
+local releaseFrom: CFrame? = nil
+local releaseStartedAt = 0
+
+--- Drops the lock. `ease` hands the view back smoothly (a player's release,
+--- a lock that broke); without it the view snaps (a new character).
+local function release(ease: boolean?)
+	local camera0 = Workspace.CurrentCamera
+	if ease and target and camera0 then
+		releaseFrom = camera0.CFrame
+		releaseStartedAt = os.clock()
+	else
+		releaseFrom = nil
+	end
 	if target and UserInputService.TouchEnabled then
 		ContextActionService:UnbindAction("LuckboundLockNext")
 	end
@@ -256,7 +270,7 @@ end
 
 local function toggle()
 	if target then
-		release()
+		release(true)
 	else
 		acquire()
 	end
@@ -264,9 +278,32 @@ end
 
 -- === the camera ======================================================
 
+--- THE EASE BACK. The default camera has already run this frame and put
+--- the view where it wants it; this blends from where the lock left the view
+--- toward that, so letting go flows back to the normal (or shoulder) view
+--- the way taking a lock flows in. The default camera reads its own last
+--- CFrame next frame, so the blend converges instead of fighting it.
+local function easeBack()
+	local from = releaseFrom
+	local camera = Workspace.CurrentCamera
+	if not from or not camera then
+		return
+	end
+	local seconds = GameConfig.LockOn.ReleaseBlendSeconds
+	local t = if seconds > 0 then math.clamp((os.clock() - releaseStartedAt) / seconds, 0, 1) else 1
+	if t >= 1 then
+		releaseFrom = nil
+		return
+	end
+	-- Ease out: quick to leave the lock's framing, gentle to settle.
+	local eased = 1 - (1 - t) ^ 3
+	camera.CFrame = from:Lerp(camera.CFrame, eased)
+end
+
 local function update(dt: number)
 	local held = target
 	if not held then
+		easeBack()
 		return
 	end
 	local root = playerRoot()
@@ -287,7 +324,7 @@ local function update(dt: number)
 	local tagged = held:IsDescendantOf(Workspace)
 		and CollectionService:HasTag(held, Constants.NAMES.LOCK_ON_TAG)
 	if LockOnCore.shouldBreak(distance, outOfSightSeconds, tagged, GameConfig) then
-		release()
+		release(true)
 		return
 	end
 
@@ -393,7 +430,9 @@ function LockOnController.init(deps: any): ()
 	end)
 
 	-- A new character (death, respawn, teleport) starts unlocked.
-	player.CharacterAdded:Connect(release)
+	player.CharacterAdded:Connect(function()
+		release(false)
+	end)
 
 	-- After the default camera has run, so ours is the one that shows.
 	RunService:BindToRenderStep("LuckboundLockOn", Enum.RenderPriority.Camera.Value + 1, update)

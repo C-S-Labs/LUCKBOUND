@@ -271,8 +271,8 @@ _254 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/PLAYER_ABILITIES.md
 
-- `docs/PLAYER_ABILITIES.md` (385) - LUCKBOUND — Player Abilities & Upgrades · 2026-09-28
-  - `PLAYER_ABILITIES.md`: 0. The line this document exists to hold:11, 1. Built: our own character controller:34, 2. Built: two profiles, one stamina bar:58, 2.5 Built: jump, roll and backstep:103, 2.7 Built: how the body moves (`CharacterAnimator`, `Animati:145, Adding real animations: where and how:172, 2.55 Built: the shoulder camera (our shift lock):206, 2.6 Built: lock-on (optional):215, 3. Planned: the Fate Tree:247, FORTUNE — what the roll can reach:263, ENDURANCE — how long you last out there:276, DISCOVERY — what a world yields:287, CRAFT — what your gear becomes:299, Node shapes worth having:309, 4. Planned: movement abilities beyond the two:320, 5. Where these would live:341, 6. How fighting drives movement (the weapon contract):356
+- `docs/PLAYER_ABILITIES.md` (387) - LUCKBOUND — Player Abilities & Upgrades · 2026-09-28
+  - `PLAYER_ABILITIES.md`: 0. The line this document exists to hold:11, 1. Built: our own character controller:34, 2. Built: two profiles, one stamina bar:58, 2.5 Built: jump, roll and backstep:103, 2.7 Built: how the body moves (`CharacterAnimator`, `Animati:145, Adding real animations: where and how:172, 2.55 Built: the shoulder camera (our shift lock):206, 2.6 Built: lock-on (optional):215, 3. Planned: the Fate Tree:249, FORTUNE — what the roll can reach:265, ENDURANCE — how long you last out there:278, DISCOVERY — what a world yields:289, CRAFT — what your gear becomes:301, Node shapes worth having:311, 4. Planned: movement abilities beyond the two:322, 5. Where these would live:343, 6. How fighting drives movement (the weapon contract):358
 
 ### docs/PLAYER_ANIMATION_BRIEF.md
 
@@ -321,8 +321,8 @@ _254 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (6038) - LUCKBOUND — Work Log · 2026-09-28
-  - `WORKLOG.md`: Template:16, Session N — YYYY-MM-DD — <short title>:19, Done:22, Decisions made:25, Stopped at:28, Next:31, Session 103 — 2026-09-28 — Wind burst, air dash, lock-on swi:37, Done (owner's walk: the run animation works):40, Decisions made:51, Next:55, Session 102 — 2026-09-28 — Prep for hand-made player animati:61, Done:64, Decisions made (owner):72, Stopped at:75, Next:78, Session 101 — 2026-09-28 — Polished body movement; direction:85, Done:88, Decisions made:104, Stopped at:109, Next:112, Session 100 — 2026-09-28 — Walk feedback: no ice, hub stamin:118, Done (owner feedback from the second Studio walk):121, Stopped at:133, Next:136, Session 99 — 2026-09-28 — First Studio walk: controller neve:142, Done:145, Decisions made:154, Stopped at:157, Next:160, Session 98 — 2026-09-28 — Lock-on switching, charge scope:165, Done:168, Decisions made:177, Stopped at:182, Next:185, Session 97 — 2026-09-28 — Own character controller, roll, st:190, Done:195, Decisions made (owner, this session):212, Stopped at:220, Next:224, Session 96 — 2026-09-28 — Movement state machine: sprint-jum:231, ... +533 more
+- `docs/WORKLOG.md` (6054) - LUCKBOUND — Work Log · 2026-09-28
+  - `WORKLOG.md`: Template:16, Session N — YYYY-MM-DD — <short title>:19, Done:22, Decisions made:25, Stopped at:28, Next:31, Session 104 — 2026-09-28 — Walk feedback: no ring, stronger :37, Done (owner's walk: wind, air dash and lock-on all work):40, Next:47, Session 103 — 2026-09-28 — Wind burst, air dash, lock-on swi:53, Done (owner's walk: the run animation works):56, Decisions made:67, Next:71, Session 102 — 2026-09-28 — Prep for hand-made player animati:77, Done:80, Decisions made (owner):88, Stopped at:91, Next:94, Session 101 — 2026-09-28 — Polished body movement; direction:101, Done:104, Decisions made:120, Stopped at:125, Next:128, Session 100 — 2026-09-28 — Walk feedback: no ice, hub stamin:134, Done (owner feedback from the second Studio walk):137, Stopped at:149, Next:152, Session 99 — 2026-09-28 — First Studio walk: controller neve:158, Done:161, Decisions made:170, Stopped at:173, Next:176, Session 98 — 2026-09-28 — Lock-on switching, charge scope:181, Done:184, Decisions made:193, Stopped at:198, Next:201, Session 97 — 2026-09-28 — Own character controller, roll, st:206, Done:211, Decisions made (owner, this session):228, ... +536 more
 
 ### docs/archive
 
@@ -351,8 +351,8 @@ _254 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
   - `AmbienceController.luau`: quality:72, make:79, setAsideScene:89, buildScene:98, buildCloudSea:148, buildMotes:202, step:239, AmbienceController.enter:288, AmbienceController.leave:310
 - `src/client/Controllers/AtmosphereEffects.luau` (1125) - The scenario atmospheres' effects (Content/Atmospheres), drawn round the · 2026-09-25
   - `AtmosphereEffects.luau`: LOCKDOWN:32, SIEGE:44, STORMHAWK:54, RIME:64, RECLAIMED:76, AETHER_SURGE:88, UNMOORING:98, num:118, col:121, vec:124, part:128, prop:144, readMap:174, randomIn:254, band:265, buildLights:273, lightLevel:306, newMover:332, buildGraph:354, route:391, hover:414, newRoute:419, stepMover:435, buildFlyers:466, bolt:508, buildWeather:564, buildDome:614, buildPlumes:664, beam:704, anchorAt:718, buildAurora:730, buildDebris:823, buildCanopy:874, applyTint:895, AtmosphereEffects.enter:924, AtmosphereEffects.leave:1091, AtmosphereEffects.setTint:1117
-- `src/client/Controllers/CharacterAnimator.luau` (772) - HOW THE PLAYER'S BODY MOVES: clips, blending and the procedural layer. · 2026-09-28
-  - `CharacterAnimator.luau`: bend:106, findJoint:110, makeSound:119, loadTrack:129, stockId:151, CharacterAnimator.bind:161, CharacterAnimator.unbind:312, playOneShot:342, CharacterAnimator.onJump:357, CharacterAnimator.onLand:366, slotDirection:382, CharacterAnimator.onRoll:391, windPart:426, setWeight:501, CharacterAnimator.update:520, CharacterAnimator.overrideSlot:726, CharacterAnimator.describeSlots:760
+- `src/client/Controllers/CharacterAnimator.luau` (762) - HOW THE PLAYER'S BODY MOVES: clips, blending and the procedural layer. · 2026-09-28
+  - `CharacterAnimator.luau`: bend:106, findJoint:110, makeSound:119, loadTrack:129, stockId:151, CharacterAnimator.bind:161, CharacterAnimator.unbind:312, playOneShot:342, CharacterAnimator.onJump:357, CharacterAnimator.onLand:366, slotDirection:382, CharacterAnimator.onRoll:391, windPart:426, setWeight:491, CharacterAnimator.update:510, CharacterAnimator.overrideSlot:716, CharacterAnimator.describeSlots:750
 - `src/client/Controllers/DebugCommands.luau` (915) - Developer commands, client half. Testing tooling, not a feature. · 2026-09-28
   - `DebugCommands.luau`: DebugCommands.onOutput:49, emit:53, say:67, fail:71, stopFlying:82, startFlying:98, toggleFly:172, setSpeed:185, teleport:227, currentStage:271, currentChunks:300, toggleNoclip:332, setOverlay:376, setStats:438, setProps:489, sorted:512, DebugCommands.sources:594, DebugCommands.describeChunk:599, onOff:610, DebugCommands.bindPanel:618, locomotion:632, DebugCommands.run:828, DebugCommands.runLine:855, DebugCommands.init:862
 - `src/client/Controllers/EventController.luau` (167) - The client's mirror of what is happening to the world. Build spec §4.1. · 2026-09-24
@@ -365,8 +365,8 @@ _254 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
   - `HubEffects.luau`: smoothstep:47, stepYaw:54, lockYawToSlot:82, hashName:99, findRigs:107, HubEffects.spinUpForRoll:123, HubEffects.settle:142, cycleFeaturedRarity:163, HubEffects.init:188
 - `src/client/Controllers/LightningController.luau` (52) - LightningController: makes WeaponFX crackle Beams (tag "CrackleBeam") re-shape now and then by bending their curves · 2026-09-25
   - `LightningController.luau`: LightningController.init:18
-- `src/client/Controllers/LockOnController.luau` (403) - LOCK-ON: an optional target lock with an over-the-shoulder camera. · 2026-09-28
-  - `LockOnController.luau`: pivotOf:45, centreOf:54, aimPoint:64, playerRoot:72, visible:82, showMarker:92, release:137, measure:157, lockOnto:189, acquire:210, LockOnController.switch:223, toggle:257, update:267, LockOnController.init:339
+- `src/client/Controllers/LockOnController.luau` (442) - LOCK-ON: an optional target lock with an over-the-shoulder camera. · 2026-09-28
+  - `LockOnController.luau`: pivotOf:45, centreOf:54, aimPoint:64, playerRoot:72, visible:82, showMarker:92, release:144, measure:171, lockOnto:203, acquire:224, LockOnController.switch:237, toggle:271, easeBack:286, update:303, LockOnController.init:376
 - `src/client/Controllers/LocomotionController.luau` (520) - PLAYER MOVEMENT: walk, sprint, jump, roll and backstep, on our own · 2026-09-28
   - `LocomotionController.luau`: moveDirection:85, launchJump:101, facingHeld:116, beginRoll:120, onJumpPressed:143, onRollPressed:152, insideStage:165, refreshProfile:186, bindCharacter:202, step:271, LocomotionController.init:418, LocomotionController.get:475, LocomotionController.mode:481, LocomotionController.lock:488, LocomotionController.unlock:493, LocomotionController.forceProfile:499, LocomotionController.setStamina:505, LocomotionController.profile:510, LocomotionController.setLockTarget:516
 - `src/client/Controllers/PartyController.luau` (135) - The client's picture of its party. Build spec §7.2. · 2026-09-24
@@ -502,7 +502,7 @@ _254 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 - `src/shared/Core/FixtureCore.luau` (55) - The pure half of fixtures (CHUNK_AUTHORING.md convention 7, build spec · 2026-09-24
   - `FixtureCore.luau`: CHEST:15, VAULT:16, FORCEFIELD:17, smooth:23, FixtureCore.lidAngle:31, FixtureCore.doorSpin:38, FixtureCore.doorRecess:44, FixtureCore.fieldTransparency:50
 - `src/shared/Core/Freeze.luau` (25) - Deep-freeze a content or config table, so a System cannot mutate the data · 2026-09-24
-- `src/shared/Core/GameConfig.luau` (1463) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-09-28
+- `src/shared/Core/GameConfig.luau` (1466) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-09-28
 - `src/shared/Core/HubMenuCore.luau` (190) - THE HUB MENU'S RULES, WITH NO ROBLOX IN THEM. · 2026-09-25
   - `HubMenuCore.luau`: HubMenuCore.panels:20, HubMenuCore.panelById:31, HubMenuCore.destinations:41, HubMenuCore.destinationById:52, HubMenuCore.landingPoint:64, HubMenuCore.isVisible:71, HubMenuCore.newState:80, HubMenuCore.reduce:98, HubMenuCore.canTravel:149, HubMenuCore.travelTiming:180
 - `src/shared/Core/KeyCore.luau` (58) - The pure half of vault keys (build spec §7.5). Owner-directed 2026-09-23: · 2026-09-24
@@ -561,7 +561,7 @@ _254 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### tests/cases.luau
 
-- `tests/cases.luau` (9215) - LUCKBOUND test suite. Run: python3 tests/build_suite.py && luau tests/generated_suite.luau · 2026-09-28
+- `tests/cases.luau` (9219) - LUCKBOUND test suite. Run: python3 tests/build_suite.py && luau tests/generated_suite.luau · 2026-09-28
   - `cases.luau`: group:51, check:56, throws:69, lcg:75, profile:86, cfg:94
 
 ### tests/run.sh

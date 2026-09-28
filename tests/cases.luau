@@ -6211,7 +6211,7 @@ do
 	)
 	check(
 		"the roll look stays subtle",
-		L.RollWindTransparency >= 0.4 and L.RollWindSeconds <= 0.4 and L.RollFovKickDegrees <= 5
+		L.RollWindTransparency >= 0.2 and L.RollWindSeconds <= 0.45 and L.RollFovKickDegrees <= 5
 	)
 
 	-- === turn in place ==============================================
@@ -6283,6 +6283,10 @@ do
 		select(2, LockOnCore.shouldBreak(10, 0, false, GameConfig)) == "gone"
 	)
 	check("a lock breaks further out than it takes", T.BreakRange > T.Range)
+	check(
+		"letting go eases the view back rather than snapping",
+		T.ReleaseBlendSeconds > 0 and T.ReleaseBlendSeconds <= 1
+	)
 	check(
 		"a tall target never pulls the camera into the sky",
 		LockOnCore.aimHeight(100, 0, GameConfig) == T.MaxAimHeight

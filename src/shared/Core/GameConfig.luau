@@ -1141,16 +1141,16 @@ local GameConfig = {
 		AirDashDurationSeconds = 0.2, -- ~9 studs
 
 		-- === ROLL LOOK ===
-		-- A discrete burst of wind, not afterimages (owner, 2026-09-28): a
-		-- pale ring that bursts out at the feet and a few short streaks left
-		-- behind, all gone in a moment. Used for the roll, backstep and dash.
+		-- A discrete burst of wind, not afterimages (owner, 2026-09-28): short
+		-- streaks of air left behind where the move starts, gone in a moment.
+		-- No ground ring (owner: too much). Used for the roll, backstep and
+		-- air dash.
 		RollWind = true,
-		RollWindSeconds = 0.3,
-		RollWindRingStartStuds = 2,
-		RollWindRingEndStuds = 9,
-		RollWindTransparency = 0.5, -- how solid it starts
-		RollWindStreaks = 3,
-		RollWindStreakLengthStuds = 5,
+		RollWindSeconds = 0.32,
+		RollWindTransparency = 0.35, -- how solid a streak starts
+		RollWindStreaks = 5,
+		RollWindStreakLengthStuds = 7,
+		RollWindStreakThickness = 0.12,
 		-- The procedural roll while there is no clip for that direction: the
 		-- body tumbles forward, backward or sideways, relative to facing,
 		-- dipping this far at its lowest. Drawn locally; other players see
@@ -1297,6 +1297,9 @@ local GameConfig = {
 		-- The camera never sits closer to the player than this after a wall
 		-- pulls it in.
 		CameraMinDistance = 3,
+		-- Letting go of a lock eases the view back to the normal (or
+		-- shoulder) camera over this long instead of snapping (owner, 2026-09-28).
+		ReleaseBlendSeconds = 0.4,
 
 		-- === SWITCHING TARGETS ===
 		-- While locked, flick the mouse or the right stick sideways (or tap
