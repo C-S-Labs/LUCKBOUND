@@ -484,7 +484,7 @@ The first thing anyone sees.
 10. **On a phone (or Studio's device emulator).** ✅ Pass: the rail starts
     collapsed, the panel is readable, and nothing is cut off at the edges.
 
-### Test K — run and double jump (2 min) ⭐ NEW
+### Test K — run, jump and dash (3 min) ⭐ NEW
 
 1. **Hold Shift and run.** ✅ Pass: you accelerate over ~0.25s rather than
    snapping, and a small bar appears above the roll prompt.
@@ -496,6 +496,16 @@ The first thing anyone sees.
 5. **Walk off the edge of a walkway and press jump immediately.** ✅ Pass: you
    get a **full** jump, not the weaker air one — that is the coyote window. You
    should then still have the air jump available.
+6. **Sprint, then jump.** ✅ Pass: the jump is visibly longer and a little
+   higher than a jump from a walk, and you land back at sprint speed.
+7. **Press Q (B on a gamepad; the Dash button on a phone) while moving.** ✅
+   Pass: a quick ~17-stud burst the way you were moving, with a gold burst at
+   your feet, and the stamina bar dips. Standing still, the dash goes the way
+   you face. It never lifts you off the floor.
+8. **Mash Q.** ✅ Pass: no faster than one dash every ~0.7s, and after about
+   five the bar is too low and Q does nothing until it refills.
+9. **Dash, then jump mid-dash.** ✅ Pass: the dash stops and you jump. **Jump,
+   then press Q in the air.** ✅ Pass: nothing happens (ground-only dash).
 
 ### Test L — the menu follows the world (4 min) ⭐ NEW
 

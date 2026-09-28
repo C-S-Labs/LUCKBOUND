@@ -1,7 +1,8 @@
 --!strict
--- RUN AND DOUBLE JUMP, and nothing else.
+-- PLAYER MOVEMENT: sprint, jump, sprint-jump, air jump and dash, driven by
+-- one state machine in LocomotionCore, plus the lock a weapon move uses.
 --
--- Phase 1 player abilities are movement. Everything offensive -- damage,
+-- Player abilities are movement. Everything offensive -- damage,
 -- reach, cooldowns, hit effects, animations -- belongs to the item that grants
 -- it: a sword model carries its own attributes and its own script, and this
 -- controller must never grow a branch that knows about one.
@@ -9,8 +10,9 @@
 -- line each rung falls on.
 --
 -- EVERY RULE IS IN LocomotionCore. This file reads input, reads the Humanoid,
--- and writes a WalkSpeed; the stamina curve, the jump budget and the coyote
--- window are decided by a pure module that the test suite exercises directly.
+-- and writes a WalkSpeed and velocities; the stamina curve, the jump budget,
+-- the coyote window, the dash cooldown and the lock rules are decided by a
+-- pure module that the test suite exercises directly.
 -- A stamina bug found here is a test that was missing there.
 --
 -- ON TRUST: Roblox movement is client-authoritative by construction. The
@@ -20,6 +22,7 @@
 -- those are guarded where they happen.
 
 local Players = game:GetService("Players")
+local ContextActionService = game:GetService("ContextActionService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
@@ -39,6 +42,14 @@ local wantsSprint = false
 local gui: ScreenGui
 local staminaTrack: Frame
 local staminaFill: Frame
+-- The horizontal push for a dash. Built once per character and only enabled
+-- for the burst; Y is left free so gravity still acts mid-dash.
+local dashDrive: LinearVelocity? = nil
+-- A ground jump out of a sprint waits here until the character actually
+-- leaves the floor, then gets its extra height. Setting it on the press
+-- would be overwritten by the Humanoid's own jump that same frame.
+local sprintJumpPendingUntil = 0
+local jumpingEnabled = true
 
 -- === the stamina pip =================================================
 -- Deliberately tiny and deliberately silent: it fades in when stamina is
@@ -85,13 +96,13 @@ local function updateIndicator(fraction: number)
 	staminaFill.BackgroundColor3 = if fraction < 0.2 then UITheme.AccentWarn else UITheme.AccentGold
 end
 
--- === the air jump ====================================================
+-- === jumps =============================================================
 
---- A ring of light under the feet on the second jump. Without it the air jump
---- is invisible to everyone including the player who pressed it, and an
---- ability nobody can see reads as a physics glitch.
-local function playAirJumpEffect(character: Model)
-	if not GameConfig.Locomotion.AirJumpEffect then
+--- A burst of light under the feet on the air jump and the dash. Without it
+--- either is invisible to everyone including the player who pressed it, and
+--- an ability nobody can see reads as a physics glitch.
+local function playBurstEffect(character: Model, enabled: boolean)
+	if not enabled then
 		return
 	end
 
@@ -131,26 +142,75 @@ local function onJumpRequest()
 	local now = os.clock()
 	local updated, kind = LocomotionCore.jump(state, now, GameConfig)
 	state = updated
-
-	if kind == "AIR" then
-		-- ChangeState(Jumping) rather than setting Jump = true: the second
-		-- one is ignored while the humanoid is in Freefall, which is exactly
-		-- when an air jump happens.
-		humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
-		local root = character:FindFirstChild("HumanoidRootPart")
-		if root and root:IsA("BasePart") then
-			-- Replace the vertical component rather than adding to it, so a
-			-- jump pressed while falling fast is worth the same as one
-			-- pressed at the top of an arc.
-			local velocity = root.AssemblyLinearVelocity
-			root.AssemblyLinearVelocity = Vector3.new(
-				velocity.X,
-				GameConfig.Locomotion.JumpPower * GameConfig.Locomotion.AirJumpPower,
-				velocity.Z
-			)
-		end
-		playAirJumpEffect(character)
+	if kind == nil then
+		return
 	end
+
+	-- A jump ends a dash, so the push stops with it.
+	if dashDrive then
+		dashDrive.Enabled = false
+	end
+
+	if kind == "GROUND" then
+		-- The Humanoid performs the ground jump itself; a sprint-jump only
+		-- tops up its height once the character has left the floor.
+		if state.SprintJumping then
+			sprintJumpPendingUntil = now + GameConfig.Locomotion.CoyoteTimeSeconds * 2
+		end
+		return
+	end
+
+	-- ChangeState(Jumping) rather than setting Jump = true: the second one is
+	-- ignored while the humanoid is in Freefall, which is exactly when an air
+	-- jump happens.
+	humanoid:ChangeState(Enum.HumanoidStateType.Jumping)
+	local root = character:FindFirstChild("HumanoidRootPart")
+	if root and root:IsA("BasePart") then
+		-- Replace the vertical component rather than adding to it, so a jump
+		-- pressed while falling fast is worth the same as one pressed at the
+		-- top of an arc.
+		local velocity = root.AssemblyLinearVelocity
+		root.AssemblyLinearVelocity = Vector3.new(
+			velocity.X,
+			LocomotionCore.jumpVelocity(state, kind, GameConfig),
+			velocity.Z
+		)
+	end
+	playBurstEffect(character, GameConfig.Locomotion.AirJumpEffect)
+end
+
+-- === the dash ========================================================
+
+local function onDashRequest()
+	local character = player.Character
+	if not character or not humanoid or not dashDrive then
+		return
+	end
+	local root = character:FindFirstChild("HumanoidRootPart")
+	if not root or not root:IsA("BasePart") then
+		return
+	end
+
+	local updated, ok = LocomotionCore.dash(state, os.clock(), GameConfig)
+	state = updated
+	if not ok then
+		return
+	end
+
+	-- The way the stick points; facing, if it points nowhere. Flattened so
+	-- a dash never launches anyone upward.
+	local direction = humanoid.MoveDirection
+	if direction.Magnitude < 0.1 then
+		direction = root.CFrame.LookVector
+	end
+	direction = Vector3.new(direction.X, 0, direction.Z)
+	if direction.Magnitude < 1e-3 then
+		return
+	end
+
+	dashDrive.VectorVelocity = direction.Unit * GameConfig.Locomotion.DashSpeed
+	dashDrive.Enabled = true
+	playBurstEffect(character, GameConfig.Locomotion.DashEffect)
 end
 
 -- === wiring ==========================================================
@@ -161,6 +221,7 @@ local function bindCharacter(character: Model)
 		return
 	end
 	humanoid = found
+	jumpingEnabled = true
 	found.UseJumpPower = true
 	found.JumpPower = GameConfig.Locomotion.JumpPower
 	-- The jump budget resets from `Grounded` inside LocomotionCore.step, which
@@ -168,6 +229,25 @@ local function bindCharacter(character: Model)
 	-- StateChanged handler here. One source of "am I on the ground" is the
 	-- whole reason the coyote window is testable.
 	state = LocomotionCore.newState(GameConfig, os.clock())
+
+	local root = character:WaitForChild("HumanoidRootPart", 10)
+	if root and root:IsA("BasePart") then
+		local attachment = Instance.new("Attachment")
+		attachment.Name = "LuckboundDash"
+		attachment.Parent = root
+		local drive = Instance.new("LinearVelocity")
+		drive.Name = "LuckboundDash"
+		drive.Attachment0 = attachment
+		drive.RelativeTo = Enum.ActuatorRelativeTo.World
+		drive.VelocityConstraintMode = Enum.VelocityConstraintMode.Vector
+		drive.ForceLimitMode = Enum.ForceLimitMode.PerAxis
+		-- Horizontal only, and strong enough to beat the Humanoid's own
+		-- walking force for the length of the burst.
+		drive.MaxAxesForce = Vector3.new(math.huge, 0, math.huge)
+		drive.Enabled = false
+		drive.Parent = root
+		dashDrive = drive
+	end
 end
 
 local function step(dt: number)
@@ -176,6 +256,7 @@ local function step(dt: number)
 		return
 	end
 
+	local now = os.clock()
 	local grounded = humanoid.FloorMaterial ~= Enum.Material.Air
 	local moving = humanoid.MoveDirection.Magnitude > 0.1
 
@@ -183,17 +264,53 @@ local function step(dt: number)
 		WantsSprint = wantsSprint,
 		Moving = moving,
 		Grounded = grounded,
-		Now = os.clock(),
+		Now = now,
 	}, GameConfig)
 
-	local target = LocomotionCore.targetSpeed(state, GameConfig)
+	local mode = LocomotionCore.mode(state, now)
+
+	-- The dash push lives exactly as long as the dash does.
+	if dashDrive and dashDrive.Enabled and mode ~= "DASH" then
+		dashDrive.Enabled = false
+	end
+
+	-- The sprint-jump top-up, applied on the first airborne frame.
+	if sprintJumpPendingUntil > 0 then
+		if now > sprintJumpPendingUntil then
+			sprintJumpPendingUntil = 0
+		elseif not grounded then
+			sprintJumpPendingUntil = 0
+			local root = character:FindFirstChild("HumanoidRootPart")
+			if root and root:IsA("BasePart") then
+				local velocity = root.AssemblyLinearVelocity
+				local lift = LocomotionCore.jumpVelocity(state, "GROUND", GameConfig)
+				if velocity.Y < lift then
+					root.AssemblyLinearVelocity = Vector3.new(velocity.X, lift, velocity.Z)
+				end
+			end
+		end
+	end
+
+	-- A weapon lock that forbids jumping has to stop the Humanoid's own jump
+	-- too, which the core cannot see. Toggled only on change.
+	local canJump = not (state.Lock and not state.Lock.AllowJump)
+	if canJump ~= jumpingEnabled then
+		jumpingEnabled = canJump
+		humanoid:SetStateEnabled(Enum.HumanoidStateType.Jumping, canJump)
+	end
+
+	local target = LocomotionCore.targetSpeed(state, GameConfig, now)
 	-- Ramp rather than snap. The acceleration is what makes a sprint read as
-	-- effort instead of as a speed setting.
+	-- effort instead of as a speed setting. A lock snaps: a swing that roots
+	-- the player must root them on its first frame, not a quarter-second in.
 	local tuning = GameConfig.Locomotion
-	local rate = if target > humanoid.WalkSpeed
-		then tuning.SprintAccelerationSeconds
-		else tuning.SprintDecelerationSeconds
-	local alpha = math.clamp(dt / math.max(rate, 1e-3), 0, 1)
+	local alpha = 1
+	if mode ~= "LOCKED" then
+		local rate = if target > humanoid.WalkSpeed
+			then tuning.SprintAccelerationSeconds
+			else tuning.SprintDecelerationSeconds
+		alpha = math.clamp(dt / math.max(rate, 1e-3), 0, 1)
+	end
 	humanoid.WalkSpeed += (target - humanoid.WalkSpeed) * alpha
 
 	updateIndicator(LocomotionCore.staminaFraction(state, GameConfig))
@@ -240,6 +357,16 @@ function LocomotionController.init(): ()
 		end)
 	end
 
+	-- The dash is bound through ContextActionService so a phone gets an
+	-- on-screen button for free. Q on a keyboard, B on a gamepad.
+	ContextActionService:BindAction("LuckboundDash", function(_, inputState)
+		if inputState == Enum.UserInputState.Begin then
+			onDashRequest()
+		end
+		return Enum.ContextActionResult.Pass
+	end, true, Enum.KeyCode.Q, Enum.KeyCode.ButtonB)
+	ContextActionService:SetTitle("LuckboundDash", "Dash")
+
 	RunService.Heartbeat:Connect(step)
 end
 
@@ -247,6 +374,24 @@ end
 --- by convention: mutate it and the next frame overwrites you.
 function LocomotionController.get(): any
 	return state
+end
+
+--- The current movement mode: "GROUND", "AIR", "DASH" or "LOCKED".
+--- RESERVED (docs/RESERVED.md): read by the weapon layer once it exists.
+function LocomotionController.mode(): string
+	return LocomotionCore.mode(state, os.clock())
+end
+
+--- THE WEAPON HOOK. A weapon move holds movement for its own length; see
+--- LocomotionCore.lock for the spec. RESERVED (docs/RESERVED.md): no weapon
+--- calls it yet.
+function LocomotionController.lock(spec: any): ()
+	state = LocomotionCore.lock(state, os.clock(), spec, GameConfig)
+end
+
+--- Releases a weapon lock early. RESERVED alongside `lock`.
+function LocomotionController.unlock(): ()
+	state = LocomotionCore.unlock(state)
 end
 
 return LocomotionController

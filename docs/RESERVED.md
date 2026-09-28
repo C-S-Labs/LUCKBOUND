@@ -77,6 +77,14 @@ loot pools are constructed").
 | `KeyCore.dropChance(base, modifiers)`: the `modifiers` list and `KeyChanceDelta` | RESERVED | World modifiers (§7-excluded). `LootSystem` passes an empty list; a modifier with `KeyChanceDelta` moves the key chance, never the vault's `SpawnChance`. |
 | `GameConfig.Loot.BossDefeatStandIn` | RESERVED (stand-in) | Replaced by a real boss-defeated event once bosses exist; until then, reaching the arena counts. |
 
+## Movement hooks for weapons — `client/Controllers/LocomotionController`
+
+| Declaration | Status | Consumer |
+|---|---|---|
+| `LocomotionController.lock` / `unlock` | RESERVED | Weapon moves rooting, slowing or pinning the player for a swing (`PLAYER_ABILITIES.md` §6). The rules behind them, `LocomotionCore.lock`/`unlock`, are consumed by the tests. Blocked by build spec §7.6 (combat not opened). |
+| `LocomotionController.mode` | RESERVED | The weapon layer reading GROUND / AIR / DASH / LOCKED to pick a move, and the combat layer reading DASH for dodge i-frames. Same block. |
+| `LocomotionCore` lock `Source` | RESERVED | The dev panel showing which move holds movement. Stored, not yet displayed. |
+
 ## Nothing is currently ORPHANED
 
 Every unread declaration above has a named consumer and a reason to exist. The

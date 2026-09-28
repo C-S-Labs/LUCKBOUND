@@ -1068,6 +1068,33 @@ local GameConfig = {
 		-- Fires a small ring effect under the feet on the air jump, so the
 		-- second jump is legible to the player and to anyone watching.
 		AirJumpEffect = true,
+
+		-- === SPRINT-JUMP ===
+		-- A ground jump taken while sprinting goes a little higher and keeps a
+		-- little more than sprint speed until landing, so the jump is longer.
+		-- Small on purpose: every gap in every kit must stay crossable without it.
+		SprintJumpPower = 1.08, -- multiplier on JumpPower: 50 -> 54
+		SprintJumpCarry = 1.12, -- multiplier on sprint speed while airborne
+
+		-- === DASH ===
+		-- A short burst in the move direction (facing, if standing still). The
+		-- movement half only: invulnerability belongs to the combat layer,
+		-- which reads LocomotionCore.mode() == "DASH" (PLAYER_ABILITIES.md §4).
+		DashSpeed = 95, -- studs/s during the burst
+		DashDurationSeconds = 0.18, -- 95 x 0.18 ~= 17 studs
+		DashCooldownSeconds = 0.7, -- from the start of one dash to the next
+		DashStaminaCost = 20, -- five dashes from full; shares the sprint bar
+		-- Refill pauses briefly after a dash, so dash-spam drains the bar.
+		DashRegenPauseSeconds = 0.5,
+		-- Dashes allowed per airtime. 0 = ground only, as the design says;
+		-- raising it is a feel test, not a free change (it extends every gap).
+		AirDashes = 0,
+		DashEffect = true,
+
+		-- === WEAPON LOCK ===
+		-- The longest any weapon move may hold movement, however long it asks
+		-- for. A forgotten unlock still hands control back.
+		MaxLockSeconds = 2.5,
 	},
 
 	Debug = {

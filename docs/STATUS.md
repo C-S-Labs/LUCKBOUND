@@ -44,6 +44,10 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 ## 2. Next — pick up here
 
+> **2026-09-28: movement state machine.** `LocomotionCore` is rebuilt as one state machine (GROUND / AIR / DASH /
+> LOCKED). Sprint and double jump are folded in unchanged; sprint-jump, a ground-only dash and the weapon lock hook
+> are new (`PLAYER_ABILITIES.md` §2.5, §6). 925 tests pass. **Studio walk pending:** `TESTING.md` Test K steps 6–9.
+
 > **2026-09-27: close ship berths fixed after precommit review.** Berths now use
 > the island's oriented face and half the ship's beam, with a 20-stud hull gap;
 > overlap/approach checks use the ship box instead of its enclosing sphere.

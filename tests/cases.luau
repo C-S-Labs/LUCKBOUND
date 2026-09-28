@@ -5702,6 +5702,258 @@ do
 			return true
 		end)()
 	)
+
+	-- === the state machine ==========================================
+	local L = GameConfig.Locomotion
+
+	local function airborne(s, now)
+		return LocomotionCore.step(s, 1 / 60, {
+			WantsSprint = false,
+			Moving = true,
+			Grounded = false,
+			Now = now,
+		}, GameConfig)
+	end
+
+	check("a fresh state is on the ground", LocomotionCore.mode(state(), 0) == "GROUND")
+	check(
+		"leaving the floor is the air mode",
+		LocomotionCore.mode(airborne(state(), 1), 1) == "AIR"
+	)
+
+	-- === sprint-jump ================================================
+	check(
+		"a jump out of a sprint is a sprint-jump",
+		(function()
+			local s = sprintFor(0.5)
+			local jumped = LocomotionCore.jump(s, 0.5, GameConfig)
+			return jumped.SprintJumping == true
+		end)()
+	)
+
+	check(
+		"a jump from a walk is not",
+		(function()
+			local jumped = LocomotionCore.jump(state(), 0, GameConfig)
+			return jumped.SprintJumping == false
+		end)()
+	)
+
+	check(
+		"a sprint-jump goes higher than a plain jump, and an air jump lower",
+		(function()
+			local sprinting = LocomotionCore.jump(sprintFor(0.5), 0.5, GameConfig)
+			local walking = LocomotionCore.jump(state(), 0, GameConfig)
+			local plain = LocomotionCore.jumpVelocity(walking, "GROUND", GameConfig)
+			return LocomotionCore.jumpVelocity(sprinting, "GROUND", GameConfig) > plain
+				and LocomotionCore.jumpVelocity(walking, "AIR", GameConfig) < plain
+		end)()
+	)
+
+	check(
+		"a sprint-jump carries more speed in the air than a sprint on the ground",
+		(function()
+			local s = sprintFor(0.5)
+			local ground = LocomotionCore.targetSpeed(s, GameConfig, 0.5)
+			local jumped = LocomotionCore.jump(s, 0.5, GameConfig)
+			jumped = LocomotionCore.step(jumped, 1 / 60, {
+				WantsSprint = true,
+				Moving = true,
+				Grounded = false,
+				Now = 0.6,
+			}, GameConfig)
+			return LocomotionCore.targetSpeed(jumped, GameConfig, 0.6) > ground
+		end)()
+	)
+
+	check(
+		"landing ends the sprint-jump",
+		(function()
+			local jumped = LocomotionCore.jump(sprintFor(0.5), 0.5, GameConfig)
+			local landed = LocomotionCore.step(jumped, 1 / 60, {
+				WantsSprint = true,
+				Moving = true,
+				Grounded = true,
+				Now = 1,
+			}, GameConfig)
+			return landed.SprintJumping == false
+		end)()
+	)
+
+	-- Every gap in every kit must stay crossable without it (the rule in
+	-- PLAYER_ABILITIES.md §4: an ability may not change what a map provides).
+	check("sprint-jump stays a small bonus", L.SprintJumpPower <= 1.2 and L.SprintJumpCarry <= 1.25)
+
+	-- === dash =======================================================
+	check(
+		"a dash puts the player in the dash mode, then back on the ground",
+		(function()
+			local s, ok = LocomotionCore.dash(state(), 0, GameConfig)
+			return ok
+				and LocomotionCore.mode(s, 0.01) == "DASH"
+				and LocomotionCore.mode(s, L.DashDurationSeconds + 0.01) == "GROUND"
+		end)()
+	)
+
+	check(
+		"a dash costs stamina",
+		(function()
+			local s = LocomotionCore.dash(state(), 0, GameConfig)
+			return s.Stamina == L.StaminaMax - L.DashStaminaCost
+		end)()
+	)
+
+	check(
+		"a second dash waits for the cooldown",
+		(function()
+			local s = LocomotionCore.dash(state(), 0, GameConfig)
+			local _, early = LocomotionCore.dash(s, L.DashDurationSeconds + 0.01, GameConfig)
+			local _, late = LocomotionCore.dash(s, L.DashCooldownSeconds + 0.01, GameConfig)
+			return not early and late
+		end)()
+	)
+
+	check(
+		"no dash without the stamina for it",
+		(function()
+			local s = state()
+			s.Stamina = L.DashStaminaCost - 1
+			local ok, reason = LocomotionCore.canDash(s, 0, GameConfig)
+			return not ok and reason == "stamina"
+		end)()
+	)
+
+	check(
+		"the dash is ground-only while AirDashes is zero",
+		(function()
+			if L.AirDashes ~= 0 then
+				return true
+			end
+			local ok, reason = LocomotionCore.canDash(airborne(state(), 1), 1, GameConfig)
+			return not ok and reason == "airborne"
+		end)()
+	)
+
+	check(
+		"an air dash budget is spent and refilled on landing",
+		(function()
+			local config = cfg({ Locomotion = { AirDashes = 1 } })
+			local s = airborne(LocomotionCore.newState(config, 0), 1)
+			local first, ok = LocomotionCore.dash(s, 1, config)
+			local _, again = LocomotionCore.dash(first, 1 + L.DashCooldownSeconds + 0.1, config)
+			local landed = LocomotionCore.step(first, 1 / 60, {
+				WantsSprint = false,
+				Moving = true,
+				Grounded = true,
+				Now = 3,
+			}, config)
+			return ok and not again and landed.AirDashesUsed == 0
+		end)()
+	)
+
+	check(
+		"stamina does not refill straight after a dash",
+		(function()
+			local s = LocomotionCore.dash(state(), 0, GameConfig)
+			local after = LocomotionCore.step(s, 0.1, {
+				WantsSprint = false,
+				Moving = true,
+				Grounded = true,
+				Now = 0.1,
+			}, GameConfig)
+			return after.Stamina == s.Stamina
+		end)()
+	)
+
+	check(
+		"sprinting through a dash does not drain on top of its cost",
+		(function()
+			local s = LocomotionCore.dash(sprintFor(0.1), 0.1, GameConfig)
+			local after = LocomotionCore.step(s, 0.05, {
+				WantsSprint = true,
+				Moving = true,
+				Grounded = true,
+				Now = 0.15,
+			}, GameConfig)
+			return after.Stamina == s.Stamina
+		end)()
+	)
+
+	check(
+		"jumping cancels a dash",
+		(function()
+			local s = LocomotionCore.dash(state(), 0, GameConfig)
+			local jumped, kind = LocomotionCore.jump(s, 0.05, GameConfig)
+			return kind == "GROUND" and LocomotionCore.mode(jumped, 0.06) ~= "DASH"
+		end)()
+	)
+
+	-- === the weapon lock ============================================
+	check(
+		"a weapon lock roots the player by default",
+		(function()
+			local s = LocomotionCore.lock(state(), 0, { DurationSeconds = 0.5 }, GameConfig)
+			return LocomotionCore.mode(s, 0.1) == "LOCKED"
+				and LocomotionCore.targetSpeed(s, GameConfig, 0.1) == 0
+		end)()
+	)
+
+	check(
+		"a locked player cannot jump, dash or sprint unless the move allows it",
+		(function()
+			local s = LocomotionCore.lock(state(), 0, { DurationSeconds = 0.5 }, GameConfig)
+			local dashOk = LocomotionCore.canDash(s, 0.1, GameConfig)
+			return LocomotionCore.jumpKind(s, 0.1, GameConfig) == nil
+				and not dashOk
+				and not LocomotionCore.canStartSprint(s, 0.1, GameConfig)
+		end)()
+	)
+
+	check(
+		"a move can allow what it wants to allow",
+		(function()
+			local s = LocomotionCore.lock(state(), 0, {
+				DurationSeconds = 0.5,
+				SpeedMultiplier = 0.4,
+				AllowJump = true,
+				AllowDash = true,
+			}, GameConfig)
+			return LocomotionCore.jumpKind(s, 0.1, GameConfig) == "GROUND"
+				and LocomotionCore.canDash(s, 0.1, GameConfig)
+				and LocomotionCore.targetSpeed(s, GameConfig, 0.1)
+					== GameConfig.Scale.WalkSpeed * 0.4
+		end)()
+	)
+
+	check(
+		"a lock runs out on its own",
+		(function()
+			local s = LocomotionCore.lock(state(), 0, { DurationSeconds = 0.5 }, GameConfig)
+			s = LocomotionCore.step(s, 1 / 60, {
+				WantsSprint = false,
+				Moving = true,
+				Grounded = true,
+				Now = 0.6,
+			}, GameConfig)
+			return s.Lock == nil and LocomotionCore.mode(s, 0.6) == "GROUND"
+		end)()
+	)
+
+	check(
+		"no weapon can hold movement longer than the cap",
+		(function()
+			local s = LocomotionCore.lock(state(), 0, { DurationSeconds = 3600 }, GameConfig)
+			return LocomotionCore.mode(s, L.MaxLockSeconds + 0.01) == "GROUND"
+		end)()
+	)
+
+	check(
+		"unlock hands movement back early",
+		(function()
+			local s = LocomotionCore.lock(state(), 0, { DurationSeconds = 1 }, GameConfig)
+			return LocomotionCore.mode(LocomotionCore.unlock(s), 0.1) == "GROUND"
+		end)()
+	)
 end
 
 -- === event scope and precedence =====================================

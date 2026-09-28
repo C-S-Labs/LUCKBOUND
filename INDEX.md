@@ -70,7 +70,7 @@
 | `docs/ENEMY_AI.md` | how enemies behave: utility AI, difficulty, boss evolution, weapon movesets, tuning, and the mandatory build order (design only; authoritative for behaviour) |
 | `docs/ART_DIRECTION.md` | the look, scale, palette rules |
 | `docs/WEAPONS.md` | weapon design and rarity rules |
-| `docs/PLAYER_UI.md` / `docs/PLAYER_ABILITIES.md` / `docs/EVENTS.md` | hub UI / sprint and double jump / live events |
+| `docs/PLAYER_UI.md` / `docs/PLAYER_ABILITIES.md` / `docs/EVENTS.md` | hub UI / player movement (sprint, jumps, dash) and the weapon-movement contract / live events |
 | `docs/TOOLCHAIN_ACCESS.md` / `docs/PARTNER_SETUP.md` | Rojo, Studio, Blender setup / testing on your own place |
 | `docs/ADDENDUM_ASSET_PIPELINE.md` | future asset and procgen architecture (target, not built) |
 | `docs/BLUEPRINT_RECONCILIATION.md` | how the Biome Blueprint merged |
@@ -92,6 +92,7 @@
 | chests, vault, gates | `Content/Fixtures/`, `Core/FixtureCore.luau`, `client/Controllers/FixtureController.luau`, `server/Systems/LootSystem.luau` |
 | world sky / fog / atmospheres | `Content/Worlds/*.luau` (`Environment`), `Content/Atmospheres/`, `client/Controllers/AmbienceController.luau` |
 | leaderboard / chat UI | `client/UI/Leaderboard.luau`, `client/UI/ChatPanel.luau`; columns + tunables in `Core/GameConfig.luau` (`Leaderboard`, `Chat`); doc `docs/PLAYER_UI.md` §3.7 |
+| player movement (sprint, jumps, dash, weapon lock) | `Core/LocomotionCore.luau` (rules), `client/Controllers/LocomotionController.luau`, `GameConfig.Locomotion`; doc `docs/PLAYER_ABILITIES.md` §2.5, §6 |
 | rolling (Fate) | `Core/FateCore.luau`, `server/Systems/FateSystem.luau`, `client/UI/FateRoll.luau` |
 | parties / teleport | `Core/PartyCore.luau`, `server/Systems/PartySystem.luau`, `client/Controllers/PartyController.luau` |
 | save data | `Core/ProfileSchema.luau`, `server/Systems/SaveSystem.luau` |

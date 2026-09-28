@@ -1,7 +1,9 @@
 # LUCKBOUND — Player Abilities & Upgrades
 
-**Status:** §1 and §2 are built. §3 onward is **planning** — owner-requested
-ideas, not commitments, and nothing here is implemented.
+**Status:** §1, §2 and §2.5 are built, on one movement state machine
+(`Core/LocomotionCore.luau`, rebuilt 2026-09-28). §6 is the contract weapons
+will build against; its hooks exist and nothing calls them yet. §3 and §4 are
+**planning**: owner-requested ideas, not commitments.
 
 ---
 
@@ -62,6 +64,37 @@ costs them nothing.
 **The air jump replaces vertical velocity rather than adding to it**, so a jump
 pressed while falling fast is worth the same as one pressed at the top of an
 arc. Adding would make the ability worthless exactly when it is needed.
+
+## 2.5 Built: the state machine, sprint-jump and dash
+
+**One state machine.** `LocomotionCore.mode()` derives exactly one mode from the
+state, and never stores it, so it cannot disagree with the timers:
+
+| Mode | Meaning |
+|---|---|
+| `GROUND` | On the floor, walking or sprinting (sprint is a flag, not a mode) |
+| `AIR` | Off the floor: jumping, falling, sprint-jump carry |
+| `DASH` | A dash is in flight |
+| `LOCKED` | A weapon move holds movement (§6) |
+
+**Sprint-jump.** A ground jump taken while sprinting launches at `JumpPower ×
+1.08` and keeps `sprint speed × 1.12` until landing: a longer jump, no new input.
+Capped small by a test, because every gap in every kit must stay crossable
+without it.
+
+**Dash**, the movement half only (§4's verdict):
+
+| | |
+|---|---|
+| Input | Q, B on a gamepad, an on-screen Dash button on touch |
+| Burst | 95 studs/s for 0.18s ≈ 17 studs, horizontal only, the move direction (facing if still) |
+| Cost | 20 stamina from the sprint bar (five from full); refill pauses 0.5s after |
+| Cooldown | 0.7s start to start |
+| In the air | Not allowed (`AirDashes = 0`). Raising it extends every gap, so it is a feel test, not a free change |
+| Cancel | Jumping ends a dash early, so a dash off a ledge can be saved |
+| I-frames | **None here.** The combat layer reads `mode() == "DASH"` and decides |
+
+All numbers are in `GameConfig.Locomotion`.
 
 ---
 
@@ -145,8 +178,8 @@ should be considered in:
 
 | Ability | Cost to the rest of the game | Verdict |
 |---|---|---|
-| **Sprint-jump** (a longer jump out of a sprint) | None. Falls out of what exists | **Do it next.** Free feel, no new input |
-| **Dash** (a short ground burst, i-frames later) | Small now, large once combat exists — a dodge is a combat ability wearing movement's clothes | Build the movement half; leave i-frames to the item/combat layer |
+| **Sprint-jump** (a longer jump out of a sprint) | None. Falls out of what exists | **Built** (§2.5) |
+| **Dash** (a short ground burst, i-frames later) | Small now, large once combat exists — a dodge is a combat ability wearing movement's clothes | **Movement half built** (§2.5); i-frames stay with the combat layer |
 | **Ledge grab / mantle** | Medium. Makes authored ledges load-bearing | After the first authored biome is walked |
 | **Glide** | Large. Every map's verticality becomes optional | Only as a rare item, never a player baseline |
 | **Wall run / climb** | Large. Every wall becomes a surface that must be authored for it | Probably never; it is a different genre |
@@ -171,3 +204,36 @@ Nothing about the split changes as this list is worked through:
 The tree, when it is built, wants the same shape: `Core/FateTreeCore.luau` for
 what a node costs and whether it may be taken, `Content/FateTree/` for the
 nodes themselves, and a panel that draws whatever it finds.
+
+---
+
+## 6. How fighting drives movement (the weapon contract)
+
+Weapons fight; the player moves (§0). A weapon move never writes a WalkSpeed or
+a velocity itself. It talks to movement through two things only:
+
+1. **It reads the mode.** `LocomotionController.mode()` gives GROUND, AIR, DASH
+   or LOCKED, so a type's base moveset can have a grounded swing, an air swing
+   and a dash attack without inventing its own "am I in the air" check.
+2. **It locks movement for its own length.** `LocomotionController.lock(spec)`:
+
+   | Field | Default | Use |
+   |---|---|---|
+   | `DurationSeconds` | 0 | the move's windup + active + recovery; **clamped to `MaxLockSeconds` (2.5s)** so a forgotten unlock still hands control back |
+   | `SpeedMultiplier` | 0 | 0 roots (a Greatsword overhead), 0.4 lets a Dagger flurry drift, 1 leaves speed alone |
+   | `AllowJump` / `AllowDash` / `AllowSprint` | false | what the move lets the player cancel into |
+   | `Source` | — | the move id, for the dev panel |
+
+   A new lock replaces the old one (a combo is one move after another, never
+   two at once). `unlock()` ends it early when the move is cancelled.
+
+**Cancels are the weapon's decision, expressed as data.** A move that lists
+`AllowDash = true` can be dodge-cancelled; one that does not is a commitment.
+That is where weapon types get their feel: light weapons allow cancels, heavy
+ones root and commit. The timing windows themselves come from the animation
+markers (`ENEMY_AI.md` §4), not from here.
+
+**What stays out of this layer, for good:** damage, hitboxes, i-frames, lunges
+that deal damage, knockback. A lunge is a weapon move that locks with
+`SpeedMultiplier` and applies its own push through the combat layer when it
+opens (build spec §7.6).

@@ -34,6 +34,37 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 96 — 2026-09-28 — Movement state machine: sprint-jump, dash, weapon lock
+**Merged:** see the PR for this branch   **Tests:** 925 passing (was 902)   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- `Core/LocomotionCore.luau` rebuilt in place as one movement state machine. `mode()` derives GROUND / AIR /
+  DASH / LOCKED. Sprint and double jump were folded in with their tuning unchanged.
+- New: sprint-jump (higher and longer out of a sprint), ground-only dash (Q / gamepad B / touch button, stamina
+  cost, cooldown, jump-cancel), and the weapon lock (`lock`/`unlock`, clamped to `MaxLockSeconds`).
+- `Controllers/LocomotionController.luau` drives the dash with a horizontal `LinearVelocity`, tops up the
+  sprint-jump on the first airborne frame, and blocks the Humanoid's jump under a no-jump lock. It exposes
+  `mode`/`lock`/`unlock` (RESERVED rows added).
+- `GameConfig.Locomotion`: sprint-jump, dash and lock tunables. 23 new tests.
+- Docs: `PLAYER_ABILITIES.md` §2.5 (built) and §6 (how weapon moves drive movement). `TESTING.md` Test K steps 6–9.
+  `RESERVED.md` has a movement-hooks section.
+
+### Decisions made
+- Owner: build movement before weapons, and fold the existing sprint and double jump into the new framework.
+  Done as an in-place rebuild, not a second module (rule 1).
+- No new remote. Movement is client-authoritative, as before; the server guards outcomes. I-frames, damage and
+  lunges stay with combat (§7.6, still not opened).
+- Weapon moves talk to movement only through `mode()` and `lock(spec)`. Cancels are data on the move.
+
+### Stopped at
+Code, tests and docs are done. **Not walked in Studio**: Test K steps 6–9 need the owner.
+
+### Next
+1. Owner runs `TESTING.md` Test K in Studio and tunes the dash and sprint-jump numbers by feel.
+2. Items and inventory (the item schema), then the §7.6 amendment step 0 (`ENEMY_AI.md` §12).
+
+---
+
 ## Session 95 — 2026-09-28 — Git workflow: implementation vs integration agents
 **Merged:** see the PR for this branch   **Tests:** CI (docs only)   **Branch:** `claude/luckbound-agent-git-workflow-0ioymd`
 
