@@ -33,6 +33,23 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 94 — 2026-09-27 — Dev panel grip: visible, and correct under Interface size
+**Merged:** see the PR for this branch   **Tests:** CI   **Branch:** `claude/devpanel-grip`
+
+### Done
+- Owner still could not resize the dev panel after #142. The grip was a muted "◢" glyph (Gotham may not carry it,
+  so it could render as nothing) and its maths mixed screen pixels with unscaled ones under SettingsController's
+  UIScale. It is now a 26px raised tab with three gold diagonal ridges (it brightens on hover), and the resize
+  divides mouse movement by the UIScale.
+- Owner will test the chat filter (#144) on the first live playtest; Studio never filters chat.
+- Workflow change: the owner tests each PR in Studio via `gh pr checkout N` before merging. main takes only
+  tested work.
+
+### Next
+1. Owner: `gh pr checkout` this PR, open the dev panel (F4), and drag the corner.
+
+---
+
 ## Session 93 — 2026-09-27 — Leaderboard rows: friend / block / view avatar
 **Merged:** see the PR for this branch   **Tests:** CI   **Branch:** `claude/leaderboard-interact`
 

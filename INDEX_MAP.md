@@ -311,8 +311,8 @@ _246 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (5771) - LUCKBOUND — Work Log · 2026-09-27
-  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 93 — 2026-09-27 — Leaderboard rows: friend / block /:36, Done:39, Next:51, Session 92 — 2026-09-27 — Chat to top-left, rail drops and c:57, Done:60, Stopped at:76, Next:79, Session 91 — 2026-09-27 — Custom leaderboard + chat panel in:84, Done:87, Decisions made:93, Stopped at:100, Next:103, Session 90 — 2026-09-27 — Fix: entering twice while a map lo:110, Done:113, Next:124, Session 89 — 2026-09-27 — Developer panel + command registry:129, Done:132, Next:151, Session 88 — 2026-09-27 — Ethereal Scape: walk fixes (Sanctu:156, Done:159, Next:175, Session 87 — 2026-09-27 — Ethereal Scape: final polish, map-:182, Done:185, Stopped at:217, Next:220, Session 86 — 2026-09-27 — Ethereal Scape: Sanctum interior, :227, Done:230, Stopped at:251, Next:254, Session 85 — 2026-09-27 — Ethereal Scape hybrid kit (36) + u:259, Done:262, Decisions made:285, Stopped at:290, Next:293, ... +487 more
+- `docs/WORKLOG.md` (5788) - LUCKBOUND — Work Log · 2026-09-27
+  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 94 — 2026-09-27 — Dev panel grip: visible, and corre:36, Done:39, Next:48, Session 93 — 2026-09-27 — Leaderboard rows: friend / block /:53, Done:56, Next:68, Session 92 — 2026-09-27 — Chat to top-left, rail drops and c:74, Done:77, Stopped at:93, Next:96, Session 91 — 2026-09-27 — Custom leaderboard + chat panel in:101, Done:104, Decisions made:110, Stopped at:117, Next:120, Session 90 — 2026-09-27 — Fix: entering twice while a map lo:127, Done:130, Next:141, Session 89 — 2026-09-27 — Developer panel + command registry:146, Done:149, Next:168, Session 88 — 2026-09-27 — Ethereal Scape: walk fixes (Sanctu:173, Done:176, Next:192, Session 87 — 2026-09-27 — Ethereal Scape: final polish, map-:199, Done:202, Stopped at:234, Next:237, Session 86 — 2026-09-27 — Ethereal Scape: Sanctum interior, :244, Done:247, Stopped at:268, Next:271, Session 85 — 2026-09-27 — Ethereal Scape hybrid kit (36) + u:276, Done:279, ... +490 more
 
 ### docs/archive
 
@@ -373,8 +373,8 @@ _246 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
   - `ThemeController.luau`: ThemeController.register:50, ThemeController.palette:59, ThemeController.onChanged:63, differs:74, repaint:83, evaluate:111, ThemeController.district:151, ThemeController.init:155
 - `src/client/UI/ChatPanel.luau` (327) - The chat window, in the house style. Replaces TextChatService's default · 2026-09-27
   - `ChatPanel.luau`: hex:34, wake:40, fade:51, addLine:66, onMessage:101, send:124, notifyOpened:142, setShown:150, buildToggle:168, build:223, ChatPanel.onOpened:278, ChatPanel.init:282
-- `src/client/UI/DevPanel.luau` (696) - THE DEVELOPER PANEL. Testing tooling, not a feature: it exists only when · 2026-09-27
-  - `DevPanel.luau`: chip:64, grid:72, scroller:87, log:102, clearLog:129, runLine:139, runCommand:155, hideSuggestions:165, drawSuggestions:171, refreshSuggestions:216, accept:227, valueLabel:239, buildCard:249, paintTabs:384, showCategory:392, toggle:412, build:421, DevPanel.init:683
+- `src/client/UI/DevPanel.luau` (730) - THE DEVELOPER PANEL. Testing tooling, not a feature: it exists only when · 2026-09-27
+  - `DevPanel.luau`: chip:64, grid:72, scroller:87, log:102, clearLog:129, runLine:139, runCommand:155, hideSuggestions:165, drawSuggestions:171, refreshSuggestions:216, accept:227, valueLabel:239, buildCard:249, paintTabs:384, showCategory:392, toggle:412, build:421, DevPanel.init:717
 - `src/client/UI/ExpeditionHud.luau` (206) - The expedition banner: where you are, how long is left, and what happened · 2026-09-23
   - `ExpeditionHud.luau`: build:35, showToast:121, ExpeditionHud.init:139
 - `src/client/UI/FateRoll.luau` (360) - The roll: prompt, build-up, reveal, result card. Build spec T-115. · 2026-09-25

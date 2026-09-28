@@ -501,37 +501,69 @@ local function build()
 	-- Corner grip: drag the bottom-right corner to resize. The window is
 	-- anchored top-right, so growing it wider also moves the right edge by
 	-- the same amount, which keeps the grip under the cursor.
+	--
+	-- Drawn from frames rather than a glyph: the first version was a "◢"
+	-- character, which Gotham may not carry and which read as nothing at all.
 	local grip = Instance.new("TextButton")
 	grip.Name = "ResizeGrip"
 	grip.AutoButtonColor = false
-	grip.BackgroundTransparency = 1
-	grip.Text = "◢"
-	grip.TextSize = 16
-	grip.Font = UITheme.LabelFont
-	grip.TextColor3 = UITheme.TextMuted
+	grip.Text = ""
+	grip.BackgroundColor3 = UITheme.RaisedColor
+	grip.BackgroundTransparency = UITheme.RaisedTransparency
+	grip.BorderSizePixel = 0
 	grip.AnchorPoint = Vector2.new(1, 1)
 	grip.Position = UDim2.new(1, S.MD - S.XS, 1, S.MD - S.XS)
-	grip.Size = UDim2.fromOffset(20, 20)
-	grip.ZIndex = 5
+	grip.Size = UDim2.fromOffset(26, 26)
+	grip.ZIndex = 20
 	grip.Parent = window
+	UITheme.corner(grip, UITheme.RadiusSmall)
+	local gripStroke = UITheme.stroke(grip, UITheme.AccentGold, 1)
+	gripStroke.Transparency = 0.5
+	-- Three diagonal ridges, the universal "drag me to resize" mark.
+	local ridges = {}
+	for i, length in { 16, 10, 4 } do
+		local ridge = Instance.new("Frame")
+		ridge.BorderSizePixel = 0
+		ridge.BackgroundColor3 = UITheme.AccentGold
+		ridge.BackgroundTransparency = 0.25
+		ridge.AnchorPoint = Vector2.new(0.5, 0.5)
+		ridge.Size = UDim2.fromOffset(length, 2)
+		ridge.Rotation = -45
+		local offset = (i - 1) * 4
+		ridge.Position = UDim2.new(0.5, 3 + offset, 0.5, 3 + offset)
+		ridge.ZIndex = 21
+		ridge.Parent = grip
+		table.insert(ridges, ridge)
+	end
 	grip.MouseEnter:Connect(function()
-		grip.TextColor3 = UITheme.AccentGold
+		gripStroke.Transparency = 0
+		for _, ridge in ridges do
+			ridge.BackgroundTransparency = 0
+		end
 	end)
 	grip.MouseLeave:Connect(function()
-		grip.TextColor3 = UITheme.TextMuted
+		gripStroke.Transparency = 0.5
+		for _, ridge in ridges do
+			ridge.BackgroundTransparency = 0.25
+		end
 	end)
 
+	-- All sizes here are in UNSCALED pixels (what window.Size holds). The
+	-- Interface size setting puts a UIScale on this ScreenGui, so screen
+	-- pixels from the mouse are divided by that scale before use.
 	local resizeFrom: Vector2? = nil
 	local startSize: Vector2 = Vector2.zero
 	local startRight: UDim2 = window.Position
+	local uiScale = 1
 	grip.InputBegan:Connect(function(input)
 		if
 			input.UserInputType == Enum.UserInputType.MouseButton1
 			or input.UserInputType == Enum.UserInputType.Touch
 		then
 			resizeFrom = Vector2.new(input.Position.X, input.Position.Y)
-			startSize = window.AbsoluteSize
+			startSize = Vector2.new(window.Size.X.Offset, window.Size.Y.Offset)
 			startRight = window.Position
+			uiScale = math.max(window.AbsoluteSize.X / math.max(startSize.X, 1), 0.01)
 		end
 	end)
 	UserInputService.InputChanged:Connect(function(input)
@@ -542,9 +574,11 @@ local function build()
 				or input.UserInputType == Enum.UserInputType.Touch
 			)
 		then
-			local viewport = workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize
+			local viewport = (
+				workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize
 				or Vector2.new(WIDTH, HEIGHT)
-			local d = Vector2.new(input.Position.X, input.Position.Y) - resizeFrom
+			) / uiScale
+			local d = (Vector2.new(input.Position.X, input.Position.Y) - resizeFrom) / uiScale
 			local w = math.clamp(startSize.X + d.X, GameConfig.Debug.PanelMinWidth, viewport.X)
 			local h = math.clamp(startSize.Y + d.Y, GameConfig.Debug.PanelMinHeight, viewport.Y)
 			window.Size = UDim2.fromOffset(w, h)
