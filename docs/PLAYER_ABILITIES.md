@@ -40,6 +40,9 @@ direction, speed and facing every frame and launches jumps itself. The stock
 Animate script is off too: the same stock animation assets are played by the
 controller from our speed and mode, until LUCKBOUND has its own animations.
 
+**Only the root collides.** Every other body part has collisions off (re-applied every frame), so a
+clip turning the torso through the floor can't push the physics. That push was a camera shake during rolls.
+
 What the Humanoid still owns: health, death (it gets its state machine back on
 death), the name plate. `Humanoid.WalkSpeed` survives only as an outside
 multiplier, so the loading screen's hold (0) and the `/speed` dev command keep
@@ -111,7 +114,7 @@ edge, and a 0.12s buffer so a press just before landing fires on landing.
 
 | | Roll (a direction held) | Backstep (no direction) |
 |---|---|---|
-| Movement | 37 studs/s for 0.65s ≈ 24 studs, the held direction, **steering** gently (110°/s) toward where you hold, so it follows the camera | 26 studs/s for 0.32s ≈ 8 studs, away from facing |
+| Movement | 37 studs/s for 0.65s ≈ 24 studs, the held direction; the clip blends out over 0.22s into standing or running (steering was tried and removed at the owner's call) | 26 studs/s for 0.32s ≈ 8 studs, away from facing |
 | Cost | the profile's roll cost | 60% of it |
 | Recovery | 0.12s standstill after | same |
 | Invulnerable window | 0.05–0.44s in | 0.02–0.16s in |
@@ -130,7 +133,7 @@ edge, and a 0.12s buffer so a press just before landing fires on landing.
   clip yet, a procedural tumble (forward, backward, or over the shoulder to either
   side). Settings: `RollWind*`, `RollTumble*`, `RollFovKickDegrees`.
 - **Air dash (the jump dash, owner 2026-09-28):** roll pressed **in the air** gives a
-  short horizontal burst (52 studs/s for 0.22s ≈ 11.5 studs, steering like the roll):
+  short horizontal burst (52 studs/s for 0.22s ≈ 11.5 studs):
   - it goes the held way, or forward with no direction held;
   - it holds height, so there is no arc;
   - once per airtime, refilled on landing;

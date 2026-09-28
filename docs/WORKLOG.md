@@ -34,6 +34,25 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 108 — 2026-09-28 — Steering out, roll blends out, shake fixed
+**Merged:** see the PR for this branch   **Tests:** 1007 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner)
+- **Roll steering removed** (owner preferred it without): `LocomotionCore.steer`, its config and its test are
+  gone.
+- **Roll blends out:** the roll, backstep and air-dash clips are timed past the move (plus recovery plus
+  `RollExitBlendSeconds` 0.22) and stopped with that fade when the move ends. The diagonal body turn
+  (`rollYaw`) eases back to straight.
+- **Camera shake while rolling:** the torso and head had collisions on, and the clip turned them through the
+  floor, so physics pushed back. Now only the HumanoidRootPart collides; every other body part is set
+  `CanCollide = false` every frame.
+
+### Next
+1. Owner re-walks rolls.
+2. Remaining clips: Sprint, Walk x4, Turn L/R. Then the PR.
+
+---
+
 ## Session 107 — 2026-09-28 — Roll polish: floor contact, distance, steering
 **Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 

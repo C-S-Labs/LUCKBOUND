@@ -54,6 +54,13 @@ local airController: AirController? = nil
 local groundSensor: ControllerPartSensor? = nil
 local groundIgnoreUntil = 0
 
+-- Every body part but the root. Only the root collides: the body is drawn
+-- over it, so a roll clip turning the torso through the floor cannot push
+-- the physics about (that push was the camera shake on the owner's walk,
+-- 2026-09-28). Re-applied every frame, because the Humanoid sets some of
+-- them back.
+local bodyParts: { BasePart } = {}
+
 -- For landings: whether the last frame was grounded, and the downward
 -- speed while airborne.
 local wasGrounded = true
@@ -267,6 +274,17 @@ local function bindCharacter(character: Model)
 	state = LocomotionCore.newState(tuning, os.clock())
 	nextProfileCheck = 0
 	wasGrounded, airFallSpeed = true, 0
+	bodyParts = {}
+	for _, part in character:GetDescendants() do
+		if part:IsA("BasePart") and part ~= root then
+			table.insert(bodyParts, part)
+		end
+	end
+	character.DescendantAdded:Connect(function(part)
+		if part:IsA("BasePart") and part ~= root then
+			table.insert(bodyParts, part)
+		end
+	end)
 	CharacterAnimator.bind(character, found, root)
 end
 
@@ -280,6 +298,11 @@ local function step(dt: number)
 
 	local now = os.clock()
 	refreshProfile(now)
+	for _, part in bodyParts do
+		if part.CanCollide then
+			part.CanCollide = false
+		end
+	end
 
 	-- The platform's jump input (Space, A, the touch button) all land on
 	-- Humanoid.Jump. Read it on the press edge, then clear it.
@@ -319,17 +342,6 @@ local function step(dt: number)
 	-- === direction and facing ===
 	local direction: Vector3
 	if LocomotionCore.rollMoving(state, now) then
-		-- The roll bends gently toward where the player holds now, so turning
-		-- the camera mid-roll carries it round (owner, 2026-09-28).
-		if moving and state.RollKind ~= "BACKSTEP" then
-			local maxTurn = math.rad(GameConfig.Locomotion.RollSteerDegreesPerSecond) * dt
-			local x, z =
-				LocomotionCore.steer(rollDirection.X, rollDirection.Z, held.X, held.Z, maxTurn)
-			rollDirection = Vector3.new(x, 0, z)
-			if not facingHeld() then
-				facing = rollDirection
-			end
-		end
 		direction = rollDirection
 	elseif mode == "ROLL" then
 		direction = Vector3.zero

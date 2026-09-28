@@ -1122,10 +1122,10 @@ local GameConfig = {
 		-- (2026-09-28): a short, quick roll read as unrefined.
 		RollDurationSeconds = 0.65,
 		RollSpeed = 37, -- studs/s -> ~24 studs (owner: a little further)
-		-- A roll steers gently toward the held direction (which follows the
-		-- camera) at up to this many degrees per second; not a free turn.
-		RollSteerDegreesPerSecond = 110,
 		RollRecoverySeconds = 0.12, -- after the roll, before the next action
+		-- The body blends out of a roll clip into standing or running over
+		-- this long, instead of dropping out of it (owner, 2026-09-28).
+		RollExitBlendSeconds = 0.22,
 		RollInvulnerableFrom = 0.05, -- seconds into the roll
 		RollInvulnerableTo = 0.44,
 		BackstepDurationSeconds = 0.32,

@@ -99,6 +99,7 @@ local rollRelative = "FORWARD"
 local rollHasClip = false
 -- Turns the body from the clip's direction onto the true one (diagonals).
 local rollYaw = 0
+local rollYawNow = 0
 local rollStartedAt = 0
 local rollDuration = 1
 local fovBase: number? = nil
@@ -383,11 +384,21 @@ end
 
 -- === events ==========================================================
 
+-- The roll's clip, while it plays, so it can be blended out at the end.
+local rollTrack: AnimationTrack? = nil
+
 local function playOneShot(name: string, duration: number?): boolean
 	local r = rig
 	local track = r and r.OneShots[name]
 	if not track then
 		return false
+	end
+	if
+		string.sub(name, 1, 4) == "Roll"
+		or name == "Backstep"
+		or string.sub(name, 1, 7) == "AirDash"
+	then
+		rollTrack = track
 	end
 	local fade = GameConfig.CharacterAnimation.AirFadeSeconds
 	track:Play(fade, 1, 1)
@@ -447,8 +458,13 @@ function CharacterAnimator.onRoll(
 		then "Backstep"
 		elseif kind == "AIRDASH" then "AirDash" .. slotDirection(relative)
 		else "Roll" .. slotDirection(relative)
-	-- A clip for this move replaces the procedural layer.
-	rollHasClip = playOneShot(slot, duration)
+	-- A clip for this move replaces the procedural layer. It is timed to run
+	-- a little past the move -- through the recovery and the blend out -- so
+	-- it is still playing when the body blends back to standing or running,
+	-- instead of ending on its last frame first.
+	local tail = GameConfig.Locomotion.RollExitBlendSeconds
+		+ (if kind == "AIRDASH" then 0 else GameConfig.Locomotion.RollRecoverySeconds)
+	rollHasClip = playOneShot(slot, duration + tail)
 
 	local r = rig
 	if r and GameConfig.Locomotion.RollWind then
@@ -691,6 +707,20 @@ function CharacterAnimator.update(ctx: any, dt: number): ()
 	elseif kind and not rolling then
 		rollKind = nil
 	end
+	-- The move is over: blend the clip out rather than cutting it.
+	local track = rollTrack
+	if track and not (rollKind and ctx.RollMoving) and (not rolling or airborne) then
+		rollTrack = nil
+		if track.IsPlaying then
+			track:Stop(GameConfig.Locomotion.RollExitBlendSeconds)
+		end
+	end
+	-- The diagonal turn eases back to straight instead of snapping.
+	local wantRollYaw = if rollKind and ctx.RollMoving then rollYaw else 0
+	rollYawNow += (wantRollYaw - rollYawNow) * AnimationCore.smoothAlpha(
+		dt,
+		GameConfig.Locomotion.RollExitBlendSeconds / 2
+	)
 
 	-- The camera eases back from its kick over the roll.
 	local camera = Workspace.CurrentCamera
@@ -709,7 +739,7 @@ function CharacterAnimator.update(ctx: any, dt: number): ()
 	if r.RootJoint then
 		r.RootJoint.C0 = bend(
 			r.RootC0,
-			CFrame.Angles(0, legYaw + (if kind and ctx.RollMoving then rollYaw else 0), 0)
+			CFrame.Angles(0, legYaw + rollYawNow, 0)
 				* CFrame.Angles(leanPitch + tumblePitch, 0, leanBank + tumbleBank),
 			Vector3.new(0, -(dip + tumbleDip), 0)
 		)
