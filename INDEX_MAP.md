@@ -271,7 +271,7 @@ _246 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/PLAYER_UI.md
 
-- `docs/PLAYER_UI.md` (262) - LUCKBOUND — Player UI · 2026-09-22
+- `docs/PLAYER_UI.md` (262) - LUCKBOUND — Player UI · 2026-09-27
   - `PLAYER_UI.md`: 1. The shape of it:11, 2. The loading screen:38, 3. The hub menu:73, It is only in the Crossroads:75, The arrow:87, The panels:98, Travel, precisely:115, 3.5 The live tint:135, How it reaches the screen:168, Events:178, 3.6 What each setting actually does:192, 3.7 Leaderboard and chat:211, 4. The design system:232, 5. Known gaps:250
 
 ### docs/PROTOTYPE_BUILD_SPEC.md
@@ -371,7 +371,7 @@ _246 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
   - `StateController.luau`: notify:31, StateController.get:37, StateController.onChanged:41, StateController.setting:55, StateController.applySetting:68, StateController.init:79
 - `src/client/Controllers/ThemeController.luau` (178) - THE LIVE PALETTE, APPLIED. · 2026-09-25
   - `ThemeController.luau`: ThemeController.register:50, ThemeController.palette:59, ThemeController.onChanged:63, differs:74, repaint:83, evaluate:111, ThemeController.district:151, ThemeController.init:155
-- `src/client/UI/ChatPanel.luau` (221) - The chat window, in the house style. Replaces TextChatService's default · new
+- `src/client/UI/ChatPanel.luau` (221) - The chat window, in the house style. Replaces TextChatService's default · 2026-09-27
   - `ChatPanel.luau`: hex:30, wake:36, fade:47, addLine:62, onMessage:97, send:112, build:130, ChatPanel.init:180
 - `src/client/UI/DevPanel.luau` (629) - THE DEVELOPER PANEL. Testing tooling, not a feature: it exists only when · 2026-09-27
   - `DevPanel.luau`: chip:64, grid:72, scroller:87, log:102, clearLog:129, runLine:139, runCommand:155, hideSuggestions:165, drawSuggestions:171, refreshSuggestions:216, accept:227, valueLabel:239, buildCard:249, paintTabs:384, showCategory:392, toggle:412, build:421, DevPanel.init:616
@@ -383,7 +383,7 @@ _246 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
   - `GlobalAnnouncements.luau`: build:35, isSuppressed:126, showBanner:136, setActiveEvent:199, GlobalAnnouncements.init:224
 - `src/client/UI/HubMenu.luau` (931) - THE HUB MENU: the side rail, its panels, and the arrow that hides it. · 2026-09-25
   - `HubMenu.luau`: say:79, travelTo:108, clearBody:133, section:141, paragraph:148, buildTravel:158, buildCodes:190, buildSettings:245, partyRow:281, buildParty:316, buildPreview:434, SHOP:456, SKILLS:461, REBIRTH:466, buildPanelBody:473, railRestingPosition:497, panelRestingPosition:507, refreshRailSelection:514, applyPanelVisibility:525, applyState:546, dispatch:568, refreshVisibility:579, setVisible:586, buildRail:596, buildArrow:672, buildPanel:694, build:740, keyCodeNamed:783, bindHotkeys:796, HubMenu.init:841
-- `src/client/UI/Leaderboard.luau` (252) - The player list, in the house style. Replaces Roblox's CoreGui one. · new
+- `src/client/UI/Leaderboard.luau` (252) - The player list, in the house style. Replaces Roblox's CoreGui one. · 2026-09-27
   - `Leaderboard.luau`: layCells:34, cellText:74, sortedPlayers:84, refresh:99, addRow:120, removeRow:151, setOpen:161, build:166, Leaderboard.init:220
 - `src/client/UI/LoadingScreen.luau` (664) - THE FIRST THING ANYONE SEES. Owner-directed (STATUS §4, "First-join intro · 2026-09-25
   - `LoadingScreen.luau`: LoadingScreen.onFinished:66, LoadingScreen.isFinished:74, playableShots:83, playShot:94, runTour:160, countHub:189, countParts:204, preloadAll:218, setReady:250, watchProgress:261, holdCharacter:348, releaseCharacter:362, pointCameraAtCharacter:392, releaseCamera:411, finish:430, build:491, passingThrough:616, LoadingScreen.init:626
