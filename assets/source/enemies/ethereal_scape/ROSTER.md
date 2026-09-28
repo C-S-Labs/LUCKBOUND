@@ -3,12 +3,20 @@
 Drafted 2026-09-26, alongside the world's 30-piece chunk kit (see
 `docs/biomes/ETHEREAL_SCAPE.md`). Same universal rules as every other biome's
 roster (`docs/ENEMY_FRAMEWORK.md`):
-- Basic/miniboss/legendary tri budgets: basic 10k-12.5k, miniboss <=35k, boss <=75k. Every mesh <10k tris.
+- Basic/miniboss/legendary tri budgets: basic 10k-15k, miniboss <=35k, boss <=75k. Every mesh <10k tris.
 - Rig: humanoid enemies get R15 core bones; minibosses and bosses get finger bones (2 per finger + thumb).
 - Flyers must regularly come into sword range; the player's weapon is the damage source (no arena tools).
 - Owner's bars: smooth glossy materials (no mottled textures), no clipping, world palette, aggression matching attack speed.
 - Weapons are sockets only (`Weapon_R` etc.) except a boss's unique weapon.
 - Build and render headless: `blender -b --factory-startup --python assets/source/enemies/_framework/run.py -- ethereal_scape <enemy_id> --validate --render`
+
+## Design language (shared by every ES enemy; do NOT reskin Sky Citadel bodies)
+- **Transfiguration**: temple-ivory + gold bodies that break apart into raw sky crystal at the extremities
+  (hems, hands, antlers, wingtips). Builds towards the Ascendant, who is mid-transfiguration.
+- **Gold masks**: smooth faceless gold faces split by a vertical portal-glow slit; no hoods, no void faces.
+- **Halos**: an occasional accent (Wisp, Acolyte), never a default -- most ES enemies do NOT get one.
+- **Ribbons**: mint/teal ribbon tendrils trailing off bodies and limbs, ending in portal glow.
+- Hovering and drifting over stomping: the enemies feel weightless, like the islands.
 
 ## Basic (5)
 1. Aether Wisp (close range, hover: the tutorial enemy). BUILT: `aether_wisp.py`, small drifting glass-and-glow
