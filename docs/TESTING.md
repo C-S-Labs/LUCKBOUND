@@ -489,10 +489,12 @@ The first thing anyone sees.
 **In the hub:**
 
 1. **Walk around.** ✅ Pass: walk, idle and run animations play (not a frozen
-   pose), turning is quick, and **no bar is visible**. *If the character slides
-   in the idle pose, the stock animations did not load: report the Output.*
-2. **Hold Shift and run.** ✅ Pass: you speed up smoothly and a gold bar appears
-   at the bottom centre, draining. Let go: it refills and fades out.
+   pose), turning is quick, and a rose health bar sits above a gold stamina bar at
+   the bottom centre, both always visible. Output shows `[Locomotion] controller
+   bound`. *If the character slides in the idle pose, the stock animations did not
+   load: report the Output.*
+2. **Hold Shift and run.** ✅ Pass: you speed up smoothly and the gold bar
+   drains. Let go: it refills.
 3. **Press Space on the ground, then again in the air.** ✅ Pass: one jump, and
    nothing in the air (the double jump is gone). The jump is as high as before.
 4. **Walk off a walkway edge and press Space immediately.** ✅ Pass: you still
@@ -503,8 +505,8 @@ The first thing anyone sees.
 
 **In an expedition** (any world, via the Fate Engine or `/roll`):
 
-6. **Stand in the map.** ✅ Pass: the stamina bar stays up even when full, you
-   move noticeably slower than in the hub, and turning has weight.
+6. **Stand in the map.** ✅ Pass: you move noticeably slower than in the hub,
+   and turning has weight.
 7. **Roll three times in a row, pressing Q again just before each lands.** ✅
    Pass: the rolls chain cleanly, without mashing. Each takes a chunk out of the
    bar, and a pale strip shows the chunk before it drains away.

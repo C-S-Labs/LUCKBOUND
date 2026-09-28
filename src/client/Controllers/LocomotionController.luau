@@ -55,7 +55,6 @@ local groundIgnoreUntil = 0
 
 local wantsSprint = false
 local jumpHeld = false
-local controls: any = nil
 local vitals: any = nil
 
 -- Where the character faces: the move direction by default, the roll
@@ -172,34 +171,25 @@ end
 
 -- === input ===========================================================
 
---- The held direction in world space, flat, from the platform's own input
---- (keyboard, stick or thumbstick) turned relative to the camera. Zero when
---- nothing is held.
+--- The held direction in world space, flat. Zero when nothing is held.
+---
+--- Read from Humanoid.MoveDirection, which the platform's own input scripts
+--- (keyboard, stick, thumbstick) already fill in, camera-relative, on every
+--- device. That is input only -- what the character DOES with it is ours.
+--- Not the PlayerModule: a place is not guaranteed to have one, and waiting
+--- for it once blocked this whole controller (2026-09-28).
 local function moveDirection(): Vector3
-	if not controls then
+	local hum = humanoid
+	if not hum then
 		return Vector3.zero
 	end
-	local raw: Vector3 = controls:GetMoveVector()
-	if raw.Magnitude < 0.1 then
-		return Vector3.zero
-	end
-	local camera = Workspace.CurrentCamera
-	if not camera then
-		return Vector3.zero
-	end
-	local look = camera.CFrame.LookVector
-	local right = camera.CFrame.RightVector
-	local forward = Vector3.new(look.X, 0, look.Z)
-	local side = Vector3.new(right.X, 0, right.Z)
-	if forward.Magnitude < 1e-3 or side.Magnitude < 1e-3 then
-		return Vector3.zero
-	end
-	local world = forward.Unit * -raw.Z + side.Unit * raw.X
-	if world.Magnitude < 1e-3 then
+	local raw = hum.MoveDirection
+	local flat = Vector3.new(raw.X, 0, raw.Z)
+	if flat.Magnitude < 0.1 then
 		return Vector3.zero
 	end
 	-- Keep analogue magnitude (a half-pushed stick walks slower), capped at 1.
-	return world.Unit * math.min(raw.Magnitude, 1)
+	return flat.Unit * math.min(flat.Magnitude, 1)
 end
 
 -- === actions =========================================================
@@ -452,12 +442,8 @@ local function step(dt: number)
 	animate(mode, Vector3.new(velocity.X, 0, velocity.Z).Magnitude, now)
 
 	if vitals then
-		vitals.setStamina(
-			LocomotionCore.staminaFraction(state, tuning),
-			profileId == "EXPEDITION",
-			now,
-			dt
-		)
+		vitals.setStamina(LocomotionCore.staminaFraction(state, tuning), now, dt)
+		vitals.setHealth(if hum.MaxHealth > 0 then hum.Health / hum.MaxHealth else 1, now, dt)
 	end
 end
 
@@ -465,14 +451,6 @@ end
 function LocomotionController.init(deps: any): ()
 	print("[Locomotion] init")
 	vitals = deps and deps.Vitals
-
-	local playerScripts = player:WaitForChild("PlayerScripts")
-	local ok, module = pcall(function()
-		return require(playerScripts:WaitForChild("PlayerModule") :: any)
-	end)
-	if ok and module then
-		controls = module:GetControls()
-	end
 
 	-- A failure here would otherwise leave the character on Roblox's default
 	-- movement with no sign anything went wrong: say so, loudly, either way.

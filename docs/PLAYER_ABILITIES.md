@@ -67,7 +67,6 @@ stands inside a loaded expedition stage, HUB otherwise.
 | Turn rate | 18 rad/s (snappy) | 10 rad/s (weight) |
 | Air control | 0.8 | 0.45 |
 | Jump / roll cost | free | 10 / 22 stamina |
-| Stamina bar | shows only when spent | always up |
 
 The owner asked for a middle ground between the hub's lightness and a Souls
 game's weight: that is the expedition column.
@@ -86,11 +85,13 @@ multiplier per field (for example `{ StaminaMax = 1.2 }`), so the Fate Tree's
 stamina and movement nodes will plug in without touching the rules. Health,
 damage and attack speed belong to the weapon and combat layers.
 
-**The bar** (`client/UI/Vitals.luau`) is house style: a panel-coloured track with
+**The bars** (`client/UI/Vitals.luau`): health above stamina, **always on screen**
+(owner, 2026-09-28). Health reads the Humanoid, in a rose fill (`UITheme.AccentHealth`).
+Each bar is house style: a panel-coloured track with
 the theme stroke, fully rounded, and a gold fill under the panel gradient that
 turns amber when low. A pale lag bar behind the fill holds the old value for a
-beat and then drains, so a spend reads as a chunk taken out. Health will be
-another row from the same `bar` function when weapons land. So will **charge**, but
+beat and then drains, so a spend reads as a chunk taken out. **Charge** will be
+another row from the same `bar` function, but
 only while an Epic or Legendary weapon with a charge is equipped (`WEAPONS.md` §2,
 "Charge").
 

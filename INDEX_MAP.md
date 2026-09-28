@@ -271,8 +271,8 @@ _250 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/PLAYER_ABILITIES.md
 
-- `docs/PLAYER_ABILITIES.md` (291) - LUCKBOUND — Player Abilities & Upgrades · 2026-09-28
-  - `PLAYER_ABILITIES.md`: 0. The line this document exists to hold:11, 1. Built: our own character controller:34, 2. Built: two profiles, one stamina bar:58, 2.5 Built: jump, roll and backstep:97, 2.6 Built: lock-on (optional):121, 3. Planned: the Fate Tree:153, FORTUNE — what the roll can reach:169, ENDURANCE — how long you last out there:182, DISCOVERY — what a world yields:193, CRAFT — what your gear becomes:205, Node shapes worth having:215, 4. Planned: movement abilities beyond the two:226, 5. Where these would live:247, 6. How fighting drives movement (the weapon contract):262
+- `docs/PLAYER_ABILITIES.md` (292) - LUCKBOUND — Player Abilities & Upgrades · 2026-09-28
+  - `PLAYER_ABILITIES.md`: 0. The line this document exists to hold:11, 1. Built: our own character controller:34, 2. Built: two profiles, one stamina bar:58, 2.5 Built: jump, roll and backstep:98, 2.6 Built: lock-on (optional):122, 3. Planned: the Fate Tree:154, FORTUNE — what the roll can reach:170, ENDURANCE — how long you last out there:183, DISCOVERY — what a world yields:194, CRAFT — what your gear becomes:206, Node shapes worth having:216, 4. Planned: movement abilities beyond the two:227, 5. Where these would live:248, 6. How fighting drives movement (the weapon contract):263
 
 ### docs/PLAYER_UI.md
 
@@ -301,8 +301,8 @@ _250 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/TESTING.md
 
-- `docs/TESTING.md` (873) - LUCKBOUND — Testing Guide · 2026-09-28
-  - `TESTING.md`: 1. Automated tests:8, Coverage:31, The three that matter most:52, A caution about the harness:78, The untested boundary — named, so it cannot be mistaken for :92, 2. Sync to Studio with Rojo:127, 2.5 Developer commands:147, The three gates on the server-side commands:204, 3. Manual Studio pass:222, Test A — the server boots (1 min):224, Test B — validation blocks a bad boot (2 min):257, Test C — the 15-roll arc (5 min):264, Test D — the cooldown holds (1 min):290, Test C2b — entering from the Fate Engine ⭐ NEW (3 min):297, Test C2 — the expedition, end to end ⭐ (6 min):314, Test C3 — the hub is walkable (3 min):380, Test H2 — the half-size world (4 min) ⭐ NEW:405, Test I — the loading screen (3 min) ⭐ NEW:421, Test J — the hub menu (5 min) ⭐ NEW:447, Test K — movement, stamina and lock-on (10 min) ⭐ NEW:487, Test L — the menu follows the world (4 min) ⭐ NEW:537, Test M — an event changes the world (4 min) ⭐ NEW:565, Test N — the ledger holds under a race ⭐ NEW — **two instanc:590, Test O — parties, in Studio ⭐ NEW — **3 clients, 10 min**:615, Test P — the portal opens a new server ⭐ NEW — **published p:653, Test Q — the Sky Citadel kit, in the world ⭐ NEW (8 min):683, Test R — a world's ambience ⭐ NEW (5 min):714, Test S — Sky Citadel's floating scenery ⭐ NEW (5 min):729, Test T — chests, the vault and its key ⭐ NEW (10 min):757, Test E — a tampered client is rejected (1 min):792, Test F — data persists (3 min) — **published places only**:804, Test G — late joiners see a live event ⭐ (5 min):819, Test H — announcements reach everyone, onboarding does not (:848, 4. What to report back:856
+- `docs/TESTING.md` (875) - LUCKBOUND — Testing Guide · 2026-09-28
+  - `TESTING.md`: 1. Automated tests:8, Coverage:31, The three that matter most:52, A caution about the harness:78, The untested boundary — named, so it cannot be mistaken for :92, 2. Sync to Studio with Rojo:127, 2.5 Developer commands:147, The three gates on the server-side commands:204, 3. Manual Studio pass:222, Test A — the server boots (1 min):224, Test B — validation blocks a bad boot (2 min):257, Test C — the 15-roll arc (5 min):264, Test D — the cooldown holds (1 min):290, Test C2b — entering from the Fate Engine ⭐ NEW (3 min):297, Test C2 — the expedition, end to end ⭐ (6 min):314, Test C3 — the hub is walkable (3 min):380, Test H2 — the half-size world (4 min) ⭐ NEW:405, Test I — the loading screen (3 min) ⭐ NEW:421, Test J — the hub menu (5 min) ⭐ NEW:447, Test K — movement, stamina and lock-on (10 min) ⭐ NEW:487, Test L — the menu follows the world (4 min) ⭐ NEW:539, Test M — an event changes the world (4 min) ⭐ NEW:567, Test N — the ledger holds under a race ⭐ NEW — **two instanc:592, Test O — parties, in Studio ⭐ NEW — **3 clients, 10 min**:617, Test P — the portal opens a new server ⭐ NEW — **published p:655, Test Q — the Sky Citadel kit, in the world ⭐ NEW (8 min):685, Test R — a world's ambience ⭐ NEW (5 min):716, Test S — Sky Citadel's floating scenery ⭐ NEW (5 min):731, Test T — chests, the vault and its key ⭐ NEW (10 min):759, Test E — a tampered client is rejected (1 min):794, Test F — data persists (3 min) — **published places only**:806, Test G — late joiners see a live event ⭐ (5 min):821, Test H — announcements reach everyone, onboarding does not (:850, 4. What to report back:858
 
 ### docs/TOOLCHAIN_ACCESS.md
 
@@ -316,8 +316,8 @@ _250 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (5910) - LUCKBOUND — Work Log · 2026-09-28
-  - `WORKLOG.md`: Template:16, Session N — YYYY-MM-DD — <short title>:19, Done:22, Decisions made:25, Stopped at:28, Next:31, Session 98 — 2026-09-28 — Lock-on switching, charge scope:37, Done:40, Decisions made:49, Stopped at:54, Next:57, Session 97 — 2026-09-28 — Own character controller, roll, st:62, Done:67, Decisions made (owner, this session):84, Stopped at:92, Next:96, Session 96 — 2026-09-28 — Movement state machine: sprint-jum:103, Done:106, Decisions made:118, Stopped at:125, Next:128, Session 95 — 2026-09-28 — Git workflow: implementation vs in:134, Done:137, Decisions made:145, Stopped at:150, Next:153, Session 94 — 2026-09-27 — Dev panel grip: visible, and corre:158, Done:161, Next:170, Session 93 — 2026-09-27 — Leaderboard rows: friend / block /:175, Done:178, Next:190, Session 92 — 2026-09-27 — Chat to top-left, rail drops and c:196, Done:199, Stopped at:215, Next:218, Session 91 — 2026-09-27 — Custom leaderboard + chat panel in:223, Done:226, Decisions made:232, Stopped at:239, ... +510 more
+- `docs/WORKLOG.md` (5933) - LUCKBOUND — Work Log · 2026-09-28
+  - `WORKLOG.md`: Template:16, Session N — YYYY-MM-DD — <short title>:19, Done:22, Decisions made:25, Stopped at:28, Next:31, Session 99 — 2026-09-28 — First Studio walk: controller neve:37, Done:40, Decisions made:49, Stopped at:52, Next:55, Session 98 — 2026-09-28 — Lock-on switching, charge scope:60, Done:63, Decisions made:72, Stopped at:77, Next:80, Session 97 — 2026-09-28 — Own character controller, roll, st:85, Done:90, Decisions made (owner, this session):107, Stopped at:115, Next:119, Session 96 — 2026-09-28 — Movement state machine: sprint-jum:126, Done:129, Decisions made:141, Stopped at:148, Next:151, Session 95 — 2026-09-28 — Git workflow: implementation vs in:157, Done:160, Decisions made:168, Stopped at:173, Next:176, Session 94 — 2026-09-27 — Dev panel grip: visible, and corre:181, Done:184, Next:193, Session 93 — 2026-09-27 — Leaderboard rows: friend / block /:198, Done:201, Next:213, Session 92 — 2026-09-27 — Chat to top-left, rail drops and c:219, Done:222, Stopped at:238, ... +515 more
 
 ### docs/archive
 
@@ -360,8 +360,8 @@ _250 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
   - `LightningController.luau`: LightningController.init:18
 - `src/client/Controllers/LockOnController.luau` (388) - LOCK-ON: an optional target lock with an over-the-shoulder camera. · 2026-09-28
   - `LockOnController.luau`: pivotOf:45, centreOf:54, aimPoint:64, playerRoot:72, visible:82, showMarker:92, release:137, measure:155, lockOnto:187, acquire:208, LockOnController.switch:221, toggle:255, update:265, LockOnController.init:333
-- `src/client/Controllers/LocomotionController.luau` (536) - PLAYER MOVEMENT: walk, sprint, jump, roll and backstep, on our own · 2026-09-28
-  - `LocomotionController.luau`: loadAnimations:73, playTrack:104, animate:121, playBurstEffect:143, moveDirection:178, launchJump:207, beginRoll:218, onJumpPressed:234, onRollPressed:243, insideStage:256, refreshProfile:277, bindCharacter:293, step:359, LocomotionController.init:464, LocomotionController.get:508, LocomotionController.mode:514, LocomotionController.lock:521, LocomotionController.unlock:526, LocomotionController.setLockTarget:532
+- `src/client/Controllers/LocomotionController.luau` (528) - PLAYER MOVEMENT: walk, sprint, jump, roll and backstep, on our own · 2026-09-28
+  - `LocomotionController.luau`: loadAnimations:72, playTrack:103, animate:120, playBurstEffect:142, moveDirection:181, launchJump:197, beginRoll:208, onJumpPressed:224, onRollPressed:233, insideStage:246, refreshProfile:267, bindCharacter:283, step:350, LocomotionController.init:451, LocomotionController.get:500, LocomotionController.mode:506, LocomotionController.lock:513, LocomotionController.unlock:518, LocomotionController.setLockTarget:524
 - `src/client/Controllers/PartyController.luau` (135) - The client's picture of its party. Build spec §7.2. · 2026-09-24
   - `PartyController.luau`: PartyController.get:39, PartyController.onChanged:45, PartyController.nameOf:56, PartyController.request:63, announceInvite:67, PartyController.init:102
 - `src/client/Controllers/PropController.luau` (340) - Dresses a generated map with its world's ambient scenery (CHUNK_AUTHORING.md · 2026-09-27
@@ -396,8 +396,8 @@ _250 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
   - `LoadingScreen.luau`: LoadingScreen.onFinished:66, LoadingScreen.isFinished:74, playableShots:83, playShot:94, runTour:160, countHub:189, countParts:204, preloadAll:218, setReady:250, watchProgress:261, holdCharacter:348, releaseCharacter:362, pointCameraAtCharacter:392, releaseCamera:411, finish:430, build:491, passingThrough:616, LoadingScreen.init:626
 - `src/client/UI/UIKit.luau` (480) - THE WIDGET LIBRARY. Every hub screen is built from these, so there is one · 2026-09-27
   - `UIKit.luau`: UIKit.formatClock:35, UIKit.reduceMotion:40, UIKit.duration:44, UIKit.tween:53, UIKit.surface:78, UIKit.label:110, UIKit.button:140, UIKit.setEnabled:237, UIKit.list:249, UIKit.divider:259, UIKit.toggle:270, UIKit.slider:319, UIKit.textbox:408, UIKit.previewBadge:441, UIKit.revealFrom:464
-- `src/client/UI/Vitals.luau` (166) - THE VITALS BARS: stamina today; health and weapon charge join it when · 2026-09-28
-  - `Vitals.luau`: tweenInfo:50, bar:56, setShown:103, setValue:120, Vitals.init:142, Vitals.setStamina:157
+- `src/client/UI/Vitals.luau` (183) - THE VITALS BARS: health above stamina, always on screen (owner, · 2026-09-28
+  - `Vitals.luau`: tweenInfo:51, bar:57, setShown:104, setValue:121, Vitals.init:150, Vitals.setStamina:167, Vitals.setHealth:175
 - `src/client/init.client.luau` (94) - The only LocalScript. Build spec T-117. · 2026-09-28
 
 ### src/server
@@ -522,8 +522,8 @@ _250 text files, 266 binary assets. Regenerate with `python tools/gen_index.py`;
 - `src/shared/Core/ThemeCore.luau` (267) - WHAT COLOUR IS THE MENU RIGHT NOW? Pure, so the answer is testable for · 2026-09-24
   - `ThemeCore.luau`: channelLuminance:42, ThemeCore.luminance:52, ThemeCore.contrast:59, toLinear:67, toGamma:71, mix:80, tintPreservingLuminance:101, lerp:133, findDistrict:140, findEvent:152, ThemeCore.base:166, ThemeCore.resolve:184, ThemeCore.enforceContrast:217, ThemeCore.districtAt:243
 - `src/shared/Core/Types.luau` (428) - LUCKBOUND canonical type definitions. · 2026-09-27
-- `src/shared/Core/UITheme.luau` (160) - Shared GUI design system. Biome Blueprint §1.4. · 2026-09-24
-  - `UITheme.luau`: UITheme.corner:108, UITheme.stroke:116, UITheme.rarityColor:125, UITheme.pad:131, UITheme.gradient:145
+- `src/shared/Core/UITheme.luau` (163) - Shared GUI design system. Biome Blueprint §1.4. · 2026-09-24
+  - `UITheme.luau`: UITheme.corner:111, UITheme.stroke:119, UITheme.rarityColor:128, UITheme.pad:134, UITheme.gradient:148
 - `src/shared/Util/ChunkCore.luau` (1023) - Seeded assembly of a map from a chunk library. Addendum §A4. · 2026-09-27
   - `ChunkCore.luau`: rotate:21, ChunkCore.yawRadians:41, norm:45, ChunkCore.libraryFor:50, socketById:69, ChunkCore.worldSocket:79, ChunkCore.placeAgainst:94, ChunkCore.arrivalSocket:121, ChunkCore.overlaps:133, ChunkCore.assemble:203, ChunkCore.assembleTest:847, ChunkCore.assembleWithRetry:950, ChunkCore.footprint:971, ChunkCore.validateLayout:987
 - `src/shared/Util/ChunkKitCore.luau` (362) - Drop-in chunk kits: turns what the server MEASURED on a world's meshes into · 2026-09-24

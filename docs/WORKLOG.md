@@ -34,6 +34,29 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 99 — 2026-09-28 — First Studio walk: controller never started; fixed
+**Merged:** see the PR for this branch   **Tests:** 947 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- **Owner's Studio walk:** default Roblox movement only; no roll, no bar. Output showed an infinite yield on
+  `PlayerScripts:WaitForChild("PlayerModule")` in `LocomotionController.init`, so the whole controller never ran
+  (the place has no PlayerModule). Fixed: input now comes from `Humanoid.MoveDirection`, which the platform's
+  input scripts fill on every device. No PlayerModule dependency, and no unbounded wait.
+- Bind success or failure is printed (`[Locomotion] controller bound` / `FAILED to bind: …`).
+- Owner: health and stamina are **always visible**. `Vitals` now has a health row (from the Humanoid,
+  `UITheme.AccentHealth`) above stamina; the hub fade is gone.
+
+### Decisions made
+- Never wait on a Roblox-provided script without a timeout; read what the Humanoid already exposes.
+
+### Stopped at
+Awaiting the owner's re-walk of Test K.
+
+### Next
+1. Owner: pull, re-sync, and re-walk Test K from step 1.
+
+---
+
 ## Session 98 — 2026-09-28 — Lock-on switching, charge scope
 **Merged:** see the PR for this branch   **Tests:** 947 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 

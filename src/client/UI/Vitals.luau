@@ -1,6 +1,8 @@
 --!strict
--- THE VITALS BARS: stamina today; health and weapon charge join it when
--- weapons land, as more rows built by the same `bar` function.
+-- THE VITALS BARS: health above stamina, always on screen (owner,
+-- 2026-09-28). Weapon charge joins them later as another row from the same
+-- `bar` function, shown ONLY while an Epic, Legendary or Mythic weapon with
+-- a charge is equipped (docs/WEAPONS.md §2, "Charge").
 --
 -- House style, not a new one: a panel-coloured track with the theme's stroke
 -- and full rounding, a gold fill lit by the panel gradient, amber when low.
@@ -8,9 +10,7 @@
 -- and then drains down to the new one, so a spend reads as a chunk taken
 -- out rather than a number changing -- the one Souls detail worth copying.
 --
--- Visibility follows the profile: in the hub the bar fades in only when
--- stamina is spent (a lobby should not look like a survival game); in an
--- expedition it stays up, because there stamina is the fight.
+-- Both bars are always visible, in the hub and in an expedition alike.
 
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -46,6 +46,7 @@ type Bar = {
 
 local gui: ScreenGui? = nil
 local stamina: Bar? = nil
+local health: Bar? = nil
 
 local function tweenInfo(seconds: number): TweenInfo
 	return TweenInfo.new(seconds, UITheme.Motion.EaseStyle, UITheme.Motion.EaseDirection)
@@ -117,7 +118,14 @@ local function setShown(b: Bar, shown: boolean)
 	TweenService:Create(b.Lag, info, { BackgroundTransparency = if shown then 0.55 else 1 }):Play()
 end
 
-local function setValue(b: Bar, fraction: number, now: number, dt: number, fillColor: Color3)
+local function setValue(
+	b: Bar,
+	fraction: number,
+	now: number,
+	dt: number,
+	fillColor: Color3,
+	lowColor: Color3
+)
 	fraction = math.clamp(fraction, 0, 1)
 	if fraction < b.Value then
 		-- A spend: the lag bar keeps the old value for a beat.
@@ -136,7 +144,7 @@ local function setValue(b: Bar, fraction: number, now: number, dt: number, fillC
 
 	b.Fill.Size = UDim2.fromScale(fraction, 1)
 	b.Lag.Size = UDim2.fromScale(b.LagValue, 1)
-	b.Fill.BackgroundColor3 = if fraction < LOW_FRACTION then UITheme.AccentWarn else fillColor
+	b.Fill.BackgroundColor3 = if fraction < LOW_FRACTION then lowColor else fillColor
 end
 
 function Vitals.init(): ()
@@ -150,17 +158,26 @@ function Vitals.init(): ()
 	gui = screen
 
 	stamina = bar("Stamina", 0, UITheme.AccentGold)
+	health = bar("Health", 1, UITheme.AccentHealth)
+	setShown(stamina :: Bar, true)
+	setShown(health :: Bar, true)
 end
 
---- Called every frame by the movement controller. `alwaysShown` is true in
---- an expedition; in the hub the bar shows only while stamina is spent.
-function Vitals.setStamina(fraction: number, alwaysShown: boolean, now: number, dt: number): ()
+--- Called every frame by the movement controller.
+function Vitals.setStamina(fraction: number, now: number, dt: number): ()
 	local b = stamina
-	if not b then
-		return
+	if b then
+		setValue(b, fraction, now, dt, UITheme.AccentGold, UITheme.AccentWarn)
 	end
-	setValue(b, fraction, now, dt, UITheme.AccentGold)
-	setShown(b, alwaysShown or fraction < 0.999 or b.LagValue > fraction + 1e-3)
+end
+
+--- Called every frame by the movement controller, from the Humanoid.
+function Vitals.setHealth(fraction: number, now: number, dt: number): ()
+	local b = health
+	if b then
+		-- Health stays its own colour when low: amber is stamina's warning.
+		setValue(b, fraction, now, dt, UITheme.AccentHealth, UITheme.AccentHealth)
+	end
 end
 
 return Vitals
