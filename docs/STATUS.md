@@ -185,6 +185,7 @@ These are settled. Do not relitigate without a deliberate reversal.
 | — | Compass mapping N=-Z, E=+X, S=+Z, W=-X, up=+Y | GameConfig.HubLayout |
 | — | **A prefab is registered from a NAMED PART, not from its model pivot.** A pivot is invisible metadata an FBX chain mangles quietly; a part name is already the contract with the artist | `Util/PrefabLoader` |
 | — | **Scale and compass corrections are content, never re-exports.** An importer setting is fixed by a number in `Prefab` | `Content/Hub/Crossroads` |
+| — | **Agents implement on `agent/<task>` branches and open PRs; only an integration agent merges, one PR at a time against the current `main`** | `docs/GIT_WORKFLOW.md` |
 
 ### Why true RNG matters downstream
 

@@ -9,6 +9,7 @@ what it changed, where it stopped, and what comes next.
 
 **Writing an entry?** Add it at the **top**, under the template. Never edit or
 delete an older entry; if something turned out wrong, say so in a newer one.
+Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering and merge order.
 
 ---
 
@@ -30,6 +31,30 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 ### Next
 1. …
 ```
+
+---
+
+## Session 95 — 2026-09-28 — Git workflow: implementation vs integration agents
+**Merged:** see the PR for this branch   **Tests:** CI (docs only)   **Branch:** `claude/luckbound-agent-git-workflow-0ioymd`
+
+### Done
+- New `docs/GIT_WORKFLOW.md`: two roles. Implementation agents branch `agent/<task>` from latest `main`, one task per
+  branch/PR, validate, push, open a PR, never merge. Integration agents review PRs one at a time against the current
+  `main`, merge `main` into the branch if needed, re-test, merge only when ready (CI green, owner Studio check where
+  visual), refresh `main` before the next PR, no feature work.
+- `AGENTS.md` gained a short "Git workflow" section pointing there; "Verify before you merge" now says merging is the
+  integration agent's job. `INDEX.md` §3/§6, the WORKLOG header and STATUS §3 updated to match.
+
+### Decisions made
+- WORKLOG stays one file, newest on top. Each branch writes its own entry numbered from its base; the integration
+  agent keeps both entries at merge, puts the one being merged on top and renumbers it. No per-branch log files.
+- `agent/` is a naming prefix only; a harness-assigned branch name (as this session had) is used as-is.
+
+### Stopped at
+PR open, not merged.
+
+### Next
+1. Owner: review the PR; start future sessions as implementation agents by default, integration sessions explicitly.
 
 ---
 

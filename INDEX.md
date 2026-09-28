@@ -60,6 +60,7 @@
 | `docs/PROTOTYPE_BUILD_SPEC.md` | **architecture**: schemas, remotes (§4), boot (§1.2), Phase 1 exclusions and amendments (§7.x) |
 | `docs/DEVELOPMENT_PLAN.md` | what to build next and in what order |
 | `docs/STATUS.md` / `docs/WORKLOG.md` | current state / session history (top entry only) |
+| `docs/GIT_WORKFLOW.md` | branch/PR/merge procedure: implementation vs integration agents, parallel WORKLOG numbering |
 | `docs/RESERVED.md` | deliberately unread declarations (an unread field not listed there is a defect) |
 | `docs/TESTING.md` | unit tests + Studio manual passes (lettered tests A…T) |
 | `docs/MODULAR_MAPS.md` | chunk system: how maps assemble from pieces |
@@ -158,8 +159,9 @@ Blender: `"C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe" -b
   - Asset files are `<WORLD>_<THING>.rbxmx` / `HUB_*.rbxmx`.
   - Never add `_v2`/`_NEW`/`_old` copies (CI enforces this).
 - Git:
-  - Branch `claude/<topic>` (or `<agent>/<topic>`), then `gh pr create --fill`, then `gh pr checks --watch`, then
-    merge **only when CI is green**, then pull `main`.
+  - Implementation agents: branch `agent/<task>` from latest `main`, push, open a PR to `main`, **do not merge**.
+  - Integration agents: review and merge PRs one at a time against the current `main`, **only when CI is green**.
+  - Full procedure, roles and parallel-WORKLOG rules: `docs/GIT_WORKFLOW.md`.
   - `git add` new files explicitly.
 - Lint: `stylua src tests` before committing. CI enforces it, and `.styluaignore` skips generated files.
 - Don't commit the owner's local `assets/rbxm/prefabs/HUB_SKY.rbxmx` edit; stash it and pop it.
