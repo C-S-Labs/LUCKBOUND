@@ -118,7 +118,9 @@ Blender: `"C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe" -b
   - Import steps: `IMPORT_STEPS.md`.
   - `build_sky_citadel_recolors.py` and `build_sky_citadel_atmosphere_props.py` are **parked** until after release.
 - Verdant Valley: the 30-piece kit exporter is `export_verdant_valley_kit.py` in the same world folder pattern; its
-  output is `VV_STRUCTURE.rbxmx`.
+  output is `VV_STRUCTURE.rbxmx`. The cleanup testing source is
+  `verdant_valley_30_cleanup_review.blend`; `--joined-scene --out-fbx` exports
+  its reviewed meshes without regenerating or renaming them (see `IMPORT_STEPS.md`).
 - Naming convention:
   - The kit file is `<W>_STRUCTURE.rbxmx`, with W = `SC` or `VV`.
   - Pieces inside it are named `chunk_<name>`.

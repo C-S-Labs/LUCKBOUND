@@ -368,6 +368,68 @@ def verify_fbx(path, rows):
     return errs
 
 
+def export_joined_scene():
+    """Export the reviewed 30-mesh scene without regenerating or renaming pieces.
+
+    This path is for a joined cleanup .blend. The original generator path below
+    remains the source for authoring a new kit from the loose source collection.
+    """
+    argv = sys.argv[sys.argv.index("--") + 1:]
+    if "--out-fbx" not in argv:
+        raise SystemExit("--joined-scene requires --out-fbx PATH")
+    fbx = os.path.abspath(argv[argv.index("--out-fbx") + 1])
+    report_path = os.path.join(os.path.dirname(fbx), "kit_report.json")
+    os.makedirs(os.path.dirname(fbx), exist_ok=True)
+
+    source = [o for o in bpy.context.scene.objects if o.type == "MESH"]
+    names = [o.name for o in source]
+    if len(source) != 30 or len(set(names)) != 30 or any(not n.startswith("chunk_") for n in names):
+        raise SystemExit("joined scene must contain exactly 30 uniquely named chunk_* meshes")
+
+    # The review scene retains its own names for these two chunks. Keep them;
+    # existing content keys can still map to the uploaded MeshIds independently.
+    expected_names = {row[0] for row in EXPECTED.values()}
+    expected_names -= {"chunk_cap_treasure_hollow", "chunk_cap_wardens_clearing"}
+    expected_names |= {"chunk_side_treasure_hollow", "chunk_side_wardens_clearing"}
+    if set(names) != expected_names:
+        raise SystemExit(f"joined scene names differ: missing {expected_names - set(names)}, extra {set(names) - expected_names}")
+
+    rows = []
+    for original in sorted(source, key=lambda o: o.name):
+        # The background process is disposable; reset only its review-grid offsets.
+        obj = original
+        obj.location = (0, 0, 0)
+        mesh = obj.data
+        color = mesh.color_attributes.get("Col")
+        if color is None or color.domain != "CORNER" or color.data_type != "BYTE_COLOR":
+            raise SystemExit(f"{original.name}: missing BYTE_COLOR/CORNER Col attribute")
+        for polygon in mesh.polygons:
+            expected = (*material_rgb(mesh.materials[polygon.material_index]), 1.0)
+            for loop_index in polygon.loop_indices:
+                if any(abs(a - b) > 0.02 for a, b in zip(color.data[loop_index].color, expected)):
+                    raise SystemExit(f"{original.name}: Col differs from material at face {polygon.index}")
+        ms = measure(obj)
+        mn, mx = ms["min"], ms["max"]
+        size = [round(mx[0] - mn[0], 3), round(mx[2] - mn[2], 3), round(mx[1] - mn[1], 3)]
+        if abs(mn[0] + mx[0]) > 0.01 or abs(mn[1] + mx[1]) > 0.01:
+            raise SystemExit(f"{obj.name}: footprint is not centered")
+        if round(size[2]) != FOOT or round(size[0]) not in (FOOT, 384):
+            raise SystemExit(f"{obj.name}: incompatible footprint {size}")
+        if ms["tris"] > TRI_BUDGET:
+            raise SystemExit(f"{obj.name}: {ms['tris']} triangles exceed the {TRI_BUDGET} budget")
+        rows.append(dict(name=obj.name, size=size, triangles=ms["tris"],
+                         openings=ms["openings"], pads=ms["pads"],
+                         ground=round(-mn[2], 3)))
+
+    export_fbx(fbx, source)
+    errors = verify_fbx(fbx, rows)
+    if errors:
+        raise SystemExit("\n".join(errors))
+    with open(report_path, "w", encoding="utf-8") as stream:
+        json.dump(rows, stream, indent=2)
+    print(f"[vv] Joined scene OK: {len(rows)} chunks -> {fbx}")
+
+
 def main():
     out, ids = args()
     dg = bpy.context.evaluated_depsgraph_get()
@@ -441,4 +503,7 @@ def main():
     print(f"[vv] OK: {len(rows)} pieces -> {fbx}")
 
 
-main()
+if "--joined-scene" in sys.argv:
+    export_joined_scene()
+else:
+    main()

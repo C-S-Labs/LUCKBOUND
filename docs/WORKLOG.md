@@ -33,6 +33,28 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 91 — 2026-09-27 — Verdant Valley cleanup kit export test
+**Merged:** none   **Tests:** 30/30 FBX and Studio model checks passed   **Branch:** `codex/vv-cleanup-testing`
+
+### Done
+- Branched from the owner's current `main` pull. Preserved the current reviewed Blender scene and its `chunk_*` names as `verdant_valley_30_cleanup_review.blend`.
+- Moved one High Ledge tree assembly five studs inward so its canopy no longer exceeded the 256-stud footprint; kept the owner's rock placements.
+- Added a joined-scene export mode to the original Verdant Valley exporter. It checks `Col` against face materials, centered footprints, triangle budgets, and FBX reimport without changing the saved scene's review layout.
+- Exported all 30 chunks, imported through Studio, saved XML `VV_STRUCTURE.rbxmx`, and synced all 30 uploaded MeshIds to the manifest. The two `side_` scene names map to the existing CAP keys.
+- Verified all 30 Studio MeshPart names and sizes against the export report; largest mesh is 9,416 triangles. Python syntax checks passed. Local StyLua launcher could not run (`home directory not found`).
+
+### Decisions made
+- Keep the older base Blender source and production exports available on `main` until this testing branch passes a Studio walk and in-experience asset-access check.
+
+### Stopped at
+The test kit is exported and wired on the testing branch; a full game experience walk has not yet been completed.
+
+### Next
+1. Walk representative and edge chunks in the game experience; confirm uploaded MeshIds are accessible to that experience and vertex colors render correctly.
+2. Run CI and merge only after those checks pass. Retain the older base source and exports until then.
+
+---
+
 ## Session 90 — 2026-09-27 — Fix: entering twice while a map loads built two maps
 **Merged:** see the PR for this branch   **Tests:** suite passing (local)   **Branch:** `claude/enter-lock`
 

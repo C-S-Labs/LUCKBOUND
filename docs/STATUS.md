@@ -18,6 +18,9 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   pieces with drifting cloud props, height variation — on the §7.7 generation blueprint, 2026-09-27; final
   polish pass done (map-wide skyrays, natural mushroom patches, overhang check) — **not yet uploaded or walked**). Emberfall and Astral
   Reach have no map yet.
+- **Verdant Valley cleanup test branch:** `codex/vv-cleanup-testing` contains the reviewed 30-mesh Blender scene,
+  validated FBX, Studio-imported `VV_STRUCTURE.rbxmx`, and synced mesh IDs. All 30 imported names and dimensions
+  match the export report; the visual Studio walk and in-experience asset-access check remain open before merge.
 
   | Id | Rarity | Weight | Phase | Map | Enterable? |
   |---|---|---|---|---|---|
