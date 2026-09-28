@@ -40,6 +40,10 @@ direction, speed and facing every frame and launches jumps itself. The stock
 Animate script is off too: the same stock animation assets are played by the
 controller from our speed and mode, until LUCKBOUND has its own animations.
 
+**Held facing turns instantly.** With the shoulder camera or a lock-on, the body turns at
+`HeldFacingTurnRate` (effectively instant) so it never lags a quick camera turn. Free running keeps the
+profile's turn rate.
+
 **Only the root collides.** Every other body part has collisions off (re-applied every frame), so a
 clip turning the torso through the floor can't push the physics. That push was a camera shake during rolls.
 
@@ -114,7 +118,7 @@ edge, and a 0.12s buffer so a press just before landing fires on landing.
 
 | | Roll (a direction held) | Backstep (no direction) |
 |---|---|---|
-| Movement | 34 studs/s for 0.65s ≈ 22 studs, the held direction; the clip blends out over 0.22s into standing or running (steering was tried and removed at the owner's call) | 26 studs/s for 0.32s ≈ 8 studs, away from facing |
+| Movement | **18 studs** over 0.65s; speed follows the clip (gentle start, full through the tumble, easing out), the held direction; the clip blends out over 0.22s into standing or running (steering was tried and removed at the owner's call) | 26 studs/s for 0.32s ≈ 8 studs, away from facing |
 | Cost | the profile's roll cost | 60% of it |
 | Recovery | 0.12s standstill after | same |
 | Invulnerable window | 0.05–0.44s in | 0.02–0.16s in |

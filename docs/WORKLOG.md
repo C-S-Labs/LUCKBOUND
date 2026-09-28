@@ -34,6 +34,24 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 109 — 2026-09-28 — Roll speed shape, 18 studs, instant held facing
+**Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner)
+- **"Burst before the roll":** the speed was flat at its peak from frame one while the clip was still gathering.
+  It now follows `LocomotionCore.rollSpeedShape`: 0.45 of peak rising to full by 22%, full to 62%, then easing
+  to 0.3.
+- **18 studs:** `RollDistanceStuds` replaces `RollSpeed`; `rollPeakSpeed` derives the peak from the shape's
+  mean. A test integrates the distance.
+- Sprint was +1.5 studs/s in the previous commit.
+- **Camera-turn lag:** with the shoulder camera or a lock-on, the body turns at `HeldFacingTurnRate` (1000,
+  effectively instant); free running keeps the profile's rate.
+
+### Next
+1. Owner re-walks. 2. Remaining clips. 3. PR.
+
+---
+
 ## Session 108 — 2026-09-28 — Steering out, roll blends out, shake fixed
 **Merged:** see the PR for this branch   **Tests:** 1007 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 

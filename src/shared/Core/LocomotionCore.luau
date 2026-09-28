@@ -375,7 +375,11 @@ function LocomotionCore.targetSpeed(state: any, now: number, t: any): number
 			if state.RollKind == "AIRDASH" then
 				return t.AirDashSpeed
 			end
-			return if state.RollKind == "BACKSTEP" then t.BackstepSpeed else t.RollSpeed
+			if state.RollKind == "BACKSTEP" then
+				return t.BackstepSpeed
+			end
+			local progress = (now - state.RollStartedAt) / (state.RollEndsAt - state.RollStartedAt)
+			return LocomotionCore.rollPeakSpeed(t) * LocomotionCore.rollSpeedShape(progress)
 		end
 		if now < state.RollRecoverUntil then
 			return 0
@@ -399,6 +403,39 @@ function LocomotionCore.land(state: any, now: number, fallSpeed: number, t: any)
 	local updated = table.clone(state)
 	updated.LandRecoverUntil = now + t.HardLandingRecoverySeconds
 	return updated, true
+end
+
+--- THE ROLL'S SPEED OVER ITS LENGTH, as a fraction of its peak, at
+--- `progress` 0..1. It follows the clip: a gentler start while the body
+--- gathers, full speed through the tumble, easing off as it comes up. A flat
+--- speed read as a burst before the roll began (owner, 2026-09-28).
+function LocomotionCore.rollSpeedShape(progress: number): number
+	local p = math.clamp(progress, 0, 1)
+	local function smooth(a: number, b: number, x: number): number
+		local u = math.clamp((x - a) / (b - a), 0, 1)
+		return u * u * (3 - 2 * u)
+	end
+	if p < 0.22 then
+		return 0.45 + 0.55 * smooth(0, 0.22, p)
+	elseif p < 0.62 then
+		return 1
+	end
+	return 1 - 0.7 * smooth(0.62, 1, p)
+end
+
+--- The shape's average over the roll, measured once: what turns a distance
+--- into a peak speed.
+local SHAPE_MEAN = (function()
+	local total, steps = 0, 400
+	for i = 0, steps - 1 do
+		total += LocomotionCore.rollSpeedShape((i + 0.5) / steps)
+	end
+	return total / steps
+end)()
+
+--- The peak speed that carries a roll exactly RollDistanceStuds.
+function LocomotionCore.rollPeakSpeed(t: any): number
+	return t.RollDistanceStuds / (t.RollDurationSeconds * SHAPE_MEAN)
 end
 
 --- Is the roll still moving the character (as opposed to recovering)?

@@ -5667,7 +5667,7 @@ do
 			local s = LocomotionCore.roll(state(), 0, true, EXP)
 			local d = L.RollDurationSeconds
 			return LocomotionCore.mode(s, 0.1) == "ROLL"
-				and LocomotionCore.targetSpeed(s, 0.1, EXP) == L.RollSpeed
+				and LocomotionCore.targetSpeed(s, 0.3, EXP) > EXP.WalkSpeed
 				and LocomotionCore.targetSpeed(s, d + 0.01, EXP) == 0
 				and LocomotionCore.mode(s, d + L.RollRecoverySeconds + 0.01) == "GROUND"
 		end)()
@@ -5802,6 +5802,22 @@ do
 			local bump = frame(state(), L.AirDashMinAirSeconds * 0.5, { Grounded = false })
 			local s, kind = LocomotionCore.roll(bump, L.AirDashMinAirSeconds * 0.5, true, EXP)
 			return kind == nil and s.RollBufferedKind == "ROLL"
+		end)()
+	)
+
+	check(
+		"a roll travels its set distance, easing in and out rather than bursting",
+		(function()
+			local s = LocomotionCore.roll(state(), 0, true, EXP)
+			local travelled, dt = 0, 1 / 600
+			local t = 0
+			while t < L.RollDurationSeconds do
+				travelled += LocomotionCore.targetSpeed(s, t + dt / 2, EXP) * dt
+				t += dt
+			end
+			local start = LocomotionCore.targetSpeed(s, 0.001, EXP)
+			local peak = LocomotionCore.rollPeakSpeed(EXP)
+			return math.abs(travelled - L.RollDistanceStuds) < 0.1 and start < peak * 0.6
 		end)()
 	)
 

@@ -375,7 +375,10 @@ local function step(dt: number)
 	cm.MovingDirection = direction
 	cm.FacingDirection = facing
 	cm.BaseMoveSpeed = speed
-	cm.BaseTurnSpeed = tuning.TurnRate
+	-- Held facing turns instantly; free running keeps its weighty turn.
+	cm.BaseTurnSpeed = if facingHeld()
+		then GameConfig.Locomotion.HeldFacingTurnRate
+		else tuning.TurnRate
 
 	local ground = groundController
 	local air = airController

@@ -1121,7 +1121,9 @@ local GameConfig = {
 		-- Slower and further after the owner's walk with the first clips
 		-- (2026-09-28): a short, quick roll read as unrefined.
 		RollDurationSeconds = 0.65,
-		RollSpeed = 34, -- studs/s -> ~22 studs (owner-tuned 2026-09-28)
+		-- How far a roll travels, in studs; its speed follows the roll's shape
+		-- (LocomotionCore.rollSpeedShape) and is worked out from this.
+		RollDistanceStuds = 18, -- owner-tuned 2026-09-28
 		RollRecoverySeconds = 0.12, -- after the roll, before the next action
 		-- The body blends out of a roll clip into standing or running over
 		-- this long, instead of dropping out of it (owner, 2026-09-28).
@@ -1170,6 +1172,11 @@ local GameConfig = {
 		-- The camera widens by this many degrees at the start of a roll and
 		-- settles back over the roll.
 		RollFovKickDegrees = 3,
+
+		-- While facing is held (shoulder camera, lock-on) the body turns this
+		-- fast, rad/s: effectively instantly, so it never lags a quick camera
+		-- turn (owner: the lag caused bugs when turning fast).
+		HeldFacingTurnRate = 1000,
 
 		-- === SHOULDER CAMERA (our shift lock) ===
 		-- Left Ctrl toggles it: the mouse locks to the centre, the camera
