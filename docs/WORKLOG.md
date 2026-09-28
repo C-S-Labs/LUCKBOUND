@@ -34,6 +34,47 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 97 — 2026-09-28 — Own character controller, roll, stamina, lock-on
+**Merged:** see the PR for this branch   **Tests:** 940 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+Supersedes Session 96's dash and double jump (same branch, unmerged).
+
+### Done
+- **Own character controller.** `LocomotionController` switches off the Humanoid state machine and the stock
+  Animate script and drives a `ControllerManager` (ground and air controllers plus a floor sensor). It sets
+  direction, speed and facing every frame, launches jumps, and plays the stock animation assets itself.
+  Death hands the Humanoid back its state machine.
+- **`LocomotionCore`:** HUB and EXPEDITION profiles (`tuning()`, with a reserved `upgrades` hook for the Fate
+  Tree), one stamina bar, a single jump with coyote time and a jump buffer, and roll/backstep with recovery,
+  a buffer and a declared invulnerable window (RESERVED). The weapon lock is kept (`AllowRoll` replaces
+  `AllowDash`).
+- **Double jump and dash removed.**
+- **Lock-on:** new `Core/LockOnCore.luau` (pick, break, aim cap, smoothing) and `Controllers/LockOnController.luau`
+  (middle mouse / R3 / touch, over-the-shoulder camera, wall pull-in, gold marker). Targets are tagged
+  `LOCK_ON_TAG` by the spawner; `/showboss` now tags its preview. No enemy asset changed.
+- **Stamina bar:** `UI/Vitals.luau`, house style, with a lag strip; built to take health and charge rows later.
+- `GameConfig.Locomotion` rewritten (profiles, stamina, jump, roll, controller); `GameConfig.LockOn` added.
+- Docs: `PLAYER_ABILITIES.md` §1–§2.6 and §6, `TESTING.md` Test K (14 steps), `RESERVED.md`.
+
+### Decisions made (owner, this session)
+- Level A: our own controller on `ControllerManager`. Not a full custom-physics engine, and not rules layered
+  over the default physics.
+- The double jump goes. The expedition is a middle ground between the hub and Souls. The hub stays fast.
+- Stamina is a challenge, not Souls-hard: actions start on any stamina above zero.
+- Lock-on is optional and must not modify enemies.
+- UI: the stamina bar now; health and charge with weapons.
+
+### Stopped at
+Code, tests and docs are done. **Not walked in Studio:** the whole of Test K. The riskiest parts are that the
+stock animations play under our controller and the ground-controller feel (`GroundOffset`/sensor distance).
+
+### Next
+1. Owner: run `TESTING.md` Test K, then tune `GameConfig.Locomotion`/`LockOn` by feel.
+2. LUCKBOUND's own animations (roll, backstep, run) to replace the stock ones.
+3. Items and inventory, then §7.6 step 0 (`ENEMY_AI.md` §12).
+
+---
+
 ## Session 96 — 2026-09-28 — Movement state machine: sprint-jump, dash, weapon lock
 **Merged:** see the PR for this branch   **Tests:** 925 passing (was 902)   **Branch:** `claude/create-branch-workflow-jsh534`
 

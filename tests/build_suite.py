@@ -40,6 +40,7 @@ PURE_MODULES = [
     ("HubMenuCore",      "src/shared/Core/HubMenuCore.luau"),
     ("CodeCore",         "src/shared/Core/CodeCore.luau"),
     ("LocomotionCore",   "src/shared/Core/LocomotionCore.luau"),
+    ("LockOnCore",   "src/shared/Core/LockOnCore.luau"),
     ("Menu",             "src/shared/Content/Hub/Menu.luau"),
     ("Cinematics",       "src/shared/Content/Hub/Cinematics.luau"),
     ("Codes",            "src/shared/Content/Codes.luau"),

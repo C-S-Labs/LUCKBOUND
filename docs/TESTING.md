@@ -484,28 +484,48 @@ The first thing anyone sees.
 10. **On a phone (or Studio's device emulator).** ✅ Pass: the rail starts
     collapsed, the panel is readable, and nothing is cut off at the edges.
 
-### Test K — run, jump and dash (3 min) ⭐ NEW
+### Test K — movement, stamina and lock-on (8 min) ⭐ NEW
 
-1. **Hold Shift and run.** ✅ Pass: you accelerate over ~0.25s rather than
-   snapping, and a small bar appears above the roll prompt.
-2. **Keep running.** ✅ Pass: about 8 seconds later you drop back to walking
-   and the bar is empty and amber. You cannot immediately sprint again.
-3. **Stand still and hold Shift.** ✅ Pass: the bar does not move.
-4. **Jump, then jump again in the air.** ✅ Pass: a second, smaller jump with a
-   gold spark ring at your feet. A third press does nothing.
-5. **Walk off the edge of a walkway and press jump immediately.** ✅ Pass: you
-   get a **full** jump, not the weaker air one — that is the coyote window. You
-   should then still have the air jump available.
-6. **Sprint, then jump.** ✅ Pass: the jump is visibly longer and a little
-   higher than a jump from a walk, and you land back at sprint speed.
-7. **Press Q (B on a gamepad; the Dash button on a phone) while moving.** ✅
-   Pass: a quick ~17-stud burst the way you were moving, with a gold burst at
-   your feet, and the stamina bar dips. Standing still, the dash goes the way
-   you face. It never lifts you off the floor.
-8. **Mash Q.** ✅ Pass: no faster than one dash every ~0.7s, and after about
-   five the bar is too low and Q does nothing until it refills.
-9. **Dash, then jump mid-dash.** ✅ Pass: the dash stops and you jump. **Jump,
-   then press Q in the air.** ✅ Pass: nothing happens (ground-only dash).
+**In the hub:**
+
+1. **Walk around.** ✅ Pass: walk, idle and run animations play (not a frozen
+   pose), turning is quick, and **no bar is visible**. *If the character slides
+   in the idle pose, the stock animations did not load: report the Output.*
+2. **Hold Shift and run.** ✅ Pass: you speed up smoothly and a gold bar appears
+   at the bottom centre, draining. Let go: it refills and fades out.
+3. **Press Space on the ground, then again in the air.** ✅ Pass: one jump, and
+   nothing in the air (the double jump is gone). The jump is as high as before.
+4. **Walk off a walkway edge and press Space immediately.** ✅ Pass: you still
+   jump (the coyote window).
+5. **Press Q while moving, then Q standing still.** ✅ Pass: a ~17-stud roll in
+   the direction you held, then a short hop backward that keeps you facing forward.
+   Both show a gold burst. In the hub neither costs stamina.
+
+**In an expedition** (any world, via the Fate Engine or `/roll`):
+
+6. **Stand in the map.** ✅ Pass: the stamina bar stays up even when full, you
+   move noticeably slower than in the hub, and turning has weight.
+7. **Roll three times in a row, pressing Q again just before each lands.** ✅
+   Pass: the rolls chain cleanly, without mashing. Each takes a chunk out of the
+   bar, and a pale strip shows the chunk before it drains away.
+8. **Roll until the bar is empty, then press Q.** ✅ Pass: the last roll happens
+   even on a sliver of stamina; with the bar empty nothing happens, and it waits
+   about a second before refilling. The fill is amber when low.
+9. **Jump.** ✅ Pass: it costs a small chunk of stamina.
+
+**Lock-on** (in a map with a boss arena):
+
+10. **`/showboss winged_sentinel`, face it, click the middle mouse button (R3
+    on a gamepad).** ✅ Pass: a gold diamond sits on the boss, and the camera
+    moves behind your right shoulder with the boss in view. It must not point
+    up at the sky, even close in.
+11. **Walk left and right.** ✅ Pass: you circle the boss facing it. Hold Shift:
+    you turn to run. Press Q with a direction: you roll that way.
+12. **Back into a wall.** ✅ Pass: the camera slides in instead of clipping
+    through.
+13. **Run away past ~120 studs, or middle-click again.** ✅ Pass: the lock drops
+    and the normal camera returns.
+14. **Middle-click with no boss in view.** ✅ Pass: nothing happens.
 
 ### Test L — the menu follows the world (4 min) ⭐ NEW
 

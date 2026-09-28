@@ -1,7 +1,8 @@
 # LUCKBOUND — Player Abilities & Upgrades
 
-**Status:** §1, §2 and §2.5 are built, on one movement state machine
-(`Core/LocomotionCore.luau`, rebuilt 2026-09-28). §6 is the contract weapons
+**Status:** §1–§2.6 are built: our own character controller, one movement
+state machine (`Core/LocomotionCore.luau`), stamina, jump, roll and lock-on
+(2026-09-28). §6 is the contract weapons
 will build against; its hooks exist and nothing calls them yet. §3 and §4 are
 **planning**: owner-requested ideas, not commitments.
 
@@ -30,42 +31,19 @@ How weapon moves are shaped, including unique Legendary movesets, is `ENEMY_AI.m
 
 ---
 
-## 1. Built: sprint
+## 1. Built: our own character controller
 
-| | |
-|---|---|
-| Input | Left Shift, or L3 on a gamepad. Touch: hold-to-move |
-| Speed | `Scale.WalkSpeed × SprintMultiplier` — 32 × 1.55 ≈ 50 |
-| Ramp | 0.25s up, 0.4s down, so it reads as effort rather than a speed setting |
-| Stamina | 100, draining 12.5/s → **8 seconds of sprint** |
-| Refill | 16.6/s after a 0.8s delay → **6 seconds to full** |
-| Exhaustion | At zero, sprint cuts out and cannot restart until the delay passes |
-| Indicator | A 120px pip above the roll prompt. Fades in when spent, out when full — a player who never sprints never learns there is a bar |
+Owner-directed 2026-09-28: **no default Roblox movement.** The Humanoid's state
+machine is off (`EvaluateStateMachine = false`) and a `ControllerManager` with a
+ground and an air controller moves the character. `LocomotionController` sets its
+direction, speed and facing every frame and launches jumps itself. The stock
+Animate script is off too: the same stock animation assets are played by the
+controller from our speed and mode, until LUCKBOUND has its own animations.
 
-**Why stamina at all.** Without it, sprint is not an ability, it is the walk
-speed — everyone holds Shift forever and the number in `Scale.WalkSpeed`
-becomes a lie. Eight seconds is roughly the walk from the Engine's dais to a
-district, so a sprint is exactly "skip one leg", which is a decision.
-
-**Standing still costs nothing.** Holding sprint while stationary does not
-drain, because draining for it would teach players to let go of a key that
-costs them nothing.
-
-## 2. Built: double jump
-
-| | |
-|---|---|
-| Budget | One ground jump plus **one** air jump. A third is not a tuning change, it is a different game |
-| Height | `JumpPower × 0.85` — noticeably a recovery, not a second full jump |
-| Coyote time | 0.12s. Walking off a walkway and jumping spends the **ground** jump |
-| Re-press guard | 0.2s, so one input frame cannot spend both |
-| Effect | A gold spark ring at the feet. An ability nobody can see reads as a physics glitch |
-
-**The air jump replaces vertical velocity rather than adding to it**, so a jump
-pressed while falling fast is worth the same as one pressed at the top of an
-arc. Adding would make the ability worthless exactly when it is needed.
-
-## 2.5 Built: the state machine, sprint-jump and dash
+What the Humanoid still owns: health, death (it gets its state machine back on
+death), the name plate. `Humanoid.WalkSpeed` survives only as an outside
+multiplier, so the loading screen's hold (0) and the `/speed` dev command keep
+working without knowing about the controller.
 
 **One state machine.** `LocomotionCore.mode()` derives exactly one mode from the
 state, and never stores it, so it cannot disagree with the timers:
@@ -73,28 +51,91 @@ state, and never stores it, so it cannot disagree with the timers:
 | Mode | Meaning |
 |---|---|
 | `GROUND` | On the floor, walking or sprinting (sprint is a flag, not a mode) |
-| `AIR` | Off the floor: jumping, falling, sprint-jump carry |
-| `DASH` | A dash is in flight |
+| `AIR` | Off the floor |
+| `ROLL` | A roll or backstep, its recovery included |
 | `LOCKED` | A weapon move holds movement (§6) |
 
-**Sprint-jump.** A ground jump taken while sprinting launches at `JumpPower ×
-1.08` and keeps `sprint speed × 1.12` until landing: a longer jump, no new input.
-Capped small by a test, because every gap in every kit must stay crossable
-without it.
+## 2. Built: two profiles, one stamina bar
 
-**Dash**, the movement half only (§4's verdict):
+**Profiles.** The hub is for getting around, an expedition is for fighting: same
+rules, different weight. The controller picks EXPEDITION while the character
+stands inside a loaded expedition stage, HUB otherwise.
 
-| | |
-|---|---|
-| Input | Q, B on a gamepad, an on-screen Dash button on touch |
-| Burst | 95 studs/s for 0.18s ≈ 17 studs, horizontal only, the move direction (facing if still) |
-| Cost | 20 stamina from the sprint bar (five from full); refill pauses 0.5s after |
-| Cooldown | 0.7s start to start |
-| In the air | Not allowed (`AirDashes = 0`). Raising it extends every gap, so it is a feel test, not a free change |
-| Cancel | Jumping ends a dash early, so a dash off a ledge can be saved |
-| I-frames | **None here.** The combat layer reads `mode() == "DASH"` and decides |
+| | Hub | Expedition |
+|---|---|---|
+| Walk / sprint | 32 / ~50 studs/s | ~22 / ~34 studs/s |
+| Turn rate | 18 rad/s (snappy) | 10 rad/s (weight) |
+| Air control | 0.8 | 0.45 |
+| Jump / roll cost | free | 10 / 22 stamina |
+| Stamina bar | shows only when spent | always up |
 
-All numbers are in `GameConfig.Locomotion`.
+The owner asked for a middle ground between the hub's lightness and a Souls
+game's weight: that is the expedition column.
+
+**Stamina: a challenge, not a punishment.** One bar (100) for sprint, jump and
+roll now, and for attacks and blocks when weapons land.
+
+- Any action can **start** on any stamina above zero; its cost may empty the bar.
+- Refill: 30/s after a 0.45s pause from the last spend, so empty to full is ~3.3s.
+- Emptying the bar costs a longer 1.1s breather before refill starts.
+- A sprint-jump keeps sprint speed without paying for the airtime.
+- Holding sprint while standing still costs nothing.
+
+**Upgrades later.** `LocomotionCore.tuning(config, profile, upgrades)` takes a
+multiplier per field (for example `{ StaminaMax = 1.2 }`), so the Fate Tree's
+stamina and movement nodes will plug in without touching the rules. Health,
+damage and attack speed belong to the weapon and combat layers.
+
+**The bar** (`client/UI/Vitals.luau`) is house style: a panel-coloured track with
+the theme stroke, fully rounded, and a gold fill under the panel gradient that
+turns amber when low. A pale lag bar behind the fill holds the old value for a
+beat and then drains, so a spend reads as a chunk taken out. Health and weapon
+charge will be more rows from the same `bar` function when weapons land.
+
+## 2.5 Built: jump, roll and backstep
+
+**Jump.** One jump: **the double jump is gone** (owner, 2026-09-28). Height is
+unchanged from the old ground jump (50 studs/s launch), so every gap the kits were
+built around stays crossable. It has a 0.12s coyote window after walking off an
+edge, and a 0.12s buffer so a press just before landing fires on landing.
+
+**Roll** (Q, B on a gamepad, a Roll button on touch):
+
+| | Roll (a direction held) | Backstep (no direction) |
+|---|---|---|
+| Movement | 34 studs/s for 0.5s ≈ 17 studs, the held direction | 26 studs/s for 0.32s ≈ 8 studs, away from facing |
+| Cost | the profile's roll cost | 60% of it |
+| Recovery | 0.12s standstill after | same |
+| Invulnerable window | 0.04–0.34s in | 0.02–0.16s in |
+
+- A roll is a commitment: no jump, sprint or second roll until it recovers.
+- A roll pressed in the last 0.2s is buffered, so chained rolls come out clean without
+  mashing.
+- Ground only.
+- **The invulnerable window is declared, not applied.** `LocomotionCore.isInvulnerable`
+  answers it, and the combat layer will call it when it resolves hits (§7.6).
+  Nothing is invulnerable today.
+
+## 2.6 Built: lock-on (optional)
+
+The game plays fully without it. Middle mouse, R3, or a Lock button on touch
+takes the best target in view; press again to release.
+
+- **Targets:** anything tagged `Constants.NAMES.LOCK_ON_TAG`. The **spawner** adds
+  the tag (the `/showboss` preview does), so no enemy asset is edited. The aim point
+  is the target's bounding-box centre, measured once at lock time.
+- **Choice:** the target nearest the camera's look beats the one merely nearest the
+  player (`LockOnCore.pick`). Range 90 studs, within 60° of the camera's look, in sight.
+- **Drops:** past 120 studs, out of sight for 1.5s, or the target is gone.
+- **Camera:** behind and over the right shoulder (11 studs back, 2.4 right), looking
+  past the player toward the target. The aim is capped 9 studs above the player, so
+  a tall boss never pulls the camera into the sky. Walls pull the camera in, and
+  smoothing is frame-rate independent.
+- **Movement while locked:** the character strafes facing the target. Sprinting
+  turns back to face the run, as in Souls, and a roll goes the held direction.
+- **Marker:** a small gold diamond on the aim point.
+
+All numbers: `GameConfig.Locomotion` and `GameConfig.LockOn`.
 
 ---
 
@@ -178,8 +219,8 @@ should be considered in:
 
 | Ability | Cost to the rest of the game | Verdict |
 |---|---|---|
-| **Sprint-jump** (a longer jump out of a sprint) | None. Falls out of what exists | **Built** (§2.5) |
-| **Dash** (a short ground burst, i-frames later) | Small now, large once combat exists — a dodge is a combat ability wearing movement's clothes | **Movement half built** (§2.5); i-frames stay with the combat layer |
+| **Sprint-jump** (a longer jump out of a sprint) | None. Falls out of what exists | Sprint speed carries through a jump; no separate boost |
+| **Dodge** (a short ground burst, i-frames later) | Small now, large once combat exists — a dodge is a combat ability wearing movement's clothes | **Built as the roll** (§2.5); the i-frame window is declared, the combat layer applies it |
 | **Ledge grab / mantle** | Medium. Makes authored ledges load-bearing | After the first authored biome is walked |
 | **Glide** | Large. Every map's verticality becomes optional | Only as a rare item, never a player baseline |
 | **Wall run / climb** | Large. Every wall becomes a surface that must be authored for it | Probably never; it is a different genre |
@@ -187,8 +228,8 @@ should be considered in:
 | **Mount / vehicle** | Large. Breaks the hub traversal budget on purpose | Hub cosmetic at most |
 
 **The rule for adding any of them:** if the ability changes what a map must
-provide, it belongs to the world or to an item, not to the player. Sprint and
-double jump pass that test — every map is walkable without them.
+provide, it belongs to the world or to an item, not to the player. Sprint, the
+jump and the roll pass that test: every map is walkable without them.
 
 ---
 
@@ -212,28 +253,28 @@ nodes themselves, and a panel that draws whatever it finds.
 Weapons fight; the player moves (§0). A weapon move never writes a WalkSpeed or
 a velocity itself. It talks to movement through two things only:
 
-1. **It reads the mode.** `LocomotionController.mode()` gives GROUND, AIR, DASH
-   or LOCKED, so a type's base moveset can have a grounded swing, an air swing
-   and a dash attack without inventing its own "am I in the air" check.
+1. **It reads the mode.** `LocomotionController.mode()` gives GROUND, AIR,
+   ROLL or LOCKED, so a type's base moveset can have a grounded swing, an air
+   swing and a roll attack without inventing its own "am I in the air" check.
 2. **It locks movement for its own length.** `LocomotionController.lock(spec)`:
 
    | Field | Default | Use |
    |---|---|---|
    | `DurationSeconds` | 0 | the move's windup + active + recovery; **clamped to `MaxLockSeconds` (2.5s)** so a forgotten unlock still hands control back |
    | `SpeedMultiplier` | 0 | 0 roots (a Greatsword overhead), 0.4 lets a Dagger flurry drift, 1 leaves speed alone |
-   | `AllowJump` / `AllowDash` / `AllowSprint` | false | what the move lets the player cancel into |
+   | `AllowJump` / `AllowRoll` / `AllowSprint` | false | what the move lets the player cancel into |
    | `Source` | — | the move id, for the dev panel |
 
    A new lock replaces the old one (a combo is one move after another, never
    two at once). `unlock()` ends it early when the move is cancelled.
 
 **Cancels are the weapon's decision, expressed as data.** A move that lists
-`AllowDash = true` can be dodge-cancelled; one that does not is a commitment.
+`AllowRoll = true` can be roll-cancelled; one that does not is a commitment.
 That is where weapon types get their feel: light weapons allow cancels, heavy
 ones root and commit. The timing windows themselves come from the animation
 markers (`ENEMY_AI.md` §4), not from here.
 
-**What stays out of this layer, for good:** damage, hitboxes, i-frames, lunges
+**What stays out of this layer, for good:** damage, hitboxes, applying i-frames, lunges
 that deal damage, knockback. A lunge is a weapon move that locks with
 `SpeedMultiplier` and applies its own push through the combat layer when it
 opens (build spec §7.6).

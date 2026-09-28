@@ -1020,81 +1020,162 @@ local GameConfig = {
 		FieldOfView = 58,
 	},
 
-	-- === PLAYER ABILITIES, PHASE 1 ===
+	-- === PLAYER MOVEMENT ===
 	-- Movement only, and deliberately so. Owner-directed: combat, damage and
 	-- every offensive stat belong to the ITEM that grants them (a sword model
 	-- carries its own damage, effects, abilities and animations), never to the
-	-- player. Nothing here may grow a damage number.
+	-- player. Nothing here may grow a damage number (a test pins it).
 	--
-	-- These are client-applied, because Roblox movement is client-authoritative
-	-- by construction -- the server cannot make a character run without the
-	-- client agreeing. The server's defence is the same one it already uses for
-	-- rolls: it validates OUTCOMES (distance to the Fate Engine, expedition
-	-- eligibility) and never reads a client-supplied speed. See
-	-- docs/PLAYER_ABILITIES.md for the planned ladder beyond these two.
+	-- Every number the movement uses is here: the character runs on our own
+	-- ControllerManager, not the default Humanoid physics, so nothing about how
+	-- a player moves is Roblox's default (owner-directed 2026-09-28).
+	--
+	-- Client-applied, because Roblox movement is client-authoritative by
+	-- construction. The server validates OUTCOMES (distance to the Fate
+	-- Engine, expedition eligibility, and later hits) and never reads a
+	-- client-supplied speed. See docs/PLAYER_ABILITIES.md.
 	Locomotion = {
-		-- Base is GameConfig.Scale.WalkSpeed (32) -- the hub traversal budget
-		-- owns that number and this must not fork it.
-		SprintMultiplier = 1.55, -- 32 -> 49.6
-		SprintAccelerationSeconds = 0.25, -- ramp, so it reads as effort
-		SprintDecelerationSeconds = 0.4,
+		-- === PROFILES ===
+		-- The hub is for getting around; an expedition is for fighting. Same
+		-- rules, different weight. Speeds are multipliers on Scale.WalkSpeed
+		-- (the hub traversal budget owns that number and nothing forks it).
+		-- The controller picks EXPEDITION while the character stands inside a
+		-- loaded expedition stage, HUB otherwise.
+		Profiles = {
+			HUB = {
+				SpeedScale = 1, -- 32 studs/s
+				SprintMultiplier = 1.55, -- ~50
+				AccelerationSeconds = 0.2,
+				DecelerationSeconds = 0.3,
+				-- Radians/s the character turns toward where it is going.
+				-- High in the hub: nobody wants to wait for a turn in a lobby.
+				TurnRate = 18,
+				-- Moving in the air steers at this fraction of ground control.
+				AirControl = 0.8,
+				-- Stamina costs. The hub keeps sprint's cost (it is what makes
+				-- a sprint a decision) and waives the rest.
+				JumpStaminaCost = 0,
+				RollStaminaCost = 0,
+				SprintDrainPerSecond = 12.5,
+			},
+			EXPEDITION = {
+				-- The middle ground the owner asked for: heavier than the hub,
+				-- lighter than a Souls game. ~22 walking, ~34 sprinting.
+				SpeedScale = 0.7,
+				SprintMultiplier = 1.5,
+				AccelerationSeconds = 0.3,
+				DecelerationSeconds = 0.22,
+				TurnRate = 10,
+				AirControl = 0.45,
+				JumpStaminaCost = 10,
+				RollStaminaCost = 22,
+				SprintDrainPerSecond = 14,
+			},
+		},
 
-		-- Stamina exists to make sprinting a decision instead of a walk speed.
-		-- Full drain is 8s of sprint; a full refill is 6s of not sprinting.
+		-- === STAMINA ===
+		-- One bar for everything: sprint, jump, roll now; attacks and blocks
+		-- when weapons land. A challenge, not a punishment: any action can be
+		-- STARTED on any stamina above zero (the cost may take the bar to
+		-- zero), and running dry only costs a short breather.
 		StaminaMax = 100,
-		StaminaDrainPerSecond = 12.5,
-		StaminaRegenPerSecond = 16.6,
-		-- You cannot re-start a sprint the instant you run dry; you have to let
-		-- it breathe. Without this the player taps sprint forever at 0.
-		StaminaRegenDelaySeconds = 0.8,
+		StaminaRegenPerSecond = 30, -- empty to full in ~3.3s
+		-- Refill waits this long after any spend...
+		StaminaRegenDelaySeconds = 0.45,
+		-- ...and this long after the bar hits zero (the "exhausted" breather).
+		StaminaExhaustedDelaySeconds = 1.1,
+		-- A NEW sprint needs this much; a running sprint continues to zero.
 		StaminaSprintFloor = 5,
 
-		-- Roblox's own default JumpPower, restated here because two places
-		-- need to restore it (the loading screen releases the character it
-		-- froze, and the air jump multiplies it) and neither may guess.
-		JumpPower = 50,
-
-		-- === DOUBLE JUMP ===
-		-- Two jumps total (the ground jump plus one), which is the whole
-		-- feature. A third is not a tuning change -- it is a movement game.
-		AirJumps = 1,
-		AirJumpPower = 0.85, -- multiplier on the humanoid's JumpPower
-		-- A grace window after leaving a ledge in which the FIRST jump is
-		-- still the ground jump. Every platformer has this and nobody notices
-		-- it until it is missing.
+		-- === JUMP ===
+		-- One jump. The double jump is gone (owner, 2026-09-28). Height is
+		-- unchanged from the old ground jump, so every gap the kits were built
+		-- around stays crossable.
+		JumpPower = 50, -- launch speed, studs/s
+		-- A grace window after leaving a ledge in which the jump still counts
+		-- as a ground jump. Every platformer has this and nobody notices it
+		-- until it is missing.
 		CoyoteTimeSeconds = 0.12,
-		-- Stops one input frame from spending both jumps at once.
-		AirJumpCooldownSeconds = 0.2,
-		-- Fires a small ring effect under the feet on the air jump, so the
-		-- second jump is legible to the player and to anyone watching.
-		AirJumpEffect = true,
+		-- A jump pressed this long before landing fires on landing.
+		JumpBufferSeconds = 0.12,
 
-		-- === SPRINT-JUMP ===
-		-- A ground jump taken while sprinting goes a little higher and keeps a
-		-- little more than sprint speed until landing, so the jump is longer.
-		-- Small on purpose: every gap in every kit must stay crossable without it.
-		SprintJumpPower = 1.08, -- multiplier on JumpPower: 50 -> 54
-		SprintJumpCarry = 1.12, -- multiplier on sprint speed while airborne
-
-		-- === DASH ===
-		-- A short burst in the move direction (facing, if standing still). The
-		-- movement half only: invulnerability belongs to the combat layer,
-		-- which reads LocomotionCore.mode() == "DASH" (PLAYER_ABILITIES.md §4).
-		DashSpeed = 95, -- studs/s during the burst
-		DashDurationSeconds = 0.18, -- 95 x 0.18 ~= 17 studs
-		DashCooldownSeconds = 0.7, -- from the start of one dash to the next
-		DashStaminaCost = 20, -- five dashes from full; shares the sprint bar
-		-- Refill pauses briefly after a dash, so dash-spam drains the bar.
-		DashRegenPauseSeconds = 0.5,
-		-- Dashes allowed per airtime. 0 = ground only, as the design says;
-		-- raising it is a feel test, not a free change (it extends every gap).
-		AirDashes = 0,
-		DashEffect = true,
+		-- === ROLL ===
+		-- The Souls verb, adapted: a committed roll with a direction, or a
+		-- quick backstep when no direction is held. The movement half only:
+		-- the invulnerable window is DECLARED here and read by the combat
+		-- layer when it opens (RESERVED, docs/RESERVED.md).
+		RollDurationSeconds = 0.5,
+		RollSpeed = 34, -- studs/s -> ~17 studs
+		RollRecoverySeconds = 0.12, -- after the roll, before the next action
+		RollInvulnerableFrom = 0.04, -- seconds into the roll
+		RollInvulnerableTo = 0.34,
+		BackstepDurationSeconds = 0.32,
+		BackstepSpeed = 26, -- ~8 studs
+		BackstepInvulnerableFrom = 0.02,
+		BackstepInvulnerableTo = 0.16,
+		BackstepStaminaFraction = 0.6, -- of the profile's RollStaminaCost
+		-- A roll pressed this long before the current one ends comes out the
+		-- moment it can. Chaining rolls is the feel; mashing is not required.
+		RollBufferSeconds = 0.2,
+		RollEffect = true,
 
 		-- === WEAPON LOCK ===
 		-- The longest any weapon move may hold movement, however long it asks
 		-- for. A forgotten unlock still hands control back.
 		MaxLockSeconds = 2.5,
+
+		-- === CONTROLLER ===
+		-- How far below the hips the floor sensor looks; past this, airborne.
+		GroundSearchDistance = 1.5,
+		-- How often the controller re-checks HUB vs EXPEDITION.
+		ProfileCheckSeconds = 0.5,
+		-- After a jump the floor sensor still sees the floor for a frame or
+		-- two; the character counts as airborne for this long regardless.
+		JumpGroundIgnoreSeconds = 0.15,
+		-- Ground acceleration during a roll: near-instant, so it bursts.
+		RollAccelerationSeconds = 0.03,
+		-- Speeds the stock walk/run animations were authored at, so their
+		-- playback speed can follow the real speed without foot-sliding.
+		AnimWalkNominalSpeed = 16,
+		AnimRunNominalSpeed = 24,
+		-- Below this horizontal speed the character counts as standing.
+		AnimIdleSpeed = 0.75,
+		-- Crossfade between movement animations.
+		AnimFadeSeconds = 0.15,
+		-- A stage's footprint is grown by this many studs when deciding
+		-- whether the character stands inside it.
+		StageMarginStuds = 20,
+	},
+
+	-- === LOCK-ON ===
+	-- Optional: everything plays without it. A target is any model the game
+	-- tags with Constants.NAMES.LOCK_ON_TAG (the spawner tags it; the enemy
+	-- asset is never edited). Over-the-shoulder camera while locked.
+	LockOn = {
+		Range = 90, -- studs, to acquire
+		BreakRange = 120, -- studs, past this the lock drops
+		-- Candidates must sit within this angle of the camera's look.
+		MaxAngleRadians = math.rad(60),
+		-- Score = angle weight x angle + distance / Range; lowest wins, so the
+		-- thing you look at beats the thing that is merely close.
+		AngleWeight = 2,
+		-- Out of sight this long and the lock drops.
+		LostSightSeconds = 1.5,
+		-- The camera: behind and over the right shoulder.
+		CameraDistance = 11,
+		ShoulderOffset = 2.4, -- studs right
+		ShoulderHeight = 2.2, -- studs above the root
+		CameraLift = 1.6,
+		-- How far toward the target the camera looks (0 = at the player).
+		LookBias = 0.55,
+		-- A tall target is aimed at no higher than this above the player's
+		-- root, so a boss never pulls the camera into the sky.
+		MaxAimHeight = 9,
+		-- Seconds for the camera to close most of the gap; smooth, not floaty.
+		CameraSmoothSeconds = 0.08,
+		-- The camera never sits closer to the player than this after a wall
+		-- pulls it in.
+		CameraMinDistance = 3,
 	},
 
 	Debug = {

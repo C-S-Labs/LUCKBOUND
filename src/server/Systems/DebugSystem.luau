@@ -16,11 +16,13 @@
 -- mistake anyone can make; it should not by itself hand a stranger the ability
 -- to roll themselves a Mythic on a live server.
 
+local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
+local Constants = require(Root.Core.Constants)
 local GameConfig = require(Root.Core.GameConfig)
 local Net = require(Root.Core.Net)
 local Worlds = require(Root.Content.Worlds)
@@ -229,6 +231,8 @@ COMMANDS.showboss = function(player: Player, args: { string }): (boolean, string
 		- (select(1, model:GetBoundingBox()).Position.Y - size.Y / 2)
 	model:PivotTo(pivot + Vector3.new(0, bottom + (def.Height or 0), 0))
 	model:SetAttribute("LightningRig", def.Model)
+	-- The spawner makes it a lock-on target; the boss asset never knows.
+	CollectionService:AddTag(model, Constants.NAMES.LOCK_ON_TAG)
 	model.Parent = workspace
 	WeaponFX.apply(model, def.Model) -- web crackle Beams + charge switch, if this boss has a lightning rig
 	local strands = 0
