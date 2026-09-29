@@ -141,9 +141,21 @@ Serene · Mysterious · Isolated · Grand
 
 ### Look, as painted
 
-Tall, symmetrical, humanoid-angelic figure: a slender armoured white-silver body with gold filigree, a masked
-faceless head, a glowing blue energy core in the chest, a thin floating halo ring behind the head, and **six large
-feathered blade-wings** fanning from the back (three per side, long tapering feather-blades edged in blue light).
+Tall, strictly symmetrical, humanoid-angelic figure seen front-on, hovering rather than standing.
+
+- **Body:** slim, smooth, armoured white-silver plating with fine gold filigree and thin blue light-lines; a small
+  glowing blue **energy core** at the chest. The lower body tapers into long pointed feather-blades in place of
+  legs, so the whole figure is a tall spear-like silhouette.
+- **Head:** a smooth, masked, helm-like head with no face and only a faint blue celestial glow.
+- **Halo:** a thin gold-and-blue ring behind and above the head, etched with sacred-geometry lines (crossing
+  arcs and star points); it reads as both crown and shield.
+- **Wings:** the dominant shape. Large **blade-feathers** (pale silver-white, gold-edged, blue-lit at the seams)
+  fan out from the back in **two tiers**: an upper sweep rising and outward like a crown, and a lower sweep of
+  longer feathers spreading out and down, so the whole figure is a radial burst roughly as wide as it is tall.
+  The sheet states **6 independent wing segments**; how the painted feather tiers group into those six is not
+  shown and is an authoring decision.
+- **Colour and effect:** cold white, silver, gold and electric blue against the dark; light streaks along the
+  feather edges. The pose is calm, upright and regal.
 
 ### Build notes (interpretation, not on the sheet)
 
@@ -203,10 +215,21 @@ feathered blade-wings** fanning from the back (three per side, long tapering fea
 
 ### Look, as painted
 
-A tall, slender female-presenting figure with a pale silver-white face-covering helm, long trailing translucent
-lavender-white cape and skirts with gold trim and blue-violet energy wisps, a dark fitted bodice, and long
-flowing hair or veil. Twin slender blades in hand; additional blades float around her. She reads as **elegant and
-fluid**, the opposite silhouette to the Seraph's rigid symmetrical wings.
+A tall, slender, feminine figure caught mid-stride, three-quarter view, leaning forward with the cape streaming
+behind her. Asymmetrical and in motion, the opposite of the Seraph.
+
+- **Head:** a pale silver-white hood or helm that covers the face, with a long, smooth veil-like line down the
+  back of the head. No visible face.
+- **Body:** a dark, fitted, narrow bodice and legs, with gold trim and gold high-heeled boots; a thin, elegant
+  frame.
+- **Cape and skirts:** the dominant shape. A huge, layered, translucent **lavender-white cape** sweeps behind and
+  to one side in long flowing panels, edged in thin gold lines, shading to blue-violet, with sparkling
+  **blue-violet energy particles** trailing through it. It is many layers deep and reads as flowing water or
+  smoke rather than fabric.
+- **Weapons:** a long, slender blade held low in one hand, trailing a streak of light. The moveset panels show
+  twin blades plus floating blades circling her.
+- **Colour and effect:** pale lavender, violet and cool white with gold accents, on a dark, faintly reflective
+  floor. The pose is graceful and unhurried, menacing through elegance.
 
 ### Build notes (interpretation, not on the sheet)
 
