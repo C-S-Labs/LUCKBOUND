@@ -181,7 +181,7 @@ Tall, strictly symmetrical, humanoid-angelic figure seen front-on, hovering rath
 | Tier | Mythic: the game's first Mythic and its hardest boss at release |
 | Triangle count | ~140k on the sheet; **owner budget 200–250k** (§4.6) |
 | Primary focus | Mobility / Melee |
-| Weapons | Twin Blades + Floating Blades |
+| Weapons | Twin Blades + Floating Blades on the sheet; **now one long blade + Twin Echo afterimages + floating blades** (§5A.1) |
 
 ### Key features
 
@@ -372,22 +372,23 @@ final moveset is a build-time design task, listed in §6.
 
 | | Astral Seraph | Celestial Dancer |
 |---|---|---|
-| Phases | **2** | **2** |
-| Weapon palette | **The 6 feather wings** are its weapon: it attacks with them at range, and by diving, swooping and slashing, and more. | **Phase 1: the single long blade** as painted. **Phase 2: the weapon becomes a two-sword weapon.** |
+| Phases | **2, plus a Final Phase** (§5A.5) | **2, plus a Final Phase** (§5A.5) |
+| Weapon palette | **The 6 feather wings** are its weapon: it attacks with them at range, and by diving, swooping and slashing, and more. | **The single long blade** as painted, throughout. The "twin" look comes from **Twin Echo afterimages**, not a second held sword. Floating blades join in phase 2. |
 | Character | A grand boss | Moveset **choreographed to look like dancing** |
 
-> **FUTURE LEGENDARY WEAPONS (marked):** *both* Dancer weapons, **the single long blade and the twin swords**, are
-> to become **obtainable Legendary weapons** in the future. The Dancer's two forms are therefore designed as
-> real, player-usable weapons: a normal weapon model and moveset should be possible for each. Not built and not
-> yet in `WEAPONS.md` or any content file; when they are designed, add them there (`WEAPONS.md` owns weapon
-> design and rarity rules) and to `RESERVED.md` if declared before use. Whether the Seraph's wings also become a
-> weapon is **not stated**, so it is not assumed.
+> **Revised 2026-09-29:** an earlier draft had the Dancer's phase 2 turn her weapon into a real two-sword weapon.
+> **The owner dropped that** because the afterimage (Twin Echo) can carry the twin idea.
+
+> **FUTURE LEGENDARY WEAPON (marked):** the Dancer's **long blade** is to become an **obtainable Legendary weapon**
+> in the future, so it is designed as a real, player-usable weapon (a normal weapon model and moveset should be
+> possible), with the Twin Echo afterimage as a possible signature effect. The earlier "twin swords" weapon is
+> **no longer planned**. Not built and not yet in `WEAPONS.md` or any content file; when designed, add it there
+> (`WEAPONS.md` owns weapon design and rarity rules) and to `RESERVED.md` if declared before use. Whether the
+> Seraph's wings also become a weapon is **not stated**, so it is not assumed.
 
 Reconciliation notes:
-- The sheet's "Twin Blades + Floating Blades" is now sequenced: single blade first, two swords in phase 2.
-  The refinement's "Twin Echo" says the twin look can come from afterimages *without* two held swords; that is
-  compatible with phase 1 and is superseded by the real two-sword weapon in phase 2.
-- Floating blades stay on the sheet. The refinement places them in "a later phase" (phase 2 here).
+- The sheet's "Twin Blades + Floating Blades" becomes: one blade, Twin Echo afterimages, and floating blades.
+- Floating blades stay on the sheet; the final movesets (§5A.5) place them in phase 2.
 
 ### 5A.2 The Astral Seraph, refined
 
@@ -483,7 +484,7 @@ know what that step means").
 **Phase 2: a more complete dance, not rage.**
 - More complex choreography, more deceptive pauses, a more active cape, and chaining with little recovery, e.g.
   step → slash → stop → spin → disappear → reappear → glide → second slash, **while she still looks calm**.
-- Weapon becomes the **two-sword weapon** (§5A.1).
+- Weapon stays the single long blade; **Twin Echo** afterimages and floating blades carry the "twin" idea (§5A.1).
 - **Signature: The Grand Dance.** She moves to the arena centre, the cape expands, the music can briefly quiet, and
   she performs a long **repeatable** sequence the player can learn: (1) slow step, (2) forward glide,
   (3) horizontal slash, (4) long pause, (5) spin, (6) backward glide, (7) sudden forward acceleration,
@@ -519,13 +520,87 @@ The Seraph is **something celestial the player cannot comprehend**; the Dancer i
 can eventually learn to understand**. Neither should feel like a conventional fantasy boss with celestial
 decorations added.
 
+### 5A.5 Final movesets by phase (owner, 2026-09-29: locked)
+
+This is the owner's **final attack assignment**. It **resolves the earlier attack-list reconciliation**: the sheet's
+lists (§2, §3) and the refinement's (§5A.2, §5A.3) are now merged into the lists below. Where they differ, **these
+lists win.** The sheet's Wing Slash, Halo Blast, Divine Lance, Aerial Dive, Wing Barrage and Phase Shift, and the
+Dancer's Twin Slash, Lunar Dash, Phase Step, Celestial Rain, Aerial Rotation and Ending Blade, are **not in the
+final lists**; they may inform animation or variations but are not planned attacks unless the owner re-adds them.
+
+**Core distinction:** Seraph = increasingly complex **overlapping celestial structures**. Dancer = increasingly
+complex **choreography and movement chains**.
+
+#### Astral Seraph
+
+**Phase 1: The Celestial Guardian**
+
+| Attack | Description |
+|---|---|
+| Wing Sweep | Massive horizontal wing attack covering a wide area. |
+| Halo Beam | Sacred geometry activates on the halo before firing a focused beam. |
+| Descent | Rises high, folds its wings, then rapidly descends with a radial shockwave. |
+| Feather-Blade Barrage | Feather-blades separate and launch toward targeted areas. |
+| Wing Cloak | Wings fold around the body before explosively opening outward. |
+| Celestial Rotation | Rotates with extended wings, creating a large circular hazard. |
+
+**Phase 2: The Unbound Seraph**
+
+| Attack | Description |
+|---|---|
+| Detached Wings | Wing structures detach and independently attack around the arena. |
+| Independent Wing Sweeps | Detached wings perform separate sweeping attacks while the Seraph remains airborne. |
+| Halo/Body Rotation | Halo and body rotate independently, creating overlapping attack patterns. |
+| Expanded Feather-Blade Barrage | More feather-blades detach and attack from multiple directions. |
+| Celestial Rotation (expanded) | Detached wings participate in the rotation. |
+
+**Final Phase: Ascension**
+- All previous attacks, in significantly less predictable combinations.
+- Detached Wings become independent floating blades/rings.
+- Halo Beam and wing attacks can overlap.
+- Body, halo and wings move on separate timing, so the Seraph feels increasingly impossible to interpret.
+
+#### Celestial Dancer
+
+**Phase 1: The First Dance**
+
+| Attack | Description |
+|---|---|
+| Opening Waltz | Slow approach, rotation, ground-trailing blade, sudden forward slash. |
+| Veiled Step | Cape conceals her movement before she emerges with a strike. |
+| Crescent Waltz | Progressive spinning sequence ending in a large sweeping slash. |
+| Falling Star | Brief aerial rise followed by a diagonal descending attack. |
+| Silent Step | Momentary stillness followed by an extremely rapid movement/strike. |
+
+**Phase 2: The Grand Dance**
+
+| Attack | Description |
+|---|---|
+| Twin Echo | A blade strike leaves a delayed luminous echo that repeats the movement. |
+| Floating Blade Sequence | Additional blades orbit/follow the choreography and attack independently. |
+| Grand Dance | Extended multi-stage choreography combining movement, pauses, spins, glides and sudden acceleration. |
+| Veiled Step (more frequent) | Used as the transition between attacks. |
+| Crescent Waltz (expanded) | Longer chained sequences. |
+| Falling Star (chaining) | Can transition directly into another movement instead of recovering. |
+
+**Final Phase: The Unending Dance**
+- All previous attacks, chained together with minimal recovery.
+- Movement itself becomes part of the attack: glides become slashes, spins become area attacks, cape turns become
+  concealed attacks, landings become impact attacks.
+- Floating blades can continue previous attack arcs while the Dancer changes direction.
+- The Grand Dance becomes the centerpiece sequence, combining nearly every movement pattern.
+
+**Phase count:** the owner's earlier message said "2 phases" for each boss, and the final lists name three stages
+(Phase 1, Phase 2, Final Phase). This document reads the **Final Phase as the low-health escalation of phase 2**
+("2 phases, plus a Final Phase"). If the owner intends three full phases, only the label changes.
+
 ---
 
 ## 6. Open questions (to settle before building, not decided here)
 
 1. ~~How do the two bosses relate?~~ **Settled 2026-09-29:** one per run, 75% Seraph / 25% Dancer (provisional, §4.5).
-2. ~~How many phases?~~ **Settled: 2 each** (§5A.1). Still open: **which attacks belong to which phase**, and how
-   the sheet's attack lists and the refinement's (§5A) merge into one final moveset per boss.
+2. ~~Phases and attack assignment~~ **Settled** in §5A.5. Only open: confirm whether the Final Phase counts as a
+   third phase or as phase 2's low-health escalation.
 3. **How the boss room's staged moving parts work** (§4.7), for both bosses.
 4. **Mesh and import limits** for 175–250k-triangle bosses and a ~200k exterior (§4.6).
 5. **Minibosses and normal enemies** for the biome (§4.8), and what the exterior and interior side rooms hold.
