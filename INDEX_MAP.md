@@ -17,7 +17,7 @@ _291 text files, 406 binary assets. Regenerate with `python tools/gen_index.py`;
   - `AGENTS.md`: STEP 0 — read `INDEX.md` before anything else (mandatory):9, Keeping INDEX.md current:26, STEP 1 — then read these three, in this order:32, Token discipline (owner priority):68, BEFORE YOU FINISH — update the handoff:76, The prime directive:106, Hard rules:114, Boot order:125, Style:129, Git workflow — implementation vs integration:136, Verify before you merge:151, When you are unsure:171
 - `CLAUDE.md` (6) - CLAUDE.md · 2026-09-25
 - `GEMINI.md` (3) - GEMINI.md · 2026-09-25
-- `INDEX.md` (210) - LUCKBOUND — Repository Index · 2026-09-28
+- `INDEX.md` (210) - LUCKBOUND — Repository Index · 2026-09-29
   - `INDEX.md`: 1. Read order for a new session:22, 2. Top-level layout and where it lands in Roblox (`default.p:32, 3. Docs: what each one owns:56, 4. "I need to…" → where:82, 5. Asset pipelines (Blender 5.2, headless):113, 6. Conventions and workflow (quick reference; full rules in :169, 7. Exact locations: `INDEX_MAP.md`:193
 - `README.md` (74) - LUCKBOUND · 2026-09-27
   - `README.md`: Read these first:15, Quick start:36, Two rules that shape everything:49, What's built:61
@@ -363,7 +363,7 @@ _291 text files, 406 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/STATUS.md
 
-- `docs/STATUS.md` (289) - LUCKBOUND — Project Status · 2026-09-28
+- `docs/STATUS.md` (289) - LUCKBOUND — Project Status · 2026-09-29
   - `STATUS.md`: 1. Where the project stands:10, 2. Next — pick up here:56, 3. Decisions locked in:187, Why true RNG matters downstream:213, 4. Open items (one line each; details are in the archive und:226, 5. Environment:271, Startup:279
 
 ### docs/TESTING.md
@@ -383,8 +383,8 @@ _291 text files, 406 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (6483) - LUCKBOUND — Work Log · 2026-09-29
-  - `WORKLOG.md`: Template:16, Session N — YYYY-MM-DD — <short title>:19, Done:22, Decisions made:25, Stopped at:28, Next:31, Session 121 — 2026-09-29 — Astral Reach design scheme locked:37, Done:40, Decisions made:46, Stopped at:49, Next:52, Session 120 — 2026-09-29 — Consolidated PR: movement (#147) :59, Done:62, Decisions made:70, Next:73, Session 119 — 2026-09-28 — Free-camera turns curve; no foot :80, Done (owner):83, Next:93, Session 118 — 2026-09-28 — Final pre-PR fixes: smooth turns,:98, Done (owner's last notes before the PR):101, Next:111, Session 117 — 2026-09-28 — Instant facing (real fix); weapon:116, Done:119, Next:127, Session 116 — 2026-09-28 — Roll speed shape, 18 studs, insta:133, Done (owner):136, Next:146, Session 115 — 2026-09-28 — Steering out, roll blends out, sh:151, Done (owner):154, Next:164, Session 114 — 2026-09-28 — Roll polish: floor contact, dista:170, Done (owner: "everything else I really like"):173, Next:182, Session 113 — 2026-09-28 — Longer roll; the second batch of :188, Done:191, Next:200, Session 112 — 2026-09-28 — Roll queueing; generated roll ani:208, Done:211, Decisions made:223, Next:227, ... +600 more
+- `docs/WORKLOG.md` (6485) - LUCKBOUND — Work Log · 2026-09-29
+  - `WORKLOG.md`: Template:16, Session N — YYYY-MM-DD — <short title>:19, Done:22, Decisions made:25, Stopped at:28, Next:31, Session 121 — 2026-09-29 — Astral Reach design scheme locked:37, Done:40, Decisions made:48, Stopped at:51, Next:54, Session 120 — 2026-09-29 — Consolidated PR: movement (#147) :61, Done:64, Decisions made:72, Next:75, Session 119 — 2026-09-28 — Free-camera turns curve; no foot :82, Done (owner):85, Next:95, Session 118 — 2026-09-28 — Final pre-PR fixes: smooth turns,:100, Done (owner's last notes before the PR):103, Next:113, Session 117 — 2026-09-28 — Instant facing (real fix); weapon:118, Done:121, Next:129, Session 116 — 2026-09-28 — Roll speed shape, 18 studs, insta:135, Done (owner):138, Next:148, Session 115 — 2026-09-28 — Steering out, roll blends out, sh:153, Done (owner):156, Next:166, Session 114 — 2026-09-28 — Roll polish: floor contact, dista:172, Done (owner: "everything else I really like"):175, Next:184, Session 113 — 2026-09-28 — Longer roll; the second batch of :190, Done:193, Next:202, Session 112 — 2026-09-28 — Roll queueing; generated roll ani:210, Done:213, Decisions made:225, Next:229, ... +600 more
 
 ### docs/archive
 
@@ -393,11 +393,11 @@ _291 text files, 406 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/biomes
 
-- `docs/biomes/ASTRAL_REACH.md` (254) - Astral Reach — locked design scheme · new
-  - `ASTRAL_REACH.md`: 1. The world:27, World overview (from the sheet):34, Key features:40, Mood and atmosphere:49, Locations on the sheet:53, Environmental details (from the sheet):61, Environmental interaction (from the sheet):69, Look, as painted:77, Build notes (interpretation, not on the sheet):87, 2. Boss: The Astral Seraph:100, Key features:114, Moveset and attacks:121, Additional detail close-ups:132, Look, as painted:141, Build notes (interpretation, not on the sheet):147, 3. Boss: The Celestial Dancer:159, Key features:173, Moveset and attacks:181, Additional detail close-ups:194, Look, as painted:203, Build notes (interpretation, not on the sheet):210, 4. The pair:225, 5. Open questions (to settle before building, not decided he:234, 6. When it is built:249
+- `docs/biomes/ASTRAL_REACH.md` (350) - Astral Reach — locked design scheme · 2026-09-29
+  - `ASTRAL_REACH.md`: 1. The world:28, World overview (from the sheet):35, Key features:41, Mood and atmosphere:50, Locations on the sheet:54, Environmental details (from the sheet):62, Environmental interaction (from the sheet):70, Look, as painted:78, Build notes (interpretation, not on the sheet):88, 2. Boss: The Astral Seraph:101, Key features:115, Moveset and attacks:122, Additional detail close-ups:133, Look, as painted:142, Build notes (interpretation, not on the sheet):148, 3. Boss: The Celestial Dancer:160, Key features:174, Moveset and attacks:182, Additional detail close-ups:195, Look, as painted:204, Build notes (interpretation, not on the sheet):211, 4. Structure of a run (owner plan, 2026-09-29):226, 4.1 Exterior: small kit, random path to the palace:234, 4.2 Palace exterior: one giant set piece:246, 4.3 Palace interior: all-interior, generated on entry, massi:257, 4.4 Two fixed boss platforms:269, 4.5 Which boss spawns:278, 4.6 Budgets:286, 4.7 Boss room moving parts (brainstorm, not locked):301, 4.8 Enemies:313, 5. The pair:320, 6. Open questions (to settle before building, not decided he:329, 7. When it is built:345
 - `docs/biomes/ETHEREAL_SCAPE.md` (228) - Ethereal Scape — biome design schema · 2026-09-27
   - `ETHEREAL_SCAPE.md`: Direction: the hybrid (owner pick, 2026-09-27):28, The look — and how it differs from Sky Citadel:46, The palette — the original's real values:58, The connection vocabulary:79, Piece size:92, The kit — 41 pieces:102, Generation — build spec §7.7:117, The Sanctum — a structure that houses the boss:125, The atmosphere (props, `CHUNK_AUTHORING.md` convention 6):148, Validation — what `build_ethereal_scape_kit.py` refuses to e:183, Enemy roster:210, Next:215, Generation tuning (2026-09-27 walk):223
-- `docs/biomes/README.md` (109) - Biome design schemas · 2026-09-26
+- `docs/biomes/README.md` (109) - Biome design schemas · 2026-09-29
   - `README.md`: What a biome schema covers:24, Ambience — a world's mood is data:54, Status:85
 - `docs/biomes/SKY_CITADEL.md` (601) - Sky Citadel — biome design schema · 2026-09-25
   - `SKY_CITADEL.md`: The look:26, It must not look like Ethereal Scape:47, The palette:61, The set-dressing vocabulary:90, Lighting and ambience — sunrise above the cloud sea:183, The connection vocabulary:216, The kit — 36 pieces (22 delivered + a 14-piece expansion):241, Variety: five axes, mixed differently on every piece:335, The shape of a run: turns, one intersection, no dead ends:381, No opening onto nothing: the caps:405, Axes:449, How to change it:456, Hand pass:483, 2026-09-22 — the caps:485, 2026-09-22 — variety, turns, the intersection, and four more:494, 2026-09-22 — the kit expansion:505, 2026-09-22 — the first four:519, Risks before upload — read before importing to Studio:534, Render headless:576, Next:586

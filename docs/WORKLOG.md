@@ -41,6 +41,8 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 - Owner supplied a concept sheet for Astral Reach with both legendary bosses. Committed it as
   `docs/design/ASTRAL_REACH_SCHEME.webp` and wrote `docs/biomes/ASTRAL_REACH.md` (world, The Astral Seraph, The
   Celestial Dancer, movesets, close-ups, environmental interaction; sheet text kept faithful, build notes labelled).
+- Same session, owner added the run plan: small exterior kit, palace exterior and interior, two fixed boss platforms,
+  75/25 boss roll, revised triangle budgets. Recorded as §4 of the doc.
 - Linked it from `INDEX.md`, `docs/biomes/README.md`, `docs/STATUS.md`.
 
 ### Decisions made
