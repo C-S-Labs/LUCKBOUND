@@ -261,6 +261,11 @@ outside is the approach, the inside is the showcase.
   feature.
 - Showcase qualities: **randomness, uncanniness, otherworldliness, impossible size ratios**, all leading to the
   **grand palace boss room where the main spectacle begins**.
+- **Interior size: 20–36 chunks per run.** They must be **random, unique** (varied, not repeats of one look) and
+  **capture the true feeling of the biome plans**: grand, otherworldly, uncanny, impossible.
+- Build note: 20–36 is a `GameConfig` range, rolled by the generator's own `Random`. "Unique" implies an interior
+  kit large enough to fill 36 chunks without visible repetition, so kit size is a sizing decision for authoring
+  time; whether the two fixed boss platforms count toward the 20–36 is undecided.
 - **Layout rule: almost all pathways lead to the boss room**, not one branch among many. Exceptions: **a few small
   treasure rooms, minibosses and the like**.
 - Build note: an inverted dungeon graph (few dead ends, many routes to one goal). Confirm the interior blueprint
