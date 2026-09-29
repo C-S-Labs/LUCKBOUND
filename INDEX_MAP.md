@@ -45,8 +45,8 @@ _271 text files, 381 binary assets. Regenerate with `python tools/gen_index.py`;
 
 - `assets/source/enemies/README.md` (16) - Enemies (source) · 2026-09-24
 - `assets/source/enemies/_framework/EnemyDef.template.luau` (56) - EnemyDef template (STAGED: not wired into src/ until the owner approves the Studio integration). · 2026-09-24
-- `assets/source/enemies/_framework/anim_core.py` (154) - Animation core shared by every enemy action. An action file (<world>/anims/<enemy_id>/<Action>.py) only describes · 2026-09-28
-  - `anim_core.py`: reset_pose:21, rot:30, move_root:34, begin:37, key:42, _key_all:53, reset_keep_action:70, mark:79, _fcurves:81, end:83, _upd:113, rot_dir:114, reach:121, aim_weapon:128, world:134, _lerp:137, param_keys:140
+- `assets/source/enemies/_framework/anim_core.py` (155) - Animation core shared by every enemy action. An action file (<world>/anims/<enemy_id>/<Action>.py) only describes · 2026-09-28
+  - `anim_core.py`: reset_pose:21, rot:30, move_root:34, begin:37, key:43, _key_all:54, reset_keep_action:71, mark:80, _fcurves:82, end:84, _upd:114, rot_dir:115, reach:122, aim_weapon:129, world:135, _lerp:138, param_keys:141
 - `assets/source/enemies/_framework/bodies/_TEMPLATE.py` (25) - Body profile TEMPLATE: copy to <biome>/bodies/<name>.py (biome-specific) or _framework/bodies/<name>.py (shared), · 2026-09-24
   - `_TEMPLATE.py`: joint_report:11, fix_clip:21
 - `assets/source/enemies/_framework/bodies/creature.py` (8) - Body profile: generic creature (custom bone chains: wisps, drones, crawlers, eels, whales...). · 2026-09-24
@@ -55,8 +55,8 @@ _271 text files, 381 binary assets. Regenerate with `python tools/gen_index.py`;
   - `humanoid.py`: fix_clip:6
 - `assets/source/enemies/_framework/character_kit.py` (129) - Character kit: reusable HUMANOID dressing for basic enemies (and anything built with humanoid.py). · 2026-09-24
   - `character_kit.py`: body_bvh:10, on_surface_in:21, flow_line_in:28, on_surface:34, flow_line:42, shaped_limbs:51, layered_pauldron:64, gorget:74, faulds:79, cape:95, bracer:101, knee_cop:110, greave:117, chest_emblem:124
-- `assets/source/enemies/_framework/cloth_core.py` (336) - CLOTH_CHAINS core (framework): free-hanging cloth -- robes, skirts, capes, scarves, tassels -- for ANY enemy. · 2026-09-28
-  - `cloth_core.py`: _pfx:28, _obj:31, _islands:34, _wco:46, _seg_closest:49, _seg_seg:53, _bone_radius:70, _set_weights:85, _chain_weights:97, _add_bones:112, _skirt:125, _strips:171, build_cloth:223, _anchor_target:238, cloth_bake:241, _lerp_mat:310, _key_chains:314
+- `assets/source/enemies/_framework/cloth_core.py` (344) - CLOTH_CHAINS core (framework): free-hanging cloth -- robes, skirts, capes, scarves, tassels -- for ANY enemy. · 2026-09-28
+  - `cloth_core.py`: _pfx:28, _obj:31, _islands:34, _wco:46, _seg_closest:49, _seg_seg:53, _bone_radius:70, _set_weights:85, _chain_weights:97, _add_bones:112, _skirt:125, _strips:171, build_cloth:223, _anchor_target:238, cloth_bake:241, _lerp_mat:318, _key_chains:322
 - `assets/source/enemies/_framework/enemy_kit.py` (260) - Shared LUCKBOUND enemy-building kit (lofts, plates, blades, gems, cloth, skinning into PIECES). · 2026-09-24
   - `enemy_kit.py`: mat:7, scale_about:19, add_bone:24, _mesh_of:28, _add:44, TR:77, _ring:80, loft:90, arc_band:117, _frame:132, tube:143, blade:147, box:153, sph:166, gem:177, cloth:186, assemble:217
 - `assets/source/enemies/_framework/export.py` (98) - FBX export for Roblox Studio (one static mesh+rig file, then one file per action). · 2026-09-25
@@ -68,8 +68,8 @@ _271 text files, 381 binary assets. Regenerate with `python tools/gen_index.py`;
 - `assets/source/enemies/_framework/lineup.py` (28) - Build every enemy of a tier into ONE review .blend, side by side (each in its own collection, rigged). · 2026-09-24
 - `assets/source/enemies/_framework/pose_common.py` (32) - Body-agnostic pose helpers (every body type): collision counts between pieces and grounding. · 2026-09-24
   - `pose_common.py`: _upd:10, _tree:11, hits:17, ground:23
-- `assets/source/enemies/_framework/pose_fix.py` (320) - HUMANOID BODY PROFILE (loaded only for manifest body="humanoid"; see bodies/). Joint + grip rules for R15 figures: · 2026-09-28
-  - `pose_fix.py`: _upd:18, _rest_rot:19, haft:21, _dax:24, _palm:27, seat_point:34, grip_lance:37, _curl:44, wrap:64, _oppose:77, setup_hinges:98, hinge_errors:106, _ik:117, _bake:127, orient_hand:136, hand_on:146, clear_arm:185, _dir:193, joint_report:194, wield:216, abduction_penalty:241, joint_penalty:248, _wield_once:251, arm_to:274, _wield_once:300
+- `assets/source/enemies/_framework/pose_fix.py` (322) - HUMANOID BODY PROFILE (loaded only for manifest body="humanoid"; see bodies/). Joint + grip rules for R15 figures: · 2026-09-28
+  - `pose_fix.py`: _upd:18, _rest_rot:19, haft:21, _dax:24, _palm:27, seat_point:34, grip_lance:37, _curl:44, wrap:64, _oppose:77, setup_hinges:98, hinge_errors:106, _ik:117, _bake:127, orient_hand:136, hand_on:146, clear_arm:186, _dir:194, joint_report:195, wield:217, abduction_penalty:243, joint_penalty:250, _wield_once:253, arm_to:276, _wield_once:302
 - `assets/source/enemies/_framework/preview.py` (11) - Render chosen frames of the current action (for review). Env FRAMES="1,8,12,15,19,26,44" (default: every key). · 2026-09-24
   - `preview.py`: preview:5
 - `assets/source/enemies/_framework/render.py` (41) - Standard review renders for any enemy (EEVEE, AgX, 3-point light, pedestal, 2 m player reference block). · 2026-09-24
@@ -89,14 +89,14 @@ _271 text files, 381 binary assets. Regenerate with `python tools/gen_index.py`;
 - `assets/source/enemies/ethereal_scape/anims/temple_acolyte/Walk.py` (2) · 2026-09-28
 - `assets/source/enemies/ethereal_scape/anims/the_ascendant/Idle_Guard.py` (24) - Idle_Guard (120 f loop @ 30 fps): the Ascendant's HIGH GUARD, which every P1 attack starts from and returns to. · 2026-09-28
   - `Idle_Guard.py`: guard:7, pose:15
-- `assets/source/enemies/ethereal_scape/anims/the_ascendant/P1_CrescentReap.py` (35) - P1_CrescentReap (ASCENDANT_MOVESET P1 #1): 14 f tell, 5 f active, 37 f recovery. 60 f @ 30 fps. In place. · 2026-09-28
-  - `P1_CrescentReap.py`: K:11
+- `assets/source/enemies/ethereal_scape/anims/the_ascendant/P1_CrescentReap.py` (37) - P1_CrescentReap (ASCENDANT_MOVESET P1 #1): 14 f tell, 5 f active, 37 f recovery. 60 f @ 30 fps. In place. · 2026-09-28
+  - `P1_CrescentReap.py`: K:14
 - `assets/source/enemies/ethereal_scape/anims/the_ascendant/StrafeLeft.py` (3) - StrafeLeft (loop): circle to its LEFT around the player (walk_core side-step at the boss gait), staff carried. · 2026-09-28
 - `assets/source/enemies/ethereal_scape/anims/the_ascendant/StrafeRight.py` (3) - StrafeRight (loop): circle to its RIGHT around the player, staff carried. Mirror of StrafeLeft. · 2026-09-28
 - `assets/source/enemies/ethereal_scape/anims/the_ascendant/Walk.py` (9) - Walk (loop): walk_core's solved humanoid walk at the boss gait (ROLE_GAIT["boss"]: shorter, slower, weightier · 2026-09-28
   - `Walk.py`: carry:5
-- `assets/source/enemies/ethereal_scape/anims/the_ascendant/_asc_pose.py` (105) - Shared posing for every Ascendant action (exec'd at the top of each action file; run.py skips "_" files). · 2026-09-28
-  - `_asc_pose.py`: _left_on_staff:12, fix_clip:17, flat_foot:25, ground_body:30, roll_edge:40, stance:54, left_on_haft:71, curl_left:78, staff:84
+- `assets/source/enemies/ethereal_scape/anims/the_ascendant/_asc_pose.py` (126) - Shared posing for every Ascendant action (exec'd at the top of each action file; run.py skips "_" files). · 2026-09-28
+  - `_asc_pose.py`: _left_on_staff:12, fix_clip:17, flat_foot:25, ground_body:30, roll_edge:40, stance:54, left_on_haft:74, curl_left:99, staff:105
 - `assets/source/enemies/ethereal_scape/crystal_warden.py` (71) - LUCKBOUND - Ethereal Scape BASIC enemy: Crystal Warden (close range, heavy: brute). · 2026-09-28
 - `assets/source/enemies/ethereal_scape/manifest.py` (23) - Ethereal Scape enemy manifest: the ONE place that lists this biome's enemies for the framework runner. · 2026-09-28
 - `assets/source/enemies/ethereal_scape/meadow_stag.py` (85) - LUCKBOUND - Ethereal Scape BASIC enemy: Meadow Stag (close range: charger, packs of two/three). · 2026-09-28

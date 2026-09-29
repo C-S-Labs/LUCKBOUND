@@ -68,12 +68,33 @@ def stance(p):
     if p.get("head_turn"): rot("Head", y=p["head_turn"])
     _upd()
 
+ROLL_MAX = 70            # the palm stays within this of straight opposite the right palm (an axe grip)
+AXE_GRIP = -1            # the off hand's wrap: thumb toward the crescent, like the lower hand on an axe
+_LAST_ROLL = [0.0, True]   # [roll, next solve scans the full circle]
 def left_on_haft(u, lift=0.0, grip=None):
-    """Off hand on the haft at distance u from the right-hand grip (negative = toward the butt), palm coming from
-       the body side and a little below, so the elbow stays down."""
-    G0, GA = haft(); C = G0 + GA*u
-    away = (Vector((0, 0.1, 1.95)) - C); away.z -= 0.25 + lift
-    hand_on("Left", u, away, grip=grip)
+    """Off hand on the haft at distance u from the right-hand grip (negative = toward the butt), held like an axe:
+       its palm on the far side of the haft from the right palm, so the haft sits between the two palms, thumb
+       toward the crescent. The palm rolls round the haft within ROLL_MAX of straight opposite to wherever the
+       wrist is straightest, staying near the last frame's roll so the hand never flips."""
+    G0, GA = haft()
+    _, _, nR = _palm("Right")                          # right palm normal: points from the right palm into the haft
+    base = (nR - GA*nR.dot(GA)).normalized()           # the far side of the haft
+    chain = ["LeftUpperArm"] + [c.name for c in P["LeftUpperArm"].children_recursive]
+    keep = {n: P[n].matrix_basis.copy() for n in chain}
+    best = None
+    last = math.degrees(_LAST_ROLL[0])
+    cands = range(-ROLL_MAX, ROLL_MAX + 1, 10) if _LAST_ROLL[1] else [last + d for d in range(-30, 31, 10)]
+    for deg in [d for d in cands if abs(d) <= ROLL_MAX]:
+        for n in chain: P[n].matrix_basis = keep[n]
+        _upd(); roll = math.radians(deg)
+        hand_on("Left", u, Matrix.Rotation(roll, 3, GA) @ base, grip=AXE_GRIP)
+        wrist = math.degrees(_dir("LeftLowerArm").angle(_dir("LeftHand")))
+        dr = (math.degrees(roll - _LAST_ROLL[0]) + 180) % 360 - 180          # shortest way round the haft
+        sc = wrist + 0.5*hits("ArmLeft") + 0.3*abs(dr)
+        if best is None or sc < best[0]: best = (sc, roll)
+    for n in chain: P[n].matrix_basis = keep[n]
+    _upd(); _LAST_ROLL[0] = best[1]; _LAST_ROLL[1] = False
+    hand_on("Left", u, Matrix.Rotation(best[1], 3, GA) @ base, grip=AXE_GRIP)
 
 def curl_left(amount):
     """Crystal fingers of the free left hand: 0 = open, 1 = loosely curled (idle breathing / casting)."""

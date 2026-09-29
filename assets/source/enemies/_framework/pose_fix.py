@@ -152,9 +152,10 @@ def hand_on(side, u, away, grip=None):
     s = 1 if side == "Left" else -1
     ua = f"{side}UpperArm"
     sh = RW @ P[ua].head
-    rest = {b_: P[b_].matrix.copy() for b_ in (ua, f"{side}LowerArm", f"{side}Hand")}
-    def _restore():
-        for b_ in rest: P[b_].matrix = rest[b_]; _upd()
+    rest = {b_: P[b_].matrix_basis.copy() for b_ in (ua, f"{side}LowerArm", f"{side}Hand")}
+    def _restore():                                  # local transforms: one refresh instead of one per bone
+        for b_ in rest: P[b_].matrix_basis = rest[b_]
+        _upd()
     def _place(hd_w):
         """Solve the arm for fingers wrapping along hd_w; returns (score, pole) of the cleanest elbow."""
         wr = C - n_w*SEAT_N - hd_w*SEAT_D
@@ -222,9 +223,10 @@ def wield(D, C, side="Right", pole_off=(0.5, 0.35, -0.6)):
     ua, la = f"{side}UpperArm", f"{side}LowerArm"
     sh = RW @ P[ua].head
     chain = [ua] + [c.name for c in P[ua].children_recursive]      # arm + hand + fingers + weapon sockets
-    keep = {b_: P[b_].matrix.copy() for b_ in chain}
-    def _restore():
-        for b_ in chain: P[b_].matrix = keep[b_]; _upd()
+    keep = {b_: P[b_].matrix_basis.copy() for b_ in chain}
+    def _restore():                                  # local transforms: one refresh instead of one per bone
+        for b_ in chain: P[b_].matrix_basis = keep[b_]
+        _upd()
     best = None
     # natural elbow directions first: back + down, tucked near the ribs; flaring out is a last resort.
     # Sticky: the pole the previous solve used wins unless another is clearly better, so consecutive frames of an

@@ -38,6 +38,7 @@ def begin(name, length, loop=False, fps=30):
     sc = bpy.context.scene; sc.render.fps = fps; sc.frame_start, sc.frame_end = 1, length
     act = bpy.data.actions.new(name); rig.animation_data_create(); rig.animation_data.action = act
     _ACT.update(name=name, act=act, length=length, loop=loop, keys=[])
+    if "_LAST_ROLL" in G: G["_LAST_ROLL"][1] = True           # each action finds its own starting grip roll
     return act
 def key(frame, pose_fn):
     """Reset to rest, run pose_fn, then key EVERY pose bone (full keys keep Studio playback exact)."""
