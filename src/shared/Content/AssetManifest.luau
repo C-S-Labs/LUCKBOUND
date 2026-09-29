@@ -94,7 +94,7 @@ local ENTRIES: { [string]: AssetEntry } = {
 		Notes = "Fern Hollow. COMBAT, opens N+S. 74.6 studs tall.",
 	},
 	VV_CHUNK_PATH_CLIFF_PASSAGE = {
-		AssetId = "rbxassetid://111001954550592",
+		AssetId = "rbxassetid://108374847811684",
 		Status = "UPLOADED",
 		Source = "assets/rbxm/chunks/verdant_valley/VV_STRUCTURE.rbxmx",
 		Notes = "Cliff Passage. PATH, opens E+W. 99.4 studs tall.",

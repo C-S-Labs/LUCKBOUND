@@ -102,6 +102,56 @@ it has.
 
 This file is the short version of the rules that protect the architecture.
 
+
+### Rapid iteration and testing (owner priority)
+
+During active development, optimize for rapid handoff to the owner's manual
+Studio, Blender, or visual test.
+
+After implementing an iteration, run only inexpensive checks needed to establish
+that the result is ready for owner testing: syntax/parse checks, expected output
+files, basic counts/transforms, missing references, malformed output, and small
+targeted probes needed to verify a new mechanism.
+
+Do not automatically perform substantial validation that duplicates a test the
+owner is about to perform. In particular, do not automatically run exhaustive
+raycast sweeps, automated character traversal, multi-rotation Studio tests,
+large collision-validation matrices, broad regression suites, or repeated
+validation passes when the owner will immediately test the same behavior
+manually.
+
+Prefer:
+
+    implement → cheap sanity checks → owner test → targeted iteration
+
+over:
+
+    implement → extensive offline validation → automated Studio/Blender
+    validation → owner repeats the same test
+
+Deeper automated validation is appropriate when:
+- the owner explicitly requests it;
+- it is necessary to diagnose a reported failure;
+- it measures something the owner's manual test cannot reasonably establish;
+- the implementation has passed the owner's initial test and is ready for
+  final validation, broad rollout, merge, or release.
+
+If a substantial additional test would be useful but is not required yet,
+briefly state what it would establish and wait for approval.
+
+Do not interpret this rule as permission to skip cheap sanity checks or required
+CI/merge checks.
+
+### Scope discipline
+
+Do not expand a narrowly requested task into a broader investigation, cleanup,
+refactor, documentation pass, or validation campaign unless that work is
+required to complete the task.
+
+If an unrelated issue is discovered, report it separately instead of
+investigating or fixing it automatically unless it blocks the current task.
+
+
 ## The prime directive
 
 > **Systems are reusable. Content is data.**

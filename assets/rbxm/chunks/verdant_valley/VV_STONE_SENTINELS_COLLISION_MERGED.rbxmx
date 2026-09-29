@@ -1,5 +1,6 @@
 <roblox xmlns:xmime="http://www.w3.org/2005/05/xmlmime" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.roblox.com/roblox.xsd" version="4">
 	<Meta name="ExplicitAutoJoints">true</Meta>
+	<!-- STONE_SURFACE_LIFT_STUDS=0.30; merged geometry and MeshIds unchanged -->
 	<External>null</External>
 	<External>nil</External>
 	<Item class="Model" referent="RBX6852DF303D0845EB86E2FA0C04BF9B8E">
@@ -107,7 +108,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>120</X>
-					<Y>-1.04430389</Y>
+					<Y>-0.74430389</Y>
 					<Z>16</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -144,7 +145,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-120</X>
-					<Y>1.04430246</Y>
+					<Y>0.74430246</Y>
 					<Z>-16</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -243,7 +244,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-24</X>
-					<Y>-0.265991211</Y>
+					<Y>0.03400879</Y>
 					<Z>56</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -280,7 +281,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>24</X>
-					<Y>0.265989661</Y>
+					<Y>-0.03401034</Y>
 					<Z>-56</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -379,7 +380,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-24</X>
-					<Y>0.0141181946</Y>
+					<Y>0.31411819</Y>
 					<Z>72</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -416,7 +417,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>24</X>
-					<Y>-0.0141197145</Y>
+					<Y>-0.31411971</Y>
 					<Z>-72</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -515,7 +516,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-24</X>
-					<Y>0.505027771</Y>
+					<Y>0.80502777</Y>
 					<Z>88</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -552,7 +553,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>24</X>
-					<Y>-0.505029321</Y>
+					<Y>-0.80502932</Y>
 					<Z>-88</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -651,7 +652,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-24</X>
-					<Y>0.966896057</Y>
+					<Y>1.26689606</Y>
 					<Z>104</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -688,7 +689,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>24</X>
-					<Y>-0.966897607</Y>
+					<Y>-1.26689761</Y>
 					<Z>-104</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -787,7 +788,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-24</X>
-					<Y>1.24635696</Y>
+					<Y>1.54635696</Y>
 					<Z>120</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -824,7 +825,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>24</X>
-					<Y>-1.24635851</Y>
+					<Y>-1.54635851</Y>
 					<Z>-120</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -923,7 +924,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-24</X>
-					<Y>-0.265151978</Y>
+					<Y>0.03484802</Y>
 					<Z>-56</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -960,7 +961,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>24</X>
-					<Y>0.265150428</Y>
+					<Y>-0.03484957</Y>
 					<Z>56</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -1059,7 +1060,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-24</X>
-					<Y>0.0104827881</Y>
+					<Y>0.31048279</Y>
 					<Z>-72</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -1096,7 +1097,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>24</X>
-					<Y>-0.010484308</Y>
+					<Y>-0.31048431</Y>
 					<Z>72</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -1195,7 +1196,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-24</X>
-					<Y>0.496002197</Y>
+					<Y>0.7960022</Y>
 					<Z>-88</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -1232,7 +1233,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>24</X>
-					<Y>-0.496003717</Y>
+					<Y>-0.79600372</Y>
 					<Z>88</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -1331,7 +1332,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-24</X>
-					<Y>0.959327698</Y>
+					<Y>1.2593277</Y>
 					<Z>-104</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -1368,7 +1369,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>24</X>
-					<Y>-0.959329247</Y>
+					<Y>-1.25932925</Y>
 					<Z>104</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -1467,7 +1468,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-24</X>
-					<Y>1.25449753</Y>
+					<Y>1.55449753</Y>
 					<Z>-120</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -1504,7 +1505,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>24</X>
-					<Y>-1.25449908</Y>
+					<Y>-1.55449908</Y>
 					<Z>120</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -1603,7 +1604,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-39.9999924</X>
-					<Y>0.0493240356</Y>
+					<Y>0.34932404</Y>
 					<Z>56</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -1640,7 +1641,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>40</X>
-					<Y>-0.0493255705</Y>
+					<Y>-0.34932557</Y>
 					<Z>-56</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -1739,7 +1740,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-39.9999924</X>
-					<Y>0.526542664</Y>
+					<Y>0.82654266</Y>
 					<Z>72</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -1776,7 +1777,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>40</X>
-					<Y>-0.526544213</Y>
+					<Y>-0.82654421</Y>
 					<Z>-72</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -1875,7 +1876,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-39.9999924</X>
-					<Y>1.29702759</Y>
+					<Y>1.59702759</Y>
 					<Z>88</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -1912,7 +1913,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>40</X>
-					<Y>-1.29702914</Y>
+					<Y>-1.59702914</Y>
 					<Z>-88</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -2011,7 +2012,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-39.9999924</X>
-					<Y>2.20546722</Y>
+					<Y>2.50546722</Y>
 					<Z>104</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -2048,7 +2049,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>40</X>
-					<Y>-2.20546889</Y>
+					<Y>-2.50546889</Y>
 					<Z>-104</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -2147,7 +2148,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-34</X>
-					<Y>3.31138611</Y>
+					<Y>3.61138611</Y>
 					<Z>120</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -2184,7 +2185,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>34</X>
-					<Y>-3.31138754</Y>
+					<Y>-3.61138754</Y>
 					<Z>-120</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -2283,7 +2284,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-39.9999924</X>
-					<Y>0.518287659</Y>
+					<Y>0.81828766</Y>
 					<Z>-24</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -2320,7 +2321,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>40</X>
-					<Y>-0.518289149</Y>
+					<Y>-0.81828915</Y>
 					<Z>24</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -2419,7 +2420,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-39.9999924</X>
-					<Y>0.0346641541</Y>
+					<Y>0.33466415</Y>
 					<Z>-56</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -2456,7 +2457,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>40</X>
-					<Y>-0.0346656889</Y>
+					<Y>-0.33466569</Y>
 					<Z>56</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -2555,7 +2556,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-39.9999924</X>
-					<Y>0.461460114</Y>
+					<Y>0.76146011</Y>
 					<Z>-72</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -2592,7 +2593,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>40</X>
-					<Y>-0.461461633</Y>
+					<Y>-0.76146163</Y>
 					<Z>72</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -2691,7 +2692,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-39.9999924</X>
-					<Y>1.26763535</Y>
+					<Y>1.56763535</Y>
 					<Z>-88</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -2728,7 +2729,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>40</X>
-					<Y>-1.2676369</Y>
+					<Y>-1.5676369</Y>
 					<Z>88</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -2827,7 +2828,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-39.9999924</X>
-					<Y>2.16330719</Y>
+					<Y>2.46330719</Y>
 					<Z>-104</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -2864,7 +2865,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>40</X>
-					<Y>-2.16330886</Y>
+					<Y>-2.46330886</Y>
 					<Z>104</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -2963,7 +2964,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-35.9999924</X>
-					<Y>3.30381775</Y>
+					<Y>3.60381775</Y>
 					<Z>-120</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -3000,7 +3001,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>36</X>
-					<Y>-3.30381918</Y>
+					<Y>-3.60381918</Y>
 					<Z>120</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -3099,7 +3100,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-55.9999924</X>
-					<Y>0.206245422</Y>
+					<Y>0.50624542</Y>
 					<Z>40</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -3136,7 +3137,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>56</X>
-					<Y>-0.206246942</Y>
+					<Y>-0.50624694</Y>
 					<Z>-40</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -3235,7 +3236,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-55.9999924</X>
-					<Y>-0.428321838</Y>
+					<Y>-0.12832184</Y>
 					<Z>56</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -3272,7 +3273,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>56</X>
-					<Y>0.428320289</Y>
+					<Y>0.12832029</Y>
 					<Z>-56</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -3371,7 +3372,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-55.9999924</X>
-					<Y>-0.574180603</Y>
+					<Y>-0.2741806</Y>
 					<Z>72</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -3408,7 +3409,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>56</X>
-					<Y>0.574179113</Y>
+					<Y>0.27417911</Y>
 					<Z>-72</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -3507,7 +3508,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-55.9999924</X>
-					<Y>-0.397125244</Y>
+					<Y>-0.09712524</Y>
 					<Z>88</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -3544,7 +3545,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>56</X>
-					<Y>0.397123754</Y>
+					<Y>0.09712375</Y>
 					<Z>-88</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -3643,7 +3644,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-55.9999924</X>
-					<Y>-0.320949554</Y>
+					<Y>-0.02094955</Y>
 					<Z>98</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -3680,7 +3681,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>56</X>
-					<Y>0.320948064</Y>
+					<Y>0.02094806</Y>
 					<Z>-98</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -3779,7 +3780,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-55.9999924</X>
-					<Y>0.207481384</Y>
+					<Y>0.50748138</Y>
 					<Z>-40</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -3816,7 +3817,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>56</X>
-					<Y>-0.207482904</Y>
+					<Y>-0.5074829</Y>
 					<Z>40</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -3915,7 +3916,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-55.9999924</X>
-					<Y>-0.42779541</Y>
+					<Y>-0.12779541</Y>
 					<Z>-56</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -3952,7 +3953,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>56</X>
-					<Y>0.42779386</Y>
+					<Y>0.12779386</Y>
 					<Z>56</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -4051,7 +4052,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-55.9999924</X>
-					<Y>-0.580047607</Y>
+					<Y>-0.28004761</Y>
 					<Z>-72</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -4088,7 +4089,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>56</X>
-					<Y>0.580046117</Y>
+					<Y>0.28004612</Y>
 					<Z>72</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -4187,7 +4188,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-55.9999924</X>
-					<Y>-0.423324585</Y>
+					<Y>-0.12332458</Y>
 					<Z>-88</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -4224,7 +4225,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>56</X>
-					<Y>0.423323095</Y>
+					<Y>0.12332309</Y>
 					<Z>88</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -4323,7 +4324,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-55.9999924</X>
-					<Y>-0.332862854</Y>
+					<Y>-0.03286285</Y>
 					<Z>-98</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -4360,7 +4361,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>56</X>
-					<Y>0.332861364</Y>
+					<Y>0.03286136</Y>
 					<Z>98</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -4459,7 +4460,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-71.9999924</X>
-					<Y>-1.71869659</Y>
+					<Y>-1.41869659</Y>
 					<Z>88</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -4496,7 +4497,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>72</X>
-					<Y>1.71869516</Y>
+					<Y>1.41869516</Y>
 					<Z>-88</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -4595,7 +4596,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-71.9999924</X>
-					<Y>-1.94152832</Y>
+					<Y>-1.64152832</Y>
 					<Z>98</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -4632,7 +4633,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>72</X>
-					<Y>1.94152689</Y>
+					<Y>1.64152689</Y>
 					<Z>-98</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -4731,7 +4732,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-71.9999924</X>
-					<Y>-1.6859169</Y>
+					<Y>-1.3859169</Y>
 					<Z>-88</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -4768,7 +4769,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>72</X>
-					<Y>1.68591547</Y>
+					<Y>1.38591547</Y>
 					<Z>88</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -4867,7 +4868,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-71.9999924</X>
-					<Y>-1.88801575</Y>
+					<Y>-1.58801575</Y>
 					<Z>-98</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -4904,7 +4905,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>72</X>
-					<Y>1.88801432</Y>
+					<Y>1.58801432</Y>
 					<Z>98</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -5003,7 +5004,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-87.9999924</X>
-					<Y>0.627944946</Y>
+					<Y>0.92794495</Y>
 					<Z>24</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -5040,7 +5041,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>88</X>
-					<Y>-0.627946436</Y>
+					<Y>-0.92794644</Y>
 					<Z>-24</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -5139,7 +5140,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-85.9999924</X>
-					<Y>0.158432007</Y>
+					<Y>0.45843201</Y>
 					<Z>40</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -5176,7 +5177,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>86</X>
-					<Y>-0.158433527</Y>
+					<Y>-0.45843353</Y>
 					<Z>-40</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -5275,7 +5276,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-87.9999924</X>
-					<Y>-0.497154236</Y>
+					<Y>-0.19715424</Y>
 					<Z>56</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -5312,7 +5313,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>88</X>
-					<Y>0.497152746</Y>
+					<Y>0.19715275</Y>
 					<Z>-56</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -5411,7 +5412,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-87.9999924</X>
-					<Y>-1.14761353</Y>
+					<Y>-0.84761353</Y>
 					<Z>72</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -5448,7 +5449,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>88</X>
-					<Y>1.14761209</Y>
+					<Y>0.84761209</Y>
 					<Z>-72</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -5547,7 +5548,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-87.9999924</X>
-					<Y>-1.63611603</Y>
+					<Y>-1.33611603</Y>
 					<Z>88</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -5584,7 +5585,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>88</X>
-					<Y>1.6361146</Y>
+					<Y>1.3361146</Y>
 					<Z>-88</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -5683,7 +5684,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-81.9999924</X>
-					<Y>-1.97636414</Y>
+					<Y>-1.67636414</Y>
 					<Z>98</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -5720,7 +5721,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>82</X>
-					<Y>1.97636271</Y>
+					<Y>1.67636271</Y>
 					<Z>-98</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -5819,7 +5820,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-87.9999924</X>
-					<Y>-1.64154816</Y>
+					<Y>-1.34154816</Y>
 					<Z>-88</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -5856,7 +5857,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>88</X>
-					<Y>1.64154673</Y>
+					<Y>1.34154673</Y>
 					<Z>88</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -5955,7 +5956,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-83.9999924</X>
-					<Y>-1.94764328</Y>
+					<Y>-1.64764328</Y>
 					<Z>-98</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -5992,7 +5993,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>84</X>
-					<Y>1.94764185</Y>
+					<Y>1.64764185</Y>
 					<Z>98</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -6091,7 +6092,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-103.999992</X>
-					<Y>0.416309357</Y>
+					<Y>0.71630936</Y>
 					<Z>22</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -6128,7 +6129,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>104</X>
-					<Y>-0.416310877</Y>
+					<Y>-0.71631088</Y>
 					<Z>-22</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -6227,7 +6228,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-97.9999924</X>
-					<Y>-1.06217194</Y>
+					<Y>-0.76217194</Y>
 					<Z>72</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -6264,7 +6265,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>98</X>
-					<Y>1.06217051</Y>
+					<Y>0.76217051</Y>
 					<Z>-72</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -6363,7 +6364,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-103.999992</X>
-					<Y>-0.948204041</Y>
+					<Y>-0.64820404</Y>
 					<Z>-70</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -6400,7 +6401,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>104</X>
-					<Y>0.94820255</Y>
+					<Y>0.64820255</Y>
 					<Z>70</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -6499,7 +6500,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-119.999992</X>
-					<Y>0.0450439453</Y>
+					<Y>0.34504395</Y>
 					<Z>8</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -6536,7 +6537,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>120</X>
-					<Y>-0.0450454652</Y>
+					<Y>-0.34504547</Y>
 					<Z>-8</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -6635,7 +6636,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-113.999992</X>
-					<Y>0.174274445</Y>
+					<Y>0.47427444</Y>
 					<Z>18</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -6672,7 +6673,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>114</X>
-					<Y>-0.174275964</Y>
+					<Y>-0.47427596</Y>
 					<Z>-18</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -6771,7 +6772,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-119.999992</X>
-					<Y>-0.505001068</Y>
+					<Y>-0.20500107</Y>
 					<Z>-56</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -6808,7 +6809,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>120</X>
-					<Y>0.504999518</Y>
+					<Y>0.20499952</Y>
 					<Z>56</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -6907,7 +6908,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-113.999992</X>
-					<Y>-0.72819519</Y>
+					<Y>-0.42819519</Y>
 					<Z>-66</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -6944,7 +6945,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>114</X>
-					<Y>0.728193641</Y>
+					<Y>0.42819364</Y>
 					<Z>66</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -7043,7 +7044,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>24</X>
-					<Y>-0.908985138</Y>
+					<Y>-0.60898514</Y>
 					<Z>40</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -7080,7 +7081,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-24</X>
-					<Y>0.908983648</Y>
+					<Y>0.60898365</Y>
 					<Z>-40</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -7179,7 +7180,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>24</X>
-					<Y>-0.111953735</Y>
+					<Y>0.18804626</Y>
 					<Z>56</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -7216,7 +7217,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-24</X>
-					<Y>0.111952215</Y>
+					<Y>-0.18804778</Y>
 					<Z>-56</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -7315,7 +7316,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>24</X>
-					<Y>0.546081543</Y>
+					<Y>0.84608154</Y>
 					<Z>72</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -7352,7 +7353,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-24</X>
-					<Y>-0.546083093</Y>
+					<Y>-0.84608309</Y>
 					<Z>-72</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -7451,7 +7452,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>24</X>
-					<Y>0.976089478</Y>
+					<Y>1.27608948</Y>
 					<Z>88</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -7488,7 +7489,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-24</X>
-					<Y>-0.976091027</Y>
+					<Y>-1.27609103</Y>
 					<Z>-88</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -7587,7 +7588,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>24</X>
-					<Y>1.17391205</Y>
+					<Y>1.47391205</Y>
 					<Z>104</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -7624,7 +7625,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-24</X>
-					<Y>-1.1739136</Y>
+					<Y>-1.4739136</Y>
 					<Z>-104</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -7723,7 +7724,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>24</X>
-					<Y>1.27863693</Y>
+					<Y>1.57863693</Y>
 					<Z>120</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -7760,7 +7761,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-24</X>
-					<Y>-1.27863848</Y>
+					<Y>-1.57863848</Y>
 					<Z>-120</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -7859,7 +7860,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>24</X>
-					<Y>-0.907970428</Y>
+					<Y>-0.60797043</Y>
 					<Z>-40</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -7896,7 +7897,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-24</X>
-					<Y>0.907968938</Y>
+					<Y>0.60796894</Y>
 					<Z>40</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -7995,7 +7996,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>24</X>
-					<Y>-0.113105774</Y>
+					<Y>0.18689423</Y>
 					<Z>-56</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -8032,7 +8033,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-24</X>
-					<Y>0.113104254</Y>
+					<Y>-0.18689575</Y>
 					<Z>56</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -8131,7 +8132,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>24</X>
-					<Y>0.546512604</Y>
+					<Y>0.8465126</Y>
 					<Z>-72</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -8168,7 +8169,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-24</X>
-					<Y>-0.546514153</Y>
+					<Y>-0.84651415</Y>
 					<Z>72</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -8267,7 +8268,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>24</X>
-					<Y>0.982467651</Y>
+					<Y>1.28246765</Y>
 					<Z>-88</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -8304,7 +8305,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-24</X>
-					<Y>-0.982469201</Y>
+					<Y>-1.2824692</Y>
 					<Z>88</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -8403,7 +8404,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>24</X>
-					<Y>1.18671417</Y>
+					<Y>1.48671417</Y>
 					<Z>-104</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -8440,7 +8441,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-24</X>
-					<Y>-1.18671572</Y>
+					<Y>-1.48671572</Y>
 					<Z>104</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -8539,7 +8540,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>24</X>
-					<Y>1.27886963</Y>
+					<Y>1.57886963</Y>
 					<Z>-120</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -8576,7 +8577,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-24</X>
-					<Y>-1.27887118</Y>
+					<Y>-1.57887118</Y>
 					<Z>120</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -8675,7 +8676,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>40</X>
-					<Y>1.14606094</Y>
+					<Y>1.44606094</Y>
 					<Z>72</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -8712,7 +8713,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-40</X>
-					<Y>-1.14606249</Y>
+					<Y>-1.44606249</Y>
 					<Z>-72</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -8811,7 +8812,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>40</X>
-					<Y>2.23363876</Y>
+					<Y>2.53363876</Y>
 					<Z>88</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -8848,7 +8849,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-40</X>
-					<Y>-2.23364019</Y>
+					<Y>-2.53364019</Y>
 					<Z>-88</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -8947,7 +8948,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>40</X>
-					<Y>2.96960449</Y>
+					<Y>3.26960449</Y>
 					<Z>104</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -8984,7 +8985,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-40</X>
-					<Y>-2.96960592</Y>
+					<Y>-3.26960592</Y>
 					<Z>-104</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -9083,7 +9084,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>36</X>
-					<Y>3.37778091</Y>
+					<Y>3.67778091</Y>
 					<Z>120</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -9120,7 +9121,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-36</X>
-					<Y>-3.37778234</Y>
+					<Y>-3.67778234</Y>
 					<Z>-120</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -9219,7 +9220,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>40</X>
-					<Y>1.18645859</Y>
+					<Y>1.48645859</Y>
 					<Z>-72</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -9256,7 +9257,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-40</X>
-					<Y>-1.18646014</Y>
+					<Y>-1.48646014</Y>
 					<Z>72</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -9355,7 +9356,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>40</X>
-					<Y>2.23489761</Y>
+					<Y>2.53489761</Y>
 					<Z>-88</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -9392,7 +9393,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-40</X>
-					<Y>-2.23489904</Y>
+					<Y>-2.53489904</Y>
 					<Z>88</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -9491,7 +9492,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>40</X>
-					<Y>2.99020004</Y>
+					<Y>3.29020004</Y>
 					<Z>-104</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -9528,7 +9529,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-40</X>
-					<Y>-2.99020147</Y>
+					<Y>-3.29020147</Y>
 					<Z>104</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -9627,7 +9628,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>34</X>
-					<Y>3.40946198</Y>
+					<Y>3.70946198</Y>
 					<Z>-120</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -9664,7 +9665,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-34</X>
-					<Y>-3.40946341</Y>
+					<Y>-3.70946341</Y>
 					<Z>120</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -9763,7 +9764,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>56</X>
-					<Y>0.69323349</Y>
+					<Y>0.99323349</Y>
 					<Z>72</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -9800,7 +9801,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-56</X>
-					<Y>-0.69323504</Y>
+					<Y>-0.99323504</Y>
 					<Z>-72</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -9899,7 +9900,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>56</X>
-					<Y>1.47198105</Y>
+					<Y>1.77198105</Y>
 					<Z>88</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -9936,7 +9937,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-56</X>
-					<Y>-1.4719826</Y>
+					<Y>-1.7719826</Y>
 					<Z>-88</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -10035,7 +10036,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>50</X>
-					<Y>2.26376343</Y>
+					<Y>2.56376343</Y>
 					<Z>98</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -10072,7 +10073,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-50</X>
-					<Y>-2.26376486</Y>
+					<Y>-2.56376486</Y>
 					<Z>-98</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -10171,7 +10172,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>56</X>
-					<Y>0.690494537</Y>
+					<Y>0.99049454</Y>
 					<Z>-72</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -10208,7 +10209,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-56</X>
-					<Y>-0.690496087</Y>
+					<Y>-0.99049609</Y>
 					<Z>72</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -10307,7 +10308,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>56</X>
-					<Y>1.46149826</Y>
+					<Y>1.76149826</Y>
 					<Z>-88</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -10344,7 +10345,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-56</X>
-					<Y>-1.46149981</Y>
+					<Y>-1.76149981</Y>
 					<Z>88</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -10443,7 +10444,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>72</X>
-					<Y>0.656547546</Y>
+					<Y>0.95654755</Y>
 					<Z>84</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -10480,7 +10481,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-72</X>
-					<Y>-0.656549096</Y>
+					<Y>-0.9565491</Y>
 					<Z>-84</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -10579,7 +10580,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>72</X>
-					<Y>0.632526398</Y>
+					<Y>0.9325264</Y>
 					<Z>-84</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -10616,7 +10617,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-72</X>
-					<Y>-0.632527947</Y>
+					<Y>-0.93252795</Y>
 					<Z>84</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -10715,7 +10716,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>88</X>
-					<Y>-0.550243378</Y>
+					<Y>-0.25024338</Y>
 					<Z>56</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -10752,7 +10753,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-88</X>
-					<Y>0.550241888</Y>
+					<Y>0.25024189</Y>
 					<Z>-56</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -10851,7 +10852,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>84</X>
-					<Y>0.118396759</Y>
+					<Y>0.41839676</Y>
 					<Z>72</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -10888,7 +10889,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-84</X>
-					<Y>-0.118398279</Y>
+					<Y>-0.41839828</Y>
 					<Z>-72</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -10987,7 +10988,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>82</X>
-					<Y>0.509708405</Y>
+					<Y>0.80970841</Y>
 					<Z>82</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -11024,7 +11025,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-82</X>
-					<Y>-0.509709954</Y>
+					<Y>-0.80970995</Y>
 					<Z>-82</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -11123,7 +11124,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>88</X>
-					<Y>-1.68061066</Y>
+					<Y>-1.38061066</Y>
 					<Z>-24</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -11160,7 +11161,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-88</X>
-					<Y>1.68060923</Y>
+					<Y>1.38060923</Y>
 					<Z>24</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -11259,7 +11260,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>88</X>
-					<Y>-1.20707321</Y>
+					<Y>-0.90707321</Y>
 					<Z>-40</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -11296,7 +11297,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-88</X>
-					<Y>1.20707178</Y>
+					<Y>0.90707178</Y>
 					<Z>40</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -11395,7 +11396,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>86</X>
-					<Y>-0.552505493</Y>
+					<Y>-0.25250549</Y>
 					<Z>-56</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -11432,7 +11433,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-86</X>
-					<Y>0.552504003</Y>
+					<Y>0.252504</Y>
 					<Z>56</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -11531,7 +11532,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>86</X>
-					<Y>0.107845306</Y>
+					<Y>0.40784531</Y>
 					<Z>-72</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -11568,7 +11569,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-86</X>
-					<Y>-0.107846826</Y>
+					<Y>-0.40784683</Y>
 					<Z>72</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -11667,7 +11668,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>84</X>
-					<Y>0.546867371</Y>
+					<Y>0.84686737</Y>
 					<Z>-84</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -11704,7 +11705,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-84</X>
-					<Y>-0.546868861</Y>
+					<Y>-0.84686886</Y>
 					<Z>84</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -11803,7 +11804,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>104</X>
-					<Y>-0.623699188</Y>
+					<Y>-0.32369919</Y>
 					<Z>54</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -11840,7 +11841,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-104</X>
-					<Y>0.623697698</Y>
+					<Y>0.3236977</Y>
 					<Z>-54</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -11939,7 +11940,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>104</X>
-					<Y>-1.4681282</Y>
+					<Y>-1.1681282</Y>
 					<Z>-24</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -11976,7 +11977,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-104</X>
-					<Y>1.46812677</Y>
+					<Y>1.16812677</Y>
 					<Z>24</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -12075,7 +12076,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>120</X>
-					<Y>-0.846305847</Y>
+					<Y>-0.54630585</Y>
 					<Z>40</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -12112,7 +12113,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-120</X>
-					<Y>0.846304357</Y>
+					<Y>0.54630436</Y>
 					<Z>-40</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -12211,7 +12212,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>118</X>
-					<Y>-0.634304047</Y>
+					<Y>-0.33430405</Y>
 					<Z>52</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -12248,7 +12249,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-118</X>
-					<Y>0.634302497</Y>
+					<Y>0.3343025</Y>
 					<Z>-52</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -12347,7 +12348,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>120</X>
-					<Y>-1.09236145</Y>
+					<Y>-0.79236145</Y>
 					<Z>-8</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -12384,7 +12385,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-120</X>
-					<Y>1.09236002</Y>
+					<Y>0.79236002</Y>
 					<Z>8</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -12483,7 +12484,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>116</X>
-					<Y>-1.16290283</Y>
+					<Y>-0.86290283</Y>
 					<Z>-20</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -12520,7 +12521,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-116</X>
-					<Y>1.1629014</Y>
+					<Y>0.8629014</Y>
 					<Z>20</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -12619,7 +12620,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-47.9999924</X>
-					<Y>0.599704742</Y>
+					<Y>0.89970474</Y>
 					<Z>24</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -12656,7 +12657,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>48</X>
-					<Y>-0.599706233</Y>
+					<Y>-0.89970623</Y>
 					<Z>-24</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -12755,7 +12756,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-63.9999924</X>
-					<Y>1.00501633</Y>
+					<Y>1.30501633</Y>
 					<Z>0</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -12792,7 +12793,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>64</X>
-					<Y>-1.00501788</Y>
+					<Y>-1.30501788</Y>
 					<Z>0</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -12891,7 +12892,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-71.9999924</X>
-					<Y>0.661651611</Y>
+					<Y>0.96165161</Y>
 					<Z>-24</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -12928,7 +12929,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>72</X>
-					<Y>-0.661653101</Y>
+					<Y>-0.9616531</Y>
 					<Z>24</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -13027,7 +13028,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-71.9999924</X>
-					<Y>-0.26966095</Y>
+					<Y>0.03033905</Y>
 					<Z>48</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -13064,7 +13065,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>72</X>
-					<Y>0.26965946</Y>
+					<Y>-0.03034054</Y>
 					<Z>-48</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -13163,7 +13164,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-79.9999924</X>
-					<Y>-0.499511719</Y>
+					<Y>-0.19951172</Y>
 					<Z>-56</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -13200,7 +13201,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>80</X>
-					<Y>0.499510229</Y>
+					<Y>0.19951023</Y>
 					<Z>56</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -13299,7 +13300,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-95.9999924</X>
-					<Y>0.671524048</Y>
+					<Y>0.97152405</Y>
 					<Z>0</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -13336,7 +13337,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>96</X>
-					<Y>-0.671525538</Y>
+					<Y>-0.97152554</Y>
 					<Z>0</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -13435,7 +13436,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-103.999992</X>
-					<Y>-0.0539360046</Y>
+					<Y>0.246064</Y>
 					<Z>-40</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -13472,7 +13473,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>104</X>
-					<Y>0.0539344847</Y>
+					<Y>-0.24606552</Y>
 					<Z>40</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -13571,7 +13572,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-119.999992</X>
-					<Y>-0.060749054</Y>
+					<Y>0.23925095</Y>
 					<Z>-24</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -13608,7 +13609,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>120</X>
-					<Y>0.060747534</Y>
+					<Y>-0.23925247</Y>
 					<Z>24</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -13707,7 +13708,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-16</X>
-					<Y>-0.240829468</Y>
+					<Y>0.05917053</Y>
 					<Z>40</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -13744,7 +13745,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>16</X>
-					<Y>0.240827978</Y>
+					<Y>-0.05917202</Y>
 					<Z>-40</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -13843,7 +13844,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>0</X>
-					<Y>-0.524997711</Y>
+					<Y>-0.22499771</Y>
 					<Z>56</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -13880,7 +13881,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
-					<Y>0.524996161</Y>
+					<Y>0.22499616</Y>
 					<Z>-56</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -13979,7 +13980,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>0</X>
-					<Y>-0.524921417</Y>
+					<Y>-0.22492142</Y>
 					<Z>96</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -14016,7 +14017,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
-					<Y>0.524919868</Y>
+					<Y>0.22491987</Y>
 					<Z>-96</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -14115,7 +14116,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>-16</X>
-					<Y>-0.242687225</Y>
+					<Y>0.05731277</Y>
 					<Z>-40</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -14152,7 +14153,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>16</X>
-					<Y>0.242685735</Y>
+					<Y>-0.05731426</Y>
 					<Z>40</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -14251,7 +14252,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>0</X>
-					<Y>-0.525001526</Y>
+					<Y>-0.22500153</Y>
 					<Z>-56</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -14288,7 +14289,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
-					<Y>0.524999976</Y>
+					<Y>0.22499998</Y>
 					<Z>56</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -14387,7 +14388,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>0</X>
-					<Y>-0.525081635</Y>
+					<Y>-0.22508164</Y>
 					<Z>-96</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -14424,7 +14425,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
-					<Y>0.525080085</Y>
+					<Y>0.22508009</Y>
 					<Z>96</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -14523,7 +14524,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>0</X>
-					<Y>-0.519737244</Y>
+					<Y>-0.21973724</Y>
 					<Z>24</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -14560,7 +14561,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
-					<Y>0.519735754</Y>
+					<Y>0.21973575</Y>
 					<Z>-24</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -14659,7 +14660,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>0</X>
-					<Y>-0.52571106</Y>
+					<Y>-0.22571106</Y>
 					<Z>-24</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -14696,7 +14697,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
-					<Y>0.525709569</Y>
+					<Y>0.22570957</Y>
 					<Z>24</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -14795,7 +14796,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>0</X>
-					<Y>-0.525001526</Y>
+					<Y>-0.22500153</Y>
 					<Z>0</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -14832,7 +14833,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>0</X>
-					<Y>0.525000036</Y>
+					<Y>0.22500004</Y>
 					<Z>0</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -14931,7 +14932,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>48</X>
-					<Y>-1.31690979</Y>
+					<Y>-1.01690979</Y>
 					<Z>32</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -14968,7 +14969,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-48</X>
-					<Y>1.31690824</Y>
+					<Y>1.01690824</Y>
 					<Z>-32</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -15067,7 +15068,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>48</X>
-					<Y>-0.123882294</Y>
+					<Y>0.17611771</Y>
 					<Z>56</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -15104,7 +15105,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-48</X>
-					<Y>0.123880804</Y>
+					<Y>-0.1761192</Y>
 					<Z>-56</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -15203,7 +15204,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>48</X>
-					<Y>-1.31459045</Y>
+					<Y>-1.01459045</Y>
 					<Z>-32</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -15240,7 +15241,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-48</X>
-					<Y>1.3145889</Y>
+					<Y>1.0145889</Y>
 					<Z>32</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -15339,7 +15340,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>48</X>
-					<Y>-0.123493195</Y>
+					<Y>0.1765068</Y>
 					<Z>-56</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -15376,7 +15377,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-48</X>
-					<Y>0.123491704</Y>
+					<Y>-0.1765083</Y>
 					<Z>56</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -15475,7 +15476,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>72</X>
-					<Y>-0.730136871</Y>
+					<Y>-0.43013687</Y>
 					<Z>48</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -15512,7 +15513,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-72</X>
-					<Y>0.730135381</Y>
+					<Y>0.43013538</Y>
 					<Z>-48</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -15611,7 +15612,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>64</X>
-					<Y>-2.05501556</Y>
+					<Y>-1.75501556</Y>
 					<Z>0</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -15648,7 +15649,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-64</X>
-					<Y>2.05501413</Y>
+					<Y>1.75501413</Y>
 					<Z>0</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -15747,7 +15748,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>72</X>
-					<Y>-0.741779327</Y>
+					<Y>-0.44177933</Y>
 					<Z>-48</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -15784,7 +15785,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-72</X>
-					<Y>0.741777837</Y>
+					<Y>0.44177784</Y>
 					<Z>48</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -15883,7 +15884,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>96</X>
-					<Y>-1.35718536</Y>
+					<Y>-1.05718536</Y>
 					<Z>32</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -15920,7 +15921,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-96</X>
-					<Y>1.35718393</Y>
+					<Y>1.05718393</Y>
 					<Z>-32</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>
@@ -16019,7 +16020,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
 					<X>96</X>
-					<Y>-1.72286606</Y>
+					<Y>-1.42286606</Y>
 					<Z>0</Z>
 					<R00>1</R00>
 					<R01>-1.22464685e-16</R01>
@@ -16056,7 +16057,7 @@ Nzg2MTU5NjVl]]></BinaryString>
 				<string name="MaterialVariantSerialized"></string>
 				<CoordinateFrame name="PivotOffset">
 					<X>-96</X>
-					<Y>1.72286463</Y>
+					<Y>1.42286463</Y>
 					<Z>0</Z>
 					<R00>1</R00>
 					<R01>1.22464685e-16</R01>

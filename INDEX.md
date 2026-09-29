@@ -39,7 +39,7 @@
 | `src/shared/Content/` | **all content as data**: worlds, chunk kits, props, fixtures, loot pools, events, hub, `AssetManifest`, `BossPreviews`, `LightningRigs` | — |
 | `src/server/` | `init.server.luau` (fixed boot order) + `Systems/*System.luau` | `ServerScriptService.LuckboundServer` |
 | `src/client/` | `init.client.luau` + `Controllers/` (behaviour) + `UI/` (screens) | `StarterPlayerScripts.LuckboundClient` |
-| `assets/rbxm/chunks/` | chunk kit models: `sky_citadel/SC_STRUCTURE.rbxmx` (+ parked `SC_RECOLORS`), `verdant_valley/VV_STRUCTURE.rbxmx` and the Stone Sentinels collision pilot | `ServerStorage.LuckboundChunkKits` |
+| `assets/rbxm/chunks/` | chunk kit models: `sky_citadel/SC_STRUCTURE.rbxmx` (+ parked `SC_RECOLORS`), `verdant_valley/VV_STRUCTURE.rbxmx`, Stone Sentinels collision assets and `VV_COLLISION.rbxmx` for the other 28 chunks | `ServerStorage.LuckboundChunkKits` |
 | `assets/rbxm/props/` | prop libraries used by client ambience and server solid scenery (`SC_PROP_LIBRARY`, `HUB_ORBITERS`, parked `SC_ATMOSPHERE_PROPS`) | `ReplicatedStorage.LuckboundProps` |
 | `assets/rbxm/prefabs/` | hub art (`HUB_*`); V1 and V2 are both still referenced by code | `ServerStorage.LuckboundPrefabs` |
 | `assets/rbxm/maps/` | prebuilt whole maps (`ES_ENVIRONMENT_FULL` = Ethereal Scape) | `ServerStorage.LuckboundMaps` |
@@ -119,7 +119,18 @@ Blender: `"C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe" -b
   - Import steps: `IMPORT_STEPS.md`.
   - `build_sky_citadel_recolors.py` and `build_sky_citadel_atmosphere_props.py` are **parked** until after release.
 - Verdant Valley: the 30-piece kit exporter is `export_verdant_valley_kit.py` in the same world folder pattern; its
-  output is `VV_STRUCTURE.rbxmx`. The cleanup testing source is
+  output is `VV_STRUCTURE.rbxmx`. The owner's current saved scene is organized
+  by `organize_scene_collections.py` into `VV_STRUCTURE`, `VV_COLLISION`,
+  `VV_PROPS_SOLID`, and `VV_PROPS_NONSOLID` without separating joined scenery;
+  it imports the existing collision FBXs rather than rebuilding them.
+  `place_collision_in_scene.py` aligns the imported collision groups to their
+  matching visual chunk transforms in the saved Blender scene.
+  `pilot_scenery_separation.py` classifies only Wetland Pools, Cutbank Ford,
+  and Mushroom Glen in that current scene; `PILOT_SCENERY_CLASSIFICATION.json`
+  records that pilot. `complete_scenery_separation.py` then classifies only the
+  other 27 chunks, preserving the owner's pilot corrections and collision;
+  `SCENERY_CLASSIFICATION_REMAINING.json` records counts and unresolved pieces.
+  The cleanup testing source is
   `verdant_valley_30_cleanup_review.blend`; `--joined-scene --out-fbx` exports
   its reviewed meshes without regenerating them. The pre-separation joined
   visual kit is the baseline. The failed separation test is retained on
@@ -129,6 +140,28 @@ Blender: `"C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe" -b
   cells; `VV_STONE_SENTINELS_COLLISION_MERGED.rbxmx` is live for that chunk,
   while the original 202-piece RBXMX remains the known-good reference. The loader
   keeps visual collision if the model is missing. See `IMPORT_STEPS.md`.
+  `build_walk_collision_kit.py` reads the owner's current saved Blender scene
+  and exports adaptive walk-collider FBXs for the other 28 chunks, with
+  per-chunk counts in `walk_collision_kit/KIT_COUNTS.md` and a seeded large-panel
+  spot check in `walk_collision_kit/LARGE_PANEL_SAMPLE.md`. Stone Sentinels and
+  Cliff Passage are excluded. Boss Sanctuary uses its authored 384×256 footprint;
+  the other included chunks use 256×256. `tools/verify_vv_collision_rbxmx.py` checks the
+  combined model and can normalize a Studio export with `--normalize`. The
+  RBXMX is saved; owner Studio walk testing is pending.
+  The 202-piece Stone Sentinels rollback stays unchanged; its existing
+  118-piece merged template is lifted 0.30 stud for the 0.05-stud rollout
+  offset. Seven reported-panel replacements are listed in `IMPORT_STEPS.md`.
+  Cliff Passage now has its own candidate: `build_cliff_passage_collision.py`
+  exports a central 64-tile floor and two tall open-ended side walls;
+  `smooth_cliff_passage_lips.py` softens only that chunk's grass crest in the
+  owner's saved scene and exports its visual FBX. `fit_cliff_passage_top.py`
+  brings the upper grass shoulders inward along the rock-face seams in that
+  same current scene and refreshes the one-chunk visual FBX. Both are staged in Studio
+  under `VV_STRUCTURE` and `VV_COLLISION`; RBXMX save and owner testing are
+  pending. The other 28 collision models are unchanged.
+  `scatter_sparse_chunks.py` places Temp-derived props, faceted saplings and a
+  Treasure Hollow lantern in four sparse chunks in the owner's
+  `VerdantValley_Extra_Details_Backup.blend`. Owner visual review is pending.
 - Naming convention:
   - The kit file is `<W>_STRUCTURE.rbxmx`, with W = `SC` or `VV`.
   - Pieces inside it are named `chunk_<name>`.

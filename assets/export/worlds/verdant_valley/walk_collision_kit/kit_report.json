@@ -1,0 +1,655 @@
+{
+  "source": "E:\\BlenderAIProjects\\Projects\\VerdantValley_CliffPassage_SeparateCollisionDeck.blend",
+  "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+  "excluded": [
+    "chunk_path_cliff_passage",
+    "chunk_stone_sentinels"
+  ],
+  "chunks": [
+    {
+      "chunk": "chunk_ancient_oak",
+      "model": "VV_ANCIENT_OAK_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 0,
+      "terrain_faces": 3054,
+      "detached_components_excluded": 85,
+      "initial_cells": 203,
+      "merged_colliders": 121,
+      "merged_regions": 31,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/ancient_oak_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_blossom_terrace",
+      "model": "VV_BLOSSOM_TERRACE_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 10,
+      "terrain_faces": 3054,
+      "detached_components_excluded": 96,
+      "initial_cells": 195,
+      "merged_colliders": 122,
+      "merged_regions": 22,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/blossom_terrace_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_boss_sanctuary",
+      "model": "VV_BOSS_SANCTUARY_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        192,
+        128
+      ],
+      "covered_bounds_xy": [
+        -192.0,
+        192.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 70,
+      "terrain_faces": 1682,
+      "detached_components_excluded": 273,
+      "initial_cells": 349,
+      "merged_colliders": 267,
+      "merged_regions": 44,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/boss_sanctuary_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_cap_cave_mouth",
+      "model": "VV_CAP_CAVE_MOUTH_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 0,
+      "terrain_faces": 3660,
+      "detached_components_excluded": 109,
+      "initial_cells": 160,
+      "merged_colliders": 120,
+      "merged_regions": 18,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/cap_cave_mouth_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_cliff_overlook_gate",
+      "model": "VV_CLIFF_OVERLOOK_GATE_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 0,
+      "terrain_faces": 2994,
+      "detached_components_excluded": 77,
+      "initial_cells": 195,
+      "merged_colliders": 118,
+      "merged_regions": 30,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/cliff_overlook_gate_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_crystal_spring_gate",
+      "model": "VV_CRYSTAL_SPRING_GATE_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 0,
+      "terrain_faces": 2994,
+      "detached_components_excluded": 100,
+      "initial_cells": 199,
+      "merged_colliders": 134,
+      "merged_regions": 36,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/crystal_spring_gate_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_cutbank_ford",
+      "model": "VV_CUTBANK_FORD_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 0,
+      "terrain_faces": 3054,
+      "detached_components_excluded": 143,
+      "initial_cells": 186,
+      "merged_colliders": 136,
+      "merged_regions": 20,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/cutbank_ford_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_deep_clearing",
+      "model": "VV_DEEP_CLEARING_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 0,
+      "terrain_faces": 3279,
+      "detached_components_excluded": 74,
+      "initial_cells": 192,
+      "merged_colliders": 146,
+      "merged_regions": 28,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/deep_clearing_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_entry_dawn_meadow",
+      "model": "VV_ENTRY_DAWN_MEADOW_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 8,
+      "terrain_faces": 3188,
+      "detached_components_excluded": 177,
+      "initial_cells": 200,
+      "merged_colliders": 122,
+      "merged_regions": 27,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/entry_dawn_meadow_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_entry_woodland_refuge",
+      "model": "VV_ENTRY_WOODLAND_REFUGE_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 0,
+      "terrain_faces": 3188,
+      "detached_components_excluded": 193,
+      "initial_cells": 188,
+      "merged_colliders": 113,
+      "merged_regions": 24,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/entry_woodland_refuge_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_fern_hollow",
+      "model": "VV_FERN_HOLLOW_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 8,
+      "terrain_faces": 3054,
+      "detached_components_excluded": 128,
+      "initial_cells": 193,
+      "merged_colliders": 119,
+      "merged_regions": 28,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/fern_hollow_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_forgotten_orchard_gate",
+      "model": "VV_FORGOTTEN_ORCHARD_GATE_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 0,
+      "terrain_faces": 2994,
+      "detached_components_excluded": 100,
+      "initial_cells": 180,
+      "merged_colliders": 124,
+      "merged_regions": 26,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/forgotten_orchard_gate_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_high_ledge_gate",
+      "model": "VV_HIGH_LEDGE_GATE_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 2,
+      "terrain_faces": 2994,
+      "detached_components_excluded": 54,
+      "initial_cells": 192,
+      "merged_colliders": 132,
+      "merged_regions": 28,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/high_ledge_gate_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_longgrass_meadow",
+      "model": "VV_LONGGRASS_MEADOW_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 0,
+      "terrain_faces": 3054,
+      "detached_components_excluded": 71,
+      "initial_cells": 195,
+      "merged_colliders": 134,
+      "merged_regions": 35,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/longgrass_meadow_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_mossbound_ruins",
+      "model": "VV_MOSSBOUND_RUINS_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 0,
+      "terrain_faces": 3054,
+      "detached_components_excluded": 96,
+      "initial_cells": 192,
+      "merged_colliders": 118,
+      "merged_regions": 38,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/mossbound_ruins_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_mushroom_glen",
+      "model": "VV_MUSHROOM_GLEN_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 0,
+      "terrain_faces": 3279,
+      "detached_components_excluded": 134,
+      "initial_cells": 202,
+      "merged_colliders": 129,
+      "merged_regions": 28,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/mushroom_glen_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_overgrown_causeway_gate",
+      "model": "VV_OVERGROWN_CAUSEWAY_GATE_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 0,
+      "terrain_faces": 2994,
+      "detached_components_excluded": 88,
+      "initial_cells": 199,
+      "merged_colliders": 122,
+      "merged_regions": 34,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/overgrown_causeway_gate_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_path_crossroads_copse",
+      "model": "VV_PATH_CROSSROADS_COPSE_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 8,
+      "terrain_faces": 3504,
+      "detached_components_excluded": 71,
+      "initial_cells": 224,
+      "merged_colliders": 170,
+      "merged_regions": 16,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/path_crossroads_copse_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_path_narrow_pass",
+      "model": "VV_PATH_NARROW_PASS_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 8,
+      "terrain_faces": 3054,
+      "detached_components_excluded": 76,
+      "initial_cells": 204,
+      "merged_colliders": 149,
+      "merged_regions": 28,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/path_narrow_pass_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_path_split_meadow",
+      "model": "VV_PATH_SPLIT_MEADOW_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 8,
+      "terrain_faces": 3279,
+      "detached_components_excluded": 77,
+      "initial_cells": 210,
+      "merged_colliders": 155,
+      "merged_regions": 28,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/path_split_meadow_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_path_sunwash_fork",
+      "model": "VV_PATH_SUNWASH_FORK_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 0,
+      "terrain_faces": 3279,
+      "detached_components_excluded": 104,
+      "initial_cells": 196,
+      "merged_colliders": 153,
+      "merged_regions": 28,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/path_sunwash_fork_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_rock_garden",
+      "model": "VV_ROCK_GARDEN_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 0,
+      "terrain_faces": 3054,
+      "detached_components_excluded": 72,
+      "initial_cells": 191,
+      "merged_colliders": 117,
+      "merged_regions": 31,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/rock_garden_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_shaded_grove",
+      "model": "VV_SHADED_GROVE_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 4,
+      "terrain_faces": 3054,
+      "detached_components_excluded": 114,
+      "initial_cells": 194,
+      "merged_colliders": 124,
+      "merged_regions": 33,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/shaded_grove_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_side_forgotten_trial",
+      "model": "VV_SIDE_FORGOTTEN_TRIAL_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 52,
+      "terrain_faces": 3305,
+      "detached_components_excluded": 55,
+      "initial_cells": 248,
+      "merged_colliders": 208,
+      "merged_regions": 10,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/side_forgotten_trial_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_side_treasure_hollow",
+      "model": "VV_CAP_TREASURE_HOLLOW_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 6,
+      "terrain_faces": 3051,
+      "detached_components_excluded": 46,
+      "initial_cells": 169,
+      "merged_colliders": 112,
+      "merged_regions": 16,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/side_treasure_hollow_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_side_wardens_clearing",
+      "model": "VV_CAP_WARDENS_CLEARING_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 0,
+      "terrain_faces": 3051,
+      "detached_components_excluded": 47,
+      "initial_cells": 185,
+      "merged_colliders": 90,
+      "merged_regions": 19,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/side_wardens_clearing_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_wetland_pools",
+      "model": "VV_WETLAND_POOLS_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 0,
+      "terrain_faces": 3054,
+      "detached_components_excluded": 113,
+      "initial_cells": 203,
+      "merged_colliders": 137,
+      "merged_regions": 37,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/wetland_pools_walk_collision.fbx"
+    },
+    {
+      "chunk": "chunk_windward_ridge_gate",
+      "model": "VV_WINDWARD_RIDGE_GATE_COLLISION_MERGED",
+      "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+      "half_extents_studs": [
+        128,
+        128
+      ],
+      "covered_bounds_xy": [
+        -128.0,
+        128.0,
+        -128.0,
+        128.0
+      ],
+      "surface_offset_studs": 0.05,
+      "forced_unmerged_tiles": 0,
+      "terrain_faces": 2994,
+      "detached_components_excluded": 75,
+      "initial_cells": 185,
+      "merged_colliders": 156,
+      "merged_regions": 16,
+      "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/windward_ridge_gate_walk_collision.fbx"
+    }
+  ],
+  "generated_colliders": 3848
+}

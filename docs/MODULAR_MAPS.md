@@ -343,6 +343,43 @@ does the loader disable the joined visual mesh's collision. The pilot is
 specific to that chunk and must pass Studio raycasts and traversal before
 any kit-wide use. See the Verdant Valley import steps.
 
+**Verdant Valley kit batch (2026-09-28):** The other 28 chunks now name
+optional adaptive walk-collision models generated from the owner's current
+Blender scene. The 28 child models are saved under the combined
+`VV_COLLISION.rbxmx` wrapper in the kit folder; the loader finds them by name.
+The previous saved generation report records 5,494 initial cells and 3,631 merged
+meshes after local repairs to Fern Hollow, Narrow Pass, Entry Dawn Meadow and
+Boss Sanctuary. Boss Sanctuary now samples its full authored 384×256
+footprint; the saved RBXMX has the same 3,631 parts. New kit collision
+sits 0.05 stud below the visual surface and is hidden in Studio play; the
+owner's revised walk is pending. Stone Sentinels
+remains the 118-part reference. Cliff Passage retains its existing collision
+and will later use a separate playable-corridor and boundary-barrier design.
+Owner Studio walks are pending; see the Verdant Valley import steps.
+
+**Reported-panel repair batch (2026-09-29):** Owner walking confirmed the Boss
+Sanctuary repair and identified eight more panels across Blossom Terrace,
+Treasure Hollow, High Ledge Gate, Crossroads Copse, Split Meadow, Shaded Grove,
+and Forgotten Trial. The current-scene generator now leaves those panels as
+16-stud cells and uses 4-stud cells only at reproduced low or missing hits.
+The refreshed report is 5,629 initial cells and 3,848 colliders across the 28
+generated chunks. Seven replacements are saved in the combined RBXMX; owner
+walking is pending.
+The preserved Stone Sentinels 118-part merged model has been lifted 0.30 stud
+to match the rollout's 0.05-stud surface offset, without changing its meshes;
+the 202-part rollback stays unchanged. Cliff Passage stays excluded. Open
+test sockets remain open.
+
+**Cliff Passage corridor candidate (2026-09-29):** This chunk alone now names
+`VV_PATH_CLIFF_PASSAGE_COLLISION_MERGED`. Its separate FBX has 64 terrain
+sampled walk tiles over the central 256×64 corridor and two 60-stud-tall
+side barriers, with no walls across either socket. The outer floor strips
+extend under the cliff faces and overlap the barriers. The old joined visual
+path deck remains visible but loses physical collision when this template is
+installed. The surrounding hills get no walk colliders. The two imports are
+staged in Studio; RBXMX save and owner walking are pending. The other 28
+collision models are unchanged.
+
 The layout rules above are about *data*. The rules below are about the *art*,
 and they are the ones that are expensive to discover late.
 

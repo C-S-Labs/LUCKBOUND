@@ -62,7 +62,7 @@ local function attachWalkCollision(
 			descendant.CanCollide = true
 			descendant.CanQuery = true
 			descendant.CanTouch = false
-			descendant.Transparency = if RunService:IsStudio() then 0.7 else 1
+			descendant.Transparency = 1
 			count += 1
 		end
 	end

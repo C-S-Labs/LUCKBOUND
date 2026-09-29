@@ -1,6 +1,6 @@
 # LUCKBOUND — Project Status
 
-**Last updated:** 2026-09-28 · slimmed for token use. The full previous version, with every closed item and walk
+**Last updated:** 2026-09-29 · slimmed for token use. The full previous version, with every closed item and walk
 report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an item below points to it.
 
 > **New conversation?** Read `INDEX.md` → `AGENTS.md` → the top entry of `docs/WORKLOG.md` → this file.
@@ -29,6 +29,35 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   the runtime loader already requests that fidelity. The visual Studio walk and
   in-experience asset-access check remain open before merge. Floating collision
   and visible terrain gaps in the owner's walk remain unresolved.
+- **Verdant Valley Blender organization:** The owner's saved scene has top-level
+  `VV_STRUCTURE`, `VV_COLLISION`, `VV_PROPS_SOLID`, and `VV_PROPS_NONSOLID`
+  collections. Its 30 joined visual chunks are intact; 4,032 collider meshes
+  were imported from the current kit, Stone Sentinels, and Cliff Passage FBXs.
+  Both prop collections are empty pending classification. Each collision group
+  now uses its matching visual chunk's saved Blender transform. Save/reopen
+  checks found 30 unique matching origins, no group at the scene origin, and
+  unchanged collider vertex/face data; owner visual review remains.
+- **Verdant Valley scenery pilot:** Wetland Pools, Cutbank Ford, and Mushroom
+  Glen were the first three chunks separated. The owner reviewed them and
+  manually corrected three classifications; those edits remain in the current
+  scene. The original pilot report records the state before those corrections.
+- **Verdant Valley full Blender scenery separation:** After the owner reviewed
+  and manually corrected the pilot, the other 27 joined chunks were separated
+  in the current scene. Overall collection counts are 72 `VV_STRUCTURE`, 1,145
+  `VV_PROPS_SOLID`, and 1,880 `VV_PROPS_NONSOLID`. The pilot corrections and
+  all 4,032 collision meshes were preserved. Nineteen genuinely ambiguous
+  gold/large-rock pieces remain in structure and are listed in
+  `SCENERY_CLASSIFICATION_REMAINING.json`. Owner Blender visual review is next;
+  production assets have not changed.
+- **Four-chunk scenery review (2026-09-29):** The owner's
+  `VerdantValley_Extra_Details_Backup.blend` now has 49 new objects in Treasure
+  Hollow (including a hanging lantern), 64 in Longgrass Meadow, 52 in Deep
+  Clearing and 63 in Warden's Clearing. The five Temp sources and the 30
+  original structure chunks remain intact. New solid-object bounds stay at
+  least 37.8 studs from each central path centreline; Deep Clearing's east
+  branch is also reserved. Cliff Passage, Dawn Meadow and Woodland Refuge
+  matched their preceding-save object and mesh digests. Owner visual review is
+  next; no Studio assets or exports have changed.
 - **Stone Sentinels collision prototype:** A new generator derives 202 thin,
   16-stud walk-surface tiles from the current connected terrain body. It
   excludes 80 detached art components and leaves steep/open spans unbridged.
@@ -65,6 +94,125 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   confirmed 118 pieces active with the visual mesh collision and queries off.
   An in-game character walk and owner visual check at the former invisible
   floor remain pending. Do not extend this optimization across the kit yet.
+- **Stone Sentinels Studio render-surface feasibility:** In Studio Edit mode,
+  `CreateEditableMeshAsync` opened the uploaded visual MeshPart (7,084 render
+  faces, 14,993 vertices). Six `EditableMesh:RaycastLocal` surface heights were
+  within 0.35 stud of the existing custom collider; at one lower-area sample,
+  the visual physics hull hit 1.31 studs above the rendered surface. This is
+  sufficient evidence for a render-geometry input prototype, but a generator
+  would still need to distinguish walkable ground from joined scenery. The
+  same API was blocked in Play mode by the experience Mesh & Image API setting;
+  no setting was changed and no generator was built.
+- **Verdant Valley reported-panel repair batch (2026-09-29):** Boss Sanctuary's latest
+  repair passed the owner walk. Seven more chunks have targeted replacement FBXs
+  generated from the active Blender scene: Blossom Terrace 195→122, Treasure Hollow
+  169→112, High Ledge Gate 192→132, Crossroads Copse 224→170, Split Meadow 210→155,
+  Shaded Grove 194→124, and Forgotten Trial 248→208 (initial cells→colliders).
+  Their reported panels are unmerged; 4-stud cells address reproduced low or missing
+  hits. The refreshed 28-chunk report is 5,629→3,848, with 3,967 intended kit
+  colliders including Stone Sentinels and Cliff Passage. The seven models are staged
+  in Studio with 3,848 unique MeshIds, zero pivots and correct settings. The owner
+  saved the wrapper; precise-fidelity XML repair, file verification and Rojo build
+  pass. Owner walking is pending. Stone's existing 118-part merged model was lifted 0.30 stud
+  to match the other chunks' 0.05-stud surface offset; MeshIds and geometry are
+  unchanged, and its 202-piece rollback remains untouched. Cliff Passage is excluded.
+- **Cliff Passage corridor candidate (2026-09-29):** Only this chunk's saved Blender
+  geometry was edited: 343 grass crest vertices softened within 1.5 studs sideways
+  and 0.8 studs vertically; a one-chunk visual FBX is exported. A separate collision
+  FBX has 64 terrain sampled floor tiles across the central corridor and two
+  overlapping, 60-stud-tall side walls. Both socket ends stay open; the hills have
+  no walk collision. Cliff Passage now names its own optional collision template,
+  which replaces the joined visual's old physical deck when imported. The other
+  28 collision models and Stone Sentinels were untouched. Both FBXs are now
+  staged in the local testing Studio place: Cliff visual MeshId
+  `rbxassetid://108374847811684` is in `VV_STRUCTURE` and in `AssetManifest`,
+  while all 66 uploaded colliders are under `VV_COLLISION` with a zero pivot.
+  Basic generation/count and Studio part-setting checks pass; owner RBXMX save,
+  crest review and corridor walking are pending. The latest current-scene
+  revision extends 235 upper grass-shoulder vertices inward up to 4.2 studs
+  along both rock-face seams. Its one-chunk visual FBX was refreshed; owner
+  Blender review and Studio reimport are pending. A side-view follow-up smoothed
+  the sharp crest tips, tucked low grass behind the gray face, and converted
+  exposed steep skirts to the existing rock material. The current Blender scene
+  and visual FBX include that revision; collision remains unchanged.
+- **Verdant Valley adaptive collision kit batch (2026-09-28):** The owner's
+  active scene at `E:\BlenderAIProjects\Projects\VerdantValley_CliffPassage_SeparateCollisionDeck.blend`
+  is the input (SHA-256 `4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf`).
+  The currently saved 28-chunk RBXMX other than Stone Sentinels and Cliff Passage has 5,494
+  initial generated cells and, after targeted repairs, 3,631 merged collider meshes. Including the preserved
+  118-part Stone model and Cliff Passage's current one-piece visual collision,
+  the intended kit total is 3,750. Boss Sanctuary is now the unusually high
+  chunk at 267; next are Windward Ridge Gate 156, Sunwash Fork 153 and Deep Clearing 146. FBXs, a per-chunk count report and
+  guarded `CollisionTemplate` entries are local. In the owner's separate
+  Studio place, all 28 models were imported, named, pivoted and staged in
+  `ServerStorage.LuckboundChunkKits.verdant_valley`; a post-recovery check
+  confirmed the original 3,425 MeshParts with unique valid MeshIds, precise fidelity and
+  expected per-model counts. The owner exported `VV_COLLISION.rbxmx`; its
+  initial selection included Stone and visible kit copies and 31 top-level
+  models, which Rojo rejected. The file now has one `VV_COLLISION` wrapper
+  containing exactly the 28 new models. After the owner's first walk found
+  fall-through spots in Fern Hollow's `walk_patch_-032_-016_4x2`, that one
+  64 × 32-stud patch was replaced by eight 16-stud cells (Fern 112 → 119).
+  A focused Studio probe found no misses around the former hole and heights
+  within 0.003 stud of the Blender surface. The 28 new models were raised
+  0.15 stud, leaving an effective 0.20-stud surface offset; Stone and Cliff
+  were unchanged. Fern Hollow and Cutbank Ford socket-edge collision heights
+  match within 0.001 stud, so the second named Fern patch was not altered.
+  The owner's next walk confirmed Fern Hollow's gap is fixed, but found
+  another physics gap/depression on Narrow Pass's `walk_patch_-016_+064_2x4`
+  near Sunwash Fork. A small sample across the 2×4 patch class found no other
+  misses. Narrow Pass's eight cells were left unmerged (127 → 134 parts), and
+  its repaired socket edge matches Sunwash Fork within about 0.002 stud at
+  nine sampled positions. The owner estimated that roughly 90% of chunks
+  still had visible foot sinking, so the 28 new models were raised another
+  0.10 stud, leaving an effective 0.10-stud offset. Studio verifies 28 models,
+  3,439 parts, 3,439 unique MeshIds, precise fidelity and expected flags.
+  The owner saved the updated wrapper RBXMX; on-disk XML fidelity repair and
+  count/MeshId verification and Rojo build passed. The generator and full FBX set now use the
+  same 0.10-stud offset. Cutbank Ford's bridge currently relies on the structure
+  for collision, and Wetland Pools appears visually slightly high despite
+  working collision; both are noted for later, with no changes this pass.
+  The next walk found a remaining Narrow Pass dip on `walk_+000_+112`.
+  That cell was split into sixteen 4-stud cells (Narrow 134 → 149), and a
+  focused 25-point Studio probe now has no misses or low corner hit. The owner
+  also reported visible collider geometry and slight general foot sinking;
+  all 28 rollout templates are now invisible and lifted another 0.05 stud,
+  leaving a 0.05-stud surface offset. The loader also hides collider geometry
+  during Studio play. Studio sanity checks found 3,454 parts, unique MeshIds
+  and correct flags. The owner saved the updated wrapper; fidelity repair,
+  on-disk verification and Rojo build pass. The owner walk is pending.
+  Severe sinking at the Boss Sanctuary entrance's sloped flank is under
+  targeted review. The owner is open to an invisible boundary but wants to
+  avoid blocking the entry; the exact spot is needed before placing one.
+  The owner subsequently confirmed Narrow Pass is good and reported a
+  socket-adjacent dip on Entry Dawn Meadow's 2×4 panel plus fall-through spots
+  on Boss Sanctuary's separate 6×5 panel. A seeded Studio spot check sampled
+  15/57 panels of at least 2×4 size at 25 points each: no random-panel misses
+  or >0.20-stud interior depressions. Targeted checks reproduced one Boss
+  panel miss and a 0.35-stud low hit near Entry's socket. Candidate FBXs split
+  both panels and their failing corner cells. The owner imported both
+  replacements; Entry's 45 focused socket samples and Boss's 25 focused panel
+  samples now hit without the reported defects. The combined RBXMX was saved
+  and verifies 3,520 unique MeshIds, hidden parts and restored precise fidelity.
+  The full generated report reads 5,403 initial cells → 3,520 colliders;
+  Rojo build passes and owner walk testing is pending. The separate Boss
+  entrance-edge issue remains.
+  The owner confirmed Entry and the prior Boss panel repair, then found a
+  second Boss issue on `walk_patch_-080_-048_10x4` and showed visible terrain
+  outside the collision grid. Boss Sanctuary's authored footprint is 384×256,
+  but the generator had sampled only 256×256. A new Boss-only candidate samples
+  the full ±192-stud width and splits the reported 10×4 panel into forty
+  16-stud cells. Its generated bounds reach x ±192 and y ±128; Boss becomes
+  349 initial cells → 267 colliders. The full candidate report is 5,494 cells
+  → 3,631 colliders, or 3,750 across the kit with unchanged Stone and Cliff.
+  The owner imported the 267-part Boss model; all 45 focused panel probes hit
+  and sampled outer-strip points beyond the former ±128-stud boundary now hit
+  terrain. Studio verifies 28 models and 3,631 valid collider parts. The
+  combined RBXMX was saved and its omitted precise-fidelity XML restored;
+  file verification and Rojo build confirm counts, MeshIds and flags. Owner walking of
+  the Boss perimeter and entrance is pending.
+  No high-count optimization
+  or broad automated raycast test was run.
 - **Overgrown Causeway split pilot (2026-09-28):** the reviewed joined mesh was
   separated into one connected terrain mesh (256 × 43.5 × 256) and one static
   scenery mesh containing 88 detached trees, rocks, ruins and moss components.
@@ -76,6 +224,9 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   stopping the character. This is a pilot check, not complete geometry coverage.
   A saved prop library, live `SizeY`/MeshId update, and two-client Studio test
   remain pending. Other 29 chunks and the old live Causeway asset are unchanged.
+  **New warning to fix later:** `[ChunkLoader] solid prop
+  'prop_overgrown_causeway_scenery' missing from LuckboundProps for
+  VV_OVERGROWN_CAUSEWAY_GATE`. No Causeway behavior was changed in this check.
 - **Wetland Pools joins (2026-09-28):** the temporary per-mouth socket-height
   change was reverted after the owner's next walk showed the route beyond
   Wetland Pools dropping by about two studs. The reviewed Blender mesh has
