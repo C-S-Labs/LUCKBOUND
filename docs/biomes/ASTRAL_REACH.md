@@ -261,11 +261,17 @@ outside is the approach, the inside is the showcase.
   feature.
 - Showcase qualities: **randomness, uncanniness, otherworldliness, impossible size ratios**, all leading to the
   **grand palace boss room where the main spectacle begins**.
-- **Interior size: 20–36 chunks per run.** They must be **random, unique** (varied, not repeats of one look) and
-  **capture the true feeling of the biome plans**: grand, otherworldly, uncanny, impossible.
-- Build note: 20–36 is a `GameConfig` range, rolled by the generator's own `Random`. "Unique" implies an interior
-  kit large enough to fill 36 chunks without visible repetition, so kit size is a sizing decision for authoring
-  time; whether the two fixed boss platforms count toward the 20–36 is undecided.
+- **Interior kit: at most 48 unique chunk pieces.** The interior layout is constructed from this set. Pieces must
+  be **random-feeling, unique** (varied, not repeats of one look) and **capture the true feeling of the biome
+  plans**: grand, otherworldly, uncanny, impossible.
+- **Interior size per run: 12–24 chunks per generation**, drawn from the kit. (This replaces an earlier draft
+  figure of 20–36, which the owner clarified was not meant per run.)
+- **Flow:** the layout goes **up staircases, down stairs**, and flows with the tower exterior in general, so the
+  route climbs and descends through the palace rather than sitting on one level.
+- Build note: 12–24 is a `GameConfig` range and 48 a kit cap, rolled by the generator's own `Random`. Kit pieces
+  need stair/vertical connectors (up and down) in the chunk contract (`CHUNK_AUTHORING.md`); check the blueprint
+  supports vertical connections. Whether the two fixed boss platforms count toward the 48 and the 12–24 is
+  undecided.
 - **Layout rule: almost all pathways lead to the boss room**, not one branch among many. Exceptions: **a few small
   treasure rooms, minibosses and the like**.
 - Build note: an inverted dungeon graph (few dead ends, many routes to one goal). Confirm the interior blueprint
