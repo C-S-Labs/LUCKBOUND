@@ -18,6 +18,7 @@ local ExpeditionController = require(Controllers.ExpeditionController)
 local PartyController = require(Controllers.PartyController)
 local FixtureController = require(Controllers.FixtureController)
 local LocomotionController = require(Controllers.LocomotionController)
+local LockOnController = require(Controllers.LockOnController)
 local EventController = require(Controllers.EventController)
 local ThemeController = require(Controllers.ThemeController)
 local SkyController = require(Controllers.SkyController)
@@ -32,6 +33,7 @@ local ChatPanel = require(UI.ChatPanel)
 local ExpeditionHud = require(UI.ExpeditionHud)
 local HubMenu = require(UI.HubMenu)
 local LoadingScreen = require(UI.LoadingScreen)
+local Vitals = require(UI.Vitals)
 
 -- FIRST, BEFORE ANYTHING DRAWS. The loading screen takes the camera and holds
 -- the character while the hub replicates, so the player never sees a
@@ -76,12 +78,13 @@ ChatPanel.init()
 HubMenu.init()
 -- Opening the chat folds the rail away: both live on the left edge.
 ChatPanel.onOpened(HubMenu.collapse)
--- Movement waits for PLAY. The loading screen holds the character at
--- WalkSpeed 0, and this controller writes WalkSpeed every frame -- starting it
--- early would simply undo the hold and let the player walk away from the
--- camera tour.
+-- Movement waits for PLAY: the camera tour is not the moment to hand the
+-- player a character. (The controller also honours the loading screen's
+-- WalkSpeed-0 hold as a multiplier, so an early start would not break it.)
 LoadingScreen.onFinished(function()
-	LocomotionController.init()
+	Vitals.init()
+	LocomotionController.init({ Vitals = Vitals })
+	LockOnController.init({ Locomotion = LocomotionController })
 end)
 
 -- Last: developer tooling must never be load-bearing for anything above it.

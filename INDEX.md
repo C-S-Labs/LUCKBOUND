@@ -44,12 +44,13 @@
 | `assets/rbxm/prefabs/` | hub art (`HUB_*`); V1 and V2 are both still referenced by code | `ServerStorage.LuckboundPrefabs` |
 | `assets/rbxm/maps/` | prebuilt whole maps (`ES_ENVIRONMENT_FULL` = Ethereal Scape) | `ServerStorage.LuckboundMaps` |
 | `assets/rbxm/bosses/` | imported boss rigs for `/showboss` (`WingedSentinel`) | `ServerStorage.LuckboundBosses` |
+| `assets/rbxm/animations/` | generated player clips (KeyframeSequences, from `tools/gen_player_anims.py`); Studio plays them unuploaded | `ReplicatedStorage.LuckboundAnimations` |
 | `assets/source/` | Blender sources + headless Python generators (never loaded by the game) | — |
 | `assets/export/` | FBX outputs from the generators, which get uploaded or imported into Studio | — |
 | `assets/textures/` | source images uploaded as Roblox textures (`lightning_strip.png` → id in `LightningRigs`) | — |
 | `docs/` | design, spec, status, worklog, briefs | — |
 | `tests/` | `cases.luau` (the tests), `build_suite.py` (assembles `generated_suite.luau`, git-ignored), `run.sh` | — |
-| `tools/` | `gen_index.py` (writes `INDEX_MAP.md`), `sync_asset_ids.py` (asset ids → `AssetManifest`) | — |
+| `tools/` | `gen_index.py` (writes `INDEX_MAP.md`), `sync_asset_ids.py` (asset ids → `AssetManifest`), `gen_player_anims.py` (player animation clips) | — |
 | `.github/workflows/` | `ci.yml` (syntax, forbidden names, tests, index check), `index.yml` (regenerate index on `main`) | — |
 
 ## 3. Docs: what each one owns
@@ -70,7 +71,8 @@
 | `docs/ENEMY_AI.md` | how enemies behave: utility AI, difficulty, boss evolution, weapon movesets, tuning, and the mandatory build order (design only; authoritative for behaviour) |
 | `docs/ART_DIRECTION.md` | the look, scale, palette rules |
 | `docs/WEAPONS.md` | weapon design and rarity rules |
-| `docs/PLAYER_UI.md` / `docs/PLAYER_ABILITIES.md` / `docs/EVENTS.md` | hub UI / sprint and double jump / live events |
+| `docs/PLAYER_ANIMATION_BRIEF.md` | what to animate for the player: every clip slot, its spec, the order to make them, and the `/animslot` try-it loop |
+| `docs/PLAYER_UI.md` / `docs/PLAYER_ABILITIES.md` / `docs/EVENTS.md` | hub UI / player movement, stamina, lock-on and the weapon-movement contract / live events |
 | `docs/TOOLCHAIN_ACCESS.md` / `docs/PARTNER_SETUP.md` | Rojo, Studio, Blender setup / testing on your own place |
 | `docs/ADDENDUM_ASSET_PIPELINE.md` | future asset and procgen architecture (target, not built) |
 | `docs/BLUEPRINT_RECONCILIATION.md` | how the Biome Blueprint merged |
@@ -92,6 +94,10 @@
 | chests, vault, gates | `Content/Fixtures/`, `Core/FixtureCore.luau`, `client/Controllers/FixtureController.luau`, `server/Systems/LootSystem.luau` |
 | world sky / fog / atmospheres | `Content/Worlds/*.luau` (`Environment`), `Content/Atmospheres/`, `client/Controllers/AmbienceController.luau` |
 | leaderboard / chat UI | `client/UI/Leaderboard.luau`, `client/UI/ChatPanel.luau`; columns + tunables in `Core/GameConfig.luau` (`Leaderboard`, `Chat`); doc `docs/PLAYER_UI.md` §3.7 |
+| player movement (own controller, profiles, stamina, jump, roll, weapon lock) | `Core/LocomotionCore.luau` (rules), `client/Controllers/LocomotionController.luau` (ControllerManager), `GameConfig.Locomotion`; doc `docs/PLAYER_ABILITIES.md` §1–§2.5, §6 |
+| lock-on and its camera | `Core/LockOnCore.luau`, `client/Controllers/LockOnController.luau`, `GameConfig.LockOn`, tag `Constants.NAMES.LOCK_ON_TAG`; doc `PLAYER_ABILITIES.md` §2.6 |
+| stamina bar (later health, charge) | `client/UI/Vitals.luau` |
+| player animation (blending, strafe, lean, head, landings, roll look, sounds) | `Core/AnimationCore.luau`, `client/Controllers/CharacterAnimator.luau`, `GameConfig.CharacterAnimation`; clips in `Content/Animations/Player.luau` (+ generated `GroundSpeeds.luau`); how-to `PLAYER_ABILITIES.md` §2.7 |
 | rolling (Fate) | `Core/FateCore.luau`, `server/Systems/FateSystem.luau`, `client/UI/FateRoll.luau` |
 | parties / teleport | `Core/PartyCore.luau`, `server/Systems/PartySystem.luau`, `client/Controllers/PartyController.luau` |
 | save data | `Core/ProfileSchema.luau`, `server/Systems/SaveSystem.luau` |
@@ -137,6 +143,16 @@ Blender: `"C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe" -b
   - `ROSTER.md` is the roster.
   - `WS_MOVESET.md` is the Winged Sentinel moveset.
   - `ws_*.py` are the Winged Sentinel's pose, animation and lance scripts.
+- Ethereal Scape roster: `assets/source/enemies/ethereal_scape/`.
+  - `ROSTER.md` is the roster (with its design language).
+  - The boss is `the_ascendant.py` + `the_ascendant_staff.py` (a Staff-class weapon), and `ASCENDANT_MOVESET.md`
+    is its moveset.
+  - Actions are in `anims/<id>/`; `_`-prefixed files there are shared helpers.
+- Locomotion: `_framework/walk_core.py` (`build_walk_humanoid` / `build_strafe_humanoid`, `ROLE_GAIT`, `post=`
+  weapon-carry hook).
+- Cloth (robes, skirts, capes, scarves): `_framework/cloth_core.py` (`build_cloth`, `cloth_bake`), baked per action
+  by `run.py`. Example: `ethereal_scape/the_ascendant_cloth.py`.
+- Hands: `_framework/hands_core.py` (`add_phalanges`: three-joint fingers); the grip is `pose_fix.wrap`.
 - Budgets: basic 10–12.5k tris, miniboss ≤35k, epic boss ~75k, legendary ~100k, and every mesh under 10k.
 - Exports go to `assets/export/enemies/sky_citadel/`.
 

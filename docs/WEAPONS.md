@@ -53,6 +53,39 @@ Reserved for Legendary and above, so Epic never cheapens them: **gold used as a
 main surface** (not a trim), a weapon that visibly **breaks apart** (a blade
 floating in segments), and **full-length particle-style ornament**.
 
+### Charge — Epic and Legendary only (owner, 2026-09-28)
+
+**Charge is a rarity reward, not a baseline.** Only certain weapons have a charge
+option at all, and the charge bar is **visible only while a weapon with a charge
+is equipped**. Every other weapon shows no charge UI.
+
+| Tier | Charge |
+|---|---|
+| Common, Uncommon, Rare | **None.** No charge, no bar |
+| **Epic** | Charge only; a charged state grants **small stat buffs** (for example damage or attack speed), with no new moves |
+| **Legendary** | Charge **alters the moveset for a short duration**: the charged state swaps in the weapon's unique charged moves, then reverts |
+| **Mythic** | Legendary's charge **in two stages** (below) |
+
+**Mythic: the two-stage charge (owner, 2026-09-28).** Stage 1 is a Legendary's:
+the moveset changes for a short duration. Holding the charge through stage 1
+reaches stage 2, an **awakening**: one signature finisher that spends the charge.
+The choice is the point: cash in early, or push for the finisher.
+
+- Decided against: a charge that fills only from a signature act (would annoy the
+  player), and charged-only movement tech (underwhelming).
+- **Open:** a small party buff when a charge is released. The owner is undecided;
+  if it is taken, keep it brief and modest so it rewards grouping without
+  making the wielder dominant.
+- Guardrails: the Mythic's edge is the charge, not raw stats (base stats at most a
+  little above Legendary). Every charged move has a readable tell (`ENEMY_AI.md`
+  §4.1). Mythics must stay inside the win-rate bands in simulation (`ENEMY_AI.md`
+  §12 step 8).
+
+A charge makes a weapon slightly stronger, and that is the point: it rewards
+getting rarer weapons. Charge numbers and charged moves live on the weapon as data
+(`ENEMY_AI.md` §4.1), never on the player. The bar is a row in
+`client/UI/Vitals.luau`, built only for a weapon whose data declares a charge.
+
 ## 3. Style
 
 The house style (`ART_DIRECTION.md`) and the island kit's palette

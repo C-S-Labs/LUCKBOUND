@@ -18,6 +18,7 @@ local Chunks = require(Root.Content.Chunks)
 local Props = require(Root.Content.Props)
 local Fixtures = require(Root.Content.Fixtures)
 local LootPools = require(Root.Content.LootPools)
+local PlayerAnimations = require(Root.Content.Animations.Player)
 local Crossroads = require(Root.Content.Hub.Crossroads)
 local Menu = require(Root.Content.Hub.Menu)
 local Cinematics = require(Root.Content.Hub.Cinematics)
@@ -85,6 +86,7 @@ Schema.validateAll({
 	props = Props,
 	fixtures = Fixtures,
 	lootPools = LootPools,
+	animations = PlayerAnimations,
 })
 
 do

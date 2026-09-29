@@ -16,11 +16,13 @@
 -- mistake anyone can make; it should not by itself hand a stranger the ability
 -- to roll themselves a Mythic on a live server.
 
+local CollectionService = game:GetService("CollectionService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
+local Constants = require(Root.Core.Constants)
 local GameConfig = require(Root.Core.GameConfig)
 local Net = require(Root.Core.Net)
 local Worlds = require(Root.Content.Worlds)
@@ -121,6 +123,53 @@ local function groundBelow(p: Vector3, ignore: { Instance }): Vector3
 	params.FilterDescendantsInstances = ignore
 	local hit = workspace:Raycast(p + Vector3.new(0, 300, 0), Vector3.new(0, -800, 0), params)
 	return if hit then hit.Position else p
+end
+
+--- /dummies [count] -- plain pillars tagged as lock-on targets, in an arc in
+--- front of you, for testing lock-on and switching before enemies spawn. No
+--- health, no AI. /dummies 0 clears them.
+COMMANDS.dummies = function(player: Player, args: { string }): (boolean, string)
+	local tuning = GameConfig.Debug
+	local old = workspace:FindFirstChild("LockOnDummies")
+	if old then
+		old:Destroy()
+	end
+	local count = math.clamp(
+		math.floor(tonumber(args[1]) or tuning.DummyDefaultCount),
+		0,
+		tuning.DummyMaxCount
+	)
+	if count == 0 then
+		return true, "dummies cleared"
+	end
+	local root = player.Character
+		and player.Character:FindFirstChild("HumanoidRootPart") :: BasePart?
+	if not root then
+		return false, "no character"
+	end
+
+	local folder = Instance.new("Folder")
+	folder.Name = "LockOnDummies"
+	local look = Vector3.new(root.CFrame.LookVector.X, 0, root.CFrame.LookVector.Z)
+	look = if look.Magnitude > 1e-3 then look.Unit else Vector3.new(0, 0, -1)
+	local right = look:Cross(Vector3.yAxis)
+	local ignore: { Instance } = { player.Character :: Instance }
+	for i = 1, count do
+		local across = (i - (count + 1) / 2) * tuning.DummySpacingStuds
+		local spot = root.Position + look * tuning.DummyDistanceStuds + right * across
+		local ground = groundBelow(spot, ignore)
+		local pillar = Instance.new("Part")
+		pillar.Name = `Dummy{i}`
+		pillar.Anchored = true
+		pillar.Size = Vector3.new(3, tuning.DummyHeightStuds, 3)
+		pillar.Material = Enum.Material.SmoothPlastic
+		pillar.Color = Color3.fromRGB(120, 110, 150)
+		pillar.CFrame = CFrame.new(ground + Vector3.new(0, tuning.DummyHeightStuds / 2, 0))
+		CollectionService:AddTag(pillar, Constants.NAMES.LOCK_ON_TAG)
+		pillar.Parent = folder
+	end
+	folder.Parent = workspace
+	return true, `{count} lock-on dummies placed. /dummies 0 clears them`
 end
 
 COMMANDS.clearboss = function(_player: Player, _args: { string }): (boolean, string)
@@ -229,6 +278,8 @@ COMMANDS.showboss = function(player: Player, args: { string }): (boolean, string
 		- (select(1, model:GetBoundingBox()).Position.Y - size.Y / 2)
 	model:PivotTo(pivot + Vector3.new(0, bottom + (def.Height or 0), 0))
 	model:SetAttribute("LightningRig", def.Model)
+	-- The spawner makes it a lock-on target; the boss asset never knows.
+	CollectionService:AddTag(model, Constants.NAMES.LOCK_ON_TAG)
 	model.Parent = workspace
 	WeaponFX.apply(model, def.Model) -- web crackle Beams + charge switch, if this boss has a lightning rig
 	local strands = 0

@@ -9,6 +9,9 @@
       },
       "LuckboundProps": {
         "$path": "assets/rbxm/props"
+      },
+      "LuckboundAnimations": {
+        "$path": "assets/rbxm/animations"
       }
     },
     "ServerScriptService": {

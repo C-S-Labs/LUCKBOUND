@@ -484,18 +484,82 @@ The first thing anyone sees.
 10. **On a phone (or Studio's device emulator).** ✅ Pass: the rail starts
     collapsed, the panel is readable, and nothing is cut off at the edges.
 
-### Test K — run and double jump (2 min) ⭐ NEW
+### Test K — movement, stamina and lock-on (10 min) ⭐ NEW
 
-1. **Hold Shift and run.** ✅ Pass: you accelerate over ~0.25s rather than
-   snapping, and a small bar appears above the roll prompt.
-2. **Keep running.** ✅ Pass: about 8 seconds later you drop back to walking
-   and the bar is empty and amber. You cannot immediately sprint again.
-3. **Stand still and hold Shift.** ✅ Pass: the bar does not move.
-4. **Jump, then jump again in the air.** ✅ Pass: a second, smaller jump with a
-   gold spark ring at your feet. A third press does nothing.
-5. **Walk off the edge of a walkway and press jump immediately.** ✅ Pass: you
-   get a **full** jump, not the weaker air one — that is the coyote window. You
-   should then still have the air jump available.
+**In the hub:**
+
+1. **Walk around.** ✅ Pass: walk, idle and run animations play (not a frozen
+   pose), turning is quick, and a rose health bar sits above a gold stamina bar at
+   the bottom centre, both always visible. Output shows `[Locomotion] controller
+   bound`. *If the character slides in the idle pose, the stock animations did not
+   load: report the Output.*
+2. **Hold Shift and run, then let go.** ✅ Pass: you reach speed and stop
+   almost at once, with no sliding. In the hub the gold bar never drains
+   (unlimited stamina).
+2b. **Press Left Ctrl.** ✅ Pass: the mouse locks to the centre, the camera sits
+   over the right shoulder, and the character turns with the camera. Ctrl again
+   turns it off.
+3. **Press Space on the ground, then again in the air.** ✅ Pass: one jump, and
+   nothing in the air (the double jump is gone). The jump is as high as before.
+4. **Walk off a walkway edge and press Space immediately.** ✅ Pass: you still
+   jump (the coyote window).
+4b. **Walk, run and stop; turn sharply at speed; jump off something tall.** ✅
+   Pass: no pop between standing, walking and running. The body leans into speed
+   and banks into turns, and the head follows the camera. A normal jump lands
+   with a light dip. A tall drop lands with a deeper dip, a louder thud and a brief
+   slowdown. Footsteps quicken with speed.
+4c. **Left Ctrl (shoulder camera), then walk sideways and backward.** ✅ Pass:
+   sideways, the legs turn toward the movement while the chest stays forward.
+   Backward, the run plays in reverse. *If backward shows a forward run
+   sliding backward, report it: the reversed clip didn't take.*
+5. **Press Q while moving, then Q standing still.** ✅ Pass: a ~17-stud roll in
+   the direction you held, with the body tumbling forward, gold afterimages along
+   the path and a brief camera widen. *(Superseded: the afterimages are now a wind
+   burst, a pale ring and streaks at the start.)* Then a short hop backward that keeps you
+   facing forward, with afterimages and no tumble. In the hub neither costs stamina.
+   **Jump, then press Q in the air (with and without a direction).** ✅ Pass: a
+   short flat burst the held way (forward with none) with a wind burst, once per
+   jump. A second Q before landing does nothing.
+   **With Left Ctrl on, press Q with each of W, A, S, D.** ✅ Pass: you keep
+   facing forward and roll front, left, back and right, each with its own tumble.
+   The afterimages are faint.
+   *Use `/moveprofile expedition` to feel the expedition weight without entering
+   one, and `/stamina 5` to test low stamina.*
+
+**In an expedition** (any world, via the Fate Engine or `/roll`):
+
+6. **Stand in the map.** ✅ Pass: you move noticeably slower than in the hub,
+   and turning has weight.
+7. **Mash Q during a roll, then press it once after the roll ends.** ✅ Pass: the
+   mashing does nothing (no queued roll); the single press after rolls again. Each
+   roll takes a chunk out of the bar, and a pale strip shows the chunk before it
+   drains away.
+8. **Roll until the bar is empty, then press Q.** ✅ Pass: the last roll happens
+   even on a sliver of stamina; with the bar empty nothing happens, and it waits
+   about a second before refilling. The fill is amber when low.
+9. **Jump.** ✅ Pass: it costs a small chunk of stamina.
+
+**Lock-on** (in a map with a boss arena):
+
+10. **`/showboss winged_sentinel`, face it, click the middle mouse button (R3
+    on a gamepad).** ✅ Pass: a gold diamond sits on the boss, and the camera
+    moves behind your right shoulder with the boss in view. It must not point
+    up at the sky, even close in.
+11. **Walk left and right.** ✅ Pass: you circle the boss facing it. Hold Shift:
+    you turn to run. Press Q with a direction: you roll that way.
+12. **Back into a wall.** ✅ Pass: the camera slides in instead of clipping
+    through.
+13. **Run away past ~120 studs, or middle-click again.** ✅ Pass: the lock drops
+    and the normal camera returns.
+14. **Middle-click with no boss in view.** ✅ Pass: nothing happens.
+15. **`/dummies 5`, then lock on to the middle one and flick the mouse right.** The
+    mouse cursor hides while locked (it's captured).
+    ✅ Pass: the diamond moves one pillar right. Flick again: one more. At the end
+    of the row a flick right does nothing.
+16. **Gamepad: push the right stick sideways, let it return, push again.** ✅
+    Pass: one pillar per push, never two from one push.
+17. **Touch (device emulator): lock on.** ✅ Pass: a Next button appears. Tapping
+    it moves the lock, and it disappears when the lock drops. `/dummies 0` clears.
 
 ### Test L — the menu follows the world (4 min) ⭐ NEW
 

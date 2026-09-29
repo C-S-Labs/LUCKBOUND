@@ -1020,54 +1020,313 @@ local GameConfig = {
 		FieldOfView = 58,
 	},
 
-	-- === PLAYER ABILITIES, PHASE 1 ===
+	-- === PLAYER MOVEMENT ===
 	-- Movement only, and deliberately so. Owner-directed: combat, damage and
 	-- every offensive stat belong to the ITEM that grants them (a sword model
 	-- carries its own damage, effects, abilities and animations), never to the
-	-- player. Nothing here may grow a damage number.
+	-- player. Nothing here may grow a damage number (a test pins it).
 	--
-	-- These are client-applied, because Roblox movement is client-authoritative
-	-- by construction -- the server cannot make a character run without the
-	-- client agreeing. The server's defence is the same one it already uses for
-	-- rolls: it validates OUTCOMES (distance to the Fate Engine, expedition
-	-- eligibility) and never reads a client-supplied speed. See
-	-- docs/PLAYER_ABILITIES.md for the planned ladder beyond these two.
+	-- Every number the movement uses is here: the character runs on our own
+	-- ControllerManager, not the default Humanoid physics, so nothing about how
+	-- a player moves is Roblox's default (owner-directed 2026-09-28).
+	--
+	-- Client-applied, because Roblox movement is client-authoritative by
+	-- construction. The server validates OUTCOMES (distance to the Fate
+	-- Engine, expedition eligibility, and later hits) and never reads a
+	-- client-supplied speed. See docs/PLAYER_ABILITIES.md.
 	Locomotion = {
-		-- Base is GameConfig.Scale.WalkSpeed (32) -- the hub traversal budget
-		-- owns that number and this must not fork it.
-		SprintMultiplier = 1.55, -- 32 -> 49.6
-		SprintAccelerationSeconds = 0.25, -- ramp, so it reads as effort
-		SprintDecelerationSeconds = 0.4,
+		-- === PROFILES ===
+		-- The hub is for getting around; an expedition is for fighting. Same
+		-- rules, different weight. Speeds are multipliers on Scale.WalkSpeed
+		-- (the hub traversal budget owns that number and nothing forks it).
+		-- The controller picks EXPEDITION while the character stands inside a
+		-- loaded expedition stage, HUB otherwise.
+		Profiles = {
+			HUB = {
+				SpeedScale = 1, -- 32 studs/s
+				SprintMultiplier = 1.61, -- 24 -> ~38.6 (owner: +1.5 studs/s)
+				-- Short on purpose: long ramps read as sliding on ice (owner's
+				-- first Studio walk, 2026-09-28).
+				AccelerationSeconds = 0.08,
+				DecelerationSeconds = 0.05,
+				-- Moving in the air steers at this fraction of ground control.
+				AirControl = 0.8,
+				-- Stamina is unlimited in the hub, and only there (owner,
+				-- 2026-09-28): nothing costs anything.
+				JumpStaminaCost = 0,
+				RollStaminaCost = 0,
+				SprintDrainPerSecond = 0,
+				-- A hard landing slows you for this long (see HardLanding*).
+				HardLandingRecoverySeconds = 0.12,
+				AirDashStaminaCost = 0,
+			},
+			EXPEDITION = {
+				-- The middle ground the owner asked for: heavier than the hub,
+				-- lighter than a Souls game. ~22 walking, ~34 sprinting.
+				SpeedScale = 0.7,
+				SprintMultiplier = 1.59, -- 16.8 -> ~26.7 (owner: +1.5 studs/s)
+				-- Weight comes from costs and the ramps, not from sliding.
+				AccelerationSeconds = 0.12,
+				DecelerationSeconds = 0.08,
+				AirControl = 0.45,
+				JumpStaminaCost = 10,
+				RollStaminaCost = 22,
+				SprintDrainPerSecond = 14,
+				HardLandingRecoverySeconds = 0.3,
+				AirDashStaminaCost = 18,
+			},
+		},
 
-		-- Stamina exists to make sprinting a decision instead of a walk speed.
-		-- Full drain is 8s of sprint; a full refill is 6s of not sprinting.
+		-- === STAMINA ===
+		-- One bar for everything: sprint, jump, roll now; attacks and blocks
+		-- when weapons land. A challenge, not a punishment: any action can be
+		-- STARTED on any stamina above zero (the cost may take the bar to
+		-- zero), and running dry only costs a short breather.
 		StaminaMax = 100,
-		StaminaDrainPerSecond = 12.5,
-		StaminaRegenPerSecond = 16.6,
-		-- You cannot re-start a sprint the instant you run dry; you have to let
-		-- it breathe. Without this the player taps sprint forever at 0.
-		StaminaRegenDelaySeconds = 0.8,
+		StaminaRegenPerSecond = 30, -- empty to full in ~3.3s
+		-- Refill waits this long after any spend...
+		StaminaRegenDelaySeconds = 0.45,
+		-- ...and this long after the bar hits zero (the "exhausted" breather).
+		StaminaExhaustedDelaySeconds = 1.1,
+		-- A NEW sprint needs this much; a running sprint continues to zero.
 		StaminaSprintFloor = 5,
 
-		-- Roblox's own default JumpPower, restated here because two places
-		-- need to restore it (the loading screen releases the character it
-		-- froze, and the air jump multiplies it) and neither may guess.
-		JumpPower = 50,
-
-		-- === DOUBLE JUMP ===
-		-- Two jumps total (the ground jump plus one), which is the whole
-		-- feature. A third is not a tuning change -- it is a movement game.
-		AirJumps = 1,
-		AirJumpPower = 0.85, -- multiplier on the humanoid's JumpPower
-		-- A grace window after leaving a ledge in which the FIRST jump is
-		-- still the ground jump. Every platformer has this and nobody notices
-		-- it until it is missing.
+		-- === JUMP ===
+		-- One jump. The double jump is gone (owner, 2026-09-28). Height is
+		-- unchanged from the old ground jump, so every gap the kits were built
+		-- around stays crossable.
+		JumpPower = 50, -- launch speed, studs/s
+		-- A grace window after leaving a ledge in which the jump still counts
+		-- as a ground jump. Every platformer has this and nobody notices it
+		-- until it is missing.
 		CoyoteTimeSeconds = 0.12,
-		-- Stops one input frame from spending both jumps at once.
-		AirJumpCooldownSeconds = 0.2,
-		-- Fires a small ring effect under the feet on the air jump, so the
-		-- second jump is legible to the player and to anyone watching.
-		AirJumpEffect = true,
+		-- A jump pressed this long before landing fires on landing.
+		JumpBufferSeconds = 0.12,
+		-- Coming down faster than this (studs/s) is a hard landing: the body
+		-- absorbs it and movement slows to HardLandingSpeedMultiplier for the
+		-- profile's HardLandingRecoverySeconds. A normal jump lands at ~50,
+		-- so only real drops count.
+		HardLandingSpeed = 72,
+		HardLandingSpeedMultiplier = 0.35,
+
+		-- === ROLL ===
+		-- The Souls verb, adapted: a committed roll with a direction, or a
+		-- quick backstep when no direction is held. The movement half only:
+		-- the invulnerable window is DECLARED here and read by the combat
+		-- layer when it opens (RESERVED, docs/RESERVED.md).
+		-- Slower and further after the owner's walk with the first clips
+		-- (2026-09-28): a short, quick roll read as unrefined.
+		RollDurationSeconds = 0.65,
+		-- How far a roll travels, in studs; its speed follows the roll's shape
+		-- (LocomotionCore.rollSpeedShape) and is worked out from this.
+		RollDistanceStuds = 18, -- owner-tuned 2026-09-28
+		RollRecoverySeconds = 0.12, -- after the roll, before the next action
+		-- The body blends out of a roll clip into standing or running over
+		-- this long, instead of dropping out of it (owner, 2026-09-28).
+		RollExitBlendSeconds = 0.22,
+		RollInvulnerableFrom = 0.05, -- seconds into the roll
+		RollInvulnerableTo = 0.44,
+		BackstepDurationSeconds = 0.32,
+		BackstepSpeed = 26, -- ~8 studs
+		BackstepInvulnerableFrom = 0.02,
+		BackstepInvulnerableTo = 0.16,
+		BackstepStaminaFraction = 0.6, -- of the profile's RollStaminaCost
+
+		-- === AIR DASH (the jump dash) ===
+		-- Roll pressed in the air: a short horizontal burst the held way (or
+		-- forward), holding height for its length, once per airtime.
+		-- Movement only -- no invulnerable window. Owner, 2026-09-28.
+		AirDashes = 1,
+		-- Off the floor for less than this is not "in the air": a roll press
+		-- then waits for the feet instead of becoming an air dash.
+		AirDashMinAirSeconds = 0.12,
+		AirDashSpeed = 52, -- studs/s
+		AirDashDurationSeconds = 0.22, -- ~11.5 studs
+
+		-- === ROLL LOOK ===
+		-- A discrete burst of wind, not afterimages (owner, 2026-09-28): short
+		-- streaks of air left behind where the move starts, gone in a moment.
+		-- No ground ring (owner: too much). Used for the roll, backstep and
+		-- air dash.
+		RollWind = true,
+		RollWindSeconds = 0.32,
+		RollWindTransparency = 0.35, -- how solid a streak starts
+		RollWindStreaks = 5,
+		RollWindStreakLengthStuds = 7,
+		RollWindStreakThickness = 0.12,
+		-- The procedural roll while there is no clip for that direction: the
+		-- body tumbles forward, backward or sideways, relative to facing,
+		-- dipping this far at its lowest. Drawn locally; other players see
+		-- the clip once one is filled in (Content/Animations/Player.luau).
+		RollTumble = true,
+		RollTumbleDropStuds = 0.9,
+		-- The air dash's procedural lean toward its direction, in degrees.
+		AirDashLeanDegrees = 28,
+		-- The camera widens by this many degrees at the start of a roll and
+		-- settles back over the roll.
+		RollFovKickDegrees = 3,
+
+		-- === TURNING ===
+		-- Turns that follow the CAMERA (shoulder camera) are instant: a lag
+		-- there put the body, and rolls aimed from it, off where the player
+		-- looked. Every other turn -- to a new movement direction, toward a
+		-- lock-on target, back after a roll -- is a quick smooth rotation at
+		-- this rate, so changing direction never snaps (owner, 2026-09-28).
+		TurnDegreesPerSecond = 480,
+		-- A bigger change of direction turns faster, up to this multiple for a
+		-- full reversal, so turning back is a quick pivot, not a wide circle.
+		ReversalTurnBoost = 1.5,
+
+		-- === SHOULDER CAMERA (our shift lock) ===
+		-- Left Ctrl toggles it: the mouse locks to the centre, the camera
+		-- sits over the right shoulder, and the character faces where the
+		-- camera looks. Not Shift, which is sprint.
+		ShoulderCameraOffset = 1.75, -- studs right
+
+		-- === WEAPON LOCK ===
+		-- The longest any weapon move may hold movement, however long it asks
+		-- for. A forgotten unlock still hands control back.
+		MaxLockSeconds = 2.5,
+
+		-- === CONTROLLER ===
+		-- How far below the hips the floor sensor looks; past this, airborne.
+		GroundSearchDistance = 1.5,
+		-- How often the controller re-checks HUB vs EXPEDITION.
+		ProfileCheckSeconds = 0.5,
+		-- After a jump the floor sensor still sees the floor for a frame or
+		-- two; the character counts as airborne for this long regardless.
+		JumpGroundIgnoreSeconds = 0.15,
+		-- Ground acceleration during a roll: near-instant, so it bursts.
+		RollAccelerationSeconds = 0.03,
+		-- A stage's footprint is grown by this many studs when deciding
+		-- whether the character stands inside it.
+		StageMarginStuds = 20,
+	},
+
+	-- === CHARACTER ANIMATION ===
+	-- How the body reads while it moves: gait blending, directional legs,
+	-- lean, head look, landings, footsteps. Presentation only -- nothing here
+	-- changes where a character goes or how fast. Rules in AnimationCore; the
+	-- clips themselves are Content/Animations/Player.luau.
+	CharacterAnimation = {
+		-- Below this horizontal speed (studs/s) the body stands.
+		IdleSpeed = 0.9,
+		-- Walk -> run crossfade band, in studs/s. Above RunFrom the run clip
+		-- starts to take over; by RunFull it has.
+		RunFrom = 10,
+		RunFull = 15,
+		-- Speeds the clips were authored at, so playback follows the real
+		-- speed without the feet sliding. Stock R15 values.
+		WalkClipSpeed = 11,
+		RunClipSpeed = 24,
+		SprintClipSpeed = 30,
+		-- Playback-rate clamp: past these a clip reads as sped-up footage.
+		MinPlaybackRate = 0.55,
+		MaxPlaybackRate = 2.5,
+		-- Crossfades.
+		FadeSeconds = 0.18,
+		AirFadeSeconds = 0.1,
+		-- Directional blend weights settle over this long, so a change of
+		-- direction flows instead of snapping between clips.
+		DirectionSmoothSeconds = 0.09,
+
+		-- === PROCEDURAL FALLBACK (no directional clips yet) ===
+		-- Strafing: the legs turn toward the movement (up to this far) while
+		-- the upper body counter-turns to keep facing forward.
+		MaxLegYawDegrees = 65,
+		WaistCounterFraction = 0.85,
+		LegYawSmoothSeconds = 0.1,
+		-- Moving backward plays the forward clip in reverse once the move
+		-- direction is this far behind (cosine of the angle, -1 = straight back).
+		BackwardBelowCos = -0.25,
+
+		-- === LEAN ===
+		-- Into acceleration (pitch) and into turns (bank), in degrees.
+		MaxLeanDegrees = 9,
+		LeanPerAcceleration = 0.09, -- degrees per studs/s^2
+		SprintLeanDegrees = 5, -- extra forward lean while sprinting
+		MaxBankDegrees = 11,
+		BankPerTurnRate = 2.4, -- degrees per rad/s, scaled by speed
+		LeanSmoothSeconds = 0.12,
+
+		-- === HEAD LOOK ===
+		-- The head turns toward the lock-on target, or where the camera looks.
+		HeadLook = true,
+		MaxHeadYawDegrees = 55,
+		MaxHeadPitchDegrees = 30,
+		HeadSmoothSeconds = 0.14,
+
+		-- === LANDING ===
+		-- Fall speed (studs/s) above which a landing is shown at all, and the
+		-- dip the body takes (studs) for a soft and a hard one.
+		SoftLandingSpeed = 22,
+		SoftLandingDipStuds = 0.35,
+		HardLandingDipStuds = 1.0,
+		LandingDipSeconds = 0.28,
+
+		-- === TURN IN PLACE ===
+		-- Standing and turning faster than this (rad/s) steps the feet.
+		TurnInPlaceRate = 2.2,
+		TurnInPlaceWeight = 0.55,
+
+		-- === SOUNDS ===
+		-- The Roblox client's built-in character sounds, played by us (the
+		-- default sound script keys off the Humanoid state machine, which is
+		-- off). The running loop's rate follows speed: at RunningSoundSpeed
+		-- studs/s it plays at normal rate.
+		Sounds = true,
+		RunningSoundSpeed = 16,
+		MaxRunningSoundRate = 2.2,
+		RunningVolume = 0.35,
+		JumpVolume = 0.4,
+		LandVolume = 0.5,
+	},
+
+	-- === LOCK-ON ===
+	-- Optional: everything plays without it. A target is any model the game
+	-- tags with Constants.NAMES.LOCK_ON_TAG (the spawner tags it; the enemy
+	-- asset is never edited). Over-the-shoulder camera while locked.
+	LockOn = {
+		Range = 90, -- studs, to acquire
+		BreakRange = 120, -- studs, past this the lock drops
+		-- Candidates must sit within this angle of the camera's look.
+		MaxAngleRadians = math.rad(60),
+		-- Score = angle weight x angle + distance / Range; lowest wins, so the
+		-- thing you look at beats the thing that is merely close.
+		AngleWeight = 2,
+		-- Out of sight this long and the lock drops.
+		LostSightSeconds = 1.5,
+		-- The camera: behind and over the right shoulder.
+		CameraDistance = 11,
+		ShoulderOffset = 2.4, -- studs right
+		ShoulderHeight = 2.2, -- studs above the root
+		CameraLift = 1.6,
+		-- How far toward the target the camera looks (0 = at the player).
+		LookBias = 0.55,
+		-- A tall target is aimed at no higher than this above the player's
+		-- root, so a boss never pulls the camera into the sky.
+		MaxAimHeight = 9,
+		-- Seconds for the camera to close most of the gap; smooth, not floaty.
+		CameraSmoothSeconds = 0.08,
+		-- The camera never sits closer to the player than this after a wall
+		-- pulls it in.
+		CameraMinDistance = 3,
+		-- Letting go of a lock eases the view back to the normal (or
+		-- shoulder) camera over this long instead of snapping (owner, 2026-09-28).
+		ReleaseBlendSeconds = 0.4,
+
+		-- === SWITCHING TARGETS ===
+		-- While locked, flick the mouse or the right stick sideways (or tap
+		-- Next on touch) to move the lock one target that way.
+		SwitchMousePixels = 60, -- sideways mouse travel that counts as a flick
+		SwitchMouseWindowSeconds = 0.25, -- ...if it happens within this long
+		SwitchStickThreshold = 0.7, -- right-stick X past this is a flick
+		SwitchStickRest = 0.3, -- and it must return inside this before the next
+		SwitchCooldownSeconds = 0.3, -- between two switches
+		-- A candidate must sit at least this far to the side (in the camera's
+		-- unit-direction space) to count as "that way", so two enemies stood
+		-- almost in line do not flip-flop.
+		SwitchMinOffset = 0.02,
 	},
 
 	Debug = {
@@ -1100,6 +1359,14 @@ local GameConfig = {
 		-- the skybox and require a rejoin.
 		MinWalkSpeed = 1,
 		MaxWalkSpeed = 500,
+
+		-- /dummies: plain lock-on targets for testing lock-on and switching
+		-- before any enemy spawns. An arc in front of the player.
+		DummyDefaultCount = 3,
+		DummyMaxCount = 6,
+		DummyDistanceStuds = 30,
+		DummySpacingStuds = 14,
+		DummyHeightStuds = 8,
 
 		LogEveryRoll = true,
 	},

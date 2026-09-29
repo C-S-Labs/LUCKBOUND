@@ -89,6 +89,9 @@ local Constants = {
 		ROLL_ANCHOR = "RollAnchor",
 		GATE_ANCHOR = "GateAnchor",
 		EXPEDITION_STAGE = "ExpeditionStage",
+		-- CollectionService tag for anything the player can lock on to. The
+		-- spawner adds it; an enemy asset never needs to know it exists.
+		LOCK_ON_TAG = "LuckboundLockOn",
 
 		-- A prebuilt map is a Model synced into ServerStorage by Rojo, named for
 		-- its AssetManifest key. Inside it, two named parts are the whole

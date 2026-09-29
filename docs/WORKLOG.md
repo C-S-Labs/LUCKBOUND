@@ -34,6 +34,654 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 120 — 2026-09-29 — Consolidated PR: movement (#147) + The Ascendant (#148)
+**Merged:** PR #147 (with #148 folded in)   **Tests:** 1008 passing (minimal run, owner's call)   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- **Owner:** consolidate #147 (player movement) and #148 (`CloudTesting`: The Ascendant boss, enemy framework,
+  cloud Blender setup) into one PR to save CI minutes. `CloudTesting` was merged into the movement branch;
+  #148 is closed in favour of #147.
+- **Overlap:** only the shared docs. #148 changes no `src/`. `INDEX_MAP.md` was regenerated, and WORKLOG sessions
+  were renumbered by branch (git workflow 95, Ascendant 96–102, movement 103–119). STATUS and INDEX merged
+  cleanly.
+
+### Decisions made
+- Owner override of GIT_WORKFLOW's one-PR-at-a-time rule for this batch only.
+
+### Next
+1. The Ascendant: the owner imports into Studio; fix its known issues (see Session 102).
+2. Movement follow-ups: Sprint, Walk x4, Turn L/R clips; upload the generated clips.
+3. The UI revamp on its own branch.
+
+---
+
+## Session 119 — 2026-09-28 — Free-camera turns curve; no foot slide
+**Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner)
+- **Free camera still snapped to 8 directions:** free running now moves along the turning body
+  (`direction = bodyFacing * input`), and the body turns at 480°/s, boosted up to 2.5× for reversals.
+  Direction changes are curves. The shoulder camera and rolls are unchanged.
+- **Sliding while running:** the run clip's feet covered ~11 studs/s but it was played as if 24. The generator
+  now measures each looping gait clip's planted-foot speed into the generated
+  `Content/Animations/GroundSpeeds.luau` (in `.styluaignore`). `CharacterAnimator` plays each run direction at
+  body speed ÷ its own speed. Strides were lengthened (forward 16.5, back 14.3, sides 10.0 studs/s);
+  `MaxPlaybackRate` is now 2.5.
+
+### Next
+1. Owner's final walk, then the PR.
+
+---
+
+## Session 118 — 2026-09-28 — Final pre-PR fixes: smooth turns, no roll queue
+**Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner's last notes before the PR)
+- **Snapping between 8 directions** and **snapping back to the target after a roll:** the last fix made every
+  turn instant. Now only camera-driven turns (the shoulder camera) and a roll's start are instant; movement-
+  direction changes, lock-on facing and the post-roll return rotate smoothly at `TurnDegreesPerSecond` (900).
+  The body facing (`bodyFacing`) is tracked separately from the desired facing. `LocomotionCore.turnToward`
+  + a test.
+- **No roll queue:** presses during a roll or its recovery are ignored; a fresh press is needed after it
+  finishes. `RollBufferSeconds` and the buffered fields are removed. A brief moment off the floor
+  (`onFloor`) still counts as the floor, so it rolls instead of air-dashing.
+
+### Next
+1. Owner's final walk, then open the PR.
+
+---
+
+## Session 117 — 2026-09-28 — Instant facing (real fix); weapon stance design
+**Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- **Turning still lagged** (owner). A higher `BaseTurnSpeed` wasn't enough: the controller turns via a torque.
+  The facing is now written to the root's CFrame directly every frame (angular velocity cleared), in every mode.
+  The profile `TurnRate`s and `HeldFacingTurnRate` are removed.
+- **Owner asked how weapon poses fit:** the design is written in `PLAYER_ABILITIES.md` §6.1. Stances are
+  upper-body clips at Action over shared locomotion. Whole-body moves (rolls, backstep, air dash) now load at
+  **Action2**; attacks go at Action3/4. Per-type stance files come later, with items.
+
+### Next
+1. Owner re-walks: fast camera swings while running, rolling and with the shoulder camera.
+2. Remaining clips; the PR.
+
+---
+
+## Session 116 — 2026-09-28 — Roll speed shape, 18 studs, instant held facing
+**Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner)
+- **"Burst before the roll":** the speed was flat at its peak from frame one while the clip was still gathering.
+  It now follows `LocomotionCore.rollSpeedShape`: 0.45 of peak rising to full by 22%, full to 62%, then easing
+  to 0.3.
+- **18 studs:** `RollDistanceStuds` replaces `RollSpeed`; `rollPeakSpeed` derives the peak from the shape's
+  mean. A test integrates the distance.
+- Sprint was +1.5 studs/s in the previous commit.
+- **Camera-turn lag:** with the shoulder camera or a lock-on, the body turns at `HeldFacingTurnRate` (1000,
+  effectively instant); free running keeps the profile's rate.
+
+### Next
+1. Owner re-walks. 2. Remaining clips. 3. PR.
+
+---
+
+## Session 115 — 2026-09-28 — Steering out, roll blends out, shake fixed
+**Merged:** see the PR for this branch   **Tests:** 1007 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner)
+- **Roll steering removed** (owner preferred it without): `LocomotionCore.steer`, its config and its test are
+  gone.
+- **Roll blends out:** the roll, backstep and air-dash clips are timed past the move (plus recovery plus
+  `RollExitBlendSeconds` 0.22) and stopped with that fade when the move ends. The diagonal body turn
+  (`rollYaw`) eases back to straight.
+- **Camera shake while rolling:** the torso and head had collisions on, and the clip turned them through the
+  floor, so physics pushed back. Now only the HumanoidRootPart collides; every other body part is set
+  `CanCollide = false` every frame.
+
+### Next
+1. Owner re-walks rolls.
+2. Remaining clips: Sprint, Walk x4, Turn L/R. Then the PR.
+
+---
+
+## Session 114 — 2026-09-28 — Roll polish: floor contact, distance, steering
+**Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner: "everything else I really like")
+- **Rolls clipped the floor:** the generator's ground solver treated the body as lines through the joints.
+  It now accounts for part thickness (`RADIUS`, extra torso and head points) plus 0.1 of clearance; clips
+  regenerated.
+- **Further:** the roll goes ~24 studs (37 studs/s x 0.65s) and the air dash ~11.5 (52 x 0.22).
+- **Follows the camera:** a moving roll or air dash steers toward the held (camera-relative) direction at up to
+  `RollSteerDegreesPerSecond` (110). `LocomotionCore.steer` + 1 test. Owner to confirm this is what they meant.
+- `/animslot <slot>` alone now describes that slot instead of clearing it.
+
+### Next
+1. Owner walks the rolls again (floor contact, distance, steering).
+2. Remaining clips: Sprint, Walk x4, Turn L/R. Then the PR.
+
+---
+
+## Session 113 — 2026-09-28 — Longer roll; the second batch of generated clips
+**Merged:** see the PR for this branch   **Tests:** 1007 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- **Owner:** the rolls "look much better" but were a bit fast and short. The roll is now 0.65s at 31 studs/s
+  (~20 studs, was ~17); the i-frame window is 0.05–0.44s and the clips were regenerated at 0.65s.
+- **Generator:** loop support (periodic Catmull-Rom across the seam), `shift_phase` (second step = first
+  mirrored), `time_reversed`.
+- **15 new clips:** Run Forward/Backward/Left/Right (directional running now on), Idle, Backstep, JumpStart,
+  Rise, Fall, LandSoft, LandHard, AirDash x4. Checked in stick-figure previews.
+- The procedural landing dip stands down while a landing clip plays.
+
+### Next
+1. Owner: pull, restart `rojo serve`, and judge the new clips (run in all directions with Left Ctrl, jump and
+   land from height, air dash, idle).
+2. Remaining clips: Sprint, Walk x4, Turn L/R.
+3. Then open the PR; then the UI branch.
+
+---
+
+## Session 112 — 2026-09-28 — Roll queueing; generated roll animations
+**Merged:** see the PR for this branch   **Tests:** 1007 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- **Owner:** spamming Q sometimes skipped the animation. Now any press during a roll is **queued** (one at most)
+  and plays after the current roll fully finishes. Being off the floor for under `AirDashMinAirSeconds` (0.12s,
+  a bump mid-roll) makes a roll wait for the feet instead of turning into an air dash. 2 tests.
+- **Animations, owner's go-ahead: Claude authors them.** New `tools/gen_player_anims.py` builds KeyframeSequences
+  from key poses (Catmull-Rom between keys, baked at 30fps, a ground-contact solver for rolls, mirroring for the
+  other side). Output is in `assets/rbxm/animations/`, and Rojo maps it to `ReplicatedStorage.LuckboundAnimations`.
+- `CharacterAnimator` registers generated clips via `KeyframeSequenceProvider` **in Studio only** and fills empty
+  slots with them. They ship by being saved to Roblox and pasted into the content file.
+- First four clips: `RollForward`, `RollBackward`, `RollLeft`, `RollRight`, checked in stick-figure previews
+  (contact constant through the roll).
+
+### Decisions made
+- Tests: the owner asked to condense them to 100 or fewer. The suite runs in about 2s and prints one line, so it
+  costs little; ~850 predate this branch. New tests are kept to one per rule.
+
+### Next
+1. Owner: pull, re-sync (a new Rojo folder: restart `rojo serve`), roll in all four directions with the
+   shoulder camera on, and judge the clips.
+2. Then: run directions, idle, backstep, jump and land, air dash.
+
+---
+
+## Session 111 — 2026-09-28 — Walk feedback: no ring, stronger streaks, lock-on eases out
+**Merged:** see the PR for this branch   **Tests:** 1005 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner's walk: wind, air dash and lock-on all work)
+- The wind burst's ground ring is removed (owner: too much). There are now 5 streaks, more solid (0.35), longer
+  (7 studs) and staggered.
+- Lock-on release eases the camera back over `LockOn.ReleaseBlendSeconds` (0.4s) by blending from the lock's
+  last framing into the default camera's output each frame. A lock that breaks eases too; a respawn snaps.
+- The air dash has its own clip slots already (`AirDash*`); they go in the animation set.
+
+- **Owner asked:** should there be 8 rolls? No. Four clips plus `AnimationCore.rollYaw` turn the body up to 45°
+  onto the true direction, so diagonals read right (the roll and the air dash).
+- **Owner asked** to condense the tests to 100 or fewer. Not done: the suite runs in about 2s and its output is
+  one line, so it costs almost no usage. ~850 of the tests predate this branch and cover other systems. Going
+  forward, new tests are kept to rules only.
+
+### Next
+1. Owner re-walks: the streaks and the unlock ease.
+2. Then generate the player animation set (four rolls first).
+
+---
+
+## Session 110 — 2026-09-28 — Wind burst, air dash, lock-on switch fix
+**Merged:** see the PR for this branch   **Tests:** 1004 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner's walk: the run animation works)
+- **Roll look:** afterimages replaced by a discrete wind burst: a ForceField ring at the feet expanding and
+  fading, plus streaks left behind (`RollWind*`).
+- **Air dash (jump dash):** roll in the air, once per airtime. It holds height and is driven directly along its
+  direction. There are 4 directional slots (`AirDash*`) plus a procedural lean fallback. Hub free, expedition 18
+  stamina, no i-frames. `LocomotionCore` gains `AirDashesUsed` and kind `"AIRDASH"`. 6 tests.
+- **Lock-on switching bug:** a mouse flick never registered because Roblox reports `InputObject.Delta` only for a
+  captured mouse. The mouse is now captured (LockCenter) while locked and handed back on release, and the flick
+  falls back to the position change.
+- Animation brief, abilities doc and Test K updated.
+
+### Decisions made
+- Owner asked whether Claude can author the animation set; answer and plan are in chat (a KeyframeSequence
+  generator). Awaiting a go-ahead.
+
+### Next
+1. Owner re-walks: the wind burst, the air dash, and lock-on switching.
+2. On a go-ahead: generate the player clips as KeyframeSequences.
+
+---
+
+## Session 109 — 2026-09-28 — Prep for hand-made player animations
+**Merged:** see the PR for this branch   **Tests:** 998 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- `docs/PLAYER_ANIMATION_BRIEF.md`: a spec per slot (type, length, what it must read as), the order to make
+  them (rolls, then run directions, then idle, and so on), what the code adds on top (don't animate it in), and
+  the try-it loop.
+- `/animslot [slot] [id]` (CLIENT, registry): swaps a clip into a slot live and rebuilds the tracks. With no
+  arguments it lists each slot's source; `""` clears. `CharacterAnimator.overrideSlot`/`describeSlots`. A test
+  keeps its slot list equal to `AnimationCore.SLOTS`.
+
+### Decisions made (owner)
+- The UI revamp starts on its own branch only **after** the moveset is confirmed. One task at a time.
+
+### Stopped at
+Owner is asleep. Next session: author the player animations together.
+
+### Next
+1. Owner walks Test K (4b, 4c, 5) to confirm the moveset.
+2. Author clips in the brief's order, trying each with `/animslot`, then paste into `Content/Animations/Player.luau`.
+3. Then: a PR for this branch; then the UI revamp on a new branch.
+
+---
+
+## Session 108 — 2026-09-28 — Polished body movement; directional rolls
+**Merged:** see the PR for this branch   **Tests:** 997 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- **Owner:** movement must read natural and polished, with independent directional and jump animations.
+  New `Core/AnimationCore.luau` (pure, 45+ tests) and `Controllers/CharacterAnimator.luau`: blended
+  idle/walk/run by speed; 4-way directional blend when a gait's clips exist; a procedural strafe fallback
+  (legs turn with a waist counter-turn; backward reverses the clip); lean and bank; head look; soft and hard
+  landing dips; turn in place; built-in running, jump and land sounds.
+- **Content slots:** `Content/Animations/Player.luau` (22 slots: Idle, Walk*/Run* x4, Sprint, JumpStart,
+  Rise, Fall, LandSoft/Hard, Roll x4, Backstep, Turn L/R), validated at boot (`Schema` "animations").
+- **Owner:** rolls keep facing when facing is held (shoulder camera or lock-on) and play by direction
+  (front/back/left/right). A per-direction procedural tumble applies until clips exist. The roll look is toned
+  down: ghosts at 0.78 transparency every 0.09s, a 3° FOV kick, a smaller dip.
+- **Movement rule:** a hard landing (>72 studs/s) slows movement briefly (`LocomotionCore.land`; hub 0.12s,
+  expedition 0.3s).
+- `LocomotionController` now only moves the character; all presentation moved to `CharacterAnimator`.
+- `PLAYER_ABILITIES.md` §2.7 covers where and how to add real clips.
+
+### Decisions made
+- Procedural layers are local-only (Motor6D.C0). Real clips are the way to make the polish visible to other
+  players; there's no new remote.
+- The UI revamp is a separate branch (one task per branch).
+
+### Stopped at
+Needs a Studio walk: `TESTING.md` Test K 4b, 4c and 5.
+
+### Next
+1. Owner walks it. Author the roll and run directional clips first.
+2. UI revamp on its own branch.
+
+---
+
+## Session 107 — 2026-09-28 — Walk feedback: no ice, hub stamina, shoulder camera, roll look
+**Merged:** see the PR for this branch   **Tests:** 950 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner feedback from the second Studio walk)
+- **Sliding on ice:** ramps cut to 0.08/0.05s (hub) and 0.12/0.08s (expedition), pinned by a test.
+- **Hub stamina unlimited**, and only there (`SprintDrainPerSecond = 0`, all costs 0). Tested.
+- **Shift lock:** our own shoulder camera on Left Ctrl (mouse lock-centre, `CameraOffset`, face the camera).
+  Roblox's shift lock needs the PlayerModule, which this place lacks.
+- **Roll look:** particles removed. Gold neon afterimages, a local forward tumble via the root joint's C0, and
+  a 7° FOV kick easing back.
+- **Lock-on** prints `[LockOn] ready…` on start. It was never reached before the PlayerModule fix, and it needs
+  a target (`/dummies`).
+- **Dev commands** (owner: every new command goes in the registry): `/moveprofile hub|expedition|auto` and
+  `/stamina [percent]`, both CLIENT, category PLAYER. `DEV_TOOLS.md` updated.
+
+### Stopped at
+Awaiting the owner's re-walk.
+
+### Next
+1. Owner re-walks Test K.
+2. A real roll animation asset, so other players see the tumble.
+
+---
+
+## Session 106 — 2026-09-28 — First Studio walk: controller never started; fixed
+**Merged:** see the PR for this branch   **Tests:** 947 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- **Owner's Studio walk:** default Roblox movement only; no roll, no bar. Output showed an infinite yield on
+  `PlayerScripts:WaitForChild("PlayerModule")` in `LocomotionController.init`, so the whole controller never ran
+  (the place has no PlayerModule). Fixed: input now comes from `Humanoid.MoveDirection`, which the platform's
+  input scripts fill on every device. No PlayerModule dependency, and no unbounded wait.
+- Bind success or failure is printed (`[Locomotion] controller bound` / `FAILED to bind: …`).
+- Owner: health and stamina are **always visible**. `Vitals` now has a health row (from the Humanoid,
+  `UITheme.AccentHealth`) above stamina; the hub fade is gone.
+
+### Decisions made
+- Never wait on a Roblox-provided script without a timeout; read what the Humanoid already exposes.
+
+### Stopped at
+Awaiting the owner's re-walk of Test K.
+
+### Next
+1. Owner: pull, re-sync, and re-walk Test K from step 1.
+
+---
+
+## Session 105 — 2026-09-28 — Lock-on switching, charge scope
+**Merged:** see the PR for this branch   **Tests:** 947 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- Lock-on target switching: `LockOnCore.switch` (nearest on that side, with a minimum offset) and `flick`.
+  `LockOnController` handles a mouse flick, a right-stick flick (rest re-arm) and a touch Next button while
+  locked. Tunables are in `GameConfig.LockOn` (Switch*).
+- `/dummies [count]` dev command (DebugSystem + DevCommands registry): tagged pillars for testing lock-on.
+- `WEAPONS.md` §2 "Charge": owner rule. The charge bar shows only for weapons with a charge. Epic: charge plus
+  small stat buffs. Legendary: charge alters the moveset briefly. Common–Rare: none.
+- Docs: `PLAYER_ABILITIES.md` §2.6, `TESTING.md` Test K steps 15–17, `DEV_TOOLS.md`.
+
+### Decisions made
+- Switching follows the Souls convention (flick sideways), adapted for mouse and touch.
+- Mythic charge (owner): Legendary's charge in two stages, with an awakening finisher at stage 2
+  (`WEAPONS.md` §2). Rejected: an act-filled charge and movement tech. Open: a party buff on release.
+
+### Stopped at
+Test K (17 steps) needs a Studio walk.
+
+### Next
+See Session 104's list.
+
+---
+
+## Session 104 — 2026-09-28 — Own character controller, roll, stamina, lock-on
+**Merged:** see the PR for this branch   **Tests:** 940 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+Supersedes Session 103's dash and double jump (same branch, unmerged).
+
+### Done
+- **Own character controller.** `LocomotionController` switches off the Humanoid state machine and the stock
+  Animate script and drives a `ControllerManager` (ground and air controllers plus a floor sensor). It sets
+  direction, speed and facing every frame, launches jumps, and plays the stock animation assets itself.
+  Death hands the Humanoid back its state machine.
+- **`LocomotionCore`:** HUB and EXPEDITION profiles (`tuning()`, with a reserved `upgrades` hook for the Fate
+  Tree), one stamina bar, a single jump with coyote time and a jump buffer, and roll/backstep with recovery,
+  a buffer and a declared invulnerable window (RESERVED). The weapon lock is kept (`AllowRoll` replaces
+  `AllowDash`).
+- **Double jump and dash removed.**
+- **Lock-on:** new `Core/LockOnCore.luau` (pick, break, aim cap, smoothing) and `Controllers/LockOnController.luau`
+  (middle mouse / R3 / touch, over-the-shoulder camera, wall pull-in, gold marker). Targets are tagged
+  `LOCK_ON_TAG` by the spawner; `/showboss` now tags its preview. No enemy asset changed.
+- **Stamina bar:** `UI/Vitals.luau`, house style, with a lag strip; built to take health and charge rows later.
+- `GameConfig.Locomotion` rewritten (profiles, stamina, jump, roll, controller); `GameConfig.LockOn` added.
+- Docs: `PLAYER_ABILITIES.md` §1–§2.6 and §6, `TESTING.md` Test K (14 steps), `RESERVED.md`.
+
+### Decisions made (owner, this session)
+- Level A: our own controller on `ControllerManager`. Not a full custom-physics engine, and not rules layered
+  over the default physics.
+- The double jump goes. The expedition is a middle ground between the hub and Souls. The hub stays fast.
+- Stamina is a challenge, not Souls-hard: actions start on any stamina above zero.
+- Lock-on is optional and must not modify enemies.
+- UI: the stamina bar now; health and charge with weapons.
+
+### Stopped at
+Code, tests and docs are done. **Not walked in Studio:** the whole of Test K. The riskiest parts are that the
+stock animations play under our controller and the ground-controller feel (`GroundOffset`/sensor distance).
+
+### Next
+1. Owner: run `TESTING.md` Test K, then tune `GameConfig.Locomotion`/`LockOn` by feel.
+2. LUCKBOUND's own animations (roll, backstep, run) to replace the stock ones.
+3. Items and inventory, then §7.6 step 0 (`ENEMY_AI.md` §12).
+
+---
+
+## Session 103 — 2026-09-28 — Movement state machine: sprint-jump, dash, weapon lock
+**Merged:** see the PR for this branch   **Tests:** 925 passing (was 902)   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- `Core/LocomotionCore.luau` rebuilt in place as one movement state machine. `mode()` derives GROUND / AIR /
+  DASH / LOCKED. Sprint and double jump were folded in with their tuning unchanged.
+- New: sprint-jump (higher and longer out of a sprint), ground-only dash (Q / gamepad B / touch button, stamina
+  cost, cooldown, jump-cancel), and the weapon lock (`lock`/`unlock`, clamped to `MaxLockSeconds`).
+- `Controllers/LocomotionController.luau` drives the dash with a horizontal `LinearVelocity`, tops up the
+  sprint-jump on the first airborne frame, and blocks the Humanoid's jump under a no-jump lock. It exposes
+  `mode`/`lock`/`unlock` (RESERVED rows added).
+- `GameConfig.Locomotion`: sprint-jump, dash and lock tunables. 23 new tests.
+- Docs: `PLAYER_ABILITIES.md` §2.5 (built) and §6 (how weapon moves drive movement). `TESTING.md` Test K steps 6–9.
+  `RESERVED.md` has a movement-hooks section.
+
+### Decisions made
+- Owner: build movement before weapons, and fold the existing sprint and double jump into the new framework.
+  Done as an in-place rebuild, not a second module (rule 1).
+- No new remote. Movement is client-authoritative, as before; the server guards outcomes. I-frames, damage and
+  lunges stay with combat (§7.6, still not opened).
+- Weapon moves talk to movement only through `mode()` and `lock(spec)`. Cancels are data on the move.
+
+### Stopped at
+Code, tests and docs are done. **Not walked in Studio**: Test K steps 6–9 need the owner.
+
+### Next
+1. Owner runs `TESTING.md` Test K in Studio and tunes the dash and sprint-jump numbers by feel.
+2. Items and inventory (the item schema), then the §7.6 amendment step 0 (`ENEMY_AI.md` §12).
+
+---
+
+## Session 102 — 2026-09-29 — Axe-chop Reap, spell orb, cast/stagger actions, extra joints
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes   **Branch:** `CloudTesting`
+
+### Done
+- **Idle left-arm snap:** `hand_on` picked its elbow pole from an arbitrary reference (`axis.orthogonal()`), so the
+  choice flipped between frames. It now measures from world-down, is biased to down, and is sticky (`_LAST_HPOLE`).
+- **Reap** re-authored as an overhead axe chop with the blade placed on the player (`HIT_POINT`), see the moveset.
+- **Spell orb** on the staff between the crescent and the back-horn (`the_ascendant_orb.py`, `VFX_Orb`).
+- **New actions:** `P1_OrbCast`, `P1_SkyCast`, `Hit_React`, `P1_Stagger`, `P1_StaggerRecover`.
+- **Joints:** `Spine` + forearm twist bones + softer shoulder pads (`joints_core.py`, `POST_POSE` hook).
+- Owner asked for no test rounds; the build prints one `CHK` line per action (hand gap, wrists, blade-to-player distance).
+
+### Stopped at
+Build checks (no test rounds, per the owner): Idle left hand stays on the staff (gap 0, wrists <= 54 deg); the Reap's
+crescent middle is exactly on the player torso at f19 and within 0.5 m at f18-20. Known leftovers:
+- Reap: the left hand lifts off the staff by up to 16 cm on some frames and the left wrist reaches 131 deg.
+- OrbCast (9 cm gap, wrist 96), StaggerRecover (17 cm gap, wrist 79): left hand drifts off on some frames.
+- Walk/Strafe still carry the staff the old way. No `Death`. Nothing tested in Studio.
+
+### Next
+Owner review in Blender; then `Death`, Phase 2 actions, and the Walk/Strafe across-the-body carry.
+
+---
+
+## Session 101 — 2026-09-29 — Axe grip for the off hand, longer staff, robe shake fixed
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes   **Branch:** `CloudTesting`
+
+### Done
+- **Robe shake:** `cloth_core` now gives contact friction and no lever kick at the pinned root; the robe no longer
+  collides with the arms. Idle shake 6 cm -> under 1 mm.
+- **Off-hand grip** (owner's axe reference): `_asc_pose.left_on_haft` puts the left hand on the haft overhand from
+  the front (`AXE_GRIP` = 1: palm to the body, fingers wrapping toward it). It needs no search, so it is fast.
+- **Idle_Guard** now holds the staff across the body like the axe (C -0.10,-0.45,2.35; u -0.85); the left hand
+  stays attached. **Staff** butt lengthened 0.82 -> 1.0 m (`the_ascendant_staff.py`); the delivered `.blend` mesh is
+  extended to match.
+- **Crescent Reap** re-authored as a two-handed swing (COIL/TELL/SWEEP/PAST/DRAG re-searched for the axe grip).
+- **Speed:** `pose_fix` restores arm bones with one refresh (`matrix_basis`); a grip solve dropped from minutes to
+  seconds. Sticky elbow pole (Session 100) is kept.
+
+### Stopped at
+Known problems, all in the Reap's recovery (f43-52, RECOVER key) unless noted:
+- Left wrist up to 139 deg and the staff clips the body (up to 482 tris at f48); the right arm clips 26 frames.
+- Idle: left wrist 95 deg on 18 frames; the right arm clips the chest by ~23 tris on every frame.
+- Walk/Strafe use the old carried-staff pose, not the axe guard, so the staff is held differently there.
+
+### Next
+1. Rework the Reap recovery (f43-60) and the Idle right arm.
+2. Give Walk/Strafe the same across-the-body carry.
+3. Owner: one Studio import once the boss is finished.
+
+---
+
+## Session 100 — 2026-09-28 — Right-elbow flare fixed
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes   **Branch:** `CloudTesting`
+
+### Done
+- The owner saw the right elbow flare out around Walk f15. `pose_fix.wield` re-picked its elbow pole from 5
+  candidates on every frame, and near-ties flipped to the last-resort "flare" pole for 1-2 frames (the elbow moved
+  10 cm out and back).
+- The pole is now sticky (`_LAST_POLE`, `STICKY` 40): consecutive solves keep the previous pole unless another is
+  clearly better.
+- Right elbow turn per frame: Walk and Strafe ×2 went from 14° to ≤ 1°, with no new clipping.
+- Re-exported the FBXs and gave the owner `TheAscendant_fixed.blend`: their mesh, the 150-bone rig and all 5 actions,
+  saved as a separate file. The owner's own `.blend` is untouched.
+
+### Stopped at
+The Reap still flicks the elbow at f31-32 (14°, a held pose). It is left until the owner decides on the left-hand
+design (a two-handed weapon would rework the Reap's grips).
+
+---
+
+## Session 99 — 2026-09-28 — Robe clears the free arm
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes   **Branch:** `CloudTesting`
+
+### Done
+- **Correction to Session 98:** the arm colliders were already in `the_ascendant_cloth.py` in `50b4f82`, not
+  pending. The remaining touches happened with them on: the left forearm met the robe's hip flare just under the
+  belt, where the chains are pinned and cannot move aside.
+- **The fix is in the pose, not the cloth.** `walk_core` now passes per-enemy pose overrides (`POSE_OVERRIDES`:
+  `arm_out`, `elbow_bend`, `lean`, `hip_roll`) through to the pose functions. The Ascendant's free arm hangs at
+  `arm_out` 0.17 in Walk and Strafe ×2 (`ARM_OUT` in `Walk.py`).
+- **On the owner's mesh:** arm-vs-body contact is 0 in Walk, Strafe ×2 and Idle. Robe-vs-leg is 0 in Strafe ×2 and
+  Idle, ≤ 4 tris on 4 Walk frames, and ≤ 14 in the Reap's deepest lunge; all of it is at the hip crease under the
+  pinned robe top. Thicker thigh colliders were tried and made no difference, so they were reverted.
+
+### Stopped at
+Pushed. The owner will import once, when the boss is finished (not after each step). Remaining leftovers are in the
+Reap only: the two-hand left-arm graze, the staff at f18, and the wrist at 82°.
+
+### Next
+The owner decides what "finished" still needs before the single Studio import.
+
+---
+
+## Session 98 — 2026-09-28 — Baked cloth (robe + scarves) and three-joint finger grips
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes (Blender assets + framework)   **Branch:** `CloudTesting`
+
+### Done
+- **`_framework/cloth_core.py`** (new, owner's request): free-hanging cloth for any enemy.
+  - It builds bone chains on a cloth piece (`skirt` = a ring of chains; `strips` = one chain per scarf) and re-skins
+    the piece onto them, with at most 4 influences per vertex.
+  - It simulates each action (verlet, gravity, damping, shape pull, capsule collision with the listed bones, ring
+    spacing for skirts) and keys the chains.
+  - `run.py` calls `cloth_bake()` after each action.
+  - The chain list is `CLOTH_CHAINS`: `CLOTH` is already every enemy's material-slot constant.
+- **The Ascendant** (`the_ascendant_cloth.py`, manifest extras): the robe is 16 × 5 bones, pinned at z 1.8 under the
+  belt, with belt islands above 1.6 kept rigid and `ring_stretch` 1.4. The scarves are 4 × 4.
+  - Robe-vs-leg overlap below the hips, worst frame, rigid → cloth: Strafe 176 → 0, Idle 29 → 0, Walk 189 → 4,
+    Reap 298 → 14.
+  - The scarves never clip, and the loop seams are no bigger than a normal frame step.
+- **`_framework/hands_core.py`** (new): `add_phalanges()` splits each finger's second bone into two, cuts a vertex
+  ring at the new joint and re-weights the finger. `humanoid.make_humanoid(fingers=True)` now builds three joints.
+- **`pose_fix.wrap`** was rewritten. Each joint curls about the haft axis until its tip meets the haft surface, and the
+  thumb opposes first (`_oppose`). The old per-bone search (`_wrap_bone`) is removed. Finger wrap is now 101-108°
+  (was 94-99°), and the thumb now reaches the haft (it stayed 111 mm off the axis).
+- Exported onto the owner's mesh: 150 bones, rest offset 0 against the pipeline, 21,300 tris.
+
+### Decisions made
+- The cloth is baked in Blender (owner's choice); a live Roblox solver can reuse the same bones later.
+- Cloth collides only with the enemy's own bones. Player collision is the normal hitbox.
+
+### Stopped at
+Pushed. Open items:
+- The moving robe touches the hanging left arm (≤ 12 tris, 5 frames in StrafeLeft and Walk). Fixed in Session 99.
+- The finger wrap is limited by finger length against the 94 mm haft.
+- 150 bones: confirm the Roblox importer accepts the rig.
+- Beacon Keeper, Spire Regent and Armory Warden gain finger joints on their next re-export.
+
+### Next
+1. Owner: import the FBXs in Studio; check the robe, the scarves and the grips.
+2. The owner decides on the arm colliders for the cloth.
+
+---
+
+## Session 97 — 2026-09-28 — The Ascendant: whole-body locomotion, arm spasm and leg-cross fixes
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes (Blender assets + framework)   **Branch:** `CloudTesting`
+
+### Done
+- **Owner's `.blend` saved first** (`e29dd92`): a hand chest cleanup, the centre crystal moved, `BreakawayGlow`
+  removed. The rig is identical to the script's (44 bones, zero rest offset); the mesh is 21.2k tris.
+- **The spasming arm had two causes, both framework bugs:**
+  - `anim_core.end` scanned only odd frames. A clip present on every frame was "fixed" on odd frames only, so the arm
+    flipped every frame (the hand jumped 33 cm). It now scans every frame.
+  - `_key_all` could key q where its neighbours held -q, and the limb whipped the long way round. Keys now take the
+    curve's sign.
+- **Root drift:** while posing, the attached action re-applied the keyed root location, so `move_root` stacked up
+  (0.5 m over a Walk loop). Posing now runs with the action detached until `_key_all`.
+- **`walk_core` is whole-body** (the owner's rule, now in `ENEMY_FRAMEWORK.md`):
+  - Root bob and sway, pelvis yaw and roll, a counter-rotating chest, a level head, and world-axis arm swings with
+    elbow flex.
+  - The pelvis now moves before the feet are solved, so planted feet no longer slide.
+- **Strafe legs:** the feet's antiphase amplitude is capped (gap ≥ 70% of the stance), the knees point out, and a
+  staggered stance (left foot forward) clears the shins. Leg-vs-leg overlap is zero; before, the feet crossed by 7 cm.
+- **The Reap's left-hand spin:** `hand_on` picked the finger wrap per frame ("fingers down"), which flips on an
+  upright haft (a 160° spin at f51). It now takes `grip=±1`. The Reap releases the hand at 48-52, swaps the wrap at
+  52-54 and re-grips at 54-60 (`_asc_pose.staff(free=)`). `_asc_pose.fix_clip` never pulls a gripping hand.
+- **Staff arcs** (C and D) plus a `LIFT` key cut the sweep's waist clip from 122 tris to 20 (f18 only).
+- **Idle_Guard:** a slow weight shift and two breaths; the chest moves 4 cm and the head 8 cm (it was nearly static).
+- **Exported onto the owner's mesh:** the 6 FBXs were written by `export.py` from the `.blend` plus the rebuilt
+  actions. The `.blend` itself was not re-saved: it was written by Blender 5.2, and pip `bpy` 5.0.1 warns of data loss.
+  On the owner's mesh, Walk, Idle and Strafe ×2 are clean.
+
+### Decisions made
+- The Ascendant's FBXs come from the owner's `.blend` until `the_ascendant.py` reproduces the chest edit.
+- The tri budget stays at 21.2k; the owner allowed 85-90k, but no fix needed it.
+
+### Stopped at
+Pushed. Known leftovers:
+- The left upper arm grazes the chest in the Reap recovery (≤ 48 tris, steady).
+- The staff grazes the waist at f18 (20 tris).
+- The wrist reaches 82° at f46-49.
+- The `VFX_Core` bone sits 6.5 cm from the nearest torso-glow vertex after the crystal move.
+
+### Next
+1. Owner: import the 6 FBXs in Studio; check the arm in both strafes and the Reap's re-grip.
+2. Port the chest edit into `the_ascendant.py` (or keep exporting from the `.blend`); move `VFX_Core` if the crystal moved.
+3. Re-export the Temple Acolyte's Walk/Strafe (it shares `walk_core`, which is now whole-body) and review it.
+
+---
+
+## Session 96 — 2026-09-28 — The Ascendant (Ethereal Scape boss): body, Sanctum Staff, moveset, first actions
+**Merged:** see the PR for `CloudTesting`   **Tests:** no `src/` changes (Blender assets only)   **Branch:** `CloudTesting`
+
+### Done
+- **Body** `ethereal_scape/the_ascendant.py`: ~3.5 m boss in the ES language (gold slit mask, crystal extremities,
+  teal/mint ribbons, no halo). The robe is a front-slit two-panel robe, each panel rigged waist→own thigh.
+  - The P2 cuirass is a `Breakaway` piece.
+  - Pieces are named for the humanoid clip scan.
+  - Validate PASS, ~18.5k tris, nothing floating.
+- **Weapon** `the_ascendant_staff.py` (manifest `extras`): the **Sanctum Staff**, weapon type **Staff** (owner: the
+  boss weapon must fit an existing `WEAPONS.md` class so it can drop). Crescent crystal head, portal-eye core.
+- **Moveset** `ASCENDANT_MOVESET.md`: sweeps and portal steps (the Sentinel's opposite), P1/transition/P2, fairness
+  rules, VFX plan.
+- **Actions** `anims/the_ascendant/`:
+  - `Idle_Guard` (clean).
+  - `P1_CrescentReap`: Tell 3, HitStart 17, HitEnd 22, RecoverStart 23, 60 f, so a 14 f tell and a 37 f recovery;
+    `anim_core` OK.
+  - `Walk` (boss gait), `StrafeLeft`, `StrafeRight`.
+  - The shared helper is `_asc_pose.py`.
+- **Framework fixes** (`_framework/walk_core.py`):
+  - `_ik2` twisted the thigh 180° and folded the shin toward the knee side, so the ankle missed its target by up to
+    0.8 m and anything weighted to the thigh flipped. It now keeps the bone's twist, places the shin as a pure
+    hinge on the target, and caps reach at 99.5% (no hyperextension).
+  - New optional `post=` hook on the walk/strafe builders (carry a weapon while walking).
+- The owner rejected the upward "mohawk" crown; it is now temple horns + a shard cascade down the back of the skull.
+
+### Decisions made
+- Boss weapons are one of the `WEAPONS.md` types. The Ascendant's is a Staff.
+- Built in a cloud container with pip `bpy` 5.0.1 (the repo targets 5.2). A scratch launcher maps the scripts' `\`
+  paths; the repo scripts are unchanged Windows-style.
+
+### Stopped at
+Body, moveset doc and the five actions are built and exported.
+
+Known leftovers:
+- Small staff clip at the Reap's f19 (22 tris).
+- Left wrist 50–80° on the Reap's return to guard.
+- The carried staff in Walk/Strafe grazed the robe; a wider carry was the last change, **re-check it**.
+
+### Next
+1. Owner: review renders (`ethereal_scape/renders/the_ascendant_*`), import `TheAscendant.fbx` + actions in Studio.
+2. Re-export the Temple Acolyte / Meadow Stag Walk & Strafe with the fixed `_ik2` (their FBXs used the old solver).
+3. Remaining Ascendant actions per `ASCENDANT_MOVESET.md`; the player-drop staff export (`wpn_es_staff_legendary_a`).
+
+---
+
 ## Session 95 — 2026-09-28 — Git workflow: implementation vs integration agents
 **Merged:** see the PR for this branch   **Tests:** CI (docs only)   **Branch:** `claude/luckbound-agent-git-workflow-0ioymd`
 

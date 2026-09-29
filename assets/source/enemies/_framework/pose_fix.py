@@ -41,30 +41,55 @@ def grip_lance():
     wb = P["Weapon_R"]
     wb.matrix = Matrix.Translation(RW.to_3x3().inverted() @ delta) @ wb.matrix
     _upd()
-def _wrap_bone(bn, G0, GA, target):
-    """Rotate bone about the axis that swings its tail toward the haft; pick the angle whose samples never enter the
-       haft and whose tail lies closest to 'target' distance from the axis."""
-    _upd(); pb = P[bn]
-    h = RW @ pb.head; t = RW @ pb.tail
-    foot = G0 + GA*(h - G0).dot(GA)
-    ax = (t - h).cross(foot - h)
-    if ax.length < 1e-6: return
-    ax.normalize(); best = None
-    for k in range(-30, 49):                         # search both ways: curl in, or back out if already inside
-        a = k*0.05
-        tt = h + Matrix.Rotation(a, 3, ax) @ (t - h)
-        if not all(_dax(h + (tt - h)*f, G0, GA) >= HAFT_R + FING_R*0.9 for f in (0.25, 0.5, 0.75, 1.0)): continue
-        sc = abs(_dax(tt, G0, GA) - target) + 0.01*abs(a)
-        if best is None or sc < best[0]: best = (sc, a)
-    if best is None or best[1] == 0: return
-    A = RW.to_3x3().inverted() @ ax; hl = pb.head.copy()
-    pb.matrix = Matrix.Translation(hl) @ Matrix.Rotation(best[1], 4, A.normalized()) @ Matrix.Translation(-hl) @ pb.matrix
+def _curl(bn, G0, GA, sign=None, max_a=1.9, step=0.04):
+    """Flex one finger joint about the haft axis (made perpendicular to the bone) through its head: curl until the
+       tail touches the haft surface, never letting the phalanx enter it. A phalanx already inside is opened first.
+       sign: curl direction, fixed per finger by its first joint (the way that brings the tip toward the haft)."""
+    _upd(); pb = P[bn]; h = RW @ pb.head; t = RW @ pb.tail; d = (t - h).normalized()
+    ax = GA - d*GA.dot(d)
+    if ax.length < 1e-4: return sign
+    ax.normalize(); R = HAFT_R + FING_R
+    at = lambda a: h + Matrix.Rotation(a, 3, ax) @ (t - h)
+    ok = lambda a: all(_dax(h + (at(a) - h)*f, G0, GA) >= HAFT_R + FING_R*0.9 for f in (0.25, 0.5, 0.75, 1.0))
+    if sign is None: sign = 1 if _dax(at(0.2), G0, GA) < _dax(at(-0.2), G0, GA) else -1
+    a = 0.0
+    while not ok(sign*a) and a > -1.0: a -= step                 # starts inside the haft: open until clear
+    while a + step <= max_a and ok(sign*(a + step)):
+        a += step
+        if _dax(at(sign*a), G0, GA) <= R: break                   # tip on the haft surface: this joint is closed
+    if abs(a) > 1e-6:
+        A = (RW.to_3x3().inverted() @ ax).normalized(); hl = pb.head.copy()
+        pb.matrix = Matrix.Translation(hl) @ Matrix.Rotation(sign*a, 4, A) @ Matrix.Translation(-hl) @ pb.matrix
+    return sign
 def wrap(side):
+    """Close the hand round the haft: every finger (and the thumb, from the other side) curls joint by joint, each
+       joint until its tip meets the haft. Works with 2- or 3-joint fingers (hands_core.add_phalanges adds the 3rd);
+       with 3 joints a finger wraps most of the way round."""
     G0, GA = haft()
     for f in ("Index", "Middle", "Ring", "Pinky", "Thumb"):
-        _wrap_bone(f"{side}{f}1", G0, GA, HAFT_R + FING_R)
-        _wrap_bone(f"{side}{f}2", G0, GA, HAFT_R + FING_R*0.8)
+        sign = None
+        for k in (1, 2, 3):
+            bn = f"{side}{f}{k}"
+            if bn not in P: break
+            if f == "Thumb" and k == 1: _oppose(bn, G0, GA); continue
+            sign = _curl(bn, G0, GA, sign, max_a=1.9 if k < 3 else 1.5)
     _upd()
+def _oppose(bn, G0, GA, step=0.04, max_a=1.6):
+    """Thumb base: swing it toward the haft (about the axis that carries its tip straight at the haft) until its tip
+       rests on the far side of the haft from the fingers; the thumb's outer joints then curl round like a finger."""
+    _upd(); pb = P[bn]; h = RW @ pb.head; t = RW @ pb.tail
+    foot = G0 + GA*(h - G0).dot(GA); ax = (t - h).cross(foot - h)
+    if ax.length < 1e-6: return
+    ax.normalize(); R = HAFT_R + FING_R
+    at = lambda a: h + Matrix.Rotation(a, 3, ax) @ (t - h)
+    ok = lambda a: all(_dax(h + (at(a) - h)*f, G0, GA) >= HAFT_R + FING_R*0.9 for f in (0.25, 0.5, 0.75, 1.0))
+    a = 0.0
+    while a + step <= max_a and ok(a + step):
+        a += step
+        if _dax(at(a), G0, GA) <= R: break
+    if a > 0:
+        A = (RW.to_3x3().inverted() @ ax).normalized(); hl = pb.head.copy()
+        pb.matrix = Matrix.Translation(hl) @ Matrix.Rotation(a, 4, A) @ Matrix.Translation(-hl) @ pb.matrix
 # Anatomical hinges (humanoid.py / R15 rigs: every limb bone's local X is the side-to-side axis at rest).
 #   elbow: flexes the forearm toward the FRONT of the upper arm  -> local X in [-150 deg, 0]  (never past straight)
 #   knee : flexes the shin toward the BACK of the thigh           -> local X in [0, 150 deg]
@@ -118,27 +143,46 @@ def orient_hand(side, n_w, hd_w):
     pb = P[f"{side}Hand"]; hl = pb.head.copy()
     pb.matrix = Matrix.Translation(hl) @ R.to_4x4() @ Matrix.Translation(-hl) @ pb.matrix
     _upd()
-def hand_on(side, u, away):
-    """Off hand grips the haft at distance u from the grip centre. 'away' = world direction the palm comes FROM."""
+def hand_on(side, u, away, grip=None):
+    """Off hand grips the haft at distance u from the grip centre. 'away' = world direction the palm comes FROM.
+       grip: +1/-1 fixes the wrap handedness (see below)."""
     G0, GA = haft(); C = G0 + GA*u
     a = Vector(away); a = (a - GA*a.dot(GA)).normalized()          # palm normal points from hand to haft = -a
-    n_w = -a; hd_w = GA.cross(n_w).normalized()
-    if hd_w.z > 0: hd_w = -hd_w                                      # fingers hang downward-ish round the haft
-    wr = C - n_w*SEAT_N - hd_w*SEAT_D
+    n_w = -a; hd0 = GA.cross(n_w).normalized()
     s = 1 if side == "Left" else -1
     ua = f"{side}UpperArm"
-    sh = RW @ P[ua].head; axis = (wr - sh).normalized(); ref = axis.orthogonal().normalized()
-    rest = {b_: P[b_].matrix.copy() for b_ in (ua, f"{side}LowerArm", f"{side}Hand")}
-    best = None
-    for k in range(12):                              # swing the elbow round the shoulder->wrist line; keep the cleanest
-        pole = sh + (wr - sh)*0.5 + (Matrix.Rotation(k*math.pi/6, 3, axis) @ ref)*0.6
-        for b_ in rest: P[b_].matrix = rest[b_]; _upd()
-        _ik(f"{side}LowerArm", tuple(RW.inverted() @ wr), tuple(RW.inverted() @ pole)); _bake([ua, f"{side}LowerArm"])
-        err = ((RW @ P[f"{side}LowerArm"].tail) - wr).length
-        sc = hits("Arm" + side) + 1000*err + (5 if (RW.to_3x3() @ (P[ua].tail - P[ua].head)).dot(Vector((s, 0, 0))) < -0.2 else 0)
-        if best is None or sc < best[0]: best = (sc, pole)
-    for b_ in rest: P[b_].matrix = rest[b_]; _upd()
-    _ik(f"{side}LowerArm", tuple(RW.inverted() @ wr), tuple(RW.inverted() @ best[1])); _bake([ua, f"{side}LowerArm"])
+    sh = RW @ P[ua].head
+    rest = {b_: P[b_].matrix_basis.copy() for b_ in (ua, f"{side}LowerArm", f"{side}Hand")}
+    def _restore():                                  # local transforms: one refresh instead of one per bone
+        for b_ in rest: P[b_].matrix_basis = rest[b_]
+        _upd()
+    def _place(hd_w):
+        """Solve the arm for fingers wrapping along hd_w; returns (score, pole) of the cleanest elbow."""
+        wr = C - n_w*SEAT_N - hd_w*SEAT_D
+        axis = (wr - sh).normalized()
+        # Elbow poles swing round the shoulder->wrist line starting from "elbow straight down". Measured from world
+        # down (not axis.orthogonal(), which jumps between frames) so pole k means the same thing on every frame; a
+        # small bias toward down and toward the previous pole keeps the elbow from snapping between near-equal choices.
+        ref = Vector((0.0, 0.0, -1.0)); ref = ref - axis*ref.dot(axis)
+        ref = (ref.normalized() if ref.length > 1e-3 else axis.orthogonal().normalized())
+        best = None
+        for k in range(12):                          # swing the elbow round the shoulder->wrist line; keep the cleanest
+            pole = sh + (wr - sh)*0.5 + (Matrix.Rotation(k*math.pi/6, 3, axis) @ ref)*0.6
+            _restore()
+            _ik(f"{side}LowerArm", tuple(RW.inverted() @ wr), tuple(RW.inverted() @ pole)); _bake([ua, f"{side}LowerArm"])
+            err = ((RW @ P[f"{side}LowerArm"].tail) - wr).length
+            sc = hits("Arm" + side) + 1000*err + (5 if (RW.to_3x3() @ (P[ua].tail - P[ua].head)).dot(Vector((s, 0, 0))) < -0.2 else 0)
+            sc += 0.4*min(k, 12 - k) - (1.5 if k == _LAST_HPOLE.get(side) else 0.0)
+            if best is None or sc < best[0]: best = (sc, pole, k)
+        _LAST_HPOLE[side] = best[2]
+        _restore()
+        _ik(f"{side}LowerArm", tuple(RW.inverted() @ wr), tuple(RW.inverted() @ best[1])); _bake([ua, f"{side}LowerArm"])
+        return best, wr
+    # Which way the fingers wrap (+/-hd0) is the grip's handedness. A held grip never changes it, and with it fixed
+    # hd_w follows the haft continuously. grip=+1/-1 fixes it (use this in any ANIMATED two-hand hold); grip=None
+    # keeps the single-pose rule "fingers hang down", which flips sign on an upright haft (a ~160 deg hand spin).
+    hd_w = hd0*grip if grip else (hd0 if hd0.z <= 0 else -hd0)
+    _, wr = _place(hd_w)
     orient_hand(side, n_w, hd_w)
     # correct residual wrist error by nudging the whole off hand onto the seat
     _upd(); err = C - seat_point(side)
@@ -175,6 +219,9 @@ def joint_report(tag=""):
     print(f"JOINTS {tag}: " + " ".join(out) + ("  BAD: " + ", ".join(bad) if bad else ""))
     return bad
 
+_LAST_POLE = {}
+_LAST_HPOLE = {}
+STICKY = 40.0
 def wield(D, C, side="Right", pole_off=(0.5, 0.35, -0.6)):
     """Natural one-hand weapon hold: the haft runs along world direction D through world point C (in the palm).
        The hand stays in line with the forearm (the haft sits across the palm, so the forearm is solved to be well
@@ -184,17 +231,21 @@ def wield(D, C, side="Right", pole_off=(0.5, 0.35, -0.6)):
     ua, la = f"{side}UpperArm", f"{side}LowerArm"
     sh = RW @ P[ua].head
     chain = [ua] + [c.name for c in P[ua].children_recursive]      # arm + hand + fingers + weapon sockets
-    keep = {b_: P[b_].matrix.copy() for b_ in chain}
-    def _restore():
-        for b_ in chain: P[b_].matrix = keep[b_]; _upd()
+    keep = {b_: P[b_].matrix_basis.copy() for b_ in chain}
+    def _restore():                                  # local transforms: one refresh instead of one per bone
+        for b_ in chain: P[b_].matrix_basis = keep[b_]
+        _upd()
     best = None
-    # natural elbow directions first: back + down, tucked near the ribs; flaring out is a last resort
+    # natural elbow directions first: back + down, tucked near the ribs; flaring out is a last resort.
+    # Sticky: the pole the previous solve used wins unless another is clearly better, so consecutive frames of an
+    # animation never flick the elbow between two near-equal poles (a ~14 deg flare for one frame).
+    last = _LAST_POLE.get(side)
     for po in ((0.3, 0.6, -0.75), (0.2, 0.8, -0.55), (0.45, 0.45, -0.75), (0.1, 0.5, -0.85), (0.6, 0.5, -0.6)):
         _restore()
         _wield_once(D, C, side, s, ua, la, sh + Vector((po[0]*s, po[1], po[2])))
-        sc = hits("Arm" + side) + 3*joint_penalty(side) + 2*abduction_penalty(side)
+        sc = hits("Arm" + side) + 3*joint_penalty(side) + 2*abduction_penalty(side) - (STICKY if po == last else 0)
         if best is None or sc < best[0]: best = (sc, po)
-        if sc < 1: break
+    _LAST_POLE[side] = best[1]
     _restore()
     _wield_once(D, C, side, s, ua, la, sh + Vector((best[1][0]*s, best[1][1], best[1][2])))
 def abduction_penalty(side):
