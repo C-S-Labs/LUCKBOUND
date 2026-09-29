@@ -1,6 +1,6 @@
 # LUCKBOUND — Project Status
 
-**Last updated:** 2026-09-25 · slimmed for token use. The full previous version, with every closed item and walk
+**Last updated:** 2026-09-29 · slimmed for token use. The full previous version, with every closed item and walk
 report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an item below points to it.
 
 > **New conversation?** Read `INDEX.md` → `AGENTS.md` → the top entry of `docs/WORKLOG.md` → this file.
@@ -8,6 +8,11 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 ---
 
 ## 1. Where the project stands
+
+- **UI overhaul (branch `agents/UI-overhaul`, 2026-09-29):** the whole player UI moved to the SIGIL visual language
+  (`client/UI/Sigil/`): HUD, chat, leaderboard (Fate level column), universal menu, the Fate Engine main menu with
+  sub-sigils, the loading/title screen and the C&S Labs ident. Owner walked it in Studio; awaiting PR and CI. Shop,
+  Archive, Fate Tree and Rebirth are still preview panels inside their sub-sigils. See the WORKLOG entry for leftovers.
 
 - **Phase 1 is complete** (hub, roll, onboarding, saves, UI, sprint and double jump, events). The build spec §7
   amendments that opened later work are §7.1 expedition entry, §7.2 parties as their own server, §7.3 scenarios,

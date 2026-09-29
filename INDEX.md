@@ -94,9 +94,12 @@
 | chests, vault, gates | `Content/Fixtures/`, `Core/FixtureCore.luau`, `client/Controllers/FixtureController.luau`, `server/Systems/LootSystem.luau` |
 | world sky / fog / atmospheres | `Content/Worlds/*.luau` (`Environment`), `Content/Atmospheres/`, `client/Controllers/AmbienceController.luau` |
 | leaderboard / chat UI | `client/UI/Leaderboard.luau`, `client/UI/ChatPanel.luau`; columns + tunables in `Core/GameConfig.luau` (`Leaderboard`, `Chat`); doc `docs/PLAYER_UI.md` §3.7 |
+| SIGIL UI system (tokens, components, Fate-state retint) | `client/UI/Sigil/SigilStyle.luau`, `client/UI/Sigil/Sigil.luau`; dev board `Sigil/SigilShowcase.luau` (F8) |
+| Fate Engine menu (main menu, sub-sigils), universal menu, Fate level HUD | `client/UI/FateEngineMenu.luau`, `client/UI/UniversalMenu.luau`, `client/UI/FateHud.luau`; hotkey `GameConfig.HubMenu.FateEngineHotkey` |
+| studio ident (C&S Labs) on fresh join | `client/UI/CSIntro.luau`, `GameConfig.StudioIntro`, gate `LoadingScreen.isFinished/isReady` |
 | player movement (own controller, profiles, stamina, jump, roll, weapon lock) | `Core/LocomotionCore.luau` (rules), `client/Controllers/LocomotionController.luau` (ControllerManager), `GameConfig.Locomotion`; doc `docs/PLAYER_ABILITIES.md` §1–§2.5, §6 |
 | lock-on and its camera | `Core/LockOnCore.luau`, `client/Controllers/LockOnController.luau`, `GameConfig.LockOn`, tag `Constants.NAMES.LOCK_ON_TAG`; doc `PLAYER_ABILITIES.md` §2.6 |
-| stamina bar (later health, charge) | `client/UI/Vitals.luau` |
+| health and stamina bars (later charge) | `client/UI/Vitals.luau` |
 | player animation (blending, strafe, lean, head, landings, roll look, sounds) | `Core/AnimationCore.luau`, `client/Controllers/CharacterAnimator.luau`, `GameConfig.CharacterAnimation`; clips in `Content/Animations/Player.luau` (+ generated `GroundSpeeds.luau`); how-to `PLAYER_ABILITIES.md` §2.7 |
 | rolling (Fate) | `Core/FateCore.luau`, `server/Systems/FateSystem.luau`, `client/UI/FateRoll.luau` |
 | parties / teleport | `Core/PartyCore.luau`, `server/Systems/PartySystem.luau`, `client/Controllers/PartyController.luau` |

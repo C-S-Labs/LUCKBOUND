@@ -17,15 +17,17 @@ local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local GameConfig = require(Root.Core.GameConfig)
 local UITheme = require(Root.Core.UITheme)
 local UIKit = require(script.Parent.UIKit)
+local Sigil = require(script.Parent.Sigil.Sigil)
+local Style = require(script.Parent.Sigil.SigilStyle)
 
 local Leaderboard = {}
 
 local CONFIG = GameConfig.Leaderboard
-local HEADER_HEIGHT = 40
+local HEADER_HEIGHT = 44
 
 local player = Players.LocalPlayer
 local gui: ScreenGui
-local panel: Frame
+local panel: GuiObject
 local menu: Frame? = nil
 local menuFor: Player? = nil
 local body: ScrollingFrame
@@ -115,10 +117,8 @@ local function refresh()
 	local visible = math.min(#list, CONFIG.MaxVisibleRows)
 	local gap = UITheme.Space.XS
 	body.CanvasSize = UDim2.fromOffset(0, #list * (CONFIG.RowHeight + gap))
-	panel.Size = UDim2.fromOffset(
-		CONFIG.Width,
-		HEADER_HEIGHT + UITheme.Space.SM * 2 + visible * (CONFIG.RowHeight + gap)
-	)
+	panel.Size =
+		UDim2.fromOffset(CONFIG.Width + 32, HEADER_HEIGHT + 30 + visible * (CONFIG.RowHeight + gap))
 end
 
 -- === the player menu ================================================
@@ -247,8 +247,18 @@ local function addRow(who: Player)
 	if rows[who] then
 		return
 	end
-	local frame = UIKit.surface(body, "RAISED")
+	local frame = Instance.new("Frame")
+	frame.BackgroundColor3 = Style.Indigo
+	frame.BackgroundTransparency = 0.85
+	frame.BorderSizePixel = 0
 	frame.Size = UDim2.new(1, 0, 0, CONFIG.RowHeight)
+	frame.Parent = body
+	local tick = Instance.new("Frame")
+	tick.BackgroundColor3 = Style.tone(if who == player then "fate" else "system")
+	tick.BackgroundTransparency = if who == player then 0.1 else 0.7
+	tick.BorderSizePixel = 0
+	tick.Size = UDim2.new(0, 2, 1, 0)
+	tick.Parent = frame
 	local inner = Instance.new("Frame")
 	inner.BackgroundTransparency = 1
 	inner.Position = UDim2.fromOffset(UITheme.Space.SM, 0)
@@ -256,15 +266,15 @@ local function addRow(who: Player)
 	inner.Parent = frame
 
 	local texts = table.create(#CONFIG.Columns, "")
-	local cells = layCells(inner, texts, 14)
+	local cells = layCells(inner, texts, 16)
 	if who == player then
 		-- You are gold, everyone else is white: find yourself at a glance.
 		for _, cell in cells do
-			cell.TextColor3 = UITheme.AccentGold
-			cell.Font = UITheme.LabelFont
+			cell.TextColor3 = Style.tone("fate")
+			cell.Font = Style.Fonts.Label
 		end
 	end
-	cells[1].TextColor3 = if who == player then UITheme.AccentGold else UITheme.TextMuted
+	cells[1].TextColor3 = if who == player then Style.tone("fate") else Style.TextMuted
 
 	-- The whole row is the click target, with a gold edge on hover so it
 	-- reads as something to press.
@@ -274,23 +284,11 @@ local function addRow(who: Player)
 	hit.Size = UDim2.fromScale(1, 1)
 	hit.ZIndex = 3
 	hit.Parent = frame
-	local edge = frame:FindFirstChildOfClass("UIStroke")
 	hit.MouseEnter:Connect(function()
-		if edge then
-			UIKit.tween(
-				edge,
-				UITheme.Motion.Instant,
-				{ Color = UITheme.AccentGold, Transparency = 0.3 }
-			)
-		end
+		UIKit.tween(frame, UITheme.Motion.Instant, { BackgroundTransparency = 0.6 })
 	end)
 	hit.MouseLeave:Connect(function()
-		if edge then
-			UIKit.tween(edge, UITheme.Motion.Quick, {
-				Color = UITheme.StrokeColor,
-				Transparency = UITheme.StrokeTransparency,
-			}, true)
-		end
+		UIKit.tween(frame, UITheme.Motion.Quick, { BackgroundTransparency = 0.85 }, true)
 	end)
 	hit.Activated:Connect(function()
 		openMenu(who, frame)
@@ -332,23 +330,29 @@ local function build()
 	gui.DisplayOrder = 4
 	gui.Parent = player:WaitForChild("PlayerGui")
 
-	panel = UIKit.surface(gui, "PANEL")
-	panel.Name = "Panel"
-	panel.AnchorPoint = Vector2.new(1, 0)
-	panel.Position = UDim2.new(1, -UITheme.Space.MD, 0, UITheme.Space.MD)
-	UITheme.pad(panel, UITheme.Space.SM)
+	local sigilPanel = Sigil.panel(gui, {
+		name = "Panel",
+		tone = "system",
+		size = UDim2.fromOffset(CONFIG.Width + 32, 100),
+		anchor = Vector2.new(1, 0),
+		position = UDim2.new(1, -UITheme.Space.MD, 0, UITheme.Space.MD),
+	})
+	panel = sigilPanel.root
+	sigilPanel.open()
+	local content = sigilPanel.body
 
 	local header = Instance.new("Frame")
 	header.BackgroundTransparency = 1
-	header.Size = UDim2.new(1, 0, 0, HEADER_HEIGHT - UITheme.Space.SM)
-	header.Parent = panel
+	header.Size = UDim2.new(1, 0, 0, HEADER_HEIGHT)
+	header.Parent = content
 
-	local title = UIKit.label(header, CONFIG.Title, 13, "ACCENT")
-	title.Font = UITheme.HeaderFont
+	local title = UIKit.label(header, CONFIG.Title, 15, "ACCENT")
+	title.Font = Style.Fonts.Display
+	title.TextColor3 = Style.tone("fate")
 	title.Position = UDim2.fromOffset(UITheme.Space.SM, 0)
-	title.Size = UDim2.new(1, -110, 0, 16)
+	title.Size = UDim2.new(1, -110, 0, 20)
 
-	countLabel = UIKit.label(header, "0", 13, "MUTED")
+	countLabel = UIKit.label(header, "0", 15, "MUTED")
 	countLabel.AnchorPoint = Vector2.new(1, 0)
 	countLabel.Position = UDim2.new(1, -UITheme.Space.SM, 0, 0)
 	countLabel.Size = UDim2.fromOffset(100, 16)
@@ -356,26 +360,31 @@ local function build()
 
 	local headings = Instance.new("Frame")
 	headings.BackgroundTransparency = 1
-	headings.Position = UDim2.fromOffset(UITheme.Space.SM, 16)
-	headings.Size = UDim2.new(1, -UITheme.Space.SM * 2, 0, 12)
+	headings.Position = UDim2.fromOffset(UITheme.Space.SM, 22)
+	headings.Size = UDim2.new(1, -UITheme.Space.SM * 2, 0, 14)
 	headings.Parent = header
 	local texts = {}
 	for i, column in CONFIG.Columns do
 		texts[i] = column.Header
 	end
-	layCells(headings, texts, 10, "MUTED")
+	layCells(headings, texts, 12, "MUTED")
 
-	local divider = UIKit.divider(panel)
-	divider.Position = UDim2.fromOffset(0, HEADER_HEIGHT - UITheme.Space.SM)
+	local divider = Instance.new("Frame")
+	divider.BackgroundColor3 = Style.Violet
+	divider.BackgroundTransparency = 0.7
+	divider.BorderSizePixel = 0
+	divider.Position = UDim2.fromOffset(0, HEADER_HEIGHT - 2)
+	divider.Size = UDim2.new(1, 0, 0, 1)
+	divider.Parent = content
 
 	body = Instance.new("ScrollingFrame")
 	body.BackgroundTransparency = 1
 	body.BorderSizePixel = 0
-	body.Position = UDim2.fromOffset(0, HEADER_HEIGHT)
-	body.Size = UDim2.new(1, 0, 1, -HEADER_HEIGHT)
+	body.Position = UDim2.fromOffset(0, HEADER_HEIGHT + 4)
+	body.Size = UDim2.new(1, 0, 1, -HEADER_HEIGHT - 4)
 	body.ScrollBarThickness = 3
-	body.ScrollBarImageColor3 = UITheme.AccentGold
-	body.Parent = panel
+	body.ScrollBarImageColor3 = Style.tone("system")
+	body.Parent = content
 	UIKit.list(body, UITheme.Space.XS)
 end
 

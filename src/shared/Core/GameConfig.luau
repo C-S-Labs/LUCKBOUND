@@ -843,16 +843,45 @@ local GameConfig = {
 		CountSingular = "player",
 		CountPlural = "players",
 		Width = 260,
-		RowHeight = 30,
+		RowHeight = 34,
 		MaxVisibleRows = 10,
 		-- The attribute to sort by, highest first. nil sorts by display name,
 		-- which is what "rank" means until a real stat exists.
-		SortBy = nil :: string?,
+		SortBy = "FateLevel" :: string?,
 		Columns = {
-			{ Header = "#", Source = "RANK", Width = 34 },
+			{ Header = "LVL", Source = "FateLevel", Width = 44 },
 			{ Header = "PLAYER", Source = "NAME", Width = 0 },
-			-- e.g. { Header = "LVL", Source = "FateLevel", Width = 44 },
 		},
+	},
+
+	-- === STUDIO IDENT (C&S LABS) ======================================
+	-- The initial-join ident (client/UI/CSIntro.luau). ONE image, the supplied
+	-- logo, shown as two halves cropped at its vertical spine and slid together,
+	-- so its geometry is the original pixels and is never redrawn. An empty id
+	-- draws nothing (the prototype warns). Times are seconds from the start.
+	StudioIntro = {
+		-- Tried in order until one loads (the Output window reports each). A
+		-- decal id is not an image id, so the thumbnail forms come first.
+		LogoImageCandidates = {
+			"rbxthumb://type=Asset&id=120441639651175&w=700&h=700",
+			"rbxassetid://120441639651175",
+			"rbxthumb://type=Asset&id=120441639651175&w=420&h=420",
+		},
+		LogoImagePx = 700, -- only used by HALVES mode; must match the loaded image -- the source image's width and height in pixels
+		LogoSize = 320, -- px, the square canvas
+		SeparationPx = 120, -- how far apart the pieces start
+		StartRotationDegrees = 3,
+		AppearAt = 0.5,
+		AppearSeconds = 1.0,
+		JoinAt = 1.0,
+		JoinSeconds = 1.6,
+		HoldSeconds = 3.0, -- completed logo + tagline, before fading
+		FadeSeconds = 2.0, -- into the title screen
+		SparkCount = 10,
+		-- Line under the logo (the image already spells LABS).
+		Tagline = "BUILDING WORLDS BEYOND THE ORDINARY",
+		-- Plays on a fresh join only (never when passing through from a run).
+		Enabled = true,
 	},
 
 	-- === CHAT =========================================================
@@ -862,8 +891,9 @@ local GameConfig = {
 	Chat = {
 		Enabled = true,
 		FocusKey = "Slash", -- an Enum.KeyCode name
-		Width = 380,
-		Height = 220,
+		ToggleKey = "Backquote", -- shows/hides the window
+		Width = 460,
+		Height = 280,
 		MaxMessages = 60,
 		-- Idle seconds before the panel dims to let the world through.
 		FadeAfterSeconds = 8,
@@ -888,6 +918,8 @@ local GameConfig = {
 		-- Pixels the rail sits below the vertical centre, to clear the chat
 		-- window in the top-left corner (GameConfig.Chat).
 		RailOffsetY = 90,
+		-- Opens the SIGIL Fate Engine menu from anywhere in the Crossroads.
+		FateEngineHotkey = "G",
 
 		-- Start collapsed on a phone. The rail plus an open panel is most of a
 		-- portrait screen, and the owner's note was explicit: the HUB must not

@@ -21,6 +21,7 @@ local UITheme = require(Root.Core.UITheme)
 
 local StateController = require(script.Parent.Parent.Controllers.StateController)
 local ThemeController = require(script.Parent.Parent.Controllers.ThemeController)
+local Style = require(script.Parent.Sigil.SigilStyle)
 
 local UIKit = {}
 
@@ -97,6 +98,23 @@ function UIKit.surface(parent: Instance, kind: string): Frame
 	UITheme.gradient(frame)
 	local stroke = UITheme.stroke(frame)
 	stroke.Transparency = UITheme.StrokeTransparency
+	stroke.Thickness = 1
+	if kind ~= "RAISED" and kind ~= "RAIL" then
+		-- Corner brackets: the constructed edge of a Sigil panel.
+		for _, c in { { 0, 0 }, { 1, 0 }, { 0, 1 }, { 1, 1 } } do
+			for _, wide in { true, false } do
+				local b = Instance.new("Frame")
+				b.BorderSizePixel = 0
+				b.BackgroundColor3 = Style.tone("system")
+				b.BackgroundTransparency = 0.15
+				b.AnchorPoint = Vector2.new(c[1], c[2])
+				b.Position = UDim2.fromScale(c[1], c[2])
+				b.Size = if wide then UDim2.fromOffset(16, 2) else UDim2.fromOffset(2, 16)
+				b.ZIndex = 5
+				b.Parent = frame
+			end
+		end
+	end
 
 	ThemeController.register(frame, "BackgroundColor3", token)
 	-- The stroke is the half that reads best: a 1px edge picking up the local
@@ -110,7 +128,7 @@ end
 function UIKit.label(parent: Instance, text: string, size: number, role: string?): TextLabel
 	local label = Instance.new("TextLabel")
 	label.BackgroundTransparency = 1
-	label.Font = UITheme.BodyFont
+	label.Font = Style.Fonts.Body
 	label.Text = text
 	label.TextSize = size
 	label.TextXAlignment = Enum.TextXAlignment.Left
@@ -118,8 +136,8 @@ function UIKit.label(parent: Instance, text: string, size: number, role: string?
 	label.RichText = true
 
 	if role == "ACCENT" then
-		label.TextColor3 = UITheme.AccentGold
-		label.Font = UITheme.LabelFont
+		label.TextColor3 = Style.tone("fate")
+		label.Font = Style.Fonts.Label
 	elseif role == "SECONDARY" then
 		label.TextColor3 = UITheme.TextSecondary
 	elseif role == "MUTED" then
@@ -143,83 +161,49 @@ function UIKit.button(
 	style: string?,
 	onClick: (() -> ())?
 ): TextButton
+	local tone = if style == "PRIMARY"
+		then "fate"
+		elseif style == "DANGER" then "danger"
+		else "system"
+	local restT = 0.86
 	local button = Instance.new("TextButton")
 	button.AutoButtonColor = false
 	button.BorderSizePixel = 0
-	button.Font = UITheme.LabelFont
+	button.Font = Style.Fonts.Label
 	button.Text = text
-	button.TextSize = 16
+	button.TextSize = 17
+	button.TextColor3 = Style.TextHigh
 	button.Size = UDim2.new(1, 0, 0, 44)
-
-	local base: Color3
-	local hover: Color3
-	if style == "PRIMARY" then
-		base = UITheme.AccentGold
-		hover = UITheme.AccentGold:Lerp(Color3.new(1, 1, 1), 0.18)
-		button.TextColor3 = UITheme.BackgroundColor
-	elseif style == "DANGER" then
-		base = UITheme.AccentWarn
-		hover = UITheme.AccentWarn:Lerp(Color3.new(1, 1, 1), 0.18)
-		button.TextColor3 = UITheme.BackgroundColor
-	else
-		base = UITheme.RaisedColor
-		hover = UITheme.RaisedColor:Lerp(UITheme.AccentGold, 0.16)
-		button.TextColor3 = UITheme.TextPrimary
-	end
-
-	button.BackgroundColor3 = base
+	button.BackgroundColor3 = Style.tone(tone)
+	button.BackgroundTransparency = restT
+	button:SetAttribute("RestTransparency", restT)
 	button.Parent = parent
-	UITheme.corner(button, UITheme.RadiusSmall)
-	if style ~= "PRIMARY" and style ~= "DANGER" then
-		UITheme.stroke(button)
-	end
 
+	-- A thin tick on the left carries the tone; the fill is only a wash.
+	local tick = Instance.new("Frame")
+	tick.BorderSizePixel = 0
+	tick.BackgroundColor3 = Style.tone(tone)
+	tick.BackgroundTransparency = 0.2
+	tick.Size = UDim2.new(0, 2, 1, 0)
+	tick.Parent = button
+
+	-- Hover and press only ease the wash: no size changes, so nothing jumps.
 	button.MouseEnter:Connect(function()
 		if button.Active then
-			UIKit.tween(button, UITheme.Motion.Instant, { BackgroundColor3 = hover })
+			UIKit.tween(button, UITheme.Motion.Quick, { BackgroundTransparency = 0.7 })
 		end
 	end)
 	button.MouseLeave:Connect(function()
-		UIKit.tween(button, UITheme.Motion.Quick, { BackgroundColor3 = base }, true)
+		UIKit.tween(button, UITheme.Motion.Normal, { BackgroundTransparency = restT }, true)
 	end)
-	-- THE PRESS ANIMATION MUST RESTORE THE BUTTON'S OWN SIZE, NOT THE DEFAULT.
-	--
-	-- This released with the release tween hard-coded to UDim2.new(1, 0, 0, 44)
-	-- -- the size the constructor happens to start with. Every caller that
-	-- resizes its button afterwards (the travel rows are 104x38) therefore had
-	-- it snap to full width on the first click and stay there, covering the
-	-- label it sat next to. Reported from the first Studio walk of the menu,
-	-- and visible in a screenshot as four rows of nothing but TRAVEL.
-	--
-	-- The resting size is captured at press time rather than at construction,
-	-- so a button that is resized or re-laid out later still returns to
-	-- wherever it currently belongs.
-	local restingSize: UDim2? = nil
-
-	local function press()
-		if restingSize == nil then
-			restingSize = button.Size
+	button.MouseButton1Down:Connect(function()
+		if button.Active then
+			UIKit.tween(button, UITheme.Motion.Instant, { BackgroundTransparency = 0.5 })
 		end
-		-- A press is a shrink, not a flash: it reads on a phone, where there
-		-- is no cursor to show a hover in the first place.
-		UIKit.tween(button, UITheme.Motion.Instant, {
-			Size = (restingSize :: UDim2) - UDim2.fromOffset(0, 3),
-		})
-	end
-
-	local function release()
-		if restingSize == nil then
-			return
-		end
-		UIKit.tween(button, UITheme.Motion.Quick, { Size = restingSize :: UDim2 })
-		restingSize = nil
-	end
-
-	button.MouseButton1Down:Connect(press)
-	button.MouseButton1Up:Connect(release)
-	-- Dragging off a pressed button must also let it go, or it stays shrunk
-	-- until the next click.
-	button.MouseLeave:Connect(release)
+	end)
+	button.MouseButton1Up:Connect(function()
+		UIKit.tween(button, UITheme.Motion.Quick, { BackgroundTransparency = 0.7 })
+	end)
 
 	if onClick then
 		button.Activated:Connect(function()
@@ -237,11 +221,11 @@ end
 function UIKit.setEnabled(button: TextButton, enabled: boolean): ()
 	button.Active = enabled
 	button.AutoButtonColor = false
-	UIKit.tween(
-		button,
-		UITheme.Motion.Quick,
-		{ BackgroundTransparency = if enabled then 0 else 0.55 }
-	)
+	UIKit.tween(button, UITheme.Motion.Quick, {
+		BackgroundTransparency = if enabled
+			then (button:GetAttribute("RestTransparency") or 0.86)
+			else 0.95,
+	})
 	button.TextTransparency = if enabled then 0 else 0.4
 end
 
@@ -287,9 +271,9 @@ function UIKit.toggle(
 	track.Text = ""
 	track.AutoButtonColor = false
 	track.BorderSizePixel = 0
-	track.BackgroundColor3 = if value then UITheme.AccentGold else UITheme.BackgroundColor
+	track.BackgroundColor3 = if value then Style.tone("fate") else Style.Void
 	track.Parent = row
-	UITheme.corner(track, UDim.new(0, 12))
+	UITheme.corner(track, UDim.new(0, 0))
 
 	local knob = Instance.new("Frame")
 	knob.AnchorPoint = Vector2.new(0, 0.5)
@@ -298,13 +282,13 @@ function UIKit.toggle(
 	knob.BackgroundColor3 = UITheme.TextPrimary
 	knob.BorderSizePixel = 0
 	knob.Parent = track
-	UITheme.corner(knob, UDim.new(0, 10))
+	UITheme.corner(knob, UDim.new(0, 0))
 
 	local current = value
 	track.Activated:Connect(function()
 		current = not current
 		UIKit.tween(track, UITheme.Motion.Quick, {
-			BackgroundColor3 = if current then UITheme.AccentGold else UITheme.BackgroundColor,
+			BackgroundColor3 = if current then Style.tone("fate") else Style.Void,
 		})
 		UIKit.tween(knob, UITheme.Motion.Quick, {
 			Position = UDim2.new(0, if current then 24 else 3, 0.5, 0),

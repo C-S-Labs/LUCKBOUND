@@ -13,6 +13,36 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## UI-overhaul (branch agents/UI-overhaul) — 2026-09-29 — SIGIL UI overhaul
+**Merged:** none yet   **Tests:** not run here (no `luau` CLI in this session; CI is the test run). Owner walked every piece in Studio.
+
+### Done
+- **SIGIL design system** (`client/UI/Sigil/`): `SigilStyle` (tokens; gold = Fate, cyan = system, crimson = danger; `setState` retints for Fate/world state), `Sigil` (panel, button, tabs, notifier, tooltip, header, engine, HUD, universal menu, title), `SigilShowcase` (F8 dev board, dev only).
+- **Restyled in place:** `Vitals` (health/stamina), new `FateHud` (Fate level ring), `ChatPanel` (toggle key backquote; Roblox's top-bar chat button cannot toggle once the default window is off), `Leaderboard` (LVL column from a `FateLevel` player attribute, sorted by it; `ProgressionSystem` sets it).
+- **Shared primitives** (`UIKit`, `UITheme.corner`): angular panels with corner brackets, tone-washed buttons, square toggles. Every old panel (Party, Settings, Codes, previews) picks this up.
+- **Hub**: old left rail hidden (code kept); `UniversalMenu` (top-right ring: Settings, Codes); `FateEngineMenu` (button emblem bottom-right + hotkey `GameConfig.HubMenu.FateEngineHotkey`). Entries orbit the Engine and open as sub-sigils that host the existing `HubMenu` panels (`HubMenu.openIn/release`). Roll state: fate decides biome; modifiers are not implemented (shown as "not yet available").
+- **Loading**: `LoadingScreen` restyled (camera tour, readiness and safety timeouts unchanged; BEGIN replaces PLAY). `CSIntro` = the C&S Labs ident, plays over it on a FRESH JOIN only (`LoadingScreen.isFinished()` gate) and waits on `LoadingScreen.isReady()`.
+
+### Decisions made
+- Party lives in the Fate Engine menu, not the universal menu (owner).
+- Rolling is still proximity-gated: the server checks distance (spec §3.4). "Roll from anywhere" and "a new roll sacrifices the old one" need a spec amendment.
+- Logo asset: the decal id is read via rbxthumb (`GameConfig.StudioIntro.LogoImageCandidates`, valid Asset sizes 150/420/700). The asset is private to the C&S Labs group, so the experience must be added under the asset's Permissions (universe id 10768387739).
+- Fate Tree will likely become a circular skill-tree sigil.
+
+### Stopped at
+UI is walked and approved by the owner. Not yet merged.
+
+### Next
+Open the PR; integration agent merges after CI. Then real content per entry (Shop, Archive, Fate Tree, Rebirth), the roll-anywhere amendment, and retiring the old rail code and `SigilShowcase`.
+
+### Leftovers to remove once the PR is proven in a live server
+- `HubMenu` rail/arrow/fate-header code (hidden, still built) and the `TRAVEL` panel (superseded by the Fate Engine menu).
+- `Sigil/SigilShowcase.luau` (dev board) and its `init.client` line.
+- Unused `UITheme` fields (`RailColor`, `RailWidth*`, `RadiusLarge/Small`, gradients) once nothing reads them.
+- `GameConfig.Chat.ToggleGlyph` and the 3 unused hub `Rail*` settings, if confirmed unread.
+
+---
+
 ## Template
 
 ```
