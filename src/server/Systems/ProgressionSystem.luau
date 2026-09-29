@@ -30,6 +30,8 @@ function ProgressionSystem.award(player: Player, reason: string): ()
 
 	profile.FatePoints = points
 	profile.FateLevel = level
+	-- Replicated so the leaderboard can show everyone's Fate level.
+	player:SetAttribute("FateLevel", level)
 	SaveSystem.markDirty(player)
 
 	Net.get("Progression_FateChanged"):FireClient(player, {
@@ -56,6 +58,7 @@ function ProgressionSystem.grant(player: Player, amount: number, reason: string)
 
 	profile.FatePoints = points
 	profile.FateLevel = level
+	player:SetAttribute("FateLevel", level)
 	SaveSystem.markDirty(player)
 
 	Net.get("Progression_FateChanged"):FireClient(player, {
@@ -98,6 +101,7 @@ function ProgressionSystem.snapshot(player: Player): any?
 	if not profile then
 		return nil
 	end
+	player:SetAttribute("FateLevel", profile.FateLevel)
 	return {
 		FatePoints = profile.FatePoints,
 		FateLevel = profile.FateLevel,

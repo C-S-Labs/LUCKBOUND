@@ -6,7 +6,6 @@
 -- default window: this module only takes over when it can do so safely.
 
 local Players = game:GetService("Players")
-local GuiService = game:GetService("GuiService")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local TextChatService = game:GetService("TextChatService")
 local UserInputService = game:GetService("UserInputService")
@@ -15,19 +14,20 @@ local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local GameConfig = require(Root.Core.GameConfig)
 local UITheme = require(Root.Core.UITheme)
 local UIKit = require(script.Parent.UIKit)
+local Sigil = require(script.Parent.Sigil.Sigil)
+local Style = require(script.Parent.Sigil.SigilStyle)
 
 local ChatPanel = {}
 
 local CONFIG = GameConfig.Chat
-local INPUT_HEIGHT = 38
+local INPUT_HEIGHT = 44
 
 local player = Players.LocalPlayer
-local panel: Frame
+local panel: CanvasGroup
 local log: ScrollingFrame
 local box: TextBox
 local count = 0
 local openedListeners: { () -> () } = {}
-local toggleButton: TextButton
 local shown = true
 local lastActivity = 0
 
@@ -39,33 +39,16 @@ end
 --- quiet, so it never sits as a solid slab over the world.
 local function wake()
 	lastActivity = os.clock()
-	UIKit.tween(panel, UITheme.Motion.Quick, { BackgroundTransparency = UITheme.PanelTransparency })
-	UIKit.tween(log, UITheme.Motion.Quick, { ScrollBarImageTransparency = 0 })
-	for _, line in log:GetChildren() do
-		if line:IsA("TextLabel") then
-			UIKit.tween(line, UITheme.Motion.Quick, { TextTransparency = 0 })
-		end
-	end
+	UIKit.tween(panel, UITheme.Motion.Quick, { GroupTransparency = 0 })
 end
 
 local function fade()
-	UIKit.tween(panel, UITheme.Motion.Slow, { BackgroundTransparency = 1 }, true)
-	UIKit.tween(log, UITheme.Motion.Slow, { ScrollBarImageTransparency = 1 }, true)
-	for _, line in log:GetChildren() do
-		if line:IsA("TextLabel") then
-			UIKit.tween(
-				line,
-				UITheme.Motion.Slow,
-				{ TextTransparency = CONFIG.FadedTransparency },
-				true
-			)
-		end
-	end
+	UIKit.tween(panel, UITheme.Motion.Slow, { GroupTransparency = CONFIG.FadedTransparency }, true)
 end
 
 local function addLine(text: string)
 	count += 1
-	local line = UIKit.label(log, text, 15)
+	local line = UIKit.label(log, text, 17)
 	line.AutomaticSize = Enum.AutomaticSize.Y
 	line.Size = UDim2.new(1, -UITheme.Space.SM, 0, 0)
 	line.LayoutOrder = count
@@ -110,14 +93,12 @@ local function onMessage(message: TextChatMessage)
 	local source = message.TextSource
 	if source == nil then
 		-- System messages (joins, command feedback) read as information.
-		addLine(`<font color="{hex(UITheme.AccentCool)}">{message.Text}</font>`)
+		addLine(`<font color="{hex(Style.tone("system"))}">{message.Text}</font>`)
 		return
 	end
 	local who = Players:GetPlayerByUserId(source.UserId)
 	local name = if who then who.DisplayName else source.Name
-	local nameColor = if source.UserId == player.UserId
-		then UITheme.AccentGold
-		else UITheme.TextSecondary
+	local nameColor = if source.UserId == player.UserId then Style.tone("fate") else Style.TextMuted
 	addLine(`<font color="{hex(nameColor)}"><b>{name}</b></font>  {message.Text}`)
 end
 
@@ -150,74 +131,12 @@ end
 local function setShown(value: boolean)
 	shown = value
 	panel.Visible = value
-	UIKit.tween(toggleButton, UITheme.Motion.Quick, {
-		TextTransparency = if value then 0 else 0.45,
-	})
 	if value then
 		wake()
 		notifyOpened()
 	else
 		box:ReleaseFocus()
 	end
-end
-
---- OUR OWN CHAT BUTTON IN ROBLOX'S TOP BAR. Roblox removes its chat icon
---- once the default window is disabled, and offers no hook for clicks on it,
---- so the toggle is a button of ours placed in the free space that
---- GuiService.TopbarInset reports, right after Roblox's own buttons.
-local function buildToggle()
-	local gui = Instance.new("ScreenGui")
-	gui.Name = "LuckboundChatToggle"
-	gui.ResetOnSpawn = false
-	gui.IgnoreGuiInset = true
-	gui.ScreenInsets = Enum.ScreenInsets.None
-	gui.DisplayOrder = 3
-	gui.Parent = player:WaitForChild("PlayerGui")
-
-	toggleButton = Instance.new("TextButton")
-	toggleButton.Name = "ChatToggle"
-	toggleButton.AutoButtonColor = false
-	toggleButton.BorderSizePixel = 0
-	toggleButton.BackgroundColor3 = UITheme.PanelColor
-	toggleButton.BackgroundTransparency = UITheme.PanelTransparency
-	toggleButton.Font = UITheme.LabelFont
-	toggleButton.Text = CONFIG.ToggleGlyph
-	toggleButton.TextColor3 = UITheme.AccentGold
-	toggleButton.TextScaled = true
-	toggleButton.Parent = gui
-	UITheme.corner(toggleButton, UDim.new(1, 0))
-	local stroke = UITheme.stroke(toggleButton)
-	stroke.Transparency = UITheme.StrokeTransparency
-	UITheme.pad(toggleButton, UITheme.Space.XS)
-
-	local function place()
-		local inset = GuiService.TopbarInset
-		local size = math.max(inset.Height - UITheme.Space.SM, 1)
-		toggleButton.Size = UDim2.fromOffset(size, size)
-		toggleButton.Position = UDim2.fromOffset(
-			inset.Min.X + UITheme.Space.XS,
-			inset.Min.Y + (inset.Height - size) / 2
-		)
-	end
-	place()
-	GuiService:GetPropertyChangedSignal("TopbarInset"):Connect(place)
-
-	toggleButton.MouseEnter:Connect(function()
-		UIKit.tween(toggleButton, UITheme.Motion.Instant, {
-			BackgroundColor3 = UITheme.PanelColor:Lerp(UITheme.AccentGold, 0.16),
-		})
-	end)
-	toggleButton.MouseLeave:Connect(function()
-		UIKit.tween(
-			toggleButton,
-			UITheme.Motion.Quick,
-			{ BackgroundColor3 = UITheme.PanelColor },
-			true
-		)
-	end)
-	toggleButton.Activated:Connect(function()
-		setShown(not shown)
-	end)
 end
 
 local function build()
@@ -227,16 +146,18 @@ local function build()
 	gui.DisplayOrder = 3
 	gui.Parent = player:WaitForChild("PlayerGui")
 
-	panel = UIKit.surface(gui, "PANEL")
-	panel.Name = "Panel"
-	-- Top-left, under Roblox's top bar (IgnoreGuiInset is off). The hub rail
-	-- sits low enough to clear it, and collapses when the chat opens.
-	panel.Position = UDim2.fromOffset(UITheme.Space.MD, UITheme.Space.SM)
-	panel.Size = UDim2.fromOffset(CONFIG.Width, CONFIG.Height)
-	UITheme.pad(panel, UITheme.Space.SM)
-	local constraint = Instance.new("UISizeConstraint")
-	constraint.MaxSize = Vector2.new(CONFIG.Width, CONFIG.Height)
-	constraint.Parent = panel
+	-- Bottom-left, clear of the Fate readout at the top. Sigil panels start
+	-- invisible and fade in, so open() runs once here.
+	local sigilPanel = Sigil.panel(gui, {
+		name = "Panel",
+		tone = "system",
+		size = UDim2.fromOffset(CONFIG.Width, CONFIG.Height),
+		anchor = Vector2.new(0, 1),
+		position = UDim2.new(0, UITheme.Space.MD, 1, -UITheme.Space.MD),
+	})
+	panel = sigilPanel.root
+	sigilPanel.open()
+	local body = sigilPanel.body
 
 	log = Instance.new("ScrollingFrame")
 	log.Name = "Log"
@@ -246,12 +167,43 @@ local function build()
 	log.AutomaticCanvasSize = Enum.AutomaticSize.Y
 	log.CanvasSize = UDim2.new()
 	log.ScrollBarThickness = 3
-	log.ScrollBarImageColor3 = UITheme.AccentGold
-	log.Parent = panel
+	log.ScrollBarImageColor3 = Style.tone("system")
+	log.Parent = body
 	UIKit.list(log, UITheme.Space.XS)
 
-	local inputFrame
-	inputFrame, box = UIKit.textbox(panel, "Press / to chat", 15)
+	local inputFrame = Instance.new("Frame")
+	inputFrame.BackgroundColor3 = Style.Deep
+	inputFrame.BackgroundTransparency = 0.3
+	inputFrame.BorderSizePixel = 0
+	inputFrame.Parent = body
+	local edge = Instance.new("UIStroke")
+	edge.Color = Style.Violet
+	edge.Transparency = 0.6
+	edge.Thickness = 1
+	edge.Parent = inputFrame
+	box = Instance.new("TextBox")
+	box.BackgroundTransparency = 1
+	box.ClearTextOnFocus = false
+	box.Font = Style.Fonts.Body
+	box.PlaceholderText = "Press / to chat"
+	box.PlaceholderColor3 = Style.TextMuted
+	box.Text = ""
+	box.TextColor3 = Style.TextHigh
+	box.TextSize = 17
+	box.TextXAlignment = Enum.TextXAlignment.Left
+	box.Position = UDim2.fromOffset(UITheme.Space.MD, 0)
+	box.Size = UDim2.new(1, -UITheme.Space.MD * 2, 1, 0)
+	box.Parent = inputFrame
+	box.Focused:Connect(function()
+		UIKit.tween(
+			edge,
+			UITheme.Motion.Quick,
+			{ Transparency = 0.1, Color = Style.tone("system") }
+		)
+	end)
+	box.FocusLost:Connect(function()
+		UIKit.tween(edge, UITheme.Motion.Quick, { Transparency = 0.6, Color = Style.Violet }, true)
+	end)
 	inputFrame.AnchorPoint = Vector2.new(0, 1)
 	inputFrame.Position = UDim2.fromScale(0, 1)
 	inputFrame.Size = UDim2.new(1, 0, 0, INPUT_HEIGHT)
@@ -294,7 +246,14 @@ function ChatPanel.init(): ()
 	end
 
 	build()
-	buildToggle()
+	-- Roblox's top-bar chat button does nothing once the default window is
+	-- off, so showing/hiding is a key (GameConfig.Chat.ToggleKey).
+	local toggleKey = (Enum.KeyCode :: any)[CONFIG.ToggleKey]
+	UserInputService.InputBegan:Connect(function(input, processed)
+		if not processed and input.KeyCode == toggleKey then
+			setShown(not shown)
+		end
+	end)
 	TextChatService.MessageReceived:Connect(onMessage)
 
 	local focusKey = (Enum.KeyCode :: any)[CONFIG.FocusKey]

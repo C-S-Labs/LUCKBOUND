@@ -109,8 +109,11 @@ local UITheme = {
 
 --- Applies the theme's corner radius to a GuiObject.
 function UITheme.corner(parent: Instance, radius: UDim?): UICorner
+	-- SIGIL: panels are angular. Only pills and dots (radius scale >= 0.5)
+	-- keep their rounding; every other rounded rectangle becomes square.
+	local r = radius or UITheme.CornerRadius
 	local c = Instance.new("UICorner")
-	c.CornerRadius = radius or UITheme.CornerRadius
+	c.CornerRadius = if r.Scale >= 0.5 then r else UDim.new(0, 0)
 	c.Parent = parent
 	return c
 end

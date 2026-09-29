@@ -509,10 +509,9 @@ local function railRestingPosition(): UDim2
 end
 
 local function panelRestingPosition(): UDim2
-	local left = if state.Collapsed
-		then UITheme.Space.LG * 2
-		else UITheme.RailWidthExpanded + UITheme.Space.MD * 2
-	return UDim2.new(0, left, 0.5, RAIL_OFFSET_Y)
+	-- The rail is retired (the SIGIL universal menu opens panels now), so the
+	-- panel always sits where the collapsed layout put it.
+	return UDim2.fromScale(0.5, 0.5)
 end
 
 local function refreshRailSelection()
@@ -574,6 +573,10 @@ local function dispatch(action: any)
 	applyState()
 end
 
+local externalGuis: { ScreenGui } = {}
+local embeddedHost: GuiObject? = nil
+local panelClose: TextButton? = nil
+
 --- THE ONE PLACE THAT DECIDES WHETHER THE MENU IS ON SCREEN.
 ---
 --- Three things can hide it and they are independent: leaving the Crossroads,
@@ -585,6 +588,9 @@ local function refreshVisibility()
 		and not hiddenForRoll
 		and not hiddenForLoading
 		and not onExpeditionServer
+	for _, other in externalGuis do
+		other.Enabled = gui.Enabled
+	end
 end
 
 local function setVisible(visible: boolean)
@@ -698,7 +704,7 @@ end
 local function buildPanel()
 	panelHolder = UIKit.surface(gui, "PANEL")
 	panelHolder.Name = "Panel"
-	panelHolder.AnchorPoint = Vector2.new(0, 0.5)
+	panelHolder.AnchorPoint = Vector2.new(0.5, 0.5)
 	panelHolder.Position = panelRestingPosition()
 	panelHolder.Size = UDim2.new(0.34, 0, 0.72, 0)
 	panelHolder.Visible = false
@@ -711,12 +717,15 @@ local function buildPanel()
 	UITheme.pad(panelHolder, UITheme.Space.LG)
 
 	panelTitle = UIKit.label(panelHolder, "", 22, "PRIMARY")
-	panelTitle.Font = UITheme.HeaderFont
+	panelTitle.Font = Enum.Font.Michroma
+	panelTitle.TextSize = 20
+	panelTitle.TextColor3 = Color3.fromRGB(232, 184, 92)
 	panelTitle.Size = UDim2.new(1, -40, 0, 30)
 
 	local close = UIKit.button(panelHolder, "✕", nil, function()
 		dispatch({ Kind = "CLOSE_PANEL" })
 	end)
+	panelClose = close
 	close.AnchorPoint = Vector2.new(1, 0)
 	close.Position = UDim2.new(1, 0, 0, 0)
 	close.Size = UDim2.fromOffset(30, 30)
@@ -733,6 +742,11 @@ local function buildPanel()
 	panelBody.AutomaticCanvasSize = Enum.AutomaticSize.Y
 	panelBody.Parent = panelHolder
 	UIKit.list(panelBody, UITheme.Space.SM)
+	-- Keep text clear of the corner brackets and the scrollbar.
+	local inset = Instance.new("UIPadding")
+	inset.PaddingBottom = UDim.new(0, 24)
+	inset.PaddingRight = UDim.new(0, 8)
+	inset.Parent = panelBody
 
 	toast = UIKit.label(panelHolder, "", 13, "ACCENT")
 	toast.AnchorPoint = Vector2.new(0, 1)
@@ -771,6 +785,8 @@ local function build()
 	buildRail()
 	buildArrow()
 	buildPanel()
+	rail.Visible = false
+	arrow.Visible = false
 end
 
 -- === wiring =========================================================
@@ -934,6 +950,58 @@ end
 
 --- Collapses the rail and closes any open panel. The chat calls this when it
 --- opens, so the two never stack on the left edge at once.
+--- Crossroads fast travel, for the SIGIL Fate Engine menu.
+function HubMenu.travelTo(destinationId: string): ()
+	travelTo(destinationId)
+end
+
+--- Hosts the open panel inside a Fate Engine sub-sigil instead of the screen:
+--- the panel frame is re-parented into `host` and fills it.
+function HubMenu.openIn(panelId: string, host: GuiObject): ()
+	if rail == nil then
+		return
+	end
+	embeddedHost = host
+	panelHolder.Parent = host
+	panelHolder.Size = UDim2.fromScale(1, 1)
+	-- The sub-sigil's Return button is the way back; a second close is clutter.
+	if panelClose then
+		panelClose.Visible = false
+	end
+	if state.OpenPanelId ~= panelId then
+		dispatch({ Kind = "TOGGLE_PANEL", PanelId = panelId })
+	end
+end
+
+--- Undoes openIn: closes the panel and returns its frame to the screen.
+function HubMenu.release(): ()
+	if embeddedHost == nil then
+		return
+	end
+	embeddedHost = nil
+	panelHolder.Visible = false
+	dispatch({ Kind = "CLOSE_PANEL" })
+	panelHolder.Parent = gui
+	panelHolder.Size = UDim2.new(0.34, 0, 0.72, 0)
+	if panelClose then
+		panelClose.Visible = true
+	end
+end
+
+--- Opens (or toggles) a panel by id, for the SIGIL universal menu.
+function HubMenu.open(panelId: string): ()
+	if rail == nil then
+		return
+	end
+	dispatch({ Kind = "TOGGLE_PANEL", PanelId = panelId })
+end
+
+--- A ScreenGui that must appear and disappear with the hub menu.
+function HubMenu.follow(other: ScreenGui): ()
+	table.insert(externalGuis, other)
+	other.Enabled = gui.Enabled
+end
+
 function HubMenu.collapse(): ()
 	if rail == nil then
 		return
