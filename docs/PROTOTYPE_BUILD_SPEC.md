@@ -1221,7 +1221,7 @@ makes what a run pays depend on how it ended. Branch `agent/expedition-portal`.
 
 Defaults are derived from geometry the loader already has: the entrance at the ENTRY chunk's centre, the exit at the
 BOSS chunk's centre (`Centre` attribute, until `BossService` supplies the boss's real position). Each is then
-**raycast down onto the chunk's walk surface** and the plinth is seated on the hit, so it is flush whatever the kit's
+**raycast down onto the chunk's walk surface** and the rift's scar is seated on the hit, so it is flush whatever the kit's
 floor height. A world may override either spot with an optional content file `Content/Portals/<World>.luau`
 (`{ Entrance = { Chunk, Offset }, Exit = { Chunk, Offset } }`, same pattern as `Content/Fixtures`). **No existing chunk
 definition changes.** A world with no file gets the defaults.
