@@ -372,7 +372,7 @@ final moveset is a build-time design task, listed in §6.
 
 | | Astral Seraph | Celestial Dancer |
 |---|---|---|
-| Phases | **2, plus a Final Phase** (§5A.5) | **2, plus a Final Phase** (§5A.5) |
+| Phases | **3** (Phase 1, Phase 2, Final Phase; §5A.5) | **3** (Phase 1, Phase 2, Final Phase; §5A.5) |
 | Weapon palette | **The 6 feather wings** are its weapon: it attacks with them at range, and by diving, swooping and slashing, and more. | **The single long blade** as painted, throughout. The "twin" look comes from **Twin Echo afterimages**, not a second held sword. Floating blades join in phase 2. |
 | Character | A grand boss | Moveset **choreographed to look like dancing** |
 
@@ -439,7 +439,7 @@ slow, but its size makes the true range much larger than expected.
 
 Build notes (interpretation): detached wings mean each wing needs its own server-driven position and hitbox
 (rule 5); the six wing segments are the natural detach units, which fits the sheet's "6 wing segments, independent
-motion". The 2-phase fight and the sheet's "phased movement (ground/aerial)" should be reconciled (aerial may be
+motion". The 3-phase fight and the sheet's "phased movement (ground/aerial)" should be reconciled (aerial may be
 movement style rather than a phase).
 
 ### 5A.3 The Celestial Dancer, refined
@@ -590,17 +590,15 @@ complex **choreography and movement chains**.
 - Floating blades can continue previous attack arcs while the Dancer changes direction.
 - The Grand Dance becomes the centerpiece sequence, combining nearly every movement pattern.
 
-**Phase count:** the owner's earlier message said "2 phases" for each boss, and the final lists name three stages
-(Phase 1, Phase 2, Final Phase). This document reads the **Final Phase as the low-health escalation of phase 2**
-("2 phases, plus a Final Phase"). If the owner intends three full phases, only the label changes.
+**Phase count (owner-confirmed 2026-09-29): each boss has 3 phases**: Phase 1, Phase 2 and the Final Phase. This
+supersedes the earlier "2 phases" wording; the Final Phase is a full phase, not a low-health escalation.
 
 ---
 
 ## 6. Open questions (to settle before building, not decided here)
 
 1. ~~How do the two bosses relate?~~ **Settled 2026-09-29:** one per run, 75% Seraph / 25% Dancer (provisional, §4.5).
-2. ~~Phases and attack assignment~~ **Settled** in §5A.5. Only open: confirm whether the Final Phase counts as a
-   third phase or as phase 2's low-health escalation.
+2. ~~Phases and attack assignment~~ **Settled** in §5A.5: 3 phases each.
 3. **How the boss room's staged moving parts work** (§4.7), for both bosses.
 4. **Mesh and import limits** for 175–250k-triangle bosses and a ~200k exterior (§4.6).
 5. **Minibosses and normal enemies** for the biome (§4.8), and what the exterior and interior side rooms hold.
