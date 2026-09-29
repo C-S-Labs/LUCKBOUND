@@ -242,7 +242,7 @@ behind her. Asymmetrical and in motion, the opposite of the Seraph.
   `ENEMY_FRAMEWORK.md`.
 - Budget is now 200–250k (§4.6); same `ENEMY_FRAMEWORK.md` caveat as the Seraph.
 - Eight attacks in "Multi-phase fight"; the sheet lists the moves in order and does not assign them to phases.
-  **Phase assignment is an open design question** (see below), not something to guess at build time.
+  **Phase assignment is an open design question** (§5A, §6), not something to guess at build time.
 
 ---
 
@@ -360,10 +360,172 @@ The interior has **2 set (non-random) chunks**: **two large boss platforms**, on
 - The sheet closes on a quote for the Dancer: *"The stars are not above you. They are within the realm."*
   (The Celestial Dancer). Treat it as world/boss flavour text.
 
+## 5A. Boss design refinement (owner, 2026-09-29)
+
+The owner supplied a detailed refinement, preserved verbatim as
+[`docs/design/ASTRAL_REACH_BOSS_REFINEMENT.md`](../design/ASTRAL_REACH_BOSS_REFINEMENT.md). This section records
+the locked decisions from it and from the owner's message. **The refinement adds to the sheet; it does not delete
+it.** Where a refined move differs from a sheet move (both lists are kept, §2 and §3), reconciling them into one
+final moveset is a build-time design task, listed in §6.
+
+### 5A.1 Weapon palettes and phases (locked)
+
+| | Astral Seraph | Celestial Dancer |
+|---|---|---|
+| Phases | **2** | **2** |
+| Weapon palette | **The 6 feather wings** are its weapon: it attacks with them at range, and by diving, swooping and slashing, and more. | **Phase 1: the single long blade** as painted. **Phase 2: the weapon becomes a two-sword weapon.** |
+| Character | A grand boss | Moveset **choreographed to look like dancing** |
+
+> **FUTURE LEGENDARY WEAPONS (marked):** *both* Dancer weapons, **the single long blade and the twin swords**, are
+> to become **obtainable Legendary weapons** in the future. The Dancer's two forms are therefore designed as
+> real, player-usable weapons: a normal weapon model and moveset should be possible for each. Not built and not
+> yet in `WEAPONS.md` or any content file; when they are designed, add them there (`WEAPONS.md` owns weapon
+> design and rarity rules) and to `RESERVED.md` if declared before use. Whether the Seraph's wings also become a
+> weapon is **not stated**, so it is not assumed.
+
+Reconciliation notes:
+- The sheet's "Twin Blades + Floating Blades" is now sequenced: single blade first, two swords in phase 2.
+  The refinement's "Twin Echo" says the twin look can come from afterimages *without* two held swords; that is
+  compatible with phase 1 and is superseded by the real two-sword weapon in phase 2.
+- Floating blades stay on the sheet. The refinement places them in "a later phase" (phase 2 here).
+
+### 5A.2 The Astral Seraph, refined
+
+**Identity:** less a creature than a sacred figure given form. It communicates **scale, divinity, symmetry and
+unnatural stillness**; the body is the centre of one larger celestial structure (wings, halo, armour and chest
+core as one impossible design). It stays upright and symmetrical for much of the fight and **hovers**; the player
+should feel it is far too large and composed to be fighting them personally.
+
+**Visual points added by the refinement:**
+- Wings must read as a **deliberate, organised structure**, not six identical feather stacks, and must be able to
+  **change the silhouette completely** while the body barely moves. Exact grouping stays an authoring decision.
+- The **blue chest core** is the strongest contrast point and matters in attacks and phase changes.
+- The **halo** is celestial instrument or seal, not decoration: sacred geometry that lights during attacks.
+- Feather-blades replace legs: it is never truly standing.
+
+**Movement: it glides, almost never runs.** Smooth, precise, and it appears to simply *decide* where it will be.
+Examples: drifting backward while facing the player; sliding sideways without turning the torso; rising vertically
+before an attack; stopping dead in midair; advancing with almost no preparation; rotating the body while wings stay
+fixed; folding the wings like a cloak, then unfolding. **Posture is itself the telegraph.**
+
+**Idle:** it spends a surprising amount of time doing almost nothing: gentle hover, faint wing motion, slowly turning
+halo, pulsing core, upward particles, occasional feather adjustments. Total stillness should read as *something is
+about to happen*.
+
+**Combat philosophy:** large, readable movements with **deceptive reach**; ceremonial, not frantic. Attacks look
+slow, but its size makes the true range much larger than expected.
+
+**Refined attacks** (in addition to the sheet's six, §2; reconcile at build time):
+
+| Attack | Description |
+|---|---|
+| **Wing Sweep** | Slowly opens one side of its wings, pauses, then the whole wing structure sweeps across a huge part of the arena. The anticipation is the point. |
+| **Halo Beam** | Goes completely stationary; halo rotates and its geometry lights; core intensifies; a focused celestial beam fires from the halo or along the chest axis. Reads as activating machinery, not casting a spell. |
+| **Descent** | Rises very high, wings fold inward, drops almost vertically and very fast; large radial shockwave on impact. |
+| **Feather-Blade Barrage** | Lower-body feather-blades separate, float briefly around it, then launch at predetermined areas. |
+| **Wing Cloak** | Folds all wings around itself into an enclosed silhouette, then explodes outward as a radial attack or many directional projectiles. |
+| **Celestial Rotation** | Spins on its vertical axis in place; extended wings become a massive rotating hazard, like a celestial mechanism. |
+
+**Phase 2: control was only temporary.**
+- Chest core much brighter; halo geometry more active.
+- Wings begin to move **independently of the body**: orbiting, sweeping, repositioning.
+- **Detached Wings (the key phase-2 mechanic):** wings can **detach** from the body and become enormous floating
+  blades, rings or sweeping structures around the arena, while the Seraph itself stays relatively still. The
+  player must track both the body and the structures.
+- **Low health:** the body can rotate independently from the lower silhouette, the halo can re-orient on its own,
+  wings run on separate timing, and the core becomes the brightest thing in the arena. The aim is not faster
+  attacks but that **the rules governing the Seraph are coming apart**.
+
+Build notes (interpretation): detached wings mean each wing needs its own server-driven position and hitbox
+(rule 5); the six wing segments are the natural detach units, which fits the sheet's "6 wing segments, independent
+motion". The 2-phase fight and the sheet's "phased movement (ground/aerial)" should be reconciled (aerial may be
+movement style rather than a phase).
+
+### 5A.3 The Celestial Dancer, refined
+
+**Identity:** the opposite of the Seraph: **asymmetrical, elegant, fast, intensely deliberate**, combat turned into
+choreography. **Rule: she never appears to move like a normal fighter.** She steps, pivots, glides, turns,
+pauses, then suddenly crosses an enormous distance.
+
+**Visual points added:** hood or veil hides the face (no reliance on expression); dark bodice and gold high-heeled
+boots contrast the enormous cape; the cape is the dominant shape: long, layered, gold-edged, pale lavender-white
+into deeper violet, with embedded energy particles that grow during attacks.
+
+**The cape is a major animated component (not a rigid accessory):** lags in normal movement; swings out on turns;
+trails on dashes; keeps moving after a stop, then settles; sections flare during attacks; can hide her silhouette
+so the player sees only a field of fabric before the blade emerges; edge particles linger after movement.
+
+**Movement language: Step → glide → turn → slash → pause → accelerate.**
+- **Step:** a deliberate, possibly harmless-looking step that can begin a larger sequence.
+- **Glide:** slides with very little vertical motion, feet barely pushing, cape following.
+- **Pivot:** rotates on one foot, upper body first, cape after; the blade trails and completes the strike at the end.
+- **Pause:** she stops, the cape and particles keep moving, the blade is still. It creates tension, then the next
+  move comes almost instantly.
+- **Sudden acceleration (signature):** from near-still to crossing a large part of the arena in one elegant move
+  (not a conventional dash); the player sees the start but the distance is surprising.
+
+**Combat philosophy:** difficulty from **rhythm recognition and movement deception**, not visual chaos. Attacks are
+beautiful enough that players may watch instead of reacting; through repetition they learn the choreography ("I
+know what that step means").
+
+**Refined signature attacks** (in addition to the sheet's eight, §3; reconcile at build time):
+
+| Attack | Description |
+|---|---|
+| **The Opening Waltz** | Slow approach, a step, a rotation, the blade drags along the ground leaving a light trail; a pause; then a sudden long horizontal slash covering far more distance than the setup suggests. |
+| **Veiled Step** | Turns away; the cape expands and hides her and the weapon; she emerges from the opposite side with a rapid slash. A recurring defence/attack transition. |
+| **Crescent Waltz** | A wide spin sequence: slow first turn, faster second, final turn a huge sweeping blade arc, the cape a few frames behind for a layered circular silhouette. |
+| **Falling Star** | Rises slightly, cape lifting; pauses midair; descends diagonally dragging the blade; bright line and a brief lingering danger zone along the path. |
+| **Silent Step** | Stands completely still, shifts her weight, then vanishes forward in a very short, very fast move; visible only through cape and blade trail. Teaches players to read her body language. |
+| **Twin Echo** | Sword sequence creating delayed afterimages: the real sword strikes once, and a luminous echo repeats the slash a moment later. |
+| **Floating Blade Sequence** | Later phase: extra blades hover and follow the choreography (she spins, a blade follows the arc, she stops, the blade continues, she changes direction as it completes the earlier motion): the choreography generates weapons. |
+
+**Phase 2: a more complete dance, not rage.**
+- More complex choreography, more deceptive pauses, a more active cape, and chaining with little recovery, e.g.
+  step → slash → stop → spin → disappear → reappear → glide → second slash, **while she still looks calm**.
+- Weapon becomes the **two-sword weapon** (§5A.1).
+- **Signature: The Grand Dance.** She moves to the arena centre, the cape expands, the music can briefly quiet, and
+  she performs a long **repeatable** sequence the player can learn: (1) slow step, (2) forward glide,
+  (3) horizontal slash, (4) long pause, (5) spin, (6) backward glide, (7) sudden forward acceleration,
+  (8) floating blade sweep, (9) cape concealment, (10) final crossing slash. It should read as a performance.
+- **Final stretch (low health):** cape saturated with energy, more particles, longer brighter blade trails, more
+  aerial movement (skimming above the ground in long transitions). **Movement and attack blur together**: a glide
+  can be a slash, a spin a teleport-like reposition, a cape turn can hide a strike, a landing can be an area
+  attack, and the player is never sure whether she is positioning or attacking.
+
+**Defeat:** no ragdoll. She stays standing a moment, the blade lowers, the cape settles, particles drift away, she
+takes one last step, the cape falls still, and the weapon dissolves into light as she fades, keeping the fight's
+elegance.
+
+Build notes (interpretation): the cape needs bone-chain or baked secondary motion driven by movement (see §3 cloth
+caveat); "The Grand Dance" is a fixed scripted sequence, i.e. boss data (Content), not System code; the pauses and
+telegraphs mean movement must be server-authoritative but readable, and hit windows must follow the visible motion.
+
+### 5A.4 The contrast (from the refinement)
+
+| | Astral Seraph | Celestial Dancer |
+|---|---|---|
+| Silhouette | Symmetrical | Asymmetrical |
+| Movement | Floating / monumental | Gliding / choreographed |
+| Scale | Enormous | Tall and elegant |
+| Combat | Large-area celestial attacks | Precise chained movement |
+| Main visual feature | Wings + halo | Cape + blade |
+| Threat | Reach and scale | Rhythm and acceleration |
+| Body language | Stillness | Constant choreography |
+| Phase progression | Anatomy becomes impossible | Dance becomes increasingly complex |
+| Player skill | Reading large telegraphs | Learning movement patterns |
+
+The Seraph is **something celestial the player cannot comprehend**; the Dancer is **something beautiful the player
+can eventually learn to understand**. Neither should feel like a conventional fantasy boss with celestial
+decorations added.
+
+---
+
 ## 6. Open questions (to settle before building, not decided here)
 
 1. ~~How do the two bosses relate?~~ **Settled 2026-09-29:** one per run, 75% Seraph / 25% Dancer (provisional, §4.5).
-2. **Which attacks belong to which phase** for each boss, and how many phases each has.
+2. ~~How many phases?~~ **Settled: 2 each** (§5A.1). Still open: **which attacks belong to which phase**, and how
+   the sheet's attack lists and the refinement's (§5A) merge into one final moveset per boss.
 3. **How the boss room's staged moving parts work** (§4.7), for both bosses.
 4. **Mesh and import limits** for 175–250k-triangle bosses and a ~200k exterior (§4.6).
 5. **Minibosses and normal enemies** for the biome (§4.8), and what the exterior and interior side rooms hold.
