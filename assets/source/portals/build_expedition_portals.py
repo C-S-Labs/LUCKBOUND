@@ -24,8 +24,8 @@ CONTRACT (all one flat model; names are exact, no .001 suffixes)
     OuterRing    spins about its own Y axis
     InnerRing    counter-spins, TINTED per rarity
     PortalPlane  TINTED, transparency pulses, carries light and particles
-    Rune1..8     static (plinth rim)
-    Glyph1..8    TINTED (float over the runes)
+    Rune1..4     static (plinth rim, flanking the feet, never in front)
+    Glyph1..4    TINTED (float over the runes)
     Shard1..6    TINTED, spin slowly about their own vertical axis
     RingFoot1..2 static struts the ring stands in
     Blade1..8    EXIT only: iris shutters. Sealed = closed over the aperture;
@@ -72,21 +72,45 @@ VARIANTS = {
     "ENTRANCE": {
         "ring_out": 9.0, "ring_in": 6.8, "ring_depth": 1.6,
         "inner_out": 6.4, "inner_in": 5.6, "plane": 5.6,
-        "plinth_r": 12.0, "found_r": 14.0,
-        "ring_segs": 48, "inner_segs": 96, "teeth": 24, "pylon_tiers": 5,
-        "blades": False, "shards": 6, "detail": 1.0,
+        "plinth_r": 8.5, "found_r": 10.0,
+        "ring_segs": 60, "inner_segs": 120, "teeth": 30, "pylon_tiers": 6,
+        "blades": False, "shards": 6, "detail": 1.25,
     },
     "EXIT": {
         "ring_out": 13.0, "ring_in": 9.8, "ring_depth": 2.4,
         "inner_out": 9.2, "inner_in": 8.0, "plane": 8.0,
-        "plinth_r": 17.0, "found_r": 19.5,
+        "plinth_r": 12.0, "found_r": 13.5,
         "ring_segs": 72, "inner_segs": 144, "teeth": 36, "pylon_tiers": 8,
         "blades": True, "shards": 6, "detail": 1.6,
     },
 }
 
-PLINTH_HEIGHT = 1.8    # total rim height; the game caps the step at 3
-FOUNDATION_DEPTH = 4.0
+# THE WALK-THROUGH PATH (owner, 2026-09-28): players come out of and go into a
+# portal along its Y axis, so nothing stands on the plinth within this half-angle
+# of +Y or -Y. Runes sit on the +/-X sides; the rim posts skip the cone too.
+CLEAR_HALF_ANGLE = math.radians(32)
+RUNE_ANGLES = [math.radians(a) for a in (22, 158, 202, 338)]
+
+
+def buried_arc(H, r_out, segs):
+    """The ring's arc with the part below BURY_FLOOR left out, and the segment
+    count scaled to match. Returns ((start, end), segments)."""
+    s = (BURY_FLOOR - H) / r_out
+    phi = math.asin(max(-1.0, min(1.0, s)))  # angle of the lowest kept point, in [-pi/2, 0]
+    start, end = phi, math.pi - phi
+    span = end - start
+    return (start, end), max(8, int(round(segs * span / (2 * math.pi))))
+
+
+def in_clear_path(a):
+    """True when angle `a` (about Z, 0 = +X) is inside the walk-through cone."""
+    s = abs(math.sin(a))
+    return s > math.cos(CLEAR_HALF_ANGLE)
+
+
+PLINTH_HEIGHT = 0.3    # a kerb, not a step: players walk on and off (owner, 2026-09-28)
+FOUNDATION_DEPTH = 6.0
+BURY_FLOOR = -0.6      # nothing of the ring is modelled below this: it must not show through a thin deck
 SINK = 0.15            # ring stands this far into the plinth
 
 
@@ -221,7 +245,9 @@ def build(variant):
     v = VARIANTS[variant]
     detail = v["detail"]
     rng = random.Random(7 if variant == "ENTRANCE" else 11)
-    H = PLINTH_HEIGHT - SINK + v["ring_out"]  # ring centre height
+    # The aperture reaches the deck: the plane's lowest edge is at z = 0, so
+    # the path through the portal is level ground with nothing to climb.
+    H = v["plane"]
     parts = []
 
     # --- Foundation: buried, hides the seam with the deck --------------------
@@ -237,10 +263,10 @@ def build(variant):
 
     # --- Plinth: shallow stepped rim, the collidable floor -------------------
     m = Mesh("Plinth", "Marble")
-    steps = 4
+    steps = 2
     for s in range(steps):
-        r0 = v["plinth_r"] - s * 1.1
-        r1 = r0 - 0.5
+        r0 = v["plinth_r"] - s * 0.7
+        r1 = r0 - 0.45
         z0 = PLINTH_HEIGHT * s / steps
         z1 = PLINTH_HEIGHT * (s + 1) / steps
         m.frustum((0, 0, 0), r0, r1, z0, z1, 16, rot=math.pi / 16)
@@ -256,6 +282,8 @@ def build(variant):
     bollards = int(24 * detail)
     for i in range(bollards):
         a = 2 * math.pi * (i + 0.5) / bollards
+        if in_clear_path(a):
+            continue
         d = v["plinth_r"] - 0.55
         m.frustum((d * math.cos(a), d * math.sin(a), 0), 0.34, 0.2, PLINTH_HEIGHT * 0.25, PLINTH_HEIGHT * 0.25 + 0.9, 6, rot=a)
         m.bipyramid(Vector((d * math.cos(a), d * math.sin(a), PLINTH_HEIGHT * 0.25 + 1.25)), 0.2, 0.32, 4)
@@ -263,11 +291,14 @@ def build(variant):
 
     # --- Rings ---------------------------------------------------------------
     m = Mesh("OuterRing", "BasaltLight")
-    m.sweep(ring_profile(v["ring_in"], v["ring_out"], v["ring_depth"], 0.35), v["ring_segs"], H)
+    arc, segs = buried_arc(H, v["ring_out"], v["ring_segs"])
+    m.sweep(ring_profile(v["ring_in"], v["ring_out"], v["ring_depth"], 0.35), segs, H, arc=arc)
     # Teeth on the rim and keystones every eighth of the ring.
     for i in range(v["teeth"]):
         a = 2 * math.pi * i / v["teeth"]
         d = v["ring_out"] + 0.25
+        if H + d * math.sin(a) < 0.3:
+            continue
         big = i % 3 == 0
         s = (0.9 if big else 0.55) * (1.0 + 0.3 * (detail - 1))
         # A tooth is a small bipyramid pointing away from the hub.
@@ -276,6 +307,8 @@ def build(variant):
     for i in range(8):
         a = 2 * math.pi * i / 8 + math.pi / 8
         d = (v["ring_in"] + v["ring_out"]) / 2
+        if H + d * math.sin(a) < 1.0:
+            continue
         m.box((d * math.cos(a), -v["ring_depth"] / 2 - 0.12, H + d * math.sin(a)), (1.4, 0.24, 1.4), yaw=0.0)
         m.box((d * math.cos(a), v["ring_depth"] / 2 + 0.12, H + d * math.sin(a)), (1.4, 0.24, 1.4), yaw=0.0)
     # Carved panels round both faces, and studs along the inner lip.
@@ -284,18 +317,25 @@ def build(variant):
     for i in range(v["ring_segs"]):
         a = 2 * math.pi * (i + 0.5) / v["ring_segs"]
         d = (v["ring_in"] + v["ring_out"]) / 2
+        if H + d * math.sin(a) < 1.0:
+            continue
         for y in (-1, 1):
             c = Vector((d * math.cos(a), y * (v["ring_depth"] / 2 + 0.06), H + d * math.sin(a)))
             m.sweep_panel(c, a, chord, span, 0.12)
         e = v["ring_in"] + 0.05
+        if H + e * math.sin(a) < 0.5:
+            continue
         m.bipyramid(Vector((e * math.cos(a), 0, H + e * math.sin(a))), 0.26, 0.5, 5)
     parts.append(m)
 
     m = Mesh("InnerRing", "Tint")
-    m.sweep(ring_profile(v["inner_in"], v["inner_out"], 0.5, 0.1), v["inner_segs"], H)
+    arc, segs = buried_arc(H, v["inner_out"], v["inner_segs"])
+    m.sweep(ring_profile(v["inner_in"], v["inner_out"], 0.5, 0.1), segs, H, arc=arc)
     for i in range(v["inner_segs"] // 2):
         a = 2 * math.pi * i / (v["inner_segs"] // 2)
         d = v["inner_in"] - 0.15
+        if H + d * math.sin(a) < 0.5:
+            continue
         m.bipyramid(Vector((d * math.cos(a), 0, H + d * math.sin(a))), 0.16, 0.36, 4)
     parts.append(m)
 
@@ -313,27 +353,32 @@ def build(variant):
     parts.append(m)
 
     # Feet: struts the ring stands in, so it reads as seated, not hovering.
+    # Where the ring crosses the deck (z = 0) it spans x = sqrt(in^2-H^2) to
+    # sqrt(out^2-H^2). The feet stand on that band and leave the aperture clear.
+    x_in = math.sqrt(max(0.0, v["ring_in"] ** 2 - H ** 2))
+    x_out = math.sqrt(v["ring_out"] ** 2 - H ** 2)
+    foot_cx = (x_in + x_out) / 2
+    foot_hw = (x_out - x_in) / 2 - 0.25
     for n, sx in enumerate((-1, 1), start=1):
         m = Mesh(f"RingFoot{n}", "Basalt")
         for t in range(v["pylon_tiers"]):
             f = t / max(1, v["pylon_tiers"] - 1)
-            r0 = 2.2 - 1.2 * f
+            r0 = foot_hw * (1.0 - 0.45 * f)
             step = v["ring_out"] * 0.42 / v["pylon_tiers"]
             z0 = PLINTH_HEIGHT * 0.3 + t * step
-            cx = sx * (v["ring_out"] * 0.62)
+            cx = sx * foot_cx
             m.frustum((cx, 0, 0), r0, r0 - 0.15, z0, z0 + step * 0.86, 8, rot=t * 0.2)
             m.frustum((cx, 0, 0), r0 + 0.22, r0 + 0.22, z0 + step * 0.86, z0 + step, 8, rot=t * 0.2)
             for k in range(int(8 * detail)):
                 b = 2 * math.pi * k / int(8 * detail) + t * 0.2
                 m.box((cx + (r0 + 0.1) * math.cos(b), (r0 + 0.1) * math.sin(b), z0 + step * 0.45), (0.28, 0.28, step * 0.5), yaw=b)
         top = PLINTH_HEIGHT * 0.3 + v["ring_out"] * 0.42
-        m.bipyramid(Vector((sx * (v["ring_out"] * 0.62), 0, top + 1.4)), 0.7 * detail, 1.5 * detail, 8)
+        m.bipyramid(Vector((sx * foot_cx, 0, top + 1.4)), 0.7 * detail, 1.5 * detail, 8)
         parts.append(m)
 
     # --- Runes and glyphs on the plinth rim ---------------------------------
-    for i in range(8):
-        a = 2 * math.pi * i / 8 + math.pi / 8
-        d = v["plinth_r"] - 2.3
+    for i, a in enumerate(RUNE_ANGLES):
+        d = v["plinth_r"] - 2.0
         m = Mesh(f"Rune{i + 1}", "Gold")
         cx, cy = d * math.cos(a), d * math.sin(a)
         m.box((cx, cy, PLINTH_HEIGHT + 0.35), (1.6, 1.6, 0.7), yaw=a)
@@ -408,7 +453,7 @@ def make_scene(variant):
 def validate(variant, report):
     v = VARIANTS[variant]
     required = ["Foundation", "Plinth", "OuterRing", "InnerRing", "PortalPlane", "RingFoot1", "RingFoot2", "SpotAnchor"]
-    required += [f"Rune{i}" for i in range(1, 9)] + [f"Glyph{i}" for i in range(1, 9)] + [f"Shard{i}" for i in range(1, v["shards"] + 1)]
+    required += [f"Rune{i}" for i in range(1, 5)] + [f"Glyph{i}" for i in range(1, 5)] + [f"Shard{i}" for i in range(1, v["shards"] + 1)]
     if v["blades"]:
         required += [f"Blade{i}" for i in range(1, 9)]
     errors = [f"missing {n}" for n in required if n not in report]

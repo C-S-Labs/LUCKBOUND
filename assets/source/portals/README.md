@@ -4,8 +4,8 @@ Two authored portals, generated headless from `build_expedition_portals.py`:
 
 | Model | Triangles | Parts | Role |
 |---|---|---|---|
-| `EXPEDITION_ENTRANCE` | ~11k | 30 | always open, on the ENTRY chunk |
-| `EXPEDITION_EXIT` | ~18k | 38 | sealed by `Blade1..8` until the boss falls, on the BOSS chunk |
+| `EXPEDITION_ENTRANCE` | ~11.3k | 22 | always open, on the ENTRY chunk |
+| `EXPEDITION_EXIT` | ~15.8k | 30 | sealed by `Blade1..8` until the boss falls, on the BOSS chunk |
 
 Budget is 10k–25k triangles per model and under 10k per mesh; the script fails if either is broken.
 
@@ -19,13 +19,15 @@ here and `assets/export/portals/EXPEDITION_<VARIANT>.fbx`.
 ## Contract (names are exact)
 
 `Foundation` (buried, not collidable) · `Plinth` (PrimaryPart, the only collidable part) · `OuterRing` (spins) ·
-`InnerRing` (counter-spins, tinted) · `PortalPlane` (tinted, pulses) · `Rune1..8` · `Glyph1..8` (tinted) ·
+`InnerRing` (counter-spins, tinted) · `PortalPlane` (tinted, pulses) · `Rune1..4` · `Glyph1..4` (tinted) ·
 `Shard1..6` (tinted, spin) · `RingFoot1..2` · `SpotAnchor` · EXIT only: `Blade1..8`.
 
 Tinted parts are untextured and near-white so the rarity colour shows. Lights and particles are made by code.
 
-**Flush:** `Foundation` sits below z = 0 and is sunk into the chunk deck; `Plinth` rises 1.8 studs as a stepped rim.
-Nothing else sits on the walk plane.
+**Flush and walkable (owner, 2026-09-28):** `Foundation` sits below z = 0 and is sunk into the chunk deck; `Plinth` is a
+0.3-stud kerb, small enough to walk on and off without jumping. The portal plane's lowest edge is at z = 0 and the ring's
+lower arc is buried (nothing is modelled below z = -0.6), so the way through is level ground. Nothing stands within 32° of
+the walk-through (Y) axis; the runes flank the ring's feet.
 
 ## Studio import (owner step, not done yet)
 
