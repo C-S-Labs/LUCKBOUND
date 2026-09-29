@@ -34,6 +34,28 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 121 — 2026-09-29 — Astral Reach design scheme locked (docs only)
+**Merged:** none yet   **Tests:** not run (docs only)   **Branch:** `claude/astral-reach-scheme-doc-1c7134`
+
+### Done
+- Owner supplied a concept sheet for Astral Reach with both legendary bosses. Committed it as
+  `docs/design/ASTRAL_REACH_SCHEME.webp` and wrote `docs/biomes/ASTRAL_REACH.md` (world, The Astral Seraph, The
+  Celestial Dancer, movesets, close-ups, environmental interaction; sheet text kept faithful, build notes labelled).
+- Linked it from `INDEX.md`, `docs/biomes/README.md`, `docs/STATUS.md`.
+
+### Decisions made
+- **Design only, nothing built**, per owner. The sheet wins over the text if they disagree.
+
+### Stopped at
+Design recorded. Open questions (boss relationship, phase assignment, triangle budgets, drops) are listed in §5 of the doc.
+
+### Next
+1. Owner answers the open questions; then kit authoring, boss rigs, AI per the doc's §6.
+
+**Leftover cleanup:** none left behind.
+
+---
+
 ## Session 120 — 2026-09-29 — Consolidated PR: movement (#147) + The Ascendant (#148)
 **Merged:** PR #147 (with #148 folded in)   **Tests:** 1008 passing (minimal run, owner's call)   **Branch:** `claude/create-branch-workflow-jsh534`
 

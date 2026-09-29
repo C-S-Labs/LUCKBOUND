@@ -17,7 +17,7 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   (**41-piece hybrid kit** — floating isles + temple + meadow, 2 landmarks, 2 miniboss arenas, 6 backdrop
   pieces with drifting cloud props, height variation — on the §7.7 generation blueprint, 2026-09-27; final
   polish pass done (map-wide skyrays, natural mushroom patches, overhang check) — **not yet uploaded or walked**). Emberfall and Astral
-  Reach have no map yet.
+  Reach have no map yet (Astral Reach's design scheme and both bosses are locked in `docs/biomes/ASTRAL_REACH.md`, 2026-09-29, unbuilt).
 
   | Id | Rarity | Weight | Phase | Map | Enterable? |
   |---|---|---|---|---|---|
