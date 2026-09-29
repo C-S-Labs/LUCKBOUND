@@ -73,12 +73,12 @@ PALETTE = {
 VARIANTS = {
     "ENTRANCE": {
         "height": 15.0, "width": 6.4, "thick": 1.1,
-        "edges": 10, "frags": 12, "frag_r": (0.55, 1.15), "debris": 22,
+        "edges": 12, "frags": 7, "frag_r": (0.6, 1.2), "debris": 22,
         "scar_r": 6.5, "cracks": 9, "seed": 7,
     },
     "EXIT": {
         "height": 21.0, "width": 9.0, "thick": 1.5,
-        "edges": 16, "frags": 18, "frag_r": (0.7, 1.6), "debris": 34,
+        "edges": 18, "frags": 10, "frag_r": (0.8, 1.7), "debris": 34,
         "scar_r": 9.5, "cracks": 13, "seed": 11,
     },
 }
@@ -98,16 +98,21 @@ class Mesh:
         except ValueError:
             pass
 
-    def crystal(self, base, direction, radius, length, sides):
-        """A faceted spike from `base` along `direction`: a short prism that
-        narrows to a point. 3 * sides triangles."""
+    def crystal(self, base, direction, radius, length, sides, lean=0.0):
+        """A faceted crystal from `base` along `direction`: a hexagonal-style
+        prism that narrows slightly, then is cut to a point that sits a little
+        off-axis (`lean`, a fraction of the radius), so the tip reads as a
+        cleaved facet, not a cone. 2 * sides + sides + (sides - 2) triangles."""
         d = Vector(direction).normalized()
         rot = Vector((0, 0, 1)).rotation_difference(d).to_matrix()
-        mid = length * 0.55
         base = Vector(base)
-        ring0 = [rot @ Vector((radius * math.cos(2 * math.pi * i / sides), radius * math.sin(2 * math.pi * i / sides), 0)) + base for i in range(sides)]
-        ring1 = [rot @ Vector((radius * 0.5 * math.cos(2 * math.pi * i / sides + 0.3), radius * 0.5 * math.sin(2 * math.pi * i / sides + 0.3), mid)) + base for i in range(sides)]
-        tip = base + d * length
+
+        def ring(rad, z, phase):
+            return [rot @ Vector((rad * math.cos(2 * math.pi * i / sides + phase), rad * math.sin(2 * math.pi * i / sides + phase), z)) + base for i in range(sides)]
+
+        ring0 = ring(radius, 0.0, 0.0)
+        ring1 = ring(radius * 0.9, length * 0.72, 0.0)
+        tip = base + rot @ Vector((radius * lean, 0.0, length))
         for i in range(sides):
             j = (i + 1) % sides
             self.face([ring0[i], ring0[j], ring1[j], ring1[i]])
@@ -202,25 +207,44 @@ def build(variant):
     halo.lens(H / 2, z0, W / 2 * 1.15, T / 2 * 1.2, 24, 16, rng, 0.18)
     parts.append(halo)
 
-    # --- Lips: crystal spikes leaning out from both edges of the tear --------
+    # --- Lips: small crystal clusters growing along the edges of the tear ----
+    # Sized to the tear (its height is 15 or 21 studs): slender, and in groups
+    # of three that fan slightly, so the lip reads as crusted with crystal
+    # rather than fenced with spikes.
+    k = H / 15.0
     for n in range(v["edges"]):
         side = -1 if n % 2 == 0 else 1
-        t = 0.14 + 0.72 * ((n // 2) + rng.random() * 0.35) / (v["edges"] / 2)
+        t = 0.12 + 0.76 * ((n // 2) + rng.random() * 0.4) / (v["edges"] / 2)
         t = min(0.9, t)
-        w = half_width_at(v, t) * 1.12
-        base = Vector((side * w, (rng.random() - 0.5) * T * 0.4, z0 + H * t))
-        out = Vector((side * (0.8 + 0.5 * rng.random()), (rng.random() - 0.5) * 0.5, 0.35 + 0.5 * rng.random()))
+        w = half_width_at(v, t) * 1.04
         m = Mesh(f"Edge{n + 1}", "Tint")
-        m.crystal(base, out, 0.42 + 0.3 * rng.random(), 1.9 + 1.7 * rng.random(), 5 if n % 3 else 6)
+        for c in range(3):
+            spread = (c - 1) * 0.42
+            base = Vector((side * (w + abs(c - 1) * 0.06), (rng.random() - 0.5) * T * 0.3, z0 + H * t + (c - 1) * 0.28 * k))
+            out = Vector((side * (0.9 - abs(spread) * 0.3), (rng.random() - 0.5) * 0.25, 0.55 + spread))
+            length = (1.4 if c == 1 else 0.95) * (0.8 + 0.5 * rng.random()) * k
+            m.crystal(base, out, (0.17 if c == 1 else 0.12) * k, length, 6, lean=0.5 * (rng.random() - 0.5))
         parts.append(m)
 
     # --- Floating fragments: rock with a crystal set in it -------------------
     mean_r = (v["frag_r"][0] + v["frag_r"][1]) / 2  # bigger stones get an extra chip
+    # FRAGMENTS STAY ON THE SIDES. The walk-through path runs along Y (in
+    # front of and behind the tear), so rock only sits within 38 degrees of
+    # the +/-X axis, and never nearer the tear than its own width. The
+    # animation must orbit them in that same band; see the README.
+    per_side = {1: [], -1: []}
     for n in range(v["frags"]):
-        ang = 2 * math.pi * n / v["frags"] + rng.random() * 0.4
-        ring_r = W * (0.95 + 0.9 * rng.random())
-        h = z0 + H * (0.2 + 0.7 * rng.random())  # clear of the walk-through path
-        c = Vector((math.cos(ang) * ring_r, math.sin(ang) * ring_r * 0.7, h))
+        per_side[1 if n % 2 == 0 else -1].append(n)
+    slot = {}
+    for sgn, ids in per_side.items():
+        for order, n in enumerate(ids):
+            slot[n] = (sgn, (order + rng.random() * 0.6) / max(1, len(ids)))
+    for n in range(v["frags"]):
+        sgn, frac = slot[n]
+        ang = (0.0 if sgn > 0 else math.pi) + (rng.random() - 0.5) * 2 * math.radians(38) * (1 if sgn > 0 else -1)
+        ring_r = W * (1.05 + 0.8 * rng.random())
+        h = z0 + H * (0.2 + 0.72 * frac)  # clear of the ground and the path
+        c = Vector((math.cos(ang) * ring_r, math.sin(ang) * ring_r * 0.55, h))
         r = v["frag_r"][0] + (v["frag_r"][1] - v["frag_r"][0]) * rng.random()
         rk = Mesh(f"FragRock{n + 1}", "Rock")
         rk.rock(c, r, rng, subdiv=3,
@@ -318,6 +342,15 @@ def validate(variant, report, col=None):
                 top = max(vt.co.z for vt in o.data.vertices)
                 if top > limit:
                     errors.append(f"{name} rises {top:.2f} above the deck (limit {limit})")
+    # THE PATH: fragments and their gems must stay off the walk-through lane,
+    # the band |x| < half the tear's width that runs the length of Y.
+    if col is not None:
+        lane = v["width"] / 2 + 0.3
+        for o in col.objects:
+            if o.name.startswith(("FragRock", "FragGem")):
+                nearest = min(abs(vt.co.x) for vt in o.data.vertices)
+                if nearest < lane:
+                    errors.append(f"{o.name} intrudes on the walk-through lane (|x| {nearest:.2f} < {lane:.2f})")
     return total, errors
 
 
