@@ -33,6 +33,34 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 100 — 2026-09-29 — Axe grip for the off hand, longer staff, robe shake fixed
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes   **Branch:** `CloudTesting`
+
+### Done
+- **Robe shake:** `cloth_core` now gives contact friction and no lever kick at the pinned root; the robe no longer
+  collides with the arms. Idle shake 6 cm -> under 1 mm.
+- **Off-hand grip** (owner's axe reference): `_asc_pose.left_on_haft` puts the left hand on the haft overhand from
+  the front (`AXE_GRIP` = 1: palm to the body, fingers wrapping toward it). It needs no search, so it is fast.
+- **Idle_Guard** now holds the staff across the body like the axe (C -0.10,-0.45,2.35; u -0.85); the left hand
+  stays attached. **Staff** butt lengthened 0.82 -> 1.0 m (`the_ascendant_staff.py`); the delivered `.blend` mesh is
+  extended to match.
+- **Crescent Reap** re-authored as a two-handed swing (COIL/TELL/SWEEP/PAST/DRAG re-searched for the axe grip).
+- **Speed:** `pose_fix` restores arm bones with one refresh (`matrix_basis`); a grip solve dropped from minutes to
+  seconds. Sticky elbow pole (Session 99) is kept.
+
+### Stopped at
+Known problems, all in the Reap's recovery (f43-52, RECOVER key) unless noted:
+- Left wrist up to 139 deg and the staff clips the body (up to 482 tris at f48); the right arm clips 26 frames.
+- Idle: left wrist 95 deg on 18 frames; the right arm clips the chest by ~23 tris on every frame.
+- Walk/Strafe use the old carried-staff pose, not the axe guard, so the staff is held differently there.
+
+### Next
+1. Rework the Reap recovery (f43-60) and the Idle right arm.
+2. Give Walk/Strafe the same across-the-body carry.
+3. Owner: one Studio import once the boss is finished.
+
+---
+
 ## Session 99 — 2026-09-28 — Right-elbow flare fixed
 **Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes   **Branch:** `CloudTesting`
 

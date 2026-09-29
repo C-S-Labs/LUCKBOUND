@@ -45,8 +45,8 @@ _271 text files, 381 binary assets. Regenerate with `python tools/gen_index.py`;
 
 - `assets/source/enemies/README.md` (16) - Enemies (source) · 2026-09-24
 - `assets/source/enemies/_framework/EnemyDef.template.luau` (56) - EnemyDef template (STAGED: not wired into src/ until the owner approves the Studio integration). · 2026-09-24
-- `assets/source/enemies/_framework/anim_core.py` (155) - Animation core shared by every enemy action. An action file (<world>/anims/<enemy_id>/<Action>.py) only describes · 2026-09-28
-  - `anim_core.py`: reset_pose:21, rot:30, move_root:34, begin:37, key:43, _key_all:54, reset_keep_action:71, mark:80, _fcurves:82, end:84, _upd:114, rot_dir:115, reach:122, aim_weapon:129, world:135, _lerp:138, param_keys:141
+- `assets/source/enemies/_framework/anim_core.py` (154) - Animation core shared by every enemy action. An action file (<world>/anims/<enemy_id>/<Action>.py) only describes · 2026-09-29
+  - `anim_core.py`: reset_pose:21, rot:30, move_root:34, begin:37, key:42, _key_all:53, reset_keep_action:70, mark:79, _fcurves:81, end:83, _upd:113, rot_dir:114, reach:121, aim_weapon:128, world:134, _lerp:137, param_keys:140
 - `assets/source/enemies/_framework/bodies/_TEMPLATE.py` (25) - Body profile TEMPLATE: copy to <biome>/bodies/<name>.py (biome-specific) or _framework/bodies/<name>.py (shared), · 2026-09-24
   - `_TEMPLATE.py`: joint_report:11, fix_clip:21
 - `assets/source/enemies/_framework/bodies/creature.py` (8) - Body profile: generic creature (custom bone chains: wisps, drones, crawlers, eels, whales...). · 2026-09-24
@@ -68,7 +68,7 @@ _271 text files, 381 binary assets. Regenerate with `python tools/gen_index.py`;
 - `assets/source/enemies/_framework/lineup.py` (28) - Build every enemy of a tier into ONE review .blend, side by side (each in its own collection, rigged). · 2026-09-24
 - `assets/source/enemies/_framework/pose_common.py` (32) - Body-agnostic pose helpers (every body type): collision counts between pieces and grounding. · 2026-09-24
   - `pose_common.py`: _upd:10, _tree:11, hits:17, ground:23
-- `assets/source/enemies/_framework/pose_fix.py` (322) - HUMANOID BODY PROFILE (loaded only for manifest body="humanoid"; see bodies/). Joint + grip rules for R15 figures: · 2026-09-28
+- `assets/source/enemies/_framework/pose_fix.py` (322) - HUMANOID BODY PROFILE (loaded only for manifest body="humanoid"; see bodies/). Joint + grip rules for R15 figures: · 2026-09-29
   - `pose_fix.py`: _upd:18, _rest_rot:19, haft:21, _dax:24, _palm:27, seat_point:34, grip_lance:37, _curl:44, wrap:64, _oppose:77, setup_hinges:98, hinge_errors:106, _ik:117, _bake:127, orient_hand:136, hand_on:146, clear_arm:186, _dir:194, joint_report:195, wield:217, abduction_penalty:243, joint_penalty:250, _wield_once:253, arm_to:276, _wield_once:302
 - `assets/source/enemies/_framework/preview.py` (11) - Render chosen frames of the current action (for review). Env FRAMES="1,8,12,15,19,26,44" (default: every key). · 2026-09-24
   - `preview.py`: preview:5
@@ -89,14 +89,14 @@ _271 text files, 381 binary assets. Regenerate with `python tools/gen_index.py`;
 - `assets/source/enemies/ethereal_scape/anims/temple_acolyte/Walk.py` (2) · 2026-09-28
 - `assets/source/enemies/ethereal_scape/anims/the_ascendant/Idle_Guard.py` (24) - Idle_Guard (120 f loop @ 30 fps): the Ascendant's HIGH GUARD, which every P1 attack starts from and returns to. · 2026-09-28
   - `Idle_Guard.py`: guard:7, pose:15
-- `assets/source/enemies/ethereal_scape/anims/the_ascendant/P1_CrescentReap.py` (37) - P1_CrescentReap (ASCENDANT_MOVESET P1 #1): 14 f tell, 5 f active, 37 f recovery. 60 f @ 30 fps. In place. · 2026-09-28
+- `assets/source/enemies/ethereal_scape/anims/the_ascendant/P1_CrescentReap.py` (34) - P1_CrescentReap (ASCENDANT_MOVESET P1 #1): 14 f tell, 5 f active, 37 f recovery. 60 f @ 30 fps. In place. · 2026-09-29
   - `P1_CrescentReap.py`: K:14
 - `assets/source/enemies/ethereal_scape/anims/the_ascendant/StrafeLeft.py` (3) - StrafeLeft (loop): circle to its LEFT around the player (walk_core side-step at the boss gait), staff carried. · 2026-09-28
 - `assets/source/enemies/ethereal_scape/anims/the_ascendant/StrafeRight.py` (3) - StrafeRight (loop): circle to its RIGHT around the player, staff carried. Mirror of StrafeLeft. · 2026-09-28
 - `assets/source/enemies/ethereal_scape/anims/the_ascendant/Walk.py` (9) - Walk (loop): walk_core's solved humanoid walk at the boss gait (ROLE_GAIT["boss"]: shorter, slower, weightier · 2026-09-28
   - `Walk.py`: carry:5
-- `assets/source/enemies/ethereal_scape/anims/the_ascendant/_asc_pose.py` (126) - Shared posing for every Ascendant action (exec'd at the top of each action file; run.py skips "_" files). · 2026-09-28
-  - `_asc_pose.py`: _left_on_staff:12, fix_clip:17, flat_foot:25, ground_body:30, roll_edge:40, stance:54, left_on_haft:74, curl_left:99, staff:105
+- `assets/source/enemies/ethereal_scape/anims/the_ascendant/_asc_pose.py` (109) - Shared posing for every Ascendant action (exec'd at the top of each action file; run.py skips "_" files). · 2026-09-29
+  - `_asc_pose.py`: _left_on_staff:12, fix_clip:17, flat_foot:25, ground_body:30, roll_edge:40, stance:54, left_on_haft:72, curl_left:82, staff:88
 - `assets/source/enemies/ethereal_scape/crystal_warden.py` (71) - LUCKBOUND - Ethereal Scape BASIC enemy: Crystal Warden (close range, heavy: brute). · 2026-09-28
 - `assets/source/enemies/ethereal_scape/manifest.py` (23) - Ethereal Scape enemy manifest: the ONE place that lists this biome's enemies for the framework runner. · 2026-09-28
 - `assets/source/enemies/ethereal_scape/meadow_stag.py` (85) - LUCKBOUND - Ethereal Scape BASIC enemy: Meadow Stag (close range: charger, packs of two/three). · 2026-09-28
@@ -363,8 +363,8 @@ _271 text files, 381 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (5962) - LUCKBOUND — Work Log · 2026-09-28
-  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 99 — 2026-09-28 — Right-elbow flare fixed:36, Done:39, Stopped at:49, Session 98 — 2026-09-28 — Robe clears the free arm:55, Done:58, Stopped at:69, Next:73, Session 97 — 2026-09-28 — Baked cloth (robe + scarves) and t:78, Done:81, Decisions made:101, Stopped at:105, Next:112, Session 96 — 2026-09-28 — The Ascendant: whole-body locomoti:118, Done:121, Decisions made:146, Stopped at:150, Next:157, Session 95 — 2026-09-28 — The Ascendant (Ethereal Scape boss:164, Done:167, Decisions made:190, Stopped at:195, Next:203, Session 94 — 2026-09-27 — Dev panel grip: visible, and corre:210, Done:213, Next:222, Session 93 — 2026-09-27 — Leaderboard rows: friend / block /:227, Done:230, Next:242, Session 92 — 2026-09-27 — Chat to top-left, rail drops and c:248, Done:251, Stopped at:267, Next:270, Session 91 — 2026-09-27 — Custom leaderboard + chat panel in:275, Done:278, ... +512 more
+- `docs/WORKLOG.md` (5990) - LUCKBOUND — Work Log · 2026-09-28
+  - `WORKLOG.md`: Template:15, Session N — YYYY-MM-DD — <short title>:18, Done:21, Decisions made:24, Stopped at:27, Next:30, Session 100 — 2026-09-29 — Axe grip for the off hand, longer:36, Done:39, Stopped at:51, Next:57, Session 99 — 2026-09-28 — Right-elbow flare fixed:64, Done:67, Stopped at:77, Session 98 — 2026-09-28 — Robe clears the free arm:83, Done:86, Stopped at:97, Next:101, Session 97 — 2026-09-28 — Baked cloth (robe + scarves) and t:106, Done:109, Decisions made:129, Stopped at:133, Next:140, Session 96 — 2026-09-28 — The Ascendant: whole-body locomoti:146, Done:149, Decisions made:174, Stopped at:178, Next:185, Session 95 — 2026-09-28 — The Ascendant (Ethereal Scape boss:192, Done:195, Decisions made:218, Stopped at:223, Next:231, Session 94 — 2026-09-27 — Dev panel grip: visible, and corre:238, Done:241, Next:250, Session 93 — 2026-09-27 — Leaderboard rows: friend / block /:255, Done:258, Next:270, Session 92 — 2026-09-27 — Chat to top-left, rail drops and c:276, Done:279, ... +516 more
 
 ### docs/archive
 

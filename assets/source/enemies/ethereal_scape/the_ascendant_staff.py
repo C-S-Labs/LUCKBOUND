@@ -22,7 +22,7 @@ def W(y, z, x=0.0): return F @ V((x, y, z))       # staff-local -> world
 def seg(mi, u0, u1, r0, r1, N=12, sub=0, smooth=True):
     loft(BONE, mi, [(u0, r0, r0), (u1, r1, r1)], N=N, M=F, sub=sub, smooth=smooth)
 HR = 0.045                                        # haft radius (pose_fix HAFT_R is 0.047: the palm seat fits it)
-BUTT, HEAD = -0.82, 1.55
+BUTT, HEAD = -1.0, 1.55                          # butt long enough for an axe grip low at the left hip
 # ---- haft: ivory shaft, gold collars, teal grip wraps where the hands sit ----
 seg(IVO, BUTT + 0.1, HEAD, HR, HR, N=14)
 for u in (-0.72, -0.62, -0.08, 0.3, 0.9, 1.45):
