@@ -1,39 +1,40 @@
-"""THE EXPEDITION PORTALS (build spec §7.8): the ENTRANCE and the EXIT.
+"""THE EXPEDITION RIFTS (build spec §7.8): the ENTRANCE and the EXIT.
 
-Two authored portals, each ONE model of separate named meshes in the same
-contract as the Fate Engine (docs/FATE_ENGINE_BLENDER_PROMPT.md), so PortalRig
-and HubEffects-style code can spin, tint and open them by name:
+Owner, 2026-09-28: the first cut was a mechanical ring portal; it was out of
+place in a floating biome. Both doors are now RIFTS, tears in the air, and the
+exit materialises out of nothing when the boss falls.
 
-    ENTRANCE  always open, the way home. Target 10-14k triangles.
-    EXIT      opens where the boss fell. Target 18-25k triangles. Adds the
-              iris Blade1..8 that seal the aperture until the boss is dead.
+Each rift is ONE model of separate named meshes. The mesh carries the SHAPE
+(the tear, its jagged lips, the floating rock); code carries the MOTION and
+the light (Beams with the flow texture, particles, tweening, the colour), so
+the same meshes serve a calm entrance and an exit that opens in five seconds.
+
+    ENTRANCE  always open, the way home. Coloured by the biome's rarity.
+    EXIT      opens where the boss fell. Always crimson.
 
 Authored in STUDS (1 Blender unit = 1 stud; the export lands 1:1). The walk
-plane is z = 0 at the portal's centre. Blender +Y is the walk-through axis
-(the rings' axis); the ring plane is XZ, centred at z = RING_HEIGHT.
+plane is z = 0 at the rift's centre. The tear lies in the XZ plane and players
+come and go along Y.
 
-FLUSH (owner, 2026-09-28: "should NOT float above the chunk; it should be part
-of the chunk, flush"). `Foundation` is a slab BELOW z = 0 that the code sinks
-into the chunk's deck; `Plinth` rises only a couple of studs, as a shallow
-stepped rim a character walks onto. Nothing in the model sits above z = 0
-without standing on those two.
+FLUSH AND WALKABLE (owner, 2026-09-28): nothing here is collidable and nothing
+stands above z = 0.12. The tear's tip touches the deck, so the way through is
+level ground; there is no platform to climb.
 
-CONTRACT (all one flat model; names are exact, no .001 suffixes)
-    Foundation   static, buried under the deck. Not collidable.
-    Plinth       PrimaryPart, the only collidable part.
-    OuterRing    spins about its own Y axis
-    InnerRing    counter-spins, TINTED per rarity
-    PortalPlane  TINTED, transparency pulses, carries light and particles
-    Rune1..4     static (plinth rim, flanking the feet, never in front)
-    Glyph1..4    TINTED (float over the runes)
-    Shard1..6    TINTED, spin slowly about their own vertical axis
-    RingFoot1..2 static struts the ring stands in
-    Blade1..8    EXIT only: iris shutters. Sealed = closed over the aperture;
-                 open = slid radially outward into the OuterRing. Pure
-                 translation, so no hinge pivot survives (or fails) FBX.
+CONTRACT (one flat model; names are exact, no .001 suffixes)
+    Scar         PrimaryPart: the cracked ground the rift stands in. Thin,
+                 dark, NOT collidable. Carries the prompt.
+    ScarGlow     TINTED. Glowing cracks laid just over Scar.
+    RiftCore     TINTED. The bright inner tear.
+    RiftMid      TINTED. A translucent shell round the core.
+    RiftHalo     TINTED. The widest, softest shell.
+    Edge1..N     TINTED. Crystal spikes lining the lips of the tear.
+    FragRock1..N static dark rock, floating round the tear.
+    FragGem1..N  TINTED. A crystal set in each rock.
+    Debris       static. Loose stones on the ground round the scar.
+    LightAnchor  a tiny marker the code hangs the point light from.
 
 TINTED parts are near-white and untextured on purpose: a SurfaceAppearance
-overrides Color and would kill the per-rarity reskin.
+overrides Color and would kill the per-rarity colour.
 
 Run headless (bpy 4.x/5.x):
     blender -b --factory-startup --python build_expedition_portals.py -- --variant BOTH --export --save
@@ -47,22 +48,23 @@ import sys
 
 import bpy
 import bmesh
-from mathutils import Matrix, Vector
+from mathutils import Vector
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, "..", "..", ".."))
 EXPORT_DIR = os.path.join(REPO, "assets", "export", "portals")
 
-TRI_MIN, TRI_MAX = 10_000, 25_000
+# The owner accepted a lower count than the mechanical version (10-25k): a
+# rift's richness is in its animation. The per-mesh cap is the house rule.
+TRI_MIN, TRI_MAX = 3_000, 25_000
+MESH_MAX = 10_000
+
+GROUND_MAX = 0.12  # nothing sits higher than this above the deck
 
 # (rgb 0-255, emissive). House palette: the Fate Engine as painted in game.
 PALETTE = {
     "Basalt": ((64, 58, 78), False),
-    "BasaltLight": ((88, 82, 104), False),
-    "Marble": ((226, 221, 234), False),
-    "MarbleDim": ((196, 190, 208), False),
-    "Gold": ((230, 178, 74), False),
-    "Inlay": ((68, 135, 123), True),
+    "Rock": ((70, 62, 92), False),
     # Near-white so a rarity Color on the part is the colour you see.
     "Tint": ((240, 240, 246), True),
 }
@@ -70,48 +72,16 @@ PALETTE = {
 # Per-variant dimensions, in studs.
 VARIANTS = {
     "ENTRANCE": {
-        "ring_out": 9.0, "ring_in": 6.8, "ring_depth": 1.6,
-        "inner_out": 6.4, "inner_in": 5.6, "plane": 5.6,
-        "plinth_r": 8.5, "found_r": 10.0,
-        "ring_segs": 60, "inner_segs": 120, "teeth": 30, "pylon_tiers": 6,
-        "blades": False, "shards": 6, "detail": 1.25,
+        "height": 15.0, "width": 6.4, "thick": 1.1,
+        "edges": 10, "frags": 12, "frag_r": (0.55, 1.15), "debris": 22,
+        "scar_r": 6.5, "cracks": 9, "seed": 7,
     },
     "EXIT": {
-        "ring_out": 13.0, "ring_in": 9.8, "ring_depth": 2.4,
-        "inner_out": 9.2, "inner_in": 8.0, "plane": 8.0,
-        "plinth_r": 12.0, "found_r": 13.5,
-        "ring_segs": 72, "inner_segs": 144, "teeth": 36, "pylon_tiers": 8,
-        "blades": True, "shards": 6, "detail": 1.6,
+        "height": 21.0, "width": 9.0, "thick": 1.5,
+        "edges": 16, "frags": 18, "frag_r": (0.7, 1.6), "debris": 34,
+        "scar_r": 9.5, "cracks": 13, "seed": 11,
     },
 }
-
-# THE WALK-THROUGH PATH (owner, 2026-09-28): players come out of and go into a
-# portal along its Y axis, so nothing stands on the plinth within this half-angle
-# of +Y or -Y. Runes sit on the +/-X sides; the rim posts skip the cone too.
-CLEAR_HALF_ANGLE = math.radians(32)
-RUNE_ANGLES = [math.radians(a) for a in (22, 158, 202, 338)]
-
-
-def buried_arc(H, r_out, segs):
-    """The ring's arc with the part below BURY_FLOOR left out, and the segment
-    count scaled to match. Returns ((start, end), segments)."""
-    s = (BURY_FLOOR - H) / r_out
-    phi = math.asin(max(-1.0, min(1.0, s)))  # angle of the lowest kept point, in [-pi/2, 0]
-    start, end = phi, math.pi - phi
-    span = end - start
-    return (start, end), max(8, int(round(segs * span / (2 * math.pi))))
-
-
-def in_clear_path(a):
-    """True when angle `a` (about Z, 0 = +X) is inside the walk-through cone."""
-    s = abs(math.sin(a))
-    return s > math.cos(CLEAR_HALF_ANGLE)
-
-
-PLINTH_HEIGHT = 0.3    # a kerb, not a step: players walk on and off (owner, 2026-09-28)
-FOUNDATION_DEPTH = 6.0
-BURY_FLOOR = -0.6      # nothing of the ring is modelled below this: it must not show through a thin deck
-SINK = 0.15            # ring stands this far into the plinth
 
 
 class Mesh:
@@ -121,81 +91,59 @@ class Mesh:
         self.name, self.mat = name, mat
         self.bm = bmesh.new()
 
-    def _face(self, pts):
+    def face(self, pts):
         vs = [self.bm.verts.new(p) for p in pts]
         try:
             self.bm.faces.new(vs)
         except ValueError:
             pass
 
-    def box(self, centre, size, yaw=0.0, pitch=0.0):
-        """Axis box, optionally turned about Z (yaw) then X (pitch)."""
-        sx, sy, sz = (s / 2 for s in size)
-        corners = [Vector((x * sx, y * sy, z * sz)) for x in (-1, 1) for y in (-1, 1) for z in (-1, 1)]
-        rot = Matrix.Rotation(yaw, 3, "Z") @ Matrix.Rotation(pitch, 3, "X")
-        pts = [rot @ c + Vector(centre) for c in corners]
-        idx = [(0, 1, 3, 2), (4, 6, 7, 5), (0, 4, 5, 1), (2, 3, 7, 6), (0, 2, 6, 4), (1, 5, 7, 3)]
-        for q in idx:
-            self._face([pts[i] for i in q])
-
-    def sweep_panel(self, centre, ang, tangent, radial, thick):
-        """A flat slab lying in a ring face: radial along the ring's spoke,
-        tangential along the rim, thin along Y."""
-        rot = Matrix.Rotation(-ang, 3, "Y")
-        # ring plane is XZ; spoke direction is (cos a, 0, sin a)
-        sx, sy, sz = radial / 2, thick / 2, tangent / 2
-        corners = [Vector((x * sx, y * sy, z * sz)) for x in (-1, 1) for y in (-1, 1) for z in (-1, 1)]
-        pts = [rot @ c + Vector(centre) for c in corners]
-        idx = [(0, 1, 3, 2), (4, 6, 7, 5), (0, 4, 5, 1), (2, 3, 7, 6), (0, 2, 6, 4), (1, 5, 7, 3)]
-        for q in idx:
-            self._face([pts[i] for i in q])
-
-    def frustum(self, centre, r0, r1, z0, z1, sides, rot=0.0):
-        """A vertical tapered prism about a vertical axis, capped."""
-        cx, cy = centre[0], centre[1]
-        lo = [(cx + r0 * math.cos(rot + 2 * math.pi * i / sides), cy + r0 * math.sin(rot + 2 * math.pi * i / sides), z0) for i in range(sides)]
-        hi = [(cx + r1 * math.cos(rot + 2 * math.pi * i / sides), cy + r1 * math.sin(rot + 2 * math.pi * i / sides), z1) for i in range(sides)]
+    def crystal(self, base, direction, radius, length, sides):
+        """A faceted spike from `base` along `direction`: a short prism that
+        narrows to a point. 3 * sides triangles."""
+        d = Vector(direction).normalized()
+        rot = Vector((0, 0, 1)).rotation_difference(d).to_matrix()
+        mid = length * 0.55
+        base = Vector(base)
+        ring0 = [rot @ Vector((radius * math.cos(2 * math.pi * i / sides), radius * math.sin(2 * math.pi * i / sides), 0)) + base for i in range(sides)]
+        ring1 = [rot @ Vector((radius * 0.5 * math.cos(2 * math.pi * i / sides + 0.3), radius * 0.5 * math.sin(2 * math.pi * i / sides + 0.3), mid)) + base for i in range(sides)]
+        tip = base + d * length
         for i in range(sides):
             j = (i + 1) % sides
-            self._face([lo[i], lo[j], hi[j], hi[i]])
-        if r0 > 0:
-            self._face(list(reversed(lo)))
-        if r1 > 0:
-            self._face(hi)
+            self.face([ring0[i], ring0[j], ring1[j], ring1[i]])
+            self.face([ring1[i], ring1[j], tip])
+        self.face(list(reversed(ring0)))
 
-    def bipyramid(self, centre, radius, half_height, sides):
-        """A faceted crystal: point, ring, ring, point. 4 * sides triangles."""
-        c = Vector(centre)
-        top, bot = c + Vector((0, 0, half_height)), c - Vector((0, 0, half_height))
-        up = [c + Vector((radius * math.cos(2 * math.pi * i / sides), radius * math.sin(2 * math.pi * i / sides), half_height * 0.25)) for i in range(sides)]
-        dn = [c + Vector((radius * math.cos(2 * math.pi * i / sides), radius * math.sin(2 * math.pi * i / sides), -half_height * 0.25)) for i in range(sides)]
-        for i in range(sides):
-            j = (i + 1) % sides
-            self._face([top, up[i], up[j]])
-            self._face([up[i], dn[i], dn[j], up[j]])
-            self._face([bot, dn[j], dn[i]])
+    def rock(self, centre, radius, rng, subdiv=1, squash=(1.0, 1.0, 0.8)):
+        """A faceted, chipped stone: an icosphere pushed about by the seeded
+        rng so no two fragments match."""
+        res = bmesh.ops.create_icosphere(self.bm, subdivisions=subdiv, radius=1.0)
+        for v in res["verts"]:
+            jitter = 0.78 + 0.42 * rng.random()
+            v.co = Vector((v.co.x * squash[0], v.co.y * squash[1], v.co.z * squash[2])) * (radius * jitter) + Vector(centre)
 
-    def sweep(self, profile, segs, radius_z, arc=(0.0, 2 * math.pi), closed=True):
-        """Sweeps a closed (d, a) profile round the Y axis at height radius_z.
-
-        d is distance from the ring centre in the ring plane (XZ), a is
-        displacement along Y (the walk-through axis)."""
-        a0, a1 = arc
-        n = len(profile)
+    def lens(self, half_h, z0, half_w, half_t, stacks, sides, rng, jag):
+        """A vertical almond: pointed top and bottom, widest at the middle,
+        thin along Y. Its lips are jittered by `jag`. Tip at z0, top at
+        z0 + 2 * half_h."""
         rings = []
-        steps = segs if (a1 - a0) >= 2 * math.pi - 1e-6 else segs + 1
-        for s in range(steps):
-            phi = a0 + (a1 - a0) * s / segs
-            rings.append([Vector((d * math.cos(phi), a, radius_z + d * math.sin(phi))) for d, a in profile])
-        cnt = segs if steps == segs else segs
-        for s in range(cnt):
-            t = (s + 1) % steps
-            for k in range(n):
-                m = (k + 1) % n
-                self._face([rings[s][k], rings[t][k], rings[t][m], rings[s][m]])
-        if steps != segs:
-            self._face(list(reversed(rings[0])))
-            self._face(rings[-1])
+        for k in range(stacks + 1):
+            t = k / stacks
+            z = z0 + 2 * half_h * t
+            envelope = (4 * t * (1 - t)) ** 0.75
+            w = half_w * envelope * (1 + jag * (rng.random() - 0.5))
+            th = half_t * envelope
+            rings.append([(w * math.cos(2 * math.pi * i / sides), th * math.sin(2 * math.pi * i / sides), z) for i in range(sides)])
+        for k in range(stacks):
+            for i in range(sides):
+                j = (i + 1) % sides
+                a, b, c, d = rings[k][i], rings[k][j], rings[k + 1][j], rings[k + 1][i]
+                if k == 0:
+                    self.face([b, c, d])  # the bottom ring is a point
+                elif k == stacks - 1:
+                    self.face([a, b, d])  # so is the top
+                else:
+                    self.face([a, b, c, d])
 
     def tris(self):
         return sum(len(f.verts) - 2 for f in self.bm.faces)
@@ -231,208 +179,104 @@ def material(key):
     return _MATS[key]
 
 
-def ring_profile(r_in, r_out, depth, bevel):
-    """A chamfered rectangular cross-section, (d, a) pairs."""
-    h = depth / 2
-    b = min(bevel, (r_out - r_in) / 2 - 1e-3, h - 1e-3)
-    return [
-        (r_in + b, -h), (r_out - b, -h), (r_out, -h + b), (r_out, h - b),
-        (r_out - b, h), (r_in + b, h), (r_in, h - b), (r_in, -h + b),
-    ]
+def half_width_at(v, t):
+    """The tear's half-width at height fraction t (0 tip, 1 top)."""
+    return v["width"] / 2 * (4 * t * (1 - t)) ** 0.75
 
 
 def build(variant):
     v = VARIANTS[variant]
-    detail = v["detail"]
-    rng = random.Random(7 if variant == "ENTRANCE" else 11)
-    # The aperture reaches the deck: the plane's lowest edge is at z = 0, so
-    # the path through the portal is level ground with nothing to climb.
-    H = v["plane"]
+    rng = random.Random(v["seed"])
     parts = []
+    H, W, T = v["height"], v["width"], v["thick"]
+    z0 = 0.05  # the tip touches the deck
 
-    # --- Foundation: buried, hides the seam with the deck --------------------
-    m = Mesh("Foundation", "Basalt")
-    tiers = [(v["found_r"], v["found_r"] - 0.6, -FOUNDATION_DEPTH, -1.5), (v["found_r"] - 0.6, v["found_r"] - 1.4, -1.5, 0.0)]
-    for r0, r1, z0, z1 in tiers:
-        m.frustum((0, 0, 0), r0, r1, z0, z1, 32, rot=math.pi / 32)
-    # Buried ribs: give the slab something to be, and the mesh its detail.
-    for i in range(int(32 * detail)):
-        a = 2 * math.pi * i / int(32 * detail)
-        m.box((math.cos(a) * (v["found_r"] - 0.9), math.sin(a) * (v["found_r"] - 0.9), -1.2), (1.4, 0.7, 1.0), yaw=a)
-    parts.append(m)
+    # --- The tear: three nested shells, so code can breathe each on its own --
+    core = Mesh("RiftCore", "Tint")
+    core.lens(H / 2 * 0.86, z0 + H * 0.07, W / 2 * 0.62, T / 2 * 0.5, 18, 12, rng, 0.10)
+    parts.append(core)
+    mid = Mesh("RiftMid", "Tint")
+    mid.lens(H / 2 * 0.94, z0 + H * 0.03, W / 2 * 0.86, T / 2 * 0.8, 20, 14, rng, 0.14)
+    parts.append(mid)
+    halo = Mesh("RiftHalo", "Tint")
+    halo.lens(H / 2, z0, W / 2 * 1.15, T / 2 * 1.2, 24, 16, rng, 0.18)
+    parts.append(halo)
 
-    # --- Plinth: shallow stepped rim, the collidable floor -------------------
-    m = Mesh("Plinth", "Marble")
-    steps = 2
-    for s in range(steps):
-        r0 = v["plinth_r"] - s * 0.7
-        r1 = r0 - 0.45
-        z0 = PLINTH_HEIGHT * s / steps
-        z1 = PLINTH_HEIGHT * (s + 1) / steps
-        m.frustum((0, 0, 0), r0, r1, z0, z1, 16, rot=math.pi / 16)
-    # Radial inlay grooves worked into the top step.
-    for i in range(int(16 * detail)):
-        a = 2 * math.pi * i / int(16 * detail)
-        m.box((math.cos(a) * v["plinth_r"] * 0.55, math.sin(a) * v["plinth_r"] * 0.55, PLINTH_HEIGHT + 0.04), (v["plinth_r"] * 0.55, 0.32, 0.1), yaw=a)
-    tiles = int(32 * detail)
-    for i in range(tiles):
-        a = 2 * math.pi * (i + 0.5) / tiles
-        d = v["plinth_r"] * 0.78
-        m.box((d * math.cos(a), d * math.sin(a), PLINTH_HEIGHT + 0.06), (2.2, 1.5, 0.14), yaw=a)
-    bollards = int(24 * detail)
-    for i in range(bollards):
-        a = 2 * math.pi * (i + 0.5) / bollards
-        if in_clear_path(a):
-            continue
-        d = v["plinth_r"] - 0.55
-        m.frustum((d * math.cos(a), d * math.sin(a), 0), 0.34, 0.2, PLINTH_HEIGHT * 0.25, PLINTH_HEIGHT * 0.25 + 0.9, 6, rot=a)
-        m.bipyramid(Vector((d * math.cos(a), d * math.sin(a), PLINTH_HEIGHT * 0.25 + 1.25)), 0.2, 0.32, 4)
-    parts.append(m)
-
-    # --- Rings ---------------------------------------------------------------
-    m = Mesh("OuterRing", "BasaltLight")
-    arc, segs = buried_arc(H, v["ring_out"], v["ring_segs"])
-    m.sweep(ring_profile(v["ring_in"], v["ring_out"], v["ring_depth"], 0.35), segs, H, arc=arc)
-    # Teeth on the rim and keystones every eighth of the ring.
-    for i in range(v["teeth"]):
-        a = 2 * math.pi * i / v["teeth"]
-        d = v["ring_out"] + 0.25
-        if H + d * math.sin(a) < 0.3:
-            continue
-        big = i % 3 == 0
-        s = (0.9 if big else 0.55) * (1.0 + 0.3 * (detail - 1))
-        # A tooth is a small bipyramid pointing away from the hub.
-        c = Vector((d * math.cos(a), 0, H + d * math.sin(a)))
-        m.bipyramid(c, s * 0.5, s * 1.1, 6 if big else 4)
-    for i in range(8):
-        a = 2 * math.pi * i / 8 + math.pi / 8
-        d = (v["ring_in"] + v["ring_out"]) / 2
-        if H + d * math.sin(a) < 1.0:
-            continue
-        m.box((d * math.cos(a), -v["ring_depth"] / 2 - 0.12, H + d * math.sin(a)), (1.4, 0.24, 1.4), yaw=0.0)
-        m.box((d * math.cos(a), v["ring_depth"] / 2 + 0.12, H + d * math.sin(a)), (1.4, 0.24, 1.4), yaw=0.0)
-    # Carved panels round both faces, and studs along the inner lip.
-    span = (v["ring_out"] - v["ring_in"]) * 0.62
-    chord = 2 * math.pi * (v["ring_in"] + v["ring_out"]) / 2 / v["ring_segs"] * 0.72
-    for i in range(v["ring_segs"]):
-        a = 2 * math.pi * (i + 0.5) / v["ring_segs"]
-        d = (v["ring_in"] + v["ring_out"]) / 2
-        if H + d * math.sin(a) < 1.0:
-            continue
-        for y in (-1, 1):
-            c = Vector((d * math.cos(a), y * (v["ring_depth"] / 2 + 0.06), H + d * math.sin(a)))
-            m.sweep_panel(c, a, chord, span, 0.12)
-        e = v["ring_in"] + 0.05
-        if H + e * math.sin(a) < 0.5:
-            continue
-        m.bipyramid(Vector((e * math.cos(a), 0, H + e * math.sin(a))), 0.26, 0.5, 5)
-    parts.append(m)
-
-    m = Mesh("InnerRing", "Tint")
-    arc, segs = buried_arc(H, v["inner_out"], v["inner_segs"])
-    m.sweep(ring_profile(v["inner_in"], v["inner_out"], 0.5, 0.1), segs, H, arc=arc)
-    for i in range(v["inner_segs"] // 2):
-        a = 2 * math.pi * i / (v["inner_segs"] // 2)
-        d = v["inner_in"] - 0.15
-        if H + d * math.sin(a) < 0.5:
-            continue
-        m.bipyramid(Vector((d * math.cos(a), 0, H + d * math.sin(a))), 0.16, 0.36, 4)
-    parts.append(m)
-
-    m = Mesh("PortalPlane", "Tint")
-    rings_r = [0.0, v["plane"] * 0.34, v["plane"] * 0.68, v["plane"]]
-    segs = 48
-    for k in range(len(rings_r) - 1):
-        for i in range(segs):
-            a0, a1 = 2 * math.pi * i / segs, 2 * math.pi * (i + 1) / segs
-            p = lambda r, a: (r * math.cos(a), 0.0, H + r * math.sin(a))
-            if k == 0:
-                m._face([p(0, 0), p(rings_r[1], a0), p(rings_r[1], a1)])
-            else:
-                m._face([p(rings_r[k], a0), p(rings_r[k + 1], a0), p(rings_r[k + 1], a1), p(rings_r[k], a1)])
-    parts.append(m)
-
-    # Feet: struts the ring stands in, so it reads as seated, not hovering.
-    # Where the ring crosses the deck (z = 0) it spans x = sqrt(in^2-H^2) to
-    # sqrt(out^2-H^2). The feet stand on that band and leave the aperture clear.
-    x_in = math.sqrt(max(0.0, v["ring_in"] ** 2 - H ** 2))
-    x_out = math.sqrt(v["ring_out"] ** 2 - H ** 2)
-    foot_cx = (x_in + x_out) / 2
-    foot_hw = (x_out - x_in) / 2 - 0.25
-    for n, sx in enumerate((-1, 1), start=1):
-        m = Mesh(f"RingFoot{n}", "Basalt")
-        for t in range(v["pylon_tiers"]):
-            f = t / max(1, v["pylon_tiers"] - 1)
-            r0 = foot_hw * (1.0 - 0.45 * f)
-            step = v["ring_out"] * 0.42 / v["pylon_tiers"]
-            z0 = PLINTH_HEIGHT * 0.3 + t * step
-            cx = sx * foot_cx
-            m.frustum((cx, 0, 0), r0, r0 - 0.15, z0, z0 + step * 0.86, 8, rot=t * 0.2)
-            m.frustum((cx, 0, 0), r0 + 0.22, r0 + 0.22, z0 + step * 0.86, z0 + step, 8, rot=t * 0.2)
-            for k in range(int(8 * detail)):
-                b = 2 * math.pi * k / int(8 * detail) + t * 0.2
-                m.box((cx + (r0 + 0.1) * math.cos(b), (r0 + 0.1) * math.sin(b), z0 + step * 0.45), (0.28, 0.28, step * 0.5), yaw=b)
-        top = PLINTH_HEIGHT * 0.3 + v["ring_out"] * 0.42
-        m.bipyramid(Vector((sx * foot_cx, 0, top + 1.4)), 0.7 * detail, 1.5 * detail, 8)
+    # --- Lips: crystal spikes leaning out from both edges of the tear --------
+    for n in range(v["edges"]):
+        side = -1 if n % 2 == 0 else 1
+        t = 0.14 + 0.72 * ((n // 2) + rng.random() * 0.35) / (v["edges"] / 2)
+        t = min(0.9, t)
+        w = half_width_at(v, t) * 1.12
+        base = Vector((side * w, (rng.random() - 0.5) * T * 0.4, z0 + H * t))
+        out = Vector((side * (0.8 + 0.5 * rng.random()), (rng.random() - 0.5) * 0.5, 0.35 + 0.5 * rng.random()))
+        m = Mesh(f"Edge{n + 1}", "Tint")
+        m.crystal(base, out, 0.42 + 0.3 * rng.random(), 1.9 + 1.7 * rng.random(), 5 if n % 3 else 6)
         parts.append(m)
 
-    # --- Runes and glyphs on the plinth rim ---------------------------------
-    for i, a in enumerate(RUNE_ANGLES):
-        d = v["plinth_r"] - 2.0
-        m = Mesh(f"Rune{i + 1}", "Gold")
-        cx, cy = d * math.cos(a), d * math.sin(a)
-        m.box((cx, cy, PLINTH_HEIGHT + 0.35), (1.6, 1.6, 0.7), yaw=a)
-        m.box((cx, cy, PLINTH_HEIGHT + 0.85), (1.0, 1.0, 0.3), yaw=a + math.pi / 4)
-        m.frustum((cx, cy, 0), 0.5, 0.05, PLINTH_HEIGHT + 1.0, PLINTH_HEIGHT + 1.9 * detail, 6, rot=a)
-        parts.append(m)
-        g = Mesh(f"Glyph{i + 1}", "Tint")
-        g.bipyramid(Vector((cx, cy, PLINTH_HEIGHT + 3.2 * detail)), 0.42 * detail, 0.9 * detail, 6)
-        parts.append(g)
+    # --- Floating fragments: rock with a crystal set in it -------------------
+    mean_r = (v["frag_r"][0] + v["frag_r"][1]) / 2  # bigger stones get an extra chip
+    for n in range(v["frags"]):
+        ang = 2 * math.pi * n / v["frags"] + rng.random() * 0.4
+        ring_r = W * (0.95 + 0.9 * rng.random())
+        h = z0 + H * (0.2 + 0.7 * rng.random())  # clear of the walk-through path
+        c = Vector((math.cos(ang) * ring_r, math.sin(ang) * ring_r * 0.7, h))
+        r = v["frag_r"][0] + (v["frag_r"][1] - v["frag_r"][0]) * rng.random()
+        rk = Mesh(f"FragRock{n + 1}", "Rock")
+        rk.rock(c, r, rng, subdiv=3,
+                squash=(1.0, 0.85 + 0.3 * rng.random(), 0.7 + 0.4 * rng.random()))
+        # A couple of chips broken off, floating beside it.
+        for _ in range(4 if r > mean_r else 3):
+            off = Vector(((rng.random() - 0.5) * r * 2.6, (rng.random() - 0.5) * r * 2.6, r * (0.9 + rng.random())))
+            rk.rock(c + off, r * (0.22 + 0.15 * rng.random()), rng, subdiv=1)
+        parts.append(rk)
+        gm = Mesh(f"FragGem{n + 1}", "Tint")
+        gm.crystal(c + Vector((0, 0, r * 0.55)), Vector((rng.random() - 0.5, rng.random() - 0.5, 1.0)), r * 0.28, r * (1.1 + 0.6 * rng.random()), 7)
+        parts.append(gm)
 
-    # --- Shards: free-floating crystals around the ring ---------------------
-    for i in range(v["shards"]):
-        a = 2 * math.pi * i / v["shards"] + 0.3
-        d = v["ring_out"] * 1.35
-        h = H + math.sin(i * 1.7) * v["ring_out"] * 0.3
-        m = Mesh(f"Shard{i + 1}", "Tint")
-        sides = 6 if variant == "ENTRANCE" else 8
-        rr = 0.7 * detail * (0.9 + 0.2 * rng.random())
-        m.bipyramid(Vector((d * math.cos(a), d * math.sin(a) * 0.6, h)), rr, rr * 2.4, sides)
-        for k in range(int(4 * detail)):
-            b = 2 * math.pi * k / int(4 * detail)
-            m.bipyramid(Vector((d * math.cos(a) + math.cos(b) * rr * 1.3, d * math.sin(a) * 0.6 + math.sin(b) * rr * 1.3, h - rr * 0.6)), rr * 0.32, rr * 0.9, 4)
-        parts.append(m)
+    # --- The scar: cracked ground, thin and flat, never in the way -----------
+    scar = Mesh("Scar", "Basalt")
+    glow = Mesh("ScarGlow", "Tint")
+    R = v["scar_r"]
+    for i in range(v["cracks"]):
+        a = 2 * math.pi * i / v["cracks"] + (rng.random() - 0.5) * 0.35
+        length = R * (0.55 + 0.45 * rng.random())
+        width = 0.5 + 0.55 * rng.random()
+        # A crack is a tapered strip, wide at the tear, pointed at the far end.
+        dirv = Vector((math.cos(a), math.sin(a), 0))
+        side = Vector((-dirv.y, dirv.x, 0))
+        p0 = dirv * 0.6
+        pm = dirv * length * 0.5 + side * (rng.random() - 0.5) * 0.8
+        p1 = dirv * length + side * (rng.random() - 0.5) * 1.2
+        for surf, z, wscale in ((scar, GROUND_MAX * 0.5, 1.9), (glow, GROUND_MAX * 0.5 + 0.02, 0.75)):
+            wd = width * wscale
+            outline = [p0 + side * wd, pm + side * wd * 0.6, p1, pm - side * wd * 0.6, p0 - side * wd]
+            pts = [Vector((q.x, q.y, z)) for q in outline]
+            for k in range(1, len(pts) - 1):
+                surf.face([pts[0], pts[k], pts[k + 1]])
+    # A flat worn disc under the tear, so the ground reads as part of the rift.
+    sides = 20
+    for i in range(sides):
+        a0, a1 = 2 * math.pi * i / sides, 2 * math.pi * (i + 1) / sides
+        r0 = R * 0.34 * (0.85 + 0.3 * rng.random())
+        r1 = R * 0.34 * (0.85 + 0.3 * rng.random())
+        zz = GROUND_MAX * 0.4
+        scar.face([(0, 0, zz), (r0 * math.cos(a0), r0 * math.sin(a0), zz), (r1 * math.cos(a1), r1 * math.sin(a1), zz)])
+    parts.append(scar)
+    parts.append(glow)
 
-    # --- SpotAnchor: a tiny hidden marker the code hangs the light from ------
-    m = Mesh("SpotAnchor", "Basalt")
-    m.box((0, 0, H + v["ring_out"] * 1.6), (0.4, 0.4, 0.4))
-    parts.append(m)
+    # --- Loose stones on the ground, low enough to walk through --------------
+    deb = Mesh("Debris", "Rock")
+    for _ in range(v["debris"]):
+        a = 2 * math.pi * rng.random()
+        d = R * (0.35 + 0.75 * rng.random())
+        r = 0.16 + 0.34 * rng.random()
+        deb.rock((d * math.cos(a), d * math.sin(a), r * 0.15), r, rng, subdiv=0, squash=(1.0, 1.0, 0.45))
+    parts.append(deb)
 
-    # --- EXIT only: the iris that seals the aperture -------------------------
-    if v["blades"]:
-        blades = 8
-        for i in range(blades):
-            a = 2 * math.pi * i / blades
-            m = Mesh(f"Blade{i + 1}", "BasaltLight")
-            r0, r1 = 0.0, v["ring_in"] + 0.1
-            half = math.pi / blades
-            # A wedge lying in the XZ plane, thin along Y.
-            steps = 6
-            for s in range(steps):
-                ra, rb = r0 + (r1 - r0) * s / steps, r0 + (r1 - r0) * (s + 1) / steps
-                pts = lambda r, ang, y: (r * math.cos(ang), y, H + r * math.sin(ang))
-                for y0, y1, sgn in ((-0.35, 0.35, 1),):
-                    m._face([pts(ra, a - half, y1), pts(rb, a - half, y1), pts(rb, a + half, y1), pts(ra, a + half, y1)])
-                    m._face([pts(ra, a + half, y0), pts(rb, a + half, y0), pts(rb, a - half, y0), pts(ra, a - half, y0)])
-                    m._face([pts(rb, a - half, y0), pts(rb, a + half, y0), pts(rb, a + half, y1), pts(rb, a - half, y1)])
-                    m._face([pts(ra, a - half, y1), pts(ra, a + half, y1), pts(ra, a + half, y0), pts(ra, a - half, y0)])
-                    m._face([pts(ra, a - half, y0), pts(rb, a - half, y0), pts(rb, a - half, y1), pts(ra, a - half, y1)])
-                    m._face([pts(ra, a + half, y1), pts(rb, a + half, y1), pts(rb, a + half, y0), pts(ra, a + half, y0)])
-            # Ridge lines on the face: gold studs along the wedge's spine.
-            for s in range(1, 9):
-                r = r1 * s / 9
-                m.bipyramid(Vector((r * math.cos(a), -0.55, H + r * math.sin(a))), 0.22, 0.4, 4)
-            parts.append(m)
+    la = Mesh("LightAnchor", "Basalt")
+    la.crystal((0, 0, z0 + H * 0.5 - 0.2), (0, 0, 1), 0.2, 0.4, 4)
+    parts.append(la)
 
     return parts, H
 
@@ -450,22 +294,30 @@ def make_scene(variant):
     return col, report, H
 
 
-def validate(variant, report):
+def validate(variant, report, col=None):
     v = VARIANTS[variant]
-    required = ["Foundation", "Plinth", "OuterRing", "InnerRing", "PortalPlane", "RingFoot1", "RingFoot2", "SpotAnchor"]
-    required += [f"Rune{i}" for i in range(1, 5)] + [f"Glyph{i}" for i in range(1, 5)] + [f"Shard{i}" for i in range(1, v["shards"] + 1)]
-    if v["blades"]:
-        required += [f"Blade{i}" for i in range(1, 9)]
+    required = ["Scar", "ScarGlow", "RiftCore", "RiftMid", "RiftHalo", "Debris", "LightAnchor"]
+    required += [f"Edge{i}" for i in range(1, v["edges"] + 1)]
+    required += [f"FragRock{i}" for i in range(1, v["frags"] + 1)] + [f"FragGem{i}" for i in range(1, v["frags"] + 1)]
     errors = [f"missing {n}" for n in required if n not in report]
     total = sum(report.values())
     if not TRI_MIN <= total <= TRI_MAX:
         errors.append(f"{total} tris is outside {TRI_MIN}-{TRI_MAX}")
     worst = max(report.items(), key=lambda kv: kv[1])
-    if worst[1] > 10_000:
+    if worst[1] > MESH_MAX:
         errors.append(f"{worst[0]} has {worst[1]} tris; keep every mesh under 10k")
     for name in report:
         if name.endswith((".001", ".002")):
             errors.append(f"bad name {name}")
+    # FLUSH: the scar and its glow must lie on the deck. (Debris stones are
+    # small rocks with some height, so they get a looser bound.)
+    if col is not None:
+        for name, limit in (("Scar", GROUND_MAX), ("ScarGlow", GROUND_MAX + 0.05), ("Debris", 0.6)):
+            o = col.objects.get(name)
+            if o:
+                top = max(vt.co.z for vt in o.data.vertices)
+                if top > limit:
+                    errors.append(f"{name} rises {top:.2f} above the deck (limit {limit})")
     return total, errors
 
 
@@ -478,8 +330,8 @@ def main():
     failed = False
     for variant in variants:
         col, report, H = make_scene(variant)
-        total, errors = validate(variant, report)
-        print(f"[{variant}] {len(report)} parts, {total} tris, ring centre z={H:.2f}")
+        total, errors = validate(variant, report, col)
+        print(f"[{variant}] {len(report)} parts, {total} tris, tear height {H:.1f}")
         for n, t in sorted(report.items(), key=lambda kv: -kv[1])[:6]:
             print(f"    {n}: {t}")
         for e in errors:

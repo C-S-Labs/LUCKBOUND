@@ -1202,10 +1202,15 @@ makes what a run pays depend on how it ended. Branch `agent/expedition-portal`.
 
    Loot is rolled **at boss defeat**, for each player present (existing `LootSystem` boss roll, §7.5), not at exit,
    so staying or leaving cannot change it.
-5. **Both portals are authored Blender meshes** (owner, 2026-09-28), 10k to 25k triangles each, in the Fate Engine's
-   named-part contract (`assets/source/portals/`). "Rigged" means separate named parts that code spins, tints and
-   opens, the same as the Engine; the exit's iris `Blade1..8` slide outward to open. Until the owner imports the
-   FBXs to Studio, the `PortalRig` blockout is the fallback, so the game never has a missing portal.
+5. **Both doors are rifts, authored as Blender meshes** (owner, 2026-09-28: the first, mechanical ring portal was out
+   of place in a floating biome). A rift is a tear in the air with jagged crystal lips and floating rock
+   (`assets/source/portals/`, about 7k and 10k triangles). The mesh is the shape; **code is the motion and the light**:
+   Beams carrying one uploaded flow texture, particles, a point light and tweening, so the animation is extensive
+   and the triangle count is not. Entrance colour is the biome's rarity; the exit is always crimson. Nothing is
+   collidable and the tear's tip touches the deck, so there is nothing to climb.
+5a. **The exit materialises** where the boss fell instead of appearing whole: cracks and motes, fragments drawn in,
+   the tear opens from the middle, then settles into a calm loop (about 5 seconds, `GameConfig`). Until the owner
+   imports the FBXs to Studio, the `PortalRig` blockout is the fallback, so the game never has a missing portal.
 6. The party ready toggle and the host-starts-run flow belong to the **Fate engine rework**, not this branch. This
    branch only leaves the payout seam (`payoutFor`) and the entry seam (`ExpeditionSystem.requestEnter`) it plugs into.
 7. **The hub Expedition Gate (the Crossroads `GATE` zone) is removed.** Entry has been at the Fate Engine
@@ -1226,7 +1231,7 @@ definition changes.** A world with no file gets the defaults.
 | | |
 |---|---|
 | `Core/ExpeditionCore.luau` | `payoutFor(outcome, cfg)`; `ExitState` (LOCKED / OPENING / OPEN) as pure data |
-| `Util/PortalRig.luau` | a `Flush` option (plinth seated on the surface); an opening sequence for the exit |
+| `Util/RiftRig.luau` | builds a rift from the prefab (or a blockout fallback), drives its loop and the exit's materialise sequence |
 | `Systems/ExpeditionSystem.luau` | build both portals, gate the exit on the boss event, route every leave through `finish(player, outcome)` |
 | `Systems/LootSystem.luau` | tells `ExpeditionSystem` when the boss falls (the existing `bossDefeated` seam) |
 | `Core/GameConfig.luau` | `Expedition`: `EarlyExitFraction`, `ExitOpenSeconds`, portal scales and prompt distances |
@@ -1251,8 +1256,8 @@ Fate engine's logic and UI: all unchanged and still excluded.
 
 1. Spec + index row (this section).
 2. `ExpeditionCore.payoutFor` + `GameConfig` values + tests (pure, no Roblox).
-3. The two portal meshes: Blender generator, `.blend` and FBX, triangle budget check (done); owner imports to Studio.
-3b. Code: load the prefab with the `PortalRig` blockout as fallback, seat it flush, drive the opening sequence.
+3. The two rift meshes: Blender generator, `.blend` and FBX, budget check (done); owner imports to Studio and uploads the flow texture.
+3b. Code: `RiftRig` loads the prefab with a blockout fallback, seats it flush, animates the loop and the exit's materialise sequence.
 4. Entrance portal: rename, flush, always open, routes through the payout.
 5. Exit portal: build closed, open on the boss event, gradual spawn, payout.
 6. Remove the hub `GATE` zone and its tests; keep `GateAnchor`.
