@@ -17,7 +17,7 @@ _297 text files, 405 binary assets. Regenerate with `python tools/gen_index.py`;
   - `AGENTS.md`: STEP 0 — read `INDEX.md` before anything else (mandatory):9, Keeping INDEX.md current:26, STEP 1 — then read these three, in this order:32, Token discipline (owner priority):68, BEFORE YOU FINISH — update the handoff:76, The prime directive:106, Hard rules:114, Boot order:125, Style:129, Git workflow — implementation vs integration:136, Verify before you merge:151, When you are unsure:171
 - `CLAUDE.md` (6) - CLAUDE.md · 2026-09-25
 - `GEMINI.md` (3) - GEMINI.md · 2026-09-25
-- `INDEX.md` (213) - LUCKBOUND — Repository Index · 2026-09-28
+- `INDEX.md` (213) - LUCKBOUND — Repository Index · 2026-09-29
   - `INDEX.md`: 1. Read order for a new session:22, 2. Top-level layout and where it lands in Roblox (`default.p:32, 3. Docs: what each one owns:56, 4. "I need to…" → where:82, 5. Asset pipelines (Blender 5.2, headless):116, 6. Conventions and workflow (quick reference; full rules in :172, 7. Exact locations: `INDEX_MAP.md`:196
 - `README.md` (74) - LUCKBOUND · 2026-09-27
   - `README.md`: Read these first:15, Quick start:36, Two rules that shape everything:49, What's built:61
@@ -363,7 +363,7 @@ _297 text files, 405 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/STATUS.md
 
-- `docs/STATUS.md` (294) - LUCKBOUND — Project Status · 2026-09-28
+- `docs/STATUS.md` (294) - LUCKBOUND — Project Status · 2026-09-29
   - `STATUS.md`: 1. Where the project stands:10, 2. Next — pick up here:61, 3. Decisions locked in:192, Why true RNG matters downstream:218, 4. Open items (one line each; details are in the archive und:231, 5. Environment:276, Startup:284
 
 ### docs/TESTING.md
@@ -435,7 +435,7 @@ _297 text files, 405 binary assets. Regenerate with `python tools/gen_index.py`;
   - `PartyController.luau`: PartyController.get:39, PartyController.onChanged:45, PartyController.nameOf:56, PartyController.request:63, announceInvite:67, PartyController.init:102
 - `src/client/Controllers/PropController.luau` (340) - Dresses a generated map with its world's ambient scenery (CHUNK_AUTHORING.md · 2026-09-27
   - `PropController.luau`: rawPose:52, pose:98, quality:109, library:116, step:120, PropController.enter:152, PropController.leave:328
-- `src/client/Controllers/ProximityController.luau` (133) - Shows the ROLL prompt near the Fate Engine and turns input into a request. · 2026-09-25
+- `src/client/Controllers/ProximityController.luau` (133) - Shows the ROLL prompt near the Fate Engine and turns input into a request. · 2026-09-29
   - `ProximityController.luau`: anchor:24, requestRoll:31, ProximityController.isInRange:40, ProximityController.requestRoll:45, ProximityController.setLocked:50, ProximityController.bindPrompt:65, bindProximityPrompt:74, ProximityController.init:101
 - `src/client/Controllers/SettingsController.luau` (158) - SETTINGS, APPLIED. The half that makes the Settings panel mean something. · 2026-09-25
   - `SettingsController.luau`: SettingsController.musicGroup:48, SettingsController.effectsGroup:53, SettingsController.screenShake:58, SettingsController.showsOthersRolls:63, buildSoundGroups:67, isOurs:90, scaleFor:95, applyScale:107, adopt:118, applyVolumes:129, SettingsController.init:137
@@ -447,41 +447,41 @@ _297 text files, 405 binary assets. Regenerate with `python tools/gen_index.py`;
   - `StateController.luau`: notify:31, StateController.get:37, StateController.onChanged:41, StateController.setting:55, StateController.applySetting:68, StateController.init:79
 - `src/client/Controllers/ThemeController.luau` (178) - THE LIVE PALETTE, APPLIED. · 2026-09-25
   - `ThemeController.luau`: ThemeController.register:50, ThemeController.palette:59, ThemeController.onChanged:63, differs:74, repaint:83, evaluate:111, ThemeController.district:151, ThemeController.init:155
-- `src/client/UI/CSIntro.luau` (401) - THE C&S LABS IDENT (prototype, isolated). Plays ONCE per fresh server join, · new
+- `src/client/UI/CSIntro.luau` (401) - THE C&S LABS IDENT (prototype, isolated). Plays ONCE per fresh server join, · 2026-09-29
   - `CSIntro.luau`: tw:30, half:55, CSIntro.play:73
-- `src/client/UI/ChatPanel.luau` (286) - The chat window, in the house style. Replaces TextChatService's default · 2026-09-27
+- `src/client/UI/ChatPanel.luau` (286) - The chat window, in the house style. Replaces TextChatService's default · 2026-09-29
   - `ChatPanel.luau`: hex:34, wake:40, fade:45, addLine:49, onMessage:84, send:105, notifyOpened:123, setShown:131, build:142, ChatPanel.onOpened:230, ChatPanel.init:234
 - `src/client/UI/DevPanel.luau` (730) - THE DEVELOPER PANEL. Testing tooling, not a feature: it exists only when · 2026-09-27
   - `DevPanel.luau`: chip:64, grid:72, scroller:87, log:102, clearLog:129, runLine:139, runCommand:155, hideSuggestions:165, drawSuggestions:171, refreshSuggestions:216, accept:227, valueLabel:239, buildCard:249, paintTabs:384, showCategory:392, toggle:412, build:421, DevPanel.init:717
 - `src/client/UI/ExpeditionHud.luau` (206) - The expedition banner: where you are, how long is left, and what happened · 2026-09-23
   - `ExpeditionHud.luau`: build:35, showToast:121, ExpeditionHud.init:139
-- `src/client/UI/FateEngineMenu.luau` (799) - THE FATE ENGINE MENU (SIGIL): the main menu. Opens anywhere in the · new
+- `src/client/UI/FateEngineMenu.luau` (799) - THE FATE ENGINE MENU (SIGIL): the main menu. Opens anywhere in the · 2026-09-29
   - `FateEngineMenu.luau`: tw:64, text:80, square:97, open:117, FateEngineMenu.close:683, FateEngineMenu.init:694
-- `src/client/UI/FateHud.luau` (85) - THE FATE READOUT, SIGIL style: a small ring holding the Fate level, with a · new
+- `src/client/UI/FateHud.luau` (85) - THE FATE READOUT, SIGIL style: a small ring holding the Fate level, with a · 2026-09-29
   - `FateHud.luau`: FateHud.init:19
 - `src/client/UI/FateRoll.luau` (360) - The roll: prompt, build-up, reveal, result card. Build spec T-115. · 2026-09-25
   - `FateRoll.luau`: setRolling:46, corner:55, stroke:59, build:63, playBuildup:209, showCard:243, hideAll:273, onRollResult:292, FateRoll.onRollingChanged:337, FateRoll.init:348
 - `src/client/UI/GlobalAnnouncements.luau` (245) - Server-wide banners and live-event display. Build spec T-116 and §4.1. · 2026-09-22
   - `GlobalAnnouncements.luau`: build:35, isSuppressed:126, showBanner:136, setActiveEvent:199, GlobalAnnouncements.init:224
-- `src/client/UI/HubMenu.luau` (1013) - THE HUB MENU: the side rail, its panels, and the arrow that hides it. · 2026-09-27
+- `src/client/UI/HubMenu.luau` (1013) - THE HUB MENU: the side rail, its panels, and the arrow that hides it. · 2026-09-29
   - `HubMenu.luau`: say:79, travelTo:108, clearBody:133, section:141, paragraph:148, buildTravel:158, buildCodes:190, buildSettings:245, partyRow:281, buildParty:316, buildPreview:434, SHOP:456, SKILLS:461, REBIRTH:466, buildPanelBody:473, railRestingPosition:501, panelRestingPosition:511, refreshRailSelection:517, applyPanelVisibility:528, applyState:549, dispatch:571, refreshVisibility:586, setVisible:596, buildRail:606, buildArrow:682, buildPanel:704, build:758, keyCodeNamed:803, bindHotkeys:816, HubMenu.init:861, HubMenu.travelTo:954, HubMenu.openIn:960, HubMenu.release:977, HubMenu.open:992, HubMenu.follow:1000, HubMenu.collapse:1005
-- `src/client/UI/Leaderboard.luau` (423) - The player list, in the house style. Replaces Roblox's CoreGui one. · 2026-09-27
+- `src/client/UI/Leaderboard.luau` (423) - The player list, in the house style. Replaces Roblox's CoreGui one. · 2026-09-29
   - `Leaderboard.luau`: layCells:40, cellText:80, sortedPlayers:90, refresh:105, closeMenu:133, prompt:141, isBlocked:149, openMenu:157, addRow:246, removeRow:305, setOpen:318, build:326, Leaderboard.init:391
-- `src/client/UI/LoadingScreen.luau` (685) - THE FIRST THING ANYONE SEES. Owner-directed (STATUS §4, "First-join intro · 2026-09-25
+- `src/client/UI/LoadingScreen.luau` (685) - THE FIRST THING ANYONE SEES. Owner-directed (STATUS §4, "First-join intro · 2026-09-29
   - `LoadingScreen.luau`: LoadingScreen.onFinished:68, LoadingScreen.isFinished:76, LoadingScreen.isReady:81, playableShots:90, playShot:101, runTour:167, countHub:196, countParts:211, preloadAll:225, setReady:257, watchProgress:267, holdCharacter:354, releaseCharacter:368, pointCameraAtCharacter:398, releaseCamera:417, finish:436, build:497, passingThrough:637, LoadingScreen.init:647
-- `src/client/UI/Sigil/Sigil.luau` (1021) - SIGIL components (prototype): panel, button, tabs, notifier, tooltip, header, · new
+- `src/client/UI/Sigil/Sigil.luau` (1021) - SIGIL components (prototype): panel, button, tabs, notifier, tooltip, header, · 2026-09-29
   - `Sigil.luau`: mk:16, box:25, tween:33, paint:44, label:55, caption:78, line:97, fadeIn:118, Sigil.ring:129, diamond:146, orbit:159, spin:191, Sigil.panel:207, Sigil.button:296, Sigil.tabs:349, Sigil.notifier:398, Sigil.tooltip:455, Sigil.header:517, Sigil.engine:586, thinBar:747, Sigil.hud:776, Sigil.menu:856, Sigil.titleScreen:908
-- `src/client/UI/Sigil/SigilShowcase.luau` (171) - Style-exploration board for the SIGIL visual language. Press F8 in Studio to · new
+- `src/client/UI/Sigil/SigilShowcase.luau` (171) - Style-exploration board for the SIGIL visual language. Press F8 in Studio to · 2026-09-29
   - `SigilShowcase.luau`: build:14, SigilShowcase.init:155
-- `src/client/UI/Sigil/SigilStyle.luau` (99) - SIGIL: the LUCKBOUND UI visual language (prototype). Tokens only, no Instances. · new
+- `src/client/UI/Sigil/SigilStyle.luau` (99) - SIGIL: the LUCKBOUND UI visual language (prototype). Tokens only, no Instances. · 2026-09-29
   - `SigilStyle.luau`: Style.accent:69, Style.tone:74, Style.setState:79, Style.bind:87
-- `src/client/UI/UIKit.luau` (464) - THE WIDGET LIBRARY. Every hub screen is built from these, so there is one · 2026-09-27
+- `src/client/UI/UIKit.luau` (464) - THE WIDGET LIBRARY. Every hub screen is built from these, so there is one · 2026-09-29
   - `UIKit.luau`: UIKit.formatClock:36, UIKit.reduceMotion:41, UIKit.duration:45, UIKit.tween:54, UIKit.surface:79, UIKit.label:128, UIKit.button:158, UIKit.setEnabled:221, UIKit.list:233, UIKit.divider:243, UIKit.toggle:254, UIKit.slider:303, UIKit.textbox:392, UIKit.previewBadge:425, UIKit.revealFrom:448
-- `src/client/UI/UniversalMenu.luau` (41) - THE UNIVERSAL MENU (SIGIL): a small ring, top-right, holding only what is · new
+- `src/client/UI/UniversalMenu.luau` (41) - THE UNIVERSAL MENU (SIGIL): a small ring, top-right, holding only what is · 2026-09-29
   - `UniversalMenu.luau`: UniversalMenu.init:14
-- `src/client/UI/Vitals.luau` (158) - THE VITALS BARS, in the SIGIL style (docs/PLAYER_UI.md; owner 2026-09-28: · 2026-09-28
+- `src/client/UI/Vitals.luau` (158) - THE VITALS BARS, in the SIGIL style (docs/PLAYER_UI.md; owner 2026-09-28: · 2026-09-29
   - `Vitals.luau`: bar:40, setValue:103, Vitals.init:128, Vitals.setStamina:143, Vitals.setHealth:151
-- `src/client/init.client.luau` (108) - The only LocalScript. Build spec T-117. · 2026-09-28
+- `src/client/init.client.luau` (108) - The only LocalScript. Build spec T-117. · 2026-09-29
 
 ### src/server
 
@@ -507,7 +507,7 @@ _297 text files, 405 binary assets. Regenerate with `python tools/gen_index.py`;
   - `LootSystem.luau`: library:59, presentMembers:63, grantDrops:78, tell:91, rollFor:98, keysOf:120, buildFixture:131, standingNear:196, markOpened:208, openChest:218, openVault:229, bossDefeated:263, watchArena:300, LootSystem.attach:339, LootSystem.setKeyChanceOverride:442, LootSystem.keyChanceOverride:446, LootSystem.triggerBoss:452, LootSystem.keyDefinitions:463, LootSystem.giveKey:474, LootSystem.takeKeys:487, LootSystem.keysOf:497, LootSystem.init:501
 - `src/server/Systems/PartySystem.luau` (338) - PARTIES: the server half. Build spec §7.2. · 2026-09-25
   - `PartySystem.luau`: allow:42, reuniteStore:57, nameOf:71, PartySystem.sync:78, syncIds:113, syncEveryone:129, partyMemberIds:137, PartySystem.handle:142, PartySystem.groupFor:231, PartySystem.recordForReunite:239, runReunite:265, onPlayerAdded:276, PartySystem.init:306
-- `src/server/Systems/ProgressionSystem.luau` (121) - Fate points and levels. Build spec T-110. · 2026-09-20
+- `src/server/Systems/ProgressionSystem.luau` (121) - Fate points and levels. Build spec T-110. · 2026-09-29
   - `ProgressionSystem.luau`: ProgressionSystem.init:17, ProgressionSystem.award:22, ProgressionSystem.grant:50, ProgressionSystem.recordRoll:76, ProgressionSystem.snapshot:99
 - `src/server/Systems/SaveSystem.luau` (239) - Profile persistence with session locking. Build spec T-109. · 2026-09-25
   - `SaveSystem.luau`: keyFor:29, SaveSystem.load:48, SaveSystem.get:119, SaveSystem.markDirty:123, SaveSystem.save:128, SaveSystem.handOff:172, SaveSystem.release:180, SaveSystem.isVolatile:190, SaveSystem.init:194
@@ -579,7 +579,7 @@ _297 text files, 405 binary assets. Regenerate with `python tools/gen_index.py`;
 - `src/shared/Core/FixtureCore.luau` (55) - The pure half of fixtures (CHUNK_AUTHORING.md convention 7, build spec · 2026-09-23
   - `FixtureCore.luau`: CHEST:15, VAULT:16, FORCEFIELD:17, smooth:23, FixtureCore.lidAngle:31, FixtureCore.doorSpin:38, FixtureCore.doorRecess:44, FixtureCore.fieldTransparency:50
 - `src/shared/Core/Freeze.luau` (25) - Deep-freeze a content or config table, so a System cannot mutate the data · 2026-09-22
-- `src/shared/Core/GameConfig.luau` (1512) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-09-28
+- `src/shared/Core/GameConfig.luau` (1512) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-09-29
 - `src/shared/Core/HubMenuCore.luau` (190) - THE HUB MENU'S RULES, WITH NO ROBLOX IN THEM. · 2026-09-25
   - `HubMenuCore.luau`: HubMenuCore.panels:20, HubMenuCore.panelById:31, HubMenuCore.destinations:41, HubMenuCore.destinationById:52, HubMenuCore.landingPoint:64, HubMenuCore.isVisible:71, HubMenuCore.newState:80, HubMenuCore.reduce:98, HubMenuCore.canTravel:149, HubMenuCore.travelTiming:180
 - `src/shared/Core/KeyCore.luau` (58) - The pure half of vault keys (build spec §7.5). Owner-directed 2026-09-23: · 2026-09-23
@@ -609,7 +609,7 @@ _297 text files, 405 binary assets. Regenerate with `python tools/gen_index.py`;
 - `src/shared/Core/ThemeCore.luau` (267) - WHAT COLOUR IS THE MENU RIGHT NOW? Pure, so the answer is testable for · 2026-09-20
   - `ThemeCore.luau`: channelLuminance:42, ThemeCore.luminance:52, ThemeCore.contrast:59, toLinear:67, toGamma:71, mix:80, tintPreservingLuminance:101, lerp:133, findDistrict:140, findEvent:152, ThemeCore.base:166, ThemeCore.resolve:184, ThemeCore.enforceContrast:217, ThemeCore.districtAt:243
 - `src/shared/Core/Types.luau` (428) - LUCKBOUND canonical type definitions. · 2026-09-27
-- `src/shared/Core/UITheme.luau` (166) - Shared GUI design system. Biome Blueprint §1.4. · 2026-09-28
+- `src/shared/Core/UITheme.luau` (166) - Shared GUI design system. Biome Blueprint §1.4. · 2026-09-29
   - `UITheme.luau`: UITheme.corner:111, UITheme.stroke:122, UITheme.rarityColor:131, UITheme.pad:137, UITheme.gradient:151
 - `src/shared/Util/ChunkCore.luau` (1023) - Seeded assembly of a map from a chunk library. Addendum §A4. · 2026-09-27
   - `ChunkCore.luau`: rotate:21, ChunkCore.yawRadians:41, norm:45, ChunkCore.libraryFor:50, socketById:69, ChunkCore.worldSocket:79, ChunkCore.placeAgainst:94, ChunkCore.arrivalSocket:121, ChunkCore.overlaps:133, ChunkCore.assemble:203, ChunkCore.assembleTest:847, ChunkCore.assembleWithRetry:950, ChunkCore.footprint:971, ChunkCore.validateLayout:987
