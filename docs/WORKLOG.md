@@ -33,6 +33,30 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 101 — 2026-09-29 — Axe-chop Reap, spell orb, cast/stagger actions, extra joints
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes   **Branch:** `CloudTesting`
+
+### Done
+- **Idle left-arm snap:** `hand_on` picked its elbow pole from an arbitrary reference (`axis.orthogonal()`), so the
+  choice flipped between frames. It now measures from world-down, is biased to down, and is sticky (`_LAST_HPOLE`).
+- **Reap** re-authored as an overhead axe chop with the blade placed on the player (`HIT_POINT`), see the moveset.
+- **Spell orb** on the staff between the crescent and the back-horn (`the_ascendant_orb.py`, `VFX_Orb`).
+- **New actions:** `P1_OrbCast`, `P1_SkyCast`, `Hit_React`, `P1_Stagger`, `P1_StaggerRecover`.
+- **Joints:** `Spine` + forearm twist bones + softer shoulder pads (`joints_core.py`, `POST_POSE` hook).
+- Owner asked for no test rounds; the build prints one `CHK` line per action (hand gap, wrists, blade-to-player distance).
+
+### Stopped at
+Build checks (no test rounds, per the owner): Idle left hand stays on the staff (gap 0, wrists <= 54 deg); the Reap's
+crescent middle is exactly on the player torso at f19 and within 0.5 m at f18-20. Known leftovers:
+- Reap: the left hand lifts off the staff by up to 16 cm on some frames and the left wrist reaches 131 deg.
+- OrbCast (9 cm gap, wrist 96), StaggerRecover (17 cm gap, wrist 79): left hand drifts off on some frames.
+- Walk/Strafe still carry the staff the old way. No `Death`. Nothing tested in Studio.
+
+### Next
+Owner review in Blender; then `Death`, Phase 2 actions, and the Walk/Strafe across-the-body carry.
+
+---
+
 ## Session 100 — 2026-09-29 — Axe grip for the off hand, longer staff, robe shake fixed
 **Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes   **Branch:** `CloudTesting`
 

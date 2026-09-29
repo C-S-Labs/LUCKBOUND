@@ -43,6 +43,7 @@ def key(frame, pose_fn):
     """Reset to rest, run pose_fn, then key EVERY pose bone (full keys keep Studio playback exact)."""
     reset_keep_action()
     pose_fn()
+    for _f in G.get("POST_POSE", ()): _f()             # procedural helper joints (joints_core: twist, spine)
     _key_all(frame)
     _ACT["keys"].append(frame)
     if "hits" in G:                                   # pose_fix loaded: report limb/weapon clipping per key

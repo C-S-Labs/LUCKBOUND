@@ -159,7 +159,12 @@ def hand_on(side, u, away, grip=None):
     def _place(hd_w):
         """Solve the arm for fingers wrapping along hd_w; returns (score, pole) of the cleanest elbow."""
         wr = C - n_w*SEAT_N - hd_w*SEAT_D
-        axis = (wr - sh).normalized(); ref = axis.orthogonal().normalized()
+        axis = (wr - sh).normalized()
+        # Elbow poles swing round the shoulder->wrist line starting from "elbow straight down". Measured from world
+        # down (not axis.orthogonal(), which jumps between frames) so pole k means the same thing on every frame; a
+        # small bias toward down and toward the previous pole keeps the elbow from snapping between near-equal choices.
+        ref = Vector((0.0, 0.0, -1.0)); ref = ref - axis*ref.dot(axis)
+        ref = (ref.normalized() if ref.length > 1e-3 else axis.orthogonal().normalized())
         best = None
         for k in range(12):                          # swing the elbow round the shoulder->wrist line; keep the cleanest
             pole = sh + (wr - sh)*0.5 + (Matrix.Rotation(k*math.pi/6, 3, axis) @ ref)*0.6
@@ -167,7 +172,9 @@ def hand_on(side, u, away, grip=None):
             _ik(f"{side}LowerArm", tuple(RW.inverted() @ wr), tuple(RW.inverted() @ pole)); _bake([ua, f"{side}LowerArm"])
             err = ((RW @ P[f"{side}LowerArm"].tail) - wr).length
             sc = hits("Arm" + side) + 1000*err + (5 if (RW.to_3x3() @ (P[ua].tail - P[ua].head)).dot(Vector((s, 0, 0))) < -0.2 else 0)
-            if best is None or sc < best[0]: best = (sc, pole)
+            sc += 0.4*min(k, 12 - k) - (1.5 if k == _LAST_HPOLE.get(side) else 0.0)
+            if best is None or sc < best[0]: best = (sc, pole, k)
+        _LAST_HPOLE[side] = best[2]
         _restore()
         _ik(f"{side}LowerArm", tuple(RW.inverted() @ wr), tuple(RW.inverted() @ best[1])); _bake([ua, f"{side}LowerArm"])
         return best, wr
@@ -213,6 +220,7 @@ def joint_report(tag=""):
     return bad
 
 _LAST_POLE = {}
+_LAST_HPOLE = {}
 STICKY = 40.0
 def wield(D, C, side="Right", pole_off=(0.5, 0.35, -0.6)):
     """Natural one-hand weapon hold: the haft runs along world direction D through world point C (in the palm).

@@ -98,12 +98,22 @@ All on the one rig (`TheAscendant.fbx`), in place (the AI moves the root between
 - **Known leftovers:** the left upper arm grazes the chest while two-handing the staff low in the recovery (up to 48
   tris, frames 20-58, steady, no jerk). The staff grazes the waist on sweep frame 18 (20 tris). The wrist reaches 82°
   in the lift at frames 46-49.
+- **Session 101 additions** (`anims/the_ascendant/`):
+  - `P1_CrescentReap` re-authored as a fluid **overhead axe chop**: the staff goes straight up and back, then chops down
+    and forward. On the strike frame (f19) the crescent's middle is placed exactly on `HIT_POINT` (the player's torso,
+    2.1 m in front of the boss's axis, 1.15 m up; the top of `P1_CrescentReap.py`), so the blade crosses the player.
+  - `P1_OrbCast` (ranged bolt) and `P1_SkyCast` (overhead area spell): both fire from the **spell orb** on the staff
+    (`VFX_Orb` socket, mesh piece `StaffOrb`). Markers: Tell, VFX_Cast, HitStart (the spell spawns), HitEnd, RecoverStart.
+  - `Hit_React` (flinch), `P1_Stagger` (loop, poise broken), `P1_StaggerRecover` (stagger ends, back to guard).
+  - The Staff is mostly a **ranged** weapon (orb casts), with the Reap as its close-range option.
+- **Rig joints added** (`joints_core.py`, driven procedurally): `Spine` (mid-chest), `{side}LowerArmTwist` (forearm
+  roll); the shoulder pads follow the torso more than the arm. 44 body + 96 cloth + 10 finger + 4 orb/joint = 154 bones.
 - **To build:**
-  - Phase 1: `P1_RisingCrescent`, `P1_PortalStep`, `P1_Lattice`, `P1_CrownFlare`, `P1_Stagger`
+  - Phase 1: `P1_RisingCrescent`, `P1_PortalStep`, `P1_Lattice`, `P1_CrownFlare`
   - Transition: `P2_Transfiguration`
   - Phase 2: `P2_Idle`, `P2_TwinReap`, `P2_PortalChain`, `P2_StarfallLattice`, `P2_CrescentWave`, `P2_Ascension`,
     `P2_Kneel`
-  - Shared: `Hit_React`, `Death`
+  - Shared: `Death`
 
 **Markers** (Studio reads them with `GetMarkerReachedSignal`):
 - `Tell`, `HitStart`, `HitEnd`, `RecoverStart` on every attack.

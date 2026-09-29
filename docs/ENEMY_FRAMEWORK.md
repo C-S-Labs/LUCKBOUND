@@ -176,6 +176,12 @@ surface, never passing through it. The thumb first swings onto the haft (opposit
   segment's bone, cuts a ring of vertices into the finger at the new joint, and re-weights the finger.
 - How far a finger can wrap depends on its length against the haft's circumference; the code cannot change that.
 
+### Extra joints and the spell orb (`_framework/joints_core.py`, `ethereal_scape/the_ascendant_orb.py`)
+`joints_core.add_joints()` adds a mid-spine joint and forearm-twist joints and re-skins the mesh onto them. They are
+driven from the solved bones every key through the `POST_POSE` hook in `anim_core.key()`, so actions never mention
+them. Pattern for new humanoids: call `add_joints()` from an extras script, before the cloth. Elbow poles in
+`hand_on`/`wield` are continuous and sticky, so an arm never snaps between two near-equal solutions.
+
 Strafes keep a staggered fighting stance (left foot forward). The foot gap never drops below 70% of the rest stance, and
 the knees point slightly out, so the legs never meet or cross. An idle breathes and slowly shifts weight between the
 feet, and the hips, chest, weapon and head ride that shift.
