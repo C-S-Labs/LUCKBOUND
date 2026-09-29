@@ -250,12 +250,10 @@ local GameConfig = {
 		SpawnHeight = 10, -- above a chunk floor, when placing the character
 
 		TimerSyncSeconds = 5,
-		-- The return portal on the arrival chunk. Small: it is a door home,
-		-- not a monument, and it must not upstage the Sky Temple.
-		ReturnPortalScale = 3.0,
-		-- Must exceed the return plinth's radius (PlinthDiameter * scale / 2)
-		-- or the way home is unusable from on top of it -- the same mistake
-		-- the Expedition Gate shipped with. Asserted by test.
+		-- How far away a rift's prompt (entrance and exit) can be used from.
+		-- Must exceed the rift's scar radius (Rift.Blockout.*.ScarRadius) or
+		-- the way home is unusable from on top of it -- the same mistake the
+		-- Expedition Gate shipped with. Asserted by test.
 		ReturnPromptDistance = 40,
 
 		-- === EXPEDITIONS AS THEIR OWN SERVER ================================
@@ -701,6 +699,9 @@ local GameConfig = {
 		},
 		GatherDistance = 34,
 		BloomBurst = 24, -- particles emitted at the bloom
+		-- Rifts stand on the walk surface found by a ray from this far above the
+		-- map's walk plane, so a chunk whose floor rises or dips is still flush.
+		DeckProbeHeight = 6,
 
 		LightRange = 40,
 		IdleBrightness = 1.3,

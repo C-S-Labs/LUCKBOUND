@@ -406,7 +406,10 @@ export type ExpeditionPayload = {
 
 export type ExpeditionEndPayload = {
 	WorldId: string?,
-	Reason: "COMPLETED" | "RETURNED" | "DIED" | "ABORTED",
+	-- EXITED is the exit rift (build spec §7.8); RETURNED is the entrance.
+	Reason: "COMPLETED" | "RETURNED" | "EXITED" | "DIED" | "ABORTED",
+	-- CLEARED | EARLY | NONE: how the run ended (ExpeditionCore.outcomeFor).
+	Outcome: string?,
 	FateAwarded: number,
 	-- Set only for the two refusals a legitimate player can hit -- no
 	-- destination, or a world with no map at all. Every other refusal is an

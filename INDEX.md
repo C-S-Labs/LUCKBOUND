@@ -43,6 +43,7 @@
 | `assets/rbxm/props/` | client prop libraries (`SC_PROP_LIBRARY`, `HUB_ORBITERS`, parked `SC_ATMOSPHERE_PROPS`) | `ReplicatedStorage.LuckboundProps` |
 | `assets/rbxm/prefabs/` | hub art (`HUB_*`); V1 and V2 are both still referenced by code | `ServerStorage.LuckboundPrefabs` |
 | `assets/rbxm/maps/` | prebuilt whole maps (`ES_ENVIRONMENT_FULL` = Ethereal Scape) | `ServerStorage.LuckboundMaps` |
+| `assets/source/portals/` | the expedition rifts (spec §7.8): `build_expedition_portals.py`, `.blend`, previews; FBX in `assets/export/portals/` | — |
 | `assets/rbxm/bosses/` | imported boss rigs for `/showboss` (`WingedSentinel`) | `ServerStorage.LuckboundBosses` |
 | `assets/source/` | Blender sources + headless Python generators (never loaded by the game) | — |
 | `assets/export/` | FBX outputs from the generators, which get uploaded or imported into Studio | — |
@@ -93,6 +94,7 @@
 | world sky / fog / atmospheres | `Content/Worlds/*.luau` (`Environment`), `Content/Atmospheres/`, `client/Controllers/AmbienceController.luau` |
 | leaderboard / chat UI | `client/UI/Leaderboard.luau`, `client/UI/ChatPanel.luau`; columns + tunables in `Core/GameConfig.luau` (`Leaderboard`, `Chat`); doc `docs/PLAYER_UI.md` §3.7 |
 | rolling (Fate) | `Core/FateCore.luau`, `server/Systems/FateSystem.luau`, `client/UI/FateRoll.luau` |
+| expedition rifts (entrance/exit) | `Core/RiftCore.luau` (motion), `Util/RiftRig.luau` (build, seal/open), `client/Controllers/RiftController.luau`, `Core/ExpeditionCore.luau` (`payoutFor`), `GameConfig.Rift`; spec §7.8 |
 | parties / teleport | `Core/PartyCore.luau`, `server/Systems/PartySystem.luau`, `client/Controllers/PartyController.luau` |
 | save data | `Core/ProfileSchema.luau`, `server/Systems/SaveSystem.luau` |
 | hub build and art | `server/Systems/HubV2.luau` (+ `HubBuilder.luau`), `Content/Hub/CrossroadsV2.luau`, `assets/source/hub/crossroads/` |

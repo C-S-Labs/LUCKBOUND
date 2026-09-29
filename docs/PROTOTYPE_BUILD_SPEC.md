@@ -444,7 +444,7 @@ Created by `Core/Net.luau` and nowhere else.
 | `UI_Acknowledge` | RemoteEvent | C→S | `{ScreenId}` | rate-limited 10/s. **RESERVED** — declared, nothing fires it. `docs/RESERVED.md` |
 | `Expedition_RequestEnter` | RemoteEvent | C→S | *(none)* | cooldown + distance + one-at-a-time |
 | `Expedition_Started` | RemoteEvent | S→C | `ExpeditionPayload` | — |
-| `Expedition_Ended` | RemoteEvent | S→C | `ExpeditionEndPayload` | — |
+| `Expedition_Ended` | RemoteEvent | S→C | `ExpeditionEndPayload` | `Reason` gains `EXITED` and the payload gains `Outcome` (§7.8) |
 | `Expedition_TimerSync` | RemoteEvent | S→C | `{RemainingSeconds, ServerNow}` | — |
 | `Hub_RequestTravel` | RemoteEvent | C→S | `{DestinationId}` | known Id + hub-only + 60/min (spam guard; **no cooldown**) |
 | `Hub_TravelResult` | RemoteEvent | S→C | `{Ok, DestinationId, Reason}` | — |

@@ -77,6 +77,14 @@ loot pools are constructed").
 | `KeyCore.dropChance(base, modifiers)`: the `modifiers` list and `KeyChanceDelta` | RESERVED | World modifiers (§7-excluded). `LootSystem` passes an empty list; a modifier with `KeyChanceDelta` moves the key chance, never the vault's `SpawnChance`. |
 | `GameConfig.Loot.BossDefeatStandIn` | RESERVED (stand-in) | Replaced by a real boss-defeated event once bosses exist; until then, reaching the arena counts. |
 
+## Expedition rifts — build spec §7.8
+
+| Declaration | Status | Consumer |
+|---|---|---|
+| `ExpeditionCore.Payout.Xp` (always 0) | RESERVED | The Fate engine rework, when an XP system exists. `payoutFor` is the one place it is filled. |
+| `GameConfig.Rift.FlowTexture` (empty string) | RESERVED | Read by `RiftRig.attachEffects` the moment an id is set; beams draw as plain glowing ribbons until the owner uploads `assets/textures/rift_flow.png`. |
+| `GameConfig.Rift.EntrancePrefab` / `ExitPrefab` `Scale` (1.0) | RESERVED | Set to the imported scale after the owner's Studio import (`assets/source/portals/README.md`). Until the prefabs exist a blockout rift is drawn. |
+
 ## Nothing is currently ORPHANED
 
 Every unread declaration above has a named consumer and a reason to exist. The

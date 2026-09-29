@@ -2814,13 +2814,6 @@ do
 			Scale = portal.ExpeditionGateScale,
 			Reach = GameConfig.UI.PromptActivationDistance,
 		},
-		-- The way home out of an expedition is the same rig at a smaller
-		-- scale, and would fail the same way if nobody checked.
-		{
-			Name = "Return portal",
-			Scale = GameConfig.Expedition.ReturnPortalScale,
-			Reach = GameConfig.Expedition.ReturnPromptDistance,
-		},
 	}
 
 	-- 1. A PROMPT MUST REACH THE EDGE OF ITS OWN PLINTH.
@@ -7215,6 +7208,22 @@ do
 		end
 	end
 	check("every materialise window is a valid span of the sequence", ordered)
+	-- A PROMPT MUST REACH THE EDGE OF ITS OWN SCAR (the flat ground the rift
+	-- stands in), or the way home is unusable from on top of it -- the same
+	-- mistake the Expedition Gate shipped with.
+	for kind, dims in cfg.Blockout do
+		check(
+			`the {kind} rift's prompt reaches past its own scar`,
+			GameConfig.Expedition.ReturnPromptDistance > dims.ScarRadius
+		)
+	end
+	check("the deck probe starts above the walk plane", cfg.DeckProbeHeight > 0)
+	check(
+		"both prefabs are declared with a positive scale and their own key",
+		cfg.EntrancePrefab.Scale > 0
+			and cfg.ExitPrefab.Scale > 0
+			and cfg.EntrancePrefab.AssetKey ~= cfg.ExitPrefab.AssetKey
+	)
 	check(
 		"the exit is not the colour of any rarity",
 		(function()

@@ -336,7 +336,12 @@ end
 --- and (while bosses do not exist) watches the arena for the boss stand-in.
 --- `members` is the group's own member table, read live, so whoever is on
 --- the map when something opens is who shares it.
-function LootSystem.attach(stage: Instance, worldId: string, members: { [number]: boolean })
+function LootSystem.attach(
+	stage: Instance,
+	worldId: string,
+	members: { [number]: boolean },
+	onBossDefeated: (() -> ())?
+)
 	local world = Worlds[worldId]
 	local set = Fixtures[worldId]
 	local cfg = GameConfig.Loot
@@ -416,6 +421,9 @@ function LootSystem.attach(stage: Instance, worldId: string, members: { [number]
 		Members = members,
 		Boss = function()
 			bossDefeated(worldId, members)
+			if onBossDefeated then
+				onBossDefeated()
+			end
 		end,
 	})
 	for i = #maps, 1, -1 do
@@ -430,6 +438,9 @@ function LootSystem.attach(stage: Instance, worldId: string, members: { [number]
 			if not done then
 				done = true
 				bossDefeated(worldId, members)
+				if onBossDefeated then
+					onBossDefeated()
+				end
 			end
 		end, members)
 	end

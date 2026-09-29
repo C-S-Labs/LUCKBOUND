@@ -34,6 +34,39 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 96 — 2026-09-29 — Expedition rifts: entrance, boss-gated exit, outcome payouts
+**Merged:** not merged   **Tests:** 944 passing   **Branch:** `agent/expedition-portal`
+
+### Done
+- Claimed build spec §7.8 (expedition portals). Owner rules: entrance always open on the start chunk; exit closed
+  until the boss falls, then materialises where the boss stood; both flush, nothing to climb; a cleared run pays
+  full Fate and keeps the boss loot, an early one pays `Expedition.EarlyExitFraction`, a death pays nothing.
+- `ExpeditionCore.outcomeFor/payoutFor` (pure, tested). `ExpeditionSystem.settle` applies it on both pay paths.
+- Portals went mechanical, then to RIFTS on the owner's call ("out of place in a floating biome"): Blender generator
+  `assets/source/portals/build_expedition_portals.py` (.blend + FBX + previews), entrance ~5.9k / exit ~7.8k tris,
+  crystal-cluster lips, floating rock kept to the sides so the lane in front is empty (script fails if not).
+- Code: `RiftCore` (pure motion), `RiftRig` (prefab or blockout, light/motes/ribbons, seal/open),
+  `RiftController` (client pose per frame). The exit is built sealed and invisible; `OpenedAt` (server time)
+  drives the materialise so late arrivals see an open door open.
+
+### Decisions made
+- The mesh is the shape, code is the motion and light; a lower triangle count than the owner's first 10-25k, agreed.
+- No new remotes. `Expedition_Ended` gains `Outcome`; `Reason` gains `EXITED`.
+- XP does not exist (Fate only), so `payoutFor` carries a reserved `Xp = 0` (RESERVED.md).
+- Fate engine: recommended roll -> Keep/Roll again -> pedestal lowers and becomes the entrance rift (walk in).
+  Not built; it is a separate branch that plugs into `payoutFor`.
+
+### Stopped at
+Rift code written and unit-tested for the pure parts; **nothing has run in Studio** (no prefab imported yet, so the
+blockout rift is what would draw). Hub gate still present.
+
+### Next
+1. Owner: import `EXPEDITION_ENTRANCE/EXIT.fbx`, save the prefabs, record `Scale`, check the tear's axes; upload the flow texture.
+2. Studio walk: entrance colour, exit materialise, prompt reach, deck flush, `/boss` to open the exit.
+3. Remove the hub `GATE` zone (spec §7.8 step 6). Then the Fate engine rework branch.
+
+---
+
 ## Session 95 — 2026-09-28 — Git workflow: implementation vs integration agents
 **Merged:** see the PR for this branch   **Tests:** CI (docs only)   **Branch:** `claude/luckbound-agent-git-workflow-0ioymd`
 

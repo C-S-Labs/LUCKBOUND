@@ -44,6 +44,15 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 ## 2. Next — pick up here
 
+> **2026-09-29: expedition rifts, branch `agent/expedition-portal` (build spec §7.8), not merged.** Entrance and exit
+> are now rifts (authored meshes in `assets/source/portals/`, ~5.9k and ~7.8k tris; motion and light in code). New:
+> `Core/RiftCore` (pure curves), `Util/RiftRig` (build, effects, seal/open), `Controllers/RiftController` (per-frame
+> pose), `ExpeditionCore.outcomeFor/payoutFor` (a cleared run pays in full, an early one `EarlyExitFraction`, a death
+> nothing). `ExpeditionSystem` builds the entrance on the arrival chunk and a SEALED exit on the boss chunk; the boss
+> stand-in opens it. 944 tests pass. **Pending:** owner's Studio import of the two FBXs (then `Prefab.Scale`, and
+> verify the tear's axes), the flow-texture upload, a Studio walk, removal of the hub gate (spec §7.8 step 6), and the
+> Fate engine rework (ready toggle, host starts, roll-then-lower entry) which plugs into `payoutFor`.
+
 > **2026-09-27: close ship berths fixed after precommit review.** Berths now use
 > the island's oriented face and half the ship's beam, with a 20-stud hull gap;
 > overlap/approach checks use the ship box instead of its enclosing sphere.

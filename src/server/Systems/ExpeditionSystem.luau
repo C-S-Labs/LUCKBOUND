@@ -59,7 +59,7 @@ local Constants = require(Root.Core.Constants)
 local ExpeditionCore = require(Root.Core.ExpeditionCore)
 local GameConfig = require(Root.Core.GameConfig)
 local Net = require(Root.Core.Net)
-local PortalRig = require(Root.Util.PortalRig)
+local RiftRig = require(Root.Util.RiftRig)
 local PrebuiltLoader = require(Root.Util.PrebuiltLoader)
 local Worlds = require(Root.Content.Worlds)
 local Atmospheres = require(Root.Content.Atmospheres)
@@ -95,6 +95,10 @@ type Group = {
 	Environment: any,
 	-- Where the client's atmosphere effects hang things (see scanAnchors).
 	Anchors: any,
+	-- Build spec §7.8. The exit rift (sealed until the boss falls) and the
+	-- fact that decides what a run pays. Set by the server, never a client.
+	Exit: Model?,
+	BossCleared: boolean,
 }
 
 -- /atmosphere: nil draws from the seed; "BASE" forces the world's own air;
@@ -414,38 +418,107 @@ local function buildStage(
 	}
 end
 
---- The way home, on the arrival chunk. Small on purpose (GameConfig.Expedition
---- .ReturnPortalScale): it is a door, and it must not read as more important
---- than whatever the world put at the far end.
-local function buildReturnPortal(stage: Model, position: Vector3, rarityKey: string)
-	local rig = PortalRig.build({
-		Name = "ReturnPortal",
-		Position = position,
-		Scale = GameConfig.Expedition.ReturnPortalScale,
-		Rarity = rarityKey,
-		PlinthMaterial = Enum.Material.Marble,
-		OuterMaterial = Enum.Material.CorrodedMetal,
-	}, stage)
+--- The point on the walk surface under (x, z), by a ray from just above the
+--- map's walk plane. Rifts are seated on THIS, not on a bounding box, so they
+--- are flush whatever the kit's floor does (spec §7.8).
+local function deckAt(stage: Instance, x: number, z: number, floorY: number): Vector3
+	local probe = GameConfig.Rift.DeckProbeHeight
+	local params = RaycastParams.new()
+	params.FilterType = Enum.RaycastFilterType.Include
+	params.FilterDescendantsInstances = { stage }
+	params.RespectCanCollide = true
+	local hit = Workspace:Raycast(
+		Vector3.new(x, floorY + probe, z),
+		Vector3.new(0, -(probe + 60), 0),
+		params
+	)
+	return if hit then hit.Position else Vector3.new(x, floorY, z)
+end
 
-	local plinth = rig.PrimaryPart
-	if not plinth then
-		return
+--- A rift's prompt, on its Scar (the PrimaryPart). Triggered fires on the
+--- SERVER with the triggering player, so no remote and nothing to spoof.
+local function riftPrompt(
+	rig: Model,
+	action: string,
+	object: string,
+	onTriggered: (Player) -> ()
+): ProximityPrompt?
+	local scar = rig.PrimaryPart
+	if not scar then
+		return nil
 	end
-
 	local prompt = Instance.new("ProximityPrompt")
-	prompt.Name = "ReturnPrompt"
-	prompt.ActionText = "RETURN"
-	prompt.ObjectText = "The Crossroads"
+	prompt.Name = "RiftPrompt"
+	prompt.ActionText = action
+	prompt.ObjectText = object
 	prompt.HoldDuration = 0.4
 	prompt.MaxActivationDistance = GameConfig.Expedition.ReturnPromptDistance
 	prompt.RequiresLineOfSight = false
-	prompt.Parent = plinth
+	prompt.Parent = scar
+	prompt.Triggered:Connect(onTriggered)
+	return prompt
+end
 
-	-- ProximityPrompt.Triggered fires on the SERVER with the triggering player,
-	-- so this path needs no remote and cannot be spoofed.
-	prompt.Triggered:Connect(function(player)
+--- The way home, on the arrival chunk (spec §7.8): always open, the colour of
+--- the biome's rarity. Leaving by it is always allowed; what it pays depends
+--- on whether the boss has fallen (ExpeditionCore.payoutFor).
+local function buildEntrance(stage: Model, position: Vector3, floorY: number, rarityKey: string)
+	local seat = deckAt(stage, position.X, position.Z, floorY)
+	local rig = RiftRig.build({
+		Name = "EntranceRift",
+		Kind = "ENTRANCE",
+		Position = seat,
+		RarityKey = rarityKey,
+	}, stage)
+	riftPrompt(rig, "RETURN", "The Crossroads", function(player)
 		if active[player.UserId] then
 			ExpeditionSystem.finish(player, "RETURNED")
+		end
+	end)
+end
+
+--- The exit, on the boss chunk where the boss stood (spec §7.8). Built SEALED
+--- and invisible; `openExit` materialises it when the boss falls. Returns the
+--- rig and its prompt so the group can wake them.
+local function buildExit(stage: Model, floorY: number): (Model?, ProximityPrompt?)
+	local arena: Instance? = nil
+	for _, chunk in stage:GetChildren() do
+		if chunk:GetAttribute("Role") == "BOSS" then
+			arena = chunk
+			break
+		end
+	end
+	local centre = arena and arena:GetAttribute("Centre")
+	if typeof(centre) ~= "Vector3" then
+		return nil, nil
+	end
+	local seat = deckAt(stage, centre.X, centre.Z, floorY)
+	local rig = RiftRig.build({ Name = "ExitRift", Kind = "EXIT", Position = seat }, stage)
+	local prompt = riftPrompt(rig, "EXIT", "Leave the world", function(player)
+		if active[player.UserId] then
+			ExpeditionSystem.finish(player, "EXITED")
+		end
+	end)
+	if prompt then
+		prompt.Enabled = false
+	end
+	return rig, prompt
+end
+
+--- The boss fell: the exit materialises, and its prompt wakes once it is real.
+local function openExit(group: Group, prompt: ProximityPrompt?)
+	if group.BossCleared then
+		return
+	end
+	group.BossCleared = true
+	local rig = group.Exit
+	if not rig then
+		return
+	end
+	RiftRig.open(rig)
+	task.delay(GameConfig.Rift.MaterialiseSeconds, function()
+		if prompt and prompt.Parent then
+			prompt.Enabled = true
 		end
 	end)
 end
@@ -536,7 +609,8 @@ local function newGroup(
 	partySize: number
 ): Group
 	local world = Worlds[worldId]
-	buildReturnPortal(built.Stage, built.ReturnPosition, world.Rarity)
+	buildEntrance(built.Stage, built.ReturnPosition, built.FloorY, world.Rarity)
+	local exitRig, exitPrompt = buildExit(built.Stage, built.FloorY)
 	local group: Group = {
 		WorldId = worldId,
 		Seed = seed,
@@ -558,6 +632,8 @@ local function newGroup(
 		AtmosphereId = nil,
 		Environment = world.Environment,
 		Anchors = scanAnchors(built.Stage, built.FloorY),
+		Exit = exitRig,
+		BossCleared = false,
 	}
 	group.AtmosphereId, group.Environment = atmosphereFor(worldId, seed)
 	if group.AtmosphereId then
@@ -568,7 +644,9 @@ local function newGroup(
 	-- the group's own Members table, so whoever is on the map when something
 	-- opens is who shares it.
 	if LootSystem then
-		LootSystem.attach(built.Stage, worldId, group.Members)
+		LootSystem.attach(built.Stage, worldId, group.Members, function()
+			openExit(group, exitPrompt)
+		end)
 	end
 	return group
 end
@@ -847,6 +925,29 @@ end
 
 --- Ends one player's expedition and brings them home. Safe to call for a
 --- player who is not on one. The map goes when its last player does.
+--- Pays one player for how their run ended (build spec §7.8) and returns the
+--- Fate given. ExpeditionCore decides the outcome and the amount; this only
+--- applies it. A cleared boss pays in full, a run left early pays a fraction,
+--- a death pays nothing. Loot is not here: it was rolled when the boss fell.
+local function settle(player: Player, group: Group, reason: string): (string, number)
+	local outcome = ExpeditionCore.outcomeFor(reason, group.BossCleared)
+	local payout = ExpeditionCore.payoutFor(
+		outcome,
+		GameConfig.Progression.Rewards.ExpeditionCompleted,
+		GameConfig
+	)
+	local profile = SaveSystem.get(player)
+	if profile and outcome ~= "NONE" then
+		if outcome == "CLEARED" then
+			profile.Stats.ExpeditionsCompleted += 1
+		end
+		if payout.Fate > 0 then
+			ProgressionSystem.grant(player, payout.Fate, "ExpeditionCompleted")
+		end
+	end
+	return outcome, payout.Fate
+end
+
 function ExpeditionSystem.finish(player: Player, reason: string): ()
 	local state = active[player.UserId]
 	if not state then
@@ -860,21 +961,13 @@ function ExpeditionSystem.finish(player: Player, reason: string): ()
 		state.Died:Disconnect()
 	end
 
-	local awarded = 0
-	-- Dying is not completing. Fate is awarded for finishing an expedition,
-	-- and "finishing" has to mean something or the reward means nothing.
-	if reason == "COMPLETED" or reason == "RETURNED" then
-		local profile = SaveSystem.get(player)
-		if profile then
-			profile.Stats.ExpeditionsCompleted += 1
-			ProgressionSystem.award(player, "ExpeditionCompleted")
-			awarded = GameConfig.Progression.Rewards.ExpeditionCompleted
-		end
-	end
+	-- Dying is not completing: settle() pays nothing for it.
+	local outcome, awarded = settle(player, group, reason)
 
 	Net.get("Expedition_Ended"):FireClient(player, {
 		WorldId = group.WorldId,
 		Reason = reason,
+		Outcome = outcome,
 		FateAwarded = awarded,
 	})
 
@@ -941,16 +1034,11 @@ local function completeGroup(group: Group)
 			if state.Died then
 				state.Died:Disconnect()
 			end
-			local profile = SaveSystem.get(player)
-			local awarded = 0
-			if profile then
-				profile.Stats.ExpeditionsCompleted += 1
-				ProgressionSystem.award(player, "ExpeditionCompleted")
-				awarded = GameConfig.Progression.Rewards.ExpeditionCompleted
-			end
+			local outcome, awarded = settle(player, group, "COMPLETED")
 			Net.get("Expedition_Ended"):FireClient(player, {
 				WorldId = group.WorldId,
 				Reason = "COMPLETED",
+				Outcome = outcome,
 				FateAwarded = awarded,
 			})
 		end
