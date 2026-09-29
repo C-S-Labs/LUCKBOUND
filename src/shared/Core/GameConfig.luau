@@ -654,6 +654,62 @@ local GameConfig = {
 		},
 	},
 
+	-- THE EXPEDITION RIFTS (build spec §7.8): the entrance and the exit. The
+	-- meshes are the shape; everything below is the motion and the light, so a
+	-- designer tunes how a rift feels without touching a System.
+	Rift = {
+		-- The exit is always this colour; the entrance takes the biome's rarity.
+		-- Crimson, not orange: Mythic is FF7A1A and must not read as the exit.
+		ExitColor = Color3.fromRGB(226, 32, 64),
+		-- assets/textures/rift_flow.png once uploaded (rbxassetid://...). Empty
+		-- means the beams draw as plain glowing ribbons.
+		FlowTexture = "",
+		FlowTextureSpeed = 0.6,
+
+		-- Prefab keys and imported scale, recorded by the owner after the Studio
+		-- import (assets/source/portals/README.md). With no prefab a blockout
+		-- rift is drawn instead.
+		EntrancePrefab = { AssetKey = "EXPEDITION_ENTRANCE", Scale = 1.0 },
+		ExitPrefab = { AssetKey = "EXPEDITION_EXIT", Scale = 1.0 },
+		-- Blockout dimensions (studs), matching the authored meshes.
+		Blockout = {
+			ENTRANCE = { Height = 15, Width = 6.4, Thickness = 1.1, ScarRadius = 6.5 },
+			EXIT = { Height = 21, Width = 9, Thickness = 1.5, ScarRadius = 9.5 },
+		},
+
+		-- THE LOOP, once a rift is open.
+		BreathSeconds = 3.4,
+		BreathAmount = 0.06, -- width and thickness only; the tip stays on the deck
+		-- Fragments drift OUTWARD from their home and back, never inward: the
+		-- lane in front of the tear must stay empty (walk-through path).
+		FragmentDriftOut = 0.9,
+		FragmentBob = 0.7,
+		FragmentSpeed = 0.55, -- rad/s
+		HaloTransparency = 0.72,
+		MidTransparency = 0.45,
+		CoreTransparency = 0.12,
+		EdgeShimmer = 0.18, -- transparency swing on the crystal lips
+		ScarGlowPulse = 0.25,
+
+		-- THE EXIT MATERIALISES. Windows are fractions of MaterialiseSeconds.
+		MaterialiseSeconds = 5.0,
+		Phases = {
+			Seeds = { 0.0, 0.3 }, -- cracks glow, motes gather
+			Gather = { 0.1, 0.65 }, -- fragments fly in from the sides
+			Split = { 0.35, 0.85 }, -- the tear opens from the middle
+			Bloom = { 0.7, 1.0 }, -- one bright pulse, then it settles
+		},
+		GatherDistance = 34,
+		BloomBurst = 24, -- particles emitted at the bloom
+
+		LightRange = 40,
+		IdleBrightness = 1.3,
+		BloomBrightness = 4.5,
+		MoteRate = 10,
+		RibbonCount = 4,
+		RibbonWidth = 0.7,
+	},
+
 	-- Shared PortalRig. Biome Blueprint §1.3.
 	Portal = {
 		OuterRingRadius = 9,
