@@ -34,7 +34,28 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
-## Session 112 — 2026-09-28 — Free-camera turns curve; no foot slide
+## Session 120 — 2026-09-29 — Consolidated PR: movement (#147) + The Ascendant (#148)
+**Merged:** PR #147 (with #148 folded in)   **Tests:** 1008 passing (minimal run, owner's call)   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- **Owner:** consolidate #147 (player movement) and #148 (`CloudTesting`: The Ascendant boss, enemy framework,
+  cloud Blender setup) into one PR to save CI minutes. `CloudTesting` was merged into the movement branch;
+  #148 is closed in favour of #147.
+- **Overlap:** only the shared docs. #148 changes no `src/`. `INDEX_MAP.md` was regenerated, and WORKLOG sessions
+  were renumbered by branch (git workflow 95, Ascendant 96–102, movement 103–119). STATUS and INDEX merged
+  cleanly.
+
+### Decisions made
+- Owner override of GIT_WORKFLOW's one-PR-at-a-time rule for this batch only.
+
+### Next
+1. The Ascendant: the owner imports into Studio; fix its known issues (see Session 102).
+2. Movement follow-ups: Sprint, Walk x4, Turn L/R clips; upload the generated clips.
+3. The UI revamp on its own branch.
+
+---
+
+## Session 119 — 2026-09-28 — Free-camera turns curve; no foot slide
 **Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 
 ### Done (owner)
@@ -52,7 +73,7 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
-## Session 111 — 2026-09-28 — Final pre-PR fixes: smooth turns, no roll queue
+## Session 118 — 2026-09-28 — Final pre-PR fixes: smooth turns, no roll queue
 **Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 
 ### Done (owner's last notes before the PR)
@@ -70,7 +91,7 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
-## Session 110 — 2026-09-28 — Instant facing (real fix); weapon stance design
+## Session 117 — 2026-09-28 — Instant facing (real fix); weapon stance design
 **Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 
 ### Done
@@ -87,7 +108,7 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
-## Session 109 — 2026-09-28 — Roll speed shape, 18 studs, instant held facing
+## Session 116 — 2026-09-28 — Roll speed shape, 18 studs, instant held facing
 **Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 
 ### Done (owner)
@@ -105,7 +126,7 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
-## Session 108 — 2026-09-28 — Steering out, roll blends out, shake fixed
+## Session 115 — 2026-09-28 — Steering out, roll blends out, shake fixed
 **Merged:** see the PR for this branch   **Tests:** 1007 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 
 ### Done (owner)
@@ -124,7 +145,7 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
-## Session 107 — 2026-09-28 — Roll polish: floor contact, distance, steering
+## Session 114 — 2026-09-28 — Roll polish: floor contact, distance, steering
 **Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 
 ### Done (owner: "everything else I really like")
@@ -142,7 +163,7 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
-## Session 106 — 2026-09-28 — Longer roll; the second batch of generated clips
+## Session 113 — 2026-09-28 — Longer roll; the second batch of generated clips
 **Merged:** see the PR for this branch   **Tests:** 1007 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 
 ### Done
@@ -162,7 +183,7 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
-## Session 105 — 2026-09-28 — Roll queueing; generated roll animations
+## Session 112 — 2026-09-28 — Roll queueing; generated roll animations
 **Merged:** see the PR for this branch   **Tests:** 1007 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 
 ### Done
@@ -188,7 +209,7 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
-## Session 104 — 2026-09-28 — Walk feedback: no ring, stronger streaks, lock-on eases out
+## Session 111 — 2026-09-28 — Walk feedback: no ring, stronger streaks, lock-on eases out
 **Merged:** see the PR for this branch   **Tests:** 1005 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 
 ### Done (owner's walk: wind, air dash and lock-on all work)
@@ -210,7 +231,7 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
-## Session 103 — 2026-09-28 — Wind burst, air dash, lock-on switch fix
+## Session 110 — 2026-09-28 — Wind burst, air dash, lock-on switch fix
 **Merged:** see the PR for this branch   **Tests:** 1004 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 
 ### Done (owner's walk: the run animation works)
@@ -234,7 +255,7 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
-## Session 102 — 2026-09-28 — Prep for hand-made player animations
+## Session 109 — 2026-09-28 — Prep for hand-made player animations
 **Merged:** see the PR for this branch   **Tests:** 998 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 
 ### Done
@@ -258,7 +279,7 @@ Owner is asleep. Next session: author the player animations together.
 
 ---
 
-## Session 101 — 2026-09-28 — Polished body movement; directional rolls
+## Session 108 — 2026-09-28 — Polished body movement; directional rolls
 **Merged:** see the PR for this branch   **Tests:** 997 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 
 ### Done
@@ -291,7 +312,7 @@ Needs a Studio walk: `TESTING.md` Test K 4b, 4c and 5.
 
 ---
 
-## Session 100 — 2026-09-28 — Walk feedback: no ice, hub stamina, shoulder camera, roll look
+## Session 107 — 2026-09-28 — Walk feedback: no ice, hub stamina, shoulder camera, roll look
 **Merged:** see the PR for this branch   **Tests:** 950 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 
 ### Done (owner feedback from the second Studio walk)
@@ -315,7 +336,7 @@ Awaiting the owner's re-walk.
 
 ---
 
-## Session 99 — 2026-09-28 — First Studio walk: controller never started; fixed
+## Session 106 — 2026-09-28 — First Studio walk: controller never started; fixed
 **Merged:** see the PR for this branch   **Tests:** 947 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 
 ### Done
@@ -338,7 +359,7 @@ Awaiting the owner's re-walk of Test K.
 
 ---
 
-## Session 98 — 2026-09-28 — Lock-on switching, charge scope
+## Session 105 — 2026-09-28 — Lock-on switching, charge scope
 **Merged:** see the PR for this branch   **Tests:** 947 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 
 ### Done
@@ -359,14 +380,14 @@ Awaiting the owner's re-walk of Test K.
 Test K (17 steps) needs a Studio walk.
 
 ### Next
-See Session 97's list.
+See Session 104's list.
 
 ---
 
-## Session 97 — 2026-09-28 — Own character controller, roll, stamina, lock-on
+## Session 104 — 2026-09-28 — Own character controller, roll, stamina, lock-on
 **Merged:** see the PR for this branch   **Tests:** 940 passing   **Branch:** `claude/create-branch-workflow-jsh534`
 
-Supersedes Session 96's dash and double jump (same branch, unmerged).
+Supersedes Session 103's dash and double jump (same branch, unmerged).
 
 ### Done
 - **Own character controller.** `LocomotionController` switches off the Humanoid state machine and the stock
@@ -404,7 +425,7 @@ stock animations play under our controller and the ground-controller feel (`Grou
 
 ---
 
-## Session 96 — 2026-09-28 — Movement state machine: sprint-jump, dash, weapon lock
+## Session 103 — 2026-09-28 — Movement state machine: sprint-jump, dash, weapon lock
 **Merged:** see the PR for this branch   **Tests:** 925 passing (was 902)   **Branch:** `claude/create-branch-workflow-jsh534`
 
 ### Done
@@ -432,6 +453,232 @@ Code, tests and docs are done. **Not walked in Studio**: Test K steps 6–9 need
 ### Next
 1. Owner runs `TESTING.md` Test K in Studio and tunes the dash and sprint-jump numbers by feel.
 2. Items and inventory (the item schema), then the §7.6 amendment step 0 (`ENEMY_AI.md` §12).
+
+---
+
+## Session 102 — 2026-09-29 — Axe-chop Reap, spell orb, cast/stagger actions, extra joints
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes   **Branch:** `CloudTesting`
+
+### Done
+- **Idle left-arm snap:** `hand_on` picked its elbow pole from an arbitrary reference (`axis.orthogonal()`), so the
+  choice flipped between frames. It now measures from world-down, is biased to down, and is sticky (`_LAST_HPOLE`).
+- **Reap** re-authored as an overhead axe chop with the blade placed on the player (`HIT_POINT`), see the moveset.
+- **Spell orb** on the staff between the crescent and the back-horn (`the_ascendant_orb.py`, `VFX_Orb`).
+- **New actions:** `P1_OrbCast`, `P1_SkyCast`, `Hit_React`, `P1_Stagger`, `P1_StaggerRecover`.
+- **Joints:** `Spine` + forearm twist bones + softer shoulder pads (`joints_core.py`, `POST_POSE` hook).
+- Owner asked for no test rounds; the build prints one `CHK` line per action (hand gap, wrists, blade-to-player distance).
+
+### Stopped at
+Build checks (no test rounds, per the owner): Idle left hand stays on the staff (gap 0, wrists <= 54 deg); the Reap's
+crescent middle is exactly on the player torso at f19 and within 0.5 m at f18-20. Known leftovers:
+- Reap: the left hand lifts off the staff by up to 16 cm on some frames and the left wrist reaches 131 deg.
+- OrbCast (9 cm gap, wrist 96), StaggerRecover (17 cm gap, wrist 79): left hand drifts off on some frames.
+- Walk/Strafe still carry the staff the old way. No `Death`. Nothing tested in Studio.
+
+### Next
+Owner review in Blender; then `Death`, Phase 2 actions, and the Walk/Strafe across-the-body carry.
+
+---
+
+## Session 101 — 2026-09-29 — Axe grip for the off hand, longer staff, robe shake fixed
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes   **Branch:** `CloudTesting`
+
+### Done
+- **Robe shake:** `cloth_core` now gives contact friction and no lever kick at the pinned root; the robe no longer
+  collides with the arms. Idle shake 6 cm -> under 1 mm.
+- **Off-hand grip** (owner's axe reference): `_asc_pose.left_on_haft` puts the left hand on the haft overhand from
+  the front (`AXE_GRIP` = 1: palm to the body, fingers wrapping toward it). It needs no search, so it is fast.
+- **Idle_Guard** now holds the staff across the body like the axe (C -0.10,-0.45,2.35; u -0.85); the left hand
+  stays attached. **Staff** butt lengthened 0.82 -> 1.0 m (`the_ascendant_staff.py`); the delivered `.blend` mesh is
+  extended to match.
+- **Crescent Reap** re-authored as a two-handed swing (COIL/TELL/SWEEP/PAST/DRAG re-searched for the axe grip).
+- **Speed:** `pose_fix` restores arm bones with one refresh (`matrix_basis`); a grip solve dropped from minutes to
+  seconds. Sticky elbow pole (Session 100) is kept.
+
+### Stopped at
+Known problems, all in the Reap's recovery (f43-52, RECOVER key) unless noted:
+- Left wrist up to 139 deg and the staff clips the body (up to 482 tris at f48); the right arm clips 26 frames.
+- Idle: left wrist 95 deg on 18 frames; the right arm clips the chest by ~23 tris on every frame.
+- Walk/Strafe use the old carried-staff pose, not the axe guard, so the staff is held differently there.
+
+### Next
+1. Rework the Reap recovery (f43-60) and the Idle right arm.
+2. Give Walk/Strafe the same across-the-body carry.
+3. Owner: one Studio import once the boss is finished.
+
+---
+
+## Session 100 — 2026-09-28 — Right-elbow flare fixed
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes   **Branch:** `CloudTesting`
+
+### Done
+- The owner saw the right elbow flare out around Walk f15. `pose_fix.wield` re-picked its elbow pole from 5
+  candidates on every frame, and near-ties flipped to the last-resort "flare" pole for 1-2 frames (the elbow moved
+  10 cm out and back).
+- The pole is now sticky (`_LAST_POLE`, `STICKY` 40): consecutive solves keep the previous pole unless another is
+  clearly better.
+- Right elbow turn per frame: Walk and Strafe ×2 went from 14° to ≤ 1°, with no new clipping.
+- Re-exported the FBXs and gave the owner `TheAscendant_fixed.blend`: their mesh, the 150-bone rig and all 5 actions,
+  saved as a separate file. The owner's own `.blend` is untouched.
+
+### Stopped at
+The Reap still flicks the elbow at f31-32 (14°, a held pose). It is left until the owner decides on the left-hand
+design (a two-handed weapon would rework the Reap's grips).
+
+---
+
+## Session 99 — 2026-09-28 — Robe clears the free arm
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes   **Branch:** `CloudTesting`
+
+### Done
+- **Correction to Session 98:** the arm colliders were already in `the_ascendant_cloth.py` in `50b4f82`, not
+  pending. The remaining touches happened with them on: the left forearm met the robe's hip flare just under the
+  belt, where the chains are pinned and cannot move aside.
+- **The fix is in the pose, not the cloth.** `walk_core` now passes per-enemy pose overrides (`POSE_OVERRIDES`:
+  `arm_out`, `elbow_bend`, `lean`, `hip_roll`) through to the pose functions. The Ascendant's free arm hangs at
+  `arm_out` 0.17 in Walk and Strafe ×2 (`ARM_OUT` in `Walk.py`).
+- **On the owner's mesh:** arm-vs-body contact is 0 in Walk, Strafe ×2 and Idle. Robe-vs-leg is 0 in Strafe ×2 and
+  Idle, ≤ 4 tris on 4 Walk frames, and ≤ 14 in the Reap's deepest lunge; all of it is at the hip crease under the
+  pinned robe top. Thicker thigh colliders were tried and made no difference, so they were reverted.
+
+### Stopped at
+Pushed. The owner will import once, when the boss is finished (not after each step). Remaining leftovers are in the
+Reap only: the two-hand left-arm graze, the staff at f18, and the wrist at 82°.
+
+### Next
+The owner decides what "finished" still needs before the single Studio import.
+
+---
+
+## Session 98 — 2026-09-28 — Baked cloth (robe + scarves) and three-joint finger grips
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes (Blender assets + framework)   **Branch:** `CloudTesting`
+
+### Done
+- **`_framework/cloth_core.py`** (new, owner's request): free-hanging cloth for any enemy.
+  - It builds bone chains on a cloth piece (`skirt` = a ring of chains; `strips` = one chain per scarf) and re-skins
+    the piece onto them, with at most 4 influences per vertex.
+  - It simulates each action (verlet, gravity, damping, shape pull, capsule collision with the listed bones, ring
+    spacing for skirts) and keys the chains.
+  - `run.py` calls `cloth_bake()` after each action.
+  - The chain list is `CLOTH_CHAINS`: `CLOTH` is already every enemy's material-slot constant.
+- **The Ascendant** (`the_ascendant_cloth.py`, manifest extras): the robe is 16 × 5 bones, pinned at z 1.8 under the
+  belt, with belt islands above 1.6 kept rigid and `ring_stretch` 1.4. The scarves are 4 × 4.
+  - Robe-vs-leg overlap below the hips, worst frame, rigid → cloth: Strafe 176 → 0, Idle 29 → 0, Walk 189 → 4,
+    Reap 298 → 14.
+  - The scarves never clip, and the loop seams are no bigger than a normal frame step.
+- **`_framework/hands_core.py`** (new): `add_phalanges()` splits each finger's second bone into two, cuts a vertex
+  ring at the new joint and re-weights the finger. `humanoid.make_humanoid(fingers=True)` now builds three joints.
+- **`pose_fix.wrap`** was rewritten. Each joint curls about the haft axis until its tip meets the haft surface, and the
+  thumb opposes first (`_oppose`). The old per-bone search (`_wrap_bone`) is removed. Finger wrap is now 101-108°
+  (was 94-99°), and the thumb now reaches the haft (it stayed 111 mm off the axis).
+- Exported onto the owner's mesh: 150 bones, rest offset 0 against the pipeline, 21,300 tris.
+
+### Decisions made
+- The cloth is baked in Blender (owner's choice); a live Roblox solver can reuse the same bones later.
+- Cloth collides only with the enemy's own bones. Player collision is the normal hitbox.
+
+### Stopped at
+Pushed. Open items:
+- The moving robe touches the hanging left arm (≤ 12 tris, 5 frames in StrafeLeft and Walk). Fixed in Session 99.
+- The finger wrap is limited by finger length against the 94 mm haft.
+- 150 bones: confirm the Roblox importer accepts the rig.
+- Beacon Keeper, Spire Regent and Armory Warden gain finger joints on their next re-export.
+
+### Next
+1. Owner: import the FBXs in Studio; check the robe, the scarves and the grips.
+2. The owner decides on the arm colliders for the cloth.
+
+---
+
+## Session 97 — 2026-09-28 — The Ascendant: whole-body locomotion, arm spasm and leg-cross fixes
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes (Blender assets + framework)   **Branch:** `CloudTesting`
+
+### Done
+- **Owner's `.blend` saved first** (`e29dd92`): a hand chest cleanup, the centre crystal moved, `BreakawayGlow`
+  removed. The rig is identical to the script's (44 bones, zero rest offset); the mesh is 21.2k tris.
+- **The spasming arm had two causes, both framework bugs:**
+  - `anim_core.end` scanned only odd frames. A clip present on every frame was "fixed" on odd frames only, so the arm
+    flipped every frame (the hand jumped 33 cm). It now scans every frame.
+  - `_key_all` could key q where its neighbours held -q, and the limb whipped the long way round. Keys now take the
+    curve's sign.
+- **Root drift:** while posing, the attached action re-applied the keyed root location, so `move_root` stacked up
+  (0.5 m over a Walk loop). Posing now runs with the action detached until `_key_all`.
+- **`walk_core` is whole-body** (the owner's rule, now in `ENEMY_FRAMEWORK.md`):
+  - Root bob and sway, pelvis yaw and roll, a counter-rotating chest, a level head, and world-axis arm swings with
+    elbow flex.
+  - The pelvis now moves before the feet are solved, so planted feet no longer slide.
+- **Strafe legs:** the feet's antiphase amplitude is capped (gap ≥ 70% of the stance), the knees point out, and a
+  staggered stance (left foot forward) clears the shins. Leg-vs-leg overlap is zero; before, the feet crossed by 7 cm.
+- **The Reap's left-hand spin:** `hand_on` picked the finger wrap per frame ("fingers down"), which flips on an
+  upright haft (a 160° spin at f51). It now takes `grip=±1`. The Reap releases the hand at 48-52, swaps the wrap at
+  52-54 and re-grips at 54-60 (`_asc_pose.staff(free=)`). `_asc_pose.fix_clip` never pulls a gripping hand.
+- **Staff arcs** (C and D) plus a `LIFT` key cut the sweep's waist clip from 122 tris to 20 (f18 only).
+- **Idle_Guard:** a slow weight shift and two breaths; the chest moves 4 cm and the head 8 cm (it was nearly static).
+- **Exported onto the owner's mesh:** the 6 FBXs were written by `export.py` from the `.blend` plus the rebuilt
+  actions. The `.blend` itself was not re-saved: it was written by Blender 5.2, and pip `bpy` 5.0.1 warns of data loss.
+  On the owner's mesh, Walk, Idle and Strafe ×2 are clean.
+
+### Decisions made
+- The Ascendant's FBXs come from the owner's `.blend` until `the_ascendant.py` reproduces the chest edit.
+- The tri budget stays at 21.2k; the owner allowed 85-90k, but no fix needed it.
+
+### Stopped at
+Pushed. Known leftovers:
+- The left upper arm grazes the chest in the Reap recovery (≤ 48 tris, steady).
+- The staff grazes the waist at f18 (20 tris).
+- The wrist reaches 82° at f46-49.
+- The `VFX_Core` bone sits 6.5 cm from the nearest torso-glow vertex after the crystal move.
+
+### Next
+1. Owner: import the 6 FBXs in Studio; check the arm in both strafes and the Reap's re-grip.
+2. Port the chest edit into `the_ascendant.py` (or keep exporting from the `.blend`); move `VFX_Core` if the crystal moved.
+3. Re-export the Temple Acolyte's Walk/Strafe (it shares `walk_core`, which is now whole-body) and review it.
+
+---
+
+## Session 96 — 2026-09-28 — The Ascendant (Ethereal Scape boss): body, Sanctum Staff, moveset, first actions
+**Merged:** see the PR for `CloudTesting`   **Tests:** no `src/` changes (Blender assets only)   **Branch:** `CloudTesting`
+
+### Done
+- **Body** `ethereal_scape/the_ascendant.py`: ~3.5 m boss in the ES language (gold slit mask, crystal extremities,
+  teal/mint ribbons, no halo). The robe is a front-slit two-panel robe, each panel rigged waist→own thigh.
+  - The P2 cuirass is a `Breakaway` piece.
+  - Pieces are named for the humanoid clip scan.
+  - Validate PASS, ~18.5k tris, nothing floating.
+- **Weapon** `the_ascendant_staff.py` (manifest `extras`): the **Sanctum Staff**, weapon type **Staff** (owner: the
+  boss weapon must fit an existing `WEAPONS.md` class so it can drop). Crescent crystal head, portal-eye core.
+- **Moveset** `ASCENDANT_MOVESET.md`: sweeps and portal steps (the Sentinel's opposite), P1/transition/P2, fairness
+  rules, VFX plan.
+- **Actions** `anims/the_ascendant/`:
+  - `Idle_Guard` (clean).
+  - `P1_CrescentReap`: Tell 3, HitStart 17, HitEnd 22, RecoverStart 23, 60 f, so a 14 f tell and a 37 f recovery;
+    `anim_core` OK.
+  - `Walk` (boss gait), `StrafeLeft`, `StrafeRight`.
+  - The shared helper is `_asc_pose.py`.
+- **Framework fixes** (`_framework/walk_core.py`):
+  - `_ik2` twisted the thigh 180° and folded the shin toward the knee side, so the ankle missed its target by up to
+    0.8 m and anything weighted to the thigh flipped. It now keeps the bone's twist, places the shin as a pure
+    hinge on the target, and caps reach at 99.5% (no hyperextension).
+  - New optional `post=` hook on the walk/strafe builders (carry a weapon while walking).
+- The owner rejected the upward "mohawk" crown; it is now temple horns + a shard cascade down the back of the skull.
+
+### Decisions made
+- Boss weapons are one of the `WEAPONS.md` types. The Ascendant's is a Staff.
+- Built in a cloud container with pip `bpy` 5.0.1 (the repo targets 5.2). A scratch launcher maps the scripts' `\`
+  paths; the repo scripts are unchanged Windows-style.
+
+### Stopped at
+Body, moveset doc and the five actions are built and exported.
+
+Known leftovers:
+- Small staff clip at the Reap's f19 (22 tris).
+- Left wrist 50–80° on the Reap's return to guard.
+- The carried staff in Walk/Strafe grazed the robe; a wider carry was the last change, **re-check it**.
+
+### Next
+1. Owner: review renders (`ethereal_scape/renders/the_ascendant_*`), import `TheAscendant.fbx` + actions in Studio.
+2. Re-export the Temple Acolyte / Meadow Stag Walk & Strafe with the fixed `_ik2` (their FBXs used the old solver).
+3. Remaining Ascendant actions per `ASCENDANT_MOVESET.md`; the player-drop staff export (`wpn_es_staff_legendary_a`).
 
 ---
 

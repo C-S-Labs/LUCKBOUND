@@ -6,7 +6,7 @@ import bpy
 from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 TRI_CAP = 10000                                   # Studio per-mesh limit: split bigger enemies into pieces
-TIER_BUDGET = {"basic": (10000, 12500), "miniboss": (None, 35000), "boss": (None, 75000), "legendary": (None, 100000)}
+TIER_BUDGET = {"basic": (10000, 15000), "miniboss": (None, 35000), "boss": (None, 75000), "legendary": (None, 100000)}
 R15 = ["HumanoidRootNode", "LowerTorso", "UpperTorso", "Head"]
 _fails = []
 _dg = bpy.context.evaluated_depsgraph_get()

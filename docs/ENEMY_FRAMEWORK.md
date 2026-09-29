@@ -128,9 +128,63 @@ The manifest's `body` picks a joint profile. `run.py` loads `<biome>/bodies/<bod
   - Elbow: a true hinge on local X that folds toward the front of the upper arm, so the elbow points back/down. Range 0-150°, never hyperextended.
   - Elbow placement: tucked by the ribs first. The solver penalises a sideways "chicken wing" (upper arm raised over 40°) and the arm going behind the body (over 45°).
   - Grip: the haft crosses the palm diagonally (about 55° to the hand axis), as with a real spear grip.
-- **Quaternion keys:** keys are stored as quaternions (shortest path).
-- **Scan and correct:** every action is scanned on every other frame for limb or weapon clipping (and corrective keys are added).
-  Every key logs its joint angles, and a wrist bent over 50° is flagged.
+- **Quaternion keys:** keys are stored as quaternions, and each new key takes the sign (q or -q) of the curve it lands
+  on. A key with the opposite sign to its neighbours makes the limb whip the long way round between them.
+- **Scan and correct:** every action is scanned on **every** frame for limb or weapon clipping, and corrective keys are
+  added. Scanning every other frame fixed only odd frames, so a clip present on every frame flickered in and out (the
+  "spazzing arm"). Every key logs its joint angles, and a wrist bent over 50° is flagged.
+  - A body's `fix_clip` must never pull a hand off a weapon it is gripping. One corrected frame tears the hand off the
+    haft and back. Fix held arms in the key poses instead (see `_asc_pose.fix_clip`).
+- **Posing runs detached:** between keys, the action is unassigned while the next pose is built. While it is assigned,
+  every view-layer update re-applies the keyed root location, so additive root moves (`move_root`) stacked frame to frame.
+- **Grip handedness:** in an animated two-hand hold, which way the off hand wraps the haft (`hand_on(..., grip=±1)`)
+  never changes while the hand is on it. The single-pose rule ("fingers point down") flips on an upright haft and spins
+  the hand about 160° in a frame. To change grip, release the hand, swap while it is off, then re-grip (`free` in
+  `_asc_pose.staff`).
+
+### Whole-body rule (owner): no action animates only legs or only arms
+Every locomotion or idle cycle moves the whole body, in this order each frame (`walk_core.py` implements it for
+`build_walk_humanoid` / `build_strafe_humanoid`):
+1. **Root:** a vertical bob, low at each double support, and a lateral sway over the stance foot.
+2. **Pelvis:** yaw toward the forward leg, plus roll (the swing-side hip drops).
+3. **Legs:** solved onto world foot targets taken from the rest feet, so a planted foot never slides.
+4. **Chest:** counter-yaw and counter-roll against the pelvis, plus a lean in the direction of travel.
+5. **Neck and head:** cancel most of the spine's motion, so the gaze stays level and forward.
+6. **Arms:** swung from the shoulder about world axes, never raw Euler (the bone's roll decides where a raw Euler goes),
+   held clear of the torso, with the elbow flexing through the swing.
+
+### Cloth: robes, skirts, capes, scarves (`_framework/cloth_core.py`)
+Roblox plays bone keys and has no cloth solver, so cloth is **baked**. A cloth piece gets its own chains of bones. A
+verlet simulation runs over every action (gravity, damping, a pull back toward the piece's own shape, and capsule
+collision with the listed bones), and `run.py` keys the result onto the chains after each action (`cloth_bake()`).
+Collision is with the enemy's own body only; players still collide with the enemy's normal hitbox.
+- An enemy describes its cloth as data in an extras script: `build_cloth([dict(name=, kind="skirt"|"strips",
+  meshes=, colliders=, ...)])`. See `ethereal_scape/the_ascendant_cloth.py`.
+- `skirt`: a ring of `sectors` chains hanging from `top` to the hem. Put `top` above the hip joints, hidden under a
+  belt if there is one: a ring pinned below the hips cannot open for a thigh raised in a deep crouch. `keep_above`
+  keeps belts rigid. `ring_stretch` lets a slit robe part round a knee.
+- `strips`: one chain per strip. Islands closer than `join` form one strip (for example a scarf, its glow and its tip).
+- Islands smaller than `rigid_size` (hem spikes, tassels) ride the cloth rigidly.
+- Each vertex takes at most 4 bone influences (the Roblox limit). Looping actions are simulated for 3 cycles and keep
+  the last one, so the loop is seamless.
+
+### Hands: three joints per finger (`_framework/hands_core.py`, `pose_fix.wrap`)
+A grip closes the hand round the haft. Each finger joint curls about the haft axis until its tip meets the haft
+surface, never passing through it. The thumb first swings onto the haft (opposition), then curls the other way.
+- `humanoid.make_humanoid(fingers=True)` builds three-joint fingers and thumbs.
+- A custom hand with two-joint fingers opts in with `add_phalanges()` in an extras script. It splits each second
+  segment's bone, cuts a ring of vertices into the finger at the new joint, and re-weights the finger.
+- How far a finger can wrap depends on its length against the haft's circumference; the code cannot change that.
+
+### Extra joints and the spell orb (`_framework/joints_core.py`, `ethereal_scape/the_ascendant_orb.py`)
+`joints_core.add_joints()` adds a mid-spine joint and forearm-twist joints and re-skins the mesh onto them. They are
+driven from the solved bones every key through the `POST_POSE` hook in `anim_core.key()`, so actions never mention
+them. Pattern for new humanoids: call `add_joints()` from an extras script, before the cloth. Elbow poles in
+`hand_on`/`wield` are continuous and sticky, so an arm never snaps between two near-equal solutions.
+
+Strafes keep a staggered fighting stance (left foot forward). The foot gap never drops below 70% of the rest stance, and
+the knees point slightly out, so the legs never meet or cross. An idle breathes and slowly shifts weight between the
+feet, and the hips, chest, weapon and head ride that shift.
 - **In place:** attacks are animated in place, and the AI moves the root between markers.
 
 ## 5. VFX (one shared system)

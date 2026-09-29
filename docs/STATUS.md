@@ -31,7 +31,18 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   (Supersedes the Worlds table in `docs/archive/STATUS_HISTORY.md`, written before Sky Citadel had a kit.)
 - **Enemies:** the framework is built and all 16 Sky Citadel enemies are modelled, rigged and exported. The Winged
   Sentinel (Boss 3) runs in Studio through `/showboss`, with the Aether Lance's lightning and `/bossphase`. Ethereal
-  Scape has a drafted 9-enemy roster (1 basic built: Aether Wisp) under `assets/source/enemies/ethereal_scape/`.
+  Scape has a drafted 9-enemy roster under `assets/source/enemies/ethereal_scape/`.
+  - Built so far: its basics, and its boss **The Ascendant** (2026-09-28).
+  - The Ascendant has a body, a Staff-class weapon, `ASCENDANT_MOVESET.md`, and Idle, Crescent Reap, Walk and
+    Strafe ×2 exported.
+  - 2026-09-28 (Session 97): all five actions were rebuilt as whole-body motion and exported onto the owner's
+    hand-edited `.blend` mesh. The strafe arm spasm, legs crossing and the Reap's hand spin are fixed. The FBXs come
+    from the `.blend`, not the script (see `ASCENDANT_MOVESET.md`).
+  - Session 98: baked cloth (`_framework/cloth_core.py`) makes the robe and back scarves hang free and collide
+    with the legs and body. Three-joint fingers (`hands_core.py`) close both hands round the staff. The rig is now
+    150 bones, so confirm Studio's importer accepts it. Session 99: the free arm clears the robe. The owner will import
+    once, when the boss is finished.
+  - Not yet imported in Studio.
   **Nothing spawns in gameplay yet.** `EnemyDef` + services wait for the owner's OK.
 - **Tooling:**
   - **Developer panel + command registry** (2026-09-27): F4 in Studio; 43 commands, all clickable, autocomplete; see `docs/DEV_TOOLS.md`.
