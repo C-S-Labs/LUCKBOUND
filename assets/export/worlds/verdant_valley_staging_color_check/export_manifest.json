@@ -1,0 +1,557 @@
+{
+  "source_blend": "E:\\BlenderAIProjects\\Projects\\VerdantValley_Production_Export_Input.blend",
+  "source_sha256": "b91087ee34c3e8c585804af9aa3e2397b463d6d1ae5a13363ffec8de589b3ce2",
+  "status": "exported; Studio validation pending",
+  "collision_source": "Current VV_COLLISION meshes; no generation",
+  "scope": {
+    "only_chunk": "chunk_path_cliff_passage",
+    "only_categories": [
+      "nonsolid_props",
+      "solid_props",
+      "structure"
+    ]
+  },
+  "units": {
+    "system": "METRIC",
+    "scale_length": 1.0
+  },
+  "coordinate_handling": "Inverse chunk structure matrix on temporary copies; relative pivots retained",
+  "excluded_objects": [],
+  "chunks": {
+    "chunk_ancient_oak": {
+      "structure": 1,
+      "collision": 121,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 24,
+      "special": 0
+    },
+    "chunk_blossom_terrace": {
+      "structure": 1,
+      "collision": 122,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 23,
+      "special": 0
+    },
+    "chunk_boss_sanctuary": {
+      "structure": 1,
+      "collision": 267,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 110,
+      "special": 0
+    },
+    "chunk_cap_cave_mouth": {
+      "structure": 1,
+      "collision": 120,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 10,
+      "special": 5
+    },
+    "chunk_cliff_overlook_gate": {
+      "structure": 1,
+      "collision": 118,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 20,
+      "special": 0
+    },
+    "chunk_crystal_spring_gate": {
+      "structure": 1,
+      "collision": 134,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 22,
+      "special": 0
+    },
+    "chunk_cutbank_ford": {
+      "structure": 1,
+      "collision": 136,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 26,
+      "special": 0
+    },
+    "chunk_deep_clearing": {
+      "structure": 1,
+      "collision": 146,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 18,
+      "special": 0
+    },
+    "chunk_entry_dawn_meadow": {
+      "structure": 1,
+      "collision": 122,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 12,
+      "special": 1
+    },
+    "chunk_entry_woodland_refuge": {
+      "structure": 1,
+      "collision": 113,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 16,
+      "special": 0
+    },
+    "chunk_fern_hollow": {
+      "structure": 1,
+      "collision": 119,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 50,
+      "special": 0
+    },
+    "chunk_forgotten_orchard_gate": {
+      "structure": 1,
+      "collision": 124,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 24,
+      "special": 0
+    },
+    "chunk_high_ledge_gate": {
+      "structure": 1,
+      "collision": 132,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 18,
+      "special": 0
+    },
+    "chunk_longgrass_meadow": {
+      "structure": 1,
+      "collision": 134,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 23,
+      "special": 0
+    },
+    "chunk_mossbound_ruins": {
+      "structure": 1,
+      "collision": 118,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 16,
+      "special": 0
+    },
+    "chunk_mushroom_glen": {
+      "structure": 1,
+      "collision": 129,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 28,
+      "special": 0
+    },
+    "chunk_overgrown_causeway_gate": {
+      "structure": 1,
+      "collision": 122,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 28,
+      "special": 0
+    },
+    "chunk_path_cliff_passage": {
+      "structure": 1,
+      "collision": 66,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 39,
+      "special": 0
+    },
+    "chunk_path_crossroads_copse": {
+      "structure": 1,
+      "collision": 170,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 22,
+      "special": 10
+    },
+    "chunk_path_narrow_pass": {
+      "structure": 1,
+      "collision": 149,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 20,
+      "special": 0
+    },
+    "chunk_path_split_meadow": {
+      "structure": 1,
+      "collision": 155,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 20,
+      "special": 0
+    },
+    "chunk_path_sunwash_fork": {
+      "structure": 1,
+      "collision": 153,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 27,
+      "special": 0
+    },
+    "chunk_rock_garden": {
+      "structure": 1,
+      "collision": 117,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 16,
+      "special": 0
+    },
+    "chunk_shaded_grove": {
+      "structure": 1,
+      "collision": 124,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 45,
+      "special": 0
+    },
+    "chunk_side_forgotten_trial": {
+      "structure": 1,
+      "collision": 208,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 2,
+      "special": 0
+    },
+    "chunk_side_treasure_hollow": {
+      "structure": 1,
+      "collision": 112,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 8,
+      "special": 1
+    },
+    "chunk_side_wardens_clearing": {
+      "structure": 1,
+      "collision": 90,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 9,
+      "special": 0
+    },
+    "chunk_stone_sentinels": {
+      "structure": 1,
+      "collision": 118,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 20,
+      "special": 0
+    },
+    "chunk_wetland_pools": {
+      "structure": 1,
+      "collision": 137,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 26,
+      "special": 0
+    },
+    "chunk_windward_ridge_gate": {
+      "structure": 1,
+      "collision": 156,
+      "solid_props": 1,
+      "nonsolid_props": 1,
+      "wind_canopies": 24,
+      "special": 0
+    }
+  },
+  "files": [
+    {
+      "chunk": "chunk_path_cliff_passage",
+      "category": "structure",
+      "filename": "path_cliff_passage_structure.fbx",
+      "destination": "C:\\Users\\jhpel\\LUCKBOUND\\assets\\export\\worlds\\verdant_valley_staging_color_check\\path_cliff_passage_structure.fbx",
+      "sources": [
+        {
+          "name": "chunk_path_cliff_passage",
+          "chunk": "chunk_path_cliff_passage",
+          "source_collections": [
+            "VV_STRUCTURE"
+          ],
+          "source_digest": "d6c3ad12f09f3fbfa26f2d5403fd7a9f9519121714177f172a7b4c7d8baa9285",
+          "matrix_world": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              -600.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              400.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "export_matrix": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "vertices": 3534,
+          "faces": 4270,
+          "chest_role": null,
+          "materials": [
+            "VV_Grass",
+            "VV_GrassLight",
+            "VV_Path",
+            "VV_Earth",
+            "VV_Rock",
+            "VV_RockLight",
+            "VV_Bark",
+            "VV_Leaf",
+            "VV_LeafLight"
+          ],
+          "export_color_preparation": {
+            "created_layer": true,
+            "material_encoded_faces": 4270,
+            "material_encoded_corners": 15603,
+            "black_corners_after": 0
+          }
+        }
+      ],
+      "sha256": "def8364aa644c5dadd5eff7189a0be47c36b836d942fc1e8ce9c6f1bb460a570"
+    },
+    {
+      "chunk": "chunk_path_cliff_passage",
+      "category": "solid_props",
+      "filename": "path_cliff_passage_solid_props.fbx",
+      "destination": "C:\\Users\\jhpel\\LUCKBOUND\\assets\\export\\worlds\\verdant_valley_staging_color_check\\path_cliff_passage_solid_props.fbx",
+      "sources": [
+        {
+          "name": "chunk_path_cliff_passage__PropsSolid",
+          "chunk": "chunk_path_cliff_passage",
+          "source_collections": [
+            "VV_PROPS_SOLID"
+          ],
+          "source_digest": "9ab8867dfced81c77dd6ec7987ad41074ee9c3a65f3594b00fe4cdce1b970676",
+          "matrix_world": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              -600.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              400.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "export_matrix": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "vertices": 2269,
+          "faces": 2279,
+          "chest_role": null,
+          "materials": [
+            null,
+            "VV_Grass",
+            "VV_GrassLight",
+            "VV_Path",
+            "VV_Earth",
+            "VV_Rock",
+            "VV_RockLight",
+            "VV_Bark",
+            "VV_Leaf",
+            "VV_LeafLight",
+            "VV_Grass.004",
+            "VV_GrassLight.004",
+            "VV_Path.004",
+            "VV_Earth.004",
+            "VV_Rock.004",
+            "VV_RockLight.004",
+            "VV_Bark.004",
+            "VV_Leaf.004",
+            "VV_LeafLight.004",
+            "VV_Flower",
+            "VV_CaveDeepRock",
+            "VV_CaveWoodDark",
+            "VVBridge_CutWood",
+            "VV_CaveFlameCore",
+            "VV_CaveFlame",
+            "VV_ScatterTreeBark"
+          ],
+          "export_color_preparation": {
+            "created_layer": false,
+            "material_encoded_faces": 1429,
+            "material_encoded_corners": 6197,
+            "black_corners_after": 0
+          }
+        }
+      ],
+      "sha256": "df07053fa09de1fb2451519a7ecf2448fe10b26177156902e490be5b72de588f"
+    },
+    {
+      "chunk": "chunk_path_cliff_passage",
+      "category": "nonsolid_props",
+      "filename": "path_cliff_passage_nonsolid_props.fbx",
+      "destination": "C:\\Users\\jhpel\\LUCKBOUND\\assets\\export\\worlds\\verdant_valley_staging_color_check\\path_cliff_passage_nonsolid_props.fbx",
+      "sources": [
+        {
+          "name": "chunk_path_cliff_passage__PropsNonSolid",
+          "chunk": "chunk_path_cliff_passage",
+          "source_collections": [
+            "VV_PROPS_NONSOLID"
+          ],
+          "source_digest": "8fae97bef295bebf7248dc93850c34ecb5d1a719de5fa1edad98dfe329710435",
+          "matrix_world": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              -600.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              400.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "export_matrix": [
+            [
+              1.0,
+              0.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              1.0,
+              0.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              1.0,
+              0.0
+            ],
+            [
+              0.0,
+              0.0,
+              0.0,
+              1.0
+            ]
+          ],
+          "vertices": 2343,
+          "faces": 3116,
+          "chest_role": null,
+          "materials": [
+            null,
+            "VV_Grass",
+            "VV_GrassLight",
+            "VV_Path",
+            "VV_Earth",
+            "VV_Rock",
+            "VV_RockLight",
+            "VV_Bark",
+            "VV_Leaf",
+            "VV_LeafLight",
+            "VV_Flower",
+            "VV_CaveDeepRock",
+            "VV_CaveWoodDark",
+            "VVBridge_CutWood",
+            "VV_CaveFlameCore",
+            "VV_CaveFlame",
+            "VV_DetailMoss"
+          ],
+          "export_color_preparation": {
+            "created_layer": false,
+            "material_encoded_faces": 510,
+            "material_encoded_corners": 1740,
+            "black_corners_after": 0
+          }
+        }
+      ],
+      "sha256": "8aa953e91f20afc97040d6440ee631a2506b9844bdfcba725e64741d36a9f18b"
+    }
+  ],
+  "source_objects_unchanged": true
+}

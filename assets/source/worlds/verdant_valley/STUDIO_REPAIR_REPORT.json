@@ -1,0 +1,631 @@
+{
+  "colors": [
+    {
+      "object": "chunk_ancient_oak__PropsNonSolid",
+      "created_layer": false,
+      "material_encoded_faces": 123,
+      "material_encoded_corners": 372,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_ancient_oak__PropsSolid",
+      "created_layer": false,
+      "material_encoded_faces": 128,
+      "material_encoded_corners": 570,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_ancient_oak__tree_canopy_13",
+      "created_layer": true,
+      "material_encoded_faces": 180,
+      "material_encoded_corners": 540,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_ancient_oak__tree_canopy_14",
+      "created_layer": true,
+      "material_encoded_faces": 20,
+      "material_encoded_corners": 60,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_boss_sanctuary__PropsSolid",
+      "created_layer": false,
+      "material_encoded_faces": 25,
+      "material_encoded_corners": 104,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_cap_cave_mouth__landmark_chest_loot",
+      "created_layer": true,
+      "material_encoded_faces": 102,
+      "material_encoded_corners": 416,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_crystal_spring_gate__PropsSolid",
+      "created_layer": false,
+      "material_encoded_faces": 5,
+      "material_encoded_corners": 16,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_cutbank_ford__PropsSolid",
+      "created_layer": false,
+      "material_encoded_faces": 12,
+      "material_encoded_corners": 48,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_deep_clearing__PropsSolid",
+      "created_layer": false,
+      "material_encoded_faces": 67,
+      "material_encoded_corners": 278,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_deep_clearing__detail_scatter_tree_01_canopy",
+      "created_layer": true,
+      "material_encoded_faces": 40,
+      "material_encoded_corners": 120,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_deep_clearing__detail_scatter_tree_02_canopy",
+      "created_layer": true,
+      "material_encoded_faces": 40,
+      "material_encoded_corners": 120,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_entry_dawn_meadow__PropsSolid",
+      "created_layer": false,
+      "material_encoded_faces": 30,
+      "material_encoded_corners": 120,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_forgotten_orchard_gate__PropsSolid",
+      "created_layer": false,
+      "material_encoded_faces": 24,
+      "material_encoded_corners": 96,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_high_ledge_gate__PropsSolid",
+      "created_layer": false,
+      "material_encoded_faces": 18,
+      "material_encoded_corners": 72,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_longgrass_meadow__PropsNonSolid",
+      "created_layer": false,
+      "material_encoded_faces": 3024,
+      "material_encoded_corners": 9216,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_longgrass_meadow__PropsSolid",
+      "created_layer": false,
+      "material_encoded_faces": 165,
+      "material_encoded_corners": 747,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_longgrass_meadow__detail_scatter_flowering_tree_canopy",
+      "created_layer": true,
+      "material_encoded_faces": 620,
+      "material_encoded_corners": 1860,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_longgrass_meadow__detail_scatter_flowering_tree_canopy_1",
+      "created_layer": true,
+      "material_encoded_faces": 260,
+      "material_encoded_corners": 780,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_longgrass_meadow__detail_scatter_flowering_tree_canopy_3",
+      "created_layer": true,
+      "material_encoded_faces": 220,
+      "material_encoded_corners": 660,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_longgrass_meadow__detail_scatter_flowering_tree_canopy_4",
+      "created_layer": true,
+      "material_encoded_faces": 620,
+      "material_encoded_corners": 1860,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_longgrass_meadow__detail_scatter_flowering_tree_canopy_5",
+      "created_layer": true,
+      "material_encoded_faces": 840,
+      "material_encoded_corners": 2520,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_longgrass_meadow__detail_scatter_flowering_tree_canopy_6",
+      "created_layer": true,
+      "material_encoded_faces": 480,
+      "material_encoded_corners": 1440,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_longgrass_meadow__detail_scatter_flowering_tree_canopy_7",
+      "created_layer": true,
+      "material_encoded_faces": 520,
+      "material_encoded_corners": 1560,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_longgrass_meadow__detail_scatter_tree_01_canopy",
+      "created_layer": true,
+      "material_encoded_faces": 40,
+      "material_encoded_corners": 120,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_mossbound_ruins__PropsSolid",
+      "created_layer": false,
+      "material_encoded_faces": 38,
+      "material_encoded_corners": 132,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_mushroom_glen__PropsNonSolid",
+      "created_layer": false,
+      "material_encoded_faces": 51,
+      "material_encoded_corners": 234,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_overgrown_causeway_gate__PropsSolid",
+      "created_layer": false,
+      "material_encoded_faces": 24,
+      "material_encoded_corners": 96,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_path_cliff_passage",
+      "created_layer": true,
+      "material_encoded_faces": 4270,
+      "material_encoded_corners": 15603,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_path_cliff_passage__PropsNonSolid",
+      "created_layer": false,
+      "material_encoded_faces": 510,
+      "material_encoded_corners": 1740,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_path_cliff_passage__PropsSolid",
+      "created_layer": false,
+      "material_encoded_faces": 1429,
+      "material_encoded_corners": 6197,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_path_cliff_passage__finish_tree_01_canopy",
+      "created_layer": true,
+      "material_encoded_faces": 40,
+      "material_encoded_corners": 120,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_path_cliff_passage__finish_tree_02_canopy",
+      "created_layer": true,
+      "material_encoded_faces": 40,
+      "material_encoded_corners": 120,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_path_cliff_passage__finish_tree_03_canopy",
+      "created_layer": true,
+      "material_encoded_faces": 40,
+      "material_encoded_corners": 120,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_path_cliff_passage__finish_tree_04_canopy",
+      "created_layer": true,
+      "material_encoded_faces": 40,
+      "material_encoded_corners": 120,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_path_cliff_passage__finish_tree_05_canopy",
+      "created_layer": true,
+      "material_encoded_faces": 40,
+      "material_encoded_corners": 120,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_path_cliff_passage__finish_tree_06_canopy",
+      "created_layer": true,
+      "material_encoded_faces": 40,
+      "material_encoded_corners": 120,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_path_crossroads_copse__PropsSolid",
+      "created_layer": false,
+      "material_encoded_faces": 1644,
+      "material_encoded_corners": 7200,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_path_crossroads_copse__landmark_chest_body",
+      "created_layer": true,
+      "material_encoded_faces": 354,
+      "material_encoded_corners": 1416,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_path_crossroads_copse__landmark_chest_body_02",
+      "created_layer": true,
+      "material_encoded_faces": 354,
+      "material_encoded_corners": 1416,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_path_crossroads_copse__landmark_chest_body_03",
+      "created_layer": true,
+      "material_encoded_faces": 354,
+      "material_encoded_corners": 1416,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_path_crossroads_copse__landmark_chest_hardware",
+      "created_layer": true,
+      "material_encoded_faces": 388,
+      "material_encoded_corners": 1392,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_path_crossroads_copse__landmark_chest_hardware_02",
+      "created_layer": true,
+      "material_encoded_faces": 388,
+      "material_encoded_corners": 1392,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_path_crossroads_copse__landmark_chest_hardware_03",
+      "created_layer": true,
+      "material_encoded_faces": 388,
+      "material_encoded_corners": 1392,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_path_crossroads_copse__landmark_chest_lid",
+      "created_layer": true,
+      "material_encoded_faces": 512,
+      "material_encoded_corners": 1980,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_path_crossroads_copse__landmark_chest_lid_02",
+      "created_layer": true,
+      "material_encoded_faces": 512,
+      "material_encoded_corners": 1980,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_path_crossroads_copse__landmark_chest_lid_03",
+      "created_layer": true,
+      "material_encoded_faces": 512,
+      "material_encoded_corners": 1980,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_path_crossroads_copse__landmark_chest_loot",
+      "created_layer": true,
+      "material_encoded_faces": 102,
+      "material_encoded_corners": 416,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_path_sunwash_fork__PropsNonSolid",
+      "created_layer": false,
+      "material_encoded_faces": 105,
+      "material_encoded_corners": 450,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_rock_garden__PropsSolid",
+      "created_layer": false,
+      "material_encoded_faces": 12,
+      "material_encoded_corners": 48,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_shaded_grove__PropsNonSolid",
+      "created_layer": false,
+      "material_encoded_faces": 52,
+      "material_encoded_corners": 168,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_side_forgotten_trial__PropsSolid",
+      "created_layer": false,
+      "material_encoded_faces": 33,
+      "material_encoded_corners": 110,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_side_treasure_hollow__PropsSolid",
+      "created_layer": false,
+      "material_encoded_faces": 489,
+      "material_encoded_corners": 2070,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_side_treasure_hollow__detail_scatter_tree_02_canopy",
+      "created_layer": true,
+      "material_encoded_faces": 40,
+      "material_encoded_corners": 120,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_side_treasure_hollow__landmark_chest_loot",
+      "created_layer": true,
+      "material_encoded_faces": 102,
+      "material_encoded_corners": 416,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_side_wardens_clearing__PropsSolid",
+      "created_layer": false,
+      "material_encoded_faces": 98,
+      "material_encoded_corners": 432,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_side_wardens_clearing__detail_scatter_tree_01_canopy",
+      "created_layer": true,
+      "material_encoded_faces": 40,
+      "material_encoded_corners": 120,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_side_wardens_clearing__detail_scatter_tree_02_canopy",
+      "created_layer": true,
+      "material_encoded_faces": 40,
+      "material_encoded_corners": 120,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_stone_sentinels__PropsSolid",
+      "created_layer": false,
+      "material_encoded_faces": 26,
+      "material_encoded_corners": 84,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_wetland_pools__PropsNonSolid",
+      "created_layer": false,
+      "material_encoded_faces": 52,
+      "material_encoded_corners": 216,
+      "black_corners_after": 0
+    },
+    {
+      "object": "chunk_windward_ridge_gate__PropsSolid",
+      "created_layer": false,
+      "material_encoded_faces": 12,
+      "material_encoded_corners": 48,
+      "black_corners_after": 0
+    }
+  ],
+  "stump_triangulated_polygons": 53,
+  "boss_entry_triangulated_polygons": 64,
+  "bridge": {
+    "object": "walk_bridge_deck",
+    "collection": "VV_CUTBANK_FORD_COLLISION_MERGED",
+    "planks": 6,
+    "bounds": [
+      [
+        -611.2200317382812,
+        815.3475952148438,
+        -0.6684858202934265
+      ],
+      [
+        -588.7799682617188,
+        874.6524047851562,
+        0.4315141439437866
+      ]
+    ],
+    "top": 0.4115141439437866
+  },
+  "source": "E:\\BlenderAIProjects\\Projects\\VerdantValley_Cleanup.blend",
+  "status": "Saved Blender repairs; Studio re-export/import validation pending",
+  "changed_objects": [
+    "chunk_ancient_oak__PropsNonSolid",
+    "chunk_ancient_oak__PropsSolid",
+    "chunk_ancient_oak__tree_canopy_13",
+    "chunk_ancient_oak__tree_canopy_14",
+    "chunk_boss_sanctuary",
+    "chunk_boss_sanctuary__PropsSolid",
+    "chunk_cap_cave_mouth__landmark_chest_loot",
+    "chunk_crystal_spring_gate__PropsSolid",
+    "chunk_cutbank_ford__PropsSolid",
+    "chunk_deep_clearing__detail_scatter_tree_01_canopy",
+    "chunk_deep_clearing__detail_scatter_tree_02_canopy",
+    "chunk_deep_clearing__PropsSolid",
+    "chunk_entry_dawn_meadow__PropsSolid",
+    "chunk_forgotten_orchard_gate__PropsSolid",
+    "chunk_high_ledge_gate__PropsSolid",
+    "chunk_longgrass_meadow__detail_scatter_flowering_tree_canopy",
+    "chunk_longgrass_meadow__detail_scatter_flowering_tree_canopy_1",
+    "chunk_longgrass_meadow__detail_scatter_flowering_tree_canopy_3",
+    "chunk_longgrass_meadow__detail_scatter_flowering_tree_canopy_4",
+    "chunk_longgrass_meadow__detail_scatter_flowering_tree_canopy_5",
+    "chunk_longgrass_meadow__detail_scatter_flowering_tree_canopy_6",
+    "chunk_longgrass_meadow__detail_scatter_flowering_tree_canopy_7",
+    "chunk_longgrass_meadow__detail_scatter_tree_01_canopy",
+    "chunk_longgrass_meadow__PropsNonSolid",
+    "chunk_longgrass_meadow__PropsSolid",
+    "chunk_mossbound_ruins__PropsSolid",
+    "chunk_mushroom_glen__PropsNonSolid",
+    "chunk_overgrown_causeway_gate__PropsSolid",
+    "chunk_path_cliff_passage",
+    "chunk_path_cliff_passage__finish_tree_01_canopy",
+    "chunk_path_cliff_passage__finish_tree_02_canopy",
+    "chunk_path_cliff_passage__finish_tree_03_canopy",
+    "chunk_path_cliff_passage__finish_tree_04_canopy",
+    "chunk_path_cliff_passage__finish_tree_05_canopy",
+    "chunk_path_cliff_passage__finish_tree_06_canopy",
+    "chunk_path_cliff_passage__PropsNonSolid",
+    "chunk_path_cliff_passage__PropsSolid",
+    "chunk_path_crossroads_copse__landmark_chest_body",
+    "chunk_path_crossroads_copse__landmark_chest_body_02",
+    "chunk_path_crossroads_copse__landmark_chest_body_03",
+    "chunk_path_crossroads_copse__landmark_chest_hardware",
+    "chunk_path_crossroads_copse__landmark_chest_hardware_02",
+    "chunk_path_crossroads_copse__landmark_chest_hardware_03",
+    "chunk_path_crossroads_copse__landmark_chest_lid",
+    "chunk_path_crossroads_copse__landmark_chest_lid_02",
+    "chunk_path_crossroads_copse__landmark_chest_lid_03",
+    "chunk_path_crossroads_copse__landmark_chest_loot",
+    "chunk_path_crossroads_copse__PropsSolid",
+    "chunk_path_sunwash_fork__PropsNonSolid",
+    "chunk_rock_garden__PropsSolid",
+    "chunk_shaded_grove__PropsNonSolid",
+    "chunk_side_forgotten_trial__PropsSolid",
+    "chunk_side_treasure_hollow__detail_scatter_tree_02_canopy",
+    "chunk_side_treasure_hollow__landmark_chest_loot",
+    "chunk_side_treasure_hollow__PropsSolid",
+    "chunk_side_wardens_clearing__detail_scatter_tree_01_canopy",
+    "chunk_side_wardens_clearing__detail_scatter_tree_02_canopy",
+    "chunk_side_wardens_clearing__PropsSolid",
+    "chunk_stone_sentinels__PropsSolid",
+    "chunk_wetland_pools__PropsNonSolid",
+    "chunk_windward_ridge_gate__PropsSolid"
+  ],
+  "protected_unchanged": 4824,
+  "stump_inner_wall": {
+    "rim_vertices": 9,
+    "wall_triangles": 18,
+    "floor_height": 5.854589748382568
+  },
+  "boss_skirt_lowered": [
+    [
+      1098,
+      1.7000000476837158
+    ],
+    [
+      1099,
+      0.9449999928474426
+    ],
+    [
+      1100,
+      -0.7749999761581421
+    ],
+    [
+      1101,
+      -1.3320000171661377
+    ],
+    [
+      1102,
+      -2.7880001068115234
+    ],
+    [
+      1103,
+      -2.799999952316284
+    ],
+    [
+      1104,
+      -2.799999952316284
+    ],
+    [
+      1105,
+      -2.799999952316284
+    ],
+    [
+      1106,
+      -2.799999952316284
+    ],
+    [
+      1107,
+      -2.799999952316284
+    ],
+    [
+      1108,
+      -2.799999952316284
+    ],
+    [
+      1109,
+      -2.799999952316284
+    ],
+    [
+      1110,
+      -2.799999952316284
+    ],
+    [
+      1111,
+      -2.799999952316284
+    ],
+    [
+      1112,
+      -2.799999952316284
+    ],
+    [
+      1113,
+      -2.799999952316284
+    ],
+    [
+      1114,
+      -2.799999952316284
+    ],
+    [
+      1115,
+      -2.799999952316284
+    ],
+    [
+      1116,
+      -2.799999952316284
+    ],
+    [
+      1117,
+      -2.799999952316284
+    ],
+    [
+      1118,
+      -2.7880001068115234
+    ],
+    [
+      1119,
+      -1.3320000171661377
+    ],
+    [
+      1120,
+      -0.7749999761581421
+    ],
+    [
+      1121,
+      0.9449999928474426
+    ],
+    [
+      1122,
+      1.7000000476837158
+    ]
+  ],
+  "boss_top_vertices_protected": 1076,
+  "boss_changed_underside_vertices": [
+    1098,
+    1099,
+    1100,
+    1101,
+    1102,
+    1118,
+    1119,
+    1120,
+    1121,
+    1122
+  ],
+  "boss_walk_vertices_unchanged": true
+}

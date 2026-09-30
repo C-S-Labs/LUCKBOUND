@@ -889,7 +889,251 @@ def main():
     print(f"[vv] OK: {len(rows)} pieces -> {fbx}")
 
 
-if "--joined-scene" in sys.argv:
+def prepare_production_colors(obj):
+    """Encode existing face colors on a disposable export mesh only.
+
+    Keep painted corners. Fill an absent layer or entirely zero-color faces
+    from their constant material color, as in the legacy build_piece path.
+    Mixed painted/zero faces and linked shader inputs are never guessed.
+    """
+    mesh = obj.data
+    attr = mesh.color_attributes.get("Col")
+    missing = attr is None
+    if missing:
+        if mesh.color_attributes:
+            raise RuntimeError(f"Unexpected color layers on {obj.name}; review required")
+        attr = mesh.color_attributes.new("Col", "BYTE_COLOR", "CORNER")
+    if attr.domain != "CORNER" or attr.data_type != "BYTE_COLOR":
+        raise RuntimeError(f"Unsupported Col format on {obj.name}")
+    changed_faces = changed_corners = 0
+    for polygon in mesh.polygons:
+        zeros = sum(max(attr.data[i].color[:3]) == 0 for i in polygon.loop_indices)
+        if not missing and zeros == 0:
+            continue
+        if not missing and zeros != polygon.loop_total:
+            raise RuntimeError(f"Mixed painted/zero corners on {obj.name}, face {polygon.index}")
+        if polygon.material_index >= len(obj.material_slots):
+            raise RuntimeError(f"Missing face material on {obj.name}, face {polygon.index}")
+        material = obj.material_slots[polygon.material_index].material
+        if material is None:
+            raise RuntimeError(f"Empty material slot on {obj.name}, face {polygon.index}")
+        if material.use_nodes:
+            shaders = [n for n in material.node_tree.nodes if n.type == "BSDF_PRINCIPLED"]
+            if len(shaders) != 1 or shaders[0].inputs["Base Color"].is_linked:
+                raise RuntimeError(f"Nonconstant face material {material.name} on {obj.name}; review required")
+        rgb = material_rgb(material)
+        # An authored black material remains black. Other zero-valued faces
+        # have no usable paint data and follow their existing face material.
+        if missing or max(rgb) > 0:
+            for index in polygon.loop_indices:
+                attr.data[index].color = (*rgb, 1.0)
+                changed_corners += 1
+            changed_faces += 1
+    mesh.color_attributes.active_color = attr
+    mesh.color_attributes.render_color_index = list(mesh.color_attributes).index(attr)
+    return {"created_layer": missing, "material_encoded_faces": changed_faces,
+            "material_encoded_corners": changed_corners,
+            "black_corners_after": sum(max(c.color[:3]) == 0 for c in attr.data)}
+
+
+def export_production_scene():
+    """Staging-only export of disposable copies; never save the source scene."""
+    import hashlib
+    from pathlib import Path
+    from io_scene_fbx import parse_fbx as fbx_parse
+
+    if not bpy.app.background:
+        raise RuntimeError("Run production export in background Blender only")
+    # libraries.write snapshots retain the source Scene but open with an empty
+    # active scene. Select the unique production scene in this disposable process.
+    candidates = [s for s in bpy.data.scenes if s.collection.children.get("VV_STRUCTURE")]
+    if len(candidates) != 1:
+        raise RuntimeError("Expected exactly one production scene")
+    bpy.context.window.scene = candidates[0]
+    base = Path(FBX_PATH).parent
+    out = base.with_name("verdant_valley_staging")
+    if "--staging-dir" in sys.argv:
+        out = Path(sys.argv[sys.argv.index("--staging-dir") + 1]).resolve()
+    if out.parent.resolve() != base.parent.resolve() or "staging" not in out.name or out == base:
+        raise RuntimeError("Output must be a sibling staging directory")
+    if out.exists() and any(out.iterdir()):
+        raise RuntimeError(f"Refusing to overwrite nonempty staging: {out}")
+    roots = ["VV_STRUCTURE", "VV_COLLISION", "VV_PROPS_SOLID", "VV_PROPS_NONSOLID"]
+    collections = {n: bpy.data.collections.get(n) for n in roots}
+    if any(c is None for c in collections.values()):
+        raise RuntimeError("Missing production collection")
+    expected = {r[0] for r in EXPECTED.values()}
+    expected -= {"chunk_cap_treasure_hollow", "chunk_cap_wardens_clearing"}
+    expected |= {"chunk_side_treasure_hollow", "chunk_side_wardens_clearing"}
+    structures = {o.name:o for o in collections[roots[0]].all_objects}
+    errors = []
+    if set(structures) != expected:
+        errors.append(f"Structure mismatch: missing {expected-set(structures)}, extra {set(structures)-expected}")
+    mapping = {}
+    for line in (base / "walk_collision_kit/KIT_COUNTS.md").read_text().splitlines():
+        if line.startswith("| chunk_"):
+            cells = [c.strip().strip("`") for c in line.strip("|").split("|")]
+            mapping[cells[3]] = cells[0]
+    mapping.update({"VV_STONE_SENTINELS_COLLISION_MERGED":"chunk_stone_sentinels",
+                    "VV_PATH_CLIFF_PASSAGE_COLLISION_MERGED":"chunk_path_cliff_passage"})
+    if len(mapping) != 30 or set(mapping.values()) != expected:
+        errors.append("Collision mapping does not cover all chunks")
+    buckets = {n:{k:[] for k in ("structure", "collision", "solid_props", "nonsolid_props", "wind_canopies", "special")} for n in expected}
+    assigned = {}
+    for root, collection in collections.items():
+        for obj in collection.all_objects:
+            if obj in assigned:
+                errors.append(f"Duplicate production membership: {obj.name}")
+                continue
+            if obj.type != "MESH" or not obj.data.polygons:
+                errors.append(f"Invalid production mesh: {obj.name}")
+            if any(re.search(r"temp|backup|reference", c.name, re.I) for c in obj.users_collection):
+                errors.append(f"Nonproduction membership: {obj.name}")
+            if root == roots[0]:
+                chunk, category = obj.name, "structure"
+            elif root == roots[1]:
+                matches = [mapping[c.name] for c in collection.children if c.name in mapping and obj.name in c.all_objects]
+                chunk, category = (matches[0] if len(matches)==1 else None), "collision"
+            else:
+                matches = [n for n in expected if obj.name.startswith(n + "__")]
+                chunk = matches[0] if len(matches)==1 else None
+                suffix = obj.name.split("__",1)[-1]
+                category = "solid_props" if root == roots[2] else "nonsolid_props"
+                if "canopy" in suffix.lower():
+                    category = "wind_canopies"
+                elif suffix not in ("PropsSolid", "PropsNonSolid"):
+                    category = "special"
+            if chunk not in buckets:
+                errors.append(f"Unassociated production object: {root}/{obj.name}")
+                continue
+            assigned[obj] = (chunk,category)
+            buckets[chunk][category].append(obj)
+    for chunk, categories in buckets.items():
+        for category in ("structure", "collision", "solid_props", "nonsolid_props"):
+            if not categories[category]:
+                errors.append(f"Missing category: {chunk}/{category}")
+        for category in ("structure", "solid_props", "nonsolid_props"):
+            if len(categories[category]) != 1:
+                errors.append(f"Expected one joined mesh: {chunk}/{category}")
+    if errors:
+        raise RuntimeError("Production preflight failed:\n" + "\n".join(errors))
+
+    def digest(obj):
+        h = hashlib.sha256()
+        h.update(str([list(r) for r in obj.matrix_world]).encode())
+        for v in obj.data.vertices:
+            h.update(str(tuple(v.co)).encode())
+        for face in obj.data.polygons:
+            h.update(str((tuple(face.vertices),face.material_index,face.use_smooth)).encode())
+        return h.hexdigest()
+
+    jobs = []
+    for chunk, categories in sorted(buckets.items()):
+        stem = chunk.removeprefix("chunk_")
+        for category, objects in categories.items():
+            if not objects:
+                continue
+            relative = f"{stem}_{category}.fbx"
+            if category == "collision":
+                relative = f"walk_collision_kit/{stem}_walk_collision.fbx"
+                if chunk == "chunk_stone_sentinels":
+                    relative = "stone_sentinels_walk_collision_merged.fbx"
+                elif chunk == "chunk_path_cliff_passage":
+                    relative = "cliff_passage_collision/path_cliff_passage_walk_collision.fbx"
+            jobs.append((chunk,category,sorted(objects,key=lambda o:o.name),relative))
+    only_chunk = only_categories = None
+    if "--only-chunk" in sys.argv:
+        only_chunk = sys.argv[sys.argv.index("--only-chunk") + 1]
+        if only_chunk not in expected:
+            raise RuntimeError(f"Unknown chunk filter: {only_chunk}")
+    if "--only-category" in sys.argv:
+        only_categories = set(sys.argv[sys.argv.index("--only-category") + 1].split(','))
+        if not only_categories <= set(next(iter(buckets.values()))):
+            raise RuntimeError(f"Unknown category filter: {only_categories}")
+    if only_chunk or only_categories:
+        jobs = [j for j in jobs if (not only_chunk or j[0] == only_chunk) and (not only_categories or j[1] in only_categories)]
+        if not jobs:
+            raise RuntimeError("No exports match requested filters")
+    else:
+        jobs.append((None,"structure",[structures[n] for n in sorted(expected)],"verdant_valley_structure.fbx"))
+        jobs.append((None,"props",sorted([o for o,(_,c) in assigned.items() if c not in ('structure','collision')],key=lambda o:o.name),"verdant_valley_props.fbx"))
+    out.mkdir(parents=True,exist_ok=True)
+    manifest = {"source_blend":bpy.data.filepath,"source_sha256":hashlib.sha256(Path(bpy.data.filepath).read_bytes()).hexdigest(),
+                "status":"exporting","collision_source":"Current VV_COLLISION meshes; no generation",
+                "scope":{"only_chunk":only_chunk,"only_categories":sorted(only_categories) if only_categories else None},
+                "units":{"system":bpy.context.scene.unit_settings.system,"scale_length":bpy.context.scene.unit_settings.scale_length},
+                "coordinate_handling":"Inverse chunk structure matrix on temporary copies; relative pivots retained",
+                "excluded_objects":sorted(o.name for o in bpy.context.scene.objects if o not in assigned),
+                "chunks":{n:{k:len(v) for k,v in c.items()} for n,c in sorted(buckets.items())},"files":[]}
+    before = {o:digest(o) for o in assigned}
+    source_scene = bpy.context.window.scene
+    export_scene = bpy.data.scenes.new("VV_EXPORT_DISPOSABLE")
+    export_scene.unit_settings.system = source_scene.unit_settings.system
+    export_scene.unit_settings.scale_length = source_scene.unit_settings.scale_length
+    try:
+        bpy.context.window.scene = export_scene
+        for chunk,category,objects,relative in jobs:
+            copies, names, records = [], {}, []
+            try:
+                for obj in objects:
+                    owner = chunk or assigned[obj][0]
+                    name = obj.name
+                    names[obj] = name
+                    obj.name = "EXPORT_SOURCE_" + name
+                    copy = obj.copy()
+                    # FBX material mapping keys on mesh datablocks. Linked source
+                    # instances may have different slot layouts; isolate export
+                    # datablocks without changing any source vertex or attribute.
+                    copy.data = obj.data.copy()
+                    copy.parent = None
+                    copy.name = name
+                    copy.matrix_world = structures[owner].matrix_world.inverted() @ obj.matrix_world
+                    copy.hide_viewport = False
+                    copy.hide_render = False
+                    export_scene.collection.objects.link(copy)
+                    copy.hide_set(False)
+                    copies.append(copy)
+                    colors = prepare_production_colors(copy) if assigned[obj][1] != 'collision' else None
+                    records.append({"name":name,"chunk":owner,"source_collections":[c.name for c in obj.users_collection],"source_digest":before[obj],"matrix_world":[list(r) for r in obj.matrix_world],"export_matrix":[list(r) for r in copy.matrix_world],"vertices":len(obj.data.vertices),"faces":len(obj.data.polygons),"chest_role":obj.get('chest_role'),"materials":[m.name if m else None for m in obj.data.materials],"export_color_preparation":colors})
+                destination = out / relative
+                destination.parent.mkdir(parents=True,exist_ok=True)
+                export_fbx(str(destination),copies)
+                if not destination.is_file() or destination.stat().st_size < 100:
+                    raise RuntimeError(f"Missing/malformed export: {destination}")
+                tree, version = fbx_parse.parse(str(destination))
+                entities = next(e for e in tree.elems if e.id == b'Objects')
+                exported_names = {e.props[1].split(b'\x00\x01')[0].decode() for e in entities.elems if e.id == b'Model' and e.props[2] == b'Mesh'}
+                expected_names = {r['name'] for r in records}
+                if exported_names != expected_names:
+                    raise RuntimeError(f"FBX object mismatch in {relative}: missing {expected_names-exported_names}, extra {exported_names-expected_names}")
+                manifest['files'].append({"chunk":chunk,"category":category,"filename":relative,"destination":str(destination.resolve()),"sources":records,"sha256":hashlib.sha256(destination.read_bytes()).hexdigest()})
+                print(f"[vv production] {relative}: {len(copies)} meshes",flush=True)
+            finally:
+                for copy in copies:
+                    mesh = copy.data
+                    bpy.data.objects.remove(copy,do_unlink=True)
+                    bpy.data.meshes.remove(mesh)
+                for obj,name in names.items():
+                    obj.name = name
+        if any(digest(o)!=h for o,h in before.items()):
+            raise RuntimeError("Source invariant failed")
+        manifest['source_objects_unchanged'] = True
+        manifest['status'] = "exported; Studio validation pending"
+    finally:
+        bpy.context.window.scene = source_scene
+        bpy.data.scenes.remove(export_scene)
+        (out/'export_manifest.json').write_text(json.dumps(manifest,indent=2),encoding='utf-8')
+    lines = ['# Verdant Valley staging export manifest','','Studio validation pending. Working exports untouched.','','| Chunk | Category | Objects | Full destination |','|---|---|---:|---|']
+    for row in manifest['files']:
+        lines.append(f"| {row['chunk'] or 'all chunks'} | {row['category']} | {len(row['sources'])} | `{row['destination']}` |")
+    (out/'EXPORT_MANIFEST.md').write_text('\n'.join(lines)+'\n',encoding='utf-8')
+    exported_objects = {o for _,_,objects,_ in jobs for o in objects}
+    print(f"[vv production] COMPLETE: {len(jobs)} FBXs, {len(exported_objects)} exported objects of {len(assigned)} production objects",flush=True)
+
+
+if "--production-scene" in sys.argv:
+    export_production_scene()
+elif "--joined-scene" in sys.argv:
     export_joined_scene()
 else:
     main()

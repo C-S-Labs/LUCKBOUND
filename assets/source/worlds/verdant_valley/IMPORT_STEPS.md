@@ -121,24 +121,37 @@ walk and asset-access check in the game experience.
 ## Sparse-chunk scenery review (2026-09-29)
 
 The owner's `E:\BlenderAIProjects\Projects\VerdantValley_Extra_Details_Backup.blend`
-contains five reusable `Temp` source objects. `scatter_sparse_chunks.py`
+contains the five original `Temp` source objects plus reusable `lantern_post`
+and `flowering_tree_trunk`/`flowering_tree_canopy` (eight sources total).
+Both tree parts are independent mesh copies of Longgrass Meadow's flowering
+tree, aligned in Temp; copy both together for a complete tree.
+The lantern's hanging assembly was reduced by 15%,
+with square timber aligned to its fitted shoe and crossbeam. Both lantern meshes
+were refined in place in the live scene, preserving the owner's manual placements.
+Do not rerun the full scatter pass to apply this refinement: it replaces generated
+copies and would reset their manual arrangement. The latest closeup is
+`E:\BlenderAIProjects\Projects\Lantern_Refinement_Review.png`.
+`scatter_sparse_chunks.py`
 replaces only its own named copies in Treasure Hollow, Longgrass Meadow, Deep
 Clearing and Warden's Clearing, so a rerun does not accumulate extras. It
-places ground-aligned foliage, rocks and logs in uneven interior groups and
-adds a few faceted saplings. Treasure Hollow also has a hanging amber lantern
-on a dark wood post beside the route. The resulting new object counts are 49,
-64, 52 and 63 respectively, under the existing solid and nonsolid prop
+places ground-aligned foliage, rocks and logs across broad planting zones with
+stray individuals and at least 8.5 studs between generated small-detail centres.
+It adds a few faceted saplings and one distinct feature per chunk: Treasure
+Hollow's traveller's pack beside its detailed chain-hung lantern, Longgrass Meadow's pale flowering tree
+and loose wildflowers, Deep Clearing's weathered trail marker, and Warden's
+Clearing's split stump with shelf fungi. Only Treasure Hollow has a placed
+lantern. The new object counts are 56, 73, 56 and 66 respectively, under the existing solid and nonsolid prop
 collections.
 
-New solid-object bounds remain at least 37.8 studs from each central path
+New solid-object bounds remain at least 38.46 studs from each central path
 centreline. Deep Clearing's east branch is also reserved. Cliff Passage,
-Dawn Meadow and Woodland Refuge were excluded; their object and mesh digests
-matched the preceding `.blend1` save. The original Temp objects, terrain and
-collision were not edited. The owner review images are
-`E:\BlenderAIProjects\Projects\VerdantValley_SceneryReview_4Chunks.png` and
-`E:\BlenderAIProjects\Projects\TreasureHollow_Lantern_Closeup.png`.
-No FBX or Studio asset has been updated. Keep the `.blend1` backup, first-pass
-Treasure Hollow preview and existing imports pending owner review and later
+Dawn Meadow and Woodland Refuge were excluded. A before/after digest matched
+all protected object geometry and transforms, including original Temp sources,
+terrain, other chunks and collision. The owner review images are
+`E:\BlenderAIProjects\Projects\VerdantValley_ScenerySpacing_Review.png` and
+`E:\BlenderAIProjects\Projects\VerdantValley_UniqueFeatures_Review.png`.
+No FBX or Studio asset has been updated by this scenery pass. Keep the `.blend1`
+backup, previous scenery review images and existing imports pending owner review and later
 Studio confirmation.
 
 ## Adaptive walk collision for the rest of the kit (2026-09-28)
@@ -394,7 +407,22 @@ and 3,848 unique collider MeshIds. Do not seal the deliberately open test
 sockets. The existing merged Stone template was raised 0.30 stud in
 Studio and its RBXMX without changing meshes or MeshIds; its 202-part rollback
 is unchanged. Cliff Passage remains untouched. Rojo build passes; owner walking
-is pending.
+ is pending.
+
+**Finalized Cliff Passage asset handoff repair (2026-09-29):** The owner's
+Studio-tested collision was absent from the saved `VV_COLLISION.rbxmx`. The
+owner re-imported the finalized FBX; its 64 floor tiles and two boundary
+barriers had unique uploaded MeshIds. In the live testing place, the imported
+model was pivoted through `CollisionOrigin`, the marker was removed, and the
+66 unchanged geometry parts were prepared and moved under the existing
+`VV_COLLISION` wrapper as `VV_PATH_CLIFF_PASSAGE_COLLISION_MERGED`. The live
+wrapper now has 29 templates: all 28 previous models remain with the same
+part counts. The Cliff model has a zero pivot, 66 unique uploaded MeshIds,
+and the expected invisible, anchored, colliding, queryable, non-touching and
+precise settings. The owner must save the wrapper as
+`assets/rbxm/chunks/verdant_valley/VV_COLLISION.rbxmx`, restore any precise
+fidelity XML omitted by Studio, and test the saved collection. No other
+collision template was regenerated, replaced or edited.
 
 ## Full terrain/prop separation candidate (2026-09-28)
 
@@ -524,6 +552,153 @@ scenery under the server-built stage; clients do not make duplicate copies.
 The temporary pilot showed usable collision on its sampled route and one side
 obstacle; complete geometry coverage and a two-client run remain open.
 
+## Production-scene staging workflow (2026-09-30)
+
+The current saved `E:/BlenderAIProjects/Projects/VerdantValley_Cleanup.blend`
+is authoritative. Run `export_verdant_valley_kit.py -- --production-scene` in
+background Blender with that file loaded. Never run this mode in the live scene.
+It exports the four `VV_*` production collections without regenerating collision,
+joining props, baking materials or saving the Blender source. Legacy modes remain.
+
+Default output is the sibling `assets/export/worlds/verdant_valley_staging/`.
+`--staging-dir` accepts only another sibling directory containing `staging` in its
+name; a nonempty destination is refused. Existing working FBXs/RBXMX/IDs stay intact.
+Aggregate structure/props use existing filenames. Per-chunk files use the chunk
+stem and category; canopies and special components remain separate named meshes
+inside their category FBXs. Collision paths exactly mirror the established layout,
+including `cliff_passage_collision/path_cliff_passage_walk_collision.fbx`.
+
+Temporary export copies use the inverse structure transform to remove the review
+layout and preserve all relative placement and origins. Each temporary object gets
+an identical independent mesh copy so linked-instance material-slot layouts cannot
+conflict in FBX; source mesh data is untouched. The existing FBX helper retains -Z forward, Y up, global scale 1,
+applied units, FBX_SCALE_ALL, baked space transform, FACE smoothing, SRGB colors,
+modifiers, no animation, and AUTO texture paths. No UV/texture/material changes
+occur. On export copies, missing Col layers and entirely zero-colored faces use
+the existing constant face-material colors through the legacy material_rgb helper;
+existing painted corners are preserved. Mixed zero/painted faces or nonconstant
+shader inputs fail for review. Production source attributes remain untouched.
+
+Preflight requires all 30 expected structures, nonempty current collision groups,
+and each chunk's joined solid/nonsolid groups. Unknown or overlapping production
+membership, Temp/backup/reference membership and empty meshes fail explicitly.
+`export_manifest.json` records every source object, source geometry digest,
+source/export transform, chest role, materials, output path and FBX hash.
+`EXPORT_MANIFEST.md` lists every written FBX path. Binary FBX inspection verifies
+the exact exported mesh names per file. Studio must validate size/orientation,
+material/color/shading, canopy origins, chest hinges and current collision before
+promotion; this workflow does not update runtime content or Roblox mesh IDs.
+
+The owner removed the three empty Longgrass Meadow canopy leftovers. The completed
+validation export is `assets/export/worlds/verdant_valley_staging_validation/`:
+156 FBXs, 30 chunks, 4,885 production objects (30 structure, 4,032 colliders,
+30 solid groups, 30 nonsolid groups, 746 canopies, 17 special components including
+12 chest components). Exact FBX mesh names and all required chunk categories pass;
+no unassociated or nonproduction object was exported. Temp is empty in this scene.
+All 76 files in the established working export directory remain byte-identical.
+Cliff Passage's 66 current colliders re-import with matching vertices, maximum
+coordinate error 0.0000138 stud. No collision generation ran. Studio testing pending.
+
+**Studio color issue (2026-09-30):** The owner reported partially black
+`path_cliff_passage_solid_props`. Its source Col layer contains 6,197 default-black
+corners on 1,429 faces whose material colors are non-black. Nonsolid props have
+1,740 such corners on 510 faces; Cliff structure has no Col layer. The initial
+exports preserved these unusable paint values; mesh-name/material-slot checks did
+not establish color correctness. Initial staging sets are not approved for promotion.
+The exporter now material-encodes only these missing/zero face colors on temporary
+copies. `--only-chunk chunk_path_cliff_passage --only-category
+structure,solid_props,nonsolid_props` writes a narrow test to sibling
+`verdant_valley_staging_color_check/`. Its three FBXs have zero black colors and
+exactly unchanged FBX vertices, polygons and normals; see COLOR_VALIDATION.json.
+Owner direction now defers the color comparison and all further color repairs:
+missing/black appearance is acceptable for initial functionality testing. The
+three-file color check remains available for later; no further refresh is required
+now. Collision is unaffected and does not need another import.
+
+The read-only source check found the same pattern on 19 solid and seven nonsolid
+joined meshes; 34 visible objects lack a Col layer (one structure, nine solid chest
+components, 24 nonsolid canopies/specials). No mixed painted/zero face was found.
+These counts refer to actual layer presence, not whether the layer is marked active.
+
+**Initial functionality testing / duplicate imports (owner direction, 2026-09-30):**
+Missing or black appearance, including the missing colors on Cliff Passage's
+structure, is a tracked deferred art/export issue rather than a blocker to initial
+functionality testing. Do not treat those tests as appearance validation or approval
+for final promotion. No additional texture/color repair or re-import is requested now.
+
+The complete batch contains two ALTERNATIVE visual entry points: per-chunk files
+and combined `verdant_valley_structure.fbx` / `verdant_valley_props.fbx`. Import
+one approach, never both for the same active test set. The owner imported both:
+read-only Studio inspection confirms all 30 individual structure models plus the
+30-mesh combined structure model. The 823-mesh combined props model is also present
+alongside individual prop-category imports. That duplicates the structure set and
+can duplicate the prop set, causing overlapping surfaces and potentially extra
+solid collision. The export/import instructions did not originally distinguish
+these alternatives clearly enough.
+
+For the current per-chunk workflow, keep the individual imports as the active set;
+the combined models are redundant. Before trusting collision/visual test results,
+park the combined `verdant_valley_structure` and `verdant_valley_props` models
+outside Workspace or otherwise exclude them from the test, preserving them for
+comparison until owner checks prove safe removal. No Studio object has been moved,
+renamed, disabled or deleted by the agent. File exports and source scene are retained.
+
+The first staging set in `verdant_valley_staging/` emitted linked-mesh material-slot
+warnings and is retained with `DO_NOT_IMPORT.md`. Use only the validation set for
+Studio. The source for these runs is an export-only snapshot of the live scene:
+`E:/BlenderAIProjects/Projects/VerdantValley_Production_Export_Input.blend`, captured
+after owner removal without saving over the working file. Library snapshots open
+with an empty active scene; the exporter selects their unique production Scene.
+Keep all legacy FBXs, RBXMX, reports and Blender recovery sources until Studio
+validation and applicable CI prove the staged production set safely replaces them.
+
+## Completed import wiring and saving (2026-09-30)
+
+The owner authorized name correction, runtime wiring, grouping and duplicate
+cleanup after imports finished. Individual imports are now the active templates;
+the checked duplicate aggregate structure/props models were removed from Studio.
+Twenty importer-shortened names have unique names under 50 characters, with full
+Blender source names retained as `BlenderSourceName` attributes and in the
+staging `studio_save_plan.json`. All canopies and chest components remain separate;
+chest pivot offsets are preserved and `ChestRole` metadata identifies the pieces.
+
+`tools/wire_vv_imports.py` reads `studio_imports.json` and the production manifest
+in `verdant_valley_staging_validation`. It requires 30 structures, 823 props and
+66 Cliff colliders; exact names or importer middle-ellipsis names must match one
+source each. It updates the existing AssetManifest keys, structure dimensions/
+GroundOffsetY and the existing props Library/Placements schema. Current imported
+geometry is already in the chunk frame, with MeshYawOffset 0. Placements come from
+each import model's original pivot-relative CFrames, before grouping, preserving
+the actual imported geometry centers. Canopies/chest/fire are Static for this first
+functionality test; no new animation or loot interaction is introduced.
+
+Thirty solid groups plus nine chest body/lid/hardware meshes were recooked with
+CreateMeshPartAsync at PreciseConvexDecomposition and applied to their existing
+MeshParts, preserving MeshId, size, CFrame, PivotOffset and texture. Merely assigning
+CollisionFidelity was a no-op. All other walk collision templates stay unchanged;
+only the existing 66-piece Cliff child in VV_COLLISION was replaced and pivoted
+to chunk origin. Old structure/Cliff templates and the unnecessary imported Stone
+collision copy are retained in ServerStorage.VV_IMPORT_RECOVERY, outside active
+loader search paths. Do not delete the original 202-piece Stone reference.
+
+Save these three active Studio Models as Roblox XML (`.rbxmx`):
+
+| Studio model | Full destination |
+|---|---|
+| `ServerStorage.LuckboundChunkKits.verdant_valley.VV_STRUCTURE` | `C:/Users/jhpel/LUCKBOUND/assets/rbxm/chunks/verdant_valley/VV_STRUCTURE.rbxmx` |
+| `ServerStorage.LuckboundChunkKits.verdant_valley.VV_COLLISION` | `C:/Users/jhpel/LUCKBOUND/assets/rbxm/chunks/verdant_valley/VV_COLLISION.rbxmx` |
+| `ReplicatedStorage.LuckboundProps.VV_PROP_LIBRARY` | `C:/Users/jhpel/LUCKBOUND/assets/rbxm/props/VV_PROP_LIBRARY.rbxmx` |
+
+VV_COLLISION contains the existing 28 other groups plus updated Cliff; Stone's
+existing separate merged model is untouched. VV_PROP_LIBRARY has per-chunk child
+models/category groups, 823 individually addressable meshes (30 solid, 30 nonsolid,
+746 canopies and 17 specials). Runtime wiring passes fresh chunk/prop schema checks,
+30 ID/size checks, 823 library/position checks and 39 precise-collision checks.
+Owner save, restart Play, `/roll VERDANT_VALLEY test`, entry and manual walking
+remain. Colors, textures and final promotion are deferred per owner direction.
+Keep recovery models and earlier files until those Studio checks/applicable CI
+prove safe replacement. Repo RBXMX files have not been saved by the agent.
+
 ## 1. Import to Studio
 
 1. Studio → **3D Importer** → `assets/export/worlds/verdant_valley/verdant_valley_structure.fbx`.
@@ -603,3 +778,145 @@ Height and ground are in studs; ground is measured from the bottom of the boundi
 | 28 | Treasure Hollow | `chunk_cap_treasure_hollow` | CAP | N PATH | 69.0 | 32.00 | 7288 |
 | 29 | Warden's Clearing | `chunk_cap_wardens_clearing` | CAP | N PATH | 72.1 | 34.00 | 7300 |
 | 30 | Forgotten Trial | `chunk_side_forgotten_trial` | SIDE | N PATH | 59.0 | 37.00 | 7292 |
+
+### Placement correction after first walk (2026-09-30)
+
+Live MCP terrain calibration selected extra 180-degree turns for ten chunks.
+The wiring utility now consumes studio_chunk_yaws.json, converts imported prop
+centres and rotations into the layout frame, and uses those calibrated hints.
+All 823 transforms checked; 267 rows corrected. Restart Play and repeat
+`/roll VERDANT_VALLEY test`; no re-import or RBXMX save required. The live test
+uses cached pre-fix data. Collision and textures remain unchanged; keep recovery
+models and previous exports until the owner placement check passes.
+
+### Chest ownership correction (2026-09-30)
+
+Treasure Hollow and Cave Mouth body/lid/hardware kept Crossroads names with
+_02/_03 suffixes. The wiring utility explicitly assigns those six components
+to their authored chunks and converts centres using manifest structure frames.
+The loot sacks already had correct ownership. All three chests now have four
+independent components in placement data. Restart Play to verify; no re-import
+or RBXMX re-save needed. Source names/geometry remain unchanged.
+
+### Saved Blender repair pass — 2026-09-30
+
+Placement is owner-confirmed. Current Blender source now fixes production
+vertex colors and stump/Boss entrance openings, and adds a Cutbank bridge
+walk deck. See STUDIO_REPAIR_REPORT.json and GEOMETRY_REVIEW.md. These changes
+are not yet imported into Studio. Next refresh must stage the changed visual
+categories and current Cutbank collision with the existing production exporter;
+do not regenerate colliders or overwrite earlier exports before validation.
+Preserve the live-calibrated placement/chest mappings when updating uploaded
+IDs. Cliff Passage and the other collision groups need no refresh for this pass.
+
+### Cliff collision source discrepancy before refresh
+
+Owner reports Studio still uses old Cliff collision. Live source comparison on
+2026-09-30 found all 66 current Blender collider digests identical to previous
+staging_validation. Active and recovery Studio barriers use identical IDs.
+Do not assume another export fixes it: identify the owner's corrected source
+first, then export that actual geometry. No collision regeneration authorized.
+Visual repairs and Cutbank deck are ready to stage; complete readiness pending.
+
+### Restored Cliff edits and refreshed staging — 2026-09-30
+
+The owner restored five floor collider edits that had been undone. Current live
+Cliff collection now differs from previous staging on five meshes. Fresh live
+snapshot VerdantValley_Refresh_Export_Input.blend was exported with established
+production settings into assets/export/worlds/verdant_valley_staging_refresh.
+Working exports and all previous staging were retained; Blender unchanged.
+
+The full kit has 156 FBXs with exact source/category coverage. Use
+REFRESH_IMPORT_MANIFEST.md in that directory for the 39 changed per-chunk files;
+do not additionally import combined verdant_valley_structure/props alternatives.
+Full EXPORT_MANIFEST.md and export_manifest.json include every written path and
+source object. REFRESH_VALIDATION.json verifies the 66-mesh current Cliff export
+against source (max vertex error 0.0000138 stud), and Cutbank's 137 meshes including
+the continuous bridge deck. No collision generator ran.
+
+Explicit current Cliff path:
+C:/Users/jhpel/LUCKBOUND/assets/export/worlds/verdant_valley_staging_refresh/cliff_passage_collision/path_cliff_passage_walk_collision.fbx
+
+Only Cliff and Cutbank walk collision templates need refreshing. Preserve all
+other collision templates and current calibrated placement/chest overrides
+while updating uploaded IDs. New staging remains pending Studio verification;
+no promotion/deletion until the owner confirms appearance and collision.
+
+### Refreshed imports installed — 2026-09-30
+
+All 39 expected imports (368 meshes) matched; active grouped sources now include
+165 refreshed visuals, the current 66-mesh Cliff collision (five new floor IDs)
+and the 137-mesh Cutbank collision with bridge deck. Two terrain IDs refreshed;
+all tested placement/chest/yaw data preserved. All 39 colliding prop sources
+are precise. Capture/install IDs: staging_refresh/studio_refresh_install.json.
+`tools/wire_vv_imports.py --refresh` updates only the two terrain IDs from that
+capture; do not run the original full wiring path to refresh these imports.
+
+Owner re-save these Models before fresh Play test:
+
+| Studio Model | Full RBXMX destination |
+|---|---|
+| ServerStorage.LuckboundChunkKits.verdant_valley.VV_STRUCTURE | C:/Users/jhpel/LUCKBOUND/assets/rbxm/chunks/verdant_valley/VV_STRUCTURE.rbxmx |
+| ServerStorage.LuckboundChunkKits.verdant_valley.VV_COLLISION | C:/Users/jhpel/LUCKBOUND/assets/rbxm/chunks/verdant_valley/VV_COLLISION.rbxmx |
+| ReplicatedStorage.LuckboundProps.VV_PROP_LIBRARY | C:/Users/jhpel/LUCKBOUND/assets/rbxm/props/VV_PROP_LIBRARY.rbxmx |
+
+Restart Play and `/roll VERDANT_VALLEY test`; inspect repaired colors/stump/Boss
+entrance, restored Cliff floor sections and Cutbank plank gaps. Keep
+ServerStorage.VV_IMPORT_RECOVERY.RefreshSources and earlier staging/source
+references until these visual/walk checks and applicable CI pass.
+
+### Prop library recovery after disappearance
+
+On 2026-09-30 the owner reported library removal during selection. MCP confirmed
+no live library, but the saved 823-mesh RBXMX remained intact. Existing Rojo sync
+restored it after a temporary file move out/back; refreshed 72 prop IDs reapplied
+from studio_refresh_install.json and all 163 refreshed IDs verified. The selected
+Model is ReplicatedStorage.LuckboundProps.VV_PROP_LIBRARY. Save it to the existing
+assets/rbxm/props/VV_PROP_LIBRARY.rbxmx before Play; structure/collision are already
+saved. Removal cause unconfirmed. No extra asset file remains from recovery.
+
+## Mushroom Glen and Split Meadow prop refresh — 2026-09-30
+
+Owner-edited saved `E:/BlenderAIProjects/Projects/VerdantValley_Cleanup.blend`
+was exported with existing production chunk/category filters. Import these four
+files, one joined mesh each:
+
+- `assets/export/worlds/verdant_valley_staging_mushroom_props/mushroom_glen_solid_props.fbx`
+- `assets/export/worlds/verdant_valley_staging_mushroom_props/mushroom_glen_nonsolid_props.fbx`
+- `assets/export/worlds/verdant_valley_staging_split_props/path_split_meadow_solid_props.fbx`
+- `assets/export/worlds/verdant_valley_staging_split_props/path_split_meadow_nonsolid_props.fbx`
+
+Each folder contains export manifests with current source/export transforms and
+hashes. FBX exact mesh names/counts, hashes and unchanged source checks pass.
+After import, update only these four library sources; if edits changed bounds,
+use their current imported sizes and manifest chunk-local placement rather than
+retaining old dimensions. Preserve wind rows and all unrelated placements.
+Save `VV_PROP_LIBRARY.rbxmx`, then verify appearance, placement and solid collision
+in Studio. Keep older matching FBXs in staging_refresh/staging_validation and
+existing active sources until that check passes; no cleanup performed here.
+
+Connected Blender follow-up: live scene is saved (not dirty), and all four prop
+geometry/transform digests match the exported sources; latest edits are included.
+
+### Installed after owner import
+
+All four new mesh IDs installed in Edit VV_PROP_LIBRARY; both solid meshes have
+PreciseConvexDecomposition. Only four runtime placement rows changed, preserving
+established yaw (Mushroom 0 / Split 180). Split nonsolid height is now 7.766588,
+centre Y 1.132254; other placement rows/wind remain unchanged. Active library
+contains 823 unique meshes and is selected. Owner Save to File to
+`assets/rbxm/props/VV_PROP_LIBRARY.rbxmx`, then fresh Play appearance/collision check.
+Old sources and imports are parked in `ServerStorage.VV_IMPORT_RECOVERY.MushroomSplitProps`;
+keep those and older matching exports until Studio/applicable CI validate replacement.
+Install capture: `verdant_valley_staging_mushroom_props/studio_prop_install.json`.
+
+Owner library save verified after Rojo PatchTree:231 nil-index warning: saved
+RBXMX parses with 823 meshes and all four updated IDs; live Edit library matches.
+Save succeeded. Rojo hook cause remains unconfirmed; visual/collision check pending.
+
+Save-time Rojo EOF errors at differing lines were followed by valid completed
+files: VV_COLLISION, VV_STRUCTURE and VV_PROP_LIBRARY parse and build with Rojo 7.7.
+These errors are consistent with partial-write reads. For large Save to File
+operations, disconnect Rojo while saving and reconnect once the write finishes.
+If PatchTree warnings persist after complete saves, reconnect and investigate
+separately; no current asset corruption was found.

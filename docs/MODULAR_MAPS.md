@@ -30,6 +30,12 @@ It is the same combinatorial philosophy as Master Spec §14
 
 ## Status
 
+**Cliff Passage continuous rock surfaces (2026-09-29):** owner-directed reconstruction supersedes modular structure and selective refinement. Each exposed wall is one welded irregular surface: 41 broad polygons, eight staggered interior vertices and two unequal broad depth changes. No extruded modules, rectangular patches or seam-cover slabs. Exact original seam samples and ridgeline preserved; terrain, path, props, transforms, sockets and collision unchanged, with 7,911 unrelated-object hashes matching. Ten views inspected: both passage directions, player stations, overhead, both overview sides and close range. Source saved; owner Blender and eventual Studio/export/walk checks pending. Keep `VerdantValley_Cliff_Continuous_Input.blend` until validation.
+
+**Cliff Passage selective refinement (2026-09-29):** softened three of eight secondary formations at unequal strengths, preserving strongest masses and all topology. Only 312 of 3,765 vertices moved inward (maximum 1.670/1.269 studs); materials, terrain, transforms, collision and 7,911 other objects unchanged. Four paired player-height views reviewed. Source saved; owner Blender and later Studio/export review pending. Keep `VerdantValley_Cliff_Selective_Input.blend` until validation.
+
+**Cliff Passage major rock structure (2026-09-29):** supersedes the shallow face-detail pass below. Four uneven structural formations plus a broad recessed bay per wall; buttresses meet the base, with tilted plates and short shelves. New forward changes capped at three studs; recesses avoid the existing earth bank. Five eye-height stations per wall, entrance/exit and both overview sides inspected; 14 final saved-source renders match the candidate. All 7,911 other objects, materials, transforms, path, corrected upper silhouette and collision unchanged. Nearest formation stays 25.58 studs from route center and outside the path material. Source saved; owner Blender and eventual Studio/export/walk checks pending. Retain `VerdantValley_Cliff_Structure_Input.blend`.
+
 **Built, tested, and — since 2026-09-16 — actually walkable.**
 
 | Piece | State |
@@ -335,6 +341,32 @@ not content count.
 ---
 
 ## The geometry contract
+
+**Cliff Passage seam topology cleanup (2026-09-29):** removed 173 unused wire
+edges left by terrain face stitching. All surface faces, colors, complete cliff
+meshes, transforms and collision remain unchanged. The current terrain has zero
+loose edges and zero open boundaries; owner viewport review remains pending.
+
+**Cliff Passage final color/mesh correction (2026-09-29):** owner clarified
+that both upper shoulders and all four end connections must match green grass.
+Each cliff mesh is again fully faced, rock colored and closed; buried caps sit
+below terrain to avoid overlap. This supersedes the incomplete cliff shell and
+brown shoulder/end interpretation recorded below. Owner review remains pending.
+
+**Cliff Passage owner-adjusted join repair (2026-09-29):** the fresh live
+reference is `VerdantValley_Cliff_Seam_Input.blend`. The current source stitches
+the ridge cut boundaries, closes missing end faces and removes duplicate cliff
+front/top faces where the terrain supplies the surface. Owner cliff transforms,
+path faces, sockets and collision remain unchanged; exposed banks use `VV_Earth`.
+Owner Blender review and Studio/export validation remain pending.
+
+**Cliff Passage ridge source revision (2026-09-29):** only its two long local
+X ±87 / |Y| 30–55 grass/rock strips were rebuilt as flat planar bands with two
+broad rises and one shallow dip each. The existing cliff meshes share those
+crest stations. Socket regions, all path faces and collision are unchanged;
+affected ground-attached scenery was only reseated vertically. Current authoring
+source is `VerdantValley_Cleanup.blend`; owner visual and Studio/export review
+remain pending before replacement of the earlier one-chunk visual export.
 
 **Verdant Valley collision pilot:** Stone Sentinels may name a separate
 `CollisionTemplate` model. Its pivot is the chunk walk-plane origin; its small

@@ -88,6 +88,7 @@
 | chunk map generation | `src/shared/Util/ChunkCore.luau` (layout, `yawRadians`), `ChunkLoader.luau` (placement), `ChunkKitCore.luau`, `src/server/Systems/ExpeditionSystem.luau` |
 | a world's chunk pieces | `src/shared/Content/Chunks/SkyCitadel.luau`, `VerdantValley.luau` (ids `SC_*` / `VV_*`, `AssetKey = "<W>_CHUNK_*"`) |
 | asset ids | `src/shared/Content/AssetManifest.luau` (`tools/sync_asset_ids.py` fills them in) |
+| canopy wind / Studio tuning | `Content/Props/VerdantValley.meta.json` Attributes, `PropController.luau`, `GameConfig.Ambience.Props.Sway`; `CHUNK_AUTHORING.md` convention 6 |
 | props: ambient / solid | `Content/Props/`, `Core/PropCore.luau`, `client/Controllers/PropController.luau` / `Util/ChunkLoader.luau` |
 | chests, vault, gates | `Content/Fixtures/`, `Core/FixtureCore.luau`, `client/Controllers/FixtureController.luau`, `server/Systems/LootSystem.luau` |
 | world sky / fog / atmospheres | `Content/Worlds/*.luau` (`Environment`), `Content/Atmospheres/`, `client/Controllers/AmbienceController.luau` |
@@ -155,13 +156,75 @@ Blender: `"C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe" -b
   exports a central 64-tile floor and two tall open-ended side walls;
   `smooth_cliff_passage_lips.py` softens only that chunk's grass crest in the
   owner's saved scene and exports its visual FBX. `fit_cliff_passage_top.py`
-  brings the upper grass shoulders inward along the rock-face seams in that
-  same current scene and refreshes the one-chunk visual FBX. Both are staged in Studio
+  now rebuilds only both long grass/rock strips and their existing cliff caps in
+  `VerdantValley_Cleanup.blend` as broad planar profiles. It exports no production
+  asset. Its `--repair-owner-seams` follow-up uses the refreshed owner scene to
+  stitch missing joins, remove overlapping faces and apply dirt banks while preserving
+  cliff transforms. `--restore-cliff-faces` corrects the incomplete shells and
+  retains green upper/end terrain per owner clarification. `--remove-stray-edges`
+  removes face-less wire remnants from stitched seams without changing surfaces.
+  `--rework-structure` supersedes the shallow detail with four large connected formations and a recessed bay per wall, reviewed at player height; terrain, ridgeline, props and collision stay fixed.
+  `--continuous-surface` supersedes the modular faces with one welded irregular low-poly surface per wall (41 broad polygons, eight interior vertices), preserving exact ridgeline and seam samples.
+  `--selective-repetition` softens only three secondary formations in place, preserving topology and strongest masses; player-height comparison and rollback retained.
+  `--detail-exposed-faces` shapes only the two rock walls into broad asymmetric folds (under two studs of projection), preserving terrain, props and collision.
+  `--correct-materials` restores peer-style rock shell/earth lip assignments and
+  unifies top grass color blocks without changing geometry or shading. Owner Blender review and eventual Studio/export check remain. The earlier
+  visual and collision candidates are staged in Studio
   under `VV_STRUCTURE` and `VV_COLLISION`; RBXMX save and owner testing are
   pending. The other 28 collision models are unchanged.
-  `scatter_sparse_chunks.py` places Temp-derived props, faceted saplings and a
-  Treasure Hollow lantern in four sparse chunks in the owner's
+  `cliff_environment.py` adds linked-reference trees/props on upper and rear slopes,
+  nonsolid yellow-strip pockets and five instances of one permitted reusable vine.
+  It preserves owner tree removals and all existing objects; full prop bounds
+  exclude red local-Y ±21, with nonsolid-only additions in yellow to ±40.
+  Its background `--review` renders overhead, passage, yellow, wall and exterior views.
+  `scatter_sparse_chunks.py` spreads Temp-derived props across four chunks and
+  adds a reusable detailed lantern, flowering tree, trail marker and split stump in the owner's
   `VerdantValley_Extra_Details_Backup.blend`. Owner visual review is pending.
+  `detail_composition.py` authors restrained additions on the other 24 chunks,
+  protecting the four finished references; `spread_review()` loosens planting after owner
+  feedback. Cliff Passage and Cave Mouth need none.
+  `review_composition.py` renders isolated overhead/route/detail and whole-kit views
+  without saving review changes. `refine_flowering_tree.py` upgrades only Longgrass
+  Meadow's two tree meshes into a flowering centerpiece and removes its two Temp sources
+  on the owner's request. `COMPOSITION_REVIEW.md` records this authoring pass,
+  preservation checks and pending owner review; no production export was changed.
+  `audit_scene_geometry.py` performs a read-only contact/solid-intersection review;
+  `validate_scene_normals.py` performs conservative component-level face winding
+  inspection, repair and verification of the live scene; `NORMALS_REVIEW.md` lists
+  per-chunk counts, corrected visible objects and unresolved manual-review cases.
+  `GEOMETRY_REVIEW.md` records findings against the owner's refreshed scene reference.
+  `refine_chunk_landmarks.py` refines Ancient Oak, shares a detailed chest across Treasure
+  Hollow/Cave Mouth/Crossroads, corrects the cave floor material and builds the requested
+  Crossroads shelter in the owner's `VerdantValley_Cleanup.blend`; unrelated art and collision
+  are protected against its retained input manifest. Its `--loot-refinement` follow-up makes
+  the shared chest smaller and hollow, gives the lid a rear hinge pivot and detailed side panels,
+  adds a loot sack, and reorients/replants the Crossroads shelter.
+  `--interior-refinement` adds matching inner wall planks and a casually tipped sack,
+  preserving every approved exterior vertex and all unrelated scene objects.
+  `--shelter-support` seats the Crossroads roof on extended posts/king posts and
+  details its stone base with masonry courses, worn corners and flagstones.
+  `--windward-patch` smooths the local center pinch in Windward Ridge terrain.
+  `prepare_props_export.py` consolidates ordinary props by their chunk name within
+  the existing solid/nonsolid collections, preserving canopies, chest components
+  and review objects. `PROPS_EXPORT_REVIEW.md` and `PROPS_EXPORT_REPORT.json`
+  record per-chunk outputs, preservation checks and every source object's outcome.
+  The exporter's `--production-scene` mode exports disposable chunk-local copies
+  of the four production collections to sibling `verdant_valley_staging`, preserving
+  legacy FBX settings and current collider geometry; strict preflight and manifests
+  precede Studio validation and promotion. Export copies material-encode missing or
+  wholly zero vertex colors; chunk/category filters support narrow Studio checks.
+  See `IMPORT_STEPS.md`.
+  Targeted owner prop refreshes for Mushroom Glen and Split Meadow are in
+  `verdant_valley_staging_mushroom_props` and `verdant_valley_staging_split_props`
+  with per-folder import manifests; four props installed and placement rows updated,
+  owner library save and Studio visual/collision checks pending.
+  `repair_studio_findings.py` repairs reported production vertex colors, the stump
+  inner-wall gap and Boss entrance underside, and adds the Cutbank bridge deck
+  directly to current collision; `STUDIO_REPAIR_REPORT.json` records the changes.
+  `tools/wire_vv_imports.py` matches completed Studio imports to the staging
+  manifest, shortens importer names, wires existing mesh/placement content and
+  writes the Studio save plan for the current production kit. Its `--refresh`
+  path updates terrain IDs after a partial import without rebuilding tested placements.
 - Naming convention:
   - The kit file is `<W>_STRUCTURE.rbxmx`, with W = `SC` or `VV`.
   - Pieces inside it are named `chunk_<name>`.

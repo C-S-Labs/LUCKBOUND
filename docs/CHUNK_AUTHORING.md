@@ -137,6 +137,19 @@ A piece is two different kinds of thing, and they are delivered differently:
    | `Bird` | the piece's flock circles its centre, nose first, banked | birds |
    | `Wing` | flaps about its hinge, riding on its bird | a bird's wings (see below) |
 
+   | `Sway` | gentle rocking about the mesh centre | separate tree canopies, banners |
+
+   **Studio wind tuning:** select `ReplicatedStorage.Luckbound.Content.Props.VerdantValley`
+   and expand Properties → Attributes. `SwayEnabled` toggles motion; `SwayStrength`
+   multiplies the default angle (1 = about 1.7°); `SwaySpeed` multiplies speed
+   (1 = five-second primary cycle; 2 = twice as fast). Strength 0 restores the
+   authored pose; speed must be positive. Attributes are read live on the Client
+   during Play. Play edits are temporary: copy preferred values to Edit mode and
+   `src/shared/Content/Props/VerdantValley.meta.json` for persistent Rojo defaults.
+   Other worlds can expose the same Attributes on their Props ModuleScript;
+   missing overrides use `GameConfig.Ambience.Props.Sway`. Only Sway rows move;
+   the existing camera-distance limit still applies.
+
    Rules every class keeps (tested): **nothing ever changes size**; bob and
    spin are about true vertical whatever the prop's tilt; rock and roll are
    about the prop's own axes. A `Bird` circles the vertical axis through its

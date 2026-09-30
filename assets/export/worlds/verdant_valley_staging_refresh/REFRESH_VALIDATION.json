@@ -1,0 +1,7 @@
+{
+  "cliff_meshes": 66,
+  "cliff_max_vertex_error_studs": 1.37540864670882e-05,
+  "cliff_source": "Current VV_COLLISION meshes from refreshed live snapshot; no generation",
+  "cutbank_meshes": 137,
+  "cutbank_bridge_deck_present": true
+}

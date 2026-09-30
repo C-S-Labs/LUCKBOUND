@@ -1,6 +1,6 @@
 # LUCKBOUND — Project Status
 
-**Last updated:** 2026-09-29 · slimmed for token use. The full previous version, with every closed item and walk
+**Last updated:** 2026-09-30 · slimmed for token use. The full previous version, with every closed item and walk
 report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an item below points to it.
 
 > **New conversation?** Read `INDEX.md` → `AGENTS.md` → the top entry of `docs/WORKLOG.md` → this file.
@@ -8,6 +8,70 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 ---
 
 ## 1. Where the project stands
+
+- **Rojo saved-asset parse verified (2026-09-30):** reported EOF errors at varying lines are consistent with reads during large Studio saves. Completed VV_COLLISION/VV_STRUCTURE/VV_PROP_LIBRARY all parse and pass a targeted Rojo 7.7 build; no repair needed. Plugin hook cause unconfirmed; reconnect after writes if warnings persist.
+
+- **Prop save verified despite Rojo warning (2026-09-30):** owner Save to File emitted PatchTree:231 precommit nil-index warning; saved XML and live Edit library both contain 823 meshes and all four latest prop IDs. Save complete; underlying Rojo hook cause unconfirmed, visual/collision test pending.
+
+- **Mushroom Glen / Split Meadow imports installed (2026-09-30):** four active prop meshes and exactly four placement rows updated; Split nonsolid bounds/centre corrected to current shorter mesh. Both solids precise; 823 unique active meshes and 746 wind rows preserved. Library selected for owner Save to File, then fresh Play visual/collision check. Replaced sources/imports retained in VV_IMPORT_RECOVERY.MushroomSplitProps. Repo RBXMX save pending.
+
+- **Mushroom Glen / Split Meadow props re-exported (2026-09-30):** four solid/nonsolid FBXs ready in verdant_valley_staging_mushroom_props and verdant_valley_staging_split_props. Exact meshes/hashes/source invariants pass; Studio import/wiring and visual/collision check pending. Saved Blender source used; prior exports/library retained.
+
+- **VV canopy wind (2026-09-30):** 746 canopies use client Sway; 77 other placements stay Static. Attributes on Content.Props.VerdantValley expose SwayEnabled, SwayStrength and SwaySpeed live during Play. Cheap parse/role/format checks pass; owner visual test pending. No obsolete iteration added.
+
+- **VV prop library recovered (2026-09-30):** disappeared from live Edit DataModel; saved 823-mesh copy intact. Restored via existing Rojo sync, reapplied 72 changed IDs and verified all 163 refresh prop IDs. All 39 precise solid sources, 746 canopies and 12 chest components intact. Selected ReplicatedStorage.LuckboundProps.VV_PROP_LIBRARY for owner Save to File; structure/collision already saved and untouched. Cause of disappearance unconfirmed. Prop RBXMX still requires save; no duplicate recovery file left.
+
+
+- **VV refreshed imports installed (2026-09-30):** all 39 imports/368 meshes matched; 165 visual sources replaced with sizes/frames/pivots preserved, two terrain IDs updated. Active Cliff has 66 meshes and five corrected floor IDs changed; Cutbank has 137 including bridge deck. Other templates retained. All 823 placement refs/sizes pass; 746 canopies/12 chest components independent; all 39 solid sources precise. Re-save grouped VV_STRUCTURE/VV_COLLISION/VV_PROP_LIBRARY, then restart Play for appearance/Cliff/bridge checks. Repo RBXMX unchanged by agent. Replaced sources kept in VV_IMPORT_RECOVERY.RefreshSources; no promotion/deletion.
+
+
+- **VV refreshed staging ready (2026-09-30):** owner restored five undone Cliff floor edits; current 66-mesh Cliff source now differs from earlier staging. Existing production exporter emitted full 156-FBX kit into verdant_valley_staging_refresh, including saved appearance/geometry repairs and 137-mesh Cutbank deck collision. Cliff FBX matches refreshed source within 0.0000138 stud. Thirty chunk category coverage/name/hash checks pass; source unchanged. Targeted 39-file REFRESH_IMPORT_MANIFEST excludes combined alternatives. Studio import/ID refresh and visual/walk check pending; preserve calibrated prop/chest placement mappings. Existing exports/recovery retained.
+
+
+- **Cliff collision source discrepancy (2026-09-30):** owner reports old collision still active. All 66 current Blender Cliff collider digests exactly match prior staging; active/recovery Studio templates have identical barrier mesh IDs. Re-exporting current source would repeat it. Owner identification of manually corrected source pending; no regeneration or export performed. Saved visual/Cutbank repairs remain ready for staging.
+
+
+- **VV Studio art/bridge repair (2026-09-30):** placement confirmed good. Saved current Blender source with missing/zero Col repaired on 60 production meshes, stump inner-wall gap closed, Boss entrance underside skirt closed (walking surfaces/sockets unchanged), and one continuous hidden Cutbank bridge deck in existing collision collection (137 parts). 4,824 unrelated objects unchanged; source previews checked. New visual/Cutbank FBX staging, import/ID refresh and Studio verification pending. Existing runtime/exports untouched; keep fresh Studio_Repair_Input backup and prior assets.
+
+
+- **VV chest placement correction (2026-09-30):** owner confirms general placement/collision now works. Six Treasure Hollow/Cave Mouth body/lid/hardware components kept Crossroads names; wiring now assigns their intended chunks and converts their centres with manifest structure frames. Each of three chests has all four component roles. Restart Play visual check pending; no re-import/re-save or Blender/texture/collision change. Recovery assets retained.
+
+
+- **Verdant Valley imported kit wired (2026-09-30):** 30 current terrain IDs/dimensions/GroundOffsetY wired; current chunk-frame imports use MeshYawOffset 0. Existing props schema now has 823 verified rows, including 746 independent canopies and 12 chest components, Static for initial testing. Twenty shortened names are unique under 50 characters. Active Studio VV_STRUCTURE and VV_PROP_LIBRARY grouped; duplicate aggregate imports deleted after matching. Only Cliff collision replaced (66 parts); other 29 templates retained. All 39 colliding prop/chest meshes recooked precise, with sizes/transforms/pivots preserved. Fresh chunk/prop schema, ID/size/reference/position checks pass. Owner must save VV_STRUCTURE, VV_COLLISION and VV_PROP_LIBRARY as RBXMX at IMPORT_STEPS paths, then restart Play and catalogue/walk. Colors remain deferred. Old templates/imported Stone copy retained in VV_IMPORT_RECOVERY; cleanup only after Studio/applicable CI. No repo RBXMX saved by agent.
+
+- **Verdant Valley initial functionality testing (owner direction, 2026-09-30):** missing/black colors/textures, including Cliff Passage structure, are deferred until functionality works; no further color repair/re-import now. Studio has 30 individual terrain models plus the combined 30-mesh verdant_valley_structure; combined 823-mesh verdant_valley_props also imported alongside individual prop files. Combined/per-chunk FBXs are alternatives, not additive content. Recommend excluding the two combined models from Workspace tests while retaining them; no Studio cleanup performed. Appearance validation/promotion remains pending. Current collision update is Cliff Passage only. Name shortening waits until import completion.
+
+- **Verdant Valley Studio color defect (2026-09-30):** owner found black regions on Cliff Passage solid props. Cause confirmed as 6,197 zero Col corners on non-black material faces, rather than an image texture or black Part Color. Same pattern on 19 solid/seven nonsolid joined groups; 34 visible meshes lack Col. Exporter now fills absent/wholly zero colors from existing constant face materials on temporary copies, preserving painted corners and refusing ambiguous cases. Narrow 3-FBX test in verdant_valley_staging_color_check has zero black colors and exactly unchanged FBX vertices/polygons/normals. Owner deferred the Studio color comparison and broader refresh until after functionality testing; retain the color-check files for later. Previous complete staging is not approved for promotion. Collision remains validated and unchanged; no further Cliff collision import needed. Source/Studio objects untouched. Keep all earlier outputs until validation; name shortening deferred until import completes.
+
+- **Verdant Valley production staging complete (2026-09-30):** owner removed empty canopy leftovers. The existing exporter's --production-scene mode wrote 156 FBXs to assets/export/worlds/verdant_valley_staging_validation, covering 30 structures, 4,032 current collider meshes across 30 chunks, 30 solid and 30 nonsolid groups, 746 independent canopies, and 17 special components including 12 chest pieces. Exact FBX mesh-name/source accounting and every required category pass; no Temp/unrelated content. All 76 working export files unchanged. Cliff Passage's 66 current meshes re-import with matching vertices (max error 0.0000138 stud) and match current live source digests. Linked-mesh material warnings fixed only in temporary export copies; validation set has none. Source/live scene untouched; no collision generator or promotion. JSON/Markdown manifests and VALIDATION_REPORT.json are in staging. Owner Studio validation pending. The first material-warning staging set is retained with DO_NOT_IMPORT.md; keep it, previous production exports and Blender recovery sources until Studio/applicable CI validate replacement. See IMPORT_STEPS production staging section.
+
+- **Verdant Valley prop consolidation (2026-09-30):** saved `VerdantValley_Cleanup.blend` with 30 `chunk_<name>__PropsSolid` and 30 `chunk_<name>__PropsNonSolid` meshes in the existing collections. All 3,923 original production props accounted for exactly once: 1,262 solid sources joined, 1,894 nonsolid sources joined, 749 independent canopies, 12 components across three chests, and six review objects (four Cave Mouth flames, Dawn Meadow fire, High Ledge unclassified piece). Canopy origins and chest hinge pivots preserved. 4,836 untouched object digests match, including structure, collision and Temp; collection hierarchy unchanged. Per-element geometry/material/color/shading checks passed; all 60 outputs below 10,000 triangles. Per-chunk report: `assets/source/worlds/verdant_valley/PROPS_EXPORT_REVIEW.md`; exact source ledger in adjacent JSON. Owner Blender review and eventual Studio import/material/pivot checks remain. Keep `VerdantValley_Props_Export_Input.blend`; no FBX/Roblox asset/manifest replacement. Existing unresolved normals cases remain unresolved by this preparation pass.
+
+- **Verdant Valley normals pass (2026-09-30):** all 30 chunks and 7,987 scene meshes scanned twice. Confirmed winding repaired on 16 visible/Temp objects and 4,005 invisible colliders (34,253 faces across instances; 34,113 unique datablock faces). Crossroads roof: 48 faces; five Cliff Passage vines plus linked Temp source: 28 each; two Wetland water patches: six each. Component-specific closed-shell orientation and selective open-surface corrections only; geometry/transforms/materials/collections preserved. Second scan found no further confirmed flips; exterior roof/vine front/back diagnostic renders reviewed. 178 ambiguous open/boundary cases remain unchanged and require manual review before declaring the kit clean for consolidation. See `assets/source/worlds/verdant_valley/NORMALS_REVIEW.md`. Saved current `VerdantValley_Cleanup.blend`; keep `VerdantValley_Normals_Input.blend` until owner Blender and later Studio verification. No joining, export grouping or production export change.
+
+- **Cliff Passage annotated-zone finish (2026-09-30):** retained nineteen appropriate earlier additions and owner tree deletions. Six linked reference trees, twenty-seven exterior ground props and twenty-six nonsolid props in eight irregular yellow-zone pockets now detail upper/rear slopes and path transitions. One permitted reusable `VV_Vine` has five linked wall instances, three long on one wall and two short on the other. Full new bounds exclude red local-Y ±21; all additions entering yellow (to ±40) have `CanCollide=false` and nonsolid collection membership. Tree/major-prop mesh data comes directly from existing references. All 7,916 existing objects unchanged, including cliffs, terrain, path and collision. Eleven saved-source views reviewed; `VerdantValley_Cleanup.blend` saved. Owner Blender and eventual Studio/export collision checks pending. Keep `VerdantValley_Cliff_Zones_Input.blend`; older environmental review/source artifacts can be removed only after validation.
+
+- **Cliff Passage continuous rock surfaces (2026-09-29):** owner-directed reconstruction supersedes modular structure and selective refinement. Each exposed wall is one welded irregular surface: 41 broad polygons, eight staggered interior vertices and two unequal broad depth changes. No extruded modules, rectangular patches or seam-cover slabs. Exact original seam samples and ridgeline preserved; terrain, path, props, transforms, sockets and collision unchanged, with 7,911 unrelated-object hashes matching. Ten views inspected: both passage directions, player stations, overhead, both overview sides and close range. Source saved; owner Blender and eventual Studio/export/walk checks pending. Keep `VerdantValley_Cliff_Continuous_Input.blend` until validation.
+
+- **Cliff Passage selective refinement (2026-09-29):** softened three of eight secondary formations at unequal strengths, preserving strongest masses and all topology. Only 312 of 3,765 vertices moved inward (maximum 1.670/1.269 studs); materials, terrain, transforms, collision and 7,911 other objects unchanged. Four paired player-height views reviewed. Source saved; owner Blender and later Studio/export review pending. Keep `VerdantValley_Cliff_Selective_Input.blend` until validation.
+
+- **Cliff Passage major rock structure (2026-09-29):** supersedes the shallow face-detail pass below. Four uneven structural formations plus a broad recessed bay per wall; buttresses meet the base, with tilted plates and short shelves. New forward changes capped at three studs; recesses avoid the existing earth bank. Five eye-height stations per wall, entrance/exit and both overview sides inspected; 14 final saved-source renders match the candidate. All 7,911 other objects, materials, transforms, path, corrected upper silhouette and collision unchanged. Nearest formation stays 25.58 studs from route center and outside the path material. Source saved; owner Blender and eventual Studio/export/walk checks pending. Retain `VerdantValley_Cliff_Structure_Input.blend`.
+
+- **Cliff Passage exposed-face detail (2026-09-29):** only cliff_01/02 shaped with four broad asymmetric folds each and a shallow uneven ledge. Maximum projections under two studs; terrain, ridgeline, path, props, collision and 7,911 other objects unchanged. Overview and both passage views inspected. Owner Blender and eventual Studio/export/walk checks pending. Keep `VerdantValley_Cliff_Detail_Input.blend`. Eight pre-existing cliff_02 boundary edges preserved.
+
+- **Cliff Passage remaining grass patch (2026-09-29):** owner-marked upper outer-edge Earth patch corrected to Grass on five triangles only. Saved-source close review complete; geometry and all other assignments/objects unchanged. Owner review pending.
+
+- **Cliff Passage material finish (2026-09-29):** latest owner geometry locked. Rim/underside assignments now follow peer chunks: rock below a thin earth lip, no green lower shell faces. Unified contrasting grass blocks on top, retaining flat facets. All 3,534 vertices, 4,271 faces and 7,912 other objects unchanged. Source saved; three-view review complete, owner Blender and eventual Studio/export checks pending. Retain `VerdantValley_Cliff_Material_Input.blend`.
+
+- **Cliff Passage stray seam edges (2026-09-29):** removed 173 face-less edges left by seam stitching from the live terrain mesh. All 4,272 surface faces unchanged, zero loose/open edges; all 8,013 other objects unchanged. Green colors, complete cliff meshes, latest owner placements and collision preserved. Source saved; owner viewport review pending. Reference: `VerdantValley_Cliff_Edge_Input.blend`.
+
+- **Cliff Passage face/color correction (2026-09-29):** supersedes the incomplete-shell repair below. Both cliff meshes again have 598 faces and zero open edges; local buried cap adjustment avoids surface overlap. Upper shoulders and all four marked end connections are green per owner clarification. Saved current live source, retaining ongoing owner edits; all 941 path faces and 7,928 protected input objects unchanged. Saved-source overview/both ends reviewed; owner approval and later Studio/export checks pending.
+
+- **Cliff Passage owner-adjusted seam repair (2026-09-29):** fresh live reference is `VerdantValley_Cliff_Seam_Input.blend` (7,931 objects). Repaired unwelded ridge cut boundaries and missing end faces; removed duplicate cliff front/top surfaces, retaining owner cliff transforms. Exposed banks now use `VV_Earth`. Main terrain has zero open boundary edges, 7,064 triangles; each cliff 600. All 941 path faces and 7,928 protected objects unchanged. Saved-source overview/both ends reviewed; owner Blender and eventual Studio/export checks pending. Production assets/collision unchanged.
+
+- **Cliff Passage long-ridge rebuild (2026-09-29):** replaced both toothed grass/rock strips in `VerdantValley_Cleanup.blend` with planar broad profiles (two rises and a shallow dip), and rebuilt the two existing cliff caps to share their exact seam. No added props; affected ground-attached props only reseated vertically. Matching-angle saved-source render shows obvious silhouette change and no exposed green wedges. All 941 path faces and 7,910 protected objects unchanged; 6,761 terrain triangles. Blender source saved/loaded; owner visual approval and eventual Studio/export check pending. Keep `VerdantValley_Cliff_Ridge_Input.blend`; production exports/collision unchanged.
+
+- **Windward Ridge center patch (2026-09-29):** smoothed 527 local terrain vertices in the current 7,933-object `VerdantValley_Cleanup.blend`; topology retained, 7,932 other objects unchanged. Saved-source close render reviewed. Owner Blender review and eventual Studio/export/collision alignment checks pending; production assets unchanged. Retain `VerdantValley_Windward_Patch_Input.blend` until validation.
 
 - **Phase 1 is complete** (hub, roll, onboarding, saves, UI, sprint and double jump, events). The build spec §7
   amendments that opened later work are §7.1 expedition entry, §7.2 parties as their own server, §7.3 scenarios,
@@ -50,14 +114,98 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   `SCENERY_CLASSIFICATION_REMAINING.json`. Owner Blender visual review is next;
   production assets have not changed.
 - **Four-chunk scenery review (2026-09-29):** The owner's
-  `VerdantValley_Extra_Details_Backup.blend` now has 49 new objects in Treasure
-  Hollow (including a hanging lantern), 64 in Longgrass Meadow, 52 in Deep
-  Clearing and 63 in Warden's Clearing. The five Temp sources and the 30
-  original structure chunks remain intact. New solid-object bounds stay at
-  least 37.8 studs from each central path centreline; Deep Clearing's east
-  branch is also reserved. Cliff Passage, Dawn Meadow and Woodland Refuge
-  matched their preceding-save object and mesh digests. Owner visual review is
-  next; no Studio assets or exports have changed.
+  `VerdantValley_Extra_Details_Backup.blend` now has 56 added objects in Treasure
+  Hollow, 73 in Longgrass Meadow, 56 in Deep Clearing and 66 in Warden's Clearing,
+  spread across wider planting zones. Their distinct features are a detailed
+  lantern/traveller's pack, pale flowering tree/wildflowers, trail marker and split stump with
+  fungi. `Temp` now contains the five original sources plus reusable `lantern_post`
+  (six sources total). On the owner's explicit follow-up, its two flowering-tree
+  sources were removed and the placed Longgrass tree became a centerpiece: seven
+  canopy lobes, 49 larger muted pink/cream flowers, tapered pale branches and roots.
+  Four bark marks now follow the actual tapered trunk faces and are embedded against
+  the surface; only their 32 vertices changed in the owner-reported floating-mark fix.
+  Its original placement and solid/nonsolid grouping remain; the other 8,021 scene
+  objects match their pre-edit geometry/transform/membership digest. Saved-source
+  close and overhead renders reviewed; Blender approval and later Studio check pending.
+  The hanging lantern is now 15% smaller with
+  aligned timber/shoe/crossbeam joins; the owner's later placement edits were preserved.
+  only Treasure Hollow has a placed lantern. All 30 original structure chunks
+  remain intact. New solid bounds stay at least 38.46 studs from the central
+  route line; Deep Clearing's east branch is reserved. Protected scene geometry
+  and transforms matched before/after the pass. Owner Blender review is next;
+  this scenery pass changed no Studio assets or production exports.
+- **Remaining Verdant Valley composition pass (2026-09-29):** the live
+  `VerdantValley_Extra_Details_Backup.blend` has restrained additions on 24 of the
+  remaining 26 chunks (746 dressing objects, 19–37 per modified chunk). Cliff Passage
+  and Cave Mouth needed none. At completion, the four references and all original
+  7,279 objects matched the pre-pass geometry/transform/membership digest (the later
+  owner-authorized flowering-tree exception is recorded above); collision,
+  sockets, terrain and primary landmarks are unchanged. Whole-kit overhead and
+  individual route/low feature renders were reviewed; crowded planting was thinned
+  and repeated flower/stone details differentiated. New bounds remain 22.73 studs
+  inside rectangular footprints and 35.56 studs from socket route centerlines.
+  Owner found initial islands too clustered: 319 props redistributed across wider
+  shoulders and 386 linking props added. Unique details stayed fixed.
+  `COMPOSITION_REVIEW.md` in the world source folder records each chunk. Owner
+  Blender visual review is next; no production export or Studio rollout occurred.
+- **Pre-cleanup Verdant Valley geometry review (2026-09-29):**
+  The live scene was captured as `VerdantValley_Geometry_Review_Reference.blend`
+  after owner edits in Longgrass Meadow and Wetland Pools. Reviewed all 30 chunks;
+  no scene edits. Four floating details: Woodland Refuge top stacked log (0.179 stud),
+  Cliff Passage and Crossroads Copse canopy contact gaps (0.223/0.191 stud), and
+  Crystal Spring foam over dry grass (0.43–0.61 stud above terrain). Recurring solid
+  rock/trunk intersections and log/boulder or rock/masonry intrusions are recorded
+  by exact object name in `GEOMETRY_REVIEW.md`; 52 solid pairs reviewed closely,
+  with normal joins/rock clusters retained as lower-priority overlap candidates.
+  All 8,023 live object hashes match the refreshed reference after the read-only pass.
+  Follow-up fixes must preserve owner edits; prior generator outputs are not the
+  current reference. Production exports and Roblox collision hulls were not changed.
+- **Current Verdant Valley landmark refinement (2026-09-29):** owner manual edits
+  supersede that review. Current authoring file is `E:/BlenderAIProjects/Projects/VerdantValley_Cleanup.blend`;
+  the 7,946-object input is retained as `VerdantValley_Landmark_Refinement_Input.blend`.
+  Ancient Oak now has a tapered branching trunk, ten canopy lobes, seated bark scars and root moss.
+  Treasure Hollow's chest now has broad wooden planks, a domed lid, metal hoops, hinges,
+  carry rings and brass lock; the same model is installed in Cave Mouth and the new Crossroads
+  shelter. Covered Cave Mouth terrain uses bare-earth material (167 faces, no geometry edits).
+  Cleared Crossroads' center obstacle and the marked northeast planting; added a small open
+  timber shelter on stone footings with a chest inside. Final scene has 7,937 objects.
+  All 7,920 unrelated input objects, including collision and the other finished references,
+  match their geometry/transform/collection hashes. Existing chest feet seated against terrain;
+  feature and overhead renders reviewed. Owner Blender approval and eventual Studio/export
+  checks remain; no production assets changed. Keep rollback sources until those checks pass.
+- **Loot-chest and Crossroads follow-up (2026-09-29):** current source remains
+  `VerdantValley_Cleanup.blend` (7,959 objects). All three chests are about 21% smaller
+  than the first detailed model (14%, then another 8% following owner size feedback),
+  with planked/metal-trimmed lid ends, a hollow wooden box and simple tied loot sack.
+  Each lid is a single separate mesh with its complete moving trim/hasp and a rear
+  local-X hinge pivot; a -105-degree open pose was reviewed without saving animations.
+  Rigging/gameplay hookup remain for later. Crossroads shelter moved to local (56,56),
+  rotated to -45 degrees so its open front faces the junction; two existing tree
+  assemblies and 13 Temp-derived rocks/bushes/tufts frame its sides/back.
+  All 7,925 unrelated input objects match hashes; terrain, collision, sockets and
+  Ancient Oak are unchanged. Closed/open and overhead/source renders reviewed.
+  Keep `VerdantValley_Loot_Chest_Input.blend` and older rollback sources until owner
+  approval and later Studio checks; production exports remain unchanged.
+- **Chest interior follow-up (2026-09-29):** all three shared chests now have 20
+  broad inner wall planks matching the outside and an off-center sack tipped onto
+  its side, seated on the plank floor. Six meshes changed; all 7,953 other objects
+  match their hashes. Original body vertices/faces, outer bounds, lids, hinges and
+  hardware are unchanged; the closed exterior render is pixel-identical to the
+  approved model. Saved-source open/close views reviewed; source remains 7,959 objects.
+  Keep `VerdantValley_Chest_Interior_Input.blend` until owner review and later Studio
+  checks; no production exports changed.
+- **Chest lid seam correction (2026-09-29):** five roof-panel slits closed per
+  chest (120 vertices per lid); outer dimensions, other geometry and hinge transforms
+  unchanged. All 7,956 other objects match hashes. Saved close render reviewed;
+  keep `VerdantValley_Lid_Seam_Input.blend` until approval and later Studio checks.
+- **Crossroads shelter support/stone follow-up (2026-09-29):** four post extensions
+  connect the header frame to the rafters, with two center king posts supporting
+  the ridge. Stonework now has seated masonry courses, beveled worn corners,
+  flagstone paving, and segmented step/footings. Only frame/stone meshes changed;
+  7,949 other objects in the owner's current 7,951-object scene match hashes.
+  Roof, chest, terrain/collision and surrounding planting are unchanged. Front/side
+  renders reviewed; keep `VerdantValley_Shelter_Support_Input.blend` until owner
+  approval and later Studio checks. No production export changed.
 - **Stone Sentinels collision prototype:** A new generator derives 202 thin,
   16-stud walk-surface tiles from the current connected terrain body. It
   excludes 80 detached art components and leaves steep/open spans unbridged.
@@ -135,6 +283,14 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   the sharp crest tips, tucked low grass behind the gray face, and converted
   exposed steep skirts to the existing rock material. The current Blender scene
   and visual FBX include that revision; collision remains unchanged.
+  After the owner's finalized Cliff Passage collision passed a Studio test but
+  was absent from the saved RBXMX, the re-imported 66-part model was added back
+  under the live Studio `VV_COLLISION` wrapper as
+  `VV_PATH_CLIFF_PASSAGE_COLLISION_MERGED`. All 28 prior templates remain
+  present with their prior part counts; the Cliff model has 64 floor tiles,
+  two barriers, 66 unique uploaded MeshIds, a zero pivot and correct settings.
+  Owner save of the wrapper as `VV_COLLISION.rbxmx` and a follow-up Studio test
+  are pending; the repository file still lacks this model.
 - **Verdant Valley adaptive collision kit batch (2026-09-28):** The owner's
   active scene at `E:\BlenderAIProjects\Projects\VerdantValley_CliffPassage_SeparateCollisionDeck.blend`
   is the input (SHA-256 `4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf`).
