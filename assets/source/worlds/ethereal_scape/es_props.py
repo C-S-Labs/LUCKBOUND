@@ -72,7 +72,7 @@ def _cloud(p, seed, w, d, h, towers=3, anvil=False):
                 a = rng.uniform(0, 6.28)
                 off = r * rng.uniform(0.25, 0.7)
                 blob(p, "CloudWhite", tx + math.cos(a) * off, ty + math.sin(a) * off, z + rng.uniform(-0.15, 0.15) * r,
-                     r * rng.uniform(0.6, 0.9), r * rng.uniform(0.55, 0.8), n=10, a0=a, below=r * 0.15)
+                     r * rng.uniform(0.6, 0.9), r * rng.uniform(0.55, 0.8), n=8, a0=a, below=r * 0.15)
             z += r * rng.uniform(0.3, 0.4)
             r *= rng.uniform(0.84, 0.92)
             tx += rng.uniform(-r, r) * 0.35

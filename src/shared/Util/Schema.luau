@@ -422,6 +422,40 @@ function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boole
 			)
 		end
 
+		if chunk.MeshParts ~= nil then
+			if type(chunk.MeshParts) ~= "table" or #chunk.MeshParts == 0 then
+				table.insert(errors, `{label}: MeshParts must be a nonempty array`)
+			else
+				local seen = {}
+				for index, part in chunk.MeshParts do
+					local partLabel = `{label} MeshParts[{index}]`
+					if type(part) ~= "table" then
+						table.insert(errors, `{partLabel}: must be a table`)
+						continue
+					end
+					if type(part.AssetKey) ~= "string" or not manifest.exists(part.AssetKey) then
+						table.insert(errors, `{partLabel}: AssetKey must exist in the manifest`)
+					elseif seen[part.AssetKey] then
+						table.insert(errors, `{partLabel}: duplicate AssetKey`)
+					else
+						seen[part.AssetKey] = true
+					end
+					for _, dim in { "SizeX", "SizeY", "SizeZ", "OffsetX", "OffsetY", "OffsetZ" } do
+						local value = part[dim]
+						if
+							type(value) ~= "number"
+							or value ~= value
+							or math.abs(value) == math.huge
+						then
+							table.insert(errors, `{partLabel}: {dim} must be finite`)
+						elseif string.sub(dim, 1, 4) == "Size" and value <= 0 then
+							table.insert(errors, `{partLabel}: {dim} must be positive`)
+						end
+					end
+				end
+			end
+		end
+
 		-- Supports is the scenario-compatibility gate. A placeable chunk with
 		-- none supports nothing, so the generator would have no room to fill
 		-- and the piece would be walked through empty. ENTRY and BOSS are

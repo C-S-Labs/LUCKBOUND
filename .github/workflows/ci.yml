@@ -10,6 +10,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # loader differential checks read the pre-multipart revision
 
       # before Install Luau: that step unpacks binaries into the checkout
       - name: Repository index is current (INDEX_MAP.md)
@@ -48,6 +50,9 @@ jobs:
         run: |
           python3 tests/build_suite.py
           luau tests/generated_suite.luau
+
+      - name: Chunk loader compatibility and multipart placement contract
+        run: python3 tests/check_chunk_loader.py
 
   lint:
     runs-on: ubuntu-latest

@@ -81,14 +81,25 @@ happened to be next to it in the authoring scene.
 
 ### 5. Every piece is its own object, named for what it is
 
-Each piece must reach Roblox as **its own mesh**. The game uploads and places
-them separately and recombines them per run.
+Each chunk reaches Roblox as an independent assembly: one mesh, or multiple aligned meshes.
+**Owner-directed, 2026-09-30:** the 10,000-triangle ceiling applies to each exported mesh,
+not to the total chunk. A large building may be split into as many meshes as needed.
+Keep the art mostly low poly; extra capacity is permission for useful detail, not a density target.
+
+A multipart chunk declares `MeshParts` in its content entry: a complete list of `AssetKey`,
+`SizeX/SizeY/SizeZ`, and `OffsetX/OffsetY/OffsetZ` for each mesh. Offsets are measured in
+the **imported mesh axes**, relative to the full chunk's bounding-box centre. Each mesh is sized
+to its own bounds, then translated by its offset. The loader rotates the entire assembly about
+the chunk centre and probes sockets against all of its meshes. A missing mesh falls back to the
+whole chunk's blockout, so a partial building never loads as a complete chunk.
 
 You may export them **one FBX per piece, or all of them in one FBX** as
 separate objects. Roblox's 3D Importer turns a multi-object FBX into one Model
 with a MeshPart per object, and centres each mesh on its own bounds, which is
 the convention the loader uses. One file is less work; either is correct.
-**Do not join the pieces into one object.**
+**Do not join separate chunks into one object.** Meshes belonging to one chunk may be split;
+preserve their authored alignment and metadata. The chunk's declared footprint, ground offset,
+sockets, role and generation identity still describe the complete assembly.
 
 **Names matter.** The object name becomes the part name and is how a piece is
 matched to its content entry. Name for what the piece is — `chunk_meadow`,

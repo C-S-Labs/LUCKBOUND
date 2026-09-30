@@ -2285,6 +2285,12 @@ local ENTRIES: { [string]: AssetEntry } = {
 			.. "temple. Its materials are this world's palette source of truth -- "
 			.. "see assets/source/worlds/ethereal_scape/aether_environment_refined.blend.",
 	},
+	ES_CHUNK_SANCTUM_TEMPLE_01 = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/export/worlds/ethereal_scape/ethereal_scape_structure.fbx",
+		Notes = "Multipart Ethereal Scape chunk mesh; generated geometry metadata in Content/Chunks.",
+	},
 }
 
 AssetManifest.ENTRIES = ENTRIES

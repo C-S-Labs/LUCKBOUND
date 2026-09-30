@@ -336,6 +336,18 @@ not content count.
 
 ## The geometry contract
 
+**Multipart art (owner-directed, 2026-09-30).** A chunk may contain multiple meshes, each under
+10,000 triangles, while remaining one generated room. Optional `ChunkDefinition.MeshParts` records
+each mesh asset, dimensions and offset from the complete bounds centre in imported mesh axes.
+`ChunkLoader` assembles the meshes, calibrates and rotates them together, and uses a whole-chunk
+blockout if any required mesh is unavailable. Existing single-mesh chunks retain their loading path.
+This changes the art delivery contract, not chunk selection, sockets or overlap rejection.
+CI's `tests/check_chunk_loader.py` compares the existing loader path against the pre-multipart revision:
+all 30 Verdant Valley, 36 Sky Citadel and 40 single-mesh Ethereal Scape chunks, at four yaws, in normal
+and catalogue modes, with loaded/placeholder/failed/recoloured assets and repeated cached placements.
+It also checks multipart offsets at all four yaws and atomic fallback after a component load failure.
+These are API contract checks using controlled raycast results; Studio still owns collision/physics checks.
+
 The layout rules above are about *data*. The rules below are about the *art*,
 and they are the ones that are expensive to discover late.
 

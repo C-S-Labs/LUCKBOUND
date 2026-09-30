@@ -395,6 +395,19 @@ def tree(p, x, y, z=FLOOR_Z, h=20, crown="DeepTealLeaves", style=0):
     p.keepout.append((x, y, max(3.0, h * 0.28)))
     trunk_top = h * (0.66 if style == 2 else 0.48)      # the umbrella's crown sits higher: its trunk reaches it
     frustum(p, "SoftWood", x, y, z - 0.5, z + trunk_top, h * 0.07, h * 0.045, n=6, a0=rng.uniform(0, 1))
+    # Visible root flares and a fork connect the faceted crown to the trunk.
+    # Derive orientation from the existing lean: polishing must not shift the scatter RNG.
+    azimuth = lean * 18
+    for i in range(3):
+        a = azimuth + i * math.tau / 3
+        rod(p, "SoftWood", (x, y, z + h * 0.09),
+            (x + math.cos(a) * h * 0.12, y + math.sin(a) * h * 0.12, z - 0.35),
+            h * 0.035, h * 0.012, n=5)
+    for s in (-1, 1):
+        a = azimuth + s * 1.1
+        rod(p, "SoftWood", (x, y, z + trunk_top * 0.72),
+            (tx + math.cos(a) * h * 0.12, ty + math.sin(a) * h * 0.12, z + trunk_top + h * 0.07),
+            h * 0.035, h * 0.012, n=5)
     if style == 0:        # the original's gem crown
         gem2(p, crown, tx, ty, z + h * 0.55, h * 0.34, h * 0.45, h * 0.18, n=7, a0=rng.uniform(0, 6))
     elif style == 1:      # stacked twin crowns
@@ -529,6 +542,10 @@ def column(p, x, y, z, h, r=2.6, broken=False, drum_fall=False):
                 (fx + math.cos(a + 1.3) * 3, fy + math.sin(a + 1.3) * 3, z + r * 0.9), r, r, n=10)
         return z + hb
     frustum(p, "TempleIvory", x, y, z + 2, z + h - 2.2, r, r * 0.9, n=10)
+    # Bevelled base and neck moldings give the temple columns a classical silhouette
+    # while retaining a countable ten-sided shaft and the existing footing radius.
+    frustum(p, "TempleGold", x, y, z + 2.0, z + 3.0, r * 1.12, r, n=10)
+    frustum(p, "TempleIvory", x, y, z + h - 3.2, z + h - 2.2, r * 0.9, r * 1.08, n=10)
     frustum(p, "TempleGold", x, y, z + h - 2.2, z + h - 1.0, r * 0.9, r * 1.35, n=10)
     box(p, "TempleGold", x, y, z + h - 0.5, r * 2.8, r * 2.8, 1.0)
     return z + h

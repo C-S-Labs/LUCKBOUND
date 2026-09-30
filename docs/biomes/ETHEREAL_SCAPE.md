@@ -11,8 +11,8 @@ The Uncommon world's art direction and its chunk kit.
 | | |
 |---|---|
 | Content | `src/shared/Content/Worlds/EtherealScape.luau`; `Content/Chunks/EtherealScape.luau` and `Content/Props/EtherealScape.luau` (both **generated**) |
-| Generator | `assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py` + `es_geometry.py`, `es_features.py`, `es_isles.py` (island web), `es_pieces.py` (36 recipes), `es_props.py`, `es_mapgen.py` (preview assembler), `es_samples.py` (the three direction samples, `--samples`) |
-| Exports | `assets/export/worlds/ethereal_scape/ethereal_scape_structure.fbx` (30 objects), `ethereal_scape_props.fbx` (8 prop kinds) |
+| Generator | `assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py` + `es_geometry.py`, `es_features.py`, `es_isles.py` (island web), `es_pieces.py` (41 recipes), `es_props.py`, `es_mapgen.py` (preview assembler), `es_samples.py` (the three direction samples, `--samples`) |
+| Exports | `assets/export/worlds/ethereal_scape/ethereal_scape_structure.fbx` (41 chunk assemblies / 42 mesh objects), `ethereal_scape_props.fbx` (14 prop kinds); `ethereal_scape_structure.json` records multipart mesh bounds and offsets |
 | Review renders | `assets/source/worlds/ethereal_scape/renders/` — a hero and a ground shot per piece, the Sanctum's interior, `preview_chain.jpg`, `kit_overview.jpg`, and **`map_preview.jpg` / `map_preview_top.jpg`** — a whole seeded map assembled by the §7.7 scheme (also in the `.blend` as the `MAP_PREVIEW` collection) |
 | Palette reference | `assets/source/worlds/ethereal_scape/aether_environment_refined.blend` |
 | Enemies | `assets/source/enemies/ethereal_scape/` (`ROSTER.md`, `manifest.py`) |
@@ -186,7 +186,9 @@ The first kit "passed" with no floors because it only checked the box. These are
 on the real mesh, for every piece:
 
 1. **Box** exactly (2H × 2H) × 256, centred, keel −96, crown +160.
-2. **Under 10,000 triangles.** The hybrid is far lighter: the heaviest are the Sanctum and the Entry (~7k).
+2. **Under 10,000 triangles per exported mesh, not per chunk** (owner-directed 2026-09-30).
+   Larger assemblies split into aligned semantic groups and further pieces as necessary. All spatial
+   checks below apply to the complete chunk. The Sanctum exports separate grounds and temple meshes.
 3. **No degenerate faces.** `mesh.validate()` dropping anything fails the piece.
 4. **Walk graph.** This builds a 2-stud heightfield of every walkable surface, with 1.6-stud steps and 5 studs of headroom. It floods from one mouth, and **every other mouth must be reached**.
 5. **Mouths:** level ground at the socket's own height across at least 95% of the width.
@@ -226,3 +228,29 @@ Unchanged. See `assets/source/enemies/ethereal_scape/ROSTER.md`. Declared per pi
   grows with the map. `ChunkCore` weights COMBAT pieces 6× while the map is under the share.
 - **Elevation:** socket `OffsetY` accumulates, so a climb (Skystair Up +24, East Ascent +16, Twin-Span +10) lifts
   every piece after it, and a descent lowers them.
+
+## First polish pass — 2026-09-30
+
+Small trees now have three root flares and two supporting crown branches. Detail uses the existing wood colour,
+flat facets and scatter positions, without consuming extra random values. The complete rebuild passes
+41/41 geometry checks. Temple columns have bevelled base and neck moldings. The existing Ascendant is
+the main Sanctum boss (owner-confirmed); gold slit-mask and crystal-crown reliefs on the open doors echo
+his design without changing his model, animations or the hall's combat space.
+
+The assembled Sanctum is 11,074 triangles: grounds 3,518 and temple 7,556. The limit is per exported
+mesh. Additional larger groups split automatically, preserving every oriented triangle and its colour.
+`MeshParts` lists the complete assembly with component sizes and offsets in imported mesh axes. The
+loader rotates/calibrates the assembly together and falls back to a complete blockout if any part is
+missing. Import all named objects; retain their names, save `ES_STRUCTURE.rbxmx`, then run
+`tools/sync_asset_ids.py ethereal_scape --write` to record the newly uploaded mesh IDs.
+
+Cloud billows use eight-sided tiers so all 14 atmosphere library meshes also meet the per-mesh limit.
+`tests/validate_ethereal_exports.py` checks 30k and oversized-primitive splits, then imports the real FBXs
+and checks mesh names, triangle limits, unit scales, vertex colours, dimensions and assembly offsets.
+
+Review renders isolate individual chunks and their props, and separate the chain, catalogue and assembled
+map. `--only` preserves unrelated renders. The generator refuses to overwrite delivery outputs on a failed
+validation, including render-only runs. The existing blend and exports are regenerated in place.
+
+This starts the owner-requested chunk polish; further terrain, flora and architecture review remains.
+Basic enemies and minibosses follow it. Keep current Studio imports until CI and a Studio walk prove replacement.

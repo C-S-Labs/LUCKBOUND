@@ -1174,6 +1174,17 @@ Minibosses = 1, MaxSides = 2, Backdrop = 18 }`).
 
 ### Heights
 
+**Chunk mesh assembly extension, owner-directed 2026-09-30.** The art budget is under 10,000
+triangles per exported mesh, not per chunk. `ChunkDefinition.MeshParts?` is a complete nonempty
+array of `{ AssetKey, SizeX, SizeY, SizeZ, OffsetX, OffsetY, OffsetZ }`. Each asset must exist in the
+manifest; dimensions must be positive finite numbers and offsets finite numbers. Asset keys are
+unique within an assembly. Offsets are relative to the full chunk's bounds centre in imported mesh
+axes. `AssetKey` remains the chunk's identity and calibration cache key. Absent `MeshParts`, the
+single-mesh path is unchanged. Present, the loader creates all component meshes at their own sizes
+and offsets, moves them as one Model and calibrates yaw against the entire assembly. A component
+load failure destroys the partial assembly and uses the whole-chunk blockout. The declared chunk
+bounds, walk plane, sockets and generation rules still apply to the union of the meshes.
+
 A socket's `OffsetY` has always been honoured by `placeAgainst`; kits may now author rises and descents (Ethereal
 Scape's Skystairs ±24, ascents ±16) and the map climbs and falls with them. The authoring contract is unchanged: every
 mouth is the kind's standard landing, level at its own socket height.

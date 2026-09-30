@@ -231,11 +231,22 @@ export type ChunkSocket = {
 	Facing: number, -- degrees: 0 = -Z (north), 90 = +X, 180 = +Z, 270 = -X
 }
 
+export type ChunkMeshPart = {
+	AssetKey: string,
+	SizeX: number,
+	SizeY: number,
+	SizeZ: number,
+	OffsetX: number,
+	OffsetY: number,
+	OffsetZ: number,
+}
+
 export type ChunkDefinition = {
 	Id: string,
 	WorldId: string,
 	Role: ChunkRole,
 	AssetKey: string, -- key into Content/AssetManifest
+	MeshParts: { ChunkMeshPart }?, -- complete assembly; offsets from its bounds centre in mesh space
 	SizeX: number, -- axis-aligned bounds, used for overlap rejection
 	SizeY: number,
 	SizeZ: number,

@@ -30,6 +30,20 @@ scan (`*_Final`, `*_NEW`, `*_FIXED`, …) from build spec P1-12.
 
 ### Coverage
 
+**Chunk loader compatibility:** `python tests/check_chunk_loader.py` (Luau on PATH; `--luau` accepts
+an explicit executable). CI runs this against the real current loader and the pre-multipart revision
+read from git. It covers every existing VV/SC single-mesh chunk and single-mesh ES chunk at all four
+yaws, normal/catalogue mode, loaded/placeholder/failed/recoloured assets, repeated cached placements,
+and entry/return positions. Multipart assembly placement and destruction after partial load failure
+have separate checks. The controlled API shim implements yaw transforms, parenting and pivots;
+its raycast results are scripted inputs. It does **not** prove collision cooking or physical walkability.
+
+**Ethereal Scape exports:** run Blender headlessly with `--python tests/validate_ethereal_exports.py`
+after regenerating the kit. This checks splitting above 10k, real FBX budgets, names, vertex colours,
+unit scale and multipart alignment metadata. In Studio, import all named components, verify the
+Sanctum at four yaws and walk its doors/floor; also roll VV and SC to confirm existing collisions,
+socket joins and entry/return placement before retiring old imports.
+
 | Group | Tests | The question it answers |
 |---|---|---|
 | Schema validation | 8 | Does the server refuse to boot on broken content? |

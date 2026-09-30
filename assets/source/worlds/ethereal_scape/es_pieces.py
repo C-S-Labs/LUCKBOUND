@@ -286,6 +286,7 @@ def es_sanctum(p):
     web(p, {"grounds": dict(x=0, y=0, r=220, z=0, pts=rsquare(0, 12, 238, 222, 70, per_edge=4), depth=92, roots=False)},
         [("grounds", "S")], width=24)
     road(p, [(0, -124), (0, -204)], width=26)
+    p.export_group = "temple"
     z = 6.0
     X0, X1, Y0, Y1 = -138.0, 138.0, -110.0, 154.0
     prism(p, [(X0, Y0), (X1, Y0), (X1, Y1), (X0, Y1)], FLOOR_Z - 0.5, z, "TempleIvory", side="Cloudstone")
@@ -475,8 +476,17 @@ def es_sanctum(p):
         ly = WY0 + T / 2 + 1.5
         box(p, "SoftWood", sx * (door + 16.5), ly, 27, 29, 1.0, 40)
         box(p, "TempleGold", sx * (door + 16.5), ly + 0.55, 27, 22, 0.5, 3)
+        # The existing Ascendant is this hall's guardian: gold slit-mask reliefs
+        # and crystal crown shards on the open doors echo his silhouette.
+        mx = sx * (door + 16.5)
+        box(p, "TempleGold", mx, ly + 0.75, 35, 5, 0.4, 6)
+        box(p, "PortalGlow", mx, ly + 0.98, 35, 0.55, 0.1, 4.4)
+        for dx, height in ((-2.1, 2.2), (0, 3.5), (2.1, 2.6)):
+            rod(p, "SkyCrystal", (mx + dx, ly + 0.85, 38),
+                (mx + dx * 1.25, ly + 0.85, 38 + height), 0.55, 0, n=5)
         for hz in (12, 27, 42):
             box(p, "TempleGold", sx * (door + 2.6), WY0 + T / 2 + 1.0, hz, 2.0, 2.2, 3)
+    p.export_group = "terrain"
     for k in range(3):
         y = -142 - k * 26
         for s in (-1, 1):

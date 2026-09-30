@@ -130,6 +130,11 @@ Blender: `"C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe" -b
   - `build_sky_citadel_recolors.py` and `build_sky_citadel_atmosphere_props.py` are **parked** until after release.
 - Verdant Valley: the 30-piece kit exporter is `export_verdant_valley_kit.py` in the same world folder pattern; its
   output is `VV_STRUCTURE.rbxmx`.
+- Ethereal Scape: its existing 41-piece hybrid generator supports aligned multipart chunks. The 10k
+  triangle limit is per mesh; `MeshParts` metadata is generated into chunk content and the export JSON.
+  Verify split geometry and FBX alignment with Blender running `tests/validate_ethereal_exports.py`.
+  `tests/check_chunk_loader.py` compares legacy loading against the pre-multipart revision and checks
+  multipart rotation/fallback using a controlled API contract shim; CI runs it. Studio validates physics.
 - Naming convention:
   - The kit file is `<W>_STRUCTURE.rbxmx`, with W = `SC` or `VV`.
   - Pieces inside it are named `chunk_<name>`.

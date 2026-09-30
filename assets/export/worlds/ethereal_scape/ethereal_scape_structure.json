@@ -1,0 +1,26 @@
+{
+  "ES_SANCTUM": [
+    {
+      "AssetKey": "ES_CHUNK_SANCTUM",
+      "Object": "ES_SANCTUM",
+      "OffsetX": 0.0,
+      "OffsetY": -65.0,
+      "OffsetZ": -0.0,
+      "SizeX": 512.0,
+      "SizeY": 126.0,
+      "SizeZ": 512.0,
+      "Triangles": 3518
+    },
+    {
+      "AssetKey": "ES_CHUNK_SANCTUM_TEMPLE_01",
+      "Object": "ES_SANCTUM_TEMPLE_01",
+      "OffsetX": 0.0,
+      "OffsetY": 47.5,
+      "OffsetZ": -16.75,
+      "SizeX": 279.0,
+      "SizeY": 161.0,
+      "SizeZ": 277.5,
+      "Triangles": 7556
+    }
+  ]
+}

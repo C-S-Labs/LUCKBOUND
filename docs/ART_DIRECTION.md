@@ -160,6 +160,11 @@ happen to stand near each other.
 
 This is a *style*, not a budget. A mesh can be cheap and still be wrong here:
 
+**Chunk mesh budgets (owner-directed, 2026-09-30):** each exported mesh stays under 10,000 triangles;
+an assembled chunk or temple may exceed that total by using aligned component meshes. Keep a
+mostly low-to-mid poly look, leaning low poly. Spend geometry on silhouettes, readable architecture
+and useful detail. Splitting a mesh does not justify smoothing the whole world or adding surface noise.
+
 | | Low poly | Merely optimised |
 |---|---|---|
 | Shading | **flat** — every facet visibly its own plane | smooth, normals interpolated |

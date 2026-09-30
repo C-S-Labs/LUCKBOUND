@@ -120,6 +120,43 @@ end
 -- Measured mesh yaw per AssetKey, per server. See calibrateYaw.
 local yawCache: { [string]: number } = {}
 
+local function setMeshFrame(mesh: BasePart | Model, cframe: CFrame)
+	if mesh:IsA("Model") then
+		mesh:PivotTo(cframe)
+	else
+		mesh.CFrame = cframe
+	end
+end
+
+local function tryChunkMesh(
+	chunk: any,
+	assetKey: string,
+	cframe: CFrame,
+	parent: Instance
+): (BasePart | Model)?
+	if not chunk.MeshParts then
+		return tryMesh(assetKey, Vector3.new(chunk.SizeX, chunk.SizeY, chunk.SizeZ), cframe, parent)
+	end
+	local assembly = Instance.new("Model")
+	assembly.Name = "Mesh"
+	for _, definition in chunk.MeshParts do
+		local mesh = tryMesh(
+			definition.AssetKey,
+			Vector3.new(definition.SizeX, definition.SizeY, definition.SizeZ),
+			cframe * CFrame.new(definition.OffsetX, definition.OffsetY, definition.OffsetZ),
+			assembly
+		)
+		if not mesh then
+			assembly:Destroy()
+			return nil
+		end
+		mesh.Name = definition.AssetKey
+	end
+	assembly.WorldPivot = cframe
+	assembly.Parent = parent
+	return assembly
+end
+
 --- Finds which quarter turn of the ART puts deck under every declared socket.
 ---
 --- THE SOCKETS ARE THE TRUTH; THE MESH IS MEASURED AGAINST THEM. A delivered
@@ -142,7 +179,7 @@ local function calibrateYaw(
 	placed: any,
 	origin: Vector3,
 	meshPos: Vector3,
-	mesh: BasePart
+	mesh: BasePart | Model
 ): number
 	local cached = yawCache[chunk.AssetKey]
 	if cached ~= nil then
@@ -168,8 +205,10 @@ local function calibrateYaw(
 	for turn = 0, 3 do
 		-- The hint first, so a tie keeps it.
 		local k = (hint + turn * 90) % 360
-		mesh.CFrame = CFrame.new(meshPos)
-			* CFrame.Angles(0, ChunkCore.yawRadians(placed.Yaw + k), 0)
+		setMeshFrame(
+			mesh,
+			CFrame.new(meshPos) * CFrame.Angles(0, ChunkCore.yawRadians(placed.Yaw + k), 0)
+		)
 		local hits, centreHits = 0, 0
 		for _, socket in chunk.Sockets do
 			local ws = ChunkCore.worldSocket(placed, chunk, socket)
@@ -466,21 +505,20 @@ function ChunkLoader.build(
 		then
 			assetKey = assetKey .. "__" .. layout.Atmosphere
 		end
-		local mesh = tryMesh(
-			assetKey,
-			Vector3.new(chunk.SizeX, chunk.SizeY, chunk.SizeZ),
-			meshCFrame,
-			folder
-		)
+		local mesh = tryChunkMesh(chunk, assetKey, meshCFrame, folder)
 
-		local surface: BasePart
+		local surface: BasePart?
 		if mesh then
 			local meshPos = meshCFrame.Position
 			local k = calibrateYaw(chunk, placed, origin, meshPos, mesh)
-			mesh.CFrame = CFrame.new(meshPos)
-				* CFrame.Angles(0, ChunkCore.yawRadians(placed.Yaw + k), 0)
+			setMeshFrame(
+				mesh,
+				CFrame.new(meshPos) * CFrame.Angles(0, ChunkCore.yawRadians(placed.Yaw + k), 0)
+			)
 			usedMeshes += 1
-			surface = mesh
+			if mesh:IsA("BasePart") then
+				surface = mesh
+			end
 		else
 			surface = buildBlockout(chunk, placed, centre, folder)
 			floorCount += 1
@@ -491,14 +529,17 @@ function ChunkLoader.build(
 		buildSocketMarkers(chunk, placed, origin, folder)
 
 		if placed.Role == "ENTRY" and (not layout.TestMode or placed.Index == 1) then
-			local top = surface.Position + Vector3.new(0, surface.Size.Y / 2, 0)
+			local top = if surface
+				then surface.Position + Vector3.new(0, surface.Size.Y / 2, 0)
+				else centre + Vector3.new(0, chunk.SizeY - groundOffset, 0)
 			entryPosition = top + Vector3.new(0, cfg.SpawnHeight, 0)
 			-- Every kit's entry socket faces away from the arrival point, and
 			-- Normal assembly places ENTRY unrotated at the layout origin.
 			-- Test entries may face along the row, so their offset rotates too.
 			-- A quarter of the chunk back
 			-- is far enough to be a destination, near enough to be obvious.
-			local returnOffset = Vector3.new(0, 0, surface.Size.Z * 0.25)
+			local returnOffset =
+				Vector3.new(0, 0, (if surface then surface.Size.Z else chunk.SizeZ) * 0.25)
 			if layout.TestMode then
 				returnOffset = CFrame.Angles(0, ChunkCore.yawRadians(placed.Yaw), 0)
 					:VectorToWorldSpace(returnOffset)

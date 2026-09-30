@@ -1269,6 +1269,66 @@ do
 	local ok, errs = Schema.validateChunks(Chunks, AssetManifest)
 	check("the real chunk library validates", ok, table.concat(errs, "; "))
 
+	local multipart = table.clone(Chunks.ES_SANCTUM)
+	multipart.MeshParts = {
+		{
+			AssetKey = multipart.AssetKey,
+			SizeX = 20,
+			SizeY = 30,
+			SizeZ = 40,
+			OffsetX = 12,
+			OffsetY = -8,
+			OffsetZ = 16,
+		},
+	}
+	local multipartLibrary = table.clone(Chunks)
+	multipartLibrary[multipart.Id] = multipart
+	local multipartOk = Schema.validateChunks(multipartLibrary, AssetManifest)
+	check("multipart chunk accepts sized meshes with local offsets", multipartOk)
+	for _, badParts in
+		{
+			{},
+			{
+				{
+					AssetKey = "UNKNOWN",
+					SizeX = 20,
+					SizeY = 30,
+					SizeZ = 40,
+					OffsetX = 0,
+					OffsetY = 0,
+					OffsetZ = 0,
+				},
+			},
+			{
+				{
+					AssetKey = multipart.AssetKey,
+					SizeX = 0,
+					SizeY = 30,
+					SizeZ = 40,
+					OffsetX = 0,
+					OffsetY = 0,
+					OffsetZ = 0,
+				},
+			},
+			{
+				{
+					AssetKey = multipart.AssetKey,
+					SizeX = 20,
+					SizeY = 30,
+					SizeZ = 40,
+					OffsetX = math.huge,
+					OffsetY = 0,
+					OffsetZ = 0,
+				},
+			},
+			{ multipart.MeshParts[1], multipart.MeshParts[1] },
+		}
+	do
+		multipart.MeshParts = badParts
+		local valid = Schema.validateChunks(multipartLibrary, AssetManifest)
+		check("multipart chunk rejects malformed or duplicated assembly", not valid)
+	end
+
 	local uploaded, placeholder = AssetManifest.summary()
 	check(
 		"manifest reports its status",

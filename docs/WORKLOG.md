@@ -13,6 +13,60 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 100 — 2026-09-30 — Ethereal Scape polish and multipart chunk delivery
+**Merged:** see the PR for this branch   **Branch:** `agent/ethereal-scape-polish`   **Tests:** 1,014 passing; 41/41 geometry checks; FBX round-trip and splitter stress checks pass.
+
+### Done
+- Continued the existing chunk kit in its isolated worktree, leaving the portal agent's checkout untouched.
+- Polished small trees with root flares and crown forks; temple columns gain bevelled moldings. The Sanctum's open doors echo the existing Ascendant's gold slit-mask and crystal crown. Owner confirms he is the main temple boss; his authored blend/animations are untouched.
+- Owner clarified that the 10k ceiling is per mesh, not per assembled chunk. Extended the existing schema/exporter/loader: optional MeshParts records each asset, dimensions and imported-axis offset; the complete assembly moves/calibrates together and falls back atomically if any component fails to load.
+- Sanctum exports grounds (3,518 tris) and temple (7,556 tris), 11,074 total. All 42 structure meshes and 14 props are under 10k; cloud tier tessellation reduced to meet the same limit.
+- Splitter preserves all oriented triangles, materials and vertex colours, including a single grouped primitive above 10k. Stress checks cover 30k assemblies and a 12k grouped primitive. Real FBX imports verify names, units, colours, bounds and offsets; this caught and corrected a flipped offset axis before delivery.
+- Regenerated existing blend, FBXs, content and renders. Reviews isolate each piece/assembly, focused renders retain unrelated images, and validation failure blocks output writes. Export JSON documents component bounds for import review.
+- Luau CLI downloaded into ignored local .tools: 1,014 tests pass; changed Luau syntax checks show no SyntaxError. Changed Luau files formatted; full checkout formatting has pre-existing differences. Updated authoring, art direction, modular map, build spec and biome docs; regenerated index.
+- Owner requested explicit protection for the other worlds. Added CI differential checks against the pre-multipart loader: 4,240 cases across all 30 VV, 36 SC and 40 single-mesh ES chunks, four yaws, normal/catalogue modes, loaded/placeholder/failed/recoloured assets and cached repeated placements. Placement calls, models and entry/return coordinates match. Multipart four-yaw placement and atomic fallback also pass. Controlled API raycasts are not a Studio physics check. Changed production modules have zero Selene errors; two existing Schema shadowing warnings remain.
+
+### Decisions made
+- Per-mesh budget supersedes the whole-chunk budget discussed in the previous entry; geometry stays mostly low poly.
+- The existing Ascendant is the Sanctum boss, not a new boss build. Basic enemies exist despite stale roster comments; inspect their current assets before polishing them.
+
+### Stopped at
+Chunk polish and multipart delivery ready for PR/Studio review. Worktree: C:/Dev/luckbound/.worktrees/ethereal-scape-polish. No Studio imports changed.
+
+### Next
+1. Import all named structure meshes at Stud / 1.0, save ES_STRUCTURE.rbxmx and sync IDs. Verify multipart Sanctum alignment/collision at all four yaws, socket heights, vertex colours, entry/return positions and missing-component blockout fallback.
+2. Review chunk render/Studio polish; then polish the five existing basics and the miniboss roster in order. Leave the Ascendant's owner-edited assets intact.
+
+### Leftovers
+Existing Studio chunk imports are replacement candidates only after CI and a successful Studio walk. No duplicate version files created. Keep palette-reference scene, direction samples and the current owner-authored Ascendant assets. The main manifest key remains in use for the Sanctum grounds and must not be removed.
+
+---
+## Ethereal Scape polish (branch agent/ethereal-scape-polish) — 2026-09-30 — First foliage and review pass
+**Merged:** not merged   **Tests:** 41/41 Blender geometry validations pass; Studio check pending.
+
+### Done
+- Polished existing small-tree geometry with root flares and a supporting fork, using the existing palette and deterministic scatter. No new chunk recipes or enemy assets.
+- Individual chunk renders now hide the rest of the catalogue and assembled preview. Chain, catalogue and map renders also isolate their own geometry; focused renders preserve other images.
+- Generator now stops before writing content, FBXs or the blend when geometry fails validation. Failures also return a nonzero exit status for render-only builds.
+- Rebuilt the existing 41-piece blend, both FBXs and review renders. All pieces pass walkability, socket, footing, clipping and triangle checks. Sanctum is 9,986 triangles: further detail requires reducing existing geometry or distributing the budget deliberately.
+- No Luau CLI or standalone Python on PATH. Blender Python used for index generation. StyLua check reports existing checkout-wide formatting differences; no Luau semantics changed.
+
+### Decisions made
+- Owner requested polishing the already-built kit, then basics and minibosses. Edit original generators and regenerate the original blend; keep portal work isolated in the other checkout.
+- This is the first chunk polish pass, not final approval of every chunk or the enemy roster.
+
+### Stopped at
+First foliage pass rebuilt and ready for visual review. Worktree: C:/Dev/luckbound/.worktrees/ethereal-scape-polish.
+
+### Next
+1. Review Arrival Isle and Meadow of Blooms, then tune terrain, vegetation and temple detail chunk by chunk.
+2. Verify imports, colours, collisions and socket heights in Studio before retiring current imports.
+3. Continue the basic enemy roster, then minibosses, using the existing enemy framework. Inspect untracked enemy assets in the portal checkout before rebuilding anything: those may contain owner or another agent work.
+
+### Leftovers
+No duplicate versions created. Keep original palette-reference scene and direction samples. Current Studio imports can only be retired after CI and a successful Studio visual/walk pass.
+
+---
 ## UI-overhaul (branch agents/UI-overhaul) — 2026-09-29 — SIGIL UI overhaul
 **Merged:** none yet   **Tests:** not run here (no `luau` CLI in this session; CI is the test run). Owner walked every piece in Studio.
 

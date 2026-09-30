@@ -67,6 +67,8 @@ class Piece:
         self.verts, self.faces, self.fmat = [], [], []
         self.ftag = []                     # per face: the builder that made it (clip reports)
         self.fshell = []                   # per face: which primitive call made it (one shell each)
+        self.fexport = []                  # per face: semantic export group
+        self.export_group = "terrain"
         self._shell = 0
         self._grouped = False
         self.slabs = []                    # geometry_checks compatibility (decks are found by area)
@@ -94,6 +96,7 @@ class Piece:
         self.fmat.extend(list(mat) if isinstance(mat, (list, tuple)) else [mat] * len(faces))
         self.ftag.extend([caller_tag()] * len(faces))
         self.fshell.extend([self._shell] * len(faces))
+        self.fexport.extend([self.export_group] * len(faces))
         if not self._grouped:              # inside group(): every add shares one shell id
             self._shell += 1
         return base
@@ -117,6 +120,7 @@ class Piece:
         self.fmat = [self.fmat[i] for i in keep]
         self.ftag = [self.ftag[i] for i in keep]
         self.fshell = [self.fshell[i] for i in keep]
+        self.fexport = [self.fexport[i] for i in keep]
         used = sorted({v for f in faces for v in f})
         vmap = {old: new for new, old in enumerate(used)}
         self.verts = [self.verts[i] for i in used]

@@ -60,6 +60,18 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 ## 2. Next — pick up here
 
+> **2026-09-30: Ethereal Scape chunk polish and multipart delivery**, `agent/ethereal-scape-polish`.
+> Owner clarified: under 10k triangles per mesh, not per chunk; low-poly style retained. Existing trees
+> and columns polished; Sanctum doors echo the existing Ascendant, confirmed as its main boss.
+> Sanctum: 11,074 tris across 3,518-tri grounds and 7,556-tri temple meshes. Optional MeshParts content
+> loads/calibrates the entire assembly together, with whole-chunk fallback if one mesh is missing.
+> 1,014 Luau tests, 41/41 geometry checks, splitter stress cases and real FBX round-trips pass;
+> 42 structure meshes and 14 props stay under 10k. Existing blend/FBXs/renders regenerated.
+> CI loader compatibility checks pass 4,240 cases: all VV/SC single-mesh chunks match the old loader
+> at four yaws, including fallback/recolour/catalogue paths. Multipart alignment/fallback also passes.
+> Studio import, four-yaw alignment/collision and colour checks remain pending. Basics already exist;
+> review and polish those next, then minibosses. Ascendant's current model/animations are preserved.
+
 > **2026-09-28: polished body movement.** `CharacterAnimator` + `AnimationCore`: blended gaits, directional
 > strafe (clips when filled, procedural until then), lean, head look, landings, sounds; rolls in four
 > directions relative to facing. Clip slots in `Content/Animations/Player.luau` (§2.7 has the how-to).
