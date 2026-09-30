@@ -154,7 +154,17 @@ class Mesh:
         return sum(len(f.verts) - 2 for f in self.bm.faces)
 
     def finish(self, collection):
+        # Faces share coordinates but face() creates separate vertices. Weld
+        # them before normal calculation so closed shells have an inside and
+        # an outside; Roblox culls inward-facing triangles.
+        bmesh.ops.remove_doubles(self.bm, verts=self.bm.verts[:], dist=0.00001)
+        bmesh.ops.triangulate(self.bm, faces=self.bm.faces[:])
         bmesh.ops.recalc_face_normals(self.bm, faces=self.bm.faces[:])
+        # These are intentionally open ground sheets, viewed from above.
+        if self.name in ("Scar", "ScarGlow"):
+            for face in self.bm.faces:
+                if face.normal.z < 0:
+                    face.normal_flip()
         me = bpy.data.meshes.new(self.name)
         self.bm.to_mesh(me)
         self.bm.free()
@@ -280,10 +290,10 @@ def build(variant):
                 surf.face([pts[0], pts[k], pts[k + 1]])
     # A flat worn disc under the tear, so the ground reads as part of the rift.
     sides = 20
+    radii = [R * 0.34 * (0.85 + 0.3 * rng.random()) for _ in range(sides)]
     for i in range(sides):
         a0, a1 = 2 * math.pi * i / sides, 2 * math.pi * (i + 1) / sides
-        r0 = R * 0.34 * (0.85 + 0.3 * rng.random())
-        r1 = R * 0.34 * (0.85 + 0.3 * rng.random())
+        r0, r1 = radii[i], radii[(i + 1) % sides]
         zz = GROUND_MAX * 0.4
         scar.face([(0, 0, zz), (r0 * math.cos(a0), r0 * math.sin(a0), zz), (r1 * math.cos(a1), r1 * math.sin(a1), zz)])
     parts.append(scar)
@@ -336,6 +346,17 @@ def validate(variant, report, col=None):
     # FLUSH: the scar and its glow must lie on the deck. (Debris stones are
     # small rocks with some height, so they get a looser bound.)
     if col is not None:
+        for o in col.objects:
+            bm = bmesh.new()
+            bm.from_mesh(o.data)
+            if any(len(f.verts) != 3 or f.calc_area() < 1e-10 for f in bm.faces):
+                errors.append(f"{o.name} has non-triangle or degenerate faces")
+            if o.name in ("Scar", "ScarGlow"):
+                if any(f.normal.z < 0 for f in bm.faces):
+                    errors.append(f"{o.name} has downward-facing ground triangles")
+            elif any(not e.is_manifold for e in bm.edges) or bm.calc_volume(signed=True) <= 0:
+                errors.append(f"{o.name} is not a closed outward-facing mesh")
+            bm.free()
         for name, limit in (("Scar", GROUND_MAX), ("ScarGlow", GROUND_MAX + 0.05), ("Debris", 0.6)):
             o = col.objects.get(name)
             if o:
@@ -354,6 +375,38 @@ def validate(variant, report, col=None):
     return total, errors
 
 
+def verify_fbx(path, col):
+    """Re-import the actual delivery: exact names, Y-up dimensions and scale."""
+    expected = {o.name: (o.dimensions.copy(), len(o.data.polygons)) for o in col.objects}
+    before = set(bpy.data.objects)
+    bpy.ops.import_scene.fbx(filepath=path)
+    imported = set(bpy.data.objects) - before
+    meshes = {o.name.split(".")[0]: o for o in imported if o.type == "MESH"}
+    errors = []
+    if set(meshes) != set(expected):
+        errors.append("FBX round-trip changed the mesh names/count")
+    for name, (dims, triangles) in expected.items():
+        o = meshes.get(name)
+        if o is None:
+            continue
+        want = Vector((dims.x, dims.z, dims.y))
+        if (o.dimensions - want).length > 0.001:
+            errors.append(f"{name} FBX dimensions {tuple(o.dimensions)} != {tuple(want)}")
+        if (o.scale - Vector((1, 1, 1))).length > 0.00001:
+            errors.append(f"{name} FBX has unapplied scale {tuple(o.scale)}")
+        bm = bmesh.new()
+        bm.from_mesh(o.data)
+        if len(bm.faces) != triangles or any(f.calc_area() < 1e-10 for f in bm.faces):
+            errors.append(f"{name} FBX changed triangles or introduced degenerate faces")
+        if name not in ("Scar", "ScarGlow"):
+            if any(not e.is_manifold for e in bm.edges) or bm.calc_volume(signed=True) <= 0:
+                errors.append(f"{name} FBX is not closed and outward-facing")
+        bm.free()
+    for o in imported:
+        bpy.data.objects.remove(o, do_unlink=True)
+    return errors
+
+
 def main():
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else sys.argv[1:]
     which = "BOTH"
@@ -370,6 +423,8 @@ def main():
         for e in errors:
             print(f"  ERROR {e}")
             failed = True
+        if errors:
+            continue  # never overwrite a delivery with invalid geometry
         if "--save" in argv:
             bpy.ops.wm.save_as_mainfile(filepath=os.path.join(HERE, f"expedition_{variant.lower()}.blend"))
         if "--export" in argv:
@@ -380,9 +435,17 @@ def main():
             bpy.ops.export_scene.fbx(
                 filepath=os.path.join(EXPORT_DIR, f"EXPEDITION_{variant}.fbx"),
                 use_selection=True, global_scale=1.0, apply_unit_scale=True,
+                apply_scale_options="FBX_SCALE_ALL", bake_space_transform=True,
+                object_types={"MESH"},
                 mesh_smooth_type="FACE", add_leaf_bones=False, bake_anim=False,
                 axis_forward="-Z", axis_up="Y",
             )
+            export_errors = verify_fbx(os.path.join(EXPORT_DIR, f"EXPEDITION_{variant}.fbx"), col)
+            for e in export_errors:
+                print(f"  ERROR {e}")
+                failed = True
+            if not export_errors:
+                print(f"[{variant}] FBX round-trip: names, dimensions, scale and topology passed")
     if failed:
         sys.exit(1)
 

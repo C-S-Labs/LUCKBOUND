@@ -88,6 +88,11 @@ the other breaks the 20-second budget, and a test will say so.
 
 ### The PortalRig
 
+Expedition entrance/exit meshes use `RiftRig` (build spec §7.8). Their source coordinates are studs:
+import at **Scale Unit: Stud / Scale: 1.0**, with `RiftHalo` heights of 15 and 21 studs respectively.
+Their generator welds and triangulates closed shells before calculating outward normals, and verifies the
+FBX round-trip dimensions and topology. Ground scar sheets face upward; motion and light remain in code.
+
 One shared component, instanced per use and reskinned by rarity colour only —
 never duplicated per biome. Fate Engine at 1.5×, Expedition Gate at 2×, and
 every future world portal from the same rig.

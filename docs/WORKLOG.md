@@ -34,6 +34,38 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 97 — 2026-09-30 — Correct rift faces and FBX import scale
+**Merged:** not merged   **Tests:** both generator validations and FBX round-trips pass   **Branch:** `agent/expedition-portal`
+
+### Done
+- Investigated owner's oversized Studio imports and exit holes. Welded coincident vertices before normal
+  calculation, explicitly triangulated shells, oriented ground sheets upward and closed scar-disc wedge gaps.
+- Matched chunk exporter settings (`FBX_SCALE_ALL`, baked Y-up transform); regenerated both existing Blender
+  sources and FBXs. Added topology validation and FBX re-import checks for names, dimensions and unit scale.
+- Corrected import instructions from Meter to Stud / 1.0; expected tear heights are 15 and 21 studs.
+- Index regenerated/checked using Blender's Python (no standalone Python installed), excluding the owner's
+  unrelated untracked `TheAscendant_fixed.blend` from the generated inventory. No Luau runtime is installed;
+  game tests remain for CI. StyLua check reports pre-existing differences across the branch (including CRLF
+  normalization); no Luau files changed in this import fix and broad reformatting was left out of scope.
+
+### Decisions made
+- Fix the original generator and assets; no duplicate portal versions. Preserve earlier Studio imports until
+  the owner verifies the corrected delivery. The exporter FACE option is a shading setting, not a face repair.
+
+### Stopped at
+Both generated variants pass topology and FBX round-trip checks. Studio warning text and corrected imports
+are pending; no prefabs saved yet. Runtime implementation remains as recorded in Session 96.
+
+### Next
+1. Owner re-imports regenerated FBXs at Stud / 1.0 and verifies faces and dimensions; saves named prefabs.
+2. Finish prefab wiring and Studio entrance/exit checks, then remaining §7.8 work.
+
+### Leftovers
+Earlier Studio imports are superseded candidates; remove only after corrected imports and gameplay pass.
+Keep the source/export assets and unrelated owner's Blender file.
+
+---
+
 ## Session 96 — 2026-09-29 — Expedition rifts: entrance, boss-gated exit, outcome payouts
 **Merged:** not merged   **Tests:** 944 passing   **Branch:** `agent/expedition-portal`
 

@@ -12,12 +12,12 @@ _252 text files, 272 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### (root)
 
-- `.stylua.toml` (3) · 2026-09-24
+- `.stylua.toml` (3) · 2026-09-15
 - `AGENTS.md` (173) - LUCKBOUND — Instructions for AI Agents · 2026-09-28
   - `AGENTS.md`: STEP 0 — read `INDEX.md` before anything else (mandatory):9, Keeping INDEX.md current:26, STEP 1 — then read these three, in this order:32, Token discipline (owner priority):68, BEFORE YOU FINISH — update the handoff:76, The prime directive:106, Hard rules:114, Boot order:125, Style:129, Git workflow — implementation vs integration:136, Verify before you merge:151, When you are unsure:171
 - `CLAUDE.md` (6) - CLAUDE.md · 2026-09-25
 - `GEMINI.md` (3) - GEMINI.md · 2026-09-25
-- `INDEX.md` (196) - LUCKBOUND — Repository Index · 2026-09-28
+- `INDEX.md` (196) - LUCKBOUND — Repository Index · 2026-09-29
   - `INDEX.md`: 1. Read order for a new session:22, 2. Top-level layout and where it lands in Roblox (`default.p:32, 3. Docs: what each one owns:56, 4. "I need to…" → where:81, 5. Asset pipelines (Blender 5.2, headless):109, 6. Conventions and workflow (quick reference; full rules in :155, 7. Exact locations: `INDEX_MAP.md`:179
 - `README.md` (74) - LUCKBOUND · 2026-09-27
   - `README.md`: Read these first:15, Quick start:36, Two rules that shape everything:49, What's built:61
@@ -34,12 +34,12 @@ _252 text files, 272 binary assets. Regenerate with `python tools/gen_index.py`;
 ### assets/rbxm
 
 - `assets/rbxm/bosses/README.md` (4) - Boss models for /showboss · 2026-09-24
-- `assets/rbxm/maps/README.md` (118) - Prebuilt maps · 2026-09-24
+- `assets/rbxm/maps/README.md` (118) - Prebuilt maps · 2026-09-17
   - `README.md`: The two ways a world gets a map:11, The contract with the modeller:26, Measured on arrival:64, Why this world is prebuilt:90, Still to do on this file:111
-- `assets/rbxm/prefabs/FATE_ENGINE_DESIGN.txt` (164) · 2026-09-24
-- `assets/rbxm/prefabs/README.md` (409) - Hub prefabs · 2026-09-24
+- `assets/rbxm/prefabs/FATE_ENGINE_DESIGN.txt` (164) · 2026-09-17
+- `assets/rbxm/prefabs/README.md` (409) - Hub prefabs · 2026-09-18
   - `README.md`: What the loader does for you:10, Scale:44, What the artist added beyond the spec:59, What is animated:79, Still to do:93, Scale — 2.0, and it is exact:118, The compass was 180° out, and that is the exporter, not the :136, Registration — by part name, not by pivot:146, Where the delivery differs from the brief:163, Collision — why so little of it is on:180, What the first walk changed — 2026-09-18:204, `CollisionFidelity` is baked into the file, not set at runti:229, Paint coverage:252, The Expedition Gate is gone entirely:263, The Fate Engine sits flush on it:280, Where players arrive:296, Still to do:310, It is built as a ring of clones, not placed whole:349
-- `assets/rbxm/props/README.md` (12) - Ambient-scenery prop libraries · 2026-09-24
+- `assets/rbxm/props/README.md` (12) - Ambient-scenery prop libraries · 2026-09-23
 
 ### assets/source
 
@@ -132,28 +132,28 @@ _252 text files, 272 binary assets. Regenerate with `python tools/gen_index.py`;
   - `README.md`: Design:15, Pieces:38, Shop wares:54, Checks:67, Gameplay anchors:72, Import:85, In the game (2026-09-24):98, The sky beyond (2026-09-24):115
 - `assets/source/hub/crossroads/build_crossroads_hub.py` (1688) - THE CROSSROADS, rebuilt around the Fate Engine (owner, 2026-09-23: "the · 2026-09-24
   - `build_crossroads_hub.py`: part_of:118, anim:135, tris:148, anchor:152, sector:158, ring_with_gaps:177, ribbon_pts:193, lamp:197, pylon_beacon:204, hanging_core:217, stepped_keel:224, district_deck:237, build_platform:259, build_levitator:342, statue:398, obelisk:414, build_hall:422, book_row:482, build_archives:493, ware:572, stall:633, build_shop:652, brazier:719, rack:728, target:739, build_training:749, lump:814, peak:853, crag:860, island_base:865, vein:887, ruin_spire:895, build_backdrop_peaks:904, build_backdrop_mesa:929, build_backdrop_spires:971, prop_isle_shrine:1015, prop_isle_grove:1030, prop_isle_ruin:1043, lathe_x:1060, rails:1073, ... +32 more
-- `assets/source/hub/crossroads/check_buried_parts.py` (68) - Find loose parts buried inside other parts of the same static mesh (points · 2026-09-24
-- `assets/source/hub/crossroads/check_walkways.py` (52) - Walk every route (plaza -> bridges -> districts, the promenade ring, the overlooks) · 2026-09-24
+- `assets/source/hub/crossroads/check_buried_parts.py` (68) - Find loose parts buried inside other parts of the same static mesh (points · 2026-09-23
+- `assets/source/hub/crossroads/check_walkways.py` (52) - Walk every route (plaza -> bridges -> districts, the promenade ring, the overlooks) · 2026-09-23
   - `check_walkways.py`: ground:15
 - `assets/source/hub/crossroads/make_layout_luau.py` (80) - crossroads_layout.json -> src/shared/Content/Hub/CrossroadsV2.luau · 2026-09-24
   - `make_layout_luau.py`: v3:17, main:21
 - `assets/source/hub/crossroads/render_crossroads.py` (188) - Review renders for the Crossroads. Called by build_crossroads_hub.py --render. · 2026-09-24
   - `render_crossroads.py`: setup_world:15, append_engine:45, person:64, shot:76, lineup:96, render_all:106
-- `assets/source/items/weapons/sky_citadel/WEAPONS_MANIFEST.md` (44) - Sky Citadel weapons — manifest · 2026-09-24
+- `assets/source/items/weapons/sky_citadel/WEAPONS_MANIFEST.md` (44) - Sky Citadel weapons — manifest · 2026-09-23
   - `WEAPONS_MANIFEST.md`: Exports:35, Warnings:42
-- `assets/source/items/weapons/sky_citadel/build_sky_citadel_weapons.py` (1928) - Sky Citadel weapons -- generator. · 2026-09-24
+- `assets/source/items/weapons/sky_citadel/build_sky_citadel_weapons.py` (1928) - Sky Citadel weapons -- generator. · 2026-09-23
   - `build_sky_citadel_weapons.py`: srgb_to_linear:108, ensure_materials:113, bone_allowed:163, is_fx:167, is_animatable:171, xf:181, Weapon:186, box:259, frustum:267, torus:283, torus_arc:298, crystal:316, orb:329, _angles:342, loft:348, tube:374, hex_section:400, single_section:406, blade:412, lathe:417, inlay:428, weapon:444, sword_bones:451, ring_bone:466, sword_wardline:481, sword_parapet:509, sword_gilded:538, sword_chevron:567, sword_turbine:596, sword_spireward:640, greatsword_bastion:693, greatsword_merlon:722, greatsword_lintel:750, greatsword_keel:780, greatsword_aethervane:809, greatsword_orrery:851, dagger_sentry:908, dagger_spike:929, dagger_talon:947, dagger_kris:973, ... +30 more
-- `assets/source/portals/README.md` (41) - Expedition rifts (build spec §7.8) · 2026-09-29
-  - `README.md`: Contract (names are exact):21, Studio import (owner step, not done yet):34
-- `assets/source/portals/build_expedition_portals.py` (391) - THE EXPEDITION RIFTS (build spec §7.8): the ENTRANCE and the EXIT. · 2026-09-29
-  - `build_expedition_portals.py`: Mesh:87, material:172, half_width_at:187, build:192, make_scene:308, validate:321, main:357
-- `assets/source/worlds/_framework/geometry_checks.py` (491) - Checks on a piece's REAL geometry, not its registered shapes. · 2026-09-24
+- `assets/source/portals/README.md` (52) - Expedition rifts (build spec §7.8) · 2026-09-29
+  - `README.md`: Contract (names are exact):21, Studio import (owner step, not done yet):34, Import correction (2026-09-30):45
+- `assets/source/portals/build_expedition_portals.py` (454) - THE EXPEDITION RIFTS (build spec §7.8): the ENTRANCE and the EXIT. · 2026-09-29
+  - `build_expedition_portals.py`: Mesh:87, material:182, half_width_at:197, build:202, make_scene:318, validate:331, verify_fbx:378, main:410
+- `assets/source/worlds/_framework/geometry_checks.py` (491) - Checks on a piece's REAL geometry, not its registered shapes. · 2026-09-23
   - `geometry_checks.py`: caller_tag:35, _shells:46, _bvh:79, _near:85, _face_normal:89, _samples:95, _close:113, _touching:124, _enclosed:137, analyse:150, gap_to_rest:228, _inside_shape:255, drop_faces:314, _lift:331, _islet:347, _deck_centres:361, _pin:369, settle:374, unclip:428, bad_clips:459, geometry_faults:482
-- `assets/source/worlds/_framework/prop_detail.py` (162) - The detail pass: every prop mesh finished before it is exported. · 2026-09-24
+- `assets/source/worlds/_framework/prop_detail.py` (162) - The detail pass: every prop mesh finished before it is exported. · 2026-09-23
   - `prop_detail.py`: _dtris:45, _dstyle:49, _to_bm:61, _from_bm:80, _bm_shells:90, _bevel:109, _subdivide:117, detail:128
 - `assets/source/worlds/_framework/refinish.py` (61) - Semi-mid-poly FINISH pass for chunk pieces (owner-approved 2026-09-24, Sky Citadel first). · 2026-09-24
   - `refinish.py`: refinish_piece:11
-- `assets/source/worlds/_framework/scatter_core.py` (232) - The prop scatter -- Python twin of src/shared/Core/ScatterCore.luau. · 2026-09-24
+- `assets/source/worlds/_framework/scatter_core.py` (232) - The prop scatter -- Python twin of src/shared/Core/ScatterCore.luau. · 2026-09-23
   - `scatter_core.py`: imul:38, fnv:46, Rng:54, encode_point:76, encode_air:84, decode_points:88, decode_air:98, rule_ok:108, scatter:122
 - `assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py` (668) - LUCKBOUND - Ethereal Scape 30-piece chunk kit, REVAMP (2026-09-26, owner-directed). · 2026-09-27
   - `build_ethereal_scape_kit.py`: materials:77, to_object:94, mesh_bvh:135, column_tops:140, walk_graph:155, detached:208, validate:224, _num:296, write_chunks_luau:304, write_props_luau:387, export:416, render_setup:444, shot:467, place_prop_copies:477, chain_preview:490, map_preview:510, main:556
@@ -173,15 +173,15 @@ _252 text files, 272 binary assets. Regenerate with `python tools/gen_index.py`;
   - `es_samples.py`: float_isle:26, landing_isle:67, sample_floating_isles:88, sample_lush_cloudscape:118, sample_temple_city:152
 - `assets/source/worlds/sky_citadel/IMPORT_STEPS.md` (34) - Sky Citadel refinish (2026-09-24): re-import steps · 2026-09-24
   - `IMPORT_STEPS.md`: 1. Chunks (structure):10, 2. Props:20, 3. Recolours (scenario variants):26, 4. Walk it:32
-- `assets/source/worlds/sky_citadel/build_sky_citadel_atmosphere_props.py` (442) - Sky Citadel ATMOSPHERE PROPS -- the things each scenario atmosphere's · 2026-09-24
+- `assets/source/worlds/sky_citadel/build_sky_citadel_atmosphere_props.py` (442) - Sky Citadel ATMOSPHERE PROPS -- the things each scenario atmosphere's · 2026-09-23
   - `build_sky_citadel_atmosphere_props.py`: lump:55, atm_security_probe:86, atm_dome_pylon:100, _hull:115, atm_burning_wreck:124, atm_wreck_stern:135, atm_storm_conductor:147, atm_stormhawk:162, atm_ice_floe:179, atm_seed_pod:192, atm_aurora_prism:206, atm_falling_masonry:226, atm_broken_ring:237, atm_alarm_beacon:256, atm_signal_fire:267, atm_lightning_rod:280, atm_frost_lantern:288, atm_glow_bloom:297, atm_aether_node:310, atm_stabilizer_beacon:320, atm_raider_glider:335, atm_ice_wisp:346, atm_moth:355, atm_aether_wisp:363, atm_repair_drone:372, build:388, main:411
 - `assets/source/worlds/sky_citadel/build_sky_citadel_kit.py` (4464) - Sky Citadel chunk kit -- generator. · 2026-09-24
   - `build_sky_citadel_kit.py`: srgb_to_linear:104, ensure_materials:109, xf:137, Piece:142, oriented:216, _slice:277, as_prop:292, as_attached:312, as_fixture:325, fixture_part:337, box:351, box_span:359, frustum:363, torus:400, crystal:415, tube:428, poly_radius:471, face_dist:479, piece_bvh:489, hang_clear:493, path_clear:503, slab:523, spine:535, keel:544, standard_keel:584, ngon:597, _xy_extent:612, _z:619, shapes_clash:623, shape_over_slab:637, shape_fits_tile:670, free_for_float:676, spire:691, tower:726, gate:781, railing:813, parapet:825, parapet_ring:842, border_band:854, lamp:869, ... +167 more
-- `assets/source/worlds/sky_citadel/build_sky_citadel_recolors.py` (122) - Sky Citadel RECOLOURS -- the 36 base pieces in each scenario atmosphere's · 2026-09-24
+- `assets/source/worlds/sky_citadel/build_sky_citadel_recolors.py` (122) - Sky Citadel RECOLOURS -- the 36 base pieces in each scenario atmosphere's · 2026-09-23
   - `build_sky_citadel_recolors.py`: normal_z:61, recolour:67, main:87
 - `assets/source/worlds/sky_citadel/refinish_test.py` (125) - Sky Citadel chunk REFINISH test (owner request 2026-09-24): does a finish pass close the style gap between the · 2026-09-24
   - `refinish_test.py`: glossy:24, refinish:32, tris:62, load_boss:67, deck_point:81, look:105
-- `assets/source/worlds/sky_citadel/render_review.py` (196) - Review renders for the Sky Citadel kit. Writes JPEGs to ./renders/. · 2026-09-24
+- `assets/source/worlds/sky_citadel/render_review.py` (196) - Review renders for the Sky Citadel kit. Writes JPEGs to ./renders/. · 2026-09-22
   - `render_review.py`: setup_world:38, camera:70, look_at:81, render:87, _preview:92, build_chain:113, build_corner:138, main:150
 - `assets/source/worlds/verdant_valley/IMPORT_STEPS.md` (72) - Verdant Valley base kit (30 pieces): import steps · 2026-09-27
   - `IMPORT_STEPS.md`: 1. Import to Studio:6, 2. Wire the asset ids:15, 3. Walk it:30, The pieces:35
@@ -195,13 +195,13 @@ _252 text files, 272 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/ADDENDUM_ASSET_PIPELINE.md
 
-- `docs/ADDENDUM_ASSET_PIPELINE.md` (61) - LUCKBOUND — Addendum: Asset Pipeline & Procedural Generation Architecture · 2026-09-24
+- `docs/ADDENDUM_ASSET_PIPELINE.md` (61) - LUCKBOUND — Addendum: Asset Pipeline & Procedural Generation Architecture · 2026-09-15
   - `ADDENDUM_ASSET_PIPELINE.md`: A1. Model & Asset Import Pipeline:7, A2. Asset Storage Location:23, A3. Terrain Strategy:29, A4. Procedural Variation — Target Design (Post-Skeleton):38, A5. Sequencing Note:59
 
 ### docs/ART_DIRECTION.md
 
-- `docs/ART_DIRECTION.md` (516) - LUCKBOUND — Art Direction Brief · 2026-09-27
-  - `ART_DIRECTION.md`: The approach:7, The mesh seam:25, What exists now:50, The PortalRig:89, What to describe:101, 1. Hub lighting ⭐ (cheapest, highest impact right now):105, 2. The reveal moment ⭐⭐ (the whole game, per §25):114, 3. The Fate Engine:126, 4. Placeholder text:135, 5. Biomes (Phase 2):140, The house style — low poly, one palette:154, Natural things grow in patches, never in geometry — universa:183, No built-in Roblox materials:203, Colour is applied in code, not baked in:226, Collision is part of the paint table, and it is the dangerou:247, The hub palette — the thematic cycle:292, Current defaults:345, Rarity colours — do not deviate:363, How a description becomes code:381, Hub scale vs. the player — measured and APPLIED 2026-09-21:392, What the number would be:414, It was applied on 2026-09-21:427, Why it was not changed in the pass before:457, Replacing the Crossroads later — the drop-in contract:482, What the new delivery has to keep:497, And the one thing to do differently:509
+- `docs/ART_DIRECTION.md` (521) - LUCKBOUND — Art Direction Brief · 2026-09-27
+  - `ART_DIRECTION.md`: The approach:7, The mesh seam:25, What exists now:50, The PortalRig:89, What to describe:106, 1. Hub lighting ⭐ (cheapest, highest impact right now):110, 2. The reveal moment ⭐⭐ (the whole game, per §25):119, 3. The Fate Engine:131, 4. Placeholder text:140, 5. Biomes (Phase 2):145, The house style — low poly, one palette:159, Natural things grow in patches, never in geometry — universa:188, No built-in Roblox materials:208, Colour is applied in code, not baked in:231, Collision is part of the paint table, and it is the dangerou:252, The hub palette — the thematic cycle:297, Current defaults:350, Rarity colours — do not deviate:368, How a description becomes code:386, Hub scale vs. the player — measured and APPLIED 2026-09-21:397, What the number would be:419, It was applied on 2026-09-21:432, Why it was not changed in the pass before:462, Replacing the Crossroads later — the drop-in contract:487, What the new delivery has to keep:502, And the one thing to do differently:514
 
 ### docs/BLUEPRINT_RECONCILIATION.md
 
@@ -220,7 +220,7 @@ _252 text files, 272 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/CROSSROADS_BLENDER_PROMPT.md
 
-- `docs/CROSSROADS_BLENDER_PROMPT.md` (383) - The Crossroads — Blender build brief · 2026-09-24
+- `docs/CROSSROADS_BLENDER_PROMPT.md` (383) - The Crossroads — Blender build brief · 2026-09-18
   - `CROSSROADS_BLENDER_PROMPT.md`: Note for us, not for the modeller:21, How to work:53, Scale law — read this first:74, Style law — low poly, flat shaded, no textures:87, Orientation and the floor plan:107, Build these objects:132, The floor:137, The Fate Engine's reserved footprint:147, The four walkways:161, The four district platforms:181, Scenery:201, Materials — flat colour, no textures:210, Light the scene like the hub:230, Hierarchy:238, Polygon budget:263, Export:276, Before you say you are done, verify:286, After the FBX exists:316, What actually arrived — 2026-09-18:334
 
 ### docs/DEVELOPMENT_PLAN.md
@@ -245,12 +245,12 @@ _252 text files, 272 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/EVENTS.md
 
-- `docs/EVENTS.md` (422) - LUCKBOUND — Live Events & Rifts · 2026-09-24
+- `docs/EVENTS.md` (422) - LUCKBOUND — Live Events & Rifts · 2026-09-20
   - `EVENTS.md`: 1. What an event is:14, The three scopes:24, 2. How an event is triggered:44, Scheduled events need no coordination at all:56, Ledger-capped is the expensive one, and it is already done:73, 3. What is built today:83, 4. The event catalogue — a proposal:97, 4.0 Three tiers of loudness:102, 4.1 Global — the game-wide ones:127, 4.2 Server — the ones a room shares:137, 4.3 Biome — the ones that open doors:147, 5. Rifts — event-gated dungeons:162, 5.1 Where the portal appears:171, 5.2 The rules that keep it honest:184, 5.3 Difficulty:200, 5.4 The rewards — DECIDED:217, 5.4b Getting to the biome in the first place — a conflict wo:250, 5.5 Who gets what — the Star and the event are separate thin:286, 5.6 Recurrence — seasonal and periodic events:309, 5.7 Announcing outside the game (Discord):329, 5.5 What a rift needs that does not exist yet:357, 6. Decisions — answered 2026-09-20:378, Still open:398, 7. What to build in what order:408
 
 ### docs/FATE_ENGINE_BLENDER_PROMPT.md
 
-- `docs/FATE_ENGINE_BLENDER_PROMPT.md` (402) - The Fate Engine — Blender build prompt · 2026-09-24
+- `docs/FATE_ENGINE_BLENDER_PROMPT.md` (402) - The Fate Engine — Blender build prompt · 2026-09-17
   - `FATE_ENGINE_BLENDER_PROMPT.md`: How to run this:20, The contract, for reference:35, How to work:75, Scale law — read this first:101, Style law — low poly, flat shaded:115, Orientation:139, Origins — the rule that makes animation work:150, Build these objects:164, The dais:169, The portal rig:180, The rune ring:205, The crystal shards:221, The spotlight anchor:237, Materials — flat colour, no textures:246, `Tint_White` is not laziness, it is the contract:265, Light the scene like the hub, not like a studio:281, Hierarchy:289, Polygon budget:316, Export:341, Before you say you are done, verify:354, After the FBX exists:389
 
 ### docs/GIT_WORKFLOW.md
@@ -290,18 +290,18 @@ _252 text files, 272 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/RESERVED.md
 
-- `docs/RESERVED.md` (102) - Reserved and unconsumed declarations · 2026-09-24
+- `docs/RESERVED.md` (102) - Reserved and unconsumed declarations · 2026-09-29
   - `RESERVED.md`: World definition — `Core/Types.WorldDefinition`:28, Chunk definition — `Core/Types.ChunkDefinition`:40, Remotes — `Core/Net`, build spec §4:49, Generation options:59, Loot, fixtures and vault keys — build spec §7.5:67, Expedition rifts — build spec §7.8:80, Nothing is currently ORPHANED:88, When you add a reserved declaration:96
 
 ### docs/SKY_CITADEL_WEAPONS_BLENDER_PROMPT.md
 
-- `docs/SKY_CITADEL_WEAPONS_BLENDER_PROMPT.md` (275) - Sky Citadel weapons — Blender build prompt · 2026-09-24
+- `docs/SKY_CITADEL_WEAPONS_BLENDER_PROMPT.md` (275) - Sky Citadel weapons — Blender build prompt · 2026-09-23
   - `SKY_CITADEL_WEAPONS_BLENDER_PROMPT.md`: How to run this:21, 0. Read these first. They are the rules, not background:38, 1. What to build:63, The creative brief:73, 2. Hard rules:114, 3. The rig — modular, named, ready to animate later:134, 4. How to work:167, 5. Layout for review, and export:190, 6. Validation — the script refuses to export on any failure:214, 7. What you must NOT do:244, 8. Checkpoints:255
 
 ### docs/STATUS.md
 
-- `docs/STATUS.md` (275) - LUCKBOUND — Project Status · 2026-09-28
-  - `STATUS.md`: 1. Where the project stands:10, 2. Next — pick up here:45, 3. Decisions locked in:173, Why true RNG matters downstream:199, 4. Open items (one line each; details are in the archive und:212, 5. Environment:257, Startup:265
+- `docs/STATUS.md` (281) - LUCKBOUND — Project Status · 2026-09-29
+  - `STATUS.md`: 1. Where the project stands:10, 2. Next — pick up here:45, 3. Decisions locked in:179, Why true RNG matters downstream:205, 4. Open items (one line each; details are in the archive und:218, 5. Environment:263, Startup:271
 
 ### docs/TESTING.md
 
@@ -320,8 +320,8 @@ _252 text files, 272 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (5846) - LUCKBOUND — Work Log · 2026-09-28
-  - `WORKLOG.md`: Template:16, Session N — YYYY-MM-DD — <short title>:19, Done:22, Decisions made:25, Stopped at:28, Next:31, Session 96 — 2026-09-29 — Expedition rifts: entrance, boss-g:37, Done:40, Decisions made:52, Stopped at:59, Next:63, Session 95 — 2026-09-28 — Git workflow: implementation vs in:70, Done:73, Decisions made:81, Stopped at:86, Next:89, Session 94 — 2026-09-27 — Dev panel grip: visible, and corre:94, Done:97, Next:106, Session 93 — 2026-09-27 — Leaderboard rows: friend / block /:111, Done:114, Next:126, Session 92 — 2026-09-27 — Chat to top-left, rail drops and c:132, Done:135, Stopped at:151, Next:154, Session 91 — 2026-09-27 — Custom leaderboard + chat panel in:159, Done:162, Decisions made:168, Stopped at:175, Next:178, Session 90 — 2026-09-27 — Fix: entering twice while a map lo:185, Done:188, Next:199, Session 89 — 2026-09-27 — Developer panel + command registry:204, Done:207, Next:226, Session 88 — 2026-09-27 — Ethereal Scape: walk fixes (Sanctu:231, Done:234, Next:250, ... +500 more
+- `docs/WORKLOG.md` (5878) - LUCKBOUND — Work Log · 2026-09-29
+  - `WORKLOG.md`: Template:16, Session N — YYYY-MM-DD — <short title>:19, Done:22, Decisions made:25, Stopped at:28, Next:31, Session 97 — 2026-09-30 — Correct rift faces and FBX import :37, Done:40, Decisions made:51, Stopped at:55, Next:59, Leftovers:63, Session 96 — 2026-09-29 — Expedition rifts: entrance, boss-g:69, Done:72, Decisions made:84, Stopped at:91, Next:95, Session 95 — 2026-09-28 — Git workflow: implementation vs in:102, Done:105, Decisions made:113, Stopped at:118, Next:121, Session 94 — 2026-09-27 — Dev panel grip: visible, and corre:126, Done:129, Next:138, Session 93 — 2026-09-27 — Leaderboard rows: friend / block /:143, Done:146, Next:158, Session 92 — 2026-09-27 — Chat to top-left, rail drops and c:164, Done:167, Stopped at:183, Next:186, Session 91 — 2026-09-27 — Custom leaderboard + chat panel in:191, Done:194, Decisions made:200, Stopped at:207, Next:210, Session 90 — 2026-09-27 — Fix: entering twice while a map lo:217, Done:220, Next:231, ... +506 more
 
 ### docs/archive
 
@@ -342,7 +342,7 @@ _252 text files, 272 binary assets. Regenerate with `python tools/gen_index.py`;
 ### (root)
 
 - `rokit.toml` (4) · 2026-09-26
-- `selene.toml` (1) · 2026-09-24
+- `selene.toml` (1) · 2026-09-15
 
 ### src/client
 
@@ -352,29 +352,29 @@ _252 text files, 272 binary assets. Regenerate with `python tools/gen_index.py`;
   - `AtmosphereEffects.luau`: LOCKDOWN:32, SIEGE:44, STORMHAWK:54, RIME:64, RECLAIMED:76, AETHER_SURGE:88, UNMOORING:98, num:118, col:121, vec:124, part:128, prop:144, readMap:174, randomIn:254, band:265, buildLights:273, lightLevel:306, newMover:332, buildGraph:354, route:391, hover:414, newRoute:419, stepMover:435, buildFlyers:466, bolt:508, buildWeather:564, buildDome:614, buildPlumes:664, beam:704, anchorAt:718, buildAurora:730, buildDebris:823, buildCanopy:874, applyTint:895, AtmosphereEffects.enter:924, AtmosphereEffects.leave:1091, AtmosphereEffects.setTint:1117
 - `src/client/Controllers/DebugCommands.luau` (861) - Developer commands, client half. Testing tooling, not a feature. · 2026-09-27
   - `DebugCommands.luau`: DebugCommands.onOutput:49, emit:53, say:67, fail:71, stopFlying:82, startFlying:98, toggleFly:172, setSpeed:185, teleport:227, currentStage:271, currentChunks:300, toggleNoclip:332, setOverlay:376, setStats:438, setProps:489, sorted:512, DebugCommands.sources:594, DebugCommands.describeChunk:599, onOff:610, DebugCommands.bindPanel:618, DebugCommands.run:774, DebugCommands.runLine:801, DebugCommands.init:808
-- `src/client/Controllers/EventController.luau` (167) - The client's mirror of what is happening to the world. Build spec §4.1. · 2026-09-24
+- `src/client/Controllers/EventController.luau` (167) - The client's mirror of what is happening to the world. Build spec §4.1. · 2026-09-20
   - `EventController.luau`: list:40, notify:51, EventController.active:59, EventController.dominant:66, EventController.onChanged:70, apply:81, EventController.init:135
 - `src/client/Controllers/ExpeditionController.luau` (222) - Client side of an expedition: lighting, the local countdown, and the Gate's · 2026-09-25
   - `ExpeditionController.luau`: snapshotHubLighting:43, restoreHubLighting:49, notify:57, ExpeditionController.onChanged:65, ExpeditionController.get:76, ExpeditionController.remaining:82, labelGateFor:92, mapCentre:109, ExpeditionController.init:116, ExpeditionController.onEnded:220
-- `src/client/Controllers/FixtureController.luau` (153) - The client half of fixtures (build spec §7.5, CHUNK_AUTHORING.md · 2026-09-24
+- `src/client/Controllers/FixtureController.luau` (153) - The client half of fixtures (build spec §7.5, CHUNK_AUTHORING.md · 2026-09-23
   - `FixtureController.luau`: partPose:43, animate:52, track:98, FixtureController.init:116
 - `src/client/Controllers/HubEffects.luau` (562) - Drives every animated element in the Crossroads. Biome Blueprint §2.2. · 2026-09-25
   - `HubEffects.luau`: smoothstep:47, stepYaw:54, lockYawToSlot:82, hashName:99, findRigs:107, HubEffects.spinUpForRoll:123, HubEffects.settle:142, cycleFeaturedRarity:163, HubEffects.init:188
 - `src/client/Controllers/LightningController.luau` (52) - LightningController: makes WeaponFX crackle Beams (tag "CrackleBeam") re-shape now and then by bending their curves · 2026-09-25
   - `LightningController.luau`: LightningController.init:18
-- `src/client/Controllers/LocomotionController.luau` (252) - RUN AND DOUBLE JUMP, and nothing else. · 2026-09-24
+- `src/client/Controllers/LocomotionController.luau` (252) - RUN AND DOUBLE JUMP, and nothing else. · 2026-09-20
   - `LocomotionController.luau`: buildIndicator:49, updateIndicator:78, playAirJumpEffect:93, onJumpRequest:125, bindCharacter:158, step:173, LocomotionController.init:202, LocomotionController.get:248
-- `src/client/Controllers/PartyController.luau` (135) - The client's picture of its party. Build spec §7.2. · 2026-09-24
+- `src/client/Controllers/PartyController.luau` (135) - The client's picture of its party. Build spec §7.2. · 2026-09-22
   - `PartyController.luau`: PartyController.get:39, PartyController.onChanged:45, PartyController.nameOf:56, PartyController.request:63, announceInvite:67, PartyController.init:102
 - `src/client/Controllers/PropController.luau` (340) - Dresses a generated map with its world's ambient scenery (CHUNK_AUTHORING.md · 2026-09-27
   - `PropController.luau`: rawPose:52, pose:98, quality:109, library:116, step:120, PropController.enter:152, PropController.leave:328
 - `src/client/Controllers/ProximityController.luau` (123) - Shows the ROLL prompt near the Fate Engine and turns input into a request. · 2026-09-25
   - `ProximityController.luau`: anchor:24, requestRoll:31, ProximityController.setLocked:40, ProximityController.bindPrompt:55, bindProximityPrompt:64, ProximityController.init:91
-- `src/client/Controllers/RiftController.luau` (318) - The client half of the expedition rifts (build spec §7.8): how they MOVE. · new
+- `src/client/Controllers/RiftController.luau` (318) - The client half of the expedition rifts (build spec §7.8): how they MOVE. · 2026-09-29
   - `RiftController.luau`: indexOf:72, info:76, track:89, setTransparency:173, shifted:181, animate:185, RiftController.init:297
 - `src/client/Controllers/SettingsController.luau` (158) - SETTINGS, APPLIED. The half that makes the Settings panel mean something. · 2026-09-25
   - `SettingsController.luau`: SettingsController.musicGroup:48, SettingsController.effectsGroup:53, SettingsController.screenShake:58, SettingsController.showsOthersRolls:63, buildSoundGroups:67, isOurs:90, scaleFor:95, applyScale:107, adopt:118, applyVolumes:129, SettingsController.init:137
-- `src/client/Controllers/SkyController.luau` (263) - THE SKY, WHEN SOMETHING IS HAPPENING TO THE WORLD. · 2026-09-24
+- `src/client/Controllers/SkyController.luau` (263) - THE SKY, WHEN SOMETHING IS HAPPENING TO THE WORLD. · 2026-09-21
   - `SkyController.luau`: definitionFor:52, captureBaseline:66, tweenLighting:73, buildEffects:84, clearEffects:151, revert:159, apply:168, evaluate:192, SkyController.current:232, SkyController.init:236
 - `src/client/Controllers/SkyTraffic.luau` (595) - THE SKY TRAFFIC round the Crossroads. · 2026-09-27
   - `SkyTraffic.luau`: blocked:90, angleOf:94, waypoint:98, berth:130, turnToward:172, SkyTraffic.init:190
@@ -386,11 +386,11 @@ _252 text files, 272 binary assets. Regenerate with `python tools/gen_index.py`;
   - `ChatPanel.luau`: hex:34, wake:40, fade:51, addLine:66, onMessage:101, send:124, notifyOpened:142, setShown:150, buildToggle:168, build:223, ChatPanel.onOpened:278, ChatPanel.init:282
 - `src/client/UI/DevPanel.luau` (730) - THE DEVELOPER PANEL. Testing tooling, not a feature: it exists only when · 2026-09-27
   - `DevPanel.luau`: chip:64, grid:72, scroller:87, log:102, clearLog:129, runLine:139, runCommand:155, hideSuggestions:165, drawSuggestions:171, refreshSuggestions:216, accept:227, valueLabel:239, buildCard:249, paintTabs:384, showCategory:392, toggle:412, build:421, DevPanel.init:717
-- `src/client/UI/ExpeditionHud.luau` (206) - The expedition banner: where you are, how long is left, and what happened · 2026-09-24
+- `src/client/UI/ExpeditionHud.luau` (206) - The expedition banner: where you are, how long is left, and what happened · 2026-09-23
   - `ExpeditionHud.luau`: build:35, showToast:121, ExpeditionHud.init:139
 - `src/client/UI/FateRoll.luau` (360) - The roll: prompt, build-up, reveal, result card. Build spec T-115. · 2026-09-25
   - `FateRoll.luau`: setRolling:46, corner:55, stroke:59, build:63, playBuildup:209, showCard:243, hideAll:273, onRollResult:292, FateRoll.onRollingChanged:337, FateRoll.init:348
-- `src/client/UI/GlobalAnnouncements.luau` (245) - Server-wide banners and live-event display. Build spec T-116 and §4.1. · 2026-09-24
+- `src/client/UI/GlobalAnnouncements.luau` (245) - Server-wide banners and live-event display. Build spec T-116 and §4.1. · 2026-09-22
   - `GlobalAnnouncements.luau`: build:35, isSuppressed:126, showBanner:136, setActiveEvent:199, GlobalAnnouncements.init:224
 - `src/client/UI/HubMenu.luau` (945) - THE HUB MENU: the side rail, its panels, and the arrow that hides it. · 2026-09-27
   - `HubMenu.luau`: say:79, travelTo:108, clearBody:133, section:141, paragraph:148, buildTravel:158, buildCodes:190, buildSettings:245, partyRow:281, buildParty:316, buildPreview:434, SHOP:456, SKILLS:461, REBIRTH:466, buildPanelBody:473, railRestingPosition:501, panelRestingPosition:511, refreshRailSelection:518, applyPanelVisibility:529, applyState:550, dispatch:572, refreshVisibility:583, setVisible:590, buildRail:600, buildArrow:676, buildPanel:698, build:744, keyCodeNamed:787, bindHotkeys:800, HubMenu.init:845, HubMenu.collapse:937
@@ -400,7 +400,7 @@ _252 text files, 272 binary assets. Regenerate with `python tools/gen_index.py`;
   - `LoadingScreen.luau`: LoadingScreen.onFinished:66, LoadingScreen.isFinished:74, playableShots:83, playShot:94, runTour:160, countHub:189, countParts:204, preloadAll:218, setReady:250, watchProgress:261, holdCharacter:348, releaseCharacter:362, pointCameraAtCharacter:392, releaseCamera:411, finish:430, build:491, passingThrough:616, LoadingScreen.init:626
 - `src/client/UI/UIKit.luau` (480) - THE WIDGET LIBRARY. Every hub screen is built from these, so there is one · 2026-09-27
   - `UIKit.luau`: UIKit.formatClock:35, UIKit.reduceMotion:40, UIKit.duration:44, UIKit.tween:53, UIKit.surface:78, UIKit.label:110, UIKit.button:140, UIKit.setEnabled:237, UIKit.list:249, UIKit.divider:259, UIKit.toggle:270, UIKit.slider:319, UIKit.textbox:408, UIKit.previewBadge:441, UIKit.revealFrom:464
-- `src/client/init.client.luau` (93) - The only LocalScript. Build spec T-117. · 2026-09-27
+- `src/client/init.client.luau` (93) - The only LocalScript. Build spec T-117. · 2026-09-29
 
 ### src/server
 
@@ -410,7 +410,7 @@ _252 text files, 272 binary assets. Regenerate with `python tools/gen_index.py`;
   - `DebugSystem.luau`: mayCommand:44, reply:59, nearestArena:102, groundBelow:118, parseChance:386, humanoidOf:489, DebugSystem.handle:535, DebugSystem.init:569, DebugSystem.registryProblems:610
 - `src/server/Systems/EventSystem.luau` (271) - Global announcements and live events. Build spec §4.1. · 2026-09-25
   - `EventSystem.luau`: EventSystem.syncTo:33, EventSystem.announce:39, EventSystem.startLocal:60, EventSystem.publish:102, EventSystem.trigger:146, EventSystem.endAll:202, EventSystem.triggerFatebreak:218, EventSystem.init:222, EventSystem._state:267
-- `src/server/Systems/ExpeditionSystem.luau` (1502) - Expedition entry, generation and return. Build spec §7.1, and §7.2 for · 2026-09-27
+- `src/server/Systems/ExpeditionSystem.luau` (1502) - Expedition entry, generation and return. Build spec §7.1, and §7.2 for · 2026-09-29
   - `ExpeditionSystem.luau`: atmosphereFor:108, manifestStore:168, stageFolder:183, gatePart:204, distanceToGate:213, moveCharacter:226, tell:242, syncTimer:253, buildStage:270, deckAt:424, riftPrompt:440, buildEntrance:465, buildExit:483, openExit:509, scanAnchors:532, newGroup:603, dropGroup:654, placeMember:667, teleport:735, sendHome:755, launchInstance:808, ExpeditionSystem.canTestWorld:895, ExpeditionSystem.setTestDestination:901, ExpeditionSystem.isActive:908, ExpeditionSystem.setSpawnOverride:914, ExpeditionSystem.spawnOverrides:918, ExpeditionSystem.isHosting:922, settle:932, ExpeditionSystem.finish:951, completeGroup:1006, enterGuarded:1056, ExpeditionSystem.requestEnter:1194, ExpeditionSystem.isEntering:1212, ExpeditionSystem.forceEnter:1216, hostArrive:1255, ExpeditionSystem.startHost:1291, ExpeditionSystem.init:1368, ExpeditionSystem.bindGatePrompt:1451, ExpeditionSystem.setAtmosphere:1467
 - `src/server/Systems/FateSystem.luau` (190) - The roll. Build spec §3 and T-111. · 2026-09-25
   - `FateSystem.luau`: nextNumber:30, rollAnchor:36, mayRoll:46, deliver:71, FateSystem.requestRoll:121, FateSystem.forceRoll:152, FateSystem.init:176
@@ -420,13 +420,13 @@ _252 text files, 272 binary assets. Regenerate with `python tools/gen_index.py`;
   - `HubUISystem.luau`: allow:46, groundedLanding:71, placeCharacter:107, refuseTravel:126, HubUISystem.travel:134, HubUISystem.redeem:174, HubUISystem.updateSetting:208, HubUISystem.init:231
 - `src/server/Systems/HubV2.luau` (551) - THE CROSSROADS v2 (2026-09-23), built around the untouched Fate Engine. · 2026-09-27
   - `HubV2.luau`: template:34, walkable:44, place:64, addLight:96, HubV2.build:119, HubV2.buildSky:204, still:338, HubV2.buildBeyond:347
-- `src/server/Systems/LedgerSystem.luau` (159) - THE GLOBAL LEDGER: the only thing in the game that knows how many of a · 2026-09-24
+- `src/server/Systems/LedgerSystem.luau` (159) - THE GLOBAL LEDGER: the only thing in the game that knows how many of a · 2026-09-20
   - `LedgerSystem.luau`: keyFor:35, LedgerSystem.claim:50, LedgerSystem.summary:116, LedgerSystem.isAvailable:133, LedgerSystem.init:137
-- `src/server/Systems/LootSystem.luau` (519) - Loot, fixtures and vault keys on an expedition map. Build spec §7.5. · 2026-09-25
+- `src/server/Systems/LootSystem.luau` (519) - Loot, fixtures and vault keys on an expedition map. Build spec §7.5. · 2026-09-29
   - `LootSystem.luau`: library:59, presentMembers:63, grantDrops:78, tell:91, rollFor:98, keysOf:120, buildFixture:131, standingNear:196, markOpened:208, openChest:218, openVault:229, bossDefeated:263, watchArena:300, LootSystem.attach:339, LootSystem.setKeyChanceOverride:453, LootSystem.keyChanceOverride:457, LootSystem.triggerBoss:463, LootSystem.keyDefinitions:474, LootSystem.giveKey:485, LootSystem.takeKeys:498, LootSystem.keysOf:508, LootSystem.init:512
 - `src/server/Systems/PartySystem.luau` (338) - PARTIES: the server half. Build spec §7.2. · 2026-09-25
   - `PartySystem.luau`: allow:42, reuniteStore:57, nameOf:71, PartySystem.sync:78, syncIds:113, syncEveryone:129, partyMemberIds:137, PartySystem.handle:142, PartySystem.groupFor:231, PartySystem.recordForReunite:239, runReunite:265, onPlayerAdded:276, PartySystem.init:306
-- `src/server/Systems/ProgressionSystem.luau` (117) - Fate points and levels. Build spec T-110. · 2026-09-24
+- `src/server/Systems/ProgressionSystem.luau` (117) - Fate points and levels. Build spec T-110. · 2026-09-20
   - `ProgressionSystem.luau`: ProgressionSystem.init:17, ProgressionSystem.award:22, ProgressionSystem.grant:48, ProgressionSystem.recordRoll:73, ProgressionSystem.snapshot:96
 - `src/server/Systems/SaveSystem.luau` (239) - Profile persistence with session locking. Build spec T-109. · 2026-09-25
   - `SaveSystem.luau`: keyFor:29, SaveSystem.load:48, SaveSystem.get:119, SaveSystem.markDirty:123, SaveSystem.save:128, SaveSystem.handOff:172, SaveSystem.release:180, SaveSystem.isVolatile:190, SaveSystem.init:194
@@ -437,9 +437,9 @@ _252 text files, 272 binary assets. Regenerate with `python tools/gen_index.py`;
 
 - `src/shared/Content/AssetManifest.luau` (2333) - Logical asset name → Roblox asset id. Addendum §A1. · 2026-09-27
   - `AssetManifest.luau`: VV_CHUNK_PATH_SUNWASH_FORK:54, VV_CHUNK_CUTBANK_FORD:60, VV_CHUNK_WINDWARD_RIDGE_GATE:66, VV_CHUNK_FORGOTTEN_ORCHARD_GATE:72, VV_CHUNK_LONGGRASS_MEADOW:78, VV_CHUNK_SHADED_GROVE:84, VV_CHUNK_FERN_HOLLOW:90, VV_CHUNK_PATH_CLIFF_PASSAGE:96, VV_CHUNK_STONE_SENTINELS:102, VV_CHUNK_MOSSBOUND_RUINS:108, VV_CHUNK_ANCIENT_OAK:114, VV_CHUNK_WETLAND_POOLS:120, VV_CHUNK_PATH_NARROW_PASS:126, VV_CHUNK_BLOSSOM_TERRACE:132, VV_CHUNK_ROCK_GARDEN:138, VV_CHUNK_CRYSTAL_SPRING_GATE:144, VV_CHUNK_OVERGROWN_CAUSEWAY_GATE:150, VV_CHUNK_HIGH_LEDGE_GATE:156, VV_CHUNK_CLIFF_OVERLOOK_GATE:162, VV_CHUNK_DEEP_CLEARING:168, VV_CHUNK_PATH_SPLIT_MEADOW:174, VV_CHUNK_MUSHROOM_GLEN:180, VV_CHUNK_PATH_CROSSROADS_COPSE:186, VV_CHUNK_CAP_CAVE_MOUTH:192, VV_CHUNK_ENTRY_DAWN_MEADOW:198, VV_CHUNK_ENTRY_WOODLAND_REFUGE:204, VV_CHUNK_BOSS_SANCTUARY:210, VV_CHUNK_CAP_TREASURE_HOLLOW:216, VV_CHUNK_CAP_WARDENS_CLEARING:222, VV_CHUNK_SIDE_FORGOTTEN_TRIAL:228, VV_CHUNK_ENTRY:234, SC_CHUNK_ENTRY:258, SC_CHUNK_PATH_STRAIGHT:264, SC_CHUNK_PATH_SKYPORT:270, SC_CHUNK_PATH_HOOPS:276, SC_CHUNK_PATH_SHATTERED:282, SC_CHUNK_PATH_AVIARY:288, SC_CHUNK_CROSSROADS:294, SC_CHUNK_PATH_BEND:300, SC_CHUNK_PATH_BEND_WEST:306, ... +85 more
-- `src/shared/Content/Atmospheres/SkyCitadel.luau` (947) - GENERATED by assets/source/worlds/sky_citadel/sky_citadel_atmospheres.py. · 2026-09-24
+- `src/shared/Content/Atmospheres/SkyCitadel.luau` (947) - GENERATED by assets/source/worlds/sky_citadel/sky_citadel_atmospheres.py. · 2026-09-23
   - `SkyCitadel.luau`: UNMOORING:13, SIEGE:138, LOCKDOWN:297, STORMHAWK:415, RIME:559, RECLAIMED:681, AETHER_SURGE:802
-- `src/shared/Content/Atmospheres/init.luau` (16) - Scenario atmospheres per world, keyed by world Id. Each module holds a · 2026-09-24
+- `src/shared/Content/Atmospheres/init.luau` (16) - Scenario atmospheres per world, keyed by world Id. Each module holds a · 2026-09-23
 - `src/shared/Content/BossPreviews.luau` (37) - Boss PREVIEWS for /showboss (debug only): look at a boss in its arena, in its idle pose/animation, to judge · 2026-09-25
 - `src/shared/Content/Chunks/EtherealScape.luau` (636) - GENERATED by assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py -- do not edit by hand. · 2026-09-27
   - `EtherealScape.luau`: socket:17
@@ -447,67 +447,67 @@ _252 text files, 272 binary assets. Regenerate with `python tools/gen_index.py`;
   - `SkyCitadel.luau`: socket:45
 - `src/shared/Content/Chunks/VerdantValley.luau` (404) - GENERATED by assets/source/worlds/verdant_valley/export_verdant_valley_kit.py · 2026-09-27
   - `VerdantValley.luau`: socket:15
-- `src/shared/Content/Chunks/init.luau` (19) - Chunk registry. Each module returns a LIST of chunks -- one file per world's · 2026-09-24
-- `src/shared/Content/Codes.luau` (41) - REDEEMABLE CODES, AS DATA. Adding one is one row; no System changes. · 2026-09-24
+- `src/shared/Content/Chunks/init.luau` (19) - Chunk registry. Each module returns a LIST of chunks -- one file per world's · 2026-09-16
+- `src/shared/Content/Codes.luau` (41) - REDEEMABLE CODES, AS DATA. Adding one is one row; no System changes. · 2026-09-20
   - `Codes.luau`: LAUNCH:18, FIRSTROLL:25, TESTER:32
 - `src/shared/Content/DevCommands.luau` (368) - THE DEVELOPER COMMAND REGISTRY. Testing tooling, not a feature. · 2026-09-27
-- `src/shared/Content/Events/AuroraVeil.luau` (47) - AURORA VEIL -- weather, and nothing but weather. · 2026-09-24
-- `src/shared/Content/Events/CatalystStar.luau` (62) - THE CATALYST STAR — one of ten that will ever exist. · 2026-09-24
-- `src/shared/Content/Events/Starfall.luau` (55) - STARFALL — the Fatebreak sky. Master Spec §12. · 2026-09-24
-- `src/shared/Content/Events/init.luau` (21) - Live-event registry. Adding an event = adding one file in this folder. · 2026-09-24
+- `src/shared/Content/Events/AuroraVeil.luau` (47) - AURORA VEIL -- weather, and nothing but weather. · 2026-09-20
+- `src/shared/Content/Events/CatalystStar.luau` (62) - THE CATALYST STAR — one of ten that will ever exist. · 2026-09-20
+- `src/shared/Content/Events/Starfall.luau` (55) - STARFALL — the Fatebreak sky. Master Spec §12. · 2026-09-20
+- `src/shared/Content/Events/init.luau` (21) - Live-event registry. Adding an event = adding one file in this folder. · 2026-09-20
 - `src/shared/Content/Fixtures/SkyCitadel.luau` (47) - GENERATED by assets/source/worlds/sky_citadel/build_sky_citadel_kit.py. · 2026-09-25
-- `src/shared/Content/Fixtures/init.luau` (16) - Fixture registry: one module per world, keyed by the world's Id. Each · 2026-09-24
-- `src/shared/Content/Hub/Cinematics.luau` (103) - THE LOADING SCREEN'S CAMERA TOUR, AS DATA. · 2026-09-24
+- `src/shared/Content/Fixtures/init.luau` (16) - Fixture registry: one module per world, keyed by the world's Id. Each · 2026-09-23
+- `src/shared/Content/Hub/Cinematics.luau` (103) - THE LOADING SCREEN'S CAMERA TOUR, AS DATA. · 2026-09-21
 - `src/shared/Content/Hub/Crossroads.luau` (1506) - The Crossroads, described as DATA. Biome Blueprint §2. · 2026-09-25
 - `src/shared/Content/Hub/CrossroadsV2.luau` (217) - GENERATED by assets/source/hub/crossroads/make_layout_luau.py from · 2026-09-25
 - `src/shared/Content/Hub/Menu.luau` (192) - THE HUB MENU, AS DATA. Build spec §2.2 -- Systems are reusable, content is · 2026-09-25
-- `src/shared/Content/Hub/Palettes.luau` (115) - WHAT THE UI LOOKS LIKE RIGHT NOW, AS DATA. · 2026-09-24
+- `src/shared/Content/Hub/Palettes.luau` (115) - WHAT THE UI LOOKS LIKE RIGHT NOW, AS DATA. · 2026-09-20
   - `Palettes.luau`: districtColor:32
 - `src/shared/Content/LightningRigs.luau` (76) - GENERATED by assets/source/enemies/sky_citadel/ws_lance.py - do not edit by hand. · 2026-09-25
-- `src/shared/Content/LootPools/SkyCitadel.luau` (32) - Sky Citadel's loot pools (build spec §7.5). · 2026-09-24
-- `src/shared/Content/LootPools/init.luau` (16) - Loot pool registry, keyed by pool Id (build spec §7.5). Each module returns · 2026-09-24
+- `src/shared/Content/LootPools/SkyCitadel.luau` (32) - Sky Citadel's loot pools (build spec §7.5). · 2026-09-23
+- `src/shared/Content/LootPools/init.luau` (16) - Loot pool registry, keyed by pool Id (build spec §7.5). Each module returns · 2026-09-23
 - `src/shared/Content/Props/EtherealScape.luau` (726) - GENERATED by assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py -- do not edit by hand. · 2026-09-27
 - `src/shared/Content/Props/SkyCitadel.luau` (660) - GENERATED by assets/source/worlds/sky_citadel/build_sky_citadel_kit.py. · 2026-09-25
-- `src/shared/Content/Props/init.luau` (16) - Ambient-scenery registry: one module per world, keyed by the world's Id. · 2026-09-24
-- `src/shared/Content/Scenarios/init.luau` (139) - SCENARIO LIBRARY -- what can HAPPEN in a chunk, as opposed to what a chunk · 2026-09-24
-- `src/shared/Content/Worlds/AstralReach.luau` (30) - Biome Blueprint §5.3: no fog in the traditional sense -- void-black · 2026-09-24
-- `src/shared/Content/Worlds/Emberfall.luau` (30) - Biome Blueprint §4.3: darker than Verdant Valley -- lava provides · 2026-09-24
+- `src/shared/Content/Props/init.luau` (16) - Ambient-scenery registry: one module per world, keyed by the world's Id. · 2026-09-23
+- `src/shared/Content/Scenarios/init.luau` (139) - SCENARIO LIBRARY -- what can HAPPEN in a chunk, as opposed to what a chunk · 2026-09-22
+- `src/shared/Content/Worlds/AstralReach.luau` (30) - Biome Blueprint §5.3: no fog in the traditional sense -- void-black · 2026-09-15
+- `src/shared/Content/Worlds/Emberfall.luau` (30) - Biome Blueprint §4.3: darker than Verdant Valley -- lava provides · 2026-09-15
 - `src/shared/Content/Worlds/EtherealScape.luau` (86) - Ethereal Scape. The Uncommon tier. · 2026-09-27
 - `src/shared/Content/Worlds/SkyCitadel.luau` (170) - Epic tier. Added so onboarding can peak on an Epic rather than handing every · 2026-09-25
-- `src/shared/Content/Worlds/TheUnknown.luau` (31) - Phase 3. Present so the roll pool, Discovery Book and UI are written against · 2026-09-24
-- `src/shared/Content/Worlds/VerdantValley.luau` (42) - Biome Blueprint §3.3: soft midday, dappled canopy light. · 2026-09-24
-- `src/shared/Content/Worlds/init.luau` (17) - World registry. Adding a world = adding one file here and one line below. · 2026-09-24
+- `src/shared/Content/Worlds/TheUnknown.luau` (31) - Phase 3. Present so the roll pool, Discovery Book and UI are written against · 2026-09-15
+- `src/shared/Content/Worlds/VerdantValley.luau` (42) - Biome Blueprint §3.3: soft midday, dappled canopy light. · 2026-09-15
+- `src/shared/Content/Worlds/init.luau` (17) - World registry. Adding a world = adding one file here and one line below. · 2026-09-15
 - `src/shared/Core/AmbienceCore.luau` (422) - The pure half of a world's ambience: how much of it to draw on this device, · 2026-09-25
   - `AmbienceCore.luau`: AmbienceCore.qualityScale:18, AmbienceCore.scaledCount:27, AmbienceCore.wrap:34, pickStyle:54, AmbienceCore.layoutClouds:90, checkRange:269, AmbienceCore.validate:279, AmbienceCore.overlay:374, AmbienceCore.pickAtmosphere:401
 - `src/shared/Core/CodeCore.luau` (101) - CODE REDEMPTION RULES. Pure, so every branch is testable without a player. · 2026-09-25
   - `CodeCore.luau`: CodeCore.normalise:16, CodeCore.find:24, CodeCore.hasRedeemed:37, CodeCore.redeem:51, CodeCore.record:94
-- `src/shared/Core/Constants.luau` (213) - Frozen enums and lookup tables. Build spec §2.1. · 2026-09-25
+- `src/shared/Core/Constants.luau` (213) - Frozen enums and lookup tables. Build spec §2.1. · 2026-09-29
   - `Constants.luau`: COMMON:24, UNCOMMON:31, RARE:38, EPIC:45, LEGENDARY:52, MYTHIC:59, UNKNOWN:66, SLOTS:81, NAMES:84, HOTKEY_NAMES:123, DATASTORE:180
 - `src/shared/Core/DevCore.luau` (267) - The pure half of the developer tools: parsing a command line, checking the · 2026-09-27
   - `DevCore.luau`: DevCore.parse:36, DevCore.index:51, DevCore.usage:60, DevCore.options:69, DevCore.check:89, startsWith:115, DevCore.complete:123, DevCore.validate:205
-- `src/shared/Core/EventCore.luau` (257) - Pure live-event state. Build spec §4.1. · 2026-09-24
+- `src/shared/Core/EventCore.luau` (257) - Pure live-event state. Build spec §4.1. · 2026-09-20
   - `EventCore.luau`: EventCore.trackedLighting:73, EventCore.formatAnnouncement:84, EventCore.newState:91, EventCore.expire:97, EventCore.startEvent:111, EventCore.isValidScope:128, EventCore.dominant:149, EventCore.pushAnnouncement:191, EventCore.snapshot:219
 - `src/shared/Core/ExpeditionCore.luau` (450) - Pure expedition logic. No Roblox globals, no Instances, no side effects -- · 2026-09-28
   - `ExpeditionCore.luau`: ExpeditionCore.destinationFrom:36, ExpeditionCore.hasKit:48, ExpeditionCore.hasPrebuiltMap:65, ExpeditionCore.hasMap:71, ExpeditionCore.worldsWithoutMaps:80, ExpeditionCore.pathLengthFor:101, ExpeditionCore.durationFor:105, ExpeditionCore.seedFor:119, ExpeditionCore.streamFor:131, ExpeditionCore.remaining:145, ExpeditionCore.freeSlot:151, ExpeditionCore.stageOffset:162, ExpeditionCore.entryChunk:168, ExpeditionCore.evaluateEntry:182, ExpeditionCore.refusalMessage:251, ExpeditionCore.outcomeFor:283, ExpeditionCore.payoutFor:295, ExpeditionCore.instanceMode:313, ExpeditionCore.isExpeditionServer:327, ExpeditionCore.placeFor:336, ExpeditionCore.isTestDestination:341, ExpeditionCore.buildManifest:359, ExpeditionCore.validateManifest:388, ExpeditionCore.isManifestMember:434, ExpeditionCore.arrivalOffset:442
-- `src/shared/Core/FateCore.luau` (114) - Pure roll logic. No Roblox globals, no player objects, no side effects -- · 2026-09-24
+- `src/shared/Core/FateCore.luau` (114) - Pure roll logic. No Roblox globals, no player objects, no side effects -- · 2026-09-15
   - `FateCore.luau`: FateCore.buildPool:20, FateCore.effectiveWeight:40, FateCore.scriptedWorldId:63, FateCore.isOnboarding:72, FateCore.roll:77, FateCore.expeditionDuration:107
-- `src/shared/Core/FixtureCore.luau` (55) - The pure half of fixtures (CHUNK_AUTHORING.md convention 7, build spec · 2026-09-24
+- `src/shared/Core/FixtureCore.luau` (55) - The pure half of fixtures (CHUNK_AUTHORING.md convention 7, build spec · 2026-09-23
   - `FixtureCore.luau`: CHEST:15, VAULT:16, FORCEFIELD:17, smooth:23, FixtureCore.lidAngle:31, FixtureCore.doorSpin:38, FixtureCore.doorRecess:44, FixtureCore.fieldTransparency:50
-- `src/shared/Core/Freeze.luau` (25) - Deep-freeze a content or config table, so a System cannot mutate the data · 2026-09-24
+- `src/shared/Core/Freeze.luau` (25) - Deep-freeze a content or config table, so a System cannot mutate the data · 2026-09-22
 - `src/shared/Core/GameConfig.luau` (1274) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-09-29
 - `src/shared/Core/HubMenuCore.luau` (190) - THE HUB MENU'S RULES, WITH NO ROBLOX IN THEM. · 2026-09-25
   - `HubMenuCore.luau`: HubMenuCore.panels:20, HubMenuCore.panelById:31, HubMenuCore.destinations:41, HubMenuCore.destinationById:52, HubMenuCore.landingPoint:64, HubMenuCore.isVisible:71, HubMenuCore.newState:80, HubMenuCore.reduce:98, HubMenuCore.canTravel:149, HubMenuCore.travelTiming:180
-- `src/shared/Core/KeyCore.luau` (58) - The pure half of vault keys (build spec §7.5). Owner-directed 2026-09-23: · 2026-09-24
+- `src/shared/Core/KeyCore.luau` (58) - The pure half of vault keys (build spec §7.5). Owner-directed 2026-09-23: · 2026-09-23
   - `KeyCore.luau`: KeyCore.dropChance:24, KeyCore.count:33, KeyCore.grant:39, KeyCore.spend:49
-- `src/shared/Core/LedgerCore.luau` (131) - GLOBAL SCARCITY, DECIDED. Pure, so the one rule that can never be wrong is · 2026-09-24
+- `src/shared/Core/LedgerCore.luau` (131) - GLOBAL SCARCITY, DECIDED. Pure, so the one rule that can never be wrong is · 2026-09-20
   - `LedgerCore.luau`: LedgerCore.newLedger:36, LedgerCore.sanitise:45, LedgerCore.issued:69, LedgerCore.remaining:73, LedgerCore.claim:86, LedgerCore.summary:121
 - `src/shared/Core/LocomotionCore.luau` (182) - MOVEMENT RULES: sprint stamina and the air jump, with no Roblox in them. · 2026-09-25
   - `LocomotionCore.luau`: LocomotionCore.newState:23, LocomotionCore.canStartSprint:44, LocomotionCore.step:54, LocomotionCore.targetSpeed:113, LocomotionCore.staminaFraction:121, LocomotionCore.jumpKind:135, LocomotionCore.jump:163
 - `src/shared/Core/LootCore.luau` (73) - The pure half of loot (build spec §7.5): what a pool yields, for whom. · 2026-09-25
   - `LootCore.luau`: LootCore.roll:35, LootCore.rollForAll:61
-- `src/shared/Core/Net.luau` (114) - The ONLY place RemoteEvents are created or looked up. Build spec §4. · 2026-09-24
+- `src/shared/Core/Net.luau` (114) - The ONLY place RemoteEvents are created or looked up. Build spec §4. · 2026-09-23
   - `Net.luau`: root:67, Net.buildRemotes:74, Net.get:97
-- `src/shared/Core/PartyCore.luau` (485) - PARTY RULES. Pure: no Roblox globals, no Instances, no remotes -- so every · 2026-09-24
+- `src/shared/Core/PartyCore.luau` (485) - PARTY RULES. Pure: no Roblox globals, no Instances, no remotes -- so every · 2026-09-22
   - `PartyCore.luau`: PartyCore.newState:67, PartyCore.partyOf:71, PartyCore.isLeader:76, disband:81, removeMember:88, PartyCore.parseRequest:98, PartyCore.invite:124, PartyCore.accept:165, PartyCore.decline:216, PartyCore.leave:227, PartyCore.kick:260, PartyCore.promote:274, PartyCore.removePlayer:291, PartyCore.pruneInvites:313, PartyCore.invitesFor:334, PartyCore.expeditionGroup:365, PartyCore.reunite:399, PartyCore.snapshotFor:473
 - `src/shared/Core/ProfileSchema.luau` (122) - Default profile shape and migrations. Pure, so both SaveSystem and the · 2026-09-25
   - `ProfileSchema.luau`: ProfileSchema.default:16, ProfileSchema.migrate:75, ProfileSchema.prune:109
@@ -515,16 +515,16 @@ _252 text files, 272 binary assets. Regenerate with `python tools/gen_index.py`;
   - `ProgressionCore.luau`: ProgressionCore.pointsForLevel:11, ProgressionCore.levelForPoints:19, ProgressionCore.levelProgress:31, ProgressionCore.award:46, ProgressionCore.grant:61
 - `src/shared/Core/PropCore.luau` (183) - The pure half of a world's ambient scenery (CHUNK_AUTHORING.md convention · 2026-09-27
   - `PropCore.luau`: PropCore.berthOnBox:21, PropCore.tierShown:75, PropCore.phase:82, PropCore.motion:98, PropCore.birdHeading:169, PropCore.wingAngle:179
-- `src/shared/Core/Result.luau` (14) - Expected-failure convention. Reserve error() for programmer mistakes. · 2026-09-24
+- `src/shared/Core/Result.luau` (14) - Expected-failure convention. Reserve error() for programmer mistakes. · 2026-09-15
   - `Result.luau`: Result.err:10
 - `src/shared/Core/RiftCore.luau` (113) - The pure half of the expedition rifts (build spec §7.8): how a rift moves. · 2026-09-29
   - `RiftCore.luau`: RiftCore.ease:29, RiftCore.window:35, RiftCore.phaseFor:46, RiftCore.materialise:61, RiftCore.breath:80, RiftCore.fragmentOffset:88, RiftCore.gatherOffset:98, RiftCore.lightBrightness:104, RiftCore.shellTransparency:109
-- `src/shared/Core/SettingsCore.luau` (166) - PLAYER SETTINGS: the schema, the defaults, and the validator. · 2026-09-24
+- `src/shared/Core/SettingsCore.luau` (166) - PLAYER SETTINGS: the schema, the defaults, and the validator. · 2026-09-20
   - `SettingsCore.luau`: specById:88, SettingsCore.ordered:100, SettingsCore.defaults:111, SettingsCore.validate:120, SettingsCore.sanitise:152
-- `src/shared/Core/ThemeCore.luau` (267) - WHAT COLOUR IS THE MENU RIGHT NOW? Pure, so the answer is testable for · 2026-09-24
+- `src/shared/Core/ThemeCore.luau` (267) - WHAT COLOUR IS THE MENU RIGHT NOW? Pure, so the answer is testable for · 2026-09-20
   - `ThemeCore.luau`: channelLuminance:42, ThemeCore.luminance:52, ThemeCore.contrast:59, toLinear:67, toGamma:71, mix:80, tintPreservingLuminance:101, lerp:133, findDistrict:140, findEvent:152, ThemeCore.base:166, ThemeCore.resolve:184, ThemeCore.enforceContrast:217, ThemeCore.districtAt:243
-- `src/shared/Core/Types.luau` (431) - LUCKBOUND canonical type definitions. · 2026-09-27
-- `src/shared/Core/UITheme.luau` (160) - Shared GUI design system. Biome Blueprint §1.4. · 2026-09-24
+- `src/shared/Core/Types.luau` (431) - LUCKBOUND canonical type definitions. · 2026-09-29
+- `src/shared/Core/UITheme.luau` (160) - Shared GUI design system. Biome Blueprint §1.4. · 2026-09-22
   - `UITheme.luau`: UITheme.corner:108, UITheme.stroke:116, UITheme.rarityColor:125, UITheme.pad:131, UITheme.gradient:145
 - `src/shared/Util/ChunkCore.luau` (1023) - Seeded assembly of a map from a chunk library. Addendum §A4. · 2026-09-27
   - `ChunkCore.luau`: rotate:21, ChunkCore.yawRadians:41, norm:45, ChunkCore.libraryFor:50, socketById:69, ChunkCore.worldSocket:79, ChunkCore.placeAgainst:94, ChunkCore.arrivalSocket:121, ChunkCore.overlaps:133, ChunkCore.assemble:203, ChunkCore.assembleTest:847, ChunkCore.assembleWithRetry:950, ChunkCore.footprint:971, ChunkCore.validateLayout:987
@@ -536,9 +536,9 @@ _252 text files, 272 binary assets. Regenerate with `python tools/gen_index.py`;
   - `PortalRig.luau`: makePart:37, buildRing:51, PortalRig.build:89, rampBoost:239, PortalRig.attachEffects:274, neon:326, paint:333, PortalRig.setRarity:342, PortalRig.playSpinUp:394, PortalRig.setActive:431, PortalRig.setIdle:448, PortalRig.animate:477
 - `src/shared/Util/PrebuiltLoader.luau` (164) - Clones a hand-authored map into an expedition stage. The other half of · 2026-09-25
   - `PrebuiltLoader.luau`: PrebuiltLoader.source:37, anchorAll:52, anchorPart:65, PrebuiltLoader.build:85
-- `src/shared/Util/PrefabLoader.luau` (394) - Drops an authored .rbxmx into a hub slot. The hub's counterpart to · 2026-09-24
+- `src/shared/Util/PrefabLoader.luau` (394) - Drops an authored .rbxmx into a hub slot. The hub's counterpart to · 2026-09-18
   - `PrefabLoader.luau`: PrefabLoader.source:77, styleFor:85, regroup:99, extendInward:136, PrefabLoader.build:202
-- `src/shared/Util/RiftRig.luau` (427) - The expedition rifts (build spec §7.8): the ENTRANCE (the way home, always · new
+- `src/shared/Util/RiftRig.luau` (427) - The expedition rifts (build spec §7.8): the ENTRANCE (the way home, always · 2026-09-29
   - `RiftRig.luau`: isTinted:53, neon:62, RiftRig.colorFor:69, restTransparency:77, styles:93, blockPart:120, buildBlockout:136, paint:188, RiftRig.setColor:210, RiftRig.attachEffects:216, RiftRig.build:331, RiftRig.seal:391, RiftRig.open:409, RiftRig.isOpen:423
 - `src/shared/Util/ScenarioCore.luau` (246) - Assigns a SCENARIO to each placed chunk in a layout. Brief §3/§5/§8, · 2026-09-27
   - `ScenarioCore.luau`: ScenarioCore.compatible:39, bandMultiplier:68, ScenarioCore.assign:85, ScenarioCore.bandCounts:236
@@ -546,7 +546,7 @@ _252 text files, 272 binary assets. Regenerate with `python tools/gen_index.py`;
   - `Schema.luau`: field:16, validateOne:46, Schema.validateWorlds:87, Schema.validateConfig:146, Schema.validateHub:237, Schema.validateChunks:324, Schema.validateScenarios:553, Schema.validateMaps:607, Schema.validateHubMenu:672, Schema.validateCodes:775, Schema.validateCinematics:820, Schema.validatePalettes:872, Schema.validateEvents:940, Schema.validateProps:1098, Schema.validateFixtures:1164, Schema.validateLoot:1245, Schema.validateAll:1415
 - `src/shared/Util/WeaponFX.luau` (160) - WeaponFX: live lightning + charge state for rigged weapons (first user: the Aether Lance - the Winged Sentinel's · 2026-09-25
   - `WeaponFX.luau`: bones:27, studsPerMetre:38, makeBeam:47, WeaponFX.apply:84, WeaponFX.applySlide:113, WeaponFX.setCharged:142
-- `src/shared/Util/WeightedRandom.luau` (72) - Weighted selection over a pool. Build spec T-106. · 2026-09-24
+- `src/shared/Util/WeightedRandom.luau` (72) - Weighted selection over a pool. Build spec T-106. · 2026-09-15
 
 ### tests/build_suite.py
 
@@ -560,7 +560,7 @@ _252 text files, 272 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### tests/run.sh
 
-- `tests/run.sh` (14) · 2026-09-24
+- `tests/run.sh` (14) · 2026-09-15
 
 ### tools/gen_index.py
 

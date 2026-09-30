@@ -44,6 +44,12 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 ## 2. Next — pick up here
 
+> **2026-09-30: rift import correction, local on `agent/expedition-portal`.** Both Blender sources and FBXs
+> regenerated with welded, outward-facing triangulated shells, gap-free scar disc and baked Y-up unit-scale
+> export. Both FBX re-import checks pass (names, dimensions, scale and topology). Import with **Stud / 1.0**;
+> `RiftHalo` height = 15 / 21 studs. Owner reported holes and oversized earlier imports; exact Studio warning
+> and corrected Studio visual check are pending. Keep earlier Studio imports until replacement is verified.
+
 > **2026-09-29: expedition rifts, branch `agent/expedition-portal` (build spec §7.8), not merged.** Entrance and exit
 > are now rifts (authored meshes in `assets/source/portals/`, ~5.9k and ~7.8k tris; motion and light in code). New:
 > `Core/RiftCore` (pure curves), `Util/RiftRig` (build, effects, seal/open), `Controllers/RiftController` (per-frame
