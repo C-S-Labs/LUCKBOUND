@@ -7429,11 +7429,41 @@ do
 	local okP, errsP = Schema.validateProps(Props, Chunks, Worlds)
 	check("the generated placements validate", okP, table.concat(errsP, "; "))
 	local vv = Props.VERDANT_VALLEY
+	local causewayRows = vv and vv.Placements.VV_OVERGROWN_CAUSEWAY_GATE or {}
+	local solid, nonsolid = nil, nil
+	local canopyCount = 0
+	local collisionErrors = {}
+	-- Placement order is exporter data; collision follows each group's identity.
+	for _, row in causewayRows do
+		if row.Prop == "chunk_overgrown_causeway_gate__PropsSolid" then
+			if solid or row.Collide ~= true or row.Anim ~= "Static" or row.Tier ~= 1 then
+				table.insert(
+					collisionErrors,
+					"solid group must be unique, colliding, Static and Tier 1"
+				)
+			end
+			solid = row
+		elseif row.Prop == "chunk_overgrown_causeway_gate__PropsNonSolid" then
+			if nonsolid or row.Collide ~= false then
+				table.insert(collisionErrors, "nonsolid group must be unique and noncolliding")
+			end
+			nonsolid = row
+		elseif string.match(row.Prop, "^chunk_overgrown_causeway_gate__tree_canopy_") then
+			canopyCount += 1
+			if row.Collide ~= false then
+				table.insert(collisionErrors, row.Prop .. " must be noncolliding")
+			end
+		end
+	end
+	if not solid or not nonsolid or canopyCount == 0 then
+		table.insert(collisionErrors, "Causeway must include solid, nonsolid and canopy placements")
+	end
 	check(
-		"Verdant Valley Causeway scenery opts into collision",
-		vv ~= nil and vv.Placements.VV_OVERGROWN_CAUSEWAY_GATE[1].Collide == true
+		"Verdant Valley Causeway groups preserve separated collision roles",
+		#collisionErrors == 0,
+		table.concat(collisionErrors, "; ")
 	)
-	local noCollisionFlag = table.clone(vv.Placements.VV_OVERGROWN_CAUSEWAY_GATE[1])
+	local noCollisionFlag = table.clone(solid or {})
 	noCollisionFlag.Collide = nil
 	local sample = {
 		VERDANT_VALLEY = {

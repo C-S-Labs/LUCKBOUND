@@ -31,6 +31,18 @@ convention, add a line there in the same change.
 
 ## STEP 1 — then read these three, in this order
 
+### Blender launch policy
+
+All repository Blender jobs must use `tools/run_blender.py`, including Python
+expressions, reviews and temporary external scripts. Never launch `blender.exe`
+directly from Codex. Read `docs/TOOLCHAIN_ACCESS.md` §3.1: Windows thumbnails
+ignore failed profile lookups under restricted tokens. If the shared launcher
+returns 78, retry it with a normal user token through the tool approval mechanism;
+do not bypass it or add another per-script guard. Use `--interactive` for GUI
+launches. The installed startup/MCP integration calls the same shared policy;
+reinstall it after replacing the MCP add-on. Do not change Blender's cwd to the
+repository in MCP code. Use absolute asset paths there.
+
 This project runs across many separate conversations. Nothing carries over
 between them except what is written in the repo, so these three files ARE the
 handoff:

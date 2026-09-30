@@ -170,6 +170,75 @@ Then in Blender:
 
 There is also a Blender connector available through Claude's connector directory if you prefer not to manage the MCP config by hand.
 
+### 3.1 Windows thumbnail safety and the shared launcher
+
+All Codex Blender operations use `python tools/run_blender.py <Blender args>`.
+Use `--interactive` as the first argument for a GUI launch. With this machine's
+bundled Python, substitute
+`C:/Users/jhpel/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe`
+for `python`. For example:
+
+```powershell
+& C:/Users/jhpel/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe tools/run_blender.py -b --factory-startup E:/BlenderAIProjects/Projects/VerdantValley_Cleanup.blend --python assets/source/worlds/verdant_valley/export_verdant_valley_kit.py -- --production-scene --staging-dir assets/export/worlds/verdant_valley_staging
+```
+
+The launcher checks `SHGetSpecialFolderPathW(CSIDL_PROFILE)` before creating a
+Blender process. Exit 78 means retry this same launcher with a normal Windows
+user token through Codex's approval mechanism. Setting USERPROFILE, APPDATA,
+LOCALAPPDATA or XDG_CACHE_HOME does not repair the Windows native thumbnail path.
+No automatic privilege elevation, shell command construction or asset processing
+occurs on refusal. The child starts in `E:/BlenderAIProjects/Runtime` and validates
+again before any command-line scene/script. Headless jobs then restore their
+original cwd so existing relative output arguments keep their meaning. File and
+script inputs are made absolute before launch; script arguments remain unchanged.
+
+`tools/blender_runtime.py` is the sole policy. The installed interactive startup
+module and the actual MCP add-on `_dispatch` call its `protect()` function; MCP
+checks every command before its handler, refuses failed lookups, and detaches a
+repository cwd. Run `tools/install_blender_runtime.py` through live MCP execute
+code to install/reinstall idempotently. It replaces only dispatch, without
+restarting Blender or changing scene data. Reinstall after an add-on replacement.
+The original add-on is retained as `E:/BlenderAIProjects/Runtime/addon_before_runtime.txt`.
+GUI startup integration is in the Blender 5.2 user scripts `startup/luckbound_runtime.py`;
+factory startup intentionally bypasses user startup scripts, so headless jobs must
+use the launcher. Direct Steam/desktop launches currently run with a normal token
+and installation cwd. Use absolute paths in live MCP code; never set cwd to the repo.
+
+**Diagnosis, 2026-09-30:** the previous investigation was external, at
+`E:/BlenderAIProjects/VerdantValleyCombinedCleanup/thumbnail_investigation.txt`
+(2026-09-27), with `thumbnail_probe.py` and 17 scripts calling
+`windows_thumbnail_preflight.py`. No matching diagnostic commit or repository
+worklog entry was found. The old helper now delegates to the shared policy.
+Later direct headless calls bypassed those guards. Fifteen root trees created
+September 29–30 contain only empty `.thumbnails/large` and
+`.thumbnails/fail/blender` directories; names, codepoints, creation times and nearby
+launch records are preserved in `BLENDER_DIRECTORY_EVIDENCE.json`. Multiple trees
+were created 1–11 seconds after Cliff seam, lip and scenery jobs. These are timing
+correlations, not a historical syscall trace proving each individual caller.
+
+Blender 5.2.2's Windows native `get_thumb_dir` ignores the Shell API failure and
+converts an uninitialized UTF-16 buffer into a relative path, then recursively
+creates thumbnail directories under inherited cwd. The same unchecked call remains
+in [upstream Blender source](https://github.com/blender/blender/blob/main/source/blender/imbuf/intern/thumbs.cc).
+Restricted Codex lookup returns false/empty; normal-token/live MCP lookup returns
+`C:/Users/jhpel`. The live MCP process observed on September 30 was started at
+06:07 EDT, after every retained directory, with installation cwd and a valid profile.
+Its earlier incarnations cannot be attributed from current process state alone.
+
+**Boundary:** this corrects the managed launch/MCP workflow, not Blender's executable.
+An arbitrary direct launch that bypasses the launcher/startup integration, or code
+that explicitly changes cwd after protection, remains capable of reproducing the
+upstream bug. A universal guarantee for all possible launches requires an upstream
+native fix or an OS-enforced restriction; Python guards cannot make that claim.
+No Blender binary, Git internals or quarantined object was changed. Keep the 15
+trees until the workflow has also passed owner usage; remove them only after that
+and applicable CI. Asset sources/exports were neither changed nor deleted.
+
+Validation: seven targeted launcher/profile regressions; restricted parent refusal
+before process creation; injected child failure exits before a following script; normal-token read-only headless open of the existing
+4,886-object scene; injected MCP failure refusal before handler; inherited repo cwd
+relocation; unchanged root evidence. No render/export/asset save was required.
+
 ### Honest expectations
 
 Blender MCP is genuinely good at: procedural and parametric geometry, scene assembly, batch operations, materials, modifier stacks, running Python against the scene.

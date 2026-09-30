@@ -9,6 +9,10 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 ## 1. Where the project stands
 
+- **Causeway collision test corrected (2026-09-30):** obsolete first-placement assumption replaced with identity-based solid/nonsolid/canopy role checks; production data and collision behavior unchanged. Affected ambience group 35/35, then full suite 908/908; Blender workflow regressions 7/7 and StyLua check pass. Standalone Selene remains at its unchanged baseline of 43 errors/44 warnings, zero parse errors (harness globals/pre-existing findings). Combined local commit with Blender workflow fix authorized; main merge not started. Owner Blender normal-use/Studio collision and remote CI remain pending; recovery assets retained.
+
+- **Blender thumbnail workflow corrected (2026-09-30):** shared launcher validates Windows CSIDL_PROFILE in parent/child before scene/script processing; restricted-token jobs must retry with a normal token. Current MCP dispatch and interactive startup installed against the same policy; legacy external preflight delegates. Seven small regressions, normal-token read-only 4,886-object scene open, injected MCP refusal/relocation and startup registration pass. Fifteen root thumbnail trees preserved with timestamp/launch evidence. Owner restart/usage and applicable CI pending. Native Blender defect remains: arbitrary direct bypass launches require an upstream native fix for an unconditional guarantee. See TOOLCHAIN_ACCESS §3.1; no asset or Git internal changed.
+
 - **Rojo saved-asset parse verified (2026-09-30):** reported EOF errors at varying lines are consistent with reads during large Studio saves. Completed VV_COLLISION/VV_STRUCTURE/VV_PROP_LIBRARY all parse and pass a targeted Rojo 7.7 build; no repair needed. Plugin hook cause unconfirmed; reconnect after writes if warnings persist.
 
 - **Prop save verified despite Rojo warning (2026-09-30):** owner Save to File emitted PatchTree:231 precommit nil-index warning; saved XML and live Edit library both contain 823 meshes and all four latest prop IDs. Save complete; underlying Rojo hook cause unconfirmed, visual/collision test pending.

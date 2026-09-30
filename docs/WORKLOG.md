@@ -33,6 +33,45 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
+## Session 173 — 2026-09-30 — Correct Causeway collision regression and commit Blender workflow
+**Merged:** none   **Tests:** affected ambience group 35/35 first, full suite 908/908 next; Blender regressions 7/7; StyLua check passes
+
+### Done
+- Replaced Causeway's obsolete first-row collision assertion with one aggregate regression checking unique solid/nonsolid groups by identity and every canopy's noncollision; requires all categories and Static/Tier 1 solid scenery. Keeps suite total at 908 with per-role failure details.
+- Adjacent schema probes now clone the identified solid row. No production placement, ordering, asset or collision behavior changed.
+- Prepared the existing shared Blender workflow fix and this test correction for the owner-requested combined local commit. Standalone Selene yields the identical committed baseline: 43 errors, 44 warnings, zero parse errors; no unrelated lint cleanup.
+
+### Decisions made
+- The pilot's single solid placement no longer defines current row order. Preserve separated structure, server solid props, client nonsolid/canopy props and dedicated walk-collider architecture.
+
+### Stopped at
+All requested test runs pass. Combined local commit authorized; no push or main merge started. Blender normal-use/restart and Studio physical collision checks remain pending, as does remote CI.
+
+### Next
+1. Owner normal-use/Studio checks, then applicable remote CI before any merge; main integration awaits separate direction.
+2. Cleanup: no new asset iteration introduced. Retain all 15 thumbnail trees, original add-on recovery and existing asset rollbacks until owner/applicable CI checks prove replacement safe; temporary test probes can be removed now.
+
+## Session 172 — 2026-09-30 — Centralize Blender Windows thumbnail safety
+**Merged:** none   **Tests:** seven targeted Python regressions; normal-token read-only headless scene open; injected child/MCP refusal and MCP relocation; startup registration and idempotent installation
+
+### Done
+- Located September 27 external thumbnail investigation/probe and 17 guarded temporary scripts. No matching diagnostic commit/repository worklog entry found. Recorded all 15 current empty thumbnail trees with names, codepoints, UTC creation times and nearby Codex launch records in `docs/BLENDER_DIRECTORY_EVIDENCE.json`; none deleted.
+- Confirmed restricted Windows CSIDL_PROFILE lookup fails while normal-token/live MCP lookup succeeds. Multiple directory times correlate within 1–11 seconds with direct headless Cliff/scenery launches that bypassed old guards. Blender native Windows thumbnail code ignores the failed lookup and converts uninitialized data into relative paths under inherited repository cwd.
+- Added sole shared policy `tools/blender_runtime.py`, ordered parent/child launcher `tools/run_blender.py`, idempotent live installer and seven small regressions. Installed shared policy calls into actual Blender 5.2 MCP dispatch and interactive startup; replaced old external preflight implementation with delegation. Preserved original add-on in external Runtime recovery text.
+- Documented mandatory launcher/normal-token retry in AGENTS, INDEX and TOOLCHAIN_ACCESS. Headless job cwd/relative output behavior preserved after child verification; no asset, export, scene data, Git internal or quarantined object changed.
+
+### Decisions made
+- Fix the shared launch/dispatch workflow rather than add guards to more content scripts. Windows native thumbnails ignore XDG_CACHE_HOME and Windows profile environment hints.
+- Do not claim a universal native repair: arbitrary executable launches that bypass the integrations, explicit later cwd changes and replacement add-ons remain outside this protection. Unconditional protection requires fixing Blender's native source or OS enforcement.
+
+### Stopped at
+Managed headless and MCP paths tested; existing 4,886-object saved scene opened read-only. Active MCP scene remains three default objects. Interactive startup register checked without opening another GUI. All 15 retained trees unchanged. Upstream native defect remains; no merge/CI or owner restart/normal-use check performed.
+
+### Next
+1. Owner normal-use/restart check; use launcher for headless/GUI jobs and reinstall integration after replacing MCP add-on. Applicable CI before merge.
+2. If unconditional protection against bypass launches is required, pursue a native Blender patch; managed policy alone cannot provide it.
+3. Cleanup: retain all 15 trees and original add-on recovery until owner/applicable CI pass; then recommend removal. Original asset iterations unchanged; no new asset iteration introduced.
+
 ## Session 171 — 2026-09-30 — Check Rojo malformed-file errors after saves
 **Merged:** none   **Tests:** XML parse of saved VV_COLLISION/VV_STRUCTURE/VV_PROP_LIBRARY; targeted Rojo 7.7 build succeeds
 

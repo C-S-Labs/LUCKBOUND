@@ -106,7 +106,12 @@
 
 ## 5. Asset pipelines (Blender 5.2, headless)
 
-Blender: `"C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe" -b --factory-startup --python <script> -- <args>`
+Blender: `python tools/run_blender.py -b --factory-startup --python <script> -- <args>`.
+The shared `tools/blender_runtime.py` validates the Windows profile before any job;
+restricted-token failures require a normal-token retry, never a direct executable
+launch. Interactive startup and current MCP dispatch use the same policy, installed
+by `tools/install_blender_runtime.py`. See `docs/TOOLCHAIN_ACCESS.md` §3.1 and the
+preserved root-directory evidence in `docs/BLENDER_DIRECTORY_EVIDENCE.json`.
 
 **Chunk kits (world geometry)**
 

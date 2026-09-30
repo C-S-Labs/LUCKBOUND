@@ -30,6 +30,12 @@ scan (`*_Final`, `*_NEW`, `*_FIXED`, …) from build spec P1-12.
 
 ### Coverage
 
+The ambient-scenery group checks Verdant Valley Causeway collision roles by
+prop identity, independently of placement order: the solid group collides and
+is Static/Tier 1, while the nonsolid group and every canopy do not collide.
+All three categories must be present. The collision-schema probes use the
+identified solid row; dedicated terrain collision remains a separate runtime path.
+
 | Group | Tests | The question it answers |
 |---|---|---|
 | Schema validation | 8 | Does the server refuse to boot on broken content? |
