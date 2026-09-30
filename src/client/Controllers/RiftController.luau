@@ -42,6 +42,7 @@ type Tracked = {
 	Model: Model,
 	Kind: string,
 	Centre: CFrame, -- the tear's centre, in world space
+	GroundY: number,
 	Shells: { PartInfo }, -- RiftCore / RiftMid / RiftHalo
 	Edges: { PartInfo },
 	Rocks: { PartInfo },
@@ -64,10 +65,14 @@ type Tracked = {
 	Phase: number, -- de-syncs this rift from the other one
 	Burned: boolean, -- the bloom burst has fired
 	LastPhase: string,
+	Frames: number,
+	Error: string?,
 }
 
 local tracked: { [Model]: Tracked } = {}
 local count = 0
+local initialized = false
+local preparing: { [Model]: boolean } = {}
 
 local function indexOf(name: string): number
 	return tonumber(string.match(name, "(%d+)$")) or 0
@@ -94,7 +99,7 @@ local function track(model: Instance)
 	if type(kind) ~= "string" then
 		return
 	end
-	local core = model:FindFirstChild("RiftCore")
+	local core = model:FindFirstChild("RiftCore", true)
 	-- The tear's centre, oriented by the MODEL's frame rather than the core
 	-- mesh's own (an imported MeshPart can carry a baked turn of its own).
 	local pivot = model:GetPivot()
@@ -106,6 +111,11 @@ local function track(model: Instance)
 		Model = model,
 		Kind = kind,
 		Centre = centre,
+		GroundY = if typeof(model:GetAttribute("GroundPosition")) == "Vector3"
+			then (model:GetAttribute("GroundPosition") :: Vector3).Y
+			else centre.Position.Y - (if core and core:IsA("BasePart")
+				then core.Size.Y / 2
+				else 0),
 		Shells = {},
 		Edges = {},
 		Rocks = {},
@@ -119,6 +129,8 @@ local function track(model: Instance)
 		Phase = 0,
 		Burned = false,
 		LastPhase = "",
+		Frames = 0,
+		Error = nil,
 	}
 	count += 1
 	t.Phase = count * 2.1
@@ -227,6 +239,12 @@ local function animate(t: Tracked, now: number)
 			math.max(0.02, p.Size.Z * swell)
 		)
 		p.Part.Transparency = RiftCore.shellTransparency(p.Rest, m.Alpha)
+		p.Part.CFrame = p.Home
+			+ Vector3.new(
+				0,
+				RiftCore.riseHeight(p.Home.Position.Y, t.GroundY, m.Height) - p.Home.Position.Y,
+				0
+			)
 	end
 
 	-- The lips ride the edge of the tear as it opens: pulled in toward the
@@ -234,21 +252,34 @@ local function animate(t: Tracked, now: number)
 	for _, p in t.Edges do
 		local d = t.Centre:PointToObjectSpace(p.Home.Position)
 		local target = t.Centre:PointToWorldSpace(Vector3.new(d.X * m.Width, d.Y * m.Height, d.Z))
+		target = Vector3.new(
+			target.X,
+			RiftCore.riseHeight(p.Home.Position.Y, t.GroundY, m.Height),
+			target.Z
+		)
 		p.Part.CFrame = p.Home - p.Home.Position + target
 		local shimmer = cfg.EdgeShimmer * math.sin(loop * 2.3 + p.Index * 0.9)
 		p.Part.Transparency =
 			RiftCore.shellTransparency(math.clamp(p.Rest + shimmer, 0, 1), m.Alpha)
 	end
 
-	-- Fragments: fly in from their own side, then drift outward and back.
+	-- Fragments rise from beneath their resting footprint, then drift outward.
 	for _, p in t.Rocks do
-		local gx, gy = RiftCore.gatherOffset(m.Gather, p.Side, cfg)
+		local gx, gy = RiftCore.gatherOffset(
+			m.Gather,
+			p.Home.Position.Y + p.Size.Magnitude / 2 - t.GroundY,
+			cfg
+		)
 		local dx, dy = RiftCore.fragmentOffset(loop, p.Index, p.Side, cfg)
 		p.Part.CFrame = shifted(t, p, gx + dx * m.Gather, gy + dy * m.Gather)
 		p.Part.Transparency = RiftCore.shellTransparency(0, m.Gather)
 	end
 	for _, p in t.Gems do
-		local gx, gy = RiftCore.gatherOffset(m.Gather, p.Side, cfg)
+		local gx, gy = RiftCore.gatherOffset(
+			m.Gather,
+			p.Home.Position.Y + p.Size.Magnitude / 2 - t.GroundY,
+			cfg
+		)
 		local dx, dy = RiftCore.fragmentOffset(loop, p.Index, p.Side, cfg)
 		p.Part.CFrame = shifted(t, p, gx + dx * m.Gather, gy + dy * m.Gather)
 		p.Part.Transparency = RiftCore.shellTransparency(p.Rest, m.Gather)
@@ -294,14 +325,68 @@ local function animate(t: Tracked, now: number)
 	end
 end
 
-function RiftController.init(): ()
-	for _, model in CollectionService:GetTagged(Constants.NAMES.RIFT_TAG) do
-		track(model)
+local function prepare(model: Instance)
+	if not model:IsA("Model") or tracked[model] or preparing[model] then
+		return
 	end
-	-- Rifts stream in and out with their chunk. Attributes arrive with the
-	-- instance, but its children can trail it by a beat.
-	CollectionService:GetInstanceAddedSignal(Constants.NAMES.RIFT_TAG):Connect(function(model)
-		task.defer(track, model)
+	preparing[model] = true
+	task.spawn(function()
+		local deadline = os.clock() + GameConfig.Rift.TrackTimeoutSeconds
+		repeat
+			local core = model:FindFirstChild("RiftCore", true)
+			if
+				model:IsDescendantOf(Workspace)
+				and type(model:GetAttribute("RiftKind")) == "string"
+				and core
+				and core:IsA("BasePart")
+			then
+				track(model)
+				preparing[model] = nil
+				return
+			end
+			task.wait(GameConfig.Rift.TrackRetrySeconds)
+		until os.clock() >= deadline
+		preparing[model] = nil
+		if model.Parent then
+			warn(
+				`[RiftController] {model.Name} did not finish replicating; /riftstatus reports registration.`
+			)
+		end
+	end)
+end
+
+function RiftController.status(): string
+	local rows = {
+		`RiftController initialized={initialized}; tagged={#CollectionService:GetTagged(
+			Constants.NAMES.RIFT_TAG
+		)}`,
+	}
+	for model, t in tracked do
+		table.insert(
+			rows,
+			`{model.Name}: {t.Kind}, phase={t.LastPhase}, frames={t.Frames}, shells={#t.Shells}, fragments={#t.Rocks}, error={t.Error or "none"}`
+		)
+	end
+	return table.concat(rows, "\n")
+end
+
+function RiftController.init(): ()
+	if initialized then
+		return
+	end
+	initialized = true
+	-- Subscribe first, then scan. Tags can arrive before metadata/children;
+	-- registration waits for a usable rig rather than silently dropping it.
+	CollectionService:GetInstanceAddedSignal(Constants.NAMES.RIFT_TAG):Connect(prepare)
+	for _, model in CollectionService:GetTagged(Constants.NAMES.RIFT_TAG) do
+		prepare(model)
+	end
+	-- Also recognize replicated rift attributes if the tag notification was
+	-- missed during streaming. Both paths share the same registration guard.
+	Workspace.DescendantAdded:Connect(function(model)
+		if model:IsA("Model") and model:GetAttribute("RiftKind") ~= nil then
+			prepare(model)
+		end
 	end)
 
 	RunService.RenderStepped:Connect(function()
@@ -310,7 +395,14 @@ function RiftController.init(): ()
 		end
 		local now = Workspace:GetServerTimeNow()
 		for _, t in tracked do
-			animate(t, now)
+			local ok, err = pcall(animate, t, now)
+			if ok then
+				t.Frames += 1
+				t.Error = nil
+			elseif t.Error ~= tostring(err) then
+				t.Error = tostring(err)
+				warn(`[RiftController] {t.Model.Name}: {t.Error}`)
+			end
 		end
 	end)
 end

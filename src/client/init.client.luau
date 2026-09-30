@@ -45,6 +45,8 @@ StateController.init()
 -- already exists and watches for the rest, so a panel built later is scaled
 -- the moment it appears.
 SettingsController.init()
+-- Portal motion must not wait on an unrelated scenery/UI controller.
+RiftController.init()
 HubEffects.init()
 SkyTraffic.init()
 LightningController.init()
@@ -56,7 +58,6 @@ ExpeditionHud.init()
 ExpeditionController.init()
 -- Chests, the vault and forcefields move on each client (build spec §7.5).
 FixtureController.init()
-RiftController.init()
 -- Before the menu, which draws the party panel from it.
 PartyController.init()
 -- The live palette, before any screen is built: EventController holds what is

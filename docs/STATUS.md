@@ -44,6 +44,30 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 ## 2. Next — pick up here
 
+> **Branch relocation, 2026-09-30:** conversation follow-ups now live on local
+> `agent/expedition-portal-followup`, based on portal head 6e6f996. Orchestrate-skill and main are untouched.
+> Owner confirms motion/rarity/facing; raised Sanctum floor and adaptive deeper placement need follow-up.
+> Adaptive floor probes are started. Expedition_Transition is registered but handlers remain unimplemented;
+> this is work in progress and must not be integrated yet. No push/PR until owner confirmation.
+
+> **2026-09-30: exit reveal and facing refinement, local only.** Owner approves entrance arrival and exit look;
+> requested rocks emerging from the floor and tear growth from its ground tip followed by sideways expansion.
+> Implemented deck-anchored shell/lip growth and buried fragment emergence. Exit facing now follows the actual
+> consumed arrival socket, fixing quarter-turned arenas; catalogue pieces use authored inlet plus row yaw.
+> **989 tests pass**, including all boss definitions at four approach directions. Recheck both Sky Citadel
+> arenas in Studio with fresh `/portaltest exit` runs. Entrance is retained; future blank pre-loading biome
+> screen should reveal players as though they walked through it. No pre-loading screen added yet. No push/PR.
+
+> **2026-09-30: portal playtest follow-up, local only on `agent/expedition-portal`.** Owner likes the design,
+> reports static animation and falling arrival. Added F4 World & Map `/portaltest [exit|entrance]` presets:
+> observe the real once-per-run boss exit opening without a boss model, or repeat grounded arrival.
+> `/riftstatus` reports client registration/frame counts/errors. Registration retries incomplete replication;
+> rift animation starts earlier and isolates per-rig errors. Generated arrivals stand beyond the entrance,
+> facing into the biome with R6/R15 clearance; E range reduced to a provisional 12 studs.
+> **971 tests pass.** Studio animation/arrival verification remains pending; static cause needs client Output
+> if it persists. Custom prompt versus walk-through is undecided. Fresh-server streaming intermission is
+> future work. **No pushes or PR until owner confirms gameplay.**
+
 > **2026-09-30: expedition portals wired locally on `agent/expedition-portal`.** Owner verified the corrected
 > Blender meshes and Studio proportions, then delivered both `.rbxmx` prefabs. They now load through Rojo at
 > scale 1 with measured Scar offsets; complete rifts stream atomically. Entrance defaults to ENTRY centre,

@@ -7,7 +7,7 @@
 -- THE TWO RULES THE MOTION KEEPS
 --   1. The lane in front of and behind the tear is EMPTY. Fragments only ever
 --      move outward from their home and back (`fragmentOffset`), and fly in
---      from the sides (`gatherOffset`), so no frame puts rock in the path.
+--      from beneath their home (`gatherOffset`), so no frame puts rock in the path.
 --   2. The tear's tip stays on the deck. The breath swells width and
 --      thickness only; only the materialise opens the tear in height, and it
 --      ends exactly at full height.
@@ -93,11 +93,16 @@ function RiftCore.fragmentOffset(t: number, index: number, side: number, cfg: an
 	return across, up
 end
 
---- Where a fragment is while flying in, relative to home: (across, up).
---- Starts far out to its own side and above, arrives exactly at (0, 0).
-function RiftCore.gatherOffset(gather: number, side: number, cfg: any): (number, number)
+--- Vertical emergence relative to home; height includes its upper extent
+--- above the deck so the entire fragment starts beneath the floor.
+function RiftCore.gatherOffset(gather: number, height: number, cfg: any): (number, number)
 	local remaining = 1 - RiftCore.ease(gather)
-	return side * cfg.GatherDistance * 0.85 * remaining, cfg.GatherDistance * 0.5 * remaining
+	return 0, -(height + cfg.GatherBurialDepth) * remaining
+end
+
+--- Scale a resting height around the deck rather than the tear's centre.
+function RiftCore.riseHeight(home: number, ground: number, height: number): number
+	return ground + (home - ground) * height
 end
 
 --- The point light: idle brightness, lifted by the bloom pulse.

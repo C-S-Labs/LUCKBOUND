@@ -107,6 +107,7 @@ function ChunkCore.placeAgainst(chunk: any, openSocket: any, index: number): (an
 					Y = openSocket.Y - s.OffsetY,
 					Z = openSocket.Z - oz,
 					Yaw = yaw,
+					ArrivalFacing = norm(s.Facing + yaw),
 					Index = index,
 				},
 					s

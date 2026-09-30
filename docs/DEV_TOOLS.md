@@ -27,7 +27,7 @@ place goes public.
 
 | Tab | Commands |
 |---|---|
-| World & Map | `/roll <world> [test]`, `/enter [seed]`, `/leave`, `/seed`, `/worlds` |
+| World & Map | `/roll <world> [test]`, `/enter [seed]`, `/leave`, `/seed`, `/worlds`, `/portaltest [exit|entrance]`, `/riftstatus` |
 | Chunks | `/chunks [on/off]` (bounds + labels; red = blockout), `/chunklist`, `/chunktp <chunk>` |
 | Player | `/fly`, `/noclip`, `/speed [n]`, `/tp <place>`, `/where`, `/god`, `/heal`, `/respawn` |
 | Fate & Loot | `/boss`, `/givekey [key]`, `/takekey`, `/keys`, `/keychance`, `/vaultchance`, `/ledger` |

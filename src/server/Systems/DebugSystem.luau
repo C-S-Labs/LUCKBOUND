@@ -16,7 +16,6 @@
 -- mistake anyone can make; it should not by itself hand a stranger the ability
 -- to roll themselves a Mythic on a live server.
 
-local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 
@@ -436,7 +435,15 @@ COMMANDS.vaultchance = function(_player: Player, args: { string }): (boolean, st
 			else `{table.concat(ids, ", ")} back to its own spawn chance`
 end
 
---- /boss -- act as if you just defeated your map's boss (repeatable).
+COMMANDS.portaltest = function(player: Player, args: { string }): (boolean, string)
+	local kind = string.lower(args[1] or "exit")
+	if kind ~= "exit" and kind ~= "entrance" then
+		return false, "usage: /portaltest [exit|entrance]"
+	end
+	return ExpeditionSystem.testPortal(player, kind)
+end
+
+--- /boss -- defeat the stand-in once and open this run's exit.
 COMMANDS.boss = function(player: Player, _args: { string }): (boolean, string)
 	return LootSystem.triggerBoss(player)
 end

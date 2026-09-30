@@ -388,10 +388,12 @@ by the owner on 2026-09-30; this gameplay pass is still pending. Combat and XP a
    have no `[RiftRig] no prefab` or missing-contract warnings.
 2. Use its RETURN prompt before approaching the boss. Confirm return to the hub with the original lighting
    restored and reduced Fate (`EarlyExitFraction` of the full award, rounded down). No boss loot is granted.
-3. Start another run. The boss exit is absent and its prompt disabled. `/boss` fires the same once-per-run
-   defeat path as entering the boss arena; it starts a five-second crimson materialisation at the boss spot.
-   Walk to the arena to observe it naturally, or use `/chunktp <boss index>` after recording the index in Explorer.
-4. Confirm cracks/motes, fragment gathering, opening tear, then a settled open rift. EXIT is unusable while
+3. Start another run. The boss exit is absent and its prompt disabled. In F4 → World & Map, select
+   `/portaltest` → **Watch exit open** (or type `/portaltest exit`). It places you facing the exit, then fires
+   the real once-per-run defeat path: no boss model is needed. Watch five-second crimson materialisation.
+   A fresh run is required to replay it; testing does not reset the reward guard.
+4. Confirm cracks/motes, rocks rising from beneath the floor, tear growing from the deck and widening
+   sideways, then a settled open rift. Its ground tip must stay seated throughout. EXIT is unusable while
    materialising and usable afterwards. Repeat `/boss`: it reports already cleared and grants no further loot.
    Loot pools currently empty cannot prove randomized drops; verify that boundary when real pools are added.
 5. Leave via EXIT; confirm full Fate once. In separate cleared runs, return via the entrance and wait for
@@ -403,6 +405,14 @@ by the owner on 2026-09-30; this gameplay pass is still pending. Combat and XP a
    while an exit is sealed: no shell, rocks, light or prompt should be visible. Verify no fragment enters the lane.
 8. Hub regression: the south shop and its travel destination remain; no prototype gate rig/prompt returns,
    including fallback hub construction. Entry remains on the Fate Engine.
+9. `/portaltest entrance` repeats grounded arrival: feet on the deck, no falling, facing away from the tear
+   into the biome. Check both R6 and R15 and party spacing. RETURN/EXIT use a provisional 12-stud E range.
+10. Run `/riftstatus` twice while near the entrance: initialized=true, three shells and increasing frame
+    counts, error=none. If static, report both results and red client Output; registration retries alone
+    cannot prove every client boot failure is resolved. Repeat after streaming away and returning.
+11. Test both Sky Citadel boss chunks (clearing and antenna/spire arena), including quarter-turned layouts.
+    The exit's face must look toward the incoming walkway, never edge-on to it. Use fresh runs to replay
+    opening. For a catalogue layout, verify the exit follows that piece's authored inlet and row yaw.
 
 Optional authored-position regression: add one world data module under `Content/Portals/` with the §7.8
 shape, choose an ENTRY/BOSS piece and nonzero offset, and verify placement rotates with that chunk's yaw.

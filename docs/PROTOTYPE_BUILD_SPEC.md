@@ -446,6 +446,7 @@ Created by `Core/Net.luau` and nowhere else.
 | `Expedition_Started` | RemoteEvent | S→C | `ExpeditionPayload` | — |
 | `Expedition_Ended` | RemoteEvent | S→C | `ExpeditionEndPayload` | `Reason` gains `EXITED` and the payload gains `Outcome` (§7.8) |
 | `Expedition_TimerSync` | RemoteEvent | S→C | `{RemainingSeconds, ServerNow}` | — |
+| `Expedition_Transition` | RemoteEvent | S↔C | S→C `{Token, Phase=COVER/LOAD/REVEAL/CANCEL, Position?, StageName?}`; C→S `{Token, Phase=COVERED/READY}` | exact current server token + expected phase, once per phase; bounded waits; no client position or reward input (§7.8) |
 | `Hub_RequestTravel` | RemoteEvent | C→S | `{DestinationId}` | known Id + hub-only + 60/min (spam guard; **no cooldown**) |
 | `Hub_TravelResult` | RemoteEvent | S→C | `{Ok, DestinationId, Reason}` | — |
 | `Code_Redeem` | RemoteEvent | C→S | `{Code}` | length cap + 6/min + one redemption per code |
@@ -1208,8 +1209,9 @@ makes what a run pays depend on how it ended. Branch `agent/expedition-portal`.
    Beams carrying one uploaded flow texture, particles, a point light and tweening, so the animation is extensive
    and the triangle count is not. Entrance colour is the biome's rarity; the exit is always crimson. Nothing is
    collidable and the tear's tip touches the deck, so there is nothing to climb.
-5a. **The exit materialises** where the boss fell instead of appearing whole: cracks and motes, fragments drawn in,
-   the tear opens from the middle, then settles into a calm loop (about 5 seconds, `GameConfig`). Until the owner
+5a. **The exit materialises** where the boss fell instead of appearing whole: cracks and motes, rock fragments rise
+   from beneath the deck, and the tear grows upward from its ground tip, then expands sideways before settling
+   into a calm loop (about 5 seconds, `GameConfig`, owner refinement 2026-09-30). Until the owner
    imports the FBXs to Studio, the `RiftRig` blockout is the fallback, so the game never has a missing portal.
 6. The party ready toggle and the host-starts-run flow belong to the **Fate engine rework**, not this branch. This
    branch only leaves the payout seam (`payoutFor`) and the entry seam (`ExpeditionSystem.requestEnter`) it plugs into.
@@ -1233,6 +1235,11 @@ default centre is used. Prebuilt maps retain their authored return position. `Sc
 world/chunk ownership, placement names and finite Vector3 offsets before boot. **No existing chunk definition
 changes.** A world with no file gets the defaults.
 
+**Exit facing:** assembly records the world-facing socket consumed to enter each placed chunk
+(`PlacedChunk.ArrivalFacing`, copied to its folder). Exit yaw faces that approach, independent of prefab art yaw
+and placement offsets. Catalogue pieces without a connection use their first authored socket plus layout yaw.
+Facing degrees pass through `ChunkCore.yawRadians`, keeping clockwise layout angles consistent with Roblox.
+
 **Delivered prefabs (2026-09-30):** `assets/rbxm/prefabs/EXPEDITION_ENTRANCE.rbxmx` / `EXPEDITION_EXIT.rbxmx`,
 33 / 45 named MeshParts, no SurfaceAppearance; import at Stud / 1.0, tear heights 15 / 21 studs. Both load via
 Rojo's `LuckboundPrefabs`. Registration uses Scar plus each prefab's measured `GameConfig.Rift.*Prefab.AnchorOffset`
@@ -1245,6 +1252,20 @@ The exit prompt remains disabled through materialisation. Boss stand-in debug an
 once-per-run reward guard, so `/boss` cannot re-roll loot or reopen the exit after arena completion.
 
 ### What it adds
+
+**Arrival and testing (2026-09-30):** generated-map arrivals are grounded beyond the entrance, facing into
+the biome; deck raycasts and actual R6/R15 standing clearance replace the elevated loader spawn. Party
+offsets remain. Prebuilt maps keep authored arrival anchors. Root velocities are cleared on placement.
+The provisional E interaction range is 12 studs; custom prompt versus walk-through remains a playtest decision.
+Client registration retries incomplete replication and starts before unrelated visual controllers; `/riftstatus`
+reports registration, frame counts and animation errors. `/portaltest exit` moves the developer to watch
+the real once-per-run boss defeat/opening path, and `/portaltest entrance` repeats arrival placement.
+
+The owner confirmed entrance arrival on 2026-09-30: a blank pre-loading biome screen should reveal players
+already beyond the entrance, as though they walked through it. The future temporary-server intermission
+should cover streaming and reveal this grounded arrival. This
+change does not add a client readiness handshake or delay the expedition timer for streaming; that fresh-server
+boundary still needs the intermission work and a published-server test.
 
 | | |
 |---|---|

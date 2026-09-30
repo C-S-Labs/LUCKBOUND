@@ -254,7 +254,7 @@ local GameConfig = {
 		-- Must exceed the rift's scar radius (Rift.Blockout.*.ScarRadius) or
 		-- the way home is unusable from on top of it -- the same mistake the
 		-- Expedition Gate shipped with. Asserted by test.
-		ReturnPromptDistance = 40,
+		ReturnPromptDistance = 12,
 
 		-- === EXPEDITIONS AS THEIR OWN SERVER ================================
 		-- Owner-directed 2026-09-22 (build spec §7.2): entering the centre
@@ -289,6 +289,7 @@ local GameConfig = {
 		-- Party members arrive a few studs apart rather than inside one
 		-- another. Radius of the ring they are placed on.
 		ArrivalSpreadStuds = 6,
+		ArrivalForwardStuds = 10, -- emerge beyond the entrance, looking into the biome
 	},
 
 	-- === PARTIES =========================================================
@@ -699,17 +700,27 @@ local GameConfig = {
 		MaterialiseSeconds = 5.0,
 		Phases = {
 			Seeds = { 0.0, 0.3 }, -- cracks glow, motes gather
-			Gather = { 0.1, 0.65 }, -- fragments fly in from the sides
-			Split = { 0.35, 0.85 }, -- the tear opens from the middle
+			Gather = { 0.1, 0.65 }, -- fragments rise from beneath the deck
+			Split = { 0.35, 0.85 }, -- the tear rises from the ground, then widens
 			Bloom = { 0.7, 1.0 }, -- one bright pulse, then it settles
 		},
-		GatherDistance = 34,
+		GatherBurialDepth = 1.5, -- fragment tops start this far beneath the deck
 		BloomBurst = 24, -- particles emitted at the bloom
 		-- Rifts stand on the walk surface found by a ray from this far above the
 		-- map's walk plane, so a chunk whose floor rises or dips is still flush.
 		DeckProbeHeight = 6,
 		DeckProbeDepth = 60,
+		ArenaProbeHeight = 40,
+		ArenaBackSteps = { 48, 24, 0 },
+		ArenaRaisedThreshold = 2,
+		ArenaFootprintRadius = 10,
+		ArenaFloorTolerance = 1,
+		ArenaHeadroom = 25,
+		ArenaSurfaceEpsilon = 0.1,
+		ArenaFloorNormalMin = 0.9,
 		PromptHoldSeconds = 0.4,
+		TrackTimeoutSeconds = 10,
+		TrackRetrySeconds = 0.1,
 
 		LightRange = 40,
 		IdleBrightness = 1.3,

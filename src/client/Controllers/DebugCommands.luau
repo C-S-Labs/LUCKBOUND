@@ -34,6 +34,7 @@ local Events = require(Root.Content.Events)
 local GameConfig = require(Root.Core.GameConfig)
 local Net = require(Root.Core.Net)
 local Worlds = require(Root.Content.Worlds)
+local RiftController = require(script.Parent.RiftController)
 
 local DebugCommands = {}
 
@@ -630,6 +631,10 @@ end
 CLIENT.speed = function(args)
 	setSpeed(args[1])
 end
+CLIENT.riftstatus = function()
+	return true, RiftController.status()
+end
+
 CLIENT.tp = function(args)
 	teleport(args[1])
 end

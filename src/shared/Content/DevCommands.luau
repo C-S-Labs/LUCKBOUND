@@ -194,6 +194,25 @@ local COMMANDS: { Command } = {
 
 	-- === FATE & LOOT ===================================================
 	{
+		Name = "portaltest",
+		Category = "WORLD",
+		Side = "SERVER",
+		Summary = "Test a portal: grounded arrival or watch the boss exit open (no boss needed).",
+		Args = {
+			{ Name = "portal", Type = "choice", Options = { "exit", "entrance" }, Optional = true },
+		},
+		Presets = {
+			{ Label = "Watch exit open", Args = { "exit" } },
+			{ Label = "Try entrance arrival", Args = { "entrance" } },
+		},
+	},
+	{
+		Name = "riftstatus",
+		Category = "WORLD",
+		Side = "CLIENT",
+		Summary = "Report rift animation registration, frame counts and the last animation error.",
+	},
+	{
 		Name = "boss",
 		Category = "LOOT",
 		Side = "SERVER",

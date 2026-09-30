@@ -30,6 +30,7 @@ local REMOTES = {
 	"Expedition_Atmosphere", -- S->C, { Environment, Atmosphere, FloorY }; a forced atmosphere mid-run (/atmosphere)
 	"Expedition_Ended", -- S->C, ExpeditionEndPayload
 	"Expedition_TimerSync", -- S->C, { RemainingSeconds, ServerNow }
+	"Expedition_Transition", -- cover/load/reveal; token-bound cosmetic acknowledgements (§7.8)
 	-- The hub menu. Three requests and two facts; everything else the menu
 	-- draws it already has from Profile_Loaded. A panel that needs a new
 	-- remote gets a row in build spec §4 in the same change as its code --

@@ -313,6 +313,7 @@ export type PlacedChunk = {
 	Y: number,
 	Z: number,
 	Yaw: number, -- 0 | 90 | 180 | 270
+	ArrivalFacing: number?, -- world-facing inlet consumed during assembly; exit rifts face this approach
 	Index: number, -- order along the critical path; 0 for side branches
 }
 

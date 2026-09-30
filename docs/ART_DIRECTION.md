@@ -49,6 +49,11 @@ enforces that the seam exists on every swappable piece.
 
 ## What exists now
 
+**Expedition rift reveal (owner, 2026-09-30):** exit rocks materialise from beneath the deck at their resting
+footprints; the tear rises from its ground tip and expands sideways. Its calm open loop is retained. Exits
+face the actual socket used to enter the arena. Entrance arrival is approved; a future blank biome pre-loading
+screen should reveal players already standing beyond the entrance, giving the impression of walking through.
+
 Built to the Biome Blueprint §2. Current state: functional blockout, **very
 dark** — the first thing worth tuning.
 

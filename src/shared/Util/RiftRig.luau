@@ -364,6 +364,7 @@ function RiftRig.build(config: Config, parent: Instance): Model
 	-- Animate a complete rig when it streams in, including its effect anchors.
 	model.ModelStreamingMode = Enum.ModelStreamingMode.Atomic
 	model:SetAttribute("RiftKind", config.Kind)
+	model:SetAttribute("GroundPosition", config.Position)
 	paint(model, color)
 	RiftRig.attachEffects(model, color)
 	-- Resting look, so an open rift reads correctly even before (or without)

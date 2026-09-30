@@ -7252,22 +7252,49 @@ do
 	check("fragments only ever drift outward, never toward the lane", outwardOnly)
 	check("fragment drift stays within its configured bounds", bounded)
 
-	local flyInSide = true
-	for _, side in { 1, -1 } do
-		for i = 0, 100 do
-			local across = RiftCore.gatherOffset(i / 100, side, cfg)
-			if side * across < -1e-9 then
-				flyInSide = false
-			end
+	local riseOnly, lastUp = true, -math.huge
+	for i = 0, 100 do
+		local across, up = RiftCore.gatherOffset(i / 100, 12, cfg)
+		if across ~= 0 or up < lastUp or up > 0 then
+			riseOnly = false
 		end
+		lastUp = up
 	end
-	check("fragments fly in from their own side", flyInSide)
-	local ax, ay = RiftCore.gatherOffset(1, 1, cfg)
+	check("fragments rise vertically without crossing the lane", riseOnly)
+	local ax, ay = RiftCore.gatherOffset(1, 12, cfg)
 	check("fragments arrive exactly home", ax == 0 and ay == 0)
 	check(
-		"fragments start far away",
-		math.abs(select(1, RiftCore.gatherOffset(0, 1, cfg))) > cfg.GatherDistance * 0.5
+		"fragment tops start buried below the deck",
+		math.abs(12 + select(2, RiftCore.gatherOffset(0, 12, cfg)) + cfg.GatherBurialDepth) < 1e-9
 	)
+	local grounded = true
+	for i = 0, 100 do
+		local height = i / 100
+		local centre = RiftCore.riseHeight(111, 100, height)
+		if math.abs(centre - 11 * height - 100) > 1e-9 then
+			grounded = false
+		end
+	end
+	check("tear bottom stays on the deck throughout growth", grounded)
+	check("tear reaches its authored resting height", RiftCore.riseHeight(111, 100, 1) == 111)
+	for _, facing in { 0, 90, 180, 270 } do
+		for _, chunk in Chunks do
+			if chunk.Role ~= "BOSS" then
+				continue
+			end
+			local placed, inlet = ChunkCore.placeAgainst(chunk, {
+				X = 0,
+				Y = 0,
+				Z = 0,
+				Facing = facing,
+				Kind = chunk.Sockets[1].Kind,
+			}, 2)
+			check(
+				`{chunk.Id}: exit faces incoming socket at approach {facing}`,
+				placed ~= nil and inlet ~= nil and placed.ArrivalFacing == (facing + 180) % 360
+			)
+		end
+	end
 
 	check("the light peaks at the bloom", RiftCore.lightBrightness(1, cfg) == cfg.BloomBrightness)
 	check("the light idles at rest", RiftCore.lightBrightness(0, cfg) == cfg.IdleBrightness)
@@ -8765,7 +8792,7 @@ do
 	check(
 		"dev registry: the SERVER commands are exactly DebugSystem's",
 		table.concat(server, ",")
-			== "atmosphere,boss,bossphase,clearboss,endevents,enter,event,givekey,god,heal,keychance,keys,leave,ledger,respawn,roll,showboss,takekey,vaultchance"
+			== "atmosphere,boss,bossphase,clearboss,endevents,enter,event,givekey,god,heal,keychance,keys,leave,ledger,portaltest,respawn,roll,showboss,takekey,vaultchance"
 	)
 
 	-- a broken registry is caught
@@ -8841,6 +8868,13 @@ do
 	check("dev check: numbers enforced", DevCore.check(byName.enter, { "abc" }) ~= nil)
 	check("dev check: optional arguments may be left off", DevCore.check(byName.enter, {}) == nil)
 	check("dev usage", DevCore.usage(byName.showboss) == "/showboss <boss> [height]")
+	check("portal test: default exit accepted", DevCore.check(byName.portaltest, {}) == nil)
+	check("portal test: entrance accepted", DevCore.check(byName.portaltest, { "entrance" }) == nil)
+	check(
+		"portal test: invalid target rejected",
+		DevCore.check(byName.portaltest, { "boss" }) ~= nil
+	)
+	check("rift diagnostic runs on client", byName.riftstatus.Side == "CLIENT")
 end
 
 -- === summary ========================================================

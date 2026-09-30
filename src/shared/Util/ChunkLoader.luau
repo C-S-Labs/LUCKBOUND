@@ -396,6 +396,7 @@ function ChunkLoader.build(
 		folder.Name = `{placed.Index}_{placed.ChunkId}`
 		folder:SetAttribute("Role", placed.Role)
 		folder:SetAttribute("Yaw", placed.Yaw)
+		folder:SetAttribute("ArrivalFacing", placed.ArrivalFacing)
 		-- What the client's PropController needs to dress this piece: which
 		-- piece it is, and where its walk-plane centre sits in the world.
 		folder:SetAttribute("ChunkId", placed.ChunkId)

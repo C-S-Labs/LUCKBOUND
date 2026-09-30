@@ -34,6 +34,104 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 101 — 2026-09-30 — Preserve portal follow-ups on a separate branch
+**Merged:** not merged   **Branch:** `agent/expedition-portal-followup`, local only
+
+### Done
+- Owner requested branch isolation. Verified checkout was agent/expedition-portal at 6e6f996, not
+  agent/orchestrate-skill; the orchestrate skill commit is absent from portal history.
+- Created agent/expedition-portal-followup from the portal head, preserving this conversation's edits.
+  Original portal branch, orchestrate-skill and main refs remain unchanged. No push or PR.
+- Owner confirms portal facing, rarity colours and motion pass playtest; raised building floors remain an issue.
+- Started adaptive exit floor/headroom probes and deeper placement for raised interiors. These additions
+  still need Studio verification. Registered Expedition_Transition in spec/Net, but its handlers are NOT
+  IMPLEMENTED yet: fade/streaming work is paused at branch relocation and is not integration-ready.
+
+### Decisions made
+- Preserve unrelated local Ethereal Scape chunk/prop imports and untracked worktrees/enemy exports;
+  they are not part of the portal follow-up commit.
+
+### Stopped at
+Portal follow-ups saved locally. Earlier validated reveal/facing has 989 tests; newest adaptive floor probe
+and transition declaration are work in progress, not a finished fade implementation.
+
+### Next
+1. Continue on agent/expedition-portal-followup: finish the transition consumers/guards and tests, then
+   test raised Sanctum floor placement and entry/return black fades in Studio and published servers.
+2. Keep publication on hold until the owner confirms.
+
+### Leftovers
+No superseded files. Keep required art/source exports and owner files. Pending transition declaration must
+gain its readers before integration; remove faulty earlier Studio imports only after replacement checks pass.
+
+---
+
+## Session 100 — 2026-09-30 — Ground-born exit reveal and approach-facing placement
+**Merged:** not merged   **Tests:** 989 passing   **Branch:** `agent/expedition-portal`, local only
+
+### Done
+- Owner tested and approves the exit look and entrance arrival. Revised exit fragments to rise from
+  beneath their resting footprints; shell/lip height now scales around the deck, followed by sideways widening.
+- Fixed fixed-world exit yaw: ChunkCore records the socket consumed on arrival, ChunkLoader carries its
+  facing, and exit placement uses it through yawRadians. Catalogue fallback uses authored inlet plus row yaw.
+- Added buried-emergence, monotonic rise, ground-tip and all-boss/four-approach regression checks.
+- Updated §7.8, ART_DIRECTION, TESTING and handoff. 989 tests pass; format, syntax and Rojo build pass.
+  Targeted lint has zero errors; four existing ChunkCore unused/shadowing warnings remain.
+
+### Decisions made
+- Keep approved entrance arrival. Future blank pre-loading biome screen reveals players beyond the portal,
+  as though they walked through it. Screen/streaming handshake remain future work.
+- No push or PR until owner confirms gameplay. Concurrent Ethereal Scape asset edits are not this work.
+
+### Stopped at
+Revised reveal/facing await Studio verification on both Sky Citadel boss chunks and rotated layouts.
+
+### Next
+1. Restart Play after Rojo sync; fresh `/portaltest exit` runs on both arenas, watch buried emergence,
+   ground-tip seating, sideways widening and face aligned with incoming walkway.
+2. Confirm remaining interaction preference, then prepare integration only when owner requests.
+
+### Leftovers
+No superseded files added. Motion replaces the earlier airborne gather/centre growth in the original modules.
+Keep required PortalRig, source/export assets and owner worktrees/asset edits. Remove faulty old Studio imports
+only after the updated visual pass and CI establish replacement safety.
+
+---
+
+## Session 99 — 2026-09-30 — Portal testing, animation registration and grounded arrival
+**Merged:** not merged   **Tests:** 971 passing   **Branch:** `agent/expedition-portal`, local only
+
+### Done
+- Added World & Map registry presets `/portaltest exit` and `/portaltest entrance`. Exit positions the
+  developer to observe the real boss stand-in opening path without a boss model; reward guard stays intact.
+- Added `/riftstatus` client diagnostics. Registration retries replication, subscribes before scanning,
+  and animation starts earlier. Per-rig errors are reported without halting every rift's motion.
+- Generated arrivals use deck raycasts, actual R6/R15 standing clearance and zero root velocity,
+  beyond the entrance facing the biome. Prebuilt maps retain authored anchors. E range is provisionally 12 studs.
+- Updated registry validation tests, testing instructions and §7.8. No new remotes or UI framework.
+- 971 headless tests, full Luau compilation, Rojo build, formatting and targeted Selene passed
+  (zero lint errors/warnings). Regenerated index excluding unrelated owner worktrees and enemy export.
+
+### Decisions made
+- Owner approved visual design; gameplay remains unverified. No pushes or PR until owner confirms.
+- Shorter E prompt is the first test. Custom prompt versus walk-through remains undecided.
+- Future fresh-server intermission should cover streaming before revealing grounded arrival; no readiness
+  handshake or streaming-based timer delay is implemented in this change.
+
+### Stopped at
+Automated checks pass; owner needs fresh Studio Play, portal presets and `/riftstatus` observations.
+Registration hardening addresses a possible race; client Output is needed if static motion persists.
+
+### Next
+1. Test entrance feet/facing, exit materialisation and prompt range; run `/riftstatus` twice.
+2. Resolve any client errors, choose interaction presentation, then confirm gameplay before publication.
+
+### Leftovers
+No new superseded files. Keep source assets, exports and required PortalRig. Earlier faulty Studio imports
+may be removed only after the visual test and CI pass. Owner's unrelated worktrees/enemy export stay untouched.
+
+---
+
 ## Session 98 — 2026-09-30 — Wire delivered rifts and finish portal authority
 **Merged:** not merged   **Tests:** 967 passing   **Branch:** `agent/expedition-portal`
 

@@ -79,6 +79,7 @@ type Group = {
 	Seed: number,
 	Slot: number?, -- IN_PLACE only; a host has the whole server
 	Stage: Model,
+	Entrance: Model,
 	FloorY: number, -- the map's walk plane; the client's cloud sea hangs below it
 	EntryPosition: Vector3,
 	Summary: string,
@@ -482,7 +483,12 @@ end
 --- The way home, on the arrival chunk (spec §7.8): always open, the colour of
 --- the biome's rarity. Leaving by it is always allowed; what it pays depends
 --- on whether the boss has fallen (ExpeditionCore.payoutFor).
-local function portalSeat(stage: Model, worldId: string, kind: string, fallback: Vector3?): Vector3?
+local function portalSeat(
+	stage: Model,
+	worldId: string,
+	kind: string,
+	fallback: Vector3?
+): (Vector3?, number, Instance?)
 	local placements = Portals[worldId]
 	local override = placements and placements[kind]
 	local role = if kind == "Entrance" then "ENTRY" else "BOSS"
@@ -513,15 +519,91 @@ local function portalSeat(stage: Model, worldId: string, kind: string, fallback:
 	end
 	local centre = chosen and chosen:GetAttribute("Centre")
 	if typeof(centre) ~= "Vector3" then
-		return fallback
+		return fallback, 0, chosen
+	end
+	local yaw = 0
+	if kind == "Exit" and chosen then
+		local facing = chosen:GetAttribute("ArrivalFacing")
+		if type(facing) ~= "number" then
+			-- Catalogue pieces have no connecting corridor; use their authored inlet.
+			local chunkId = chosen:GetAttribute("ChunkId")
+			local definition = if type(chunkId) == "string" then Chunks[chunkId] else nil
+			local socket = definition and definition.Sockets[1]
+			facing = if socket then socket.Facing + (chosen:GetAttribute("Yaw") or 0) else 0
+		end
+		yaw = ChunkCore.yawRadians(facing)
 	end
 	if override then
-		local yaw = chosen:GetAttribute("Yaw")
-		local offset = CFrame.Angles(0, ChunkCore.yawRadians(yaw), 0)
+		local chunkYaw = chosen:GetAttribute("Yaw")
+		local offset = CFrame.Angles(0, ChunkCore.yawRadians(chunkYaw), 0)
 			:VectorToWorldSpace(override.Offset)
-		return centre + offset
+		return centre + offset, yaw, chosen
 	end
-	return centre
+	return centre, yaw, chosen
+end
+
+--- Find a supported interior patch below tall roofs, with room for the tear.
+local function arenaSeat(chunk: Instance, centre: Vector3, yaw: number): Vector3?
+	local cfg = GameConfig.Rift
+	local params = RaycastParams.new()
+	params.FilterType = Enum.RaycastFilterType.Include
+	params.FilterDescendantsInstances = { chunk }
+	params.RespectCanCollide = true
+	local function floorAt(at: Vector3): RaycastResult?
+		return Workspace:Raycast(
+			Vector3.new(at.X, centre.Y + cfg.ArenaProbeHeight, at.Z),
+			Vector3.new(0, -(cfg.ArenaProbeHeight + cfg.DeckProbeDepth), 0),
+			params
+		)
+	end
+	local function supported(at: Vector3): Vector3?
+		local hit = floorAt(at)
+		if not hit or hit.Normal.Y < cfg.ArenaFloorNormalMin then
+			return nil
+		end
+		local floor = hit.Position
+		local r = cfg.ArenaFootprintRadius
+		for _, offset in
+			{
+				Vector3.zero,
+				Vector3.new(r, 0, 0),
+				Vector3.new(-r, 0, 0),
+				Vector3.new(0, 0, r),
+				Vector3.new(0, 0, -r),
+			}
+		do
+			local sample = floorAt(at + offset)
+			if
+				not sample
+				or sample.Normal.Y < cfg.ArenaFloorNormalMin
+				or math.abs(sample.Position.Y - floor.Y) > cfg.ArenaFloorTolerance
+			then
+				return nil
+			end
+			if
+				Workspace:Raycast(
+					sample.Position + Vector3.new(0, cfg.ArenaSurfaceEpsilon, 0),
+					Vector3.new(0, cfg.ArenaHeadroom, 0),
+					params
+				)
+			then
+				return nil
+			end
+		end
+		return floor
+	end
+	local atCentre = supported(centre)
+	if atCentre and atCentre.Y - centre.Y <= cfg.ArenaRaisedThreshold then
+		return atCentre -- preserve the approved open-arena placement
+	end
+	local towardDoor = CFrame.Angles(0, yaw, 0).LookVector
+	for _, back in cfg.ArenaBackSteps do
+		local candidate = supported(centre - towardDoor * back)
+		if candidate then
+			return candidate
+		end
+	end
+	return atCentre
 end
 
 local function buildEntrance(stage: Model, worldId: string, fallback: Vector3, rarityKey: string)
@@ -538,18 +620,23 @@ local function buildEntrance(stage: Model, worldId: string, fallback: Vector3, r
 			ExpeditionSystem.finish(player, "RETURNED")
 		end
 	end)
+	return rig
 end
 
 --- The exit, on the boss chunk where the boss stood (spec §7.8). Built SEALED
 --- and invisible; `openExit` materialises it when the boss falls. Returns the
 --- rig and its prompt so the group can wake them.
 local function buildExit(stage: Model, worldId: string): (Model?, ProximityPrompt?)
-	local centre = portalSeat(stage, worldId, "Exit", nil)
+	local centre, yaw, chunk = portalSeat(stage, worldId, "Exit", nil)
 	if not centre then
 		return nil, nil
 	end
 	local seat = deckAt(stage, centre.X, centre.Z, centre.Y)
-	local rig = RiftRig.build({ Name = "ExitRift", Kind = "EXIT", Position = seat }, stage)
+	if chunk then
+		seat = arenaSeat(chunk, centre, yaw) or seat
+	end
+	local rig =
+		RiftRig.build({ Name = "ExitRift", Kind = "EXIT", Position = seat, Yaw = yaw }, stage)
 	local prompt = riftPrompt(rig, "EXIT", "Leave the world", function(player)
 		if active[player.UserId] then
 			ExpeditionSystem.finish(player, "EXITED")
@@ -665,13 +752,14 @@ local function newGroup(
 	partySize: number
 ): Group
 	local world = Worlds[worldId]
-	buildEntrance(built.Stage, worldId, built.ReturnPosition, world.Rarity)
+	local entranceRig = buildEntrance(built.Stage, worldId, built.ReturnPosition, world.Rarity)
 	local exitRig, exitPrompt = buildExit(built.Stage, worldId)
 	local group: Group = {
 		WorldId = worldId,
 		Seed = seed,
 		Slot = slot,
 		Stage = built.Stage,
+		Entrance = entranceRig,
 		FloorY = built.FloorY,
 		EntryPosition = built.EntryPosition,
 		Summary = built.Summary,
@@ -720,11 +808,93 @@ end
 
 --- Puts one player on the group's map and starts their expedition. Party
 --- members stand on a small ring around the entry point.
+local function groundNearPortal(
+	player: Player,
+	group: Group,
+	rig: Model,
+	dx: number,
+	dz: number,
+	watch: boolean
+): boolean
+	local character = player.Character
+	local root = character and character:FindFirstChild("HumanoidRootPart")
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	local core = rig:FindFirstChild("RiftCore", true)
+	if
+		not character
+		or not root
+		or not root:IsA("BasePart")
+		or not humanoid
+		or not core
+		or not core:IsA("BasePart")
+	then
+		return false
+	end
+	local frame = rig:GetPivot()
+	local forward = frame.LookVector
+	local at = core.Position
+		+ frame:VectorToWorldSpace(
+			Vector3.new(dx, 0, dz - GameConfig.Expedition.ArrivalForwardStuds)
+		)
+	-- Authored whole maps keep their named arrival anchor; generated chunks
+	-- emerge from the entrance instead of using the loader's elevated spawn.
+	local authored = ExpeditionCore.hasPrebuiltMap(Worlds[group.WorldId]) and not watch
+	if authored then
+		at = group.EntryPosition + frame:VectorToWorldSpace(Vector3.new(dx, 0, dz))
+	end
+	local ground = rig:GetAttribute("GroundPosition")
+	local floorY = if authored
+		then at.Y
+		elseif typeof(ground) == "Vector3" then ground.Y
+		else group.FloorY
+	local floor = deckAt(group.Stage, at.X, at.Z, floorY)
+	local clearance = humanoid.HipHeight + root.Size.Y / 2
+	if humanoid.RigType == Enum.HumanoidRigType.R6 then
+		local leg = character:FindFirstChild("Left Leg")
+		if leg and leg:IsA("BasePart") then
+			clearance += leg.Size.Y
+		end
+	end
+	local position = floor + Vector3.new(0, clearance, 0)
+	local facing = if watch then -forward else forward
+	local rootToPivot = root.CFrame:ToObjectSpace(character:GetPivot())
+	character:PivotTo(CFrame.lookAt(position, position + facing) * rootToPivot)
+	root.AssemblyLinearVelocity = Vector3.zero
+	root.AssemblyAngularVelocity = Vector3.zero
+	return true
+end
+
+--- Developer registry seam: stand at a portal and exercise the real defeat path.
+function ExpeditionSystem.testPortal(player: Player, kind: string): (boolean, string)
+	local state = active[player.UserId]
+	if not state then
+		return false, "Enter an expedition first, then /portaltest [exit|entrance]."
+	end
+	local group = state.Group
+	local rig = if kind == "entrance" then group.Entrance else group.Exit
+	if not rig then
+		return false, "This map has no boss exit."
+	end
+	if not groundNearPortal(player, group, rig, 0, 0, kind == "exit") then
+		return false, "Character or portal is not ready."
+	end
+	if kind == "exit" and not group.BossCleared then
+		if not LootSystem then
+			return false, "LootSystem is not ready to fire the boss stand-in."
+		end
+		return LootSystem.triggerBoss(player)
+	end
+	return true,
+		if kind == "exit"
+			then "At the open exit; start a fresh run to replay its materialisation."
+			else "Grounded beyond the entrance, facing into the biome."
+end
+
 local function placeMember(player: Player, group: Group): boolean
 	group.Arrivals += 1
 	local dx, dz =
 		ExpeditionCore.arrivalOffset(group.Arrivals, GameConfig.Expedition.ArrivalSpreadStuds)
-	if not moveCharacter(player, group.EntryPosition + Vector3.new(dx, 0, dz)) then
+	if not groundNearPortal(player, group, group.Entrance, dx, dz, false) then
 		return false
 	end
 
