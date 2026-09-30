@@ -17,7 +17,7 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 - **Phase 1 is complete** (hub, roll, onboarding, saves, UI, events; movement now uses main's own controller, single jump, roll/backstep and air dash). The build spec §7
   amendments that opened later work are §7.1 expedition entry, §7.2 parties as their own server, §7.3 scenarios,
   §7.4 caps, §7.5 loot and §7.7 universal map generation (2026-09-27).
-- **Worlds you can enter:** Verdant Valley (30-piece separated kit — saved production assets, integrated Studio verification pending), Sky Citadel
+- **Worlds you can enter:** Verdant Valley (30-piece separated kit — corrected sockets validated across approximately eight owner-tested seeds; broader fidelity review pending), Sky Citadel
   (36-piece chunk kit, walked and verified, with ambience, props, chests and the vault) and Ethereal Scape
   (**41-piece hybrid kit** — floating isles + temple + meadow, 2 landmarks, 2 miniboss arenas, 6 backdrop
   pieces with drifting cloud props, height variation — on the §7.7 generation blueprint, 2026-09-27; final
@@ -26,7 +26,7 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
   | Id | Rarity | Weight | Phase | Map | Enterable? |
   |---|---|---|---|---|---|
-  | `VERDANT_VALLEY` | Common | 6000 (60%) | 1 | chunk kit, 30 pieces — separated terrain/props/collision; Studio check pending | ✅ |
+  | `VERDANT_VALLEY` | Common | 6000 (60%) | 1 | chunk kit, 30 pieces — separated terrain/props/collision; socket Studio pass complete | ✅ |
   | `ETHEREAL_SCAPE` | Uncommon | 1500 (15%) | 1 | chunk kit, 41 pieces — hybrid isles/temple, §7.7 blueprint, uploaded IDs retained | ✅ |
   | `EMBERFALL` | Rare | 1500 (15%) | 1 | blueprint written | ❌ no kit |
   | `SKY_CITADEL` | Epic | 700 (7%) | 1 | chunk kit, 36 pieces — walked and verified | ✅ |
@@ -53,22 +53,22 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   - **Developer panel + command registry** (2026-09-27): F4 in Studio; 43 commands, all clickable, autocomplete; see `docs/DEV_TOOLS.md`.
   - `INDEX.md` + `INDEX_MAP.md` give the repo map, and CI keeps the map current.
   - StyLua is enforced.
-  - Integrated validation: **1,014/1,014 Luau tests**, **7/7 Blender regressions**, StyLua and syntax compilation (127 files) pass; full Rojo 7.7 project build succeeds. Index/forbidden-name/handoff checks pass. Collision verifier validates all 4,033 active colliders; 3,915 serialized-fidelity parts still require Studio inspection.
+  - Integrated validation: **1,017/1,017 Luau tests**, **7/7 Blender regressions**, **7/7 collision-verifier probes**, StyLua and syntax compilation (129 files including diagnostics) pass; full Rojo 7.7 project build succeeds. Index/forbidden-name/handoff checks pass. Collision verifier validates all 4,033 active colliders; 3,915 serialized-fidelity parts still require Studio inspection.
 
 - **Leaderboard + chat:** SIGIL LVL/name columns use server-replicated FateLevel; filtered TextChatService messages only. Opening chat collapses the retained hidden rail. Integrated UI smoke test remains pending.
 
 - **Verdant Valley production:** all 30 structures and calibrated per-chunk yaw/size/GroundOffsetY values retained with matching VV manifest IDs. The saved prop library has 823 meshes/placements: 30 solid groups, 30 nonsolid groups, 746 Sway canopies and 17 special parts, including 12 chest components. Thirty-nine solid rows are server-owned Static/Tier 1; nonsolid/canopy rows are client-owned. Chest props have no new loot/fixture interaction.
 - **VV walk collision:** 29 child templates/3,915 parts in VV_COLLISION (including 66 Cliff parts and the 137-part Cutbank bridge set), plus the separate 118-part merged Stone template, cover all 30 chunks. Missing/empty templates retain visual collision. The original 202-part Stone rollback is protected. Collision verifier now uses the refreshed production ledger, not the obsolete 28-model report; serialized fidelity still needs Studio reload inspection.
 - **VV appearance and placement:** refreshed terrain/prop IDs, repaired colors/stump/Boss underside, chest ownership/centres, and Mushroom Glen/Split Meadow refreshes are saved. Source/runtime/reference checks precede owner fresh Play checks; prior warnings and save-pending statements are historical in WORKLOG. Normal/winding review retains 178 ambiguous manual-review cases. No old staging set is approved for promotion.
-- **VV testing:** identity-based Causeway solid/nonsolid/canopy assertions and Wetland equal-height socket regression retained. Current source authoring lives in the owner's external Blender scene; older tracked generators/candidates cannot reconstruct all calibrated production data safely.
+- **VV testing:** `VV_SOCKET_WIDTH_REVIEW.md` supersedes the earlier audit's flat-ground PASS criterion with exact authored path/width measurements across all 30 chunks/59 sockets. Independently confirmed and corrected Mushroom's east→west exit plus PATH/WIDE reversals on Causeway, Windward, Crystal Spring, High Ledge and Cliff Overlook. Trial, Orchard, Boss and prior Refuge south correction unchanged. Before stronger audit: 34 PASS/14 SUSPICIOUS/11 FAIL sockets (six failing chunks); after: **42 PASS/17 SUSPICIOUS/0 FAIL**. Runtime yaw selections and all assets/prop transforms retained. Mushroom→Trial pair passes 220/220; all pair centres pass; Owner manually tested approximately eight procedural seeds after the latest corrections: Refuge remains fixed, Mushroom connects correctly and corrected PATH/WIDE gates connect cleanly; no additional socket-placement or visible connection failures observed. The 17 suspicious sockets, Windward/High Ledge/Orchard panel seams, earlier Refuge terrain-query and Shaded Grove pair limitations remain audit/query ambiguities, not confirmed metadata failures. Luau **1,017/1,017**, Blender/verifier probes 7/7 each; Rojo 7.7 passes. Historical generators cannot reconstruct current production safely.
 - **Blender protection:** shared launcher validates Windows profile lookup before parent/child work; failed restricted-token lookup requires normal-token retry. Installed MCP/startup protection and seven regressions are retained. Fifteen thumbnail trees and original add-on recovery remain; owner normal-use/restart check and upstream native fix remain pending. Launcher is Windows-specific; cloud bpy 4.2 tooling is retained separately, not claimed as an equivalent protected workflow.
-- **Integration:** fd60833 and frozen main 1001ec2 are reconciled locally; merge commit and push are deliberately pending. Production assets, newer movement/animation/lock-on/UI/progression, ES assets, enemy work, HUB_SKY and the animation Rojo mount are retained. Remote CI and integrated owner Studio validation are still required.
+- **Integration:** fd60833 and frozen main 1001ec2 are reconciled by existing local two-parent merge 191ea0b. Final local completion commit is authorized after checks; push and merge into main are prohibited. Production assets, newer movement/animation/lock-on/UI/progression, ES assets, enemy work, HUB_SKY and the animation Rojo mount are retained. Socket-specific owner Studio validation is complete; remote CI and broader integrated movement/UI/asset-fidelity checks remain pending.
 
 ## 2. Next — pick up here
 
-1. Fresh Rojo sync/Play: verify saved collision fidelity, catalogue and seeded VV generation, all socket/yaw/prop alignment, Cliff/Cutbank/Stone/Wetland traversal and main's movement/profile/camera/lock-on behavior. Check low/high quality props and Sway attributes; smoke-test ES and newer hub/SIGIL UI.
+1. Fresh Rojo sync/Play: verify saved collision fidelity, catalogue and seeded VV generation, remaining prop alignment and query ambiguities, Cliff/Cutbank/Stone/Wetland traversal and main's movement/profile/camera/lock-on behavior. Check low/high quality props and Sway attributes; smoke-test ES and newer hub/SIGIL UI.
 2. Owner Blender normal-use/restart check; use the shared launcher and reinstall startup/MCP integration after add-on replacement.
-3. Run remote CI on a later authorized commit before main integration. No commit/push is authorized in this session.
+3. Run remote CI on a later authorized commit before main integration. Local wrap-up commit is authorized; do not push or merge into main.
 4. Existing follow-ups remain: hub ship docking observation; player animation slots/upload checks; Winged Sentinel re-import/lightning and remaining moveset; Ascendant Studio import and importer bone acceptance. Gameplay enemy services/items still await their design/amendment gates.
 5. Shop, Archive, Fate Tree and Rebirth remain preview panels. Roll-anywhere and sacrificing an old roll need a spec amendment. Retire hidden UI rail/showcase only after owner/live-server checks. Recolours and other owner-kept assets remain parked.
 6. Keep old VV exports, failed separation candidates, staging/recovery sources and protected rollbacks until integrated Studio/CI validation establishes safe replacement. Do not run an older generator to recreate current assets.
@@ -123,7 +123,7 @@ progression-feel problem.
 | **World ambience** | **Built 2026-09-23, walked and verified 2026-09-25** |
 | **Ambient props** | **Live 2026-09-23, walked and verified 2026-09-25** |
 | **Loot, fixtures, vault keys** | **Live 2026-09-23, walked and verified 2026-09-25** |
-| **Verdant Valley 30-piece kit exported** | **Separated production kit saved; integrated visual/collision/movement review pending** |
+| **Verdant Valley 30-piece kit exported** | **Separated production kit saved; socket Studio pass complete (~8 seeds); broader fidelity/movement review pending** |
 | **The Grove did not survive the upload** | Medium |
 | **The scenario layer** | **New 2026-09-22, headless only** |
 | **A brief that specifies the piece gets the piece it specified** | **Process** |

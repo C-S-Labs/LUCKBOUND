@@ -63,6 +63,18 @@ Static/Tier 1 props; nonsolid groups and canopies remain client ambience.
 Saved per-chunk yaw and placement corrections are authoritative. Old exporter
 or collision-generator defaults cannot reconstruct this production snapshot.
 
+**Full socket/opening audit (2026-09-30):** `docs/VV_SOCKET_AUDIT.md` records
+all 30 chunks/59 sockets and before/after raw evidence. Woodland Refuge's
+saved zero-yaw terrain, collision and all 18 props approach south; its socket
+contract is corrected to south (+128 Z, Facing 180) without rotating assets
+or translations. Exact production-export triangles and saved collision pass
+the corrected approach. Runtime precise terrain mouth queries/calibration
+still miss it; fresh owner Studio inspection remains required. After audit:
+40 PASS, 19 SUSPICIOUS, zero conclusive FAIL sockets. Suspicious cases are
+untouched; no production ID or staging/rollback asset changed. Historical
+generator EXPECTED tables describe native authoring, not this imported frame;
+do not regenerate production metadata from them.
+
 The 28-template generation reports, Stone pilot and first Cliff candidate below
 in the import history describe earlier iterations. Current counts come from the
 refreshed export ledger and saved templates. Run the read-only collision verifier;
@@ -105,6 +117,28 @@ current saved production assets.
 ---
 
 ## 3. How pieces connect
+
+**Production exit/width correction (2026-09-30):** exact authored VV_Path
+triangles establish Mushroom Glen's north/south/west exits (east is grass,
+not a path mouth). Causeway and Cliff Overlook are north PATH/south WIDE;
+Windward, Crystal Spring and High Ledge are east PATH/west WIDE. Each mouth
+was measured independently: normal paths 43 studs, wide paths 50 studs, with
+46.5/52.5-stud level pads and the existing buffered 48/52 socket contracts.
+Forgotten Orchard, Boss and Forgotten Trial already agree and remain unchanged;
+Refuge's south correction is retained. The native authoring socket table was
+not converted when those chunks retained zero-degree production art hints;
+do not rotate art or prop transforms to fix metadata. See
+`docs/VV_SOCKET_WIDTH_REVIEW.md` and its complete 30-chunk before/after reports.
+These stronger measurements supersede the earlier audit's PASS counts:
+42 PASS, 17 SUSPICIOUS, zero conclusive FAIL after corrections. Query/collision
+ambiguities still require owner Studio review; no asset IDs were replaced.
+
+**Owner Studio validation (2026-09-30):** approximately eight procedural seeds
+after the latest corrections retain the Refuge fix, connect Mushroom Glen
+correctly and produce clean corrected PATH/WIDE gate connections. No additional
+socket-placement or visible connection failures were observed. The 17 suspicious
+audit results and serialized collision-fidelity/Studio-query ambiguity remain
+known limitations; this sample does not establish exhaustive collision fidelity.
 
 Verdant Valley's connection types:
 

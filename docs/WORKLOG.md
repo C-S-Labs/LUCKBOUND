@@ -36,6 +36,69 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 206 — 2026-09-30 — Final VV integration wrap-up and owner Studio pass
+**Merged:** existing two-parent integration merge `191ea0b` retained; local completion commit authorized; no push/main merge   **Branch:** integration/vv-main-sync   **Tests:** 1,017/1,017 Luau; 7/7 Blender regressions; 7/7 verifier probes; 129 Luau/11 Python syntax files; full Rojo 7.7 build
+
+### Done
+- Recorded owner manual validation of approximately eight procedural VV seeds after the latest corrections: Refuge remains fixed, Mushroom Glen connects correctly, corrected PATH/WIDE gates connect cleanly, and no additional socket-placement or visible connection failures were observed.
+- Reviewed the working tree: substantive tracked changes are the socket contracts, three connection regressions, audit/index/biome/handoff documentation; remaining broad Luau/test changes are whitespace formatting. New files are reusable audit/verifier tools and their retained evidence. The existing merge preserves frozen main movement/animation/lock-on/SIGIL/progression/ES/enemy work and the Blender launch fix.
+- Final checks pass: full integrated Luau suite, Blender launcher regressions, collision-verifier failure probes, production collision structure (29 combined templates plus Stone, 4,033 unique collider IDs), syntax, StyLua 2.0.2, forbidden names, index/handoff, conflict-marker/whitespace checks and full Rojo 7.7.0 build at `E:/BlenderAIProjects/Runtime/vv_integration_final.rbxlx`.
+- Active Studio Server and Client contain no socket audit/pair-probe inspection instances; the full build contains none. Repository untracked files are only intended audit tools/evidence. Ignored files are ordinary Python caches, generated test suite and the historical socket-repair handoff, retained as recovery history. No temporary production diagnostic module/model was added.
+- Production assets, staging/recovery material, protected 202-part Stone rollback, separate live Stone template, HUB_SKY and Rojo mounts are unchanged from integration HEAD. No speculative socket/geometry correction, scene save, asset upload or cleanup performed.
+
+### Decisions made
+- Owner's sampled Studio pass completes corrected-metadata connection validation. Retain 42 PASS/17 SUSPICIOUS/0 FAIL as the independent audit classification; sampled success does not erase isolated lateral/panel-seam or precise-query/calibration ambiguity.
+- 3,915 serialized PhysicalConfigData colliders still lack explicit fidelity tokens; the structural verifier cannot prove their cooked Studio collision fidelity. No speculative asset rewrite is justified. Broader integrated movement/UI/ES checks and Blender normal-use/restart review remain separate pending work.
+- HEAD already contains a two-parent merge, with no MERGE_HEAD pending. Preserve that merge and shared history; record final corrections/evidence in a completion commit on top, without fabricating another merge or rewriting the existing one.
+
+### Stopped at
+Final validation is green and the local completion commit is authorized on `integration/vv-main-sync`. Do not push or merge into main. Remote CI has not run for the completion commit.
+
+### Next
+1. Owner may separately authorize push/remote CI; require applicable green CI before later main integration.
+2. Retain serialized-fidelity and Studio-query limitations, 17 suspicious audit cases, broader integrated smoke checks and Blender workflow usage review in the handoff.
+3. Cleanup: no replacement asset iteration left behind. Keep all historical exports, failed separation candidates, staging/recovery assets, thumbnail evidence and protected Stone rollback; no deletion recommended until applicable CI and the remaining owner checks establish replacement safety.
+
+## Session 205 — 2026-09-30 — Exact VV path exits and gate-width correction
+**Merged:** none; no commit/push/merge/rebase   **Branch:** integration/vv-main-sync   **Tests:** 1,017/1,017 Luau; 7/7 Blender regressions; 7/7 verifier probes; full Rojo 7.7 build
+
+### Done
+- Measured exact VV_Path mouths, flat pads and material runs independently across all 30 authored chunks, five inward depths and four edges. Production input source hash and 30/30 terrain digests match the refreshed ledger; no scene saved/exported.
+- Confirmed five gate width/Kind reversals: Causeway and Cliff Overlook need south WIDE/north PATH; Windward, Crystal Spring and High Ledge need west WIDE/east PATH. Each has a 50-stud wide path/52.5-stud level pad versus a 43-stud normal path/46.5-stud pad. Corrected only their socket Kind assignments and Mushroom Glen's unsupported east declaration to its authored west exit.
+- Independently verified Trial's north path, Orchard's south WIDE/west PATH and Boss's north WIDE; left them and Refuge's previous south correction unchanged. Added explicit path/width report mode, complete current before/after evidence and two connection regressions; prior raw audit snapshots retained.
+
+### Decisions made
+- The prior flat terrain/query samples did not distinguish an authored path mouth or the asymmetric width identity. Stronger criterion supersedes earlier PASS counts: before 34 PASS/14 SUSPICIOUS/11 FAIL sockets across six failed chunks; after 42 PASS/17 SUSPICIOUS/0 FAIL across all 30 chunks/59 sockets.
+- Historical native socket tables were retained while current zero-yaw production hints put geometry in the opposite compass frame. Correct proven metadata; preserve all art yaw, source geometry, saved collision, prop centres/orientations, IDs and shared generation/calibration code.
+
+### Stopped at
+All changes remain unstaged/uncommitted on the requested branch. `docs/VV_SOCKET_WIDTH_REVIEW.md` is the current report. All 30 runtime calibration selections remain their existing hints; all structures/templates/823 props and 4,033 colliders resolve with unchanged roles. Seven four-yaw pair checks pass every centre: Mushroom→Trial 220/220; Causeway/Crystal/Cliff Overlook→Boss each 220/220; Windward 217/220, High Ledge 216/220, Orchard control 216/220 have side-normal panel-seam hits needing manual review. Full Luau, Blender/verifier probes, syntax/formatting/index/handoff and Rojo build pass. No production asset/ID or staging/recovery/rollback changed.
+
+### Next
+1. Owner fresh Rojo sync/restart Play: inspect Mushroom west→Trial and corrected wide Boss approaches. Review the 17 suspicious sockets and pair seam cases; older Refuge query/Shaded Grove limitations and serialized collider fidelity remain pending.
+2. No commit/push/merge/rebase without later owner authorization; applicable remote CI remains pending.
+3. Cleanup: no replacement asset iteration introduced. Keep all existing historical/staging/recovery assets and protected Stone rollback; no cleanup is part of this task.
+
+## Session 204 — 2026-09-30 — Full Verdant Valley socket/opening audit
+**Merged:** none; no commit/push/rebase   **Branch:** integration/vv-main-sync   **Tests:** 1,015/1,015 Luau; 7/7 Blender regressions; 7/7 collision-verifier probes; full Rojo 7.7 build
+
+### Done
+- Audited all 30 chunks/59 sockets before production edits, then repeated the entire diagnostic after repair. Recorded runtime precise query hulls, saved walk collision, inset/lateral/cardinal approaches, calibration and prop obstruction evidence. Independent Blender source hash and 30/30 terrain digests match the production ledger; no scene saved.
+- Before: 39 PASS, 19 SUSPICIOUS, 1 FAIL. Corrected the sole conclusive failure, Woodland Refuge, from north to its existing south composition (+128 Z/Facing 180), preserving zero art yaw and all assets/18 prop transforms. After: 40 PASS, 19 SUSPICIOUS, zero conclusive FAIL.
+- Added reusable Studio/Blender diagnostics, complete reports/raw evidence, one four-yaw Luau join regression, seven small collision-verifier failure probes and refreshed index. Production manifest/props/RBXMX, controls and protected Stone rollback unchanged.
+
+### Decisions made
+- Correct the socket contract to the proven authored approach rather than rotating only art or prop orientations. Historical generator EXPECTED values are not a safe production regeneration recipe.
+- PASS is sampled authored/collision agreement, not universal query-hull success or character traversal. Refuge's precise mouth query/calibration remains 0/1 despite exact exported triangles and all 30 collision approach samples passing; preserve and report that limitation. Do not repair ambiguous seams or query artifacts automatically.
+
+### Stopped at
+All changes remain in the working tree for owner review. Complete report: `docs/VV_SOCKET_AUDIT.md`. Syntax compiles 129 files; formatting/index/forbidden-name/handoff/preservation checks pass. All 30 structures/templates and 823 props resolve, with 4,033 active colliders, 39 solid rows and 746 Sway canopies. Pair probes pass joins/centres/all Refuge samples at four yaws; 3/220 outer neighbour samples hit a steep collider side on Shaded Grove and remain ambiguous. Serialized fidelity for 3,915 colliders and all owner character/visual checks remain pending. No replacement asset IDs needed.
+
+### Next
+1. Owner fresh Studio run: inspect Refuge's corrected south opening/scenery and terrain-query/calibration limitation, the 19 suspicious sockets in the after report, and Shaded Grove pairwise outer samples. Then targeted repairs only where manual evidence establishes a defect.
+2. Later authorized commit/remote CI and integration review; no commit/push/merge/rebase authorized here.
+3. Cleanup: no replacement asset iteration introduced. Keep every historical/staging/recovery asset and protected rollback until owner/applicable CI establish safe replacement; diagnostic evidence remains the audit record.
+
 ## Session 203 — 2026-09-30 — Reconcile frozen main with Verdant Valley
 **Merged:** pending, no commit/push   **Branch:** integration/vv-main-sync   **Tests:** 1,014/1,014 Luau; 7/7 Blender; 7 collision-verifier probes; formatting/syntax/index/forbidden-name/handoff pass; full Rojo 7.7 build passes
 

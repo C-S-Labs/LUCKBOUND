@@ -66,6 +66,8 @@
 | `docs/RESERVED.md` | deliberately unread declarations (an unread field not listed there is a defect) |
 | `docs/TESTING.md` | unit tests + Studio manual passes (lettered tests Aâ€¦T) |
 | `docs/MODULAR_MAPS.md` | chunk system: how maps assemble from pieces |
+| `docs/VV_SOCKET_AUDIT.md` | complete 30-chunk socket/opening audit, root cause/repair, before/after reports and raw query/source evidence |
+| `docs/VV_SOCKET_WIDTH_REVIEW.md` | follow-up exact path/width audit: five gate reversals, Mushroom west exit, unchanged controls and new full-kit evidence |
 | `docs/CHUNK_AUTHORING.md` / `docs/CHUNK_DROP_IN.md` | engine contract for modelling a kit / dropping a kit in |
 | `docs/biomes/<WORLD>.md` | what a world is (pieces, kinds, inhabitants); `SKY_CITADEL`, `VERDANT_VALLEY` |
 | `docs/ENEMY_FRAMEWORK.md` | how every enemy, miniboss and boss is built, rigged, animated and exported |
@@ -158,6 +160,14 @@ preserved root-directory evidence in `docs/BLENDER_DIRECTORY_EVIDENCE.json`.
   while the original 202-piece RBXMX remains the known-good reference. The loader
   keeps visual collision if the model is missing. See `IMPORT_STEPS.md`.
   Historical generator inventory (not a production regeneration recipe):
+  `tools/audit_vv_sockets.luau` and `tools/probe_vv_socket_pair.luau` run disposable
+  Studio socket/collision probes. `audit_socket_surfaces.py` independently measures
+  exact authored surfaces through the protected Blender launcher;
+  `tools/report_vv_socket_audit.py` reproduces the complete classified reports.
+  `tools/test_vv_collision_verifier.py` provides seven in-memory verifier probes.
+  `audit_socket_widths.py` measures all authored path mouths and widths without
+  saving the scene; the report tool's `--width-followup` mode adds physical
+  path/Kind validation while preserving the earlier audit snapshots.
   `build_walk_collision_kit.py` reads the owner's current saved Blender scene
   and exports adaptive walk-collider FBXs for the other 28 chunks, with
   per-chunk counts in `walk_collision_kit/KIT_COUNTS.md` and a seeded large-panel

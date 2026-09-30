@@ -1356,7 +1356,94 @@ do
 	check("Verdant Valley has an ENTRY chunk", lib.ENTRY and #lib.ENTRY >= 1)
 	check("Verdant Valley has a BOSS chunk", lib.BOSS and #lib.BOSS == 1)
 	local wetland = Chunks.VV_WETLAND_POOLS
+	local refuge = Chunks.VV_ENTRY_WOODLAND_REFUGE
+	local refugeSocket = refuge.Sockets[1]
+	local refugeAgreement = refugeSocket.Id == "south"
+		and refugeSocket.OffsetX == 0
+		and refugeSocket.OffsetZ == refuge.SizeZ / 2
+		and refugeSocket.Facing == 180
+		and refuge.MeshYawOffset == 0
+	for _, yaw in { 0, 90, 180, 270 } do
+		local placed = { X = 0, Y = 0, Z = 0, Yaw = yaw }
+		local opening = ChunkCore.worldSocket(placed, refuge, refugeSocket)
+		local neighbour, arrival = ChunkCore.placeAgainst(Chunks.VV_SHADED_GROVE, opening, 2)
+		if not neighbour or not arrival then
+			refugeAgreement = false
+		else
+			local joint = ChunkCore.worldSocket(neighbour, Chunks.VV_SHADED_GROVE, arrival)
+			refugeAgreement = refugeAgreement
+				and joint.X == opening.X
+				and joint.Z == opening.Z
+				and joint.Y == opening.Y
+				and joint.Facing == (opening.Facing + 180) % 360
+		end
+	end
+	check(
+		"Refuge joins from its saved south approach without rotating its production composition",
+		refugeAgreement
+	)
 	local east, west = wetland.Sockets[1], wetland.Sockets[2]
+	local measuredWideFacings = {
+		VV_WINDWARD_RIDGE_GATE = 270,
+		VV_CRYSTAL_SPRING_GATE = 270,
+		VV_HIGH_LEDGE_GATE = 270,
+		VV_OVERGROWN_CAUSEWAY_GATE = 180,
+		VV_CLIFF_OVERLOOK_GATE = 180,
+		VV_FORGOTTEN_ORCHARD_GATE = 180,
+	}
+	local wideAgreement = true
+	for id, facing in measuredWideFacings do
+		local gate = Chunks[id]
+		local wide = nil
+		for _, socket in gate.Sockets do
+			if socket.Kind == "WIDE" then
+				wide = socket
+			end
+		end
+		if not wide or wide.Facing ~= facing or wide.Width ~= 52 then
+			wideAgreement = false
+		else
+			local opening = ChunkCore.worldSocket({ X = 0, Y = 0, Z = 0, Yaw = 0 }, gate, wide)
+			local boss, arrival = ChunkCore.placeAgainst(Chunks.VV_BOSS_SANCTUARY, opening, 2)
+			wideAgreement = wideAgreement
+				and boss ~= nil
+				and arrival ~= nil
+				and arrival.Kind == "WIDE"
+		end
+	end
+	check(
+		"All six VV gate Boss approaches use their independently measured wide edge",
+		wideAgreement
+	)
+	local glen = Chunks.VV_MUSHROOM_GLEN
+	local trial = Chunks.VV_SIDE_FORGOTTEN_TRIAL
+	local glenWest = nil
+	local glenEast = false
+	for _, socket in glen.Sockets do
+		if socket.Id == "west" then
+			glenWest = socket
+		elseif socket.Id == "east" then
+			glenEast = true
+		end
+	end
+	local trialPlaced, trialArrival = nil, nil
+	if glenWest then
+		local opening = ChunkCore.worldSocket({ X = 0, Y = 0, Z = 0, Yaw = 0 }, glen, glenWest)
+		trialPlaced, trialArrival = ChunkCore.placeAgainst(trial, opening, 2)
+	end
+	check(
+		"Mushroom Glen's authored west path accepts the unchanged Forgotten Trial north contract",
+		glenWest ~= nil
+			and glenWest.Facing == 270
+			and glenWest.OffsetX == -glen.SizeX / 2
+			and not glenEast
+			and #glen.Sockets == 3
+			and glen.MeshYawOffset == 0
+			and trialPlaced ~= nil
+			and trialArrival ~= nil
+			and trialArrival.Id == "north"
+			and trial.MeshYawOffset == 180
+	)
 	check(
 		"Wetland Pools keeps both visible mouths at the common route height",
 		east.Id == "east" and west.Id == "west" and east.OffsetY == 0 and west.OffsetY == 0
