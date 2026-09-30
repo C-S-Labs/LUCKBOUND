@@ -34,6 +34,49 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## Session 98 — 2026-09-30 — Wire delivered rifts and finish portal authority
+**Merged:** not merged   **Tests:** 967 passing   **Branch:** `agent/expedition-portal`
+
+### Done
+- Owner checked corrected geometry in Blender and proportional imports in Studio; saved entrance/exit
+  prefabs (33/45 uploaded MeshParts, 15/21-stud tears). Verified exact part names, mesh ids, no scripts or
+  SurfaceAppearance; Rojo build includes both. Registered prefab provenance in AssetManifest.
+- Measured asymmetric Scar registration offsets in GameConfig; rifts stream atomically. Entrance now uses
+  the lowest-index ENTRY centre instead of legacy return offset, exit the BOSS centre, both raycast flush.
+- Added the spec's optional per-world Content/Portals registry with boot validation; chunk-local offsets
+  rotate with yaw, absent optional pieces use role defaults, prebuilt return anchors remain supported.
+- Portal guards check living character, server distance, exact active stage, membership and open state.
+  Arena and debug boss defeat share a once-per-run claim, preventing duplicate loot rolls through both paths.
+- Removed prototype gate builders, prompt, anchor dimensions and scale. Kept the shop and its legacy travel
+  Id as owner instructed; PLATFORM supplies its bare fallback deck. Updated gate tests and added guard/schema tests.
+- 967 headless tests, full Luau syntax compilation, StyLua and Rojo build passed. Selene: no errors; two
+  pre-existing Schema shadowing warnings. Used official Luau binaries in TEMP and Blender's Python for the harness.
+- Added TESTING Test C2c, updated §7.8, STATUS, art/pipeline docs and index. Index inventory excludes the
+  unrelated owner's untracked TheAscendant_fixed.blend, which remains untouched.
+- Fixed index generation treating a tracked worktree/gitlink directory as a binary asset with a blank name;
+  only actual files belong in the inventory.
+
+### Decisions made
+- Shop remains, prototype gate behavior is removed (owner). No Fate Engine UI/ready state or XP implementation.
+- Empty flow texture remains the supported plain-ribbon fallback; custom texture upload is still pending.
+
+### Stopped at
+Implementation and automated checks complete locally. Owner's gameplay/streaming pass (Test C2c) is pending;
+import proportions alone do not verify motion, floor seating, prompt reach or returns.
+
+### Next
+1. Rojo sync, restart Play, run Test C2c: early return, boss materialise, cleared return/expiry/death,
+   two-group prompt authority and late streaming.
+2. Record the Studio result; upload a flow texture if desired, then review the portal branch for integration.
+3. Fate Engine rework consumes requestEnter and payoutFor; saved ready toggle and XP need their own scope.
+
+### Leftovers
+Earlier oversized/holed Studio imports can be removed after Test C2c and CI pass; keep corrected source/export
+assets. PortalRig remains required by the Fate Engine and other previews, so do not delete it. No duplicate
+portal module versions were added. Keep the owner's unrelated Blender file and parked recolours.
+
+---
+
 ## Session 97 — 2026-09-30 — Correct rift faces and FBX import scale
 **Merged:** not merged   **Tests:** both generator validations and FBX round-trips pass   **Branch:** `agent/expedition-portal`
 

@@ -851,8 +851,8 @@ do
 		)
 	)
 	check(
-		"the gate processional is wider than a walkway",
-		Crossroads.Bridges.ProcessionalWidth > Crossroads.Bridges.Width
+		"the shop approach is wider than a walkway",
+		Crossroads.Districts[3].WalkwayWidth > Crossroads.Bridges.Width
 	)
 
 	-- === SCALE BUDGET =============================================
@@ -966,13 +966,13 @@ do
 			> GameConfig.Portal.PlinthDiameter * GameConfig.Portal.FateEngineScale * 0.5
 	)
 	check(
-		"the gate processional is wider than a walkway",
-		Crossroads.Bridges.ProcessionalWidth > Crossroads.Bridges.Width
+		"the shop approach is wider than a walkway",
+		Crossroads.Districts[3].WalkwayWidth > Crossroads.Bridges.Width
 	)
 
 	-- Every zone must have a builder, or HubBuilder asserts at boot.
 	local KNOWN_KINDS =
-		{ AMPHITHEATRE = true, ROTUNDA = true, GATE = true, YARD = true, OBSERVATORY = true }
+		{ AMPHITHEATRE = true, ROTUNDA = true, PLATFORM = true, YARD = true, OBSERVATORY = true }
 	local kindsOk = true
 	local badKind
 	for _, d in Crossroads.Districts do
@@ -1109,7 +1109,7 @@ do
 		) >= portal.SpinUpSeconds
 	)
 
-	check("the gate is the larger portal", portal.ExpeditionGateScale > portal.FateEngineScale)
+	check("the obsolete gate scale is removed", portal.ExpeditionGateScale == nil)
 
 	-- Blueprint §1.1 is declared the single source of truth for rarity colour.
 	local BLUEPRINT = {
@@ -2810,8 +2810,8 @@ do
 			Reach = GameConfig.UI.PromptActivationDistance,
 		},
 		{
-			Name = "Expedition Gate",
-			Scale = portal.ExpeditionGateScale,
+			Name = "Large rig regression",
+			Scale = portal.MaxPlinthHeight / portal.PlinthHeight + 1,
 			Reach = GameConfig.UI.PromptActivationDistance,
 		},
 	}
@@ -2839,8 +2839,8 @@ do
 	end
 	check(
 		"the plinth height cap is what makes that true at any scale",
-		portal.PlinthHeight * portal.ExpeditionGateScale > portal.MaxPlinthHeight,
-		"the cap is inert -- it should be binding at the Gate's scale"
+		portal.PlinthHeight * PORTALS[2].Scale > portal.MaxPlinthHeight,
+		"the cap is inert -- it should be binding at the larger test scale"
 	)
 
 	-- 3. THE PLAZA IS A FLOOR, NOT A COLUMN.
@@ -2979,7 +2979,7 @@ do
 			hasGate = true
 		end
 	end
-	check("the EXPEDITION_GATE district exists (ensureContract asserts on it)", hasGate)
+	check("the shop district keeps its travel Id", hasGate)
 
 	-- 7. NOTHING MAY ENCIRCLE THE FATE ENGINE.
 	-- The Global Observatory's spiral access was a 2.5-turn helix at radius
@@ -4466,8 +4466,7 @@ do
 		Crossroads.Shell.GateAnchorTop == nil
 	)
 
-	-- The district itself still exists in content: the EXPEDITION_GATE ->
-	-- SHOP rename is a separate, still-ungated change.
+	-- The shop keeps its legacy district Id for travel, without gate behavior.
 	local ids = {}
 	for _, d in Crossroads.Districts do
 		ids[d.Id] = true
@@ -7018,6 +7017,82 @@ do
 			end
 			return run({ 1, 2, 3 }) and run({ 3, 2, 1 }) and run({ 2, 1, 3 })
 		end)()
+	)
+end
+
+group("Expedition portal guards and placements (build spec §7.8)")
+do
+	local function allowed(overrides)
+		local opts = { Member = true, Alive = true, Open = true, Distance = 1 }
+		for key, value in overrides or {} do
+			opts[key] = value
+		end
+		return ExpeditionCore.canUsePortal(opts, GameConfig)
+	end
+	check("a living member at an open portal can leave", allowed())
+	check("a different expedition cannot use this portal", not allowed({ Member = false }))
+	check("a dead character cannot take a cleared payout", not allowed({ Alive = false }))
+	check("sealed or materialising exits cannot be used", not allowed({ Open = false }))
+	check("forged distant prompt triggers are rejected", not allowed({ Distance = 1e9 }))
+	check(
+		"the exact prompt boundary is accepted",
+		allowed({ Distance = GameConfig.Expedition.ReturnPromptDistance })
+	)
+	check(
+		"just outside the prompt boundary is rejected",
+		not allowed({ Distance = GameConfig.Expedition.ReturnPromptDistance + 0.01 })
+	)
+	check("NaN distance is rejected", not allowed({ Distance = 0 / 0 }))
+	check("infinite distance is rejected", not allowed({ Distance = math.huge }))
+	check("negative distance is rejected", not allowed({ Distance = -1 }))
+	check(
+		"a missing character position is rejected",
+		not ExpeditionCore.canUsePortal({ Member = true, Alive = true, Open = true }, GameConfig)
+	)
+
+	local function valid(placement, worldId)
+		local id = worldId or "VERDANT_VALLEY"
+		return Schema.validatePortals({ [id] = { Id = id, Entrance = placement } }, Chunks, Worlds)
+	end
+	check("no placement file is required", Schema.validatePortals({}, Chunks, Worlds))
+	check(
+		"chunk-local portal offsets are accepted",
+		valid({ Chunk = "VV_ENTRY_DAWN_MEADOW", Offset = Vector3.new(4, 0, -8) })
+	)
+	check(
+		"unknown placement chunks are rejected",
+		not valid({ Chunk = "MISSING", Offset = Vector3.zero })
+	)
+	check(
+		"cross-world placement chunks are rejected",
+		not valid({ Chunk = "VV_ENTRY_DAWN_MEADOW", Offset = Vector3.zero }, "SKY_CITADEL")
+	)
+	check(
+		"table offsets cannot impersonate Vector3",
+		not valid({ Chunk = "VV_ENTRY_DAWN_MEADOW", Offset = { X = 0, Y = 0, Z = 0 } })
+	)
+	check(
+		"non-finite placement offsets are rejected",
+		not valid({ Chunk = "VV_ENTRY_DAWN_MEADOW", Offset = Vector3.new(math.huge, 0, 0) })
+	)
+	check(
+		"placement typos fail validation",
+		not Schema.validatePortals(
+			{ VERDANT_VALLEY = { Id = "VERDANT_VALLEY", Entrnace = {} } },
+			Chunks,
+			Worlds
+		)
+	)
+	local shop
+	for _, district in Crossroads.Districts do
+		check("no district builds a prototype gate", district.Kind ~= "GATE")
+		if district.Id == "EXPEDITION_GATE" then
+			shop = district
+		end
+	end
+	check(
+		"the shop survives without a portal",
+		shop and shop.Name == "Shop" and shop.Kind == "PLATFORM" and shop.PortalScale == nil
 	)
 end
 

@@ -62,6 +62,7 @@ local Net = require(Root.Core.Net)
 local RiftRig = require(Root.Util.RiftRig)
 local PrebuiltLoader = require(Root.Util.PrebuiltLoader)
 local Worlds = require(Root.Content.Worlds)
+local Portals = require(Root.Content.Portals)
 local Atmospheres = require(Root.Content.Atmospheres)
 local AmbienceCore = require(Root.Core.AmbienceCore)
 
@@ -429,7 +430,7 @@ local function deckAt(stage: Instance, x: number, z: number, floorY: number): Ve
 	params.RespectCanCollide = true
 	local hit = Workspace:Raycast(
 		Vector3.new(x, floorY + probe, z),
-		Vector3.new(0, -(probe + 60), 0),
+		Vector3.new(0, -(probe + GameConfig.Rift.DeckProbeDepth), 0),
 		params
 	)
 	return if hit then hit.Position else Vector3.new(x, floorY, z)
@@ -451,19 +452,81 @@ local function riftPrompt(
 	prompt.Name = "RiftPrompt"
 	prompt.ActionText = action
 	prompt.ObjectText = object
-	prompt.HoldDuration = 0.4
+	prompt.HoldDuration = GameConfig.Rift.PromptHoldSeconds
 	prompt.MaxActivationDistance = GameConfig.Expedition.ReturnPromptDistance
 	prompt.RequiresLineOfSight = false
 	prompt.Parent = scar
-	prompt.Triggered:Connect(onTriggered)
+	prompt.Triggered:Connect(function(player)
+		local state = active[player.UserId]
+		local character = player.Character
+		local root = character and character:FindFirstChild("HumanoidRootPart")
+		local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+		if
+			ExpeditionCore.canUsePortal({
+				Member = state ~= nil
+					and state.Group.Stage == rig.Parent
+					and state.Group.Members[player.UserId] == true,
+				Alive = humanoid ~= nil and humanoid.Health > 0,
+				Open = prompt.Enabled and RiftRig.isOpen(rig),
+				Distance = if root and root:IsA("BasePart")
+					then (root.Position - scar.Position).Magnitude
+					else nil,
+			}, GameConfig)
+		then
+			onTriggered(player)
+		end
+	end)
 	return prompt
 end
 
 --- The way home, on the arrival chunk (spec §7.8): always open, the colour of
 --- the biome's rarity. Leaving by it is always allowed; what it pays depends
 --- on whether the boss has fallen (ExpeditionCore.payoutFor).
-local function buildEntrance(stage: Model, position: Vector3, floorY: number, rarityKey: string)
-	local seat = deckAt(stage, position.X, position.Z, floorY)
+local function portalSeat(stage: Model, worldId: string, kind: string, fallback: Vector3?): Vector3?
+	local placements = Portals[worldId]
+	local override = placements and placements[kind]
+	local role = if kind == "Entrance" then "ENTRY" else "BOSS"
+	local chosen: Instance? = nil
+	local chosenIndex = math.huge
+	for _, chunk in stage:GetChildren() do
+		local matches = if override
+			then chunk:GetAttribute("ChunkId") == override.Chunk
+			else chunk:GetAttribute("Role") == role
+		local index = chunk:GetAttribute("Index")
+		if matches and type(index) == "number" and index < chosenIndex then
+			chosen, chosenIndex = chunk, index
+		end
+	end
+	if not chosen and override then
+		-- An optional authored piece need not appear in every seeded layout.
+		for _, chunk in stage:GetChildren() do
+			local index = chunk:GetAttribute("Index")
+			if
+				chunk:GetAttribute("Role") == role
+				and type(index) == "number"
+				and index < chosenIndex
+			then
+				chosen, chosenIndex = chunk, index
+			end
+		end
+		override = nil
+	end
+	local centre = chosen and chosen:GetAttribute("Centre")
+	if typeof(centre) ~= "Vector3" then
+		return fallback
+	end
+	if override then
+		local yaw = chosen:GetAttribute("Yaw")
+		local offset = CFrame.Angles(0, ChunkCore.yawRadians(yaw), 0)
+			:VectorToWorldSpace(override.Offset)
+		return centre + offset
+	end
+	return centre
+end
+
+local function buildEntrance(stage: Model, worldId: string, fallback: Vector3, rarityKey: string)
+	local position = portalSeat(stage, worldId, "Entrance", fallback) :: Vector3
+	local seat = deckAt(stage, position.X, position.Z, position.Y)
 	local rig = RiftRig.build({
 		Name = "EntranceRift",
 		Kind = "ENTRANCE",
@@ -480,19 +543,12 @@ end
 --- The exit, on the boss chunk where the boss stood (spec §7.8). Built SEALED
 --- and invisible; `openExit` materialises it when the boss falls. Returns the
 --- rig and its prompt so the group can wake them.
-local function buildExit(stage: Model, floorY: number): (Model?, ProximityPrompt?)
-	local arena: Instance? = nil
-	for _, chunk in stage:GetChildren() do
-		if chunk:GetAttribute("Role") == "BOSS" then
-			arena = chunk
-			break
-		end
-	end
-	local centre = arena and arena:GetAttribute("Centre")
-	if typeof(centre) ~= "Vector3" then
+local function buildExit(stage: Model, worldId: string): (Model?, ProximityPrompt?)
+	local centre = portalSeat(stage, worldId, "Exit", nil)
+	if not centre then
 		return nil, nil
 	end
-	local seat = deckAt(stage, centre.X, centre.Z, floorY)
+	local seat = deckAt(stage, centre.X, centre.Z, centre.Y)
 	local rig = RiftRig.build({ Name = "ExitRift", Kind = "EXIT", Position = seat }, stage)
 	local prompt = riftPrompt(rig, "EXIT", "Leave the world", function(player)
 		if active[player.UserId] then
@@ -609,8 +665,8 @@ local function newGroup(
 	partySize: number
 ): Group
 	local world = Worlds[worldId]
-	buildEntrance(built.Stage, built.ReturnPosition, built.FloorY, world.Rarity)
-	local exitRig, exitPrompt = buildExit(built.Stage, built.FloorY)
+	buildEntrance(built.Stage, worldId, built.ReturnPosition, world.Rarity)
+	local exitRig, exitPrompt = buildExit(built.Stage, worldId)
 	local group: Group = {
 		WorldId = worldId,
 		Seed = seed,

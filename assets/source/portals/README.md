@@ -40,7 +40,9 @@ animation must keep them in that band** (orbit in the side lobes, never sweep ac
 3. Measure the imported scale against the spec and record it as `Prefab.Scale` (as `HUB_FATE_ENGINE` did).
 4. Upload the flow texture (see the spec) and put its id in `AssetManifest`.
 
-Until those files exist the game keeps drawing the `PortalRig` blockout portals.
+Both prefabs were delivered and their proportions checked in Studio on 2026-09-30. They load automatically
+through Rojo's `LuckboundPrefabs`; scale remains 1.0, and measured Scar registration offsets live in
+`GameConfig.Rift`. If either prefab is missing, `RiftRig` draws its blockout fallback.
 
 ## Import correction (2026-09-30)
 

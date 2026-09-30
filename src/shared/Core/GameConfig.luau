@@ -387,11 +387,7 @@ local GameConfig = {
 		-- under the dais lip and the player steps up onto it.
 		WalkwayRaise = 1.5 * WORLD_SCALE, -- studs above the lower plaza ring
 
-		-- The invisible pad the Gate's ENTER prompt lives on, as a multiple of
-		-- the portal's scale, and how far above the platform it floats.
-		GateAnchorSpan = 8,
-		GateAnchorLift = 2 * WORLD_SCALE,
-		ProcessionalWidth = 72 * WORLD_SCALE, -- the Expedition Gate approach is wider
+		ProcessionalWidth = 72 * WORLD_SCALE, -- the shop approach is wider
 		-- 400, not 420: the plaza lost 25 studs of radius and a zone platform
 		-- must not hang off the edge of the floor it stands on. Furthest
 		-- platform edge is now 400 + 160 = 560 against a 575-stud plaza.
@@ -667,8 +663,18 @@ local GameConfig = {
 		-- Prefab keys and imported scale, recorded by the owner after the Studio
 		-- import (assets/source/portals/README.md). With no prefab a blockout
 		-- rift is drawn instead.
-		EntrancePrefab = { AssetKey = "EXPEDITION_ENTRANCE", Scale = 1.0 },
-		ExitPrefab = { AssetKey = "EXPEDITION_EXIT", Scale = 1.0 },
+		-- Measured from Scar to the tear's ground origin in the saved prefabs.
+		-- Scar is an asymmetric mesh: its bounding-box centre is not the origin.
+		EntrancePrefab = {
+			AssetKey = "EXPEDITION_ENTRANCE",
+			Scale = 1.0,
+			AnchorOffset = Vector3.new(0.0840454, -0.0540028, -0.9318314),
+		},
+		ExitPrefab = {
+			AssetKey = "EXPEDITION_EXIT",
+			Scale = 1.0,
+			AnchorOffset = Vector3.new(-1.2360306, -0.0540009, 0.0560227),
+		},
 		-- Blockout dimensions (studs), matching the authored meshes.
 		Blockout = {
 			ENTRANCE = { Height = 15, Width = 6.4, Thickness = 1.1, ScarRadius = 6.5 },
@@ -702,6 +708,8 @@ local GameConfig = {
 		-- Rifts stand on the walk surface found by a ray from this far above the
 		-- map's walk plane, so a chunk whose floor rises or dips is still flush.
 		DeckProbeHeight = 6,
+		DeckProbeDepth = 60,
+		PromptHoldSeconds = 0.4,
 
 		LightRange = 40,
 		IdleBrightness = 1.3,
@@ -815,7 +823,6 @@ local GameConfig = {
 		-- proportionally like the real thing rather than like a different
 		-- game -- and the platform the walkways meet is the same either way.
 		FateEngineScale = 1.25 * WORLD_SCALE,
-		ExpeditionGateScale = 8.0 * WORLD_SCALE,
 	},
 
 	Events = {

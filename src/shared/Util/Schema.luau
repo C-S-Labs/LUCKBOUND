@@ -1309,6 +1309,42 @@ function Schema.validateLoot(pools: any, worlds: any): (boolean, { string })
 	return #errors == 0, errors
 end
 
+function Schema.validatePortals(portals: any, chunks: any, worlds: any): (boolean, { string })
+	local errors = {}
+	for worldId, placements in portals do
+		if worlds[worldId] == nil or type(placements) ~= "table" or placements.Id ~= worldId then
+			table.insert(errors, `Portals '{worldId}': unknown world or mismatched Id`)
+			continue
+		end
+		for kind, placement in placements do
+			if kind == "Id" then
+				continue
+			end
+			if kind ~= "Entrance" and kind ~= "Exit" then
+				table.insert(errors, `Portals '{worldId}': unknown placement '{kind}'`)
+				continue
+			end
+			local chunk = type(placement) == "table" and chunks[placement.Chunk]
+			if not chunk or chunk.WorldId ~= worldId then
+				table.insert(errors, `Portals '{worldId}'.{kind}: Chunk must belong to this world`)
+			end
+			local offset = type(placement) == "table" and placement.Offset
+			if typeof(offset) ~= "Vector3" then
+				table.insert(errors, `Portals '{worldId}'.{kind}: Offset must be Vector3`)
+			elseif
+				not (
+					math.abs(offset.X) < math.huge
+					and math.abs(offset.Y) < math.huge
+					and math.abs(offset.Z) < math.huge
+				)
+			then
+				table.insert(errors, `Portals '{worldId}'.{kind}: Offset must be finite`)
+			end
+		end
+	end
+	return #errors == 0, errors
+end
+
 local VALIDATORS: { { Kind: string, Required: boolean?, Run: (any) -> (boolean, { string }) } } = {
 	{
 		Kind = "worlds",
@@ -1399,6 +1435,12 @@ local VALIDATORS: { { Kind: string, Required: boolean?, Run: (any) -> (boolean, 
 		Kind = "fixtures",
 		Run = function(c)
 			return Schema.validateFixtures(c.fixtures, c.chunks or {}, c.worlds)
+		end,
+	},
+	{
+		Kind = "portals",
+		Run = function(c)
+			return Schema.validatePortals(c.portals, c.chunks or {}, c.worlds)
 		end,
 	},
 	{
