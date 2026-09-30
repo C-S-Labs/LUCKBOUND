@@ -654,6 +654,16 @@ validation and applicable CI prove the staged production set safely replaces the
 
 ## Completed import wiring and saving (2026-09-30)
 
+**Current production contract:** the three RBXMX libraries are saved in the
+repository. Later refresh/placement entries below supersede first-import
+instructions. Preserve calibrated per-chunk yaw, current Cliff/Cutbank collision
+and the separate Stone template. Do not rerun older export/generation paths to
+rebuild these assets: their defaults can reset yaw and omit current Cliff data.
+The read-only `tools/verify_vv_collision_rbxmx.py` checks 29 combined templates
+plus Stone against the refreshed export ledger; `--strict-fidelity` exits 2 when
+Studio must establish fidelity from serialized physical data. No asset rewrite
+is needed to satisfy that diagnostic. Fresh integrated Rojo/Play checks remain.
+
 The owner authorized name correction, runtime wiring, grouping and duplicate
 cleanup after imports finished. Individual imports are now the active templates;
 the checked duplicate aggregate structure/props models were removed from Studio.
@@ -667,10 +677,12 @@ in `verdant_valley_staging_validation`. It requires 30 structures, 823 props and
 66 Cliff colliders; exact names or importer middle-ellipsis names must match one
 source each. It updates the existing AssetManifest keys, structure dimensions/
 GroundOffsetY and the existing props Library/Placements schema. Current imported
-geometry is already in the chunk frame, with MeshYawOffset 0. Placements come from
+geometry uses the saved calibrated chunk frame; later measured MeshYawOffset
+values include both 0 and 180. Placements come from
 each import model's original pivot-relative CFrames, before grouping, preserving
-the actual imported geometry centers. Canopies/chest/fire are Static for this first
-functionality test; no new animation or loot interaction is introduced.
+the actual imported geometry centers. This initial pass used Static canopies;
+current production uses 746 Sway canopies. Chest component metadata does not
+create loot interaction.
 
 Thirty solid groups plus nine chest body/lid/hardware meshes were recooked with
 CreateMeshPartAsync at PreciseConvexDecomposition and applied to their existing
@@ -681,7 +693,7 @@ to chunk origin. Old structure/Cliff templates and the unnecessary imported Ston
 collision copy are retained in ServerStorage.VV_IMPORT_RECOVERY, outside active
 loader search paths. Do not delete the original 202-piece Stone reference.
 
-Save these three active Studio Models as Roblox XML (`.rbxmx`):
+These three active Studio Models are saved as Roblox XML (`.rbxmx`):
 
 | Studio model | Full destination |
 |---|---|
@@ -694,10 +706,10 @@ existing separate merged model is untouched. VV_PROP_LIBRARY has per-chunk child
 models/category groups, 823 individually addressable meshes (30 solid, 30 nonsolid,
 746 canopies and 17 specials). Runtime wiring passes fresh chunk/prop schema checks,
 30 ID/size checks, 823 library/position checks and 39 precise-collision checks.
-Owner save, restart Play, `/roll VERDANT_VALLEY test`, entry and manual walking
-remain. Colors, textures and final promotion are deferred per owner direction.
-Keep recovery models and earlier files until those Studio checks/applicable CI
-prove safe replacement. Repo RBXMX files have not been saved by the agent.
+Repository saving and later prop/visual refreshes are complete. Restart Play,
+`/roll VERDANT_VALLEY test`, entry and manual walking remain integration checks.
+Keep recovery models and earlier files until Studio checks/applicable CI prove
+safe replacement; do not promote or delete staging from this integration.
 
 ## 1. Import to Studio
 

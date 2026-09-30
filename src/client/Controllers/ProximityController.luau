@@ -36,6 +36,16 @@ local function requestRoll()
 	Net.get("Fate_RequestRoll"):FireServer()
 end
 
+--- True while the player is close enough to the Engine to roll.
+function ProximityController.isInRange(): boolean
+	return inRange
+end
+
+--- Roll request for callers other than the prompt (the Fate Engine menu).
+function ProximityController.requestRoll(): ()
+	requestRoll()
+end
+
 --- Called by the reveal UI so a player cannot queue rolls mid-animation.
 function ProximityController.setLocked(value: boolean): ()
 	locked = value

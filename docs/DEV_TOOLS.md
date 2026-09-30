@@ -7,7 +7,8 @@ place goes public.
 
 ## Using it
 
-- **Panel:** press **F4** (`GameConfig.Debug.PanelKey`), click the **DEV** button top-right, or type `/panel`.
+- **Panel:** press **F4** (`GameConfig.Debug.PanelKey`), click the **DEV** button top-right, or type `/panel`. Drag the header to move it, and drag the
+  **gold ridged grip in the bottom-right corner** to resize it (minimum `GameConfig.Debug.PanelMinWidth/Height`).
   - **Category tabs** down the left: World & Map, Chunks, Player, Fate & Loot, Events, Ambience,
     Bosses, Diagnostics, General.
   - **A card per command.** Click an argument's picker to choose from its live values (world ids,
@@ -28,11 +29,11 @@ place goes public.
 |---|---|
 | World & Map | `/roll <world> [test]`, `/enter [seed]`, `/leave`, `/seed`, `/worlds` |
 | Chunks | `/chunks [on/off]` (bounds + labels; red = blockout), `/chunklist`, `/chunktp <chunk>` |
-| Player | `/fly`, `/noclip`, `/speed [n]`, `/tp <place>`, `/where`, `/god`, `/heal`, `/respawn` |
+| Player | `/fly`, `/noclip`, `/speed [n]`, `/tp <place>`, `/where`, `/god`, `/heal`, `/respawn`, `/moveprofile [hub/expedition/auto]` (force a movement feel), `/stamina [percent]`, `/animslot [slot] [id]` (try an animation clip live; `PLAYER_ANIMATION_BRIEF.md`) |
 | Fate & Loot | `/boss`, `/givekey [key]`, `/takekey`, `/keys`, `/keychance`, `/vaultchance`, `/ledger` |
 | Events | `/event <id>`, `/endevents` |
 | Ambience | `/atmosphere <id>`, `/tint`, `/props on/off`, `/clock <hour>` |
-| Bosses | `/showboss <boss> [height]`, `/bossphase <1/2>`, `/clearboss` |
+| Bosses | `/showboss <boss> [height]`, `/bossphase <1/2>`, `/clearboss`, `/dummies [count]` (lock-on targets; 0 clears) |
 | Diagnostics | `/stats [on/off]` (FPS, ping, memory, instances), `/assets` (which chunks drew as blockout) |
 | General | `/panel`, `/help`, `/clear` |
 

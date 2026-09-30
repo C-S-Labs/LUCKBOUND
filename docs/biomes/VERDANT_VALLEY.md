@@ -47,10 +47,28 @@ revamp pass (see `docs/STATUS.md` §4). All pieces are in one file,
 `assets/source/worlds/verdant_valley/export_verdant_valley_kit.py`. The 2026-09-22 first-pass test kit
 (`chunk_path_straight`, `chunk_meadow_a`, `chunk_waterfall`…) was retired in the 2026-09-25 audit.
 
-The current collision prototype uses the joined Stone Sentinels visual art and
-a separate segmented walk-surface FBX derived from the reviewed Blender scene.
-It is not active until its Studio-imported collision model is saved in the
-chunk kit; other 29 pieces retain their existing collision.
+**Current Verdant Valley collision architecture (2026-09-30):** all 30 chunks
+use saved separated structure, solid/nonsolid props and dedicated walk collision.
+`VV_COLLISION.rbxmx` contains 29 named child templates with 3,915 MeshParts,
+including Cliff Passage (66) and Cutbank Ford (137). Stone Sentinels uses its
+separate 118-part merged template: 4,033 active colliders in total. The original
+202-part Stone template is rollback material, outside the active selection.
+`CollisionTemplate` lookup disables visual terrain collision only when the named
+model is found; cloned colliders rotate with each chunk's calibrated art frame.
+ChunkLoader sets the clone's transparency and physics flags at runtime.
+
+The prop library contains 823 meshes: 30 solid groups, 30 nonsolid groups,
+746 canopies and 17 specials. The 39 colliding placements are server-owned
+Static/Tier 1 props; nonsolid groups and canopies remain client ambience.
+Saved per-chunk yaw and placement corrections are authoritative. Old exporter
+or collision-generator defaults cannot reconstruct this production snapshot.
+
+The 28-template generation reports, Stone pilot and first Cliff candidate below
+in the import history describe earlier iterations. Current counts come from the
+refreshed export ledger and saved templates. Run the read-only collision verifier;
+serialized physical configuration without explicit fidelity tokens requires
+Studio inspection and traversal after Rojo sync. Retain earlier assets until
+those checks and CI establish safe replacement.
 
 | Role | Pieces |
 |---|---|
@@ -74,14 +92,15 @@ alongside Cave Mouth; Forgotten Trial remains the optional side pocket. All thre
 caps are equally weighted and unlimited per layout, following the owner's corrected
 direction. Their geometry, sockets, scenario support and mesh IDs are unchanged.
 
-**2026-09-28 separated candidate:** the reviewed 30-piece source has been
+**Historical 2026-09-28 separated candidate (superseded by the saved production set above):** the reviewed 30-piece source has been
 partitioned into 30 connected terrain meshes and 66 tagged prop meshes in
 `verdant_valley_separated.blend`. Props use `prop_*` names; the two former
 `chunk_side_*` cap meshes use their current `chunk_cap_*` names. Solid scenery
 and detached walkable surfaces are server placements; water, foliage and small
 details remain client ambience. New FBXs and candidate placement/size tables
-are staged under `assets/export/worlds/verdant_valley/`. No new IDs or live
-chunk sizes are active until Studio import and collision walks pass.
+are staged under `assets/export/worlds/verdant_valley/`. At that stage no new IDs or live
+chunk sizes were active. This candidate is not an instruction to replace the
+current saved production assets.
 
 ---
 

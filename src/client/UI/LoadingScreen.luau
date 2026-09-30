@@ -37,6 +37,8 @@ local Net = require(Root.Core.Net)
 local Constants = require(Root.Core.Constants)
 local GameConfig = require(Root.Core.GameConfig)
 local UITheme = require(Root.Core.UITheme)
+local Sigil = require(script.Parent.Sigil.Sigil)
+local Style = require(script.Parent.Sigil.SigilStyle)
 
 local UIKit = require(script.Parent.UIKit)
 
@@ -73,6 +75,11 @@ end
 
 function LoadingScreen.isFinished(): boolean
 	return finished
+end
+
+--- True once the hub has arrived and PLAY is lit (the studio ident waits on it).
+function LoadingScreen.isReady(): boolean
+	return ready or finished
 end
 
 -- === the camera tour ================================================
@@ -255,7 +262,6 @@ local function setReady(reason: string)
 	statusLabel.Text = reason
 	progressFill.Size = UDim2.fromScale(1, 1)
 	UIKit.setEnabled(playButton, true)
-	UIKit.tween(playButton, UITheme.Motion.Normal, { BackgroundColor3 = UITheme.AccentGold })
 end
 
 local function watchProgress()
@@ -528,26 +534,41 @@ local function build()
 	})
 	vignetteGradient.Parent = vignette
 
-	titleLabel = UIKit.label(backdrop, "LUCKBOUND", 64)
-	titleLabel.Font = UITheme.HeaderFont
-	titleLabel.AnchorPoint = Vector2.new(0.5, 1)
-	titleLabel.Position = UDim2.fromScale(0.5, 0.44)
+	-- SIGIL title: slow rings and ticks behind the wordmark. The camera tour
+	-- still runs underneath; only the presentation is new.
+	local halo = Instance.new("Frame")
+	halo.BackgroundTransparency = 1
+	halo.AnchorPoint = Vector2.new(0.5, 0.5)
+	halo.Position = UDim2.fromScale(0.5, 0.42)
+	halo.Size = UDim2.fromOffset(480, 480)
+	halo.Parent = backdrop
+	Sigil.ring(halo, UDim2.fromScale(1, 1), "system", 1, 0.6)
+	Sigil.ring(halo, UDim2.fromScale(0.72, 0.72), "fate", 1, 0.5)
+	Sigil.spin(Sigil.orbit(halo, 72, "fate", 6, 18), 4)
+	local haloInner = Instance.new("Frame")
+	haloInner.BackgroundTransparency = 1
+	haloInner.AnchorPoint = Vector2.new(0.5, 0.5)
+	haloInner.Position = UDim2.fromScale(0.5, 0.5)
+	haloInner.Size = UDim2.fromScale(0.72, 0.72)
+	haloInner.Parent = halo
+	Sigil.spin(Sigil.orbit(haloInner, 48, "system", 5, 12), -6)
+
+	titleLabel =
+		UIKit.label(backdrop, table.concat(string.split("LUCKBOUND", ""), "\u{200A}\u{200A}"), 56)
+	titleLabel.Font = Style.Fonts.Display
+	titleLabel.AnchorPoint = Vector2.new(0.5, 0.5)
+	titleLabel.Position = UDim2.fromScale(0.5, 0.42)
 	titleLabel.Size = UDim2.new(0.9, 0, 0, 74)
 	titleLabel.TextXAlignment = Enum.TextXAlignment.Center
-	titleLabel.TextColor3 = UITheme.TextPrimary
+	titleLabel.TextColor3 = Style.TextHigh
 
-	local titleGradient = Instance.new("UIGradient")
-	titleGradient.Rotation = 90
-	titleGradient.Color = ColorSequence.new({
-		ColorSequenceKeypoint.new(0, UITheme.TextPrimary),
-		ColorSequenceKeypoint.new(1, UITheme.AccentGold),
-	})
-	titleGradient.Parent = titleLabel
-
-	local tagline = UIKit.label(backdrop, "Roll the world. Walk what you get.", 18, "SECONDARY")
-	tagline.AnchorPoint = Vector2.new(0.5, 0)
-	tagline.Position = UDim2.fromScale(0.5, 0.45)
-	tagline.Size = UDim2.new(0.9, 0, 0, 24)
+	local tagline = Sigil.caption(
+		backdrop,
+		"Roll the world. Walk what you get.",
+		"fate",
+		UDim2.new(0.5, -200, 0.42, 48),
+		UDim2.fromOffset(400, 18)
+	)
 	tagline.TextXAlignment = Enum.TextXAlignment.Center
 
 	-- The caption names the place on screen. It is what makes the tour read
@@ -559,46 +580,46 @@ local function build()
 
 	local controls = Instance.new("Frame")
 	controls.AnchorPoint = Vector2.new(0.5, 0)
-	controls.Position = UDim2.fromScale(0.5, 0.56)
-	controls.Size = UDim2.new(0.5, 0, 0, 100)
+	controls.Position = UDim2.fromScale(0.5, 0.66)
+	controls.Size = UDim2.new(0.5, 0, 0, 110)
 	controls.BackgroundTransparency = 1
 	controls.Parent = backdrop
 
 	local controlsConstraint = Instance.new("UISizeConstraint")
-	controlsConstraint.MinSize = Vector2.new(260, 100)
-	controlsConstraint.MaxSize = Vector2.new(420, 100)
+	controlsConstraint.MinSize = Vector2.new(260, 110)
+	controlsConstraint.MaxSize = Vector2.new(380, 110)
 	controlsConstraint.Parent = controls
 
 	local track = Instance.new("Frame")
-	track.Size = UDim2.new(1, 0, 0, 4)
-	track.BackgroundColor3 = UITheme.RaisedColor
+	track.Size = UDim2.new(1, 0, 0, 2)
+	track.BackgroundColor3 = Style.Violet
+	track.BackgroundTransparency = 0.5
 	track.BorderSizePixel = 0
 	track.Parent = controls
-	UITheme.corner(track, UDim.new(0, 2))
 
 	progressFill = Instance.new("Frame")
 	progressFill.Size = UDim2.fromScale(0, 1)
-	progressFill.BackgroundColor3 = UITheme.AccentGold
+	progressFill.BackgroundColor3 = Style.tone("fate")
 	progressFill.BorderSizePixel = 0
 	progressFill.Parent = track
-	UITheme.corner(progressFill, UDim.new(0, 2))
 
 	statusLabel = UIKit.label(controls, "Building the Crossroads…", 13, "MUTED")
+	statusLabel.Font = Style.Fonts.Label
 	statusLabel.Position = UDim2.fromOffset(0, 12)
 	statusLabel.Size = UDim2.new(1, 0, 0, 18)
 	statusLabel.TextXAlignment = Enum.TextXAlignment.Center
 
-	playButton = UIKit.button(controls, "PLAY", "PRIMARY", function()
+	playButton = UIKit.button(controls, "BEGIN", "PRIMARY", function()
 		if ready then
 			finish()
 		end
 	end)
-	playButton.Position = UDim2.fromOffset(0, 44)
-	playButton.Size = UDim2.new(1, 0, 0, 48)
+	playButton.Position = UDim2.fromOffset(0, 48)
+	playButton.Size = UDim2.new(1, 0, 0, 52)
 	playButton.TextSize = 20
 	UIKit.setEnabled(playButton, false)
 
-	-- PLAY IS THE ONLY BUTTON. Owner-directed 2026-09-20: an EXIT that can
+	-- BEGIN IS THE ONLY BUTTON. Owner-directed 2026-09-20: an EXIT that can
 	-- only kick you back to the app's home screen is a button whose best
 	-- outcome is leaving, and a title screen offering one thing is a
 	-- stronger screen than one offering a choice nobody wants to make.

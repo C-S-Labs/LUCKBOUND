@@ -208,6 +208,38 @@ Studio walk reported, correctly, that the Settings panel did nothing.
 sound added to a game with no routing is a sound that ships ignoring the
 volume slider — by the time anyone notices, there are forty of them.
 
+## 3.7 Leaderboard and chat
+
+Both replace a Roblox default with a panel in the house style (UIKit surfaces, UITheme tokens). Both are built in
+every place, not only in the hub.
+
+**Leaderboard** (`client/UI/Leaderboard.luau`) sits in the top-right corner, and **Tab** toggles it. It hides the
+CoreGui player list. The header is the flavour name **FATEBOUND**, with a live count beside it ("4 players"), so a
+new player can tell it is the player list without knowing the lore. Your own row is gold.
+
+**Rows are interactive.** Clicking a player opens a small menu beside the list with **Add Friend / Unfriend**,
+**View Avatar** and **Block / Unblock**, the same actions as Roblox's own list. Each one is Roblox's own prompt
+(`StarterGui:SetCore("PromptSendFriendRequest" | "PromptUnfriend" | "PromptBlockPlayer" | "PromptUnblockPlayer")`,
+`GuiService:InspectPlayerFromUserId`), so the player confirms it in the standard dialog. Your own row shows only
+View Avatar. Clicking outside the menu closes it.
+
+**The columns are data.** `GameConfig.Leaderboard.Columns` lists `{ Header, Source, Width }`. `Source` is `"RANK"`,
+`"NAME"`, or the name of any **Player attribute**, and a row redraws whenever that player's attributes change. To add
+a stat, have the server `player:SetAttribute("FateLevel", n)` and add a config row. No UI code changes. `SortBy`
+names the attribute to rank by (highest first); while it is unset, rank is alphabetical. Today's columns are rank
+and name only, as the owner asked on 2026-09-27.
+
+**Chat** (`client/UI/ChatPanel.luau`) sits **top-left**, under Roblox's top bar, and **/** focuses it. Opening it
+collapses the hub rail (`HubMenu.collapse`, wired in `init.client.luau`). The rail sits `GameConfig.HubMenu.RailOffsetY`
+px below centre so the two do not overlap. A **chat button in the top bar** (right after Roblox's own buttons,
+placed from `GuiService.TopbarInset`) shows and hides the window, and **/** reopens a hidden window. It is our
+button rather than Roblox's chat icon: Roblox removes that icon once the default window is off, and exposes no
+click hook for it. It hides TextChatService's default
+window and input bar, but messages still go through TextChatService (`RBXGeneral:SendAsync` and `MessageReceived`),
+so filtering, mutes and bubble chat are unchanged. Your name shows in gold, other players' names in secondary text,
+and system lines in AccentCool. After `Chat.FadeAfterSeconds` without activity the panel dims. A place still on
+legacy chat keeps its default window.
+
 ## 4. The design system
 
 Everything visual comes from `UITheme`: three surface depths, one spacing

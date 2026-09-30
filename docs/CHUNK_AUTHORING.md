@@ -184,11 +184,12 @@ where they were authored.
 - each kind of prop is uploaded once instead of baked into 22 meshes
 - floating clutter stops inflating each piece's collision
 
-**Verdant Valley Causeway pilot (2026-09-27):** the joined mesh made trees,
-loose rocks, ruin fragments and moss part of a single complex collision
-decomposition. The separated scenery is exported as a solid prop using
-convention 8. Its server-owned collision still needs a Studio walk before activation;
-the library has not been saved into the game yet.
+**Verdant Valley Causeway (2026-09-30):** the saved production library separates
+its solid group, nonsolid group and individual canopies. Only the solid group
+uses convention 8 and server-owned collision; nonsolid scenery and canopies stay
+client ambience. Terrain uses its dedicated CollisionTemplate. All 30 chunks now
+follow this separation. A fresh integrated Studio walk remains required; the
+2026-09-27 unsaved pilot is historical.
 
 **Keep the size pins.** With the scenery removed, the structure mesh must still
 fill the piece's declared box exactly (for Sky Citadel, 256³: tiny pins at the

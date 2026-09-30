@@ -51,6 +51,9 @@ local UITheme = {
 	-- meaning "this is the thing to press".
 	AccentCool = Color3.fromRGB(124, 245, 224),
 	AccentWarn = Color3.fromRGB(240, 132, 96),
+	-- The health bar's fill. A deep rose rather than a pure red, so it sits
+	-- in the cosmic-purple palette and stays distinct from AccentWarn.
+	AccentHealth = Color3.fromRGB(214, 74, 104),
 	-- RAISED FROM (116, 110, 140) ON 2026-09-20, and the reason is worth
 	-- keeping: at the old value this token scored 3.40:1 against a raised row
 	-- and 3.74:1 against a panel -- below WCAG's 4.5:1 floor for body text,
@@ -106,8 +109,11 @@ local UITheme = {
 
 --- Applies the theme's corner radius to a GuiObject.
 function UITheme.corner(parent: Instance, radius: UDim?): UICorner
+	-- SIGIL: panels are angular. Only pills and dots (radius scale >= 0.5)
+	-- keep their rounding; every other rounded rectangle becomes square.
+	local r = radius or UITheme.CornerRadius
 	local c = Instance.new("UICorner")
-	c.CornerRadius = radius or UITheme.CornerRadius
+	c.CornerRadius = if r.Scale >= 0.5 then r else UDim.new(0, 0)
 	c.Parent = parent
 	return c
 end

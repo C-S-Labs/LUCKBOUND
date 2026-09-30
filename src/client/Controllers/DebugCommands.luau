@@ -627,6 +627,72 @@ end
 CLIENT.noclip = function()
 	toggleNoclip()
 end
+-- Movement testing. The controller is required here, not at module scope,
+-- so developer tooling never becomes load-bearing for movement.
+local function locomotion(): any
+	return require(script.Parent.LocomotionController)
+end
+CLIENT.moveprofile = function(args)
+	local choice = args[1] and string.lower(args[1])
+	if choice == nil then
+		say(`movement profile is {locomotion().profile()}`)
+		return
+	end
+	if choice == "auto" then
+		locomotion().forceProfile(nil)
+		say("movement profile follows where you stand (hub / expedition stage)")
+	elseif choice == "hub" or choice == "expedition" then
+		locomotion().forceProfile(string.upper(choice))
+		say(`movement profile forced to {string.upper(choice)} -- /moveprofile auto to undo`)
+	else
+		fail("usage: /moveprofile <hub|expedition|auto>")
+	end
+end
+CLIENT.stamina = function(args)
+	local state = locomotion().get()
+	if not args[1] then
+		say(`stamina {math.floor(state.Stamina + 0.5)}`)
+		return
+	end
+	local value = tonumber(args[1])
+	if not value then
+		fail(`'{args[1]}' is not a number`)
+		return
+	end
+	locomotion().setStamina(math.clamp(value, 0, 100) / 100)
+	say(`stamina set to {math.clamp(value, 0, 100)}%`)
+end
+CLIENT.animslot = function(args)
+	local animator = require(script.Parent.CharacterAnimator)
+	if not args[1] then
+		for _, line in animator.describeSlots() do
+			say(line)
+		end
+		return
+	end
+	-- A slot alone describes that slot; clearing needs an explicit "".
+	if not args[2] then
+		local wanted = string.lower(args[1])
+		for _, line in animator.describeSlots() do
+			if string.lower(string.match(line, "^[^:]+") or "") == wanted then
+				say(line)
+				return
+			end
+		end
+		fail(`unknown slot '{args[1]}' (/animslot lists them all)`)
+		return
+	end
+	local id = args[2]
+	if id == '""' then
+		id = ""
+	end
+	local ok, message = animator.overrideSlot(args[1], id)
+	if ok then
+		say(message)
+	else
+		fail(message)
+	end
+end
 CLIENT.speed = function(args)
 	setSpeed(args[1])
 end

@@ -51,12 +51,18 @@ def make_humanoid(H=1.8, shoulder=0.21, hip=0.105, bulk=1.0, limb=1.0, m_body=No
         seg(f"{side}LowerLeg", j["kn"], j["an"], 0.048, 0.036)
         loft(f"{side}Foot", ml, [(0, .045*L, .03*L), (0.16*k, .05*L, .035*L), (0.24*k, .03*L, .02*L)], N=10,
              M=TR((j["an"][0], j["an"][1] + 0.05*k, 0.04*k), (math.pi/2, 0, 0)), sub=1)
-        if fingers:
+        if fingers:                                   # three joints per finger + thumb: pose_fix.wrap() closes them round a haft
             for fn, yy in (("Index", -0.03), ("Middle", -0.01), ("Ring", 0.01), ("Pinky", 0.03)):
-                p0 = Vector(j["hd"]) + Vector((0, yy*k, 0.02*k)); p1 = p0 + Vector((0, 0, -0.045*k)); p2 = p1 + Vector((-0.005*s*k, 0, -0.035*k))
+                p0 = Vector(j["hd"]) + Vector((0, yy*k, 0.02*k)); p1 = p0 + Vector((0, 0, -0.045*k))
+                p2 = p1 + Vector((-0.003*s*k, 0, -0.02*k)); p3 = p2 + Vector((-0.002*s*k, 0, -0.016*k))
                 add_bone(f"{side}{fn}1", p0, p1, f"{side}Hand"); add_bone(f"{side}{fn}2", p1, p2, f"{side}{fn}1")
-                tube(f"{side}{fn}1", ms, p0, p1, 0.011*L, 0.01*L, N=6); tube(f"{side}{fn}2", ms, p1, p2, 0.01*L, 0.008*L, N=6)
-            t0 = Vector(j["wr"]) + Vector((0, -0.04*k, -0.05*k)); t1 = t0 + Vector((0, -0.03*k, -0.03*k)); t2 = t1 + Vector((0, -0.02*k, -0.03*k))
+                add_bone(f"{side}{fn}3", p2, p3, f"{side}{fn}2")
+                tube(f"{side}{fn}1", ms, p0, p1, 0.011*L, 0.01*L, N=6); tube(f"{side}{fn}2", ms, p1, p2, 0.01*L, 0.009*L, N=6)
+                tube(f"{side}{fn}3", ms, p2, p3, 0.009*L, 0.007*L, N=6)
+            t0 = Vector(j["wr"]) + Vector((0, -0.04*k, -0.05*k)); t1 = t0 + Vector((0, -0.03*k, -0.03*k))
+            t2 = t1 + Vector((0, -0.012*k, -0.017*k)); t3 = t2 + Vector((0, -0.01*k, -0.013*k))
             add_bone(f"{side}Thumb1", t0, t1, f"{side}Hand"); add_bone(f"{side}Thumb2", t1, t2, f"{side}Thumb1")
-            tube(f"{side}Thumb1", ms, t0, t1, 0.012*L, 0.011*L, N=6); tube(f"{side}Thumb2", ms, t1, t2, 0.011*L, 0.009*L, N=6)
+            add_bone(f"{side}Thumb3", t2, t3, f"{side}Thumb2")
+            tube(f"{side}Thumb1", ms, t0, t1, 0.012*L, 0.011*L, N=6); tube(f"{side}Thumb2", ms, t1, t2, 0.011*L, 0.01*L, N=6)
+            tube(f"{side}Thumb3", ms, t2, t3, 0.01*L, 0.008*L, N=6)
     return J, k

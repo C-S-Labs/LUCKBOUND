@@ -92,6 +92,7 @@ Before ending any session where you changed something:
 
 - **Append a `docs/WORKLOG.md` entry at the top** using the template there:
   what you did, what you decided, where you stopped, what comes next.
+  Write it on your task branch; parallel-branch numbering is in `docs/GIT_WORKFLOW.md`.
 - **Update `docs/STATUS.md`** (CI fails a PR touching `src/` or `assets/` that updates neither STATUS nor WORKLOG;
   `[skip-status]` in the PR title bypasses it for trivial changes) if state changed — test count, what is built,
   open items, next-session priorities.
@@ -194,10 +195,25 @@ Fixed, in `src/server/init.server.luau`. See build spec §1.2. `Schema.validateA
 - Return a single table from every ModuleScript.
 - Errors use the `Result` convention in `Core/Result.luau` — `{ok = true, value = …}` or `{ok = false, err = …}`. Reserve `error()` for programmer mistakes, not expected failures.
 
+## Git workflow — implementation vs integration
+
+Full procedure: **`docs/GIT_WORKFLOW.md`**. It applies identically to local and cloud agents.
+
+- **`main` is the stable integration branch. Never do implementation work on it.**
+- **Implementation agent** (the default role): branch `agent/<task>` from the latest `origin/main` (or the branch
+  name your environment assigns), one logical task per branch and PR, commit, validate, push, open a PR to `main`
+  with what/why/files/tests/concerns. **Do not merge.**
+- **Integration agent** (only when the owner starts a session as one): review PRs one at a time against the
+  *current* `main`, merge `main` into the branch and re-test if needed, merge only when integration-ready, refresh
+  `main` before the next PR, and make no feature changes.
+- `agent/` is a branch-name prefix only: not a folder, and not a sign the work ran in the cloud.
+- With parallel branches, each writes its own WORKLOG entry on its branch; the integration agent keeps both and
+  renumbers at merge time (`docs/GIT_WORKFLOW.md`, "Work log and STATUS").
+
 ## Verify before you merge
 
 CI runs the tests, a syntax check, and the forbidden-name scan. **Check that it
-is green before merging a PR.** This was skipped once and shipped a `main` that
+is green before a PR is merged** (merging is the integration agent's job). This was skipped once and shipped a `main` that
 could not boot, because `git commit -am` silently skipped a new untracked file.
 
 - `git add` new files explicitly — `-am` stages only tracked ones.

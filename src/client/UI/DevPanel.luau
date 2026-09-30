@@ -437,8 +437,9 @@ local function build()
 	window.Position = UDim2.new(1, -S.MD, 0, 46)
 	window.Size = UDim2.fromOffset(WIDTH, HEIGHT)
 	window.Visible = false
+	-- A floor, not a ceiling: the corner grip below lets the window grow.
 	local limit = Instance.new("UISizeConstraint")
-	limit.MaxSize = Vector2.new(WIDTH, HEIGHT)
+	limit.MinSize = Vector2.new(GameConfig.Debug.PanelMinWidth, GameConfig.Debug.PanelMinHeight)
 	limit.Parent = window
 	UITheme.pad(window, S.MD)
 
@@ -450,8 +451,12 @@ local function build()
 	local title = UIKit.label(header, "DEVELOPER", 18, "ACCENT")
 	title.Size = UDim2.new(1, -90, 1, 0)
 	title.Font = UITheme.HeaderFont
-	local hint =
-		UIKit.label(header, `{GameConfig.Debug.PanelKey} to toggle . drag to move`, 12, "MUTED")
+	local hint = UIKit.label(
+		header,
+		`{GameConfig.Debug.PanelKey} to toggle . drag to move . corner to resize`,
+		12,
+		"MUTED"
+	)
 	hint.Position = UDim2.fromOffset(130, 0)
 	hint.Size = UDim2.new(1, -230, 1, 0)
 	local close = UIKit.button(header, "Close", "GHOST", toggle)
@@ -490,6 +495,102 @@ local function build()
 			or input.UserInputType == Enum.UserInputType.Touch
 		then
 			dragFrom = nil
+		end
+	end)
+
+	-- Corner grip: drag the bottom-right corner to resize. The window is
+	-- anchored top-right, so growing it wider also moves the right edge by
+	-- the same amount, which keeps the grip under the cursor.
+	--
+	-- Drawn from frames rather than a glyph: the first version was a "◢"
+	-- character, which Gotham may not carry and which read as nothing at all.
+	local grip = Instance.new("TextButton")
+	grip.Name = "ResizeGrip"
+	grip.AutoButtonColor = false
+	grip.Text = ""
+	grip.BackgroundColor3 = UITheme.RaisedColor
+	grip.BackgroundTransparency = UITheme.RaisedTransparency
+	grip.BorderSizePixel = 0
+	grip.AnchorPoint = Vector2.new(1, 1)
+	grip.Position = UDim2.new(1, S.MD - S.XS, 1, S.MD - S.XS)
+	grip.Size = UDim2.fromOffset(26, 26)
+	grip.ZIndex = 20
+	grip.Parent = window
+	UITheme.corner(grip, UITheme.RadiusSmall)
+	local gripStroke = UITheme.stroke(grip, UITheme.AccentGold, 1)
+	gripStroke.Transparency = 0.5
+	-- Three diagonal ridges, the universal "drag me to resize" mark.
+	local ridges = {}
+	for i, length in { 16, 10, 4 } do
+		local ridge = Instance.new("Frame")
+		ridge.BorderSizePixel = 0
+		ridge.BackgroundColor3 = UITheme.AccentGold
+		ridge.BackgroundTransparency = 0.25
+		ridge.AnchorPoint = Vector2.new(0.5, 0.5)
+		ridge.Size = UDim2.fromOffset(length, 2)
+		ridge.Rotation = -45
+		local offset = (i - 1) * 4
+		ridge.Position = UDim2.new(0.5, 3 + offset, 0.5, 3 + offset)
+		ridge.ZIndex = 21
+		ridge.Parent = grip
+		table.insert(ridges, ridge)
+	end
+	grip.MouseEnter:Connect(function()
+		gripStroke.Transparency = 0
+		for _, ridge in ridges do
+			ridge.BackgroundTransparency = 0
+		end
+	end)
+	grip.MouseLeave:Connect(function()
+		gripStroke.Transparency = 0.5
+		for _, ridge in ridges do
+			ridge.BackgroundTransparency = 0.25
+		end
+	end)
+
+	-- All sizes here are in UNSCALED pixels (what window.Size holds). The
+	-- Interface size setting puts a UIScale on this ScreenGui, so screen
+	-- pixels from the mouse are divided by that scale before use.
+	local resizeFrom: Vector2? = nil
+	local startSize: Vector2 = Vector2.zero
+	local startRight: UDim2 = window.Position
+	local uiScale = 1
+	grip.InputBegan:Connect(function(input)
+		if
+			input.UserInputType == Enum.UserInputType.MouseButton1
+			or input.UserInputType == Enum.UserInputType.Touch
+		then
+			resizeFrom = Vector2.new(input.Position.X, input.Position.Y)
+			startSize = Vector2.new(window.Size.X.Offset, window.Size.Y.Offset)
+			startRight = window.Position
+			uiScale = math.max(window.AbsoluteSize.X / math.max(startSize.X, 1), 0.01)
+		end
+	end)
+	UserInputService.InputChanged:Connect(function(input)
+		if
+			resizeFrom
+			and (
+				input.UserInputType == Enum.UserInputType.MouseMovement
+				or input.UserInputType == Enum.UserInputType.Touch
+			)
+		then
+			local viewport = (
+				workspace.CurrentCamera and workspace.CurrentCamera.ViewportSize
+				or Vector2.new(WIDTH, HEIGHT)
+			) / uiScale
+			local d = (Vector2.new(input.Position.X, input.Position.Y) - resizeFrom) / uiScale
+			local w = math.clamp(startSize.X + d.X, GameConfig.Debug.PanelMinWidth, viewport.X)
+			local h = math.clamp(startSize.Y + d.Y, GameConfig.Debug.PanelMinHeight, viewport.Y)
+			window.Size = UDim2.fromOffset(w, h)
+			window.Position = startRight + UDim2.fromOffset(w - startSize.X, 0)
+		end
+	end)
+	UserInputService.InputEnded:Connect(function(input)
+		if
+			input.UserInputType == Enum.UserInputType.MouseButton1
+			or input.UserInputType == Enum.UserInputType.Touch
+		then
+			resizeFrom = nil
 		end
 	end)
 

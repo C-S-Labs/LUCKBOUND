@@ -28,6 +28,9 @@ local HubMenuCore = __require("HubMenuCore")
 local CodeCore = __require("CodeCore")
 local SettingsCore = __require("SettingsCore")
 local LocomotionCore = __require("LocomotionCore")
+local LockOnCore = __require("LockOnCore")
+local AnimationCore = __require("AnimationCore")
+local PlayerAnimations = __require("PlayerAnimations")
 local ThemeCore = __require("ThemeCore")
 local Palettes = __require("Palettes")
 local EventCore = __require("EventCore")
@@ -5419,258 +5422,478 @@ end
 
 -- === movement =======================================================
 do
-	group("Player abilities: run and double jump")
+	group("Player movement: the state machine")
 
-	local function state()
-		return LocomotionCore.newState(GameConfig, 0)
+	local L = GameConfig.Locomotion
+	local EXP = LocomotionCore.tuning(GameConfig, "EXPEDITION")
+	local HUB = LocomotionCore.tuning(GameConfig, "HUB")
+
+	local function state(t)
+		return LocomotionCore.newState(t or EXP, 0)
 	end
 
-	local function sprintFor(seconds, from)
-		local s = from or state()
-		local dt = 1 / 60
+	local function frame(s, now, overrides, t)
+		local input = { WantsSprint = false, Moving = true, Grounded = true, Now = now }
+		for k, v in overrides or {} do
+			input[k] = v
+		end
+		return LocomotionCore.step(s, 1 / 60, input, t or EXP)
+	end
+
+	local function sprintFor(seconds, from, t)
+		local s = from or state(t)
 		local elapsed = 0
 		while elapsed < seconds do
-			s = LocomotionCore.step(s, dt, {
-				WantsSprint = true,
-				Moving = true,
-				Grounded = true,
-				Now = elapsed,
-			}, GameConfig)
-			elapsed += dt
+			s = frame(s, elapsed, { WantsSprint = true }, t)
+			elapsed += 1 / 60
 		end
 		return s, elapsed
 	end
 
+	-- === profiles ===================================================
+	check(
+		"the hub walks at the hub's traversal budget",
+		HUB.WalkSpeed == GameConfig.Scale.WalkSpeed
+	)
+	check("an expedition moves slower than the hub", EXP.WalkSpeed < HUB.WalkSpeed)
+	check(
+		"sprint is faster than walking in both",
+		EXP.SprintSpeed > EXP.WalkSpeed and HUB.SprintSpeed > HUB.WalkSpeed
+	)
+	check(
+		"an unknown profile falls back to the hub",
+		LocomotionCore.tuning(GameConfig, "NOPE").ProfileId == "HUB"
+	)
+	check(
+		"the profile is the expedition's inside a stage and the hub's outside",
+		LocomotionCore.profileFor(true) == "EXPEDITION"
+			and LocomotionCore.profileFor(false) == "HUB"
+	)
+	check(
+		"an upgrade multiplier scales the number it names (the Fate Tree hook)",
+		LocomotionCore.tuning(GameConfig, "EXPEDITION", { StaminaMax = 1.5 }).StaminaMax
+			== L.StaminaMax * 1.5
+	)
+	check(
+		"the hub waives roll and jump costs",
+		HUB.RollStaminaCost == 0 and HUB.JumpStaminaCost == 0
+	)
+	check(
+		"stamina is unlimited in the hub: a long sprint costs nothing",
+		(function()
+			local s = sprintFor(30, nil, HUB)
+			return s.Stamina == L.StaminaMax and s.Sprinting
+		end)()
+	)
+	check("...and only in the hub", EXP.SprintDrainPerSecond > 0 and EXP.RollStaminaCost > 0)
+	check(
+		"short ramps: nothing slides like ice",
+		HUB.AccelerationSeconds <= 0.15
+			and HUB.DecelerationSeconds <= 0.15
+			and EXP.AccelerationSeconds <= 0.15
+			and EXP.DecelerationSeconds <= 0.15
+	)
+
+	-- === stamina ====================================================
 	check(
 		"a fresh state starts with full stamina",
-		LocomotionCore.staminaFraction(state(), GameConfig) == 1
+		LocomotionCore.staminaFraction(state(), EXP) == 1
 	)
-
-	check(
-		"sprinting is faster than walking",
-		(function()
-			local s = sprintFor(0.5)
-			return LocomotionCore.targetSpeed(s, GameConfig) > GameConfig.Scale.WalkSpeed
-		end)()
-	)
-
-	-- Sprint is a multiplier on the hub's traversal budget, never a second
-	-- speed to keep in step with it.
-	check(
-		"sprint speed is derived from the hub's walk speed",
-		(function()
-			local s = sprintFor(0.5)
-			return LocomotionCore.targetSpeed(s, GameConfig)
-				== GameConfig.Scale.WalkSpeed * GameConfig.Locomotion.SprintMultiplier
-		end)()
-	)
+	check("a fresh state is on the ground", LocomotionCore.mode(state(), 0) == "GROUND")
 
 	check(
 		"holding sprint while stood still costs nothing",
 		(function()
-			local s = LocomotionCore.step(state(), 1, {
-				WantsSprint = true,
-				Moving = false,
-				Grounded = true,
-				Now = 0,
-			}, GameConfig)
-			return s.Stamina == GameConfig.Locomotion.StaminaMax and not s.Sprinting
+			local s = frame(state(), 0, { WantsSprint = true, Moving = false })
+			return s.Stamina == L.StaminaMax and not s.Sprinting
 		end)()
 	)
 
-	check(
-		"stamina drains while sprinting",
-		(function()
-			local s = sprintFor(2)
-			return s.Stamina < GameConfig.Locomotion.StaminaMax
-		end)()
-	)
+	check("stamina drains while sprinting", sprintFor(1).Stamina < L.StaminaMax)
 
-	local drained = sprintFor(
-		GameConfig.Locomotion.StaminaMax / GameConfig.Locomotion.StaminaDrainPerSecond + 0.5
-	)
+	local drained = sprintFor(L.StaminaMax / EXP.SprintDrainPerSecond + 0.5)
 	check("a sprint ends when stamina runs out", drained.Stamina == 0 and not drained.Sprinting)
-
+	check(
+		"running dry costs the longer exhausted breather",
+		drained.RegenBlockedUntil
+			> L.StaminaMax / EXP.SprintDrainPerSecond + L.StaminaRegenDelaySeconds
+	)
 	check(
 		"you cannot restart a sprint the instant you run dry",
-		not LocomotionCore.canStartSprint(drained, drained.RegenBlockedUntil - 0.1, GameConfig)
+		not LocomotionCore.canStartSprint(drained, drained.RegenBlockedUntil - 0.1, EXP)
 	)
 
 	check(
-		"stamina refills once the delay has passed",
+		"stamina refills once the delay has passed, and never past its maximum",
 		(function()
 			local s = drained
 			local now = s.RegenBlockedUntil + 0.001
-			for _ = 1, 60 do
-				s = LocomotionCore.step(s, 1 / 60, {
-					WantsSprint = false,
-					Moving = true,
-					Grounded = true,
-					Now = now,
-				}, GameConfig)
+			for _ = 1, 600 do
+				s = frame(s, now, {})
 				now += 1 / 60
 			end
-			return s.Stamina > 0
+			return s.Stamina == L.StaminaMax
 		end)()
 	)
 
 	check(
-		"stamina never exceeds its maximum",
+		"a sprint-jump does not pay for its airtime",
+		(function()
+			local s = sprintFor(0.5)
+			local before = s.Stamina
+			s = frame(s, 0.6, { WantsSprint = true, Grounded = false })
+			return s.Sprinting and s.Stamina == before
+		end)()
+	)
+
+	-- A challenge, not a punishment: any action can start on any stamina.
+	check(
+		"a roll can start on a sliver of stamina and empties the bar",
 		(function()
 			local s = state()
-			for i = 1, 600 do
-				s = LocomotionCore.step(s, 1 / 60, {
-					WantsSprint = false,
-					Moving = true,
-					Grounded = true,
-					Now = i / 60,
-				}, GameConfig)
-			end
-			return s.Stamina == GameConfig.Locomotion.StaminaMax
+			s.Stamina = 1
+			local after, kind = LocomotionCore.roll(s, 0, true, EXP)
+			return kind == "ROLL" and after.Stamina == 0
 		end)()
 	)
-
 	check(
-		"a full drain takes the number of seconds the config says it does",
-		(function()
-			local seconds = GameConfig.Locomotion.StaminaMax
-				/ GameConfig.Locomotion.StaminaDrainPerSecond
-			-- 8 seconds of sprint. Long enough to cross a district, short enough
-			-- that it is a decision.
-			return seconds >= 5 and seconds <= 12
-		end)()
-	)
-
-	-- === jumps ======================================================
-	check(
-		"the first jump on the ground is the ground jump",
-		LocomotionCore.jumpKind(state(), 0, GameConfig) == "GROUND"
-	)
-
-	check(
-		"the second press in the air is the air jump",
-		(function()
-			local s, kind = LocomotionCore.jump(state(), 0, GameConfig)
-			if kind ~= "GROUND" then
-				return false
-			end
-			s = LocomotionCore.step(s, 1 / 60, {
-				WantsSprint = false,
-				Moving = true,
-				Grounded = false,
-				Now = 0.5,
-			}, GameConfig)
-			local _, second = LocomotionCore.jump(s, 0.5, GameConfig)
-			return second == "AIR"
-		end)()
-	)
-
-	check(
-		"there is no third jump",
-		(function()
-			local s, _ = LocomotionCore.jump(state(), 0, GameConfig)
-			s = LocomotionCore.step(s, 1 / 60, {
-				WantsSprint = false,
-				Moving = true,
-				Grounded = false,
-				Now = 0.5,
-			}, GameConfig)
-			local afterAir = select(1, LocomotionCore.jump(s, 0.5, GameConfig))
-			local _, third = LocomotionCore.jump(afterAir, 1.5, GameConfig)
-			return third == nil
-		end)()
-	)
-
-	check(
-		"one input frame cannot spend two jumps",
+		"...but not on none",
 		(function()
 			local s = state()
-			s = LocomotionCore.step(s, 1 / 60, {
-				WantsSprint = false,
-				Moving = true,
-				Grounded = false,
-				Now = 1,
-			}, GameConfig)
-			-- Already past the coyote window, so the first press is the air jump.
-			s.LastGroundedAt = 0
-			local afterFirst, first = LocomotionCore.jump(s, 1, GameConfig)
-			local _, second = LocomotionCore.jump(afterFirst, 1, GameConfig)
-			return first == "AIR" and second == nil
+			s.Stamina = 0
+			local ok, reason = LocomotionCore.canRoll(s, 0, EXP)
+			return not ok and reason == "stamina"
+		end)()
+	)
+
+	-- === jump =======================================================
+	check("the double jump is gone", L.AirJumps == nil)
+
+	check(
+		"a jump on the ground works once",
+		(function()
+			local s, ok = LocomotionCore.jump(state(), 0, EXP)
+			local _, again = LocomotionCore.jump(s, 0.01, EXP)
+			return ok and not again
 		end)()
 	)
 
 	check(
-		"landing gives the jumps back",
+		"there is no jump in the air",
 		(function()
-			local s = state()
-			s.AirJumpsUsed = GameConfig.Locomotion.AirJumps
-			s.GroundJumpSpent = true
-			s = LocomotionCore.step(s, 1 / 60, {
-				WantsSprint = false,
-				Moving = true,
-				Grounded = true,
-				Now = 2,
-			}, GameConfig)
-			return s.AirJumpsUsed == 0 and s.GroundJumpSpent == false
+			local s, _ = LocomotionCore.jump(state(), 0, EXP)
+			s = frame(s, 0.5, { Grounded = false })
+			local _, again = LocomotionCore.jump(s, 0.5, EXP)
+			return not again
 		end)()
 	)
 
-	-- THE COYOTE WINDOW. Walking off a walkway and jumping must spend the
-	-- GROUND jump, not the air jump -- otherwise stepping off an edge
-	-- silently costs the player their double jump.
 	check(
-		"stepping off an edge still gets the ground jump",
+		"a jump costs stamina in an expedition and nothing in the hub",
 		(function()
-			local s = state()
-			s = LocomotionCore.step(s, 1 / 60, {
-				WantsSprint = false,
-				Moving = true,
-				Grounded = false,
-				Now = GameConfig.Locomotion.CoyoteTimeSeconds * 0.5,
-			}, GameConfig)
-			return LocomotionCore.jumpKind(
-				s,
-				GameConfig.Locomotion.CoyoteTimeSeconds * 0.5,
-				GameConfig
-			) == "GROUND"
+			local exp = LocomotionCore.jump(state(), 0, EXP)
+			local hub = LocomotionCore.jump(state(HUB), 0, HUB)
+			return exp.Stamina == L.StaminaMax - EXP.JumpStaminaCost and hub.Stamina == L.StaminaMax
+		end)()
+	)
+
+	check(
+		"stepping off an edge still gets the jump (coyote window)",
+		(function()
+			local now = L.CoyoteTimeSeconds * 0.5
+			local s = frame(state(), now, { Grounded = false })
+			return LocomotionCore.canJump(s, now, EXP)
 		end)()
 	)
 
 	check(
 		"...but only for a moment",
 		(function()
-			local s = state()
-			s = LocomotionCore.step(s, 1 / 60, {
-				WantsSprint = false,
-				Moving = true,
-				Grounded = false,
-				Now = GameConfig.Locomotion.CoyoteTimeSeconds * 3,
-			}, GameConfig)
-			return LocomotionCore.jumpKind(
-				s,
-				GameConfig.Locomotion.CoyoteTimeSeconds * 3,
-				GameConfig
-			) == "AIR"
+			local now = L.CoyoteTimeSeconds * 3
+			local s = frame(state(), now, { Grounded = false })
+			return not LocomotionCore.canJump(s, now, EXP)
 		end)()
 	)
 
 	check(
-		"the coyote window does not hand out an extra jump",
+		"landing gives the jump back",
 		(function()
-			local s = state()
-			s = LocomotionCore.step(s, 1 / 60, {
+			local s = LocomotionCore.jump(state(), 0, EXP)
+			s = frame(s, 1, { Grounded = false })
+			s = frame(s, 2, { Grounded = true })
+			return LocomotionCore.canJump(s, 2, EXP)
+		end)()
+	)
+
+	check(
+		"a jump pressed just before landing fires on landing",
+		(function()
+			local s = LocomotionCore.jump(state(), 0, EXP)
+			s = frame(s, 1, { Grounded = false })
+			s = LocomotionCore.jump(s, 1, EXP) -- too early: buffered
+			local _, events = LocomotionCore.step(s, 1 / 60, {
 				WantsSprint = false,
 				Moving = true,
-				Grounded = false,
-				Now = GameConfig.Locomotion.CoyoteTimeSeconds * 0.5,
-			}, GameConfig)
-			local afterGround = select(
-				1,
-				LocomotionCore.jump(s, GameConfig.Locomotion.CoyoteTimeSeconds * 0.5, GameConfig)
-			)
-			local afterAir, kind = LocomotionCore.jump(afterGround, 0.4, GameConfig)
-			local _, third = LocomotionCore.jump(afterAir, 1.0, GameConfig)
-			return kind == "AIR" and third == nil
+				Grounded = true,
+				Now = 1 + L.JumpBufferSeconds * 0.5,
+			}, EXP)
+			return events.Jumped
+		end)()
+	)
+
+	check(
+		"...but not one pressed long before",
+		(function()
+			local s = LocomotionCore.jump(state(), 0, EXP)
+			s = frame(s, 1, { Grounded = false })
+			s = LocomotionCore.jump(s, 1, EXP)
+			local _, events = LocomotionCore.step(s, 1 / 60, {
+				WantsSprint = false,
+				Moving = true,
+				Grounded = true,
+				Now = 1 + L.JumpBufferSeconds * 3,
+			}, EXP)
+			return not events.Jumped
+		end)()
+	)
+
+	-- === roll =======================================================
+	check(
+		"a roll with a direction is a roll; without one, a backstep",
+		(function()
+			local _, a = LocomotionCore.roll(state(), 0, true, EXP)
+			local _, b = LocomotionCore.roll(state(), 0, false, EXP)
+			return a == "ROLL" and b == "BACKSTEP"
+		end)()
+	)
+
+	check(
+		"a roll moves, then recovers, then hands control back",
+		(function()
+			local s = LocomotionCore.roll(state(), 0, true, EXP)
+			local d = L.RollDurationSeconds
+			return LocomotionCore.mode(s, 0.1) == "ROLL"
+				and LocomotionCore.targetSpeed(s, 0.3, EXP) > EXP.WalkSpeed
+				and LocomotionCore.targetSpeed(s, d + 0.01, EXP) == 0
+				and LocomotionCore.mode(s, d + L.RollRecoverySeconds + 0.01) == "GROUND"
+		end)()
+	)
+
+	check(
+		"a roll costs the profile's stamina; a backstep less",
+		(function()
+			local r = LocomotionCore.roll(state(), 0, true, EXP)
+			local b = LocomotionCore.roll(state(), 0, false, EXP)
+			return r.Stamina == L.StaminaMax - EXP.RollStaminaCost and b.Stamina > r.Stamina
+		end)()
+	)
+
+	-- === the air dash (the jump dash) ==============================
+	check(
+		"roll pressed in the air is an air dash",
+		(function()
+			local air = frame(state(), 1, { Grounded = false })
+			local _, kind = LocomotionCore.roll(air, 1, false, EXP)
+			return kind == "AIRDASH"
+		end)()
+	)
+	check(
+		"one air dash per airtime",
+		(function()
+			local air = frame(state(), 1, { Grounded = false })
+			local dashed = LocomotionCore.roll(air, 1, true, EXP)
+			local later = 1 + L.AirDashDurationSeconds + 0.05
+			dashed = frame(dashed, later, { Grounded = false })
+			local ok, reason = LocomotionCore.canRoll(dashed, later, EXP)
+			return not ok and reason == "airborne"
+		end)()
+	)
+	check(
+		"landing gives the air dash back",
+		(function()
+			local air = frame(state(), 1, { Grounded = false })
+			local dashed = LocomotionCore.roll(air, 1, true, EXP)
+			local landed = frame(dashed, 2, { Grounded = true })
+			return landed.AirDashesUsed == 0
+		end)()
+	)
+	check(
+		"an air dash moves at its own speed, then hands straight back to the fall",
+		(function()
+			local air = frame(state(), 1, { Grounded = false })
+			local dashed = LocomotionCore.roll(air, 1, true, EXP)
+			local after = 1 + L.AirDashDurationSeconds + 0.001
+			return LocomotionCore.targetSpeed(dashed, 1.05, EXP) == L.AirDashSpeed
+				and LocomotionCore.mode(dashed, 1.05) == "ROLL"
+				and LocomotionCore.mode(dashed, after) == "AIR"
+		end)()
+	)
+	check(
+		"an air dash costs stamina in an expedition, nothing in the hub",
+		(function()
+			local exp = LocomotionCore.roll(frame(state(), 1, { Grounded = false }), 1, true, EXP)
+			local hubAir = frame(state(HUB), 1, { Grounded = false }, HUB)
+			local hub = LocomotionCore.roll(hubAir, 1, true, HUB)
+			return exp.Stamina == L.StaminaMax - EXP.AirDashStaminaCost
+				and hub.Stamina == L.StaminaMax
+		end)()
+	)
+	check(
+		"an air dash has no invulnerable window",
+		(function()
+			local dashed =
+				LocomotionCore.roll(frame(state(), 1, { Grounded = false }), 1, true, EXP)
+			return not LocomotionCore.isInvulnerable(dashed, 1.05, EXP)
+		end)()
+	)
+	check(
+		"a weapon lock blocks the air dash too",
+		(function()
+			local air = frame(state(), 1, { Grounded = false })
+			local locked = LocomotionCore.lock(air, 1, { DurationSeconds = 1 }, EXP)
+			return not LocomotionCore.canRoll(locked, 1.1, EXP)
+		end)()
+	)
+
+	check(
+		"no jump and no sprint during a roll: it is a commitment",
+		(function()
+			local s = LocomotionCore.roll(state(), 0, true, EXP)
+			s = frame(s, 0.1, { WantsSprint = true })
+			return not LocomotionCore.canJump(s, 0.1, EXP) and not s.Sprinting
+		end)()
+	)
+
+	check(
+		"no queue: a press during a roll is ignored, and a fresh press after it rolls",
+		(function()
+			local s = LocomotionCore.roll(state(), 0, true, EXP)
+			local mashed, kind = LocomotionCore.roll(s, 0.1, true, EXP)
+			local _, events = LocomotionCore.step(mashed, 1 / 60, {
+				WantsSprint = false,
+				Moving = true,
+				Grounded = true,
+				Now = s.RollRecoverUntil + 0.01,
+			}, EXP)
+			local _, fresh = LocomotionCore.roll(mashed, s.RollRecoverUntil + 0.02, true, EXP)
+			return kind == nil and events.Rolled == nil and fresh == "ROLL"
+		end)()
+	)
+	check(
+		"a moment off the floor still rolls, never air-dashes",
+		(function()
+			local bump = frame(state(), L.AirDashMinAirSeconds * 0.5, { Grounded = false })
+			local _, kind = LocomotionCore.roll(bump, L.AirDashMinAirSeconds * 0.5, true, EXP)
+			return kind == "ROLL"
+		end)()
+	)
+	check(
+		"turning is a smooth rotation capped per frame, not a snap",
+		(function()
+			local x, z = LocomotionCore.turnToward(1, 0, 0, 1, math.rad(10))
+			local fx, fz = LocomotionCore.turnToward(1, 0, 0.99, 0.14, math.rad(10))
+			return math.abs(math.atan2(z, x) - math.rad(10)) < 1e-9
+				and math.abs(math.atan2(fz, fx) - math.atan2(0.14, 0.99)) < 1e-9
+		end)()
+	)
+
+	check(
+		"a roll travels its set distance, easing in and out rather than bursting",
+		(function()
+			local s = LocomotionCore.roll(state(), 0, true, EXP)
+			local travelled, dt = 0, 1 / 600
+			local t = 0
+			while t < L.RollDurationSeconds do
+				travelled += LocomotionCore.targetSpeed(s, t + dt / 2, EXP) * dt
+				t += dt
+			end
+			local start = LocomotionCore.targetSpeed(s, 0.001, EXP)
+			local peak = LocomotionCore.rollPeakSpeed(EXP)
+			return math.abs(travelled - L.RollDistanceStuds) < 0.1 and start < peak * 0.6
+		end)()
+	)
+
+	-- The invulnerable window is declared for the combat layer (RESERVED).
+	check(
+		"a roll is invulnerable only inside its window",
+		(function()
+			local s = LocomotionCore.roll(state(), 0, true, EXP)
+			return not LocomotionCore.isInvulnerable(s, 0, EXP)
+				and LocomotionCore.isInvulnerable(
+					s,
+					(L.RollInvulnerableFrom + L.RollInvulnerableTo) / 2,
+					EXP
+				)
+				and not LocomotionCore.isInvulnerable(s, L.RollInvulnerableTo + 0.01, EXP)
+		end)()
+	)
+	check(
+		"a backstep's window is shorter than a roll's",
+		L.BackstepInvulnerableTo - L.BackstepInvulnerableFrom
+			< L.RollInvulnerableTo - L.RollInvulnerableFrom
+	)
+	check(
+		"the invulnerable window sits inside the roll",
+		L.RollInvulnerableTo <= L.RollDurationSeconds
+	)
+
+	-- === the weapon lock ============================================
+	check(
+		"a weapon lock roots the player by default",
+		(function()
+			local s = LocomotionCore.lock(state(), 0, { DurationSeconds = 0.5 }, EXP)
+			return LocomotionCore.mode(s, 0.1) == "LOCKED"
+				and LocomotionCore.targetSpeed(s, 0.1, EXP) == 0
+		end)()
+	)
+
+	check(
+		"a locked player cannot jump, roll or sprint unless the move allows it",
+		(function()
+			local s = LocomotionCore.lock(state(), 0, { DurationSeconds = 0.5 }, EXP)
+			return not LocomotionCore.canJump(s, 0.1, EXP)
+				and not LocomotionCore.canRoll(s, 0.1, EXP)
+				and not LocomotionCore.canStartSprint(s, 0.1, EXP)
+		end)()
+	)
+
+	check(
+		"a move can allow what it wants to allow",
+		(function()
+			local s = LocomotionCore.lock(state(), 0, {
+				DurationSeconds = 0.5,
+				SpeedMultiplier = 0.4,
+				AllowJump = true,
+				AllowRoll = true,
+			}, EXP)
+			return LocomotionCore.canJump(s, 0.1, EXP)
+				and LocomotionCore.canRoll(s, 0.1, EXP)
+				and LocomotionCore.targetSpeed(s, 0.1, EXP) == EXP.WalkSpeed * 0.4
+		end)()
+	)
+
+	check(
+		"a lock runs out on its own",
+		(function()
+			local s = LocomotionCore.lock(state(), 0, { DurationSeconds = 0.5 }, EXP)
+			s = frame(s, 0.6, {})
+			return s.Lock == nil and LocomotionCore.mode(s, 0.6) == "GROUND"
+		end)()
+	)
+
+	check(
+		"no weapon can hold movement longer than the cap",
+		(function()
+			local s = LocomotionCore.lock(state(), 0, { DurationSeconds = 3600 }, EXP)
+			return LocomotionCore.mode(s, L.MaxLockSeconds + 0.01) == "GROUND"
+		end)()
+	)
+
+	check(
+		"unlock hands movement back early",
+		(function()
+			local s = LocomotionCore.lock(state(), 0, { DurationSeconds = 1 }, EXP)
+			return LocomotionCore.mode(LocomotionCore.unlock(s), 0.1) == "GROUND"
 		end)()
 	)
 
@@ -5678,34 +5901,482 @@ do
 		"stepping does not mutate the state it was given",
 		(function()
 			local before = state()
-			LocomotionCore.step(before, 1, {
-				WantsSprint = true,
-				Moving = true,
-				Grounded = true,
-				Now = 0,
-			}, GameConfig)
-			return before.Stamina == GameConfig.Locomotion.StaminaMax
+			frame(before, 0, { WantsSprint = true })
+			LocomotionCore.roll(before, 0, true, EXP)
+			return before.Stamina == L.StaminaMax and before.RollKind == nil
 		end)()
 	)
 
-	-- PHASE SCOPE, PINNED. Movement abilities may not grow combat numbers:
-	-- a sword carries its own damage, and the day this config has a damage
-	-- field is the day that rule quietly broke.
+	-- PHASE SCOPE, PINNED. Movement may not grow combat numbers: a sword
+	-- carries its own damage, and the day this config has a damage field is
+	-- the day that rule quietly broke.
 	check(
-		"no player ability config carries a combat number",
+		"no player movement config carries a combat number",
 		(function()
-			for key in GameConfig.Locomotion do
-				local lowered = string.lower(key)
-				if
-					string.find(lowered, "damage")
-					or string.find(lowered, "attack")
-					or string.find(lowered, "crit")
-					or string.find(lowered, "dps")
-				then
-					return false
+			local function clean(tbl)
+				for key, value in tbl do
+					local lowered = string.lower(tostring(key))
+					if
+						string.find(lowered, "damage")
+						or string.find(lowered, "attack")
+						or string.find(lowered, "crit")
+						or string.find(lowered, "dps")
+					then
+						return false
+					end
+					if type(value) == "table" and not clean(value) then
+						return false
+					end
+				end
+				return true
+			end
+			return clean(GameConfig.Locomotion)
+		end)()
+	)
+end
+
+-- === character animation ==========================================
+do
+	group("Character animation")
+
+	local A = GameConfig.CharacterAnimation
+	local L = GameConfig.Locomotion
+	local EXP = LocomotionCore.tuning(GameConfig, "EXPEDITION")
+	local HUB = LocomotionCore.tuning(GameConfig, "HUB")
+	local function near(a, b)
+		return math.abs(a - b) < 1e-6
+	end
+
+	-- === the content ================================================
+	check(
+		"the shipped animation set passes its boot check",
+		(AnimationCore.validateSet(PlayerAnimations))
+	)
+	check(
+		"a typo'd slot is a boot error",
+		(function()
+			local copy = table.clone(PlayerAnimations)
+			copy.RollFoward = ""
+			return not AnimationCore.validateSet(copy)
+		end)()
+	)
+	check(
+		"a malformed id is a boot error",
+		(function()
+			local copy = table.clone(PlayerAnimations)
+			copy.Idle = "12345"
+			return not AnimationCore.validateSet(copy)
+		end)()
+	)
+	check(
+		"a missing slot is a boot error",
+		(function()
+			local copy = table.clone(PlayerAnimations)
+			copy.Idle = nil
+			return not AnimationCore.validateSet(copy)
+		end)()
+	)
+	check(
+		"a directional gait switches to clips only when all four are filled",
+		(function()
+			local set = {
+				RunForward = "rbxassetid://1",
+				RunBackward = "rbxassetid://2",
+				RunLeft = "rbxassetid://3",
+			}
+			local partial = AnimationCore.hasDirectionalSet(set, "Run")
+			set.RunRight = "rbxassetid://4"
+			return not partial and AnimationCore.hasDirectionalSet(set, "Run")
+		end)()
+	)
+	check(
+		"an empty slot falls back",
+		AnimationCore.slot({ Idle = "" }, "Idle") == nil
+			and AnimationCore.slot({ Idle = "rbxassetid://9" }, "Idle") == "rbxassetid://9"
+	)
+
+	check(
+		"the /animslot command offers exactly the real slots",
+		(function()
+			for _, c in __require("DevCommands").Commands do
+				if c.Name == "animslot" then
+					return table.concat(c.Args[1].Options, ",")
+						== table.concat(AnimationCore.SLOTS, ",")
 				end
 			end
-			return true
+			return false
+		end)()
+	)
+
+	-- === direction ==================================================
+	check(
+		"moving along your facing is forward",
+		(function()
+			local f, r = AnimationCore.localVelocity(0, -1, 0, -10)
+			return near(f, 10) and near(r, 0)
+		end)()
+	)
+	check(
+		"moving to your right is right",
+		(function()
+			-- Facing -Z, the right is +X.
+			local f, r = AnimationCore.localVelocity(0, -1, 10, 0)
+			return near(f, 0) and near(r, 10)
+		end)()
+	)
+	check("straight ahead is angle 0", near(AnimationCore.moveAngle(1, 0), 0))
+	check("right is +pi/2", near(AnimationCore.moveAngle(0, 1), math.pi / 2))
+	check("wrap keeps angles in (-pi, pi]", near(AnimationCore.wrap(3 * math.pi / 2), -math.pi / 2))
+
+	check(
+		"a pure direction is all one clip",
+		(function()
+			local w = AnimationCore.directionalWeights(math.pi / 2)
+			return near(w.Right, 1) and near(w.Forward, 0) and near(w.Left, 0)
+		end)()
+	)
+	check(
+		"a diagonal splits between its neighbours, and weights sum to 1",
+		(function()
+			local w = AnimationCore.directionalWeights(-math.pi / 4)
+			return near(w.Forward, 0.5)
+				and near(w.Left, 0.5)
+				and near(w.Forward + w.Backward + w.Left + w.Right, 1)
+		end)()
+	)
+
+	-- === the procedural strafe ======================================
+	check(
+		"strafing right turns the legs right, within the limit",
+		(function()
+			local reverse, yaw = AnimationCore.procedural(math.pi / 2, GameConfig)
+			return not reverse and near(yaw, -math.rad(A.MaxLegYawDegrees))
+		end)()
+	)
+	check(
+		"a gentle right diagonal turns the legs by the angle itself",
+		(function()
+			local reverse, yaw = AnimationCore.procedural(math.rad(30), GameConfig)
+			return not reverse and near(yaw, -math.rad(30))
+		end)()
+	)
+	check(
+		"straight back plays the clip in reverse with the legs straight",
+		(function()
+			local reverse, yaw = AnimationCore.procedural(math.pi, GameConfig)
+			return reverse and near(yaw, 0)
+		end)()
+	)
+	check(
+		"backing off to the right turns the legs from behind, never through 180",
+		(function()
+			local reverse, yaw = AnimationCore.procedural(math.rad(150), GameConfig)
+			return reverse
+				and math.abs(yaw) <= math.rad(A.MaxLegYawDegrees) + 1e-9
+				and near(yaw, math.rad(30))
+		end)()
+	)
+
+	-- === gait =======================================================
+	check("walking pace is the walk clip", AnimationCore.runBlend(A.RunFrom - 1, GameConfig) == 0)
+	check("running pace is the run clip", AnimationCore.runBlend(A.RunFull + 1, GameConfig) == 1)
+	check(
+		"between them it crossfades",
+		(function()
+			local b = AnimationCore.runBlend((A.RunFrom + A.RunFull) / 2, GameConfig)
+			return b > 0.4 and b < 0.6
+		end)()
+	)
+	check(
+		"both profiles walk at a pace that reads as a run (no half-speed shuffle)",
+		HUB.WalkSpeed >= A.RunFull and EXP.WalkSpeed >= A.RunFull
+	)
+	check(
+		"playback follows speed, within the clamp",
+		near(AnimationCore.playbackRate(A.RunClipSpeed, A.RunClipSpeed, GameConfig), 1)
+			and AnimationCore.playbackRate(1000, A.RunClipSpeed, GameConfig) == A.MaxPlaybackRate
+			and AnimationCore.playbackRate(0.01, A.RunClipSpeed, GameConfig)
+				== A.MinPlaybackRate
+	)
+	check(
+		"the running sound quickens with speed, and is capped",
+		AnimationCore.runningSoundRate(A.RunningSoundSpeed, GameConfig) == 1
+			and AnimationCore.runningSoundRate(10000, GameConfig) == A.MaxRunningSoundRate
+	)
+
+	-- === lean =======================================================
+	check(
+		"accelerating leans forward (front down), braking leans back",
+		(function()
+			local forward = AnimationCore.lean(50, 0, 1, false, GameConfig)
+			local braking = AnimationCore.lean(-50, 0, 1, false, GameConfig)
+			return forward < 0 and braking > 0
+		end)()
+	)
+	check(
+		"a sprint leans further forward",
+		(function()
+			local run = AnimationCore.lean(0, 0, 1, false, GameConfig)
+			local sprint = AnimationCore.lean(0, 0, 1, true, GameConfig)
+			return sprint < run
+		end)()
+	)
+	check(
+		"turning left banks left, and the bank is capped",
+		(function()
+			local _, bank = AnimationCore.lean(0, 100, 1, false, GameConfig)
+			return bank > 0 and near(bank, math.rad(A.MaxBankDegrees))
+		end)()
+	)
+	check(
+		"standing still never banks",
+		select(2, AnimationCore.lean(0, 5, 0, false, GameConfig)) == 0
+	)
+
+	-- === head =======================================================
+	check(
+		"the head turns toward something to the left",
+		(function()
+			local yaw = AnimationCore.headLook(-1, 0, -1, GameConfig)
+			return yaw > 0
+		end)()
+	)
+	check(
+		"the head looks up at something above, within the limit",
+		(function()
+			local _, pitch = AnimationCore.headLook(0, 10, -1, GameConfig)
+			return near(pitch, math.rad(A.MaxHeadPitchDegrees))
+		end)()
+	)
+	check(
+		"the head never snaps round to something behind it",
+		(function()
+			local yaw, pitch = AnimationCore.headLook(0.2, 0, 1, GameConfig)
+			return yaw == 0 and pitch == 0
+		end)()
+	)
+
+	-- === landing ====================================================
+	check(
+		"a step down is no landing at all",
+		AnimationCore.landing(A.SoftLandingSpeed - 1, GameConfig) == "NONE"
+	)
+	check("a normal jump lands soft", AnimationCore.landing(L.JumpPower, GameConfig) == "SOFT")
+	check("a real drop lands hard", AnimationCore.landing(L.HardLandingSpeed, GameConfig) == "HARD")
+	check(
+		"the landing dip goes down, comes back up, and ends",
+		(function()
+			local peak = AnimationCore.landingDip("HARD", A.LandingDipSeconds * 0.2, GameConfig)
+			local late = AnimationCore.landingDip("HARD", A.LandingDipSeconds * 0.9, GameConfig)
+			local done = AnimationCore.landingDip("HARD", A.LandingDipSeconds, GameConfig)
+			return near(peak, A.HardLandingDipStuds) and late > 0 and late < peak and done == 0
+		end)()
+	)
+	check(
+		"a hard landing dips further than a soft one",
+		AnimationCore.landingDip("HARD", A.LandingDipSeconds * 0.2, GameConfig)
+			> AnimationCore.landingDip("SOFT", A.LandingDipSeconds * 0.2, GameConfig)
+	)
+	check(
+		"a hard landing slows movement for a beat in an expedition",
+		(function()
+			local s = LocomotionCore.newState(EXP, 0)
+			local landed, hard = LocomotionCore.land(s, 0, L.HardLandingSpeed + 1, EXP)
+			return hard
+				and LocomotionCore.targetSpeed(landed, 0.01, EXP) < EXP.WalkSpeed
+				and LocomotionCore.targetSpeed(
+						landed,
+						EXP.HardLandingRecoverySeconds + 0.01,
+						EXP
+					)
+					== EXP.WalkSpeed
+		end)()
+	)
+	check(
+		"a normal jump's landing costs nothing",
+		(function()
+			local s = LocomotionCore.newState(EXP, 0)
+			local _, hard = LocomotionCore.land(s, 0, L.JumpPower, EXP)
+			return not hard
+		end)()
+	)
+	check(
+		"the hub recovers from a hard landing faster than an expedition",
+		HUB.HardLandingRecoverySeconds < EXP.HardLandingRecoverySeconds
+	)
+
+	-- === the roll ===================================================
+	check(
+		"a roll's direction is taken relative to facing",
+		AnimationCore.rollDirection(1, 0.2) == "FORWARD"
+			and AnimationCore.rollDirection(-1, 0.2) == "BACKWARD"
+			and AnimationCore.rollDirection(0.1, 1) == "RIGHT"
+			and AnimationCore.rollDirection(0.1, -1) == "LEFT"
+	)
+	check(
+		"four clips cover diagonals: north-east is the forward roll turned 45 degrees right",
+		near(AnimationCore.rollYaw(1, 1), -math.pi / 4)
+			and near(AnimationCore.rollYaw(1, -1), math.pi / 4)
+			and near(AnimationCore.rollYaw(1, 0), 0)
+			and math.abs(AnimationCore.rollYaw(-1, 0.99)) <= math.pi / 4 + 1e-9
+	)
+	check(
+		"a forward tumble turns the front down through one full turn",
+		(function()
+			local mid = AnimationCore.tumble("FORWARD", 0.5, GameConfig)
+			local finish = AnimationCore.tumble("FORWARD", 1, GameConfig)
+			return mid < 0 and near(finish, -2 * math.pi)
+		end)()
+	)
+	check(
+		"a backward tumble turns the other way",
+		AnimationCore.tumble("BACKWARD", 0.5, GameConfig) > 0
+	)
+	check(
+		"side rolls bank toward the side pressed",
+		select(2, AnimationCore.tumble("LEFT", 0.5, GameConfig)) > 0
+			and select(2, AnimationCore.tumble("RIGHT", 0.5, GameConfig)) < 0
+	)
+	check(
+		"a tumble dips mid-roll and lands upright at the end",
+		(function()
+			local _, _, midDip = AnimationCore.tumble("LEFT", 0.5, GameConfig)
+			local _, _, endDip = AnimationCore.tumble("LEFT", 1, GameConfig)
+			return near(midDip, L.RollTumbleDropStuds) and near(endDip, 0)
+		end)()
+	)
+	check(
+		"the roll look stays subtle",
+		L.RollWindTransparency >= 0.2 and L.RollWindSeconds <= 0.45 and L.RollFovKickDegrees <= 5
+	)
+
+	-- === turn in place ==============================================
+	check(
+		"standing and turning fast steps the feet",
+		AnimationCore.turnInPlace(0, A.TurnInPlaceRate + 1, GameConfig) > 0
+	)
+	check(
+		"moving never counts as turning in place",
+		AnimationCore.turnInPlace(10, 10, GameConfig) == 0
+	)
+
+	check(
+		"smoothing does not depend on the frame rate",
+		(function()
+			local one = AnimationCore.smoothAlpha(1 / 30, 0.1)
+			local two = AnimationCore.smoothAlpha(1 / 60, 0.1)
+			return math.abs((1 - one) - (1 - two) ^ 2) < 1e-9
+		end)()
+	)
+end
+
+-- === lock-on ========================================================
+do
+	group("Lock-on")
+
+	local T = GameConfig.LockOn
+	local function c(id, distance, angle, isVisible)
+		return { Id = id, Distance = distance, AngleRadians = angle, Visible = isVisible ~= false }
+	end
+
+	check("nothing to lock on to is nothing", LockOnCore.pick({}, GameConfig) == nil)
+	check(
+		"the thing you look at beats the thing that is merely close",
+		LockOnCore.pick({ c("near", 10, math.rad(50)), c("ahead", 40, math.rad(3)) }, GameConfig).Id
+			== "ahead"
+	)
+	check(
+		"of two straight ahead, the nearer wins",
+		LockOnCore.pick({ c("far", 60, 0), c("near", 20, 0) }, GameConfig).Id == "near"
+	)
+	check(
+		"out of range is never picked",
+		LockOnCore.pick({ c("x", T.Range + 1, 0) }, GameConfig) == nil
+	)
+	check(
+		"behind the camera is never picked",
+		LockOnCore.pick({ c("x", 10, T.MaxAngleRadians + 0.1) }, GameConfig) == nil
+	)
+	check(
+		"hidden behind a wall is never picked",
+		LockOnCore.pick({ c("x", 10, 0, false) }, GameConfig) == nil
+	)
+
+	check(
+		"a held lock stays in range and in sight",
+		not LockOnCore.shouldBreak(T.Range, 0, true, GameConfig)
+	)
+	check(
+		"a lock drops past its break range",
+		select(2, LockOnCore.shouldBreak(T.BreakRange + 1, 0, true, GameConfig)) == "range"
+	)
+	check(
+		"a lock drops after losing sight for long enough",
+		select(2, LockOnCore.shouldBreak(10, T.LostSightSeconds, true, GameConfig)) == "sight"
+	)
+	check(
+		"a lock drops when its target is gone",
+		select(2, LockOnCore.shouldBreak(10, 0, false, GameConfig)) == "gone"
+	)
+	check("a lock breaks further out than it takes", T.BreakRange > T.Range)
+	check(
+		"letting go eases the view back rather than snapping",
+		T.ReleaseBlendSeconds > 0 and T.ReleaseBlendSeconds <= 1
+	)
+	check(
+		"a tall target never pulls the camera into the sky",
+		LockOnCore.aimHeight(100, 0, GameConfig) == T.MaxAimHeight
+			and LockOnCore.aimHeight(3, 0, GameConfig) == 3
+	)
+	-- === switching ==================================================
+	local function side(id, offset, distance, isVisible)
+		return { Id = id, Offset = offset, Distance = distance or 20, Visible = isVisible ~= false }
+	end
+	check(
+		"a flick right moves to the nearest target on the right",
+		LockOnCore.switch(
+			{ side("far", 0.6), side("near", 0.2), side("left", -0.1) },
+			1,
+			GameConfig
+		).Id == "near"
+	)
+	check(
+		"a flick left moves left",
+		LockOnCore.switch({ side("right", 0.2), side("left", -0.3) }, -1, GameConfig).Id == "left"
+	)
+	check(
+		"nothing that way keeps the current lock",
+		LockOnCore.switch({ side("left", -0.3) }, 1, GameConfig) == nil
+	)
+	check(
+		"two targets almost in line do not flip-flop",
+		LockOnCore.switch({ side("inline", T.SwitchMinOffset * 0.5) }, 1, GameConfig) == nil
+	)
+	check(
+		"switching skips hidden and out-of-range targets",
+		LockOnCore.switch(
+			{ side("hidden", 0.1, 20, false), side("far", 0.15, T.Range + 1), side("ok", 0.5) },
+			1,
+			GameConfig
+		).Id == "ok"
+	)
+	check(
+		"a flick needs the full threshold, either way",
+		LockOnCore.flick(T.SwitchMousePixels, T.SwitchMousePixels) == 1
+			and LockOnCore.flick(-T.SwitchMousePixels, T.SwitchMousePixels) == -1
+			and LockOnCore.flick(T.SwitchMousePixels - 1, T.SwitchMousePixels) == 0
+	)
+	check(
+		"the stick must return to rest before a second flick",
+		T.SwitchStickRest < T.SwitchStickThreshold
+	)
+
+	check(
+		"camera smoothing does not depend on the frame rate",
+		(function()
+			local one = LockOnCore.smoothAlpha(1 / 30, T.CameraSmoothSeconds)
+			local two = LockOnCore.smoothAlpha(1 / 60, T.CameraSmoothSeconds)
+			return math.abs((1 - one) - (1 - two) ^ 2) < 1e-9
 		end)()
 	)
 end
@@ -8543,7 +9214,7 @@ do
 	check(
 		"dev registry: the SERVER commands are exactly DebugSystem's",
 		table.concat(server, ",")
-			== "atmosphere,boss,bossphase,clearboss,endevents,enter,event,givekey,god,heal,keychance,keys,leave,ledger,respawn,roll,showboss,takekey,vaultchance"
+			== "atmosphere,boss,bossphase,clearboss,dummies,endevents,enter,event,givekey,god,heal,keychance,keys,leave,ledger,respawn,roll,showboss,takekey,vaultchance"
 	)
 
 	-- a broken registry is caught

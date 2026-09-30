@@ -1,6 +1,6 @@
 # LUCKBOUND enemy framework - single headless entry point for EVERY enemy in EVERY biome.
 #
-#   blender -b --factory-startup --python assets/source/enemies/_framework/run.py -- <world> <enemy_id> [steps...]
+#   python tools/run_blender.py -b --factory-startup --python assets/source/enemies/_framework/run.py -- <world> <enemy_id> [steps...]
 #
 #   steps (any order, default = --validate --render):
 #     --validate        tri budget / rig / grounding / clipping report (framework/validate.py)
@@ -63,6 +63,7 @@ if "--anims" in STEPS:
     for a in names:
         reset_pose()
         exec(open(os.path.join(adir, a + ".py")).read(), G)
+        if G.get("CLOTH_CHAINS"): cloth_bake()                      # enemies with cloth extras (cloth_core.py)
         export_action(a)
         if "--preview" in STEPS:
             if "preview" not in G: _run("preview.py")

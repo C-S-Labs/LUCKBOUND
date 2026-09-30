@@ -173,6 +173,10 @@ There is also a Blender connector available through Claude's connector directory
 ### 3.1 Windows thumbnail safety and the shared launcher
 
 All Codex Blender operations use `python tools/run_blender.py <Blender args>`.
+The profile/thumbnail protection below applies to the managed Windows Blender
+installation. Main also contains an isolated cloud `bpy` 4.2 workflow in `cloud/`;
+that environment is not covered by the Windows protection or an authoritative
+source for regenerating the saved Verdant Valley production assets.
 Use `--interactive` as the first argument for a GUI launch. With this machine's
 bundled Python, substitute
 `C:/Users/jhpel/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe`

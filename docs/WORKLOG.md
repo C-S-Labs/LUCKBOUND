@@ -9,8 +9,11 @@ what it changed, where it stopped, and what comes next.
 
 **Writing an entry?** Add it at the **top**, under the template. Never edit or
 delete an older entry; if something turned out wrong, say so in a newer one.
+Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering and merge order.
 
 ---
+
+Integration history: main-only Sessions 91–120 retain their numbers; the main SIGIL entry is Session 121. VV-only entries become Sessions 122–202 in their original order, with original numbers recorded on each entry. Shared history is retained once. Pre-existing duplicate Sessions 70–74 are distinguished by date/title and are unchanged.
 
 ## Template
 
@@ -33,7 +36,27 @@ delete an older entry; if something turned out wrong, say so in a newer one.
 
 ---
 
-## Session 173 — 2026-09-30 — Correct Causeway collision regression and commit Blender workflow
+## Session 203 — 2026-09-30 — Reconcile frozen main with Verdant Valley
+**Merged:** pending, no commit/push   **Branch:** integration/vv-main-sync   **Tests:** 1,014/1,014 Luau; 7/7 Blender; 7 collision-verifier probes; formatting/syntax/index/forbidden-name/handoff pass; full Rojo 7.7 build passes
+
+### Done
+- Reconciled inventories, generated-index workflow and current status; retained both work histories with explicit VV numbering provenance.
+- Reviewed the six auto-merged shared files and preserved newer main systems/assets alongside coordinated VV runtime/data/assets and Blender protection.
+- Updated current production contracts and read-only collision verification; no production asset regeneration or collision behavior change.
+
+### Decisions made
+- Current saved RBXMX, calibrated metadata and refreshed import ledger are authoritative. Historical exporter outputs must not replace them.
+- Missing fidelity tokens with valid serialized physics configuration require Studio reload verification; structural validation must not claim verified physical fidelity.
+
+### Stopped at
+All four conflicts resolved and derived index regenerated. Automated checks pass; 4,033 active colliders match the refreshed ledger. 3,915 parts serialize physics without explicit fidelity tokens: strict verifier reports pending Studio evidence, not an asset defect. Local syntax compilation used pinned Luau 0.740 loadstring on 127 files; CI latest luau-analyze remains a remote check. All authoritative production assets and exclusive parent changes were compared; no production behavior/assets regenerated or rewritten. Do not commit or push; MERGE_HEAD remains frozen main 1001ec2.
+
+### Next
+1. Owner fresh Rojo/Studio movement, collision fidelity/traversal, placement and visual validation, then remote CI on a later authorized commit before main integration.
+2. Cleanup: retain original 202-part Stone rollback, old exports/staging sets, Blender/add-on recovery and owner-kept assets until owner/applicable CI prove replacement safe. No new asset iteration introduced.
+
+## Session 202 — 2026-09-30 — Correct Causeway collision regression and commit Blender workflow
+**History:** VV branch original Session 173; renumbered during integration.
 **Merged:** none   **Tests:** affected ambience group 35/35 first, full suite 908/908 next; Blender regressions 7/7; StyLua check passes
 
 ### Done
@@ -51,7 +74,8 @@ All requested test runs pass. Combined local commit authorized; no push or main 
 1. Owner normal-use/Studio checks, then applicable remote CI before any merge; main integration awaits separate direction.
 2. Cleanup: no new asset iteration introduced. Retain all 15 thumbnail trees, original add-on recovery and existing asset rollbacks until owner/applicable CI checks prove replacement safe; temporary test probes can be removed now.
 
-## Session 172 — 2026-09-30 — Centralize Blender Windows thumbnail safety
+## Session 201 — 2026-09-30 — Centralize Blender Windows thumbnail safety
+**History:** VV branch original Session 172; renumbered during integration.
 **Merged:** none   **Tests:** seven targeted Python regressions; normal-token read-only headless scene open; injected child/MCP refusal and MCP relocation; startup registration and idempotent installation
 
 ### Done
@@ -72,7 +96,8 @@ Managed headless and MCP paths tested; existing 4,886-object saved scene opened 
 2. If unconditional protection against bypass launches is required, pursue a native Blender patch; managed policy alone cannot provide it.
 3. Cleanup: retain all 15 trees and original add-on recovery until owner/applicable CI pass; then recommend removal. Original asset iterations unchanged; no new asset iteration introduced.
 
-## Session 171 — 2026-09-30 — Check Rojo malformed-file errors after saves
+## Session 200 — 2026-09-30 — Check Rojo malformed-file errors after saves
+**History:** VV branch original Session 171; renumbered during integration.
 **Merged:** none   **Tests:** XML parse of saved VV_COLLISION/VV_STRUCTURE/VV_PROP_LIBRARY; targeted Rojo 7.7 build succeeds
 
 ### Done
@@ -87,7 +112,8 @@ Saved assets are readable by Rojo now. If plugin warnings persist, disconnect/re
 1. Continue Studio checks; for subsequent large saves disconnect Rojo while saving and reconnect afterward to avoid partial reads.
 2. No obsolete check files retained; keep existing recovery/old exports until Studio/applicable CI pass.
 
-## Session 170 — 2026-09-30 — Verify prop save after Rojo warning
+## Session 199 — 2026-09-30 — Verify prop save after Rojo warning
+**History:** VV branch original Session 170; renumbered during integration.
 **Merged:** none   **Tests:** saved RBXMX XML parses; 823 meshes; all four latest mesh IDs match disk/live library
 
 ### Done
@@ -102,7 +128,8 @@ Library save is complete; owner appearance/collision checks remain pending. If s
 1. Continue fresh Play visual/collision check of both chunks.
 2. Retain MushroomSplitProps recovery and prior exports until that check/applicable CI passes; no new obsolete files added.
 
-## Session 169 — 2026-09-30 — Install Mushroom Glen and Split Meadow prop imports
+## Session 198 — 2026-09-30 — Install Mushroom Glen and Split Meadow prop imports
+**History:** VV branch original Session 169; renumbered during integration.
 **Merged:** none   **Tests:** four live import/source mappings; Blender centre/bounds match; two precise solid meshes; 823 unique active meshes; four fresh-module sizes/collision roles; 746 wind rows preserved
 
 ### Done
@@ -118,7 +145,8 @@ Owner save selected VV_PROP_LIBRARY to assets/rbxm/props/VV_PROP_LIBRARY.rbxmx, 
 1. Save the selected library and check both chunks in fresh Play.
 2. Keep MushroomSplitProps recovery and prior matching exports until Studio checks/applicable CI pass; then remove superseded copies if no longer needed. Nothing deleted.
 
-## Session 168 — 2026-09-30 — Re-export Mushroom Glen and Split Meadow props
+## Session 197 — 2026-09-30 — Re-export Mushroom Glen and Split Meadow props
+**History:** VV branch original Session 168; renumbered during integration.
 **Merged:** none   **Tests:** four FBX outputs, exact mesh-name/count checks, hashes; source invariants and saved Blender SHA unchanged
 
 ### Done
@@ -133,7 +161,8 @@ Four files ready for owner Studio import. Changed prop bounds/placement should b
 1. Owner import the four FBXs; then refresh corresponding active prop meshes/placement sizes and save VV_PROP_LIBRARY.
 2. Keep earlier matching files in verdant_valley_staging_refresh and verdant_valley_staging_validation plus existing active library until Studio appearance/placement/collision checks pass; only then remove superseded exports if no longer needed. Nothing deleted.
 
-## Session 167 — 2026-09-30 — Studio-adjustable canopy wind
+## Session 196 — 2026-09-30 — Studio-adjustable canopy wind
+**History:** VV branch original Session 167; renumbered during integration.
 **Merged:** none   **Tests:** 823 placement roles (746 Sway / 77 Static); Luau parse/content execution; targeted StyLua; generator Python compile
 
 ### Done
@@ -151,7 +180,8 @@ Fresh owner Play/catalogue visual test pending; existing Play session left runni
 1. Owner check canopy motion and strength/speed/on-off tuning.
 2. No obsolete iteration added; keep existing import recovery/export assets until prior visual/collision checks pass.
 
-## Session 166 — 2026-09-30 — Recover vanished prop library
+## Session 195 — 2026-09-30 — Recover vanished prop library
+**History:** VV branch original Session 166; renumbered during integration.
 **Merged:** none   **Tests:** restored 823 meshes; 163 refresh IDs checked (72 reapplied); 39 precise solids; 746 canopies; 12 chest components; unique names; Explorer selection
 
 ### Done
@@ -167,7 +197,8 @@ Owner Save to File of selected VV_PROP_LIBRARY at assets/rbxm/props/VV_PROP_LIBR
 1. Owner save selected Model, then restart Play/catalogue and inspect repairs.
 2. Keep recovery sources/old exports until manual checks pass. No additional obsolete duplicate left by recovery; temporary move was reversed.
 
-## Session 165 — 2026-09-30 — Install refreshed Studio meshes and corrected collision
+## Session 194 — 2026-09-30 — Install refreshed Studio meshes and corrected collision
+**History:** VV branch original Session 165; renumbered during integration.
 **Merged:** none   **Tests:** 39 import/source mappings; 165 visual size/frame checks; five changed Cliff uploaded IDs; fresh two terrain IDs; 823 placement references/sizes; 39 precise solid props; 66 Cliff/137 Cutbank counts and zero pivots
 
 ### Done
@@ -184,7 +215,8 @@ Edit mode grouped Models ready for owner re-save of VV_STRUCTURE, VV_COLLISION a
 1. Re-save all three grouped Models to IMPORT_STEPS paths. Restart Play, `/roll VERDANT_VALLEY test`, inspect colors/stump/Boss entrance and walk Cliff restored floors plus Cutbank plank gaps.
 2. Keep RefreshSources and older recovery/export/input versions until new Studio visual/collision checks and applicable CI pass. No unrelated export/asset deleted; no promotion yet.
 
-## Session 164 — 2026-09-30 — Export restored Cliff edits and repaired production kit
+## Session 193 — 2026-09-30 — Export restored Cliff edits and repaired production kit
+**History:** VV branch original Session 164; renumbered during integration.
 **Merged:** none   **Tests:** five restored Cliff source digests; 156 expected FBXs/names/hashes; 30 chunk category coverage; source invariant; 66 Cliff meshes re-import with max vertex error 0.0000138 stud; Cutbank deck present
 
 ### Done
@@ -200,7 +232,8 @@ Refreshed staging ready for owner Studio import/test; current Studio meshes stil
 1. Import only 39 files from REFRESH_IMPORT_MANIFEST, then capture IDs/update existing structures/props and replace Cliff/Cutbank templates while preserving validated placement data. All other walk collision templates stay.
 2. Studio appearance/bridge/Cliff walk validation before promotion. Retain prior staging/working exports, recovery models and input snapshots until replacement proven; no old file deleted.
 
-## Session 163 — 2026-09-30 — Cliff collision source discrepancy before refresh export
+## Session 192 — 2026-09-30 — Cliff collision source discrepancy before refresh export
+**History:** VV branch original Session 163; renumbered during integration.
 **Merged:** none   **Tests:** live Blender source digest comparison for 66 Cliff colliders; live Studio active/recovery template check
 
 ### Done
@@ -215,7 +248,8 @@ Appearance repairs and Cutbank deck are saved and ready for staging, but Cliff c
 1. Locate owner-corrected Cliff source; compare and export its actual geometry without generating replacements.
 2. Keep existing exports, current source and recovery assets until corrected staging and Studio testing pass. No new obsolete export created.
 
-## Session 162 — 2026-09-30 — Repair Studio-reported colors, openings and bridge collision in Blender
+## Session 191 — 2026-09-30 — Repair Studio-reported colors, openings and bridge collision in Blender
+**History:** VV branch original Session 162; renumbered during integration.
 **Merged:** none   **Tests:** color preflight on production only; 4,824 unrelated object hashes unchanged; six-plank deck bounds; Boss walking vertices unchanged; targeted backface-culling previews
 
 ### Done
@@ -233,7 +267,8 @@ Blender source repairs saved. Updated FBX staging/re-import and Studio appearanc
 1. Review Blender repairs, then use existing production exporter to stage changed visuals and Cutbank collision for Studio refresh. Preserve validated placement mappings/chest overrides during any ID refresh.
 2. Keep fresh input backup, earlier FBXs/RBXMXs and recovery models until updated Studio appearance/walk tests pass. No production export deleted or overwritten. Intermediate review snapshot/diagnostic image may be removed after source/Studio validation.
 
-## Session 161 — 2026-09-30 — Correct two chest chunk assignments
+## Session 190 — 2026-09-30 — Correct two chest chunk assignments
+**History:** VV branch original Session 161; renumbered during integration.
 **Merged:** none   **Tests:** six corrected component bounds; four chest roles per intended chunk; 823 rows retained; targeted StyLua/Python checks
 
 ### Done
@@ -249,7 +284,8 @@ Owner restart Play and inspect all three chests. No re-import or RBXMX re-save n
 1. Verify Treasure Hollow/Cave Mouth chests sit with their loot sacks and Crossroads chest remains correct.
 2. Keep recovery models and earlier exports until this visual check passes; no additional obsolete asset or duplicate created.
 
-## Session 160 — 2026-09-30 — Correct calibrated prop placement frames
+## Session 189 — 2026-09-30 — Correct calibrated prop placement frames
+**History:** VV branch original Session 160; renumbered during integration.
 **Merged:** none   **Tests:** live MCP capture of all 30 terrain rotations; 823 generated transform comparisons; Python syntax; targeted StyLua
 
 ### Done
@@ -267,7 +303,8 @@ Ready for owner restart Play and catalogue check. No re-import or RBXMX re-save 
 1. Restart Play and `/roll VERDANT_VALLEY test`; compare props/canopies with terrain.
 2. Keep recovery models, earlier exports and Stone rollback until the placement test passes. No older asset deleted; captured source-centre audit retained in staging as read-only diagnostic.
 
-## Session 159 — 2026-09-30 — Wire completed production imports for testing
+## Session 188 — 2026-09-30 — Wire completed production imports for testing
+**History:** VV branch original Session 159; renumbered during integration.
 **Merged:** none   **Tests:** source/import matching; fresh Studio chunk/prop schema; 30 asset ID/size/template checks; 823 placement/library checks; 39 precise collision checks; StyLua 2.0.2 on changed content
 
 ### Done
@@ -287,7 +324,8 @@ Studio edit mode ready for owner save of VV_STRUCTURE, VV_COLLISION and new VV_P
 1. Owner save Models to paths in IMPORT_STEPS, restart Play, catalogue entry and walk (especially Cliff and joined solid props). Watch for bounds/rotation/spawn/asset-access issues; then targeted fixes.
 2. Cleanup: aggregate duplicate Studio imports removed with owner authorization; recovery models and earlier FBX/RBXMX/staging/reports are retained until manual Studio testing and applicable CI prove safe replacement. Do not delete parked assets or Stone rollback. No repo asset file deleted.
 
-## Session 158 — 2026-09-30 — Functionality first; duplicate-import clarification
+## Session 187 — 2026-09-30 — Functionality first; duplicate-import clarification
+**History:** VV branch original Session 158; renumbered during integration.
 **Merged:** none   **Tests:** read-only Studio root-model/mesh counts; documentation only
 
 ### Done
@@ -305,7 +343,8 @@ Owner importing/testing. Black prop regions and Cliff Passage structure appearan
 1. Owner tests functionality after redundant combined imports are excluded from the test. Only Cliff Passage collision needed this update; other walk collision imports stay as-is.
 2. Later: resolve colors/textures and validate Studio appearance, then promote. Cleanup: combined imported models and earlier staging sets are redundant/superseded candidates; retain until tests/CI establish safe replacement. No files or models deleted.
 
-## Session 157 — 2026-09-30 — Targeted Cliff Passage export-color repair
+## Session 186 — 2026-09-30 — Targeted Cliff Passage export-color repair
+**History:** VV branch original Session 157; renumbered during integration.
 **Merged:** none   **Tests:** read-only Studio MeshPart inspection; live source color audit; 3 target exports; FBX color-array and identical vertex/polygon/normal checks
 
 ### Done
@@ -324,7 +363,8 @@ Color-check solid-props FBX ready for owner visual comparison. Broader affected-
 1. Owner Studio test of color-check path_cliff_passage_solid_props.fbx, then targeted export refresh for other affected objects if confirmed.
 2. Cleanup: keep earlier staging sets, working FBX/RBXMX, manifests and recovery snapshots until Studio validation/applicable CI prove replacement. Nothing deleted; earlier color-defective staging marked not for promotion.
 
-## Session 156 — 2026-09-30 — Complete production staging export
+## Session 185 — 2026-09-30 — Complete production staging export
+**History:** VV branch original Session 156; renumbered during integration.
 **Merged:** none   **Tests:** strict 30-chunk preflight; exact binary FBX mesh-name checks for 156 files; source invariants; 76 working export hashes unchanged; Cliff Passage vertex re-import; current live collision digest match
 
 ### Done
@@ -343,7 +383,8 @@ Complete staging set and manifests ready for owner Studio size/orientation/mater
 1. Owner Studio validation, then targeted corrections if needed and promotion only after confirmation.
 2. Cleanup: first material-warning staging set is superseded; remove it only after Studio validation and applicable CI. Keep all previous production FBX/RBXMX files, collision reports/manifests and recovery inputs until safe replacement is proven. No deletion performed; legacy exporter retained.
 
-## Session 155 — 2026-09-30 — Production-scene staging exporter
+## Session 184 — 2026-09-30 — Production-scene staging exporter
+**History:** VV branch original Session 155; renumbered during integration.
 **Merged:** none   **Tests:** Python syntax; headless preflight; live read-only empty-mesh confirmation
 
 ### Done
@@ -361,7 +402,8 @@ Initial preflight found three entirely empty Longgrass Meadow canopy meshes: chu
 1. Resolve empty-placeholder handling, run staging export, then owner Studio validation before promotion. No runtime assets/IDs changed.
 2. Cleanup: retain all prior FBX/RBXMX exports, collision reports, manifests and Blender recovery files until Studio and applicable CI prove replacement safe. No older assets deleted; legacy exporter retained.
 
-## Session 154 — 2026-09-30 — Verdant Valley prop export consolidation
+## Session 183 — 2026-09-30 — Verdant Valley prop export consolidation
+**History:** VV branch original Session 154; renumbered during integration.
 **Merged:** none   **Tests:** source syntax executed in Blender; per-element join checks; 4,836 protected object digests; exact source accounting; saved scene confirmed
 
 ### Done
@@ -381,7 +423,8 @@ Current live `VerdantValley_Cleanup.blend` saved, 4,896 scene objects. Connector
 1. Owner Blender review, then Studio import/visual/material/color/pivot validation before replacing any production assets. Review the six retained objects and earlier unresolved normals cases.
 2. Cleanup: the separate ordinary source props are superseded in the live scene; recover them from the retained input. Keep that backup and all earlier FBX/RBXMX exports, manifests and kept assets until owner review, Studio checks and applicable CI prove safe replacement. No production asset or manifest entry replaced/deleted.
 
-## Session 153 — 2026-09-30 — Full Verdant Valley normals validation and repair
+## Session 182 — 2026-09-30 — Full Verdant Valley normals validation and repair
+**History:** VV branch original Session 153; renumbered during integration.
 **Merged:** none   **Tests:** two full-scene winding/topology scans, candidate self-intersection/nesting screening, 26-direction exterior probes, 7,987 preserved-object invariants, four exterior front/back diagnostic views
 
 ### Done
@@ -400,7 +443,8 @@ Saved the current `VerdantValley_Cleanup.blend`. Second full-scene scan found ze
 1. Review listed ambiguous objects in Blender; resolve intended surfaces before consolidation. Do not start joining/export grouping as part of this task.
 2. Keep `VerdantValley_Normals_Input.blend`, normals audit/repair JSON and `Normals_Review/` until Blender review and eventual Studio verification pass. No production asset or manifest entry replaced; no older files removed.
 
-## Session 152 — 2026-09-30 — Cliff Passage annotated-zone environmental finish
+## Session 181 — 2026-09-30 — Cliff Passage annotated-zone environmental finish
+**History:** VV branch original Session 152; renumbered during integration.
 **Merged:** none   **Tests:** Python parse, full prop-bound zoning, linked-mesh provenance, cliff contact probes, 7,916 protected-object hashes, eleven saved-source views
 
 ### Done
@@ -421,7 +465,8 @@ Saved-source overhead, both passage directions, both yellow strips, both wall fe
 1. Owner checks yellow dressing, upper/rear density and vine treatment in Blender. On export, retain nonsolid classification; confirm no gameplay collision in Studio.
 2. Keep `VerdantValley_Cliff_Zones_Input.blend`, earlier `VerdantValley_Cliff_Environment_Input.blend`, `Cliff_Environment_Review/` and the old record until Blender/Studio checks pass; then remove superseded environmental review artifacts if unneeded. No production asset/manifest entry replaced. Preserve Temp sources and owner-kept references.
 
-## Session 151 — 2026-09-29 — Continuous Cliff Passage rock faces
+## Session 180 — 2026-09-29 — Continuous Cliff Passage rock faces
+**History:** VV branch original Session 151; renumbered during integration.
 **Merged:** none   **Tests:** Python parse, seam/topology/connectedness/clearance sanity checks, 7,911 protected-object hashes, ten review views
 
 ### Done
@@ -440,7 +485,8 @@ Owner Blender review next. Contact sheet: `Cliff_Continuous_Review/Review.jpg`. 
 1. Owner checks the continuous surface in Blender; Studio/export/clearance and walk review follow approval.
 2. After owner and Studio checks pass, remove superseded detail, structure, selective and unused hierarchy review artifacts, redundant candidate copies and rollback inputs if no longer needed. Keep them until then. No production asset or manifest entry replaced.
 
-## Session 150 — 2026-09-29 — Cliff Passage selective repetition refinement
+## Session 179 — 2026-09-29 — Cliff Passage selective repetition refinement
+**History:** VV branch original Session 150; renumbered during integration.
 **Merged:** none   **Tests:** Python parse, topology/material/boundary checks, 7,911 protected-object hashes, four paired player-height views
 
 ### Done
@@ -457,7 +503,8 @@ Saved source ready for owner review. Four before/after player-height pairs in `C
 1. Owner Blender review, then eventual Studio/export/walk validation.
 2. Keep `VerdantValley_Cliff_Selective_Input.blend`, previous structure/detail/hierarchy review artifacts and rollback inputs until those checks pass; remove superseded references only afterwards. No production asset or manifest entry superseded.
 
-## Session 149 — 2026-09-29 — Cliff Passage major rock structure
+## Session 178 — 2026-09-29 — Cliff Passage major rock structure
+**History:** VV branch original Session 149; renumbered during integration.
 **Merged:** none   **Tests:** Python parse, 7,911 protected-object hashes, crest/boundary/triangle checks, path clearance, 14 saved-source views
 
 ### Done
@@ -477,7 +524,8 @@ Saved and ready for owner Blender review; eventual Studio/export, collision alig
 1. Owner inspects the formations through the passage at player height.
 2. After Blender approval and Studio/export/walk validation, remove superseded `Cliff_Detail_Review` previews, `Cliff_Detail_Record.json`, redundant candidate/backups and rollback inputs if no longer needed. Keep them until then. No production asset or manifest entry was superseded.
 
-## Session 148 — 2026-09-29 — Cliff Passage exposed-face detail
+## Session 177 — 2026-09-29 — Cliff Passage exposed-face detail
+**History:** VV branch original Session 148; renumbered during integration.
 **Merged:** none   **Tests:** Python parse, protected-object hashes, boundary counts, saved-source overview/both passage directions
 
 ### Done
@@ -495,7 +543,8 @@ Ready for owner Blender review; later Studio/export and walk checks pending.
 1. Owner reviews the saved exposed faces.
 2. Retain `VerdantValley_Cliff_Detail_Input.blend` and earlier references until owner/Studio validation, then remove superseded previews and rollback files. No new production asset or manifest iteration created.
 
-## Session 147 — 2026-09-29 — Remaining Cliff Passage grass patch
+## Session 176 — 2026-09-29 — Remaining Cliff Passage grass patch
+**History:** VV branch original Session 147; renumbered during integration.
 **Merged:** none   **Tests:** five-face material-only equality/protected-object checks, saved-source close render, parse
 
 ### Done
@@ -512,7 +561,8 @@ Saved and ready for owner review. Production exports unchanged.
 1. Owner checks the marked spot in Blender.
 2. Retain earlier material/source rollback and review files until owner and Studio validation; remove obsolete previews afterward. No new production assets were left behind.
 
-## Session 146 — 2026-09-29 — Cliff Passage material finish
+## Session 175 — 2026-09-29 — Cliff Passage material finish
+**History:** VV branch original Session 146; renumbered during integration.
 **Merged:** none   **Tests:** exact geometry/shading preservation, 7,912 protected-object hashes, saved-source three-view review, parse
 
 ### Done
@@ -530,7 +580,8 @@ Saved-source visual review complete; owner Blender review and eventual Studio/ex
 1. Owner reviews the three-view contact sheet and live scene.
 2. Keep material input and earlier rollback sources until owner/Studio validation; then remove obsolete review renders and superseded candidates only after reference checks.
 
-## Session 145 — 2026-09-29 — Remove stray Cliff Passage seam edges
+## Session 174 — 2026-09-29 — Remove stray Cliff Passage seam edges
+**History:** VV branch original Session 145; renumbered during integration.
 **Merged:** none   **Tests:** surface-face equality, protected-object hashes, zero loose/open edges, parse
 
 ### Done
@@ -548,7 +599,8 @@ Saved source ready for owner viewport review. Production exports and collision u
 1. Owner checks the marked seam/end areas in the live Blender viewport.
 2. Keep `VerdantValley_Cliff_Edge_Input.blend` and older rollback sources until owner review and eventual Studio validation pass; then remove superseded previews and temporary diagnostics if unneeded. No production asset, manifest entry or surface geometry replaced.
 
-## Session 144 — 2026-09-29 — Restore complete cliff faces and green terrain
+## Session 173 — 2026-09-29 — Restore complete cliff faces and green terrain
+**History:** VV branch original Session 144; renumbered during integration.
 **Merged:** none   **Tests:** closed cliff edges, parse, mesh budget, protected/path geometry comparison, saved-source overview and both ends
 
 ### Done
@@ -567,7 +619,8 @@ Current live source saved; owner Blender review and eventual Studio/export check
 1. Owner reviews restored cliff surfaces and green ends.
 2. Retain `VerdantValley_Cliff_Face_Input.blend` and earlier rollback sources until owner/Studio checks pass; then remove obsolete brown-bank previews and temporary render/check helpers if unneeded. No production asset or manifest replaced.
 
-## Session 143 — 2026-09-29 — Repair owner-adjusted Cliff Passage seams
+## Session 172 — 2026-09-29 — Repair owner-adjusted Cliff Passage seams
+**History:** VV branch original Session 143; renumbered during integration.
 **Merged:** none   **Tests:** parse, mesh budgets/finite coordinates, saved-source protected hashes/path geometry/cliff transforms, two-end and overview renders
 
 ### Done
@@ -587,7 +640,8 @@ Source ready for owner Blender review. Production export/RBXMX/collision unchang
 1. Owner reviews both ends and dirt banks in Blender, then eventual Studio/export alignment check.
 2. Keep `VerdantValley_Cliff_Seam_Input.blend`, `Cliff_Seam_Repair_Record.json` and review images until approval/Studio validation. After that, remove superseded ridge previews and temporary inspection/render/check helpers if unneeded. Earlier visual FBX and rollback scenes remain retained; no production asset or manifest replaced.
 
-## Session 142 — 2026-09-29 — Rebuild Cliff Passage long ridges
+## Session 171 — 2026-09-29 — Rebuild Cliff Passage long ridges
+**History:** VV branch original Session 142; renumbered during integration.
 **Merged:** none   **Tests:** parse, finite coordinates, mesh budgets, saved-source protected hashes/path face comparison, matching-angle before/after render
 
 ### Done
@@ -606,7 +660,8 @@ Final source saved and loaded in Blender. Owner visual review and eventual Studi
 1. Owner reviews both long ridges in Blender; Studio check before production replacement.
 2. Keep `VerdantValley_Cliff_Ridge_Input.blend`, inspection mesh JSON, operation record and before/after previews until approval and Studio checks. Then remove temporary inspection/render helpers and superseded previews if unneeded. The earlier one-chunk visual FBX is stale relative to this source; retain until a reviewed replacement passes Studio. No manifest or production assets replaced; `smooth_cliff_passage_lips.py` remains historical and must not be reapplied to the rebuilt strip.
 
-## Session 141 — 2026-09-29 — Smooth Windward Ridge center patch
+## Session 170 — 2026-09-29 — Smooth Windward Ridge center patch
+**History:** VV branch original Session 141; renumbered during integration.
 **Merged:** none   **Tests:** finite coordinates, mesh budget, protected-object hashes, saved-source close render
 
 ### Done
@@ -624,7 +679,8 @@ Saved Blender source ready for owner visual review. Production assets/collision 
 1. Owner reviews center and transition in Blender. Eventual Studio/export and collision alignment checks remain before rollout.
 2. Retain `VerdantValley_Windward_Patch_Input.blend`, operation record and `Windward_Patch_After.png` until approval and Studio checks; then remove superseded rollback/preview artifacts if unneeded. No production exports or manifest entries replaced.
 
-## Session 140 — 2026-09-29 — Support Crossroads roof and detail stone base
+## Session 169 — 2026-09-29 — Support Crossroads roof and detail stone base
+**History:** VV branch original Session 140; renumbered during integration.
 **Merged:** none   **Tests:** parse, roof bearing overlap, protected-object hashes, mesh budget, saved-source front/side renders
 
 ### Done
@@ -644,7 +700,8 @@ Saved `VerdantValley_Cleanup.blend` ready for owner review. No production or Stu
 ### Next
 1. Owner checks roof contact and stone detail. Retain `VerdantValley_Shelter_Support_Input.blend` and earlier rollbacks/previews until approval and eventual Studio checks, then remove superseded artifacts if unneeded. No production exports or manifest entries were replaced.
 
-## Session 139 — 2026-09-29 — Close chest lid panel gaps
+## Session 168 — 2026-09-29 — Close chest lid panel gaps
+**History:** VV branch original Session 139; renumbered during integration.
 **Merged:** none   **Tests:** expected panel-edge positions, unchanged other vertices/object hashes, saved-source close render
 
 ### Done
@@ -660,7 +717,8 @@ Saved correction ready for owner review; no production assets changed.
 ### Next
 1. Owner checks lid seams. Keep `VerdantValley_Lid_Seam_Input.blend` and earlier rollback/previews until approval and eventual Studio checks, then remove superseded artifacts if unneeded. No production exports or manifest entries were replaced.
 
-## Session 138 — 2026-09-29 — Matching chest inner planks and casually tossed sack
+## Session 167 — 2026-09-29 — Matching chest inner planks and casually tossed sack
+**History:** VV branch original Session 138; renumbered during integration.
 **Merged:** none   **Tests:** parse, original exterior vertex/face/bounds equality, protected-object hashes, sack cavity bounds/floor seating, open/closed renders, pixel-identical closed exterior
 
 ### Done
@@ -680,7 +738,8 @@ Saved interior refinement ready for owner Blender review. No production or Studi
 1. Owner reviews inner plank readability and tossed sack pose.
 2. Keep `VerdantValley_Chest_Interior_Input.blend` and earlier backups/previews until owner approval and eventual Studio checks; then remove obsolete artifacts if unneeded. No production files or manifest entries were superseded.
 
-## Session 137 — 2026-09-29 — Smaller opening chests and center-facing Crossroads shelter
+## Session 166 — 2026-09-29 — Smaller opening chests and center-facing Crossroads shelter
+**History:** VV branch original Session 137; renumbered during integration.
 **Merged:** none   **Tests:** parse, protected-object hashes, hollow-interior floor probes, hinge/open-pose renders, route/boundary bounds, saved-source close/overhead review
 
 ### Done
@@ -702,7 +761,8 @@ Saved source ready for owner Blender review. No production export or Studio chan
 1. Owner checks chest size, side details/open interior and shelter orientation/planting.
 2. Retain `VerdantValley_Loot_Chest_Input.blend`, earlier landmark reference, `.blend1` and earlier previews until visual approval and later Studio checks; then remove superseded artifacts if unneeded. No production files or manifest entries were replaced.
 
-## Session 136 — 2026-09-29 — Owner cleanup reference and four landmark refinements
+## Session 165 — 2026-09-29 — Owner cleanup reference and four landmark refinements
+**History:** VV branch original Session 136; renumbered during integration.
 **Merged:** none   **Tests:** Python parse, protected-object hashes, cave topology equality, chest foot contact, route/boundary bounds, saved-source overhead/feature renders
 
 ### Done
@@ -726,7 +786,8 @@ Four requested refinements saved in `E:/BlenderAIProjects/Projects/VerdantValley
 1. Owner reviews focal oak, chest detail, cave interior and Crossroads shelter; refine only requested follow-up areas.
 2. Keep `VerdantValley_Landmark_Refinement_Input.blend`, old references and `.blend1` rollback until visual approval and eventual Studio checks, then remove obsolete backups/previews if unneeded. No production files, exports or manifest entries were superseded by this pass.
 
-## Session 135 — 2026-09-29 — Refresh owner reference and audit all chunks
+## Session 164 — 2026-09-29 — Refresh owner reference and audit all chunks
+**History:** VV branch original Session 135; renumbered during integration.
 **Merged:** none   **Tests:** read-only mesh contact/intersection checks on all 30 chunks, overhead/route review, 56 candidate groups in two close views, live/reference hashes
 
 ### Done
@@ -746,7 +807,8 @@ Report ready for owner review; scene untouched.
 1. Owner chooses the follow-up correction scope using exact names and locations in `GEOMETRY_REVIEW.md`.
 2. Keep the refreshed review reference for follow-up. Prior composition/flowering previews and rollback blends are historical; retain backups until approved replacement and eventual Studio checks, then remove superseded artifacts if unneeded. No production files were replaced.
 
-## Session 134 — 2026-09-29 — Seat flowering-tree bark marks
+## Session 163 — 2026-09-29 — Seat flowering-tree bark marks
+**History:** VV branch original Session 134; renumbered during integration.
 **Merged:** none   **Tests:** bark-face projection, protected-object digest, unchanged non-scar trunk vertices, saved-source render
 
 ### Done
@@ -762,7 +824,8 @@ Saved correction ready for owner Blender review; refreshed feature/chunk/overhea
 ### Next
 1. Owner checks bark contact. Keep `Flowering_Tree_Bark_Input.blend` until visual approval and eventual Studio checks, then remove if unneeded; earlier rollback files remain pending their own checks.
 
-## Session 133 — 2026-09-29 — Longgrass flowering centerpiece
+## Session 162 — 2026-09-29 — Longgrass flowering centerpiece
+**History:** VV branch original Session 133; renumbered during integration.
 **Merged:** none   **Tests:** protected-object digest, finite geometry, placement/route/boundary checks, saved-source render review
 
 ### Done
@@ -781,7 +844,8 @@ Saved `VerdantValley_Extra_Details_Backup.blend`, ready for owner Blender review
 1. Owner reviews the flowering centerpiece; eventual production export needs a Studio visual check.
 2. Keep `VerdantValley_Flowering_Tree_Input.blend` and `Flowering_Tree_Before/` until those checks confirm replacement, then remove if unneeded. Retain prior collision/composition rollback references pending their own checks.
 
-## Session 132 — 2026-09-29 — Loosen Verdant Valley dressing distribution
+## Session 161 — 2026-09-29 — Loosen Verdant Valley dressing distribution
+**History:** VV branch original Session 132; renumbered during integration.
 **Merged:** none   **Tests:** preservation digest, finite meshes, local support, footprint/route bounds, saved-scene render review
 
 ### Done
@@ -800,7 +864,8 @@ Saved live source ready for owner review; new renders in external `Composition_S
 1. Owner reviews wider distribution; iterate reported areas only.
 2. Keep clustered rollback `VerdantValley_Composition_Clustered.blend`, `VerdantValley_Clustered_Overview.png` and `Composition_After/` until owner review and eventual Studio visual checks confirm replacement, then remove if unneeded. Retain earlier rollback/collision references.
 
-## Session 131 — 2026-09-29 — Remaining Verdant Valley composition pass
+## Session 160 — 2026-09-29 — Remaining Verdant Valley composition pass
+**History:** VV branch original Session 131; renumbered during integration.
 **Merged:** none   **Tests:** Python syntax, original-object digest, finite meshes, bounds/route clearances, saved-scene renders
 
 ### Done
@@ -822,7 +887,8 @@ Saved Blender composition pass and visual review complete; owner visual review n
 1. Owner reviews the live 24-chunk additions; iterate only reported placements.
 2. Retain `VerdantValley_Composition_Input.blend`, before renders and prior backups until owner review and eventual Studio visual validation. No production assets were superseded; temporary review helpers may be removed after validation (listed in COMPOSITION_REVIEW.md).
 
-## Session 130 — 2026-09-29 — Complete the Temp flowering tree
+## Session 159 — 2026-09-29 — Complete the Temp flowering tree
+**History:** VV branch original Session 130; renumbered during integration.
 **Merged:** none   **Tests:** relative-transform check and all existing object transforms preserved
 
 ### Done
@@ -838,7 +904,8 @@ Complete Temp flowering tree ready for owner review.
 ### Next
 1. Owner checks the complete tree. No replaced assets or new cleanup leftovers from this correction; retain earlier backups pending review.
 
-## Session 129 — 2026-09-29 — Lantern join cleanup and reusable flowering trunk
+## Session 158 — 2026-09-29 — Lantern join cleanup and reusable flowering trunk
+**History:** VV branch original Session 129; renumbered during integration.
 **Merged:** none   **Tests:** live preservation digest, finite vertices, saved-scene reopen/render   **Branch:** current checkout
 
 ### Done
@@ -856,7 +923,8 @@ Saved authoring scene ready for owner visual review. No production exports or St
 ### Next
 1. Owner reviews the revised lantern and Temp trunk. Retain earlier review images, `.blend1` backup, and existing imports until visual review and later Studio confirmation establish safe replacement.
 
-## Session 128 — 2026-09-29 — Spread scenery and distinguish the four review chunks
+## Session 157 — 2026-09-29 — Spread scenery and distinguish the four review chunks
+**History:** VV branch original Session 128; renumbered during integration.
 **Merged:** none   **Tests:** saved-scene reopen, protected geometry digest, path bounds, review contact sheets   **Branch:** current checkout
 
 ### Done
@@ -876,7 +944,8 @@ The current saved Blender scene is ready for owner review. No production exports
 1. Owner inspect the four chunks, feature placements and the reusable Temp lantern in Blender.
 2. Keep `.blend1`, previous scenery review PNGs and existing Studio imports until the new review and later Studio checks confirm replacement; then retire obsolete previews.
 
-## Session 127 — 2026-09-29 — Restore finalized Cliff Passage collision in Studio
+## Session 156 — 2026-09-29 — Restore finalized Cliff Passage collision in Studio
+**History:** VV branch original Session 127; renumbered during integration.
 **Merged:** none   **Tests:** Studio collection and part checks   **Branch:** current checkout
 
 ### Done
@@ -896,7 +965,8 @@ The live Studio `VV_COLLISION` collection contains 29 templates. The owner still
 
 ---
 
-## Session 126 — 2026-09-29 — Four-chunk scenery fill and Treasure Hollow lantern
+## Session 155 — 2026-09-29 — Four-chunk scenery fill and Treasure Hollow lantern
+**History:** VV branch original Session 126; renumbered during integration.
 **Merged:** none   **Tests:** Blender save/reopen, four top previews and lantern close-up, object-count/path checks, excluded-chunk digest comparison   **Branch:** current checkout
 
 ### Done
@@ -914,7 +984,8 @@ The four edited chunks are ready for owner Blender review. No FBX, RBXMX or Stud
 1. Owner inspect the four chunks and the lantern in Blender; adjust density or placement based on that review.
 2. Keep the `.blend1` backup, the first Treasure Hollow preview and existing Studio assets until owner visual review and a later Studio check confirm replacement.
 
-## Session 125 — 2026-09-29 — Treasure Hollow side-pocket scenery
+## Session 154 — 2026-09-29 — Treasure Hollow side-pocket scenery
+**History:** VV branch original Session 125; renumbered during integration.
 **Merged:** none   **Tests:** Blender save/reopen, placement count and path-clearance check, top preview   **Branch:** current checkout
 
 ### Done
@@ -931,7 +1002,8 @@ The saved Blender scene and top preview are ready for owner visual review. No St
 1. Owner inspect Treasure Hollow in Blender and request placement or density adjustments if needed.
 2. Keep the `.blend1` backup and existing Studio meshes until visual review and any later Studio check confirm replacement.
 
-## Session 124 — 2026-09-29 — Smooth Cliff Passage's grass-to-rock seam
+## Session 153 — 2026-09-29 — Smooth Cliff Passage's grass-to-rock seam
+**History:** VV branch original Session 124; renumbered during integration.
 **Merged:** none   **Tests:** Blender save/export, side preview, targeted file checks   **Branch:** current checkout
 
 ### Done
@@ -948,7 +1020,8 @@ The current Blender scene and replacement visual FBX are ready for owner visual 
 1. Owner inspect the marked upper and lower problem areas in Blender, then reimport the Cliff Passage visual if acceptable.
 2. Retain the `.blend1` backup and old Studio mesh until that visual review and Studio walk confirm replacement.
 
-## Session 123 — 2026-09-29 — Cliff Passage upper terrain seam
+## Session 152 — 2026-09-29 — Cliff Passage upper terrain seam
+**History:** VV branch original Session 123; renumbered during integration.
 **Merged:** none   **Tests:** Blender save/export and targeted geometry checks   **Branch:** current checkout
 
 ### Done
@@ -965,7 +1038,8 @@ The scene and replacement visual FBX are saved. Owner Blender review and Studio 
 1. Owner inspect both upper seams in Blender and reimport the refreshed Cliff Passage visual in Studio if approved.
 2. Keep the previous `.blend1` scene and prior Studio mesh until visual and walk checks confirm replacement; then consider cleanup.
 
-## Session 122 — 2026-09-29 — Complete Verdant Valley scenery separation
+## Session 151 — 2026-09-29 — Complete Verdant Valley scenery separation
+**History:** VV branch original Session 122; renumbered during integration.
 **Merged:** none   **Tests:** Blender component/transform conservation and protected-object digest checks   **Branch:** current checkout
 
 ### Done
@@ -985,7 +1059,8 @@ The complete scene is saved for owner visual review. No production RBXMX, collis
 
 ---
 
-## Session 121 — 2026-09-29 — Three-chunk scenery classification pilot
+## Session 150 — 2026-09-29 — Three-chunk scenery classification pilot
+**History:** VV branch original Session 121; renumbered during integration.
 **Merged:** none   **Tests:** Blender component conservation, save/reopen, collection and collision checks   **Branch:** current checkout
 
 ### Done
@@ -1005,7 +1080,8 @@ The three-chunk pilot is saved for owner visual review. No other chunks were sep
 
 ---
 
-## Session 120 — 2026-09-29 — Align Blender collision with visual chunks
+## Session 149 — 2026-09-29 — Align Blender collision with visual chunks
+**History:** VV branch original Session 120; renumbered during integration.
 **Merged:** none   **Tests:** Blender save/reopen, one-to-one transform and mesh-data checks   **Branch:** current checkout
 
 ### Done
@@ -1025,7 +1101,8 @@ The corrected scene is saved for owner visual inspection. No gameplay or Studio 
 
 ---
 
-## Session 119 — 2026-09-29 — Verdant Valley Blender collection parity
+## Session 148 — 2026-09-29 — Verdant Valley Blender collection parity
+**History:** VV branch original Session 119; renumbered during integration.
 **Merged:** none   **Tests:** Blender save/reopen and collection/count checks   **Branch:** current checkout
 
 ### Done
@@ -1045,7 +1122,8 @@ The scene is saved and reopens with the expected four roots and collider counts.
 
 ---
 
-## Session 118 — 2026-09-29 — Cliff Passage corridor and crest candidate
+## Session 147 — 2026-09-29 — Cliff Passage corridor and crest candidate
+**History:** VV branch original Session 118; renumbered during integration.
 **Merged:** none   **Tests:** Blender generation, complete-tile/manifold and output count checks   **Branch:** current checkout
 
 ### Done
@@ -1066,7 +1144,8 @@ The owner needs to save `VV_STRUCTURE` and `VV_COLLISION` as RBXMX, then do the 
 
 ---
 
-## Session 117 — 2026-09-29 — Seven reported-panel collision replacements
+## Session 146 — 2026-09-29 — Seven reported-panel collision replacements
+**History:** VV branch original Session 117; renumbered during integration.
 **Merged:** none   **Tests:** current-scene Blender generation, targeted Studio panel probes, 3,848-part RBXMX verification, Stone MeshId/transform check, Rojo build   **Branch:** `codex/vv-stone-collision-merge`
 
 ### Done
@@ -1087,7 +1166,8 @@ The saved combined `VV_COLLISION.rbxmx` contains all seven replacements and veri
 
 ---
 
-## Session 116 — 2026-09-28 — Boss Sanctuary full-width collision candidate
+## Session 145 — 2026-09-28 — Boss Sanctuary full-width collision candidate
+**History:** VV branch original Session 116; renumbered during integration.
 **Merged:** none   **Tests:** current-scene Blender export; targeted Boss panel and outer-strip Studio probes; 3,631-part Studio sanity check   **Branch:** `codex/vv-stone-collision-merge`
 
 ### Done
@@ -1109,7 +1189,8 @@ The saved RBXMX has the 267-part Boss Sanctuary model and 3,631 rollout collider
 
 ---
 
-## Session 115 — 2026-09-28 — Large-panel spot check and two local repairs
+## Session 144 — 2026-09-28 — Large-panel spot check and two local repairs
+**History:** VV branch original Session 115; renumbered during integration.
 **Merged:** none   **Tests:** seeded 25%-panel Studio spot check; Entry socket and Boss panel targeted probes; 3,520-part Studio sanity check   **Branch:** `codex/vv-stone-collision-merge`
 
 ### Done
@@ -1131,7 +1212,8 @@ The saved RBXMX now has 3,520 rollout colliders. Boss Sanctuary's entrance-edge 
 
 ---
 
-## Session 114 — 2026-09-28 — Narrow Pass fine-cell repair and hidden colliders
+## Session 143 — 2026-09-28 — Narrow Pass fine-cell repair and hidden colliders
+**History:** VV branch original Session 114; renumbered during integration.
 **Merged:** none   **Tests:** targeted 25-point Narrow Pass Studio probe; 3,454-part Studio sanity check   **Branch:** `codex/vv-stone-collision-merge`
 
 ### Done
@@ -1153,7 +1235,8 @@ The updated wrapper is saved and buildable. The Boss Sanctuary location is still
 
 ---
 
-## Session 113 — 2026-09-28 — Narrow Pass socket collision repair candidate
+## Session 142 — 2026-09-28 — Narrow Pass socket collision repair candidate
+**History:** VV branch original Session 113; renumbered during integration.
 **Merged:** none   **Tests:** targeted Studio seam and 2×4 probes; Blender targeted export; 3,439-part Studio sanity check   **Branch:** `codex/vv-stone-collision-merge`
 
 ### Done
@@ -1176,7 +1259,8 @@ The saved combined RBXMX has the repaired Narrow Pass model and second lift. Own
 
 ---
 
-## Session 112 — 2026-09-28 — Fern Hollow collision gap and kit surface lift
+## Session 141 — 2026-09-28 — Fern Hollow collision gap and kit surface lift
+**History:** VV branch original Session 112; renumbered during integration.
 **Merged:** none   **Tests:** targeted Fern Studio raycasts; 28/28 models, 3,432/3,432 MeshParts and MeshIds; Rojo build   **Branch:** `codex/vv-stone-collision-merge`
 
 ### Done
@@ -1197,7 +1281,8 @@ The updated combined RBXMX is saved and buildable. The owner's revised walk is p
 
 ---
 
-## Session 111 — 2026-09-28 — Normalize combined Verdant Valley collision export
+## Session 140 — 2026-09-28 — Normalize combined Verdant Valley collision export
+**History:** VV branch original Session 111; renumbered during integration.
 **Merged:** none   **Tests:** 28/28 models, 3,425/3,425 MeshParts and MeshIds; Rojo build   **Branch:** `codex/vv-stone-collision-merge`
 
 ### Done
@@ -1217,7 +1302,8 @@ The combined file is wired and buildable. Owner Studio walk testing is pending b
 
 ---
 
-## Session 110 — 2026-09-28 — Prepare imported Verdant Valley colliders in Studio
+## Session 139 — 2026-09-28 — Prepare imported Verdant Valley colliders in Studio
+**History:** VV branch original Session 110; renumbered during integration.
 **Merged:** none   **Tests:** 28 model/3,425 MeshPart Studio property and MeshId audit   **Branch:** `codex/vv-stone-collision-merge`
 
 ### Done
@@ -1237,7 +1323,8 @@ The owner will export all 28 prepared models as RBXMX. No new RBXMX files exist 
 
 ---
 
-## Session 109 — 2026-09-28 — Verdant Valley adaptive collision kit batch
+## Session 138 — 2026-09-28 — Verdant Valley adaptive collision kit batch
+**History:** VV branch original Session 109; renumbered during integration.
 **Merged:** none   **Tests:** 28 Blender exports; basic file/count/manifold checks   **Branch:** `codex/vv-stone-collision-merge`
 
 ### Done
@@ -1257,7 +1344,8 @@ The Blender export package is ready for Studio import. The 28 RBXMX models do no
 
 ---
 
-## Session 108 — 2026-09-28 — Studio render-surface feasibility check
+## Session 137 — 2026-09-28 — Studio render-surface feasibility check
+**History:** VV branch original Session 108; renumbered during integration.
 **Merged:** none   **Tests:** six Stone Sentinels render-surface samples in Studio Edit   **Branch:** `codex/vv-stone-collision-merge`
 
 ### Done
@@ -1277,7 +1365,8 @@ The narrow feasibility question is answered. No generator, Blender work, game se
 
 ---
 
-## Session 107 — 2026-09-28 — Merge compatible Stone Sentinels collider cells
+## Session 136 — 2026-09-28 — Merge compatible Stone Sentinels collider cells
+**History:** VV branch original Session 107; renumbered during integration.
 **Merged:** none   **Tests:** 908 headless passed; Rojo build; Studio 253/253 rays at four yaws and 4-stud coverage grid   **Branch:** `codex/vv-stone-collision-merge`
 
 ### Done
@@ -1299,7 +1388,8 @@ The merged asset is selected locally and raycast-validated. An in-game character
 
 ---
 
-## Session 106 — 2026-09-28 — Stone Sentinels walk collider pilot
+## Session 135 — 2026-09-28 — Stone Sentinels walk collider pilot
+**History:** VV branch original Session 106; renumbered during integration.
 **Merged:** none   **Tests:** 908 headless passed; Blender FBX reimport 203 meshes; Studio 253/253 rays at four yaws   **Branch:** `codex/vv-stone-walk-collision`
 
 ### Done
@@ -1322,7 +1412,8 @@ The isolated Stone Sentinels prototype is integrated and its sampled collision i
 
 ---
 
-## Session 103 — 2026-09-28 — Import separated Verdant Valley meshes to staged RBXMX
+## Session 134 — 2026-09-28 — Import separated Verdant Valley meshes to staged RBXMX
+**History:** VV branch original Session 103; renumbered during integration.
 **Merged:** none   **Tests:** Studio import 30 terrain + 66 props; RBXMX XML/name/ID checks   **Branch:** `codex/vv-cleanup-testing`
 
 ### Done
@@ -1343,7 +1434,8 @@ Studio conversion is complete. Candidate size/placement and new IDs still need t
 
 ---
 
-## Session 102 — 2026-09-28 — Separate remaining Verdant Valley scenery in Blender
+## Session 133 — 2026-09-28 — Separate remaining Verdant Valley scenery in Blender
+**History:** VV branch original Session 102; renumbered during integration.
 **Merged:** none   **Tests:** 30 terrain and 66 prop FBX reimports; candidate Luau suite 908 passing, 0 failing   **Branch:** `codex/vv-cleanup-testing`
 
 ### Done
@@ -1365,7 +1457,8 @@ The Blender and generated-data candidates are ready. New mesh uploads, RBXMX con
 
 ---
 
-## Session 101 — 2026-09-28 — Revert Wetland Pools route drop
+## Session 132 — 2026-09-28 — Revert Wetland Pools route drop
+**History:** VV branch original Session 101; renumbered during integration.
 **Merged:** none   **Tests:** 908 passing, 0 failing; Blender mouth-height probe   **Branch:** `codex/vv-cleanup-testing`
 
 ### Done
@@ -1386,7 +1479,8 @@ The owner's active Play run still holds the offset content loaded at start. Rest
 
 ---
 
-## Session 100 — 2026-09-28 — Align Wetland Pools socket heights
+## Session 131 — 2026-09-28 — Align Wetland Pools socket heights
+**History:** VV branch original Session 100; renumbered during integration.
 **Merged:** none   **Tests:** 909 passing, 0 failing; temporary Studio seam probe   **Branch:** `codex/vv-cleanup-testing`
 
 ### Done
@@ -1406,7 +1500,8 @@ The owner's current Play session uses the old module state. A restarted Verdant 
 
 ---
 
-## Session 99 — 2026-09-28 — Server-owned Causeway collision pilot
+## Session 130 — 2026-09-28 — Server-owned Causeway collision pilot
+**History:** VV branch original Session 99; renumbered during integration.
 **Merged:** none   **Tests:** 907 passing, 0 failing; temporary Studio four-yaw walk   **Branch:** `codex/vv-cleanup-testing`
 
 ### Done
@@ -1426,7 +1521,8 @@ The prop library is not saved into the place or repository. The live Causeway te
 
 ---
 
-## Session 98 — 2026-09-28 — Pin and verify Luau CLI
+## Session 129 — 2026-09-28 — Pin and verify Luau CLI
+**History:** VV branch original Session 98; renumbered during integration.
 **Merged:** none   **Tests:** 905 passing, 0 failing   **Branch:** `codex/vv-cleanup-testing`
 
 ### Done
@@ -1442,7 +1538,8 @@ The Luau toolchain is ready. The Verdant Valley prop library import and Studio c
 ### Next
 1. Import the Causeway prop library and complete the four-turn collision walk in the LUCKBOUND place.
 
-## Session 97 — 2026-09-27 — Opt-in solid prop placements
+## Session 128 — 2026-09-27 — Opt-in solid prop placements
+**History:** VV branch original Session 97; renumbered during integration.
 **Merged:** none   **Tests:** Blender FBX re-import and changed-file StyLua check passed; Luau suite assembled, CLI unavailable   **Branch:** `codex/vv-cleanup-testing`
 
 ### Done
@@ -1460,7 +1557,8 @@ The Causeway prop library is still unsaved in the game. Terrain and prop MeshIds
 1. Import and save the prop library, update the Causeway terrain asset and size together, then walk collision at all four turns.
 2. Extend the `solid` tagging to each Verdant Valley `PropLibrary` object when the separate CCBlender prop scene is delivered.
 
-## Session 96 — 2026-09-27 — Causeway Studio staging and collision correction
+## Session 127 — 2026-09-27 — Causeway Studio staging and collision correction
+**History:** VV branch original Session 96; renumbered during integration.
 **Merged:** none   **Tests:** Studio MCP MeshPart inspection and terrain socket/path raycasts   **Branch:** `codex/vv-cleanup-testing`
 
 ### Done
@@ -1479,7 +1577,8 @@ Staged meshes are configured in Studio but not saved as RBXMX or activated. Stud
 1. Agree on a generic server-side secondary structure mesh schema for chunk content, then implement and validate it before activating the pilot.
 2. Save the imported meshes to RBXMX and run the four-yaw Causeway collision walk in the LUCKBOUND place, preserving the old asset until it passes.
 
-## Session 95 — 2026-09-27 — Studio MCP handshake and Luau verification
+## Session 126 — 2026-09-27 — Studio MCP handshake and Luau verification
+**History:** VV branch original Session 95; renumbered during integration.
 **Merged:** none   **Tests:** MCP 28-tool discovery, read-only Luau, disposable MeshPart property check   **Branch:** `codex/vv-cleanup-testing`
 
 ### Done
@@ -1497,7 +1596,8 @@ The MCP connection works. The open Studio place is not LUCKBOUND, and the Causew
 1. Owner opens the LUCKBOUND place and manually imports the terrain and scenery FBXs listed in `assets/source/worlds/verdant_valley/IMPORT_STEPS.md`.
 2. Use Studio MCP to inspect the imported MeshParts, configure the terrain and noncolliding prop, save RBXMX, update IDs and loader content, then run the Causeway collision walk.
 
-## Session 94 — 2026-09-27 — Codex Roblox Studio MCP connection
+## Session 125 — 2026-09-27 — Codex Roblox Studio MCP connection
+**History:** VV branch original Session 94; renumbered during integration.
 **Merged:** none   **Tests:** configuration parse and local MCP handshake passed   **Branch:** `codex/vv-cleanup-testing`
 
 ### Done
@@ -1515,7 +1615,8 @@ Waiting for Studio's MCP server toggle and a refreshed Codex connection. The Cau
 1. Enable Studio as MCP server, refresh Codex, and verify `list_roblox_studios`, read-only Luau, MeshPart inspection, and a disposable collision-property check.
 2. After the owner manually imports the Causeway terrain and prop FBXs, configure those new MeshParts and run the existing collision validation before replacing the old assets.
 
-## Session 93 — 2026-09-27 — Overgrown Causeway scenery split pilot
+## Session 124 — 2026-09-27 — Overgrown Causeway scenery split pilot
+**History:** VV branch original Session 93; renumbered during integration.
 **Merged:** none   **Tests:** 30 structure + 1 terrain + 1 prop FBX reimports passed   **Branch:** `codex/vv-cleanup-testing`
 
 ### Done
@@ -1537,7 +1638,8 @@ The pilot assets and content are prepared, but no Studio upload or in-experience
 
 ---
 
-## Session 92 — 2026-09-27 — Verdant Valley collision and visible gap review
+## Session 123 — 2026-09-27 — Verdant Valley collision and visible gap review
+**History:** VV branch original Session 92; renumbered during integration.
 **Merged:** none   **Tests:** 30/30 saved MeshParts checked   **Branch:** `codex/vv-cleanup-testing`
 
 ### Done
@@ -1559,7 +1661,8 @@ The saved Studio model has the best available standard collision fidelity. A liv
 
 ---
 
-## Session 91 — 2026-09-27 — Verdant Valley cleanup kit export test
+## Session 122 — 2026-09-27 — Verdant Valley cleanup kit export test
+**History:** VV branch original Session 91; renumbered during integration.
 **Merged:** none   **Tests:** 30/30 FBX and Studio model checks passed   **Branch:** `codex/vv-cleanup-testing`
 
 ### Done
@@ -1578,6 +1681,800 @@ The test kit is exported and wired on the testing branch; a full game experience
 ### Next
 1. Walk representative and edge chunks in the game experience; confirm uploaded MeshIds are accessible to that experience and vertex colors render correctly.
 2. Run CI and merge only after those checks pass. Retain the older base source and exports until then.
+
+---
+
+## Session 121 — UI-overhaul (branch agents/UI-overhaul) — 2026-09-29 — SIGIL UI overhaul
+**History:** Main branch unnumbered UI-overhaul entry; numbered during integration.
+**Merged:** none yet   **Tests:** not run here (no `luau` CLI in this session; CI is the test run). Owner walked every piece in Studio.
+
+### Done
+- **SIGIL design system** (`client/UI/Sigil/`): `SigilStyle` (tokens; gold = Fate, cyan = system, crimson = danger; `setState` retints for Fate/world state), `Sigil` (panel, button, tabs, notifier, tooltip, header, engine, HUD, universal menu, title), `SigilShowcase` (F8 dev board, dev only).
+- **Restyled in place:** `Vitals` (health/stamina), new `FateHud` (Fate level ring), `ChatPanel` (toggle key backquote; Roblox's top-bar chat button cannot toggle once the default window is off), `Leaderboard` (LVL column from a `FateLevel` player attribute, sorted by it; `ProgressionSystem` sets it).
+- **Shared primitives** (`UIKit`, `UITheme.corner`): angular panels with corner brackets, tone-washed buttons, square toggles. Every old panel (Party, Settings, Codes, previews) picks this up.
+- **Hub**: old left rail hidden (code kept); `UniversalMenu` (top-right ring: Settings, Codes); `FateEngineMenu` (button emblem bottom-right + hotkey `GameConfig.HubMenu.FateEngineHotkey`). Entries orbit the Engine and open as sub-sigils that host the existing `HubMenu` panels (`HubMenu.openIn/release`). Roll state: fate decides biome; modifiers are not implemented (shown as "not yet available").
+- **Loading**: `LoadingScreen` restyled (camera tour, readiness and safety timeouts unchanged; BEGIN replaces PLAY). `CSIntro` = the C&S Labs ident, plays over it on a FRESH JOIN only (`LoadingScreen.isFinished()` gate) and waits on `LoadingScreen.isReady()`.
+
+### Decisions made
+- Party lives in the Fate Engine menu, not the universal menu (owner).
+- Rolling is still proximity-gated: the server checks distance (spec §3.4). "Roll from anywhere" and "a new roll sacrifices the old one" need a spec amendment.
+- Logo asset: the decal id is read via rbxthumb (`GameConfig.StudioIntro.LogoImageCandidates`, valid Asset sizes 150/420/700). The asset is private to the C&S Labs group, so the experience must be added under the asset's Permissions (universe id 10768387739).
+- Fate Tree will likely become a circular skill-tree sigil.
+
+### Stopped at
+UI is walked and approved by the owner. Not yet merged.
+
+### Next
+Open the PR; integration agent merges after CI. Then real content per entry (Shop, Archive, Fate Tree, Rebirth), the roll-anywhere amendment, and retiring the old rail code and `SigilShowcase`.
+
+### Leftovers to remove once the PR is proven in a live server
+- `HubMenu` rail/arrow/fate-header code (hidden, still built) and the `TRAVEL` panel (superseded by the Fate Engine menu).
+- `Sigil/SigilShowcase.luau` (dev board) and its `init.client` line.
+- Unused `UITheme` fields (`RailColor`, `RailWidth*`, `RadiusLarge/Small`, gradients) once nothing reads them.
+- `GameConfig.Chat.ToggleGlyph` and the 3 unused hub `Rail*` settings, if confirmed unread.
+
+---
+
+## Session 120 — 2026-09-29 — Consolidated PR: movement (#147) + The Ascendant (#148)
+**Merged:** PR #147 (with #148 folded in)   **Tests:** 1008 passing (minimal run, owner's call)   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- **Owner:** consolidate #147 (player movement) and #148 (`CloudTesting`: The Ascendant boss, enemy framework,
+  cloud Blender setup) into one PR to save CI minutes. `CloudTesting` was merged into the movement branch;
+  #148 is closed in favour of #147.
+- **Overlap:** only the shared docs. #148 changes no `src/`. `INDEX_MAP.md` was regenerated, and WORKLOG sessions
+  were renumbered by branch (git workflow 95, Ascendant 96–102, movement 103–119). STATUS and INDEX merged
+  cleanly.
+
+### Decisions made
+- Owner override of GIT_WORKFLOW's one-PR-at-a-time rule for this batch only.
+
+### Next
+1. The Ascendant: the owner imports into Studio; fix its known issues (see Session 102).
+2. Movement follow-ups: Sprint, Walk x4, Turn L/R clips; upload the generated clips.
+3. The UI revamp on its own branch.
+
+---
+
+## Session 119 — 2026-09-28 — Free-camera turns curve; no foot slide
+**Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner)
+- **Free camera still snapped to 8 directions:** free running now moves along the turning body
+  (`direction = bodyFacing * input`), and the body turns at 480°/s, boosted up to 2.5× for reversals.
+  Direction changes are curves. The shoulder camera and rolls are unchanged.
+- **Sliding while running:** the run clip's feet covered ~11 studs/s but it was played as if 24. The generator
+  now measures each looping gait clip's planted-foot speed into the generated
+  `Content/Animations/GroundSpeeds.luau` (in `.styluaignore`). `CharacterAnimator` plays each run direction at
+  body speed ÷ its own speed. Strides were lengthened (forward 16.5, back 14.3, sides 10.0 studs/s);
+  `MaxPlaybackRate` is now 2.5.
+
+### Next
+1. Owner's final walk, then the PR.
+
+---
+
+## Session 118 — 2026-09-28 — Final pre-PR fixes: smooth turns, no roll queue
+**Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner's last notes before the PR)
+- **Snapping between 8 directions** and **snapping back to the target after a roll:** the last fix made every
+  turn instant. Now only camera-driven turns (the shoulder camera) and a roll's start are instant; movement-
+  direction changes, lock-on facing and the post-roll return rotate smoothly at `TurnDegreesPerSecond` (900).
+  The body facing (`bodyFacing`) is tracked separately from the desired facing. `LocomotionCore.turnToward`
+  + a test.
+- **No roll queue:** presses during a roll or its recovery are ignored; a fresh press is needed after it
+  finishes. `RollBufferSeconds` and the buffered fields are removed. A brief moment off the floor
+  (`onFloor`) still counts as the floor, so it rolls instead of air-dashing.
+
+### Next
+1. Owner's final walk, then open the PR.
+
+---
+
+## Session 117 — 2026-09-28 — Instant facing (real fix); weapon stance design
+**Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- **Turning still lagged** (owner). A higher `BaseTurnSpeed` wasn't enough: the controller turns via a torque.
+  The facing is now written to the root's CFrame directly every frame (angular velocity cleared), in every mode.
+  The profile `TurnRate`s and `HeldFacingTurnRate` are removed.
+- **Owner asked how weapon poses fit:** the design is written in `PLAYER_ABILITIES.md` §6.1. Stances are
+  upper-body clips at Action over shared locomotion. Whole-body moves (rolls, backstep, air dash) now load at
+  **Action2**; attacks go at Action3/4. Per-type stance files come later, with items.
+
+### Next
+1. Owner re-walks: fast camera swings while running, rolling and with the shoulder camera.
+2. Remaining clips; the PR.
+
+---
+
+## Session 116 — 2026-09-28 — Roll speed shape, 18 studs, instant held facing
+**Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner)
+- **"Burst before the roll":** the speed was flat at its peak from frame one while the clip was still gathering.
+  It now follows `LocomotionCore.rollSpeedShape`: 0.45 of peak rising to full by 22%, full to 62%, then easing
+  to 0.3.
+- **18 studs:** `RollDistanceStuds` replaces `RollSpeed`; `rollPeakSpeed` derives the peak from the shape's
+  mean. A test integrates the distance.
+- Sprint was +1.5 studs/s in the previous commit.
+- **Camera-turn lag:** with the shoulder camera or a lock-on, the body turns at `HeldFacingTurnRate` (1000,
+  effectively instant); free running keeps the profile's rate.
+
+### Next
+1. Owner re-walks. 2. Remaining clips. 3. PR.
+
+---
+
+## Session 115 — 2026-09-28 — Steering out, roll blends out, shake fixed
+**Merged:** see the PR for this branch   **Tests:** 1007 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner)
+- **Roll steering removed** (owner preferred it without): `LocomotionCore.steer`, its config and its test are
+  gone.
+- **Roll blends out:** the roll, backstep and air-dash clips are timed past the move (plus recovery plus
+  `RollExitBlendSeconds` 0.22) and stopped with that fade when the move ends. The diagonal body turn
+  (`rollYaw`) eases back to straight.
+- **Camera shake while rolling:** the torso and head had collisions on, and the clip turned them through the
+  floor, so physics pushed back. Now only the HumanoidRootPart collides; every other body part is set
+  `CanCollide = false` every frame.
+
+### Next
+1. Owner re-walks rolls.
+2. Remaining clips: Sprint, Walk x4, Turn L/R. Then the PR.
+
+---
+
+## Session 114 — 2026-09-28 — Roll polish: floor contact, distance, steering
+**Merged:** see the PR for this branch   **Tests:** 1008 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner: "everything else I really like")
+- **Rolls clipped the floor:** the generator's ground solver treated the body as lines through the joints.
+  It now accounts for part thickness (`RADIUS`, extra torso and head points) plus 0.1 of clearance; clips
+  regenerated.
+- **Further:** the roll goes ~24 studs (37 studs/s x 0.65s) and the air dash ~11.5 (52 x 0.22).
+- **Follows the camera:** a moving roll or air dash steers toward the held (camera-relative) direction at up to
+  `RollSteerDegreesPerSecond` (110). `LocomotionCore.steer` + 1 test. Owner to confirm this is what they meant.
+- `/animslot <slot>` alone now describes that slot instead of clearing it.
+
+### Next
+1. Owner walks the rolls again (floor contact, distance, steering).
+2. Remaining clips: Sprint, Walk x4, Turn L/R. Then the PR.
+
+---
+
+## Session 113 — 2026-09-28 — Longer roll; the second batch of generated clips
+**Merged:** see the PR for this branch   **Tests:** 1007 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- **Owner:** the rolls "look much better" but were a bit fast and short. The roll is now 0.65s at 31 studs/s
+  (~20 studs, was ~17); the i-frame window is 0.05–0.44s and the clips were regenerated at 0.65s.
+- **Generator:** loop support (periodic Catmull-Rom across the seam), `shift_phase` (second step = first
+  mirrored), `time_reversed`.
+- **15 new clips:** Run Forward/Backward/Left/Right (directional running now on), Idle, Backstep, JumpStart,
+  Rise, Fall, LandSoft, LandHard, AirDash x4. Checked in stick-figure previews.
+- The procedural landing dip stands down while a landing clip plays.
+
+### Next
+1. Owner: pull, restart `rojo serve`, and judge the new clips (run in all directions with Left Ctrl, jump and
+   land from height, air dash, idle).
+2. Remaining clips: Sprint, Walk x4, Turn L/R.
+3. Then open the PR; then the UI branch.
+
+---
+
+## Session 112 — 2026-09-28 — Roll queueing; generated roll animations
+**Merged:** see the PR for this branch   **Tests:** 1007 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- **Owner:** spamming Q sometimes skipped the animation. Now any press during a roll is **queued** (one at most)
+  and plays after the current roll fully finishes. Being off the floor for under `AirDashMinAirSeconds` (0.12s,
+  a bump mid-roll) makes a roll wait for the feet instead of turning into an air dash. 2 tests.
+- **Animations, owner's go-ahead: Claude authors them.** New `tools/gen_player_anims.py` builds KeyframeSequences
+  from key poses (Catmull-Rom between keys, baked at 30fps, a ground-contact solver for rolls, mirroring for the
+  other side). Output is in `assets/rbxm/animations/`, and Rojo maps it to `ReplicatedStorage.LuckboundAnimations`.
+- `CharacterAnimator` registers generated clips via `KeyframeSequenceProvider` **in Studio only** and fills empty
+  slots with them. They ship by being saved to Roblox and pasted into the content file.
+- First four clips: `RollForward`, `RollBackward`, `RollLeft`, `RollRight`, checked in stick-figure previews
+  (contact constant through the roll).
+
+### Decisions made
+- Tests: the owner asked to condense them to 100 or fewer. The suite runs in about 2s and prints one line, so it
+  costs little; ~850 predate this branch. New tests are kept to one per rule.
+
+### Next
+1. Owner: pull, re-sync (a new Rojo folder: restart `rojo serve`), roll in all four directions with the
+   shoulder camera on, and judge the clips.
+2. Then: run directions, idle, backstep, jump and land, air dash.
+
+---
+
+## Session 111 — 2026-09-28 — Walk feedback: no ring, stronger streaks, lock-on eases out
+**Merged:** see the PR for this branch   **Tests:** 1005 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner's walk: wind, air dash and lock-on all work)
+- The wind burst's ground ring is removed (owner: too much). There are now 5 streaks, more solid (0.35), longer
+  (7 studs) and staggered.
+- Lock-on release eases the camera back over `LockOn.ReleaseBlendSeconds` (0.4s) by blending from the lock's
+  last framing into the default camera's output each frame. A lock that breaks eases too; a respawn snaps.
+- The air dash has its own clip slots already (`AirDash*`); they go in the animation set.
+
+- **Owner asked:** should there be 8 rolls? No. Four clips plus `AnimationCore.rollYaw` turn the body up to 45°
+  onto the true direction, so diagonals read right (the roll and the air dash).
+- **Owner asked** to condense the tests to 100 or fewer. Not done: the suite runs in about 2s and its output is
+  one line, so it costs almost no usage. ~850 of the tests predate this branch and cover other systems. Going
+  forward, new tests are kept to rules only.
+
+### Next
+1. Owner re-walks: the streaks and the unlock ease.
+2. Then generate the player animation set (four rolls first).
+
+---
+
+## Session 110 — 2026-09-28 — Wind burst, air dash, lock-on switch fix
+**Merged:** see the PR for this branch   **Tests:** 1004 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner's walk: the run animation works)
+- **Roll look:** afterimages replaced by a discrete wind burst: a ForceField ring at the feet expanding and
+  fading, plus streaks left behind (`RollWind*`).
+- **Air dash (jump dash):** roll in the air, once per airtime. It holds height and is driven directly along its
+  direction. There are 4 directional slots (`AirDash*`) plus a procedural lean fallback. Hub free, expedition 18
+  stamina, no i-frames. `LocomotionCore` gains `AirDashesUsed` and kind `"AIRDASH"`. 6 tests.
+- **Lock-on switching bug:** a mouse flick never registered because Roblox reports `InputObject.Delta` only for a
+  captured mouse. The mouse is now captured (LockCenter) while locked and handed back on release, and the flick
+  falls back to the position change.
+- Animation brief, abilities doc and Test K updated.
+
+### Decisions made
+- Owner asked whether Claude can author the animation set; answer and plan are in chat (a KeyframeSequence
+  generator). Awaiting a go-ahead.
+
+### Next
+1. Owner re-walks: the wind burst, the air dash, and lock-on switching.
+2. On a go-ahead: generate the player clips as KeyframeSequences.
+
+---
+
+## Session 109 — 2026-09-28 — Prep for hand-made player animations
+**Merged:** see the PR for this branch   **Tests:** 998 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- `docs/PLAYER_ANIMATION_BRIEF.md`: a spec per slot (type, length, what it must read as), the order to make
+  them (rolls, then run directions, then idle, and so on), what the code adds on top (don't animate it in), and
+  the try-it loop.
+- `/animslot [slot] [id]` (CLIENT, registry): swaps a clip into a slot live and rebuilds the tracks. With no
+  arguments it lists each slot's source; `""` clears. `CharacterAnimator.overrideSlot`/`describeSlots`. A test
+  keeps its slot list equal to `AnimationCore.SLOTS`.
+
+### Decisions made (owner)
+- The UI revamp starts on its own branch only **after** the moveset is confirmed. One task at a time.
+
+### Stopped at
+Owner is asleep. Next session: author the player animations together.
+
+### Next
+1. Owner walks Test K (4b, 4c, 5) to confirm the moveset.
+2. Author clips in the brief's order, trying each with `/animslot`, then paste into `Content/Animations/Player.luau`.
+3. Then: a PR for this branch; then the UI revamp on a new branch.
+
+---
+
+## Session 108 — 2026-09-28 — Polished body movement; directional rolls
+**Merged:** see the PR for this branch   **Tests:** 997 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- **Owner:** movement must read natural and polished, with independent directional and jump animations.
+  New `Core/AnimationCore.luau` (pure, 45+ tests) and `Controllers/CharacterAnimator.luau`: blended
+  idle/walk/run by speed; 4-way directional blend when a gait's clips exist; a procedural strafe fallback
+  (legs turn with a waist counter-turn; backward reverses the clip); lean and bank; head look; soft and hard
+  landing dips; turn in place; built-in running, jump and land sounds.
+- **Content slots:** `Content/Animations/Player.luau` (22 slots: Idle, Walk*/Run* x4, Sprint, JumpStart,
+  Rise, Fall, LandSoft/Hard, Roll x4, Backstep, Turn L/R), validated at boot (`Schema` "animations").
+- **Owner:** rolls keep facing when facing is held (shoulder camera or lock-on) and play by direction
+  (front/back/left/right). A per-direction procedural tumble applies until clips exist. The roll look is toned
+  down: ghosts at 0.78 transparency every 0.09s, a 3° FOV kick, a smaller dip.
+- **Movement rule:** a hard landing (>72 studs/s) slows movement briefly (`LocomotionCore.land`; hub 0.12s,
+  expedition 0.3s).
+- `LocomotionController` now only moves the character; all presentation moved to `CharacterAnimator`.
+- `PLAYER_ABILITIES.md` §2.7 covers where and how to add real clips.
+
+### Decisions made
+- Procedural layers are local-only (Motor6D.C0). Real clips are the way to make the polish visible to other
+  players; there's no new remote.
+- The UI revamp is a separate branch (one task per branch).
+
+### Stopped at
+Needs a Studio walk: `TESTING.md` Test K 4b, 4c and 5.
+
+### Next
+1. Owner walks it. Author the roll and run directional clips first.
+2. UI revamp on its own branch.
+
+---
+
+## Session 107 — 2026-09-28 — Walk feedback: no ice, hub stamina, shoulder camera, roll look
+**Merged:** see the PR for this branch   **Tests:** 950 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done (owner feedback from the second Studio walk)
+- **Sliding on ice:** ramps cut to 0.08/0.05s (hub) and 0.12/0.08s (expedition), pinned by a test.
+- **Hub stamina unlimited**, and only there (`SprintDrainPerSecond = 0`, all costs 0). Tested.
+- **Shift lock:** our own shoulder camera on Left Ctrl (mouse lock-centre, `CameraOffset`, face the camera).
+  Roblox's shift lock needs the PlayerModule, which this place lacks.
+- **Roll look:** particles removed. Gold neon afterimages, a local forward tumble via the root joint's C0, and
+  a 7° FOV kick easing back.
+- **Lock-on** prints `[LockOn] ready…` on start. It was never reached before the PlayerModule fix, and it needs
+  a target (`/dummies`).
+- **Dev commands** (owner: every new command goes in the registry): `/moveprofile hub|expedition|auto` and
+  `/stamina [percent]`, both CLIENT, category PLAYER. `DEV_TOOLS.md` updated.
+
+### Stopped at
+Awaiting the owner's re-walk.
+
+### Next
+1. Owner re-walks Test K.
+2. A real roll animation asset, so other players see the tumble.
+
+---
+
+## Session 106 — 2026-09-28 — First Studio walk: controller never started; fixed
+**Merged:** see the PR for this branch   **Tests:** 947 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- **Owner's Studio walk:** default Roblox movement only; no roll, no bar. Output showed an infinite yield on
+  `PlayerScripts:WaitForChild("PlayerModule")` in `LocomotionController.init`, so the whole controller never ran
+  (the place has no PlayerModule). Fixed: input now comes from `Humanoid.MoveDirection`, which the platform's
+  input scripts fill on every device. No PlayerModule dependency, and no unbounded wait.
+- Bind success or failure is printed (`[Locomotion] controller bound` / `FAILED to bind: …`).
+- Owner: health and stamina are **always visible**. `Vitals` now has a health row (from the Humanoid,
+  `UITheme.AccentHealth`) above stamina; the hub fade is gone.
+
+### Decisions made
+- Never wait on a Roblox-provided script without a timeout; read what the Humanoid already exposes.
+
+### Stopped at
+Awaiting the owner's re-walk of Test K.
+
+### Next
+1. Owner: pull, re-sync, and re-walk Test K from step 1.
+
+---
+
+## Session 105 — 2026-09-28 — Lock-on switching, charge scope
+**Merged:** see the PR for this branch   **Tests:** 947 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- Lock-on target switching: `LockOnCore.switch` (nearest on that side, with a minimum offset) and `flick`.
+  `LockOnController` handles a mouse flick, a right-stick flick (rest re-arm) and a touch Next button while
+  locked. Tunables are in `GameConfig.LockOn` (Switch*).
+- `/dummies [count]` dev command (DebugSystem + DevCommands registry): tagged pillars for testing lock-on.
+- `WEAPONS.md` §2 "Charge": owner rule. The charge bar shows only for weapons with a charge. Epic: charge plus
+  small stat buffs. Legendary: charge alters the moveset briefly. Common–Rare: none.
+- Docs: `PLAYER_ABILITIES.md` §2.6, `TESTING.md` Test K steps 15–17, `DEV_TOOLS.md`.
+
+### Decisions made
+- Switching follows the Souls convention (flick sideways), adapted for mouse and touch.
+- Mythic charge (owner): Legendary's charge in two stages, with an awakening finisher at stage 2
+  (`WEAPONS.md` §2). Rejected: an act-filled charge and movement tech. Open: a party buff on release.
+
+### Stopped at
+Test K (17 steps) needs a Studio walk.
+
+### Next
+See Session 104's list.
+
+---
+
+## Session 104 — 2026-09-28 — Own character controller, roll, stamina, lock-on
+**Merged:** see the PR for this branch   **Tests:** 940 passing   **Branch:** `claude/create-branch-workflow-jsh534`
+
+Supersedes Session 103's dash and double jump (same branch, unmerged).
+
+### Done
+- **Own character controller.** `LocomotionController` switches off the Humanoid state machine and the stock
+  Animate script and drives a `ControllerManager` (ground and air controllers plus a floor sensor). It sets
+  direction, speed and facing every frame, launches jumps, and plays the stock animation assets itself.
+  Death hands the Humanoid back its state machine.
+- **`LocomotionCore`:** HUB and EXPEDITION profiles (`tuning()`, with a reserved `upgrades` hook for the Fate
+  Tree), one stamina bar, a single jump with coyote time and a jump buffer, and roll/backstep with recovery,
+  a buffer and a declared invulnerable window (RESERVED). The weapon lock is kept (`AllowRoll` replaces
+  `AllowDash`).
+- **Double jump and dash removed.**
+- **Lock-on:** new `Core/LockOnCore.luau` (pick, break, aim cap, smoothing) and `Controllers/LockOnController.luau`
+  (middle mouse / R3 / touch, over-the-shoulder camera, wall pull-in, gold marker). Targets are tagged
+  `LOCK_ON_TAG` by the spawner; `/showboss` now tags its preview. No enemy asset changed.
+- **Stamina bar:** `UI/Vitals.luau`, house style, with a lag strip; built to take health and charge rows later.
+- `GameConfig.Locomotion` rewritten (profiles, stamina, jump, roll, controller); `GameConfig.LockOn` added.
+- Docs: `PLAYER_ABILITIES.md` §1–§2.6 and §6, `TESTING.md` Test K (14 steps), `RESERVED.md`.
+
+### Decisions made (owner, this session)
+- Level A: our own controller on `ControllerManager`. Not a full custom-physics engine, and not rules layered
+  over the default physics.
+- The double jump goes. The expedition is a middle ground between the hub and Souls. The hub stays fast.
+- Stamina is a challenge, not Souls-hard: actions start on any stamina above zero.
+- Lock-on is optional and must not modify enemies.
+- UI: the stamina bar now; health and charge with weapons.
+
+### Stopped at
+Code, tests and docs are done. **Not walked in Studio:** the whole of Test K. The riskiest parts are that the
+stock animations play under our controller and the ground-controller feel (`GroundOffset`/sensor distance).
+
+### Next
+1. Owner: run `TESTING.md` Test K, then tune `GameConfig.Locomotion`/`LockOn` by feel.
+2. LUCKBOUND's own animations (roll, backstep, run) to replace the stock ones.
+3. Items and inventory, then §7.6 step 0 (`ENEMY_AI.md` §12).
+
+---
+
+## Session 103 — 2026-09-28 — Movement state machine: sprint-jump, dash, weapon lock
+**Merged:** see the PR for this branch   **Tests:** 925 passing (was 902)   **Branch:** `claude/create-branch-workflow-jsh534`
+
+### Done
+- `Core/LocomotionCore.luau` rebuilt in place as one movement state machine. `mode()` derives GROUND / AIR /
+  DASH / LOCKED. Sprint and double jump were folded in with their tuning unchanged.
+- New: sprint-jump (higher and longer out of a sprint), ground-only dash (Q / gamepad B / touch button, stamina
+  cost, cooldown, jump-cancel), and the weapon lock (`lock`/`unlock`, clamped to `MaxLockSeconds`).
+- `Controllers/LocomotionController.luau` drives the dash with a horizontal `LinearVelocity`, tops up the
+  sprint-jump on the first airborne frame, and blocks the Humanoid's jump under a no-jump lock. It exposes
+  `mode`/`lock`/`unlock` (RESERVED rows added).
+- `GameConfig.Locomotion`: sprint-jump, dash and lock tunables. 23 new tests.
+- Docs: `PLAYER_ABILITIES.md` §2.5 (built) and §6 (how weapon moves drive movement). `TESTING.md` Test K steps 6–9.
+  `RESERVED.md` has a movement-hooks section.
+
+### Decisions made
+- Owner: build movement before weapons, and fold the existing sprint and double jump into the new framework.
+  Done as an in-place rebuild, not a second module (rule 1).
+- No new remote. Movement is client-authoritative, as before; the server guards outcomes. I-frames, damage and
+  lunges stay with combat (§7.6, still not opened).
+- Weapon moves talk to movement only through `mode()` and `lock(spec)`. Cancels are data on the move.
+
+### Stopped at
+Code, tests and docs are done. **Not walked in Studio**: Test K steps 6–9 need the owner.
+
+### Next
+1. Owner runs `TESTING.md` Test K in Studio and tunes the dash and sprint-jump numbers by feel.
+2. Items and inventory (the item schema), then the §7.6 amendment step 0 (`ENEMY_AI.md` §12).
+
+---
+
+## Session 102 — 2026-09-29 — Axe-chop Reap, spell orb, cast/stagger actions, extra joints
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes   **Branch:** `CloudTesting`
+
+### Done
+- **Idle left-arm snap:** `hand_on` picked its elbow pole from an arbitrary reference (`axis.orthogonal()`), so the
+  choice flipped between frames. It now measures from world-down, is biased to down, and is sticky (`_LAST_HPOLE`).
+- **Reap** re-authored as an overhead axe chop with the blade placed on the player (`HIT_POINT`), see the moveset.
+- **Spell orb** on the staff between the crescent and the back-horn (`the_ascendant_orb.py`, `VFX_Orb`).
+- **New actions:** `P1_OrbCast`, `P1_SkyCast`, `Hit_React`, `P1_Stagger`, `P1_StaggerRecover`.
+- **Joints:** `Spine` + forearm twist bones + softer shoulder pads (`joints_core.py`, `POST_POSE` hook).
+- Owner asked for no test rounds; the build prints one `CHK` line per action (hand gap, wrists, blade-to-player distance).
+
+### Stopped at
+Build checks (no test rounds, per the owner): Idle left hand stays on the staff (gap 0, wrists <= 54 deg); the Reap's
+crescent middle is exactly on the player torso at f19 and within 0.5 m at f18-20. Known leftovers:
+- Reap: the left hand lifts off the staff by up to 16 cm on some frames and the left wrist reaches 131 deg.
+- OrbCast (9 cm gap, wrist 96), StaggerRecover (17 cm gap, wrist 79): left hand drifts off on some frames.
+- Walk/Strafe still carry the staff the old way. No `Death`. Nothing tested in Studio.
+
+### Next
+Owner review in Blender; then `Death`, Phase 2 actions, and the Walk/Strafe across-the-body carry.
+
+---
+
+## Session 101 — 2026-09-29 — Axe grip for the off hand, longer staff, robe shake fixed
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes   **Branch:** `CloudTesting`
+
+### Done
+- **Robe shake:** `cloth_core` now gives contact friction and no lever kick at the pinned root; the robe no longer
+  collides with the arms. Idle shake 6 cm -> under 1 mm.
+- **Off-hand grip** (owner's axe reference): `_asc_pose.left_on_haft` puts the left hand on the haft overhand from
+  the front (`AXE_GRIP` = 1: palm to the body, fingers wrapping toward it). It needs no search, so it is fast.
+- **Idle_Guard** now holds the staff across the body like the axe (C -0.10,-0.45,2.35; u -0.85); the left hand
+  stays attached. **Staff** butt lengthened 0.82 -> 1.0 m (`the_ascendant_staff.py`); the delivered `.blend` mesh is
+  extended to match.
+- **Crescent Reap** re-authored as a two-handed swing (COIL/TELL/SWEEP/PAST/DRAG re-searched for the axe grip).
+- **Speed:** `pose_fix` restores arm bones with one refresh (`matrix_basis`); a grip solve dropped from minutes to
+  seconds. Sticky elbow pole (Session 100) is kept.
+
+### Stopped at
+Known problems, all in the Reap's recovery (f43-52, RECOVER key) unless noted:
+- Left wrist up to 139 deg and the staff clips the body (up to 482 tris at f48); the right arm clips 26 frames.
+- Idle: left wrist 95 deg on 18 frames; the right arm clips the chest by ~23 tris on every frame.
+- Walk/Strafe use the old carried-staff pose, not the axe guard, so the staff is held differently there.
+
+### Next
+1. Rework the Reap recovery (f43-60) and the Idle right arm.
+2. Give Walk/Strafe the same across-the-body carry.
+3. Owner: one Studio import once the boss is finished.
+
+---
+
+## Session 100 — 2026-09-28 — Right-elbow flare fixed
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes   **Branch:** `CloudTesting`
+
+### Done
+- The owner saw the right elbow flare out around Walk f15. `pose_fix.wield` re-picked its elbow pole from 5
+  candidates on every frame, and near-ties flipped to the last-resort "flare" pole for 1-2 frames (the elbow moved
+  10 cm out and back).
+- The pole is now sticky (`_LAST_POLE`, `STICKY` 40): consecutive solves keep the previous pole unless another is
+  clearly better.
+- Right elbow turn per frame: Walk and Strafe ×2 went from 14° to ≤ 1°, with no new clipping.
+- Re-exported the FBXs and gave the owner `TheAscendant_fixed.blend`: their mesh, the 150-bone rig and all 5 actions,
+  saved as a separate file. The owner's own `.blend` is untouched.
+
+### Stopped at
+The Reap still flicks the elbow at f31-32 (14°, a held pose). It is left until the owner decides on the left-hand
+design (a two-handed weapon would rework the Reap's grips).
+
+---
+
+## Session 99 — 2026-09-28 — Robe clears the free arm
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes   **Branch:** `CloudTesting`
+
+### Done
+- **Correction to Session 98:** the arm colliders were already in `the_ascendant_cloth.py` in `50b4f82`, not
+  pending. The remaining touches happened with them on: the left forearm met the robe's hip flare just under the
+  belt, where the chains are pinned and cannot move aside.
+- **The fix is in the pose, not the cloth.** `walk_core` now passes per-enemy pose overrides (`POSE_OVERRIDES`:
+  `arm_out`, `elbow_bend`, `lean`, `hip_roll`) through to the pose functions. The Ascendant's free arm hangs at
+  `arm_out` 0.17 in Walk and Strafe ×2 (`ARM_OUT` in `Walk.py`).
+- **On the owner's mesh:** arm-vs-body contact is 0 in Walk, Strafe ×2 and Idle. Robe-vs-leg is 0 in Strafe ×2 and
+  Idle, ≤ 4 tris on 4 Walk frames, and ≤ 14 in the Reap's deepest lunge; all of it is at the hip crease under the
+  pinned robe top. Thicker thigh colliders were tried and made no difference, so they were reverted.
+
+### Stopped at
+Pushed. The owner will import once, when the boss is finished (not after each step). Remaining leftovers are in the
+Reap only: the two-hand left-arm graze, the staff at f18, and the wrist at 82°.
+
+### Next
+The owner decides what "finished" still needs before the single Studio import.
+
+---
+
+## Session 98 — 2026-09-28 — Baked cloth (robe + scarves) and three-joint finger grips
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes (Blender assets + framework)   **Branch:** `CloudTesting`
+
+### Done
+- **`_framework/cloth_core.py`** (new, owner's request): free-hanging cloth for any enemy.
+  - It builds bone chains on a cloth piece (`skirt` = a ring of chains; `strips` = one chain per scarf) and re-skins
+    the piece onto them, with at most 4 influences per vertex.
+  - It simulates each action (verlet, gravity, damping, shape pull, capsule collision with the listed bones, ring
+    spacing for skirts) and keys the chains.
+  - `run.py` calls `cloth_bake()` after each action.
+  - The chain list is `CLOTH_CHAINS`: `CLOTH` is already every enemy's material-slot constant.
+- **The Ascendant** (`the_ascendant_cloth.py`, manifest extras): the robe is 16 × 5 bones, pinned at z 1.8 under the
+  belt, with belt islands above 1.6 kept rigid and `ring_stretch` 1.4. The scarves are 4 × 4.
+  - Robe-vs-leg overlap below the hips, worst frame, rigid → cloth: Strafe 176 → 0, Idle 29 → 0, Walk 189 → 4,
+    Reap 298 → 14.
+  - The scarves never clip, and the loop seams are no bigger than a normal frame step.
+- **`_framework/hands_core.py`** (new): `add_phalanges()` splits each finger's second bone into two, cuts a vertex
+  ring at the new joint and re-weights the finger. `humanoid.make_humanoid(fingers=True)` now builds three joints.
+- **`pose_fix.wrap`** was rewritten. Each joint curls about the haft axis until its tip meets the haft surface, and the
+  thumb opposes first (`_oppose`). The old per-bone search (`_wrap_bone`) is removed. Finger wrap is now 101-108°
+  (was 94-99°), and the thumb now reaches the haft (it stayed 111 mm off the axis).
+- Exported onto the owner's mesh: 150 bones, rest offset 0 against the pipeline, 21,300 tris.
+
+### Decisions made
+- The cloth is baked in Blender (owner's choice); a live Roblox solver can reuse the same bones later.
+- Cloth collides only with the enemy's own bones. Player collision is the normal hitbox.
+
+### Stopped at
+Pushed. Open items:
+- The moving robe touches the hanging left arm (≤ 12 tris, 5 frames in StrafeLeft and Walk). Fixed in Session 99.
+- The finger wrap is limited by finger length against the 94 mm haft.
+- 150 bones: confirm the Roblox importer accepts the rig.
+- Beacon Keeper, Spire Regent and Armory Warden gain finger joints on their next re-export.
+
+### Next
+1. Owner: import the FBXs in Studio; check the robe, the scarves and the grips.
+2. The owner decides on the arm colliders for the cloth.
+
+---
+
+## Session 97 — 2026-09-28 — The Ascendant: whole-body locomotion, arm spasm and leg-cross fixes
+**Merged:** not merged; pushed to `CloudTesting`   **Tests:** no `src/` changes (Blender assets + framework)   **Branch:** `CloudTesting`
+
+### Done
+- **Owner's `.blend` saved first** (`e29dd92`): a hand chest cleanup, the centre crystal moved, `BreakawayGlow`
+  removed. The rig is identical to the script's (44 bones, zero rest offset); the mesh is 21.2k tris.
+- **The spasming arm had two causes, both framework bugs:**
+  - `anim_core.end` scanned only odd frames. A clip present on every frame was "fixed" on odd frames only, so the arm
+    flipped every frame (the hand jumped 33 cm). It now scans every frame.
+  - `_key_all` could key q where its neighbours held -q, and the limb whipped the long way round. Keys now take the
+    curve's sign.
+- **Root drift:** while posing, the attached action re-applied the keyed root location, so `move_root` stacked up
+  (0.5 m over a Walk loop). Posing now runs with the action detached until `_key_all`.
+- **`walk_core` is whole-body** (the owner's rule, now in `ENEMY_FRAMEWORK.md`):
+  - Root bob and sway, pelvis yaw and roll, a counter-rotating chest, a level head, and world-axis arm swings with
+    elbow flex.
+  - The pelvis now moves before the feet are solved, so planted feet no longer slide.
+- **Strafe legs:** the feet's antiphase amplitude is capped (gap ≥ 70% of the stance), the knees point out, and a
+  staggered stance (left foot forward) clears the shins. Leg-vs-leg overlap is zero; before, the feet crossed by 7 cm.
+- **The Reap's left-hand spin:** `hand_on` picked the finger wrap per frame ("fingers down"), which flips on an
+  upright haft (a 160° spin at f51). It now takes `grip=±1`. The Reap releases the hand at 48-52, swaps the wrap at
+  52-54 and re-grips at 54-60 (`_asc_pose.staff(free=)`). `_asc_pose.fix_clip` never pulls a gripping hand.
+- **Staff arcs** (C and D) plus a `LIFT` key cut the sweep's waist clip from 122 tris to 20 (f18 only).
+- **Idle_Guard:** a slow weight shift and two breaths; the chest moves 4 cm and the head 8 cm (it was nearly static).
+- **Exported onto the owner's mesh:** the 6 FBXs were written by `export.py` from the `.blend` plus the rebuilt
+  actions. The `.blend` itself was not re-saved: it was written by Blender 5.2, and pip `bpy` 5.0.1 warns of data loss.
+  On the owner's mesh, Walk, Idle and Strafe ×2 are clean.
+
+### Decisions made
+- The Ascendant's FBXs come from the owner's `.blend` until `the_ascendant.py` reproduces the chest edit.
+- The tri budget stays at 21.2k; the owner allowed 85-90k, but no fix needed it.
+
+### Stopped at
+Pushed. Known leftovers:
+- The left upper arm grazes the chest in the Reap recovery (≤ 48 tris, steady).
+- The staff grazes the waist at f18 (20 tris).
+- The wrist reaches 82° at f46-49.
+- The `VFX_Core` bone sits 6.5 cm from the nearest torso-glow vertex after the crystal move.
+
+### Next
+1. Owner: import the 6 FBXs in Studio; check the arm in both strafes and the Reap's re-grip.
+2. Port the chest edit into `the_ascendant.py` (or keep exporting from the `.blend`); move `VFX_Core` if the crystal moved.
+3. Re-export the Temple Acolyte's Walk/Strafe (it shares `walk_core`, which is now whole-body) and review it.
+
+---
+
+## Session 96 — 2026-09-28 — The Ascendant (Ethereal Scape boss): body, Sanctum Staff, moveset, first actions
+**Merged:** see the PR for `CloudTesting`   **Tests:** no `src/` changes (Blender assets only)   **Branch:** `CloudTesting`
+
+### Done
+- **Body** `ethereal_scape/the_ascendant.py`: ~3.5 m boss in the ES language (gold slit mask, crystal extremities,
+  teal/mint ribbons, no halo). The robe is a front-slit two-panel robe, each panel rigged waist→own thigh.
+  - The P2 cuirass is a `Breakaway` piece.
+  - Pieces are named for the humanoid clip scan.
+  - Validate PASS, ~18.5k tris, nothing floating.
+- **Weapon** `the_ascendant_staff.py` (manifest `extras`): the **Sanctum Staff**, weapon type **Staff** (owner: the
+  boss weapon must fit an existing `WEAPONS.md` class so it can drop). Crescent crystal head, portal-eye core.
+- **Moveset** `ASCENDANT_MOVESET.md`: sweeps and portal steps (the Sentinel's opposite), P1/transition/P2, fairness
+  rules, VFX plan.
+- **Actions** `anims/the_ascendant/`:
+  - `Idle_Guard` (clean).
+  - `P1_CrescentReap`: Tell 3, HitStart 17, HitEnd 22, RecoverStart 23, 60 f, so a 14 f tell and a 37 f recovery;
+    `anim_core` OK.
+  - `Walk` (boss gait), `StrafeLeft`, `StrafeRight`.
+  - The shared helper is `_asc_pose.py`.
+- **Framework fixes** (`_framework/walk_core.py`):
+  - `_ik2` twisted the thigh 180° and folded the shin toward the knee side, so the ankle missed its target by up to
+    0.8 m and anything weighted to the thigh flipped. It now keeps the bone's twist, places the shin as a pure
+    hinge on the target, and caps reach at 99.5% (no hyperextension).
+  - New optional `post=` hook on the walk/strafe builders (carry a weapon while walking).
+- The owner rejected the upward "mohawk" crown; it is now temple horns + a shard cascade down the back of the skull.
+
+### Decisions made
+- Boss weapons are one of the `WEAPONS.md` types. The Ascendant's is a Staff.
+- Built in a cloud container with pip `bpy` 5.0.1 (the repo targets 5.2). A scratch launcher maps the scripts' `\`
+  paths; the repo scripts are unchanged Windows-style.
+
+### Stopped at
+Body, moveset doc and the five actions are built and exported.
+
+Known leftovers:
+- Small staff clip at the Reap's f19 (22 tris).
+- Left wrist 50–80° on the Reap's return to guard.
+- The carried staff in Walk/Strafe grazed the robe; a wider carry was the last change, **re-check it**.
+
+### Next
+1. Owner: review renders (`ethereal_scape/renders/the_ascendant_*`), import `TheAscendant.fbx` + actions in Studio.
+2. Re-export the Temple Acolyte / Meadow Stag Walk & Strafe with the fixed `_ik2` (their FBXs used the old solver).
+3. Remaining Ascendant actions per `ASCENDANT_MOVESET.md`; the player-drop staff export (`wpn_es_staff_legendary_a`).
+
+---
+
+## Session 95 — 2026-09-28 — Git workflow: implementation vs integration agents
+**Merged:** see the PR for this branch   **Tests:** CI (docs only)   **Branch:** `claude/luckbound-agent-git-workflow-0ioymd`
+
+### Done
+- New `docs/GIT_WORKFLOW.md`: two roles. Implementation agents branch `agent/<task>` from latest `main`, one task per
+  branch/PR, validate, push, open a PR, never merge. Integration agents review PRs one at a time against the current
+  `main`, merge `main` into the branch if needed, re-test, merge only when ready (CI green, owner Studio check where
+  visual), refresh `main` before the next PR, no feature work.
+- `AGENTS.md` gained a short "Git workflow" section pointing there; "Verify before you merge" now says merging is the
+  integration agent's job. `INDEX.md` §3/§6, the WORKLOG header and STATUS §3 updated to match.
+
+### Decisions made
+- WORKLOG stays one file, newest on top. Each branch writes its own entry numbered from its base; the integration
+  agent keeps both entries at merge, puts the one being merged on top and renumbers it. No per-branch log files.
+- `agent/` is a naming prefix only; a harness-assigned branch name (as this session had) is used as-is.
+
+### Stopped at
+PR open, not merged.
+
+### Next
+1. Owner: review the PR; start future sessions as implementation agents by default, integration sessions explicitly.
+
+---
+
+## Session 94 — 2026-09-27 — Dev panel grip: visible, and correct under Interface size
+**Merged:** see the PR for this branch   **Tests:** CI   **Branch:** `claude/devpanel-grip`
+
+### Done
+- Owner still could not resize the dev panel after #142. The grip was a muted "◢" glyph (Gotham may not carry it,
+  so it could render as nothing) and its maths mixed screen pixels with unscaled ones under SettingsController's
+  UIScale. It is now a 26px raised tab with three gold diagonal ridges (it brightens on hover), and the resize
+  divides mouse movement by the UIScale.
+- Owner will test the chat filter (#144) on the first live playtest; Studio never filters chat.
+- Workflow change: the owner tests each PR in Studio via `gh pr checkout N` before merging. main takes only
+  tested work.
+
+### Next
+1. Owner: `gh pr checkout` this PR, open the dev panel (F4), and drag the corner.
+
+---
+
+## Session 93 — 2026-09-27 — Leaderboard rows: friend / block / view avatar
+**Merged:** see the PR for this branch   **Tests:** CI   **Branch:** `claude/leaderboard-interact`
+
+### Done
+- Owner: players should be able to click leaderboard entries to friend, block and so on, like Roblox's list. Each
+  row is now a click target (gold edge on hover) that opens a house-style menu: Add Friend/Unfriend (from
+  IsFriendsWith), View Avatar, Block/Unblock (from GetBlockedUserIds). All go through Roblox's own prompts.
+- Owner reported the chat and leaderboard "weren't implemented" after pulling #142. The code is on main and the
+  running `rojo serve` is serving Leaderboard/ChatPanel. Next step: check whether they tested the published place
+  (it needs a Studio publish) and whether Studio's Output shows a client error.
+
+- Owner: "fuck" went through the chat unfiltered. Cause: ChatPanel rendered the sender's local `Sending` echo,
+  which carries the raw text. It now renders only `TextChatMessageStatus.Success` (filtered). Studio never filters
+  chat at all, so verify in a live server.
+
+### Next
+1. Studio walk: the menu's position, and the prompts appearing (SetCore prompts do not show in Studio for some
+   actions; test in a live server).
+
+---
+
+## Session 92 — 2026-09-27 — Chat to top-left, rail drops and collapses when chat opens
+**Merged:** see the PR for this branch   **Tests:** CI   **Branch:** `claude/chat-top-left`
+
+### Done
+- Owner: chat should stay top-left; move the sidebar down a tad; the sidebar closes when chat opens; slightly more
+  space between PLAYER and the divider. So: the chat is anchored top-left. `GameConfig.HubMenu.RailOffsetY` (90)
+  lowers the rail, arrow and panel. New `HubMenu.collapse()` is fired by `ChatPanel.onOpened`. The leaderboard
+  header grows from 34 to 40px, so the headings no longer touch the divider.
+- Owner: "toggles the chat window by clicking on the default roblox chat icon". Roblox hides that icon when the
+  default window is disabled and exposes no click event, so a house-style chat button now sits in the top bar
+  (GuiService.TopbarInset) and toggles the panel. Showing the chat also collapses the rail.
+- Owner: dev menu should resize by dragging a corner. `DevPanel.luau` now has a bottom-right grip that resizes the
+  panel, from `GameConfig.Debug.PanelMinWidth/Height` up to the viewport. The old fixed MaxSize is gone.
+- Owner's partner cannot see the rotating constellation above the Fate Engine. Cause: `HubV2` clones
+  `hubsky_ring_constellation` / `_spokes` / `_core` / `_gyro_a/b` from the HUB_SKY prefab, and those meshes exist
+  only in the owner's uncommitted local `assets/rbxm/prefabs/HUB_SKY.rbxmx`. origin/main's copy lacks them, and
+  HubV2 silently skips missing meshes. Fixed: with the owner's go-ahead, their local prefab (12 new MeshParts on
+  uploaded rbxassetids) is committed in this PR.
+
+### Stopped at
+Not walked in Studio. Check that the rail clears the chat on small or phone screens, and tune RailOffsetY if not.
+
+### Next
+1. Studio walk of both panels.
+
+---
+
+## Session 91 — 2026-09-27 — Custom leaderboard + chat panel in the house style
+**Merged:** see the PR for this branch   **Tests:** CI (luau not installed locally)   **Branch:** `claude/leaderboard-chat-ui`
+
+### Done
+- Owner asked for a custom leaderboard and chat panel that match the game's GUI. New `client/UI/Leaderboard.luau`
+  (top-right, Tab toggles, replaces the CoreGui player list) and `client/UI/ChatPanel.luau` (bottom-left, / focuses,
+  built on TextChatService, and fades when idle). Both use UIKit surfaces and UITheme tokens. Wired into
+  `init.client.luau`. Tunables are in `GameConfig.Leaderboard` / `GameConfig.Chat`. Doc: PLAYER_UI §3.7.
+
+### Decisions made
+- Owner: "should be easily modifiable, as there will be more attributes… name alone is fine, and perhaps rank".
+  So the columns are a data list (`RANK` / `NAME` / any Player attribute). There is no server change yet: a future
+  stat is `SetAttribute` on the server plus one config row.
+- Owner likes "FATEBOUND" but finds it undescriptive, so the title stays FATEBOUND with a "N players" count beside it.
+- Chat keeps TextChatService underneath, so Roblox moderation and filtering still apply.
+
+### Stopped at
+Code done and lint-clean. It has not been walked in Studio yet.
+
+### Next
+1. Studio check: the panel positions against the hub rail and the mobile controls, and that `/` commands still
+   fire through the custom input (SendAsync should trigger TextChatCommands; confirm this).
+2. When a stat should show, set the attribute server-side and add a column.
 
 ---
 
