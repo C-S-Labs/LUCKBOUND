@@ -69,7 +69,7 @@
 | `docs/VV_SOCKET_AUDIT.md` | complete 30-chunk socket/opening audit, root cause/repair, before/after reports and raw query/source evidence |
 | `docs/VV_SOCKET_WIDTH_REVIEW.md` | follow-up exact path/width audit: five gate reversals, Mushroom west exit, unchanged controls and new full-kit evidence |
 | `docs/CHUNK_AUTHORING.md` / `docs/CHUNK_DROP_IN.md` | engine contract for modelling a kit / dropping a kit in |
-| `docs/biomes/<WORLD>.md` | what a world is (pieces, kinds, inhabitants); `SKY_CITADEL`, `VERDANT_VALLEY` |
+| `docs/biomes/<WORLD>.md` | what a world is (pieces, kinds, inhabitants); `SKY_CITADEL`, `VERDANT_VALLEY`, `ASTRAL_REACH` (locked scheme, design only, with its concept sheet `docs/design/ASTRAL_REACH_SCHEME.webp`) |
 | `docs/ENEMY_FRAMEWORK.md` | how every enemy, miniboss and boss is built, rigged, animated and exported |
 | `docs/BOSS_ANIMATION_VFX.md` | **boss animation and VFX contract** (all bosses): fairness minimums, markers, effect recipes, budgets, delivery order, acceptance; links the per-boss work orders (`ASCENDANT_MOVESET`, `WS_MOVESET`, `astral_reach/ROSTER.md`); source plans in `docs/design/boss_plans/` |
 | `docs/ENEMY_AI.md` | how enemies behave: utility AI, difficulty, boss evolution, weapon movesets, tuning, and the mandatory build order (design only; authoritative for behaviour) |

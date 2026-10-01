@@ -90,7 +90,7 @@ replacement; cancellation behaviour. Reuse code for rings, bursts, trails and de
 
 ## 6. Phases, transitions and defeat (the shape every boss follows)
 
-- Phase boundaries and damage modifiers stay as the boss's moveset sheet states; this doc adds no third phase.
+- Phase count, boundaries and damage modifiers come from the boss's locked design/moveset sheet (Astral bosses have 3 phases per `docs/biomes/ASTRAL_REACH.md`); this doc adds no phase of its own.
 - **Transition:** no damage, one largest silhouette change, harmless cosmetic debris with deterministic movement and a TTL,
   then a free vulnerable window (recovery-dimmed). Break pieces hide the source armour once and restore on reset.
 - **Defeat:** about 3.5–4 s, all damage cancelled, no ragdoll or explosion, one readable final silhouette, a bounded
@@ -131,5 +131,4 @@ replacement; cancellation behaviour. Reuse code for rings, bursts, trails and de
 | Astral Seraph (Astral Reach) | not built | `assets/source/enemies/astral_reach/ROSTER.md` |
 | Celestial Dancer (Astral Reach) | not built | `assets/source/enemies/astral_reach/ROSTER.md` |
 
-`src/shared/Content/Worlds/AstralReach.luau` still names `STAR_EATER` as its boss. **Do not swap it for Seraph or Dancer without a
-separate owner-approved task.** Future bosses copy a work-order block (audit, manifest, prototypes, parts, FX recipes, conflicts, acceptance).
+Astral Reach's locked design is `docs/biomes/ASTRAL_REACH.md` and it wins over the plan (see the reconciliation table in `astral_reach/ROSTER.md`). `AstralReach.luau` still names `STAR_EATER`; **wiring Seraph/Dancer as its bosses is a separate owner-approved task.** Future bosses copy a work-order block (audit, manifest, prototypes, parts, FX recipes, conflicts, acceptance).
