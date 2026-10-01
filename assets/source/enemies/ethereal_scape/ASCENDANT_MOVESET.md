@@ -132,3 +132,58 @@ every boss.
 | Portal step | Floor portal ring at departure and arrival; mint afterimage | root |
 | Phase change | Cuirass debris flies off, core flares, crown blazes | `VFX_Core`, `Breakaway` |
 | Defeat | Crown shards crack off, then an upward crystal dissolve and a fading portal ring; loot after (~4 s, harmless) | `VFX_Core` |
+
+
+## Work order 2026-09-30: animation and VFX construction (owner-directed; contract in `docs/BOSS_ANIMATION_VFX.md`)
+
+Source: `docs/design/boss_plans/ASCENDANT_SENTINEL_ANIMATION_VFX_PLAN.md` §4. **Pending input: the owner is pushing an updated Ascendant spec and mesh
+with extra rigging and joint properties. Do not start any step that touches the mesh or rig until it lands; reconcile that spec first and update this
+order.** Timings below are existing source timings or *proposals*; no combat rebalance.
+
+**0. Guard rails**
+- The shipped FBXs come from the hand-edited `TheAscendant.blend` (chest/centre crystal adjusted, `BreakawayGlow` removed). Never run a full
+  scripted rebuild/export over it, and never re-add `BreakawayGlow`. Locate the newest authoritative `.blend` (and any `_fixed`), compare dates,
+  meshes, rig names and exports, then generate actions separately and transfer them onto the compatible rig.
+- Confirm the inner core and `Breakaway` mesh still exist before designing the transition around them. No hood, no halo.
+- Do not add dozens of bones for VFX. Plan counts (154 bones: 16 robe chains x 5, 4 scarves x 4) are unverified; audit the real scene.
+
+**1. Audit (deliverable)**: authoritative file, tri/bone counts, which of `Weapon_R`, `VFX_Core`, `VFX_Eye`, `VFX_PalmL/R`, `VFX_Orb`,
+`VFX_StaffBase`, `VFX_StaffTip` really exist (the last two are only documented), clipping/wrist reports against the re-authored actions.
+
+**2. Construction to add**
+| Item | Work |
+|---|---|
+| Sockets | Register missing `VFX_StaffBase`/`VFX_StaffTip`; orb socket at orb centre following the staff; verify imported transforms while animating |
+| Armour debris | Split/identify harmless chunks of the real `Breakaway` cuirass (no duplicate armour underneath); deterministic cosmetic motion, TTL, restore on reset |
+| Crystal shard | One reusable low-poly shard for transition/death; do not rig every crystal |
+| FX meshes | Thin ring, tapered crescent, optional bolt shell, crystal pillar (see contract §5) |
+| Cloth | Tune follow-through for casts and portal steps; no new giant cape |
+| Orb | `StaffOrb` glow driven as phase/tell data, not whole-staff overexposure |
+| Actions to build | `P2_Transfiguration` (70 f), `Hit_React`, `Stagger/Recover`, death, plus approved move variants below |
+
+**3. Existing actions: production recipes** (source frames, 1-based)
+- `P1_CrescentReap` 60 f: Tell 3, Crescent 14, hit 17-22, recover 23-60. Overhead chop; narrow downward blade ribbon on active frames only.
+- `P1_OrbCast` 54 f: Tell 3, Cast 12, hit/spawn 18-22, recover 24-54. One mint-blue bolt from `VFX_Orb`, tiny release ring.
+- `P1_SkyCast` 66 f: Tell 3, Cast 20, release 34-40, recover 42-66. Maps to **one** named ground-spell recipe in encounter data; never lattice, starfall and Crown Flare together.
+- **Spawn window is not projectile lifetime.** `HitEnd` f22 ends the release window; the bolt needs its own authoritative lifetime/range/collision and must not become an unmarked lingering hazard.
+- OrbCast cue sheet: f3 `Tell`, f12 `VFX_Cast`, f16 proposed `Commit`, f18 `HitStart` (spawn bolt from live socket), f22 `HitEnd`, f24 `RecoverStart` (dim, no second cast), f54 end.
+
+**4. Prototypes (do these first, end to end):** `P1_OrbCast` + overhead `P1_CrescentReap`. They prove staff sockets, skinning, grips, cast origin and timing.
+
+**5. Move variants (older melee-first sheet; reconcile before enabling, none confirmed built)**
+Rising Crescent 12/5/26; Portal Step -> Thrust 16/6/28; Sanctum Lattice 18/8/34 (generic SkyCast cannot substitute); Crown Flare 8/26 counter/20;
+Twin Reap P2 12 then 8 / 5+5 / 30 (decide arcs vs overhead); Portal Chain P2 14 per arrival / 3x6 f / 40; Starfall Lattice P2 20 / 2x8 f / 36;
+Crescent Wave P2 16/10/30; Ascension finisher: replace four Reaps with **two strokes, opening, two strokes, 60 f kneel** (three-attack rule).
+Portal destinations validated against real collision/navigation, each with a full warning and reachable escape. Counterplay (jump/roll) verified against actual player capability.
+
+**6. Transfiguration cue sheet** (70 f, then 60 f vulnerable; no damage; keeps 55% boundary and +25% damage without cuirass): f1-20 knee, veins rise; f21-29 core
+charges; f30 `ArmourBreak` shards, no fire/smoke; f30-50 crystal torso revealed; f50-70 rise into slight hover in sword range; f70 `P2Start`, no portal escape or cast.
+
+**7. Defeat (~4 s):** cancel casts/projectiles per encounter cleanup, staff lowers, crown sheds a few harmless shards, robe settles, one thin portal ring, motes rise. Preserve the edited silhouette. No implosion, no floor-wide hazard.
+
+**8. Conflicts to resolve (record decisions here):** older horizontal Reap vs current overhead chop (keep the chop; any horizontal move gets a new approved id);
+melee duelist vs caster-first roster (define one roster, enable nothing automatically); "only ranged move" prose is stale (OrbCast/SkyCast exist); table timing vs cast clips; edited `.blend` vs generator.
+
+**9. VFX recipes:** `ASCENDANT_MOVESET.md` VFX plan above stays; additionally palette `#8CFFD0` / `#7FC8FF` checked against Ethereal Scape's bright cloud lighting; aggregate ~50 live particles normal, ~110 transition.
+
+**10. Acceptance (boss-specific, on top of contract §8):** edited chest/crystal intact and `BreakawayGlow` absent; cast effects start at the moving `VFX_Orb`; armour breaks remove the correct parts once and restore on reset.

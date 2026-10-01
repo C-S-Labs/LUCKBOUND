@@ -188,6 +188,8 @@ feet, and the hips, chest, weapon and head ride that shift.
 - **In place:** attacks are animated in place, and the AI moves the root between markers.
 
 ## 5. VFX (one shared system)
+> Boss animation, effect recipes, budgets and acceptance gates: `docs/BOSS_ANIMATION_VFX.md` (owner-directed 2026-09-30).
+
 - **Attachments:** the socket bones become Attachments: `Weapon_R`, weapon tip, `VFX_Core`, `VFX_Eye`, wing tips and feet.
 - **Emitters:** `ParticleEmitter`, `Trail` and `Beam` objects hang off those attachments and are switched on and off by the combat markers.
 - **Texture sheet:** one shared sheet (spark, soft glow, streak, ring, rune circle, shard) for every biome, recoloured per biome palette.

@@ -9,6 +9,8 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 ## 1. Where the project stands
 
+- **Boss animation/VFX (2026-09-30, docs only):** `docs/BOSS_ANIMATION_VFX.md` is the universal contract for every boss; per-boss work orders are in `ASCENDANT_MOVESET.md`, `WS_MOVESET.md` and `astral_reach/ROSTER.md` (Seraph, Dancer: not built). Ascendant work waits on the owner's updated spec and mesh.
+
 - **UI overhaul (branch `agents/UI-overhaul`, 2026-09-29):** the whole player UI moved to the SIGIL visual language
   (`client/UI/Sigil/`): HUD, chat, leaderboard (Fate level column), universal menu, the Fate Engine main menu with
   sub-sigils, the loading/title screen and the C&S Labs ident. Owner walked it in Studio; present in frozen main PR #149 and retained in this integration. Shop,
@@ -22,7 +24,7 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   (**41-piece hybrid kit** — floating isles + temple + meadow, 2 landmarks, 2 miniboss arenas, 6 backdrop
   pieces with drifting cloud props, height variation — on the §7.7 generation blueprint, 2026-09-27; final
   polish pass done (map-wide skyrays, natural mushroom patches, overhang check) — **uploaded IDs retained; integrated Studio walk pending**). Emberfall and Astral
-  Reach have no map yet.
+  Reach have no map yet (Astral Reach's design scheme and both bosses are locked in `docs/biomes/ASTRAL_REACH.md`; animation/VFX work orders in `assets/source/enemies/astral_reach/ROSTER.md`, 2026-09-30; unbuilt).
 
   | Id | Rarity | Weight | Phase | Map | Enterable? |
   |---|---|---|---|---|---|

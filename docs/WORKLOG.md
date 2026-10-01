@@ -36,6 +36,30 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 207 — 2026-09-30 — Astral Reach planning consolidated; universal boss animation/VFX contract
+**Merged:** consolidated PR (this branch)   **Tests:** docs only, no `src/` change   **Branch:** worktree-boss-anim-vfx-plans
+
+### Done
+- Merged the unmerged Astral Reach design branch (`claude/astral-reach-scheme-doc-1c7134`: `docs/biomes/ASTRAL_REACH.md`, `docs/design/ASTRAL_REACH_BOSS_REFINEMENT.md`, `ASTRAL_REACH_SCHEME.webp`; its Session 121 entry is the design record) together with the new animation/VFX docs.
+- New `docs/BOSS_ANIMATION_VFX.md` (universal boss contract), plans in `docs/design/boss_plans/`, work orders in `ASCENDANT_MOVESET.md`, `WS_MOVESET.md`, `assets/source/enemies/astral_reach/ROSTER.md`.
+- Reconciled the Astral work orders against the locked design (table in `astral_reach/ROSTER.md`).
+
+### Decisions made
+- Locked design wins over the plan: **3 phases each**, owner triangle budgets (Seraph 175-200k, Dancer 200-250k).
+- **Open owner question:** Dancer second handheld blade (plan) vs dropped in favour of Twin Echo (design 2026-09-29). Defaulting to the locked design; second-blade work is on hold.
+- Plan timings/budgets are proposals; nothing in existing movesets rebalanced.
+
+### Stopped at
+Docs only. The P2->Final-phase transition work order for both Astral bosses is still to be written. Ascendant work waits on the owner's updated spec/mesh.
+
+### Next
+Owner rules on the Dancer blade; then Seraph Wing Sweep and Dancer Opening Waltz prototypes, Ascendant OrbCast/Reap, Sentinel Lunge.
+
+### Leftovers
+None created.
+
+---
+
 ## Session 206 — 2026-09-30 — Final VV integration wrap-up and owner Studio pass
 **Merged:** existing two-parent integration merge `191ea0b` retained; local completion commit authorized; no push/main merge   **Branch:** integration/vv-main-sync   **Tests:** 1,017/1,017 Luau; 7/7 Blender regressions; 7/7 verifier probes; 129 Luau/11 Python syntax files; full Rojo 7.7 build
 
