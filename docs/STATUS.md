@@ -9,6 +9,7 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 ## 1. Where the project stands
 
+- **ES enemies handed to Codex (2026-09-30):** read `assets/source/enemies/ethereal_scape/CODEX_HANDOFF.md`; Ascendant work waits on the owner's updated spec/mesh.
 - **Boss animation/VFX (2026-09-30, docs only):** `docs/BOSS_ANIMATION_VFX.md` is the universal contract for every boss; per-boss work orders are in `ASCENDANT_MOVESET.md`, `WS_MOVESET.md` and `astral_reach/ROSTER.md` (Seraph, Dancer: not built). Ascendant work waits on the owner's updated spec and mesh.
 
 - **UI overhaul (branch `agents/UI-overhaul`, 2026-09-29):** the whole player UI moved to the SIGIL visual language

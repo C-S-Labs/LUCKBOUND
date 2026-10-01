@@ -36,6 +36,21 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 211 — 2026-09-30 — Ethereal Scape enemy work handed to Codex (docs only)
+**Merged:** this PR   **Tests:** docs only   **Branch:** agent/es-enemy-codex-handoff
+
+### Done
+- Owner is handing the Ascendant and the other ES enemies to Codex. Wrote `assets/source/enemies/ethereal_scape/CODEX_HANDOFF.md`: read order, verified build state of every ES enemy, guard rails (hand-edited Ascendant `.blend`, owner's uncommitted local ES files), ordered next steps, settled decisions.
+
+### Open
+- Owner's updated Ascendant spec and mesh (extra rigging/joint properties) is not in the repo yet; Codex must reconcile it before touching the Ascendant.
+- `ROSTER.md` status table is stale (says 1/9 built; five basics have scripts).
+
+### Leftovers
+None created.
+
+---
+
 ## Session 210 — 2026-09-30 — Stagger timing and player-combat roadmap (docs only)
 **Merged:** none yet   **Tests:** docs only   **Branch:** agent/astral-boss-forms (PR #152)
 
