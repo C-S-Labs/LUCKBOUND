@@ -293,9 +293,9 @@ _406 text files, 935 binary assets. Regenerate with `python tools/gen_index.py`;
 - `assets/source/worlds/verdant_valley/STUDIO_REPAIR_REPORT.json` (631) · 2026-09-30
 - `assets/source/worlds/verdant_valley/audit_scene_geometry.py` (94) - Read-only contact and solid-intersection review of the owner's current chunk meshes. · 2026-09-30
   - `audit_scene_geometry.py`: main:17
-- `assets/source/worlds/verdant_valley/audit_socket_surfaces.py` (65) - Read-only authored terrain/solid-prop opening samples in export-local coordinates. · new
+- `assets/source/worlds/verdant_valley/audit_socket_surfaces.py` (65) - Read-only authored terrain/solid-prop opening samples in export-local coordinates. · 2026-09-30
   - `audit_socket_surfaces.py`: main:16
-- `assets/source/worlds/verdant_valley/audit_socket_widths.py` (79) - Read-only VV authored exit/width audit, including every asymmetric gate. · new
+- `assets/source/worlds/verdant_valley/audit_socket_widths.py` (79) - Read-only VV authored exit/width audit, including every asymmetric gate. · 2026-09-30
   - `audit_socket_widths.py`: main:15
 - `assets/source/worlds/verdant_valley/build_cliff_passage_collision.py` (215) - Export Cliff Passage's terrain floor and two broad boundary walls. · 2026-09-29
   - `build_cliff_passage_collision.py`: terrain_bvh:32, closed_mesh:76, wall_mesh:100, main:113
@@ -488,73 +488,73 @@ _406 text files, 935 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/VV_SOCKET_AUDIT.md
 
-- `docs/VV_SOCKET_AUDIT.md` (160) - Verdant Valley socket/opening validation and repair — 2026-09-30 · new
+- `docs/VV_SOCKET_AUDIT.md` (160) - Verdant Valley socket/opening validation and repair — 2026-09-30 · 2026-09-30
   - `VV_SOCKET_AUDIT.md`: Result:12, Conclusive repair: Woodland Refuge:28, Independent geometry and production safety:66, Validation:86, Remaining owner inspection:112, Files changed and reproducibility:138, Cleanup recommendation:155
 
 ### docs/VV_SOCKET_AUDIT_AFTER.json
 
-- `docs/VV_SOCKET_AUDIT_AFTER.json` (100528) · new
+- `docs/VV_SOCKET_AUDIT_AFTER.json` (100528) · 2026-09-30
 
 ### docs/VV_SOCKET_AUDIT_AFTER.md
 
-- `docs/VV_SOCKET_AUDIT_AFTER.md` (102) - Verdant Valley complete socket audit — after · new
+- `docs/VV_SOCKET_AUDIT_AFTER.md` (102) - Verdant Valley complete socket audit — after · 2026-09-30
   - `VV_SOCKET_AUDIT_AFTER.md`: Every detected anomaly:75, Evidence limitations and preservation:98
 
 ### docs/VV_SOCKET_AUDIT_BEFORE.json
 
-- `docs/VV_SOCKET_AUDIT_BEFORE.json` (100433) · new
+- `docs/VV_SOCKET_AUDIT_BEFORE.json` (100433) · 2026-09-30
 
 ### docs/VV_SOCKET_AUDIT_BEFORE.md
 
-- `docs/VV_SOCKET_AUDIT_BEFORE.md` (102) - Verdant Valley complete socket audit — before · new
+- `docs/VV_SOCKET_AUDIT_BEFORE.md` (102) - Verdant Valley complete socket audit — before · 2026-09-30
   - `VV_SOCKET_AUDIT_BEFORE.md`: Every detected anomaly:75, Evidence limitations and preservation:98
 
 ### docs/VV_SOCKET_AUDIT_WIDTH_AFTER.json
 
-- `docs/VV_SOCKET_AUDIT_WIDTH_AFTER.json` (100819) · new
+- `docs/VV_SOCKET_AUDIT_WIDTH_AFTER.json` (100819) · 2026-09-30
 
 ### docs/VV_SOCKET_AUDIT_WIDTH_AFTER.md
 
-- `docs/VV_SOCKET_AUDIT_WIDTH_AFTER.md` (105) - Verdant Valley complete socket audit — width_after · new
+- `docs/VV_SOCKET_AUDIT_WIDTH_AFTER.md` (105) - Verdant Valley complete socket audit — width_after · 2026-09-30
   - `VV_SOCKET_AUDIT_WIDTH_AFTER.md`: Every detected anomaly:75, Added path identity and width criterion:96, Evidence limitations and preservation:101
 
 ### docs/VV_SOCKET_AUDIT_WIDTH_BEFORE.json
 
-- `docs/VV_SOCKET_AUDIT_WIDTH_BEFORE.json` (100843) · new
+- `docs/VV_SOCKET_AUDIT_WIDTH_BEFORE.json` (100843) · 2026-09-30
 
 ### docs/VV_SOCKET_AUDIT_WIDTH_BEFORE.md
 
-- `docs/VV_SOCKET_AUDIT_WIDTH_BEFORE.md` (113) - Verdant Valley complete socket audit — width_before · new
+- `docs/VV_SOCKET_AUDIT_WIDTH_BEFORE.md` (113) - Verdant Valley complete socket audit — width_before · 2026-09-30
   - `VV_SOCKET_AUDIT_WIDTH_BEFORE.md`: Every detected anomaly:75, Added path identity and width criterion:104, Evidence limitations and preservation:109
 
 ### docs/VV_SOCKET_AUTHORED_SURFACES.json
 
-- `docs/VV_SOCKET_AUTHORED_SURFACES.json` (41200) · new
+- `docs/VV_SOCKET_AUTHORED_SURFACES.json` (41200) · 2026-09-30
 
 ### docs/VV_SOCKET_PAIR_PROBES.json
 
-- `docs/VV_SOCKET_PAIR_PROBES.json` (1794) · new
+- `docs/VV_SOCKET_PAIR_PROBES.json` (1794) · 2026-09-30
 
 ### docs/VV_SOCKET_SAVED_HULL_COMPARISON.json
 
-- `docs/VV_SOCKET_SAVED_HULL_COMPARISON.json` (1) · new
+- `docs/VV_SOCKET_SAVED_HULL_COMPARISON.json` (1) · 2026-09-30
 
 ### docs/VV_SOCKET_WIDTH_EVIDENCE.json
 
-- `docs/VV_SOCKET_WIDTH_EVIDENCE.json` (1) · new
+- `docs/VV_SOCKET_WIDTH_EVIDENCE.json` (1) · 2026-09-30
 
 ### docs/VV_SOCKET_WIDTH_PAIR_PROBES.json
 
-- `docs/VV_SOCKET_WIDTH_PAIR_PROBES.json` (12700) · new
+- `docs/VV_SOCKET_WIDTH_PAIR_PROBES.json` (12700) · 2026-09-30
 
 ### docs/VV_SOCKET_WIDTH_REVIEW.md
 
-- `docs/VV_SOCKET_WIDTH_REVIEW.md` (188) - Verdant Valley authored path exits and asymmetric widths — 2026-09-30 · new
+- `docs/VV_SOCKET_WIDTH_REVIEW.md` (188) - Verdant Valley authored path exits and asymmetric widths — 2026-09-30 · 2026-09-30
   - `VV_SOCKET_WIDTH_REVIEW.md`: Before corrections: independent measurements:8, Shared cause and limits of the prior heuristic:64, Corrections and verification:86, Owner Studio validation — 2026-09-30:147, Exact files and preserved history:164
 
 ### docs/VV_SOCKET_WIDTH_RUNTIME_AFTER.json
 
-- `docs/VV_SOCKET_WIDTH_RUNTIME_AFTER.json` (1) · new
+- `docs/VV_SOCKET_WIDTH_RUNTIME_AFTER.json` (1) · 2026-09-30
 
 ### docs/WEAPONS.md
 
@@ -829,7 +829,7 @@ _406 text files, 935 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### tools/audit_vv_sockets.luau
 
-- `tools/audit_vv_sockets.luau` (255) - Read-only production socket audit. Execute in Studio Server with optional · new
+- `tools/audit_vv_sockets.luau` (255) - Read-only production socket audit. Execute in Studio Server with optional · 2026-09-30
   - `audit_vv_sockets.luau`: rotation:18, query:21, probe:27, run:41
 
 ### tools/blender_runtime.py
@@ -854,12 +854,12 @@ _406 text files, 935 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### tools/probe_vv_socket_pair.luau
 
-- `tools/probe_vv_socket_pair.luau` (116) - Temporary saved-collision approach probes at four yaws; destroys all clones. · new
+- `tools/probe_vv_socket_pair.luau` (116) - Temporary saved-collision approach probes at four yaws; destroys all clones. · 2026-09-30
   - `probe_vv_socket_pair.luau`: run:27
 
 ### tools/report_vv_socket_audit.py
 
-- `tools/report_vv_socket_audit.py` (120) - Classify complete VV socket evidence without treating query hulls as visible mesh. · new
+- `tools/report_vv_socket_audit.py` (120) - Classify complete VV socket evidence without treating query hulls as visible mesh. · 2026-09-30
   - `report_vv_socket_audit.py`: classify:10, main:67
 
 ### tools/run_blender.py
@@ -879,7 +879,7 @@ _406 text files, 935 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### tools/test_vv_collision_verifier.py
 
-- `tools/test_vv_collision_verifier.py` (55) - Small in-memory failure probes for the read-only production collision verifier. · new
+- `tools/test_vv_collision_verifier.py` (55) - Small in-memory failure probes for the read-only production collision verifier. · 2026-09-30
   - `test_vv_collision_verifier.py`: CollisionVerifierTests:9
 
 ### tools/verify_vv_collision_rbxmx.py
