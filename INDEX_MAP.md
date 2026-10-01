@@ -380,8 +380,8 @@ _412 text files, 936 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/BOSS_ANIMATION_VFX.md
 
-- `docs/BOSS_ANIMATION_VFX.md` (134) - Boss animation and VFX contract (universal, every boss in every biome) · 2026-09-30
-  - `BOSS_ANIMATION_VFX.md`: 1. Principles:13, 2. Fairness (extends the Sky Citadel rules; these are the sh:26, 3. Blender contract (all in the existing `_framework/`, head:40, 4. Timing, markers and manifest (per action):61, 5. Runtime effect recipe (data, not copy-pasted emitter code:70, 6. Phases, transitions and defeat (the shape every boss foll:91, 7. Mandatory delivery order for any boss (extends `ENEMY_AI.:100, 8. Acceptance gates (all bosses):113, 9. Per-boss work orders (where the construction lists live):125
+- `docs/BOSS_ANIMATION_VFX.md` (135) - Boss animation and VFX contract (universal, every boss in every biome) · 2026-09-30
+  - `BOSS_ANIMATION_VFX.md`: 1. Principles:13, 2. Fairness (extends the Sky Citadel rules; these are the sh:26, 3. Blender contract (all in the existing `_framework/`, head:41, 4. Timing, markers and manifest (per action):62, 5. Runtime effect recipe (data, not copy-pasted emitter code:71, 6. Phases, transitions and defeat (the shape every boss foll:92, 7. Mandatory delivery order for any boss (extends `ENEMY_AI.:101, 8. Acceptance gates (all bosses):114, 9. Per-boss work orders (where the construction lists live):126
 
 ### docs/CHUNK_AUTHORING.md
 
@@ -410,8 +410,8 @@ _412 text files, 936 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/ENEMY_AI.md
 
-- `docs/ENEMY_AI.md` (275) - Enemy AI: how every enemy, miniboss and boss thinks, adapts and is tuned · 2026-09-26
-  - `ENEMY_AI.md`: 1. Goals:19, 2. Governing rules:28, 3. Architecture:47, 4. The combat language (shared by items and enemies):67, 4.1 Weapons carry their own moves:83, 5. The map contract:97, 6. World effect palettes:113, 7. Archetypes:124, 8. The decision model (utility AI):143, Fairness guardrails (hard rules, tested):153, 9. Difficulty and rewards:162, The personal adjustment:169, Rewards:180, Win-rate targets:189, 10. Bosses:200, Universal evolution:208, Raid-ready, not raids:219, 11. Tuning and telemetry:224, 12. Order of operations (mandatory):234, Rules for agents:261, 13. Open questions:269
+- `docs/ENEMY_AI.md` (298) - Enemy AI: how every enemy, miniboss and boss thinks, adapts and is tuned · 2026-09-26
+  - `ENEMY_AI.md`: 1. Goals:19, 2. Governing rules:28, 3. Architecture:47, 4. The combat language (shared by items and enemies):67, 4.1 Weapons carry their own moves:83, 5. The map contract:97, 6. World effect palettes:113, 7. Archetypes:124, 8. The decision model (utility AI):143, Fairness guardrails (hard rules, tested):153, 9. Difficulty and rewards:162, The personal adjustment:169, Rewards:180, Win-rate targets:189, 10. Bosses:200, Universal evolution:208, Raid-ready, not raids:219, 10.1 Parry and stagger (owner design, 2026-09-30; not built):224, 11. Tuning and telemetry:247, 12. Order of operations (mandatory):257, Rules for agents:284, 13. Open questions:292
 
 ### docs/ENEMY_FRAMEWORK.md
 
@@ -570,8 +570,8 @@ _412 text files, 936 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (8248) - LUCKBOUND — Work Log · 2026-09-30
-  - `WORKLOG.md`: Template:18, Session N — YYYY-MM-DD — <short title>:21, Done:24, Decisions made:27, Stopped at:30, Next:33, Session 208 — 2026-09-30 — Dancer form changes decided; Astr:39, Done:42, Open:47, Next:50, Leftovers:53, Session 207 — 2026-09-30 — Astral Reach planning consolidate:58, Done:61, Decisions made:66, Stopped at:71, Next:74, Leftovers:77, Session 206 — 2026-09-30 — Final VV integration wrap-up and :82, Done:85, Decisions made:92, Stopped at:97, Next:100, Session 205 — 2026-09-30 — Exact VV path exits and gate-widt:105, Done:108, Decisions made:113, Stopped at:117, Next:120, Session 204 — 2026-09-30 — Full Verdant Valley socket/openin:125, Done:128, Decisions made:133, Stopped at:137, Next:140, Session 203 — 2026-09-30 — Reconcile frozen main with Verdan:145, Done:148, Decisions made:153, Stopped at:157, Next:160, Session 202 — 2026-09-30 — Correct Causeway collision regres:164, Done:168, Decisions made:173, ... +1027 more
+- `docs/WORKLOG.md` (8263) - LUCKBOUND — Work Log · 2026-09-30
+  - `WORKLOG.md`: Template:18, Session N — YYYY-MM-DD — <short title>:21, Done:24, Decisions made:27, Stopped at:30, Next:33, Session 209 — 2026-09-30 — Parry/stagger design; Final Phase:39, Done:42, Open:46, Leftovers:49, Session 208 — 2026-09-30 — Dancer form changes decided; Astr:54, Done:57, Open:62, Next:65, Leftovers:68, Session 207 — 2026-09-30 — Astral Reach planning consolidate:73, Done:76, Decisions made:81, Stopped at:86, Next:89, Leftovers:92, Session 206 — 2026-09-30 — Final VV integration wrap-up and :97, Done:100, Decisions made:107, Stopped at:112, Next:115, Session 205 — 2026-09-30 — Exact VV path exits and gate-widt:120, Done:123, Decisions made:128, Stopped at:132, Next:135, Session 204 — 2026-09-30 — Full Verdant Valley socket/openin:140, Done:143, Decisions made:148, Stopped at:152, Next:155, Session 203 — 2026-09-30 — Reconcile frozen main with Verdan:160, Done:163, Decisions made:168, Stopped at:172, ... +1031 more
 
 ### docs/archive
 

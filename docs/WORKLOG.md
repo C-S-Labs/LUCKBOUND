@@ -36,6 +36,21 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 209 — 2026-09-30 — Parry/stagger design; Final Phase keeps the contract (docs only)
+**Merged:** none yet   **Tests:** docs only   **Branch:** agent/astral-boss-forms (PR #152)
+
+### Done
+- Owner: keep the three-attack limit and 18 f punish in the Final Phase; difficulty comes from pressure. Recorded in the Astral roster.
+- New `ENEMY_AI.md` §10.1: player parry plus hit-only stagger, hidden internal meter for every boss; agile bosses parry-stagger (Dancer harder in P2/Final); large bosses (Seraph) are not staggered by parrying ranged attacks, only by a meter that fills on successive hits and drains slowly. Cross-referenced from `BOSS_ANIMATION_VFX.md`.
+
+### Open
+- The player parry mechanic (input, windows, cost) is not specified anywhere; needs `PLAYER_ABILITIES.md` plus a build-spec amendment. All stagger numbers are to be set by simulation.
+
+### Leftovers
+None created.
+
+---
+
 ## Session 208 — 2026-09-30 — Dancer form changes decided; Astral transitions drafted (docs only)
 **Merged:** none yet   **Tests:** docs only   **Branch:** agent/astral-boss-forms
 

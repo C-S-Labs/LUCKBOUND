@@ -221,6 +221,29 @@ The same brain as every enemy, with more layers, all driven by the moveset sheet
 - Multi-entity bosses share one blackboard.
 - Nothing in code assumes four players. Raids (4–10+ players) are future scope, with their own design document.
 
+### 10.1 Parry and stagger (owner design, 2026-09-30; not built)
+
+Players will be able to **parry**, and most bosses have a **stagger** that procs **only on hits** (confirmed damaging hits or successful parries, never on time, dodges or misses). Everything is decided server-side and every number is data in `GameConfig` (no magic numbers). The stagger meter is **internal for every boss and never shown to the player**; the cues are diegetic (flinch accent, a held broken-poise stance).
+
+Two models, chosen per boss in its moveset data:
+
+| | Agile / duelist bosses (Dancer, Sentinel, Ascendant) | Large bosses (Astral Seraph) |
+|---|---|---|
+| Parry | A successful parry on a melee attack opens a **short window** (stagger) to sneak in hits | Parrying **ranged** attacks never staggers it; at most it deflects/denies that attack |
+| Stagger source | The parry itself, plus the hidden meter | **The hidden meter only** |
+| Hidden meter | Present, same rules | **Fills with successive hits, drains slowly**; full means stagger |
+| Difficulty by phase | **Dancer:** P1 staggerable normally; P2 and Final harder (shorter windows and/or a higher fill threshold) but always possible | Meter thresholds and drain per phase; stays achievable under sustained pressure |
+
+Rules for the meter (all tunable, to be set by simulation like the win-rate bands in §9):
+- Each confirmed hit adds a weighted amount (weapon class, heavy vs light). Draining begins after a short no-hit delay and is **slow, but never so fast that sustained pressure cannot fill it**; sparse hits never stagger the boss.
+- Full meter -> the boss's `Stagger` action and a defined vulnerable window, then the meter resets and a **refractory period** blocks chain-staggering. Later phases raise resistance (threshold, drain, window length) by data.
+- A stagger never cuts through a **transition** or any server invulnerable state, and does not interrupt a damaging active window mid-hit: it lands at the next safe point (after `HitEnd` / at recovery) unless the move's data says it is interruptible during its tell. A parried attack is interrupted immediately.
+- A stagger cancels the attack's owned cosmetics (framework/contract cleanup rules) and lowers glow; it grants a punish window, not a free infinite combo (refractory).
+- The three-attack limit and 18 f punish minimum are **unchanged**; stagger is an extra, earned opening on top of them. Difficulty comes from the boss's pressure, tighter parry windows and phase resistance, not from removing openings.
+- A boss's own `Parry Stance` / `Riposte` moves (Sentinel) are boss attacks, separate from this player mechanic.
+
+Needs before building (not decided here): the player parry mechanic itself (input, frame window, stamina cost, melee vs projectile rules) belongs in `PLAYER_ABILITIES.md` and a build-spec amendment; any new remote must go through spec §4 first. Telemetry logs stagger events per cohort; the simulations must show bosses are neither unstaggerable nor trivially chain-staggered.
+
 ## 11. Tuning and telemetry
 
 - **Simulation:** headless bot players (aggressive melee, kiter, turtle, button-masher) run thousands of fights per
