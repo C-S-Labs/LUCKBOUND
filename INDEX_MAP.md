@@ -135,8 +135,8 @@ _412 text files, 936 binary assets. Regenerate with `python tools/gen_index.py`;
 - `assets/source/enemies/_framework/validate.py` (85) - Enemy validation (run by run.py --validate, or exec'd after any build). Prints VALIDATE lines and a PASS/FAIL summary. · 2026-09-28
 - `assets/source/enemies/_framework/walk_core.py` (281) - WALK CYCLE core (framework, humanoid bodies). A parametric, ANALYTICALLY SOLVED walk loop: every frame's foot · 2026-09-28
   - `walk_core.py`: _ik2:20, leg_to:54, _rest_foot:58, _leg_phase:61, _wrot:75, _tilt:83, _swing_arm:88, _level_head:102, walk_pose_humanoid:108, _leg_len:137, _resolve_gait:153, build_walk_humanoid:164, strafe_pose_humanoid:180, _quad_leg_len:220, walk_pose_quadruped:224, build_walk_quadruped:243, build_strafe_humanoid:264
-- `assets/source/enemies/astral_reach/ROSTER.md` (104) - Astral Reach enemy roster (STAGING, biome has no map yet) · 2026-09-30
-  - `ROSTER.md`: Shared rules for both:26, Boss A: Astral Seraph — NOT BUILT (work order):33, Boss B: Celestial Dancer — NOT BUILT (work order):66, Build status:98
+- `assets/source/enemies/astral_reach/ROSTER.md` (110) - Astral Reach enemy roster (STAGING, biome has no map yet) · 2026-09-30
+  - `ROSTER.md`: Shared rules for both:26, Boss A: Astral Seraph — NOT BUILT (work order):33, Boss B: Celestial Dancer — NOT BUILT (work order):67, Build status:104
 - `assets/source/enemies/ethereal_scape/ASCENDANT_MOVESET.md` (189) - The Ascendant: moveset (v1) · 2026-09-30
   - `ASCENDANT_MOVESET.md`: Phase 1: The Guardian (ivory cuirass intact), 100-55% HP:27, Transition: P2_Transfiguration (70 f, invulnerable, no damag:44, Phase 2: Ascended (inner body exposed, crystal ascendant), 5:53, Fairness rules (every boss, restated):64, Animations:74, VFX plan (Studio):122, Work order 2026-09-30: animation and VFX construction (owner:137
 - `assets/source/enemies/ethereal_scape/ROSTER.md` (62) - Ethereal Scape enemy roster (base chunk set only) · 2026-09-28
@@ -570,8 +570,8 @@ _412 text files, 936 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (8229) - LUCKBOUND — Work Log · 2026-09-30
-  - `WORKLOG.md`: Template:18, Session N — YYYY-MM-DD — <short title>:21, Done:24, Decisions made:27, Stopped at:30, Next:33, Session 207 — 2026-09-30 — Astral Reach planning consolidate:39, Done:42, Decisions made:47, Stopped at:52, Next:55, Leftovers:58, Session 206 — 2026-09-30 — Final VV integration wrap-up and :63, Done:66, Decisions made:73, Stopped at:78, Next:81, Session 205 — 2026-09-30 — Exact VV path exits and gate-widt:86, Done:89, Decisions made:94, Stopped at:98, Next:101, Session 204 — 2026-09-30 — Full Verdant Valley socket/openin:106, Done:109, Decisions made:114, Stopped at:118, Next:121, Session 203 — 2026-09-30 — Reconcile frozen main with Verdan:126, Done:129, Decisions made:134, Stopped at:138, Next:141, Session 202 — 2026-09-30 — Correct Causeway collision regres:145, Done:149, Decisions made:154, Stopped at:157, Next:160, Session 201 — 2026-09-30 — Centralize Blender Windows thumbn:164, Done:168, Decisions made:174, ... +1022 more
+- `docs/WORKLOG.md` (8248) - LUCKBOUND — Work Log · 2026-09-30
+  - `WORKLOG.md`: Template:18, Session N — YYYY-MM-DD — <short title>:21, Done:24, Decisions made:27, Stopped at:30, Next:33, Session 208 — 2026-09-30 — Dancer form changes decided; Astr:39, Done:42, Open:47, Next:50, Leftovers:53, Session 207 — 2026-09-30 — Astral Reach planning consolidate:58, Done:61, Decisions made:66, Stopped at:71, Next:74, Leftovers:77, Session 206 — 2026-09-30 — Final VV integration wrap-up and :82, Done:85, Decisions made:92, Stopped at:97, Next:100, Session 205 — 2026-09-30 — Exact VV path exits and gate-widt:105, Done:108, Decisions made:113, Stopped at:117, Next:120, Session 204 — 2026-09-30 — Full Verdant Valley socket/openin:125, Done:128, Decisions made:133, Stopped at:137, Next:140, Session 203 — 2026-09-30 — Reconcile frozen main with Verdan:145, Done:148, Decisions made:153, Stopped at:157, Next:160, Session 202 — 2026-09-30 — Correct Causeway collision regres:164, Done:168, Decisions made:173, ... +1027 more
 
 ### docs/archive
 

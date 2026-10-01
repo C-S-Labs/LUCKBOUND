@@ -36,6 +36,25 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 208 — 2026-09-30 — Dancer form changes decided; Astral transitions drafted (docs only)
+**Merged:** none yet   **Tests:** docs only   **Branch:** agent/astral-boss-forms
+
+### Done
+- Owner ruled on the Dancer: one real blade through P1 and P2; P2 form change = cape unfurl (outer layer peels, ribbon streamers) plus a fan of 3-5 floating blades; second spectral blade materialises from particles at P2 -> Final.
+- Owner: P1 must be **slim and elegant** (basis: `docs/design/ASTRAL_REACH_SCHEME.webp`). Recorded as a silhouette rule and acceptance gate in `assets/source/enemies/astral_reach/ROSTER.md`; budgets updated to the owner's 175-200k / 200-250k.
+- Drafted P1 -> P2 and P2 -> Final transitions (Dancer), and P2 -> Final "Ascension" (Seraph), as proposals.
+
+### Open
+- The locked Final Phase wording ("minimal recovery", overlapping attacks) vs the 18 f punish / 3-attack contract: owner to confirm the contract holds.
+
+### Next
+Silhouette renders at player scale for owner review before animation; then the Seraph Wing Sweep and Dancer Opening Waltz prototypes.
+
+### Leftovers
+None created.
+
+---
+
 ## Session 207 — 2026-09-30 — Astral Reach planning consolidated; universal boss animation/VFX contract
 **Merged:** consolidated PR (this branch)   **Tests:** docs only, no `src/` change   **Branch:** worktree-boss-anim-vfx-plans
 
