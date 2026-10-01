@@ -400,7 +400,7 @@ _412 text files, 936 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/DEVELOPMENT_PLAN.md
 
-- `docs/DEVELOPMENT_PLAN.md` (302) - LUCKBOUND — Development Plan · 2026-09-26
+- `docs/DEVELOPMENT_PLAN.md` (302) - LUCKBOUND — Development Plan · 2026-09-30
   - `DEVELOPMENT_PLAN.md`: 1. The decision that shapes everything:16, 2. Where we actually are:47, 3. The critical path to a playtest:67, Phase 0 — Clear the deck · **S**:74, Phase 1 — Every roll leads somewhere · **M**:89, Phase 1b — The procedural loop proves itself · **S/M**:130, Phase 2 — Something to do in a world · **M/L**:155, Phase 3 — Make it feel like a game · **M**:170, Phase 4 — The playtest itself · **S** (process, not code):186, Phase 5 — Act on what it says · **?**:201, 4. After the playtest — the long game:209, 5. What we are deliberately NOT doing yet:246, 6. How to work, so we stop jumping around:263, 7. The risks worth naming:283, 8. If you only do four things:295
 
 ### docs/DEV_TOOLS.md
@@ -450,7 +450,7 @@ _412 text files, 936 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/PLAYER_ABILITIES.md
 
-- `docs/PLAYER_ABILITIES.md` (448) - LUCKBOUND — Player Abilities & Upgrades · 2026-09-28
+- `docs/PLAYER_ABILITIES.md` (448) - LUCKBOUND — Player Abilities & Upgrades · 2026-09-30
   - `PLAYER_ABILITIES.md`: 0. The line this document exists to hold:11, 1. Built: our own character controller:34, 2. Built: two profiles, one stamina bar:71, 2.5 Built: jump, roll and backstep:115, 2.7 Built: how the body moves (`CharacterAnimator`, `Animati:157, Adding real animations: where and how:187, 2.55 Built: the shoulder camera (our shift lock):221, 2.6 Built: lock-on (optional):230, 3. Planned: the Fate Tree:264, FORTUNE — what the roll can reach:280, ENDURANCE — how long you last out there:293, DISCOVERY — what a world yields:304, CRAFT — what your gear becomes:316, Node shapes worth having:326, 4. Planned: movement abilities beyond the two:337, 5. Where these would live:358, 6. How fighting drives movement (the weapon contract):373, 6.1 Weapon stances: how holding a weapon changes the body (d:399, 7. Planned: player combat, the next major system (owner, 202:431
 
 ### docs/PLAYER_ANIMATION_BRIEF.md
