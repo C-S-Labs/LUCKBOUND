@@ -36,6 +36,23 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 212 — 2026-09-30 — Ascendant mesh secured; ES miniboss drafts; roster corrected (docs + one binary)
+**Merged:** this PR   **Tests:** docs only   **Branch:** agent/es-ascendant-and-minibosses
+
+### Done
+- Found the owner's untracked `TheAscendant_fixed.blend` in the main checkout (under no version control anywhere) and committed it unchanged (SHA-256 verified identical to the source).
+- Drafted the three ES minibosses in `assets/source/enemies/ethereal_scape/MINIBOSSES.md` (proposals, nothing modelled).
+- Corrected `ROSTER.md`'s stale status table (five basics are scripted); updated `CODEX_HANDOFF.md`.
+
+### Open
+- Contents of `_fixed` not inspected (no Blender run); owner to confirm it is the authoritative Ascendant mesh and whether the updated rigging spec is this file or a later push.
+- Owner OK needed on the miniboss drafts.
+
+### Leftovers
+`TheAscendant.blend` (older, 525 KB) stays until `_fixed` is confirmed authoritative; then recommend removing or archiving it, after checking nothing references it.
+
+---
+
 ## Session 211 — 2026-09-30 — Ethereal Scape enemy work handed to Codex (docs only)
 **Merged:** this PR   **Tests:** docs only   **Branch:** agent/es-enemy-codex-handoff
 

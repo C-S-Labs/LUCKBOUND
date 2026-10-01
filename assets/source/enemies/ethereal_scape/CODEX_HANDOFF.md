@@ -17,15 +17,16 @@ Long source plan, by section only: `docs/design/boss_plans/ASCENDANT_SENTINEL_AN
 | Meadow Stag | basic | `meadow_stag.py`, `anims/meadow_stag/Walk.py` | `.blend`, Walk FBX |
 | Crystal Warden | basic | `crystal_warden.py` | `.blend` only |
 | Skyborne Harrier | basic | `skyborne_harrier.py` | `.blend` only |
-| 3 minibosses (Waystone Sentinel, Reliquary Keeper, Gatewarden) | miniboss | **not started** | none |
+| 3 minibosses (Waystone Sentinel, Reliquary Keeper, Gatewarden) | miniboss | **drafted only**: `MINIBOSSES.md` (needs owner OK before modelling) | none |
 | The Ascendant | boss | `the_ascendant*.py`, `anims/the_ascendant/` | body FBX plus Idle_Guard, Walk, StrafeL/R, P1_CrescentReap, P1_OrbCast, P1_SkyCast, Hit_React, P1_Stagger, P1_StaggerRecover |
 
-`ROSTER.md` still says "1/9 built"; the five basics have scripts and renders, so its status table needs correcting (verify each in Blender before claiming "built"). None of this is imported in Studio yet, and nothing spawns in gameplay (`EnemyDef` + services wait for the owner's OK).
+`ROSTER.md`'s status table was corrected 2026-09-30 (basics scripted; verify each in Blender before claiming "built"). None of this is imported in Studio yet, and nothing spawns in gameplay (`EnemyDef` + services wait for the owner's OK).
 
 ## The Ascendant: hard guard rails
-- **The owner's updated Ascendant spec and mesh (extra rigging and joint properties) were announced and are NOT in the repo yet.** Do not touch the Ascendant mesh or rig until it is pushed; then reconcile it against the work order and update the work order first.
+- **`assets/export/enemies/ethereal_scape/TheAscendant_fixed.blend` (4.8 MB, saved 2026-09-28) is the owner's newer hand-edited scene, added to the repo 2026-09-30.** It differs greatly in size from the older `TheAscendant.blend` (525 KB). **Owner confirmed 2026-09-30: the larger `TheAscendant_fixed.blend` is the authoritative Ascendant mesh.** Its contents were not inspected when it was committed, so still open it and audit it (work order §1) before exporting; the older `TheAscendant.blend` is superseded.
+- **The owner's updated Ascendant spec (extra rigging and joint properties) may still be coming.** Do not export or rebuild the Ascendant mesh or rig until the owner confirms which file is authoritative; then reconcile it against the work order and update the work order first.
 - The shipped FBXs come from the owner's **hand-edited** `TheAscendant.blend` (chest/centre crystal adjusted, `BreakawayGlow` removed). **Never run a full scripted rebuild/export over it** and never re-add `BreakawayGlow`. Locate the authoritative `.blend` (and any `_fixed`), compare, and add non-destructively.
-- The owner's local checkout has **uncommitted** ES files (`assets/export/enemies/ethereal_scape/` additions and edits to `ES_STRUCTURE.rbxmx` / `ES_PROP_LIBRARY.rbxmx`). Do not assume `main` equals what the owner sees; ask which `.blend` is authoritative.
+- ES world/chunk edits (`ES_STRUCTURE.rbxmx`, `ES_PROP_LIBRARY.rbxmx`) are being implemented in a separate PR; do not touch them here.
 - Do not commit `assets/rbxm/prefabs/HUB_SKY.rbxmx` changes (owner's local edit).
 
 ## Next steps, in order
@@ -33,7 +34,7 @@ Long source plan, by section only: `docs/design/boss_plans/ASCENDANT_SENTINEL_AN
 2. Reconcile the owner's pushed spec/mesh; update the work order.
 3. **Prototypes first:** `P1_OrbCast` plus overhead `P1_CrescentReap`, end to end (sockets, grips, cast origin, markers). Parry/stagger actions are already present (`Hit_React`, `P1_Stagger`, `P1_StaggerRecover`).
 4. Remaining ES basics: animations (Idle, Walk, Strafe, attacks) per `ENEMY_FRAMEWORK.md` §1, one at a time.
-5. Three minibosses (budget <=35k tris, finger bones), after basics.
+5. Three minibosses: get owner OK on `MINIBOSSES.md`, then build (budget <=35k tris, finger bones), after basics.
 6. Ascendant extras: `P2_Transfiguration`, death, approved move variants (work order §5), armour debris.
 7. Studio import of ES enemies is the owner's step ("once, when the boss is finished"); do not mark any Studio check passed unless run.
 
@@ -42,6 +43,7 @@ Long source plan, by section only: `docs/design/boss_plans/ASCENDANT_SENTINEL_AN
 - Three-attack limit and 18 f punish stay everywhere (owner, 2026-09-30). Stagger is hit-triggered with a hidden meter (`ENEMY_AI.md` §10.1).
 - Plan timings, budgets and move variants are proposals for owner review; no combat rebalance in an animation task.
 - Open stale prose to fix when convenient: ASCENDANT_MOVESET "only ranged move" line.
+- The owner's updated Ascendant spec (extra rigging/joint properties) may still arrive separately; reconcile it against `_fixed` when it does.
 
 ## Leftovers (do not delete yet)
 Old moveset sections describing the horizontal Reap and melee-first roster stay until the roster is reconciled with the owner.
