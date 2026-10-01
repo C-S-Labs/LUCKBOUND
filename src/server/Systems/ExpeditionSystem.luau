@@ -44,6 +44,7 @@ local Workspace = game:GetService("Workspace")
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local ChunkCore = require(Root.Util.ChunkCore)
 local ChunkLoader = require(Root.Util.ChunkLoader)
+local ChunkTransit = require(Root.Util.ChunkTransit)
 local Chunks = require(Root.Content.Chunks)
 
 -- Fresh entropy per expedition. Random.new() with no argument seeds itself
@@ -564,6 +565,7 @@ local function newGroup(
 		print(`[ExpeditionSystem] {worldId} seed {seed}: atmosphere {group.AtmosphereId}`)
 	end
 	table.insert(groups, group)
+	ChunkTransit.attach(built.Stage, group.Members)
 	-- Chests, the vault, the forcefield, and the boss stand-in (§7.5). Handed
 	-- the group's own Members table, so whoever is on the map when something
 	-- opens is who shares it.

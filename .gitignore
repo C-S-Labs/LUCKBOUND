@@ -12,3 +12,6 @@ assets/source/worlds/*/generated/
 tests/generated_suite.luau
 __pycache__/
 *.pyc
+
+# Local validation executables (e.g. downloaded Luau CLI)
+.tools/

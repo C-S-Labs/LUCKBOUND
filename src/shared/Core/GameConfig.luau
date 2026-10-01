@@ -27,6 +27,12 @@ local deepFreeze = Freeze.deep
 local WORLD_SCALE = 0.5
 
 local GameConfig = {
+	ChunkRuntime = {
+		PortalCooldownSeconds = 2,
+		TriggerSlackStuds = 1.5,
+		GateOpenSeconds = 1.4,
+		StreamTimeoutSeconds = 3,
+	},
 	-- Gates content by phase. Worlds with EnabledInPhase > CurrentPhase are
 	-- excluded from the roll pool without being deleted. Bump to 2 / 3 to
 	-- light up Phase 2 and 3 content.
@@ -1417,6 +1423,8 @@ local GameConfig = {
 		-- How often cloud layers beyond the nearest are moved, per second. They
 		-- are far away and slow, so full frame rate buys nothing visible.
 		FarLayerHz = 20,
+		-- Fixed rendering budget for distant ribbon scenery.
+		Ribbons = { MaxCount = 8, UpdateHz = 10, Segments = 12 },
 
 		-- AMBIENT SCENERY (CHUNK_AUTHORING.md convention 6): the props a kit
 		-- ships apart from its pieces, placed and animated on each client.
@@ -1424,7 +1432,8 @@ local GameConfig = {
 		-- seed, or keeps the world's own air. BaseWeight is the world's own share
 		-- against 1 per profile (2 with seven profiles = 2 in 9 runs plain).
 		-- /atmosphere forces one in Studio.
-		Atmospheres = { Enabled = true, BaseWeight = 2 },
+		-- Owner release gate: every world uses BASE until variant atmospheres reopen.
+		Atmospheres = { Enabled = false, BaseWeight = 2 },
 		Props = {
 			-- On since Sky Citadel's structure-only meshes went live
 			-- (2026-09-23). A world still on meshes with its props baked in
@@ -1458,8 +1467,8 @@ local GameConfig = {
 				Speed = 16,
 				Bob = 1.5,
 				Bank = 0.2,
-				Reach = 0.45,
-				ReachPeriod = 70,
+				Reach = 0.08,
+				ReachPeriod = 180,
 				Altitude = 172,
 				Spread = 40,
 			},
@@ -1467,6 +1476,10 @@ local GameConfig = {
 			Wing = { Amplitude = 0.45, Period = 0.7 },
 			-- Banners rocking in the wind: radians each way about the centre.
 			Sway = { Angle = 0.03, Period = 5, Enabled = true, Strength = 1, Speed = 1 },
+			Foliage = { Angle = 0.065, Period = 3.6, GustAngle = 0.012, GustPeriod = 1.1 },
+			Drift = { Amplitude = 3, Period = 38, Reach = 18 },
+			Backdrop = { Amplitude = 3.5, Period = 24 },
+			Pulse = { Period = 4, MinimumBrightness = 0.82 },
 		},
 	},
 	-- Loot, fixtures and vault keys (build spec §7.5, owner-directed

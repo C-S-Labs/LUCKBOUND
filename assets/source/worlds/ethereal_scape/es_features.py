@@ -144,11 +144,9 @@ def cloud_floor(p, holes=()):
                 if open_side:
                     side_faces.append([idx[u + (0,)], idx[u + (1,)], idx[v + (1,)], idx[v + (0,)]])
     base_f = len(p.faces)
-    p.add(verts, top_faces, "CloudWhite")
+    p.add(verts, top_faces + side_faces + bot_faces, "CloudWhite")
     for k in range(len(top_faces)):
         p.up.add(base_f + k)
-    p.add(verts, side_faces, "CloudWhite")
-    p.add(verts, bot_faces, "CloudWhite")
 
 
 def puff(p, x, y, z, r, h, rng, mat="CloudWhite"):
@@ -230,21 +228,20 @@ def mesa(p, cx, cy, r, top=8.0, floor="AetherMintGrass", sides=13, jitter=0.12, 
         a = 2 * math.pi * (i + rng.uniform(-0.25, 0.25)) / sides
         rr = r * (1 + rng.uniform(-jitter, jitter))
         outline.append((cx + rr * sx * math.cos(a), cy + rr * sy * math.sin(a)))
-    prism(p, outline, top - 2.5, top, floor, side=floor)
     rim = [(cx + (x - cx) * 1.035 + 0.8 * math.copysign(1, x - cx), cy + (y - cy) * 1.035 + 0.8 * math.copysign(1, y - cy))
            for x, y in outline]
-    prism(p, rim, top - 5.5, top - 1.4, "TempleGold")
     # faceted flanks: widen as they go down into the cloud (a butte, not a keel)
     foot = [(cx + (x - cx) * 1.12, cy + (y - cy) * 1.12) for x, y in outline]
     n = len(outline)
-    verts = [(x, y, top - 5.5) for x, y in outline] + [(x, y, FLOOR_Z - 3) for x, y in foot]
-    faces = [[i, (i + 1) % n, n + (i + 1) % n, n + i] for i in range(n)]
-    p.add(verts, [f[::-1] for f in faces], "Cloudstone")
-    # strata stripe of pale soil across the flank
-    sv = [(cx + (x - cx) * 1.06, cy + (y - cy) * 1.06, top - 5.5 - (top - 2.5) * 0.45) for x, y in outline]
-    if top > 7:
-        verts2 = [(x, y, top - 5.6) for x, y in outline] + sv
-        p.add(verts2, [[n + (i + 1) % n, (i + 1) % n, i, n + i] for i in range(n)][::2], "PaleGoldSoil")
+    rings = [[(x, y, top) for x, y in outline], [(x, y, top-1.4) for x, y in rim],
+             [(x, y, top-5.5) for x, y in rim], [(x, y, FLOOR_Z-3) for x, y in foot]]
+    verts = [q for ring in rings for q in ring]
+    faces = [list(range(n)), list(reversed(range(3*n, 4*n)))]
+    mats = [floor, "Cloudstone"]
+    for k in range(3):
+        faces += [[k*n+i, (k+1)*n+i, (k+1)*n+(i+1)%n, k*n+(i+1)%n] for i in range(n)]
+        mats += ["TempleGold" if k < 2 else "Cloudstone"] * n
+    p.add(verts, faces, mats)
     if collar:
         for i in range(0, n, 2):
             x, y = foot[i]
@@ -265,9 +262,8 @@ def ramp(p, a, b, width, z0, z1, mat="GoldenPath", side="Cloudstone"):
              (pa0.x, pa0.y, min(z0, z1) - 2), (pa1.x, pa1.y, min(z0, z1) - 2), (pb1.x, pb1.y, min(z0, z1) - 2),
              (pb0.x, pb0.y, min(z0, z1) - 2)]
     base_f = len(p.faces)
-    p.add(verts, [[0, 3, 2, 1]], mat)
+    p.add(verts, [[0, 3, 2, 1], [0, 4, 7, 3], [2, 6, 5, 1], [3, 7, 6, 2], [1, 5, 4, 0], [4, 5, 6, 7]], [mat] + [side] * 5)
     p.up.add(base_f)
-    p.add(verts, [[0, 4, 7, 3], [2, 6, 5, 1], [3, 7, 6, 2], [1, 5, 4, 0], [4, 5, 6, 7]], side)
     # step lines across the ramp so it reads as a stair
     steps = max(2, int(L / 3))
     for k in range(1, steps):
@@ -284,12 +280,12 @@ def ramp(p, a, b, width, z0, z1, mat="GoldenPath", side="Cloudstone"):
 def path(p, pts, width=10, z=FLOOR_Z, mat="GoldenPath", edge="TempleGold"):
     """A golden flagstone path laid on the cloud (decals: flush, walkable), with flagstone seams."""
     for a, b in zip(pts, pts[1:]):
-        decal_strip(p, mat, a, b, width, z + 0.03)
-        decal_strip(p, edge, a, b, width + 1.2, z + 0.015)
-        flagstones(p, a, b, width, z + 0.045)
+        decal_strip(p, mat, a, b, width, z + 0.16)
+        decal_strip(p, edge, a, b, width + 1.2, z + 0.12)
+        flagstones(p, a, b, width, z + 0.20)
         p.corridors.append((a[0], a[1], b[0], b[1], width / 2 + 2))
     for q in pts[1:-1]:                         # round the joints so bends read as one road
-        decal(p, mat, ring_pts(q[0], q[1], width / 2, 10), z + 0.035)
+        decal(p, mat, ring_pts(q[0], q[1], width / 2, 10), z + 0.17)
 
 
 def flagstones(p, a, b, width, z, course=5.0):
@@ -395,6 +391,19 @@ def tree(p, x, y, z=FLOOR_Z, h=20, crown="DeepTealLeaves", style=0):
     p.keepout.append((x, y, max(3.0, h * 0.28)))
     trunk_top = h * (0.66 if style == 2 else 0.48)      # the umbrella's crown sits higher: its trunk reaches it
     frustum(p, "SoftWood", x, y, z - 0.5, z + trunk_top, h * 0.07, h * 0.045, n=6, a0=rng.uniform(0, 1))
+    # Visible root flares and a fork connect the faceted crown to the trunk.
+    # Derive orientation from the existing lean: polishing must not shift the scatter RNG.
+    azimuth = lean * 18
+    for i in range(3):
+        a = azimuth + i * math.tau / 3
+        rod(p, "SoftWood", (x, y, z + h * 0.09),
+            (x + math.cos(a) * h * 0.12, y + math.sin(a) * h * 0.12, z - 0.35),
+            h * 0.035, h * 0.012, n=5)
+    for s in (-1, 1):
+        a = azimuth + s * 1.1
+        rod(p, "SoftWood", (x, y, z + trunk_top * 0.72),
+            (tx + math.cos(a) * h * 0.12, ty + math.sin(a) * h * 0.12, z + trunk_top + h * 0.07),
+            h * 0.035, h * 0.012, n=5)
     if style == 0:        # the original's gem crown
         gem2(p, crown, tx, ty, z + h * 0.55, h * 0.34, h * 0.45, h * 0.18, n=7, a0=rng.uniform(0, 6))
     elif style == 1:      # stacked twin crowns
@@ -501,7 +510,7 @@ def grass_tufts(p, cx, cy, r, n, z=FLOOR_Z, avoid=()):
             c, s = math.cos(b), math.sin(b)
             p.add([(x + c * 0.35, y + s * 0.35, z - 0.1), (x - c * 0.35, y - s * 0.35, z - 0.1),
                    (x - s * 0.12, y + c * 0.12, z - 0.1), (x + math.cos(b + 1.4) * 0.5, y + math.sin(b + 1.4) * 0.5, z + h)],
-                  [[0, 1, 3], [1, 2, 3], [2, 0, 3]], "AetherMintGrass")
+                  [[0, 1, 3], [1, 2, 3], [2, 0, 3], [2, 1, 0]], "AetherMintGrass")
 
 
 def rock(p, x, y, z=FLOOR_Z, s=3.0):
@@ -528,8 +537,18 @@ def column(p, x, y, z, h, r=2.6, broken=False, drum_fall=False):
             rod(p, "TempleIvory", (fx - math.cos(a + 1.3) * 3, fy - math.sin(a + 1.3) * 3, z + r * 0.9),
                 (fx + math.cos(a + 1.3) * 3, fy + math.sin(a + 1.3) * 3, z + r * 0.9), r, r, n=10)
         return z + hb
-    frustum(p, "TempleIvory", x, y, z + 2, z + h - 2.2, r, r * 0.9, n=10)
-    frustum(p, "TempleGold", x, y, z + h - 2.2, z + h - 1.0, r * 0.9, r * 1.35, n=10)
+    # Stack moldings end-to-end instead of burying rings in the shaft.
+    frustum(p, "TempleGold", x, y, z + 2.0, z + 3.0, r * 1.12, r, n=12)
+    # Alternating radii create restrained fluting, with a continuous closed shaft.
+    count = 24
+    verts = []
+    for zz, taper in ((z + 3.0, 1.0), (z + h - 3.2, 0.9)):
+        verts += [(x + math.cos(i * 2 * math.pi / count) * r * taper * (1 if i % 2 == 0 else 0.94),
+                   y + math.sin(i * 2 * math.pi / count) * r * taper * (1 if i % 2 == 0 else 0.94), zz) for i in range(count)]
+    p.add(verts, [[i, (i+1)%count, count+(i+1)%count, count+i] for i in range(count)]
+          + [list(reversed(range(count))), list(range(count, count*2))], "TempleIvory")
+    frustum(p, "TempleIvory", x, y, z + h - 3.2, z + h - 2.2, r * 0.9, r * 1.08, n=12)
+    frustum(p, "TempleGold", x, y, z + h - 2.2, z + h - 1.0, r * 1.08, r * 1.35, n=12)
     box(p, "TempleGold", x, y, z + h - 0.5, r * 2.8, r * 2.8, 1.0)
     return z + h
 
@@ -554,7 +573,7 @@ def pavilion(p, x, y, z, w, d, h, rz=0.0, roof="hip", altar=True):
     if roof == "hip":
         n = 4
         verts = [(q[0], q[1], top + 1.4) for q in roofp] + [(x, y, top + 1.4 + max(w, d) * 0.45)]
-        p.add(verts, [[i, (i + 1) % n, n] for i in range(n)], "TempleGold")
+        p.add(verts, [[i, (i + 1) % n, n] for i in range(n)] + [list(reversed(range(n)))], "TempleGold")
         box(p, "SkyCrystal", x, y, top + 1.4 + max(w, d) * 0.45 + 1.0, 1.2, 1.2, 2.0, rz=rz + 0.785)
     if altar:
         cx, cy = at(0, 0)
@@ -658,7 +677,7 @@ def bell_tower(p, x, y, z=FLOOR_Z, top=CROWN_TOP, w=16.0, rz=0.0):
     # roof is seated in it; eaves outside the slab left the whole roof floating a stud clear
     verts = [(x + (u * c - v * s) * (w / 2 + 0.5), y + (u * s + v * c) * (w / 2 + 0.5), bel_top + 1.0)
              for u, v in ((-1, -1), (1, -1), (1, 1), (-1, 1))] + [(x, y, roof_top)]
-    p.add(verts, [[0, 1, 4], [1, 2, 4], [2, 3, 4], [3, 0, 4]], "TempleGold")
+    p.add(verts, [[0, 1, 4], [1, 2, 4], [2, 3, 4], [3, 0, 4], [3, 2, 1, 0]], "TempleGold")
     frustum(p, "SkyCrystal", x, y, roof_top - 1.5, top, 1.4, 0.0, n=5)
 
 
@@ -715,10 +734,11 @@ def crag(p, x, y, z=FLOOR_Z, r=18.0, top=CROWN_TOP, ledges=True):
         if prev is not None:
             if k == tiers:
                 verts = prev + [(x, y, top)]
-                p.add(verts, [[i, (i + 1) % 7, 7] for i in range(7)], "Cloudstone")
+                p.add(verts, [[i, (i + 1) % 7, 7] for i in range(7)] + [list(reversed(range(7)))], "Cloudstone")
             else:
                 verts = prev + ring
-                p.add(verts, [[i, (i + 1) % 7, 7 + (i + 1) % 7, 7 + i] for i in range(7)],
+                p.add(verts, [[i, (i + 1) % 7, 7 + (i + 1) % 7, 7 + i] for i in range(7)]
+                      + [list(reversed(range(7))), list(range(7, 14))],
                       "PaleGoldSoil" if k == 2 else "Cloudstone")
         prev = ring
         if ledges and 1 <= k <= 3:
@@ -793,12 +813,15 @@ def hut(p, x, y, z=FLOOR_Z, rz=0.0):
     def at(u, v):
         return x + u * c - v * s, y + u * s + v * c
 
-    w, d, h = 12, 10, 7
-    for (u0, v0, u1, v1) in ((-w / 2, -d / 2, -2, -d / 2), (2, -d / 2, w / 2, -d / 2),
+    w, d, h = 12, 10, 10
+    a, b = at(0, -d / 2 - 8), at(0, 0)
+    p.corridors.append((*a, *b, 4))
+    p.clearances.append((a, at(0, -d / 2 + 2), z, 2.4, "hut doorway"))
+    for (u0, v0, u1, v1) in ((-w / 2, -d / 2, -3, -d / 2), (3, -d / 2, w / 2, -d / 2),
                              (w / 2, -d / 2, w / 2, d / 2), (w / 2, d / 2, -w / 2, d / 2), (-w / 2, d / 2, -w / 2, -d / 2)):
         a, b = at(u0, v0), at(u1, v1)
         beam(p, "SoftWood", (a[0], a[1], z + h / 2), (b[0], b[1], z + h / 2), 0.8, h)
-    a, b = at(-2, -d / 2), at(2, -d / 2)
+    a, b = at(-3, -d / 2), at(3, -d / 2)
     beam(p, "SoftWood", (a[0], a[1], z + h - 1), (b[0], b[1], z + h - 1), 0.8, 2)
     verts = [(at(u, v)[0], at(u, v)[1], z + h) for u, v in ((-w / 2 - 1.5, -d / 2 - 1.5), (w / 2 + 1.5, -d / 2 - 1.5),
                                                               (w / 2 + 1.5, d / 2 + 1.5), (-w / 2 - 1.5, d / 2 + 1.5))]

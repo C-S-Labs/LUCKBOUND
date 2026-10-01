@@ -36,6 +36,496 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 234 — 2026-10-01 — ES delivery for integration
+**Merged:** see PR for this branch. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Owner authorized PR and merge of the reviewed ES kit, animation props, boundaries, shrine room/vault/transit and BASE ambience/scenery changes.
+- Removed temporary loading diagnostics and restored pre-experiment generation behavior. Fundamental loading changes are deferred to the owner's next task.
+- ES upper-air ribbon prototype remains visually unresolved; do not treat it as accepted visible scenery.
+
+### Next
+Integrate against current main, validate CI and merge. Owner will develop the loading redesign next.
+
+### Leftovers
+Retain parked atmosphere/recolour assets and prior cloud props until their replacement is accepted. No automatic asset deletion.
+
+---
+
+## Session 233 — 2026-10-01 — ES readability and ribbon visibility tuning
+**Merged:** no PR/push. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Owner likes twilight, finds map dark and ribbons unseen. Retained18.35; raised ambient fill/exposure, reduced density0.34→0.31 and haze1.8→1.6, slight purple grade with gentler contrast.
+- Ribbon visibility tuning: lower420–620studs, wider80–135, longer1000–2000 and opacity0.30 instead of0.16, paler violet. Count/10Hz performance budget unchanged. Appearance remains a Studio check; no runtime error was observed remotely.
+- 1,038 tests pass. No assets/imports, SC/Crossroads changes or cleanup introduced.
+
+### Next
+Sync, Stop/Play and review. Owner has a larger task next; don't widen this tuning pass.
+
+### Leftovers
+No new obsolete files. Prior retained cloud/variant assets stay until final acceptance.
+
+---
+
+## Session 232 — 2026-10-01 — ES upper-air ribbon prototype
+**Merged:** no PR/push. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Owner authorized Studio ribbons over the entire generated ES layout and beyond. Environment.Ribbons now declares8 soft violet/rose textured Beams, heights650–950studs, broad700–1500stud spans,45–95width,600stud outside margin and55–90s staggered fade cycles.
+- Existing AtmosphereEffects lifecycle builds/recycles them client-side: stratified map-bounds placement, gentle drift/ripple, tapered transparent ends, smooth fade envelope and invisible relocation into subsequent sectors. Uses built-in smoke texture, no upload/Blender/import required. Leave/redraw disconnects and destroys the effect.
+- Generic rendering budget in GameConfig.Ambience.Ribbons caps8 Beams,12segments,10Hz updates. Graphics scaling yields2–8; no collision/query/touch, emitters, gameplay logic or replication. SC/Crossroads unchanged; global BASE only retained.
+- Added optional Environment type and boot validation for ranges/min-max/texture, pure fade envelope and budget tests.1,038 units, syntax/format and Rojo build pass. Actual Beam texture appearance/coverage and GPU performance still need owner Studio review alongside18.35 twilight.
+
+### Next
+Stop Play, sync worktree, restart and enter ES. Look up from several chunks, wait60–90s for fade/relocation, compare low/high graphics; review ribbons against new dusk and Sanctum readability. Tune brightness/height/count after feedback. Enemies remain separate.
+
+### Leftovers
+No obsolete assets introduced. Existing older cloud/variant/review files retained pending Studio acceptance; no deletion.
+
+---
+
+## Session 231 — 2026-10-01 — ES orange-purple twilight
+**Merged:** no PR/push. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Owner found afternoon too bright; ES BASE now18.35 twilight, brightness2/exposure-0.18, apricot atmospheric horizon and violet decay/shadows, faint stars and matching warmer/cooler cloud colors. Retains ambient fill for combat/interiors, sparse clouds and global BASE gate. SC/Crossroads unchanged.
+- Tests replace superseded brightest-world assumption with twilight/readability contract; SC retains its unique sunrise slot while ES can share dusk with Emberfall. Overhead accents brainstormed only; no asset created.
+
+### Next
+Studio Stop/Play after sync, review orange-purple dusk and room readability. Choose overhead treatment before authoring it.
+
+### Leftovers
+No extra asset iterations; prior clouds/variant assets retained pending acceptance.
+
+---
+
+## Session 230 — 2026-10-01 — Slightly denser ES and SC clouds
+**Merged:** no PR/push. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Owner confirmed Crossroads clouds remained unchanged, then requested a small density increase in ES/SC.
+- ES lower cloud banks14→19 (11/8); SC23→31 (12/12/7), about35% more at full quality. Heights, wander and graphics scaling retained. Restored SC StarCount300 after prior count replacement incidentally matched its suffix; Crossroads untouched.
+
+### Next
+Sync, Stop/Play and enter ES/SC to review density. Atmosphere/motion still in Studio tuning.
+
+### Leftovers
+No new assets or obsolete iterations from this tweak. Prior retained cloud/variant assets remain pending final Studio acceptance.
+
+---
+
+## Session 229 — 2026-10-01 — Living ES scenery, sparse Crossroads clouds and glider correction
+**Merged:** no PR/push. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Stronger ES BASE lavender pearl haze/grade and motes after owner found the first pass too ordinary. Global BASE-only gate retained.
+- Added shared client CLOUD_BANKS library with exactly the three existing Crossroads banks, uploaded IDs and required SharedStrings; HUB_SKY untouched (primary/worktree hashes match). sync_cloud_banks.py reproduces the subset.
+- ES lower sea14 banks and SC23 at full quality, scattered hundreds of studs in height, clamped below keel clearance. Generic CloudLayer Meshes/VerticalSpread/Wander/WanderPeriod support uses independent smooth cycles. ES replaces old small cloud props with one Crossroads bank on alternating chunk templates, preserving scale proportions, with bounded Drift animation.
+- Generic Foliage motion: distinct crown phase/strength/pace, smooth slow pace modulation and small fast gusts, trunk hinge retained. All161 separated ES crowns use it through prepare_ethereal_delivery.py. Existing banner Sway unchanged. No VerdantValley prop/wind module exists on this branch; reused and extended shared wind mechanism.
+- Six decorative ES BACKDROP templates declare Motion=Float. Client structure and associated props bob together; rest transforms restored on leave. Playable chunks/connectors remain static. Schema rejects Motion on playable roles.
+- Skyray radial sweep reduced from45%/70s to8%/180s; heading follows actual radial+circular tangent instead of sliding sideways. Decorative backdrops excluded from playable map centre/radius/top. Borders unchanged.
+- 1,034 unit tests pass, including tangent heading, bounded drift/wind and glider radial speed. 4,280 loader differential cases, room/boundary checks and Rojo build pass. Visual motion/lighting acceptance still pending Studio.
+
+### Next
+Stop Play, sync worktree, restart and enter ES. Watch crowns close up, backdrop islands with attached foliage, skyrays through a full inward/outward cycle, sparse clouds and interior lighting. Also enter SC to inspect replacement banks. Tune motion/cloud density after owner review. Enemies stay separate.
+
+### Leftovers
+Original prop_es_cloud_a/b remain in ES library but are replaced in runtime placements; keep until Studio acceptance. Existing variant atmospheres/review exports deliberately retained. No deletions or PR.
+
+---
+
+## Session 228 — 2026-10-01 — ES base ambience and global BASE-only gate
+**Merged:** no PR/push. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Owner reports imported kit works in Studio; remaining full-publish tweaks deferred.
+- ES Environment now authors pearl afternoon haze, warm ivory highlights, violet shadow bounce, restrained bloom/rays, slight desaturation, two slow lower cloud layers and sparse lavender motes through the existing client ambience pipeline. No mesh changes or new assets required.
+- GameConfig.Ambience.Atmospheres.Enabled=false forces BASE across ALL worlds, including developer profile overrides. Variant content retained for later reopening.
+- Content validation and 1,029 tests pass; Rojo build passes. Visual atmosphere acceptance pending Studio re-entry.
+
+### Next
+Sync the ES worktree, leave/re-enter ETHEREAL_SCAPE and review sunlight, crystal bloom, distant visibility, cloud clearance and Sanctum/shrine interior readability. Other worlds retain their own base look. Enemies remain a separate conversation.
+
+### Leftovers
+Variant atmosphere modules and parked exports retained deliberately. Keep earlier ES assets until final Studio/CI acceptance; no deletion.
+
+---
+
+## Session 227 — 2026-10-01 — Imported ES models verified and IDs synced
+**Merged:** no PR/push; Studio walk pending. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Owner saved replacement XML models in the primary checkout. Copied both into the matching ES worktree without modifying primary files: structure227 MeshParts, props258.
+- Verified complete expected mesh sets, uploaded MeshIds and declared dimensions. Studio shortened50 long prop names with literal ellipses, creating one duplicate; restored canonical names in the worktree XML using unique prefix/suffix and dimension matches. All258 props now resolve uniquely; no geometry/IDs changed by rename.
+- Synced all227 structure mesh IDs into AssetManifest. Real content boot validation and1,029 unit tests pass; full Rojo build passes with the saved imports. Scene/FBX/runtime logic unchanged.
+
+### Next
+Serve from `.worktrees/ethereal-scape-polish`, accept Rojo updates, then `/roll ETHEREAL_SCAPE test` and enter. Walk stairs/bridges/paths, tree/window alignment, borders/free+locked cameras and both shrine portals. Test vault gate via biome-boss stand-in; chest refuses no key and consumes a player's key on success. Check normal seeds for conditional shrine/room pairing. Atmosphere follows acceptance; enemy work remains a separate conversation.
+
+### Leftovers
+Primary-checkout prop XML retains the owner's shortened import names; use the corrected worktree library for testing. Existing older review renders, source blend and unused historical manifest rows retained until Studio and CI prove replacement safe. No cleanup deletion or PR this session.
+
+---
+
+## Session 226 — 2026-09-30 — Live ES delivery, conditional room, transit and boundaries
+**Merged:** no PR/push; owner Studio gate remains. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Exported owner-edited live scene on Blender's main thread using temporary baked objects, preserving originals/selection and never saving/rebuilding the scene. Sanctum's inspection offset corrected in export only. 227 structure meshes,258 props (245 separated plus13 existing atmosphere). FBX round trips pass names, colors, units, centred pivots and dimensions; max9,999 triangles.
+- Generated bounds/placement data from live_delivery.json. Conditional AttachedRooms are expanded after layout selection: each shrine owns one MINIBOSS room4096studs above it, separate indices/parent links, reciprocal touch portals and expedition lifetime. No shrine means no room, not a third random-kit arena.
+- Added generic authored Boundary content and runtime boxes,35 playable ES groups64studs tall with mouths open. Tagged collision excluded from custom camera/visibility rays. Default/free camera and physical clearances remain Studio checks; SC/VV assets unchanged.
+- Server transit validates membership, health, root position and cooldown, requests destination streaming, revalidates and clears momentum. Props use attachment-height Sway; mounted lights and portal membranes pulse. Room metadata resolves for props/fixtures without entering the random registry; detached room excluded from glider map bounds.
+- Owner clarified final loot rule: **only BIOME BOSS** completion rolls the existing20% ES vault key and opens the chamber's vault-room gate for everyone. Chest remains key-required per player. Minibosses do neither. Same biome-boss stand-in (/boss or BOSS arena) exercises it before enemy gameplay. Loot pools stay empty as before.
+- Shared schema/types/spec §7.7 updated, import guide with exact paths/counts added, existing kit generator left untouched by delivery. Core/loader/unit and FBX checks pass; no new remote or world special-case. Existing uploaded RBXMX/IDs not replaced without owner import.
+
+### Next
+Owner imports both FBXs and saves ES_STRUCTURE.rbxmx / ES_PROP_LIBRARY.rbxmx in this worktree. Sync227 structure IDs, recheck and Studio-walk portals, room gate/key refusal/success, bridges/paths/props, borders and free/locked cameras. Only then PR/push; atmosphere next and enemies in a separate conversation.
+
+### Leftovers
+Prior RBXMX/mesh IDs remain until owner replacement. Prior FBXs are superseded in place; old review renders and generator-source blend retained. Recommend obsolete manifest entries/assets cleanup only after new delivery passes Studio and CI, and only after confirming nothing references them. No deletion this session.
+
+---
+
+## Session 225 — 2026-09-30 — Enlarged shrine arena and ceiling murals
+**Merged:** no PR/push. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Enlarged only the existing detached room group: horizontal 1.5×, vertical 1.45×. Clear central fighting area is now 114 × 114 studs, ceiling 60.9; alcoves remain beyond the fighting floor. Existing owner geometry and prop parent transforms preserved, no scene rebuild.
+- Extended side-column shafts/collars/ribs to meet roof capitals. Six support capitals connect to ceiling; six shallow indigo/gold celestial murals with symmetric halo/eye/ray motifs sit between roof beams. No new floor obstructions. Mural light centers separated as a prop group.
+- Fixed DetailMesh palette fallback after original emissive/foliage faces had moved to props; interrupted creation resumed without scaling/extending columns twice. New support/mural meshes pass closed-edge/nondegenerate checks, helper syntax passes. Reviewed live_shrine_large_arena_murals.png.
+
+### Next
+Owner inspect room size/roof art, save accepted scene, then prepare fresh complete geometry/props/placement delivery for Studio. Teleport, gate-defeat opening and generic safety-boundary runtime remain pending. No save/export/PR this pass.
+
+### Leftovers
+Older room review render and FBX/RBXMX retained until replacement passes Studio; room resized in place, no superseded module or exported asset deleted.
+
+---
+
+## Session 224 — 2026-09-30 — Open boundary mouths and chamfered connector profiles
+**Merged:** no PR/push. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Owner correctly identified Sanctum approach blockage: edited mouth lies away from nominal tile edge. Removed two transverse mouth walls using actual keel/socket profiles. Raised all 35 boundary groups from 32 to 64 studs; collision remains separate from future visual animation. Sidecar updated.
+- Rebuilt 60 connector profiles with 2-stud lower chamfers, matching shared socket silhouettes and flat bottom levels. Earlier exact-height filter missed two shifted-origin pieces; these are now included. Original landing generator gets matching chamfered section; did not regenerate scene.
+- Added shared future-map boundary requirement plus Emberfall/Astral Reach requirement stubs and Sky Citadel refinement notes. No SC assets or runtime loaders changed. Runtime generic boundary placement/camera exclusion still pending.
+
+### Next
+Owner inspect live profiles and open mouths; then fresh complete exports/content and Studio wall/jump/bridge/camera checks. No save/export or PR during this correction.
+
+### Leftovers
+Keep earlier FBX/RBXMX and review renders until new delivery passes Studio; rectangular live keel geometry replaced in place, no superseded files deleted.
+
+---
+
+## Session 223 — 2026-09-30 — Animation props and authored safety boundaries
+**Merged:** no PR/push. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Extracted 66 light/effect groups and 161 tree crowns into separate meshes with local animation pivots; the full ES_ANIMATION_PROPS collection contains 244 objects including existing shrine effects and complete chandelier. Lights stay in their mounted rest pose; material/light pulse is independent of moving the support. Tree crowns can use Sway. Extracted objects parent to source objects; unrelated owner edits retained.
+- Audit reports no geometry errors and no vertex-count/position preservation errors after extraction. No scene reload, regeneration, save, FBX export or loader change.
+- Authored ES_SAFETY_BOUNDARIES: 35 playable chunk groups, 1,750 closed wall segments around the union of island/deck walking surfaces, connecting socket faces left open. Wire display / hidden render; 32-stud height, 0.36 thickness, fixed collision. Backdrops excluded. Future visible identification must be a separate noncollidable animated effect. Geometry audit passes; owner visual/Studio clearance inspection pending.
+- Corrected counts: EnemyTags on COMBAT 11, PATH 12, SIDE 1, ENTRY 1, MINIBOSS 2, BOSS 1. Thus 24 of 31 ordinary PATH/COMBAT/SIDE/CAP pieces, 25 including entry, 28 including bosses. Earlier wording '25 ordinary pieces' included entry incorrectly. Roles/tags unchanged.
+- Sidecars live_animation_props.json and live_safety_boundaries.json record authoring placements/properties. These are not yet runtime content. Blender does not guarantee FBX transfers Roblox settings.
+- Roblox CanQuery=false is ineffective while CanCollide=true; collidable boundaries need explicit exclusion from camera queries. Existing mesh loader reconstructs meshes from IDs, so importer properties alone do not implement boundaries. Generic boundary schema/camera filtering required before runtime activation; no ES special case or shared loader mutation introduced.
+
+### Next
+Owner inspect props/boundary outlines, save accepted live scene, then prepare fresh complete structure/prop exports and matching placement/bounds content from it. Propose generic per-chunk boundary data under §7.7 with defaults leaving existing maps unchanged and camera exclusions; implement only after architecture decision. Shrine-room teleport/vault gate wiring remains pending. Atmosphere pass follows Studio walk.
+
+### Leftovers
+Previous FBX/RBXMX retained until fresh exports pass Studio. No superseded modules or files deleted; current exported geometry still predates live separation.
+
+---
+
+## Session 222 — 2026-09-30 — Socket-flush connector undersides
+**Merged:** no PR/push. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Replaced standard mouth pyramids with closed faceted keels: full-depth/full-width vertical faces at socket planes, taper only toward the island. Matching mouths meet beneath their decks; top paths/rails/platforms and unrelated owner edits retained.
+- Small 0.22-stud single-segment bevel affects only edges wholly away from socket planes. Flat shading retained. Helper skips owner edit-mode objects. Updated original landing generator to preserve socket-flush shape on future builds; did not regenerate the owner's scene.
+- Helper/generator Python syntax passes; live replacement meshes checked for closed edges and nondegenerate faces. No loader changes, save, export or PR.
+
+### Next
+Owner inspect underside joints; verify matching socket alignment in Studio after export. Live bevel is applied mesh geometry; generator writes base shape, live helper provides finish.
+
+### Leftovers
+Previous FBX/RBXMX and pyramid review renders retained until replacement passes Studio. No exported files deleted.
+
+---
+
+## Session 221 — 2026-09-30 — Shrine portal, detached arena and loot content
+**Merged:** no PR/push. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Revamped only sealed shrine facade, added standalone named indoor room with 76 × 76 clear fighting floor, matching return portal/dark backing and recessed locked vault. Portal/light crystals/vault door are separate props with local pivots. Gentle portal emission preview is Blender-only; runtime wiring pending.
+- Removed ES_ENTRY stray added trim. Appended completed portal branch entrance as separate preview at rear circle, offset 0,0,110; exclude from chunk export.
+- Counted 31 ordinary chunks, two miniboss chunks and 25 ordinary enemy-tagged pieces (28 including bosses), 41 registered pieces total. Detached room extra; EnemyTags do not yet spawn enemies.
+- Added ES generic loot pools/key chance (20%, matching SC) and altar chest fixture using installed SC library. Empty drops deliberately match deferred SC loot design. Room vault requires detached-room runtime placement/teleport contract before registration; no loader change.
+- New shrine meshes pass closed/nondegenerate/finite checks; interior render reviewed. Unrelated original ES_SHRINE_OF_WINDS has 232 open edges, retained rather than broad repair during owner's live edits. Python syntax, targeted StyLua and Rojo build passed; luau CLI unavailable, unit run pending CI.
+
+### Next
+Owner inspect live room and save when accepted. Export props separately and preserve transforms. Integrate portal placement data and implement detached-room teleport/fixture contract after placement choice. Studio gate before PR.
+
+Owner follow-up: replaced rectangular black backing with an aperture-shaped backing
+and ivory vestibule masks. Added symmetrical vault ribs/diamond inlays/lock accents,
+alcove columns/coffers/floor inlays and separate sealed gate `ES_SHRINE_VAULT_GATE_PROP_01`.
+Gate's intended motion is 18 studs vertically into ceiling after miniboss defeat;
+this is authored geometry/motion metadata, not implemented gameplay. Owner scene review pending.
+
+### Leftovers
+Retain previous FBX/RBXMX and review renders until replacements pass Studio. Preview portal collection must not be baked into chunk export. No exported assets deleted.
+
+---
+
+## Session 220 — 2026-09-30 — Faceted throne and complete deck/trim boundaries
+**Merged:** no PR/push; owner Studio gate pending. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Owner rejected smooth throne shading. Retained bowed/arched geometry but restored flat faces on the curved chair, original chair feet/crown and chair detail; removed this pass's chair bevel/normal modifiers. Helper now preserves faceted throne geometry.
+- Diagnosed Observatory road slivers: imported bridge caps are triangulated, but the previous cutter selected only one triangle. Recovered the whole coplanar deck boundary and stopped road decals at that complete footprint, including sloping decks. Removed 57 additional overlap faces; Observatory bridge now shows uninterrupted plank seams. No paths were extended or new path geometry introduced beyond the surviving original footprint.
+- Checked all 43 source parts incrementally on Blender main-thread timers. Removed 465 complete floor-trim primitives crossing roads, bridge decks or solid structures and four added architectural trim components penetrating glass. Preserved supporting terrain, solids and unrelated owner edits.
+- All 65 current floor/structure/architecture/chair/stair detail meshes pass closed-edge, nondegenerate and finite-coordinate audit. Helper syntax passes. Reviewed live_observatory_flush_path.png and live_sanctum_curved_faceted_throne.png. No loader, save, export or PR actions.
+
+### Next
+Owner inspect current scene, then save/export when accepted; include evaluated detail meshes and recompute bounds/offsets. Studio gate remains required before PR. Clearance checks are geometric safeguards, not owner visual approval.
+
+### Leftovers
+Prior FBX/RBXMX and superseded review renders retained until replacement passes Studio. Conflicting live trim was removed; no old exported files deleted.
+
+---
+
+## Session 219 — 2026-09-30 — Rebuilt Gardens stair and clearance corrections
+**Merged:** no PR/push; owner Studio gate pending. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Owner rejected the lower Gardens continuation. Replaced only that diagonal stair/foot assembly with a continuous 704-triangle deck, full-width landing, following handrails/posts and connected stringers; retained the upper junction and all unrelated owner geometry. Removed the old stair and foot filler from the live scene.
+- Refitted added column bands and ribs around framed window footprints, with closed capped ends; reduced new window-frame standoff to keep the backing flush. Ran incrementally on the 43 actual source parts through main-thread timers.
+- Clipped 70 flat road/edge/flagstone decal faces against nearby bridge deck surfaces across nine chunks, including Temple Gate A, and removed floor trim crossing bridge transitions. Preserved road colours, solid decks, platform geometry and collision; no loader edits.
+- Helper syntax passes; all 22 current structure-trim/stair meshes have no open edges or degenerate faces. Nine edited path meshes have no added degenerates or nonfinite vertices. Inspected rebuilt stair, column-window and Temple Gate A transition renders. Current owner-edited scene remains unsaved/unexported. Studio remains required.
+
+### Next
+Owner inspect stairs, windows and path/bridge transitions in Blender, then save/export when satisfied. Update evaluated bounds and include all separate detail meshes on import; test Studio before any PR.
+
+### Leftovers
+Old FBX/RBXMX exports and superseded review images remain until replacement passes Studio. Rejected live stair/filler geometry was replaced; no exported assets deleted.
+
+---
+
+## Session 218 — 2026-09-30 — Curved throne, restrained trim and Gardens junction
+**Merged:** no PR/push; owner Studio gate pending. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Replaced throne slabs with a bowed/arched back, rounded seat and cushion, curved supported armrests and a symmetrical faceted purple eye in an oval gold mask. New chair mesh is 2,934 tris; existing back filigree refitted to its surface. Removed superseded original arm support posts.
+- Added floor edge variants that raycast against supporting caps and reject path-strip crossings. Added fitted column collars/ribs, missing window frames (including backdrop columns) and restrained wall friezes. Processed 43 source parts incrementally on Blender main-thread timers; no loader changes.
+- Owner rejected smooth terrain undersides: restored faceted Cloudstone and connected gold terrain skirts, preserving architectural bevels. Owner rejected Gardens upper wedge: removed that upper filler, mitered the actual deck ends to a shared seam and fitted existing stringers/cross members. Lower foot landing unchanged.
+- Audited all 57 new floor/structure/chair meshes: no open edges, degenerate faces or nonfinite coordinates. Helper syntax passes. Reviewed Gardens joint renders and curved-chair render. Owner edits elsewhere preserved; no automatic blend save or export.
+
+### Next
+Owner inspect the current scene and save when satisfied. Export evaluated meshes/normals, include new detail parts and recompute bounds/offsets before Studio testing. Additional visual revisions remain owner-directed; SC/Winged Sentinel polish is still separate.
+
+### Leftovers
+Previous FBX/RBXMX exports and review renders retained until replacements pass Studio. The rejected upper Gardens filler and replaced chair slabs/posts were removed from the live scene; the lower foot landing remains. No old exported files deleted.
+
+---
+
+## Session 217 — 2026-09-30 — Ascendant-aligned ES smoothing
+**Merged:** no PR/push; owner Studio gate pending. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Owner revised the world aesthetic toward the bosses' smoothness. Referenced Ascendant smooth ivory/gold forms, curved cuirass filigree and faceted crystals. Updated ART_DIRECTION for ES, retaining the hub's separate flat style; SC/Winged Sentinel polish remains a separate next pass.
+- Added curved gold strokes and a portal core to the throne's blank indigo panel (ES_SANCTUM_THRONE_INLAY_01, 1,648 tris). Raycast-fitted each primitive 0.035 studs off its backing rather than leaving floating ornament.
+- Processed all 59 non-foliage ES structure/detail meshes on main-thread timers. Reversible three-segment 0.18-stud bevels round 258 eligible architectural blocks; curved ivory/gold/wood and island-side shading smooths while crystals, foliage and walking planes retain their intended facets. Original vertex coordinate bytes unchanged for every processed mesh. No loader/content/asset ID changes in this pass.
+- Initial evaluated audit exposed collapsed bevels on rotated thin trim. Tightened eligibility using shortest actual edge length, rebuilt only this pass's modifiers, then audited all 59 evaluated meshes: no additional open edges, degenerate faces, nonfinite coordinates or expanded bounds. Helper syntax passes. Reviewed throne, Fork Twin Span and Twin Isles renders under renders/live_*_softened.png and live_sanctum_throne_ascendant.png.
+
+### Next
+Owner inspect and save current scene. Do not regenerate. Export must evaluate ES_ARCH_SOFTEN/ES_ARCH_NORMALS, preserve vertex colours and smooth/split normals, include all new detail objects, and recalculate evaluated bounds/native Roblox offsets. Re-import and verify rendering/physics in Studio before any PR. SC polish should reference the owner's Winged Sentinel after ES acceptance; untouched this session.
+
+### Leftovers
+Old FBX/RBXMX and previous review renders are retained until replacements pass Studio. Existing uploads do not contain these live changes. No files/assets deleted or automatic scene save/export performed.
+
+---
+
+## Session 216 — 2026-09-30 — Resume throne definition and inner entry wall
+**Merged:** no PR/push; Studio gate pending. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Codex crash did not remove prior live edits. Owner exited Edit Mode; applied single-segment chamfers to five chair blocks and tapered three back panels. Preserved other geometry and scene placement. Restored original chair materials/vertex colours on bevel faces after the render exposed imported default green colours.
+- Added four shallow arched inner entrance-wall reliefs and lintel crest as ES_SANCTUM_ENTRY_WALL_DETAIL_01 (900 tris). Depth 93.49–93.91 stays against the inner wall, beyond the fighting region and outside the doorway.
+- Mesh checks: chair edit introduces no extra open edges or degenerate faces; original mesh's 332 open edges predate this pass. New entry detail has zero open edges and degenerate faces. Rendered live_sanctum_throne_defined.png and live_sanctum_entry_wall_defined.png for review.
+
+### Next
+Owner inspect and save the live scene; agent did not save/export. Re-export with all added meshes, correct material colours, updated bounds and native Roblox offsets. Preserve owner's manual geometry; moved temple and detail meshes should be aligned together for export. No PR before owner Studio test.
+
+### Leftovers
+Retain existing FBX/RBXMX and earlier review PNGs until replacement passes Studio. Exact pre-bevel mesh snapshot remains in live driver namespace for recovery, not an exported object. No files deleted.
+
+---
+
+## Session 215 — 2026-09-30 — Sanctum presence and definition
+**Merged:** no PR/push; owner review pending. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Targeted enlargement of the existing chair only (340 vertices), scale 1.65/1.35/1.25 about its footing. Exact live coordinate snapshot retained in driver namespace. New chair bounds X ±14.438, height 9.6–59.55, depth -138 to -124.875: behind the fight region, clear of rear wall and roof.
+- Separate throne canopy/trim (228 tris), thin floor compass/aisle inlays (1,620), and facade pediment/frieze/tower details (2,856). All three new meshes have zero open/nonmanifold edges and degenerate faces. Original scene placement retained; all Sanctum detail transforms match its moved temple.
+- Interior review: renders/live_sanctum_presence_interior.png. Floor additions marked CanCollide=false for export metadata. Helper syntax passes.
+- Owner asks to soften throne blockiness and detail the inner front wall. Prepared targeted single-segment bevel/taper helper and four shallow wall reliefs plus entrance crest. Both deferred because owner has temple in Edit Mode; asked to return to Object Mode. No active edit mesh touched.
+
+### Next
+After owner says ready, apply sanctum_throne_definition and sanctum_inner_entry_reliefs on the main thread. Check geometry/clearance and render. Owner inspects/saves before re-export; preserve manually edited scene, align moved temple and its detail meshes with platform only for export. No loader edits or PR.
+
+### Leftovers
+Existing exports and prior review PNGs remain until replacements pass Studio. New live meshes are unsaved/unexported and need content/manifest metadata at export. Nothing deleted.
+
+---
+
+## Session 214 — 2026-09-30 — Sanctum details and Studio foliage registration
+**Merged:** no PR/push; owner Studio gate pending. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Preserved the open owner-edited Blender scene. Main-thread timer writes added separate meshes: chandelier (3,196 tris), both-sided lattice frames on 39 thick Sanctum wall/lantern windows (9,360 tris), and faceted mask cheeks, crown rays, robe folds and borders on two existing door leaves (584 tris). No original mesh vertices/transforms changed; no save/export.
+- All three added meshes have zero open/nonmanifold edges and zero degenerate faces. Interior and door review PNGs are under the existing renders directory. Earlier thin-window pass missed thick Sanctum panes; this pass addresses them.
+- Owner Studio screenshot shows an entire garden mushroom patch off-island. Saved RBXMX confirms native mesh centre offsets have reversed X/Z signs from our generated data. Fixed ES generator and current JSON/generated Content offsets; shared ChunkLoader unchanged in this session.
+- Added actual Studio import regression check: all 28 foliage offsets match saved RBXMX relative centres and all multipart content matches JSON. Blender FBX round-trip assertion now accounts for the native Roblox axis conversion. Studio retest pending.
+- Verification: Rojo build passes; four changed Python files parse; changed-file whitespace check passes. No Luau behaviour changes in this follow-up.
+
+### Next
+Owner inspect/save live Sanctum additions. Retest the placement correction with Rojo from this worktree; existing uploaded mesh IDs remain usable for this metadata correction. Re-export the owner-edited scene after review with all added detail meshes, recalculated bounds and native Roblox offsets. Do not regenerate or overwrite the edited scene. No PR before owner approval.
+
+### Leftovers
+Keep existing FBX/RBXMX until replacement visual testing passes; new live detail meshes are not in those exports or asset manifest yet. Existing metadata now corrects current uploaded foliage. No files/assets deleted.
+
+---
+
+## Session 213 — 2026-09-30 — Owner-edited live Blender polish
+**Merged:** no PR/push; Studio gate remains pending. **Branch:** `agent/ethereal-scape-polish`.
+
+### Done
+- Restored access through the original Blender Open MCP HTTP bridge after an incorrect addon replacement. Its execute handler runs on a worker thread: direct mesh writes crashed Blender twice. Owner recovered and saved the scene; subsequent writes scheduled with bpy.app.timers on the main thread completed without crashes.
+- Earlier live changes: Twin Isles stair landing/support/material fixes and leaf alignment on 100 regular trees; owner accepted them. Preserved owner edits; no scene reload, regeneration or automatic save.
+- Framed/mullioned 60 rectangular crystal windows; 10 tall square columns receive raised ivory panels and gold ribs. Seven separate ARCH_DETAIL meshes preserve existing meshes. Added two closed landing patches to ES_TERRACED_GARDENS without moving stair vertices; separate STAIR_DETAIL mesh. Tower review render: renders/live_fork_twin_span.png.
+- Audited 28 foliage meshes against content offsets: matched before the edge correction. Checked 140 mushroom footprints; moved one Sky Aqueduct mushroom inward 0.25 studs. Other crystal outliers are underside pendants/raised architecture, left intact. The cause of widespread Studio-only floating decoration remains unconfirmed.
+- Added live_scene_polish.py as main-thread helpers, not a replacement generator. Syntax passes; all eight detail meshes are closed, finite and have no degenerate faces. Owner asked to ignore triangle budgeting for the current scene.
+
+### Next
+Owner inspects/saves live additions. Blender filepath reports C:/Users/shawn/AppData/Local/Temp/36916_autosave.blend (owner says saved). Do not overwrite the generator blend. Re-export from the owner-edited scene after review, including new detail meshes and recalculated bounds/offset metadata. Owner will identify an affected Studio chunk/seed/screenshot for the decoration issue. No loader changes in this pass; no PR before Studio approval.
+
+### Leftovers
+Existing FBX/RBXMX, metadata and review renders predate live polish; retain until replacement passes Studio. No assets deleted. Agent has not saved/exported live additions.
+
+---
+
+## Session 212 — 2026-09-30 — Sync replacement ES imports
+**Merged:** no PR/push; Studio gate pending   **Branch:** `agent/ethereal-scape-polish`   **Tests:** 1,016 passing; Rojo build passes.
+
+### Done
+- Owner exported replacement models into the primary checkout. Copied them into the polish worktree, preserving primary files; synced 71 structure mesh IDs and verified 13 uploaded props.
+- Minimum readiness checks pass. Serve from the polish worktree and reinspect ES.
+
+### Next
+Owner tests in Studio and may edit assets/source/worlds/ethereal_scape/ethereal_scape_kit.blend directly. Do not regenerate that output blend after owner edits without first preserving/incorporating them. No PR until owner approval.
+
+### Leftovers
+Keep previous Studio Models until replacement passes. No files deleted; primary exports preserved.
+
+---
+## Session 211 — 2026-09-30 — Repair ES after failed Studio walk
+**Merged:** no PR or push; owner requires replacement Studio test   **Branch:** `agent/ethereal-scape-polish`   **Tests:** 1,016 units; 4,280 loader compatibility cases; 41/41 geometry/route checks; FBX checks and Rojo build pass.
+
+### Done
+- Worked only in C:/Dev/luckbound/.worktrees/ethereal-scape-polish. Verified the primary checkout remains on agent/expedition-portal-followup; no branch switch or changes to its portal work.
+- Owner rejected the first Studio set for missing faces, island seams, clipping and obstructed routes. Rebuilt islands/mesas with matching rim vertices and closed shells; closed landing/ramp/cloud shells, roofs and skyray surfaces. Added closed/outward/degenerate surface checks and a missing-face regression; review renders enable backface culling.
+- Bridge slopes compensate for beam thickness and start outside the entire rim. Added player-clearance checks to every bridge, shrine and hut approach. Adjusted eight island webs to provide enough slope run, moved Entry's perch beacon and Plank Crossing's waystone off approaches. Reliquary guardians are at the perimeter; shrine steps/column bases no longer overlap and hut doors are wider/taller.
+- Roads clear court inlays; waterfall sheets follow actual rim geometry with connected spill surfaces. Columns have restrained fluting and stacked moldings. Sanctum door reliefs face outward, with portico clearance. Throne gains feet, framed seat/back, arm supports, slit-mask relief and seven crystal crown rays behind the combat area.
+- Removed prayer kites. Small mushrooms, blossoms and grass export separately with CanCollide=false. Extended the existing mesh-record schema/spec; default remains true, no world-specific loader branch. Non-collidable foliage disables queries/touches; buildings/terrain/bridges remain solid.
+- Regenerated the existing blend, both FBXs, metadata, content and all review renders. Delivery: 71 structure meshes and 13 props, all below 10k; largest mesh 9,994 tris. Sanctum 11,990 total (3,292 terrain + 8,530 temple + 168 foliage). Real FBX checks verify colours, names, units, bounds and offsets.
+- 1,016 units pass. Compatibility checks compare all 30 VV, 36 SC and 41 ES entries through the legacy path at four yaws/modes (4,280 cases); actual multipart collision flags/alignment/fallback also pass. Rojo build passes. Changed Luau formatted; Selene reports 0 errors and two pre-existing Schema shadowing warnings.
+
+### Stopped at
+Replacement art is ready for reimport. Retained RBXMX files/IDs still describe the failed first upload; 29 additional mesh keys are placeholders until reimport. No PR/push. Enemy polish waits for chunk acceptance; Ascendant's owner-edited model/animations are untouched.
+
+### Next
+1. Import assets/export/worlds/ethereal_scape/ethereal_scape_structure.fbx and ethereal_scape_props.fbx from the polish worktree with names intact. Export only the newly imported Models to its assets/rbxm/chunks/ethereal_scape/ES_STRUCTURE.rbxmx and assets/rbxm/props/ES_PROP_LIBRARY.rbxmx.
+2. Run tools/sync_asset_ids.py ethereal_scape --write after those exports; verify all 71 structure mesh IDs. Until then, missing multipart meshes intentionally cause whole-chunk blockout.
+3. Serve from the polish worktree. Owner reinspects /roll ETHEREAL_SCAPE test (all sides, thresholds, bridges, farm foliage, Reliquary approach, Sanctum doors/throne), normal ES assembly, then VV/SC smoke checks. Only pursue a PR after owner approval.
+
+### Leftovers
+Keep the previous 42-mesh ES_STRUCTURE.rbxmx, 14-prop ES_PROP_LIBRARY.rbxmx (including its unused kite), uploaded IDs and previous Studio Models until replacement walks pass. Canonical blend/FBXs/renders were rebuilt in place; no duplicate version files created or files deleted. Primary checkout imports remain preserved. After Studio approval, replace prior imported Models; do not delete referenced source or parked recolours.
+
+---
+## Session 210 — 2026-09-30 — Stage owner ES imports for Studio testing
+**Merged:** no PR; owner requires Studio test first   **Branch:** `agent/ethereal-scape-polish`   **Tests:** 1,014 unit tests; 4,240 loader compatibility cases; Rojo build passes.
+
+### Done
+- Owner exported new RBXMX files into the primary checkout. Confirmed 42 structure meshes (including ES_SANCTUM_TEMPLE_01) and 14 named props with uploaded mesh IDs; polish worktree still had the older 41-mesh structure.
+- Copied both owner exports into the isolated polish worktree, preserving the primary checkout files. Synced all 42 ES structure IDs into this branch's AssetManifest. Prop library meshes load from the named RBXMX library.
+- Re-ran unit tests, loader differential/assembly checks and a full Rojo build: all pass. No PR created; owner explicitly deferred PR creation until Studio testing.
+
+### Stopped at
+Ready for owner to run rojo serve from C:/Dev/luckbound/.worktrees/ethereal-scape-polish, reconnect Studio and test ES. Imported files and synced IDs remain local on this branch.
+
+### Next
+1. Owner runs /roll ETHEREAL_SCAPE test, enters, and checks the whole catalogue including Sanctum alignment, collisions, socket heights and colours; then tests a normal assembled roll.
+2. Check VV/SC in Studio and record results. Only open a PR after the owner's Studio test gate.
+
+### Leftovers
+Keep current/previous Studio imports until replacement walks pass. No files deleted or duplicate version assets created; source exports in the primary checkout are preserved for the other agent/owner.
+
+---
+## Session 209 — 2026-09-30 — Ethereal Scape polish and multipart chunk delivery
+**Merged:** see the PR for this branch   **Branch:** `agent/ethereal-scape-polish`   **Tests:** 1,014 passing; 41/41 geometry checks; FBX round-trip and splitter stress checks pass.
+
+### Done
+- Continued the existing chunk kit in its isolated worktree, leaving the portal agent's checkout untouched.
+- Polished small trees with root flares and crown forks; temple columns gain bevelled moldings. The Sanctum's open doors echo the existing Ascendant's gold slit-mask and crystal crown. Owner confirms he is the main temple boss; his authored blend/animations are untouched.
+- Owner clarified that the 10k ceiling is per mesh, not per assembled chunk. Extended the existing schema/exporter/loader: optional MeshParts records each asset, dimensions and imported-axis offset; the complete assembly moves/calibrates together and falls back atomically if any component fails to load.
+- Sanctum exports grounds (3,518 tris) and temple (7,556 tris), 11,074 total. All 42 structure meshes and 14 props are under 10k; cloud tier tessellation reduced to meet the same limit.
+- Splitter preserves all oriented triangles, materials and vertex colours, including a single grouped primitive above 10k. Stress checks cover 30k assemblies and a 12k grouped primitive. Real FBX imports verify names, units, colours, bounds and offsets; this caught and corrected a flipped offset axis before delivery.
+- Regenerated existing blend, FBXs, content and renders. Reviews isolate each piece/assembly, focused renders retain unrelated images, and validation failure blocks output writes. Export JSON documents component bounds for import review.
+- Luau CLI downloaded into ignored local .tools: 1,014 tests pass; changed Luau syntax checks show no SyntaxError. Changed Luau files formatted; full checkout formatting has pre-existing differences. Updated authoring, art direction, modular map, build spec and biome docs; regenerated index.
+- Owner requested explicit protection for the other worlds. Added CI differential checks against the pre-multipart loader: 4,240 cases across all 30 VV, 36 SC and 40 single-mesh ES chunks, four yaws, normal/catalogue modes, loaded/placeholder/failed/recoloured assets and cached repeated placements. Placement calls, models and entry/return coordinates match. Multipart four-yaw placement and atomic fallback also pass. Controlled API raycasts are not a Studio physics check. Changed production modules have zero Selene errors; two existing Schema shadowing warnings remain.
+
+### Decisions made
+- Per-mesh budget supersedes the whole-chunk budget discussed in the previous entry; geometry stays mostly low poly.
+- The existing Ascendant is the Sanctum boss, not a new boss build. Basic enemies exist despite stale roster comments; inspect their current assets before polishing them.
+
+### Stopped at
+Chunk polish and multipart delivery ready for PR/Studio review. Worktree: C:/Dev/luckbound/.worktrees/ethereal-scape-polish. No Studio imports changed.
+
+### Next
+1. Import all named structure meshes at Stud / 1.0, save ES_STRUCTURE.rbxmx and sync IDs. Verify multipart Sanctum alignment/collision at all four yaws, socket heights, vertex colours, entry/return positions and missing-component blockout fallback.
+2. Review chunk render/Studio polish; then polish the five existing basics and the miniboss roster in order. Leave the Ascendant's owner-edited assets intact.
+
+### Leftovers
+Existing Studio chunk imports are replacement candidates only after CI and a successful Studio walk. No duplicate version files created. Keep palette-reference scene, direction samples and the current owner-authored Ascendant assets. The main manifest key remains in use for the Sanctum grounds and must not be removed.
+
+---
+## Ethereal Scape polish (branch agent/ethereal-scape-polish) — 2026-09-30 — First foliage and review pass
+**Merged:** not merged   **Tests:** 41/41 Blender geometry validations pass; Studio check pending.
+
+### Done
+- Polished existing small-tree geometry with root flares and a supporting fork, using the existing palette and deterministic scatter. No new chunk recipes or enemy assets.
+- Individual chunk renders now hide the rest of the catalogue and assembled preview. Chain, catalogue and map renders also isolate their own geometry; focused renders preserve other images.
+- Generator now stops before writing content, FBXs or the blend when geometry fails validation. Failures also return a nonzero exit status for render-only builds.
+- Rebuilt the existing 41-piece blend, both FBXs and review renders. All pieces pass walkability, socket, footing, clipping and triangle checks. Sanctum is 9,986 triangles: further detail requires reducing existing geometry or distributing the budget deliberately.
+- No Luau CLI or standalone Python on PATH. Blender Python used for index generation. StyLua check reports existing checkout-wide formatting differences; no Luau semantics changed.
+
+### Decisions made
+- Owner requested polishing the already-built kit, then basics and minibosses. Edit original generators and regenerate the original blend; keep portal work isolated in the other checkout.
+- This is the first chunk polish pass, not final approval of every chunk or the enemy roster.
+
+### Stopped at
+First foliage pass rebuilt and ready for visual review. Worktree: C:/Dev/luckbound/.worktrees/ethereal-scape-polish.
+
+### Next
+1. Review Arrival Isle and Meadow of Blooms, then tune terrain, vegetation and temple detail chunk by chunk.
+2. Verify imports, colours, collisions and socket heights in Studio before retiring current imports.
+3. Continue the basic enemy roster, then minibosses, using the existing enemy framework. Inspect untracked enemy assets in the portal checkout before rebuilding anything: those may contain owner or another agent work.
+
+### Leftovers
+No duplicate versions created. Keep original palette-reference scene and direction samples. Current Studio imports can only be retired after CI and a successful Studio visual/walk pass.
+
+---
 ## Session 211 — 2026-09-30 — Ethereal Scape enemy work handed to Codex (docs only)
 **Merged:** this PR   **Tests:** docs only   **Branch:** agent/es-enemy-codex-handoff
 

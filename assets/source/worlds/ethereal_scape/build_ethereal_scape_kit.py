@@ -1,20 +1,23 @@
-# LUCKBOUND - Ethereal Scape 30-piece chunk kit, REVAMP (2026-09-26, owner-directed).
+# LUCKBOUND - Ethereal Scape 41-piece hybrid chunk kit.
 #
-# A GROUNDED cloudscape -- see es_features.py's header and docs/biomes/ETHEREAL_SCAPE.md.
+# Floating isles, temple architecture and lush meadows: docs/biomes/ETHEREAL_SCAPE.md.
 #   es_geometry.py  palette (the ORIGINAL scene's values), Piece, primitives
 #   es_features.py  cloud floor, cloud banks, mesas, mouths, flora, temple architecture
-#   es_pieces.py    the 30 recipes and the kit table
+#   es_pieces.py    the 41 recipes and the kit table
 #   es_props.py     the atmosphere: prop library + placement (CHUNK_AUTHORING.md convention 6)
 #
 # Run (headless; the .blend is an OUTPUT, edit the scripts):
 #   blender -b --factory-startup --python assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py -- --export --render
 #
-# validate() refuses a piece unless: its box is exactly (2H x 2H) x 256 about the origin; it is under
-# 10,000 triangles; no face degenerated; a WALK GRAPH (2-stud heightfield, 1.6-stud steps, 5-stud
+# validate() refuses a piece unless: its box is exactly (2H x 2H) x 256 about the origin; solids are
+# closed and outward; no face degenerated; a WALK GRAPH (2-stud heightfield, 1.6-stud steps, 5-stud
 # headroom) connects every mouth to every other; every mouth is level ground at z = 0 across its width;
 # nothing detached floats in the structure; props are clear of the real mesh; the entry's landing and
 # return-portal pad are open to the sky; the Sanctum's hall is clear for the fight.
+# Exports then split complete assemblies so every individual mesh stays below 10,000 triangles.
 import math
+import json
+import re
 import os
 import sys
 
@@ -42,6 +45,8 @@ ONLY = next((a.split("=", 1)[1].split(",") for a in ARGV if a.startswith("--only
 SAMPLES = "--samples" in ARGV          # the direction samples (es_samples.py) instead of the kit
 if SAMPLES:                            # samples never write kit outputs, and render to their own folder
     ONLY = ["SAMPLES"]
+if ONLY and DO_EXPORT:
+    raise SystemExit("--only/--samples are review modes; export the complete kit so meshes and content remain in sync")
 for m in ("es_samples",):
     sys.modules.pop(m, None)
 
@@ -91,7 +96,7 @@ def materials():
     return mats
 
 
-def to_object(name, verts, faces, fmat, up, mats, coll):
+def to_object(name, verts, faces, fmat, up, mats, coll, recalculate=True):
     me = bpy.data.meshes.get(name)
     if me:
         bpy.data.meshes.remove(me)
@@ -106,7 +111,8 @@ def to_object(name, verts, faces, fmat, up, mats, coll):
         poly.use_smooth = mname == "CloudWhite"          # clouds are soft; everything else keeps its facets
     bm = bmesh.new()
     bm.from_mesh(me)
-    bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
+    if recalculate:
+        bmesh.ops.recalc_face_normals(bm, faces=bm.faces)
     bm.faces.ensure_lookup_table()
     if not dropped:
         for i in up:
@@ -221,8 +227,57 @@ def detached(p):
     return out, clips
 
 
+def surface_errors(p, obj):
+    """Every solid connected surface must be closed and outward-facing.
+
+    Only explicitly marked floor inlays may be single-sided. Check each
+    component separately: an island's valid cap cannot hide an open rock band.
+    """
+    from collections import Counter
+    parents = list(range(len(obj.data.vertices)))
+    def root(v):
+        while parents[v] != v:
+            parents[v] = parents[parents[v]]
+            v = parents[v]
+        return v
+    for face in obj.data.polygons:
+        first = root(face.vertices[0])
+        for v in face.vertices[1:]:
+            parents[root(v)] = first
+    components = {}
+    for face in obj.data.polygons:
+        components.setdefault(root(face.vertices[0]), []).append(face.index)
+    obj.data.calc_loop_triangles()
+    volumes, degenerate = Counter(), Counter()
+    for tri in obj.data.loop_triangles:
+        a, b, c = [obj.data.vertices[v].co for v in tri.vertices]
+        key = root(tri.vertices[0])
+        volumes[key] += a.dot(b.cross(c)) / 6
+        if (b-a).cross(c-a).length < 1e-7:
+            degenerate[key] += 1
+    errors = []
+    for key, indices in components.items():
+        if all(i in p.up for i in indices):
+            continue
+        edges = Counter()
+        for i in indices:
+            vs = list(obj.data.polygons[i].vertices)
+            for a, b in zip(vs, vs[1:]+vs[:1]):
+                edges[tuple(sorted((a, b)))] += 1
+        tag = p.ftag[indices[0]]
+        bad = sum(count != 2 for count in edges.values())
+        if bad:
+            errors.append(f"open/nonmanifold {tag}: {bad} edge(s)")
+        elif volumes[key] <= 0:
+            errors.append(f"inward/flat solid {tag}: volume {volumes[key]:.6f}")
+        if degenerate[key]:
+            errors.append(f"collapsed surface {tag}: {degenerate[key]} triangle(s)")
+    return errors
+
+
 def validate(p, obj, dropped, spec):
     fails, notes = [], []
+    fails.extend(surface_errors(p, obj))
     H = p.H
     xs = [v.co.x for v in obj.data.vertices]
     ys = [v.co.y for v in obj.data.vertices]
@@ -231,12 +286,22 @@ def validate(p, obj, dropped, spec):
                                             ("Z", min(zs), max(zs), G.KEEL_BOTTOM, G.CROWN_TOP)):
         if abs(lo - want_lo) > 0.05 or abs(hi - want_hi) > 0.05:
             fails.append(f"box {label} {lo:.2f}..{hi:.2f}, want {want_lo}..{want_hi}")
-    tris = p.tri_count()
-    if tris >= TRI_LIMIT:
-        fails.append(f"{tris} tris >= {TRI_LIMIT}")
     if dropped:
         fails.append(f"{dropped} degenerate face(s)")
     bvh = mesh_bvh(obj)
+    # Cosmetic foliage must not be treated as a movement obstacle.
+    solid_indices = [i for i in range(len(p.faces)) if p.fexport[i] != "foliage"]
+    solid = BVHTree.FromPolygons(p.verts, [p.faces[i] for i in solid_indices])
+    for a, b, floor_z, radius, label in p.clearances:
+        length = math.dist(a, b)
+        for k in range(math.ceil(length) + 1):
+            u = k / max(1, math.ceil(length))
+            z = floor_z[0] + (floor_z[1]-floor_z[0])*u if isinstance(floor_z, tuple) else floor_z
+            point = Vector((a[0]+(b[0]-a[0])*u, a[1]+(b[1]-a[1])*u, z+3))
+            hit = solid.find_nearest(point, min(radius, 2.4))
+            if hit[0] is not None:
+                fails.append(f"blocked {label} by {p.ftag[solid_indices[hit[2]]]} at ({point.x:.1f}, {point.y:.1f}, {point.z:.1f}); surface {tuple(round(v, 1) for v in hit[0])}")
+                break
     if spec["role"] == "BACKDROP":               # scenery: never walked, nothing to connect
         return fails, notes, 0.0, bvh
     mouths, area = walk_graph(p, bvh)
@@ -267,7 +332,7 @@ def validate(p, obj, dropped, spec):
             fails.append(f"sanctum hall/door obstructed at {blocked} sample(s)")
     # GROUNDED (owner 2026-09-27: "all decorative pillars and columns are connected to the ground, not
     # floating"). Every column, tower, waystone, statue, beacon and lantern post registers its footing;
-    # rays cast down from just under its base, at the centre and round its rim, must meet ground within
+    # terrain-only rays cast down from above its base, at the centre and round its rim, must meet ground within
     # 10 studs (a podium can be thick). Owner 2026-09-27 ("the spires are hanging off the edge of the chunk
     # still"): EVERY rim point, at the footing's FULL radius, must land -- 4 of 5 at 0.7r let a beacon's
     # base hang half off an isle. A crag's own base ring sits 2 studs under the floor, so its rays start
@@ -278,8 +343,14 @@ def validate(p, obj, dropped, spec):
         m = 3.0 if fr >= 4 else 0.0
         pts = [(fx, fy)] + [(fx + math.cos(a) * (fr + m), fy + math.sin(a) * (fr + m))
                             for a in [0.3 + k * math.pi / 4 for k in range(8)]]
-        z0 = fz - (3.0 if what == "crag" else 0.6)
-        hits = sum(bvh.ray_cast(Vector((qx, qy, z0)), Vector((0, 0, -1)), 10.0)[0] is not None for qx, qy in pts)
+        # Cast onto terrain only, from ABOVE its surface. Starting inside the
+        # old island's hidden grass slab accepted buried geometry and breaks
+        # completely when the island becomes a proper closed shell.
+        ground_faces = [face for i, face in enumerate(p.faces)
+                        if p.ftag[i] in {"isle", "landing", "mesa", "cloud_floor", "stairs"}
+                        or (p.ftag[i].startswith("es_") and max(p.verts[v].z for v in face) <= fz + 0.1)]
+        ground_bvh = BVHTree.FromPolygons(p.verts, ground_faces)
+        hits = sum(ground_bvh.ray_cast(Vector((qx, qy, fz + 0.25)), Vector((0, 0, -1)), 10.25)[0] is not None for qx, qy in pts)
         if hits < len(pts):
             fails.append(f"overhanging {what} at ({fx:.0f}, {fy:.0f}, {fz:.0f}): ground under {hits}/{len(pts)} of its base")
     det, clips = detached(p)
@@ -301,11 +372,11 @@ def _num(v):
 GAME_SOCKET = {"N": (0, -1, 0), "S": (0, 1, 180), "E": (1, 0, 90), "W": (-1, 0, 270)}
 
 
-def write_chunks_luau(specs):
+def write_chunks_luau(specs, asset_parts):
     out = ["--!strict",
            "-- GENERATED by assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py -- do not edit by hand.",
-           "-- Ethereal Scape chunk kit (REVAMP 2026-09-26): a GROUNDED cloudscape -- walkable cloud, meadow",
-           "-- mesas with the original scene's gold rims, cloud-bank walls, temple ruins. docs/biomes/ETHEREAL_SCAPE.md.",
+           "-- Ethereal Scape's 41-piece hybrid kit: floating isles, gold rims, lush meadows and classical temples.",
+           "-- Large assemblies use MeshParts: the 10k triangle ceiling is per exported mesh. docs/biomes/ETHEREAL_SCAPE.md.",
            "--",
            "-- CONNECTION VOCABULARY (disjoint from every other world's -- a test asserts it):",
            "--   SPAN       connective, a 44-stud golden landing at z = 0.",
@@ -344,6 +415,15 @@ def write_chunks_luau(specs):
         out.append('\t\tId = "%s",' % s["id"])
         out.append('\t\tRole = "%s" :: any,' % s["role"])
         out.append('\t\tAssetKey = "ES_CHUNK_%s",' % s["id"][3:])
+        if s["id"] in asset_parts:
+            out.append("\t\tMeshParts = {")
+            for part in asset_parts[s["id"]]:
+                fields = ['AssetKey = "%s"' % part["AssetKey"]]
+                fields += [f"{k} = {_num(part[k])}" for k in ("SizeX", "SizeY", "SizeZ", "OffsetX", "OffsetY", "OffsetZ")]
+                if part.get("CanCollide") is False:
+                    fields.append("CanCollide = false")
+                out.append("\t\t\t{ " + ", ".join(fields) + " },")
+            out.append("\t\t},")
         out.append("\t\t-- %s" % s["desc"])
         if socks:
             out.append("\t\tSockets = {")
@@ -413,11 +493,69 @@ def write_props_luau(pieces):
         fh.write("\n".join(out))
 
 
+def split_piece(p, mats, coll, source=None):
+    """Partition semantic groups into whole primitive shells, preserving exact authored coordinates."""
+    groups = {}
+    # Reuse the validated source's oriented triangles. Even an oversized individual
+    # primitive can then be split without changing surfaces or recomputing seam normals.
+    if source is None:
+        source, dropped = to_object("SPLIT_SOURCE_" + p.name, p.verts, p.faces, p.fmat, p.up, mats, coll)
+        assert not dropped
+    source.data.calc_loop_triangles()
+    triangles = list(source.data.loop_triangles)
+    faces = [list(t.vertices) for t in triangles]
+    materials = [p.fmat[t.polygon_index] for t in triangles]
+    up = {i for i, t in enumerate(triangles) if t.polygon_index in p.up}
+    for i, tri in enumerate(triangles):
+        groups.setdefault(p.fexport[tri.polygon_index], {}).setdefault(p.fshell[tri.polygon_index], []).append(i)
+    batches = []
+    for group, shells in groups.items():
+        indices, tris = [], 0
+        for shell_faces in shells.values():
+            for start in range(0, len(shell_faces), TRI_LIMIT - 1):
+                subset = shell_faces[start:start + TRI_LIMIT - 1]
+                if tris + len(subset) >= TRI_LIMIT and indices:
+                    batches.append((group, indices))
+                    indices, tris = [], 0
+                indices.extend(subset)
+                tris += len(subset)
+        if indices:
+            batches.append((group, indices))
+    objects, parts = [], []
+    counts = {}
+    all_indices = []
+    for index, (group, indices) in enumerate(batches):
+        counts[group] = counts.get(group, 0) + 1
+        name = p.name if index == 0 else f"{p.name}_{group.upper()}_{counts[group]:02d}"
+        used = sorted({v for i in indices for v in faces[i]})
+        remap = {old: new for new, old in enumerate(used)}
+        obj, dropped = to_object(name, [p.verts[v] for v in used],
+                                 [[remap[v] for v in faces[i]] for i in indices],
+                                 [materials[i] for i in indices], {j for j, i in enumerate(indices) if i in up}, mats, coll,
+                                 recalculate=False)
+        assert not dropped, f"{name}: degenerate split faces"
+        obj.data.calc_loop_triangles()
+        assert len(obj.data.loop_triangles) < TRI_LIMIT, name
+        lo = [min(v.co[a] for v in obj.data.vertices) for a in range(3)]
+        hi = [max(v.co[a] for v in obj.data.vertices) for a in range(3)]
+        centre = [(a + b) / 2 for a, b in zip(lo, hi)]
+        # Studio's uploaded mesh axes map Blender (X,Y,Z) to (-X,Z,Y).
+        # MeshYawOffset=180 restores authored orientation for the entire assembly.
+        # Offsets must use the SAME imported axes as the individual mesh geometry.
+        parts.append(dict(AssetKey="ES_CHUNK_" + name[3:],
+                          SizeX=hi[0]-lo[0], SizeY=hi[2]-lo[2], SizeZ=hi[1]-lo[1],
+                          OffsetX=-centre[0], OffsetY=centre[2]-(G.KEEL_BOTTOM+G.CROWN_TOP)/2,
+                          OffsetZ=centre[1], Triangles=len(obj.data.loop_triangles), Object=name))
+        if group == "foliage":
+            parts[-1]["CanCollide"] = False
+        objects.append(obj)
+        all_indices.extend(indices)
+    assert sorted(all_indices) == list(range(len(faces))), f"{p.name}: missing or duplicated faces"
+    return objects, parts
+
+
 def export(objs, prop_objs):
     os.makedirs(EXPORT_DIR, exist_ok=True)
-    for f in os.listdir(EXPORT_DIR):
-        if f.endswith(".fbx"):
-            os.remove(os.path.join(EXPORT_DIR, f))
 
     def fbx(objects, name):
         saved = [(o, o.location.copy()) for o in objects]
@@ -447,11 +585,14 @@ def render_setup():
     sh = s.display.shading
     sh.light = "STUDIO"
     sh.color_type = "MATERIAL"
+    sh.studiolight_rotate_z = math.radians(25)
     sh.show_shadows = True
     sh.shadow_intensity = 0.35
     sh.show_cavity = True
+    sh.show_backface_culling = True
     sh.cavity_type = "BOTH"
-    sh.background_type = "VIEWPORT"
+    sh.background_type = "WORLD"
+    s.world.color = (0.66, 0.78, 0.92)
     sh.background_color = (0.66, 0.78, 0.92)
     s.display.light_direction = (0.45, -0.35, 0.82)
     s.render.image_settings.file_format = "JPEG"
@@ -474,10 +615,20 @@ def shot(s, cam, path, target, offset, lens=28, res=(1280, 800)):
     bpy.ops.render.render(write_still=True)
 
 
+def review_visibility(scene, visible):
+    """Keep catalogue, assembled-map and individual-piece review geometry separate."""
+    visible = set(visible)
+    for obj in scene.objects:
+        if obj.type == "MESH":
+            obj.hide_render = obj not in visible
+
+
 def place_prop_copies(pieces, prop_objs, coll):
     """Review only: linked copies of the prop library where the placements say (never exported)."""
     lib = {o.name: o for o in prop_objs}
+    copies = {}
     for p, obj in pieces:
+        copies[p.name] = []
         for prop in p.props:
             src = lib[prop["kind"]]
             o = bpy.data.objects.new("REVIEW_" + prop["kind"], src.data)
@@ -485,6 +636,8 @@ def place_prop_copies(pieces, prop_objs, coll):
             o.rotation_euler = (0, 0, prop["yaw"])
             o.scale = (prop["scale"],) * 3
             coll.objects.link(o)
+            copies[p.name].append(o)
+    return copies
 
 
 def chain_preview(objs_by_id, coll):
@@ -608,25 +761,68 @@ def main():
     print(f"=== {len(rows) - n_fail}/{len(rows)} PASS ===")
 
     preview = None
+    # Never publish failed geometry or generated content, even for a render-only build.
+    if n_fail:
+        return n_fail
+    export_coll = bpy.data.collections.new("EXPORT_PARTS")
+    coll.children.link(export_coll)
+    export_coll.hide_render = True
+    export_objs, asset_parts = [], {}
+    for p, obj in pieces:
+        if p.tri_count() >= TRI_LIMIT or len(set(p.fexport)) > 1:
+            # Avoid name suffixes: the review mesh is never exported.
+            obj.name = "REVIEW_" + p.name
+            obj.data.name = "REVIEW_" + p.name
+            split, metadata = split_piece(p, mats, export_coll, source=obj)
+            for part in split:
+                part.location = obj.location
+            export_objs.extend(split)
+            asset_parts[p.name] = metadata
+            print(f"EXPORT {p.name}: " + ", ".join(f"{q['Object']} {q['Triangles']} tris" for q in metadata))
+        else:
+            export_objs.append(obj)
+    for obj in [*export_objs, *prop_objs]:
+        obj.data.calc_loop_triangles()
+        if len(obj.data.loop_triangles) >= TRI_LIMIT:
+            raise ValueError(f"{obj.name}: exported mesh exceeds per-mesh triangle limit")
     if not ONLY:
         preview = map_preview(specs, {spec["id"]: obj for spec, (p, obj) in ((SPEC_BY_ID[p_.name], (p_, o_)) for p_, o_ in pieces)},
                               {p_.name: p_ for p_, _o in pieces}, prop_objs)
-        write_chunks_luau(specs)
+        write_chunks_luau(specs, asset_parts)
         write_props_luau([p for p, _o in pieces])
+        # Register new mesh keys once; never erase uploaded IDs on rebuild.
+        manifest_path = os.path.join(REPO, "src", "shared", "Content", "AssetManifest.luau")
+        with open(manifest_path, encoding="utf-8") as fh:
+            manifest = fh.read()
+        for metadata in asset_parts.values():
+            for part in metadata:
+                key = part["AssetKey"]
+                if re.search(r"\b" + re.escape(key) + r"\s*=\s*\{", manifest):
+                    continue
+                entry = ('\t%s = {\n\t\tAssetId = "",\n\t\tStatus = "PLACEHOLDER",\n'
+                         '\t\tSource = "assets/export/worlds/ethereal_scape/ethereal_scape_structure.fbx",\n'
+                         '\t\tNotes = "Multipart Ethereal Scape chunk mesh; generated geometry metadata in Content/Chunks.",\n\t},\n') % key
+                marker = "}\n\nAssetManifest.ENTRIES = ENTRIES"
+                assert marker in manifest
+                manifest = manifest.replace(marker, entry + marker, 1)
+        with open(manifest_path, "w", encoding="utf-8", newline="\n") as fh:
+            fh.write(manifest)
         print("WROTE", CHUNKS_LUAU)
         print("WROTE", PROPS_LUAU)
     if DO_EXPORT:
-        export(objs, prop_objs)
+        export(export_objs, prop_objs)
+        with open(os.path.join(EXPORT_DIR, "ethereal_scape_structure.json"), "w", encoding="utf-8") as fh:
+            json.dump(asset_parts, fh, indent=2, sort_keys=True)
+            fh.write("\n")
         print("EXPORTED structure + props FBX to", EXPORT_DIR)
     blend = os.path.join(HERE, "ethereal_scape_kit.blend")
     if DO_RENDER:
         os.makedirs(RENDER_DIR, exist_ok=True)
-        for f in os.listdir(RENDER_DIR):
-            if f.endswith((".png", ".jpg")):
-                os.remove(os.path.join(RENDER_DIR, f))
-        place_prop_copies(pieces, prop_objs, coll)
+        # A focused review must not erase the other pieces' existing renders.
+        copies = place_prop_copies(pieces, prop_objs, coll)
         s, cam = render_setup()
         for spec, (p, obj) in ((SPEC_BY_ID[p_.name], (p_, o_)) for p_, o_ in pieces):
+            review_visibility(s, [obj, *copies[p.name]])
             H = p.H
             c = obj.location
             k = H / 128
@@ -646,17 +842,23 @@ def main():
         if not ONLY:
             byid = {spec["id"]: (obj, spec["half"]) for spec, (p, obj) in ((SPEC_BY_ID[p_.name], (p_, o_)) for p_, o_ in pieces)}
             origin, length = chain_preview(byid, coll)
+            review_visibility(s, [o for o in s.objects if o.name.startswith("CHAIN_")])
             mid = origin + Vector((0, length / 2, 0))
             shot(s, cam, os.path.join(RENDER_DIR, "preview_chain.jpg"), mid, (900, -700, 900), lens=24, res=(1600, 900))
             grid_c = Vector((2.5 * GRID, 2 * GRID, 0))
+            review_visibility(s, [*objs, *(o for group in copies.values() for o in group)])
             shot(s, cam, os.path.join(RENDER_DIR, "kit_overview.jpg"), grid_c, (0, -2600, 2600), lens=30, res=(1600, 1100))
             if preview:
+                review_visibility(s, [o for o in s.objects if o.name.startswith(("MAP_", "MAPPROP_"))])
                 c, span = preview
                 shot(s, cam, os.path.join(RENDER_DIR, "map_preview.jpg"), c, (span * 0.35, -span * 0.75, span * 0.7), lens=28,
                      res=(1920, 1080))
                 shot(s, cam, os.path.join(RENDER_DIR, "map_preview_top.jpg"), c, (0, -1, span * 1.25), lens=30, res=(1600, 1600))
+        review_visibility(s, [*objs, *prop_objs, *(o for group in copies.values() for o in group),
+                              *(o for o in s.objects if o.name.startswith(("MAP_", "MAPPROP_", "CHAIN_")))])
         print("RENDERED to", RENDER_DIR)
     if not ONLY:
+        export_coll.hide_viewport = True
         bpy.ops.wm.save_as_mainfile(filepath=blend)
         print("SAVED", blend)
     return n_fail
@@ -664,5 +866,5 @@ def main():
 
 if __name__ == "__main__":
     fails = main()
-    if fails and DO_EXPORT:
+    if fails:
         raise SystemExit(f"{fails} piece(s) failed validation")

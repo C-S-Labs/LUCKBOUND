@@ -37,16 +37,13 @@ KINDS = {
     # variety for the air (owner 2026-09-27: "a few more props ... there are a LOT of floating island bits")
     "prop_es_petals": ("Float", 2),      # a loose swirl of blossom petals drifting over the meadows
     "prop_es_lotus": ("Hover", 2),       # a floating aether lotus, glowing heart on a dark pad
-    "prop_es_kite": ("Sway", 2),         # a pilgrim's prayer kite, ribbons trailing
 }
 
 
 def _isle(p, r, top_mat="AetherMintGrass"):
-    pts = ring_pts(0, 0, r, 9, a0=0.3)
-    prism(p, pts, -1.5, 0, top_mat)
-    prism(p, [(x * 1.07, y * 1.07) for x, y in pts], -3.2, -1.0, "TempleGold")
-    verts = [(x * 1.05, y * 1.05, -3.2) for x, y in pts] + [(0.1 * r, -0.05 * r, -r * 1.4)]
-    p.add(verts, [[(i + 1) % 9, i, 9] for i in range(9)], "Cloudstone")
+    from es_isles import isle
+    isle(p, ring_pts(0, 0, r, 9, a0=0.3), z=0, depth=r*1.4,
+         floor=top_mat, roots=False, chandelier=False)
 
 
 def _cloud(p, seed, w, d, h, towers=3, anvil=False):
@@ -72,7 +69,7 @@ def _cloud(p, seed, w, d, h, towers=3, anvil=False):
                 a = rng.uniform(0, 6.28)
                 off = r * rng.uniform(0.25, 0.7)
                 blob(p, "CloudWhite", tx + math.cos(a) * off, ty + math.sin(a) * off, z + rng.uniform(-0.15, 0.15) * r,
-                     r * rng.uniform(0.6, 0.9), r * rng.uniform(0.55, 0.8), n=10, a0=a, below=r * 0.15)
+                     r * rng.uniform(0.6, 0.9), r * rng.uniform(0.55, 0.8), n=8, a0=a, below=r * 0.15)
             z += r * rng.uniform(0.3, 0.4)
             r *= rng.uniform(0.84, 0.92)
             tx += rng.uniform(-r, r) * 0.35
@@ -108,7 +105,7 @@ def _skyray(p):
         droop = -0.9 * au ** 2
         for j, v in enumerate((0.0, 0.3, 0.65, 1.0)):     # chordwise stations, leading to trailing
             y = lead + (trail - lead) * v
-            bump = math.sin(math.pi * min(1.0, 0.15 + v * 0.85))
+            bump = max(0.08, math.sin(math.pi * min(1.0, 0.15 + v * 0.85)))
             top.append((x, y, droop + th * bump))
             bot.append((x, y, droop - th * 0.45 * bump))
     m = 4
@@ -130,9 +127,8 @@ def _skyray(p):
         for j in range(m - 1):
             a, b = side * m + j, side * m + j + 1
             edge.append([a, b, off + b, off + a] if side == 0 else [b, a, off + a, off + b])
-    p.add(top, ft, "IndigoLeaves")
-    p.add(bot, fb, "CloudWhite")
-    p.add(top + bot, edge, "IndigoLeaves")
+    p.add(top + bot, ft + [[v + off for v in f] for f in fb] + edge,
+          ["IndigoLeaves"] * len(ft) + ["CloudWhite"] * len(fb) + ["IndigoLeaves"] * len(edge))
     under = -0.5                                          # just under the belly at the body's centre line
     # gill slits: five pairs curving across the belly behind the mouth
     for k in range(5):
@@ -158,11 +154,13 @@ def _skyray(p):
         gem(p, "SkyCrystal", 0, 1.6 - k * 1.1, 1.05 - k * 0.12, 0.3 - k * 0.04, 0.4, 0.1, n=4)
     # pelvic fins and the whip tail with its little dorsal fin
     for sx in (-1, 1):
-        p.add([(sx * 0.5, -2.6, 0.1), (sx * 1.6, -3.6, -0.1), (sx * 0.4, -3.4, 0.0)], [[0, 1, 2] if sx > 0 else [0, 2, 1]],
+        p.add([(sx * 0.5, -2.6, 0.1), (sx * 1.6, -3.6, -0.1), (sx * 0.4, -3.4, 0.0), (sx * 0.7, -3.1, -0.12)],
+              [[0, 1, 2], [0, 3, 1], [1, 3, 2], [2, 3, 0]],
               "IndigoLeaves")
     rod(p, "IndigoLeaves", (0, -2.8, 0.25), (0, -7.0, 0.1), 0.35, 0.14, n=5)
     rod(p, "IndigoLeaves", (0, -7.0, 0.1), (0, -11.0, -0.3), 0.14, 0.03, n=4)
-    p.add([(0, -3.2, 0.5), (0, -4.6, 0.3), (0, -3.6, 1.3)], [[0, 1, 2]], "IndigoLeaves")
+    p.add([(-0.08, -3.2, 0.5), (-0.08, -4.6, 0.3), (0, -3.6, 1.3), (0.08, -3.2, 0.5), (0.08, -4.6, 0.3)],
+          [[0, 1, 2], [4, 3, 2], [0, 3, 4, 1], [1, 4, 2], [2, 3, 0]], "IndigoLeaves")
 
 
 def build_kind(kind):
@@ -223,18 +221,6 @@ def build_kind(kind):
                     0.5, 0.05, n=4)
         gem(p, "PortalGlow", 0, 0, 0.9, 0.6, 0.7, 0.3, n=6)
         gem(p, "IndigoLeaves", 0, 0, 0.1, 2.0, 0.1, 0.35, n=8)                # the pad beneath
-    elif kind == "prop_es_kite":
-        from es_geometry import box
-        p.add([(0, 0, 3.2), (1.8, 0, 0.4), (0, 0, -2.6), (-1.8, 0, 0.4)], [[0, 1, 2, 3], [3, 2, 1, 0]], "CloudWhite")
-        box(p, "TempleGold", 0, 0.08, 0.3, 0.15, 0.15, 5.8)
-        box(p, "TempleGold", 0, 0.08, 0.4, 3.6, 0.15, 0.15)
-        gem(p, "PortalGlow", 0, 0.12, 0.4, 0.5, 0.1, 0.1, n=4)
-        for k, (dx, mat) in enumerate(((-0.3, "PortalGlow"), (0.3, "TempleGold"))):
-            prev = (0, 0, -2.6)
-            for j in range(1, 5):
-                q = (dx * j + math.sin(j * 1.3 + k) * 0.5, 0.2 * j, -2.6 - j * 1.4)
-                rod(p, mat, prev, q, 0.14, 0.12, n=3)
-                prev = q
     else:
         raise KeyError(kind)
     # recentre on the box centre: the game scales and places the mesh by its box
@@ -313,7 +299,7 @@ def place_all(p, bvh, spec):
     scatter("prop_es_cloud_a", 3 if big else 2, (70, 115), (0.9, 1.3))
     scatter("prop_es_cloud_b", 2 if big else 1, (80, 125), (0.9, 1.3))
     # satellite isles live in the outer sky of the tile, never over its middle
-    # thinned (owner 2026-09-27: "a LOT of floating island bits"); petals, lotuses and kites fill the air instead
+    # Thinned satellite isles; petals and lotuses supply variety.
     for k in ("prop_es_isle_grove", "prop_es_isle_crystal", "prop_es_isle_ruin"):
         if rng.random() < (0.55 if big else 0.3):
             scatter(k, 1, (100, 150), (0.9, 1.4), outer=True)
@@ -323,12 +309,10 @@ def place_all(p, bvh, spec):
     scatter("prop_es_lantern", lanterns, (16, 48), (1.0, 1.4), region=(0, 0, H * 0.7))
     if tags & {"crystal", "falls"} or "CRYSTAL_WARDEN" in spec.get("enemies", []):
         scatter("prop_es_shard", 6, (10, 34), (0.9, 1.6))
-    # petals drift low over the meadows, lotuses hang above head height, kites fly high
+    # Petals drift low over the meadows; lotuses hang above head height.
     scatter("prop_es_petals", rng.choice((1, 2, 3)), (8, 22), (0.9, 1.4), region=(0, 0, H * 0.75))
     scatter("prop_es_lotus", rng.choice((1, 2, 3)) + (2 if tags & {"shrine", "crystal", "arena"} else 0),
             (12, 30), (0.8, 1.3), region=(0, 0, H * 0.75))
-    if rng.random() < 0.6:
-        scatter("prop_es_kite", rng.choice((1, 2)), (50, 80), (1.2, 1.8), region=(0, 0, H * 0.7))
     # skyrays: prove every orbit clear, and the flock's radii distinct
     rays = 3 if big else rng.choice((1, 2, 2))
     for _ in range(rays):

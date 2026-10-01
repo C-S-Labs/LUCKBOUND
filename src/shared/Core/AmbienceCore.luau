@@ -28,6 +28,22 @@ function AmbienceCore.scaledCount(base: number, scale: number): number
 	return math.max(1, math.floor(base * scale + 0.5))
 end
 
+--- Smooth appearance/disappearance with a fully invisible relocation window.
+function AmbienceCore.ribbonOpacity(
+	progress: number,
+	activeFraction: number,
+	fadeFraction: number,
+	opacity: number
+): number
+	local visible = progress / activeFraction
+	if visible <= 0 or visible >= 1 then
+		return 0
+	end
+	local edge = math.min(visible, 1 - visible) / fadeFraction
+	local x = math.clamp(edge, 0, 1)
+	return opacity * x * x * (3 - 2 * x)
+end
+
 --- Wraps an offset into [-half, half). This is the whole "infinite" trick: a
 --- puff that drifts off one side of the square around the camera reappears on
 --- the other, so a few dozen puffs pave an endless sea.
@@ -246,7 +262,7 @@ function AmbienceCore.layoutClouds(
 		-- then held under the ceiling. Y is relative to the layer's plane
 		-- (Depth below the walk plane), so the cloud's top sits at
 		-- Y + top - Depth relative to the walk plane.
-		local y = (nextNumber() * 2 - 1) * baseH * 0.5
+		local y = (nextNumber() * 2 - 1) * (layer.VerticalSpread or baseH * 0.5)
 		if ceiling then
 			local top = 0
 			for _, piece in parts do
@@ -282,6 +298,53 @@ function AmbienceCore.validate(environment: any, label: string): { string }
 		return errors
 	end
 
+	local ribbons = environment.Ribbons
+	if ribbons ~= nil then
+		if type(ribbons) ~= "table" then
+			table.insert(errors, `{label}.Ribbons must be a table`)
+		else
+			local ranges = {
+				Count = { 1, 8 },
+				HeightMin = { 200, 3000 },
+				HeightMax = { 200, 3000 },
+				Margin = { 0, 3000 },
+				LengthMin = { 100, 5000 },
+				LengthMax = { 100, 5000 },
+				WidthMin = { 1, 300 },
+				WidthMax = { 1, 300 },
+				PeriodMin = { 10, 300 },
+				PeriodMax = { 10, 300 },
+				ActiveFraction = { 0.1, 0.95 },
+				FadeFraction = { 0.05, 0.5 },
+				Opacity = { 0, 0.4 },
+				Drift = { 0, 300 },
+				Ripple = { 0, 100 },
+			}
+			for key, range in ranges do
+				checkRange(errors, `{label}.Ribbons.{key}`, ribbons[key], range[1], range[2])
+			end
+			for _, pair in
+				{
+					{ "HeightMin", "HeightMax" },
+					{ "LengthMin", "LengthMax" },
+					{ "WidthMin", "WidthMax" },
+					{ "PeriodMin", "PeriodMax" },
+				}
+			do
+				if
+					type(ribbons[pair[1]]) == "number"
+					and type(ribbons[pair[2]]) == "number"
+					and ribbons[pair[1]] > ribbons[pair[2]]
+				then
+					table.insert(errors, `{label}.Ribbons.{pair[1]} must not exceed {pair[2]}`)
+				end
+			end
+			if type(ribbons.Texture) ~= "string" or ribbons.Texture == "" then
+				table.insert(errors, `{label}.Ribbons needs a Texture`)
+			end
+		end
+	end
+
 	local atmosphere = environment.Atmosphere
 	if atmosphere ~= nil then
 		checkRange(errors, `{label}.Atmosphere.Density`, atmosphere.Density, 0, 1)
@@ -300,6 +363,24 @@ function AmbienceCore.validate(environment: any, label: string): { string }
 			for i, layer in sea do
 				local l = `{label}.CloudSea[{i}]`
 				checkRange(errors, `{l}.Depth`, layer.Depth, 1, 5000)
+				if layer.VerticalSpread ~= nil then
+					checkRange(errors, `{l}.VerticalSpread`, layer.VerticalSpread, 0, 5000)
+				end
+				if layer.Wander ~= nil then
+					checkRange(errors, `{l}.Wander`, layer.Wander, 0, 500)
+					checkRange(errors, `{l}.WanderPeriod`, layer.WanderPeriod, 1, 600)
+				end
+				if layer.Meshes ~= nil then
+					if type(layer.Meshes) ~= "table" or #layer.Meshes == 0 then
+						table.insert(errors, `{l}.Meshes must be a non-empty list`)
+					else
+						for _, name in layer.Meshes do
+							if type(name) ~= "string" or name == "" then
+								table.insert(errors, `{l}.Meshes needs mesh names`)
+							end
+						end
+					end
+				end
 				if
 					type(layer.Depth) == "number"
 					and type(environment.CloudCeiling) == "number"

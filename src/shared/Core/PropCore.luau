@@ -63,6 +63,8 @@ PropCore.ANIMS = {
 	Wing = true,
 	-- Banners and hanging cloth: a slight rock in the wind about its centre.
 	Sway = true,
+	Foliage = true, -- crown wind about its trunk attachment
+	Drift = true, -- bounded, independently phased cloud wander
 	-- Light classes: they do not MOVE. Named so a later light pass can find
 	-- them -- a brazier or lamp (Flicker), aether (Pulse), an alarm (Strobe).
 	Pulse = true,
@@ -96,7 +98,20 @@ end
 --- birds, whose own rotation R is replaced by `heading`/`bank` (see
 --- PropCore.birdHeading). There is deliberately no scale term.
 function PropCore.motion(anim: string, t: number, phase: number, cfg: any, radius: number?)
-	local m = { lift = 0, turn = 0, tiltX = 0, tiltZ = 0, orbit = 0, bank = 0, flap = 0, reach = 0 }
+	local m = {
+		lift = 0,
+		turn = 0,
+		tiltX = 0,
+		tiltZ = 0,
+		orbit = 0,
+		bank = 0,
+		flap = 0,
+		reach = 0,
+		driftX = 0,
+		driftZ = 0,
+		orbitRate = 0,
+		reachRate = 0,
+	}
 	local tau = math.pi * 2
 	local c = cfg[anim]
 	if anim == "Static" or c == nil then
@@ -150,7 +165,22 @@ function PropCore.motion(anim: string, t: number, phase: number, cfg: any, radiu
 			m.orbit = tau * t / c.Period
 		end
 		m.reach = c.Reach * math.sin(tau * t / c.ReachPeriod + offset)
+		m.reachRate = c.Reach * tau / c.ReachPeriod * math.cos(tau * t / c.ReachPeriod + offset)
+		m.orbitRate = if radius and radius > 1 and c.Speed then c.Speed / radius else tau / c.Period
 		m.bank = c.Bank
+	elseif anim == "Drift" then
+		m.lift = c.Amplitude * math.sin(tau * t / c.Period + offset)
+		m.driftX = c.Reach * math.sin(tau * t / (c.Period * (1 + phase)) + offset)
+		m.driftZ = c.Reach * math.cos(tau * t / (c.Period * (1.4 + phase)) + offset * 2)
+	elseif anim == "Foliage" then
+		-- Integrated varying pace: smooth acceleration, no abrupt phase jumps.
+		local pace = tau * t / (c.Period * (0.8 + phase * 0.4)) + offset
+		pace += 0.35 * math.sin(tau * t / (c.Period * 4) + offset)
+		local strength = 0.75 + phase * 0.5
+		local gust = c.GustAngle
+			* math.sin(tau * t / (c.GustPeriod * (0.9 + phase * 0.3)) + offset * 3)
+		m.tiltX = c.Angle * strength * math.sin(pace) + gust
+		m.tiltZ = c.Angle * strength * 0.6 * math.sin(pace / 1.7 + offset)
 	elseif anim == "Sway" then
 		m.tiltX = c.Angle * math.sin(tau * t / c.Period + offset)
 		m.tiltZ = c.Angle * 0.6 * math.sin(tau * t / (c.Period * 1.7) + offset * 2)
@@ -178,6 +208,24 @@ end
 --- so this makes both rise together.
 function PropCore.wingAngle(flap: number, wingZ: number): number
 	return if wingZ < 0 then flap else -flap
+end
+
+--- Heading along the actual tangent, including radial travel (pre-orbit frame).
+function PropCore.glideHeading(
+	x: number,
+	z: number,
+	radius: number,
+	radialSpeed: number,
+	orbitRate: number
+): number
+	local length = math.sqrt(x * x + z * z)
+	if length < 1 then
+		return 0
+	end
+	local ux, uz = x / length, z / length
+	local vx = ux * radialSpeed + uz * radius * orbitRate
+	local vz = uz * radialSpeed - ux * radius * orbitRate
+	return math.atan2(-vz, vx)
 end
 
 return PropCore

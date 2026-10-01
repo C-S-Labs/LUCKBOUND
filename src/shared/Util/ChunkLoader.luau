@@ -28,6 +28,7 @@ local AssetManifest = require(Root.Content.AssetManifest)
 local ChunkCore = require(Root.Util.ChunkCore)
 local Constants = require(Root.Core.Constants)
 local GameConfig = require(Root.Core.GameConfig)
+local ChunkRuntimeCore = require(Root.Core.ChunkRuntimeCore)
 local Props = require(Root.Content.Props)
 
 local ChunkLoader = {}
@@ -169,6 +170,48 @@ end
 -- Measured mesh yaw per AssetKey, per server. See calibrateYaw.
 local yawCache: { [string]: number } = {}
 
+local function setMeshFrame(mesh: BasePart | Model, cframe: CFrame)
+	if mesh:IsA("Model") then
+		mesh:PivotTo(cframe)
+	else
+		mesh.CFrame = cframe
+	end
+end
+
+local function tryChunkMesh(
+	chunk: any,
+	assetKey: string,
+	cframe: CFrame,
+	parent: Instance
+): (BasePart | Model)?
+	if not chunk.MeshParts then
+		return tryMesh(assetKey, Vector3.new(chunk.SizeX, chunk.SizeY, chunk.SizeZ), cframe, parent)
+	end
+	local assembly = Instance.new("Model")
+	assembly.Name = "Mesh"
+	for _, definition in chunk.MeshParts do
+		local mesh = tryMesh(
+			definition.AssetKey,
+			Vector3.new(definition.SizeX, definition.SizeY, definition.SizeZ),
+			cframe * CFrame.new(definition.OffsetX, definition.OffsetY, definition.OffsetZ),
+			assembly
+		)
+		if not mesh then
+			assembly:Destroy()
+			return nil
+		end
+		mesh.Name = definition.AssetKey
+		mesh.CanCollide = definition.CanCollide ~= false
+		if definition.CanCollide == false then
+			mesh.CanQuery = false
+			mesh.CanTouch = false
+		end
+	end
+	assembly.WorldPivot = cframe
+	assembly.Parent = parent
+	return assembly
+end
+
 --- Finds which quarter turn of the ART puts deck under every declared socket.
 ---
 --- THE SOCKETS ARE THE TRUTH; THE MESH IS MEASURED AGAINST THEM. A delivered
@@ -191,7 +234,7 @@ local function calibrateYaw(
 	placed: any,
 	origin: Vector3,
 	meshPos: Vector3,
-	mesh: BasePart
+	mesh: BasePart | Model
 ): number
 	local cached = yawCache[chunk.AssetKey]
 	if cached ~= nil then
@@ -217,8 +260,10 @@ local function calibrateYaw(
 	for turn = 0, 3 do
 		-- The hint first, so a tie keeps it.
 		local k = (hint + turn * 90) % 360
-		mesh.CFrame = CFrame.new(meshPos)
-			* CFrame.Angles(0, ChunkCore.yawRadians(placed.Yaw + k), 0)
+		setMeshFrame(
+			mesh,
+			CFrame.new(meshPos) * CFrame.Angles(0, ChunkCore.yawRadians(placed.Yaw + k), 0)
+		)
 		local hits, centreHits = 0, 0
 		for _, socket in chunk.Sockets do
 			local ws = ChunkCore.worldSocket(placed, chunk, socket)
@@ -462,6 +507,37 @@ export type LoadResult = {
 
 --- Builds `layout` under `parent`, offset to `origin`. Returns where the
 --- player should arrive.
+local function buildBoundaries(chunk: any, centre: Vector3, yaw: number, folder: Instance)
+	local data = chunk.Boundary
+	if not data then
+		return
+	end
+	local holder = Instance.new("Folder")
+	holder.Name = "SafetyBoundaries"
+	holder.Parent = folder
+	game:GetService("CollectionService"):AddTag(holder, Constants.NAMES.CHUNK_BOUNDARY_TAG)
+	local frame = CFrame.new(centre) * CFrame.Angles(0, ChunkCore.yawRadians(yaw), 0)
+	for i, segment in data.Segments do
+		local a, b = segment.A, segment.B
+		local dx, dz = b[1] - a[1], b[3] - a[3]
+		local height = data.Height + math.abs(b[2] - a[2])
+		part({
+			Name = "Boundary_" .. i,
+			Anchored = true,
+			CanCollide = true,
+			CanTouch = false,
+			CanQuery = false,
+			Transparency = 1,
+			Size = Vector3.new(data.Thickness, height, math.sqrt(dx * dx + dz * dz)),
+			CFrame = frame * CFrame.new(
+				(a[1] + b[1]) / 2,
+				math.min(a[2], b[2]) + height / 2,
+				(a[3] + b[3]) / 2
+			) * CFrame.Angles(0, math.atan2(dx, dz), 0),
+		}, holder)
+	end
+end
+
 function ChunkLoader.build(
 	layout: any,
 	chunks: { [string]: any },
@@ -486,6 +562,8 @@ function ChunkLoader.build(
 	local returnPosition = origin
 	local usedMeshes = 0
 	local floorCount = 0
+	local runtimeRows, runtimeChunks = ChunkRuntimeCore.expand(layout, chunks)
+	local folders: { [number]: Instance } = {}
 
 	-- Scenario steps keyed by layout index, so the loop below can look one up
 	-- without caring whether a plan exists at all.
@@ -496,9 +574,9 @@ function ChunkLoader.build(
 		end
 	end
 
-	for _, placed in layout.Chunks do
+	for _, placed in runtimeRows do
 		local step = planByIndex[placed.Index]
-		local chunk = chunks[placed.ChunkId]
+		local chunk = runtimeChunks[placed.ChunkId]
 		if not chunk then
 			warn(`[ChunkLoader] layout names unknown chunk '{placed.ChunkId}'; skipped`)
 			continue
@@ -512,6 +590,11 @@ function ChunkLoader.build(
 		-- piece it is, and where its walk-plane centre sits in the world.
 		folder:SetAttribute("ChunkId", placed.ChunkId)
 		folder:SetAttribute("Index", placed.Index)
+		if placed.ParentIndex then
+			folder:SetAttribute("ParentChunkIndex", placed.ParentIndex)
+			folder:SetAttribute("ParentChunkId", placed.ParentChunkId)
+		end
+		folders[placed.Index] = folder
 		folder:SetAttribute("Centre", origin + Vector3.new(placed.X, placed.Y, placed.Z))
 
 		-- The scenario for this room, when the layout carries a plan (build
@@ -578,24 +661,23 @@ function ChunkLoader.build(
 		then
 			assetKey = assetKey .. "__" .. layout.Atmosphere
 		end
-		local mesh = tryMesh(
-			assetKey,
-			Vector3.new(chunk.SizeX, chunk.SizeY, chunk.SizeZ),
-			meshCFrame,
-			folder
-		)
+		local mesh = tryChunkMesh(chunk, assetKey, meshCFrame, folder)
 
-		local surface: BasePart
+		local surface: BasePart?
 		local artYawOffset = chunk.MeshYawOffset or 0
 		if mesh then
 			local meshPos = meshCFrame.Position
 			local k = calibrateYaw(chunk, placed, origin, meshPos, mesh)
 			artYawOffset = k
-			mesh.CFrame = CFrame.new(meshPos)
-				* CFrame.Angles(0, ChunkCore.yawRadians(placed.Yaw + k), 0)
+			setMeshFrame(
+				mesh,
+				CFrame.new(meshPos) * CFrame.Angles(0, ChunkCore.yawRadians(placed.Yaw + k), 0)
+			)
 			usedMeshes += 1
-			surface = mesh
-			attachWalkCollision(chunk, centre, mesh, folder)
+			if mesh:IsA("BasePart") then
+				surface = mesh
+				attachWalkCollision(chunk, centre, mesh, folder)
+			end
 		else
 			surface = buildBlockout(chunk, placed, centre, folder)
 			floorCount += 1
@@ -605,21 +687,58 @@ function ChunkLoader.build(
 		buildSolidProps(layout.WorldId, placed.ChunkId, centre, placed.Yaw, artYawOffset, folder)
 
 		buildSocketMarkers(chunk, placed, origin, folder)
+		buildBoundaries(chunk, centre, placed.Yaw, folder)
 
 		if placed.Role == "ENTRY" and (not layout.TestMode or placed.Index == 1) then
-			local top = surface.Position + Vector3.new(0, surface.Size.Y / 2, 0)
+			local top = if surface
+				then surface.Position + Vector3.new(0, surface.Size.Y / 2, 0)
+				else centre + Vector3.new(0, chunk.SizeY - groundOffset, 0)
 			entryPosition = top + Vector3.new(0, cfg.SpawnHeight, 0)
 			-- Every kit's entry socket faces away from the arrival point, and
 			-- Normal assembly places ENTRY unrotated at the layout origin.
 			-- Test entries may face along the row, so their offset rotates too.
 			-- A quarter of the chunk back
 			-- is far enough to be a destination, near enough to be obvious.
-			local returnOffset = Vector3.new(0, 0, surface.Size.Z * 0.25)
+			local returnOffset =
+				Vector3.new(0, 0, (if surface then surface.Size.Z else chunk.SizeZ) * 0.25)
 			if layout.TestMode then
 				returnOffset = CFrame.Angles(0, ChunkCore.yawRadians(placed.Yaw), 0)
 					:VectorToWorldSpace(returnOffset)
 			end
 			returnPosition = top + returnOffset
+		end
+	end
+	for _, placed in runtimeRows do
+		if placed.Portal then
+			local source, room = folders[placed.ParentIndex], folders[placed.Index]
+			if source and room then
+				local p = placed.Portal
+				local function portal(
+					folder: Instance,
+					position: any,
+					size: any,
+					target: Instance,
+					arrival: any
+				)
+					local frame = CFrame.new(folder:GetAttribute("Centre"))
+						* CFrame.Angles(0, ChunkCore.yawRadians(folder:GetAttribute("Yaw")), 0)
+					local targetFrame = CFrame.new(target:GetAttribute("Centre"))
+						* CFrame.Angles(0, ChunkCore.yawRadians(target:GetAttribute("Yaw")), 0)
+					local trigger = part({
+						Name = "RoomPortalTrigger",
+						Anchored = true,
+						CanCollide = false,
+						CanTouch = true,
+						CanQuery = false,
+						Transparency = 1,
+						Size = Vector3.new(table.unpack(size)),
+						CFrame = frame * CFrame.new(table.unpack(position)),
+					}, folder)
+					trigger:SetAttribute("Arrival", targetFrame * CFrame.new(table.unpack(arrival)))
+				end
+				portal(source, p.SourceP, p.SourceS, room, p.RoomArrival)
+				portal(room, p.RoomP, p.RoomS, source, p.SourceArrival)
+			end
 		end
 	end
 

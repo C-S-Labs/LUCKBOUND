@@ -1,6 +1,14 @@
 # Sky Citadel — biome design schema
 
 The Epic world's art direction and its chunk kit. This is the "real section"
+
+> **Owner refinement requirement, 2026-09-30:** add invisible player safety boundaries
+> along all playable island/platform/bridge/path edges, 64 studs above the local floor.
+> Keep sockets, doors and bridge approaches open; exclude backdrops. Boundaries accompany
+> their chunk, stay fixed, and are explicitly ignored by camera queries. Future visual
+> identification uses separate noncollidable animation props. Geometry/clearance refinement
+> and Studio checks pending; no Sky Citadel assets or loaders changed in the ES live pass.
+
 `ART_DIRECTION.md` said Sky Citadel needed before Phase 2 makes worlds
 enterable — the Biome Blueprint reserved the slot (§7.4) and never drafted it.
 
@@ -179,6 +187,12 @@ each edge, at the keel line (z = −96). Each lies wholly on its own side of the
 edge, so two neighbours' pins meet face to face and never interpenetrate; 96
 studs under the deck and a third of a stud across, they are invisible in play.
 The +160 crown is still pinned by one landmark per piece.
+
+**2026-10-01 cloud revision:** BASE only until variants reopen. Existing sunrise lighting
+retained; lower sea now shares the current Crossroads cloud-bank meshes, copied read-only
+into CLOUD_BANKS. Full-quality counts12/12/7, depths300/600/1000, independent vertical scatter
+170/300/450studs with the130stud ceiling maintained. Bounded, phased wandering adds varied
+motion to slow layer drift. Supersedes earlier dense procedural cloud counts below. Studio walk pending.
 
 ### Lighting and ambience — sunrise above the cloud sea
 

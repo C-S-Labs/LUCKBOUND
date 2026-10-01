@@ -163,10 +163,38 @@ local function buildCloudSea(env: any, floorY: number, scale: number, folder: In
 			Pending = 0,
 		}
 		for _, cloud in clouds do
+			cloud.Phase = random:NextNumber(0, math.pi * 2)
+			cloud.Pace = random:NextNumber(0.75, 1.3)
+			local source: BasePart? = nil
+			if def.Meshes then
+				local lib = ReplicatedStorage:FindFirstChild("LuckboundProps")
+				local name = def.Meshes[random:NextInteger(1, #def.Meshes)]
+				local found = lib and lib:FindFirstChild(name, true)
+				if found and found:IsA("BasePart") then
+					source = found
+					local width = random:NextNumber(def.SizeMin, def.SizeMax)
+					local size = found.Size * (width / found.Size.X)
+					cloud.Parts = {
+						{
+							DX = 0,
+							DY = 0,
+							DZ = 0,
+							Width = size.X,
+							Height = size.Y,
+							Length = size.Z,
+							Shade = 0,
+							Fade = 0,
+						},
+					}
+					cloud.Y = math.min(cloud.Y, def.Depth - env.CloudCeiling - size.Y / 2)
+				else
+					warn(`[AmbienceController] cloud mesh missing: {name}`)
+				end
+			end
 			-- Built once: a cloud's heading never changes, only where it is.
 			cloud.Rot = CFrame.Angles(0, cloud.Yaw, 0)
 			for _, piece in cloud.Parts do
-				local part = Instance.new("Part")
+				local part: BasePart = if source then source:Clone() else Instance.new("Part")
 				part.Name = `Cloud{cloud.Style}`
 				part.Anchored = true
 				part.CanCollide = false
@@ -181,9 +209,11 @@ local function buildCloudSea(env: any, floorY: number, scale: number, folder: In
 				part.Size = Vector3.new(piece.Width, piece.Height, piece.Length)
 				-- A SpecialMesh sphere takes the part's non-uniform size, so each
 				-- piece is a soft ellipsoid rather than a ball or a block.
-				local mesh = Instance.new("SpecialMesh")
-				mesh.MeshType = Enum.MeshType.Sphere
-				mesh.Parent = part
+				if not source then
+					local mesh = Instance.new("SpecialMesh")
+					mesh.MeshType = Enum.MeshType.Sphere
+					mesh.Parent = part
+				end
 				part.CFrame = CFrame.new(
 					cloud.X + piece.DX,
 					floorY - def.Depth + cloud.Y + piece.DY,
@@ -264,9 +294,29 @@ local function step(dt: number, floorY: number)
 		local centres = {}
 		for _, cloud in layer.Clouds do
 			centres[cloud] = Vector3.new(
-				focus.X + AmbienceCore.wrap(cloud.X + layer.DriftX - focus.X, def.Radius),
+				focus.X
+					+ AmbienceCore.wrap(
+						cloud.X
+							+ layer.DriftX
+							+ (def.Wander or 0) * math.sin(
+								os.clock() / (def.WanderPeriod or 1) * 2 * math.pi * cloud.Pace
+									+ cloud.Phase
+							)
+							- focus.X,
+						def.Radius
+					),
 				floorY - def.Depth + cloud.Y,
-				focus.Z + AmbienceCore.wrap(cloud.Z + layer.DriftZ - focus.Z, def.Radius)
+				focus.Z
+					+ AmbienceCore.wrap(
+						cloud.Z
+							+ layer.DriftZ
+							+ (def.Wander or 0) * math.cos(
+								os.clock() / (def.WanderPeriod or 1) * 2 * math.pi / cloud.Pace
+									+ cloud.Phase
+							)
+							- focus.Z,
+						def.Radius
+					)
 			)
 		end
 		local cframes = table.create(#layer.Parts)

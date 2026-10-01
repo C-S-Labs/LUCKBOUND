@@ -18,6 +18,14 @@ constraints, and a piece that satisfies them is correct however it looks.
 
 ## The eight conventions
 
+**Universal boundary/room extension (2026-09-30, build spec §7.7):** every newly authored playable
+chunk supplies walk-plane `Boundary` segments following exposed floor, walkway and bridge edges.
+Keep sockets and traversable approaches open; use 64-stud height for this pass. Collision travels
+with the parent, stays fixed/transparent, and is camera-excluded. Animated border identification is
+separate prop geometry. Detached `AttachedRooms` are conditional dependencies, not ordinary random-kit
+entries. Their reciprocal portals, animated gates and lights are separately exported props. ES import
+and saved-model paths: `assets/source/worlds/ethereal_scape/IMPORT_STEPS.md`.
+
 ### 1. One metre is one stud
 
 A Roblox character is about 5 studs tall, so a 5-metre reference object in the
@@ -81,14 +89,30 @@ happened to be next to it in the authoring scene.
 
 ### 5. Every piece is its own object, named for what it is
 
-Each piece must reach Roblox as **its own mesh**. The game uploads and places
-them separately and recombines them per run.
+Each chunk reaches Roblox as an independent assembly: one mesh, or multiple aligned meshes.
+**Owner-directed, 2026-09-30:** the 10,000-triangle ceiling applies to each exported mesh,
+not to the total chunk. A large building may be split into as many meshes as needed.
+Keep the art mostly low poly; extra capacity is permission for useful detail, not a density target.
+
+A multipart chunk declares `MeshParts` in its content entry: a complete list of `AssetKey`,
+`SizeX/SizeY/SizeZ`, and `OffsetX/OffsetY/OffsetZ` for each mesh. Offsets are measured in
+the **imported mesh axes**, relative to the full chunk's bounding-box centre. Each mesh is sized
+to its own bounds, then translated by its offset. The loader rotates the entire assembly about
+the chunk centre and probes sockets against all of its meshes. A missing mesh falls back to the
+whole chunk's blockout, so a partial building never loads as a complete chunk.
+
+`CanCollide = false` may be set on a component containing only small mushrooms, blossoms or
+grass. Omitted means solid. Non-collidable components also opt out of queries/touches so they
+cannot block combat rays or socket probes. Separate foliage before export; never disable a
+whole building or chunk to compensate for a blocked route.
 
 You may export them **one FBX per piece, or all of them in one FBX** as
 separate objects. Roblox's 3D Importer turns a multi-object FBX into one Model
 with a MeshPart per object, and centres each mesh on its own bounds, which is
 the convention the loader uses. One file is less work; either is correct.
-**Do not join the pieces into one object.**
+**Do not join separate chunks into one object.** Meshes belonging to one chunk may be split;
+preserve their authored alignment and metadata. The chunk's declared footprint, ground offset,
+sockets, role and generation identity still describe the complete assembly.
 
 **Names matter.** The object name becomes the part name and is how a piece is
 matched to its content entry. Name for what the piece is — `chunk_meadow`,
@@ -278,6 +302,13 @@ a fight or an ambush, no cover for a puzzle."*
 
 ## Export settings
 
+**Multipart offset check (Ethereal Scape, 2026-09-30):** offsets must be expressed in
+the uploaded mesh's native axes, before `MeshYawOffset` rotates the assembly. This ES
+export lands in Studio as Blender `(-X, Z, Y)`; its 180-degree art correction restores
+the authored orientation. Blender FBX reimport reports different axes, so that
+round-trip alone cannot certify Roblox offsets. `tests/check_ethereal_offsets.py`
+compares the generated foliage offsets with actual saved RBXMX mesh centres.
+
 | Setting | Value |
 |---|---|
 | Limit to → Selected Objects | on — one piece per file |
@@ -382,3 +413,26 @@ the file in. See `CHUNK_DROP_IN.md`.
 
 Say so rather than working around it. The conventions exist to make pieces
 connect, and a convention that is making pieces worse is the wrong convention.
+
+## Client scenery motion and shared cloud banks — 2026-10-01
+
+Decorative BACKDROP chunks may declare `Motion = "Float"`; no playable role may use it.
+PropController offsets the structure and attached props together and restores structure on leave.
+Tuning lives in GameConfig.Ambience.Props.Backdrop. Foliage is hinge-based varied wind;
+Drift is bounded lateral cloud wander plus bob. Both use independent placement phases.
+
+Environment.CloudSea layers may declare Meshes (names in LuckboundProps), VerticalSpread
+(studs of depth scatter), Wander (lateral amplitude) and WanderPeriod (seconds). Missing mesh
+warns and uses the existing procedural fallback. Cloud tops are clamped beneath CloudCeiling.
+`tools/sync_cloud_banks.py` copies only three named banks and their shared mesh data from
+HUB_SKY into `assets/rbxm/props/CLOUD_BANKS.rbxmx`; never edits the owner's hub file.
+
+### Optional upper-air ribbons
+
+Environment.Ribbons is generic client scenery rendered by AtmosphereEffects, independent
+of rolled scenario variants. Content owns Count, HeightMin/Max, Margin, LengthMin/Max,
+WidthMin/Max, PeriodMin/Max, ActiveFraction, FadeFraction, Opacity, Drift, Ripple, Color,
+Tip and Texture. Map server anchor bounds determine the footprint, including outside Margin.
+GameConfig.Ambience.Ribbons caps instances, Beam segments and update frequency. Invisible
+anchors have all physics/query flags off; connections/instances are disposed on leave.
+AmbienceCore.ribbonOpacity supplies the tested smooth fade/hidden relocation window.
