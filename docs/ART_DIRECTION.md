@@ -238,6 +238,53 @@ A textured portal ring is a dead portal ring.
 Ethereal Scape v2 is already built this way, so the hub matching it is what
 makes the game look like one game.
 
+**Cliff Passage continuous rock surfaces (2026-09-29):** owner-directed reconstruction supersedes modular structure and selective refinement. Each exposed wall is one welded irregular surface: 41 broad polygons, eight staggered interior vertices and two unequal broad depth changes. No extruded modules, rectangular patches or seam-cover slabs. Exact original seam samples and ridgeline preserved; terrain, path, props, transforms, sockets and collision unchanged, with 7,911 unrelated-object hashes matching. Ten views inspected: both passage directions, player stations, overhead, both overview sides and close range. Source saved; owner Blender and eventual Studio/export/walk checks pending. Keep `VerdantValley_Cliff_Continuous_Input.blend` until validation.
+
+**Cliff Passage selective refinement (2026-09-29):** softened three of eight secondary formations at unequal strengths, preserving strongest masses and all topology. Only 312 of 3,765 vertices moved inward (maximum 1.670/1.269 studs); materials, terrain, transforms, collision and 7,911 other objects unchanged. Four paired player-height views reviewed. Source saved; owner Blender and later Studio/export review pending. Keep `VerdantValley_Cliff_Selective_Input.blend` until validation.
+
+**Cliff Passage major rock structure (2026-09-29):** supersedes the shallow face-detail pass below. Four uneven structural formations plus a broad recessed bay per wall; buttresses meet the base, with tilted plates and short shelves. New forward changes capped at three studs; recesses avoid the existing earth bank. Five eye-height stations per wall, entrance/exit and both overview sides inspected; 14 final saved-source renders match the candidate. All 7,911 other objects, materials, transforms, path, corrected upper silhouette and collision unchanged. Nearest formation stays 25.58 studs from route center and outside the path material. Source saved; owner Blender and eventual Studio/export/walk checks pending. Retain `VerdantValley_Cliff_Structure_Input.blend`.
+
+**Cliff Passage exposed-face detail (2026-09-29):** only cliff_01/02 shaped with four broad asymmetric folds each and a shallow uneven ledge. Maximum projections under two studs; terrain, ridgeline, path, props, collision and 7,911 other objects unchanged. Overview and both passage views inspected. Owner Blender and eventual Studio/export/walk checks pending. Keep `VerdantValley_Cliff_Detail_Input.blend`. Eight pre-existing cliff_02 boundary edges preserved.
+
+**Cliff Passage material finish (2026-09-29):** terrain geometry is locked per
+owner. Crossroads Copse, Windward Ridge Gate and Ancient Oak establish the shell
+convention: a thin earth lip above a faceted rock rim and underside. Corrected
+grass/earth spill on lower shell faces; upper grass stays green. Contrasting
+GrassLight blocks on the top now use the existing Grass material, preserving
+flat-shaded geometry and palette. Latest owner scene saved; visual review complete,
+owner Blender and eventual Studio/export checks pending. The owner-marked remaining
+upper outer-edge brown patch also uses Grass (five triangles); lower earth lip retained.
+
+**Cliff Passage final color/mesh correction (2026-09-29):** owner clarified
+that both upper shoulders and all four end connections must match green grass.
+Each cliff mesh is again fully faced, rock colored and closed; buried caps sit
+below terrain to avoid overlap. This supersedes the incomplete cliff shell and
+brown shoulder/end interpretation recorded below. Owner review remains pending.
+
+**Cliff Passage dirt banks (2026-09-29):** the exposed transition from grass
+to passage now uses the existing `VV_Earth` palette material, including bank ends.
+Shared-surface repairs retain the broad angular crest and add no disguising rocks
+or dressing. The owner-adjusted scene is the reference for later review.
+
+**Cliff Passage ridge revision (2026-09-29):** its two long grass/rock edges now
+use broad, piecewise-planar profiles: two rises with a shallow dip, rather than
+frequent alternating triangular teeth. Flat shading and existing palette remain;
+the rebuilt exposed-face join has no descending grass wedges. This is a local
+silhouette correction in `VerdantValley_Cleanup.blend`, with owner review pending.
+
+**Cliff Passage annotated-zone finish (2026-09-30):** red local-Y ±21 stays free
+of new objects. Yellow strips to ±40 carry eight unequal pockets of existing
+small ground-cover assets, all nonsolid; no tree/log/large-rock obstacle there.
+Six linked Deep Clearing/Warden's Clearing tree assemblies and supporting rocks
+now compose upper shelves and rear slopes, retaining broad negative space and
+the nineteen appropriate prior additions. Owner removed the earlier oak-derived
+tree copies; none remain. No new tree/prop variants were modelled. The sole
+owner-permitted exception is one reusable low-poly `VV_Vine` asset (no existing
+hanging asset was available), instanced three times on one wall and twice with
+shorter lengths on the other. Full foliage/prop bounds protect red; terrain,
+cliffs, ridgelines and all 7,916 existing objects are unchanged. Saved-source
+views reviewed; owner Blender and eventual Studio/export checks pending.
+
 ### Natural things grow in patches, never in geometry — universal rule
 
 **Owner-directed, 2026-09-27**, after Ethereal Scape's Three-Trees fork put ten

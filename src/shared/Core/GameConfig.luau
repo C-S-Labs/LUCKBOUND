@@ -1475,7 +1475,7 @@ local GameConfig = {
 			-- A wingbeat: radians each way from the modelled pose, and seconds.
 			Wing = { Amplitude = 0.45, Period = 0.7 },
 			-- Banners rocking in the wind: radians each way about the centre.
-			Sway = { Angle = 0.03, Period = 5 },
+			Sway = { Angle = 0.03, Period = 5, Enabled = true, Strength = 1, Speed = 1 },
 			Foliage = { Angle = 0.065, Period = 3.6, GustAngle = 0.012, GustPeriod = 1.1 },
 			Drift = { Amplitude = 3, Period = 38, Reach = 18 },
 			Backdrop = { Amplitude = 3.5, Period = 24 },

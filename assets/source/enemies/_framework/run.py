@@ -1,6 +1,6 @@
 # LUCKBOUND enemy framework - single headless entry point for EVERY enemy in EVERY biome.
 #
-#   blender -b --factory-startup --python assets/source/enemies/_framework/run.py -- <world> <enemy_id> [steps...]
+#   python tools/run_blender.py -b --factory-startup --python assets/source/enemies/_framework/run.py -- <world> <enemy_id> [steps...]
 #
 #   steps (any order, default = --validate --render):
 #     --validate        tri budget / rig / grounding / clipping report (framework/validate.py)

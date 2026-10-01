@@ -109,6 +109,20 @@ end
 function methods.GetAttribute(o, k)
 	return o.attributes[k]
 end
+function methods.FindFirstChild(o, name, recursive)
+	for _, child in o.children do
+		if child.Name == name then
+			return child
+		end
+		if recursive then
+			local found = child:FindFirstChild(name, true)
+			if found then
+				return found
+			end
+		end
+	end
+	return nil
+end
 function methods.Destroy(o)
 	for _, child in table.clone(o.children) do
 		child:Destroy()
@@ -147,15 +161,15 @@ function AssetService.CreateMeshPartAsync(self, id, options)
 	return Instance.new("MeshPart")
 end
 local ReplicatedStorage = {
+	FindFirstChild = function()
+		return nil
+	end, -- absent prop library; no fabricated templates
 	WaitForChild = function()
 		return {}
 	end,
 }
 local RunService = {
 	Heartbeat = { Wait = function() end },
-	IsStudio = function()
-		return false
-	end,
 }
 local tags = {}
 local CollectionService = {
@@ -172,6 +186,7 @@ local game = {
 			RunService = RunService,
 			Workspace = Workspace,
 			CollectionService = CollectionService,
+			ServerStorage = Instance.new("Folder"), -- empty library exercises safe collider fallback
 		})[name]
 	end,
 }

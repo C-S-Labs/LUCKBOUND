@@ -3,8 +3,8 @@
 -- convention 6): floating crystals, beacons, birds, tomes and the rest, which
 -- ship apart from the pieces so they can move and be thinned on low graphics.
 --
--- Client-only by design. Props carry no gameplay, so the server never builds
--- or replicates them; each device places its own at its own detail tier.
+-- Client-only ambient rows are placed at each device's detail tier. Solid
+-- rows are built by ChunkLoader on the server and skipped here.
 --
 -- Where things come from:
 --   ReplicatedStorage.LuckboundProps   the imported prop libraries (Rojo,
@@ -118,6 +118,7 @@ local folder: Folder? = nil
 local placed: { Placed } = {}
 local stepper: RBXScriptConnection? = nil
 local startedAt = 0
+local swaySettings: Instance? = nil
 
 local function quality(): number
 	local ok, level = pcall(function()
@@ -130,12 +131,41 @@ local function library(): Instance?
 	return ReplicatedStorage:FindFirstChild("LuckboundProps")
 end
 
+-- Per-world Sway overrides are editable as Studio Attributes on the Props module.
+local function swayConfig(cfg: any): any
+	local defaults = cfg.Sway
+	local settings = swaySettings
+	local enabled = if settings then settings:GetAttribute("SwayEnabled") else nil
+	local strength = if settings then settings:GetAttribute("SwayStrength") else nil
+	local speed = if settings then settings:GetAttribute("SwaySpeed") else nil
+	strength = if type(strength) == "number"
+			and strength == strength
+			and math.abs(strength) < math.huge
+		then math.max(0, strength)
+		else defaults.Strength
+	speed = if type(speed) == "number"
+			and speed == speed
+			and math.abs(speed) < math.huge
+			and speed > 0
+		then speed
+		else defaults.Speed
+	local overrides = table.clone(cfg)
+	overrides.Sway = {
+		Angle = if enabled == false or (enabled == nil and not defaults.Enabled)
+			then 0
+			else defaults.Angle * strength,
+		Period = defaults.Period / speed,
+	}
+	return overrides
+end
+
 local function step()
 	local camera = Workspace.CurrentCamera
 	if not camera then
 		return
 	end
 	local cfg = GameConfig.Ambience.Props
+	local motionCfg = swayConfig(cfg)
 	local focus = camera.CFrame.Position
 	local radius2 = cfg.AnimateRadius * cfg.AnimateRadius
 	local t = os.clock() - startedAt
@@ -170,7 +200,10 @@ local function step()
 						Color3.new(p.Color.R * value, p.Color.G * value, p.Color.B * value)
 				end
 				table.insert(parts, p.Part)
-				table.insert(cframes, pose(p, PropCore.motion(p.Anim, t, p.Phase, cfg, p.Radius)))
+				table.insert(
+					cframes,
+					pose(p, PropCore.motion(p.Anim, t, p.Phase, motionCfg, p.Radius))
+				)
 			end
 		end
 	end
@@ -188,6 +221,12 @@ function PropController.enter(worldId: string, stageName: string?)
 	local set = Props[worldId]
 	if not cfg.Enabled or not set or not stageName then
 		return
+	end
+	for _, module in Root.Content.Props:GetChildren() do
+		if module:IsA("ModuleScript") and require(module) == set then
+			swaySettings = module
+			break
+		end
 	end
 	local lib = library()
 	if not lib then
@@ -264,6 +303,10 @@ function PropController.enter(worldId: string, stageName: string?)
 			local byRow: { [number]: Placed } = {}
 			for rowIndex, row in rows do
 				index += 1
+				-- The server builds solid rows under this chunk folder.
+				if row.Collide == true then
+					continue
+				end
 				-- A wing needs its bird drawn; a wing whose bird was not (tier,
 				-- or a missing mesh) is simply not drawn either.
 				local body = if row.Attach then byRow[row.Attach] else nil
@@ -403,6 +446,7 @@ function PropController.leave()
 	end
 	table.clear(backdrops)
 	table.clear(placed)
+	swaySettings = nil
 	if folder then
 		folder:Destroy()
 		folder = nil

@@ -22,7 +22,7 @@ Expected tail:
 
 ```
 ============================================================
-208 passed, 0 failed, 208 total
+N passed, 0 failed, N total
 ```
 
 CI runs them on every push, plus a syntax check and the forbidden-module-name
@@ -53,6 +53,21 @@ from above and below, each bridge end, shrine/hut thresholds, the Reliquary appr
 Sanctum exterior doors and throne. Check that foliage is passable and structures remain solid.
 Then run a normal ES assembly and VV/SC smoke checks. Owner requires this before any PR.
 
+The ambient-scenery group checks Verdant Valley Causeway collision roles by
+prop identity, independently of placement order: the solid group collides and
+is Static/Tier 1, while the nonsolid group and every canopy do not collide.
+All three categories must be present. The collision-schema probes use the
+identified solid row; dedicated terrain collision remains a separate runtime path.
+
+After integration, run `python tools/verify_vv_collision_rbxmx.py` without mutation
+flags. It checks the current 29-template combined library plus the separate Stone
+template against the refreshed export ledger. Missing explicit fidelity tokens
+with valid serialized PhysicalConfigData are pending Studio evidence, not proof
+of default or precise collision. `--strict-fidelity` returns 2 in that case.
+After fresh Rojo sync, inspect physical fidelity and walk Cliff, Cutbank, Stone
+and Causeway; confirm nonsolid scenery/canopies do not block and solid props do.
+Run movement/animation/lock-on Test K on that same integrated runtime.
+
 | Group | Tests | The question it answers |
 |---|---|---|
 | Schema validation | 8 | Does the server refuse to boot on broken content? |
@@ -70,7 +85,8 @@ Then run a normal ES assembly and VV/SC smoke checks. Owner requires this before
 | **Ethereal Scape** | 15 | **Is the prebuilt map's scale honest against the art?** |
 | **Expedition entry** | 46 | **Who may enter, where do they go, can it be replayed?** |
 
-**295 total.** Run `./tests/run.sh`; the suite prints the count.
+The table is historical coverage, not an exhaustive live inventory. Run
+`./tests/run.sh`; the discovered suite prints the authoritative count.
 
 ### The three that matter most
 

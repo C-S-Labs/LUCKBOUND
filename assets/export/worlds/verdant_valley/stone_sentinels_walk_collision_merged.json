@@ -1,0 +1,292 @@
+{
+  "source": "assets/source/worlds/verdant_valley/verdant_valley_30_cleanup_review.blend",
+  "source_sha256": "a915fbb0c76e4fdfe6fca211e4113c66583a036a8fa6a428620fe10caf3382fe",
+  "chunk": "chunk_stone_sentinels",
+  "connected_terrain_faces": 3054,
+  "detached_components_excluded": 80,
+  "tile_studs": 16,
+  "sample_step_studs": 4,
+  "surface_offset_studs": 0.35,
+  "pieces": 118,
+  "baseline_pieces": 202,
+  "merged_region_count": 27,
+  "merged_regions": [
+    {
+      "x": -48,
+      "y": -16,
+      "width_studs": 96,
+      "depth_studs": 32,
+      "tiles": 12,
+      "plane_max_residual": 0.2104,
+      "max_slope_delta": 0.0135
+    },
+    {
+      "x": -16,
+      "y": 64,
+      "width_studs": 32,
+      "depth_studs": 64,
+      "tiles": 8,
+      "plane_max_residual": 0.1123,
+      "max_slope_delta": 0.0059
+    },
+    {
+      "x": -16,
+      "y": -128,
+      "width_studs": 32,
+      "depth_studs": 64,
+      "tiles": 8,
+      "plane_max_residual": 0.1123,
+      "max_slope_delta": 0.0059
+    },
+    {
+      "x": 64,
+      "y": -80,
+      "width_studs": 32,
+      "depth_studs": 48,
+      "tiles": 6,
+      "plane_max_residual": 0.1624,
+      "max_slope_delta": 0.0093
+    },
+    {
+      "x": 64,
+      "y": 16,
+      "width_studs": 16,
+      "depth_studs": 64,
+      "tiles": 4,
+      "plane_max_residual": 0.1664,
+      "max_slope_delta": 0.0122
+    },
+    {
+      "x": -80,
+      "y": -80,
+      "width_studs": 16,
+      "depth_studs": 64,
+      "tiles": 4,
+      "plane_max_residual": 0.1975,
+      "max_slope_delta": 0.0135
+    },
+    {
+      "x": -32,
+      "y": 16,
+      "width_studs": 64,
+      "depth_studs": 16,
+      "tiles": 4,
+      "plane_max_residual": 0.1983,
+      "max_slope_delta": 0.0156
+    },
+    {
+      "x": -32,
+      "y": -32,
+      "width_studs": 64,
+      "depth_studs": 16,
+      "tiles": 4,
+      "plane_max_residual": 0.2001,
+      "max_slope_delta": 0.0156
+    },
+    {
+      "x": -80,
+      "y": 16,
+      "width_studs": 16,
+      "depth_studs": 64,
+      "tiles": 4,
+      "plane_max_residual": 0.2059,
+      "max_slope_delta": 0.0136
+    },
+    {
+      "x": -16,
+      "y": -48,
+      "width_studs": 64,
+      "depth_studs": 16,
+      "tiles": 4,
+      "plane_max_residual": 0.2131,
+      "max_slope_delta": 0.0179
+    },
+    {
+      "x": -16,
+      "y": 32,
+      "width_studs": 64,
+      "depth_studs": 16,
+      "tiles": 4,
+      "plane_max_residual": 0.2132,
+      "max_slope_delta": 0.018
+    },
+    {
+      "x": 80,
+      "y": -16,
+      "width_studs": 32,
+      "depth_studs": 32,
+      "tiles": 4,
+      "plane_max_residual": 0.1469,
+      "max_slope_delta": 0.0108
+    },
+    {
+      "x": -112,
+      "y": -16,
+      "width_studs": 32,
+      "depth_studs": 32,
+      "tiles": 4,
+      "plane_max_residual": 0.147,
+      "max_slope_delta": 0.0108
+    },
+    {
+      "x": -80,
+      "y": -16,
+      "width_studs": 32,
+      "depth_studs": 32,
+      "tiles": 4,
+      "plane_max_residual": 0.1581,
+      "max_slope_delta": 0.0125
+    },
+    {
+      "x": 48,
+      "y": -16,
+      "width_studs": 32,
+      "depth_studs": 32,
+      "tiles": 4,
+      "plane_max_residual": 0.1581,
+      "max_slope_delta": 0.0125
+    },
+    {
+      "x": -64,
+      "y": -48,
+      "width_studs": 32,
+      "depth_studs": 32,
+      "tiles": 4,
+      "plane_max_residual": 0.1921,
+      "max_slope_delta": 0.0129
+    },
+    {
+      "x": -64,
+      "y": 16,
+      "width_studs": 32,
+      "depth_studs": 32,
+      "tiles": 4,
+      "plane_max_residual": 0.1981,
+      "max_slope_delta": 0.0131
+    },
+    {
+      "x": -112,
+      "y": 16,
+      "width_studs": 32,
+      "depth_studs": 32,
+      "tiles": 4,
+      "plane_max_residual": 0.2106,
+      "max_slope_delta": 0.0121
+    },
+    {
+      "x": 48,
+      "y": -32,
+      "width_studs": 48,
+      "depth_studs": 16,
+      "tiles": 3,
+      "plane_max_residual": 0.1624,
+      "max_slope_delta": 0.0115
+    },
+    {
+      "x": 112,
+      "y": -48,
+      "width_studs": 16,
+      "depth_studs": 48,
+      "tiles": 3,
+      "plane_max_residual": 0.1961,
+      "max_slope_delta": 0.0113
+    },
+    {
+      "x": 96,
+      "y": -64,
+      "width_studs": 16,
+      "depth_studs": 48,
+      "tiles": 3,
+      "plane_max_residual": 0.2068,
+      "max_slope_delta": 0.0132
+    },
+    {
+      "x": 32,
+      "y": 16,
+      "width_studs": 32,
+      "depth_studs": 16,
+      "tiles": 2,
+      "plane_max_residual": 0.0969,
+      "max_slope_delta": 0.0056
+    },
+    {
+      "x": -128,
+      "y": 0,
+      "width_studs": 16,
+      "depth_studs": 32,
+      "tiles": 2,
+      "plane_max_residual": 0.0972,
+      "max_slope_delta": 0.0047
+    },
+    {
+      "x": -16,
+      "y": 48,
+      "width_studs": 32,
+      "depth_studs": 16,
+      "tiles": 2,
+      "plane_max_residual": 0.1256,
+      "max_slope_delta": 0.0073
+    },
+    {
+      "x": -16,
+      "y": -64,
+      "width_studs": 32,
+      "depth_studs": 16,
+      "tiles": 2,
+      "plane_max_residual": 0.1257,
+      "max_slope_delta": 0.0073
+    },
+    {
+      "x": -64,
+      "y": -64,
+      "width_studs": 32,
+      "depth_studs": 16,
+      "tiles": 2,
+      "plane_max_residual": 0.1809,
+      "max_slope_delta": 0.0128
+    },
+    {
+      "x": -64,
+      "y": 48,
+      "width_studs": 32,
+      "depth_studs": 16,
+      "tiles": 2,
+      "plane_max_residual": 0.1837,
+      "max_slope_delta": 0.0126
+    }
+  ],
+  "surface_equivalence": {
+    "grid_step_studs": 2,
+    "hit_mismatches": 0,
+    "max_height_difference_studs": 0.0
+  },
+  "fbx_reimport_meshes_including_origin": 119,
+  "triangles_skipped_at_open_or_steep_areas": 2432,
+  "interpolation_samples": 5760,
+  "interpolation_max_error_studs": 0.26,
+  "interpolation_mean_error_studs": 0.01,
+  "coverage_4_stud_grid": {
+    "regular_hits": 2540,
+    "regular_misses": 69,
+    "north_hits": 353,
+    "north_misses": 3
+  },
+  "collision_surface_max_error_studs": 0.245,
+  "north_miss_locations_blender_xy_height": [
+    [
+      46,
+      102,
+      2.22
+    ],
+    [
+      42,
+      106,
+      3.14
+    ],
+    [
+      38,
+      114,
+      4.02
+    ]
+  ]
+}

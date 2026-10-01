@@ -1,0 +1,23 @@
+{
+  "chunk": "chunk_boss_sanctuary",
+  "model": "VV_BOSS_SANCTUARY_COLLISION_MERGED",
+  "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+  "half_extents_studs": [
+    192,
+    128
+  ],
+  "covered_bounds_xy": [
+    -192.0,
+    192.0,
+    -128.0,
+    128.0
+  ],
+  "surface_offset_studs": 0.05,
+  "forced_unmerged_tiles": 70,
+  "terrain_faces": 1682,
+  "detached_components_excluded": 273,
+  "initial_cells": 349,
+  "merged_colliders": 267,
+  "merged_regions": 44,
+  "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/boss_sanctuary_walk_collision_targeted.fbx"
+}

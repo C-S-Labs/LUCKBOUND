@@ -1,0 +1,21 @@
+{
+  "chunk": "VV_OVERGROWN_CAUSEWAY_GATE",
+  "prop": "prop_overgrown_causeway_scenery",
+  "position": [
+    3.948,
+    14.59,
+    5.996
+  ],
+  "size": [
+    199.878,
+    37.363,
+    186.961
+  ],
+  "terrain_size": [
+    256.0,
+    43.5,
+    256.0
+  ],
+  "ground_offset_y": 39.0,
+  "detached_components": 88
+}

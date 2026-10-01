@@ -1,0 +1,29 @@
+{
+  "cliff_passage_collision": {
+    "file": "C:\\Users\\jhpel\\LUCKBOUND\\assets\\export\\worlds\\verdant_valley_staging_validation\\cliff_passage_collision\\path_cliff_passage_walk_collision.fbx",
+    "source_collection": "VV_PATH_CLIFF_PASSAGE_COLLISION_MERGED",
+    "meshes": 66,
+    "max_vertex_error_studs": 1.37540864670882e-05,
+    "geometry_matches_current_snapshot": true,
+    "source_digests_match_current_live_scene": true
+  },
+  "studio_validation": "pending",
+  "fbx_files": 156,
+  "expected_chunks": 30,
+  "source_objects": 4885,
+  "source_counts": {
+    "structure": 30,
+    "collision": 4032,
+    "solid_props": 30,
+    "nonsolid_props": 30,
+    "wind_canopies": 746,
+    "special_components": 17,
+    "chest_components": 12
+  },
+  "all_fbx_mesh_names_match_manifest": true,
+  "unassociated_production_objects": [],
+  "nonproduction_exported_objects": [],
+  "temp_objects_in_current_scene": 0,
+  "working_export_files_unchanged": 76,
+  "material_slot_warnings": 0
+}

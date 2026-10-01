@@ -1,0 +1,74 @@
+{
+  "source_scene": "E:\\BlenderAIProjects\\Projects\\VerdantValley_CliffPassage_SeparateCollisionDeck.blend",
+  "note": "Historical pilot counts precede the owner's three manual corrections; the current Blender scene is authoritative.",
+  "pilot_chunks": [
+    "chunk_wetland_pools",
+    "chunk_cutbank_ford",
+    "chunk_mushroom_glen"
+  ],
+  "chunks": {
+    "chunk_wetland_pools": {
+      "components": 114,
+      "counts": {
+        "structure": 4,
+        "solid": 35,
+        "nonsolid": 75
+      },
+      "types": {
+        "island": 3,
+        "terrain": 1,
+        "rock": 21,
+        "tree_trunk": 13,
+        "woody_piece": 1,
+        "bush": 4,
+        "grass_tuft": 30,
+        "tree_canopy": 26,
+        "water": 3,
+        "water_foam": 6,
+        "grass_clump": 6
+      },
+      "source_vertices": 4720,
+      "source_faces": 5492
+    },
+    "chunk_cutbank_ford": {
+      "components": 144,
+      "counts": {
+        "structure": 1,
+        "solid": 74,
+        "nonsolid": 69
+      },
+      "types": {
+        "terrain": 1,
+        "bridge_piece": 44,
+        "rock": 16,
+        "tree_trunk": 13,
+        "woody_piece": 1,
+        "grass_tuft": 42,
+        "tree_canopy": 26,
+        "water": 1
+      },
+      "source_vertices": 4383,
+      "source_faces": 4770
+    },
+    "chunk_mushroom_glen": {
+      "components": 135,
+      "counts": {
+        "structure": 1,
+        "solid": 99,
+        "nonsolid": 35
+      },
+      "types": {
+        "terrain": 1,
+        "mushroom_cap": 39,
+        "mushroom_stem": 39,
+        "rock": 7,
+        "tree_trunk": 14,
+        "bush": 7,
+        "tree_canopy": 28
+      },
+      "source_vertices": 4692,
+      "source_faces": 5274
+    }
+  },
+  "ambiguities": []
+}

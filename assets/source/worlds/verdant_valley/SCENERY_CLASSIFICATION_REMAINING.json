@@ -1,0 +1,818 @@
+{
+  "source_scene": "E:\\BlenderAIProjects\\Projects\\VerdantValley_CliffPassage_SeparateCollisionDeck.blend",
+  "preserved_pilot_chunks": [
+    "chunk_cutbank_ford",
+    "chunk_mushroom_glen",
+    "chunk_wetland_pools"
+  ],
+  "processed_chunks": [
+    "chunk_ancient_oak",
+    "chunk_blossom_terrace",
+    "chunk_boss_sanctuary",
+    "chunk_cap_cave_mouth",
+    "chunk_cliff_overlook_gate",
+    "chunk_crystal_spring_gate",
+    "chunk_deep_clearing",
+    "chunk_entry_dawn_meadow",
+    "chunk_entry_woodland_refuge",
+    "chunk_fern_hollow",
+    "chunk_forgotten_orchard_gate",
+    "chunk_high_ledge_gate",
+    "chunk_longgrass_meadow",
+    "chunk_mossbound_ruins",
+    "chunk_overgrown_causeway_gate",
+    "chunk_path_cliff_passage",
+    "chunk_path_crossroads_copse",
+    "chunk_path_narrow_pass",
+    "chunk_path_split_meadow",
+    "chunk_path_sunwash_fork",
+    "chunk_rock_garden",
+    "chunk_shaded_grove",
+    "chunk_side_forgotten_trial",
+    "chunk_side_treasure_hollow",
+    "chunk_side_wardens_clearing",
+    "chunk_stone_sentinels",
+    "chunk_windward_ridge_gate"
+  ],
+  "chunks": {
+    "chunk_ancient_oak": {
+      "components": 86,
+      "counts": {
+        "nonsolid": 57,
+        "solid": 28,
+        "structure": 1
+      },
+      "types": {
+        "bush": 3,
+        "fungus": 2,
+        "moss_detail": 30,
+        "rock": 9,
+        "terrain": 1,
+        "tree_canopy": 24,
+        "tree_trunk": 12,
+        "woody_piece": 5
+      },
+      "source_vertices": 3792,
+      "source_faces": 4314
+    },
+    "chunk_blossom_terrace": {
+      "components": 97,
+      "counts": {
+        "nonsolid": 68,
+        "solid": 28,
+        "structure": 1
+      },
+      "types": {
+        "flower_detail": 31,
+        "moss_detail": 14,
+        "rock": 8,
+        "ruin_piece": 2,
+        "terrain": 1,
+        "tree_canopy": 23,
+        "tree_trunk": 16,
+        "wood_piece": 2
+      },
+      "source_vertices": 3938,
+      "source_faces": 4717
+    },
+    "chunk_boss_sanctuary": {
+      "components": 238,
+      "counts": {
+        "nonsolid": 144,
+        "solid": 93,
+        "structure": 1
+      },
+      "types": {
+        "bush": 12,
+        "moss_detail": 22,
+        "rock": 42,
+        "ruin_piece": 43,
+        "terrain": 1,
+        "tree_canopy": 110,
+        "tree_trunk": 8
+      },
+      "source_vertices": 4339,
+      "source_faces": 4037
+    },
+    "chunk_cap_cave_mouth": {
+      "components": 110,
+      "counts": {
+        "solid": 56,
+        "structure": 15,
+        "nonsolid": 39
+      },
+      "types": {
+        "cave_rock": 43,
+        "cave_structure": 7,
+        "flame": 4,
+        "metal_piece": 4,
+        "moss_detail": 25,
+        "terrain": 1,
+        "tree_canopy": 10,
+        "tree_trunk": 5,
+        "unclassified": 7,
+        "wood_piece": 4
+      },
+      "source_vertices": 5006,
+      "source_faces": 5878
+    },
+    "chunk_cliff_overlook_gate": {
+      "components": 78,
+      "counts": {
+        "structure": 5,
+        "nonsolid": 50,
+        "solid": 23
+      },
+      "types": {
+        "cliff": 4,
+        "moss_detail": 30,
+        "rock": 12,
+        "ruin_piece": 1,
+        "terrain": 1,
+        "tree_canopy": 20,
+        "tree_trunk": 10
+      },
+      "source_vertices": 3683,
+      "source_faces": 4234
+    },
+    "chunk_crystal_spring_gate": {
+      "components": 101,
+      "counts": {
+        "solid": 37,
+        "nonsolid": 62,
+        "structure": 2
+      },
+      "types": {
+        "crystal": 9,
+        "grass_tuft": 30,
+        "ground": 1,
+        "rock": 17,
+        "terrain": 1,
+        "tree_canopy": 22,
+        "tree_trunk": 11,
+        "water": 4,
+        "water_foam": 6
+      },
+      "source_vertices": 4036,
+      "source_faces": 4636
+    },
+    "chunk_deep_clearing": {
+      "components": 75,
+      "counts": {
+        "nonsolid": 59,
+        "solid": 15,
+        "structure": 1
+      },
+      "types": {
+        "flower_detail": 29,
+        "moss_detail": 14,
+        "rock": 7,
+        "terrain": 1,
+        "tree_canopy": 16,
+        "tree_trunk": 8
+      },
+      "source_vertices": 3870,
+      "source_faces": 4567
+    },
+    "chunk_entry_dawn_meadow": {
+      "components": 178,
+      "counts": {
+        "solid": 43,
+        "nonsolid": 134,
+        "structure": 1
+      },
+      "types": {
+        "bridge_piece": 3,
+        "bush": 36,
+        "cave_rock": 1,
+        "flame": 7,
+        "flower_detail": 53,
+        "grass_clump": 12,
+        "grass_tuft": 14,
+        "rock": 29,
+        "terrain": 1,
+        "tree_canopy": 12,
+        "tree_trunk": 6,
+        "wood_piece": 3,
+        "woody_piece": 1
+      },
+      "source_vertices": 4891,
+      "source_faces": 5704
+    },
+    "chunk_entry_woodland_refuge": {
+      "components": 194,
+      "counts": {
+        "nonsolid": 137,
+        "solid": 50,
+        "structure": 7
+      },
+      "types": {
+        "bush": 64,
+        "cave_rock": 10,
+        "flower_detail": 28,
+        "grass_clump": 6,
+        "grass_tuft": 17,
+        "moss_detail": 6,
+        "rock": 24,
+        "ruin_piece": 8,
+        "terrain": 1,
+        "tree_canopy": 16,
+        "tree_trunk": 8,
+        "unclassified": 6
+      },
+      "source_vertices": 5097,
+      "source_faces": 6081
+    },
+    "chunk_fern_hollow": {
+      "components": 129,
+      "counts": {
+        "nonsolid": 94,
+        "solid": 34,
+        "structure": 1
+      },
+      "types": {
+        "bush": 12,
+        "moss_detail": 32,
+        "rock": 8,
+        "terrain": 1,
+        "tree_canopy": 50,
+        "tree_trunk": 25,
+        "woody_piece": 1
+      },
+      "source_vertices": 4296,
+      "source_faces": 5057
+    },
+    "chunk_forgotten_orchard_gate": {
+      "components": 101,
+      "counts": {
+        "nonsolid": 72,
+        "solid": 28,
+        "structure": 1
+      },
+      "types": {
+        "bush": 3,
+        "grass_tuft": 12,
+        "moss_detail": 33,
+        "rock": 9,
+        "ruin_piece": 7,
+        "terrain": 1,
+        "tree_canopy": 24,
+        "tree_trunk": 12
+      },
+      "source_vertices": 3834,
+      "source_faces": 4534
+    },
+    "chunk_high_ledge_gate": {
+      "components": 55,
+      "counts": {
+        "nonsolid": 33,
+        "solid": 20,
+        "structure": 2
+      },
+      "types": {
+        "moss_detail": 15,
+        "rock": 11,
+        "terrain": 1,
+        "tree_canopy": 18,
+        "tree_trunk": 9,
+        "unclassified": 1
+      },
+      "source_vertices": 3372,
+      "source_faces": 3835
+    },
+    "chunk_longgrass_meadow": {
+      "components": 72,
+      "counts": {
+        "nonsolid": 57,
+        "solid": 14,
+        "structure": 1
+      },
+      "types": {
+        "flower_detail": 13,
+        "moss_detail": 29,
+        "rock": 6,
+        "terrain": 1,
+        "tree_canopy": 15,
+        "tree_trunk": 8
+      },
+      "source_vertices": 3628,
+      "source_faces": 4272
+    },
+    "chunk_mossbound_ruins": {
+      "components": 97,
+      "counts": {
+        "nonsolid": 49,
+        "solid": 47,
+        "structure": 1
+      },
+      "types": {
+        "grass_clump": 4,
+        "moss_detail": 29,
+        "rock": 9,
+        "ruin_piece": 30,
+        "terrain": 1,
+        "tree_canopy": 16,
+        "tree_trunk": 8
+      },
+      "source_vertices": 3830,
+      "source_faces": 4270
+    },
+    "chunk_overgrown_causeway_gate": {
+      "components": 89,
+      "counts": {
+        "nonsolid": 56,
+        "solid": 32,
+        "structure": 1
+      },
+      "types": {
+        "moss_detail": 28,
+        "rock": 7,
+        "ruin_piece": 11,
+        "terrain": 1,
+        "tree_canopy": 28,
+        "tree_trunk": 14
+      },
+      "source_vertices": 3726,
+      "source_faces": 4265
+    },
+    "chunk_path_cliff_passage": {
+      "components": 176,
+      "counts": {
+        "nonsolid": 88,
+        "structure": 4,
+        "solid": 84
+      },
+      "types": {
+        "bush": 19,
+        "cliff": 2,
+        "grass_clump": 16,
+        "grass_tuft": 14,
+        "ground": 1,
+        "rock": 65,
+        "terrain": 1,
+        "tree_canopy": 39,
+        "tree_trunk": 19
+      },
+      "source_vertices": 4993,
+      "source_faces": 6247
+    },
+    "chunk_path_crossroads_copse": {
+      "components": 72,
+      "counts": {
+        "nonsolid": 47,
+        "solid": 24,
+        "structure": 1
+      },
+      "types": {
+        "moss_detail": 27,
+        "rock": 8,
+        "ruin_piece": 6,
+        "terrain": 1,
+        "tree_canopy": 20,
+        "tree_trunk": 10
+      },
+      "source_vertices": 4018,
+      "source_faces": 4520
+    },
+    "chunk_path_narrow_pass": {
+      "components": 77,
+      "counts": {
+        "structure": 9,
+        "nonsolid": 49,
+        "solid": 19
+      },
+      "types": {
+        "cliff": 8,
+        "moss_detail": 29,
+        "rock": 9,
+        "terrain": 1,
+        "tree_canopy": 20,
+        "tree_trunk": 10
+      },
+      "source_vertices": 3769,
+      "source_faces": 4408
+    },
+    "chunk_path_split_meadow": {
+      "components": 78,
+      "counts": {
+        "nonsolid": 57,
+        "solid": 20,
+        "structure": 1
+      },
+      "types": {
+        "bush": 2,
+        "flower_detail": 19,
+        "moss_detail": 16,
+        "rock": 8,
+        "terrain": 1,
+        "tree_canopy": 20,
+        "tree_trunk": 10,
+        "woody_piece": 2
+      },
+      "source_vertices": 3902,
+      "source_faces": 4577
+    },
+    "chunk_path_sunwash_fork": {
+      "components": 105,
+      "counts": {
+        "nonsolid": 79,
+        "solid": 25,
+        "structure": 1
+      },
+      "types": {
+        "flower_detail": 8,
+        "grass_tuft": 14,
+        "moss_detail": 30,
+        "rock": 10,
+        "terrain": 1,
+        "tree_canopy": 27,
+        "tree_trunk": 15
+      },
+      "source_vertices": 4124,
+      "source_faces": 4691
+    },
+    "chunk_rock_garden": {
+      "components": 73,
+      "counts": {
+        "nonsolid": 43,
+        "solid": 29,
+        "structure": 1
+      },
+      "types": {
+        "moss_detail": 27,
+        "rock": 21,
+        "terrain": 1,
+        "tree_canopy": 16,
+        "tree_trunk": 8
+      },
+      "source_vertices": 3610,
+      "source_faces": 4184
+    },
+    "chunk_shaded_grove": {
+      "components": 115,
+      "counts": {
+        "nonsolid": 81,
+        "solid": 33,
+        "structure": 1
+      },
+      "types": {
+        "bush": 7,
+        "moss_detail": 29,
+        "rock": 8,
+        "terrain": 1,
+        "tree_canopy": 45,
+        "tree_trunk": 25
+      },
+      "source_vertices": 4138,
+      "source_faces": 4808
+    },
+    "chunk_side_forgotten_trial": {
+      "components": 56,
+      "counts": {
+        "nonsolid": 12,
+        "solid": 43,
+        "structure": 1
+      },
+      "types": {
+        "bush": 3,
+        "flower_detail": 3,
+        "moss_detail": 4,
+        "rock": 22,
+        "ruin_piece": 20,
+        "terrain": 1,
+        "tree_canopy": 2,
+        "tree_trunk": 1
+      },
+      "source_vertices": 3352,
+      "source_faces": 3946
+    },
+    "chunk_side_treasure_hollow": {
+      "components": 47,
+      "counts": {
+        "nonsolid": 15,
+        "solid": 26,
+        "structure": 6
+      },
+      "types": {
+        "bush": 3,
+        "flower_detail": 3,
+        "moss_detail": 2,
+        "rock": 15,
+        "ruin_piece": 4,
+        "terrain": 1,
+        "tree_canopy": 7,
+        "tree_trunk": 4,
+        "unclassified": 5,
+        "wood_piece": 2,
+        "woody_piece": 1
+      },
+      "source_vertices": 3205,
+      "source_faces": 3728
+    },
+    "chunk_side_wardens_clearing": {
+      "components": 48,
+      "counts": {
+        "nonsolid": 18,
+        "solid": 29,
+        "structure": 1
+      },
+      "types": {
+        "bush": 3,
+        "flower_detail": 3,
+        "moss_detail": 5,
+        "rock": 15,
+        "ruin_piece": 10,
+        "terrain": 1,
+        "tree_canopy": 7,
+        "tree_trunk": 4
+      },
+      "source_vertices": 3213,
+      "source_faces": 3734
+    },
+    "chunk_stone_sentinels": {
+      "components": 81,
+      "counts": {
+        "nonsolid": 50,
+        "solid": 30,
+        "structure": 1
+      },
+      "types": {
+        "moss_detail": 30,
+        "rock": 20,
+        "terrain": 1,
+        "tree_canopy": 20,
+        "tree_trunk": 10
+      },
+      "source_vertices": 3704,
+      "source_faces": 4276
+    },
+    "chunk_windward_ridge_gate": {
+      "components": 76,
+      "counts": {
+        "nonsolid": 51,
+        "solid": 24,
+        "structure": 1
+      },
+      "types": {
+        "grass_tuft": 8,
+        "moss_detail": 19,
+        "rock": 11,
+        "ruin_piece": 1,
+        "terrain": 1,
+        "tree_canopy": 24,
+        "tree_trunk": 12
+      },
+      "source_vertices": 3568,
+      "source_faces": 3914
+    }
+  },
+  "ambiguities": [
+    {
+      "chunk": "chunk_cap_cave_mouth",
+      "object": "chunk_cap_cave_mouth__unclassified_01",
+      "materials": {
+        "VV_CaveGold": 7
+      },
+      "dimensions": [
+        2.0,
+        1.73,
+        0.6
+      ],
+      "reason": "material and shape do not establish gameplay solidity"
+    },
+    {
+      "chunk": "chunk_cap_cave_mouth",
+      "object": "chunk_cap_cave_mouth__unclassified_02",
+      "materials": {
+        "VV_CaveGoldLight": 7
+      },
+      "dimensions": [
+        2.8,
+        2.42,
+        0.85
+      ],
+      "reason": "material and shape do not establish gameplay solidity"
+    },
+    {
+      "chunk": "chunk_cap_cave_mouth",
+      "object": "chunk_cap_cave_mouth__unclassified_03",
+      "materials": {
+        "VV_CaveGoldLight": 7
+      },
+      "dimensions": [
+        2.2,
+        1.91,
+        0.6
+      ],
+      "reason": "material and shape do not establish gameplay solidity"
+    },
+    {
+      "chunk": "chunk_cap_cave_mouth",
+      "object": "chunk_cap_cave_mouth__unclassified_04",
+      "materials": {
+        "VV_CaveGoldLight": 6
+      },
+      "dimensions": [
+        1.4,
+        0.7,
+        1.8
+      ],
+      "reason": "material and shape do not establish gameplay solidity"
+    },
+    {
+      "chunk": "chunk_cap_cave_mouth",
+      "object": "chunk_cap_cave_mouth__unclassified_05",
+      "materials": {
+        "VV_CaveGold": 7
+      },
+      "dimensions": [
+        2.4,
+        2.08,
+        0.65
+      ],
+      "reason": "material and shape do not establish gameplay solidity"
+    },
+    {
+      "chunk": "chunk_cap_cave_mouth",
+      "object": "chunk_cap_cave_mouth__unclassified_06",
+      "materials": {
+        "VV_CaveGold": 7
+      },
+      "dimensions": [
+        2.8,
+        2.42,
+        0.75
+      ],
+      "reason": "material and shape do not establish gameplay solidity"
+    },
+    {
+      "chunk": "chunk_cap_cave_mouth",
+      "object": "chunk_cap_cave_mouth__unclassified_07",
+      "materials": {
+        "VV_CaveGoldLight": 7
+      },
+      "dimensions": [
+        2.2,
+        1.91,
+        0.65
+      ],
+      "reason": "material and shape do not establish gameplay solidity"
+    },
+    {
+      "chunk": "chunk_entry_woodland_refuge",
+      "object": "chunk_entry_woodland_refuge__unclassified_01",
+      "materials": {
+        "VV_CaveGoldLight": 7
+      },
+      "dimensions": [
+        1.25,
+        0.27,
+        1.0
+      ],
+      "reason": "material and shape do not establish gameplay solidity"
+    },
+    {
+      "chunk": "chunk_entry_woodland_refuge",
+      "object": "chunk_entry_woodland_refuge__unclassified_02",
+      "materials": {
+        "VV_CaveGoldLight": 7
+      },
+      "dimensions": [
+        1.09,
+        0.27,
+        0.81
+      ],
+      "reason": "material and shape do not establish gameplay solidity"
+    },
+    {
+      "chunk": "chunk_entry_woodland_refuge",
+      "object": "chunk_entry_woodland_refuge__unclassified_03",
+      "materials": {
+        "VV_CaveGold": 20
+      },
+      "dimensions": [
+        0.98,
+        0.37,
+        1.4
+      ],
+      "reason": "material and shape do not establish gameplay solidity"
+    },
+    {
+      "chunk": "chunk_entry_woodland_refuge",
+      "object": "chunk_entry_woodland_refuge__unclassified_04",
+      "materials": {
+        "VV_CaveGoldLight": 7
+      },
+      "dimensions": [
+        0.27,
+        0.25,
+        4.05
+      ],
+      "reason": "material and shape do not establish gameplay solidity"
+    },
+    {
+      "chunk": "chunk_entry_woodland_refuge",
+      "object": "chunk_entry_woodland_refuge__unclassified_05",
+      "materials": {
+        "VV_CaveGoldLight": 7
+      },
+      "dimensions": [
+        1.09,
+        0.27,
+        0.81
+      ],
+      "reason": "material and shape do not establish gameplay solidity"
+    },
+    {
+      "chunk": "chunk_entry_woodland_refuge",
+      "object": "chunk_entry_woodland_refuge__unclassified_06",
+      "materials": {
+        "VV_CaveGoldLight": 7
+      },
+      "dimensions": [
+        1.25,
+        0.27,
+        1.0
+      ],
+      "reason": "material and shape do not establish gameplay solidity"
+    },
+    {
+      "chunk": "chunk_high_ledge_gate",
+      "object": "chunk_high_ledge_gate__unclassified_01",
+      "materials": {
+        "VV_Rock": 20
+      },
+      "dimensions": [
+        53.69,
+        45.47,
+        24.0
+      ],
+      "reason": "large rock may be cliff or detached boulder"
+    },
+    {
+      "chunk": "chunk_side_treasure_hollow",
+      "object": "chunk_side_treasure_hollow__unclassified_01",
+      "materials": {
+        "VV_Gold": 20
+      },
+      "dimensions": [
+        1.97,
+        1.87,
+        0.9
+      ],
+      "reason": "material and shape do not establish gameplay solidity"
+    },
+    {
+      "chunk": "chunk_side_treasure_hollow",
+      "object": "chunk_side_treasure_hollow__unclassified_02",
+      "materials": {
+        "VV_Gold": 20
+      },
+      "dimensions": [
+        1.97,
+        1.87,
+        0.9
+      ],
+      "reason": "material and shape do not establish gameplay solidity"
+    },
+    {
+      "chunk": "chunk_side_treasure_hollow",
+      "object": "chunk_side_treasure_hollow__unclassified_03",
+      "materials": {
+        "VV_Gold": 6
+      },
+      "dimensions": [
+        1.33,
+        0.85,
+        2.1
+      ],
+      "reason": "material and shape do not establish gameplay solidity"
+    },
+    {
+      "chunk": "chunk_side_treasure_hollow",
+      "object": "chunk_side_treasure_hollow__unclassified_04",
+      "materials": {
+        "VV_Gold": 20
+      },
+      "dimensions": [
+        1.97,
+        1.87,
+        0.9
+      ],
+      "reason": "material and shape do not establish gameplay solidity"
+    },
+    {
+      "chunk": "chunk_side_treasure_hollow",
+      "object": "chunk_side_treasure_hollow__unclassified_05",
+      "materials": {
+        "VV_Gold": 20
+      },
+      "dimensions": [
+        1.97,
+        1.87,
+        0.9
+      ],
+      "reason": "material and shape do not establish gameplay solidity"
+    }
+  ]
+}
