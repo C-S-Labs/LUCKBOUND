@@ -13,6 +13,31 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 
 ---
 
+## boss-anim-vfx-plans (branch worktree-boss-anim-vfx-plans) — 2026-09-30 — Universal boss animation/VFX contract and work orders
+**Merged:** none yet   **Tests:** docs only, no `src/` change
+
+### Done
+- Owner supplied two plans (Astral Seraph/Celestial Dancer; Ascendant/Winged Sentinel). Stored under `docs/design/boss_plans/`.
+- New **`docs/BOSS_ANIMATION_VFX.md`**: the universal contract every boss follows (fairness minimums, Blender/export rules, markers, effect recipes, budgets, transition/defeat shape, delivery order, acceptance gates).
+- Per-boss construction work orders: appended to `ASCENDANT_MOVESET.md` and `WS_MOVESET.md`; new `assets/source/enemies/astral_reach/ROSTER.md` (Seraph, Dancer).
+
+### Decisions made
+- Plan figures (timings, budgets, thresholds) are proposals; existing moveset values are untouched. No combat rebalance.
+- Seraph/Dancer do not replace `STAR_EATER` in `AstralReach.luau` (separate owner task).
+- Sentinel: tell fixes (Twin Thrust 7 f, Riposte 6 f), Flurry/Ascension splits are proposals awaiting owner review.
+
+### Stopped at
+Docs only; no Blender, Luau or Studio work started.
+
+### Next
+1. Owner pushes the updated Ascendant spec and mesh (extra rigging/joint properties): reconcile, then update the Ascendant work order and start with the audit.
+2. Ascendant `P1_OrbCast` + `P1_CrescentReap` prototype; Sentinel `P1_Lunge` + charge proof; Seraph Wing Sweep; Dancer Opening Waltz.
+
+### Leftovers
+None created. The ASCENDANT_MOVESET "only ranged move" prose is stale and should be corrected during the Ascendant reconciliation.
+
+---
+
 ## UI-overhaul (branch agents/UI-overhaul) — 2026-09-29 — SIGIL UI overhaul
 **Merged:** none yet   **Tests:** not run here (no `luau` CLI in this session; CI is the test run). Owner walked every piece in Studio.
 
