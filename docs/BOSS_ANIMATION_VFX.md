@@ -35,6 +35,7 @@ never silently rebalance combat inside an animation/VFX task.
 - Detached or lingering hazards stop threatening during recovery. A pretty fading afterimage must be visibly distinct
   from a persistent damaging residue; **no unmarked damage from a decorative trail.** A projectile's lifetime is its own
   contract and is not ended by the caster's `HitEnd`; decide and document whether it may outlive the cast.
+- **Parry and stagger** (`ENEMY_AI.md` §10.1): stagger only on hits, hidden internal meter, never shown. The three-attack limit and 18 f punish stay; stagger is an extra earned opening. Large bosses are not staggered by parrying ranged attacks. Every boss needs `Stagger`/`StaggerRecover` actions, a diegetic cue and full cosmetic cleanup on stagger; stagger never cuts through a transition.
 - Transition and defeat debris does no damage; transition invulnerability is an explicit server state ending in a free punish window.
 
 ## 3. Blender contract (all in the existing `_framework/`, headless `run.py`)

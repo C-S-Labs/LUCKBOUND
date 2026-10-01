@@ -36,6 +36,55 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 210 — 2026-09-30 — Stagger timing and player-combat roadmap (docs only)
+**Merged:** none yet   **Tests:** docs only   **Branch:** agent/astral-boss-forms (PR #152)
+
+### Done
+- `ENEMY_AI.md` §10.1: stagger timing is now the owner's rule: immediate during an interruptible tell; otherwise pending until the boss stops attacking, then triggered by the next confirmed player hit; meter holds while pending, with an expiry.
+- `PLAYER_ABILITIES.md` §7 and `DEVELOPMENT_PLAN.md`: player combat is the next major system; four starter weapons (sword, greatsword, staff, spear); per-weapon block/parry animation; movement refinement first.
+
+### Next
+Draft the four starter weapons, then movement refinement, then a build-spec amendment to open combat.
+
+### Leftovers
+None created.
+
+---
+
+## Session 209 — 2026-09-30 — Parry/stagger design; Final Phase keeps the contract (docs only)
+**Merged:** none yet   **Tests:** docs only   **Branch:** agent/astral-boss-forms (PR #152)
+
+### Done
+- Owner: keep the three-attack limit and 18 f punish in the Final Phase; difficulty comes from pressure. Recorded in the Astral roster.
+- New `ENEMY_AI.md` §10.1: player parry plus hit-only stagger, hidden internal meter for every boss; agile bosses parry-stagger (Dancer harder in P2/Final); large bosses (Seraph) are not staggered by parrying ranged attacks, only by a meter that fills on successive hits and drains slowly. Cross-referenced from `BOSS_ANIMATION_VFX.md`.
+
+### Open
+- The player parry mechanic (input, windows, cost) is not specified anywhere; needs `PLAYER_ABILITIES.md` plus a build-spec amendment. All stagger numbers are to be set by simulation.
+
+### Leftovers
+None created.
+
+---
+
+## Session 208 — 2026-09-30 — Dancer form changes decided; Astral transitions drafted (docs only)
+**Merged:** none yet   **Tests:** docs only   **Branch:** agent/astral-boss-forms
+
+### Done
+- Owner ruled on the Dancer: one real blade through P1 and P2; P2 form change = cape unfurl (outer layer peels, ribbon streamers) plus a fan of 3-5 floating blades; second spectral blade materialises from particles at P2 -> Final.
+- Owner: P1 must be **slim and elegant** (basis: `docs/design/ASTRAL_REACH_SCHEME.webp`). Recorded as a silhouette rule and acceptance gate in `assets/source/enemies/astral_reach/ROSTER.md`; budgets updated to the owner's 175-200k / 200-250k.
+- Drafted P1 -> P2 and P2 -> Final transitions (Dancer), and P2 -> Final "Ascension" (Seraph), as proposals.
+
+### Open
+- The locked Final Phase wording ("minimal recovery", overlapping attacks) vs the 18 f punish / 3-attack contract: owner to confirm the contract holds.
+
+### Next
+Silhouette renders at player scale for owner review before animation; then the Seraph Wing Sweep and Dancer Opening Waltz prototypes.
+
+### Leftovers
+None created.
+
+---
+
 ## Session 207 — 2026-09-30 — Astral Reach planning consolidated; universal boss animation/VFX contract
 **Merged:** consolidated PR (this branch)   **Tests:** docs only, no `src/` change   **Branch:** worktree-boss-anim-vfx-plans
 

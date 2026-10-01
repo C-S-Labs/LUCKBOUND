@@ -135,8 +135,8 @@ _412 text files, 936 binary assets. Regenerate with `python tools/gen_index.py`;
 - `assets/source/enemies/_framework/validate.py` (85) - Enemy validation (run by run.py --validate, or exec'd after any build). Prints VALIDATE lines and a PASS/FAIL summary. · 2026-09-28
 - `assets/source/enemies/_framework/walk_core.py` (281) - WALK CYCLE core (framework, humanoid bodies). A parametric, ANALYTICALLY SOLVED walk loop: every frame's foot · 2026-09-28
   - `walk_core.py`: _ik2:20, leg_to:54, _rest_foot:58, _leg_phase:61, _wrot:75, _tilt:83, _swing_arm:88, _level_head:102, walk_pose_humanoid:108, _leg_len:137, _resolve_gait:153, build_walk_humanoid:164, strafe_pose_humanoid:180, _quad_leg_len:220, walk_pose_quadruped:224, build_walk_quadruped:243, build_strafe_humanoid:264
-- `assets/source/enemies/astral_reach/ROSTER.md` (104) - Astral Reach enemy roster (STAGING, biome has no map yet) · 2026-09-30
-  - `ROSTER.md`: Shared rules for both:26, Boss A: Astral Seraph — NOT BUILT (work order):33, Boss B: Celestial Dancer — NOT BUILT (work order):66, Build status:98
+- `assets/source/enemies/astral_reach/ROSTER.md` (110) - Astral Reach enemy roster (STAGING, biome has no map yet) · 2026-09-30
+  - `ROSTER.md`: Shared rules for both:26, Boss A: Astral Seraph — NOT BUILT (work order):33, Boss B: Celestial Dancer — NOT BUILT (work order):67, Build status:104
 - `assets/source/enemies/ethereal_scape/ASCENDANT_MOVESET.md` (189) - The Ascendant: moveset (v1) · 2026-09-30
   - `ASCENDANT_MOVESET.md`: Phase 1: The Guardian (ivory cuirass intact), 100-55% HP:27, Transition: P2_Transfiguration (70 f, invulnerable, no damag:44, Phase 2: Ascended (inner body exposed, crystal ascendant), 5:53, Fairness rules (every boss, restated):64, Animations:74, VFX plan (Studio):122, Work order 2026-09-30: animation and VFX construction (owner:137
 - `assets/source/enemies/ethereal_scape/ROSTER.md` (62) - Ethereal Scape enemy roster (base chunk set only) · 2026-09-28
@@ -380,8 +380,8 @@ _412 text files, 936 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/BOSS_ANIMATION_VFX.md
 
-- `docs/BOSS_ANIMATION_VFX.md` (134) - Boss animation and VFX contract (universal, every boss in every biome) · 2026-09-30
-  - `BOSS_ANIMATION_VFX.md`: 1. Principles:13, 2. Fairness (extends the Sky Citadel rules; these are the sh:26, 3. Blender contract (all in the existing `_framework/`, head:40, 4. Timing, markers and manifest (per action):61, 5. Runtime effect recipe (data, not copy-pasted emitter code:70, 6. Phases, transitions and defeat (the shape every boss foll:91, 7. Mandatory delivery order for any boss (extends `ENEMY_AI.:100, 8. Acceptance gates (all bosses):113, 9. Per-boss work orders (where the construction lists live):125
+- `docs/BOSS_ANIMATION_VFX.md` (135) - Boss animation and VFX contract (universal, every boss in every biome) · 2026-09-30
+  - `BOSS_ANIMATION_VFX.md`: 1. Principles:13, 2. Fairness (extends the Sky Citadel rules; these are the sh:26, 3. Blender contract (all in the existing `_framework/`, head:41, 4. Timing, markers and manifest (per action):62, 5. Runtime effect recipe (data, not copy-pasted emitter code:71, 6. Phases, transitions and defeat (the shape every boss foll:92, 7. Mandatory delivery order for any boss (extends `ENEMY_AI.:101, 8. Acceptance gates (all bosses):114, 9. Per-boss work orders (where the construction lists live):126
 
 ### docs/CHUNK_AUTHORING.md
 
@@ -400,8 +400,8 @@ _412 text files, 936 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/DEVELOPMENT_PLAN.md
 
-- `docs/DEVELOPMENT_PLAN.md` (300) - LUCKBOUND — Development Plan · 2026-09-26
-  - `DEVELOPMENT_PLAN.md`: 1. The decision that shapes everything:16, 2. Where we actually are:47, 3. The critical path to a playtest:67, Phase 0 — Clear the deck · **S**:72, Phase 1 — Every roll leads somewhere · **M**:87, Phase 1b — The procedural loop proves itself · **S/M**:128, Phase 2 — Something to do in a world · **M/L**:153, Phase 3 — Make it feel like a game · **M**:168, Phase 4 — The playtest itself · **S** (process, not code):184, Phase 5 — Act on what it says · **?**:199, 4. After the playtest — the long game:207, 5. What we are deliberately NOT doing yet:244, 6. How to work, so we stop jumping around:261, 7. The risks worth naming:281, 8. If you only do four things:293
+- `docs/DEVELOPMENT_PLAN.md` (302) - LUCKBOUND — Development Plan · 2026-09-26
+  - `DEVELOPMENT_PLAN.md`: 1. The decision that shapes everything:16, 2. Where we actually are:47, 3. The critical path to a playtest:67, Phase 0 — Clear the deck · **S**:74, Phase 1 — Every roll leads somewhere · **M**:89, Phase 1b — The procedural loop proves itself · **S/M**:130, Phase 2 — Something to do in a world · **M/L**:155, Phase 3 — Make it feel like a game · **M**:170, Phase 4 — The playtest itself · **S** (process, not code):186, Phase 5 — Act on what it says · **?**:201, 4. After the playtest — the long game:209, 5. What we are deliberately NOT doing yet:246, 6. How to work, so we stop jumping around:263, 7. The risks worth naming:283, 8. If you only do four things:295
 
 ### docs/DEV_TOOLS.md
 
@@ -410,8 +410,8 @@ _412 text files, 936 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/ENEMY_AI.md
 
-- `docs/ENEMY_AI.md` (275) - Enemy AI: how every enemy, miniboss and boss thinks, adapts and is tuned · 2026-09-26
-  - `ENEMY_AI.md`: 1. Goals:19, 2. Governing rules:28, 3. Architecture:47, 4. The combat language (shared by items and enemies):67, 4.1 Weapons carry their own moves:83, 5. The map contract:97, 6. World effect palettes:113, 7. Archetypes:124, 8. The decision model (utility AI):143, Fairness guardrails (hard rules, tested):153, 9. Difficulty and rewards:162, The personal adjustment:169, Rewards:180, Win-rate targets:189, 10. Bosses:200, Universal evolution:208, Raid-ready, not raids:219, 11. Tuning and telemetry:224, 12. Order of operations (mandatory):234, Rules for agents:261, 13. Open questions:269
+- `docs/ENEMY_AI.md` (303) - Enemy AI: how every enemy, miniboss and boss thinks, adapts and is tuned · 2026-09-30
+  - `ENEMY_AI.md`: 1. Goals:19, 2. Governing rules:28, 3. Architecture:47, 4. The combat language (shared by items and enemies):67, 4.1 Weapons carry their own moves:83, 5. The map contract:97, 6. World effect palettes:113, 7. Archetypes:124, 8. The decision model (utility AI):143, Fairness guardrails (hard rules, tested):153, 9. Difficulty and rewards:162, The personal adjustment:169, Rewards:180, Win-rate targets:189, 10. Bosses:200, Universal evolution:208, Raid-ready, not raids:219, 10.1 Parry and stagger (owner design, 2026-09-30; not built):224, 11. Tuning and telemetry:252, 12. Order of operations (mandatory):262, Rules for agents:289, 13. Open questions:297
 
 ### docs/ENEMY_FRAMEWORK.md
 
@@ -450,8 +450,8 @@ _412 text files, 936 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/PLAYER_ABILITIES.md
 
-- `docs/PLAYER_ABILITIES.md` (429) - LUCKBOUND — Player Abilities & Upgrades · 2026-09-28
-  - `PLAYER_ABILITIES.md`: 0. The line this document exists to hold:11, 1. Built: our own character controller:34, 2. Built: two profiles, one stamina bar:71, 2.5 Built: jump, roll and backstep:115, 2.7 Built: how the body moves (`CharacterAnimator`, `Animati:157, Adding real animations: where and how:187, 2.55 Built: the shoulder camera (our shift lock):221, 2.6 Built: lock-on (optional):230, 3. Planned: the Fate Tree:264, FORTUNE — what the roll can reach:280, ENDURANCE — how long you last out there:293, DISCOVERY — what a world yields:304, CRAFT — what your gear becomes:316, Node shapes worth having:326, 4. Planned: movement abilities beyond the two:337, 5. Where these would live:358, 6. How fighting drives movement (the weapon contract):373, 6.1 Weapon stances: how holding a weapon changes the body (d:399
+- `docs/PLAYER_ABILITIES.md` (448) - LUCKBOUND — Player Abilities & Upgrades · 2026-09-28
+  - `PLAYER_ABILITIES.md`: 0. The line this document exists to hold:11, 1. Built: our own character controller:34, 2. Built: two profiles, one stamina bar:71, 2.5 Built: jump, roll and backstep:115, 2.7 Built: how the body moves (`CharacterAnimator`, `Animati:157, Adding real animations: where and how:187, 2.55 Built: the shoulder camera (our shift lock):221, 2.6 Built: lock-on (optional):230, 3. Planned: the Fate Tree:264, FORTUNE — what the roll can reach:280, ENDURANCE — how long you last out there:293, DISCOVERY — what a world yields:304, CRAFT — what your gear becomes:316, Node shapes worth having:326, 4. Planned: movement abilities beyond the two:337, 5. Where these would live:358, 6. How fighting drives movement (the weapon contract):373, 6.1 Weapon stances: how holding a weapon changes the body (d:399, 7. Planned: player combat, the next major system (owner, 202:431
 
 ### docs/PLAYER_ANIMATION_BRIEF.md
 
@@ -570,8 +570,8 @@ _412 text files, 936 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (8229) - LUCKBOUND — Work Log · 2026-09-30
-  - `WORKLOG.md`: Template:18, Session N — YYYY-MM-DD — <short title>:21, Done:24, Decisions made:27, Stopped at:30, Next:33, Session 207 — 2026-09-30 — Astral Reach planning consolidate:39, Done:42, Decisions made:47, Stopped at:52, Next:55, Leftovers:58, Session 206 — 2026-09-30 — Final VV integration wrap-up and :63, Done:66, Decisions made:73, Stopped at:78, Next:81, Session 205 — 2026-09-30 — Exact VV path exits and gate-widt:86, Done:89, Decisions made:94, Stopped at:98, Next:101, Session 204 — 2026-09-30 — Full Verdant Valley socket/openin:106, Done:109, Decisions made:114, Stopped at:118, Next:121, Session 203 — 2026-09-30 — Reconcile frozen main with Verdan:126, Done:129, Decisions made:134, Stopped at:138, Next:141, Session 202 — 2026-09-30 — Correct Causeway collision regres:145, Done:149, Decisions made:154, Stopped at:157, Next:160, Session 201 — 2026-09-30 — Centralize Blender Windows thumbn:164, Done:168, Decisions made:174, ... +1022 more
+- `docs/WORKLOG.md` (8278) - LUCKBOUND — Work Log · 2026-09-30
+  - `WORKLOG.md`: Template:18, Session N — YYYY-MM-DD — <short title>:21, Done:24, Decisions made:27, Stopped at:30, Next:33, Session 210 — 2026-09-30 — Stagger timing and player-combat :39, Done:42, Next:46, Leftovers:49, Session 209 — 2026-09-30 — Parry/stagger design; Final Phase:54, Done:57, Open:61, Leftovers:64, Session 208 — 2026-09-30 — Dancer form changes decided; Astr:69, Done:72, Open:77, Next:80, Leftovers:83, Session 207 — 2026-09-30 — Astral Reach planning consolidate:88, Done:91, Decisions made:96, Stopped at:101, Next:104, Leftovers:107, Session 206 — 2026-09-30 — Final VV integration wrap-up and :112, Done:115, Decisions made:122, Stopped at:127, Next:130, Session 205 — 2026-09-30 — Exact VV path exits and gate-widt:135, Done:138, Decisions made:143, Stopped at:147, Next:150, Session 204 — 2026-09-30 — Full Verdant Valley socket/openin:155, Done:158, Decisions made:163, Stopped at:167, Next:170, ... +1035 more
 
 ### docs/archive
 
