@@ -32,7 +32,30 @@ assert sum(q["Triangles"] for q in large_metadata) == 12000
 assert all(q["Triangles"] < api["TRI_LIMIT"] for q in large_metadata)
 print("PASS: 30k assembly and 12k grouped primitive split losslessly")
 
+# Missing faces must fail before export, even if the scene looks filled from above.
+from es_isles import isle
+island = G.Piece("ES_TEST_SEAM", 128, [])
+isle(island, G.ring_pts(0, 0, 40, 12), roots=False, chandelier=False)
+obj, dropped = api["to_object"](island.name, island.verts, island.faces, island.fmat, island.up, mats, bpy.context.scene.collection)
+assert not dropped and not api["surface_errors"](island, obj)
+broken = G.Piece("ES_TEST_HOLE", 128, [])
+broken.add(island.verts, island.faces[:-1], island.fmat[:-1])
+obj, _ = api["to_object"](broken.name, broken.verts, broken.faces, broken.fmat, broken.up, mats, bpy.context.scene.collection)
+assert any("open/nonmanifold" in error for error in api["surface_errors"](broken, obj))
+print("PASS: seamless island shell; a removed underside face is rejected")
+for kind in api["PR"].KINDS:
+    vertices, faces, materials, _ = api["PR"].build_kind(kind)
+    p = G.Piece(kind, 0, [])
+    p.add(vertices, faces, materials)
+    obj, dropped = api["to_object"](kind, p.verts, p.faces, p.fmat, p.up, mats, bpy.context.scene.collection)
+    assert not dropped and not api["surface_errors"](p, obj), (kind, api["surface_errors"](p, obj))
+assert "prop_es_kite" not in api["PR"].KINDS
+print("PASS: all prop surfaces closed and outward; prayer kite removed")
+
 export_dir = ROOT / "assets/export/worlds/ethereal_scape"
+if (export_dir / "live_delivery.json").exists():
+    runpy.run_path(str(ROOT / "tests/validate_live_ethereal_delivery.py"), run_name="__main__")
+    raise SystemExit(0)
 parts = json.loads((export_dir / "ethereal_scape_structure.json").read_text())
 for obj in list(bpy.data.objects):
     bpy.data.objects.remove(obj, do_unlink=True)
@@ -55,7 +78,9 @@ for assembly in parts.values():
         for i, axis in enumerate("XYZ"):
             assert abs(hi[i]-lo[i]-q["Size"+axis]) < 0.01, (obj.name, axis, "size")
             origin = (G.KEEL_BOTTOM+G.CROWN_TOP)/2 if axis == "Y" else 0
-            assert abs((hi[i]+lo[i])/2-origin-q["Offset"+axis]) < 0.01, (obj.name, axis, "offset")
+            # Blender's round-trip axes are 180 degrees from native Roblox mesh axes.
+            sign = 1 if axis == "Y" else -1
+            assert abs(sign*((hi[i]+lo[i])/2-origin)-q["Offset"+axis]) < 0.01, (obj.name, axis, "offset")
 print(f"PASS: {len(meshes)} structure meshes round-trip with matching colours, units, bounds and multipart offsets")
 
 for obj in list(bpy.data.objects):

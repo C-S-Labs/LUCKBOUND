@@ -69,7 +69,29 @@ def aether_fall(p, x, y, z_top, out_dir, width=12.0, drop=None, z_bottom=FLOOR_Z
     """A ribbon of glowing sky-crystal water spilling from a rim, curving outward as it falls,
     into a pool at its foot."""
     dx, dy = out_dir
+    direction_length = math.hypot(dx, dy)
+    dx, dy = dx / direction_length, dy / direction_length
     nx, ny = -dy, dx
+    start_x, start_y = x, y
+    spill_floor = None
+    # Spill from the real rim, rather than burying a straight ribbon in a
+    # jittered island. Clear the entire width, including the gold overhang.
+    for outline, top in p.tops:
+        if abs(top - z_top) > 3:
+            continue
+        cx = sum(q[0] for q in outline) / len(outline)
+        cy = sum(q[1] for q in outline) / len(outline)
+        rim = [(cx + (qx-cx)*1.04, cy + (qy-cy)*1.04) for qx, qy in outline]
+        if math.hypot(x-cx, y-cy) > max(math.hypot(qx-cx, qy-cy) for qx, qy in rim) + width:
+            continue
+        spill_floor = top
+        for _ in range(160):
+            if not any(inside(rim, x+nx*off, y+ny*off) for off in (-width/2, 0, width/2)):
+                break
+            x, y = x+dx*0.5, y+dy*0.5
+    if spill_floor is not None:
+        z_top = spill_floor + 0.1
+        beam(p, "SkyCrystal", (start_x, start_y, z_top), (x+dx, y+dy, z_top), width, 0.2)
     drop = drop if drop is not None else z_top - z_bottom
     steps = 5
     verts, faces = [], []
@@ -87,6 +109,7 @@ def aether_fall(p, x, y, z_top, out_dir, width=12.0, drop=None, z_bottom=FLOOR_Z
         for i in range(4):
             j = (i + 1) % 4
             faces.append([a + i, a + j, b + j, b + i])
+    faces += [[3, 2, 1, 0], list(range(4 * steps, 4 * steps + 4))]
     p.add(verts, faces, "SkyCrystal")
     if not pool:                       # off an isle's rim the water simply falls away into the cloud
         return
@@ -160,7 +183,18 @@ def web(p, nodes, links, width=16.0):
                 t = 0.0                       # walk out to the outline's edge, then back 5 studs onto it
                 while inside(N["pts"], N["x"] + ux * (t + 1), N["y"] + uy * (t + 1)):
                     t += 1
-                edge = (N["x"] + ux * t, N["y"] + uy * t)
+                # Descend only after the WHOLE deck clears the expanded gold
+                # rim. Starting a slope at the grass edge drove it through
+                # the thicker rim, blocking three approaches in Studio.
+                cx = sum(q[0] for q in N["pts"]) / len(N["pts"])
+                cy = sum(q[1] for q in N["pts"]) / len(N["pts"])
+                rim = [(cx + (x-cx)*1.04, cy + (y-cy)*1.04) for x, y in N["pts"]]
+                edge_t = t
+                while any(inside(rim, N["x"]+ux*edge_t-uy*off, N["y"]+uy*edge_t+ux*off)
+                          for off in (-width/2, 0, width/2)):
+                    edge_t += 0.25
+                edge_t += 0.25
+                edge = (N["x"] + ux * edge_t, N["y"] + uy * edge_t)
                 t = max(4.0, t - 5.0)
                 ends.append(((N["x"] + ux * t, N["y"] + uy * t), N["z"], edge))
         (pa, za, ea), (pb, zb, eb) = ends
@@ -243,7 +277,7 @@ def es_entry(p):
     pins(p)
     H = p.H
     n = web(p, {"main": dict(x=0, y=-6, r=150, z=0, pts=rsquare(0, -6, 156, 150, 46, per_edge=4), depth=92),
-                "perch_w": (-150, 158, 18, 14), "perch_e": (160, -164, 18, -16)},
+                "perch_w": (-156, 166, 18, 14), "perch_e": (166, -170, 18, -16)},
             [("main", "N"), ("main", "perch_w"), ("main", "perch_e")])
     m = n["main"]
     hub_plaza(p, 0, 0, 34)
@@ -273,7 +307,7 @@ def es_entry(p):
     meadow_dress(p, (0, 0, 118), trees=10, blossom=50, tufts=20, mush=6,
                  avoid=[(0, 0, 58), (0, -110, 38), (-96, 52, 50), (100, 70, 40), (84, -64, 22)])
     lantern_post(p, *at(n["perch_w"], 2, -4), z=14)
-    sky_spire(p, *at(n["perch_e"], 0, -2), z=-16, r=3.6)
+    sky_spire(p, *at(n["perch_e"], 3, -3), z=-16, r=3.6)
 
 
 def es_sanctum(p):
@@ -323,7 +357,7 @@ def es_sanctum(p):
             box(p, "SkyCrystal", x + 12, WY1, 34, 9, T + 0.5, 20)
         x += 24
     for cx in (-108, -80, -52, 52, 80, 108):
-        column(p, cx, WY0 - 8, z, WH - z, r=3.2)
+        column(p, cx, WY0 - 12, z, WH - z, r=3.2)
     beam(p, "TempleIvory", (-126, WY0 - 8, WH + 1.5), (126, WY0 - 8, WH + 1.5), 9, 3)
     beam(p, "TempleGold", (-126, WY0 - 12.6, WH + 3.4), (126, WY0 - 12.6, WH + 3.4), 1.0, 1.0)
     # the pediment: its base is sunk into the entablature (a base face lying ON the beam's top z-fought),
@@ -331,7 +365,7 @@ def es_sanctum(p):
     # walk: "faces appearing ... on the roof overhang right above the entrance")
     p.add([(-100, WY0 - 12, WH + 2.4), (100, WY0 - 12, WH + 2.4), (0, WY0 - 12, WH + 24),
            (-100, WY0 - 4, WH + 2.4), (100, WY0 - 4, WH + 2.4), (0, WY0 - 4, WH + 24)],
-          [[0, 1, 2], [4, 3, 5]], "TempleIvory")
+          [[0, 1, 2], [4, 3, 5], [0, 3, 4, 1], [1, 4, 5, 2], [2, 5, 3, 0]], "TempleIvory")
     for sx in (-1, 1):
         beam(p, "TempleGold", (sx * 106, WY0 - 8, WH + 2.4), (0, WY0 - 8, WH + 25.4), 11, 1.6)
     gem(p, "PortalGlow", 0, WY0 - 12.2, WH + 12, 4.0, 3.0, 3.0, n=8)
@@ -444,12 +478,29 @@ def es_sanctum(p):
     # --- the throne dais at the north end: three steps, a crystal-backed throne, braziers, a sun disc
     for k, (w_, d_) in enumerate(((96, 30), (72, 22), (44, 14))):
         box(p, "TempleIvory" if k % 2 == 0 else "TempleGold", 0, WY1 - T / 2 - d_ / 2 - 0.5, z + 0.6 + k * 1.2, w_, d_, 1.2 + k * 0.0)
-    tz = z + 3.0
-    box(p, "TempleGold", 0, WY1 - 12, tz + 1.5, 12, 7, 3.0)                     # the seat
-    box(p, "TempleIvory", 0, WY1 - 9.5, tz + 8, 12, 2.0, 13)                    # its back
-    gem(p, "SkyCrystal", 0, WY1 - 9.5, tz + 16, 5.0, 9.0, 4.0, n=6)            # a crystal crest rising out of it
+    tz = z + 3.6
+    ty = 130.5
+    # An elevated ruler's chair: four feet, framed seat, broad back and a
+    # seven-ray crown. Everything sits on the dais and stays clear of the wall.
     for sx in (-1, 1):
-        box(p, "TempleGold", sx * 6.8, WY1 - 12, tz + 4.5, 1.6, 7, 3.0)          # armrests
+        for dy in (-3.0, 3.0):
+            frustum(p, "TempleGold", sx * 6.5, ty + dy, tz, tz + 4, 0.85, 0.7, n=8)
+    box(p, "TempleGold", 0, ty, tz + 5, 16, 9, 2)
+    box(p, "IndigoLeaves", 0, ty - 0.2, tz + 6.4, 13, 7, 0.8)
+    box(p, "TempleIvory", 0, ty + 5.25, tz + 16, 14, 1.5, 20)
+    box(p, "TempleGold", 0, ty + 4.42, tz + 16, 10, 0.16, 16)
+    box(p, "IndigoLeaves", 0, ty + 4.28, tz + 16, 8.5, 0.1, 14.5)
+    box(p, "TempleGold", 0, ty + 4.15, tz + 18, 3.5, 0.12, 6)
+    box(p, "PortalGlow", 0, ty + 4.04, tz + 18, 0.45, 0.08, 4.5)
+    for dx in range(-6, 7, 2):
+        height = 9 - abs(dx) * 0.65
+        rod(p, "TempleGold", (dx, ty + 5.25, tz + 26), (dx * 1.2, ty + 5.25, tz + 26 + height), 0.55, 0.2, n=6)
+        gem(p, "SkyCrystal", dx * 1.2, ty + 5.25, tz + 26 + height + 1, 0.65, 1, 1, n=6)
+    for sx in (-1, 1):
+        box(p, "TempleIvory", sx * 8.0, ty, tz + 9, 1.5, 8.5, 1.5)
+        for dy in (-3.0, 3.0):
+            rod(p, "TempleGold", (sx * 8, ty + dy, tz + 6), (sx * 8, ty + dy, tz + 8.25), 0.4, 0.4, n=6)
+        gem(p, "SkyCrystal", sx * 8, ty - 3.8, tz + 10.2, 0.65, 0.6, 0.45, n=6)
         bz = z + 2.2                                                           # on the second step
         frustum(p, "TempleIvory", sx * 30, WY1 - 16, bz, bz + 8, 2.4, 1.8, n=8)  # braziers
         frustum(p, "TempleGold", sx * 30, WY1 - 16, bz + 8, bz + 10, 1.8, 3.6, n=8)
@@ -467,25 +518,25 @@ def es_sanctum(p):
         beam(p, "TempleGold", (math.cos(a0) * 10, wy, M_z + math.sin(a0) * 10), (math.cos(a1) * 10, wy, M_z + math.sin(a1) * 10),
              2.0, 1.4)
     box(p, "PortalGlow", 0, wy, M_z, 8, 0.8, 8)
-    # the great door: gold jambs, and its two leaves swung open INWARD against the hall's south wall
-    # (outside, a stud off the wall, they ran into the portico's columns)
+    # Open leaves sit against the EXTERIOR wall. Reliefs face the approach;
+    # columns stand farther forward, leaving both leaves and the opening clear.
     for sx in (-1, 1):
         box(p, "TempleGold", sx * (door + 1.2), WY0, 28, 2.4, T + 1.2, 44)
         # the leaf stands a stud proud of the wall (flush, its back z-fought the wall's face), hung on
         # three gold hinges from the jamb, its gold rail seated in its face rather than buried in it
-        ly = WY0 + T / 2 + 1.5
+        ly = WY0 - T / 2 - 1.5
         box(p, "SoftWood", sx * (door + 16.5), ly, 27, 29, 1.0, 40)
-        box(p, "TempleGold", sx * (door + 16.5), ly + 0.55, 27, 22, 0.5, 3)
+        box(p, "TempleGold", sx * (door + 16.5), ly - 0.8, 27, 22, 0.5, 3)
         # The existing Ascendant is this hall's guardian: gold slit-mask reliefs
         # and crystal crown shards on the open doors echo his silhouette.
         mx = sx * (door + 16.5)
-        box(p, "TempleGold", mx, ly + 0.75, 35, 5, 0.4, 6)
-        box(p, "PortalGlow", mx, ly + 0.98, 35, 0.55, 0.1, 4.4)
+        box(p, "TempleGold", mx, ly - 0.75, 35, 5, 0.4, 6)
+        box(p, "PortalGlow", mx, ly - 1.03, 35, 0.55, 0.1, 4.4)
         for dx, height in ((-2.1, 2.2), (0, 3.5), (2.1, 2.6)):
-            rod(p, "SkyCrystal", (mx + dx, ly + 0.85, 38),
-                (mx + dx * 1.25, ly + 0.85, 38 + height), 0.55, 0, n=5)
+            rod(p, "SkyCrystal", (mx + dx, ly - 1.1, 38),
+                (mx + dx * 1.25, ly - 1.1, 38 + height), 0.55, 0, n=5)
         for hz in (12, 27, 42):
-            box(p, "TempleGold", sx * (door + 2.6), WY0 + T / 2 + 1.0, hz, 2.0, 2.2, 3)
+            box(p, "TempleGold", sx * (door + 2.6), ly, hz, 2.0, 2.2, 3)
     p.export_group = "terrain"
     for k in range(3):
         y = -142 - k * 26
@@ -510,7 +561,7 @@ def es_sanctum(p):
 # ---------------------------------------------------------------------------
 def es_plank_crossing(p):
     pins(p)
-    n = web(p, {"a": (-10, -50, 28, 0), "b": (24, 10, 28, 8), "c": (-8, 62, 24, 0), "perch": (-82, 4, 18, -10)},
+    n = web(p, {"a": (-10, -50, 28, 0), "b": (24, 10, 24, 8), "c": (-8, 62, 22, 0), "perch": (-82, 4, 18, -10)},
             [("S", "a"), ("a", "b"), ("b", "c"), ("c", "N"), ("b", "perch")])
     pavilion(p, *at(n["b"], 8, 4), 8, 12, 12, 10, rz=face(*at(n["b"], 8, 4), *at(n["b"])))
     for k, (dx, dy) in enumerate(((-12, -6), (8, 8))):
@@ -518,7 +569,7 @@ def es_plank_crossing(p):
     dress(p, n["a"], trees=1, blossom=16, tufts=6, mush=2)
     for s in (-1, 1):
         lantern_post(p, *at(n["c"], s * 11, -2), rz=0 if s > 0 else math.pi)
-    waystone(p, *at(n["c"], 0, 12), rz=0.2)
+    waystone(p, *at(n["c"], 10, 7), rz=0.2)
     sky_spire(p, *at(n["perch"], 0, 0), z=-10, r=3.6)
 
 
@@ -624,7 +675,7 @@ def es_bend_west_shrine(p):
 # ---------------------------------------------------------------------------
 def es_fork_wayshrine(p):
     pins(p)
-    n = web(p, {"hub": (0, -6, 50, 0), "rear": (0, 82, 24, 14)}, [("S", "hub"), ("hub", "E"), ("hub", "W"), ("hub", "rear")])
+    n = web(p, {"hub": (0, -6, 50, 0), "rear": (0, 92, 22, 14)}, [("S", "hub"), ("hub", "E"), ("hub", "W"), ("hub", "rear")])
     hub_plaza(p, 0, -6, 20)
     for a in (0.6, 1.4, 2.5, 3.9, 5.5):
         waystone(p, math.cos(a) * 32, -6 + math.sin(a) * 32, rz=a, h=14)
@@ -637,7 +688,7 @@ def es_fork_wayshrine(p):
 
 def es_fork_three_trees(p):
     pins(p)
-    n = web(p, {"hub": (-10, 0, 52, 0), "crag": (-86, -44, 22, -12)},
+    n = web(p, {"hub": (-10, 0, 52, 0), "crag": (-94, -46, 22, -12)},
             [("S", "hub"), ("hub", "N"), ("hub", "E"), ("hub", "crag")])
     for k, (dx, dy) in enumerate(((-24, 18), (16, 28), (-26, -22))):
         tree(p, *at(n["hub"], dx, dy), h=34 - k * 3, crown=(TEAL, INDIGO)[k % 2], style=k)
@@ -651,12 +702,12 @@ def es_fork_twin_span(p):
     """A fork on two isles: the lower court sends a road west, the upper (+10) carries a bell tower
     and the north mouth."""
     pins(p)
-    n = web(p, {"a": (0, -30, 36, 0), "b": (0, 52, 34, 10)}, [("S", "a"), ("a", "W"), ("a", "b"), ("b", "N")])
-    bell_tower(p, *at(n["b"], -20, 2), z=10, w=12, rz=0.1)
+    n = web(p, {"a": (0, -30, 36, 0), "b": (0, 58, 29, 10)}, [("S", "a"), ("a", "W"), ("a", "b"), ("b", "N")])
+    bell_tower(p, *at(n["b"], -16, 2), z=10, w=12, rz=0.1)
     for s in (-1, 1):
         column(p, *at(n["a"], 18, s * 12), 0, 16, broken=s > 0)
     dress(p, n["a"], trees=1, blossom=20, tufts=8, mush=2)
-    dress(p, n["b"], trees=1, blossom=12, tufts=4, mush=1, avoid=[(-20, 54, 14)])
+    dress(p, n["b"], trees=1, blossom=12, tufts=4, mush=1, avoid=[(-16, 60, 14)])
 
 
 def es_convergence(p):
@@ -708,7 +759,7 @@ def es_terraced_gardens(p):
 
 def es_crystal_hollow(p):
     pins(p)
-    n = web(p, {"h": dict(x=0, y=0, r=72, z=0, sides=16), "shard": (80, -70, 16, -10)},
+    n = web(p, {"h": dict(x=0, y=0, r=72, z=0, sides=16), "shard": (84, -74, 16, -10)},
             [("S", "h"), ("h", "N"), ("h", "shard")])
     aether_pool(p, 18, 0, 18)
     for k in range(7):
@@ -776,7 +827,7 @@ def es_rooted_hollow(p):
 
 def es_twin_isles(p):
     pins(p)
-    n = web(p, {"a": (-36, -22, 40, 0), "b": (42, 32, 38, 12)}, [("S", "a"), ("a", "b"), ("b", "N")])
+    n = web(p, {"a": (-40, -24, 40, 0), "b": (46, 36, 38, 12)}, [("S", "a"), ("a", "b"), ("b", "N")])
     sky_spire(p, *at(n["a"], -18, -8), r=4)
     pavilion(p, *at(n["b"], 14, 6), 12, 14, 14, 11, rz=face(*at(n["b"], 14, 6), *at(n["b"])))
     dress(p, n["a"], trees=3, blossom=30, tufts=10, mush=3, avoid=[(n["a"]["x"] - 18, n["a"]["y"] - 8, 12)])
@@ -843,7 +894,8 @@ def es_sky_aqueduct(p):
     # the water channel along the east side, with a spill over the edge at mid-span
     decal_strip(p, "SkyCrystal", (DW / 2 - 4.5, -94), (DW / 2 - 4.5, 94), 3.2, 0.08)
     decal_strip(p, "TempleGold", (DW / 2 - 6.4, -94), (DW / 2 - 6.4, 94), 0.6, 0.1)
-    aether_fall(p, DW / 2 - 1.5, 0, -1.0, (1, 0), width=6, drop=60, pool=False)
+    beam(p, "SkyCrystal", (DW / 2 - 4.5, 0, 0.15), (DW / 2 + 0.5, 0, 0.15), 6, 0.12)
+    aether_fall(p, DW / 2 - 0.5, 0, 0.05, (1, 0), width=6, drop=60, pool=False)
     # piers down to their isles, gold bands; arcades spring between them
     for y in (-46, 0, 46):
         box(p, "TempleIvory", 0, y, -36.5, 22, 12, 67)
@@ -957,7 +1009,7 @@ def es_miniboss_waystone_ring(p):
     """The Waystone Sentinel's ring: a wide arena isle, eight waystones round a gold ring, twin
     spires behind, a gallery perch looking down on the fight."""
     pins(p)
-    n = web(p, {"ring": dict(x=0, y=6, r=84, z=0, sides=18), "gallery": (-84, 88, 18, 10)},
+    n = web(p, {"ring": dict(x=0, y=6, r=84, z=0, sides=18), "gallery": (-88, 94, 18, 10)},
             [("S", "ring"), ("ring", "gallery")])
     decal_ring(p, "TempleGold", 0, 6, 54, 57, 0.05, n=32)
     decal_ring(p, "PortalGlow", 0, 6, 30, 31, 0.06, n=24)
@@ -976,8 +1028,10 @@ def es_miniboss_reliquary_court(p):
     n = web(p, {"c": dict(x=0, y=8, r=84, z=0, pts=rsquare(0, 8, 84, 88, 28))}, [("S", "c")])
     temple_floor(p, n["c"])
     shrine_hall(p, 0, 66, 0, 30, 20, rz=face(0, 66, 0, 8))   # its porch opens onto the court
-    for a in (0.3, 1.2, 1.95, 2.85):
-        statue(p, math.cos(a + math.pi) * 52, 8 + math.sin(a + math.pi) * 40 + 20, rz=a)
+    # Guardians belong at the perimeter, leaving the doorway and central arena open.
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            statue(p, sx * 60, 8 + sy * 35, rz=face(sx * 60, 8 + sy * 35, 0, 8))
     for s in (-1, 1):
         sky_spire(p, s * 54, 66, r=4)
         balustrade(p, [(s * 74, -60), (s * 74, 40)], 0, closed=False)

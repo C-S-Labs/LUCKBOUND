@@ -2,6 +2,24 @@
 
 How a biome map gets built from authored pieces. Addendum §A4.
 
+## Owner requirement — safety boundaries (2026-09-30)
+
+All playable chunks require invisible player-collision boundaries along exposed island,
+platform and path/bridge sides, accompanying their parent chunk at every yaw/elevation.
+Boundary height: **64 studs above its supporting walking surface** for the initial pass;
+verify against movement exploits in Studio. They must never close a socket, door, bridge
+approach or traversable connection, including connections not lying exactly at nominal
+tile bounds. Use actual authored mouth profiles when checking clearance. Backdrops are
+excluded; enclosed rooms use their existing solid walls. Keep collision fixed and any
+future animated visual identification in separate noncollidable props.
+
+Camera queries must explicitly exclude boundary geometry: collidable parts cannot rely
+on CanQuery=false. Apply this requirement to ES, Emberfall, Astral Reach and the upcoming
+Sky Citadel refinement; future map specs inherit it. ES boundaries now use the generic
+§7.7 Boundary schema and runtime placement; custom camera queries exclude the tagged colliders.
+Fully transparent colliders still require a default/free camera Studio check. Existing SC/VV
+assets have no authored boundary data yet and retain their previous loading behavior.
+
 ---
 
 ## The idea
@@ -343,9 +361,12 @@ each mesh asset, dimensions and offset from the complete bounds centre in import
 blockout if any required mesh is unavailable. Existing single-mesh chunks retain their loading path.
 This changes the art delivery contract, not chunk selection, sockets or overlap rejection.
 CI's `tests/check_chunk_loader.py` compares the existing loader path against the pre-multipart revision:
-all 30 Verdant Valley, 36 Sky Citadel and 40 single-mesh Ethereal Scape chunks, at four yaws, in normal
+all 30 Verdant Valley, 36 Sky Citadel and 41 Ethereal Scape entries through their single-mesh path, at four yaws, in normal
 and catalogue modes, with loaded/placeholder/failed/recoloured assets and repeated cached placements.
 It also checks multipart offsets at all four yaws and atomic fallback after a component load failure.
+Optional per-component `CanCollide` defaults to true; ES small foliage declares false and also
+opts out of queries/touches. Structural geometry remains solid. The tests check both collision
+defaults and this opt-out; no world-specific loader branch was added.
 These are API contract checks using controlled raycast results; Studio still owns collision/physics checks.
 
 The layout rules above are about *data*. The rules below are about the *art*,

@@ -1,0 +1,2510 @@
+[
+  {
+    "Object": "ES_BACKDROP_CRYSTAL_SPIRE_CANOPY_M11_8_13_7_PROP_01",
+    "Source": "ES_BACKDROP_CRYSTAL_SPIRE",
+    "Kind": "CANOPY_M11_8_13_7",
+    "LocalPivot": [
+      -11.753944396972656,
+      28.297142028808594,
+      13.709700584411621
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_BACKDROP_DRIFT_ISLES_CANOPY_49_7_9_0_PROP_01",
+    "Source": "ES_BACKDROP_DRIFT_ISLES",
+    "Kind": "CANOPY_49_7_9_0",
+    "LocalPivot": [
+      49.74991989135742,
+      25.077604293823242,
+      8.951098442077637
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_BACKDROP_DRIFT_ISLES_CANOPY_61_2_11_1_PROP_01",
+    "Source": "ES_BACKDROP_DRIFT_ISLES",
+    "Kind": "CANOPY_61_2_11_1",
+    "LocalPivot": [
+      61.197044372558594,
+      24.9210205078125,
+      11.114435195922852
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_BACKDROP_DRIFT_ISLES_CANOPY_M23_8_M57_5_PROP_01",
+    "Source": "ES_BACKDROP_DRIFT_ISLES",
+    "Kind": "CANOPY_M23_8_M57_5",
+    "LocalPivot": [
+      -23.821136474609375,
+      50.023502349853516,
+      -57.53662109375
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_BACKDROP_DRIFT_ISLES_CANOPY_M29_6_M65_2_PROP_01",
+    "Source": "ES_BACKDROP_DRIFT_ISLES",
+    "Kind": "CANOPY_M29_6_M65_2",
+    "LocalPivot": [
+      -29.591968536376953,
+      49.287872314453125,
+      -65.17378997802734
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_BACKDROP_DRIFT_ISLES_LIGHT_PROP_01",
+    "Source": "ES_BACKDROP_DRIFT_ISLES",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      63.99785614013672,
+      144.40000915527344,
+      -72.00163269042969
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CAP_BROKEN_BRIDGE_LIGHT_PROP_01",
+    "Source": "ES_CAP_BROKEN_BRIDGE",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      0.0,
+      3.1999995708465576,
+      100.0
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CAP_BROKEN_BRIDGE_CANOPY_M0_1_39_0_PROP_01",
+    "Source": "ES_CAP_BROKEN_BRIDGE",
+    "Kind": "CANOPY_M0_1_39_0",
+    "LocalPivot": [
+      -0.09292993694543839,
+      11.0482816696167,
+      39.039119720458984
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CAP_BROKEN_BRIDGE_CANOPY_M8_5_51_7_PROP_01",
+    "Source": "ES_CAP_BROKEN_BRIDGE",
+    "Kind": "CANOPY_M8_5_51_7",
+    "LocalPivot": [
+      -8.50344181060791,
+      7.137306213378906,
+      51.68734359741211
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CAP_BROKEN_BRIDGE_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_CAP_BROKEN_BRIDGE_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      4.838934421539307,
+      0.533333420753479,
+      33.122520446777344
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CAP_FALLS_LEDGE_LIGHT_PROP_01",
+    "Source": "ES_CAP_FALLS_LEDGE",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -15.855195999145508,
+      89.29755401611328,
+      67.07199096679688
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CAP_FALLS_LEDGE_CANOPY_8_4_46_4_PROP_01",
+    "Source": "ES_CAP_FALLS_LEDGE",
+    "Kind": "CANOPY_8_4_46_4",
+    "LocalPivot": [
+      8.365205764770508,
+      6.765370845794678,
+      46.35200500488281
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CAP_FALLS_LEDGE_CANOPY_M18_5_14_9_PROP_01",
+    "Source": "ES_CAP_FALLS_LEDGE",
+    "Kind": "CANOPY_M18_5_14_9",
+    "LocalPivot": [
+      -18.48341941833496,
+      8.349252700805664,
+      14.907078742980957
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CAP_FALLS_LEDGE_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_CAP_FALLS_LEDGE_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -2.009320020675659,
+      0.5333333611488342,
+      39.0237922668457
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CAP_OVERLOOK_LIGHT_PROP_01",
+    "Source": "ES_CAP_OVERLOOK",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      0.0,
+      3.1999995708465576,
+      100.0
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CAP_OVERLOOK_CANOPY_M22_0_34_0_PROP_01",
+    "Source": "ES_CAP_OVERLOOK",
+    "Kind": "CANOPY_M22_0_34_0",
+    "LocalPivot": [
+      -22.000001907348633,
+      121.0,
+      33.999996185302734
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CAP_OVERLOOK_CANOPY_11_2_23_7_PROP_01",
+    "Source": "ES_CAP_OVERLOOK",
+    "Kind": "CANOPY_11_2_23_7",
+    "LocalPivot": [
+      11.221026420593262,
+      78.36823272705078,
+      23.723533630371094
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CAP_OVERLOOK_CANOPY_M21_4_2_8_PROP_01",
+    "Source": "ES_CAP_OVERLOOK",
+    "Kind": "CANOPY_M21_4_2_8",
+    "LocalPivot": [
+      -21.351478576660156,
+      88.69429016113281,
+      2.8201568126678467
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CAP_OVERLOOK_CANOPY_M50_8_23_8_PROP_01",
+    "Source": "ES_CAP_OVERLOOK",
+    "Kind": "CANOPY_M50_8_23_8",
+    "LocalPivot": [
+      -50.82206726074219,
+      103.03250122070312,
+      23.752897262573242
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CAP_OVERLOOK_CANOPY_M39_4_56_3_PROP_01",
+    "Source": "ES_CAP_OVERLOOK",
+    "Kind": "CANOPY_M39_4_56_3",
+    "LocalPivot": [
+      -39.37468338012695,
+      78.83287811279297,
+      56.27694320678711
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CAP_OVERLOOK_CANOPY_M2_5_63_2_PROP_01",
+    "Source": "ES_CAP_OVERLOOK",
+    "Kind": "CANOPY_M2_5_63_2",
+    "LocalPivot": [
+      -2.5244357585906982,
+      90.11531066894531,
+      63.23814010620117
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CAP_OVERLOOK_CANOPY_13_9_15_5_PROP_01",
+    "Source": "ES_CAP_OVERLOOK",
+    "Kind": "CANOPY_13_9_15_5",
+    "LocalPivot": [
+      13.902910232543945,
+      9.280338287353516,
+      15.464418411254883
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CAP_OVERLOOK_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_CAP_OVERLOOK_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      10.935205459594727,
+      0.533333420753479,
+      27.64045524597168
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CAP_SEALED_SHRINE_LIGHT_PROP_01",
+    "Source": "ES_CAP_SEALED_SHRINE",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      1.1920928955078125e-07,
+      4.649999618530273,
+      72.0
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CAP_SEALED_SHRINE_CANOPY_4_4_6_9_PROP_01",
+    "Source": "ES_CAP_SEALED_SHRINE",
+    "Kind": "CANOPY_4_4_6_9",
+    "LocalPivot": [
+      4.424880027770996,
+      49.72571563720703,
+      6.93121862411499
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CONVERGENCE_LIGHT_PROP_01",
+    "Source": "ES_CONVERGENCE",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      5.422249794006348,
+      26.32822036743164,
+      -5.422863006591797
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CONVERGENCE_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_CONVERGENCE_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      1.409704566001892,
+      0.5333330035209656,
+      7.03029203414917
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CRYSTAL_HOLLOW_LIGHT_PROP_01",
+    "Source": "ES_CRYSTAL_HOLLOW",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -7.538461685180664,
+      6.72820520401001,
+      -6.102565288543701
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CRYSTAL_HOLLOW_CANOPY_M48_9_16_2_PROP_01",
+    "Source": "ES_CRYSTAL_HOLLOW",
+    "Kind": "CANOPY_M48_9_16_2",
+    "LocalPivot": [
+      -48.90249252319336,
+      9.824764251708984,
+      16.164350509643555
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CRYSTAL_HOLLOW_CANOPY_47_9_M37_5_PROP_01",
+    "Source": "ES_CRYSTAL_HOLLOW",
+    "Kind": "CANOPY_47_9_M37_5",
+    "LocalPivot": [
+      47.859764099121094,
+      8.41772747039795,
+      -37.45384979248047
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_CRYSTAL_HOLLOW_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_CRYSTAL_HOLLOW_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -5.318854331970215,
+      0.533333420753479,
+      35.90088653564453
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ENTRY_LIGHT_PROP_01",
+    "Source": "ES_ENTRY",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      21.97476577758789,
+      35.17371368408203,
+      -43.99299240112305
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ENTRY_CANOPY_100_0_M70_0_PROP_01",
+    "Source": "ES_ENTRY",
+    "Kind": "CANOPY_100_0_M70_0",
+    "LocalPivot": [
+      100.0,
+      121.0,
+      -70.0
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ENTRY_CANOPY_125_1_M77_8_PROP_01",
+    "Source": "ES_ENTRY",
+    "Kind": "CANOPY_125_1_M77_8",
+    "LocalPivot": [
+      125.09707641601562,
+      77.3049545288086,
+      -77.763427734375
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ENTRY_CANOPY_100_6_M98_6_PROP_01",
+    "Source": "ES_ENTRY",
+    "Kind": "CANOPY_100_6_M98_6",
+    "LocalPivot": [
+      100.59513092041016,
+      89.34127044677734,
+      -98.61294555664062
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ENTRY_CANOPY_70_5_M80_5_PROP_01",
+    "Source": "ES_ENTRY",
+    "Kind": "CANOPY_70_5_M80_5",
+    "LocalPivot": [
+      70.49473571777344,
+      101.3021469116211,
+      -80.49000549316406
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ENTRY_CANOPY_83_7_M49_1_PROP_01",
+    "Source": "ES_ENTRY",
+    "Kind": "CANOPY_83_7_M49_1",
+    "LocalPivot": [
+      83.73084259033203,
+      77.12910461425781,
+      -49.140499114990234
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ENTRY_CANOPY_114_5_M48_3_PROP_01",
+    "Source": "ES_ENTRY",
+    "Kind": "CANOPY_114_5_M48_3",
+    "LocalPivot": [
+      114.48079681396484,
+      88.72113037109375,
+      -48.2603645324707
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ENTRY_CANOPY_79_8_M14_1_PROP_01",
+    "Source": "ES_ENTRY",
+    "Kind": "CANOPY_79_8_M14_1",
+    "LocalPivot": [
+      79.82382202148438,
+      8.76855754852295,
+      -14.063693046569824
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ENTRY_CANOPY_M58_1_76_1_PROP_01",
+    "Source": "ES_ENTRY",
+    "Kind": "CANOPY_M58_1_76_1",
+    "LocalPivot": [
+      -58.099910736083984,
+      8.730063438415527,
+      76.06259155273438
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ENTRY_CANOPY_45_3_59_9_PROP_01",
+    "Source": "ES_ENTRY",
+    "Kind": "CANOPY_45_3_59_9",
+    "LocalPivot": [
+      45.26238250732422,
+      7.8982768058776855,
+      59.8729133605957
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ENTRY_CANOPY_34_6_M82_2_PROP_01",
+    "Source": "ES_ENTRY",
+    "Kind": "CANOPY_34_6_M82_2",
+    "LocalPivot": [
+      34.6002082824707,
+      8.385089874267578,
+      -82.16527557373047
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ENTRY_CANOPY_61_0_95_6_PROP_01",
+    "Source": "ES_ENTRY",
+    "Kind": "CANOPY_61_0_95_6",
+    "LocalPivot": [
+      60.967628479003906,
+      7.764878749847412,
+      95.55692291259766
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ENTRY_CANOPY_M41_8_M99_4_PROP_01",
+    "Source": "ES_ENTRY",
+    "Kind": "CANOPY_M41_8_M99_4",
+    "LocalPivot": [
+      -41.77151107788086,
+      12.804461479187012,
+      -99.42347717285156
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ENTRY_CANOPY_M63_4_97_6_PROP_01",
+    "Source": "ES_ENTRY",
+    "Kind": "CANOPY_M63_4_97_6",
+    "LocalPivot": [
+      -63.39063262939453,
+      6.162590503692627,
+      97.59739685058594
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ENTRY_CANOPY_M101_4_15_6_PROP_01",
+    "Source": "ES_ENTRY",
+    "Kind": "CANOPY_M101_4_15_6",
+    "LocalPivot": [
+      -101.3690414428711,
+      8.572202682495117,
+      15.61888313293457
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ENTRY_CANOPY_M89_2_52_3_PROP_01",
+    "Source": "ES_ENTRY",
+    "Kind": "CANOPY_M89_2_52_3",
+    "LocalPivot": [
+      -89.22603607177734,
+      5.518226623535156,
+      52.27958297729492
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ENTRY_CANOPY_86_9_31_5_PROP_01",
+    "Source": "ES_ENTRY",
+    "Kind": "CANOPY_86_9_31_5",
+    "LocalPivot": [
+      86.90349578857422,
+      7.763696193695068,
+      31.519105911254883
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ENTRY_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_ENTRY_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      69.10045623779297,
+      0.5333336591720581,
+      -30.813953399658203
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_FALLEN_COLONNADE_LIGHT_PROP_01",
+    "Source": "ES_FALLEN_COLONNADE",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -6.370369911193848,
+      23.424070358276367,
+      3.2148144245147705
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_FORK_THREE_TREES_LIGHT_PROP_01",
+    "Source": "ES_FORK_THREE_TREES",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      33.333335876464844,
+      3.200000762939453,
+      -8.742014756535355e-07
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_FORK_THREE_TREES_CANOPY_M34_0_M18_0_PROP_01",
+    "Source": "ES_FORK_THREE_TREES",
+    "Kind": "CANOPY_M34_0_M18_0",
+    "LocalPivot": [
+      -34.0,
+      12.579999923706055,
+      -18.0
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_FORK_THREE_TREES_CANOPY_6_0_M28_0_PROP_01",
+    "Source": "ES_FORK_THREE_TREES",
+    "Kind": "CANOPY_6_0_M28_0",
+    "LocalPivot": [
+      6.000000476837158,
+      10.539999961853027,
+      -28.000003814697266
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_FORK_THREE_TREES_CANOPY_M36_0_22_0_PROP_01",
+    "Source": "ES_FORK_THREE_TREES",
+    "Kind": "CANOPY_M36_0_22_0",
+    "LocalPivot": [
+      -36.0,
+      16.799999237060547,
+      22.0
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_FORK_THREE_TREES_CANOPY_M94_9_58_7_PROP_01",
+    "Source": "ES_FORK_THREE_TREES",
+    "Kind": "CANOPY_M94_9_58_7",
+    "LocalPivot": [
+      -94.90511322021484,
+      41.1542854309082,
+      58.710384368896484
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_FORK_THREE_TREES_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_FORK_THREE_TREES_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -6.647692680358887,
+      1.2478221654891968,
+      1.4805729389190674
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_FORK_TWIN_SPAN_LIGHT_PROP_01",
+    "Source": "ES_FORK_TWIN_SPAN",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -31.407405853271484,
+      22.47407341003418,
+      -6.666667461395264
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_FORK_TWIN_SPAN_CANOPY_M7_0_39_5_PROP_01",
+    "Source": "ES_FORK_TWIN_SPAN",
+    "Kind": "CANOPY_M7_0_39_5",
+    "LocalPivot": [
+      -6.997183322906494,
+      8.383383750915527,
+      39.513648986816406
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_FORK_TWIN_SPAN_CANOPY_9_9_M60_7_PROP_01",
+    "Source": "ES_FORK_TWIN_SPAN",
+    "Kind": "CANOPY_9_9_M60_7",
+    "LocalPivot": [
+      9.909415245056152,
+      16.198089599609375,
+      -60.6975212097168
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_FORK_TWIN_SPAN_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_FORK_TWIN_SPAN_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      0.7047938704490662,
+      4.1696977615356445,
+      -1.9975738525390625
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_FORK_WAYSHRINE_LIGHT_PROP_01",
+    "Source": "ES_FORK_WAYSHRINE",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      0.02217431180179119,
+      4.720000743865967,
+      23.136613845825195
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_FORK_WAYSHRINE_CANOPY_0_0_M96_0_PROP_01",
+    "Source": "ES_FORK_WAYSHRINE",
+    "Kind": "CANOPY_0_0_M96_0",
+    "LocalPivot": [
+      7.947286206899662e-08,
+      121.0,
+      -96.0
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_FORK_WAYSHRINE_CANOPY_33_5_M100_0_PROP_01",
+    "Source": "ES_FORK_WAYSHRINE",
+    "Kind": "CANOPY_33_5_M100_0",
+    "LocalPivot": [
+      33.50981903076172,
+      92.5238265991211,
+      -100.0
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_FORK_WAYSHRINE_CANOPY_0_7_M100_0_PROP_01",
+    "Source": "ES_FORK_WAYSHRINE",
+    "Kind": "CANOPY_0_7_M100_0",
+    "LocalPivot": [
+      0.6675127148628235,
+      104.5367431640625,
+      -99.99999237060547
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_FORK_WAYSHRINE_CANOPY_M33_4_M100_0_PROP_01",
+    "Source": "ES_FORK_WAYSHRINE",
+    "Kind": "CANOPY_M33_4_M100_0",
+    "LocalPivot": [
+      -33.37315368652344,
+      114.65778350830078,
+      -100.0
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_FORK_WAYSHRINE_CANOPY_M17_1_M74_1_PROP_01",
+    "Source": "ES_FORK_WAYSHRINE",
+    "Kind": "CANOPY_M17_1_M74_1",
+    "LocalPivot": [
+      -17.104522705078125,
+      91.65898895263672,
+      -74.0694351196289
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_FORK_WAYSHRINE_CANOPY_18_0_M69_0_PROP_01",
+    "Source": "ES_FORK_WAYSHRINE",
+    "Kind": "CANOPY_18_0_M69_0",
+    "LocalPivot": [
+      18.01302146911621,
+      102.91161346435547,
+      -68.95753479003906
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_MEADOW_OF_BLOOMS_LIGHT_PROP_01",
+    "Source": "ES_MEADOW_OF_BLOOMS",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      0.0,
+      3.200000047683716,
+      -1.430511474609375e-06
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_MEADOW_OF_BLOOMS_CANOPY_M42_0_M30_0_PROP_01",
+    "Source": "ES_MEADOW_OF_BLOOMS",
+    "Kind": "CANOPY_M42_0_M30_0",
+    "LocalPivot": [
+      -42.0,
+      121.0,
+      -30.0
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_MEADOW_OF_BLOOMS_CANOPY_M16_0_M38_1_PROP_01",
+    "Source": "ES_MEADOW_OF_BLOOMS",
+    "Kind": "CANOPY_M16_0_M38_1",
+    "LocalPivot": [
+      -15.951190948486328,
+      76.85595703125,
+      -38.057838439941406
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_MEADOW_OF_BLOOMS_CANOPY_M41_3_M62_5_PROP_01",
+    "Source": "ES_MEADOW_OF_BLOOMS",
+    "Kind": "CANOPY_M41_3_M62_5",
+    "LocalPivot": [
+      -41.324180603027344,
+      89.8351058959961,
+      -62.49221420288086
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_MEADOW_OF_BLOOMS_CANOPY_M72_8_M40_9_PROP_01",
+    "Source": "ES_MEADOW_OF_BLOOMS",
+    "Kind": "CANOPY_M72_8_M40_9",
+    "LocalPivot": [
+      -72.79531860351562,
+      100.81207275390625,
+      -40.94865417480469
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_MEADOW_OF_BLOOMS_CANOPY_M59_4_M7_6_PROP_01",
+    "Source": "ES_MEADOW_OF_BLOOMS",
+    "Kind": "CANOPY_M59_4_M7_6",
+    "LocalPivot": [
+      -59.44634246826172,
+      77.28673553466797,
+      -7.631167888641357
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_MEADOW_OF_BLOOMS_CANOPY_M23_9_M2_8_PROP_01",
+    "Source": "ES_MEADOW_OF_BLOOMS",
+    "Kind": "CANOPY_M23_9_M2_8",
+    "LocalPivot": [
+      -23.860881805419922,
+      89.18872833251953,
+      -2.768226385116577
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_MEADOW_OF_BLOOMS_CANOPY_40_0_M36_0_PROP_01",
+    "Source": "ES_MEADOW_OF_BLOOMS",
+    "Kind": "CANOPY_40_0_M36_0",
+    "LocalPivot": [
+      40.0,
+      15.800000190734863,
+      -36.0
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_MEADOW_OF_BLOOMS_CANOPY_1_5_3_5_PROP_01",
+    "Source": "ES_MEADOW_OF_BLOOMS",
+    "Kind": "CANOPY_1_5_3_5",
+    "LocalPivot": [
+      1.5018519163131714,
+      7.607263088226318,
+      3.45491099357605
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_MEADOW_OF_BLOOMS_CANOPY_11_3_M54_5_PROP_01",
+    "Source": "ES_MEADOW_OF_BLOOMS",
+    "Kind": "CANOPY_11_3_M54_5",
+    "LocalPivot": [
+      11.298006057739258,
+      7.772863388061523,
+      -54.52473068237305
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_MEADOW_OF_BLOOMS_CANOPY_M62_1_1_3_PROP_01",
+    "Source": "ES_MEADOW_OF_BLOOMS",
+    "Kind": "CANOPY_M62_1_1_3",
+    "LocalPivot": [
+      -62.0971794128418,
+      5.63615083694458,
+      1.3449363708496094
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_MEADOW_OF_BLOOMS_CANOPY_M33_2_52_1_PROP_01",
+    "Source": "ES_MEADOW_OF_BLOOMS",
+    "Kind": "CANOPY_M33_2_52_1",
+    "LocalPivot": [
+      -33.24687957763672,
+      7.565591335296631,
+      52.13275146484375
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_MEADOW_OF_BLOOMS_CANOPY_53_5_M0_9_PROP_01",
+    "Source": "ES_MEADOW_OF_BLOOMS",
+    "Kind": "CANOPY_53_5_M0_9",
+    "LocalPivot": [
+      53.45132064819336,
+      7.396637916564941,
+      -0.9434794783592224
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_MEADOW_OF_BLOOMS_CANOPY_M17_5_1_0_PROP_01",
+    "Source": "ES_MEADOW_OF_BLOOMS",
+    "Kind": "CANOPY_M17_5_1_0",
+    "LocalPivot": [
+      -17.523334503173828,
+      6.885140419006348,
+      0.9942649006843567
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_MEADOW_OF_BLOOMS_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_MEADOW_OF_BLOOMS_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -3.7003071308135986,
+      0.533333957195282,
+      -4.175730228424072
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_MINIBOSS_RELIQUARY_COURT_LIGHT_PROP_01",
+    "Source": "ES_MINIBOSS_RELIQUARY_COURT",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -0.001224371138960123,
+      77.34808349609375,
+      -22.472089767456055
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_MINIBOSS_WAYSTONE_RING_LIGHT_PROP_01",
+    "Source": "ES_MINIBOSS_WAYSTONE_RING",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -4.974826812744141,
+      57.7971076965332,
+      1.1877083778381348
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_MIRROR_POOL_LIGHT_PROP_01",
+    "Source": "ES_MIRROR_POOL",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      15.78123664855957,
+      47.68988800048828,
+      -2.8357138633728027
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_MIRROR_POOL_CANOPY_57_4_16_0_PROP_01",
+    "Source": "ES_MIRROR_POOL",
+    "Kind": "CANOPY_57_4_16_0",
+    "LocalPivot": [
+      57.41672897338867,
+      10.27423095703125,
+      15.992067337036133
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_MIRROR_POOL_CANOPY_17_6_M50_5_PROP_01",
+    "Source": "ES_MIRROR_POOL",
+    "Kind": "CANOPY_17_6_M50_5",
+    "LocalPivot": [
+      17.557804107666016,
+      6.0265398025512695,
+      -50.47065353393555
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_MIRROR_POOL_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_MIRROR_POOL_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      1.5589942932128906,
+      0.533333420753479,
+      22.09862518310547
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_EAST_ASCENT_LIGHT_PROP_01",
+    "Source": "ES_PATH_BEND_EAST_ASCENT",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      25.843143463134766,
+      30.058822631835938,
+      31.176471710205078
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_EAST_ASCENT_CANOPY_M8_4_49_3_PROP_01",
+    "Source": "ES_PATH_BEND_EAST_ASCENT",
+    "Kind": "CANOPY_M8_4_49_3",
+    "LocalPivot": [
+      -8.42167854309082,
+      5.988032817840576,
+      49.325679779052734
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_EAST_ASCENT_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_PATH_BEND_EAST_ASCENT_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -2.7468841075897217,
+      0.533333420753479,
+      43.80924987792969
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_EAST_GROVE_LIGHT_PROP_01",
+    "Source": "ES_PATH_BEND_EAST_GROVE",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      50.0,
+      3.200000047683716,
+      50.0
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_EAST_GROVE_CANOPY_M52_0_M72_0_PROP_01",
+    "Source": "ES_PATH_BEND_EAST_GROVE",
+    "Kind": "CANOPY_M52_0_M72_0",
+    "LocalPivot": [
+      -52.0,
+      121.0,
+      -72.0
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_EAST_GROVE_CANOPY_M22_8_M81_0_PROP_01",
+    "Source": "ES_PATH_BEND_EAST_GROVE",
+    "Kind": "CANOPY_M22_8_M81_0",
+    "LocalPivot": [
+      -22.781896591186523,
+      92.70377349853516,
+      -81.03822326660156
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_EAST_GROVE_CANOPY_M51_4_M99_3_PROP_01",
+    "Source": "ES_PATH_BEND_EAST_GROVE",
+    "Kind": "CANOPY_M51_4_M99_3",
+    "LocalPivot": [
+      -51.43222427368164,
+      102.96562957763672,
+      -99.29753875732422
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_EAST_GROVE_CANOPY_M84_0_M83_4_PROP_01",
+    "Source": "ES_PATH_BEND_EAST_GROVE",
+    "Kind": "CANOPY_M84_0_M83_4",
+    "LocalPivot": [
+      -83.95917510986328,
+      117.19021606445312,
+      -83.36243438720703
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_EAST_GROVE_CANOPY_M68_8_M50_5_PROP_01",
+    "Source": "ES_PATH_BEND_EAST_GROVE",
+    "Kind": "CANOPY_M68_8_M50_5",
+    "LocalPivot": [
+      -68.78022766113281,
+      92.30760192871094,
+      -50.48524475097656
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_EAST_GROVE_CANOPY_M37_4_M50_1_PROP_01",
+    "Source": "ES_PATH_BEND_EAST_GROVE",
+    "Kind": "CANOPY_M37_4_M50_1",
+    "LocalPivot": [
+      -37.39208984375,
+      103.5660629272461,
+      -50.06953811645508
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_EAST_GROVE_CANOPY_M12_0_M1_2_PROP_01",
+    "Source": "ES_PATH_BEND_EAST_GROVE",
+    "Kind": "CANOPY_M12_0_M1_2",
+    "LocalPivot": [
+      -11.987666130065918,
+      12.137214660644531,
+      -1.1531437635421753
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_EAST_GROVE_CANOPY_M13_3_14_5_PROP_01",
+    "Source": "ES_PATH_BEND_EAST_GROVE",
+    "Kind": "CANOPY_M13_3_14_5",
+    "LocalPivot": [
+      -13.26152229309082,
+      8.925573348999023,
+      14.517680168151855
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_EAST_GROVE_CANOPY_M18_6_38_8_PROP_01",
+    "Source": "ES_PATH_BEND_EAST_GROVE",
+    "Kind": "CANOPY_M18_6_38_8",
+    "LocalPivot": [
+      -18.605514526367188,
+      5.92239236831665,
+      38.75804138183594
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_EAST_GROVE_CANOPY_M33_5_23_9_PROP_01",
+    "Source": "ES_PATH_BEND_EAST_GROVE",
+    "Kind": "CANOPY_M33_5_23_9",
+    "LocalPivot": [
+      -33.45586013793945,
+      5.840252876281738,
+      23.949552536010742
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_EAST_GROVE_CANOPY_M37_9_10_1_PROP_01",
+    "Source": "ES_PATH_BEND_EAST_GROVE",
+    "Kind": "CANOPY_M37_9_10_1",
+    "LocalPivot": [
+      -37.851348876953125,
+      11.522333145141602,
+      10.118040084838867
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_EAST_GROVE_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_PATH_BEND_EAST_GROVE_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -25.877147674560547,
+      0.7181486487388611,
+      23.12630271911621
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_WEST_FALLS_LIGHT_PROP_01",
+    "Source": "ES_PATH_BEND_WEST_FALLS",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -1.2210495471954346,
+      89.29755401611328,
+      71.95004272460938
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_WEST_SHRINE_LIGHT_PROP_01",
+    "Source": "ES_PATH_BEND_WEST_SHRINE",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -25.737680435180664,
+      47.924137115478516,
+      16.996646881103516
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_WEST_SHRINE_CANOPY_M23_5_46_9_PROP_01",
+    "Source": "ES_PATH_BEND_WEST_SHRINE",
+    "Kind": "CANOPY_M23_5_46_9",
+    "LocalPivot": [
+      -23.50902557373047,
+      8.744451522827148,
+      46.91926574707031
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_WEST_SHRINE_CANOPY_M47_4_21_5_PROP_01",
+    "Source": "ES_PATH_BEND_WEST_SHRINE",
+    "Kind": "CANOPY_M47_4_21_5",
+    "LocalPivot": [
+      -47.42915344238281,
+      6.4490180015563965,
+      21.521392822265625
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_WEST_SHRINE_CANOPY_37_8_17_9_PROP_01",
+    "Source": "ES_PATH_BEND_WEST_SHRINE",
+    "Kind": "CANOPY_37_8_17_9",
+    "LocalPivot": [
+      37.827327728271484,
+      11.258759498596191,
+      17.89693260192871
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_BEND_WEST_SHRINE_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_PATH_BEND_WEST_SHRINE_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -1.5771949291229248,
+      0.5333332419395447,
+      11.702483177185059
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_GROVE_ISLE_LIGHT_PROP_01",
+    "Source": "ES_PATH_GROVE_ISLE",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -2.384185791015625e-07,
+      4.166667461395264,
+      18.0
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_GROVE_ISLE_CANOPY_M36_0_M14_0_PROP_01",
+    "Source": "ES_PATH_GROVE_ISLE",
+    "Kind": "CANOPY_M36_0_M14_0",
+    "LocalPivot": [
+      -36.0,
+      121.0,
+      -14.0
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_GROVE_ISLE_CANOPY_M9_9_M22_1_PROP_01",
+    "Source": "ES_PATH_GROVE_ISLE",
+    "Kind": "CANOPY_M9_9_M22_1",
+    "LocalPivot": [
+      -9.908263206481934,
+      78.34839630126953,
+      -22.071117401123047
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_GROVE_ISLE_CANOPY_M35_4_M40_6_PROP_01",
+    "Source": "ES_PATH_GROVE_ISLE",
+    "Kind": "CANOPY_M35_4_M40_6",
+    "LocalPivot": [
+      -35.44655990600586,
+      88.59698486328125,
+      -40.60848617553711
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_GROVE_ISLE_CANOPY_M67_3_M25_1_PROP_01",
+    "Source": "ES_PATH_GROVE_ISLE",
+    "Kind": "CANOPY_M67_3_M25_1",
+    "LocalPivot": [
+      -67.33212280273438,
+      101.24974060058594,
+      -25.139501571655273
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_GROVE_ISLE_CANOPY_M56_7_12_5_PROP_01",
+    "Source": "ES_PATH_GROVE_ISLE",
+    "Kind": "CANOPY_M56_7_12_5",
+    "LocalPivot": [
+      -56.65590286254883,
+      77.1290283203125,
+      12.483975410461426
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_GROVE_ISLE_CANOPY_M17_6_13_6_PROP_01",
+    "Source": "ES_PATH_GROVE_ISLE",
+    "Kind": "CANOPY_M17_6_13_6",
+    "LocalPivot": [
+      -17.601572036743164,
+      90.85089874267578,
+      13.62106990814209
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_GROVE_ISLE_CANOPY_M58_1_13_5_PROP_01",
+    "Source": "ES_PATH_GROVE_ISLE",
+    "Kind": "CANOPY_M58_1_13_5",
+    "LocalPivot": [
+      -58.05778503417969,
+      8.045699119567871,
+      13.495165824890137
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_GROVE_ISLE_CANOPY_39_3_M41_6_PROP_01",
+    "Source": "ES_PATH_GROVE_ISLE",
+    "Kind": "CANOPY_39_3_M41_6",
+    "LocalPivot": [
+      39.259037017822266,
+      6.2871198654174805,
+      -41.63650131225586
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_GROVE_ISLE_CANOPY_M17_1_40_1_PROP_01",
+    "Source": "ES_PATH_GROVE_ISLE",
+    "Kind": "CANOPY_M17_1_40_1",
+    "LocalPivot": [
+      -17.074682235717773,
+      6.348486423492432,
+      40.11249542236328
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_GROVE_ISLE_CANOPY_M27_2_M51_5_PROP_01",
+    "Source": "ES_PATH_GROVE_ISLE",
+    "Kind": "CANOPY_M27_2_M51_5",
+    "LocalPivot": [
+      -27.18437957763672,
+      8.008174896240234,
+      -51.53329086303711
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_GROVE_ISLE_CANOPY_53_7_M0_5_PROP_01",
+    "Source": "ES_PATH_GROVE_ISLE",
+    "Kind": "CANOPY_53_7_M0_5",
+    "LocalPivot": [
+      53.71596145629883,
+      6.996365547180176,
+      -0.47378572821617126
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_GROVE_ISLE_CANOPY_M24_7_18_7_PROP_01",
+    "Source": "ES_PATH_GROVE_ISLE",
+    "Kind": "CANOPY_M24_7_18_7",
+    "LocalPivot": [
+      -24.668411254882812,
+      7.865375518798828,
+      18.722259521484375
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_GROVE_ISLE_CANOPY_M30_2_52_3_PROP_01",
+    "Source": "ES_PATH_GROVE_ISLE",
+    "Kind": "CANOPY_M30_2_52_3",
+    "LocalPivot": [
+      -30.175006866455078,
+      8.99968147277832,
+      52.33888244628906
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_GROVE_ISLE_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_PATH_GROVE_ISLE_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      20.950931549072266,
+      0.596406102180481,
+      8.801729202270508
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_PLANK_CROSSING_LIGHT_PROP_01",
+    "Source": "ES_PATH_PLANK_CROSSING",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -26.69205665588379,
+      47.925926208496094,
+      -19.90176773071289
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_PLANK_CROSSING_CANOPY_M22_0_56_0_PROP_01",
+    "Source": "ES_PATH_PLANK_CROSSING",
+    "Kind": "CANOPY_M22_0_56_0",
+    "LocalPivot": [
+      -22.0,
+      7.400000095367432,
+      55.999996185302734
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_PLANK_CROSSING_CANOPY_M2_0_42_0_PROP_01",
+    "Source": "ES_PATH_PLANK_CROSSING",
+    "Kind": "CANOPY_M2_0_42_0",
+    "LocalPivot": [
+      -2.0,
+      8.15999984741211,
+      42.0
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_PLANK_CROSSING_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_PATH_PLANK_CROSSING_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -11.49903392791748,
+      0.5333331823348999,
+      51.26260757446289
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_SKYSTAIR_DOWN_LIGHT_PROP_01",
+    "Source": "ES_PATH_SKYSTAIR_DOWN",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      0.0,
+      3.1999995708465576,
+      100.0
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_SKYSTAIR_DOWN_CANOPY_M7_8_51_4_PROP_01",
+    "Source": "ES_PATH_SKYSTAIR_DOWN",
+    "Kind": "CANOPY_M7_8_51_4",
+    "LocalPivot": [
+      -7.765300273895264,
+      10.026110649108887,
+      51.42074203491211
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_SKYSTAIR_DOWN_CANOPY_13_7_60_7_PROP_01",
+    "Source": "ES_PATH_SKYSTAIR_DOWN",
+    "Kind": "CANOPY_13_7_60_7",
+    "LocalPivot": [
+      13.67133617401123,
+      14.692364692687988,
+      60.70146560668945
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_SKYSTAIR_DOWN_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_PATH_SKYSTAIR_DOWN_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -4.416335105895996,
+      0.5333333611488342,
+      59.66762161254883
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_SKYSTAIR_UP_LIGHT_PROP_01",
+    "Source": "ES_PATH_SKYSTAIR_UP",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      8.771429061889648,
+      21.714282989501953,
+      -25.428571701049805
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_SKYSTAIR_UP_CANOPY_M44_0_M10_0_PROP_01",
+    "Source": "ES_PATH_SKYSTAIR_UP",
+    "Kind": "CANOPY_M44_0_M10_0",
+    "LocalPivot": [
+      -44.0,
+      121.0,
+      -10.000000953674316
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_SKYSTAIR_UP_CANOPY_M14_8_M19_0_PROP_01",
+    "Source": "ES_PATH_SKYSTAIR_UP",
+    "Kind": "CANOPY_M14_8_M19_0",
+    "LocalPivot": [
+      -14.825207710266113,
+      88.72456359863281,
+      -19.02482032775879
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_SKYSTAIR_UP_CANOPY_M43_4_M38_0_PROP_01",
+    "Source": "ES_PATH_SKYSTAIR_UP",
+    "Kind": "CANOPY_M43_4_M38_0",
+    "LocalPivot": [
+      -43.41753387451172,
+      100.91470336914062,
+      -38.00407409667969
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_SKYSTAIR_UP_CANOPY_M71_9_M19_9_PROP_01",
+    "Source": "ES_PATH_SKYSTAIR_UP",
+    "Kind": "CANOPY_M71_9_M19_9",
+    "LocalPivot": [
+      -71.9448013305664,
+      112.5718994140625,
+      -19.935209274291992
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_SKYSTAIR_UP_CANOPY_M60_9_11_7_PROP_01",
+    "Source": "ES_PATH_SKYSTAIR_UP",
+    "Kind": "CANOPY_M60_9_11_7",
+    "LocalPivot": [
+      -60.90666580200195,
+      90.18743133544922,
+      11.676884651184082
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_SKYSTAIR_UP_CANOPY_M24_8_18_8_PROP_01",
+    "Source": "ES_PATH_SKYSTAIR_UP",
+    "Kind": "CANOPY_M24_8_18_8",
+    "LocalPivot": [
+      -24.794198989868164,
+      101.78331756591797,
+      18.83315658569336
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_SKYSTAIR_UP_CANOPY_M2_8_58_0_PROP_01",
+    "Source": "ES_PATH_SKYSTAIR_UP",
+    "Kind": "CANOPY_M2_8_58_0",
+    "LocalPivot": [
+      -2.787705183029175,
+      9.467415809631348,
+      57.9959602355957
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_PATH_SKYSTAIR_UP_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_PATH_SKYSTAIR_UP_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      6.154407978057861,
+      0.5333333611488342,
+      64.27403259277344
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ROOTED_HOLLOW_LIGHT_PROP_01",
+    "Source": "ES_ROOTED_HOLLOW",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      0.0,
+      3.200000047683716,
+      -1.430511474609375e-06
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ROOTED_HOLLOW_CANOPY_22_0_M8_0_PROP_01",
+    "Source": "ES_ROOTED_HOLLOW",
+    "Kind": "CANOPY_22_0_M8_0",
+    "LocalPivot": [
+      21.999998092651367,
+      121.0,
+      -8.0
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ROOTED_HOLLOW_CANOPY_47_1_M15_8_PROP_01",
+    "Source": "ES_ROOTED_HOLLOW",
+    "Kind": "CANOPY_47_1_M15_8",
+    "LocalPivot": [
+      47.14055252075195,
+      79.11625671386719,
+      -15.776883125305176
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ROOTED_HOLLOW_CANOPY_22_7_M41_2_PROP_01",
+    "Source": "ES_ROOTED_HOLLOW",
+    "Kind": "CANOPY_22_7_M41_2",
+    "LocalPivot": [
+      22.689552307128906,
+      90.28791046142578,
+      -41.152469635009766
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ROOTED_HOLLOW_CANOPY_M5_8_M17_9_PROP_01",
+    "Source": "ES_ROOTED_HOLLOW",
+    "Kind": "CANOPY_M5_8_M17_9",
+    "LocalPivot": [
+      -5.751152038574219,
+      101.78227996826172,
+      -17.866363525390625
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ROOTED_HOLLOW_CANOPY_4_3_14_7_PROP_01",
+    "Source": "ES_ROOTED_HOLLOW",
+    "Kind": "CANOPY_4_3_14_7",
+    "LocalPivot": [
+      4.26055383682251,
+      77.75677490234375,
+      14.744626998901367
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ROOTED_HOLLOW_CANOPY_40_1_19_2_PROP_01",
+    "Source": "ES_ROOTED_HOLLOW",
+    "Kind": "CANOPY_40_1_19_2",
+    "LocalPivot": [
+      40.140750885009766,
+      88.88896942138672,
+      19.234220504760742
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ROOTED_HOLLOW_CANOPY_M34_7_36_0_PROP_01",
+    "Source": "ES_ROOTED_HOLLOW",
+    "Kind": "CANOPY_M34_7_36_0",
+    "LocalPivot": [
+      -34.72612380981445,
+      7.867995738983154,
+      36.02534103393555
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ROOTED_HOLLOW_CANOPY_M27_0_M36_2_PROP_01",
+    "Source": "ES_ROOTED_HOLLOW",
+    "Kind": "CANOPY_M27_0_M36_2",
+    "LocalPivot": [
+      -27.01948356628418,
+      6.001629829406738,
+      -36.21733093261719
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ROOTED_HOLLOW_CANOPY_M38_1_13_2_PROP_01",
+    "Source": "ES_ROOTED_HOLLOW",
+    "Kind": "CANOPY_M38_1_13_2",
+    "LocalPivot": [
+      -38.12622833251953,
+      5.577255725860596,
+      13.16368579864502
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_ROOTED_HOLLOW_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_ROOTED_HOLLOW_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -8.803297996520996,
+      1.7608072757720947,
+      -20.083003997802734
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SANCTUM_LIGHT_PROP_01",
+    "Source": "ES_SANCTUM",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -0.08408840745687485,
+      9.022764205932617,
+      48.659934997558594
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SANCTUM_CANOPY_M186_1_M160_0_PROP_01",
+    "Source": "ES_SANCTUM",
+    "Kind": "CANOPY_M186_1_M160_0",
+    "LocalPivot": [
+      -186.08409118652344,
+      9.281099319458008,
+      -160.0067596435547
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SANCTUM_CANOPY_M186_1_M230_0_PROP_01",
+    "Source": "ES_SANCTUM",
+    "Kind": "CANOPY_M186_1_M230_0",
+    "LocalPivot": [
+      -186.0840606689453,
+      8.701099395751953,
+      -230.00674438476562
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SANCTUM_CANOPY_185_9_M160_0_PROP_01",
+    "Source": "ES_SANCTUM",
+    "Kind": "CANOPY_185_9_M160_0",
+    "LocalPivot": [
+      185.91590881347656,
+      9.281099319458008,
+      -160.0067596435547
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SANCTUM_CANOPY_185_9_M230_0_PROP_01",
+    "Source": "ES_SANCTUM",
+    "Kind": "CANOPY_185_9_M230_0",
+    "LocalPivot": [
+      185.91590881347656,
+      8.701099395751953,
+      -230.0067596435547
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SANCTUM_CANOPY_M86_1_70_0_PROP_01",
+    "Source": "ES_SANCTUM",
+    "Kind": "CANOPY_M86_1_70_0",
+    "LocalPivot": [
+      -86.0840835571289,
+      7.221099376678467,
+      69.99327087402344
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SANCTUM_CANOPY_M106_1_56_0_PROP_01",
+    "Source": "ES_SANCTUM",
+    "Kind": "CANOPY_M106_1_56_0",
+    "LocalPivot": [
+      -106.08409118652344,
+      5.881099224090576,
+      55.99326705932617
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SANCTUM_CANOPY_M126_1_70_0_PROP_01",
+    "Source": "ES_SANCTUM",
+    "Kind": "CANOPY_M126_1_70_0",
+    "LocalPivot": [
+      -126.08409881591797,
+      9.881099700927734,
+      69.99327850341797
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SANCTUM_CANOPY_85_9_70_0_PROP_01",
+    "Source": "ES_SANCTUM",
+    "Kind": "CANOPY_85_9_70_0",
+    "LocalPivot": [
+      85.91590118408203,
+      7.221099376678467,
+      69.99327087402344
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SANCTUM_CANOPY_105_9_56_0_PROP_01",
+    "Source": "ES_SANCTUM",
+    "Kind": "CANOPY_105_9_56_0",
+    "LocalPivot": [
+      105.9159164428711,
+      5.881099224090576,
+      55.993282318115234
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SANCTUM_CANOPY_125_9_70_0_PROP_01",
+    "Source": "ES_SANCTUM",
+    "Kind": "CANOPY_125_9_70_0",
+    "LocalPivot": [
+      125.91590881347656,
+      9.881099700927734,
+      69.99327850341797
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SANCTUM_CURVED_CHAIR_01_CANOPY_M0_0_M130_3_PROP_01",
+    "Source": "ES_SANCTUM_CURVED_CHAIR_01",
+    "Kind": "CANOPY_M0_0_M130_3",
+    "LocalPivot": [
+      1.7881394143159923e-08,
+      17.639999389648438,
+      -130.25
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SANCTUM_CURVED_CHAIR_01_CANOPY_0_0_M135_7_PROP_01",
+    "Source": "ES_SANCTUM_CURVED_CHAIR_01",
+    "Kind": "CANOPY_0_0_M135_7",
+    "LocalPivot": [
+      0.0,
+      21.299999237060547,
+      -135.71495056152344
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SANCTUM_CURVED_CHAIR_01_LIGHT_PROP_01",
+    "Source": "ES_SANCTUM_CURVED_CHAIR_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -1.3245476715439963e-08,
+      33.900001525878906,
+      -135.00555419921875
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SANCTUM_DOOR_DETAIL_01_LIGHT_PROP_01",
+    "Source": "ES_SANCTUM_DOOR_DETAIL_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      2.384185791015625e-07,
+      20.5,
+      100.30001831054688
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SANCTUM_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_SANCTUM_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      24.42937469482422,
+      0.5333332419395447,
+      170.8406219482422
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SANCTUM_TEMPLE_01_LIGHT_PROP_01",
+    "Source": "ES_SANCTUM_TEMPLE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      0.0011113779619336128,
+      47.82413864135742,
+      -13.636144638061523
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SANCTUM_THRONE_INLAY_01_LIGHT_PROP_01",
+    "Source": "ES_SANCTUM_THRONE_INLAY_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      0.0,
+      24.30000114440918,
+      -135.81411743164062
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SHRINE_OF_WINDS_LIGHT_PROP_01",
+    "Source": "ES_SHRINE_OF_WINDS",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      2.625,
+      13.95936393737793,
+      10.458333015441895
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SIDE_CRYSTAL_GROTTO_LIGHT_PROP_01",
+    "Source": "ES_SIDE_CRYSTAL_GROTTO",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      0.0,
+      3.1999995708465576,
+      100.0
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SIDE_CRYSTAL_GROTTO_CANOPY_5_7_2_6_PROP_01",
+    "Source": "ES_SIDE_CRYSTAL_GROTTO",
+    "Kind": "CANOPY_5_7_2_6",
+    "LocalPivot": [
+      5.722646713256836,
+      49.72571563720703,
+      2.64693021774292
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SIDE_CRYSTAL_GROTTO_CANOPY_28_9_33_3_PROP_01",
+    "Source": "ES_SIDE_CRYSTAL_GROTTO",
+    "Kind": "CANOPY_28_9_33_3",
+    "LocalPivot": [
+      28.879772186279297,
+      9.050765991210938,
+      33.33439254760742
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SIDE_CRYSTAL_GROTTO_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_SIDE_CRYSTAL_GROTTO_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      6.1771345138549805,
+      0.533333420753479,
+      22.892192840576172
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SIDE_HERMIT_GROVE_LIGHT_PROP_01",
+    "Source": "ES_SIDE_HERMIT_GROVE",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      20.19310188293457,
+      9.534483909606934,
+      42.0
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SIDE_HERMIT_GROVE_CANOPY_M20_0_M10_0_PROP_01",
+    "Source": "ES_SIDE_HERMIT_GROVE",
+    "Kind": "CANOPY_M20_0_M10_0",
+    "LocalPivot": [
+      -20.000001907348633,
+      121.0,
+      -10.0
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SIDE_HERMIT_GROVE_CANOPY_8_3_M18_8_PROP_01",
+    "Source": "ES_SIDE_HERMIT_GROVE",
+    "Kind": "CANOPY_8_3_M18_8",
+    "LocalPivot": [
+      8.337601661682129,
+      79.00789642333984,
+      -18.765846252441406
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SIDE_HERMIT_GROVE_CANOPY_M19_3_M41_4_PROP_01",
+    "Source": "ES_SIDE_HERMIT_GROVE",
+    "Kind": "CANOPY_M19_3_M41_4",
+    "LocalPivot": [
+      -19.347408294677734,
+      89.44121551513672,
+      -41.375694274902344
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SIDE_HERMIT_GROVE_CANOPY_M51_4_M21_1_PROP_01",
+    "Source": "ES_SIDE_HERMIT_GROVE",
+    "Kind": "CANOPY_M51_4_M21_1",
+    "LocalPivot": [
+      -51.358036041259766,
+      102.7053451538086,
+      -21.148717880249023
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SIDE_HERMIT_GROVE_CANOPY_M36_6_11_3_PROP_01",
+    "Source": "ES_SIDE_HERMIT_GROVE",
+    "Kind": "CANOPY_M36_6_11_3",
+    "LocalPivot": [
+      -36.647281646728516,
+      77.56063079833984,
+      11.344304084777832
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SIDE_HERMIT_GROVE_CANOPY_M1_0_18_5_PROP_01",
+    "Source": "ES_SIDE_HERMIT_GROVE",
+    "Kind": "CANOPY_M1_0_18_5",
+    "LocalPivot": [
+      -1.0155301094055176,
+      89.37815856933594,
+      18.500879287719727
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SIDE_HERMIT_GROVE_CANOPY_31_8_2_4_PROP_01",
+    "Source": "ES_SIDE_HERMIT_GROVE",
+    "Kind": "CANOPY_31_8_2_4",
+    "LocalPivot": [
+      31.752193450927734,
+      7.873467445373535,
+      2.416274309158325
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SIDE_HERMIT_GROVE_CANOPY_13_2_4_0_PROP_01",
+    "Source": "ES_SIDE_HERMIT_GROVE",
+    "Kind": "CANOPY_13_2_4_0",
+    "LocalPivot": [
+      13.155418395996094,
+      9.16885757446289,
+      3.9802212715148926
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SIDE_HERMIT_GROVE_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_SIDE_HERMIT_GROVE_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      2.635117769241333,
+      0.5333331823348999,
+      13.343879699707031
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SIDE_RELIC_ALTAR_LIGHT_PROP_01",
+    "Source": "ES_SIDE_RELIC_ALTAR",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      46.718772888183594,
+      12.065412521362305,
+      -36.312862396240234
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SIDE_RELIC_ALTAR_CANOPY_9_9_19_0_PROP_01",
+    "Source": "ES_SIDE_RELIC_ALTAR",
+    "Kind": "CANOPY_9_9_19_0",
+    "LocalPivot": [
+      9.921072006225586,
+      7.144741058349609,
+      19.032672882080078
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SIDE_RELIC_ALTAR_CANOPY_26_0_9_8_PROP_01",
+    "Source": "ES_SIDE_RELIC_ALTAR",
+    "Kind": "CANOPY_26_0_9_8",
+    "LocalPivot": [
+      26.004236221313477,
+      7.740263938903809,
+      9.785810470581055
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SIDE_RELIC_ALTAR_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_SIDE_RELIC_ALTAR_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      6.62814998626709,
+      0.5333334803581238,
+      15.268535614013672
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_AQUEDUCT_LIGHT_PROP_01",
+    "Source": "ES_SKY_AQUEDUCT",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      1.118644118309021,
+      12.994070053100586,
+      -7.932202339172363
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_AQUEDUCT_CANOPY_M19_7_126_9_PROP_01",
+    "Source": "ES_SKY_AQUEDUCT",
+    "Kind": "CANOPY_M19_7_126_9",
+    "LocalPivot": [
+      -19.737754821777344,
+      6.164148330688477,
+      126.87294006347656
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_AQUEDUCT_CANOPY_2_8_M109_2_PROP_01",
+    "Source": "ES_SKY_AQUEDUCT",
+    "Kind": "CANOPY_2_8_M109_2",
+    "LocalPivot": [
+      2.783533811569214,
+      8.991303443908691,
+      -109.24446105957031
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_AQUEDUCT_CANOPY_M16_6_M126_5_PROP_01",
+    "Source": "ES_SKY_AQUEDUCT",
+    "Kind": "CANOPY_M16_6_M126_5",
+    "LocalPivot": [
+      -16.62600326538086,
+      6.19518518447876,
+      -126.4992904663086
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_AQUEDUCT_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_SKY_AQUEDUCT_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -7.405811786651611,
+      0.5333330631256104,
+      27.268754959106445
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_OBSERVATORY_LIGHT_PROP_01",
+    "Source": "ES_SKY_OBSERVATORY",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      0.0022858264856040478,
+      22.943504333496094,
+      -0.00528951408341527
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_OBSERVATORY_CANOPY_65_9_M71_4_PROP_01",
+    "Source": "ES_SKY_OBSERVATORY",
+    "Kind": "CANOPY_65_9_M71_4",
+    "LocalPivot": [
+      65.89749908447266,
+      9.399999618530273,
+      -71.35511016845703
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_OBSERVATORY_CANOPY_65_9_M64_4_PROP_01",
+    "Source": "ES_SKY_OBSERVATORY",
+    "Kind": "CANOPY_65_9_M64_4",
+    "LocalPivot": [
+      65.85187530517578,
+      9.399999618530273,
+      -64.43585968017578
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_OBSERVATORY_CANOPY_M69_9_M71_4_PROP_01",
+    "Source": "ES_SKY_OBSERVATORY",
+    "Kind": "CANOPY_M69_9_M71_4",
+    "LocalPivot": [
+      -69.86700439453125,
+      9.399999618530273,
+      -71.35511016845703
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_OBSERVATORY_CANOPY_M69_9_M64_4_PROP_01",
+    "Source": "ES_SKY_OBSERVATORY",
+    "Kind": "CANOPY_M69_9_M64_4",
+    "LocalPivot": [
+      -69.9126205444336,
+      9.399999618530273,
+      -64.43585968017578
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_OBSERVATORY_CANOPY_M69_9_64_4_PROP_01",
+    "Source": "ES_SKY_OBSERVATORY",
+    "Kind": "CANOPY_M69_9_64_4",
+    "LocalPivot": [
+      -69.86700439453125,
+      9.399999618530273,
+      64.40939331054688
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_OBSERVATORY_CANOPY_M69_9_71_3_PROP_01",
+    "Source": "ES_SKY_OBSERVATORY",
+    "Kind": "CANOPY_M69_9_71_3",
+    "LocalPivot": [
+      -69.9126205444336,
+      9.399999618530273,
+      71.3286361694336
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_OBSERVATORY_CANOPY_65_9_64_4_PROP_01",
+    "Source": "ES_SKY_OBSERVATORY",
+    "Kind": "CANOPY_65_9_64_4",
+    "LocalPivot": [
+      65.89749908447266,
+      9.399999618530273,
+      64.40939331054688
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_OBSERVATORY_CANOPY_65_9_71_3_PROP_01",
+    "Source": "ES_SKY_OBSERVATORY",
+    "Kind": "CANOPY_65_9_71_3",
+    "LocalPivot": [
+      65.85187530517578,
+      9.399999618530273,
+      71.3286361694336
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_OBSERVATORY_CANOPY_M92_0_42_3_PROP_01",
+    "Source": "ES_SKY_OBSERVATORY",
+    "Kind": "CANOPY_M92_0_42_3",
+    "LocalPivot": [
+      -91.9583740234375,
+      7.828305244445801,
+      42.25776672363281
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_OBSERVATORY_CANOPY_M25_2_M100_0_PROP_01",
+    "Source": "ES_SKY_OBSERVATORY",
+    "Kind": "CANOPY_M25_2_M100_0",
+    "LocalPivot": [
+      -25.2435302734375,
+      6.713900089263916,
+      -99.99999237060547
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_OBSERVATORY_CANOPY_M91_6_23_2_PROP_01",
+    "Source": "ES_SKY_OBSERVATORY",
+    "Kind": "CANOPY_M91_6_23_2",
+    "LocalPivot": [
+      -91.5935287475586,
+      9.408052444458008,
+      23.20317268371582
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_OBSERVATORY_CANOPY_M77_6_50_8_PROP_01",
+    "Source": "ES_SKY_OBSERVATORY",
+    "Kind": "CANOPY_M77_6_50_8",
+    "LocalPivot": [
+      -77.60725402832031,
+      9.132719993591309,
+      50.82454299926758
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_OBSERVATORY_CANOPY_52_1_79_8_PROP_01",
+    "Source": "ES_SKY_OBSERVATORY",
+    "Kind": "CANOPY_52_1_79_8",
+    "LocalPivot": [
+      52.11612319946289,
+      7.81265115737915,
+      79.75154113769531
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_OBSERVATORY_CANOPY_M47_6_M82_6_PROP_01",
+    "Source": "ES_SKY_OBSERVATORY",
+    "Kind": "CANOPY_M47_6_M82_6",
+    "LocalPivot": [
+      -47.55015563964844,
+      6.183254241943359,
+      -82.575927734375
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_OBSERVATORY_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_SKY_OBSERVATORY_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      2.2548582553863525,
+      0.533333420753479,
+      -33.90028762817383
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_OBSERVATORY_TERRAIN_02_CANOPY_79_0_M53_0_PROP_01",
+    "Source": "ES_SKY_OBSERVATORY_TERRAIN_02",
+    "Kind": "CANOPY_79_0_M53_0",
+    "LocalPivot": [
+      79.01220703125,
+      9.156250953674316,
+      -52.98462677001953
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SKY_OBSERVATORY_TERRAIN_02_CANOPY_92_1_4_6_PROP_01",
+    "Source": "ES_SKY_OBSERVATORY_TERRAIN_02",
+    "Kind": "CANOPY_92_1_4_6",
+    "LocalPivot": [
+      92.0543441772461,
+      8.766594886779785,
+      4.5783843994140625
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_TEMPLE_GATE_A_LIGHT_PROP_01",
+    "Source": "ES_TEMPLE_GATE_A",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      8.292820297128856e-08,
+      24.25434684753418,
+      8.8695650100708
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_TEMPLE_GATE_B_LIGHT_PROP_01",
+    "Source": "ES_TEMPLE_GATE_B",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -3.317128118851542e-07,
+      9.182608604431152,
+      10.347825050354004
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_TERRACED_GARDENS_LIGHT_PROP_01",
+    "Source": "ES_TERRACED_GARDENS",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      0.0,
+      3.200000047683716,
+      -1.430511474609375e-06
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_TERRACED_GARDENS_CANOPY_70_3_M44_2_PROP_01",
+    "Source": "ES_TERRACED_GARDENS",
+    "Kind": "CANOPY_70_3_M44_2",
+    "LocalPivot": [
+      70.27099609375,
+      64.01142883300781,
+      -44.20536804199219
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_TERRACED_GARDENS_CANOPY_0_4_41_2_PROP_01",
+    "Source": "ES_TERRACED_GARDENS",
+    "Kind": "CANOPY_0_4_41_2",
+    "LocalPivot": [
+      0.359524667263031,
+      7.1108880043029785,
+      41.22014236450195
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_TERRACED_GARDENS_CANOPY_18_2_25_9_PROP_01",
+    "Source": "ES_TERRACED_GARDENS",
+    "Kind": "CANOPY_18_2_25_9",
+    "LocalPivot": [
+      18.17510986328125,
+      6.55238676071167,
+      25.925321578979492
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_TERRACED_GARDENS_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_TERRACED_GARDENS_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      0.08144482970237732,
+      0.5333334803581238,
+      33.34562683105469
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_TWIN_ISLES_LIGHT_PROP_01",
+    "Source": "ES_TWIN_ISLES",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -25.439701080322266,
+      65.12982940673828,
+      14.034242630004883
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_TWIN_ISLES_CANOPY_M37_8_M0_1_PROP_01",
+    "Source": "ES_TWIN_ISLES",
+    "Kind": "CANOPY_M37_8_M0_1",
+    "LocalPivot": [
+      -37.83354949951172,
+      6.178501605987549,
+      -0.07310809195041656
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_TWIN_ISLES_CANOPY_M32_0_26_3_PROP_01",
+    "Source": "ES_TWIN_ISLES",
+    "Kind": "CANOPY_M32_0_26_3",
+    "LocalPivot": [
+      -31.95585060119629,
+      6.515858173370361,
+      26.28410530090332
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_TWIN_ISLES_CANOPY_M59_7_5_2_PROP_01",
+    "Source": "ES_TWIN_ISLES",
+    "Kind": "CANOPY_M59_7_5_2",
+    "LocalPivot": [
+      -59.70322036743164,
+      7.1062517166137695,
+      5.196749210357666
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_TWIN_ISLES_CANOPY_28_1_M39_3_PROP_01",
+    "Source": "ES_TWIN_ISLES",
+    "Kind": "CANOPY_28_1_M39_3",
+    "LocalPivot": [
+      28.054601669311523,
+      21.11176872253418,
+      -39.310630798339844
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_TWIN_ISLES_CANOPY_38_6_M22_2_PROP_01",
+    "Source": "ES_TWIN_ISLES",
+    "Kind": "CANOPY_38_6_M22_2",
+    "LocalPivot": [
+      38.556121826171875,
+      19.134769439697266,
+      -22.240596771240234
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_TWIN_ISLES_FOLIAGE_01_LIGHT_PROP_01",
+    "Source": "ES_TWIN_ISLES_FOLIAGE_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      -8.144163131713867,
+      4.533331871032715,
+      -0.23954792320728302
+    ],
+    "CanCollide": false
+  },
+  {
+    "Object": "ES_SHRINE_MINIBOSS_ROOM_CEILING_MURALS_01_LIGHT_PROP_01",
+    "Source": "ES_SHRINE_MINIBOSS_ROOM_CEILING_MURALS_01",
+    "Kind": "LIGHT",
+    "LocalPivot": [
+      1.0927518445669193e-07,
+      41.599998474121094,
+      0.0
+    ],
+    "CanCollide": false
+  }
+]

@@ -55,6 +55,10 @@
 
 ## 3. Docs: what each one owns
 
+Emberfall and Astral Reach safety-boundary authoring requirements are now recorded in
+`docs/biomes/EMBERFALL.md` and `docs/biomes/ASTRAL_REACH.md`; their full kit schemas remain
+pending. Shared safety requirements live in `docs/MODULAR_MAPS.md`.
+
 | Doc | Owns |
 |---|---|
 | `docs/MASTER_DESIGN.md` | **design source of truth**: the game, Fate, worlds, generation layers, built vs planned |
@@ -93,6 +97,8 @@
 | floating props, birds | `Content/Props/SkyCitadel.luau` (generated), `Core/PropCore.luau`, `client/Controllers/PropController.luau` |
 | chests, vault, gates | `Content/Fixtures/`, `Core/FixtureCore.luau`, `client/Controllers/FixtureController.luau`, `server/Systems/LootSystem.luau` |
 | world sky / fog / atmospheres | `Content/Worlds/*.luau` (`Environment`), `Content/Atmospheres/`, `client/Controllers/AmbienceController.luau` |
+| shared Crossroads cloud banks for biome ambience | `tools/sync_cloud_banks.py` copies read-only HUB_SKY banks into `assets/rbxm/props/CLOUD_BANKS.rbxmx`; CloudLayer mesh/depth/wander contract in `docs/CHUNK_AUTHORING.md` |
+| upper-air ribbon scenery | optional `World.Environment.Ribbons`, rendered by `AtmosphereEffects`; budget in `GameConfig.Ambience.Ribbons`, contract in `CHUNK_AUTHORING.md` |
 | leaderboard / chat UI | `client/UI/Leaderboard.luau`, `client/UI/ChatPanel.luau`; columns + tunables in `Core/GameConfig.luau` (`Leaderboard`, `Chat`); doc `docs/PLAYER_UI.md` §3.7 |
 | SIGIL UI system (tokens, components, Fate-state retint) | `client/UI/Sigil/SigilStyle.luau`, `client/UI/Sigil/Sigil.luau`; dev board `Sigil/SigilShowcase.luau` (F8) |
 | Fate Engine menu (main menu, sub-sigils), universal menu, Fate level HUD | `client/UI/FateEngineMenu.luau`, `client/UI/UniversalMenu.luau`, `client/UI/FateHud.luau`; hotkey `GameConfig.HubMenu.FateEngineHotkey` |
@@ -119,6 +125,24 @@ Blender: `"C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe" -b
 
 **Chunk kits (world geometry)**
 
+- ES fresh live-scene delivery: `live_scene_delivery.py` exports owner edits without saving/rebuilding;
+  `tools/prepare_ethereal_delivery.py` publishes metadata. `IMPORT_STEPS.md` in the ES source folder
+  gives FBX/RBXMX paths. `tests/validate_live_ethereal_delivery.py` checks FBX round trips.
+- Generic runtime boundaries/conditional rooms: `Core/ChunkRuntimeCore.luau`, `Util/ChunkLoader.luau`
+  and server-only `Util/ChunkTransit.luau`, schema/build spec §7.7. Rooms do not enter selection pools.
+
+- ES owner-scene animation extraction and authored collision boundaries are functions in
+  `live_scene_polish.py`; sidecars `assets/export/worlds/ethereal_scape/live_animation_props.json`
+  and `live_safety_boundaries.json` feed the live delivery exporter and runtime content publisher.
+
+- ES shrine room live authoring and separate effect/vault props: `live_scene_polish.py`;
+  conditional-room runtime wiring and biome-boss vault gating are documented in `docs/biomes/ETHEREAL_SCAPE.md`.
+  ES loot pools and altar fixture: `Content/LootPools/EtherealScape.luau` and
+  `Content/Fixtures/EtherealScape.luau`, reusing the existing generic loot system.
+
+- Ethereal Scape owner-edited live scenes: `assets/source/worlds/ethereal_scape/live_scene_polish.py`
+  adds architectural detail and landing patches on Blender's main thread; never regenerates/saves the scene.
+
 - Shared helpers in `assets/source/worlds/_framework/`:
   - `refinish.py` is the finish pass.
   - `geometry_checks.py` handles validation.
@@ -135,6 +159,9 @@ Blender: `"C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe" -b
   Verify split geometry and FBX alignment with Blender running `tests/validate_ethereal_exports.py`.
   `tests/check_chunk_loader.py` compares legacy loading against the pre-multipart revision and checks
   multipart rotation/fallback using a controlled API contract shim; CI runs it. Studio validates physics.
+  ES repair checks closed/outward surfaces and bridge/door clearances. Small foliage uses optional
+  per-component `CanCollide = false`; all other meshes retain solid defaults. Reimport instructions
+  and the owner-required Studio gate are in `docs/biomes/ETHEREAL_SCAPE.md`.
 - Naming convention:
   - The kit file is `<W>_STRUCTURE.rbxmx`, with W = `SC` or `VV`.
   - Pieces inside it are named `chunk_<name>`.

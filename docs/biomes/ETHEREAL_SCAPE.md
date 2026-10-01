@@ -2,6 +2,177 @@
 
 The Uncommon world's art direction and its chunk kit.
 
+## Living scenery revision — 2026-10-01
+
+BASE remains universal. Owner requested more visible atmosphere: ES now has lavender pearl
+haze (Density0.34/Haze1.8), stronger grade and six lavender motes/sec. Lower sea uses19 (11/8)
+Crossroads mesh banks at full quality, layers320/740studs down with180/320stud scatter,
+ceiling160. Sparse smaller banks appear on alternating templates and wander18studs/bob3.
+Crowns use Foliage with phased strength/pace, 3.6s nominal cycle, gentle pace changes and
+tiny gusts. Six BACKDROP templates float3.5studs over24s, structure/props together.
+Skyrays breathe8% of map radius over180s and face their true travel tangent; backdrops
+no longer inflate map flight bounds. Studio review is the acceptance gate. No new import.
+
+## BASE atmosphere — 2026-10-01
+
+Owner accepted the current imported kit for this Studio pass. BASE is the only available
+atmosphere across all maps until further notice; existing variants remain parked via
+`GameConfig.Ambience.Atmospheres.Enabled=false`.
+
+ES uses pearl afternoon air (14.3): ivory sunlight, lavender shadow bounce, pale distance haze,
+restrained bloom/rays and a subtle cool grade. Two slowly drifting cloud layers remain below
+keels (160-stud ceiling clearance), with sparse lavender motes. Authored in the world's
+Environment and applied per client by existing ambience code; no imports required. Sync,
+leave and re-enter to review. Sanctum/shrine visibility and final exposure need Studio approval.
+
+## Live delivery and runtime — 2026-09-30
+
+**2026-10-01 import verified:** owner saved227 structure/258 prop meshes in primary checkout;
+both copied into the ES worktree. All names, uploaded IDs and dimensions verified after restoring
+50 Studio-shortened prop names in worktree XML (one duplicate resolved).227 structure IDs synced,
+1,029 tests and Rojo build pass. Use corrected worktree models; Studio walk remains pending.
+
+Fresh owner-scene exports: **227 structure meshes**, **258 props** (13 existing atmospheric +245
+separated scene props). Main-thread export bakes transforms/modifiers and preserves the live scene;
+the inspection-offset Sanctum is aligned in the export only. Generated placement/bounds data comes
+from `live_delivery.json` through `tools/prepare_ethereal_delivery.py`. Import and save instructions:
+`assets/source/worlds/ethereal_scape/IMPORT_STEPS.md`. Replacement RBXMX/IDs are now synced as noted above.
+
+41 registered templates: ordinary31 (PATH13/COMBAT11/SIDE3/CAP4), ENTRY1, MINIBOSS2, BOSS1,
+BACKDROP6. One additional shrine miniboss chamber is a conditional attachment, outside the random pool.
+Enemy-tag eligibility: 24 ordinary,25 with entry,28 with registered bosses; these are not live enemy counts.
+Loot venues are the altar chest and shrine chamber's keyed chest. The shrine creates its own hidden room
+4,096 studs above it and reciprocal walk-through portals; no shrine means no room. Both share expedition lifetime.
+
+35 authored boundary groups create transparent64-stud colliders. Camera exclusion is explicit for custom
+camera/visibility rays; Studio must verify free camera, wall jumping and open socket mouths. Tree crowns sway
+about root attachments; mounted lights/portal membranes pulse without detaching from their supports.
+
+**Locked owner decision:** only the **biome boss** can drop the vault key. Biome boss completion opens
+the shrine vault-room gate for everyone regardless of the drop; the chest still requires/spends each player's
+key. Miniboss completion does neither. `/boss` and the existing BOSS-arena stand-in test this until enemy
+gameplay is implemented. Prior authoring-only/pending delivery notes below are historical.
+
+Latest room revision (2026-09-30): existing room group enlarged 1.5× horizontally and
+1.45× vertically, yielding **114 × 114 studs clear fighting area and a 60.9-stud ceiling**.
+Side columns reach roof capitals; six indigo/gold celestial ceiling murals occupy coffer
+bays with halo/eye/ray motifs. Detail stays above or outside the combat floor. Alcoves
+scale with the room, keeping portal/vault separate. Supersedes earlier 76 × 76 dimensions.
+
+Latest correction (2026-09-30): boundary height is now **64 studs**, superseding 32 below.
+Two mouth-crossing walls removed using actual connector profiles, including the Sanctum
+approach whose edited local mouth plane differs from nominal tile bounds. All 60 connector
+keels now use a 2-stud chamfer on lower corners; matching faces share the same silhouette
+and level bottom. Includes two previously missed pieces with shifted origins. Owner inspect
+then Studio clearance/join test pending; older prose describes superseded iterations.
+
+### Animation separation and safety walls — 2026-09-30
+
+Live collection `ES_ANIMATION_PROPS` contains 244 separate prop objects. Newly extracted:
+66 light/effect groups and 161 tree-crown meshes, preserving positions and local pivots.
+Attached lights use material/light pulsing; tree crowns can use existing Sway. Chandelier
+is one suspended assembly with ceiling pivot. Source meshes no longer contain extracted
+geometry; exporting structure alone would omit these props. Complete export/prop placement
+generation must precede the next Studio walk. Current FBXs remain older delivery.
+
+`ES_SAFETY_BOUNDARIES` holds a separate, source-parented collision group for all 35 playable
+chunks (no backdrops). Walls follow the union of walking surfaces including bridge edges,
+with socket mouths open. Thickness 0.36 studs, height 32; hidden render/wire display for
+author review. Wall collision stays fixed; future animated identification is separate.
+Sidecars `live_animation_props.json` and `live_safety_boundaries.json` are authoring metadata,
+not automatically consumed runtime data.
+
+Runtime proposal: add reusable optional per-chunk boundary definitions under §7.7, server
+placement in the chunk frame, and explicit camera-query exclusion. No content-specific
+system behavior. Existing maps default to no boundaries. This proposal is not implemented:
+the current loader recreates MeshParts from IDs, and CanQuery=false cannot exclude collidable
+parts from Roblox queries. Importer/custom Blender properties alone are insufficient.
+
+Correct tagged breakdown: COMBAT 11, PATH 12, SIDE 1, ENTRY 1, MINIBOSS 2, BOSS 1.
+That is **24 of 31 ordinary pieces**, **25 including entry**, **28 including bosses**.
+Earlier '25 ordinary' wording included entry incorrectly. Tags do not spawn gameplay enemies.
+
+Connector underside revision (2026-09-30): standard mouth pyramids replaced with
+socket-flush keels; matching faces retain full width down to the common keel depth.
+Only inward edges are lightly beveled; top decks remain unchanged. Generator preserves
+the new shape; live helper applies the faceted edge finish. Studio seam test pending.
+
+### Live shrine / loot review — 2026-09-30
+
+`ES_CAP_SEALED_SHRINE` has a walk-through portal arch. Separate group
+`ES_SHRINE_MINIBOSS_ROOM` contains an enclosed arena with a clear 76 × 76 stud
+combat floor, matching return portal in a vestibule and opaque dark backing hiding
+the sky. A locked container sits in a rear-side alcove beyond the combat floor.
+Portal surfaces, light crystals and vault door are separate props with animation
+pivots. Portal emission has a gentle Blender preview pulse; Blender material
+keyframes do not automatically become Roblox animation.
+
+The room is standalone art, not a registered generated chunk. Owner controls its
+hidden placement. Teleport triggers, RiftController hookup and runtime vault
+registration need a detached-room placement contract; do not alter shared loaders
+or fabricate far-away fixture coordinates. Generic loot content defines ES
+chest/vault/boss pools and a 20% party boss-completion key chance, matching SC.
+Drop entries remain deliberately empty. `ES_SIDE_RELIC_ALTAR` has one registered
+chest using installed SC fixture meshes. Two planned loot locations: altar chest
+and room vault; the room vault's runtime placement is pending.
+
+Removed ES_ENTRY's stray added trim; original perimeter retained. Separate
+`ES_ENTRY_PORTAL_PREVIEW` collection uses the completed portal branch asset on
+the rear circle, chunk offset **0, 0, 110**. Exclude this preview from chunk export:
+runtime supplies the prefab. Carry the offset into portal content at branch integration.
+
+41 registered pieces: ENTRY 1, PATH 13, COMBAT 11, SIDE 3, CAP 4, MINIBOSS 2,
+BOSS 1, BACKDROP 6. Ordinary PATH/COMBAT/SIDE/CAP total **31**. EnemyTags on
+**25 ordinary pieces**, **28** including boss/miniboss pieces; these are metadata,
+not live enemy spawning. The new standalone room is additional to those counts.
+No automatic save/export or PR; owner scene review and Studio test remain required.
+
+Vault revision: black backing now follows only the portal aperture, with ivory masking
+outside it. Alcove gains wall columns/coffers/inlays; container gains ribs/diamond
+inlays and lock detail. Separate sealed gate `ES_SHRINE_VAULT_GATE_PROP_01` is authored
+to slide 18 studs into the ceiling after miniboss defeat. Defeat-triggered opening is
+pending runtime implementation alongside the detached-room contract.
+
+> **Boss-aligned finish, 2026-09-30:** owner requests smoother chunks matching the Ascendant.
+> Live scene gains curved gold filigree and a small portal core on the throne back, rounded
+> architectural block edges and smooth curved ivory/gold/wood shading. Owner rejected softer
+> island sides: terrain undersides and skirts are faceted again. Shared platform rims remain fixed; crystals and foliage
+> retain their facets. Use evaluated modifiers/normals on export and recheck Studio.
+
+> **Detail revision, 2026-09-30:** curved throne back, oval mask/faceted symmetrical eye,
+> rounded seated cushion and supported armrests replace the block slabs. Floor edge accents
+> raycast to their supporting cap and avoid explicit path strips; columns (including backdrops)
+> gain fitted collars/ribs, missing window trim and restrained wall friezes. Gardens' upper
+> filler was rejected and removed: actual deck ends now share a miter seam and existing
+> stringers/cross members fit beneath it. Lower foot landing remains unchanged. No loader edits.
+> Latest clearance revision replaces the Gardens stair/foot landing entirely with a continuous
+> full-width route and following rails. Column trim is cut around framed panes, and flat path
+> decals stop at nearby bridge decks (70 faces across nine chunks). Floor trim crossing these
+> transitions is removed. Live changes are not saved/exported automatically; owner review and Studio gate remain.
+
+> **Presence pass, 2026-09-30:** existing throne enlarged 1.65x across, 1.35x vertically
+> and 1.25x in depth, preserving its footing and rear-wall clearance. Added rear canopy,
+> armrest gems and seat trim; thin compass/aisle floor inlays; pediment wings, entrance
+> frieze and octagonal tower relief panels. Chair bounds remain behind the fight area.
+> Five chair blocks now have single-segment chamfers, three back panels taper upward,
+> and the inner entrance wall has four shallow arched reliefs and a lintel crest. Entry
+> detail is 900 triangles and remains outside the fighting region. Live review/save/export pending.
+
+> **Sanctum follow-up, 2026-09-30:** separate 3,196-triangle suspended crystal chandelier,
+> interior/exterior lattice trim on 39 thick wall/lantern panes, and faceted ivory slit masks,
+> gold crown rays and robe folds on both existing doors. Original meshes remain intact.
+> These additions are live and unsaved/unexported; review renders are `live_sanctum_interior.png`
+> and `live_sanctum_door.png`. The Studio mushroom displacement was traced to reversed X/Z
+> multipart offsets: generator, JSON and generated content now use native Roblox import axes.
+> All 28 foliage offsets match the saved Studio import; Studio retest remains required.
+
+> **Live polish, 2026-09-30:** owner-edited scene gains ivory relief panels and slim gold ribs
+> on 10 tall square columns, gold frames and mullions on 60 crystal windows, and closed landing
+> patches at both ends of the Terraced Gardens diagonal stair. Additions are separate detail
+> meshes; existing owner geometry is preserved. One mushroom was moved inward 0.25 studs.
+> Blender review completed; owner inspection, save, re-export and Studio check remain pending.
+> Use `live_scene_polish.py` on Blender's main thread only; never regenerate the edited scene.
+
 > **History.** Ethereal Scape shipped as a `PrebuiltMap` (one hand-authored traverse,
 > `aether_environment_refined.blend`). On 2026-09-26 it became a 30-piece chunk kit, was rejected (no platforms,
 > too close to Sky Citadel), and was revamped as a grounded cloudscape. On 2026-09-27 the owner still wasn't sold,
@@ -254,3 +425,82 @@ validation, including render-only runs. The existing blend and exports are regen
 
 This starts the owner-requested chunk polish; further terrain, flora and architecture review remains.
 Basic enemies and minibosses follow it. Keep current Studio imports until CI and a Studio walk prove replacement.
+
+## Studio delivery staged — 2026-09-30
+
+Owner saved the new 42-mesh structure and 14-prop library. Both RBXMX files are now in the polish
+worktree and all chunk IDs, including the separate temple, are synced to AssetManifest. Rojo build,
+unit tests and legacy/multipart loader contract checks pass. Run rojo serve from that worktree,
+reconnect Studio, then /roll ETHEREAL_SCAPE test and enter to inspect every chunk. A normal roll
+checks assembly afterward. Studio collision, alignment and colour checks remain pending; owner
+requires those before PR creation. Keep prior Studio imports until that replacement gate passes.
+
+## Studio repair pass — 2026-09-30
+
+The owner's first Studio test failed: missing faces/seams, clipped details and blocked routes.
+The previously uploaded RBXMX models are retained for comparison and are **not** the repaired art.
+No PR or push is authorized until the owner tests the replacement.
+
+- Island tops, gold rims and rock tiers now form one closed shell with shared edge vertices.
+  Landing undersides, cloud floors, mesa/ramp shells, roofs and skyray surfaces are closed too.
+  Validation rejects open/nonmanifold solids, inward shells and collapsed triangles; review renders
+  use backface culling. Only marked floor inlays are intentionally single-sided.
+- Bridge decks compensate for slope thickness and remain level across the entire gold rim before
+  descending. Eight island-web recipes gained more slope run by modestly moving/resizing their
+  isles. Entry's perch beacon and Plank Crossing's waystone moved clear of the bridge approaches.
+  Every bridge and shrine/hut approach now has a sampled player-clearance check.
+- Shrine steps fit between their columns; small porches have two columns to prevent overlapping
+  bases. Hut doors are wider/taller. Reliquary guardians moved to the perimeter. Roads sit above
+  court inlays; waterfalls clear the real island rim and connect to an exposed spill surface.
+- Columns have lightly fluted shafts and end-to-end moldings. Sanctum doors sit outside the wall
+  with their reliefs facing the approach. The throne has feet, a framed seat/back, arm supports,
+  slit-mask relief and seven crystal-tipped crown rays, all behind the combat floor.
+- Prayer kites were removed. Mushrooms, blossoms and grass export as foliage components with
+  `CanCollide = false`; buildings, bridges and terrain remain solid. This is a generic optional
+  mesh-record flag under the existing §7.7 assembly contract, defaulting to true for other maps.
+
+Delivery is the existing `ethereal_scape_structure.fbx` (71 meshes) and
+`ethereal_scape_props.fbx` (13 meshes), regenerated under
+`C:/Dev/luckbound/.worktrees/ethereal-scape-polish/assets/export/worlds/ethereal_scape/`.
+Sanctum is 11,990 triangles: 3,292 terrain, 8,530 temple, 168 non-collidable foliage.
+The largest export is 9,994 triangles. Import all meshes with names intact, then save:
+
+- `assets/rbxm/chunks/ethereal_scape/ES_STRUCTURE.rbxmx`
+- `assets/rbxm/props/ES_PROP_LIBRARY.rbxmx`
+
+Both paths are relative to the **polish worktree**, not the portal checkout. Export only the new
+imported Models, then run `tools/sync_asset_ids.py ethereal_scape --write`. New component IDs
+remain placeholders until that import; do not expect the existing Studio uploads to show this pass.
+Reinspect the entire catalogue, then normal assembly and VV/SC. Keep the old imported Models
+separate until the owner approves replacement. Enemy polish follows the chunk acceptance gate;
+Ascendant's owner-edited model and animations are untouched.
+
+Replacement import staged: owner exported 71 structure meshes and 13 uploaded props into the
+primary checkout; copied into the polish worktree and all structure IDs synced. Unit tests and
+Rojo build pass. Ready for Studio reinspection. Owner intends to hand-edit the output blend:
+preserve those changes before any subsequent generator run.
+
+### ES twilight revision — 2026-10-01
+
+Owner supersedes the bright afternoon: BASE now uses18.35 orange-purple twilight,
+brightness2 and exposure-0.18. Apricot horizon, violet decay/shadows and muted lavender
+cloud undersides; ambient fill preserves readable combat/interiors. Prior afternoon notes
+are historical. SC sunrise and Crossroads remain unchanged. Overhead accents are proposals
+only: high violet wisps, a distant celestial halo or sparse constellation points.
+
+### ES upper-air ribbons — 2026-10-01
+
+Studio prototype implemented as client Beams through optional Environment.Ribbons.
+Soft violet-to-rose smoke-textured veils at650–950studs,700–1500studs long,45–95wide;
+map-wide sectors extend600studs beyond layout bounds. Each fades through its55–90s cycle,
+then relocates invisibly; ends taper in transparency. Gentle lateral drift32studs/ripple14.
+Count2–8 by graphics quality, capped8,12segments,10Hz update. No imported asset, collision
+or particles. Current opacity0.16 remains a Studio tuning value. Review with twilight;
+SC/Crossroads unchanged.
+
+### ES readability tuning — 2026-10-01
+
+Twilight18.35 retained. Lifted shadow fill/exposure(-0.06), density0.31/haze1.6, gentle
+purple grade(246,232,255) and contrast0.075. Ribbons lowered420–620studs, width80–135,
+length1000–2000, opacity0.30 to improve visibility; same2–8beam/10Hz budget. Studio retest
+pending; supersedes previous visibility values, with no new assets or imports.

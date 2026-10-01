@@ -82,24 +82,35 @@ def isle(p, pts, z=FLOOR_Z, depth=70, floor="AetherMintGrass", roots=True, chand
     rng = p.rng
     depth = min(depth, z - KEEL_SAFE)
     cx, cy = centroid(pts)
-    prism(p, pts, z - 2.5, z, floor, side=floor)
     rim = [(cx + (x - cx) * 1.04, cy + (y - cy) * 1.04) for x, y in pts]
-    prism(p, rim, z - 6.0, z - 1.4, "TempleGold")
     n = len(pts)
-    prev = None
+    # One closed shell: every adjoining tier shares the exact same vertices.
+    # Independent jitter at the rim used to leave holes; disconnected open tiers
+    # also let normal recalculation turn some bands inside out.
+    rings = [[(x, y, z) for x, y in pts],
+             [(x, y, z - 1.4) for x, y in rim],
+             [(x, y, z - 6.0) for x, y in rim]]
     for k, (s, dz) in enumerate(((1.04, -6.0), (0.86, -depth * 0.3), (0.55, -depth * 0.64), (0.22, -depth * 0.9))):
         ring = [(cx + (x - cx) * s * rng.uniform(0.93, 1.05), cy + (y - cy) * s * rng.uniform(0.93, 1.05), z + dz)
                 for x, y in pts]
-        if prev is not None:
-            p.add(prev + ring, [[n + i, n + (i + 1) % n, (i + 1) % n, i] for i in range(n)],
-                  "PaleGoldSoil" if k == 1 else "Cloudstone")
-        prev = ring
-    p.add(prev + [(cx + rng.uniform(-3, 3), cy + rng.uniform(-3, 3), z - depth)],
-          [[(i + 1) % n, i, n] for i in range(n)], "Cloudstone")
+        if k:
+            rings.append(ring)
+    verts = [q for ring in rings for q in ring]
+    verts += [(cx, cy, z), (cx + rng.uniform(-3, 3), cy + rng.uniform(-3, 3), z - depth)]
+    ct, cb = len(verts) - 2, len(verts) - 1
+    faces = [[ct, i, (i + 1) % n] for i in range(n)]
+    mats = [floor] * n
+    for k in range(len(rings) - 1):
+        faces += [[k*n+i, (k+1)*n+i, (k+1)*n+(i+1)%n, k*n+(i+1)%n] for i in range(n)]
+        mats += ["TempleGold" if k < 2 else "PaleGoldSoil" if k == 2 else "Cloudstone"] * n
+    base = (len(rings) - 1) * n
+    faces += [[base+(i+1)%n, base+i, cb] for i in range(n)]
+    mats += ["Cloudstone"] * n
+    p.add(verts, faces, mats)
     if roots:
         for i in range(0, n, 2 if n <= 14 else 3):
             x, y = pts[i]
-            mx, my = cx + (x - cx) * 0.86, cy + (y - cy) * 0.86
+            mx, my = rings[3][i][:2]
             a = math.atan2(my - cy, mx - cx)
             rod(p, "SoftWood", (mx - math.cos(a) * 3, my - math.sin(a) * 3, z - depth * 0.3 + 2),
                 (mx + math.cos(a) * 4, my + math.sin(a) * 4, max(KEEL_SAFE, z - depth * 0.3 - rng.uniform(10, 22))),
@@ -147,8 +158,18 @@ def landing(p, cardinal, z=FLOOR_Z, depth=40, length=34.0):
     prism(p, pts, z - 3.0, z, "GoldenPath", side="TempleGold")
     cx, cy = dx * (H - length / 2), dy * (H - length / 2)
     d = min(depth, z - KEEL_SAFE)
-    p.add([(x, y, z - 3.0) for x, y in pts] + [(cx - dx * 4, cy - dy * 4, z - d)], [[1, 0, 4], [2, 1, 4], [3, 2, 4], [0, 3, 4]],
-          "Cloudstone")
+    # Full-width vertical socket face meets its matching neighbour at every depth.
+    # Taper only inward; a single centre apex leaves a notch under connected mouths.
+    rings=[]
+    for extent,halfwidth,pair in [(H,w/2+2,[pts[1],pts[2]]),
+                                 (H-length/2-4,5,[pts[0],pts[3]])]:
+        ring=[(x,y,z-3) for x,y in pair]
+        for sideways,height in [(-halfwidth,z-d+2),(-halfwidth+2,z-d),
+                                (halfwidth-2,z-d),(halfwidth,z-d+2)]:
+            ring.append((dx*extent+nx*sideways,dy*extent+ny*sideways,height))
+        rings.append(ring)
+    p.add(rings[0]+rings[1],[list(range(6)),list(reversed(range(6,12)))]+
+          [[k,(k+1)%6,(k+1)%6+6,k+6] for k in range(6)],"Cloudstone")
     flagstones(p, (dx * a0, dy * a0), (dx * (a1 - 0.5), dy * (a1 - 0.5)), w, z + 0.045, course=7.0)
     for s in (-1, 1):
         decal_strip(p, "TempleGold", (dx * a0 + nx * s * (w / 2 - 0.6), dy * a0 + ny * s * (w / 2 - 0.6)),
@@ -177,7 +198,10 @@ def bridge(p, a, b, za=FLOOR_Z, zb=None, width=16.0):
     def at(u, off=0.0, dz=0.0):
         return (ax + (bx - ax) * u + nx * off, ay + (by - ay) * u + ny * off, za + (zb - za) * u + dz)
 
-    beam(p, "GoldenPath", at(0, 0, -0.6), at(1, 0, -0.6), width, 1.2)
+    # A rotated beam's upper face lies h/(2*cos(pitch)) above its centre
+    # at the authored XY endpoint. Compensate so slopes do not bury their ends.
+    deck_drop = 0.6 * math.sqrt(1 + ((zb-za)/L)**2)
+    beam(p, "GoldenPath", at(0, 0, -deck_drop), at(1, 0, -deck_drop), width, 1.2)
     n = int(L / 3.2)
     for k in range(n):                                # plank seams, laid on the deck
         u = (k + 0.5) / n
@@ -192,7 +216,10 @@ def bridge(p, a, b, za=FLOOR_Z, zb=None, width=16.0):
         m = max(2, int(L / 8))
         for k in range(m + 1):
             q = at(k / m, s * (width / 2 - 0.4))
-            box(p, "SoftWood", q[0], q[1], q[2] + 2.0, 0.7, 0.7, 4.2)
+            key = tuple(round(v, 3) for v in q)
+            if key not in p.bridge_posts:
+                box(p, "SoftWood", q[0], q[1], q[2] + 2.0, 0.7, 0.7, 4.2)
+                p.bridge_posts.add(key)
             if prev:
                 beam(p, "TempleGold", (prev[0], prev[1], prev[2] + 3.7), (q[0], q[1], q[2] + 3.7), 0.35, 0.35)
                 beam(p, "TempleGold", (prev[0], prev[1], prev[2] + 2.0), (q[0], q[1], q[2] + 2.0), 0.25, 0.25)
@@ -202,6 +229,7 @@ def bridge(p, a, b, za=FLOOR_Z, zb=None, width=16.0):
     for k in range(m):
         beam(p, "SoftWood", at(k / m, width * 0.3, -3.4), at((k + 1) / m, -width * 0.3, -3.4), 0.6, 0.6)
     p.corridors.append((ax, ay, bx, by, width / 2 + 2))
+    p.clearances.append((a, b, (za, zb), 2.0, "bridge approach"))
 
 
 def stair_link(p, x, y, z0, z1, rz, width=16.0):
@@ -268,6 +296,12 @@ def shrine_hall(p, x, y, z, w, d, rz=0.0):
 
     prism(p, [at(-w / 2 - 3, -d / 2 - 8), at(w / 2 + 3, -d / 2 - 8), at(w / 2 + 3, d / 2 + 3), at(-w / 2 - 3, d / 2 + 3)],
           z - 0.5, z + 2, "TempleIvory", side="Cloudstone")
+    from es_features import stairs
+    q = at(0, -d / 2 - 12)
+    stairs(p, q[0], q[1], z, z + 2, 7, rz + math.pi / 2)
+    a, b = at(0, -d / 2 - 18), at(0, 0)
+    p.corridors.append((*a, *b, 5))
+    p.clearances.append((a, at(0, -d / 2 + 3), z + 2, 3, "shrine doorway"))
     h = 22
     for (u0, v0, u1, v1) in ((-w / 2, -d / 2, -5, -d / 2), (5, -d / 2, w / 2, -d / 2), (w / 2, -d / 2, w / 2, d / 2),
                              (w / 2, d / 2, -w / 2, d / 2), (-w / 2, d / 2, -w / 2, -d / 2)):
@@ -279,13 +313,14 @@ def shrine_hall(p, x, y, z, w, d, rz=0.0):
             box(p, "SkyCrystal", q[0], q[1], z + 13, 0.8 if True else 0, 5, 9, rz=rz)
     a, b = at(-5, -d / 2), at(5, -d / 2)
     beam(p, "TempleIvory", (a[0], a[1], z + 2 + h - 3), (b[0], b[1], z + 2 + h - 3), 2.4, 6)
-    for u in (-w / 2 + 2, -6, 6, w / 2 - 2):
+    porch_columns = (-w / 2 + 2, w / 2 - 2) if w < 28 else (-w / 2 + 2, -6, 6, w / 2 - 2)
+    for u in porch_columns:
         q = at(u, -d / 2 - 6)
         column(p, q[0], q[1], z + 2, h, r=1.6)
     roof = [at(-w / 2 - 3, -d / 2 - 8), at(w / 2 + 3, -d / 2 - 8), at(w / 2 + 3, d / 2 + 3), at(-w / 2 - 3, d / 2 + 3)]
     prism(p, roof, z + 2 + h, z + 4 + h, "TempleIvory", side="TempleGold")
     cx, cy = at(0, -2.5)
     verts = [(q[0], q[1], z + 4 + h) for q in roof] + [(cx, cy, z + 4 + h + 14)]
-    p.add(verts, [[0, 1, 4], [1, 2, 4], [2, 3, 4], [3, 0, 4]], "TempleGold")
+    p.add(verts, [[0, 1, 4], [1, 2, 4], [2, 3, 4], [3, 0, 4], [3, 2, 1, 0]], "TempleGold")
     rod(p, "SkyCrystal", (cx, cy, z + 4 + h + 13), (cx, cy, z + 4 + h + 20), 1.2, 0.0, n=5)
     p.keepout.append((x, y, max(w, d) * 0.75 + 6))

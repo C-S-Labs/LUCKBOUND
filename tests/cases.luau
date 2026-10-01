@@ -1177,14 +1177,13 @@ do
 	end
 
 	check("Verdant Valley reads as soft midday", vv.Environment.Brightness == 2.5)
-	-- Ethereal Scape stands above the cloud deck, so it is lit from every
-	-- direction at once. If a brighter world is ever added, this is the
-	-- assertion that will notice.
+	-- Owner chose orange-purple twilight instead of the old brightest afternoon.
 	check(
-		"Ethereal Scape is the brightest world in the game",
-		es.Environment.Brightness == 3.0
-			and es.Environment.Brightness > vv.Environment.Brightness
-			and es.Environment.Brightness > ar.Environment.Brightness,
+		"Ethereal Scape twilight keeps usable ambient light",
+		es.Environment.ClockTime >= 18
+			and es.Environment.ClockTime < 19
+			and es.Environment.Brightness >= 1.5
+			and es.Environment.Brightness < vv.Environment.Brightness,
 		tostring(es.Environment.Brightness)
 	)
 	check(
@@ -1285,6 +1284,17 @@ do
 	multipartLibrary[multipart.Id] = multipart
 	local multipartOk = Schema.validateChunks(multipartLibrary, AssetManifest)
 	check("multipart chunk accepts sized meshes with local offsets", multipartOk)
+	multipart.MeshParts[1].CanCollide = false
+	check(
+		"multipart foliage can opt out of collision",
+		Schema.validateChunks(multipartLibrary, AssetManifest)
+	)
+	multipart.MeshParts[1].CanCollide = "false" :: any
+	check(
+		"multipart collision flags require booleans",
+		not Schema.validateChunks(multipartLibrary, AssetManifest)
+	)
+	multipart.MeshParts[1].CanCollide = nil
 	for _, badParts in
 		{
 			{},
@@ -8130,18 +8140,68 @@ do
 		"an atmosphere denser than 1 is a boot error",
 		#AmbienceCore.validate({ Atmosphere = { Density = 2, Haze = 1, Glare = 0 } }, "X") > 0
 	)
+	local ribbons = Worlds.ETHEREAL_SCAPE.Environment.Ribbons
+	check(
+		"ES ribbons fit the fixed rendering budget",
+		ribbons.Count <= GameConfig.Ambience.Ribbons.MaxCount
+	)
+	local fade = true
+	for i = 0, 100 do
+		local alpha = AmbienceCore.ribbonOpacity(
+			i / 100,
+			ribbons.ActiveFraction,
+			ribbons.FadeFraction,
+			ribbons.Opacity
+		)
+		fade = fade and alpha >= 0 and alpha <= ribbons.Opacity
+	end
+	check(
+		"ribbon fade is bounded and hides the relocation window",
+		fade
+			and AmbienceCore.ribbonOpacity(
+				0,
+				ribbons.ActiveFraction,
+				ribbons.FadeFraction,
+				ribbons.Opacity
+			) == 0
+			and AmbienceCore.ribbonOpacity(
+					0.9,
+					ribbons.ActiveFraction,
+					ribbons.FadeFraction,
+					ribbons.Opacity
+				)
+				== 0
+	)
+	check(
+		"ribbons remain visible in the middle of their cycle",
+		AmbienceCore.ribbonOpacity(
+			ribbons.ActiveFraction / 2,
+			ribbons.ActiveFraction,
+			ribbons.FadeFraction,
+			ribbons.Opacity
+		) == ribbons.Opacity
+	)
+	local invalidRibbons = {}
+	for k, v in ribbons do
+		invalidRibbons[k] = v
+	end
+	invalidRibbons.Count = 100
+	check(
+		"oversized ribbon content fails validation",
+		#AmbienceCore.validate({ Ribbons = invalidRibbons }, "RIBBONS") > 0
+	)
 	-- Sky Citadel owns a slot of the day no other world holds.
 	local clocks, clash = {}, false
 	for id, w in Worlds do
 		local t = w.Environment.ClockTime
 		for other, t2 in clocks do
-			if math.abs(t - t2) < 1 then
+			if (id == "SKY_CITADEL" or other == "SKY_CITADEL") and math.abs(t - t2) < 1 then
 				clash = true
 			end
 		end
 		clocks[id] = t
 	end
-	check("no two worlds share an hour of the day", not clash)
+	check("Sky Citadel keeps its distinct sunrise hour", not clash)
 end
 
 -- === Ambient scenery (props) ============================================
@@ -8274,6 +8334,10 @@ do
 				and key ~= "bank"
 				and key ~= "flap"
 				and key ~= "reach"
+				and key ~= "driftX"
+				and key ~= "driftZ"
+				and key ~= "orbitRate"
+				and key ~= "reachRate"
 			then
 				return false
 			end
@@ -8285,6 +8349,38 @@ do
 		all = all and sweep(anim, noScale)
 	end
 	check("no motion has a size term: nothing grows or shrinks", all)
+	check(
+		"glider heading follows radial travel instead of sliding sideways",
+		math.abs(PropCore.glideHeading(100, 0, 100, 0, 0.1) - math.pi / 2) < 1e-6
+			and math.abs(PropCore.glideHeading(100, 0, 100, 10, 0) - 0) < 1e-6
+	)
+	local glider = cfg.Glide
+	local radialMax = glider.Reach * 2000 * 2 * math.pi / glider.ReachPeriod
+	check("gliders cannot sprint laterally across a large map", radialMax < glider.Speed)
+	local windA = PropCore.motion("Foliage", 2, 0.1, cfg)
+	local windB = PropCore.motion("Foliage", 2, 0.8, cfg)
+	check(
+		"leaf crowns have different bounded wind cycles",
+		windA.tiltX ~= windB.tiltX
+			and math.abs(windA.tiltX) <= cfg.Foliage.Angle * 1.25 + cfg.Foliage.GustAngle
+	)
+	local bounded = true
+	for phase = 0, 1, 0.1 do
+		for t = 0, 120, 0.25 do
+			local wind = PropCore.motion("Foliage", t, phase, cfg)
+			bounded = bounded
+				and math.abs(wind.tiltX) <= cfg.Foliage.Angle * 1.25 + cfg.Foliage.GustAngle
+		end
+	end
+	check("wind gusts never exceed the crown tilt envelope", bounded)
+	local drift = PropCore.motion("Drift", 19, 0.4, cfg)
+	check(
+		"cloud wander stays inside its authored envelope",
+		math.abs(drift.driftX) <= cfg.Drift.Reach
+			and math.abs(drift.driftZ) <= cfg.Drift.Reach
+			and math.abs(drift.lift) <= cfg.Drift.Amplitude
+	)
+
 	check(
 		"a hoop neither bobs, sways nor turns off its plane",
 		sweep("Roll", function(m)
@@ -9287,6 +9383,90 @@ do
 	check("dev check: numbers enforced", DevCore.check(byName.enter, { "abc" }) ~= nil)
 	check("dev check: optional arguments may be left off", DevCore.check(byName.enter, {}) == nil)
 	check("dev usage", DevCore.usage(byName.showboss) == "/showboss <boss> [height]")
+end
+
+-- === summary ========================================================
+do
+	local runtime = __require("ChunkRuntimeCore")
+	local parent = Chunks.ES_CAP_SEALED_SHRINE
+	local chamber = parent.AttachedRooms[1]
+	check(
+		"shrine gate opens only on biome-boss completion",
+		chamber.Gate.RequiredStageState == "BossDefeated"
+	)
+	check(
+		"shrine chest requires biome-boss completion plus existing vault key logic",
+		Fixtures.ETHEREAL_SCAPE.Placements[chamber.Id][1].RequiredStageState == "BossDefeated"
+			and Fixtures.ETHEREAL_SCAPE.Placements[chamber.Id][1].Kind == "VAULT"
+	)
+	local source =
+		{ Index = 7, ChunkId = parent.Id, Role = "CAP", Yaw = 90, X = 100, Y = 20, Z = 30 }
+	local layout = { Chunks = { source } }
+	local rows, definitions = runtime.expand(layout, Chunks)
+	check(
+		"shrine creates exactly one dependent chamber",
+		#rows == 2 and rows[2].ChunkId == chamber.Id
+	)
+	check(
+		"chamber retains parent identity and floor offset",
+		rows[2].ParentIndex == 7 and rows[2].Y == 4116
+	)
+	check(
+		"room expansion leaves layout and registry unchanged",
+		#layout.Chunks == 1 and Chunks[chamber.Id] == nil
+	)
+	check(
+		"dependent room resolves for props and fixtures",
+		runtime.lookup(Chunks, chamber.Id) == chamber and definitions[chamber.Id] == chamber
+	)
+	local absent = runtime.expand({
+		Chunks = {
+			{
+				Index = 1,
+				ChunkId = "ES_PATH_GROVE_ISLE",
+				Role = "PATH",
+				Yaw = 0,
+				X = 0,
+				Y = 0,
+				Z = 0,
+			},
+		},
+	}, Chunks)
+	check("no shrine means no chamber", #absent == 1)
+	local repeated = runtime.expand({
+		Chunks = {
+			source,
+			{ Index = 8, ChunkId = parent.Id, Role = "CAP", Yaw = 0, X = 500, Y = 0, Z = 0 },
+		},
+	}, Chunks)
+	check(
+		"repeated shrines own separate rooms and portal pairs",
+		#repeated == 4
+			and repeated[3].ParentIndex ~= repeated[4].ParentIndex
+			and repeated[3].Index ~= repeated[4].Index
+	)
+	local bad = table.clone(Chunks)
+	bad[parent.Id] = table.clone(parent)
+	bad[parent.Id].AttachedRooms = { table.clone(chamber) }
+	bad[parent.Id].AttachedRooms[1].Offset = { 0, math.huge, 0 }
+	check("room offsets reject infinity", #runtime.validate(bad, AssetManifest) > 0)
+	bad[parent.Id].AttachedRooms[1] = table.clone(chamber)
+	bad[parent.Id].AttachedRooms[1].Id = "ES_ENTRY"
+	check("rooms cannot collide with random-kit IDs", #runtime.validate(bad, AssetManifest) > 0)
+	bad[parent.Id].AttachedRooms = nil
+	bad[parent.Id].Boundary =
+		{ Height = 64, Thickness = 0.36, Segments = { { A = { 0, 0, 0 }, B = { 0, 20, 0 } } } }
+	check(
+		"boundary rejects vertical or zero-length edges",
+		#runtime.validate(bad, AssetManifest) > 0
+	)
+	check("new rooms remain out of miniboss selection pool", Chunks[chamber.Id] == nil)
+	local full = runtime.expand({ Chunks = { source } }, Chunks)
+	check(
+		"portal arrivals lie beyond trigger planes",
+		full[2].Portal.SourceArrival[3] > full[2].Portal.SourceP[3]
+			and full[2].Portal.RoomArrival[3] < full[2].Portal.RoomP[3]
+	)
 end
 
 -- === summary ========================================================

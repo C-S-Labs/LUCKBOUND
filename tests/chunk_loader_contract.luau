@@ -106,6 +106,9 @@ end
 function methods.SetAttribute(o, k, v)
 	o.attributes[k] = v
 end
+function methods.GetAttribute(o, k)
+	return o.attributes[k]
+end
 function methods.Destroy(o)
 	for _, child in table.clone(o.children) do
 		child:Destroy()
@@ -148,7 +151,19 @@ local ReplicatedStorage = {
 		return {}
 	end,
 }
-local RunService = { Heartbeat = { Wait = function() end } }
+local RunService = {
+	Heartbeat = { Wait = function() end },
+	IsStudio = function()
+		return false
+	end,
+}
+local tags = {}
+local CollectionService = {
+	AddTag = function(self, object, tag)
+		tags[object] = tags[object] or {}
+		tags[object][tag] = true
+	end,
+}
 local game = {
 	GetService = function(self, name)
 		return ({
@@ -156,6 +171,7 @@ local game = {
 			ReplicatedStorage = ReplicatedStorage,
 			RunService = RunService,
 			Workspace = Workspace,
+			CollectionService = CollectionService,
 		})[name]
 	end,
 }
@@ -269,9 +285,15 @@ local compared = 0
 for _, world in { "VERDANT_VALLEY", "SKY_CITADEL", "ETHEREAL_SCAPE" } do
 	local count = 0
 	for _, chunk in __require("Chunks") do
-		if chunk.WorldId ~= world or chunk.MeshParts then
+		if chunk.WorldId ~= world then
 			continue
 		end
+		-- Exercise every content entry through the legacy path, including ES
+		-- entries that now use multipart art. Actual assemblies are checked below.
+		chunk = table.clone(chunk)
+		chunk.MeshParts = nil
+		chunk.Boundary = nil
+		chunk.AttachedRooms = nil
 		count += 1
 		for yaw = 0, 270, 90 do
 			for _, testMode in { false, true } do
@@ -308,6 +330,12 @@ for yaw = 0, 270, 90 do
 		local actual = group.children[index].CFrame
 		assert(equal(encode(expected), encode(actual)), `multipart alignment changed at yaw {yaw}`)
 		assert(group.children[index].Size == Vector3.new(part.SizeX, part.SizeY, part.SizeZ))
+		assert(group.children[index].CanCollide == (part.CanCollide ~= false))
+		if part.CanCollide == false then
+			assert(
+				group.children[index].CanQuery == false and group.children[index].CanTouch == false
+			)
+		end
 	end
 	for _, call in calls do
 		if call.filter then
@@ -328,6 +356,46 @@ assert(fallback.UsedMeshes == 0 and fallback.FloorCount == 1)
 for _, o in objects do
 	assert(o.ClassName ~= "MeshPart" or o.destroyed, "partial multipart mesh survived fallback")
 end
+AssetService.CreateMeshPartAsync = savedCreate
+local shrine = __require("Chunks").ES_CAP_SEALED_SHRINE
+for yaw = 0, 270, 90 do
+	local _, result = run(newFactory, shrine, yaw, false, "mesh", true)
+	assert(#result.Model.children == 4, "two shrines must own two separate dependent rooms")
+	for _, folder in result.Model.children do
+		local portals = 0
+		for _, child in folder.children do
+			if child.Name == "RoomPortalTrigger" then
+				portals += 1
+				assert(
+					child.CanCollide == false and child.CanTouch == true and child.Transparency == 1
+				)
+				local centre = folder:GetAttribute("Centre")
+				local frame = CFrame.new(centre)
+					* CFrame.Angles(0, -math.rad(folder:GetAttribute("Yaw")), 0)
+				local localZ = if folder:GetAttribute("ParentChunkIndex") then 105 else 24
+				assert(
+					equal(encode(child.CFrame), encode(frame * CFrame.new(0, 12, localZ))),
+					"portal yaw must match actual geometry"
+				)
+				assert(child:GetAttribute("Arrival") ~= nil)
+			elseif child.Name == "SafetyBoundaries" then
+				assert(tags[child][__require("Constants").NAMES.CHUNK_BOUNDARY_TAG])
+				for _, wall in child.children do
+					assert(
+						wall.CanCollide
+							and wall.Transparency == 1
+							and not wall.CanTouch
+							and wall.Size.Y >= 64
+					)
+				end
+			end
+		end
+		assert(portals == 1, "each source and destination must have one trigger")
+	end
+end
+nativePrint(
+	"PASS: conditional room pairs and rotated portal positions at four yaws; tagged 64-stud boundaries"
+)
 nativePrint(
 	`PASS: {compared} legacy differential cases; multipart alignment at four yaws; atomic component failure`
 )

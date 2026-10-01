@@ -82,6 +82,7 @@ local Constants = {
 
 	-- Folder and instance names the code relies on existing.
 	NAMES = {
+		CHUNK_BOUNDARY_TAG = "LuckboundChunkBoundary",
 		ROOT = "Luckbound",
 		NET_FOLDER = "Net",
 		CROSSROADS = "Crossroads",

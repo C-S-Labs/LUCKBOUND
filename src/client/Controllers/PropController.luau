@@ -24,11 +24,14 @@ local GameConfig = require(Root.Core.GameConfig)
 local PropCore = require(Root.Core.PropCore)
 local Chunks = require(Root.Content.Chunks)
 local Props = require(Root.Content.Props)
+local ChunkRuntimeCore = require(Root.Core.ChunkRuntimeCore)
 
 local PropController = {}
+local backdrops: { any } = {}
 
 type Placed = {
 	Part: BasePart,
+	Color: Color3,
 	Layout: CFrame, -- the piece's layout frame (centre, turned by its yaw)
 	Offset: Vector3, -- the prop's position in that frame
 	Rot: CFrame, -- the prop's own rotation, no translation
@@ -43,6 +46,7 @@ type Placed = {
 	-- Wings only: the bird this rides on, and the root it flaps about.
 	Body: Placed?,
 	Hinge: Vector3?,
+	Backdrop: any?,
 	-- This frame's pose before the importer's turn, so a wing can ride on it.
 	Pose: CFrame?,
 }
@@ -67,7 +71,7 @@ local function rawPose(p: Placed, m: any): CFrame
 		-- banked into the turn (its inside is its -Z; see birdHeading).
 		return p.Layout
 			* CFrame.Angles(0, m.orbit, 0)
-			* CFrame.new(p.Offset + Vector3.new(0, m.lift, 0))
+			* CFrame.new(p.Offset + Vector3.new(m.driftX or 0, m.lift, m.driftZ or 0))
 			* CFrame.Angles(0, p.Heading, 0)
 			* CFrame.Angles(-m.bank, 0, 0)
 	end
@@ -76,27 +80,36 @@ local function rawPose(p: Placed, m: any): CFrame
 		-- in and out by `reach` but never inside a fifth of the map or past
 		-- its edge. The heading only depends on direction, so it still holds.
 		local mapR = p.MapRadius or p.Radius
-		local r = math.clamp(p.Radius + m.reach * mapR, mapR * 0.2, mapR)
+		local proposed = p.Radius + m.reach * mapR
+		local r = math.clamp(proposed, mapR * 0.2, mapR)
+		local radialSpeed = if proposed == r then m.reachRate * mapR else 0
+		local heading = PropCore.glideHeading(p.Offset.X, p.Offset.Z, r, radialSpeed, m.orbitRate)
 		local out = if p.Radius > 1 then p.Offset * (r / p.Radius) else p.Offset
 		return p.Layout
 			* CFrame.Angles(0, m.orbit, 0)
 			* CFrame.new(out + Vector3.new(0, m.lift, 0))
-			* CFrame.Angles(0, p.Heading, 0)
+			* CFrame.Angles(0, heading, 0)
 			* CFrame.Angles(-m.bank, 0, 0)
 			-- Heading/bank point a nose along +X (a bird's); the skyray's nose is
 			-- its -Z (Blender +Y), so turn it -90° onto +X. Without this they
 			-- flew sideways round their circle (owner, 2026-09-27).
 			* CFrame.Angles(0, -math.pi / 2, 0)
 	end
+	local hinge = p.Hinge or Vector3.zero
 	return p.Layout
-		* CFrame.new(p.Offset + Vector3.new(0, m.lift, 0))
+		* CFrame.new(p.Offset + Vector3.new(m.driftX or 0, m.lift, m.driftZ or 0))
 		* CFrame.Angles(0, m.turn, 0)
 		* p.Rot
+		* CFrame.new(hinge)
 		* CFrame.Angles(m.tiltX, 0, m.tiltZ)
+		* CFrame.new(-hinge)
 end
 
 local function pose(p: Placed, m: any): CFrame
 	local raw = rawPose(p, m)
+	if p.Backdrop then
+		raw = raw + Vector3.new(0, p.Backdrop.Lift, 0)
+	end
 	p.Pose = raw
 	return raw * p.Fix
 end
@@ -127,15 +140,35 @@ local function step()
 	local radius2 = cfg.AnimateRadius * cfg.AnimateRadius
 	local t = os.clock() - startedAt
 	local parts, cframes = {}, {}
+	for _, backdrop in backdrops do
+		local motion = PropCore.motion("Float", t, backdrop.Phase, { Float = cfg.Backdrop })
+		backdrop.Lift = motion.lift
+		for i, part in backdrop.Parts do
+			if part.Parent then
+				table.insert(parts, part)
+				table.insert(cframes, backdrop.Rest[i] + Vector3.new(0, motion.lift, 0))
+			end
+		end
+	end
 	for _, p in placed do
-		if p.Anim ~= "Static" then
+		if p.Anim ~= "Static" or p.Backdrop then
 			local d = p.Position - focus
 			-- A wing moves only when its bird did this frame.
 			-- A glider roams the whole map, so it never rests out of range.
 			local near = if p.Body
 				then (p.Body :: Placed).Pose ~= nil and d:Dot(d) <= radius2
-				else p.Anim == "Glide" or d:Dot(d) <= radius2
+				else p.Backdrop ~= nil or p.Anim == "Glide" or d:Dot(d) <= radius2
 			if near then
+				if p.Anim == "Pulse" then
+					local pulse = cfg.Pulse
+					local value = pulse.MinimumBrightness
+						+ (1 - pulse.MinimumBrightness)
+							* (0.5 + 0.5 * math.sin(
+								t * 2 * math.pi / pulse.Period + p.Phase * 2 * math.pi
+							))
+					p.Part.Color =
+						Color3.new(p.Color.R * value, p.Color.G * value, p.Color.B * value)
+				end
 				table.insert(parts, p.Part)
 				table.insert(cframes, pose(p, PropCore.motion(p.Anim, t, p.Phase, cfg, p.Radius)))
 			end
@@ -188,13 +221,39 @@ function PropController.enter(worldId: string, stageName: string?)
 		local yaw = chunkFolder:GetAttribute("Yaw")
 		local rows = chunkId and set.Placements[chunkId]
 		if rows and typeof(centre) == "Vector3" and type(yaw) == "number" then
-			local chunk = Chunks[chunkId]
+			local chunk = ChunkRuntimeCore.lookup(Chunks, chunkId)
+			local backdrop = nil
+			if chunk and chunk.Motion == "Float" and chunk.Role == "BACKDROP" then
+				backdrop = {
+					Parts = {},
+					Rest = {},
+					Lift = 0,
+					Phase = PropCore.phase(math.floor(centre.X + centre.Z)),
+				}
+				for _, child in chunkFolder:GetDescendants() do
+					if child:IsA("BasePart") then
+						table.insert(backdrop.Parts, child)
+						table.insert(backdrop.Rest, child.CFrame)
+					end
+				end
+				table.insert(backdrops, backdrop)
+			end
 			-- The piece's layout frame: where the generator put it and which
 			-- way it turned it. Placements are authored in exactly this frame.
 			local layout = CFrame.new(centre) * CFrame.Angles(0, ChunkCore.yawRadians(yaw), 0)
-			table.insert(floors, centre)
+			if
+				not chunkFolder:GetAttribute("ParentChunkIndex")
+				and chunk
+				and chunk.Role ~= "BACKDROP"
+			then
+				table.insert(floors, centre)
+			end
 			local half = chunk and math.max(chunk.SizeX or 0, chunk.SizeZ or 0) / 2 or 0
-			mapReach = math.max(mapReach, half)
+			if chunk and chunk.Role ~= "BACKDROP" then
+				if chunk and chunk.Role ~= "BACKDROP" then
+					mapReach = math.max(mapReach, half)
+				end
+			end
 			-- The importer turns every mesh relative to the Blender axes the
 			-- placements use -- the same turn the kit's MeshYawOffset corrects
 			-- for the structure -- so a prop gets it too, applied last, in its
@@ -219,10 +278,14 @@ function PropController.enter(worldId: string, stageName: string?)
 						part.CanCollide = false
 						part.CanQuery = false
 						part.CanTouch = false
+						if row.Anim == "Pulse" then
+							part.Material = Enum.Material.Neon
+						end
 						part.Size = Vector3.new(row.S[1], row.S[2], row.S[3])
 						local r = row.R
 						local entry: Placed = {
 							Part = part,
+							Color = part.Color,
 							Layout = layout,
 							Offset = Vector3.new(row.P[1], row.P[2], row.P[3]),
 							Rot = CFrame.new(
@@ -241,6 +304,7 @@ function PropController.enter(worldId: string, stageName: string?)
 							),
 							Fix = fix,
 							Anim = row.Anim,
+							Backdrop = backdrop,
 							-- A wing beats in time with its own bird.
 							Phase = if body then body.Phase else PropCore.phase(index),
 							Heading = PropCore.birdHeading(row.P[1], row.P[3]),
@@ -330,6 +394,14 @@ function PropController.leave()
 		stepper:Disconnect()
 		stepper = nil
 	end
+	for _, backdrop in backdrops do
+		for i, part in backdrop.Parts do
+			if part.Parent then
+				part.CFrame = backdrop.Rest[i]
+			end
+		end
+	end
+	table.clear(backdrops)
 	table.clear(placed)
 	if folder then
 		folder:Destroy()

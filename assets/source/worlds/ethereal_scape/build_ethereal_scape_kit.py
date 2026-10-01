@@ -9,11 +9,12 @@
 # Run (headless; the .blend is an OUTPUT, edit the scripts):
 #   blender -b --factory-startup --python assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py -- --export --render
 #
-# validate() refuses a piece unless: its box is exactly (2H x 2H) x 256 about the origin; it is under
-# 10,000 triangles; no face degenerated; a WALK GRAPH (2-stud heightfield, 1.6-stud steps, 5-stud
+# validate() refuses a piece unless: its box is exactly (2H x 2H) x 256 about the origin; solids are
+# closed and outward; no face degenerated; a WALK GRAPH (2-stud heightfield, 1.6-stud steps, 5-stud
 # headroom) connects every mouth to every other; every mouth is level ground at z = 0 across its width;
 # nothing detached floats in the structure; props are clear of the real mesh; the entry's landing and
 # return-portal pad are open to the sky; the Sanctum's hall is clear for the fight.
+# Exports then split complete assemblies so every individual mesh stays below 10,000 triangles.
 import math
 import json
 import re
@@ -226,8 +227,57 @@ def detached(p):
     return out, clips
 
 
+def surface_errors(p, obj):
+    """Every solid connected surface must be closed and outward-facing.
+
+    Only explicitly marked floor inlays may be single-sided. Check each
+    component separately: an island's valid cap cannot hide an open rock band.
+    """
+    from collections import Counter
+    parents = list(range(len(obj.data.vertices)))
+    def root(v):
+        while parents[v] != v:
+            parents[v] = parents[parents[v]]
+            v = parents[v]
+        return v
+    for face in obj.data.polygons:
+        first = root(face.vertices[0])
+        for v in face.vertices[1:]:
+            parents[root(v)] = first
+    components = {}
+    for face in obj.data.polygons:
+        components.setdefault(root(face.vertices[0]), []).append(face.index)
+    obj.data.calc_loop_triangles()
+    volumes, degenerate = Counter(), Counter()
+    for tri in obj.data.loop_triangles:
+        a, b, c = [obj.data.vertices[v].co for v in tri.vertices]
+        key = root(tri.vertices[0])
+        volumes[key] += a.dot(b.cross(c)) / 6
+        if (b-a).cross(c-a).length < 1e-7:
+            degenerate[key] += 1
+    errors = []
+    for key, indices in components.items():
+        if all(i in p.up for i in indices):
+            continue
+        edges = Counter()
+        for i in indices:
+            vs = list(obj.data.polygons[i].vertices)
+            for a, b in zip(vs, vs[1:]+vs[:1]):
+                edges[tuple(sorted((a, b)))] += 1
+        tag = p.ftag[indices[0]]
+        bad = sum(count != 2 for count in edges.values())
+        if bad:
+            errors.append(f"open/nonmanifold {tag}: {bad} edge(s)")
+        elif volumes[key] <= 0:
+            errors.append(f"inward/flat solid {tag}: volume {volumes[key]:.6f}")
+        if degenerate[key]:
+            errors.append(f"collapsed surface {tag}: {degenerate[key]} triangle(s)")
+    return errors
+
+
 def validate(p, obj, dropped, spec):
     fails, notes = [], []
+    fails.extend(surface_errors(p, obj))
     H = p.H
     xs = [v.co.x for v in obj.data.vertices]
     ys = [v.co.y for v in obj.data.vertices]
@@ -239,6 +289,19 @@ def validate(p, obj, dropped, spec):
     if dropped:
         fails.append(f"{dropped} degenerate face(s)")
     bvh = mesh_bvh(obj)
+    # Cosmetic foliage must not be treated as a movement obstacle.
+    solid_indices = [i for i in range(len(p.faces)) if p.fexport[i] != "foliage"]
+    solid = BVHTree.FromPolygons(p.verts, [p.faces[i] for i in solid_indices])
+    for a, b, floor_z, radius, label in p.clearances:
+        length = math.dist(a, b)
+        for k in range(math.ceil(length) + 1):
+            u = k / max(1, math.ceil(length))
+            z = floor_z[0] + (floor_z[1]-floor_z[0])*u if isinstance(floor_z, tuple) else floor_z
+            point = Vector((a[0]+(b[0]-a[0])*u, a[1]+(b[1]-a[1])*u, z+3))
+            hit = solid.find_nearest(point, min(radius, 2.4))
+            if hit[0] is not None:
+                fails.append(f"blocked {label} by {p.ftag[solid_indices[hit[2]]]} at ({point.x:.1f}, {point.y:.1f}, {point.z:.1f}); surface {tuple(round(v, 1) for v in hit[0])}")
+                break
     if spec["role"] == "BACKDROP":               # scenery: never walked, nothing to connect
         return fails, notes, 0.0, bvh
     mouths, area = walk_graph(p, bvh)
@@ -269,7 +332,7 @@ def validate(p, obj, dropped, spec):
             fails.append(f"sanctum hall/door obstructed at {blocked} sample(s)")
     # GROUNDED (owner 2026-09-27: "all decorative pillars and columns are connected to the ground, not
     # floating"). Every column, tower, waystone, statue, beacon and lantern post registers its footing;
-    # rays cast down from just under its base, at the centre and round its rim, must meet ground within
+    # terrain-only rays cast down from above its base, at the centre and round its rim, must meet ground within
     # 10 studs (a podium can be thick). Owner 2026-09-27 ("the spires are hanging off the edge of the chunk
     # still"): EVERY rim point, at the footing's FULL radius, must land -- 4 of 5 at 0.7r let a beacon's
     # base hang half off an isle. A crag's own base ring sits 2 studs under the floor, so its rays start
@@ -280,8 +343,14 @@ def validate(p, obj, dropped, spec):
         m = 3.0 if fr >= 4 else 0.0
         pts = [(fx, fy)] + [(fx + math.cos(a) * (fr + m), fy + math.sin(a) * (fr + m))
                             for a in [0.3 + k * math.pi / 4 for k in range(8)]]
-        z0 = fz - (3.0 if what == "crag" else 0.6)
-        hits = sum(bvh.ray_cast(Vector((qx, qy, z0)), Vector((0, 0, -1)), 10.0)[0] is not None for qx, qy in pts)
+        # Cast onto terrain only, from ABOVE its surface. Starting inside the
+        # old island's hidden grass slab accepted buried geometry and breaks
+        # completely when the island becomes a proper closed shell.
+        ground_faces = [face for i, face in enumerate(p.faces)
+                        if p.ftag[i] in {"isle", "landing", "mesa", "cloud_floor", "stairs"}
+                        or (p.ftag[i].startswith("es_") and max(p.verts[v].z for v in face) <= fz + 0.1)]
+        ground_bvh = BVHTree.FromPolygons(p.verts, ground_faces)
+        hits = sum(ground_bvh.ray_cast(Vector((qx, qy, fz + 0.25)), Vector((0, 0, -1)), 10.25)[0] is not None for qx, qy in pts)
         if hits < len(pts):
             fails.append(f"overhanging {what} at ({fx:.0f}, {fy:.0f}, {fz:.0f}): ground under {hits}/{len(pts)} of its base")
     det, clips = detached(p)
@@ -351,6 +420,8 @@ def write_chunks_luau(specs, asset_parts):
             for part in asset_parts[s["id"]]:
                 fields = ['AssetKey = "%s"' % part["AssetKey"]]
                 fields += [f"{k} = {_num(part[k])}" for k in ("SizeX", "SizeY", "SizeZ", "OffsetX", "OffsetY", "OffsetZ")]
+                if part.get("CanCollide") is False:
+                    fields.append("CanCollide = false")
                 out.append("\t\t\t{ " + ", ".join(fields) + " },")
             out.append("\t\t},")
         out.append("\t\t-- %s" % s["desc"])
@@ -468,12 +539,15 @@ def split_piece(p, mats, coll, source=None):
         lo = [min(v.co[a] for v in obj.data.vertices) for a in range(3)]
         hi = [max(v.co[a] for v in obj.data.vertices) for a in range(3)]
         centre = [(a + b) / 2 for a, b in zip(lo, hi)]
-        # Baked FBX vertices map Blender (X,Y,Z) to mesh (X,Z,-Y).
-        # Offsets are relative to the full box centre in the imported mesh axes.
+        # Studio's uploaded mesh axes map Blender (X,Y,Z) to (-X,Z,Y).
+        # MeshYawOffset=180 restores authored orientation for the entire assembly.
+        # Offsets must use the SAME imported axes as the individual mesh geometry.
         parts.append(dict(AssetKey="ES_CHUNK_" + name[3:],
                           SizeX=hi[0]-lo[0], SizeY=hi[2]-lo[2], SizeZ=hi[1]-lo[1],
-                          OffsetX=centre[0], OffsetY=centre[2]-(G.KEEL_BOTTOM+G.CROWN_TOP)/2,
-                          OffsetZ=-centre[1], Triangles=len(obj.data.loop_triangles), Object=name))
+                          OffsetX=-centre[0], OffsetY=centre[2]-(G.KEEL_BOTTOM+G.CROWN_TOP)/2,
+                          OffsetZ=centre[1], Triangles=len(obj.data.loop_triangles), Object=name))
+        if group == "foliage":
+            parts[-1]["CanCollide"] = False
         objects.append(obj)
         all_indices.extend(indices)
     assert sorted(all_indices) == list(range(len(faces))), f"{p.name}: missing or duplicated faces"
@@ -515,6 +589,7 @@ def render_setup():
     sh.show_shadows = True
     sh.shadow_intensity = 0.35
     sh.show_cavity = True
+    sh.show_backface_culling = True
     sh.cavity_type = "BOTH"
     sh.background_type = "WORLD"
     s.world.color = (0.66, 0.78, 0.92)

@@ -9,6 +9,7 @@ local AmbienceCore = require(script.Parent.Parent.Core.AmbienceCore)
 local PropCore = require(script.Parent.Parent.Core.PropCore)
 local FixtureCore = require(script.Parent.Parent.Core.FixtureCore)
 local AnimationCore = require(script.Parent.Parent.Core.AnimationCore)
+local ChunkRuntimeCore = require(script.Parent.Parent.Core.ChunkRuntimeCore)
 
 local Schema = {}
 
@@ -323,7 +324,7 @@ end
 --- manifest. A chunk naming a missing asset is the same class of bug as an
 --- onboarding sequence naming a missing world -- catch it at boot.
 function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boolean, { string })
-	local errors = {}
+	local errors = ChunkRuntimeCore.validate(chunks, manifest)
 	local VALID_ROLES = {
 		ENTRY = true,
 		PATH = true,
@@ -341,6 +342,12 @@ function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boole
 
 	for key, chunk in chunks do
 		local label = `Chunk '{key}'`
+		if chunk.Motion ~= nil and (chunk.Motion ~= "Float" or chunk.Role ~= "BACKDROP") then
+			table.insert(
+				errors,
+				`{label}: Motion Float is only valid on decorative BACKDROP chunks`
+			)
+		end
 
 		if chunk.Id ~= key then
 			table.insert(
@@ -432,6 +439,9 @@ function Schema.validateChunks(chunks: { [string]: any }, manifest: any): (boole
 					if type(part) ~= "table" then
 						table.insert(errors, `{partLabel}: must be a table`)
 						continue
+					end
+					if part.CanCollide ~= nil and type(part.CanCollide) ~= "boolean" then
+						table.insert(errors, `{partLabel}: CanCollide must be a boolean`)
 					end
 					if type(part.AssetKey) ~= "string" or not manifest.exists(part.AssetKey) then
 						table.insert(errors, `{partLabel}: AssetKey must exist in the manifest`)
@@ -1142,7 +1152,7 @@ function Schema.validateProps(props: any, chunks: any, worlds: any): (boolean, {
 			library[name] = true
 		end
 		for chunkId, rows in set.Placements or {} do
-			local chunk = chunks[chunkId]
+			local chunk = ChunkRuntimeCore.lookup(chunks, chunkId)
 			if chunk == nil then
 				table.insert(errors, `{label}: placements for unknown chunk '{chunkId}'`)
 			elseif chunk.WorldId ~= worldId then
@@ -1219,7 +1229,7 @@ function Schema.validateFixtures(fixtures: any, chunks: any, worlds: any): (bool
 			library[name] = true
 		end
 		for chunkId, rows in set.Placements or {} do
-			local chunk = chunks[chunkId]
+			local chunk = ChunkRuntimeCore.lookup(chunks, chunkId)
 			if chunk == nil then
 				table.insert(errors, `{label}: placements for unknown chunk '{chunkId}'`)
 			elseif chunk.WorldId ~= worldId then
@@ -1228,6 +1238,9 @@ function Schema.validateFixtures(fixtures: any, chunks: any, worlds: any): (bool
 			for i, row in rows do
 				local at = `{label}.{chunkId}[{i}]`
 				local roles = FixtureCore.KINDS[row.Kind]
+				if row.RequiredStageState ~= nil and row.RequiredStageState ~= "BossDefeated" then
+					table.insert(errors, at .. ": invalid RequiredStageState")
+				end
 				if not roles then
 					table.insert(errors, `{at}: unknown fixture kind '{tostring(row.Kind)}'`)
 					continue

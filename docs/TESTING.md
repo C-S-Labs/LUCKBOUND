@@ -32,17 +32,26 @@ scan (`*_Final`, `*_NEW`, `*_FIXED`, …) from build spec P1-12.
 
 **Chunk loader compatibility:** `python tests/check_chunk_loader.py` (Luau on PATH; `--luau` accepts
 an explicit executable). CI runs this against the real current loader and the pre-multipart revision
-read from git. It covers every existing VV/SC single-mesh chunk and single-mesh ES chunk at all four
+read from git. It covers every VV/SC/ES content entry through the single-mesh path at all four
 yaws, normal/catalogue mode, loaded/placeholder/failed/recoloured assets, repeated cached placements,
 and entry/return positions. Multipart assembly placement and destruction after partial load failure
 have separate checks. The controlled API shim implements yaw transforms, parenting and pivots;
 its raycast results are scripted inputs. It does **not** prove collision cooking or physical walkability.
 
 **Ethereal Scape exports:** run Blender headlessly with `--python tests/validate_ethereal_exports.py`
-after regenerating the kit. This checks splitting above 10k, real FBX budgets, names, vertex colours,
+after regenerating the kit. This checks closed/outward prop surfaces, rejection of a missing island
+face, splitting above 10k, real FBX budgets, names, vertex colours,
 unit scale and multipart alignment metadata. In Studio, import all named components, verify the
 Sanctum at four yaws and walk its doors/floor; also roll VV and SC to confirm existing collisions,
 socket joins and entry/return placement before retiring old imports.
+
+**ES repair reinspection (2026-09-30):** reimport the complete 71-mesh structure and 13-prop
+library from the polish worktree; export only those new imported Models to its canonical RBXMX
+paths, then sync chunk IDs. Until then, new component keys are placeholders and several chunks
+will intentionally fall back to blockout. Run `/roll ETHEREAL_SCAPE test` and inspect every island
+from above and below, each bridge end, shrine/hut thresholds, the Reliquary approach, farm rows,
+Sanctum exterior doors and throne. Check that foliage is passable and structures remain solid.
+Then run a normal ES assembly and VV/SC smoke checks. Owner requires this before any PR.
 
 | Group | Tests | The question it answers |
 |---|---|---|

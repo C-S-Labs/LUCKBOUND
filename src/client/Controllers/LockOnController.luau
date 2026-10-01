@@ -79,10 +79,18 @@ local function playerRoot(): BasePart?
 end
 
 --- Nothing solid between the camera and the point?
+local function cameraIgnore(ignore: { Instance }): { Instance }
+	local result = table.clone(ignore)
+	for _, boundary in CollectionService:GetTagged(Constants.NAMES.CHUNK_BOUNDARY_TAG) do
+		table.insert(result, boundary)
+	end
+	return result
+end
+
 local function visible(from: Vector3, to: Vector3, ignore: { Instance }): boolean
 	local params = RaycastParams.new()
 	params.FilterType = Enum.RaycastFilterType.Exclude
-	params.FilterDescendantsInstances = ignore
+	params.FilterDescendantsInstances = cameraIgnore(ignore)
 	return Workspace:Raycast(from, to - from, params) == nil
 end
 
@@ -350,7 +358,7 @@ local function update(dt: number)
 	-- A wall between the shoulder and the camera pulls the camera in.
 	local params = RaycastParams.new()
 	params.FilterType = Enum.RaycastFilterType.Exclude
-	params.FilterDescendantsInstances = ignore
+	params.FilterDescendantsInstances = cameraIgnore(ignore)
 	local hit = Workspace:Raycast(shoulder, wanted - shoulder, params)
 	if hit then
 		local pulled = (hit.Position - shoulder).Magnitude - 0.5

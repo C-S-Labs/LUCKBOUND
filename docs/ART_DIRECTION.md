@@ -2,6 +2,31 @@
 
 How to describe the look so it becomes code, and where authored art plugs in.
 
+Detached ES miniboss arena now uses a 114 × 114 clear combat floor, 60.9-stud ceiling,
+side colonnades connected to roof capitals and six shallow celestial ceiling murals in
+coffer bays. Gold halos/rays and crystal-eye motifs on indigo match the shrine language;
+new detail remains above or outside the fighting space.
+
+Latest ES connector finish: 2-stud lower-corner chamfers form matching socket profiles,
+retaining the flat common bottom and flush seam. Safety walls are now 64 studs high,
+with actual mouth crossings removed; this supersedes earlier 32-stud authoring values.
+
+ES animation assets: mounted light surfaces, portal effects, suspended chandelier and
+tree crowns are separate props with local pivots; retain exact rest positions. Safety
+walls are separate collision-only groups following walkable boundaries with socket mouths
+open. Future boundary visuals animate separately; do not move collision with them.
+
+ES connecting mouths use full-width, full-depth vertical socket faces beneath their
+decks so paired chunks meet flush. Keels taper inward toward their island, with flat
+facets and a restrained 0.22-stud single-segment bevel away from socket seam planes.
+Do not smooth underside normals globally or round the shared joining face.
+
+Ethereal shrine room review (2026-09-30): faceted ivory/gold architecture with restrained
+window tracery, clear central fighting floor and a recessed vault alcove. Portal surfaces,
+light crystals and vault door remain separate animation props; opaque vestibule backing
+hides sky. Preserve owner-authored scene edits. Blender portal emission animation is a
+preview, requiring Roblox controller hookup; no automatic save/export. See ETHEREAL_SCAPE.
+
 ---
 
 ## The approach
@@ -153,6 +178,27 @@ real section before Phase 2 makes worlds enterable.
 
 ## The house style — low poly, one palette
 
+**World-specific revision, owner-directed 2026-09-30:** Ethereal Scape now uses the
+Ascendant as its finish reference: smooth ivory/gold forms, rounded architectural
+edges and sweeping filigree, with deliberately faceted crystals. This supersedes
+the flat-only world treatment below for ES; it does not change the hub. Geometry
+remains economical, with extra segments where silhouettes or edge highlights benefit.
+Keep socket rims and walking surfaces exact. Island undersides and gold terrain skirts
+remain faceted; soften selected edges instead of interpolating every terrain normal.
+Add restrained trim to rounded floors, columns and structures, leaving paths clear.
+The throne uses curved geometry with flat facet shading, fitted arm supports and a seated cushion, with a
+symmetrical faceted crystal eye. Bridge junctions must use fitted deck/support ends,
+not suspended filler wedges. Ground path decals terminate at the complete bridge cap
+boundary, never cover its planks. Floor trim crossing paths, decks or solids is removed;
+glass receives no intersecting shaft trim. Sky Citadel needs a separate matching pass against
+the Winged Sentinel after ES review; VV and other maps remain unchanged.
+
+The owner waived ES triangle budgeting for the edited scene (the chandelier's
+explicit under-10k requirement remains). Reversible ES_ARCH_SOFTEN bevel and
+ES_ARCH_NORMALS modifiers must be evaluated when exporting, preserving vertex
+colours and authored split normals. Recompute final bounds/offsets from evaluated
+meshes and verify Studio rendering/physics before replacing the current exports.
+
 **Owner-directed, 2026-09-17.** Every authored asset in the hub is **low poly
 and flat shaded**, and every asset draws from the one palette below. The hub has
 to read as a single place built by a single hand, not a gallery of pieces that
@@ -164,6 +210,13 @@ This is a *style*, not a budget. A mesh can be cheap and still be wrong here:
 an assembled chunk or temple may exceed that total by using aligned component meshes. Keep a
 mostly low-to-mid poly look, leaning low poly. Spend geometry on silhouettes, readable architecture
 and useful detail. Splitting a mesh does not justify smoothing the whole world or adding surface noise.
+
+**ES Studio repair, 2026-09-30:** terrain tiers share their actual rim vertices and form closed,
+outward-facing shells. Thin roofs and animal surfaces must also be closed; floor inlays alone
+may be single-sided. Check renders with backface culling enabled. Bridge slopes start outside
+the complete rim, doors face the player's approach, and small foliage exports separately with
+collision disabled. Spend extra detail on fluted columns and the ruler's throne, rather than
+more scattered objects. Prayer kites are removed at the owner's request.
 
 | | Low poly | Merely optimised |
 |---|---|---|
@@ -519,3 +572,36 @@ double, which is why the counters were 6 studs tall and everything had to be
 halved. Put an R15 rig next to a counter, a railing and a doorway in Blender
 before exporting. If the head clears the counter and the railing is at the
 waist, the scale is right and `Prefab.Scale` can stay at 1.0.
+
+### ES/SC cloud and wind review — 2026-10-01
+
+Use current Crossroads authored cloud banks sparsely in both sky biomes, with markedly
+varied depths under the islands. ES keeps pearl/lavender afternoon; SC keeps gold sunrise.
+Crown wind varies gently by leaf group, with small gusts; decorative islands bob as complete
+assemblies, preserving attachments. Skyrays face their travel tangent and radial movement
+stays slower than forward flight. This is a Studio tuning pass, not final atmosphere acceptance.
+
+### ES twilight revision — 2026-10-01
+
+Owner supersedes the bright afternoon: BASE now uses18.35 orange-purple twilight,
+brightness2 and exposure-0.18. Apricot horizon, violet decay/shadows and muted lavender
+cloud undersides; ambient fill preserves readable combat/interiors. Prior afternoon notes
+are historical. SC sunrise and Crossroads remain unchanged. Overhead accents are proposals
+only: high violet wisps, a distant celestial halo or sparse constellation points.
+
+### ES upper-air ribbons — 2026-10-01
+
+Studio prototype implemented as client Beams through optional Environment.Ribbons.
+Soft violet-to-rose smoke-textured veils at650–950studs,700–1500studs long,45–95wide;
+map-wide sectors extend600studs beyond layout bounds. Each fades through its55–90s cycle,
+then relocates invisibly; ends taper in transparency. Gentle lateral drift32studs/ripple14.
+Count2–8 by graphics quality, capped8,12segments,10Hz update. No imported asset, collision
+or particles. Current opacity0.16 remains a Studio tuning value. Review with twilight;
+SC/Crossroads unchanged.
+
+### ES readability tuning — 2026-10-01
+
+Twilight18.35 retained. Lifted shadow fill/exposure(-0.06), density0.31/haze1.6, gentle
+purple grade(246,232,255) and contrast0.075. Ribbons lowered420–620studs, width80–135,
+length1000–2000, opacity0.30 to improve visibility; same2–8beam/10Hz budget. Studio retest
+pending; supersedes previous visibility values, with no new assets or imports.

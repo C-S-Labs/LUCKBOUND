@@ -31,6 +31,7 @@ local Workspace = game:GetService("Workspace")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local ChunkCore = require(Root.Util.ChunkCore)
+local ChunkRuntimeCore = require(Root.Core.ChunkRuntimeCore)
 local Chunks = require(Root.Content.Chunks)
 local Fixtures = require(Root.Content.Fixtures)
 local FixtureCore = require(Root.Core.FixtureCore)
@@ -303,7 +304,7 @@ local function watchArena(
 	onReached: () -> (),
 	members: { [number]: boolean }
 )
-	local chunk = Chunks[arena:GetAttribute("ChunkId") :: string]
+	local chunk = ChunkRuntimeCore.lookup(Chunks, arena:GetAttribute("ChunkId") :: string)
 	local centre = arena:GetAttribute("Centre")
 	if not chunk or typeof(centre) ~= "Vector3" then
 		return
@@ -319,6 +320,7 @@ local function watchArena(
 					if
 						Vector2.new(d.X, d.Z).Magnitude <= radius
 						and d.Y > -GameConfig.Loot.ArenaBelowStuds
+						and d.Y < GameConfig.Loot.ArenaBelowStuds
 					then
 						onReached()
 						return
@@ -362,7 +364,7 @@ function LootSystem.attach(stage: Instance, worldId: string, members: { [number]
 			continue
 		end
 		local layout = CFrame.new(centre) * CFrame.Angles(0, ChunkCore.yawRadians(yaw), 0)
-		local chunk = Chunks[chunkId]
+		local chunk = ChunkRuntimeCore.lookup(Chunks, chunkId)
 		local fix = CFrame.Angles(0, ChunkCore.yawRadians((chunk and chunk.MeshYawOffset) or 0), 0)
 		for _, row in rows do
 			local model = buildFixture(row, layout, fix, lib :: Instance, missing, folder)
@@ -381,7 +383,14 @@ function LootSystem.attach(stage: Instance, worldId: string, members: { [number]
 				prompt.Triggered:Connect(function(player)
 					-- A chest's Opened is the party's; a vault's is per player
 					-- (openVault keeps it).
-					if model:GetAttribute("Opened") or not members[player.UserId] then
+					if
+						model:GetAttribute("Opened")
+						or not members[player.UserId]
+						or (
+							row.RequiredStageState
+							and stage:GetAttribute(row.RequiredStageState) ~= true
+						)
+					then
 						return
 					end
 					if not standingNear(player, model.PrimaryPart :: BasePart) then
@@ -410,13 +419,15 @@ function LootSystem.attach(stage: Instance, worldId: string, members: { [number]
 		warn(`[LootSystem] fixture meshes missing from the library: {table.concat(names, ", ")}`)
 	end
 
+	local function completeBiomeBoss()
+		stage:SetAttribute("BossDefeated", true)
+		bossDefeated(worldId, members)
+	end
 	table.insert(maps, {
 		Stage = stage,
 		WorldId = worldId,
 		Members = members,
-		Boss = function()
-			bossDefeated(worldId, members)
-		end,
+		Boss = completeBiomeBoss,
 	})
 	for i = #maps, 1, -1 do
 		if maps[i].Stage.Parent == nil then
@@ -429,7 +440,7 @@ function LootSystem.attach(stage: Instance, worldId: string, members: { [number]
 		watchArena(stage, arena :: Instance, function()
 			if not done then
 				done = true
-				bossDefeated(worldId, members)
+				completeBiomeBoss()
 			end
 		end, members)
 	end

@@ -25,6 +25,10 @@ local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
+local Root = ReplicatedStorage:WaitForChild("Luckbound")
+local AmbienceCore = require(Root.Core.AmbienceCore)
+local GameConfig = require(Root.Core.GameConfig)
+
 local AtmosphereEffects = {}
 
 -- Per scenario: the light on the spires, the flyers, and how they behave.
@@ -820,6 +824,114 @@ local function buildAurora(au: any, root: Instance, map: Map)
 	)
 end
 
+-- Recycled beam veils: no particles, physics, per-frame allocation or map-sized mesh.
+local function buildRibbons(def: any, root: Instance, map: Map, rng: Random)
+	if type(def) ~= "table" then
+		return
+	end
+	local budget = GameConfig.Ambience.Ribbons
+	local ok, level = pcall(function()
+		return (UserSettings():GetService("UserGameSettings") :: any).SavedQualityLevel.Value
+	end)
+	local quality = AmbienceCore.qualityScale(if ok then level else 0, GameConfig.Ambience)
+	local count = math.min(budget.MaxCount, AmbienceCore.scaledCount(def.Count, quality))
+	local veils = {}
+	local function relocate(v: any)
+		local angle = rng:NextNumber(0, math.pi * 2)
+		local columns = math.ceil(math.sqrt(count))
+		local rows = math.ceil(count / columns)
+		local slot = (v.Index + v.Cycle - 1) % count
+		local cellX, cellZ = slot % columns, math.floor(slot / columns)
+		local minX, minZ = map.Min.X - def.Margin, map.Min.Z - def.Margin
+		local width = (map.Max.X - map.Min.X + def.Margin * 2) / columns
+		local depth = (map.Max.Z - map.Min.Z + def.Margin * 2) / rows
+		v.Base = Vector3.new(
+			minX + (cellX + rng:NextNumber(0.15, 0.85)) * width,
+			map.Floor + rng:NextNumber(def.HeightMin, def.HeightMax),
+			minZ + (cellZ + rng:NextNumber(0.15, 0.85)) * depth
+		)
+		v.Direction = Vector3.new(math.cos(angle), 0, math.sin(angle))
+		v.Side = Vector3.new(-math.sin(angle), 0, math.cos(angle))
+		v.Rotation = CFrame.Angles(0, -angle + math.pi / 2, 0)
+		v.Length = rng:NextNumber(def.LengthMin, def.LengthMax)
+		v.Width = rng:NextNumber(def.WidthMin, def.WidthMax)
+		v.Phase = rng:NextNumber(0, math.pi * 2)
+		v.Beam.Width0, v.Beam.Width1 = v.Width, v.Width * 0.6
+	end
+	for index = 1, count do
+		local p0, a0 = anchorAt(root, map.Centre)
+		local p1, a1 = anchorAt(root, map.Centre)
+		p0.Name, p1.Name = "RibbonAnchor", "RibbonAnchor"
+		local b = beam(a0, a1, {
+			Name = "SkyRibbon",
+			Segments = budget.Segments,
+			Texture = def.Texture,
+			TextureMode = Enum.TextureMode.Stretch,
+			TextureSpeed = 0,
+			Color = ColorSequence.new(def.Color, def.Tip),
+			Transparency = NumberSequence.new(1),
+			Enabled = false,
+		})
+		local period = rng:NextNumber(def.PeriodMin, def.PeriodMax)
+		local v = {
+			Part0 = p0,
+			Part1 = p1,
+			Beam = b,
+			Period = period,
+			Elapsed = rng:NextNumber(0, period),
+			Cycle = 0,
+			Index = index,
+		}
+		relocate(v)
+		table.insert(veils, v)
+	end
+	local pending = 0
+	table.insert(
+		conns,
+		RunService.Heartbeat:Connect(function(dt)
+			pending += dt
+			if pending < 1 / budget.UpdateHz then
+				return
+			end
+			local elapsed = pending
+			pending = 0
+			for _, v in veils do
+				v.Elapsed += elapsed
+				if v.Elapsed >= v.Period then
+					v.Elapsed %= v.Period
+					v.Cycle += 1
+					relocate(v) -- the preceding tail is fully invisible
+				end
+				local f = v.Elapsed / v.Period
+				local alpha =
+					AmbienceCore.ribbonOpacity(f, def.ActiveFraction, def.FadeFraction, def.Opacity)
+				v.Beam.Enabled = alpha > 0
+				if alpha > 0 then
+					local wave = f * math.pi * 2 + v.Phase
+					local centre = v.Base
+						+ v.Side * (def.Drift * math.sin(wave))
+						+ Vector3.new(0, def.Ripple * math.sin(wave * 1.3), 0)
+					v.Part0.CFrame = CFrame.new(centre - v.Direction * v.Length * 0.5) * v.Rotation
+					v.Part1.CFrame = CFrame.new(
+						centre
+							+ v.Direction * v.Length * 0.5
+							+ Vector3.new(0, def.Ripple * math.sin(wave + 1), 0)
+					) * v.Rotation
+					v.Beam.CurveSize0 = v.Length * 0.2
+					v.Beam.CurveSize1 = -v.Length * 0.2
+					v.Beam.Transparency = NumberSequence.new({
+						NumberSequenceKeypoint.new(0, 1),
+						NumberSequenceKeypoint.new(0.2, 1 - alpha),
+						NumberSequenceKeypoint.new(0.5, 1 - alpha),
+						NumberSequenceKeypoint.new(0.8, 1 - alpha),
+						NumberSequenceKeypoint.new(1, 1),
+					})
+				end
+			end
+		end)
+	)
+end
+
 local function buildDebris(db: any, root: Instance, map: Map, rng: Random)
 	if type(db) ~= "table" then
 		return
@@ -946,6 +1058,7 @@ function AtmosphereEffects.enter(
 	buildDome(env.Dome, root, map)
 	buildPlumes(env.Plumes, root, map, rng)
 	buildAurora(env.Aurora, root, map)
+	buildRibbons(env.Ribbons, root, map, rng)
 	buildDebris(env.Debris, root, map, rng)
 	buildCanopy(env.Canopy, root, map)
 	applyTint(env, map)

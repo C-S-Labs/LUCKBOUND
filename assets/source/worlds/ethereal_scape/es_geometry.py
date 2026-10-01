@@ -75,6 +75,8 @@ class Piece:
         self.up = set()                    # single-sided decals: force +Z
         self.islands = []                  # (cx, cy, r, bottom_z, top_z) for float clearance
         self.corridors = []                # (ax, ay, bx, by, half_width): bridges and paths
+        self.clearances = []               # (a, b, z or (za,zb), radius, label): usable approaches
+        self.bridge_posts = set()          # shared endpoints get one railing post
         self.keepout = []                  # (x, y, r): every big feature's footprint; scatter never lands in one
         self.holes = []                    # (x, y, r): open drops in the cloud floor
         self.props = []                    # placed ambient props (convention 6)
@@ -96,7 +98,10 @@ class Piece:
         self.fmat.extend(list(mat) if isinstance(mat, (list, tuple)) else [mat] * len(faces))
         self.ftag.extend([caller_tag()] * len(faces))
         self.fshell.extend([self._shell] * len(faces))
-        self.fexport.extend([self.export_group] * len(faces))
+        tag = caller_tag()
+        # These are cosmetic ground-cover, never building or terrain geometry.
+        group = "foliage" if tag in {"mushroom", "blossoms", "grass_tufts"} else self.export_group
+        self.fexport.extend([group] * len(faces))
         if not self._grouped:              # inside group(): every add shares one shell id
             self._shell += 1
         return base

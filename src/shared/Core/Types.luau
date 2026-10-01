@@ -56,10 +56,34 @@ export type Environment = {
 	-- CloudSea; set it below the kit's deepest keel so clouds never touch the map.
 	CloudCeiling: number?,
 	-- Faint particles drifting past the camera. Rate scales with quality.
+	Ribbons: {
+		Count: number,
+		HeightMin: number,
+		HeightMax: number,
+		Margin: number,
+		LengthMin: number,
+		LengthMax: number,
+		WidthMin: number,
+		WidthMax: number,
+		PeriodMin: number,
+		PeriodMax: number,
+		ActiveFraction: number,
+		FadeFraction: number,
+		Opacity: number,
+		Drift: number,
+		Ripple: number,
+		Color: Color3,
+		Tip: Color3,
+		Texture: string,
+	}?,
 	Motes: { Rate: number, Lifetime: number, Color: Color3, Size: number, Speed: number }?,
 }
 
 export type CloudLayer = {
+	Meshes: { string }?, -- optional named mesh banks in LuckboundProps
+	VerticalSpread: number?, -- independent vertical scatter, ceiling still enforced
+	Wander: number?, -- bounded lateral drift variation in studs
+	WanderPeriod: number?, -- seconds per wander cycle
 	Depth: number, -- studs below the walk plane
 	Count: number, -- puffs at full quality
 	Radius: number, -- half-width of the square the layer paves around the camera
@@ -214,6 +238,8 @@ export type ChunkRole =
 	| "SIDE" -- optional branch, off the critical path
 	| "CAP" -- a dead end authored as one, closing an opening the path left unused
 	| "BOSS" -- exactly one per layout; the destination
+	| "MINIBOSS"
+	| "BACKDROP"
 
 --- A connection point on a chunk. Two sockets may join only if their Kind
 --- matches -- that is what stops a 4-stud footpath opening onto a cliff face.
@@ -233,6 +259,7 @@ export type ChunkSocket = {
 
 export type ChunkMeshPart = {
 	AssetKey: string,
+	CanCollide: boolean?, -- absent means solid; small foliage may opt out
 	SizeX: number,
 	SizeY: number,
 	SizeZ: number,
@@ -242,6 +269,9 @@ export type ChunkMeshPart = {
 }
 
 export type ChunkDefinition = {
+	Boundary: ChunkBoundary?,
+	Motion: "Float"?, -- decorative BACKDROP only
+	AttachedRooms: { AttachedChunkRoom }?,
 	Id: string,
 	WorldId: string,
 	Role: ChunkRole,
@@ -278,6 +308,37 @@ export type ChunkDefinition = {
 	-- legible to a human. Reading them from code would turn authoring notes
 	-- into behaviour, which is exactly what Supports exists to prevent.
 	Tags: { string }?,
+}
+
+export type ChunkBoundary = {
+	Height: number,
+	Thickness: number,
+	Segments: { { A: { number }, B: { number } } }, -- layout frame; socket mouths stay open
+}
+
+export type AttachedChunkRoom = {
+	Id: string,
+	WorldId: string,
+	Role: "MINIBOSS",
+	Offset: { number },
+	AssetKey: string,
+	MeshParts: { ChunkMeshPart },
+	SizeX: number,
+	SizeY: number,
+	SizeZ: number,
+	GroundOffsetY: number,
+	MeshYawOffset: number,
+	Sockets: { ChunkSocket },
+	Boundary: ChunkBoundary?,
+	Portal: {
+		SourceP: { number },
+		SourceS: { number },
+		SourceArrival: { number },
+		RoomP: { number },
+		RoomS: { number },
+		RoomArrival: { number },
+	},
+	Gate: { Mesh: string, P: { number }, S: { number }, TravelY: number, RequiredStageState: string }?,
 }
 
 --- A SCENARIO -- what happens inside a chunk, as opposed to what the chunk is.

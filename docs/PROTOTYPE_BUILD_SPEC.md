@@ -1159,6 +1159,28 @@ With a blueprint, after the critical path (ENTRY → `MapPathLength` pieces → 
 
 ### Roles added
 
+**Owner-directed runtime extension, 2026-09-30:** a chunk may declare `Boundary =
+{ Height, Thickness, Segments = { { A = number[3], B = number[3] } } }` in its walk-plane
+layout frame. The loader rotates/translates transparent collision boxes with the parent;
+socket mouths stay open. Camera queries exclude tagged `LuckboundChunkBoundary` folders.
+Absent data leaves legacy loading unchanged; every newly authored playable chunk must
+include boundaries, and future animated identification is separate noncollidable art.
+
+`AttachedRooms` is an optional array of detached MINIBOSS room definitions: `Id`,
+`WorldId`, `Role`, `Offset`, mesh bounds/parts and sockets, plus `Portal` containing
+`SourceP/SourceS/SourceArrival` (parent frame) and `RoomP/RoomS/RoomArrival` (room frame).
+Rooms are not registered selection candidates and cannot nest. Each placed parent creates
+its own room/index and reciprocal touch triggers; no parent means no room. Both are destroyed
+with the expedition. Server transit validates membership, health, root position and cooldown,
+requests destination streaming, rechecks state and clears momentum before moving the character.
+Optional `Gate = { Mesh, P, S, TravelY, RequiredStageState = "BossDefeated" }` uses the imported
+prop library and slides upward when that expedition's biome boss completes. Fixture rows may
+also require this stage state. Biome boss completion opens the room even if no key drops;
+only biome bosses roll vault keys, and existing per-player key consumption still gates the chest.
+Miniboss completion grants neither this key nor this gate state. No enemy spawning is opened here.
+All tunables live in `GameConfig.ChunkRuntime`; source positions are content. Schema validates
+finite geometry, unique room IDs, assets, portal sizes and the gate state. ES is the first consumer.
+
 | Role | Sockets | Supports | Placed by |
 |---|---|---|---|
 | `MINIBOSS` | exactly 1 | required (`MiniBoss`) | step 2, blueprint worlds only |
@@ -1184,6 +1206,11 @@ single-mesh path is unchanged. Present, the loader creates all component meshes 
 and offsets, moves them as one Model and calibrates yaw against the entire assembly. A component
 load failure destroys the partial assembly and uses the whole-chunk blockout. The declared chunk
 bounds, walk plane, sockets and generation rules still apply to the union of the meshes.
+
+**Collision extension, owner-directed Studio repair 2026-09-30:** each mesh record may also
+declare `CanCollide: boolean`. Omitted means true, preserving existing worlds. False is for
+small decorative foliage only; doors, buildings, terrain and bridges remain collidable.
+The loader applies this content flag to the component, never to the whole chunk.
 
 A socket's `OffsetY` has always been honoured by `placeAgainst`; kits may now author rises and descents (Ethereal
 Scape's Skystairs ±24, ascents ±16) and the map climbs and falls with them. The authoring contract is unchanged: every
