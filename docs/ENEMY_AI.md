@@ -237,7 +237,12 @@ Two models, chosen per boss in its moveset data:
 Rules for the meter (all tunable, to be set by simulation like the win-rate bands in §9):
 - Each confirmed hit adds a weighted amount (weapon class, heavy vs light). Draining begins after a short no-hit delay and is **slow, but never so fast that sustained pressure cannot fill it**; sparse hits never stagger the boss.
 - Full meter -> the boss's `Stagger` action and a defined vulnerable window, then the meter resets and a **refractory period** blocks chain-staggering. Later phases raise resistance (threshold, drain, window length) by data.
-- A stagger never cuts through a **transition** or any server invulnerable state, and does not interrupt a damaging active window mid-hit: it lands at the next safe point (after `HitEnd` / at recovery) unless the move's data says it is interruptible during its tell. A parried attack is interrupted immediately.
+- **When a full meter staggers (owner, 2026-09-30):**
+  - Meter fills during a move's **tell** and the move is flagged interruptible in its data: stagger **immediately** (nothing is hurting anyone yet).
+  - Meter fills during a move's **active/hit frames**, or in any non-interruptible part: the stagger becomes **pending**. The boss finishes the move untouched (no mid-swing cancel, so animation never looks broken). Once it has stopped attacking, **the next confirmed player hit triggers the stagger.**
+  - While pending, the meter holds full (no drain). A pending stagger expires after a data-set time so it cannot linger forever, and then the meter resumes draining.
+  - A boss never staggers during a **transition** or any server invulnerable state; a pending stagger carries through and waits.
+  - A **parried** attack is interrupted immediately, as before.
 - A stagger cancels the attack's owned cosmetics (framework/contract cleanup rules) and lowers glow; it grants a punish window, not a free infinite combo (refractory).
 - The three-attack limit and 18 f punish minimum are **unchanged**; stagger is an extra, earned opening on top of them. Difficulty comes from the boss's pressure, tighter parry windows and phase resistance, not from removing openings.
 - A boss's own `Parry Stance` / `Riposte` moves (Sentinel) are boss attacks, separate from this player mechanic.

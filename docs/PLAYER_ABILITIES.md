@@ -427,3 +427,22 @@ in place so nothing built now has to move.
 that deal damage, knockback. A lunge is a weapon move that locks with
 `SpeedMultiplier` and applies its own push through the combat layer when it
 opens (build spec §7.6).
+
+## 7. Planned: player combat, the next major system (owner, 2026-09-30)
+
+**Player combat is the next major system to build.** It comes after the four starter weapon types are drafted and after a small refinement of player movement (owner to do first). Parry and boss stagger are designed in `ENEMY_AI.md` §10.1 and are built here, per weapon.
+
+**Starter (temporary) weapon types, enough for a playtest:**
+
+| Type | Notes |
+|---|---|
+| Sword | one-handed baseline |
+| Greatsword | two-handed, roots and commits (§6) |
+| Staff | the Ascendant's Sanctum Staff is this class |
+| Spear | the Winged Sentinel's Aether Lance is, technically, this class |
+
+The wider list in §6.1 (Dagger, Hammer, Bow, Gauntlets) is deferred; the pool expands after the playtest. Each type is a data file (`Content/Animations/Stances/<TYPE>.luau`, `ENEMY_AI.md` §4.1).
+
+**Parry and block, per weapon:** each weapon type needs its **own block/parry animation** and its own parry window and stamina cost, all data. A successful parry gives a short opening (`ENEMY_AI.md` §10.1); against large bosses, parrying ranged attacks does not stagger them. Stagger is hit-triggered and its meter is internal, never shown to the player.
+
+**Order:** draft the four weapons (moves, stance clips, block animation, numbers) -> refine movement -> build the combat system -> integrate parry per weapon. Anything needing a new remote goes through build spec §4 first, and a spec amendment must open the work (build spec §7).

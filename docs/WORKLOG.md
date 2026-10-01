@@ -36,6 +36,21 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 210 — 2026-09-30 — Stagger timing and player-combat roadmap (docs only)
+**Merged:** none yet   **Tests:** docs only   **Branch:** agent/astral-boss-forms (PR #152)
+
+### Done
+- `ENEMY_AI.md` §10.1: stagger timing is now the owner's rule: immediate during an interruptible tell; otherwise pending until the boss stops attacking, then triggered by the next confirmed player hit; meter holds while pending, with an expiry.
+- `PLAYER_ABILITIES.md` §7 and `DEVELOPMENT_PLAN.md`: player combat is the next major system; four starter weapons (sword, greatsword, staff, spear); per-weapon block/parry animation; movement refinement first.
+
+### Next
+Draft the four starter weapons, then movement refinement, then a build-spec amendment to open combat.
+
+### Leftovers
+None created.
+
+---
+
 ## Session 209 — 2026-09-30 — Parry/stagger design; Final Phase keeps the contract (docs only)
 **Merged:** none yet   **Tests:** docs only   **Branch:** agent/astral-boss-forms (PR #152)
 

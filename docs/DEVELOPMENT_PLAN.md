@@ -66,6 +66,8 @@ directly.
 
 ## 3. The critical path to a playtest
 
+> **2026-09-30 (owner): player combat is the next major system**, after the four starter weapons (sword, greatsword, staff, spear) are drafted and player movement is lightly refined. Parry and boss stagger are built into it per weapon. Details: `PLAYER_ABILITIES.md` §7, `ENEMY_AI.md` §10.1.
+
 Five phases. **Each has an exit gate, and the gate is a thing you can check,
 not a feeling.** Sizes are rough: S = a session, M = a few, L = a week or more.
 
