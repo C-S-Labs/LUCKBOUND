@@ -23,10 +23,10 @@ Long source plan, by section only: `docs/design/boss_plans/ASCENDANT_SENTINEL_AN
 `ROSTER.md`'s status table was corrected 2026-09-30 (basics scripted; verify each in Blender before claiming "built"). None of this is imported in Studio yet, and nothing spawns in gameplay (`EnemyDef` + services wait for the owner's OK).
 
 ## The Ascendant: hard guard rails
-- **`assets/export/enemies/ethereal_scape/TheAscendant_fixed.blend` (4.8 MB, saved 2026-09-28) is the owner's newer hand-edited scene, added to the repo 2026-09-30.** It differs greatly in size from the older `TheAscendant.blend` (525 KB). Treat `_fixed` as the likely authoritative mesh, but verify (open it, compare rig/meshes/exported appearance) and confirm with the owner before any export. Its contents were not inspected when it was committed.
+- **`assets/export/enemies/ethereal_scape/TheAscendant_fixed.blend` (4.8 MB, saved 2026-09-28) is the owner's newer hand-edited scene, added to the repo 2026-09-30.** It differs greatly in size from the older `TheAscendant.blend` (525 KB). **Owner confirmed 2026-09-30: the larger `TheAscendant_fixed.blend` is the authoritative Ascendant mesh.** Its contents were not inspected when it was committed, so still open it and audit it (work order §1) before exporting; the older `TheAscendant.blend` is superseded.
 - **The owner's updated Ascendant spec (extra rigging and joint properties) may still be coming.** Do not export or rebuild the Ascendant mesh or rig until the owner confirms which file is authoritative; then reconcile it against the work order and update the work order first.
 - The shipped FBXs come from the owner's **hand-edited** `TheAscendant.blend` (chest/centre crystal adjusted, `BreakawayGlow` removed). **Never run a full scripted rebuild/export over it** and never re-add `BreakawayGlow`. Locate the authoritative `.blend` (and any `_fixed`), compare, and add non-destructively.
-- The owner's local checkout still has **uncommitted** edits to `ES_STRUCTURE.rbxmx` / `ES_PROP_LIBRARY.rbxmx` (not part of this work).
+- ES world/chunk edits (`ES_STRUCTURE.rbxmx`, `ES_PROP_LIBRARY.rbxmx`) are being implemented in a separate PR; do not touch them here.
 - Do not commit `assets/rbxm/prefabs/HUB_SKY.rbxmx` changes (owner's local edit).
 
 ## Next steps, in order
@@ -43,7 +43,7 @@ Long source plan, by section only: `docs/design/boss_plans/ASCENDANT_SENTINEL_AN
 - Three-attack limit and 18 f punish stay everywhere (owner, 2026-09-30). Stagger is hit-triggered with a hidden meter (`ENEMY_AI.md` §10.1).
 - Plan timings, budgets and move variants are proposals for owner review; no combat rebalance in an animation task.
 - Open stale prose to fix when convenient: ASCENDANT_MOVESET "only ranged move" line.
-- The owner's separately announced updated Ascendant spec/mesh with extra rigging/joint properties may be the `_fixed` file or a later push; ask.
+- The owner's updated Ascendant spec (extra rigging/joint properties) may still arrive separately; reconcile it against `_fixed` when it does.
 
 ## Leftovers (do not delete yet)
 Old moveset sections describing the horizontal Reap and melee-first roster stay until the roster is reconciled with the owner.
