@@ -1,0 +1,25 @@
+{
+  "source": "E:\\BlenderAIProjects\\Projects\\VerdantValley_CliffPassage_SeparateCollisionDeck.blend",
+  "source_sha256": "dbeb1a359f7f1460bc9f4b2f7dcc39bf7a1f189d5af09f1db4520c4aad11005d",
+  "chunk": "chunk_path_cliff_passage",
+  "model": "VV_PATH_CLIFF_PASSAGE_COLLISION_MERGED",
+  "floor_tiles": 64,
+  "barriers": 2,
+  "parts_after_marker_removal": 66,
+  "floor_bounds_xy": [
+    -128,
+    128,
+    -32,
+    32
+  ],
+  "barrier_centres_y": [
+    -30,
+    30
+  ],
+  "barrier_height": [
+    -8,
+    52
+  ],
+  "detached_visual_components_excluded": 174,
+  "fbx": "assets/export/worlds/verdant_valley/cliff_passage_collision/path_cliff_passage_walk_collision.fbx"
+}

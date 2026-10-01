@@ -1,0 +1,374 @@
+[
+  {
+    "name": "\uc068\u6b9fE",
+    "name_codepoints": [
+      "U+C068",
+      "U+6B9F",
+      "U+0045"
+    ],
+    "created_utc": "2026-09-29T05:02:45.658768+00:00",
+    "files": 0,
+    "tree": [
+      ".thumbnails",
+      ".thumbnails\\fail",
+      ".thumbnails\\large",
+      ".thumbnails\\fail\\blender"
+    ],
+    "nearest_launch_utc": "2026-09-29T05:02:44.490Z",
+    "seconds_after_launch": 1.169,
+    "session": "rollout-2026-09-29T00-56-44-01a0eb85-b903-7d20-ab97-7fd734cb75e3.jsonl",
+    "launch": "const r=await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_CliffPassage_SeparateCollisionDeck.blend' --python 'assets/source/worlds/verdant_valley/smooth_cliff_passage_lips.py'\",\"workdir\":\"C:\\\\Users\\\\jhpel\\\\LUCKBOUND\",\"yield_time_ms\":30000,\"max_output_tokens\":1800}); text(r);\n",
+    "preceding_launch_utc": "2026-09-29T05:02:44.490Z",
+    "seconds_after_preceding_launch": 1.169,
+    "preceding_session": "rollout-2026-09-29T00-56-44-01a0eb85-b903-7d20-ab97-7fd734cb75e3.jsonl",
+    "preceding_launch": "const r=await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_CliffPassage_SeparateCollisionDeck.blend' --python 'assets/source/worlds/verdant_valley/smooth_cliff_passage_lips.py'\",\"workdir\":\"C:\\\\Users\\\\jhpel\\\\LUCKBOUND\",\"yield_time_ms\":30000,\"max_output_tokens\":1800}); text(r);\n",
+    "attribution": "Timing correlation only; nearest record may be a later launch while the preceding job is running. No syscall trace."
+  },
+  {
+    "name": "\ubdc8\u14ffh",
+    "name_codepoints": [
+      "U+BDC8",
+      "U+14FF",
+      "U+0068"
+    ],
+    "created_utc": "2026-09-29T06:34:19.813629+00:00",
+    "files": 0,
+    "tree": [
+      ".thumbnails",
+      ".thumbnails\\fail",
+      ".thumbnails\\large",
+      ".thumbnails\\fail\\blender"
+    ],
+    "nearest_launch_utc": "2026-09-29T06:34:17.774Z",
+    "seconds_after_launch": 2.04,
+    "session": "rollout-2026-09-29T02-20-43-01a0ebd2-9b43-7892-a8d3-249a30abd91d.jsonl",
+    "launch": "const r=await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_CliffPassage_SeparateCollisionDeck.blend' --python assets/source/worlds/verdant_valley/fit_cliff_passage_top.py | Select-String 'CLIFF_TOP|Error|Traceback|Saved|Export finished|RuntimeError'\",\"workdir\":\"C:\\\\Users\\\\jhpel\\\\LUCKBOUND\",\"yield_time_ms\":30000,\"max_output_tokens\":1200});text(r.output);\n",
+    "preceding_launch_utc": "2026-09-29T06:34:17.774Z",
+    "seconds_after_preceding_launch": 2.04,
+    "preceding_session": "rollout-2026-09-29T02-20-43-01a0ebd2-9b43-7892-a8d3-249a30abd91d.jsonl",
+    "preceding_launch": "const r=await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_CliffPassage_SeparateCollisionDeck.blend' --python assets/source/worlds/verdant_valley/fit_cliff_passage_top.py | Select-String 'CLIFF_TOP|Error|Traceback|Saved|Export finished|RuntimeError'\",\"workdir\":\"C:\\\\Users\\\\jhpel\\\\LUCKBOUND\",\"yield_time_ms\":30000,\"max_output_tokens\":1200});text(r.output);\n",
+    "attribution": "Timing correlation only; nearest record may be a later launch while the preceding job is running. No syscall trace."
+  },
+  {
+    "name": "\uc0a8\u065fG",
+    "name_codepoints": [
+      "U+C0A8",
+      "U+065F",
+      "U+0047"
+    ],
+    "created_utc": "2026-09-29T06:35:23.461938+00:00",
+    "files": 0,
+    "tree": [
+      ".thumbnails",
+      ".thumbnails\\fail",
+      ".thumbnails\\large",
+      ".thumbnails\\fail\\blender"
+    ],
+    "nearest_launch_utc": "2026-09-29T06:35:21.471Z",
+    "seconds_after_launch": 1.991,
+    "session": "rollout-2026-09-29T02-20-43-01a0ebd2-9b43-7892-a8d3-249a30abd91d.jsonl",
+    "launch": "const r=await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_CliffPassage_SeparateCollisionDeck.blend' --python assets/source/worlds/verdant_valley/fit_cliff_passage_top.py | Select-String 'CLIFF_TOP|Error|Traceback|Saved|RuntimeError'\",\"workdir\":\"C:\\\\Users\\\\jhpel\\\\LUCKBOUND\",\"yield_time_ms\":30000,\"max_output_tokens\":1000});text(r.output);\n",
+    "preceding_launch_utc": "2026-09-29T06:35:21.471Z",
+    "seconds_after_preceding_launch": 1.991,
+    "preceding_session": "rollout-2026-09-29T02-20-43-01a0ebd2-9b43-7892-a8d3-249a30abd91d.jsonl",
+    "preceding_launch": "const r=await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_CliffPassage_SeparateCollisionDeck.blend' --python assets/source/worlds/verdant_valley/fit_cliff_passage_top.py | Select-String 'CLIFF_TOP|Error|Traceback|Saved|RuntimeError'\",\"workdir\":\"C:\\\\Users\\\\jhpel\\\\LUCKBOUND\",\"yield_time_ms\":30000,\"max_output_tokens\":1000});text(r.output);\n",
+    "attribution": "Timing correlation only; nearest record may be a later launch while the preceding job is running. No syscall trace."
+  },
+  {
+    "name": "\ubcd8\uf9ff\u00d7",
+    "name_codepoints": [
+      "U+BCD8",
+      "U+F9FF",
+      "U+00D7"
+    ],
+    "created_utc": "2026-09-29T06:36:03.879419+00:00",
+    "files": 0,
+    "tree": [
+      ".thumbnails",
+      ".thumbnails\\fail",
+      ".thumbnails\\large",
+      ".thumbnails\\fail\\blender"
+    ],
+    "nearest_launch_utc": "2026-09-29T06:36:01.830Z",
+    "seconds_after_launch": 2.049,
+    "session": "rollout-2026-09-29T02-20-43-01a0ebd2-9b43-7892-a8d3-249a30abd91d.jsonl",
+    "launch": "const r=await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_CliffPassage_SeparateCollisionDeck.blend' --python assets/source/worlds/verdant_valley/fit_cliff_passage_top.py | Select-String 'CLIFF_TOP|Error|Traceback|RuntimeError'\",\"workdir\":\"C:\\\\Users\\\\jhpel\\\\LUCKBOUND\",\"yield_time_ms\":30000,\"max_output_tokens\":1000});text(r.output);\n",
+    "preceding_launch_utc": "2026-09-29T06:36:01.830Z",
+    "seconds_after_preceding_launch": 2.049,
+    "preceding_session": "rollout-2026-09-29T02-20-43-01a0ebd2-9b43-7892-a8d3-249a30abd91d.jsonl",
+    "preceding_launch": "const r=await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_CliffPassage_SeparateCollisionDeck.blend' --python assets/source/worlds/verdant_valley/fit_cliff_passage_top.py | Select-String 'CLIFF_TOP|Error|Traceback|RuntimeError'\",\"workdir\":\"C:\\\\Users\\\\jhpel\\\\LUCKBOUND\",\"yield_time_ms\":30000,\"max_output_tokens\":1000});text(r.output);\n",
+    "attribution": "Timing correlation only; nearest record may be a later launch while the preceding job is running. No syscall trace."
+  },
+  {
+    "name": "\uc0c8\u151f\u0081",
+    "name_codepoints": [
+      "U+C0C8",
+      "U+151F",
+      "U+0081"
+    ],
+    "created_utc": "2026-09-29T06:43:12.958838+00:00",
+    "files": 0,
+    "tree": [
+      ".thumbnails",
+      ".thumbnails\\fail",
+      ".thumbnails\\large",
+      ".thumbnails\\fail\\blender"
+    ],
+    "nearest_launch_utc": "2026-09-29T06:43:11.147Z",
+    "seconds_after_launch": 1.812,
+    "session": "rollout-2026-09-29T02-20-43-01a0ebd2-9b43-7892-a8d3-249a30abd91d.jsonl",
+    "launch": "const r=await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_CliffPassage_SeparateCollisionDeck.blend' --python assets/source/worlds/verdant_valley/fit_cliff_passage_top.py | Select-String 'CLIFF_TOP|RuntimeError|Traceback'\",\"workdir\":\"C:\\\\Users\\\\jhpel\\\\LUCKBOUND\",\"yield_time_ms\":30000,\"max_output_tokens\":1000});text(r.output);\n",
+    "preceding_launch_utc": "2026-09-29T06:43:11.147Z",
+    "seconds_after_preceding_launch": 1.812,
+    "preceding_session": "rollout-2026-09-29T02-20-43-01a0ebd2-9b43-7892-a8d3-249a30abd91d.jsonl",
+    "preceding_launch": "const r=await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_CliffPassage_SeparateCollisionDeck.blend' --python assets/source/worlds/verdant_valley/fit_cliff_passage_top.py | Select-String 'CLIFF_TOP|RuntimeError|Traceback'\",\"workdir\":\"C:\\\\Users\\\\jhpel\\\\LUCKBOUND\",\"yield_time_ms\":30000,\"max_output_tokens\":1000});text(r.output);\n",
+    "attribution": "Timing correlation only; nearest record may be a later launch while the preceding job is running. No syscall trace."
+  },
+  {
+    "name": "\ubcd8\u317fj",
+    "name_codepoints": [
+      "U+BCD8",
+      "U+317F",
+      "U+006A"
+    ],
+    "created_utc": "2026-09-29T07:10:32.328343+00:00",
+    "files": 0,
+    "tree": [
+      ".thumbnails",
+      ".thumbnails\\fail",
+      ".thumbnails\\large",
+      ".thumbnails\\fail\\blender"
+    ],
+    "nearest_launch_utc": "2026-09-29T07:10:29.359Z",
+    "seconds_after_launch": 2.969,
+    "session": "rollout-2026-09-29T03-06-25-01a0ebfc-7309-7822-9e1a-358e45455f2d.jsonl",
+    "launch": "const r=await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_Extra_Details_Backup.blend' --python 'assets/source/worlds/verdant_valley/scatter_treasure_hollow.py'\",\"workdir\":\"C:\\\\Users\\\\jhpel\\\\LUCKBOUND\",\"yield_time_ms\":30000,\"max_output_tokens\":1800}); text(r.output);\n",
+    "preceding_launch_utc": "2026-09-29T07:10:29.359Z",
+    "seconds_after_preceding_launch": 2.969,
+    "preceding_session": "rollout-2026-09-29T03-06-25-01a0ebfc-7309-7822-9e1a-358e45455f2d.jsonl",
+    "preceding_launch": "const r=await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_Extra_Details_Backup.blend' --python 'assets/source/worlds/verdant_valley/scatter_treasure_hollow.py'\",\"workdir\":\"C:\\\\Users\\\\jhpel\\\\LUCKBOUND\",\"yield_time_ms\":30000,\"max_output_tokens\":1800}); text(r.output);\n",
+    "attribution": "Timing correlation only; nearest record may be a later launch while the preceding job is running. No syscall trace."
+  },
+  {
+    "name": "\ubc58\ubc3fk",
+    "name_codepoints": [
+      "U+BC58",
+      "U+BC3F",
+      "U+006B"
+    ],
+    "created_utc": "2026-09-29T08:11:41.741357+00:00",
+    "files": 0,
+    "tree": [
+      ".thumbnails",
+      ".thumbnails\\fail",
+      ".thumbnails\\large",
+      ".thumbnails\\fail\\blender"
+    ],
+    "nearest_launch_utc": "2026-09-29T08:11:46.665Z",
+    "seconds_after_launch": -4.924,
+    "session": "rollout-2026-09-29T03-06-25-01a0ebfc-7309-7822-9e1a-358e45455f2d.jsonl",
+    "launch": "const r=await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_Extra_Details_Backup.blend' --python '.scene_preview.py' -- chunk_side_treasure_hollow 'C:/Users/jhpel/LUCKBOUND/.treasure_after.png' 2>$null | Select-Object -Last 3\",\"workdir\":\"C:\\\\Users\\\\jhpel\\\\LUCKBOUND\",\"yield_time_ms\":30000,\"max_output_tokens\":300}); text(r.output);\n",
+    "preceding_launch_utc": "2026-09-29T08:11:35.633Z",
+    "seconds_after_preceding_launch": 6.108,
+    "preceding_session": "rollout-2026-09-29T03-06-25-01a0ebfc-7309-7822-9e1a-358e45455f2d.jsonl",
+    "preceding_launch": "const r=await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_Extra_Details_Backup.blend' --python 'assets/source/worlds/verdant_valley/scatter_treasure_hollow.py' 2>$null | Select-String 'SCATTER_RESULT|Saved as'\",\"workdir\":\"C:\\\\Users\\\\jhpel\\\\LUCKBOUND\",\"yield_time_ms\":30000,\"max_output_tokens\":1200}); text(r.output);\n",
+    "attribution": "Timing correlation only; nearest record may be a later launch while the preceding job is running. No syscall trace."
+  },
+  {
+    "name": "\ubdb8\u191fh",
+    "name_codepoints": [
+      "U+BDB8",
+      "U+191F",
+      "U+0068"
+    ],
+    "created_utc": "2026-09-29T08:12:36.916276+00:00",
+    "files": 0,
+    "tree": [
+      ".thumbnails",
+      ".thumbnails\\fail",
+      ".thumbnails\\large",
+      ".thumbnails\\fail\\blender"
+    ],
+    "nearest_launch_utc": "2026-09-29T08:12:41.362Z",
+    "seconds_after_launch": -4.446,
+    "session": "rollout-2026-09-29T03-06-25-01a0ebfc-7309-7822-9e1a-358e45455f2d.jsonl",
+    "launch": "const r=await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_Extra_Details_Backup.blend' --python '.scene_preview.py' -- chunk_side_treasure_hollow 'C:/Users/jhpel/LUCKBOUND/.treasure_after.png' 2>$null | Select-Object -Last 2\",\"workdir\":\"C:\\\\Users\\\\jhpel\\\\LUCKBOUND\",\"yield_time_ms\":30000,\"max_output_tokens\":300}); text(r.output);\n",
+    "preceding_launch_utc": "2026-09-29T08:12:28.561Z",
+    "seconds_after_preceding_launch": 8.355,
+    "preceding_session": "rollout-2026-09-29T03-06-25-01a0ebfc-7309-7822-9e1a-358e45455f2d.jsonl",
+    "preceding_launch": "const r=await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_Extra_Details_Backup.blend' --python 'assets/source/worlds/verdant_valley/scatter_treasure_hollow.py' 2>$null | Select-String 'SCATTER_RESULT|Saved as'\",\"workdir\":\"C:\\\\Users\\\\jhpel\\\\LUCKBOUND\",\"yield_time_ms\":30000,\"max_output_tokens\":1000}); text(r.output);\n",
+    "attribution": "Timing correlation only; nearest record may be a later launch while the preceding job is running. No syscall trace."
+  },
+  {
+    "name": "\ubf88\uc21f\u00c7",
+    "name_codepoints": [
+      "U+BF88",
+      "U+C21F",
+      "U+00C7"
+    ],
+    "created_utc": "2026-09-29T08:31:07.946341+00:00",
+    "files": 0,
+    "tree": [
+      ".thumbnails",
+      ".thumbnails\\fail",
+      ".thumbnails\\large",
+      ".thumbnails\\fail\\blender"
+    ],
+    "nearest_launch_utc": "2026-09-29T08:31:43.228Z",
+    "seconds_after_launch": -35.282,
+    "session": "rollout-2026-09-29T03-06-25-01a0ebfc-7309-7822-9e1a-358e45455f2d.jsonl",
+    "launch": "const r=await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_Extra_Details_Backup.blend' --python '.scatter_preview.py' -- chunk_side_treasure_hollow chunk_longgrass_meadow chunk_deep_clearing chunk_side_wardens_clearing 2>$null | Select-String '^PREVIEW'\",\"workdir\":\"C:\\\\Users\\\\jhpel\\\\LUCKBOUND\",\"yield_time_ms\":30000,\"max_output_tokens\":400}); text(r);\n",
+    "preceding_launch_utc": "2026-09-29T08:30:24.342Z",
+    "seconds_after_preceding_launch": 43.604,
+    "preceding_session": "rollout-2026-09-29T03-06-25-01a0ebfc-7309-7822-9e1a-358e45455f2d.jsonl",
+    "preceding_launch": "const r=await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_Extra_Details_Backup.blend' --python 'assets/source/worlds/verdant_valley/scatter_open_chunks.py' 2>$null | Select-String 'SCATTER_REPORT|RuntimeError|Traceback|Saved as'\",\"workdir\":\"C:\\\\Users\\\\jhpel\\\\LUCKBOUND\",\"yield_time_ms\":30000,\"max_output_tokens\":1000}); text(r.output);\n",
+    "attribution": "Timing correlation only; nearest record may be a later launch while the preceding job is running. No syscall trace."
+  },
+  {
+    "name": "\uba68\u691f\u00a3",
+    "name_codepoints": [
+      "U+BA68",
+      "U+691F",
+      "U+00A3"
+    ],
+    "created_utc": "2026-09-29T08:34:53.957322+00:00",
+    "files": 0,
+    "tree": [
+      ".thumbnails",
+      ".thumbnails\\fail",
+      ".thumbnails\\large",
+      ".thumbnails\\fail\\blender"
+    ],
+    "nearest_launch_utc": "2026-09-29T08:34:59.087Z",
+    "seconds_after_launch": -5.13,
+    "session": "rollout-2026-09-29T03-06-25-01a0ebfc-7309-7822-9e1a-358e45455f2d.jsonl",
+    "launch": "const r=await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_Extra_Details_Backup.blend' --python '.scatter_preview.py' -- chunk_side_treasure_hollow chunk_longgrass_meadow chunk_deep_clearing chunk_side_wardens_clearing 2>$null | Select-String '^PREVIEW'\",\"workdir\":\"C:\\\\Users\\\\jhpel\\\\LUCKBOUND\",\"yield_time_ms\":30000,\"max_output_tokens\":400}); text(r.output);\n",
+    "preceding_launch_utc": "2026-09-29T08:34:12.160Z",
+    "seconds_after_preceding_launch": 41.797,
+    "preceding_session": "rollout-2026-09-29T03-06-25-01a0ebfc-7309-7822-9e1a-358e45455f2d.jsonl",
+    "preceding_launch": "const r=await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_Extra_Details_Backup.blend' --python 'assets/source/worlds/verdant_valley/scatter_open_chunks.py'\",\"workdir\":\"C:\\\\Users\\\\jhpel\\\\LUCKBOUND\",\"yield_time_ms\":30000,\"max_output_tokens\":1200}); text(r);\n",
+    "attribution": "Timing correlation only; nearest record may be a later launch while the preceding job is running. No syscall trace."
+  },
+  {
+    "name": "\ubf48",
+    "name_codepoints": [
+      "U+BF48"
+    ],
+    "created_utc": "2026-09-29T20:14:32.777699+00:00",
+    "files": 0,
+    "tree": [
+      ".thumbnails",
+      ".thumbnails\\fail",
+      ".thumbnails\\large",
+      ".thumbnails\\fail\\blender"
+    ],
+    "nearest_launch_utc": "2026-09-29T20:14:27.627Z",
+    "seconds_after_launch": 5.151,
+    "session": "rollout-2026-09-29T03-06-25-01a0ebfc-7309-7822-9e1a-358e45455f2d.jsonl",
+    "launch": "text(await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_Extra_Details_Backup.blend' -t 2 --python 'assets/source/worlds/verdant_valley/scatter_sparse_chunks.py'\",\"yield_time_ms\":10000,\"max_output_tokens\":1600}));\n",
+    "preceding_launch_utc": "2026-09-29T20:14:27.627Z",
+    "seconds_after_preceding_launch": 5.151,
+    "preceding_session": "rollout-2026-09-29T03-06-25-01a0ebfc-7309-7822-9e1a-358e45455f2d.jsonl",
+    "preceding_launch": "text(await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b 'E:/BlenderAIProjects/Projects/VerdantValley_Extra_Details_Backup.blend' -t 2 --python 'assets/source/worlds/verdant_valley/scatter_sparse_chunks.py'\",\"yield_time_ms\":10000,\"max_output_tokens\":1600}));\n",
+    "attribution": "Timing correlation only; nearest record may be a later launch while the preceding job is running. No syscall trace."
+  },
+  {
+    "name": "\ubf68\u1f9f`",
+    "name_codepoints": [
+      "U+BF68",
+      "U+1F9F",
+      "U+0060"
+    ],
+    "created_utc": "2026-09-30T01:02:27.050969+00:00",
+    "files": 0,
+    "tree": [
+      ".thumbnails",
+      ".thumbnails\\fail",
+      ".thumbnails\\large",
+      ".thumbnails\\fail\\blender"
+    ],
+    "nearest_launch_utc": "2026-09-30T01:02:16.126Z",
+    "seconds_after_launch": 10.925,
+    "session": "rollout-2026-09-29T20-53-19-01a0efcd-3b3b-71d1-a8eb-484e2d4895b5.jsonl",
+    "launch": "text(await tools.exec_command({cmd:\"@'\\nimport bpy\\nbpy.ops.wm.save_as_mainfile(filepath='E:/BlenderAIProjects/Projects/VerdantValley_Cleanup.blend')\\nns={'__name__':'ridge_edit'}\\nexec(compile(open('C:/Users/jhpel/LUCKBOUND/assets/source/worlds/verdant_valley/fit_cliff_passage_top.py').read(),'fit_cliff_passage_top.py','exec'),ns)\\nns['main']()\\n'@ | Set-Content E:/BlenderAIProjects/Projects/apply_cliff_ridge.py\\n& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b E:/BlenderAIProjects/Projects/VerdantValley_Cliff_Ridge_Input.blend --python E:/BlenderAIProjects/Projects/apply_cliff_ridge.py\",\"yield_time_ms\":1000,\"max_output_tokens\":1000}));\n",
+    "preceding_launch_utc": "2026-09-30T01:02:16.126Z",
+    "seconds_after_preceding_launch": 10.925,
+    "preceding_session": "rollout-2026-09-29T20-53-19-01a0efcd-3b3b-71d1-a8eb-484e2d4895b5.jsonl",
+    "preceding_launch": "text(await tools.exec_command({cmd:\"@'\\nimport bpy\\nbpy.ops.wm.save_as_mainfile(filepath='E:/BlenderAIProjects/Projects/VerdantValley_Cleanup.blend')\\nns={'__name__':'ridge_edit'}\\nexec(compile(open('C:/Users/jhpel/LUCKBOUND/assets/source/worlds/verdant_valley/fit_cliff_passage_top.py').read(),'fit_cliff_passage_top.py','exec'),ns)\\nns['main']()\\n'@ | Set-Content E:/BlenderAIProjects/Projects/apply_cliff_ridge.py\\n& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b E:/BlenderAIProjects/Projects/VerdantValley_Cliff_Ridge_Input.blend --python E:/BlenderAIProjects/Projects/apply_cliff_ridge.py\",\"yield_time_ms\":1000,\"max_output_tokens\":1000}));\n",
+    "attribution": "Timing correlation only; nearest record may be a later launch while the preceding job is running. No syscall trace."
+  },
+  {
+    "name": "\ubf48\u9d3f\u00a5",
+    "name_codepoints": [
+      "U+BF48",
+      "U+9D3F",
+      "U+00A5"
+    ],
+    "created_utc": "2026-09-30T01:03:15.057443+00:00",
+    "files": 0,
+    "tree": [
+      ".thumbnails",
+      ".thumbnails\\fail",
+      ".thumbnails\\large",
+      ".thumbnails\\fail\\blender"
+    ],
+    "nearest_launch_utc": "2026-09-30T01:03:21.911Z",
+    "seconds_after_launch": -6.854,
+    "session": "rollout-2026-09-29T20-53-19-01a0efcd-3b3b-71d1-a8eb-484e2d4895b5.jsonl",
+    "launch": "text(await tools.exec_command({cmd:\"& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b E:/BlenderAIProjects/Projects/VerdantValley_Cleanup.blend --python E:/BlenderAIProjects/Projects/render_cliff_ridge.py -- E:/BlenderAIProjects/Projects/Cliff_Ridge_After.png\",\"yield_time_ms\":1000,\"max_output_tokens\":500}));\n",
+    "preceding_launch_utc": "2026-09-30T01:03:04.546Z",
+    "seconds_after_preceding_launch": 10.511,
+    "preceding_session": "rollout-2026-09-29T20-53-19-01a0efcd-3b3b-71d1-a8eb-484e2d4895b5.jsonl",
+    "preceding_launch": "text(await tools.exec_command({cmd:\"@'\\nfrom pathlib import Path\\np=Path('assets/source/worlds/verdant_valley/fit_cliff_passage_top.py')\\ns=p.read_text();s=s.replace('    for side in (-1, 1):\\\\n        xs = sorted', '    ridge_rows = {}\\\\n    for side in (-1, 1):\\\\n        xs = sorted')\\ns=s.replace('        for j in range(3):','        ridge_rows[side] = rows\\\\n        for j in range(3):')\\na=s.index('        for v in wall.data.vertices:');b=s.index('    bpy.context.view_layer.update()',a)\\ns=s[:a]+'''        old_wall = wall.data\\n        stations = [[to_chunk @ old_wall.vertices[i+j].co for j in range(4)] for i in range(0,len(old_wall.vertices),4)]\\n        def base_point(x, row):\\n            for a,b in zip(stations,stations[1:]):\\n                if x <= b[0].x + .001:\\n                    return a[row].lerp(b[row],max(0,min(1,(x-a[0].x)/(b[0].x-a[0].x))))\\n            return stations[-1][row].copy()\\n        wall_v, wall_f = [], []\\n        for crest, shoulder in zip(ridge_rows[side][1],ridge_rows[side][2]):\\n            upper = crest.copy(); upper.z -= .08\\n            back = shoulder.copy(); back.z -= .08\\n            wall_v.extend([tuple(to_wall@p) for p in (base_point(crest.x,0),upper,back,base_point(crest.x,3))])\\n        for i in range(len(wall_v)//4-1):\\n            for j in range(4):\\n                a=i*4+j;b=(i+1)*4+j;c=(i+1)*4+(j+1)%4;d=i*4+(j+1)%4\\n                face=[a,b,c,d]\\n                if side<0:face.reverse()\\n                wall_f.append(face)\\n        wall_f.extend([[3,2,1,0],[len(wall_v)-4+j for j in range(4)]])\\n        rebuilt=bpy.data.meshes.new(old_wall.name+'_crest')\\n        rebuilt.from_pydata(wall_v,[],wall_f)\\n        for material in old_wall.materials:rebuilt.materials.append(material)\\n        for p in rebuilt.polygons:p.use_smooth=False\\n        rebuilt.update();wall.data=rebuilt\\n''' +s[b:]\\np.write_text(s)\\n'@ | & 'C:/Users/jhpel/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe'\\n& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b E:/BlenderAIProjects/Projects/VerdantValley_Cliff_Ridge_Input.blend --python E:/BlenderAIProjects/Projects/apply_cliff_ridge.py\",\"yield_time_ms\":1000,\"max_output_tokens\":500}));\n",
+    "attribution": "Timing correlation only; nearest record may be a later launch while the preceding job is running. No syscall trace."
+  },
+  {
+    "name": "\ubf58\u0e9f\u00e0",
+    "name_codepoints": [
+      "U+BF58",
+      "U+0E9F",
+      "U+00E0"
+    ],
+    "created_utc": "2026-09-30T01:04:08.664093+00:00",
+    "files": 0,
+    "tree": [
+      ".thumbnails",
+      ".thumbnails\\fail",
+      ".thumbnails\\large",
+      ".thumbnails\\fail\\blender"
+    ],
+    "nearest_launch_utc": "2026-09-30T01:03:58.139Z",
+    "seconds_after_launch": 10.525,
+    "session": "rollout-2026-09-29T20-53-19-01a0efcd-3b3b-71d1-a8eb-484e2d4895b5.jsonl",
+    "launch": "text(await tools.exec_command({cmd:\"$p='assets/source/worlds/verdant_valley/fit_cliff_passage_top.py';$s=Get-Content $p -Raw;$s=$s.Replace('for p in rebuilt.polygons:p.use_smooth=False','for p in rebuilt.polygons:p.use_smooth=False; p.material_index=4');Set-Content $p $s\\n& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b E:/BlenderAIProjects/Projects/VerdantValley_Cliff_Ridge_Input.blend --python E:/BlenderAIProjects/Projects/apply_cliff_ridge.py\",\"yield_time_ms\":1000,\"max_output_tokens\":500}));\n",
+    "preceding_launch_utc": "2026-09-30T01:03:58.139Z",
+    "seconds_after_preceding_launch": 10.525,
+    "preceding_session": "rollout-2026-09-29T20-53-19-01a0efcd-3b3b-71d1-a8eb-484e2d4895b5.jsonl",
+    "preceding_launch": "text(await tools.exec_command({cmd:\"$p='assets/source/worlds/verdant_valley/fit_cliff_passage_top.py';$s=Get-Content $p -Raw;$s=$s.Replace('for p in rebuilt.polygons:p.use_smooth=False','for p in rebuilt.polygons:p.use_smooth=False; p.material_index=4');Set-Content $p $s\\n& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b E:/BlenderAIProjects/Projects/VerdantValley_Cliff_Ridge_Input.blend --python E:/BlenderAIProjects/Projects/apply_cliff_ridge.py\",\"yield_time_ms\":1000,\"max_output_tokens\":500}));\n",
+    "attribution": "Timing correlation only; nearest record may be a later launch while the preceding job is running. No syscall trace."
+  },
+  {
+    "name": "\uc000\ub90f",
+    "name_codepoints": [
+      "U+C000",
+      "U+B90F"
+    ],
+    "created_utc": "2026-09-30T02:45:41.148086+00:00",
+    "files": 0,
+    "tree": [
+      ".thumbnails",
+      ".thumbnails\\fail",
+      ".thumbnails\\large",
+      ".thumbnails\\fail\\blender"
+    ],
+    "nearest_launch_utc": "2026-09-30T02:45:31.438Z",
+    "seconds_after_launch": 9.71,
+    "session": "rollout-2026-09-29T22-27-40-01a0f023-9998-7f30-89f4-68bf12dc0dbb.jsonl",
+    "launch": "text(await tools.exec_command({cmd:\"@'\\nfrom pathlib import Path\\np=Path('assets/source/worlds/verdant_valley/fit_cliff_passage_top.py');s=p.read_text(encoding='utf-8')\\ns=s.replace(\\\"crest={tuple(v.co) for v in bm.verts if any(f.normal.z>.6 for f in v.link_faces)}\\\", \\\"crest={tuple(v.co) for v in bm.verts if v.co.y*direction<5 and v.co.z>5 and any(f.normal.z>.6 for f in v.link_faces)}\\\")\\ns=s.replace(\\\"        bm.normal_update()\\\\n        assert sum(e.is_boundary\\\", \\\"        wire=[e for e in bm.edges if e.is_wire]\\\\n        if wire:bmesh.ops.delete(bm,geom=wire,context='EDGES')\\\\n        loose=[v for v in bm.verts if not v.link_edges]\\\\n        if loose:bmesh.ops.delete(bm,geom=loose,context='VERTS')\\\\n        bm.normal_update()\\\\n        assert sum(e.is_boundary\\\",1)\\np.write_text(s,encoding='utf-8')\\n'@ | & 'C:/Users/jhpel/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -\\n& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b E:/BlenderAIProjects/Projects/VerdantValley_Cliff_Structure_Input.blend --python E:/BlenderAIProjects/Projects/cliff_structure_candidate.py\",yield_time_ms:1000,max_output_tokens:2000}));\n",
+    "preceding_launch_utc": "2026-09-30T02:45:31.438Z",
+    "seconds_after_preceding_launch": 9.71,
+    "preceding_session": "rollout-2026-09-29T22-27-40-01a0f023-9998-7f30-89f4-68bf12dc0dbb.jsonl",
+    "preceding_launch": "text(await tools.exec_command({cmd:\"@'\\nfrom pathlib import Path\\np=Path('assets/source/worlds/verdant_valley/fit_cliff_passage_top.py');s=p.read_text(encoding='utf-8')\\ns=s.replace(\\\"crest={tuple(v.co) for v in bm.verts if any(f.normal.z>.6 for f in v.link_faces)}\\\", \\\"crest={tuple(v.co) for v in bm.verts if v.co.y*direction<5 and v.co.z>5 and any(f.normal.z>.6 for f in v.link_faces)}\\\")\\ns=s.replace(\\\"        bm.normal_update()\\\\n        assert sum(e.is_boundary\\\", \\\"        wire=[e for e in bm.edges if e.is_wire]\\\\n        if wire:bmesh.ops.delete(bm,geom=wire,context='EDGES')\\\\n        loose=[v for v in bm.verts if not v.link_edges]\\\\n        if loose:bmesh.ops.delete(bm,geom=loose,context='VERTS')\\\\n        bm.normal_update()\\\\n        assert sum(e.is_boundary\\\",1)\\np.write_text(s,encoding='utf-8')\\n'@ | & 'C:/Users/jhpel/.cache/codex-runtimes/codex-primary-runtime/dependencies/python/python.exe' -\\n& 'C:/Program Files (x86)/Steam/steamapps/common/Blender/blender.exe' -b E:/BlenderAIProjects/Projects/VerdantValley_Cliff_Structure_Input.blend --python E:/BlenderAIProjects/Projects/cliff_structure_candidate.py\",yield_time_ms:1000,max_output_tokens:2000}));\n",
+    "attribution": "Timing correlation only; nearest record may be a later launch while the preceding job is running. No syscall trace."
+  }
+]

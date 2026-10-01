@@ -24,6 +24,10 @@ ROOT = pathlib.Path(__file__).resolve().parent.parent
 MANIFEST = ROOT / "src/shared/Content/AssetManifest.luau"
 PREFIX = {"verdant_valley": "VV", "sky_citadel": "SC", "ethereal_scape": "ES",
           "astral_reach": "AR", "emberfall": "EF"}
+VV_REVIEW_NAME_ALIASES = {
+    "chunk_side_treasure_hollow": "VV_CHUNK_CAP_TREASURE_HOLLOW",
+    "chunk_side_wardens_clearing": "VV_CHUNK_CAP_WARDENS_CLEARING",
+}
 
 ITEM = re.compile(r'<Item class="MeshPart"[^>]*>\s*<Properties>(.*?)</Properties>', re.S)
 NAME = re.compile(r'<string name="Name">([^<]*)</string>')
@@ -59,6 +63,8 @@ def main(argv):
         pre = PREFIX[world] + "_"
         if name.upper().startswith(pre):
             key = f"{pre}CHUNK_{name.upper()[len(pre):]}"
+        if world == "verdant_valley":
+            key = VV_REVIEW_NAME_ALIASES.get(name, key)
         entry = re.compile(r'(\t%s = \{\n)(.*?)(\n\t\},)' % re.escape(key), re.S)
         m = entry.search(text)
         if not m:

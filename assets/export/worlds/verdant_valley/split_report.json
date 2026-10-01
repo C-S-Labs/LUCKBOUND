@@ -1,0 +1,511 @@
+{
+  "chunk_ancient_oak": {
+    "source_name": "chunk_ancient_oak",
+    "detached_components": 85,
+    "props": [
+      {
+        "name": "prop_ancient_oak_scenery",
+        "solid": true,
+        "vertices": 358
+      },
+      {
+        "name": "prop_ancient_oak_ambient",
+        "solid": false,
+        "vertices": 644
+      }
+    ]
+  },
+  "chunk_blossom_terrace": {
+    "source_name": "chunk_blossom_terrace",
+    "detached_components": 96,
+    "props": [
+      {
+        "name": "prop_blossom_terrace_scenery",
+        "solid": true,
+        "vertices": 360
+      },
+      {
+        "name": "prop_blossom_terrace_ambient",
+        "solid": false,
+        "vertices": 788
+      }
+    ]
+  },
+  "chunk_boss_sanctuary": {
+    "source_name": "chunk_boss_sanctuary",
+    "detached_components": 273,
+    "props": [
+      {
+        "name": "prop_boss_sanctuary_scenery",
+        "solid": true,
+        "vertices": 2095
+      },
+      {
+        "name": "prop_boss_sanctuary_ambient",
+        "solid": false,
+        "vertices": 1194
+      }
+    ]
+  },
+  "chunk_cap_cave_mouth": {
+    "source_name": "chunk_cap_cave_mouth",
+    "detached_components": 109,
+    "props": [
+      {
+        "name": "prop_cap_cave_mouth_scenery",
+        "solid": true,
+        "vertices": 1228
+      },
+      {
+        "name": "prop_cap_cave_mouth_ambient",
+        "solid": false,
+        "vertices": 490
+      }
+    ]
+  },
+  "chunk_cliff_overlook_gate": {
+    "source_name": "chunk_cliff_overlook_gate",
+    "detached_components": 77,
+    "props": [
+      {
+        "name": "prop_cliff_overlook_gate_scenery",
+        "solid": true,
+        "vertices": 405
+      },
+      {
+        "name": "prop_cliff_overlook_gate_ambient",
+        "solid": false,
+        "vertices": 544
+      }
+    ]
+  },
+  "chunk_crystal_spring_gate": {
+    "source_name": "chunk_crystal_spring_gate",
+    "detached_components": 100,
+    "props": [
+      {
+        "name": "prop_crystal_spring_gate_surface",
+        "solid": true,
+        "vertices": 168
+      },
+      {
+        "name": "prop_crystal_spring_gate_scenery",
+        "solid": true,
+        "vertices": 728
+      },
+      {
+        "name": "prop_crystal_spring_gate_ambient",
+        "solid": false,
+        "vertices": 406
+      }
+    ]
+  },
+  "chunk_cutbank_ford": {
+    "source_name": "chunk_cutbank_ford",
+    "detached_components": 143,
+    "props": [
+      {
+        "name": "prop_cutbank_ford_surface",
+        "solid": true,
+        "vertices": 352
+      },
+      {
+        "name": "prop_cutbank_ford_scenery",
+        "solid": true,
+        "vertices": 742
+      },
+      {
+        "name": "prop_cutbank_ford_ambient",
+        "solid": false,
+        "vertices": 499
+      }
+    ]
+  },
+  "chunk_deep_clearing": {
+    "source_name": "chunk_deep_clearing",
+    "detached_components": 74,
+    "props": [
+      {
+        "name": "prop_deep_clearing_scenery",
+        "solid": true,
+        "vertices": 192
+      },
+      {
+        "name": "prop_deep_clearing_ambient",
+        "solid": false,
+        "vertices": 678
+      }
+    ]
+  },
+  "chunk_entry_dawn_meadow": {
+    "source_name": "chunk_entry_dawn_meadow",
+    "detached_components": 177,
+    "props": [
+      {
+        "name": "prop_entry_dawn_meadow_surface",
+        "solid": true,
+        "vertices": 36
+      },
+      {
+        "name": "prop_entry_dawn_meadow_scenery",
+        "solid": true,
+        "vertices": 734
+      },
+      {
+        "name": "prop_entry_dawn_meadow_ambient",
+        "solid": false,
+        "vertices": 1176
+      }
+    ]
+  },
+  "chunk_entry_woodland_refuge": {
+    "source_name": "chunk_entry_woodland_refuge",
+    "detached_components": 193,
+    "props": [
+      {
+        "name": "prop_entry_woodland_refuge_scenery",
+        "solid": true,
+        "vertices": 780
+      },
+      {
+        "name": "prop_entry_woodland_refuge_ambient",
+        "solid": false,
+        "vertices": 1372
+      }
+    ]
+  },
+  "chunk_fern_hollow": {
+    "source_name": "chunk_fern_hollow",
+    "detached_components": 128,
+    "props": [
+      {
+        "name": "prop_fern_hollow_scenery",
+        "solid": true,
+        "vertices": 442
+      },
+      {
+        "name": "prop_fern_hollow_ambient",
+        "solid": false,
+        "vertices": 1064
+      }
+    ]
+  },
+  "chunk_forgotten_orchard_gate": {
+    "source_name": "chunk_forgotten_orchard_gate",
+    "detached_components": 100,
+    "props": [
+      {
+        "name": "prop_forgotten_orchard_gate_scenery",
+        "solid": true,
+        "vertices": 408
+      },
+      {
+        "name": "prop_forgotten_orchard_gate_ambient",
+        "solid": false,
+        "vertices": 692
+      }
+    ]
+  },
+  "chunk_high_ledge_gate": {
+    "source_name": "chunk_high_ledge_gate",
+    "detached_components": 54,
+    "props": [
+      {
+        "name": "prop_high_ledge_gate_scenery",
+        "solid": true,
+        "vertices": 266
+      },
+      {
+        "name": "prop_high_ledge_gate_ambient",
+        "solid": false,
+        "vertices": 372
+      }
+    ]
+  },
+  "chunk_longgrass_meadow": {
+    "source_name": "chunk_longgrass_meadow",
+    "detached_components": 71,
+    "props": [
+      {
+        "name": "prop_longgrass_meadow_scenery",
+        "solid": true,
+        "vertices": 184
+      },
+      {
+        "name": "prop_longgrass_meadow_ambient",
+        "solid": false,
+        "vertices": 654
+      }
+    ]
+  },
+  "chunk_mossbound_ruins": {
+    "source_name": "chunk_mossbound_ruins",
+    "detached_components": 96,
+    "props": [
+      {
+        "name": "prop_mossbound_ruins_scenery",
+        "solid": true,
+        "vertices": 558
+      },
+      {
+        "name": "prop_mossbound_ruins_ambient",
+        "solid": false,
+        "vertices": 482
+      }
+    ]
+  },
+  "chunk_mushroom_glen": {
+    "source_name": "chunk_mushroom_glen",
+    "detached_components": 134,
+    "props": [
+      {
+        "name": "prop_mushroom_glen_scenery",
+        "solid": true,
+        "vertices": 742
+      },
+      {
+        "name": "prop_mushroom_glen_ambient",
+        "solid": false,
+        "vertices": 950
+      }
+    ]
+  },
+  "chunk_overgrown_causeway_gate": {
+    "detached_components": 88,
+    "props": [
+      {
+        "name": "prop_overgrown_causeway_scenery",
+        "solid": true,
+        "vertices": 992
+      }
+    ]
+  },
+  "chunk_path_cliff_passage": {
+    "source_name": "chunk_path_cliff_passage",
+    "detached_components": 179,
+    "props": [
+      {
+        "name": "prop_path_cliff_passage_surface",
+        "solid": true,
+        "vertices": 132
+      },
+      {
+        "name": "prop_path_cliff_passage_scenery",
+        "solid": true,
+        "vertices": 1424
+      },
+      {
+        "name": "prop_path_cliff_passage_ambient",
+        "solid": false,
+        "vertices": 706
+      }
+    ]
+  },
+  "chunk_path_crossroads_copse": {
+    "source_name": "chunk_path_crossroads_copse",
+    "detached_components": 71,
+    "props": [
+      {
+        "name": "prop_path_crossroads_copse_scenery",
+        "solid": true,
+        "vertices": 300
+      },
+      {
+        "name": "prop_path_crossroads_copse_ambient",
+        "solid": false,
+        "vertices": 508
+      }
+    ]
+  },
+  "chunk_path_narrow_pass": {
+    "source_name": "chunk_path_narrow_pass",
+    "detached_components": 76,
+    "props": [
+      {
+        "name": "prop_path_narrow_pass_scenery",
+        "solid": true,
+        "vertices": 449
+      },
+      {
+        "name": "prop_path_narrow_pass_ambient",
+        "solid": false,
+        "vertices": 530
+      }
+    ]
+  },
+  "chunk_path_split_meadow": {
+    "source_name": "chunk_path_split_meadow",
+    "detached_components": 77,
+    "props": [
+      {
+        "name": "prop_path_split_meadow_scenery",
+        "solid": true,
+        "vertices": 248
+      },
+      {
+        "name": "prop_path_split_meadow_ambient",
+        "solid": false,
+        "vertices": 654
+      }
+    ]
+  },
+  "chunk_path_sunwash_fork": {
+    "source_name": "chunk_path_sunwash_fork",
+    "detached_components": 104,
+    "props": [
+      {
+        "name": "prop_path_sunwash_fork_scenery",
+        "solid": true,
+        "vertices": 412
+      },
+      {
+        "name": "prop_path_sunwash_fork_ambient",
+        "solid": false,
+        "vertices": 712
+      }
+    ]
+  },
+  "chunk_rock_garden": {
+    "source_name": "chunk_rock_garden",
+    "detached_components": 72,
+    "props": [
+      {
+        "name": "prop_rock_garden_scenery",
+        "solid": true,
+        "vertices": 360
+      },
+      {
+        "name": "prop_rock_garden_ambient",
+        "solid": false,
+        "vertices": 460
+      }
+    ]
+  },
+  "chunk_shaded_grove": {
+    "source_name": "chunk_shaded_grove",
+    "detached_components": 114,
+    "props": [
+      {
+        "name": "prop_shaded_grove_scenery",
+        "solid": true,
+        "vertices": 440
+      },
+      {
+        "name": "prop_shaded_grove_ambient",
+        "solid": false,
+        "vertices": 908
+      }
+    ]
+  },
+  "chunk_side_forgotten_trial": {
+    "source_name": "chunk_side_forgotten_trial",
+    "detached_components": 55,
+    "props": [
+      {
+        "name": "prop_side_forgotten_trial_scenery",
+        "solid": true,
+        "vertices": 390
+      },
+      {
+        "name": "prop_side_forgotten_trial_ambient",
+        "solid": false,
+        "vertices": 144
+      }
+    ]
+  },
+  "chunk_cap_treasure_hollow": {
+    "source_name": "chunk_side_treasure_hollow",
+    "detached_components": 46,
+    "props": [
+      {
+        "name": "prop_cap_treasure_hollow_scenery",
+        "solid": true,
+        "vertices": 282
+      },
+      {
+        "name": "prop_cap_treasure_hollow_ambient",
+        "solid": false,
+        "vertices": 232
+      }
+    ]
+  },
+  "chunk_cap_wardens_clearing": {
+    "source_name": "chunk_side_wardens_clearing",
+    "detached_components": 47,
+    "props": [
+      {
+        "name": "prop_cap_wardens_clearing_scenery",
+        "solid": true,
+        "vertices": 314
+      },
+      {
+        "name": "prop_cap_wardens_clearing_ambient",
+        "solid": false,
+        "vertices": 208
+      }
+    ]
+  },
+  "chunk_stone_sentinels": {
+    "source_name": "chunk_stone_sentinels",
+    "detached_components": 80,
+    "props": [
+      {
+        "name": "prop_stone_sentinels_scenery",
+        "solid": true,
+        "vertices": 376
+      },
+      {
+        "name": "prop_stone_sentinels_ambient",
+        "solid": false,
+        "vertices": 538
+      }
+    ]
+  },
+  "chunk_wetland_pools": {
+    "source_name": "chunk_wetland_pools",
+    "detached_components": 113,
+    "props": [
+      {
+        "name": "prop_wetland_pools_surface_01",
+        "solid": true,
+        "vertices": 168
+      },
+      {
+        "name": "prop_wetland_pools_surface_02",
+        "solid": true,
+        "vertices": 168
+      },
+      {
+        "name": "prop_wetland_pools_surface_03",
+        "solid": true,
+        "vertices": 168
+      },
+      {
+        "name": "prop_wetland_pools_scenery",
+        "solid": true,
+        "vertices": 768
+      },
+      {
+        "name": "prop_wetland_pools_ambient",
+        "solid": false,
+        "vertices": 658
+      }
+    ]
+  },
+  "chunk_windward_ridge_gate": {
+    "source_name": "chunk_windward_ridge_gate",
+    "detached_components": 75,
+    "props": [
+      {
+        "name": "prop_windward_ridge_gate_scenery",
+        "solid": true,
+        "vertices": 362
+      },
+      {
+        "name": "prop_windward_ridge_gate_ambient",
+        "solid": false,
+        "vertices": 472
+      }
+    ]
+  }
+}

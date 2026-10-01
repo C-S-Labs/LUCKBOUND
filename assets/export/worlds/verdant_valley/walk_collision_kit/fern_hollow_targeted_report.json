@@ -1,0 +1,13 @@
+{
+  "chunk": "chunk_fern_hollow",
+  "model": "VV_FERN_HOLLOW_COLLISION_MERGED",
+  "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+  "surface_offset_studs": 0.2,
+  "forced_unmerged_tiles": 8,
+  "terrain_faces": 3054,
+  "detached_components_excluded": 128,
+  "initial_cells": 193,
+  "merged_colliders": 119,
+  "merged_regions": 28,
+  "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/fern_hollow_walk_collision_targeted.fbx"
+}

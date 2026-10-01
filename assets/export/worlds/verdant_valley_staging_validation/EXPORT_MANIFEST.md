@@ -1,0 +1,176 @@
+# Verdant Valley staging export manifest
+
+Studio validation pending. Working exports untouched.
+
+| Chunk | Category | Objects | Full destination |
+|---|---|---:|---|
+| chunk_ancient_oak | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\ancient_oak_structure.fbx` |
+| chunk_ancient_oak | collision | 121 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\ancient_oak_walk_collision.fbx` |
+| chunk_ancient_oak | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\ancient_oak_solid_props.fbx` |
+| chunk_ancient_oak | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\ancient_oak_nonsolid_props.fbx` |
+| chunk_ancient_oak | wind_canopies | 24 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\ancient_oak_wind_canopies.fbx` |
+| chunk_blossom_terrace | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\blossom_terrace_structure.fbx` |
+| chunk_blossom_terrace | collision | 122 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\blossom_terrace_walk_collision.fbx` |
+| chunk_blossom_terrace | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\blossom_terrace_solid_props.fbx` |
+| chunk_blossom_terrace | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\blossom_terrace_nonsolid_props.fbx` |
+| chunk_blossom_terrace | wind_canopies | 23 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\blossom_terrace_wind_canopies.fbx` |
+| chunk_boss_sanctuary | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\boss_sanctuary_structure.fbx` |
+| chunk_boss_sanctuary | collision | 267 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\boss_sanctuary_walk_collision.fbx` |
+| chunk_boss_sanctuary | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\boss_sanctuary_solid_props.fbx` |
+| chunk_boss_sanctuary | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\boss_sanctuary_nonsolid_props.fbx` |
+| chunk_boss_sanctuary | wind_canopies | 110 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\boss_sanctuary_wind_canopies.fbx` |
+| chunk_cap_cave_mouth | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\cap_cave_mouth_structure.fbx` |
+| chunk_cap_cave_mouth | collision | 120 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\cap_cave_mouth_walk_collision.fbx` |
+| chunk_cap_cave_mouth | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\cap_cave_mouth_solid_props.fbx` |
+| chunk_cap_cave_mouth | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\cap_cave_mouth_nonsolid_props.fbx` |
+| chunk_cap_cave_mouth | wind_canopies | 10 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\cap_cave_mouth_wind_canopies.fbx` |
+| chunk_cap_cave_mouth | special | 5 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\cap_cave_mouth_special.fbx` |
+| chunk_cliff_overlook_gate | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\cliff_overlook_gate_structure.fbx` |
+| chunk_cliff_overlook_gate | collision | 118 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\cliff_overlook_gate_walk_collision.fbx` |
+| chunk_cliff_overlook_gate | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\cliff_overlook_gate_solid_props.fbx` |
+| chunk_cliff_overlook_gate | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\cliff_overlook_gate_nonsolid_props.fbx` |
+| chunk_cliff_overlook_gate | wind_canopies | 20 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\cliff_overlook_gate_wind_canopies.fbx` |
+| chunk_crystal_spring_gate | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\crystal_spring_gate_structure.fbx` |
+| chunk_crystal_spring_gate | collision | 134 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\crystal_spring_gate_walk_collision.fbx` |
+| chunk_crystal_spring_gate | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\crystal_spring_gate_solid_props.fbx` |
+| chunk_crystal_spring_gate | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\crystal_spring_gate_nonsolid_props.fbx` |
+| chunk_crystal_spring_gate | wind_canopies | 22 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\crystal_spring_gate_wind_canopies.fbx` |
+| chunk_cutbank_ford | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\cutbank_ford_structure.fbx` |
+| chunk_cutbank_ford | collision | 136 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\cutbank_ford_walk_collision.fbx` |
+| chunk_cutbank_ford | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\cutbank_ford_solid_props.fbx` |
+| chunk_cutbank_ford | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\cutbank_ford_nonsolid_props.fbx` |
+| chunk_cutbank_ford | wind_canopies | 26 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\cutbank_ford_wind_canopies.fbx` |
+| chunk_deep_clearing | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\deep_clearing_structure.fbx` |
+| chunk_deep_clearing | collision | 146 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\deep_clearing_walk_collision.fbx` |
+| chunk_deep_clearing | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\deep_clearing_solid_props.fbx` |
+| chunk_deep_clearing | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\deep_clearing_nonsolid_props.fbx` |
+| chunk_deep_clearing | wind_canopies | 18 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\deep_clearing_wind_canopies.fbx` |
+| chunk_entry_dawn_meadow | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\entry_dawn_meadow_structure.fbx` |
+| chunk_entry_dawn_meadow | collision | 122 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\entry_dawn_meadow_walk_collision.fbx` |
+| chunk_entry_dawn_meadow | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\entry_dawn_meadow_solid_props.fbx` |
+| chunk_entry_dawn_meadow | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\entry_dawn_meadow_nonsolid_props.fbx` |
+| chunk_entry_dawn_meadow | wind_canopies | 12 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\entry_dawn_meadow_wind_canopies.fbx` |
+| chunk_entry_dawn_meadow | special | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\entry_dawn_meadow_special.fbx` |
+| chunk_entry_woodland_refuge | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\entry_woodland_refuge_structure.fbx` |
+| chunk_entry_woodland_refuge | collision | 113 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\entry_woodland_refuge_walk_collision.fbx` |
+| chunk_entry_woodland_refuge | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\entry_woodland_refuge_solid_props.fbx` |
+| chunk_entry_woodland_refuge | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\entry_woodland_refuge_nonsolid_props.fbx` |
+| chunk_entry_woodland_refuge | wind_canopies | 16 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\entry_woodland_refuge_wind_canopies.fbx` |
+| chunk_fern_hollow | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\fern_hollow_structure.fbx` |
+| chunk_fern_hollow | collision | 119 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\fern_hollow_walk_collision.fbx` |
+| chunk_fern_hollow | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\fern_hollow_solid_props.fbx` |
+| chunk_fern_hollow | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\fern_hollow_nonsolid_props.fbx` |
+| chunk_fern_hollow | wind_canopies | 50 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\fern_hollow_wind_canopies.fbx` |
+| chunk_forgotten_orchard_gate | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\forgotten_orchard_gate_structure.fbx` |
+| chunk_forgotten_orchard_gate | collision | 124 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\forgotten_orchard_gate_walk_collision.fbx` |
+| chunk_forgotten_orchard_gate | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\forgotten_orchard_gate_solid_props.fbx` |
+| chunk_forgotten_orchard_gate | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\forgotten_orchard_gate_nonsolid_props.fbx` |
+| chunk_forgotten_orchard_gate | wind_canopies | 24 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\forgotten_orchard_gate_wind_canopies.fbx` |
+| chunk_high_ledge_gate | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\high_ledge_gate_structure.fbx` |
+| chunk_high_ledge_gate | collision | 132 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\high_ledge_gate_walk_collision.fbx` |
+| chunk_high_ledge_gate | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\high_ledge_gate_solid_props.fbx` |
+| chunk_high_ledge_gate | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\high_ledge_gate_nonsolid_props.fbx` |
+| chunk_high_ledge_gate | wind_canopies | 18 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\high_ledge_gate_wind_canopies.fbx` |
+| chunk_longgrass_meadow | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\longgrass_meadow_structure.fbx` |
+| chunk_longgrass_meadow | collision | 134 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\longgrass_meadow_walk_collision.fbx` |
+| chunk_longgrass_meadow | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\longgrass_meadow_solid_props.fbx` |
+| chunk_longgrass_meadow | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\longgrass_meadow_nonsolid_props.fbx` |
+| chunk_longgrass_meadow | wind_canopies | 23 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\longgrass_meadow_wind_canopies.fbx` |
+| chunk_mossbound_ruins | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\mossbound_ruins_structure.fbx` |
+| chunk_mossbound_ruins | collision | 118 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\mossbound_ruins_walk_collision.fbx` |
+| chunk_mossbound_ruins | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\mossbound_ruins_solid_props.fbx` |
+| chunk_mossbound_ruins | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\mossbound_ruins_nonsolid_props.fbx` |
+| chunk_mossbound_ruins | wind_canopies | 16 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\mossbound_ruins_wind_canopies.fbx` |
+| chunk_mushroom_glen | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\mushroom_glen_structure.fbx` |
+| chunk_mushroom_glen | collision | 129 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\mushroom_glen_walk_collision.fbx` |
+| chunk_mushroom_glen | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\mushroom_glen_solid_props.fbx` |
+| chunk_mushroom_glen | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\mushroom_glen_nonsolid_props.fbx` |
+| chunk_mushroom_glen | wind_canopies | 28 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\mushroom_glen_wind_canopies.fbx` |
+| chunk_overgrown_causeway_gate | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\overgrown_causeway_gate_structure.fbx` |
+| chunk_overgrown_causeway_gate | collision | 122 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\overgrown_causeway_gate_walk_collision.fbx` |
+| chunk_overgrown_causeway_gate | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\overgrown_causeway_gate_solid_props.fbx` |
+| chunk_overgrown_causeway_gate | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\overgrown_causeway_gate_nonsolid_props.fbx` |
+| chunk_overgrown_causeway_gate | wind_canopies | 28 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\overgrown_causeway_gate_wind_canopies.fbx` |
+| chunk_path_cliff_passage | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\path_cliff_passage_structure.fbx` |
+| chunk_path_cliff_passage | collision | 66 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\cliff_passage_collision\path_cliff_passage_walk_collision.fbx` |
+| chunk_path_cliff_passage | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\path_cliff_passage_solid_props.fbx` |
+| chunk_path_cliff_passage | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\path_cliff_passage_nonsolid_props.fbx` |
+| chunk_path_cliff_passage | wind_canopies | 39 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\path_cliff_passage_wind_canopies.fbx` |
+| chunk_path_crossroads_copse | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\path_crossroads_copse_structure.fbx` |
+| chunk_path_crossroads_copse | collision | 170 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\path_crossroads_copse_walk_collision.fbx` |
+| chunk_path_crossroads_copse | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\path_crossroads_copse_solid_props.fbx` |
+| chunk_path_crossroads_copse | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\path_crossroads_copse_nonsolid_props.fbx` |
+| chunk_path_crossroads_copse | wind_canopies | 22 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\path_crossroads_copse_wind_canopies.fbx` |
+| chunk_path_crossroads_copse | special | 10 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\path_crossroads_copse_special.fbx` |
+| chunk_path_narrow_pass | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\path_narrow_pass_structure.fbx` |
+| chunk_path_narrow_pass | collision | 149 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\path_narrow_pass_walk_collision.fbx` |
+| chunk_path_narrow_pass | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\path_narrow_pass_solid_props.fbx` |
+| chunk_path_narrow_pass | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\path_narrow_pass_nonsolid_props.fbx` |
+| chunk_path_narrow_pass | wind_canopies | 20 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\path_narrow_pass_wind_canopies.fbx` |
+| chunk_path_split_meadow | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\path_split_meadow_structure.fbx` |
+| chunk_path_split_meadow | collision | 155 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\path_split_meadow_walk_collision.fbx` |
+| chunk_path_split_meadow | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\path_split_meadow_solid_props.fbx` |
+| chunk_path_split_meadow | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\path_split_meadow_nonsolid_props.fbx` |
+| chunk_path_split_meadow | wind_canopies | 20 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\path_split_meadow_wind_canopies.fbx` |
+| chunk_path_sunwash_fork | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\path_sunwash_fork_structure.fbx` |
+| chunk_path_sunwash_fork | collision | 153 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\path_sunwash_fork_walk_collision.fbx` |
+| chunk_path_sunwash_fork | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\path_sunwash_fork_solid_props.fbx` |
+| chunk_path_sunwash_fork | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\path_sunwash_fork_nonsolid_props.fbx` |
+| chunk_path_sunwash_fork | wind_canopies | 27 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\path_sunwash_fork_wind_canopies.fbx` |
+| chunk_rock_garden | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\rock_garden_structure.fbx` |
+| chunk_rock_garden | collision | 117 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\rock_garden_walk_collision.fbx` |
+| chunk_rock_garden | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\rock_garden_solid_props.fbx` |
+| chunk_rock_garden | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\rock_garden_nonsolid_props.fbx` |
+| chunk_rock_garden | wind_canopies | 16 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\rock_garden_wind_canopies.fbx` |
+| chunk_shaded_grove | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\shaded_grove_structure.fbx` |
+| chunk_shaded_grove | collision | 124 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\shaded_grove_walk_collision.fbx` |
+| chunk_shaded_grove | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\shaded_grove_solid_props.fbx` |
+| chunk_shaded_grove | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\shaded_grove_nonsolid_props.fbx` |
+| chunk_shaded_grove | wind_canopies | 45 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\shaded_grove_wind_canopies.fbx` |
+| chunk_side_forgotten_trial | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\side_forgotten_trial_structure.fbx` |
+| chunk_side_forgotten_trial | collision | 208 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\side_forgotten_trial_walk_collision.fbx` |
+| chunk_side_forgotten_trial | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\side_forgotten_trial_solid_props.fbx` |
+| chunk_side_forgotten_trial | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\side_forgotten_trial_nonsolid_props.fbx` |
+| chunk_side_forgotten_trial | wind_canopies | 2 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\side_forgotten_trial_wind_canopies.fbx` |
+| chunk_side_treasure_hollow | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\side_treasure_hollow_structure.fbx` |
+| chunk_side_treasure_hollow | collision | 112 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\side_treasure_hollow_walk_collision.fbx` |
+| chunk_side_treasure_hollow | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\side_treasure_hollow_solid_props.fbx` |
+| chunk_side_treasure_hollow | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\side_treasure_hollow_nonsolid_props.fbx` |
+| chunk_side_treasure_hollow | wind_canopies | 8 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\side_treasure_hollow_wind_canopies.fbx` |
+| chunk_side_treasure_hollow | special | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\side_treasure_hollow_special.fbx` |
+| chunk_side_wardens_clearing | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\side_wardens_clearing_structure.fbx` |
+| chunk_side_wardens_clearing | collision | 90 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\side_wardens_clearing_walk_collision.fbx` |
+| chunk_side_wardens_clearing | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\side_wardens_clearing_solid_props.fbx` |
+| chunk_side_wardens_clearing | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\side_wardens_clearing_nonsolid_props.fbx` |
+| chunk_side_wardens_clearing | wind_canopies | 9 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\side_wardens_clearing_wind_canopies.fbx` |
+| chunk_stone_sentinels | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\stone_sentinels_structure.fbx` |
+| chunk_stone_sentinels | collision | 118 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\stone_sentinels_walk_collision_merged.fbx` |
+| chunk_stone_sentinels | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\stone_sentinels_solid_props.fbx` |
+| chunk_stone_sentinels | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\stone_sentinels_nonsolid_props.fbx` |
+| chunk_stone_sentinels | wind_canopies | 20 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\stone_sentinels_wind_canopies.fbx` |
+| chunk_wetland_pools | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\wetland_pools_structure.fbx` |
+| chunk_wetland_pools | collision | 137 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\wetland_pools_walk_collision.fbx` |
+| chunk_wetland_pools | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\wetland_pools_solid_props.fbx` |
+| chunk_wetland_pools | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\wetland_pools_nonsolid_props.fbx` |
+| chunk_wetland_pools | wind_canopies | 26 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\wetland_pools_wind_canopies.fbx` |
+| chunk_windward_ridge_gate | structure | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\windward_ridge_gate_structure.fbx` |
+| chunk_windward_ridge_gate | collision | 156 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\walk_collision_kit\windward_ridge_gate_walk_collision.fbx` |
+| chunk_windward_ridge_gate | solid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\windward_ridge_gate_solid_props.fbx` |
+| chunk_windward_ridge_gate | nonsolid_props | 1 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\windward_ridge_gate_nonsolid_props.fbx` |
+| chunk_windward_ridge_gate | wind_canopies | 24 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\windward_ridge_gate_wind_canopies.fbx` |
+| all chunks | structure | 30 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\verdant_valley_structure.fbx` |
+| all chunks | props | 823 | `C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\verdant_valley_props.fbx` |
+
+Source-object details and transforms: C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\export_manifest.json.
+
+Validation report: C:\Users\jhpel\LUCKBOUND\assets\export\worlds\verdant_valley_staging_validation\VALIDATION_REPORT.json.
+
+All 30 chunks have structure, collision, solid and nonsolid FBXs. Wind canopies and special components are separate named mesh objects in their category FBXs; 12 chest components retain their pivots. Temp contains no objects in this captured scene; no unrelated content exported.
+
+Cliff Passage: 66 current collider meshes re-imported with matching vertex counts and coordinates (maximum error 0.0000138 stud). No collision generator ran.
+
+The earlier sibling verdant_valley_staging set is retained with a DO_NOT_IMPORT.md marker because it emitted material-slot warnings. Working exports are unchanged.
+
+## Owner testing direction — 2026-09-30
+
+Missing/black colors and Cliff Passage structure appearance are deferred for initial functionality testing. Combined verdant_valley_structure.fbx and verdant_valley_props.fbx are alternatives to the per-chunk exports: do not activate both sets. Studio currently contains the combined models as well as individual imports. Keep individual imports active and park combined models outside Workspace before interpreting collision/visual test results. Preserve all models/files until owner validation; no cleanup performed.

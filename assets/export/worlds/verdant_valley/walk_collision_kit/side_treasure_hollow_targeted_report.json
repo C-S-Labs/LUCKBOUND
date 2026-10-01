@@ -1,0 +1,23 @@
+{
+  "chunk": "chunk_side_treasure_hollow",
+  "model": "VV_CAP_TREASURE_HOLLOW_COLLISION_MERGED",
+  "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+  "half_extents_studs": [
+    128,
+    128
+  ],
+  "covered_bounds_xy": [
+    -128.0,
+    128.0,
+    -128.0,
+    128.0
+  ],
+  "surface_offset_studs": 0.05,
+  "forced_unmerged_tiles": 6,
+  "terrain_faces": 3051,
+  "detached_components_excluded": 46,
+  "initial_cells": 169,
+  "merged_colliders": 112,
+  "merged_regions": 16,
+  "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/side_treasure_hollow_walk_collision_targeted.fbx"
+}

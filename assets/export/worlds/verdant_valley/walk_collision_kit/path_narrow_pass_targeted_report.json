@@ -1,0 +1,13 @@
+{
+  "chunk": "chunk_path_narrow_pass",
+  "model": "VV_PATH_NARROW_PASS_COLLISION_MERGED",
+  "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+  "surface_offset_studs": 0.1,
+  "forced_unmerged_tiles": 8,
+  "terrain_faces": 3054,
+  "detached_components_excluded": 76,
+  "initial_cells": 204,
+  "merged_colliders": 149,
+  "merged_regions": 28,
+  "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/path_narrow_pass_walk_collision_targeted.fbx"
+}

@@ -16,7 +16,7 @@ constraints, and a piece that satisfies them is correct however it looks.
 
 ---
 
-## The six conventions
+## The eight conventions
 
 ### 1. One metre is one stud
 
@@ -105,7 +105,7 @@ A piece is two different kinds of thing, and they are delivered differently:
 |---|---|---|
 | **What** | everything walked on, collided with, or that makes the place what it is: decks, floors, walls, bridges, stairs, keels, cliffs, landmarks, trees, rocks, buildings | everything that floats, drifts, flies, spins, glows or is there only for mood, never blocking the player: floating crystals and shards, floating books, rings, birds and drones, lanterns, falling leaves, embers |
 | **Delivered as** | part of the piece's mesh (convention 5) | **not** merged into the piece; one copy of each *kind*, plus a list of where it goes |
-| **Drawn by** | the server, with collision | each player's device only, no collision, animated, and thinned out on low graphics |
+| **Drawn by** | the server, with collision | each player's device; noncolliding by default, animated, and thinned out on low graphics |
 
 **How to deliver ambient scenery:**
 
@@ -136,6 +136,19 @@ A piece is two different kinds of thing, and they are delivered differently:
    | `Tumble` | bob, mild rock, slow turn | debris, rubble |
    | `Bird` | the piece's flock circles its centre, nose first, banked | birds |
    | `Wing` | flaps about its hinge, riding on its bird | a bird's wings (see below) |
+
+   | `Sway` | gentle rocking about the mesh centre | separate tree canopies, banners |
+
+   **Studio wind tuning:** select `ReplicatedStorage.Luckbound.Content.Props.VerdantValley`
+   and expand Properties → Attributes. `SwayEnabled` toggles motion; `SwayStrength`
+   multiplies the default angle (1 = about 1.7°); `SwaySpeed` multiplies speed
+   (1 = five-second primary cycle; 2 = twice as fast). Strength 0 restores the
+   authored pose; speed must be positive. Attributes are read live on the Client
+   during Play. Play edits are temporary: copy preferred values to Edit mode and
+   `src/shared/Content/Props/VerdantValley.meta.json` for persistent Rojo defaults.
+   Other worlds can expose the same Attributes on their Props ModuleScript;
+   missing overrides use `GameConfig.Ambience.Props.Sway`. Only Sway rows move;
+   the existing camera-distance limit still applies.
 
    Rules every class keeps (tested): **nothing ever changes size**; bob and
    spin are about true vertical whatever the prop's tilt; rock and roll are
@@ -171,6 +184,13 @@ where they were authored.
 - each kind of prop is uploaded once instead of baked into 22 meshes
 - floating clutter stops inflating each piece's collision
 
+**Verdant Valley Causeway (2026-09-30):** the saved production library separates
+its solid group, nonsolid group and individual canopies. Only the solid group
+uses convention 8 and server-owned collision; nonsolid scenery and canopies stay
+client ambience. Terrain uses its dedicated CollisionTemplate. All 30 chunks now
+follow this separation. A fresh integrated Studio walk remains required; the
+2026-09-27 unsaved pilot is historical.
+
 **Keep the size pins.** With the scenery removed, the structure mesh must still
 fill the piece's declared box exactly (for Sky Citadel, 256³: tiny pins at the
 bottom corners, the landmark reaching the top). `ChunkLoader` sets every mesh to
@@ -186,12 +206,12 @@ its prop.
 ### 7. Interactive things are fixtures — chests, doors, forcefields
 
 **Adopted 2026-09-23, owner-directed (build spec §7.5).** Anything a player
-opens, uses or cannot pass is neither structure nor ambient scenery:
+opens, uses or that has shared state is a fixture:
 
 | | Props (convention 6) | Fixtures |
 |---|---|---|
 | **Examples** | crystals, birds, tomes | chests, the vault door, a sealed gate's forcefield |
-| **Drawn by** | each client, no collision | the **server**, with collision, replicated |
+| **Drawn by** | each client; collision only when opted in | the **server**, with collision, replicated |
 | **State** | none | a chest opens once per party; a vault opens per player, per key |
 | **Content** | `Content/Props/<World>.luau` | `Content/Fixtures/<World>.luau` |
 
@@ -213,6 +233,27 @@ opens, uses or cannot pass is neither structure nor ambient scenery:
    Moving parts do not.
 4. A fixture's loot comes from the world's `Loot` block
    (`Content/Worlds/<World>.luau`), never from the kit.
+
+### 8. Solid decoration
+
+Prop placement rows may set `Collide = true` for static scenery players should
+be blocked by, such as trees, rocks and ruins. The field is optional and defaults
+to `false`; existing Sky Citadel and Ethereal Scape placements remain
+noncolliding. `ChunkLoader` places solid rows under the replicated expedition
+stage with collision; `PropController` skips them. Solid rows must be `Static`
+and Tier 1. Keep floating and ambient objects noncolliding.
+
+In Blender, keep each `prop_*` object in `PropLibrary` and set its custom
+property `solid` to a boolean: `True` for chunk-attached solid scenery,
+`False` or absent for ambient objects. The Verdant Valley exporter reads this
+tag and writes `Collide = true` or `false` into generated placement rows.
+Keep terrain as `chunk_*` and separated meshes as `prop_*`. Use the tag, not
+the name, to express collision. Detached walkable surfaces may be solid prop
+rows too; their source geometry must still meet the route at every socket.
+
+Solid rows currently use the visible prop mesh for collision. Check its
+collision decomposition in Studio at all quarter turns before relying on it
+to bound a route; a later asset pass may use a separate collision shape.
 
 ---
 
