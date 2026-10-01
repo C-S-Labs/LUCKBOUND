@@ -47,6 +47,41 @@ revamp pass (see `docs/STATUS.md` §4). All pieces are in one file,
 `assets/source/worlds/verdant_valley/export_verdant_valley_kit.py`. The 2026-09-22 first-pass test kit
 (`chunk_path_straight`, `chunk_meadow_a`, `chunk_waterfall`…) was retired in the 2026-09-25 audit.
 
+**Current Verdant Valley collision architecture (2026-09-30):** all 30 chunks
+use saved separated structure, solid/nonsolid props and dedicated walk collision.
+`VV_COLLISION.rbxmx` contains 29 named child templates with 3,915 MeshParts,
+including Cliff Passage (66) and Cutbank Ford (137). Stone Sentinels uses its
+separate 118-part merged template: 4,033 active colliders in total. The original
+202-part Stone template is rollback material, outside the active selection.
+`CollisionTemplate` lookup disables visual terrain collision only when the named
+model is found; cloned colliders rotate with each chunk's calibrated art frame.
+ChunkLoader sets the clone's transparency and physics flags at runtime.
+
+The prop library contains 823 meshes: 30 solid groups, 30 nonsolid groups,
+746 canopies and 17 specials. The 39 colliding placements are server-owned
+Static/Tier 1 props; nonsolid groups and canopies remain client ambience.
+Saved per-chunk yaw and placement corrections are authoritative. Old exporter
+or collision-generator defaults cannot reconstruct this production snapshot.
+
+**Full socket/opening audit (2026-09-30):** `docs/VV_SOCKET_AUDIT.md` records
+all 30 chunks/59 sockets and before/after raw evidence. Woodland Refuge's
+saved zero-yaw terrain, collision and all 18 props approach south; its socket
+contract is corrected to south (+128 Z, Facing 180) without rotating assets
+or translations. Exact production-export triangles and saved collision pass
+the corrected approach. Runtime precise terrain mouth queries/calibration
+still miss it; fresh owner Studio inspection remains required. After audit:
+40 PASS, 19 SUSPICIOUS, zero conclusive FAIL sockets. Suspicious cases are
+untouched; no production ID or staging/rollback asset changed. Historical
+generator EXPECTED tables describe native authoring, not this imported frame;
+do not regenerate production metadata from them.
+
+The 28-template generation reports, Stone pilot and first Cliff candidate below
+in the import history describe earlier iterations. Current counts come from the
+refreshed export ledger and saved templates. Run the read-only collision verifier;
+serialized physical configuration without explicit fidelity tokens requires
+Studio inspection and traversal after Rojo sync. Retain earlier assets until
+those checks and CI establish safe replacement.
+
 | Role | Pieces |
 |---|---|
 | `ENTRY` (2) | `chunk_entry_dawn_meadow` · `chunk_entry_woodland_refuge` |
@@ -69,9 +104,41 @@ alongside Cave Mouth; Forgotten Trial remains the optional side pocket. All thre
 caps are equally weighted and unlimited per layout, following the owner's corrected
 direction. Their geometry, sockets, scenario support and mesh IDs are unchanged.
 
+**Historical 2026-09-28 separated candidate (superseded by the saved production set above):** the reviewed 30-piece source has been
+partitioned into 30 connected terrain meshes and 66 tagged prop meshes in
+`verdant_valley_separated.blend`. Props use `prop_*` names; the two former
+`chunk_side_*` cap meshes use their current `chunk_cap_*` names. Solid scenery
+and detached walkable surfaces are server placements; water, foliage and small
+details remain client ambience. New FBXs and candidate placement/size tables
+are staged under `assets/export/worlds/verdant_valley/`. At that stage no new IDs or live
+chunk sizes were active. This candidate is not an instruction to replace the
+current saved production assets.
+
 ---
 
 ## 3. How pieces connect
+
+**Production exit/width correction (2026-09-30):** exact authored VV_Path
+triangles establish Mushroom Glen's north/south/west exits (east is grass,
+not a path mouth). Causeway and Cliff Overlook are north PATH/south WIDE;
+Windward, Crystal Spring and High Ledge are east PATH/west WIDE. Each mouth
+was measured independently: normal paths 43 studs, wide paths 50 studs, with
+46.5/52.5-stud level pads and the existing buffered 48/52 socket contracts.
+Forgotten Orchard, Boss and Forgotten Trial already agree and remain unchanged;
+Refuge's south correction is retained. The native authoring socket table was
+not converted when those chunks retained zero-degree production art hints;
+do not rotate art or prop transforms to fix metadata. See
+`docs/VV_SOCKET_WIDTH_REVIEW.md` and its complete 30-chunk before/after reports.
+These stronger measurements supersede the earlier audit's PASS counts:
+42 PASS, 17 SUSPICIOUS, zero conclusive FAIL after corrections. Query/collision
+ambiguities still require owner Studio review; no asset IDs were replaced.
+
+**Owner Studio validation (2026-09-30):** approximately eight procedural seeds
+after the latest corrections retain the Refuge fix, connect Mushroom Glen
+correctly and produce clean corrected PATH/WIDE gate connections. No additional
+socket-placement or visible connection failures were observed. The 17 suspicious
+audit results and serialized collision-fidelity/Studio-query ambiguity remain
+known limitations; this sample does not establish exhaustive collision fidelity.
 
 Verdant Valley's connection types:
 
@@ -83,6 +150,12 @@ Verdant Valley's connection types:
 Openings are centred on an edge midpoint and are 42–50 studs across in the
 delivered kit. A piece may have an opening on any side it leaves open, and no
 opening on a side the art closes.
+
+Wetland Pools' reviewed Blender mesh has both mouth surfaces at the same
+walk-plane height. Keep both socket `OffsetY` values at zero: unequal values
+move every later chunk vertically. Studio raycasts on the uploaded MeshPart can
+hit its convex collision hull above the visible path; check the visible mesh
+and collision separately before changing socket positions.
 
 ### The consequence worth understanding
 
@@ -227,3 +300,135 @@ The kit was redelivered as 30 pieces in one `.blend`, laid out 5 × 6. It is exp
 - 200/200 seeds assemble into 200 distinct layouts, and every one of the 30 pieces appears.
   **Not yet uploaded or walked in Studio.**
 
+
+
+## 9. Composition review (2026-09-29)
+
+**Export preparation (2026-09-30):** ordinary props are now consolidated by
+their existing chunk-name prefixes into one `PropsSolid` and one `PropsNonSolid`
+per chunk, inside the original collections. All 749 canopy objects and the
+12 components of the three openable chests retain their geometry, transforms
+and pivots. Six concrete review objects remain separate. Structure, dedicated
+collision and Temp are unchanged. See
+[`PROPS_EXPORT_REVIEW.md`](../../assets/source/worlds/verdant_valley/PROPS_EXPORT_REVIEW.md)
+for all 30 chunk counts and outputs; the adjacent JSON accounts for every source.
+Keep `VerdantValley_Props_Export_Input.blend` until owner Blender and Studio
+import/material/pivot checks pass. Production exports have not been replaced.
+
+The current live authoring source is `E:/BlenderAIProjects/Projects/VerdantValley_Cleanup.blend`.
+The following composition record describes the earlier `VerdantValley_Extra_Details_Backup.blend` pass.
+Treasure Hollow, Longgrass Meadow, Deep Clearing and Warden's Clearing are finished,
+protected density/style references. The remaining 26 chunks were reviewed individually;
+24 received restrained Temp-based shoulder/landmark dressing and minor identifying
+features. Cliff Passage and Cave Mouth already read intentionally and remain unchanged.
+Large uninterrupted grass areas are deliberate. Collision, terrain, sockets, connectivity
+and primary landmarks were preserved. Owner Blender review precedes production export.
+
+The per-chunk record, verification and cleanup handoff live in
+[`COMPOSITION_REVIEW.md`](../../assets/source/worlds/verdant_valley/COMPOSITION_REVIEW.md).
+
+Owner review corrected the too-compact initial planting: 319 props redistributed into
+wider uneven shoulder groups and 386 linking props added (746 total across 24 chunks).
+Original geometry and identifying details stayed fixed. Current renders: `Composition_Spread/`
+beside the live source; clustered rollback retained pending review.
+
+Owner-authorized exception to reference protection: refine only Longgrass Meadow's
+flowering tree into a secondary centerpiece. Its seven-lobed crown carries 49 readable
+muted pink/cream flowers; tapered pale branches and roots replace the simple beams.
+Original placement, surrounding dressing, terrain and collision stay fixed. Removed
+the two flowering-tree sources from Temp (six props remain). `refine_flowering_tree.py`
+seats bark marks on the actual tapered trunk faces, avoiding detached floating etchings, and
+records the targeted operation; `Flowering_Tree_After/` contains overhead/feature/whole
+chunk previews. Keep `VerdantValley_Flowering_Tree_Input.blend` until owner visual and
+eventual Studio checks confirm replacement; then remove that rollback if unneeded.
+
+Earlier owner-edited reference (2026-09-29): `VerdantValley_Geometry_Review_Reference.blend`.
+Read-only review of all 30 chunks is recorded in
+[`GEOMETRY_REVIEW.md`](../../assets/source/worlds/verdant_valley/GEOMETRY_REVIEW.md).
+Four floating details and solid prop intersections are pending owner-directed correction;
+no scene geometry changed during this review. Preserve current owner edits when fixing
+findings; earlier generated placements are historical rather than the current reference.
+
+Owner manual cleanup and landmark refinement (2026-09-29): retained the owner's latest
+7,946-object scene as `VerdantValley_Landmark_Refinement_Input.blend`, with an input manifest.
+The earlier geometry report predates these manual adjustments and must not be treated as
+the current placement reference. `refine_chunk_landmarks.py` made only the requested changes:
+
+| Chunk | Changes |
+|---|---|
+| Ancient Oak | Tapered aged trunk, branching forks and short broken limb, ten varied canopy lobes, bark seams/knot seated on trunk faces, small moss patches on existing roots. Existing root meshes and surrounding composition retained. |
+| Treasure Hollow | Rebuilt its plain chest as a planked wooden chest with domed lid, continuous metal hoops, corner shoes, hinges, side carry rings, rivets and brass lock. This is the owner's explicit exception to finished-reference protection. |
+| Cave Mouth | Same chest model as Treasure Hollow, feet seated into ground. Reassigned 167 covered ground faces to `VV_CaveFloor`; terrain vertices/topology and cave structure unchanged. |
+| Crossroads Copse | Removed center obstacle and marked northeast props (16 objects total). Added open timber roof shelter, low broken stone walls, grounded footings/step, and the same chest facing west toward the route. All structure/chest bounds lie within the non-path shoulder. |
+
+Final source has 7,937 objects. All 7,920 unrelated input objects match their geometry,
+transform, materials and collection hashes; collision and sockets are unchanged. The cave
+floor's exact vertex/face data also match. `Landmark_Refinement_Record.json` beside the source
+records edits/removals/additions, protected count and chest seating. `Landmarks_After/` contains
+saved-source overhead and feature renders. Owner Blender review and later Studio checks
+remain. Retain the landmark input, earlier review references and automatic `.blend1` rollback
+until approved replacement and Studio checks; then remove obsolete previews/backups if unneeded.
+Production meshes, exports and manifest entries were not replaced in this pass.
+
+Owner chest/shelter follow-up: all three chests now use 0.7912 scale (14% reduction,
+then another 8% on the owner's follow-up; approximately 21% smaller overall). Their side-end lid
+panels have horizontal planks, metal edge trim and a riveted cross strip. The body is
+a hollow four-wall box with a plank floor; the lid is a hollow arch shell, not a solid
+filled volume. A small tied sack sits on the floor. Every moving lid detail is in its
+lid mesh, whose origin is the rear hinge (local X; -105 degrees for the reviewed open
+pose). Closed source is saved; animations, rigging and runtime loot integration remain
+for later as requested. Existing locations were retained and feet regrounded.
+
+Crossroads' shelter now sits at chunk-local (56,56), rotated -45 degrees so the entrance
+faces southwest toward the junction, matching the marked reference orientation. Its
+footings and entry step were refitted to existing terrain. Two varied existing tree
+assemblies and 13 reused Temp rock/bush/tuft props frame the sides and back; the front
+approach and four paths stay clear. Final count is 7,959 objects; all 7,925 unrelated
+input objects match hashes, including Ancient Oak, all terrain/collision and sockets.
+`VerdantValley_Loot_Chest_Input.blend`, `Loot_Chest_Refinement_Input_Manifest.json`,
+`Loot_Chest_Refinement_Record.json` and `Loot_Chest_After/` preserve this iteration's
+input, operation and closed/open/overhead evidence. Keep those and earlier rollback
+sources until owner review and later Studio checks, then remove superseded artifacts
+if unneeded. No production files, exports or manifest entries were superseded.
+
+Interior-only follow-up: added 20 broad inner wall planks using the exterior's
+spacing and wood tones. The sack retains its geometry, but is rotated onto its
+side, shifted off-center and settled 0.02 canonical stud into the plank floor.
+Only three body meshes and three sack meshes changed. All old body vertices/faces
+and outer bounds, lids/pivots/hardware and 7,953 unrelated objects remain unchanged;
+the approved closed exterior render is pixel-identical. `--interior-refinement`
+records this targeted edit; `Chest_Interior_After/` has open/closed previews and
+`Chest_Interior_Refinement_Record.json` the preservation result. Keep the new
+`VerdantValley_Chest_Interior_Input.blend` rollback and earlier references until
+owner review and eventual Studio checks, then remove obsolete artifacts if unneeded.
+No production assets, exports or manifest entries were replaced.
+
+Lid seam correction: closed the five narrow gaps between roof planks on each of
+the three chests, extending only their internal X edges by 0.02 canonical unit.
+Outer dimensions, all remaining lid vertices, bodies, interiors, hinges and other
+7,956 scene objects are unchanged. The original generator now uses touching panel
+edges. `Lid_Seam_Refinement_Record.json` and `Lid_Seam_After/lid_closed.png` record
+the correction; keep `VerdantValley_Lid_Seam_Input.blend` until owner approval and
+eventual Studio checks, then remove obsolete rollback/previews if unneeded.
+
+Crossroads shelter support/stone correction: extended its four upright posts into
+the rafters and added front/back king posts between headers and ridge. Roof and
+all original timber geometry/placement remain fixed. Replaced plain stone boxes
+with seated courses and softened corners, flagstone paving, segmented step and
+layered footings, preserving wall/footing envelopes and finished floor elevation.
+Only two meshes changed; all other 7,949 objects in the owner's latest 7,951-object
+scene match hashes. `--shelter-support` records the operation; close/front evidence
+is in `Shelter_Support_After/` and `Shelter_Support_Refinement_Record.json` beside
+the source. Retain `VerdantValley_Shelter_Support_Input.blend` and earlier rollbacks
+until owner review and eventual Studio checks, then remove obsolete artifacts if
+unneeded. No production assets, exports or manifest entries were replaced.
+
+Windward Ridge patch correction: the central fan pinched uneven boundary heights
+into radiating humps. `--windward-patch` adjusts 527 local terrain vertices onto a
+fitted ridge slope within radius 16 and feathers to unchanged terrain at radius
+32, retaining topology, materials and transforms. All 7,932 unrelated objects
+match the owner's retained input; close render reviewed. Blender approval and
+eventual Studio/export/collision alignment checks remain. Keep
+`VerdantValley_Windward_Patch_Input.blend` and `Windward_Patch_After.png` until
+those pass, then remove obsolete rollback/previews if unneeded. Production
+exports and manifest entries were not replaced.

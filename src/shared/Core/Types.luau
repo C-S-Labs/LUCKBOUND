@@ -254,6 +254,9 @@ export type ChunkDefinition = {
 	-- Corrects a kit whose authored "north" is not the layout's north; nil
 	-- means the art already agrees. Never touches sockets or collision.
 	MeshYawOffset: number?,
+	-- Optional server-side model of small walk colliders, positioned at the
+	-- chunk walk-plane origin. Only active after its imported model is present.
+	CollisionTemplate: string?,
 	-- Scenario compatibility (build spec §7.3): what can HAPPEN here, keyed by
 	-- a scenario's Requires. Deliberately not universal -- a traversal
 	-- challenge in a flat meadow is not a challenge. Required on PATH,

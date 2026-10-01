@@ -1,0 +1,40 @@
+{
+  "source": "assets/source/worlds/verdant_valley/verdant_valley_30_cleanup_review.blend",
+  "source_sha256": "a915fbb0c76e4fdfe6fca211e4113c66583a036a8fa6a428620fe10caf3382fe",
+  "chunk": "chunk_stone_sentinels",
+  "connected_terrain_faces": 3054,
+  "detached_components_excluded": 80,
+  "tile_studs": 16,
+  "sample_step_studs": 4,
+  "surface_offset_studs": 0.35,
+  "pieces": 202,
+  "fbx_reimport_meshes_including_origin": 203,
+  "triangles_skipped_at_open_or_steep_areas": 2432,
+  "interpolation_samples": 5760,
+  "interpolation_max_error_studs": 0.26,
+  "interpolation_mean_error_studs": 0.01,
+  "coverage_4_stud_grid": {
+    "regular_hits": 2540,
+    "regular_misses": 69,
+    "north_hits": 353,
+    "north_misses": 3
+  },
+  "collision_surface_max_error_studs": 0.245,
+  "north_miss_locations_blender_xy_height": [
+    [
+      46,
+      102,
+      2.22
+    ],
+    [
+      42,
+      106,
+      3.14
+    ],
+    [
+      38,
+      114,
+      4.02
+    ]
+  ]
+}

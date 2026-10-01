@@ -1,0 +1,17 @@
+[
+  {
+    "file": "path_cliff_passage_structure.fbx",
+    "geometry_and_normals_identical_to_previous_fbx": true,
+    "black_export_colors": 0
+  },
+  {
+    "file": "path_cliff_passage_solid_props.fbx",
+    "geometry_and_normals_identical_to_previous_fbx": true,
+    "black_export_colors": 0
+  },
+  {
+    "file": "path_cliff_passage_nonsolid_props.fbx",
+    "geometry_and_normals_identical_to_previous_fbx": true,
+    "black_export_colors": 0
+  }
+]

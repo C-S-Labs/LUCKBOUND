@@ -1,0 +1,13 @@
+{
+  "chunk": "chunk_entry_dawn_meadow",
+  "model": "VV_ENTRY_DAWN_MEADOW_COLLISION_MERGED",
+  "source_sha256": "4b4568595bb6b24f4c7ca0bb0a78aa2699f30cdb020448cb4d39e45b49ebe6bf",
+  "surface_offset_studs": 0.05,
+  "forced_unmerged_tiles": 8,
+  "terrain_faces": 3188,
+  "detached_components_excluded": 177,
+  "initial_cells": 200,
+  "merged_colliders": 122,
+  "merged_regions": 27,
+  "fbx": "assets/export/worlds/verdant_valley/walk_collision_kit/entry_dawn_meadow_walk_collision_targeted.fbx"
+}

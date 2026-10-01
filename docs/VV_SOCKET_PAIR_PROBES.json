@@ -1,0 +1,1794 @@
+[
+  {
+    "total": 55,
+    "yaw": 0,
+    "samples": [
+      {
+        "normal": 0.9998645782470703,
+        "lateral": -16,
+        "height": 0.064453125,
+        "distance": -40,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999462962150574,
+        "lateral": -8,
+        "height": 0.173828125,
+        "distance": -40,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9998905658721924,
+        "lateral": 0,
+        "height": 0.2646484375,
+        "distance": -40,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999918937683105,
+        "lateral": 8,
+        "height": 0.3349609375,
+        "distance": -40,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9998685121536255,
+        "lateral": 16,
+        "height": 0.37890625,
+        "distance": -40,
+        "pass": true,
+        "part": "walk_+016_+080"
+      },
+      {
+        "normal": 0.9999942183494568,
+        "lateral": -16,
+        "height": 0.0244140625,
+        "distance": -24,
+        "pass": true,
+        "part": "walk_-032_+096"
+      },
+      {
+        "normal": 0.9999539852142334,
+        "lateral": -8,
+        "height": 0.087890625,
+        "distance": -24,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.999947190284729,
+        "lateral": 0,
+        "height": 0.134765625,
+        "distance": -24,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999228119850159,
+        "lateral": 8,
+        "height": 0.150390625,
+        "distance": -24,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999234676361084,
+        "lateral": 16,
+        "height": 0.15234375,
+        "distance": -24,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999905228614807,
+        "lateral": -16,
+        "height": -0.015625,
+        "distance": -12,
+        "pass": true,
+        "part": "walk_-032_+112"
+      },
+      {
+        "normal": 0.9999942183494568,
+        "lateral": -8,
+        "height": -0.0078125,
+        "distance": -12,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999216198921204,
+        "lateral": 0,
+        "height": -0.00390625,
+        "distance": -12,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999998211860657,
+        "lateral": 8,
+        "height": 0.001953125,
+        "distance": -12,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999822378158569,
+        "lateral": 16,
+        "height": 0.021484375,
+        "distance": -12,
+        "pass": true,
+        "part": "walk_+016_+112"
+      },
+      {
+        "normal": 0.9999904632568359,
+        "lateral": -16,
+        "height": -0.0322265625,
+        "distance": -6,
+        "pass": true,
+        "part": "walk_-032_+112"
+      },
+      {
+        "normal": 0.9999933838844299,
+        "lateral": -8,
+        "height": -0.0283203125,
+        "distance": -6,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999935030937195,
+        "lateral": 0,
+        "height": -0.0283203125,
+        "distance": -6,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999877214431763,
+        "lateral": 8,
+        "height": -0.02734375,
+        "distance": -6,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999822378158569,
+        "lateral": 16,
+        "height": -0.013671875,
+        "distance": -6,
+        "pass": true,
+        "part": "walk_+016_+112"
+      },
+      {
+        "normal": 0.9999905228614807,
+        "lateral": -16,
+        "height": -0.0439453125,
+        "distance": -2,
+        "pass": true,
+        "part": "walk_-032_+112"
+      },
+      {
+        "normal": 0.9999933838844299,
+        "lateral": -8,
+        "height": -0.04296875,
+        "distance": -2,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999933838844299,
+        "lateral": 0,
+        "height": -0.04296875,
+        "distance": -2,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999929666519165,
+        "lateral": 8,
+        "height": -0.04296875,
+        "distance": -2,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999821186065674,
+        "lateral": 16,
+        "height": -0.0380859375,
+        "distance": -2,
+        "pass": true,
+        "part": "walk_+016_+112"
+      },
+      {
+        "normal": 0.7713741064071655,
+        "lateral": -16,
+        "height": -0.0498046875,
+        "distance": 0,
+        "pass": true,
+        "part": "walk_-032_+112"
+      },
+      {
+        "normal": 0.9999999403953552,
+        "lateral": -8,
+        "height": -0.0498046875,
+        "distance": 0,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 1,
+        "lateral": 0,
+        "height": -0.0498046875,
+        "distance": 0,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999999403953552,
+        "lateral": 8,
+        "height": -0.0498046875,
+        "distance": 0,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.7801727652549744,
+        "lateral": 16,
+        "height": -0.0498046875,
+        "distance": 0,
+        "pass": true,
+        "part": "walk_+016_+112"
+      },
+      {
+        "normal": 0.9999947547912598,
+        "lateral": -16,
+        "height": -0.0439453125,
+        "distance": 2,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999945759773254,
+        "lateral": -8,
+        "height": -0.04296875,
+        "distance": 2,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999940991401672,
+        "lateral": 0,
+        "height": -0.0439453125,
+        "distance": 2,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999939799308777,
+        "lateral": 8,
+        "height": -0.0439453125,
+        "distance": 2,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999935626983643,
+        "lateral": 16,
+        "height": -0.0439453125,
+        "distance": 2,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999945759773254,
+        "lateral": -16,
+        "height": -0.0302734375,
+        "distance": 6,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999945759773254,
+        "lateral": -8,
+        "height": -0.029296875,
+        "distance": 6,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.999993622303009,
+        "lateral": 0,
+        "height": -0.029296875,
+        "distance": 6,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999939203262329,
+        "lateral": 8,
+        "height": -0.029296875,
+        "distance": 6,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999896883964539,
+        "lateral": 16,
+        "height": -0.0302734375,
+        "distance": 6,
+        "pass": true,
+        "part": "walk_-128_-032"
+      },
+      {
+        "normal": 0.9999951720237732,
+        "lateral": -16,
+        "height": -0.01171875,
+        "distance": 12,
+        "pass": true,
+        "part": "walk_-128_+016"
+      },
+      {
+        "normal": 0.9999961853027344,
+        "lateral": -8,
+        "height": -0.009765625,
+        "distance": 12,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9805753827095032,
+        "lateral": 0,
+        "height": -0.0087890625,
+        "distance": 12,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999958872795105,
+        "lateral": 8,
+        "height": -0.009765625,
+        "distance": 12,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999786615371704,
+        "lateral": 16,
+        "height": -0.01171875,
+        "distance": 12,
+        "pass": true,
+        "part": "walk_-128_-032"
+      },
+      {
+        "normal": 0.9999814033508301,
+        "lateral": -16,
+        "height": -0.0078125,
+        "distance": 24,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999879002571106,
+        "lateral": -8,
+        "height": -0.0068359375,
+        "distance": 24,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999879002571106,
+        "lateral": 0,
+        "height": -0.0048828125,
+        "distance": 24,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999890923500061,
+        "lateral": 8,
+        "height": -0.005859375,
+        "distance": 24,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9126902222633362,
+        "lateral": 16,
+        "height": -0.0078125,
+        "distance": 24,
+        "pass": true,
+        "part": "walk_-112_-032"
+      },
+      {
+        "normal": 0.9996985197067261,
+        "lateral": -16,
+        "height": -0.2548828125,
+        "distance": 40,
+        "pass": true,
+        "part": "walk_patch_-096_-016_3x2"
+      },
+      {
+        "normal": 0.9997286796569824,
+        "lateral": -8,
+        "height": -0.2607421875,
+        "distance": 40,
+        "pass": true,
+        "part": "walk_patch_-096_-016_3x2"
+      },
+      {
+        "normal": 0.9997286796569824,
+        "lateral": 0,
+        "height": -0.259765625,
+        "distance": 40,
+        "pass": true,
+        "part": "walk_patch_-096_-016_3x2"
+      },
+      {
+        "normal": 0.9997286796569824,
+        "lateral": 8,
+        "height": -0.2578125,
+        "distance": 40,
+        "pass": true,
+        "part": "walk_patch_-096_-016_3x2"
+      },
+      {
+        "normal": 0.36925435066223145,
+        "lateral": 16,
+        "height": -0.255859375,
+        "distance": 40,
+        "pass": false,
+        "part": "walk_-096_-032"
+      }
+    ],
+    "passed": 54,
+    "neighbourYaw": 270
+  },
+  {
+    "total": 55,
+    "yaw": 90,
+    "samples": [
+      {
+        "normal": 0.9998645782470703,
+        "lateral": -16,
+        "height": 0.064453125,
+        "distance": -40,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999462962150574,
+        "lateral": -8,
+        "height": 0.173828125,
+        "distance": -40,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9998906254768372,
+        "lateral": 0,
+        "height": 0.2646484375,
+        "distance": -40,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9998587369918823,
+        "lateral": 8,
+        "height": 0.3349609375,
+        "distance": -40,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9998636245727539,
+        "lateral": 16,
+        "height": 0.37890625,
+        "distance": -40,
+        "pass": true,
+        "part": "walk_+016_+080"
+      },
+      {
+        "normal": 0.9999942183494568,
+        "lateral": -16,
+        "height": 0.0244140625,
+        "distance": -24,
+        "pass": true,
+        "part": "walk_-032_+096"
+      },
+      {
+        "normal": 0.9999539852142334,
+        "lateral": -8,
+        "height": 0.087890625,
+        "distance": -24,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.999947190284729,
+        "lateral": 0,
+        "height": 0.134765625,
+        "distance": -24,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999228119850159,
+        "lateral": 8,
+        "height": 0.150390625,
+        "distance": -24,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999232888221741,
+        "lateral": 16,
+        "height": 0.15234375,
+        "distance": -24,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999904632568359,
+        "lateral": -16,
+        "height": -0.015625,
+        "distance": -12,
+        "pass": true,
+        "part": "walk_-032_+112"
+      },
+      {
+        "normal": 0.9999942183494568,
+        "lateral": -8,
+        "height": -0.0078125,
+        "distance": -12,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999215602874756,
+        "lateral": 0,
+        "height": -0.00390625,
+        "distance": -12,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999998807907104,
+        "lateral": 8,
+        "height": 0.001953125,
+        "distance": -12,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999822378158569,
+        "lateral": 16,
+        "height": 0.021484375,
+        "distance": -12,
+        "pass": true,
+        "part": "walk_+016_+112"
+      },
+      {
+        "normal": 0.9999904632568359,
+        "lateral": -16,
+        "height": -0.0322265625,
+        "distance": -6,
+        "pass": true,
+        "part": "walk_-032_+112"
+      },
+      {
+        "normal": 0.9999933242797852,
+        "lateral": -8,
+        "height": -0.0283203125,
+        "distance": -6,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999935030937195,
+        "lateral": 0,
+        "height": -0.0283203125,
+        "distance": -6,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999877214431763,
+        "lateral": 8,
+        "height": -0.02734375,
+        "distance": -6,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999822378158569,
+        "lateral": 16,
+        "height": -0.013671875,
+        "distance": -6,
+        "pass": true,
+        "part": "walk_+016_+112"
+      },
+      {
+        "normal": 0.9999904632568359,
+        "lateral": -16,
+        "height": -0.0439453125,
+        "distance": -2,
+        "pass": true,
+        "part": "walk_-032_+112"
+      },
+      {
+        "normal": 0.9999933838844299,
+        "lateral": -8,
+        "height": -0.04296875,
+        "distance": -2,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999933838844299,
+        "lateral": 0,
+        "height": -0.04296875,
+        "distance": -2,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999929666519165,
+        "lateral": 8,
+        "height": -0.04296875,
+        "distance": -2,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999821186065674,
+        "lateral": 16,
+        "height": -0.0380859375,
+        "distance": -2,
+        "pass": true,
+        "part": "walk_+016_+112"
+      },
+      {
+        "normal": 0.7713742256164551,
+        "lateral": -16,
+        "height": -0.0498046875,
+        "distance": 0,
+        "pass": true,
+        "part": "walk_-032_+112"
+      },
+      {
+        "normal": 0.9999999403953552,
+        "lateral": -8,
+        "height": -0.0498046875,
+        "distance": 0,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999999403953552,
+        "lateral": 0,
+        "height": -0.0498046875,
+        "distance": 0,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999999403953552,
+        "lateral": 8,
+        "height": -0.0498046875,
+        "distance": 0,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.7801727652549744,
+        "lateral": 16,
+        "height": -0.0498046875,
+        "distance": 0,
+        "pass": true,
+        "part": "walk_+016_+112"
+      },
+      {
+        "normal": 0.9999947547912598,
+        "lateral": -16,
+        "height": -0.0439453125,
+        "distance": 2,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999945759773254,
+        "lateral": -8,
+        "height": -0.04296875,
+        "distance": 2,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999940991401672,
+        "lateral": 0,
+        "height": -0.0439453125,
+        "distance": 2,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999939799308777,
+        "lateral": 8,
+        "height": -0.0439453125,
+        "distance": 2,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999937415122986,
+        "lateral": 16,
+        "height": -0.04296875,
+        "distance": 2,
+        "pass": true,
+        "part": "walk_-128_-032"
+      },
+      {
+        "normal": 0.9999945759773254,
+        "lateral": -16,
+        "height": -0.0302734375,
+        "distance": 6,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999945759773254,
+        "lateral": -8,
+        "height": -0.029296875,
+        "distance": 6,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.999993622303009,
+        "lateral": 0,
+        "height": -0.029296875,
+        "distance": 6,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999939203262329,
+        "lateral": 8,
+        "height": -0.029296875,
+        "distance": 6,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999951720237732,
+        "lateral": 16,
+        "height": -0.0302734375,
+        "distance": 6,
+        "pass": true,
+        "part": "walk_-128_-032"
+      },
+      {
+        "normal": 0.9999951720237732,
+        "lateral": -16,
+        "height": -0.01171875,
+        "distance": 12,
+        "pass": true,
+        "part": "walk_-128_+016"
+      },
+      {
+        "normal": 0.9999961853027344,
+        "lateral": -8,
+        "height": -0.009765625,
+        "distance": 12,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9805753827095032,
+        "lateral": 0,
+        "height": -0.0087890625,
+        "distance": 12,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999958872795105,
+        "lateral": 8,
+        "height": -0.009765625,
+        "distance": 12,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999957084655762,
+        "lateral": 16,
+        "height": -0.01171875,
+        "distance": 12,
+        "pass": true,
+        "part": "walk_-128_-032"
+      },
+      {
+        "normal": 0.9999814629554749,
+        "lateral": -16,
+        "height": -0.0078125,
+        "distance": 24,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999879002571106,
+        "lateral": -8,
+        "height": -0.0068359375,
+        "distance": 24,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999879002571106,
+        "lateral": 0,
+        "height": -0.0048828125,
+        "distance": 24,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999890923500061,
+        "lateral": 8,
+        "height": -0.005859375,
+        "distance": 24,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999813437461853,
+        "lateral": 16,
+        "height": -0.0078125,
+        "distance": 24,
+        "pass": true,
+        "part": "walk_-112_-032"
+      },
+      {
+        "normal": 0.9996985197067261,
+        "lateral": -16,
+        "height": -0.2548828125,
+        "distance": 40,
+        "pass": true,
+        "part": "walk_patch_-096_-016_3x2"
+      },
+      {
+        "normal": 0.9997286796569824,
+        "lateral": -8,
+        "height": -0.2607421875,
+        "distance": 40,
+        "pass": true,
+        "part": "walk_patch_-096_-016_3x2"
+      },
+      {
+        "normal": 0.9997286796569824,
+        "lateral": 0,
+        "height": -0.259765625,
+        "distance": 40,
+        "pass": true,
+        "part": "walk_patch_-096_-016_3x2"
+      },
+      {
+        "normal": 0.9997286200523376,
+        "lateral": 8,
+        "height": -0.2578125,
+        "distance": 40,
+        "pass": true,
+        "part": "walk_patch_-096_-016_3x2"
+      },
+      {
+        "normal": 0.9996970295906067,
+        "lateral": 16,
+        "height": -0.255859375,
+        "distance": 40,
+        "pass": true,
+        "part": "walk_-096_-032"
+      }
+    ],
+    "passed": 55,
+    "neighbourYaw": 0
+  },
+  {
+    "total": 55,
+    "yaw": 180,
+    "samples": [
+      {
+        "normal": 0.9998644590377808,
+        "lateral": -16,
+        "height": 0.064453125,
+        "distance": -40,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999462962150574,
+        "lateral": -8,
+        "height": 0.173828125,
+        "distance": -40,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9998906254768372,
+        "lateral": 0,
+        "height": 0.2646484375,
+        "distance": -40,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999918341636658,
+        "lateral": 8,
+        "height": 0.3349609375,
+        "distance": -40,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.999868631362915,
+        "lateral": 16,
+        "height": 0.37890625,
+        "distance": -40,
+        "pass": true,
+        "part": "walk_+016_+080"
+      },
+      {
+        "normal": 0.9999942183494568,
+        "lateral": -16,
+        "height": 0.0244140625,
+        "distance": -24,
+        "pass": true,
+        "part": "walk_-032_+096"
+      },
+      {
+        "normal": 0.9999539852142334,
+        "lateral": -8,
+        "height": 0.087890625,
+        "distance": -24,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999471306800842,
+        "lateral": 0,
+        "height": 0.134765625,
+        "distance": -24,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999228119850159,
+        "lateral": 8,
+        "height": 0.150390625,
+        "distance": -24,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999234676361084,
+        "lateral": 16,
+        "height": 0.15234375,
+        "distance": -24,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999904632568359,
+        "lateral": -16,
+        "height": -0.015625,
+        "distance": -12,
+        "pass": true,
+        "part": "walk_-032_+112"
+      },
+      {
+        "normal": 0.9999942183494568,
+        "lateral": -8,
+        "height": -0.0078125,
+        "distance": -12,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999216198921204,
+        "lateral": 0,
+        "height": -0.00390625,
+        "distance": -12,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999998211860657,
+        "lateral": 8,
+        "height": 0.001953125,
+        "distance": -12,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999822378158569,
+        "lateral": 16,
+        "height": 0.021484375,
+        "distance": -12,
+        "pass": true,
+        "part": "walk_+016_+112"
+      },
+      {
+        "normal": 0.9999904632568359,
+        "lateral": -16,
+        "height": -0.0322265625,
+        "distance": -6,
+        "pass": true,
+        "part": "walk_-032_+112"
+      },
+      {
+        "normal": 0.9999933242797852,
+        "lateral": -8,
+        "height": -0.0283203125,
+        "distance": -6,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999935030937195,
+        "lateral": 0,
+        "height": -0.0283203125,
+        "distance": -6,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999877214431763,
+        "lateral": 8,
+        "height": -0.02734375,
+        "distance": -6,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999822378158569,
+        "lateral": 16,
+        "height": -0.013671875,
+        "distance": -6,
+        "pass": true,
+        "part": "walk_+016_+112"
+      },
+      {
+        "normal": 0.9999904632568359,
+        "lateral": -16,
+        "height": -0.0439453125,
+        "distance": -2,
+        "pass": true,
+        "part": "walk_-032_+112"
+      },
+      {
+        "normal": 0.9999933838844299,
+        "lateral": -8,
+        "height": -0.04296875,
+        "distance": -2,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999933838844299,
+        "lateral": 0,
+        "height": -0.04296875,
+        "distance": -2,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999929666519165,
+        "lateral": 8,
+        "height": -0.04296875,
+        "distance": -2,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999821186065674,
+        "lateral": 16,
+        "height": -0.0380859375,
+        "distance": -2,
+        "pass": true,
+        "part": "walk_+016_+112"
+      },
+      {
+        "normal": 0.7713742256164551,
+        "lateral": -16,
+        "height": -0.0498046875,
+        "distance": 0,
+        "pass": true,
+        "part": "walk_-032_+112"
+      },
+      {
+        "normal": 0.9999999403953552,
+        "lateral": -8,
+        "height": -0.0498046875,
+        "distance": 0,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999999403953552,
+        "lateral": 0,
+        "height": -0.0498046875,
+        "distance": 0,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999999403953552,
+        "lateral": 8,
+        "height": -0.0498046875,
+        "distance": 0,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.7801727652549744,
+        "lateral": 16,
+        "height": -0.0498046875,
+        "distance": 0,
+        "pass": true,
+        "part": "walk_+016_+112"
+      },
+      {
+        "normal": 0.9999580979347229,
+        "lateral": -16,
+        "height": -0.0439453125,
+        "distance": 2,
+        "pass": true,
+        "part": "walk_-128_+016"
+      },
+      {
+        "normal": 0.9999945759773254,
+        "lateral": -8,
+        "height": -0.04296875,
+        "distance": 2,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.999994158744812,
+        "lateral": 0,
+        "height": -0.0439453125,
+        "distance": 2,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999939799308777,
+        "lateral": 8,
+        "height": -0.0439453125,
+        "distance": 2,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999952912330627,
+        "lateral": 16,
+        "height": -0.0439453125,
+        "distance": 2,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999946355819702,
+        "lateral": -16,
+        "height": -0.0302734375,
+        "distance": 6,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999946355819702,
+        "lateral": -8,
+        "height": -0.029296875,
+        "distance": 6,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.999993622303009,
+        "lateral": 0,
+        "height": -0.029296875,
+        "distance": 6,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999939203262329,
+        "lateral": 8,
+        "height": -0.029296875,
+        "distance": 6,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999556541442871,
+        "lateral": 16,
+        "height": -0.0302734375,
+        "distance": 6,
+        "pass": true,
+        "part": "walk_-128_-032"
+      },
+      {
+        "normal": 0.9999951720237732,
+        "lateral": -16,
+        "height": -0.01171875,
+        "distance": 12,
+        "pass": true,
+        "part": "walk_-128_+016"
+      },
+      {
+        "normal": 0.9999961853027344,
+        "lateral": -8,
+        "height": -0.009765625,
+        "distance": 12,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9805753827095032,
+        "lateral": 0,
+        "height": -0.0087890625,
+        "distance": 12,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999958872795105,
+        "lateral": 8,
+        "height": -0.009765625,
+        "distance": 12,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999954104423523,
+        "lateral": 16,
+        "height": -0.01171875,
+        "distance": 12,
+        "pass": true,
+        "part": "walk_-128_-032"
+      },
+      {
+        "normal": 0.9999814629554749,
+        "lateral": -16,
+        "height": -0.0078125,
+        "distance": 24,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999879002571106,
+        "lateral": -8,
+        "height": -0.0068359375,
+        "distance": 24,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999879002571106,
+        "lateral": 0,
+        "height": -0.0048828125,
+        "distance": 24,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999890923500061,
+        "lateral": 8,
+        "height": -0.005859375,
+        "distance": 24,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9126902222633362,
+        "lateral": 16,
+        "height": -0.0078125,
+        "distance": 24,
+        "pass": true,
+        "part": "walk_-112_-032"
+      },
+      {
+        "normal": 0.9996985197067261,
+        "lateral": -16,
+        "height": -0.2548828125,
+        "distance": 40,
+        "pass": true,
+        "part": "walk_patch_-096_-016_3x2"
+      },
+      {
+        "normal": 0.9997286796569824,
+        "lateral": -8,
+        "height": -0.2607421875,
+        "distance": 40,
+        "pass": true,
+        "part": "walk_patch_-096_-016_3x2"
+      },
+      {
+        "normal": 0.9997286796569824,
+        "lateral": 0,
+        "height": -0.259765625,
+        "distance": 40,
+        "pass": true,
+        "part": "walk_patch_-096_-016_3x2"
+      },
+      {
+        "normal": 0.9997286796569824,
+        "lateral": 8,
+        "height": -0.2578125,
+        "distance": 40,
+        "pass": true,
+        "part": "walk_patch_-096_-016_3x2"
+      },
+      {
+        "normal": 0.3692532479763031,
+        "lateral": 16,
+        "height": -0.255859375,
+        "distance": 40,
+        "pass": false,
+        "part": "walk_-096_-032"
+      }
+    ],
+    "passed": 54,
+    "neighbourYaw": 90
+  },
+  {
+    "total": 55,
+    "yaw": 270,
+    "samples": [
+      {
+        "normal": 0.9998645782470703,
+        "lateral": -16,
+        "height": 0.064453125,
+        "distance": -40,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999462962150574,
+        "lateral": -8,
+        "height": 0.173828125,
+        "distance": -40,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9998906254768372,
+        "lateral": 0,
+        "height": 0.2646484375,
+        "distance": -40,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999918937683105,
+        "lateral": 8,
+        "height": 0.3349609375,
+        "distance": -40,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9998779892921448,
+        "lateral": 16,
+        "height": 0.37890625,
+        "distance": -40,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999942183494568,
+        "lateral": -16,
+        "height": 0.0244140625,
+        "distance": -24,
+        "pass": true,
+        "part": "walk_-032_+096"
+      },
+      {
+        "normal": 0.9999539852142334,
+        "lateral": -8,
+        "height": 0.087890625,
+        "distance": -24,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.999947190284729,
+        "lateral": 0,
+        "height": 0.134765625,
+        "distance": -24,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999228119850159,
+        "lateral": 8,
+        "height": 0.150390625,
+        "distance": -24,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999233484268188,
+        "lateral": 16,
+        "height": 0.15234375,
+        "distance": -24,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999905228614807,
+        "lateral": -16,
+        "height": -0.015625,
+        "distance": -12,
+        "pass": true,
+        "part": "walk_-032_+112"
+      },
+      {
+        "normal": 0.9999942183494568,
+        "lateral": -8,
+        "height": -0.0078125,
+        "distance": -12,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999215602874756,
+        "lateral": 0,
+        "height": -0.00390625,
+        "distance": -12,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999998211860657,
+        "lateral": 8,
+        "height": 0.001953125,
+        "distance": -12,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999822378158569,
+        "lateral": 16,
+        "height": 0.021484375,
+        "distance": -12,
+        "pass": true,
+        "part": "walk_+016_+112"
+      },
+      {
+        "normal": 0.9999904632568359,
+        "lateral": -16,
+        "height": -0.0322265625,
+        "distance": -6,
+        "pass": true,
+        "part": "walk_-032_+112"
+      },
+      {
+        "normal": 0.9999933838844299,
+        "lateral": -8,
+        "height": -0.0283203125,
+        "distance": -6,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999935030937195,
+        "lateral": 0,
+        "height": -0.0283203125,
+        "distance": -6,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999876618385315,
+        "lateral": 8,
+        "height": -0.02734375,
+        "distance": -6,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999822378158569,
+        "lateral": 16,
+        "height": -0.013671875,
+        "distance": -6,
+        "pass": true,
+        "part": "walk_+016_+112"
+      },
+      {
+        "normal": 0.9999904632568359,
+        "lateral": -16,
+        "height": -0.0439453125,
+        "distance": -2,
+        "pass": true,
+        "part": "walk_-032_+112"
+      },
+      {
+        "normal": 0.9999933838844299,
+        "lateral": -8,
+        "height": -0.04296875,
+        "distance": -2,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999933838844299,
+        "lateral": 0,
+        "height": -0.04296875,
+        "distance": -2,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999929666519165,
+        "lateral": 8,
+        "height": -0.04296875,
+        "distance": -2,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999821186065674,
+        "lateral": 16,
+        "height": -0.0380859375,
+        "distance": -2,
+        "pass": true,
+        "part": "walk_+016_+112"
+      },
+      {
+        "normal": 0.7713741064071655,
+        "lateral": -16,
+        "height": -0.0498046875,
+        "distance": 0,
+        "pass": true,
+        "part": "walk_-032_+112"
+      },
+      {
+        "normal": 0.9999999403953552,
+        "lateral": -8,
+        "height": -0.0498046875,
+        "distance": 0,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999999403953552,
+        "lateral": 0,
+        "height": -0.0498046875,
+        "distance": 0,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.9999999403953552,
+        "lateral": 8,
+        "height": -0.0498046875,
+        "distance": 0,
+        "pass": true,
+        "part": "walk_patch_-016_+080_2x3"
+      },
+      {
+        "normal": 0.7801727652549744,
+        "lateral": 16,
+        "height": -0.0498046875,
+        "distance": 0,
+        "pass": true,
+        "part": "walk_+016_+112"
+      },
+      {
+        "normal": 0.9999945759773254,
+        "lateral": -16,
+        "height": -0.0439453125,
+        "distance": 2,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999945163726807,
+        "lateral": -8,
+        "height": -0.04296875,
+        "distance": 2,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999940991401672,
+        "lateral": 0,
+        "height": -0.0439453125,
+        "distance": 2,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999939203262329,
+        "lateral": 8,
+        "height": -0.0439453125,
+        "distance": 2,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999943971633911,
+        "lateral": 16,
+        "height": -0.04296875,
+        "distance": 2,
+        "pass": true,
+        "part": "walk_-128_-032"
+      },
+      {
+        "normal": 0.9999945759773254,
+        "lateral": -16,
+        "height": -0.0302734375,
+        "distance": 6,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999946355819702,
+        "lateral": -8,
+        "height": -0.029296875,
+        "distance": 6,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999940991401672,
+        "lateral": 0,
+        "height": -0.029296875,
+        "distance": 6,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999939203262329,
+        "lateral": 8,
+        "height": -0.029296875,
+        "distance": 6,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9998408555984497,
+        "lateral": 16,
+        "height": -0.0302734375,
+        "distance": 6,
+        "pass": true,
+        "part": "walk_-128_-032"
+      },
+      {
+        "normal": 0.9999951720237732,
+        "lateral": -16,
+        "height": -0.01171875,
+        "distance": 12,
+        "pass": true,
+        "part": "walk_-128_+016"
+      },
+      {
+        "normal": 0.9999958276748657,
+        "lateral": -8,
+        "height": -0.009765625,
+        "distance": 12,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9805753827095032,
+        "lateral": 0,
+        "height": -0.0087890625,
+        "distance": 12,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999958276748657,
+        "lateral": 8,
+        "height": -0.009765625,
+        "distance": 12,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999954104423523,
+        "lateral": 16,
+        "height": -0.01171875,
+        "distance": 12,
+        "pass": true,
+        "part": "walk_-128_-032"
+      },
+      {
+        "normal": 0.9999814629554749,
+        "lateral": -16,
+        "height": -0.0078125,
+        "distance": 24,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999878406524658,
+        "lateral": -8,
+        "height": -0.0068359375,
+        "distance": 24,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999879002571106,
+        "lateral": 0,
+        "height": -0.0048828125,
+        "distance": 24,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.9999890327453613,
+        "lateral": 8,
+        "height": -0.005859375,
+        "distance": 24,
+        "pass": true,
+        "part": "walk_patch_-128_-016_2x2"
+      },
+      {
+        "normal": 0.912690281867981,
+        "lateral": 16,
+        "height": -0.0078125,
+        "distance": 24,
+        "pass": true,
+        "part": "walk_-112_-032"
+      },
+      {
+        "normal": 0.9996985197067261,
+        "lateral": -16,
+        "height": -0.2548828125,
+        "distance": 40,
+        "pass": true,
+        "part": "walk_patch_-096_-016_3x2"
+      },
+      {
+        "normal": 0.9997286796569824,
+        "lateral": -8,
+        "height": -0.2607421875,
+        "distance": 40,
+        "pass": true,
+        "part": "walk_patch_-096_-016_3x2"
+      },
+      {
+        "normal": 0.9997287392616272,
+        "lateral": 0,
+        "height": -0.259765625,
+        "distance": 40,
+        "pass": true,
+        "part": "walk_patch_-096_-016_3x2"
+      },
+      {
+        "normal": 0.9997286200523376,
+        "lateral": 8,
+        "height": -0.2578125,
+        "distance": 40,
+        "pass": true,
+        "part": "walk_patch_-096_-016_3x2"
+      },
+      {
+        "normal": 0.3692549467086792,
+        "lateral": 16,
+        "height": -0.255859375,
+        "distance": 40,
+        "pass": false,
+        "part": "walk_-096_-032"
+      }
+    ],
+    "passed": 54,
+    "neighbourYaw": 180
+  }
+]

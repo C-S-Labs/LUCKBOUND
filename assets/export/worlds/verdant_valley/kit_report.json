@@ -1,0 +1,601 @@
+[
+  {
+    "name": "chunk_ancient_oak",
+    "size": [
+      256.0,
+      41.5,
+      256.0
+    ],
+    "triangles": 5576,
+    "openings": {
+      "N": "PATH",
+      "S": "PATH"
+    },
+    "pads": {
+      "N": 46.5,
+      "S": 46.5,
+      "E": 0.0,
+      "W": 0.0
+    },
+    "ground": 37.0
+  },
+  {
+    "name": "chunk_blossom_terrace",
+    "size": [
+      256.0,
+      47.5,
+      256.0
+    ],
+    "triangles": 5576,
+    "openings": {
+      "E": "PATH",
+      "W": "PATH"
+    },
+    "pads": {
+      "N": 17.0,
+      "S": 17.0,
+      "E": 46.5,
+      "W": 46.5
+    },
+    "ground": 43.0
+  },
+  {
+    "name": "chunk_boss_sanctuary",
+    "size": [
+      384.0,
+      53.792,
+      256.0
+    ],
+    "triangles": 2888,
+    "openings": {
+      "N": "WIDE"
+    },
+    "pads": {
+      "N": 52.5,
+      "S": 0.0,
+      "E": 0.0,
+      "W": 0.0
+    },
+    "ground": 48.0
+  },
+  {
+    "name": "chunk_cap_cave_mouth",
+    "size": [
+      256.0,
+      41.65,
+      256.0
+    ],
+    "triangles": 6572,
+    "openings": {
+      "N": "PATH"
+    },
+    "pads": {
+      "N": 46.5,
+      "S": 0.0,
+      "E": 0.0,
+      "W": 0.0
+    },
+    "ground": 37.15
+  },
+  {
+    "name": "chunk_cliff_overlook_gate",
+    "size": [
+      256.0,
+      54.423,
+      256.0
+    ],
+    "triangles": 5464,
+    "openings": {
+      "N": "WIDE",
+      "S": "PATH"
+    },
+    "pads": {
+      "N": 52.5,
+      "S": 46.5,
+      "E": 0.0,
+      "W": 0.0
+    },
+    "ground": 43.0
+  },
+  {
+    "name": "chunk_crystal_spring_gate",
+    "size": [
+      256.0,
+      41.5,
+      256.0
+    ],
+    "triangles": 5464,
+    "openings": {
+      "E": "WIDE",
+      "W": "PATH"
+    },
+    "pads": {
+      "N": 21.5,
+      "S": 21.0,
+      "E": 52.5,
+      "W": 46.5
+    },
+    "ground": 37.0
+  },
+  {
+    "name": "chunk_cutbank_ford",
+    "size": [
+      256.0,
+      48.5,
+      256.0
+    ],
+    "triangles": 5576,
+    "openings": {
+      "N": "PATH",
+      "S": "PATH"
+    },
+    "pads": {
+      "N": 47.5,
+      "S": 47.0,
+      "E": 0.0,
+      "W": 0.0
+    },
+    "ground": 44.0
+  },
+  {
+    "name": "chunk_deep_clearing",
+    "size": [
+      256.0,
+      39.5,
+      256.0
+    ],
+    "triangles": 5996,
+    "openings": {
+      "N": "PATH",
+      "S": "PATH",
+      "E": "PATH"
+    },
+    "pads": {
+      "N": 46.5,
+      "S": 46.5,
+      "E": 46.5,
+      "W": 0.0
+    },
+    "ground": 35.0
+  },
+  {
+    "name": "chunk_entry_dawn_meadow",
+    "size": [
+      256.0,
+      39.382,
+      256.0
+    ],
+    "triangles": 5886,
+    "openings": {
+      "N": "PATH"
+    },
+    "pads": {
+      "N": 46.5,
+      "S": 0.0,
+      "E": 0.0,
+      "W": 0.0
+    },
+    "ground": 34.882
+  },
+  {
+    "name": "chunk_entry_woodland_refuge",
+    "size": [
+      256.0,
+      42.405,
+      256.0
+    ],
+    "triangles": 5886,
+    "openings": {
+      "N": "PATH"
+    },
+    "pads": {
+      "N": 46.5,
+      "S": 0.0,
+      "E": 0.0,
+      "W": 0.0
+    },
+    "ground": 37.905
+  },
+  {
+    "name": "chunk_fern_hollow",
+    "size": [
+      256.0,
+      43.5,
+      256.0
+    ],
+    "triangles": 5576,
+    "openings": {
+      "N": "PATH",
+      "S": "PATH"
+    },
+    "pads": {
+      "N": 46.5,
+      "S": 46.5,
+      "E": 0.0,
+      "W": 0.0
+    },
+    "ground": 39.0
+  },
+  {
+    "name": "chunk_forgotten_orchard_gate",
+    "size": [
+      256.0,
+      47.534,
+      256.0
+    ],
+    "triangles": 5464,
+    "openings": {
+      "S": "WIDE",
+      "W": "PATH"
+    },
+    "pads": {
+      "N": 0.0,
+      "S": 52.5,
+      "E": 0.0,
+      "W": 46.5
+    },
+    "ground": 42.0
+  },
+  {
+    "name": "chunk_high_ledge_gate",
+    "size": [
+      256.0,
+      52.485,
+      256.0
+    ],
+    "triangles": 5464,
+    "openings": {
+      "E": "WIDE",
+      "W": "PATH"
+    },
+    "pads": {
+      "N": 0.0,
+      "S": 0.0,
+      "E": 52.5,
+      "W": 46.5
+    },
+    "ground": 41.0
+  },
+  {
+    "name": "chunk_longgrass_meadow",
+    "size": [
+      256.0,
+      39.5,
+      256.0
+    ],
+    "triangles": 5576,
+    "openings": {
+      "N": "PATH",
+      "S": "PATH"
+    },
+    "pads": {
+      "N": 46.5,
+      "S": 46.5,
+      "E": 0.0,
+      "W": 0.0
+    },
+    "ground": 35.0
+  },
+  {
+    "name": "chunk_mossbound_ruins",
+    "size": [
+      256.0,
+      39.5,
+      256.0
+    ],
+    "triangles": 5576,
+    "openings": {
+      "E": "PATH",
+      "W": "PATH"
+    },
+    "pads": {
+      "N": 10.5,
+      "S": 11.0,
+      "E": 46.5,
+      "W": 46.5
+    },
+    "ground": 35.0
+  },
+  {
+    "name": "chunk_mushroom_glen",
+    "size": [
+      256.0,
+      43.5,
+      256.0
+    ],
+    "triangles": 5996,
+    "openings": {
+      "N": "PATH",
+      "S": "PATH",
+      "E": "PATH"
+    },
+    "pads": {
+      "N": 46.5,
+      "S": 46.5,
+      "E": 46.5,
+      "W": 0.0
+    },
+    "ground": 39.0
+  },
+  {
+    "name": "chunk_overgrown_causeway_gate",
+    "size": [
+      256.0,
+      43.5,
+      256.0
+    ],
+    "triangles": 5464,
+    "openings": {
+      "N": "WIDE",
+      "S": "PATH"
+    },
+    "pads": {
+      "N": 52.5,
+      "S": 46.5,
+      "E": 0.0,
+      "W": 0.0
+    },
+    "ground": 39.0
+  },
+  {
+    "name": "chunk_path_cliff_passage",
+    "size": [
+      256.0,
+      79.84,
+      256.0
+    ],
+    "triangles": 5554,
+    "openings": {
+      "E": "PATH",
+      "W": "PATH"
+    },
+    "pads": {
+      "N": 0.0,
+      "S": 27.5,
+      "E": 46.5,
+      "W": 46.5
+    },
+    "ground": 41.0
+  },
+  {
+    "name": "chunk_path_crossroads_copse",
+    "size": [
+      256.0,
+      45.5,
+      256.0
+    ],
+    "triangles": 6416,
+    "openings": {
+      "N": "PATH",
+      "S": "PATH",
+      "E": "PATH",
+      "W": "PATH"
+    },
+    "pads": {
+      "N": 46.5,
+      "S": 46.5,
+      "E": 46.5,
+      "W": 46.5
+    },
+    "ground": 41.0
+  },
+  {
+    "name": "chunk_path_narrow_pass",
+    "size": [
+      256.0,
+      49.064,
+      256.0
+    ],
+    "triangles": 5576,
+    "openings": {
+      "N": "PATH",
+      "S": "PATH"
+    },
+    "pads": {
+      "N": 46.5,
+      "S": 46.5,
+      "E": 0.0,
+      "W": 0.0
+    },
+    "ground": 41.0
+  },
+  {
+    "name": "chunk_path_split_meadow",
+    "size": [
+      256.0,
+      41.5,
+      256.0
+    ],
+    "triangles": 5996,
+    "openings": {
+      "N": "PATH",
+      "E": "PATH",
+      "W": "PATH"
+    },
+    "pads": {
+      "N": 46.5,
+      "S": 0.0,
+      "E": 46.5,
+      "W": 46.5
+    },
+    "ground": 37.0
+  },
+  {
+    "name": "chunk_path_sunwash_fork",
+    "size": [
+      256.0,
+      45.273,
+      256.0
+    ],
+    "triangles": 5996,
+    "openings": {
+      "N": "PATH",
+      "S": "PATH",
+      "E": "PATH"
+    },
+    "pads": {
+      "N": 46.5,
+      "S": 46.5,
+      "E": 46.5,
+      "W": 0.0
+    },
+    "ground": 40.0
+  },
+  {
+    "name": "chunk_rock_garden",
+    "size": [
+      256.0,
+      39.5,
+      256.0
+    ],
+    "triangles": 5576,
+    "openings": {
+      "N": "PATH",
+      "S": "PATH"
+    },
+    "pads": {
+      "N": 46.5,
+      "S": 46.5,
+      "E": 0.0,
+      "W": 0.0
+    },
+    "ground": 35.0
+  },
+  {
+    "name": "chunk_shaded_grove",
+    "size": [
+      256.0,
+      41.5,
+      256.0
+    ],
+    "triangles": 5576,
+    "openings": {
+      "E": "PATH",
+      "W": "PATH"
+    },
+    "pads": {
+      "N": 0.0,
+      "S": 0.0,
+      "E": 46.5,
+      "W": 46.5
+    },
+    "ground": 37.0
+  },
+  {
+    "name": "chunk_side_forgotten_trial",
+    "size": [
+      256.0,
+      41.5,
+      256.0
+    ],
+    "triangles": 5632,
+    "openings": {
+      "N": "PATH"
+    },
+    "pads": {
+      "N": 46.5,
+      "S": 0.0,
+      "E": 0.0,
+      "W": 0.0
+    },
+    "ground": 37.0
+  },
+  {
+    "name": "chunk_cap_treasure_hollow",
+    "size": [
+      256.0,
+      36.5,
+      256.0
+    ],
+    "triangles": 5378,
+    "openings": {
+      "N": "PATH"
+    },
+    "pads": {
+      "N": 46.5,
+      "S": 0.0,
+      "E": 0.0,
+      "W": 0.0
+    },
+    "ground": 32.0
+  },
+  {
+    "name": "chunk_cap_wardens_clearing",
+    "size": [
+      256.0,
+      38.5,
+      256.0
+    ],
+    "triangles": 5378,
+    "openings": {
+      "N": "PATH"
+    },
+    "pads": {
+      "N": 46.5,
+      "S": 0.0,
+      "E": 0.0,
+      "W": 0.0
+    },
+    "ground": 34.0
+  },
+  {
+    "name": "chunk_stone_sentinels",
+    "size": [
+      256.0,
+      47.5,
+      256.0
+    ],
+    "triangles": 5576,
+    "openings": {
+      "N": "PATH",
+      "S": "PATH"
+    },
+    "pads": {
+      "N": 46.5,
+      "S": 46.5,
+      "E": 0.0,
+      "W": 0.0
+    },
+    "ground": 43.0
+  },
+  {
+    "name": "chunk_wetland_pools",
+    "size": [
+      256.0,
+      43.5,
+      256.0
+    ],
+    "triangles": 5576,
+    "openings": {
+      "E": "PATH",
+      "W": "PATH"
+    },
+    "pads": {
+      "N": 0.0,
+      "S": 0.0,
+      "E": 46.5,
+      "W": 46.5
+    },
+    "ground": 39.0
+  },
+  {
+    "name": "chunk_windward_ridge_gate",
+    "size": [
+      256.0,
+      76.419,
+      256.0
+    ],
+    "triangles": 5464,
+    "openings": {
+      "E": "WIDE",
+      "W": "PATH"
+    },
+    "pads": {
+      "N": 0.0,
+      "S": 0.0,
+      "E": 52.5,
+      "W": 46.5
+    },
+    "ground": 50.0
+  }
+]

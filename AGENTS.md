@@ -31,6 +31,18 @@ convention, add a line there in the same change.
 
 ## STEP 1 — then read these three, in this order
 
+### Blender launch policy
+
+All repository Blender jobs must use `tools/run_blender.py`, including Python
+expressions, reviews and temporary external scripts. Never launch `blender.exe`
+directly from Codex. Read `docs/TOOLCHAIN_ACCESS.md` §3.1: Windows thumbnails
+ignore failed profile lookups under restricted tokens. If the shared launcher
+returns 78, retry it with a normal user token through the tool approval mechanism;
+do not bypass it or add another per-script guard. Use `--interactive` for GUI
+launches. The installed startup/MCP integration calls the same shared policy;
+reinstall it after replacing the MCP add-on. Do not change Blender's cwd to the
+repository in MCP code. Use absolute asset paths there.
+
 This project runs across many separate conversations. Nothing carries over
 between them except what is written in the repo, so these three files ARE the
 handoff:
@@ -102,6 +114,56 @@ Documentation is not an afterthought on this project — it is the only memory
 it has.
 
 This file is the short version of the rules that protect the architecture.
+
+
+### Rapid iteration and testing (owner priority)
+
+During active development, optimize for rapid handoff to the owner's manual
+Studio, Blender, or visual test.
+
+After implementing an iteration, run only inexpensive checks needed to establish
+that the result is ready for owner testing: syntax/parse checks, expected output
+files, basic counts/transforms, missing references, malformed output, and small
+targeted probes needed to verify a new mechanism.
+
+Do not automatically perform substantial validation that duplicates a test the
+owner is about to perform. In particular, do not automatically run exhaustive
+raycast sweeps, automated character traversal, multi-rotation Studio tests,
+large collision-validation matrices, broad regression suites, or repeated
+validation passes when the owner will immediately test the same behavior
+manually.
+
+Prefer:
+
+    implement → cheap sanity checks → owner test → targeted iteration
+
+over:
+
+    implement → extensive offline validation → automated Studio/Blender
+    validation → owner repeats the same test
+
+Deeper automated validation is appropriate when:
+- the owner explicitly requests it;
+- it is necessary to diagnose a reported failure;
+- it measures something the owner's manual test cannot reasonably establish;
+- the implementation has passed the owner's initial test and is ready for
+  final validation, broad rollout, merge, or release.
+
+If a substantial additional test would be useful but is not required yet,
+briefly state what it would establish and wait for approval.
+
+Do not interpret this rule as permission to skip cheap sanity checks or required
+CI/merge checks.
+
+### Scope discipline
+
+Do not expand a narrowly requested task into a broader investigation, cleanup,
+refactor, documentation pass, or validation campaign unless that work is
+required to complete the task.
+
+If an unrelated issue is discovered, report it separately instead of
+investigating or fixing it automatically unless it blocks the current task.
+
 
 ## The prime directive
 

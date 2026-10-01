@@ -1,6 +1,6 @@
 # LUCKBOUND — Project Status
 
-**Last updated:** 2026-09-29 · slimmed for token use. The full previous version, with every closed item and walk
+**Last updated:** 2026-09-30 · slimmed for token use. The full previous version, with every closed item and walk
 report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an item below points to it.
 
 > **New conversation?** Read `INDEX.md` → `AGENTS.md` → the top entry of `docs/WORKLOG.md` → this file.
@@ -13,23 +13,23 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 - **UI overhaul (branch `agents/UI-overhaul`, 2026-09-29):** the whole player UI moved to the SIGIL visual language
   (`client/UI/Sigil/`): HUD, chat, leaderboard (Fate level column), universal menu, the Fate Engine main menu with
-  sub-sigils, the loading/title screen and the C&S Labs ident. Owner walked it in Studio; awaiting PR and CI. Shop,
+  sub-sigils, the loading/title screen and the C&S Labs ident. Owner walked it in Studio; present in frozen main PR #149 and retained in this integration. Shop,
   Archive, Fate Tree and Rebirth are still preview panels inside their sub-sigils. See the WORKLOG entry for leftovers.
 
-- **Phase 1 is complete** (hub, roll, onboarding, saves, UI, sprint and double jump, events). The build spec §7
+- **Phase 1 is complete** (hub, roll, onboarding, saves, UI, events; movement now uses main's own controller, single jump, roll/backstep and air dash). The build spec §7
   amendments that opened later work are §7.1 expedition entry, §7.2 parties as their own server, §7.3 scenarios,
   §7.4 caps, §7.5 loot and §7.7 universal map generation (2026-09-27).
-- **Worlds you can enter:** Verdant Valley (30-piece chunk kit — built, **needs a revamp pass**), Sky Citadel
+- **Worlds you can enter:** Verdant Valley (30-piece separated kit — corrected sockets validated across approximately eight owner-tested seeds; broader fidelity review pending), Sky Citadel
   (36-piece chunk kit, walked and verified, with ambience, props, chests and the vault) and Ethereal Scape
   (**41-piece hybrid kit** — floating isles + temple + meadow, 2 landmarks, 2 miniboss arenas, 6 backdrop
   pieces with drifting cloud props, height variation — on the §7.7 generation blueprint, 2026-09-27; final
-  polish pass done (map-wide skyrays, natural mushroom patches, overhang check) — **not yet uploaded or walked**). Emberfall and Astral
+  polish pass done (map-wide skyrays, natural mushroom patches, overhang check) — **uploaded IDs retained; integrated Studio walk pending**). Emberfall and Astral
   Reach have no map yet.
 
   | Id | Rarity | Weight | Phase | Map | Enterable? |
   |---|---|---|---|---|---|
-  | `VERDANT_VALLEY` | Common | 6000 (60%) | 1 | chunk kit, 30 pieces — needs a revamp pass | ✅ |
-  | `ETHEREAL_SCAPE` | Uncommon | 1500 (15%) | 1 | chunk kit, 41 pieces — hybrid isles/temple, §7.7 blueprint, not uploaded | ✅ |
+  | `VERDANT_VALLEY` | Common | 6000 (60%) | 1 | chunk kit, 30 pieces — separated terrain/props/collision; socket Studio pass complete | ✅ |
+  | `ETHEREAL_SCAPE` | Uncommon | 1500 (15%) | 1 | chunk kit, 41 pieces — hybrid isles/temple, §7.7 blueprint, uploaded IDs retained | ✅ |
   | `EMBERFALL` | Rare | 1500 (15%) | 1 | blueprint written | ❌ no kit |
   | `SKY_CITADEL` | Epic | 700 (7%) | 1 | chunk kit, 36 pieces — walked and verified | ✅ |
   | `ASTRAL_REACH` | Mythic | 300 (3%) | 1 | blueprint written | ❌ no kit |
@@ -55,141 +55,25 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
   - **Developer panel + command registry** (2026-09-27): F4 in Studio; 43 commands, all clickable, autocomplete; see `docs/DEV_TOOLS.md`.
   - `INDEX.md` + `INDEX_MAP.md` give the repo map, and CI keeps the map current.
   - StyLua is enforced.
-  - ~808 tests, updated 2026-09-26 for the Ethereal Scape amendment below (exact count pending the next CI run).
+  - Integrated validation: **1,017/1,017 Luau tests**, **7/7 Blender regressions**, **7/7 collision-verifier probes**, StyLua and syntax compilation (129 files including diagnostics) pass; full Rojo 7.7 project build succeeds. Index/forbidden-name/handoff checks pass. Collision verifier validates all 4,033 active colliders; 3,915 serialized-fidelity parts still require Studio inspection.
 
-- **Leaderboard + chat panel** (2026-09-27): custom house-style replacements; columns are config data (rank + name
-  today). Chat is top-left; opening it collapses the hub rail, which sits lower (RailOffsetY). Needs a Studio walk. See PLAYER_UI §3.7.
+- **Leaderboard + chat:** SIGIL LVL/name columns use server-replicated FateLevel; filtered TextChatService messages only. Opening chat collapses the retained hidden rail. Integrated UI smoke test remains pending.
+
+- **Verdant Valley production:** all 30 structures and calibrated per-chunk yaw/size/GroundOffsetY values retained with matching VV manifest IDs. The saved prop library has 823 meshes/placements: 30 solid groups, 30 nonsolid groups, 746 Sway canopies and 17 special parts, including 12 chest components. Thirty-nine solid rows are server-owned Static/Tier 1; nonsolid/canopy rows are client-owned. Chest props have no new loot/fixture interaction.
+- **VV walk collision:** 29 child templates/3,915 parts in VV_COLLISION (including 66 Cliff parts and the 137-part Cutbank bridge set), plus the separate 118-part merged Stone template, cover all 30 chunks. Missing/empty templates retain visual collision. The original 202-part Stone rollback is protected. Collision verifier now uses the refreshed production ledger, not the obsolete 28-model report; serialized fidelity still needs Studio reload inspection.
+- **VV appearance and placement:** refreshed terrain/prop IDs, repaired colors/stump/Boss underside, chest ownership/centres, and Mushroom Glen/Split Meadow refreshes are saved. Source/runtime/reference checks precede owner fresh Play checks; prior warnings and save-pending statements are historical in WORKLOG. Normal/winding review retains 178 ambiguous manual-review cases. No old staging set is approved for promotion.
+- **VV testing:** `VV_SOCKET_WIDTH_REVIEW.md` supersedes the earlier audit's flat-ground PASS criterion with exact authored path/width measurements across all 30 chunks/59 sockets. Independently confirmed and corrected Mushroom's east→west exit plus PATH/WIDE reversals on Causeway, Windward, Crystal Spring, High Ledge and Cliff Overlook. Trial, Orchard, Boss and prior Refuge south correction unchanged. Before stronger audit: 34 PASS/14 SUSPICIOUS/11 FAIL sockets (six failing chunks); after: **42 PASS/17 SUSPICIOUS/0 FAIL**. Runtime yaw selections and all assets/prop transforms retained. Mushroom→Trial pair passes 220/220; all pair centres pass; Owner manually tested approximately eight procedural seeds after the latest corrections: Refuge remains fixed, Mushroom connects correctly and corrected PATH/WIDE gates connect cleanly; no additional socket-placement or visible connection failures observed. The 17 suspicious sockets, Windward/High Ledge/Orchard panel seams, earlier Refuge terrain-query and Shaded Grove pair limitations remain audit/query ambiguities, not confirmed metadata failures. Luau **1,017/1,017**, Blender/verifier probes 7/7 each; Rojo 7.7 passes. Historical generators cannot reconstruct current production safely.
+- **Blender protection:** shared launcher validates Windows profile lookup before parent/child work; failed restricted-token lookup requires normal-token retry. Installed MCP/startup protection and seven regressions are retained. Fifteen thumbnail trees and original add-on recovery remain; owner normal-use/restart check and upstream native fix remain pending. Launcher is Windows-specific; cloud bpy 4.2 tooling is retained separately, not claimed as an equivalent protected workflow.
+- **Integration:** fd60833 and frozen main 1001ec2 are reconciled by existing local two-parent merge 191ea0b. Final local completion commit is authorized after checks; push and merge into main are prohibited. Production assets, newer movement/animation/lock-on/UI/progression, ES assets, enemy work, HUB_SKY and the animation Rojo mount are retained. Socket-specific owner Studio validation is complete; remote CI and broader integrated movement/UI/asset-fidelity checks remain pending.
 
 ## 2. Next — pick up here
 
-> **2026-09-28: polished body movement.** `CharacterAnimator` + `AnimationCore`: blended gaits, directional
-> strafe (clips when filled, procedural until then), lean, head look, landings, sounds; rolls in four
-> directions relative to facing. Clip slots in `Content/Animations/Player.luau` (§2.7 has the how-to).
-> 997 tests pass. Studio walk pending.
-
-> **2026-09-28: our own character controller.** Default Roblox movement is off: a `ControllerManager` drives the
-> character from `LocomotionCore`, with HUB (fast) and EXPEDITION (weightier) profiles, one stamina bar, a single
-> jump (the double jump is gone), roll/backstep, and optional lock-on with an over-the-shoulder camera
-> (`LockOnCore`, `LockOnController`). There is a new stamina bar (`UI/Vitals`). 940 tests pass. **Studio walk
-> pending:** `TESTING.md` Test K, all 17 steps. Lock-on switching (mouse/stick flick, touch Next) and `/dummies`
-> were added the same day; charge is scoped to Epic/Legendary weapons only (`WEAPONS.md` §2).
-
-> **2026-09-27: close ship berths fixed after precommit review.** Berths now use
-> the island's oriented face and half the ship's beam, with a 20-stud hull gap;
-> overlap/approach checks use the ship box instead of its enclosing sphere.
-> This supersedes the earlier radius-based berth calculation. 866 tests pass,
-> including angled mesa/carrier and all-side clearance regressions; changed docking
-> files lint clean. Studio docking observation remains pending. Owner authorized
-> a final review, commit and push of all related test-command/docking changes.
-
-> **2026-09-27: hub docking corrected locally.** Large galleons/carriers explicitly
-> opt into docking; whales and other orbiters do not, regardless of size. Berths
-> account for full ship radius and clearance. Ships brake to a full stop, retain
-> steering while approaching and have a turn-scaled timeout; docking and visual
-> headings are separate. Docking tunables are in HubLayout.V2.Docking. 862 tests
-> pass; medium/higher graphics Studio docking observation remains pending.
-> Owner confirms the catalogue test environment now works after the loader fix.
-
-> **2026-09-27: catalogue load crash fixed locally.** Owner's Output traced the
-> failure to ChunkLoader's test return-offset rotation: CFrame.Angles was missing
-> its third argument, aborting loading on the first entry. Added the zero Z angle;
-> all five calls in the loader now supply three arguments. Restart Play after sync
-> and rerun the catalogue to verify complete loading in Studio.
-
-> **2026-09-27: catalogue orientation and streaming correction.** Separated chunks
-> now turn their sockets along the observation row, with rotated footprint spacing
-> and return-portal offset. Test stages use Persistent streaming to keep the whole
-> kit in client Explorer; normal streaming stays unchanged. 858 tests pass. Studio
-> verification of all 30 VV folders, orientation and the 60-minute timer remains
-> pending. These address visible weaknesses in the test implementation; the earlier
-> screenshot of normal assembly still needs command/expedition Output evidence.
-
-> **2026-09-27: test timer extended to 60 minutes.** Test instances use 3600 seconds
-> in place and through the reserved-server manifest; normal durations are unchanged.
-> 854 tests pass. Owner's screenshot shows normal assembly (index 0 and 108–110,
-> repeated chunks), rather than catalogue assembly. Awaiting the command/expedition
-> Output replies and model TestMode attribute to distinguish stale Studio code from
-> a lost selection; the reported missing-chunk issue is not yet resolved.
-
-> **2026-09-27: catalogue test roll implemented locally.** `/roll <WORLD_ID> test`
-> selects the next instance's all-chunk observation line; ordinary `/roll` keeps
-> seeded generation. Every current kit definition appears once, including rare
-> pieces and multiple entry/boss variants, with matching joins where possible,
-> configured gaps otherwise, and open sockets allowed. The flag follows the
-> server manifest and is bound to one roll/instance. 851 headless tests pass;
-> Studio catalogue/normal-roll and published teleport checks remain pending.
-
-> **2026-09-27: Verdant Valley cap variety, local change.** Cave Mouth remains a cap;
-> Treasure Hollow and Warden's Clearing are now caps; all three caps are unlimited
-> and equally weighted following the owner's corrected direction. Forgotten Trial is
-> the sole SIDE chunk. Kit names, generated
-> content, exporter and manifest agree; mesh IDs and geometry are unchanged.
-> 817 tests pass; 400 additional VV layouts close every socket and exercise repeat
-> placements of both converted caps. Studio/Rojo loading and walks remain pending.
-
-> **2026-09-26: local socket recovery** on `codex/recover-socket-fixes`, based on main `5090ace`: canonical VV mesh mappings, per-chunk calibration tolerance, centre-hit diagnostics, and Rojo 7.7 restored. Latest main and recovery both pass 817 tests; full Rojo build and Luau syntax pass. Studio four-yaw asset/collision checks remain pending; existing 43 seam-height failures are a separate baseline. New Ethereal Scape and enemy work preserved. No push or main merge.
-
-> **2026-09-26: Ethereal Scape converted from a `PrebuiltMap` to a 30-piece chunk kit, owner-directed.** It shipped
-> as one composed, hand-authored, no-combat traverse (a map-generation test rig). That is superseded:
-> `Content/Worlds/EtherealScape.luau` now declares a chunk kit + `MapPathLength` like Sky Citadel and Verdant
-> Valley; `Content/Chunks/EtherealScape.luau` has the 30 pieces (generated by
-> `assets/source/worlds/ethereal_scape/build_ethereal_scape_kit.py`, geometrically validated, not yet uploaded or
-> walked); `docs/biomes/ETHEREAL_SCAPE.md` is the schema. A 9-enemy roster was drafted alongside it
-> (`assets/source/enemies/ethereal_scape/ROSTER.md`), one basic built (Aether Wisp) to prove the palette
-> translates to a character; `Enemies`/`BossId`/`LootTableId` stay empty, same as every other world, since no
-> world's combat content is built yet (§7.6, reserved). `tests/cases.luau`'s "Ethereal Scape" group and the "two
-> ways a world gets a map" checks were rewritten for the new reality — **run the suite before merging**, this
-> session could not (no local Luau interpreter). The original scene stays in the repo as the palette's source of
-> truth. See `docs/biomes/ETHEREAL_SCAPE.md`'s header for the full reasoning.
-
-> **2026-09-26: §7.6 reserved for enemy AI/combat, module names locked.** Build spec §7.6 now claims the number
-> `ENEMY_AI.md` §12 step 0 asked for, so no other branch can take it. `CombatCore`, `PerceptionCore`, `EnemyAICore`,
-> `DifficultyCore`, `BossCore`, `TelemetryCore`, `EnemyService` and `BossService` are locked as the final module
-> names. **Nothing opens yet** — combat/enemies/bosses stay excluded by §7's list. Remotes and `GameConfig` blocks,
-> the rest of step 0, are deferred to step 1, when the actual schemas exist to design them against.
-
-> **2026-09-25: enemy AI designed, not built.** `docs/ENEMY_AI.md` is now authoritative for enemy behaviour:
-> utility AI over the framework's roles, no difficulty setting (a shared versioned profile plus an invisible,
-> capped personal tempo adjustment), harder play pays extra loot rolls never better odds, universal versioned
-> boss evolution with rollback, and weapons carrying their own moves with unique Legendary movesets. It sets a
-> mandatory build order. Nothing is opened: step 0 is a §7.x amendment for the owner to approve, and items and
-> inventory still come first.
-
-> **2026-09-25: animation ids are account/group-scoped, documented.** A partner playtesting `/showboss
-> winged_sentinel` in their own place got a silent `Animation failed to load` warning for the Idle id — same class
-> of bug as a mesh uploaded to the wrong account (`assets/README.md` already covered that for meshes). Documented
-> in `docs/PARTNER_SETUP.md` ("Animation and other account-scoped ids") and `BossPreviews.luau`'s header. No code
-> changed — `DebugSystem.luau`'s `/showboss` animation loading is correct; Roblox just denies cross-account asset
-> fetches without raising an error. Once LUCKBOUND is published under one group with all assets uploaded to that
-> same group, this stops affecting real players — it only bites Studio testing across separate accounts/places.
-
-> **2026-09-25: audit + index.** `INDEX.md` is the mandatory first read for every AI agent: a hand-written guide,
-> plus `INDEX_MAP.md`, generated with the exact line of every symbol. `AGENTS.md` holds the agent rules, and
-> `CLAUDE.md`/`GEMINI.md` point to it.
->
-> Legacy Verdant Valley pieces are gone. The kit is `VV_STRUCTURE.rbxmx` (the same shape as `SC_STRUCTURE`).
-> The duplicate Fern Hollow and Mushroom Glen manifest rows were removed on `socket-fixing`; both canonical keys point to the current 30-piece assets in `VV_STRUCTURE.rbxmx`. The owner confirmed both pieces load their intended meshes in Studio on 2026-09-25. Earlier socket warnings were downstream of the wrong assets loading. Boss Sanctuary rotation is verified.
-
-> **2026-09-25: the Winged Sentinel stands in Studio.** Run `/showboss winged_sentinel` in the boss arena: 16 studs,
-> facing the entrance, playing the Idle_Guard animation (`rbxassetid://132590990835909`). The Aether Lance's web is
-> geometry plus live Beams; `/bossphase 2` charges the plasma blade.
->
-> **Owner to verify:** re-import the latest `WingedSentinel.fbx` (with pinned anchors), then check that the strands
-> show (`/showboss` reports the count) and that `/bossphase 2` opens the blade halves.
->
-> Next for enemies:
-> - The rest of the Sentinel moveset animations (Epic tier and above get weapon animations).
-> - The `EnemyDef` + services wiring, which awaits the owner's OK.
->
-> Queued:
-> - The crossroads chunk pass.
-> - The hub refinish.
-> - Recolours and scenarios stay parked until after release (files kept).
-
-> **2026-09-24: enemies have a framework.** `docs/ENEMY_FRAMEWORK.md` +
-> `assets/source/enemies/_framework/` build, validate, pose, animate and export every enemy in every biome.
-> Sky Citadel's 16 enemies are built and exported (`assets/export/enemies/sky_citadel/`); the Winged Sentinel has
-> Idle, the P2 transition and the first moveset attack. Studio wiring (`EnemyDef` + services) awaits the owner's OK.
+1. Fresh Rojo sync/Play: verify saved collision fidelity, catalogue and seeded VV generation, remaining prop alignment and query ambiguities, Cliff/Cutbank/Stone/Wetland traversal and main's movement/profile/camera/lock-on behavior. Check low/high quality props and Sway attributes; smoke-test ES and newer hub/SIGIL UI.
+2. Owner Blender normal-use/restart check; use the shared launcher and reinstall startup/MCP integration after add-on replacement.
+3. Run remote CI on a later authorized commit before main integration. Local wrap-up commit is authorized; do not push or merge into main.
+4. Existing follow-ups remain: hub ship docking observation; player animation slots/upload checks; Winged Sentinel re-import/lightning and remaining moveset; Ascendant Studio import and importer bone acceptance. Gameplay enemy services/items still await their design/amendment gates.
+5. Shop, Archive, Fate Tree and Rebirth remain preview panels. Roll-anywhere and sacrificing an old roll need a spec amendment. Retire hidden UI rail/showcase only after owner/live-server checks. Recolours and other owner-kept assets remain parked.
+6. Keep old VV exports, failed separation candidates, staging/recovery sources and protected rollbacks until integrated Studio/CI validation establishes safe replacement. Do not run an older generator to recreate current assets.
 
 ## 3. Decisions locked in
 
@@ -241,7 +125,7 @@ progression-feel problem.
 | **World ambience** | **Built 2026-09-23, walked and verified 2026-09-25** |
 | **Ambient props** | **Live 2026-09-23, walked and verified 2026-09-25** |
 | **Loot, fixtures, vault keys** | **Live 2026-09-23, walked and verified 2026-09-25** |
-| **Verdant Valley 30-piece kit exported** | **Open 2026-09-25 — kit built and walked; needs a revamp pass** |
+| **Verdant Valley 30-piece kit exported** | **Separated production kit saved; socket Studio pass complete (~8 seeds); broader fidelity/movement review pending** |
 | **The Grove did not survive the upload** | Medium |
 | **The scenario layer** | **New 2026-09-22, headless only** |
 | **A brief that specifies the piece gets the piece it specified** | **Process** |
@@ -259,7 +143,7 @@ progression-feel problem.
 | **The portal's stop has nothing to lead to yet** | **Open** |
 | **The mountain horizon is built, not placed** | Low |
 | **First-join intro screen** | **Built, walked and verified 2026-09-25** |
-| **The Engine portal is to become the way into biomes** | **Architecture** |
+| **The Engine portal is to become the way into biomes** | **SIGIL Fate Engine menu built; entry/roll server rules retained** |
 | **The authored Fate Engine is wired** | **Walked and verified 2026-09-25** |
 | **Ethereal Scape's `Scale_Reference` proxy is loose** | Low |
 | **The scene has no `EntryAnchor` / `ReturnAnchor`** | Medium |
