@@ -139,7 +139,7 @@ _413 text files, 936 binary assets. Regenerate with `python tools/gen_index.py`;
   - `ROSTER.md`: Shared rules for both:26, Boss A: Astral Seraph — NOT BUILT (work order):33, Boss B: Celestial Dancer — NOT BUILT (work order):67, Build status:104
 - `assets/source/enemies/ethereal_scape/ASCENDANT_MOVESET.md` (189) - The Ascendant: moveset (v1) · 2026-09-30
   - `ASCENDANT_MOVESET.md`: Phase 1: The Guardian (ivory cuirass intact), 100-55% HP:27, Transition: P2_Transfiguration (70 f, invulnerable, no damag:44, Phase 2: Ascended (inner body exposed, crystal ascendant), 5:53, Fairness rules (every boss, restated):64, Animations:74, VFX plan (Studio):122, Work order 2026-09-30: animation and VFX construction (owner:137
-- `assets/source/enemies/ethereal_scape/CODEX_HANDOFF.md` (47) - Ethereal Scape enemies: handoff to Codex (2026-09-30) · new
+- `assets/source/enemies/ethereal_scape/CODEX_HANDOFF.md` (47) - Ethereal Scape enemies: handoff to Codex (2026-09-30) · 2026-09-30
   - `CODEX_HANDOFF.md`: Read in this order:5, State of the ES enemies (verified against `origin/main`):12, The Ascendant: hard guard rails:25, Next steps, in order:31, Decisions already made (do not relitigate):40, Leftovers (do not delete yet):46
 - `assets/source/enemies/ethereal_scape/ROSTER.md` (62) - Ethereal Scape enemy roster (base chunk set only) · 2026-09-28
   - `ROSTER.md`: Design language (shared by every ES enemy; do NOT reskin Sky:13, Basic (5):21, Minibosses (3):34, Boss (1):41, Shared scene:52, Build status (2026-09-26): 1/9 built (first pass):56
