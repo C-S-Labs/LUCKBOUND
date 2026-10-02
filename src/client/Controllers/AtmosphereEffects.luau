@@ -117,6 +117,7 @@ local grade: ColorCorrectionEffect? = nil
 local baseBrightness: number? = nil
 local tinted: { [BasePart]: Color3 } = {}
 local missing: { [string]: boolean } = {}
+local anchorUpdate: ((any) -> ())? = nil
 AtmosphereEffects.tintEnabled = false
 
 local function num(v: any, d: number): number
@@ -357,6 +358,9 @@ local graph: { { number } } = {}
 
 local function buildGraph(path: { Vector3 })
 	table.clear(graph)
+	if #path == 0 then
+		return
+	end
 	for i = 1, #path do
 		graph[i] = {}
 	end
@@ -1066,6 +1070,17 @@ function AtmosphereEffects.enter(
 	local lights, movers = {}, {}
 	buildLights(cfg, map, root, lights)
 	buildGraph(map.Path)
+	anchorUpdate = function(updated: any)
+		local resolved = readMap(stageName, centre, updated)
+		local hadTips = #map.Tips > 0
+		map.Tips, map.Path = resolved.Tips, resolved.Path
+		map.Min, map.Max, map.Centre, map.Floor =
+			resolved.Min, resolved.Max, resolved.Centre, resolved.Floor
+		buildGraph(map.Path)
+		if not hadTips then
+			buildLights(cfg, map, root, lights)
+		end
+	end
 	buildFlyers(cfg, map, root, rng, movers, if cfg then cfg.Glow else Color3.new(1, 0, 0))
 	if cfg and cfg.Drift then
 		for i = 1, 6 do
@@ -1201,7 +1216,18 @@ function AtmosphereEffects.enter(
 	end
 end
 
+--- Late anchor completion keeps existing weather, flyers and their positions.
+function AtmosphereEffects.updateAnchors(anchors: any): boolean
+	if not last or not anchorUpdate or not folder or not folder.Parent then
+		return false
+	end
+	last.Anchors = anchors
+	anchorUpdate(anchors)
+	return true
+end
+
 function AtmosphereEffects.leave()
+	anchorUpdate = nil
 	for _, c in conns do
 		c:Disconnect()
 	end

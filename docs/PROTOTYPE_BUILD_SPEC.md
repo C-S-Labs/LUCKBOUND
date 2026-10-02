@@ -443,7 +443,8 @@ Created by `Core/Net.luau` and nowhere else.
 | `Event_StateSync` | RemoteEvent | S→C | live-event snapshot | fires on join (§4.1) |
 | `UI_Acknowledge` | RemoteEvent | C→S | `{ScreenId}` | rate-limited 10/s. **RESERVED** — declared, nothing fires it. `docs/RESERVED.md` |
 | `Expedition_RequestEnter` | RemoteEvent | C→S | *(none)* | cooldown + distance + one-at-a-time |
-| `Expedition_Started` | RemoteEvent | S→C | `ExpeditionPayload` | — |
+| `Expedition_Started` | RemoteEvent | S→C | `ExpeditionPayload` (optional `GenerationToken`, `Anchors`) | — |
+| `Expedition_Atmosphere` | RemoteEvent | S→C | existing `{Environment, Atmosphere, FloorY}` override or `{AnchorsOnly=true, StageName, GenerationToken, Anchors}` | anchor updates require active client stage/token |
 | `Expedition_Ended` | RemoteEvent | S→C | `ExpeditionEndPayload` | — |
 | `Expedition_TimerSync` | RemoteEvent | S→C | `{RemainingSeconds, ServerNow}` | — |
 | `Hub_RequestTravel` | RemoteEvent | C→S | `{DestinationId}` | known Id + hub-only + 60/min (spam guard; **no cooldown**) |
@@ -1218,3 +1219,30 @@ The loader applies this content flag to the component, never to the whole chunk.
 A socket's `OffsetY` has always been honoured by `placeAgainst`; kits may now author rises and descents (Ethereal
 Scape's Skystairs ±24, ascents ±16) and the map climbs and falls with them. The authoring contract is unchanged: every
 mouth is the kind's standard landing, level at its own socket height.
+
+### Production asset preparation extension - owner-directed, 2026-10-01
+
+Layout/socket/overlap/scenario rules above remain unchanged. ExpeditionSystem owns
+one server-lifetime AssetPreparation cache in ServerStorage. Canonical identity is
+AssetKey + collision role + asset ID; concurrent callers share one flight and
+failed preparations may retry. The seed working set includes all selected roles
+and attached-room components, never unused world or enemy assets. Six configurable
+workers prepare unique missing templates; cached/local visuals resolve immediately.
+
+ChunkLoader clones prepared meshes and existing verified collision templates.
+Visual-only geometry uses local authored MeshParts or Box fallback; authoritative
+SC/ES geometry retains PreciseConvexDecomposition and existing calibration. A
+rejected/missing proxy keeps precise mesh collision. Whole-chunk blockout and
+atomic multipart-failure behavior remain. GameConfig.Expedition contains the
+worker limit, enable/diagnostic switches and deferred atmosphere/cache budgets.
+
+Geometry/gameplay fixtures precede placement; optional chunk-local anchor discovery
+may finish later through token-scoped Expedition_Atmosphere updates. The client
+keeps existing moving effects; group teardown cancels stale work. No new remote.
+A future enemy-marker seam is documented only: chunks own eligible layout-local
+locations; encounter rules own selection/identity, independent of map assets and
+default map-ready timing. No enemy implementation is opened by this extension.
+
+See GENERATION_MIGRATION.md for targeted evidence, acceptance gates and the future
+small designer collision pilot. Owner traversal and published-server validation
+are required before accepting this migration; no broad collision conversion.

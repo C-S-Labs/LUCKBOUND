@@ -436,3 +436,19 @@ Tip and Texture. Map server anchor bounds determine the footprint, including out
 GameConfig.Ambience.Ribbons caps instances, Beam segments and update frequency. Invisible
 anchors have all physics/query flags off; connections/instances are disposed on leave.
 AmbienceCore.ribbonOpacity supplies the tested smooth fade/hidden relocation window.
+
+## Future collision / enemy marker pilot - proposal, 2026-10-01
+
+The first asset-runtime migration is documented in
+[GENERATION_MIGRATION.md](GENERATION_MIGRATION.md), including its exact owner
+acceptance checklist and future authoring contracts. Keep visual/collision pairing
+on the existing AssetKey/MeshParts/CollisionTemplate path, one metre per stud and
+shared ground-centred pivot/scale. A future 5-8 chunk SC/ES pilot must preserve
+walkable surfaces, openings, stairs, barriers and socket landings; no automatic
+bounding-box hulls or biome-wide conversion is accepted. Multipart proxy support
+requires explicit pilot validation before replacing precise component collision.
+
+Future spawn markers describe eligible local locations; encounter rules select
+what appears. They share the layout frame used by sockets/boundaries, independent
+of visual art yaw and enemy asset preparation. No marker fields or enemy runtime
+were declared/authored here. Existing boss/scripted logic remains separate.

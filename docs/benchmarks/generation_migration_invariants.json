@@ -1,0 +1,13 @@
+{
+  "asset_preparation_studio": {
+    "Passed": 22,
+    "SyntheticFailures": 3,
+    "WorkerMaximum": 3,
+    "Engine": "real Studio scheduler/instances"
+  },
+  "generation_anchors_studio": {
+    "Passed": 10,
+    "Rotations": 4,
+    "Physics": "real Studio"
+  }
+}

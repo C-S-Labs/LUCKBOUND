@@ -453,6 +453,14 @@ export type RollPayload = {
 ---
 --- RemainingSeconds, never an absolute end time -- build spec §4.1 rule 4: a
 --- client with a skewed clock still counts down correctly.
+export type AtmosphereAnchors = {
+	Tips: { Vector3 },
+	Path: { Vector3 },
+	Min: Vector3,
+	Max: Vector3,
+	Pending: boolean?,
+}
+
 export type ExpeditionPayload = {
 	WorldId: string,
 	Name: string,
@@ -477,6 +485,9 @@ export type ExpeditionPayload = {
 	FloorY: number,
 	-- The map model's name under Workspace's expedition stage folder.
 	StageName: string,
+	-- Identifies this stage lifetime for cancellable, presentation-only updates.
+	GenerationToken: string?,
+	Anchors: AtmosphereAnchors?,
 }
 
 export type ExpeditionEndPayload = {

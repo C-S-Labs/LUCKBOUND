@@ -36,6 +36,35 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 235 — 2026-10-01 — Production generation asset migration
+**Branch:** `agent/procgen-production` from main `714fa33`. **Merged:** none; no push. **Tests:** 1,063 units, 4,280 loader comparisons, 300 layout comparisons; focused Studio invariants and all 30 VV catalogue comparisons pass.
+
+### Done
+- Added owned ServerStorage canonical templates, role-aware single-flight/cache/retry, safe local visuals and six bounded preparation workers.
+- Integrated seed-only working sets including structural roles and conditional rooms. Retained SC/ES precise collision/calibration, blockout and failed/missing proxy fallbacks.
+- Cached/deferred presentation anchors with stage lifetime tokens and existing client actor preservation. No world/Props registry migration, proxy authoring or enemies.
+- Preserved bb47f91 and all A-M evidence. Six targeted maps ground all players: cold VV 0.366 / SC 7.199 / ES 7.317 s; reuse 0.366 / 1.315 / 1.317 s, zero API calls. Matched control creation/Precise 310 -> 64, visual-only Precise 140 -> 0; zero duplicates or sampled collision/signature/yaw regressions.
+- Full VV prepared catalogue matches baseline: 30 rotations, 4,033 proxy parts, maximum query float variance 0.004 stud. Studio sources restored/verified; no save/publish.
+- 32 asset/worker/fidelity/fallback assertions, 10 anchor and 9 client assertions pass. Format, 140-file syntax and Rojo build pass. Selene has zero errors and 20 existing warnings (allow-warnings run); fixed only a pre-existing missing Animator assertion message.
+- Documented the exact acceptance checklist and future small collision/enemy-marker proposals in GENERATION_MIGRATION.md; spec/authoring/testing/index updated.
+
+### Decisions made
+- Adopt cache/templates/seed preparation/deferred presentation; retain authoritative cold collision and original gameplay. No broad benchmark rerun or full-world preparation.
+- Cold timings mean fresh Play/application cache, not fresh published CDN/native cache. Native cache memory and rendered/traversal acceptance remain pending.
+
+### Stopped at
+Local review branch, completion commit in handoff. No push/merge. Ready for owner traversal after syncing this worktree; open Studio Edit sources are original.
+
+### Next
+1. Owner VV/SC/ES traversal and atmosphere/streaming acceptance checklist.
+2. Published fresh-server/client/native-memory validation before adoption.
+3. Only with explicit authorization, a designer-authored 5-8 chunk SC/ES proxy pilot. Enemies remain separate.
+
+### Leftovers
+Keep benchmark worktree, synchronous fallback, precise collision and all rollback/parked/referenced exports. No assets/manifest entries were deleted. Cleanup waits for CI plus owner/published acceptance.
+
+---
+
 ## Session 234 — 2026-10-01 — ES delivery for integration
 **Merged:** see PR for this branch. **Branch:** `agent/ethereal-scape-polish`.
 

@@ -9,6 +9,8 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 ## 1. Where the project stands
 
+- **Production generation migration (2026-10-01, agent/procgen-production):** server-owned single-flight templates, safe local visuals/fidelity fallback, seed working sets with six bounded workers and cached/deferred presentation. 1,063 units, 300 layout comparisons, 4,280 loader comparisons; Studio cache/fidelity/worker/anchor/client invariants and all30 VV rotations/collision samples pass. Cold seed1 grounding VV0.366s/SC7.199s/ES7.317s; reuse0.366/1.315/1.317s with zero API calls. Six-map creation/Precise310 -> 64, visual-only Precise140 -> 0, no duplicate preparations. Owner traversal, actual visual/pop-in acceptance and published-server/native memory validation remain open. No push/merge/save/publish; original benchmark branch preserved. See GENERATION_MIGRATION.md.
+
 - **ES enemies handed to Codex (2026-09-30):** read `assets/source/enemies/ethereal_scape/CODEX_HANDOFF.md`; Ascendant work waits on the owner's updated spec/mesh.
 - **Boss animation/VFX (2026-09-30, docs only):** `docs/BOSS_ANIMATION_VFX.md` is the universal contract for every boss; per-boss work orders are in `ASCENDANT_MOVESET.md`, `WS_MOVESET.md` and `astral_reach/ROSTER.md` (Seraph, Dancer: not built). Ascendant work waits on the owner's updated spec and mesh.
 
@@ -68,6 +70,11 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 - **Integration:** fd60833 and frozen main 1001ec2 are reconciled by existing local two-parent merge 191ea0b. Final local completion commit is authorized after checks; push and merge into main are prohibited. Production assets, newer movement/animation/lock-on/UI/progression, ES assets, enemy work, HUB_SKY and the animation Rojo mount are retained. Socket-specific owner Studio validation is complete; remote CI and broader integrated movement/UI/asset-fidelity checks remain pending.
 
 ## 2. Next — pick up here
+
+> **Generation migration acceptance:** sync agent/procgen-production and follow
+> GENERATION_MIGRATION.md for the exact VV/SC/ES traversal checklist. Stop before
+> broad collision migration; future small proxy and enemy-marker contracts are
+> proposals only. Session 235. No push/merge/save/publish.
 
 > **2026-10-01 ES integration:** owner authorizes PR/merge of the Studio-walked kit
 > and current BASE scenery. Temporary loading diagnostics removed; generation

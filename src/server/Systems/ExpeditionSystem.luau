@@ -45,6 +45,10 @@ local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local ChunkCore = require(Root.Util.ChunkCore)
 local ChunkLoader = require(Root.Util.ChunkLoader)
 local ChunkTransit = require(Root.Util.ChunkTransit)
+local AssetPreparation = require(Root.Util.AssetPreparation)
+local AssetManifest = require(Root.Content.AssetManifest)
+local GenerationAnchors = require(Root.Util.GenerationAnchors)
+local HttpService = game:GetService("HttpService")
 local Chunks = require(Root.Content.Chunks)
 
 -- Fresh entropy per expedition. Random.new() with no argument seeds itself
@@ -72,6 +76,9 @@ local SaveSystem
 local ProgressionSystem
 local PartySystem
 local LootSystem
+-- Owned by this server's expedition lifecycle, shared by its groups only.
+local preparedAssets: any = nil
+local anchorScanner = GenerationAnchors.new(GameConfig.Expedition)
 
 -- One map and everyone on it.
 type Group = {
@@ -94,8 +101,9 @@ type Group = {
 	-- the Environment it makes: the world's, overlaid.
 	AtmosphereId: string?,
 	Environment: any,
-	-- Where the client's atmosphere effects hang things (see scanAnchors).
+	-- Where the client's atmosphere effects hang things (see GenerationAnchors).
 	Anchors: any,
+	GenerationToken: string,
 }
 
 -- /atmosphere: nil draws from the seed; "BASE" forces the world's own air;
@@ -382,7 +390,16 @@ local function buildStage(
 	-- chunk is then built from its recoloured mesh for that atmosphere, when
 	-- one is uploaded (AssetKey .. "__" .. atmosphere id).
 	layout.Atmosphere = (atmosphereFor(worldId, seed))
-	local result = ChunkLoader.build(layout, Chunks, origin, stageFolder(), stageName)
+	if preparedAssets then
+		local preparation = ChunkLoader.prepare(layout, Chunks, preparedAssets)
+		if not preparation.ok then
+			warn(
+				`[ExpeditionSystem] asset preparation incomplete; loader will retry or use blockout: {preparation.err}`
+			)
+		end
+	end
+	local result =
+		ChunkLoader.build(layout, Chunks, origin, stageFolder(), stageName, preparedAssets)
 
 	local scenarioSummary = "no plan"
 	if planOk then
@@ -451,83 +468,6 @@ local function buildReturnPortal(stage: Model, position: Vector3, rarityKey: str
 	end)
 end
 
---- Scans the built map ON THE SERVER, where every chunk exists. The client
---- cannot: with StreamingEnabled it only holds the chunks near the player,
---- which is why lightning and spire lights once gathered round the spawn.
----   Tips  -- peaks all over the map (spires, towers, the floating crystals at
----            the sides): flat enough to stand a rod or beacon on, spread out.
----   Path  -- points on the walkway, for patrols and ground strikes.
-local function scanAnchors(stage: Instance, floorY: number): any
-	local tips, path = {}, {}
-	local minX, minZ, maxX, maxZ = math.huge, math.huge, -math.huge, -math.huge
-	local params = RaycastParams.new()
-	params.FilterType = Enum.RaycastFilterType.Include
-	local function far(list: { Vector3 }, p: Vector3, gap: number): boolean
-		for _, q in list do
-			if (Vector3.new(q.X - p.X, 0, q.Z - p.Z)).Magnitude < gap then
-				return false
-			end
-		end
-		return true
-	end
-	for _, chunk in stage:GetChildren() do
-		local c = chunk:GetAttribute("Centre")
-		if typeof(c) ~= "Vector3" then
-			continue
-		end
-		minX, maxX = math.min(minX, c.X - 128), math.max(maxX, c.X + 128)
-		minZ, maxZ = math.min(minZ, c.Z - 128), math.max(maxZ, c.Z + 128)
-		params.FilterDescendantsInstances = { chunk }
-		local grid = {}
-		for gx = -124, 124, 8 do
-			for gz = -124, 124, 8 do
-				local r = Workspace:Raycast(
-					Vector3.new(c.X + gx, floorY + 400, c.Z + gz),
-					Vector3.new(0, -800, 0),
-					params
-				)
-				if r then
-					table.insert(grid, r)
-				end
-			end
-		end
-		-- peaks: highest first; a peak stands clear of anything higher nearby
-		table.sort(grid, function(a, b)
-			return a.Position.Y > b.Position.Y
-		end)
-		local picked = {}
-		for _, r in grid do
-			local h = r.Position
-			if #picked >= 6 then
-				break
-			end
-			local deck = math.abs(h.Y - floorY) < 8
-			if not deck and r.Normal.Y > 0.6 and far(picked, h, 40) and far(tips, h, 30) then
-				table.insert(picked, h)
-				table.insert(tips, h)
-			end
-		end
-		-- the walkway: level surfaces at the walk plane
-		local mine = {}
-		for _, r in grid do
-			local h = r.Position
-			if math.abs(h.Y - floorY) < 8 and r.Normal.Y > 0.9 and far(mine, h, 28) then
-				table.insert(mine, h)
-				table.insert(path, h)
-			end
-		end
-	end
-	if minX == math.huge then
-		return nil
-	end
-	return {
-		Tips = tips,
-		Path = path,
-		Min = Vector3.new(minX, floorY, minZ),
-		Max = Vector3.new(maxX, floorY, maxZ),
-	}
-end
-
 local function newGroup(
 	worldId: string,
 	seed: number,
@@ -558,7 +498,10 @@ local function newGroup(
 		Arrivals = 0,
 		AtmosphereId = nil,
 		Environment = world.Environment,
-		Anchors = scanAnchors(built.Stage, built.FloorY),
+		Anchors = if GameConfig.Expedition.DeferredAtmosphere
+			then anchorScanner.pending(built.Stage, built.FloorY)
+			else anchorScanner.scan(built.Stage, built.FloorY),
+		GenerationToken = HttpService:GenerateGUID(false),
 	}
 	group.AtmosphereId, group.Environment = atmosphereFor(worldId, seed)
 	if group.AtmosphereId then
@@ -571,6 +514,34 @@ local function newGroup(
 	-- opens is who shares it.
 	if LootSystem then
 		LootSystem.attach(built.Stage, worldId, group.Members)
+	end
+	if GameConfig.Expedition.DeferredAtmosphere then
+		task.defer(function()
+			local function current(): boolean
+				return group.Stage.Parent ~= nil and table.find(groups, group) ~= nil
+			end
+			local ok, anchors = pcall(anchorScanner.scan, group.Stage, group.FloorY, current)
+			if not ok then
+				warn(`[ExpeditionSystem] optional atmosphere preparation failed: {anchors}`)
+				return
+			end
+			if not current() or not anchors then
+				return
+			end
+			group.Anchors = anchors
+			for userId in group.Members do
+				local member = Players:GetPlayerByUserId(userId)
+				local state = active[userId]
+				if member and state and state.Group == group then
+					Net.get("Expedition_Atmosphere"):FireClient(member, {
+						StageName = group.Stage.Name,
+						GenerationToken = group.GenerationToken,
+						AnchorsOnly = true,
+						Anchors = anchors,
+					})
+				end
+			end
+		end)
 	end
 	return group
 end
@@ -633,6 +604,7 @@ local function placeMember(player: Player, group: Group): boolean
 		PartySize = group.PartySize,
 		FloorY = group.FloorY,
 		Anchors = group.Anchors,
+		GenerationToken = group.GenerationToken,
 		-- The map's model, by name, so the client can find its own pieces
 		-- among several groups' maps in one Studio server.
 		StageName = group.Stage.Name,
@@ -1285,10 +1257,25 @@ function ExpeditionSystem.init(
 	partySystem: any?,
 	lootSystem: any?
 ): ()
+	anchorScanner.clear()
 	SaveSystem = saveSystem
 	ProgressionSystem = progressionSystem
 	PartySystem = partySystem
 	LootSystem = lootSystem
+	if preparedAssets then
+		preparedAssets:destroy()
+	end
+	preparedAssets = if GameConfig.Expedition.AssetPreparationEnabled
+		then AssetPreparation.new(AssetManifest, GameConfig.Expedition)
+		else nil
+
+	local assetOwner = preparedAssets
+	game:BindToClose(function()
+		if assetOwner then
+			assetOwner:destroy()
+		end
+		anchorScanner.clear()
+	end)
 
 	-- Lighting is a shared service. The server never touches it -- each client
 	-- dresses its own screen from the Environment in Expedition_Started, which

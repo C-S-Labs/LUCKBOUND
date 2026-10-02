@@ -937,3 +937,16 @@ Currently worth watching:
   that helps or dilutes it is the thing to watch.
 - Is 1200 studs and WalkSpeed 32 right, now that there is somewhere to walk to?
   Both are one line in `GameConfig`.
+
+## Production generation migration - 2026-10-01
+
+See [GENERATION_MIGRATION.md](GENERATION_MIGRATION.md) for the exact owner traversal
+checklist, cold/reuse limitations and future authoring contracts. The preserved A-M
+experiment is commit bb47f91; do not restart it. Focused real-Studio scripts under
+`tests/` cover cache/single-flight/failure/worker/fidelity/proxy behavior, anchor
+rotation/cancellation, client late effects and all 30 VV yaw/collision definitions.
+`tools/verify_generation_migration.py` runs only seed1 cold/reuse in VV/SC/ES and
+preserves completed results. `verify_generation_contracts.py --invariants-only`
+retains its completed catalogue. Temporary source hooks are restored afterward;
+no publish/save. Set LUCKBOUND_STUDIO_ID for another connected Studio instance.
+`tools/summarize_generation_migration.py` consolidates existing raw data only.

@@ -39,6 +39,8 @@ local hubLighting: { [string]: any } = {}
 local active: any = nil
 local startedAtClock = 0
 local listeners: { (any) -> () } = {}
+local enteredStageName: string? = nil
+local enteredGenerationToken: string? = nil
 
 local function snapshotHubLighting()
 	for _, property in TRACKED do
@@ -129,6 +131,9 @@ function ExpeditionController.init(): ()
 	end)
 
 	Net.get("Expedition_Started").OnClientEvent:Connect(function(payload)
+		enteredStageName, enteredGenerationToken = payload.StageName, payload.GenerationToken
+		active = payload
+		local entering = payload
 		if not next(hubLighting) then
 			snapshotHubLighting()
 		end
@@ -145,7 +150,10 @@ function ExpeditionController.init(): ()
 		)
 		-- Waits for the map to replicate, so it must not hold up the rest.
 		task.spawn(PropController.enter, payload.WorldId, payload.StageName)
-		active = payload
+		-- Keep the latest anchors if presentation initialization yielded.
+		if active == entering then
+			AtmosphereEffects.updateAnchors(entering.Anchors)
+		end
 		startedAtClock = os.clock()
 		notify()
 		print(
@@ -163,6 +171,20 @@ function ExpeditionController.init(): ()
 	-- /atmosphere in Studio: the run's air replaced while it is running.
 	Net.get("Expedition_Atmosphere").OnClientEvent:Connect(function(payload)
 		if not active or type(payload) ~= "table" then
+			return
+		end
+		if payload.AnchorsOnly then
+			if type(payload.Anchors) ~= "table" then
+				return
+			end
+			if
+				payload.StageName ~= enteredStageName
+				or payload.GenerationToken ~= enteredGenerationToken
+			then
+				return
+			end
+			active.Anchors = payload.Anchors
+			AtmosphereEffects.updateAnchors(payload.Anchors)
 			return
 		end
 		ChunkLoader.applyEnvironment(Lighting, payload.Environment)
@@ -195,6 +217,7 @@ function ExpeditionController.init(): ()
 			PropController.leave()
 			restoreHubLighting()
 			active = nil
+			enteredStageName, enteredGenerationToken = nil, nil
 			notify()
 		end
 		ExpeditionController.onEnded(payload)

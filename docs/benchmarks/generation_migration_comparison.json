@@ -1,0 +1,56 @@
+[
+  {
+    "DifferentSamples": 0,
+    "ComparedSamples": 1862,
+    "MaximumDifferenceStuds": 0.00399999999999999,
+    "WorldId": "VERDANT_VALLEY",
+    "Repeat": 1,
+    "VisualSignaturesMatch": true,
+    "ArtYawsMatch": true
+  },
+  {
+    "DifferentSamples": 0,
+    "ComparedSamples": 1862,
+    "MaximumDifferenceStuds": 0,
+    "WorldId": "VERDANT_VALLEY",
+    "Repeat": 2,
+    "VisualSignaturesMatch": true,
+    "ArtYawsMatch": true
+  },
+  {
+    "DifferentSamples": 0,
+    "ComparedSamples": 2372,
+    "MaximumDifferenceStuds": 0,
+    "WorldId": "SKY_CITADEL",
+    "Repeat": 1,
+    "VisualSignaturesMatch": true,
+    "ArtYawsMatch": true
+  },
+  {
+    "DifferentSamples": 0,
+    "ComparedSamples": 2372,
+    "MaximumDifferenceStuds": 0,
+    "WorldId": "SKY_CITADEL",
+    "Repeat": 2,
+    "VisualSignaturesMatch": true,
+    "ArtYawsMatch": true
+  },
+  {
+    "DifferentSamples": 0,
+    "ComparedSamples": 4608,
+    "MaximumDifferenceStuds": 0,
+    "WorldId": "ETHEREAL_SCAPE",
+    "Repeat": 1,
+    "VisualSignaturesMatch": true,
+    "ArtYawsMatch": true
+  },
+  {
+    "DifferentSamples": 0,
+    "ComparedSamples": 4608,
+    "MaximumDifferenceStuds": 0,
+    "WorldId": "ETHEREAL_SCAPE",
+    "Repeat": 2,
+    "VisualSignaturesMatch": true,
+    "ArtYawsMatch": true
+  }
+]
