@@ -497,8 +497,8 @@ _452 text files, 956 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/STATUS.md
 
-- `docs/STATUS.md` (466) - LUCKBOUND — Project Status · 2026-10-02
-  - `STATUS.md`: 1. Where the project stands:10, 2. Next — pick up here:72, 3. Decisions locked in:364, Why true RNG matters downstream:390, 4. Open items (one line each; details are in the archive und:403, 5. Environment:448, Startup:456
+- `docs/STATUS.md` (467) - LUCKBOUND — Project Status · 2026-10-02
+  - `STATUS.md`: 1. Where the project stands:10, 2. Next — pick up here:72, 3. Decisions locked in:365, Why true RNG matters downstream:391, 4. Open items (one line each; details are in the archive und:404, 5. Environment:449, Startup:457
 
 ### docs/TESTING.md
 

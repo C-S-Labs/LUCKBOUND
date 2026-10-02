@@ -50,7 +50,7 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 - Keep published-server memory and explicit atmosphere/streaming/catalogue acceptance limitations visible rather than claiming they were tested.
 
 ### Stopped at
-Local checks passed; preparing GitHub PR and remote CI. No Studio save/publication or main changes.
+Local checks passed; PR #156 opened: https://github.com/C-S-Labs/LUCKBOUND/pull/156. Branch has no conflicts with refreshed origin/main714fa33. Push CI test/lint passed; await final-head PR CI. Stop before merge. No Studio save/publication or main changes.
 
 ### Next
 1. Complete local checks, push production branch, create PR and inspect CI/review state.

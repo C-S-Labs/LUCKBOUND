@@ -75,7 +75,8 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 > VV/SC/ES tested traversal and quick re-entry passed; remaining published, memory,
 > explicit atmosphere/streaming and unreported catalogue checks are recorded in
 > GENERATION_MIGRATION.md. Future small proxy/enemy contracts remain proposals.
-> Sessions 235-237. Owner authorizes production PR/push; stop before merge.
+> Sessions 235-237. Production PR #156 opened; local checks pass, no merge conflict.
+> Await final-head CI; owner explicitly requires stopping before merge.
 > Separate ES collision pilot rejected and excluded; keep current collision. No Studio save/publish.
 
 > **2026-10-01 ES integration:** owner authorizes PR/merge of the Studio-walked kit
