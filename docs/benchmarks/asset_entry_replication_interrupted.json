@@ -1,0 +1,8 @@
+{
+  "Server": null,
+  "Client": {
+    "StreamingMode": "Default",
+    "StreamingEnabled": true,
+    "Parts": []
+  }
+}

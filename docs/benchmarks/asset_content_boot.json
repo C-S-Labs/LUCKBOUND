@@ -1,0 +1,112 @@
+[
+  {
+    "WorldViewSeconds": 0,
+    "ValidationSeconds": 0.008037999970838428,
+    "MemoryDeltaMb": 6.29296875,
+    "Mode": "MANIFEST",
+    "ManifestRequireSeconds": 0.007061799988150597,
+    "ContentReadySeconds": 0.08559629996307194,
+    "Repeat": 1,
+    "WorldViewAssets": 0,
+    "LuaHeapDeltaKb": 5433
+  },
+  {
+    "WorldViewSeconds": 0.0027196999872103333,
+    "ValidationSeconds": 0.0018485999898985028,
+    "MemoryDeltaMb": 1.33203125,
+    "Mode": "WORLD_VIEW",
+    "ManifestRequireSeconds": 0.000332399969920516,
+    "ContentReadySeconds": 0.00764960004016757,
+    "Repeat": 1,
+    "WorldViewAssets": 30,
+    "LuaHeapDeltaKb": 3075
+  },
+  {
+    "WorldViewSeconds": 0,
+    "ValidationSeconds": 0.0017565999878570437,
+    "MemoryDeltaMb": 0.3125,
+    "Mode": "MANIFEST",
+    "ManifestRequireSeconds": 0.00032410002313554287,
+    "ContentReadySeconds": 0.004961600061506033,
+    "Repeat": 2,
+    "WorldViewAssets": 0,
+    "LuaHeapDeltaKb": 3037
+  },
+  {
+    "WorldViewSeconds": 0.00034339993726462126,
+    "ValidationSeconds": 0.0019017000449821353,
+    "MemoryDeltaMb": 0.1328125,
+    "Mode": "WORLD_VIEW",
+    "ManifestRequireSeconds": 0.0003127000527456403,
+    "ContentReadySeconds": 0.007899499963968992,
+    "Repeat": 2,
+    "WorldViewAssets": 30,
+    "LuaHeapDeltaKb": 1504
+  },
+  {
+    "WorldViewSeconds": 0,
+    "ValidationSeconds": 0.0017332000425085425,
+    "MemoryDeltaMb": 0.140625,
+    "Mode": "MANIFEST",
+    "ManifestRequireSeconds": 0.00038189999759197235,
+    "ContentReadySeconds": 0.004782700096257031,
+    "Repeat": 3,
+    "WorldViewAssets": 0,
+    "LuaHeapDeltaKb": 2776
+  },
+  {
+    "WorldViewSeconds": 0.0003097999142482877,
+    "ValidationSeconds": 0.0016978000057861209,
+    "MemoryDeltaMb": 0.16015625,
+    "Mode": "WORLD_VIEW",
+    "ManifestRequireSeconds": 0.0003132999408990145,
+    "ContentReadySeconds": 0.004912999924272299,
+    "Repeat": 3,
+    "WorldViewAssets": 30,
+    "LuaHeapDeltaKb": 3069
+  },
+  {
+    "WorldViewSeconds": 0,
+    "ValidationSeconds": 0.0016986000118777156,
+    "MemoryDeltaMb": 0.078125,
+    "Mode": "MANIFEST",
+    "ManifestRequireSeconds": 0.00030830001924186945,
+    "ContentReadySeconds": 0.004557800013571978,
+    "Repeat": 4,
+    "WorldViewAssets": 0,
+    "LuaHeapDeltaKb": 3038
+  },
+  {
+    "WorldViewSeconds": 0.00032190000638365746,
+    "ValidationSeconds": 0.0016180999809876084,
+    "MemoryDeltaMb": 0.109375,
+    "Mode": "WORLD_VIEW",
+    "ManifestRequireSeconds": 0.0003405999159440398,
+    "ContentReadySeconds": 0.004827899974770844,
+    "Repeat": 4,
+    "WorldViewAssets": 30,
+    "LuaHeapDeltaKb": 3070
+  },
+  {
+    "WorldViewSeconds": 0,
+    "ValidationSeconds": 0.0016727999318391085,
+    "MemoryDeltaMb": 0.24609375,
+    "Mode": "MANIFEST",
+    "ManifestRequireSeconds": 0.00034039991442114115,
+    "ContentReadySeconds": 0.004549399949610233,
+    "Repeat": 5,
+    "WorldViewAssets": 0,
+    "LuaHeapDeltaKb": 3038
+  },
+  {
+    "WorldViewSeconds": 0.00028680008836090565,
+    "ValidationSeconds": 0.0017272999975830317,
+    "MemoryDeltaMb": 0.1171875,
+    "Mode": "WORLD_VIEW",
+    "ManifestRequireSeconds": 0.000301400083117187,
+    "ContentReadySeconds": 0.004784700111486018,
+    "Repeat": 5,
+    "WorldViewAssets": 30,
+    "LuaHeapDeltaKb": 3069
+  }
+]

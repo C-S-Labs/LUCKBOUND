@@ -1,0 +1,2424 @@
+{
+  "Server": {
+    "PlayerFinalY": 20001.748046875,
+    "EntryParts": [
+      {
+        "Position": [
+          0,
+          20027,
+          0
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY",
+        "CanCollide": true
+      },
+      {
+        "Position": [
+          1.5298985090339556e-05,
+          19978.5,
+          -175
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_CONNECTOR_KEEL_01",
+        "CanCollide": true
+      },
+      {
+        "Position": [
+          -1790.5301513671875,
+          20002.14453125,
+          1796.389892578125
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_FOLIAGE_01",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3150.17431640625,
+          20000.05078125,
+          -1579.3367919921875
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_DEBRIS",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3147.434326171875,
+          20002.509765625,
+          -1580.0078125
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_EDGE1",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3153.663330078125,
+          20009.919921875,
+          -1580.0906982421875
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_EDGE10",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3146.913330078125,
+          20012.310546875,
+          -1579.9647216796875
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_EDGE11",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3153.044189453125,
+          20011.99609375,
+          -1580.0537109375
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_EDGE12",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3152.25732421875,
+          20002.185546875,
+          -1580.0338134765625
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_EDGE2",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3146.393310546875,
+          20004.703125,
+          -1580.020751953125
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_EDGE3",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3153.451171875,
+          20004.439453125,
+          -1579.997802734375
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_EDGE4",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3146.287353515625,
+          20006.53515625,
+          -1580.0028076171875
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_EDGE5",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3153.63916015625,
+          20005.904296875,
+          -1579.99169921875
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_EDGE6",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3146.01025390625,
+          20008.6328125,
+          -1579.916748046875
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_EDGE7",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3153.912353515625,
+          20008.34765625,
+          -1579.976806640625
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_EDGE8",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3146.312255859375,
+          20009.857421875,
+          -1580.0667724609375
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_EDGE9",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3158.315185546875,
+          20005.5625,
+          -1583.26171875
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_FRAGGEM1",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3139.97119140625,
+          20005.00390625,
+          -1581.374755859375
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_FRAGGEM2",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3159.01513671875,
+          20008.7890625,
+          -1578.667724609375
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_FRAGGEM3",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3138.983154296875,
+          20007.92578125,
+          -1579.32080078125
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_FRAGGEM4",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3158.63916015625,
+          20010.388671875,
+          -1581.6068115234375
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_FRAGGEM5",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3140.287353515625,
+          20010.931640625,
+          -1578.59375
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_FRAGGEM6",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3160.545166015625,
+          20012.72265625,
+          -1582.2838134765625
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_FRAGGEM7",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3158.1103515625,
+          20004.62890625,
+          -1583.2607421875
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_FRAGROCK1",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3139.851318359375,
+          20004.71484375,
+          -1581.271728515625
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_FRAGROCK2",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3158.769287109375,
+          20007.791015625,
+          -1578.51171875
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_FRAGROCK3",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3138.80615234375,
+          20007.212890625,
+          -1579.3917236328125
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_FRAGROCK4",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3158.57421875,
+          20009.916015625,
+          -1581.7127685546875
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_FRAGROCK5",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3140.46728515625,
+          20010.509765625,
+          -1578.7357177734375
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_FRAGROCK6",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3160.697265625,
+          20012.142578125,
+          -1582.144775390625
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_FRAGROCK7",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3150.000244140625,
+          20007.55078125,
+          -1579.999755859375
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_LIGHTANCHOR",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3150.000244140625,
+          20007.55078125,
+          -1579.999755859375
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_RIFTCORE",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3150.000244140625,
+          20007.55078125,
+          -1579.999755859375
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_RIFTHALO",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3150.000244140625,
+          20007.55078125,
+          -1579.999755859375
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_RIFTMID",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3150.084228515625,
+          20000.0546875,
+          -1580.9317626953125
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_SCAR",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          3150.084228515625,
+          20000.080078125,
+          -1580.9317626953125
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_PORTAL_SCARGLOW",
+        "CanCollide": false
+      },
+      {
+        "Position": [
+          70.31151580810547,
+          20062.400390625,
+          72.31147003173828
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_STRUCTURE_TRIM_01",
+        "CanCollide": true
+      }
+    ],
+    "MemoryDeltaMb": 104.54296875,
+    "LayoutErrors": [],
+    "StructureSeconds": 4.790912500000559,
+    "MaterializationReadySeconds": 4.78849349997472,
+    "CollisionReadySeconds": 4.78849349997472,
+    "CacheInstancesAfterDestroyMb": 244.49176025390625,
+    "WorldId": "ETHEREAL_SCAPE",
+    "VisualSignatures": {
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_EDGE5": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://116056592838193",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          1.1000980138778687,
+          1.379760980606079,
+          0.5646973252296448
+        ]
+      },
+      "ES_MIRROR_POOL:ES_CHUNK_MIRROR_POOL_FLOOR_TRIM_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://89311451407922",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          142.11740112304688,
+          1.6800060272216797,
+          136.48609924316406
+        ]
+      },
+      "ES_PATH_SKYSTAIR_UP:ES_CHUNK_PATH_SKYSTAIR_UP_CONNECTOR_KEEL_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://135961117707912",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          58,
+          37,
+          34
+        ]
+      },
+      "ES_TERRACED_GARDENS:ES_CHUNK_TERRACED_GARDENS_FOLIAGE_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://126711481348285",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          70.75261688232422,
+          12.510000228881836,
+          110.57689666748047
+        ]
+      },
+      "ES_BACKDROP_DRIFT_ISLES:ES_CHUNK_BACKDROP_DRIFT_ISLES": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://84528239803966",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          256,
+          246,
+          256
+        ]
+      },
+      "ES_SANCTUM:ES_CHUNK_SANCTUM_STRUCTURE_TRIM_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://130242443891834",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          94.51927185058594,
+          11.784520149230957,
+          6.52099609375
+        ]
+      },
+      "ES_TEMPLE_GATE_A:ES_CHUNK_TEMPLE_GATE_A": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://110756468513680",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          256,
+          244.8000030517578,
+          256
+        ]
+      },
+      "ES_MINIBOSS_RELIQUARY_COURT:ES_CHUNK_MINIBOSS_RELIQUARY_COURT_FLOOR_TRIM_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://77057204200027",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          166.87989807128906,
+          2.1800029277801514,
+          174.8800048828125
+        ]
+      },
+      "ES_SANCTUM:ES_CHUNK_SANCTUM_FOLIAGE_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://79451633651966",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          242.10470581054688,
+          1.0000040531158447,
+          52.28662109375
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_FRAGGEM3": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://81891788273647",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          1.0532230138778687,
+          1.8546279668807983,
+          0.703125
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_EDGE7": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://79316903501075",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          1.5522459745407104,
+          1.4521199464797974,
+          0.3603515923023224
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_FRAGGEM6": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://101194904108863",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          0.5048828125,
+          0.7401313781738281,
+          0.4785155951976776
+        ]
+      },
+      "ES_SKY_OBSERVATORY:ES_CHUNK_SKY_OBSERVATORY_TERRAIN_02": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://91330367623995",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          188.0399932861328,
+          14.131159782409668,
+          174.3917999267578
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_FRAGGEM4": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://110258257660631",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          0.6987305283546448,
+          1.205346941947937,
+          0.638916015625
+        ]
+      },
+      "ES_SANCTUM:ES_CHUNK_SANCTUM_TEMPLE_01_PART_02": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://120875703428291",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          244,
+          58.00001907348633,
+          210.60000610351562
+        ]
+      },
+      "ES_BACKDROP_DRIFT_ISLES:ES_CHUNK_BACKDROP_DRIFT_ISLES_FLOOR_TRIM_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://135765585748925",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          40.588130950927734,
+          0.18000219762325287,
+          39.224979400634766
+        ]
+      },
+      "ES_SKY_OBSERVATORY:ES_CHUNK_SKY_OBSERVATORY_STRUCTURE_TRIM_01_PART_02": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://71751480626787",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          30.494630813598633,
+          25.6895809173584,
+          43.164310455322266
+        ]
+      },
+      "ES_MINIBOSS_RELIQUARY_COURT:ES_CHUNK_MINIBOSS_RELIQUARY_COURT_CONNECTOR_KEEL_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://85324500940780",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          58,
+          37,
+          34
+        ]
+      },
+      "ES_SANCTUM:ES_CHUNK_SANCTUM_FACADE_DETAIL_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://96478082913008",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          274.427001953125,
+          71.07836151123047,
+          262.427001953125
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_EDGE4": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://87977338740616",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          1.4506839513778687,
+          1.275668978691101,
+          0.5659180283546448
+        ]
+      },
+      "ES_SKY_OBSERVATORY:ES_CHUNK_SKY_OBSERVATORY_PART_02": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://81869172401514",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          121.69429779052734,
+          90.07717895507812,
+          121.69419860839844
+        ]
+      },
+      "ES_SANCTUM:ES_CHUNK_SANCTUM_TEMPLE_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://139700336182963",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          279,
+          151,
+          277.5
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_STRUCTURE_TRIM_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://91506910101176",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          210.8125,
+          139.3928985595703,
+          214.81260681152344
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_FRAGGEM5": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://116099551627224",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          0.4936523139476776,
+          1.0287530422210693,
+          0.4780273139476776
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_EDGE6": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://103070043628056",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          1.1220699548721313,
+          1.3037739992141724,
+          0.57861328125
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_FRAGROCK5": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://139334608346397",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          1.6416020393371582,
+          2.098768949508667,
+          2.000243902206421
+        ]
+      },
+      "ES_SANCTUM:ES_CHUNK_SANCTUM_THRONE_INLAY_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://115400878334296",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          12.469969749450684,
+          16.555200576782227,
+          0.3486328125
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_LIGHTANCHOR": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://137797232883452",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          0.4003905951976776,
+          0.40000009536743164,
+          0.3999023139476776
+        ]
+      },
+      "ES_FORK_WAYSHRINE:ES_CHUNK_FORK_WAYSHRINE": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://124503022970236",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          256,
+          222,
+          256
+        ]
+      },
+      "ES_FORK_WAYSHRINE:ES_CHUNK_FORK_WAYSHRINE_FLOOR_TRIM_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://85106320708640",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          86.425537109375,
+          14.180000305175781,
+          163.69920349121094
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_SCARGLOW": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://135753272666710",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          8.150390625,
+          0.0010000000474974513,
+          10.062740325927734
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_FRAGROCK7": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://140415515643318",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          2.9375,
+          3.1561779975891113,
+          2.635010004043579
+        ]
+      },
+      "ES_TERRACED_GARDENS:ES_CHUNK_TERRACED_GARDENS_CONNECTOR_KEEL_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://95503489621824",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          58,
+          37.00001907348633,
+          256
+        ]
+      },
+      "ES_BACKDROP_CLOUD_SHELF:ES_CHUNK_BACKDROP_CLOUD_SHELF": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://103622548173409",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          256,
+          256,
+          256
+        ]
+      },
+      "ES_BACKDROP_CLOUD_DRIFT:ES_CHUNK_BACKDROP_CLOUD_DRIFT": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://121715778696491",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          256,
+          256,
+          256
+        ]
+      },
+      "ES_BACKDROP_CLOUDBANK:ES_CHUNK_BACKDROP_CLOUDBANK": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://135103035982907",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          256,
+          256,
+          256
+        ]
+      },
+      "ES_BACKDROP_DRIFT_ISLES:ES_CHUNK_BACKDROP_DRIFT_ISLES_STRUCTURE_TRIM_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://70528313904460",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          12.745610237121582,
+          152.27279663085938,
+          12.745610237121582
+        ]
+      },
+      "ES_BACKDROP_STORM_ANVIL:ES_CHUNK_BACKDROP_STORM_ANVIL": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://74427436240497",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          256,
+          256,
+          256
+        ]
+      },
+      "ES_BACKDROP_CRYSTAL_SPIRE:ES_CHUNK_BACKDROP_CRYSTAL_SPIRE": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://127274358220179",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          256,
+          256,
+          256
+        ]
+      },
+      "ES_MINIBOSS_RELIQUARY_COURT:ES_CHUNK_MINIBOSS_RELIQUARY_COURT_STRUCTURE_TRIM_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://103976518453128",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          122.81050109863281,
+          128.09640502929688,
+          25.47528076171875
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_EDGE2": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://73702041523046",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          1.183593988418579,
+          1.4339749813079834,
+          0.4111328125
+        ]
+      },
+      "ES_TERRACED_GARDENS:ES_CHUNK_TERRACED_GARDENS": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://97444880877364",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          256,
+          256,
+          256
+        ]
+      },
+      "ES_MINIBOSS_RELIQUARY_COURT:ES_CHUNK_MINIBOSS_RELIQUARY_COURT": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://125091853621852",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          256,
+          246,
+          256
+        ]
+      },
+      "ES_TERRACED_GARDENS:ES_CHUNK_TERRACED_GARDENS_FLOOR_TRIM_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://127645157535460",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          104.49510192871094,
+          10.180000305175781,
+          140.92930603027344
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_FRAGGEM7": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://135967946227512",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          0.7407227158546448,
+          1.1250710487365723,
+          0.638916015625
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_CONNECTOR_KEEL_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://71236066007435",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          58,
+          37,
+          34
+        ]
+      },
+      "ES_PATH_GROVE_ISLE:ES_CHUNK_PATH_GROVE_ISLE_FOLIAGE_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://83990827632555",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          84.8895263671875,
+          5.420569896697998,
+          109.9000015258789
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_FRAGGEM1": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://78087733612290",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          0.7744141221046448,
+          1.4990639686584473,
+          0.559326171875
+        ]
+      },
+      "ES_SANCTUM:ES_CHUNK_SANCTUM_ENTRY_WALL_DETAIL_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://131094276769902",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          202.5,
+          46.249000549316406,
+          0.4200438857078552
+        ]
+      },
+      "ES_PATH_SKYSTAIR_UP:ES_CHUNK_PATH_SKYSTAIR_UP_FOLIAGE_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://70818004608886",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          28.5872802734375,
+          4.936697006225586,
+          28.628299713134766
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_EDGE11": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://124471561003789",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          1.574218988418579,
+          1.3494939804077148,
+          0.50244140625
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_EDGE10": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://125095426966308",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          1.2436519861221313,
+          1.3411660194396973,
+          0.62548828125
+        ]
+      },
+      "ES_PATH_SKYSTAIR_UP:ES_CHUNK_PATH_SKYSTAIR_UP_FLOOR_TRIM_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://130370103198507",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          90.4197998046875,
+          12.180000305175781,
+          113.5895004272461
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_FOLIAGE_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://75475813254783",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          249.45849609375,
+          4.687461853027344,
+          217.3762969970703
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_DEBRIS": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://112421974698712",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          13.947270393371582,
+          0.4256055951118469,
+          12.073240280151367
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_EDGE9": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://125988454454713",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          1.280761957168579,
+          1.2704650163650513,
+          0.5244141221046448
+        ]
+      },
+      "ES_SKY_OBSERVATORY:ES_CHUNK_SKY_OBSERVATORY_STRUCTURE_TRIM_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://76602139270544",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          122.8281021118164,
+          25.689590454101562,
+          122.6886978149414
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_EDGE8": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://130806143853897",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          1.3603520393371582,
+          1.5680019855499268,
+          0.4748534858226776
+        ]
+      },
+      "ES_MIRROR_POOL:ES_CHUNK_MIRROR_POOL_FOLIAGE_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://139637263327033",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          79.74268341064453,
+          5.021393775939941,
+          111.14839935302734
+        ]
+      },
+      "ES_SKY_OBSERVATORY:ES_CHUNK_SKY_OBSERVATORY_FLOOR_TRIM_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://75263646034022",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          245.9954071044922,
+          4.180014133453369,
+          243.69549560546875
+        ]
+      },
+      "ES_TEMPLE_GATE_A:ES_CHUNK_TEMPLE_GATE_A_FLOOR_TRIM_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://114526065238133",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          158.87989807128906,
+          2.6800029277801514,
+          166.87989807128906
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_FRAGROCK4": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://134198349280397",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          1.937011957168579,
+          1.9808299541473389,
+          2.105468988418579
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_RIFTCORE": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://99184151286072",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          3.941406011581421,
+          12.899999618530273,
+          0.5498046875
+        ]
+      },
+      "ES_PATH_SKYSTAIR_UP:ES_CHUNK_PATH_SKYSTAIR_UP": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://131946345833449",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          256,
+          222,
+          256
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_SCAR": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://129887104874350",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          8.150390625,
+          0.012000000104308128,
+          10.062740325927734
+        ]
+      },
+      "ES_SANCTUM:ES_CHUNK_SANCTUM_WINDOW_DETAIL_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://71596693256562",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          253.11000061035156,
+          64.50000762939453,
+          221.3050994873047
+        ]
+      },
+      "ES_SKY_OBSERVATORY:ES_CHUNK_SKY_OBSERVATORY": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://116034293966913",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          384,
+          248,
+          384
+        ]
+      },
+      "ES_SANCTUM:ES_CHUNK_SANCTUM_THRONE_DETAIL_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://101377721829884",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          49.400020599365234,
+          53.367008209228516,
+          13.95740032196045
+        ]
+      },
+      "ES_SANCTUM:ES_CHUNK_SANCTUM_TEMPLE_01_STRUCTURE_TRIM_01_PART_02": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://77177827353032",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          274.9765930175781,
+          69.19001770019531,
+          263.8467102050781
+        ]
+      },
+      "ES_SANCTUM:ES_CHUNK_SANCTUM_TEMPLE_01_STRUCTURE_TRIM_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://99454221912085",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          265.9595031738281,
+          69.19001770019531,
+          265.2467956542969
+        ]
+      },
+      "ES_SANCTUM:ES_CHUNK_SANCTUM": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://117090521335311",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          512,
+          116,
+          512
+        ]
+      },
+      "ES_SANCTUM:ES_CHUNK_SANCTUM_FLOOR_DETAIL_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://140424867922619",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          192,
+          0.01801490969955921,
+          192.60000610351562
+        ]
+      },
+      "ES_PATH_GROVE_ISLE:ES_CHUNK_PATH_GROVE_ISLE_CONNECTOR_KEEL_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://90261454552124",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          58,
+          37.00001907348633,
+          256
+        ]
+      },
+      "ES_SANCTUM:ES_CHUNK_SANCTUM_DOOR_DETAIL_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://79763764039627",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          121.30000305175781,
+          36.900001525878906,
+          1.5600589513778687
+        ]
+      },
+      "ES_MIRROR_POOL:ES_CHUNK_MIRROR_POOL": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://70669629361027",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          256,
+          246,
+          256
+        ]
+      },
+      "ES_SANCTUM:ES_CHUNK_SANCTUM_CONNECTOR_KEEL_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://101323333838519",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          78,
+          37,
+          34
+        ]
+      },
+      "ES_SANCTUM:ES_CHUNK_SANCTUM_TEMPLE_01_ARCH_DETAIL_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://105734946818196",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          271.3128967285156,
+          9.330024719238281,
+          259.31298828125
+        ]
+      },
+      "ES_TEMPLE_GATE_A:ES_CHUNK_TEMPLE_GATE_A_STRUCTURE_TRIM_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://78945201738119",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          118.35350036621094,
+          65.62999725341797,
+          14.353520393371582
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_EDGE12": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://123547321459190",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          1.1279300451278687,
+          1.5807700157165527,
+          0.5498046875
+        ]
+      },
+      "ES_MIRROR_POOL:ES_CHUNK_MIRROR_POOL_STRUCTURE_TRIM_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://112206204948726",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          14.81054973602295,
+          124.67310333251953,
+          14.81054973602295
+        ]
+      },
+      "ES_TEMPLE_GATE_A:ES_CHUNK_TEMPLE_GATE_A_CONNECTOR_KEEL_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://128961464510721",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          78,
+          37.00001907348633,
+          256
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_EDGE1": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://138418501825117",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          1.4077149629592896,
+          1.4200810194015503,
+          0.6042479872703552
+        ]
+      },
+      "ES_FORK_WAYSHRINE:ES_CHUNK_FORK_WAYSHRINE_FOLIAGE_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://72023045108631",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          59.957401275634766,
+          5.343666076660156,
+          55.927249908447266
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_FRAGROCK3": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://130046064191098",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          2.6630859375,
+          3.5570449829101562,
+          3.165282964706421
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_FRAGROCK2": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://100142242307333",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          1.9907230138778687,
+          2.1316330432891846,
+          1.9406739473342896
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_RIFTMID": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://99751927353297",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          5.574219226837158,
+          14.100000381469727,
+          0.8579102158546448
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_FRAGGEM2": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://76356483886485",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          0.517578125,
+          0.8412361145019531,
+          0.4379883110523224
+        ]
+      },
+      "ES_TEMPLE_GATE_A:ES_CHUNK_TEMPLE_GATE_A_ARCH_DETAIL_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://109151153210791",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          118.89009857177734,
+          96.42001342773438,
+          14.88988971710205
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_RIFTHALO": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://106914177008914",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          7.829102039337158,
+          15,
+          1.319823980331421
+        ]
+      },
+      "ES_MIRROR_POOL:ES_CHUNK_MIRROR_POOL_CONNECTOR_KEEL_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://117007917643367",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          58,
+          37.00001907348633,
+          256
+        ]
+      },
+      "ES_PATH_GROVE_ISLE:ES_CHUNK_PATH_GROVE_ISLE_FLOOR_TRIM_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://72981229059282",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          148.12559509277344,
+          0.21500879526138306,
+          130.43319702148438
+        ]
+      },
+      "ES_PATH_GROVE_ISLE:ES_CHUNK_PATH_GROVE_ISLE": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://129611787409916",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          256,
+          222,
+          256
+        ]
+      },
+      "ES_SANCTUM:ES_CHUNK_SANCTUM_CURVED_CHAIR_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://95637268102368",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          28.840030670166016,
+          31.200000762939453,
+          12.900019645690918
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_FRAGROCK6": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://116249036385222",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          1.71533203125,
+          1.9938770532608032,
+          1.666260004043579
+        ]
+      },
+      "ES_SKY_OBSERVATORY:ES_CHUNK_SKY_OBSERVATORY_FOLIAGE_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://77612374538855",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          196.7075958251953,
+          4.870351791381836,
+          150.72909545898438
+        ]
+      },
+      "ES_SKY_OBSERVATORY:ES_CHUNK_SKY_OBSERVATORY_CONNECTOR_KEEL_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://84003027497050",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          58,
+          37.000030517578125,
+          384
+        ]
+      },
+      "ES_SKY_OBSERVATORY:ES_CHUNK_SKY_OBSERVATORY_PART_03": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://95436518628917",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          121.69429779052734,
+          90.07717895507812,
+          121.69419860839844
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_EDGE3": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://85412737368025",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          1.6259770393371582,
+          1.3566950559616089,
+          0.5122069716453552
+        ]
+      },
+      "ES_FORK_WAYSHRINE:ES_CHUNK_FORK_WAYSHRINE_CONNECTOR_KEEL_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://75528169550214",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          256,
+          37.0000114440918,
+          157
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://87558612556793",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          384,
+          246,
+          384
+        ]
+      },
+      "ES_ENTRY:ES_CHUNK_ENTRY_PORTAL_FRAGROCK1": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://86986100640607",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          1.9824219942092896,
+          2.3140900135040283,
+          2.782958984375
+        ]
+      },
+      "ES_TERRACED_GARDENS:ES_CHUNK_TERRACED_GARDENS_STAIR_DETAIL_01": {
+        "Material": "Plastic",
+        "TextureID": "",
+        "MeshId": "rbxassetid://131604699736134",
+        "Color": [
+          0.6392157077789307,
+          0.6352941393852234,
+          0.6470588445663452
+        ],
+        "Size": [
+          39.354129791259766,
+          17.850000381469727,
+          45.926029205322266
+        ]
+      }
+    },
+    "CacheRetentionAfterDestroyMb": 3018.44140625,
+    "CacheInstancesBeforeDestroyMb": 244.48507690429688,
+    "SafePlayerReadyEpochMs": 1790903783270,
+    "SafePlayerReadySeconds": 6.093987099942751,
+    "LuaHeapBeforeKb": 56196,
+    "TotalRaycasts": 16384,
+    "MemoryBeforeMb": 2914.15234375,
+    "AssetExperiment": "ENTRY_DIAGNOSTIC",
+    "PlayerPlacedEpochMs": 1790903781978,
+    "RequestEpochMs": 1790903777176,
+    "WorkingSetAssets": 102,
+    "BlockoutCount": 0,
+    "Times": {
+      "CreateMeshPartAsync": 25.134153100429103,
+      "AtmosphereAnchors": 2.113620600081049,
+      "TemplateResolution": 0.0001775999553501606,
+      "TemplateClone": 0.002645100117661059,
+      "Assembly": 0.00023429992143064737,
+      "WorkingSet": 7.11000757291913e-05,
+      "SolidProps": 9.579979814589024e-05,
+      "PropInitialization": 2.209970261901617e-05,
+      "EntryStreaming": 0.009798999992199242,
+      "AssetInitialization": 0.011925900005735457,
+      "PropRegistry": 0.013449400081299245,
+      "TemplateIndex": 0.005789600079879165,
+      "AssetPreparation": 4.756007199990563,
+      "Overlap": 6.149988621473312e-05
+    },
+    "CumulativeUniqueAssetLoads": 51,
+    "MemoryAfterMb": 3018.6953125,
+    "Stage": "F",
+    "PathCount": 209,
+    "ServerPresentationReadySeconds": 6.90956009994261,
+    "TipCount": 116,
+    "CompletionSeconds": 6.90956009994261,
+    "PropStats": {
+      "ModulesRequired": 1,
+      "Seconds": 0.013445900054648519,
+      "Misses": 1,
+      "Hits": 28
+    },
+    "AssetCreations": [
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_BACKDROP_CLOUD_DRIFT",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.005838199984282255
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_BACKDROP_CLOUDBANK",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.006025400012731552
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_BACKDROP_CLOUD_SHELF",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.006349800038151443
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_BACKDROP_STORM_ANVIL",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.01674039999488741
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_ENTRY_CONNECTOR_KEEL_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.01683229999616742
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_BACKDROP_CRYSTAL_SPIRE",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.07278389995917678
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_FORK_WAYSHRINE_CONNECTOR_KEEL_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.015627200016751885
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_BACKDROP_DRIFT_ISLES",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.1894099999917671
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_MINIBOSS_RELIQUARY_COURT_CONNECTOR_KEEL_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.016840900061652064
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_BACKDROP_DRIFT_ISLES_STRUCTURE_TRIM_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.4217277999268845
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_FORK_WAYSHRINE",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.5324038000544533
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_MIRROR_POOL_CONNECTOR_KEEL_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.017261500004678965
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_MIRROR_POOL",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.4171640999848023
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_MINIBOSS_RELIQUARY_COURT",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.784169299993664
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_PATH_GROVE_ISLE_CONNECTOR_KEEL_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.01611130009405315
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_MIRROR_POOL_STRUCTURE_TRIM_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.3832613000413403
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_ENTRY_STRUCTURE_TRIM_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.9495500000193715
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_PATH_SKYSTAIR_UP_CONNECTOR_KEEL_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.01627519994508475
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SANCTUM_CONNECTOR_KEEL_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.016738400096073747
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_ENTRY",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 1.0164998000254855
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_PATH_GROVE_ISLE",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.2001492999261245
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SANCTUM_DOOR_DETAIL_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.05065009999088943
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SANCTUM_ENTRY_WALL_DETAIL_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.08353930001612753
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SANCTUM_STRUCTURE_TRIM_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.04952240001875907
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SANCTUM",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.30095059995073825
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SANCTUM_FACADE_DETAIL_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.41615940001793206
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SANCTUM_TEMPLE_01_ARCH_DETAIL_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.28246140002738684
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_PATH_SKYSTAIR_UP",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.9003841000376269
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SANCTUM_TEMPLE_01_PART_02",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.7829540999373421
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SANCTUM_TEMPLE_01_STRUCTURE_TRIM_01_PART_02",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.4999601999297738
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SANCTUM_THRONE_DETAIL_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.017136999987997115
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SANCTUM_TEMPLE_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 1.2166360000846907
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SANCTUM_THRONE_INLAY_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.2159866999136284
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SKY_OBSERVATORY_CONNECTOR_KEEL_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.016895100008696318
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_MINIBOSS_RELIQUARY_COURT_STRUCTURE_TRIM_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 2.3165083000203595
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SANCTUM_CURVED_CHAIR_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 1.7333118000533432
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SKY_OBSERVATORY_PART_03",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.6995042000198737
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SANCTUM_TEMPLE_01_STRUCTURE_TRIM_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 1.733060700003989
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SKY_OBSERVATORY_TERRAIN_02",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.01670969999395311
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SKY_OBSERVATORY_STRUCTURE_TRIM_01_PART_02",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.1500179999275133
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SKY_OBSERVATORY",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 1.1840405999682844
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_TEMPLE_GATE_A_CONNECTOR_KEEL_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.0159791000187397
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_TEMPLE_GATE_A_ARCH_DETAIL_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.2504476000322029
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_TEMPLE_GATE_A_STRUCTURE_TRIM_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.08335990004707128
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_TERRACED_GARDENS_CONNECTOR_KEEL_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.016277499962598085
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_TERRACED_GARDENS_STAIR_DETAIL_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.09989630000200123
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SANCTUM_WINDOW_DETAIL_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 1.5332287000492215
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_TERRACED_GARDENS",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 0.46613009995780885
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SKY_OBSERVATORY_PART_02",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 1.6837058999808505
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_SKY_OBSERVATORY_STRUCTURE_TRIM_01",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 1.75042219995521
+      },
+      {
+        "Success": true,
+        "AssetKey": "ES_CHUNK_TEMPLE_GATE_A",
+        "Fidelity": "PreciseConvexDecomposition",
+        "Seconds": 1.4496569999027997
+      }
+    ],
+    "AssetPolicy": {
+      "Workers": 6,
+      "VisualFidelity": true,
+      "Id": "ENTRY_DIAGNOSTIC",
+      "Prepare": "Seed",
+      "LocalTemplates": true,
+      "Cache": true
+    },
+    "PlayableSeconds": 6.093987099942751,
+    "CacheRetentionBeforeDestroyMb": 3018.42578125,
+    "PlayerGrounded": true,
+    "ArtYaws": {
+      "ES_TEMPLE_GATE_A": 180,
+      "ES_BACKDROP_CRYSTAL_SPIRE": 180,
+      "ES_BACKDROP_CLOUD_DRIFT": 180,
+      "ES_BACKDROP_CLOUDBANK": 180,
+      "ES_SKY_OBSERVATORY": 180,
+      "ES_TERRACED_GARDENS": 180,
+      "ES_BACKDROP_DRIFT_ISLES": 180,
+      "ES_MINIBOSS_RELIQUARY_COURT": 180,
+      "ES_MIRROR_POOL": 180,
+      "ES_PATH_SKYSTAIR_UP": 180,
+      "ES_SANCTUM": 180,
+      "ES_FORK_WAYSHRINE": 180,
+      "ES_ENTRY": 180,
+      "ES_BACKDROP_STORM_ANVIL": 180,
+      "ES_PATH_GROVE_ISLE": 180,
+      "ES_BACKDROP_CLOUD_SHELF": 180
+    },
+    "PlayerPlacedSeconds": 4.800918900058605,
+    "MaximumCreationSeconds": 2.3165083000203595,
+    "MemoryPeakObservedMb": 3019.57421875,
+    "UniqueAssetLoads": 51,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 64751,
+    "AssetsPreparedSeconds": 4.776562500046566,
+    "RuntimeTemplateInstances": 51,
+    "TemplateCacheEntries": 102,
+    "DuplicateAssetLoads": 0,
+    "LayoutSolvedSeconds": 0.02040579996537417,
+    "PlayerPlacementMeasured": true,
+    "AssemblyAttempts": 1,
+    "CreatedAssets": {
+      "ES_CHUNK_MINIBOSS_RELIQUARY_COURT_STRUCTURE_TRIM_01": 1,
+      "ES_CHUNK_TEMPLE_GATE_A": 1,
+      "ES_CHUNK_SKY_OBSERVATORY_STRUCTURE_TRIM_01_PART_02": 1,
+      "ES_CHUNK_SKY_OBSERVATORY_PART_03": 1,
+      "ES_CHUNK_BACKDROP_STORM_ANVIL": 1,
+      "ES_CHUNK_MINIBOSS_RELIQUARY_COURT": 1,
+      "ES_CHUNK_SANCTUM_WINDOW_DETAIL_01": 1,
+      "ES_CHUNK_BACKDROP_CLOUDBANK": 1,
+      "ES_CHUNK_PATH_SKYSTAIR_UP_CONNECTOR_KEEL_01": 1,
+      "ES_CHUNK_BACKDROP_CLOUD_DRIFT": 1,
+      "ES_CHUNK_BACKDROP_DRIFT_ISLES_STRUCTURE_TRIM_01": 1,
+      "ES_CHUNK_SANCTUM_TEMPLE_01_STRUCTURE_TRIM_01": 1,
+      "ES_CHUNK_MINIBOSS_RELIQUARY_COURT_CONNECTOR_KEEL_01": 1,
+      "ES_CHUNK_SANCTUM_DOOR_DETAIL_01": 1,
+      "ES_CHUNK_SANCTUM_TEMPLE_01_ARCH_DETAIL_01": 1,
+      "ES_CHUNK_SANCTUM": 1,
+      "ES_CHUNK_TERRACED_GARDENS_STAIR_DETAIL_01": 1,
+      "ES_CHUNK_SANCTUM_TEMPLE_01_PART_02": 1,
+      "ES_CHUNK_MIRROR_POOL_CONNECTOR_KEEL_01": 1,
+      "ES_CHUNK_SANCTUM_THRONE_INLAY_01": 1,
+      "ES_CHUNK_BACKDROP_CRYSTAL_SPIRE": 1,
+      "ES_CHUNK_PATH_GROVE_ISLE_CONNECTOR_KEEL_01": 1,
+      "ES_CHUNK_TERRACED_GARDENS": 1,
+      "ES_CHUNK_SANCTUM_TEMPLE_01_STRUCTURE_TRIM_01_PART_02": 1,
+      "ES_CHUNK_FORK_WAYSHRINE_CONNECTOR_KEEL_01": 1,
+      "ES_CHUNK_TEMPLE_GATE_A_STRUCTURE_TRIM_01": 1,
+      "ES_CHUNK_SKY_OBSERVATORY_CONNECTOR_KEEL_01": 1,
+      "ES_CHUNK_SKY_OBSERVATORY": 1,
+      "ES_CHUNK_PATH_SKYSTAIR_UP": 1,
+      "ES_CHUNK_SKY_OBSERVATORY_TERRAIN_02": 1,
+      "ES_CHUNK_SKY_OBSERVATORY_STRUCTURE_TRIM_01": 1,
+      "ES_CHUNK_TERRACED_GARDENS_CONNECTOR_KEEL_01": 1,
+      "ES_CHUNK_BACKDROP_CLOUD_SHELF": 1,
+      "ES_CHUNK_TEMPLE_GATE_A_CONNECTOR_KEEL_01": 1,
+      "ES_CHUNK_TEMPLE_GATE_A_ARCH_DETAIL_01": 1,
+      "ES_CHUNK_SANCTUM_THRONE_DETAIL_01": 1,
+      "ES_CHUNK_SKY_OBSERVATORY_PART_02": 1,
+      "ES_CHUNK_FORK_WAYSHRINE": 1,
+      "ES_CHUNK_ENTRY": 1,
+      "ES_CHUNK_MIRROR_POOL": 1,
+      "ES_CHUNK_PATH_GROVE_ISLE": 1,
+      "ES_CHUNK_SANCTUM_TEMPLE_01": 1,
+      "ES_CHUNK_MIRROR_POOL_STRUCTURE_TRIM_01": 1,
+      "ES_CHUNK_ENTRY_STRUCTURE_TRIM_01": 1,
+      "ES_CHUNK_ENTRY_CONNECTOR_KEEL_01": 1,
+      "ES_CHUNK_SANCTUM_CONNECTOR_KEEL_01": 1,
+      "ES_CHUNK_SANCTUM_FACADE_DETAIL_01": 1,
+      "ES_CHUNK_BACKDROP_DRIFT_ISLES": 1,
+      "ES_CHUNK_SANCTUM_ENTRY_WALL_DETAIL_01": 1,
+      "ES_CHUNK_SANCTUM_STRUCTURE_TRIM_01": 1,
+      "ES_CHUNK_SANCTUM_CURVED_CHAIR_01": 1
+    },
+    "Seed": 1,
+    "StructuralValid": true,
+    "Counters": {
+      "AnchorCacheMisses": 16,
+      "AnchorCacheHits": 12,
+      "DefinitionMisses": 41,
+      "LocalTemplateClones": 59,
+      "AtmosphereRaycasts": 16384,
+      "MultipartMeshInstances": 130,
+      "PreciseRequests": 51,
+      "TemplateCacheHits": 130,
+      "TemplateClones": 130,
+      "OverlapComparisons": 672,
+      "LocalTemplateResolutions": 51,
+      "VerifiedYawUses": 28,
+      "ChunkCount": 28,
+      "CreateMeshPartAsyncCalls": 51,
+      "CandidateAttempts": 10,
+      "PlacementFailures": 35,
+      "TemplateCacheMisses": 102
+    },
+    "Repeat": 1,
+    "AnchorCache": {
+      "Samples": 5346,
+      "SerializedFloat64PayloadBytes": 256608,
+      "Entries": 16
+    },
+    "Started": 161689.71215799998
+  },
+  "Client": {
+    "StreamingMode": "Default",
+    "StreamingEnabled": true,
+    "Parts": [
+      {
+        "Position": [
+          0,
+          20027,
+          0
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY",
+        "CanCollide": true
+      },
+      {
+        "Position": [
+          70.31151580810547,
+          20062.400390625,
+          72.31147003173828
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_STRUCTURE_TRIM_01",
+        "CanCollide": true
+      },
+      {
+        "Position": [
+          1.5298985090339556e-05,
+          19978.5,
+          -175
+        ],
+        "Transparency": 0,
+        "Name": "ES_CHUNK_ENTRY_CONNECTOR_KEEL_01",
+        "CanCollide": true
+      }
+    ]
+  }
+}

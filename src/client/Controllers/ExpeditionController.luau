@@ -165,8 +165,23 @@ function ExpeditionController.init(): ()
 		if not active or type(payload) ~= "table" then
 			return
 		end
-		ChunkLoader.applyEnvironment(Lighting, payload.Environment)
-		AmbienceController.enter(payload.Environment, payload.FloorY or active.FloorY or 0)
+		if payload.StageName and payload.StageName ~= active.StageName then
+			return
+		end
+		if payload.GenerationToken and payload.GenerationToken ~= active.GenerationToken then
+			return
+		end
+		if payload.Anchors then
+			active.Anchors = payload.Anchors
+		end
+		if payload.AnchorsOnly then
+			AtmosphereEffects.updateAnchors(active.Anchors)
+			return
+		end
+		if not payload.AnchorsOnly then
+			ChunkLoader.applyEnvironment(Lighting, payload.Environment)
+			AmbienceController.enter(payload.Environment, payload.FloorY or active.FloorY or 0)
+		end
 		AtmosphereEffects.enter(
 			payload.Environment,
 			mapCentre(payload.FloorY or active.FloorY or 0),

@@ -1,0 +1,13 @@
+{
+  "Counters": {
+    "TemplateCacheHits": 2,
+    "AssetCreationErrors": 2,
+    "InFlightDeduplications": 1,
+    "CreateMeshPartAsyncCalls": 4,
+    "TemplateClones": 2,
+    "PreciseRequests": 3,
+    "TemplateCacheMisses": 4
+  },
+  "CreateCalls": 2,
+  "Passed": 9
+}

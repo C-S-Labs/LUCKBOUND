@@ -1,0 +1,38 @@
+{
+  "A": {
+    "runs": 3000,
+    "median_layout_ms": 0.12794999999999998,
+    "worst_layout_ms": 1.6376,
+    "assembly_failures": 0
+  },
+  "B": {
+    "runs": 3000,
+    "median_layout_ms": 0.12329999999999999,
+    "worst_layout_ms": 1.3403,
+    "assembly_failures": 0
+  },
+  "C": {
+    "runs": 3000,
+    "median_layout_ms": 0.12265,
+    "worst_layout_ms": 1.3854,
+    "assembly_failures": 0
+  },
+  "D": {
+    "runs": 3000,
+    "median_layout_ms": 0.12075000000000001,
+    "worst_layout_ms": 1.5975,
+    "assembly_failures": 0
+  },
+  "E": {
+    "runs": 3000,
+    "median_layout_ms": 0.12234999999999999,
+    "worst_layout_ms": 1.3586,
+    "assembly_failures": 0
+  },
+  "F": {
+    "runs": 3000,
+    "median_layout_ms": 0.12589999999999998,
+    "worst_layout_ms": 1.3401999999999998,
+    "assembly_failures": 0
+  }
+}

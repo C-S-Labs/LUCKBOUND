@@ -69,6 +69,18 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 ## 2. Next — pick up here
 
+> Generation performance experiment is local on `agent/procgen-performance`, from
+> main `714fa33`. A–M completed and preserved: 660 full-map measurements, 48 SC
+> proxy sample builds; opt-in implementation is not adopted. Paired A map-ready
+> 20.264/47.941 s median/worst; combined cold SC map 4.781 s. Live server safe-play
+> 22.248/46.600 → 1.333/6.215 s (mixed cold/cache reuse). Layout comparisons18,000,
+> Luau1,047, loader4,280 and four sets of nine Studio invariants pass. L automatic
+> collision proxies fail15,474 query samples: rejected. ES spawn observer counted
+> remote authored decoration; production scene offsets/visual walk, cold published
+> server/client measurements and exact cache-memory attribution remain pending.
+> No production switch, push, merge, place save or publication.
+> See `GENERATION_PERFORMANCE.md`.
+
 > **2026-10-01 ES integration:** owner authorizes PR/merge of the Studio-walked kit
 > and current BASE scenery. Temporary loading diagnostics removed; generation
 > behavior restored. Loading redesign is next. Ribbon visibility remains open.

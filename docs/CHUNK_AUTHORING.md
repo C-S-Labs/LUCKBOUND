@@ -436,3 +436,19 @@ Tip and Texture. Map server anchor bounds determine the footprint, including out
 GameConfig.Ambience.Ribbons caps instances, Beam segments and update frequency. Invisible
 anchors have all physics/query flags off; connections/instances are disposed on leave.
 AmbienceCore.ribbonOpacity supplies the tested smooth fade/hidden relocation window.
+
+### Experimental collision contract recommendation — 2026-10-01
+
+The local performance prototype recommends eventually separating visual assets
+from explicitly authored gameplay collision for every role, including Spawn,
+Normal, BossApproach and Boss. This is a proposal, not a mandatory schema change.
+Existing VV CollisionTemplate data remains the current implementation example.
+Visual-only components may use local imported templates; an imported Default
+collision hull must not replace authoritative SC/ES precise collision.
+
+Author collision from intended walkable surfaces, walls/barriers, cliffs, stairs,
+ramps, holes, socket seams and boss boundaries. Decorative detail need not collide.
+The automated SC Hoops/Shattered box/floor sample failed15,474 query comparisons;
+it is rejected for production. Require a manually reviewed representative sample,
+dense engine queries and player traversals before converting the rest of a biome.
+See `GENERATION_PERFORMANCE.md` for measurements and migration gates.

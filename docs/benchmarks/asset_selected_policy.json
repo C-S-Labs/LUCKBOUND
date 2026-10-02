@@ -1,0 +1,8 @@
+{
+  "Id": "FINAL",
+  "LocalTemplates": true,
+  "VisualFidelity": true,
+  "Cache": true,
+  "Prepare": "Seed",
+  "Workers": 6
+}

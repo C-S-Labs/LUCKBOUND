@@ -34,6 +34,7 @@
 -- them through SaveSystem and is never shared.
 
 local Lighting = game:GetService("Lighting")
+local HttpService = game:GetService("HttpService")
 local MemoryStoreService = game:GetService("MemoryStoreService")
 local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
@@ -44,6 +45,8 @@ local Workspace = game:GetService("Workspace")
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local ChunkCore = require(Root.Util.ChunkCore)
 local ChunkLoader = require(Root.Util.ChunkLoader)
+local GenerationAnchors = require(Root.Util.GenerationAnchors)
+local GenerationProfile = require(Root.Util.GenerationProfile)
 local ChunkTransit = require(Root.Util.ChunkTransit)
 local Chunks = require(Root.Content.Chunks)
 
@@ -162,6 +165,7 @@ local manifestMap: MemoryStoreHashMap? = nil
 -- DEVELOPER TESTING ONLY (/vaultchance): chunk Id -> SpawnChance override for
 -- every map built from now on. Empty in play. Remove with the debug commands.
 local spawnOverrides: { [string]: number } = {}
+local experimentStage: string? = nil
 local function manifestStore(): MemoryStoreHashMap?
 	if manifestMap then
 		return manifestMap
@@ -272,6 +276,10 @@ local function buildStage(
 	testMode: boolean?
 )
 	local world = Worlds[worldId]
+	local profile = if experimentStage then GenerationProfile.new(experimentStage) else nil
+	if profile then
+		profile.RayBudget = GameConfig.GenerationBenchmark.RayBudget
+	end
 
 	if ExpeditionCore.hasPrebuiltMap(world) then
 		local built = PrebuiltLoader.build(world, origin, stageFolder(), stageName)
@@ -309,6 +317,7 @@ local function buildStage(
 		attempts = 1
 	else
 		ok, layout, attempts = ChunkCore.assembleWithRetry(Chunks, {
+			Profile = profile,
 			WorldId = worldId,
 			PathLength = ExpeditionCore.pathLengthFor(world, GameConfig),
 			-- Was never passed, so GameConfig.Expedition.IncludeSide did nothing:
@@ -382,7 +391,10 @@ local function buildStage(
 	-- chunk is then built from its recoloured mesh for that atmosphere, when
 	-- one is uploaded (AssetKey .. "__" .. atmosphere id).
 	layout.Atmosphere = (atmosphereFor(worldId, seed))
-	local result = ChunkLoader.build(layout, Chunks, origin, stageFolder(), stageName)
+	local result = ChunkLoader.build(layout, Chunks, origin, stageFolder(), stageName, profile)
+	if profile then
+		result.Model:SetAttribute("GenerationToken", HttpService:GenerateGUID(false))
+	end
 
 	local scenarioSummary = "no plan"
 	if planOk then
@@ -397,6 +409,7 @@ local function buildStage(
 
 	return {
 		Stage = result.Model,
+		GenerationProfile = profile,
 		-- The layout plane: every chunk's walk surface sits at origin.Y. The
 		-- client hangs its cloud sea below this.
 		FloorY = origin.Y,
@@ -457,77 +470,6 @@ end
 ---   Tips  -- peaks all over the map (spires, towers, the floating crystals at
 ---            the sides): flat enough to stand a rod or beacon on, spread out.
 ---   Path  -- points on the walkway, for patrols and ground strikes.
-local function scanAnchors(stage: Instance, floorY: number): any
-	local tips, path = {}, {}
-	local minX, minZ, maxX, maxZ = math.huge, math.huge, -math.huge, -math.huge
-	local params = RaycastParams.new()
-	params.FilterType = Enum.RaycastFilterType.Include
-	local function far(list: { Vector3 }, p: Vector3, gap: number): boolean
-		for _, q in list do
-			if (Vector3.new(q.X - p.X, 0, q.Z - p.Z)).Magnitude < gap then
-				return false
-			end
-		end
-		return true
-	end
-	for _, chunk in stage:GetChildren() do
-		local c = chunk:GetAttribute("Centre")
-		if typeof(c) ~= "Vector3" then
-			continue
-		end
-		minX, maxX = math.min(minX, c.X - 128), math.max(maxX, c.X + 128)
-		minZ, maxZ = math.min(minZ, c.Z - 128), math.max(maxZ, c.Z + 128)
-		params.FilterDescendantsInstances = { chunk }
-		local grid = {}
-		for gx = -124, 124, 8 do
-			for gz = -124, 124, 8 do
-				local r = Workspace:Raycast(
-					Vector3.new(c.X + gx, floorY + 400, c.Z + gz),
-					Vector3.new(0, -800, 0),
-					params
-				)
-				if r then
-					table.insert(grid, r)
-				end
-			end
-		end
-		-- peaks: highest first; a peak stands clear of anything higher nearby
-		table.sort(grid, function(a, b)
-			return a.Position.Y > b.Position.Y
-		end)
-		local picked = {}
-		for _, r in grid do
-			local h = r.Position
-			if #picked >= 6 then
-				break
-			end
-			local deck = math.abs(h.Y - floorY) < 8
-			if not deck and r.Normal.Y > 0.6 and far(picked, h, 40) and far(tips, h, 30) then
-				table.insert(picked, h)
-				table.insert(tips, h)
-			end
-		end
-		-- the walkway: level surfaces at the walk plane
-		local mine = {}
-		for _, r in grid do
-			local h = r.Position
-			if math.abs(h.Y - floorY) < 8 and r.Normal.Y > 0.9 and far(mine, h, 28) then
-				table.insert(mine, h)
-				table.insert(path, h)
-			end
-		end
-	end
-	if minX == math.huge then
-		return nil
-	end
-	return {
-		Tips = tips,
-		Path = path,
-		Min = Vector3.new(minX, floorY, minZ),
-		Max = Vector3.new(maxX, floorY, maxZ),
-	}
-end
-
 local function newGroup(
 	worldId: string,
 	seed: number,
@@ -537,6 +479,8 @@ local function newGroup(
 	partySize: number
 ): Group
 	local world = Worlds[worldId]
+	local profile = built.GenerationProfile
+	local deferred = profile and profile.Stage >= "E"
 	buildReturnPortal(built.Stage, built.ReturnPosition, world.Rarity)
 	local group: Group = {
 		WorldId = worldId,
@@ -558,7 +502,9 @@ local function newGroup(
 		Arrivals = 0,
 		AtmosphereId = nil,
 		Environment = world.Environment,
-		Anchors = scanAnchors(built.Stage, built.FloorY),
+		Anchors = if deferred
+			then GenerationAnchors.pending(built.Stage, built.FloorY)
+			else GenerationAnchors.scan(built.Stage, built.FloorY, profile),
 	}
 	group.AtmosphereId, group.Environment = atmosphereFor(worldId, seed)
 	if group.AtmosphereId then
@@ -571,6 +517,49 @@ local function newGroup(
 	-- opens is who shares it.
 	if LootSystem then
 		LootSystem.attach(built.Stage, worldId, group.Members)
+	end
+	if profile then
+		profile.PlayableSeconds = os.clock() - profile.Started
+		built.Stage:SetAttribute("GenerationStage", profile.Stage)
+		built.Stage:SetAttribute("PlayableSeconds", profile.PlayableSeconds)
+		local function finishAnchors()
+			if not built.Stage.Parent then
+				return
+			end
+			if deferred then
+				local ok, anchors =
+					pcall(GenerationAnchors.scan, built.Stage, built.FloorY, profile)
+				if not ok then
+					warn("[GenerationExperiment] anchor scan failed: " .. tostring(anchors))
+					return
+				end
+				if not built.Stage.Parent or not anchors then
+					return
+				end
+				group.Anchors = anchors
+				for userId in group.Members do
+					local member = Players:GetPlayerByUserId(userId)
+					if member and active[userId] and active[userId].Group == group then
+						Net.get("Expedition_Atmosphere"):FireClient(member, {
+							StageName = built.Stage.Name,
+							GenerationToken = built.Stage:GetAttribute("GenerationToken"),
+							Anchors = anchors,
+							AnchorsOnly = true,
+							Environment = group.Environment,
+							Atmosphere = group.AtmosphereId,
+							FloorY = group.FloorY,
+						})
+					end
+				end
+			end
+			profile.CompletionSeconds = os.clock() - profile.Started
+			built.Stage:SetAttribute("CompletionSeconds", profile.CompletionSeconds)
+		end
+		if deferred then
+			task.defer(finishAnchors)
+		else
+			finishAnchors()
+		end
 	end
 	return group
 end
@@ -636,6 +625,7 @@ local function placeMember(player: Player, group: Group): boolean
 		-- The map's model, by name, so the client can find its own pieces
 		-- among several groups' maps in one Studio server.
 		StageName = group.Stage.Name,
+		GenerationToken = group.Stage:GetAttribute("GenerationToken"),
 	})
 
 	print(
@@ -1411,6 +1401,69 @@ function ExpeditionSystem.setAtmosphere(player: Player, id: string): (boolean, s
 		end
 	end
 	return true, `atmosphere now {group.AtmosphereId or "BASE"} (and for the next expedition)`
+end
+
+function ExpeditionSystem.setGenerationExperiment(stage: string?)
+	assert(RunService:IsStudio(), "generation experiments are Studio-only")
+	if stage then
+		GenerationProfile.new(stage)
+	end
+	experimentStage = stage
+end
+
+-- Manual experiment dependency seam; never called by normal entry.
+function ExpeditionSystem.benchmarkDependencies(loot: any): any
+	return {
+		atmosphereFor = atmosphereFor,
+		prepare = function(built: any, worldId: string, members: any)
+			buildReturnPortal(built.Model, built.ReturnPosition, Worlds[worldId].Rarity)
+			ChunkTransit.attach(built.Model, members)
+			loot.attach(built.Model, worldId, members)
+		end,
+	}
+end
+
+--- Studio-only placement observer uses the same rig movement as normal entry.
+function ExpeditionSystem.benchmarkPlace(player: Player, built: any, profile: any): () -> ()
+	assert(RunService:IsStudio(), "Studio only")
+	local character = player.Character
+	local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+	assert(character and humanoid, "benchmark character missing")
+	local original = character:GetPivot()
+	local rootPart = character:FindFirstChild("HumanoidRootPart") :: BasePart
+	local streamStarted = os.clock()
+	if Workspace.StreamingEnabled then
+		player:RequestStreamAroundAsync(
+			built.EntryPosition,
+			GameConfig.ChunkRuntime.StreamTimeoutSeconds
+		)
+	end
+	GenerationProfile.time(profile, "EntryStreaming", streamStarted)
+	rootPart:SetNetworkOwner(nil)
+	rootPart.AssemblyLinearVelocity = Vector3.zero
+	rootPart.AssemblyAngularVelocity = Vector3.zero
+	assert(moveCharacter(player, built.EntryPosition), "benchmark placement failed")
+	profile.PlayerPlacementMeasured = true
+	profile.PlayerPlacedSeconds = os.clock() - profile.Started
+	profile.PlayerPlacedEpochMs = DateTime.now().UnixTimestampMillis
+	local deadline = os.clock() + GameConfig.ChunkRuntime.StreamTimeoutSeconds
+	local stable = 0
+	repeat
+		RunService.Heartbeat:Wait()
+		stable = if humanoid.FloorMaterial ~= Enum.Material.Air then stable + 1 else 0
+	until stable >= 2 or os.clock() >= deadline or humanoid.Health <= 0
+	profile.PlayerGrounded = stable >= 2 and humanoid.Health > 0
+	profile.PlayerFinalY = rootPart.Position.Y
+	profile.SafePlayerReadySeconds = os.clock() - profile.Started
+	profile.SafePlayerReadyEpochMs = DateTime.now().UnixTimestampMillis
+	return function()
+		if character.Parent then
+			character:PivotTo(original)
+			rootPart.AssemblyLinearVelocity = Vector3.zero
+			rootPart.AssemblyAngularVelocity = Vector3.zero
+			rootPart:SetNetworkOwnershipAuto()
+		end
+	end
 end
 
 return ExpeditionSystem

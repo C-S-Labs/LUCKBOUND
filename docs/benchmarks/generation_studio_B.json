@@ -1,0 +1,1516 @@
+[
+  {
+    "TotalRaycasts": 11264,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 7.11328125,
+    "LayoutErrors": [],
+    "StructureSeconds": 25.26853600004688,
+    "MemoryAfterMb": 2220.3125,
+    "WorldId": "VERDANT_VALLEY",
+    "TipCount": 34,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 66459,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 76031,
+    "PathCount": 529,
+    "MemoryBeforeMb": 2213.19921875,
+    "Seed": 1,
+    "Started": 99304.06246139994,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 25.340158900013193,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 4.2100087739527225e-05,
+      "AtmosphereAnchors": 0.07161759992595762,
+      "SolidProps": 0.0013003998901695013,
+      "Assembly": 0.0001343999756500125,
+      "AssetInitialization": 25.22558420000132,
+      "PropRegistry": 0.040115199983119965,
+      "Overlap": 1.109996810555458e-05
+    },
+    "Counters": {
+      "AuthoredYawUses": 11,
+      "AtmosphereRaycasts": 11264,
+      "ChunkCount": 11,
+      "CandidateAttempts": 12,
+      "AnchorCacheMisses": 11,
+      "OverlapComparisons": 61
+    },
+    "Repeat": 1,
+    "Stage": "B",
+    "CompletionSeconds": 25.340158900013193
+  },
+  {
+    "TotalRaycasts": 13312,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 5.69921875,
+    "LayoutErrors": [],
+    "StructureSeconds": 29.459988499991596,
+    "MemoryAfterMb": 2226.01953125,
+    "WorldId": "VERDANT_VALLEY",
+    "TipCount": 55,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 64356,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 66471,
+    "PathCount": 567,
+    "MemoryBeforeMb": 2220.3203125,
+    "Seed": 997,
+    "Started": 99329.42017259996,
+    "AssemblyAttempts": 4,
+    "PlayableSeconds": 29.53885460004676,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 5.2100163884460926e-05,
+      "AtmosphereAnchors": 0.07886100001633167,
+      "SolidProps": 0.0013982001692056656,
+      "Assembly": 0.00046929996460676193,
+      "AssetInitialization": 29.456874900031835,
+      "PropRegistry": 1.0199961252510548e-05,
+      "Overlap": 8.470006287097931e-05
+    },
+    "Counters": {
+      "AnchorCacheMisses": 13,
+      "AtmosphereRaycasts": 13312,
+      "OverlapComparisons": 639,
+      "ChunkCount": 13,
+      "CandidateAttempts": 103,
+      "PlacementFailures": 43,
+      "AuthoredYawUses": 13
+    },
+    "Repeat": 1,
+    "Stage": "B",
+    "CompletionSeconds": 29.53885460004676
+  },
+  {
+    "TotalRaycasts": 10240,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 0.29296875,
+    "LayoutErrors": [],
+    "StructureSeconds": 21.0320633999072,
+    "MemoryAfterMb": 2226.3203125,
+    "WorldId": "VERDANT_VALLEY",
+    "TipCount": 39,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 79813,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 64368,
+    "PathCount": 499,
+    "MemoryBeforeMb": 2226.02734375,
+    "Seed": 65537,
+    "Started": 99358.97881340003,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 21.09935349994339,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 3.930006641894579e-05,
+      "AtmosphereAnchors": 0.06728359998669475,
+      "SolidProps": 0.0010138001525774598,
+      "Assembly": 0.00011289992835372686,
+      "AssetInitialization": 21.029509100015275,
+      "PropRegistry": 8.70006624609232e-06,
+      "Overlap": 1.1399970389902592e-05
+    },
+    "Counters": {
+      "AuthoredYawUses": 10,
+      "AtmosphereRaycasts": 10240,
+      "ChunkCount": 10,
+      "CandidateAttempts": 15,
+      "AnchorCacheMisses": 10,
+      "OverlapComparisons": 60
+    },
+    "Repeat": 1,
+    "Stage": "B",
+    "CompletionSeconds": 21.09935349994339
+  },
+  {
+    "TotalRaycasts": 13312,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 1.484375,
+    "LayoutErrors": [],
+    "StructureSeconds": 27.831028099986725,
+    "MemoryAfterMb": 2227.8046875,
+    "WorldId": "VERDANT_VALLEY",
+    "TipCount": 37,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 66481,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 79826,
+    "PathCount": 672,
+    "MemoryBeforeMb": 2226.3203125,
+    "Seed": 999983,
+    "Started": 99380.09569899994,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 27.9205656000413,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 5.219993181526661e-05,
+      "AtmosphereAnchors": 0.08952969999518245,
+      "SolidProps": 0.0013338999124243855,
+      "Assembly": 0.00013130006846040487,
+      "AssetInitialization": 27.828337499988265,
+      "PropRegistry": 9.899958968162537e-06,
+      "Overlap": 1.4099990949034691e-05
+    },
+    "Counters": {
+      "AuthoredYawUses": 13,
+      "AtmosphereRaycasts": 13312,
+      "ChunkCount": 13,
+      "CandidateAttempts": 14,
+      "AnchorCacheMisses": 13,
+      "OverlapComparisons": 86
+    },
+    "Repeat": 1,
+    "Stage": "B",
+    "CompletionSeconds": 27.9205656000413
+  },
+  {
+    "TotalRaycasts": 10240,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 6.65234375,
+    "LayoutErrors": [],
+    "StructureSeconds": 20.92525830003433,
+    "MemoryAfterMb": 2233.45703125,
+    "WorldId": "VERDANT_VALLEY",
+    "TipCount": 36,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 56259,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 66493,
+    "PathCount": 492,
+    "MemoryBeforeMb": 2226.8046875,
+    "Seed": 1704274940,
+    "Started": 99408.03714959999,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 20.990575399948284,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 4.070007707923651e-05,
+      "AtmosphereAnchors": 0.06531040009576827,
+      "SolidProps": 0.0010859000030905008,
+      "Assembly": 0.00012009998317807913,
+      "AssetInitialization": 20.922423999989405,
+      "PropRegistry": 9.299954399466515e-06,
+      "Overlap": 9.399838745594025e-06
+    },
+    "Counters": {
+      "AuthoredYawUses": 10,
+      "AtmosphereRaycasts": 10240,
+      "ChunkCount": 10,
+      "CandidateAttempts": 11,
+      "AnchorCacheMisses": 10,
+      "OverlapComparisons": 47
+    },
+    "Repeat": 1,
+    "Stage": "B",
+    "CompletionSeconds": 20.990575399948284
+  },
+  {
+    "TotalRaycasts": 14336,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 16.56640625,
+    "LayoutErrors": [],
+    "StructureSeconds": 23.21718229993712,
+    "MemoryAfterMb": 2250.0234375,
+    "WorldId": "SKY_CITADEL",
+    "TipCount": 33,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 71208,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 56272,
+    "PathCount": 361,
+    "MemoryBeforeMb": 2233.45703125,
+    "Seed": 1,
+    "Started": 99429.04528369999,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 23.26870889996644,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 4.6900007873773575e-05,
+      "AtmosphereAnchors": 0.05152119998820126,
+      "SolidProps": 0.00015399977564811707,
+      "Assembly": 0.00013539998326450586,
+      "AssetInitialization": 23.21440200007055,
+      "PropRegistry": 9.299954399466515e-06,
+      "Overlap": 1.5600118786096573e-05
+    },
+    "Counters": {
+      "AuthoredYawUses": 14,
+      "AtmosphereRaycasts": 14336,
+      "ChunkCount": 14,
+      "CandidateAttempts": 13,
+      "AnchorCacheMisses": 14,
+      "OverlapComparisons": 91
+    },
+    "Repeat": 1,
+    "Stage": "B",
+    "CompletionSeconds": 23.26870889996644
+  },
+  {
+    "TotalRaycasts": 11264,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 0.2421875,
+    "LayoutErrors": [],
+    "StructureSeconds": 16.32861630001571,
+    "MemoryAfterMb": 2250.265625,
+    "WorldId": "SKY_CITADEL",
+    "TipCount": 36,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 83015,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 71221,
+    "PathCount": 264,
+    "MemoryBeforeMb": 2250.0234375,
+    "Seed": 997,
+    "Started": 99452.31672729994,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 16.36589370004367,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 3.639992792159319e-05,
+      "AtmosphereAnchors": 0.03727119998075068,
+      "SolidProps": 0.00011769996490329504,
+      "Assembly": 0.00011960009578615427,
+      "AssetInitialization": 16.326466199941933,
+      "PropRegistry": 9.299954399466515e-06,
+      "Overlap": 9.800074622035027e-06
+    },
+    "Counters": {
+      "AuthoredYawUses": 11,
+      "AtmosphereRaycasts": 11264,
+      "ChunkCount": 11,
+      "CandidateAttempts": 10,
+      "AnchorCacheMisses": 11,
+      "OverlapComparisons": 55
+    },
+    "Repeat": 1,
+    "Stage": "B",
+    "CompletionSeconds": 16.36589370004367
+  },
+  {
+    "TotalRaycasts": 13312,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 4.03515625,
+    "LayoutErrors": [],
+    "StructureSeconds": 18.159760200069286,
+    "MemoryAfterMb": 2254.30859375,
+    "WorldId": "SKY_CITADEL",
+    "TipCount": 32,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 60667,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 83028,
+    "PathCount": 305,
+    "MemoryBeforeMb": 2250.2734375,
+    "Seed": 65537,
+    "Started": 99468.68516769994,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 18.203924100031145,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 4.0899962186813354e-05,
+      "AtmosphereAnchors": 0.04415859992150217,
+      "SolidProps": 0.0001425999216735363,
+      "Assembly": 0.00016659998800605536,
+      "AssetInitialization": 18.1567703000037,
+      "PropRegistry": 9.300070814788342e-06,
+      "Overlap": 1.4099990949034691e-05
+    },
+    "Counters": {
+      "AuthoredYawUses": 13,
+      "AtmosphereRaycasts": 13312,
+      "ChunkCount": 13,
+      "CandidateAttempts": 12,
+      "AnchorCacheMisses": 13,
+      "OverlapComparisons": 78
+    },
+    "Repeat": 1,
+    "Stage": "B",
+    "CompletionSeconds": 18.203924100031145
+  },
+  {
+    "TotalRaycasts": 11264,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 0.98828125,
+    "LayoutErrors": [],
+    "StructureSeconds": 15.66900750005152,
+    "MemoryAfterMb": 2255.296875,
+    "WorldId": "SKY_CITADEL",
+    "TipCount": 25,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 72016,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 60680,
+    "PathCount": 270,
+    "MemoryBeforeMb": 2254.30859375,
+    "Seed": 999983,
+    "Started": 99486.89163189998,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 15.70986860000994,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 3.300001844763756e-05,
+      "AtmosphereAnchors": 0.04085350001696497,
+      "SolidProps": 0.00011260004248470068,
+      "Assembly": 0.00011310004629194736,
+      "AssetInitialization": 15.665990500012413,
+      "PropRegistry": 9.09995287656784e-06,
+      "Overlap": 9.999959729611874e-06
+    },
+    "Counters": {
+      "AuthoredYawUses": 11,
+      "AtmosphereRaycasts": 11264,
+      "ChunkCount": 11,
+      "CandidateAttempts": 11,
+      "AnchorCacheMisses": 11,
+      "OverlapComparisons": 56
+    },
+    "Repeat": 1,
+    "Stage": "B",
+    "CompletionSeconds": 15.70986860000994
+  },
+  {
+    "TotalRaycasts": 13312,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": -433.39453125,
+    "LayoutErrors": [],
+    "StructureSeconds": 15.54027210001368,
+    "MemoryAfterMb": 1821.91015625,
+    "WorldId": "SKY_CITADEL",
+    "TipCount": 29,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 54627,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 72029,
+    "PathCount": 293,
+    "MemoryBeforeMb": 2255.3046875,
+    "Seed": 1704274940,
+    "Started": 99502.60410619993,
+    "AssemblyAttempts": 2,
+    "PlayableSeconds": 15.584200200042687,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 3.769993782043457e-05,
+      "AtmosphereAnchors": 0.043923099990934134,
+      "SolidProps": 0.00013329996727406979,
+      "Assembly": 0.00026940007228404284,
+      "AssetInitialization": 15.537501699989662,
+      "PropRegistry": 9.399955160915852e-06,
+      "Overlap": 2.0800158381462097e-05
+    },
+    "Counters": {
+      "AnchorCacheMisses": 13,
+      "AtmosphereRaycasts": 13312,
+      "OverlapComparisons": 118,
+      "ChunkCount": 13,
+      "CandidateAttempts": 41,
+      "PlacementFailures": 24,
+      "AuthoredYawUses": 13
+    },
+    "Repeat": 1,
+    "Stage": "B",
+    "CompletionSeconds": 15.584200200042687
+  },
+  {
+    "TotalRaycasts": 28672,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 5.22265625,
+    "LayoutErrors": [],
+    "StructureSeconds": 47.18704140000045,
+    "MemoryAfterMb": 1827.1328125,
+    "WorldId": "ETHEREAL_SCAPE",
+    "TipCount": 116,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 55466,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 54640,
+    "PathCount": 209,
+    "MemoryBeforeMb": 1821.91015625,
+    "Seed": 1,
+    "Started": 99518.19166549994,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 47.26094210008159,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 9.260023944079876e-05,
+      "AtmosphereAnchors": 0.07389530004002154,
+      "SolidProps": 0.0003026003250852227,
+      "Assembly": 0.0002392000751569867,
+      "AssetInitialization": 47.184707499924116,
+      "PropRegistry": 1.079996582120657e-05,
+      "Overlap": 8.57001869007945e-05
+    },
+    "Counters": {
+      "AnchorCacheMisses": 28,
+      "AtmosphereRaycasts": 28672,
+      "OverlapComparisons": 672,
+      "ChunkCount": 28,
+      "CandidateAttempts": 10,
+      "PlacementFailures": 35,
+      "AuthoredYawUses": 28
+    },
+    "Repeat": 1,
+    "Stage": "B",
+    "CompletionSeconds": 47.26094210008159
+  },
+  {
+    "TotalRaycasts": 28672,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 0.515625,
+    "LayoutErrors": [],
+    "StructureSeconds": 19.89798570005223,
+    "MemoryAfterMb": 1827.6875,
+    "WorldId": "ETHEREAL_SCAPE",
+    "TipCount": 85,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 69935,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 55479,
+    "PathCount": 201,
+    "MemoryBeforeMb": 1827.171875,
+    "Seed": 997,
+    "Started": 99565.46209569997,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 19.966619099956006,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 8.510018233209848e-05,
+      "AtmosphereAnchors": 0.06862800009548664,
+      "SolidProps": 0.00028290029149502516,
+      "Assembly": 0.0002410999732092023,
+      "AssetInitialization": 19.895589400082827,
+      "PropRegistry": 1.0399962775409222e-05,
+      "Overlap": 9.430001955479383e-05
+    },
+    "Counters": {
+      "AnchorCacheMisses": 28,
+      "AtmosphereRaycasts": 28672,
+      "OverlapComparisons": 764,
+      "ChunkCount": 28,
+      "CandidateAttempts": 9,
+      "PlacementFailures": 40,
+      "AuthoredYawUses": 28
+    },
+    "Repeat": 1,
+    "Stage": "B",
+    "CompletionSeconds": 19.966619099956006
+  },
+  {
+    "TotalRaycasts": 28672,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 0.9453125,
+    "LayoutErrors": [],
+    "StructureSeconds": 23.30537880002521,
+    "MemoryAfterMb": 1828.63671875,
+    "WorldId": "ETHEREAL_SCAPE",
+    "TipCount": 92,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 55563,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 69947,
+    "PathCount": 130,
+    "MemoryBeforeMb": 1827.69140625,
+    "Seed": 65537,
+    "Started": 99585.43832750001,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 23.373095399932936,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 9.120022878050804e-05,
+      "AtmosphereAnchors": 0.06771169998683035,
+      "SolidProps": 0.0003018999705091119,
+      "Assembly": 0.00025649997405707836,
+      "AssetInitialization": 23.302861600066535,
+      "PropRegistry": 9.200070053339005e-06,
+      "Overlap": 0.00010599999222904444
+    },
+    "Counters": {
+      "AnchorCacheMisses": 28,
+      "AtmosphereRaycasts": 28672,
+      "OverlapComparisons": 819,
+      "ChunkCount": 28,
+      "CandidateAttempts": 9,
+      "PlacementFailures": 43,
+      "AuthoredYawUses": 28
+    },
+    "Repeat": 1,
+    "Stage": "B",
+    "CompletionSeconds": 23.373095399932936
+  },
+  {
+    "TotalRaycasts": 28672,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 1.296875,
+    "LayoutErrors": [],
+    "StructureSeconds": 21.93830959999468,
+    "MemoryAfterMb": 1829.93359375,
+    "WorldId": "ETHEREAL_SCAPE",
+    "TipCount": 97,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 71769,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 55575,
+    "PathCount": 212,
+    "MemoryBeforeMb": 1828.63671875,
+    "Seed": 999983,
+    "Started": 99608.8211836,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 22.00846449995879,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 9.779969695955515e-05,
+      "AtmosphereAnchors": 0.07014749990776181,
+      "SolidProps": 0.00030600023455917835,
+      "Assembly": 0.00028030003886669874,
+      "AssetInitialization": 21.935712099890225,
+      "PropRegistry": 9.7999582067132e-06,
+      "Overlap": 0.00011890020687133074
+    },
+    "Counters": {
+      "AnchorCacheMisses": 28,
+      "AtmosphereRaycasts": 28672,
+      "OverlapComparisons": 913,
+      "ChunkCount": 28,
+      "CandidateAttempts": 10,
+      "PlacementFailures": 53,
+      "AuthoredYawUses": 28
+    },
+    "Repeat": 1,
+    "Stage": "B",
+    "CompletionSeconds": 22.00846449995879
+  },
+  {
+    "TotalRaycasts": 31744,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 1.30859375,
+    "LayoutErrors": [],
+    "StructureSeconds": 22.003813300048932,
+    "MemoryAfterMb": 1831.296875,
+    "WorldId": "ETHEREAL_SCAPE",
+    "TipCount": 105,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 56738,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 71782,
+    "PathCount": 306,
+    "MemoryBeforeMb": 1829.98828125,
+    "Seed": 1704274940,
+    "Started": 99630.83833179995,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 22.08216500002891,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 9.540014434605837e-05,
+      "AtmosphereAnchors": 0.07834559993352741,
+      "SolidProps": 0.0003147998359054327,
+      "Assembly": 0.0003375000087544322,
+      "AssetInitialization": 22.001117800013162,
+      "PropRegistry": 1.0899966582655907e-05,
+      "Overlap": 0.00015069975052028894
+    },
+    "Counters": {
+      "AnchorCacheMisses": 31,
+      "AtmosphereRaycasts": 31744,
+      "OverlapComparisons": 1065,
+      "ChunkCount": 31,
+      "CandidateAttempts": 13,
+      "PlacementFailures": 61,
+      "AuthoredYawUses": 31
+    },
+    "Repeat": 1,
+    "Stage": "B",
+    "CompletionSeconds": 22.08216500002891
+  },
+  {
+    "TotalRaycasts": 11264,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 1.265625,
+    "LayoutErrors": [],
+    "StructureSeconds": 25.101283200085163,
+    "MemoryAfterMb": 1832.56640625,
+    "WorldId": "VERDANT_VALLEY",
+    "TipCount": 34,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 75095,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 56751,
+    "PathCount": 529,
+    "MemoryBeforeMb": 1831.30078125,
+    "Seed": 1,
+    "Started": 99652.93273549993,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 25.170493900077417,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 4.209985490888357e-05,
+      "AtmosphereAnchors": 0.06920370005536824,
+      "SolidProps": 0.0013076997129246593,
+      "Assembly": 0.00011640007141977549,
+      "AssetInitialization": 25.09835339989513,
+      "PropRegistry": 9.699957445263863e-06,
+      "Overlap": 1.0699965059757233e-05
+    },
+    "Counters": {
+      "AuthoredYawUses": 11,
+      "AtmosphereRaycasts": 11264,
+      "ChunkCount": 11,
+      "CandidateAttempts": 12,
+      "AnchorCacheMisses": 11,
+      "OverlapComparisons": 61
+    },
+    "Repeat": 2,
+    "Stage": "B",
+    "CompletionSeconds": 25.170493900077417
+  },
+  {
+    "TotalRaycasts": 13312,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 0.953125,
+    "LayoutErrors": [],
+    "StructureSeconds": 29.94575930002611,
+    "MemoryAfterMb": 1833.5234375,
+    "WorldId": "VERDANT_VALLEY",
+    "TipCount": 55,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 65380,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 75108,
+    "PathCount": 567,
+    "MemoryBeforeMb": 1832.5703125,
+    "Seed": 997,
+    "Started": 99678.12022849999,
+    "AssemblyAttempts": 4,
+    "PlayableSeconds": 30.02499770000577,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 5.259981844574213e-05,
+      "AtmosphereAnchors": 0.07923240005038679,
+      "SolidProps": 0.0013793999096378684,
+      "Assembly": 0.0004662999417632818,
+      "AssetInitialization": 29.942344499984756,
+      "PropRegistry": 9.699957445263863e-06,
+      "Overlap": 8.329993579536676e-05
+    },
+    "Counters": {
+      "AnchorCacheMisses": 13,
+      "AtmosphereRaycasts": 13312,
+      "OverlapComparisons": 639,
+      "ChunkCount": 13,
+      "CandidateAttempts": 103,
+      "PlacementFailures": 43,
+      "AuthoredYawUses": 13
+    },
+    "Repeat": 2,
+    "Stage": "B",
+    "CompletionSeconds": 30.02499770000577
+  },
+  {
+    "TotalRaycasts": 10240,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 3.6015625,
+    "LayoutErrors": [],
+    "StructureSeconds": 21.182996699935757,
+    "MemoryAfterMb": 1837.13671875,
+    "WorldId": "VERDANT_VALLEY",
+    "TipCount": 39,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 80942,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 65393,
+    "PathCount": 499,
+    "MemoryBeforeMb": 1833.53515625,
+    "Seed": 65537,
+    "Started": 99708.1654381,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 21.253848999971524,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 4.0199956856667995e-05,
+      "AtmosphereAnchors": 0.07084559998475015,
+      "SolidProps": 0.0010803000768646598,
+      "Assembly": 0.00011669995728880167,
+      "AssetInitialization": 21.18050769995898,
+      "PropRegistry": 9.400071576237679e-06,
+      "Overlap": 1.1299969628453255e-05
+    },
+    "Counters": {
+      "AuthoredYawUses": 10,
+      "AtmosphereRaycasts": 10240,
+      "ChunkCount": 10,
+      "CandidateAttempts": 15,
+      "AnchorCacheMisses": 10,
+      "OverlapComparisons": 60
+    },
+    "Repeat": 2,
+    "Stage": "B",
+    "CompletionSeconds": 21.253848999971524
+  },
+  {
+    "TotalRaycasts": 13312,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 2.14453125,
+    "LayoutErrors": [],
+    "StructureSeconds": 28.03019870002754,
+    "MemoryAfterMb": 1839.30078125,
+    "WorldId": "VERDANT_VALLEY",
+    "TipCount": 37,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 70361,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 80954,
+    "PathCount": 672,
+    "MemoryBeforeMb": 1837.15625,
+    "Seed": 999983,
+    "Started": 99729.43529009994,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 28.120137799996883,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 5.1700277253985405e-05,
+      "AtmosphereAnchors": 0.08993240003474057,
+      "SolidProps": 0.0013825999340042472,
+      "Assembly": 0.0001284000463783741,
+      "AssetInitialization": 28.027398200007156,
+      "PropRegistry": 1.0999967344105244e-05,
+      "Overlap": 1.4100107364356518e-05
+    },
+    "Counters": {
+      "AuthoredYawUses": 13,
+      "AtmosphereRaycasts": 13312,
+      "ChunkCount": 13,
+      "CandidateAttempts": 14,
+      "AnchorCacheMisses": 13,
+      "OverlapComparisons": 86
+    },
+    "Repeat": 2,
+    "Stage": "B",
+    "CompletionSeconds": 28.120137799996883
+  },
+  {
+    "TotalRaycasts": 10240,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 0.8515625,
+    "LayoutErrors": [],
+    "StructureSeconds": 21.08285679994151,
+    "MemoryAfterMb": 1839.15234375,
+    "WorldId": "VERDANT_VALLEY",
+    "TipCount": 36,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 55571,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 70374,
+    "PathCount": 492,
+    "MemoryBeforeMb": 1838.30078125,
+    "Seed": 1704274940,
+    "Started": 99757.57803510001,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 21.148768699960783,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 6.909994408488274e-05,
+      "AtmosphereAnchors": 0.06590519996825606,
+      "SolidProps": 0.0011733999708667397,
+      "Assembly": 0.00010990002192556858,
+      "AssetInitialization": 21.07999350002501,
+      "PropRegistry": 1.0100076906383038e-05,
+      "Overlap": 9.500072337687016e-06
+    },
+    "Counters": {
+      "AuthoredYawUses": 10,
+      "AtmosphereRaycasts": 10240,
+      "ChunkCount": 10,
+      "CandidateAttempts": 11,
+      "AnchorCacheMisses": 10,
+      "OverlapComparisons": 47
+    },
+    "Repeat": 2,
+    "Stage": "B",
+    "CompletionSeconds": 21.148768699960783
+  },
+  {
+    "TotalRaycasts": 14336,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 14.80078125,
+    "LayoutErrors": [],
+    "StructureSeconds": 23.321698599960655,
+    "MemoryAfterMb": 1853.96484375,
+    "WorldId": "SKY_CITADEL",
+    "TipCount": 33,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 72388,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 55583,
+    "PathCount": 361,
+    "MemoryBeforeMb": 1839.1640625,
+    "Seed": 1,
+    "Started": 99778.74325629999,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 23.371464099967852,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 4.619988612830639e-05,
+      "AtmosphereAnchors": 0.049758699955418706,
+      "SolidProps": 0.00015300046652555466,
+      "Assembly": 0.0001370999962091446,
+      "AssetInitialization": 23.319337400025688,
+      "PropRegistry": 9.899958968162537e-06,
+      "Overlap": 1.580000389367342e-05
+    },
+    "Counters": {
+      "AuthoredYawUses": 14,
+      "AtmosphereRaycasts": 14336,
+      "ChunkCount": 14,
+      "CandidateAttempts": 13,
+      "AnchorCacheMisses": 14,
+      "OverlapComparisons": 91
+    },
+    "Repeat": 2,
+    "Stage": "B",
+    "CompletionSeconds": 23.371464099967852
+  },
+  {
+    "TotalRaycasts": 11264,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": -56.3046875,
+    "LayoutErrors": [],
+    "StructureSeconds": 16.213931299978867,
+    "MemoryAfterMb": 1797.66015625,
+    "WorldId": "SKY_CITADEL",
+    "TipCount": 36,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 56496,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 72400,
+    "PathCount": 264,
+    "MemoryBeforeMb": 1853.96484375,
+    "Seed": 997,
+    "Started": 99802.11752690002,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 16.251811099937186,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 3.420014400035143e-05,
+      "AtmosphereAnchors": 0.037873299908824265,
+      "SolidProps": 0.00011820008512586355,
+      "Assembly": 0.00011669995728880167,
+      "AssetInitialization": 16.211606499971822,
+      "PropRegistry": 9.900075383484364e-06,
+      "Overlap": 9.999959729611874e-06
+    },
+    "Counters": {
+      "AuthoredYawUses": 11,
+      "AtmosphereRaycasts": 11264,
+      "ChunkCount": 11,
+      "CandidateAttempts": 10,
+      "AnchorCacheMisses": 11,
+      "OverlapComparisons": 55
+    },
+    "Repeat": 2,
+    "Stage": "B",
+    "CompletionSeconds": 16.251811099937186
+  },
+  {
+    "TotalRaycasts": 13312,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 2.5234375,
+    "LayoutErrors": [],
+    "StructureSeconds": 17.99416999996174,
+    "MemoryAfterMb": 1800.1875,
+    "WorldId": "SKY_CITADEL",
+    "TipCount": 32,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 65989,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 56508,
+    "PathCount": 305,
+    "MemoryBeforeMb": 1797.6640625,
+    "Seed": 65537,
+    "Started": 99818.371438,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 18.038686499930918,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 4.20999713242054e-05,
+      "AtmosphereAnchors": 0.044511100044474006,
+      "SolidProps": 0.0001447000540792942,
+      "Assembly": 0.00016309996135532856,
+      "AssetInitialization": 17.99077140004374,
+      "PropRegistry": 8.09994526207447e-06,
+      "Overlap": 1.3999990187585354e-05
+    },
+    "Counters": {
+      "AuthoredYawUses": 13,
+      "AtmosphereRaycasts": 13312,
+      "ChunkCount": 13,
+      "CandidateAttempts": 12,
+      "AnchorCacheMisses": 13,
+      "OverlapComparisons": 78
+    },
+    "Repeat": 2,
+    "Stage": "B",
+    "CompletionSeconds": 18.038686499930918
+  },
+  {
+    "TotalRaycasts": 11264,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 1.61328125,
+    "LayoutErrors": [],
+    "StructureSeconds": 15.583684300072491,
+    "MemoryAfterMb": 1801.8125,
+    "WorldId": "SKY_CITADEL",
+    "TipCount": 25,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 77283,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 66001,
+    "PathCount": 270,
+    "MemoryBeforeMb": 1800.19921875,
+    "Seed": 999983,
+    "Started": 99836.41309319995,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 15.622823300072923,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 3.279978409409523e-05,
+      "AtmosphereAnchors": 0.03913340007420629,
+      "SolidProps": 0.00011329993139952421,
+      "Assembly": 0.0001249000197276473,
+      "AssetInitialization": 15.581058799987659,
+      "PropRegistry": 8.999952115118504e-06,
+      "Overlap": 1.0400079190731049e-05
+    },
+    "Counters": {
+      "AuthoredYawUses": 11,
+      "AtmosphereRaycasts": 11264,
+      "ChunkCount": 11,
+      "CandidateAttempts": 11,
+      "AnchorCacheMisses": 11,
+      "OverlapComparisons": 56
+    },
+    "Repeat": 2,
+    "Stage": "B",
+    "CompletionSeconds": 15.622823300072923
+  },
+  {
+    "TotalRaycasts": 13312,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 1.58203125,
+    "LayoutErrors": [],
+    "StructureSeconds": 15.474688100046478,
+    "MemoryAfterMb": 1803.3984375,
+    "WorldId": "SKY_CITADEL",
+    "TipCount": 29,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 56254,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 77296,
+    "PathCount": 293,
+    "MemoryBeforeMb": 1801.81640625,
+    "Seed": 1704274940,
+    "Started": 99852.03878369997,
+    "AssemblyAttempts": 2,
+    "PlayableSeconds": 15.519219700014219,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 3.8100057281553745e-05,
+      "AtmosphereAnchors": 0.04452630004379898,
+      "SolidProps": 0.0001362999901175499,
+      "Assembly": 0.00020809995476156473,
+      "AssetInitialization": 15.472119600046426,
+      "PropRegistry": 9.599956683814526e-06,
+      "Overlap": 2.1700048819184303e-05
+    },
+    "Counters": {
+      "AnchorCacheMisses": 13,
+      "AtmosphereRaycasts": 13312,
+      "OverlapComparisons": 118,
+      "ChunkCount": 13,
+      "CandidateAttempts": 41,
+      "PlacementFailures": 24,
+      "AuthoredYawUses": 13
+    },
+    "Repeat": 2,
+    "Stage": "B",
+    "CompletionSeconds": 15.519219700014219
+  },
+  {
+    "TotalRaycasts": 28672,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 4.625,
+    "LayoutErrors": [],
+    "StructureSeconds": 46.737438500043936,
+    "MemoryAfterMb": 1808.0234375,
+    "WorldId": "ETHEREAL_SCAPE",
+    "TipCount": 116,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 59006,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 56267,
+    "PathCount": 209,
+    "MemoryBeforeMb": 1803.3984375,
+    "Seed": 1,
+    "Started": 99867.56064819999,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 46.80993119999766,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 8.120026905089617e-05,
+      "AtmosphereAnchors": 0.07248820003587753,
+      "SolidProps": 0.0002703003119677305,
+      "Assembly": 0.00022639997769147158,
+      "AssetInitialization": 46.73514530004468,
+      "PropRegistry": 8.199946023523808e-06,
+      "Overlap": 8.600007276982069e-05
+    },
+    "Counters": {
+      "AnchorCacheMisses": 28,
+      "AtmosphereRaycasts": 28672,
+      "OverlapComparisons": 672,
+      "ChunkCount": 28,
+      "CandidateAttempts": 10,
+      "PlacementFailures": 35,
+      "AuthoredYawUses": 28
+    },
+    "Repeat": 2,
+    "Stage": "B",
+    "CompletionSeconds": 46.80993119999766
+  },
+  {
+    "TotalRaycasts": 28672,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 0.99609375,
+    "LayoutErrors": [],
+    "StructureSeconds": 19.450537999975495,
+    "MemoryAfterMb": 1809.0234375,
+    "WorldId": "ETHEREAL_SCAPE",
+    "TipCount": 85,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 73485,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 59018,
+    "PathCount": 201,
+    "MemoryBeforeMb": 1808.02734375,
+    "Seed": 997,
+    "Started": 99914.37957570003,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 19.517109799897298,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 8.58004204928875e-05,
+      "AtmosphereAnchors": 0.06656680000014603,
+      "SolidProps": 0.0002807001583278179,
+      "Assembly": 0.00026730005629360676,
+      "AssetInitialization": 19.448146200040355,
+      "PropRegistry": 1.0999967344105244e-05,
+      "Overlap": 9.950017556548119e-05
+    },
+    "Counters": {
+      "AnchorCacheMisses": 28,
+      "AtmosphereRaycasts": 28672,
+      "OverlapComparisons": 764,
+      "ChunkCount": 28,
+      "CandidateAttempts": 9,
+      "PlacementFailures": 40,
+      "AuthoredYawUses": 28
+    },
+    "Repeat": 2,
+    "Stage": "B",
+    "CompletionSeconds": 19.517109799897298
+  },
+  {
+    "TotalRaycasts": 28672,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 2.171875,
+    "LayoutErrors": [],
+    "StructureSeconds": 22.20716370001901,
+    "MemoryAfterMb": 1811.22265625,
+    "WorldId": "ETHEREAL_SCAPE",
+    "TipCount": 92,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 57574,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 73497,
+    "PathCount": 130,
+    "MemoryBeforeMb": 1809.05078125,
+    "Seed": 65537,
+    "Started": 99933.90523569996,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 22.27318280003965,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 8.719996549189091e-05,
+      "AtmosphereAnchors": 0.06601469998713583,
+      "SolidProps": 0.0002891995245590806,
+      "Assembly": 0.0002688000677153468,
+      "AssetInitialization": 22.204836299992166,
+      "PropRegistry": 8.79995059221983e-06,
+      "Overlap": 0.00010430056136101484
+    },
+    "Counters": {
+      "AnchorCacheMisses": 28,
+      "AtmosphereRaycasts": 28672,
+      "OverlapComparisons": 819,
+      "ChunkCount": 28,
+      "CandidateAttempts": 9,
+      "PlacementFailures": 43,
+      "AuthoredYawUses": 28
+    },
+    "Repeat": 2,
+    "Stage": "B",
+    "CompletionSeconds": 22.27318280003965
+  },
+  {
+    "TotalRaycasts": 28672,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 2.2265625,
+    "LayoutErrors": [],
+    "StructureSeconds": 22.026887199957855,
+    "MemoryAfterMb": 1813.44921875,
+    "WorldId": "ETHEREAL_SCAPE",
+    "TipCount": 97,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 73819,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 57587,
+    "PathCount": 212,
+    "MemoryBeforeMb": 1811.22265625,
+    "Seed": 999983,
+    "Started": 99956.18748369999,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 22.095379199949093,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 9.160011541098356e-05,
+      "AtmosphereAnchors": 0.06848640006501228,
+      "SolidProps": 0.0002871997421607375,
+      "Assembly": 0.00026700005400925875,
+      "AssetInitialization": 22.02442249993328,
+      "PropRegistry": 8.09994526207447e-06,
+      "Overlap": 0.00011389981955289841
+    },
+    "Counters": {
+      "AnchorCacheMisses": 28,
+      "AtmosphereRaycasts": 28672,
+      "OverlapComparisons": 913,
+      "ChunkCount": 28,
+      "CandidateAttempts": 10,
+      "PlacementFailures": 53,
+      "AuthoredYawUses": 28
+    },
+    "Repeat": 2,
+    "Stage": "B",
+    "CompletionSeconds": 22.095379199949093
+  },
+  {
+    "TotalRaycasts": 31744,
+    "PropStats": {
+      "Misses": 0,
+      "ModulesRequired": 3,
+      "Hits": 0
+    },
+    "MemoryDeltaMb": 1.828125,
+    "LayoutErrors": [],
+    "StructureSeconds": 21.967877899995074,
+    "MemoryAfterMb": 1815.27734375,
+    "WorldId": "ETHEREAL_SCAPE",
+    "TipCount": 105,
+    "RayBudget": 128,
+    "LuaHeapAfterKb": 58439,
+    "AnchorCache": {
+      "Samples": 0,
+      "SerializedFloat64PayloadBytes": 0,
+      "Entries": 0
+    },
+    "StructuralValid": true,
+    "LuaHeapBeforeKb": 73832,
+    "PathCount": 306,
+    "MemoryBeforeMb": 1813.44921875,
+    "Seed": 1704274940,
+    "Started": 99978.29338659998,
+    "AssemblyAttempts": 1,
+    "PlayableSeconds": 22.04533250001259,
+    "BlockoutCount": 0,
+    "Times": {
+      "PropInitialization": 9.75003931671381e-05,
+      "AtmosphereAnchors": 0.07744919997639954,
+      "SolidProps": 0.00035219965502619743,
+      "Assembly": 0.0003002999583259225,
+      "AssetInitialization": 21.965244900085963,
+      "PropRegistry": 9.7999582067132e-06,
+      "Overlap": 0.00013319996651262045
+    },
+    "Counters": {
+      "AnchorCacheMisses": 31,
+      "AtmosphereRaycasts": 31744,
+      "OverlapComparisons": 1065,
+      "ChunkCount": 31,
+      "CandidateAttempts": 13,
+      "PlacementFailures": 61,
+      "AuthoredYawUses": 31
+    },
+    "Repeat": 2,
+    "Stage": "B",
+    "CompletionSeconds": 22.04533250001259
+  }
+]

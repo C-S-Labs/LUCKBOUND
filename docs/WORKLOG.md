@@ -36,6 +36,58 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 236 — 2026-10-01 — Generation and asset experiments completed locally
+**Merged:** not merged. **Branch:** `agent/procgen-performance`, from main `714fa33`.
+**Tests:** 1,047 Luau; 4,280 loader comparisons; 18,000 layout comparisons; four Studio invariant sets of nine. Formatting, focused lint,149 syntax files and Rojo build pass.
+
+### Done
+- Preserved completed A–F and all partial/raw evidence; added G–M, combinations,60 real player-entry samples,10 real bootstrap runs and an ES replication diagnostic.
+- Consolidated660 full maps and48 proxy samples in `GENERATION_PERFORMANCE.md` and reproducible JSON; no production-policy adoption.
+- Implemented opt-in visual template/fidelity loading, AssetKey/fidelity single-flight cache, role-inclusive world views, seed working sets and bounded1/2/4/6 preparation.
+- Implemented cancellable deferred/cached anchors and token-bound late client delivery preserving actors; fixed empty pending-path handling.
+- Original Studio bootstrap restored; no place save/publish. Original owner checkout/assets and production source bundle preserved.
+
+### Decisions made
+- Asset materialization dominates: paired A20.264/47.941s, final map-ready0.036/4.781s; live safe-play22.248/46.600→1.333/6.215s. Mixed cache medians do not describe one-map reserved-server cold latency.
+- Keep SC/ES authoritative precise collision; imported Default templates only serve visual-only parts. Final119 mesh API/Precise calls versus1,452 control.
+- Reject L auto-derived proxies (15,474 query differences) and blocking full-world preparation. J direct world views show no material boot/entry gain; manifest lookup already direct.
+- ES observer's34 remote non-colliding entry parts are streamed out in both controls/optimized runs; folder-wide timestamps invalid. Grounding passes60/60, VV/SC client spawn observations40/40. Existing ES content offsets need production-scene review.
+
+### Stopped at
+Completed local experiment/report; no push or merge. Performance improvement is sampled-geometry validated, not full production visual/traversal acceptance. Exact native cache-memory attribution, published cold network loads and aesthetic atmosphere pop-in remain unvalidated.
+
+### Next
+1. Review report and production source bundle; authorize a separate production migration task if desired.
+2. Trial I→G/H→K/M behind a fallback, then F with visual review. Preserve collision fidelity and certify all authored yaw hints.
+3. Author one manually reviewed SC proxy then ES stair/gap sample; do not promote the failed fixture.
+4. Retain all original assets/rollbacks and benchmark evidence; remove production predecessors only after CI and owner Studio traversal/appearance acceptance.
+
+## Session 235 ? 2026-10-01 ? Generation performance prototype started
+**Merged:** not merged. **Branch:** `agent/procgen-performance`, local only, from main `714fa33`.
+
+### Done
+- Created isolated `.worktrees/procgen-performance`; original checkout and owner assets preserved.
+- Started opt-in profile instrumentation, deterministic bounds/definition cache and world prop resolver.
+- Confirmed existing layout is already direct sockets plus deterministic bounds; loader probes calibrate art.
+- Owner enabled Studio Codex MCP. Global config contains Roblox_Studio; running agent lacks its tools.
+
+### Decisions made
+- No production switch, push or merge. No performance results claimed before actual staged benchmarks.
+- Keep solid prop collision blocking; account for eager Props boot validation before claiming lazy savings.
+
+### Stopped at
+Incomplete foundations, formatted but not tested. Restart Codex to load Studio MCP tools.
+See docs/GENERATION_PERFORMANCE.md for exact unfinished work and benchmark requirements.
+
+### Next
+1. Verify Studio connection, establish instrumented baseline A, then finish and test stages A?F.
+2. Obtain real engine timing/memory and visual checks; complete report before adoption decisions.
+
+### Leftovers
+No superseded production assets. Keep all originals; remove one-time implementation helper after checks.
+
+---
+
 ## Session 234 — 2026-10-01 — ES delivery for integration
 **Merged:** see PR for this branch. **Branch:** `agent/ethereal-scape-polish`.
 

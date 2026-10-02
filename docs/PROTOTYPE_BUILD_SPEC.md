@@ -444,6 +444,7 @@ Created by `Core/Net.luau` and nowhere else.
 | `UI_Acknowledge` | RemoteEvent | C→S | `{ScreenId}` | rate-limited 10/s. **RESERVED** — declared, nothing fires it. `docs/RESERVED.md` |
 | `Expedition_RequestEnter` | RemoteEvent | C→S | *(none)* | cooldown + distance + one-at-a-time |
 | `Expedition_Started` | RemoteEvent | S→C | `ExpeditionPayload` | — |
+| `Expedition_Atmosphere` | RemoteEvent | S→C | `{Environment, Atmosphere?, FloorY?, StageName?, GenerationToken?, Anchors?, AnchorsOnly?}` | Existing override; optional Studio experiment completion packets are bound to StageName and GenerationToken. |
 | `Expedition_Ended` | RemoteEvent | S→C | `ExpeditionEndPayload` | — |
 | `Expedition_TimerSync` | RemoteEvent | S→C | `{RemainingSeconds, ServerNow}` | — |
 | `Hub_RequestTravel` | RemoteEvent | C→S | `{DestinationId}` | known Id + hub-only + 60/min (spam guard; **no cooldown**) |
@@ -1218,3 +1219,27 @@ The loader applies this content flag to the component, never to the whole chunk.
 A socket's `OffsetY` has always been honoured by `placeAgainst`; kits may now author rises and descents (Ethereal
 Scape's Skystairs ±24, ascents ±16) and the map climbs and falls with them. The authoring contract is unchanged: every
 mouth is the kind's standard landing, level at its own socket height.
+
+### Opt-in generation performance experiment (2026-10-01)
+
+`ExpeditionSystem.setGenerationExperiment(A..F)` is Studio-only and unset by default.
+Profiles explicitly select authored art yaw, cached deterministic bounds, world prop
+resolution and budgeted/cached atmosphere work. Existing direct socket alignment,
+Kind compatibility, boss constraints and production nil-profile behavior remain.
+E/F mark playable after geometry, collision, portal, transit and loot setup; optional
+anchor discovery is deferred and cancelled on stage destruction. Empty pending
+server bounds prevent clients rediscovering anchors via their fallback physics scan.
+The existing Expedition_Atmosphere completion packet includes StageName and GenerationToken; clients
+ignore stale stage packets and avoid resetting base lighting for anchor-only updates.
+No live production adoption is authorized. See GENERATION_PERFORMANCE.md.
+
+G–M asset policies are available only through the explicit scratch benchmark's
+profile.AssetResolver. Nil retains the precise production loader. Visual-only
+templates/Box fidelity require explicit non-colliding metadata or a verified
+nonempty CollisionTemplate. Authoritative meshes retain precise collision;
+cache keys distinguish fidelity and concurrent misses share one preparation.
+Seed working sets include all roles, multipart components and attached rooms;
+bounded workers prepare only remaining required assets. No full invisible maps
+are cached. Late anchor updates preserve existing client actors and lighting.
+World asset views are direct-key metadata facades, not an adopted lazy-manifest
+migration. The failed SC collision fixture never enters production selection.

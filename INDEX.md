@@ -70,6 +70,7 @@ pending. Shared safety requirements live in `docs/MODULAR_MAPS.md`.
 | `docs/RESERVED.md` | deliberately unread declarations (an unread field not listed there is a defect) |
 | `docs/TESTING.md` | unit tests + Studio manual passes (lettered tests Aâ€¦T) |
 | `docs/MODULAR_MAPS.md` | chunk system: how maps assemble from pieces |
+| `docs/GENERATION_PERFORMANCE.md` | completed local A–M report, cold/cache/live-entry results, preserved raw benchmarks and migration recommendations; no production adoption |
 | `docs/VV_SOCKET_AUDIT.md` | complete 30-chunk socket/opening audit, root cause/repair, before/after reports and raw query/source evidence |
 | `docs/VV_SOCKET_WIDTH_REVIEW.md` | follow-up exact path/width audit: five gate reversals, Mushroom west exit, unchanged controls and new full-kit evidence |
 | `docs/CHUNK_AUTHORING.md` / `docs/CHUNK_DROP_IN.md` | engine contract for modelling a kit / dropping a kit in |
@@ -96,6 +97,7 @@ pending. Shared safety requirements live in `docs/MODULAR_MAPS.md`.
 | add a world / enemy / item / event | one file under `src/shared/Content/` (the prime directive in `AGENTS.md`) |
 | server boot order | `src/server/init.server.luau`; schema check `src/shared/Util/Schema.luau` (`validateAll`) |
 | chunk map generation | `src/shared/Util/ChunkCore.luau` (layout, `yawRadians`), `ChunkLoader.luau` (placement), `ChunkKitCore.luau`, `src/server/Systems/ExpeditionSystem.luau` |
+| generation/asset performance experiments | `Util/GenerationBenchmark`, `GenerationProfile`, `GenerationAnchors`, `ChunkDefinitionCache`, `PropRegistry`, `AssetPreparation`, `AssetRegistry`, `AssetGeometryCheck`, `CollisionProxySample`; `tools/run_generation_matrix.py`, `run_asset_matrix.py`, `run_collision_parallel_matrix.py`; `docs/benchmarks/` raw measurements |
 | a world's chunk pieces | `src/shared/Content/Chunks/SkyCitadel.luau`, `VerdantValley.luau` (ids `SC_*` / `VV_*`, `AssetKey = "<W>_CHUNK_*"`) |
 | asset ids | `src/shared/Content/AssetManifest.luau` (`tools/sync_asset_ids.py` fills them in) |
 | canopy wind / Studio tuning | `Content/Props/VerdantValley.meta.json` Attributes, `PropController.luau`, `GameConfig.Ambience.Props.Sway`; `CHUNK_AUTHORING.md` convention 6 |

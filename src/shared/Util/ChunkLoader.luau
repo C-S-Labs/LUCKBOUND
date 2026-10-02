@@ -29,7 +29,9 @@ local ChunkCore = require(Root.Util.ChunkCore)
 local Constants = require(Root.Core.Constants)
 local GameConfig = require(Root.Core.GameConfig)
 local ChunkRuntimeCore = require(Root.Core.ChunkRuntimeCore)
-local Props = require(Root.Content.Props)
+local GenerationProfile = require(Root.Util.GenerationProfile)
+local PropRegistry = require(Root.Util.PropRegistry)
+local lazyProps: any = nil
 
 local ChunkLoader = {}
 
@@ -130,7 +132,24 @@ end
 --- Tries the authored mesh. Returns nil when the asset is a PLACEHOLDER, when
 --- the id fails to load, or when the engine refuses it -- every one of which
 --- must fall back to blockout rather than leaving a hole in the map.
-local function tryMesh(assetKey: string, size: Vector3, cframe: CFrame, parent: Instance): BasePart?
+local function tryMesh(
+	assetKey: string,
+	size: Vector3,
+	cframe: CFrame,
+	parent: Instance,
+	profile: any?,
+	visualOnly: boolean?
+): BasePart?
+	if profile and profile.AssetResolver then
+		return profile.AssetResolver:place(
+			assetKey,
+			size,
+			cframe,
+			parent,
+			visualOnly == true,
+			profile
+		)
+	end
 	local id = AssetManifest.assetId(assetKey)
 	if not id then
 		return nil
@@ -182,10 +201,26 @@ local function tryChunkMesh(
 	chunk: any,
 	assetKey: string,
 	cframe: CFrame,
-	parent: Instance
+	parent: Instance,
+	profile: any?
 ): (BasePart | Model)?
 	if not chunk.MeshParts then
-		return tryMesh(assetKey, Vector3.new(chunk.SizeX, chunk.SizeY, chunk.SizeZ), cframe, parent)
+		local proxyValid = false
+		if profile and profile.AssetResolver and chunk.CollisionTemplate then
+			local kits = ServerStorage:FindFirstChild("LuckboundChunkKits")
+			local proxy = kits and kits:FindFirstChild(chunk.CollisionTemplate, true)
+			proxyValid = proxy ~= nil
+				and proxy:IsA("Model")
+				and proxy:FindFirstChildWhichIsA("BasePart", true) ~= nil
+		end
+		return tryMesh(
+			assetKey,
+			Vector3.new(chunk.SizeX, chunk.SizeY, chunk.SizeZ),
+			cframe,
+			parent,
+			profile,
+			proxyValid
+		)
 	end
 	local assembly = Instance.new("Model")
 	assembly.Name = "Mesh"
@@ -194,8 +229,13 @@ local function tryChunkMesh(
 			definition.AssetKey,
 			Vector3.new(definition.SizeX, definition.SizeY, definition.SizeZ),
 			cframe * CFrame.new(definition.OffsetX, definition.OffsetY, definition.OffsetZ),
-			assembly
+			assembly,
+			profile,
+			definition.CanCollide == false
 		)
+		if profile and profile.AssetResolver then
+			GenerationProfile.count(profile, "MultipartMeshInstances")
+		end
 		if not mesh then
 			assembly:Destroy()
 			return nil
@@ -234,8 +274,20 @@ local function calibrateYaw(
 	placed: any,
 	origin: Vector3,
 	meshPos: Vector3,
-	mesh: BasePart | Model
+	mesh: BasePart | Model,
+	profile: any?
 ): number
+	if profile and profile.AssetResolver and profile.ReferenceYaws then
+		local key = chunk.Id .. ":" .. (profile.Atmosphere or "")
+		local reference = profile.ReferenceYaws[key]
+		assert(reference ~= nil, `missing precise-collision orientation reference for {key}`)
+		GenerationProfile.count(profile, "VerifiedYawUses")
+		return reference
+	end
+	if profile and profile.Stage >= "B" and chunk.MeshYawOffset ~= nil then
+		GenerationProfile.count(profile, "AuthoredYawUses")
+		return chunk.MeshYawOffset
+	end
 	local cached = yawCache[chunk.AssetKey]
 	if cached ~= nil then
 		return cached
@@ -259,6 +311,7 @@ local function calibrateYaw(
 	local best, bestScore, bestCentreHits, mostCentreHits = hint, -math.huge, 0, 0
 	for turn = 0, 3 do
 		-- The hint first, so a tie keeps it.
+		GenerationProfile.count(profile, "RotationalAttempts")
 		local k = (hint + turn * 90) % 360
 		setMeshFrame(
 			mesh,
@@ -271,6 +324,7 @@ local function calibrateYaw(
 			local inward = Vector3.new(centre.X - mouth.X, 0, centre.Z - mouth.Z).Unit
 			local centreProbe = mouth + inward * probe.Inset
 			local function deckAt(point: Vector3): boolean
+				GenerationProfile.count(profile, "PlacementRaycasts")
 				local hit = Workspace:Raycast(
 					point + Vector3.new(0, probe.Height, 0),
 					Vector3.new(0, -probe.Height * 2, 0),
@@ -309,6 +363,7 @@ local function calibrateYaw(
 			if not socketAt[facing] then
 				local dir = CFrame.Angles(0, -math.rad(facing), 0).LookVector
 				local edge = centre + dir * (chunk.SizeX / 2 - probe.Inset)
+				GenerationProfile.count(profile, "PlacementRaycasts")
 				local hit = Workspace:Raycast(
 					edge + Vector3.new(0, probe.Height, 0),
 					Vector3.new(0, -probe.Height * 2, 0),
@@ -401,9 +456,22 @@ local function buildSolidProps(
 	centre: Vector3,
 	yaw: number,
 	artYawOffset: number,
-	parent: Instance
+	parent: Instance,
+	profile: any?
 )
-	local set = Props[worldId]
+	local started = os.clock()
+	local set
+	if profile and profile.PropResolver then
+		set = profile.PropResolver:GetForWorld(worldId)
+		profile.PropStats = table.clone(profile.PropResolver.Stats)
+	elseif profile and profile.Stage >= "D" then
+		lazyProps = lazyProps or PropRegistry.new(Root.Content.Props)
+		set = lazyProps:GetForWorld(worldId)
+		profile.PropStats = table.clone(lazyProps.Stats)
+	else
+		set = require(Root.Content.Props)[worldId]
+	end
+	GenerationProfile.time(profile, "PropInitialization", started)
 	local rows = set and set.Placements[chunkId]
 	if not rows then
 		return
@@ -543,14 +611,19 @@ function ChunkLoader.build(
 	chunks: { [string]: any },
 	origin: Vector3,
 	parent: Instance,
-	name: string
+	name: string,
+	profile: any?
 ): LoadResult
+	local assetStarted = os.clock()
 	local cfg = GameConfig.Expedition
 
 	local model = Instance.new("Model")
 	model.Name = name
 	model:SetAttribute("WorldId", layout.WorldId)
 	model:SetAttribute("Seed", layout.Seed)
+	if profile then
+		model:SetAttribute("Atmosphere", layout.Atmosphere)
+	end
 	model:SetAttribute("TestMode", layout.TestMode == true)
 	if layout.TestMode then
 		-- A catalogue spans far beyond the player's streaming radius. Keep
@@ -661,13 +734,13 @@ function ChunkLoader.build(
 		then
 			assetKey = assetKey .. "__" .. layout.Atmosphere
 		end
-		local mesh = tryChunkMesh(chunk, assetKey, meshCFrame, folder)
+		local mesh = tryChunkMesh(chunk, assetKey, meshCFrame, folder, profile)
 
 		local surface: BasePart?
 		local artYawOffset = chunk.MeshYawOffset or 0
 		if mesh then
 			local meshPos = meshCFrame.Position
-			local k = calibrateYaw(chunk, placed, origin, meshPos, mesh)
+			local k = calibrateYaw(chunk, placed, origin, meshPos, mesh, profile)
 			artYawOffset = k
 			setMeshFrame(
 				mesh,
@@ -676,7 +749,14 @@ function ChunkLoader.build(
 			usedMeshes += 1
 			if mesh:IsA("BasePart") then
 				surface = mesh
-				attachWalkCollision(chunk, centre, mesh, folder)
+				local collisionStarted = os.clock()
+				local attached = attachWalkCollision(chunk, centre, mesh, folder)
+				if profile and profile.AssetResolver then
+					GenerationProfile.time(profile, "CollisionProxyPreparation", collisionStarted)
+					if attached then
+						GenerationProfile.count(profile, "CollisionProxyClones")
+					end
+				end
 			end
 		else
 			surface = buildBlockout(chunk, placed, centre, folder)
@@ -684,7 +764,21 @@ function ChunkLoader.build(
 		end
 		-- read by the dev panel's /assets and /chunks: which pieces had no mesh
 		folder:SetAttribute("Blockout", mesh == nil)
-		buildSolidProps(layout.WorldId, placed.ChunkId, centre, placed.Yaw, artYawOffset, folder)
+		if profile then
+			folder:SetAttribute("ArtYawOffset", artYawOffset)
+			folder:SetAttribute("AssetKey", assetKey)
+		end
+		local propsStarted = os.clock()
+		buildSolidProps(
+			layout.WorldId,
+			placed.ChunkId,
+			centre,
+			placed.Yaw,
+			artYawOffset,
+			folder,
+			profile
+		)
+		GenerationProfile.time(profile, "SolidProps", propsStarted)
 
 		buildSocketMarkers(chunk, placed, origin, folder)
 		buildBoundaries(chunk, centre, placed.Yaw, folder)
@@ -743,6 +837,8 @@ function ChunkLoader.build(
 	end
 
 	model.Parent = parent
+	GenerationProfile.time(profile, "AssetInitialization", assetStarted)
+	GenerationProfile.count(profile, "ChunkCount", #runtimeRows)
 	return {
 		Model = model,
 		EntryPosition = entryPosition,

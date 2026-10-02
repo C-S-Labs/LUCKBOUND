@@ -1,0 +1,12 @@
+{
+  "SC_PATH_HOOPS": {
+    "AuthoredShapes": 115,
+    "Boxes": 113,
+    "FloorPrisms": 2
+  },
+  "SC_PATH_SHATTERED": {
+    "AuthoredShapes": 82,
+    "Boxes": 72,
+    "FloorPrisms": 10
+  }
+}

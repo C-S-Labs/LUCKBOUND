@@ -1,0 +1,4350 @@
+{
+  "A": {
+    "Samples": 30,
+    "Worlds": {
+      "ETHEREAL_SCAPE": {
+        "Playable": {
+          "Median": 19.72722589992918,
+          "Worst": 47.94064960000105,
+          "Minimum": 18.96964400005527
+        },
+        "Complete": {
+          "Median": 19.72722589992918,
+          "Worst": 47.94064960000105,
+          "Minimum": 18.96964400005527
+        },
+        "AssetInitialization": {
+          "Median": 19.649918949988205,
+          "Worst": 47.84972669999115,
+          "Minimum": 18.899404599913396
+        }
+      },
+      "SKY_CITADEL": {
+        "Playable": {
+          "Median": 15.355021499970462,
+          "Worst": 23.778415699955076,
+          "Minimum": 14.570126600097865
+        },
+        "Complete": {
+          "Median": 15.355021499970462,
+          "Worst": 23.778415699955076,
+          "Minimum": 14.570126600097865
+        },
+        "AssetInitialization": {
+          "Median": 15.313726699969266,
+          "Worst": 23.72603850008454,
+          "Minimum": 14.5220250999555
+        }
+      },
+      "VERDANT_VALLEY": {
+        "Playable": {
+          "Median": 26.210581200080924,
+          "Worst": 30.945338499965146,
+          "Minimum": 20.99697770003695
+        },
+        "Complete": {
+          "Median": 26.210581200080924,
+          "Worst": 30.945338499965146,
+          "Minimum": 20.99697770003695
+        },
+        "AssetInitialization": {
+          "Median": 26.1276312500122,
+          "Worst": 30.864399099955335,
+          "Minimum": 20.930511699989438
+        }
+      }
+    },
+    "Playable": {
+      "Median": 20.263545050052926,
+      "Worst": 47.94064960000105,
+      "Minimum": 14.570126600097865
+    },
+    "Complete": {
+      "Median": 20.263545050052926,
+      "Worst": 47.94064960000105,
+      "Minimum": 14.570126600097865
+    },
+    "Counters": {
+      "AnchorCacheMisses": 524,
+      "RotationalAttempts": 228,
+      "PlacementRaycasts": 1352,
+      "AtmosphereRaycasts": 536576,
+      "OverlapComparisons": 11048,
+      "CandidateAttempts": 586,
+      "ChunkCount": 524,
+      "PlacementFailures": 598
+    },
+    "UniqueCreatedAssetKeys": 0,
+    "DuplicateCreations": 0,
+    "CreationWall": {
+      "Median": 0.0,
+      "Worst": 0,
+      "Minimum": 0
+    },
+    "MemoryDeltaMb": {
+      "Median": 2.66015625,
+      "Worst": 77.17578125,
+      "Minimum": -45.13671875
+    },
+    "LuaHeapDeltaKb": {
+      "Median": 0.0,
+      "Worst": 0,
+      "Minimum": 0
+    },
+    "CorrectnessFailures": 0,
+    "CollisionDifferentSamples": 0,
+    "CollisionWorstDifferenceStuds": 0,
+    "VisualSignatureMismatchMaps": 0,
+    "YawMismatchMaps": 0,
+    "ColdFirstMapByWorld": {
+      "ETHEREAL_SCAPE": 47.94064960000105,
+      "SKY_CITADEL": 23.778415699955076,
+      "VERDANT_VALLEY": 28.300490500056185
+    },
+    "PhaseMedians": {
+      "LayoutSolvedSeconds": null,
+      "AssetsPreparedSeconds": null,
+      "MaterializationReadySeconds": null,
+      "CollisionReadySeconds": null,
+      "PlayerPlacedSeconds": null,
+      "SafePlayerReadySeconds": null,
+      "ServerPresentationReadySeconds": null
+    },
+    "TimeMedians": {
+      "Assembly": {
+        "Median": 0.00019784999312832952,
+        "Worst": 0.00047740002628415823,
+        "Minimum": 0.0001167000737041235
+      },
+      "AssetInitialization": {
+        "Median": 20.1885434500291,
+        "Worst": 47.84972669999115,
+        "Minimum": 14.5220250999555
+      },
+      "AtmosphereAnchors": {
+        "Median": 0.06815335003193468,
+        "Worst": 0.0903433000203222,
+        "Minimum": 0.03772919997572899
+      },
+      "Overlap": {
+        "Median": 1.46999373100698e-05,
+        "Worst": 0.0001333998516201973,
+        "Minimum": 8.70006624609232e-06
+      },
+      "PropInitialization": {
+        "Median": 5.15999854542315e-05,
+        "Worst": 0.00012540013995021582,
+        "Minimum": 3.77000542357564e-05
+      },
+      "PropRegistry": {
+        "Median": 9.950017556548119e-06,
+        "Worst": 0.037747299997136,
+        "Minimum": 8.00006091594696e-06
+      },
+      "SolidProps": {
+        "Median": 0.00032730004750192165,
+        "Worst": 0.0014281999319791794,
+        "Minimum": 0.00011909985914826393
+      }
+    },
+    "RetainedCache": {
+      "TemplateCacheEntries": null,
+      "RuntimeTemplateInstances": null,
+      "CacheRetentionBeforeDestroyMb": null,
+      "CacheRetentionAfterDestroyMb": null,
+      "CacheInstancesBeforeDestroyMb": null,
+      "CacheInstancesAfterDestroyMb": null,
+      "AnchorCache": null,
+      "PropStats": {
+        "Misses": 0,
+        "ModulesRequired": 3,
+        "Hits": 0
+      }
+    }
+  },
+  "B": {
+    "Samples": 30,
+    "Worlds": {
+      "ETHEREAL_SCAPE": {
+        "Playable": {
+          "Median": 22.088772099989,
+          "Worst": 47.26094210008159,
+          "Minimum": 19.517109799897298
+        },
+        "Complete": {
+          "Median": 22.088772099989,
+          "Worst": 47.26094210008159,
+          "Minimum": 19.517109799897298
+        },
+        "AssetInitialization": {
+          "Median": 22.01277014997322,
+          "Worst": 47.184707499924116,
+          "Minimum": 19.448146200040355
+        }
+      },
+      "SKY_CITADEL": {
+        "Playable": {
+          "Median": 16.30885239999043,
+          "Worst": 23.371464099967852,
+          "Minimum": 15.519219700014219
+        },
+        "Complete": {
+          "Median": 16.30885239999043,
+          "Worst": 23.371464099967852,
+          "Minimum": 15.519219700014219
+        },
+        "AssetInitialization": {
+          "Median": 16.269036349956878,
+          "Worst": 23.319337400025688,
+          "Minimum": 15.472119600046426
+        }
+      },
+      "VERDANT_VALLEY": {
+        "Playable": {
+          "Median": 25.255326400045305,
+          "Worst": 30.02499770000577,
+          "Minimum": 20.990575399948284
+        },
+        "Complete": {
+          "Median": 25.255326400045305,
+          "Worst": 30.02499770000577,
+          "Minimum": 20.990575399948284
+        },
+        "AssetInitialization": {
+          "Median": 25.161968799948227,
+          "Worst": 29.942344499984756,
+          "Minimum": 20.922423999989405
+        }
+      }
+    },
+    "Playable": {
+      "Median": 22.02689849998569,
+      "Worst": 47.26094210008159,
+      "Minimum": 15.519219700014219
+    },
+    "Complete": {
+      "Median": 22.02689849998569,
+      "Worst": 47.26094210008159,
+      "Minimum": 15.519219700014219
+    },
+    "Counters": {
+      "AuthoredYawUses": 524,
+      "AtmosphereRaycasts": 536576,
+      "ChunkCount": 524,
+      "CandidateAttempts": 586,
+      "AnchorCacheMisses": 524,
+      "OverlapComparisons": 11048,
+      "PlacementFailures": 598
+    },
+    "UniqueCreatedAssetKeys": 0,
+    "DuplicateCreations": 0,
+    "CreationWall": {
+      "Median": 0.0,
+      "Worst": 0,
+      "Minimum": 0
+    },
+    "MemoryDeltaMb": {
+      "Median": 1.59765625,
+      "Worst": 16.56640625,
+      "Minimum": -433.39453125
+    },
+    "LuaHeapDeltaKb": {
+      "Median": -644.5,
+      "Worst": 18344,
+      "Minimum": -22361
+    },
+    "CorrectnessFailures": 0,
+    "CollisionDifferentSamples": 0,
+    "CollisionWorstDifferenceStuds": 0,
+    "VisualSignatureMismatchMaps": 0,
+    "YawMismatchMaps": 0,
+    "ColdFirstMapByWorld": {
+      "ETHEREAL_SCAPE": 47.26094210008159,
+      "SKY_CITADEL": 23.26870889996644,
+      "VERDANT_VALLEY": 25.340158900013193
+    },
+    "PhaseMedians": {
+      "LayoutSolvedSeconds": null,
+      "AssetsPreparedSeconds": null,
+      "MaterializationReadySeconds": null,
+      "CollisionReadySeconds": null,
+      "PlayerPlacedSeconds": null,
+      "SafePlayerReadySeconds": null,
+      "ServerPresentationReadySeconds": null
+    },
+    "TimeMedians": {
+      "Assembly": {
+        "Median": 0.00016484997468069196,
+        "Worst": 0.00046929996460676193,
+        "Minimum": 0.00010990002192556858
+      },
+      "AssetInitialization": {
+        "Median": 21.950478499988094,
+        "Worst": 47.184707499924116,
+        "Minimum": 15.472119600046426
+      },
+      "AtmosphereAnchors": {
+        "Median": 0.06749764998676255,
+        "Worst": 0.08993240003474057,
+        "Minimum": 0.03727119998075068
+      },
+      "Overlap": {
+        "Median": 1.5700061339884996e-05,
+        "Worst": 0.00015069975052028894,
+        "Minimum": 9.399838745594025e-06
+      },
+      "PropInitialization": {
+        "Median": 4.930014256387949e-05,
+        "Worst": 9.779969695955515e-05,
+        "Minimum": 3.279978409409523e-05
+      },
+      "PropRegistry": {
+        "Median": 9.649957064539194e-06,
+        "Worst": 0.040115199983119965,
+        "Minimum": 8.09994526207447e-06
+      },
+      "SolidProps": {
+        "Median": 0.00029554974753409624,
+        "Worst": 0.0013982001692056656,
+        "Minimum": 0.00011260004248470068
+      }
+    },
+    "RetainedCache": {
+      "TemplateCacheEntries": null,
+      "RuntimeTemplateInstances": null,
+      "CacheRetentionBeforeDestroyMb": null,
+      "CacheRetentionAfterDestroyMb": null,
+      "CacheInstancesBeforeDestroyMb": null,
+      "CacheInstancesAfterDestroyMb": null,
+      "AnchorCache": {
+        "Samples": 0,
+        "SerializedFloat64PayloadBytes": 0,
+        "Entries": 0
+      },
+      "PropStats": {
+        "Misses": 0,
+        "ModulesRequired": 3,
+        "Hits": 0
+      }
+    }
+  },
+  "C": {
+    "Samples": 30,
+    "Worlds": {
+      "ETHEREAL_SCAPE": {
+        "Playable": {
+          "Median": 21.845327450020704,
+          "Worst": 47.834569000056945,
+          "Minimum": 19.55283599998802
+        },
+        "Complete": {
+          "Median": 21.845327450020704,
+          "Worst": 47.834569000056945,
+          "Minimum": 19.55283599998802
+        },
+        "AssetInitialization": {
+          "Median": 21.769634199969005,
+          "Worst": 47.755002399906516,
+          "Minimum": 19.482330900034867
+        }
+      },
+      "SKY_CITADEL": {
+        "Playable": {
+          "Median": 15.943991549953353,
+          "Worst": 23.288640100043267,
+          "Minimum": 14.803381200064905
+        },
+        "Complete": {
+          "Median": 15.943991549953353,
+          "Worst": 23.288640100043267,
+          "Minimum": 14.803381200064905
+        },
+        "AssetInitialization": {
+          "Median": 15.903157999913674,
+          "Worst": 23.237724000005983,
+          "Minimum": 14.757945799967274
+        }
+      },
+      "VERDANT_VALLEY": {
+        "Playable": {
+          "Median": 25.120544200064614,
+          "Worst": 29.854015100048855,
+          "Minimum": 20.732380900066346
+        },
+        "Complete": {
+          "Median": 25.120544200064614,
+          "Worst": 29.854015100048855,
+          "Minimum": 20.732380900066346
+        },
+        "AssetInitialization": {
+          "Median": 25.030874650052283,
+          "Worst": 29.772014599991962,
+          "Minimum": 20.655263499938883
+        }
+      }
+    },
+    "Playable": {
+      "Median": 21.68043609999586,
+      "Worst": 47.834569000056945,
+      "Minimum": 14.803381200064905
+    },
+    "Complete": {
+      "Median": 21.68043609999586,
+      "Worst": 47.834569000056945,
+      "Minimum": 14.803381200064905
+    },
+    "Counters": {
+      "AuthoredYawUses": 524,
+      "AtmosphereRaycasts": 536576,
+      "AnchorCacheMisses": 524,
+      "ChunkCount": 524,
+      "CandidateAttempts": 586,
+      "OverlapComparisons": 11048,
+      "DefinitionMisses": 107,
+      "DefinitionHits": 1215,
+      "PlacementFailures": 598
+    },
+    "UniqueCreatedAssetKeys": 0,
+    "DuplicateCreations": 0,
+    "CreationWall": {
+      "Median": 0.0,
+      "Worst": 0,
+      "Minimum": 0
+    },
+    "MemoryDeltaMb": {
+      "Median": 3.4140625,
+      "Worst": 81.75,
+      "Minimum": -73.078125
+    },
+    "LuaHeapDeltaKb": {
+      "Median": 1211.5,
+      "Worst": 21819,
+      "Minimum": -20600
+    },
+    "CorrectnessFailures": 0,
+    "CollisionDifferentSamples": 0,
+    "CollisionWorstDifferenceStuds": 0,
+    "VisualSignatureMismatchMaps": 0,
+    "YawMismatchMaps": 0,
+    "ColdFirstMapByWorld": {
+      "ETHEREAL_SCAPE": 47.834569000056945,
+      "SKY_CITADEL": 23.288640100043267,
+      "VERDANT_VALLEY": 25.222246500081383
+    },
+    "PhaseMedians": {
+      "LayoutSolvedSeconds": null,
+      "AssetsPreparedSeconds": null,
+      "MaterializationReadySeconds": null,
+      "CollisionReadySeconds": null,
+      "PlayerPlacedSeconds": null,
+      "SafePlayerReadySeconds": null,
+      "ServerPresentationReadySeconds": null
+    },
+    "TimeMedians": {
+      "Assembly": {
+        "Median": 0.00018544995691627264,
+        "Worst": 0.0005201000021770597,
+        "Minimum": 0.0001202999847009778
+      },
+      "AssetInitialization": {
+        "Median": 21.60354164999444,
+        "Worst": 47.755002399906516,
+        "Minimum": 14.757945799967274
+      },
+      "AtmosphereAnchors": {
+        "Median": 0.06674189999466762,
+        "Worst": 0.09249780001118779,
+        "Minimum": 0.03725169994868338
+      },
+      "Overlap": {
+        "Median": 1.479999627918005e-05,
+        "Worst": 0.0001064998796209693,
+        "Minimum": 8.999952115118504e-06
+      },
+      "PropInitialization": {
+        "Median": 4.534993786364794e-05,
+        "Worst": 9.889970533549786e-05,
+        "Minimum": 2.9399641789495945e-05
+      },
+      "PropRegistry": {
+        "Median": 9.299954399466515e-06,
+        "Worst": 0.03512409992981702,
+        "Minimum": 7.4999406933784485e-06
+      },
+      "SolidProps": {
+        "Median": 0.0002847999567165971,
+        "Worst": 0.0015064999461174011,
+        "Minimum": 0.00010509986896067858
+      }
+    },
+    "RetainedCache": {
+      "TemplateCacheEntries": null,
+      "RuntimeTemplateInstances": null,
+      "CacheRetentionBeforeDestroyMb": null,
+      "CacheRetentionAfterDestroyMb": null,
+      "CacheInstancesBeforeDestroyMb": null,
+      "CacheInstancesAfterDestroyMb": null,
+      "AnchorCache": {
+        "Samples": 0,
+        "SerializedFloat64PayloadBytes": 0,
+        "Entries": 0
+      },
+      "PropStats": {
+        "Misses": 0,
+        "ModulesRequired": 3,
+        "Hits": 0
+      }
+    }
+  },
+  "D": {
+    "Samples": 30,
+    "Worlds": {
+      "ETHEREAL_SCAPE": {
+        "Playable": {
+          "Median": 22.131711299996823,
+          "Worst": 47.19824369996786,
+          "Minimum": 19.964111300068907
+        },
+        "Complete": {
+          "Median": 22.131711299996823,
+          "Worst": 47.19824369996786,
+          "Minimum": 19.964111300068907
+        },
+        "AssetInitialization": {
+          "Median": 22.062573950039223,
+          "Worst": 47.11954390001483,
+          "Minimum": 19.893512900103815
+        }
+      },
+      "SKY_CITADEL": {
+        "Playable": {
+          "Median": 16.176668250001967,
+          "Worst": 23.271032999968156,
+          "Minimum": 15.102583500090986
+        },
+        "Complete": {
+          "Median": 16.176668250001967,
+          "Worst": 23.271032999968156,
+          "Minimum": 15.102583500090986
+        },
+        "AssetInitialization": {
+          "Median": 16.135838000045624,
+          "Worst": 23.2178322999971,
+          "Minimum": 15.056561499950476
+        }
+      },
+      "VERDANT_VALLEY": {
+        "Playable": {
+          "Median": 24.680551000055857,
+          "Worst": 29.237838099943474,
+          "Minimum": 20.418347600032575
+        },
+        "Complete": {
+          "Median": 24.680551000055857,
+          "Worst": 29.237838099943474,
+          "Minimum": 20.418347600032575
+        },
+        "AssetInitialization": {
+          "Median": 24.6005961499759,
+          "Worst": 29.156614999985322,
+          "Minimum": 20.35257729992736
+        }
+      }
+    },
+    "Playable": {
+      "Median": 21.680252150050364,
+      "Worst": 47.19824369996786,
+      "Minimum": 15.102583500090986
+    },
+    "Complete": {
+      "Median": 21.680252150050364,
+      "Worst": 47.19824369996786,
+      "Minimum": 15.102583500090986
+    },
+    "Counters": {
+      "AuthoredYawUses": 524,
+      "AtmosphereRaycasts": 536576,
+      "AnchorCacheMisses": 524,
+      "ChunkCount": 524,
+      "CandidateAttempts": 586,
+      "OverlapComparisons": 11048,
+      "DefinitionMisses": 107,
+      "DefinitionHits": 1215,
+      "PlacementFailures": 598
+    },
+    "UniqueCreatedAssetKeys": 0,
+    "DuplicateCreations": 0,
+    "CreationWall": {
+      "Median": 0.0,
+      "Worst": 0,
+      "Minimum": 0
+    },
+    "MemoryDeltaMb": {
+      "Median": 2.958984375,
+      "Worst": 22.85546875,
+      "Minimum": -204.2578125
+    },
+    "LuaHeapDeltaKb": {
+      "Median": 156.5,
+      "Worst": 16460,
+      "Minimum": -22710
+    },
+    "CorrectnessFailures": 0,
+    "CollisionDifferentSamples": 0,
+    "CollisionWorstDifferenceStuds": 0,
+    "VisualSignatureMismatchMaps": 0,
+    "YawMismatchMaps": 0,
+    "ColdFirstMapByWorld": {
+      "ETHEREAL_SCAPE": 46.834036999964155,
+      "SKY_CITADEL": 23.243896400090307,
+      "VERDANT_VALLEY": 24.522143800044432
+    },
+    "PhaseMedians": {
+      "LayoutSolvedSeconds": null,
+      "AssetsPreparedSeconds": null,
+      "MaterializationReadySeconds": null,
+      "CollisionReadySeconds": null,
+      "PlayerPlacedSeconds": null,
+      "SafePlayerReadySeconds": null,
+      "ServerPresentationReadySeconds": null
+    },
+    "TimeMedians": {
+      "Assembly": {
+        "Median": 0.0001799999736249447,
+        "Worst": 0.0005729000549763441,
+        "Minimum": 0.00011339993216097355
+      },
+      "AssetInitialization": {
+        "Median": 21.6034256000421,
+        "Worst": 47.11954390001483,
+        "Minimum": 15.056561499950476
+      },
+      "AtmosphereAnchors": {
+        "Median": 0.06699755002046004,
+        "Worst": 0.09321329998783767,
+        "Minimum": 0.0368124000960961
+      },
+      "Overlap": {
+        "Median": 1.2999982573091984e-05,
+        "Worst": 9.90001717582345e-05,
+        "Minimum": 9.100069291889668e-06
+      },
+      "PropInitialization": {
+        "Median": 5.0850037951022387e-05,
+        "Worst": 0.0001183999702334404,
+        "Minimum": 3.890017978847027e-05
+      },
+      "PropRegistry": {
+        "Median": 2.100015990436077e-06,
+        "Worst": 0.01382769993506372,
+        "Minimum": 1.800013706088066e-06
+      },
+      "SolidProps": {
+        "Median": 0.0003034999826923013,
+        "Worst": 0.0013713000807911158,
+        "Minimum": 0.00012020010035485029
+      }
+    },
+    "RetainedCache": {
+      "TemplateCacheEntries": null,
+      "RuntimeTemplateInstances": null,
+      "CacheRetentionBeforeDestroyMb": null,
+      "CacheRetentionAfterDestroyMb": null,
+      "CacheInstancesBeforeDestroyMb": null,
+      "CacheInstancesAfterDestroyMb": null,
+      "AnchorCache": {
+        "Samples": 0,
+        "SerializedFloat64PayloadBytes": 0,
+        "Entries": 0
+      },
+      "PropStats": {
+        "ModulesRequired": 3,
+        "Seconds": 0.03446840005926788,
+        "Misses": 3,
+        "Hits": 551
+      }
+    }
+  },
+  "E": {
+    "Samples": 30,
+    "Worlds": {
+      "ETHEREAL_SCAPE": {
+        "Playable": {
+          "Median": 22.281916999956593,
+          "Worst": 47.788512099999934,
+          "Minimum": 19.955378099926747
+        },
+        "Complete": {
+          "Median": 26.198689450044185,
+          "Worst": 51.4983377000317,
+          "Minimum": 23.66541789995972
+        },
+        "AssetInitialization": {
+          "Median": 22.27951210003812,
+          "Worst": 47.772677700035274,
+          "Minimum": 19.952941700001247
+        }
+      },
+      "SKY_CITADEL": {
+        "Playable": {
+          "Median": 15.98501414997736,
+          "Worst": 23.03325589990709,
+          "Minimum": 15.084889400051907
+        },
+        "Complete": {
+          "Median": 17.431808950030245,
+          "Worst": 24.880742499954067,
+          "Minimum": 16.649032599991187
+        },
+        "AssetInitialization": {
+          "Median": 15.98258915002225,
+          "Worst": 23.0214417000534,
+          "Minimum": 15.082361600012518
+        }
+      },
+      "VERDANT_VALLEY": {
+        "Playable": {
+          "Median": 24.65728985000169,
+          "Worst": 29.19667400000617,
+          "Minimum": 20.67347330006305
+        },
+        "Complete": {
+          "Median": 26.10945280001033,
+          "Worst": 30.913513700012118,
+          "Minimum": 21.97749830002431
+        },
+        "AssetInitialization": {
+          "Median": 24.646985250059515,
+          "Worst": 29.192639100016095,
+          "Minimum": 20.67091139999684
+        }
+      }
+    },
+    "Playable": {
+      "Median": 21.78881525003817,
+      "Worst": 47.788512099999934,
+      "Minimum": 15.084889400051907
+    },
+    "Complete": {
+      "Median": 24.789749499992467,
+      "Worst": 51.4983377000317,
+      "Minimum": 16.649032599991187
+    },
+    "Counters": {
+      "AuthoredYawUses": 524,
+      "AtmosphereRaycasts": 536576,
+      "AnchorCacheMisses": 524,
+      "ChunkCount": 524,
+      "CandidateAttempts": 586,
+      "OverlapComparisons": 11048,
+      "DefinitionMisses": 107,
+      "DefinitionHits": 1215,
+      "PlacementFailures": 598
+    },
+    "UniqueCreatedAssetKeys": 0,
+    "DuplicateCreations": 0,
+    "CreationWall": {
+      "Median": 0.0,
+      "Worst": 0,
+      "Minimum": 0
+    },
+    "MemoryDeltaMb": {
+      "Median": 1.248046875,
+      "Worst": 136.2890625,
+      "Minimum": -37.0390625
+    },
+    "LuaHeapDeltaKb": {
+      "Median": -1868.0,
+      "Worst": 22299,
+      "Minimum": -20585
+    },
+    "CorrectnessFailures": 0,
+    "CollisionDifferentSamples": 0,
+    "CollisionWorstDifferenceStuds": 0,
+    "VisualSignatureMismatchMaps": 0,
+    "YawMismatchMaps": 0,
+    "ColdFirstMapByWorld": {
+      "ETHEREAL_SCAPE": 47.788512099999934,
+      "SKY_CITADEL": 23.03325589990709,
+      "VERDANT_VALLEY": 24.717782099964097
+    },
+    "PhaseMedians": {
+      "LayoutSolvedSeconds": null,
+      "AssetsPreparedSeconds": null,
+      "MaterializationReadySeconds": null,
+      "CollisionReadySeconds": null,
+      "PlayerPlacedSeconds": null,
+      "SafePlayerReadySeconds": null,
+      "ServerPresentationReadySeconds": null
+    },
+    "TimeMedians": {
+      "Assembly": {
+        "Median": 0.00020414998289197683,
+        "Worst": 0.0005010999739170074,
+        "Minimum": 0.00011499994434416294
+      },
+      "AssetInitialization": {
+        "Median": 21.786274300015066,
+        "Worst": 47.772677700035274,
+        "Minimum": 15.082361600012518
+      },
+      "AtmosphereAnchors": {
+        "Median": 1.7165607499773614,
+        "Worst": 4.110288699972443,
+        "Minimum": 1.3027413999661803
+      },
+      "Overlap": {
+        "Median": 1.645000884309411e-05,
+        "Worst": 9.500025771558285e-05,
+        "Minimum": 9.199953638017178e-06
+      },
+      "PropInitialization": {
+        "Median": 4.7600013203918934e-05,
+        "Worst": 0.00010829977691173553,
+        "Minimum": 3.729993477463722e-05
+      },
+      "PropRegistry": {
+        "Median": 2.4500186555087566e-06,
+        "Worst": 0.014706899994052947,
+        "Minimum": 2.00001522898674e-06
+      },
+      "SolidProps": {
+        "Median": 0.0002995501272380352,
+        "Worst": 0.0015258999774232507,
+        "Minimum": 0.0001173998462036252
+      }
+    },
+    "RetainedCache": {
+      "TemplateCacheEntries": null,
+      "RuntimeTemplateInstances": null,
+      "CacheRetentionBeforeDestroyMb": null,
+      "CacheRetentionAfterDestroyMb": null,
+      "CacheInstancesBeforeDestroyMb": null,
+      "CacheInstancesAfterDestroyMb": null,
+      "AnchorCache": {
+        "Samples": 0,
+        "SerializedFloat64PayloadBytes": 0,
+        "Entries": 0
+      },
+      "PropStats": {
+        "ModulesRequired": 3,
+        "Seconds": 0.03741489991080016,
+        "Misses": 3,
+        "Hits": 551
+      }
+    }
+  },
+  "F": {
+    "Samples": 30,
+    "Worlds": {
+      "ETHEREAL_SCAPE": {
+        "Playable": {
+          "Median": 21.804651200014632,
+          "Worst": 47.088545600068755,
+          "Minimum": 19.71219450002536
+        },
+        "Complete": {
+          "Median": 22.241216599941254,
+          "Worst": 49.197294800076634,
+          "Minimum": 19.716731099993922
+        },
+        "AssetInitialization": {
+          "Median": 21.802033700048923,
+          "Worst": 47.07310270005837,
+          "Minimum": 19.709698399994522
+        }
+      },
+      "SKY_CITADEL": {
+        "Playable": {
+          "Median": 15.802133299934212,
+          "Worst": 22.835033499985002,
+          "Minimum": 15.151582399965264
+        },
+        "Complete": {
+          "Median": 16.208760649955366,
+          "Worst": 24.45255080005154,
+          "Minimum": 15.155886400025338
+        },
+        "AssetInitialization": {
+          "Median": 15.799820550018921,
+          "Worst": 22.832306800060906,
+          "Minimum": 15.149047499988228
+        }
+      },
+      "VERDANT_VALLEY": {
+        "Playable": {
+          "Median": 25.06390334997559,
+          "Worst": 30.49041200010106,
+          "Minimum": 20.704673400032334
+        },
+        "Complete": {
+          "Median": 25.79477969999425,
+          "Worst": 31.408847400103696,
+          "Minimum": 20.714390800101683
+        },
+        "AssetInitialization": {
+          "Median": 25.053165650053415,
+          "Worst": 30.48695819999557,
+          "Minimum": 20.702145599992946
+        }
+      }
+    },
+    "Playable": {
+      "Median": 21.729669349908363,
+      "Worst": 47.088545600068755,
+      "Minimum": 15.151582399965264
+    },
+    "Complete": {
+      "Median": 21.810200300067663,
+      "Worst": 49.197294800076634,
+      "Minimum": 15.155886400025338
+    },
+    "Counters": {
+      "AuthoredYawUses": 524,
+      "AtmosphereRaycasts": 97280,
+      "AnchorCacheMisses": 95,
+      "ChunkCount": 524,
+      "CandidateAttempts": 586,
+      "OverlapComparisons": 11048,
+      "DefinitionMisses": 107,
+      "AnchorCacheHits": 429,
+      "PlacementFailures": 598,
+      "DefinitionHits": 1215
+    },
+    "UniqueCreatedAssetKeys": 0,
+    "DuplicateCreations": 0,
+    "CreationWall": {
+      "Median": 0.0,
+      "Worst": 0,
+      "Minimum": 0
+    },
+    "MemoryDeltaMb": {
+      "Median": 0.654296875,
+      "Worst": 8.05078125,
+      "Minimum": -127.453125
+    },
+    "LuaHeapDeltaKb": {
+      "Median": 3047.5,
+      "Worst": 18862,
+      "Minimum": -24205
+    },
+    "CorrectnessFailures": 0,
+    "CollisionDifferentSamples": 0,
+    "CollisionWorstDifferenceStuds": 0,
+    "VisualSignatureMismatchMaps": 0,
+    "YawMismatchMaps": 0,
+    "ColdFirstMapByWorld": {
+      "ETHEREAL_SCAPE": 47.088545600068755,
+      "SKY_CITADEL": 22.738560400088318,
+      "VERDANT_VALLEY": 25.331312599941157
+    },
+    "PhaseMedians": {
+      "LayoutSolvedSeconds": null,
+      "AssetsPreparedSeconds": null,
+      "MaterializationReadySeconds": null,
+      "CollisionReadySeconds": null,
+      "PlayerPlacedSeconds": null,
+      "SafePlayerReadySeconds": null,
+      "ServerPresentationReadySeconds": null
+    },
+    "TimeMedians": {
+      "Assembly": {
+        "Median": 0.00017494993517175317,
+        "Worst": 0.0005549000343307853,
+        "Minimum": 0.00011829996947199106
+      },
+      "AssetInitialization": {
+        "Median": 21.72729695000453,
+        "Worst": 47.07310270005837,
+        "Minimum": 15.149047499988228
+      },
+      "AtmosphereAnchors": {
+        "Median": 0.0125477000256069,
+        "Worst": 2.108688100008294,
+        "Minimum": 0.00360920000821352
+      },
+      "Overlap": {
+        "Median": 1.3349985238164663e-05,
+        "Worst": 9.990006219595671e-05,
+        "Minimum": 8.999952115118504e-06
+      },
+      "PropInitialization": {
+        "Median": 4.89500816911459e-05,
+        "Worst": 0.00011049991007894278,
+        "Minimum": 3.560015466064215e-05
+      },
+      "PropRegistry": {
+        "Median": 2.400018274784088e-06,
+        "Worst": 0.016361100017093122,
+        "Minimum": 1.700012944638729e-06
+      },
+      "SolidProps": {
+        "Median": 0.00030045025050640106,
+        "Worst": 0.0014560000272467732,
+        "Minimum": 0.00011339993216097355
+      }
+    },
+    "RetainedCache": {
+      "TemplateCacheEntries": null,
+      "RuntimeTemplateInstances": null,
+      "CacheRetentionBeforeDestroyMb": null,
+      "CacheRetentionAfterDestroyMb": null,
+      "CacheInstancesBeforeDestroyMb": null,
+      "CacheInstancesAfterDestroyMb": null,
+      "AnchorCache": {
+        "Samples": 39804,
+        "SerializedFloat64PayloadBytes": 1910592,
+        "Entries": 95
+      },
+      "PropStats": {
+        "ModulesRequired": 3,
+        "Seconds": 0.037765099899843335,
+        "Misses": 3,
+        "Hits": 551
+      }
+    }
+  },
+  "ASSET_CONTROL": {
+    "Samples": 30,
+    "Worlds": {
+      "ETHEREAL_SCAPE": {
+        "Playable": {
+          "Median": 21.880467999959365,
+          "Worst": 47.19763290008996,
+          "Minimum": 19.628845300059766
+        },
+        "Complete": {
+          "Median": 21.880467999959365,
+          "Worst": 47.19763290008996,
+          "Minimum": 19.628845300059766
+        },
+        "AssetInitialization": {
+          "Median": 21.80373394995695,
+          "Worst": 47.12053710001055,
+          "Minimum": 19.558161800028756
+        }
+      },
+      "SKY_CITADEL": {
+        "Playable": {
+          "Median": 15.853102050023153,
+          "Worst": 22.72214709990658,
+          "Minimum": 15.077376900007948
+        },
+        "Complete": {
+          "Median": 15.853102050023153,
+          "Worst": 22.72214709990658,
+          "Minimum": 15.077376900007948
+        },
+        "AssetInitialization": {
+          "Median": 15.812809799914248,
+          "Worst": 22.670956899994053,
+          "Minimum": 15.030175199965015
+        }
+      },
+      "VERDANT_VALLEY": {
+        "Playable": {
+          "Median": 24.831588749948423,
+          "Worst": 29.296167300082743,
+          "Minimum": 20.708534999983385
+        },
+        "Complete": {
+          "Median": 24.831588749948423,
+          "Worst": 29.296167300082743,
+          "Minimum": 20.708534999983385
+        },
+        "AssetInitialization": {
+          "Median": 24.74199069995666,
+          "Worst": 29.21369240002241,
+          "Minimum": 20.642641699989326
+        }
+      }
+    },
+    "Playable": {
+      "Median": 21.70715884998208,
+      "Worst": 47.19763290008996,
+      "Minimum": 15.077376900007948
+    },
+    "Complete": {
+      "Median": 21.70715884998208,
+      "Worst": 47.19763290008996,
+      "Minimum": 15.077376900007948
+    },
+    "Counters": {
+      "AnchorCacheMisses": 524,
+      "PlacementRaycasts": 2022,
+      "VisualOnlyPreciseRequests": 672,
+      "OverlapComparisons": 11048,
+      "AtmosphereRaycasts": 536576,
+      "ChunkCount": 524,
+      "RotationalAttempts": 340,
+      "CollisionProxyClones": 114,
+      "CreateMeshPartAsyncCalls": 1452,
+      "CandidateAttempts": 586,
+      "PreciseRequests": 1452,
+      "TemplateCacheMisses": 1452,
+      "PlacementFailures": 598,
+      "MultipartMeshInstances": 1214
+    },
+    "UniqueCreatedAssetKeys": 219,
+    "DuplicateCreations": 1233,
+    "CreationWall": {
+      "Median": 21.61129554983927,
+      "Worst": 47.10238769964781,
+      "Minimum": 15.027555700275116
+    },
+    "MemoryDeltaMb": {
+      "Median": 1.5234375,
+      "Worst": 15.55859375,
+      "Minimum": -109.21875
+    },
+    "LuaHeapDeltaKb": {
+      "Median": 3072.5,
+      "Worst": 21249,
+      "Minimum": -25943
+    },
+    "CorrectnessFailures": 0,
+    "CollisionDifferentSamples": 0,
+    "CollisionWorstDifferenceStuds": 0,
+    "VisualSignatureMismatchMaps": 0,
+    "YawMismatchMaps": 0,
+    "ColdFirstMapByWorld": {
+      "ETHEREAL_SCAPE": 46.644882099935785,
+      "SKY_CITADEL": 22.72214709990658,
+      "VERDANT_VALLEY": 25.03578249993734
+    },
+    "PhaseMedians": {
+      "LayoutSolvedSeconds": null,
+      "AssetsPreparedSeconds": {
+        "Median": 0.0003285999991931021,
+        "Worst": 0.036076099961064756,
+        "Minimum": 0.0001993000041693449
+      },
+      "MaterializationReadySeconds": null,
+      "CollisionReadySeconds": null,
+      "PlayerPlacedSeconds": null,
+      "SafePlayerReadySeconds": null,
+      "ServerPresentationReadySeconds": null
+    },
+    "TimeMedians": {
+      "Assembly": {
+        "Median": 0.0001877499744296074,
+        "Worst": 0.0005752000724896789,
+        "Minimum": 0.00010740000288933516
+      },
+      "AssetInitialization": {
+        "Median": 21.631022349989507,
+        "Worst": 47.12053710001055,
+        "Minimum": 15.030175199965015
+      },
+      "AtmosphereAnchors": {
+        "Median": 0.06719540001358837,
+        "Worst": 0.0860427999868989,
+        "Minimum": 0.037747299997136
+      },
+      "CollisionProxyPreparation": {
+        "Median": 1.444999361410737e-05,
+        "Worst": 0.02697519981302321,
+        "Minimum": 0
+      },
+      "CreateMeshPartAsync": {
+        "Median": 21.61129554983927,
+        "Worst": 47.10238769964781,
+        "Minimum": 15.027555700275116
+      },
+      "Overlap": {
+        "Median": 1.5700003132224083e-05,
+        "Worst": 0.0001334003172814846,
+        "Minimum": 8.89983493834734e-06
+      },
+      "PropInitialization": {
+        "Median": 2.8450042009353638e-05,
+        "Worst": 9.059987496584654e-05,
+        "Minimum": 1.9900035113096237e-05
+      },
+      "PropRegistry": {
+        "Median": 9.800016414374113e-06,
+        "Worst": 0.03567670006304979,
+        "Minimum": 8.499948307871819e-06
+      },
+      "SolidProps": {
+        "Median": 0.00025205023121088743,
+        "Worst": 0.001314300112426281,
+        "Minimum": 9.350012987852097e-05
+      },
+      "TemplateClone": {
+        "Median": 2.7000089175999165e-05,
+        "Worst": 0.00028410099912434816,
+        "Minimum": 1.9399914890527725e-05
+      },
+      "TemplateIndex": {
+        "Median": 1.00000761449337e-07,
+        "Worst": 1.00000761449337e-07,
+        "Minimum": 1.00000761449337e-07
+      },
+      "TemplateResolution": {
+        "Median": 2.7949747163802385e-05,
+        "Worst": 0.0003657001070678234,
+        "Minimum": 2.100015990436077e-05
+      },
+      "WorkingSet": {
+        "Median": 6.609992124140263e-05,
+        "Worst": 0.0001949999714270234,
+        "Minimum": 1.989991869777441e-05
+      }
+    },
+    "RetainedCache": {
+      "TemplateCacheEntries": 0,
+      "RuntimeTemplateInstances": null,
+      "CacheRetentionBeforeDestroyMb": null,
+      "CacheRetentionAfterDestroyMb": null,
+      "CacheInstancesBeforeDestroyMb": null,
+      "CacheInstancesAfterDestroyMb": null,
+      "AnchorCache": {
+        "Samples": 0,
+        "SerializedFloat64PayloadBytes": 0,
+        "Entries": 0
+      },
+      "PropStats": {
+        "ModulesRequired": 3,
+        "Misses": 0,
+        "Hits": 0
+      }
+    }
+  },
+  "FINAL": {
+    "Samples": 30,
+    "Worlds": {
+      "ETHEREAL_SCAPE": {
+        "Playable": {
+          "Median": 0.3649968499667011,
+          "Worst": 4.578987000044435,
+          "Minimum": 0.011730100028216839
+        },
+        "Complete": {
+          "Median": 0.5694067999720573,
+          "Worst": 6.700862600002438,
+          "Minimum": 0.016142799984663725
+        },
+        "AssetInitialization": {
+          "Median": 0.009445150033570826,
+          "Worst": 0.00988669996149838,
+          "Minimum": 0.008511299965903163
+        }
+      },
+      "SKY_CITADEL": {
+        "Playable": {
+          "Median": 0.3640710500185378,
+          "Worst": 4.781255100038834,
+          "Minimum": 0.003334500011987984
+        },
+        "Complete": {
+          "Median": 0.6320314499898814,
+          "Worst": 6.511136700049974,
+          "Minimum": 0.007837100070901215
+        },
+        "AssetInitialization": {
+          "Median": 0.0011479000095278025,
+          "Worst": 0.0013971999287605286,
+          "Minimum": 0.0009600999765098095
+        }
+      },
+      "VERDANT_VALLEY": {
+        "Playable": {
+          "Median": 0.03637804999016225,
+          "Worst": 0.05721470003481954,
+          "Minimum": 0.029345499933697283
+        },
+        "Complete": {
+          "Median": 0.05329509999137372,
+          "Worst": 1.5010707000037655,
+          "Minimum": 0.03912910004146397
+        },
+        "AssetInitialization": {
+          "Median": 0.031713549979031086,
+          "Worst": 0.03988649998791516,
+          "Minimum": 0.026461099972948432
+        }
+      }
+    },
+    "Playable": {
+      "Median": 0.03637804999016225,
+      "Worst": 4.781255100038834,
+      "Minimum": 0.003334500011987984
+    },
+    "Complete": {
+      "Median": 0.05329509999137372,
+      "Worst": 6.700862600002438,
+      "Minimum": 0.007837100070901215
+    },
+    "Counters": {
+      "TemplateCacheHits": 2433,
+      "TemplateClones": 1452,
+      "OverlapComparisons": 11048,
+      "LocalTemplateResolutions": 100,
+      "LocalTemplateClones": 672,
+      "AtmosphereRaycasts": 97280,
+      "VerifiedYawUses": 524,
+      "AnchorCacheMisses": 95,
+      "CollisionProxyClones": 114,
+      "ChunkCount": 524,
+      "CandidateAttempts": 586,
+      "DefinitionMisses": 107,
+      "TemplateCacheMisses": 219,
+      "AnchorCacheHits": 429,
+      "PlacementFailures": 598,
+      "DefinitionHits": 1215,
+      "PreciseRequests": 119,
+      "CreateMeshPartAsyncCalls": 119,
+      "MultipartMeshInstances": 1214
+    },
+    "UniqueCreatedAssetKeys": 119,
+    "DuplicateCreations": 0,
+    "CreationWall": {
+      "Median": 0.0,
+      "Worst": 24.145882700104266,
+      "Minimum": 0
+    },
+    "MemoryDeltaMb": {
+      "Median": 0.09375,
+      "Worst": 3.91015625,
+      "Minimum": -31.515625
+    },
+    "LuaHeapDeltaKb": {
+      "Median": 1706.5,
+      "Worst": 8209,
+      "Minimum": -30788
+    },
+    "CorrectnessFailures": 0,
+    "CollisionDifferentSamples": 0,
+    "CollisionWorstDifferenceStuds": 0.0020000000000000018,
+    "VisualSignatureMismatchMaps": 0,
+    "YawMismatchMaps": 0,
+    "ColdFirstMapByWorld": {
+      "ETHEREAL_SCAPE": 4.578987000044435,
+      "SKY_CITADEL": 4.781255100038834,
+      "VERDANT_VALLEY": 0.05721470003481954
+    },
+    "PhaseMedians": {
+      "LayoutSolvedSeconds": {
+        "Median": 0.0002419000375084579,
+        "Worst": 0.021547500044107437,
+        "Minimum": 0.00013020006008446217
+      },
+      "AssetsPreparedSeconds": {
+        "Median": 0.0004837500164285302,
+        "Worst": 4.77780719997827,
+        "Minimum": 0.0002581999870017171
+      },
+      "MaterializationReadySeconds": {
+        "Median": 0.033446399960666895,
+        "Worst": 4.779016199987382,
+        "Minimum": 0.0012865000171586871
+      },
+      "CollisionReadySeconds": {
+        "Median": 0.033446399960666895,
+        "Worst": 4.779016199987382,
+        "Minimum": 0.0012865000171586871
+      },
+      "PlayerPlacedSeconds": null,
+      "SafePlayerReadySeconds": null,
+      "ServerPresentationReadySeconds": {
+        "Median": 0.05329509999137372,
+        "Worst": 6.700862600002438,
+        "Minimum": 0.007837100070901215
+      }
+    },
+    "TimeMedians": {
+      "Assembly": {
+        "Median": 0.00020270008826628327,
+        "Worst": 0.0005486999871209264,
+        "Minimum": 0.00011819996871054173
+      },
+      "AssetInitialization": {
+        "Median": 0.009445150033570826,
+        "Worst": 0.03988649998791516,
+        "Minimum": 0.0009600999765098095
+      },
+      "AssetPreparation": {
+        "Median": 6.430002395063639e-05,
+        "Worst": 4.768828899948858,
+        "Minimum": 1.650000922381878e-05
+      },
+      "AtmosphereAnchors": {
+        "Median": 0.011924849997740239,
+        "Worst": 2.1166061999974772,
+        "Minimum": 0.004146399907767773
+      },
+      "CollisionProxyPreparation": {
+        "Median": 2.7500209398567677e-06,
+        "Worst": 0.02542549988720566,
+        "Minimum": 0
+      },
+      "CreateMeshPartAsync": {
+        "Median": 0.0,
+        "Worst": 24.145882700104266,
+        "Minimum": 0
+      },
+      "Overlap": {
+        "Median": 1.680001150816679e-05,
+        "Worst": 9.730015881359577e-05,
+        "Minimum": 9.19983722269535e-06
+      },
+      "PropInitialization": {
+        "Median": 1.3600103557109833e-05,
+        "Worst": 4.0400074794888496e-05,
+        "Minimum": 4.799920134246349e-06
+      },
+      "PropRegistry": {
+        "Median": 2.400018274784088e-06,
+        "Worst": 0.015351299894973636,
+        "Minimum": 2.09989957511425e-06
+      },
+      "SolidProps": {
+        "Median": 7.910002022981644e-05,
+        "Worst": 0.0012383002322167158,
+        "Minimum": 2.7399742975831032e-05
+      },
+      "TemplateClone": {
+        "Median": 0.0003521498874761164,
+        "Worst": 0.0019304995657876134,
+        "Minimum": 0.000228899996727705
+      },
+      "TemplateIndex": {
+        "Median": 0.0,
+        "Worst": 0.005448200041428208,
+        "Minimum": 0
+      },
+      "TemplateResolution": {
+        "Median": 0.0,
+        "Worst": 0.0001880002673715353,
+        "Minimum": 0
+      },
+      "WorkingSet": {
+        "Median": 6.370001938194036e-05,
+        "Worst": 0.00012710003647953272,
+        "Minimum": 2.429995220154524e-05
+      }
+    },
+    "RetainedCache": {
+      "TemplateCacheEntries": 219,
+      "RuntimeTemplateInstances": 119,
+      "CacheRetentionBeforeDestroyMb": 2157.6015625,
+      "CacheRetentionAfterDestroyMb": 2157.6015625,
+      "CacheInstancesBeforeDestroyMb": 290.294921875,
+      "CacheInstancesAfterDestroyMb": 290.3118896484375,
+      "AnchorCache": {
+        "Samples": 39804,
+        "SerializedFloat64PayloadBytes": 1910592,
+        "Entries": 95
+      },
+      "PropStats": {
+        "ModulesRequired": 3,
+        "Seconds": 0.03797390020918101,
+        "Misses": 3,
+        "Hits": 551
+      }
+    }
+  },
+  "G": {
+    "Samples": 30,
+    "Worlds": {
+      "ETHEREAL_SCAPE": {
+        "Playable": {
+          "Median": 15.710211049998179,
+          "Worst": 21.282979600015096,
+          "Minimum": 13.901210600044578
+        },
+        "Complete": {
+          "Median": 15.710211049998179,
+          "Worst": 21.282979600015096,
+          "Minimum": 13.901210600044578
+        },
+        "AssetInitialization": {
+          "Median": 15.634248350048438,
+          "Worst": 21.207684300024994,
+          "Minimum": 13.832998599973507
+        }
+      },
+      "SKY_CITADEL": {
+        "Playable": {
+          "Median": 15.256861600035336,
+          "Worst": 20.64166830002796,
+          "Minimum": 14.39052829996217
+        },
+        "Complete": {
+          "Median": 15.256861600035336,
+          "Worst": 20.64166830002796,
+          "Minimum": 14.39052829996217
+        },
+        "AssetInitialization": {
+          "Median": 15.213550749933347,
+          "Worst": 20.589190799975768,
+          "Minimum": 14.344095100066625
+        }
+      },
+      "VERDANT_VALLEY": {
+        "Playable": {
+          "Median": 0.11269750003702939,
+          "Worst": 0.14729029999580234,
+          "Minimum": 0.09169200004544109
+        },
+        "Complete": {
+          "Median": 0.11269750003702939,
+          "Worst": 0.14729029999580234,
+          "Minimum": 0.09169200004544109
+        },
+        "AssetInitialization": {
+          "Median": 0.033383450005203485,
+          "Worst": 0.04493489989545196,
+          "Minimum": 0.02570460003335029
+        }
+      }
+    },
+    "Playable": {
+      "Median": 14.757257049961481,
+      "Worst": 21.282979600015096,
+      "Minimum": 0.09169200004544109
+    },
+    "Complete": {
+      "Median": 14.757257049961481,
+      "Worst": 21.282979600015096,
+      "Minimum": 0.09169200004544109
+    },
+    "Counters": {
+      "AnchorCacheMisses": 524,
+      "TemplateClones": 672,
+      "OverlapComparisons": 11048,
+      "LocalTemplateResolutions": 672,
+      "LocalTemplateClones": 672,
+      "VerifiedYawUses": 524,
+      "UncachedPreparations": 1452,
+      "ChunkCount": 524,
+      "CandidateAttempts": 586,
+      "AtmosphereRaycasts": 536576,
+      "CollisionProxyClones": 114,
+      "PlacementFailures": 598,
+      "CreateMeshPartAsyncCalls": 780,
+      "PreciseRequests": 780,
+      "MultipartMeshInstances": 1214
+    },
+    "UniqueCreatedAssetKeys": 119,
+    "DuplicateCreations": 661,
+    "CreationWall": {
+      "Median": 14.692703699925914,
+      "Worst": 21.18871409993153,
+      "Minimum": 0
+    },
+    "MemoryDeltaMb": {
+      "Median": 1.21484375,
+      "Worst": 48.16015625,
+      "Minimum": -176.33984375
+    },
+    "LuaHeapDeltaKb": {
+      "Median": 1568.0,
+      "Worst": 16472,
+      "Minimum": -27805
+    },
+    "CorrectnessFailures": 0,
+    "CollisionDifferentSamples": 0,
+    "CollisionWorstDifferenceStuds": 0.00399999999999999,
+    "VisualSignatureMismatchMaps": 0,
+    "YawMismatchMaps": 0,
+    "ColdFirstMapByWorld": {
+      "ETHEREAL_SCAPE": 21.282979600015096,
+      "SKY_CITADEL": 20.64166830002796,
+      "VERDANT_VALLEY": 0.14729029999580234
+    },
+    "PhaseMedians": {
+      "LayoutSolvedSeconds": null,
+      "AssetsPreparedSeconds": {
+        "Median": 0.0003004500176757574,
+        "Worst": 0.04165049991570413,
+        "Minimum": 0.0002001000102609396
+      },
+      "MaterializationReadySeconds": null,
+      "CollisionReadySeconds": null,
+      "PlayerPlacedSeconds": null,
+      "SafePlayerReadySeconds": null,
+      "ServerPresentationReadySeconds": null
+    },
+    "TimeMedians": {
+      "Assembly": {
+        "Median": 0.00017750001279637218,
+        "Worst": 0.0006602000212296844,
+        "Minimum": 0.00010750000365078449
+      },
+      "AssetInitialization": {
+        "Median": 14.701610999996774,
+        "Worst": 21.207684300024994,
+        "Minimum": 0.02570460003335029
+      },
+      "AtmosphereAnchors": {
+        "Median": 0.06614710000576451,
+        "Worst": 0.08909429993946105,
+        "Minimum": 0.037378799985162914
+      },
+      "CollisionProxyPreparation": {
+        "Median": 1.1849973816424608e-05,
+        "Worst": 0.027336299885064363,
+        "Minimum": 0
+      },
+      "CreateMeshPartAsync": {
+        "Median": 14.692703699925914,
+        "Worst": 21.18871409993153,
+        "Minimum": 0
+      },
+      "Overlap": {
+        "Median": 1.5350058674812317e-05,
+        "Worst": 0.00013639975804835558,
+        "Minimum": 8.499948307871819e-06
+      },
+      "PropInitialization": {
+        "Median": 2.1400104742497206e-05,
+        "Worst": 0.00010670023038983345,
+        "Minimum": 1.0100076906383038e-05
+      },
+      "PropRegistry": {
+        "Median": 9.400013368576765e-06,
+        "Worst": 0.03498939995188266,
+        "Minimum": 6.300047971308231e-06
+      },
+      "SolidProps": {
+        "Median": 0.0002504997537471354,
+        "Worst": 0.001207600231282413,
+        "Minimum": 8.829997386783361e-05
+      },
+      "TemplateClone": {
+        "Median": 0.00041699997382238507,
+        "Worst": 0.0037741995183750987,
+        "Minimum": 2.1300045773386955e-05
+      },
+      "TemplateIndex": {
+        "Median": 0.0,
+        "Worst": 0.005832599941641092,
+        "Minimum": 0
+      },
+      "TemplateResolution": {
+        "Median": 3.145006485283375e-05,
+        "Worst": 0.00028049969114363194,
+        "Minimum": 1.6200006939470768e-05
+      },
+      "WorkingSet": {
+        "Median": 6.359996041283011e-05,
+        "Worst": 0.00010009994730353355,
+        "Minimum": 1.98000343516469e-05
+      }
+    },
+    "RetainedCache": {
+      "TemplateCacheEntries": 0,
+      "RuntimeTemplateInstances": null,
+      "CacheRetentionBeforeDestroyMb": null,
+      "CacheRetentionAfterDestroyMb": null,
+      "CacheInstancesBeforeDestroyMb": null,
+      "CacheInstancesAfterDestroyMb": null,
+      "AnchorCache": {
+        "Samples": 0,
+        "SerializedFloat64PayloadBytes": 0,
+        "Entries": 0
+      },
+      "PropStats": {
+        "ModulesRequired": 3,
+        "Misses": 0,
+        "Hits": 0
+      }
+    }
+  },
+  "GHIK": {
+    "Samples": 30,
+    "Worlds": {
+      "ETHEREAL_SCAPE": {
+        "Playable": {
+          "Median": 0.7288033999502659,
+          "Worst": 19.818379800068215,
+          "Minimum": 0.07792199996765703
+        },
+        "Complete": {
+          "Median": 0.7288033999502659,
+          "Worst": 19.818379800068215,
+          "Minimum": 0.07792199996765703
+        },
+        "AssetInitialization": {
+          "Median": 0.009679350012447685,
+          "Worst": 0.012917499989271164,
+          "Minimum": 0.008420599973760545
+        }
+      },
+      "SKY_CITADEL": {
+        "Playable": {
+          "Median": 1.497300049988553,
+          "Worst": 21.347398199955933,
+          "Minimum": 0.040014199912548065
+        },
+        "Complete": {
+          "Median": 1.497300049988553,
+          "Worst": 21.347398199955933,
+          "Minimum": 0.040014199912548065
+        },
+        "AssetInitialization": {
+          "Median": 0.0010724000167101622,
+          "Worst": 0.0017809000564739108,
+          "Minimum": 0.0008924000430852175
+        }
+      },
+      "VERDANT_VALLEY": {
+        "Playable": {
+          "Median": 0.10859690001234412,
+          "Worst": 0.14053540001623333,
+          "Minimum": 0.0905547000002116
+        },
+        "Complete": {
+          "Median": 0.10859690001234412,
+          "Worst": 0.14053540001623333,
+          "Minimum": 0.0905547000002116
+        },
+        "AssetInitialization": {
+          "Median": 0.031203399994410574,
+          "Worst": 0.04036189999897033,
+          "Minimum": 0.02487899991683662
+        }
+      }
+    },
+    "Playable": {
+      "Median": 0.10859690001234412,
+      "Worst": 21.347398199955933,
+      "Minimum": 0.040014199912548065
+    },
+    "Complete": {
+      "Median": 0.10859690001234412,
+      "Worst": 21.347398199955933,
+      "Minimum": 0.040014199912548065
+    },
+    "Counters": {
+      "TemplateCacheHits": 2433,
+      "TemplateClones": 1452,
+      "OverlapComparisons": 11048,
+      "LocalTemplateResolutions": 100,
+      "LocalTemplateClones": 672,
+      "VerifiedYawUses": 524,
+      "AtmosphereRaycasts": 536576,
+      "AnchorCacheMisses": 524,
+      "ChunkCount": 524,
+      "CandidateAttempts": 586,
+      "CollisionProxyClones": 114,
+      "TemplateCacheMisses": 219,
+      "PlacementFailures": 598,
+      "CreateMeshPartAsyncCalls": 119,
+      "PreciseRequests": 119,
+      "MultipartMeshInstances": 1214
+    },
+    "UniqueCreatedAssetKeys": 119,
+    "DuplicateCreations": 0,
+    "CreationWall": {
+      "Median": 0.0,
+      "Worst": 21.294807799742557,
+      "Minimum": 0
+    },
+    "MemoryDeltaMb": {
+      "Median": 0.16796875,
+      "Worst": 8.31640625,
+      "Minimum": 0.00390625
+    },
+    "LuaHeapDeltaKb": {
+      "Median": 1515.5,
+      "Worst": 15665,
+      "Minimum": -36642
+    },
+    "CorrectnessFailures": 0,
+    "CollisionDifferentSamples": 0,
+    "CollisionWorstDifferenceStuds": 0.0020000000000000018,
+    "VisualSignatureMismatchMaps": 0,
+    "YawMismatchMaps": 0,
+    "ColdFirstMapByWorld": {
+      "ETHEREAL_SCAPE": 19.818379800068215,
+      "SKY_CITADEL": 21.347398199955933,
+      "VERDANT_VALLEY": 0.14053540001623333
+    },
+    "PhaseMedians": {
+      "LayoutSolvedSeconds": {
+        "Median": 0.00020240002777427435,
+        "Worst": 0.037827600026503205,
+        "Minimum": 0.00012830004561692476
+      },
+      "AssetsPreparedSeconds": {
+        "Median": 0.0005339999916031957,
+        "Worst": 21.295648199971765,
+        "Minimum": 0.00020779995247721672
+      },
+      "MaterializationReadySeconds": {
+        "Median": 0.03363205003552139,
+        "Worst": 21.29680150002241,
+        "Minimum": 0.001102200010791421
+      },
+      "CollisionReadySeconds": {
+        "Median": 0.03363205003552139,
+        "Worst": 21.29680150002241,
+        "Minimum": 0.001102200010791421
+      },
+      "PlayerPlacedSeconds": null,
+      "SafePlayerReadySeconds": null,
+      "ServerPresentationReadySeconds": {
+        "Median": 0.10859690001234412,
+        "Worst": 21.347398199955933,
+        "Minimum": 0.040014199912548065
+      }
+    },
+    "TimeMedians": {
+      "Assembly": {
+        "Median": 0.0001653000363148749,
+        "Worst": 0.0006702999817207456,
+        "Minimum": 0.00011330004781484604
+      },
+      "AssetInitialization": {
+        "Median": 0.009679350012447685,
+        "Worst": 0.04036189999897033,
+        "Minimum": 0.0008924000430852175
+      },
+      "AssetPreparation": {
+        "Median": 6.275001214817166e-05,
+        "Worst": 21.295414099935442,
+        "Minimum": 1.4499993994832039e-05
+      },
+      "AtmosphereAnchors": {
+        "Median": 0.06514055002480745,
+        "Worst": 0.08705229999031872,
+        "Minimum": 0.036947700078599155
+      },
+      "CollisionProxyPreparation": {
+        "Median": 2.700020559132099e-06,
+        "Worst": 0.024864899809472263,
+        "Minimum": 0
+      },
+      "CreateMeshPartAsync": {
+        "Median": 0.0,
+        "Worst": 21.294807799742557,
+        "Minimum": 0
+      },
+      "Overlap": {
+        "Median": 1.5349884051829576e-05,
+        "Worst": 0.00013389985542744398,
+        "Minimum": 9.19983722269535e-06
+      },
+      "PropInitialization": {
+        "Median": 1.3150041922926903e-05,
+        "Worst": 4.870002157986164e-05,
+        "Minimum": 4.100031219422817e-06
+      },
+      "PropRegistry": {
+        "Median": 9.400071576237679e-06,
+        "Worst": 0.03210920002311468,
+        "Minimum": 7.4999406933784485e-06
+      },
+      "SolidProps": {
+        "Median": 7.824995554983616e-05,
+        "Worst": 0.0010312000522390008,
+        "Minimum": 2.850010059773922e-05
+      },
+      "TemplateClone": {
+        "Median": 0.00037279981188476086,
+        "Worst": 0.0019857001025229692,
+        "Minimum": 0.00021749990992248058
+      },
+      "TemplateIndex": {
+        "Median": 0.0,
+        "Worst": 0.005015000002458692,
+        "Minimum": 0
+      },
+      "TemplateResolution": {
+        "Median": 0.0,
+        "Worst": 0.00017830007709562778,
+        "Minimum": 0
+      },
+      "WorkingSet": {
+        "Median": 6.304995622485876e-05,
+        "Worst": 0.00010280008427798748,
+        "Minimum": 1.9300030544400215e-05
+      }
+    },
+    "RetainedCache": {
+      "TemplateCacheEntries": 219,
+      "RuntimeTemplateInstances": 119,
+      "CacheRetentionBeforeDestroyMb": 2016.3203125,
+      "CacheRetentionAfterDestroyMb": 2016.3203125,
+      "CacheInstancesBeforeDestroyMb": 287.674072265625,
+      "CacheInstancesAfterDestroyMb": 287.6885986328125,
+      "AnchorCache": {
+        "Samples": 0,
+        "SerializedFloat64PayloadBytes": 0,
+        "Entries": 0
+      },
+      "PropStats": {
+        "ModulesRequired": 3,
+        "Misses": 0,
+        "Hits": 0
+      }
+    }
+  },
+  "H": {
+    "Samples": 30,
+    "Worlds": {
+      "ETHEREAL_SCAPE": {
+        "Playable": {
+          "Median": 18.909085499995854,
+          "Worst": 44.06168309994973,
+          "Minimum": 16.562988699995913
+        },
+        "Complete": {
+          "Median": 18.909085499995854,
+          "Worst": 44.06168309994973,
+          "Minimum": 16.562988699995913
+        },
+        "AssetInitialization": {
+          "Median": 18.833128950034734,
+          "Worst": 43.98877579998225,
+          "Minimum": 16.491480499971658
+        }
+      },
+      "SKY_CITADEL": {
+        "Playable": {
+          "Median": 15.800188349967357,
+          "Worst": 22.8072617999278,
+          "Minimum": 15.041171199991368
+        },
+        "Complete": {
+          "Median": 15.800188349967357,
+          "Worst": 22.8072617999278,
+          "Minimum": 15.041171199991368
+        },
+        "AssetInitialization": {
+          "Median": 15.759318900003564,
+          "Worst": 22.754443300073035,
+          "Minimum": 14.995440599974245
+        }
+      },
+      "VERDANT_VALLEY": {
+        "Playable": {
+          "Median": 1.2122081500128843,
+          "Worst": 3.356298799975775,
+          "Minimum": 0.09611679997760803
+        },
+        "Complete": {
+          "Median": 1.2122081500128843,
+          "Worst": 3.356298799975775,
+          "Minimum": 0.09611679997760803
+        },
+        "AssetInitialization": {
+          "Median": 1.1210644000093453,
+          "Worst": 3.2524928000057116,
+          "Minimum": 0.031231299974024296
+        }
+      }
+    },
+    "Playable": {
+      "Median": 15.800188349967357,
+      "Worst": 44.06168309994973,
+      "Minimum": 0.09611679997760803
+    },
+    "Complete": {
+      "Median": 15.800188349967357,
+      "Worst": 44.06168309994973,
+      "Minimum": 0.09611679997760803
+    },
+    "Counters": {
+      "AnchorCacheMisses": 524,
+      "OverlapComparisons": 11048,
+      "AtmosphereRaycasts": 536576,
+      "VerifiedYawUses": 524,
+      "ChunkCount": 524,
+      "UncachedPreparations": 1452,
+      "CreateMeshPartAsyncCalls": 1452,
+      "CandidateAttempts": 586,
+      "CollisionProxyClones": 114,
+      "PreciseRequests": 780,
+      "PlacementFailures": 598,
+      "MultipartMeshInstances": 1214
+    },
+    "UniqueCreatedAssetKeys": 219,
+    "DuplicateCreations": 1233,
+    "CreationWall": {
+      "Median": 15.757202449894976,
+      "Worst": 43.97094600042328,
+      "Minimum": 0.004133599926717579
+    },
+    "MemoryDeltaMb": {
+      "Median": 6.6484375,
+      "Worst": 33.94140625,
+      "Minimum": -108.01953125
+    },
+    "LuaHeapDeltaKb": {
+      "Median": 2516.0,
+      "Worst": 15344,
+      "Minimum": -30470
+    },
+    "CorrectnessFailures": 0,
+    "CollisionDifferentSamples": 0,
+    "CollisionWorstDifferenceStuds": 0.00399999999999999,
+    "VisualSignatureMismatchMaps": 0,
+    "YawMismatchMaps": 0,
+    "ColdFirstMapByWorld": {
+      "ETHEREAL_SCAPE": 44.031702999956906,
+      "SKY_CITADEL": 22.723182299989276,
+      "VERDANT_VALLEY": 3.356298799975775
+    },
+    "PhaseMedians": {
+      "LayoutSolvedSeconds": {
+        "Median": 0.00019789999350905418,
+        "Worst": 0.03205149993300438,
+        "Minimum": 0.00012069998774677515
+      },
+      "AssetsPreparedSeconds": {
+        "Median": 0.00031079998007044196,
+        "Worst": 0.032184200012125075,
+        "Minimum": 0.00018989993259310722
+      },
+      "MaterializationReadySeconds": {
+        "Median": 15.759524099936243,
+        "Worst": 43.98915699997451,
+        "Minimum": 0.03146159998141229
+      },
+      "CollisionReadySeconds": {
+        "Median": 15.759524099936243,
+        "Worst": 43.98915699997451,
+        "Minimum": 0.03146159998141229
+      },
+      "PlayerPlacedSeconds": null,
+      "SafePlayerReadySeconds": null,
+      "ServerPresentationReadySeconds": {
+        "Median": 15.800188349967357,
+        "Worst": 44.06168309994973,
+        "Minimum": 0.09611679997760803
+      }
+    },
+    "TimeMedians": {
+      "Assembly": {
+        "Median": 0.00015899998834356666,
+        "Worst": 0.000714199966751039,
+        "Minimum": 0.00010569998994469643
+      },
+      "AssetInitialization": {
+        "Median": 15.759318900003564,
+        "Worst": 43.98877579998225,
+        "Minimum": 0.031231299974024296
+      },
+      "AtmosphereAnchors": {
+        "Median": 0.06565805000718683,
+        "Worst": 0.08783590001985431,
+        "Minimum": 0.03730349999386817
+      },
+      "CollisionProxyPreparation": {
+        "Median": 1.2749980669468641e-05,
+        "Worst": 0.026406400022096932,
+        "Minimum": 0
+      },
+      "CreateMeshPartAsync": {
+        "Median": 15.757202449894976,
+        "Worst": 43.97094600042328,
+        "Minimum": 0.004133599926717579
+      },
+      "Overlap": {
+        "Median": 1.7499958630651236e-05,
+        "Worst": 0.00018300011288374662,
+        "Minimum": 8.799834176898003e-06
+      },
+      "PropInitialization": {
+        "Median": 2.474989742040634e-05,
+        "Worst": 6.319978274405003e-05,
+        "Minimum": 1.2299977242946625e-05
+      },
+      "PropRegistry": {
+        "Median": 9.500072337687016e-06,
+        "Worst": 0.031447699991986156,
+        "Minimum": 8.499948307871819e-06
+      },
+      "SolidProps": {
+        "Median": 0.0002434002235531807,
+        "Worst": 0.001350400154478848,
+        "Minimum": 8.890021126717329e-05
+      },
+      "TemplateClone": {
+        "Median": 2.535001840442419e-05,
+        "Worst": 0.00026509910821914673,
+        "Minimum": 7.1999384090304375e-06
+      },
+      "TemplateIndex": {
+        "Median": 0.0,
+        "Worst": 1.00000761449337e-07,
+        "Minimum": 0
+      },
+      "TemplateResolution": {
+        "Median": 3.0149647500365973e-05,
+        "Worst": 0.00032009975984692574,
+        "Minimum": 1.580000389367342e-05
+      },
+      "WorkingSet": {
+        "Median": 6.060005398467183e-05,
+        "Worst": 0.00010050006676465273,
+        "Minimum": 1.8799910321831703e-05
+      }
+    },
+    "RetainedCache": {
+      "TemplateCacheEntries": 0,
+      "RuntimeTemplateInstances": null,
+      "CacheRetentionBeforeDestroyMb": 1804.1328125,
+      "CacheRetentionAfterDestroyMb": 1804.14453125,
+      "CacheInstancesBeforeDestroyMb": 275.0562438964844,
+      "CacheInstancesAfterDestroyMb": 275.0772399902344,
+      "AnchorCache": {
+        "Samples": 0,
+        "SerializedFloat64PayloadBytes": 0,
+        "Entries": 0
+      },
+      "PropStats": {
+        "ModulesRequired": 3,
+        "Misses": 0,
+        "Hits": 0
+      }
+    }
+  },
+  "I": {
+    "Samples": 30,
+    "Worlds": {
+      "ETHEREAL_SCAPE": {
+        "Playable": {
+          "Median": 1.8203890000004321,
+          "Worst": 41.99197069997899,
+          "Minimum": 0.07897089992184192
+        },
+        "Complete": {
+          "Median": 1.8203890000004321,
+          "Worst": 41.99197069997899,
+          "Minimum": 0.07897089992184192
+        },
+        "AssetInitialization": {
+          "Median": 1.7441422500414774,
+          "Worst": 41.85836539999582,
+          "Minimum": 0.00875929999165237
+        }
+      },
+      "SKY_CITADEL": {
+        "Playable": {
+          "Median": 1.4977301500621252,
+          "Worst": 21.474834499997087,
+          "Minimum": 0.041503399959765375
+        },
+        "Complete": {
+          "Median": 1.4977301500621252,
+          "Worst": 21.474834499997087,
+          "Minimum": 0.041503399959765375
+        },
+        "AssetInitialization": {
+          "Median": 1.4489390500239097,
+          "Worst": 21.424847799935378,
+          "Minimum": 0.0009435999672859907
+        }
+      },
+      "VERDANT_VALLEY": {
+        "Playable": {
+          "Median": 0.12516029994003475,
+          "Worst": 24.282851500087418,
+          "Minimum": 0.09262530005071312
+        },
+        "Complete": {
+          "Median": 0.12516029994003475,
+          "Worst": 24.282851500087418,
+          "Minimum": 0.09262530005071312
+        },
+        "AssetInitialization": {
+          "Median": 0.038817099935840815,
+          "Worst": 24.177551300032064,
+          "Minimum": 0.02757879998534918
+        }
+      }
+    },
+    "Playable": {
+      "Median": 0.12516029994003475,
+      "Worst": 41.99197069997899,
+      "Minimum": 0.041503399959765375
+    },
+    "Complete": {
+      "Median": 0.12516029994003475,
+      "Worst": 41.99197069997899,
+      "Minimum": 0.041503399959765375
+    },
+    "Counters": {
+      "AnchorCacheMisses": 524,
+      "TemplateClones": 1452,
+      "VisualOnlyPreciseRequests": 100,
+      "OverlapComparisons": 11048,
+      "AtmosphereRaycasts": 536576,
+      "VerifiedYawUses": 524,
+      "ChunkCount": 524,
+      "CollisionProxyClones": 114,
+      "CreateMeshPartAsyncCalls": 219,
+      "CandidateAttempts": 586,
+      "PreciseRequests": 219,
+      "TemplateCacheMisses": 219,
+      "TemplateCacheHits": 1233,
+      "PlacementFailures": 598,
+      "MultipartMeshInstances": 1214
+    },
+    "UniqueCreatedAssetKeys": 219,
+    "DuplicateCreations": 0,
+    "CreationWall": {
+      "Median": 0.0,
+      "Worst": 41.834204200073145,
+      "Minimum": 0
+    },
+    "MemoryDeltaMb": {
+      "Median": 0.212890625,
+      "Worst": 12.1015625,
+      "Minimum": 0.02734375
+    },
+    "LuaHeapDeltaKb": {
+      "Median": 1513.5,
+      "Worst": 15366,
+      "Minimum": -32023
+    },
+    "CorrectnessFailures": 0,
+    "CollisionDifferentSamples": 0,
+    "CollisionWorstDifferenceStuds": 0.00399999999999999,
+    "VisualSignatureMismatchMaps": 0,
+    "YawMismatchMaps": 0,
+    "ColdFirstMapByWorld": {
+      "ETHEREAL_SCAPE": 41.99197069997899,
+      "SKY_CITADEL": 21.474834499997087,
+      "VERDANT_VALLEY": 24.282851500087418
+    },
+    "PhaseMedians": {
+      "LayoutSolvedSeconds": {
+        "Median": 0.00021309999283403158,
+        "Worst": 0.03602410003077239,
+        "Minimum": 0.00012919993605464697
+      },
+      "AssetsPreparedSeconds": {
+        "Median": 0.0003046999918296933,
+        "Worst": 0.036171199986711144,
+        "Minimum": 0.0001897999318316579
+      },
+      "MaterializationReadySeconds": {
+        "Median": 0.0394251499674283,
+        "Worst": 41.858749600010924,
+        "Minimum": 0.0011454999912530184
+      },
+      "CollisionReadySeconds": {
+        "Median": 0.0394251499674283,
+        "Worst": 41.858749600010924,
+        "Minimum": 0.0011454999912530184
+      },
+      "PlayerPlacedSeconds": null,
+      "SafePlayerReadySeconds": null,
+      "ServerPresentationReadySeconds": {
+        "Median": 0.12516029994003475,
+        "Worst": 41.99197069997899,
+        "Minimum": 0.041503399959765375
+      }
+    },
+    "TimeMedians": {
+      "Assembly": {
+        "Median": 0.00018019991694018245,
+        "Worst": 0.0006952000549063087,
+        "Minimum": 0.00011410005390644073
+      },
+      "AssetInitialization": {
+        "Median": 0.038817099935840815,
+        "Worst": 41.85836539999582,
+        "Minimum": 0.0009435999672859907
+      },
+      "AtmosphereAnchors": {
+        "Median": 0.06567884999094531,
+        "Worst": 0.1304289000108838,
+        "Minimum": 0.0376605000346899
+      },
+      "CollisionProxyPreparation": {
+        "Median": 4.899920895695686e-06,
+        "Worst": 0.026328999432735145,
+        "Minimum": 0
+      },
+      "CreateMeshPartAsync": {
+        "Median": 0.0,
+        "Worst": 41.834204200073145,
+        "Minimum": 0
+      },
+      "Overlap": {
+        "Median": 1.750001683831215e-05,
+        "Worst": 0.0001351999817416072,
+        "Minimum": 9.300070814788342e-06
+      },
+      "PropInitialization": {
+        "Median": 1.5100056771188974e-05,
+        "Worst": 3.7300167605280876e-05,
+        "Minimum": 4.700035788118839e-06
+      },
+      "PropRegistry": {
+        "Median": 9.300070814788342e-06,
+        "Worst": 0.03539430000819266,
+        "Minimum": 7.79994297772646e-06
+      },
+      "SolidProps": {
+        "Median": 9.255012264475226e-05,
+        "Worst": 0.0011506997980177402,
+        "Minimum": 2.759997732937336e-05
+      },
+      "TemplateClone": {
+        "Median": 0.0005983998416922987,
+        "Worst": 0.009521499858237803,
+        "Minimum": 0.00023510016035288572
+      },
+      "TemplateIndex": {
+        "Median": 0.0,
+        "Worst": 1.00000761449337e-07,
+        "Minimum": 0
+      },
+      "TemplateResolution": {
+        "Median": 0.0,
+        "Worst": 0.0002418996300548315,
+        "Minimum": 0
+      },
+      "WorkingSet": {
+        "Median": 6.244989344850183e-05,
+        "Worst": 0.00012799992691725492,
+        "Minimum": 1.8799910321831703e-05
+      }
+    },
+    "RetainedCache": {
+      "TemplateCacheEntries": 219,
+      "RuntimeTemplateInstances": null,
+      "CacheRetentionBeforeDestroyMb": 1831.734375,
+      "CacheRetentionAfterDestroyMb": 1831.734375,
+      "CacheInstancesBeforeDestroyMb": 279.70947265625,
+      "CacheInstancesAfterDestroyMb": 279.73858642578125,
+      "AnchorCache": {
+        "Samples": 0,
+        "SerializedFloat64PayloadBytes": 0,
+        "Entries": 0
+      },
+      "PropStats": {
+        "ModulesRequired": 3,
+        "Misses": 0,
+        "Hits": 0
+      }
+    }
+  },
+  "J": {
+    "Samples": 30,
+    "Worlds": {
+      "ETHEREAL_SCAPE": {
+        "Playable": {
+          "Median": 21.584163499996066,
+          "Worst": 46.36388269998133,
+          "Minimum": 19.37897940003313
+        },
+        "Complete": {
+          "Median": 21.584163499996066,
+          "Worst": 46.36388269998133,
+          "Minimum": 19.37897940003313
+        },
+        "AssetInitialization": {
+          "Median": 21.508170350047294,
+          "Worst": 46.28843800001778,
+          "Minimum": 19.309117699973285
+        }
+      },
+      "SKY_CITADEL": {
+        "Playable": {
+          "Median": 15.757644550001714,
+          "Worst": 22.823247399996035,
+          "Minimum": 14.975834500044584
+        },
+        "Complete": {
+          "Median": 15.757644550001714,
+          "Worst": 22.823247399996035,
+          "Minimum": 14.975834500044584
+        },
+        "AssetInitialization": {
+          "Median": 15.717862299992703,
+          "Worst": 22.769874999998137,
+          "Minimum": 14.9298602999188
+        }
+      },
+      "VERDANT_VALLEY": {
+        "Playable": {
+          "Median": 24.55460505001247,
+          "Worst": 28.74034630006645,
+          "Minimum": 20.393000500043854
+        },
+        "Complete": {
+          "Median": 24.55460505001247,
+          "Worst": 28.74034630006645,
+          "Minimum": 20.393000500043854
+        },
+        "AssetInitialization": {
+          "Median": 24.468663849984296,
+          "Worst": 28.659614700009115,
+          "Minimum": 20.32733170001302
+        }
+      }
+    },
+    "Playable": {
+      "Median": 21.42733340000268,
+      "Worst": 46.36388269998133,
+      "Minimum": 14.975834500044584
+    },
+    "Complete": {
+      "Median": 21.42733340000268,
+      "Worst": 46.36388269998133,
+      "Minimum": 14.975834500044584
+    },
+    "Counters": {
+      "AnchorCacheMisses": 524,
+      "VisualOnlyPreciseRequests": 672,
+      "OverlapComparisons": 11048,
+      "AtmosphereRaycasts": 536576,
+      "VerifiedYawUses": 524,
+      "ChunkCount": 524,
+      "UncachedPreparations": 1452,
+      "CreateMeshPartAsyncCalls": 1452,
+      "CandidateAttempts": 586,
+      "CollisionProxyClones": 114,
+      "PreciseRequests": 1452,
+      "PlacementFailures": 598,
+      "MultipartMeshInstances": 1214
+    },
+    "UniqueCreatedAssetKeys": 219,
+    "DuplicateCreations": 1233,
+    "CreationWall": {
+      "Median": 21.333198099920992,
+      "Worst": 46.27087960031349,
+      "Minimum": 14.927558899857104
+    },
+    "MemoryDeltaMb": {
+      "Median": 0.587890625,
+      "Worst": 16.796875,
+      "Minimum": -27.5546875
+    },
+    "LuaHeapDeltaKb": {
+      "Median": 10974.0,
+      "Worst": 20939,
+      "Minimum": -26066
+    },
+    "CorrectnessFailures": 0,
+    "CollisionDifferentSamples": 0,
+    "CollisionWorstDifferenceStuds": 0.00399999999999999,
+    "VisualSignatureMismatchMaps": 0,
+    "YawMismatchMaps": 0,
+    "ColdFirstMapByWorld": {
+      "ETHEREAL_SCAPE": 46.36388269998133,
+      "SKY_CITADEL": 22.553831900004297,
+      "VERDANT_VALLEY": 24.46604520000983
+    },
+    "PhaseMedians": {
+      "LayoutSolvedSeconds": {
+        "Median": 0.0002340000355616212,
+        "Worst": 0.03338110004551709,
+        "Minimum": 0.0001241000136360526
+      },
+      "AssetsPreparedSeconds": {
+        "Median": 0.0003189999843016267,
+        "Worst": 0.03368600003886968,
+        "Minimum": 0.00020030001178383827
+      },
+      "MaterializationReadySeconds": {
+        "Median": 21.35101320000831,
+        "Worst": 46.288986500003375,
+        "Minimum": 14.930166500038467
+      },
+      "CollisionReadySeconds": {
+        "Median": 21.35101320000831,
+        "Worst": 46.288986500003375,
+        "Minimum": 14.930166500038467
+      },
+      "PlayerPlacedSeconds": null,
+      "SafePlayerReadySeconds": null,
+      "ServerPresentationReadySeconds": {
+        "Median": 21.42733340000268,
+        "Worst": 46.36388269998133,
+        "Minimum": 14.975834500044584
+      }
+    },
+    "TimeMedians": {
+      "Assembly": {
+        "Median": 0.0001869500265456736,
+        "Worst": 0.0005991000216454268,
+        "Minimum": 0.00010850001126527786
+      },
+      "AssetInitialization": {
+        "Median": 21.3505470000091,
+        "Worst": 46.28843800001778,
+        "Minimum": 14.9298602999188
+      },
+      "AtmosphereAnchors": {
+        "Median": 0.06527369999093935,
+        "Worst": 0.08700099994894117,
+        "Minimum": 0.03698970004916191
+      },
+      "CollisionProxyPreparation": {
+        "Median": 1.5049939975142479e-05,
+        "Worst": 0.02646579989232123,
+        "Minimum": 0
+      },
+      "CreateMeshPartAsync": {
+        "Median": 21.333198099920992,
+        "Worst": 46.27087960031349,
+        "Minimum": 14.927558899857104
+      },
+      "Overlap": {
+        "Median": 1.534994225949049e-05,
+        "Worst": 0.0001880002673715353,
+        "Minimum": 8.600065484642982e-06
+      },
+      "PropInitialization": {
+        "Median": 2.4950015358626842e-05,
+        "Worst": 7.810024544596672e-05,
+        "Minimum": 1.8400023691356182e-05
+      },
+      "PropRegistry": {
+        "Median": 9.899958968162537e-06,
+        "Worst": 0.03271810000296682,
+        "Minimum": 8.600065484642982e-06
+      },
+      "SolidProps": {
+        "Median": 0.0002415499766357243,
+        "Worst": 0.0012641000794246793,
+        "Minimum": 8.359993807971478e-05
+      },
+      "TemplateClone": {
+        "Median": 2.619996666908264e-05,
+        "Worst": 0.0002589002251625061,
+        "Minimum": 1.8200022168457508e-05
+      },
+      "TemplateIndex": {
+        "Median": 0.0,
+        "Worst": 0,
+        "Minimum": 0
+      },
+      "TemplateResolution": {
+        "Median": 3.1099829357117414e-05,
+        "Worst": 0.0003622007789090276,
+        "Minimum": 2.3200176656246185e-05
+      },
+      "WorkingSet": {
+        "Median": 6.90500601194799e-05,
+        "Worst": 0.0002541999565437436,
+        "Minimum": 2.2499938495457172e-05
+      },
+      "WorldAssetRegistry": {
+        "Median": 3.149965777993202e-06,
+        "Worst": 0.00018550001550465822,
+        "Minimum": 2.300017513334751e-06
+      }
+    },
+    "RetainedCache": {
+      "TemplateCacheEntries": 0,
+      "RuntimeTemplateInstances": null,
+      "CacheRetentionBeforeDestroyMb": 1852,
+      "CacheRetentionAfterDestroyMb": 1852.0234375,
+      "CacheInstancesBeforeDestroyMb": 281.4547424316406,
+      "CacheInstancesAfterDestroyMb": 281.4700012207031,
+      "AnchorCache": {
+        "Samples": 0,
+        "SerializedFloat64PayloadBytes": 0,
+        "Entries": 0
+      },
+      "PropStats": {
+        "ModulesRequired": 3,
+        "Misses": 0,
+        "Hits": 0
+      }
+    }
+  },
+  "K_SEED": {
+    "Samples": 30,
+    "Worlds": {
+      "ETHEREAL_SCAPE": {
+        "Playable": {
+          "Median": 1.8133131500217132,
+          "Worst": 40.48569110000972,
+          "Minimum": 0.07623540004715323
+        },
+        "Complete": {
+          "Median": 1.8133131500217132,
+          "Worst": 40.48569110000972,
+          "Minimum": 0.07623540004715323
+        },
+        "AssetInitialization": {
+          "Median": 0.009367499966174364,
+          "Worst": 0.01533019996713847,
+          "Minimum": 0.009104100055992603
+        }
+      },
+      "SKY_CITADEL": {
+        "Playable": {
+          "Median": 1.4656575999688357,
+          "Worst": 21.433587500010617,
+          "Minimum": 0.0406074000056833
+        },
+        "Complete": {
+          "Median": 1.4656575999688357,
+          "Worst": 21.433587500010617,
+          "Minimum": 0.0406074000056833
+        },
+        "AssetInitialization": {
+          "Median": 0.0011403499520383775,
+          "Worst": 0.0014018999645486474,
+          "Minimum": 0.0008332000579684973
+        }
+      },
+      "VERDANT_VALLEY": {
+        "Playable": {
+          "Median": 0.12117889994988218,
+          "Worst": 24.553858900093473,
+          "Minimum": 0.09118029999081045
+        },
+        "Complete": {
+          "Median": 0.12117889994988218,
+          "Worst": 24.553858900093473,
+          "Minimum": 0.09118029999081045
+        },
+        "AssetInitialization": {
+          "Median": 0.03115604998311028,
+          "Worst": 0.0369102000258863,
+          "Minimum": 0.025290200021117926
+        }
+      }
+    },
+    "Playable": {
+      "Median": 0.12117889994988218,
+      "Worst": 40.48569110000972,
+      "Minimum": 0.0406074000056833
+    },
+    "Complete": {
+      "Median": 0.12117889994988218,
+      "Worst": 40.48569110000972,
+      "Minimum": 0.0406074000056833
+    },
+    "Counters": {
+      "TemplateCacheHits": 2433,
+      "TemplateClones": 1452,
+      "VisualOnlyPreciseRequests": 100,
+      "OverlapComparisons": 11048,
+      "AtmosphereRaycasts": 536576,
+      "AnchorCacheMisses": 524,
+      "VerifiedYawUses": 524,
+      "ChunkCount": 524,
+      "CollisionProxyClones": 114,
+      "CreateMeshPartAsyncCalls": 219,
+      "CandidateAttempts": 586,
+      "PreciseRequests": 219,
+      "TemplateCacheMisses": 219,
+      "PlacementFailures": 598,
+      "MultipartMeshInstances": 1214
+    },
+    "UniqueCreatedAssetKeys": 219,
+    "DuplicateCreations": 0,
+    "CreationWall": {
+      "Median": 0.0,
+      "Worst": 40.3974250999745,
+      "Minimum": 0
+    },
+    "MemoryDeltaMb": {
+      "Median": 1.46484375,
+      "Worst": 32.7109375,
+      "Minimum": 0.01953125
+    },
+    "LuaHeapDeltaKb": {
+      "Median": 1292.0,
+      "Worst": 20958,
+      "Minimum": -28487
+    },
+    "CorrectnessFailures": 0,
+    "CollisionDifferentSamples": 0,
+    "CollisionWorstDifferenceStuds": 0.00399999999999999,
+    "VisualSignatureMismatchMaps": 0,
+    "YawMismatchMaps": 0,
+    "ColdFirstMapByWorld": {
+      "ETHEREAL_SCAPE": 40.48569110000972,
+      "SKY_CITADEL": 21.433587500010617,
+      "VERDANT_VALLEY": 24.553858900093473
+    },
+    "PhaseMedians": {
+      "LayoutSolvedSeconds": {
+        "Median": 0.0002397999633103609,
+        "Worst": 0.03378040005918592,
+        "Minimum": 0.00012039998546242714
+      },
+      "AssetsPreparedSeconds": {
+        "Median": 0.0006138000171631575,
+        "Worst": 40.40118259994779,
+        "Minimum": 0.000219699926674366
+      },
+      "MaterializationReadySeconds": {
+        "Median": 0.03635334997670725,
+        "Worst": 40.411493799998425,
+        "Minimum": 0.0010550000006332994
+      },
+      "CollisionReadySeconds": {
+        "Median": 0.03635334997670725,
+        "Worst": 40.411493799998425,
+        "Minimum": 0.0010550000006332994
+      },
+      "PlayerPlacedSeconds": null,
+      "SafePlayerReadySeconds": null,
+      "ServerPresentationReadySeconds": {
+        "Median": 0.12117889994988218,
+        "Worst": 40.48569110000972,
+        "Minimum": 0.0406074000056833
+      }
+    },
+    "TimeMedians": {
+      "Assembly": {
+        "Median": 0.00020100001711398363,
+        "Worst": 0.0006518000736832619,
+        "Minimum": 0.00010559998918324709
+      },
+      "AssetInitialization": {
+        "Median": 0.009367499966174364,
+        "Worst": 0.0369102000258863,
+        "Minimum": 0.0008332000579684973
+      },
+      "AssetPreparation": {
+        "Median": 9.14999982342124e-05,
+        "Worst": 40.40079409989994,
+        "Minimum": 1.5900004655122757e-05
+      },
+      "AtmosphereAnchors": {
+        "Median": 0.06542434997390956,
+        "Worst": 0.08840169990435243,
+        "Minimum": 0.03662849997635931
+      },
+      "CollisionProxyPreparation": {
+        "Median": 2.400018274784088e-06,
+        "Worst": 0.02376469993032515,
+        "Minimum": 0
+      },
+      "CreateMeshPartAsync": {
+        "Median": 0.0,
+        "Worst": 40.3974250999745,
+        "Minimum": 0
+      },
+      "Overlap": {
+        "Median": 1.8099963199347258e-05,
+        "Worst": 0.00019000028260052204,
+        "Minimum": 8.499948307871819e-06
+      },
+      "PropInitialization": {
+        "Median": 1.2200092896819115e-05,
+        "Worst": 3.120012115687132e-05,
+        "Minimum": 3.700028173625469e-06
+      },
+      "PropRegistry": {
+        "Median": 9.699957445263863e-06,
+        "Worst": 0.03310360002797097,
+        "Minimum": 8.400063961744308e-06
+      },
+      "SolidProps": {
+        "Median": 7.549987640231848e-05,
+        "Worst": 0.0009768002200871706,
+        "Minimum": 2.740020863711834e-05
+      },
+      "TemplateClone": {
+        "Median": 0.00028550002025440335,
+        "Worst": 0.002009799820370972,
+        "Minimum": 0.00022109993733465672
+      },
+      "TemplateIndex": {
+        "Median": 0.0,
+        "Worst": 2.00001522898674e-07,
+        "Minimum": 0
+      },
+      "TemplateResolution": {
+        "Median": 0.0,
+        "Worst": 0.00024359999224543571,
+        "Minimum": 0
+      },
+      "WorkingSet": {
+        "Median": 6.649998249486089e-05,
+        "Worst": 0.00012370001059025526,
+        "Minimum": 1.98000343516469e-05
+      }
+    },
+    "RetainedCache": {
+      "TemplateCacheEntries": 219,
+      "RuntimeTemplateInstances": 219,
+      "CacheRetentionBeforeDestroyMb": 2026.3359375,
+      "CacheRetentionAfterDestroyMb": 2026.359375,
+      "CacheInstancesBeforeDestroyMb": 286.07379150390625,
+      "CacheInstancesAfterDestroyMb": 286.1009521484375,
+      "AnchorCache": {
+        "Samples": 0,
+        "SerializedFloat64PayloadBytes": 0,
+        "Entries": 0
+      },
+      "PropStats": {
+        "ModulesRequired": 3,
+        "Misses": 0,
+        "Hits": 0
+      }
+    }
+  },
+  "K_WORLD": {
+    "Samples": 30,
+    "Worlds": {
+      "ETHEREAL_SCAPE": {
+        "Playable": {
+          "Median": 0.0825810999958776,
+          "Worst": 88.0632542000385,
+          "Minimum": 0.07897130004130304
+        },
+        "Complete": {
+          "Median": 0.0825810999958776,
+          "Worst": 88.0632542000385,
+          "Minimum": 0.07897130004130304
+        },
+        "AssetInitialization": {
+          "Median": 0.00959939998574555,
+          "Worst": 0.010675800032913685,
+          "Minimum": 0.00900229997932911
+        }
+      },
+      "SKY_CITADEL": {
+        "Playable": {
+          "Median": 0.047382300021126866,
+          "Worst": 50.566071000066586,
+          "Minimum": 0.04017469997052103
+        },
+        "Complete": {
+          "Median": 0.047382300021126866,
+          "Worst": 50.566071000066586,
+          "Minimum": 0.04017469997052103
+        },
+        "AssetInitialization": {
+          "Median": 0.0011214000405743718,
+          "Worst": 0.0014137999387457967,
+          "Minimum": 0.0009060000302270055
+        }
+      },
+      "VERDANT_VALLEY": {
+        "Playable": {
+          "Median": 0.11060659994836897,
+          "Worst": 69.40326950000599,
+          "Minimum": 0.09200330008752644
+        },
+        "Complete": {
+          "Median": 0.11060659994836897,
+          "Worst": 69.40326950000599,
+          "Minimum": 0.09200330008752644
+        },
+        "AssetInitialization": {
+          "Median": 0.0310239500249736,
+          "Worst": 0.03656699997372925,
+          "Minimum": 0.026872700080275536
+        }
+      }
+    },
+    "Playable": {
+      "Median": 0.08416569995461032,
+      "Worst": 88.0632542000385,
+      "Minimum": 0.04017469997052103
+    },
+    "Complete": {
+      "Median": 0.08416569995461032,
+      "Worst": 88.0632542000385,
+      "Minimum": 0.04017469997052103
+    },
+    "Counters": {
+      "TemplateCacheHits": 4089,
+      "TemplateClones": 1452,
+      "VisualOnlyPreciseRequests": 132,
+      "OverlapComparisons": 11048,
+      "AtmosphereRaycasts": 536576,
+      "AnchorCacheMisses": 524,
+      "VerifiedYawUses": 524,
+      "ChunkCount": 524,
+      "CollisionProxyClones": 114,
+      "CreateMeshPartAsyncCalls": 293,
+      "CandidateAttempts": 586,
+      "PreciseRequests": 293,
+      "TemplateCacheMisses": 293,
+      "PlacementFailures": 598,
+      "MultipartMeshInstances": 1214
+    },
+    "UniqueCreatedAssetKeys": 293,
+    "DuplicateCreations": 0,
+    "CreationWall": {
+      "Median": 0.0,
+      "Worst": 87.97171549941413,
+      "Minimum": 0
+    },
+    "MemoryDeltaMb": {
+      "Median": 0.103515625,
+      "Worst": 57.3515625,
+      "Minimum": -98.64453125
+    },
+    "LuaHeapDeltaKb": {
+      "Median": 1201.0,
+      "Worst": 1720,
+      "Minimum": -9521
+    },
+    "CorrectnessFailures": 0,
+    "CollisionDifferentSamples": 0,
+    "CollisionWorstDifferenceStuds": 0.00399999999999999,
+    "VisualSignatureMismatchMaps": 0,
+    "YawMismatchMaps": 0,
+    "ColdFirstMapByWorld": {
+      "ETHEREAL_SCAPE": 88.0632542000385,
+      "SKY_CITADEL": 50.566071000066586,
+      "VERDANT_VALLEY": 69.40326950000599
+    },
+    "PhaseMedians": {
+      "LayoutSolvedSeconds": {
+        "Median": 0.0002232000115327537,
+        "Worst": 0.03278610005509108,
+        "Minimum": 0.00012450001668184996
+      },
+      "AssetsPreparedSeconds": {
+        "Median": 0.0003933500265702605,
+        "Worst": 87.979132700013,
+        "Minimum": 0.00024069997016340494
+      },
+      "MaterializationReadySeconds": {
+        "Median": 0.010348849988076836,
+        "Worst": 87.98820770008024,
+        "Minimum": 0.0011566000757738948
+      },
+      "CollisionReadySeconds": {
+        "Median": 0.010348849988076836,
+        "Worst": 87.98820770008024,
+        "Minimum": 0.0011566000757738948
+      },
+      "PlayerPlacedSeconds": null,
+      "SafePlayerReadySeconds": null,
+      "ServerPresentationReadySeconds": {
+        "Median": 0.08416569995461032,
+        "Worst": 88.0632542000385,
+        "Minimum": 0.04017469997052103
+      }
+    },
+    "TimeMedians": {
+      "Assembly": {
+        "Median": 0.0001837499439716339,
+        "Worst": 0.0004924999084323645,
+        "Minimum": 0.00010870001278817654
+      },
+      "AssetInitialization": {
+        "Median": 0.00959939998574555,
+        "Worst": 0.03656699997372925,
+        "Minimum": 0.0009060000302270055
+      },
+      "AssetPreparation": {
+        "Median": 3.525003558024764e-05,
+        "Worst": 87.97849150002003,
+        "Minimum": 2.9799994081258774e-05
+      },
+      "AtmosphereAnchors": {
+        "Median": 0.06647125002928078,
+        "Worst": 0.08904210000764579,
+        "Minimum": 0.03710239997599274
+      },
+      "CollisionProxyPreparation": {
+        "Median": 2.900022082030773e-06,
+        "Worst": 0.023271799669601023,
+        "Minimum": 0
+      },
+      "CreateMeshPartAsync": {
+        "Median": 0.0,
+        "Worst": 87.97171549941413,
+        "Minimum": 0
+      },
+      "Overlap": {
+        "Median": 1.6149948351085186e-05,
+        "Worst": 0.00013599975500255823,
+        "Minimum": 8.899951353669167e-06
+      },
+      "PropInitialization": {
+        "Median": 1.2249976862221956e-05,
+        "Worst": 1.7200130969285965e-05,
+        "Minimum": 3.899913281202316e-06
+      },
+      "PropRegistry": {
+        "Median": 9.500014130026102e-06,
+        "Worst": 0.03214040002785623,
+        "Minimum": 7.800059393048286e-06
+      },
+      "SolidProps": {
+        "Median": 7.489975541830063e-05,
+        "Worst": 0.0009674999164417386,
+        "Minimum": 2.6799971237778664e-05
+      },
+      "TemplateClone": {
+        "Median": 0.00030109978979453444,
+        "Worst": 0.0020445992704480886,
+        "Minimum": 0.00022589985746890306
+      },
+      "TemplateIndex": {
+        "Median": 0.0,
+        "Worst": 1.00000761449337e-07,
+        "Minimum": 0
+      },
+      "TemplateResolution": {
+        "Median": 0.0,
+        "Worst": 0.0005804004613310099,
+        "Minimum": 0
+      },
+      "WorkingSet": {
+        "Median": 7.715000538155437e-05,
+        "Worst": 0.00029909994918853045,
+        "Minimum": 3.0099996365606785e-05
+      }
+    },
+    "RetainedCache": {
+      "TemplateCacheEntries": 293,
+      "RuntimeTemplateInstances": 293,
+      "CacheRetentionBeforeDestroyMb": 1997.21875,
+      "CacheRetentionAfterDestroyMb": 1997.23046875,
+      "CacheInstancesBeforeDestroyMb": 286.697998046875,
+      "CacheInstancesAfterDestroyMb": 286.6845397949219,
+      "AnchorCache": {
+        "Samples": 0,
+        "SerializedFloat64PayloadBytes": 0,
+        "Entries": 0
+      },
+      "PropStats": {
+        "ModulesRequired": 3,
+        "Misses": 0,
+        "Hits": 0
+      }
+    }
+  },
+  "L": {
+    "SampleBuilds": 48,
+    "CollisionComparisons": [
+      {
+        "DifferentSamples": 1191,
+        "MaximumDifferenceStuds": 3.9020000000000152
+      },
+      {
+        "DifferentSamples": 1181,
+        "MaximumDifferenceStuds": 3.9020000000000152
+      },
+      {
+        "DifferentSamples": 1191,
+        "MaximumDifferenceStuds": 3.9020000000000152
+      },
+      {
+        "DifferentSamples": 1195,
+        "MaximumDifferenceStuds": 3.9020000000000152
+      },
+      {
+        "DifferentSamples": 100,
+        "MaximumDifferenceStuds": 0.801
+      },
+      {
+        "DifferentSamples": 100,
+        "MaximumDifferenceStuds": 0.801
+      },
+      {
+        "DifferentSamples": 100,
+        "MaximumDifferenceStuds": 0.801
+      },
+      {
+        "DifferentSamples": 100,
+        "MaximumDifferenceStuds": 0.801
+      },
+      {
+        "DifferentSamples": 1191,
+        "MaximumDifferenceStuds": 3.9020000000000152
+      },
+      {
+        "DifferentSamples": 1181,
+        "MaximumDifferenceStuds": 3.9020000000000152
+      },
+      {
+        "DifferentSamples": 1191,
+        "MaximumDifferenceStuds": 3.9020000000000152
+      },
+      {
+        "DifferentSamples": 1195,
+        "MaximumDifferenceStuds": 3.9020000000000152
+      },
+      {
+        "DifferentSamples": 100,
+        "MaximumDifferenceStuds": 0.801
+      },
+      {
+        "DifferentSamples": 100,
+        "MaximumDifferenceStuds": 0.801
+      },
+      {
+        "DifferentSamples": 100,
+        "MaximumDifferenceStuds": 0.801
+      },
+      {
+        "DifferentSamples": 100,
+        "MaximumDifferenceStuds": 0.801
+      },
+      {
+        "DifferentSamples": 1191,
+        "MaximumDifferenceStuds": 3.9020000000000152
+      },
+      {
+        "DifferentSamples": 1181,
+        "MaximumDifferenceStuds": 3.9020000000000152
+      },
+      {
+        "DifferentSamples": 1191,
+        "MaximumDifferenceStuds": 3.9020000000000152
+      },
+      {
+        "DifferentSamples": 1195,
+        "MaximumDifferenceStuds": 3.9020000000000152
+      },
+      {
+        "DifferentSamples": 100,
+        "MaximumDifferenceStuds": 0.801
+      },
+      {
+        "DifferentSamples": 100,
+        "MaximumDifferenceStuds": 0.801
+      },
+      {
+        "DifferentSamples": 100,
+        "MaximumDifferenceStuds": 0.801
+      },
+      {
+        "DifferentSamples": 100,
+        "MaximumDifferenceStuds": 0.801
+      }
+    ],
+    "ControlMaterialization": {
+      "Median": 0.5437529499758966,
+      "Worst": 0.5615996000124142,
+      "Minimum": 0.5283387000672519
+    },
+    "ProxyMaterialization": {
+      "Median": 0.00697110005421564,
+      "Worst": 0.008851799997501075,
+      "Minimum": 0.006503000040538609
+    }
+  },
+  "LIVE_CONTROL": {
+    "Samples": 30,
+    "Worlds": {
+      "ETHEREAL_SCAPE": {
+        "Playable": {
+          "Median": 22.98192554997513,
+          "Worst": 46.59974919992965,
+          "Minimum": 20.6818793999264
+        },
+        "Complete": {
+          "Median": 22.98192554997513,
+          "Worst": 46.59974919992965,
+          "Minimum": 20.6818793999264
+        },
+        "AssetInitialization": {
+          "Median": 21.594331450003665,
+          "Worst": 45.21815730002709,
+          "Minimum": 19.303268699906766
+        }
+      },
+      "SKY_CITADEL": {
+        "Playable": {
+          "Median": 16.90628315001959,
+          "Worst": 23.84835350001231,
+          "Minimum": 16.19865099992603
+        },
+        "Complete": {
+          "Median": 16.90628315001959,
+          "Worst": 23.84835350001231,
+          "Minimum": 16.19865099992603
+        },
+        "AssetInitialization": {
+          "Median": 15.564802749955561,
+          "Worst": 22.480159600032493,
+          "Minimum": 14.882382099982351
+        }
+      },
+      "VERDANT_VALLEY": {
+        "Playable": {
+          "Median": 23.290733750036452,
+          "Worst": 29.04713229998015,
+          "Minimum": 20.510318899992853
+        },
+        "Complete": {
+          "Median": 23.290733750036452,
+          "Worst": 29.04713229998015,
+          "Minimum": 20.510318899992853
+        },
+        "AssetInitialization": {
+          "Median": 22.86976119998144,
+          "Worst": 28.64261990005616,
+          "Minimum": 20.121404299978167
+        }
+      }
+    },
+    "Playable": {
+      "Median": 22.248408849991392,
+      "Worst": 46.59974919992965,
+      "Minimum": 16.19865099992603
+    },
+    "Complete": {
+      "Median": 22.248408849991392,
+      "Worst": 46.59974919992965,
+      "Minimum": 16.19865099992603
+    },
+    "Counters": {
+      "AnchorCacheMisses": 524,
+      "PlacementRaycasts": 2022,
+      "VisualOnlyPreciseRequests": 672,
+      "OverlapComparisons": 11048,
+      "AtmosphereRaycasts": 536576,
+      "ChunkCount": 524,
+      "RotationalAttempts": 340,
+      "UncachedPreparations": 1452,
+      "CreateMeshPartAsyncCalls": 1452,
+      "CandidateAttempts": 586,
+      "CollisionProxyClones": 114,
+      "PreciseRequests": 1452,
+      "PlacementFailures": 598,
+      "MultipartMeshInstances": 1214
+    },
+    "UniqueCreatedAssetKeys": 219,
+    "DuplicateCreations": 1233,
+    "CreationWall": {
+      "Median": 21.25103954988299,
+      "Worst": 45.20111549948342,
+      "Minimum": 14.87669119995553
+    },
+    "MemoryDeltaMb": {
+      "Median": 1.69140625,
+      "Worst": 12.54296875,
+      "Minimum": -122.92578125
+    },
+    "LuaHeapDeltaKb": {
+      "Median": 4748.0,
+      "Worst": 21579,
+      "Minimum": -27123
+    },
+    "CorrectnessFailures": 0,
+    "CollisionDifferentSamples": 0,
+    "CollisionWorstDifferenceStuds": 0.0020000000000000018,
+    "VisualSignatureMismatchMaps": 0,
+    "YawMismatchMaps": 0,
+    "ColdFirstMapByWorld": {
+      "ETHEREAL_SCAPE": 46.36601270001847,
+      "SKY_CITADEL": 23.614314700011164,
+      "VERDANT_VALLEY": 21.865543900057673
+    },
+    "PhaseMedians": {
+      "LayoutSolvedSeconds": {
+        "Median": 0.00023005000548437238,
+        "Worst": 0.034188800025731325,
+        "Minimum": 0.00013159995432943106
+      },
+      "AssetsPreparedSeconds": {
+        "Median": 0.00030925002647563815,
+        "Worst": 0.034356300020590425,
+        "Minimum": 0.00020779995247721672
+      },
+      "MaterializationReadySeconds": {
+        "Median": 21.270026899990626,
+        "Worst": 45.2185513000004,
+        "Minimum": 14.882682999945246
+      },
+      "CollisionReadySeconds": {
+        "Median": 21.270026899990626,
+        "Worst": 45.2185513000004,
+        "Minimum": 14.882682999945246
+      },
+      "PlayerPlacedSeconds": {
+        "Median": 21.350392299937084,
+        "Worst": 45.29945799999405,
+        "Minimum": 14.93164299998898
+      },
+      "SafePlayerReadySeconds": {
+        "Median": 22.248408849991392,
+        "Worst": 46.59974919992965,
+        "Minimum": 16.19865099992603
+      },
+      "ServerPresentationReadySeconds": {
+        "Median": 21.344496799982153,
+        "Worst": 45.29373899998609,
+        "Minimum": 14.929045099997893
+      }
+    },
+    "TimeMedians": {
+      "Assembly": {
+        "Median": 0.00019990006694570184,
+        "Worst": 0.00047969992738217115,
+        "Minimum": 0.00011230004020035267
+      },
+      "AssetInitialization": {
+        "Median": 21.26956844999222,
+        "Worst": 45.21815730002709,
+        "Minimum": 14.882382099982351
+      },
+      "AtmosphereAnchors": {
+        "Median": 0.06500710005639121,
+        "Worst": 0.08679209998808801,
+        "Minimum": 0.03738210001029074
+      },
+      "CollisionProxyPreparation": {
+        "Median": 1.2950098607689142e-05,
+        "Worst": 0.026405499898828566,
+        "Minimum": 0
+      },
+      "CreateMeshPartAsync": {
+        "Median": 21.25103954988299,
+        "Worst": 45.20111549948342,
+        "Minimum": 14.87669119995553
+      },
+      "EntryStreaming": {
+        "Median": 0.0059426999650895596,
+        "Worst": 0.010486099985428154,
+        "Minimum": 0.002445099991746247
+      },
+      "Overlap": {
+        "Median": 1.6949954442679882e-05,
+        "Worst": 0.00021149974782019854,
+        "Minimum": 9.100069291889668e-06
+      },
+      "PropInitialization": {
+        "Median": 2.7900096029043198e-05,
+        "Worst": 6.180023774504662e-05,
+        "Minimum": 2.0499806851148605e-05
+      },
+      "PropRegistry": {
+        "Median": 9.70007386058569e-06,
+        "Worst": 0.033406500006094575,
+        "Minimum": 8.79995059221983e-06
+      },
+      "SolidProps": {
+        "Median": 0.0002458500675857067,
+        "Worst": 0.0013248001923784614,
+        "Minimum": 9.189965203404427e-05
+      },
+      "TemplateClone": {
+        "Median": 2.5700137484818697e-05,
+        "Worst": 0.0002459009410813451,
+        "Minimum": 1.8900027498602867e-05
+      },
+      "TemplateIndex": {
+        "Median": 0.0,
+        "Worst": 2.00001522898674e-07,
+        "Minimum": 0
+      },
+      "TemplateResolution": {
+        "Median": 3.039988223463297e-05,
+        "Worst": 0.00045080017298460007,
+        "Minimum": 2.1900166757404804e-05
+      },
+      "WorkingSet": {
+        "Median": 6.185000529512763e-05,
+        "Worst": 0.00011000002268701792,
+        "Minimum": 1.9799917936325073e-05
+      }
+    },
+    "RetainedCache": {
+      "TemplateCacheEntries": 0,
+      "RuntimeTemplateInstances": 0,
+      "CacheRetentionBeforeDestroyMb": 1912.80078125,
+      "CacheRetentionAfterDestroyMb": 1912.80078125,
+      "CacheInstancesBeforeDestroyMb": 290.69732666015625,
+      "CacheInstancesAfterDestroyMb": 290.69775390625,
+      "AnchorCache": {
+        "Samples": 0,
+        "SerializedFloat64PayloadBytes": 0,
+        "Entries": 0
+      },
+      "PropStats": {
+        "ModulesRequired": 3,
+        "Misses": 0,
+        "Hits": 0
+      }
+    },
+    "ClientAndGroundedReady": {
+      "Median": 20.7085,
+      "Worst": 29.046,
+      "Minimum": 16.199
+    },
+    "ClientValidatedSamples": 20,
+    "ClientOrGroundingFailures": 10
+  },
+  "LIVE_FINAL": {
+    "Samples": 30,
+    "Worlds": {
+      "ETHEREAL_SCAPE": {
+        "Playable": {
+          "Median": 1.685508850030601,
+          "Worst": 5.749539299984463,
+          "Minimum": 1.3489416999509558
+        },
+        "Complete": {
+          "Median": 1.685508850030601,
+          "Worst": 6.5659607000416145,
+          "Minimum": 1.3489416999509558
+        },
+        "AssetInitialization": {
+          "Median": 0.009658949973527342,
+          "Worst": 0.01091049995739013,
+          "Minimum": 0.008523100055754185
+        }
+      },
+      "SKY_CITADEL": {
+        "Playable": {
+          "Median": 1.7837290500756353,
+          "Worst": 6.214745300007053,
+          "Minimum": 1.3153505000518635
+        },
+        "Complete": {
+          "Median": 1.7837290500756353,
+          "Worst": 6.632914199959487,
+          "Minimum": 1.3153505000518635
+        },
+        "AssetInitialization": {
+          "Median": 0.0011371500440873206,
+          "Worst": 0.0014015000779181719,
+          "Minimum": 0.0009487000061199069
+        }
+      },
+      "VERDANT_VALLEY": {
+        "Playable": {
+          "Median": 0.3400481499847956,
+          "Worst": 0.4326102000195533,
+          "Minimum": 0.3280131999636069
+        },
+        "Complete": {
+          "Median": 0.3638926999992691,
+          "Worst": 1.50006150000263,
+          "Minimum": 0.32873960002325475
+        },
+        "AssetInitialization": {
+          "Median": 0.03094855009112507,
+          "Worst": 0.038852499914355576,
+          "Minimum": 0.027022600057534873
+        }
+      }
+    },
+    "Playable": {
+      "Median": 1.333278700010851,
+      "Worst": 6.214745300007053,
+      "Minimum": 0.3280131999636069
+    },
+    "Complete": {
+      "Median": 1.3493434499832802,
+      "Worst": 6.632914199959487,
+      "Minimum": 0.32873960002325475
+    },
+    "Counters": {
+      "TemplateCacheHits": 2433,
+      "TemplateClones": 1452,
+      "OverlapComparisons": 11048,
+      "LocalTemplateResolutions": 100,
+      "LocalTemplateClones": 672,
+      "AtmosphereRaycasts": 97280,
+      "VerifiedYawUses": 524,
+      "AnchorCacheMisses": 95,
+      "CollisionProxyClones": 114,
+      "ChunkCount": 524,
+      "CandidateAttempts": 586,
+      "DefinitionMisses": 107,
+      "TemplateCacheMisses": 219,
+      "AnchorCacheHits": 429,
+      "PlacementFailures": 598,
+      "DefinitionHits": 1215,
+      "PreciseRequests": 119,
+      "CreateMeshPartAsyncCalls": 119,
+      "MultipartMeshInstances": 1214
+    },
+    "UniqueCreatedAssetKeys": 119,
+    "DuplicateCreations": 0,
+    "CreationWall": {
+      "Median": 0.0,
+      "Worst": 23.668555800104514,
+      "Minimum": 0
+    },
+    "MemoryDeltaMb": {
+      "Median": 2.44921875,
+      "Worst": 24.109375,
+      "Minimum": 0.19140625
+    },
+    "LuaHeapDeltaKb": {
+      "Median": 2487.0,
+      "Worst": 6802,
+      "Minimum": -32475
+    },
+    "CorrectnessFailures": 0,
+    "CollisionDifferentSamples": 0,
+    "CollisionWorstDifferenceStuds": 0.00399999999999999,
+    "VisualSignatureMismatchMaps": 0,
+    "YawMismatchMaps": 0,
+    "ColdFirstMapByWorld": {
+      "ETHEREAL_SCAPE": 5.749539299984463,
+      "SKY_CITADEL": 6.214745300007053,
+      "VERDANT_VALLEY": 0.4326102000195533
+    },
+    "PhaseMedians": {
+      "LayoutSolvedSeconds": {
+        "Median": 0.000235249986872077,
+        "Worst": 0.019553300109691918,
+        "Minimum": 0.00013040006160736084
+      },
+      "AssetsPreparedSeconds": {
+        "Median": 0.00047119997907429934,
+        "Worst": 4.8983606999972835,
+        "Minimum": 0.0002535000676289201
+      },
+      "MaterializationReadySeconds": {
+        "Median": 0.033613699954003096,
+        "Worst": 4.8996092999586836,
+        "Minimum": 0.0012151999399065971
+      },
+      "CollisionReadySeconds": {
+        "Median": 0.033613699954003096,
+        "Worst": 4.8996092999586836,
+        "Minimum": 0.0012151999399065971
+      },
+      "PlayerPlacedSeconds": {
+        "Median": 0.06491154996911064,
+        "Worst": 4.914478900027461,
+        "Minimum": 0.015064999926835299
+      },
+      "SafePlayerReadySeconds": {
+        "Median": 1.333278700010851,
+        "Worst": 6.214745300007053,
+        "Minimum": 0.3280131999636069
+      },
+      "ServerPresentationReadySeconds": {
+        "Median": 0.052573150023818016,
+        "Worst": 6.632914199959487,
+        "Minimum": 0.007004000013694167
+      }
+    },
+    "TimeMedians": {
+      "Assembly": {
+        "Median": 0.00017690000822767615,
+        "Worst": 0.0005265999352559447,
+        "Minimum": 0.00011859997175633907
+      },
+      "AssetInitialization": {
+        "Median": 0.009658949973527342,
+        "Worst": 0.038852499914355576,
+        "Minimum": 0.0009487000061199069
+      },
+      "AssetPreparation": {
+        "Median": 6.084999768063426e-05,
+        "Worst": 4.890085499966517,
+        "Minimum": 1.7600017599761486e-05
+      },
+      "AtmosphereAnchors": {
+        "Median": 0.011597650009207428,
+        "Worst": 2.116584699950181,
+        "Minimum": 0.0036898000398650765
+      },
+      "CollisionProxyPreparation": {
+        "Median": 2.500019036233425e-06,
+        "Worst": 0.024311100132763386,
+        "Minimum": 0
+      },
+      "CreateMeshPartAsync": {
+        "Median": 0.0,
+        "Worst": 23.668555800104514,
+        "Minimum": 0
+      },
+      "EntryStreaming": {
+        "Median": 0.01669114996911958,
+        "Worst": 0.041364199947565794,
+        "Minimum": 0.005012699984945357
+      },
+      "Overlap": {
+        "Median": 1.3449985999614e-05,
+        "Worst": 0.00016800034791231155,
+        "Minimum": 9.09995287656784e-06
+      },
+      "PropInitialization": {
+        "Median": 1.4050048775970936e-05,
+        "Worst": 2.010003663599491e-05,
+        "Minimum": 4.899920895695686e-06
+      },
+      "PropRegistry": {
+        "Median": 2.500019036233425e-06,
+        "Worst": 0.013704700046218932,
+        "Minimum": 1.700012944638729e-06
+      },
+      "SolidProps": {
+        "Median": 6.790022598579526e-05,
+        "Worst": 0.0010271999053657055,
+        "Minimum": 3.319978713989258e-05
+      },
+      "TemplateClone": {
+        "Median": 0.00034164986573159695,
+        "Worst": 0.0019338001729920506,
+        "Minimum": 0.0002321999054402113
+      },
+      "TemplateIndex": {
+        "Median": 0.0,
+        "Worst": 0.005042799981310964,
+        "Minimum": 0
+      },
+      "TemplateResolution": {
+        "Median": 0.0,
+        "Worst": 0.00017829961143434048,
+        "Minimum": 0
+      },
+      "WorkingSet": {
+        "Median": 6.895000115036964e-05,
+        "Worst": 0.0001078000059351325,
+        "Minimum": 2.3999949917197227e-05
+      }
+    },
+    "RetainedCache": {
+      "TemplateCacheEntries": 219,
+      "RuntimeTemplateInstances": 119,
+      "CacheRetentionBeforeDestroyMb": 1997.59765625,
+      "CacheRetentionAfterDestroyMb": 1997.59765625,
+      "CacheInstancesBeforeDestroyMb": 293.60809326171875,
+      "CacheInstancesAfterDestroyMb": 293.6227111816406,
+      "AnchorCache": {
+        "Samples": 39804,
+        "SerializedFloat64PayloadBytes": 1910592,
+        "Entries": 95
+      },
+      "PropStats": {
+        "ModulesRequired": 3,
+        "Seconds": 0.0343091000104323,
+        "Misses": 3,
+        "Hits": 551
+      }
+    },
+    "ClientAndGroundedReady": {
+      "Median": 0.873,
+      "Worst": 6.214,
+      "Minimum": 0.327
+    },
+    "ClientValidatedSamples": 20,
+    "ClientOrGroundingFailures": 10
+  },
+  "M2": {
+    "Samples": 30,
+    "Worlds": {
+      "ETHEREAL_SCAPE": {
+        "Playable": {
+          "Median": 0.46914019994437695,
+          "Worst": 8.570892699994147,
+          "Minimum": 0.07837969996035099
+        },
+        "Complete": {
+          "Median": 0.46914019994437695,
+          "Worst": 8.570892699994147,
+          "Minimum": 0.07837969996035099
+        },
+        "AssetInitialization": {
+          "Median": 0.009401099989190698,
+          "Worst": 0.010194299975410104,
+          "Minimum": 0.008816399960778654
+        }
+      },
+      "SKY_CITADEL": {
+        "Playable": {
+          "Median": 0.5976026999996975,
+          "Worst": 10.542575999977998,
+          "Minimum": 0.04020499996840954
+        },
+        "Complete": {
+          "Median": 0.5976026999996975,
+          "Worst": 10.542575999977998,
+          "Minimum": 0.04020499996840954
+        },
+        "AssetInitialization": {
+          "Median": 0.001054299937095493,
+          "Worst": 0.0012773999478667974,
+          "Minimum": 0.0008718000026419759
+        }
+      },
+      "VERDANT_VALLEY": {
+        "Playable": {
+          "Median": 0.10974645003443584,
+          "Worst": 0.1369497999548912,
+          "Minimum": 0.0911805999930948
+        },
+        "Complete": {
+          "Median": 0.10974645003443584,
+          "Worst": 0.1369497999548912,
+          "Minimum": 0.0911805999930948
+        },
+        "AssetInitialization": {
+          "Median": 0.03142605000175536,
+          "Worst": 0.038229200057685375,
+          "Minimum": 0.025475400034338236
+        }
+      }
+    },
+    "Playable": {
+      "Median": 0.10974645003443584,
+      "Worst": 10.542575999977998,
+      "Minimum": 0.04020499996840954
+    },
+    "Complete": {
+      "Median": 0.10974645003443584,
+      "Worst": 10.542575999977998,
+      "Minimum": 0.04020499996840954
+    },
+    "Counters": {
+      "TemplateCacheHits": 2433,
+      "TemplateClones": 1452,
+      "OverlapComparisons": 11048,
+      "LocalTemplateResolutions": 100,
+      "LocalTemplateClones": 672,
+      "VerifiedYawUses": 524,
+      "AtmosphereRaycasts": 536576,
+      "AnchorCacheMisses": 524,
+      "ChunkCount": 524,
+      "CandidateAttempts": 586,
+      "CollisionProxyClones": 114,
+      "TemplateCacheMisses": 219,
+      "PlacementFailures": 598,
+      "CreateMeshPartAsyncCalls": 119,
+      "PreciseRequests": 119,
+      "MultipartMeshInstances": 1214
+    },
+    "UniqueCreatedAssetKeys": 119,
+    "DuplicateCreations": 0,
+    "CreationWall": {
+      "Median": 0.0,
+      "Worst": 18.9130587996915,
+      "Minimum": 0
+    },
+    "MemoryDeltaMb": {
+      "Median": 0.130859375,
+      "Worst": 57.50390625,
+      "Minimum": 0.01171875
+    },
+    "LuaHeapDeltaKb": {
+      "Median": 1551.0,
+      "Worst": 8205,
+      "Minimum": -37637
+    },
+    "CorrectnessFailures": 0,
+    "CollisionDifferentSamples": 0,
+    "CollisionWorstDifferenceStuds": 0.00399999999999999,
+    "VisualSignatureMismatchMaps": 0,
+    "YawMismatchMaps": 0,
+    "ColdFirstMapByWorld": {
+      "ETHEREAL_SCAPE": 8.570892699994147,
+      "SKY_CITADEL": 10.542575999977998,
+      "VERDANT_VALLEY": 0.1369497999548912
+    },
+    "PhaseMedians": {
+      "LayoutSolvedSeconds": {
+        "Median": 0.00020764995133504272,
+        "Worst": 0.034958999953232706,
+        "Minimum": 0.00012729992158710957
+      },
+      "AssetsPreparedSeconds": {
+        "Median": 0.0004982500104233623,
+        "Worst": 10.490386600024067,
+        "Minimum": 0.00023010000586509705
+      },
+      "MaterializationReadySeconds": {
+        "Median": 0.033733150048647076,
+        "Worst": 10.491572299972177,
+        "Minimum": 0.0011043999111279845
+      },
+      "CollisionReadySeconds": {
+        "Median": 0.033733150048647076,
+        "Worst": 10.491572299972177,
+        "Minimum": 0.0011043999111279845
+      },
+      "PlayerPlacedSeconds": null,
+      "SafePlayerReadySeconds": null,
+      "ServerPresentationReadySeconds": {
+        "Median": 0.10974645003443584,
+        "Worst": 10.542575999977998,
+        "Minimum": 0.04020499996840954
+      }
+    },
+    "TimeMedians": {
+      "Assembly": {
+        "Median": 0.00016929995035752654,
+        "Worst": 0.0005009999731555581,
+        "Minimum": 0.00011129991617053747
+      },
+      "AssetInitialization": {
+        "Median": 0.009401099989190698,
+        "Worst": 0.038229200057685375,
+        "Minimum": 0.0008718000026419759
+      },
+      "AssetPreparation": {
+        "Median": 6.104999920353293e-05,
+        "Worst": 10.49013669998385,
+        "Minimum": 1.4399993233382702e-05
+      },
+      "AtmosphereAnchors": {
+        "Median": 0.06491464999271557,
+        "Worst": 0.08622759999707341,
+        "Minimum": 0.037140000029467046
+      },
+      "CollisionProxyPreparation": {
+        "Median": 2.6999041438102722e-06,
+        "Worst": 0.024112600018270314,
+        "Minimum": 0
+      },
+      "CreateMeshPartAsync": {
+        "Median": 0.0,
+        "Worst": 18.9130587996915,
+        "Minimum": 0
+      },
+      "Overlap": {
+        "Median": 1.5150057151913643e-05,
+        "Worst": 0.00016049982514232397,
+        "Minimum": 9.00006853044033e-06
+      },
+      "PropInitialization": {
+        "Median": 1.2899981811642647e-05,
+        "Worst": 1.900014467537403e-05,
+        "Minimum": 4.299916326999664e-06
+      },
+      "PropRegistry": {
+        "Median": 9.549956303089857e-06,
+        "Worst": 0.029716099961660802,
+        "Minimum": 7.999944500625134e-06
+      },
+      "SolidProps": {
+        "Median": 7.234996883198619e-05,
+        "Worst": 0.0010979000944644213,
+        "Minimum": 2.5699962861835957e-05
+      },
+      "TemplateClone": {
+        "Median": 0.00038014998426660895,
+        "Worst": 0.0021019999403506517,
+        "Minimum": 0.00022259994875639677
+      },
+      "TemplateIndex": {
+        "Median": 0.0,
+        "Worst": 0.004567399970255792,
+        "Minimum": 0
+      },
+      "TemplateResolution": {
+        "Median": 0.0,
+        "Worst": 0.00020389922428876162,
+        "Minimum": 0
+      },
+      "WorkingSet": {
+        "Median": 6.430002395063639e-05,
+        "Worst": 8.269993122667074e-05,
+        "Minimum": 2.0200037397444248e-05
+      }
+    },
+    "RetainedCache": {
+      "TemplateCacheEntries": 219,
+      "RuntimeTemplateInstances": 119,
+      "CacheRetentionBeforeDestroyMb": 2123.2578125,
+      "CacheRetentionAfterDestroyMb": 2123.26953125,
+      "CacheInstancesBeforeDestroyMb": 288.63885498046875,
+      "CacheInstancesAfterDestroyMb": 288.65435791015625,
+      "AnchorCache": {
+        "Samples": 0,
+        "SerializedFloat64PayloadBytes": 0,
+        "Entries": 0
+      },
+      "PropStats": {
+        "ModulesRequired": 3,
+        "Misses": 0,
+        "Hits": 0
+      }
+    }
+  },
+  "M4": {
+    "Samples": 30,
+    "Worlds": {
+      "ETHEREAL_SCAPE": {
+        "Playable": {
+          "Median": 0.4350715999607928,
+          "Worst": 5.605626899981871,
+          "Minimum": 0.07774480001535267
+        },
+        "Complete": {
+          "Median": 0.4350715999607928,
+          "Worst": 5.605626899981871,
+          "Minimum": 0.07774480001535267
+        },
+        "AssetInitialization": {
+          "Median": 0.00948959996458143,
+          "Worst": 0.01074609998613596,
+          "Minimum": 0.00866429996676743
+        }
+      },
+      "SKY_CITADEL": {
+        "Playable": {
+          "Median": 0.41474650002783164,
+          "Worst": 6.539629300008528,
+          "Minimum": 0.04024610004853457
+        },
+        "Complete": {
+          "Median": 0.41474650002783164,
+          "Worst": 6.539629300008528,
+          "Minimum": 0.04024610004853457
+        },
+        "AssetInitialization": {
+          "Median": 0.0010613500489853323,
+          "Worst": 0.001395900035277009,
+          "Minimum": 0.0008462000405415893
+        }
+      },
+      "VERDANT_VALLEY": {
+        "Playable": {
+          "Median": 0.10693880007602274,
+          "Worst": 0.14170240005478263,
+          "Minimum": 0.09110790002159774
+        },
+        "Complete": {
+          "Median": 0.10693880007602274,
+          "Worst": 0.14170240005478263,
+          "Minimum": 0.09110790002159774
+        },
+        "AssetInitialization": {
+          "Median": 0.030848749971482903,
+          "Worst": 0.03883529989980161,
+          "Minimum": 0.025351100019179285
+        }
+      }
+    },
+    "Playable": {
+      "Median": 0.10693880007602274,
+      "Worst": 6.539629300008528,
+      "Minimum": 0.04024610004853457
+    },
+    "Complete": {
+      "Median": 0.10693880007602274,
+      "Worst": 6.539629300008528,
+      "Minimum": 0.04024610004853457
+    },
+    "Counters": {
+      "TemplateCacheHits": 2433,
+      "TemplateClones": 1452,
+      "OverlapComparisons": 11048,
+      "LocalTemplateResolutions": 100,
+      "LocalTemplateClones": 672,
+      "VerifiedYawUses": 524,
+      "AtmosphereRaycasts": 536576,
+      "AnchorCacheMisses": 524,
+      "ChunkCount": 524,
+      "CandidateAttempts": 586,
+      "CollisionProxyClones": 114,
+      "TemplateCacheMisses": 219,
+      "PlacementFailures": 598,
+      "CreateMeshPartAsyncCalls": 119,
+      "PreciseRequests": 119,
+      "MultipartMeshInstances": 1214
+    },
+    "UniqueCreatedAssetKeys": 119,
+    "DuplicateCreations": 0,
+    "CreationWall": {
+      "Median": 0.0,
+      "Worst": 20.662445300025865,
+      "Minimum": 0
+    },
+    "MemoryDeltaMb": {
+      "Median": 0.08984375,
+      "Worst": 39.859375,
+      "Minimum": 0.00390625
+    },
+    "LuaHeapDeltaKb": {
+      "Median": 1256.0,
+      "Worst": 5602,
+      "Minimum": -35880
+    },
+    "CorrectnessFailures": 0,
+    "CollisionDifferentSamples": 0,
+    "CollisionWorstDifferenceStuds": 0.00399999999999999,
+    "VisualSignatureMismatchMaps": 0,
+    "YawMismatchMaps": 0,
+    "ColdFirstMapByWorld": {
+      "ETHEREAL_SCAPE": 5.605626899981871,
+      "SKY_CITADEL": 6.539629300008528,
+      "VERDANT_VALLEY": 0.14170240005478263
+    },
+    "PhaseMedians": {
+      "LayoutSolvedSeconds": {
+        "Median": 0.00021495006512850523,
+        "Worst": 0.03712160000577569,
+        "Minimum": 0.00012949993833899498
+      },
+      "AssetsPreparedSeconds": {
+        "Median": 0.000487550045363605,
+        "Worst": 6.487517199944705,
+        "Minimum": 0.00023610005155205727
+      },
+      "MaterializationReadySeconds": {
+        "Median": 0.03268530004424974,
+        "Worst": 6.488916900008917,
+        "Minimum": 0.0011217999272048473
+      },
+      "CollisionReadySeconds": {
+        "Median": 0.03268530004424974,
+        "Worst": 6.488916900008917,
+        "Minimum": 0.0011217999272048473
+      },
+      "PlayerPlacedSeconds": null,
+      "SafePlayerReadySeconds": null,
+      "ServerPresentationReadySeconds": {
+        "Median": 0.10693880007602274,
+        "Worst": 6.539629300008528,
+        "Minimum": 0.04024610004853457
+      }
+    },
+    "TimeMedians": {
+      "Assembly": {
+        "Median": 0.00016270001651719213,
+        "Worst": 0.000750600011087954,
+        "Minimum": 0.00010820000898092985
+      },
+      "AssetInitialization": {
+        "Median": 0.00948959996458143,
+        "Worst": 0.03883529989980161,
+        "Minimum": 0.0008462000405415893
+      },
+      "AssetPreparation": {
+        "Median": 6.0649996157735586e-05,
+        "Worst": 6.48724599997513,
+        "Minimum": 1.6699894331395626e-05
+      },
+      "AtmosphereAnchors": {
+        "Median": 0.06514229997992516,
+        "Worst": 0.08921520004514605,
+        "Minimum": 0.037137000006623566
+      },
+      "CollisionProxyPreparation": {
+        "Median": 2.700020559132099e-06,
+        "Worst": 0.024785099900327623,
+        "Minimum": 0
+      },
+      "CreateMeshPartAsync": {
+        "Median": 0.0,
+        "Worst": 20.662445300025865,
+        "Minimum": 0
+      },
+      "Overlap": {
+        "Median": 1.4750054106116295e-05,
+        "Worst": 0.00022670032922178507,
+        "Minimum": 8.800067007541656e-06
+      },
+      "PropInitialization": {
+        "Median": 1.2150034308433533e-05,
+        "Worst": 3.1599774956703186e-05,
+        "Minimum": 3.400025889277458e-06
+      },
+      "PropRegistry": {
+        "Median": 1.025001984089613e-05,
+        "Worst": 0.03117460000794381,
+        "Minimum": 8.500064723193645e-06
+      },
+      "SolidProps": {
+        "Median": 7.185008144006133e-05,
+        "Worst": 0.0009988999227061868,
+        "Minimum": 2.469983883202076e-05
+      },
+      "TemplateClone": {
+        "Median": 0.00036910001654177904,
+        "Worst": 0.0020812994334846735,
+        "Minimum": 0.00022109993733465672
+      },
+      "TemplateIndex": {
+        "Median": 0.0,
+        "Worst": 0.0051571999210864305,
+        "Minimum": 0
+      },
+      "TemplateResolution": {
+        "Median": 0.0,
+        "Worst": 0.00017130025662481785,
+        "Minimum": 0
+      },
+      "WorkingSet": {
+        "Median": 6.084999768063426e-05,
+        "Worst": 9.410001803189516e-05,
+        "Minimum": 1.950003206729889e-05
+      }
+    },
+    "RetainedCache": {
+      "TemplateCacheEntries": 219,
+      "RuntimeTemplateInstances": 119,
+      "CacheRetentionBeforeDestroyMb": 2112.5703125,
+      "CacheRetentionAfterDestroyMb": 2112.609375,
+      "CacheInstancesBeforeDestroyMb": 287.42291259765625,
+      "CacheInstancesAfterDestroyMb": 287.4386291503906,
+      "AnchorCache": {
+        "Samples": 0,
+        "SerializedFloat64PayloadBytes": 0,
+        "Entries": 0
+      },
+      "PropStats": {
+        "ModulesRequired": 3,
+        "Misses": 0,
+        "Hits": 0
+      }
+    }
+  },
+  "M6": {
+    "Samples": 30,
+    "Worlds": {
+      "ETHEREAL_SCAPE": {
+        "Playable": {
+          "Median": 0.4372544499929063,
+          "Worst": 4.672813099925406,
+          "Minimum": 0.07820970006287098
+        },
+        "Complete": {
+          "Median": 0.4372544499929063,
+          "Worst": 4.672813099925406,
+          "Minimum": 0.07820970006287098
+        },
+        "AssetInitialization": {
+          "Median": 0.009614350041374564,
+          "Worst": 0.011913099908269942,
+          "Minimum": 0.008544099982827902
+        }
+      },
+      "SKY_CITADEL": {
+        "Playable": {
+          "Median": 0.405675949936267,
+          "Worst": 4.816537700011395,
+          "Minimum": 0.04044530005194247
+        },
+        "Complete": {
+          "Median": 0.405675949936267,
+          "Worst": 4.816537700011395,
+          "Minimum": 0.04044530005194247
+        },
+        "AssetInitialization": {
+          "Median": 0.0010249500046484172,
+          "Worst": 0.0012343000853434205,
+          "Minimum": 0.0008685999782755971
+        }
+      },
+      "VERDANT_VALLEY": {
+        "Playable": {
+          "Median": 0.10783099994296208,
+          "Worst": 0.13464009994640946,
+          "Minimum": 0.08881970006041229
+        },
+        "Complete": {
+          "Median": 0.10783099994296208,
+          "Worst": 0.13464009994640946,
+          "Minimum": 0.08881970006041229
+        },
+        "AssetInitialization": {
+          "Median": 0.030358350020833313,
+          "Worst": 0.03717919997870922,
+          "Minimum": 0.02479900000616908
+        }
+      }
+    },
+    "Playable": {
+      "Median": 0.10783099994296208,
+      "Worst": 4.816537700011395,
+      "Minimum": 0.04044530005194247
+    },
+    "Complete": {
+      "Median": 0.10783099994296208,
+      "Worst": 4.816537700011395,
+      "Minimum": 0.04044530005194247
+    },
+    "Counters": {
+      "TemplateCacheHits": 2433,
+      "TemplateClones": 1452,
+      "OverlapComparisons": 11048,
+      "LocalTemplateResolutions": 100,
+      "LocalTemplateClones": 672,
+      "VerifiedYawUses": 524,
+      "AtmosphereRaycasts": 536576,
+      "AnchorCacheMisses": 524,
+      "ChunkCount": 524,
+      "CandidateAttempts": 586,
+      "CollisionProxyClones": 114,
+      "TemplateCacheMisses": 219,
+      "PlacementFailures": 598,
+      "CreateMeshPartAsyncCalls": 119,
+      "PreciseRequests": 119,
+      "MultipartMeshInstances": 1214
+    },
+    "UniqueCreatedAssetKeys": 119,
+    "DuplicateCreations": 0,
+    "CreationWall": {
+      "Median": 0.0,
+      "Worst": 24.227321099722758,
+      "Minimum": 0
+    },
+    "MemoryDeltaMb": {
+      "Median": 0.255859375,
+      "Worst": 52.765625,
+      "Minimum": 0.01953125
+    },
+    "LuaHeapDeltaKb": {
+      "Median": 1542.0,
+      "Worst": 4675,
+      "Minimum": -37336
+    },
+    "CorrectnessFailures": 0,
+    "CollisionDifferentSamples": 0,
+    "CollisionWorstDifferenceStuds": 0.00399999999999999,
+    "VisualSignatureMismatchMaps": 0,
+    "YawMismatchMaps": 0,
+    "ColdFirstMapByWorld": {
+      "ETHEREAL_SCAPE": 4.672813099925406,
+      "SKY_CITADEL": 4.816537700011395,
+      "VERDANT_VALLEY": 0.13464009994640946
+    },
+    "PhaseMedians": {
+      "LayoutSolvedSeconds": {
+        "Median": 0.00021415000082924962,
+        "Worst": 0.035911799990572035,
+        "Minimum": 0.00012560002505779266
+      },
+      "AssetsPreparedSeconds": {
+        "Median": 0.0004983000108040869,
+        "Worst": 4.764086099923588,
+        "Minimum": 0.0002169000217691064
+      },
+      "MaterializationReadySeconds": {
+        "Median": 0.03317504993174225,
+        "Worst": 4.765253199962899,
+        "Minimum": 0.0010872000129893422
+      },
+      "CollisionReadySeconds": {
+        "Median": 0.03317504993174225,
+        "Worst": 4.765253199962899,
+        "Minimum": 0.0010872000129893422
+      },
+      "PlayerPlacedSeconds": null,
+      "SafePlayerReadySeconds": null,
+      "ServerPresentationReadySeconds": {
+        "Median": 0.10783099994296208,
+        "Worst": 4.816537700011395,
+        "Minimum": 0.04044530005194247
+      }
+    },
+    "TimeMedians": {
+      "Assembly": {
+        "Median": 0.00017150002531707287,
+        "Worst": 0.0005734000587835908,
+        "Minimum": 0.00010619999375194311
+      },
+      "AssetInitialization": {
+        "Median": 0.009614350041374564,
+        "Worst": 0.03717919997870922,
+        "Minimum": 0.0008685999782755971
+      },
+      "AssetPreparation": {
+        "Median": 6.390002090483904e-05,
+        "Worst": 4.763848399976268,
+        "Minimum": 1.7300015315413475e-05
+      },
+      "AtmosphereAnchors": {
+        "Median": 0.06584100006148219,
+        "Worst": 0.0886556999757886,
+        "Minimum": 0.03728159994352609
+      },
+      "CollisionProxyPreparation": {
+        "Median": 2.400018274784088e-06,
+        "Worst": 0.02378989988937974,
+        "Minimum": 0
+      },
+      "CreateMeshPartAsync": {
+        "Median": 0.0,
+        "Worst": 24.227321099722758,
+        "Minimum": 0
+      },
+      "Overlap": {
+        "Median": 1.4599936548620462e-05,
+        "Worst": 0.00013310019858181477,
+        "Minimum": 8.999835699796677e-06
+      },
+      "PropInitialization": {
+        "Median": 1.2199918273836374e-05,
+        "Worst": 0.00020340003538876772,
+        "Minimum": 4.200031980872154e-06
+      },
+      "PropRegistry": {
+        "Median": 9.599956683814526e-06,
+        "Worst": 0.03003380005247891,
+        "Minimum": 8.699949830770493e-06
+      },
+      "SolidProps": {
+        "Median": 7.919984636828303e-05,
+        "Worst": 0.000928599969483912,
+        "Minimum": 2.529995981603861e-05
+      },
+      "TemplateClone": {
+        "Median": 0.0003305000136606395,
+        "Worst": 0.002026498899795115,
+        "Minimum": 0.0002098999684676528
+      },
+      "TemplateIndex": {
+        "Median": 0.0,
+        "Worst": 0.005067999940365553,
+        "Minimum": 0
+      },
+      "TemplateResolution": {
+        "Median": 0.0,
+        "Worst": 0.00019020040053874254,
+        "Minimum": 0
+      },
+      "WorkingSet": {
+        "Median": 6.265001138672233e-05,
+        "Worst": 9.079999290406704e-05,
+        "Minimum": 1.9300030544400215e-05
+      }
+    },
+    "RetainedCache": {
+      "TemplateCacheEntries": 219,
+      "RuntimeTemplateInstances": 119,
+      "CacheRetentionBeforeDestroyMb": 2194.7890625,
+      "CacheRetentionAfterDestroyMb": 2194.8125,
+      "CacheInstancesBeforeDestroyMb": 290.36199951171875,
+      "CacheInstancesAfterDestroyMb": 290.37774658203125,
+      "AnchorCache": {
+        "Samples": 0,
+        "SerializedFloat64PayloadBytes": 0,
+        "Entries": 0
+      },
+      "PropStats": {
+        "ModulesRequired": 3,
+        "Misses": 0,
+        "Hits": 0
+      }
+    }
+  },
+  "SERVER_BOOT": {
+    "A": {
+      "Ready": {
+        "Median": 0.12296039995271713,
+        "Worst": 0.13672379998024553,
+        "Minimum": 0.12053069996181875
+      },
+      "ContentReady": {
+        "Median": 0.10944220004603267,
+        "Worst": 0.12251869996543974,
+        "Minimum": 0.10758059995714575
+      },
+      "TotalMemoryMb": {
+        "Median": 3465.80078125,
+        "Worst": 3531.06640625,
+        "Minimum": 3279
+      }
+    },
+    "J": {
+      "Ready": {
+        "Median": 0.12385879992507398,
+        "Worst": 0.1340792999835685,
+        "Minimum": 0.12064699991606176
+      },
+      "ContentReady": {
+        "Median": 0.11080129991751164,
+        "Worst": 0.12088349997065961,
+        "Minimum": 0.10874239995609969
+      },
+      "TotalMemoryMb": {
+        "Median": 3475.6640625,
+        "Worst": 3547.0546875,
+        "Minimum": 3354.6640625
+      }
+    }
+  }
+}

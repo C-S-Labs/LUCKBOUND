@@ -1,0 +1,92 @@
+[
+  {
+    "ContentReady": 0.12251869996543974,
+    "TotalMemoryMb": 3279,
+    "LuaHeapKb": 47055,
+    "Ready": 0.13672379998024553,
+    "Mode": "A",
+    "Repeat": 1
+  },
+  {
+    "ContentReady": 0.11338740005157888,
+    "WorldViewSeconds": 0.00015059998258948326,
+    "WorldViewAssets": 30,
+    "LuaHeapKb": 46742,
+    "TotalMemoryMb": 3354.6640625,
+    "Ready": 0.1272978000342846,
+    "Mode": "J",
+    "Repeat": 1
+  },
+  {
+    "ContentReady": 0.10944220004603267,
+    "TotalMemoryMb": 3404.19921875,
+    "LuaHeapKb": 47390,
+    "Ready": 0.12296039995271713,
+    "Mode": "A",
+    "Repeat": 2
+  },
+  {
+    "ContentReady": 0.10903149994555861,
+    "WorldViewSeconds": 0.00016469997353851795,
+    "WorldViewAssets": 30,
+    "LuaHeapKb": 47520,
+    "TotalMemoryMb": 3441.1484375,
+    "Ready": 0.12198499997612089,
+    "Mode": "J",
+    "Repeat": 2
+  },
+  {
+    "ContentReady": 0.10758059995714575,
+    "TotalMemoryMb": 3465.80078125,
+    "LuaHeapKb": 48373,
+    "Ready": 0.12053069996181875,
+    "Mode": "A",
+    "Repeat": 3
+  },
+  {
+    "ContentReady": 0.12088349997065961,
+    "WorldViewSeconds": 0.00018719991203397512,
+    "WorldViewAssets": 30,
+    "LuaHeapKb": 47621,
+    "TotalMemoryMb": 3475.6640625,
+    "Ready": 0.1340792999835685,
+    "Mode": "J",
+    "Repeat": 3
+  },
+  {
+    "ContentReady": 0.11008889996446669,
+    "TotalMemoryMb": 3492.265625,
+    "LuaHeapKb": 47649,
+    "Ready": 0.12368740001693368,
+    "Mode": "A",
+    "Repeat": 4
+  },
+  {
+    "ContentReady": 0.10874239995609969,
+    "WorldViewSeconds": 0.00013160007074475288,
+    "WorldViewAssets": 30,
+    "LuaHeapKb": 48205,
+    "TotalMemoryMb": 3502.4140625,
+    "Ready": 0.12064699991606176,
+    "Mode": "J",
+    "Repeat": 4
+  },
+  {
+    "ContentReady": 0.10854849999304861,
+    "TotalMemoryMb": 3531.06640625,
+    "LuaHeapKb": 46988,
+    "Ready": 0.12142619991209358,
+    "Mode": "A",
+    "Repeat": 5
+  },
+  {
+    "ContentReady": 0.11080129991751164,
+    "WorldViewSeconds": 0.00013289996422827244,
+    "WorldViewAssets": 30,
+    "LuaHeapKb": 47638,
+    "TotalMemoryMb": 3547.0546875,
+    "Ready": 0.12385879992507398,
+    "Mode": "J",
+    "Repeat": 5
+  }
+]

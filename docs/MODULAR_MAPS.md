@@ -564,3 +564,19 @@ openings. Everything else was over-specification, and
 
 No System changes at any point. That is the prime directive holding:
 **systems are reusable, content is data.**
+
+## Local generation and asset performance experiment
+
+`agent/procgen-performance` keeps production loading available and uses optional
+profiles for A-M measurements. Existing connectivity is already socket-derived;
+overlap validation is deterministic bounds. Current measurements instead identify
+runtime mesh materialization as the dominant cost. Do not equate raycast count
+with wall time or adopt a change before the staged comparison is complete.
+
+The asset prototype separates visual-only meshes from authoritative collision,
+clones matching authored templates only when a valid separate proxy exists,
+retains precise runtime loading for gameplay meshes, and tests unique-asset
+caching plus bounded preparation. Spawn/boss assets and attached rooms remain
+in working sets. Two SC collision samples are feasibility data, not a replacement
+kit. See `GENERATION_PERFORMANCE.md` and `docs/benchmarks/` for provenance,
+remaining checks and results. No production switch is authorized.

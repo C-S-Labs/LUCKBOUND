@@ -1,0 +1,3814 @@
+{
+  "MeshPartCount": 4780,
+  "Visuals": [
+    {
+      "Path": "chunk_spire_court_b",
+      "Key": "SC_CHUNK_SPIRE_COURT_B",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://129951400055967",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_turbine_hall",
+      "Key": "SC_CHUNK_TURBINE_HALL",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://92367216899210",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_aether_springs",
+      "Key": "SC_CHUNK_AETHER_SPRINGS",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://126072084633109",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_archive",
+      "Key": "SC_CHUNK_ARCHIVE",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://140031125559328",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_armory",
+      "Key": "SC_CHUNK_ARMORY",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://112478409531568",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_boss_clearing",
+      "Key": "SC_CHUNK_BOSS_CLEARING",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://109965904727909",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_cap_crumbling",
+      "Key": "SC_CHUNK_CAP_CRUMBLING",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://117766670542193",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_cap_overlook",
+      "Key": "SC_CHUNK_CAP_OVERLOOK",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://78182513014315",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_cap_sealed_gate",
+      "Key": "SC_CHUNK_CAP_SEALED_GATE",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://116297783045278",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_crossroads",
+      "Key": "SC_CHUNK_CROSSROADS",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://125660529173543",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_dockside",
+      "Key": "SC_CHUNK_DOCKSIDE",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://116550456955440",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_entry",
+      "Key": "SC_CHUNK_ENTRY",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://88026123779214",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_garden_terrace",
+      "Key": "SC_CHUNK_GARDEN_TERRACE",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://82489694760900",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_lighthouse_point",
+      "Key": "SC_CHUNK_LIGHTHOUSE_POINT",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://128031908839397",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_observatory",
+      "Key": "SC_CHUNK_OBSERVATORY",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://129391704093522",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_parade_ground",
+      "Key": "SC_CHUNK_PARADE_GROUND",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://130221894470618",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_aviary",
+      "Key": "SC_CHUNK_PATH_AVIARY",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://137981780730267",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_bend",
+      "Key": "SC_CHUNK_PATH_BEND",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://117961282087994",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_bend_west",
+      "Key": "SC_CHUNK_PATH_BEND_WEST",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://76613732448064",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_colonnade",
+      "Key": "SC_CHUNK_PATH_COLONNADE",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://82969550619674",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_hoops",
+      "Key": "SC_CHUNK_PATH_HOOPS",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://110348035119895",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_lantern_row",
+      "Key": "SC_CHUNK_PATH_LANTERN_ROW",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://128410235010256",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_long_span",
+      "Key": "SC_CHUNK_PATH_LONG_SPAN",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://111164295397853",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_shattered",
+      "Key": "SC_CHUNK_PATH_SHATTERED",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://135502845057517",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_skyport",
+      "Key": "SC_CHUNK_PATH_SKYPORT",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://94483045189423",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_straight",
+      "Key": "SC_CHUNK_PATH_STRAIGHT",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://129089925999266",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_tee",
+      "Key": "SC_CHUNK_PATH_TEE",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://82848937468291",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_tower_bend",
+      "Key": "SC_CHUNK_PATH_TOWER_BEND",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://132459811428668",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_prism_arena",
+      "Key": "SC_CHUNK_PRISM_ARENA",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://94560926909219",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_side_chapel",
+      "Key": "SC_CHUNK_SIDE_CHAPEL",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://87806779307836",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_side_garden",
+      "Key": "SC_CHUNK_SIDE_GARDEN",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://110451357110362",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_side_lookout",
+      "Key": "SC_CHUNK_SIDE_LOOKOUT",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://80071796065848",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_side_reliquary",
+      "Key": "SC_CHUNK_SIDE_RELIQUARY",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://123020266926627",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_sky_tree_grove",
+      "Key": "SC_CHUNK_SKY_TREE_GROVE",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://116496516286575",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_spire_court",
+      "Key": "SC_CHUNK_SPIRE_COURT",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://92301933968079",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_vault_turn",
+      "Key": "SC_CHUNK_VAULT_TURN",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://89917125807653",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_side_treasure_hollow",
+      "Key": "VV_CHUNK_CAP_TREASURE_HOLLOW",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://108998754327688",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        36.5,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_wetland_pools",
+      "Key": "VV_CHUNK_WETLAND_POOLS",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://104729256567910",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        43.5,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_ancient_oak",
+      "Key": "VV_CHUNK_ANCIENT_OAK",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://96205112804955",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        41.5,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_blossom_terrace",
+      "Key": "VV_CHUNK_BLOSSOM_TERRACE",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://138655111463512",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        47.5,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_boss_sanctuary",
+      "Key": "VV_CHUNK_BOSS_SANCTUARY",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://122401029379266",
+      "Fidelity": "Default",
+      "Size": [
+        384,
+        53.792091369628906,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_cap_cave_mouth",
+      "Key": "VV_CHUNK_CAP_CAVE_MOUTH",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://78030030202123",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        41.649715423583984,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_cliff_overlook_gate",
+      "Key": "VV_CHUNK_CLIFF_OVERLOOK_GATE",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://80817874099038",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        54.422760009765625,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_crystal_spring_gate",
+      "Key": "VV_CHUNK_CRYSTAL_SPRING_GATE",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://135569709710447",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        41.5,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_cutbank_ford",
+      "Key": "VV_CHUNK_CUTBANK_FORD",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://123576031253680",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        48.5,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_deep_clearing",
+      "Key": "VV_CHUNK_DEEP_CLEARING",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://124773291201766",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        39.5,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_entry_dawn_meadow",
+      "Key": "VV_CHUNK_ENTRY_DAWN_MEADOW",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://125747744370561",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        39.38206100463867,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_entry_woodland_refuge",
+      "Key": "VV_CHUNK_ENTRY_WOODLAND_REFUGE",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://124136837229471",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        42.40499496459961,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_fern_hollow",
+      "Key": "VV_CHUNK_FERN_HOLLOW",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://74601037115647",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        43.5,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_forgotten_orchard_gate",
+      "Key": "VV_CHUNK_FORGOTTEN_ORCHARD_GATE",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://102899400517887",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        47.53351974487305,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_high_ledge_gate",
+      "Key": "VV_CHUNK_HIGH_LEDGE_GATE",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://89731913709365",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        52.485435485839844,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_longgrass_meadow",
+      "Key": "VV_CHUNK_LONGGRASS_MEADOW",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://71382604371128",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        39.5,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_mossbound_ruins",
+      "Key": "VV_CHUNK_MOSSBOUND_RUINS",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://116035874670415",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        39.5,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_mushroom_glen",
+      "Key": "VV_CHUNK_MUSHROOM_GLEN",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://131086208688466",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        43.5,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_overgrown_causeway_gate",
+      "Key": "VV_CHUNK_OVERGROWN_CAUSEWAY_GATE",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://83945520781147",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        43.5,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_cliff_passage",
+      "Key": "VV_CHUNK_PATH_CLIFF_PASSAGE",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://115541060237984",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        79.225830078125,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_crossroads_copse",
+      "Key": "VV_CHUNK_PATH_CROSSROADS_COPSE",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://126913858532095",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        45.5,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_narrow_pass",
+      "Key": "VV_CHUNK_PATH_NARROW_PASS",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://94804911449317",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        49.06410217285156,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_split_meadow",
+      "Key": "VV_CHUNK_PATH_SPLIT_MEADOW",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://104117597912146",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        41.5,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_sunwash_fork",
+      "Key": "VV_CHUNK_PATH_SUNWASH_FORK",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://124731754576795",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        45.27284240722656,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_rock_garden",
+      "Key": "VV_CHUNK_ROCK_GARDEN",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://113509390452178",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        39.5,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_shaded_grove",
+      "Key": "VV_CHUNK_SHADED_GROVE",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://116737947844320",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        41.5,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_side_forgotten_trial",
+      "Key": "VV_CHUNK_SIDE_FORGOTTEN_TRIAL",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://82807125317458",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        41.5,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_windward_ridge_gate",
+      "Key": "VV_CHUNK_WINDWARD_RIDGE_GATE",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://75952327047107",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        76.41908264160156,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_stone_sentinels",
+      "Key": "VV_CHUNK_STONE_SENTINELS",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://120954720998658",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        47.5,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_side_wardens_clearing",
+      "Key": "VV_CHUNK_CAP_WARDENS_CLEARING",
+      "CanCollide": false,
+      "CanQuery": false,
+      "MeshId": "rbxassetid://91428635426624",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        38.5,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_crystal_hollow",
+      "Key": "ES_CHUNK_CRYSTAL_HOLLOW",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://80581921546433",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        164.88619995117188,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_cap_broken_bridge_floor_trim_01",
+      "Key": "ES_CHUNK_CAP_BROKEN_BRIDGE_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://111613558925277",
+      "Fidelity": "Default",
+      "Size": [
+        70.175048828125,
+        13.894280433654785,
+        140.456298828125
+      ]
+    },
+    {
+      "Path": "chunk_path_grove_isle_connector_keel_01",
+      "Key": "ES_CHUNK_PATH_GROVE_ISLE_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://90261454552124",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37.000022888183594,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_rooted_hollow_connector_keel_01",
+      "Key": "ES_CHUNK_ROOTED_HOLLOW_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://73332860711344",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37.000022888183594,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_sky_observatory_structure_trim_01",
+      "Key": "ES_CHUNK_SKY_OBSERVATORY_STRUCTURE_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://76602139270544",
+      "Fidelity": "Default",
+      "Size": [
+        122.828125,
+        25.689586639404297,
+        122.688720703125
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_fraggem7",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_FRAGGEM7",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://135967946227512",
+      "Fidelity": "Default",
+      "Size": [
+        0.74072265625,
+        1.125070571899414,
+        0.638916015625
+      ]
+    },
+    {
+      "Path": "chunk_entry_foliage_01",
+      "Key": "ES_CHUNK_ENTRY_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://75475813254783",
+      "Fidelity": "Default",
+      "Size": [
+        249.45849609375,
+        4.68746280670166,
+        217.3763427734375
+      ]
+    },
+    {
+      "Path": "chunk_crystal_hollow_floor_trim_01",
+      "Key": "ES_CHUNK_CRYSTAL_HOLLOW_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://93643291030109",
+      "Fidelity": "Default",
+      "Size": [
+        146.09375,
+        0.23000645637512207,
+        133.27734375
+      ]
+    },
+    {
+      "Path": "chunk_terraced_gardens_floor_trim_01",
+      "Key": "ES_CHUNK_TERRACED_GARDENS_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://127645157535460",
+      "Fidelity": "Default",
+      "Size": [
+        104.49508666992188,
+        10.179998397827148,
+        140.9293212890625
+      ]
+    },
+    {
+      "Path": "chunk_rooted_hollow",
+      "Key": "ES_CHUNK_ROOTED_HOLLOW",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://86553856257597",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        222,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_temple_gate_a_structure_trim_01",
+      "Key": "ES_CHUNK_TEMPLE_GATE_A_STRUCTURE_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://78945201738119",
+      "Fidelity": "Default",
+      "Size": [
+        118.353515625,
+        65.6300048828125,
+        14.353515625
+      ]
+    },
+    {
+      "Path": "chunk_fork_three_trees_floor_trim_01",
+      "Key": "ES_CHUNK_FORK_THREE_TREES_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://102407492997906",
+      "Fidelity": "Default",
+      "Size": [
+        97.9232177734375,
+        0.18000677227973938,
+        89.730712890625
+      ]
+    },
+    {
+      "Path": "chunk_path_skystair_up",
+      "Key": "ES_CHUNK_PATH_SKYSTAIR_UP",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://131946345833449",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        222,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_bend_west_shrine_connector_keel_01",
+      "Key": "ES_CHUNK_PATH_BEND_WEST_SHRINE_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://85410397961157",
+      "Fidelity": "Default",
+      "Size": [
+        157,
+        37.00000762939453,
+        157
+      ]
+    },
+    {
+      "Path": "chunk_sanctum_floor_detail_01",
+      "Key": "ES_CHUNK_SANCTUM_FLOOR_DETAIL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://140424867922619",
+      "Fidelity": "Default",
+      "Size": [
+        192,
+        0.018014907836914062,
+        192.5999755859375
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_edge7",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_EDGE7",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://79316903501075",
+      "Fidelity": "Default",
+      "Size": [
+        1.55224609375,
+        1.4521198272705078,
+        0.3603515625
+      ]
+    },
+    {
+      "Path": "chunk_cap_falls_ledge_connector_keel_01",
+      "Key": "ES_CHUNK_CAP_FALLS_LEDGE_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://118708650395810",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37,
+        34
+      ]
+    },
+    {
+      "Path": "chunk_shrine_miniboss_room_supports_01",
+      "Key": "ES_CHUNK_SHRINE_MINIBOSS_ROOM_SUPPORTS_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://70644894512649",
+      "Fidelity": "Default",
+      "Size": [
+        134.10009765625,
+        52.20000457763672,
+        101.10009765625
+      ]
+    },
+    {
+      "Path": "chunk_twin_isles_foliage_01",
+      "Key": "ES_CHUNK_TWIN_ISLES_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://99467920339198",
+      "Fidelity": "Default",
+      "Size": [
+        144.303955078125,
+        17.064363479614258,
+        105.55908203125
+      ]
+    },
+    {
+      "Path": "chunk_meadow_of_blooms_connector_keel_01",
+      "Key": "ES_CHUNK_MEADOW_OF_BLOOMS_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://139951938287103",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37.000022888183594,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_bend_east_ascent_floor_trim_01",
+      "Key": "ES_CHUNK_PATH_BEND_EAST_ASCENT_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://81565237285947",
+      "Fidelity": "Default",
+      "Size": [
+        108.14227294921875,
+        18.679996490478516,
+        126.38671875
+      ]
+    },
+    {
+      "Path": "chunk_fallen_colonnade_structure_trim_01",
+      "Key": "ES_CHUNK_FALLEN_COLONNADE_STRUCTURE_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://82194363076862",
+      "Fidelity": "Default",
+      "Size": [
+        88.833984375,
+        109.54800415039062,
+        124.62255859375
+      ]
+    },
+    {
+      "Path": "chunk_miniboss_waystone_ring_connector_keel_01",
+      "Key": "ES_CHUNK_MINIBOSS_WAYSTONE_RING_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://140556000569139",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37,
+        34
+      ]
+    },
+    {
+      "Path": "chunk_backdrop_cloud_shelf",
+      "Key": "ES_CHUNK_BACKDROP_CLOUD_SHELF",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://103622548173409",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_fraggem2",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_FRAGGEM2",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://76356483886485",
+      "Fidelity": "Default",
+      "Size": [
+        0.517578125,
+        0.8412361145019531,
+        0.43798828125
+      ]
+    },
+    {
+      "Path": "chunk_shrine_vault_threshold_trim_01",
+      "Key": "ES_CHUNK_SHRINE_VAULT_THRESHOLD_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://70935599253764",
+      "Fidelity": "Default",
+      "Size": [
+        126,
+        0.3013768196105957,
+        0.360107421875
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_fragrock7",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_FRAGROCK7",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://140415515643318",
+      "Fidelity": "Default",
+      "Size": [
+        2.9375,
+        3.1561784744262695,
+        2.635009765625
+      ]
+    },
+    {
+      "Path": "chunk_crystal_hollow_connector_keel_01",
+      "Key": "ES_CHUNK_CRYSTAL_HOLLOW_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://99064241274688",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37.000022888183594,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_bend_west_shrine_structure_trim_01",
+      "Key": "ES_CHUNK_PATH_BEND_WEST_SHRINE_STRUCTURE_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://115081192513201",
+      "Fidelity": "Default",
+      "Size": [
+        74.5946044921875,
+        128.09642028808594,
+        36.1711540222168
+      ]
+    },
+    {
+      "Path": "chunk_terraced_gardens_stair_detail_01",
+      "Key": "ES_CHUNK_TERRACED_GARDENS_STAIR_DETAIL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://131604699736134",
+      "Fidelity": "Default",
+      "Size": [
+        39.3541259765625,
+        17.850004196166992,
+        45.926025390625
+      ]
+    },
+    {
+      "Path": "chunk_path_plank_crossing_connector_keel_01",
+      "Key": "ES_CHUNK_PATH_PLANK_CROSSING_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://77867256272375",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37.000022888183594,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_grove_isle_floor_trim_01",
+      "Key": "ES_CHUNK_PATH_GROVE_ISLE_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://72981229059282",
+      "Fidelity": "Default",
+      "Size": [
+        148.1256103515625,
+        0.21500879526138306,
+        130.4332275390625
+      ]
+    },
+    {
+      "Path": "chunk_twin_isles_connector_keel_01",
+      "Key": "ES_CHUNK_TWIN_ISLES_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://115101779700791",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37.000022888183594,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_edge9",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_EDGE9",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://125988454454713",
+      "Fidelity": "Default",
+      "Size": [
+        1.28076171875,
+        1.2704648971557617,
+        0.5244140625
+      ]
+    },
+    {
+      "Path": "chunk_miniboss_waystone_ring_floor_trim_01",
+      "Key": "ES_CHUNK_MINIBOSS_WAYSTONE_RING_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://116246937594731",
+      "Fidelity": "Default",
+      "Size": [
+        186.390625,
+        10.180001258850098,
+        186.223388671875
+      ]
+    },
+    {
+      "Path": "chunk_fork_twin_span_structure_trim_01",
+      "Key": "ES_CHUNK_FORK_TWIN_SPAN_STRUCTURE_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://97957097686443",
+      "Fidelity": "Default",
+      "Size": [
+        13.52490234375,
+        90.3499984741211,
+        13.525146484375
+      ]
+    },
+    {
+      "Path": "chunk_miniboss_waystone_ring",
+      "Key": "ES_CHUNK_MINIBOSS_WAYSTONE_RING",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://88614179949141",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        246,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_riftcore",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_RIFTCORE",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://99184151286072",
+      "Fidelity": "Default",
+      "Size": [
+        3.94140625,
+        12.899999618530273,
+        0.5498046875
+      ]
+    },
+    {
+      "Path": "chunk_sky_observatory_PART_03",
+      "Key": "ES_CHUNK_SKY_OBSERVATORY_PART_03",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://95436518628917",
+      "Fidelity": "Default",
+      "Size": [
+        121.6943359375,
+        90.07717895507812,
+        121.6942138671875
+      ]
+    },
+    {
+      "Path": "chunk_shrine_of_winds",
+      "Key": "ES_CHUNK_SHRINE_OF_WINDS",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://88978705457186",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        244.80001831054688,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_temple_gate_a_connector_keel_01",
+      "Key": "ES_CHUNK_TEMPLE_GATE_A_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://128961464510721",
+      "Fidelity": "Default",
+      "Size": [
+        78,
+        37.000022888183594,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_cap_falls_ledge",
+      "Key": "ES_CHUNK_CAP_FALLS_LEDGE",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://112295566391985",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        246,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_cap_falls_ledge_structure_trim_01",
+      "Key": "ES_CHUNK_CAP_FALLS_LEDGE_STRUCTURE_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://111939748711578",
+      "Fidelity": "Default",
+      "Size": [
+        14.810546875,
+        124.673095703125,
+        14.810546875
+      ]
+    },
+    {
+      "Path": "chunk_cap_broken_bridge_foliage_01",
+      "Key": "ES_CHUNK_CAP_BROKEN_BRIDGE_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://108002360271894",
+      "Fidelity": "Default",
+      "Size": [
+        45.164306640625,
+        4.453085899353027,
+        38.8515625
+      ]
+    },
+    {
+      "Path": "chunk_terraced_gardens",
+      "Key": "ES_CHUNK_TERRACED_GARDENS",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://97444880877364",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_debris",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_DEBRIS",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://112421974698712",
+      "Fidelity": "Default",
+      "Size": [
+        13.947265625,
+        0.4256055951118469,
+        12.0732421875
+      ]
+    },
+    {
+      "Path": "chunk_entry",
+      "Key": "ES_CHUNK_ENTRY",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://87558612556793",
+      "Fidelity": "Default",
+      "Size": [
+        384,
+        246.00003051757812,
+        384
+      ]
+    },
+    {
+      "Path": "chunk_path_plank_crossing_structure_trim_01",
+      "Key": "ES_CHUNK_PATH_PLANK_CROSSING_STRUCTURE_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://99873674508530",
+      "Fidelity": "Default",
+      "Size": [
+        13.435546875,
+        133.87295532226562,
+        13.435546875
+      ]
+    },
+    {
+      "Path": "chunk_terraced_gardens_connector_keel_01",
+      "Key": "ES_CHUNK_TERRACED_GARDENS_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://95503489621824",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37.000022888183594,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_side_crystal_grotto_floor_trim_01",
+      "Key": "ES_CHUNK_SIDE_CRYSTAL_GROTTO_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://78520232637174",
+      "Fidelity": "Default",
+      "Size": [
+        100.90420532226562,
+        0.180006742477417,
+        89.078369140625
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_edge8",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_EDGE8",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://130806143853897",
+      "Fidelity": "Default",
+      "Size": [
+        1.3603515625,
+        1.5680017471313477,
+        0.474853515625
+      ]
+    },
+    {
+      "Path": "chunk_rooted_hollow_floor_trim_01",
+      "Key": "ES_CHUNK_ROOTED_HOLLOW_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://75056362085552",
+      "Fidelity": "Default",
+      "Size": [
+        143.9749755859375,
+        0.21500921249389648,
+        142.17807006835938
+      ]
+    },
+    {
+      "Path": "chunk_side_relic_altar",
+      "Key": "ES_CHUNK_SIDE_RELIC_ALTAR",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://77672087844440",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        119.50000762939453,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_side_hermit_grove_floor_trim_01",
+      "Key": "ES_CHUNK_SIDE_HERMIT_GROVE_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://89928114413238",
+      "Fidelity": "Default",
+      "Size": [
+        121.126953125,
+        12.179998397827148,
+        142.9866943359375
+      ]
+    },
+    {
+      "Path": "chunk_fork_twin_span_connector_keel_01",
+      "Key": "ES_CHUNK_FORK_TWIN_SPAN_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://121268796061541",
+      "Fidelity": "Default",
+      "Size": [
+        157,
+        46.99999237060547,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_sky_aqueduct_foliage_01",
+      "Key": "ES_CHUNK_SKY_AQUEDUCT_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://112153670212288",
+      "Fidelity": "Default",
+      "Size": [
+        42.802978515625,
+        5.301702499389648,
+        266.28009033203125
+      ]
+    },
+    {
+      "Path": "chunk_fork_twin_span_floor_trim_01",
+      "Key": "ES_CHUNK_FORK_TWIN_SPAN_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://131273761834567",
+      "Fidelity": "Default",
+      "Size": [
+        69.01025390625,
+        12.679996490478516,
+        186.4793701171875
+      ]
+    },
+    {
+      "Path": "chunk_backdrop_cloud_drift",
+      "Key": "ES_CHUNK_BACKDROP_CLOUD_DRIFT",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://121715778696491",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_side_relic_altar_floor_trim_01",
+      "Key": "ES_CHUNK_SIDE_RELIC_ALTAR_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://104654943521341",
+      "Fidelity": "Default",
+      "Size": [
+        128.582275390625,
+        10.180000305175781,
+        139.416748046875
+      ]
+    },
+    {
+      "Path": "chunk_backdrop_drift_isles_structure_trim_01",
+      "Key": "ES_CHUNK_BACKDROP_DRIFT_ISLES_STRUCTURE_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://70528313904460",
+      "Fidelity": "Default",
+      "Size": [
+        12.74560546875,
+        152.27279663085938,
+        12.74560546875
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_lightanchor",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_LIGHTANCHOR",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://137797232883452",
+      "Fidelity": "Default",
+      "Size": [
+        0.400390625,
+        0.40000009536743164,
+        0.39990234375
+      ]
+    },
+    {
+      "Path": "chunk_path_bend_east_grove",
+      "Key": "ES_CHUNK_PATH_BEND_EAST_GROVE",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://115844789877272",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        222,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_cap_falls_ledge_foliage_01",
+      "Key": "ES_CHUNK_CAP_FALLS_LEDGE_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://120657733288909",
+      "Fidelity": "Default",
+      "Size": [
+        60.537841796875,
+        4.813239097595215,
+        47.6290283203125
+      ]
+    },
+    {
+      "Path": "chunk_shrine_return_dark_backing_01",
+      "Key": "ES_CHUNK_SHRINE_RETURN_DARK_BACKING_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://128948623375697",
+      "Fidelity": "Default",
+      "Size": [
+        18.2998046875,
+        23.635000228881836,
+        0.2998046875
+      ]
+    },
+    {
+      "Path": "chunk_path_grove_isle_foliage_01",
+      "Key": "ES_CHUNK_PATH_GROVE_ISLE_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://83990827632555",
+      "Fidelity": "Default",
+      "Size": [
+        84.8895263671875,
+        5.420570373535156,
+        109.89999389648438
+      ]
+    },
+    {
+      "Path": "chunk_temple_gate_a",
+      "Key": "ES_CHUNK_TEMPLE_GATE_A",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://110756468513680",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        244.80001831054688,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_cap_overlook_floor_trim_01",
+      "Key": "ES_CHUNK_CAP_OVERLOOK_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://92811690182374",
+      "Fidelity": "Default",
+      "Size": [
+        87.69921875,
+        0.18000656366348267,
+        86.7877197265625
+      ]
+    },
+    {
+      "Path": "chunk_path_bend_west_falls",
+      "Key": "ES_CHUNK_PATH_BEND_WEST_FALLS",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://111178239629221",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        246,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_fraggem3",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_FRAGGEM3",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://81891788273647",
+      "Fidelity": "Default",
+      "Size": [
+        1.05322265625,
+        1.854628086090088,
+        0.703125
+      ]
+    },
+    {
+      "Path": "chunk_path_skystair_down",
+      "Key": "ES_CHUNK_PATH_SKYSTAIR_DOWN",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://125532048392306",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_fragrock4",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_FRAGROCK4",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://134198349280397",
+      "Fidelity": "Default",
+      "Size": [
+        1.93701171875,
+        1.980830192565918,
+        2.10546875
+      ]
+    },
+    {
+      "Path": "chunk_sanctum_throne_detail_01",
+      "Key": "ES_CHUNK_SANCTUM_THRONE_DETAIL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://101377721829884",
+      "Fidelity": "Default",
+      "Size": [
+        49.4000244140625,
+        53.367008209228516,
+        13.9573974609375
+      ]
+    },
+    {
+      "Path": "chunk_cap_broken_bridge_connector_keel_01",
+      "Key": "ES_CHUNK_CAP_BROKEN_BRIDGE_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://88146335649478",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37,
+        34
+      ]
+    },
+    {
+      "Path": "chunk_sanctum",
+      "Key": "ES_CHUNK_SANCTUM",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://117090521335311",
+      "Fidelity": "Default",
+      "Size": [
+        512,
+        116.00003051757812,
+        512
+      ]
+    },
+    {
+      "Path": "chunk_shrine_miniboss_room_floor_detail_01",
+      "Key": "ES_CHUNK_SHRINE_MINIBOSS_ROOM_FLOOR_DETAIL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://123118618486359",
+      "Fidelity": "Default",
+      "Size": [
+        87.134765625,
+        0.13050654530525208,
+        87.134765625
+      ]
+    },
+    {
+      "Path": "chunk_sky_aqueduct",
+      "Key": "ES_CHUNK_SKY_AQUEDUCT",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://85694555382529",
+      "Fidelity": "Default",
+      "Size": [
+        384,
+        244.80003356933594,
+        384
+      ]
+    },
+    {
+      "Path": "chunk_path_plank_crossing_floor_trim_01",
+      "Key": "ES_CHUNK_PATH_PLANK_CROSSING_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://138247471014401",
+      "Fidelity": "Default",
+      "Size": [
+        82.2178955078125,
+        8.180006980895996,
+        152.5
+      ]
+    },
+    {
+      "Path": "chunk_path_bend_west_shrine_floor_trim_01",
+      "Key": "ES_CHUNK_PATH_BEND_WEST_SHRINE_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://103820631855542",
+      "Fidelity": "Default",
+      "Size": [
+        118.75946044921875,
+        2.180004119873047,
+        121.57167053222656
+      ]
+    },
+    {
+      "Path": "chunk_sanctum_foliage_01",
+      "Key": "ES_CHUNK_SANCTUM_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://79451633651966",
+      "Fidelity": "Default",
+      "Size": [
+        242.104736328125,
+        1.0000039339065552,
+        52.28662109375
+      ]
+    },
+    {
+      "Path": "chunk_sky_observatory_PART_02",
+      "Key": "ES_CHUNK_SKY_OBSERVATORY_PART_02",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://81869172401514",
+      "Fidelity": "Default",
+      "Size": [
+        121.6943359375,
+        90.07717895507812,
+        121.6942138671875
+      ]
+    },
+    {
+      "Path": "chunk_entry_structure_trim_01",
+      "Key": "ES_CHUNK_ENTRY_STRUCTURE_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://91506910101176",
+      "Fidelity": "Default",
+      "Size": [
+        210.8125,
+        139.3929443359375,
+        214.8126220703125
+      ]
+    },
+    {
+      "Path": "chunk_path_bend_west_falls_foliage_01",
+      "Key": "ES_CHUNK_PATH_BEND_WEST_FALLS_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://119566840919086",
+      "Fidelity": "Default",
+      "Size": [
+        36.943115234375,
+        3.3866539001464844,
+        37.072265625
+      ]
+    },
+    {
+      "Path": "chunk_side_crystal_grotto_foliage_01",
+      "Key": "ES_CHUNK_SIDE_CRYSTAL_GROTTO_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://103657211261040",
+      "Fidelity": "Default",
+      "Size": [
+        71.876708984375,
+        4.9698286056518555,
+        19.226806640625
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_fraggem1",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_FRAGGEM1",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://78087733612290",
+      "Fidelity": "Default",
+      "Size": [
+        0.7744140625,
+        1.4990639686584473,
+        0.559326171875
+      ]
+    },
+    {
+      "Path": "chunk_convergence_structure_trim_01",
+      "Key": "ES_CHUNK_CONVERGENCE_STRUCTURE_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://70490058234248",
+      "Fidelity": "Default",
+      "Size": [
+        13.435480117797852,
+        124.67304992675781,
+        13.43548583984375
+      ]
+    },
+    {
+      "Path": "chunk_cap_falls_ledge_floor_trim_01",
+      "Key": "ES_CHUNK_CAP_FALLS_LEDGE_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://121607192897792",
+      "Fidelity": "Default",
+      "Size": [
+        86.765380859375,
+        1.6800029277801514,
+        60.404052734375
+      ]
+    },
+    {
+      "Path": "chunk_fork_twin_span_foliage_01",
+      "Key": "ES_CHUNK_FORK_TWIN_SPAN_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://102065470737856",
+      "Fidelity": "Default",
+      "Size": [
+        40.528564453125,
+        12.264177322387695,
+        121.92431640625
+      ]
+    },
+    {
+      "Path": "chunk_sanctum_door_detail_01",
+      "Key": "ES_CHUNK_SANCTUM_DOOR_DETAIL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://79763764039627",
+      "Fidelity": "Default",
+      "Size": [
+        121.29998779296875,
+        36.900001525878906,
+        1.56005859375
+      ]
+    },
+    {
+      "Path": "chunk_temple_gate_a_floor_trim_01",
+      "Key": "ES_CHUNK_TEMPLE_GATE_A_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://114526065238133",
+      "Fidelity": "Default",
+      "Size": [
+        158.8798828125,
+        2.6800031661987305,
+        166.8798828125
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_riftmid",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_RIFTMID",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://99751927353297",
+      "Fidelity": "Default",
+      "Size": [
+        5.57421875,
+        14.100000381469727,
+        0.85791015625
+      ]
+    },
+    {
+      "Path": "chunk_temple_gate_b_floor_trim_01",
+      "Key": "ES_CHUNK_TEMPLE_GATE_B_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://113470406856739",
+      "Fidelity": "Default",
+      "Size": [
+        162.8798828125,
+        0.2600114941596985,
+        166.8798828125
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_edge6",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_EDGE6",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://103070043628056",
+      "Fidelity": "Default",
+      "Size": [
+        1.1220703125,
+        1.303774356842041,
+        0.57861328125
+      ]
+    },
+    {
+      "Path": "chunk_sanctum_temple_01_structure_trim_01",
+      "Key": "ES_CHUNK_SANCTUM_TEMPLE_01_STRUCTURE_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://99454221912085",
+      "Fidelity": "Default",
+      "Size": [
+        265.95953369140625,
+        69.19001770019531,
+        265.246826171875
+      ]
+    },
+    {
+      "Path": "chunk_sanctum_temple_01_arch_detail_01",
+      "Key": "ES_CHUNK_SANCTUM_TEMPLE_01_ARCH_DETAIL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://105734946818196",
+      "Fidelity": "Default",
+      "Size": [
+        271.31292724609375,
+        9.330024719238281,
+        259.31298828125
+      ]
+    },
+    {
+      "Path": "chunk_path_bend_east_ascent_foliage_01",
+      "Key": "ES_CHUNK_PATH_BEND_EAST_ASCENT_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://72649209303892",
+      "Fidelity": "Default",
+      "Size": [
+        34.18408203125,
+        5.265501022338867,
+        34.92529296875
+      ]
+    },
+    {
+      "Path": "chunk_backdrop_drift_isles",
+      "Key": "ES_CHUNK_BACKDROP_DRIFT_ISLES",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://84528239803966",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        246,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_scarglow",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_SCARGLOW",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://135753272666710",
+      "Fidelity": "Default",
+      "Size": [
+        8.150390625,
+        0.0010000000474974513,
+        10.062744140625
+      ]
+    },
+    {
+      "Path": "chunk_meadow_of_blooms_foliage_01",
+      "Key": "ES_CHUNK_MEADOW_OF_BLOOMS_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://87728641940355",
+      "Fidelity": "Default",
+      "Size": [
+        102.654052734375,
+        5.444662570953369,
+        118.074462890625
+      ]
+    },
+    {
+      "Path": "chunk_sanctum_temple_01_structure_trim_01_PART_02",
+      "Key": "ES_CHUNK_SANCTUM_TEMPLE_01_STRUCTURE_TRIM_01_PART_02",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://77177827353032",
+      "Fidelity": "Default",
+      "Size": [
+        274.9765625,
+        69.19001770019531,
+        263.8466796875
+      ]
+    },
+    {
+      "Path": "chunk_sky_aqueduct_connector_keel_01",
+      "Key": "ES_CHUNK_SKY_AQUEDUCT_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://135116308951740",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37.000030517578125,
+        384
+      ]
+    },
+    {
+      "Path": "chunk_path_skystair_up_floor_trim_01",
+      "Key": "ES_CHUNK_PATH_SKYSTAIR_UP_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://130370103198507",
+      "Fidelity": "Default",
+      "Size": [
+        90.4197998046875,
+        12.179999351501465,
+        113.5894775390625
+      ]
+    },
+    {
+      "Path": "chunk_mirror_pool_connector_keel_01",
+      "Key": "ES_CHUNK_MIRROR_POOL_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://117007917643367",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37.000022888183594,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_fallen_colonnade_connector_keel_01",
+      "Key": "ES_CHUNK_FALLEN_COLONNADE_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://97704501136009",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37.000022888183594,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_miniboss_reliquary_court_connector_keel_01",
+      "Key": "ES_CHUNK_MINIBOSS_RELIQUARY_COURT_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://85324500940780",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37,
+        34
+      ]
+    },
+    {
+      "Path": "chunk_sanctum_curved_chair_01",
+      "Key": "ES_CHUNK_SANCTUM_CURVED_CHAIR_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://95637268102368",
+      "Fidelity": "Default",
+      "Size": [
+        28.84002685546875,
+        31.200000762939453,
+        12.9000244140625
+      ]
+    },
+    {
+      "Path": "chunk_mirror_pool",
+      "Key": "ES_CHUNK_MIRROR_POOL",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://70669629361027",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        246,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_sanctum_window_detail_01",
+      "Key": "ES_CHUNK_SANCTUM_WINDOW_DETAIL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://71596693256562",
+      "Fidelity": "Default",
+      "Size": [
+        253.1099853515625,
+        64.50001525878906,
+        221.3050537109375
+      ]
+    },
+    {
+      "Path": "chunk_backdrop_storm_anvil",
+      "Key": "ES_CHUNK_BACKDROP_STORM_ANVIL",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://74427436240497",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_bend_west_falls_floor_trim_01",
+      "Key": "ES_CHUNK_PATH_BEND_WEST_FALLS_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://86661060068524",
+      "Fidelity": "Default",
+      "Size": [
+        106.602783203125,
+        10.179996490478516,
+        142.130126953125
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_fragrock1",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_FRAGROCK1",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://86986100640607",
+      "Fidelity": "Default",
+      "Size": [
+        1.982421875,
+        2.314089775085449,
+        2.782958984375
+      ]
+    },
+    {
+      "Path": "chunk_sanctum_temple_01",
+      "Key": "ES_CHUNK_SANCTUM_TEMPLE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://139700336182963",
+      "Fidelity": "Default",
+      "Size": [
+        279,
+        151,
+        277.5
+      ]
+    },
+    {
+      "Path": "chunk_path_skystair_down_foliage_01",
+      "Key": "ES_CHUNK_PATH_SKYSTAIR_DOWN_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://132194707595697",
+      "Fidelity": "Default",
+      "Size": [
+        33.382080078125,
+        27.232425689697266,
+        135.857666015625
+      ]
+    },
+    {
+      "Path": "chunk_path_bend_west_shrine",
+      "Key": "ES_CHUNK_PATH_BEND_WEST_SHRINE",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://134586974797825",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        246,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_shrine_miniboss_room_roof_01",
+      "Key": "ES_CHUNK_SHRINE_MINIBOSS_ROOM_ROOF_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://95296323659590",
+      "Fidelity": "Default",
+      "Size": [
+        144,
+        31.90000343322754,
+        192
+      ]
+    },
+    {
+      "Path": "chunk_shrine_miniboss_room_shell_01",
+      "Key": "ES_CHUNK_SHRINE_MINIBOSS_ROOM_SHELL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://119744497269567",
+      "Fidelity": "Default",
+      "Size": [
+        148.5,
+        63.800018310546875,
+        193.591064453125
+      ]
+    },
+    {
+      "Path": "chunk_twin_isles",
+      "Key": "ES_CHUNK_TWIN_ISLES",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://87318428957815",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        246,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_cap_sealed_shrine_floor_trim_01",
+      "Key": "ES_CHUNK_CAP_SEALED_SHRINE_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://130734588259026",
+      "Fidelity": "Default",
+      "Size": [
+        99.5576171875,
+        0.18000687658786774,
+        91.230224609375
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_fraggem4",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_FRAGGEM4",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://110258257660631",
+      "Fidelity": "Default",
+      "Size": [
+        0.69873046875,
+        1.2053465843200684,
+        0.638916015625
+      ]
+    },
+    {
+      "Path": "chunk_sky_observatory_connector_keel_01",
+      "Key": "ES_CHUNK_SKY_OBSERVATORY_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://84003027497050",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37.000030517578125,
+        384
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_fragrock5",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_FRAGROCK5",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://139334608346397",
+      "Fidelity": "Default",
+      "Size": [
+        1.6416015625,
+        2.098769187927246,
+        2.000244140625
+      ]
+    },
+    {
+      "Path": "chunk_convergence_connector_keel_01",
+      "Key": "ES_CHUNK_CONVERGENCE_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://105133942007707",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        37.000022888183594,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_bend_east_ascent_arch_detail_01",
+      "Key": "ES_CHUNK_PATH_BEND_EAST_ASCENT_ARCH_DETAIL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://111029464411144",
+      "Fidelity": "Default",
+      "Size": [
+        14.56585693359375,
+        79.16000366210938,
+        14.56591796875
+      ]
+    },
+    {
+      "Path": "chunk_sanctum_entry_wall_detail_01",
+      "Key": "ES_CHUNK_SANCTUM_ENTRY_WALL_DETAIL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://131094276769902",
+      "Fidelity": "Default",
+      "Size": [
+        202.5,
+        46.24899673461914,
+        0.4200439453125
+      ]
+    },
+    {
+      "Path": "chunk_fork_wayshrine_floor_trim_01",
+      "Key": "ES_CHUNK_FORK_WAYSHRINE_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://85106320708640",
+      "Fidelity": "Default",
+      "Size": [
+        86.425537109375,
+        14.179996490478516,
+        163.69921875
+      ]
+    },
+    {
+      "Path": "chunk_side_hermit_grove",
+      "Key": "ES_CHUNK_SIDE_HERMIT_GROVE",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://137762813755555",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        222,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_sky_aqueduct_floor_trim_01",
+      "Key": "ES_CHUNK_SKY_AQUEDUCT_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://138825166725088",
+      "Fidelity": "Default",
+      "Size": [
+        67.757568359375,
+        2.6800198554992676,
+        284.6619567871094
+      ]
+    },
+    {
+      "Path": "chunk_cap_sealed_shrine",
+      "Key": "ES_CHUNK_CAP_SEALED_SHRINE",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://116404859001295",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_fork_three_trees",
+      "Key": "ES_CHUNK_FORK_THREE_TREES",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://98453345147690",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_sanctum_throne_inlay_01",
+      "Key": "ES_CHUNK_SANCTUM_THRONE_INLAY_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://115400878334296",
+      "Fidelity": "Default",
+      "Size": [
+        12.469970703125,
+        16.555200576782227,
+        0.3486328125
+      ]
+    },
+    {
+      "Path": "chunk_cap_overlook_connector_keel_01",
+      "Key": "ES_CHUNK_CAP_OVERLOOK_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://137997136606440",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37,
+        34
+      ]
+    },
+    {
+      "Path": "chunk_convergence_floor_trim_01",
+      "Key": "ES_CHUNK_CONVERGENCE_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://102123413309127",
+      "Fidelity": "Default",
+      "Size": [
+        121.22572326660156,
+        1.7800052165985107,
+        123.4207763671875
+      ]
+    },
+    {
+      "Path": "chunk_path_plank_crossing_foliage_01",
+      "Key": "ES_CHUNK_PATH_PLANK_CROSSING_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://129583278560780",
+      "Fidelity": "Default",
+      "Size": [
+        41.3271484375,
+        4.477842330932617,
+        27.7222900390625
+      ]
+    },
+    {
+      "Path": "chunk_sanctum_temple_01_PART_02",
+      "Key": "ES_CHUNK_SANCTUM_TEMPLE_01_PART_02",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://120875703428291",
+      "Fidelity": "Default",
+      "Size": [
+        244,
+        58.00001525878906,
+        210.5999755859375
+      ]
+    },
+    {
+      "Path": "chunk_path_bend_west_falls_structure_trim_01",
+      "Key": "ES_CHUNK_PATH_BEND_WEST_FALLS_STRUCTURE_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://84394409716959",
+      "Fidelity": "Default",
+      "Size": [
+        14.810546875,
+        124.673095703125,
+        14.810546875
+      ]
+    },
+    {
+      "Path": "chunk_sanctum_facade_detail_01",
+      "Key": "ES_CHUNK_SANCTUM_FACADE_DETAIL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://96478082913008",
+      "Fidelity": "Default",
+      "Size": [
+        274.427001953125,
+        71.07835388183594,
+        262.427001953125
+      ]
+    },
+    {
+      "Path": "chunk_shrine_of_winds_structure_trim_01",
+      "Key": "ES_CHUNK_SHRINE_OF_WINDS_STRUCTURE_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://105804432642424",
+      "Fidelity": "Default",
+      "Size": [
+        13.525146484375,
+        65.6300048828125,
+        13.525146484375
+      ]
+    },
+    {
+      "Path": "chunk_sky_aqueduct_arch_detail_01",
+      "Key": "ES_CHUNK_SKY_AQUEDUCT_ARCH_DETAIL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://85786331762309",
+      "Fidelity": "Default",
+      "Size": [
+        39.630126953125,
+        166.39801025390625,
+        174.6300048828125
+      ]
+    },
+    {
+      "Path": "chunk_path_skystair_down_connector_keel_01",
+      "Key": "ES_CHUNK_PATH_SKYSTAIR_DOWN_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://116033224291796",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37,
+        34
+      ]
+    },
+    {
+      "Path": "chunk_fork_wayshrine_foliage_01",
+      "Key": "ES_CHUNK_FORK_WAYSHRINE_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://72023045108631",
+      "Fidelity": "Default",
+      "Size": [
+        59.9573974609375,
+        5.343666076660156,
+        55.92724609375
+      ]
+    },
+    {
+      "Path": "chunk_meadow_of_blooms_floor_trim_01",
+      "Key": "ES_CHUNK_MEADOW_OF_BLOOMS_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://96276251147540",
+      "Fidelity": "Default",
+      "Size": [
+        156.418212890625,
+        5.180004596710205,
+        146.579345703125
+      ]
+    },
+    {
+      "Path": "chunk_twin_isles_structure_trim_01",
+      "Key": "ES_CHUNK_TWIN_ISLES_STRUCTURE_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://120407150858391",
+      "Fidelity": "Default",
+      "Size": [
+        14.810546875,
+        124.673095703125,
+        14.810546875
+      ]
+    },
+    {
+      "Path": "chunk_convergence_foliage_01",
+      "Key": "ES_CHUNK_CONVERGENCE_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://98758876638144",
+      "Fidelity": "Default",
+      "Size": [
+        72.8494873046875,
+        2.2893166542053223,
+        77.24444580078125
+      ]
+    },
+    {
+      "Path": "chunk_rooted_hollow_foliage_01",
+      "Key": "ES_CHUNK_ROOTED_HOLLOW_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://87425400393324",
+      "Fidelity": "Default",
+      "Size": [
+        83.69873046875,
+        7.1779375076293945,
+        86.581298828125
+      ]
+    },
+    {
+      "Path": "chunk_sky_observatory_terrain_02",
+      "Key": "ES_CHUNK_SKY_OBSERVATORY_TERRAIN_02",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://91330367623995",
+      "Fidelity": "Default",
+      "Size": [
+        188.0400390625,
+        14.131160736083984,
+        174.391845703125
+      ]
+    },
+    {
+      "Path": "chunk_fork_twin_span_arch_detail_01",
+      "Key": "ES_CHUNK_FORK_TWIN_SPAN_ARCH_DETAIL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://82348241131188",
+      "Fidelity": "Default",
+      "Size": [
+        13.23681640625,
+        91.39799499511719,
+        13.236572265625
+      ]
+    },
+    {
+      "Path": "chunk_path_bend_east_ascent_connector_keel_01",
+      "Key": "ES_CHUNK_PATH_BEND_EAST_ASCENT_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://125770326693045",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37,
+        34
+      ]
+    },
+    {
+      "Path": "chunk_entry_connector_keel_01",
+      "Key": "ES_CHUNK_ENTRY_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://71236066007435",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37.000003814697266,
+        34
+      ]
+    },
+    {
+      "Path": "chunk_shrine_of_winds_connector_keel_01",
+      "Key": "ES_CHUNK_SHRINE_OF_WINDS_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://104378833434421",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37.000022888183594,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_edge1",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_EDGE1",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://138418501825117",
+      "Fidelity": "Default",
+      "Size": [
+        1.40771484375,
+        1.4200812578201294,
+        0.604248046875
+      ]
+    },
+    {
+      "Path": "chunk_miniboss_reliquary_court_structure_trim_01",
+      "Key": "ES_CHUNK_MINIBOSS_RELIQUARY_COURT_STRUCTURE_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://103976518453128",
+      "Fidelity": "Default",
+      "Size": [
+        122.810546875,
+        128.09642028808594,
+        25.47528076171875
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_fragrock3",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_FRAGROCK3",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://130046064191098",
+      "Fidelity": "Default",
+      "Size": [
+        2.6630859375,
+        3.557044506072998,
+        3.165283203125
+      ]
+    },
+    {
+      "Path": "chunk_shrine_miniboss_room_ceiling_murals_01",
+      "Key": "ES_CHUNK_SHRINE_MINIBOSS_ROOM_CEILING_MURALS_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://81037785391467",
+      "Fidelity": "Default",
+      "Size": [
+        67.919921875,
+        0.5692558288574219,
+        102.419921875
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_edge5",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_EDGE5",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://116056592838193",
+      "Fidelity": "Default",
+      "Size": [
+        1.10009765625,
+        1.3797612190246582,
+        0.564697265625
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_edge4",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_EDGE4",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://87977338740616",
+      "Fidelity": "Default",
+      "Size": [
+        1.45068359375,
+        1.2756686210632324,
+        0.56591796875
+      ]
+    },
+    {
+      "Path": "chunk_miniboss_reliquary_court",
+      "Key": "ES_CHUNK_MINIBOSS_RELIQUARY_COURT",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://125091853621852",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        246,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_temple_gate_a_arch_detail_01",
+      "Key": "ES_CHUNK_TEMPLE_GATE_A_ARCH_DETAIL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://109151153210791",
+      "Fidelity": "Default",
+      "Size": [
+        118.89013671875,
+        96.42001342773438,
+        14.889892578125
+      ]
+    },
+    {
+      "Path": "chunk_path_plank_crossing",
+      "Key": "ES_CHUNK_PATH_PLANK_CROSSING",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://124478778946275",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        246,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_shrine_vault_alcove_detail_01",
+      "Key": "ES_CHUNK_SHRINE_VAULT_ALCOVE_DETAIL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://131490639499142",
+      "Fidelity": "Default",
+      "Size": [
+        27.60009765625,
+        31.544750213623047,
+        30.367431640625
+      ]
+    },
+    {
+      "Path": "chunk_path_skystair_up_foliage_01",
+      "Key": "ES_CHUNK_PATH_SKYSTAIR_UP_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://70818004608886",
+      "Fidelity": "Default",
+      "Size": [
+        28.5872802734375,
+        4.936697006225586,
+        28.6282958984375
+      ]
+    },
+    {
+      "Path": "chunk_miniboss_waystone_ring_structure_trim_01",
+      "Key": "ES_CHUNK_MINIBOSS_WAYSTONE_RING_STRUCTURE_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://131291335599059",
+      "Fidelity": "Default",
+      "Size": [
+        138.810546875,
+        124.673095703125,
+        14.810546875
+      ]
+    },
+    {
+      "Path": "chunk_path_bend_east_ascent",
+      "Key": "ES_CHUNK_PATH_BEND_EAST_ASCENT",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://137240008429733",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        245.92001342773438,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_temple_gate_b",
+      "Key": "ES_CHUNK_TEMPLE_GATE_B",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://131070519404017",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        167.51193237304688,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_fork_twin_span",
+      "Key": "ES_CHUNK_FORK_TWIN_SPAN",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://87703031364900",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        245.5,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_skystair_up_connector_keel_01",
+      "Key": "ES_CHUNK_PATH_SKYSTAIR_UP_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://135961117707912",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37,
+        34
+      ]
+    },
+    {
+      "Path": "chunk_sanctum_connector_keel_01",
+      "Key": "ES_CHUNK_SANCTUM_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://101323333838519",
+      "Fidelity": "Default",
+      "Size": [
+        78,
+        37,
+        34
+      ]
+    },
+    {
+      "Path": "chunk_side_relic_altar_connector_keel_01",
+      "Key": "ES_CHUNK_SIDE_RELIC_ALTAR_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://127597653481088",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37,
+        34
+      ]
+    },
+    {
+      "Path": "chunk_shrine_vault_chest_detail_01",
+      "Key": "ES_CHUNK_SHRINE_VAULT_CHEST_DETAIL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://119586283859227",
+      "Fidelity": "Default",
+      "Size": [
+        13.2001953125,
+        8.627500534057617,
+        8.909912109375
+      ]
+    },
+    {
+      "Path": "chunk_shrine_miniboss_room_detail_01",
+      "Key": "ES_CHUNK_SHRINE_MINIBOSS_ROOM_DETAIL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://103998190342515",
+      "Fidelity": "Default",
+      "Size": [
+        141.2255859375,
+        60.610008239746094,
+        164.68701171875
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_fragrock6",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_FRAGROCK6",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://116249036385222",
+      "Fidelity": "Default",
+      "Size": [
+        1.71533203125,
+        1.9938774108886719,
+        1.666259765625
+      ]
+    },
+    {
+      "Path": "chunk_shrine_of_winds_arch_detail_01",
+      "Key": "ES_CHUNK_SHRINE_OF_WINDS_ARCH_DETAIL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://137767525821592",
+      "Fidelity": "Default",
+      "Size": [
+        13.23663330078125,
+        96.39801025390625,
+        13.23663330078125
+      ]
+    },
+    {
+      "Path": "chunk_mirror_pool_foliage_01",
+      "Key": "ES_CHUNK_MIRROR_POOL_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://139637263327033",
+      "Fidelity": "Default",
+      "Size": [
+        79.74267578125,
+        5.0213942527771,
+        111.1484375
+      ]
+    },
+    {
+      "Path": "chunk_miniboss_reliquary_court_floor_trim_01",
+      "Key": "ES_CHUNK_MINIBOSS_RELIQUARY_COURT_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://77057204200027",
+      "Fidelity": "Default",
+      "Size": [
+        166.8798828125,
+        2.1800034046173096,
+        174.8800048828125
+      ]
+    },
+    {
+      "Path": "chunk_fork_three_trees_foliage_01",
+      "Key": "ES_CHUNK_FORK_THREE_TREES_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://139215632232195",
+      "Fidelity": "Default",
+      "Size": [
+        56.690826416015625,
+        7.419567108154297,
+        64.66455078125
+      ]
+    },
+    {
+      "Path": "chunk_mirror_pool_floor_trim_01",
+      "Key": "ES_CHUNK_MIRROR_POOL_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://89311451407922",
+      "Fidelity": "Default",
+      "Size": [
+        142.117431640625,
+        1.6800055503845215,
+        136.486083984375
+      ]
+    },
+    {
+      "Path": "chunk_cap_overlook_foliage_01",
+      "Key": "ES_CHUNK_CAP_OVERLOOK_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://76478646989809",
+      "Fidelity": "Default",
+      "Size": [
+        48.75830078125,
+        5.221152305603027,
+        56.196044921875
+      ]
+    },
+    {
+      "Path": "chunk_path_bend_east_grove_connector_keel_01",
+      "Key": "ES_CHUNK_PATH_BEND_EAST_GROVE_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://84884193559761",
+      "Fidelity": "Default",
+      "Size": [
+        157,
+        37.00000762939453,
+        157
+      ]
+    },
+    {
+      "Path": "chunk_meadow_of_blooms",
+      "Key": "ES_CHUNK_MEADOW_OF_BLOOMS",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://98463990559919",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        222,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_edge12",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_EDGE12",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://123547321459190",
+      "Fidelity": "Default",
+      "Size": [
+        1.1279296875,
+        1.5807695388793945,
+        0.5498046875
+      ]
+    },
+    {
+      "Path": "chunk_fallen_colonnade",
+      "Key": "ES_CHUNK_FALLEN_COLONNADE",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://87641653489098",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        244.80001831054688,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_cap_sealed_shrine_connector_keel_01",
+      "Key": "ES_CHUNK_CAP_SEALED_SHRINE_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://83425914375613",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37,
+        34
+      ]
+    },
+    {
+      "Path": "chunk_temple_gate_b_connector_keel_01",
+      "Key": "ES_CHUNK_TEMPLE_GATE_B_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://104335787501439",
+      "Fidelity": "Default",
+      "Size": [
+        78,
+        37.000022888183594,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_cap_overlook",
+      "Key": "ES_CHUNK_CAP_OVERLOOK",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://87554917978823",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        222,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_scar",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_SCAR",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://129887104874350",
+      "Fidelity": "Default",
+      "Size": [
+        8.150390625,
+        0.011999998241662979,
+        10.062744140625
+      ]
+    },
+    {
+      "Path": "chunk_shrine_of_winds_floor_trim_01",
+      "Key": "ES_CHUNK_SHRINE_OF_WINDS_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://114208656415475",
+      "Fidelity": "Default",
+      "Size": [
+        142.8800048828125,
+        2.680002212524414,
+        138.8800048828125
+      ]
+    },
+    {
+      "Path": "chunk_path_bend_east_grove_floor_trim_01",
+      "Key": "ES_CHUNK_PATH_BEND_EAST_GROVE_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://98969172655638",
+      "Fidelity": "Default",
+      "Size": [
+        94.10009765625,
+        14.179997444152832,
+        159.47607421875
+      ]
+    },
+    {
+      "Path": "chunk_side_crystal_grotto",
+      "Key": "ES_CHUNK_SIDE_CRYSTAL_GROTTO",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://129748468913737",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_fork_three_trees_connector_keel_01",
+      "Key": "ES_CHUNK_FORK_THREE_TREES_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://102515812326768",
+      "Fidelity": "Default",
+      "Size": [
+        157,
+        37.000022888183594,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_fork_wayshrine",
+      "Key": "ES_CHUNK_FORK_WAYSHRINE",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://124503022970236",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        222,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_shrine_vault_alcove_01",
+      "Key": "ES_CHUNK_SHRINE_VAULT_ALCOVE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://136755771778544",
+      "Fidelity": "Default",
+      "Size": [
+        126,
+        63.80000305175781,
+        36
+      ]
+    },
+    {
+      "Path": "chunk_temple_gate_b_structure_trim_01",
+      "Key": "ES_CHUNK_TEMPLE_GATE_B_STRUCTURE_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://115604297843358",
+      "Fidelity": "Default",
+      "Size": [
+        49.520751953125,
+        18.090431213378906,
+        85.4456787109375
+      ]
+    },
+    {
+      "Path": "chunk_path_skystair_down_floor_trim_01",
+      "Key": "ES_CHUNK_PATH_SKYSTAIR_DOWN_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://128312742251011",
+      "Fidelity": "Default",
+      "Size": [
+        50.598388671875,
+        0.1800035983324051,
+        47.75457763671875
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_edge10",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_EDGE10",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://125095426966308",
+      "Fidelity": "Default",
+      "Size": [
+        1.24365234375,
+        1.3411664962768555,
+        0.62548828125
+      ]
+    },
+    {
+      "Path": "chunk_fallen_colonnade_floor_trim_01",
+      "Key": "ES_CHUNK_FALLEN_COLONNADE_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://112348808402597",
+      "Fidelity": "Default",
+      "Size": [
+        150.8798828125,
+        2.6800031661987305,
+        166.8800048828125
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_edge3",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_EDGE3",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://85412737368025",
+      "Fidelity": "Default",
+      "Size": [
+        1.6259765625,
+        1.3566946983337402,
+        0.51220703125
+      ]
+    },
+    {
+      "Path": "chunk_sky_observatory_foliage_01",
+      "Key": "ES_CHUNK_SKY_OBSERVATORY_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://77612374538855",
+      "Fidelity": "Default",
+      "Size": [
+        196.7076416015625,
+        4.870351791381836,
+        150.7291259765625
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_edge2",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_EDGE2",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://73702041523046",
+      "Fidelity": "Default",
+      "Size": [
+        1.18359375,
+        1.4339754581451416,
+        0.4111328125
+      ]
+    },
+    {
+      "Path": "chunk_sanctum_structure_trim_01",
+      "Key": "ES_CHUNK_SANCTUM_STRUCTURE_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://130242443891834",
+      "Fidelity": "Default",
+      "Size": [
+        94.51927185058594,
+        11.784517288208008,
+        6.52099609375
+      ]
+    },
+    {
+      "Path": "chunk_backdrop_drift_isles_floor_trim_01",
+      "Key": "ES_CHUNK_BACKDROP_DRIFT_ISLES_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://135765585748925",
+      "Fidelity": "Default",
+      "Size": [
+        40.588134765625,
+        0.18000221252441406,
+        39.2249755859375
+      ]
+    },
+    {
+      "Path": "chunk_side_hermit_grove_connector_keel_01",
+      "Key": "ES_CHUNK_SIDE_HERMIT_GROVE_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://112649258180361",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37,
+        34
+      ]
+    },
+    {
+      "Path": "chunk_fallen_colonnade_arch_detail_01",
+      "Key": "ES_CHUNK_FALLEN_COLONNADE_ARCH_DETAIL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://117065110635586",
+      "Fidelity": "Default",
+      "Size": [
+        16.233154296875,
+        96.42001342773438,
+        16.233154296875
+      ]
+    },
+    {
+      "Path": "chunk_sky_aqueduct_structure_trim_01",
+      "Key": "ES_CHUNK_SKY_AQUEDUCT_STRUCTURE_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://112845237041140",
+      "Fidelity": "Default",
+      "Size": [
+        39.396240234375,
+        174.1380157470703,
+        174.29647827148438
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_fraggem6",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_FRAGGEM6",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://101194904108863",
+      "Fidelity": "Default",
+      "Size": [
+        0.5048828125,
+        0.7401313781738281,
+        0.478515625
+      ]
+    },
+    {
+      "Path": "chunk_path_grove_isle",
+      "Key": "ES_CHUNK_PATH_GROVE_ISLE",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://129611787409916",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        222,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_edge11",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_EDGE11",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://124471561003789",
+      "Fidelity": "Default",
+      "Size": [
+        1.57421875,
+        1.3494939804077148,
+        0.50244140625
+      ]
+    },
+    {
+      "Path": "chunk_shrine_return_wall_mask_01",
+      "Key": "ES_CHUNK_SHRINE_RETURN_WALL_MASK_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://138911488721326",
+      "Fidelity": "Default",
+      "Size": [
+        37.2001953125,
+        31.900001525878906,
+        1.5
+      ]
+    },
+    {
+      "Path": "chunk_side_crystal_grotto_connector_keel_01",
+      "Key": "ES_CHUNK_SIDE_CRYSTAL_GROTTO_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://81255498634833",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37,
+        34
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_fragrock2",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_FRAGROCK2",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://100142242307333",
+      "Fidelity": "Default",
+      "Size": [
+        1.99072265625,
+        2.1316332817077637,
+        1.940673828125
+      ]
+    },
+    {
+      "Path": "chunk_side_hermit_grove_foliage_01",
+      "Key": "ES_CHUNK_SIDE_HERMIT_GROVE_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://106251143761866",
+      "Fidelity": "Default",
+      "Size": [
+        28.204833984375,
+        5.408876419067383,
+        55.2000732421875
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_rifthalo",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_RIFTHALO",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://106914177008914",
+      "Fidelity": "Default",
+      "Size": [
+        7.8291015625,
+        15,
+        1.31982421875
+      ]
+    },
+    {
+      "Path": "chunk_path_bend_west_falls_connector_keel_01",
+      "Key": "ES_CHUNK_PATH_BEND_WEST_FALLS_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://128348537979325",
+      "Fidelity": "Default",
+      "Size": [
+        58,
+        37,
+        34
+      ]
+    },
+    {
+      "Path": "chunk_path_bend_west_shrine_foliage_01",
+      "Key": "ES_CHUNK_PATH_BEND_WEST_SHRINE_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://118738370323179",
+      "Fidelity": "Default",
+      "Size": [
+        87.34112548828125,
+        4.599578857421875,
+        62.68218994140625
+      ]
+    },
+    {
+      "Path": "chunk_backdrop_crystal_spire",
+      "Key": "ES_CHUNK_BACKDROP_CRYSTAL_SPIRE",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://127274358220179",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_bend_east_grove_foliage_01",
+      "Key": "ES_CHUNK_PATH_BEND_EAST_GROVE_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://86690840527421",
+      "Fidelity": "Default",
+      "Size": [
+        52.63641357421875,
+        4.794564247131348,
+        49.1148681640625
+      ]
+    },
+    {
+      "Path": "chunk_crystal_hollow_foliage_01",
+      "Key": "ES_CHUNK_CRYSTAL_HOLLOW_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://86716489662970",
+      "Fidelity": "Default",
+      "Size": [
+        66.45849609375,
+        4.349724769592285,
+        76.2705078125
+      ]
+    },
+    {
+      "Path": "chunk_sky_observatory_floor_trim_01",
+      "Key": "ES_CHUNK_SKY_OBSERVATORY_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://75263646034022",
+      "Fidelity": "Default",
+      "Size": [
+        245.995361328125,
+        4.180014133453369,
+        243.69549560546875
+      ]
+    },
+    {
+      "Path": "chunk_twin_isles_floor_trim_01",
+      "Key": "ES_CHUNK_TWIN_ISLES_FLOOR_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://131574176811278",
+      "Fidelity": "Default",
+      "Size": [
+        158.864990234375,
+        12.180001258850098,
+        138.982177734375
+      ]
+    },
+    {
+      "Path": "chunk_sky_observatory_structure_trim_01_PART_02",
+      "Key": "ES_CHUNK_SKY_OBSERVATORY_STRUCTURE_TRIM_01_PART_02",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://71751480626787",
+      "Fidelity": "Default",
+      "Size": [
+        30.49462890625,
+        25.6895809173584,
+        43.164306640625
+      ]
+    },
+    {
+      "Path": "chunk_entry_portal_fraggem5",
+      "Key": "ES_CHUNK_ENTRY_PORTAL_FRAGGEM5",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://116099551627224",
+      "Fidelity": "Default",
+      "Size": [
+        0.49365234375,
+        1.0287532806396484,
+        0.47802734375
+      ]
+    },
+    {
+      "Path": "chunk_mirror_pool_structure_trim_01",
+      "Key": "ES_CHUNK_MIRROR_POOL_STRUCTURE_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://112206204948726",
+      "Fidelity": "Default",
+      "Size": [
+        14.810546875,
+        124.673095703125,
+        14.810546875
+      ]
+    },
+    {
+      "Path": "chunk_terraced_gardens_foliage_01",
+      "Key": "ES_CHUNK_TERRACED_GARDENS_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://126711481348285",
+      "Fidelity": "Default",
+      "Size": [
+        70.75262451171875,
+        12.50999641418457,
+        110.576904296875
+      ]
+    },
+    {
+      "Path": "chunk_convergence",
+      "Key": "ES_CHUNK_CONVERGENCE",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://103952806164300",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        246,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_fork_wayshrine_connector_keel_01",
+      "Key": "ES_CHUNK_FORK_WAYSHRINE_CONNECTOR_KEEL_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://75528169550214",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        37.00000762939453,
+        157
+      ]
+    },
+    {
+      "Path": "chunk_backdrop_cloudbank",
+      "Key": "ES_CHUNK_BACKDROP_CLOUDBANK",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://135103035982907",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_sky_observatory",
+      "Key": "ES_CHUNK_SKY_OBSERVATORY",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://116034293966913",
+      "Fidelity": "Default",
+      "Size": [
+        384,
+        248.00001525878906,
+        384
+      ]
+    },
+    {
+      "Path": "chunk_cap_broken_bridge",
+      "Key": "ES_CHUNK_CAP_BROKEN_BRIDGE",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://124569736618905",
+      "Fidelity": "Default",
+      "Size": [
+        256,
+        256,
+        256
+      ]
+    },
+    {
+      "Path": "chunk_path_bend_east_ascent_structure_trim_01",
+      "Key": "ES_CHUNK_PATH_BEND_EAST_ASCENT_STRUCTURE_TRIM_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://123736481094927",
+      "Fidelity": "Default",
+      "Size": [
+        15.4525146484375,
+        86.75,
+        15.45263671875
+      ]
+    },
+    {
+      "Path": "chunk_side_relic_altar_foliage_01",
+      "Key": "ES_CHUNK_SIDE_RELIC_ALTAR_FOLIAGE_01",
+      "CanCollide": true,
+      "CanQuery": true,
+      "MeshId": "rbxassetid://104049568175509",
+      "Fidelity": "Default",
+      "Size": [
+        69.35107421875,
+        5.0295867919921875,
+        41.5633544921875
+      ]
+    }
+  ]
+}

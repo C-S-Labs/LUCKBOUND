@@ -13,6 +13,9 @@
 
 local WeightedRandom = require(script.Parent.WeightedRandom)
 
+local GenerationProfile = require(script.Parent.GenerationProfile)
+local ChunkDefinitionCache = require(script.Parent.ChunkDefinitionCache)
+
 local ChunkCore = {}
 
 local QUARTER = { [0] = true, [90] = true, [180] = true, [270] = true }
@@ -91,10 +94,18 @@ end
 --- Places `chunk` so that one of its sockets meets `openSocket` head-on.
 --- Returns the placement and the socket consumed, or nil if the chunk has no
 --- socket of a matching Kind.
-function ChunkCore.placeAgainst(chunk: any, openSocket: any, index: number): (any?, any?)
+function ChunkCore.placeAgainst(
+	chunk: any,
+	openSocket: any,
+	index: number,
+	definition: any?
+): (any?, any?)
 	local wanted = norm(openSocket.Facing + 180)
 
-	for _, s in chunk.Sockets do
+	local sockets = if definition
+		then definition.SocketsByKind[openSocket.Kind] or {}
+		else chunk.Sockets
+	for _, s in sockets do
 		if s.Kind == openSocket.Kind then
 			-- Yaw that turns this socket to face back down the corridor.
 			local yaw = norm(wanted - s.Facing)
@@ -146,6 +157,7 @@ function ChunkCore.overlaps(a: any, chunkA: any, b: any, chunkB: any): boolean
 end
 
 export type AssembleOptions = {
+	Profile: any?, -- explicit experiment context; nil preserves production
 	WorldId: string,
 	PathLength: number, -- chunks between entry and boss
 	IncludeSide: boolean?,
@@ -205,7 +217,30 @@ function ChunkCore.assemble(
 	options: AssembleOptions,
 	nextNumber: () -> number
 ): (boolean, any)
+	local profile = options.Profile
 	local byRole = ChunkCore.libraryFor(chunks, options.WorldId)
+	local definitions = {}
+	if profile and profile.Stage >= "C" then
+		for _, list in byRole do
+			for _, chunk in list do
+				local definition, hit = ChunkDefinitionCache.get(chunk)
+				definitions[chunk.Id] = definition
+				GenerationProfile.count(
+					profile,
+					if hit then "DefinitionHits" else "DefinitionMisses"
+				)
+			end
+		end
+	end
+	local function placeAgainst(chunk: any, openSocket: any, index: number): (any?, any?)
+		GenerationProfile.count(profile, "CandidateAttempts")
+		local placement, socket =
+			ChunkCore.placeAgainst(chunk, openSocket, index, definitions[chunk.Id])
+		if not placement then
+			GenerationProfile.count(profile, "CompatibilityFailures")
+		end
+		return placement, socket
+	end
 
 	-- SPAWN CHANCE (build spec §7.5). A piece with SpawnChance is in this
 	-- layout's library only if one seeded draw says so -- the treasury is in
@@ -336,12 +371,40 @@ function ChunkCore.assemble(
 		return repeats == nil or chunk.Role == "CAP" or n < repeats
 	end
 
+	local occupancy = {}
+	local function bounds(p: any, definition: any): any
+		local x, z = definition.HalfX, definition.HalfZ
+		if p.Yaw == 90 or p.Yaw == 270 then
+			x, z = z, x
+		end
+		return { X = p.X, Z = p.Z, HalfX = x, HalfZ = z }
+	end
 	local function collides(p: any, chunk: any): boolean
+		local started = os.clock()
+		local candidate = if definitions[chunk.Id] then bounds(p, definitions[chunk.Id]) else nil
 		for _, other in placed do
-			if ChunkCore.overlaps(p, chunk, other, chunks[other.ChunkId]) then
+			GenerationProfile.count(profile, "OverlapComparisons")
+			local collision
+			if candidate then
+				local existing = occupancy[other]
+				if not existing then
+					existing = bounds(other, definitions[other.ChunkId])
+					occupancy[other] = existing
+				end
+				collision = math.abs(candidate.X - existing.X)
+						< candidate.HalfX + existing.HalfX - 1
+					and math.abs(candidate.Z - existing.Z)
+						< candidate.HalfZ + existing.HalfZ - 1
+			else
+				collision = ChunkCore.overlaps(p, chunk, other, chunks[other.ChunkId])
+			end
+			if collision then
+				GenerationProfile.count(profile, "PlacementFailures")
+				GenerationProfile.time(profile, "Overlap", started)
 				return true
 			end
 		end
+		GenerationProfile.time(profile, "Overlap", started)
 		return false
 	end
 
@@ -461,7 +524,7 @@ function ChunkCore.assemble(
 		for _ = 1, 24 do
 			local c = WeightedRandom.pick(candidates, pathWeight, nextNumber)
 			if c then
-				local p, consumed = ChunkCore.placeAgainst(c, open, i)
+				local p, consumed = placeAgainst(c, open, i)
 				if p and not collides(p, c) then
 					local exit = exitFor(c, consumed.Id, isFinalStep)
 					if exit then
@@ -498,7 +561,7 @@ function ChunkCore.assemble(
 		return c.Weight
 	end, nextNumber)
 	assert(boss, "no boss chunk could be picked")
-	local bossPlacement, bossArrived = ChunkCore.placeAgainst(boss, open, options.PathLength + 1)
+	local bossPlacement, bossArrived = placeAgainst(boss, open, options.PathLength + 1)
 	if not bossPlacement then
 		return false,
 			`boss chunk '{boss.Id}' cannot attach to a '{open.Kind}' socket -- the path must end on a socket the arena accepts`
@@ -533,7 +596,7 @@ function ChunkCore.assemble(
 			end, nextNumber)
 			if side and allowed(side) then
 				local at = ChunkCore.worldSocket(spare.Placement, spare.Chunk, spare.Socket)
-				local p, arrived = ChunkCore.placeAgainst(side, at, options.PathLength + 2)
+				local p, arrived = placeAgainst(side, at, options.PathLength + 2)
 				if p and not collides(p, side) then
 					record(p, side)
 					consumedBy[p][arrived.Id] = true
@@ -600,7 +663,7 @@ function ChunkCore.assemble(
 				for _ = 1, 12 do
 					local c = WeightedRandom.pick(middle, weightOf, nextNumber)
 					if c and allowed(c) and c.Id ~= fromC.Id and not hasBossKind(c) then
-						local p, arrived = ChunkCore.placeAgainst(c, at, branchIndex)
+						local p, arrived = placeAgainst(c, at, branchIndex)
 						if p and not collides(p, c) then
 							record(p, c)
 							branchIndex += 1
@@ -673,7 +736,7 @@ function ChunkCore.assemble(
 				end
 				table.remove(list, table.find(list, c) :: number)
 				if allowed(c) and c.Id ~= from.Chunk.Id and not hasBossKind(c) then
-					local p, arrived = ChunkCore.placeAgainst(c, at, index)
+					local p, arrived = placeAgainst(c, at, index)
 					if p and not collides(p, c) then
 						record(p, c)
 						index += 1
@@ -745,7 +808,7 @@ function ChunkCore.assemble(
 				table.remove(pool, table.find(pool, cap) :: number)
 				if allowed(cap) then
 					local at = ChunkCore.worldSocket(spare.Placement, spare.Chunk, spare.Socket)
-					local p, arrived = ChunkCore.placeAgainst(cap, at, options.PathLength + 2 + n)
+					local p, arrived = placeAgainst(cap, at, options.PathLength + 2 + n)
 					if p and not collides(p, cap) then
 						record(p, cap)
 						consumedBy[p][arrived.Id] = true

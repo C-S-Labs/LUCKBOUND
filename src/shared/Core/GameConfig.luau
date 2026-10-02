@@ -27,6 +27,14 @@ local deepFreeze = Freeze.deep
 local WORLD_SCALE = 0.5
 
 local GameConfig = {
+	GenerationBenchmark = {
+		AssetWorkers = { 1, 2, 4, 6 },
+		CollisionSampleToleranceStuds = 0.05,
+		RayBudget = 128,
+		Seeds = { 1, 17, 101, 997, 4099, 17011, 65537, 104729, 999983, 1704274940 },
+		Repeats = 3,
+		Worlds = { "VERDANT_VALLEY", "SKY_CITADEL", "ETHEREAL_SCAPE" },
+	},
 	ChunkRuntime = {
 		PortalCooldownSeconds = 2,
 		TriggerSlackStuds = 1.5,
