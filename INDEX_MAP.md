@@ -442,8 +442,8 @@ _452 text files, 956 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/GENERATION_MIGRATION.md
 
-- `docs/GENERATION_MIGRATION.md` (331) - Procedural generation: first production migration · new
-  - `GENERATION_MIGRATION.md`: Evidence and scope:8, Runtime architecture:28, Single-flight and resolution:45, Collision roles and orientation:66, Seed working set and workers:87, Atmosphere:104, Targeted production verification:122, Automated validation and differences from the prototype:165, Exact owner Studio acceptance checklist:196, Future designer-authored collision pilot contract — proposal:241, Future enemy-spawn authoring contract — proposal only:280, Reproduction, files and cleanup:307
+- `docs/GENERATION_MIGRATION.md` (374) - Procedural generation: first production migration · 2026-10-02
+  - `GENERATION_MIGRATION.md`: Evidence and scope:8, Runtime architecture:28, Single-flight and resolution:45, Collision roles and orientation:66, Seed working set and workers:87, Atmosphere:104, Targeted production verification:122, Automated validation and differences from the prototype:165, Owner Studio acceptance observations - 2026-10-02:196, Exact owner Studio acceptance checklist:227, Future designer-authored collision pilot contract — proposal:272, Future enemy-spawn authoring contract — proposal only:311, Reproduction, files and cleanup:338, PR readiness and rejected collision follow-up - 2026-10-02:364
 
 ### docs/GIT_WORKFLOW.md
 
@@ -497,8 +497,8 @@ _452 text files, 956 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/STATUS.md
 
-- `docs/STATUS.md` (464) - LUCKBOUND — Project Status · 2026-10-01
-  - `STATUS.md`: 1. Where the project stands:10, 2. Next — pick up here:72, 3. Decisions locked in:362, Why true RNG matters downstream:388, 4. Open items (one line each; details are in the archive und:401, 5. Environment:446, Startup:454
+- `docs/STATUS.md` (466) - LUCKBOUND — Project Status · 2026-10-02
+  - `STATUS.md`: 1. Where the project stands:10, 2. Next — pick up here:72, 3. Decisions locked in:364, Why true RNG matters downstream:390, 4. Open items (one line each; details are in the archive und:403, 5. Environment:448, Startup:456
 
 ### docs/TESTING.md
 
@@ -587,8 +587,8 @@ _452 text files, 956 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (8812) - LUCKBOUND — Work Log · 2026-10-01
-  - `WORKLOG.md`: Template:18, Session N — YYYY-MM-DD — <short title>:21, Done:24, Decisions made:27, Stopped at:30, Next:33, Session 235 — 2026-10-01 — Production generation asset migra:39, Done:42, Decisions made:51, Stopped at:55, Next:58, Leftovers:63, Session 234 — 2026-10-01 — ES delivery for integration:68, Done:71, Next:76, Leftovers:79, Session 233 — 2026-10-01 — ES readability and ribbon visibil:84, Done:87, Next:92, Leftovers:95, Session 232 — 2026-10-01 — ES upper-air ribbon prototype:100, Done:103, Next:109, Leftovers:112, Session 231 — 2026-10-01 — ES orange-purple twilight:117, Done:120, Next:124, Leftovers:127, Session 230 — 2026-10-01 — Slightly denser ES and SC clouds:132, Done:135, Next:139, Leftovers:142, Session 229 — 2026-10-01 — Living ES scenery, sparse Crossro:147, Done:150, Next:159, Leftovers:162, Session 228 — 2026-10-01 — ES base ambience and global BASE-:167, Done:170, Next:176, Leftovers:179, ... +1159 more
+- `docs/WORKLOG.md` (8862) - LUCKBOUND — Work Log · 2026-10-02
+  - `WORKLOG.md`: Template:18, Session N — YYYY-MM-DD — <short title>:21, Done:24, Decisions made:27, Stopped at:30, Next:33, Session 237 - 2026-10-02 - Production generation PR preparat:39, Done:42, Decisions made:48, Stopped at:52, Next:55, Leftovers:59, Session 236 - 2026-10-02 - Owner generation migration accept:64, Done:67, Decisions made:72, Stopped at:76, Next:79, Leftovers:84, Session 235 — 2026-10-01 — Production generation asset migra:89, Done:92, Decisions made:101, Stopped at:105, Next:108, Leftovers:113, Session 234 — 2026-10-01 — ES delivery for integration:118, Done:121, Next:126, Leftovers:129, Session 233 — 2026-10-01 — ES readability and ribbon visibil:134, Done:137, Next:142, Leftovers:145, Session 232 — 2026-10-01 — ES upper-air ribbon prototype:150, Done:153, Next:159, Leftovers:162, Session 231 — 2026-10-01 — ES orange-purple twilight:167, Done:170, Next:174, Leftovers:177, ... +1171 more
 
 ### docs/archive
 
@@ -597,13 +597,13 @@ _452 text files, 956 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/benchmarks
 
-- `docs/benchmarks/generation_migration_client.json` (44) · new
-- `docs/benchmarks/generation_migration_comparison.json` (56) · new
-- `docs/benchmarks/generation_migration_contracts.json` (12467) · new
-- `docs/benchmarks/generation_migration_invariants.json` (13) · new
-- `docs/benchmarks/generation_migration_progress.json` (22390) · new
-- `docs/benchmarks/generation_migration_studio.json` (22390) · new
-- `docs/benchmarks/generation_migration_summary.json` (93) · new
+- `docs/benchmarks/generation_migration_client.json` (44) · 2026-10-01
+- `docs/benchmarks/generation_migration_comparison.json` (56) · 2026-10-01
+- `docs/benchmarks/generation_migration_contracts.json` (12467) · 2026-10-01
+- `docs/benchmarks/generation_migration_invariants.json` (13) · 2026-10-01
+- `docs/benchmarks/generation_migration_progress.json` (22390) · 2026-10-01
+- `docs/benchmarks/generation_migration_studio.json` (22390) · 2026-10-01
+- `docs/benchmarks/generation_migration_summary.json` (93) · 2026-10-01
 
 ### docs/biomes
 
@@ -639,13 +639,13 @@ _452 text files, 956 binary assets. Regenerate with `python tools/gen_index.py`;
   - `AmbienceController.luau`: quality:72, make:79, setAsideScene:89, buildScene:98, buildCloudSea:148, buildMotes:232, step:269, AmbienceController.enter:338, AmbienceController.leave:360
 - `src/client/Controllers/AtmosphereEffects.luau` (1264) - The scenario atmospheres' effects (Content/Atmospheres), drawn round the · 2026-10-01
   - `AtmosphereEffects.luau`: LOCKDOWN:36, SIEGE:48, STORMHAWK:58, RIME:68, RECLAIMED:80, AETHER_SURGE:92, UNMOORING:102, num:123, col:126, vec:129, part:133, prop:149, readMap:179, randomIn:259, band:270, buildLights:278, lightLevel:311, newMover:337, buildGraph:359, route:399, hover:422, newRoute:427, stepMover:443, buildFlyers:474, bolt:516, buildWeather:572, buildDome:622, buildPlumes:672, beam:712, anchorAt:726, buildAurora:738, buildRibbons:832, buildDebris:939, buildCanopy:990, applyTint:1011, AtmosphereEffects.enter:1040, AtmosphereEffects.updateAnchors:1220, AtmosphereEffects.leave:1229, AtmosphereEffects.setTint:1256
-- `src/client/Controllers/CharacterAnimator.luau` (859) - HOW THE PLAYER'S BODY MOVES: clips, blending and the procedural layer. · 2026-09-28
+- `src/client/Controllers/CharacterAnimator.luau` (859) - HOW THE PLAYER'S BODY MOVES: clips, blending and the procedural layer. · 2026-10-01
   - `CharacterAnimator.luau`: bend:114, findJoint:118, makeSound:127, loadTrack:137, stockId:159, CharacterAnimator.bind:202, CharacterAnimator.unbind:370, playOneShot:403, CharacterAnimator.onJump:425, CharacterAnimator.onLand:434, slotDirection:452, CharacterAnimator.onRoll:461, windPart:501, setWeight:566, CharacterAnimator.update:585, CharacterAnimator.overrideSlot:812, CharacterAnimator.describeSlots:846
 - `src/client/Controllers/DebugCommands.luau` (927) - Developer commands, client half. Testing tooling, not a feature. · 2026-09-28
   - `DebugCommands.luau`: DebugCommands.onOutput:49, emit:53, say:67, fail:71, stopFlying:82, startFlying:98, toggleFly:172, setSpeed:185, teleport:227, currentStage:271, currentChunks:300, toggleNoclip:332, setOverlay:376, setStats:438, setProps:489, sorted:512, DebugCommands.sources:594, DebugCommands.describeChunk:599, onOff:610, DebugCommands.bindPanel:618, locomotion:632, DebugCommands.run:840, DebugCommands.runLine:867, DebugCommands.init:874
 - `src/client/Controllers/EventController.luau` (167) - The client's mirror of what is happening to the world. Build spec §4.1. · 2026-09-20
   - `EventController.luau`: list:40, notify:51, EventController.active:59, EventController.dominant:66, EventController.onChanged:70, apply:81, EventController.init:135
-- `src/client/Controllers/ExpeditionController.luau` (245) - Client side of an expedition: lighting, the local countdown, and the Gate's · 2026-09-25
+- `src/client/Controllers/ExpeditionController.luau` (245) - Client side of an expedition: lighting, the local countdown, and the Gate's · 2026-10-01
   - `ExpeditionController.luau`: snapshotHubLighting:45, restoreHubLighting:51, notify:59, ExpeditionController.onChanged:67, ExpeditionController.get:78, ExpeditionController.remaining:84, labelGateFor:94, mapCentre:111, ExpeditionController.init:118, ExpeditionController.onEnded:243
 - `src/client/Controllers/FixtureController.luau` (153) - The client half of fixtures (build spec §7.5, CHUNK_AUTHORING.md · 2026-09-23
   - `FixtureController.luau`: partPose:43, animate:52, track:98, FixtureController.init:116
@@ -824,7 +824,7 @@ _452 text files, 956 binary assets. Regenerate with `python tools/gen_index.py`;
   - `LocomotionCore.luau`: LocomotionCore.tuning:37, LocomotionCore.newState:64, activeLock:93, LocomotionCore.mode:102, LocomotionCore.isInvulnerable:115, spend:129, hasStaminaFor:140, LocomotionCore.canStartSprint:147, LocomotionCore.canRoll:160, startRoll:184, LocomotionCore.roll:212, LocomotionCore.onFloor:227, LocomotionCore.canJump:235, LocomotionCore.jump:255, LocomotionCore.step:273, LocomotionCore.targetSpeed:348, LocomotionCore.land:379, LocomotionCore.rollSpeedShape:392, LocomotionCore.rollPeakSpeed:417, LocomotionCore.rollMoving:422, LocomotionCore.staminaFraction:427, LocomotionCore.lock:447, LocomotionCore.unlock:462, LocomotionCore.turnToward:473, LocomotionCore.profileFor:489
 - `src/shared/Core/LootCore.luau` (73) - The pure half of loot (build spec §7.5): what a pool yields, for whom. · 2026-09-25
   - `LootCore.luau`: LootCore.roll:35, LootCore.rollForAll:61
-- `src/shared/Core/Net.luau` (114) - The ONLY place RemoteEvents are created or looked up. Build spec §4. · 2026-09-23
+- `src/shared/Core/Net.luau` (114) - The ONLY place RemoteEvents are created or looked up. Build spec §4. · 2026-10-01
   - `Net.luau`: root:67, Net.buildRemotes:74, Net.get:97
 - `src/shared/Core/PartyCore.luau` (485) - PARTY RULES. Pure: no Roblox globals, no Instances, no remotes -- so every · 2026-09-22
   - `PartyCore.luau`: PartyCore.newState:67, PartyCore.partyOf:71, PartyCore.isLeader:76, disband:81, removeMember:88, PartyCore.parseRequest:98, PartyCore.invite:124, PartyCore.accept:165, PartyCore.decline:216, PartyCore.leave:227, PartyCore.kick:260, PartyCore.promote:274, PartyCore.removePlayer:291, PartyCore.pruneInvites:313, PartyCore.invitesFor:334, PartyCore.expeditionGroup:365, PartyCore.reunite:399, PartyCore.snapshotFor:473
@@ -843,9 +843,9 @@ _452 text files, 956 binary assets. Regenerate with `python tools/gen_index.py`;
 - `src/shared/Core/Types.luau` (514) - LUCKBOUND canonical type definitions. · 2026-10-01
 - `src/shared/Core/UITheme.luau` (166) - Shared GUI design system. Biome Blueprint §1.4. · 2026-09-29
   - `UITheme.luau`: UITheme.corner:111, UITheme.stroke:122, UITheme.rarityColor:131, UITheme.pad:137, UITheme.gradient:151
-- `src/shared/Util/AssetPreparation.luau` (279) - Explicit server-owned canonical mesh templates; never parent into Workspace. · new
+- `src/shared/Util/AssetPreparation.luau` (279) - Explicit server-owned canonical mesh templates; never parent into Workspace. · 2026-10-01
   - `AssetPreparation.luau`: meshId:8, AssetPreparation.new:12
-- `src/shared/Util/ChunkAssetCore.luau` (55) - Seed-only mesh dependencies. Layout/content selection remain unchanged. · new
+- `src/shared/Util/ChunkAssetCore.luau` (55) - Seed-only mesh dependencies. Layout/content selection remain unchanged. · 2026-10-01
   - `ChunkAssetCore.luau`: ChunkAssetCore.role:9, ChunkAssetCore.key:15, ChunkAssetCore.requests:22
 - `src/shared/Util/ChunkCore.luau` (1023) - Seeded assembly of a map from a chunk library. Addendum §A4. · 2026-09-27
   - `ChunkCore.luau`: rotate:21, ChunkCore.yawRadians:41, norm:45, ChunkCore.libraryFor:50, socketById:69, ChunkCore.worldSocket:79, ChunkCore.placeAgainst:94, ChunkCore.arrivalSocket:121, ChunkCore.overlaps:133, ChunkCore.assemble:203, ChunkCore.assembleTest:847, ChunkCore.assembleWithRetry:950, ChunkCore.footprint:971, ChunkCore.validateLayout:987
@@ -855,7 +855,7 @@ _452 text files, 956 binary assets. Regenerate with `python tools/gen_index.py`;
   - `ChunkLoader.luau`: attachWalkCollision:39, part:96, billboard:108, tryMesh:134, setMeshFrame:195, tryChunkMesh:203, calibrateYaw:267, buildBlockout:379, buildSolidProps:433, kindColor:501, buildSocketMarkers:512, buildBoundaries:545, ChunkLoader.prepare:576, ChunkLoader.build:583, ChunkLoader.applyEnvironment:832
 - `src/shared/Util/ChunkTransit.luau` (126) - Server-authoritative walk-through transit inside one expedition (§7.7). · 2026-10-01
   - `ChunkTransit.luau`: ChunkTransit.attach:14
-- `src/shared/Util/GenerationAnchors.luau` (194) - Server-owned bounded cache of chunk-local presentation samples. · new
+- `src/shared/Util/GenerationAnchors.luau` (194) - Server-owned bounded cache of chunk-local presentation samples. · 2026-10-01
   - `GenerationAnchors.luau`: GenerationAnchors.new:6
 - `src/shared/Util/PortalRig.luau` (554) - The shared Expedition Gate component. Biome Blueprint §1.3. · 2026-09-25
   - `PortalRig.luau`: makePart:37, buildRing:51, PortalRig.build:89, rampBoost:239, PortalRig.attachEffects:274, neon:326, paint:333, PortalRig.setRarity:342, PortalRig.playSpinUp:394, PortalRig.setActive:431, PortalRig.setIdle:448, PortalRig.animate:477
@@ -873,12 +873,12 @@ _452 text files, 956 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### tests/asset_preparation_studio.luau
 
-- `tests/asset_preparation_studio.luau` (256) - Real Roblox scheduling, server ownership and MeshPart clones; injected API latency only. · new
+- `tests/asset_preparation_studio.luau` (256) - Real Roblox scheduling, server ownership and MeshPart clones; injected API latency only. · 2026-10-01
   - `asset_preparation_studio.luau`: check:5, PROXY:154, MULTIPART:155, EMPTY:180, UNAVAILABLE:181
 
 ### tests/atmosphere_late_update_studio.luau
 
-- `tests/atmosphere_late_update_studio.luau` (65) - Client-only real-instance invariant: anchors must not destroy moving scenery. · new
+- `tests/atmosphere_late_update_studio.luau` (65) - Client-only real-instance invariant: anchors must not destroy moving scenery. · 2026-10-01
 
 ### tests/build_suite.py
 
@@ -906,17 +906,17 @@ _452 text files, 956 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### tests/chunk_loader_studio.luau
 
-- `tests/chunk_loader_studio.luau` (70) - Full VV catalogue parity with an injected production-baseline loader. · new
+- `tests/chunk_loader_studio.luau` (70) - Full VV catalogue parity with an injected production-baseline loader. · 2026-10-01
   - `chunk_loader_studio.luau`: Check.run:13
 
 ### tests/generation_anchors_studio.luau
 
-- `tests/generation_anchors_studio.luau` (86) - Real geometry, all quarter-turn transforms, bounded cache and cancellation. · new
+- `tests/generation_anchors_studio.luau` (86) - Real geometry, all quarter-turn transforms, bounded cache and cancellation. · 2026-10-01
   - `generation_anchors_studio.luau`: pose:28, check:38
 
 ### tests/generation_geometry_studio.luau
 
-- `tests/generation_geometry_studio.luau` (79) - Real-engine differential sampling. Complements, never replaces, a player walk. · new
+- `tests/generation_geometry_studio.luau` (79) - Real-engine differential sampling. Complements, never replaces, a player walk. · 2026-10-01
   - `generation_geometry_studio.luau`: Check.sample:9
 
 ### tests/run.sh
@@ -978,12 +978,12 @@ _452 text files, 956 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### tools/studio_mcp.py
 
-- `tools/studio_mcp.py` (73) - Small stdio MCP client for the local Roblox Studio benchmark connection. · new
+- `tools/studio_mcp.py` (73) - Small stdio MCP client for the local Roblox Studio benchmark connection. · 2026-10-01
   - `studio_mcp.py`: main:11
 
 ### tools/summarize_generation_migration.py
 
-- `tools/summarize_generation_migration.py` (80) - Summarize preserved targeted verification; performs no Studio execution. · new
+- `tools/summarize_generation_migration.py` (80) - Summarize preserved targeted verification; performs no Studio execution. · 2026-10-01
   - `summarize_generation_migration.py`: differences:11, main:29
 
 ### tools/sync_asset_ids.py
@@ -1008,12 +1008,12 @@ _452 text files, 956 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### tools/verify_generation_contracts.py
 
-- `tools/verify_generation_contracts.py` (80) - Focused Studio contracts; restores temporary sources, never saves/publishes. · new
+- `tools/verify_generation_contracts.py` (80) - Focused Studio contracts; restores temporary sources, never saves/publishes. · 2026-10-01
   - `verify_generation_contracts.py`: fixture:14, main:20
 
 ### tools/verify_generation_migration.py
 
-- `tools/verify_generation_migration.py` (194) - Targeted real production-path cold/reuse verification, restoring every Edit source. · new
+- `tools/verify_generation_migration.py` (194) - Targeted real production-path cold/reuse verification, restoring every Edit source. · 2026-10-01
   - `verify_generation_migration.py`: rpc:26, code:40, play:41, parent:44, install:106, restore:131, main:151
 
 ### tools/verify_vv_collision_rbxmx.py

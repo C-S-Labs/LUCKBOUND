@@ -36,6 +36,56 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 237 - 2026-10-02 - Production generation PR preparation
+**Branch:** `agent/procgen-production`. **Merged:** none; owner authorizes push/PR, explicitly stop before merge. **Tests:** 1,063 unit assertions, 4,280 loader comparisons, 140 syntax checks, StyLua, zero-error Selene and Rojo build pass.
+
+### Done
+- Recorded owner acceptance of fast VV/SC/ES generation, tested collision and fresh re-entry.
+- Refreshed origin/main: still714fa33; no upstream runtime changes or conflicts to reconcile.
+- Reviewed production migration scope: single-flight asset templates, seed-only preparation, six bounded workers, fidelity-safe fallback and cached/deferred atmosphere.
+- Owner cancelled the separate ES collision pilot; it is excluded from this branch/PR. Keep current authoritative VV/SC/ES collision.
+
+### Decisions made
+- Open the production migration PR after final local checks, then await remote CI; never merge in this session.
+- Keep published-server memory and explicit atmosphere/streaming/catalogue acceptance limitations visible rather than claiming they were tested.
+
+### Stopped at
+Local checks passed; preparing GitHub PR and remote CI. No Studio save/publication or main changes.
+
+### Next
+1. Complete local checks, push production branch, create PR and inspect CI/review state.
+2. Report readiness to owner and stop before merging.
+
+### Leftovers
+Keep original benchmark evidence, synchronous/failure fallbacks and protected production collision assets. No production assets made obsolete by this migration. Rejected pilot remains excluded.
+
+---
+
+## Session 236 - 2026-10-02 - Owner generation migration acceptance
+**Branch:** `agent/procgen-production`. **Merged:** none; no push. **Tests:** owner Studio traversal observations recorded; documentation-only follow-up, automated suite unchanged.
+
+### Done
+- Recorded owner VV fresh/reuse/random-seed instant entry, SC approximately 3-4s cold/new seed and instant replay, ES approximately 4-5s first entry and near-instant reuse/new seed.
+- Recorded tested SC boss approach/both arenas/railings and ES chunks/stairs/railings passing collision, with no reported missing map portions or unexpected holes. Quick re-entry preserves a fresh run without old attributes.
+- Distinguished manual estimates from instrumented benchmark evidence and preserved all prior results/checklists.
+
+### Decisions made
+- Owner wants to retain the migrated asset pipeline. Existing maps already have authoritative collision; universal authored proxies remain a future standard to validate through a small designer-authored pilot, not a mass migration.
+- SC/ES precise collision remains authoritative. New seeds can require cold assets; cache reuse is server-lifetime scoped.
+
+### Stopped at
+Owner accepts the tested migration behavior. No runtime changes, push, merge, Studio save or publication. Remaining unreported acceptance checks are still open.
+
+### Next
+1. Remaining explicit atmosphere/streaming/catalogue checks and published cold-server/client/native-memory validation when authorized.
+2. Remote CI and integration only on explicit instruction.
+3. Optional future 5-8 chunk designer-authored collision pilot requires a separate task; no enemy spawning.
+
+### Leftovers
+No new obsolete files or assets. Keep benchmark evidence, legacy/synchronous fallbacks, precise collision and protected rollback exports; no cleanup until CI and remaining validation establish safe replacement.
+
+---
+
 ## Session 235 — 2026-10-01 — Production generation asset migration
 **Branch:** `agent/procgen-production` from main `714fa33`. **Merged:** none; no push. **Tests:** 1,063 units, 4,280 loader comparisons, 300 layout comparisons; focused Studio invariants and all 30 VV catalogue comparisons pass.
 

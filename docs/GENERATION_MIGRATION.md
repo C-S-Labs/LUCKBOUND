@@ -193,6 +193,37 @@ limitations remain unchanged. Cold anchors finished 0.435–1.150 s after ground
 actual visual pop-in acceptance remains pending. No broad proxy migration is allowed
 on the strength of these tests.
 
+## Owner Studio acceptance observations - 2026-10-02
+
+The owner accepts keeping the migrated asset pipeline after testing VV, SC and ES.
+These are approximate manual observations, separate from the instrumented timings
+above; they are not a new benchmark cohort or a published-server measurement.
+
+- **VV:** fresh entry, same-seed reuse and another random seed appeared instantaneous.
+  Player placement preceded visible rendering. Owner accepts this arrival behavior
+  with the existing black-screen fade masking presentation arrival.
+- **SC:** first entry was approximately 3-4 seconds. Same-seed reuse and replay
+  appeared instantaneous; a new seed took a similar, slightly shorter initial load.
+  Tested collision, railings, boss approach and both arena variants were correct,
+  with no blank map portions reported.
+- **ES:** first entry was approximately 4-5 seconds. Same-seed reuse and subsequent
+  new-seed entry appeared nearly instantaneous. Tested chunks, stairs and railings
+  had no unexpected collision gaps or holes.
+- **Lifecycle:** quick re-entry did not carry old attributes into the new run.
+- **Decision:** retain the new pipeline. No push, merge, publication, broad proxy
+  migration or enemy implementation is authorized by this acceptance.
+
+Every generated map already requires authoritative collision. This acceptance
+supports the current collision routes: VV authored templates and SC/ES precise
+mesh collision. It does not validate new SC/ES proxies. The next optional collision
+step remains a designer-authored 5-8 chunk pilot, targeting cold authoritative
+mesh preparation, with precision retained until each replacement passes validation.
+New seeds may introduce uncached assets; replay reuse is scoped to the server's
+lifetime. Published cold-server/client delivery and isolated memory validation,
+explicit atmosphere review, catalogue coverage and unreported checklist items
+remain open. The checklist below is retained for those remaining checks; unchecked
+boxes do not negate the owner-reported observations above.
+
 ## Exact owner Studio acceptance checklist
 
 Serve **this worktree** with Rojo, review its sync preview, and use a fresh Play.
@@ -329,3 +360,15 @@ manifest entries or older iterations were deleted. Only the superseded inline
 anchor scan was factored into the owned utility; its original is preserved in git.
 Temporary `.tools` profiling outputs are ignored. Supported runners/test evidence
 remain for review; no noisy benchmark hooks ship in the runtime.
+
+## PR readiness and rejected collision follow-up - 2026-10-02
+
+Owner authorizes pushing agent/procgen-production and opening a PR, with an explicit
+stop before merge. Remote main remains714fa33 at preparation. Owner VV/SC/ES
+acceptance above supports retaining the migrated generation pipeline.
+
+The separately authored ES collision pilot was cancelled because it retained too
+much visual detail and established no additional performance win. Its files and
+loader work are excluded from this production PR. Current authoritative collision
+and all original benchmark evidence remain unchanged. No broad proxy migration,
+enemy spawning, whole-world preload, or world-scoped performance registry is included.
