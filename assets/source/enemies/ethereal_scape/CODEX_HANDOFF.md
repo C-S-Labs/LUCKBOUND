@@ -1,5 +1,8 @@
 # Ethereal Scape enemies: handoff to Codex (2026-09-30)
 
+> **OWNERSHIP UPDATE (owner, 2026-10-02): Claude Code keeps THE ASCENDANT** (it created it). **Codex takes the other Ethereal Scape enemies** (basics' animations, the three minibosses). Codex: do not export, rebuild or edit the Ascendant mesh, rig, actions or `TheAscendant_fixed.blend`; where this file says "Codex" about the Ascendant, it now means Claude Code. Ascendant construction was not started tonight; the next Ascendant step is the read-only audit of `_fixed` (work order §1). To avoid binary-merge conflicts, only one agent touches `.blend` files for a given enemy.
+
+
 Owner-directed: **the Ascendant and the rest of the Ethereal Scape (ES) enemy work moves from Claude Code to Codex.** Everything below is what a fresh agent needs. Read `INDEX.md`, `AGENTS.md`, then this file. Rules in `AGENTS.md` apply unchanged (branch `agent/<task>`, PR, do not merge unless integration agent, token discipline, update WORKLOG/STATUS/INDEX).
 
 ## Read in this order
