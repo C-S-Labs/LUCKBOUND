@@ -9620,6 +9620,161 @@ do
 end
 
 -- === summary ========================================================
+group("Seed asset working sets")
+do
+	local assets = __require("ChunkAssetCore")
+	local used = {
+		ENTRY = { AssetKey = "SPAWN" },
+		NORMAL = { AssetKey = "PATH" },
+		BOSS = { AssetKey = "BOSS" },
+		APPROACH = { AssetKey = "APPROACH" },
+		UNUSED = { AssetKey = "UNUSED" },
+		MULTI = {
+			AssetKey = "ASSEMBLY",
+			MeshParts = {
+				{ AssetKey = "TERRAIN" },
+				{ AssetKey = "FOLIAGE", CanCollide = false },
+			},
+		},
+	}
+	local layout = { Chunks = {} }
+	for index, id in { "ENTRY", "NORMAL", "NORMAL", "APPROACH", "BOSS", "MULTI" } do
+		table.insert(layout.Chunks, { ChunkId = id, Index = index, X = 0, Y = 0, Z = 0, Yaw = 0 })
+	end
+	local manifest = {
+		isUploaded = function()
+			return false
+		end,
+	}
+	local requests = assets.requests(layout, used, manifest, function(chunk)
+		return chunk.AssetKey == "SPAWN"
+	end)
+	local keys = {}
+	for _, request in requests do
+		keys[request.Key] = request.Role
+	end
+	check("duplicate asset keys deduplicate", #requests == 6)
+	check(
+		"spawn and boss approach/boss included",
+		keys.SPAWN ~= nil and keys.APPROACH ~= nil and keys.BOSS ~= nil
+	)
+	check("unused biome asset excluded", keys.UNUSED == nil and keys.ASSEMBLY == nil)
+	check("all multipart components included", keys.TERRAIN ~= nil and keys.FOLIAGE ~= nil)
+	check(
+		"verified proxy visual and explicit foliage visual",
+		keys.SPAWN == "VISUAL_ONLY" and keys.FOLIAGE == "VISUAL_ONLY"
+	)
+	check("authoritative terrain keeps role", keys.TERRAIN == "AUTHORITATIVE_MESH_COLLISION")
+	check(
+		"working set preserves layout order",
+		layout.Chunks[2].ChunkId == "NORMAL" and #layout.Chunks == 6
+	)
+	local stats = assets.requests(layout, used, manifest, function()
+		return false
+	end)
+	check(
+		"missing proxy keeps authoritative collision",
+		stats[5].Key == "SPAWN" and stats[5].Role == "AUTHORITATIVE_MESH_COLLISION"
+	)
+	check(
+		"worker default and debug quiet",
+		GameConfig.Expedition.AssetPreparationWorkers == 6
+			and not GameConfig.Expedition.AssetPreparationDiagnostics
+	)
+	local invalid = table.clone(GameConfig)
+	invalid.Expedition = table.clone(GameConfig.Expedition)
+	invalid.Expedition.AssetPreparationWorkers = 0
+	check("invalid worker limit refuses boot", not Schema.validateConfig(invalid, Worlds))
+	check(
+		"uploaded recolour is collected without loading unused variants",
+		assets.key({ AssetKey = "PATH" }, "MIST", {
+			isUploaded = function(key)
+				return key == "PATH__MIST"
+			end,
+		})
+				== "PATH__MIST"
+			and assets.key({ AssetKey = "PATH" }, "MIST", manifest) == "PATH"
+	)
+	local mixed = table.clone(used)
+	mixed.VISUAL = { MeshParts = { { AssetKey = "PATH", CanCollide = false } } }
+	local mixedLayout = { Chunks = table.clone(layout.Chunks) }
+	table.insert(mixedLayout.Chunks, { ChunkId = "VISUAL", Index = 7 })
+	local variants = assets.requests(mixedLayout, mixed, manifest, function()
+		return false
+	end)
+	local roles = {}
+	for _, request in variants do
+		if request.Key == "PATH" then
+			roles[request.Role] = true
+		end
+	end
+	check(
+		"same asset retains distinct collision requirements",
+		roles.VISUAL_ONLY and roles.AUTHORITATIVE_MESH_COLLISION
+	)
+	local parent = Chunks.ES_CAP_SEALED_SHRINE
+	local roomRequests = assets.requests(
+		{ Chunks = { { ChunkId = parent.Id, Index = 1, X = 0, Y = 0, Z = 0, Yaw = 0 } } },
+		Chunks,
+		AssetManifest,
+		function()
+			return false
+		end
+	)
+	local roomKeys = {}
+	for _, request in roomRequests do
+		roomKeys[request.Key] = true
+	end
+	local roomIncluded = true
+	for _, component in parent.AttachedRooms[1].MeshParts do
+		roomIncluded = roomIncluded and roomKeys[component.AssetKey] == true
+	end
+	check("conditional room components enter only their parent's working set", roomIncluded)
+	for _, worldId in { "VERDANT_VALLEY", "SKY_CITADEL", "ETHEREAL_SCAPE" } do
+		local world = Worlds[worldId]
+		local options = {
+			WorldId = worldId,
+			PathLength = ExpeditionCore.pathLengthFor(world, GameConfig),
+			IncludeSide = GameConfig.Expedition.IncludeSide,
+			BranchLength = GameConfig.Expedition.BranchLength,
+			MaxRepeats = GameConfig.Expedition.MaxRepeats,
+			Generation = world.Generation,
+		}
+		local unchanged, completed = true, 0
+		for seed = 1, 100 do
+			local function generate()
+				return ChunkCore.assembleWithRetry(Chunks, options, function(attempt)
+					return ExpeditionCore.streamFor(seed, attempt)
+				end, GameConfig.Expedition.AssemblyAttempts)
+			end
+			local ok, before = generate()
+			if ok then
+				assets.requests(before, Chunks, AssetManifest, function()
+					return false
+				end)
+				local again, after = generate()
+				unchanged = unchanged and again and #before.Chunks == #after.Chunks
+				for index, a in before.Chunks do
+					local b = after.Chunks[index]
+					unchanged = unchanged
+						and b ~= nil
+						and a.ChunkId == b.ChunkId
+						and a.Role == b.Role
+						and a.Yaw == b.Yaw
+						and a.X == b.X
+						and a.Y == b.Y
+						and a.Z == b.Z
+				end
+				completed += 1
+			end
+		end
+		check(
+			worldId .. " working-set collection preserves 100 seed layouts",
+			unchanged and completed == 100
+		)
+	end
+end
+
 print(
 	string.format(
 		"\n%s\n%d passed, %d failed, %d total",

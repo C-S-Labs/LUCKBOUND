@@ -207,7 +207,7 @@ function CharacterAnimator.bind(character: Model, hum: Humanoid, root: BasePart)
 		animator = Instance.new("Animator")
 		animator.Parent = hum
 	end
-	assert(animator)
+	assert(animator, "player Animator missing")
 
 	-- The stock Animate script keys off the Humanoid state machine, which
 	-- is off; its assets are still the fallback for every empty slot.

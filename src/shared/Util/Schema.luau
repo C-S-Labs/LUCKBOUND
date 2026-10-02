@@ -181,7 +181,26 @@ function Schema.validateConfig(config: any, worlds: { [string]: any }): (boolean
 		)
 	end
 
-	-- Scenario-layer pacing dials (build spec §7.3). Required, not optional:
+	-- Asset preparation / optional presentation limits (build spec §7.7).
+	for _, key in { "AssetPreparationWorkers", "AtmosphereRayBudget", "AtmosphereCacheEntries" } do
+		local value = config.Expedition[key]
+		if
+			type(value) ~= "number"
+			or value ~= value
+			or value == math.huge
+			or value <= 0
+			or value % 1 ~= 0
+		then
+			table.insert(errors, `GameConfig.Expedition.{key} must be a positive finite integer`)
+		end
+	end
+	for _, key in { "AssetPreparationEnabled", "AssetPreparationDiagnostics", "DeferredAtmosphere" } do
+		if type(config.Expedition[key]) ~= "boolean" then
+			table.insert(errors, `GameConfig.Expedition.{key} must be boolean`)
+		end
+	end
+
+	-- Scenario-layer pacing dials (build spec §7.3), required, not optional.
 	-- ScenarioCore cannot assign without them, and losing them silently is
 	-- exactly what merge f9dec00 did -- the block vanished, nothing at boot
 	-- objected because the module had no runtime caller, and the failure

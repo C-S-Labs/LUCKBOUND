@@ -358,6 +358,22 @@ not content count.
 
 ---
 
+## Production materialization - 2026-10-01
+
+`ChunkCore` still solves layout/connectivity/overlap without changes. After success,
+`ChunkAssetCore` enumerates only this seed’s AssetKeys, including attached rooms.
+A server-owned `AssetPreparation` cache prepares unique role-aware templates with
+single-flight and six bounded workers. ChunkLoader places their clones and existing
+authored collision. Only safe visual-only imports bypass AssetService; SC/ES
+authoritative geometry retains Precise and existing art calibration. VV’s full
+30-chunk yaw/collision catalogue passed the production comparison. Presentation
+anchors are cached/deferred through the existing remote contract.
+
+See [GENERATION_MIGRATION.md](GENERATION_MIGRATION.md) for evidence, reversibility,
+manual gates and proposed 5-8 chunk designer collision/enemy-marker contracts.
+No automatic proxy migration or enemy spawning was implemented. Keep rollback
+assets until owner traversal and published-server validation pass.
+
 ## The geometry contract
 
 **Multipart art (owner-directed, 2026-09-30).** A chunk may contain multiple meshes, each under

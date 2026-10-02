@@ -1,0 +1,93 @@
+{
+  "BaselineCommit": "714fa33",
+  "EvidenceCommit": "bb47f91",
+  "Maps": 6,
+  "Method": "fresh Play per world, seed 1 twice; cold application cache, existing Studio process/native asset cache",
+  "PlayableMedianSeconds": 1.3161800000234507,
+  "PlayableWorstSeconds": 7.316548599977978,
+  "PairedControlCounters": {
+    "CreateMeshPartAsyncCalls": 310,
+    "PreciseRequests": 310,
+    "VisualOnlyPreciseRequests": 140
+  },
+  "MigrationCounters": {
+    "CreateMeshPartAsyncCalls": 64,
+    "PreciseRequests": 64,
+    "VisualOnlyPreciseRequests": 0
+  },
+  "ColdMisses": 126,
+  "AuthoredResolutions": 62,
+  "WarmMisses": 0,
+  "WarmHits": 281,
+  "InFlightDeduplications": 0,
+  "DuplicatePreparations": 0,
+  "Comparisons": [
+    {
+      "DifferentSamples": 0,
+      "ComparedSamples": 1862,
+      "MaximumDifferenceStuds": 0.00399999999999999,
+      "WorldId": "VERDANT_VALLEY",
+      "Repeat": 1,
+      "VisualSignaturesMatch": true,
+      "ArtYawsMatch": true
+    },
+    {
+      "DifferentSamples": 0,
+      "ComparedSamples": 1862,
+      "MaximumDifferenceStuds": 0,
+      "WorldId": "VERDANT_VALLEY",
+      "Repeat": 2,
+      "VisualSignaturesMatch": true,
+      "ArtYawsMatch": true
+    },
+    {
+      "DifferentSamples": 0,
+      "ComparedSamples": 2372,
+      "MaximumDifferenceStuds": 0,
+      "WorldId": "SKY_CITADEL",
+      "Repeat": 1,
+      "VisualSignaturesMatch": true,
+      "ArtYawsMatch": true
+    },
+    {
+      "DifferentSamples": 0,
+      "ComparedSamples": 2372,
+      "MaximumDifferenceStuds": 0,
+      "WorldId": "SKY_CITADEL",
+      "Repeat": 2,
+      "VisualSignaturesMatch": true,
+      "ArtYawsMatch": true
+    },
+    {
+      "DifferentSamples": 0,
+      "ComparedSamples": 4608,
+      "MaximumDifferenceStuds": 0,
+      "WorldId": "ETHEREAL_SCAPE",
+      "Repeat": 1,
+      "VisualSignaturesMatch": true,
+      "ArtYawsMatch": true
+    },
+    {
+      "DifferentSamples": 0,
+      "ComparedSamples": 4608,
+      "MaximumDifferenceStuds": 0,
+      "WorldId": "ETHEREAL_SCAPE",
+      "Repeat": 2,
+      "VisualSignaturesMatch": true,
+      "ArtYawsMatch": true
+    }
+  ],
+  "Catalogue": {
+    "DifferentSamples": 0,
+    "ComparedSamples": 5096,
+    "MaximumDifferenceStuds": 0.004000000000001336,
+    "VisualSignaturesMatch": true,
+    "VerifiedArtRotations": 30,
+    "VerifiedProxyParts": 4033
+  },
+  "Limits": [
+    "one cold application-cache run per world",
+    "native cache memory not isolated",
+    "manual traversal/rendered visual acceptance and published client/network validation pending"
+  ]
+}

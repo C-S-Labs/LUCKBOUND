@@ -29,11 +29,12 @@ local ChunkCore = require(Root.Util.ChunkCore)
 local Constants = require(Root.Core.Constants)
 local GameConfig = require(Root.Core.GameConfig)
 local ChunkRuntimeCore = require(Root.Core.ChunkRuntimeCore)
+local ChunkAssetCore = require(Root.Util.ChunkAssetCore)
 local Props = require(Root.Content.Props)
 
 local ChunkLoader = {}
 
--- Prototype only: a named model in the Verdant Valley kit holds the small,
+-- A named model in the authored kit holds the authoritative simplified,
 -- authored walk colliders. The import sets its pivot to the chunk origin.
 local function attachWalkCollision(
 	chunk: any,
@@ -130,7 +131,28 @@ end
 --- Tries the authored mesh. Returns nil when the asset is a PLACEHOLDER, when
 --- the id fails to load, or when the engine refuses it -- every one of which
 --- must fall back to blockout rather than leaving a hole in the map.
-local function tryMesh(assetKey: string, size: Vector3, cframe: CFrame, parent: Instance): BasePart?
+local function tryMesh(
+	assetKey: string,
+	size: Vector3,
+	cframe: CFrame,
+	parent: Instance,
+	assets: any?,
+	role: string?
+): BasePart?
+	if assets then
+		local prepared = assets:clone(assetKey, role or "AUTHORITATIVE_MESH_COLLISION")
+		if not prepared.ok then
+			warn(`[ChunkLoader] {prepared.err}; using blockout`)
+			return nil
+		end
+		local mesh = prepared.value
+		mesh.Name = "Mesh"
+		mesh.Anchored = true
+		mesh.CanCollide, mesh.CanQuery, mesh.CanTouch = true, true, true
+		mesh.Size, mesh.CFrame = size, cframe
+		mesh.Parent = parent
+		return mesh
+	end
 	local id = AssetManifest.assetId(assetKey)
 	if not id then
 		return nil
@@ -182,10 +204,21 @@ local function tryChunkMesh(
 	chunk: any,
 	assetKey: string,
 	cframe: CFrame,
-	parent: Instance
+	parent: Instance,
+	assets: any?,
+	authoritative: boolean?
 ): (BasePart | Model)?
 	if not chunk.MeshParts then
-		return tryMesh(assetKey, Vector3.new(chunk.SizeX, chunk.SizeY, chunk.SizeZ), cframe, parent)
+		return tryMesh(
+			assetKey,
+			Vector3.new(chunk.SizeX, chunk.SizeY, chunk.SizeZ),
+			cframe,
+			parent,
+			assets,
+			if authoritative
+				then "AUTHORITATIVE_MESH_COLLISION"
+				else ChunkAssetCore.role(nil, assets ~= nil and assets:hasProxy(chunk))
+		)
 	end
 	local assembly = Instance.new("Model")
 	assembly.Name = "Mesh"
@@ -194,7 +227,9 @@ local function tryChunkMesh(
 			definition.AssetKey,
 			Vector3.new(definition.SizeX, definition.SizeY, definition.SizeZ),
 			cframe * CFrame.new(definition.OffsetX, definition.OffsetY, definition.OffsetZ),
-			assembly
+			assembly,
+			assets,
+			ChunkAssetCore.role(definition, false)
 		)
 		if not mesh then
 			assembly:Destroy()
@@ -538,12 +573,20 @@ local function buildBoundaries(chunk: any, centre: Vector3, yaw: number, folder:
 	end
 end
 
+function ChunkLoader.prepare(layout: any, chunks: any, assets: any): (any, number)
+	local requests = ChunkAssetCore.requests(layout, chunks, AssetManifest, function(chunk)
+		return assets:hasProxy(chunk)
+	end)
+	return assets:prepareMany(requests), #requests
+end
+
 function ChunkLoader.build(
 	layout: any,
 	chunks: { [string]: any },
 	origin: Vector3,
 	parent: Instance,
-	name: string
+	name: string,
+	assets: any?
 ): LoadResult
 	local cfg = GameConfig.Expedition
 
@@ -551,6 +594,9 @@ function ChunkLoader.build(
 	model.Name = name
 	model:SetAttribute("WorldId", layout.WorldId)
 	model:SetAttribute("Seed", layout.Seed)
+	if assets then
+		model:SetAttribute("Atmosphere", layout.Atmosphere)
+	end
 	model:SetAttribute("TestMode", layout.TestMode == true)
 	if layout.TestMode then
 		-- A catalogue spans far beyond the player's streaming radius. Keep
@@ -661,13 +707,30 @@ function ChunkLoader.build(
 		then
 			assetKey = assetKey .. "__" .. layout.Atmosphere
 		end
-		local mesh = tryChunkMesh(chunk, assetKey, meshCFrame, folder)
+		local usesProxy = assets ~= nil and not chunk.MeshParts and assets:hasProxy(chunk)
+		local mesh = tryChunkMesh(chunk, assetKey, meshCFrame, folder, assets)
+		-- A verified authored proxy makes the terrain visual-only. Never use a
+		-- Box visual hull as an orientation oracle; use the existing authored yaw.
+		if mesh and usesProxy and mesh:IsA("BasePart") then
+			local attached, success = pcall(attachWalkCollision, chunk, centre, mesh, folder)
+			if not attached or not success then
+				mesh:Destroy()
+				local partial = folder:FindFirstChild("WalkCollision")
+				if partial then
+					partial:Destroy()
+				end
+				usesProxy = false
+				mesh = tryChunkMesh(chunk, assetKey, meshCFrame, folder, assets, true)
+			end
+		end
 
 		local surface: BasePart?
 		local artYawOffset = chunk.MeshYawOffset or 0
 		if mesh then
 			local meshPos = meshCFrame.Position
-			local k = calibrateYaw(chunk, placed, origin, meshPos, mesh)
+			local k = if usesProxy
+				then chunk.MeshYawOffset or 0
+				else calibrateYaw(chunk, placed, origin, meshPos, mesh)
 			artYawOffset = k
 			setMeshFrame(
 				mesh,
@@ -676,7 +739,11 @@ function ChunkLoader.build(
 			usedMeshes += 1
 			if mesh:IsA("BasePart") then
 				surface = mesh
-				attachWalkCollision(chunk, centre, mesh, folder)
+				-- The prepared route already installed its verified proxy or retained
+				-- authoritative collision. Never retry a rejected/uncloneable proxy.
+				if not assets then
+					attachWalkCollision(chunk, centre, mesh, folder)
+				end
 			end
 		else
 			surface = buildBlockout(chunk, placed, centre, folder)
@@ -684,6 +751,10 @@ function ChunkLoader.build(
 		end
 		-- read by the dev panel's /assets and /chunks: which pieces had no mesh
 		folder:SetAttribute("Blockout", mesh == nil)
+		if assets then
+			folder:SetAttribute("AssetKey", assetKey)
+			folder:SetAttribute("ArtYawOffset", artYawOffset)
+		end
 		buildSolidProps(layout.WorldId, placed.ChunkId, centre, placed.Yaw, artYawOffset, folder)
 
 		buildSocketMarkers(chunk, placed, origin, folder)

@@ -1,0 +1,44 @@
+[
+  {
+    "WorldId": "VERDANT_VALLEY",
+    "Repeat": 1,
+    "StageName": "ProductionGenerationVerification",
+    "Pending": false,
+    "Active": true
+  },
+  {
+    "WorldId": "VERDANT_VALLEY",
+    "Repeat": 2,
+    "StageName": "ProductionGenerationVerification",
+    "Pending": false,
+    "Active": true
+  },
+  {
+    "WorldId": "SKY_CITADEL",
+    "Repeat": 1,
+    "StageName": "ProductionGenerationVerification",
+    "Pending": false,
+    "Active": true
+  },
+  {
+    "WorldId": "SKY_CITADEL",
+    "Repeat": 2,
+    "StageName": "ProductionGenerationVerification",
+    "Pending": false,
+    "Active": true
+  },
+  {
+    "WorldId": "ETHEREAL_SCAPE",
+    "Repeat": 1,
+    "StageName": "ProductionGenerationVerification",
+    "Pending": false,
+    "Active": true
+  },
+  {
+    "WorldId": "ETHEREAL_SCAPE",
+    "Repeat": 2,
+    "StageName": "ProductionGenerationVerification",
+    "Pending": false,
+    "Active": true
+  }
+]

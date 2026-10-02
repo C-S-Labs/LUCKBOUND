@@ -147,6 +147,14 @@ local GameConfig = {
 		-- turning it off returns the game to Phase 1 behaviour exactly -- the
 		-- Gate's prompt disappears and Expedition_RequestEnter is dropped.
 		Enabled = true,
+		-- Server-owned templates; disable to retain the synchronous asset fallback.
+		AssetPreparationEnabled = true,
+		AssetPreparationWorkers = 6,
+		AssetPreparationDiagnostics = false,
+		-- Presentation may arrive after playable geometry; sampling remains legacy.
+		DeferredAtmosphere = true,
+		AtmosphereRayBudget = 128,
+		AtmosphereCacheEntries = 128,
 
 		-- D-7: PDF §6 says 12 minutes. Flagged as likely too long for a
 		-- proof-of-concept tester; revisit before Phase 2 playtests. A world

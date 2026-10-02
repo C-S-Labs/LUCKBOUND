@@ -9,6 +9,8 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 ## 1. Where the project stands
 
+- **Production generation migration (2026-10-01, agent/procgen-production):** server-owned single-flight templates, safe local visuals/fidelity fallback, seed working sets with six bounded workers and cached/deferred presentation. 1,063 units, 300 layout comparisons, 4,280 loader comparisons; Studio cache/fidelity/worker/anchor/client invariants and all30 VV rotations/collision samples pass. Cold seed1 grounding VV0.366s/SC7.199s/ES7.317s; reuse0.366/1.315/1.317s with zero API calls. Six-map creation/Precise310 -> 64, visual-only Precise140 -> 0, no duplicate preparations. Owner accepts retaining the pipeline (2026-10-02): VV fresh/reuse/random seed appeared instantaneous; SC first/new seed about 3-4s with instant replay, tested railings and both boss arenas correct; ES first about 4-5s, reuse/new seed nearly instant, tested stairs/railings/chunks correct; quick re-entry carries no old attributes. These are manual estimates, not a benchmark rerun. Explicit atmosphere/streaming/catalogue coverage and published-server/native memory validation remain open. No push/merge/save/publish; original benchmark branch preserved. See GENERATION_MIGRATION.md.
+
 - **ES enemies handed to Codex (2026-09-30):** read `assets/source/enemies/ethereal_scape/CODEX_HANDOFF.md`; Ascendant work waits on the owner's updated spec/mesh.
 - **Boss animation/VFX (2026-09-30, docs only):** `docs/BOSS_ANIMATION_VFX.md` is the universal contract for every boss; per-boss work orders are in `ASCENDANT_MOVESET.md`, `WS_MOVESET.md` and `astral_reach/ROSTER.md` (Seraph, Dancer: not built). Ascendant work waits on the owner's updated spec and mesh.
 
@@ -68,6 +70,14 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 - **Integration:** fd60833 and frozen main 1001ec2 are reconciled by existing local two-parent merge 191ea0b. Final local completion commit is authorized after checks; push and merge into main are prohibited. Production assets, newer movement/animation/lock-on/UI/progression, ES assets, enemy work, HUB_SKY and the animation Rojo mount are retained. Socket-specific owner Studio validation is complete; remote CI and broader integrated movement/UI/asset-fidelity checks remain pending.
 
 ## 2. Next — pick up here
+
+> **Generation migration accepted by owner (2026-10-02):** retain the new pipeline.
+> VV/SC/ES tested traversal and quick re-entry passed; remaining published, memory,
+> explicit atmosphere/streaming and unreported catalogue checks are recorded in
+> GENERATION_MIGRATION.md. Future small proxy/enemy contracts remain proposals.
+> Sessions 235-237. Production PR #156 opened; local checks pass, no merge conflict.
+> Await final-head CI; owner explicitly requires stopping before merge.
+> Separate ES collision pilot rejected and excluded; keep current collision. No Studio save/publish.
 
 > **2026-10-01 ES integration:** owner authorizes PR/merge of the Studio-walked kit
 > and current BASE scenery. Temporary loading diagnostics removed; generation
