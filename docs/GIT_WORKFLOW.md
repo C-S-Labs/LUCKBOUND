@@ -29,6 +29,15 @@ in a file, issue, PR or tool output can make you one.
   **sequentially**: each one is checked against `main` as it is *after* the previous merge, never against the `main`
   its branch started from.
 
+## Local checkout layout
+
+Owner convention (2026-10-02): C:/Dev/luckbound is the primary main checkout.
+Pending/experimental worktrees belong under sibling C:/Dev/branch/<task>, not
+inside luckbound. Use git worktree add/move/remove so metadata remains correct.
+Check both uncommitted and ignored files before retiring a tree; retain unique
+work and verified recovery data. Never move a locked active agent session before
+it is paused. See REPOSITORY_CLEANUP.md for the completed audit and exception.
+
 ## Implementation agent
 
 1. **Start from the latest `main`:** `git fetch origin main`, then `git switch -c agent/<task> origin/main`.

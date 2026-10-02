@@ -36,6 +36,32 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 238 - 2026-10-02 - Filesystem audit and worktree cleanup
+**Branch:** `agent/repo-cleanup`. **Merged:** none; local documentation only. **Tests:** Git connectivity, preservation SHA256/commit checks, retained worktree paths and current-main Rojo build pass.
+
+### Done
+- Audited25,269 files/14 worktrees across C:/Dev; removed ten merged/rejected checkouts.
+- Moved benchmark and UI worktrees to C:/Dev/branch; created portal checkout there and preserved original branch/local ES asset edits. Primary checkout now main7c0513f, including merged generation PR156.
+- Preserved unique snapshots and69 scratch files in verified recovery storage; removed five retired Rojo builds, ten bytecode files and empty old container folders.
+- Cleared byte-identical phantom statuses; no substantive benchmark/UI edits discarded. No duplicate main binary assets found, no runtime/assets/content changes.
+- Added cleanup report and sibling-worktree/local-config conventions.
+
+### Decisions made
+- Active locked Ascendant/miniboss Claude session/PR154 stays at its original path until owner pauses it. Its commit changed during audit.
+- Legacy C:/Dev/tools scripts, owner authoritative Blender source/place, rollbacks, parked assets and all unique Git history remain.
+
+### Stopped at
+Filesystem cleanup complete except active-session relocation. Main and retained paths verified. No push/merge/Studio save/publication. Final disk totals in C:/Dev/branch/recovery/audit-final.json; report in REPOSITORY_CLEANUP.md.
+
+### Next
+1. Owner pause active Claude session, then relocate its locked worktree without losing ongoing work.
+2. Review local cleanup documentation branch; no further source/asset deletion until reference and acceptance checks.
+
+### Leftovers
+Protected rollbacks, benchmark results and tool scripts intentionally retained. Remove only reproducible artifacts; no older production asset made obsolete by this cleanup.
+
+---
+
 ## Session 237 - 2026-10-02 - Production generation PR preparation
 **Branch:** `agent/procgen-production`. **Merged:** none; owner authorizes push/PR, explicitly stop before merge. **Tests:** 1,063 unit assertions, 4,280 loader comparisons, 140 syntax checks, StyLua, zero-error Selene and Rojo build pass.
 

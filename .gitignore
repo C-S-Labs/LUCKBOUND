@@ -15,3 +15,9 @@ __pycache__/
 
 # Local validation executables (e.g. downloaded Luau CLI)
 .tools/
+
+# Local agent worktrees and machine-specific connection/settings files
+.worktrees/
+.claude/worktrees/
+.claude/settings.local.json
+.mcp.json
