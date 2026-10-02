@@ -137,13 +137,13 @@ _414 text files, 937 binary assets. Regenerate with `python tools/gen_index.py`;
   - `walk_core.py`: _ik2:20, leg_to:54, _rest_foot:58, _leg_phase:61, _wrot:75, _tilt:83, _swing_arm:88, _level_head:102, walk_pose_humanoid:108, _leg_len:137, _resolve_gait:153, build_walk_humanoid:164, strafe_pose_humanoid:180, _quad_leg_len:220, walk_pose_quadruped:224, build_walk_quadruped:243, build_strafe_humanoid:264
 - `assets/source/enemies/astral_reach/ROSTER.md` (110) - Astral Reach enemy roster (STAGING, biome has no map yet) · 2026-09-30
   - `ROSTER.md`: Shared rules for both:26, Boss A: Astral Seraph — NOT BUILT (work order):33, Boss B: Celestial Dancer — NOT BUILT (work order):67, Build status:104
-- `assets/source/enemies/ethereal_scape/ASCENDANT_MOVESET.md` (189) - The Ascendant: moveset (v1) · 2026-09-30
-  - `ASCENDANT_MOVESET.md`: Phase 1: The Guardian (ivory cuirass intact), 100-55% HP:27, Transition: P2_Transfiguration (70 f, invulnerable, no damag:44, Phase 2: Ascended (inner body exposed, crystal ascendant), 5:53, Fairness rules (every boss, restated):64, Animations:74, VFX plan (Studio):122, Work order 2026-09-30: animation and VFX construction (owner:137
-- `assets/source/enemies/ethereal_scape/CODEX_HANDOFF.md` (49) - Ethereal Scape enemies: handoff to Codex (2026-09-30) · 2026-09-30
-  - `CODEX_HANDOFF.md`: Read in this order:5, State of the ES enemies (verified against `origin/main`):12, The Ascendant: hard guard rails:25, Next steps, in order:32, Decisions already made (do not relitigate):41, Leftovers (do not delete yet):48
-- `assets/source/enemies/ethereal_scape/MINIBOSSES.md` (58) - Ethereal Scape minibosses: DRAFT work orders (2026-09-30, nothing built) · new
+- `assets/source/enemies/ethereal_scape/ASCENDANT_MOVESET.md` (219) - The Ascendant: moveset (v1) · 2026-09-30
+  - `ASCENDANT_MOVESET.md`: Phase 1: The Guardian (ivory cuirass intact), 100-55% HP:27, Transition: P2_Transfiguration (70 f, invulnerable, no damag:44, Phase 2: Ascended (inner body exposed, crystal ascendant), 5:53, Fairness rules (every boss, restated):64, Animations:74, VFX plan (Studio):122, Work order 2026-09-30: animation and VFX construction (owner:137, Roster direction (owner, 2026-10-02) and next-session plan:191
+- `assets/source/enemies/ethereal_scape/CODEX_HANDOFF.md` (52) - Ethereal Scape enemies: handoff to Codex (2026-09-30) · 2026-10-02
+  - `CODEX_HANDOFF.md`: Read in this order:8, State of the ES enemies (verified against `origin/main`):15, The Ascendant: hard guard rails:28, Next steps, in order:35, Decisions already made (do not relitigate):44, Leftovers (do not delete yet):51
+- `assets/source/enemies/ethereal_scape/MINIBOSSES.md` (58) - Ethereal Scape minibosses: DRAFT work orders (2026-09-30, nothing built) · 2026-09-30
   - `MINIBOSSES.md`: 1. Waystone Sentinel (Waystone Ring arena) · id `waystone_se:13, 2. Reliquary Keeper (Reliquary Court arena) · id `reliquary_:26, 3. Gatewarden (either Temple Gate) · id `gatewarden`:39, Open questions for the owner:54
-- `assets/source/enemies/ethereal_scape/ROSTER.md` (68) - Ethereal Scape enemy roster (base chunk set only) · 2026-09-28
+- `assets/source/enemies/ethereal_scape/ROSTER.md` (68) - Ethereal Scape enemy roster (base chunk set only) · 2026-09-30
   - `ROSTER.md`: Design language (shared by every ES enemy; do NOT reskin Sky:13, Basic (5):21, Minibosses (3):34, Boss (1):41, Shared scene:52, Build status (corrected 2026-09-30):56
 - `assets/source/enemies/ethereal_scape/aether_wisp.py` (98) - LUCKBOUND - Ethereal Scape BASIC enemy: Aether Wisp (close range, hover; the tutorial enemy). · 2026-09-28
 - `assets/source/enemies/ethereal_scape/anims/meadow_stag/Walk.py` (2) · 2026-09-28
@@ -574,8 +574,8 @@ _414 text files, 937 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (8310) - LUCKBOUND — Work Log · 2026-09-30
-  - `WORKLOG.md`: Template:18, Session N — YYYY-MM-DD — <short title>:21, Done:24, Decisions made:27, Stopped at:30, Next:33, Session 212 — 2026-09-30 — Ascendant mesh secured; ES minibo:39, Done:42, Open:47, Leftovers:51, Session 211 — 2026-09-30 — Ethereal Scape enemy work handed :56, Done:59, Open:62, Leftovers:66, Session 210 — 2026-09-30 — Stagger timing and player-combat :71, Done:74, Next:78, Leftovers:81, Session 209 — 2026-09-30 — Parry/stagger design; Final Phase:86, Done:89, Open:93, Leftovers:96, Session 208 — 2026-09-30 — Dancer form changes decided; Astr:101, Done:104, Open:109, Next:112, Leftovers:115, Session 207 — 2026-09-30 — Astral Reach planning consolidate:120, Done:123, Decisions made:128, Stopped at:133, Next:136, Leftovers:139, Session 206 — 2026-09-30 — Final VV integration wrap-up and :144, Done:147, Decisions made:154, Stopped at:159, Next:162, Session 205 — 2026-09-30 — Exact VV path exits and gate-widt:167, Done:170, ... +1043 more
+- `docs/WORKLOG.md` (8325) - LUCKBOUND — Work Log · 2026-09-30
+  - `WORKLOG.md`: Template:18, Session N — YYYY-MM-DD — <short title>:21, Done:24, Decisions made:27, Stopped at:30, Next:33, Session 213 — 2026-10-02 — Ascendant roster direction and ne:39, Done:42, Next:46, Leftovers:49, Session 212 — 2026-09-30 — Ascendant mesh secured; ES minibo:54, Done:57, Open:62, Leftovers:66, Session 211 — 2026-09-30 — Ethereal Scape enemy work handed :71, Done:74, Open:77, Leftovers:81, Session 210 — 2026-09-30 — Stagger timing and player-combat :86, Done:89, Next:93, Leftovers:96, Session 209 — 2026-09-30 — Parry/stagger design; Final Phase:101, Done:104, Open:108, Leftovers:111, Session 208 — 2026-09-30 — Dancer form changes decided; Astr:116, Done:119, Open:124, Next:127, Leftovers:130, Session 207 — 2026-09-30 — Astral Reach planning consolidate:135, Done:138, Decisions made:143, Stopped at:148, Next:151, Leftovers:154, Session 206 — 2026-09-30 — Final VV integration wrap-up and :159, Done:162, Decisions made:169, ... +1047 more
 
 ### docs/archive
 

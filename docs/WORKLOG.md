@@ -36,6 +36,21 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 213 — 2026-10-02 — Ascendant roster direction and next-session plan (docs only)
+**Merged:** none yet   **Tests:** docs only   **Branch:** agent/es-ascendant-and-minibosses (PR #154)
+
+### Done
+- Owner confirmed the Ascendant's roster direction: mixed ranged (OrbCast, SkyCast, spells) and physical (Crescent Reap and others). Wrote the proposed roster and a Blender-only plan into `ASCENDANT_MOVESET.md`.
+- Claude Code owns the Ascendant; work continues on this branch. No Studio import, `src/` change or `BossPreviews` row until all animations are final.
+
+### Next
+Read-only audit of `TheAscendant_fixed.blend` via `tools/run_blender.py`, then reconcile the owner's rigging spec, then the OrbCast and Crescent Reap prototypes.
+
+### Leftovers
+Older `TheAscendant.blend` stays until `_fixed` is audited.
+
+---
+
 ## Session 212 — 2026-09-30 — Ascendant mesh secured; ES miniboss drafts; roster corrected (docs + one binary)
 **Merged:** this PR   **Tests:** docs only   **Branch:** agent/es-ascendant-and-minibosses
 

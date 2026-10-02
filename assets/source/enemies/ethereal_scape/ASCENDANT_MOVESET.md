@@ -58,7 +58,7 @@ It's faster, and every recovery stays at or above the P1 floor. With the cuirass
 | 1 | **Twin Reap** | 12 f, then 8 f | 5 f + 5 f (R→L, then L→R) | **30 f** after the second | Roll through each arc | The second arc's tell is the staff flipping overhead: readable. |
 | 2 | **Portal Chain** | 14 f per step (arrival ring each time) | 3 thrusts, 6 f each | **40 f** after the 3rd (it kneels, core flickers) | Leave each ring | **Main P2 opening.** Every surface is within sword range of the player. |
 | 3 | **Starfall Lattice** | 20 f (staff raised skyward, rune rings mark the floor) | 5 pillars in two waves, 8 f each | **36 f** | Leave the rings; there is always a clear lane | Like P1 #4, larger, with a guaranteed safe lane. |
-| 4 | **Crescent Wave** | 16 f (crescent charges white) | a 6 m ground-level crescent wave, 10 f travel | **30 f** | Jump it | Its only ranged move, to punish players who stand off. |
+| 4 | **Crescent Wave** | 16 f (crescent charges white) | a 6 m ground-level crescent wave, 10 f travel | **30 f** | Jump it | Originally its only ranged move; superseded: the Ascendant now has a ranged kit (see Roster direction, 2026-10-02). |
 | 5 | **Ascension** (below 15% HP, once) | 24 f (lifts, crown and palms go white) | 4 alternating Reaps, 5 f each | **60 f**: collapses to one knee, glow out | Back off during the flurry, then finish it | The "finish it" moment. |
 
 ## Fairness rules (every boss, restated)
@@ -187,3 +187,33 @@ melee duelist vs caster-first roster (define one roster, enable nothing automati
 **9. VFX recipes:** `ASCENDANT_MOVESET.md` VFX plan above stays; additionally palette `#8CFFD0` / `#7FC8FF` checked against Ethereal Scape's bright cloud lighting; aggregate ~50 live particles normal, ~110 transition.
 
 **10. Acceptance (boss-specific, on top of contract §8):** edited chest/crystal intact and `BreakawayGlow` absent; cast effects start at the moving `VFX_Orb`; armour breaks remove the correct parts once and restore on reset.
+
+## Roster direction (owner, 2026-10-02) and next-session plan
+
+**Direction confirmed: a MIXED roster. The Ascendant needs both ranged moves (OrbCast, SkyCast, spell variants) and physical moves like Crescent Reap.** It is neither melee-only (older sheet) nor caster-only. Ranged pressures players who stand off, physical punishes players who crowd it, and the two keep the three-attack limit and 18 f punish.
+
+**Proposed roster for owner confirmation** (nothing enabled until confirmed; frame numbers are the older sheet's unless stated):
+| | Physical | Ranged / spell |
+|---|---|---|
+| Phase 1 | `P1_CrescentReap` (built, overhead chop), Rising Crescent, Portal Step -> Thrust | `P1_OrbCast` (built), `P1_SkyCast` (built; mapped to ONE named ground-spell recipe), Sanctum Lattice (own clip, not SkyCast) |
+| Counter | Crown Flare: counter cue, answered by a full Rising Crescent tell; defer to last | |
+| Phase 2 | Twin Reap (decide arcs vs overhead), Portal Chain | Starfall Lattice, Crescent Wave (ranged, ground-level; check collision height) |
+| Finisher | Ascension: two strokes, opening, two strokes, then 60 f kneel (three-attack rule) | |
+Open for the owner: which of these to cut or add for a tight playtest roster, and whether Crown Flare ships.
+
+**Session rules (owner, 2026-10-02):**
+- Work stays on this branch (`agent/es-ascendant-and-minibosses`, PR #154).
+- **Blender only until ALL his animations are finalised.** No `src/` change, no `BossPreviews` row, no Studio import until then; then one Studio walk, ideally with nothing left to rework.
+- Repo rules apply: Blender only via `python tools/run_blender.py` (never `blender.exe`); cheap checks only (parse, markers, expected files, counts), then hand to the owner (`AGENTS.md` rapid iteration).
+- Claude Code owns the Ascendant; Codex does not touch its `.blend` or actions.
+
+**Plan (Blender only):**
+1. **Audit `TheAscendant_fixed.blend`, read-only:** tri/bone counts per piece; which sockets exist (`VFX_Orb`, `VFX_StaffBase`, `VFX_StaffTip`, `VFX_Core`, `VFX_Eye`, `VFX_PalmL/R`, `Weapon_R`); `Breakaway` and inner core present, `BreakawayGlow` absent; differences vs the older `TheAscendant.blend` and the generator; how `run.py`/`export.py` would apply the action scripts to `_fixed` without rebuilding it. Write results into this file; **stop for owner OK.**
+2. **Reconcile the owner's updated rigging/joint spec** against the audit; change this work order first, assets second.
+3. **Prototype A, `P1_OrbCast`:** onto `_fixed`, add a `Commit` marker (f16) and put the bolt origin at `VFX_Orb` (f18); cheap checks, owner Blender review.
+4. **Prototype B, `P1_CrescentReap`** (overhead chop): grips, clearance, recovery; owner review.
+5. **Confirm the roster** (table above), then build remaining physical and ranged clips one at a time: Rising Crescent, Portal Step -> Thrust, Sanctum Lattice, then Phase 2.
+6. **Transfiguration** (70 f) with the `Breakaway` debris split; **death**; stagger/parry reactions per `ENEMY_AI.md` §10.1.
+7. **Finalise and export** every action from `_fixed`; update the manifest, this sheet and `INDEX.md`; **then** one Studio walk (import, `BossPreviews`, VFX recipes) with the owner.
+
+**Housekeeping:** (`INDEX.md` §5 already shows `tools/run_blender.py` on current `main`); after `_fixed` is audited and nothing references it, recommend removing or archiving the older `TheAscendant.blend`.
