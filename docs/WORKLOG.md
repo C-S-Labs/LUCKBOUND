@@ -56,6 +56,13 @@ Parallel branches: see `GIT_WORKFLOW.md` ("Work log and STATUS") for numbering a
 - Fate engine: recommended roll -> Keep/Roll again -> pedestal lowers and becomes the entrance rift (walk in).
   Not built; it is a separate branch that plugs into `payoutFor`.
 
+### Follow-up 2026-10-05
+- Removed the hub gate's portal (spec §7.8 step 6): `GateRig`, `buildGateAnchor`, `ExpeditionGateScale`, `GateAnchorSpan/Lift`,
+  the gate zone's `PortalScale`, HubEffects' `gateRig`, and four tests that only guarded it. The `EXPEDITION_GATE`
+  district id stays (Menu/Palettes/Cinematics key on it).
+- Made `assets/textures/rift_flow.png` (+ `make_rift_flow.py`): a seamless white-with-alpha flow texture the ribbons tint.
+  Upload is the owner's, under the group (README step 4); I cannot reach Roblox from here.
+
 ### Stopped at
 Rift code written and unit-tested for the pure parts; **nothing has run in Studio** (no prefab imported yet, so the
 blockout rift is what would draw). Hub gate still present.

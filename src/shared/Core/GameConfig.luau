@@ -387,11 +387,7 @@ local GameConfig = {
 		-- under the dais lip and the player steps up onto it.
 		WalkwayRaise = 1.5 * WORLD_SCALE, -- studs above the lower plaza ring
 
-		-- The invisible pad the Gate's ENTER prompt lives on, as a multiple of
-		-- the portal's scale, and how far above the platform it floats.
-		GateAnchorSpan = 8,
-		GateAnchorLift = 2 * WORLD_SCALE,
-		ProcessionalWidth = 72 * WORLD_SCALE, -- the Expedition Gate approach is wider
+		ProcessionalWidth = 72 * WORLD_SCALE, -- the market district's approach is wider
 		-- 400, not 420: the plaza lost 25 studs of radius and a zone platform
 		-- must not hang off the edge of the floor it stands on. Furthest
 		-- platform edge is now 400 + 160 = 560 against a 575-stud plaza.
@@ -815,7 +811,6 @@ local GameConfig = {
 		-- proportionally like the real thing rather than like a different
 		-- game -- and the platform the walkways meet is the same either way.
 		FateEngineScale = 1.25 * WORLD_SCALE,
-		ExpeditionGateScale = 8.0 * WORLD_SCALE,
 	},
 
 	Events = {

@@ -304,41 +304,6 @@ local function buildEngineEntryAnchor(parent: Instance): BasePart?
 	return anchor
 end
 
---- What ExpeditionSystem measures entry distance from, and where the ENTER
---- prompt lives. Decoupled from the portal art on purpose: a ProximityPrompt
---- measures from its part's origin, and a plinth wider than the prompt's reach
---- locks the player out while standing on it. That shipped once.
-local function buildGateAnchor(zone: any, top: Vector3, parent: Instance): BasePart
-	local anchor = part({
-		Name = Constants.NAMES.GATE_ANCHOR,
-		Size = Vector3.new(
-			zone.PortalScale * GameConfig.HubLayout.GateAnchorSpan,
-			1,
-			zone.PortalScale * GameConfig.HubLayout.GateAnchorSpan
-		),
-		Position = top + Vector3.new(
-			0,
-			GameConfig.Portal.MaxPlinthHeight + GameConfig.HubLayout.GateAnchorLift,
-			0
-		),
-		Transparency = 1,
-		CanCollide = false,
-	}, parent)
-	anchor:SetAttribute("IsGateAnchor", true)
-
-	local prompt = Instance.new("ProximityPrompt")
-	prompt.Name = "EnterPrompt"
-	prompt.ActionText = "ENTER"
-	prompt.ObjectText = "Expedition Gate"
-	prompt.HoldDuration = 0.5
-	prompt.MaxActivationDistance = GameConfig.UI.PromptActivationDistance
-	prompt.RequiresLineOfSight = false
-	prompt.Enabled = GameConfig.Expedition.Enabled
-	prompt.Parent = anchor
-
-	return anchor
-end
-
 --- Where a player arrives. Non-colliding, so it cannot become a lip on the
 --- walkway it sits over.
 --- A RING OF INVISIBLE PADS AROUND THE ENGINE'S DAIS, not one visible pad.
@@ -796,27 +761,10 @@ end
 local function buildGate(zone: any, centre: Vector3, parent: Instance)
 	local top = centre + Vector3.new(0, zone.PlatformSize.Y / 2, 0)
 
-	-- The largest portal in the hub. Blueprint §2.2.
-	PortalRig.build({
-		Name = "GateRig",
-		Position = top,
-		Scale = zone.PortalScale,
-		Rarity = "COMMON",
-		PlinthMaterial = Enum.Material.SmoothPlastic,
-		OuterMaterial = Enum.Material.CorrodedMetal,
-	}, parent)
-
-	-- The part the ENTER prompt lives on, and the part the server measures
-	-- entry distance from. Exactly the RollAnchor pattern from the Fate
-	-- Engine, and for the same two reasons.
-	--
-	-- A ProximityPrompt measures from its parent part's ORIGIN. Hanging the
-	-- prompt on the plinth meant measuring from the plinth's centre, and the
-	-- plinth is wider than the prompt's reach -- so a player standing on it
-	-- was already out of range. An anchor decouples "where the prompt is"
-	-- from "how big the art is", which is what lets the rig be rebuilt in
-	-- Blender at any size without breaking entry.
-	buildGateAnchor(zone, top, parent)
+	-- THE PORTAL THAT STOOD HERE IS GONE (build spec §7.8, owner 2026-09-28:
+	-- "it was only a prototype"). Entry is the Fate Engine's (see
+	-- buildEngineEntryAnchor); this district keeps its processional and its
+	-- torches, and its id, which Menu/Palettes/Cinematics still key on.
 
 	-- Processional walkway with flanking torch pillars: deliberately the most
 	-- dramatic sightline in the hub, visible from the Fate Engine.

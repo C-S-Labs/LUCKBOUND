@@ -1447,7 +1447,6 @@ local Crossroads = {
 			Accent = Color3.fromRGB(158, 158, 158),
 			Pillars = 6, -- torch pillars flanking the processional
 			PillarHeight = 110 * S,
-			PortalScale = GameConfig.Portal.ExpeditionGateScale,
 			MeshId = nil,
 		},
 		{

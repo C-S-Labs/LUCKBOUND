@@ -36,6 +36,9 @@ animation must keep them in that band** (orbit in the side lobes, never sweep ac
 1. Import each FBX with the 3D Importer (Imported Rig, Custom, Meter, 1.0).
 2. Save as `assets/rbxm/prefabs/EXPEDITION_ENTRANCE.rbxmx` / `EXPEDITION_EXIT.rbxmx`.
 3. Measure the imported scale against the spec and record it as `Prefab.Scale` (as `HUB_FATE_ENGINE` did).
-4. Upload the flow texture (see the spec) and put its id in `AssetManifest`.
+4. Upload `assets/textures/rift_flow.png` (made by `make_rift_flow.py`, 512x128, white with an alpha pattern, seamless
+   along its length) to Roblox **under the group**, not a personal account: Creator Hub > Creations > Images > Upload,
+   with the group as owner. Wait for moderation, then copy the **Image** asset id (a Decal id will not work on a Beam;
+   Studio can convert one) and set `GameConfig.Rift.FlowTexture = "rbxassetid://<id>"`.
 
 Until those files exist the game keeps drawing the `PortalRig` blockout portals.

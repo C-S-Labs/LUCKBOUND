@@ -1109,8 +1109,6 @@ do
 		) >= portal.SpinUpSeconds
 	)
 
-	check("the gate is the larger portal", portal.ExpeditionGateScale > portal.FateEngineScale)
-
 	-- Blueprint §1.1 is declared the single source of truth for rarity colour.
 	local BLUEPRINT = {
 		COMMON = "9E9E9E",
@@ -2809,11 +2807,6 @@ do
 			Scale = portal.FateEngineScale,
 			Reach = GameConfig.UI.PromptActivationDistance,
 		},
-		{
-			Name = "Expedition Gate",
-			Scale = portal.ExpeditionGateScale,
-			Reach = GameConfig.UI.PromptActivationDistance,
-		},
 	}
 
 	-- 1. A PROMPT MUST REACH THE EDGE OF ITS OWN PLINTH.
@@ -2837,11 +2830,6 @@ do
 			string.format("%.1f studs vs a %.1f-stud jump", height, JUMP_HEIGHT)
 		)
 	end
-	check(
-		"the plinth height cap is what makes that true at any scale",
-		portal.PlinthHeight * portal.ExpeditionGateScale > portal.MaxPlinthHeight,
-		"the cap is inert -- it should be binding at the Gate's scale"
-	)
 
 	-- 3. THE PLAZA IS A FLOOR, NOT A COLUMN.
 	-- It was built as a Part wearing a CylinderMesh, whose axis is Y while

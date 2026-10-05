@@ -1263,3 +1263,7 @@ Fate engine's logic and UI: all unchanged and still excluded.
 6. Remove the hub `GATE` zone and its tests; keep `GateAnchor`.
 7. Docs (`STATUS`, `WORKLOG`, `RESERVED`, `INDEX.md`, `TESTING.md` Studio pass), `stylua`, `gen_index.py`.
 
+*Status 2026-10-05: steps 1-5 and 6 are done in code (the blockout hub's `GateRig`, its anchor and prompt, `ExpeditionGateScale`
+and `GateAnchor*` config are removed; the `EXPEDITION_GATE` district id stays because Menu, Palettes and Cinematics key on
+it). Step 3b waits on the owner's Studio import; step 7 continues.*
+
