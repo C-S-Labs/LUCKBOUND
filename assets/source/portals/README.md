@@ -38,7 +38,7 @@ animation must keep them in that band** (orbit in the side lobes, never sweep ac
    15 studs high for the entrance and 21 for the exit. See [Roblox's Blender import settings](https://create.roblox.com/docs/art/blender).
 2. Save as `assets/rbxm/prefabs/EXPEDITION_ENTRANCE.rbxmx` / `EXPEDITION_EXIT.rbxmx`.
 3. Measure the imported scale against the spec and record it as `Prefab.Scale` (as `HUB_FATE_ENGINE` did).
-4. Upload `assets/textures/rift_flow.png` (made by `make_rift_flow.py`, 512x128, white with an alpha pattern, seamless
+4. **Done 2026-10-05:** uploaded to the group, id `97048945584606` (in `GameConfig.Rift.FlowTexture`). Steps used: upload `assets/textures/rift_flow.png` (made by `make_rift_flow.py`, 512x128, white with an alpha pattern, seamless
    along its length) to Roblox **under the group**, not a personal account: Creator Hub > Creations > Images > Upload,
    with the group as owner. Wait for moderation, then copy the **Image** asset id (a Decal id will not work on a Beam;
    Studio can convert one) and set `GameConfig.Rift.FlowTexture = "rbxassetid://<id>"`.

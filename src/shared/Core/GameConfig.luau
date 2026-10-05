@@ -655,9 +655,9 @@ local GameConfig = {
 		-- The exit is always this colour; the entrance takes the biome's rarity.
 		-- Crimson, not orange: Mythic is FF7A1A and must not read as the exit.
 		ExitColor = Color3.fromRGB(226, 32, 64),
-		-- assets/textures/rift_flow.png once uploaded (rbxassetid://...). Empty
+		-- assets/textures/rift_flow.png, uploaded to the group 2026-10-05. Empty
 		-- means the beams draw as plain glowing ribbons.
-		FlowTexture = "",
+		FlowTexture = "rbxassetid://97048945584606",
 		FlowTextureSpeed = 0.6,
 
 		-- Prefab keys and imported scale, recorded by the owner after the Studio

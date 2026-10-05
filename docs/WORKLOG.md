@@ -138,6 +138,10 @@ Keep the source/export assets and unrelated owner's Blender file.
 - Made `assets/textures/rift_flow.png` (+ `make_rift_flow.py`): a seamless white-with-alpha flow texture the ribbons tint.
   Upload is the owner's, under the group (README step 4); I cannot reach Roblox from here.
 
+- 2026-10-05: owner uploaded both textures to the group. `GameConfig.Rift.FlowTexture` = `rbxassetid://97048945584606`;
+  `LightningRigs` (and its generator `ws_lance.py`) now use `rbxassetid://99323739536569` for `lightning_strip.png`, since the
+  old id was personal-account-owned and the partner could not see it.
+
 ### Stopped at
 Rift code written and unit-tested for the pure parts; **nothing has run in Studio** (no prefab imported yet, so the
 blockout rift is what would draw). Hub gate still present.
