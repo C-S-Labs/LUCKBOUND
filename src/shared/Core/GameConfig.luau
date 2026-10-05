@@ -552,6 +552,11 @@ local GameConfig = {
 					FallbackAngle = 0.5,
 					ArriveTurnScale = 0.8, -- arrived = within max(ArriveMin, this x turn radius)
 					StuckSeconds = 8,
+					CircleSeconds = 20, -- circling check window ...
+					CircleTurns = 2.5, -- ... more turns than this ...
+					CircleSpan = 4, -- ... without getting further than this x its turning circle (min CircleSpanMin) = circling
+					CircleSpanMin = 15,
+					ArriveRadiusScale = 1.5, -- a waypoint is reached within this x the real turning radius at the current speed
 					RescueSeconds = 45, -- progress check window: a flier that gets almost nowhere is re-entered ...
 					RescueSpeedFrac = 0.25, -- ... if it covered less than this fraction of its slowest cruise
 					StuckTurnScale = 3, -- ... plus this x (turn radius / speed): the time to come round

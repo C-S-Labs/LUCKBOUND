@@ -88,6 +88,11 @@ export type Flier = {
 	BestDist: number,
 	RescueT: number, -- seconds since the progress check began
 	RescueDist: number, -- distance flown since the progress check began
+	CircleT: number, -- circling check window: seconds, turn flown, start point, strikes in a row
+	CircleTurn: number,
+	CircleX: number,
+	CircleZ: number,
+	CircleStrikes: number,
 	Rescues: number, -- times it was moved out of a dead end
 	StuckFor: number,
 	Mode: string, -- fly | approach | land | perch | takeoff
@@ -382,6 +387,12 @@ function FlightCore.keepOutSteer(
 	end
 	local dx, dz = f.X - cx, f.Z - cz
 	local d = math.sqrt(dx * dx + dz * dz)
+	-- OVER THE ROOF: a creature that may cross the hub and is already above its roof only
+	-- needs to stay up. An edge tangent here is ill-conditioned (it swings with every stud
+	-- of travel near the axis and the creature spins chasing it), so the push is vertical only.
+	if f.Roofed and d < c and f.Y >= cy + prof.OverheadMinY + vpad then
+		return 0, fl.KeepOutClimb * fl.KeepOutWeight * fl.KeepOutFloor, 0, true
+	end
 	local ux, uz
 	if d < EPS then
 		ux, uz = math.cos(f.Yaw), math.sin(f.Yaw)
@@ -974,6 +985,11 @@ function FlightCore.spawn(
 		BestDist = math.huge,
 		RescueT = 0,
 		RescueDist = 0,
+		CircleT = 0,
+		CircleTurn = 0,
+		CircleX = x,
+		CircleZ = z,
+		CircleStrikes = 0,
 		Rescues = 0,
 		StuckFor = 0,
 		Mode = "fly",
@@ -1284,6 +1300,30 @@ function FlightCore.tick(f: Flier, dt: number, env: any)
 			return
 		end
 	end
+	-- NO ENDLESS CIRCLES: several turns while getting nowhere means the creature is orbiting
+	-- something it cannot reach (a waypoint inside its turning circle, a steer it cannot
+	-- satisfy). Choose again; if that fails twice running, re-enter at the band's edge.
+	f.CircleT += dt
+	f.CircleTurn += math.abs(f.YawRate) * dt
+	if f.CircleT >= fl.CircleSeconds then
+		local nx, nz = f.X - f.CircleX, f.Z - f.CircleZ
+		local net = math.sqrt(nx * nx + nz * nz)
+		local span = fl.CircleSpan * math.max(f.TurnRadius, fl.CircleSpanMin)
+		local circling = f.CircleTurn > fl.CircleTurns * TWO_PI and net < span
+		f.CircleT, f.CircleTurn, f.CircleX, f.CircleZ = 0, 0, f.X, f.Z
+		if circling then
+			f.CircleStrikes += 1
+			if f.CircleStrikes >= 2 then
+				f.CircleStrikes = 0
+				FlightCore.enter(f)
+				f.Rescues += 1
+				return
+			end
+			FlightCore.pickWaypoint(f, env, math.pi * 0.5)
+		else
+			f.CircleStrikes = 0
+		end
+	end
 	local tx, ty, tz = f.TX - f.X, f.TY - f.Y, f.TZ - f.Z
 	local to = math.sqrt(tx * tx + ty * ty + tz * tz)
 	if to < f.BestDist - 1 then
@@ -1294,7 +1334,12 @@ function FlightCore.tick(f: Flier, dt: number, env: any)
 	-- a big turner counts as arrived from further out: it cannot tighten its
 	-- circle onto a point
 	if
-		to < math.max(prof.ArriveMin, f.TurnRadius * fl.ArriveTurnScale)
+		to
+			< math.max(
+				prof.ArriveMin,
+				f.TurnRadius * fl.ArriveTurnScale,
+				f.Speed / math.max(maxTurnRate(f), EPS) * fl.ArriveRadiusScale
+			)
 		or f.StuckFor > stuckLimit(f)
 	then
 		local perched = false

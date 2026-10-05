@@ -10275,6 +10275,100 @@ do
 		return false
 	end
 
+	-- NO CIRCLING IN PLACE: with the world's obstacles and a player near the hub, no 30 s window
+	-- turns more than three circles while getting nowhere (the owner saw fliers spin forever)
+	do
+		local circlers, total = 0, 0
+		for _, class in life.ClassOrder do
+			for seed = 1, (if class == "COLOSSAL" then 6 else 16) do
+				local obs = worldObstacles(seed * 29)
+				local f = newFlier(class, 9100 + seed, false)
+				f.Obstacles = obs
+				FlightCore.relocate(f)
+				local rng = newRng(seed)
+				local env = { PlayerX = 0, PlayerY = 40, PlayerZ = 0 }
+				FlightCore.pickWaypoint(f, env)
+				local wx, wz, turned, t0 = f.X, f.Z, 0.0, 0.0
+				local dt = if class == "COLOSSAL" then 0.5 else 0.1
+				local steps = math.floor((if class == "COLOSSAL" then 8000 else 900) / dt)
+				for i = 1, steps do
+					if i % 50 == 0 then -- the player flies about near the hub
+						env.PlayerX, env.PlayerZ =
+							rng:NextNumber(-250, 250), rng:NextNumber(-250, 250)
+					end
+					FlightCore.tick(f, dt, env)
+					turned += math.abs(f.YawRate) * dt
+					if i * dt - t0 >= 30 then
+						local net = math.sqrt((f.X - wx) ^ 2 + (f.Z - wz) ^ 2)
+						total += 1
+						if turned > 6 * math.pi and net < 4 * f.TurnRadius then
+							circlers += 1
+						end
+						wx, wz, turned, t0 = f.X, f.Z, 0.0, i * dt
+					end
+				end
+			end
+		end
+		-- a flock: eight small fliers in one place, repelling one another, over the hub's edge
+		for _, class in { "TINY", "SMALL" } do
+			for seed = 1, 10 do
+				local obs = worldObstacles(seed * 31)
+				local flock = {}
+				for k = 1, 8 do
+					local f = newFlier(class, 9500 + seed * 10 + k, false)
+					f.Obstacles = obs
+					f.X, f.Y, f.Z = 230 + k * 9, 70 + (k % 3) * 12, 40 + k * 7
+					FlightCore.relocate(f)
+					FlightCore.pickWaypoint(f, { PlayerX = 0, PlayerY = 40, PlayerZ = 0 })
+					flock[k] = { f = f, wx = f.X, wz = f.Z, turned = 0.0, t0 = 0.0 }
+				end
+				local cores = {}
+				for _, m in flock do
+					table.insert(cores, m.f)
+				end
+				for i = 1, 6000 do
+					for a, m in flock do
+						local sx, sy, sz = 0, 0, 0
+						for b, o in flock do
+							if a ~= b then
+								local ax, ay, az = FlightCore.separation(
+									m.f,
+									o.f.Radius,
+									m.f.X - o.f.X,
+									m.f.Y - o.f.Y,
+									m.f.Z - o.f.Z
+								)
+								sx += ax
+								sy += ay
+								sz += az
+							end
+						end
+						local env = {
+							PlayerX = 0,
+							PlayerZ = 0,
+							SepX = sx,
+							SepY = sy,
+							SepZ = sz,
+							Others = cores,
+						}
+						FlightCore.tick(m.f, 0.1, env)
+						m.turned += math.abs(m.f.YawRate) * 0.1
+						if i * 0.1 - m.t0 >= 30 then
+							local net = math.sqrt((m.f.X - m.wx) ^ 2 + (m.f.Z - m.wz) ^ 2)
+							total += 1
+							if m.turned > 6 * math.pi and net < 4 * m.f.TurnRadius then
+								circlers += 1
+								local tx, ty, tz = m.f.TX - m.f.X, m.f.TY - m.f.Y, m.f.TZ - m.f.Z
+							end
+							m.wx, m.wz, m.turned, m.t0 = m.f.X, m.f.Z, 0.0, i * 0.1
+						end
+					end
+				end
+			end
+		end
+		check("no flier circles in place for thirty seconds", circlers == 0)
+	end
+
 	for _, class in life.ClassOrder do
 		local seeds = if class == "COLOSSAL" then 12 else 20
 		local seconds = if class == "COLOSSAL" then 4000 else 700
