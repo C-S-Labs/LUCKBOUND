@@ -127,12 +127,16 @@
       0.0,
       0.5
      ],
-     "amp": 0.17,
-     "rate": 0.085,
+     "amp": 0.09,
+     "rate": 0.05,
      "phase": 0.0,
      "chain": null,
      "lag": 0.0,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.09,
+      0.09
+     ]
     },
     "hubprop_starweaver__tendriltip_1": {
      "kind": "Flap",
@@ -151,12 +155,16 @@
       0.0,
       0.5
      ],
-     "amp": 0.26,
-     "rate": 0.1,
+     "amp": 0.13,
+     "rate": 0.055,
      "phase": 0.95,
      "chain": "hubprop_starweaver__tendril_1",
      "lag": 0.0,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.08,
+      0.08
+     ]
     },
     "hubprop_starweaver__tendriltail_1": {
      "kind": "Flap",
@@ -175,12 +183,16 @@
       0.0,
       0.866
      ],
-     "amp": 0.36,
-     "rate": 0.125,
+     "amp": 0.18,
+     "rate": 0.06,
      "phase": 1.9,
      "chain": "hubprop_starweaver__tendriltip_1",
      "lag": 0.0,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.18,
+      0.18
+     ]
     },
     "hubprop_starweaver__tendril_2": {
      "kind": "Flap",
@@ -199,12 +211,16 @@
       0.0,
       -1.0
      ],
-     "amp": 0.17,
-     "rate": 0.085,
+     "amp": 0.09,
+     "rate": 0.05,
      "phase": 2.09,
      "chain": null,
      "lag": 0.0,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.09,
+      0.09
+     ]
     },
     "hubprop_starweaver__tendriltip_2": {
      "kind": "Flap",
@@ -223,12 +239,16 @@
       0.0,
       -1.0
      ],
-     "amp": 0.26,
-     "rate": 0.1,
+     "amp": 0.13,
+     "rate": 0.055,
      "phase": 3.04,
      "chain": "hubprop_starweaver__tendril_2",
      "lag": 0.0,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.13,
+      0.13
+     ]
     },
     "hubprop_starweaver__tendriltail_2": {
      "kind": "Flap",
@@ -247,12 +267,16 @@
       0.0,
       0.0
      ],
-     "amp": 0.36,
-     "rate": 0.125,
+     "amp": 0.18,
+     "rate": 0.06,
      "phase": 3.99,
      "chain": "hubprop_starweaver__tendriltip_2",
      "lag": 0.0,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.18,
+      0.18
+     ]
     },
     "hubprop_starweaver__tendril_3": {
      "kind": "Flap",
@@ -271,12 +295,16 @@
       0.0,
       0.5
      ],
-     "amp": 0.17,
-     "rate": 0.085,
+     "amp": 0.09,
+     "rate": 0.05,
      "phase": 4.18,
      "chain": null,
      "lag": 0.0,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.09,
+      0.09
+     ]
     },
     "hubprop_starweaver__tendriltip_3": {
      "kind": "Flap",
@@ -295,12 +323,16 @@
       0.0,
       0.5
      ],
-     "amp": 0.26,
-     "rate": 0.1,
+     "amp": 0.13,
+     "rate": 0.055,
      "phase": 5.13,
      "chain": "hubprop_starweaver__tendril_3",
      "lag": 0.0,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.08,
+      0.13
+     ]
     },
     "hubprop_starweaver__tendriltail_3": {
      "kind": "Flap",
@@ -319,12 +351,16 @@
       0.0,
       -0.866
      ],
-     "amp": 0.36,
-     "rate": 0.125,
+     "amp": 0.18,
+     "rate": 0.06,
      "phase": 6.08,
      "chain": "hubprop_starweaver__tendriltip_3",
      "lag": 0.0,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.18,
+      0.18
+     ]
     }
    }
   },
@@ -358,7 +394,7 @@
       1.0,
       0.0
      ],
-     "amp": 0.022,
+     "amp": 0.0,
      "rate": 0.09,
      "phase": 0.0,
      "chain": null,
@@ -387,7 +423,11 @@
      "phase": 0.4,
      "chain": "hubprop_elder_greatturtle__shell_1",
      "lag": 0.0,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.034,
+      0.034
+     ]
     },
     "hubprop_elder_greatturtle__grove_1": {
      "kind": "Flap",
@@ -411,7 +451,11 @@
      "phase": 1.7,
      "chain": "hubprop_elder_greatturtle__isle_1",
      "lag": 0.0,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.05,
+      0.02
+     ]
     },
     "hubprop_elder_greatturtle__crystals_1": {
      "kind": "Flicker",
@@ -459,7 +503,11 @@
      "phase": 0.0,
      "chain": null,
      "lag": 0.0,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.1,
+      0.1
+     ]
     },
     "hubprop_elder_greatturtle__head_1": {
      "kind": "Flap",
@@ -483,7 +531,11 @@
      "phase": 0.9,
      "chain": "hubprop_elder_greatturtle__neck_1",
      "lag": 0.0,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.16,
+      0.16
+     ]
     },
     "hubprop_elder_greatturtle__tail_1": {
      "kind": "Flap",
@@ -507,7 +559,11 @@
      "phase": 2.2,
      "chain": null,
      "lag": 0.0,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.24,
+      0.24
+     ]
     },
     "hubprop_elder_greatturtle__flipper_1": {
      "kind": "Flap",
@@ -531,7 +587,11 @@
      "phase": 0.0,
      "chain": null,
      "lag": 0.0,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.42,
+      0.378
+     ]
     },
     "hubprop_elder_greatturtle__flippertip_1": {
      "kind": "Flap",
@@ -555,7 +615,11 @@
      "phase": -0.9,
      "chain": "hubprop_elder_greatturtle__flipper_1",
      "lag": 0.0,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.5,
+      0.5
+     ]
     },
     "hubprop_elder_greatturtle__flipper_2": {
      "kind": "Flap",
@@ -579,7 +643,11 @@
      "phase": 0.0,
      "chain": null,
      "lag": 0.0,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.42,
+      0.378
+     ]
     },
     "hubprop_elder_greatturtle__flippertip_2": {
      "kind": "Flap",
@@ -603,7 +671,11 @@
      "phase": -0.9,
      "chain": "hubprop_elder_greatturtle__flipper_2",
      "lag": 0.0,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.5,
+      0.5
+     ]
     },
     "hubprop_elder_greatturtle__hindflipper_1": {
      "kind": "Flap",
@@ -627,7 +699,11 @@
      "phase": 1.5708,
      "chain": null,
      "lag": 0.0,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.34,
+      0.34
+     ]
     },
     "hubprop_elder_greatturtle__hindflipper_2": {
      "kind": "Flap",
@@ -651,7 +727,11 @@
      "phase": 4.7124,
      "chain": null,
      "lag": 0.0,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.34,
+      0.34
+     ]
     }
    }
   }

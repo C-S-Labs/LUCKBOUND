@@ -229,7 +229,7 @@ def wyrm_segment(c, i, prev, rng):
     sm = (s0 + s1) * 0.5
     last = i == NSEG
     hinge = (-s0, 0, 0)
-    amp = lerp(0.09, 0.24, (i - 1) / (NSEG - 1))
+    amp = 0.0       # round 3: the sidecar `spine` places the segments on the head's trail; no hinge flapping
     q = c.part("body_a", "Flap", hinge=hinge, axis=(0, 1, 0), amp=amp, rate=0.075, phase=0.0, chain=prev,
                lag=0.5, gait="Always")
     rings = [((-(s0 - 9), 0, 0), (0, 1, 0), (0, 0, 1), wr(s0) * 0.93, wr(s0) * 0.93),
@@ -569,6 +569,9 @@ def to_sidecar_frame(v):
     return [-v.x, v.z, v.y]
 
 
+SPINE = {"wavelength": 350, "amp": 32, "rate": 0.12, "plane": "lateral"}   # studs, studs, Hz
+
+
 def build_sidecar(creatures):
     out = {"group": "colossal2", "frame": "orbiter", "creatures": {}}
     for c in creatures:
@@ -588,6 +591,8 @@ def build_sidecar(creatures):
                 "axis": [round(-ax.x, 4), round(ax.z, 4), round(ax.y, 4)],
                 "amp": m["amp"], "rate": m["rate"], "phase": round(m["phase"], 4),
                 "chain": m["chain"], "lag": m["lag"], "gait": m["gait"]}
+        if c.id == "cinder_wyrm":
+            entry["spine"] = dict(parts=["hubprop_cinder_wyrm__body_a_%d" % k for k in range(1, NSEG + 1)], **SPINE)
         out["creatures"][c.id] = entry
     return out
 
