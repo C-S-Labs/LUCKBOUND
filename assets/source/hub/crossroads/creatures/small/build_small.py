@@ -139,6 +139,22 @@ def bbox(verts):
     return mn, mx
 
 
+# ---- shared anatomy ---------------------------------------------------------------
+
+def leg_chain(p, name, hip, knee, ankle, toes, r, amp, rate, phase=0.0, gait="Idle", col="Gold",
+              foot_col="Gold", foot_lag=0.5):
+    """A leg (hip hinge) with its foot chained at the ankle. Modelled TUCKED: the runtime swings
+    them about the rest pose (Idle: perched/landing/hover); hinge axis +Y, so a positive angle
+    sweeps the foot backwards."""
+    lg = part(p, name, "Flap", hinge=hip, axis=(0, 1, 0), amp=amp, rate=rate, phase=phase, gait=gait)
+    tube(lg, col, [hip, knee, ankle], [r * 1.5, r, r * 0.8], n=3)
+    ft = part(p, name + "_foot", "Flap", hinge=ankle, axis=(0, 1, 0), amp=amp * 1.4, rate=rate, phase=phase,
+              chain=lg, lag=foot_lag, gait=gait)
+    for t in toes:
+        tube(ft, foot_col, [ankle, t], [r * 0.9, 0.0], n=3)
+    return lg, ft
+
+
 # ---- skyfinch: songbird -----------------------------------------------------------
 
 def build_skyfinch():
@@ -148,65 +164,62 @@ def build_skyfinch():
                           (0.4, 0.8), (0, 0.95)], 8, "finch", sy=0.85, jitter=0.0)
     paint(p, f0, lambda c: "Marble" if c.z < -0.14 and c.x > -0.8 else (
         "Moss" if c.z > 0.34 and -0.55 < c.x < 0.25 else ("BasaltLight" if c.z > 0.1 else None)))
-    for s in (-1, 1):                                                # legs and feet
-        tube(p, "Gold", [(0.05, s * 0.22, -0.45), (0.1, s * 0.22, -0.85)], [0.06, 0.045], n=3)
-        tube(p, "Gold", [(0.0, s * 0.22, -0.85), (0.45, s * 0.22, -0.9)], [0.045, 0.0], n=3)
-    # the head: round skull, gold bill, glowing eyes
-    h = part(p, "head", "Flap", hinge=(0.8, 0, 0.1), axis=(0, 1, 0), amp=0.14, rate=1.1, gait="Idle")
+    # the head: round skull, gold upper bill, small glowing eyes; the jaw is its own piece
+    h = part(p, "head", "Flap", hinge=(0.75, 0, 0.05), axis=(0, 1, 0), amp=0.14, rate=1.1, gait="Idle")
     orb(h, "Basalt", 0.88, 0, 0.2, 0.42, n=8)
     orb(h, "Marble", 0.98, 0, 0.0, 0.3, n=6)                         # pale cheeks and throat
-    tube(h, "Gold", [(1.18, 0, 0.17), (1.62, 0, 0.07)], [0.17, 0.0], n=4)
-    tube(h, "Gold", [(1.16, 0, 0.0), (1.5, 0, 0.03)], [0.11, 0.0], n=4)
+    tube(h, "Gold", [(1.1, 0, 0.17), (1.62, 0, 0.07)], [0.17, 0.0], n=4)
     for s in (-1, 1):
-        orb(h, "Shard", 1.02, s * 0.3, 0.3, 0.1, n=6)
-    # crystal crest (Flicker, rides the head)
+        orb(h, "Shard", 1.02, s * 0.3, 0.3, 0.08, n=6)
+    jaw = part(p, "jaw", "Flap", hinge=(1.1, 0, 0.0), axis=(0, 1, 0), amp=0.3, rate=2.4, chain=h, lag=0.0,
+               gait="Idle")
+    tube(jaw, "Gold", [(1.08, 0, -0.04), (1.5, 0, -0.06)], [0.11, 0.0], n=4)
     cr = part(p, "crest", "Flicker", hinge=(0.78, 0, 0.55), axis=(0, 0, 1), amp=0.3, rate=1.3,
               chain=h, gait="Always")
     for k, (m, a) in enumerate((("Violet", 0.0), ("Rose", 0.22), ("Shard", 0.44))):
         gem(cr, m, (0.74 - a * 0.9, 0, 0.56 - a * 0.25), (-0.5 - a, 0, 1.0), 0.09, 0.4 - a * 0.3, 0.05, n=4)
-    # breathing breast patch
-    ch = part(p, "chest", "Pulse", hinge=(0.3, 0, -0.26), axis=(0, 0, 1), amp=0.06, rate=1.0, gait="Idle")
-    f1 = len(ch.faces)
+    ch = part(p, "chest", "Pulse", hinge=(0.3, 0, -0.26), axis=(0, 0, 1), amp=0.06, rate=1.0, gait="Always")
     lathe_x(ch, "Marble", [(0, -0.2), (0.3, -0.05), (0.38, 0.15), (0.3, 0.38), (0, 0.5)], 8, "chest",
             sy=0.8, x0=0.3, z0=-0.3, jitter=0.0)
+    # legs and feet: tucked against the belly, swung when perched or landing
+    for k, s in enumerate((-1, 1)):
+        leg_chain(p, "leg", (0.1, s * 0.25, -0.4), (0.3, s * 0.27, -0.62), (0.05, s * 0.27, -0.78),
+                  [(0.36, s * 0.27, -0.85), (0.32, s * 0.4, -0.84), (0.32, s * 0.14, -0.84), (-0.25, s * 0.27, -0.83)],
+                  0.055, 0.4, 1.3, phase=0.0 if s > 0 else 1.1)
     # wings: inner panel + three primaries, tips in moss
-    inner, outer = {}, {}
     for s in (-1, 1):
         ax = (s, 0, 0)
-        wi = part(p, "wing_in", "Flap", hinge=(0.15, s * 0.4, 0.3), axis=ax, amp=0.55, rate=6.5,
+        wi = part(p, "wing_in", "Flap", hinge=(0.15, s * 0.4, 0.3), axis=ax, amp=0.5, rate=7.0,
                   phase=0.0, gait="Flight")
         prism(wi, "BasaltLight", mirror(s, [(0.6, 0.35, 0.3), (0.45, 1.1, 0.33), (-0.4, 1.15, 0.33), (-0.55, 0.35, 0.3)]), 0.04)
         prism(wi, "Moss", mirror(s, [(0.55, 0.5, 0.345), (0.45, 1.05, 0.36), (0.15, 1.08, 0.36), (0.15, 0.5, 0.345)]), 0.03)
-        wo = part(p, "wing_out", "Flap", hinge=(0.1, s * 1.1, 0.33), axis=ax, amp=0.4, rate=6.5,
-                  phase=0.0, chain=wi, lag=0.55, gait="Flight")
+        wo = part(p, "wing_out", "Flap", hinge=(0.1, s * 1.1, 0.33), axis=ax, amp=0.38, rate=7.0,
+                  phase=0.0, chain=wi, lag=0.6, gait="Flight")
         for r0, r1, w0, w1, m in (((0.35, 1.05, 0.34), (0.55, 1.85, 0.4), 0.4, 0.2, "Basalt"),
                                   ((0.05, 1.05, 0.33), (-0.05, 1.9, 0.38), 0.4, 0.2, "BasaltLight"),
                                   ((-0.3, 1.05, 0.33), (-0.55, 1.7, 0.36), 0.36, 0.16, "Basalt")):
             feather(wo, m, (r0[0], r0[1] * s, r0[2]), (r1[0], r1[1] * s, r1[2]), w0, w1, 0.035, "Moss", 0.68)
-        inner[s], outer[s] = wi, wo
-    # tail: a fan of three, then moss-tipped ends
-    t1 = part(p, "tail", "Flap", hinge=(-1.0, 0, 0.05), axis=(0, 1, 0), amp=0.16, rate=6.5, phase=0.6,
+    # tail: a central pair that follows the beat, a fan on each side that swings into turns
+    t1 = part(p, "tail", "Flap", hinge=(-0.95, 0, 0.05), axis=(0, 1, 0), amp=0.18, rate=7.0, phase=0.7,
               gait="Flight")
-    t2 = part(p, "tail_tip", "Flap", hinge=(-1.7, 0, 0.05), axis=(0, 0, 1), amp=0.22, rate=1.8,
-              chain=t1, lag=0.6, gait="Turn")
-    for y, rz in ((0.0, 0.0), (0.16, 0.18), (-0.16, -0.18)):
-        a0 = Vector((-1.0, y * 0.4, 0.05))
-        a1 = Vector((-1.7 - abs(y) * 0.2, y * 1.6, 0.05))
-        a2 = Vector((-2.2 - abs(y) * 0.1, y * 2.0, 0.05))
-        feather(t1, "Basalt", a0, a1, 0.3, 0.26, 0.035)
-        feather(t2, "Moss", a1, a2, 0.26, 0.04, 0.035)
+    feather(t1, "Basalt", (-0.95, 0, 0.05), (-1.75, 0, 0.05), 0.34, 0.28, 0.035)
+    feather(t1, "Moss", (-1.7, 0, 0.05), (-2.25, 0, 0.05), 0.28, 0.05, 0.035)
+    for s in (-1, 1):
+        tf = part(p, "tail_fan", "Flap", hinge=(-1.0, s * 0.1, 0.05), axis=(0, 0, 1), amp=0.3, rate=1.8,
+                  chain=t1, lag=0.5, gait="Turn")
+        feather(tf, "Basalt", (-1.0, s * 0.1, 0.05), (-1.8, s * 0.42, 0.05), 0.3, 0.26, 0.035)
+        feather(tf, "Moss", (-1.75, s * 0.4, 0.05), (-2.2, s * 0.6, 0.05), 0.26, 0.04, 0.035)
     return p
 
 
 # ---- lumen_moth: pearly wings, glow veins -----------------------------------------
 
-def moth_wing(q, s, poly, z, veins, spot):
+def moth_wing(q, s, poly, z, veins, spot, root):
     pts = mirror(s, [(x, y, z) for x, y in poly])
     prism(q, "Violet", pts, 0.035)                                   # twilight border
     prism(q, "PearlViolet", inset(pts, 0.8), 0.05)                   # pearl field
     for tx, ty in veins:                                              # glowing veins
-        a = (poly[0][0] * 0.3 + poly[-1][0] * 0.3, 0.25 * s, z)
-        tube(q, "Shard", [a, (tx * 0.9, ty * s * 0.9, z)], [0.055, 0.035], n=3)
+        tube(q, "Shard", [(root[0], root[1] * s, z), (tx * 0.9, ty * s * 0.9, z)], [0.055, 0.035], n=3)
     gem(q, "Rose", (spot[0], spot[1] * s, z), (0, 0, 1), 0.26, 0.07, 0.07, n=6)
     gem(q, "Shard", (spot[0], spot[1] * s, z), (0, 0, 1), 0.12, 0.09, 0.09, n=5)
 
@@ -217,22 +230,33 @@ def build_lumen_moth():
     lathe_x(p, "Marble", [(0, -0.35), (0.3, -0.25), (0.5, 0.05), (0.56, 0.5), (0.46, 0.85), (0.26, 1.1), (0, 1.2)],
             8, "moth", sy=0.9, jitter=0.0,
             bands=["Cloud", "PearlViolet", "Marble", "PearlViolet", "Cloud", "Marble"])
-    for s in (-1, 1):                                                # folded legs
-        tube(p, "Gold", [(0.5, s * 0.25, -0.35), (0.8, s * 0.4, -0.75)], [0.045, 0.03], n=3)
-        tube(p, "Gold", [(0.15, s * 0.25, -0.4), (0.15, s * 0.45, -0.8)], [0.045, 0.03], n=3)
     gem(p, "Violet", (0.45, 0, 0.55), (0.0, 0, 1.0), 0.14, 0.28, 0.0, n=5)      # a mantle shard
-    h = part(p, "head", "Flap", hinge=(1.15, 0, 0.1), axis=(0, 1, 0), amp=0.12, rate=0.9, gait="Idle")
+    mt = part(p, "mantle", "Pulse", hinge=(0.7, 0, 0.2), axis=(0, 0, 1), amp=0.07, rate=0.9, gait="Always")
+    orb(mt, "Cloud", 0.75, 0, 0.18, 0.4, n=6)                         # the downy thorax collar, breathing
+    h = part(p, "head", "Flap", hinge=(1.1, 0, 0.1), axis=(0, 1, 0), amp=0.12, rate=0.9, gait="Idle")
     orb(h, "PearlViolet", 1.32, 0, 0.12, 0.3, n=8)
     for s in (-1, 1):
-        orb(h, "Shard", 1.5, s * 0.2, 0.2, 0.12, n=6)
-    for s in (-1, 1):                                                # feathered antennae
-        an = part(p, "antenna", "Flap", hinge=(1.4, s * 0.1, 0.35), axis=(0, 0, 1), amp=0.28, rate=1.4,
-                  phase=0.0 if s > 0 else 1.6, chain=h, lag=0.3, gait="Idle")
-        tube(an, "Gold", [(1.4, s * 0.1, 0.35), (1.85, s * 0.45, 0.8), (2.2, s * 1.0, 1.0)], [0.05, 0.04, 0.0], n=3)
-        for k, (x, y, z) in enumerate(((1.7, 0.3, 0.65), (1.95, 0.55, 0.85))):
-            gem(an, "Cosmic", (x, y * s, z), (0.3, s * 0.5, 0.6), 0.07, 0.28, 0.0, n=4)
-    ab = part(p, "abdomen", "Pulse", hinge=(-0.35, 0, 0), axis=(0, 0, 1), amp=0.05, rate=0.8, gait="Idle")
-    lathe_x(ab, "Marble", [(0, -1.7), (0.16, -1.5), (0.3, -1.0), (0.38, -0.55), (0.34, -0.2), (0, 0.0)], 8, "moth2",
+        orb(h, "Shard", 1.5, s * 0.2, 0.2, 0.1, n=6)
+    for s in (-1, 1):                                                # feathered antennae: stalk then plume
+        ph = 0.0 if s > 0 else 1.6
+        a1 = part(p, "antenna", "Flap", hinge=(1.4, s * 0.1, 0.35), axis=(0, 0, 1), amp=0.2, rate=1.4,
+                  phase=ph, chain=h, lag=0.3, gait="Idle")
+        tube(a1, "Gold", [(1.4, s * 0.1, 0.35), (1.8, s * 0.35, 0.75)], [0.05, 0.04], n=3)
+        a2 = part(p, "antenna_plume", "Flap", hinge=(1.8, s * 0.35, 0.75), axis=(0, 0, 1), amp=0.35, rate=1.4,
+                  phase=ph, chain=a1, lag=0.4, gait="Idle")
+        tube(a2, "Gold", [(1.78, s * 0.33, 0.73), (2.2, s * 0.95, 1.0)], [0.04, 0.0], n=3)
+        for (x, y, z) in ((1.95, 0.55, 0.85), (2.1, 0.8, 0.95)):
+            gem(a2, "Cosmic", (x, y * s, z), (0.3, s * 0.5, 0.6), 0.07, 0.28, 0.0, n=4)
+    # legs: forelegs reach forward, hindlegs trail; swung when perched or drifting
+    for s in (-1, 1):
+        leg_chain(p, "leg_fore", (0.55, s * 0.28, -0.3), (0.85, s * 0.4, -0.6), (1.0, s * 0.45, -0.95),
+                  [(1.2, s * 0.5, -1.05), (1.1, s * 0.6, -1.0)], 0.04, 0.35, 1.2,
+                  phase=0.0 if s > 0 else 1.0)
+        leg_chain(p, "leg_hind", (0.1, s * 0.3, -0.35), (-0.2, s * 0.5, -0.65), (-0.45, s * 0.55, -0.95),
+                  [(-0.25, s * 0.6, -1.05), (-0.7, s * 0.6, -1.0)], 0.04, 0.35, 1.2,
+                  phase=2.0 if s > 0 else 3.0)
+    ab = part(p, "abdomen", "Flap", hinge=(-0.3, 0, 0), axis=(0, 1, 0), amp=0.12, rate=3.4, phase=0.9, gait="Flight")
+    lathe_x(ab, "Marble", [(0, -1.7), (0.16, -1.5), (0.3, -1.0), (0.38, -0.55), (0.34, -0.2), (0.0, 0.05)], 8, "moth2",
             sy=0.9, jitter=0.0, bands=["Cloud", "PearlViolet", "Marble", "PearlViolet", "Cloud"])
     lan = part(p, "lantern", "Flicker", hinge=(-1.45, 0, -0.1), axis=(0, 0, 1), amp=0.3, rate=0.8,
                chain=ab, gait="Always")
@@ -241,11 +265,11 @@ def build_lumen_moth():
     hw = [(0.25, 0.2), (0.3, 0.9), (-0.4, 1.6), (-1.5, 1.7), (-2.4, 1.35), (-1.45, 0.8), (-0.95, 0.2)]
     for s in (-1, 1):
         ax = (s, 0, 0)
-        w1 = part(p, "wing_fore", "Flap", hinge=(0.3, s * 0.2, 0.32), axis=ax, amp=0.6, rate=3.2, gait="Flight")
-        moth_wing(w1, s, fw, 0.32, [(-0.3, 2.7), (0.55, 2.0), (-1.1, 2.0)], (-0.1, 1.5))
-        w2 = part(p, "wing_hind", "Flap", hinge=(-0.1, s * 0.2, 0.2), axis=ax, amp=0.5, rate=3.2,
-                  chain=w1, lag=0.5, gait="Flight")
-        moth_wing(w2, s, hw, 0.2, [(-1.5, 1.7), (-2.4, 1.35), (-0.4, 1.6)], (-1.0, 1.2))
+        w1 = part(p, "wing_fore", "Flap", hinge=(0.3, s * 0.2, 0.32), axis=ax, amp=0.5, rate=3.4, gait="Flight")
+        moth_wing(w1, s, fw, 0.32, [(-0.3, 2.7), (0.55, 2.0), (-1.1, 2.0)], (-0.1, 1.5), (0.1, 0.25))
+        w2 = part(p, "wing_hind", "Flap", hinge=(-0.1, s * 0.2, 0.2), axis=ax, amp=0.45, rate=3.4,
+                  chain=w1, lag=0.6, gait="Flight")
+        moth_wing(w2, s, hw, 0.2, [(-1.5, 1.7), (-2.4, 1.35), (-0.4, 1.6)], (-1.0, 1.2), (-0.4, 0.25))
     return p
 
 
@@ -258,49 +282,62 @@ def build_cinderkite():
                           (0.5, 2.0), (0.3, 2.5), (0, 2.7)], 8, "kite", sy=0.8, jitter=0.0,
             bands=["Basalt", "Ash", "Basalt", "Ash", "Basalt", "Gold", "Basalt", "Ash"])
     paint(p, f0, lambda c: "BasaltLight" if c.z < -0.25 and c.x > -1.5 else None)
-    for s in (-1, 1):                                                # tucked talons
-        tube(p, "Gold", [(0.2, s * 0.35, -0.55), (0.45, s * 0.35, -1.15), (0.85, s * 0.35, -1.3)],
-             [0.09, 0.07, 0.0], n=3)
     for k in range(4):                                               # charred back plates
         x = -1.2 + k * 0.85
         prism(p, "Ash", [(x + 0.55, -0.32, 0.72 - k * 0.04), (x + 0.55, 0.32, 0.72 - k * 0.04),
                          (x - 0.25, 0.4, 0.74 - k * 0.04), (x - 0.25, -0.4, 0.74 - k * 0.04)], 0.05)
-    h = part(p, "head", "Flap", hinge=(2.55, 0, 0.1), axis=(0, 1, 0), amp=0.12, rate=0.8, gait="Idle")
+    h = part(p, "head", "Flap", hinge=(2.45, 0, 0.1), axis=(0, 1, 0), amp=0.12, rate=0.8, gait="Idle")
     lathe_x(h, "Basalt", [(0, 2.45), (0.4, 2.7), (0.5, 3.1), (0.42, 3.5), (0.2, 3.8), (0, 3.9)], 8, "kitehead",
             sy=0.85, z0=0.15, jitter=0.0)
-    tube(h, "Gold", [(3.55, 0, 0.18), (4.2, 0, 0.12), (4.62, 0, -0.32)], [0.27, 0.17, 0.0], n=4)
-    tube(h, "Gold", [(3.5, 0, 0.0), (4.1, 0, -0.1)], [0.14, 0.0], n=4)
+    tube(h, "Gold", [(3.5, 0, 0.18), (4.2, 0, 0.12), (4.62, 0, -0.32)], [0.27, 0.17, 0.0], n=4)   # hooked upper beak
     for s in (-1, 1):
         orb(h, "Shard", 3.15, s * 0.42, 0.34, 0.1, n=6)
         prism(h, "Ash", [(3.5, s * 0.35, 0.52), (3.1, s * 0.5, 0.58), (2.8, s * 0.45, 0.4), (3.2, s * 0.3, 0.4)], 0.05)
         prism(h, "Marble", [(2.75, s * 0.4, 0.25), (3.3, s * 0.48, 0.1), (3.2, s * 0.4, -0.2), (2.75, s * 0.35, -0.1)], 0.04)
+    jaw = part(p, "jaw", "Flap", hinge=(3.4, 0, -0.02), axis=(0, 1, 0), amp=0.22, rate=1.6, chain=h, lag=0.0,
+               gait="Idle")
+    tube(jaw, "Gold", [(3.35, 0, -0.1), (3.95, 0, -0.2), (4.2, 0, -0.14)], [0.13, 0.1, 0.0], n=4)
     gl = part(p, "glow", "Flicker", hinge=(0, 0, 0.8), axis=(0, 0, 1), amp=0.3, rate=1.6, gait="Always")
     for k, (x, m) in enumerate(((1.3, "Shard"), (0.55, "Violet"), (-0.2, "Rose"), (-0.95, "Violet"))):
         gem(gl, m, (x, 0, 0.78 - k * 0.04), (-0.6, 0, 1.0), 0.17, 0.75 - k * 0.1, 0.05, n=4)
-    ch = part(p, "chest", "Pulse", hinge=(1.0, 0, -0.35), axis=(0, 0, 1), amp=0.05, rate=0.9, gait="Idle")
+    ch = part(p, "chest", "Pulse", hinge=(1.0, 0, -0.35), axis=(0, 0, 1), amp=0.05, rate=0.9, gait="Always")
     lathe_x(ch, "BasaltLight", [(0, 0.1), (0.5, 0.45), (0.6, 1.0), (0.45, 1.6), (0, 1.9)], 8, "kitechest", sy=0.78,
             z0=-0.3, jitter=0.0, bands=["BasaltLight", "Gold", "BasaltLight", "BasaltLight"])
+    # legs and talons: feathered thigh, gold tarsus, curled talons; tucked back, swung to land
+    for s in (-1, 1):
+        lg, ft = leg_chain(p, "leg", (0.2, s * 0.35, -0.45), (0.55, s * 0.4, -1.0), (0.1, s * 0.4, -1.3),
+                           [(0.55, s * 0.42, -1.5), (0.5, s * 0.6, -1.45), (0.5, s * 0.24, -1.45), (-0.4, s * 0.4, -1.4)],
+                           0.1, 0.3, 0.9, phase=0.0 if s > 0 else 0.7, foot_lag=0.5)
+        orb(lg, "BasaltLight", 0.3, s * 0.38, -0.7, 0.28, n=6)           # feathered thigh
+    # wings: arm, mid feathers, then ember-tipped primaries as a third chained segment
     for s in (-1, 1):
         ax = (s, 0, 0)
-        wi = part(p, "wing_in", "Flap", hinge=(0.6, s * 0.6, 0.35), axis=ax, amp=0.34, rate=2.2, gait="Flight")
+        wi = part(p, "wing_in", "Flap", hinge=(0.6, s * 0.6, 0.35), axis=ax, amp=0.3, rate=2.0, gait="Flight")
         prism(wi, "Basalt", mirror(s, [(1.3, 0.5, 0.35), (1.1, 2.4, 0.4), (-0.7, 2.5, 0.4), (-1.3, 0.5, 0.35)]), 0.05)
         prism(wi, "Ash", mirror(s, [(0.8, 0.6, 0.4), (0.7, 2.2, 0.45), (-0.3, 2.3, 0.45), (-0.7, 0.6, 0.4)]), 0.04)
         prism(wi, "Gold", mirror(s, [(1.3, 0.5, 0.35), (1.1, 2.4, 0.4), (0.95, 2.4, 0.4), (1.1, 0.5, 0.35)]), 0.06)
-        wo = part(p, "wing_out", "Flap", hinge=(0.6, s * 2.4, 0.4), axis=ax, amp=0.28, rate=2.2,
-                  chain=wi, lag=0.5, gait="Flight")
+        wo = part(p, "wing_out", "Flap", hinge=(0.6, s * 2.4, 0.4), axis=ax, amp=0.26, rate=2.0,
+                  chain=wi, lag=0.45, gait="Flight")
+        wt = part(p, "wing_tip", "Flap", hinge=(0.1, s * 4.2, 0.45), axis=ax, amp=0.24, rate=2.0,
+                  chain=wo, lag=0.5, gait="Flight")
         roots = [(0.9, 2.4), (0.4, 2.4), (-0.1, 2.4), (-0.6, 2.4), (-1.0, 2.4)]
         tips = [(-0.1, 5.7), (-0.7, 5.5), (-1.3, 5.1), (-1.9, 4.5), (-2.4, 3.9)]
         for i, ((rx, ry), (tx, ty)) in enumerate(zip(roots, tips)):
-            feather(wo, "Basalt" if i % 2 == 0 else "BasaltLight", (rx, ry * s, 0.4), (tx, ty * s, 0.55 + 0.04 * (4 - i)),
-                    0.5, 0.2, 0.04, "EmberDeep" if i < 4 else "Ember", 0.66)
-    tail = part(p, "tail", "Flap", hinge=(-2.3, 0, 0.1), axis=(0, 1, 0), amp=0.14, rate=2.2, phase=0.5, gait="Flight")
+            r0 = Vector((rx, ry * s, 0.4))
+            r1 = Vector((tx, ty * s, 0.55 + 0.04 * (4 - i)))
+            m = r0 + (r1 - r0) * 0.55
+            base = "Basalt" if i % 2 == 0 else "BasaltLight"
+            feather(wo, base, r0, m + (r1 - r0).normalized() * 0.12, 0.5, 0.36, 0.04)
+            feather(wt, "EmberDeep" if i < 4 else "Ember", m, r1, 0.36, 0.2, 0.04, base, 0.3)
+    tail = part(p, "tail", "Flap", hinge=(-2.3, 0, 0.1), axis=(0, 1, 0), amp=0.14, rate=2.0, phase=0.5, gait="Flight")
     prism(tail, "Basalt", [(-2.2, -0.2, 0.1), (-2.2, 0.2, 0.1), (-3.4, 0.2, 0.1), (-3.4, -0.2, 0.1)], 0.05)
     for s in (-1, 1):
-        prism(tail, "Basalt", [(-2.2, s * 0.15, 0.1), (-4.2, s * 1.0, 0.1), (-4.4, s * 0.7, 0.1), (-2.5, s * 0.1, 0.1)], 0.05)
-        prism(tail, "Gold", [(-3.4, s * 0.55, 0.12), (-4.0, s * 0.95, 0.12), (-4.1, s * 0.8, 0.12), (-3.6, s * 0.5, 0.12)], 0.05)
-    for s in (-1, 1):
+        tf = part(p, "tail_fan", "Flap", hinge=(-2.3, s * 0.1, 0.1), axis=(0, 0, 1), amp=0.3, rate=1.7,
+                  chain=tail, lag=0.4, gait="Turn")
+        prism(tf, "Basalt", [(-2.2, s * 0.15, 0.1), (-4.2, s * 1.0, 0.1), (-4.4, s * 0.7, 0.1), (-2.5, s * 0.1, 0.1)], 0.05)
+        prism(tf, "Gold", [(-3.4, s * 0.55, 0.12), (-4.0, s * 0.95, 0.12), (-4.1, s * 0.8, 0.12), (-3.6, s * 0.5, 0.12)], 0.05)
         sa = part(p, "streamer_a", "Flap", hinge=(-4.3, s * 0.85, 0.1), axis=(0, 0, 1), amp=0.3, rate=1.7,
-                  phase=0.0 if s > 0 else 0.8, chain=tail, lag=0.5, gait="Always")
+                  phase=0.0 if s > 0 else 0.8, chain=tf, lag=0.5, gait="Always")
         feather(sa, "Ember", (-4.3, s * 0.85, 0.1), (-5.7, s * 1.15, 0.1), 0.32, 0.26, 0.035)
         sb = part(p, "streamer_b", "Flap", hinge=(-5.7, s * 1.15, 0.1), axis=(0, 0, 1), amp=0.4, rate=1.7,
                   phase=0.0 if s > 0 else 0.8, chain=sa, lag=0.6, gait="Always")
@@ -315,19 +352,32 @@ def build_cinderkite():
 
 DART_L = [(1.2, 0.4), (1.3, 2.0), (1.0, 4.0), (0.4, 5.2)]
 DART_T = [(-0.5, 0.4), (-0.5, 2.0), (-0.3, 4.2), (0.4, 5.2)]
+BAND = (("StarGlass", "Cloud"), ("Cloud", "PearlViolet"), ("PearlViolet", "Violet"))
 
 
-def darter_wing(q, s, dx, dy, z, k=1.0):
+def darter_wing(q, qt, s, dx, dy, z, k=1.0):
+    """Root panels (two banded quads, gold costa, inlay vein, cross seams) into q; the outer tip
+    triangle with the stigma into qt (chained on the root)."""
     L = [(x * k + dx, y * dy) for x, y in DART_L]
     T = [(x * k + dx, y * dy) for x, y in DART_T]
-    mats = ["StarGlass", "Cloud", "Violet"]
-    for i in range(3):
-        poly = [L[i], L[i + 1], T[i + 1], T[i]] if i < 2 else [L[2], L[3], T[2]]
-        prism(q, mats[i], mirror(s, [(x, y, z) for x, y in poly]), 0.035)
-    tube(q, "Gold", mirror(s, [(x, y, z + 0.0) for x, y in L]), [0.07, 0.07, 0.06, 0.02], n=3)    # costa
+    M = [((a[0] * 0.5 + b[0] * 0.5), (a[1] * 0.5 + b[1] * 0.5)) for a, b in zip(L, T)]
+    for i in range(2):
+        lead = [L[i], L[i + 1], M[i + 1], M[i]]
+        trail = [M[i], M[i + 1], T[i + 1], T[i]]
+        prism(q, BAND[i][0], mirror(s, [(x, y, z) for x, y in lead]), 0.035)
+        prism(q, BAND[i][1], mirror(s, [(x, y, z) for x, y in trail]), 0.032)
+    tipoly = [L[2], L[3], T[2]]
+    prism(qt, "Violet", mirror(s, [(x, y, z) for x, y in tipoly]), 0.03)
+    prism(qt, "PearlViolet", mirror(s, inset([(x, y, z) for x, y in tipoly], 0.6)), 0.04)
+    tube(q, "Gold", mirror(s, [(x, y, z) for x, y in L[:3]]), [0.07, 0.07, 0.06], n=3)             # costa
+    tube(qt, "Gold", mirror(s, [(x, y, z) for x, y in L[2:]]), [0.06, 0.02], n=3)
+    tube(q, "Inlay", mirror(s, [(x, y, z + 0.03) for x, y in M[:3]]), [0.05, 0.05, 0.04], n=3)     # glowing mid vein
+    tube(qt, "Inlay", mirror(s, [(M[2][0], M[2][1], z + 0.03), (M[3][0], M[3][1], z + 0.03)]), [0.04, 0.0], n=3)
     for i in (1, 2):                                                  # prismatic cross seams
-        tube(q, "Shard", mirror(s, [(L[i][0], L[i][1], z), (T[i][0], T[i][1], z)]), [0.045, 0.04], n=3)
-    gem(q, "Rose", (L[2][0] - 0.05, L[2][1] * s + 0.0, z), (0, 0, 1), 0.2, 0.08, 0.08, n=5)          # stigma
+        tube(q if i == 1 else qt, "Shard", mirror(s, [(L[i][0], L[i][1], z), (T[i][0], T[i][1], z)]),
+             [0.045, 0.04], n=3)
+    gem(qt, "Rose", (L[2][0] - 0.05, L[2][1] * s + 0.0, z), (0, 0, 1), 0.2, 0.08, 0.08, n=5)       # stigma
+    return L[2]
 
 
 def build_prism_darter():
@@ -336,24 +386,29 @@ def build_prism_darter():
     lathe_x(p, "Basalt", [(0, -0.9), (0.4, -0.75), (0.7, -0.35), (0.84, 0.2), (0.72, 0.75), (0.4, 1.05), (0, 1.15)],
             8, "darter", sy=0.85, jitter=0.0)
     paint(p, f0, lambda c: "StarGlass" if c.z < -0.3 else ("BasaltLight" if c.z > 0.4 and abs(c.y) > 0.25 else None))
-    for s in (-1, 1):                                                # three pairs of folded legs
-        for k, x in enumerate((0.7, 0.25, -0.2)):
-            tube(p, "Gold", [(x, s * 0.35, -0.5), (x + 0.35, s * 0.55, -1.0), (x + 0.85, s * 0.5, -1.2)],
-                 [0.06, 0.05, 0.0], n=3)
     h = part(p, "head", "Flap", hinge=(1.1, 0, 0.1), axis=(0, 0, 1), amp=0.25, rate=0.9, gait="Idle")
-    orb(h, "Basalt", 1.45, 0, 0.0, 0.5, n=8)
+    orb(h, "Basalt", 1.45, 0, 0.0, 0.46, n=8)
     for s in (-1, 1):
-        orb(h, "Shard", 1.62, s * 0.55, 0.2, 0.52, n=8)              # the compound eyes
-        orb(h, "StarGlass", 1.72, s * 0.7, 0.32, 0.18, n=6)
-    tube(h, "Gold", [(1.85, 0, -0.2), (2.15, 0, -0.35)], [0.17, 0.0], n=4)
-    ch = part(p, "chest", "Pulse", hinge=(0.2, 0, -0.5), axis=(0, 0, 1), amp=0.05, rate=1.0, gait="Idle")
+        orb(h, "Shard", 1.55, s * 0.4, 0.2, 0.34, n=8)               # the compound eyes (smaller)
+        orb(h, "StarGlass", 1.62, s * 0.5, 0.3, 0.1, n=6)
+    jaw = part(p, "jaw", "Flap", hinge=(1.75, 0, -0.2), axis=(0, 1, 0), amp=0.3, rate=1.8, chain=h, lag=0.0,
+               gait="Idle")
+    tube(jaw, "Gold", [(1.7, 0, -0.25), (2.1, 0, -0.45)], [0.15, 0.0], n=4)
+    ch = part(p, "chest", "Pulse", hinge=(0.2, 0, -0.5), axis=(0, 0, 1), amp=0.05, rate=1.0, gait="Always")
     lathe_x(ch, "StarGlass", [(0, -0.55), (0.45, -0.3), (0.55, 0.2), (0.4, 0.65), (0, 0.9)], 8, "dchest", sy=0.8,
             z0=-0.45, jitter=0.0, bands=["StarGlass", "Gold", "StarGlass", "StarGlass"])
     star = part(p, "star", "Flicker", hinge=(0.1, 0, 0.8), axis=(0, 0, 1), amp=0.3, rate=1.2, gait="Always")
     for x, m, r, up in ((0.6, "Violet", 0.17, 0.6), (0.0, "Shard", 0.2, 0.75), (-0.5, "Rose", 0.15, 0.5)):
         gem(star, m, (x, 0, 0.78), (-0.4, 0, 1.0), r, up, 0.05, n=5)
+    # three pairs of legs, each its own piece; held folded under the thorax, swung when hovering/perching
+    for s in (-1, 1):
+        for name, x, ph in (("leg_fore", 0.7, 0.0), ("leg_mid", 0.25, 1.1), ("leg_hind", -0.2, 2.2)):
+            lg = part(p, name, "Flap", hinge=(x, s * 0.3, -0.45), axis=(0, 1, 0), amp=0.3, rate=1.4,
+                      phase=ph + (0.0 if s > 0 else 0.9), gait="Idle")
+            tube(lg, "Gold", [(x, s * 0.3, -0.45), (x + 0.35, s * 0.55, -1.0), (x + 0.85, s * 0.5, -1.2)],
+                 [0.08, 0.06, 0.0], n=3)
     # abdomen: three chained segments, gold-banded, with an inlay ridge
-    prev, x0 = None, -0.8
+    prev = None
     segs = [("abd_a", -0.8, -3.6, 0.38), ("abd_b", -3.6, -6.2, 0.31), ("abd_c", -6.2, -8.4, 0.26)]
     for name, xa, xb, r in segs:
         a = part(p, name, "Flap", hinge=(xa, 0, 0.05), axis=(0, 1, 0), amp=0.1, rate=1.0,
@@ -367,15 +422,18 @@ def build_prism_darter():
     tip = part(p, "tip", "Flicker", hinge=(-8.4, 0, 0.05), axis=(0, 0, 1), amp=0.3, rate=1.8, chain=prev, gait="Always")
     for s in (-1, 1):
         gem(tip, "Violet", (-8.5, s * 0.15, 0.05), (-1.0, s * 0.35, 0.0), 0.1, 0.55, 0.05, n=4)
-    gem(tip, "Shard", (-8.5, 0, 0.05), (-1.0, 0, 0.0), 0.13, 0.5, 0.05, n=4)
-    fores, hinds = {}, {}
+    gem(tip, "Shard", (-8.5, 0, 0.05), (-1.0, 0, 0.05), 0.13, 0.5, 0.05, n=4)
     for s in (-1, 1):
         ax = (s, 0, 0)
         w1 = part(p, "wing_fore", "Flap", hinge=(0.7, s * 0.5, 0.55), axis=ax, amp=0.3, rate=8.0, gait="Flight")
-        darter_wing(w1, s, 0.8, 1.0, 0.55)
+        w1t = part(p, "wing_fore_tip", "Flap", hinge=(0.7, s * 4.0, 0.55), axis=ax, amp=0.2, rate=8.0,
+                   chain=w1, lag=0.35, gait="Flight")
+        darter_wing(w1, w1t, s, 0.8, 1.0, 0.55)
         w2 = part(p, "wing_hind", "Flap", hinge=(-0.4, s * 0.5, 0.45), axis=ax, amp=0.3, rate=8.0,
                   phase=3.14159, gait="Flight")
-        darter_wing(w2, s, -1.7, 0.95, 0.45, k=1.12)
+        w2t = part(p, "wing_hind_tip", "Flap", hinge=(-0.4, s * 3.8, 0.45), axis=ax, amp=0.2, rate=8.0,
+                   phase=0.0, chain=w2, lag=0.35, gait="Flight")
+        darter_wing(w2, w2t, s, -1.7, 0.95, 0.45, k=1.12)
     return p
 
 
@@ -413,12 +471,13 @@ def finish(cid, builder, cls, biome, rng, tri_cap):
     return p, subs, size, total, k
 
 
-def main():
+def build_all():
+    """Build every creature; returns (objs, sidecar dict, by_creature)."""
     bpy.ops.wm.read_factory_settings(use_empty=True)
     mats = K["ensure_materials"]()
     coll = bpy.data.collections.new("Crossroads_Small")
     bpy.context.scene.collection.children.link(coll)
-    objs, side = [], {"group": "small", "creatures": {}}
+    objs, side = [], {"frame": "blender", "group": "small", "creatures": {}}
     by_creature = {}
     for cid, builder, cls, biome, rng, cap in BUILDERS:
         p, subs, size, total, k = finish(cid, builder, cls, biome, rng, cap)
@@ -445,6 +504,11 @@ def main():
         print(f"CREATURE {cid:13s} {cls:6s} size {size} tris {total} (body {tris(p)}) parts {len(subs)} scale {k:.3f}")
         for o in group:
             print(f"   {o.name:46s} {o['tris']:5d}")
+    return objs, side, by_creature
+
+
+def main():
+    objs, side, by_creature = build_all()
     if "--export" in ARGV:
         os.makedirs(EXPORT_DIR, exist_ok=True)
         K["_export_selected"](objs, os.path.join(EXPORT_DIR, "creatures_small.fbx"))
