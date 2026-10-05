@@ -81,7 +81,7 @@ def ell(a, r, sy=1.0):
     return (r * math.cos(a), r * sy * math.sin(a))
 
 
-def lathe(p, prof, n, matfn, sx=1.0, sy=1.0, cx=0.0, cy=0.0, jit=0.0, seed="", cap_bottom="Basalt"):
+def lathe(p, prof, n, matfn, sx=1.0, sy=1.0, cx=0.0, cy=0.0, jit=0.0, seed="", cap_bottom="Basalt", cap_top=True):
     """Lathe about Z. prof: [(r, z, tag)] with the tag naming the segment that ENDS at that point.
     matfn(tag, k, c) -> palette name for ring-pair k, column c."""
     rng = random.Random(seed)
@@ -113,10 +113,10 @@ def lathe(p, prof, n, matfn, sx=1.0, sy=1.0, cx=0.0, cy=0.0, jit=0.0, seed="", c
             for c in range(n):
                 faces.append((A[0], B[(c + 1) % n], B[c]))
                 mats.append(matfn(tag, k, c))
-    if len(rings[0]) > 1:
+    if len(rings[0]) > 1 and cap_bottom:
         faces.append(tuple(reversed(rings[0])))
         mats.append(cap_bottom)
-    if len(rings[-1]) > 1:
+    if len(rings[-1]) > 1 and cap_top:
         faces.append(tuple(rings[-1]))
         mats.append(matfn(prof[-1][2], len(rings) - 2, 0))
     soup(p, verts, faces, mats)
@@ -171,6 +171,20 @@ def blade(p, mat, pts, widths, thicks, up=(0, 0, 1)):
     faces.append(tuple(reversed(rings[0])))
     faces.append(tuple(rings[-1]))
     soup(p, verts, faces, [mat] * len(faces))
+
+
+def anchor(p, centre):
+    """Make the mesh bbox centre exactly `centre` by adding two 0.4-stud hidden tetrahedra at mirrored extremes.
+    The client scales a Pulse part about its bbox centre, so this fixes WHERE a pulse scales from."""
+    lo, hi = bbox(p)
+    c = Vector(centre)
+    nlo = Vector((min(lo[i], 2 * c[i] - hi[i]) for i in range(3)))
+    nhi = Vector((max(hi[i], 2 * c[i] - lo[i]) for i in range(3)))
+    for tgt0, bound, sg in ((nlo, lo, 1), (nhi, hi, -1)):
+        tgt = Vector((tgt0[i] if abs(tgt0[i] - bound[i]) > 1e-6 else c[i] for i in range(3)))
+        e = 0.4 * sg
+        v = [tuple(tgt), (tgt.x + e, tgt.y, tgt.z), (tgt.x, tgt.y + e, tgt.z), (tgt.x, tgt.y, tgt.z + e)]
+        soup(p, v, [(0, 2, 1), (0, 1, 3), (1, 2, 3), (0, 3, 2)], ["Basalt"] * 4)
 
 
 def lerp(a, b, t):
@@ -291,14 +305,16 @@ def starweaver_body(c):
             rz=math.degrees(math.atan2(SY * math.sin(a), math.cos(a))))
     frustum(p, "Gold", 12, 52, 36, -12, -40)
     frustum(p, "Marble", 12, 36, 26, -40, -64)
-    for k in range(4):
-        a = math.radians(45 + 90 * k)
-        frustum(p, "Gold", 8, 17, 12, -12, -22, math.cos(a) * 150, math.sin(a) * 150)
-        orb(p, "Cosmic", math.cos(a) * 150, math.sin(a) * 150, -22, 6, n=6)
+    for az in TEND_AZ:
+        a = math.radians(az)
+        frustum(p, "Gold", 8, 20, 14, -12, -24, math.cos(a) * 150, math.sin(a) * 150)
+        orb(p, "Cosmic", math.cos(a) * 150, math.sin(a) * 150, -24, 7, n=6)
 
 
 def starweaver_skirt(c):
-    q = c.part("skirt", "Pulse", hinge=(0, 0, 0), axis=(0, 0, 1), amp=0.06, rate=0.07, phase=0.0, gait="Always")
+    # THRUST BELL: contracts and relaxes in bursts (Flight gait: rate and depth follow speed). Scales about the
+    # bell/skirt junction (anchor), so the top stays tucked under the lip and the rim breathes in and out.
+    q = c.part("skirt", "Pulse", hinge=(0, 0, 0), axis=(0, 0, 1), amp=0.14, rate=0.22, phase=0.0, gait="Flight")
     band = [(246, 12, "x"), (262, -8, "b"), (280, -34, "b"), (292, -60, "b"), (296, -66, "r")]
     lathe(q, band, 32, lambda t, k, cc: "Gold" if t == "r" else ("StarGlassDeep" if cc % 2 == 0 else "Violet"),
           sy=SY, cap_bottom="StarGlassDeep")
@@ -307,7 +323,6 @@ def starweaver_skirt(c):
         long_ = j % 2 == 0
         L = 1.0 if long_ else 0.58
         bx, by = ell(a, 294, SY)
-        out = 1.0
         pts = [(bx, by, -62)]
         for t in (0.25, 0.5, 0.75, 1.0):
             rr = 294 + 8 * math.sin(t * math.pi) - 14 * t * t
@@ -318,44 +333,71 @@ def starweaver_skirt(c):
         tube(q, mat, pts, rad, n=4)
         ex, ey, ez = pts[-1]
         orb(q, "Cosmic" if j % 4 == 0 else GLOW[j % 3], ex, ey, ez - 3, 5.5, n=6)
-    # frill of star-glass veil between the lappets
     for j in range(16):
         a = 2 * math.pi * (j + 0.5) / 16
         pts = [(*ell(a, 286 + 6 * t, SY), -64 - 100 * t) for t in (0, 0.5, 1.0)]
         blade(q, "StarGlass", pts, [26, 22, 6], [1.2, 1.0, 0.6], up=(math.cos(a), math.sin(a), 0))
+    anchor(q, (0, 0, 0))
+    return q
+
+
+def starweaver_fringe(c, skirt):
+    # RIM FRINGE: 72 short thin tentacles on a gold cuff, chained to the skirt, pulsing a short beat behind it (0.4 rad: the cuff
+    # slips at most ~14 studs off the rim) so the contraction visibly travels down the bell. Same scale centre as the skirt (anchor) so the cuff stays on the rim.
+    q = c.part("fringe", "Pulse", hinge=(0, 0, 0), axis=(0, 0, 1), amp=0.14, rate=0.22, phase=-0.4, chain=skirt,
+               gait="Flight")
+    cuff = [(289, -46, "x"), (298, -58, "c"), (300, -76, "c"), (292, -88, "c")]
+    lathe(q, cuff, 36, lambda t, k, cc: "Gold" if cc % 3 == 0 else "Marble", sy=SY, cap_bottom=None, cap_top=False)
+    n = 72
+    for j in range(n):
+        a = 2 * math.pi * (j + 0.25) / n
+        L = (86, 118, 100, 132)[j % 4]
+        sway = 0.10 * math.sin(j * 1.3)
+        pts = []
+        for t in (0.0, 0.33, 0.66, 1.0):
+            x, y = ell(a + sway * t, 294 + 9 * math.sin(t * math.pi) - 12 * t * t, SY)
+            pts.append((x, y, -76 - L * t))
+        tube(q, "StarGlass" if j % 2 else "Violet", pts, [3.4, 3.0, 2.2, 0.7], n=4)
+        ex, ey, ez = pts[-1]
+        orb(q, GLOW[j % 3] if j % 3 else "Cosmic", ex, ey, ez - 2, 4.4, n=6)
+    anchor(q, (0, 0, 0))
+    return q
 
 
 def starweaver_halo(c):
-    M = xf(0, 0, 118, rx=7, ry=-5)
-    ax = M.to_3x3() @ Vector((0, 0, 1))
-    q = c.part("halo", "Spin", hinge=(0, 0, 118), axis=tuple(ax), amp=0.0, rate=0.045, phase=0.0, gait="Always")
+    M = xf(0, 0, 124, rx=7, ry=-5)
+    n0 = M.to_3x3() @ Vector((0, 0, 1))
+    side = M.to_3x3() @ Vector((1, 0, 0))
+    # PRECESSION: the spin axis is leaned 6 degrees off the ring's own normal, so the ring wobbles as it turns
+    ax = Matrix.Rotation(math.radians(6.0), 3, side) @ n0
+    q = c.part("halo", "Spin", hinge=(0, 0, 124), axis=tuple(ax), amp=0.0, rate=0.11, phase=0.0, gait="Always")
     with frame(q, M):
         R = 316
         for i in range(32):
             torus_arc(q, "Gold" if (i // 2) % 4 == 0 else ("Marble" if i % 2 == 0 else "MarbleDim"), R, 11, 0, 0, 0,
                       i * 11.25, (i + 1) * 11.25 + 0.4, n=2, m=6)
-        # inner light ring, joined by struts; rune plates on the crown of the ring
         for i in range(48):
             torus_arc(q, "Cosmic" if i % 3 == 0 else "Inlay", 292, 4, 0, 0, 0, i * 7.5, (i + 1) * 7.5 + 0.2, n=1, m=4)
         for i in range(12):
             a = math.radians(30 * i)
             box(q, "Gold", math.cos(a) * 304, math.sin(a) * 304, 0, 28, 7, 7, rz=math.degrees(a))
-            # pylon crystals: tall above, short below
             shard(q, GLOW[i % 3], math.cos(a) * R, math.sin(a) * R, 8, 13, 78 + (i % 2) * 28, 44, n=6)
             frustum(q, "Gold", 8, 18, 14, 4, 16, math.cos(a) * R, math.sin(a) * R)
         for i in range(24):
             a = math.radians(15 * i + 7.5)
             box(q, "Cosmic", math.cos(a) * R, math.sin(a) * R, 11, 15, 8, 3, rz=math.degrees(a) + 90)
-        # six gold blades pointing in toward the bell
         for i in range(6):
             a = math.radians(60 * i + 30)
             tube(q, "Gold", [(math.cos(a) * 290, math.sin(a) * 290, 0), (math.cos(a) * 262, math.sin(a) * 262, 2),
                              (math.cos(a) * 240, math.sin(a) * 240, 0)], [9, 6, 0.8], n=4)
+    return q
 
 
 def starweaver_heart(c):
     zc = -108
-    q = c.part("heart", "Pulse", hinge=(0, 0, zc), axis=(0, 0, 1), amp=0.10, rate=0.07, phase=math.pi * 0.35, gait="Always")
+    # HEART GLOW: a strong slow beat (+-18% in scale), always on
+    q = c.part("heart", "Pulse", hinge=(0, 0, zc), axis=(0, 0, 1), amp=0.18, rate=0.12, phase=math.pi * 0.35,
+               gait="Always")
     shard(q, "Cosmic", 0, 0, zc, 52, 80, 80, n=8)
     shard(q, "Violet", 0, 0, zc, 34, 100, 100, n=4, a=45)
     for j in range(6):
@@ -367,22 +409,31 @@ def starweaver_heart(c):
     for j in range(8):
         a = math.radians(45 * j)
         orb(q, GLOW[j % 3], math.cos(a) * 82 * 0.7, math.sin(a) * 82 * 0.7, zc + 58 * math.sin(j * 1.7), 7, n=6)
+    anchor(q, (0, 0, zc))
+    return q
+
+
+# three tendrils x three chained segments: a swing about a root/joint hinge, each segment rides on its parent
+# (acc = parent.acc * hinge) and beats a little later and a little deeper than the one above it.
+TEND_AZ = (60, 180, 300)      # degrees about the bell axis from +X: two forward sides and one trailing
+TEND_LEN = 450.0              # total hang below the bell underside
+TEND_SEG = 3
 
 
 def tpath(a, h):
-    r = 150 + 75 * h + 12 * math.sin(2 * math.pi * h)
-    return Vector((r * math.cos(a), r * math.sin(a), -14 - 286 * h))
+    r = 150 + 70 * h + 14 * math.sin(2 * math.pi * h)
+    return Vector((r * math.cos(a), r * math.sin(a), -14 - TEND_LEN * h))
 
 
-def tendril_segment(q, a, h0, h1, links, tip, rngseed):
+def tendril_segment(q, a, h0, h1, links, first, last):
     ts = [h0 + (h1 - h0) * i / links for i in range(links + 1)]
     pts = [tpath(a, t) for t in ts]
-    rad = [4.5] * len(pts)
-    if tip:
-        rad[-1] = 1.5
+    rad = [4.8 - 2.0 * t for t in ts]
+    if last:
+        rad[-1] = 1.4
     tube(q, "Gold", pts, rad, n=4)
-    for i in range(links):
-        pos = pts[i] if i else pts[0]
+    for i in range(links + (1 if last else 0)):
+        pos = pts[i]
         t = (pts[min(i + 1, links)] - pts[max(i - 1, 0)]).normalized()
         perp1 = t.cross(Vector((0, 0, 1)))
         if perp1.length < 1e-6:
@@ -390,33 +441,41 @@ def tendril_segment(q, a, h0, h1, links, tip, rngseed):
         perp1.normalize()
         perp2 = t.cross(perp1).normalized()
         axis = perp1 if i % 2 else perp2
-        basis_ring(q, ("Marble", "Gold", "StarGlass")[i % 3], pos, t, axis, 12.5 - 3 * (i / links) * (1 if tip else 0.5), 2.8)
-        mid = (pts[i] + pts[i + 1]) * 0.5
-        shard(q, GLOW[(i + (3 if tip else 0)) % 3], mid.x, mid.y, mid.z, 7, 12, 12, n=6)
-    # veils along the chain, one radial, one tangential
+        basis_ring(q, ("Marble", "Gold", "StarGlass")[i % 3], pos, t, axis, 13.0 - 6.0 * ts[i], 2.8)
+        if i < links:
+            mid = (pts[i] + pts[i + 1]) * 0.5
+            shard(q, GLOW[(i + int(h0 * 9)) % 3], mid.x, mid.y, mid.z, 7, 12, 12, n=6)
     radial = (math.cos(a), math.sin(a), 0)
     tang = (-math.sin(a), math.cos(a), 0)
-    wmax = 24 if not tip else 20
-    ws = [wmax * (1 - 0.6 * i / links) for i in range(links + 1)]
-    if tip:
+    ws = [26 * (1 - 0.62 * t) for t in ts]
+    if last:
         ws[-1] = 3
     blade(q, "StarGlass", pts, ws, [1.2] * (links + 1), up=radial)
     blade(q, "Violet", pts, [w * 0.8 for w in ws], [1.0] * (links + 1), up=tang)
-    # two strands wound round the chain
     for ph in (0.0, math.pi):
         sp = []
         for i in range(links * 2 + 1):
             tt = i / (links * 2)
-            base = tpath(a, h0 + (h1 - h0) * tt)
-            tnext = tpath(a, h0 + (h1 - h0) * min(tt + 0.02, 1.0)) - tpath(a, h0 + (h1 - h0) * max(tt - 0.02, 0.0))
-            tnext.normalize()
-            u = tnext.cross(Vector(radial)).normalized()
-            v = tnext.cross(u).normalized()
-            ang = ph + tt * 9.0
-            sp.append(tuple(base + (u * math.cos(ang) + v * math.sin(ang)) * 15))
-        tube(q, "Rose" if ph == 0 else "Shard", sp, [2.6] * (len(sp) - 1) + [0.8], n=3)
-    if tip:
-        e = pts[-1]
+            g = h0 + (h1 - h0) * tt
+            base = tpath(a, g)
+            tn = tpath(a, min(g + 0.01, 1.0)) - tpath(a, max(g - 0.01, 0.0))
+            tn.normalize()
+            u = tn.cross(Vector(radial)).normalized()
+            v = tn.cross(u).normalized()
+            ang = ph + tt * 4.0 + h0 * 12.0
+            sp.append(tuple(base + (u * math.cos(ang) + v * math.sin(ang)) * (15 - 5 * g)))
+        tube(q, "Rose" if ph == 0 else "Shard", sp, [2.4] * (len(sp) - 1) + [0.8], n=3)
+    j0 = pts[0]
+    if first:
+        # root stem running up INTO the bell: the swing pivots at the underside and the stem stays buried
+        tube(q, "Gold", [(j0.x, j0.y, j0.z + 46), (j0.x, j0.y, j0.z + 14), (j0.x, j0.y, j0.z - 6)], [9, 9, 6], n=6)
+        orb(q, "Gold", j0.x, j0.y, j0.z - 2, 12, n=6)
+    else:
+        orb(q, "Gold", j0.x, j0.y, j0.z, 11, n=6)           # joint bead: overlaps the parent's last link
+    e = pts[-1]
+    if not last:
+        orb(q, "Gold", e.x, e.y, e.z, 9.5, n=6)
+    else:
         shard(q, "Cosmic", e.x, e.y, e.z - 8, 18, 34, 46, n=6)
         with frame(q, xf(e.x, e.y, e.z - 6)):
             torus(q, "Gold", 22, 2.8, 0, 0, 0, n=12, m=4)
@@ -425,28 +484,37 @@ def tendril_segment(q, a, h0, h1, links, tip, rngseed):
             orb(q, GLOW[k], e.x + math.cos(aa) * 22, e.y + math.sin(aa) * 22, e.z - 30, 5, n=6)
 
 
-def starweaver_tendrils(c):
-    skirt = c.parts[0][0]
-    for k in range(4):
-        a = math.radians(45 + 90 * k)
+def starweaver_tendrils(c, skirt):
+    # Root + middle links swing in/out (tangent axis), the tip link swings sideways (radial axis), so the tip draws
+    # a loop. Rates differ per link (0.085/0.10/0.125 Hz) so the whip never settles into a metronome. The per-link
+    # LAG is carried by `phase` (explicit); the `lag` field stays 0 so any driver reading it adds nothing.
+    names = ("tendril", "tendriltip", "tendriltail")
+    amps = (0.17, 0.26, 0.36)
+    rates = (0.085, 0.100, 0.125)
+    for k, az in enumerate(TEND_AZ):
+        a = math.radians(az)
         tang = (-math.sin(a), math.cos(a), 0)
-        hup = tpath(a, 0.0)
-        hmid = tpath(a, 0.5)
-        up_ = c.part("tendril", "Flap", hinge=tuple(hup), axis=tang, amp=0.12, rate=0.06, phase=k * math.pi / 2,
-                     chain=skirt, lag=0.0, gait="Always")
-        tendril_segment(up_, a, 0.0, 0.5, 8, False, k)
-        tip = c.part("tendriltip", "Flap", hinge=tuple(hmid), axis=tang, amp=0.20, rate=0.06, phase=k * math.pi / 2,
-                     chain=up_, lag=0.8, gait="Always")
-        tendril_segment(tip, a, 0.5, 1.0, 9, True, k + 7)
+        radial = (math.cos(a), math.sin(a), 0)
+        parent = None
+        for s in range(TEND_SEG):
+            h0, h1 = s / TEND_SEG, (s + 1) / TEND_SEG
+            ax = tang if s < 2 else radial
+            hp = tpath(a, h0)
+            ph = k * 2.09 + s * 0.95
+            q = c.part(names[s], "Flap", hinge=tuple(hp), axis=ax, amp=amps[s], rate=rates[s], phase=ph,
+                       chain=parent, lag=0.0, gait="Always")
+            tendril_segment(q, a, h0, h1, 6, s == 0, s == TEND_SEG - 1)
+            parent = q
 
 
 def build_starweaver():
     c = Creature("starweaver", "COLOSSAL", ["ASTRAL_REACH"], "star-glass jelly celestial, head along +X")
     starweaver_body(c)
-    starweaver_skirt(c)
+    skirt = starweaver_skirt(c)
     starweaver_halo(c)
     starweaver_heart(c)
-    starweaver_tendrils(c)
+    starweaver_fringe(c, skirt)
+    starweaver_tendrils(c, skirt)
     return c
 
 
@@ -481,6 +549,13 @@ def shell_matfn(seed):
     return f
 
 
+TAIL_HINGE = (-262, 0, 8)
+NECK_HINGE = (240, 0, 26)
+HEAD_HINGE = (300, 0, 41)
+FORE_HINGE_X, FORE_HINGE_Y = 118, 208
+HIND_HINGE_X, HIND_HINGE_Y = -172, 188
+
+
 def turtle_body(c):
     p = c.body
     body = [(250, 38, "x"), (254, 28, "gold"), (248, 10, "flank"), (232, -8, "flank"), (205, -22, "belly"),
@@ -493,25 +568,19 @@ def turtle_body(c):
             return "TurtleSkin" if cc % 2 == 0 else "Moss" if cc % 8 == 3 else "BasaltLight"
         return "TurtleBelly" if cc % 4 else "Gold"
     lathe(p, body, TN, mf, sy=TSY, cap_bottom="TurtleBelly")
-    # limb masses where the four flippers and the neck join the body
+    # limb masses where the four flippers and the neck join the body (the paddle hinges sit at their centres)
     for s in (-1, 1):
-        ell_solid(p, "TurtleSkin", 118, s * 212, 4, 74, 60, 46, n=10)
-        ell_solid(p, "TurtleSkin", -172, s * 188, 0, 62, 52, 38, n=10)
-        for x, y in ((118, s * 212), (-172, s * 188)):
+        ell_solid(p, "TurtleSkin", FORE_HINGE_X, s * FORE_HINGE_Y, 4, 74, 62, 48, n=10)
+        ell_solid(p, "TurtleSkin", HIND_HINGE_X, s * HIND_HINGE_Y, 0, 62, 54, 40, n=10)
+        for x, y in ((FORE_HINGE_X, s * FORE_HINGE_Y), (HIND_HINGE_X, s * HIND_HINGE_Y)):
             with frame(p, xf(x, y, 6)):
-                torus(p, "Gold", 54 if x > 0 else 46, 4.5, 0, 0, 0, n=14, m=4)
+                torus(p, "Gold", 56 if x > 0 else 48, 4.5, 0, 0, 0, n=14, m=4)
     ell_solid(p, "TurtleSkin", 244, 0, 24, 40, 62, 38, n=10)
     with frame(p, xf(252, 0, 26, ry=90)):
         torus(p, "Gold", 50, 5.5, 0, 0, 0, n=14, m=4)
-    # tail: a tapering root with crest crystals
+    # tail root: a fat stub the moving tail overlaps (keeps the body 560+ long)
     tube(p, "TurtleSkin", [(-230, 0, 12), (-258, 0, 8), (-286, 0, -2), (-306, 0, -12), (-318, 0, -22)],
          [34, 28, 20, 11, 0.8], n=8)
-    for i in range(5):
-        x = -240 - i * 15
-        shard(p, GLOW[i % 3], x, 0, 36 - i * 6, 6 - i * 0.6, 22 - i * 2, 3, n=4, tilt=-20)
-    for i, x in enumerate((-250, -278, -300)):
-        with frame(p, xf(x, 0, 12 - i * 8, ry=90)):
-            torus(p, "Gold", 26 - i * 8, 3, 0, 0, 0, n=10, m=4)
     # hanging crystals under the plastron, and a ring of inlay light
     rng = random.Random("turtle belly")
     for i in range(12):
@@ -530,14 +599,13 @@ def turtle_body(c):
 
 
 def turtle_shell(c):
-    q = c.part("shell", "Pulse", hinge=HINGE_SHELL, axis=(0, 0, 1), amp=0.012, rate=0.05, phase=0.0, gait="Always")
+    # BREATHING: the whole shell swells and settles (+-2.2% about its own centre, ~11 s) so the grove rides up and down
+    q = c.part("shell", "Pulse", hinge=HINGE_SHELL, axis=(0, 0, 1), amp=0.022, rate=0.09, phase=0.0, gait="Always")
     lathe(q, SHELL, TN, shell_matfn("elder shell"), sy=TSY, cap_bottom="Basalt")
-    # marginal horns round the rim, marble fangs with gold roots
     for j in range(TN):
         a = 2 * math.pi * (j + 0.5) / TN
         x, y = ell(a, 258, TSY)
         shard(q, "Marble" if j % 2 == 0 else "MarbleDim", x, y, 44, 9, 26, 2, n=4, a=math.degrees(a), tilt=62)
-    # growth ridges: gold arcs on the scute seams of the shoulders
     for j in range(8):
         a = 2 * math.pi * j / 8
         pts = [(*ell(a, r * 1.02, TSY), z) for r, z, _t in SHELL[4:14:2]]
@@ -556,6 +624,9 @@ def tz(rn):
 
 
 ISLE_TOP = [(160, 192), (130, 200), (95, 212), (60, 225), (30, 233), (0, 236)]
+ISLE_HINGE = (0, 0, 150)        # buried in the shell: the island rocks about a point inside the carapace
+GROVE_HINGE = (0, 0, 228)       # ground level of the meadow: the trees lean about their feet
+SINK = 7.0                      # trunks are planted this deep so a leaning grove never lifts a root clear of the turf
 
 
 def rn_of(x, y):
@@ -567,20 +638,26 @@ def top(x, y):
 
 
 def tree(q, x, y, h, kind, rng):
-    z = top(x, y) - 1.0
+    z = top(x, y) - SINK
+    h2 = h + SINK
     if kind == 0:                                                   # pine
-        frustum(q, "Bark", 5, 2.2, 1.6, z, z + h * 0.3, x, y)
+        frustum(q, "Bark", 5, 2.2, 1.6, z, z + h2 * 0.3, x, y)
         for i in range(3):
             r0 = (h * 0.34) * (1 - i * 0.26)
             frustum(q, "LeafDark" if i != 1 else "Moss", 6, r0, 0.0 if i == 2 else r0 * 0.42,
-                    z + h * (0.2 + 0.26 * i), z + h * (0.5 + 0.26 * i), x, y)
+                    z + SINK + h * (0.2 + 0.26 * i), z + SINK + h * (0.5 + 0.26 * i), x, y)
     else:                                                           # broadleaf
-        frustum(q, "Bark", 5, 2.6, 1.8, z, z + h * 0.45, x, y)
-        orb(q, "Leaf" if rng.random() < 0.6 else "Moss", x, y, z + h * 0.7, h * 0.34, n=6)
+        frustum(q, "Bark", 5, 2.6, 1.8, z, z + SINK + h * 0.45, x, y)
+        orb(q, "Leaf" if rng.random() < 0.6 else "Moss", x, y, z + SINK + h * 0.7, h * 0.34, n=6)
+
+
+RUIN_C, POND_C = (74, -38), (-92, -62)
+GREAT = (-34, 22)
 
 
 def turtle_isle(c, shell_part):
-    q = c.part("isle", "Pulse", hinge=HINGE_SHELL, axis=(0, 0, 1), amp=0.012, rate=0.05, phase=0.0, chain=shell_part,
+    # ISLAND ROCK: the whole island sways +-1.9 deg about a point buried in the shell (slow, ~16 s)
+    q = c.part("isle", "Flap", hinge=ISLE_HINGE, axis=(0.8, 0.6, 0), amp=0.034, rate=0.062, phase=0.4, chain=shell_part,
                lag=0.0, gait="Always")
     rng = random.Random("elder isle")
     prof = [(160, 135, "x"), (172, 158, "cliff"), (172, 176, "cliff"), (160, 192, "lip")] + \
@@ -593,7 +670,6 @@ def turtle_isle(c, shell_part):
             return "Moss" if cc % 3 else "MossDark"
         return ("Moss", "Leaf", "MossDark")[(cc * 7 + k * 3) % 3]
     lathe(q, prof, TN, mf, sy=TSY, cx=0.0, jit=0.07, seed="elder terrain", cap_bottom="Rock")
-    # roots draping down the shell
     for i in range(16):
         a = 2 * math.pi * i / 16 + 0.2
         pts = []
@@ -601,42 +677,12 @@ def turtle_isle(c, shell_part):
             x, y = ell(a, r, TSY)
             pts.append((x, y, z))
         tube(q, "Bark", pts, [7, 6, 5, 3.5, 0.8], n=5)
-    # cliff boulders and ledges
     for i in range(18):
         a = 2 * math.pi * i / 18 + rng.uniform(-0.1, 0.1)
         x, y = ell(a, 166, TSY)
         shard(q, "RockLight", x, y, 168, rng.uniform(8, 14), rng.uniform(8, 18), 6, n=5, a=math.degrees(a), tilt=10)
-    # the great tree
-    gx, gy = -34, 22
-    gz = top(gx, gy) - 2
-    tube(q, "Bark", [(gx, gy, gz), (gx + 3, gy - 2, gz + 40), (gx + 1, gy + 4, gz + 80), (gx - 4, gy + 2, gz + 112)],
-         [17, 14, 10, 7], n=7)
-    for bi, (dx, dy, dz) in enumerate(((46, 10, 90), (-40, 22, 94), (10, -44, 100), (-6, 44, 96), (34, -30, 110))):
-        tube(q, "Bark", [(gx + 2, gy, gz + 80), (gx + dx * 0.5, gy + dy * 0.5, gz + dz * 0.95),
-                         (gx + dx, gy + dy, gz + dz + 18)], [7, 5, 2.4], n=5)
-    for (dx, dy, dz, rr, col) in ((0, 0, 140, 58, "Leaf"), (46, 10, 118, 40, "Moss"), (-40, 22, 120, 42, "Leaf"),
-                                  (10, -44, 124, 40, "LeafDark"), (-6, 44, 118, 38, "Moss"),
-                                  (34, -30, 138, 34, "Leaf"), (-24, -10, 178, 36, "Moss")):
-        orb(q, col, gx + dx, gy + dy, gz + dz, rr, n=8)
-    for k in range(9):
-        a = rng.uniform(0, 2 * math.pi)
-        d = rng.uniform(26, 56)
-        orb(q, "Rose", gx + math.cos(a) * d, gy + math.sin(a) * d, gz + 100 + rng.uniform(0, 70), 4.2, n=5)
-    # woods: pines and broadleaves, kept clear of the ruin and the pond
-    ruin_c, pond_c = (74, -38), (-92, -62)
-    placed = 0
-    tries = 0
-    while placed < 70 and tries < 800:
-        tries += 1
-        a = rng.uniform(0, 2 * math.pi)
-        d = rng.uniform(0.08, 0.94) * 150
-        x, y = d * math.cos(a), d * TSY * math.sin(a)
-        if math.hypot(x - gx, y - gy) < 62 or math.hypot(x - ruin_c[0], y - ruin_c[1]) < 64 \
-                or math.hypot(x - pond_c[0], y - pond_c[1]) < 38:
-            continue
-        tree(q, x, y, rng.uniform(26, 56), rng.randrange(2), rng)
-        placed += 1
-    # a pond, with a waterfall down the cliff beside it
+    # pond with a waterfall down the cliff beside it
+    pond_c = POND_C
     pz = top(*pond_c) + 0.3
     frustum(q, "Water", 10, 30, 30, pz, pz + 0.8, *pond_c)
     frustum(q, "MarbleDim", 10, 34, 32, pz - 1, pz + 0.2, *pond_c)
@@ -647,7 +693,7 @@ def turtle_isle(c, shell_part):
         wp.append((x, y, z))
     blade(q, "Water", wp, [9, 9, 10, 10, 6], [0.9] * 5, up=(-math.sin(a_fall), math.cos(a_fall), 0))
     # the ruin: a stepped terrace, a broken colonnade, an altar, an obelisk
-    rx, ry = ruin_c
+    rx, ry = RUIN_C
     z0 = top(rx, ry) - 1.5
     frustum(q, "MarbleDim", 10, 56, 52, z0, z0 + 5, rx, ry)
     frustum(q, "Marble", 10, 46, 44, z0 + 5, z0 + 9, rx, ry)
@@ -674,9 +720,8 @@ def turtle_isle(c, shell_part):
     frustum(q, "Marble", 4, 6.5, 2.2, z0 + 18, z0 + 82, ox, oy)
     frustum(q, "Gold", 4, 3.2, 3.2, z0 + 82, z0 + 86, ox, oy)
     shard(q, "Violet", ox, oy, z0 + 98, 6, 14, 8, n=5)
-    for i in range(5):                                         # steps down from the terrace
+    for i in range(5):
         box(q, "MarbleDim" if i % 2 else "Marble", rx + 60 + i * 5, ry + 6, z0 + 5 - i * 1.0, 6, 28 - i * 3, 3.2 + 0.0)
-    # a ruined arch on the north rim
     ax_, ay_ = 36, 100
     az = top(ax_, ay_) - 1.5
     for s in (-1, 1):
@@ -684,7 +729,6 @@ def turtle_isle(c, shell_part):
         box(q, "Gold", ax_ + s * 15, ay_, az + 35.5, 11, 11, 3)
     box(q, "Marble", ax_, ay_, az + 40, 40, 8, 7)
     box(q, "Gold", ax_, ay_, az + 44.5, 41, 9, 2)
-    # flowers and stones scattered across the meadow
     for i in range(46):
         a = rng.uniform(0, 2 * math.pi)
         d = rng.uniform(0.1, 0.95) * 150
@@ -695,11 +739,47 @@ def turtle_isle(c, shell_part):
     return q
 
 
+def turtle_grove(c, isle_part):
+    # GROVE SWAY: the great tree and the woods are their own part, chained to the island and leaning a little
+    # later and deeper than it, about the meadow's ground level (the trunks are planted deep, so nothing floats)
+    q = c.part("grove", "Flap", hinge=GROVE_HINGE, axis=(0.6, -0.8, 0), amp=0.05, rate=0.095, phase=1.7, chain=isle_part,
+               lag=0.0, gait="Always")
+    rng = random.Random("elder grove")
+    gx, gy = GREAT
+    gz = top(gx, gy) - SINK
+    tube(q, "Bark", [(gx, gy, gz), (gx + 3, gy - 2, gz + 40 + SINK), (gx + 1, gy + 4, gz + 80 + SINK),
+                     (gx - 4, gy + 2, gz + 112 + SINK)], [17, 14, 10, 7], n=7)
+    for bi, (dx, dy, dz) in enumerate(((46, 10, 90), (-40, 22, 94), (10, -44, 100), (-6, 44, 96), (34, -30, 110))):
+        tube(q, "Bark", [(gx + 2, gy, gz + 80 + SINK), (gx + dx * 0.5, gy + dy * 0.5, gz + SINK + dz * 0.95),
+                         (gx + dx, gy + dy, gz + SINK + dz + 18)], [7, 5, 2.4], n=5)
+    gz2 = gz + SINK
+    for (dx, dy, dz, rr, col) in ((0, 0, 140, 58, "Leaf"), (46, 10, 118, 40, "Moss"), (-40, 22, 120, 42, "Leaf"),
+                                  (10, -44, 124, 40, "LeafDark"), (-6, 44, 118, 38, "Moss"),
+                                  (34, -30, 138, 34, "Leaf"), (-24, -10, 178, 36, "Moss")):
+        orb(q, col, gx + dx, gy + dy, gz2 + dz, rr, n=8)
+    for k in range(9):
+        a = rng.uniform(0, 2 * math.pi)
+        d = rng.uniform(26, 56)
+        orb(q, "Rose", gx + math.cos(a) * d, gy + math.sin(a) * d, gz2 + 100 + rng.uniform(0, 70), 4.2, n=5)
+    placed = 0
+    tries = 0
+    while placed < 70 and tries < 800:
+        tries += 1
+        a = rng.uniform(0, 2 * math.pi)
+        d = rng.uniform(0.08, 0.94) * 150
+        x, y = d * math.cos(a), d * TSY * math.sin(a)
+        if math.hypot(x - gx, y - gy) < 62 or math.hypot(x - RUIN_C[0], y - RUIN_C[1]) < 64 \
+                or math.hypot(x - POND_C[0], y - POND_C[1]) < 38:
+            continue
+        tree(q, x, y, rng.uniform(26, 56), rng.randrange(2), rng)
+        placed += 1
+    return q
+
+
 def turtle_crystals(c, shell_part):
     q = c.part("crystals", "Flicker", hinge=HINGE_SHELL, axis=(0, 0, 1), amp=0.0, rate=0.11, phase=0.0,
                chain=shell_part, lag=0.0, gait="Always")
     rng = random.Random("elder crystals")
-    # great spurs growing out of the shoulders of the shell, in fans
     for j in range(18):
         a = 2 * math.pi * (j + 0.3) / 18
         for k, (rr, z, up, rad, tilt) in enumerate(((210, 120, 52, 11, 26), (194, 140, 34, 8, 18))):
@@ -708,7 +788,7 @@ def turtle_crystals(c, shell_part):
             x, y = ell(a, rr, TSY)
             shard(q, GLOW[(j + k) % 3], x, y, z, rad, up * rng.uniform(0.8, 1.25), 10, n=5, a=math.degrees(a),
                   tilt=tilt)
-    for j in range(6):                                              # four big clusters on the diagonals + two fore
+    for j in range(6):
         a = math.radians(45 + 60 * j)
         x, y = ell(a, 236, TSY)
         for m in range(5):
@@ -716,7 +796,6 @@ def turtle_crystals(c, shell_part):
             xx, yy = ell(aa, 236 + (m % 2) * 6, TSY)
             shard(q, GLOW[m % 3], xx, yy, 96 + (m % 2) * 6, 10 + (2 - abs(m - 2)) * 3, 40 + (2 - abs(m - 2)) * 28, 14,
                   n=6, a=math.degrees(aa), tilt=34 - abs(m - 2) * 6)
-    # slender spires standing up out of the grove, glowing
     for j in range(7):
         a = 2 * math.pi * j / 7 + 0.5
         d = 38 + (j % 3) * 28
@@ -726,25 +805,36 @@ def turtle_crystals(c, shell_part):
 
 
 def turtle_neck_head(c):
-    neck = c.part("neck", "Flap", hinge=(240, 0, 26), axis=(0, 1, 0), amp=0.07, rate=0.04, phase=0.0, gait="Always")
-    tube(neck, "TurtleSkin", [(236, 0, 24), (262, 0, 30), (290, 0, 38), (322, 0, 46), (336, 0, 47)],
-         [48, 44, 42, 41, 38], n=8)
-    for i, x in enumerate((256, 280, 304, 326)):
+    # NECK: two links. The neck nods about its root (slow, ~14 s), the head link carries the distal neck, the head
+    # and the eyes and nods a beat later and deeper, so the head reaches out and eases back like a living thing.
+    neck = c.part("neck", "Flap", hinge=NECK_HINGE, axis=(0, 1, 0), amp=0.10, rate=0.07, phase=0.0, gait="Always")
+    tube(neck, "TurtleSkin", [(226, 0, 22), (262, 0, 30), (292, 0, 39), (306, 0, 43)], [46, 44, 42, 41], n=8)
+    for i, x in enumerate((256, 280)):
         with frame(neck, xf(x, 0, 28 + i * 6, ry=90)):
             torus(neck, "Gold" if i % 2 == 0 else "Marble", 43 - i * 1.5, 4.2, 0, 0, 0, n=12, m=4)
-    for i in range(6):                                              # dorsal plates down the neck
+    for i in range(3):
         x = 252 + i * 14
         box(neck, "MarbleDim" if i % 2 else "Marble", x, 0, 30 + i * 3 + 40, 11, 24, 5, ry=-12)
     for s in (-1, 1):
-        tube(neck, "MossDark", [(262, s * 38, 14), (290, s * 38, 22), (318, s * 36, 28)], [6, 5, 0.8], n=4)
-    head = c.part("head", "Flap", hinge=(336, 0, 47), axis=(0, 1, 0), amp=0.11, rate=0.04, phase=0.0, chain=neck,
-                  lag=0.7, gait="Always")
+        tube(neck, "MossDark", [(262, s * 38, 14), (286, s * 38, 22), (300, s * 37, 26)], [6, 5, 0.8], n=4)
+    head = c.part("head", "Flap", hinge=HEAD_HINGE, axis=(0, 1, 0), amp=0.16, rate=0.07, phase=0.9, chain=neck,
+                  lag=0.0, gait="Always")
+    tube(head, "TurtleSkin", [(296, 0, 41), (318, 0, 45), (336, 0, 47)], [42, 40, 38], n=8)
+    for i, x in enumerate((312, 328)):
+        with frame(head, xf(x, 0, 42 + i * 3, ry=90)):
+            torus(head, "Gold" if i % 2 == 0 else "Marble", 41.5 - i * 1.5, 4.2, 0, 0, 0, n=12, m=4)
+    for i in range(3):
+        x = 306 + i * 14
+        box(head, "MarbleDim" if i % 2 else "Marble", x, 0, 30 + i * 3 + 52, 11, 24, 5, ry=-12)
+    for s in (-1, 1):
+        tube(head, "MossDark", [(300, s * 36, 26), (318, s * 36, 30)], [5, 0.8], n=4)
     ell_solid(head, "TurtleSkin", 374, 0, 50, 50, 42, 34, n=10)
     tube(head, "BasaltLight", [(398, 0, 56), (416, 0, 50), (430, 0, 40), (436, 0, 34)], [24, 18, 10, 1.4], n=6)     # beak
     tube(head, "Marble", [(396, 0, 40), (412, 0, 34), (424, 0, 30)], [17, 11, 1.5], n=6)                           # jaw
     for s in (-1, 1):
         orb(head, "TurtleBelly", 394, s * 31, 58, 8.4, n=8)
         orb(head, "Cosmic", 399, s * 33, 59, 5.0, n=6)
+        orb(head, "Cosmic", 396, s * 31.5, 59, 7.2, n=6)                                                         # eye glow
         tube(head, "Gold", [(360, s * 26, 70), (384, s * 33, 72), (404, s * 36, 66)], [5.5, 5, 2], n=4)
         shard(head, "Violet" if s > 0 else "Rose", 352, s * 24, 66, 12, 62, 6, n=5, a=0, tilt=-55)
         shard(head, "Shard", 366, s * 34, 62, 8, 34, 4, n=5, a=s * 90, tilt=50)
@@ -756,12 +846,24 @@ def turtle_neck_head(c):
     return neck, head
 
 
-def flipper(c, name, s, root, pts, widths, thicks, hinge, chain, lag, amp, rate, phase, kind_bits):
-    q = c.part(name, "Flap", hinge=hinge, axis=(1, 0, 0), amp=amp, rate=rate, phase=phase, chain=chain, lag=lag,
+def turtle_tail(c):
+    # TAIL: a long slow sweep behind the turn, fat root buried in the body stub
+    q = c.part("tail", "Flap", hinge=TAIL_HINGE, axis=(0, 0, 1), amp=0.24, rate=0.065, phase=2.2, gait="Always")
+    tube(q, "TurtleSkin", [(-246, 0, 10), (-290, 0, 5), (-330, 0, -6), (-362, 0, -17), (-384, 0, -26), (-394, 0, -30)],
+         [37, 31, 23, 14, 6, 0.8], n=8)
+    for i in range(6):
+        x = -258 - i * 20
+        shard(q, GLOW[i % 3], x, 0, 38 - i * 8, 6.5 - i * 0.7, 24 - i * 2.4, 3, n=4, tilt=-20)
+    for i, x in enumerate((-270, -300, -328)):
+        with frame(q, xf(x, 0, 8 - i * 6, ry=90)):
+            torus(q, "Gold", 31 - i * 7, 3, 0, 0, 0, n=10, m=4)
+    return q
+
+
+def paddle(c, name, s, pts, widths, thicks, hinge, axis, amp, rate, phase, chain, extra=None):
+    q = c.part(name, "Flap", hinge=hinge, axis=axis, amp=amp, rate=rate, phase=phase, chain=chain, lag=0.0,
                gait="Flight")
     blade(q, "TurtleSkin", pts, widths, thicks, up=(0, 0, 1))
-    # leading edge gold trim, an inlay line, moss patches, crystal studs
-    lead = [(x + 4, y - s * 0.0, z + t * 0.9) for (x, y, z), t in zip(pts, thicks)]
     blade(q, "Inlay", [(x, y, z + t + 0.8) for (x, y, z), t in zip(pts, thicks)],
           [w * 0.12 for w in widths], [0.7] * len(pts), up=(0, 0, 1))
     blade(q, "Gold", [(x + w * 0.9, y, z + 0.2) for (x, y, z), w in zip(pts, widths)], [w * 0.1 for w in widths],
@@ -770,37 +872,40 @@ def flipper(c, name, s, root, pts, widths, thicks, hinge, chain, lag, amp, rate,
         x, y, z = pts[i]
         shard(q, "Moss" if i % 2 else "MossDark", x - widths[i] * 0.3, y, z + thicks[i] + 0.6, widths[i] * 0.38, 2.4, 0.5, n=5)
         shard(q, GLOW[i % 3], x + widths[i] * 0.35, y, z + thicks[i], 4.2, 11, 2, n=4, a=-s * 20, tilt=-18)
-    kind_bits(q, pts)
+    if extra:
+        extra(q, pts)
     return q
 
 
 def turtle_flippers(c):
     for s in (1, -1):
-        ph = 0.0 if s > 0 else math.pi
-        up = flipper(
-            c, "flipper", s, None,
-            [(118, s * 226, 2), (102, s * 268, -1), (86, s * 306, -5), (76, s * 328, -8)],
-            [56, 70, 66, 50], [16, 16.5, 14, 11], (118, s * 226, 2), None, 0.0, 0.26, 0.055, ph, lambda q, pts: None)
+        # FORE PADDLES (symmetric): a slow deep stroke. The root link beats +-0.45 rad about the body axis; the tip
+        # link is chained, beats a beat later and deeper, and its axis is turned 22 degrees toward the paddle's long
+        # axis so it also FEATHERS (the leading edge dips on the downstroke) like a real flipper.
+        ph = 0.0
+        hx, hy = FORE_HINGE_X, s * FORE_HINGE_Y
+        root_pts = [(hx, hy, 4), (hx - 8, s * 262, -1), (hx - 18, s * 318, -6)]
+        tip_pts = [(hx - 18, s * 318, -6), (hx - 56, s * 354, -12), (hx - 108, s * 384, -22), (hx - 156, s * 402, -33),
+                   (hx - 186, s * 410, -44)]
+        up = paddle(c, "flipper", s, root_pts, [64, 80, 76], [20, 17, 14], (hx, hy, 4), (s, 0, 0), 0.42, 0.14, ph, None)
+        # joint bead hides the seam when the tip link bends against the root link
+        orb(up, "TurtleSkin", hx - 18, s * 318, -6, 19, n=8)
 
         def claws(q, pts, s=s):
             ex, ey, ez = pts[-1]
             for i in range(3):
-                dx = (-52 + i * 40)
-                tube(q, "Marble", [(ex + dx - 40, ey - 4 * s, ez - 2), (ex + dx - 62, ey + s * 4, ez - 6)], [6, 0.8], n=4)
-        flipper(
-            c, "flippertip", s, None,
-            [(76, s * 322, -8), (36, s * 342, -16), (-6, s * 354, -26), (-42, s * 360, -36), (-72, s * 364, -46)],
-            [60, 78, 72, 48, 12], [12, 11, 9, 7, 3], (76, s * 322, -8), up, 0.9, 0.34, 0.055, ph,
-            lambda q, pts, s=s: [tube(q, "Marble", [(-78 - i * 14, s * (352 + i * 5), -48 - i * 3),
-                                                     (-104 - i * 14, s * (360 + i * 5), -58 - i * 3)],
-                                      [5, 0.7], n=4) for i in range(3)])
-    # hind flippers: a single broad paddle each, rowing out of phase with the fore pair
+                tube(q, "Marble", [(ex + 22 - i * 20, ey - 3 * s, ez - 2), (ex - 6 - i * 20, ey + s * 14, ez - 8)],
+                     [6, 0.8], n=4)
+        tip = paddle(c, "flippertip", s, tip_pts, [74, 86, 74, 46, 12], [14, 12, 9, 6, 3], (hx - 18, s * 318, -6),
+                     (s * math.cos(math.radians(22)), math.sin(math.radians(22)), 0), 0.50, 0.14, ph - 0.9, up, claws)
+        orb(tip, "TurtleSkin", hx - 18, s * 318, -6, 19, n=8)
+    # HIND PADDLES: one broad blade each, rowing against each other, half a beat behind the fore pair
     for s in (1, -1):
-        flipper(
-            c, "hindflipper", s, None,
-            [(-172, s * 224, -2), (-206, s * 262, -8), (-246, s * 296, -18), (-282, s * 322, -30), (-300, s * 334, -36)],
-            [44, 62, 64, 48, 10], [13, 12, 10, 8, 3], (-172, s * 224, -2), None, 0.0, 0.2, 0.05,
-            math.pi / 2 if s > 0 else 3 * math.pi / 2, lambda q, pts: None)
+        hx, hy = HIND_HINGE_X, s * HIND_HINGE_Y
+        pts = [(hx, hy, 0), (hx - 34, s * 246, -8), (hx - 72, s * 296, -18), (hx - 108, s * 332, -30),
+               (hx - 128, s * 348, -38)]
+        paddle(c, "hindflipper", s, pts, [52, 68, 68, 50, 10], [15, 13, 10, 8, 3], (hx, hy, 0), (s, 0, 0), 0.34, 0.14,
+               math.pi * 0.5 + (0.0 if s > 0 else math.pi), None)
 
 
 def build_turtle():
@@ -808,14 +913,11 @@ def build_turtle():
     turtle_body(c)
     shell = turtle_shell(c)
     isle = turtle_isle(c, shell)
+    turtle_grove(c, isle)
     turtle_crystals(c, shell)
     turtle_neck_head(c)
-    n0 = len(c.parts)
+    turtle_tail(c)
     turtle_flippers(c)
-    for q, m in c.parts[n0:]:                      # keep the span inside the 760-stud class limit
-        for i, v in enumerate(q.verts):
-            q.verts[i] = Vector((v.x, v.y * 0.86, v.z))
-        m["hinge"] = Vector((m["hinge"].x, m["hinge"].y * 0.86, m["hinge"].z))
     return c
 
 
@@ -891,7 +993,7 @@ def check(creatures):
         blo, bhi = bbox(c.body)
         print(f"CREATURE {c.id}: {len(allp)} meshes, {total} tris, body bbox {[round(x, 1) for x in (bhi - blo)]}, "
               f"assembly bbox {[round(x, 1) for x in (ahi - alo)]}")
-        if len(allp) > 13:       # body + up to 12 parts... contract: up to 12 meshes per creature
+        if len(allp) > 14:       # round 2: up to 14 meshes per creature, body included
             ok = False
     return ok
 
@@ -1027,9 +1129,9 @@ def main(argv):
     creatures = [build_starweaver(), build_turtle()]
     for c in creatures:
         finalize(c)
-    # contract: up to 12 meshes per creature (body counts)
+    # round 2 contract: up to 14 meshes per creature (body counts)
     for c in creatures:
-        assert 1 + len(c.parts) <= 12, f"{c.id}: {1 + len(c.parts)} meshes"
+        assert 1 + len(c.parts) <= 14, f"{c.id}: {1 + len(c.parts)} meshes"
     ok = check(creatures)
     sidecar = build_sidecar(creatures)
     for c in creatures:
