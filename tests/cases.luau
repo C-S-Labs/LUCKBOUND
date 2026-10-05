@@ -9687,53 +9687,500 @@ do
 	check("rotated rectangle keeps gap using rotated width", rectangular.Chunks[3].X == 58)
 end
 
--- Hub docking is explicit content intent, independent of a prop's size.
+-- === the living sky: FlightCore, SkyLife, SkyCreatures ================
+-- The boats and their docking are gone (docs/design/SKY_ECOSYSTEM_CONTRACT.md 4.2);
+-- creatures fly by class profile. Headless: FlightCore is pure.
 do
-	local docking = {}
-	for _, group in GameConfig.HubLayout.V2.Orbiters do
-		for _, name in group.Names do
-			docking[name] = group.CanDock == true
+	local FlightCore = __require("FlightCore")
+	local SkyCreatures = __require("SkyCreatures")
+	local V2 = GameConfig.HubLayout.V2
+	local life = V2.SkyLife
+
+	-- A seedable stand-in for Roblox's Random (the luau CLI has none): the same
+	-- NextNumber(min, max) / NextNumber() surface, a plain LCG underneath.
+	local function newRng(seed: number)
+		local state = (seed * 2654435761 + 12345) % 4294967296
+		local rng = {}
+		function rng.NextNumber(_self, lo: number?, hi: number?): number
+			state = (state * 1664525 + 1013904223) % 4294967296
+			local u = state / 4294967296
+			if lo == nil then
+				return u
+			end
+			return (lo :: number) + u * ((hi :: number) - (lo :: number))
 		end
-	end
-	check("hub galleons can dock", docking.hubprop_ship_galleon == true)
-	check("hub carriers can dock", docking.hubprop_ship_carrier == true)
-	check("hub whales never dock regardless of scale", docking.hubprop_sky_whale == false)
-	local onlyLargeShips = true
-	for name, enabled in docking do
-		if enabled and name ~= "hubprop_ship_galleon" and name ~= "hubprop_ship_carrier" then
-			onlyLargeShips = false
+		function rng.NextInteger(self, lo: number, hi: number): number
+			return math.floor(self:NextNumber(lo, hi + 1))
 		end
+		return rng
 	end
-	check("only large hub ships have docking enabled", onlyLargeShips)
-	local x, z, nx, nz = PropCore.berthOnBox(535.1, 523, 1, 1, 86, 20)
+
+	local RADII = { TINY = 2.5, SMALL = 7, MEDIUM = 22, LARGE = 60, COLOSSAL = 420 }
+	local function bandFor(class)
+		local p = life.Classes[class]
+		return {
+			Cx = 0,
+			Cy = 0,
+			Cz = 0,
+			RMin = p.RadiusMin,
+			RMax = p.RadiusMax,
+			YMin = p.HeightMin,
+			YMax = p.HeightMax,
+			SMin = p.SpeedMin,
+			SMax = p.SpeedMax,
+		}
+	end
+	local function newFlier(class, seed, canLand)
+		local rng = newRng(seed)
+		local b = bandFor(class)
+		local a = rng:NextNumber(0, 2 * math.pi)
+		local r = rng:NextNumber(b.RMin, b.RMax)
+		local f = FlightCore.spawn(
+			life,
+			class,
+			RADII[class],
+			rng,
+			b,
+			math.cos(a) * r,
+			rng:NextNumber(b.YMin, b.YMax),
+			math.sin(a) * r,
+			rng:NextNumber(0, 2 * math.pi),
+			canLand
+		)
+		f.Present = true
+		FlightCore.pickWaypoint(f, { PlayerX = 0, PlayerY = 0, PlayerZ = 0 })
+		return f
+	end
+	local function wrapAngle(a)
+		return (a + math.pi) % (2 * math.pi) - math.pi
+	end
+
+	-- the boats and docking are gone; the whale is a creature now
+	local ordinary = {}
+	local noCanDock = true
+	for _, entry in V2.Orbiters do
+		for _, name in entry.Names do
+			ordinary[name] = true
+		end
+		noCanDock = noCanDock and entry.CanDock == nil
+	end
+	check("orbiter entries no longer carry CanDock", noCanDock)
+	check("Docking config is gone", V2.Docking == nil)
+	local anyShip, anyWhale = false, false
+	for name in ordinary do
+		anyShip = anyShip or string.find(name, "^hubprop_ship_") ~= nil
+		anyWhale = anyWhale or name == "hubprop_sky_whale"
+	end
+	check("no ship is spawned as an orbiter", not anyShip)
+	check("the whale is spawned from SkyCreatures, not Orbiters", not anyWhale)
 	check(
-		"diagonal carrier berth selects actual mesa face",
-		nz == 1 and nx == 0 and z == 523 / 2 + 43 + 20
+		"the whale stays in the roster, LARGE with its moving parts",
+		SkyCreatures.SKY_WHALE ~= nil
+			and SkyCreatures.SKY_WHALE.Class == "LARGE"
+			and SkyCreatures.SKY_WHALE.Parts.hubprop_sky_whale__fluke_1 ~= nil
 	)
-	check("diagonal berth keeps ship clearance box outside mesa", z - (86 / 2 + 18) > 523 / 2)
-	check("berth hugs island face rather than full diagonal sphere", z - 523 / 2 == 86 / 2 + 20)
-	local allSides = true
-	for _, dir in
-		{
-			{ 1, 0 },
-			{ -1, 0 },
-			{ 0, 1 },
-			{ 0, -1 },
-			{ 1, 1 },
-			{ -1, 1 },
-			{ 1, -1 },
-			{ -1, -1 },
-			{
-				0,
-				0,
+
+	-- the shipped roster and profiles validate
+	local ok, errs = Schema.validateSkyCreatures(SkyCreatures, life)
+	check("SkyCreatures + SkyLife validate", ok, table.concat(errs, " | "))
+	local bundled, bundleErrs = pcall(
+		Schema.validateAll,
+		{ worlds = Worlds, config = GameConfig, skyCreatures = SkyCreatures }
+	)
+	check("Schema.validateAll accepts the roster at boot", bundled, tostring(bundleErrs))
+
+	-- fixture creatures (the real sidecars arrive separately), valid then broken
+	local function fixture()
+		return {
+			TEST_FINCH = {
+				Model = "hubprop_test_finch",
+				Class = "TINY",
+				Size = Vector3.new(4, 1.5, 3),
+				Biome = { "VERDANT" },
+				CanLand = true,
+				Weight = 1,
+				ScaleMin = 1,
+				ScaleMax = 1,
+				Parts = {
+					hubprop_test_finch__wing_1 = {
+						Kind = "Flap",
+						Offset = Vector3.new(0, 0, -1),
+						Hinge = Vector3.new(0, 0, 0),
+						Axis = Vector3.new(1, 0, 0),
+						Amp = 0.8,
+						Rate = 5,
+						Phase = 0,
+						Lag = 0,
+						Gait = "Flight",
+					},
+					hubprop_test_finch__tip_1 = {
+						Kind = "Flap",
+						Offset = Vector3.new(0, 0, -2),
+						Hinge = Vector3.new(0, 0, -1),
+						Axis = Vector3.new(1, 0, 0),
+						Amp = 0.4,
+						Rate = 5,
+						Phase = 0,
+						Chain = "hubprop_test_finch__wing_1",
+						Lag = 0.5,
+						Gait = "Flight",
+					},
+				},
 			},
 		}
-	do
-		local bx, bz, fx, fz = PropCore.berthOnBox(200, 100, dir[1], dir[2], 40, 20)
-		local faceDistance = if fx ~= 0 then bx * fx - 100 else bz * fz - 50
-		allSides = allSides and faceDistance == 40 and math.abs(fx) + math.abs(fz) == 1
 	end
-	check("all berth directions preserve exact beam clearance", allSides)
+	local function invalid(label, mutate)
+		local c = fixture()
+		mutate(c.TEST_FINCH)
+		local good = Schema.validateSkyCreatures(c, life)
+		check(label, not good)
+	end
+	check(
+		"a well-formed fixture creature validates",
+		(Schema.validateSkyCreatures(fixture(), life))
+	)
+	local badBundle = fixture()
+	badBundle.TEST_FINCH.Class = "GIANT"
+	check(
+		"Schema.validateAll raises on a bad roster (server refuses to boot)",
+		not pcall(
+			Schema.validateAll,
+			{ worlds = Worlds, config = GameConfig, skyCreatures = badBundle }
+		)
+	)
+	invalid("species with an unknown class is refused", function(c)
+		c.Class = "GIANT"
+	end)
+	invalid("a species outside its class's size range is refused", function(c)
+		c.Size = Vector3.new(60, 10, 10)
+	end)
+	invalid("a colossal-or-large species may not land", function(c)
+		c.Class = "LARGE"
+		c.Size = Vector3.new(100, 30, 30)
+	end)
+	invalid("a part that does not carry the model's name is refused", function(c)
+		c.Parts.other_wing = c.Parts.hubprop_test_finch__wing_1
+	end)
+	invalid("an unknown gait is refused", function(c)
+		c.Parts.hubprop_test_finch__wing_1.Gait = "Sometimes"
+	end)
+	invalid("an unknown part kind is refused", function(c)
+		c.Parts.hubprop_test_finch__wing_1.Kind = "Wobble"
+	end)
+	invalid("a chain to a missing part is refused", function(c)
+		c.Parts.hubprop_test_finch__tip_1.Chain = "hubprop_test_finch__gone_1"
+	end)
+	invalid("a chain loop is refused", function(c)
+		c.Parts.hubprop_test_finch__wing_1.Chain = "hubprop_test_finch__tip_1"
+	end)
+	invalid("a missing Weight is refused", function(c)
+		c.Weight = nil
+	end)
+	-- a profile whose band reaches inside its own keep-out is refused
+	local brokenLife =
+		{ Classes = {}, ClassOrder = life.ClassOrder, Flight = life.Flight, MaxParts = 16 }
+	for name, p in life.Classes do
+		local copy = {}
+		for k, v in p do
+			copy[k] = v
+		end
+		brokenLife.Classes[name] = copy
+	end
+	brokenLife.Classes.MEDIUM.RadiusMin = 100
+	check(
+		"a band inside its own keep-out is refused",
+		not (Schema.validateSkyCreatures({}, brokenLife))
+	)
+
+	-- THE CONTRACT: heading equals velocity, no instant yaw, for every class
+	local DT = 1 / 20
+	for _, class in life.ClassOrder do
+		local worstHead, worstYaw, worstPitch = 0, 0, 0
+		local steps = 0
+		for seed = 1, 5 do
+			local f = newFlier(class, seed, false)
+			local pitchScale = life.Flight.PitchRateScale
+			for _ = 1, math.floor(300 / DT) do
+				local x0, y0, z0 = f.X, f.Y, f.Z
+				local yaw0, pit0 = f.Yaw, f.Pitch
+				local limit = FlightCore.turnRate(f) * DT
+				FlightCore.tick(f, DT, { PlayerX = 0, PlayerY = 0, PlayerZ = 0 })
+				local hx, hy, hz = FlightCore.heading(f)
+				local dx, dy, dz = f.X - x0, f.Y - y0, f.Z - z0
+				local len = math.sqrt(dx * dx + dy * dy + dz * dz)
+				if len > 1e-9 then
+					local c = (dx * hx + dy * hy + dz * hz) / len
+					worstHead = math.max(worstHead, math.acos(math.min(1, c)))
+				end
+				local vx, vy, vz = FlightCore.velocity(f)
+				worstHead = math.max(
+					worstHead,
+					math.abs(vx * DT - dx),
+					math.abs(vy * DT - dy),
+					math.abs(vz * DT - dz)
+				)
+				worstYaw = math.max(worstYaw, math.abs(wrapAngle(f.Yaw - yaw0)) - limit)
+				worstPitch = math.max(worstPitch, math.abs(f.Pitch - pit0) - limit * pitchScale)
+				steps += 1
+			end
+		end
+		check(
+			`{class}: velocity is heading x speed every step ({steps} steps)`,
+			worstHead < 1e-3,
+			tostring(worstHead)
+		)
+		check(
+			`{class}: heading never turns faster than its limit`,
+			worstYaw < 1e-9,
+			tostring(worstYaw)
+		)
+		check(
+			`{class}: pitch never changes faster than its limit`,
+			worstPitch < 1e-9,
+			tostring(worstPitch)
+		)
+	end
+
+	-- a U-turn: the target dead astern. It swings round on its radius while
+	-- moving forward the whole way, and eases off first.
+	for _, class in life.ClassOrder do
+		local f = newFlier(class, 99, false)
+		f.Speed = f.Band.SMax
+		f.SpeedGoal = f.Band.SMax
+		f.Yaw = 0
+		f.Pitch = 0
+		local startSpeed = f.Speed
+		local forwardAlways, turned = true, 0
+		for _ = 1, math.floor(600 / DT) do
+			local x0, z0 = f.X, f.Z
+			local yaw0 = f.Yaw
+			-- the way to go is back where it came from
+			FlightCore.advance(f, DT, -1, 0, 0.0001, f.Band.SMin * f.Prof.MinSpeedScale)
+			local hx, hz = math.cos(f.Yaw), math.sin(f.Yaw)
+			forwardAlways = forwardAlways and ((f.X - x0) * hx + (f.Z - z0) * hz) >= -1e-9
+			turned += math.abs(wrapAngle(f.Yaw - yaw0))
+			if math.abs(wrapAngle(f.Yaw - math.pi)) < 2e-4 then
+				break
+			end
+		end
+		check(`{class}: a U-turn is flown forward all the way`, forwardAlways)
+		check(
+			`{class}: a U-turn is a wide arc, not a pivot`,
+			turned >= math.pi - 1e-3 and f.Speed < startSpeed
+		)
+	end
+
+	-- KEEP-OUT: per class, over many seeds, at the step sizes the driver can take
+	for _, class in life.ClassOrder do
+		local p = life.Classes[class]
+		local violations, closest = 0, math.huge
+		local seeds = if class == "COLOSSAL" then 8 else 24
+		local seconds = if class == "COLOSSAL" then 2500 else 500
+		for seed = 1, seeds do
+			local f = newFlier(class, 1000 + seed, false)
+			local dt = if seed % 2 == 0 then 0.1 else 0.25
+			for _ = 1, math.floor(seconds / dt) do
+				FlightCore.tick(f, dt, { PlayerX = 0, PlayerY = 0, PlayerZ = 0 })
+				if FlightCore.inKeepOut(f.Prof, 0, 0, 0, f.X, f.Y, f.Z, 0, 0) then
+					violations += 1
+				end
+				closest = math.min(closest, math.sqrt(f.X * f.X + f.Z * f.Z))
+			end
+		end
+		check(
+			`{class}: keep-out holds over {seeds} seeds (closest to the hub axis {math.floor(
+				closest
+			)}, clearance {p.HubClearance})`,
+			violations == 0,
+			`{violations} step(s) inside`
+		)
+	end
+	do
+		local colossal = life.Classes.COLOSSAL
+		check(
+			"colossals keep 1800+ studs from the hub and orbit beyond it",
+			colossal.HubClearance >= 1800 and colossal.RadiusMin >= 2200 and colossal.Max <= 2
+		)
+		check(
+			"small classes may cross the hub overhead, big ones may not",
+			life.Classes.TINY.OverheadMinY < 100
+				and life.Classes.SMALL.OverheadMinY < 100
+				and life.Classes.MEDIUM.OverheadMinY > 10000
+				and life.Classes.LARGE.HubClearance > life.Classes.MEDIUM.HubClearance
+				and colossal.HubClearance > life.Classes.LARGE.HubClearance
+		)
+		-- a tiny flier really does cross over the hub, above its roof
+		local crossed = false
+		for seed = 1, 12 do
+			local f = newFlier("TINY", 500 + seed, false)
+			for _ = 1, 20 * 600 do
+				FlightCore.tick(f, 0.05, { PlayerX = 0, PlayerY = 0, PlayerZ = 0 })
+				if math.sqrt(f.X * f.X + f.Z * f.Z) < 100 then
+					crossed = true
+					break
+				end
+			end
+			if crossed then
+				break
+			end
+		end
+		check("a TINY creature does cross over the hub, above the keep-out roof", crossed)
+	end
+
+	-- separation, scaled by both bodies
+	do
+		local f = newFlier("MEDIUM", 7, false)
+		local near = { FlightCore.separation(f, 22, 10, 0, 0) }
+		local far = { FlightCore.separation(f, 22, 5000, 0, 0) }
+		local bigger = { FlightCore.separation(f, 300, 200, 0, 0) }
+		check("separation pushes away from a near neighbour", near[1] > 0)
+		check("separation is zero when far", far[1] == 0 and far[2] == 0 and far[3] == 0)
+		check("a bigger neighbour is felt from further away", bigger[1] > 0)
+	end
+
+	-- throttling by distance
+	do
+		local p = life.Classes.SMALL
+		check(
+			"inside the activation radius a creature updates every frame",
+			FlightCore.updateInterval(p, p.ActivationRadius - 1) == 0
+		)
+		check(
+			"beyond it a creature updates at UpdateHz",
+			math.abs(FlightCore.updateInterval(p, p.ActivationRadius + 1) - 1 / p.UpdateHz) < 1e-9
+		)
+		local colossal = life.Classes.COLOSSAL
+		check(
+			"far colossals update less often than small creatures do",
+			FlightCore.updateInterval(colossal, colossal.ActivationRadius + 1)
+				> FlightCore.updateInterval(p, p.ActivationRadius + 1)
+		)
+	end
+
+	-- perching: small and medium only, a full state machine, flown forward
+	do
+		local function spotFor(f)
+			local x, y, z = 600, 40, 300
+			return { X = x, Y = y, Z = z, FaceYaw = math.atan2(z - f.Z, x - f.X) }
+		end
+		check("a colossal can never be told to land", not newFlier("COLOSSAL", 3, true).CanLand)
+		check("a large creature can never be told to land", not newFlier("LARGE", 3, true).CanLand)
+		check("a species not marked CanLand never lands", not newFlier("TINY", 3, false).CanLand)
+		local refused = newFlier("LARGE", 3, true)
+		check(
+			"beginPerch refuses a large creature",
+			not FlightCore.beginPerch(refused, spotFor(refused))
+		)
+		for _, class in { "TINY", "SMALL", "MEDIUM" } do
+			local cycles, forward, sits = 0, true, true
+			for seed = 1, 6 do
+				local f = newFlier(class, 40 + seed, true)
+				f.PerchCooldown = 0
+				f.Prof = setmetatable({ PerchChance = 1 }, { __index = f.Prof })
+				local seq = {}
+				local last = f.Mode
+				for _ = 1, 20 * 600 do
+					local x0, y0, z0, mode0 = f.X, f.Y, f.Z, f.Mode
+					FlightCore.tick(f, 0.05, { FindPerch = spotFor })
+					if f.Mode ~= last then
+						table.insert(seq, f.Mode)
+						last = f.Mode
+					end
+					if mode0 ~= "perch" and f.Mode == mode0 and f.Speed > 0.01 then
+						local hx, hy, hz = FlightCore.heading(f)
+						local dx, dy, dz = f.X - x0, f.Y - y0, f.Z - z0
+						local len = math.sqrt(dx * dx + dy * dy + dz * dz)
+						forward = forward
+							and (len == 0 or (dx * hx + dy * hy + dz * hz) / len > 0.99999)
+					end
+					if f.Mode == "perch" then
+						sits = sits and f.X == 600 and f.Y == 40 and f.Speed == 0
+						break
+					end
+				end
+				for _ = 1, 20 * 120 do
+					FlightCore.tick(f, 0.05, { FindPerch = spotFor })
+					if f.Mode ~= last then
+						table.insert(seq, f.Mode)
+						last = f.Mode
+					end
+				end
+				for i = 1, #seq - 3 do
+					if
+						seq[i] == "approach"
+						and seq[i + 1] == "land"
+						and seq[i + 2] == "perch"
+						and seq[i + 3] == "takeoff"
+					then
+						cycles += 1
+						break
+					end
+				end
+			end
+			check(`{class}: a perched creature sits on its spot, still`, sits)
+			check(
+				`{class}: fly > approach > land > perch > takeoff cycle completes ({cycles}/6 seeds)`,
+				cycles >= 4
+			)
+			check(`{class}: it moves forward through approach, land and takeoff`, forward)
+		end
+	end
+
+	-- colossals come and go
+	do
+		local f = newFlier("COLOSSAL", 11, false)
+		local present, absent = 0, 0
+		local enteredOk = true
+		local was = true
+		f.Present = true
+		f.PresenceLeft = 1
+		for _ = 1, 20 * 12000 do
+			FlightCore.tick(f, 0.05, {})
+			if f.Present then
+				present += 1
+			else
+				absent += 1
+			end
+			if f.Present and not was then
+				enteredOk = enteredOk
+					and not FlightCore.inKeepOut(f.Prof, 0, 0, 0, f.X, f.Y, f.Z, 0, 0)
+					and math.abs(math.sqrt(f.X * f.X + f.Z * f.Z) - f.Band.RMax) < 1
+			end
+			was = f.Present
+		end
+		check("a colossal is away for long stretches (rare)", absent > 0 and present > 0)
+		check("a returning colossal arrives on the outer edge of its band", enteredOk)
+	end
+
+	-- gait: glides, breathing while perched, flap clock follows speed
+	do
+		local f = newFlier("MEDIUM", 21, false)
+		local minAmp, maxAmp = 1, 0
+		for _ = 1, 20 * 120 do
+			FlightCore.tick(f, 0.05, {})
+			FlightCore.gait(f, 0.05)
+			minAmp = math.min(minAmp, f.FlapAmp)
+			maxAmp = math.max(maxAmp, f.FlapAmp)
+		end
+		check("a creature beats and also glides", maxAmp > 0.9 and minAmp < 0.5)
+		local fast, slow = newFlier("SMALL", 5, false), newFlier("SMALL", 5, false)
+		fast.Speed, slow.Speed = fast.Band.SMax, fast.Band.SMin
+		FlightCore.gait(fast, 0.05)
+		FlightCore.gait(slow, 0.05)
+		check("the beat rate rises with speed", fast.Warp > slow.Warp)
+		local perched = newFlier("TINY", 6, true)
+		perched.Mode = "perch"
+		perched.Perch = { X = perched.X, Y = perched.Y, Z = perched.Z, FaceYaw = 0 }
+		perched.HoldFor = 1e9
+		for _ = 1, 100 do
+			FlightCore.tick(perched, 0.05, {})
+			FlightCore.gait(perched, 0.05)
+		end
+		check(
+			"a perched creature breathes (Idle) and folds its wings (Flight amp)",
+			perched.Idle > 0.9 and perched.FlapAmp < 0.1
+		)
+	end
 end
 
 -- === developer command registry (Content/DevCommands, Core/DevCore) ====

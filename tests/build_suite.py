@@ -33,6 +33,8 @@ PURE_MODULES = [
     ("PartyCore",        "src/shared/Core/PartyCore.luau"),
     ("AmbienceCore",     "src/shared/Core/AmbienceCore.luau"),
     ("PropCore",         "src/shared/Core/PropCore.luau"),
+    ("FlightCore",       "src/shared/Core/FlightCore.luau"),
+    ("SkyCreatures",     "src/shared/Content/Hub/SkyCreatures.luau"),
     ("FixtureCore",      "src/shared/Core/FixtureCore.luau"),
     ("LootCore",         "src/shared/Core/LootCore.luau"),
     ("KeyCore",          "src/shared/Core/KeyCore.luau"),
