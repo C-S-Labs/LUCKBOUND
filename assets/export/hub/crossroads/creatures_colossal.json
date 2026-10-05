@@ -31,7 +31,7 @@
       1.0,
       0.0
      ],
-     "amp": 0.14,
+     "amp": 0.0,
      "rate": 0.22,
      "phase": 0.0,
      "chain": null,
@@ -79,7 +79,7 @@
       1.0,
       0.0
      ],
-     "amp": 0.18,
+     "amp": 0.0,
      "rate": 0.12,
      "phase": 1.0996,
      "chain": null,
@@ -103,7 +103,7 @@
       1.0,
       0.0
      ],
-     "amp": 0.14,
+     "amp": 0.0,
      "rate": 0.22,
      "phase": -0.4,
      "chain": "hubprop_starweaver__skirt_1",

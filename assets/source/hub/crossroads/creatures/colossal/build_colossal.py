@@ -314,7 +314,7 @@ def starweaver_body(c):
 def starweaver_skirt(c):
     # THRUST BELL: contracts and relaxes in bursts (Flight gait: rate and depth follow speed). Scales about the
     # bell/skirt junction (anchor), so the top stays tucked under the lip and the rim breathes in and out.
-    q = c.part("skirt", "Pulse", hinge=(0, 0, 0), axis=(0, 0, 1), amp=0.14, rate=0.22, phase=0.0, gait="Flight")
+    q = c.part("skirt", "Pulse", hinge=(0, 0, 0), axis=(0, 0, 1), amp=0.0, rate=0.22, phase=0.0, gait="Flight")
     band = [(246, 12, "x"), (262, -8, "b"), (280, -34, "b"), (292, -60, "b"), (296, -66, "r")]
     lathe(q, band, 32, lambda t, k, cc: "Gold" if t == "r" else ("StarGlassDeep" if cc % 2 == 0 else "Violet"),
           sy=SY, cap_bottom="StarGlassDeep")
@@ -344,7 +344,7 @@ def starweaver_skirt(c):
 def starweaver_fringe(c, skirt):
     # RIM FRINGE: 72 short thin tentacles on a gold cuff, chained to the skirt, pulsing a short beat behind it (0.4 rad: the cuff
     # slips at most ~14 studs off the rim) so the contraction visibly travels down the bell. Same scale centre as the skirt (anchor) so the cuff stays on the rim.
-    q = c.part("fringe", "Pulse", hinge=(0, 0, 0), axis=(0, 0, 1), amp=0.14, rate=0.22, phase=-0.4, chain=skirt,
+    q = c.part("fringe", "Pulse", hinge=(0, 0, 0), axis=(0, 0, 1), amp=0.0, rate=0.22, phase=-0.4, chain=skirt,
                gait="Flight")
     cuff = [(289, -46, "x"), (298, -58, "c"), (300, -76, "c"), (292, -88, "c")]
     lathe(q, cuff, 36, lambda t, k, cc: "Gold" if cc % 3 == 0 else "Marble", sy=SY, cap_bottom=None, cap_top=False)
@@ -396,7 +396,7 @@ def starweaver_halo(c):
 def starweaver_heart(c):
     zc = -108
     # HEART GLOW: a strong slow beat (+-18% in scale), always on
-    q = c.part("heart", "Pulse", hinge=(0, 0, zc), axis=(0, 0, 1), amp=0.18, rate=0.12, phase=math.pi * 0.35,
+    q = c.part("heart", "Pulse", hinge=(0, 0, zc), axis=(0, 0, 1), amp=0.0, rate=0.12, phase=math.pi * 0.35,
                gait="Always")
     shard(q, "Cosmic", 0, 0, zc, 52, 80, 80, n=8)
     shard(q, "Violet", 0, 0, zc, 34, 100, 100, n=4, a=45)
