@@ -1,0 +1,1073 @@
+{
+ "group": "small",
+ "creatures": {
+  "skyfinch": {
+   "model": "hubprop_skyfinch",
+   "class": "TINY",
+   "size": [
+    3.6,
+    3.589,
+    1.705
+   ],
+   "tris": 732,
+   "biome": [
+    "VERDANT_VALLEY"
+   ],
+   "parts": {
+    "hubprop_skyfinch__head_1": {
+     "kind": "Flap",
+     "offset": [
+      1.084,
+      0.0,
+      0.263
+     ],
+     "hinge": [
+      0.844,
+      0.0,
+      0.206
+     ],
+     "axis": [
+      0.0,
+      1.0,
+      0.0
+     ],
+     "amp": 0.14,
+     "rate": 1.1,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Idle"
+    },
+    "hubprop_skyfinch__crest_1": {
+     "kind": "Flicker",
+     "offset": [
+      0.554,
+      0.0,
+      0.725
+     ],
+     "hinge": [
+      0.825,
+      0.0,
+      0.628
+     ],
+     "axis": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.3,
+     "rate": 1.3,
+     "phase": 0.0,
+     "chain": "hubprop_skyfinch__head_1",
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_skyfinch__chest_1": {
+     "kind": "Pulse",
+     "offset": [
+      0.516,
+      0.0,
+      -0.169
+     ],
+     "hinge": [
+      0.375,
+      0.0,
+      -0.131
+     ],
+     "axis": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.06,
+     "rate": 1.0,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Idle"
+    },
+    "hubprop_skyfinch__wing_in_1": {
+     "kind": "Flap",
+     "offset": [
+      0.117,
+      -0.703,
+      0.417
+     ],
+     "hinge": [
+      0.234,
+      -0.375,
+      0.394
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.55,
+     "rate": 6.5,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_skyfinch__wing_out_1": {
+     "kind": "Flap",
+     "offset": [
+      0.104,
+      -1.359,
+      0.455
+     ],
+     "hinge": [
+      0.188,
+      -1.032,
+      0.422
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.4,
+     "rate": 6.5,
+     "phase": 0.0,
+     "chain": "hubprop_skyfinch__wing_in_1",
+     "lag": 0.55,
+     "gait": "Flight"
+    },
+    "hubprop_skyfinch__wing_in_2": {
+     "kind": "Flap",
+     "offset": [
+      0.117,
+      0.703,
+      0.417
+     ],
+     "hinge": [
+      0.234,
+      0.375,
+      0.394
+     ],
+     "axis": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.55,
+     "rate": 6.5,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_skyfinch__wing_out_2": {
+     "kind": "Flap",
+     "offset": [
+      0.104,
+      1.359,
+      0.455
+     ],
+     "hinge": [
+      0.188,
+      1.032,
+      0.422
+     ],
+     "axis": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.4,
+     "rate": 6.5,
+     "phase": 0.0,
+     "chain": "hubprop_skyfinch__wing_in_2",
+     "lag": 0.55,
+     "gait": "Flight"
+    },
+    "hubprop_skyfinch__tail_1": {
+     "kind": "Flap",
+     "offset": [
+      -1.185,
+      0.0,
+      0.159
+     ],
+     "hinge": [
+      -0.844,
+      0.0,
+      0.159
+     ],
+     "axis": [
+      0.0,
+      1.0,
+      0.0
+     ],
+     "amp": 0.16,
+     "rate": 6.5,
+     "phase": 0.6,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_skyfinch__tail_tip_1": {
+     "kind": "Flap",
+     "offset": [
+      -1.744,
+      0.0,
+      0.159
+     ],
+     "hinge": [
+      -1.501,
+      0.0,
+      0.159
+     ],
+     "axis": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.22,
+     "rate": 1.8,
+     "phase": 0.0,
+     "chain": "hubprop_skyfinch__tail_1",
+     "lag": 0.6,
+     "gait": "Turn"
+    }
+   }
+  },
+  "lumen_moth": {
+   "model": "hubprop_lumen_moth",
+   "class": "TINY",
+   "size": [
+    4.6,
+    5.4,
+    1.862
+   ],
+   "tris": 862,
+   "biome": [
+    "ETHEREAL_SCAPE"
+   ],
+   "parts": {
+    "hubprop_lumen_moth__head_1": {
+     "kind": "Flap",
+     "offset": [
+      0.898,
+      0.0,
+      0.111
+     ],
+     "hinge": [
+      0.725,
+      0.0,
+      0.091
+     ],
+     "axis": [
+      0.0,
+      1.0,
+      0.0
+     ],
+     "amp": 0.12,
+     "rate": 0.9,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Idle"
+    },
+    "hubprop_lumen_moth__antenna_1": {
+     "kind": "Flap",
+     "offset": [
+      1.36,
+      -0.532,
+      0.674
+     ],
+     "hinge": [
+      0.975,
+      -0.1,
+      0.341
+     ],
+     "axis": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.28,
+     "rate": 1.4,
+     "phase": 1.6,
+     "chain": "hubprop_lumen_moth__head_1",
+     "lag": 0.3,
+     "gait": "Idle"
+    },
+    "hubprop_lumen_moth__antenna_2": {
+     "kind": "Flap",
+     "offset": [
+      1.357,
+      0.53,
+      0.674
+     ],
+     "hinge": [
+      0.975,
+      0.1,
+      0.341
+     ],
+     "axis": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.28,
+     "rate": 1.4,
+     "phase": 0.0,
+     "chain": "hubprop_lumen_moth__head_1",
+     "lag": 0.3,
+     "gait": "Idle"
+    },
+    "hubprop_lumen_moth__abdomen_1": {
+     "kind": "Pulse",
+     "offset": [
+      -1.275,
+      0.0,
+      -0.009
+     ],
+     "hinge": [
+      -0.775,
+      0.0,
+      -0.009
+     ],
+     "axis": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.05,
+     "rate": 0.8,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Idle"
+    },
+    "hubprop_lumen_moth__lantern_1": {
+     "kind": "Flicker",
+     "offset": [
+      -1.975,
+      0.0,
+      -0.109
+     ],
+     "hinge": [
+      -1.875,
+      0.0,
+      -0.109
+     ],
+     "axis": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.3,
+     "rate": 0.8,
+     "phase": 0.0,
+     "chain": "hubprop_lumen_moth__abdomen_1",
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_lumen_moth__wing_fore_1": {
+     "kind": "Flap",
+     "offset": [
+      -0.5,
+      -1.45,
+      0.311
+     ],
+     "hinge": [
+      -0.125,
+      -0.2,
+      0.311
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.6,
+     "rate": 3.2,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_lumen_moth__wing_hind_1": {
+     "kind": "Flap",
+     "offset": [
+      -1.475,
+      -0.95,
+      0.191
+     ],
+     "hinge": [
+      -0.525,
+      -0.2,
+      0.191
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.5,
+     "rate": 3.2,
+     "phase": 0.0,
+     "chain": "hubprop_lumen_moth__wing_fore_1",
+     "lag": 0.5,
+     "gait": "Flight"
+    },
+    "hubprop_lumen_moth__wing_fore_2": {
+     "kind": "Flap",
+     "offset": [
+      -0.5,
+      1.45,
+      0.311
+     ],
+     "hinge": [
+      -0.125,
+      0.2,
+      0.311
+     ],
+     "axis": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.6,
+     "rate": 3.2,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_lumen_moth__wing_hind_2": {
+     "kind": "Flap",
+     "offset": [
+      -1.475,
+      0.95,
+      0.191
+     ],
+     "hinge": [
+      -0.525,
+      0.2,
+      0.191
+     ],
+     "axis": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.5,
+     "rate": 3.2,
+     "phase": 0.0,
+     "chain": "hubprop_lumen_moth__wing_fore_2",
+     "lag": 0.5,
+     "gait": "Flight"
+    }
+   }
+  },
+  "cinderkite": {
+   "model": "hubprop_cinderkite",
+   "class": "SMALL",
+   "size": [
+    11.0,
+    10.757,
+    2.555
+   ],
+   "tris": 948,
+   "biome": [
+    "EMBERFALL"
+   ],
+   "parts": {
+    "hubprop_cinderkite__head_1": {
+     "kind": "Flap",
+     "offset": [
+      3.27,
+      0.0,
+      0.38
+     ],
+     "hinge": [
+      2.346,
+      0.0,
+      0.333
+     ],
+     "axis": [
+      0.0,
+      1.0,
+      0.0
+     ],
+     "amp": 0.12,
+     "rate": 0.8,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Idle"
+    },
+    "hubprop_cinderkite__glow_1": {
+     "kind": "Flicker",
+     "offset": [
+      0.077,
+      0.0,
+      1.176
+     ],
+     "hinge": [
+      -0.047,
+      0.0,
+      0.99
+     ],
+     "axis": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.3,
+     "rate": 1.6,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_cinderkite__chest_1": {
+     "kind": "Pulse",
+     "offset": [
+      0.891,
+      0.0,
+      -0.042
+     ],
+     "hinge": [
+      0.891,
+      0.0,
+      -0.089
+     ],
+     "axis": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.05,
+     "rate": 0.9,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Idle"
+    },
+    "hubprop_cinderkite__wing_in_1": {
+     "kind": "Flap",
+     "offset": [
+      -0.047,
+      -1.407,
+      0.605
+     ],
+     "hinge": [
+      0.516,
+      -0.563,
+      0.568
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.34,
+     "rate": 2.2,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_cinderkite__wing_out_1": {
+     "kind": "Flap",
+     "offset": [
+      -0.673,
+      -3.734,
+      0.76
+     ],
+     "hinge": [
+      0.516,
+      -2.252,
+      0.615
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.28,
+     "rate": 2.2,
+     "phase": 0.0,
+     "chain": "hubprop_cinderkite__wing_in_1",
+     "lag": 0.5,
+     "gait": "Flight"
+    },
+    "hubprop_cinderkite__wing_in_2": {
+     "kind": "Flap",
+     "offset": [
+      -0.047,
+      1.407,
+      0.605
+     ],
+     "hinge": [
+      0.516,
+      0.563,
+      0.568
+     ],
+     "axis": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.34,
+     "rate": 2.2,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_cinderkite__wing_out_2": {
+     "kind": "Flap",
+     "offset": [
+      -0.673,
+      3.734,
+      0.76
+     ],
+     "hinge": [
+      0.516,
+      2.252,
+      0.615
+     ],
+     "axis": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.28,
+     "rate": 2.2,
+     "phase": 0.0,
+     "chain": "hubprop_cinderkite__wing_in_2",
+     "lag": 0.5,
+     "gait": "Flight"
+    },
+    "hubprop_cinderkite__tail_1": {
+     "kind": "Flap",
+     "offset": [
+      -3.143,
+      0.0,
+      0.342
+     ],
+     "hinge": [
+      -2.205,
+      0.0,
+      0.333
+     ],
+     "axis": [
+      0.0,
+      1.0,
+      0.0
+     ],
+     "amp": 0.14,
+     "rate": 2.2,
+     "phase": 0.5,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_cinderkite__streamer_a_1": {
+     "kind": "Flap",
+     "offset": [
+      -4.735,
+      -0.925,
+      0.333
+     ],
+     "hinge": [
+      -4.081,
+      -0.798,
+      0.333
+     ],
+     "axis": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.3,
+     "rate": 1.7,
+     "phase": 0.8,
+     "chain": "hubprop_cinderkite__tail_1",
+     "lag": 0.5,
+     "gait": "Always"
+    },
+    "hubprop_cinderkite__streamer_b_1": {
+     "kind": "Flap",
+     "offset": [
+      -6.039,
+      -1.191,
+      0.333
+     ],
+     "hinge": [
+      -5.395,
+      -1.079,
+      0.333
+     ],
+     "axis": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.4,
+     "rate": 1.7,
+     "phase": 0.8,
+     "chain": "hubprop_cinderkite__streamer_a_1",
+     "lag": 0.6,
+     "gait": "Always"
+    },
+    "hubprop_cinderkite__streamer_a_2": {
+     "kind": "Flap",
+     "offset": [
+      -4.735,
+      0.925,
+      0.333
+     ],
+     "hinge": [
+      -4.081,
+      0.798,
+      0.333
+     ],
+     "axis": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.3,
+     "rate": 1.7,
+     "phase": 0.0,
+     "chain": "hubprop_cinderkite__tail_1",
+     "lag": 0.5,
+     "gait": "Always"
+    },
+    "hubprop_cinderkite__streamer_b_2": {
+     "kind": "Flap",
+     "offset": [
+      -6.039,
+      1.191,
+      0.333
+     ],
+     "hinge": [
+      -5.395,
+      1.079,
+      0.333
+     ],
+     "axis": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.4,
+     "rate": 1.7,
+     "phase": 0.0,
+     "chain": "hubprop_cinderkite__streamer_a_2",
+     "lag": 0.6,
+     "gait": "Always"
+    },
+    "hubprop_cinderkite__ember_1": {
+     "kind": "Flicker",
+     "offset": [
+      -2.595,
+      0.0,
+      0.427
+     ],
+     "hinge": [
+      -2.393,
+      0.0,
+      0.427
+     ],
+     "axis": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.3,
+     "rate": 2.3,
+     "phase": 0.0,
+     "chain": "hubprop_cinderkite__tail_1",
+     "lag": 0.0,
+     "gait": "Always"
+    }
+   }
+  },
+  "prism_darter": {
+   "model": "hubprop_prism_darter",
+   "class": "SMALL",
+   "size": [
+    12.0,
+    11.168,
+    2.87
+   ],
+   "tris": 1112,
+   "biome": [
+    "ASTRAL_REACH"
+   ],
+   "parts": {
+    "hubprop_prism_darter__head_1": {
+     "kind": "Flap",
+     "offset": [
+      1.334,
+      0.0,
+      0.311
+     ],
+     "hinge": [
+      0.831,
+      0.0,
+      0.3
+     ],
+     "axis": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.25,
+     "rate": 0.9,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Idle"
+    },
+    "hubprop_prism_darter__chest_1": {
+     "kind": "Pulse",
+     "offset": [
+      -0.161,
+      0.0,
+      -0.29
+     ],
+     "hinge": [
+      -0.134,
+      0.0,
+      -0.343
+     ],
+     "axis": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.05,
+     "rate": 1.0,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Idle"
+    },
+    "hubprop_prism_darter__star_1": {
+     "kind": "Flicker",
+     "offset": [
+      -0.314,
+      -0.02,
+      1.365
+     ],
+     "hinge": [
+      -0.241,
+      0.0,
+      1.051
+     ],
+     "axis": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.3,
+     "rate": 1.2,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_prism_darter__abd_a_1": {
+     "kind": "Flap",
+     "offset": [
+      -2.681,
+      0.0,
+      0.193
+     ],
+     "hinge": [
+      -1.207,
+      0.0,
+      0.247
+     ],
+     "axis": [
+      0.0,
+      1.0,
+      0.0
+     ],
+     "amp": 0.1,
+     "rate": 1.0,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_prism_darter__abd_b_1": {
+     "kind": "Flap",
+     "offset": [
+      -5.577,
+      0.0,
+      0.193
+     ],
+     "hinge": [
+      -4.209,
+      0.0,
+      0.247
+     ],
+     "axis": [
+      0.0,
+      1.0,
+      0.0
+     ],
+     "amp": 0.1,
+     "rate": 1.0,
+     "phase": 0.0,
+     "chain": "hubprop_prism_darter__abd_a_1",
+     "lag": 0.45,
+     "gait": "Flight"
+    },
+    "hubprop_prism_darter__abd_c_1": {
+     "kind": "Flap",
+     "offset": [
+      -8.151,
+      0.0,
+      0.193
+     ],
+     "hinge": [
+      -6.998,
+      0.0,
+      0.247
+     ],
+     "axis": [
+      0.0,
+      1.0,
+      0.0
+     ],
+     "amp": 0.1,
+     "rate": 1.0,
+     "phase": 0.0,
+     "chain": "hubprop_prism_darter__abd_b_1",
+     "lag": 0.45,
+     "gait": "Flight"
+    },
+    "hubprop_prism_darter__tip_1": {
+     "kind": "Flicker",
+     "offset": [
+      -9.716,
+      0.0,
+      0.247
+     ],
+     "hinge": [
+      -9.357,
+      0.0,
+      0.247
+     ],
+     "axis": [
+      0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.3,
+     "rate": 1.8,
+     "phase": 0.0,
+     "chain": "hubprop_prism_darter__abd_c_1",
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_prism_darter__wing_fore_1": {
+     "kind": "Flap",
+     "offset": [
+      0.957,
+      -3.004,
+      0.783
+     ],
+     "hinge": [
+      0.402,
+      -0.536,
+      0.783
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.3,
+     "rate": 8.0,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_prism_darter__wing_hind_1": {
+     "kind": "Flap",
+     "offset": [
+      -1.673,
+      -2.854,
+      0.676
+     ],
+     "hinge": [
+      -0.778,
+      -0.536,
+      0.676
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.3,
+     "rate": 8.0,
+     "phase": 3.1416,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_prism_darter__wing_fore_2": {
+     "kind": "Flap",
+     "offset": [
+      0.976,
+      3.005,
+      0.783
+     ],
+     "hinge": [
+      0.402,
+      0.536,
+      0.783
+     ],
+     "axis": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.3,
+     "rate": 8.0,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_prism_darter__wing_hind_2": {
+     "kind": "Flap",
+     "offset": [
+      -1.654,
+      2.855,
+      0.676
+     ],
+     "hinge": [
+      -0.778,
+      0.536,
+      0.676
+     ],
+     "axis": [
+      1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.3,
+     "rate": 8.0,
+     "phase": 3.1416,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    }
+   }
+  }
+ }
+}
