@@ -1,14 +1,14 @@
 """Walk every route (plaza -> bridges -> districts, the promenade ring, the overlooks)
 and report any gap or lip over 0.55 studs. District interiors are skipped.
-Overlook routes hit the beacon pylons by design.
+Overlook routes skip the beacon pylons (solid by design).
 
     blender -b --factory-startup --python check_walkways.py
 """
-import bpy, sys, runpy, math
+import bpy, sys, runpy, math, os
 from mathutils import Vector
 from mathutils.bvhtree import BVHTree
 sys.argv = ["x"]
-g = runpy.run_path(r"C:\Dev\luckbound\assets\source\hub\crossroads\build_crossroads_hub.py", run_name="lib")
+g = runpy.run_path(os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_crossroads_hub.py"), run_name="lib")
 groups = g["build_all"]()
 dg = bpy.context.evaluated_depsgraph_get()
 trees = [BVHTree.FromObject(o, dg) for o in groups["Hub"]]
@@ -35,12 +35,16 @@ for k in range(4):                                   # district -> ring arc -> o
         routes[f"ring{k}_{dr}"] = pts
     am = math.radians(45 + 90 * k)
     routes[f"overlook{k}"] = [(math.cos(am) * r, math.sin(am) * r) for r in [DA + i * 0.5 for i in range(60)]]
+beacons = [(math.cos(math.radians(45 + 90 * k)) * (DA + 24), math.sin(math.radians(45 + 90 * k)) * (DA + 24)) for k in range(4)]
 bad = 0
 for name, pts in routes.items():
     prev = None
     cents = [(0, DA), (DA, 0), (0, -DA), (-DA, 0)]
     for x, y in pts:
         if any(math.hypot(x - cx, y - cy) < 64 for cx, cy in cents):
+            prev = None
+            continue
+        if any(math.hypot(x - px, y - py) < 5.5 for px, py in beacons):    # the beacon pylon: a solid, not a walk surface
             prev = None
             continue
         z = ground(x, y)

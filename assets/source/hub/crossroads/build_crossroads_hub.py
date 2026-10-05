@@ -41,6 +41,8 @@ REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 KIT_PATH = os.path.join(REPO, "assets", "source", "worlds", "sky_citadel", "build_sky_citadel_kit.py")
 K = {"__name__": "sky_citadel_kit", "__file__": KIT_PATH}
 exec(open(KIT_PATH, encoding="utf-8").read(), K)
+# The kit now defaults to its "refinish" pass (violet trim, Sky Citadel palette names); the hub has its own palette.
+K["REFINISH"] = False
 
 # The palette is the Fate Engine's AS PAINTED IN GAME (Content/Hub/Crossroads
 # Theme), so the hub and the Engine read as one object. (rgb, emissive)
@@ -77,6 +79,8 @@ K["PALETTE"].update({
     "Water": ((110, 200, 230), True),
     "Whale": ((92, 104, 150), False),
     "WhaleBelly": ((196, 204, 230), False),
+    "Leaf": ((84, 142, 92), False),         # light vegetation: vines on the plaza rim
+    "LeafLight": ((126, 186, 120), False),
 })
 K["MAT_ORDER"] = list(K["PALETTE"].keys())
 
@@ -99,6 +103,10 @@ DISTRICT_AT = 218.0     # hub centre -> district centre (GameConfig.HubLayout.Zo
 DISTRICT_R = 80.0       # district deck radius
 DISTRICT_TOP = 0.5      # a half-stud step up onto a district
 BRIDGE_W = 24.0
+RAIL_W = 1.2            # a bridge's gold rails: centre line at RAIL_U, outer face at RAIL_OUT (inside the slab edge)
+RAIL_U = 11.2
+RAIL_OUT = RAIL_U + RAIL_W / 2
+RAIL_IN = RAIL_U - RAIL_W / 2
 RING_W = 18.0           # the promenade loop joining the districts
 DISTRICTS = {           # name: (centre, rz that turns local -Y toward the hub)
     "HUB_HALL_OF_CHAMPIONS": ((0.0, DISTRICT_AT), 0.0),
@@ -234,11 +242,60 @@ def stepped_keel(p, x, y, R, n, depth, glow="Shard", core=True):
         hanging_core(p, x, y, -4 - depth - depth * 0.12, R * 0.16, depth * 0.55, glow)
 
 
+def poly_band(p, mat, apothem, width, z0, z1, a0, a1, n=16, rot=None, cx=0.0, cy=0.0, flat_ends=True):
+    """A band that follows a regular n-gon deck (frustum default: rot = half a
+    step) from angle a0 to a1 (degrees, CCW). Its OUTER edge lies on the deck's
+    edge `apothem` and it is `width` deep (negative width = a lip outside the
+    edge). The decks are polygons, so a circular curb of the deck's circumradius
+    hung over the void by up to R*(1 - cos(180/n)) studs between corners. With
+    flat_ends the end faces run along the deck-edge normal, so a curb can meet a
+    rail square-on."""
+    rot = 180.0 / n if rot is None else rot
+    step = 360.0 / n
+    bps = [a0] + [rot + step * j for j in range(-n, 3 * n) if a0 + 1e-6 < rot + step * j < a1 - 1e-6] + [a1]
+    out_pts, in_pts = [], []
+    for i, t in enumerate(bps):
+        j = math.floor((t - rot) / step + 1e-9)
+        mid = rot + step * j + step / 2
+        r = apothem / math.cos(math.radians(t - mid))
+        o = (r * math.cos(math.radians(t)), r * math.sin(math.radians(t)))
+        if flat_ends and i in (0, len(bps) - 1):
+            ii = (o[0] - width * math.cos(math.radians(mid)), o[1] - width * math.sin(math.radians(mid)))
+        else:
+            k = (apothem - width) / apothem
+            ii = (o[0] * k, o[1] * k)
+        out_pts.append(o)
+        in_pts.append(ii)
+    v, f = [], []
+    for o, ii in zip(out_pts, in_pts):
+        for q, z in ((o, z0), (ii, z0), (ii, z1), (o, z1)):
+            v.append((cx + q[0], cy + q[1], z))
+    for i in range(len(bps) - 1):
+        A, B = 4 * i, 4 * (i + 1)
+        for k in range(4):
+            f.append((A + k, B + k, B + (k + 1) % 4, A + (k + 1) % 4))
+    f.append((0, 1, 2, 3)[::-1])
+    L = 4 * (len(bps) - 1)
+    f.append((L, L + 1, L + 2, L + 3))
+    p.add(v, f, mat, Matrix.Identity(4))
+
+
+def poly_curb_with_gaps(p, mat, apothem, width, z0, z1, gaps, n=16, rot=None):
+    """poly_band round a whole deck minus angular windows [(centre_deg, half_deg)]."""
+    cuts = sorted(((c - h) % 360, (c + h) % 360) for c, h in gaps)
+    for i, (s_, e) in enumerate(cuts):
+        nxt = cuts[(i + 1) % len(cuts)][0]
+        poly_band(p, mat, apothem, width, z0, z1, e, nxt if nxt > e else nxt + 360, n, rot)
+
+
+COS16 = math.cos(math.pi / 16)           # a 16-sided deck's edge sits at R * COS16 (its apothem)
+
+
 def district_deck(p, floor, rim_gaps, keel_glow):
     """A district's round deck in its local frame: floor at DISTRICT_TOP, a gold
     curb round the edge with gaps, and its own keel."""
     frustum(p, floor, 16, DISTRICT_R, DISTRICT_R, -4, DISTRICT_TOP)
-    ring_with_gaps(p, "Gold", DISTRICT_R - 1.6, DISTRICT_R, DISTRICT_TOP, DISTRICT_TOP + 1.0, rim_gaps, 8)
+    poly_curb_with_gaps(p, "Gold", DISTRICT_R * COS16, 1.6, DISTRICT_TOP, DISTRICT_TOP + 1.0, rim_gaps)
     sector(p, "Inlay", DISTRICT_R - 5.0, DISTRICT_R - 4.2, DISTRICT_TOP, DISTRICT_TOP + 0.06, 0, 360, 32)
     stepped_keel(p, 0, 0, DISTRICT_R, 16, 46, keel_glow)
 
@@ -261,7 +318,15 @@ def build_platform():
     # --- the plaza --------------------------------------------------------------
     frustum(p, "Plaza", 16, PLAZA_R, PLAZA_R, -4, 0)
     # the curb, open at the four bridge mouths so the walk onto a bridge is flush
-    ring_with_gaps(p, "Gold", PLAZA_R - 4.5, PLAZA_R, 0, 0.7, [(0, 6.8), (90, 6.8), (180, 6.8), (270, 6.8)], 8)
+    # The plaza is a 16-gon: its edge at a bridge mouth is flat at PLAZA_R * cos(11.25 deg) = 115.7, not at
+    # 118. The curb follows that edge and stops square against the bridge's rail line (u = +-BRIDGE_MOUTH_U).
+    ap = PLAZA_R * COS16
+    ca = math.degrees(math.atan(RAIL_OUT / ap))
+    for k in range(4):
+        poly_band(p, "Gold", ap, 4.0, 0, 0.7, 90 * k + ca, 90 * (k + 1) - ca)
+    for k in range(4):                                                             # a lip of stone under the rim
+        poly_band(p, "MarbleDim", ap + 0.3, 0.35, -0.9, -0.12, 90 * k + math.degrees(math.atan(12.0 / ap)),
+                  90 * (k + 1) - math.degrees(math.atan(12.0 / ap)))
     sector(p, "Marble", RESERVE_R, RESERVE_R + 2.5, 0, 0.25, 0, 360, 32)           # the Engine's dais ring
     sector(p, "Inlay", RESERVE_R + 6.0, RESERVE_R + 7.2, 0, 0.06, 0, 360, 32)      # inner inlay
     sector(p, "Inlay", 64.0, 65.2, 0, 0.06, 0, 360, 32)                            # middle inlay
@@ -290,19 +355,46 @@ def build_platform():
     for k in range(4):
         a = math.radians(45 + 90 * k)
         hanging_core(p, math.cos(a) * 96, math.sin(a) * 96, -38, 5.0, 26, ("Violet", "Rose")[k % 2])
+    for k in range(16):                                                            # vines over the plaza's rim
+        vr = random.Random(f"vine{k}")
+        t = math.radians(11.25 + 22.5 * k)
+        c, sn = math.cos(t), math.sin(t)
+        path = [(118.1, -0.5), (118.4 + vr.uniform(0, 0.4), -2.0), (118.3 + vr.uniform(0, 0.5), -3.7),
+                (118.5 + vr.uniform(0, 0.5), -5.0 - vr.uniform(0, 1.2))]
+        tube(p, "Leaf", [(r * c, r * sn, z) for r, z in path], [0.22, 0.18, 0.13, 0.0], n=3)
+        for r, z in path[1:3]:
+            for sg in (-1, 1):
+                crystal(p, "LeafLight" if sg > 0 else "Leaf", r * c - sg * 0.35 * sn, r * sn + sg * 0.35 * c, z,
+                        0.5, 0.75, 0.3, n=4, rz=vr.uniform(0, 90))
     # --- the four bridges ---------------------------------------------------------
+    # The slab meets the plaza's FLAT edge square (no overlap, so no coplanar tops), a gold threshold
+    # collar covers the seam, and the rails run on over the curb line from the plaza to the district.
+    dap = DISTRICT_AT - DISTRICT_R * COS16                 # the district deck's edge toward the hub
     for k in range(4):
         with frame(p, xf(rz=90 * k)):
-            y0, y1 = PLAZA_R - 3, DISTRICT_AT - DISTRICT_R + 4
-            box(p, "Walkway", 0, (y0 + y1) / 2, -1.25, BRIDGE_W, y1 - y0, 2.5)   # flush on its spine
+            y0, y1 = ap, DISTRICT_AT - DISTRICT_R + 4      # the slab runs on under the district deck
+            ym = (y0 + y1) / 2
+            box(p, "Walkway", 0, ym, -1.25, BRIDGE_W, y1 - y0, 2.5)
+            box(p, "Gold", 0, y0, 0.02, 2 * RAIL_IN, 1.8, 0.04)                # the threshold collar
+            rx0, rx1 = ap - 4.0, dap                       # the rail starts at the curb's inner edge
             for s in (-1, 1):
-                box(p, "Gold", s * (BRIDGE_W / 2 - 0.6), (y0 + y1) / 2 + 2, 0.4, 1.2, y1 - y0 - 4, 0.8)
-                for yy in (y0 + 6, y1 - 6):                                    # gateposts at each end
-                    frustum(p, "Marble", 4, 1.2, 1.0, 0, 7, s * (BRIDGE_W / 2 - 0.6), yy, rot=45)
-                    crystal(p, "Shard", s * (BRIDGE_W / 2 - 0.6), yy, 8.2, 0.7, 1.3, 1.0, n=4)
-            box(p, "Inlay", 0, (y0 + y1) / 2, 0.03, 1.4, y1 - y0 - 6, 0.06)
-            # under the bridge: a spine, not a wall
-            K["spine"](p, "Basalt", y0 + 2, y1 - 2, BRIDGE_W / 2 - 1, 16)
+                ru = s * RAIL_U
+                box(p, "Gold", ru, (rx0 + rx1) / 2, 0.4, RAIL_W, rx1 - rx0, 0.8)
+                box(p, "GoldBright", ru, (rx0 + rx1) / 2, 0.86, RAIL_W, rx1 - rx0, 0.12)   # rail cap
+                for yy, face in ((ap + 1.5, -1), (dap - 1.5, 1)):                # gateposts, on the rail, at each end
+                    frustum(p, "Marble", 4, 1.1, 0.9, 0.92, 7.0, ru, yy, rot=45)
+                    crystal(p, "Shard", ru, yy, 8.2, 0.7, 1.3, 1.0, n=4)
+                    box(p, "Canvas", ru, yy + face * 0.75, 4.4, 1.1, 0.1, 2.8)    # a banner on its outer face
+                    box(p, "Gold", ru, yy + face * 0.8, 5.95, 1.5, 0.2, 0.25)
+                box(p, "Gold", s * 12.03, (ap + dap) / 2, -0.28, 0.06, dap - ap, 0.16)       # slab edge trim
+                box(p, "BasaltLight", s * 12.1, (ap + dap) / 2, -2.3, 0.2, dap - ap, 0.4)    # and a lower lip
+                box(p, "Inlay", s * 11.6, (ap + dap) / 2, -2.55, 0.3, dap - ap - 6.4, 0.1)      # a light line under each edge
+                for x0, x1 in ((ap, ap + 3.0), (dap - 3.0, dap)):                           # bearing blocks under the landings
+                    box(p, "BasaltLight", s * 11.75, (x0 + x1) / 2, -2.95, 1.5, x1 - x0, 0.9)
+            box(p, "Inlay", 0, (PLAZA_R + DISTRICT_AT - DISTRICT_R + 1) / 2, 0.03, 1.4, DISTRICT_AT - DISTRICT_R + 1 - PLAZA_R, 0.06)
+            # under the bridge: a spine, not a wall. It runs on INTO the plaza's and the district's keels
+            # (its old ends stopped in open air, 117 and 140, outside both).
+            K["spine"](p, "Basalt", ap - 14, dap + 16, BRIDGE_W / 2 - 1, 16)
     # --- the promenade ring: the four arcs between districts, and the overlooks -
     half = math.degrees(math.asin((DISTRICT_R - 3) / DISTRICT_AT))       # where the curbs stop
     deep = math.degrees(math.asin((DISTRICT_R - 10) / DISTRICT_AT))      # the slab runs on under the deck
@@ -321,7 +413,7 @@ def build_platform():
         ox, oy = math.cos(am) * (DISTRICT_AT + 18), math.sin(am) * (DISTRICT_AT + 18)
         frustum(p, "Walkway", 12, 16, 16, -3, 0, ox, oy)
         md = 45 + 90 * k                                   # its curb opens back onto the ring
-        sector(p, "Gold", 15, 16, 0, 1.0, md - 180 + 72, md + 180 - 72, 16, ox, oy)
+        poly_band(p, "Gold", 16 * math.cos(math.radians(15)), 1.0, 0, 1.0, md - 108, md + 108, 12, 15.0, ox, oy)
         frustum(p, "Basalt", 12, 15, 4, -26, -3, ox, oy)
         pylon_beacon(p, ox + math.cos(am) * 6, oy + math.sin(am) * 6, 30.0, ("Shard", "Violet", "Rose", "Shard")[k])
         anchor(p, f"Overlook{k + 1}", ox, oy, 0)

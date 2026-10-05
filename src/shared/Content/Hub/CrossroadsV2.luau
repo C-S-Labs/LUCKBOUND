@@ -8,12 +8,12 @@
 
 return {
 	Pieces = {
-		HUB_ARCHIVES = { Centre = Vector3.new(218.769, 6.547, -0.000) },
-		HUB_HALL_OF_CHAMPIONS = { Centre = Vector3.new(0.000, -5.250, -218.769) },
+		HUB_ARCHIVES = { Centre = Vector3.new(218.000, 6.547, -0.000) },
+		HUB_HALL_OF_CHAMPIONS = { Centre = Vector3.new(0.000, -5.250, -218.000) },
 		HUB_LEVITATOR = { Centre = Vector3.new(0.000, -175.042, -0.000) },
 		HUB_PLATFORM = { Centre = Vector3.new(0.000, -25.000, -0.000) },
-		HUB_SHOP = { Centre = Vector3.new(0.000, -3.050, 218.769) },
-		HUB_TRAINING_GROUNDS = { Centre = Vector3.new(-218.769, -1.550, -0.000) },
+		HUB_SHOP = { Centre = Vector3.new(0.000, -3.050, 218.000) },
+		HUB_TRAINING_GROUNDS = { Centre = Vector3.new(-218.000, -1.550, -0.000) },
 	},
 	Animated = {
 		anim_archive_book_1 = { Centre = Vector3.new(236.188, 13.239, 22.496), Kind = "Bob", Host = "HUB_ARCHIVES" },
