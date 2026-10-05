@@ -36,6 +36,38 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## orchestrate-skill (branch agent/orchestrate-skill) - 2026-10-05 - provider-neutral orchestration
+**Merged:** none yet   **Tests:** none (no game code); `gen_index.py --check` run. No live orchestration run yet.
+
+### Done
+- `docs/ORCHESTRATION.md`: one provider-neutral protocol. A lead (Claude or Codex) plans, classifies tasks
+  (FOUNDATION / PARALLEL / DEPENDENT / INTEGRATION / VALIDATION), gives each parallel writing worker its own
+  `agent/<task>-<part>` branch and worktree, reviews and integrates in dependency order, validates under AGENTS.md,
+  and hands off. Modes: A Claude to Codex, B Codex to Codex (native subagents or `codex exec`, never the removed
+  `codex mcp-server`), C Claude to Claude, D single-agent fallback.
+- Entry points, all explicit-only: `.claude/skills/orchestrate` and `orchestrate-resume` (Claude Code),
+  `.agents/skills/orchestrate` and `orchestrate-resume` (Codex, `allow_implicit_invocation: false`). All are thin and
+  point at the doc. `AGENTS.md` and `CLAUDE.md` untouched.
+- Checkpoint moved out of the repo: `<ORCH_ROOT>/.orchestration/<task>.md` (`ORCH_ROOT` = the `branch/` directory beside
+  the clone), so it cannot be committed and any provider can read it. Usage limits, timeouts and crashes are
+  availability failures: no retry, no probing, no correction round used.
+- Re-applied on current `origin/main` (the branch was 41 commits behind and conflicted on line endings).
+
+### Decisions made
+- Workers never commit; the orchestrator commits after review. A probe showed a `workspace-write` Codex worker cannot
+  even `git add` in its linked worktree (`index.lock: Permission denied`), so a worker-commit grant was removed.
+- The same sandbox did allow `git worktree add` and writes outside its cwd, so it is inconsistent as a Git boundary;
+  review is the control.
+
+### Stopped at
+Written, indexed, committed locally. Not pushed. Not exercised live.
+
+### Next
+Owner runs a small `/orchestrate` (and `$orchestrate`) task; check the worktree location, worker commit behaviour and
+checkpoint reads across providers, then adjust the wording.
+
+---
+
 ## Session 240 — 2026-09-30 — Wire delivered rifts and finish portal authority
 **Merged:** not merged   **Tests:** 967 passing   **Branch:** `agent/expedition-portal`
 
