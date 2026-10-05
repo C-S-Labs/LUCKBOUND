@@ -1,0 +1,563 @@
+{
+ "group": "colossal",
+ "creatures": {
+  "starweaver": {
+   "model": "hubprop_starweaver",
+   "class": "COLOSSAL",
+   "size": [
+    680.79,
+    440.0,
+    502.69
+   ],
+   "tris": 22572,
+   "biome": [
+    "ASTRAL_REACH"
+   ],
+   "parts": {
+    "hubprop_starweaver__skirt_1": {
+     "kind": "Pulse",
+     "offset": [
+      42.542,
+      -271.25,
+      0.0
+     ],
+     "hinge": [
+      42.542,
+      -156.0,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "amp": 0.06,
+     "rate": 0.07,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_starweaver__halo_1": {
+     "kind": "Spin",
+     "offset": [
+      42.888,
+      -1.419,
+      -0.487
+     ],
+     "hinge": [
+      42.542,
+      -38.0,
+      0.0
+     ],
+     "axis": [
+      0.0865,
+      0.9888,
+      -0.1219
+     ],
+     "amp": 0.0,
+     "rate": 0.045,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_starweaver__heart_1": {
+     "kind": "Pulse",
+     "offset": [
+      42.542,
+      -264.0,
+      0.0
+     ],
+     "hinge": [
+      42.542,
+      -264.0,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "amp": 0.1,
+     "rate": 0.07,
+     "phase": 1.0996,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_starweaver__tendril_1": {
+     "kind": "Flap",
+     "offset": [
+      -76.513,
+      -236.149,
+      119.263
+     ],
+     "hinge": [
+      -63.524,
+      -170.0,
+      106.066
+     ],
+     "axis": [
+      0.7071,
+      0.0,
+      0.7071
+     ],
+     "amp": 0.12,
+     "rate": 0.06,
+     "phase": 0.0,
+     "chain": "hubprop_starweaver__skirt_1",
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_starweaver__tendriltip_1": {
+     "kind": "Flap",
+     "offset": [
+      -108.443,
+      -404.256,
+      149.516
+     ],
+     "hinge": [
+      -90.041,
+      -313.0,
+      132.583
+     ],
+     "axis": [
+      0.7071,
+      0.0,
+      0.7071
+     ],
+     "amp": 0.2,
+     "rate": 0.06,
+     "phase": 0.0,
+     "chain": "hubprop_starweaver__tendril_1",
+     "lag": 0.8,
+     "gait": "Always"
+    },
+    "hubprop_starweaver__tendril_2": {
+     "kind": "Flap",
+     "offset": [
+      161.805,
+      -236.149,
+      119.054
+     ],
+     "hinge": [
+      148.608,
+      -170.0,
+      106.066
+     ],
+     "axis": [
+      0.7071,
+      0.0,
+      -0.7071
+     ],
+     "amp": 0.12,
+     "rate": 0.06,
+     "phase": 1.5708,
+     "chain": "hubprop_starweaver__skirt_1",
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_starweaver__tendriltip_2": {
+     "kind": "Flap",
+     "offset": [
+      192.022,
+      -404.256,
+      149.846
+     ],
+     "hinge": [
+      175.124,
+      -313.0,
+      132.583
+     ],
+     "axis": [
+      0.7071,
+      0.0,
+      -0.7071
+     ],
+     "amp": 0.2,
+     "rate": 0.06,
+     "phase": 1.5708,
+     "chain": "hubprop_starweaver__tendril_2",
+     "lag": 0.8,
+     "gait": "Always"
+    },
+    "hubprop_starweaver__tendril_3": {
+     "kind": "Flap",
+     "offset": [
+      161.596,
+      -236.149,
+      -119.263
+     ],
+     "hinge": [
+      148.608,
+      -170.0,
+      -106.066
+     ],
+     "axis": [
+      -0.7071,
+      0.0,
+      -0.7071
+     ],
+     "amp": 0.12,
+     "rate": 0.06,
+     "phase": 3.1416,
+     "chain": "hubprop_starweaver__skirt_1",
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_starweaver__tendriltip_3": {
+     "kind": "Flap",
+     "offset": [
+      192.351,
+      -404.256,
+      -149.516
+     ],
+     "hinge": [
+      175.124,
+      -313.0,
+      -132.583
+     ],
+     "axis": [
+      -0.7071,
+      0.0,
+      -0.7071
+     ],
+     "amp": 0.2,
+     "rate": 0.06,
+     "phase": 3.1416,
+     "chain": "hubprop_starweaver__tendril_3",
+     "lag": 0.8,
+     "gait": "Always"
+    },
+    "hubprop_starweaver__tendril_4": {
+     "kind": "Flap",
+     "offset": [
+      -76.721,
+      -236.149,
+      -119.054
+     ],
+     "hinge": [
+      -63.524,
+      -170.0,
+      -106.066
+     ],
+     "axis": [
+      -0.7071,
+      0.0,
+      0.7071
+     ],
+     "amp": 0.12,
+     "rate": 0.06,
+     "phase": 4.7124,
+     "chain": "hubprop_starweaver__skirt_1",
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_starweaver__tendriltip_4": {
+     "kind": "Flap",
+     "offset": [
+      -108.114,
+      -404.256,
+      -149.846
+     ],
+     "hinge": [
+      -90.041,
+      -313.0,
+      -132.583
+     ],
+     "axis": [
+      -0.7071,
+      0.0,
+      0.7071
+     ],
+     "amp": 0.2,
+     "rate": 0.06,
+     "phase": 4.7124,
+     "chain": "hubprop_starweaver__tendril_4",
+     "lag": 0.8,
+     "gait": "Always"
+    }
+   }
+  },
+  "elder_greatturtle": {
+   "model": "hubprop_elder_greatturtle",
+   "class": "COLOSSAL",
+   "size": [
+    602.51,
+    198.07,
+    538.13
+   ],
+   "tris": 16178,
+   "biome": [
+    "VERDANT"
+   ],
+   "parts": {
+    "hubprop_elder_greatturtle__shell_1": {
+     "kind": "Pulse",
+     "offset": [
+      -17.256,
+      129.144,
+      0.0
+     ],
+     "hinge": [
+      -17.256,
+      53.144,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "amp": 0.012,
+     "rate": 0.05,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_elder_greatturtle__isle_1": {
+     "kind": "Pulse",
+     "offset": [
+      -17.253,
+      292.779,
+      -0.062
+     ],
+     "hinge": [
+      -17.256,
+      53.144,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "amp": 0.012,
+     "rate": 0.05,
+     "phase": 0.0,
+     "chain": "hubprop_elder_greatturtle__shell_1",
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_elder_greatturtle__crystals_1": {
+     "kind": "Flicker",
+     "offset": [
+      -17.256,
+      239.84,
+      0.0
+     ],
+     "hinge": [
+      -17.256,
+      53.144,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "amp": 0.0,
+     "rate": 0.11,
+     "phase": 0.0,
+     "chain": "hubprop_elder_greatturtle__shell_1",
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_elder_greatturtle__neck_1": {
+     "kind": "Flap",
+     "offset": [
+      -299.213,
+      52.053,
+      0.0
+     ],
+     "hinge": [
+      -257.256,
+      45.144,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.07,
+     "rate": 0.04,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_elder_greatturtle__head_1": {
+     "kind": "Flap",
+     "offset": [
+      -386.291,
+      80.135,
+      0.0
+     ],
+     "hinge": [
+      -353.256,
+      66.144,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.11,
+     "rate": 0.04,
+     "phase": 0.0,
+     "chain": "hubprop_elder_greatturtle__neck_1",
+     "lag": 0.7,
+     "gait": "Always"
+    },
+    "hubprop_elder_greatturtle__flipper_1": {
+     "kind": "Flap",
+     "offset": [
+      -116.968,
+      22.059,
+      238.544
+     ],
+     "hinge": [
+      -135.256,
+      21.144,
+      194.36
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.26,
+     "rate": 0.055,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_elder_greatturtle__flippertip_1": {
+     "kind": "Flap",
+     "offset": [
+      -18.365,
+      -10.441,
+      297.771
+     ],
+     "hinge": [
+      -93.256,
+      11.144,
+      276.92
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.34,
+     "rate": 0.055,
+     "phase": 0.0,
+     "chain": "hubprop_elder_greatturtle__flipper_1",
+     "lag": 0.9,
+     "gait": "Flight"
+    },
+    "hubprop_elder_greatturtle__flipper_2": {
+     "kind": "Flap",
+     "offset": [
+      -116.968,
+      22.059,
+      -238.544
+     ],
+     "hinge": [
+      -135.256,
+      21.144,
+      -194.36
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.26,
+     "rate": 0.055,
+     "phase": 3.1416,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_elder_greatturtle__flippertip_2": {
+     "kind": "Flap",
+     "offset": [
+      -18.365,
+      -10.441,
+      -297.771
+     ],
+     "hinge": [
+      -93.256,
+      11.144,
+      -276.92
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.34,
+     "rate": 0.055,
+     "phase": 3.1416,
+     "chain": "hubprop_elder_greatturtle__flipper_2",
+     "lag": 0.9,
+     "gait": "Flight"
+    },
+    "hubprop_elder_greatturtle__hindflipper_1": {
+     "kind": "Flap",
+     "offset": [
+      202.53,
+      6.835,
+      239.044
+     ],
+     "hinge": [
+      154.744,
+      17.144,
+      192.64
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.2,
+     "rate": 0.05,
+     "phase": 1.5708,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_elder_greatturtle__hindflipper_2": {
+     "kind": "Flap",
+     "offset": [
+      202.53,
+      6.835,
+      -239.044
+     ],
+     "hinge": [
+      154.744,
+      17.144,
+      -192.64
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.2,
+     "rate": 0.05,
+     "phase": 4.7124,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    }
+   }
+  }
+ }
+}
