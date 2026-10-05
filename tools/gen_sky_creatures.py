@@ -55,10 +55,17 @@ def upper_id(species: str) -> str:
     return species.upper()
 
 
+def to_orbiter(v):
+    """Blender axes (head +X, up +Z) to the OrbiterParts frame, as make_layout_luau.local()."""
+    return [round(-v[0], 3), round(v[2], 3), round(v[1], 3)]
+
+
 def load_sidecars() -> dict[str, dict]:
     out: dict[str, dict] = {}
     for path in sorted(EXPORT.glob("creatures_*.json")):
         data = json.loads(path.read_text(encoding="utf-8"))
+        # "frame": "orbiter" (default) is already OrbiterParts space; "blender" is converted here
+        conv = to_orbiter if data.get("frame") == "blender" else (lambda v: v)
         for cid, c in data.get("creatures", {}).items():
             if cid in out:
                 sys.exit(f"duplicate creature {cid} (in {path.name})")
@@ -66,9 +73,9 @@ def load_sidecars() -> dict[str, dict]:
             for pname, p in c.get("parts", {}).items():
                 parts[pname] = {
                     "Kind": p["kind"],
-                    "Offset": p["offset"],
-                    "Hinge": p["hinge"],
-                    "Axis": p["axis"],
+                    "Offset": conv(p["offset"]),
+                    "Hinge": conv(p["hinge"]),
+                    "Axis": conv(p["axis"]),
                     "Amp": p["amp"],
                     "Rate": p["rate"],
                     "Phase": p["phase"],

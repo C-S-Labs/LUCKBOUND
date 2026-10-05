@@ -36,6 +36,24 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## crossroads-v2-refinement (branch claude/crossroads-v2-refinement-4f3234) - 2026-10-05 - orchestrated Crossroads refinement
+**Merged:** none (experimental, owner review)   **Tests:** Luau NOT run (no `luau` CLI); suite build, Rojo build, selene, StyLua pass
+
+### Done
+- Orchestrated (Mode C, five worker branches `agent/crossroads-v2-{traffic,hub,creatures-small,creatures-mid,creatures-colossal}`, merged here). Contract: `docs/design/SKY_ECOSYSTEM_CONTRACT.md`.
+- Hub: bridge junction clip root cause was a 16-gon plaza treated as a circle (slab 0.73 studs inside, coplanar tops). Re-seated, collars, polygon curbs, trim; Fate Engine untouched.
+- Sky: boats and docking removed; `FlightCore` class profiles (TINY..COLOSSAL + PROP), forward-only kinematics, keep-out cylinders, perching for skyfinch and canopy_drake, colossal presence cycles, distance throttling. Whale retained under the LARGE profile (band 640-1000).
+- 10 creatures (sources, FBX, sidecars): skyfinch, lumen_moth, cinderkite, prism_darter, citadel_falcon, canopy_drake, aether_manta, ashen_roc, starweaver, elder_greatturtle. `SkyCreatures.luau` generated (11 incl. whale).
+
+### Decisions made
+- Sidecars carry a `frame` key (small = blender, others = orbiter); `Pulse` amp is a scale fraction; `Biome` is reserved/unread (RESERVED.md).
+
+### Stopped at
+OWNER GATES: (1) run `tests/run.sh` where `luau` exists; (2) Studio import of `crossroads_hub.fbx` (into HUB_CROSSROADS_V2, with the new CrossroadsV2.luau, re-bake collision) and of `creatures_{small,mid,colossal}.fbx` into HUB_ORBITERS (then `tools/sync_asset_ids.py`/part wiring); until imported, species with missing meshes are skipped with a warning and the sky has only the whale and non-boat props; (3) Studio visual, perch surface, look-ahead and performance checks.
+
+### Next
+1. Owner imports and walks the hub and sky. 2. Tune SkyLife and CanLand; polish prism_darter and aether_manta if wanted. 3. After Studio proof, delete boat meshes in HUB_ORBITERS.rbxmx, boat generator functions and stale boat OrbiterParts rows.
+
 ## orchestrate-skill (branch agent/orchestrate-skill) - 2026-10-05 - provider-neutral orchestration
 **Merged:** none yet   **Tests:** none (no game code); `gen_index.py --check` run. No live orchestration run yet.
 

@@ -122,3 +122,7 @@ the place. The old authored shell and the blockout remain the fallback, and
 
 The far range reuses the backdrop chunks, larger and darker. Placement is set in
 `GameConfig.HubLayout.V2` (CloudSea, FarRange, Moon, Planet, Ring).
+
+## Update 2026-10-05 (orchestrated refinement)
+
+Bridge junctions re-seated on the plaza's 16-gon edge (115.73, not 118), polygon curbs, restrained trim; hub tri counts are now HUB_PLATFORM 8088, LEVITATOR 2984, HALL 3830, ARCHIVES 6880, SHOP 3664, TRAINING 4588; animated parts 114 (7162 tris). Creatures live in `creatures/`. Boats are no longer spawned (meshes kept until Studio proves the replacement). Re-import `crossroads_hub.fbx` with the regenerated `CrossroadsV2.luau`.

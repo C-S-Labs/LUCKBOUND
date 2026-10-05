@@ -96,7 +96,7 @@ the island's oriented bounding box and place the ship side-on, with its hull
 18 studs plus `Docking.BerthPadding` (2 studs) off that face. Spacing uses the
 ship's beam rather than a mast/length-derived sphere, so angled approaches are
 clear without placing the ship far away. The berth overlap and docking approach
-cast use the oriented ship box; `PropCore.berthOnBox` supplies tested local geometry.
+cast; ship docking was removed (2026-10-05) when the boats gave way to the sky creatures.
 Approaches ease to a full
 stop, hold alongside, then resume flight. Large ships receive enough time to
 turn into the approach; their docking heading is distinct from the smoothed
