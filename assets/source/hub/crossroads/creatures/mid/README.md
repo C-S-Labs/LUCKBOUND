@@ -27,3 +27,10 @@ Conventions
 - The drake's back between the shoulders is a flat, clear moss patch (room for a future saddle).
 - `renders/contact_sheet.png`: rows from the TOP are roc, manta, drake, falcon (image is stacked bottom-up);
   columns: 3/4 view, side, top, underside.
+
+Round 2 (rig rework)
+- Parts now include legs (hip/shin/foot chain), jaw, crest/ears, neck/tail yaw stubs (`neck_1`, `tailyaw_1`, `tailbase_1`: Turn gait),
+  three-segment wings (wing/wingtip/pinion; drake wingfin) and a three-segment manta fin chain buried in the body.
+- `pose_preview.py` (reusable): poses the exported FBX with the game's hinge maths and writes `<id>_posesheet.png`
+  (rows: beat0-5, glide, turn+, turn-, idle; columns front/side/top) plus an attach report. See its docstring.
+- `renders/before_/after_aether_manta_join.png`: manta fin root before and after.
