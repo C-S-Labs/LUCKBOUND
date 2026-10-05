@@ -1988,7 +1988,7 @@ local GameConfig = {
 
 	Debug = {
 		-- publish each sky creature's steering inputs as the `SkyDbg` attribute (turn off when done tuning)
-		SkyDebug = true,
+		SkyDebug = false,
 		-- === DEVELOPER COMMANDS -- NEVER SHIP EITHER OF THESE TRUE ===
 		--
 		-- Both are ON for the current testing phase, at the owner's request,

@@ -48,6 +48,9 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 ### Follow-ups (owner test 3)
 - Starweaver bell/fringe/heart amp 0 (no size change). Dead-end rescue in `FlightCore.tick` (average speed under `RescueSpeedFrac` of slowest cruise over `RescueSeconds` re-enters the flier at the band edge; the driver warns). Spine wave now locked to distance flown (`Motion.Spine.TravelShare` 1, `TimeShare` 0.1, `HeadAmp` 0.5) so the body keeps up with the head; COLOSSAL cruise 12-20.
 
+### Follow-ups (owner test 4: circling, weaving, drifting colossals)
+- Measured live in Studio (attribute `SkyDbg`, switch `GameConfig.Debug.SkyDebug`, default off). Causes found and fixed: keep-out edge tangent over the hub roof (ill-conditioned near the axis: vertical-only push now); separation scaled BOTH bodies' radii so every small creature fled isles/clouds (now own comfort zone scaled, other body at true size: small-class mean turn 164 -> 13 deg/s); colossals drifting out of band into the far range (band leash `Flight.Leash*`, far range moved to 5200-6400). Added circling guard (`Flight.Circle*`), arrival by real turning radius (`ArriveRadiusScale`), stall rescue (`Rescue*`).
+
 ### Stopped at
 Owner Studio test. Hand-set limits on starweaver tendriltip_1 [-0.08,0.08] and tendriltip_3 [-0.08,0.13] (the sweep reported a false positive at the joint); re-running gen_part_limits.py overwrites them. Check: wyrm bends, under-hub depth (`UnderDepth` 300 assumed), wing-down sign.
 
