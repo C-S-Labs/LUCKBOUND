@@ -1,0 +1,838 @@
+{
+ "group": "colossal2",
+ "frame": "orbiter",
+ "creatures": {
+  "cinder_wyrm": {
+   "model": "hubprop_cinder_wyrm",
+   "class": "COLOSSAL",
+   "size": [
+    889.9,
+    140.0,
+    263.8
+   ],
+   "tris": 8578,
+   "biome": [
+    "EMBERFALL"
+   ],
+   "parts": {
+    "hubprop_cinder_wyrm__jaw_1": {
+     "kind": "Flap",
+     "offset": [
+      -39.094,
+      -56.311,
+      -0.099
+     ],
+     "hinge": [
+      16.906,
+      -58.199,
+      -0.099
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.14,
+     "rate": 0.07,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_cinder_wyrm__body_a_1": {
+     "kind": "Flap",
+     "offset": [
+      42.729,
+      -15.416,
+      -0.099
+     ],
+     "hinge": [
+      24.906,
+      -28.199,
+      -0.099
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.09,
+     "rate": 0.075,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.5,
+     "gait": "Always"
+    },
+    "hubprop_cinder_wyrm__body_a_2": {
+     "kind": "Flap",
+     "offset": [
+      89.01,
+      -15.109,
+      -0.099
+     ],
+     "hinge": [
+      70.906,
+      -28.199,
+      -0.099
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.10071428571428571,
+     "rate": 0.075,
+     "phase": 0.0,
+     "chain": "hubprop_cinder_wyrm__body_a_1",
+     "lag": 0.5,
+     "gait": "Always"
+    },
+    "hubprop_cinder_wyrm__body_a_3": {
+     "kind": "Flap",
+     "offset": [
+      135.292,
+      -15.913,
+      -0.099
+     ],
+     "hinge": [
+      116.906,
+      -28.199,
+      -0.099
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.11142857142857142,
+     "rate": 0.075,
+     "phase": 0.0,
+     "chain": "hubprop_cinder_wyrm__body_a_2",
+     "lag": 0.5,
+     "gait": "Always"
+    },
+    "hubprop_cinder_wyrm__body_a_4": {
+     "kind": "Flap",
+     "offset": [
+      181.573,
+      -16.077,
+      -0.099
+     ],
+     "hinge": [
+      162.906,
+      -28.199,
+      -0.099
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.12214285714285714,
+     "rate": 0.075,
+     "phase": 0.0,
+     "chain": "hubprop_cinder_wyrm__body_a_3",
+     "lag": 0.5,
+     "gait": "Always"
+    },
+    "hubprop_cinder_wyrm__body_a_5": {
+     "kind": "Flap",
+     "offset": [
+      227.854,
+      -16.899,
+      -0.099
+     ],
+     "hinge": [
+      208.906,
+      -28.199,
+      -0.099
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.13285714285714284,
+     "rate": 0.075,
+     "phase": 0.0,
+     "chain": "hubprop_cinder_wyrm__body_a_4",
+     "lag": 0.5,
+     "gait": "Always"
+    },
+    "hubprop_cinder_wyrm__body_a_6": {
+     "kind": "Flap",
+     "offset": [
+      274.135,
+      -18.792,
+      -0.099
+     ],
+     "hinge": [
+      254.906,
+      -28.199,
+      -0.099
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.14357142857142857,
+     "rate": 0.075,
+     "phase": 0.0,
+     "chain": "hubprop_cinder_wyrm__body_a_5",
+     "lag": 0.5,
+     "gait": "Always"
+    },
+    "hubprop_cinder_wyrm__body_a_7": {
+     "kind": "Flap",
+     "offset": [
+      320.416,
+      -18.545,
+      0.298
+     ],
+     "hinge": [
+      300.906,
+      -28.199,
+      -0.099
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.15428571428571428,
+     "rate": 0.075,
+     "phase": 0.0,
+     "chain": "hubprop_cinder_wyrm__body_a_6",
+     "lag": 0.5,
+     "gait": "Always"
+    },
+    "hubprop_cinder_wyrm__body_a_8": {
+     "kind": "Flap",
+     "offset": [
+      366.697,
+      -19.353,
+      0.159
+     ],
+     "hinge": [
+      346.906,
+      -28.199,
+      -0.099
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.16499999999999998,
+     "rate": 0.075,
+     "phase": 0.0,
+     "chain": "hubprop_cinder_wyrm__body_a_7",
+     "lag": 0.5,
+     "gait": "Always"
+    },
+    "hubprop_cinder_wyrm__body_a_9": {
+     "kind": "Flap",
+     "offset": [
+      412.307,
+      -21.96,
+      -0.099
+     ],
+     "hinge": [
+      392.906,
+      -28.199,
+      -0.099
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.1757142857142857,
+     "rate": 0.075,
+     "phase": 0.0,
+     "chain": "hubprop_cinder_wyrm__body_a_8",
+     "lag": 0.5,
+     "gait": "Always"
+    },
+    "hubprop_cinder_wyrm__body_a_10": {
+     "kind": "Flap",
+     "offset": [
+      457.706,
+      -20.907,
+      -0.099
+     ],
+     "hinge": [
+      438.906,
+      -28.199,
+      -0.099
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.18642857142857144,
+     "rate": 0.075,
+     "phase": 0.0,
+     "chain": "hubprop_cinder_wyrm__body_a_9",
+     "lag": 0.5,
+     "gait": "Always"
+    },
+    "hubprop_cinder_wyrm__body_a_11": {
+     "kind": "Flap",
+     "offset": [
+      503.706,
+      -21.685,
+      -0.099
+     ],
+     "hinge": [
+      484.906,
+      -28.199,
+      -0.099
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.19714285714285712,
+     "rate": 0.075,
+     "phase": 0.0,
+     "chain": "hubprop_cinder_wyrm__body_a_10",
+     "lag": 0.5,
+     "gait": "Always"
+    },
+    "hubprop_cinder_wyrm__body_a_12": {
+     "kind": "Flap",
+     "offset": [
+      549.706,
+      -24.803,
+      -0.099
+     ],
+     "hinge": [
+      530.906,
+      -28.199,
+      -0.099
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.20785714285714285,
+     "rate": 0.075,
+     "phase": 0.0,
+     "chain": "hubprop_cinder_wyrm__body_a_11",
+     "lag": 0.5,
+     "gait": "Always"
+    },
+    "hubprop_cinder_wyrm__body_a_13": {
+     "kind": "Flap",
+     "offset": [
+      595.706,
+      -23.694,
+      -0.099
+     ],
+     "hinge": [
+      576.906,
+      -28.199,
+      -0.099
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.21857142857142856,
+     "rate": 0.075,
+     "phase": 0.0,
+     "chain": "hubprop_cinder_wyrm__body_a_12",
+     "lag": 0.5,
+     "gait": "Always"
+    },
+    "hubprop_cinder_wyrm__body_a_14": {
+     "kind": "Flap",
+     "offset": [
+      641.706,
+      -24.611,
+      -0.099
+     ],
+     "hinge": [
+      622.906,
+      -28.199,
+      -0.099
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.2292857142857143,
+     "rate": 0.075,
+     "phase": 0.0,
+     "chain": "hubprop_cinder_wyrm__body_a_13",
+     "lag": 0.5,
+     "gait": "Always"
+    },
+    "hubprop_cinder_wyrm__body_a_15": {
+     "kind": "Flap",
+     "offset": [
+      717.343,
+      -10.545,
+      -0.099
+     ],
+     "hinge": [
+      668.906,
+      -28.199,
+      -0.099
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.24,
+     "rate": 0.075,
+     "phase": 0.0,
+     "chain": "hubprop_cinder_wyrm__body_a_14",
+     "lag": 0.5,
+     "gait": "Always"
+    },
+    "hubprop_cinder_wyrm__fin_fore_1": {
+     "kind": "Flap",
+     "offset": [
+      159.424,
+      -35.4,
+      -72.658
+     ],
+     "hinge": [
+      139.906,
+      -38.046,
+      -24.716
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.42,
+     "rate": 0.16,
+     "phase": 3.1416,
+     "chain": "hubprop_cinder_wyrm__body_a_3",
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_cinder_wyrm__fin_fore_2": {
+     "kind": "Flap",
+     "offset": [
+      159.424,
+      -35.4,
+      72.46
+     ],
+     "hinge": [
+      139.906,
+      -38.046,
+      24.518
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.42,
+     "rate": 0.16,
+     "phase": 0.0,
+     "chain": "hubprop_cinder_wyrm__body_a_3",
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_cinder_wyrm__fin_rear_1": {
+     "kind": "Flap",
+     "offset": [
+      484.261,
+      -33.271,
+      -68.714
+     ],
+     "hinge": [
+      461.906,
+      -35.703,
+      -18.859
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.42,
+     "rate": 0.16,
+     "phase": 3.1416,
+     "chain": "hubprop_cinder_wyrm__body_a_10",
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_cinder_wyrm__fin_rear_2": {
+     "kind": "Flap",
+     "offset": [
+      484.261,
+      -33.271,
+      68.516
+     ],
+     "hinge": [
+      461.906,
+      -35.703,
+      18.661
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.42,
+     "rate": 0.16,
+     "phase": 0.0,
+     "chain": "hubprop_cinder_wyrm__body_a_10",
+     "lag": 0.0,
+     "gait": "Flight"
+    }
+   },
+   "centre": [
+    329.9,
+    -7.0,
+    0.0
+   ]
+  },
+  "aether_nautilus": {
+   "model": "hubprop_aether_nautilus",
+   "class": "COLOSSAL",
+   "size": [
+    654.1,
+    430.0,
+    384.0
+   ],
+   "tris": 9792,
+   "biome": [
+    "ETHEREAL_SCAPE"
+   ],
+   "parts": {
+    "hubprop_aether_nautilus__head_1": {
+     "kind": "Flap",
+     "offset": [
+      153.716,
+      -54.57,
+      0.0
+     ],
+     "hinge": [
+      60.553,
+      -66.089,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.06,
+     "rate": 0.06,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_aether_nautilus__funnel_1": {
+     "kind": "Pulse",
+     "offset": [
+      188.3,
+      -125.655,
+      0.0
+     ],
+     "hinge": [
+      170.553,
+      -125.059,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.22,
+     "rate": 0.13,
+     "phase": 0.0,
+     "chain": "hubprop_aether_nautilus__head_1",
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_aether_nautilus__halo_1": {
+     "kind": "Spin",
+     "offset": [
+      158.24,
+      -66.089,
+      0.0
+     ],
+     "hinge": [
+      140.553,
+      -66.089,
+      0.0
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.0,
+     "rate": 0.05,
+     "phase": 0.0,
+     "chain": "hubprop_aether_nautilus__head_1",
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_aether_nautilus__tent_c_1": {
+     "kind": "Flap",
+     "offset": [
+      278.471,
+      -81.778,
+      0.0
+     ],
+     "hinge": [
+      232.553,
+      -70.089,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.16,
+     "rate": 0.1,
+     "phase": 0.0,
+     "chain": "hubprop_aether_nautilus__head_1",
+     "lag": 0.6,
+     "gait": "Always"
+    },
+    "hubprop_aether_nautilus__tent_c_2": {
+     "kind": "Flap",
+     "offset": [
+      355.806,
+      -109.679,
+      0.0
+     ],
+     "hinge": [
+      314.881,
+      -94.95,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.23,
+     "rate": 0.1,
+     "phase": 0.0,
+     "chain": "hubprop_aether_nautilus__tent_c_1",
+     "lag": 0.6,
+     "gait": "Always"
+    },
+    "hubprop_aether_nautilus__tent_c_3": {
+     "kind": "Flap",
+     "offset": [
+      425.814,
+      -142.41,
+      0.0
+     ],
+     "hinge": [
+      389.772,
+      -125.389,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.30000000000000004,
+     "rate": 0.1,
+     "phase": 0.0,
+     "chain": "hubprop_aether_nautilus__tent_c_2",
+     "lag": 0.6,
+     "gait": "Always"
+    },
+    "hubprop_aether_nautilus__tent_c_4": {
+     "kind": "Flap",
+     "offset": [
+      490.364,
+      -178.563,
+      0.0
+     ],
+     "hinge": [
+      457.071,
+      -160.006,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.37,
+     "rate": 0.1,
+     "phase": 0.0,
+     "chain": "hubprop_aether_nautilus__tent_c_3",
+     "lag": 0.6,
+     "gait": "Always"
+    },
+    "hubprop_aether_nautilus__tent_l_1": {
+     "kind": "Flap",
+     "offset": [
+      277.819,
+      -85.319,
+      -40.621
+     ],
+     "hinge": [
+      232.553,
+      -66.089,
+      -34.0
+     ],
+     "axis": [
+      -0.0,
+      0.4104,
+      0.9119
+     ],
+     "amp": 0.16,
+     "rate": 0.11,
+     "phase": 2.1,
+     "chain": "hubprop_aether_nautilus__head_1",
+     "lag": 0.6,
+     "gait": "Always"
+    },
+    "hubprop_aether_nautilus__tent_l_2": {
+     "kind": "Flap",
+     "offset": [
+      354.815,
+      -126.226,
+      -54.474
+     ],
+     "hinge": [
+      314.8,
+      -104.564,
+      -48.804
+     ],
+     "axis": [
+      -0.0,
+      0.4104,
+      0.9119
+     ],
+     "amp": 0.23,
+     "rate": 0.11,
+     "phase": 2.1,
+     "chain": "hubprop_aether_nautilus__tent_l_1",
+     "lag": 0.6,
+     "gait": "Always"
+    },
+    "hubprop_aether_nautilus__tent_l_3": {
+     "kind": "Flap",
+     "offset": [
+      424.326,
+      -169.195,
+      -64.502
+     ],
+     "hinge": [
+      388.728,
+      -147.416,
+      -62.111
+     ],
+     "axis": [
+      -0.0,
+      0.4104,
+      0.9119
+     ],
+     "amp": 0.30000000000000004,
+     "rate": 0.11,
+     "phase": 2.1,
+     "chain": "hubprop_aether_nautilus__tent_l_2",
+     "lag": 0.6,
+     "gait": "Always"
+    },
+    "hubprop_aether_nautilus__tent_r_1": {
+     "kind": "Flap",
+     "offset": [
+      277.745,
+      -85.319,
+      40.621
+     ],
+     "hinge": [
+      232.553,
+      -66.089,
+      34.0
+     ],
+     "axis": [
+      -0.0,
+      -0.4104,
+      0.9119
+     ],
+     "amp": 0.16,
+     "rate": 0.11,
+     "phase": 4.2,
+     "chain": "hubprop_aether_nautilus__head_1",
+     "lag": 0.6,
+     "gait": "Always"
+    },
+    "hubprop_aether_nautilus__tent_r_2": {
+     "kind": "Flap",
+     "offset": [
+      354.643,
+      -126.226,
+      54.474
+     ],
+     "hinge": [
+      314.8,
+      -104.564,
+      48.804
+     ],
+     "axis": [
+      -0.0,
+      -0.4104,
+      0.9119
+     ],
+     "amp": 0.23,
+     "rate": 0.11,
+     "phase": 4.2,
+     "chain": "hubprop_aether_nautilus__tent_r_1",
+     "lag": 0.6,
+     "gait": "Always"
+    },
+    "hubprop_aether_nautilus__tent_r_3": {
+     "kind": "Flap",
+     "offset": [
+      424.326,
+      -169.007,
+      64.502
+     ],
+     "hinge": [
+      388.728,
+      -147.416,
+      62.111
+     ],
+     "axis": [
+      -0.0,
+      -0.4104,
+      0.9119
+     ],
+     "amp": 0.30000000000000004,
+     "rate": 0.11,
+     "phase": 4.2,
+     "chain": "hubprop_aether_nautilus__tent_r_2",
+     "lag": 0.6,
+     "gait": "Always"
+    }
+   },
+   "centre": [
+    199.75,
+    -43.0,
+    0.0
+   ]
+  }
+ }
+}
