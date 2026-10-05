@@ -197,9 +197,7 @@ local function paint(rig: Model, color: Color3)
 		light.Color = color
 	end
 	for _, d in rig:GetDescendants() do
-		if d:IsA("ParticleEmitter") then
-			d.Color = ColorSequence.new(color)
-		elseif d:IsA("Beam") then
+		if d:IsA("ParticleEmitter") or d:IsA("Beam") then
 			d.Color = ColorSequence.new(color)
 		end
 	end
@@ -339,10 +337,9 @@ function RiftRig.build(config: Config, parent: Instance): Model
 		AssetKey = prefabCfg.AssetKey,
 		Scale = prefabCfg.Scale,
 		YawDegrees = prefabCfg.YawDegrees,
-		-- The Scar is the registration point, and its centre sits half its
-		-- thickness above the deck, so the deck is a hair below it.
+		-- Register the tear's ground origin from the asymmetric Scar mesh.
 		AnchorPart = "Scar",
-		AnchorOffset = Vector3.new(0, -0.06, 0),
+		AnchorOffset = prefabCfg.AnchorOffset,
 		Styles = styles(),
 	}, CONTRACT, base, parent, config.Name)
 
@@ -364,6 +361,8 @@ function RiftRig.build(config: Config, parent: Instance): Model
 		model = buildBlockout(config, base, parent)
 	end
 
+	-- Animate a complete rig when it streams in, including its effect anchors.
+	model.ModelStreamingMode = Enum.ModelStreamingMode.Atomic
 	model:SetAttribute("RiftKind", config.Kind)
 	paint(model, color)
 	RiftRig.attachEffects(model, color)
@@ -394,11 +393,7 @@ function RiftRig.seal(rig: Model): ()
 	for _, d in rig:GetDescendants() do
 		if d:IsA("BasePart") then
 			d.Transparency = 1
-		elseif d:IsA("ParticleEmitter") then
-			d.Enabled = false
-		elseif d:IsA("Beam") then
-			d.Enabled = false
-		elseif d:IsA("PointLight") then
+		elseif d:IsA("ParticleEmitter") or d:IsA("Beam") or d:IsA("PointLight") then
 			d.Enabled = false
 		end
 	end

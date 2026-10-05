@@ -33,7 +33,9 @@ animation must keep them in that band** (orbit in the side lobes, never sweep ac
 
 ## Studio import (owner step, not done yet)
 
-1. Import each FBX with the 3D Importer (Imported Rig, Custom, Meter, 1.0).
+1. Import each FBX as a model with **Scale Unit: Stud**, **Scale: 1.0** (these meshes are authored in studs,
+   not metres). Preserve the separate mesh names; no character rig is needed. `RiftHalo` must measure
+   15 studs high for the entrance and 21 for the exit. See [Roblox's Blender import settings](https://create.roblox.com/docs/art/blender).
 2. Save as `assets/rbxm/prefabs/EXPEDITION_ENTRANCE.rbxmx` / `EXPEDITION_EXIT.rbxmx`.
 3. Measure the imported scale against the spec and record it as `Prefab.Scale` (as `HUB_FATE_ENGINE` did).
 4. Upload `assets/textures/rift_flow.png` (made by `make_rift_flow.py`, 512x128, white with an alpha pattern, seamless
@@ -41,4 +43,15 @@ animation must keep them in that band** (orbit in the side lobes, never sweep ac
    with the group as owner. Wait for moderation, then copy the **Image** asset id (a Decal id will not work on a Beam;
    Studio can convert one) and set `GameConfig.Rift.FlowTexture = "rbxassetid://<id>"`.
 
-Until those files exist the game keeps drawing the `PortalRig` blockout portals.
+Both prefabs were delivered and their proportions checked in Studio on 2026-09-30. They load automatically
+through Rojo's `LuckboundPrefabs`; scale remains 1.0, and measured Scar registration offsets live in
+`GameConfig.Rift`. If either prefab is missing, `RiftRig` draws its blockout fallback.
+
+## Import correction (2026-09-30)
+
+The generator welds coincident face vertices before recalculating outward normals, triangulates explicitly,
+and points ground sheets upward. The scar disc shares its perimeter radii so adjacent wedges have no gaps.
+The FBX export bakes the Y-up axes and keeps object scale at 1 using `FBX_SCALE_ALL`, matching the chunk pipeline.
+Validation checks degenerates, closed shells and signed volume; each exported FBX is re-imported to verify
+names, dimensions, scale and topology. Studio visual verification is still required; replace the earlier
+Studio imports only once these regenerated files pass that check.

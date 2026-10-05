@@ -41,7 +41,8 @@
 | `src/client/` | `init.client.luau` + `Controllers/` (behaviour) + `UI/` (screens) | `StarterPlayerScripts.LuckboundClient` |
 | `assets/rbxm/chunks/` | chunk kit models: `sky_citadel/SC_STRUCTURE.rbxmx` (+ parked `SC_RECOLORS`), `verdant_valley/VV_STRUCTURE.rbxmx` | `ServerStorage.LuckboundChunkKits` |
 | `assets/rbxm/props/` | client prop libraries (`SC_PROP_LIBRARY`, `HUB_ORBITERS`, parked `SC_ATMOSPHERE_PROPS`) | `ReplicatedStorage.LuckboundProps` |
-| `assets/rbxm/prefabs/` | hub art (`HUB_*`); V1 and V2 are both still referenced by code | `ServerStorage.LuckboundPrefabs` |
+| `assets/rbxm/prefabs/` | hub art (`HUB_*`) and `EXPEDITION_ENTRANCE/EXIT` rifts; V1 and V2 hub art is still referenced | `ServerStorage.LuckboundPrefabs` |
+| `src/shared/Content/Portals/` | optional per-world chunk-local entrance/exit positions; validated before boot (spec §7.8) | `ReplicatedStorage.Luckbound.Content.Portals` |
 | `assets/rbxm/maps/` | prebuilt whole maps (`ES_ENVIRONMENT_FULL` = Ethereal Scape) | `ServerStorage.LuckboundMaps` |
 | `assets/source/portals/` | the expedition rifts (spec §7.8): `build_expedition_portals.py`, `.blend`, previews; FBX in `assets/export/portals/` | — |
 | `assets/rbxm/bosses/` | imported boss rigs for `/showboss` (`WingedSentinel`) | `ServerStorage.LuckboundBosses` |

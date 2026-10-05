@@ -10,6 +10,25 @@
 
 local ExpeditionCore = {}
 
+--- The server supplies all facts; a prompt never bypasses these guards.
+function ExpeditionCore.canUsePortal(
+	opts: {
+		Member: boolean,
+		Alive: boolean,
+		Open: boolean,
+		Distance: number?,
+	},
+	config: any
+): boolean
+	local distance = opts.Distance
+	return opts.Member
+		and opts.Alive
+		and opts.Open
+		and distance ~= nil
+		and distance >= 0
+		and distance <= config.Expedition.ReturnPromptDistance
+end
+
 export type EntryRefusal =
 	"DISABLED" -- GameConfig.Expedition.Enabled is false
 	| "NO_DESTINATION" -- the player has not rolled yet

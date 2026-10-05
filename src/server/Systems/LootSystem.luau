@@ -53,7 +53,7 @@ local lastRefusal: { [number]: number } = {}
 -- DEVELOPER TESTING ONLY (/keychance, /boss). Remove with the debug commands.
 local keyChanceOverride: number? = nil
 -- Every furnished map, so /boss can find the one a player is on.
-local maps: { { Stage: Instance, WorldId: string, Members: { [number]: boolean }, Boss: () -> () } } =
+local maps: { { Stage: Instance, WorldId: string, Members: { [number]: boolean }, Boss: () -> boolean } } =
 	{}
 
 local function library(): Instance?
@@ -415,16 +415,25 @@ function LootSystem.attach(
 		warn(`[LootSystem] fixture meshes missing from the library: {table.concat(names, ", ")}`)
 	end
 
+	-- The debug command and arena watcher share one claim. Defeating the
+	-- stand-in by either route cannot roll another reward through the other.
+	local cleared = false
+	local function defeatBoss(): boolean
+		if cleared or not stage.Parent then
+			return false
+		end
+		cleared = true
+		bossDefeated(worldId, members)
+		if onBossDefeated then
+			onBossDefeated()
+		end
+		return true
+	end
 	table.insert(maps, {
 		Stage = stage,
 		WorldId = worldId,
 		Members = members,
-		Boss = function()
-			bossDefeated(worldId, members)
-			if onBossDefeated then
-				onBossDefeated()
-			end
-		end,
+		Boss = defeatBoss,
 	})
 	for i = #maps, 1, -1 do
 		if maps[i].Stage.Parent == nil then
@@ -433,15 +442,8 @@ function LootSystem.attach(
 	end
 
 	if cfg.BossDefeatStandIn and arena then
-		local done = false
 		watchArena(stage, arena :: Instance, function()
-			if not done then
-				done = true
-				bossDefeated(worldId, members)
-				if onBossDefeated then
-					onBossDefeated()
-				end
-			end
+			defeatBoss()
 		end, members)
 	end
 end
@@ -459,12 +461,14 @@ function LootSystem.keyChanceOverride(): number?
 end
 
 --- Fires the boss stand-in for the map this player is on, as if the boss had
---- just been defeated. Repeatable, unlike the real one.
+--- just been defeated. Shares the arena watcher's once-per-run guard.
 function LootSystem.triggerBoss(player: Player): (boolean, string)
 	for _, map in maps do
 		if map.Stage.Parent and map.Members[player.UserId] then
-			map.Boss()
-			return true, `boss stand-in fired on {map.WorldId}`
+			if map.Boss() then
+				return true, `boss stand-in fired on {map.WorldId}`
+			end
+			return false, `boss already cleared on {map.WorldId}`
 		end
 	end
 	return false, "you are not on an expedition map"

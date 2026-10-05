@@ -44,13 +44,29 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 ## 2. Next — pick up here
 
+> **2026-09-30: expedition portals wired locally on `agent/expedition-portal`.** Owner verified the corrected
+> Blender meshes and Studio proportions, then delivered both `.rbxmx` prefabs. They now load through Rojo at
+> scale 1 with measured Scar offsets; complete rifts stream atomically. Entrance defaults to ENTRY centre,
+> exit to BOSS centre, raycast flush; optional validated `Content/Portals/<World>.luau` offsets are supported.
+> Return/exit triggers enforce server distance, living membership, exact stage and open state. Arena and
+> `/boss` share one reward claim. Prototype gate behavior/tunables removed; shop and legacy travel Id kept.
+> **967 tests pass**, full source syntax and Rojo build pass, StyLua clean. Selene has no errors (two existing
+> Schema shadowing warnings). **Next:** owner performs `TESTING.md` Test C2c; gameplay/streaming remain
+> unverified. Flow texture upload is pending (plain ribbons work); Fate Engine rework and XP remain separate.
+
+> **2026-09-30: rift import correction, local on `agent/expedition-portal`.** Both Blender sources and FBXs
+> regenerated with welded, outward-facing triangulated shells, gap-free scar disc and baked Y-up unit-scale
+> export. Both FBX re-import checks pass (names, dimensions, scale and topology). Import with **Stud / 1.0**;
+> `RiftHalo` height = 15 / 21 studs. Owner subsequently verified corrected Blender geometry and Studio
+> proportions and delivered both prefabs. Earlier Studio imports may be removed after Test C2c passes.
+
 > **2026-09-29: expedition rifts, branch `agent/expedition-portal` (build spec §7.8), not merged.** Entrance and exit
 > are now rifts (authored meshes in `assets/source/portals/`, ~5.9k and ~7.8k tris; motion and light in code). New:
 > `Core/RiftCore` (pure curves), `Util/RiftRig` (build, effects, seal/open), `Controllers/RiftController` (per-frame
 > pose), `ExpeditionCore.outcomeFor/payoutFor` (a cleared run pays in full, an early one `EarlyExitFraction`, a death
 > nothing). `ExpeditionSystem` builds the entrance on the arrival chunk and a SEALED exit on the boss chunk; the boss
-> stand-in opens it. 944 tests pass. **Pending:** owner's Studio import of the two FBXs (then `Prefab.Scale`, and
-> verify the tear's axes), the flow-texture upload, a Studio walk, removal of the hub gate (spec §7.8 step 6), and the
+> stand-in opens it. Initial 944 tests passed; now 967. Imports, measured scale/axes and hub gate behavior
+> removal are complete locally (2026-09-30). **Pending:** flow-texture upload, Studio Test C2c, and the
 > Fate engine rework (ready toggle, host starts, roll-then-lower entry) which plugs into `payoutFor`.
 
 > **2026-09-27: close ship berths fixed after precommit review.** Berths now use

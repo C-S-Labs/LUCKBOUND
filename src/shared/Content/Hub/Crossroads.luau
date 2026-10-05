@@ -1437,16 +1437,16 @@ local Crossroads = {
 		},
 		{
 			Id = "EXPEDITION_GATE",
-			Name = "Expedition Gate",
+			-- Keep the district Id for saved travel/menu and authored shop maps.
+			Name = "Shop",
 			Angle = 180,
 			Radius = Layout.ZoneRingRadius,
-			Kind = "GATE",
+			Kind = "PLATFORM",
+			WalkwayWidth = Layout.ProcessionalWidth,
 			PlatformSize = Vector3.new(290 * S, 14 * S, 240 * S),
 			Height = 0,
 			Color = Color3.fromRGB(48, 43, 64),
 			Accent = Color3.fromRGB(158, 158, 158),
-			Pillars = 6, -- torch pillars flanking the processional
-			PillarHeight = 110 * S,
 			MeshId = nil,
 		},
 		{
@@ -1488,7 +1488,6 @@ local Crossroads = {
 
 	Bridges = {
 		Width = Layout.WalkwayWidth,
-		ProcessionalWidth = Layout.ProcessionalWidth,
 		Thickness = 8 * S,
 		Raise = Layout.WalkwayRaise,
 		-- Walkways run a little INTO the surfaces they join at both ends.

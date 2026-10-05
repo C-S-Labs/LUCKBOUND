@@ -197,7 +197,7 @@ local COMMANDS: { Command } = {
 		Name = "boss",
 		Category = "LOOT",
 		Side = "SERVER",
-		Summary = "Act as if you just defeated this map's boss (repeatable).",
+		Summary = "Defeat this map's boss stand-in once; open its exit.",
 	},
 	{
 		Name = "givekey",

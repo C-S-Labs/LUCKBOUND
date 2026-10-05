@@ -88,6 +88,15 @@ the other breaks the 20-second budget, and a test will say so.
 
 ### The PortalRig
 
+Expedition entrance/exit meshes use `RiftRig` (build spec §7.8). Their source coordinates are studs:
+import at **Scale Unit: Stud / Scale: 1.0**, with `RiftHalo` heights of 15 and 21 studs respectively.
+Their generator welds and triangulates closed shells before calculating outward normals, and verifies the
+FBX round-trip dimensions and topology. Ground scar sheets face upward; motion and light remain in code.
+The owner verified Blender geometry and Studio proportions and delivered both prefabs on 2026-09-30.
+`GameConfig.Rift` records each asymmetric Scar's registration offset so the tear seats at the requested origin;
+scale remains 1. Gameplay motion and deck seating still need TESTING Test C2c. The shop stays in the south
+district; prototype expedition-gate geometry/behavior is removed from fallback builds.
+
 One shared component, instanced per use and reskinned by rarity colour only —
 never duplicated per biome. Fate Engine at 1.5×, Expedition Gate at 2×, and
 every future world portal from the same rig.
