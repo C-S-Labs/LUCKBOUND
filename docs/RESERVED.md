@@ -92,7 +92,7 @@ loot pools are constructed").
 | Declaration | Status | Consumer |
 |---|---|---|
 | `ExpeditionCore.Payout.Xp` (always 0) | RESERVED | The Fate engine rework, when an XP system exists. `payoutFor` is the one place it is filled. |
-| `GameConfig.Rift.FlowTexture` | **CONSUMED** | `RiftRig.attachEffects` sets it on every ribbon beam. Uploaded to the group 2026-10-05 (`rbxassetid://97048945584606`); it was an empty string until then. |
+| `GameConfig.Rift.FlowTexture` | **CONSUMED** | `RiftRig.attachEffects` sets it on every ribbon beam. Uploaded to the group 2026-10-05 (`rbxassetid://125599526173332`); it was an empty string until then. |
 | `GameConfig.Rift.EntrancePrefab` / `ExitPrefab` `Scale` (1.0) | RESERVED | Set to the imported scale after the owner's Studio import (`assets/source/portals/README.md`). Until the prefabs exist a blockout rift is drawn. |
 
 ## Nothing is currently ORPHANED
