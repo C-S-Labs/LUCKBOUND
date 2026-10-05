@@ -1,0 +1,1217 @@
+{
+ "group": "mid",
+ "creatures": {
+  "citadel_falcon": {
+   "model": "hubprop_citadel_falcon",
+   "class": "MEDIUM",
+   "size": [
+    28.615,
+    9.603,
+    29.525
+   ],
+   "tris": 1904,
+   "biome": [
+    "SKY_CITADEL"
+   ],
+   "parts": {
+    "hubprop_citadel_falcon__head_1": {
+     "kind": "Flap",
+     "offset": [
+      -10.185,
+      1.458,
+      0.0
+     ],
+     "hinge": [
+      -8.73,
+      0.146,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.12,
+     "rate": 0.35,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Idle"
+    },
+    "hubprop_citadel_falcon__wing_1": {
+     "kind": "Flap",
+     "offset": [
+      -0.208,
+      0.871,
+      5.27
+     ],
+     "hinge": [
+      -4.462,
+      0.631,
+      1.94
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.55,
+     "rate": 0.9,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_citadel_falcon__wingtip_1": {
+     "kind": "Flap",
+     "offset": [
+      1.167,
+      2.058,
+      10.895
+     ],
+     "hinge": [
+      -1.552,
+      1.445,
+      7.779
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.45,
+     "rate": 0.9,
+     "phase": 0.0,
+     "chain": "hubprop_citadel_falcon__wing_1",
+     "lag": 0.5,
+     "gait": "Flight"
+    },
+    "hubprop_citadel_falcon__wing_2": {
+     "kind": "Flap",
+     "offset": [
+      -0.208,
+      0.871,
+      -5.27
+     ],
+     "hinge": [
+      -4.462,
+      0.631,
+      -1.94
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.55,
+     "rate": 0.9,
+     "phase": 3.14159,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_citadel_falcon__wingtip_2": {
+     "kind": "Flap",
+     "offset": [
+      1.215,
+      2.058,
+      -10.895
+     ],
+     "hinge": [
+      -1.552,
+      1.445,
+      -7.779
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.45,
+     "rate": 0.9,
+     "phase": 3.14159,
+     "chain": "hubprop_citadel_falcon__wing_2",
+     "lag": 0.5,
+     "gait": "Flight"
+    },
+    "hubprop_citadel_falcon__tail_1": {
+     "kind": "Flap",
+     "offset": [
+      8.73,
+      -0.242,
+      0.0
+     ],
+     "hinge": [
+      6.402,
+      -0.242,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.16,
+     "rate": 0.9,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_citadel_falcon__tail_2": {
+     "kind": "Flap",
+     "offset": [
+      12.071,
+      -0.242,
+      0.0
+     ],
+     "hinge": [
+      9.506,
+      -0.242,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.2,
+     "rate": 0.9,
+     "phase": 0.0,
+     "chain": "hubprop_citadel_falcon__tail_1",
+     "lag": 0.45,
+     "gait": "Flight"
+    },
+    "hubprop_citadel_falcon__breath_1": {
+     "kind": "Pulse",
+     "offset": [
+      -6.014,
+      -1.891,
+      0.0
+     ],
+     "hinge": [
+      -4.462,
+      -0.824,
+      0.0
+     ],
+     "axis": [
+      -0.5774,
+      0.5774,
+      0.5774
+     ],
+     "amp": 0.04,
+     "rate": 0.3,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_citadel_falcon__glow_1": {
+     "kind": "Flicker",
+     "offset": [
+      1.009,
+      2.377,
+      0.0
+     ],
+     "hinge": [
+      -1.552,
+      -0.63,
+      0.0
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.3,
+     "rate": 1.6,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Always"
+    }
+   }
+  },
+  "canopy_drake": {
+   "model": "hubprop_canopy_drake",
+   "class": "MEDIUM",
+   "size": [
+    34.898,
+    10.032,
+    32.806
+   ],
+   "tris": 1784,
+   "biome": [
+    "VERDANT"
+   ],
+   "parts": {
+    "hubprop_canopy_drake__neck_1": {
+     "kind": "Flap",
+     "offset": [
+      -6.776,
+      0.816,
+      -0.008
+     ],
+     "hinge": [
+      -5.456,
+      -0.044,
+      -0.008
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.14,
+     "rate": 0.4,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.45,
+     "gait": "Idle"
+    },
+    "hubprop_canopy_drake__neck_2": {
+     "kind": "Flap",
+     "offset": [
+      -9.416,
+      1.459,
+      -0.008
+     ],
+     "hinge": [
+      -8.096,
+      0.572,
+      -0.008
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.14,
+     "rate": 0.4,
+     "phase": 0.0,
+     "chain": "hubprop_canopy_drake__neck_1",
+     "lag": 0.45,
+     "gait": "Idle"
+    },
+    "hubprop_canopy_drake__neck_3": {
+     "kind": "Flap",
+     "offset": [
+      -12.056,
+      2.124,
+      -0.008
+     ],
+     "hinge": [
+      -10.736,
+      1.276,
+      -0.008
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.14,
+     "rate": 0.4,
+     "phase": 0.0,
+     "chain": "hubprop_canopy_drake__neck_2",
+     "lag": 0.45,
+     "gait": "Idle"
+    },
+    "hubprop_canopy_drake__head_1": {
+     "kind": "Flap",
+     "offset": [
+      -13.904,
+      2.87,
+      -0.008
+     ],
+     "hinge": [
+      -13.376,
+      1.804,
+      -0.008
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.16,
+     "rate": 0.4,
+     "phase": 0.5,
+     "chain": "hubprop_canopy_drake__neck_3",
+     "lag": 0.45,
+     "gait": "Idle"
+    },
+    "hubprop_canopy_drake__tail_1": {
+     "kind": "Flap",
+     "offset": [
+      6.16,
+      0.823,
+      -0.008
+     ],
+     "hinge": [
+      4.928,
+      -0.176,
+      -0.008
+     ],
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "amp": 0.22,
+     "rate": 0.5,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.5,
+     "gait": "Always"
+    },
+    "hubprop_canopy_drake__tail_2": {
+     "kind": "Flap",
+     "offset": [
+      8.8,
+      0.693,
+      -0.008
+     ],
+     "hinge": [
+      7.568,
+      -0.176,
+      -0.008
+     ],
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "amp": 0.22,
+     "rate": 0.5,
+     "phase": 0.0,
+     "chain": "hubprop_canopy_drake__tail_1",
+     "lag": 0.5,
+     "gait": "Always"
+    },
+    "hubprop_canopy_drake__tail_3": {
+     "kind": "Flap",
+     "offset": [
+      11.44,
+      0.52,
+      -0.008
+     ],
+     "hinge": [
+      10.208,
+      -0.22,
+      -0.008
+     ],
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "amp": 0.22,
+     "rate": 0.5,
+     "phase": 0.0,
+     "chain": "hubprop_canopy_drake__tail_2",
+     "lag": 0.5,
+     "gait": "Always"
+    },
+    "hubprop_canopy_drake__tail_4": {
+     "kind": "Flap",
+     "offset": [
+      15.249,
+      0.347,
+      -0.008
+     ],
+     "hinge": [
+      12.848,
+      -0.264,
+      -0.008
+     ],
+     "axis": [
+      -0.0,
+      1.0,
+      0.0
+     ],
+     "amp": 0.22,
+     "rate": 0.5,
+     "phase": 0.0,
+     "chain": "hubprop_canopy_drake__tail_3",
+     "lag": 0.5,
+     "gait": "Always"
+    },
+    "hubprop_canopy_drake__wing_1": {
+     "kind": "Flap",
+     "offset": [
+      1.459,
+      1.231,
+      5.421
+     ],
+     "hinge": [
+      -1.672,
+      0.572,
+      2.104
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.5,
+     "rate": 0.7,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_canopy_drake__wingtip_1": {
+     "kind": "Flap",
+     "offset": [
+      4.005,
+      2.334,
+      12.417
+     ],
+     "hinge": [
+      -0.352,
+      1.776,
+      8.792
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.45,
+     "rate": 0.7,
+     "phase": 0.0,
+     "chain": "hubprop_canopy_drake__wing_1",
+     "lag": 0.55,
+     "gait": "Flight"
+    },
+    "hubprop_canopy_drake__wing_2": {
+     "kind": "Flap",
+     "offset": [
+      1.459,
+      1.231,
+      -5.437
+     ],
+     "hinge": [
+      -1.672,
+      0.572,
+      -2.12
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.5,
+     "rate": 0.7,
+     "phase": 3.14159,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_canopy_drake__wingtip_2": {
+     "kind": "Flap",
+     "offset": [
+      4.039,
+      2.334,
+      -12.391
+     ],
+     "hinge": [
+      -0.352,
+      1.776,
+      -8.808
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.45,
+     "rate": 0.7,
+     "phase": 3.14159,
+     "chain": "hubprop_canopy_drake__wing_2",
+     "lag": 0.55,
+     "gait": "Flight"
+    },
+    "hubprop_canopy_drake__breath_1": {
+     "kind": "Pulse",
+     "offset": [
+      -1.232,
+      -2.695,
+      -0.008
+     ],
+     "hinge": [
+      -1.232,
+      -0.748,
+      -0.008
+     ],
+     "axis": [
+      -0.5774,
+      0.5774,
+      0.5774
+     ],
+     "amp": 0.04,
+     "rate": 0.25,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_canopy_drake__glow_1": {
+     "kind": "Flicker",
+     "offset": [
+      0.37,
+      2.578,
+      -0.008
+     ],
+     "hinge": [
+      -0.352,
+      -0.484,
+      -0.008
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.3,
+     "rate": 1.4,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Always"
+    }
+   }
+  },
+  "aether_manta": {
+   "model": "hubprop_aether_manta",
+   "class": "LARGE",
+   "size": [
+    90.556,
+    15.8,
+    96.0
+   ],
+   "tris": 1208,
+   "biome": [
+    "ETHEREAL_SCAPE"
+   ],
+   "parts": {
+    "hubprop_aether_manta__fin_1": {
+     "kind": "Flap",
+     "offset": [
+      3.4,
+      -3.275,
+      23.0
+     ],
+     "hinge": [
+      -4.6,
+      -3.475,
+      16.0
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.32,
+     "rate": 0.18,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.6,
+     "gait": "Flight"
+    },
+    "hubprop_aether_manta__fin_2": {
+     "kind": "Flap",
+     "offset": [
+      6.9,
+      -4.2,
+      35.0
+     ],
+     "hinge": [
+      -4.6,
+      -3.475,
+      30.0
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.3,
+     "rate": 0.18,
+     "phase": 0.0,
+     "chain": "hubprop_aether_manta__fin_1",
+     "lag": 0.6,
+     "gait": "Flight"
+    },
+    "hubprop_aether_manta__fin_3": {
+     "kind": "Flap",
+     "offset": [
+      10.4,
+      -4.8,
+      44.0
+     ],
+     "hinge": [
+      -4.6,
+      -3.475,
+      40.0
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.28,
+     "rate": 0.18,
+     "phase": 0.0,
+     "chain": "hubprop_aether_manta__fin_2",
+     "lag": 0.6,
+     "gait": "Flight"
+    },
+    "hubprop_aether_manta__lobe_1": {
+     "kind": "Flap",
+     "offset": [
+      -21.349,
+      -4.066,
+      3.599
+     ],
+     "hinge": [
+      -17.6,
+      -3.975,
+      3.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.25,
+     "rate": 0.25,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Idle"
+    },
+    "hubprop_aether_manta__fin_4": {
+     "kind": "Flap",
+     "offset": [
+      3.4,
+      -3.275,
+      -23.0
+     ],
+     "hinge": [
+      -4.6,
+      -3.475,
+      -16.0
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.32,
+     "rate": 0.18,
+     "phase": 3.14159,
+     "chain": null,
+     "lag": 0.6,
+     "gait": "Flight"
+    },
+    "hubprop_aether_manta__fin_5": {
+     "kind": "Flap",
+     "offset": [
+      6.9,
+      -4.2,
+      -35.0
+     ],
+     "hinge": [
+      -4.6,
+      -3.475,
+      -30.0
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.3,
+     "rate": 0.18,
+     "phase": 3.14159,
+     "chain": "hubprop_aether_manta__fin_4",
+     "lag": 0.6,
+     "gait": "Flight"
+    },
+    "hubprop_aether_manta__fin_6": {
+     "kind": "Flap",
+     "offset": [
+      10.4,
+      -4.8,
+      -44.0
+     ],
+     "hinge": [
+      -4.6,
+      -3.475,
+      -40.0
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.28,
+     "rate": 0.18,
+     "phase": 3.14159,
+     "chain": "hubprop_aether_manta__fin_5",
+     "lag": 0.6,
+     "gait": "Flight"
+    },
+    "hubprop_aether_manta__lobe_2": {
+     "kind": "Flap",
+     "offset": [
+      -21.349,
+      -4.066,
+      -3.599
+     ],
+     "hinge": [
+      -17.6,
+      -3.975,
+      -3.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.25,
+     "rate": 0.25,
+     "phase": 3.14159,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Idle"
+    },
+    "hubprop_aether_manta__tail_1": {
+     "kind": "Flap",
+     "offset": [
+      23.65,
+      -3.775,
+      0.0
+     ],
+     "hinge": [
+      18.4,
+      -3.775,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.22,
+     "rate": 0.18,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.55,
+     "gait": "Always"
+    },
+    "hubprop_aether_manta__tail_2": {
+     "kind": "Flap",
+     "offset": [
+      34.65,
+      -3.762,
+      0.0
+     ],
+     "hinge": [
+      29.4,
+      -3.775,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.22,
+     "rate": 0.18,
+     "phase": 0.0,
+     "chain": "hubprop_aether_manta__tail_1",
+     "lag": 0.55,
+     "gait": "Always"
+    },
+    "hubprop_aether_manta__tail_3": {
+     "kind": "Flap",
+     "offset": [
+      45.65,
+      -3.749,
+      0.0
+     ],
+     "hinge": [
+      40.4,
+      -3.775,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.22,
+     "rate": 0.18,
+     "phase": 0.0,
+     "chain": "hubprop_aether_manta__tail_2",
+     "lag": 0.55,
+     "gait": "Always"
+    },
+    "hubprop_aether_manta__tail_4": {
+     "kind": "Flap",
+     "offset": [
+      57.9,
+      -3.775,
+      0.0
+     ],
+     "hinge": [
+      51.4,
+      -3.775,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.22,
+     "rate": 0.18,
+     "phase": 0.0,
+     "chain": "hubprop_aether_manta__tail_3",
+     "lag": 0.55,
+     "gait": "Always"
+    },
+    "hubprop_aether_manta__gills_1": {
+     "kind": "Pulse",
+     "offset": [
+      -6.6,
+      -7.938,
+      0.0
+     ],
+     "hinge": [
+      -6.6,
+      -6.475,
+      0.0
+     ],
+     "axis": [
+      -0.5774,
+      0.5774,
+      0.5774
+     ],
+     "amp": 0.05,
+     "rate": 0.2,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_aether_manta__glow_1": {
+     "kind": "Flicker",
+     "offset": [
+      -3.2,
+      1.925,
+      0.0
+     ],
+     "hinge": [
+      -4.6,
+      -3.475,
+      0.0
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.3,
+     "rate": 1.0,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Always"
+    }
+   }
+  },
+  "ashen_roc": {
+   "model": "hubprop_ashen_roc",
+   "class": "LARGE",
+   "size": [
+    99.5,
+    33.0,
+    105.779
+   ],
+   "tris": 2496,
+   "biome": [
+    "EMBERFALL"
+   ],
+   "parts": {
+    "hubprop_ashen_roc__neck_1": {
+     "kind": "Flap",
+     "offset": [
+      -24.4,
+      0.628,
+      0.0
+     ],
+     "hinge": [
+      -23.5,
+      -1.0,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.1,
+     "rate": 0.14,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Idle"
+    },
+    "hubprop_ashen_roc__head_1": {
+     "kind": "Flap",
+     "offset": [
+      -32.05,
+      4.771,
+      0.0
+     ],
+     "hinge": [
+      -28.5,
+      1.0,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.14,
+     "rate": 0.14,
+     "phase": 0.6,
+     "chain": "hubprop_ashen_roc__neck_1",
+     "lag": 0.5,
+     "gait": "Idle"
+    },
+    "hubprop_ashen_roc__wing_1": {
+     "kind": "Flap",
+     "offset": [
+      11.562,
+      3.251,
+      18.744
+     ],
+     "hinge": [
+      -9.5,
+      1.5,
+      8.0
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.5,
+     "rate": 0.22,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_ashen_roc__wingtip_1": {
+     "kind": "Flap",
+     "offset": [
+      13.568,
+      3.748,
+      39.542
+     ],
+     "hinge": [
+      2.5,
+      3.7,
+      27.8
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.42,
+     "rate": 0.22,
+     "phase": 0.0,
+     "chain": "hubprop_ashen_roc__wing_1",
+     "lag": 0.6,
+     "gait": "Flight"
+    },
+    "hubprop_ashen_roc__wing_2": {
+     "kind": "Flap",
+     "offset": [
+      11.562,
+      3.251,
+      -18.744
+     ],
+     "hinge": [
+      -9.5,
+      1.5,
+      -8.0
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.5,
+     "rate": 0.22,
+     "phase": 3.14159,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Flight"
+    },
+    "hubprop_ashen_roc__wingtip_2": {
+     "kind": "Flap",
+     "offset": [
+      13.681,
+      3.748,
+      -39.542
+     ],
+     "hinge": [
+      2.5,
+      3.7,
+      -27.8
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.42,
+     "rate": 0.22,
+     "phase": 3.14159,
+     "chain": "hubprop_ashen_roc__wing_2",
+     "lag": 0.6,
+     "gait": "Flight"
+    },
+    "hubprop_ashen_roc__tail_1": {
+     "kind": "Flap",
+     "offset": [
+      29.0,
+      -1.9,
+      0.0
+     ],
+     "hinge": [
+      23.5,
+      -1.9,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.14,
+     "rate": 0.22,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.5,
+     "gait": "Flight"
+    },
+    "hubprop_ashen_roc__tail_2": {
+     "kind": "Flap",
+     "offset": [
+      37.5,
+      -1.9,
+      0.0
+     ],
+     "hinge": [
+      31.5,
+      -1.9,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.14,
+     "rate": 0.22,
+     "phase": 0.0,
+     "chain": "hubprop_ashen_roc__tail_1",
+     "lag": 0.5,
+     "gait": "Flight"
+    },
+    "hubprop_ashen_roc__tail_3": {
+     "kind": "Flap",
+     "offset": [
+      47.0,
+      -1.9,
+      0.0
+     ],
+     "hinge": [
+      40.5,
+      -1.9,
+      0.0
+     ],
+     "axis": [
+      -0.0,
+      0.0,
+      1.0
+     ],
+     "amp": 0.14,
+     "rate": 0.22,
+     "phase": 0.0,
+     "chain": "hubprop_ashen_roc__tail_2",
+     "lag": 0.5,
+     "gait": "Flight"
+    },
+    "hubprop_ashen_roc__core_1": {
+     "kind": "Pulse",
+     "offset": [
+      -13.5,
+      -10.025,
+      0.0
+     ],
+     "hinge": [
+      -13.5,
+      -6.5,
+      0.0
+     ],
+     "axis": [
+      -0.5774,
+      0.5774,
+      0.5774
+     ],
+     "amp": 0.05,
+     "rate": 0.2,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Always"
+    },
+    "hubprop_ashen_roc__glow_1": {
+     "kind": "Flicker",
+     "offset": [
+      -4.9,
+      5.2,
+      0.0
+     ],
+     "hinge": [
+      0.5,
+      -2.5,
+      0.0
+     ],
+     "axis": [
+      -1.0,
+      0.0,
+      0.0
+     ],
+     "amp": 0.3,
+     "rate": 1.8,
+     "phase": 0.0,
+     "chain": null,
+     "lag": 0.0,
+     "gait": "Always"
+    }
+   }
+  }
+ }
+}
