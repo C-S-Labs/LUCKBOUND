@@ -34,15 +34,19 @@ local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local Constants = require(Root.Core.Constants)
 local GameConfig = require(Root.Core.GameConfig)
 local FlightCore = require(Root.Core.FlightCore)
+local CreatureMotionCore = require(Root.Core.CreatureMotionCore)
 
 local life: any = GameConfig.HubLayout.V2.SkyLife
 local driverCfg = life.Driver
 local gaitCfg = life.Gait
 local perchCfg = life.Perch
+local motionCfg = life.Motion
 
 local SkyTraffic = {}
 
 type Rock = { Part: BasePart, Pos: Vector3, Radius: number }
+-- the world's obstacles for FlightCore (islands and the far range), shared by every flyer
+local obstacles: { FlightCore.Obstacle } = {}
 type Sub = {
 	Part: BasePart,
 	Kind: string,
@@ -58,6 +62,7 @@ type Sub = {
 	Alpha: number,
 	BaseSize: Vector3,
 	Acc: CFrame, -- this part's hinge motion composed on its chain (rebuilt every update)
+	M: CreatureMotionCore.Part?, -- layered motion state (Flap, Pulse, Flicker)
 }
 type Flyer = {
 	Part: BasePart,
@@ -68,6 +73,9 @@ type Flyer = {
 	Yaw: number,
 	TimeOffset: number,
 	Subs: { Sub },
+	Body: CreatureMotionCore.Body,
+	MC: any, -- this class's motion profile
+	RefRate: number, -- beat rate of the main wing (0: none)
 	ScanIn: number,
 	Accum: number,
 	Parked: boolean,
@@ -159,6 +167,8 @@ function SkyTraffic.init(): ()
 		end
 
 		local flyers: { Flyer } = {}
+		local presenceGroup: { FlightCore.Flier } = {}
+		local cores: { FlightCore.Flier } = {} -- every flier's core, for the hard stop between bodies
 		-- the cloud sea turns slowly round the hub, each bank at its own pace
 		-- Each bank keeps its layer's direction but has its own character: its
 		-- pace swells and slackens on its own cycle, it eases in and out from the
@@ -212,8 +222,8 @@ function SkyTraffic.init(): ()
 				if up and guard < 16 then
 					sub.Chain = up
 					dd = depthOf(up, guard + 1) + 1
-					-- a chained part's beat follows its parent's, lagged behind it
-					sub.Phase = up.Phase - sub.Lag
+					-- a chained part's beat follows its parent's, lagged behind it, plus its own offset
+					sub.Phase = up.Phase + sub.Phase - sub.Lag
 				end
 				depth[sub] = dd
 				return dd
@@ -224,6 +234,22 @@ function SkyTraffic.init(): ()
 			table.sort(list, function(a, b)
 				return depth[a] < depth[b]
 			end)
+			for i, sub in list do
+				if sub.Kind ~= "Spin" then
+					sub.M = CreatureMotionCore.newPart(
+						sub.Kind,
+						sub.Gait,
+						sub.Amp,
+						sub.Rate,
+						sub.Phase,
+						sub.Lag,
+						{ sub.Axis.X, sub.Axis.Y, sub.Axis.Z },
+						{ sub.Offset.X, sub.Offset.Y, sub.Offset.Z },
+						{ sub.Hinge.X, sub.Hinge.Y, sub.Hinge.Z },
+						i * 1.618 + d.Size.X * 0.01
+					)
+				end
+			end
 			return list
 		end
 
@@ -269,7 +295,23 @@ function SkyTraffic.init(): ()
 						Phase = r:NextNumber(0, math.pi * 2),
 					})
 				end
+			elseif d:GetAttribute("FarRange") then
+				-- the far range: not solid to the look-ahead, but an obstacle to the planner
+				table.insert(obstacles, {
+					X = d.Position.X,
+					Y = d.Position.Y,
+					Z = d.Position.Z,
+					R = math.sqrt(d.Size.X ^ 2 + d.Size.Z ^ 2) * 0.5 * driverCfg.ObstacleShape,
+					H = d.Size.Y * 0.5 * driverCfg.ObstacleShape,
+				})
 			elseif d:GetAttribute("Backdrop") then
+				table.insert(obstacles, {
+					X = d.Position.X,
+					Y = d.Position.Y,
+					Z = d.Position.Z,
+					R = math.sqrt(d.Size.X ^ 2 + d.Size.Z ^ 2) * 0.5 * driverCfg.ObstacleShape,
+					H = d.Size.Y * 0.5 * driverCfg.ObstacleShape,
+				})
 				table.insert(
 					rocks,
 					{ Part = d, Pos = d.Position, Radius = math.max(d.Size.X, d.Size.Z) * 0.5 }
@@ -285,10 +327,11 @@ function SkyTraffic.init(): ()
 				local rng = Random.new((d:GetAttribute("WanderSeed") :: number?) or 1)
 				local class = (d:GetAttribute("SkyClass") :: string?) or "PROP"
 				local a = rng:NextNumber(0, math.pi * 2)
+				local centreAttr = d:GetAttribute("SkyCentre") :: Vector3?
 				local core = FlightCore.spawn(
 					life,
 					class,
-					d.Size.Magnitude * 0.5,
+					(d:GetAttribute("SkyRadius") :: number?) or d.Size.Magnitude * 0.5,
 					rng,
 					{
 						Cx = centre.X,
@@ -305,8 +348,18 @@ function SkyTraffic.init(): ()
 					d.Position.Y,
 					d.Position.Z,
 					a,
-					d:GetAttribute("SkyCanLand") == true
+					d:GetAttribute("SkyCanLand") == true,
+					if centreAttr then { centreAttr.X, centreAttr.Y, centreAttr.Z } else nil
 				)
+				core.Obstacles = obstacles
+				local subs = gatherSubs(d)
+				local refRate = 0
+				for _, sub in subs do
+					if sub.M and sub.M.WingLike then
+						refRate = sub.Rate
+						break
+					end
+				end
 				local f: Flyer = {
 					Part = d,
 					Core = core,
@@ -315,7 +368,10 @@ function SkyTraffic.init(): ()
 					Spin = if core.Circ > 0 then 1 else -1,
 					Yaw = rng:NextNumber(0, math.pi * 2),
 					TimeOffset = rng:NextNumber(0, 10),
-					Subs = gatherSubs(d),
+					Subs = subs,
+					Body = CreatureMotionCore.newBody(),
+					MC = motionCfg.Classes[class] or motionCfg.Classes.SMALL,
+					RefRate = refRate,
 					ScanIn = rng:NextNumber(0, driverCfg.ScanSeconds),
 					Accum = 0,
 					Parked = false,
@@ -326,6 +382,8 @@ function SkyTraffic.init(): ()
 					return findPerch(c, d.Size.Y)
 				end
 				table.insert(flyers, f)
+				table.insert(cores, core)
+				core.Neighbours = cores
 				FlightCore.pickWaypoint(core, f.Env, nil)
 			end
 		end
@@ -335,7 +393,11 @@ function SkyTraffic.init(): ()
 		castParams.FilterDescendantsInstances = solids
 		overlapParams.FilterDescendantsInstances = solids
 		for _, f in flyers do
+			FlightCore.relocate(f.Core) -- never start inside an island
 			FlightCore.pickWaypoint(f.Core, f.Env, nil)
+			if f.Core.Prof.Presence then
+				table.insert(presenceGroup, f.Core)
+			end
 		end
 		sky.ChildAdded:Connect(function(d)
 			task.wait(driverCfg.AdoptSeconds) -- let its moving pieces arrive with it
@@ -356,15 +418,19 @@ function SkyTraffic.init(): ()
 		-- hang a flyer's body and its pieces at its current pose
 		local function place(f: Flyer, dt: number)
 			local core = f.Core
-			local at = Vector3.new(core.X, core.Y, core.Z)
+			local body = f.Body
+			CreatureMotionCore.updateBody(body, core, dt, f.MC, motionCfg, f.RefRate)
+			local at = Vector3.new(core.X, core.Y + body.Heave, core.Z)
 			local cf
 			if f.Faces then
 				local hx, hy, hz = FlightCore.heading(core)
 				-- the imported meshes' noses point along -X: a quarter turn lines
-				-- them up with lookAt's forward. Bank rolls about the nose.
+				-- them up with lookAt's forward. Bank rolls about the nose; the
+				-- beat's pitch (nose up) is about the mesh's Z.
 				cf = CFrame.lookAt(at, at + Vector3.new(hx, hy, hz))
 					* CFrame.Angles(0, -math.pi / 2, 0)
 					* CFrame.Angles(-core.Bank, 0, 0)
+					* CFrame.Angles(0, 0, -body.PitchOff)
 			else
 				at += Vector3.new(0, math.sin(elapsed * 0.5 + f.TimeOffset) * f.Bob, 0)
 				f.Yaw += dt * 0.05 * f.Spin
@@ -372,33 +438,29 @@ function SkyTraffic.init(): ()
 			end
 			f.Part.CFrame = cf
 
-			-- the moving pieces: flap, spin, flicker, pulse; chained, gaited
+			-- the moving pieces, parents first (chain rule: acc = parent.acc * hinge)
 			local t = elapsed + f.TimeOffset
 			for _, s in f.Subs do
-				-- how much this gait lets the piece move right now
-				local gate = 1
-				local g = s.Gait
-				if g == "Flight" then
-					gate = core.FlapAmp
-				elseif g == "Idle" then
-					gate = core.Idle
-				elseif g == "Turn" then
-					gate = math.abs(core.BankNorm)
-				end
-				-- the phase clock: a Flight beat runs on the creature's own
-				-- speed- and climb-driven clock, everything else on real time
-				local clock = if g == "Flight" then core.GaitClock / (math.pi * 2) else t
-				local wave = math.sin(clock * s.Rate * math.pi * 2 + s.Phase)
 				local hinge = CFrame.identity
-				if s.Kind == "Spin" then
+				local m = s.M
+				if m == nil then
 					hinge = hingeAbout(s.Hinge, s.Axis, t * s.Rate + s.Phase)
-				elseif s.Kind == "Flap" then
-					local angle = if g == "Turn" then core.BankNorm * s.Amp else wave * s.Amp * gate
-					hinge = hingeAbout(s.Hinge, s.Axis, angle)
-				elseif s.Kind == "Flicker" then
-					s.Part.Transparency = s.Alpha + gaitCfg.FlickerDepth * gate * (0.5 + 0.5 * wave)
-				elseif s.Kind == "Pulse" then
-					s.Part.Size = s.BaseSize * (1 + s.Amp * wave * gate)
+				else
+					CreatureMotionCore.stepPart(
+						m,
+						body,
+						if s.Chain then s.Chain.M else nil,
+						dt,
+						f.MC,
+						motionCfg
+					)
+					if s.Kind == "Flap" then
+						hinge = hingeAbout(s.Hinge, s.Axis, m.Angle)
+					elseif s.Kind == "Flicker" then
+						s.Part.Transparency = s.Alpha + gaitCfg.FlickerDepth * m.Flick
+					elseif s.Kind == "Pulse" then
+						s.Part.Size = s.BaseSize * m.Scale
+					end
 				end
 				local acc = if s.Chain then s.Chain.Acc * hinge else hinge
 				s.Acc = acc
@@ -449,6 +511,8 @@ function SkyTraffic.init(): ()
 				playerPos = root.Position
 			end
 
+			-- colossals: at least Floor are always here, never more than Ceiling
+			FlightCore.presenceStep(presenceGroup, dt)
 			for i, f in flyers do
 				local core = f.Core
 				local prof = core.Prof
@@ -548,6 +612,7 @@ function SkyTraffic.init(): ()
 					end
 				end
 				env.SepX, env.SepY, env.SepZ = sx, sy, sz
+				env.Others = cores
 
 				FlightCore.tick(core, step, env)
 				if not core.Present then

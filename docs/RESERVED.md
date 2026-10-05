@@ -100,6 +100,7 @@ loot pools are constructed").
 | Field | Status | Consumer |
 |---|---|---|
 | `SkyCreatures.<id>.Biome` | RESERVED | Biome-weighted spawning (a creature more likely when its biome is the hub's current accent). The roster carries it from the creature sidecars (`creatures_<group>.json`) so content is not re-authored later; `Schema.validateSkyCreatures` checks it is a list. Nothing reads it yet. |
+| `Gait = "Thrust"` (a sub-part gait) | RESERVED | `CreatureMotionCore.stepPart` drives a Pulse part with it in thrust bursts tied to acceleration and speed; no sidecar uses it yet (the art workers set it on jelly bells and funnels; Flight-gait Pulse parts of a class with `ThrustGain` > 0 burst the same way). |
 
 Boat docking (`Docking`, `CanDock`, `PropCore.berthOnBox`) was removed with the boats on 2026-10-05; the boat meshes stay in `HUB_ORBITERS.rbxmx`
 and the boat `OrbiterParts` rows stay in the generated `CrossroadsV2.luau` until the owner's Studio check proves the creatures

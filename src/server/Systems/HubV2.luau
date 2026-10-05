@@ -409,16 +409,29 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 			total += SkyCreatures[id].Weight
 		end
 		local count = rng:NextInteger(prof.Min, prof.Max)
+		local chosen: { [string]: boolean } = {}
 		for k = 1, count do
 			local roll = rng:NextNumber(0, total)
 			local pick = ids[#ids]
+			local distinct = prof.Presence ~= nil and #ids > k - 1
+			local avail = 0
 			for _, id in ids do
+				if not (distinct and chosen[id]) then
+					avail += SkyCreatures[id].Weight
+				end
+			end
+			roll = rng:NextNumber(0, avail)
+			for _, id in ids do
+				if distinct and chosen[id] then
+					continue -- colossals: different species, while there are enough
+				end
+				pick = id
 				roll -= SkyCreatures[id].Weight
 				if roll <= 0 then
-					pick = id
 					break
 				end
 			end
+			chosen[pick] = true
 			local c = SkyCreatures[pick]
 			local src = findMesh(c.Model) :: BasePart
 			local p = src:Clone()
@@ -444,6 +457,12 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 			p:SetAttribute("WanderSeed", rng:NextInteger(1, 1e6))
 			p:SetAttribute("SkyClass", class)
 			p:SetAttribute("SkyCanLand", c.CanLand)
+			-- bounding sphere of the whole assembly (a long creature's centre is not its body origin)
+			local extent = math.max(c.Size.X, c.Size.Y, c.Size.Z) * s
+			p:SetAttribute("SkyRadius", extent * 0.5)
+			if c.Centre then
+				p:SetAttribute("SkyCentre", c.Centre * s)
+			end
 			p:SetAttribute("Detail", detailFor(prof.Detail, k))
 			p.Parent = sky
 			local missing = attachParts(p, s, c.Parts)
@@ -655,6 +674,7 @@ function HubV2.buildBeyond(
 		local p = src:Clone()
 		p.Size = src.Size * rng:NextNumber(f.ScaleMin, f.ScaleMax)
 		p.Color = f.Tint
+		p:SetAttribute("FarRange", true) -- an obstacle to the sky creatures' planner (SkyTraffic)
 		local a = (i + rng:NextNumber(-0.4, 0.4)) / f.Count * math.pi * 2
 		local r = rng:NextNumber(f.RadiusMin, f.RadiusMax)
 		still(

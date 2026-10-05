@@ -29,7 +29,7 @@ OUT = ROOT / "src" / "shared" / "Content" / "Hub" / "SkyCreatures.luau"
 
 CLASSES = ("TINY", "SMALL", "MEDIUM", "LARGE", "COLOSSAL")
 KINDS = ("Flap", "Spin", "Flicker", "Pulse")
-GAITS = ("Always", "Flight", "Idle", "Turn")
+GAITS = ("Always", "Flight", "Idle", "Turn", "Thrust")
 
 # Which species may perch (owner: some small/medium species only, never colossals).
 # A data flag: flip it here and regenerate.
@@ -89,6 +89,7 @@ def load_sidecars() -> dict[str, dict]:
                 "Size": c["size"],
                 "Biome": c.get("biome", []),
                 "Tris": c.get("tris"),
+                "Centre": conv(c["centre"]) if c.get("centre") else None,
                 "Parts": parts,
             }
     return out
@@ -146,7 +147,7 @@ def render(roster: dict[str, dict]) -> str:
         "-- sub-mesh of the body, in the body's own space, exactly as CrossroadsV2.OrbiterParts:",
         "-- Kind Flap | Spin | Flicker | Pulse; Chain names the part whose motion this one",
         "-- rides on (tail, neck, wing tip) and Lag its phase lag behind it; Gait says when",
-        "-- it moves (Always | Flight | Idle | Turn). CanLand: may perch on backdrop islands.",
+        "-- it moves (Always | Flight | Idle | Turn | Thrust). CanLand: may perch on backdrop islands.",
         "-- Biome is RESERVED (unread): see docs/RESERVED.md.",
         "",
         "return {",
@@ -164,6 +165,8 @@ def render(roster: dict[str, dict]) -> str:
         o.append(f"		Weight = {num(WEIGHT.get(species, 1))},")
         o.append(f"		ScaleMin = {num(lo)},")
         o.append(f"		ScaleMax = {num(hi)},")
+        if c.get("Centre") and any(abs(x) > 1e-6 for x in c["Centre"]):
+            o.append(f"		Centre = {vec(c['Centre'])},")
         o.append("		Parts = {")
         for pname in sorted(c["Parts"]):
             p = c["Parts"][pname]

@@ -132,7 +132,7 @@ head/neck motion, body undulation by chained segments, breathing (`Pulse`), glow
 
 `Always` continuous; `Flight` wing/tail cycle whose rate scales with speed and climb and which pauses into glides on
 a per-class schedule; `Idle` breathing/tail flick while perched or hovering; `Turn` additional lean/tail swing with
-bank. Mass cue: tiny = fast shallow beats, colossal = very slow deep beats, turning radii and accelerations by class.
+bank; `Thrust` (round 2) a Pulse part's burst train tied to acceleration and speed. Mass cue: tiny = fast shallow beats, colossal = very slow deep beats, turning radii and accelerations by class.
 
 ### 4.4 Hub geometry worker
 

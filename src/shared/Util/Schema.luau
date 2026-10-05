@@ -1468,9 +1468,43 @@ local SKY_BAND_FIELDS = {
 	"SpeedMax",
 }
 
+-- Optional per-class planner numbers (FlightCore reads them when present).
+local SKY_AVOID_FIELDS = {
+	"AvoidRadiusScale",
+	"AvoidMargin",
+	"HubClearanceExtentScale",
+	"OverheadExtentScale",
+	"OverpassChance",
+}
+
+-- Every class's motion profile (Core/CreatureMotionCore) carries these.
+local SKY_MOTION_FIELDS = {
+	"DownFrac",
+	"GlideHold",
+	"GlideBias",
+	"ClimbBias",
+	"FlareAmp",
+	"HeaveScale",
+	"HeaveMax",
+	"PitchBeat",
+	"NoiseAmp",
+	"NoiseHz",
+	"AmpScale",
+	"RateScale",
+	"InertiaGain",
+	"FollowTau",
+	"LookGain",
+	"IdleInFlight",
+	"ThrustHz",
+	"ThrustGain",
+	"AccelKick",
+	"LegExtend",
+	"HoverDangle",
+}
+
 -- The sub-part kinds and gaits a creature part may name (Content/Hub/SkyCreatures).
 local SKY_PART_KINDS = { Flap = true, Spin = true, Flicker = true, Pulse = true }
-local SKY_PART_GAITS = { Always = true, Flight = true, Idle = true, Turn = true }
+local SKY_PART_GAITS = { Always = true, Flight = true, Idle = true, Turn = true, Thrust = true }
 
 local function finite(v: any): boolean
 	return type(v) == "number" and v == v and v > -math.huge and v < math.huge
@@ -1579,13 +1613,42 @@ function Schema.validateSkyCreatures(creatures: any, skyLife: any): (boolean, { 
 			local pr = p.Presence
 			if
 				type(pr) ~= "table"
-				or not (finite(pr.StartPresent) and finite(pr.PresentMin) and finite(pr.PresentMax) and finite(
-					pr.AbsentMin
-				) and finite(pr.AbsentMax))
+				or not (finite(pr.Floor) and finite(pr.Ceiling) and finite(pr.PresentMin) and finite(
+					pr.PresentMax
+				) and finite(pr.AbsentMin) and finite(pr.AbsentMax))
 				or pr.PresentMin > pr.PresentMax
 				or pr.AbsentMin > pr.AbsentMax
+				or pr.Floor < 1
+				or pr.Ceiling < pr.Floor
 			then
-				table.insert(errors, `{label}.Presence is malformed`)
+				table.insert(errors, `{label}.Presence is malformed (Floor >= 1, Ceiling >= Floor)`)
+			end
+		end
+		for _, key in SKY_AVOID_FIELDS do
+			if p[key] ~= nil and not finite(p[key]) then
+				table.insert(errors, `{label}.{key} must be a number`)
+			end
+		end
+		if name ~= "PROP" and not finite(p.AvoidRadiusScale) then
+			table.insert(errors, `{label}.AvoidRadiusScale must be a number (obstacle inflation)`)
+		end
+		local mc = if skyLife.Motion then skyLife.Motion.Classes else nil
+		if name ~= "PROP" and (type(mc) ~= "table" or type(mc[name]) ~= "table") then
+			table.insert(errors, `SkyLife.Motion.Classes.{name} is missing`)
+		elseif name ~= "PROP" then
+			for _, key in SKY_MOTION_FIELDS do
+				if not finite(mc[name][key]) then
+					table.insert(errors, `SkyLife.Motion.Classes.{name}.{key} must be a number`)
+				end
+			end
+			if
+				finite(mc[name].DownFrac)
+				and (mc[name].DownFrac <= 0.05 or mc[name].DownFrac >= 0.95)
+			then
+				table.insert(
+					errors,
+					`SkyLife.Motion.Classes.{name}.DownFrac must be in (0.05, 0.95)`
+				)
 			end
 		end
 	end
@@ -1650,6 +1713,9 @@ function Schema.validateSkyCreatures(creatures: any, skyLife: any): (boolean, { 
 				`{label}: {c.Class} creatures never land, so CanLand must be false`
 			)
 		end
+		if c.Centre ~= nil and typeof(c.Centre) ~= "Vector3" then
+			table.insert(errors, `{label}: Centre must be a Vector3`)
+		end
 		if type(c.Biome) ~= "table" then
 			table.insert(errors, `{label}: Biome must be a list`)
 		end
@@ -1680,7 +1746,7 @@ function Schema.validateSkyCreatures(creatures: any, skyLife: any): (boolean, { 
 			if not SKY_PART_GAITS[part.Gait] then
 				table.insert(
 					errors,
-					`{pl}: Gait '{tostring(part.Gait)}' is not Always/Flight/Idle/Turn`
+					`{pl}: Gait '{tostring(part.Gait)}' is not Always/Flight/Idle/Turn/Thrust`
 				)
 			end
 			for _, key in { "Offset", "Hinge", "Axis" } do

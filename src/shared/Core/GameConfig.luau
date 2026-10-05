@@ -492,9 +492,10 @@ local GameConfig = {
 					"HUB_CREATURES_SMALL",
 					"HUB_CREATURES_MID",
 					"HUB_CREATURES_COLOSSAL",
+					"HUB_CREATURES_COLOSSAL2",
 				},
 				HubRadius = 330, -- the hub's reach from its axis (districts + plaza); keep-outs below are this plus a margin
-				MaxParts = 16, -- moving sub-meshes per creature (the contract allows a colossal 12)
+				MaxParts = 40, -- moving sub-meshes per creature (the contract allows a colossal 12)
 				ClassOrder = { "TINY", "SMALL", "MEDIUM", "LARGE", "COLOSSAL" },
 				-- Kinematics shared by every class (FlightCore.advance / tick).
 				Flight = {
@@ -520,7 +521,7 @@ local GameConfig = {
 					SeparationStrength = 2.5,
 					-- waypoints
 					WaypointPad = 15,
-					WaypointTries = 12,
+					WaypointTries = 24,
 					AcrossChance = 0.15, -- straight across, over or through the hub
 					AcrossSpread = 0.6,
 					BackChance = 0.15, -- doubling back
@@ -533,6 +534,28 @@ local GameConfig = {
 					FallbackAngle = 0.5,
 					ArriveTurnScale = 0.8, -- arrived = within max(ArriveMin, this x turn radius)
 					StuckSeconds = 8,
+					GuardMargin = 4, -- the hard stop keeps this much beyond the body's own sphere
+					LegPad = 20, -- extra clearance a waypoint leg keeps from obstacles
+					RelocateTries = 40, -- tries to find a clear start or arrival
+					FallbackReach = 2, -- no clear waypoint: straight on this x the turn radius ...
+					FallbackClimb = 0.3, -- ... climbing at this slope
+					OverpassLead = 1.2, -- overpass entry sits this x the turn radius outside the keep-out edge
+					OverpassPitchUse = 0.6, -- fraction of MaxPitch an overpass climb may use
+				},
+				-- Obstacle avoidance (FlightCore.obstacleSteer): look-ahead = turn radius x TurnScale
+				-- + speed x Lead + SizeScale x the obstacle's radius, sampled at Samples points.
+				Avoid = {
+					TurnScale = 1.6,
+					Lead = 6,
+					SizeScale = 0.5,
+					Samples = 8,
+					Weight = 6,
+					Floor = 0.5,
+					HoldScale = 0.6, -- steer persists this x the turn time (turn radius / speed) after the obstacle leaves the look-ahead
+					RiseScale = 0.3, -- and builds up in this fraction of that
+					ActiveSteer = 0.5, -- a remaining steer above this still counts as threatened (eases speed)
+					PocketRatio = 0.35, -- pushed both ways (net below this x the total): turn back
+					VerticalBias = 0.5, -- go over/under when that exit is this x as short as the sideways one
 				},
 				-- The client driver (SkyTraffic).
 				Driver = {
@@ -552,6 +575,7 @@ local GameConfig = {
 					SettleSeconds = 2, -- let HubEffects mark what the device hides
 					AdoptSeconds = 0.5,
 					HiddenY = -100000, -- where a creature that is away is parked
+					ObstacleShape = 0.9, -- an island's bounding cylinder is this fraction of its box (meshes do not fill the corners)
 				},
 				-- Sub-part animation (the Kinds Flap, Spin, Flicker, Pulse; gaits).
 				Gait = {
@@ -563,6 +587,135 @@ local GameConfig = {
 					AmpSmoothing = 2.5,
 					IdleSmoothing = 2,
 					FlickerDepth = 0.35,
+					AccelSmoothing = 1.5,
+					ApproachFlare = 0.4, -- flare level while on the final approach
+					FlareSmoothing = 2.5,
+				},
+				-- Layered creature animation (Core/CreatureMotionCore), per class: mass appropriate.
+				-- Stroke*: asymmetric wing beat (fast down, slow up). Noise*: per-part wobble.
+				-- Inertia*: tails/tendrils trail behind turns, climbs and acceleration, each
+				-- segment FollowTau seconds behind the one before it. Thrust*: jelly-like pulse bursts.
+				Motion = {
+					StrokeSign = 1, -- +1: a positive hinge angle swings a wing DOWN (flip if Studio shows the beat inverted)
+					PitchRef = 0.15, -- rad/s of pitch change counted as a full climb signal
+					DragSpeed = 0.5, -- steady backward trail of loose parts at cruise speed
+					Classes = {
+						TINY = {
+							DownFrac = 0.4,
+							GlideHold = 0.2,
+							GlideBias = 0.25,
+							ClimbBias = 0.2,
+							FlareAmp = 0.35,
+							HeaveScale = 0.06,
+							HeaveMax = 0.5,
+							PitchBeat = 0.05,
+							NoiseAmp = 0.12,
+							NoiseHz = 1.7,
+							AmpScale = 0.9,
+							RateScale = 1,
+							InertiaGain = 1.2,
+							FollowTau = 0.12,
+							LookGain = 1.5,
+							IdleInFlight = 0.7,
+							ThrustHz = 2.5,
+							ThrustGain = 0,
+							AccelKick = 0,
+							LegExtend = 1,
+							HoverDangle = 0.2,
+						},
+						SMALL = {
+							DownFrac = 0.4,
+							GlideHold = 0.2,
+							GlideBias = 0.3,
+							ClimbBias = 0.2,
+							FlareAmp = 0.35,
+							HeaveScale = 0.06,
+							HeaveMax = 1.2,
+							PitchBeat = 0.06,
+							NoiseAmp = 0.12,
+							NoiseHz = 1.2,
+							AmpScale = 1,
+							RateScale = 1,
+							InertiaGain = 1.2,
+							FollowTau = 0.2,
+							LookGain = 1.5,
+							IdleInFlight = 0.7,
+							ThrustHz = 1.5,
+							ThrustGain = 0,
+							AccelKick = 0,
+							LegExtend = 1,
+							HoverDangle = 0.2,
+						},
+						MEDIUM = {
+							DownFrac = 0.38,
+							GlideHold = 0.25,
+							GlideBias = 0.35,
+							ClimbBias = 0.25,
+							FlareAmp = 0.4,
+							HeaveScale = 0.07,
+							HeaveMax = 2.5,
+							PitchBeat = 0.06,
+							NoiseAmp = 0.1,
+							NoiseHz = 0.7,
+							AmpScale = 1.1,
+							RateScale = 1,
+							InertiaGain = 1.3,
+							FollowTau = 0.4,
+							LookGain = 1.5,
+							IdleInFlight = 0.7,
+							ThrustHz = 0.6,
+							ThrustGain = 0,
+							AccelKick = 0,
+							LegExtend = 1,
+							HoverDangle = 0.15,
+						},
+						LARGE = {
+							DownFrac = 0.36,
+							GlideHold = 0.5,
+							GlideBias = 0.4,
+							ClimbBias = 0.25,
+							FlareAmp = 0.4,
+							HeaveScale = 0.07,
+							HeaveMax = 6,
+							PitchBeat = 0.05,
+							NoiseAmp = 0.1,
+							NoiseHz = 0.4,
+							AmpScale = 1.2,
+							RateScale = 1.5,
+							InertiaGain = 1.4,
+							FollowTau = 0.9,
+							LookGain = 1.5,
+							IdleInFlight = 0.7,
+							ThrustHz = 0.3,
+							ThrustGain = 2,
+							AccelKick = 1.5,
+							LegExtend = 1,
+							HoverDangle = 0.1,
+						},
+						COLOSSAL = {
+							DownFrac = 0.34,
+							GlideHold = 0.5,
+							GlideBias = 0.3,
+							ClimbBias = 0.2,
+							FlareAmp = 0,
+							HeaveScale = 0.01,
+							HeaveMax = 12,
+							PitchBeat = 0.02,
+							NoiseAmp = 0.15,
+							NoiseHz = 0.08,
+							AmpScale = 2,
+							RateScale = 2.2,
+							InertiaGain = 2,
+							FollowTau = 3,
+							LookGain = 1.5,
+							IdleInFlight = 1,
+							ThrustHz = 0.12,
+							ThrustGain = 5,
+							AccelKick = 4,
+							LegExtend = 1,
+							HoverDangle = 0,
+						},
+					},
 				},
 				-- Landing (small and medium creatures that are CanLand only).
 				Perch = {
@@ -634,6 +787,8 @@ local GameConfig = {
 						SeparationScale = 2,
 						UpdateHz = 10,
 						ActivationRadius = 250,
+						AvoidRadiusScale = 1.5,
+						AvoidMargin = 8,
 						ArriveMin = 12,
 						PerchChance = 0.35,
 						BeatScale = 1,
@@ -671,9 +826,11 @@ local GameConfig = {
 						SeparationScale = 2,
 						UpdateHz = 10,
 						ActivationRadius = 350,
+						AvoidRadiusScale = 1.4,
+						AvoidMargin = 12,
 						ArriveMin = 20,
 						PerchChance = 0.25,
-						BeatScale = 0.8,
+						BeatScale = 1,
 						FlapMin = 2,
 						FlapMax = 6,
 						GlideMin = 1.5,
@@ -708,9 +865,11 @@ local GameConfig = {
 						SeparationScale = 2,
 						UpdateHz = 10,
 						ActivationRadius = 500,
+						AvoidRadiusScale = 1.3,
+						AvoidMargin = 30,
 						ArriveMin = 40,
 						PerchChance = 0.15,
-						BeatScale = 0.6,
+						BeatScale = 1,
 						FlapMin = 3,
 						FlapMax = 8,
 						GlideMin = 3,
@@ -745,9 +904,11 @@ local GameConfig = {
 						SeparationScale = 1.6,
 						UpdateHz = 8,
 						ActivationRadius = 600,
+						AvoidRadiusScale = 1.15,
+						AvoidMargin = 30,
 						ArriveMin = 60,
 						PerchChance = 0,
-						BeatScale = 0.4,
+						BeatScale = 1,
 						FlapMin = 6,
 						FlapMax = 14,
 						GlideMin = 6,
@@ -755,48 +916,55 @@ local GameConfig = {
 						GlideChance = 0.8,
 					},
 					COLOSSAL = {
-						Min = 1,
-						Max = 2,
+						Min = 2,
+						Max = 3,
 						Detail = 2,
 						SizeMin = 520, -- longest body dimension a creature of this class may have, studs
-						SizeMax = 760,
-						RadiusMin = 2200,
-						RadiusMax = 3200,
-						HeightMin = -150,
-						HeightMax = 450,
+						SizeMax = 920,
+						RadiusMin = 850,
+						RadiusMax = 1900,
+						HeightMin = 150,
+						HeightMax = 1000,
 						SpeedMin = 8,
 						SpeedMax = 14,
 						Accel = 1.5,
-						TurnRadiusScale = 2.2,
-						TurnRadiusMin = 500,
-						TurnRadiusMax = 1400,
+						TurnRadiusScale = 1.2,
+						TurnRadiusMin = 350,
+						TurnRadiusMax = 900,
 						MaxBank = 0.12,
-						MaxPitch = 0.2,
+						MaxPitch = 0.3,
 						MinSpeedScale = 0.75,
-						HubClearance = 1800,
-						OverheadMinY = 20000,
+						HubClearance = 330,
+						OverheadMinY = 500,
 						CloseApproach = 0,
 						CloseRadius = 0,
 						CloseHeightMin = 0,
 						CloseHeightMax = 0,
 						SeparationScale = 1.2,
 						UpdateHz = 4,
-						ActivationRadius = 1500,
+						ActivationRadius = 2500,
+						AvoidRadiusScale = 1.2,
+						AvoidMargin = 120,
+						HubClearanceExtentScale = 1,
+						OverheadExtentScale = 0.8,
+						OverpassChance = 0.3,
 						ArriveMin = 150,
 						PerchChance = 0,
-						BeatScale = 0.25,
+						BeatScale = 1,
 						FlapMin = 12,
 						FlapMax = 30,
 						GlideMin = 10,
 						GlideMax = 30,
 						GlideChance = 1,
-						-- rare: present for a while, then away for a long while
+						-- at least Floor are always present, never more than Ceiling; a colossal
+						-- may leave (and another arrive) once it has been present PresentMin..Max
 						Presence = {
-							StartPresent = 0.5,
-							PresentMin = 600,
-							PresentMax = 1200,
-							AbsentMin = 900,
-							AbsentMax = 2400,
+							Floor = 1,
+							Ceiling = 3,
+							PresentMin = 900,
+							PresentMax = 2000,
+							AbsentMin = 60,
+							AbsentMax = 300,
 						},
 					},
 					-- Everything in Orbiters that is not a creature: isles, clouds,
@@ -820,6 +988,8 @@ local GameConfig = {
 						SeparationScale = 1,
 						UpdateHz = 15,
 						ActivationRadius = 1500,
+						AvoidRadiusScale = 1,
+						AvoidMargin = 10,
 						ArriveMin = 40,
 						PerchChance = 0,
 						BeatScale = 1,
