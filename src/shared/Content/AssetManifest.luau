@@ -2768,6 +2768,19 @@ local ENTRIES: { [string]: AssetEntry } = {
 	},
 
 	-- === Hub prefabs =============================================
+	-- Expedition models are loaded by name; MeshIds live in the saved prefab.
+	EXPEDITION_ENTRANCE = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/rbxm/prefabs/EXPEDITION_ENTRANCE.rbxmx",
+		Notes = "Delivered entrance rift: 33 MeshParts, 15-stud tear, Stud / 1.0 import. Loaded as a local prefab.",
+	},
+	EXPEDITION_EXIT = {
+		AssetId = "",
+		Status = "PLACEHOLDER",
+		Source = "assets/rbxm/prefabs/EXPEDITION_EXIT.rbxmx",
+		Notes = "Delivered exit rift: 45 MeshParts, 21-stud tear, Stud / 1.0 import. Loaded as a local prefab.",
+	},
 	-- Authored pieces of the Crossroads, synced to ServerStorage by Rojo and
 	-- cloned by Util/PrefabLoader. Like the map entries below, AssetId stays
 	-- empty forever: a prefab is a Model of many MeshParts, so the loader

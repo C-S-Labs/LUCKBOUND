@@ -5,7 +5,7 @@ return {
 	WingedSentinel = {
 		Color = Color3.fromRGB(110, 235, 255),
 		Width = 0.012, -- strand width, metres (scaled to the model)
-		Texture = "rbxassetid://105229129478403", -- assets/textures/lightning_strip.png (uploaded 2026-09-25)
+		Texture = "rbxassetid://99323739536569", -- assets/textures/lightning_strip.png (group-owned, 2026-10-05)
 		TextureSpeed = 2.5,
 		SlideMetres = 0.076, -- how far each blade half slides open when charged
 		-- two anchors and their distance in metres: measures the model scale at run time

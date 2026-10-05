@@ -163,6 +163,10 @@ local GameConfig = {
 		DefaultDurationSeconds = 720,
 		ReturnGraceSeconds = 10,
 
+		-- Build spec §7.8. What a run pays when the boss was NOT cleared, as a
+		-- fraction of the full Fate award. Placeholder for playtest tuning.
+		EarlyExitFraction = 0.5,
+
 		-- Generated maps are built high above the hub rather than beside it.
 		-- The hub's scenery reaches HubLayout.VisualExtent (4000 studs) in the
 		-- X/Z plane, so anything at ground level would be visible from the
@@ -260,12 +264,10 @@ local GameConfig = {
 		SpawnHeight = 10, -- above a chunk floor, when placing the character
 
 		TimerSyncSeconds = 5,
-		-- The return portal on the arrival chunk. Small: it is a door home,
-		-- not a monument, and it must not upstage the Sky Temple.
-		ReturnPortalScale = 3.0,
-		-- Must exceed the return plinth's radius (PlinthDiameter * scale / 2)
-		-- or the way home is unusable from on top of it -- the same mistake
-		-- the Expedition Gate shipped with. Asserted by test.
+		-- How far away a rift's prompt (entrance and exit) can be used from.
+		-- Must exceed the rift's scar radius (Rift.Blockout.*.ScarRadius) or
+		-- the way home is unusable from on top of it -- the same mistake the
+		-- Expedition Gate shipped with. Asserted by test.
 		ReturnPromptDistance = 40,
 
 		-- === EXPEDITIONS AS THEIR OWN SERVER ================================
@@ -399,11 +401,7 @@ local GameConfig = {
 		-- under the dais lip and the player steps up onto it.
 		WalkwayRaise = 1.5 * WORLD_SCALE, -- studs above the lower plaza ring
 
-		-- The invisible pad the Gate's ENTER prompt lives on, as a multiple of
-		-- the portal's scale, and how far above the platform it floats.
-		GateAnchorSpan = 8,
-		GateAnchorLift = 2 * WORLD_SCALE,
-		ProcessionalWidth = 72 * WORLD_SCALE, -- the Expedition Gate approach is wider
+		ProcessionalWidth = 72 * WORLD_SCALE, -- the shop approach is wider
 		-- 400, not 420: the plaza lost 25 studs of radius and a zone platform
 		-- must not hang off the edge of the floor it stands on. Furthest
 		-- platform edge is now 400 + 160 = 560 against a 575-stud plaza.
@@ -664,6 +662,82 @@ local GameConfig = {
 		},
 	},
 
+	-- THE EXPEDITION RIFTS (build spec §7.8): the entrance and the exit. The
+	-- meshes are the shape; everything below is the motion and the light, so a
+	-- designer tunes how a rift feels without touching a System.
+	Rift = {
+		-- The exit is always this colour; the entrance takes the biome's rarity.
+		-- Crimson, not orange: Mythic is FF7A1A and must not read as the exit.
+		ExitColor = Color3.fromRGB(226, 32, 64),
+		-- assets/textures/rift_flow.png, uploaded to the group 2026-10-05. Empty
+		-- means the beams draw as plain glowing ribbons.
+		FlowTexture = "rbxassetid://97048945584606",
+		FlowTextureSpeed = 0.6,
+
+		-- Prefab keys and imported scale, recorded by the owner after the Studio
+		-- import (assets/source/portals/README.md). With no prefab a blockout
+		-- rift is drawn instead.
+		-- Measured from Scar to the tear's ground origin in the saved prefabs.
+		-- Scar is an asymmetric mesh: its bounding-box centre is not the origin.
+		EntrancePrefab = {
+			AssetKey = "EXPEDITION_ENTRANCE",
+			Scale = 1.0,
+			AnchorOffset = Vector3.new(0.0840454, -0.0540028, -0.9318314),
+		},
+		ExitPrefab = {
+			AssetKey = "EXPEDITION_EXIT",
+			Scale = 1.0,
+			AnchorOffset = Vector3.new(-1.2360306, -0.0540009, 0.0560227),
+		},
+		-- Blockout dimensions (studs), matching the authored meshes.
+		Blockout = {
+			ENTRANCE = { Height = 15, Width = 6.4, Thickness = 1.1, ScarRadius = 6.5 },
+			EXIT = { Height = 21, Width = 9, Thickness = 1.5, ScarRadius = 9.5 },
+		},
+
+		-- THE LOOP, once a rift is open.
+		BreathSeconds = 3.4,
+		BreathAmount = 0.06, -- width and thickness only; the tip stays on the deck
+		-- Fragments drift OUTWARD from their home and back, never inward: the
+		-- lane in front of the tear must stay empty (walk-through path).
+		-- Big enough to READ as floating from across the arena: the first values
+		-- (0.9 / 0.7 / 0.55) were under a stud and looked static (owner, 2026-10-05).
+		FragmentDriftOut = 2.6,
+		FragmentBob = 1.7,
+		FragmentSpeed = 0.85, -- rad/s
+		-- A gentle tumble of each rock about its own centre (radians, +/-), so
+		-- the fragments turn in the light as well as drifting.
+		FragmentTumble = 0.4,
+		HaloTransparency = 0.72,
+		MidTransparency = 0.45,
+		CoreTransparency = 0.12,
+		EdgeShimmer = 0.18, -- transparency swing on the crystal lips
+		ScarGlowPulse = 0.25,
+
+		-- THE EXIT MATERIALISES. Windows are fractions of MaterialiseSeconds.
+		MaterialiseSeconds = 5.0,
+		Phases = {
+			Seeds = { 0.0, 0.3 }, -- cracks glow, motes gather
+			Gather = { 0.1, 0.65 }, -- fragments fly in from the sides
+			Split = { 0.35, 0.85 }, -- the tear opens from the middle
+			Bloom = { 0.7, 1.0 }, -- one bright pulse, then it settles
+		},
+		GatherDistance = 34,
+		BloomBurst = 24, -- particles emitted at the bloom
+		-- Rifts stand on the walk surface found by a ray from this far above the
+		-- map's walk plane, so a chunk whose floor rises or dips is still flush.
+		DeckProbeHeight = 6,
+		DeckProbeDepth = 60,
+		PromptHoldSeconds = 0.4,
+
+		LightRange = 40,
+		IdleBrightness = 1.3,
+		BloomBrightness = 4.5,
+		MoteRate = 10,
+		RibbonCount = 4,
+		RibbonWidth = 0.7,
+	},
+
 	-- Shared PortalRig. Biome Blueprint §1.3.
 	Portal = {
 		OuterRingRadius = 9,
@@ -768,7 +842,6 @@ local GameConfig = {
 		-- proportionally like the real thing rather than like a different
 		-- game -- and the platform the walkways meet is the same either way.
 		FateEngineScale = 1.25 * WORLD_SCALE,
-		ExpeditionGateScale = 8.0 * WORLD_SCALE,
 	},
 
 	Events = {

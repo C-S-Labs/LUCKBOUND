@@ -20,6 +20,7 @@ local ChunkKitCore = __require("ChunkKitCore")
 local ScenarioCore = __require("ScenarioCore")
 local Scenarios = __require("Scenarios")
 local ExpeditionCore = __require("ExpeditionCore")
+local RiftCore = __require("RiftCore")
 local Chunks = __require("Chunks")
 local Menu = __require("Menu")
 local Cinematics = __require("Cinematics")
@@ -853,8 +854,8 @@ do
 		)
 	)
 	check(
-		"the gate processional is wider than a walkway",
-		Crossroads.Bridges.ProcessionalWidth > Crossroads.Bridges.Width
+		"the shop approach is wider than a walkway",
+		Crossroads.Districts[3].WalkwayWidth > Crossroads.Bridges.Width
 	)
 
 	-- === SCALE BUDGET =============================================
@@ -968,13 +969,13 @@ do
 			> GameConfig.Portal.PlinthDiameter * GameConfig.Portal.FateEngineScale * 0.5
 	)
 	check(
-		"the gate processional is wider than a walkway",
-		Crossroads.Bridges.ProcessionalWidth > Crossroads.Bridges.Width
+		"the shop approach is wider than a walkway",
+		Crossroads.Districts[3].WalkwayWidth > Crossroads.Bridges.Width
 	)
 
 	-- Every zone must have a builder, or HubBuilder asserts at boot.
 	local KNOWN_KINDS =
-		{ AMPHITHEATRE = true, ROTUNDA = true, GATE = true, YARD = true, OBSERVATORY = true }
+		{ AMPHITHEATRE = true, ROTUNDA = true, PLATFORM = true, YARD = true, OBSERVATORY = true }
 	local kindsOk = true
 	local badKind
 	for _, d in Crossroads.Districts do
@@ -1111,7 +1112,7 @@ do
 		) >= portal.SpinUpSeconds
 	)
 
-	check("the gate is the larger portal", portal.ExpeditionGateScale > portal.FateEngineScale)
+	check("the obsolete gate scale is removed", portal.ExpeditionGateScale == nil)
 
 	-- Blueprint §1.1 is declared the single source of truth for rarity colour.
 	local BLUEPRINT = {
@@ -2975,16 +2976,9 @@ do
 			Reach = GameConfig.UI.PromptActivationDistance,
 		},
 		{
-			Name = "Expedition Gate",
-			Scale = portal.ExpeditionGateScale,
+			Name = "Large rig regression",
+			Scale = portal.MaxPlinthHeight / portal.PlinthHeight + 1,
 			Reach = GameConfig.UI.PromptActivationDistance,
-		},
-		-- The way home out of an expedition is the same rig at a smaller
-		-- scale, and would fail the same way if nobody checked.
-		{
-			Name = "Return portal",
-			Scale = GameConfig.Expedition.ReturnPortalScale,
-			Reach = GameConfig.Expedition.ReturnPromptDistance,
 		},
 	}
 
@@ -3011,8 +3005,8 @@ do
 	end
 	check(
 		"the plinth height cap is what makes that true at any scale",
-		portal.PlinthHeight * portal.ExpeditionGateScale > portal.MaxPlinthHeight,
-		"the cap is inert -- it should be binding at the Gate's scale"
+		portal.PlinthHeight * PORTALS[2].Scale > portal.MaxPlinthHeight,
+		"the cap is inert -- it should be binding at the larger test scale"
 	)
 
 	-- 3. THE PLAZA IS A FLOOR, NOT A COLUMN.
@@ -3151,7 +3145,7 @@ do
 			hasGate = true
 		end
 	end
-	check("the EXPEDITION_GATE district exists (ensureContract asserts on it)", hasGate)
+	check("the shop district keeps its travel Id", hasGate)
 
 	-- 7. NOTHING MAY ENCIRCLE THE FATE ENGINE.
 	-- The Global Observatory's spiral access was a 2.5-turn helix at radius
@@ -4638,8 +4632,7 @@ do
 		Crossroads.Shell.GateAnchorTop == nil
 	)
 
-	-- The district itself still exists in content: the EXPEDITION_GATE ->
-	-- SHOP rename is a separate, still-ungated change.
+	-- The shop keeps its legacy district Id for travel, without gate behavior.
 	local ids = {}
 	for _, d in Crossroads.Districts do
 		ids[d.Id] = true
@@ -7861,6 +7854,317 @@ do
 	)
 end
 
+group("Expedition portal guards and placements (build spec §7.8)")
+do
+	local function allowed(overrides)
+		local opts = { Member = true, Alive = true, Open = true, Distance = 1 }
+		for key, value in overrides or {} do
+			opts[key] = value
+		end
+		return ExpeditionCore.canUsePortal(opts, GameConfig)
+	end
+	check("a living member at an open portal can leave", allowed())
+	check("a different expedition cannot use this portal", not allowed({ Member = false }))
+	check("a dead character cannot take a cleared payout", not allowed({ Alive = false }))
+	check("sealed or materialising exits cannot be used", not allowed({ Open = false }))
+	check("forged distant prompt triggers are rejected", not allowed({ Distance = 1e9 }))
+	check(
+		"the exact prompt boundary is accepted",
+		allowed({ Distance = GameConfig.Expedition.ReturnPromptDistance })
+	)
+	check(
+		"just outside the prompt boundary is rejected",
+		not allowed({ Distance = GameConfig.Expedition.ReturnPromptDistance + 0.01 })
+	)
+	check("NaN distance is rejected", not allowed({ Distance = 0 / 0 }))
+	check("infinite distance is rejected", not allowed({ Distance = math.huge }))
+	check("negative distance is rejected", not allowed({ Distance = -1 }))
+	check(
+		"a missing character position is rejected",
+		not ExpeditionCore.canUsePortal({ Member = true, Alive = true, Open = true }, GameConfig)
+	)
+
+	local function valid(placement, worldId)
+		local id = worldId or "VERDANT_VALLEY"
+		return Schema.validatePortals({ [id] = { Id = id, Entrance = placement } }, Chunks, Worlds)
+	end
+	check("no placement file is required", Schema.validatePortals({}, Chunks, Worlds))
+	check(
+		"chunk-local portal offsets are accepted",
+		valid({ Chunk = "VV_ENTRY_DAWN_MEADOW", Offset = Vector3.new(4, 0, -8) })
+	)
+	check(
+		"unknown placement chunks are rejected",
+		not valid({ Chunk = "MISSING", Offset = Vector3.zero })
+	)
+	check(
+		"cross-world placement chunks are rejected",
+		not valid({ Chunk = "VV_ENTRY_DAWN_MEADOW", Offset = Vector3.zero }, "SKY_CITADEL")
+	)
+	check(
+		"table offsets cannot impersonate Vector3",
+		not valid({ Chunk = "VV_ENTRY_DAWN_MEADOW", Offset = { X = 0, Y = 0, Z = 0 } })
+	)
+	check(
+		"non-finite placement offsets are rejected",
+		not valid({ Chunk = "VV_ENTRY_DAWN_MEADOW", Offset = Vector3.new(math.huge, 0, 0) })
+	)
+	check(
+		"placement typos fail validation",
+		not Schema.validatePortals(
+			{ VERDANT_VALLEY = { Id = "VERDANT_VALLEY", Entrnace = {} } },
+			Chunks,
+			Worlds
+		)
+	)
+	local shop
+	for _, district in Crossroads.Districts do
+		check("no district builds a prototype gate", district.Kind ~= "GATE")
+		if district.Id == "EXPEDITION_GATE" then
+			shop = district
+		end
+	end
+	check(
+		"the shop survives without a portal",
+		shop and shop.Name == "Shop" and shop.Kind == "PLATFORM" and shop.PortalScale == nil
+	)
+end
+
+group("Expedition payout (build spec §7.8)")
+do
+	local full = GameConfig.Progression.Rewards.ExpeditionCompleted
+	local function payout(outcome)
+		return ExpeditionCore.payoutFor(outcome, full, GameConfig)
+	end
+
+	check(
+		"a death is not a run that ended in a reward",
+		ExpeditionCore.outcomeFor("DIED", true) == "NONE"
+	)
+	check("an aborted entry pays nothing", ExpeditionCore.outcomeFor("ABORTED", false) == "NONE")
+	check(
+		"leaving with the boss standing is EARLY",
+		ExpeditionCore.outcomeFor("RETURNED", false) == "EARLY"
+	)
+	check(
+		"the timer with the boss standing is EARLY",
+		ExpeditionCore.outcomeFor("COMPLETED", false) == "EARLY"
+	)
+	check(
+		"leaving after the boss is CLEARED",
+		ExpeditionCore.outcomeFor("RETURNED", true) == "CLEARED"
+	)
+	check(
+		"the timer after the boss is CLEARED",
+		ExpeditionCore.outcomeFor("COMPLETED", true) == "CLEARED"
+	)
+
+	check("a cleared run pays the full Fate", payout("CLEARED").Fate == full)
+	check("a cleared run keeps its loot", payout("CLEARED").Loot == true)
+	check(
+		"an early run pays less than a cleared one",
+		payout("EARLY").Fate < payout("CLEARED").Fate
+	)
+	check("an early run pays some Fate", payout("EARLY").Fate > 0)
+	check("an early run gets no loot", payout("EARLY").Loot == false)
+	check("a death pays nothing", payout("NONE").Fate == 0 and payout("NONE").Loot == false)
+	check(
+		"XP is reserved and zero on every outcome",
+		payout("CLEARED").Xp == 0 and payout("EARLY").Xp == 0
+	)
+
+	local fraction = GameConfig.Expedition.EarlyExitFraction
+	check("the early fraction is strictly between none and full", fraction > 0 and fraction < 1)
+	check(
+		"the early payout never rounds up to the full award",
+		ExpeditionCore.payoutFor("EARLY", 1, { Expedition = { EarlyExitFraction = 0.99 } }).Fate
+			== 0
+	)
+	check(
+		"the early fraction is read from config",
+		ExpeditionCore.payoutFor("EARLY", 100, { Expedition = { EarlyExitFraction = 0.25 } }).Fate
+			== 25
+	)
+end
+
+group("Rift motion (build spec §7.8)")
+do
+	local cfg = GameConfig.Rift
+	local secs = cfg.MaterialiseSeconds
+
+	check(
+		"an entrance is always open",
+		select(1, RiftCore.phaseFor("ENTRANCE", nil, 100, cfg)) == "OPEN"
+	)
+	check(
+		"an exit with no OpenedAt is sealed",
+		select(1, RiftCore.phaseFor("EXIT", nil, 100, cfg)) == "SEALED"
+	)
+	check(
+		"an exit is materialising just after it opens",
+		select(1, RiftCore.phaseFor("EXIT", 100, 100.5, cfg)) == "MATERIALISING"
+	)
+	check(
+		"an exit is open once the sequence is over",
+		select(1, RiftCore.phaseFor("EXIT", 100, 100 + secs, cfg)) == "OPEN"
+	)
+	check(
+		"a late arrival sees an open exit already open",
+		select(1, RiftCore.phaseFor("EXIT", 100, 100 + secs * 10, cfg)) == "OPEN"
+	)
+	check(
+		"a clock behind OpenedAt does not go negative",
+		select(2, RiftCore.phaseFor("EXIT", 100, 90, cfg)) == 0
+	)
+
+	local start = RiftCore.materialise(0, cfg)
+	check(
+		"the materialise starts from nothing",
+		start.Seeds == 0
+			and start.Gather == 0
+			and start.Height == 0
+			and start.Width == 0
+			and start.Alpha == 0
+	)
+	local done = RiftCore.materialise(secs, cfg)
+	check(
+		"the materialise ends fully open",
+		done.Seeds == 1
+			and done.Gather == 1
+			and done.Height == 1
+			and done.Width == 1
+			and done.Alpha == 1
+	)
+	check("the bloom pulse ends at rest", math.abs(done.Bloom) < 1e-9 and start.Bloom == 0)
+
+	local peak = 0
+	local lastHeight, lastWidth = 0, 0
+	local monotone, tallBeforeWide = true, true
+	for i = 0, 200 do
+		local m = RiftCore.materialise(secs * i / 200, cfg)
+		peak = math.max(peak, m.Bloom)
+		if m.Height < lastHeight - 1e-9 or m.Width < lastWidth - 1e-9 then
+			monotone = false
+		end
+		if m.Width > m.Height + 1e-9 then
+			tallBeforeWide = false
+		end
+		lastHeight, lastWidth = m.Height, m.Width
+	end
+	check("the tear only ever opens, never closes", monotone)
+	check("the tear opens tall before it opens wide", tallBeforeWide)
+	check("the bloom actually peaks", peak > 0.99)
+
+	local w1, w2 = RiftCore.breath(0, 0, cfg), 0
+	local within = true
+	for i = 0, 400 do
+		w2 = RiftCore.breath(i * 0.05, i * 0.3, cfg)
+		if math.abs(w2 - 1) > cfg.BreathAmount + 1e-9 then
+			within = false
+		end
+	end
+	check("the breath stays within its amount", within and w1 == 1)
+
+	-- THE PATH RULE: no frame puts a fragment toward the lane in front.
+	local outwardOnly, bounded = true, true
+	for _, side in { 1, -1 } do
+		for index = 1, 18 do
+			for i = 0, 300 do
+				local across, up = RiftCore.fragmentOffset(i * 0.1, index, side, cfg)
+				if side * across < -1e-9 then
+					outwardOnly = false
+				end
+				if
+					math.abs(across) > cfg.FragmentDriftOut + 1e-9
+					or math.abs(up) > cfg.FragmentBob + 1e-9
+				then
+					bounded = false
+				end
+			end
+		end
+	end
+	check("fragments only ever drift outward, never toward the lane", outwardOnly)
+	check("fragment drift stays within its configured bounds", bounded)
+
+	local flyInSide = true
+	for _, side in { 1, -1 } do
+		for i = 0, 100 do
+			local across = RiftCore.gatherOffset(i / 100, side, cfg)
+			if side * across < -1e-9 then
+				flyInSide = false
+			end
+		end
+	end
+	check("fragments fly in from their own side", flyInSide)
+	local ax, ay = RiftCore.gatherOffset(1, 1, cfg)
+	check("fragments arrive exactly home", ax == 0 and ay == 0)
+	check(
+		"fragments start far away",
+		math.abs(select(1, RiftCore.gatherOffset(0, 1, cfg))) > cfg.GatherDistance * 0.5
+	)
+
+	local tumbleBounded = true
+	for index = 1, 18 do
+		for i = 0, 200 do
+			local a, b, c = RiftCore.fragmentTumble(i * 0.2, index, cfg)
+			if
+				math.abs(a) > cfg.FragmentTumble + 1e-9
+				or math.abs(b) > cfg.FragmentTumble + 1e-9
+				or math.abs(c) > cfg.FragmentTumble + 1e-9
+			then
+				tumbleBounded = false
+			end
+		end
+	end
+	check("a fragment's tumble stays within its configured angle", tumbleBounded)
+	check(
+		"fragment motion is large enough to read as floating",
+		cfg.FragmentDriftOut >= 2 and cfg.FragmentBob >= 1
+	)
+
+	check("the light peaks at the bloom", RiftCore.lightBrightness(1, cfg) == cfg.BloomBrightness)
+	check("the light idles at rest", RiftCore.lightBrightness(0, cfg) == cfg.IdleBrightness)
+	check("a shell rests at its transparency once open", RiftCore.shellTransparency(0.4, 1) == 0.4)
+	check("a shell is invisible before it opens", RiftCore.shellTransparency(0.4, 0) == 1)
+
+	local phases = cfg.Phases
+	local ordered = true
+	for _, name in { "Seeds", "Gather", "Split", "Bloom" } do
+		local w = phases[name]
+		if not (w[1] >= 0 and w[2] <= 1 and w[1] < w[2]) then
+			ordered = false
+		end
+	end
+	check("every materialise window is a valid span of the sequence", ordered)
+	-- A PROMPT MUST REACH THE EDGE OF ITS OWN SCAR (the flat ground the rift
+	-- stands in), or the way home is unusable from on top of it -- the same
+	-- mistake the Expedition Gate shipped with.
+	for kind, dims in cfg.Blockout do
+		check(
+			`the {kind} rift's prompt reaches past its own scar`,
+			GameConfig.Expedition.ReturnPromptDistance > dims.ScarRadius
+		)
+	end
+	check("the deck probe starts above the walk plane", cfg.DeckProbeHeight > 0)
+	check(
+		"both prefabs are declared with a positive scale and their own key",
+		cfg.EntrancePrefab.Scale > 0
+			and cfg.ExitPrefab.Scale > 0
+			and cfg.EntrancePrefab.AssetKey ~= cfg.ExitPrefab.AssetKey
+	)
+	check(
+		"the exit is not the colour of any rarity",
+		(function()
+			for _, r in Constants.RARITY do
+				if (r.Color :: any) == cfg.ExitColor then
+					return false
+				end
+			end
+			return true
+		end)()
+	)
+end
+
 group("Expeditions as their own server")
 
 do
@@ -9457,7 +9761,7 @@ do
 	check(
 		"dev registry: the SERVER commands are exactly DebugSystem's",
 		table.concat(server, ",")
-			== "atmosphere,boss,bossphase,clearboss,dummies,endevents,enter,event,givekey,god,heal,keychance,keys,leave,ledger,respawn,roll,showboss,takekey,vaultchance"
+			== "atmosphere,boss,bossphase,clearboss,dummies,endevents,enter,event,givekey,god,heal,keychance,keys,leave,ledger,respawn,riftexit,roll,showboss,takekey,vaultchance"
 	)
 
 	-- a broken registry is caught

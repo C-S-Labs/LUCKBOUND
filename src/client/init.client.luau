@@ -17,6 +17,7 @@ local ProximityController = require(Controllers.ProximityController)
 local ExpeditionController = require(Controllers.ExpeditionController)
 local PartyController = require(Controllers.PartyController)
 local FixtureController = require(Controllers.FixtureController)
+local RiftController = require(Controllers.RiftController)
 local LocomotionController = require(Controllers.LocomotionController)
 local LockOnController = require(Controllers.LockOnController)
 local EventController = require(Controllers.EventController)
@@ -68,6 +69,7 @@ ExpeditionHud.init()
 ExpeditionController.init()
 -- Chests, the vault and forcefields move on each client (build spec §7.5).
 FixtureController.init()
+RiftController.init()
 -- Before the menu, which draws the party panel from it.
 PartyController.init()
 -- The live palette, before any screen is built: EventController holds what is

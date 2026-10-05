@@ -205,7 +205,8 @@ where the `[Roll]` and `[Expedition]` lines already are.
 | `/leave` | **server** | End the current expedition (counts as RETURNED, so it pays Fate). |
 | `/keychance <0-1\|reset>` | **server** | *Temporary (§7.5 testing).* Override the vault key's drop chance for this session. `1` = always drops. |
 | `/vaultchance <0-1\|reset>` | **server** | *Temporary.* Override how often the treasury spawns, for maps built from now on. `1` = every map, `0` = never. |
-| `/boss` | **server** | *Temporary.* Act as if you just defeated your map's boss: rolls the boss pool and the key. Repeatable. |
+| `/boss` | **server** | *Temporary.* Defeat this map's boss stand-in once, roll the boss pool/key and open its exit. Further calls cannot re-roll rewards. |
+| `/riftexit` | **server** | *Temporary.* Stand in front of this map's exit rift (it is on the boss chunk, far from the entrance, so you cannot see it open from where you ran `/boss`). |
 | `/givekey [KEY_ID]` | **server** | *Temporary.* Give yourself a vault key (Sky Citadel's by default). Max one still applies. |
 | `/takekey` | **server** | *Temporary.* Remove every key you hold. |
 | `/keys` | **server** | *Temporary.* Your keys, and any testing overrides in force. |
@@ -415,6 +416,37 @@ is exactly as it was**, and you gained +25 Fate.
 The seed in that log line is derived from `(userId, TotalRolls, worldId)`, so
 re-entering on the same roll count rebuilds the identical map. Two different
 players never get the same one.
+
+### Test C2c — authored entrance and boss-gated exit (§7.8, 10 min)
+
+Use `agent/expedition-portal`, Rojo sync, then a fresh Play session. Prefab geometry/proportions were checked
+by the owner on 2026-09-30; this gameplay pass is still pending. Combat and XP are not implemented yet.
+
+1. `/roll SKY_CITADEL`, then `/enter` (or use the Fate Engine ENTER prompt). At the lowest-index ENTRY chunk,
+   the entrance rift is centred on its walk surface: no plinth, no floating gap, no collision blocking the lane.
+   Verify its rarity colour and gently moving shells, crystal lips, fragments, motes and ribbons. Output must
+   have no `[RiftRig] no prefab` or missing-contract warnings.
+2. Use its RETURN prompt before approaching the boss. Confirm return to the hub with the original lighting
+   restored and reduced Fate (`EarlyExitFraction` of the full award, rounded down). No boss loot is granted.
+3. Start another run. The boss exit is absent and its prompt disabled. `/boss` fires the same once-per-run
+   defeat path as entering the boss arena; it starts a five-second crimson materialisation at the boss spot.
+   Walk to the arena to observe it naturally, or use `/chunktp <boss index>` after recording the index in Explorer.
+4. Confirm cracks/motes, fragment gathering, opening tear, then a settled open rift. EXIT is unusable while
+   materialising and usable afterwards. Repeat `/boss`: it reports already cleared and grants no further loot.
+   Loot pools currently empty cannot prove randomized drops; verify that boundary when real pools are added.
+5. Leave via EXIT; confirm full Fate once. In separate cleared runs, return via the entrance and wait for
+   expiry: each grants the same full payout. Death still grants no completion Fate.
+6. With two independent players/runs, have one approach the other's rift. It must not return them or pay out.
+   A member too far from their own prompt, or a dead member, must also be rejected. Party members on the
+   same stage may leave independently; the remaining party keeps its timer and map.
+7. Stream away from an open exit, then return. It should remain open without replaying its bloom. Repeat
+   while an exit is sealed: no shell, rocks, light or prompt should be visible. Verify no fragment enters the lane.
+8. Hub regression: the south shop and its travel destination remain; no prototype gate rig/prompt returns,
+   including fallback hub construction. Entry remains on the Fate Engine.
+
+Optional authored-position regression: add one world data module under `Content/Portals/` with the §7.8
+shape, choose an ENTRY/BOSS piece and nonzero offset, and verify placement rotates with that chunk's yaw.
+An absent optional piece must fall back to the role centre; malformed world/chunk/offset must block boot.
 
 ### Test C3 — the hub is walkable (3 min)
 

@@ -36,6 +36,131 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 240 — 2026-09-30 — Wire delivered rifts and finish portal authority
+**Merged:** not merged   **Tests:** 967 passing   **Branch:** `agent/expedition-portal`
+
+### Done
+- Owner checked corrected geometry in Blender and proportional imports in Studio; saved entrance/exit
+  prefabs (33/45 uploaded MeshParts, 15/21-stud tears). Verified exact part names, mesh ids, no scripts or
+  SurfaceAppearance; Rojo build includes both. Registered prefab provenance in AssetManifest.
+- Measured asymmetric Scar registration offsets in GameConfig; rifts stream atomically. Entrance now uses
+  the lowest-index ENTRY centre instead of legacy return offset, exit the BOSS centre, both raycast flush.
+- Added the spec's optional per-world Content/Portals registry with boot validation; chunk-local offsets
+  rotate with yaw, absent optional pieces use role defaults, prebuilt return anchors remain supported.
+- Portal guards check living character, server distance, exact active stage, membership and open state.
+  Arena and debug boss defeat share a once-per-run claim, preventing duplicate loot rolls through both paths.
+- Removed prototype gate builders, prompt, anchor dimensions and scale. Kept the shop and its legacy travel
+  Id as owner instructed; PLATFORM supplies its bare fallback deck. Updated gate tests and added guard/schema tests.
+- 967 headless tests, full Luau syntax compilation, StyLua and Rojo build passed. Selene: no errors; two
+  pre-existing Schema shadowing warnings. Used official Luau binaries in TEMP and Blender's Python for the harness.
+- Added TESTING Test C2c, updated §7.8, STATUS, art/pipeline docs and index. Index inventory excludes the
+  unrelated owner's untracked TheAscendant_fixed.blend, which remains untouched.
+- Fixed index generation treating a tracked worktree/gitlink directory as a binary asset with a blank name;
+  only actual files belong in the inventory.
+
+### Decisions made
+- Shop remains, prototype gate behavior is removed (owner). No Fate Engine UI/ready state or XP implementation.
+- Empty flow texture remains the supported plain-ribbon fallback; custom texture upload is still pending.
+
+### Stopped at
+Implementation and automated checks complete locally. Owner's gameplay/streaming pass (Test C2c) is pending;
+import proportions alone do not verify motion, floor seating, prompt reach or returns.
+
+### Next
+1. Rojo sync, restart Play, run Test C2c: early return, boss materialise, cleared return/expiry/death,
+   two-group prompt authority and late streaming.
+2. Record the Studio result; upload a flow texture if desired, then review the portal branch for integration.
+3. Fate Engine rework consumes requestEnter and payoutFor; saved ready toggle and XP need their own scope.
+
+### Leftovers
+Earlier oversized/holed Studio imports can be removed after Test C2c and CI pass; keep corrected source/export
+assets. PortalRig remains required by the Fate Engine and other previews, so do not delete it. No duplicate
+portal module versions were added. Keep the owner's unrelated Blender file and parked recolours.
+
+---
+
+## Session 239 — 2026-09-30 — Correct rift faces and FBX import scale
+**Merged:** not merged   **Tests:** both generator validations and FBX round-trips pass   **Branch:** `agent/expedition-portal`
+
+### Done
+- Investigated owner's oversized Studio imports and exit holes. Welded coincident vertices before normal
+  calculation, explicitly triangulated shells, oriented ground sheets upward and closed scar-disc wedge gaps.
+- Matched chunk exporter settings (`FBX_SCALE_ALL`, baked Y-up transform); regenerated both existing Blender
+  sources and FBXs. Added topology validation and FBX re-import checks for names, dimensions and unit scale.
+- Corrected import instructions from Meter to Stud / 1.0; expected tear heights are 15 and 21 studs.
+- Index regenerated/checked using Blender's Python (no standalone Python installed), excluding the owner's
+  unrelated untracked `TheAscendant_fixed.blend` from the generated inventory. No Luau runtime is installed;
+  game tests remain for CI. StyLua check reports pre-existing differences across the branch (including CRLF
+  normalization); no Luau files changed in this import fix and broad reformatting was left out of scope.
+
+### Decisions made
+- Fix the original generator and assets; no duplicate portal versions. Preserve earlier Studio imports until
+  the owner verifies the corrected delivery. The exporter FACE option is a shading setting, not a face repair.
+
+### Stopped at
+Both generated variants pass topology and FBX round-trip checks. Studio warning text and corrected imports
+are pending; no prefabs saved yet. Runtime implementation remains as recorded in Session 96.
+
+### Next
+1. Owner re-imports regenerated FBXs at Stud / 1.0 and verifies faces and dimensions; saves named prefabs.
+2. Finish prefab wiring and Studio entrance/exit checks, then remaining §7.8 work.
+
+### Leftovers
+Earlier Studio imports are superseded candidates; remove only after corrected imports and gameplay pass.
+Keep the source/export assets and unrelated owner's Blender file.
+
+---
+
+## Session 238 — 2026-09-29 — Expedition rifts: entrance, boss-gated exit, outcome payouts
+**Merged:** not merged   **Tests:** 944 passing   **Branch:** `agent/expedition-portal`
+
+### Done
+- Claimed build spec §7.8 (expedition portals). Owner rules: entrance always open on the start chunk; exit closed
+  until the boss falls, then materialises where the boss stood; both flush, nothing to climb; a cleared run pays
+  full Fate and keeps the boss loot, an early one pays `Expedition.EarlyExitFraction`, a death pays nothing.
+- `ExpeditionCore.outcomeFor/payoutFor` (pure, tested). `ExpeditionSystem.settle` applies it on both pay paths.
+- Portals went mechanical, then to RIFTS on the owner's call ("out of place in a floating biome"): Blender generator
+  `assets/source/portals/build_expedition_portals.py` (.blend + FBX + previews), entrance ~5.9k / exit ~7.8k tris,
+  crystal-cluster lips, floating rock kept to the sides so the lane in front is empty (script fails if not).
+- Code: `RiftCore` (pure motion), `RiftRig` (prefab or blockout, light/motes/ribbons, seal/open),
+  `RiftController` (client pose per frame). The exit is built sealed and invisible; `OpenedAt` (server time)
+  drives the materialise so late arrivals see an open door open.
+
+### Decisions made
+- The mesh is the shape, code is the motion and light; a lower triangle count than the owner's first 10-25k, agreed.
+- No new remotes. `Expedition_Ended` gains `Outcome`; `Reason` gains `EXITED`.
+- XP does not exist (Fate only), so `payoutFor` carries a reserved `Xp = 0` (RESERVED.md).
+- Fate engine: recommended roll -> Keep/Roll again -> pedestal lowers and becomes the entrance rift (walk in).
+  Not built; it is a separate branch that plugs into `payoutFor`.
+
+### Follow-up 2026-10-05
+- Removed the hub gate's portal (spec §7.8 step 6): `GateRig`, `buildGateAnchor`, `ExpeditionGateScale`, `GateAnchorSpan/Lift`,
+  the gate zone's `PortalScale`, HubEffects' `gateRig`, and four tests that only guarded it. The `EXPEDITION_GATE`
+  district id stays (Menu/Palettes/Cinematics key on it).
+- Made `assets/textures/rift_flow.png` (+ `make_rift_flow.py`): a seamless white-with-alpha flow texture the ribbons tint.
+  Upload is the owner's, under the group (README step 4); I cannot reach Roblox from here.
+
+- 2026-10-05: owner uploaded both textures to the group. `GameConfig.Rift.FlowTexture` = `rbxassetid://97048945584606`;
+  `LightningRigs` (and its generator `ws_lance.py`) now use `rbxassetid://99323739536569` for `lightning_strip.png`, since the
+  old id was personal-account-owned and the partner could not see it.
+
+- 2026-10-05 Studio report: exit did not appear on `/boss`, no rift texture, rocks looked static. Findings: the exit sits on
+  the BOSS chunk, far from the entrance, so with streaming it cannot be seen opening from where `/boss` is run; the rock
+  motion was under a stud (now 2.6 / 1.7, plus a gentle tumble, gem rides its rock); the texture id may be a Decal id
+  (RiftController now preloads it and warns). Added `/riftexit` to stand in front of the exit rift, a tracking log line
+  per rift, and server warnings when no exit is built or opened.
+
+### Stopped at
+Rift code written and unit-tested for the pure parts; **nothing has run in Studio** (no prefab imported yet, so the
+blockout rift is what would draw). Hub gate still present.
+
+### Next
+1. Owner: import `EXPEDITION_ENTRANCE/EXIT.fbx`, save the prefabs, record `Scale`, check the tear's axes; upload the flow texture.
+2. Studio walk: entrance colour, exit materialise, prompt reach, deck flush, `/boss` to open the exit.
+3. Remove the hub `GATE` zone (spec §7.8 step 6). Then the Fate engine rework branch.
+
+---
+
 ## Session 237 - 2026-10-02 - Production generation PR preparation
 **Branch:** `agent/procgen-production`. **Merged:** none; owner authorizes push/PR, explicitly stop before merge. **Tests:** 1,063 unit assertions, 4,280 loader comparisons, 140 syntax checks, StyLua, zero-error Selene and Rojo build pass.
 

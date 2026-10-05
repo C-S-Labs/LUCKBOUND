@@ -29,6 +29,7 @@ PURE_MODULES = [
     ("Scenarios",        "src/shared/Content/Scenarios/init.luau"),
     ("ScenarioCore",     "src/shared/Util/ScenarioCore.luau"),
     ("ExpeditionCore",   "src/shared/Core/ExpeditionCore.luau"),
+    ("RiftCore",         "src/shared/Core/RiftCore.luau"),
     ("PartyCore",        "src/shared/Core/PartyCore.luau"),
     ("AmbienceCore",     "src/shared/Core/AmbienceCore.luau"),
     ("PropCore",         "src/shared/Core/PropCore.luau"),

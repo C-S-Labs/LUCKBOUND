@@ -87,6 +87,14 @@ loot pools are constructed").
 | `LocomotionCore.tuning(…, upgrades)` | RESERVED | Fate Tree stamina and movement nodes, as per-field multipliers (`PLAYER_ABILITIES.md` §2, §3). Tested; no caller passes it yet. |
 | `LocomotionCore` lock `Source` | RESERVED | The dev panel showing which move holds movement. Stored, not yet displayed. |
 
+## Expedition rifts — build spec §7.8
+
+| Declaration | Status | Consumer |
+|---|---|---|
+| `ExpeditionCore.Payout.Xp` (always 0) | RESERVED | The Fate engine rework, when an XP system exists. `payoutFor` is the one place it is filled. |
+| `GameConfig.Rift.FlowTexture` | **CONSUMED** | `RiftRig.attachEffects` sets it on every ribbon beam. Uploaded to the group 2026-10-05 (`rbxassetid://97048945584606`); it was an empty string until then. |
+| `GameConfig.Rift.EntrancePrefab` / `ExitPrefab` `Scale` (1.0) | RESERVED | Set to the imported scale after the owner's Studio import (`assets/source/portals/README.md`). Until the prefabs exist a blockout rift is drawn. |
+
 ## Nothing is currently ORPHANED
 
 Every unread declaration above has a named consumer and a reason to exist. The

@@ -41,7 +41,9 @@
 | `src/client/` | `init.client.luau` + `Controllers/` (behaviour) + `UI/` (screens) | `StarterPlayerScripts.LuckboundClient` |
 | `assets/rbxm/chunks/` | chunk kit models: `sky_citadel/SC_STRUCTURE.rbxmx` (+ parked `SC_RECOLORS`), `verdant_valley/VV_STRUCTURE.rbxmx`, Stone Sentinels collision assets and `VV_COLLISION.rbxmx` for the other 29 chunks | `ServerStorage.LuckboundChunkKits` |
 | `assets/rbxm/props/` | prop libraries used by client ambience and server solid scenery (`SC_PROP_LIBRARY`, `HUB_ORBITERS`, parked `SC_ATMOSPHERE_PROPS`) | `ReplicatedStorage.LuckboundProps` |
-| `assets/rbxm/prefabs/` | hub art (`HUB_*`); V1 and V2 are both still referenced by code | `ServerStorage.LuckboundPrefabs` |
+| `assets/rbxm/prefabs/` | hub art (`HUB_*`) and `EXPEDITION_ENTRANCE/EXIT` rifts; V1 and V2 hub art is still referenced | `ServerStorage.LuckboundPrefabs` |
+| `src/shared/Content/Portals/` | optional per-world chunk-local entrance/exit positions; validated before boot (spec §7.8) | `ReplicatedStorage.Luckbound.Content.Portals` |
+| `assets/source/portals/` | the expedition rifts (spec §7.8): `build_expedition_portals.py`, `.blend`, previews; FBX in `assets/export/portals/`; flow texture in `assets/textures/` | — |
 | `assets/rbxm/maps/` | prebuilt whole maps (`ES_ENVIRONMENT_FULL` = Ethereal Scape) | `ServerStorage.LuckboundMaps` |
 | `assets/rbxm/bosses/` | imported boss rigs for `/showboss` (`WingedSentinel`) | `ServerStorage.LuckboundBosses` |
 | `assets/rbxm/animations/` | generated player clips (KeyframeSequences, from `tools/gen_player_anims.py`); Studio plays them unuploaded | `ReplicatedStorage.LuckboundAnimations` |
@@ -114,6 +116,7 @@ pending. Shared safety requirements live in `docs/MODULAR_MAPS.md`.
 | health and stamina bars (later charge) | `client/UI/Vitals.luau` |
 | player animation (blending, strafe, lean, head, landings, roll look, sounds) | `Core/AnimationCore.luau`, `client/Controllers/CharacterAnimator.luau`, `GameConfig.CharacterAnimation`; clips in `Content/Animations/Player.luau` (+ generated `GroundSpeeds.luau`); how-to `PLAYER_ABILITIES.md` Â§2.7 |
 | rolling (Fate) | `Core/FateCore.luau`, `server/Systems/FateSystem.luau`, `client/UI/FateRoll.luau` |
+| expedition rifts (entrance/exit) | `Core/RiftCore.luau` (motion), `Util/RiftRig.luau` (build, seal/open), `client/Controllers/RiftController.luau`, `Core/ExpeditionCore.luau` (`payoutFor`), `GameConfig.Rift`; spec §7.8 |
 | parties / teleport | `Core/PartyCore.luau`, `server/Systems/PartySystem.luau`, `client/Controllers/PartyController.luau` |
 | save data | `Core/ProfileSchema.luau`, `server/Systems/SaveSystem.luau` |
 | hub build and art | `server/Systems/HubV2.luau` (+ `HubBuilder.luau`), `Content/Hub/CrossroadsV2.luau`, `assets/source/hub/crossroads/` |

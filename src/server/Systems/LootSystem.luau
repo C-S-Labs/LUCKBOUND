@@ -54,7 +54,7 @@ local lastRefusal: { [number]: number } = {}
 -- DEVELOPER TESTING ONLY (/keychance, /boss). Remove with the debug commands.
 local keyChanceOverride: number? = nil
 -- Every furnished map, so /boss can find the one a player is on.
-local maps: { { Stage: Instance, WorldId: string, Members: { [number]: boolean }, Boss: () -> () } } =
+local maps: { { Stage: Instance, WorldId: string, Members: { [number]: boolean }, Boss: () -> boolean } } =
 	{}
 
 local function library(): Instance?
@@ -338,7 +338,12 @@ end
 --- and (while bosses do not exist) watches the arena for the boss stand-in.
 --- `members` is the group's own member table, read live, so whoever is on
 --- the map when something opens is who shares it.
-function LootSystem.attach(stage: Instance, worldId: string, members: { [number]: boolean })
+function LootSystem.attach(
+	stage: Instance,
+	worldId: string,
+	members: { [number]: boolean },
+	onBossDefeated: (() -> ())?
+)
 	local world = Worlds[worldId]
 	local set = Fixtures[worldId]
 	local cfg = GameConfig.Loot
@@ -419,9 +424,20 @@ function LootSystem.attach(stage: Instance, worldId: string, members: { [number]
 		warn(`[LootSystem] fixture meshes missing from the library: {table.concat(names, ", ")}`)
 	end
 
-	local function completeBiomeBoss()
+	-- The debug command and arena watcher share one claim. Defeating the
+	-- stand-in by either route cannot roll another reward through the other.
+	local cleared = false
+	local function completeBiomeBoss(): boolean
+		if cleared or not stage.Parent then
+			return false
+		end
+		cleared = true
 		stage:SetAttribute("BossDefeated", true)
 		bossDefeated(worldId, members)
+		if onBossDefeated then
+			onBossDefeated()
+		end
+		return true
 	end
 	table.insert(maps, {
 		Stage = stage,
@@ -436,12 +452,8 @@ function LootSystem.attach(stage: Instance, worldId: string, members: { [number]
 	end
 
 	if cfg.BossDefeatStandIn and arena then
-		local done = false
 		watchArena(stage, arena :: Instance, function()
-			if not done then
-				done = true
-				completeBiomeBoss()
-			end
+			completeBiomeBoss()
 		end, members)
 	end
 end
@@ -459,12 +471,15 @@ function LootSystem.keyChanceOverride(): number?
 end
 
 --- Fires the boss stand-in for the map this player is on, as if the boss had
---- just been defeated. Repeatable, unlike the real one.
+--- just been defeated. Shares the arena watcher's once-per-run guard.
 function LootSystem.triggerBoss(player: Player): (boolean, string)
 	for _, map in maps do
 		if map.Stage.Parent and map.Members[player.UserId] then
-			map.Boss()
-			return true, `boss stand-in fired on {map.WorldId}`
+			if map.Boss() then
+				return true,
+					`boss stand-in fired on {map.WorldId}; the exit rift opens on the boss chunk (use /riftexit to go there)`
+			end
+			return false, `boss already cleared on {map.WorldId}`
 		end
 	end
 	return false, "you are not on an expedition map"
