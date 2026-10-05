@@ -30,6 +30,14 @@ local SkyLayout = require(Root.Core.SkyLayout)
 
 local HubV2 = {}
 
+-- the live sky, kept so a developer command can swap its colossal (set by buildSky)
+local liveSky: {
+	Model: Model,
+	Spawn: (string, any, string, number) -> BasePart,
+	HasMesh: (string) -> boolean,
+}? =
+	nil
+
 local HALF_TURN = CFrame.Angles(0, math.pi, 0)
 local cfg = GameConfig.HubLayout.V2
 
@@ -397,6 +405,62 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 	local life: any = cfg.SkyLife
 	local creatures = 0
 	local skipped: { [string]: boolean } = {}
+	local function spawnCreature(class: string, prof: any, pick: string, k: number): BasePart
+		local c = SkyCreatures[pick]
+		local src = findMesh(c.Model) :: BasePart
+		local p = src:Clone()
+		p.Anchored, p.CanCollide, p.CanQuery, p.CanTouch = true, false, false, false
+		local s = rng:NextNumber(c.ScaleMin, c.ScaleMax)
+		p.Size = src.Size * s
+		-- a class that comes and goes (colossals) starts in the OUTER part of its band, at a
+		-- random bearing: never over the hub
+		local outer = if prof.Presence ~= nil then (prof.SpawnOuter or 0) else 0
+		local radius = rng:NextNumber(
+			prof.RadiusMin + (prof.RadiusMax - prof.RadiusMin) * outer,
+			prof.RadiusMax
+		)
+		local height = rng:NextNumber(prof.HeightMin, prof.HeightMax)
+		local phase = rng:NextNumber(0, math.pi * 2)
+		p.CFrame = CFrame.new(
+			origin + Vector3.new(math.cos(phase) * radius, height, math.sin(phase) * radius)
+		)
+		p:SetAttribute("Wander", true)
+		p:SetAttribute("WanderCentre", origin)
+		p:SetAttribute("WanderRadius", Vector2.new(prof.RadiusMin, prof.RadiusMax))
+		p:SetAttribute(
+			"WanderHeight",
+			Vector2.new(origin.Y + prof.HeightMin, origin.Y + prof.HeightMax)
+		)
+		p:SetAttribute("WanderSpeed", Vector2.new(prof.SpeedMin, prof.SpeedMax))
+		p:SetAttribute("WanderFaces", true)
+		p:SetAttribute("WanderBob", 0)
+		p:SetAttribute("WanderSeed", rng:NextInteger(1, 1e6))
+		p:SetAttribute("SkyClass", class)
+		p:SetAttribute("SkyCanLand", c.CanLand)
+		-- bounding sphere of the whole assembly (a long creature's centre is not its body origin)
+		local extent = math.max(c.Size.X, c.Size.Y, c.Size.Z) * s
+		p:SetAttribute("SkyRadius", extent * 0.5)
+		if c.Centre then
+			p:SetAttribute("SkyCentre", c.Centre * s)
+		end
+		-- serpent / eel locomotion (SkyCreatures Spine): the segments follow the head's trail
+		local spine = c.Spine
+		if spine then
+			p:SetAttribute("SpineWavelength", spine.Wavelength * s)
+			p:SetAttribute("SpineAmp", spine.Amp * s)
+			p:SetAttribute("SpineRate", spine.Rate)
+			p:SetAttribute("SpinePlane", spine.Plane)
+		end
+		p:SetAttribute("Detail", detailFor(prof.Detail, k))
+		p.Parent = sky
+		local missing = attachParts(p, s, c.Parts, if spine then spine.Parts else nil)
+		if missing > 0 and not skipped[pick] then
+			skipped[pick] = true
+			warn(`[HubV2] sky creature {pick}: {missing} moving part mesh(es) missing`)
+		end
+		return p
+	end
+
 	for _, class in life.ClassOrder do
 		local prof = life.Classes[class]
 		local ids: { string } = {}
@@ -446,62 +510,53 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 				end
 			end
 			chosen[pick] = true
-			local c = SkyCreatures[pick]
-			local src = findMesh(c.Model) :: BasePart
-			local p = src:Clone()
-			p.Anchored, p.CanCollide, p.CanQuery, p.CanTouch = true, false, false, false
-			local s = rng:NextNumber(c.ScaleMin, c.ScaleMax)
-			p.Size = src.Size * s
-			-- a class that comes and goes (colossals) starts in the OUTER part of its band, at a
-			-- random bearing: never over the hub
-			local outer = if prof.Presence ~= nil then (prof.SpawnOuter or 0) else 0
-			local radius = rng:NextNumber(
-				prof.RadiusMin + (prof.RadiusMax - prof.RadiusMin) * outer,
-				prof.RadiusMax
-			)
-			local height = rng:NextNumber(prof.HeightMin, prof.HeightMax)
-			local phase = rng:NextNumber(0, math.pi * 2)
-			p.CFrame = CFrame.new(
-				origin + Vector3.new(math.cos(phase) * radius, height, math.sin(phase) * radius)
-			)
-			p:SetAttribute("Wander", true)
-			p:SetAttribute("WanderCentre", origin)
-			p:SetAttribute("WanderRadius", Vector2.new(prof.RadiusMin, prof.RadiusMax))
-			p:SetAttribute(
-				"WanderHeight",
-				Vector2.new(origin.Y + prof.HeightMin, origin.Y + prof.HeightMax)
-			)
-			p:SetAttribute("WanderSpeed", Vector2.new(prof.SpeedMin, prof.SpeedMax))
-			p:SetAttribute("WanderFaces", true)
-			p:SetAttribute("WanderBob", 0)
-			p:SetAttribute("WanderSeed", rng:NextInteger(1, 1e6))
-			p:SetAttribute("SkyClass", class)
-			p:SetAttribute("SkyCanLand", c.CanLand)
-			-- bounding sphere of the whole assembly (a long creature's centre is not its body origin)
-			local extent = math.max(c.Size.X, c.Size.Y, c.Size.Z) * s
-			p:SetAttribute("SkyRadius", extent * 0.5)
-			if c.Centre then
-				p:SetAttribute("SkyCentre", c.Centre * s)
-			end
-			-- serpent / eel locomotion (SkyCreatures Spine): the segments follow the head's trail
-			local spine = c.Spine
-			if spine then
-				p:SetAttribute("SpineWavelength", spine.Wavelength * s)
-				p:SetAttribute("SpineAmp", spine.Amp * s)
-				p:SetAttribute("SpineRate", spine.Rate)
-				p:SetAttribute("SpinePlane", spine.Plane)
-			end
-			p:SetAttribute("Detail", detailFor(prof.Detail, k))
-			p.Parent = sky
-			local missing = attachParts(p, s, c.Parts, if spine then spine.Parts else nil)
-			if missing > 0 and not skipped[pick] then
-				skipped[pick] = true
-				warn(`[HubV2] sky creature {pick}: {missing} moving part mesh(es) missing`)
-			end
+			spawnCreature(class, prof, pick, k)
 			creatures += 1
 		end
 	end
+	liveSky = {
+		Model = sky,
+		Spawn = spawnCreature,
+		HasMesh = function(model: string): boolean
+			return findMesh(model) ~= nil
+		end,
+	}
 	print(`[HubV2] sky: {backdropCount} backdrop chunk(s), {n} orbiter(s), {creatures} creature(s)`)
+end
+
+--- Developer tool: replace the sky's colossal with `speciesId` (a SkyCreatures key of class COLOSSAL).
+--- The current colossal despawns and the new one appears at the outer edge of its band. Returns ok, message.
+function HubV2.setColossal(speciesId: string): (boolean, string)
+	local sky = liveSky
+	if not sky then
+		return false, "the sky is not built"
+	end
+	local id = string.upper(speciesId)
+	local c = SkyCreatures[id]
+	if not c or c.Class ~= "COLOSSAL" then
+		local names = {}
+		for key, def in SkyCreatures do
+			if def.Class == "COLOSSAL" then
+				table.insert(names, key)
+			end
+		end
+		table.sort(names)
+		return false, `unknown colossal '{speciesId}' (try {table.concat(names, ", ")})`
+	end
+	if not sky.HasMesh(c.Model) then
+		return false, `{id}: its mesh ({c.Model}) is not imported yet`
+	end
+	local prof = cfg.SkyLife.Classes.COLOSSAL
+	for _, d in sky.Model:GetChildren() do
+		if d:IsA("BasePart") and d:GetAttribute("SkyClass") == "COLOSSAL" then
+			d:Destroy()
+		end
+	end
+	local ok, spawned = pcall(sky.Spawn, "COLOSSAL", prof, id, 1)
+	if not ok then
+		return false, `could not spawn {id}: {spawned} (is its mesh imported?)`
+	end
+	return true, `colossal is now {id}`
 end
 
 local function still(p: BasePart, cf: CFrame, parent: Instance)

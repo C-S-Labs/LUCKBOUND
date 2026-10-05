@@ -11829,7 +11829,7 @@ do
 	check(
 		"dev registry: the SERVER commands are exactly DebugSystem's",
 		table.concat(server, ",")
-			== "atmosphere,boss,bossphase,clearboss,dummies,endevents,enter,event,givekey,god,heal,keychance,keys,leave,ledger,respawn,riftexit,roll,showboss,takekey,vaultchance"
+			== "atmosphere,boss,bossphase,clearboss,colossal,dummies,endevents,enter,event,givekey,god,heal,keychance,keys,leave,ledger,respawn,riftexit,roll,showboss,takekey,vaultchance"
 	)
 
 	-- a broken registry is caught

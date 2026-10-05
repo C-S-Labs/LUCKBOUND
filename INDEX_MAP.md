@@ -696,8 +696,8 @@ _489 text files, 1006 binary assets. Regenerate with `python tools/gen_index.py`
   - `AtmosphereEffects.luau`: LOCKDOWN:36, SIEGE:48, STORMHAWK:58, RIME:68, RECLAIMED:80, AETHER_SURGE:92, UNMOORING:102, num:123, col:126, vec:129, part:133, prop:149, readMap:179, randomIn:259, band:270, buildLights:278, lightLevel:311, newMover:337, buildGraph:359, route:399, hover:422, newRoute:427, stepMover:443, buildFlyers:474, bolt:516, buildWeather:572, buildDome:622, buildPlumes:672, beam:712, anchorAt:726, buildAurora:738, buildRibbons:832, buildDebris:939, buildCanopy:990, applyTint:1011, AtmosphereEffects.enter:1040, AtmosphereEffects.updateAnchors:1220, AtmosphereEffects.leave:1229, AtmosphereEffects.setTint:1256
 - `src/client/Controllers/CharacterAnimator.luau` (859) - HOW THE PLAYER'S BODY MOVES: clips, blending and the procedural layer. · 2026-10-01
   - `CharacterAnimator.luau`: bend:114, findJoint:118, makeSound:127, loadTrack:137, stockId:159, CharacterAnimator.bind:202, CharacterAnimator.unbind:370, playOneShot:403, CharacterAnimator.onJump:425, CharacterAnimator.onLand:434, slotDirection:452, CharacterAnimator.onRoll:461, windPart:501, setWeight:566, CharacterAnimator.update:585, CharacterAnimator.overrideSlot:812, CharacterAnimator.describeSlots:846
-- `src/client/Controllers/DebugCommands.luau` (927) - Developer commands, client half. Testing tooling, not a feature. · 2026-09-28
-  - `DebugCommands.luau`: DebugCommands.onOutput:49, emit:53, say:67, fail:71, stopFlying:82, startFlying:98, toggleFly:172, setSpeed:185, teleport:227, currentStage:271, currentChunks:300, toggleNoclip:332, setOverlay:376, setStats:438, setProps:489, sorted:512, DebugCommands.sources:594, DebugCommands.describeChunk:599, onOff:610, DebugCommands.bindPanel:618, locomotion:632, DebugCommands.run:840, DebugCommands.runLine:867, DebugCommands.init:874
+- `src/client/Controllers/DebugCommands.luau` (939) - Developer commands, client half. Testing tooling, not a feature. · 2026-09-28
+  - `DebugCommands.luau`: DebugCommands.onOutput:49, emit:53, say:67, fail:71, stopFlying:82, startFlying:98, toggleFly:172, setSpeed:185, teleport:227, currentStage:271, currentChunks:300, toggleNoclip:332, setOverlay:376, setStats:438, setProps:489, sorted:512, DebugCommands.sources:606, DebugCommands.describeChunk:611, onOff:622, DebugCommands.bindPanel:630, locomotion:644, DebugCommands.run:852, DebugCommands.runLine:879, DebugCommands.init:886
 - `src/client/Controllers/EventController.luau` (167) - The client's mirror of what is happening to the world. Build spec §4.1. · 2026-09-20
   - `EventController.luau`: list:40, notify:51, EventController.active:59, EventController.dominant:66, EventController.onChanged:70, apply:81, EventController.init:135
 - `src/client/Controllers/ExpeditionController.luau` (245) - Client side of an expedition: lighting, the local countdown, and the Gate's · 2026-10-01
@@ -724,7 +724,7 @@ _489 text files, 1006 binary assets. Regenerate with `python tools/gen_index.py`
   - `SettingsController.luau`: SettingsController.musicGroup:48, SettingsController.effectsGroup:53, SettingsController.screenShake:58, SettingsController.showsOthersRolls:63, buildSoundGroups:67, isOurs:90, scaleFor:95, applyScale:107, adopt:118, applyVolumes:129, SettingsController.init:137
 - `src/client/Controllers/SkyController.luau` (263) - THE SKY, WHEN SOMETHING IS HAPPENING TO THE WORLD. · 2026-09-21
   - `SkyController.luau`: definitionFor:52, captureBaseline:66, tweenLighting:73, buildEffects:84, clearEffects:151, revert:159, apply:168, evaluate:192, SkyController.current:232, SkyController.init:236
-- `src/client/Controllers/SkyTraffic.luau` (750) - THE SKY TRAFFIC round the Crossroads: a thin client driver over Core/FlightCore. · 2026-10-05
+- `src/client/Controllers/SkyTraffic.luau` (776) - THE SKY TRAFFIC round the Crossroads: a thin client driver over Core/FlightCore. · 2026-10-05
   - `SkyTraffic.luau`: blocked:97, findPerch:104, hingeAbout:143, SkyTraffic.init:150
 - `src/client/Controllers/StateController.luau` (105) - The single client-side mirror of server state. Build spec T-114. · 2026-09-25
   - `StateController.luau`: notify:31, StateController.get:37, StateController.onChanged:41, StateController.setting:55, StateController.applySetting:68, StateController.init:79
@@ -770,20 +770,20 @@ _489 text files, 1006 binary assets. Regenerate with `python tools/gen_index.py`
 
 - `src/server/Systems/ChunkAutoKit.luau` (274) - Drop-in chunk kits, the Roblox half. At boot, every world folder under · 2026-09-24
   - `ChunkAutoKit.luau`: median:49, probe:65, pieceName:172, ChunkAutoKit.load:181
-- `src/server/Systems/DebugSystem.luau` (689) - Server-authoritative developer commands. Testing tooling, not a feature. · 2026-10-05
-  - `DebugSystem.luau`: mayCommand:46, reply:61, nearestArena:104, groundBelow:120, parseChance:437, humanoidOf:545, DebugSystem.handle:591, DebugSystem.init:625, DebugSystem.registryProblems:666
+- `src/server/Systems/DebugSystem.luau` (701) - Server-authoritative developer commands. Testing tooling, not a feature. · 2026-10-05
+  - `DebugSystem.luau`: mayCommand:47, reply:62, nearestArena:105, groundBelow:121, parseChance:447, humanoidOf:555, DebugSystem.handle:601, DebugSystem.init:635, DebugSystem.registryProblems:678
 - `src/server/Systems/EventSystem.luau` (271) - Global announcements and live events. Build spec §4.1. · 2026-09-25
   - `EventSystem.luau`: EventSystem.syncTo:33, EventSystem.announce:39, EventSystem.startLocal:60, EventSystem.publish:102, EventSystem.trigger:146, EventSystem.endAll:202, EventSystem.triggerFatebreak:218, EventSystem.init:222, EventSystem._state:267
 - `src/server/Systems/ExpeditionSystem.luau` (1615) - Expedition entry, generation and return. Build spec §7.1, and §7.2 for · 2026-10-05
   - `ExpeditionSystem.luau`: atmosphereFor:121, manifestStore:181, stageFolder:196, gatePart:217, distanceToGate:226, moveCharacter:239, tell:260, syncTimer:271, buildStage:288, groundAt:451, deckAt:465, riftPrompt:471, portalSeat:515, buildEntrance:557, buildExit:602, openExit:624, newGroup:643, dropGroup:730, placeMember:743, teleport:814, sendHome:834, launchInstance:887, ExpeditionSystem.canTestWorld:974, ExpeditionSystem.setTestDestination:980, ExpeditionSystem.gotoExit:990, ExpeditionSystem.isActive:1006, ExpeditionSystem.setSpawnOverride:1012, ExpeditionSystem.spawnOverrides:1016, ExpeditionSystem.isHosting:1020, settle:1030, ExpeditionSystem.finish:1049, completeGroup:1104, enterGuarded:1154, ExpeditionSystem.requestEnter:1292, ExpeditionSystem.isEntering:1310, ExpeditionSystem.forceEnter:1314, hostArrive:1353, ExpeditionSystem.startHost:1389, ExpeditionSystem.init:1466, ExpeditionSystem.bindGatePrompt:1564, ... +1 more
 - `src/server/Systems/FateSystem.luau` (190) - The roll. Build spec §3 and T-111. · 2026-09-25
   - `FateSystem.luau`: nextNumber:30, rollAnchor:36, mayRoll:46, deliver:71, FateSystem.requestRoll:121, FateSystem.forceRoll:152, FateSystem.init:176
-- `src/server/Systems/HubBuilder.luau` (1331) - Procedurally generates The Crossroads into Workspace at runtime. · 2026-10-05
-  - `HubBuilder.luau`: part:39, cylinder:73, meshOrNil:96, label:125, applyLighting:152, buildRollAnchor:222, buildEngineEntryAnchor:260, buildSpawn:323, clearPlaceDefaults:364, buildFateEngine:402, buildPlatform:587, buildAmphitheatre:619, buildRotunda:683, buildYard:765, buildWalkway:846, buildFloatingIslands:894, buildHubPrefab:944, buildShell:995, buildBackdrop:1013, ensureContract:1100, HubBuilder.build:1162
+- `src/server/Systems/HubBuilder.luau` (1336) - Procedurally generates The Crossroads into Workspace at runtime. · 2026-10-05
+  - `HubBuilder.luau`: part:39, cylinder:73, meshOrNil:96, label:125, applyLighting:152, buildRollAnchor:222, buildEngineEntryAnchor:260, buildSpawn:323, clearPlaceDefaults:364, buildFateEngine:402, buildPlatform:587, buildAmphitheatre:619, buildRotunda:683, buildYard:765, buildWalkway:846, buildFloatingIslands:894, buildHubPrefab:944, buildShell:995, buildBackdrop:1013, ensureContract:1100, HubBuilder.build:1162, HubBuilder.setColossal:1332
 - `src/server/Systems/HubUISystem.luau` (254) - THE SERVER SIDE OF THE HUB MENU: travel, codes and settings. · 2026-09-25
   - `HubUISystem.luau`: allow:46, groundedLanding:71, placeCharacter:107, refuseTravel:126, HubUISystem.travel:134, HubUISystem.redeem:174, HubUISystem.updateSetting:208, HubUISystem.init:231
-- `src/server/Systems/HubV2.luau` (721) - THE CROSSROADS v2 (2026-09-23), built around the untouched Fate Engine. · 2026-10-05
-  - `HubV2.luau`: template:36, walkable:46, place:66, addLight:98, HubV2.build:121, HubV2.buildSky:206, still:507, HubV2.buildBeyond:516
+- `src/server/Systems/HubV2.luau` (776) - THE CROSSROADS v2 (2026-09-23), built around the untouched Fate Engine. · 2026-10-05
+  - `HubV2.luau`: template:44, walkable:54, place:74, addLight:106, HubV2.build:129, HubV2.buildSky:214, HubV2.setColossal:529, still:562, HubV2.buildBeyond:571
 - `src/server/Systems/LedgerSystem.luau` (159) - THE GLOBAL LEDGER: the only thing in the game that knows how many of a · 2026-09-20
   - `LedgerSystem.luau`: keyFor:35, LedgerSystem.claim:50, LedgerSystem.summary:116, LedgerSystem.isAvailable:133, LedgerSystem.init:137
 - `src/server/Systems/LootSystem.luau` (534) - Loot, fixtures and vault keys on an expedition map. Build spec §7.5. · 2026-10-05
@@ -816,7 +816,7 @@ _489 text files, 1006 binary assets. Regenerate with `python tools/gen_index.py`
 - `src/shared/Content/Chunks/init.luau` (19) - Chunk registry. Each module returns a LIST of chunks -- one file per world's · 2026-09-16
 - `src/shared/Content/Codes.luau` (41) - REDEEMABLE CODES, AS DATA. Adding one is one row; no System changes. · 2026-09-20
   - `Codes.luau`: LAUNCH:18, FIRSTROLL:25, TESTER:32
-- `src/shared/Content/DevCommands.luau` (458) - THE DEVELOPER COMMAND REGISTRY. Testing tooling, not a feature. · 2026-10-05
+- `src/shared/Content/DevCommands.luau` (465) - THE DEVELOPER COMMAND REGISTRY. Testing tooling, not a feature. · 2026-10-05
 - `src/shared/Content/Events/AuroraVeil.luau` (47) - AURORA VEIL -- weather, and nothing but weather. · 2026-09-20
 - `src/shared/Content/Events/CatalystStar.luau` (62) - THE CATALYST STAR — one of ten that will ever exist. · 2026-09-20
 - `src/shared/Content/Events/Starfall.luau` (55) - STARFALL — the Fatebreak sky. Master Spec §12. · 2026-09-20
@@ -862,8 +862,8 @@ _489 text files, 1006 binary assets. Regenerate with `python tools/gen_index.py`
   - `Constants.luau`: COMMON:24, UNCOMMON:31, RARE:38, EPIC:45, LEGENDARY:52, MYTHIC:59, UNKNOWN:66, SLOTS:81, NAMES:84, HOTKEY_NAMES:127, DATASTORE:184
 - `src/shared/Core/CreatureMotionCore.luau` (717) - THE LAYERED MOTION OF THE SKY CREATURES: the pure animation maths behind · 2026-10-05
   - `CreatureMotionCore.luau`: clamp:90, CreatureMotionCore.flapShape:97, CreatureMotionCore.flapSlope:106, CreatureMotionCore.burstShape:116, CreatureMotionCore.noise:126, CreatureMotionCore.follow:132, CreatureMotionCore.softLimit:141, CreatureMotionCore.torque:163, CreatureMotionCore.newBody:184, CreatureMotionCore.newPart:211, CreatureMotionCore.updateBody:270, CreatureMotionCore.stepPart:323, CreatureMotionCore.newSpine:492, CreatureMotionCore.seedTrail:548, CreatureMotionCore.pushTrail:570, unit:603, CreatureMotionCore.solveSpine:620
-- `src/shared/Core/DevCore.luau` (267) - The pure half of the developer tools: parsing a command line, checking the · 2026-09-27
-  - `DevCore.luau`: DevCore.parse:36, DevCore.index:51, DevCore.usage:60, DevCore.options:69, DevCore.check:89, startsWith:115, DevCore.complete:123, DevCore.validate:205
+- `src/shared/Core/DevCore.luau` (268) - The pure half of the developer tools: parsing a command line, checking the · 2026-09-27
+  - `DevCore.luau`: DevCore.parse:37, DevCore.index:52, DevCore.usage:61, DevCore.options:70, DevCore.check:90, startsWith:116, DevCore.complete:124, DevCore.validate:206
 - `src/shared/Core/EventCore.luau` (257) - Pure live-event state. Build spec §4.1. · 2026-09-20
   - `EventCore.luau`: EventCore.trackedLighting:73, EventCore.formatAnnouncement:84, EventCore.newState:91, EventCore.expire:97, EventCore.startEvent:111, EventCore.isValidScope:128, EventCore.dominant:149, EventCore.pushAnnouncement:191, EventCore.snapshot:219
 - `src/shared/Core/ExpeditionCore.luau` (469) - Pure expedition logic. No Roblox globals, no Instances, no side effects -- · 2026-09-30

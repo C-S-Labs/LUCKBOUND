@@ -457,7 +457,18 @@ function SkyTraffic.init(): ()
 		FlightCore.presenceStep(presenceGroup, 0)
 		sky.ChildAdded:Connect(function(d)
 			task.wait(driverCfg.AdoptSeconds) -- let its moving pieces arrive with it
+			local before = #flyers
 			adopt(d)
+			-- a creature that arrives late (a developer swapping the colossal) joins like the first lot:
+			-- placed in clear sky at its band's edge, and counted in its class's presence group
+			for k = before + 1, #flyers do
+				local core = flyers[k].Core
+				FlightCore.enter(core)
+				if core.Prof.Presence then
+					table.insert(presenceGroup, core)
+				end
+			end
+			FlightCore.presenceStep(presenceGroup, 0)
 		end)
 		print(
 			string.format(
@@ -629,6 +640,21 @@ function SkyTraffic.init(): ()
 				playerPos = root.Position
 			end
 
+			-- a creature whose model was removed (a developer swapping the colossal) leaves the sky
+			for k = #flyers, 1, -1 do
+				local gone = flyers[k]
+				if not gone.Part.Parent then
+					table.remove(flyers, k)
+					local ci = table.find(cores, gone.Core)
+					if ci then
+						table.remove(cores, ci)
+					end
+					local pi = table.find(presenceGroup, gone.Core)
+					if pi then
+						table.remove(presenceGroup, pi)
+					end
+				end
+			end
 			-- colossals: at least Floor are always here, never more than Ceiling
 			FlightCore.presenceStep(presenceGroup, dt)
 			for i, f in flyers do

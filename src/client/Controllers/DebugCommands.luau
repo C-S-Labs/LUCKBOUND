@@ -548,6 +548,18 @@ local SOURCES: { [string]: any } = {
 		table.insert(ids, 1, "BASE")
 		return ids
 	end,
+	COLOSSALS = function()
+		local ids = {}
+		local ok, creatures = pcall(require, Root.Content.Hub.SkyCreatures)
+		if ok then
+			for id, def in creatures :: any do
+				if def.Class == "COLOSSAL" then
+					table.insert(ids, id)
+				end
+			end
+		end
+		return sorted(ids)
+	end,
 	BOSSES = function()
 		local ids = {}
 		for id in BossPreviews do
