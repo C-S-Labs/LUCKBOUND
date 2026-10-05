@@ -236,18 +236,6 @@ return {
 		ScaleMax = 1,
 		Centre = Vector3.new(199.75, -43, 0),
 		Parts = {
-			hubprop_aether_nautilus__funnel_1 = {
-				Kind = "Pulse",
-				Offset = Vector3.new(188.3, -125.655, 0),
-				Hinge = Vector3.new(170.553, -125.059, 0),
-				Axis = Vector3.new(0, 0, 1),
-				Amp = 0.22,
-				Rate = 0.13,
-				Phase = 0,
-				Chain = "hubprop_aether_nautilus__head_1",
-				Lag = 0,
-				Gait = "Thrust",
-			},
 			hubprop_aether_nautilus__halo_1 = {
 				Kind = "Spin",
 				Offset = Vector3.new(158.24, -66.089, 0),

@@ -586,30 +586,6 @@
       0.06
      ]
     },
-    "hubprop_aether_nautilus__funnel_1": {
-     "kind": "Pulse",
-     "offset": [
-      188.3,
-      -125.655,
-      0.0
-     ],
-     "hinge": [
-      170.553,
-      -125.059,
-      0.0
-     ],
-     "axis": [
-      -0.0,
-      0.0,
-      1.0
-     ],
-     "amp": 0.22,
-     "rate": 0.13,
-     "phase": 0.0,
-     "chain": "hubprop_aether_nautilus__head_1",
-     "lag": 0.0,
-     "gait": "Thrust"
-    },
     "hubprop_aether_nautilus__halo_1": {
      "kind": "Spin",
      "offset": [

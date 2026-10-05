@@ -4,7 +4,7 @@
                       hinged part; 15 chained trunk/tail segments carry a travelling wave; two pairs of ember fins
                       (Flap chains on segments 3 and 10); crown of spines, glowing seams, ember belly.
     aether_nautilus   Ethereal Scape: a colossal pearl nautilus. A chambered spiral shell is the body root; a head
-                      part (hood, eyes) with a drifting fin halo and a pulsing jet funnel chained to it; three
+                      part (hood, eyes) with a drifting fin halo chained to it; three
                       trailing tentacle chains of 4, 3 and 3 segments.
 
 Contract: docs/design/SKY_ECOSYSTEM_CONTRACT.md sections 2, 3, 4.1, 6. Built at FINAL stud size, head +X, up +Z,
@@ -432,27 +432,6 @@ def naut_head(c, ap, rho):
     return q, (xa - 180, zc)
 
 
-def naut_funnel(c, head, ap, rho):
-    zc, xa = ap.z, ap.x
-    b0 = rho * 0.93
-    base = (xa - 54, 0, zc - b0 * 0.74)
-    hinge = (xa - 100, 0, zc - b0 * 0.86)
-    q = c.part("funnel", "Pulse", hinge=hinge, axis=(0, 1, 0), amp=0.22, rate=0.13, phase=0.0, chain=head, gait="Always")
-    pts = [base, (xa - 80, 0, zc - b0 * 0.92), (xa - 118, 0, zc - b0 * 1.02), (xa - 168, 0, zc - b0 * 1.06),
-           (xa - 190, 0, zc - b0 * 1.02)]
-    tube(q, "DeepPearl", pts, [34, 30, 24, 17, 14], n=10)
-    for i, (x, z) in enumerate(((xa - 80, zc - b0 * 0.92), (xa - 118, zc - b0 * 1.02), (xa - 168, zc - b0 * 1.06))):
-        with frame(q, xf(x, 0, z, ry=90 - 6)):
-            torus(q, "Gold" if i != 1 else "Marble", [31, 25, 16][i], 3.6, 0, 0, 0, n=12, m=4)
-    with frame(q, xf(xa - 190, 0, zc - b0 * 1.02, ry=90)):
-        torus(q, "Gold", 15, 4.2, 0, 0, 0, n=12, m=4)
-    orb(q, "Opal", xa - 188, 0, zc - b0 * 1.02, 8.5, n=6)                # the glow of the jet
-    for s in (-1, 1):
-        tube(q, "Opal", [(xa - 66, s * 25, zc - b0 * 0.80), (xa - 120, s * 20, zc - b0 * 0.92), (xa - 166, s * 13, zc - b0 * 0.98)],
-             [2.2, 2.2, 1.6], n=3)
-    return q
-
-
 def naut_halo(c, head, ap, rho, hx):
     zc = ap.z
     xa = ap.x
@@ -545,7 +524,6 @@ def build_nautilus():
     c = Creature("aether_nautilus", "COLOSSAL", ["ETHEREAL_SCAPE"], "pearl chambered nautilus, travel along +X")
     ap, radial, tang, rho = nautilus_shell(c)
     head, hx = naut_head(c, ap, rho)
-    naut_funnel(c, head, ap, rho)
     naut_halo(c, head, ap, rho, hx)
     naut_tentacles(c, head, ap, rho, hx)
     return c
