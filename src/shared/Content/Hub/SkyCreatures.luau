@@ -10,6 +10,8 @@
 -- Kind Flap | Spin | Flicker | Pulse; Chain names the part whose motion this one
 -- rides on (tail, neck, wing tip) and Lag its phase lag behind it; Gait says when
 -- it moves (Always | Flight | Idle | Turn | Thrust). CanLand: may perch on backdrop islands.
+-- Limit = { min, max } radians soft-clamps the part's hinge angle (no self-clipping).
+-- Spine = serpent / eel locomotion: Parts root-first, Wavelength/Amp studs, Rate Hz, Plane.
 -- Biome is RESERVED (unread): see docs/RESERVED.md.
 
 return {
@@ -33,6 +35,7 @@ return {
 				Phase = 0,
 				Lag = 0.6,
 				Gait = "Flight",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_aether_manta__fin_2 = {
 				Kind = "Flap",
@@ -45,6 +48,7 @@ return {
 				Chain = "hubprop_aether_manta__fin_1",
 				Lag = 0.6,
 				Gait = "Flight",
+				Limit = { -0.34, 0.34 },
 			},
 			hubprop_aether_manta__fin_3 = {
 				Kind = "Flap",
@@ -57,6 +61,7 @@ return {
 				Chain = "hubprop_aether_manta__fin_2",
 				Lag = 0.6,
 				Gait = "Flight",
+				Limit = { -0.38, 0.38 },
 			},
 			hubprop_aether_manta__fin_4 = {
 				Kind = "Flap",
@@ -68,6 +73,7 @@ return {
 				Phase = 3.1416,
 				Lag = 0.6,
 				Gait = "Flight",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_aether_manta__fin_5 = {
 				Kind = "Flap",
@@ -80,6 +86,7 @@ return {
 				Chain = "hubprop_aether_manta__fin_4",
 				Lag = 0.6,
 				Gait = "Flight",
+				Limit = { -0.34, 0.34 },
 			},
 			hubprop_aether_manta__fin_6 = {
 				Kind = "Flap",
@@ -92,6 +99,7 @@ return {
 				Chain = "hubprop_aether_manta__fin_5",
 				Lag = 0.6,
 				Gait = "Flight",
+				Limit = { -0.38, 0.38 },
 			},
 			hubprop_aether_manta__gills_1 = {
 				Kind = "Pulse",
@@ -125,6 +133,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Always",
+				Limit = { -0.16, 0.144 },
 			},
 			hubprop_aether_manta__lobe_1 = {
 				Kind = "Flap",
@@ -136,6 +145,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Always",
+				Limit = { -0.28, 0.28 },
 			},
 			hubprop_aether_manta__lobe_2 = {
 				Kind = "Flap",
@@ -147,6 +157,7 @@ return {
 				Phase = 3.1416,
 				Lag = 0,
 				Gait = "Always",
+				Limit = { -0.28, 0.28 },
 			},
 			hubprop_aether_manta__tail_1 = {
 				Kind = "Flap",
@@ -159,6 +170,7 @@ return {
 				Chain = "hubprop_aether_manta__tailbase_1",
 				Lag = 0.55,
 				Gait = "Always",
+				Limit = { -0.26, 0.26 },
 			},
 			hubprop_aether_manta__tail_2 = {
 				Kind = "Flap",
@@ -171,6 +183,7 @@ return {
 				Chain = "hubprop_aether_manta__tail_1",
 				Lag = 0.55,
 				Gait = "Always",
+				Limit = { -0.26, 0.26 },
 			},
 			hubprop_aether_manta__tail_3 = {
 				Kind = "Flap",
@@ -183,6 +196,7 @@ return {
 				Chain = "hubprop_aether_manta__tail_2",
 				Lag = 0.55,
 				Gait = "Always",
+				Limit = { -0.26, 0.26 },
 			},
 			hubprop_aether_manta__tail_4 = {
 				Kind = "Flap",
@@ -195,6 +209,7 @@ return {
 				Chain = "hubprop_aether_manta__tail_3",
 				Lag = 0.55,
 				Gait = "Always",
+				Limit = { -0.26, 0.26 },
 			},
 			hubprop_aether_manta__tailbase_1 = {
 				Kind = "Flap",
@@ -206,6 +221,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Turn",
+				Limit = { -0.32, 0.32 },
 			},
 		},
 	},
@@ -254,6 +270,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Always",
+				Limit = { -0.054, 0.06 },
 			},
 			hubprop_aether_nautilus__tent_c_1 = {
 				Kind = "Flap",
@@ -266,6 +283,7 @@ return {
 				Chain = "hubprop_aether_nautilus__head_1",
 				Lag = 0.6,
 				Gait = "Always",
+				Limit = { -0.16, 0.16 },
 			},
 			hubprop_aether_nautilus__tent_c_2 = {
 				Kind = "Flap",
@@ -278,6 +296,7 @@ return {
 				Chain = "hubprop_aether_nautilus__tent_c_1",
 				Lag = 0.6,
 				Gait = "Always",
+				Limit = { -0.23, 0.23 },
 			},
 			hubprop_aether_nautilus__tent_c_3 = {
 				Kind = "Flap",
@@ -290,6 +309,7 @@ return {
 				Chain = "hubprop_aether_nautilus__tent_c_2",
 				Lag = 0.6,
 				Gait = "Always",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_aether_nautilus__tent_c_4 = {
 				Kind = "Flap",
@@ -302,6 +322,7 @@ return {
 				Chain = "hubprop_aether_nautilus__tent_c_3",
 				Lag = 0.6,
 				Gait = "Always",
+				Limit = { -0.37, 0.37 },
 			},
 			hubprop_aether_nautilus__tent_l_1 = {
 				Kind = "Flap",
@@ -314,6 +335,7 @@ return {
 				Chain = "hubprop_aether_nautilus__head_1",
 				Lag = 0.6,
 				Gait = "Always",
+				Limit = { -0.16, 0.16 },
 			},
 			hubprop_aether_nautilus__tent_l_2 = {
 				Kind = "Flap",
@@ -326,6 +348,7 @@ return {
 				Chain = "hubprop_aether_nautilus__tent_l_1",
 				Lag = 0.6,
 				Gait = "Always",
+				Limit = { -0.23, 0.23 },
 			},
 			hubprop_aether_nautilus__tent_l_3 = {
 				Kind = "Flap",
@@ -338,6 +361,7 @@ return {
 				Chain = "hubprop_aether_nautilus__tent_l_2",
 				Lag = 0.6,
 				Gait = "Always",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_aether_nautilus__tent_r_1 = {
 				Kind = "Flap",
@@ -350,6 +374,7 @@ return {
 				Chain = "hubprop_aether_nautilus__head_1",
 				Lag = 0.6,
 				Gait = "Always",
+				Limit = { -0.16, 0.16 },
 			},
 			hubprop_aether_nautilus__tent_r_2 = {
 				Kind = "Flap",
@@ -362,6 +387,7 @@ return {
 				Chain = "hubprop_aether_nautilus__tent_r_1",
 				Lag = 0.6,
 				Gait = "Always",
+				Limit = { -0.23, 0.23 },
 			},
 			hubprop_aether_nautilus__tent_r_3 = {
 				Kind = "Flap",
@@ -374,6 +400,7 @@ return {
 				Chain = "hubprop_aether_nautilus__tent_r_2",
 				Lag = 0.6,
 				Gait = "Always",
+				Limit = { -0.3, 0.3 },
 			},
 		},
 	},
@@ -409,6 +436,7 @@ return {
 				Chain = "hubprop_ashen_roc__head_1",
 				Lag = 0.5,
 				Gait = "Idle",
+				Limit = { -0.252, 0.28 },
 			},
 			hubprop_ashen_roc__foot_1 = {
 				Kind = "Flap",
@@ -421,6 +449,7 @@ return {
 				Chain = "hubprop_ashen_roc__shin_1",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.338, 0.338 },
 			},
 			hubprop_ashen_roc__foot_2 = {
 				Kind = "Flap",
@@ -433,6 +462,7 @@ return {
 				Chain = "hubprop_ashen_roc__shin_2",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.338, 0.338 },
 			},
 			hubprop_ashen_roc__glow_1 = {
 				Kind = "Flicker",
@@ -456,6 +486,7 @@ return {
 				Chain = "hubprop_ashen_roc__neck_2",
 				Lag = 0.4,
 				Gait = "Flight",
+				Limit = { -0.12, 0.12 },
 			},
 			hubprop_ashen_roc__hip_1 = {
 				Kind = "Flap",
@@ -467,6 +498,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.25, 0.35 },
 			},
 			hubprop_ashen_roc__hip_2 = {
 				Kind = "Flap",
@@ -478,6 +510,7 @@ return {
 				Phase = 0.35,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.2, 0.5 },
 			},
 			hubprop_ashen_roc__jaw_1 = {
 				Kind = "Flap",
@@ -490,6 +523,7 @@ return {
 				Chain = "hubprop_ashen_roc__head_1",
 				Lag = 0.2,
 				Gait = "Idle",
+				Limit = { -0.18, 0.18 },
 			},
 			hubprop_ashen_roc__neck_1 = {
 				Kind = "Flap",
@@ -501,6 +535,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Turn",
+				Limit = { -0.066, 0.066 },
 			},
 			hubprop_ashen_roc__neck_2 = {
 				Kind = "Flap",
@@ -513,6 +548,7 @@ return {
 				Chain = "hubprop_ashen_roc__neck_1",
 				Lag = 0.4,
 				Gait = "Flight",
+				Limit = { -0.09, 0.09 },
 			},
 			hubprop_ashen_roc__pinion_1 = {
 				Kind = "Flap",
@@ -525,6 +561,7 @@ return {
 				Chain = "hubprop_ashen_roc__wingtip_1",
 				Lag = 0.5,
 				Gait = "Flight",
+				Limit = { -0.42, 0.42 },
 			},
 			hubprop_ashen_roc__pinion_2 = {
 				Kind = "Flap",
@@ -537,6 +574,7 @@ return {
 				Chain = "hubprop_ashen_roc__wingtip_2",
 				Lag = 0.5,
 				Gait = "Flight",
+				Limit = { -0.42, 0.42 },
 			},
 			hubprop_ashen_roc__shin_1 = {
 				Kind = "Flap",
@@ -549,6 +587,7 @@ return {
 				Chain = "hubprop_ashen_roc__hip_1",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.26, 0.26 },
 			},
 			hubprop_ashen_roc__shin_2 = {
 				Kind = "Flap",
@@ -561,6 +600,7 @@ return {
 				Chain = "hubprop_ashen_roc__hip_2",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.26, 0.26 },
 			},
 			hubprop_ashen_roc__tail_1 = {
 				Kind = "Flap",
@@ -573,6 +613,7 @@ return {
 				Chain = "hubprop_ashen_roc__tailyaw_1",
 				Lag = 0.5,
 				Gait = "Flight",
+				Limit = { -0.16, 0.16 },
 			},
 			hubprop_ashen_roc__tail_2 = {
 				Kind = "Flap",
@@ -585,6 +626,7 @@ return {
 				Chain = "hubprop_ashen_roc__tail_1",
 				Lag = 0.5,
 				Gait = "Flight",
+				Limit = { -0.16, 0.16 },
 			},
 			hubprop_ashen_roc__tail_3 = {
 				Kind = "Flap",
@@ -597,6 +639,7 @@ return {
 				Chain = "hubprop_ashen_roc__tail_2",
 				Lag = 0.5,
 				Gait = "Flight",
+				Limit = { -0.16, 0.16 },
 			},
 			hubprop_ashen_roc__tailyaw_1 = {
 				Kind = "Flap",
@@ -608,6 +651,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Turn",
+				Limit = { -0.28, 0.28 },
 			},
 			hubprop_ashen_roc__wing_1 = {
 				Kind = "Flap",
@@ -619,6 +663,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.62, 0.62 },
 			},
 			hubprop_ashen_roc__wing_2 = {
 				Kind = "Flap",
@@ -630,6 +675,7 @@ return {
 				Phase = 3.1416,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.62, 0.62 },
 			},
 			hubprop_ashen_roc__wingtip_1 = {
 				Kind = "Flap",
@@ -642,6 +688,7 @@ return {
 				Chain = "hubprop_ashen_roc__wing_1",
 				Lag = 0.55,
 				Gait = "Flight",
+				Limit = { -0.5, 0.5 },
 			},
 			hubprop_ashen_roc__wingtip_2 = {
 				Kind = "Flap",
@@ -654,6 +701,7 @@ return {
 				Chain = "hubprop_ashen_roc__wing_2",
 				Lag = 0.55,
 				Gait = "Flight",
+				Limit = { -0.5, 0.5 },
 			},
 		},
 	},
@@ -689,6 +737,7 @@ return {
 				Chain = "hubprop_canopy_drake__head_1",
 				Lag = 0.3,
 				Gait = "Always",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_canopy_drake__ear_2 = {
 				Kind = "Flap",
@@ -701,6 +750,7 @@ return {
 				Chain = "hubprop_canopy_drake__head_1",
 				Lag = 0.3,
 				Gait = "Always",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_canopy_drake__foot_1 = {
 				Kind = "Flap",
@@ -713,6 +763,7 @@ return {
 				Chain = "hubprop_canopy_drake__shin_1",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.364, 0.364 },
 			},
 			hubprop_canopy_drake__foot_2 = {
 				Kind = "Flap",
@@ -725,6 +776,7 @@ return {
 				Chain = "hubprop_canopy_drake__shin_2",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.364, 0.364 },
 			},
 			hubprop_canopy_drake__forearm_1 = {
 				Kind = "Flap",
@@ -737,6 +789,7 @@ return {
 				Chain = "hubprop_canopy_drake__foreleg_1",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.225, 0.125 },
 			},
 			hubprop_canopy_drake__forearm_2 = {
 				Kind = "Flap",
@@ -749,6 +802,7 @@ return {
 				Chain = "hubprop_canopy_drake__foreleg_2",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.25, 0.125 },
 			},
 			hubprop_canopy_drake__foreleg_1 = {
 				Kind = "Flap",
@@ -760,6 +814,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.2, 0.5 },
 			},
 			hubprop_canopy_drake__foreleg_2 = {
 				Kind = "Flap",
@@ -771,6 +826,7 @@ return {
 				Phase = 0.4,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_canopy_drake__forepaw_1 = {
 				Kind = "Flap",
@@ -783,6 +839,7 @@ return {
 				Chain = "hubprop_canopy_drake__forearm_1",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.325, 0.2275 },
 			},
 			hubprop_canopy_drake__forepaw_2 = {
 				Kind = "Flap",
@@ -795,6 +852,7 @@ return {
 				Chain = "hubprop_canopy_drake__forearm_2",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.325, 0.325 },
 			},
 			hubprop_canopy_drake__frill_1 = {
 				Kind = "Flap",
@@ -806,6 +864,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Always",
+				Limit = { -0.07, 0.14 },
 			},
 			hubprop_canopy_drake__frill_2 = {
 				Kind = "Flap",
@@ -817,6 +876,7 @@ return {
 				Phase = 1.3,
 				Lag = 0,
 				Gait = "Always",
+				Limit = { -0.14, 0.14 },
 			},
 			hubprop_canopy_drake__glow_1 = {
 				Kind = "Flicker",
@@ -840,6 +900,7 @@ return {
 				Chain = "hubprop_canopy_drake__neck_3",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.14, 0.14 },
 			},
 			hubprop_canopy_drake__hip_1 = {
 				Kind = "Flap",
@@ -851,6 +912,7 @@ return {
 				Phase = 0.2,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.18, 0.6 },
 			},
 			hubprop_canopy_drake__hip_2 = {
 				Kind = "Flap",
@@ -862,6 +924,7 @@ return {
 				Phase = 0.6,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.12, 0.06 },
 			},
 			hubprop_canopy_drake__jaw_1 = {
 				Kind = "Flap",
@@ -874,6 +937,7 @@ return {
 				Chain = "hubprop_canopy_drake__head_1",
 				Lag = 0.2,
 				Gait = "Idle",
+				Limit = { -0.2, 0.2 },
 			},
 			hubprop_canopy_drake__neck_1 = {
 				Kind = "Flap",
@@ -885,6 +949,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Turn",
+				Limit = { -0.26, 0.26 },
 			},
 			hubprop_canopy_drake__neck_2 = {
 				Kind = "Flap",
@@ -897,6 +962,7 @@ return {
 				Chain = "hubprop_canopy_drake__neck_1",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.12, 0.12 },
 			},
 			hubprop_canopy_drake__neck_3 = {
 				Kind = "Flap",
@@ -909,6 +975,7 @@ return {
 				Chain = "hubprop_canopy_drake__neck_2",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.14, 0.14 },
 			},
 			hubprop_canopy_drake__shin_1 = {
 				Kind = "Flap",
@@ -921,6 +988,7 @@ return {
 				Chain = "hubprop_canopy_drake__hip_1",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.112, 0.112 },
 			},
 			hubprop_canopy_drake__shin_2 = {
 				Kind = "Flap",
@@ -933,6 +1001,7 @@ return {
 				Chain = "hubprop_canopy_drake__hip_2",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.28, 0.14 },
 			},
 			hubprop_canopy_drake__tail_1 = {
 				Kind = "Flap",
@@ -945,6 +1014,7 @@ return {
 				Chain = "hubprop_canopy_drake__tailyaw_1",
 				Lag = 0.5,
 				Gait = "Always",
+				Limit = { -0.24, 0.24 },
 			},
 			hubprop_canopy_drake__tail_2 = {
 				Kind = "Flap",
@@ -957,6 +1027,7 @@ return {
 				Chain = "hubprop_canopy_drake__tail_1",
 				Lag = 0.5,
 				Gait = "Always",
+				Limit = { -0.24, 0.24 },
 			},
 			hubprop_canopy_drake__tail_3 = {
 				Kind = "Flap",
@@ -969,6 +1040,7 @@ return {
 				Chain = "hubprop_canopy_drake__tail_2",
 				Lag = 0.5,
 				Gait = "Always",
+				Limit = { -0.24, 0.24 },
 			},
 			hubprop_canopy_drake__tail_4 = {
 				Kind = "Flap",
@@ -981,6 +1053,7 @@ return {
 				Chain = "hubprop_canopy_drake__tail_3",
 				Lag = 0.5,
 				Gait = "Always",
+				Limit = { -0.24, 0.24 },
 			},
 			hubprop_canopy_drake__tailyaw_1 = {
 				Kind = "Flap",
@@ -992,6 +1065,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Turn",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_canopy_drake__wing_1 = {
 				Kind = "Flap",
@@ -1003,6 +1077,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.58, 0.58 },
 			},
 			hubprop_canopy_drake__wing_2 = {
 				Kind = "Flap",
@@ -1014,6 +1089,7 @@ return {
 				Phase = 3.1416,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.58, 0.58 },
 			},
 			hubprop_canopy_drake__wingfin_1 = {
 				Kind = "Flap",
@@ -1026,6 +1102,7 @@ return {
 				Chain = "hubprop_canopy_drake__wingtip_1",
 				Lag = 0.5,
 				Gait = "Flight",
+				Limit = { -0.36, 0.36 },
 			},
 			hubprop_canopy_drake__wingfin_2 = {
 				Kind = "Flap",
@@ -1038,6 +1115,7 @@ return {
 				Chain = "hubprop_canopy_drake__wingtip_2",
 				Lag = 0.5,
 				Gait = "Flight",
+				Limit = { -0.36, 0.36 },
 			},
 			hubprop_canopy_drake__wingtip_1 = {
 				Kind = "Flap",
@@ -1050,6 +1128,7 @@ return {
 				Chain = "hubprop_canopy_drake__wing_1",
 				Lag = 0.55,
 				Gait = "Flight",
+				Limit = { -0.42, 0.42 },
 			},
 			hubprop_canopy_drake__wingtip_2 = {
 				Kind = "Flap",
@@ -1062,6 +1141,7 @@ return {
 				Chain = "hubprop_canopy_drake__wing_2",
 				Lag = 0.55,
 				Gait = "Flight",
+				Limit = { -0.42, 0.42 },
 			},
 		},
 	},
@@ -1075,13 +1155,36 @@ return {
 		ScaleMin = 1,
 		ScaleMax = 1,
 		Centre = Vector3.new(329.9, -7, 0),
+		Spine = {
+			Parts = {
+				"hubprop_cinder_wyrm__body_a_1",
+				"hubprop_cinder_wyrm__body_a_2",
+				"hubprop_cinder_wyrm__body_a_3",
+				"hubprop_cinder_wyrm__body_a_4",
+				"hubprop_cinder_wyrm__body_a_5",
+				"hubprop_cinder_wyrm__body_a_6",
+				"hubprop_cinder_wyrm__body_a_7",
+				"hubprop_cinder_wyrm__body_a_8",
+				"hubprop_cinder_wyrm__body_a_9",
+				"hubprop_cinder_wyrm__body_a_10",
+				"hubprop_cinder_wyrm__body_a_11",
+				"hubprop_cinder_wyrm__body_a_12",
+				"hubprop_cinder_wyrm__body_a_13",
+				"hubprop_cinder_wyrm__body_a_14",
+				"hubprop_cinder_wyrm__body_a_15",
+			},
+			Wavelength = 350,
+			Amp = 32,
+			Rate = 0.12,
+			Plane = "lateral",
+		},
 		Parts = {
 			hubprop_cinder_wyrm__body_a_1 = {
 				Kind = "Flap",
 				Offset = Vector3.new(42.729, -15.416, -0.099),
 				Hinge = Vector3.new(24.906, -28.199, -0.099),
 				Axis = Vector3.new(0, 0, 1),
-				Amp = 0.09,
+				Amp = 0,
 				Rate = 0.075,
 				Phase = 0,
 				Lag = 0.5,
@@ -1092,7 +1195,7 @@ return {
 				Offset = Vector3.new(457.706, -20.907, -0.099),
 				Hinge = Vector3.new(438.906, -28.199, -0.099),
 				Axis = Vector3.new(0, 0, 1),
-				Amp = 0.1864,
+				Amp = 0,
 				Rate = 0.075,
 				Phase = 0,
 				Chain = "hubprop_cinder_wyrm__body_a_9",
@@ -1104,7 +1207,7 @@ return {
 				Offset = Vector3.new(503.706, -21.685, -0.099),
 				Hinge = Vector3.new(484.906, -28.199, -0.099),
 				Axis = Vector3.new(0, 0, 1),
-				Amp = 0.1971,
+				Amp = 0,
 				Rate = 0.075,
 				Phase = 0,
 				Chain = "hubprop_cinder_wyrm__body_a_10",
@@ -1116,7 +1219,7 @@ return {
 				Offset = Vector3.new(549.706, -24.803, -0.099),
 				Hinge = Vector3.new(530.906, -28.199, -0.099),
 				Axis = Vector3.new(0, 0, 1),
-				Amp = 0.2079,
+				Amp = 0,
 				Rate = 0.075,
 				Phase = 0,
 				Chain = "hubprop_cinder_wyrm__body_a_11",
@@ -1128,7 +1231,7 @@ return {
 				Offset = Vector3.new(595.706, -23.694, -0.099),
 				Hinge = Vector3.new(576.906, -28.199, -0.099),
 				Axis = Vector3.new(0, 0, 1),
-				Amp = 0.2186,
+				Amp = 0,
 				Rate = 0.075,
 				Phase = 0,
 				Chain = "hubprop_cinder_wyrm__body_a_12",
@@ -1140,7 +1243,7 @@ return {
 				Offset = Vector3.new(641.706, -24.611, -0.099),
 				Hinge = Vector3.new(622.906, -28.199, -0.099),
 				Axis = Vector3.new(0, 0, 1),
-				Amp = 0.2293,
+				Amp = 0,
 				Rate = 0.075,
 				Phase = 0,
 				Chain = "hubprop_cinder_wyrm__body_a_13",
@@ -1152,7 +1255,7 @@ return {
 				Offset = Vector3.new(717.343, -10.545, -0.099),
 				Hinge = Vector3.new(668.906, -28.199, -0.099),
 				Axis = Vector3.new(0, 0, 1),
-				Amp = 0.24,
+				Amp = 0,
 				Rate = 0.075,
 				Phase = 0,
 				Chain = "hubprop_cinder_wyrm__body_a_14",
@@ -1164,7 +1267,7 @@ return {
 				Offset = Vector3.new(89.01, -15.109, -0.099),
 				Hinge = Vector3.new(70.906, -28.199, -0.099),
 				Axis = Vector3.new(0, 0, 1),
-				Amp = 0.1007,
+				Amp = 0,
 				Rate = 0.075,
 				Phase = 0,
 				Chain = "hubprop_cinder_wyrm__body_a_1",
@@ -1176,7 +1279,7 @@ return {
 				Offset = Vector3.new(135.292, -15.913, -0.099),
 				Hinge = Vector3.new(116.906, -28.199, -0.099),
 				Axis = Vector3.new(0, 0, 1),
-				Amp = 0.1114,
+				Amp = 0,
 				Rate = 0.075,
 				Phase = 0,
 				Chain = "hubprop_cinder_wyrm__body_a_2",
@@ -1188,7 +1291,7 @@ return {
 				Offset = Vector3.new(181.573, -16.077, -0.099),
 				Hinge = Vector3.new(162.906, -28.199, -0.099),
 				Axis = Vector3.new(0, 0, 1),
-				Amp = 0.1221,
+				Amp = 0,
 				Rate = 0.075,
 				Phase = 0,
 				Chain = "hubprop_cinder_wyrm__body_a_3",
@@ -1200,7 +1303,7 @@ return {
 				Offset = Vector3.new(227.854, -16.899, -0.099),
 				Hinge = Vector3.new(208.906, -28.199, -0.099),
 				Axis = Vector3.new(0, 0, 1),
-				Amp = 0.1329,
+				Amp = 0,
 				Rate = 0.075,
 				Phase = 0,
 				Chain = "hubprop_cinder_wyrm__body_a_4",
@@ -1212,7 +1315,7 @@ return {
 				Offset = Vector3.new(274.135, -18.792, -0.099),
 				Hinge = Vector3.new(254.906, -28.199, -0.099),
 				Axis = Vector3.new(0, 0, 1),
-				Amp = 0.1436,
+				Amp = 0,
 				Rate = 0.075,
 				Phase = 0,
 				Chain = "hubprop_cinder_wyrm__body_a_5",
@@ -1224,7 +1327,7 @@ return {
 				Offset = Vector3.new(320.416, -18.545, 0.298),
 				Hinge = Vector3.new(300.906, -28.199, -0.099),
 				Axis = Vector3.new(0, 0, 1),
-				Amp = 0.1543,
+				Amp = 0,
 				Rate = 0.075,
 				Phase = 0,
 				Chain = "hubprop_cinder_wyrm__body_a_6",
@@ -1236,7 +1339,7 @@ return {
 				Offset = Vector3.new(366.697, -19.353, 0.159),
 				Hinge = Vector3.new(346.906, -28.199, -0.099),
 				Axis = Vector3.new(0, 0, 1),
-				Amp = 0.165,
+				Amp = 0,
 				Rate = 0.075,
 				Phase = 0,
 				Chain = "hubprop_cinder_wyrm__body_a_7",
@@ -1248,7 +1351,7 @@ return {
 				Offset = Vector3.new(412.307, -21.96, -0.099),
 				Hinge = Vector3.new(392.906, -28.199, -0.099),
 				Axis = Vector3.new(0, 0, 1),
-				Amp = 0.1757,
+				Amp = 0,
 				Rate = 0.075,
 				Phase = 0,
 				Chain = "hubprop_cinder_wyrm__body_a_8",
@@ -1266,6 +1369,7 @@ return {
 				Chain = "hubprop_cinder_wyrm__body_a_3",
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.42, 0.42 },
 			},
 			hubprop_cinder_wyrm__fin_fore_2 = {
 				Kind = "Flap",
@@ -1278,6 +1382,7 @@ return {
 				Chain = "hubprop_cinder_wyrm__body_a_3",
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.42, 0.42 },
 			},
 			hubprop_cinder_wyrm__fin_rear_1 = {
 				Kind = "Flap",
@@ -1290,6 +1395,7 @@ return {
 				Chain = "hubprop_cinder_wyrm__body_a_10",
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.42, 0.42 },
 			},
 			hubprop_cinder_wyrm__fin_rear_2 = {
 				Kind = "Flap",
@@ -1302,6 +1408,7 @@ return {
 				Chain = "hubprop_cinder_wyrm__body_a_10",
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.42, 0.42 },
 			},
 			hubprop_cinder_wyrm__jaw_1 = {
 				Kind = "Flap",
@@ -1313,6 +1420,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.028, 0.14 },
 			},
 		},
 	},
@@ -1370,6 +1478,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.12, 0.12 },
 			},
 			hubprop_cinderkite__jaw_1 = {
 				Kind = "Flap",
@@ -1382,6 +1491,7 @@ return {
 				Chain = "hubprop_cinderkite__head_1",
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.22, 0.22 },
 			},
 			hubprop_cinderkite__leg_1 = {
 				Kind = "Flap",
@@ -1393,6 +1503,7 @@ return {
 				Phase = 0.7,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_cinderkite__leg_2 = {
 				Kind = "Flap",
@@ -1404,6 +1515,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_cinderkite__leg_foot_1 = {
 				Kind = "Flap",
@@ -1416,6 +1528,7 @@ return {
 				Chain = "hubprop_cinderkite__leg_1",
 				Lag = 0.5,
 				Gait = "Idle",
+				Limit = { -0.42, 0.42 },
 			},
 			hubprop_cinderkite__leg_foot_2 = {
 				Kind = "Flap",
@@ -1428,6 +1541,7 @@ return {
 				Chain = "hubprop_cinderkite__leg_2",
 				Lag = 0.5,
 				Gait = "Idle",
+				Limit = { -0.42, 0.42 },
 			},
 			hubprop_cinderkite__streamer_a_1 = {
 				Kind = "Flap",
@@ -1440,6 +1554,7 @@ return {
 				Chain = "hubprop_cinderkite__tail_fan_1",
 				Lag = 0.5,
 				Gait = "Always",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_cinderkite__streamer_a_2 = {
 				Kind = "Flap",
@@ -1452,6 +1567,7 @@ return {
 				Chain = "hubprop_cinderkite__tail_fan_2",
 				Lag = 0.5,
 				Gait = "Always",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_cinderkite__streamer_b_1 = {
 				Kind = "Flap",
@@ -1464,6 +1580,7 @@ return {
 				Chain = "hubprop_cinderkite__streamer_a_1",
 				Lag = 0.6,
 				Gait = "Always",
+				Limit = { -0.12, 0.4 },
 			},
 			hubprop_cinderkite__streamer_b_2 = {
 				Kind = "Flap",
@@ -1476,6 +1593,7 @@ return {
 				Chain = "hubprop_cinderkite__streamer_a_2",
 				Lag = 0.6,
 				Gait = "Always",
+				Limit = { -0.4, 0.12 },
 			},
 			hubprop_cinderkite__tail_1 = {
 				Kind = "Flap",
@@ -1487,6 +1605,7 @@ return {
 				Phase = 0.5,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.14, 0.14 },
 			},
 			hubprop_cinderkite__tail_fan_1 = {
 				Kind = "Flap",
@@ -1499,6 +1618,7 @@ return {
 				Chain = "hubprop_cinderkite__tail_1",
 				Lag = 0.4,
 				Gait = "Turn",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_cinderkite__tail_fan_2 = {
 				Kind = "Flap",
@@ -1511,6 +1631,7 @@ return {
 				Chain = "hubprop_cinderkite__tail_1",
 				Lag = 0.4,
 				Gait = "Turn",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_cinderkite__wing_in_1 = {
 				Kind = "Flap",
@@ -1522,6 +1643,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_cinderkite__wing_in_2 = {
 				Kind = "Flap",
@@ -1533,6 +1655,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_cinderkite__wing_out_1 = {
 				Kind = "Flap",
@@ -1545,6 +1668,7 @@ return {
 				Chain = "hubprop_cinderkite__wing_in_1",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.26, 0.26 },
 			},
 			hubprop_cinderkite__wing_out_2 = {
 				Kind = "Flap",
@@ -1557,6 +1681,7 @@ return {
 				Chain = "hubprop_cinderkite__wing_in_2",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.26, 0.26 },
 			},
 			hubprop_cinderkite__wing_tip_1 = {
 				Kind = "Flap",
@@ -1569,6 +1694,7 @@ return {
 				Chain = "hubprop_cinderkite__wing_out_1",
 				Lag = 0.5,
 				Gait = "Flight",
+				Limit = { -0.24, 0.24 },
 			},
 			hubprop_cinderkite__wing_tip_2 = {
 				Kind = "Flap",
@@ -1581,6 +1707,7 @@ return {
 				Chain = "hubprop_cinderkite__wing_out_2",
 				Lag = 0.5,
 				Gait = "Flight",
+				Limit = { -0.24, 0.24 },
 			},
 		},
 	},
@@ -1616,6 +1743,7 @@ return {
 				Chain = "hubprop_citadel_falcon__head_1",
 				Lag = 0.5,
 				Gait = "Idle",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_citadel_falcon__foot_1 = {
 				Kind = "Flap",
@@ -1628,6 +1756,7 @@ return {
 				Chain = "hubprop_citadel_falcon__shin_1",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.364, 0.364 },
 			},
 			hubprop_citadel_falcon__foot_2 = {
 				Kind = "Flap",
@@ -1640,6 +1769,7 @@ return {
 				Chain = "hubprop_citadel_falcon__shin_2",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.364, 0.364 },
 			},
 			hubprop_citadel_falcon__glow_1 = {
 				Kind = "Flicker",
@@ -1663,6 +1793,7 @@ return {
 				Chain = "hubprop_citadel_falcon__neck_1",
 				Lag = 0.3,
 				Gait = "Idle",
+				Limit = { -0.028, 0.14 },
 			},
 			hubprop_citadel_falcon__hip_1 = {
 				Kind = "Flap",
@@ -1674,6 +1805,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.275, 0.33 },
 			},
 			hubprop_citadel_falcon__hip_2 = {
 				Kind = "Flap",
@@ -1685,6 +1817,7 @@ return {
 				Phase = 0.35,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.385, 0.44 },
 			},
 			hubprop_citadel_falcon__jaw_1 = {
 				Kind = "Flap",
@@ -1697,6 +1830,7 @@ return {
 				Chain = "hubprop_citadel_falcon__head_1",
 				Lag = 0.2,
 				Gait = "Idle",
+				Limit = { -0.16, 0.16 },
 			},
 			hubprop_citadel_falcon__neck_1 = {
 				Kind = "Flap",
@@ -1708,6 +1842,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Turn",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_citadel_falcon__pinion_1 = {
 				Kind = "Flap",
@@ -1720,6 +1855,7 @@ return {
 				Chain = "hubprop_citadel_falcon__wingtip_1",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.36, 0.36 },
 			},
 			hubprop_citadel_falcon__pinion_2 = {
 				Kind = "Flap",
@@ -1732,6 +1868,7 @@ return {
 				Chain = "hubprop_citadel_falcon__wingtip_2",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.36, 0.36 },
 			},
 			hubprop_citadel_falcon__shin_1 = {
 				Kind = "Flap",
@@ -1744,6 +1881,7 @@ return {
 				Chain = "hubprop_citadel_falcon__hip_1",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.28, 0.28 },
 			},
 			hubprop_citadel_falcon__shin_2 = {
 				Kind = "Flap",
@@ -1756,6 +1894,7 @@ return {
 				Chain = "hubprop_citadel_falcon__hip_2",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.28, 0.224 },
 			},
 			hubprop_citadel_falcon__tail_1 = {
 				Kind = "Flap",
@@ -1768,6 +1907,7 @@ return {
 				Chain = "hubprop_citadel_falcon__tailyaw_1",
 				Lag = 0.35,
 				Gait = "Flight",
+				Limit = { -0.18, 0.18 },
 			},
 			hubprop_citadel_falcon__tail_2 = {
 				Kind = "Flap",
@@ -1780,6 +1920,7 @@ return {
 				Chain = "hubprop_citadel_falcon__tail_1",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.22, 0.22 },
 			},
 			hubprop_citadel_falcon__tailyaw_1 = {
 				Kind = "Flap",
@@ -1791,6 +1932,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Turn",
+				Limit = { -0.32, 0.32 },
 			},
 			hubprop_citadel_falcon__wing_1 = {
 				Kind = "Flap",
@@ -1802,6 +1944,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.62, 0.62 },
 			},
 			hubprop_citadel_falcon__wing_2 = {
 				Kind = "Flap",
@@ -1813,6 +1956,7 @@ return {
 				Phase = 3.1416,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.62, 0.62 },
 			},
 			hubprop_citadel_falcon__wingtip_1 = {
 				Kind = "Flap",
@@ -1825,6 +1969,7 @@ return {
 				Chain = "hubprop_citadel_falcon__wing_1",
 				Lag = 0.5,
 				Gait = "Flight",
+				Limit = { -0.44, 0.44 },
 			},
 			hubprop_citadel_falcon__wingtip_2 = {
 				Kind = "Flap",
@@ -1837,6 +1982,7 @@ return {
 				Chain = "hubprop_citadel_falcon__wing_2",
 				Lag = 0.5,
 				Gait = "Flight",
+				Limit = { -0.44, 0.44 },
 			},
 		},
 	},
@@ -1872,6 +2018,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.42, 0.378 },
 			},
 			hubprop_elder_greatturtle__flipper_2 = {
 				Kind = "Flap",
@@ -1883,6 +2030,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.42, 0.378 },
 			},
 			hubprop_elder_greatturtle__flippertip_1 = {
 				Kind = "Flap",
@@ -1895,6 +2043,7 @@ return {
 				Chain = "hubprop_elder_greatturtle__flipper_1",
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.5, 0.5 },
 			},
 			hubprop_elder_greatturtle__flippertip_2 = {
 				Kind = "Flap",
@@ -1907,6 +2056,7 @@ return {
 				Chain = "hubprop_elder_greatturtle__flipper_2",
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.5, 0.5 },
 			},
 			hubprop_elder_greatturtle__grove_1 = {
 				Kind = "Flap",
@@ -1919,6 +2069,7 @@ return {
 				Chain = "hubprop_elder_greatturtle__isle_1",
 				Lag = 0,
 				Gait = "Always",
+				Limit = { -0.05, 0.02 },
 			},
 			hubprop_elder_greatturtle__head_1 = {
 				Kind = "Flap",
@@ -1931,6 +2082,7 @@ return {
 				Chain = "hubprop_elder_greatturtle__neck_1",
 				Lag = 0,
 				Gait = "Always",
+				Limit = { -0.16, 0.16 },
 			},
 			hubprop_elder_greatturtle__hindflipper_1 = {
 				Kind = "Flap",
@@ -1942,6 +2094,7 @@ return {
 				Phase = 1.5708,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.34, 0.34 },
 			},
 			hubprop_elder_greatturtle__hindflipper_2 = {
 				Kind = "Flap",
@@ -1953,6 +2106,7 @@ return {
 				Phase = 4.7124,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.34, 0.34 },
 			},
 			hubprop_elder_greatturtle__isle_1 = {
 				Kind = "Flap",
@@ -1965,6 +2119,7 @@ return {
 				Chain = "hubprop_elder_greatturtle__shell_1",
 				Lag = 0,
 				Gait = "Always",
+				Limit = { -0.034, 0.034 },
 			},
 			hubprop_elder_greatturtle__neck_1 = {
 				Kind = "Flap",
@@ -1976,13 +2131,14 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Always",
+				Limit = { -0.1, 0.1 },
 			},
 			hubprop_elder_greatturtle__shell_1 = {
 				Kind = "Pulse",
 				Offset = Vector3.new(-17.256, 129.144, 0),
 				Hinge = Vector3.new(-17.256, 53.144, 0),
 				Axis = Vector3.new(0, 1, 0),
-				Amp = 0.022,
+				Amp = 0,
 				Rate = 0.09,
 				Phase = 0,
 				Lag = 0,
@@ -1998,6 +2154,7 @@ return {
 				Phase = 2.2,
 				Lag = 0,
 				Gait = "Always",
+				Limit = { -0.24, 0.24 },
 			},
 		},
 	},
@@ -2021,6 +2178,7 @@ return {
 				Phase = 0.9,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.12, 0.12 },
 			},
 			hubprop_lumen_moth__antenna_1 = {
 				Kind = "Flap",
@@ -2033,6 +2191,7 @@ return {
 				Chain = "hubprop_lumen_moth__head_1",
 				Lag = 0.3,
 				Gait = "Idle",
+				Limit = { -0.2, 0.2 },
 			},
 			hubprop_lumen_moth__antenna_2 = {
 				Kind = "Flap",
@@ -2045,6 +2204,7 @@ return {
 				Chain = "hubprop_lumen_moth__head_1",
 				Lag = 0.3,
 				Gait = "Idle",
+				Limit = { -0.2, 0.2 },
 			},
 			hubprop_lumen_moth__antenna_plume_1 = {
 				Kind = "Flap",
@@ -2057,6 +2217,7 @@ return {
 				Chain = "hubprop_lumen_moth__antenna_1",
 				Lag = 0.4,
 				Gait = "Idle",
+				Limit = { -0.35, 0.35 },
 			},
 			hubprop_lumen_moth__antenna_plume_2 = {
 				Kind = "Flap",
@@ -2069,6 +2230,7 @@ return {
 				Chain = "hubprop_lumen_moth__antenna_2",
 				Lag = 0.4,
 				Gait = "Idle",
+				Limit = { -0.35, 0.35 },
 			},
 			hubprop_lumen_moth__head_1 = {
 				Kind = "Flap",
@@ -2080,6 +2242,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.12, 0.12 },
 			},
 			hubprop_lumen_moth__lantern_1 = {
 				Kind = "Flicker",
@@ -2103,6 +2266,7 @@ return {
 				Phase = 1,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.35, 0.35 },
 			},
 			hubprop_lumen_moth__leg_fore_2 = {
 				Kind = "Flap",
@@ -2114,6 +2278,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.35, 0.35 },
 			},
 			hubprop_lumen_moth__leg_fore_foot_1 = {
 				Kind = "Flap",
@@ -2126,6 +2291,7 @@ return {
 				Chain = "hubprop_lumen_moth__leg_fore_1",
 				Lag = 0.5,
 				Gait = "Idle",
+				Limit = { -0.49, 0.49 },
 			},
 			hubprop_lumen_moth__leg_fore_foot_2 = {
 				Kind = "Flap",
@@ -2138,6 +2304,7 @@ return {
 				Chain = "hubprop_lumen_moth__leg_fore_2",
 				Lag = 0.5,
 				Gait = "Idle",
+				Limit = { -0.49, 0.49 },
 			},
 			hubprop_lumen_moth__leg_hind_1 = {
 				Kind = "Flap",
@@ -2149,6 +2316,7 @@ return {
 				Phase = 3,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.35, 0.35 },
 			},
 			hubprop_lumen_moth__leg_hind_2 = {
 				Kind = "Flap",
@@ -2160,6 +2328,7 @@ return {
 				Phase = 2,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.35, 0.35 },
 			},
 			hubprop_lumen_moth__leg_hind_foot_1 = {
 				Kind = "Flap",
@@ -2172,6 +2341,7 @@ return {
 				Chain = "hubprop_lumen_moth__leg_hind_1",
 				Lag = 0.5,
 				Gait = "Idle",
+				Limit = { -0.49, 0.49 },
 			},
 			hubprop_lumen_moth__leg_hind_foot_2 = {
 				Kind = "Flap",
@@ -2184,6 +2354,7 @@ return {
 				Chain = "hubprop_lumen_moth__leg_hind_2",
 				Lag = 0.5,
 				Gait = "Idle",
+				Limit = { -0.49, 0.49 },
 			},
 			hubprop_lumen_moth__mantle_1 = {
 				Kind = "Pulse",
@@ -2206,6 +2377,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.5, 0.5 },
 			},
 			hubprop_lumen_moth__wing_fore_2 = {
 				Kind = "Flap",
@@ -2217,6 +2389,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.5, 0.5 },
 			},
 			hubprop_lumen_moth__wing_hind_1 = {
 				Kind = "Flap",
@@ -2229,6 +2402,7 @@ return {
 				Chain = "hubprop_lumen_moth__wing_fore_1",
 				Lag = 0.6,
 				Gait = "Flight",
+				Limit = { -0.36, 0.45 },
 			},
 			hubprop_lumen_moth__wing_hind_2 = {
 				Kind = "Flap",
@@ -2241,6 +2415,7 @@ return {
 				Chain = "hubprop_lumen_moth__wing_fore_2",
 				Lag = 0.6,
 				Gait = "Flight",
+				Limit = { -0.405, 0.45 },
 			},
 		},
 	},
@@ -2264,6 +2439,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.1, 0.1 },
 			},
 			hubprop_prism_darter__abd_b_1 = {
 				Kind = "Flap",
@@ -2276,6 +2452,7 @@ return {
 				Chain = "hubprop_prism_darter__abd_a_1",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.1, 0.1 },
 			},
 			hubprop_prism_darter__abd_c_1 = {
 				Kind = "Flap",
@@ -2288,6 +2465,7 @@ return {
 				Chain = "hubprop_prism_darter__abd_b_1",
 				Lag = 0.45,
 				Gait = "Flight",
+				Limit = { -0.1, 0.1 },
 			},
 			hubprop_prism_darter__chest_1 = {
 				Kind = "Pulse",
@@ -2310,6 +2488,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.25, 0.25 },
 			},
 			hubprop_prism_darter__jaw_1 = {
 				Kind = "Flap",
@@ -2322,6 +2501,7 @@ return {
 				Chain = "hubprop_prism_darter__head_1",
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_prism_darter__leg_fore_1 = {
 				Kind = "Flap",
@@ -2333,6 +2513,7 @@ return {
 				Phase = 0.9,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_prism_darter__leg_fore_2 = {
 				Kind = "Flap",
@@ -2344,6 +2525,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_prism_darter__leg_hind_1 = {
 				Kind = "Flap",
@@ -2355,6 +2537,7 @@ return {
 				Phase = 3.1,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.21, 0.3 },
 			},
 			hubprop_prism_darter__leg_hind_2 = {
 				Kind = "Flap",
@@ -2366,6 +2549,7 @@ return {
 				Phase = 2.2,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.03, 0.3 },
 			},
 			hubprop_prism_darter__leg_mid_1 = {
 				Kind = "Flap",
@@ -2377,6 +2561,7 @@ return {
 				Phase = 2,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.21, 0.24 },
 			},
 			hubprop_prism_darter__leg_mid_2 = {
 				Kind = "Flap",
@@ -2388,6 +2573,7 @@ return {
 				Phase = 1.1,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.03, 0.3 },
 			},
 			hubprop_prism_darter__star_1 = {
 				Kind = "Flicker",
@@ -2422,6 +2608,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_prism_darter__wing_fore_2 = {
 				Kind = "Flap",
@@ -2433,6 +2620,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_prism_darter__wing_fore_tip_1 = {
 				Kind = "Flap",
@@ -2445,6 +2633,7 @@ return {
 				Chain = "hubprop_prism_darter__wing_fore_1",
 				Lag = 0.35,
 				Gait = "Flight",
+				Limit = { -0.2, 0.2 },
 			},
 			hubprop_prism_darter__wing_fore_tip_2 = {
 				Kind = "Flap",
@@ -2457,6 +2646,7 @@ return {
 				Chain = "hubprop_prism_darter__wing_fore_2",
 				Lag = 0.35,
 				Gait = "Flight",
+				Limit = { -0.2, 0.2 },
 			},
 			hubprop_prism_darter__wing_hind_1 = {
 				Kind = "Flap",
@@ -2468,6 +2658,7 @@ return {
 				Phase = 3.1416,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_prism_darter__wing_hind_2 = {
 				Kind = "Flap",
@@ -2479,6 +2670,7 @@ return {
 				Phase = 3.1416,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_prism_darter__wing_hind_tip_1 = {
 				Kind = "Flap",
@@ -2491,6 +2683,7 @@ return {
 				Chain = "hubprop_prism_darter__wing_hind_1",
 				Lag = 0.35,
 				Gait = "Flight",
+				Limit = { -0.2, 0.2 },
 			},
 			hubprop_prism_darter__wing_hind_tip_2 = {
 				Kind = "Flap",
@@ -2503,6 +2696,7 @@ return {
 				Chain = "hubprop_prism_darter__wing_hind_2",
 				Lag = 0.35,
 				Gait = "Flight",
+				Limit = { -0.2, 0.2 },
 			},
 		},
 	},
@@ -2605,6 +2799,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.14, 0.14 },
 			},
 			hubprop_skyfinch__jaw_1 = {
 				Kind = "Flap",
@@ -2617,6 +2812,7 @@ return {
 				Chain = "hubprop_skyfinch__head_1",
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.3, 0.3 },
 			},
 			hubprop_skyfinch__leg_1 = {
 				Kind = "Flap",
@@ -2628,6 +2824,7 @@ return {
 				Phase = 1.1,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.4, 0.4 },
 			},
 			hubprop_skyfinch__leg_2 = {
 				Kind = "Flap",
@@ -2639,6 +2836,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Idle",
+				Limit = { -0.4, 0.4 },
 			},
 			hubprop_skyfinch__leg_foot_1 = {
 				Kind = "Flap",
@@ -2651,6 +2849,7 @@ return {
 				Chain = "hubprop_skyfinch__leg_1",
 				Lag = 0.5,
 				Gait = "Idle",
+				Limit = { -0.56, 0.56 },
 			},
 			hubprop_skyfinch__leg_foot_2 = {
 				Kind = "Flap",
@@ -2663,6 +2862,7 @@ return {
 				Chain = "hubprop_skyfinch__leg_2",
 				Lag = 0.5,
 				Gait = "Idle",
+				Limit = { -0.56, 0.56 },
 			},
 			hubprop_skyfinch__tail_1 = {
 				Kind = "Flap",
@@ -2674,6 +2874,7 @@ return {
 				Phase = 0.7,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.18, 0.18 },
 			},
 			hubprop_skyfinch__tail_fan_1 = {
 				Kind = "Flap",
@@ -2686,6 +2887,7 @@ return {
 				Chain = "hubprop_skyfinch__tail_1",
 				Lag = 0.5,
 				Gait = "Turn",
+				Limit = { -0.27, 0.3 },
 			},
 			hubprop_skyfinch__tail_fan_2 = {
 				Kind = "Flap",
@@ -2698,6 +2900,7 @@ return {
 				Chain = "hubprop_skyfinch__tail_1",
 				Lag = 0.5,
 				Gait = "Turn",
+				Limit = { -0.3, 0.27 },
 			},
 			hubprop_skyfinch__wing_in_1 = {
 				Kind = "Flap",
@@ -2709,6 +2912,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.5, 0.5 },
 			},
 			hubprop_skyfinch__wing_in_2 = {
 				Kind = "Flap",
@@ -2720,6 +2924,7 @@ return {
 				Phase = 0,
 				Lag = 0,
 				Gait = "Flight",
+				Limit = { -0.5, 0.5 },
 			},
 			hubprop_skyfinch__wing_out_1 = {
 				Kind = "Flap",
@@ -2732,6 +2937,7 @@ return {
 				Chain = "hubprop_skyfinch__wing_in_1",
 				Lag = 0.6,
 				Gait = "Flight",
+				Limit = { -0.38, 0.38 },
 			},
 			hubprop_skyfinch__wing_out_2 = {
 				Kind = "Flap",
@@ -2744,6 +2950,7 @@ return {
 				Chain = "hubprop_skyfinch__wing_in_2",
 				Lag = 0.6,
 				Gait = "Flight",
+				Limit = { -0.38, 0.38 },
 			},
 		},
 	},
@@ -2807,105 +3014,114 @@ return {
 				Offset = Vector3.new(-38.996, -226.75, 143.866),
 				Hinge = Vector3.new(-32.458, -170, 129.904),
 				Axis = Vector3.new(0.866, 0, 0.5),
-				Amp = 0.17,
-				Rate = 0.085,
+				Amp = 0.09,
+				Rate = 0.05,
 				Phase = 0,
 				Lag = 0,
 				Gait = "Always",
+				Limit = { -0.09, 0.09 },
 			},
 			hubprop_starweaver__tendril_2 = {
 				Kind = "Flap",
 				Offset = Vector3.new(208.664, -226.75, 0),
 				Hinge = Vector3.new(192.542, -170, 0),
 				Axis = Vector3.new(0, 0, -1),
-				Amp = 0.17,
-				Rate = 0.085,
+				Amp = 0.09,
+				Rate = 0.05,
 				Phase = 2.09,
 				Lag = 0,
 				Gait = "Always",
+				Limit = { -0.09, 0.09 },
 			},
 			hubprop_starweaver__tendril_3 = {
 				Kind = "Flap",
 				Offset = Vector3.new(-38.996, -226.75, -143.866),
 				Hinge = Vector3.new(-32.458, -170, -129.904),
 				Axis = Vector3.new(-0.866, 0, 0.5),
-				Amp = 0.17,
-				Rate = 0.085,
+				Amp = 0.09,
+				Rate = 0.05,
 				Phase = 4.18,
 				Lag = 0,
 				Gait = "Always",
+				Limit = { -0.09, 0.09 },
 			},
 			hubprop_starweaver__tendriltail_1 = {
 				Kind = "Flap",
 				Offset = Vector3.new(-65.154, -566.444, 181.482),
 				Hinge = Vector3.new(-49.73, -470, 159.818),
 				Axis = Vector3.new(-0.5, 0, 0.866),
-				Amp = 0.36,
-				Rate = 0.125,
+				Amp = 0.18,
+				Rate = 0.06,
 				Phase = 1.9,
 				Chain = "hubprop_starweaver__tendriltip_1",
 				Lag = 0,
 				Gait = "Always",
+				Limit = { -0.18, 0.18 },
 			},
 			hubprop_starweaver__tendriltail_2 = {
 				Kind = "Flap",
 				Offset = Vector3.new(250.017, -566.444, 0),
 				Hinge = Vector3.new(227.084, -470, 0),
 				Axis = Vector3.new(1, 0, 0),
-				Amp = 0.36,
-				Rate = 0.125,
+				Amp = 0.18,
+				Rate = 0.06,
 				Phase = 3.99,
 				Chain = "hubprop_starweaver__tendriltip_2",
 				Lag = 0,
 				Gait = "Always",
+				Limit = { -0.18, 0.18 },
 			},
 			hubprop_starweaver__tendriltail_3 = {
 				Kind = "Flap",
 				Offset = Vector3.new(-65.154, -566.444, -181.181),
 				Hinge = Vector3.new(-49.73, -470, -159.818),
 				Axis = Vector3.new(-0.5, 0, -0.866),
-				Amp = 0.36,
-				Rate = 0.125,
+				Amp = 0.18,
+				Rate = 0.06,
 				Phase = 6.08,
 				Chain = "hubprop_starweaver__tendriltip_3",
 				Lag = 0,
 				Gait = "Always",
+				Limit = { -0.18, 0.18 },
 			},
 			hubprop_starweaver__tendriltip_1 = {
 				Kind = "Flap",
 				Offset = Vector3.new(-50.187, -393.233, 160.104),
 				Hinge = Vector3.new(-50.187, -320, 160.611),
 				Axis = Vector3.new(0.866, 0, 0.5),
-				Amp = 0.26,
-				Rate = 0.1,
+				Amp = 0.13,
+				Rate = 0.055,
 				Phase = 0.95,
 				Chain = "hubprop_starweaver__tendril_1",
 				Lag = 0,
 				Gait = "Always",
+				Limit = { -0.08, 0.08 },
 			},
 			hubprop_starweaver__tendriltip_2 = {
 				Kind = "Flap",
 				Offset = Vector3.new(228.026, -393.233, 0),
 				Hinge = Vector3.new(227.999, -320, 0),
 				Axis = Vector3.new(0, 0, -1),
-				Amp = 0.26,
-				Rate = 0.1,
+				Amp = 0.13,
+				Rate = 0.055,
 				Phase = 3.04,
 				Chain = "hubprop_starweaver__tendril_2",
 				Lag = 0,
 				Gait = "Always",
+				Limit = { -0.13, 0.13 },
 			},
 			hubprop_starweaver__tendriltip_3 = {
 				Kind = "Flap",
 				Offset = Vector3.new(-50.187, -393.233, -161.248),
 				Hinge = Vector3.new(-50.187, -320, -160.611),
 				Axis = Vector3.new(-0.866, 0, 0.5),
-				Amp = 0.26,
-				Rate = 0.1,
+				Amp = 0.13,
+				Rate = 0.055,
 				Phase = 5.13,
 				Chain = "hubprop_starweaver__tendril_3",
 				Lag = 0,
 				Gait = "Always",
+				Limit = { -0.08, 0.13 },
 			},
 		},
 	},

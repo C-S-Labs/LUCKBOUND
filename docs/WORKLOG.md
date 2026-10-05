@@ -36,6 +36,18 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## crossroads-v2 round 3 (same branch) - 2026-10-05 - owner Studio test 2
+**Merged:** none   **Tests:** 1281 passing; Rojo build ok
+
+### Done
+- Exactly 1 colossal per server (spare waits parked and swaps in); colossals spawn in the outer band, never over the hub, and use lanes under/over/around it. Islands grow with distance (up to 2.2x), spread out with min gaps, vertical stagger and 4 free lanes (`Core/SkyLayout`); far range pushed to 4600-5800.
+- Serpent locomotion: `spine` mode (trail-following segments, travelling wave, head on the wave). Cinder wyrm uses it.
+- Self-clip system: sidecar `limit` per part (tool `tools/gen_part_limits.py`), soft clamp in the driver. Turtle shell rigid (amp 0 Pulse skipped); starweaver tendrils calmer; colossal inertia damped.
+- Wing power by class: bigger classes beat harder and slower. No FBX changed: sidecars only (no re-import).
+
+### Stopped at
+Owner Studio test. Hand-set limits on starweaver tendriltip_1 [-0.08,0.08] and tendriltip_3 [-0.08,0.13] (the sweep reported a false positive at the joint); re-running gen_part_limits.py overwrites them. Check: wyrm bends, under-hub depth (`UnderDepth` 300 assumed), wing-down sign.
+
 ## crossroads-v2 round 2 (same branch) - 2026-10-05 - owner Studio findings
 **Merged:** none   **Tests:** 1240 passing (luau CLI installed); Rojo build ok
 
