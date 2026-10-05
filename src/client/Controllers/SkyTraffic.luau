@@ -43,6 +43,7 @@ local perchCfg = life.Perch
 local motionCfg = life.Motion
 
 local SkyTraffic = {}
+local dbgOn = GameConfig.Debug ~= nil and GameConfig.Debug.SkyDebug == true
 
 type Rock = { Part: BasePart, Pos: Vector3, Radius: number }
 -- the world's obstacles for FlightCore (islands and the far range), shared by every flyer
@@ -500,6 +501,26 @@ function SkyTraffic.init(): ()
 				at += Vector3.new(0, math.sin(elapsed * 0.5 + f.TimeOffset) * f.Bob, 0)
 				f.Yaw += dt * 0.05 * f.Spin
 				cf = CFrame.new(at) * CFrame.Angles(0, f.Yaw, 0)
+			end
+			if dbgOn then
+				local d = core.Dbg
+				f.Part:SetAttribute(
+					"SkyDbg",
+					string.format(
+						"mode=%s speed=%.1f yawrate=%.2f err=%.2f keep=%.2f sep=%.2f look=%.2f obs=%.2f to=%.0f threat=%d tr=%.0f",
+						core.Mode,
+						core.Speed,
+						core.YawRate,
+						d.Err or 0,
+						d.Keep or 0,
+						d.Sep or 0,
+						d.Look or 0,
+						d.Obs or 0,
+						d.To or 0,
+						d.Threat or 0,
+						core.TurnRadius
+					)
+				)
 			end
 			local sp = f.Spine
 			if sp and f.Faces then

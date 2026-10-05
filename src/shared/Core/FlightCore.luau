@@ -93,6 +93,7 @@ export type Flier = {
 	CircleX: number,
 	CircleZ: number,
 	CircleStrikes: number,
+	Dbg: { [string]: number }, -- last step's steering inputs (read by the driver's debug switch)
 	Rescues: number, -- times it was moved out of a dead end
 	StuckFor: number,
 	Mode: string, -- fly | approach | land | perch | takeoff
@@ -434,7 +435,9 @@ function FlightCore.separation(
 	if d < EPS then
 		return 0, 0, 0
 	end
-	local need = (f.Radius + otherRadius) * f.Prof.SeparationScale
+	-- the creature's own comfort zone is scaled; the other body counts at its true size (scaling a
+	-- big prop's radius too made every small creature flee isles and clouds across hundreds of studs)
+	local need = f.Radius * f.Prof.SeparationScale + otherRadius
 	local zone = need * fl.SeparationFalloff
 	if d >= need + zone then
 		return 0, 0, 0
@@ -990,6 +993,7 @@ function FlightCore.spawn(
 		CircleX = x,
 		CircleZ = z,
 		CircleStrikes = 0,
+		Dbg = {},
 		Rescues = 0,
 		StuckFor = 0,
 		Mode = "fly",
@@ -1426,6 +1430,17 @@ function FlightCore.tick(f: Flier, dt: number, env: any)
 	if obstructed or ox * ox + oy * oy + oz * oz > av.ActiveSteer ^ 2 then
 		threatened = true
 	end
+	-- BAND LEASH: past its band's outer edge a creature is drawn back in (avoiding things pushes
+	-- it outward, and nothing else ever brings it home; far out it meets the far range)
+	local lx, lz = f.X - b.Cx, f.Z - b.Cz
+	local ld = math.sqrt(lx * lx + lz * lz)
+	local lstart = b.RMax * (1 + fl.LeashStart)
+	if ld > lstart then
+		local pull = clamp((ld - lstart) / math.max(b.RMax * fl.LeashRange, EPS), 0, 1)
+			* fl.LeashWeight
+		wx -= lx / ld * pull
+		wz -= lz / ld * pull
+	end
 	wx += (env.AvoidX or 0) + sepX + kx + ox
 	wy += (env.AvoidY or 0) + sepY + ky + oy
 	wz += (env.AvoidZ or 0) + sepZ + kz + oz
@@ -1436,6 +1451,14 @@ function FlightCore.tick(f: Flier, dt: number, env: any)
 	if flat > EPS then
 		err = math.abs(wrap(math.atan2(wz, wx) - f.Yaw))
 	end
+	local dbg = f.Dbg
+	dbg.Err = err
+	dbg.Keep = math.sqrt(kx * kx + ky * ky + kz * kz)
+	dbg.Sep = math.sqrt(sepX * sepX + sepY * sepY + sepZ * sepZ)
+	dbg.Look = math.sqrt((env.AvoidX or 0) ^ 2 + (env.AvoidY or 0) ^ 2 + (env.AvoidZ or 0) ^ 2)
+	dbg.Obs = math.sqrt(ox * ox + oy * oy + oz * oz)
+	dbg.To = to
+	dbg.Threat = if threatened then 1 else 0
 	local slow = clamp(err / fl.SlowAngle, 0, 1)
 	if threatened then
 		slow = 1

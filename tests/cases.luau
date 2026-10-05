@@ -10275,6 +10275,56 @@ do
 		return false
 	end
 
+	-- THE BAND LEASH: with the world's obstacles, no creature strays far beyond its band
+	do
+		local worst = {}
+		for _, class in life.ClassOrder do
+			local b = bandFor(class)
+			local far = 0.0
+			for seed = 1, (if class == "COLOSSAL" then 6 else 8) do
+				local f = newFlier(class, 9900 + seed, false)
+				f.Obstacles = worldObstacles(seed * 41)
+				FlightCore.relocate(f)
+				local env = { PlayerX = 0, PlayerY = 40, PlayerZ = 0 }
+				FlightCore.pickWaypoint(f, env)
+				local dt = if class == "COLOSSAL" then 0.5 else 0.1
+				for _ = 1, math.floor((if class == "COLOSSAL" then 12000 else 1200) / dt) do
+					FlightCore.tick(f, dt, env)
+					far = math.max(far, math.sqrt((f.X - b.Cx) ^ 2 + (f.Z - b.Cz) ^ 2) / b.RMax)
+				end
+			end
+			worst[class] = far
+			print("LEASH", class, far)
+			check(
+				`{class}: never strays beyond 1.4 x its band ({string.format("%.2f", far)})`,
+				far < 1.4
+			)
+		end
+	end
+	-- NO WEAVING: small fliers should arc and cruise, not turn flat out all the time
+	-- (mean turn rate over a long flight, with the world's obstacles and a player about)
+	do
+		local rates = {}
+		for _, class in { "TINY", "SMALL", "MEDIUM" } do
+			local sum, n = 0.0, 0
+			for seed = 1, 12 do
+				local f = newFlier(class, 9700 + seed, false)
+				f.Obstacles = worldObstacles(seed * 37)
+				FlightCore.relocate(f)
+				local env = { PlayerX = 0, PlayerY = 40, PlayerZ = 0 }
+				FlightCore.pickWaypoint(f, env)
+				for _ = 1, 6000 do
+					FlightCore.tick(f, 0.1, env)
+					sum += math.abs(f.YawRate)
+					n += 1
+				end
+			end
+			rates[class] = math.deg(sum / n)
+		end
+		print("MEANTURN", rates.TINY, rates.SMALL, rates.MEDIUM)
+		check("tiny fliers do not weave constantly", rates.TINY < 30)
+		check("small fliers do not weave constantly", rates.SMALL < 30)
+	end
 	-- NO CIRCLING IN PLACE: with the world's obstacles and a player near the hub, no 30 s window
 	-- turns more than three circles while getting nowhere (the owner saw fliers spin forever)
 	do

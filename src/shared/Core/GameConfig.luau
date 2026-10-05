@@ -474,8 +474,8 @@ local GameConfig = {
 			},
 			FarRange = {
 				Count = 14,
-				RadiusMin = 4600,
-				RadiusMax = 5800,
+				RadiusMin = 5200,
+				RadiusMax = 6400,
 				HeightMin = -520,
 				HeightMax = -120,
 				ScaleMin = 2.8,
@@ -552,6 +552,9 @@ local GameConfig = {
 					FallbackAngle = 0.5,
 					ArriveTurnScale = 0.8, -- arrived = within max(ArriveMin, this x turn radius)
 					StuckSeconds = 8,
+					LeashStart = 0, -- beyond RMax x (1 + this) a creature is drawn back toward its band ...
+					LeashRange = 0.15, -- ... at full strength this far (x RMax) beyond that
+					LeashWeight = 12,
 					CircleSeconds = 20, -- circling check window ...
 					CircleTurns = 2.5, -- ... more turns than this ...
 					CircleSpan = 4, -- ... without getting further than this x its turning circle (min CircleSpanMin) = circling
@@ -1984,6 +1987,8 @@ local GameConfig = {
 	},
 
 	Debug = {
+		-- publish each sky creature's steering inputs as the `SkyDbg` attribute (turn off when done tuning)
+		SkyDebug = true,
 		-- === DEVELOPER COMMANDS -- NEVER SHIP EITHER OF THESE TRUE ===
 		--
 		-- Both are ON for the current testing phase, at the owner's request,
