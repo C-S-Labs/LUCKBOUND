@@ -487,6 +487,12 @@ local GameConfig = {
 			-- checks the shape at boot. Heights are relative to the hub deck;
 			-- speeds are studs/second; angles radians.
 			SkyLife = {
+				-- extra prop libraries (files in assets/rbxm/props) searched for creature meshes
+				CreatureLibraries = {
+					"HUB_CREATURES_SMALL",
+					"HUB_CREATURES_MID",
+					"HUB_CREATURES_COLOSSAL",
+				},
 				HubRadius = 330, -- the hub's reach from its axis (districts + plaza); keep-outs below are this plus a margin
 				MaxParts = 16, -- moving sub-meshes per creature (the contract allows a colossal 12)
 				ClassOrder = { "TINY", "SMALL", "MEDIUM", "LARGE", "COLOSSAL" },

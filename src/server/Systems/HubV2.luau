@@ -260,10 +260,29 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 	-- SkyTraffic moves them with it and animates each one. `parts` maps a
 	-- part's mesh name to its description (Kind, Offset, Hinge, Axis, Amp, Rate,
 	-- Phase and, for creatures, Chain, Lag, Gait). Returns how many were missing.
+	-- creature meshes may live in HUB_ORBITERS or in their own libraries
+	-- (GameConfig.HubLayout.V2.SkyLife.CreatureLibraries), so no import ever has to edit the ship file
+	local libs: { Instance } = { lib }
+	for _, name in cfg.SkyLife.CreatureLibraries do
+		local extra = props and props:FindFirstChild(name)
+		if extra then
+			table.insert(libs, extra)
+		end
+	end
+	local function findMesh(name: string): Instance?
+		for _, l in libs do
+			local m = l:FindFirstChild(name, true)
+			if m then
+				return m
+			end
+		end
+		return nil
+	end
+
 	local function attachParts(p: BasePart, s: number, parts: { [string]: any }): number
 		local missing = 0
 		for subName, sub in parts do
-			local sp = lib:FindFirstChild(subName, true)
+			local sp = findMesh(subName)
 			if not (sp and sp:IsA("BasePart")) then
 				missing += 1
 				continue
@@ -371,12 +390,14 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 			if c.Class ~= class then
 				continue
 			end
-			local body = lib:FindFirstChild(c.Model, true)
+			local body = findMesh(c.Model)
 			if body and body:IsA("BasePart") then
 				table.insert(ids, id)
 			elseif not skipped[id] then
 				skipped[id] = true
-				warn(`[HubV2] sky creature {id}: mesh {c.Model} not in HUB_ORBITERS -- skipped`)
+				warn(
+					`[HubV2] sky creature {id}: mesh {c.Model} not imported (HUB_ORBITERS or a CreatureLibraries file) -- skipped`
+				)
 			end
 		end
 		table.sort(ids)
@@ -399,7 +420,7 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 				end
 			end
 			local c = SkyCreatures[pick]
-			local src = lib:FindFirstChild(c.Model, true) :: BasePart
+			local src = findMesh(c.Model) :: BasePart
 			local p = src:Clone()
 			p.Anchored, p.CanCollide, p.CanQuery, p.CanTouch = true, false, false, false
 			local s = rng:NextNumber(c.ScaleMin, c.ScaleMax)
