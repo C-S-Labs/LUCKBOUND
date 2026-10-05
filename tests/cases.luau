@@ -8147,6 +8147,11 @@ do
 	end
 	check("the deck probe starts above the walk plane", cfg.DeckProbeHeight > 0)
 	check(
+		"arrivals stand 5-10 studs in front of the entrance rift",
+		cfg.SpawnDistance >= 5 and cfg.SpawnDistance <= 10
+	)
+	check("arrivals are lifted onto, not into, the ground", cfg.SpawnLift > 0 and cfg.SpawnLift < 6)
+	check(
 		"both prefabs are declared with a positive scale and their own key",
 		cfg.EntrancePrefab.Scale > 0
 			and cfg.ExitPrefab.Scale > 0

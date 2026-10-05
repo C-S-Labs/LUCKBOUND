@@ -727,6 +727,14 @@ local GameConfig = {
 		-- Rifts stand on the walk surface found by a ray from this far above the
 		-- map's walk plane, so a chunk whose floor rises or dips is still flush.
 		DeckProbeHeight = 6,
+		-- ARRIVAL. Players are placed on the ground this far in front of the
+		-- entrance rift, facing it: no drop from above. SpawnLift is the
+		-- character root's height above the ground it stands on; SpawnMaxStep
+		-- is how far the ground there may differ from the rift's before that
+		-- side is rejected as not the same floor.
+		SpawnDistance = 8,
+		SpawnLift = 3.5,
+		SpawnMaxStep = 3,
 		DeckProbeDepth = 60,
 		PromptHoldSeconds = 0.4,
 

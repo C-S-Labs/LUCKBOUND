@@ -150,6 +150,11 @@ Keep the source/export assets and unrelated owner's Blender file.
   (RiftController now preloads it and warns). Added `/riftexit` to stand in front of the exit rift, a tracking log line
   per rift, and server warnings when no exit is built or opened.
 
+- 2026-10-05 arrival: players now spawn on the ground `Rift.SpawnDistance` (8) studs in front of the entrance rift, facing it,
+  instead of dropping from above the chunk. `groundAt` raycasts both sides of the rift's lane and takes the first with the
+  same floor; if neither has ground the chunk's own entry point stays in force (with a warning). Party members still ring
+  out from that spot (`ArrivalSpreadStuds`).
+
 ### Stopped at
 Rift code written and unit-tested for the pure parts; **nothing has run in Studio** (no prefab imported yet, so the
 blockout rift is what would draw). Hub gate still present.

@@ -89,6 +89,9 @@ type Group = {
 	Stage: Model,
 	FloorY: number, -- the map's walk plane; the client's cloud sea hangs below it
 	EntryPosition: Vector3,
+	-- Where arrivals turn to face (the entrance rift), or nil to keep their
+	-- spawn facing.
+	EntryLookAt: Vector3?,
 	Summary: string,
 	Duration: number,
 	-- Set when the first member arrives, so a slow teleport does not eat
@@ -233,7 +236,7 @@ local function distanceToGate(player: Player): number?
 	return (hrp.Position - target.Position).Magnitude
 end
 
-local function moveCharacter(player: Player, position: Vector3): boolean
+local function moveCharacter(player: Player, position: Vector3, lookAt: Vector3?): boolean
 	local character = player.Character
 	local hrp = character and character:FindFirstChild("HumanoidRootPart")
 	if not hrp or not hrp:IsA("BasePart") then
@@ -242,7 +245,12 @@ local function moveCharacter(player: Player, position: Vector3): boolean
 	-- PivotTo moves the whole rig, not just the root part, which is what stops
 	-- limbs being left behind at the old location for a frame.
 	local rig = character :: Model
-	rig:PivotTo(CFrame.new(position))
+	-- Turn to face `lookAt` (level with the player, so they never tilt).
+	rig:PivotTo(
+		if lookAt
+			then CFrame.lookAt(position, Vector3.new(lookAt.X, position.Y, lookAt.Z))
+			else CFrame.new(position)
+	)
 	return true
 end
 
@@ -440,7 +448,7 @@ end
 --- The point on the walk surface under (x, z), by a ray from just above the
 --- map's walk plane. Rifts are seated on THIS, not on a bounding box, so they
 --- are flush whatever the kit's floor does (spec §7.8).
-local function deckAt(stage: Instance, x: number, z: number, floorY: number): Vector3
+local function groundAt(stage: Instance, x: number, z: number, floorY: number): Vector3?
 	local probe = GameConfig.Rift.DeckProbeHeight
 	local params = RaycastParams.new()
 	params.FilterType = Enum.RaycastFilterType.Include
@@ -451,7 +459,11 @@ local function deckAt(stage: Instance, x: number, z: number, floorY: number): Ve
 		Vector3.new(0, -(probe + GameConfig.Rift.DeckProbeDepth), 0),
 		params
 	)
-	return if hit then hit.Position else Vector3.new(x, floorY, z)
+	return if hit then hit.Position else nil
+end
+
+local function deckAt(stage: Instance, x: number, z: number, floorY: number): Vector3
+	return groundAt(stage, x, z, floorY) or Vector3.new(x, floorY, z)
 end
 
 --- A rift's prompt, on its Scar (the PrimaryPart). Triggered fires on the
@@ -542,7 +554,12 @@ local function portalSeat(stage: Model, worldId: string, kind: string, fallback:
 	return centre
 end
 
-local function buildEntrance(stage: Model, worldId: string, fallback: Vector3, rarityKey: string)
+local function buildEntrance(
+	stage: Model,
+	worldId: string,
+	fallback: Vector3,
+	rarityKey: string
+): (Model, Vector3?)
 	local position = portalSeat(stage, worldId, "Entrance", fallback) :: Vector3
 	local seat = deckAt(stage, position.X, position.Z, position.Y)
 	local rig = RiftRig.build({
@@ -556,6 +573,27 @@ local function buildEntrance(stage: Model, worldId: string, fallback: Vector3, r
 			ExpeditionSystem.finish(player, "RETURNED")
 		end
 	end)
+
+	-- WHERE PLAYERS ARRIVE: on the ground in front of the rift, facing it
+	-- (owner, 2026-10-05: they used to drop in from above). The rift's lane
+	-- runs along its own Z, so try that side and then the other, and take the
+	-- first with solid ground at the same height. nil leaves the chunk's own
+	-- entry point in force.
+	local scar = rig.PrimaryPart
+	if scar then
+		local look = scar.CFrame.LookVector
+		for _, side in { 1, -1 } do
+			local spot = seat + look * (side * GameConfig.Rift.SpawnDistance)
+			local ground = groundAt(stage, spot.X, spot.Z, seat.Y)
+			if ground and math.abs(ground.Y - seat.Y) <= GameConfig.Rift.SpawnMaxStep then
+				return rig, ground + Vector3.new(0, GameConfig.Rift.SpawnLift, 0)
+			end
+		end
+		warn(
+			"[ExpeditionSystem] no ground in front of the entrance rift; arriving at the chunk's entry point"
+		)
+	end
+	return rig, nil
 end
 
 --- The exit, on the boss chunk where the boss stood (spec §7.8). Built SEALED
@@ -611,7 +649,8 @@ local function newGroup(
 	partySize: number
 ): Group
 	local world = Worlds[worldId]
-	buildEntrance(built.Stage, worldId, built.ReturnPosition, world.Rarity)
+	local entranceRig, frontSpot =
+		buildEntrance(built.Stage, worldId, built.ReturnPosition, world.Rarity)
 	local exitRig, exitPrompt = buildExit(built.Stage, worldId)
 	local group: Group = {
 		WorldId = worldId,
@@ -619,7 +658,10 @@ local function newGroup(
 		Slot = slot,
 		Stage = built.Stage,
 		FloorY = built.FloorY,
-		EntryPosition = built.EntryPosition,
+		EntryPosition = frontSpot or built.EntryPosition,
+		EntryLookAt = if frontSpot and entranceRig.PrimaryPart
+			then entranceRig.PrimaryPart.Position
+			else nil,
 		Summary = built.Summary,
 		Duration = ExpeditionCore.durationFor(
 			world,
@@ -702,7 +744,9 @@ local function placeMember(player: Player, group: Group): boolean
 	group.Arrivals += 1
 	local dx, dz =
 		ExpeditionCore.arrivalOffset(group.Arrivals, GameConfig.Expedition.ArrivalSpreadStuds)
-	if not moveCharacter(player, group.EntryPosition + Vector3.new(dx, 0, dz)) then
+	if
+		not moveCharacter(player, group.EntryPosition + Vector3.new(dx, 0, dz), group.EntryLookAt)
+	then
 		return false
 	end
 
