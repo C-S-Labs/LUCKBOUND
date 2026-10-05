@@ -63,6 +63,7 @@ type Sub = {
 	BaseSize: Vector3,
 	Acc: CFrame, -- this part's hinge motion composed on its chain (rebuilt every update)
 	M: CreatureMotionCore.Part?, -- layered motion state (Flap, Pulse, Flicker)
+	SpineIdx: number?, -- 1 = the root segment of the creature's spine (serpent / eel locomotion)
 }
 type Flyer = {
 	Part: BasePart,
@@ -76,6 +77,7 @@ type Flyer = {
 	Body: CreatureMotionCore.Body,
 	MC: any, -- this class's motion profile
 	RefRate: number, -- beat rate of the main wing (0: none)
+	Spine: CreatureMotionCore.Spine?, -- serpent / eel locomotion: the segments follow the head's trail
 	ScanIn: number,
 	Accum: number,
 	Parked: boolean,
@@ -201,6 +203,7 @@ function SkyTraffic.init(): ()
 						Alpha = c.Transparency,
 						BaseSize = c.Size,
 						Acc = CFrame.identity,
+						SpineIdx = c:GetAttribute("SubSpine") :: number?,
 					}
 					byName[c.Name] = sub
 					local chain = c:GetAttribute("SubChain")
@@ -236,6 +239,7 @@ function SkyTraffic.init(): ()
 			end)
 			for i, sub in list do
 				if sub.Kind ~= "Spin" then
+					local limit = sub.Part:GetAttribute("SubLimit") :: Vector2?
 					sub.M = CreatureMotionCore.newPart(
 						sub.Kind,
 						sub.Gait,
@@ -246,7 +250,8 @@ function SkyTraffic.init(): ()
 						{ sub.Axis.X, sub.Axis.Y, sub.Axis.Z },
 						{ sub.Offset.X, sub.Offset.Y, sub.Offset.Z },
 						{ sub.Hinge.X, sub.Hinge.Y, sub.Hinge.Z },
-						i * 1.618 + d.Size.X * 0.01
+						i * 1.618 + d.Size.X * 0.01,
+						if limit then { limit.X, limit.Y } else nil
 					)
 				end
 			end
@@ -360,6 +365,49 @@ function SkyTraffic.init(): ()
 						break
 					end
 				end
+				-- serpent / eel: the segments in order, their arc lengths from the head (Offset.X
+				-- runs back along the body), and the wave the server set out
+				local spine: CreatureMotionCore.Spine? = nil
+				local wavelength = d:GetAttribute("SpineWavelength") :: number?
+				if wavelength then
+					local ordered: { Sub } = {}
+					for _, sub in subs do
+						if sub.SpineIdx then
+							table.insert(ordered, sub)
+						end
+					end
+					table.sort(ordered, function(first, second)
+						return (first.SpineIdx :: number) < (second.SpineIdx :: number)
+					end)
+					if #ordered >= 2 then
+						local arcs: { number } = {}
+						for i, sub in ordered do
+							sub.SpineIdx = i
+							table.insert(arcs, sub.Offset.X)
+						end
+						local sc = motionCfg.Spine
+						spine = CreatureMotionCore.newSpine(
+							arcs,
+							wavelength,
+							(d:GetAttribute("SpineAmp") :: number?) or 0,
+							(d:GetAttribute("SpineRate") :: number?) or 0.1,
+							d:GetAttribute("SpinePlane") == "vertical",
+							sc.HeadAmp,
+							sc.StepsPerWave,
+							sc.Margin
+						)
+						local hx0, hy0, hz0 = FlightCore.heading(core)
+						CreatureMotionCore.seedTrail(
+							spine.Trail,
+							d.Position.X,
+							d.Position.Y,
+							d.Position.Z,
+							hx0,
+							hy0,
+							hz0
+						)
+					end
+				end
 				local f: Flyer = {
 					Part = d,
 					Core = core,
@@ -372,6 +420,7 @@ function SkyTraffic.init(): ()
 					Body = CreatureMotionCore.newBody(),
 					MC = motionCfg.Classes[class] or motionCfg.Classes.SMALL,
 					RefRate = refRate,
+					Spine = spine,
 					ScanIn = rng:NextNumber(0, driverCfg.ScanSeconds),
 					Accum = 0,
 					Parked = false,
@@ -399,6 +448,8 @@ function SkyTraffic.init(): ()
 				table.insert(presenceGroup, f.Core)
 			end
 		end
+		-- exactly Floor..Ceiling colossals at once: the extra ones a server spawns wait their turn
+		FlightCore.presenceStep(presenceGroup, 0)
 		sky.ChildAdded:Connect(function(d)
 			task.wait(driverCfg.AdoptSeconds) -- let its moving pieces arrive with it
 			adopt(d)
@@ -436,7 +487,25 @@ function SkyTraffic.init(): ()
 				f.Yaw += dt * 0.05 * f.Spin
 				cf = CFrame.new(at) * CFrame.Angles(0, f.Yaw, 0)
 			end
+			local sp = f.Spine
+			if sp and f.Faces then
+				-- the head leads on its trail and sways with the wave; the whole body (and every
+				-- part hung off it) moves with it
+				local hx, hy, hz = FlightCore.heading(core)
+				local tr = sp.Trail
+				if not CreatureMotionCore.pushTrail(tr, at.X, at.Y, at.Z) then
+					CreatureMotionCore.seedTrail(tr, at.X, at.Y, at.Z, hx, hy, hz) -- it was moved, not flown
+					CreatureMotionCore.pushTrail(tr, at.X, at.Y, at.Z)
+				end
+				CreatureMotionCore.solveSpine(sp, at.X, at.Y, at.Z, elapsed + f.TimeOffset)
+				local head = Vector3.new(sp.PX[1], sp.PY[1], sp.PZ[1])
+				cf = CFrame.lookAt(head, head + Vector3.new(sp.TX[1], sp.TY[1], sp.TZ[1]))
+					* CFrame.Angles(0, -math.pi / 2, 0)
+					* CFrame.Angles(-core.Bank, 0, 0)
+					* CFrame.Angles(0, 0, -body.PitchOff)
+			end
 			f.Part.CFrame = cf
+			local cfInv = if sp then cf:Inverse() else cf
 
 			-- the moving pieces, parents first (chain rule: acc = parent.acc * hinge)
 			local t = elapsed + f.TimeOffset
@@ -463,6 +532,20 @@ function SkyTraffic.init(): ()
 					end
 				end
 				local acc = if s.Chain then s.Chain.Acc * hinge else hinge
+				local segAt = s.SpineIdx
+				if sp and segAt then
+					-- a spine segment sits on the trail, oriented by the path (parts hung on it
+					-- inherit this pose through Acc, as for any chained part)
+					local o = segAt + 1
+					local pos = Vector3.new(sp.PX[o], sp.PY[o], sp.PZ[o])
+					local frame = CFrame.lookAt(
+						pos,
+						pos + Vector3.new(sp.TX[o], sp.TY[o], sp.TZ[o])
+					) * CFrame.Angles(0, -math.pi / 2, 0)
+					acc = cfInv
+						* (frame * CFrame.new(0, s.Offset.Y, s.Offset.Z))
+						* CFrame.new(s.Offset):Inverse()
+				end
 				s.Acc = acc
 				s.Part.CFrame = cf * acc * CFrame.new(s.Offset)
 			end

@@ -51,7 +51,7 @@ export type PerchSpot = { X: number, Y: number, Z: number, FaceYaw: number }
 -- A world obstacle: a vertical cylinder (horizontal radius R, half height H);
 -- a sphere is R == H. Positions are absolute.
 export type Obstacle = { X: number, Y: number, Z: number, R: number, H: number }
-export type RoutePoint = { X: number, Y: number, Z: number, Over: boolean }
+export type RoutePoint = { X: number, Y: number, Z: number, Over: boolean, Under: boolean? }
 
 export type Flier = {
 	Cfg: Cfg,
@@ -70,6 +70,7 @@ export type Flier = {
 	Neighbours: { any }?, -- every other flier (env.Others), for the hard stop
 	Route: { RoutePoint }, -- waypoints queued after the current target (overpass legs)
 	OverLeg: boolean, -- the current target is part of a hub overpass
+	UnderLeg: boolean, -- ... or of a hub underpass (below the hub)
 	X: number,
 	Y: number,
 	Z: number,
@@ -264,9 +265,21 @@ end
 
 -- ---------------------------------------------------------------- keep-out
 
+--- The lowest height (relative to the deck) the keep-out volume reaches: the
+--- class's UnderDepth below the deck (the hub's underside plus the creature's own
+--- extent), or unbounded when the class has none (it may not pass beneath).
+local function floorOf(prof: Cfg): number
+	local u = prof.UnderDepth
+	if u == nil then
+		return -math.huge
+	end
+	return -u
+end
+
 --- Is the point inside the keep-out volume of this class? The volume is the
---- cylinder of radius HubClearance about the hub axis, from far below up to
---- OverheadMinY above the deck. `padH` fattens it sideways, `padV` upward.
+--- cylinder of radius HubClearance about the hub axis, from UnderDepth below the
+--- deck (or far below) up to OverheadMinY above it. `padH` fattens it sideways
+--- and `padV` up and down.
 function FlightCore.inKeepOut(
 	prof: Cfg,
 	cx: number,
@@ -287,7 +300,8 @@ function FlightCore.inKeepOut(
 	if dx * dx + dz * dz >= r * r then
 		return false
 	end
-	return (y - cy) < prof.OverheadMinY + padV
+	local rel = y - cy
+	return rel < prof.OverheadMinY + padV and rel > floorOf(prof) - padV
 end
 
 --- Does the straight segment a->b pass through the (padded) keep-out?
@@ -310,6 +324,7 @@ function FlightCore.segmentHitsKeepOut(
 	end
 	local r = c + pad
 	local roof = cy + prof.OverheadMinY + pad
+	local floor = cy + floorOf(prof) - pad
 	local dx, dz = bx - ax, bz - az
 	local ox, oz = ax - cx, az - cz
 	local qa = dx * dx + dz * dz
@@ -328,11 +343,11 @@ function FlightCore.segmentHitsKeepOut(
 	if s1 < 0 or s0 > 1 then
 		return false
 	end
-	-- the stretch of the leg inside the cylinder is a hit wherever it is below the roof
+	-- the stretch of the leg inside the cylinder is a hit wherever it is below the roof and above the floor
 	local t0, t1 = math.max(s0, 0), math.min(s1, 1)
 	local y0 = ay + (by - ay) * t0
 	local y1 = ay + (by - ay) * t1
-	return math.min(y0, y1) < roof
+	return math.min(y0, y1) < roof and math.max(y0, y1) > floor
 end
 
 --- Steering away from the keep-out: a vector (zero when nothing is near).
@@ -603,18 +618,35 @@ local function angleOf(f: Flier): number
 end
 
 --- The overpass the creature may take across the hub: climb to a level above the
---- roof BEFORE the keep-out edge, cross it level, leave on the far side. Returns
---- the route (entry, exit, then the target beyond) or nil when it is not
---- possible from here (not high enough to be there in time, or a leg blocked).
-local function planOverpass(f: Flier): { RoutePoint }?
+--- roof BEFORE the keep-out edge, cross it level, leave on the far side. With
+--- `under` the mirror image: sink below the hub's underside (UnderDepth, which
+--- includes the creature's own extent) and cross beneath it. Returns the route
+--- (entry, exit, then the target beyond) or nil when it is not possible from
+--- here (not enough room to be there in time, or a leg blocked).
+local function planPass(f: Flier, under: boolean): { RoutePoint }?
 	local b, prof, fl, rng = f.Band, f.Prof, f.Cfg.Flight, f.Rng
-	if not f.Roofed or (prof.OverpassChance or 0) <= 0 then
+	local chance = if under then (prof.UnderpassChance or 0) else (prof.OverpassChance or 0)
+	if chance <= 0 then
 		return nil
 	end
 	local pad = fl.WaypointPad
-	local level = b.Cy + prof.OverheadMinY + pad + fl.KeepOutRoofMargin * 2
-	if level > b.YMax then
-		return nil
+	local level
+	if under then
+		if prof.UnderDepth == nil then
+			return nil
+		end
+		level = b.Cy - prof.UnderDepth - pad - fl.KeepOutRoofMargin * 2
+		if level < b.YMin then
+			return nil
+		end
+	else
+		if not f.Roofed then
+			return nil
+		end
+		level = b.Cy + prof.OverheadMinY + pad + fl.KeepOutRoofMargin * 2
+		if level > b.YMax then
+			return nil
+		end
 	end
 	local edge = prof.HubClearance + pad + fl.KeepOutMargin
 	local dx, dz = f.X - b.Cx, f.Z - b.Cz
@@ -622,39 +654,66 @@ local function planOverpass(f: Flier): { RoutePoint }?
 	if d < EPS then
 		return nil
 	end
-	local ux, uz = dx / d, dz / d
 	-- the entry sits outside the edge by the creature's own turning room
 	local entryR = edge + f.TurnRadius * fl.OverpassLead
-	local ex, ez = b.Cx + ux * entryR, b.Cz + uz * entryR
-	local run = math.sqrt((ex - f.X) ^ 2 + (ez - f.Z) ^ 2)
-	local climb = math.max(0, level - f.Y)
-	if d < entryR or climb > run * math.tan(f.Prof.MaxPitch * fl.OverpassPitchUse) then
-		return nil
+	local slope = math.tan(f.Prof.MaxPitch * fl.OverpassPitchUse)
+	-- the first try enters from where the creature is; later ones from other bearings, so a
+	-- crowded sky (islands in the way at this level) still leaves a lane
+	for try = 1, fl.PassTries do
+		local a0 = if try == 1 then math.atan2(dz, dx) else rng:NextNumber(0, TWO_PI)
+		local ux, uz = math.cos(a0), math.sin(a0)
+		local ex, ez = b.Cx + ux * entryR, b.Cz + uz * entryR
+		local run = math.sqrt((ex - f.X) ^ 2 + (ez - f.Z) ^ 2)
+		local climb
+		if under then
+			climb = math.max(0, f.Y - level)
+		else
+			climb = math.max(0, level - f.Y)
+		end
+		if (try == 1 and d < entryR) or climb > run * slope * fl.PassSlack then
+			continue
+		end
+		-- the far side: exit at the same level, then a band point beyond it
+		local a = math.atan2(-uz, -ux) + rng:NextNumber(-fl.PassSpread, fl.PassSpread)
+		local fx, fz = b.Cx + math.cos(a) * entryR, b.Cz + math.sin(a) * entryR
+		local r = rangeOf(rng, b.RMin, b.RMax)
+		local tx, tz = b.Cx + math.cos(a) * r, b.Cz + math.sin(a) * r
+		local ty = rangeOf(rng, b.YMin, b.YMax)
+		local descent = math.sqrt((tx - fx) ^ 2 + (tz - fz) ^ 2)
+		if math.abs(level - ty) > descent * slope then
+			ty = level + clamp(ty - level, -descent, descent) * 0.2
+		end
+		ty = clamp(ty, b.YMin, b.YMax)
+		local y = if under then math.min(level, f.Y) else math.max(level, f.Y)
+		if
+			not (
+				FlightCore.blockedAt(f, tx, ty, tz, fl.WaypointPad)
+				or FlightCore.segmentHitsKeepOut(
+					prof,
+					b.Cx,
+					b.Cy,
+					b.Cz,
+					f.X,
+					f.Y,
+					f.Z,
+					ex,
+					y,
+					ez,
+					pad
+				)
+				or FlightCore.legBlocked(f, f.X, f.Y, f.Z, ex, y, ez, fl.LegPad)
+				or FlightCore.legBlocked(f, fx, y, fz, tx, ty, tz, fl.LegPad)
+				or FlightCore.legBlocked(f, ex, y, ez, fx, y, fz, fl.LegPad)
+			)
+		then
+			return {
+				{ X = ex, Y = y, Z = ez, Over = true, Under = under },
+				{ X = fx, Y = y, Z = fz, Over = true, Under = under },
+				{ X = tx, Y = ty, Z = tz, Over = false },
+			}
+		end
 	end
-	-- the far side: exit at the same level, then a band point beyond it
-	local a = math.atan2(-uz, -ux) + rng:NextNumber(-fl.AcrossSpread, fl.AcrossSpread) * 0.5
-	local fx, fz = b.Cx + math.cos(a) * entryR, b.Cz + math.sin(a) * entryR
-	local r = rangeOf(rng, b.RMin, b.RMax)
-	local tx, tz = b.Cx + math.cos(a) * r, b.Cz + math.sin(a) * r
-	local ty = rangeOf(rng, b.YMin, b.YMax)
-	local descent = math.sqrt((tx - fx) ^ 2 + (tz - fz) ^ 2)
-	if math.abs(level - ty) > descent * math.tan(f.Prof.MaxPitch * fl.OverpassPitchUse) then
-		ty = level + clamp(ty - level, -descent, descent) * 0.2
-	end
-	ty = clamp(ty, b.YMin, b.YMax)
-	local y = math.max(level, f.Y)
-	if
-		FlightCore.blockedAt(f, tx, ty, tz, fl.WaypointPad)
-		or FlightCore.legBlocked(f, f.X, f.Y, f.Z, ex, y, ez, fl.LegPad)
-		or FlightCore.legBlocked(f, fx, y, fz, tx, ty, tz, fl.LegPad)
-	then
-		return nil
-	end
-	return {
-		{ X = ex, Y = y, Z = ez, Over = true },
-		{ X = fx, Y = y, Z = fz, Over = true },
-		{ X = tx, Y = ty, Z = tz, Over = false },
-	}
+	return nil
 end
 
 --- Make the next route point (if any) the current target. True if one was used.
@@ -662,11 +721,13 @@ local function takeRoutePoint(f: Flier): boolean
 	local nxt = table.remove(f.Route, 1)
 	if nxt then
 		f.TX, f.TY, f.TZ = nxt.X, nxt.Y, nxt.Z
-		f.OverLeg = nxt.Over
+		f.OverLeg = nxt.Over and not nxt.Under
+		f.UnderLeg = nxt.Under == true
 		f.BestDist, f.StuckFor = math.huge, 0
 		return true
 	end
 	f.OverLeg = false
+	f.UnderLeg = false
 	return false
 end
 
@@ -684,6 +745,7 @@ function FlightCore.pickWaypoint(f: Flier, env: any?, extraAngle: number?)
 	local blocked = if env then env.Blocked else nil
 	f.Route = {}
 	f.OverLeg = false
+	f.UnderLeg = false
 	local function pointOk(x: number, y: number, z: number): boolean
 		if FlightCore.inKeepOut(prof, b.Cx, b.Cy, b.Cz, x, y, z, pad, pad) then
 			return false
@@ -712,7 +774,16 @@ function FlightCore.pickWaypoint(f: Flier, env: any?, extraAngle: number?)
 
 	-- over the hub, for a creature big enough to need the altitude and high enough to manage it
 	if rng:NextNumber() < (prof.OverpassChance or 0) then
-		local route = planOverpass(f)
+		local route = planPass(f, false)
+		if route then
+			f.Route = route
+			takeRoutePoint(f)
+			return
+		end
+	end
+	-- ... or beneath it, for a creature whose band reaches below the hub's underside
+	if rng:NextNumber() < (prof.UnderpassChance or 0) then
+		local route = planPass(f, true)
 		if route then
 			f.Route = route
 			takeRoutePoint(f)
@@ -853,10 +924,17 @@ function FlightCore.spawn(
 	local base = cfg.Classes[class]
 	-- the keep-out and the overpass roof grow with the creature's own extent
 	local prof = base
-	if (base.HubClearanceExtentScale or 0) > 0 or (base.OverheadExtentScale or 0) > 0 then
+	if
+		(base.HubClearanceExtentScale or 0) > 0
+		or (base.OverheadExtentScale or 0) > 0
+		or (base.UnderExtentScale or 0) > 0
+	then
 		prof = setmetatable({
 			HubClearance = base.HubClearance + radius * (base.HubClearanceExtentScale or 0),
 			OverheadMinY = base.OverheadMinY + radius * (base.OverheadExtentScale or 0),
+			UnderDepth = if base.UnderDepth ~= nil
+				then base.UnderDepth + radius * (base.UnderExtentScale or 0)
+				else nil,
 		}, { __index = base })
 	end
 	local f: Flier = {
@@ -875,6 +953,7 @@ function FlightCore.spawn(
 		Route = {},
 		AvoidV = { 0, 0, 0 },
 		OverLeg = false,
+		UnderLeg = false,
 		X = x,
 		Y = y,
 		Z = z,
@@ -928,16 +1007,17 @@ function FlightCore.spawn(
 	return f
 end
 
---- Put an arriving creature on the outer edge of its band, flying inward
---- along the edge (never inside the keep-out or an obstacle).
+--- Put an arriving creature in the OUTER part of its band (SpawnOuter..1 of the
+--- way out) at a random bearing, flying along the edge (never inside the keep-out or an obstacle).
 function FlightCore.enter(f: Flier)
 	local b = f.Band
 	local fl = f.Cfg.Flight
-	local a, x, z, y = 0.0, 0.0, 0.0, 0.0
+	local a, x, z, y, r = 0.0, 0.0, 0.0, 0.0, 0.0
 	for _ = 1, fl.RelocateTries do
 		a = f.Rng:NextNumber(0, TWO_PI)
-		x = b.Cx + math.cos(a) * b.RMax
-		z = b.Cz + math.sin(a) * b.RMax
+		r = rangeOf(f.Rng, b.RMin + (b.RMax - b.RMin) * (f.Prof.SpawnOuter or 1), b.RMax)
+		x = b.Cx + math.cos(a) * r
+		z = b.Cz + math.sin(a) * r
 		y = rangeOf(f.Rng, b.YMin, b.YMax)
 		if not FlightCore.blockedAt(f, x, y, z, fl.WaypointPad) then
 			break
@@ -987,26 +1067,56 @@ end
 -- ---------------------------------------------------------------- the tick
 
 --- Presence: colossals come and go, but as a GROUP: at least `Floor` are always
---- present and never more than `Ceiling` (the profile's Presence). The driver
---- calls this once per step with every creature of the class; a creature due to
---- leave stays while it would break the floor, one due to arrive waits while it
---- would break the ceiling. Returns the number present afterwards.
+--- present and never more than `Ceiling` (the profile's Presence). With Floor ==
+--- Ceiling == 1 there is exactly one at all times: when it has been here long
+--- enough it is REPLACED (it leaves as another arrives, never zero, never two).
+--- The driver calls this once per step with every creature of the class. Extra
+--- ones present at the start (a server spawns more than it shows) are sent away
+--- at once. Returns the number present afterwards.
 function FlightCore.presenceStep(group: { Flier }, dt: number): number
 	local present = 0
+	local pr: any = nil
 	for _, f in group do
 		if f.Present then
 			present += 1
 		end
-	end
-	local pr: any = nil
-	for _, f in group do
-		pr = f.Prof.Presence
-		if pr then
-			break
+		if not pr then
+			pr = f.Prof.Presence
 		end
 	end
 	if not pr then
 		return present
+	end
+	local function absentOnes(): { Flier }
+		local list = {}
+		for _, f in group do
+			if not f.Present then
+				table.insert(list, f)
+			end
+		end
+		return list
+	end
+	local function leave(f: Flier)
+		f.Present = false
+		f.PresenceLeft = rangeOf(f.Rng, pr.AbsentMin, pr.AbsentMax)
+		present -= 1
+	end
+	local function arrive(f: Flier)
+		f.Present = true
+		f.PresenceLeft = rangeOf(f.Rng, pr.PresentMin, pr.PresentMax)
+		FlightCore.enter(f)
+		present += 1
+	end
+	-- never more than the ceiling, even at the start
+	while present > pr.Ceiling do
+		local here = {}
+		for _, f in group do
+			if f.Present then
+				table.insert(here, f)
+			end
+		end
+		-- a random one goes
+		leave(here[math.floor(here[1].Rng:NextNumber(0, #here)) + 1] or here[1])
 	end
 	for _, f in group do
 		f.PresenceLeft -= dt
@@ -1014,18 +1124,18 @@ function FlightCore.presenceStep(group: { Flier }, dt: number): number
 			continue
 		end
 		if f.Present then
-			if present > pr.Floor then
-				f.Present = false
-				f.PresenceLeft = rangeOf(f.Rng, pr.AbsentMin, pr.AbsentMax)
-				present -= 1
+			local others = absentOnes()
+			if #others > 0 then
+				-- swap: this one leaves as another arrives, the count never changes
+				leave(f)
+				arrive(others[math.floor(f.Rng:NextNumber(0, #others)) + 1] or others[1])
+			elseif present > pr.Floor then
+				leave(f)
 			else
 				f.PresenceLeft = rangeOf(f.Rng, pr.PresentMin, pr.PresentMax)
 			end
 		elseif present < pr.Ceiling then
-			f.Present = true
-			f.PresenceLeft = rangeOf(f.Rng, pr.PresentMin, pr.PresentMax)
-			FlightCore.enter(f)
-			present += 1
+			arrive(f)
 		else
 			f.PresenceLeft = rangeOf(f.Rng, pr.AbsentMin, pr.AbsentMax) * 0.1
 		end
@@ -1034,14 +1144,19 @@ function FlightCore.presenceStep(group: { Flier }, dt: number): number
 	if present < pr.Floor then
 		for _, f in group do
 			if not f.Present and present < pr.Floor then
-				f.Present = true
-				f.PresenceLeft = rangeOf(f.Rng, pr.PresentMin, pr.PresentMax)
-				FlightCore.enter(f)
-				present += 1
+				arrive(f)
 			end
 		end
 	end
 	return present
+end
+
+--- How long a creature may make no progress toward its waypoint before it is called stuck:
+--- StuckSeconds plus StuckTurnScale x the time one turn radius takes at its speed (a colossal
+--- needs minutes to come round, and must not give up on a leg while it is turning).
+local function stuckLimit(f: Flier): number
+	local fl = f.Cfg.Flight
+	return fl.StuckSeconds + fl.StuckTurnScale * f.TurnRadius / math.max(f.Speed, f.Band.SMin, 1)
 end
 
 --- One simulation step.
@@ -1161,7 +1276,7 @@ function FlightCore.tick(f: Flier, dt: number, env: any)
 	-- circle onto a point
 	if
 		to < math.max(prof.ArriveMin, f.TurnRadius * fl.ArriveTurnScale)
-		or f.StuckFor > fl.StuckSeconds
+		or f.StuckFor > stuckLimit(f)
 	then
 		local perched = false
 		if
@@ -1182,11 +1297,7 @@ function FlightCore.tick(f: Flier, dt: number, env: any)
 			return
 		end
 		if not takeRoutePoint(f) then
-			FlightCore.pickWaypoint(
-				f,
-				env,
-				if f.StuckFor > fl.StuckSeconds then math.pi * 0.5 else 0
-			)
+			FlightCore.pickWaypoint(f, env, if f.StuckFor > stuckLimit(f) then math.pi * 0.5 else 0)
 		end
 		tx, ty, tz = f.TX - f.X, f.TY - f.Y, f.TZ - f.Z
 		to = math.sqrt(tx * tx + ty * ty + tz * tz)
@@ -1198,6 +1309,17 @@ function FlightCore.tick(f: Flier, dt: number, env: any)
 	end
 
 	local kx, ky, kz, threatened = FlightCore.keepOutSteer(f, b.Cx, b.Cy, b.Cz)
+	if f.UnderLeg then
+		-- crossing beneath the hub: no swerve while low enough
+		local floor = b.Cy - (prof.UnderDepth or math.huge) - fl.KeepOutRoofMargin
+		if f.Y <= floor then
+			kx, ky, kz, threatened = 0, 0, 0, false
+		elseif threatened then
+			f.UnderLeg = false
+			f.Route = {}
+			FlightCore.pickWaypoint(f, env, 0)
+		end
+	end
 	if f.OverLeg then
 		-- crossing the hub overhead: no sideways swerve while high enough; if the
 		-- climb fell short, give the overpass up and go round like everyone else

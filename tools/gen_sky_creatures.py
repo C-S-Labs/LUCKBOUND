@@ -82,8 +82,15 @@ def load_sidecars() -> dict[str, dict]:
                     "Chain": p.get("chain"),
                     "Lag": p.get("lag", 0),
                     "Gait": p.get("gait", "Always"),
+                    # soft hinge-angle range, radians [min, max] (contract 7.5), optional
+                    "Limit": p.get("limit"),
                 }
+            spine = c.get("spine")
             out[cid] = {
+                # serpent / eel locomotion (contract 7.4), optional:
+                # {"parts": [root segment first...], "wavelength": studs, "amp": studs,
+                #  "rate": Hz, "plane": "lateral"|"vertical"}
+                "Spine": spine,
                 "Model": c["model"],
                 "Class": c["class"],
                 "Size": c["size"],
@@ -123,6 +130,7 @@ def load_whale() -> dict | None:
             "Chain": None,
             "Lag": 0,
             "Gait": "Always",
+            "Limit": None,
         }
     return {
         "Model": "hubprop_sky_whale",
@@ -148,6 +156,8 @@ def render(roster: dict[str, dict]) -> str:
         "-- Kind Flap | Spin | Flicker | Pulse; Chain names the part whose motion this one",
         "-- rides on (tail, neck, wing tip) and Lag its phase lag behind it; Gait says when",
         "-- it moves (Always | Flight | Idle | Turn | Thrust). CanLand: may perch on backdrop islands.",
+        "-- Limit = { min, max } radians soft-clamps the part's hinge angle (no self-clipping).",
+        "-- Spine = serpent / eel locomotion: Parts root-first, Wavelength/Amp studs, Rate Hz, Plane.",
         "-- Biome is RESERVED (unread): see docs/RESERVED.md.",
         "",
         "return {",
@@ -167,6 +177,18 @@ def render(roster: dict[str, dict]) -> str:
         o.append(f"		ScaleMax = {num(hi)},")
         if c.get("Centre") and any(abs(x) > 1e-6 for x in c["Centre"]):
             o.append(f"		Centre = {vec(c['Centre'])},")
+        sp = c.get("Spine")
+        if sp:
+            o.append("		Spine = {")
+            o.append("			Parts = {")
+            for name in sp["parts"]:
+                o.append(f'				"{name}",')
+            o.append("			},")
+            o.append(f"			Wavelength = {num(sp['wavelength'])},")
+            o.append(f"			Amp = {num(sp['amp'])},")
+            o.append(f"			Rate = {num(sp['rate'])},")
+            o.append(f'			Plane = "{sp["plane"]}",')
+            o.append("		},")
         o.append("		Parts = {")
         for pname in sorted(c["Parts"]):
             p = c["Parts"][pname]
@@ -184,6 +206,8 @@ def render(roster: dict[str, dict]) -> str:
                 o.append(f'				Chain = "{p["Chain"]}",')
             o.append(f"				Lag = {num(p['Lag'])},")
             o.append(f'				Gait = "{p["Gait"]}",')
+            if p.get("Limit"):
+                o.append(f"				Limit = {{ {num(p['Limit'][0])}, {num(p['Limit'][1])} }},")
             o.append("			},")
         o.append("		},")
         o.append("	},")
@@ -199,6 +223,16 @@ def main() -> int:
         for pname, p in c["Parts"].items():
             if p["Kind"] not in KINDS or p["Gait"] not in GAITS:
                 sys.exit(f"{cid}/{pname}: bad kind or gait")
+            lim = p.get("Limit")
+            if lim is not None and not (len(lim) == 2 and lim[0] <= lim[1]):
+                sys.exit(f"{cid}/{pname}: limit must be [min, max] radians with min <= max")
+        sp = c.get("Spine")
+        if sp:
+            if sp.get("plane") not in ("lateral", "vertical") or len(sp.get("parts", [])) < 2:
+                sys.exit(f"{cid}: spine needs >= 2 parts and plane lateral|vertical")
+            for name in sp["parts"]:
+                if name not in c["Parts"]:
+                    sys.exit(f"{cid}: spine part {name} is not a part of the creature")
     whale = load_whale()
     if whale and WHALE not in roster:
         roster[WHALE] = whale

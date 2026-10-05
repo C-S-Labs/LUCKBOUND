@@ -9998,12 +9998,13 @@ do
 	do
 		local colossal = life.Classes.COLOSSAL
 		check(
-			"colossals: 1-3 present, a close orbit band inside the far range, clearance grows with extent",
+			"colossals: exactly one present, spawned in the outer band, never closer than the hub keep-out, clearance grows with extent",
 			colossal.Presence.Floor == 1
-				and colossal.Presence.Ceiling == 3
-				and colossal.Max <= 3
-				and colossal.RadiusMax <= 2000
-				and colossal.RadiusMin <= 1400
+				and colossal.Presence.Ceiling == 1
+				and colossal.SpawnOuter >= 0.5
+				and colossal.RadiusMax < life.Classes.COLOSSAL.RadiusMax + 1
+				and colossal.RadiusMax < V2.FarRange.RadiusMin
+				and colossal.RadiusMin > colossal.HubClearance
 				and newFlier("COLOSSAL", 3, false).Prof.HubClearance > colossal.HubClearance
 				and newFlier("COLOSSAL", 3, false).Prof.OverheadMinY > colossal.OverheadMinY
 		)
@@ -10164,7 +10165,7 @@ do
 	end
 
 	-- === round 2: presence floor and ceiling, obstacles, overpass ===========
-	-- colossals come and go as a GROUP: never fewer than the floor, never more than the ceiling
+	-- colossals are REPLACED one at a time: exactly one is present, never zero, never two (contract 7.1)
 	for _, total in { 1, 2, 3 } do
 		local group = {}
 		for i = 1, total do
@@ -10190,42 +10191,36 @@ do
 			end
 		end
 		check(
-			`colossal presence with {total} spawned stays within 1..3 ({minNow}..{maxNow}), {leaves} left, {enters} came`,
-			minNow >= 1 and maxNow <= 3 and (total < 2 or leaves > 0 and enters > 0)
+			`colossal presence with {total} spawned is exactly one at all times ({minNow}..{maxNow}), {leaves} left, {enters} came`,
+			minNow == 1 and maxNow == 1 and (total < 2 or leaves > 0 and enters > 0)
 		)
 	end
 
-	-- obstacles as the world builds them: backdrop islands and the far range, as cylinders
+	-- obstacles as the world builds them: Core/SkyLayout's backdrop (the same function HubV2
+	-- calls, with the real chunk sizes) and the far range, as cylinders
+	local SkyLayout = __require("SkyLayout")
+	local CHUNK_SHAPES = { { 535, 426, 523 }, { 386, 620, 396 }, { 283, 720, 337 } }
 	local function worldObstacles(seed: number)
 		local rng = newRng(seed)
 		local list = {}
-		local shapes = { { 535, 426, 523 }, { 386, 620, 396 }, { 283, 720, 337 } }
-		local function add(count, rMin, rMax, hMin, hMax, sMin, sMax)
-			for i = 1, count do
-				local sh = shapes[rng:NextInteger(1, 3)]
-				local k = rng:NextNumber(sMin, sMax)
-				local a = (i + rng:NextNumber(-0.35, 0.35)) / count * 2 * math.pi
-				local r = rng:NextNumber(rMin, rMax)
-				table.insert(list, {
-					X = math.cos(a) * r,
-					Y = rng:NextNumber(hMin, hMax),
-					Z = math.sin(a) * r,
-					R = math.sqrt(sh[1] ^ 2 + sh[3] ^ 2) * 0.5 * k * 0.9,
-					H = sh[2] * 0.5 * k * 0.9,
-				})
-			end
+		local islands = SkyLayout.backdrop(V2.Backdrop, CHUNK_SHAPES, rng)
+		for _, i in islands do
+			table.insert(list, { X = i.X, Y = i.Y, Z = i.Z, R = i.R, H = i.H })
 		end
-		local b, fr = V2.Backdrop, V2.FarRange
-		add(b.Count, b.RadiusMin, b.RadiusMax, b.HeightMin, b.HeightMax, b.ScaleMin, b.ScaleMax)
-		add(
-			fr.Count,
-			fr.RadiusMin,
-			fr.RadiusMax,
-			fr.HeightMin,
-			fr.HeightMax,
-			fr.ScaleMin,
-			fr.ScaleMax
-		)
+		local fr = V2.FarRange
+		for i = 1, fr.Count do
+			local sh = CHUNK_SHAPES[rng:NextInteger(1, 3)]
+			local k = rng:NextNumber(fr.ScaleMin, fr.ScaleMax)
+			local a = (i + rng:NextNumber(-0.4, 0.4)) / fr.Count * 2 * math.pi
+			local r = rng:NextNumber(fr.RadiusMin, fr.RadiusMax)
+			table.insert(list, {
+				X = math.cos(a) * r,
+				Y = rng:NextNumber(fr.HeightMin, fr.HeightMax),
+				Z = math.sin(a) * r,
+				R = math.sqrt(sh[1] ^ 2 + sh[3] ^ 2) * 0.5 * k * 0.9,
+				H = sh[2] * 0.5 * k * 0.9,
+			})
+		end
 		return list
 	end
 
@@ -10407,7 +10402,7 @@ do
 				local d = math.sqrt(f.X * f.X + f.Z * f.Z)
 				local inside = d < life.Classes.COLOSSAL.HubClearance
 				if inside then
-					if f.Y < roof then
+					if f.Y < roof and f.Y > -f.Prof.UnderDepth then
 						lowInside += 1
 					end
 					if not wasInside then
@@ -10421,7 +10416,764 @@ do
 			`colossals do take overpass routes ({overs} steps, {crossings} crossings)`,
 			overs > 0 and crossings > 0
 		)
-		check(`a crossing colossal is always above its roof ({lowInside})`, lowInside == 0)
+		check(
+			`a colossal inside the hub cylinder is always above its roof or below its underside ({lowInside})`,
+			lowInside == 0
+		)
+	end
+
+	-- === round 3 (contract 7): islands, colossal routes, serpent, limits, wing power ==========
+	do
+		local SkyLayout = __require("SkyLayout")
+		local CM = __require("CreatureMotionCore")
+		local bd = V2.Backdrop
+
+		-- THE ISLAND LAYOUT: size rises with radius, real gaps, staggered heights, open lanes
+		local rising = true
+		local prevK = 0
+		for i = 0, 10 do
+			local k = SkyLayout.scaleAt(bd, bd.RadiusMin + (bd.RadiusMax - bd.RadiusMin) * i / 10)
+			rising = rising and k >= prevK - 1e-9
+			prevK = k
+		end
+		check(
+			"island scale factor rises from ScaleNear at RadiusMin to ScaleFar at RadiusMax",
+			rising
+				and math.abs(SkyLayout.scaleAt(bd, bd.RadiusMin) - bd.ScaleNear) < 1e-9
+				and math.abs(SkyLayout.scaleAt(bd, bd.RadiusMax) - bd.ScaleFar) < 1e-9
+				and bd.ScaleFar >= 2
+		)
+		local innerSum, innerN, outerSum, outerN = 0, 0, 0, 0
+		local minCount, gapsOk, lanesOk, hubOk, boundsOk = 99, true, true, true, true
+		local seated = 0
+		local ySpan = 0
+		for seed = 1, 40 do
+			local islands, lanes = SkyLayout.backdrop(bd, CHUNK_SHAPES, newRng(seed * 131))
+			minCount = math.min(minCount, #islands)
+			seated += #islands
+			local yLo, yHi = math.huge, -math.huge
+			for i, a in islands do
+				local third = (a.Radius - bd.RadiusMin) / (bd.RadiusMax - bd.RadiusMin)
+				if third < 1 / 3 then
+					innerSum += a.Scale
+					innerN += 1
+				elseif third > 2 / 3 then
+					outerSum += a.Scale
+					outerN += 1
+				end
+				yLo, yHi = math.min(yLo, a.Y), math.max(yHi, a.Y)
+				hubOk = hubOk and a.Radius - a.R >= bd.HubClear - 1e-6
+				boundsOk = boundsOk
+					and a.Radius >= bd.RadiusMin - 1e-6
+					and a.Radius <= bd.RadiusMax + 1e-6
+					and a.Y >= bd.HeightMin - 1e-6
+					and a.Y <= bd.HeightMax + 1e-6
+				for _, lane in lanes do
+					local diff = a.Angle - lane
+					local d = if a.Radius * math.cos(diff) <= 0
+						then a.Radius
+						else a.Radius * math.abs(math.sin(diff))
+					lanesOk = lanesOk and d >= a.R + bd.LaneWidth * 0.5 - 1e-6
+				end
+				for j = i + 1, #islands do
+					local o = islands[j]
+					local dh = math.sqrt((o.X - a.X) ^ 2 + (o.Z - a.Z) ^ 2) - o.R - a.R
+					local dv = math.abs(o.Y - a.Y) - o.H - a.H
+					gapsOk = gapsOk and (dh >= bd.MinGap - 1e-6 or dv >= bd.VGap - 1e-6)
+				end
+			end
+			ySpan += (yHi - yLo) / 40
+		end
+		check(
+			`islands grow with distance (outer third averages x{string.format(
+				"%.2f",
+				(outerSum / math.max(outerN, 1)) / math.max(innerSum / math.max(innerN, 1), 1e-6)
+			)} the inner third)`,
+			outerN > 0 and innerN > 0 and outerSum / outerN > innerSum / innerN * 1.4
+		)
+		check("every island keeps its MinGap (or a vertical gap) from every other", gapsOk)
+		check("no island stands in a lane, and none reaches HubClear of the hub", lanesOk and hubOk)
+		check("islands stay inside the configured radius and height bands", boundsOk)
+		check(
+			`heights are staggered over the band (mean span {math.floor(ySpan)} of {bd.HeightMax - bd.HeightMin})`,
+			ySpan > (bd.HeightMax - bd.HeightMin) * 0.5
+		)
+		check(
+			`the layout seats a crowd of islands in every seed (min {minCount}, mean {string.format(
+				"%.1f",
+				seated / 40
+			)} of {bd.Count})`,
+			minCount >= 5 and seated / 40 >= 8
+		)
+		check(
+			"a lane is wide enough for a colossal with its inflation and leg padding",
+			bd.LaneWidth * 0.5
+				> RADII.COLOSSAL * life.Classes.COLOSSAL.AvoidRadiusScale
+					+ life.Classes.COLOSSAL.AvoidMargin
+					+ life.Flight.LegPad
+		)
+		check(
+			"the backdrop's cylinder shape matches the planner's ObstacleShape",
+			bd.Shape == life.Driver.ObstacleShape
+		)
+		check(
+			"the far range lies beyond the backdrop's outermost island and the colossal band",
+			V2.FarRange.RadiusMin > bd.RadiusMax + 1000
+				and life.Classes.COLOSSAL.RadiusMax < V2.FarRange.RadiusMin
+		)
+
+		-- COLOSSAL SPAWN: the outer part of the band, a random bearing, never over the hub
+		do
+			local p = life.Classes.COLOSSAL
+			local quadrants, worst, inner = {}, -math.huge, math.huge
+			for seed = 1, 40 do
+				local f = newFlier("COLOSSAL", 12000 + seed, false)
+				f.Obstacles = worldObstacles(seed)
+				FlightCore.enter(f)
+				local r = math.sqrt(f.X * f.X + f.Z * f.Z)
+				inner = math.min(inner, r)
+				-- relocate() may have moved it for an obstacle, but only inside the band
+				worst = math.max(worst, f.Prof.HubClearance - r)
+				local q = (if f.X >= 0 then 1 else 0) + (if f.Z >= 0 then 2 else 0)
+				quadrants[q] = true
+			end
+			local count = 0
+			for _ in quadrants do
+				count += 1
+			end
+			check(
+				`an arriving colossal appears in the outer band, never within the hub keep-out (nearest {math.floor(
+					inner
+				)}, outer band from {math.floor(
+					p.RadiusMin + (p.RadiusMax - p.RadiusMin) * p.SpawnOuter
+				)})`,
+				worst < 0 and inner >= p.RadiusMin
+			)
+			check(`arrivals come from random bearings ({count} of 4 quadrants in 40)`, count == 4)
+		end
+
+		-- ROUTES: colossals cross the hub's footprint only below the underside or above the roof,
+		-- through the new layout, and do both
+		do
+			local under, over, inside, violations, total = 0, 0, 0, 0, 0
+			for seed = 1, 14 do
+				local obs = worldObstacles(seed * 23)
+				local f = newFlier("COLOSSAL", 15000 + seed, false)
+				f.Obstacles = obs
+				FlightCore.relocate(f)
+				FlightCore.pickWaypoint(f, {})
+				local roof = f.Prof.OverheadMinY
+				local floor = -f.Prof.UnderDepth
+				for step = 1, 12000 do
+					FlightCore.tick(f, 0.25, {})
+					total += 1
+					if FlightCore.inKeepOut(f.Prof, 0, 0, 0, f.X, f.Y, f.Z, 0, 0) then
+						violations += 1
+					end
+					if f.X * f.X + f.Z * f.Z < f.Prof.HubClearance ^ 2 then
+						inside += 1
+						if f.Y <= floor then
+							under += 1
+						elseif f.Y >= roof then
+							over += 1
+						end
+					end
+				end
+			end
+			check(
+				`colossals never enter the hub keep-out volume ({violations} of {total} steps)`,
+				violations == 0
+			)
+			check(
+				`colossals pass under ({under} steps) and over ({over} steps) the hub through the new layout`,
+				under > 0 and over > 0
+			)
+			check(
+				`colossals do not linger over the hub ({string.format("%.2f", inside / total * 100)}% of steps within its footprint)`,
+				inside / total < 0.1
+			)
+		end
+
+		-- THE SERPENT: follow-the-leader on the head's trail with a travelling wave
+		do
+			local ARCS = {}
+			for i = 1, 14 do
+				ARCS[i] = 46 * i
+			end
+			local LAMBDA, AMP, RATE, HEAD = 350, 30, 0.12, 0.3
+			local function spine(vertical)
+				return CM.newSpine(ARCS, LAMBDA, AMP, RATE, vertical or false, HEAD, 24, 1.25)
+			end
+			-- fly the head along a path, return the spine solved at the end
+			local function fly(sp, path, seconds, dt, endT)
+				local x, y, z, yaw = 0.0, 0.0, 0.0, 0.0
+				local hx, hy, hz = 1, 0, 0
+				local t = 0
+				local first = true
+				local frames = {}
+				for _ = 1, math.floor(seconds / dt) do
+					yaw = path(t, x, y, z, yaw)
+					hx, hy, hz = math.cos(yaw), 0, math.sin(yaw)
+					x, y, z = x + hx * 12 * dt, y, z + hz * 12 * dt
+					t += dt
+					if first then
+						CM.seedTrail(sp.Trail, x, y, z, hx, hy, hz)
+						first = false
+					end
+					CM.pushTrail(sp.Trail, x, y, z)
+					CM.solveSpine(sp, x, y, z, t)
+					if endT == nil or t > endT then
+						local snap = {
+							t = t,
+							yaw = yaw,
+							hx = x,
+							hy = y,
+							hz = z,
+							PX = {},
+							PY = {},
+							PZ = {},
+							TX = {},
+							TY = {},
+							TZ = {},
+						}
+						for i = 1, #sp.PX do
+							snap.PX[i], snap.PY[i], snap.PZ[i] = sp.PX[i], sp.PY[i], sp.PZ[i]
+							snap.TX[i], snap.TY[i], snap.TZ[i] = sp.TX[i], sp.TY[i], sp.TZ[i]
+						end
+						table.insert(frames, snap)
+					end
+				end
+				return frames
+			end
+			local function straight(_t, _x, _y, _z, yaw)
+				return yaw
+			end
+			local function circle(radius)
+				return function(_t, _x, _y, _z, yaw)
+					return yaw + 12 / radius * 0.05
+				end
+			end
+
+			-- spacing along the body is preserved: chords never exceed the rest spacing and
+			-- never open a gap (a chord shorter than the spacing means the segments overlap more, not less)
+			local function spacingReport(frames)
+				local worstLong, worstShort = 0, 1
+				for _, fr in frames do
+					for i = 1, #ARCS do
+						local prev = if i == 1 then 0 else i - 1
+						local dx = fr.PX[i + 1] - fr.PX[prev + 1]
+						local dy = fr.PY[i + 1] - fr.PY[prev + 1]
+						local dz = fr.PZ[i + 1] - fr.PZ[prev + 1]
+						local d = math.sqrt(dx * dx + dy * dy + dz * dz)
+						local gap = ARCS[i] - (ARCS[i - 1] or 0)
+						worstLong = math.max(worstLong, d / gap)
+						worstShort = math.min(worstShort, d / gap)
+					end
+				end
+				return worstLong, worstShort
+			end
+			local longS, shortS = spacingReport(fly(spine(), straight, 120, 0.05, 60))
+			check(
+				`serpent: segment spacing is preserved along a straight run (chord {string.format(
+					"%.3f",
+					shortS
+				)}..{string.format("%.3f", longS)} of the rest spacing)`,
+				longS <= 1.000001 and shortS > 0.93
+			)
+			local longT, shortT = spacingReport(fly(spine(), circle(350), 300, 0.05, 150))
+			check(
+				`serpent: no segment gap opens in a turn at the colossal turning circle (chord {string.format(
+					"%.3f",
+					shortT
+				)}..{string.format("%.3f", longT)})`,
+				longT <= 1.000001 and shortT > 0.9
+			)
+			local longH, shortH = spacingReport(fly(spine(), circle(120), 300, 0.05, 150))
+			check(
+				`serpent: nor in a very sharp turn (radius 120: chord {string.format("%.3f", shortH)}..{string.format(
+					"%.3f",
+					longH
+				)})`,
+				longH <= 1.000001 and shortH > 0.8
+			)
+			local longV, shortV = spacingReport(fly(spine(true), straight, 120, 0.05, 60))
+			check(
+				`serpent: the vertical plane keeps its spacing too ({string.format("%.3f", shortV)}..{string.format(
+					"%.3f",
+					longV
+				)})`,
+				longV <= 1.000001 and shortV > 0.93
+			)
+
+			-- the head is on the wave: its sideways displacement is the wave at u = 0
+			local frames = fly(spine(), straight, 120, 0.05, 20)
+			local worstHead, swayed = 0, 0
+			for _, fr in frames do
+				local expect = -AMP * HEAD * math.sin(2 * math.pi * RATE * fr.t)
+				worstHead = math.max(worstHead, math.abs(fr.PZ[1] - fr.hz - expect))
+				swayed = math.max(swayed, math.abs(fr.PZ[1] - fr.hz))
+			end
+			check(
+				`serpent: the head's displacement matches the wave at the head (error {string.format(
+					"%.4f",
+					worstHead
+				)}, sways {string.format("%.1f", swayed)} studs)`,
+				worstHead < 1e-4 and swayed > AMP * HEAD * 0.9
+			)
+			-- ... and it yaws with the wave: the head's tangent leaves the heading
+			local yawMax = 0
+			for _, fr in frames do
+				yawMax = math.max(yawMax, math.abs(math.atan2(fr.TZ[1], fr.TX[1])))
+			end
+			check(
+				`serpent: the head yaws with the wave ({string.format("%.3f", yawMax)} rad)`,
+				yawMax > 0.02 and yawMax < 0.6
+			)
+
+			-- the wave travels from head to tail: a later segment crosses zero later
+			local function crossing(frs, seg)
+				local last
+				for _, fr in frs do
+					local w = fr.PZ[seg + 1] - fr.hz
+					if last ~= nil and last < 0 and w >= 0 then
+						return fr.t
+					end
+					last = w
+				end
+				return nil
+			end
+			local ta, tb = crossing(frames, 2), crossing(frames, 5)
+			local period = 1 / RATE
+			local expectDelay = (ARCS[5] - ARCS[2]) / (RATE * LAMBDA)
+			local delay = if ta and tb then (tb - ta) % period else -1
+			check(
+				`serpent: the wave travels head to tail ({string.format("%.2f", delay)}s between segments 2 and 5, expected {string.format(
+					"%.2f",
+					expectDelay
+				)}s)`,
+				ta ~= nil and tb ~= nil and math.abs(delay - expectDelay) < 0.7
+			)
+			-- amplitude grows toward the tail
+			local amps = {}
+			for _, seg in { 1, 6, 14 } do
+				local m = 0
+				for _, fr in frames do
+					m = math.max(m, math.abs(fr.PZ[seg + 1] - fr.hz))
+				end
+				amps[seg] = m
+			end
+			check(
+				`serpent: amplitude grows toward the tail ({string.format("%.1f", amps[1])} < {string.format(
+					"%.1f",
+					amps[6]
+				)} < {string.format("%.1f", amps[14])} studs)`,
+				amps[1] < amps[6] and amps[6] < amps[14] and amps[14] > AMP * 0.9
+			)
+			-- the tail follows the turn arc, on the inside of nothing and outside of nothing: it
+			-- stays near the circle the head flew
+			local turn = fly(spine(), circle(350), 300, 0.05, 150)
+			local worstOff = 0
+			local last = turn[#turn]
+			-- centre of the turn: head position plus 350 along the left of its heading (yaw rate positive)
+			local ccx, ccz = last.hx - 350 * math.sin(last.yaw), last.hz + 350 * math.cos(last.yaw)
+			for i = 2, #ARCS + 1 do
+				local d = math.sqrt((last.PX[i] - ccx) ^ 2 + (last.PZ[i] - ccz) ^ 2)
+				worstOff = math.max(worstOff, math.abs(d - 350))
+			end
+			check(
+				`serpent: the tail follows the turn arc (furthest segment {string.format(
+					"%.1f",
+					worstOff
+				)} studs off the head's circle)`,
+				worstOff < AMP * 1.6
+			)
+		end
+
+		-- LIMITS: a soft clamp of the part's own hinge angle
+		do
+			local k = life.Motion.LimitKnee
+			local inside = CM.softLimit(0.1, -0.3, 0.5, k)
+			local beyond, below = CM.softLimit(3, -0.3, 0.5, k), CM.softLimit(-3, -0.3, 0.5, k)
+			local prev, mono = -10, true
+			for i = -400, 400 do
+				local v = CM.softLimit(i / 100, -0.3, 0.5, k)
+				mono = mono and v >= prev - 1e-12
+				prev = v
+			end
+			check(
+				"softLimit: untouched in the middle, saturating below the ends, monotone",
+				inside == 0.1
+					and beyond < 0.5
+					and beyond > 0.4
+					and below > -0.3
+					and below < -0.2
+					and mono
+			)
+			check(
+				"softLimit: continuous through the knee",
+				math.abs(
+					CM.softLimit(0.5 - 0.8 * k - 1e-6, -0.3, 0.5, k)
+						- CM.softLimit(0.5 - 0.8 * k + 1e-6, -0.3, 0.5, k)
+				) < 1e-4
+			)
+			local mc = {}
+			for key, v in life.Motion.Classes.LARGE do
+				mc[key] = v
+			end
+			local wing = CM.newPart(
+				"Flap",
+				"Flight",
+				1.0,
+				1,
+				0,
+				0,
+				{ 1, 0, 0 },
+				{ 0, 0, 8 },
+				{ 0, 0, 0 },
+				3,
+				{ -0.2, 0.3 }
+			)
+			local loose = CM.newPart(
+				"Flap",
+				"Always",
+				0.6,
+				0.4,
+				0,
+				0,
+				{ 0, 0, 1 },
+				{ 0, -30, 0 },
+				{ 0, 0, 0 },
+				4,
+				{ -0.1, 0.25 }
+			)
+			local b = CM.newBody()
+			b.WingGate = 1
+			b.Drag, b.SDrag, b.Climb, b.SClimb = 1.2, 1.2, 0.8, 0.8
+			local lo, hi, llo, lhi = 1, -1, 1, -1
+			for i = 0, 3000 do
+				b.Time = i * 0.02
+				b.Beat = i * 0.02
+				CM.stepPart(wing, b, nil, 0.02, mc, life.Motion)
+				CM.stepPart(loose, b, nil, 0.02, mc, life.Motion)
+				lo, hi = math.min(lo, wing.Angle), math.max(hi, wing.Angle)
+				llo, lhi = math.min(llo, loose.Angle), math.max(lhi, loose.Angle)
+			end
+			check(
+				`a part's limit bounds its swing (wing {string.format("%.2f", lo)}..{string.format(
+					"%.2f",
+					hi
+				)} within -0.2..0.3, loose part {string.format("%.2f", llo)}..{string.format(
+					"%.2f",
+					lhi
+				)} within -0.1..0.25)`,
+				lo >= -0.2 and hi <= 0.3 and llo >= -0.1 and lhi <= 0.25 and hi > 0.2 and lhi > 0.15
+			)
+		end
+
+		-- A RIGID SHELL NEVER PULSES: a Pulse with no amplitude is static, whatever the body does
+		do
+			local mc = life.Motion.Classes.COLOSSAL
+			local shell = CM.newPart(
+				"Pulse",
+				"Always",
+				0,
+				0.1,
+				0,
+				0,
+				{ 0, 1, 0 },
+				{ 0, 0, 0 },
+				{ 0, 0, 0 },
+				1
+			)
+			local bell = CM.newPart(
+				"Pulse",
+				"Thrust",
+				0.08,
+				0.1,
+				0,
+				0,
+				{ 0, 1, 0 },
+				{ 0, 0, 0 },
+				{ 0, 0, 0 },
+				2
+			)
+			local b = CM.newBody()
+			local sMin, sMax, bMin, bMax = 9, 0, 9, 0
+			for i = 0, 800 do
+				b.Time = i * 0.05
+				b.Accel = math.sin(i * 0.05)
+				b.Burst = math.abs(math.sin(i * 0.2))
+				b.ThrustAmp = 1
+				b.WingGate = 1
+				CM.stepPart(shell, b, nil, 0.05, mc, life.Motion)
+				CM.stepPart(bell, b, nil, 0.05, mc, life.Motion)
+				sMin, sMax = math.min(sMin, shell.Scale), math.max(sMax, shell.Scale)
+				bMin, bMax = math.min(bMin, bell.Scale), math.max(bMax, bell.Scale)
+			end
+			check(
+				`a Pulse part with amp 0 never changes size, even under acceleration; one with amp does ({sMin}..{sMax} vs {string.format(
+					"%.3f",
+					bMin
+				)}..{string.format("%.3f", bMax)})`,
+				sMin == 1 and sMax == 1 and bMax - bMin > 0.02
+			)
+		end
+
+		-- WING POWER: lifting costs effort, so bigger classes beat harder and deeper, slower
+		do
+			local order = { "TINY", "SMALL", "MEDIUM", "LARGE" }
+			local peak, downPeak, upPeak, heave, pitch = {}, {}, {}, {}, {}
+			local RAD = { TINY = 2.5, SMALL = 7, MEDIUM = 22, LARGE = 60 }
+			for _, class in order do
+				local mc = {}
+				for key, v in life.Motion.Classes[class] do
+					mc[key] = v
+				end
+				mc.NoiseAmp = 0
+				local wing = CM.newPart(
+					"Flap",
+					"Flight",
+					0.5,
+					1,
+					0,
+					0,
+					{ -1, 0, 0 },
+					{ 0, 0, 8 },
+					{ 0, 0, 0 },
+					1
+				)
+				local b = CM.newBody()
+				b.WingGate = 1
+				local f = {
+					GaitClock = 0,
+					Idle = 0,
+					GlideBlend = 0,
+					Flare = 0,
+					BankNorm = 0,
+					AccelN = 0,
+					Speed = 30,
+					Pitch = 0,
+					Radius = RAD[class],
+					Band = { SMax = 30 },
+					Prof = { MaxPitch = 0.5 },
+				}
+				local dMax, uMax, hMax, pMax = 0, 0, 0, 0
+				for i = 1, 600 do
+					f.GaitClock = i * 0.01
+					CM.updateBody(b, f, 0.01, mc, life.Motion, 1)
+					CM.stepPart(wing, b, nil, 0.01, mc, life.Motion)
+					dMax = math.max(dMax, wing.Angle)
+					uMax = math.max(uMax, -wing.Angle)
+					hMax = math.max(hMax, math.abs(b.Heave))
+					pMax = math.max(pMax, math.abs(b.PitchOff))
+				end
+				peak[class], downPeak[class], upPeak[class] = math.max(dMax, uMax), dMax, uMax
+				heave[class], pitch[class] = hMax, pMax
+			end
+			check(
+				`wing amplitude rises with class effort (same sidecar amp): TINY {string.format(
+					"%.2f",
+					peak.TINY
+				)} < SMALL {string.format("%.2f", peak.SMALL)} < MEDIUM {string.format(
+					"%.2f",
+					peak.MEDIUM
+				)} < LARGE {string.format("%.2f", peak.LARGE)}`,
+				peak.TINY < peak.SMALL
+					and peak.SMALL < peak.MEDIUM
+					and peak.MEDIUM < peak.LARGE
+					and peak.MEDIUM > peak.SMALL * 1.25
+			)
+			check(
+				`MEDIUM and LARGE drive the downstroke harder than the recovery (down {string.format(
+					"%.2f",
+					downPeak.MEDIUM
+				)} vs up {string.format("%.2f", upPeak.MEDIUM)}; {string.format(
+					"%.2f",
+					downPeak.LARGE
+				)} vs {string.format("%.2f", upPeak.LARGE)})`,
+				downPeak.MEDIUM > upPeak.MEDIUM * 1.15
+					and downPeak.LARGE > upPeak.LARGE * 1.25
+					and downPeak.TINY <= upPeak.TINY * 1.05
+			)
+			check(
+				`body heave and pitch per beat grow with class (heave {string.format(
+					"%.2f",
+					heave.TINY
+				)}/{string.format("%.2f", heave.SMALL)}/{string.format("%.2f", heave.MEDIUM)}/{string.format(
+					"%.2f",
+					heave.LARGE
+				)} studs; pitch {string.format("%.3f", pitch.SMALL)} -> {string.format(
+					"%.3f",
+					pitch.MEDIUM
+				)} -> {string.format("%.3f", pitch.LARGE)} rad)`,
+				heave.TINY < heave.SMALL
+					and heave.SMALL < heave.MEDIUM
+					and heave.MEDIUM < heave.LARGE
+					and pitch.TINY < pitch.MEDIUM * 0.6
+					and pitch.SMALL < pitch.MEDIUM
+					and pitch.MEDIUM < pitch.LARGE
+			)
+			local beat = life.Classes
+			check(
+				"bigger classes beat slower (BeatScale falls TINY > SMALL > MEDIUM > LARGE); LARGE glides between bursts",
+				beat.TINY.BeatScale > beat.SMALL.BeatScale
+					and beat.SMALL.BeatScale > beat.MEDIUM.BeatScale
+					and beat.MEDIUM.BeatScale > beat.LARGE.BeatScale
+					and beat.LARGE.GlideChance >= 0.8
+			)
+		end
+
+		-- CALM TENDRILS: a colossal's loose parts, driven through thrust bursts, move slowly and smoothly
+		do
+			local function tendrilSpeed(class, limit)
+				local mc = life.Motion.Classes[class]
+				local part = CM.newPart(
+					"Flap",
+					"Always",
+					0.3,
+					0.1,
+					0,
+					0,
+					{ 0, 0, 1 },
+					{ 0, -60, 0 },
+					{ 0, 0, 0 },
+					9,
+					limit
+				)
+				local b = CM.newBody()
+				local f = {
+					GaitClock = 0,
+					Idle = 0,
+					GlideBlend = 0,
+					Flare = 0,
+					BankNorm = 0,
+					AccelN = 0,
+					Speed = 10,
+					Pitch = 0,
+					Radius = 400,
+					Band = { SMax = 14 },
+					Prof = { MaxPitch = 0.3 },
+				}
+				local last, vMax, aMax, lo, hi = 0, 0, 0, 9, -9
+				local lastV = 0
+				for i = 1, 4000 do
+					local t = i * 0.05
+					-- sharp, repeated acceleration and turning
+					f.AccelN = if math.sin(t * 0.9) > 0 then 1 else -0.6
+					f.BankNorm = math.sin(t * 0.5)
+					f.Pitch = 0.15 * math.sin(t * 0.7)
+					f.Speed = 10 + 4 * f.AccelN
+					f.GaitClock = t
+					CM.updateBody(b, f, 0.05, mc, life.Motion, 0)
+					CM.stepPart(part, b, nil, 0.05, mc, life.Motion)
+					local v = (part.Angle - last) / 0.05
+					if i > 100 then
+						vMax = math.max(vMax, math.abs(v))
+						aMax = math.max(aMax, math.abs(v - lastV) / 0.05)
+						lo, hi = math.min(lo, part.Angle), math.max(hi, part.Angle)
+					end
+					last, lastV = part.Angle, v
+				end
+				return vMax, aMax, lo, hi
+			end
+			local cv, ca, clo, chi = tendrilSpeed("COLOSSAL", { -0.15, 0.35 })
+			local lv = tendrilSpeed("LARGE", nil)
+			check(
+				`a colossal tendril moves slowly and smoothly (peak {string.format("%.3f", cv)} rad/s, {string.format(
+					"%.3f",
+					ca
+				)} rad/s^2; a LARGE one {string.format("%.3f", lv)} rad/s)`,
+				cv < 0.25 and cv < lv * 0.8 and ca < 0.5
+			)
+			check(
+				`... and stays inside its limit (angle {string.format("%.2f", clo)}..{string.format(
+					"%.2f",
+					chi
+				)} within -0.15..0.35), so it cannot whip up through the body`,
+				clo >= -0.15 and chi <= 0.35
+			)
+		end
+
+		-- DATA: the sidecar fields reach the roster, and bad ones are refused at boot
+		do
+			local function seg(model, i, x)
+				return {
+					Kind = "Flap",
+					Offset = Vector3.new(x, 0, 0),
+					Hinge = Vector3.new(x - 5, 0, 0),
+					Axis = Vector3.new(0, 0, 1),
+					Amp = 0.1,
+					Rate = 0.2,
+					Phase = 0,
+					Lag = 0,
+					Gait = "Always",
+				}
+			end
+			local function snake()
+				return {
+					TEST_EEL = {
+						Model = "hubprop_test_eel",
+						Class = "LARGE",
+						Size = Vector3.new(100, 8, 8),
+						Biome = {},
+						CanLand = false,
+						Weight = 1,
+						ScaleMin = 1,
+						ScaleMax = 1,
+						Spine = {
+							Parts = {
+								"hubprop_test_eel__s_1",
+								"hubprop_test_eel__s_2",
+								"hubprop_test_eel__s_3",
+							},
+							Wavelength = 60,
+							Amp = 6,
+							Rate = 0.4,
+							Plane = "lateral",
+						},
+						Parts = {
+							hubprop_test_eel__s_1 = seg("e", 1, 10),
+							hubprop_test_eel__s_2 = seg("e", 2, 20),
+							hubprop_test_eel__s_3 = seg("e", 3, 30),
+						},
+					},
+				}
+			end
+			check(
+				"a well-formed spine creature validates",
+				(Schema.validateSkyCreatures(snake(), life))
+			)
+			local function broken(label, mutate)
+				local c = snake()
+				mutate(c.TEST_EEL)
+				check(label, not (Schema.validateSkyCreatures(c, life)))
+			end
+			broken("a spine naming a missing part is refused", function(c)
+				c.Spine.Parts[2] = "hubprop_test_eel__gone_1"
+			end)
+			broken(
+				"a spine whose segments do not run root-first (Offset.X rising) is refused",
+				function(c)
+					c.Spine.Parts = {
+						"hubprop_test_eel__s_2",
+						"hubprop_test_eel__s_1",
+						"hubprop_test_eel__s_3",
+					}
+				end
+			)
+			broken("a spine with a bad plane is refused", function(c)
+				c.Spine.Plane = "sideways"
+			end)
+			broken("a spine with no wavelength is refused", function(c)
+				c.Spine.Wavelength = 0
+			end)
+			broken("a part Limit that is not [min, max] is refused", function(c)
+				c.Parts.hubprop_test_eel__s_1.Limit = { 0.5, -0.5 }
+			end)
+			local limited = snake()
+			limited.TEST_EEL.Parts.hubprop_test_eel__s_1.Limit = { -0.4, 0.4 }
+			check("a part Limit [min, max] validates", (Schema.validateSkyCreatures(limited, life)))
+		end
 	end
 
 	-- velocity is still heading * speed with obstacles, overpass routes and presence in play

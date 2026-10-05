@@ -1475,6 +1475,10 @@ local SKY_AVOID_FIELDS = {
 	"HubClearanceExtentScale",
 	"OverheadExtentScale",
 	"OverpassChance",
+	"UnderpassChance",
+	"UnderDepth",
+	"UnderExtentScale",
+	"SpawnOuter",
 }
 
 -- Every class's motion profile (Core/CreatureMotionCore) carries these.
@@ -1500,6 +1504,16 @@ local SKY_MOTION_FIELDS = {
 	"AccelKick",
 	"LegExtend",
 	"HoverDangle",
+}
+
+-- Optional motion numbers (the code defaults each when absent): wing power, calm loose parts.
+local SKY_MOTION_OPTIONAL = {
+	"DownPower",
+	"LooseAmp",
+	"LooseRate",
+	"InertiaMax",
+	"BurstDrag",
+	"InputTau",
 }
 
 -- The sub-part kinds and gaits a creature part may name (Content/Hub/SkyCreatures).
@@ -1641,6 +1655,11 @@ function Schema.validateSkyCreatures(creatures: any, skyLife: any): (boolean, { 
 					table.insert(errors, `SkyLife.Motion.Classes.{name}.{key} must be a number`)
 				end
 			end
+			for _, key in SKY_MOTION_OPTIONAL do
+				if mc[name][key] ~= nil and not finite(mc[name][key]) then
+					table.insert(errors, `SkyLife.Motion.Classes.{name}.{key} must be a number`)
+				end
+			end
 			if
 				finite(mc[name].DownFrac)
 				and (mc[name].DownFrac <= 0.05 or mc[name].DownFrac >= 0.95)
@@ -1762,6 +1781,16 @@ function Schema.validateSkyCreatures(creatures: any, skyLife: any): (boolean, { 
 					table.insert(errors, `{pl}: {key} must be a number`)
 				end
 			end
+			if part.Limit ~= nil then
+				local lim = part.Limit
+				if
+					type(lim) ~= "table"
+					or not (finite(lim[1]) and finite(lim[2]))
+					or lim[1] > lim[2]
+				then
+					table.insert(errors, `{pl}: Limit must be [min, max] radians with min <= max`)
+				end
+			end
 			if part.Chain ~= nil then
 				if type(part.Chain) ~= "string" or c.Parts[part.Chain] == nil then
 					table.insert(
@@ -1770,6 +1799,40 @@ function Schema.validateSkyCreatures(creatures: any, skyLife: any): (boolean, { 
 					)
 				elseif part.Chain == partName then
 					table.insert(errors, `{pl}: a part cannot chain to itself`)
+				end
+			end
+		end
+		-- the spine (serpent / eel locomotion): ordered segments, a wave
+		if c.Spine ~= nil then
+			local sp = c.Spine
+			local sl = `{label}.Spine`
+			if type(sp) ~= "table" or type(sp.Parts) ~= "table" or #sp.Parts < 2 then
+				table.insert(errors, `{sl} needs Parts: an ordered list of at least two segments`)
+			else
+				local prev = -math.huge
+				for i, name in sp.Parts do
+					local part = if type(name) == "string" then c.Parts[name] else nil
+					if part == nil or typeof(part.Offset) ~= "Vector3" then
+						table.insert(
+							errors,
+							`{sl}.Parts[{i}] '{tostring(name)}' is not a part of {id}`
+						)
+					elseif part.Offset.X <= prev then
+						table.insert(
+							errors,
+							`{sl}.Parts[{i}]: segments must run root first, each further back (Offset.X rising)`
+						)
+					else
+						prev = part.Offset.X
+					end
+				end
+				for _, key in { "Wavelength", "Amp", "Rate" } do
+					if not finite(sp[key]) or sp[key] <= 0 then
+						table.insert(errors, `{sl}.{key} must be a positive number`)
+					end
+				end
+				if sp.Plane ~= "lateral" and sp.Plane ~= "vertical" then
+					table.insert(errors, `{sl}.Plane must be 'lateral' or 'vertical'`)
 				end
 			end
 		end

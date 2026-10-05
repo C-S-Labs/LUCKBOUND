@@ -26,6 +26,7 @@ local Constants = require(Root.Core.Constants)
 local GameConfig = require(Root.Core.GameConfig)
 local V2 = require(Root.Content.Hub.CrossroadsV2)
 local SkyCreatures: { [string]: any } = require(Root.Content.Hub.SkyCreatures)
+local SkyLayout = require(Root.Core.SkyLayout)
 
 local HubV2 = {}
 
@@ -222,27 +223,26 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 			table.insert(chunks, src)
 		end
 	end
+	local backdropCount = 0
 	if #chunks > 0 then
 		local b = cfg.Backdrop
-		for i = 1, b.Count do
-			local src = chunks[rng:NextInteger(1, #chunks)]
+		-- Core/SkyLayout: size grows with distance, real gaps, staggered heights, open lanes
+		local shapes = {}
+		for _, src in chunks do
+			table.insert(shapes, { src.Size.X, src.Size.Y, src.Size.Z })
+		end
+		local islands = SkyLayout.backdrop(b, shapes, rng)
+		for _, island in islands do
+			local src = chunks[island.Chunk]
 			local p = src:Clone()
-			local s = rng:NextNumber(b.ScaleMin, b.ScaleMax)
-			p.Size = src.Size * s
-			local a = (i + rng:NextNumber(-0.35, 0.35)) / b.Count * math.pi * 2
-			local r = rng:NextNumber(b.RadiusMin, b.RadiusMax)
+			p.Size = src.Size * island.Scale
 			-- not solid, but queryable: sky props steer round it and dock beside it
 			p.Anchored, p.CanCollide, p.CanQuery, p.CanTouch = true, false, true, false
-			p.CFrame = CFrame.new(
-				origin
-					+ Vector3.new(
-						math.cos(a) * r,
-						rng:NextNumber(b.HeightMin, b.HeightMax),
-						math.sin(a) * r
-					)
-			) * CFrame.Angles(0, rng:NextNumber(0, math.pi * 2), 0)
+			p.CFrame = CFrame.new(origin + Vector3.new(island.X, island.Y, island.Z))
+				* CFrame.Angles(0, island.Yaw, 0)
 			p:SetAttribute("Backdrop", true)
 			p.Parent = sky
+			backdropCount += 1
 		end
 	end
 
@@ -279,7 +279,12 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 		return nil
 	end
 
-	local function attachParts(p: BasePart, s: number, parts: { [string]: any }): number
+	local function attachParts(
+		p: BasePart,
+		s: number,
+		parts: { [string]: any },
+		spineParts: { string }?
+	): number
 		local missing = 0
 		for subName, sub in parts do
 			local sp = findMesh(subName)
@@ -299,6 +304,15 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 			q:SetAttribute("SubAmp", sub.Amp)
 			q:SetAttribute("SubRate", sub.Rate)
 			q:SetAttribute("SubPhase", sub.Phase)
+			if sub.Limit then
+				q:SetAttribute("SubLimit", Vector2.new(sub.Limit[1], sub.Limit[2]))
+			end
+			if spineParts then
+				local at = table.find(spineParts, subName)
+				if at then
+					q:SetAttribute("SubSpine", at)
+				end
+			end
 			if sub.Chain then
 				q:SetAttribute("SubChain", sub.Chain)
 				q:SetAttribute("SubLag", sub.Lag or 0)
@@ -438,7 +452,13 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 			p.Anchored, p.CanCollide, p.CanQuery, p.CanTouch = true, false, false, false
 			local s = rng:NextNumber(c.ScaleMin, c.ScaleMax)
 			p.Size = src.Size * s
-			local radius = rng:NextNumber(prof.RadiusMin, prof.RadiusMax)
+			-- a class that comes and goes (colossals) starts in the OUTER part of its band, at a
+			-- random bearing: never over the hub
+			local outer = if prof.Presence ~= nil then (prof.SpawnOuter or 0) else 0
+			local radius = rng:NextNumber(
+				prof.RadiusMin + (prof.RadiusMax - prof.RadiusMin) * outer,
+				prof.RadiusMax
+			)
 			local height = rng:NextNumber(prof.HeightMin, prof.HeightMax)
 			local phase = rng:NextNumber(0, math.pi * 2)
 			p.CFrame = CFrame.new(
@@ -463,9 +483,17 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 			if c.Centre then
 				p:SetAttribute("SkyCentre", c.Centre * s)
 			end
+			-- serpent / eel locomotion (SkyCreatures Spine): the segments follow the head's trail
+			local spine = c.Spine
+			if spine then
+				p:SetAttribute("SpineWavelength", spine.Wavelength * s)
+				p:SetAttribute("SpineAmp", spine.Amp * s)
+				p:SetAttribute("SpineRate", spine.Rate)
+				p:SetAttribute("SpinePlane", spine.Plane)
+			end
 			p:SetAttribute("Detail", detailFor(prof.Detail, k))
 			p.Parent = sky
-			local missing = attachParts(p, s, c.Parts)
+			local missing = attachParts(p, s, c.Parts, if spine then spine.Parts else nil)
 			if missing > 0 and not skipped[pick] then
 				skipped[pick] = true
 				warn(`[HubV2] sky creature {pick}: {missing} moving part mesh(es) missing`)
@@ -473,9 +501,7 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 			creatures += 1
 		end
 	end
-	print(
-		`[HubV2] sky: {#chunks > 0 and cfg.Backdrop.Count or 0} backdrop chunk(s), {n} orbiter(s), {creatures} creature(s)`
-	)
+	print(`[HubV2] sky: {backdropCount} backdrop chunk(s), {n} orbiter(s), {creatures} creature(s)`)
 end
 
 local function still(p: BasePart, cf: CFrame, parent: Instance)

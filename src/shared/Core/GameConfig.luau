@@ -422,14 +422,32 @@ local GameConfig = {
 				EXPEDITION_GATE = "Shop",
 				TRAINING_GROUNDS = "Training Grounds",
 			},
+			-- The islands round the hub (Core/SkyLayout places them). Their size
+			-- GROWS with distance (the creatures are huge): the scale factor rises from
+			-- ScaleNear at RadiusMin to ScaleFar at RadiusMax along ScaleCurve, +/-
+			-- ScaleJitter. They are SPREAD OUT: MinGap between two islands' bounding
+			-- cylinders (waived when they are VGap apart vertically), heights are staggered
+			-- over HeightMin..HeightMax, and LaneCount diameters of corridors LaneWidth wide are
+			-- kept free of islands so a colossal can reach the hub, pass under it and over it.
 			Backdrop = {
-				Count = 12,
-				RadiusMin = 1150,
-				RadiusMax = 1700,
-				HeightMin = -260,
-				HeightMax = 40,
-				ScaleMin = 0.8,
-				ScaleMax = 1.35,
+				Count = 16, -- islands attempted; crowded seeds seat fewer (about 9 of 16)
+				RadiusMin = 1800,
+				RadiusMax = 3000,
+				HeightMin = -700,
+				HeightMax = 60,
+				ScaleNear = 1,
+				ScaleFar = 2.2,
+				ScaleCurve = 1.2,
+				ScaleJitter = 0.12,
+				MinGap = 350,
+				VGap = 250,
+				HubClear = 1400, -- an island's near edge stays this far from the hub axis (room for a colossal to circle the hub inside it)
+				LaneCount = 2, -- diameters: 2 means four radial corridors, each opposite another
+				LaneWidth = 1450,
+				Tries = 80,
+				Shrink = 0.92, -- every ShrinkEvery failed tries the island is drawn smaller
+				ShrinkEvery = 15,
+				Shape = 0.9, -- bounding cylinder = this fraction of the box (as SkyLife.Driver.ObstacleShape)
 			},
 			-- THE SKY BEYOND (HUB_SKY). The cloud sea is the cloud props' own
 			-- puffs as wide banks, in two drifting layers; the far range is the
@@ -456,12 +474,12 @@ local GameConfig = {
 			},
 			FarRange = {
 				Count = 14,
-				RadiusMin = 3200,
-				RadiusMax = 4600,
+				RadiusMin = 4600,
+				RadiusMax = 5800,
 				HeightMin = -520,
 				HeightMax = -120,
-				ScaleMin = 2.2,
-				ScaleMax = 3.2,
+				ScaleMin = 2.8,
+				ScaleMax = 3.8,
 				Tint = Color3.fromRGB(116, 104, 150),
 			},
 			Moon = {
@@ -534,6 +552,7 @@ local GameConfig = {
 					FallbackAngle = 0.5,
 					ArriveTurnScale = 0.8, -- arrived = within max(ArriveMin, this x turn radius)
 					StuckSeconds = 8,
+					StuckTurnScale = 3, -- ... plus this x (turn radius / speed): the time to come round
 					GuardMargin = 4, -- the hard stop keeps this much beyond the body's own sphere
 					LegPad = 20, -- extra clearance a waypoint leg keeps from obstacles
 					RelocateTries = 40, -- tries to find a clear start or arrival
@@ -541,6 +560,9 @@ local GameConfig = {
 					FallbackClimb = 0.3, -- ... climbing at this slope
 					OverpassLead = 1.2, -- overpass entry sits this x the turn radius outside the keep-out edge
 					OverpassPitchUse = 0.6, -- fraction of MaxPitch an overpass climb may use
+					PassTries = 24, -- entry bearings tried for an over- or underpass
+					PassSlack = 0.7, -- the climb or dive to the pass level may use only this fraction of the run (pitch lags)
+					PassSpread = 0.1, -- rad: how far off straight across the hub the exit may be (it follows a lane)
 				},
 				-- Obstacle avoidance (FlightCore.obstacleSteer): look-ahead = turn radius x TurnScale
 				-- + speed x Lead + SizeScale x the obstacle's radius, sampled at Samples points.
@@ -598,10 +620,20 @@ local GameConfig = {
 				Motion = {
 					StrokeSign = 1, -- +1: a positive hinge angle swings a wing DOWN (flip if Studio shows the beat inverted)
 					PitchRef = 0.15, -- rad/s of pitch change counted as a full climb signal
+					LimitKnee = 0.25, -- soft clamp of a part's `limit` range: saturation begins this fraction of the range from each end
+					-- Spine locomotion (serpents, eels; CreatureMotionCore.newSpine): HeadAmp = the head's share of the wave
+					-- amplitude (it grows toward the tail); StepsPerWave = trail samples per wavelength; Margin = extra trail kept.
+					Spine = { HeadAmp = 0.3, StepsPerWave = 24, Margin = 1.25 },
 					DragSpeed = 0.5, -- steady backward trail of loose parts at cruise speed
 					Classes = {
 						TINY = {
 							DownFrac = 0.4,
+							InputTau = 0,
+							BurstDrag = 0.6,
+							InertiaMax = 1.5,
+							LooseRate = 1,
+							LooseAmp = 1,
+							DownPower = 1,
 							GlideHold = 0.2,
 							GlideBias = 0.25,
 							ClimbBias = 0.2,
@@ -611,7 +643,7 @@ local GameConfig = {
 							PitchBeat = 0.05,
 							NoiseAmp = 0.12,
 							NoiseHz = 1.7,
-							AmpScale = 0.9,
+							AmpScale = 0.85,
 							RateScale = 1,
 							InertiaGain = 1.2,
 							FollowTau = 0.12,
@@ -625,13 +657,19 @@ local GameConfig = {
 						},
 						SMALL = {
 							DownFrac = 0.4,
+							InputTau = 0,
+							BurstDrag = 0.6,
+							InertiaMax = 1.5,
+							LooseRate = 1,
+							LooseAmp = 1,
+							DownPower = 1.08,
 							GlideHold = 0.2,
 							GlideBias = 0.3,
 							ClimbBias = 0.2,
 							FlareAmp = 0.35,
-							HeaveScale = 0.06,
-							HeaveMax = 1.2,
-							PitchBeat = 0.06,
+							HeaveScale = 0.08,
+							HeaveMax = 1.5,
+							PitchBeat = 0.07,
 							NoiseAmp = 0.12,
 							NoiseHz = 1.2,
 							AmpScale = 1,
@@ -647,17 +685,23 @@ local GameConfig = {
 							HoverDangle = 0.2,
 						},
 						MEDIUM = {
-							DownFrac = 0.38,
+							DownFrac = 0.36,
+							InputTau = 0,
+							BurstDrag = 0.6,
+							InertiaMax = 1.5,
+							LooseRate = 1,
+							LooseAmp = 1,
+							DownPower = 1.3,
 							GlideHold = 0.25,
 							GlideBias = 0.35,
 							ClimbBias = 0.25,
 							FlareAmp = 0.4,
-							HeaveScale = 0.07,
-							HeaveMax = 2.5,
-							PitchBeat = 0.06,
+							HeaveScale = 0.16,
+							HeaveMax = 5,
+							PitchBeat = 0.13,
 							NoiseAmp = 0.1,
 							NoiseHz = 0.7,
-							AmpScale = 1.1,
+							AmpScale = 1.35,
 							RateScale = 1,
 							InertiaGain = 1.3,
 							FollowTau = 0.4,
@@ -670,17 +714,23 @@ local GameConfig = {
 							HoverDangle = 0.15,
 						},
 						LARGE = {
-							DownFrac = 0.36,
+							DownFrac = 0.34,
+							InputTau = 0,
+							BurstDrag = 0.6,
+							InertiaMax = 1.5,
+							LooseRate = 1,
+							LooseAmp = 1,
+							DownPower = 1.4,
 							GlideHold = 0.5,
 							GlideBias = 0.4,
 							ClimbBias = 0.25,
 							FlareAmp = 0.4,
-							HeaveScale = 0.07,
-							HeaveMax = 6,
-							PitchBeat = 0.05,
+							HeaveScale = 0.2,
+							HeaveMax = 16,
+							PitchBeat = 0.15,
 							NoiseAmp = 0.1,
 							NoiseHz = 0.4,
-							AmpScale = 1.2,
+							AmpScale = 1.5,
 							RateScale = 1.5,
 							InertiaGain = 1.4,
 							FollowTau = 0.9,
@@ -694,6 +744,12 @@ local GameConfig = {
 						},
 						COLOSSAL = {
 							DownFrac = 0.34,
+							DownPower = 1,
+							InputTau = 2,
+							BurstDrag = 0.12,
+							InertiaMax = 0.6,
+							LooseRate = 0.5,
+							LooseAmp = 0.3,
 							GlideHold = 0.5,
 							GlideBias = 0.3,
 							ClimbBias = 0.2,
@@ -705,13 +761,13 @@ local GameConfig = {
 							NoiseHz = 0.08,
 							AmpScale = 2,
 							RateScale = 2.2,
-							InertiaGain = 2,
+							InertiaGain = 0.8,
 							FollowTau = 3,
 							LookGain = 1.5,
 							IdleInFlight = 1,
 							ThrustHz = 0.12,
 							ThrustGain = 5,
-							AccelKick = 4,
+							AccelKick = 1.5,
 							LegExtend = 1,
 							HoverDangle = 0,
 						},
@@ -791,7 +847,7 @@ local GameConfig = {
 						AvoidMargin = 8,
 						ArriveMin = 12,
 						PerchChance = 0.35,
-						BeatScale = 1,
+						BeatScale = 1.15,
 						FlapMin = 1.5,
 						FlapMax = 4,
 						GlideMin = 0.3,
@@ -869,7 +925,7 @@ local GameConfig = {
 						AvoidMargin = 30,
 						ArriveMin = 40,
 						PerchChance = 0.15,
-						BeatScale = 1,
+						BeatScale = 0.85,
 						FlapMin = 3,
 						FlapMax = 8,
 						GlideMin = 3,
@@ -908,26 +964,30 @@ local GameConfig = {
 						AvoidMargin = 30,
 						ArriveMin = 60,
 						PerchChance = 0,
-						BeatScale = 1,
+						BeatScale = 0.7,
 						FlapMin = 6,
 						FlapMax = 14,
 						GlideMin = 6,
 						GlideMax = 16,
-						GlideChance = 0.8,
+						GlideChance = 0.9,
 					},
 					COLOSSAL = {
 						Min = 2,
-						Max = 3,
+						Max = 2,
 						Detail = 2,
 						SizeMin = 520, -- longest body dimension a creature of this class may have, studs
 						SizeMax = 920,
-						RadiusMin = 850,
-						RadiusMax = 1900,
-						HeightMin = 150,
-						HeightMax = 1000,
+						RadiusMin = 900,
+						RadiusMax = 3200,
+						HeightMin = -1100,
+						HeightMax = 900,
 						SpeedMin = 8,
 						SpeedMax = 14,
 						Accel = 1.5,
+						SpawnOuter = 0.7,
+						UnderExtentScale = 1,
+						UnderDepth = 300,
+						UnderpassChance = 0.5,
 						TurnRadiusScale = 1.2,
 						TurnRadiusMin = 350,
 						TurnRadiusMax = 900,
@@ -947,7 +1007,7 @@ local GameConfig = {
 						AvoidMargin = 120,
 						HubClearanceExtentScale = 1,
 						OverheadExtentScale = 0.8,
-						OverpassChance = 0.3,
+						OverpassChance = 0.2,
 						ArriveMin = 150,
 						PerchChance = 0,
 						BeatScale = 1,
@@ -956,13 +1016,13 @@ local GameConfig = {
 						GlideMin = 10,
 						GlideMax = 30,
 						GlideChance = 1,
-						-- at least Floor are always present, never more than Ceiling; a colossal
-						-- may leave (and another arrive) once it has been present PresentMin..Max
+						-- EXACTLY ONE colossal is here at a time (Floor == Ceiling == 1, contract 7.1); once
+						-- it has been present PresentMin..Max seconds it is REPLACED by another species
 						Presence = {
 							Floor = 1,
-							Ceiling = 3,
-							PresentMin = 900,
-							PresentMax = 2000,
+							Ceiling = 1,
+							PresentMin = 700,
+							PresentMax = 1500,
 							AbsentMin = 60,
 							AbsentMax = 300,
 						},

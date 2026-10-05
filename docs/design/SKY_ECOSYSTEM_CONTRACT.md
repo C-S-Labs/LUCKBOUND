@@ -220,3 +220,16 @@ its body; overall the creatures feel robotic. Owner decisions:
    birds/dragons beat visibly harder and more dramatically than TINY/SMALL (bigger amplitude, stronger downstroke, bigger body heave and pitch, larger
    rise per beat; tiny stay quick and fluttery with small amplitude). Class profile data, no per-species code. Realism over rate: bigger = slower beat but much
    deeper/stronger; gliding between bursts for LARGE.
+
+### 7.x Runtime decisions (round 3 implementation)
+
+- Colossal presence is Floor = Ceiling = 1 with a pool of 2 spawned per server: the extra one waits parked and REPLACES the present one after
+  `Presence.PresentMin..Max` seconds (`FlightCore.presenceStep` swaps them; the ceiling is enforced on the first step). Arrivals use
+  `FlightCore.enter`: the outer `SpawnOuter..1` of the band at a random bearing; `HubV2` places the first one the same way.
+- The hub keep-out is a cylinder between the deck's underside and the roof: class `UnderDepth` (+ `UnderExtentScale` x the creature radius) below the deck.
+  A class without `UnderDepth` may not pass beneath. `OverpassChance` / `UnderpassChance` plan a 3-point route (entry, exit, target) over or under; entry bearings are
+  tried `PassTries` times so a crowded sky still leaves a lane. `SkyLayout` keeps `LaneCount` diameters of corridors `LaneWidth` wide free of islands.
+- Sidecar `spine` -> `Spine = { Parts, Wavelength, Amp, Rate, Plane }`; sidecar part `limit` -> `Limit = { min, max }` (radians, hinge angle as fed to `hingeAbout`).
+  The limit clamps the part's OWN hinge angle (soft, `Motion.LimitKnee`); a chained child still inherits its parent's (clamped) pose. Spine segments are
+  placed from the trail (arc length = part `Offset.X`, the tail runs along +X, nose -X); their lateral/vertical `Offset.Y/Z` ride along in the segment's frame.
+- A `Pulse` part with `amp <= 0` is skipped entirely (no breathing, no acceleration kick).
