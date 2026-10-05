@@ -93,6 +93,9 @@ local Constants = {
 		-- CollectionService tag for anything the player can lock on to. The
 		-- spawner adds it; an enemy asset never needs to know it exists.
 		LOCK_ON_TAG = "LuckboundLockOn",
+		-- CollectionService tag on every rift (spec §7.8); RiftController animates
+		-- whatever carries it, streamed in or out.
+		RIFT_TAG = "ExpeditionRift",
 
 		-- A prebuilt map is a Model synced into ServerStorage by Rojo, named for
 		-- its AssetManifest key. Inside it, two named parts are the whole

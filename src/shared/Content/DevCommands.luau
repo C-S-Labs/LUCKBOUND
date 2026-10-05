@@ -274,7 +274,13 @@ local COMMANDS: { Command } = {
 		Name = "boss",
 		Category = "LOOT",
 		Side = "SERVER",
-		Summary = "Act as if you just defeated this map's boss (repeatable).",
+		Summary = "Defeat this map's boss stand-in once; open its exit.",
+	},
+	{
+		Name = "riftexit",
+		Category = "LOOT",
+		Side = "SERVER",
+		Summary = "Stand in front of this map's exit rift (on the boss chunk).",
 	},
 	{
 		Name = "givekey",

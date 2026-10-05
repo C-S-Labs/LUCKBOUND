@@ -64,9 +64,10 @@ local Constants = require(Root.Core.Constants)
 local ExpeditionCore = require(Root.Core.ExpeditionCore)
 local GameConfig = require(Root.Core.GameConfig)
 local Net = require(Root.Core.Net)
-local PortalRig = require(Root.Util.PortalRig)
+local RiftRig = require(Root.Util.RiftRig)
 local PrebuiltLoader = require(Root.Util.PrebuiltLoader)
 local Worlds = require(Root.Content.Worlds)
+local Portals = require(Root.Content.Portals)
 local Atmospheres = require(Root.Content.Atmospheres)
 local AmbienceCore = require(Root.Core.AmbienceCore)
 
@@ -88,6 +89,9 @@ type Group = {
 	Stage: Model,
 	FloorY: number, -- the map's walk plane; the client's cloud sea hangs below it
 	EntryPosition: Vector3,
+	-- Where arrivals turn to face (the entrance rift), or nil to keep their
+	-- spawn facing.
+	EntryLookAt: Vector3?,
 	Summary: string,
 	Duration: number,
 	-- Set when the first member arrives, so a slow teleport does not eat
@@ -104,6 +108,10 @@ type Group = {
 	-- Where the client's atmosphere effects hang things (see GenerationAnchors).
 	Anchors: any,
 	GenerationToken: string,
+	-- Build spec §7.8. The exit rift (sealed until the boss falls) and the
+	-- fact that decides what a run pays. Set by the server, never a client.
+	Exit: Model?,
+	BossCleared: boolean,
 }
 
 -- /atmosphere: nil draws from the seed; "BASE" forces the world's own air;
@@ -228,7 +236,7 @@ local function distanceToGate(player: Player): number?
 	return (hrp.Position - target.Position).Magnitude
 end
 
-local function moveCharacter(player: Player, position: Vector3): boolean
+local function moveCharacter(player: Player, position: Vector3, lookAt: Vector3?): boolean
 	local character = player.Character
 	local hrp = character and character:FindFirstChild("HumanoidRootPart")
 	if not hrp or not hrp:IsA("BasePart") then
@@ -237,7 +245,12 @@ local function moveCharacter(player: Player, position: Vector3): boolean
 	-- PivotTo moves the whole rig, not just the root part, which is what stops
 	-- limbs being left behind at the old location for a frame.
 	local rig = character :: Model
-	rig:PivotTo(CFrame.new(position))
+	-- Turn to face `lookAt` (level with the player, so they never tilt).
+	rig:PivotTo(
+		if lookAt
+			then CFrame.lookAt(position, Vector3.new(lookAt.X, position.Y, lookAt.Z))
+			else CFrame.new(position)
+	)
 	return true
 end
 
@@ -432,38 +445,197 @@ local function buildStage(
 	}
 end
 
---- The way home, on the arrival chunk. Small on purpose (GameConfig.Expedition
---- .ReturnPortalScale): it is a door, and it must not read as more important
---- than whatever the world put at the far end.
-local function buildReturnPortal(stage: Model, position: Vector3, rarityKey: string)
-	local rig = PortalRig.build({
-		Name = "ReturnPortal",
-		Position = position,
-		Scale = GameConfig.Expedition.ReturnPortalScale,
-		Rarity = rarityKey,
-		PlinthMaterial = Enum.Material.Marble,
-		OuterMaterial = Enum.Material.CorrodedMetal,
-	}, stage)
+--- The point on the walk surface under (x, z), by a ray from just above the
+--- map's walk plane. Rifts are seated on THIS, not on a bounding box, so they
+--- are flush whatever the kit's floor does (spec §7.8).
+local function groundAt(stage: Instance, x: number, z: number, floorY: number): Vector3?
+	local probe = GameConfig.Rift.DeckProbeHeight
+	local params = RaycastParams.new()
+	params.FilterType = Enum.RaycastFilterType.Include
+	params.FilterDescendantsInstances = { stage }
+	params.RespectCanCollide = true
+	local hit = Workspace:Raycast(
+		Vector3.new(x, floorY + probe, z),
+		Vector3.new(0, -(probe + GameConfig.Rift.DeckProbeDepth), 0),
+		params
+	)
+	return if hit then hit.Position else nil
+end
 
-	local plinth = rig.PrimaryPart
-	if not plinth then
-		return
+local function deckAt(stage: Instance, x: number, z: number, floorY: number): Vector3
+	return groundAt(stage, x, z, floorY) or Vector3.new(x, floorY, z)
+end
+
+--- A rift's prompt, on its Scar (the PrimaryPart). Triggered fires on the
+--- SERVER with the triggering player, so no remote and nothing to spoof.
+local function riftPrompt(
+	rig: Model,
+	action: string,
+	object: string,
+	onTriggered: (Player) -> ()
+): ProximityPrompt?
+	local scar = rig.PrimaryPart
+	if not scar then
+		return nil
 	end
-
 	local prompt = Instance.new("ProximityPrompt")
-	prompt.Name = "ReturnPrompt"
-	prompt.ActionText = "RETURN"
-	prompt.ObjectText = "The Crossroads"
-	prompt.HoldDuration = 0.4
+	prompt.Name = "RiftPrompt"
+	prompt.ActionText = action
+	prompt.ObjectText = object
+	prompt.HoldDuration = GameConfig.Rift.PromptHoldSeconds
 	prompt.MaxActivationDistance = GameConfig.Expedition.ReturnPromptDistance
 	prompt.RequiresLineOfSight = false
-	prompt.Parent = plinth
-
-	-- ProximityPrompt.Triggered fires on the SERVER with the triggering player,
-	-- so this path needs no remote and cannot be spoofed.
+	prompt.Parent = scar
 	prompt.Triggered:Connect(function(player)
+		local state = active[player.UserId]
+		local character = player.Character
+		local root = character and character:FindFirstChild("HumanoidRootPart")
+		local humanoid = character and character:FindFirstChildOfClass("Humanoid")
+		if
+			ExpeditionCore.canUsePortal({
+				Member = state ~= nil
+					and state.Group.Stage == rig.Parent
+					and state.Group.Members[player.UserId] == true,
+				Alive = humanoid ~= nil and humanoid.Health > 0,
+				Open = prompt.Enabled and RiftRig.isOpen(rig),
+				Distance = if root and root:IsA("BasePart")
+					then (root.Position - scar.Position).Magnitude
+					else nil,
+			}, GameConfig)
+		then
+			onTriggered(player)
+		end
+	end)
+	return prompt
+end
+
+--- The way home, on the arrival chunk (spec §7.8): always open, the colour of
+--- the biome's rarity. Leaving by it is always allowed; what it pays depends
+--- on whether the boss has fallen (ExpeditionCore.payoutFor).
+local function portalSeat(stage: Model, worldId: string, kind: string, fallback: Vector3?): Vector3?
+	local placements = Portals[worldId]
+	local override = placements and placements[kind]
+	local role = if kind == "Entrance" then "ENTRY" else "BOSS"
+	local chosen: Instance? = nil
+	local chosenIndex = math.huge
+	for _, chunk in stage:GetChildren() do
+		local matches = if override
+			then chunk:GetAttribute("ChunkId") == override.Chunk
+			else chunk:GetAttribute("Role") == role
+		local index = chunk:GetAttribute("Index")
+		if matches and type(index) == "number" and index < chosenIndex then
+			chosen, chosenIndex = chunk, index
+		end
+	end
+	if not chosen and override then
+		-- An optional authored piece need not appear in every seeded layout.
+		for _, chunk in stage:GetChildren() do
+			local index = chunk:GetAttribute("Index")
+			if
+				chunk:GetAttribute("Role") == role
+				and type(index) == "number"
+				and index < chosenIndex
+			then
+				chosen, chosenIndex = chunk, index
+			end
+		end
+		override = nil
+	end
+	local centre = chosen and chosen:GetAttribute("Centre")
+	if typeof(centre) ~= "Vector3" then
+		return fallback
+	end
+	if override then
+		local yaw = chosen:GetAttribute("Yaw")
+		local offset = CFrame.Angles(0, ChunkCore.yawRadians(yaw), 0)
+			:VectorToWorldSpace(override.Offset)
+		return centre + offset
+	end
+	return centre
+end
+
+local function buildEntrance(
+	stage: Model,
+	worldId: string,
+	fallback: Vector3,
+	rarityKey: string
+): (Model, Vector3?)
+	local position = portalSeat(stage, worldId, "Entrance", fallback) :: Vector3
+	local seat = deckAt(stage, position.X, position.Z, position.Y)
+	local rig = RiftRig.build({
+		Name = "EntranceRift",
+		Kind = "ENTRANCE",
+		Position = seat,
+		RarityKey = rarityKey,
+	}, stage)
+	riftPrompt(rig, "RETURN", "The Crossroads", function(player)
 		if active[player.UserId] then
 			ExpeditionSystem.finish(player, "RETURNED")
+		end
+	end)
+
+	-- WHERE PLAYERS ARRIVE: on the ground in front of the rift, facing it
+	-- (owner, 2026-10-05: they used to drop in from above). The rift's lane
+	-- runs along its own Z, so try that side and then the other, and take the
+	-- first with solid ground at the same height. nil leaves the chunk's own
+	-- entry point in force.
+	local scar = rig.PrimaryPart
+	if scar then
+		local look = scar.CFrame.LookVector
+		for _, side in { 1, -1 } do
+			local spot = seat + look * (side * GameConfig.Rift.SpawnDistance)
+			local ground = groundAt(stage, spot.X, spot.Z, seat.Y)
+			if ground and math.abs(ground.Y - seat.Y) <= GameConfig.Rift.SpawnMaxStep then
+				return rig, ground + Vector3.new(0, GameConfig.Rift.SpawnLift, 0)
+			end
+		end
+		warn(
+			"[ExpeditionSystem] no ground in front of the entrance rift; arriving at the chunk's entry point"
+		)
+	end
+	return rig, nil
+end
+
+--- The exit, on the boss chunk where the boss stood (spec §7.8). Built SEALED
+--- and invisible; `openExit` materialises it when the boss falls. Returns the
+--- rig and its prompt so the group can wake them.
+local function buildExit(stage: Model, worldId: string): (Model?, ProximityPrompt?)
+	local centre = portalSeat(stage, worldId, "Exit", nil)
+	if not centre then
+		warn(
+			`[ExpeditionSystem] {worldId}: no BOSS chunk to seat the exit rift on; no exit will open`
+		)
+		return nil, nil
+	end
+	local seat = deckAt(stage, centre.X, centre.Z, centre.Y)
+	local rig = RiftRig.build({ Name = "ExitRift", Kind = "EXIT", Position = seat }, stage)
+	local prompt = riftPrompt(rig, "EXIT", "Leave the world", function(player)
+		if active[player.UserId] then
+			ExpeditionSystem.finish(player, "EXITED")
+		end
+	end)
+	if prompt then
+		prompt.Enabled = false
+	end
+	return rig, prompt
+end
+
+--- The boss fell: the exit materialises, and its prompt wakes once it is real.
+local function openExit(group: Group, prompt: ProximityPrompt?)
+	if group.BossCleared then
+		return
+	end
+	group.BossCleared = true
+	local rig = group.Exit
+	if not rig then
+		warn(`[ExpeditionSystem] {group.WorldId}: the boss fell but this map has no exit rift`)
+		return
+	end
+	RiftRig.open(rig)
+	print(`[ExpeditionSystem] {group.WorldId}: boss cleared, exit rift materialising`)
+	task.delay(GameConfig.Rift.MaterialiseSeconds, function()
+		if prompt and prompt.Parent then
+			prompt.Enabled = true
 		end
 	end)
 end
@@ -477,14 +649,19 @@ local function newGroup(
 	partySize: number
 ): Group
 	local world = Worlds[worldId]
-	buildReturnPortal(built.Stage, built.ReturnPosition, world.Rarity)
+	local entranceRig, frontSpot =
+		buildEntrance(built.Stage, worldId, built.ReturnPosition, world.Rarity)
+	local exitRig, exitPrompt = buildExit(built.Stage, worldId)
 	local group: Group = {
 		WorldId = worldId,
 		Seed = seed,
 		Slot = slot,
 		Stage = built.Stage,
 		FloorY = built.FloorY,
-		EntryPosition = built.EntryPosition,
+		EntryPosition = frontSpot or built.EntryPosition,
+		EntryLookAt = if frontSpot and entranceRig.PrimaryPart
+			then entranceRig.PrimaryPart.Position
+			else nil,
 		Summary = built.Summary,
 		Duration = ExpeditionCore.durationFor(
 			world,
@@ -502,6 +679,8 @@ local function newGroup(
 			then anchorScanner.pending(built.Stage, built.FloorY)
 			else anchorScanner.scan(built.Stage, built.FloorY),
 		GenerationToken = HttpService:GenerateGUID(false),
+		Exit = exitRig,
+		BossCleared = false,
 	}
 	group.AtmosphereId, group.Environment = atmosphereFor(worldId, seed)
 	if group.AtmosphereId then
@@ -513,7 +692,9 @@ local function newGroup(
 	-- the group's own Members table, so whoever is on the map when something
 	-- opens is who shares it.
 	if LootSystem then
-		LootSystem.attach(built.Stage, worldId, group.Members)
+		LootSystem.attach(built.Stage, worldId, group.Members, function()
+			openExit(group, exitPrompt)
+		end)
 	end
 	if GameConfig.Expedition.DeferredAtmosphere then
 		task.defer(function()
@@ -563,7 +744,9 @@ local function placeMember(player: Player, group: Group): boolean
 	group.Arrivals += 1
 	local dx, dz =
 		ExpeditionCore.arrivalOffset(group.Arrivals, GameConfig.Expedition.ArrivalSpreadStuds)
-	if not moveCharacter(player, group.EntryPosition + Vector3.new(dx, 0, dz)) then
+	if
+		not moveCharacter(player, group.EntryPosition + Vector3.new(dx, 0, dz), group.EntryLookAt)
+	then
 		return false
 	end
 
@@ -801,6 +984,25 @@ function ExpeditionSystem.setTestDestination(player: Player, worldId: string, en
 		else nil
 end
 
+--- DEVELOPER TESTING ONLY (/riftexit). Stands the player just in front of
+--- their map's exit rift, which lives on the boss chunk, usually far from the
+--- entrance: with streaming on, you cannot see it open from where you are.
+function ExpeditionSystem.gotoExit(player: Player): (boolean, string)
+	local state = active[player.UserId]
+	local rig = state and state.Group.Exit
+	local scar = rig and rig.PrimaryPart
+	if not (state and rig and scar) then
+		return false, "this map has no exit rift (are you on an expedition?)"
+	end
+	-- Along the rift's own walk-through lane, a little above the deck.
+	local spot = scar.CFrame:PointToWorldSpace(Vector3.new(0, 6, 14))
+	if not moveCharacter(player, spot) then
+		return false, "no character to move"
+	end
+	local open = rig:GetAttribute("State")
+	return true, `at the exit rift ({tostring(open)})`
+end
+
 function ExpeditionSystem.isActive(player: Player): boolean
 	return active[player.UserId] ~= nil or launching[player.UserId] == true
 end
@@ -821,6 +1023,29 @@ end
 
 --- Ends one player's expedition and brings them home. Safe to call for a
 --- player who is not on one. The map goes when its last player does.
+--- Pays one player for how their run ended (build spec §7.8) and returns the
+--- Fate given. ExpeditionCore decides the outcome and the amount; this only
+--- applies it. A cleared boss pays in full, a run left early pays a fraction,
+--- a death pays nothing. Loot is not here: it was rolled when the boss fell.
+local function settle(player: Player, group: Group, reason: string): (string, number)
+	local outcome = ExpeditionCore.outcomeFor(reason, group.BossCleared)
+	local payout = ExpeditionCore.payoutFor(
+		outcome,
+		GameConfig.Progression.Rewards.ExpeditionCompleted,
+		GameConfig
+	)
+	local profile = SaveSystem.get(player)
+	if profile and outcome ~= "NONE" then
+		if outcome == "CLEARED" then
+			profile.Stats.ExpeditionsCompleted += 1
+		end
+		if payout.Fate > 0 then
+			ProgressionSystem.grant(player, payout.Fate, "ExpeditionCompleted")
+		end
+	end
+	return outcome, payout.Fate
+end
+
 function ExpeditionSystem.finish(player: Player, reason: string): ()
 	local state = active[player.UserId]
 	if not state then
@@ -834,21 +1059,13 @@ function ExpeditionSystem.finish(player: Player, reason: string): ()
 		state.Died:Disconnect()
 	end
 
-	local awarded = 0
-	-- Dying is not completing. Fate is awarded for finishing an expedition,
-	-- and "finishing" has to mean something or the reward means nothing.
-	if reason == "COMPLETED" or reason == "RETURNED" then
-		local profile = SaveSystem.get(player)
-		if profile then
-			profile.Stats.ExpeditionsCompleted += 1
-			ProgressionSystem.award(player, "ExpeditionCompleted")
-			awarded = GameConfig.Progression.Rewards.ExpeditionCompleted
-		end
-	end
+	-- Dying is not completing: settle() pays nothing for it.
+	local outcome, awarded = settle(player, group, reason)
 
 	Net.get("Expedition_Ended"):FireClient(player, {
 		WorldId = group.WorldId,
 		Reason = reason,
+		Outcome = outcome,
 		FateAwarded = awarded,
 	})
 
@@ -915,16 +1132,11 @@ local function completeGroup(group: Group)
 			if state.Died then
 				state.Died:Disconnect()
 			end
-			local profile = SaveSystem.get(player)
-			local awarded = 0
-			if profile then
-				profile.Stats.ExpeditionsCompleted += 1
-				ProgressionSystem.award(player, "ExpeditionCompleted")
-				awarded = GameConfig.Progression.Rewards.ExpeditionCompleted
-			end
+			local outcome, awarded = settle(player, group, "COMPLETED")
 			Net.get("Expedition_Ended"):FireClient(player, {
 				WorldId = group.WorldId,
 				Reason = "COMPLETED",
+				Outcome = outcome,
 				FateAwarded = awarded,
 			})
 		end

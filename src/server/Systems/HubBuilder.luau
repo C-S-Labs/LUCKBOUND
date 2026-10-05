@@ -308,37 +308,6 @@ end
 --- prompt lives. Decoupled from the portal art on purpose: a ProximityPrompt
 --- measures from its part's origin, and a plinth wider than the prompt's reach
 --- locks the player out while standing on it. That shipped once.
-local function buildGateAnchor(zone: any, top: Vector3, parent: Instance): BasePart
-	local anchor = part({
-		Name = Constants.NAMES.GATE_ANCHOR,
-		Size = Vector3.new(
-			zone.PortalScale * GameConfig.HubLayout.GateAnchorSpan,
-			1,
-			zone.PortalScale * GameConfig.HubLayout.GateAnchorSpan
-		),
-		Position = top + Vector3.new(
-			0,
-			GameConfig.Portal.MaxPlinthHeight + GameConfig.HubLayout.GateAnchorLift,
-			0
-		),
-		Transparency = 1,
-		CanCollide = false,
-	}, parent)
-	anchor:SetAttribute("IsGateAnchor", true)
-
-	local prompt = Instance.new("ProximityPrompt")
-	prompt.Name = "EnterPrompt"
-	prompt.ActionText = "ENTER"
-	prompt.ObjectText = "Expedition Gate"
-	prompt.HoldDuration = 0.5
-	prompt.MaxActivationDistance = GameConfig.UI.PromptActivationDistance
-	prompt.RequiresLineOfSight = false
-	prompt.Enabled = GameConfig.Expedition.Enabled
-	prompt.Parent = anchor
-
-	return anchor
-end
-
 --- Where a player arrives. Non-colliding, so it cannot become a lip on the
 --- walkway it sits over.
 --- A RING OF INVISIBLE PADS AROUND THE ENGINE'S DAIS, not one visible pad.
@@ -793,70 +762,6 @@ local function buildRotunda(zone: any, centre: Vector3, parent: Instance)
 	prompt.Parent = podium
 end
 
-local function buildGate(zone: any, centre: Vector3, parent: Instance)
-	local top = centre + Vector3.new(0, zone.PlatformSize.Y / 2, 0)
-
-	-- The largest portal in the hub. Blueprint §2.2.
-	PortalRig.build({
-		Name = "GateRig",
-		Position = top,
-		Scale = zone.PortalScale,
-		Rarity = "COMMON",
-		PlinthMaterial = Enum.Material.SmoothPlastic,
-		OuterMaterial = Enum.Material.CorrodedMetal,
-	}, parent)
-
-	-- The part the ENTER prompt lives on, and the part the server measures
-	-- entry distance from. Exactly the RollAnchor pattern from the Fate
-	-- Engine, and for the same two reasons.
-	--
-	-- A ProximityPrompt measures from its parent part's ORIGIN. Hanging the
-	-- prompt on the plinth meant measuring from the plinth's centre, and the
-	-- plinth is wider than the prompt's reach -- so a player standing on it
-	-- was already out of range. An anchor decouples "where the prompt is"
-	-- from "how big the art is", which is what lets the rig be rebuilt in
-	-- Blender at any size without breaking entry.
-	buildGateAnchor(zone, top, parent)
-
-	-- Processional walkway with flanking torch pillars: deliberately the most
-	-- dramatic sightline in the hub, visible from the Fate Engine.
-	local torches = Instance.new("Folder")
-	torches.Name = "TorchPillars"
-	torches.Parent = parent
-
-	local perSide = math.max(1, math.floor(zone.Pillars / 2))
-	for side = -1, 1, 2 do
-		for i = 1, perSide do
-			local z = centre.Z - i * 11
-			local pillar = part({
-				Name = `Torch_{side}_{i}`,
-				Size = Vector3.new(2.4, zone.PillarHeight, 2.4),
-				Position = Vector3.new(
-					centre.X + side * (GameConfig.HubLayout.ProcessionalWidth / 2 + 3),
-					centre.Y + zone.PillarHeight / 2,
-					z
-				),
-				Color = zone.Color,
-			}, torches)
-
-			local flame = part({
-				Name = "Flame",
-				Size = Vector3.new(1.6, 1.6, 1.6),
-				Position = pillar.Position + Vector3.new(0, zone.PillarHeight / 2 + 0.8, 0),
-				Color = Layout.Theme.TorchLight,
-				Material = Enum.Material.Neon,
-				CanCollide = false,
-			}, torches)
-
-			local flameLight = Instance.new("PointLight")
-			flameLight.Color = Layout.Theme.TorchLight
-			flameLight.Brightness = 2
-			flameLight.Range = 22
-			flameLight.Parent = flame
-		end
-	end
-end
-
 local function buildYard(zone: any, centre: Vector3, parent: Instance)
 	local half = zone.PlatformSize.X / 2
 	local top = centre.Y + zone.PlatformSize.Y / 2
@@ -933,7 +838,6 @@ end
 local ZONE_BUILDERS: { [string]: (any, Vector3, Instance) -> () } = {
 	AMPHITHEATRE = buildAmphitheatre,
 	ROTUNDA = buildRotunda,
-	GATE = buildGate,
 	YARD = buildYard,
 }
 
@@ -976,7 +880,7 @@ local function buildWalkway(zone: any, centre: Vector3, parent: Instance)
 		return
 	end
 
-	local width = if zone.Kind == "GATE" then bridges.ProcessionalWidth else bridges.Width
+	local width = zone.WalkwayWidth or bridges.Width
 
 	part({
 		Name = `Walkway_{zone.Id}`,
@@ -1337,9 +1241,13 @@ function HubBuilder.build(): Model
 
 			buildPlatform(zone, centre, model)
 
-			local builder = ZONE_BUILDERS[zone.Kind]
-			assert(builder, `no builder for zone Kind '{zone.Kind}' (zone {zone.Id})`)
-			builder(zone, centre, model)
+			-- PLATFORM is the bare deck, already built above; authored shops
+			-- supply their own dressing without adding an expedition gate.
+			if zone.Kind ~= "PLATFORM" then
+				local builder = ZONE_BUILDERS[zone.Kind]
+				assert(builder, `no builder for zone Kind '{zone.Kind}' (zone {zone.Id})`)
+				builder(zone, centre, model)
+			end
 
 			buildWalkway(zone, centre, hub)
 		end

@@ -30,7 +30,7 @@ place goes public.
 | World & Map | `/roll <world> [test]`, `/enter [seed]`, `/leave`, `/seed`, `/worlds` |
 | Chunks | `/chunks [on/off]` (bounds + labels; red = blockout), `/chunklist`, `/chunktp <chunk>` |
 | Player | `/fly`, `/noclip`, `/speed [n]`, `/tp <place>`, `/where`, `/god`, `/heal`, `/respawn`, `/moveprofile [hub/expedition/auto]` (force a movement feel), `/stamina [percent]`, `/animslot [slot] [id]` (try an animation clip live; `PLAYER_ANIMATION_BRIEF.md`) |
-| Fate & Loot | `/boss`, `/givekey [key]`, `/takekey`, `/keys`, `/keychance`, `/vaultchance`, `/ledger` |
+| Fate & Loot | `/boss`, `/riftexit`, `/givekey [key]`, `/takekey`, `/keys`, `/keychance`, `/vaultchance`, `/ledger` |
 | Events | `/event <id>`, `/endevents` |
 | Ambience | `/atmosphere <id>`, `/tint`, `/props on/off`, `/clock <hour>` |
 | Bosses | `/showboss <boss> [height]`, `/bossphase <1/2>`, `/clearboss`, `/dummies [count]` (lock-on targets; 0 clears) |

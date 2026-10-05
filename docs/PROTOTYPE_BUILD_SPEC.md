@@ -445,7 +445,7 @@ Created by `Core/Net.luau` and nowhere else.
 | `Expedition_RequestEnter` | RemoteEvent | C→S | *(none)* | cooldown + distance + one-at-a-time |
 | `Expedition_Started` | RemoteEvent | S→C | `ExpeditionPayload` (optional `GenerationToken`, `Anchors`) | — |
 | `Expedition_Atmosphere` | RemoteEvent | S→C | existing `{Environment, Atmosphere, FloorY}` override or `{AnchorsOnly=true, StageName, GenerationToken, Anchors}` | anchor updates require active client stage/token |
-| `Expedition_Ended` | RemoteEvent | S→C | `ExpeditionEndPayload` | — |
+| `Expedition_Ended` | RemoteEvent | S→C | `ExpeditionEndPayload` | `Reason` gains `EXITED` and the payload gains `Outcome` (§7.8) |
 | `Expedition_TimerSync` | RemoteEvent | S→C | `{RemainingSeconds, ServerNow}` | — |
 | `Hub_RequestTravel` | RemoteEvent | C→S | `{DestinationId}` | known Id + hub-only + 60/min (spam guard; **no cooldown**) |
 | `Hub_TravelResult` | RemoteEvent | S→C | `{Ok, DestinationId, Reason}` | — |
@@ -646,6 +646,7 @@ Four lessons worth keeping:
 | **§7.5** | Loot, fixtures and vault keys | 2026-09-23 |
 | **§7.6** | Enemy AI and combat — number reserved, nothing opened yet | 2026-09-26 |
 | **§7.7** | Universal map generation: blueprints, filled junctions, miniboss arenas, backdrop | 2026-09-27 |
+| **§7.8** | Expedition portals: entrance, boss-gated exit, outcome-based rewards | 2026-09-28 |
 
 **Two branches once claimed §7.2 simultaneously**, each green on its own, and
 the collision was caught by hand during a merge. An amendment number is
@@ -1246,3 +1247,110 @@ default map-ready timing. No enemy implementation is opened by this extension.
 See GENERATION_MIGRATION.md for targeted evidence, acceptance gates and the future
 small designer collision pilot. Owner traversal and published-server validation
 are required before accepting this migration; no broad collision conversion.
+
+## 7.8 Amendment: expedition portals — entrance, boss-gated exit, outcome rewards, opened 2026-09-28
+
+**Owner-directed.** Replaces the prototype Expedition Gate's role and the single "RETURN" portal with two doors, and
+makes what a run pays depend on how it ended. Branch `agent/expedition-portal`.
+
+### The rules (owner, 2026-09-28)
+
+1. **Entrance portal** (today's `ReturnPortal`, renamed `EntrancePortal`) stands on the ENTRY chunk and is **always
+   open**. A player may leave through it at any time.
+2. **Exit portal** stands on the BOSS chunk where the boss stood. It is **closed until the boss is defeated**, then
+   spawns gradually (spin-up, then open). Players may leave through it or stay until the timer ends.
+3. **Both portals are flush**: part of the chunk, standing on the walk surface, never floating above it.
+4. **Outcomes decide the payout** (`ExpeditionCore.payoutFor`, pure, server-decided):
+
+   | Outcome | Loot | Fate / XP |
+   |---|---|---|
+   | Boss cleared, then any exit: exit portal, entrance portal, or timer | the boss roll (once per player, at defeat) | full |
+   | Left through the entrance, boss **not** cleared | none | **reduced** (`GameConfig.Expedition.EarlyExitFraction`) |
+   | Timer ran out, boss not cleared | none | reduced |
+   | Died | none | none (unchanged) |
+
+   Loot is rolled **at boss defeat**, for each player present (existing `LootSystem` boss roll, §7.5), not at exit,
+   so staying or leaving cannot change it.
+5. **Both doors are rifts, authored as Blender meshes** (owner, 2026-09-28: the first, mechanical ring portal was out
+   of place in a floating biome). A rift is a tear in the air with jagged crystal lips and floating rock
+   (`assets/source/portals/`, about 5.9k and 7.8k triangles). The mesh is the shape; **code is the motion and the light**:
+   Beams carrying one uploaded flow texture, particles, a point light and tweening, so the animation is extensive
+   and the triangle count is not. Entrance colour is the biome's rarity; the exit is always crimson. Nothing is
+   collidable and the tear's tip touches the deck, so there is nothing to climb.
+5a. **The exit materialises** where the boss fell instead of appearing whole: cracks and motes, fragments drawn in,
+   the tear opens from the middle, then settles into a calm loop (about 5 seconds, `GameConfig`). Until the owner
+   imports the FBXs to Studio, the `RiftRig` blockout is the fallback, so the game never has a missing portal.
+6. The party ready toggle and the host-starts-run flow belong to the **Fate engine rework**, not this branch. This
+   branch only leaves the payout seam (`payoutFor`) and the entry seam (`ExpeditionSystem.requestEnter`) it plugs into.
+7. **The hub Expedition Gate behavior is removed; the shop stays** (owner confirmed 2026-09-30). The legacy
+   `EXPEDITION_GATE` district Id remains for travel and authored shop mappings, named Shop with generic
+   `Kind = "PLATFORM"` (a bare fallback deck) and optional `WalkwayWidth`. Its old gate rig, builder, prompt,
+   anchor dimensions and portal scale are removed. Entry has been at the Fate Engine
+   (`Expedition.EntryAtEngine`) since before this amendment; the `GateAnchor` *name* stays because `ExpeditionSystem`
+   finds the entry prompt by it.
+
+### Where a portal stands, without touching any chunk kit
+
+Defaults are derived from geometry the loader already has: the entrance at the ENTRY chunk's centre, the exit at the
+BOSS chunk's centre (`Centre` attribute, until `BossService` supplies the boss's real position). Each is then
+**raycast down onto the chunk's walk surface** and the rift's scar is seated on the hit, so it is flush whatever the kit's
+floor height. A world may override either spot with an optional content file `Content/Portals/<World>.luau`
+(`{ Id = WORLD_ID, Entrance = { Chunk = CHUNK_ID, Offset = Vector3 }, Exit = { Chunk = CHUNK_ID, Offset = Vector3 } }`,
+same pattern as `Content/Fixtures`). Offsets rotate with the chunk's layout yaw and are projected onto the deck.
+The lowest-index matching chunk is used; if an optional target piece was not selected in this run, the role's
+default centre is used. Prebuilt maps retain their authored return position. `Schema.validatePortals` checks
+world/chunk ownership, placement names and finite Vector3 offsets before boot. **No existing chunk definition
+changes.** A world with no file gets the defaults.
+
+**Delivered prefabs (2026-09-30):** `assets/rbxm/prefabs/EXPEDITION_ENTRANCE.rbxmx` / `EXPEDITION_EXIT.rbxmx`,
+33 / 45 named MeshParts, no SurfaceAppearance; import at Stud / 1.0, tear heights 15 / 21 studs. Both load via
+Rojo's `LuckboundPrefabs`. Registration uses Scar plus each prefab's measured `GameConfig.Rift.*Prefab.AnchorOffset`
+because the asymmetric scar's bounding-box centre is not the tear origin. Rifts stream atomically so their
+parts and effect anchors are available together. The flow texture remains optional; empty draws plain ribbons.
+
+**Portal authority:** prompt triggers are checked against a living character, server distance within
+`Expedition.ReturnPromptDistance`, the active group's membership and exact stage, and the portal's open state.
+The exit prompt remains disabled through materialisation. Boss stand-in debug and arena entry share one
+once-per-run reward guard, so `/boss` cannot re-roll loot or reopen the exit after arena completion.
+
+### What it adds
+
+| | |
+|---|---|
+| `Core/ExpeditionCore.luau` | `payoutFor(outcome, cfg)`; `ExitState` (LOCKED / OPENING / OPEN) as pure data |
+| `Util/RiftRig.luau` | builds a rift from the prefab (or a blockout fallback), drives its loop and the exit's materialise sequence |
+| `Systems/ExpeditionSystem.luau` | build both portals, gate the exit on the boss event, route every leave through `finish(player, outcome)` |
+| `Systems/LootSystem.luau` | tells `ExpeditionSystem` when the boss falls (the existing `bossDefeated` seam) |
+| `Core/GameConfig.luau` | `Expedition`: `EarlyExitFraction`, `ExitOpenSeconds`, portal scales and prompt distances |
+| remotes | **none.** Both portals are server-side `ProximityPrompt`s; every trigger is re-checked for group membership, distance and portal state (§7.1 standard) |
+
+### Findings from reading the code (2026-09-28)
+
+- **There is Fate but no XP.** `ProgressionSystem` awards `FatePoints` only. The payout carries an `Xp` field so the
+  rework can fill it; it is unread today and gets a `docs/RESERVED.md` row. Until XP exists, "reduced Fate and XP"
+  means reduced Fate.
+- Today `RETURNED` and `COMPLETED` pay **the same full award**, so leaving at once pays as much as clearing the
+  world. This amendment ends that.
+- The boss is still the §7.5 **stand-in** (a party member first stands in the arena); the exit portal opens on that
+  event and will open on the real boss's death when `BossService` exists (§7.6).
+
+### Not opened
+
+Combat, enemies, real bosses, what drops (pools still empty), world modifiers, the party ready toggle, and the
+Fate engine's logic and UI: all unchanged and still excluded.
+
+### Build order
+
+1. Spec + index row (this section).
+2. `ExpeditionCore.payoutFor` + `GameConfig` values + tests (pure, no Roblox).
+3. The two rift meshes: Blender generator, `.blend` and FBX, budget check (done); owner imports to Studio and uploads the flow texture.
+3b. Code: `RiftRig` loads the prefab with a blockout fallback, seats it flush, animates the loop and the exit's materialise sequence.
+4. Entrance portal: rename, flush, always open, routes through the payout.
+5. Exit portal: build closed, open on the boss event, gradual spawn, payout.
+6. Remove the prototype gate behavior and gate-specific tests/tunables; keep the shop district and Engine `GateAnchor`.
+7. Docs (`STATUS`, `WORKLOG`, `RESERVED`, `INDEX.md`, `TESTING.md` Studio pass), `stylua`, `gen_index.py`.
+
+*Status 2026-10-05: steps 1-5 and 6 are done in code (the blockout hub's `GateRig`, its anchor and prompt, `ExpeditionGateScale`
+and `GateAnchor*` config are removed; the `EXPEDITION_GATE` district id stays because Menu, Palettes and Cinematics key on
+it). Step 3b waits on the owner's Studio import; step 7 continues.*
+

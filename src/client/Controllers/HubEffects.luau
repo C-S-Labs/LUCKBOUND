@@ -20,7 +20,6 @@ local PortalRig = require(Root.Util.PortalRig)
 local HubEffects = {}
 
 local engineRig: Model? = nil
-local gateRig: Model? = nil
 local featuredIndex = 0
 
 --- THE PORTAL'S YAW, and why it is one module-level number rather than a
@@ -112,13 +111,9 @@ local function findRigs()
 
 	local engine = hub:FindFirstChild(Constants.NAMES.FATE_ENGINE)
 	engineRig = engine and engine:FindFirstChild("EngineRig") :: Model?
-
-	local zones = hub:FindFirstChild("Zones")
-	local gate = zones and zones:FindFirstChild("EXPEDITION_GATE")
-	gateRig = gate and gate:FindFirstChild("GateRig") :: Model?
 end
 
---- Plays the 2.5s spin-up on both rigs, coloured to the rolled rarity.
+--- Plays the 2.5s spin-up on the Engine, coloured to the rolled rarity.
 --- Blueprint §1.3: this beat happens BEFORE the destination banner.
 function HubEffects.spinUpForRoll(rarityKey: string): ()
 	-- Release the lock from the previous roll. The portal starts turning
@@ -129,15 +124,12 @@ function HubEffects.spinUpForRoll(rarityKey: string): ()
 	if engineRig then
 		PortalRig.playSpinUp(engineRig, rarityKey)
 	end
-	if gateRig then
-		PortalRig.playSpinUp(gateRig, rarityKey)
-	end
 end
 
 --- Ends the reveal. The Engine KEEPS the rolled rarity rather than reverting
 --- to UNKNOWN: it is the portal to the world you just rolled, and a player
 --- looking at it should be able to see where they are going. Reverting made
---- the Engine disagree with the Gate, which holds the destination colour --
+--- the Engine disagree with the destination it had just announced --
 --- reported from the third authored playtest.
 function HubEffects.settle(rarityKey: string?): ()
 	-- The portal coasts down WITH the rings and then, unlike them, stops --
@@ -151,9 +143,6 @@ function HubEffects.settle(rarityKey: string?): ()
 			rarityKey or Constants.RARITY.UNKNOWN.Key,
 			GameConfig.Portal.RarityTweenSeconds
 		)
-	end
-	if gateRig then
-		PortalRig.setIdle(gateRig)
 	end
 end
 
@@ -248,9 +237,6 @@ function HubEffects.init(): ()
 		findRigs()
 		if engineRig then
 			PortalRig.animate(engineRig)
-		end
-		if gateRig then
-			PortalRig.animate(gateRig)
 		end
 
 		-- ONE DATA-DRIVEN ANIMATOR for everything in the hub that moves.
