@@ -25,6 +25,7 @@ local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local Constants = require(Root.Core.Constants)
 local GameConfig = require(Root.Core.GameConfig)
 local V2 = require(Root.Content.Hub.CrossroadsV2)
+local SkyCreatures: { [string]: any } = require(Root.Content.Hub.SkyCreatures)
 
 local HubV2 = {}
 
@@ -254,7 +255,62 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 		warn("[HubV2] LuckboundProps.HUB_ORBITERS missing -- no orbiters")
 		return
 	end
+
+	-- A body's moving pieces (propellers, flippers, wings, flames), hung off it;
+	-- SkyTraffic moves them with it and animates each one. `parts` maps a
+	-- part's mesh name to its description (Kind, Offset, Hinge, Axis, Amp, Rate,
+	-- Phase and, for creatures, Chain, Lag, Gait). Returns how many were missing.
+	local function attachParts(p: BasePart, s: number, parts: { [string]: any }): number
+		local missing = 0
+		for subName, sub in parts do
+			local sp = lib:FindFirstChild(subName, true)
+			if not (sp and sp:IsA("BasePart")) then
+				missing += 1
+				continue
+			end
+			local q = sp:Clone()
+			q.Anchored, q.CanCollide, q.CanQuery, q.CanTouch = true, false, false, false
+			q.Size = sp.Size * s
+			q:SetAttribute("Wander", true) -- so HubEffects leaves it to SkyTraffic
+			q:SetAttribute("Detail", p:GetAttribute("Detail"))
+			q:SetAttribute("SubKind", sub.Kind)
+			q:SetAttribute("SubOffset", sub.Offset * s)
+			q:SetAttribute("SubHinge", sub.Hinge * s)
+			q:SetAttribute("SubAxis", sub.Axis)
+			q:SetAttribute("SubAmp", sub.Amp)
+			q:SetAttribute("SubRate", sub.Rate)
+			q:SetAttribute("SubPhase", sub.Phase)
+			if sub.Chain then
+				q:SetAttribute("SubChain", sub.Chain)
+				q:SetAttribute("SubLag", sub.Lag or 0)
+			end
+			if sub.Gait then
+				q:SetAttribute("SubGait", sub.Gait)
+			end
+			q.CFrame = p.CFrame * CFrame.new(sub.Offset * s)
+			q.Parent = p
+			addLight(q)
+		end
+		return missing
+	end
+
+	-- 1 always shown, 2 medium graphics and up, 3 high only.
+	local function detailFor(base: number, k: number): number
+		return if k == 1 then base else math.min(3, base + (k > 2 and 1 or 0))
+	end
+
 	local n = 0
+	-- ORDINARY PROPS (isles, clouds, crystals, lanterns): not creatures, so no
+	-- class; SkyTraffic flies them with the PROP profile.
+	local legacyParts: { [string]: { [string]: any } } = {}
+	for subName, sub in V2.OrbiterParts do
+		local list = legacyParts[sub.Parent]
+		if not list then
+			list = {}
+			legacyParts[sub.Parent] = list
+		end
+		list[subName] = sub
+	end
 	for _, entry in cfg.Orbiters do
 		local names = entry.Names
 		local count = rng:NextInteger(entry.Min, entry.Max)
@@ -291,47 +347,94 @@ function HubV2.buildSky(hub: Instance, origin: Vector3)
 			)
 			p:SetAttribute("WanderSpeed", Vector2.new(entry.SpeedMin, entry.SpeedMax))
 			p:SetAttribute("WanderFaces", entry.Faces == true)
-			p:SetAttribute("WanderCanDock", entry.CanDock == true)
 			p:SetAttribute("WanderBob", entry.Bob or 0)
 			p:SetAttribute("WanderSeed", rng:NextInteger(1, 1e6))
-			local _ = radius + height + phase
-			-- 1 always shown, 2 medium graphics and up, 3 high only.
-			p:SetAttribute(
-				"Detail",
-				if k == 1 then entry.Detail else math.min(3, entry.Detail + (k > 2 and 1 or 0))
-			)
+			p:SetAttribute("Detail", detailFor(entry.Detail, k))
 			p.Parent = sky
-			-- its moving pieces (propellers, flippers, flames), hung off the
-			-- body; SkyTraffic moves them with it and animates each one
-			for subName, sub in V2.OrbiterParts do
-				if sub.Parent ~= src.Name then
-					continue
-				end
-				local sp = lib:FindFirstChild(subName, true)
-				if not (sp and sp:IsA("BasePart")) then
-					continue
-				end
-				local q = sp:Clone()
-				q.Anchored, q.CanCollide, q.CanQuery, q.CanTouch = true, false, false, false
-				q.Size = sp.Size * s
-				q:SetAttribute("Wander", true) -- so HubEffects leaves it to SkyTraffic
-				q:SetAttribute("Detail", p:GetAttribute("Detail"))
-				q:SetAttribute("SubKind", sub.Kind)
-				q:SetAttribute("SubOffset", sub.Offset * s)
-				q:SetAttribute("SubHinge", sub.Hinge * s)
-				q:SetAttribute("SubAxis", sub.Axis)
-				q:SetAttribute("SubAmp", sub.Amp)
-				q:SetAttribute("SubRate", sub.Rate)
-				q:SetAttribute("SubPhase", sub.Phase)
-				q.CFrame = p.CFrame * CFrame.new(sub.Offset * s)
-				q.Parent = p
-				addLight(q)
-			end
+			attachParts(p, s, legacyParts[src.Name] or {})
 			n += 1
 		end
 	end
+
+	-- CREATURES: spawned per class from SkyCreatures + SkyLife (docs/design/
+	-- SKY_ECOSYSTEM_CONTRACT.md 4.2). The class profile sets where and how it
+	-- flies; the species only says what it looks like. A species whose mesh is
+	-- not in the place yet (not imported) is skipped with ONE warning, so the
+	-- hub still boots before the owner's import.
+	local life: any = cfg.SkyLife
+	local creatures = 0
+	local skipped: { [string]: boolean } = {}
+	for _, class in life.ClassOrder do
+		local prof = life.Classes[class]
+		local ids: { string } = {}
+		for id, c in SkyCreatures do
+			if c.Class ~= class then
+				continue
+			end
+			local body = lib:FindFirstChild(c.Model, true)
+			if body and body:IsA("BasePart") then
+				table.insert(ids, id)
+			elseif not skipped[id] then
+				skipped[id] = true
+				warn(`[HubV2] sky creature {id}: mesh {c.Model} not in HUB_ORBITERS -- skipped`)
+			end
+		end
+		table.sort(ids)
+		if #ids == 0 then
+			continue
+		end
+		local total = 0
+		for _, id in ids do
+			total += SkyCreatures[id].Weight
+		end
+		local count = rng:NextInteger(prof.Min, prof.Max)
+		for k = 1, count do
+			local roll = rng:NextNumber(0, total)
+			local pick = ids[#ids]
+			for _, id in ids do
+				roll -= SkyCreatures[id].Weight
+				if roll <= 0 then
+					pick = id
+					break
+				end
+			end
+			local c = SkyCreatures[pick]
+			local src = lib:FindFirstChild(c.Model, true) :: BasePart
+			local p = src:Clone()
+			p.Anchored, p.CanCollide, p.CanQuery, p.CanTouch = true, false, false, false
+			local s = rng:NextNumber(c.ScaleMin, c.ScaleMax)
+			p.Size = src.Size * s
+			local radius = rng:NextNumber(prof.RadiusMin, prof.RadiusMax)
+			local height = rng:NextNumber(prof.HeightMin, prof.HeightMax)
+			local phase = rng:NextNumber(0, math.pi * 2)
+			p.CFrame = CFrame.new(
+				origin + Vector3.new(math.cos(phase) * radius, height, math.sin(phase) * radius)
+			)
+			p:SetAttribute("Wander", true)
+			p:SetAttribute("WanderCentre", origin)
+			p:SetAttribute("WanderRadius", Vector2.new(prof.RadiusMin, prof.RadiusMax))
+			p:SetAttribute(
+				"WanderHeight",
+				Vector2.new(origin.Y + prof.HeightMin, origin.Y + prof.HeightMax)
+			)
+			p:SetAttribute("WanderSpeed", Vector2.new(prof.SpeedMin, prof.SpeedMax))
+			p:SetAttribute("WanderFaces", true)
+			p:SetAttribute("WanderBob", 0)
+			p:SetAttribute("WanderSeed", rng:NextInteger(1, 1e6))
+			p:SetAttribute("SkyClass", class)
+			p:SetAttribute("SkyCanLand", c.CanLand)
+			p:SetAttribute("Detail", detailFor(prof.Detail, k))
+			p.Parent = sky
+			local missing = attachParts(p, s, c.Parts)
+			if missing > 0 and not skipped[pick] then
+				skipped[pick] = true
+				warn(`[HubV2] sky creature {pick}: {missing} moving part mesh(es) missing`)
+			end
+			creatures += 1
+		end
+	end
 	print(
-		`[HubV2] sky: {#chunks > 0 and cfg.Backdrop.Count or 0} backdrop chunk(s), {n} orbiter(s)`
+		`[HubV2] sky: {#chunks > 0 and cfg.Backdrop.Count or 0} backdrop chunk(s), {n} orbiter(s), {creatures} creature(s)`
 	)
 end
 

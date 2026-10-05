@@ -95,6 +95,16 @@ loot pools are constructed").
 | `GameConfig.Rift.FlowTexture` | **CONSUMED** | `RiftRig.attachEffects` sets it on every ribbon beam. Uploaded to the group 2026-10-05 (`rbxassetid://125599526173332`); it was an empty string until then. |
 | `GameConfig.Rift.EntrancePrefab` / `ExitPrefab` `Scale` (1.0) | RESERVED | Set to the imported scale after the owner's Studio import (`assets/source/portals/README.md`). Until the prefabs exist a blockout rift is drawn. |
 
+## The living sky — `Content/Hub/SkyCreatures`, `GameConfig.HubLayout.V2.SkyLife`
+
+| Field | Status | Consumer |
+|---|---|---|
+| `SkyCreatures.<id>.Biome` | RESERVED | Biome-weighted spawning (a creature more likely when its biome is the hub's current accent). The roster carries it from the creature sidecars (`creatures_<group>.json`) so content is not re-authored later; `Schema.validateSkyCreatures` checks it is a list. Nothing reads it yet. |
+
+Boat docking (`Docking`, `CanDock`, `PropCore.berthOnBox`) was removed with the boats on 2026-10-05; the boat meshes stay in `HUB_ORBITERS.rbxmx`
+and the boat `OrbiterParts` rows stay in the generated `CrossroadsV2.luau` until the owner's Studio check proves the creatures
+(AGENTS.md leftover rule). Those `OrbiterParts` rows are unread meanwhile: OBSOLETE, to be dropped with the next hub regeneration.
+
 ## Nothing is currently ORPHANED
 
 Every unread declaration above has a named consumer and a reason to exist. The

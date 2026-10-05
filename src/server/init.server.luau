@@ -87,6 +87,7 @@ Schema.validateAll({
 	fixtures = Fixtures,
 	portals = require(Root.Content.Portals),
 	lootPools = LootPools,
+	skyCreatures = require(Root.Content.Hub.SkyCreatures),
 	animations = PlayerAnimations,
 })
 

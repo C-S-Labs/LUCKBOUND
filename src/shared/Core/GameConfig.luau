@@ -479,79 +479,357 @@ local GameConfig = {
 				GlyphA = Color3.fromRGB(124, 245, 224),
 				GlyphB = Color3.fromRGB(182, 131, 255),
 			},
-			-- Drawn at random per server. Detail: 1 on every device, 2 from
-			-- medium graphics, 3 high only (extra copies step up one level).
-			-- Speed is studs/second along the orbit.
-			Docking = {
-				BerthPadding = 2, -- keep the clearance box off the island face
-				InitialDelayMin = 30,
-				InitialDelayMax = 90,
-				RetryDelayMin = 20,
-				RetryDelayMax = 40,
-				FailedApproachDelayMin = 30,
-				FailedApproachDelayMax = 60,
-				DepartureDelayMin = 60,
-				DepartureDelayMax = 140,
-				HoldMin = 12,
-				HoldMax = 25,
-				ArrivalDistance = 6,
-				SlowdownRate = 0.4,
-				StuckMinSeconds = 12,
-				ApproachTurnRadians = math.pi,
-			},
-			Orbiters = {
-				{
-					Names = {
-						"hubprop_ship_sloop",
-						"hubprop_ship_cutter",
-						"hubprop_ship_trawler",
-						"hubprop_ship_cog",
-						"hubprop_ship_yacht",
+			-- THE LIVING SKY (docs/design/SKY_ECOSYSTEM_CONTRACT.md 4.2, 4.3).
+			-- Creatures (Content/Hub/SkyCreatures) are spawned per CLASS: the
+			-- class profile below IS their behaviour; nothing is per-species.
+			-- Every field is read by Core/FlightCore (the kinematics) or
+			-- SkyTraffic / HubV2.buildSky; Util/Schema.validateSkyCreatures
+			-- checks the shape at boot. Heights are relative to the hub deck;
+			-- speeds are studs/second; angles radians.
+			SkyLife = {
+				HubRadius = 330, -- the hub's reach from its axis (districts + plaza); keep-outs below are this plus a margin
+				MaxParts = 16, -- moving sub-meshes per creature (the contract allows a colossal 12)
+				ClassOrder = { "TINY", "SMALL", "MEDIUM", "LARGE", "COLOSSAL" },
+				-- Kinematics shared by every class (FlightCore.advance / tick).
+				Flight = {
+					TurnSpeedFloor = 0.3, -- lowest speed/cruise ratio used for turn rate (a near-stopped creature still turns)
+					TurnSpeedCeil = 1.5,
+					PitchRateScale = 0.5, -- pitch changes at this fraction of the yaw rate
+					OppositeEpsilon = 0.05, -- "dead astern" window, rad
+					BankSmoothing = 3, -- 1/s
+					SlowAngle = 1.2, -- heading error (rad) at which the speed goal is fully eased down
+					SpeedChangeMin = 5,
+					SpeedChangeMax = 15,
+					CounterChance = 0.3, -- chance a creature circulates the other way round the hub
+					-- keep-out steering: margin = Margin + TurnScale x turn radius + Lead x speed
+					KeepOutMargin = 20,
+					KeepOutTurnScale = 0.9,
+					KeepOutLead = 1.5,
+					KeepOutRoofMargin = 10, -- extra height over a crossable roof
+					KeepOutPush = 1.5, -- outward push at full depth
+					KeepOutClimb = 1.5,
+					KeepOutWeight = 6,
+					KeepOutFloor = 0.4, -- fraction of the weight applied at the edge of the margin
+					SeparationFalloff = 1,
+					SeparationStrength = 2.5,
+					-- waypoints
+					WaypointPad = 15,
+					WaypointTries = 12,
+					AcrossChance = 0.15, -- straight across, over or through the hub
+					AcrossSpread = 0.6,
+					BackChance = 0.15, -- doubling back
+					BackMin = 0.4,
+					BackMax = 1.2,
+					OnwardMin = 0.3,
+					OnwardMax = 1.1,
+					RetryAngleMin = 0.2,
+					RetryAngleMax = 0.6,
+					FallbackAngle = 0.5,
+					ArriveTurnScale = 0.8, -- arrived = within max(ArriveMin, this x turn radius)
+					StuckSeconds = 8,
+				},
+				-- The client driver (SkyTraffic).
+				Driver = {
+					ScanSeconds = 0.15, -- between one creature's look-ahead casts
+					MaxCast = 1000, -- Roblox refuses a shapecast longer than 1024
+					ScanReachSeconds = 3,
+					ScanTurnScale = 1.5,
+					ScanSphereScale = 0.7,
+					ScanSphereMin = 2,
+					ScanSphereMax = 200,
+					AvoidBase = 0.5,
+					AvoidGain = 2.5,
+					AvoidClimb = 0.6,
+					AvoidReplanUrgency = 0.4,
+					ReplanAngle = 0.35, -- x pi, when a waypoint is behind an obstacle
+					MaxDt = 0.1,
+					SettleSeconds = 2, -- let HubEffects mark what the device hides
+					AdoptSeconds = 0.5,
+					HiddenY = -100000, -- where a creature that is away is parked
+				},
+				-- Sub-part animation (the Kinds Flap, Spin, Flicker, Pulse; gaits).
+				Gait = {
+					SpeedGain = 0.6, -- beat rate rises with speed ...
+					ClimbGain = 1, -- ... and with climb
+					BeatMin = 0.4,
+					BeatMax = 2.2,
+					GlideAmpFloor = 0.08, -- wing amplitude while coasting
+					AmpSmoothing = 2.5,
+					IdleSmoothing = 2,
+					FlickerDepth = 0.35,
+				},
+				-- Landing (small and medium creatures that are CanLand only).
+				Perch = {
+					ApproachDistance = 60, -- from the perch, at least; grows with turn radius
+					ApproachTurns = 2.5, -- x turn radius
+					ApproachSlope = 0.35, -- glide slope, rad
+					ArriveRadius = 12,
+					ArriveTurnScale = 0.8,
+					SnapDistance = 1.5,
+					LandSpeedMin = 2.5,
+					LandSpeedGain = 0.6,
+					ApproachSpeedScale = 0.6,
+					AlignMax = 0.9, -- rad between heading and the perch when the final glide begins
+					AbortSeconds = 6,
+					HoldMin = 8,
+					HoldMax = 25,
+					TakeoffSeconds = 2.5,
+					TakeoffPitch = 0.45,
+					PerchTurnRate = 1.5, -- rad/s: turning on the perch to face out
+					InitialDelayMin = 10,
+					InitialDelayMax = 40,
+					RetryDelayMin = 20,
+					RetryDelayMax = 40,
+					CooldownMin = 25,
+					CooldownMax = 70,
+					RestLiftScale = 0.5, -- body centre sits this x the body height above the perch surface
+					MinHubDistance = 600, -- never perch this near the hub axis
+					CastHeight = 400, -- the downward ray starts this far above the island
+					Inset = 0.6, -- fraction of an island's half-extent a perch may be chosen within
+					Tries = 4,
+					NormalMinY = 0.7, -- the surface must be this flat
+				},
+				-- THE CLASS PROFILES.
+				-- Min/Max/Detail: how many are drawn per server and at what graphics level.
+				-- Radius/Height: the orbit band. Speed/Accel: cruise limits and how fast speed changes.
+				-- TurnRadius*: turning circle = scale x body radius, clamped. MinSpeedScale: how far it eases
+				-- off before a tight turn. HubClearance/OverheadMinY: the keep-out cylinder about the hub axis
+				-- and the height over the deck at which it may be crossed (huge = never).
+				-- CloseApproach: chance per waypoint of a pass over the local player.
+				-- UpdateHz/ActivationRadius: beyond that distance from the camera the creature updates at UpdateHz.
+				-- Flap/Glide: seconds beating / coasting; GlideChance per beat cycle; BeatScale multiplies the beat rate.
+				-- PerchChance: per waypoint arrival, for CanLand species only. Presence: comes and goes (colossals).
+				Classes = {
+					TINY = {
+						Min = 6,
+						Max = 10,
+						Detail = 1,
+						SizeMin = 3, -- longest body dimension a creature of this class may have, studs
+						SizeMax = 6,
+						RadiusMin = 40,
+						RadiusMax = 520,
+						HeightMin = 55,
+						HeightMax = 150,
+						SpeedMin = 14,
+						SpeedMax = 26,
+						Accel = 18,
+						TurnRadiusScale = 2,
+						TurnRadiusMin = 6,
+						TurnRadiusMax = 40,
+						MaxBank = 0.9,
+						MaxPitch = 0.7,
+						MinSpeedScale = 0.6,
+						HubClearance = 330,
+						OverheadMinY = 40,
+						CloseApproach = 0.3,
+						CloseRadius = 35,
+						CloseHeightMin = 42,
+						CloseHeightMax = 70,
+						SeparationScale = 2,
+						UpdateHz = 10,
+						ActivationRadius = 250,
+						ArriveMin = 12,
+						PerchChance = 0.35,
+						BeatScale = 1,
+						FlapMin = 1.5,
+						FlapMax = 4,
+						GlideMin = 0.3,
+						GlideMax = 0.8,
+						GlideChance = 0.15,
 					},
-					Min = 4,
-					Max = 7,
-					Detail = 1,
-					RadiusMin = 360,
-					RadiusMax = 620,
-					HeightMin = -40,
-					HeightMax = 90,
-					SpeedMin = 22,
-					SpeedMax = 38,
-					Faces = true,
-					Bob = 2,
+					SMALL = {
+						Min = 4,
+						Max = 7,
+						Detail = 1,
+						SizeMin = 9, -- longest body dimension a creature of this class may have, studs
+						SizeMax = 14,
+						RadiusMin = 80,
+						RadiusMax = 600,
+						HeightMin = 80,
+						HeightMax = 170,
+						SpeedMin = 22,
+						SpeedMax = 38,
+						Accel = 20,
+						TurnRadiusScale = 2.5,
+						TurnRadiusMin = 10,
+						TurnRadiusMax = 60,
+						MaxBank = 0.8,
+						MaxPitch = 0.65,
+						MinSpeedScale = 0.6,
+						HubClearance = 330,
+						OverheadMinY = 60,
+						CloseApproach = 0.2,
+						CloseRadius = 50,
+						CloseHeightMin = 62,
+						CloseHeightMax = 100,
+						SeparationScale = 2,
+						UpdateHz = 10,
+						ActivationRadius = 350,
+						ArriveMin = 20,
+						PerchChance = 0.25,
+						BeatScale = 0.8,
+						FlapMin = 2,
+						FlapMax = 6,
+						GlideMin = 1.5,
+						GlideMax = 4,
+						GlideChance = 0.5,
+					},
+					MEDIUM = {
+						Min = 3,
+						Max = 5,
+						Detail = 2,
+						SizeMin = 24, -- longest body dimension a creature of this class may have, studs
+						SizeMax = 36,
+						RadiusMin = 430,
+						RadiusMax = 900,
+						HeightMin = -20,
+						HeightMax = 200,
+						SpeedMin = 30,
+						SpeedMax = 48,
+						Accel = 14,
+						TurnRadiusScale = 3,
+						TurnRadiusMin = 24,
+						TurnRadiusMax = 140,
+						MaxBank = 0.6,
+						MaxPitch = 0.55,
+						MinSpeedScale = 0.65,
+						HubClearance = 410,
+						OverheadMinY = 20000,
+						CloseApproach = 0,
+						CloseRadius = 0,
+						CloseHeightMin = 0,
+						CloseHeightMax = 0,
+						SeparationScale = 2,
+						UpdateHz = 10,
+						ActivationRadius = 500,
+						ArriveMin = 40,
+						PerchChance = 0.15,
+						BeatScale = 0.6,
+						FlapMin = 3,
+						FlapMax = 8,
+						GlideMin = 3,
+						GlideMax = 8,
+						GlideChance = 0.6,
+					},
+					LARGE = {
+						Min = 2,
+						Max = 4,
+						Detail = 2,
+						SizeMin = 80, -- longest body dimension a creature of this class may have, studs
+						SizeMax = 135,
+						RadiusMin = 640,
+						RadiusMax = 1000,
+						HeightMin = -120,
+						HeightMax = 180,
+						SpeedMin = 15,
+						SpeedMax = 28,
+						Accel = 5,
+						TurnRadiusScale = 3,
+						TurnRadiusMin = 100,
+						TurnRadiusMax = 360,
+						MaxBank = 0.35,
+						MaxPitch = 0.4,
+						MinSpeedScale = 0.7,
+						HubClearance = 590,
+						OverheadMinY = 20000,
+						CloseApproach = 0,
+						CloseRadius = 0,
+						CloseHeightMin = 0,
+						CloseHeightMax = 0,
+						SeparationScale = 1.6,
+						UpdateHz = 8,
+						ActivationRadius = 600,
+						ArriveMin = 60,
+						PerchChance = 0,
+						BeatScale = 0.4,
+						FlapMin = 6,
+						FlapMax = 14,
+						GlideMin = 6,
+						GlideMax = 16,
+						GlideChance = 0.8,
+					},
+					COLOSSAL = {
+						Min = 1,
+						Max = 2,
+						Detail = 2,
+						SizeMin = 520, -- longest body dimension a creature of this class may have, studs
+						SizeMax = 760,
+						RadiusMin = 2200,
+						RadiusMax = 3200,
+						HeightMin = -150,
+						HeightMax = 450,
+						SpeedMin = 8,
+						SpeedMax = 14,
+						Accel = 1.5,
+						TurnRadiusScale = 2.2,
+						TurnRadiusMin = 500,
+						TurnRadiusMax = 1400,
+						MaxBank = 0.12,
+						MaxPitch = 0.2,
+						MinSpeedScale = 0.75,
+						HubClearance = 1800,
+						OverheadMinY = 20000,
+						CloseApproach = 0,
+						CloseRadius = 0,
+						CloseHeightMin = 0,
+						CloseHeightMax = 0,
+						SeparationScale = 1.2,
+						UpdateHz = 4,
+						ActivationRadius = 1500,
+						ArriveMin = 150,
+						PerchChance = 0,
+						BeatScale = 0.25,
+						FlapMin = 12,
+						FlapMax = 30,
+						GlideMin = 10,
+						GlideMax = 30,
+						GlideChance = 1,
+						-- rare: present for a while, then away for a long while
+						Presence = {
+							StartPresent = 0.5,
+							PresentMin = 600,
+							PresentMax = 1200,
+							AbsentMin = 900,
+							AbsentMax = 2400,
+						},
+					},
+					-- Everything in Orbiters that is not a creature: isles, clouds,
+					-- crystals, lanterns. They fly the same kinematics at their own
+					-- speeds, with no keep-out (their look-ahead steers them round
+					-- the hub's meshes as before).
+					PROP = {
+						Accel = 2.5,
+						TurnRadiusScale = 3,
+						TurnRadiusMin = 12,
+						TurnRadiusMax = 320,
+						MaxBank = 0.3,
+						MaxPitch = 0.5,
+						MinSpeedScale = 1,
+						HubClearance = 0,
+						OverheadMinY = 0,
+						CloseApproach = 0,
+						CloseRadius = 0,
+						CloseHeightMin = 0,
+						CloseHeightMax = 0,
+						SeparationScale = 1,
+						UpdateHz = 15,
+						ActivationRadius = 1500,
+						ArriveMin = 40,
+						PerchChance = 0,
+						BeatScale = 1,
+						FlapMin = 5,
+						FlapMax = 10,
+						GlideMin = 1,
+						GlideMax = 2,
+						GlideChance = 0,
+					},
 				},
-				{
-					Names = { "hubprop_ship_galleon", "hubprop_ship_carrier" },
-					CanDock = true,
-					Min = 1,
-					Max = 2,
-					Detail = 2,
-					-- above the hub and clear of the mountains' reach, so nothing boxes them in
-					RadiusMin = 480,
-					RadiusMax = 720,
-					HeightMin = 200,
-					HeightMax = 300,
-					SpeedMin = 16,
-					SpeedMax = 26,
-					Faces = true,
-					Bob = 3,
-				},
-				{
-					Names = { "hubprop_sky_whale" },
-					Min = 1,
-					Max = 2,
-					Detail = 2,
-					RadiusMin = 480,
-					RadiusMax = 820,
-					HeightMin = -120,
-					HeightMax = 40,
-					SpeedMin = 15,
-					SpeedMax = 25,
-					Faces = true,
-					Bob = 6,
-					ScaleMin = 1,
-					ScaleMax = 1.6,
-				},
+			},
+			-- Ordinary props drawn at random per server. Detail: 1 on every
+			-- device, 2 from medium graphics, 3 high only (extra copies step up
+			-- one level). Speed is studs/second along the orbit. (Creatures are
+			-- spawned from SkyCreatures + SkyLife.Classes instead.)
+			Orbiters = {
 				{
 					Names = { "hubprop_isle_shrine", "hubprop_isle_grove", "hubprop_isle_ruin" },
 					Min = 4,
