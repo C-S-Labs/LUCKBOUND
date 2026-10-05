@@ -157,3 +157,41 @@ Deliver before/after renders (contact sheet) and a written findings report. Stud
 - All Luau tests pass (`tests/run.sh` if `luau` exists), StyLua clean, `tools/gen_index.py` current, Rojo build ok if rojo present.
 - Creature sidecars validate: tris budgets, mesh < 10k, naming, orientation (head +X), sizes in class range.
 - Studio-dependent checks (import, visual, collision, performance) are listed as MANUAL and are the owner's gate.
+
+## 6. Round 2 amendment (owner Studio test, 2026-10-05) - SUPERSEDES earlier colossal/animation rules where it conflicts
+
+Owner findings from a Studio run: starweaver and turtle spawn super far away and clip into islands; tendrils barely
+move and the bell does not respond to acceleration; medium/large birds and the drake raise their wings and do not beat
+them incrementally, their other limbs never move, and they slide through the air; the manta's fins are detached from
+its body; overall the creatures feel robotic. Owner decisions:
+
+1. COLOSSALS: pool grows to 4 species (existing starweaver, elder_greatturtle + 2 new, below). A server ALWAYS has at least
+   1 colossal present and never more than 3 (replaces the old rare/absent presence cycle; a colossal may still leave and be
+   replaced, but the floor of 1 is never broken). They are meant to be SEEN: orbit band much closer than 2200-3200 (target
+   closest approach 600-1400 studs, visible and imposing from the hub) and they MAY fly over the central hub (at an altitude
+   that clears the deck by their own extent) and around it.
+2. PATHFINDING: colossals (and all classes) plan around existing islands: backdrop islands AND the far range, and every
+   other body, as obstacles (bounding spheres/boxes inflated by the creature's own radius). The route is chosen around
+   them with smooth, wide turns; if a leg is blocked a new waypoint is chosen before it arrives. No clipping into any
+   island, far-range mountain, the hub or another creature (check starweaver at ~700 studs wide).
+3. ANIMATION FEEL (all creatures): layered, non-metronomic, mass-appropriate motion:
+   - wing beats asymmetric (fast downstroke, slower upstroke), per-wing tiny phase/amplitude noise, glide intervals with
+     wings partly folded or held, flare on landing and takeoff; body heave/pitch locked to the beat (lift on downstroke);
+   - body roll into turns, tail follows through the turn with delay (follow-the-leader), neck and head counter-move and look
+     toward the turn; legs/feet tuck in flight and extend when landing; breathing always on;
+   - jelly-like creatures pulse their bell in thrust bursts tied to acceleration/speed and trail tendrils with real lag;
+   - slow, deep, long-period motion for colossals; fast shallow for tiny.
+   Anything the animation needs that the meshes do not have (separate legs/feet/jaw/ears/crest parts, extra chain
+   segments) is a MODEL change by the art workers, within the 10k-per-mesh and class tri budgets.
+4. NEW COLOSSALS (decided): `cinder_wyrm` (Emberfall: a vast sinuous ash-and-ember sky serpent, 700-900 studs long, 14+ chained
+   body segments undulating with lag, two pairs of small ember fins, jaw, crown of spines, glowing seams) and `aether_nautilus`
+   (Ethereal Scape: a colossal pearl nautilus with a chambered translucent-look shell, trailing tentacle chains, a jet funnel
+   that thrusts in pulses, drifting fin halo; 520-700 studs). Same quality bar as the whale/starweaver; each <=12 meshes,
+   each < 10k tris. Their own group `colossal2`, sidecar `creatures_colossal2.json`, FBX `creatures_colossal2.fbx`,
+   library file `HUB_CREATURES_COLOSSAL2` (add to `SkyLife.CreatureLibraries`).
+5. MODEL FIXES: the manta's fins attach to the body (no gap; hinge at the body edge, overlapping root). Every creature's
+   wing/limb hinge, axis, amp, rate, chain, gait is audited with a pose preview (Blender frames of the rig at several phases
+   using the SAME hinge maths as `SkyTraffic.hingeAbout` and the chain rule `acc = parent.acc * hinge`) so the data is proven
+   before the owner re-imports.
+6. Existing sidecar rules stand (frame key, Pulse = scale fraction, names `hubprop_<id>__<part>_<n>`). Re-exports keep part
+   names stable where possible so the owner's re-import overwrites the same file.
