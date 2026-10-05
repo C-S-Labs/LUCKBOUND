@@ -68,6 +68,7 @@ type Sub = {
 type Flyer = {
 	Part: BasePart,
 	Core: FlightCore.Flier,
+	Rescues: number, -- dead-end rescues already reported
 	Faces: boolean,
 	Bob: number,
 	Spin: number, -- slow turn of a prop that does not face its heading
@@ -394,7 +395,9 @@ function SkyTraffic.init(): ()
 							d:GetAttribute("SpinePlane") == "vertical",
 							sc.HeadAmp,
 							sc.StepsPerWave,
-							sc.Margin
+							sc.Margin,
+							sc.TimeShare,
+							sc.TravelShare
 						)
 						local hx0, hy0, hz0 = FlightCore.heading(core)
 						CreatureMotionCore.seedTrail(
@@ -411,6 +414,7 @@ function SkyTraffic.init(): ()
 				local f: Flyer = {
 					Part = d,
 					Core = core,
+					Rescues = 0,
 					Faces = d:GetAttribute("WanderFaces") == true,
 					Bob = (d:GetAttribute("WanderBob") :: number?) or 0,
 					Spin = if core.Circ > 0 then 1 else -1,
@@ -469,6 +473,16 @@ function SkyTraffic.init(): ()
 		-- hang a flyer's body and its pieces at its current pose
 		local function place(f: Flyer, dt: number)
 			local core = f.Core
+			if core.Rescues > f.Rescues then
+				f.Rescues = core.Rescues
+				warn(
+					string.format(
+						"[SkyTraffic] %s was wedged and moved to open sky (rescue %d)",
+						f.Part.Name,
+						f.Rescues
+					)
+				)
+			end
 			local body = f.Body
 			CreatureMotionCore.updateBody(body, core, dt, f.MC, motionCfg, f.RefRate)
 			local at = Vector3.new(core.X, core.Y + body.Heave, core.Z)

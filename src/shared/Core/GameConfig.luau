@@ -552,6 +552,8 @@ local GameConfig = {
 					FallbackAngle = 0.5,
 					ArriveTurnScale = 0.8, -- arrived = within max(ArriveMin, this x turn radius)
 					StuckSeconds = 8,
+					RescueSeconds = 45, -- progress check window: a flier that gets almost nowhere is re-entered ...
+					RescueSpeedFrac = 0.25, -- ... if it covered less than this fraction of its slowest cruise
 					StuckTurnScale = 3, -- ... plus this x (turn radius / speed): the time to come round
 					GuardMargin = 4, -- the hard stop keeps this much beyond the body's own sphere
 					LegPad = 20, -- extra clearance a waypoint leg keeps from obstacles
@@ -623,7 +625,13 @@ local GameConfig = {
 					LimitKnee = 0.25, -- soft clamp of a part's `limit` range: saturation begins this fraction of the range from each end
 					-- Spine locomotion (serpents, eels; CreatureMotionCore.newSpine): HeadAmp = the head's share of the wave
 					-- amplitude (it grows toward the tail); StepsPerWave = trail samples per wavelength; Margin = extra trail kept.
-					Spine = { HeadAmp = 0.3, StepsPerWave = 24, Margin = 1.25 },
+					Spine = {
+						HeadAmp = 0.5,
+						StepsPerWave = 24,
+						Margin = 1.25,
+						TimeShare = 0.25,
+						TravelShare = 1,
+					},
 					DragSpeed = 0.5, -- steady backward trail of loose parts at cruise speed
 					Classes = {
 						TINY = {
@@ -981,8 +989,8 @@ local GameConfig = {
 						RadiusMax = 3200,
 						HeightMin = -1100,
 						HeightMax = 900,
-						SpeedMin = 8,
-						SpeedMax = 14,
+						SpeedMin = 12,
+						SpeedMax = 20,
 						Accel = 1.5,
 						SpawnOuter = 0.7,
 						UnderExtentScale = 1,

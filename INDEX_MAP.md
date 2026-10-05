@@ -640,8 +640,8 @@ _489 text files, 1006 binary assets. Regenerate with `python tools/gen_index.py`
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (9064) - LUCKBOUND — Work Log · 2026-10-05
-  - `WORKLOG.md`: Template:18, Session N — YYYY-MM-DD — <short title>:21, Done:24, Decisions made:27, Stopped at:30, Next:33, crossroads-v2 round 3 (same branch) - 2026-10-05 - owner Stu:39, Done:42, Stopped at:48, crossroads-v2 round 2 (same branch) - 2026-10-05 - owner Stu:51, Done:54, Stopped at:58, crossroads-v2-refinement (branch claude/crossroads-v2-refine:61, Done:64, Decisions made:70, Stopped at:73, Next:76, orchestrate-skill (branch agent/orchestrate-skill) - 2026-10:79, Done:82, Decisions made:96, Stopped at:102, Next:105, Session 240 — 2026-09-30 — Wire delivered rifts and finish p:111, Done:114, Decisions made:133, Stopped at:137, Next:141, Leftovers:147, Session 239 — 2026-09-30 — Correct rift faces and FBX import:154, Done:157, Decisions made:168, Stopped at:172, Next:176, Leftovers:180, Session 238 — 2026-09-29 — Expedition rifts: entrance, boss-:186, Done:189, Decisions made:201, Follow-up 2026-10-05:208, Stopped at:230, Next:234, ... +1205 more
+- `docs/WORKLOG.md` (9067) - LUCKBOUND — Work Log · 2026-10-05
+  - `WORKLOG.md`: Template:18, Session N — YYYY-MM-DD — <short title>:21, Done:24, Decisions made:27, Stopped at:30, Next:33, crossroads-v2 round 3 (same branch) - 2026-10-05 - owner Stu:39, Done:42, Follow-ups (owner test 3):48, Stopped at:51, crossroads-v2 round 2 (same branch) - 2026-10-05 - owner Stu:54, Done:57, Stopped at:61, crossroads-v2-refinement (branch claude/crossroads-v2-refine:64, Done:67, Decisions made:73, Stopped at:76, Next:79, orchestrate-skill (branch agent/orchestrate-skill) - 2026-10:82, Done:85, Decisions made:99, Stopped at:105, Next:108, Session 240 — 2026-09-30 — Wire delivered rifts and finish p:114, Done:117, Decisions made:136, Stopped at:140, Next:144, Leftovers:150, Session 239 — 2026-09-30 — Correct rift faces and FBX import:157, Done:160, Decisions made:171, Stopped at:175, Next:179, Leftovers:183, Session 238 — 2026-09-29 — Expedition rifts: entrance, boss-:189, Done:192, Decisions made:204, Follow-up 2026-10-05:211, Stopped at:233, ... +1206 more
 
 ### docs/archive
 
@@ -724,8 +724,8 @@ _489 text files, 1006 binary assets. Regenerate with `python tools/gen_index.py`
   - `SettingsController.luau`: SettingsController.musicGroup:48, SettingsController.effectsGroup:53, SettingsController.screenShake:58, SettingsController.showsOthersRolls:63, buildSoundGroups:67, isOurs:90, scaleFor:95, applyScale:107, adopt:118, applyVolumes:129, SettingsController.init:137
 - `src/client/Controllers/SkyController.luau` (263) - THE SKY, WHEN SOMETHING IS HAPPENING TO THE WORLD. · 2026-09-21
   - `SkyController.luau`: definitionFor:52, captureBaseline:66, tweenLighting:73, buildEffects:84, clearEffects:151, revert:159, apply:168, evaluate:192, SkyController.current:232, SkyController.init:236
-- `src/client/Controllers/SkyTraffic.luau` (715) - THE SKY TRAFFIC round the Crossroads: a thin client driver over Core/FlightCore. · 2026-10-05
-  - `SkyTraffic.luau`: blocked:95, findPerch:102, hingeAbout:141, SkyTraffic.init:148
+- `src/client/Controllers/SkyTraffic.luau` (729) - THE SKY TRAFFIC round the Crossroads: a thin client driver over Core/FlightCore. · 2026-10-05
+  - `SkyTraffic.luau`: blocked:96, findPerch:103, hingeAbout:142, SkyTraffic.init:149
 - `src/client/Controllers/StateController.luau` (105) - The single client-side mirror of server state. Build spec T-114. · 2026-09-25
   - `StateController.luau`: notify:31, StateController.get:37, StateController.onChanged:41, StateController.setting:55, StateController.applySetting:68, StateController.init:79
 - `src/client/Controllers/ThemeController.luau` (178) - THE LIVE PALETTE, APPLIED. · 2026-09-25
@@ -860,8 +860,8 @@ _489 text files, 1006 binary assets. Regenerate with `python tools/gen_index.py`
   - `CodeCore.luau`: CodeCore.normalise:16, CodeCore.find:24, CodeCore.hasRedeemed:37, CodeCore.redeem:51, CodeCore.record:94
 - `src/shared/Core/Constants.luau` (217) - Frozen enums and lookup tables. Build spec §2.1. · 2026-10-01
   - `Constants.luau`: COMMON:24, UNCOMMON:31, RARE:38, EPIC:45, LEGENDARY:52, MYTHIC:59, UNKNOWN:66, SLOTS:81, NAMES:84, HOTKEY_NAMES:127, DATASTORE:184
-- `src/shared/Core/CreatureMotionCore.luau` (700) - THE LAYERED MOTION OF THE SKY CREATURES: the pure animation maths behind · 2026-10-05
-  - `CreatureMotionCore.luau`: clamp:90, CreatureMotionCore.flapShape:97, CreatureMotionCore.flapSlope:106, CreatureMotionCore.burstShape:116, CreatureMotionCore.noise:126, CreatureMotionCore.follow:132, CreatureMotionCore.softLimit:141, CreatureMotionCore.torque:163, CreatureMotionCore.newBody:184, CreatureMotionCore.newPart:211, CreatureMotionCore.updateBody:270, CreatureMotionCore.stepPart:323, CreatureMotionCore.newSpine:488, CreatureMotionCore.seedTrail:539, CreatureMotionCore.pushTrail:561, unit:594, CreatureMotionCore.solveSpine:611
+- `src/shared/Core/CreatureMotionCore.luau` (717) - THE LAYERED MOTION OF THE SKY CREATURES: the pure animation maths behind · 2026-10-05
+  - `CreatureMotionCore.luau`: clamp:90, CreatureMotionCore.flapShape:97, CreatureMotionCore.flapSlope:106, CreatureMotionCore.burstShape:116, CreatureMotionCore.noise:126, CreatureMotionCore.follow:132, CreatureMotionCore.softLimit:141, CreatureMotionCore.torque:163, CreatureMotionCore.newBody:184, CreatureMotionCore.newPart:211, CreatureMotionCore.updateBody:270, CreatureMotionCore.stepPart:323, CreatureMotionCore.newSpine:492, CreatureMotionCore.seedTrail:548, CreatureMotionCore.pushTrail:570, unit:603, CreatureMotionCore.solveSpine:620
 - `src/shared/Core/DevCore.luau` (267) - The pure half of the developer tools: parsing a command line, checking the · 2026-09-27
   - `DevCore.luau`: DevCore.parse:36, DevCore.index:51, DevCore.usage:60, DevCore.options:69, DevCore.check:89, startsWith:115, DevCore.complete:123, DevCore.validate:205
 - `src/shared/Core/EventCore.luau` (257) - Pure live-event state. Build spec §4.1. · 2026-09-20
@@ -872,10 +872,10 @@ _489 text files, 1006 binary assets. Regenerate with `python tools/gen_index.py`
   - `FateCore.luau`: FateCore.buildPool:20, FateCore.effectiveWeight:40, FateCore.scriptedWorldId:63, FateCore.isOnboarding:72, FateCore.roll:77, FateCore.expeditionDuration:107
 - `src/shared/Core/FixtureCore.luau` (55) - The pure half of fixtures (CHUNK_AUTHORING.md convention 7, build spec · 2026-09-23
   - `FixtureCore.luau`: CHEST:15, VAULT:16, FORCEFIELD:17, smooth:23, FixtureCore.lidAngle:31, FixtureCore.doorSpin:38, FixtureCore.doorRecess:44, FixtureCore.fieldTransparency:50
-- `src/shared/Core/FlightCore.luau` (1450) - THE FLIGHT OF THE SKY CREATURES: the pure half of SkyTraffic. · 2026-10-05
-  - `FlightCore.luau`: wrap:117, clamp:121, approach:125, rangeOf:129, distTo:136, FlightCore.heading:144, FlightCore.velocity:150, FlightCore.turnRate:157, maxTurnRate:165, FlightCore.advance:175, floorOf:271, FlightCore.inKeepOut:283, FlightCore.segmentHitsKeepOut:308, FlightCore.keepOutSteer:357, FlightCore.separation:411, FlightCore.obstacleHitsPoint:435, FlightCore.obstacleHitsSegment:451, centreOffset:494, FlightCore.blockedAt:507, FlightCore.legBlocked:520, FlightCore.obstacleSteer:545, angleOf:616, planPass:626, takeRoutePoint:720, FlightCore.pickWaypoint:739, FlightCore.relocate:863, FlightCore.spawn:911, FlightCore.enter:1012, FlightCore.beginPerch:1044, endPerchAttempt:1060, FlightCore.presenceStep:1076, stuckLimit:1157, FlightCore.tick:1165, FlightCore.updateInterval:1388, FlightCore.gait:1400
+- `src/shared/Core/FlightCore.luau` (1469) - THE FLIGHT OF THE SKY CREATURES: the pure half of SkyTraffic. · 2026-10-05
+  - `FlightCore.luau`: wrap:120, clamp:124, approach:128, rangeOf:132, distTo:139, FlightCore.heading:147, FlightCore.velocity:153, FlightCore.turnRate:160, maxTurnRate:168, FlightCore.advance:178, floorOf:274, FlightCore.inKeepOut:286, FlightCore.segmentHitsKeepOut:311, FlightCore.keepOutSteer:360, FlightCore.separation:414, FlightCore.obstacleHitsPoint:438, FlightCore.obstacleHitsSegment:454, centreOffset:497, FlightCore.blockedAt:510, FlightCore.legBlocked:523, FlightCore.obstacleSteer:548, angleOf:619, planPass:629, takeRoutePoint:723, FlightCore.pickWaypoint:742, FlightCore.relocate:866, FlightCore.spawn:914, FlightCore.enter:1018, FlightCore.beginPerch:1050, endPerchAttempt:1066, FlightCore.presenceStep:1082, stuckLimit:1163, FlightCore.tick:1171, FlightCore.updateInterval:1407, FlightCore.gait:1419
 - `src/shared/Core/Freeze.luau` (25) - Deep-freeze a content or config table, so a System cannot mutate the data · 2026-09-22
-- `src/shared/Core/GameConfig.luau` (2128) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-10-05
+- `src/shared/Core/GameConfig.luau` (2136) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-10-05
 - `src/shared/Core/HubMenuCore.luau` (190) - THE HUB MENU'S RULES, WITH NO ROBLOX IN THEM. · 2026-09-25
   - `HubMenuCore.luau`: HubMenuCore.panels:20, HubMenuCore.panelById:31, HubMenuCore.destinations:41, HubMenuCore.destinationById:52, HubMenuCore.landingPoint:64, HubMenuCore.isVisible:71, HubMenuCore.newState:80, HubMenuCore.reduce:98, HubMenuCore.canTravel:149, HubMenuCore.travelTiming:180
 - `src/shared/Core/KeyCore.luau` (58) - The pure half of vault keys (build spec §7.5). Owner-directed 2026-09-23: · 2026-09-23
@@ -957,7 +957,7 @@ _489 text files, 1006 binary assets. Regenerate with `python tools/gen_index.py`
 
 ### tests/cases.luau
 
-- `tests/cases.luau` (11988) - LUCKBOUND test suite. Run: python3 tests/build_suite.py && luau tests/generated_suite.luau · 2026-10-05
+- `tests/cases.luau` (12022) - LUCKBOUND test suite. Run: python3 tests/build_suite.py && luau tests/generated_suite.luau · 2026-10-05
   - `cases.luau`: group:52, check:57, throws:70, lcg:76, profile:87, cfg:95
 
 ### tests/check_chunk_loader.py

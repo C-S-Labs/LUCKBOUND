@@ -45,6 +45,9 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 - Self-clip system: sidecar `limit` per part (tool `tools/gen_part_limits.py`), soft clamp in the driver. Turtle shell rigid (amp 0 Pulse skipped); starweaver tendrils calmer; colossal inertia damped.
 - Wing power by class: bigger classes beat harder and slower. No FBX changed: sidecars only (no re-import).
 
+### Follow-ups (owner test 3)
+- Starweaver bell/fringe/heart amp 0 (no size change). Dead-end rescue in `FlightCore.tick` (average speed under `RescueSpeedFrac` of slowest cruise over `RescueSeconds` re-enters the flier at the band edge; the driver warns). Spine wave now locked to distance flown (`Motion.Spine.TravelShare` 1, `TimeShare` 0.1, `HeadAmp` 0.5) so the body keeps up with the head; COLOSSAL cruise 12-20.
+
 ### Stopped at
 Owner Studio test. Hand-set limits on starweaver tendriltip_1 [-0.08,0.08] and tendriltip_3 [-0.08,0.13] (the sweep reported a false positive at the joint); re-running gen_part_limits.py overwrites them. Check: wyrm bends, under-hub depth (`UnderDepth` 300 assumed), wing-down sign.
 

@@ -9755,6 +9755,40 @@ do
 		return (a + math.pi) % (2 * math.pi) - math.pi
 	end
 
+	-- a flier pinned in place (wedged between obstacles) is re-entered at its band edge
+	do
+		local f = newFlier("COLOSSAL", 7, false)
+		local x0, y0, z0 = f.X, f.Y, f.Z
+		local env = { PlayerX = 0, PlayerY = 0, PlayerZ = 0 }
+		for _ = 1, 4000 do
+			FlightCore.tick(f, 0.1, env)
+			if f.Rescues == 0 then
+				f.X, f.Y, f.Z, f.Speed = x0, y0, z0, 0 -- held in place by something the test imposes
+			end
+		end
+		check("a pinned flier is rescued from its dead end", f.Rescues >= 1)
+	end
+	-- the spine's wave is locked to distance flown: crawling forward does not whip the body sideways
+	do
+		local CM = __require("CreatureMotionCore")
+		local sp = CM.newSpine({ 100, 200, 300 }, 350, 32, 0.12, false, 0.5, 24, 1.25, 0.1, 1)
+		CM.seedTrail(sp.Trail, 0, 0, 0, 1, 0, 0)
+		local peak = 0.0
+		local prevZ = nil
+		local x = 0.0
+		for i = 1, 400 do
+			x += 1 -- 10 studs/s at dt 0.1
+			CM.pushTrail(sp.Trail, x, 0, 0)
+			CM.solveSpine(sp, x, 0, 0, i * 0.1)
+			local z = sp.PZ[4]
+			if prevZ then
+				peak = math.max(peak, math.abs(z - prevZ) / 0.1)
+			end
+			prevZ = z
+		end
+		check("the tail's sideways speed stays below the forward speed", peak < 9)
+	end
+
 	-- the boats and docking are gone; the whale is a creature now
 	local ordinary = {}
 	local noCanDock = true

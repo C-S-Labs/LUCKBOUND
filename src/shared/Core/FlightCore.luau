@@ -86,6 +86,9 @@ export type Flier = {
 	TY: number,
 	TZ: number,
 	BestDist: number,
+	RescueT: number, -- seconds since the progress check began
+	RescueDist: number, -- distance flown since the progress check began
+	Rescues: number, -- times it was moved out of a dead end
 	StuckFor: number,
 	Mode: string, -- fly | approach | land | perch | takeoff
 	ModeTime: number,
@@ -969,6 +972,9 @@ function FlightCore.spawn(
 		TY = y,
 		TZ = z,
 		BestDist = math.huge,
+		RescueT = 0,
+		RescueDist = 0,
+		Rescues = 0,
 		StuckFor = 0,
 		Mode = "fly",
 		ModeTime = 0,
@@ -1265,6 +1271,19 @@ function FlightCore.tick(f: Flier, dt: number, env: any)
 		f.NextSpeedChange = rangeOf(f.Rng, fl.SpeedChangeMin, fl.SpeedChangeMax)
 	end
 	f.PerchCooldown -= dt
+	-- DEAD-END RESCUE: a flier that has made almost no headway for a long window (wedged
+	-- between obstacles, or crawling in a pocket) re-enters at the edge of its band
+	f.RescueT += dt
+	f.RescueDist += f.Speed * dt
+	if f.RescueT >= fl.RescueSeconds then
+		local flown = f.RescueDist
+		f.RescueT, f.RescueDist = 0, 0
+		if flown < b.SMin * fl.RescueSeconds * fl.RescueSpeedFrac then
+			FlightCore.enter(f)
+			f.Rescues += 1
+			return
+		end
+	end
 	local tx, ty, tz = f.TX - f.X, f.TY - f.Y, f.TZ - f.Z
 	local to = math.sqrt(tx * tx + ty * ty + tz * tz)
 	if to < f.BestDist - 1 then

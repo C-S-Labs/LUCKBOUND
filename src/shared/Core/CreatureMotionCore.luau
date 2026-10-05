@@ -472,6 +472,10 @@ export type Spine = {
 	Rate: number, -- Hz
 	Vertical: boolean, -- wave in the vertical plane (else lateral)
 	HeadAmp: number, -- fraction of Amp at the head
+	TimeShare: number, -- how much of the wave runs on the clock (1) ...
+	TravelShare: number, -- ... and how much is locked to distance flown (0 = none, 1 = the body traces the head's path)
+	Travel: number, -- distance the head has flown
+	Last: { number }?, -- the head's last raw position
 	Trail: Trail,
 	-- outputs: index 1 is the head, index i + 1 segment i
 	PX: { number },
@@ -493,7 +497,9 @@ function CreatureMotionCore.newSpine(
 	vertical: boolean,
 	headAmp: number,
 	stepsPerWave: number,
-	margin: number
+	margin: number,
+	timeShare: number?,
+	travelShare: number?
 ): Spine
 	local last = 0.0
 	local minGap = math.huge
@@ -511,6 +517,9 @@ function CreatureMotionCore.newSpine(
 		Rate = rate,
 		Vertical = vertical,
 		HeadAmp = headAmp,
+		TimeShare = timeShare or 1,
+		TravelShare = travelShare or 0,
+		Travel = 0,
 		Trail = {
 			Step = step,
 			Max = (last + amp * 2) * math.max(margin, 1) + step * 2,
@@ -634,7 +643,15 @@ function CreatureMotionCore.solveSpine(sp: Spine, hx: number, hy: number, hz: nu
 	end
 	-- tangents of the raw path (pointing the way the head went) and the wave's normals
 	local qx, qy, qz = {}, {}, {}
-	local ang = TWO_PI * sp.Rate * t
+	-- the wave's phase: a share on the clock, a share locked to the distance flown, so a body
+	-- that creeps forward does not whip sideways faster than its head can lead it
+	local last = sp.Last
+	if last then
+		local ddx, ddy, ddz = hx - last[1], hy - last[2], hz - last[3]
+		sp.Travel += math.sqrt(ddx * ddx + ddy * ddy + ddz * ddz)
+	end
+	sp.Last = { hx, hy, hz }
+	local ang = TWO_PI * (sp.Rate * t * sp.TimeShare + sp.Travel / sp.Lambda * sp.TravelShare)
 	local prevNx, prevNy, prevNz = 0.0, 0.0, 1.0
 	for k = 1, n do
 		local a, b = math.max(k - 1, 1), math.min(k + 1, n)
