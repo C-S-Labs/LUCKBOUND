@@ -36,7 +36,11 @@
      "phase": 0.0,
      "chain": null,
      "lag": 0.0,
-     "gait": "Turn"
+     "gait": "Turn",
+     "limit": [
+      -0.3,
+      0.3
+     ]
     },
     "hubprop_citadel_falcon__head_1": {
      "kind": "Flap",
@@ -60,7 +64,11 @@
      "phase": 0.0,
      "chain": "hubprop_citadel_falcon__neck_1",
      "lag": 0.3,
-     "gait": "Idle"
+     "gait": "Idle",
+     "limit": [
+      -0.028,
+      0.14
+     ]
     },
     "hubprop_citadel_falcon__jaw_1": {
      "kind": "Flap",
@@ -84,7 +92,11 @@
      "phase": 0.0,
      "chain": "hubprop_citadel_falcon__head_1",
      "lag": 0.2,
-     "gait": "Idle"
+     "gait": "Idle",
+     "limit": [
+      -0.16,
+      0.16
+     ]
     },
     "hubprop_citadel_falcon__crest_1": {
      "kind": "Flap",
@@ -108,7 +120,11 @@
      "phase": 0.0,
      "chain": "hubprop_citadel_falcon__head_1",
      "lag": 0.5,
-     "gait": "Idle"
+     "gait": "Idle",
+     "limit": [
+      -0.3,
+      0.3
+     ]
     },
     "hubprop_citadel_falcon__wing_1": {
      "kind": "Flap",
@@ -132,7 +148,11 @@
      "phase": 0.0,
      "chain": null,
      "lag": 0.0,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.62,
+      0.62
+     ]
     },
     "hubprop_citadel_falcon__wingtip_1": {
      "kind": "Flap",
@@ -156,7 +176,11 @@
      "phase": 0.0,
      "chain": "hubprop_citadel_falcon__wing_1",
      "lag": 0.5,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.44,
+      0.44
+     ]
     },
     "hubprop_citadel_falcon__pinion_1": {
      "kind": "Flap",
@@ -180,7 +204,11 @@
      "phase": 0.0,
      "chain": "hubprop_citadel_falcon__wingtip_1",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.36,
+      0.36
+     ]
     },
     "hubprop_citadel_falcon__wing_2": {
      "kind": "Flap",
@@ -204,7 +232,11 @@
      "phase": 3.14159,
      "chain": null,
      "lag": 0.0,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.62,
+      0.62
+     ]
     },
     "hubprop_citadel_falcon__wingtip_2": {
      "kind": "Flap",
@@ -228,7 +260,11 @@
      "phase": 3.14159,
      "chain": "hubprop_citadel_falcon__wing_2",
      "lag": 0.5,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.44,
+      0.44
+     ]
     },
     "hubprop_citadel_falcon__pinion_2": {
      "kind": "Flap",
@@ -252,7 +288,11 @@
      "phase": 3.14159,
      "chain": "hubprop_citadel_falcon__wingtip_2",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.36,
+      0.36
+     ]
     },
     "hubprop_citadel_falcon__tailyaw_1": {
      "kind": "Flap",
@@ -276,7 +316,11 @@
      "phase": 0.0,
      "chain": null,
      "lag": 0.0,
-     "gait": "Turn"
+     "gait": "Turn",
+     "limit": [
+      -0.32,
+      0.32
+     ]
     },
     "hubprop_citadel_falcon__tail_1": {
      "kind": "Flap",
@@ -300,7 +344,11 @@
      "phase": 0.0,
      "chain": "hubprop_citadel_falcon__tailyaw_1",
      "lag": 0.35,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.18,
+      0.18
+     ]
     },
     "hubprop_citadel_falcon__tail_2": {
      "kind": "Flap",
@@ -324,7 +372,11 @@
      "phase": 0.0,
      "chain": "hubprop_citadel_falcon__tail_1",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.22,
+      0.22
+     ]
     },
     "hubprop_citadel_falcon__hip_1": {
      "kind": "Flap",
@@ -348,7 +400,11 @@
      "phase": 0.0,
      "chain": null,
      "lag": 0.0,
-     "gait": "Idle"
+     "gait": "Idle",
+     "limit": [
+      -0.275,
+      0.33
+     ]
     },
     "hubprop_citadel_falcon__shin_1": {
      "kind": "Flap",
@@ -372,7 +428,11 @@
      "phase": 0.0,
      "chain": "hubprop_citadel_falcon__hip_1",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.28,
+      0.28
+     ]
     },
     "hubprop_citadel_falcon__foot_1": {
      "kind": "Flap",
@@ -396,7 +456,11 @@
      "phase": 0.0,
      "chain": "hubprop_citadel_falcon__shin_1",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.364,
+      0.364
+     ]
     },
     "hubprop_citadel_falcon__hip_2": {
      "kind": "Flap",
@@ -420,7 +484,11 @@
      "phase": 0.35,
      "chain": null,
      "lag": 0.0,
-     "gait": "Idle"
+     "gait": "Idle",
+     "limit": [
+      -0.385,
+      0.44
+     ]
     },
     "hubprop_citadel_falcon__shin_2": {
      "kind": "Flap",
@@ -444,7 +512,11 @@
      "phase": 0.0,
      "chain": "hubprop_citadel_falcon__hip_2",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.28,
+      0.224
+     ]
     },
     "hubprop_citadel_falcon__foot_2": {
      "kind": "Flap",
@@ -468,7 +540,11 @@
      "phase": 0.0,
      "chain": "hubprop_citadel_falcon__shin_2",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.364,
+      0.364
+     ]
     },
     "hubprop_citadel_falcon__breath_1": {
      "kind": "Pulse",
@@ -555,7 +631,11 @@
      "phase": 0.0,
      "chain": null,
      "lag": 0.0,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.07,
+      0.14
+     ]
     },
     "hubprop_canopy_drake__frill_2": {
      "kind": "Flap",
@@ -579,7 +659,11 @@
      "phase": 1.3,
      "chain": null,
      "lag": 0.0,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.14,
+      0.14
+     ]
     },
     "hubprop_canopy_drake__neck_1": {
      "kind": "Flap",
@@ -603,7 +687,11 @@
      "phase": 0.0,
      "chain": null,
      "lag": 0.0,
-     "gait": "Turn"
+     "gait": "Turn",
+     "limit": [
+      -0.26,
+      0.26
+     ]
     },
     "hubprop_canopy_drake__neck_2": {
      "kind": "Flap",
@@ -627,7 +715,11 @@
      "phase": 0.0,
      "chain": "hubprop_canopy_drake__neck_1",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.12,
+      0.12
+     ]
     },
     "hubprop_canopy_drake__neck_3": {
      "kind": "Flap",
@@ -651,7 +743,11 @@
      "phase": 0.0,
      "chain": "hubprop_canopy_drake__neck_2",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.14,
+      0.14
+     ]
     },
     "hubprop_canopy_drake__head_1": {
      "kind": "Flap",
@@ -675,7 +771,11 @@
      "phase": 0.0,
      "chain": "hubprop_canopy_drake__neck_3",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.14,
+      0.14
+     ]
     },
     "hubprop_canopy_drake__jaw_1": {
      "kind": "Flap",
@@ -699,7 +799,11 @@
      "phase": 0.0,
      "chain": "hubprop_canopy_drake__head_1",
      "lag": 0.2,
-     "gait": "Idle"
+     "gait": "Idle",
+     "limit": [
+      -0.2,
+      0.2
+     ]
     },
     "hubprop_canopy_drake__ear_1": {
      "kind": "Flap",
@@ -723,7 +827,11 @@
      "phase": 0.0,
      "chain": "hubprop_canopy_drake__head_1",
      "lag": 0.3,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.3,
+      0.3
+     ]
     },
     "hubprop_canopy_drake__ear_2": {
      "kind": "Flap",
@@ -747,7 +855,11 @@
      "phase": 0.0,
      "chain": "hubprop_canopy_drake__head_1",
      "lag": 0.3,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.3,
+      0.3
+     ]
     },
     "hubprop_canopy_drake__tailyaw_1": {
      "kind": "Flap",
@@ -771,7 +883,11 @@
      "phase": 0.0,
      "chain": null,
      "lag": 0.0,
-     "gait": "Turn"
+     "gait": "Turn",
+     "limit": [
+      -0.3,
+      0.3
+     ]
     },
     "hubprop_canopy_drake__tail_1": {
      "kind": "Flap",
@@ -795,7 +911,11 @@
      "phase": 0.0,
      "chain": "hubprop_canopy_drake__tailyaw_1",
      "lag": 0.5,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.24,
+      0.24
+     ]
     },
     "hubprop_canopy_drake__tail_2": {
      "kind": "Flap",
@@ -819,7 +939,11 @@
      "phase": 0.0,
      "chain": "hubprop_canopy_drake__tail_1",
      "lag": 0.5,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.24,
+      0.24
+     ]
     },
     "hubprop_canopy_drake__tail_3": {
      "kind": "Flap",
@@ -843,7 +967,11 @@
      "phase": 0.0,
      "chain": "hubprop_canopy_drake__tail_2",
      "lag": 0.5,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.24,
+      0.24
+     ]
     },
     "hubprop_canopy_drake__tail_4": {
      "kind": "Flap",
@@ -867,7 +995,11 @@
      "phase": 0.0,
      "chain": "hubprop_canopy_drake__tail_3",
      "lag": 0.5,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.24,
+      0.24
+     ]
     },
     "hubprop_canopy_drake__wing_1": {
      "kind": "Flap",
@@ -891,7 +1023,11 @@
      "phase": 0.0,
      "chain": null,
      "lag": 0.0,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.58,
+      0.58
+     ]
     },
     "hubprop_canopy_drake__wingtip_1": {
      "kind": "Flap",
@@ -915,7 +1051,11 @@
      "phase": 0.0,
      "chain": "hubprop_canopy_drake__wing_1",
      "lag": 0.55,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.42,
+      0.42
+     ]
     },
     "hubprop_canopy_drake__wingfin_1": {
      "kind": "Flap",
@@ -939,7 +1079,11 @@
      "phase": 0.0,
      "chain": "hubprop_canopy_drake__wingtip_1",
      "lag": 0.5,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.36,
+      0.36
+     ]
     },
     "hubprop_canopy_drake__wing_2": {
      "kind": "Flap",
@@ -963,7 +1107,11 @@
      "phase": 3.14159,
      "chain": null,
      "lag": 0.0,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.58,
+      0.58
+     ]
     },
     "hubprop_canopy_drake__wingtip_2": {
      "kind": "Flap",
@@ -987,7 +1135,11 @@
      "phase": 3.14159,
      "chain": "hubprop_canopy_drake__wing_2",
      "lag": 0.55,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.42,
+      0.42
+     ]
     },
     "hubprop_canopy_drake__wingfin_2": {
      "kind": "Flap",
@@ -1011,7 +1163,11 @@
      "phase": 3.14159,
      "chain": "hubprop_canopy_drake__wingtip_2",
      "lag": 0.5,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.36,
+      0.36
+     ]
     },
     "hubprop_canopy_drake__foreleg_1": {
      "kind": "Flap",
@@ -1035,7 +1191,11 @@
      "phase": 0.0,
      "chain": null,
      "lag": 0.0,
-     "gait": "Idle"
+     "gait": "Idle",
+     "limit": [
+      -0.2,
+      0.5
+     ]
     },
     "hubprop_canopy_drake__forearm_1": {
      "kind": "Flap",
@@ -1059,7 +1219,11 @@
      "phase": 0.0,
      "chain": "hubprop_canopy_drake__foreleg_1",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.225,
+      0.125
+     ]
     },
     "hubprop_canopy_drake__forepaw_1": {
      "kind": "Flap",
@@ -1083,7 +1247,11 @@
      "phase": 0.0,
      "chain": "hubprop_canopy_drake__forearm_1",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.325,
+      0.2275
+     ]
     },
     "hubprop_canopy_drake__hip_1": {
      "kind": "Flap",
@@ -1107,7 +1275,11 @@
      "phase": 0.2,
      "chain": null,
      "lag": 0.0,
-     "gait": "Idle"
+     "gait": "Idle",
+     "limit": [
+      -0.18,
+      0.6
+     ]
     },
     "hubprop_canopy_drake__shin_1": {
      "kind": "Flap",
@@ -1131,7 +1303,11 @@
      "phase": 0.0,
      "chain": "hubprop_canopy_drake__hip_1",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.112,
+      0.112
+     ]
     },
     "hubprop_canopy_drake__foot_1": {
      "kind": "Flap",
@@ -1155,7 +1331,11 @@
      "phase": 0.0,
      "chain": "hubprop_canopy_drake__shin_1",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.364,
+      0.364
+     ]
     },
     "hubprop_canopy_drake__foreleg_2": {
      "kind": "Flap",
@@ -1179,7 +1359,11 @@
      "phase": 0.4,
      "chain": null,
      "lag": 0.0,
-     "gait": "Idle"
+     "gait": "Idle",
+     "limit": [
+      -0.3,
+      0.3
+     ]
     },
     "hubprop_canopy_drake__forearm_2": {
      "kind": "Flap",
@@ -1203,7 +1387,11 @@
      "phase": 0.0,
      "chain": "hubprop_canopy_drake__foreleg_2",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.25,
+      0.125
+     ]
     },
     "hubprop_canopy_drake__forepaw_2": {
      "kind": "Flap",
@@ -1227,7 +1415,11 @@
      "phase": 0.0,
      "chain": "hubprop_canopy_drake__forearm_2",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.325,
+      0.325
+     ]
     },
     "hubprop_canopy_drake__hip_2": {
      "kind": "Flap",
@@ -1251,7 +1443,11 @@
      "phase": 0.6,
      "chain": null,
      "lag": 0.0,
-     "gait": "Idle"
+     "gait": "Idle",
+     "limit": [
+      -0.12,
+      0.06
+     ]
     },
     "hubprop_canopy_drake__shin_2": {
      "kind": "Flap",
@@ -1275,7 +1471,11 @@
      "phase": 0.0,
      "chain": "hubprop_canopy_drake__hip_2",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.28,
+      0.14
+     ]
     },
     "hubprop_canopy_drake__foot_2": {
      "kind": "Flap",
@@ -1299,7 +1499,11 @@
      "phase": 0.0,
      "chain": "hubprop_canopy_drake__shin_2",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.364,
+      0.364
+     ]
     },
     "hubprop_canopy_drake__breath_1": {
      "kind": "Pulse",
@@ -1386,7 +1590,11 @@
      "phase": 0.0,
      "chain": null,
      "lag": 0.6,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.3,
+      0.3
+     ]
     },
     "hubprop_aether_manta__fin_2": {
      "kind": "Flap",
@@ -1410,7 +1618,11 @@
      "phase": 0.0,
      "chain": "hubprop_aether_manta__fin_1",
      "lag": 0.6,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.34,
+      0.34
+     ]
     },
     "hubprop_aether_manta__fin_3": {
      "kind": "Flap",
@@ -1434,7 +1646,11 @@
      "phase": 0.0,
      "chain": "hubprop_aether_manta__fin_2",
      "lag": 0.6,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.38,
+      0.38
+     ]
     },
     "hubprop_aether_manta__lobe_1": {
      "kind": "Flap",
@@ -1458,7 +1674,11 @@
      "phase": 0.0,
      "chain": null,
      "lag": 0.0,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.28,
+      0.28
+     ]
     },
     "hubprop_aether_manta__fin_4": {
      "kind": "Flap",
@@ -1482,7 +1702,11 @@
      "phase": 3.14159,
      "chain": null,
      "lag": 0.6,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.3,
+      0.3
+     ]
     },
     "hubprop_aether_manta__fin_5": {
      "kind": "Flap",
@@ -1506,7 +1730,11 @@
      "phase": 3.14159,
      "chain": "hubprop_aether_manta__fin_4",
      "lag": 0.6,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.34,
+      0.34
+     ]
     },
     "hubprop_aether_manta__fin_6": {
      "kind": "Flap",
@@ -1530,7 +1758,11 @@
      "phase": 3.14159,
      "chain": "hubprop_aether_manta__fin_5",
      "lag": 0.6,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.38,
+      0.38
+     ]
     },
     "hubprop_aether_manta__lobe_2": {
      "kind": "Flap",
@@ -1554,7 +1786,11 @@
      "phase": 3.14159,
      "chain": null,
      "lag": 0.0,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.28,
+      0.28
+     ]
     },
     "hubprop_aether_manta__jaw_1": {
      "kind": "Flap",
@@ -1578,7 +1814,11 @@
      "phase": 0.0,
      "chain": null,
      "lag": 0.0,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.16,
+      0.144
+     ]
     },
     "hubprop_aether_manta__tailbase_1": {
      "kind": "Flap",
@@ -1602,7 +1842,11 @@
      "phase": 0.0,
      "chain": null,
      "lag": 0.0,
-     "gait": "Turn"
+     "gait": "Turn",
+     "limit": [
+      -0.32,
+      0.32
+     ]
     },
     "hubprop_aether_manta__tail_1": {
      "kind": "Flap",
@@ -1626,7 +1870,11 @@
      "phase": 0.0,
      "chain": "hubprop_aether_manta__tailbase_1",
      "lag": 0.55,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.26,
+      0.26
+     ]
     },
     "hubprop_aether_manta__tail_2": {
      "kind": "Flap",
@@ -1650,7 +1898,11 @@
      "phase": 0.0,
      "chain": "hubprop_aether_manta__tail_1",
      "lag": 0.55,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.26,
+      0.26
+     ]
     },
     "hubprop_aether_manta__tail_3": {
      "kind": "Flap",
@@ -1674,7 +1926,11 @@
      "phase": 0.0,
      "chain": "hubprop_aether_manta__tail_2",
      "lag": 0.55,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.26,
+      0.26
+     ]
     },
     "hubprop_aether_manta__tail_4": {
      "kind": "Flap",
@@ -1698,7 +1954,11 @@
      "phase": 0.0,
      "chain": "hubprop_aether_manta__tail_3",
      "lag": 0.55,
-     "gait": "Always"
+     "gait": "Always",
+     "limit": [
+      -0.26,
+      0.26
+     ]
     },
     "hubprop_aether_manta__gills_1": {
      "kind": "Pulse",
@@ -1785,7 +2045,11 @@
      "phase": 0.0,
      "chain": null,
      "lag": 0.0,
-     "gait": "Turn"
+     "gait": "Turn",
+     "limit": [
+      -0.066,
+      0.066
+     ]
     },
     "hubprop_ashen_roc__neck_2": {
      "kind": "Flap",
@@ -1809,7 +2073,11 @@
      "phase": 0.0,
      "chain": "hubprop_ashen_roc__neck_1",
      "lag": 0.4,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.09,
+      0.09
+     ]
     },
     "hubprop_ashen_roc__head_1": {
      "kind": "Flap",
@@ -1833,7 +2101,11 @@
      "phase": 0.0,
      "chain": "hubprop_ashen_roc__neck_2",
      "lag": 0.4,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.12,
+      0.12
+     ]
     },
     "hubprop_ashen_roc__jaw_1": {
      "kind": "Flap",
@@ -1857,7 +2129,11 @@
      "phase": 0.0,
      "chain": "hubprop_ashen_roc__head_1",
      "lag": 0.2,
-     "gait": "Idle"
+     "gait": "Idle",
+     "limit": [
+      -0.18,
+      0.18
+     ]
     },
     "hubprop_ashen_roc__crest_1": {
      "kind": "Flap",
@@ -1881,7 +2157,11 @@
      "phase": 0.0,
      "chain": "hubprop_ashen_roc__head_1",
      "lag": 0.5,
-     "gait": "Idle"
+     "gait": "Idle",
+     "limit": [
+      -0.252,
+      0.28
+     ]
     },
     "hubprop_ashen_roc__wing_1": {
      "kind": "Flap",
@@ -1905,7 +2185,11 @@
      "phase": 0.0,
      "chain": null,
      "lag": 0.0,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.62,
+      0.62
+     ]
     },
     "hubprop_ashen_roc__wingtip_1": {
      "kind": "Flap",
@@ -1929,7 +2213,11 @@
      "phase": 0.0,
      "chain": "hubprop_ashen_roc__wing_1",
      "lag": 0.55,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.5,
+      0.5
+     ]
     },
     "hubprop_ashen_roc__pinion_1": {
      "kind": "Flap",
@@ -1953,7 +2241,11 @@
      "phase": 0.0,
      "chain": "hubprop_ashen_roc__wingtip_1",
      "lag": 0.5,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.42,
+      0.42
+     ]
     },
     "hubprop_ashen_roc__wing_2": {
      "kind": "Flap",
@@ -1977,7 +2269,11 @@
      "phase": 3.14159,
      "chain": null,
      "lag": 0.0,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.62,
+      0.62
+     ]
     },
     "hubprop_ashen_roc__wingtip_2": {
      "kind": "Flap",
@@ -2001,7 +2297,11 @@
      "phase": 3.14159,
      "chain": "hubprop_ashen_roc__wing_2",
      "lag": 0.55,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.5,
+      0.5
+     ]
     },
     "hubprop_ashen_roc__pinion_2": {
      "kind": "Flap",
@@ -2025,7 +2325,11 @@
      "phase": 3.14159,
      "chain": "hubprop_ashen_roc__wingtip_2",
      "lag": 0.5,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.42,
+      0.42
+     ]
     },
     "hubprop_ashen_roc__tailyaw_1": {
      "kind": "Flap",
@@ -2049,7 +2353,11 @@
      "phase": 0.0,
      "chain": null,
      "lag": 0.0,
-     "gait": "Turn"
+     "gait": "Turn",
+     "limit": [
+      -0.28,
+      0.28
+     ]
     },
     "hubprop_ashen_roc__tail_1": {
      "kind": "Flap",
@@ -2073,7 +2381,11 @@
      "phase": 0.0,
      "chain": "hubprop_ashen_roc__tailyaw_1",
      "lag": 0.5,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.16,
+      0.16
+     ]
     },
     "hubprop_ashen_roc__tail_2": {
      "kind": "Flap",
@@ -2097,7 +2409,11 @@
      "phase": 0.0,
      "chain": "hubprop_ashen_roc__tail_1",
      "lag": 0.5,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.16,
+      0.16
+     ]
     },
     "hubprop_ashen_roc__tail_3": {
      "kind": "Flap",
@@ -2121,7 +2437,11 @@
      "phase": 0.0,
      "chain": "hubprop_ashen_roc__tail_2",
      "lag": 0.5,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.16,
+      0.16
+     ]
     },
     "hubprop_ashen_roc__hip_1": {
      "kind": "Flap",
@@ -2145,7 +2465,11 @@
      "phase": 0.0,
      "chain": null,
      "lag": 0.0,
-     "gait": "Idle"
+     "gait": "Idle",
+     "limit": [
+      -0.25,
+      0.35
+     ]
     },
     "hubprop_ashen_roc__shin_1": {
      "kind": "Flap",
@@ -2169,7 +2493,11 @@
      "phase": 0.0,
      "chain": "hubprop_ashen_roc__hip_1",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.26,
+      0.26
+     ]
     },
     "hubprop_ashen_roc__foot_1": {
      "kind": "Flap",
@@ -2193,7 +2521,11 @@
      "phase": 0.0,
      "chain": "hubprop_ashen_roc__shin_1",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.338,
+      0.338
+     ]
     },
     "hubprop_ashen_roc__hip_2": {
      "kind": "Flap",
@@ -2217,7 +2549,11 @@
      "phase": 0.35,
      "chain": null,
      "lag": 0.0,
-     "gait": "Idle"
+     "gait": "Idle",
+     "limit": [
+      -0.2,
+      0.5
+     ]
     },
     "hubprop_ashen_roc__shin_2": {
      "kind": "Flap",
@@ -2241,7 +2577,11 @@
      "phase": 0.0,
      "chain": "hubprop_ashen_roc__hip_2",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.26,
+      0.26
+     ]
     },
     "hubprop_ashen_roc__foot_2": {
      "kind": "Flap",
@@ -2265,7 +2605,11 @@
      "phase": 0.0,
      "chain": "hubprop_ashen_roc__shin_2",
      "lag": 0.45,
-     "gait": "Flight"
+     "gait": "Flight",
+     "limit": [
+      -0.338,
+      0.338
+     ]
     },
     "hubprop_ashen_roc__core_1": {
      "kind": "Pulse",

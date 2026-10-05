@@ -489,8 +489,8 @@ def starweaver_tendrils(c, skirt):
     # a loop. Rates differ per link (0.085/0.10/0.125 Hz) so the whip never settles into a metronome. The per-link
     # LAG is carried by `phase` (explicit); the `lag` field stays 0 so any driver reading it adds nothing.
     names = ("tendril", "tendriltip", "tendriltail")
-    amps = (0.17, 0.26, 0.36)
-    rates = (0.085, 0.100, 0.125)
+    amps = (0.09, 0.13, 0.18)           # round 3: calmer (was 0.17/0.26/0.36); the runtime damps inertia
+    rates = (0.05, 0.055, 0.06)         # slower (was 0.085/0.10/0.125)
     for k, az in enumerate(TEND_AZ):
         a = math.radians(az)
         tang = (-math.sin(a), math.cos(a), 0)
@@ -600,7 +600,7 @@ def turtle_body(c):
 
 def turtle_shell(c):
     # BREATHING: the whole shell swells and settles (+-2.2% about its own centre, ~11 s) so the grove rides up and down
-    q = c.part("shell", "Pulse", hinge=HINGE_SHELL, axis=(0, 0, 1), amp=0.022, rate=0.09, phase=0.0, gait="Always")
+    q = c.part("shell", "Pulse", hinge=HINGE_SHELL, axis=(0, 0, 1), amp=0.0, rate=0.09, phase=0.0, gait="Always")   # round 3: rigid shell, no breathing
     lathe(q, SHELL, TN, shell_matfn("elder shell"), sy=TSY, cap_bottom="Basalt")
     for j in range(TN):
         a = 2 * math.pi * (j + 0.5) / TN
