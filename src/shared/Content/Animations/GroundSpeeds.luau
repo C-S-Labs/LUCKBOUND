@@ -6,8 +6,9 @@
 -- at body speed / this, so the feet never slide (owner, 2026-09-28).
 
 return {
-	RunForward = 16.53,
-	RunBackward = 14.31,
-	RunRight = 10.02,
-	RunLeft = 10.02,
+	RunForward = 15.05,
+	RunBackward = 12.32,
+	RunRight = 10.00,
+	RunLeft = 10.00,
+	Sprint = 17.10,
 }
