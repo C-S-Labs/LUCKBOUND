@@ -10345,6 +10345,7 @@ do
 						end
 						local env = {
 							PlayerX = 0,
+							PlayerY = 40,
 							PlayerZ = 0,
 							SepX = sx,
 							SepY = sy,
@@ -10358,7 +10359,6 @@ do
 							total += 1
 							if m.turned > 6 * math.pi and net < 4 * m.f.TurnRadius then
 								circlers += 1
-								local tx, ty, tz = m.f.TX - m.f.X, m.f.TY - m.f.Y, m.f.TZ - m.f.Z
 							end
 							m.wx, m.wz, m.turned, m.t0 = m.f.X, m.f.Z, 0.0, i * 0.1
 						end
