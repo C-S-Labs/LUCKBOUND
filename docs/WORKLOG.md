@@ -36,6 +36,16 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## crossroads-v2 round 2 (same branch) - 2026-10-05 - owner Studio findings
+**Merged:** none   **Tests:** 1240 passing (luau CLI installed); Rojo build ok
+
+### Done
+- Runtime: colossals always 1-3 present, band 850-1900, obstacle pathfinding (backdrop + far range), overpass over the hub, layered motion core (asymmetric stroke, heave, roll, inertia chains, leg tuck, thrust bursts). New gait `Thrust`.
+- Art: pose-preview harnesses (same maths as SkyTraffic); real limbs/jaws/yaw stubs on small and mid groups; manta fins attached; starweaver and turtle livelier; two new colossals cinder_wyrm and aether_nautilus (library file HUB_CREATURES_COLOSSAL2). Roster now 13 incl. whale.
+
+### Stopped at
+OWNER GATE: re-import creatures_small, creatures_mid, creatures_colossal (overwrite same files) and creatures_colossal2 (new HUB_CREATURES_COLOSSAL2.rbxmx), then Studio test. Leg tuck bias only applies to hip-Idle legs; shin/foot beat on the Flight clock. Confirm SkyLife.Motion.StrokeSign (wing-down sign) in Studio.
+
 ## crossroads-v2-refinement (branch claude/crossroads-v2-refinement-4f3234) - 2026-10-05 - orchestrated Crossroads refinement
 **Merged:** none (experimental, owner review)   **Tests:** Luau NOT run (no `luau` CLI); suite build, Rojo build, selene, StyLua pass
 

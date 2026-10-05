@@ -36,7 +36,7 @@
      "phase": 0.0,
      "chain": null,
      "lag": 0.0,
-     "gait": "Flight"
+     "gait": "Thrust"
     },
     "hubprop_starweaver__halo_1": {
      "kind": "Spin",
@@ -84,7 +84,7 @@
      "phase": 1.0996,
      "chain": null,
      "lag": 0.0,
-     "gait": "Always"
+     "gait": "Thrust"
     },
     "hubprop_starweaver__fringe_1": {
      "kind": "Pulse",
