@@ -52,6 +52,7 @@
 | `tests/` | `cases.luau` (the tests), `build_suite.py` (assembles `generated_suite.luau`, git-ignored), `run.sh` | â€” |
 | `tools/` | `gen_index.py` (writes `INDEX_MAP.md`), `sync_asset_ids.py` (asset ids → `AssetManifest`), `gen_player_anims.py` (player animation clips), shared Blender launcher and VV import/collision checks | — |
 | `rokit.toml` | pinned local CLI tools: Rojo, StyLua, Selene and Luau | — |
+| `.claude/skills/orchestrate*/`, `.agents/skills/orchestrate*/` | thin, explicit-only entry points for the orchestration protocol: `/orchestrate`, `/orchestrate-resume` (Claude Code) and `$orchestrate`, `$orchestrate-resume` (Codex). Not read by plain Claude or Codex sessions | — |
 | `.github/workflows/` | `ci.yml` (syntax, forbidden names, tests, index check), `index.yml` (regenerate index on `main`) | â€” |
 
 ## 3. Docs: what each one owns
@@ -66,6 +67,7 @@ pending. Shared safety requirements live in `docs/MODULAR_MAPS.md`.
 | `docs/PROTOTYPE_BUILD_SPEC.md` | **architecture**: schemas, remotes (Â§4), boot (Â§1.2), Phase 1 exclusions and amendments (Â§7.x) |
 | `docs/DEVELOPMENT_PLAN.md` | what to build next and in what order |
 | `docs/STATUS.md` / `docs/WORKLOG.md` | current state / session history (top entry only) |
+| `docs/ORCHESTRATION.md` | opt-in, provider-neutral orchestration protocol: a lead agent (Claude or Codex) drives worker agents in isolated worktrees; checkpoint and resume rules |
 | `docs/GIT_WORKFLOW.md` | branch/PR/merge procedure: implementation vs integration agents, parallel WORKLOG numbering |
 | `docs/RESERVED.md` | deliberately unread declarations (an unread field not listed there is a defect) |
 | `docs/TESTING.md` | unit tests + Studio manual passes (lettered tests Aâ€¦T) |
