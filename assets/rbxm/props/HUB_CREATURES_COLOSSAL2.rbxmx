@@ -2,7 +2,7 @@
 	<Meta name="ExplicitAutoJoints">true</Meta>
 	<External>null</External>
 	<External>nil</External>
-	<Item class="Model" referent="RBXE6699C2641DA4EA5A4C286AFED382EA0">
+	<Item class="Model" referent="RBXC79730ACFDEB41BE80C7F30EF89D5F00">
 		<Properties>
 			<token name="LevelOfDetail">0</token>
 			<CoordinateFrame name="ModelMeshCFrame">
@@ -32,9 +32,9 @@
 			<SharedString name="SlimHash">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			<OptionalCoordinateFrame name="WorldPivotData">
 				<CFrame>
-					<X>-24.1431408</X>
-					<Y>258.322754</Y>
-					<Z>-53.4008331</Z>
+					<X>-29.1796951</X>
+					<Y>258.302795</Y>
+					<Z>104.828148</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -46,15 +46,15 @@
 					<R22>1</R22>
 				</CFrame>
 			</OptionalCoordinateFrame>
-			<BinaryString name="AttributesSerialize"><![CDATA[AQAAAA4AAABSQlhfUmVpbXBvcnRJZAIkAAAAMjhmMjg1OTctNDlmMi00NzllLWI2NmEtYzgy
-OWE5MjNhYmJk]]></BinaryString>
+			<BinaryString name="AttributesSerialize"><![CDATA[AQAAAA4AAABSQlhfUmVpbXBvcnRJZAIkAAAAMDVkYzU1YjYtYzI3Yy00ZWIxLWE1YWQtOWNj
+YTUwZTI4ZmZi]]></BinaryString>
 			<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
 			<bool name="DefinesCapabilities">false</bool>
 			<string name="Name">creatures_colossal2</string>
-			<int64 name="SourceAssetId">131941208293560</int64>
+			<int64 name="SourceAssetId">-1</int64>
 			<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 		</Properties>
-		<Item class="MeshPart" referent="RBXC3247DC0A0944D3BA0425CC85EBC5231">
+		<Item class="MeshPart" referent="RBX62E53724D2514E3690481C6DFDDD8218">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -94,7 +94,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>1.76965841e-07</Z>
 				</Vector3>
 				<float name="UnscaledVolume">4082522.25</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -105,9 +105,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-24.1431408</X>
-					<Y>258.322693</Y>
-					<Z>-53.4008331</Z>
+					<X>-29.1796951</X>
+					<Y>258.302795</Y>
+					<Z>104.828148</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -189,142 +189,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX9C3B33E14F6344CDBA0CD6675353F740">
-			<Properties>
-				<bool name="DoubleSided">false</bool>
-				<bool name="HasJointOffset">false</bool>
-				<bool name="HasSkinnedMesh">false</bool>
-				<Vector3 name="InitialSize">
-					<X>155.228333</X>
-					<Y>76.0718613</Y>
-					<Z>68</Z>
-				</Vector3>
-				<Vector3 name="JointOffset">
-					<X>0</X>
-					<Y>0</Y>
-					<Z>0</Z>
-				</Vector3>
-				<Content name="MeshId"><url>rbxassetid://131709352565245</url></Content>
-				<BinaryString name="PhysicsData"></BinaryString>
-				<token name="RenderFidelity">0</token>
-				<Content name="TextureID"><null></null></Content>
-				<int name="VertexCount">0</int>
-				<SharedString name="AeroMeshData">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
-				<token name="FluidFidelityInternal">0</token>
-				<bool name="InertiaMigrated">false</bool>
-				<SharedString name="PhysicalConfigData">XIVM3GAEe/ic1vWA326D0Q==</SharedString>
-				<Vector3 name="UnscaledCofm">
-					<X>-13.1009159</X>
-					<Y>-5.82314301</Y>
-					<Z>1.02147114e-05</Z>
-				</Vector3>
-				<Vector3 name="UnscaledVolInertiaDiags">
-					<X>99682248</X>
-					<Y>429466336</Y>
-					<Z>434977120</Z>
-				</Vector3>
-				<Vector3 name="UnscaledVolInertiaOffDiags">
-					<X>42516016</X>
-					<Y>69.8780136</Y>
-					<Z>-22.6356621</Z>
-				</Vector3>
-				<float name="UnscaledVolume">264812.156</float>
-				<bool name="Anchored">false</bool>
-				<bool name="AudioCanCollide">true</bool>
-				<float name="BackParamA">-0.5</float>
-				<float name="BackParamB">0.5</float>
-				<token name="BackSurface">0</token>
-				<token name="BackSurfaceInput">0</token>
-				<float name="BottomParamA">-0.5</float>
-				<float name="BottomParamB">0.5</float>
-				<token name="BottomSurface">0</token>
-				<token name="BottomSurfaceInput">0</token>
-				<CoordinateFrame name="CFrame">
-					<X>164.157303</X>
-					<Y>132.667877</Y>
-					<Z>-53.4008331</Z>
-					<R00>1</R00>
-					<R01>0</R01>
-					<R02>0</R02>
-					<R10>0</R10>
-					<R11>1</R11>
-					<R12>0</R12>
-					<R20>0</R20>
-					<R21>0</R21>
-					<R22>1</R22>
-				</CoordinateFrame>
-				<bool name="CanCollide">true</bool>
-				<bool name="CanQuery">true</bool>
-				<bool name="CanTouch">true</bool>
-				<bool name="CastShadow">true</bool>
-				<string name="CollisionGroup">Default</string>
-				<int name="CollisionGroupId">0</int>
-				<Color3uint8 name="Color3uint8">4288914085</Color3uint8>
-				<PhysicalProperties name="CustomPhysicalProperties">
-					<CustomPhysics>false</CustomPhysics>
-				</PhysicalProperties>
-				<bool name="EnableFluidForces">true</bool>
-				<float name="FrontParamA">-0.5</float>
-				<float name="FrontParamB">0.5</float>
-				<token name="FrontSurface">0</token>
-				<token name="FrontSurfaceInput">0</token>
-				<float name="LeftParamA">-0.5</float>
-				<float name="LeftParamB">0.5</float>
-				<token name="LeftSurface">0</token>
-				<token name="LeftSurfaceInput">0</token>
-				<bool name="Locked">false</bool>
-				<bool name="Massless">false</bool>
-				<token name="Material">256</token>
-				<string name="MaterialVariantSerialized"></string>
-				<CoordinateFrame name="PivotOffset">
-					<X>-188.300446</X>
-					<Y>125.654861</Y>
-					<Z>0</Z>
-					<R00>1</R00>
-					<R01>1.22464685e-16</R01>
-					<R02>-1.22464685e-16</R02>
-					<R10>-1.22464685e-16</R10>
-					<R11>1</R11>
-					<R12>-1.22464685e-16</R12>
-					<R20>1.22464685e-16</R20>
-					<R21>1.22464685e-16</R21>
-					<R22>1</R22>
-				</CoordinateFrame>
-				<float name="Reflectance">0</float>
-				<float name="RightParamA">-0.5</float>
-				<float name="RightParamB">0.5</float>
-				<token name="RightSurface">0</token>
-				<token name="RightSurfaceInput">0</token>
-				<int name="RootPriority">0</int>
-				<Vector3 name="RotVelocity">
-					<X>0</X>
-					<Y>0</Y>
-					<Z>0</Z>
-				</Vector3>
-				<float name="TopParamA">-0.5</float>
-				<float name="TopParamB">0.5</float>
-				<token name="TopSurface">0</token>
-				<token name="TopSurfaceInput">0</token>
-				<float name="Transparency">0</float>
-				<Vector3 name="Velocity">
-					<X>0</X>
-					<Y>0</Y>
-					<Z>0</Z>
-				</Vector3>
-				<Vector3 name="size">
-					<X>155.228333</X>
-					<Y>76.0718613</Y>
-					<Z>68</Z>
-				</Vector3>
-				<BinaryString name="AttributesSerialize"></BinaryString>
-				<SecurityCapabilities name="Capabilities">0</SecurityCapabilities>
-				<bool name="DefinesCapabilities">false</bool>
-				<string name="Name">hubprop_aether_nautilus__funnel_1</string>
-				<int64 name="SourceAssetId">-1</int64>
-				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
-			</Properties>
-		</Item>
-		<Item class="MeshPart" referent="RBXACE17395ACF841BCB75970900E28201F">
+		<Item class="MeshPart" referent="RBXA314AC6DEFE94ACB9145059D79404445">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -364,7 +229,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>-0.335792601</Z>
 				</Vector3>
 				<float name="UnscaledVolume">209466.109</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -375,9 +240,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>134.09642</X>
-					<Y>192.233932</Y>
-					<Z>-53.4008331</Z>
+					<X>129.059875</X>
+					<Y>192.213943</Y>
+					<Z>104.828148</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -459,7 +324,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXBEC6C83385524380BE21B850042823D4">
+		<Item class="MeshPart" referent="RBX7DD5C7A98CA242CDBAAA2EBEDBA28C31">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -499,7 +364,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>-11.3022251</Z>
 				</Vector3>
 				<float name="UnscaledVolume">2644352.75</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -510,9 +375,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>129.57309</X>
-					<Y>203.752502</Y>
-					<Z>-53.4008331</Z>
+					<X>124.536537</X>
+					<Y>203.732559</Y>
+					<Z>104.828148</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -594,7 +459,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXE52F7E1C6C49494FA7FDD0E7659E234D">
+		<Item class="MeshPart" referent="RBXDE851F786BFB44A2879019E3FCD1FB70">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -634,7 +499,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>4178.18213</Z>
 				</Vector3>
 				<float name="UnscaledVolume">38527.4258</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -645,9 +510,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>254.328171</X>
-					<Y>176.544342</Y>
-					<Z>-53.4008331</Z>
+					<X>249.291626</X>
+					<Y>176.524414</Y>
+					<Z>104.828148</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -729,7 +594,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXF59B3681282E4ADDB1A1DF6DA255CAAB">
+		<Item class="MeshPart" referent="RBX98531DE8149E4E40BA7D5CCF071E53B5">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -769,7 +634,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>-4409.03076</Z>
 				</Vector3>
 				<float name="UnscaledVolume">26080.377</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -780,9 +645,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>331.66333</X>
-					<Y>148.643478</Y>
-					<Z>-53.4008331</Z>
+					<X>326.62677</X>
+					<Y>148.623566</Y>
+					<Z>104.828148</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -864,7 +729,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXE1A08A65B4254872BDD69406962AA647">
+		<Item class="MeshPart" referent="RBXF5192831D6EF4393AC68F471087EEC42">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -904,7 +769,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>3458.19092</Z>
 				</Vector3>
 				<float name="UnscaledVolume">14430.2832</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -915,9 +780,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>401.670898</X>
-					<Y>115.913185</Y>
-					<Z>-53.4008331</Z>
+					<X>396.634338</X>
+					<Y>115.893257</Y>
+					<Z>104.828148</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -999,7 +864,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXBD9FA6AA34454FBC9471B27E60ADF23E">
+		<Item class="MeshPart" referent="RBXE6FDA229296F4A09AE69CDA91FD4C587">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1039,7 +904,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>447.790161</Z>
 				</Vector3>
 				<float name="UnscaledVolume">5304.27051</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -1050,9 +915,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>466.221069</X>
-					<Y>79.7594299</Y>
-					<Z>-53.4008331</Z>
+					<X>461.184509</X>
+					<Y>79.7394714</Y>
+					<Z>104.828148</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -1134,7 +999,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX8BB2B24F3F60403D85B9A3E3411C1F61">
+		<Item class="MeshPart" referent="RBX0CCCEFB0133B45CD8D0E192717BB8BC1">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1174,7 +1039,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>-2661101.25</Z>
 				</Vector3>
 				<float name="UnscaledVolume">40145.543</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -1185,9 +1050,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>253.675858</X>
-					<Y>173.003799</Y>
-					<Z>-94.0217438</Z>
+					<X>248.639313</X>
+					<Y>172.983887</Y>
+					<Z>64.2072296</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -1269,7 +1134,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX81120E06426C4B3980D0D3AC249670BB">
+		<Item class="MeshPart" referent="RBX221EC2BC181342D99E2E2975C4C4A5B9">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1309,7 +1174,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>-1800253.88</Z>
 				</Vector3>
 				<float name="UnscaledVolume">27273.7031</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -1320,9 +1185,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>330.671997</X>
-					<Y>132.096527</Y>
-					<Z>-107.87468</Z>
+					<X>325.635437</X>
+					<Y>132.07663</Y>
+					<Z>50.3543015</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -1404,7 +1269,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX158A9BC7747F4C42BE5140B760FEE4A2">
+		<Item class="MeshPart" referent="RBXA737CEF26E6A4D2BAC7E88C53C7676BF">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1444,7 +1309,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>-344421.719</Z>
 				</Vector3>
 				<float name="UnscaledVolume">7277.99561</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -1455,9 +1320,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>400.182404</X>
-					<Y>89.1274719</Y>
-					<Z>-117.902771</Z>
+					<X>395.145844</X>
+					<Y>89.1075211</Y>
+					<Z>40.32621</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -1539,7 +1404,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX5088A06DA3D840348A4356C656FE9005">
+		<Item class="MeshPart" referent="RBX666E2425FB3A40B9994BF9B3F71C1460">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1579,7 +1444,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>2668142.5</Z>
 				</Vector3>
 				<float name="UnscaledVolume">40145.0156</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -1590,9 +1455,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>253.60173</X>
-					<Y>173.003799</Y>
-					<Z>-12.7799187</Z>
+					<X>248.565186</X>
+					<Y>172.983887</Y>
+					<Z>145.449066</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -1674,7 +1539,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXBF2D9EEE05F94B1281C2123DF879C241">
+		<Item class="MeshPart" referent="RBXD1AA340EF22F4ACF814D327612F14631">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1714,7 +1579,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>1792814.12</Z>
 				</Vector3>
 				<float name="UnscaledVolume">27273.0859</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -1725,9 +1590,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>330.499817</X>
-					<Y>132.096527</Y>
-					<Z>1.07301331</Z>
+					<X>325.463257</X>
+					<Y>132.07663</Y>
+					<Z>159.302002</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -1809,7 +1674,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX49C7943FB1C24DB1AB07091F1BCD6AFA">
+		<Item class="MeshPart" referent="RBX4AE64C7D060D4148B2690A897C83139D">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1849,7 +1714,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>348184.812</Z>
 				</Vector3>
 				<float name="UnscaledVolume">7277.68848</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -1860,9 +1725,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>400.182404</X>
-					<Y>89.3152771</Y>
-					<Z>11.1011047</Z>
+					<X>395.145844</X>
+					<Y>89.2953262</Y>
+					<Z>169.330078</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -1944,7 +1809,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX8E123FA55FEA4A0F8261E69BE8A604B8">
+		<Item class="MeshPart" referent="RBX2DB402077D3E4D2D80B6CA9F73ADFFFD">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -1984,7 +1849,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>46027.4922</Z>
 				</Vector3>
 				<float name="UnscaledVolume">495073.094</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -1995,9 +1860,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-24.1431408</X>
-					<Y>258.322693</Y>
-					<Z>-53.4008331</Z>
+					<X>-29.1796951</X>
+					<Y>258.302795</Y>
+					<Z>104.828148</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2079,7 +1944,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX51872B84A197478282613064DAFF19D2">
+		<Item class="MeshPart" referent="RBX82F6DF1AF09E40BBB786ED62BB4EF58D">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -2119,7 +1984,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>-538.434509</Z>
 				</Vector3>
 				<float name="UnscaledVolume">305837.969</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -2130,9 +1995,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>18.5860538</X>
-					<Y>242.907043</Y>
-					<Z>-53.4998627</Z>
+					<X>13.5494995</X>
+					<Y>242.8871</Y>
+					<Z>104.729118</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2214,7 +2079,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX78F05AF3711D442087AA791C13E617D3">
+		<Item class="MeshPart" referent="RBX4E16315717EF462492F909E9CA701702">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -2254,7 +2119,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>16301.7656</Z>
 				</Vector3>
 				<float name="UnscaledVolume">189012.297</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -2265,9 +2130,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>433.562988</X>
-					<Y>237.415222</Y>
-					<Z>-53.4998627</Z>
+					<X>428.526428</X>
+					<Y>237.395264</Y>
+					<Z>104.729118</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2349,7 +2214,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXA8371FEE060E4FEA95DFCBC2EFB3FC72">
+		<Item class="MeshPart" referent="RBX163AEE1B0D0D4A199B9554A829C20C27">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -2389,7 +2254,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>-14136.6533</Z>
 				</Vector3>
 				<float name="UnscaledVolume">153469.891</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -2400,9 +2265,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>479.562988</X>
-					<Y>236.637756</Y>
-					<Z>-53.4998627</Z>
+					<X>474.526428</X>
+					<Y>236.617798</Y>
+					<Z>104.729118</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2484,7 +2349,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX658B185B557242BCB20532F19BF1A81B">
+		<Item class="MeshPart" referent="RBX45C61FB3628047A7BA687D19B5B217CA">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -2524,7 +2389,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>2877.45752</Z>
 				</Vector3>
 				<float name="UnscaledVolume">123103.297</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -2535,9 +2400,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>525.562927</X>
-					<Y>233.519379</Y>
-					<Z>-53.4998627</Z>
+					<X>520.526367</X>
+					<Y>233.499451</Y>
+					<Z>104.729118</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2619,7 +2484,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX5D2495B05C0B452683A75E2E38611340">
+		<Item class="MeshPart" referent="RBXD5B7569AEBAD425A836FE5BB9AB7DD86">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -2659,7 +2524,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>11700.5957</Z>
 				</Vector3>
 				<float name="UnscaledVolume">83600.9531</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -2670,9 +2535,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>571.562927</X>
-					<Y>234.628815</Y>
-					<Z>-53.4998627</Z>
+					<X>566.526367</X>
+					<Y>234.608856</Y>
+					<Z>104.729118</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2754,7 +2619,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX2B84671DF0824CA5BAD515293D5CDCEB">
+		<Item class="MeshPart" referent="RBX5F3ECCF2F5544250818C08B450F56AC7">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -2794,7 +2659,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>-8114.06152</Z>
 				</Vector3>
 				<float name="UnscaledVolume">53535.5391</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -2805,9 +2670,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>617.562927</X>
-					<Y>233.711777</Y>
-					<Z>-53.4998627</Z>
+					<X>612.526367</X>
+					<Y>233.691849</Y>
+					<Z>104.729118</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -2889,7 +2754,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXDCBA8113A017489C817C5A65F15A43EB">
+		<Item class="MeshPart" referent="RBXA9682992CE7E4985BB413EFF1788532B">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -2929,7 +2794,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>-6491.08105</Z>
 				</Vector3>
 				<float name="UnscaledVolume">47394.5234</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -2940,9 +2805,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>693.200012</X>
-					<Y>247.777237</Y>
-					<Z>-53.4998627</Z>
+					<X>688.163452</X>
+					<Y>247.757324</Y>
+					<Z>104.729118</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3024,7 +2889,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXDE82E4E473F2486FBF962C5F2CDE7BFF">
+		<Item class="MeshPart" referent="RBXBE0E918F7C3B42D8B95BDA5148602AE8">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -3064,7 +2929,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>-30880.1328</Z>
 				</Vector3>
 				<float name="UnscaledVolume">346047.219</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -3075,9 +2940,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>64.8672256</X>
-					<Y>243.213776</Y>
-					<Z>-53.4998627</Z>
+					<X>59.8306732</X>
+					<Y>243.193832</Y>
+					<Z>104.729118</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3159,7 +3024,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXD486D0E8ED70485DBD1BFC2BFFB47188">
+		<Item class="MeshPart" referent="RBX7447B9305A0342BB9BFF8A78F17FD792">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -3199,7 +3064,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>81460.7891</Z>
 				</Vector3>
 				<float name="UnscaledVolume">370005.156</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -3210,9 +3075,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>111.148392</X>
-					<Y>242.409271</Y>
-					<Z>-53.4998627</Z>
+					<X>106.111839</X>
+					<Y>242.389343</Y>
+					<Z>104.729118</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3294,7 +3159,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX6CC658DE78344A6486EDE58715799928">
+		<Item class="MeshPart" referent="RBXA7710A3F9D5A4E70951DF4D2A9A23AF3">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -3334,7 +3199,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>-134701.359</Z>
 				</Vector3>
 				<float name="UnscaledVolume">377262.5</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -3345,9 +3210,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>157.429581</X>
-					<Y>242.246033</Y>
-					<Z>-53.4998627</Z>
+					<X>152.393036</X>
+					<Y>242.226105</Y>
+					<Z>104.729118</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3429,7 +3294,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXB3E7862EAD074E4AB51D040E602C4470">
+		<Item class="MeshPart" referent="RBX96127F71579340C083FCC494B1DE0769">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -3469,7 +3334,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>15363.5234</Z>
 				</Vector3>
 				<float name="UnscaledVolume">352940.5</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -3480,9 +3345,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>203.710754</X>
-					<Y>241.42337</Y>
-					<Z>-53.4998627</Z>
+					<X>198.674194</X>
+					<Y>241.403442</Y>
+					<Z>104.729118</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3564,7 +3429,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX2DD88734EF4E4146AC1340F17B078800">
+		<Item class="MeshPart" referent="RBXD12E8DE73CF347F487F2A4E0AA15CD60">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -3604,7 +3469,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>-7729.65869</Z>
 				</Vector3>
 				<float name="UnscaledVolume">330928.062</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -3615,9 +3480,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>249.991928</X>
-					<Y>239.530472</Y>
-					<Z>-53.4998627</Z>
+					<X>244.955383</X>
+					<Y>239.510544</Y>
+					<Z>104.729118</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3699,7 +3564,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX9B29B113D38B47D3BA608A3B8B03D5AA">
+		<Item class="MeshPart" referent="RBXC275BE04C9BF4B40A43A031A891C81E2">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -3739,7 +3604,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>-52365.3711</Z>
 				</Vector3>
 				<float name="UnscaledVolume">300699.844</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -3750,9 +3615,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>296.273132</X>
-					<Y>239.778061</Y>
-					<Z>-53.1031075</Z>
+					<X>291.236572</X>
+					<Y>239.758148</Y>
+					<Z>105.12587</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3834,7 +3699,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX453AD57AEF4C49EDB13110092E4D8418">
+		<Item class="MeshPart" referent="RBX42EFF60355EC48F0A563344E43368D7A">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -3874,7 +3739,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>76392.8672</Z>
 				</Vector3>
 				<float name="UnscaledVolume">270334.375</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -3885,9 +3750,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>342.554291</X>
-					<Y>238.970154</Y>
-					<Z>-53.242012</Z>
+					<X>337.517731</X>
+					<Y>238.950211</Y>
+					<Z>104.986969</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -3969,7 +3834,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXB2C9256C9A6B4FF594F14F86DEE613C4">
+		<Item class="MeshPart" referent="RBXF4E99947623E4CB89D3FE208F544E39C">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -4009,7 +3874,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>6400.16357</Z>
 				</Vector3>
 				<float name="UnscaledVolume">232794.141</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -4020,9 +3885,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>388.164124</X>
-					<Y>236.362335</Y>
-					<Z>-53.4998627</Z>
+					<X>383.127563</X>
+					<Y>236.342392</Y>
+					<Z>104.729118</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -4104,7 +3969,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX6C703073165A44A383613698954F493D">
+		<Item class="MeshPart" referent="RBX11E1A44E64D94FE1888621004D33A2BA">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -4144,7 +4009,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>-1671734.62</Z>
 				</Vector3>
 				<float name="UnscaledVolume">33154.3633</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -4155,9 +4020,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>135.28067</X>
-					<Y>222.922241</Y>
-					<Z>-126.058586</Z>
+					<X>130.24411</X>
+					<Y>222.902313</Y>
+					<Z>32.1703949</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -4239,7 +4104,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX19797F094B6F4ACCAF0403F1C5B0B9E2">
+		<Item class="MeshPart" referent="RBX9D0DB61EB914495CAEC3BE83A2C1906F">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -4279,7 +4144,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>1671960.88</Z>
 				</Vector3>
 				<float name="UnscaledVolume">33157.7852</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -4290,9 +4155,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>135.28067</X>
-					<Y>222.922241</Y>
-					<Z>19.0588608</Z>
+					<X>130.24411</X>
+					<Y>222.902313</Y>
+					<Z>177.287842</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -4374,7 +4239,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX92FE92A687F642EA830B42616B300A2C">
+		<Item class="MeshPart" referent="RBXE724D0767B114E319541F1466D7E2032">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -4414,7 +4279,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>-1943382.75</Z>
 				</Vector3>
 				<float name="UnscaledVolume">37837.9648</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -4425,9 +4290,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>460.117554</X>
-					<Y>225.052032</Y>
-					<Z>-122.114609</Z>
+					<X>455.080994</X>
+					<Y>225.032104</Y>
+					<Z>36.1143723</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -4509,7 +4374,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBX4F76D35BB5AE4DB7938C6641D8C9E7DA">
+		<Item class="MeshPart" referent="RBXCE2E4D8962154B1EBCBCCC1AF92F8D7F">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -4549,7 +4414,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>1943658.12</Z>
 				</Vector3>
 				<float name="UnscaledVolume">37841.6289</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -4560,9 +4425,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>460.117554</X>
-					<Y>225.052032</Y>
-					<Z>15.1148834</Z>
+					<X>455.080994</X>
+					<Y>225.032104</Y>
+					<Z>173.343872</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -4644,7 +4509,7 @@ OWE5MjNhYmJk]]></BinaryString>
 				<SharedString name="Tags">yuZpQdnvvUBOTYh1jqZ2cA==</SharedString>
 			</Properties>
 		</Item>
-		<Item class="MeshPart" referent="RBXD144CAE7A41D40B89B380283954A4700">
+		<Item class="MeshPart" referent="RBX3EEE8677F4934E79BC326DD13972CE94">
 			<Properties>
 				<bool name="DoubleSided">false</bool>
 				<bool name="HasJointOffset">false</bool>
@@ -4684,7 +4549,7 @@ OWE5MjNhYmJk]]></BinaryString>
 					<Z>0.442946523</Z>
 				</Vector3>
 				<float name="UnscaledVolume">46780.6953</float>
-				<bool name="Anchored">false</bool>
+				<bool name="Anchored">true</bool>
 				<bool name="AudioCanCollide">true</bool>
 				<float name="BackParamA">-0.5</float>
 				<float name="BackParamB">0.5</float>
@@ -4695,9 +4560,9 @@ OWE5MjNhYmJk]]></BinaryString>
 				<token name="BottomSurface">0</token>
 				<token name="BottomSurfaceInput">0</token>
 				<CoordinateFrame name="CFrame">
-					<X>-63.2370453</X>
-					<Y>202.011292</Y>
-					<Z>-53.4998627</Z>
+					<X>-68.2735977</X>
+					<Y>201.991333</Y>
+					<Z>104.729118</Z>
 					<R00>1</R00>
 					<R01>0</R01>
 					<R02>0</R02>
@@ -6365,121 +6230,6 @@ WAG8X3mxJWmXlIVXX0VWa/p+qL7lPWcWU1LPmMGIcuH5mivucY0MM3TFm74JoUWj3FslW6Wr
 d0HrB/ZBKCTKP2z12P5HUn90sf/0M7PgzcVoaSJjgPVsYjPFSM1DKkv2dV4LTiKc28O4xCnp
 VWAInl3n6OIezw149Lc/7uGl8wqU22o/B7gGO3wGvUTF7fIVonm6SdFF89/m5baG+4S76Xuz
 aFb+z2O+5nzb26+VpXs88nTR/zqQv2KYIVM1f8Hn/f0=</SharedString>
-		<SharedString md5="XIVM3GAEe/ic1vWA326D0Q==">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</SharedString>
 		<SharedString md5="YPHlCtJGkX6DKgcPWp8Khw==">Q1NHUEhTCAAAAAIAKLUv/WAMLf3EAGoJfUA3EBBqzwHAd039W6IFDtdDurxwUtqlfCKgKCvo
 e9jKNeaDcWviVShtZJJyEN32syBz/NC1+JMBdw0E8gP6A4cZAnlsidZPVeZyP0L5GaxKfPU0
 KUoiZ3QYieVG24Ve0PkgebEJge1nLbjkn5BTH8uOj8ac+XcULDVYKfBlrrbEWnV+PVr2Y5V3
