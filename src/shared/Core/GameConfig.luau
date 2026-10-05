@@ -686,9 +686,14 @@ local GameConfig = {
 		BreathAmount = 0.06, -- width and thickness only; the tip stays on the deck
 		-- Fragments drift OUTWARD from their home and back, never inward: the
 		-- lane in front of the tear must stay empty (walk-through path).
-		FragmentDriftOut = 0.9,
-		FragmentBob = 0.7,
-		FragmentSpeed = 0.55, -- rad/s
+		-- Big enough to READ as floating from across the arena: the first values
+		-- (0.9 / 0.7 / 0.55) were under a stud and looked static (owner, 2026-10-05).
+		FragmentDriftOut = 2.6,
+		FragmentBob = 1.7,
+		FragmentSpeed = 0.85, -- rad/s
+		-- A gentle tumble of each rock about its own centre (radians, +/-), so
+		-- the fragments turn in the light as well as drifting.
+		FragmentTumble = 0.4,
 		HaloTransparency = 0.72,
 		MidTransparency = 0.45,
 		CoreTransparency = 0.12,

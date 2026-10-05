@@ -93,6 +93,15 @@ function RiftCore.fragmentOffset(t: number, index: number, side: number, cfg: an
 	return across, up
 end
 
+--- A fragment's tumble about its own centre (radians about X, Y, Z): a slow
+--- wobble inside +/- cfg.FragmentTumble, different per fragment. Rock and gem
+--- turn TOGETHER about the rock's centre, so the crystal stays set in it.
+function RiftCore.fragmentTumble(t: number, index: number, cfg: any): (number, number, number)
+	local a = cfg.FragmentSpeed * t * 0.6 + index * 2.3
+	local k = cfg.FragmentTumble
+	return k * math.sin(a), k * math.sin(a * 1.3 + 1.1), k * 0.6 * math.sin(a * 0.8 + 2.4)
+end
+
 --- Where a fragment is while flying in, relative to home: (across, up).
 --- Starts far out to its own side and above, arrives exactly at (0, 0).
 function RiftCore.gatherOffset(gather: number, side: number, cfg: any): (number, number)

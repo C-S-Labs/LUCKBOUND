@@ -18,6 +18,7 @@
 -- fragments or lips). Nothing here may assume the prefab is complete.
 
 local CollectionService = game:GetService("CollectionService")
+local ContentProvider = game:GetService("ContentProvider")
 local RunService = game:GetService("RunService")
 local Workspace = game:GetService("Workspace")
 
@@ -31,6 +32,8 @@ local RiftController = {}
 
 type PartInfo = {
 	Part: BasePart,
+	-- A gem's pose relative to the rock it is set in, so the pair turn as one.
+	RockRel: CFrame?,
 	Home: CFrame,
 	Size: Vector3,
 	Rest: number, -- resting transparency, from RiftRig
@@ -68,6 +71,7 @@ type Tracked = {
 
 local tracked: { [Model]: Tracked } = {}
 local count = 0
+local textureChecked = false
 
 local function indexOf(name: string): number
 	return tonumber(string.match(name, "(%d+)$")) or 0
@@ -78,6 +82,7 @@ local function info(part: BasePart, centre: CFrame): PartInfo
 	local local_ = centre:PointToObjectSpace(part.Position)
 	return {
 		Part = part,
+		RockRel = nil,
 		Home = part.CFrame,
 		Size = part.Size,
 		Rest = if type(rest) == "number" then rest else 0,
@@ -162,6 +167,48 @@ local function track(model: Instance)
 		end
 	end
 
+	-- Each gem is set in the rock with the same number; remember where, so the
+	-- pair turn as one object when the rock tumbles.
+	for _, gem in t.Gems do
+		for _, rock in t.Rocks do
+			if rock.Index == gem.Index then
+				gem.RockRel = rock.Home:Inverse() * gem.Home
+				break
+			end
+		end
+	end
+
+	-- One line per rift, so a missing piece is obvious in the Output window.
+	print(
+		string.format(
+			"[RiftController] tracking %s (%s): %d shells, %d lips, %d rocks, %d gems, %d ribbons, light %s",
+			model.Name,
+			kind,
+			#t.Shells,
+			#t.Edges,
+			#t.Rocks,
+			#t.Gems,
+			#t.Ribbons,
+			tostring(t.Light ~= nil)
+		)
+	)
+	if #t.Ribbons > 0 and GameConfig.Rift.FlowTexture ~= "" and not textureChecked then
+		textureChecked = true
+		-- A Decal id (or a moderated/private image) loads as nothing. Say so.
+		task.spawn(function()
+			local beam = t.Ribbons[1].Beam
+			ContentProvider:PreloadAsync({ beam }, function(contentId, status)
+				if status ~= Enum.AssetFetchStatus.Success then
+					warn(
+						`[RiftController] flow texture {contentId} did not load ({status.Name}). `
+							.. "A Beam needs an IMAGE asset id, not a Decal id, and the image must be "
+							.. "public or owned by this experience's group."
+					)
+				end
+			end)
+		end)
+	end
+
 	tracked[model] = t
 	model.AncestryChanged:Connect(function(_, parent)
 		if parent == nil then
@@ -240,17 +287,28 @@ local function animate(t: Tracked, now: number)
 			RiftCore.shellTransparency(math.clamp(p.Rest + shimmer, 0, 1), m.Alpha)
 	end
 
-	-- Fragments: fly in from their own side, then drift outward and back.
+	-- Fragments: fly in from their own side, then drift outward and back, and
+	-- tumble gently. A gem is set in its rock, so it takes the ROCK's pose.
+	local rockPose: { [number]: CFrame } = {}
 	for _, p in t.Rocks do
 		local gx, gy = RiftCore.gatherOffset(m.Gather, p.Side, cfg)
 		local dx, dy = RiftCore.fragmentOffset(loop, p.Index, p.Side, cfg)
-		p.Part.CFrame = shifted(t, p, gx + dx * m.Gather, gy + dy * m.Gather)
+		local rx, ry, rz = RiftCore.fragmentTumble(loop, p.Index, cfg)
+		local pose = shifted(t, p, gx + dx * m.Gather, gy + dy * m.Gather)
+			* CFrame.Angles(rx * m.Gather, ry * m.Gather, rz * m.Gather)
+		rockPose[p.Index] = pose
+		p.Part.CFrame = pose
 		p.Part.Transparency = RiftCore.shellTransparency(0, m.Gather)
 	end
 	for _, p in t.Gems do
-		local gx, gy = RiftCore.gatherOffset(m.Gather, p.Side, cfg)
-		local dx, dy = RiftCore.fragmentOffset(loop, p.Index, p.Side, cfg)
-		p.Part.CFrame = shifted(t, p, gx + dx * m.Gather, gy + dy * m.Gather)
+		local pose = rockPose[p.Index]
+		if pose and p.RockRel then
+			p.Part.CFrame = pose * p.RockRel
+		else
+			local gx, gy = RiftCore.gatherOffset(m.Gather, p.Side, cfg)
+			local dx, dy = RiftCore.fragmentOffset(loop, p.Index, p.Side, cfg)
+			p.Part.CFrame = shifted(t, p, gx + dx * m.Gather, gy + dy * m.Gather)
+		end
 		p.Part.Transparency = RiftCore.shellTransparency(p.Rest, m.Gather)
 	end
 

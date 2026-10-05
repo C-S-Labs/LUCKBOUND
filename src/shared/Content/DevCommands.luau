@@ -200,6 +200,12 @@ local COMMANDS: { Command } = {
 		Summary = "Defeat this map's boss stand-in once; open its exit.",
 	},
 	{
+		Name = "riftexit",
+		Category = "LOOT",
+		Side = "SERVER",
+		Summary = "Stand in front of this map's exit rift (on the boss chunk).",
+	},
+	{
 		Name = "givekey",
 		Category = "LOOT",
 		Side = "SERVER",

@@ -546,6 +546,9 @@ end
 local function buildExit(stage: Model, worldId: string): (Model?, ProximityPrompt?)
 	local centre = portalSeat(stage, worldId, "Exit", nil)
 	if not centre then
+		warn(
+			`[ExpeditionSystem] {worldId}: no BOSS chunk to seat the exit rift on; no exit will open`
+		)
 		return nil, nil
 	end
 	local seat = deckAt(stage, centre.X, centre.Z, centre.Y)
@@ -569,9 +572,11 @@ local function openExit(group: Group, prompt: ProximityPrompt?)
 	group.BossCleared = true
 	local rig = group.Exit
 	if not rig then
+		warn(`[ExpeditionSystem] {group.WorldId}: the boss fell but this map has no exit rift`)
 		return
 	end
 	RiftRig.open(rig)
+	print(`[ExpeditionSystem] {group.WorldId}: boss cleared, exit rift materialising`)
 	task.delay(GameConfig.Rift.MaterialiseSeconds, function()
 		if prompt and prompt.Parent then
 			prompt.Enabled = true
@@ -959,6 +964,25 @@ function ExpeditionSystem.setTestDestination(player: Player, worldId: string, en
 	testDestinations[player.UserId] = if enabled and profile
 		then { WorldId = worldId, RollNumber = profile.TotalRolls }
 		else nil
+end
+
+--- DEVELOPER TESTING ONLY (/riftexit). Stands the player just in front of
+--- their map's exit rift, which lives on the boss chunk, usually far from the
+--- entrance: with streaming on, you cannot see it open from where you are.
+function ExpeditionSystem.gotoExit(player: Player): (boolean, string)
+	local state = active[player.UserId]
+	local rig = state and state.Group.Exit
+	local scar = rig and rig.PrimaryPart
+	if not (state and rig and scar) then
+		return false, "this map has no exit rift (are you on an expedition?)"
+	end
+	-- Along the rift's own walk-through lane, a little above the deck.
+	local spot = scar.CFrame:PointToWorldSpace(Vector3.new(0, 6, 14))
+	if not moveCharacter(player, spot) then
+		return false, "no character to move"
+	end
+	local open = rig:GetAttribute("State")
+	return true, `at the exit rift ({tostring(open)})`
 end
 
 function ExpeditionSystem.isActive(player: Player): boolean

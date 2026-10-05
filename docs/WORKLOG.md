@@ -142,6 +142,12 @@ Keep the source/export assets and unrelated owner's Blender file.
   `LightningRigs` (and its generator `ws_lance.py`) now use `rbxassetid://99323739536569` for `lightning_strip.png`, since the
   old id was personal-account-owned and the partner could not see it.
 
+- 2026-10-05 Studio report: exit did not appear on `/boss`, no rift texture, rocks looked static. Findings: the exit sits on
+  the BOSS chunk, far from the entrance, so with streaming it cannot be seen opening from where `/boss` is run; the rock
+  motion was under a stud (now 2.6 / 1.7, plus a gentle tumble, gem rides its rock); the texture id may be a Decal id
+  (RiftController now preloads it and warns). Added `/riftexit` to stand in front of the exit rift, a tracking log line
+  per rift, and server warnings when no exit is built or opened.
+
 ### Stopped at
 Rift code written and unit-tested for the pure parts; **nothing has run in Studio** (no prefab imported yet, so the
 blockout rift is what would draw). Hub gate still present.

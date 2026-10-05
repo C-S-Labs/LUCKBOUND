@@ -441,6 +441,11 @@ COMMANDS.boss = function(player: Player, _args: { string }): (boolean, string)
 	return LootSystem.triggerBoss(player)
 end
 
+--- /riftexit -- stand in front of this map's exit rift (it is on the boss chunk).
+COMMANDS.riftexit = function(player: Player, _args: { string }): (boolean, string)
+	return ExpeditionSystem.gotoExit(player)
+end
+
 --- /givekey [KEY_ID] -- give yourself a vault key (the Sky Citadel one by default).
 COMMANDS.givekey = function(player: Player, args: { string }): (boolean, string)
 	local defs = LootSystem.keyDefinitions()

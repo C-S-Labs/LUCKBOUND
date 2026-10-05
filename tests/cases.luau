@@ -7269,6 +7269,25 @@ do
 		math.abs(select(1, RiftCore.gatherOffset(0, 1, cfg))) > cfg.GatherDistance * 0.5
 	)
 
+	local tumbleBounded = true
+	for index = 1, 18 do
+		for i = 0, 200 do
+			local a, b, c = RiftCore.fragmentTumble(i * 0.2, index, cfg)
+			if
+				math.abs(a) > cfg.FragmentTumble + 1e-9
+				or math.abs(b) > cfg.FragmentTumble + 1e-9
+				or math.abs(c) > cfg.FragmentTumble + 1e-9
+			then
+				tumbleBounded = false
+			end
+		end
+	end
+	check("a fragment's tumble stays within its configured angle", tumbleBounded)
+	check(
+		"fragment motion is large enough to read as floating",
+		cfg.FragmentDriftOut >= 2 and cfg.FragmentBob >= 1
+	)
+
 	check("the light peaks at the bloom", RiftCore.lightBrightness(1, cfg) == cfg.BloomBrightness)
 	check("the light idles at rest", RiftCore.lightBrightness(0, cfg) == cfg.IdleBrightness)
 	check("a shell rests at its transparency once open", RiftCore.shellTransparency(0.4, 1) == 0.4)
@@ -8765,7 +8784,7 @@ do
 	check(
 		"dev registry: the SERVER commands are exactly DebugSystem's",
 		table.concat(server, ",")
-			== "atmosphere,boss,bossphase,clearboss,endevents,enter,event,givekey,god,heal,keychance,keys,leave,ledger,respawn,roll,showboss,takekey,vaultchance"
+			== "atmosphere,boss,bossphase,clearboss,endevents,enter,event,givekey,god,heal,keychance,keys,leave,ledger,respawn,riftexit,roll,showboss,takekey,vaultchance"
 	)
 
 	-- a broken registry is caught

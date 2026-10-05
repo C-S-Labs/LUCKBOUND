@@ -466,7 +466,8 @@ function LootSystem.triggerBoss(player: Player): (boolean, string)
 	for _, map in maps do
 		if map.Stage.Parent and map.Members[player.UserId] then
 			if map.Boss() then
-				return true, `boss stand-in fired on {map.WorldId}`
+				return true,
+					`boss stand-in fired on {map.WorldId}; the exit rift opens on the boss chunk (use /riftexit to go there)`
 			end
 			return false, `boss already cleared on {map.WorldId}`
 		end
