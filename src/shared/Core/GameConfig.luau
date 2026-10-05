@@ -1241,8 +1241,8 @@ local GameConfig = {
 		-- quick backstep when no direction is held. The movement half only:
 		-- the invulnerable window is DECLARED here and read by the combat
 		-- layer when it opens (RESERVED, docs/RESERVED.md).
-		-- Slower and further after the owner's walk with the first clips
-		-- (2026-09-28): a short, quick roll read as unrefined.
+		-- Faster execution for the 2026-10-05 movement refinement, retaining
+		-- the 18-stud distance, recovery and declared invulnerable window.
 		RollDurationSeconds = 0.52,
 		-- How far a roll travels, in studs; its speed follows the roll's shape
 		-- (LocomotionCore.rollSpeedShape) and is worked out from this.

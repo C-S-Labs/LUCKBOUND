@@ -36,6 +36,36 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 241 — 2026-10-05 — Player movement refinement (orchestrated)
+**Merged:** none; local `agent/player-movement-refinement`   **Tests:** 1,136 passing   **Base:** e9ea329
+
+### Done
+- Audited physical travel and gait independently. Free travel was overwritten with smoothed body facing, causing arcs; generated ground-contact pose solving produced roughly 1.04 studs of forward pelvis excursion, accelerated further when sprint reused RunForward.
+- Kept ControllerManager and LocomotionCore. Free input now drives travel directly while visual facing still turns smoothly; zero free-ground acceleration/deceleration settings retain original profile response for lock-on, weapon locks and hard landings.
+- Roll remains nominally 18 studs, execution 0.65→0.52s (recovery 0.12s and iframe window unchanged). Air dash is 70 studs/s for 0.32s (22.4 nominal studs), then hands horizontal velocity to current ordinary air intent once; subsequent ordinary air momentum behavior is unchanged.
+- Refined generated directional Run poses with the existing ground-contact solver and added a forward Sprint clip with a longer stride, stronger arms and measured ground-speed playback. Directional weights remain conserved through sprint transitions.
+- Two isolated implementation worktrees: movement worker completed the controller; animation worker completed animator/generator/gait assets. Lead owns tuning, review, Git, tests and docs. Independent review caught a pose replacement error and excess diagonal sprint weight before acceptance. Initial single-worker attempt was interrupted without edits; owner explicitly authorized this smaller retry.
+- Added four targeted tuning checks and TESTING.md Test K2. Owning movement/animation docs and generated index updated. Final checks: 1,136/1,136 units; syntax for 144 tracked Luau files; canonical StyLua, index and forbidden-name checks; Rojo build. Selene: zero errors/parse errors, 20 existing warnings (including the unchanged animator empty-if). Five generated gait assets match source and parse as XML; all15 non-gait outputs are unchanged. No push, PR, main merge or publish.
+- Local commits: shared tuning `c3f6be7`; movement `86bc9c5` integrated by `7410fcd`; animation `319a9ce` integrated by `8bf31f9`. Final documentation/test commit follows those merges.
+
+### Decisions made
+- Lock-on selection, camera, facing UX and public weapon hooks remain frozen. No corrective forces, second controller, IK system or locomotion speed reduction.
+- Preserve side-step stride coverage rather than maximizing bob reduction; the generated ground-speed measurements are estimates for the reference R15 rig, not proof of planted feet on every avatar.
+- Source roll/dash clips stay unchanged and are retimed by the existing runtime. Sprint preview remains Studio-only until the owner chooses group-owned uploads.
+
+### Stopped at
+Local task branch committed and ready for owner Studio review. Automated checks establish source/config integrity; perceived inertia, bob, foot planting, camera feel and lock-on compatibility still require Test K2. Remote CI has not run because pushing is outside this task.
+
+### Next
+1. Serve this task worktree and run Test K2 in a fresh Studio Play session, first free traversal, then shoulder/lock-on, then roll/air dash in both profiles.
+2. Report profile, input, camera mode and surface for any regression, with a short recording where useful; tune the same files after that feedback.
+3. After owner acceptance, seek the normal push/PR/integration authorization and required CI.
+
+### Leftovers
+No duplicate implementation versions or obsolete exported files were created. Refined Run assets replace their existing files and Sprint is additive. Keep task/worker worktrees and the external orchestration checkpoint for review/rollback; remove them only after the approved Git lifecycle and Studio/CI acceptance. Existing group upload work remains pending.
+
+---
+
 ## orchestrate-skill (branch agent/orchestrate-skill) - 2026-10-05 - provider-neutral orchestration
 **Merged:** none yet   **Tests:** none (no game code); `gen_index.py --check` run. No live orchestration run yet.
 

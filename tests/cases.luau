@@ -5644,6 +5644,32 @@ do
 			and EXP.DecelerationSeconds <= 0.15
 	)
 
+	check(
+		"free ground traversal has no intentional speed ramps",
+		HUB.FreeGroundAccelerationSeconds == 0
+			and HUB.FreeGroundDecelerationSeconds == 0
+			and EXP.FreeGroundAccelerationSeconds == 0
+			and EXP.FreeGroundDecelerationSeconds == 0
+	)
+	check(
+		"target lock-on retains positive profile response ramps",
+		HUB.AccelerationSeconds > 0
+			and HUB.DecelerationSeconds > 0
+			and EXP.AccelerationSeconds > 0
+			and EXP.DecelerationSeconds > 0
+	)
+	check(
+		"the aerial burst travels farther than the ground roll in both profiles",
+		HUB.AirDashSpeed * HUB.AirDashDurationSeconds > HUB.RollDistanceStuds
+			and EXP.AirDashSpeed * EXP.AirDashDurationSeconds > EXP.RollDistanceStuds
+	)
+	check(
+		"the roll invulnerable window remains inside its movement",
+		L.RollInvulnerableFrom >= 0
+			and L.RollInvulnerableFrom < L.RollInvulnerableTo
+			and L.RollInvulnerableTo <= L.RollDurationSeconds
+	)
+
 	-- === stamina ====================================================
 	check(
 		"a fresh state starts with full stamina",

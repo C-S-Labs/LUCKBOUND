@@ -46,7 +46,7 @@
 | `assets/source/portals/` | the expedition rifts (spec §7.8): `build_expedition_portals.py`, `.blend`, previews; FBX in `assets/export/portals/`; flow texture in `assets/textures/` | — |
 | `assets/rbxm/maps/` | prebuilt whole maps (`ES_ENVIRONMENT_FULL` = Ethereal Scape) | `ServerStorage.LuckboundMaps` |
 | `assets/rbxm/bosses/` | imported boss rigs for `/showboss` (`WingedSentinel`) | `ServerStorage.LuckboundBosses` |
-| `assets/rbxm/animations/` | generated player clips (KeyframeSequences, from `tools/gen_player_anims.py`); Studio plays them unuploaded | `ReplicatedStorage.LuckboundAnimations` |
+| `assets/rbxm/animations/` | 20 generated player clips including forward Sprint (KeyframeSequences, from `tools/gen_player_anims.py`); Studio plays them unuploaded | `ReplicatedStorage.LuckboundAnimations` |
 | `assets/source/` | Blender sources + headless Python generators (never loaded by the game) | â€” |
 | `assets/export/` | FBX outputs from the generators, which get uploaded or imported into Studio | â€” |
 | `assets/textures/` | source images uploaded as Roblox textures (`lightning_strip.png` â†’ id in `LightningRigs`) | â€” |
