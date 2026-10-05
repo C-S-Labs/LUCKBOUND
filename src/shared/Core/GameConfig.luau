@@ -1243,7 +1243,7 @@ local GameConfig = {
 		-- layer when it opens (RESERVED, docs/RESERVED.md).
 		-- Slower and further after the owner's walk with the first clips
 		-- (2026-09-28): a short, quick roll read as unrefined.
-		RollDurationSeconds = 0.65,
+		RollDurationSeconds = 0.52,
 		-- How far a roll travels, in studs; its speed follows the roll's shape
 		-- (LocomotionCore.rollSpeedShape) and is worked out from this.
 		RollDistanceStuds = 18, -- owner-tuned 2026-09-28
@@ -1267,8 +1267,8 @@ local GameConfig = {
 		-- Off the floor for less than this is not "in the air": a roll press
 		-- then waits for the feet instead of becoming an air dash.
 		AirDashMinAirSeconds = 0.12,
-		AirDashSpeed = 52, -- studs/s
-		AirDashDurationSeconds = 0.22, -- ~11.5 studs
+		AirDashSpeed = 70, -- studs/s
+		AirDashDurationSeconds = 0.32, -- 22.4 studs, farther than the 18-stud roll
 
 		-- === ROLL LOOK ===
 		-- A discrete burst of wind, not afterimages (owner, 2026-09-28): short
@@ -1316,6 +1316,10 @@ local GameConfig = {
 		MaxLockSeconds = 2.5,
 
 		-- === CONTROLLER ===
+		-- Ordinary free/shoulder traversal follows input without speed ramps.
+		-- Target lock-on, action recovery and weapon locks retain profile ramps.
+		FreeGroundAccelerationSeconds = 0,
+		FreeGroundDecelerationSeconds = 0,
 		-- How far below the hips the floor sensor looks; past this, airborne.
 		GroundSearchDistance = 1.5,
 		-- How often the controller re-checks HUB vs EXPEDITION.
