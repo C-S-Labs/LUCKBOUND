@@ -195,3 +195,28 @@ its body; overall the creatures feel robotic. Owner decisions:
    before the owner re-imports.
 6. Existing sidecar rules stand (frame key, Pulse = scale fraction, names `hubprop_<id>__<part>_<n>`). Re-exports keep part
    names stable where possible so the owner's re-import overwrites the same file.
+
+## 7. Round 3 amendment (owner Studio test 2, 2026-10-05) - SUPERSEDES §6 where it conflicts
+
+1. COLOSSALS: exactly ONE per server (floor 1, ceiling 1; it may be replaced by another species over time, never zero or two).
+2. COLOSSAL SPAWN/ROUTE: colossals must NOT spawn or linger over the hub. They spawn at the outer part of their band at a random bearing and
+   travel the open lanes BETWEEN islands, UNDER the hub and OVER it at the planned overpass altitude. Small/medium may still cross the hub.
+3. ISLANDS: the surrounding backdrop islands grow with distance from the hub (scale factor rises with radius, so the far ones are huge)
+   and are SPREAD OUT with real gaps: wider radial band, minimum spacing, and vertical staggering so lanes exist below, beside and above the hub.
+   The look from the hub must stay good. All parameters in `GameConfig.HubLayout.V2.Backdrop`; the planner's obstacle inflation follows the new sizes.
+4. SERPENT / EEL LOCOMOTION (new data-driven mode, any creature may use it): sidecar creature field `spine = {"parts": [ordered part names, root
+   segment first], "wavelength": studs, "amp": studs, "rate": Hz, "plane": "lateral"|"vertical"}`. The body root (head) is the leader. Segments are NOT
+   hinge-chained sines: each segment is placed on the trail the head has actually travelled (follow-the-leader, spacing from the part Offsets), with a
+   travelling lateral wave added perpendicular to the path (amplitude growing toward the tail). The HEAD itself sways and yaws/pitches with the
+   wave, so the whole body flows like a snake or an eel and the head moves with the body. Fins attached to segments inherit that segment's pose.
+   Turning makes the body follow the arc. Used by `cinder_wyrm` (spine over its `body_a_*` segments).
+5. SELF-CLIP LIMITS (new system): every moving part may carry `limit = [min, max]` radians (hinge-angle range, same sign convention as the driver).
+   The driver clamps (soft) to it. The art-side tool `tools/gen_part_limits.py` (Blender BVH sweep) computes, per Flap part, the largest swing that keeps
+   the part from intersecting the body mesh or any non-chained part, over the chain's combined swing, and writes `limit` into the sidecars. Starweaver
+   tendrils must never whip up through the bell; tendril motion is also calmer: lower amp/rate and heavily damped inertia (no sporadic whip).
+6. TURTLE: the shell does NOT pulse or change size (remove its Pulse; keep limbs, head, tail, isle/grove sway, crystals flicker). Same rule for any
+   creature mass that is a landmass or shell: no breathing scale on rigid shells.
+7. WING POWER: lifting costs energy. Wing stroke amplitude, depth of the downstroke and body heave scale with the class's lift effort: MEDIUM and LARGE
+   birds/dragons beat visibly harder and more dramatically than TINY/SMALL (bigger amplitude, stronger downstroke, bigger body heave and pitch, larger
+   rise per beat; tiny stay quick and fluttery with small amplitude). Class profile data, no per-species code. Realism over rate: bigger = slower beat but much
+   deeper/stronger; gliding between bursts for LARGE.
