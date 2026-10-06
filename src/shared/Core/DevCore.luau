@@ -21,6 +21,7 @@ DevCore.SOURCES = {
 	LEDGERS = true, -- unique ledger ids
 	DESTINATIONS = true, -- hub anchor aliases for /tp
 	CHUNKS = true, -- the current map's chunks (live)
+	COLOSSALS = true, -- the sky's colossal species (Content/Hub/SkyCreatures, class COLOSSAL)
 }
 
 DevCore.SIDES = { CLIENT = true, SERVER = true }

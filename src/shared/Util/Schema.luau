@@ -1424,6 +1424,440 @@ function Schema.validatePortals(portals: any, chunks: any, worlds: any): (boolea
 	return #errors == 0, errors
 end
 
+-- The numeric fields every SkyLife class profile must carry (FlightCore and
+-- SkyTraffic read each one).
+local SKY_PROFILE_FIELDS = {
+	"Accel",
+	"TurnRadiusScale",
+	"TurnRadiusMin",
+	"TurnRadiusMax",
+	"MaxBank",
+	"MaxPitch",
+	"MinSpeedScale",
+	"HubClearance",
+	"OverheadMinY",
+	"CloseApproach",
+	"CloseRadius",
+	"CloseHeightMin",
+	"CloseHeightMax",
+	"SeparationScale",
+	"UpdateHz",
+	"ActivationRadius",
+	"ArriveMin",
+	"PerchChance",
+	"BeatScale",
+	"FlapMin",
+	"FlapMax",
+	"GlideMin",
+	"GlideMax",
+	"GlideChance",
+}
+
+-- Spawned classes (everything in SkyLife.ClassOrder) also carry how many are
+-- drawn and the band they fly in; the ordinary-prop profile (PROP) takes its
+-- band from the Orbiters entry instead.
+local SKY_BAND_FIELDS = {
+	"Min",
+	"Max",
+	"Detail",
+	"RadiusMin",
+	"RadiusMax",
+	"HeightMin",
+	"HeightMax",
+	"SpeedMin",
+	"SpeedMax",
+}
+
+-- Optional per-class planner numbers (FlightCore reads them when present).
+local SKY_AVOID_FIELDS = {
+	"AvoidRadiusScale",
+	"AvoidMargin",
+	"HubClearanceExtentScale",
+	"OverheadExtentScale",
+	"OverpassChance",
+	"UnderpassChance",
+	"UnderDepth",
+	"UnderExtentScale",
+	"SpawnOuter",
+}
+
+-- Every class's motion profile (Core/CreatureMotionCore) carries these.
+local SKY_MOTION_FIELDS = {
+	"DownFrac",
+	"GlideHold",
+	"GlideBias",
+	"ClimbBias",
+	"FlareAmp",
+	"HeaveScale",
+	"HeaveMax",
+	"PitchBeat",
+	"NoiseAmp",
+	"NoiseHz",
+	"AmpScale",
+	"RateScale",
+	"InertiaGain",
+	"FollowTau",
+	"LookGain",
+	"IdleInFlight",
+	"ThrustHz",
+	"ThrustGain",
+	"AccelKick",
+	"LegExtend",
+	"HoverDangle",
+}
+
+-- Optional motion numbers (the code defaults each when absent): wing power, calm loose parts.
+local SKY_MOTION_OPTIONAL = {
+	"DownPower",
+	"LooseAmp",
+	"LooseRate",
+	"InertiaMax",
+	"BurstDrag",
+	"InputTau",
+}
+
+-- The sub-part kinds and gaits a creature part may name (Content/Hub/SkyCreatures).
+local SKY_PART_KINDS = { Flap = true, Spin = true, Flicker = true, Pulse = true }
+local SKY_PART_GAITS = { Always = true, Flight = true, Idle = true, Turn = true, Thrust = true }
+
+local function finite(v: any): boolean
+	return type(v) == "number" and v == v and v > -math.huge and v < math.huge
+end
+
+--- Validates the sky roster (Content/Hub/SkyCreatures) against the SkyLife
+--- class profiles. A bad roster would otherwise surface as creatures that
+--- never spawn or that fly through the hub, so the server refuses to start.
+function Schema.validateSkyCreatures(creatures: any, skyLife: any): (boolean, { string })
+	local errors = {}
+	if type(creatures) ~= "table" then
+		return false, { "SkyCreatures is not a table" }
+	end
+	if type(skyLife) ~= "table" or type(skyLife.Classes) ~= "table" then
+		return false, { "SkyLife.Classes is missing" }
+	end
+	local classes = skyLife.Classes
+	local order = skyLife.ClassOrder
+	if type(order) ~= "table" or #order == 0 then
+		return false, { "SkyLife.ClassOrder is missing" }
+	end
+	local pad = if type(skyLife.Flight) == "table" and finite(skyLife.Flight.WaypointPad)
+		then skyLife.Flight.WaypointPad
+		else 0
+
+	-- the class profiles
+	local profiles = {}
+	for _, name in order do
+		table.insert(profiles, name)
+	end
+	table.insert(profiles, "PROP")
+	for _, name in profiles do
+		local p = classes[name]
+		local label = `SkyLife.Classes.{name}`
+		if type(p) ~= "table" then
+			table.insert(errors, `{label} is missing`)
+			continue
+		end
+		local complete = true
+		for _, key in SKY_PROFILE_FIELDS do
+			if not finite(p[key]) then
+				table.insert(errors, `{label}.{key} must be a number`)
+				complete = false
+			end
+		end
+		if name ~= "PROP" then
+			for _, key in SKY_BAND_FIELDS do
+				if not finite(p[key]) then
+					table.insert(errors, `{label}.{key} must be a number`)
+					complete = false
+				end
+			end
+		end
+		if not complete then
+			continue
+		end
+		for _, pair in
+			{
+				{ "Min", "Max" },
+				{ "RadiusMin", "RadiusMax" },
+				{ "HeightMin", "HeightMax" },
+				{ "SpeedMin", "SpeedMax" },
+				{ "TurnRadiusMin", "TurnRadiusMax" },
+				{ "FlapMin", "FlapMax" },
+				{ "GlideMin", "GlideMax" },
+				{ "CloseHeightMin", "CloseHeightMax" },
+			}
+		do
+			if p[pair[1]] ~= nil and p[pair[2]] ~= nil and p[pair[1]] > p[pair[2]] then
+				table.insert(errors, `{label}: {pair[1]} must not exceed {pair[2]}`)
+			end
+		end
+		if name ~= "PROP" and p.SpeedMin <= 0 then
+			table.insert(
+				errors,
+				`{label}: SpeedMin must be positive (a creature never stops flying)`
+			)
+		end
+		if p.TurnRadiusMin <= 0 or p.Accel <= 0 or p.UpdateHz <= 0 then
+			table.insert(errors, `{label}: TurnRadiusMin, Accel and UpdateHz must be positive`)
+		end
+		if p.MinSpeedScale <= 0 or p.MinSpeedScale > 1 then
+			table.insert(errors, `{label}.MinSpeedScale must be in (0, 1]`)
+		end
+		if p.PerchChance < 0 or p.PerchChance > 1 or p.GlideChance < 0 or p.GlideChance > 1 then
+			table.insert(errors, `{label}: PerchChance and GlideChance are probabilities`)
+		end
+		-- a keep-out the band can reach must be one the class can stay out of:
+		-- either the band lies outside it, or entirely above its roof
+		if p.HubClearance > 0 and name ~= "PROP" and p.Max > 0 then
+			local clearsRoof = p.HeightMin >= p.OverheadMinY + pad
+			local clearsSide = p.RadiusMin >= p.HubClearance + pad
+			if not (clearsRoof or clearsSide) then
+				table.insert(
+					errors,
+					`{label}: its band reaches inside its own keep-out (RadiusMin {p.RadiusMin} < HubClearance {p.HubClearance} and HeightMin {p.HeightMin} < OverheadMinY {p.OverheadMinY})`
+				)
+			end
+		end
+		if name == "COLOSSAL" or name == "LARGE" then
+			if p.PerchChance ~= 0 then
+				table.insert(errors, `{label}: big creatures never land (PerchChance must be 0)`)
+			end
+		end
+		if p.Presence ~= nil then
+			local pr = p.Presence
+			if
+				type(pr) ~= "table"
+				or not (finite(pr.Floor) and finite(pr.Ceiling) and finite(pr.PresentMin) and finite(
+					pr.PresentMax
+				) and finite(pr.AbsentMin) and finite(pr.AbsentMax))
+				or pr.PresentMin > pr.PresentMax
+				or pr.AbsentMin > pr.AbsentMax
+				or pr.Floor < 1
+				or pr.Ceiling < pr.Floor
+			then
+				table.insert(errors, `{label}.Presence is malformed (Floor >= 1, Ceiling >= Floor)`)
+			end
+		end
+		for _, key in SKY_AVOID_FIELDS do
+			if p[key] ~= nil and not finite(p[key]) then
+				table.insert(errors, `{label}.{key} must be a number`)
+			end
+		end
+		if name ~= "PROP" and not finite(p.AvoidRadiusScale) then
+			table.insert(errors, `{label}.AvoidRadiusScale must be a number (obstacle inflation)`)
+		end
+		local mc = if skyLife.Motion then skyLife.Motion.Classes else nil
+		if name ~= "PROP" and (type(mc) ~= "table" or type(mc[name]) ~= "table") then
+			table.insert(errors, `SkyLife.Motion.Classes.{name} is missing`)
+		elseif name ~= "PROP" then
+			for _, key in SKY_MOTION_FIELDS do
+				if not finite(mc[name][key]) then
+					table.insert(errors, `SkyLife.Motion.Classes.{name}.{key} must be a number`)
+				end
+			end
+			for _, key in SKY_MOTION_OPTIONAL do
+				if mc[name][key] ~= nil and not finite(mc[name][key]) then
+					table.insert(errors, `SkyLife.Motion.Classes.{name}.{key} must be a number`)
+				end
+			end
+			if
+				finite(mc[name].DownFrac)
+				and (mc[name].DownFrac <= 0.05 or mc[name].DownFrac >= 0.95)
+			then
+				table.insert(
+					errors,
+					`SkyLife.Motion.Classes.{name}.DownFrac must be in (0.05, 0.95)`
+				)
+			end
+		end
+	end
+
+	-- the species
+	for id, c in creatures do
+		local label = `SkyCreatures.{id}`
+		if type(id) ~= "string" or string.match(id, "^[A-Z][A-Z0-9_]*$") == nil then
+			table.insert(errors, `{label}: Id must be UPPER_SNAKE`)
+		end
+		if type(c) ~= "table" then
+			table.insert(errors, `{label} is not a table`)
+			continue
+		end
+		if type(c.Model) ~= "string" or string.match(c.Model, "^hubprop_[%w_]+$") == nil then
+			table.insert(errors, `{label}: Model must be a hubprop_<name> mesh`)
+			continue
+		end
+		local profile = classes[c.Class]
+		local inOrder = false
+		for _, name in order do
+			if name == c.Class then
+				inOrder = true
+			end
+		end
+		if not (profile and inOrder) then
+			table.insert(
+				errors,
+				`{label}: Class '{tostring(c.Class)}' is not in SkyLife.ClassOrder`
+			)
+			continue
+		end
+		if typeof(c.Size) ~= "Vector3" then
+			table.insert(errors, `{label}: Size must be a Vector3`)
+		elseif finite(profile.SizeMin) and finite(profile.SizeMax) then
+			local scaleMin = c.ScaleMin or 1
+			local scaleMax = c.ScaleMax or 1
+			local longest = math.max(c.Size.X, c.Size.Y, c.Size.Z)
+			if longest * scaleMin < profile.SizeMin or longest * scaleMax > profile.SizeMax then
+				table.insert(
+					errors,
+					`{label}: longest dimension {longest} x scale {scaleMin}-{scaleMax} is outside the {c.Class} range {profile.SizeMin}-{profile.SizeMax}`
+				)
+			end
+		end
+		if
+			not finite(c.ScaleMin or 1)
+			or not finite(c.ScaleMax or 1)
+			or (c.ScaleMin or 1) <= 0
+			or (c.ScaleMin or 1) > (c.ScaleMax or 1)
+		then
+			table.insert(errors, `{label}: ScaleMin/ScaleMax must be positive with Min <= Max`)
+		end
+		if not finite(c.Weight) or c.Weight <= 0 then
+			table.insert(errors, `{label}: Weight must be positive`)
+		end
+		if type(c.CanLand) ~= "boolean" then
+			table.insert(errors, `{label}: CanLand must be a boolean`)
+		elseif c.CanLand and profile.PerchChance <= 0 then
+			table.insert(
+				errors,
+				`{label}: {c.Class} creatures never land, so CanLand must be false`
+			)
+		end
+		if c.Centre ~= nil and typeof(c.Centre) ~= "Vector3" then
+			table.insert(errors, `{label}: Centre must be a Vector3`)
+		end
+		if type(c.Biome) ~= "table" then
+			table.insert(errors, `{label}: Biome must be a list`)
+		end
+		if type(c.Parts) ~= "table" then
+			table.insert(errors, `{label}: Parts must be a table`)
+			continue
+		end
+		local count = 0
+		for partName, part in c.Parts do
+			count += 1
+			local pl = `{label}.{partName}`
+			if
+				type(partName) ~= "string"
+				or string.sub(partName, 1, #c.Model + 2) ~= c.Model .. "__"
+			then
+				table.insert(errors, `{pl}: part names must start with '{c.Model}__'`)
+			end
+			if type(part) ~= "table" then
+				table.insert(errors, `{pl} is not a table`)
+				continue
+			end
+			if not SKY_PART_KINDS[part.Kind] then
+				table.insert(
+					errors,
+					`{pl}: Kind '{tostring(part.Kind)}' is not Flap/Spin/Flicker/Pulse`
+				)
+			end
+			if not SKY_PART_GAITS[part.Gait] then
+				table.insert(
+					errors,
+					`{pl}: Gait '{tostring(part.Gait)}' is not Always/Flight/Idle/Turn/Thrust`
+				)
+			end
+			for _, key in { "Offset", "Hinge", "Axis" } do
+				local v = part[key]
+				if typeof(v) ~= "Vector3" then
+					table.insert(errors, `{pl}: {key} must be a Vector3`)
+				elseif not (finite(v.X) and finite(v.Y) and finite(v.Z)) then
+					table.insert(errors, `{pl}: {key} is not finite`)
+				end
+			end
+			for _, key in { "Amp", "Rate", "Phase", "Lag" } do
+				if not finite(part[key]) then
+					table.insert(errors, `{pl}: {key} must be a number`)
+				end
+			end
+			if part.Limit ~= nil then
+				local lim = part.Limit
+				if
+					type(lim) ~= "table"
+					or not (finite(lim[1]) and finite(lim[2]))
+					or lim[1] > lim[2]
+				then
+					table.insert(errors, `{pl}: Limit must be [min, max] radians with min <= max`)
+				end
+			end
+			if part.Chain ~= nil then
+				if type(part.Chain) ~= "string" or c.Parts[part.Chain] == nil then
+					table.insert(
+						errors,
+						`{pl}: Chain '{tostring(part.Chain)}' is not a part of {id}`
+					)
+				elseif part.Chain == partName then
+					table.insert(errors, `{pl}: a part cannot chain to itself`)
+				end
+			end
+		end
+		-- the spine (serpent / eel locomotion): ordered segments, a wave
+		if c.Spine ~= nil then
+			local sp = c.Spine
+			local sl = `{label}.Spine`
+			if type(sp) ~= "table" or type(sp.Parts) ~= "table" or #sp.Parts < 2 then
+				table.insert(errors, `{sl} needs Parts: an ordered list of at least two segments`)
+			else
+				local prev = -math.huge
+				for i, name in sp.Parts do
+					local part = if type(name) == "string" then c.Parts[name] else nil
+					if part == nil or typeof(part.Offset) ~= "Vector3" then
+						table.insert(
+							errors,
+							`{sl}.Parts[{i}] '{tostring(name)}' is not a part of {id}`
+						)
+					elseif part.Offset.X <= prev then
+						table.insert(
+							errors,
+							`{sl}.Parts[{i}]: segments must run root first, each further back (Offset.X rising)`
+						)
+					else
+						prev = part.Offset.X
+					end
+				end
+				for _, key in { "Wavelength", "Amp", "Rate" } do
+					if not finite(sp[key]) or sp[key] <= 0 then
+						table.insert(errors, `{sl}.{key} must be a positive number`)
+					end
+				end
+				if sp.Plane ~= "lateral" and sp.Plane ~= "vertical" then
+					table.insert(errors, `{sl}.Plane must be 'lateral' or 'vertical'`)
+				end
+			end
+		end
+		if skyLife.MaxParts and count > skyLife.MaxParts then
+			table.insert(
+				errors,
+				`{label}: {count} parts exceeds SkyLife.MaxParts {skyLife.MaxParts}`
+			)
+		end
+		-- no chain may loop back on itself
+		for partName, part in c.Parts do
+			local hops, at = 0, part
+			while type(at) == "table" and at.Chain ~= nil and hops <= count do
+				at = c.Parts[at.Chain]
+				hops += 1
+			end
+			if hops > count then
+				table.insert(errors, `{label}.{partName}: Chain loops`)
+			end
+		end
+	end
+
+	return #errors == 0, errors
+end
+
 local VALIDATORS: { { Kind: string, Required: boolean?, Run: (any) -> (boolean, { string }) } } = {
 	{
 		Kind = "worlds",
@@ -1527,6 +1961,16 @@ local VALIDATORS: { { Kind: string, Required: boolean?, Run: (any) -> (boolean, 
 		Kind = "portals",
 		Run = function(c)
 			return Schema.validatePortals(c.portals, c.chunks or {}, c.worlds)
+		end,
+	},
+	{
+		-- The sky roster (Content/Hub/SkyCreatures) against the SkyLife class profiles.
+		Kind = "skyCreatures",
+		Run = function(c)
+			if c.config == nil then
+				return true, {}
+			end
+			return Schema.validateSkyCreatures(c.skyCreatures, c.config.HubLayout.V2.SkyLife)
 		end,
 	},
 	{

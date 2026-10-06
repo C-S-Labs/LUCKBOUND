@@ -349,6 +349,13 @@ local COMMANDS: { Command } = {
 		Args = { { Name = "atmosphere", Type = "choice", Source = "ATMOSPHERES" } },
 	},
 	{
+		Name = "colossal",
+		Category = "AMBIENCE",
+		Side = "SERVER",
+		Summary = "Swap the sky's colossal: the current one despawns and the chosen species appears.",
+		Args = { { Name = "species", Type = "choice", Source = "COLOSSALS" } },
+	},
+	{
 		Name = "tint",
 		Category = "AMBIENCE",
 		Side = "CLIENT",

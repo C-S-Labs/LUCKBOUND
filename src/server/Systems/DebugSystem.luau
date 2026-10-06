@@ -40,6 +40,7 @@ local ExpeditionSystem
 local EventSystem
 local LedgerSystem
 local LootSystem
+local HubBuilder: any
 
 --- Who is allowed to run a command. Studio is the everyday case; the creator
 --- check is what makes this safe to leave wired up on a published test place.
@@ -324,6 +325,15 @@ end
 --- RANDOM goes back to drawing from the seed. No argument lists the ids.
 COMMANDS.atmosphere = function(player: Player, args: { string }): (boolean, string)
 	return ExpeditionSystem.setAtmosphere(player, args[1] or "?")
+end
+
+--- /colossal <SPECIES> -- replace the sky's colossal with another species (the current one
+--- despawns, the new one appears at the outer edge of its band). Testing aid for the sky creatures.
+COMMANDS.colossal = function(_player: Player, args: { string }): (boolean, string)
+	if not args[1] then
+		return false, "usage: /colossal <species>"
+	end
+	return HubBuilder.setColossal(args[1])
 end
 
 --- /event <ID> -- start an authored event from Content/Events.
@@ -627,13 +637,15 @@ function DebugSystem.init(
 	expeditionSystem: any,
 	eventSystem: any,
 	ledgerSystem: any,
-	lootSystem: any
+	lootSystem: any,
+	hubBuilder: any
 ): ()
 	FateSystem = fateSystem
 	ExpeditionSystem = expeditionSystem
 	EventSystem = eventSystem
 	LedgerSystem = ledgerSystem
 	LootSystem = lootSystem
+	HubBuilder = hubBuilder
 
 	if not GameConfig.Debug.AllowCommands then
 		print("[DebugSystem] commands disabled (GameConfig.Debug.AllowCommands)")

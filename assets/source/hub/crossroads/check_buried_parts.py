@@ -3,10 +3,10 @@ more than 0.2 studs inside a solid). Most hits are intended joins; read the list
 
     blender -b --factory-startup --python check_buried_parts.py
 """
-import bpy, bmesh, sys, runpy
+import bpy, bmesh, sys, runpy, os
 from mathutils.bvhtree import BVHTree
 sys.argv = ["x"]
-g = runpy.run_path(r"C:\Dev\luckbound\assets\source\hub\crossroads\build_crossroads_hub.py", run_name="lib")
+g = runpy.run_path(os.path.join(os.path.dirname(os.path.abspath(__file__)), "build_crossroads_hub.py"), run_name="lib")
 groups = g["build_all"]()
 for o in groups["Hub"]:
     bm = bmesh.new(); bm.from_mesh(o.data); bm.faces.ensure_lookup_table(); bm.verts.ensure_lookup_table()
