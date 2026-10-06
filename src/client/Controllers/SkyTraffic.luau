@@ -1,84 +1,89 @@
 --!strict
--- THE SKY TRAFFIC round the Crossroads.
+-- THE SKY TRAFFIC round the Crossroads: a thin client driver over Core/FlightCore.
 --
--- The server (HubV2.buildSky) places the props and marks each with Wander and
--- the band it may use. Here, per client, every one flies its own course:
+-- The server (HubV2.buildSky) places the props and the creatures and marks each
+-- with Wander and the band it may use (creatures also carry SkyClass, the class
+-- profile in GameConfig.HubLayout.V2.SkyLife that says how that kind of thing
+-- flies, and SkyCanLand). Here, per client, every one flies its own course:
 --
---   * it heads for a waypoint in its band, then picks another -- usually
---     onward round the hub, sometimes doubling back, sometimes straight across;
---   * its speed drifts between its limits, so no two keep pace;
---   * IT TURNS LIKE ITS SIZE (owner, 2026-09-24: "larger moving props should
---     have larger turning radius"): heading changes at most speed / radius,
---     and the radius grows with the prop -- a skiff darts, a whale or a carrier
---     swings round in a wide arc and never pivots on the spot;
---   * IT LOOKS AHEAD ("test what's in front of it before the prop is there ...
---     reroute it before it gets there"): a sphere its own size is swept along
---     its path -- far enough to cover its turning arc -- against the real hub
---     meshes, the Engine and the backdrop islands, and anything in the way
---     turns it early, sideways and up. There is no no-fly zone: it may cross
---     the hub when the way is clear;
---   * it keeps clear of every other prop by a clearance scaled to both sizes;
---   * THE BIG SHIPS DOCK: now and then one picks a backdrop island, comes
---     alongside its edge, slows, holds a while, and sails on.
+--   * FlightCore owns the kinematics: a creature ALWAYS travels forward
+--     (velocity is heading * speed -- no sideways translation, no instant yaw),
+--     turns no faster than its size allows, eases off before a tight turn and
+--     banks into it; it keeps out of a hub cylinder scaled to its class;
+--   * this driver adds what needs the real world: a look-ahead sweep of a
+--     sphere its own size against the hub's meshes, the Engine and the backdrop
+--     islands (anything in the way turns it early, sideways and up), separation
+--     scaled by both bodies, and landing spots on the backdrop islands for the
+--     species that may land;
+--   * it animates the moving pieces (Spin, Flap, Flicker, Pulse), chained
+--     (a tail follows the body, a wing tip its wing) and by gait (flap rate rises
+--     with speed and climb, glides between beats, breathing while perched, lean
+--     with the bank);
+--   * it throttles: a creature far from the camera updates at its class's
+--     UpdateHz, one that is away (colossals come and go) costs nothing.
 --
 -- Client-side decoration: each player's sky moves on its own. Props the
 -- device's graphics level hides (Detail, see HubEffects) are skipped.
 
 local RunService = game:GetService("RunService")
+local Players = game:GetService("Players")
 local Workspace = game:GetService("Workspace")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 
 local Root = ReplicatedStorage:WaitForChild("Luckbound")
 local Constants = require(Root.Core.Constants)
 local GameConfig = require(Root.Core.GameConfig)
-local PropCore = require(Root.Core.PropCore)
-local dockCfg = GameConfig.HubLayout.V2.Docking
+local FlightCore = require(Root.Core.FlightCore)
+local CreatureMotionCore = require(Root.Core.CreatureMotionCore)
+
+local life: any = GameConfig.HubLayout.V2.SkyLife
+local driverCfg = life.Driver
+local gaitCfg = life.Gait
+local perchCfg = life.Perch
+local motionCfg = life.Motion
 
 local SkyTraffic = {}
-
-local CLEARANCE = 18 -- studs kept between two props
-local SCAN_EVERY = 0.15 -- seconds between one prop's path checks
-local MAX_CAST = 1000 -- Roblox refuses a shapecast longer than 1024 studs
-local TURN_PER_SIZE = 3 -- turning radius = this x the prop's half-diagonal
-local TURN_MIN, TURN_MAX = 12, 320
+local dbgOn = GameConfig.Debug ~= nil and GameConfig.Debug.SkyDebug == true
 
 type Rock = { Part: BasePart, Pos: Vector3, Radius: number }
+-- the world's obstacles for FlightCore (islands and the far range), shared by every flyer
+local obstacles: { FlightCore.Obstacle } = {}
+type Sub = {
+	Part: BasePart,
+	Kind: string,
+	Offset: Vector3,
+	Hinge: Vector3,
+	Axis: Vector3,
+	Amp: number,
+	Rate: number,
+	Phase: number, -- effective: a chained part's follows its parent's, lagged
+	Lag: number,
+	Gait: string,
+	Chain: Sub?,
+	Alpha: number,
+	BaseSize: Vector3,
+	Acc: CFrame, -- this part's hinge motion composed on its chain (rebuilt every update)
+	M: CreatureMotionCore.Part?, -- layered motion state (Flap, Pulse, Flicker)
+	SpineIdx: number?, -- 1 = the root segment of the creature's spine (serpent / eel locomotion)
+}
 type Flyer = {
 	Part: BasePart,
-	Pos: Vector3,
-	Dir: Vector3, -- unit heading; turns no faster than Speed / TurnRadius
-	Target: Vector3,
-	Speed: number,
-	SpeedGoal: number,
-	NextSpeedChange: number,
-	Radius: number,
-	TurnRadius: number,
-	Band: {
-		Centre: Vector3,
-		RMin: number,
-		RMax: number,
-		YMin: number,
-		YMax: number,
-		SMin: number,
-		SMax: number,
-	},
+	Core: FlightCore.Flier,
+	Rescues: number, -- dead-end rescues already reported
 	Faces: boolean,
-	CanDock: boolean,
 	Bob: number,
-	Phase: number,
+	Spin: number, -- slow turn of a prop that does not face its heading
 	Yaw: number,
-	Bank: number,
-	Rng: Random,
-	Subs: { any },
-	BestDist: number,
-	StuckFor: number,
-	Avoid: Vector3,
+	TimeOffset: number,
+	Subs: { Sub },
+	Body: CreatureMotionCore.Body,
+	MC: any, -- this class's motion profile
+	RefRate: number, -- beat rate of the main wing (0: none)
+	Spine: CreatureMotionCore.Spine?, -- serpent / eel locomotion: the segments follow the head's trail
 	ScanIn: number,
-	Mode: string, -- "fly" | "dock" | "docked"
-	NextDock: number,
-	DockUntil: number,
-	DockHeading: Vector3,
-	FacingDir: Vector3,
+	Accum: number,
+	Parked: boolean,
+	Env: { [string]: any },
 }
 
 local rocks: { Rock } = {}
@@ -86,105 +91,60 @@ local castParams = RaycastParams.new()
 castParams.FilterType = Enum.RaycastFilterType.Include
 local overlapParams = OverlapParams.new()
 overlapParams.FilterType = Enum.RaycastFilterType.Include
+local perchParams = RaycastParams.new()
+perchParams.FilterType = Enum.RaycastFilterType.Include
 
-local function blocked(p: Vector3, r: number): boolean
-	return #Workspace:GetPartBoundsInRadius(p, r, overlapParams) > 0
+local function blocked(x: number, y: number, z: number, r: number): boolean
+	return #Workspace:GetPartBoundsInRadius(Vector3.new(x, y, z), r, overlapParams) > 0
 end
 
-local function angleOf(f: Flyer, p: Vector3): number
-	return math.atan2(p.Z - f.Band.Centre.Z, p.X - f.Band.Centre.X)
-end
-
-local function waypoint(f: Flyer, fromAngle: number): Vector3
-	local b = f.Band
-	local roll = f.Rng:NextNumber()
-	local turn
-	if roll < 0.15 then
-		turn = math.pi + f.Rng:NextNumber(-0.6, 0.6) -- straight across, over or through the hub
-	elseif roll < 0.3 then
-		turn = -f.Rng:NextNumber(0.4, 1.2) -- doubling back (in a wide arc, for a big one)
-	else
-		turn = f.Rng:NextNumber(0.3, 1.1)
-	end
-	local a = fromAngle + turn * (if f.Phase > 0 then 1 else -1)
-	-- never a point inside something: a waypoint there can only be circled
-	local p = b.Centre
-	for _ = 1, 10 do
-		local r = f.Rng:NextNumber(b.RMin, b.RMax)
-		p = Vector3.new(
-			b.Centre.X + math.cos(a) * r,
-			f.Rng:NextNumber(b.YMin, b.YMax),
-			b.Centre.Z + math.sin(a) * r
-		)
-		if not blocked(p, f.Radius + CLEARANCE) then
-			break
-		end
-		a += f.Rng:NextNumber(0.2, 0.6)
-	end
-	f.BestDist, f.StuckFor = math.huge, 0
-	return p
-end
-
--- A berth beside a backdrop island: at its edge, on the side facing the ship,
--- a little below its top, and clear of it.
-local function berth(f: Flyer): (Vector3?, Vector3?)
-	local best, bestD = nil, math.huge
+-- A landing spot on a backdrop island: the top surface (a real downward ray),
+-- on a flat enough patch, never near the hub, on the side the creature is
+-- already flying toward.
+local function findPerch(core: FlightCore.Flier, bodyHeight: number): FlightCore.PerchSpot?
+	local nearest: { Rock } = {}
 	for _, rock in rocks do
-		local d = (rock.Pos - f.Pos).Magnitude
-		if d < bestD then
-			best, bestD = rock, d
+		local dx, dz = rock.Pos.X - core.Band.Cx, rock.Pos.Z - core.Band.Cz
+		if math.sqrt(dx * dx + dz * dz) >= perchCfg.MinHubDistance then
+			table.insert(nearest, rock)
 		end
 	end
-	if not best then
-		return nil, nil
-	end
-	local rock = best :: Rock
-	local out = Vector3.new(f.Pos.X - rock.Pos.X, 0, f.Pos.Z - rock.Pos.Z)
-	out = if out.Magnitude > 1 then out.Unit else Vector3.xAxis
-	for k = 0, 6 do
-		local dir = CFrame.Angles(0, (k % 2 == 0 and 1 or -1) * math.ceil(k / 2) * 0.35, 0)
-			:VectorToWorldSpace(out)
-		local localDir = rock.Part.CFrame:VectorToObjectSpace(dir)
-		local x, z, nx, nz = PropCore.berthOnBox(
-			rock.Part.Size.X,
-			rock.Part.Size.Z,
-			localDir.X,
-			localDir.Z,
-			f.Part.Size.Z,
-			CLEARANCE + dockCfg.BerthPadding
+	table.sort(nearest, function(a, b)
+		return (a.Pos - Vector3.new(core.X, core.Y, core.Z)).Magnitude
+			< (b.Pos - Vector3.new(core.X, core.Y, core.Z)).Magnitude
+	end)
+	for i = 1, math.min(#nearest, perchCfg.Tries) do
+		local rock = nearest[i]
+		local part = rock.Part
+		local lx = core.Rng:NextNumber(-1, 1) * part.Size.X * 0.5 * perchCfg.Inset
+		local lz = core.Rng:NextNumber(-1, 1) * part.Size.Z * 0.5 * perchCfg.Inset
+		local above = part.CFrame:PointToWorldSpace(Vector3.new(lx, 0, lz))
+		local top =
+			Vector3.new(above.X, part.Position.Y + part.Size.Y * 0.5 + perchCfg.CastHeight, above.Z)
+		perchParams.FilterDescendantsInstances = { part }
+		local hit = Workspace:Raycast(
+			top,
+			Vector3.new(0, -(part.Size.Y + perchCfg.CastHeight * 2), 0),
+			perchParams
 		)
-		local spot = rock.Part.CFrame:PointToWorldSpace(Vector3.new(x, rock.Part.Size.Y * 0.12, z))
-		local normal = rock.Part.CFrame:VectorToWorldSpace(Vector3.new(nx, 0, nz))
-		local heading = normal:Cross(Vector3.yAxis).Unit
-		local cf = CFrame.lookAt(spot, spot + heading) * CFrame.Angles(0, -math.pi / 2, 0)
-		local size = f.Part.Size + Vector3.new(CLEARANCE * 2, 0, CLEARANCE * 2)
-		if #Workspace:GetPartBoundsInBox(cf, size, overlapParams) == 0 then
-			-- moored side-on to the island
-			return spot, heading
+		if hit and hit.Normal.Y >= perchCfg.NormalMinY then
+			return {
+				X = hit.Position.X,
+				Y = hit.Position.Y + bodyHeight * perchCfg.RestLiftScale,
+				Z = hit.Position.Z,
+				FaceYaw = math.atan2(hit.Position.Z - core.Z, hit.Position.X - core.X),
+			}
 		end
 	end
-	return nil, nil
+	return nil
 end
 
--- Turn `dir` toward `want` by at most `maxAngle` radians. Heading in the
--- horizontal plane is rate-limited (that is the turning circle); climb and
--- dive blend freely, since pitch is small.
-local function turnToward(dir: Vector3, want: Vector3, maxAngle: number): Vector3
-	local flatD = Vector3.new(dir.X, 0, dir.Z)
-	local flatW = Vector3.new(want.X, 0, want.Z)
-	if flatW.Magnitude < 1e-3 then
-		return dir
+-- A moving piece's hinge motion about its joint, as a CFrame in the body's space.
+local function hingeAbout(hinge: Vector3, axis: Vector3, angle: number): CFrame
+	if axis.Magnitude < 1e-3 then
+		axis = Vector3.xAxis
 	end
-	if flatD.Magnitude < 1e-3 then
-		flatD = flatW
-	end
-	local a0 = math.atan2(flatD.Z, flatD.X)
-	local a1 = math.atan2(flatW.Z, flatW.X)
-	local delta = (a1 - a0 + math.pi) % (2 * math.pi) - math.pi
-	local a = a0 + math.clamp(delta, -maxAngle, maxAngle)
-	local y = dir.Y + (want.Unit.Y - dir.Y) * math.min(1, maxAngle * 2)
-	local h = math.sqrt(math.max(0, 1 - y * y))
-	return Vector3.new(math.cos(a) * h, y, math.sin(a) * h)
+	return CFrame.new(hinge) * CFrame.fromAxisAngle(axis, angle) * CFrame.new(-hinge)
 end
 
 function SkyTraffic.init(): ()
@@ -197,7 +157,7 @@ function SkyTraffic.init(): ()
 		if not sky then
 			return
 		end
-		task.wait(2) -- let HubEffects mark what this device hides
+		task.wait(driverCfg.SettleSeconds) -- let HubEffects mark what this device hides
 
 		-- what a prop must not fly into: the hub's pieces, the Engine, the islands
 		local solids: { Instance } = {}
@@ -211,6 +171,8 @@ function SkyTraffic.init(): ()
 		end
 
 		local flyers: { Flyer } = {}
+		local presenceGroup: { FlightCore.Flier } = {}
+		local cores: { FlightCore.Flier } = {} -- every flier's core, for the hard stop between bodies
 		-- the cloud sea turns slowly round the hub, each bank at its own pace
 		-- Each bank keeps its layer's direction but has its own character: its
 		-- pace swells and slackens on its own cycle, it eases in and out from the
@@ -219,10 +181,89 @@ function SkyTraffic.init(): ()
 		-- the celestial ring and its runes
 		local spinners: { any } = {}
 		local adopted: { [Instance]: boolean } = {}
-		-- ONE PROP OR ISLAND, whenever it arrives. Called for everything already
-		-- here and again for anything that streams in later, so a late arrival
-		-- flies (or is steered round) like the rest instead of sitting still.
-		local function adopt(d: Instance, late: boolean)
+
+		-- A creature or prop's moving pieces, in chain order (a parent before the
+		-- parts that ride on it).
+		local function gatherSubs(d: BasePart): { Sub }
+			local byName: { [string]: Sub } = {}
+			local chainOf: { [string]: string } = {}
+			local list: { Sub } = {}
+			for _, c in d:GetChildren() do
+				if c:IsA("BasePart") and c:GetAttribute("SubKind") then
+					local sub: Sub = {
+						Part = c,
+						Kind = c:GetAttribute("SubKind") :: string,
+						Offset = c:GetAttribute("SubOffset") :: Vector3,
+						Hinge = c:GetAttribute("SubHinge") :: Vector3,
+						Axis = c:GetAttribute("SubAxis") :: Vector3,
+						Amp = (c:GetAttribute("SubAmp") :: number?) or 0.3,
+						Rate = (c:GetAttribute("SubRate") :: number?) or 1,
+						Phase = (c:GetAttribute("SubPhase") :: number?) or 0,
+						Lag = (c:GetAttribute("SubLag") :: number?) or 0,
+						Gait = (c:GetAttribute("SubGait") :: string?) or "Always",
+						Chain = nil,
+						Alpha = c.Transparency,
+						BaseSize = c.Size,
+						Acc = CFrame.identity,
+						SpineIdx = c:GetAttribute("SubSpine") :: number?,
+					}
+					byName[c.Name] = sub
+					local chain = c:GetAttribute("SubChain")
+					if type(chain) == "string" then
+						chainOf[c.Name] = chain
+					end
+					table.insert(list, sub)
+				end
+			end
+			-- resolve chains, and order parents first
+			local depth: { [Sub]: number } = {}
+			local function depthOf(sub: Sub, guard: number): number
+				if depth[sub] then
+					return depth[sub]
+				end
+				local parent = chainOf[sub.Part.Name]
+				local up = if parent then byName[parent] else nil
+				local dd = 0
+				if up and guard < 16 then
+					sub.Chain = up
+					dd = depthOf(up, guard + 1) + 1
+					-- a chained part's beat follows its parent's, lagged behind it, plus its own offset
+					sub.Phase = up.Phase + sub.Phase - sub.Lag
+				end
+				depth[sub] = dd
+				return dd
+			end
+			for _, sub in list do
+				depthOf(sub, 0)
+			end
+			table.sort(list, function(a, b)
+				return depth[a] < depth[b]
+			end)
+			for i, sub in list do
+				if sub.Kind ~= "Spin" then
+					local limit = sub.Part:GetAttribute("SubLimit") :: Vector2?
+					sub.M = CreatureMotionCore.newPart(
+						sub.Kind,
+						sub.Gait,
+						sub.Amp,
+						sub.Rate,
+						sub.Phase,
+						sub.Lag,
+						{ sub.Axis.X, sub.Axis.Y, sub.Axis.Z },
+						{ sub.Offset.X, sub.Offset.Y, sub.Offset.Z },
+						{ sub.Hinge.X, sub.Hinge.Y, sub.Hinge.Z },
+						i * 1.618 + d.Size.X * 0.01,
+						if limit then { limit.X, limit.Y } else nil
+					)
+				end
+			end
+			return list
+		end
+
+		-- ONE PROP, CREATURE OR ISLAND, whenever it arrives. Called for everything
+		-- already here and again for anything that streams in later, so a late
+		-- arrival flies (or is steered round) like the rest instead of sitting still.
+		local function adopt(d: Instance)
 			if adopted[d] or not d:IsA("BasePart") then
 				return
 			end
@@ -261,7 +302,23 @@ function SkyTraffic.init(): ()
 						Phase = r:NextNumber(0, math.pi * 2),
 					})
 				end
+			elseif d:GetAttribute("FarRange") then
+				-- the far range: not solid to the look-ahead, but an obstacle to the planner
+				table.insert(obstacles, {
+					X = d.Position.X,
+					Y = d.Position.Y,
+					Z = d.Position.Z,
+					R = math.sqrt(d.Size.X ^ 2 + d.Size.Z ^ 2) * 0.5 * driverCfg.ObstacleShape,
+					H = d.Size.Y * 0.5 * driverCfg.ObstacleShape,
+				})
 			elseif d:GetAttribute("Backdrop") then
+				table.insert(obstacles, {
+					X = d.Position.X,
+					Y = d.Position.Y,
+					Z = d.Position.Z,
+					R = math.sqrt(d.Size.X ^ 2 + d.Size.Z ^ 2) * 0.5 * driverCfg.ObstacleShape,
+					H = d.Size.Y * 0.5 * driverCfg.ObstacleShape,
+				})
 				table.insert(
 					rocks,
 					{ Part = d, Pos = d.Position, Radius = math.max(d.Size.X, d.Size.Z) * 0.5 }
@@ -273,21 +330,20 @@ function SkyTraffic.init(): ()
 				local r = d:GetAttribute("WanderRadius") :: Vector2
 				local h = d:GetAttribute("WanderHeight") :: Vector2
 				local s = d:GetAttribute("WanderSpeed") :: Vector2
+				local centre = d:GetAttribute("WanderCentre") :: Vector3
 				local rng = Random.new((d:GetAttribute("WanderSeed") :: number?) or 1)
-				local size = d.Size.Magnitude * 0.5
+				local class = (d:GetAttribute("SkyClass") :: string?) or "PROP"
 				local a = rng:NextNumber(0, math.pi * 2)
-				local f: Flyer = {
-					Part = d,
-					Pos = d.Position,
-					Dir = Vector3.new(math.cos(a), 0, math.sin(a)),
-					Target = d.Position,
-					Speed = rng:NextNumber(s.X, s.Y),
-					SpeedGoal = rng:NextNumber(s.X, s.Y),
-					NextSpeedChange = rng:NextNumber(4, 12),
-					Radius = size,
-					TurnRadius = math.clamp(size * TURN_PER_SIZE, TURN_MIN, TURN_MAX),
-					Band = {
-						Centre = d:GetAttribute("WanderCentre") :: Vector3,
+				local centreAttr = d:GetAttribute("SkyCentre") :: Vector3?
+				local core = FlightCore.spawn(
+					life,
+					class,
+					(d:GetAttribute("SkyRadius") :: number?) or d.Size.Magnitude * 0.5,
+					rng,
+					{
+						Cx = centre.X,
+						Cy = centre.Y,
+						Cz = centre.Z,
 						RMin = r.X,
 						RMax = r.Y,
 						YMin = h.X,
@@ -295,59 +351,124 @@ function SkyTraffic.init(): ()
 						SMin = s.X,
 						SMax = s.Y,
 					},
-					Faces = d:GetAttribute("WanderFaces") == true,
-					CanDock = d:GetAttribute("WanderCanDock") == true,
-					Bob = (d:GetAttribute("WanderBob") :: number?) or 0,
-					Phase = if rng:NextNumber() < 0.3
-						then -rng:NextNumber(0.1, 6)
-						else rng:NextNumber(0.1, 6),
-					Yaw = rng:NextNumber(0, math.pi * 2),
-					Bank = 0,
-					Rng = rng,
-					Subs = {},
-					BestDist = math.huge,
-					StuckFor = 0,
-					Avoid = Vector3.zero,
-					ScanIn = rng:NextNumber(0, SCAN_EVERY),
-					Mode = "fly",
-					NextDock = rng:NextNumber(dockCfg.InitialDelayMin, dockCfg.InitialDelayMax),
-					DockUntil = 0,
-					DockHeading = Vector3.new(math.cos(a), 0, math.sin(a)),
-					FacingDir = Vector3.new(math.cos(a), 0, math.sin(a)),
-				}
-				for _, c in d:GetChildren() do
-					if c:IsA("BasePart") and c:GetAttribute("SubKind") then
-						table.insert(f.Subs, {
-							Part = c,
-							Kind = c:GetAttribute("SubKind"),
-							Offset = c:GetAttribute("SubOffset") :: Vector3,
-							Hinge = c:GetAttribute("SubHinge") :: Vector3,
-							Axis = c:GetAttribute("SubAxis") :: Vector3,
-							Amp = (c:GetAttribute("SubAmp") :: number?) or 0.3,
-							Rate = (c:GetAttribute("SubRate") :: number?) or 1,
-							Phase = ((c:GetAttribute("SubPhase") :: number?) or 0)
-								+ rng:NextNumber(0, 1),
-							Alpha = c.Transparency,
-						})
+					d.Position.X,
+					d.Position.Y,
+					d.Position.Z,
+					a,
+					d:GetAttribute("SkyCanLand") == true,
+					if centreAttr then { centreAttr.X, centreAttr.Y, centreAttr.Z } else nil
+				)
+				core.Obstacles = obstacles
+				local subs = gatherSubs(d)
+				local refRate = 0
+				for _, sub in subs do
+					if sub.M and sub.M.WingLike then
+						refRate = sub.Rate
+						break
 					end
 				end
-				table.insert(flyers, f)
-				if late then
-					f.Target = waypoint(f, angleOf(f, f.Pos))
+				-- serpent / eel: the segments in order, their arc lengths from the head (Offset.X
+				-- runs back along the body), and the wave the server set out
+				local spine: CreatureMotionCore.Spine? = nil
+				local wavelength = d:GetAttribute("SpineWavelength") :: number?
+				if wavelength then
+					local ordered: { Sub } = {}
+					for _, sub in subs do
+						if sub.SpineIdx then
+							table.insert(ordered, sub)
+						end
+					end
+					table.sort(ordered, function(first, second)
+						return (first.SpineIdx :: number) < (second.SpineIdx :: number)
+					end)
+					if #ordered >= 2 then
+						local arcs: { number } = {}
+						for i, sub in ordered do
+							sub.SpineIdx = i
+							table.insert(arcs, sub.Offset.X)
+						end
+						local sc = motionCfg.Spine
+						spine = CreatureMotionCore.newSpine(
+							arcs,
+							wavelength,
+							(d:GetAttribute("SpineAmp") :: number?) or 0,
+							(d:GetAttribute("SpineRate") :: number?) or 0.1,
+							d:GetAttribute("SpinePlane") == "vertical",
+							sc.HeadAmp,
+							sc.StepsPerWave,
+							sc.Margin,
+							sc.TimeShare,
+							sc.TravelShare
+						)
+						local hx0, hy0, hz0 = FlightCore.heading(core)
+						CreatureMotionCore.seedTrail(
+							spine.Trail,
+							d.Position.X,
+							d.Position.Y,
+							d.Position.Z,
+							hx0,
+							hy0,
+							hz0
+						)
+					end
 				end
+				local f: Flyer = {
+					Part = d,
+					Core = core,
+					Rescues = 0,
+					Faces = d:GetAttribute("WanderFaces") == true,
+					Bob = (d:GetAttribute("WanderBob") :: number?) or 0,
+					Spin = if core.Circ > 0 then 1 else -1,
+					Yaw = rng:NextNumber(0, math.pi * 2),
+					TimeOffset = rng:NextNumber(0, 10),
+					Subs = subs,
+					Body = CreatureMotionCore.newBody(),
+					MC = motionCfg.Classes[class] or motionCfg.Classes.SMALL,
+					RefRate = refRate,
+					Spine = spine,
+					ScanIn = rng:NextNumber(0, driverCfg.ScanSeconds),
+					Accum = 0,
+					Parked = false,
+					Env = {},
+				}
+				f.Env.Blocked = blocked
+				f.Env.FindPerch = function(c: FlightCore.Flier)
+					return findPerch(c, d.Size.Y)
+				end
+				table.insert(flyers, f)
+				table.insert(cores, core)
+				core.Neighbours = cores
+				FlightCore.pickWaypoint(core, f.Env, nil)
 			end
 		end
 		for _, d in sky:GetChildren() do
-			adopt(d, false)
+			adopt(d)
 		end
 		castParams.FilterDescendantsInstances = solids
 		overlapParams.FilterDescendantsInstances = solids
 		for _, f in flyers do
-			f.Target = waypoint(f, angleOf(f, f.Pos))
+			FlightCore.relocate(f.Core) -- never start inside an island
+			FlightCore.pickWaypoint(f.Core, f.Env, nil)
+			if f.Core.Prof.Presence then
+				table.insert(presenceGroup, f.Core)
+			end
 		end
+		-- exactly Floor..Ceiling colossals at once: the extra ones a server spawns wait their turn
+		FlightCore.presenceStep(presenceGroup, 0)
 		sky.ChildAdded:Connect(function(d)
-			task.wait(0.5) -- let its moving pieces arrive with it
-			adopt(d, true)
+			task.wait(driverCfg.AdoptSeconds) -- let its moving pieces arrive with it
+			local before = #flyers
+			adopt(d)
+			-- a creature that arrives late (a developer swapping the colossal) joins like the first lot:
+			-- placed in clear sky at its band's edge, and counted in its class's presence group
+			for k = before + 1, #flyers do
+				local core = flyers[k].Core
+				FlightCore.enter(core)
+				if core.Prof.Presence then
+					table.insert(presenceGroup, core)
+				end
+			end
+			FlightCore.presenceStep(presenceGroup, 0)
 		end)
 		print(
 			string.format(
@@ -358,10 +479,136 @@ function SkyTraffic.init(): ()
 			)
 		)
 
+		local localPlayer = Players.LocalPlayer
 		local elapsed = 0
-		RunService.Heartbeat:Connect(function(dt)
-			elapsed += dt
-			dt = math.min(dt, 0.1)
+
+		-- hang a flyer's body and its pieces at its current pose
+		local function place(f: Flyer, dt: number)
+			local core = f.Core
+			if core.Rescues > f.Rescues then
+				f.Rescues = core.Rescues
+				warn(
+					string.format(
+						"[SkyTraffic] %s was wedged and moved to open sky (rescue %d)",
+						f.Part.Name,
+						f.Rescues
+					)
+				)
+			end
+			local body = f.Body
+			CreatureMotionCore.updateBody(body, core, dt, f.MC, motionCfg, f.RefRate)
+			local at = Vector3.new(core.X, core.Y + body.Heave, core.Z)
+			local cf
+			if f.Faces then
+				local hx, hy, hz = FlightCore.heading(core)
+				-- the imported meshes' noses point along -X: a quarter turn lines
+				-- them up with lookAt's forward. Bank rolls about the nose; the
+				-- beat's pitch (nose up) is about the mesh's Z.
+				cf = CFrame.lookAt(at, at + Vector3.new(hx, hy, hz))
+					* CFrame.Angles(0, -math.pi / 2, 0)
+					* CFrame.Angles(-core.Bank, 0, 0)
+					* CFrame.Angles(0, 0, -body.PitchOff)
+			else
+				at += Vector3.new(0, math.sin(elapsed * 0.5 + f.TimeOffset) * f.Bob, 0)
+				f.Yaw += dt * 0.05 * f.Spin
+				cf = CFrame.new(at) * CFrame.Angles(0, f.Yaw, 0)
+			end
+			if dbgOn then
+				local d = core.Dbg
+				f.Part:SetAttribute(
+					"SkyDbg",
+					string.format(
+						"mode=%s speed=%.1f yawrate=%.2f err=%.2f keep=%.2f sep=%.2f look=%.2f obs=%.2f to=%.0f threat=%d tr=%.0f",
+						core.Mode,
+						core.Speed,
+						core.YawRate,
+						d.Err or 0,
+						d.Keep or 0,
+						d.Sep or 0,
+						d.Look or 0,
+						d.Obs or 0,
+						d.To or 0,
+						d.Threat or 0,
+						core.TurnRadius
+					)
+				)
+			end
+			local sp = f.Spine
+			if sp and f.Faces then
+				-- the head leads on its trail and sways with the wave; the whole body (and every
+				-- part hung off it) moves with it
+				local hx, hy, hz = FlightCore.heading(core)
+				local tr = sp.Trail
+				if not CreatureMotionCore.pushTrail(tr, at.X, at.Y, at.Z) then
+					CreatureMotionCore.seedTrail(tr, at.X, at.Y, at.Z, hx, hy, hz) -- it was moved, not flown
+					CreatureMotionCore.pushTrail(tr, at.X, at.Y, at.Z)
+				end
+				CreatureMotionCore.solveSpine(sp, at.X, at.Y, at.Z, elapsed + f.TimeOffset)
+				local head = Vector3.new(sp.PX[1], sp.PY[1], sp.PZ[1])
+				cf = CFrame.lookAt(head, head + Vector3.new(sp.TX[1], sp.TY[1], sp.TZ[1]))
+					* CFrame.Angles(0, -math.pi / 2, 0)
+					* CFrame.Angles(-core.Bank, 0, 0)
+					* CFrame.Angles(0, 0, -body.PitchOff)
+			end
+			f.Part.CFrame = cf
+			local cfInv = if sp then cf:Inverse() else cf
+
+			-- the moving pieces, parents first (chain rule: acc = parent.acc * hinge)
+			local t = elapsed + f.TimeOffset
+			for _, s in f.Subs do
+				local hinge = CFrame.identity
+				local m = s.M
+				if m == nil then
+					hinge = hingeAbout(s.Hinge, s.Axis, t * s.Rate + s.Phase)
+				else
+					CreatureMotionCore.stepPart(
+						m,
+						body,
+						if s.Chain then s.Chain.M else nil,
+						dt,
+						f.MC,
+						motionCfg
+					)
+					if s.Kind == "Flap" then
+						hinge = hingeAbout(s.Hinge, s.Axis, m.Angle)
+					elseif s.Kind == "Flicker" then
+						s.Part.Transparency = s.Alpha + gaitCfg.FlickerDepth * m.Flick
+					elseif s.Kind == "Pulse" then
+						s.Part.Size = s.BaseSize * m.Scale
+					end
+				end
+				local acc = if s.Chain then s.Chain.Acc * hinge else hinge
+				local segAt = s.SpineIdx
+				if sp and segAt then
+					-- a spine segment sits on the trail, oriented by the path (parts hung on it
+					-- inherit this pose through Acc, as for any chained part)
+					local o = segAt + 1
+					local pos = Vector3.new(sp.PX[o], sp.PY[o], sp.PZ[o])
+					local frame = CFrame.lookAt(
+						pos,
+						pos + Vector3.new(sp.TX[o], sp.TY[o], sp.TZ[o])
+					) * CFrame.Angles(0, -math.pi / 2, 0)
+					acc = cfInv
+						* (frame * CFrame.new(0, s.Offset.Y, s.Offset.Z))
+						* CFrame.new(s.Offset):Inverse()
+				end
+				s.Acc = acc
+				s.Part.CFrame = cf * acc * CFrame.new(s.Offset)
+			end
+		end
+
+		local function park(f: Flyer)
+			local away = CFrame.new(0, driverCfg.HiddenY, 0)
+			f.Part.CFrame = away
+			for _, s in f.Subs do
+				s.Part.CFrame = away
+			end
+			f.Parked = true
+		end
+
+		RunService.Heartbeat:Connect(function(rawDt)
+			elapsed += rawDt
+			local dt = math.min(rawDt, driverCfg.MaxDt)
 			for _, c in drifters do
 				local pace = 1
 					+ math.sin(elapsed * math.pi * 2 / c.PacePeriod + c.Phase) * c.PaceAmp
@@ -382,211 +629,145 @@ function SkyTraffic.init(): ()
 					s.Part.Color = (s.A :: Color3):Lerp(s.B :: Color3, t)
 				end
 			end
+
+			local camera = Workspace.CurrentCamera
+			local camPos = if camera then camera.CFrame.Position else Vector3.zero
+			-- where the local player is, for the small classes' close passes
+			local playerPos: Vector3? = nil
+			local character = if localPlayer then localPlayer.Character else nil
+			local root = if character then character:FindFirstChild("HumanoidRootPart") else nil
+			if root and root:IsA("BasePart") then
+				playerPos = root.Position
+			end
+
+			-- a creature whose model was removed (a developer swapping the colossal) leaves the sky
+			for k = #flyers, 1, -1 do
+				local gone = flyers[k]
+				if not gone.Part.Parent then
+					table.remove(flyers, k)
+					local ci = table.find(cores, gone.Core)
+					if ci then
+						table.remove(cores, ci)
+					end
+					local pi = table.find(presenceGroup, gone.Core)
+					if pi then
+						table.remove(presenceGroup, pi)
+					end
+				end
+			end
+			-- colossals: at least Floor are always here, never more than Ceiling
+			FlightCore.presenceStep(presenceGroup, dt)
 			for i, f in flyers do
-				-- DOCKING: big ships only, now and then
-				if f.CanDock and f.Faces then
-					if f.Mode == "fly" then
-						f.NextDock -= dt
-						if f.NextDock <= 0 then
-							local spot, heading = berth(f)
-							if spot then
-								f.Mode, f.Target, f.DockHeading = "dock", spot, heading :: Vector3
-								f.BestDist, f.StuckFor = math.huge, 0
-							else
-								f.NextDock =
-									f.Rng:NextNumber(dockCfg.RetryDelayMin, dockCfg.RetryDelayMax)
-							end
-						end
-					elseif f.Mode == "docked" and elapsed >= f.DockUntil then
-						f.Mode = "fly"
-						f.NextDock =
-							f.Rng:NextNumber(dockCfg.DepartureDelayMin, dockCfg.DepartureDelayMax)
-						f.Target = waypoint(f, angleOf(f, f.Pos))
-					end
+				local core = f.Core
+				local prof = core.Prof
+				f.Accum += rawDt
+				local dist = (Vector3.new(core.X, core.Y, core.Z) - camPos).Magnitude
+				local interval = FlightCore.updateInterval(prof, dist)
+				if f.Accum < interval then
+					continue
 				end
+				-- a throttled creature takes a longer step, never a bigger jump than that
+				local step = math.min(f.Accum, math.max(driverCfg.MaxDt, interval * 1.5))
+				f.Accum = 0
 
-				-- speed drifts toward a goal that itself changes now and then
-				f.NextSpeedChange -= dt
-				if f.NextSpeedChange <= 0 then
-					f.SpeedGoal = f.Rng:NextNumber(f.Band.SMin, f.Band.SMax)
-					f.NextSpeedChange = f.Rng:NextNumber(5, 15)
-				end
-				local to = f.Target - f.Pos
-				local goal = f.SpeedGoal
-				if f.Mode == "dock" then
-					goal = math.min(goal, to.Magnitude * dockCfg.SlowdownRate) -- ease to a stop at the berth
-				elseif f.Mode == "docked" then
-					goal = 0
-				end
-				f.Speed += (goal - f.Speed) * math.min(1, dt * 0.4)
-
-				if f.Mode == "fly" then
-					if to.Magnitude < f.BestDist - 1 then
-						f.BestDist, f.StuckFor = to.Magnitude, 0
-					else
-						f.StuckFor += dt
-					end
-					-- a big turner counts as arrived from further out: it cannot
-					-- tighten its circle onto a point
-					if to.Magnitude < math.max(40, f.TurnRadius * 0.8) or f.StuckFor > 8 then
-						f.Target = waypoint(
-							f,
-							angleOf(f, f.Pos) + (if f.StuckFor > 8 then math.pi * 0.5 else 0)
-						)
-						to = f.Target - f.Pos
-					end
-				elseif f.Mode == "dock" then
-					if to.Magnitude < dockCfg.ArrivalDistance then
-						f.Mode = "docked"
-						f.Speed = 0
-						f.DockUntil = elapsed + f.Rng:NextNumber(dockCfg.HoldMin, dockCfg.HoldMax)
-					elseif to.Magnitude < f.BestDist - 1 then
-						f.BestDist, f.StuckFor = to.Magnitude, 0
-					else
-						f.StuckFor += dt
-						-- Allow a large ship enough time to turn back toward its berth.
-						local turnAllowance = f.TurnRadius
-							/ f.Band.SMin
-							* dockCfg.ApproachTurnRadians
-						if f.StuckFor > math.max(dockCfg.StuckMinSeconds, turnAllowance) then
-							f.Mode = "fly"
-							f.NextDock = f.Rng:NextNumber(
-								dockCfg.FailedApproachDelayMin,
-								dockCfg.FailedApproachDelayMax
-							)
-							f.Target = waypoint(f, angleOf(f, f.Pos))
-						end
-					end
-				end
-
-				local steer = if to.Magnitude > 0.01 then to.Unit else f.Dir
-
-				-- LOOK AHEAD, far enough to cover this prop's turning arc: sweep a
-				-- sphere of its size along its heading; anything in the way turns
-				-- it early, sideways and up.
-				f.ScanIn -= dt
-				if f.ScanIn <= 0 and f.Mode ~= "docked" then
-					f.ScanIn = SCAN_EVERY
-					f.Avoid = Vector3.zero
-					local reach =
-						math.min(math.max(f.Speed, 8) * 3 + f.TurnRadius * 1.5 + f.Radius, MAX_CAST)
-					local r = math.clamp(f.Radius * 0.7, 2, 200)
-					local hit
-					if f.Mode == "dock" then
-						-- Match the berth's actual ship box, so a mast/length-derived
-						-- sphere cannot repel a ship from its own clear mooring.
-						hit = Workspace:Blockcast(
-							f.Part.CFrame,
-							f.Part.Size + Vector3.new(CLEARANCE * 2, 0, CLEARANCE * 2),
-							f.Dir * math.min(reach, to.Magnitude),
-							castParams
-						)
-					else
-						hit = Workspace:Spherecast(
-							f.Pos - f.Dir * r * 0.5,
-							r,
-							f.Dir * reach,
-							castParams
-						)
-					end
-					if hit then
-						local urgency = 1 - math.clamp(hit.Distance / reach, 0, 1)
-						local side = hit.Normal - f.Dir * hit.Normal:Dot(f.Dir)
-						if side.Magnitude < 0.1 then
-							side = f.Dir:Cross(Vector3.yAxis)
-						end
-						f.Avoid = (side.Unit + Vector3.yAxis * 0.6).Unit * (0.5 + urgency * 2.5)
-						-- if the waypoint is behind the obstacle, choose another now
-						if urgency > 0.4 and f.Mode == "fly" then
-							local toTarget = f.Target - f.Pos
-							if toTarget.Magnitude > MAX_CAST then
-								toTarget = toTarget.Unit * MAX_CAST -- only the stretch that matters now
-							end
-							if
-								toTarget.Magnitude > 1
-								and Workspace:Spherecast(f.Pos, r, toTarget, castParams)
-							then
-								f.Target = waypoint(f, angleOf(f, f.Pos) + math.pi * 0.35)
-							end
-						end
-					end
-				end
-				steer += f.Avoid
-
-				-- and keep clear of each other
-				for j, o in flyers do
-					if j ~= i then
-						local away = f.Pos - o.Pos
-						local d = away.Magnitude
-						local need = f.Radius + o.Radius + CLEARANCE
-						if d < need + 30 and d > 0.01 then
-							steer += away.Unit * 2.5 * (1 - math.clamp((d - need) / 30, 0, 1))
-						end
-					end
-				end
-
-				-- Cruise uses Speed / TurnRadius; berth approach keeps authority
-				-- as it brakes. A docked ship's position remains fixed.
-				-- Keep steering authority while slowing into a berth. Using the
-				-- shrinking approach speed here made ships circle instead of stop.
-				local turnSpeed = if f.Mode == "dock"
-					then math.max(f.Speed, f.SpeedGoal)
-					else math.max(f.Speed, 1)
-				local maxTurn = turnSpeed / f.TurnRadius * dt
-				local prevDir = f.Dir
-				if steer.Magnitude > 1e-3 then
-					f.Dir = turnToward(f.Dir, steer.Unit, maxTurn)
-				end
-				f.Pos += f.Dir * f.Speed * dt
-
-				local bob = math.sin(elapsed * 0.5 + f.Phase) * f.Bob
-				local at = f.Pos + Vector3.new(0, bob, 0)
-				local cf
-				if f.Faces then
-					local fwd = Vector3.new(f.Dir.X, 0, f.Dir.Z)
-					if f.Mode == "dock" or f.Mode == "docked" then
-						fwd = f.DockHeading
-					end
-					if fwd.Magnitude < 1e-3 then
-						fwd = Vector3.xAxis
-					end
-					-- bank into the turn, by how hard it is turning
-					local yawRate = prevDir:Cross(f.Dir).Y / math.max(dt, 1e-3)
-					f.Bank += (math.clamp(yawRate * 0.8, -0.3, 0.3) - f.Bank) * math.min(
-						1,
-						dt * 1.5
-					)
-					f.FacingDir = f.FacingDir:Lerp(fwd.Unit, math.min(1, dt * 0.5))
-					-- the imported meshes' noses point along -X: a quarter turn
-					-- lines them up with lookAt's forward
-					cf = CFrame.lookAt(at, at + f.FacingDir)
-						* CFrame.Angles(0, -math.pi / 2, 0)
-						* CFrame.Angles(f.Bank, 0, 0)
+				local env = f.Env
+				local band = core.Band
+				-- the local player, only while they are near the hub
+				if
+					playerPos
+					and (playerPos.X - band.Cx) ^ 2 + (playerPos.Z - band.Cz) ^ 2 < life.HubRadius ^ 2
+				then
+					env.PlayerX, env.PlayerY, env.PlayerZ = playerPos.X, playerPos.Y, playerPos.Z
 				else
-					f.Yaw += dt * 0.05 * (if f.Phase > 0 then 1 else -1)
-					cf = CFrame.new(at) * CFrame.Angles(0, f.Yaw, 0)
+					env.PlayerX, env.PlayerY, env.PlayerZ = nil, nil, nil
 				end
-				f.Part.CFrame = cf
 
-				-- the moving pieces: propellers spin, fins and flukes swing about
-				-- their joints, flames and lift crystals flicker
-				for _, s in f.Subs do
-					local rel = CFrame.new(s.Offset)
-					if s.Kind == "Spin" or s.Kind == "Flap" then
-						local spin = if f.Mode == "docked" then 0.2 else 1 -- propellers idle at a berth
-						local angle = if s.Kind == "Spin"
-							then elapsed * s.Rate * spin + s.Phase
-							else math.sin(elapsed * s.Rate * math.pi * 2 + s.Phase) * s.Amp
-						rel = CFrame.new(s.Hinge)
-							* CFrame.fromAxisAngle(s.Axis, angle)
-							* CFrame.new(s.Offset - s.Hinge)
-					elseif s.Kind == "Flicker" then
-						s.Part.Transparency = s.Alpha
-							+ 0.35
-								* (0.5 + 0.5 * math.sin(elapsed * s.Rate * math.pi * 2 + s.Phase))
+				-- LOOK AHEAD, far enough to cover this creature's turning arc: sweep a
+				-- sphere of its size along its heading; anything in the way turns it
+				-- early, sideways and up. Not while it is landing or perched.
+				f.ScanIn -= step
+				if core.Mode == "fly" and core.Present then
+					if f.ScanIn <= 0 then
+						f.ScanIn = driverCfg.ScanSeconds
+						env.AvoidX, env.AvoidY, env.AvoidZ = 0, 0, 0
+						local hx, hy, hz = FlightCore.heading(core)
+						local dir = Vector3.new(hx, hy, hz)
+						local pos = Vector3.new(core.X, core.Y, core.Z)
+						local reach = math.min(
+							math.max(core.Speed, 8) * driverCfg.ScanReachSeconds
+								+ core.TurnRadius * driverCfg.ScanTurnScale
+								+ core.Radius,
+							driverCfg.MaxCast
+						)
+						local r = math.clamp(
+							core.Radius * driverCfg.ScanSphereScale,
+							driverCfg.ScanSphereMin,
+							driverCfg.ScanSphereMax
+						)
+						local hit =
+							Workspace:Spherecast(pos - dir * r * 0.5, r, dir * reach, castParams)
+						if hit then
+							local urgency = 1 - math.clamp(hit.Distance / reach, 0, 1)
+							local side = hit.Normal - dir * hit.Normal:Dot(dir)
+							if side.Magnitude < 0.1 then
+								side = dir:Cross(Vector3.yAxis)
+							end
+							local avoid = (side.Unit + Vector3.yAxis * driverCfg.AvoidClimb).Unit
+								* (driverCfg.AvoidBase + urgency * driverCfg.AvoidGain)
+							env.AvoidX, env.AvoidY, env.AvoidZ = avoid.X, avoid.Y, avoid.Z
+							-- if the waypoint is behind the obstacle, choose another now
+							if urgency > driverCfg.AvoidReplanUrgency then
+								local toTarget = Vector3.new(core.TX, core.TY, core.TZ) - pos
+								if toTarget.Magnitude > driverCfg.MaxCast then
+									toTarget = toTarget.Unit * driverCfg.MaxCast -- only the stretch that matters now
+								end
+								if
+									toTarget.Magnitude > 1
+									and Workspace:Spherecast(pos, r, toTarget, castParams)
+								then
+									FlightCore.pickWaypoint(
+										core,
+										env,
+										math.pi * driverCfg.ReplanAngle
+									)
+								end
+							end
+						end
 					end
-					s.Part.CFrame = cf * rel
+				else
+					env.AvoidX, env.AvoidY, env.AvoidZ = 0, 0, 0
 				end
+
+				-- and keep clear of each other, by both bodies' sizes
+				local sx, sy, sz = 0, 0, 0
+				for j, o in flyers do
+					if j ~= i and o.Core.Present then
+						local oc = o.Core
+						local ax, ay, az = FlightCore.separation(
+							core,
+							oc.Radius,
+							core.X - oc.X,
+							core.Y - oc.Y,
+							core.Z - oc.Z
+						)
+						sx += ax
+						sy += ay
+						sz += az
+					end
+				end
+				env.SepX, env.SepY, env.SepZ = sx, sy, sz
+				env.Others = cores
+
+				FlightCore.tick(core, step, env)
+				if not core.Present then
+					if not f.Parked then
+						park(f)
+					end
+					continue
+				end
+				f.Parked = false
+				FlightCore.gait(core, step)
+				place(f, step)
 			end
 		end)
 	end)

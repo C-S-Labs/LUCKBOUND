@@ -36,6 +36,30 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 244 — 2026-10-05 — Accept movement baseline and prepare PR
+**Merged:** none   **Branch:** agent/player-movement-refinement
+
+### Done
+- Owner accepts movement feel, defers remaining visual polish and authorizes pushing/opening a PR. Freeze the behavior baseline in PLAYER_ABILITIES.md; Test K2 becomes the retained regression checklist for combat.
+- Refresh against current main (Crossroads PR159), retaining both branches' STATUS/WORKLOG entries and regenerating INDEX_MAP. No movement retuning during PR preparation.
+- Re-run required cheap repository checks on the combined branch; push/open PR after validation. Remote CI outcome is reported with the PR.
+
+### Decisions made
+- Combat uses existing movement interfaces; explicit extensions must preserve accepted free traversal, actions, stamina and lock-on. Movement visual polish does not block combat.
+- PR creation is authorized; merging main and publishing the place are not.
+
+### Stopped at
+PR handoff. Integration agent must verify green CI before merge.
+
+### Next
+1. Review movement PR and CI; integration agent merges when ready.
+2. Combat foundation begins from integrated movement baseline, with representative Sword/Greatsword/Spear/Staff moves before deep weapon implementation.
+
+### Leftovers
+No duplicate movement versions. Retain task/worker worktrees until PR lifecycle finishes; old clips remain recoverable in Git. Group-owned animation uploads remain pending for published play.
+
+---
+
 ## Session 243 — 2026-10-05 — Give running a coordinated shoulder drive
 **Merged:** none; local `agent/player-movement-refinement`   **Tests:** prior 1,138 units retained (no Luau changes); 20 clip sanity checks   **Previous head:** abca03c
 
@@ -116,6 +140,58 @@ Local task branch committed and ready for owner Studio review. Automated checks 
 No duplicate implementation versions or obsolete exported files were created. Refined Run assets replace their existing files and Sprint is additive. Keep task/worker worktrees and the external orchestration checkpoint for review/rollback; remove them only after the approved Git lifecycle and Studio/CI acceptance. Existing group upload work remains pending.
 
 ---
+
+## crossroads-v2 round 3 (same branch) - 2026-10-05 - owner Studio test 2
+**Merged:** none   **Tests:** 1281 passing; Rojo build ok
+
+### Done
+- Exactly 1 colossal per server (spare waits parked and swaps in); colossals spawn in the outer band, never over the hub, and use lanes under/over/around it. Islands grow with distance (up to 2.2x), spread out with min gaps, vertical stagger and 4 free lanes (`Core/SkyLayout`); far range pushed to 4600-5800.
+- Serpent locomotion: `spine` mode (trail-following segments, travelling wave, head on the wave). Cinder wyrm uses it.
+- Self-clip system: sidecar `limit` per part (tool `tools/gen_part_limits.py`), soft clamp in the driver. Turtle shell rigid (amp 0 Pulse skipped); starweaver tendrils calmer; colossal inertia damped.
+- Wing power by class: bigger classes beat harder and slower. No FBX changed: sidecars only (no re-import).
+
+### Follow-ups (owner test 3)
+- Starweaver bell/fringe/heart amp 0 (no size change). Dead-end rescue in `FlightCore.tick` (average speed under `RescueSpeedFrac` of slowest cruise over `RescueSeconds` re-enters the flier at the band edge; the driver warns). Spine wave now locked to distance flown (`Motion.Spine.TravelShare` 1, `TimeShare` 0.1, `HeadAmp` 0.5) so the body keeps up with the head; COLOSSAL cruise 12-20.
+
+### Follow-ups (owner test 4: circling, weaving, drifting colossals)
+- Measured live in Studio (attribute `SkyDbg`, switch `GameConfig.Debug.SkyDebug`, default off). Causes found and fixed: keep-out edge tangent over the hub roof (ill-conditioned near the axis: vertical-only push now); separation scaled BOTH bodies' radii so every small creature fled isles/clouds (now own comfort zone scaled, other body at true size: small-class mean turn 164 -> 13 deg/s); colossals drifting out of band into the far range (band leash `Flight.Leash*`, far range moved to 5200-6400). Added circling guard (`Flight.Circle*`), arrival by real turning radius (`ArriveRadiusScale`), stall rescue (`Rescue*`).
+
+### Final polish (owner tests 5-6)
+- `/colossal <species>` dev command (registry entry, `DebugSystem` handler, `HubV2.setColossal`): swaps the sky's colossal live; the client drops removed creatures and adopts late arrivals.
+- Nautilus jet funnel removed (mesh re-imported). Spine head jitter fixed: `solveSpine` resamples the head's path at even spacing (head heading step 0.039 -> 0.0017 rad/frame in the unit test); NOT yet verified live (the owner's Studio was on another worktree).
+- Boat cleanup done: ship generators and helpers removed from `build_crossroads_hub.py`, orbiters FBX and layout rows regenerated (26 ship entries; hub pieces, anchors and animated parts byte-for-byte equal in the layout JSON), `CrossroadsV2.luau` regenerated, 26 ship items removed from `HUB_ORBITERS.rbxmx`, stale docs fixed.
+- Tests 1293 passing; Rojo build ok. Debug switch `GameConfig.Debug.SkyDebug` (off) publishes steering inputs as the `SkyDbg` attribute.
+
+### Stopped at
+Owner Studio test. Hand-set limits on starweaver tendriltip_1 [-0.08,0.08] and tendriltip_3 [-0.08,0.13] (the sweep reported a false positive at the joint); re-running gen_part_limits.py overwrites them. Check: wyrm bends, under-hub depth (`UnderDepth` 300 assumed), wing-down sign.
+
+## crossroads-v2 round 2 (same branch) - 2026-10-05 - owner Studio findings
+**Merged:** none   **Tests:** 1240 passing (luau CLI installed); Rojo build ok
+
+### Done
+- Runtime: colossals always 1-3 present, band 850-1900, obstacle pathfinding (backdrop + far range), overpass over the hub, layered motion core (asymmetric stroke, heave, roll, inertia chains, leg tuck, thrust bursts). New gait `Thrust`.
+- Art: pose-preview harnesses (same maths as SkyTraffic); real limbs/jaws/yaw stubs on small and mid groups; manta fins attached; starweaver and turtle livelier; two new colossals cinder_wyrm and aether_nautilus (library file HUB_CREATURES_COLOSSAL2). Roster now 13 incl. whale.
+
+### Stopped at
+OWNER GATE: re-import creatures_small, creatures_mid, creatures_colossal (overwrite same files) and creatures_colossal2 (new HUB_CREATURES_COLOSSAL2.rbxmx), then Studio test. Leg tuck bias only applies to hip-Idle legs; shin/foot beat on the Flight clock. Confirm SkyLife.Motion.StrokeSign (wing-down sign) in Studio.
+
+## crossroads-v2-refinement (branch claude/crossroads-v2-refinement-4f3234) - 2026-10-05 - orchestrated Crossroads refinement
+**Merged:** none (experimental, owner review)   **Tests:** Luau NOT run (no `luau` CLI); suite build, Rojo build, selene, StyLua pass
+
+### Done
+- Orchestrated (Mode C, five worker branches `agent/crossroads-v2-{traffic,hub,creatures-small,creatures-mid,creatures-colossal}`, merged here). Contract: `docs/design/SKY_ECOSYSTEM_CONTRACT.md`.
+- Hub: bridge junction clip root cause was a 16-gon plaza treated as a circle (slab 0.73 studs inside, coplanar tops). Re-seated, collars, polygon curbs, trim; Fate Engine untouched.
+- Sky: boats and docking removed; `FlightCore` class profiles (TINY..COLOSSAL + PROP), forward-only kinematics, keep-out cylinders, perching for skyfinch and canopy_drake, colossal presence cycles, distance throttling. Whale retained under the LARGE profile (band 640-1000).
+- 10 creatures (sources, FBX, sidecars): skyfinch, lumen_moth, cinderkite, prism_darter, citadel_falcon, canopy_drake, aether_manta, ashen_roc, starweaver, elder_greatturtle. `SkyCreatures.luau` generated (11 incl. whale).
+
+### Decisions made
+- Sidecars carry a `frame` key (small = blender, others = orbiter); `Pulse` amp is a scale fraction; `Biome` is reserved/unread (RESERVED.md).
+
+### Stopped at
+OWNER GATES: (1) run `tests/run.sh` where `luau` exists; (2) Studio import of `crossroads_hub.fbx` (into HUB_CROSSROADS_V2, with the new CrossroadsV2.luau, re-bake collision) and of `creatures_{small,mid,colossal}.fbx` into HUB_ORBITERS (then `tools/sync_asset_ids.py`/part wiring); until imported, species with missing meshes are skipped with a warning and the sky has only the whale and non-boat props; (3) Studio visual, perch surface, look-ahead and performance checks.
+
+### Next
+1. Owner imports and walks the hub and sky. 2. Tune SkyLife and CanLand; polish prism_darter and aether_manta if wanted. 3. After Studio proof, delete boat meshes in HUB_ORBITERS.rbxmx, boat generator functions and stale boat OrbiterParts rows.
 
 ## orchestrate-skill (branch agent/orchestrate-skill) - 2026-10-05 - provider-neutral orchestration
 **Merged:** none yet   **Tests:** none (no game code); `gen_index.py --check` run. No live orchestration run yet.

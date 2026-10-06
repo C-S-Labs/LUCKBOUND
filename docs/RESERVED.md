@@ -95,18 +95,12 @@ loot pools are constructed").
 | `GameConfig.Rift.FlowTexture` | **CONSUMED** | `RiftRig.attachEffects` sets it on every ribbon beam. Uploaded to the group 2026-10-05 (`rbxassetid://125599526173332`); it was an empty string until then. |
 | `GameConfig.Rift.EntrancePrefab` / `ExitPrefab` `Scale` (1.0) | RESERVED | Set to the imported scale after the owner's Studio import (`assets/source/portals/README.md`). Until the prefabs exist a blockout rift is drawn. |
 
-## Nothing is currently ORPHANED
+## The living sky — `Content/Hub/SkyCreatures`, `GameConfig.HubLayout.V2.SkyLife`
 
-Every unread declaration above has a named consumer and a reason to exist. The
-two that were genuinely orphaned — `ScenarioCore` and the
-`GameConfig.Expedition.IncludeSide` dial — were wired up rather than listed
-here, because a register is for deliberate reservations and not a place to
-park work.
+| Field | Status | Consumer |
+|---|---|---|
+| `SkyCreatures.<id>.Biome` | RESERVED | Biome-weighted spawning (a creature more likely when its biome is the hub's current accent). The roster carries it from the creature sidecars (`creatures_<group>.json`) so content is not re-authored later; `Schema.validateSkyCreatures` checks it is a list. Nothing reads it yet. |
+| `Gait = "Thrust"` (a sub-part gait) | RESERVED | `CreatureMotionCore.stepPart` drives a Pulse part with it in thrust bursts tied to acceleration and speed; only the starweaver's bell and heart carry it, with `amp` 0, so they do not move (owner: no size changes on the jelly); kept so a future pulsing creature can use it. |
 
-## When you add a reserved declaration
-
-1. Add the row here, with the consumer named and the blocker stated.
-2. Put `RESERVED: see docs/RESERVED.md` at the declaration.
-3. When the consumer lands, move the row to **CONSUMED** or delete it.
-
-If you cannot name the consumer, the declaration is premature. Leave it out.
+The boat flyers are fully removed (2026-10-05): docking config and code, the ship generators, their exported meshes, the imported
+`HUB_ORBITERS` ship meshes and the ship `OrbiterParts` rows. Nothing about them remains outside git history.

@@ -33,6 +33,13 @@ How weapon moves are shaped, including unique Legendary movesets, is `ENEMY_AI.m
 
 ## 1. Built: our own character controller
 
+**Accepted behavior baseline — owner, 2026-10-05.** Free input trajectory, smooth
+visual facing, hub/expedition speeds, jump/roll/backstep/air-dash behavior, stamina
+rules and lock-on compatibility are frozen for the combat foundation. Combat
+consumes the existing movement contract (§6); any required extension must preserve
+ordinary traversal and be reviewed explicitly. Remaining gait polish is deferred,
+and is not a prerequisite for combat. Test K2 remains the regression checklist.
+
 Owner-directed 2026-09-28: **no default Roblox movement.** The Humanoid's state
 machine is off (`EvaluateStateMachine = false`) and a `ControllerManager` with a
 ground and an air controller moves the character. `LocomotionController` sets its

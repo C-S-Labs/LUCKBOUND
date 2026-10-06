@@ -1328,4 +1328,9 @@ function HubBuilder.build(): Model
 	return hub
 end
 
+--- Developer tool: swap the sky's colossal for another species (see HubV2.setColossal).
+function HubBuilder.setColossal(speciesId: string): (boolean, string)
+	return HubV2.setColossal(speciesId)
+end
+
 return HubBuilder

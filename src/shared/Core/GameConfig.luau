@@ -422,14 +422,32 @@ local GameConfig = {
 				EXPEDITION_GATE = "Shop",
 				TRAINING_GROUNDS = "Training Grounds",
 			},
+			-- The islands round the hub (Core/SkyLayout places them). Their size
+			-- GROWS with distance (the creatures are huge): the scale factor rises from
+			-- ScaleNear at RadiusMin to ScaleFar at RadiusMax along ScaleCurve, +/-
+			-- ScaleJitter. They are SPREAD OUT: MinGap between two islands' bounding
+			-- cylinders (waived when they are VGap apart vertically), heights are staggered
+			-- over HeightMin..HeightMax, and LaneCount diameters of corridors LaneWidth wide are
+			-- kept free of islands so a colossal can reach the hub, pass under it and over it.
 			Backdrop = {
-				Count = 12,
-				RadiusMin = 1150,
-				RadiusMax = 1700,
-				HeightMin = -260,
-				HeightMax = 40,
-				ScaleMin = 0.8,
-				ScaleMax = 1.35,
+				Count = 16, -- islands attempted; crowded seeds seat fewer (about 9 of 16)
+				RadiusMin = 1800,
+				RadiusMax = 3000,
+				HeightMin = -700,
+				HeightMax = 60,
+				ScaleNear = 1,
+				ScaleFar = 2.2,
+				ScaleCurve = 1.2,
+				ScaleJitter = 0.12,
+				MinGap = 350,
+				VGap = 250,
+				HubClear = 1400, -- an island's near edge stays this far from the hub axis (room for a colossal to circle the hub inside it)
+				LaneCount = 2, -- diameters: 2 means four radial corridors, each opposite another
+				LaneWidth = 1450,
+				Tries = 80,
+				Shrink = 0.92, -- every ShrinkEvery failed tries the island is drawn smaller
+				ShrinkEvery = 15,
+				Shape = 0.9, -- bounding cylinder = this fraction of the box (as SkyLife.Driver.ObstacleShape)
 			},
 			-- THE SKY BEYOND (HUB_SKY). The cloud sea is the cloud props' own
 			-- puffs as wide banks, in two drifting layers; the far range is the
@@ -456,12 +474,12 @@ local GameConfig = {
 			},
 			FarRange = {
 				Count = 14,
-				RadiusMin = 3200,
-				RadiusMax = 4600,
+				RadiusMin = 5200,
+				RadiusMax = 6400,
 				HeightMin = -520,
 				HeightMax = -120,
-				ScaleMin = 2.2,
-				ScaleMax = 3.2,
+				ScaleMin = 2.8,
+				ScaleMax = 3.8,
 				Tint = Color3.fromRGB(116, 104, 150),
 			},
 			Moon = {
@@ -479,79 +497,591 @@ local GameConfig = {
 				GlyphA = Color3.fromRGB(124, 245, 224),
 				GlyphB = Color3.fromRGB(182, 131, 255),
 			},
-			-- Drawn at random per server. Detail: 1 on every device, 2 from
-			-- medium graphics, 3 high only (extra copies step up one level).
-			-- Speed is studs/second along the orbit.
-			Docking = {
-				BerthPadding = 2, -- keep the clearance box off the island face
-				InitialDelayMin = 30,
-				InitialDelayMax = 90,
-				RetryDelayMin = 20,
-				RetryDelayMax = 40,
-				FailedApproachDelayMin = 30,
-				FailedApproachDelayMax = 60,
-				DepartureDelayMin = 60,
-				DepartureDelayMax = 140,
-				HoldMin = 12,
-				HoldMax = 25,
-				ArrivalDistance = 6,
-				SlowdownRate = 0.4,
-				StuckMinSeconds = 12,
-				ApproachTurnRadians = math.pi,
-			},
-			Orbiters = {
-				{
-					Names = {
-						"hubprop_ship_sloop",
-						"hubprop_ship_cutter",
-						"hubprop_ship_trawler",
-						"hubprop_ship_cog",
-						"hubprop_ship_yacht",
+			-- THE LIVING SKY (docs/design/SKY_ECOSYSTEM_CONTRACT.md 4.2, 4.3).
+			-- Creatures (Content/Hub/SkyCreatures) are spawned per CLASS: the
+			-- class profile below IS their behaviour; nothing is per-species.
+			-- Every field is read by Core/FlightCore (the kinematics) or
+			-- SkyTraffic / HubV2.buildSky; Util/Schema.validateSkyCreatures
+			-- checks the shape at boot. Heights are relative to the hub deck;
+			-- speeds are studs/second; angles radians.
+			SkyLife = {
+				-- extra prop libraries (files in assets/rbxm/props) searched for creature meshes
+				CreatureLibraries = {
+					"HUB_CREATURES_SMALL",
+					"HUB_CREATURES_MID",
+					"HUB_CREATURES_COLOSSAL",
+					"HUB_CREATURES_COLOSSAL2",
+				},
+				HubRadius = 330, -- the hub's reach from its axis (districts + plaza); keep-outs below are this plus a margin
+				MaxParts = 40, -- moving sub-meshes per creature (the contract allows a colossal 12)
+				ClassOrder = { "TINY", "SMALL", "MEDIUM", "LARGE", "COLOSSAL" },
+				-- Kinematics shared by every class (FlightCore.advance / tick).
+				Flight = {
+					TurnSpeedFloor = 0.3, -- lowest speed/cruise ratio used for turn rate (a near-stopped creature still turns)
+					TurnSpeedCeil = 1.5,
+					PitchRateScale = 0.5, -- pitch changes at this fraction of the yaw rate
+					OppositeEpsilon = 0.05, -- "dead astern" window, rad
+					BankSmoothing = 3, -- 1/s
+					SlowAngle = 1.2, -- heading error (rad) at which the speed goal is fully eased down
+					SpeedChangeMin = 5,
+					SpeedChangeMax = 15,
+					CounterChance = 0.3, -- chance a creature circulates the other way round the hub
+					-- keep-out steering: margin = Margin + TurnScale x turn radius + Lead x speed
+					KeepOutMargin = 20,
+					KeepOutTurnScale = 0.9,
+					KeepOutLead = 1.5,
+					KeepOutRoofMargin = 10, -- extra height over a crossable roof
+					KeepOutPush = 1.5, -- outward push at full depth
+					KeepOutClimb = 1.5,
+					KeepOutWeight = 6,
+					KeepOutFloor = 0.4, -- fraction of the weight applied at the edge of the margin
+					SeparationFalloff = 1,
+					SeparationStrength = 2.5,
+					-- waypoints
+					WaypointPad = 15,
+					WaypointTries = 24,
+					AcrossChance = 0.15, -- straight across, over or through the hub
+					AcrossSpread = 0.6,
+					BackChance = 0.15, -- doubling back
+					BackMin = 0.4,
+					BackMax = 1.2,
+					OnwardMin = 0.3,
+					OnwardMax = 1.1,
+					RetryAngleMin = 0.2,
+					RetryAngleMax = 0.6,
+					FallbackAngle = 0.5,
+					ArriveTurnScale = 0.8, -- arrived = within max(ArriveMin, this x turn radius)
+					StuckSeconds = 8,
+					LeashStart = 0, -- beyond RMax x (1 + this) a creature is drawn back toward its band ...
+					LeashRange = 0.15, -- ... at full strength this far (x RMax) beyond that
+					LeashWeight = 12,
+					CircleSeconds = 20, -- circling check window ...
+					CircleTurns = 2.5, -- ... more turns than this ...
+					CircleSpan = 4, -- ... without getting further than this x its turning circle (min CircleSpanMin) = circling
+					CircleSpanMin = 15,
+					ArriveRadiusScale = 1.5, -- a waypoint is reached within this x the real turning radius at the current speed
+					RescueSeconds = 45, -- progress check window: a flier that gets almost nowhere is re-entered ...
+					RescueSpeedFrac = 0.25, -- ... if it covered less than this fraction of its slowest cruise
+					StuckTurnScale = 3, -- ... plus this x (turn radius / speed): the time to come round
+					GuardMargin = 4, -- the hard stop keeps this much beyond the body's own sphere
+					LegPad = 20, -- extra clearance a waypoint leg keeps from obstacles
+					RelocateTries = 40, -- tries to find a clear start or arrival
+					FallbackReach = 2, -- no clear waypoint: straight on this x the turn radius ...
+					FallbackClimb = 0.3, -- ... climbing at this slope
+					OverpassLead = 1.2, -- overpass entry sits this x the turn radius outside the keep-out edge
+					OverpassPitchUse = 0.6, -- fraction of MaxPitch an overpass climb may use
+					PassTries = 24, -- entry bearings tried for an over- or underpass
+					PassSlack = 0.7, -- the climb or dive to the pass level may use only this fraction of the run (pitch lags)
+					PassSpread = 0.1, -- rad: how far off straight across the hub the exit may be (it follows a lane)
+				},
+				-- Obstacle avoidance (FlightCore.obstacleSteer): look-ahead = turn radius x TurnScale
+				-- + speed x Lead + SizeScale x the obstacle's radius, sampled at Samples points.
+				Avoid = {
+					TurnScale = 1.6,
+					Lead = 6,
+					SizeScale = 0.5,
+					Samples = 8,
+					Weight = 6,
+					Floor = 0.5,
+					HoldScale = 0.6, -- steer persists this x the turn time (turn radius / speed) after the obstacle leaves the look-ahead
+					RiseScale = 0.3, -- and builds up in this fraction of that
+					ActiveSteer = 0.5, -- a remaining steer above this still counts as threatened (eases speed)
+					PocketRatio = 0.35, -- pushed both ways (net below this x the total): turn back
+					VerticalBias = 0.5, -- go over/under when that exit is this x as short as the sideways one
+				},
+				-- The client driver (SkyTraffic).
+				Driver = {
+					ScanSeconds = 0.15, -- between one creature's look-ahead casts
+					MaxCast = 1000, -- Roblox refuses a shapecast longer than 1024
+					ScanReachSeconds = 3,
+					ScanTurnScale = 1.5,
+					ScanSphereScale = 0.7,
+					ScanSphereMin = 2,
+					ScanSphereMax = 200,
+					AvoidBase = 0.5,
+					AvoidGain = 2.5,
+					AvoidClimb = 0.6,
+					AvoidReplanUrgency = 0.4,
+					ReplanAngle = 0.35, -- x pi, when a waypoint is behind an obstacle
+					MaxDt = 0.1,
+					SettleSeconds = 2, -- let HubEffects mark what the device hides
+					AdoptSeconds = 0.5,
+					HiddenY = -100000, -- where a creature that is away is parked
+					ObstacleShape = 0.9, -- an island's bounding cylinder is this fraction of its box (meshes do not fill the corners)
+				},
+				-- Sub-part animation (the Kinds Flap, Spin, Flicker, Pulse; gaits).
+				Gait = {
+					SpeedGain = 0.6, -- beat rate rises with speed ...
+					ClimbGain = 1, -- ... and with climb
+					BeatMin = 0.4,
+					BeatMax = 2.2,
+					GlideAmpFloor = 0.08, -- wing amplitude while coasting
+					AmpSmoothing = 2.5,
+					IdleSmoothing = 2,
+					FlickerDepth = 0.35,
+					AccelSmoothing = 1.5,
+					ApproachFlare = 0.4, -- flare level while on the final approach
+					FlareSmoothing = 2.5,
+				},
+				-- Layered creature animation (Core/CreatureMotionCore), per class: mass appropriate.
+				-- Stroke*: asymmetric wing beat (fast down, slow up). Noise*: per-part wobble.
+				-- Inertia*: tails/tendrils trail behind turns, climbs and acceleration, each
+				-- segment FollowTau seconds behind the one before it. Thrust*: jelly-like pulse bursts.
+				Motion = {
+					StrokeSign = 1, -- +1: a positive hinge angle swings a wing DOWN (flip if Studio shows the beat inverted)
+					PitchRef = 0.15, -- rad/s of pitch change counted as a full climb signal
+					LimitKnee = 0.25, -- soft clamp of a part's `limit` range: saturation begins this fraction of the range from each end
+					-- Spine locomotion (serpents, eels; CreatureMotionCore.newSpine): HeadAmp = the head's share of the wave
+					-- amplitude (it grows toward the tail); StepsPerWave = trail samples per wavelength; Margin = extra trail kept.
+					Spine = {
+						HeadAmp = 0.5,
+						StepsPerWave = 24,
+						Margin = 1.25,
+						TimeShare = 0.25,
+						TravelShare = 1,
 					},
-					Min = 4,
-					Max = 7,
-					Detail = 1,
-					RadiusMin = 360,
-					RadiusMax = 620,
-					HeightMin = -40,
-					HeightMax = 90,
-					SpeedMin = 22,
-					SpeedMax = 38,
-					Faces = true,
-					Bob = 2,
+					DragSpeed = 0.5, -- steady backward trail of loose parts at cruise speed
+					Classes = {
+						TINY = {
+							DownFrac = 0.4,
+							InputTau = 0,
+							BurstDrag = 0.6,
+							InertiaMax = 1.5,
+							LooseRate = 1,
+							LooseAmp = 1,
+							DownPower = 1,
+							GlideHold = 0.2,
+							GlideBias = 0.25,
+							ClimbBias = 0.2,
+							FlareAmp = 0.35,
+							HeaveScale = 0.06,
+							HeaveMax = 0.5,
+							PitchBeat = 0.05,
+							NoiseAmp = 0.12,
+							NoiseHz = 1.7,
+							AmpScale = 0.85,
+							RateScale = 1,
+							InertiaGain = 1.2,
+							FollowTau = 0.12,
+							LookGain = 1.5,
+							IdleInFlight = 0.7,
+							ThrustHz = 2.5,
+							ThrustGain = 0,
+							AccelKick = 0,
+							LegExtend = 1,
+							HoverDangle = 0.2,
+						},
+						SMALL = {
+							DownFrac = 0.4,
+							InputTau = 0,
+							BurstDrag = 0.6,
+							InertiaMax = 1.5,
+							LooseRate = 1,
+							LooseAmp = 1,
+							DownPower = 1.08,
+							GlideHold = 0.2,
+							GlideBias = 0.3,
+							ClimbBias = 0.2,
+							FlareAmp = 0.35,
+							HeaveScale = 0.08,
+							HeaveMax = 1.5,
+							PitchBeat = 0.07,
+							NoiseAmp = 0.12,
+							NoiseHz = 1.2,
+							AmpScale = 1,
+							RateScale = 1,
+							InertiaGain = 1.2,
+							FollowTau = 0.2,
+							LookGain = 1.5,
+							IdleInFlight = 0.7,
+							ThrustHz = 1.5,
+							ThrustGain = 0,
+							AccelKick = 0,
+							LegExtend = 1,
+							HoverDangle = 0.2,
+						},
+						MEDIUM = {
+							DownFrac = 0.36,
+							InputTau = 0,
+							BurstDrag = 0.6,
+							InertiaMax = 1.5,
+							LooseRate = 1,
+							LooseAmp = 1,
+							DownPower = 1.3,
+							GlideHold = 0.25,
+							GlideBias = 0.35,
+							ClimbBias = 0.25,
+							FlareAmp = 0.4,
+							HeaveScale = 0.16,
+							HeaveMax = 5,
+							PitchBeat = 0.13,
+							NoiseAmp = 0.1,
+							NoiseHz = 0.7,
+							AmpScale = 1.35,
+							RateScale = 1,
+							InertiaGain = 1.3,
+							FollowTau = 0.4,
+							LookGain = 1.5,
+							IdleInFlight = 0.7,
+							ThrustHz = 0.6,
+							ThrustGain = 0,
+							AccelKick = 0,
+							LegExtend = 1,
+							HoverDangle = 0.15,
+						},
+						LARGE = {
+							DownFrac = 0.34,
+							InputTau = 0,
+							BurstDrag = 0.6,
+							InertiaMax = 1.5,
+							LooseRate = 1,
+							LooseAmp = 1,
+							DownPower = 1.4,
+							GlideHold = 0.5,
+							GlideBias = 0.4,
+							ClimbBias = 0.25,
+							FlareAmp = 0.4,
+							HeaveScale = 0.2,
+							HeaveMax = 16,
+							PitchBeat = 0.15,
+							NoiseAmp = 0.1,
+							NoiseHz = 0.4,
+							AmpScale = 1.5,
+							RateScale = 1.5,
+							InertiaGain = 1.4,
+							FollowTau = 0.9,
+							LookGain = 1.5,
+							IdleInFlight = 0.7,
+							ThrustHz = 0.3,
+							ThrustGain = 2,
+							AccelKick = 1.5,
+							LegExtend = 1,
+							HoverDangle = 0.1,
+						},
+						COLOSSAL = {
+							DownFrac = 0.34,
+							DownPower = 1,
+							InputTau = 2,
+							BurstDrag = 0.12,
+							InertiaMax = 0.6,
+							LooseRate = 0.5,
+							LooseAmp = 0.3,
+							GlideHold = 0.5,
+							GlideBias = 0.3,
+							ClimbBias = 0.2,
+							FlareAmp = 0,
+							HeaveScale = 0.01,
+							HeaveMax = 12,
+							PitchBeat = 0.02,
+							NoiseAmp = 0.15,
+							NoiseHz = 0.08,
+							AmpScale = 2,
+							RateScale = 2.2,
+							InertiaGain = 0.8,
+							FollowTau = 3,
+							LookGain = 1.5,
+							IdleInFlight = 1,
+							ThrustHz = 0.12,
+							ThrustGain = 5,
+							AccelKick = 1.5,
+							LegExtend = 1,
+							HoverDangle = 0,
+						},
+					},
 				},
-				{
-					Names = { "hubprop_ship_galleon", "hubprop_ship_carrier" },
-					CanDock = true,
-					Min = 1,
-					Max = 2,
-					Detail = 2,
-					-- above the hub and clear of the mountains' reach, so nothing boxes them in
-					RadiusMin = 480,
-					RadiusMax = 720,
-					HeightMin = 200,
-					HeightMax = 300,
-					SpeedMin = 16,
-					SpeedMax = 26,
-					Faces = true,
-					Bob = 3,
+				-- Landing (small and medium creatures that are CanLand only).
+				Perch = {
+					ApproachDistance = 60, -- from the perch, at least; grows with turn radius
+					ApproachTurns = 2.5, -- x turn radius
+					ApproachSlope = 0.35, -- glide slope, rad
+					ArriveRadius = 12,
+					ArriveTurnScale = 0.8,
+					SnapDistance = 1.5,
+					LandSpeedMin = 2.5,
+					LandSpeedGain = 0.6,
+					ApproachSpeedScale = 0.6,
+					AlignMax = 0.9, -- rad between heading and the perch when the final glide begins
+					AbortSeconds = 6,
+					HoldMin = 8,
+					HoldMax = 25,
+					TakeoffSeconds = 2.5,
+					TakeoffPitch = 0.45,
+					PerchTurnRate = 1.5, -- rad/s: turning on the perch to face out
+					InitialDelayMin = 10,
+					InitialDelayMax = 40,
+					RetryDelayMin = 20,
+					RetryDelayMax = 40,
+					CooldownMin = 25,
+					CooldownMax = 70,
+					RestLiftScale = 0.5, -- body centre sits this x the body height above the perch surface
+					MinHubDistance = 600, -- never perch this near the hub axis
+					CastHeight = 400, -- the downward ray starts this far above the island
+					Inset = 0.6, -- fraction of an island's half-extent a perch may be chosen within
+					Tries = 4,
+					NormalMinY = 0.7, -- the surface must be this flat
 				},
-				{
-					Names = { "hubprop_sky_whale" },
-					Min = 1,
-					Max = 2,
-					Detail = 2,
-					RadiusMin = 480,
-					RadiusMax = 820,
-					HeightMin = -120,
-					HeightMax = 40,
-					SpeedMin = 15,
-					SpeedMax = 25,
-					Faces = true,
-					Bob = 6,
-					ScaleMin = 1,
-					ScaleMax = 1.6,
+				-- THE CLASS PROFILES.
+				-- Min/Max/Detail: how many are drawn per server and at what graphics level.
+				-- Radius/Height: the orbit band. Speed/Accel: cruise limits and how fast speed changes.
+				-- TurnRadius*: turning circle = scale x body radius, clamped. MinSpeedScale: how far it eases
+				-- off before a tight turn. HubClearance/OverheadMinY: the keep-out cylinder about the hub axis
+				-- and the height over the deck at which it may be crossed (huge = never).
+				-- CloseApproach: chance per waypoint of a pass over the local player.
+				-- UpdateHz/ActivationRadius: beyond that distance from the camera the creature updates at UpdateHz.
+				-- Flap/Glide: seconds beating / coasting; GlideChance per beat cycle; BeatScale multiplies the beat rate.
+				-- PerchChance: per waypoint arrival, for CanLand species only. Presence: comes and goes (colossals).
+				Classes = {
+					TINY = {
+						Min = 6,
+						Max = 10,
+						Detail = 1,
+						SizeMin = 3, -- longest body dimension a creature of this class may have, studs
+						SizeMax = 6,
+						RadiusMin = 40,
+						RadiusMax = 520,
+						HeightMin = 55,
+						HeightMax = 150,
+						SpeedMin = 14,
+						SpeedMax = 26,
+						Accel = 18,
+						TurnRadiusScale = 2,
+						TurnRadiusMin = 6,
+						TurnRadiusMax = 40,
+						MaxBank = 0.9,
+						MaxPitch = 0.7,
+						MinSpeedScale = 0.6,
+						HubClearance = 330,
+						OverheadMinY = 40,
+						CloseApproach = 0.3,
+						CloseRadius = 35,
+						CloseHeightMin = 42,
+						CloseHeightMax = 70,
+						SeparationScale = 2,
+						UpdateHz = 10,
+						ActivationRadius = 250,
+						AvoidRadiusScale = 1.5,
+						AvoidMargin = 8,
+						ArriveMin = 12,
+						PerchChance = 0.35,
+						BeatScale = 1.15,
+						FlapMin = 1.5,
+						FlapMax = 4,
+						GlideMin = 0.3,
+						GlideMax = 0.8,
+						GlideChance = 0.15,
+					},
+					SMALL = {
+						Min = 4,
+						Max = 7,
+						Detail = 1,
+						SizeMin = 9, -- longest body dimension a creature of this class may have, studs
+						SizeMax = 14,
+						RadiusMin = 80,
+						RadiusMax = 600,
+						HeightMin = 80,
+						HeightMax = 170,
+						SpeedMin = 22,
+						SpeedMax = 38,
+						Accel = 20,
+						TurnRadiusScale = 2.5,
+						TurnRadiusMin = 10,
+						TurnRadiusMax = 60,
+						MaxBank = 0.8,
+						MaxPitch = 0.65,
+						MinSpeedScale = 0.6,
+						HubClearance = 330,
+						OverheadMinY = 60,
+						CloseApproach = 0.2,
+						CloseRadius = 50,
+						CloseHeightMin = 62,
+						CloseHeightMax = 100,
+						SeparationScale = 2,
+						UpdateHz = 10,
+						ActivationRadius = 350,
+						AvoidRadiusScale = 1.4,
+						AvoidMargin = 12,
+						ArriveMin = 20,
+						PerchChance = 0.25,
+						BeatScale = 1,
+						FlapMin = 2,
+						FlapMax = 6,
+						GlideMin = 1.5,
+						GlideMax = 4,
+						GlideChance = 0.5,
+					},
+					MEDIUM = {
+						Min = 3,
+						Max = 5,
+						Detail = 2,
+						SizeMin = 24, -- longest body dimension a creature of this class may have, studs
+						SizeMax = 36,
+						RadiusMin = 430,
+						RadiusMax = 900,
+						HeightMin = -20,
+						HeightMax = 200,
+						SpeedMin = 30,
+						SpeedMax = 48,
+						Accel = 14,
+						TurnRadiusScale = 3,
+						TurnRadiusMin = 24,
+						TurnRadiusMax = 140,
+						MaxBank = 0.6,
+						MaxPitch = 0.55,
+						MinSpeedScale = 0.65,
+						HubClearance = 410,
+						OverheadMinY = 20000,
+						CloseApproach = 0,
+						CloseRadius = 0,
+						CloseHeightMin = 0,
+						CloseHeightMax = 0,
+						SeparationScale = 2,
+						UpdateHz = 10,
+						ActivationRadius = 500,
+						AvoidRadiusScale = 1.3,
+						AvoidMargin = 30,
+						ArriveMin = 40,
+						PerchChance = 0.15,
+						BeatScale = 0.85,
+						FlapMin = 3,
+						FlapMax = 8,
+						GlideMin = 3,
+						GlideMax = 8,
+						GlideChance = 0.6,
+					},
+					LARGE = {
+						Min = 2,
+						Max = 4,
+						Detail = 2,
+						SizeMin = 80, -- longest body dimension a creature of this class may have, studs
+						SizeMax = 135,
+						RadiusMin = 640,
+						RadiusMax = 1000,
+						HeightMin = -120,
+						HeightMax = 180,
+						SpeedMin = 15,
+						SpeedMax = 28,
+						Accel = 5,
+						TurnRadiusScale = 3,
+						TurnRadiusMin = 100,
+						TurnRadiusMax = 360,
+						MaxBank = 0.35,
+						MaxPitch = 0.4,
+						MinSpeedScale = 0.7,
+						HubClearance = 590,
+						OverheadMinY = 20000,
+						CloseApproach = 0,
+						CloseRadius = 0,
+						CloseHeightMin = 0,
+						CloseHeightMax = 0,
+						SeparationScale = 1.6,
+						UpdateHz = 8,
+						ActivationRadius = 600,
+						AvoidRadiusScale = 1.15,
+						AvoidMargin = 30,
+						ArriveMin = 60,
+						PerchChance = 0,
+						BeatScale = 0.7,
+						FlapMin = 6,
+						FlapMax = 14,
+						GlideMin = 6,
+						GlideMax = 16,
+						GlideChance = 0.9,
+					},
+					COLOSSAL = {
+						Min = 2,
+						Max = 2,
+						Detail = 2,
+						SizeMin = 520, -- longest body dimension a creature of this class may have, studs
+						SizeMax = 920,
+						RadiusMin = 900,
+						RadiusMax = 3200,
+						HeightMin = -1100,
+						HeightMax = 900,
+						SpeedMin = 12,
+						SpeedMax = 20,
+						Accel = 1.5,
+						SpawnOuter = 0.7,
+						UnderExtentScale = 1,
+						UnderDepth = 300,
+						UnderpassChance = 0.5,
+						TurnRadiusScale = 1.2,
+						TurnRadiusMin = 350,
+						TurnRadiusMax = 900,
+						MaxBank = 0.12,
+						MaxPitch = 0.3,
+						MinSpeedScale = 0.75,
+						HubClearance = 330,
+						OverheadMinY = 500,
+						CloseApproach = 0,
+						CloseRadius = 0,
+						CloseHeightMin = 0,
+						CloseHeightMax = 0,
+						SeparationScale = 1.2,
+						UpdateHz = 4,
+						ActivationRadius = 2500,
+						AvoidRadiusScale = 1.2,
+						AvoidMargin = 120,
+						HubClearanceExtentScale = 1,
+						OverheadExtentScale = 0.8,
+						OverpassChance = 0.2,
+						ArriveMin = 150,
+						PerchChance = 0,
+						BeatScale = 1,
+						FlapMin = 12,
+						FlapMax = 30,
+						GlideMin = 10,
+						GlideMax = 30,
+						GlideChance = 1,
+						-- EXACTLY ONE colossal is here at a time (Floor == Ceiling == 1, contract 7.1); once
+						-- it has been present PresentMin..Max seconds it is REPLACED by another species
+						Presence = {
+							Floor = 1,
+							Ceiling = 1,
+							PresentMin = 700,
+							PresentMax = 1500,
+							AbsentMin = 60,
+							AbsentMax = 300,
+						},
+					},
+					-- Everything in Orbiters that is not a creature: isles, clouds,
+					-- crystals, lanterns. They fly the same kinematics at their own
+					-- speeds, with no keep-out (their look-ahead steers them round
+					-- the hub's meshes as before).
+					PROP = {
+						Accel = 2.5,
+						TurnRadiusScale = 3,
+						TurnRadiusMin = 12,
+						TurnRadiusMax = 320,
+						MaxBank = 0.3,
+						MaxPitch = 0.5,
+						MinSpeedScale = 1,
+						HubClearance = 0,
+						OverheadMinY = 0,
+						CloseApproach = 0,
+						CloseRadius = 0,
+						CloseHeightMin = 0,
+						CloseHeightMax = 0,
+						SeparationScale = 1,
+						UpdateHz = 15,
+						ActivationRadius = 1500,
+						AvoidRadiusScale = 1,
+						AvoidMargin = 10,
+						ArriveMin = 40,
+						PerchChance = 0,
+						BeatScale = 1,
+						FlapMin = 5,
+						FlapMax = 10,
+						GlideMin = 1,
+						GlideMax = 2,
+						GlideChance = 0,
+					},
 				},
+			},
+			-- Ordinary props drawn at random per server. Detail: 1 on every
+			-- device, 2 from medium graphics, 3 high only (extra copies step up
+			-- one level). Speed is studs/second along the orbit. (Creatures are
+			-- spawned from SkyCreatures + SkyLife.Classes instead.)
+			Orbiters = {
 				{
 					Names = { "hubprop_isle_shrine", "hubprop_isle_grove", "hubprop_isle_ruin" },
 					Min = 4,
@@ -1462,6 +1992,8 @@ local GameConfig = {
 	},
 
 	Debug = {
+		-- publish each sky creature's steering inputs as the `SkyDbg` attribute (turn off when done tuning)
+		SkyDebug = false,
 		-- === DEVELOPER COMMANDS -- NEVER SHIP EITHER OF THESE TRUE ===
 		--
 		-- Both are ON for the current testing phase, at the owner's request,

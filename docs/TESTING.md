@@ -634,7 +634,10 @@ The first thing anyone sees.
 
 ### Test K2 — movement refinement first owner gate (2026-10-05)
 
-This is a feel/visual acceptance gate, pending the owner. Offline checks do not
+Owner accepted the overall movement behavior on 2026-10-05 and authorized its PR.
+Remaining visual polish is deferred. Retain this checklist for combat regressions;
+this acceptance does not claim every optional device/surface case was exercised.
+Offline checks do not
 establish zero physical turning radius, stopping on contacts, grounded presentation
 or unchanged lock-on feel. Keep the previous clips in Git until Studio acceptance.
 

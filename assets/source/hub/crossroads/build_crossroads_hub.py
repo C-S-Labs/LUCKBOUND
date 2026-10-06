@@ -41,6 +41,8 @@ REPO = os.path.abspath(os.path.join(HERE, "..", "..", "..", ".."))
 KIT_PATH = os.path.join(REPO, "assets", "source", "worlds", "sky_citadel", "build_sky_citadel_kit.py")
 K = {"__name__": "sky_citadel_kit", "__file__": KIT_PATH}
 exec(open(KIT_PATH, encoding="utf-8").read(), K)
+# The kit now defaults to its "refinish" pass (violet trim, Sky Citadel palette names); the hub has its own palette.
+K["REFINISH"] = False
 
 # The palette is the Fate Engine's AS PAINTED IN GAME (Content/Hub/Crossroads
 # Theme), so the hub and the Engine read as one object. (rgb, emissive)
@@ -77,6 +79,8 @@ K["PALETTE"].update({
     "Water": ((110, 200, 230), True),
     "Whale": ((92, 104, 150), False),
     "WhaleBelly": ((196, 204, 230), False),
+    "Leaf": ((84, 142, 92), False),         # light vegetation: vines on the plaza rim
+    "LeafLight": ((126, 186, 120), False),
 })
 K["MAT_ORDER"] = list(K["PALETTE"].keys())
 
@@ -99,6 +103,10 @@ DISTRICT_AT = 218.0     # hub centre -> district centre (GameConfig.HubLayout.Zo
 DISTRICT_R = 80.0       # district deck radius
 DISTRICT_TOP = 0.5      # a half-stud step up onto a district
 BRIDGE_W = 24.0
+RAIL_W = 1.2            # a bridge's gold rails: centre line at RAIL_U, outer face at RAIL_OUT (inside the slab edge)
+RAIL_U = 11.2
+RAIL_OUT = RAIL_U + RAIL_W / 2
+RAIL_IN = RAIL_U - RAIL_W / 2
 RING_W = 18.0           # the promenade loop joining the districts
 DISTRICTS = {           # name: (centre, rz that turns local -Y toward the hub)
     "HUB_HALL_OF_CHAMPIONS": ((0.0, DISTRICT_AT), 0.0),
@@ -234,11 +242,60 @@ def stepped_keel(p, x, y, R, n, depth, glow="Shard", core=True):
         hanging_core(p, x, y, -4 - depth - depth * 0.12, R * 0.16, depth * 0.55, glow)
 
 
+def poly_band(p, mat, apothem, width, z0, z1, a0, a1, n=16, rot=None, cx=0.0, cy=0.0, flat_ends=True):
+    """A band that follows a regular n-gon deck (frustum default: rot = half a
+    step) from angle a0 to a1 (degrees, CCW). Its OUTER edge lies on the deck's
+    edge `apothem` and it is `width` deep (negative width = a lip outside the
+    edge). The decks are polygons, so a circular curb of the deck's circumradius
+    hung over the void by up to R*(1 - cos(180/n)) studs between corners. With
+    flat_ends the end faces run along the deck-edge normal, so a curb can meet a
+    rail square-on."""
+    rot = 180.0 / n if rot is None else rot
+    step = 360.0 / n
+    bps = [a0] + [rot + step * j for j in range(-n, 3 * n) if a0 + 1e-6 < rot + step * j < a1 - 1e-6] + [a1]
+    out_pts, in_pts = [], []
+    for i, t in enumerate(bps):
+        j = math.floor((t - rot) / step + 1e-9)
+        mid = rot + step * j + step / 2
+        r = apothem / math.cos(math.radians(t - mid))
+        o = (r * math.cos(math.radians(t)), r * math.sin(math.radians(t)))
+        if flat_ends and i in (0, len(bps) - 1):
+            ii = (o[0] - width * math.cos(math.radians(mid)), o[1] - width * math.sin(math.radians(mid)))
+        else:
+            k = (apothem - width) / apothem
+            ii = (o[0] * k, o[1] * k)
+        out_pts.append(o)
+        in_pts.append(ii)
+    v, f = [], []
+    for o, ii in zip(out_pts, in_pts):
+        for q, z in ((o, z0), (ii, z0), (ii, z1), (o, z1)):
+            v.append((cx + q[0], cy + q[1], z))
+    for i in range(len(bps) - 1):
+        A, B = 4 * i, 4 * (i + 1)
+        for k in range(4):
+            f.append((A + k, B + k, B + (k + 1) % 4, A + (k + 1) % 4))
+    f.append((0, 1, 2, 3)[::-1])
+    L = 4 * (len(bps) - 1)
+    f.append((L, L + 1, L + 2, L + 3))
+    p.add(v, f, mat, Matrix.Identity(4))
+
+
+def poly_curb_with_gaps(p, mat, apothem, width, z0, z1, gaps, n=16, rot=None):
+    """poly_band round a whole deck minus angular windows [(centre_deg, half_deg)]."""
+    cuts = sorted(((c - h) % 360, (c + h) % 360) for c, h in gaps)
+    for i, (s_, e) in enumerate(cuts):
+        nxt = cuts[(i + 1) % len(cuts)][0]
+        poly_band(p, mat, apothem, width, z0, z1, e, nxt if nxt > e else nxt + 360, n, rot)
+
+
+COS16 = math.cos(math.pi / 16)           # a 16-sided deck's edge sits at R * COS16 (its apothem)
+
+
 def district_deck(p, floor, rim_gaps, keel_glow):
     """A district's round deck in its local frame: floor at DISTRICT_TOP, a gold
     curb round the edge with gaps, and its own keel."""
     frustum(p, floor, 16, DISTRICT_R, DISTRICT_R, -4, DISTRICT_TOP)
-    ring_with_gaps(p, "Gold", DISTRICT_R - 1.6, DISTRICT_R, DISTRICT_TOP, DISTRICT_TOP + 1.0, rim_gaps, 8)
+    poly_curb_with_gaps(p, "Gold", DISTRICT_R * COS16, 1.6, DISTRICT_TOP, DISTRICT_TOP + 1.0, rim_gaps)
     sector(p, "Inlay", DISTRICT_R - 5.0, DISTRICT_R - 4.2, DISTRICT_TOP, DISTRICT_TOP + 0.06, 0, 360, 32)
     stepped_keel(p, 0, 0, DISTRICT_R, 16, 46, keel_glow)
 
@@ -261,7 +318,15 @@ def build_platform():
     # --- the plaza --------------------------------------------------------------
     frustum(p, "Plaza", 16, PLAZA_R, PLAZA_R, -4, 0)
     # the curb, open at the four bridge mouths so the walk onto a bridge is flush
-    ring_with_gaps(p, "Gold", PLAZA_R - 4.5, PLAZA_R, 0, 0.7, [(0, 6.8), (90, 6.8), (180, 6.8), (270, 6.8)], 8)
+    # The plaza is a 16-gon: its edge at a bridge mouth is flat at PLAZA_R * cos(11.25 deg) = 115.7, not at
+    # 118. The curb follows that edge and stops square against the bridge's rail line (u = +-BRIDGE_MOUTH_U).
+    ap = PLAZA_R * COS16
+    ca = math.degrees(math.atan(RAIL_OUT / ap))
+    for k in range(4):
+        poly_band(p, "Gold", ap, 4.0, 0, 0.7, 90 * k + ca, 90 * (k + 1) - ca)
+    for k in range(4):                                                             # a lip of stone under the rim
+        poly_band(p, "MarbleDim", ap + 0.3, 0.35, -0.9, -0.12, 90 * k + math.degrees(math.atan(12.0 / ap)),
+                  90 * (k + 1) - math.degrees(math.atan(12.0 / ap)))
     sector(p, "Marble", RESERVE_R, RESERVE_R + 2.5, 0, 0.25, 0, 360, 32)           # the Engine's dais ring
     sector(p, "Inlay", RESERVE_R + 6.0, RESERVE_R + 7.2, 0, 0.06, 0, 360, 32)      # inner inlay
     sector(p, "Inlay", 64.0, 65.2, 0, 0.06, 0, 360, 32)                            # middle inlay
@@ -290,19 +355,46 @@ def build_platform():
     for k in range(4):
         a = math.radians(45 + 90 * k)
         hanging_core(p, math.cos(a) * 96, math.sin(a) * 96, -38, 5.0, 26, ("Violet", "Rose")[k % 2])
+    for k in range(16):                                                            # vines over the plaza's rim
+        vr = random.Random(f"vine{k}")
+        t = math.radians(11.25 + 22.5 * k)
+        c, sn = math.cos(t), math.sin(t)
+        path = [(118.1, -0.5), (118.4 + vr.uniform(0, 0.4), -2.0), (118.3 + vr.uniform(0, 0.5), -3.7),
+                (118.5 + vr.uniform(0, 0.5), -5.0 - vr.uniform(0, 1.2))]
+        tube(p, "Leaf", [(r * c, r * sn, z) for r, z in path], [0.22, 0.18, 0.13, 0.0], n=3)
+        for r, z in path[1:3]:
+            for sg in (-1, 1):
+                crystal(p, "LeafLight" if sg > 0 else "Leaf", r * c - sg * 0.35 * sn, r * sn + sg * 0.35 * c, z,
+                        0.5, 0.75, 0.3, n=4, rz=vr.uniform(0, 90))
     # --- the four bridges ---------------------------------------------------------
+    # The slab meets the plaza's FLAT edge square (no overlap, so no coplanar tops), a gold threshold
+    # collar covers the seam, and the rails run on over the curb line from the plaza to the district.
+    dap = DISTRICT_AT - DISTRICT_R * COS16                 # the district deck's edge toward the hub
     for k in range(4):
         with frame(p, xf(rz=90 * k)):
-            y0, y1 = PLAZA_R - 3, DISTRICT_AT - DISTRICT_R + 4
-            box(p, "Walkway", 0, (y0 + y1) / 2, -1.25, BRIDGE_W, y1 - y0, 2.5)   # flush on its spine
+            y0, y1 = ap, DISTRICT_AT - DISTRICT_R + 4      # the slab runs on under the district deck
+            ym = (y0 + y1) / 2
+            box(p, "Walkway", 0, ym, -1.25, BRIDGE_W, y1 - y0, 2.5)
+            box(p, "Gold", 0, y0, 0.02, 2 * RAIL_IN, 1.8, 0.04)                # the threshold collar
+            rx0, rx1 = ap - 4.0, dap                       # the rail starts at the curb's inner edge
             for s in (-1, 1):
-                box(p, "Gold", s * (BRIDGE_W / 2 - 0.6), (y0 + y1) / 2 + 2, 0.4, 1.2, y1 - y0 - 4, 0.8)
-                for yy in (y0 + 6, y1 - 6):                                    # gateposts at each end
-                    frustum(p, "Marble", 4, 1.2, 1.0, 0, 7, s * (BRIDGE_W / 2 - 0.6), yy, rot=45)
-                    crystal(p, "Shard", s * (BRIDGE_W / 2 - 0.6), yy, 8.2, 0.7, 1.3, 1.0, n=4)
-            box(p, "Inlay", 0, (y0 + y1) / 2, 0.03, 1.4, y1 - y0 - 6, 0.06)
-            # under the bridge: a spine, not a wall
-            K["spine"](p, "Basalt", y0 + 2, y1 - 2, BRIDGE_W / 2 - 1, 16)
+                ru = s * RAIL_U
+                box(p, "Gold", ru, (rx0 + rx1) / 2, 0.4, RAIL_W, rx1 - rx0, 0.8)
+                box(p, "GoldBright", ru, (rx0 + rx1) / 2, 0.86, RAIL_W, rx1 - rx0, 0.12)   # rail cap
+                for yy, face in ((ap + 1.5, -1), (dap - 1.5, 1)):                # gateposts, on the rail, at each end
+                    frustum(p, "Marble", 4, 1.1, 0.9, 0.92, 7.0, ru, yy, rot=45)
+                    crystal(p, "Shard", ru, yy, 8.2, 0.7, 1.3, 1.0, n=4)
+                    box(p, "Canvas", ru, yy + face * 0.75, 4.4, 1.1, 0.1, 2.8)    # a banner on its outer face
+                    box(p, "Gold", ru, yy + face * 0.8, 5.95, 1.5, 0.2, 0.25)
+                box(p, "Gold", s * 12.03, (ap + dap) / 2, -0.28, 0.06, dap - ap, 0.16)       # slab edge trim
+                box(p, "BasaltLight", s * 12.1, (ap + dap) / 2, -2.3, 0.2, dap - ap, 0.4)    # and a lower lip
+                box(p, "Inlay", s * 11.6, (ap + dap) / 2, -2.55, 0.3, dap - ap - 6.4, 0.1)      # a light line under each edge
+                for x0, x1 in ((ap, ap + 3.0), (dap - 3.0, dap)):                           # bearing blocks under the landings
+                    box(p, "BasaltLight", s * 11.75, (x0 + x1) / 2, -2.95, 1.5, x1 - x0, 0.9)
+            box(p, "Inlay", 0, (PLAZA_R + DISTRICT_AT - DISTRICT_R + 1) / 2, 0.03, 1.4, DISTRICT_AT - DISTRICT_R + 1 - PLAZA_R, 0.06)
+            # under the bridge: a spine, not a wall. It runs on INTO the plaza's and the district's keels
+            # (its old ends stopped in open air, 117 and 140, outside both).
+            K["spine"](p, "Basalt", ap - 14, dap + 16, BRIDGE_W / 2 - 1, 16)
     # --- the promenade ring: the four arcs between districts, and the overlooks -
     half = math.degrees(math.asin((DISTRICT_R - 3) / DISTRICT_AT))       # where the curbs stop
     deep = math.degrees(math.asin((DISTRICT_R - 10) / DISTRICT_AT))      # the slab runs on under the deck
@@ -321,7 +413,7 @@ def build_platform():
         ox, oy = math.cos(am) * (DISTRICT_AT + 18), math.sin(am) * (DISTRICT_AT + 18)
         frustum(p, "Walkway", 12, 16, 16, -3, 0, ox, oy)
         md = 45 + 90 * k                                   # its curb opens back onto the ring
-        sector(p, "Gold", 15, 16, 0, 1.0, md - 180 + 72, md + 180 - 72, 16, ox, oy)
+        poly_band(p, "Gold", 16 * math.cos(math.radians(15)), 1.0, 0, 1.0, md - 108, md + 108, 12, 15.0, ox, oy)
         frustum(p, "Basalt", 12, 15, 4, -26, -3, ox, oy)
         pylon_beacon(p, ox + math.cos(am) * 6, oy + math.sin(am) * 6, 30.0, ("Shard", "Violet", "Rose", "Shard")[k])
         anchor(p, f"Overlook{k + 1}", ox, oy, 0)
@@ -1053,9 +1145,9 @@ def prop_isle_ruin():
     return p
 
 
-# ---- Ships and the whale ---------------------------------------------------------
-# Every vessel's bow points along +X, keel down, deck at z ~ 0. The server picks
-# a random handful per hub instance; low graphics settings pick fewer.
+# ---- The whale ---------------------------------------------------------------------
+# (The sky ships were removed 2026-10-05: the sky creatures replaced them. See
+# assets/source/hub/crossroads/creatures/ and docs/design/SKY_ECOSYSTEM_CONTRACT.md.)
 
 def lathe_x(p, mat, profile, n, seed, sy=0.8, flat_top=None, x0=0.0, z0=0.0, jitter=0.02, bands=None):
     """A lathe laid along X (profile: (radius, x)). flat_top squashes everything
@@ -1068,249 +1160,6 @@ def lathe_x(p, mat, profile, n, seed, sy=0.8, flat_top=None, x0=0.0, z0=0.0, jit
         if flat_top is not None and z > flat_top:
             z = flat_top                              # a flat deck line: nothing bulges over the deck
         v.x, v.z = x + x0, z + z0
-
-
-def rails(p, x0, x1, half_w, z, step=3.0, h=1.4):
-    x = x0
-    while x <= x1:
-        for s in (-1, 1):
-            box(p, "Gold", x, s * half_w, z + h / 2, 0.25, 0.25, h)
-        x += step
-    for s in (-1, 1):
-        box(p, "Gold", (x0 + x1) / 2, s * half_w, z + h, x1 - x0, 0.25, 0.25)
-
-
-def sail(p, mat, x, z0, h, w, belly=1.2, rz=0.0):
-    """A square sail bellied forward: three panels on a curve, with yards."""
-    with frame(p, xf(x, 0, 0, rz)):
-        for k, (dy0, dy1) in enumerate(((-w / 2, -w / 6), (-w / 6, w / 6), (w / 6, w / 2))):
-            bx = belly * (0.6 if k != 1 else 1.0)
-            box(p, mat, bx, (dy0 + dy1) / 2, z0 + h / 2, 0.25, dy1 - dy0 + 0.05, h)
-        box(p, "Wood", 0.2, 0, z0 + h + 0.3, 0.5, w + 1.5, 0.5)
-        box(p, "Wood", 0.2, 0, z0 - 0.3, 0.5, w + 1.0, 0.4)
-
-
-def mast(p, x, h, sails_=((0.25, 0.45), (0.62, 0.3)), w=10.0, mat="Marble", crow=True):
-    tube(p, "Wood", [(x, 0, 0), (x, 0, h)], [0.55, 0.35], n=6)
-    for f0, fh in sails_:
-        sail(p, mat, x + 0.8, h * f0, h * fh, w * (1.0 - f0 * 0.5))
-    if crow:
-        frustum(p, "Wood", 8, 1.4, 1.6, h * 0.8, h * 0.8 + 1.0, x, 0)
-    crystal(p, "Shard", x, 0, h + 1.2, 0.5, 1.2, 0.3, n=5)
-    tube(p, "Canvas", [(x, 0, h - 0.5), (x - 4, 0, h - 1.5)], [0.3, 0.05], n=3)  # pennant
-
-
-def envelope(p, L, R, z, mat="Canvas", x0=0.0, ribs=True):
-    lathe_x(p, mat, [(0, -L / 2), (R * 0.55, -L * 0.42), (R * 0.9, -L * 0.25), (R, 0), (R * 0.92, L * 0.25),
-                     (R * 0.6, L * 0.42), (0, L / 2)], 14, "env" + str(L), sy=1.0, x0=x0, z0=z, jitter=0.0)
-    if ribs:
-        for t in (-0.3, -0.1, 0.1, 0.3):
-            rr = R * (1 - abs(t) * 1.2) + 0.15
-            torus(p, "Gold", rr, 0.2, x0 + t * L, 0, z, n=16, m=3, ry=90)
-    for s in (-1, 1):                                              # tail fins
-        box(p, mat, x0 - L * 0.44, s * R * 0.55, z, L * 0.12, R * 0.9, 0.3, rz=s * 8)
-    box(p, mat, x0 - L * 0.44, 0, z + R * 0.55, L * 0.12, 0.3, R * 0.9)
-
-
-def prop_rotor(p, x, y, z, r, axis="x"):
-    rot = (0, 0, 90) if axis == "x" else (0, 0, 0)
-    frustum(p, "Iron", 8, r * 0.25, r * 0.25, -r * 0.4, r * 0.4, M=xf(x, y, z, rot[0], rot[1], rot[2]))
-    # the blades turn: their own mesh, spun about the hub's axis
-    q = part_of(p, "rotor", "Spin", axis=(1, 0, 0) if axis == "x" else (0, 0, 1), hinge=(x, y, z),
-                rate=7.0 if r < 4 else 3.5)
-    for k in range(3):
-        a = 120 * k
-        with frame(q, xf(x, y, z, 0, a if axis == "x" else 0, 0 if axis == "x" else 0)):
-            box(q, "Wood", 0, 0, r * 0.55, 0.3, r * 0.35, r * 0.9)
-        frustum(q, "Gold", 6, r * 0.12, 0, r * 0.4, r * 0.7, M=xf(x, y, z, rot[0], rot[1], rot[2]))
-
-
-def lift_crystals(p, x0, x1, z, n=3, col="Shard"):
-    q = part_of(p, "lift", "Flicker", rate=1.6)
-    for k in range(n):
-        x = x0 + (x1 - x0) * k / max(1, n - 1)
-        crystal(q, col, x, 0, z, 1.2, 0.3, 2.6, n=6)
-
-
-def prop_ship_sloop():
-    p = Piece("hubprop_ship_sloop", "small: a one-masted courier sloop")
-    lathe_x(p, "Wood", [(0, -9), (2.2, -7), (3.2, -2), (3.3, 3), (2.4, 8), (0, 11)], 12, "sloop", flat_top=0.4,
-            bands=["Wood", "Wood", "Gold", "Wood", "Wood"])
-    box(p, "Wood", 0.5, 0, 0.6, 17, 4.6, 0.3)
-    rails(p, -7, 8, 2.1, 0.75, 2.5, 1.0)
-    mast(p, 1.5, 14, ((0.2, 0.55),), w=9)
-    box(p, "Wood", -8.6, 0, -0.8, 1.6, 0.3, 3.2)                  # rudder
-    crystal(p, "Rose", 11.4, 0, 0.6, 0.5, 0.4, 0.9, n=5)           # figurehead
-    lift_crystals(p, -5, 5, -2.8, 2)
-    return p
-
-
-def prop_ship_cutter():
-    p = Piece("hubprop_ship_cutter", "small: a patrol cutter with wing-sails and twin rotors")
-    lathe_x(p, "Basalt", [(0, -11), (2.6, -9), (3.6, -3), (3.6, 4), (2.2, 10), (0, 13)], 12, "cutter", flat_top=0.5,
-            bands=["Basalt", "Basalt", "Gold", "Basalt", "Basalt"])
-    box(p, "BasaltLight", 0, 0, 0.7, 20, 5.4, 0.3)
-    box(p, "Basalt", -3, 0, 2.2, 6, 4, 3)                          # wheelhouse
-    box(p, "Gold", -3, 0, 3.8, 6.4, 4.4, 0.3)
-    box(p, "Shard", -0.1, 0, 2.6, 0.2, 3.2, 1.2)                   # its window
-    for s in (-1, 1):                                              # wing-sails
-        with frame(p, xf(-1, s * 3.2, 1.0, 0, s * -20)):
-            box(p, "Canvas", 0, s * 5, 0, 9, 10, 0.25)
-            box(p, "Gold", 4.6, s * 5, 0, 0.4, 10.4, 0.4)
-        prop_rotor(p, -10.5, s * 2.4, 0.8, 2.2)
-    rails(p, 1, 10, 2.4, 0.85, 3.0, 0.9)
-    tube(p, "Iron", [(10, 0, 1), (13.5, 0, 1.4)], [0.35, 0.25], n=5)     # a bow lamp
-    crystal(p, "Ember", 13.8, 0, 1.4, 0.5, 0.4, 0.4, n=6)
-    lift_crystals(p, -7, 7, -3.2, 3, "Violet")
-    return p
-
-
-def prop_ship_trawler():
-    p = Piece("hubprop_ship_trawler", "small: a cloud-trawler with a boom and hanging nets")
-    lathe_x(p, "Wood", [(0, -10), (3, -8), (4.2, -2), (4.2, 4), (3.2, 9), (0, 11)], 12, "trawler", flat_top=0.5,
-            sy=0.9, bands=["Wood", "Wood", "CanvasTeal", "Wood", "Wood"])
-    box(p, "Wood", 0, 0, 0.7, 18, 6.6, 0.3)
-    box(p, "Wood", -5, 0, 2.4, 5, 5, 3.4)                          # cabin
-    frustum(p, "CanvasTeal", 4, 4.2, 0.6, 4.1, 6.2, -5, 0, rot=45)
-    tube(p, "Iron", [(-6, 1.5, 4), (-6, 1.5, 7.5)], [0.4, 0.4], n=6)      # stovepipe
-    tube(p, "Wood", [(3, 0, 0.8), (3, 0, 11)], [0.4, 0.3], n=6)            # mast
-    tube(p, "Wood", [(3, 0, 9), (3, 8, 5)], [0.25, 0.2], n=4)              # the boom, out to starboard
-    for k in range(5):                                                     # the net, hanging
-        t = k / 4
-        tube(p, "Cloud", [(1.5 + t * 3, 8, 5), (1.8 + t * 2.6, 8.4, 0), (2.5 + t, 8.2, -4)], [0.12, 0.12, 0.1], n=3)
-    orb(p, "Cloud", 3, 8.2, -4.5, 1.6, n=6)                                # a catch of cloud
-    crate_ = [(6, 1.8), (7.4, -1.6), (-1, -2.2)]
-    for x, y in crate_:
-        box(p, "Wood", x, y, 1.6, 1.8, 1.8, 1.8, rz=x * 7)
-    rails(p, 1, 9, 3.1, 0.85, 2.6, 0.9)
-    lift_crystals(p, -6, 6, -3.6, 3)
-    return p
-
-
-def prop_ship_cog():
-    p = Piece("hubprop_ship_cog", "small: a merchant cog under a small gas envelope")
-    lathe_x(p, "Wood", [(0, -12), (3.4, -10), (4.8, -3), (4.8, 4), (3.6, 10), (0, 13)], 14, "cog", flat_top=0.6,
-            sy=0.85, bands=["Wood", "Wood", "Wood", "Wood", "Wood", "Wood"])
-    box(p, "Wood", 0, 0, 0.8, 22, 7.4, 0.3)
-    box(p, "Wood", -8, 0, 2.6, 5, 7, 3.6)                          # sterncastle
-    box(p, "Gold", -8, 0, 4.5, 5.4, 7.4, 0.3)
-    rails(p, -10, -5.6, 3.4, 4.6, 1.5, 0.9)
-    envelope(p, 22, 5.2, 14, "Canvas", 1)
-    for x in (-6, 1, 8):
-        for s in (-1, 1):
-            tube(p, "Iron", [(x, s * 3.2, 1), (x, s * 4.2, 9.4)], [0.15, 0.15], n=3)
-    for k, (x, y) in enumerate(((2, 1.5), (4.5, -1.8), (6.8, 1.2), (0, -1.6))):   # cargo
-        box(p, ("Wood", "CanvasTeal", "Wood", "Canvas")[k], x, y, 1.8, 2.2, 2.2, 2.0, rz=k * 13)
-    rails(p, -4, 10, 3.4, 0.95, 2.8, 1.0)
-    prop_rotor(p, -12.8, 0, 0.8, 2.6)
-    crystal(p, "Ember", 12.6, 0, 1.8, 0.6, 0.5, 0.5, n=6)
-    lift_crystals(p, -8, 8, -4.2, 3)
-    return p
-
-
-def prop_ship_yacht():
-    p = Piece("hubprop_ship_yacht", "small: a noble's pleasure yacht, white and gold, rose sails")
-    lathe_x(p, "Marble", [(0, -12), (2.6, -10), (3.8, -4), (3.8, 3), (2.6, 10), (0, 15)], 14, "yacht", flat_top=0.5,
-            bands=["Marble", "Marble", "Gold", "Marble", "Marble"])
-    box(p, "Walkway", 0.5, 0, 0.7, 23, 5.6, 0.3)
-    frustum(p, "Marble", 8, 3.2, 3.2, 0.8, 3.2, -6, 0)             # a round pavilion aft
-    frustum(p, "Canvas", 8, 4.0, 0.4, 3.2, 6.2, -6, 0)
-    crystal(p, "Rose", -6, 0, 6.8, 0.4, 0.8, 0.2, n=4)
-    mast(p, 3, 16, ((0.22, 0.32), (0.58, 0.28)), w=8, mat="Rose")
-    rails(p, -1, 12, 2.4, 0.85, 2.4, 1.0)
-    for s in (-1, 1):
-        torus_arc(p, "Gold", 2.2, 0.2, 14, s * 0.2, 1.5, 0, 180, n=6, m=3, rx=90)   # bow scrolls
-    crystal(p, "Shard", 15.6, 0, 1.2, 0.6, 0.5, 1.1, n=6)
-    lift_crystals(p, -8, 8, -3.2, 3, "Rose")
-    return p
-
-
-def prop_ship_galleon():
-    p = Piece("hubprop_ship_galleon", "LARGE: a three-masted sky galleon, twin envelopes, 120 studs")
-    lathe_x(p, "Wood", [(0, -52), (9, -46), (15, -30), (17, -8), (16.5, 14), (13, 34), (6, 50), (0, 60)], 18,
-            "galleon", flat_top=2.0, sy=0.75, bands=["Wood", "Wood", "Wood", "Wood", "Wood", "Wood", "Wood"])
-    box(p, "Wood", 2, 0, 2.4, 100, 24, 0.5)
-    for s in (-1, 1):
-        box(p, "Gold", 2, s * 12.6, 0.4, 96, 0.3, 0.6)
-    # sterncastle, three decks of windows
-    box(p, "Wood", -42, 0, 7.5, 18, 22, 10)
-    box(p, "Gold", -42, 0, 12.8, 19, 23, 0.6)
-    for k in range(5):
-        box(p, "Ember", -51.2, -8 + k * 4, 6.5, 0.3, 2.0, 2.4)
-        box(p, "Ember", -51.2, -8 + k * 4, 10, 0.3, 2.0, 1.6)
-    rails(p, -50, -34, 10.5, 13.1, 3, 1.2)
-    box(p, "Wood", -52, 0, -2, 4, 1, 12)                              # rudder
-    # forecastle
-    box(p, "Wood", 40, 0, 4.6, 14, 18, 4.4)
-    box(p, "Gold", 40, 0, 6.9, 14.6, 18.6, 0.5)
-    tube(p, "Wood", [(46, 0, 5), (68, 0, 12)], [0.8, 0.4], n=6)       # bowsprit
-    crystal(p, "Rose", 60, 0, 3, 1.6, 2.4, 3.2, n=6)                  # figurehead
-    for x, h in ((-20, 58), (6, 70), (30, 52)):
-        mast(p, x, h, ((0.18, 0.26), (0.47, 0.22), (0.72, 0.16)), w=30)
-    envelope(p, 96, 16, 92, "Canvas", 4)                              # the envelope above the masts
-    # rigging from masts to rails
-    for x, h in ((-20, 58), (6, 70), (30, 52)):
-        for s in (-1, 1):
-            tube(p, "Iron", [(x, 0, h * 0.95), (x - 6, s * 11.5, 3)], [0.15, 0.15], n=3)
-            tube(p, "Iron", [(x, 0, h), (x, 0, 76)], [0.2, 0.2], n=3)
-    # gun ports and lanterns along both sides
-    for k in range(9):
-        x = -32 + k * 8
-        for s in (-1, 1):
-            box(p, "Basalt", x, s * 12.3, -1.5, 3, 0.4, 2.2)
-            box(p, "Gold", x, s * 12.4, -1.5, 3.4, 0.2, 0.3)
-    rails(p, -32, 32, 11.5, 2.4, 4, 1.4)
-    for s in (-1, 1):                                                 # side rotors on outriggers
-        tube(p, "Iron", [(-30, s * 11, 1), (-30, s * 20, 3)], [0.6, 0.5], n=5)
-        prop_rotor(p, -32, s * 20, 3, 6)
-    lift_crystals(p, -36, 36, -14, 5)
-    crystal(p, "Shard", 0, 0, -20, 5, 0.5, 14, n=8)                   # the keel stone
-    return p
-
-
-def prop_ship_carrier():
-    p = Piece("hubprop_ship_carrier", "LARGE: a sky-carrier: an armoured flagship with a flight deck, 200 studs")
-    lathe_x(p, "Basalt", [(0, -90), (16, -84), (26, -60), (30, -20), (30, 30), (24, 70), (10, 96), (0, 108)], 20,
-            "carrier", flat_top=3.0, sy=0.7, bands=["Basalt", "Basalt", "BasaltLight", "BasaltLight", "Basalt", "Basalt",
-                                                    "Basalt"])
-    box(p, "Walkway", 10, 0, 3.4, 170, 36, 0.6)                     # the flight deck
-    box(p, "Inlay", 10, 0, 3.75, 150, 1.2, 0.1)
-    for k in range(9):
-        box(p, "Gold", -60 + k * 18, 0, 3.8, 5, 0.6, 0.1)
-    # the island: a stepped tower off to port
-    for k, (w, h) in enumerate(((34, 10), (26, 9), (18, 8), (10, 10))):
-        z = 4 + sum(hh for _, hh in ((34, 10), (26, 9), (18, 8), (10, 10))[:k])
-        box(p, ("Basalt", "BasaltLight", "Basalt", "BasaltLight")[k], -30 + k * 2, -12, z + h / 2, w, 10 - k, h)
-        box(p, "Gold", -30 + k * 2, -12, z + h + 0.2, w + 0.4, 10.4 - k, 0.4)
-        box(p, "Shard", -30 + k * 2 + w / 2 + 0.05, -12, z + h * 0.6, 0.2, 7 - k, h * 0.3)
-    tube(p, "Iron", [(-26, -12, 41), (-26, -12, 60)], [0.8, 0.4], n=6)
-    crystal(p, "Shard", -26, -12, 62, 1.6, 3, 1, n=6)
-    torus(p, "Gold", 4, 0.4, -26, -12, 52, n=12, m=3)
-    # the envelope: one long armoured gas-bag above everything
-    envelope(p, 180, 24, 80, "Basalt", 0)
-    for x in (-60, -20, 20, 60):
-        for s in (-1, 1):
-            tube(p, "Iron", [(x, s * 16, 4), (x, s * 18, 58)], [0.8, 0.6], n=5)
-    # turrets, fore and aft
-    for x in (60, -70):
-        frustum(p, "BasaltLight", 10, 6, 5, 4, 8, x, 12)
-        frustum(p, "Gold", 10, 5, 5, 8, 8.6, x, 12)
-        tube(p, "Iron", [(x, 12, 7), (x + (10 if x > 0 else -10), 12, 8.5)], [0.9, 0.7], n=6)
-    # engine nacelles: four big rotors aft on pylons
-    for s in (-1, 1):
-        for x in (-78, -50):
-            tube(p, "Basalt", [(x, s * 22, 0), (x, s * 38, 6)], [1.6, 1.4], n=6)
-            frustum(p, "Iron", 10, 5, 4, -8, 8, M=xf(x, s * 38, 6, 0, 0, 90))
-            prop_rotor(p, x - 9, s * 38, 6, 9)
-            crystal(part_of(p, "glow", "Flicker", rate=3.0), "Cosmic", x + 8.5, s * 38, 6, 2.5, 0.2, 0.2, n=6)
-    # the prow ram and the carrier's great lift stones in a row under the keel
-    frustum(p, "Gold", 6, 4, 0, 96, 116, M=xf(0, 0, -6, 0, 0, 90))
-    for k in range(5):
-        crystal(p, ("Shard", "Violet")[k % 2], -64 + k * 32, 0, -24, 6, 0.5, 18, n=8)
-    for k in range(12):                                             # portholes, both sides
-        for s in (-1, 1):
-            orb(p, "Ember", -70 + k * 13, s * 29.6, -4, 1.1, n=6)
-    return p
 
 
 def prop_sky_whale():
@@ -1565,8 +1414,6 @@ SKY_BUILDERS = (lambda: cloud_bank("hubsky_cloudbank_a", "cba", 560, 320),
 HUB_BUILDERS = (build_platform, build_levitator, build_hall, build_archives, build_shop, build_training)
 BACKDROP_BUILDERS = (build_backdrop_peaks, build_backdrop_mesa, build_backdrop_spires)
 PROP_BUILDERS = (prop_isle_shrine, prop_isle_grove, prop_isle_ruin,
-                 prop_ship_sloop, prop_ship_cutter, prop_ship_trawler, prop_ship_cog, prop_ship_yacht,
-                 prop_ship_galleon, prop_ship_carrier,
                  lambda: cloud("hubprop_cloud_a", "ca", 6), lambda: cloud("hubprop_cloud_b", "cb", 4),
                  prop_crystal_cluster, prop_rune_ring, prop_sky_lantern, prop_sky_whale, prop_waystone)
 

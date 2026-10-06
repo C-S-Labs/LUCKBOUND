@@ -46,7 +46,7 @@ in `assets/export/hub/crossroads/crossroads_layout.json`.
 | `crossroads_hub.fbx` (also) | `HUB_LEVITATOR` (2.9k): under the plaza, a cradle, a great crystal heart and eight thrusters, with conduits out to every district. It is what keeps the whole hub in the sky. |
 | `crossroads_animated.fbx` | **79 `anim_*` meshes** (6.2k tris in all), in hub coordinates: every part that moves, split out of its host mesh the way the Sky Citadel props are. Each one's `anim` (Spin / Bob / SpinBob / Flicker) and `host` are in the layout JSON. They include: beacon shards, keel cores and rings, obelisk crystals, the crown, halo and heart, the oculus crystal, the orrery (a sun plus three rings, each carrying its planet), the floating books, the coin and fountain rings, the thruster flames, the three gyroscope rings, and **every ware for sale**. |
 | `crossroads_backdrop.fbx` | `HUB_BACKDROP_PEAKS`, `_MESA`, `_SPIRES` (3.4–3.7k each), 390–720 studs tall, to be cloned round the hub |
-| `crossroads_orbiters.fbx` | 17 `hubprop_*`: three small isles (shrine, grove, ruin); **five small ships** (sloop, cutter, trawler, cog, yacht, 470–1.2k tris); **two large ships** (galleon 120 studs, carrier 200 studs, ~3k tris each); two clouds; crystal cluster; rune ring; sky lantern; a detailed sky whale (1.9k); waystone. The server picks a random set per instance, and the graphics setting scales how many. |
+| `crossroads_orbiters.fbx` | 10 `hubprop_*`: three small isles (shrine, grove, ruin); two clouds; crystal cluster; rune ring; sky lantern; a detailed sky whale (1.7k); waystone. The server picks a random set per instance, and the graphics setting scales how many. (The five small ships and two large ships were removed 2026-10-05; the sky creatures live in `creatures/` and `creatures_*.fbx`.) |
 
 The hub pieces are the same in every server. The backdrop and orbiters are
 placed at random by the server.
@@ -122,3 +122,7 @@ the place. The old authored shell and the blockout remain the fallback, and
 
 The far range reuses the backdrop chunks, larger and darker. Placement is set in
 `GameConfig.HubLayout.V2` (CloudSea, FarRange, Moon, Planet, Ring).
+
+## Update 2026-10-05 (orchestrated refinement)
+
+Bridge junctions re-seated on the plaza's 16-gon edge (115.73, not 118), polygon curbs, restrained trim; hub tri counts are now HUB_PLATFORM 8088, LEVITATOR 2984, HALL 3830, ARCHIVES 6880, SHOP 3664, TRAINING 4588; animated parts 114 (7162 tris). Creatures live in `creatures/`. Boats are no longer spawned (meshes kept until Studio proves the replacement). Re-import `crossroads_hub.fbx` with the regenerated `CrossroadsV2.luau`.
