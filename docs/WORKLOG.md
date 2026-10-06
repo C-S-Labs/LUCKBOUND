@@ -51,6 +51,12 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 ### Follow-ups (owner test 4: circling, weaving, drifting colossals)
 - Measured live in Studio (attribute `SkyDbg`, switch `GameConfig.Debug.SkyDebug`, default off). Causes found and fixed: keep-out edge tangent over the hub roof (ill-conditioned near the axis: vertical-only push now); separation scaled BOTH bodies' radii so every small creature fled isles/clouds (now own comfort zone scaled, other body at true size: small-class mean turn 164 -> 13 deg/s); colossals drifting out of band into the far range (band leash `Flight.Leash*`, far range moved to 5200-6400). Added circling guard (`Flight.Circle*`), arrival by real turning radius (`ArriveRadiusScale`), stall rescue (`Rescue*`).
 
+### Final polish (owner tests 5-6)
+- `/colossal <species>` dev command (registry entry, `DebugSystem` handler, `HubV2.setColossal`): swaps the sky's colossal live; the client drops removed creatures and adopts late arrivals.
+- Nautilus jet funnel removed (mesh re-imported). Spine head jitter fixed: `solveSpine` resamples the head's path at even spacing (head heading step 0.039 -> 0.0017 rad/frame in the unit test); NOT yet verified live (the owner's Studio was on another worktree).
+- Boat cleanup done: ship generators and helpers removed from `build_crossroads_hub.py`, orbiters FBX and layout rows regenerated (26 ship entries; hub pieces, anchors and animated parts byte-for-byte equal in the layout JSON), `CrossroadsV2.luau` regenerated, 26 ship items removed from `HUB_ORBITERS.rbxmx`, stale docs fixed.
+- Tests 1293 passing; Rojo build ok. Debug switch `GameConfig.Debug.SkyDebug` (off) publishes steering inputs as the `SkyDbg` attribute.
+
 ### Stopped at
 Owner Studio test. Hand-set limits on starweaver tendriltip_1 [-0.08,0.08] and tendriltip_3 [-0.08,0.13] (the sweep reported a false positive at the joint); re-running gen_part_limits.py overwrites them. Check: wyrm bends, under-hub depth (`UnderDepth` 300 assumed), wing-down sign.
 
