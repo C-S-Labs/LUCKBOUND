@@ -42,7 +42,7 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 ### Done
 - Owner accepts movement feel, defers remaining visual polish and authorizes pushing/opening a PR. Freeze the behavior baseline in PLAYER_ABILITIES.md; Test K2 becomes the retained regression checklist for combat.
 - Refresh against current main (Crossroads PR159), retaining both branches' STATUS/WORKLOG entries and regenerating INDEX_MAP. No movement retuning during PR preparation.
-- Re-run required cheap repository checks on the combined branch; push/open PR after validation. Remote CI outcome is reported with the PR.
+- Combined branch validation passes: 1,299/1,299 units; 148 Luau syntax parses; canonical repository StyLua; 4,280 loader differential cases plus multipart/portal contracts; index/forbidden-name checks; Rojo build. Remote CI outcome is reported with the PR.
 
 ### Decisions made
 - Combat uses existing movement interfaces; explicit extensions must preserve accepted free traversal, actions, stamina and lock-on. Movement visual polish does not block combat.

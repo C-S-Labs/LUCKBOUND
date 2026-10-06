@@ -41,11 +41,11 @@ _489 text files, 1007 binary assets. Regenerate with `python tools/gen_index.py`
 
 ### assets/export
 
-- `assets/export/hub/crossroads/creatures_colossal.json` (739) · new
-- `assets/export/hub/crossroads/creatures_colossal2.json` (901) · new
-- `assets/export/hub/crossroads/creatures_mid.json` (2665) · new
-- `assets/export/hub/crossroads/creatures_small.json` (2238) · new
-- `assets/export/hub/crossroads/crossroads_layout.json` (2876) · 2026-09-24
+- `assets/export/hub/crossroads/creatures_colossal.json` (739) · 2026-10-05
+- `assets/export/hub/crossroads/creatures_colossal2.json` (901) · 2026-10-05
+- `assets/export/hub/crossroads/creatures_mid.json` (2665) · 2026-10-05
+- `assets/export/hub/crossroads/creatures_small.json` (2238) · 2026-10-05
+- `assets/export/hub/crossroads/crossroads_layout.json` (2876) · 2026-10-05
 - `assets/export/worlds/ethereal_scape/ethereal_scape_structure.json` (2810) · 2026-10-01
 - `assets/export/worlds/ethereal_scape/live_animation_props.json` (2510) · 2026-10-01
 - `assets/export/worlds/ethereal_scape/live_delivery.json` (34569) · 2026-10-01
@@ -250,36 +250,36 @@ _489 text files, 1007 binary assets. Regenerate with `python tools/gen_index.py`
 - `assets/source/enemies/verdant_valley/manifest.py` (14) - Verdant Valley enemy manifest: the ONE place that lists this biome's enemies for the framework runner. · 2026-09-26
 - `assets/source/enemies/verdant_valley/rootbound_warden.py` (110) - LUCKBOUND - Verdant Valley BASIC enemy: Rootbound Warden (close range, heavy; Sky-Tree Grove + gardens). · 2026-09-26
   - `rootbound_warden.py`: braid:23
-- `assets/source/hub/crossroads/README.md` (128) - The Crossroads, rebuilt (2026-09-23) · 2026-09-24
+- `assets/source/hub/crossroads/README.md` (128) - The Crossroads, rebuilt (2026-09-23) · 2026-10-05
   - `README.md`: Design:15, Pieces:38, Shop wares:54, Checks:67, Gameplay anchors:72, Import:85, In the game (2026-09-24):98, The sky beyond (2026-09-24):115, Update 2026-10-05 (orchestrated refinement):126
-- `assets/source/hub/crossroads/build_crossroads_hub.py` (1535) - THE CROSSROADS, rebuilt around the Fate Engine (owner, 2026-09-23: "the · 2026-09-24
+- `assets/source/hub/crossroads/build_crossroads_hub.py` (1535) - THE CROSSROADS, rebuilt around the Fate Engine (owner, 2026-09-23: "the · 2026-10-05
   - `build_crossroads_hub.py`: part_of:126, anim:143, tris:156, anchor:160, sector:166, ring_with_gaps:185, ribbon_pts:201, lamp:205, pylon_beacon:212, hanging_core:225, stepped_keel:232, poly_band:245, poly_curb_with_gaps:283, district_deck:294, build_platform:316, build_levitator:434, statue:490, obelisk:506, build_hall:514, book_row:574, build_archives:585, ware:664, stall:725, build_shop:744, brazier:811, rack:820, target:831, build_training:841, lump:906, peak:945, crag:952, island_base:957, vein:979, ruin_spire:987, build_backdrop_peaks:996, build_backdrop_mesa:1021, build_backdrop_spires:1063, prop_isle_shrine:1107, prop_isle_grove:1122, prop_isle_ruin:1135, ... +21 more
-- `assets/source/hub/crossroads/check_buried_parts.py` (68) - Find loose parts buried inside other parts of the same static mesh (points · 2026-09-23
-- `assets/source/hub/crossroads/check_walkways.py` (56) - Walk every route (plaza -> bridges -> districts, the promenade ring, the overlooks) · 2026-09-23
+- `assets/source/hub/crossroads/check_buried_parts.py` (68) - Find loose parts buried inside other parts of the same static mesh (points · 2026-10-05
+- `assets/source/hub/crossroads/check_walkways.py` (56) - Walk every route (plaza -> bridges -> districts, the promenade ring, the overlooks) · 2026-10-05
   - `check_walkways.py`: ground:15
-- `assets/source/hub/crossroads/creatures/colossal/README.md` (11) - Colossal creatures (Crossroads V2 sky ecosystem) · new
-- `assets/source/hub/crossroads/creatures/colossal/build_colossal.py` (1156) - Crossroads V2 sky ecosystem: the two COLOSSAL hero creatures. · new
+- `assets/source/hub/crossroads/creatures/colossal/README.md` (11) - Colossal creatures (Crossroads V2 sky ecosystem) · 2026-10-05
+- `assets/source/hub/crossroads/creatures/colossal/build_colossal.py` (1156) - Crossroads V2 sky ecosystem: the two COLOSSAL hero creatures. · 2026-10-05
   - `build_colossal.py`: tris:68, soup:72, ell:80, lathe:84, ellipsoid:125, ell_solid:135, shard:143, blade:149, anchor:176, lerp:190, basis_ring:194, Creature:209, star_matfn:233, starweaver_body:258, starweaver_skirt:314, starweaver_fringe:344, starweaver_halo:367, starweaver_heart:396, tpath:423, tendril_segment:428, starweaver_tendrils:487, build_starweaver:510, shell_matfn:533, turtle_body:559, turtle_shell:601, tz:616, rn_of:632, top:636, tree:640, turtle_isle:658, turtle_grove:742, turtle_crystals:779, turtle_neck_head:807, turtle_tail:849, paddle:863, turtle_flippers:880, build_turtle:911, bbox:927, finalize:934, to_sidecar_frame:946, ... +8 more
-- `assets/source/hub/crossroads/creatures/colossal/pose_preview.py` (266) - Pose-preview harness for the colossal rigs (contract SKY_ECOSYSTEM_CONTRACT.md 4.1 / 6.5). · new
+- `assets/source/hub/crossroads/creatures/colossal/pose_preview.py` (266) - Pose-preview harness for the colossal rigs (contract SKY_ECOSYSTEM_CONTRACT.md 4.1 / 6.5). · 2026-10-05
   - `pose_preview.py`: T:40, hinge_about:44, build_all:51, Rig:58, extents:111, attach_report:149, frame_box:167, render_set:172, main:181
-- `assets/source/hub/crossroads/creatures/colossal/tendril_compare.py` (63) - Starweaver tendril before/after sheet (round 3): worst-case chain poses, old amps vs new calmer amps + limits. · new
+- `assets/source/hub/crossroads/creatures/colossal/tendril_compare.py` (63) - Starweaver tendril before/after sheet (round 3): worst-case chain poses, old amps vs new calmer amps + limits. · 2026-10-05
   - `tendril_compare.py`: main:23
-- `assets/source/hub/crossroads/creatures/colossal2/README.md` (9) - Colossal2 (Crossroads V2 round 2): cinder_wyrm, aether_nautilus · new
-- `assets/source/hub/crossroads/creatures/colossal2/bend_preview.py` (168) - Cinder wyrm trail-following bend check (contract section 7 item 4). · new
+- `assets/source/hub/crossroads/creatures/colossal2/README.md` (9) - Colossal2 (Crossroads V2 round 2): cinder_wyrm, aether_nautilus · 2026-10-05
+- `assets/source/hub/crossroads/creatures/colossal2/bend_preview.py` (168) - Cinder wyrm trail-following bend check (contract section 7 item 4). · 2026-10-05
   - `bend_preview.py`: path_points:29, at:45, place:59, run:69, main:160
-- `assets/source/hub/crossroads/creatures/colossal2/build_colossal2.py` (705) - Crossroads V2 sky ecosystem, round 2: the two NEW COLOSSAL hero creatures. · new
+- `assets/source/hub/crossroads/creatures/colossal2/build_colossal2.py` (705) - Crossroads V2 sky ecosystem, round 2: the two NEW COLOSSAL hero creatures. · 2026-10-05
   - `build_colossal2.py`: lerp:76, loft:80, xloft:116, interp:122, lean_spike:131, wr:147, wyrm_seg_mat:151, wyrm_head:166, wyrm_jaw:211, wyrm_segment:227, wyrm_fins:285, build_wyrm:310, spi:338, nautilus_shell:346, naut_head:400, naut_halo:435, naut_tentacles:470, build_nautilus:523, finalize:535, to_sidecar_frame:546, build_sidecar:553, extents:578, check:589, to_objects:613, build_all:628, render_all:648, main:684
-- `assets/source/hub/crossroads/creatures/colossal2/pose_preview.py` (175) - Pose-preview harness: applies the SAME maths as the game client SkyTraffic to the colossal2 rig data. · new
+- `assets/source/hub/crossroads/creatures/colossal2/pose_preview.py` (175) - Pose-preview harness: applies the SAME maths as the game client SkyTraffic to the colossal2 rig data. · 2026-10-05
   - `pose_preview.py`: S:28, hinge_about:32, pose:36, to_blender_piece:82, gap_report:91, pose_neutral:113, main:123
-- `assets/source/hub/crossroads/creatures/mid/README.md` (36) - Crossroads V2 sky creatures, group `mid` · new
-- `assets/source/hub/crossroads/creatures/mid/build_mid.py` (946) - CROSSROADS V2 SKY ECOSYSTEM, group `mid`: four flying creatures. · new
+- `assets/source/hub/crossroads/creatures/mid/README.md` (36) - Crossroads V2 sky creatures, group `mid` · 2026-10-05
+- `assets/source/hub/crossroads/creatures/mid/build_mid.py` (946) - CROSSROADS V2 SKY ECOSYSTEM, group `mid`: four flying creatures. · 2026-10-05
   - `build_mid.py`: tris:64, _put:68, prism:76, feather:92, shard:109, loft:127, ring_x:162, loft_x:173, ring_lens:190, loft_y:197, interp:214, new_part:224, eye:231, preturn:244, make_leg:253, build_falcon:282, fin:394, seg_tube:401, build_drake:415, fin_sec:550, build_manta:554, build_roc:632, bbox:766, rescale:776, recentre:784, build_all:795, local:821, sidecar:827, export:862, render:874, main:930
-- `assets/source/hub/crossroads/creatures/mid/pose_preview.py` (405) - POSE PREVIEW HARNESS for the Crossroads V2 sky creatures (reusable by every creature group). · new
+- `assets/source/hub/crossroads/creatures/mid/pose_preview.py` (405) - POSE PREVIEW HARNESS for the Crossroads V2 sky creatures (reusable by every creature group). · 2026-10-05
   - `pose_preview.py`: arg:50, hinge_about:60, load_creature:68, part_table:95, pose_matrices:126, apply_pose:154, posed_verts:167, inside:171, attach_audit:186, parse_poses:231, setup_scene:254, run:272
-- `assets/source/hub/crossroads/creatures/small/README.md` (16) - Crossroads V2 sky creatures: group SMALL · new
-- `assets/source/hub/crossroads/creatures/small/build_small.py` (570) - Crossroads V2 sky ecosystem, group SMALL: four little flyers. · new
+- `assets/source/hub/crossroads/creatures/small/README.md` (16) - Crossroads V2 sky creatures: group SMALL · 2026-10-05
+- `assets/source/hub/crossroads/creatures/small/build_small.py` (570) - Crossroads V2 sky ecosystem, group SMALL: four little flyers. · 2026-10-05
   - `build_small.py`: part:63, prism:69, inset:86, feather:91, gem:109, paint:122, mirror:132, bbox:136, leg_chain:144, build_skyfinch:160, moth_wing:217, build_lumen_moth:227, build_cinderkite:278, darter_wing:358, build_prism_darter:383, finish:451, build_all:474, main:510, render:525
-- `assets/source/hub/crossroads/creatures/small/pose_preview.py` (147) - Pose preview for the SMALL group: poses every part with the SAME maths as the game client. · new
+- `assets/source/hub/crossroads/creatures/small/pose_preview.py` (147) - Pose preview for the SMALL group: poses every part with the SAME maths as the game client. · 2026-10-05
   - `pose_preview.py`: to_o:31, hinge_about:35, pose:41, apply:79, main:90
 - `assets/source/hub/crossroads/make_layout_luau.py` (80) - crossroads_layout.json -> src/shared/Content/Hub/CrossroadsV2.luau · 2026-09-24
   - `make_layout_luau.py`: v3:17, main:21
@@ -426,7 +426,7 @@ _489 text files, 1007 binary assets. Regenerate with `python tools/gen_index.py`
 
 ### docs/ART_DIRECTION.md
 
-- `docs/ART_DIRECTION.md` (654) - LUCKBOUND — Art Direction Brief · 2026-10-01
+- `docs/ART_DIRECTION.md` (654) - LUCKBOUND — Art Direction Brief · 2026-10-05
   - `ART_DIRECTION.md`: The approach:32, The mesh seam:50, What exists now:75, The PortalRig:105, What to describe:126, 1. Hub lighting ⭐ (cheapest, highest impact right now):130, 2. The reveal moment ⭐⭐ (the whole game, per §25):139, 3. The Fate Engine:151, 4. Placeholder text:160, 5. Biomes (Phase 2):165, The house style — low poly, one palette:179, Natural things grow in patches, never in geometry — universa:288, No built-in Roblox materials:308, Colour is applied in code, not baked in:331, Collision is part of the paint table, and it is the dangerou:352, The hub palette — the thematic cycle:397, Current defaults:450, Rarity colours — do not deviate:468, How a description becomes code:486, Hub scale vs. the player — measured and APPLIED 2026-09-21:497, What the number would be:519, It was applied on 2026-09-21:532, Why it was not changed in the pass before:562, Replacing the Crossroads later — the drop-in contract:587, What the new delivery has to keep:602, And the one thing to do differently:614, ES/SC cloud and wind review — 2026-10-01:623, ES twilight revision — 2026-10-01:631, ES upper-air ribbons — 2026-10-01:639, ES readability tuning — 2026-10-01:649
 
 ### docs/BLENDER_DIRECTORY_EVIDENCE.json
@@ -676,7 +676,7 @@ _489 text files, 1007 binary assets. Regenerate with `python tools/gen_index.py`
 
 - `docs/design/ASTRAL_REACH_BOSS_REFINEMENT.md` (683) - Astral Reach --- Boss Design Refinement · 2026-09-29
   - `ASTRAL_REACH_BOSS_REFINEMENT.md`: Core Identity:10, Visual Design:30, Movement:61, Idle Behavior:89, Combat Philosophy:110, Wing Sweep:125, Halo Beam:136, Descent:150, Feather-Blade Barrage:163, Wing Cloak:174, Celestial Rotation:184, Phase Two:193, Detached Wings:215, Final Phase Behavior:234, Core Identity:255, Visual Design:284, The Cape:311, Movement Language:336, Step:352, Glide:360, Pivot:369, Pause:377, Sudden Acceleration:391, Combat Philosophy:404, Signature Attacks:421, The Opening Waltz:423, Veiled Step:440, Crescent Waltz:452, Falling Star:465, Silent Step:480, Twin Echo:495, Floating Blade Sequence:510, Phase Two:530, Phase Two Signature: The Grand Dance:559, Final Phase:591, Defeat:620
-- `docs/design/SKY_ECOSYSTEM_CONTRACT.md` (238) - Crossroads V2 refinement: sky ecosystem and hub contract · new
+- `docs/design/SKY_ECOSYSTEM_CONTRACT.md` (238) - Crossroads V2 refinement: sky ecosystem and hub contract · 2026-10-05
   - `SKY_ECOSYSTEM_CONTRACT.md`: 0. Frozen: the Fate Engine:10, 1. Current system (as inspected):18, 2. Shared visual contract:39, 3. Roster (decided; 10 designs, plus the retained whale):49, 4. Technical contract:70, 4.1 Authoring and sidecar (creature workers):72, 4.2 Runtime data (traffic worker):103, 4.3 Animation gaits:134, 4.4 Hub geometry worker:140, 5. Acceptance (orchestrator checks):154, 6. Round 2 amendment (owner Studio test, 2026-10-05) - SUPER:164, 7. Round 3 amendment (owner Studio test 2, 2026-10-05) - SUP:202, 7.x Runtime decisions (round 3 implementation):227
 - `docs/design/boss_plans/ASCENDANT_SENTINEL_ANIMATION_VFX_PLAN.md` (351) - LUCKBOUND — The Ascendant & The Winged Sentinel · 2026-09-30
   - `ASCENDANT_SENTINEL_ANIMATION_VFX_PLAN.md`: Blender construction, animation, and Roblox VFX production p:2, 1. Purpose and authority:6, Sources inspected:12, 2. Spectacle across the four bosses:33, 3. Shared Blender and runtime contract:46, Extend the current pipeline:48, Timing and event data:60, Warning and recovery rules:70, 4. Ascendant — preserve the edited guardian:79, Critical mesh provenance:81, Art identity:89, Parts and bones:95, Existing-action production recipes:112, OrbCast prototype cue sheet:126, Additional attacks — compatibility plan:141, Transfiguration cue sheet:159, Defeat:174, 5. Winged Sentinel — precision and plasma:178, Art and parts:180, Charge ownership:196, Existing Dash Lunge prototype:204, Phase 1 recipes:222, Phase change — existing 60-frame choreography:237, Phase 2 recipes:251, Defeat:264, 6. Moveset conflicts to resolve before full encounter wiring:268, 7. Shared accompanying FX assets and recipes:286, Runtime recipe schema:302, 8. Deliverables and verification:315, Agent delivery checklist:317, Acceptance gates:327, 9. Copyable agent handoff:339, 10. References:343
@@ -696,7 +696,7 @@ _489 text files, 1007 binary assets. Regenerate with `python tools/gen_index.py`
   - `AtmosphereEffects.luau`: LOCKDOWN:36, SIEGE:48, STORMHAWK:58, RIME:68, RECLAIMED:80, AETHER_SURGE:92, UNMOORING:102, num:123, col:126, vec:129, part:133, prop:149, readMap:179, randomIn:259, band:270, buildLights:278, lightLevel:311, newMover:337, buildGraph:359, route:399, hover:422, newRoute:427, stepMover:443, buildFlyers:474, bolt:516, buildWeather:572, buildDome:622, buildPlumes:672, beam:712, anchorAt:726, buildAurora:738, buildRibbons:832, buildDebris:939, buildCanopy:990, applyTint:1011, AtmosphereEffects.enter:1040, AtmosphereEffects.updateAnchors:1220, AtmosphereEffects.leave:1229, AtmosphereEffects.setTint:1256
 - `src/client/Controllers/CharacterAnimator.luau` (862) - HOW THE PLAYER'S BODY MOVES: clips, blending and the procedural layer. · 2026-10-05
   - `CharacterAnimator.luau`: bend:114, findJoint:118, makeSound:127, loadTrack:137, stockId:159, CharacterAnimator.bind:202, CharacterAnimator.unbind:370, playOneShot:403, CharacterAnimator.onJump:425, CharacterAnimator.onLand:434, slotDirection:452, CharacterAnimator.onRoll:461, windPart:501, setWeight:566, CharacterAnimator.update:585, CharacterAnimator.overrideSlot:815, CharacterAnimator.describeSlots:849
-- `src/client/Controllers/DebugCommands.luau` (939) - Developer commands, client half. Testing tooling, not a feature. · 2026-09-28
+- `src/client/Controllers/DebugCommands.luau` (939) - Developer commands, client half. Testing tooling, not a feature. · 2026-10-05
   - `DebugCommands.luau`: DebugCommands.onOutput:49, emit:53, say:67, fail:71, stopFlying:82, startFlying:98, toggleFly:172, setSpeed:185, teleport:227, currentStage:271, currentChunks:300, toggleNoclip:332, setOverlay:376, setStats:438, setProps:489, sorted:512, DebugCommands.sources:606, DebugCommands.describeChunk:611, onOff:622, DebugCommands.bindPanel:630, locomotion:644, DebugCommands.run:852, DebugCommands.runLine:879, DebugCommands.init:886
 - `src/client/Controllers/EventController.luau` (167) - The client's mirror of what is happening to the world. Build spec §4.1. · 2026-09-20
   - `EventController.luau`: list:40, notify:51, EventController.active:59, EventController.dominant:66, EventController.onChanged:70, apply:81, EventController.init:135
@@ -724,7 +724,7 @@ _489 text files, 1007 binary assets. Regenerate with `python tools/gen_index.py`
   - `SettingsController.luau`: SettingsController.musicGroup:48, SettingsController.effectsGroup:53, SettingsController.screenShake:58, SettingsController.showsOthersRolls:63, buildSoundGroups:67, isOurs:90, scaleFor:95, applyScale:107, adopt:118, applyVolumes:129, SettingsController.init:137
 - `src/client/Controllers/SkyController.luau` (263) - THE SKY, WHEN SOMETHING IS HAPPENING TO THE WORLD. · 2026-09-21
   - `SkyController.luau`: definitionFor:52, captureBaseline:66, tweenLighting:73, buildEffects:84, clearEffects:151, revert:159, apply:168, evaluate:192, SkyController.current:232, SkyController.init:236
-- `src/client/Controllers/SkyTraffic.luau` (776) - THE SKY TRAFFIC round the Crossroads: a thin client driver over Core/FlightCore. · 2026-09-27
+- `src/client/Controllers/SkyTraffic.luau` (776) - THE SKY TRAFFIC round the Crossroads: a thin client driver over Core/FlightCore. · 2026-10-05
   - `SkyTraffic.luau`: blocked:97, findPerch:104, hingeAbout:143, SkyTraffic.init:150
 - `src/client/Controllers/StateController.luau` (105) - The single client-side mirror of server state. Build spec T-114. · 2026-09-25
   - `StateController.luau`: notify:31, StateController.get:37, StateController.onChanged:41, StateController.setting:55, StateController.applySetting:68, StateController.init:79
@@ -782,7 +782,7 @@ _489 text files, 1007 binary assets. Regenerate with `python tools/gen_index.py`
   - `HubBuilder.luau`: part:39, cylinder:73, meshOrNil:96, label:125, applyLighting:152, buildRollAnchor:222, buildEngineEntryAnchor:260, buildSpawn:323, clearPlaceDefaults:364, buildFateEngine:402, buildPlatform:587, buildAmphitheatre:619, buildRotunda:683, buildYard:765, buildWalkway:846, buildFloatingIslands:894, buildHubPrefab:944, buildShell:995, buildBackdrop:1013, ensureContract:1100, HubBuilder.build:1162, HubBuilder.setColossal:1332
 - `src/server/Systems/HubUISystem.luau` (254) - THE SERVER SIDE OF THE HUB MENU: travel, codes and settings. · 2026-09-25
   - `HubUISystem.luau`: allow:46, groundedLanding:71, placeCharacter:107, refuseTravel:126, HubUISystem.travel:134, HubUISystem.redeem:174, HubUISystem.updateSetting:208, HubUISystem.init:231
-- `src/server/Systems/HubV2.luau` (776) - THE CROSSROADS v2 (2026-09-23), built around the untouched Fate Engine. · 2026-09-27
+- `src/server/Systems/HubV2.luau` (776) - THE CROSSROADS v2 (2026-09-23), built around the untouched Fate Engine. · 2026-10-05
   - `HubV2.luau`: template:44, walkable:54, place:74, addLight:106, HubV2.build:129, HubV2.buildSky:214, HubV2.setColossal:529, still:562, HubV2.buildBeyond:571
 - `src/server/Systems/LedgerSystem.luau` (159) - THE GLOBAL LEDGER: the only thing in the game that knows how many of a · 2026-09-20
   - `LedgerSystem.luau`: keyFor:35, LedgerSystem.claim:50, LedgerSystem.summary:116, LedgerSystem.isAvailable:133, LedgerSystem.init:137
@@ -794,7 +794,7 @@ _489 text files, 1007 binary assets. Regenerate with `python tools/gen_index.py`
   - `ProgressionSystem.luau`: ProgressionSystem.init:17, ProgressionSystem.award:22, ProgressionSystem.grant:50, ProgressionSystem.recordRoll:76, ProgressionSystem.snapshot:99
 - `src/server/Systems/SaveSystem.luau` (239) - Profile persistence with session locking. Build spec T-109. · 2026-09-25
   - `SaveSystem.luau`: keyFor:29, SaveSystem.load:48, SaveSystem.get:119, SaveSystem.markDirty:123, SaveSystem.save:128, SaveSystem.handOff:172, SaveSystem.release:180, SaveSystem.isVolatile:190, SaveSystem.init:194
-- `src/server/init.server.luau` (285) - The only Script on the server. Build spec §1.2 -- this order is fixed. · 2026-09-30
+- `src/server/init.server.luau` (285) - The only Script on the server. Build spec §1.2 -- this order is fixed. · 2026-10-05
   - `init.server.luau`: step:49, applyMovement:179, loadingFocus:216, onPlayerAdded:235
 
 ### src/shared
@@ -826,11 +826,11 @@ _489 text files, 1007 binary assets. Regenerate with `python tools/gen_index.py`
 - `src/shared/Content/Fixtures/init.luau` (16) - Fixture registry: one module per world, keyed by the world's Id. Each · 2026-09-23
 - `src/shared/Content/Hub/Cinematics.luau` (103) - THE LOADING SCREEN'S CAMERA TOUR, AS DATA. · 2026-09-21
 - `src/shared/Content/Hub/Crossroads.luau` (1504) - The Crossroads, described as DATA. Biome Blueprint §2. · 2026-10-05
-- `src/shared/Content/Hub/CrossroadsV2.luau` (191) - GENERATED by assets/source/hub/crossroads/make_layout_luau.py from · 2026-09-25
+- `src/shared/Content/Hub/CrossroadsV2.luau` (191) - GENERATED by assets/source/hub/crossroads/make_layout_luau.py from · 2026-10-05
 - `src/shared/Content/Hub/Menu.luau` (192) - THE HUB MENU, AS DATA. Build spec §2.2 -- Systems are reusable, content is · 2026-09-25
 - `src/shared/Content/Hub/Palettes.luau` (115) - WHAT THE UI LOOKS LIKE RIGHT NOW, AS DATA. · 2026-09-20
   - `Palettes.luau`: districtColor:32
-- `src/shared/Content/Hub/SkyCreatures.luau` (3116) - GENERATED by tools/gen_sky_creatures.py from the creature sidecars · new
+- `src/shared/Content/Hub/SkyCreatures.luau` (3116) - GENERATED by tools/gen_sky_creatures.py from the creature sidecars · 2026-10-05
   - `SkyCreatures.luau`: AETHER_MANTA:18, AETHER_NAUTILUS:228, ASHEN_ROC:395, CANOPY_DRAKE:696, CINDER_WYRM:1136, CINDERKITE:1415, CITADEL_FALCON:1702, ELDER_GREATTURTLE:1977, LUMEN_MOTH:2149, PRISM_DARTER:2410, SKY_WHALE:2691, SKYFINCH:2747, STARWEAVER:2945
 - `src/shared/Content/LightningRigs.luau` (76) - GENERATED by assets/source/enemies/sky_citadel/ws_lance.py - do not edit by hand. · 2026-10-05
 - `src/shared/Content/LootPools/EtherealScape.luau` (7) - Drop contents remain deferred, matching Sky Citadel and build spec §7.5. · 2026-10-01
@@ -860,9 +860,9 @@ _489 text files, 1007 binary assets. Regenerate with `python tools/gen_index.py`
   - `CodeCore.luau`: CodeCore.normalise:16, CodeCore.find:24, CodeCore.hasRedeemed:37, CodeCore.redeem:51, CodeCore.record:94
 - `src/shared/Core/Constants.luau` (217) - Frozen enums and lookup tables. Build spec §2.1. · 2026-10-01
   - `Constants.luau`: COMMON:24, UNCOMMON:31, RARE:38, EPIC:45, LEGENDARY:52, MYTHIC:59, UNKNOWN:66, SLOTS:81, NAMES:84, HOTKEY_NAMES:127, DATASTORE:184
-- `src/shared/Core/CreatureMotionCore.luau` (743) - THE LAYERED MOTION OF THE SKY CREATURES: the pure animation maths behind · new
+- `src/shared/Core/CreatureMotionCore.luau` (743) - THE LAYERED MOTION OF THE SKY CREATURES: the pure animation maths behind · 2026-10-05
   - `CreatureMotionCore.luau`: clamp:90, CreatureMotionCore.flapShape:97, CreatureMotionCore.flapSlope:106, CreatureMotionCore.burstShape:116, CreatureMotionCore.noise:126, CreatureMotionCore.follow:132, CreatureMotionCore.softLimit:141, CreatureMotionCore.torque:163, CreatureMotionCore.newBody:184, CreatureMotionCore.newPart:211, CreatureMotionCore.updateBody:270, CreatureMotionCore.stepPart:323, CreatureMotionCore.newSpine:492, CreatureMotionCore.seedTrail:548, CreatureMotionCore.pushTrail:570, unit:603, CreatureMotionCore.solveSpine:620
-- `src/shared/Core/DevCore.luau` (268) - The pure half of the developer tools: parsing a command line, checking the · 2026-09-27
+- `src/shared/Core/DevCore.luau` (268) - The pure half of the developer tools: parsing a command line, checking the · 2026-10-05
   - `DevCore.luau`: DevCore.parse:37, DevCore.index:52, DevCore.usage:61, DevCore.options:70, DevCore.check:90, startsWith:116, DevCore.complete:124, DevCore.validate:206
 - `src/shared/Core/EventCore.luau` (257) - Pure live-event state. Build spec §4.1. · 2026-09-20
   - `EventCore.luau`: EventCore.trackedLighting:73, EventCore.formatAnnouncement:84, EventCore.newState:91, EventCore.expire:97, EventCore.startEvent:111, EventCore.isValidScope:128, EventCore.dominant:149, EventCore.pushAnnouncement:191, EventCore.snapshot:219
@@ -872,7 +872,7 @@ _489 text files, 1007 binary assets. Regenerate with `python tools/gen_index.py`
   - `FateCore.luau`: FateCore.buildPool:20, FateCore.effectiveWeight:40, FateCore.scriptedWorldId:63, FateCore.isOnboarding:72, FateCore.roll:77, FateCore.expeditionDuration:107
 - `src/shared/Core/FixtureCore.luau` (55) - The pure half of fixtures (CHUNK_AUTHORING.md convention 7, build spec · 2026-09-23
   - `FixtureCore.luau`: CHEST:15, VAULT:16, FORCEFIELD:17, smooth:23, FixtureCore.lidAngle:31, FixtureCore.doorSpin:38, FixtureCore.doorRecess:44, FixtureCore.fieldTransparency:50
-- `src/shared/Core/FlightCore.luau` (1537) - THE FLIGHT OF THE SKY CREATURES: the pure half of SkyTraffic. · new
+- `src/shared/Core/FlightCore.luau` (1537) - THE FLIGHT OF THE SKY CREATURES: the pure half of SkyTraffic. · 2026-10-05
   - `FlightCore.luau`: wrap:126, clamp:130, approach:134, rangeOf:138, distTo:145, FlightCore.heading:153, FlightCore.velocity:159, FlightCore.turnRate:166, maxTurnRate:174, FlightCore.advance:184, floorOf:280, FlightCore.inKeepOut:292, FlightCore.segmentHitsKeepOut:317, FlightCore.keepOutSteer:366, FlightCore.separation:426, FlightCore.obstacleHitsPoint:452, FlightCore.obstacleHitsSegment:468, centreOffset:511, FlightCore.blockedAt:524, FlightCore.legBlocked:537, FlightCore.obstacleSteer:562, angleOf:633, planPass:643, takeRoutePoint:737, FlightCore.pickWaypoint:756, FlightCore.relocate:880, FlightCore.spawn:928, FlightCore.enter:1038, FlightCore.beginPerch:1070, endPerchAttempt:1086, FlightCore.presenceStep:1102, stuckLimit:1183, FlightCore.tick:1191, FlightCore.updateInterval:1475, FlightCore.gait:1487
 - `src/shared/Core/Freeze.luau` (25) - Deep-freeze a content or config table, so a System cannot mutate the data · 2026-09-22
 - `src/shared/Core/GameConfig.luau` (2151) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-10-05
@@ -896,7 +896,7 @@ _489 text files, 1007 binary assets. Regenerate with `python tools/gen_index.py`
   - `ProfileSchema.luau`: ProfileSchema.default:16, ProfileSchema.migrate:75, ProfileSchema.prune:109
 - `src/shared/Core/ProgressionCore.luau` (72) - Pure Fate progression maths. Build spec §2.4 / GameConfig.Progression. · 2026-09-25
   - `ProgressionCore.luau`: ProgressionCore.pointsForLevel:11, ProgressionCore.levelForPoints:19, ProgressionCore.levelProgress:31, ProgressionCore.award:46, ProgressionCore.grant:61
-- `src/shared/Core/PropCore.luau` (203) - The pure half of a world's ambient scenery (CHUNK_AUTHORING.md convention · 2026-10-01
+- `src/shared/Core/PropCore.luau` (203) - The pure half of a world's ambient scenery (CHUNK_AUTHORING.md convention · 2026-10-05
   - `PropCore.luau`: PropCore.tierShown:49, PropCore.phase:56, PropCore.motion:72, PropCore.birdHeading:171, PropCore.wingAngle:181, PropCore.glideHeading:186
 - `src/shared/Core/Result.luau` (14) - Expected-failure convention. Reserve error() for programmer mistakes. · 2026-09-15
   - `Result.luau`: Result.err:10
@@ -904,7 +904,7 @@ _489 text files, 1007 binary assets. Regenerate with `python tools/gen_index.py`
   - `RiftCore.luau`: RiftCore.ease:29, RiftCore.window:35, RiftCore.phaseFor:46, RiftCore.materialise:61, RiftCore.breath:80, RiftCore.fragmentOffset:88, RiftCore.fragmentTumble:99, RiftCore.gatherOffset:107, RiftCore.lightBrightness:113, RiftCore.shellTransparency:118
 - `src/shared/Core/SettingsCore.luau` (166) - PLAYER SETTINGS: the schema, the defaults, and the validator. · 2026-09-20
   - `SettingsCore.luau`: specById:88, SettingsCore.ordered:100, SettingsCore.defaults:111, SettingsCore.validate:120, SettingsCore.sanitise:152
-- `src/shared/Core/SkyLayout.luau` (138) - WHERE THE ISLANDS ROUND THE HUB GO: the pure layout behind HubV2.buildSky's · new
+- `src/shared/Core/SkyLayout.luau` (138) - WHERE THE ISLANDS ROUND THE HUB GO: the pure layout behind HubV2.buildSky's · 2026-10-05
   - `SkyLayout.luau`: clamp:33, SkyLayout.scaleAt:38, SkyLayout.cylinder:44, laneDistance:52, SkyLayout.lanes:64, SkyLayout.backdrop:78
 - `src/shared/Core/ThemeCore.luau` (267) - WHAT COLOUR IS THE MENU RIGHT NOW? Pure, so the answer is testable for · 2026-09-20
   - `ThemeCore.luau`: channelLuminance:42, ThemeCore.luminance:52, ThemeCore.contrast:59, toLinear:67, toGamma:71, mix:80, tintPreservingLuminance:101, lerp:133, findDistrict:140, findEvent:152, ThemeCore.base:166, ThemeCore.resolve:184, ThemeCore.enforceContrast:217, ThemeCore.districtAt:243
@@ -935,7 +935,7 @@ _489 text files, 1007 binary assets. Regenerate with `python tools/gen_index.py`
   - `RiftRig.luau`: isTinted:53, neon:62, RiftRig.colorFor:69, restTransparency:77, styles:93, blockPart:120, buildBlockout:136, paint:188, RiftRig.setColor:208, RiftRig.attachEffects:214, RiftRig.build:329, RiftRig.seal:390, RiftRig.open:404, RiftRig.isOpen:418
 - `src/shared/Util/ScenarioCore.luau` (246) - Assigns a SCENARIO to each placed chunk in a layout. Brief §3/§5/§8, · 2026-09-27
   - `ScenarioCore.luau`: ScenarioCore.compatible:39, bandMultiplier:68, ScenarioCore.assign:85, ScenarioCore.bandCounts:236
-- `src/shared/Util/Schema.luau` (2012) - Boot-time content validation. Build spec T-107. · 2026-10-01
+- `src/shared/Util/Schema.luau` (2012) - Boot-time content validation. Build spec T-107. · 2026-10-05
   - `Schema.luau`: field:18, validateOne:48, Schema.validateWorlds:89, Schema.validateConfig:148, Schema.validateHub:258, Schema.validateChunks:345, Schema.validateScenarios:623, Schema.validateMaps:677, Schema.validateHubMenu:742, Schema.validateCodes:845, Schema.validateCinematics:890, Schema.validatePalettes:942, Schema.validateEvents:1010, Schema.validateProps:1168, Schema.validateFixtures:1240, Schema.validateLoot:1324, Schema.validatePortals:1391, finite:1523, Schema.validateSkyCreatures:1530, Schema.validateAll:1987
 - `src/shared/Util/WeaponFX.luau` (160) - WeaponFX: live lightning + charge state for rigged weapons (first user: the Aether Lance - the Winged Sentinel's · 2026-09-25
   - `WeaponFX.luau`: bones:27, studsPerMetre:38, makeBeam:47, WeaponFX.apply:84, WeaponFX.applySlide:113, WeaponFX.setCharged:142
@@ -952,7 +952,7 @@ _489 text files, 1007 binary assets. Regenerate with `python tools/gen_index.py`
 
 ### tests/build_suite.py
 
-- `tests/build_suite.py` (263) - Bundles the real src/ modules + tests/cases.luau into one runnable Luau file. · 2026-10-01
+- `tests/build_suite.py` (263) - Bundles the real src/ modules + tests/cases.luau into one runnable Luau file. · 2026-10-05
   - `build_suite.py`: transform:69, main:209
 
 ### tests/cases.luau
@@ -1018,7 +1018,7 @@ _489 text files, 1007 binary assets. Regenerate with `python tools/gen_index.py`
 
 ### tools/gen_part_limits.py
 
-- `tools/gen_part_limits.py` (272) - Self-clip limits for the sky creature sidecars (contract section 7 item 5). · new
+- `tools/gen_part_limits.py` (272) - Self-clip limits for the sky creature sidecars (contract section 7 item 5). · 2026-10-05
   - `gen_part_limits.py`: to_orb:44, hinge_about:48, Mesh:52, Rig:63, box:123, overlaps:127, depths:131, crossed:145, clash:157, part_limit:172, main:226
 
 ### tools/gen_player_anims.py
@@ -1028,7 +1028,7 @@ _489 text files, 1007 binary assets. Regenerate with `python tools/gen_index.py`
 
 ### tools/gen_sky_creatures.py
 
-- `tools/gen_sky_creatures.py` (254) - Generates src/shared/Content/Hub/SkyCreatures.luau, the sky's creature roster. · new
+- `tools/gen_sky_creatures.py` (254) - Generates src/shared/Content/Hub/SkyCreatures.luau, the sky's creature roster. · 2026-10-05
   - `gen_sky_creatures.py`: vec:45, num:49, upper_id:54, to_orbiter:58, load_sidecars:63, load_whale:105, render:145, main:218
 
 ### tools/install_blender_runtime.py
