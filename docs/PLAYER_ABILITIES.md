@@ -175,6 +175,9 @@ Presentation only: it never changes where or how fast a character goes.
   Sprint transitions use the existing track crossfade. Forward Run and Sprint arm
   swing were increased 15% after the first owner test, without changing stride
   coverage or authored torso lean. Playback still follows measured speed.
+  Forward Run now twists the chest 10 degrees toward the advancing arm (Sprint
+  12 degrees), alternating each stride. A head counter-turn keeps the gaze calm;
+  the pelvis, legs and measured stride coverage remain unchanged.
 - **Blending, not switching.** Idle, walk and run play at once, weighted by speed,
   so there is no pop between them. Playback rate follows real speed, so the feet
   don't slide.

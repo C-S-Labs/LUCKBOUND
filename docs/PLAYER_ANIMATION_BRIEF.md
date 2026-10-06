@@ -98,7 +98,10 @@ them to 0.52s); `RunForward/Backward/Left/Right`, the forward-only `Sprint`; `Id
 `AirDash*` (runtime stretches them to 0.32s). The refined gait poses retain the
 ground-contact solver; Sprint has a longer stride and stronger arm drive. The
 first owner iteration adds 15% forward Run/Sprint arm swing without changing
-stride coverage or torso lean; cadence follows the reduced expedition speeds. Still
+stride coverage or torso lean; cadence follows the reduced expedition speeds.
+Forward Run/Sprint also coordinate chest yaw with the advancing arm (10/12
+degrees), with mirrored strides and a restrained head counter-turn. This is
+waist articulation, separate from the procedural whole-body acceleration lean. Still
 to make: the four `Walk*` and `TurnLeft/Right`. Walking uses the stock walk at low
 speeds, blended into the directional Run clips as speed rises. Owner Studio
 acceptance of the refinement is pending: see TESTING.md Test K2.

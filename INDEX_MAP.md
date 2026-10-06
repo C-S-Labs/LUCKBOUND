@@ -492,13 +492,13 @@ _464 text files, 968 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/PLAYER_ABILITIES.md
 
-- `docs/PLAYER_ABILITIES.md` (470) - LUCKBOUND — Player Abilities & Upgrades · 2026-10-05
-  - `PLAYER_ABILITIES.md`: 0. The line this document exists to hold:11, 1. Built: our own character controller:34, 2. Built: two profiles, one stamina bar:71, 2.5 Built: jump, roll and backstep:117, 2.7 Built: how the body moves (`CharacterAnimator`, `Animati:165, Adding real animations: where and how:209, 2.55 Built: the shoulder camera (our shift lock):243, 2.6 Built: lock-on (optional):252, 3. Planned: the Fate Tree:286, FORTUNE — what the roll can reach:302, ENDURANCE — how long you last out there:315, DISCOVERY — what a world yields:326, CRAFT — what your gear becomes:338, Node shapes worth having:348, 4. Planned: movement abilities beyond the two:359, 5. Where these would live:380, 6. How fighting drives movement (the weapon contract):395, 6.1 Weapon stances: how holding a weapon changes the body (d:421, 7. Planned: player combat, the next major system (owner, 202:453
+- `docs/PLAYER_ABILITIES.md` (473) - LUCKBOUND — Player Abilities & Upgrades · 2026-10-05
+  - `PLAYER_ABILITIES.md`: 0. The line this document exists to hold:11, 1. Built: our own character controller:34, 2. Built: two profiles, one stamina bar:71, 2.5 Built: jump, roll and backstep:117, 2.7 Built: how the body moves (`CharacterAnimator`, `Animati:165, Adding real animations: where and how:212, 2.55 Built: the shoulder camera (our shift lock):246, 2.6 Built: lock-on (optional):255, 3. Planned: the Fate Tree:289, FORTUNE — what the roll can reach:305, ENDURANCE — how long you last out there:318, DISCOVERY — what a world yields:329, CRAFT — what your gear becomes:341, Node shapes worth having:351, 4. Planned: movement abilities beyond the two:362, 5. Where these would live:383, 6. How fighting drives movement (the weapon contract):398, 6.1 Weapon stances: how holding a weapon changes the body (d:424, 7. Planned: player combat, the next major system (owner, 202:456
 
 ### docs/PLAYER_ANIMATION_BRIEF.md
 
-- `docs/PLAYER_ANIMATION_BRIEF.md` (115) - Player Animation Brief · 2026-10-05
-  - `PLAYER_ANIMATION_BRIEF.md`: 1. Rules for every clip:14, 2. Make them in this order:37, 3. What the code already adds on top (don't animate these in:64, 3.5 Generated clips (how these are being made):77, 4. The loop: author, try, keep:106
+- `docs/PLAYER_ANIMATION_BRIEF.md` (118) - Player Animation Brief · 2026-10-05
+  - `PLAYER_ANIMATION_BRIEF.md`: 1. Rules for every clip:14, 2. Make them in this order:37, 3. What the code already adds on top (don't animate these in:64, 3.5 Generated clips (how these are being made):77, 4. The loop: author, try, keep:109
 
 ### docs/PLAYER_UI.md
 
@@ -612,8 +612,8 @@ _464 text files, 968 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (9081) - LUCKBOUND — Work Log · 2026-10-05
-  - `WORKLOG.md`: Template:18, Session N — YYYY-MM-DD — <short title>:21, Done:24, Decisions made:27, Stopped at:30, Next:33, Session 242 — 2026-10-05 — First movement walk: immediate da:39, Done:42, Decisions made:50, Stopped at:54, Next:57, Leftovers:61, Session 241 — 2026-10-05 — Player movement refinement (orche:66, Done:69, Decisions made:78, Stopped at:83, Next:86, Leftovers:91, orchestrate-skill (branch agent/orchestrate-skill) - 2026-10:96, Done:99, Decisions made:113, Stopped at:119, Next:122, Session 240 — 2026-09-30 — Wire delivered rifts and finish p:128, Done:131, Decisions made:150, Stopped at:154, Next:158, Leftovers:164, Session 239 — 2026-09-30 — Correct rift faces and FBX import:171, Done:174, Decisions made:185, Stopped at:189, Next:193, Leftovers:197, Session 238 — 2026-09-29 — Expedition rifts: entrance, boss-:203, Done:206, Decisions made:218, Follow-up 2026-10-05:225, Stopped at:247, ... +1206 more
+- `docs/WORKLOG.md` (9105) - LUCKBOUND — Work Log · 2026-10-05
+  - `WORKLOG.md`: Template:18, Session N — YYYY-MM-DD — <short title>:21, Done:24, Decisions made:27, Stopped at:30, Next:33, Session 243 — 2026-10-05 — Give running a coordinated should:39, Done:42, Decisions made:47, Stopped at:51, Next:54, Leftovers:58, Session 242 — 2026-10-05 — First movement walk: immediate da:63, Done:66, Decisions made:74, Stopped at:78, Next:81, Leftovers:85, Session 241 — 2026-10-05 — Player movement refinement (orche:90, Done:93, Decisions made:102, Stopped at:107, Next:110, Leftovers:115, orchestrate-skill (branch agent/orchestrate-skill) - 2026-10:120, Done:123, Decisions made:137, Stopped at:143, Next:146, Session 240 — 2026-09-30 — Wire delivered rifts and finish p:152, Done:155, Decisions made:174, Stopped at:178, Next:182, Leftovers:188, Session 239 — 2026-09-30 — Correct rift faces and FBX import:195, Done:198, Decisions made:209, Stopped at:213, Next:217, ... +1212 more
 
 ### docs/archive
 
@@ -848,7 +848,7 @@ _464 text files, 968 binary assets. Regenerate with `python tools/gen_index.py`;
   - `LedgerCore.luau`: LedgerCore.newLedger:36, LedgerCore.sanitise:45, LedgerCore.issued:69, LedgerCore.remaining:73, LedgerCore.claim:86, LedgerCore.summary:121
 - `src/shared/Core/LockOnCore.luau` (108) - LOCK-ON RULES: which target a press picks, and when a lock drops. No · 2026-09-28
   - `LockOnCore.luau`: LockOnCore.pick:18, LockOnCore.switch:45, LockOnCore.flick:62, LockOnCore.shouldBreak:73, LockOnCore.aimHeight:95, LockOnCore.smoothAlpha:101
-- `src/shared/Core/LocomotionCore.luau` (498) - MOVEMENT RULES: one state machine for everything a player does to get · 2026-09-28
+- `src/shared/Core/LocomotionCore.luau` (498) - MOVEMENT RULES: one state machine for everything a player does to get · 2026-10-05
   - `LocomotionCore.luau`: LocomotionCore.tuning:37, LocomotionCore.newState:64, activeLock:93, LocomotionCore.mode:102, LocomotionCore.isInvulnerable:115, spend:129, hasStaminaFor:140, LocomotionCore.canStartSprint:147, LocomotionCore.canRoll:160, startRoll:184, LocomotionCore.roll:212, LocomotionCore.onFloor:227, LocomotionCore.canJump:238, LocomotionCore.jump:258, LocomotionCore.step:277, LocomotionCore.targetSpeed:353, LocomotionCore.land:384, LocomotionCore.rollSpeedShape:397, LocomotionCore.rollPeakSpeed:422, LocomotionCore.rollMoving:427, LocomotionCore.staminaFraction:432, LocomotionCore.lock:452, LocomotionCore.unlock:467, LocomotionCore.turnToward:478, LocomotionCore.profileFor:494
 - `src/shared/Core/LootCore.luau` (73) - The pure half of loot (build spec §7.5): what a pool yields, for whom. · 2026-09-25
   - `LootCore.luau`: LootCore.roll:35, LootCore.rollForAll:61
@@ -980,8 +980,8 @@ _464 text files, 968 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### tools/gen_player_anims.py
 
-- `tools/gen_player_anims.py` (768) - Generates the player's hand-authored animation clips as Roblox KeyframeSequences. · 2026-10-05
-  - `gen_player_anims.py`: rot_x:76, rot_y:81, rot_z:86, matmul:91, euler_xyz:95, catmull_rom:100, matvec:173, lowest_point:177, foot_tips:201, ground_speed:222, ground:250, channel:271, sample:280, time_reversed:304, shift_phase:309, mirror:317, tuck:333, ready:350, with_root:365, run_step:420, strafe_step:463, fmt:640, cframe_xml:644, Refs:655, pose_xml:664, build:676, check:707, main:734
+- `tools/gen_player_anims.py` (772) - Generates the player's hand-authored animation clips as Roblox KeyframeSequences. · 2026-10-05
+  - `gen_player_anims.py`: rot_x:76, rot_y:81, rot_z:86, matmul:91, euler_xyz:95, catmull_rom:100, matvec:173, lowest_point:177, foot_tips:201, ground_speed:222, ground:250, channel:271, sample:280, time_reversed:304, shift_phase:309, mirror:317, tuck:333, ready:350, with_root:365, run_step:420, strafe_step:467, fmt:644, cframe_xml:648, Refs:659, pose_xml:668, build:680, check:711, main:738
 
 ### tools/install_blender_runtime.py
 

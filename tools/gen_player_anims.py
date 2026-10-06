@@ -417,11 +417,15 @@ ROLL_LEFT = [
 # comes through, rather than lowering the entire body between every step.
 
 
-def run_step(lean=-12, stride=1.25, arms=1.0, knee_lift=1.0, twist=6, plant_angle=38, rear_knee=-10, stance_knee=-6, arm_swing=1.0):
+def run_step(lean=-12, stride=1.25, arms=1.0, knee_lift=1.0, twist=6, plant_angle=38, rear_knee=-10, stance_knee=-6, arm_swing=1.0, shoulder_turn=None):
     s, a, k = stride, arms, knee_lift
+    # +Y brings the right shoulder forward (-Z) with the right arm.
+    # Mirroring drives the left shoulder on the next stride; keep the
+    # pelvis planted and counter-turn the head so the gaze stays quiet.
+    torso_yaw = -twist * a if shoulder_turn is None else shoulder_turn
     contact = {
-        "UpperTorso": (lean, -twist * a, 0),
-        "Head": (-lean * 0.6, twist * a * 0.8, 0),
+        "UpperTorso": (lean, torso_yaw, 0),
+        "Head": (-lean * 0.6, -torso_yaw * 0.8, 0),
         "LeftUpperLeg": (plant_angle, 0, 0),
         "LeftLowerLeg": (-12,),
         "LeftFoot": (-10,),
@@ -449,7 +453,7 @@ def run_step(lean=-12, stride=1.25, arms=1.0, knee_lift=1.0, twist=6, plant_angl
     return [{"t": 0.0, "pose": contact}, {"t": 0.25, "pose": passing}]
 
 
-RUN_FORWARD = shift_phase(run_step(arm_swing=1.15), mirror)
+RUN_FORWARD = shift_phase(run_step(arm_swing=1.15, shoulder_turn=10), mirror)
 # The backpedal: a shorter, upright cycle played backward, weight kept over the
 # heels, arms low.
 RUN_BACKWARD = time_reversed(shift_phase(run_step(lean=6, stride=1.1, arms=0.55, knee_lift=0.75, twist=3, plant_angle=34), mirror))
@@ -457,7 +461,7 @@ RUN_BACKWARD = time_reversed(shift_phase(run_step(lean=6, stride=1.1, arms=0.55,
 
 # Longer ground-covering stride and stronger arms, without adding a second
 # sprint lean: CharacterAnimator already tips the whole body while sprinting.
-SPRINT = shift_phase(run_step(stride=1.55, arms=1.3, knee_lift=1.05, twist=7, plant_angle=42, rear_knee=-8, stance_knee=-4, arm_swing=1.15), mirror)
+SPRINT = shift_phase(run_step(stride=1.55, arms=1.3, knee_lift=1.05, twist=7, plant_angle=42, rear_knee=-8, stance_knee=-4, arm_swing=1.15, shoulder_turn=12), mirror)
 
 
 def strafe_step(lean_side=-9):

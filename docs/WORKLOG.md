@@ -36,6 +36,30 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 243 — 2026-10-05 — Give running a coordinated shoulder drive
+**Merged:** none; local `agent/player-movement-refinement`   **Tests:** prior 1,138 units retained (no Luau changes); 20 clip sanity checks   **Previous head:** abca03c
+
+### Done
+- Owner finds running generic/robotic and asks the torso side to advance with its arm. Forward Run now yaws the chest 10 degrees toward the advancing shoulder; Sprint uses12. The next stride mirrors it. The existing modest twist was in the opposite direction for this arm phase.
+- Add a quiet 80% head counter-turn while leaving the pelvis, leg poses, torso pitch, cadence and all movement tuning unchanged. This is articulation at the waist, not another whole-body lean or a physical trajectory change.
+- Regenerated only RunForward and Sprint. All20 clip sanity checks pass; both XML outputs parse; anatomical axis probe confirms the right shoulder moves forward with the right arm. Measured ground speeds are unchanged; other18 generated builds match HEAD byte-for-byte. Rojo/index/whitespace checks pass.
+
+### Decisions made
+- Use restrained rotation rather than translating the root or adding bounce. Directional side/back clips and lock-on code remain unchanged.
+- No new workers, broad validation or unit tests for this reversible authored-pose change. No push, PR, main merge or publish.
+
+### Stopped at
+Committed locally, ready for a fresh Studio visual check; robot-to-natural feel cannot be certified from the generator.
+
+### Next
+1. Fresh Play: view forward walking/running and sprinting from front/side/rear; the shoulder should join each arm drive while feet and head stay calm.
+2. Briefly check reversals and shoulder/lock-on diagonal blends for an abrupt torso twist.
+
+### Leftovers
+No duplicate/superseded files created; existing two gait assets updated in place. Keep prior versions in Git and task worktrees until owner acceptance and the approved Git lifecycle.
+
+---
+
 ## Session 242 — 2026-10-05 — First movement walk: immediate dash and gait tuning
 **Merged:** none; local `agent/player-movement-refinement`   **Tests:** 1,138 passing   **Previous head:** 7d8ddf9
 
