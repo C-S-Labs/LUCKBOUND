@@ -413,34 +413,39 @@ ROLL_LEFT = [
 # two sides always match. Phase 0: left foot planted ahead, right leg driving
 # back, right arm forward. Phase 0.25: passing, the right knee coming through
 # high. The ground-contact solver plants the lowest foot, which gives the body
-# its bob for free.
+# a modest weight transfer. The stance stays extended as the swing knee
+# comes through, rather than lowering the entire body between every step.
 
 
-def run_step(lean=-12, stride=1.25, arms=1.0, knee_lift=1.0, twist=6):
+def run_step(lean=-12, stride=1.25, arms=1.0, knee_lift=1.0, twist=6, plant_angle=38, rear_knee=-10, stance_knee=-6, arm_swing=1.0, shoulder_turn=None):
     s, a, k = stride, arms, knee_lift
+    # +Y brings the right shoulder forward (-Z) with the right arm.
+    # Mirroring drives the left shoulder on the next stride; keep the
+    # pelvis planted and counter-turn the head so the gaze stays quiet.
+    torso_yaw = -twist * a if shoulder_turn is None else shoulder_turn
     contact = {
-        "UpperTorso": (lean, -twist * a, 0),
-        "Head": (-lean * 0.6, twist * a * 0.8, 0),
-        "LeftUpperLeg": (38 * s, 0, 0),
+        "UpperTorso": (lean, torso_yaw, 0),
+        "Head": (-lean * 0.6, -torso_yaw * 0.8, 0),
+        "LeftUpperLeg": (plant_angle, 0, 0),
         "LeftLowerLeg": (-12,),
         "LeftFoot": (-10,),
         "RightUpperLeg": (-28 * s, 0, 0),
-        "RightLowerLeg": (-45 * s,),
+        "RightLowerLeg": (rear_knee,),
         "RightFoot": (20,),
-        "RightUpperArm": (40 * a, 0, 8),
+        "RightUpperArm": (40 * a * arm_swing, 0, 8),
         "RightLowerArm": (75,),
-        "LeftUpperArm": (-35 * a, 0, -8),
+        "LeftUpperArm": (-35 * a * arm_swing, 0, -8),
         "LeftLowerArm": (55,),
     }
     passing = {
         "UpperTorso": (lean - 2, 0, 0),
         "Head": (-(lean - 2) * 0.6,),
         "LeftUpperLeg": (4 * s, 0, 0),
-        "LeftLowerLeg": (-22,),
+        "LeftLowerLeg": (stance_knee,),
         "RightUpperLeg": (58 * s * k, 0, 0),
         "RightLowerLeg": (-105 * k,),
         "RightFoot": (15,),
-        "RightUpperArm": (5 * a, 0, 8),
+        "RightUpperArm": (5 * a * arm_swing, 0, 8),
         "RightLowerArm": (80,),
         "LeftUpperArm": (0, 0, -8),
         "LeftLowerArm": (70,),
@@ -448,10 +453,15 @@ def run_step(lean=-12, stride=1.25, arms=1.0, knee_lift=1.0, twist=6):
     return [{"t": 0.0, "pose": contact}, {"t": 0.25, "pose": passing}]
 
 
-RUN_FORWARD = shift_phase(run_step(), mirror)
+RUN_FORWARD = shift_phase(run_step(arm_swing=1.15, shoulder_turn=10), mirror)
 # The backpedal: a shorter, upright cycle played backward, weight kept over the
 # heels, arms low.
-RUN_BACKWARD = time_reversed(shift_phase(run_step(lean=6, stride=1.1, arms=0.55, knee_lift=0.75, twist=3), mirror))
+RUN_BACKWARD = time_reversed(shift_phase(run_step(lean=6, stride=1.1, arms=0.55, knee_lift=0.75, twist=3, plant_angle=34), mirror))
+
+
+# Longer ground-covering stride and stronger arms, without adding a second
+# sprint lean: CharacterAnimator already tips the whole body while sprinting.
+SPRINT = shift_phase(run_step(stride=1.55, arms=1.3, knee_lift=1.05, twist=7, plant_angle=42, rear_knee=-8, stance_knee=-4, arm_swing=1.15, shoulder_turn=12), mirror)
 
 
 def strafe_step(lean_side=-9):
@@ -463,10 +473,10 @@ def strafe_step(lean_side=-9):
         "UpperTorso": (-8, 6, -lean_side * 0.6),
         "Head": (4, 2, -lean_side * 0.4),
         "RightUpperLeg": (10, 0, 44),
-        "RightLowerLeg": (-18,),
+        "RightLowerLeg": (-32,),
         "RightFoot": (0, 0, -18),
         "LeftUpperLeg": (-6, 0, -28),
-        "LeftLowerLeg": (-30,),
+        "LeftLowerLeg": (-45,),
         "LeftFoot": (0, 0, 10),
         "RightUpperArm": (20, 0, 22),
         "RightLowerArm": (60,),
@@ -608,11 +618,12 @@ CLIPS = {
     "RollBackward": {"keys": ROLL_BACKWARD, "length": 0.65, "loop": False, "grounded": True},
     "RollLeft": {"keys": ROLL_LEFT, "length": 0.65, "loop": False, "grounded": True},
     "RollRight": {"keys": mirror(ROLL_LEFT), "length": 0.65, "loop": False, "grounded": True},
-    # Run cycles: authored at GameConfig.CharacterAnimation.RunClipSpeed.
+    # Gait playback uses the ground speed measured from each generated clip.
     "RunForward": {"keys": RUN_FORWARD, "length": 0.5, "loop": True, "grounded": True},
     "RunBackward": {"keys": RUN_BACKWARD, "length": 0.52, "loop": True, "grounded": True},
     "RunRight": {"keys": RUN_RIGHT, "length": 0.36, "loop": True, "grounded": True},
     "RunLeft": {"keys": RUN_LEFT, "length": 0.36, "loop": True, "grounded": True},
+    "Sprint": {"keys": SPRINT, "length": 0.56, "loop": True, "grounded": True},
     "Idle": {"keys": IDLE, "length": 4.0, "loop": True, "grounded": True},
     "Backstep": {"keys": BACKSTEP, "length": 0.32, "loop": False, "grounded": True},
     "JumpStart": {"keys": JUMP_START, "length": 0.2, "loop": False},

@@ -36,6 +36,111 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 244 — 2026-10-05 — Accept movement baseline and prepare PR
+**Merged:** none   **Branch:** agent/player-movement-refinement
+
+### Done
+- Owner accepts movement feel, defers remaining visual polish and authorizes pushing/opening a PR. Freeze the behavior baseline in PLAYER_ABILITIES.md; Test K2 becomes the retained regression checklist for combat.
+- Refresh against current main (Crossroads PR159), retaining both branches' STATUS/WORKLOG entries and regenerating INDEX_MAP. No movement retuning during PR preparation.
+- Combined branch validation passes: 1,299/1,299 units; 148 Luau syntax parses; canonical repository StyLua; 4,280 loader differential cases plus multipart/portal contracts; index/forbidden-name checks; Rojo build. Remote CI outcome is reported with the PR.
+
+### Decisions made
+- Combat uses existing movement interfaces; explicit extensions must preserve accepted free traversal, actions, stamina and lock-on. Movement visual polish does not block combat.
+- PR creation is authorized; merging main and publishing the place are not.
+
+### Stopped at
+PR handoff. Integration agent must verify green CI before merge.
+
+### Next
+1. Review movement PR and CI; integration agent merges when ready.
+2. Combat foundation begins from integrated movement baseline, with representative Sword/Greatsword/Spear/Staff moves before deep weapon implementation.
+
+### Leftovers
+No duplicate movement versions. Retain task/worker worktrees until PR lifecycle finishes; old clips remain recoverable in Git. Group-owned animation uploads remain pending for published play.
+
+---
+
+## Session 243 — 2026-10-05 — Give running a coordinated shoulder drive
+**Merged:** none; local `agent/player-movement-refinement`   **Tests:** prior 1,138 units retained (no Luau changes); 20 clip sanity checks   **Previous head:** abca03c
+
+### Done
+- Owner finds running generic/robotic and asks the torso side to advance with its arm. Forward Run now yaws the chest 10 degrees toward the advancing shoulder; Sprint uses12. The next stride mirrors it. The existing modest twist was in the opposite direction for this arm phase.
+- Add a quiet 80% head counter-turn while leaving the pelvis, leg poses, torso pitch, cadence and all movement tuning unchanged. This is articulation at the waist, not another whole-body lean or a physical trajectory change.
+- Regenerated only RunForward and Sprint. All20 clip sanity checks pass; both XML outputs parse; anatomical axis probe confirms the right shoulder moves forward with the right arm. Measured ground speeds are unchanged; other18 generated builds match HEAD byte-for-byte. Rojo/index/whitespace checks pass.
+
+### Decisions made
+- Use restrained rotation rather than translating the root or adding bounce. Directional side/back clips and lock-on code remain unchanged.
+- No new workers, broad validation or unit tests for this reversible authored-pose change. No push, PR, main merge or publish.
+
+### Stopped at
+Committed locally, ready for a fresh Studio visual check; robot-to-natural feel cannot be certified from the generator.
+
+### Next
+1. Fresh Play: view forward walking/running and sprinting from front/side/rear; the shoulder should join each arm drive while feet and head stay calm.
+2. Briefly check reversals and shoulder/lock-on diagonal blends for an abrupt torso twist.
+
+### Leftovers
+No duplicate/superseded files created; existing two gait assets updated in place. Keep prior versions in Git and task worktrees until owner acceptance and the approved Git lifecycle.
+
+---
+
+## Session 242 — 2026-10-05 — First movement walk: immediate dash and gait tuning
+**Merged:** none; local `agent/player-movement-refinement`   **Tests:** 1,138 passing   **Previous head:** 7d8ddf9
+
+### Done
+- Owner first walk: general movement is starting to feel good; immediate jump-dash played a ground roll and stopped, expedition legs were too fast, and running arms needed more swing.
+- Root cause: accepting a jump left `Grounded` true; even once false, roll floor grace still treated the first 0.12s as ground. Accepted/direct and buffered jumps now enter airborne state immediately, bypassing grace. A dash press consumes a pending Humanoid jump edge before classifying the action.
+- Keep the air controller and suppress nearby floor sensing throughout an active dash, so a low jump-dash cannot become a ground action or refill the dash budget. Ordinary edge/bump grace, landing reset, stamina, ground roll and lock-on remain intact.
+- Expedition walking 16.8→15 studs/s, sprinting 26.712→23.85 (SpeedScale 0.7→0.625; SprintMultiplier 1.59 retained). Hub, roll and dash speeds unchanged. Existing measured stride matching lowers cadence with actual speed rather than independently slowing feet.
+- Forward Run and Sprint shoulder swing increased 15%, retaining torso lean, leg poses and measured stride coverage. Regenerated only those two assets; other18 generated outputs remain byte-identical.
+- Added immediate directional/no-input and buffered jump-dash regressions. Checks pass: 1,138/1,138 units, changed-file syntax, canonical repository StyLua, targeted Selene (zero errors/warnings), index, whitespace and Rojo build. Landing recovery is preserved for buffered takeoff. No push, PR, main merge or publish.
+
+### Decisions made
+- This is a small follow-up in the existing task worktree; no new workers or orchestration run. Do not change lock-on or add another movement system.
+- No independent playback slowdown: physical expedition speed supplies the cadence reduction while preserving stride matching.
+
+### Stopped at
+Committed locally for owner retest. The unit suite passes 1,138/1,138; input timing and actual impulse/animation selection still require the focused Studio check in Test K2 steps6–7.
+
+### Next
+1. Fresh Play: Space then Q immediately, with/without direction, and after a buffered landing jump; verify AirDash animation, burst and once-per-airtime budget.
+2. Walk/sprint an actual expedition: judge slower cadence and stronger arms. Briefly repeat shoulder/lock-on and ordinary ground roll/backstep.
+
+### Leftovers
+No duplicate clips/modules or superseded files left behind. Keep task/worker worktrees and checkpoint until Studio acceptance and the approved Git lifecycle; prior asset versions remain recoverable in Git.
+
+---
+
+## Session 241 — 2026-10-05 — Player movement refinement (orchestrated)
+**Merged:** none; local `agent/player-movement-refinement`   **Tests:** 1,136 passing   **Base:** e9ea329
+
+### Done
+- Audited physical travel and gait independently. Free travel was overwritten with smoothed body facing, causing arcs; generated ground-contact pose solving produced roughly 1.04 studs of forward pelvis excursion, accelerated further when sprint reused RunForward.
+- Kept ControllerManager and LocomotionCore. Free input now drives travel directly while visual facing still turns smoothly; zero free-ground acceleration/deceleration settings retain original profile response for lock-on, weapon locks and hard landings.
+- Roll remains nominally 18 studs, execution 0.65→0.52s (recovery 0.12s and iframe window unchanged). Air dash is 70 studs/s for 0.32s (22.4 nominal studs), then hands horizontal velocity to current ordinary air intent once; subsequent ordinary air momentum behavior is unchanged.
+- Refined generated directional Run poses with the existing ground-contact solver and added a forward Sprint clip with a longer stride, stronger arms and measured ground-speed playback. Directional weights remain conserved through sprint transitions.
+- Two isolated implementation worktrees: movement worker completed the controller; animation worker completed animator/generator/gait assets. Lead owns tuning, review, Git, tests and docs. Independent review caught a pose replacement error and excess diagonal sprint weight before acceptance. Initial single-worker attempt was interrupted without edits; owner explicitly authorized this smaller retry.
+- Added four targeted tuning checks and TESTING.md Test K2. Owning movement/animation docs and generated index updated. Final checks: 1,136/1,136 units; syntax for 144 tracked Luau files; canonical StyLua, index and forbidden-name checks; Rojo build. Selene: zero errors/parse errors, 20 existing warnings (including the unchanged animator empty-if). Five generated gait assets match source and parse as XML; all15 non-gait outputs are unchanged. No push, PR, main merge or publish.
+- Local commits: shared tuning `c3f6be7`; movement `86bc9c5` integrated by `7410fcd`; animation `319a9ce` integrated by `8bf31f9`. Final documentation/test commit follows those merges.
+
+### Decisions made
+- Lock-on selection, camera, facing UX and public weapon hooks remain frozen. No corrective forces, second controller, IK system or locomotion speed reduction.
+- Preserve side-step stride coverage rather than maximizing bob reduction; the generated ground-speed measurements are estimates for the reference R15 rig, not proof of planted feet on every avatar.
+- Source roll/dash clips stay unchanged and are retimed by the existing runtime. Sprint preview remains Studio-only until the owner chooses group-owned uploads.
+
+### Stopped at
+Local task branch committed and ready for owner Studio review. Automated checks establish source/config integrity; perceived inertia, bob, foot planting, camera feel and lock-on compatibility still require Test K2. Remote CI has not run because pushing is outside this task.
+
+### Next
+1. Serve this task worktree and run Test K2 in a fresh Studio Play session, first free traversal, then shoulder/lock-on, then roll/air dash in both profiles.
+2. Report profile, input, camera mode and surface for any regression, with a short recording where useful; tune the same files after that feedback.
+3. After owner acceptance, seek the normal push/PR/integration authorization and required CI.
+
+### Leftovers
+No duplicate implementation versions or obsolete exported files were created. Refined Run assets replace their existing files and Sprint is additive. Keep task/worker worktrees and the external orchestration checkpoint for review/rollback; remove them only after the approved Git lifecycle and Studio/CI acceptance. Existing group upload work remains pending.
+
+---
+
 ## crossroads-v2 round 3 (same branch) - 2026-10-05 - owner Studio test 2
 **Merged:** none   **Tests:** 1281 passing; Rojo build ok
 

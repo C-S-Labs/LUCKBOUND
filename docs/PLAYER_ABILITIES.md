@@ -33,6 +33,13 @@ How weapon moves are shaped, including unique Legendary movesets, is `ENEMY_AI.m
 
 ## 1. Built: our own character controller
 
+**Accepted behavior baseline — owner, 2026-10-05.** Free input trajectory, smooth
+visual facing, hub/expedition speeds, jump/roll/backstep/air-dash behavior, stamina
+rules and lock-on compatibility are frozen for the combat foundation. Combat
+consumes the existing movement contract (§6); any required extension must preserve
+ordinary traversal and be reviewed explicitly. Remaining gait polish is deferred,
+and is not a prerequisite for combat. Test K2 remains the regression checklist.
+
 Owner-directed 2026-09-28: **no default Roblox movement.** The Humanoid's state
 machine is off (`EvaluateStateMachine = false`) and a `ControllerManager` with a
 ground and an air controller moves the character. `LocomotionController` sets its
@@ -46,9 +53,9 @@ the controller's torque, which lagged. There are two kinds of turn:
 - **Every other turn is a smooth rotation**: a new movement direction, turning toward a lock-on target,
   and the return after a roll. It turns at 480°/s (`TurnDegreesPerSecond`), up to 2.5× that for a full
   reversal (`ReversalTurnBoost`).
-- **Free-camera running goes where the body faces**, not along the raw key. The eight WASD directions
-  become smooth curves, and the feet never slide sideways under a turning body. Strafing (shoulder camera,
-  lock-on) and rolls keep their own direction.
+- **Free movement follows the camera-relative input vector immediately** (owner refinement, 2026-10-05),
+  including analogue magnitude. Body facing still turns smoothly, but no longer steers the physical trajectory.
+  Shoulder movement remains direct; target-facing strafing and roll direction keep their existing contracts.
 
 **Only the root collides.** Every other body part has collisions off (re-applied every frame), so a
 clip turning the torso through the floor can't push the physics. That push was a camera shake during rolls.
@@ -76,17 +83,19 @@ stands inside a loaded expedition stage, HUB otherwise.
 
 | | Hub | Expedition |
 |---|---|---|
-| Walk / sprint | 32 / ~50 studs/s | ~22 / ~34 studs/s |
-| Speed-up / slow-down | 0.08s / 0.05s | 0.12s / 0.08s |
+| Walk / sprint | 24 / 38.64 studs/s | 15 / 23.85 studs/s |
+| Free ground speed-up / slow-down | 0s / 0s | 0s / 0s |
+| Target lock-on / action profile ramps | 0.08s / 0.05s | 0.12s / 0.08s |
 | Air control | 0.8 | 0.45 |
 | Stamina | **unlimited**: nothing costs anything | sprint 14/s, jump 10, roll 22 |
 
-Ramps are short in both profiles. The first Studio walk felt like sliding on
-ice with longer ones, so weight comes from turning and costs, never from
-sliding. Stamina is unlimited in the hub, and only there (owner, 2026-09-28).
-
-The owner asked for a middle ground between the hub's lightness and a Souls
-game's weight: that is the expedition column.
+Ordinary free and shoulder traversal uses `FreeGroundAccelerationSeconds` and
+`FreeGroundDecelerationSeconds` (both zero). Target lock-on, weapon locks and
+hard-landing recovery keep the existing profile ramps; active rolls keep their
+0.03s acceleration. Weight comes from presentation and costs while input controls
+travel. Air steering and hub speeds are unchanged. Expedition speeds were reduced by
+1.8 studs/s walking and 2.862 sprinting after the first owner test. Actual contact/friction
+response still requires Studio testing. Stamina stays unlimited only in the hub.
 
 **Stamina: a challenge, not a punishment.** One bar (100) for sprint, jump and
 roll now, and for attacks and blocks when weapons land.
@@ -123,7 +132,7 @@ edge, and a 0.12s buffer so a press just before landing fires on landing.
 
 | | Roll (a direction held) | Backstep (no direction) |
 |---|---|---|
-| Movement | **18 studs** over 0.65s; speed follows the clip (gentle start, full through the tumble, easing out), the held direction; the clip blends out over 0.22s into standing or running (steering was tried and removed at the owner's call) | 26 studs/s for 0.32s ≈ 8 studs, away from facing |
+| Movement | **18 studs** over 0.52s; speed follows the clip (gentle start, full through the tumble, easing out), the held direction; the clip blends out over 0.22s into standing or running (steering was tried and removed at the owner's call) | 26 studs/s for 0.32s ≈ 8 studs, away from facing |
 | Cost | the profile's roll cost | 60% of it |
 | Recovery | 0.12s standstill after | same |
 | Invulnerable window | 0.05–0.44s in | 0.02–0.16s in |
@@ -142,9 +151,15 @@ edge, and a 0.12s buffer so a press just before landing fires on landing.
   clip yet, a procedural tumble (forward, backward, or over the shoulder to either
   side). Settings: `RollWind*`, `RollTumble*`, `RollFovKickDegrees`.
 - **Air dash (the jump dash, owner 2026-09-28):** roll pressed **in the air** gives a
-  short horizontal burst (52 studs/s for 0.22s ≈ 11.5 studs):
+  horizontal burst (70 studs/s for 0.32s = 22.4 nominal studs, farther than the ground roll):
   - it goes the held way, or forward with no direction held;
+  - an accepted jump (including a buffered landing jump) enters airtime immediately,
+    so jump then Q bypasses the ground-roll grace window even before the floor sensor clears;
+    an active dash keeps the air controller and cannot refill its budget from a nearby floor;
   - it holds height, so there is no arc;
+  - completion hands horizontal velocity to current input and ordinary movement speed once,
+    respecting weapon restrictions and the external WalkSpeed multiplier while preserving vertical velocity;
+    releasing input removes the burst carry, and subsequent air steering keeps its normal rules;
   - once per airtime, refilled on landing;
   - free in the hub, 18 stamina in an expedition;
   - it has the same four-direction rule and wind burst as the roll, leans into its
@@ -161,6 +176,15 @@ Presentation only: it never changes where or how fast a character goes.
 - **No foot sliding.** The generator measures each gait clip's real foot speed
   (`Content/Animations/GroundSpeeds.luau`, generated), and each direction plays at body speed ÷ its own foot
   speed.
+- **Sprint:** the generated forward Sprint has its own longer stride and measured
+  ground speed. It takes the forward Run weight while sprinting; sideways and
+  backward directional clips retain their weights. Total gait weight is conserved.
+  Sprint transitions use the existing track crossfade. Forward Run and Sprint arm
+  swing were increased 15% after the first owner test, without changing stride
+  coverage or authored torso lean. Playback still follows measured speed.
+  Forward Run now twists the chest 10 degrees toward the advancing arm (Sprint
+  12 degrees), alternating each stride. A head counter-turn keeps the gaze calm;
+  the pelvis, legs and measured stride coverage remain unchanged.
 - **Blending, not switching.** Idle, walk and run play at once, weighted by speed,
   so there is no pop between them. Playback rate follows real speed, so the feet
   don't slide.
@@ -183,6 +207,14 @@ Presentation only: it never changes where or how fast a character goes.
 - **One limit:** the procedural layer (legs, lean, head, dip, tumble) bends joints
   locally, so **other players see only the clips**. Filling the slots below is what
   makes the polish visible to everyone.
+
+The 2026-10-05 gait refinement changes the generated poses, not the contact
+solver or the physical root. Reference-rig modeled pelvis peak-to-peak excursion:
+forward 1.036→0.493 studs; backward 0.816→0.412; side 0.516→0.443. Sprint is
+0.659 studs with a 0.56s cycle and measured 17.10 studs/s ground speed (RunForward
+15.05, RunBackward 12.32, RunLeft/Right 10.00). These measurements establish the
+pose change, not subjective feel or avatar-specific foot planting. Actual
+physics/camera contributions and transition quality require Test K2 in Studio.
 
 ### Adding real animations: where and how
 
@@ -207,7 +239,7 @@ that slot switches to it. No code changes.
      forward. **All four of a gait** (Walk or Run) must be filled before that gait
      switches over; each roll direction switches on its own.
    - **One-shots** (JumpStart, Land*, Roll*, Backstep, Turn*): any length. Rolls and
-     the backstep are stretched to the move's real duration (0.5s / 0.32s).
+     the backstep are stretched to the move's real duration (0.52s / 0.32s).
    - Priority is set by code; the editor's setting doesn't matter.
 3. **Publish** each clip to Roblox under the **group that owns the place** (ids are
    account/group-scoped; see `PARTNER_SETUP.md`). Copy the id.

@@ -635,7 +635,10 @@ function CharacterAnimator.update(ctx: any, dt: number): ()
 	-- Turning on the spot steps the feet with a little walk.
 	local turning = if ground > 0 then AnimationCore.turnInPlace(speed, yawRate, GameConfig) else 0
 	local walkWeight = ground * moving * (1 - run)
-	local runWeight = ground * moving * run * (if sprinting then 0 else 1)
+	local runWeight = ground * moving * run
+	-- Sprint is forward-only; keep the directional gait through held-facing
+	-- side/back movement and the visual turn after an immediate reversal.
+	local sprintFraction = if sprinting then direction.Forward else 0
 
 	setWeight("Idle", ground * (1 - moving) * (1 - turning), blend)
 	if r.DirectionalWalk then
@@ -656,19 +659,19 @@ function CharacterAnimator.update(ctx: any, dt: number): ()
 			local clipSpeed = GroundSpeeds["Run" .. d] or tune.RunClipSpeed
 			setWeight(
 				"Run" .. d,
-				runWeight * direction[d],
+				runWeight * direction[d] * (if d == "Forward" and sprinting then 0 else 1),
 				blend,
 				AnimationCore.playbackRate(speed, clipSpeed, GameConfig)
 			)
 		end
 	else
-		setWeight("Run", runWeight, blend, runRate * sign)
+		setWeight("Run", runWeight * (1 - sprintFraction), blend, runRate * sign)
 	end
 	setWeight(
 		"Sprint",
-		if sprinting then ground * moving else 0,
+		ground * moving * run * sprintFraction,
 		blend,
-		AnimationCore.playbackRate(speed, tune.SprintClipSpeed, GameConfig)
+		AnimationCore.playbackRate(speed, GroundSpeeds.Sprint or tune.SprintClipSpeed, GameConfig)
 	)
 
 	-- === air ===

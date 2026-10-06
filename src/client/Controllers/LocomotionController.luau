@@ -57,6 +57,8 @@ local groundController: GroundController? = nil
 local airController: AirController? = nil
 local groundSensor: ControllerPartSensor? = nil
 local groundIgnoreUntil = 0
+-- An actual dash must start before its finish can hand momentum back once.
+local airDashWasMoving = false
 
 -- Every body part but the root. Only the root collides: the body is drawn
 -- over it, so a roll clip turning the torso through the floor cannot push
@@ -134,6 +136,9 @@ local function facingHeld(): boolean
 end
 
 local function beginRoll(kind: string)
+	if kind == "AIRDASH" then
+		airDashWasMoving = true
+	end
 	local now = os.clock()
 	local relative = "BACKWARD"
 	local yaw = 0
@@ -169,6 +174,12 @@ local function onJumpPressed()
 end
 
 local function onRollPressed()
+	-- Space/touch jump may arrive before the next movement frame. Consume
+	-- that edge first so an immediate Q is an air dash, not a ground roll.
+	if humanoid and humanoid.Jump and not jumpHeld then
+		jumpHeld = true
+		onJumpPressed()
+	end
 	local now = os.clock()
 	local updated, kind = LocomotionCore.roll(state, now, moveDirection().Magnitude > 0, tuning)
 	state = updated
@@ -220,6 +231,10 @@ end
 
 local function bindCharacter(character: Model)
 	manager = nil
+	airDashWasMoving = false
+	jumpHeld = false
+	groundIgnoreUntil = 0
+	snapFacing = false
 	local found = character:WaitForChild("Humanoid", 10)
 	local root = character:WaitForChild("HumanoidRootPart", 10)
 	if not found or not found:IsA("Humanoid") or not root or not root:IsA("BasePart") then
@@ -326,7 +341,11 @@ local function step(dt: number)
 	jumpHeld = jumpInput
 
 	local sensed = groundSensor and groundSensor.SensedPart ~= nil
-	local grounded = (sensed == true) and now >= groundIgnoreUntil
+	local dashMoving = state.RollKind == "AIRDASH" and LocomotionCore.rollMoving(state, now)
+	local grounded = (sensed == true) and now >= groundIgnoreUntil and not dashMoving
+	-- A buffered jump can take off on this contact; retain its landing
+	-- event/recovery while selecting the air controller for the new jump.
+	local landed = grounded and not wasGrounded
 	local held = moveDirection()
 	local moving = held.Magnitude > 0
 
@@ -338,6 +357,7 @@ local function step(dt: number)
 	}, tuning)
 	state = updated
 	if events.Jumped then
+		grounded = false
 		launchJump(now)
 	end
 	if events.Rolled then
@@ -385,6 +405,7 @@ local function step(dt: number)
 		end
 	end
 
+	-- Input controls travel independently of the smooth visual turn below.
 	cm.MovingDirection = direction
 	-- === turning ===
 	-- Camera-driven (shoulder camera) and a roll's start: instant. Anything
@@ -405,17 +426,6 @@ local function step(dt: number)
 		bodyFacing = Vector3.new(x, 0, z)
 	end
 
-	-- FREE RUNNING GOES WHERE THE BODY FACES (owner, 2026-09-28). With the
-	-- free camera the keys only give eight directions; moving along the
-	-- turning body instead of the raw key makes every change of direction a
-	-- smooth curve, and the feet never slide sideways under a body that is
-	-- still turning. Strafing (shoulder camera, lock-on) and rolls keep their
-	-- own direction.
-	if not facingHeld() and mode ~= "ROLL" and moving then
-		direction = bodyFacing * held.Magnitude
-		cm.MovingDirection = direction
-	end
-
 	cm.FacingDirection = bodyFacing
 	cm.BaseMoveSpeed = speed
 
@@ -433,35 +443,47 @@ local function step(dt: number)
 	local air = airController
 	if ground then
 		local rolling = LocomotionCore.rollMoving(state, now)
+		local freeGround = mode == "GROUND"
+			and lockTarget == nil
+			and now >= (state.LandRecoverUntil or 0)
 		ground.AccelerationTime = if rolling
 			then GameConfig.Locomotion.RollAccelerationSeconds
+			elseif freeGround then tuning.FreeGroundAccelerationSeconds
 			else tuning.AccelerationSeconds
-		ground.DecelerationTime = tuning.DecelerationSeconds
+		ground.DecelerationTime = if freeGround
+			then tuning.FreeGroundDecelerationSeconds
+			else tuning.DecelerationSeconds
 	end
 	if air then
 		air.MoveSpeedFactor = tuning.AirControl
 	end
-	if now >= groundIgnoreUntil then
-		cm.ActiveController = if sensed then ground else air
-	end
+	cm.ActiveController = if grounded then ground else air
 
 	-- The air dash drives the body directly: straight along its direction at
 	-- full speed, holding height. The air controller's steering is too soft
 	-- for a burst, and gravity would bend it into an arc.
-	if state.RollKind == "AIRDASH" and LocomotionCore.rollMoving(state, now) then
+	local airDashMoving = state.RollKind == "AIRDASH" and LocomotionCore.rollMoving(state, now)
+	if airDashMoving then
 		root.AssemblyLinearVelocity = rollDirection * speed
+	elseif airDashWasMoving then
+		-- The dash has expired: targetSpeed now includes ordinary movement
+		-- and any active weapon restriction. Return horizontal momentum to
+		-- the held input once; later air steering keeps its normal rules.
+		local velocity = root.AssemblyLinearVelocity
+		root.AssemblyLinearVelocity = held * speed + Vector3.new(0, velocity.Y, 0)
 	end
+	airDashWasMoving = airDashMoving
 
 	-- === landings ===
 	-- The downward speed is sampled every airborne frame, because on the
 	-- landing frame itself the floor has already stopped the fall.
 	local velocity = root.AssemblyLinearVelocity
-	if not grounded then
-		airFallSpeed = math.max(0, -velocity.Y)
-	elseif not wasGrounded then
+	if landed then
 		state = LocomotionCore.land(state, now, airFallSpeed, tuning)
 		CharacterAnimator.onLand(airFallSpeed, now)
 		airFallSpeed = 0
+	elseif not grounded then
+		airFallSpeed = math.max(0, -velocity.Y)
 	end
 	wasGrounded = grounded
 

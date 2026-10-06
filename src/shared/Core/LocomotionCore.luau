@@ -225,7 +225,10 @@ end
 --- AirDashMinAirSeconds (a bump mid-roll, the lip of a step). Such a moment
 --- is not "in the air", so the press is a roll, never an air dash.
 function LocomotionCore.onFloor(state: any, now: number, t: any): boolean
-	return state.Grounded or now - state.LastGroundedAt <= t.AirDashMinAirSeconds
+	-- An accepted jump is intentional airtime immediately, even before the
+	-- floor sensor clears. Grace applies only to walking off a lip/bump.
+	return state.Grounded
+		or (not state.JumpSpent and now - state.LastGroundedAt <= t.AirDashMinAirSeconds)
 end
 
 --- WHAT DOES PRESSING JUMP DO RIGHT NOW? true if it jumps.
@@ -256,6 +259,7 @@ function LocomotionCore.jump(state: any, now: number, t: any): (any, boolean)
 	if LocomotionCore.canJump(state, now, t) then
 		local updated = table.clone(state)
 		updated.JumpSpent = true
+		updated.Grounded = false
 		updated.JumpBufferedUntil = 0
 		spend(updated, t.JumpStaminaCost, now, t)
 		return updated, true
@@ -300,6 +304,7 @@ function LocomotionCore.step(state: any, dt: number, input: any, t: any): (any, 
 		and LocomotionCore.canJump(updated, now, t)
 	then
 		updated.JumpSpent = true
+		updated.Grounded = false
 		updated.JumpBufferedUntil = 0
 		spend(updated, t.JumpStaminaCost, now, t)
 		events.Jumped = true

@@ -5644,6 +5644,32 @@ do
 			and EXP.DecelerationSeconds <= 0.15
 	)
 
+	check(
+		"free ground traversal has no intentional speed ramps",
+		HUB.FreeGroundAccelerationSeconds == 0
+			and HUB.FreeGroundDecelerationSeconds == 0
+			and EXP.FreeGroundAccelerationSeconds == 0
+			and EXP.FreeGroundDecelerationSeconds == 0
+	)
+	check(
+		"target lock-on retains positive profile response ramps",
+		HUB.AccelerationSeconds > 0
+			and HUB.DecelerationSeconds > 0
+			and EXP.AccelerationSeconds > 0
+			and EXP.DecelerationSeconds > 0
+	)
+	check(
+		"the aerial burst travels farther than the ground roll in both profiles",
+		HUB.AirDashSpeed * HUB.AirDashDurationSeconds > HUB.RollDistanceStuds
+			and EXP.AirDashSpeed * EXP.AirDashDurationSeconds > EXP.RollDistanceStuds
+	)
+	check(
+		"the roll invulnerable window remains inside its movement",
+		L.RollInvulnerableFrom >= 0
+			and L.RollInvulnerableFrom < L.RollInvulnerableTo
+			and L.RollInvulnerableTo <= L.RollDurationSeconds
+	)
+
 	-- === stamina ====================================================
 	check(
 		"a fresh state starts with full stamina",
@@ -5839,6 +5865,40 @@ do
 	)
 
 	-- === the air dash (the jump dash) ==============================
+	check(
+		"an immediate jump-dash bypasses ground grace with or without directional input",
+		(function()
+			for _, hasDirection in { true, false } do
+				local jumped, ok = LocomotionCore.jump(state(), 0, EXP)
+				local dashed, kind = LocomotionCore.roll(jumped, 0, hasDirection, EXP)
+				if
+					not ok
+					or jumped.Grounded
+					or kind ~= "AIRDASH"
+					or LocomotionCore.targetSpeed(dashed, 0, EXP) ~= EXP.AirDashSpeed
+				then
+					return false
+				end
+			end
+			return true
+		end)()
+	)
+	check(
+		"a buffered landing jump also permits an immediate air dash",
+		(function()
+			local falling = frame(state(), 1, { Grounded = false })
+			local buffered = LocomotionCore.jump(falling, 1, EXP)
+			local now = 1 + EXP.JumpBufferSeconds * 0.5
+			local launched, events = LocomotionCore.step(buffered, 1 / 60, {
+				WantsSprint = false,
+				Moving = true,
+				Grounded = true,
+				Now = now,
+			}, EXP)
+			local _, kind = LocomotionCore.roll(launched, now, true, EXP)
+			return events.Jumped and not launched.Grounded and kind == "AIRDASH"
+		end)()
+	)
 	check(
 		"roll pressed in the air is an air dash",
 		(function()

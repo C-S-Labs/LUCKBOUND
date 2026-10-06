@@ -1700,7 +1700,7 @@ local GameConfig = {
 		-- loaded expedition stage, HUB otherwise.
 		Profiles = {
 			HUB = {
-				SpeedScale = 1, -- 32 studs/s
+				SpeedScale = 1, -- 24 studs/s
 				SprintMultiplier = 1.61, -- 24 -> ~38.6 (owner: +1.5 studs/s)
 				-- Short on purpose: long ramps read as sliding on ice (owner's
 				-- first Studio walk, 2026-09-28).
@@ -1719,9 +1719,10 @@ local GameConfig = {
 			},
 			EXPEDITION = {
 				-- The middle ground the owner asked for: heavier than the hub,
-				-- lighter than a Souls game. ~22 walking, ~34 sprinting.
-				SpeedScale = 0.7,
-				SprintMultiplier = 1.59, -- 16.8 -> ~26.7 (owner: +1.5 studs/s)
+				-- lighter than a Souls game. Owner gait iteration: 15 walking,
+				-- 23.85 sprinting, with cadence still matched to stride coverage.
+				SpeedScale = 0.625,
+				SprintMultiplier = 1.59,
 				-- Weight comes from costs and the ramps, not from sliding.
 				AccelerationSeconds = 0.12,
 				DecelerationSeconds = 0.08,
@@ -1771,9 +1772,9 @@ local GameConfig = {
 		-- quick backstep when no direction is held. The movement half only:
 		-- the invulnerable window is DECLARED here and read by the combat
 		-- layer when it opens (RESERVED, docs/RESERVED.md).
-		-- Slower and further after the owner's walk with the first clips
-		-- (2026-09-28): a short, quick roll read as unrefined.
-		RollDurationSeconds = 0.65,
+		-- Faster execution for the 2026-10-05 movement refinement, retaining
+		-- the 18-stud distance, recovery and declared invulnerable window.
+		RollDurationSeconds = 0.52,
 		-- How far a roll travels, in studs; its speed follows the roll's shape
 		-- (LocomotionCore.rollSpeedShape) and is worked out from this.
 		RollDistanceStuds = 18, -- owner-tuned 2026-09-28
@@ -1797,8 +1798,8 @@ local GameConfig = {
 		-- Off the floor for less than this is not "in the air": a roll press
 		-- then waits for the feet instead of becoming an air dash.
 		AirDashMinAirSeconds = 0.12,
-		AirDashSpeed = 52, -- studs/s
-		AirDashDurationSeconds = 0.22, -- ~11.5 studs
+		AirDashSpeed = 70, -- studs/s
+		AirDashDurationSeconds = 0.32, -- 22.4 studs, farther than the 18-stud roll
 
 		-- === ROLL LOOK ===
 		-- A discrete burst of wind, not afterimages (owner, 2026-09-28): short
@@ -1846,6 +1847,10 @@ local GameConfig = {
 		MaxLockSeconds = 2.5,
 
 		-- === CONTROLLER ===
+		-- Ordinary free/shoulder traversal follows input without speed ramps.
+		-- Target lock-on, action recovery and weapon locks retain profile ramps.
+		FreeGroundAccelerationSeconds = 0,
+		FreeGroundDecelerationSeconds = 0,
 		-- How far below the hips the floor sensor looks; past this, airborne.
 		GroundSearchDistance = 1.5,
 		-- How often the controller re-checks HUB vs EXPEDITION.

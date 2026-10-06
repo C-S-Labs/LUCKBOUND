@@ -632,6 +632,52 @@ The first thing anyone sees.
 17. **Touch (device emulator): lock on.** ✅ Pass: a Next button appears. Tapping
     it moves the lock, and it disappears when the lock drops. `/dummies 0` clears.
 
+### Test K2 — movement refinement first owner gate (2026-10-05)
+
+Owner accepted the overall movement behavior on 2026-10-05 and authorized its PR.
+Remaining visual polish is deferred. Retain this checklist for combat regressions;
+this acceptance does not claim every optional device/surface case was exercised.
+Offline checks do not
+establish zero physical turning radius, stopping on contacts, grounded presentation
+or unchanged lock-on feel. Keep the previous clips in Git until Studio acceptance.
+
+1. Stop Play and the previous Rojo server. Serve from
+   `C:/Dev/branch/player-movement-refinement`, reconnect Studio, accept the sync,
+   start fresh Play and press PLAY. Confirm `[Locomotion] controller bound`.
+   Run `/animslot`: generated Run directions and Sprint should be available in Studio.
+2. On a broad flat hub surface, with Ctrl off and no target, alternate W/S and A/D,
+   then all diagonals, at walk and sprint speed. Trajectory should change directly;
+   visual facing may finish turning afterwards. Release all movement keys: no unwanted
+   horizontal skating. Watch starts/stops and pivots for animation pops or sliding feet.
+3. Repeat with Left Ctrl on, including sideways/backward sprinting. Camera-facing
+   behavior stays familiar; sideways/backward gait must remain directional.
+4. Compare normal traversal and sprint from side and rear views. Judge pelvis/head
+   bounce, foot contact, smooth transitions, speed and weight. Sprint should read
+   as a stronger stride rather than a faster version of the old bouncing gait.
+   Repeat on a mild slope and a few ordinary steps. If bob persists, report whether
+   the whole character, only the torso/head, or the camera visibly oscillates.
+5. On the same flat route, Q with input should roll about 18 studs in 0.52s, then
+   keep the existing 0.12s recovery. Q without input remains the short backstep.
+   Mash Q during recovery: nothing queues. Check front/back/side rolls with Ctrl on.
+6. Press jump then Q immediately (also try within the same movement frame),
+   with and without direction: an AirDash clip must play, with a clear burst and
+   no ground roll/dead stop. Repeat after a buffered landing jump and after
+   waiting until clearly airborne. The flat dash
+   should travel clearly farther than the roll (22.4 nominal studs). Hold, reverse,
+   and release input at its finish: burst speed must hand back to current intent,
+   without a persistent high-speed coast. Second Q before landing does nothing.
+7. `/moveprofile expedition`, then repeat the essentials. Walking is now 15 studs/s
+   and sprinting 23.85: judge slower leg cadence, planted feet and the 15% stronger
+   forward arm swing. `/stamina 5` checks that
+   actions can spend the remaining sliver and an empty bar blocks the next action.
+   Restore with `/moveprofile auto`. Test one ordinary jump and a hard landing.
+8. `/dummies 5`: middle-click a target, strafe, sprint, roll and dash. Check familiar
+   facing, framing, target switching, wall avoidance and smooth release using Test K
+   steps 10–17. Lock-on feel must remain as good as before. `/dummies 0` clears them.
+9. If available, check partial gamepad/touch input and diagonals. Movement magnitude
+   should remain proportional. Report the failing step, profile, camera mode, input,
+   surface, Output warning and a short recording where useful.
+
 ### Test L — the menu follows the world (4 min) ⭐ NEW
 
 The tint is subtle on purpose. Judge whether it is *too* subtle.
