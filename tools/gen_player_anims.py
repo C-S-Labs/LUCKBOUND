@@ -417,7 +417,7 @@ ROLL_LEFT = [
 # comes through, rather than lowering the entire body between every step.
 
 
-def run_step(lean=-12, stride=1.25, arms=1.0, knee_lift=1.0, twist=6, plant_angle=38, rear_knee=-10, stance_knee=-6):
+def run_step(lean=-12, stride=1.25, arms=1.0, knee_lift=1.0, twist=6, plant_angle=38, rear_knee=-10, stance_knee=-6, arm_swing=1.0):
     s, a, k = stride, arms, knee_lift
     contact = {
         "UpperTorso": (lean, -twist * a, 0),
@@ -428,9 +428,9 @@ def run_step(lean=-12, stride=1.25, arms=1.0, knee_lift=1.0, twist=6, plant_angl
         "RightUpperLeg": (-28 * s, 0, 0),
         "RightLowerLeg": (rear_knee,),
         "RightFoot": (20,),
-        "RightUpperArm": (40 * a, 0, 8),
+        "RightUpperArm": (40 * a * arm_swing, 0, 8),
         "RightLowerArm": (75,),
-        "LeftUpperArm": (-35 * a, 0, -8),
+        "LeftUpperArm": (-35 * a * arm_swing, 0, -8),
         "LeftLowerArm": (55,),
     }
     passing = {
@@ -441,7 +441,7 @@ def run_step(lean=-12, stride=1.25, arms=1.0, knee_lift=1.0, twist=6, plant_angl
         "RightUpperLeg": (58 * s * k, 0, 0),
         "RightLowerLeg": (-105 * k,),
         "RightFoot": (15,),
-        "RightUpperArm": (5 * a, 0, 8),
+        "RightUpperArm": (5 * a * arm_swing, 0, 8),
         "RightLowerArm": (80,),
         "LeftUpperArm": (0, 0, -8),
         "LeftLowerArm": (70,),
@@ -449,7 +449,7 @@ def run_step(lean=-12, stride=1.25, arms=1.0, knee_lift=1.0, twist=6, plant_angl
     return [{"t": 0.0, "pose": contact}, {"t": 0.25, "pose": passing}]
 
 
-RUN_FORWARD = shift_phase(run_step(), mirror)
+RUN_FORWARD = shift_phase(run_step(arm_swing=1.15), mirror)
 # The backpedal: a shorter, upright cycle played backward, weight kept over the
 # heels, arms low.
 RUN_BACKWARD = time_reversed(shift_phase(run_step(lean=6, stride=1.1, arms=0.55, knee_lift=0.75, twist=3, plant_angle=34), mirror))
@@ -457,7 +457,7 @@ RUN_BACKWARD = time_reversed(shift_phase(run_step(lean=6, stride=1.1, arms=0.55,
 
 # Longer ground-covering stride and stronger arms, without adding a second
 # sprint lean: CharacterAnimator already tips the whole body while sprinting.
-SPRINT = shift_phase(run_step(stride=1.55, arms=1.3, knee_lift=1.05, twist=7, plant_angle=42, rear_knee=-8, stance_knee=-4), mirror)
+SPRINT = shift_phase(run_step(stride=1.55, arms=1.3, knee_lift=1.05, twist=7, plant_angle=42, rear_knee=-8, stance_knee=-4, arm_swing=1.15), mirror)
 
 
 def strafe_step(lean_side=-9):

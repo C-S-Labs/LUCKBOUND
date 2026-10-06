@@ -5866,6 +5866,40 @@ do
 
 	-- === the air dash (the jump dash) ==============================
 	check(
+		"an immediate jump-dash bypasses ground grace with or without directional input",
+		(function()
+			for _, hasDirection in { true, false } do
+				local jumped, ok = LocomotionCore.jump(state(), 0, EXP)
+				local dashed, kind = LocomotionCore.roll(jumped, 0, hasDirection, EXP)
+				if
+					not ok
+					or jumped.Grounded
+					or kind ~= "AIRDASH"
+					or LocomotionCore.targetSpeed(dashed, 0, EXP) ~= EXP.AirDashSpeed
+				then
+					return false
+				end
+			end
+			return true
+		end)()
+	)
+	check(
+		"a buffered landing jump also permits an immediate air dash",
+		(function()
+			local falling = frame(state(), 1, { Grounded = false })
+			local buffered = LocomotionCore.jump(falling, 1, EXP)
+			local now = 1 + EXP.JumpBufferSeconds * 0.5
+			local launched, events = LocomotionCore.step(buffered, 1 / 60, {
+				WantsSprint = false,
+				Moving = true,
+				Grounded = true,
+				Now = now,
+			}, EXP)
+			local _, kind = LocomotionCore.roll(launched, now, true, EXP)
+			return events.Jumped and not launched.Grounded and kind == "AIRDASH"
+		end)()
+	)
+	check(
 		"roll pressed in the air is an air dash",
 		(function()
 			local air = frame(state(), 1, { Grounded = false })

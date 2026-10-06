@@ -76,7 +76,7 @@ stands inside a loaded expedition stage, HUB otherwise.
 
 | | Hub | Expedition |
 |---|---|---|
-| Walk / sprint | 24 / 38.64 studs/s | 16.8 / 26.712 studs/s |
+| Walk / sprint | 24 / 38.64 studs/s | 15 / 23.85 studs/s |
 | Free ground speed-up / slow-down | 0s / 0s | 0s / 0s |
 | Target lock-on / action profile ramps | 0.08s / 0.05s | 0.12s / 0.08s |
 | Air control | 0.8 | 0.45 |
@@ -86,7 +86,8 @@ Ordinary free and shoulder traversal uses `FreeGroundAccelerationSeconds` and
 `FreeGroundDecelerationSeconds` (both zero). Target lock-on, weapon locks and
 hard-landing recovery keep the existing profile ramps; active rolls keep their
 0.03s acceleration. Weight comes from presentation and costs while input controls
-travel. Air steering and profile speeds are unchanged. Actual contact/friction
+travel. Air steering and hub speeds are unchanged. Expedition speeds were reduced by
+1.8 studs/s walking and 2.862 sprinting after the first owner test. Actual contact/friction
 response still requires Studio testing. Stamina stays unlimited only in the hub.
 
 **Stamina: a challenge, not a punishment.** One bar (100) for sprint, jump and
@@ -145,6 +146,9 @@ edge, and a 0.12s buffer so a press just before landing fires on landing.
 - **Air dash (the jump dash, owner 2026-09-28):** roll pressed **in the air** gives a
   horizontal burst (70 studs/s for 0.32s = 22.4 nominal studs, farther than the ground roll):
   - it goes the held way, or forward with no direction held;
+  - an accepted jump (including a buffered landing jump) enters airtime immediately,
+    so jump then Q bypasses the ground-roll grace window even before the floor sensor clears;
+    an active dash keeps the air controller and cannot refill its budget from a nearby floor;
   - it holds height, so there is no arc;
   - completion hands horizontal velocity to current input and ordinary movement speed once,
     respecting weapon restrictions and the external WalkSpeed multiplier while preserving vertical velocity;
@@ -168,7 +172,9 @@ Presentation only: it never changes where or how fast a character goes.
 - **Sprint:** the generated forward Sprint has its own longer stride and measured
   ground speed. It takes the forward Run weight while sprinting; sideways and
   backward directional clips retain their weights. Total gait weight is conserved.
-  Sprint transitions use the existing track crossfade.
+  Sprint transitions use the existing track crossfade. Forward Run and Sprint arm
+  swing were increased 15% after the first owner test, without changing stride
+  coverage or authored torso lean. Playback still follows measured speed.
 - **Blending, not switching.** Idle, walk and run play at once, weighted by speed,
   so there is no pop between them. Playback rate follows real speed, so the feet
   don't slide.

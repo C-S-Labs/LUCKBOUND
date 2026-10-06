@@ -174,6 +174,12 @@ local function onJumpPressed()
 end
 
 local function onRollPressed()
+	-- Space/touch jump may arrive before the next movement frame. Consume
+	-- that edge first so an immediate Q is an air dash, not a ground roll.
+	if humanoid and humanoid.Jump and not jumpHeld then
+		jumpHeld = true
+		onJumpPressed()
+	end
 	local now = os.clock()
 	local updated, kind = LocomotionCore.roll(state, now, moveDirection().Magnitude > 0, tuning)
 	state = updated
@@ -335,7 +341,11 @@ local function step(dt: number)
 	jumpHeld = jumpInput
 
 	local sensed = groundSensor and groundSensor.SensedPart ~= nil
-	local grounded = (sensed == true) and now >= groundIgnoreUntil
+	local dashMoving = state.RollKind == "AIRDASH" and LocomotionCore.rollMoving(state, now)
+	local grounded = (sensed == true) and now >= groundIgnoreUntil and not dashMoving
+	-- A buffered jump can take off on this contact; retain its landing
+	-- event/recovery while selecting the air controller for the new jump.
+	local landed = grounded and not wasGrounded
 	local held = moveDirection()
 	local moving = held.Magnitude > 0
 
@@ -347,6 +357,7 @@ local function step(dt: number)
 	}, tuning)
 	state = updated
 	if events.Jumped then
+		grounded = false
 		launchJump(now)
 	end
 	if events.Rolled then
@@ -446,9 +457,7 @@ local function step(dt: number)
 	if air then
 		air.MoveSpeedFactor = tuning.AirControl
 	end
-	if now >= groundIgnoreUntil then
-		cm.ActiveController = if sensed then ground else air
-	end
+	cm.ActiveController = if grounded then ground else air
 
 	-- The air dash drives the body directly: straight along its direction at
 	-- full speed, holding height. The air controller's steering is too soft
@@ -469,12 +478,12 @@ local function step(dt: number)
 	-- The downward speed is sampled every airborne frame, because on the
 	-- landing frame itself the floor has already stopped the fall.
 	local velocity = root.AssemblyLinearVelocity
-	if not grounded then
-		airFallSpeed = math.max(0, -velocity.Y)
-	elseif not wasGrounded then
+	if landed then
 		state = LocomotionCore.land(state, now, airFallSpeed, tuning)
 		CharacterAnimator.onLand(airFallSpeed, now)
 		airFallSpeed = 0
+	elseif not grounded then
+		airFallSpeed = math.max(0, -velocity.Y)
 	end
 	wasGrounded = grounded
 

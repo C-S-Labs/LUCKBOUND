@@ -492,13 +492,13 @@ _464 text files, 968 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/PLAYER_ABILITIES.md
 
-- `docs/PLAYER_ABILITIES.md` (464) - LUCKBOUND — Player Abilities & Upgrades · 2026-09-30
-  - `PLAYER_ABILITIES.md`: 0. The line this document exists to hold:11, 1. Built: our own character controller:34, 2. Built: two profiles, one stamina bar:71, 2.5 Built: jump, roll and backstep:116, 2.7 Built: how the body moves (`CharacterAnimator`, `Animati:161, Adding real animations: where and how:203, 2.55 Built: the shoulder camera (our shift lock):237, 2.6 Built: lock-on (optional):246, 3. Planned: the Fate Tree:280, FORTUNE — what the roll can reach:296, ENDURANCE — how long you last out there:309, DISCOVERY — what a world yields:320, CRAFT — what your gear becomes:332, Node shapes worth having:342, 4. Planned: movement abilities beyond the two:353, 5. Where these would live:374, 6. How fighting drives movement (the weapon contract):389, 6.1 Weapon stances: how holding a weapon changes the body (d:415, 7. Planned: player combat, the next major system (owner, 202:447
+- `docs/PLAYER_ABILITIES.md` (470) - LUCKBOUND — Player Abilities & Upgrades · 2026-10-05
+  - `PLAYER_ABILITIES.md`: 0. The line this document exists to hold:11, 1. Built: our own character controller:34, 2. Built: two profiles, one stamina bar:71, 2.5 Built: jump, roll and backstep:117, 2.7 Built: how the body moves (`CharacterAnimator`, `Animati:165, Adding real animations: where and how:209, 2.55 Built: the shoulder camera (our shift lock):243, 2.6 Built: lock-on (optional):252, 3. Planned: the Fate Tree:286, FORTUNE — what the roll can reach:302, ENDURANCE — how long you last out there:315, DISCOVERY — what a world yields:326, CRAFT — what your gear becomes:338, Node shapes worth having:348, 4. Planned: movement abilities beyond the two:359, 5. Where these would live:380, 6. How fighting drives movement (the weapon contract):395, 6.1 Weapon stances: how holding a weapon changes the body (d:421, 7. Planned: player combat, the next major system (owner, 202:453
 
 ### docs/PLAYER_ANIMATION_BRIEF.md
 
-- `docs/PLAYER_ANIMATION_BRIEF.md` (113) - Player Animation Brief · 2026-09-28
-  - `PLAYER_ANIMATION_BRIEF.md`: 1. Rules for every clip:14, 2. Make them in this order:37, 3. What the code already adds on top (don't animate these in:64, 3.5 Generated clips (how these are being made):77, 4. The loop: author, try, keep:104
+- `docs/PLAYER_ANIMATION_BRIEF.md` (115) - Player Animation Brief · 2026-10-05
+  - `PLAYER_ANIMATION_BRIEF.md`: 1. Rules for every clip:14, 2. Make them in this order:37, 3. What the code already adds on top (don't animate these in:64, 3.5 Generated clips (how these are being made):77, 4. The loop: author, try, keep:106
 
 ### docs/PLAYER_UI.md
 
@@ -527,8 +527,8 @@ _464 text files, 968 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/TESTING.md
 
-- `docs/TESTING.md` (1022) - LUCKBOUND — Testing Guide · 2026-10-01
-  - `TESTING.md`: 1. Automated tests:8, Coverage:31, The three that matter most:91, A caution about the harness:117, The untested boundary — named, so it cannot be mistaken for :131, 2. Sync to Studio with Rojo:166, 2.5 Developer commands:186, The three gates on the server-side commands:244, 3. Manual Studio pass:262, Test A — the server boots (1 min):264, Test B — validation blocks a bad boot (2 min):297, Test C — the 15-roll arc (5 min):304, Test D — the cooldown holds (1 min):330, Test C2b — entering from the Fate Engine ⭐ NEW (3 min):337, Test C2 — the expedition, end to end ⭐ (6 min):354, Test C2c — authored entrance and boss-gated exit (§7.8, 10 m:420, Test C3 — the hub is walkable (3 min):451, Test H2 — the half-size world (4 min) ⭐ NEW:476, Test I — the loading screen (3 min) ⭐ NEW:492, Test J — the hub menu (5 min) ⭐ NEW:518, Test K — movement, stamina and lock-on (10 min) ⭐ NEW:558, Test K2 — movement refinement first owner gate (2026-10-05):635, Test L — the menu follows the world (4 min) ⭐ NEW:673, Test M — an event changes the world (4 min) ⭐ NEW:701, Test N — the ledger holds under a race ⭐ NEW — **two instanc:726, Test O — parties, in Studio ⭐ NEW — **3 clients, 10 min**:751, Test P — the portal opens a new server ⭐ NEW — **published p:789, Test Q — the Sky Citadel kit, in the world ⭐ NEW (8 min):819, Test R — a world's ambience ⭐ NEW (5 min):850, Test S — Sky Citadel's floating scenery ⭐ NEW (5 min):865, Test T — chests, the vault and its key ⭐ NEW (10 min):893, Test E — a tampered client is rejected (1 min):928, Test F — data persists (3 min) — **published places only**:940, Test G — late joiners see a live event ⭐ (5 min):955, Test H — announcements reach everyone, onboarding does not (:984, 4. What to report back:992, Production generation migration - 2026-10-01:1011
+- `docs/TESTING.md` (1027) - LUCKBOUND — Testing Guide · 2026-10-05
+  - `TESTING.md`: 1. Automated tests:8, Coverage:31, The three that matter most:91, A caution about the harness:117, The untested boundary — named, so it cannot be mistaken for :131, 2. Sync to Studio with Rojo:166, 2.5 Developer commands:186, The three gates on the server-side commands:244, 3. Manual Studio pass:262, Test A — the server boots (1 min):264, Test B — validation blocks a bad boot (2 min):297, Test C — the 15-roll arc (5 min):304, Test D — the cooldown holds (1 min):330, Test C2b — entering from the Fate Engine ⭐ NEW (3 min):337, Test C2 — the expedition, end to end ⭐ (6 min):354, Test C2c — authored entrance and boss-gated exit (§7.8, 10 m:420, Test C3 — the hub is walkable (3 min):451, Test H2 — the half-size world (4 min) ⭐ NEW:476, Test I — the loading screen (3 min) ⭐ NEW:492, Test J — the hub menu (5 min) ⭐ NEW:518, Test K — movement, stamina and lock-on (10 min) ⭐ NEW:558, Test K2 — movement refinement first owner gate (2026-10-05):635, Test L — the menu follows the world (4 min) ⭐ NEW:678, Test M — an event changes the world (4 min) ⭐ NEW:706, Test N — the ledger holds under a race ⭐ NEW — **two instanc:731, Test O — parties, in Studio ⭐ NEW — **3 clients, 10 min**:756, Test P — the portal opens a new server ⭐ NEW — **published p:794, Test Q — the Sky Citadel kit, in the world ⭐ NEW (8 min):824, Test R — a world's ambience ⭐ NEW (5 min):855, Test S — Sky Citadel's floating scenery ⭐ NEW (5 min):870, Test T — chests, the vault and its key ⭐ NEW (10 min):898, Test E — a tampered client is rejected (1 min):933, Test F — data persists (3 min) — **published places only**:945, Test G — late joiners see a live event ⭐ (5 min):960, Test H — announcements reach everyone, onboarding does not (:989, 4. What to report back:997, Production generation migration - 2026-10-01:1016
 
 ### docs/TOOLCHAIN_ACCESS.md
 
@@ -612,8 +612,8 @@ _464 text files, 968 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (9054) - LUCKBOUND — Work Log · 2026-10-05
-  - `WORKLOG.md`: Template:18, Session N — YYYY-MM-DD — <short title>:21, Done:24, Decisions made:27, Stopped at:30, Next:33, Session 241 — 2026-10-05 — Player movement refinement (orche:39, Done:42, Decisions made:51, Stopped at:56, Next:59, Leftovers:64, orchestrate-skill (branch agent/orchestrate-skill) - 2026-10:69, Done:72, Decisions made:86, Stopped at:92, Next:95, Session 240 — 2026-09-30 — Wire delivered rifts and finish p:101, Done:104, Decisions made:123, Stopped at:127, Next:131, Leftovers:137, Session 239 — 2026-09-30 — Correct rift faces and FBX import:144, Done:147, Decisions made:158, Stopped at:162, Next:166, Leftovers:170, Session 238 — 2026-09-29 — Expedition rifts: entrance, boss-:176, Done:179, Decisions made:191, Follow-up 2026-10-05:198, Stopped at:220, Next:224, Session 237 - 2026-10-02 - Production generation PR preparat:231, Done:234, Decisions made:240, Stopped at:244, Next:247, ... +1200 more
+- `docs/WORKLOG.md` (9081) - LUCKBOUND — Work Log · 2026-10-05
+  - `WORKLOG.md`: Template:18, Session N — YYYY-MM-DD — <short title>:21, Done:24, Decisions made:27, Stopped at:30, Next:33, Session 242 — 2026-10-05 — First movement walk: immediate da:39, Done:42, Decisions made:50, Stopped at:54, Next:57, Leftovers:61, Session 241 — 2026-10-05 — Player movement refinement (orche:66, Done:69, Decisions made:78, Stopped at:83, Next:86, Leftovers:91, orchestrate-skill (branch agent/orchestrate-skill) - 2026-10:96, Done:99, Decisions made:113, Stopped at:119, Next:122, Session 240 — 2026-09-30 — Wire delivered rifts and finish p:128, Done:131, Decisions made:150, Stopped at:154, Next:158, Leftovers:164, Session 239 — 2026-09-30 — Correct rift faces and FBX import:171, Done:174, Decisions made:185, Stopped at:189, Next:193, Leftovers:197, Session 238 — 2026-09-29 — Expedition rifts: entrance, boss-:203, Done:206, Decisions made:218, Follow-up 2026-10-05:225, Stopped at:247, ... +1206 more
 
 ### docs/archive
 
@@ -680,8 +680,8 @@ _464 text files, 968 binary assets. Regenerate with `python tools/gen_index.py`;
   - `LightningController.luau`: LightningController.init:18
 - `src/client/Controllers/LockOnController.luau` (450) - LOCK-ON: an optional target lock with an over-the-shoulder camera. · 2026-10-01
   - `LockOnController.luau`: pivotOf:45, centreOf:54, aimPoint:64, playerRoot:72, cameraIgnore:82, visible:90, showMarker:100, release:152, measure:179, lockOnto:211, acquire:232, LockOnController.switch:245, toggle:279, easeBack:294, update:311, LockOnController.init:384
-- `src/client/Controllers/LocomotionController.luau` (610) - PLAYER MOVEMENT: walk, sprint, jump, roll and backstep, on our own · 2026-10-05
-  - `LocomotionController.luau`: moveDirection:103, launchJump:119, facingHeld:134, beginRoll:138, onJumpPressed:167, onRollPressed:176, insideStage:189, refreshProfile:210, bindCharacter:226, step:313, LocomotionController.init:508, LocomotionController.get:565, LocomotionController.mode:571, LocomotionController.lock:578, LocomotionController.unlock:583, LocomotionController.forceProfile:589, LocomotionController.setStamina:595, LocomotionController.profile:600, LocomotionController.setLockTarget:606
+- `src/client/Controllers/LocomotionController.luau` (619) - PLAYER MOVEMENT: walk, sprint, jump, roll and backstep, on our own · 2026-10-05
+  - `LocomotionController.luau`: moveDirection:103, launchJump:119, facingHeld:134, beginRoll:138, onJumpPressed:167, onRollPressed:176, insideStage:195, refreshProfile:216, bindCharacter:232, step:319, LocomotionController.init:517, LocomotionController.get:574, LocomotionController.mode:580, LocomotionController.lock:587, LocomotionController.unlock:592, LocomotionController.forceProfile:598, LocomotionController.setStamina:604, LocomotionController.profile:609, LocomotionController.setLockTarget:615
 - `src/client/Controllers/PartyController.luau` (135) - The client's picture of its party. Build spec §7.2. · 2026-09-22
   - `PartyController.luau`: PartyController.get:39, PartyController.onChanged:45, PartyController.nameOf:56, PartyController.request:63, announceInvite:67, PartyController.init:102
 - `src/client/Controllers/PropController.luau` (456) - Dresses a generated map with its world's ambient scenery (CHUNK_AUTHORING.md · 2026-10-01
@@ -839,7 +839,7 @@ _464 text files, 968 binary assets. Regenerate with `python tools/gen_index.py`;
 - `src/shared/Core/FixtureCore.luau` (55) - The pure half of fixtures (CHUNK_AUTHORING.md convention 7, build spec · 2026-09-23
   - `FixtureCore.luau`: CHEST:15, VAULT:16, FORCEFIELD:17, smooth:23, FixtureCore.lidAngle:31, FixtureCore.doorSpin:38, FixtureCore.doorRecess:44, FixtureCore.fieldTransparency:50
 - `src/shared/Core/Freeze.luau` (25) - Deep-freeze a content or config table, so a System cannot mutate the data · 2026-09-22
-- `src/shared/Core/GameConfig.luau` (1618) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-10-05
+- `src/shared/Core/GameConfig.luau` (1619) - EVERY tunable number in LUCKBOUND lives here. Build spec §6. · 2026-10-05
 - `src/shared/Core/HubMenuCore.luau` (190) - THE HUB MENU'S RULES, WITH NO ROBLOX IN THEM. · 2026-09-25
   - `HubMenuCore.luau`: HubMenuCore.panels:20, HubMenuCore.panelById:31, HubMenuCore.destinations:41, HubMenuCore.destinationById:52, HubMenuCore.landingPoint:64, HubMenuCore.isVisible:71, HubMenuCore.newState:80, HubMenuCore.reduce:98, HubMenuCore.canTravel:149, HubMenuCore.travelTiming:180
 - `src/shared/Core/KeyCore.luau` (58) - The pure half of vault keys (build spec §7.5). Owner-directed 2026-09-23: · 2026-09-23
@@ -848,8 +848,8 @@ _464 text files, 968 binary assets. Regenerate with `python tools/gen_index.py`;
   - `LedgerCore.luau`: LedgerCore.newLedger:36, LedgerCore.sanitise:45, LedgerCore.issued:69, LedgerCore.remaining:73, LedgerCore.claim:86, LedgerCore.summary:121
 - `src/shared/Core/LockOnCore.luau` (108) - LOCK-ON RULES: which target a press picks, and when a lock drops. No · 2026-09-28
   - `LockOnCore.luau`: LockOnCore.pick:18, LockOnCore.switch:45, LockOnCore.flick:62, LockOnCore.shouldBreak:73, LockOnCore.aimHeight:95, LockOnCore.smoothAlpha:101
-- `src/shared/Core/LocomotionCore.luau` (493) - MOVEMENT RULES: one state machine for everything a player does to get · 2026-09-28
-  - `LocomotionCore.luau`: LocomotionCore.tuning:37, LocomotionCore.newState:64, activeLock:93, LocomotionCore.mode:102, LocomotionCore.isInvulnerable:115, spend:129, hasStaminaFor:140, LocomotionCore.canStartSprint:147, LocomotionCore.canRoll:160, startRoll:184, LocomotionCore.roll:212, LocomotionCore.onFloor:227, LocomotionCore.canJump:235, LocomotionCore.jump:255, LocomotionCore.step:273, LocomotionCore.targetSpeed:348, LocomotionCore.land:379, LocomotionCore.rollSpeedShape:392, LocomotionCore.rollPeakSpeed:417, LocomotionCore.rollMoving:422, LocomotionCore.staminaFraction:427, LocomotionCore.lock:447, LocomotionCore.unlock:462, LocomotionCore.turnToward:473, LocomotionCore.profileFor:489
+- `src/shared/Core/LocomotionCore.luau` (498) - MOVEMENT RULES: one state machine for everything a player does to get · 2026-09-28
+  - `LocomotionCore.luau`: LocomotionCore.tuning:37, LocomotionCore.newState:64, activeLock:93, LocomotionCore.mode:102, LocomotionCore.isInvulnerable:115, spend:129, hasStaminaFor:140, LocomotionCore.canStartSprint:147, LocomotionCore.canRoll:160, startRoll:184, LocomotionCore.roll:212, LocomotionCore.onFloor:227, LocomotionCore.canJump:238, LocomotionCore.jump:258, LocomotionCore.step:277, LocomotionCore.targetSpeed:353, LocomotionCore.land:384, LocomotionCore.rollSpeedShape:397, LocomotionCore.rollPeakSpeed:422, LocomotionCore.rollMoving:427, LocomotionCore.staminaFraction:432, LocomotionCore.lock:452, LocomotionCore.unlock:467, LocomotionCore.turnToward:478, LocomotionCore.profileFor:494
 - `src/shared/Core/LootCore.luau` (73) - The pure half of loot (build spec §7.5): what a pool yields, for whom. · 2026-09-25
   - `LootCore.luau`: LootCore.roll:35, LootCore.rollForAll:61
 - `src/shared/Core/Net.luau` (114) - The ONLY place RemoteEvents are created or looked up. Build spec §4. · 2026-10-01
@@ -919,7 +919,7 @@ _464 text files, 968 binary assets. Regenerate with `python tools/gen_index.py`;
 
 ### tests/cases.luau
 
-- `tests/cases.luau` (10129) - LUCKBOUND test suite. Run: python3 tests/build_suite.py && luau tests/generated_suite.luau · 2026-10-05
+- `tests/cases.luau` (10163) - LUCKBOUND test suite. Run: python3 tests/build_suite.py && luau tests/generated_suite.luau · 2026-10-05
   - `cases.luau`: group:52, check:57, throws:70, lcg:76, profile:87, cfg:95
 
 ### tests/check_chunk_loader.py

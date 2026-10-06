@@ -656,11 +656,16 @@ or unchanged lock-on feel. Keep the previous clips in Git until Studio acceptanc
 5. On the same flat route, Q with input should roll about 18 studs in 0.52s, then
    keep the existing 0.12s recovery. Q without input remains the short backstep.
    Mash Q during recovery: nothing queues. Check front/back/side rolls with Ctrl on.
-6. Jump, wait until clearly airborne, and Q with and without input. The flat dash
+6. Press jump then Q immediately (also try within the same movement frame),
+   with and without direction: an AirDash clip must play, with a clear burst and
+   no ground roll/dead stop. Repeat after a buffered landing jump and after
+   waiting until clearly airborne. The flat dash
    should travel clearly farther than the roll (22.4 nominal studs). Hold, reverse,
    and release input at its finish: burst speed must hand back to current intent,
    without a persistent high-speed coast. Second Q before landing does nothing.
-7. `/moveprofile expedition`, then repeat the essentials. `/stamina 5` checks that
+7. `/moveprofile expedition`, then repeat the essentials. Walking is now 15 studs/s
+   and sprinting 23.85: judge slower leg cadence, planted feet and the 15% stronger
+   forward arm swing. `/stamina 5` checks that
    actions can spend the remaining sliver and an empty bar blocks the next action.
    Restore with `/moveprofile auto`. Test one ordinary jump and a hard landing.
 8. `/dummies 5`: middle-click a target, strafe, sprint, roll and dash. Check familiar

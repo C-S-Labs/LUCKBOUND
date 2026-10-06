@@ -1170,7 +1170,7 @@ local GameConfig = {
 		-- loaded expedition stage, HUB otherwise.
 		Profiles = {
 			HUB = {
-				SpeedScale = 1, -- 32 studs/s
+				SpeedScale = 1, -- 24 studs/s
 				SprintMultiplier = 1.61, -- 24 -> ~38.6 (owner: +1.5 studs/s)
 				-- Short on purpose: long ramps read as sliding on ice (owner's
 				-- first Studio walk, 2026-09-28).
@@ -1189,9 +1189,10 @@ local GameConfig = {
 			},
 			EXPEDITION = {
 				-- The middle ground the owner asked for: heavier than the hub,
-				-- lighter than a Souls game. ~22 walking, ~34 sprinting.
-				SpeedScale = 0.7,
-				SprintMultiplier = 1.59, -- 16.8 -> ~26.7 (owner: +1.5 studs/s)
+				-- lighter than a Souls game. Owner gait iteration: 15 walking,
+				-- 23.85 sprinting, with cadence still matched to stride coverage.
+				SpeedScale = 0.625,
+				SprintMultiplier = 1.59,
 				-- Weight comes from costs and the ramps, not from sliding.
 				AccelerationSeconds = 0.12,
 				DecelerationSeconds = 0.08,

@@ -36,6 +36,33 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 242 — 2026-10-05 — First movement walk: immediate dash and gait tuning
+**Merged:** none; local `agent/player-movement-refinement`   **Tests:** 1,138 passing   **Previous head:** 7d8ddf9
+
+### Done
+- Owner first walk: general movement is starting to feel good; immediate jump-dash played a ground roll and stopped, expedition legs were too fast, and running arms needed more swing.
+- Root cause: accepting a jump left `Grounded` true; even once false, roll floor grace still treated the first 0.12s as ground. Accepted/direct and buffered jumps now enter airborne state immediately, bypassing grace. A dash press consumes a pending Humanoid jump edge before classifying the action.
+- Keep the air controller and suppress nearby floor sensing throughout an active dash, so a low jump-dash cannot become a ground action or refill the dash budget. Ordinary edge/bump grace, landing reset, stamina, ground roll and lock-on remain intact.
+- Expedition walking 16.8→15 studs/s, sprinting 26.712→23.85 (SpeedScale 0.7→0.625; SprintMultiplier 1.59 retained). Hub, roll and dash speeds unchanged. Existing measured stride matching lowers cadence with actual speed rather than independently slowing feet.
+- Forward Run and Sprint shoulder swing increased 15%, retaining torso lean, leg poses and measured stride coverage. Regenerated only those two assets; other18 generated outputs remain byte-identical.
+- Added immediate directional/no-input and buffered jump-dash regressions. Checks pass: 1,138/1,138 units, changed-file syntax, canonical repository StyLua, targeted Selene (zero errors/warnings), index, whitespace and Rojo build. Landing recovery is preserved for buffered takeoff. No push, PR, main merge or publish.
+
+### Decisions made
+- This is a small follow-up in the existing task worktree; no new workers or orchestration run. Do not change lock-on or add another movement system.
+- No independent playback slowdown: physical expedition speed supplies the cadence reduction while preserving stride matching.
+
+### Stopped at
+Committed locally for owner retest. The unit suite passes 1,138/1,138; input timing and actual impulse/animation selection still require the focused Studio check in Test K2 steps6–7.
+
+### Next
+1. Fresh Play: Space then Q immediately, with/without direction, and after a buffered landing jump; verify AirDash animation, burst and once-per-airtime budget.
+2. Walk/sprint an actual expedition: judge slower cadence and stronger arms. Briefly repeat shoulder/lock-on and ordinary ground roll/backstep.
+
+### Leftovers
+No duplicate clips/modules or superseded files left behind. Keep task/worker worktrees and checkpoint until Studio acceptance and the approved Git lifecycle; prior asset versions remain recoverable in Git.
+
+---
+
 ## Session 241 — 2026-10-05 — Player movement refinement (orchestrated)
 **Merged:** none; local `agent/player-movement-refinement`   **Tests:** 1,136 passing   **Base:** e9ea329
 
