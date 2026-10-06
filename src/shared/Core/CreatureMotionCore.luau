@@ -641,6 +641,32 @@ function CreatureMotionCore.solveSpine(sp: Spine, hx: number, hy: number, hz: nu
 			hx - sp.TX[1] * need, hy - sp.TY[1] * need, hz - sp.TZ[1] * need, need
 		n = 2
 	end
+	-- RESAMPLE the raw path at even spacing from the head. The stored trail points sit wherever
+	-- the head happened to drop them, so the first one is anywhere from 0 to a whole step behind
+	-- it: a direction taken from the head to that point jumps every time the trail takes a new
+	-- point (once every second or two at colossal speed). Even samples keep every tangent steady.
+	do
+		local step = tr.Step
+		local rx, ry, rz, ru = { px[1] }, { py[1] }, { pz[1] }, { 0.0 }
+		local k = 1
+		local s = step
+		while s <= u[n] + 1e-6 do
+			while k < n - 1 and u[k + 1] < s do
+				k += 1
+			end
+			local span = u[k + 1] - u[k]
+			local f = if span > 1e-9 then clamp((s - u[k]) / span, 0, 1) else 0
+			local m = #rx + 1
+			rx[m] = px[k] + (px[k + 1] - px[k]) * f
+			ry[m] = py[k] + (py[k + 1] - py[k]) * f
+			rz[m] = pz[k] + (pz[k + 1] - pz[k]) * f
+			ru[m] = s
+			s += step
+		end
+		if #rx >= 2 then
+			px, py, pz, u, n = rx, ry, rz, ru, #rx
+		end
+	end
 	-- tangents of the raw path (pointing the way the head went) and the wave's normals
 	local qx, qy, qz = {}, {}, {}
 	-- the wave's phase: a share on the clock, a share locked to the distance flown, so a body

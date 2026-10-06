@@ -10275,6 +10275,53 @@ do
 		return false
 	end
 
+	-- THE SPINE'S HEAD IS STEADY: flying straight at 60 fps, the head's heading changes smoothly
+	-- (no jump when the trail takes a new point) and its position never steps
+	do
+		local CM = __require("CreatureMotionCore")
+		local arcs = {}
+		for i = 1, 15 do
+			arcs[i] = 42.7 + (i - 1) * 48
+		end
+		local sp = CM.newSpine(arcs, 350, 32, 0.12, false, 0.5, 24, 1.25, 0.1, 1)
+		CM.seedTrail(sp.Trail, 0, 0, 0, 1, 0, 0)
+		local x, prevA, prevPos, prevStep = 0.0, nil, nil, nil
+		local worstTurn, worstStep = 0.0, 0.0
+		for i = 1, 60 * 40 do
+			x += 15 / 60
+			CM.pushTrail(sp.Trail, x, 0, 0)
+			CM.solveSpine(sp, x, 0, 0, i / 60)
+			local a = math.atan2(sp.TZ[1], sp.TX[1])
+			local pos = { sp.PX[1], sp.PY[1], sp.PZ[1] }
+			if i > 120 then
+				if prevA then
+					worstTurn = math.max(worstTurn, math.abs(a - prevA))
+				end
+				if prevPos then
+					local stepLen = math.sqrt(
+						(pos[1] - prevPos[1]) ^ 2
+							+ (pos[2] - prevPos[2]) ^ 2
+							+ (pos[3] - prevPos[3]) ^ 2
+					)
+					worstStep = math.max(worstStep, math.abs(stepLen - 15 / 60))
+				end
+			end
+			prevA, prevPos = a, pos
+		end
+		print("HEADSTEADY", worstTurn, worstStep)
+		check(
+			"the spine's head heading changes smoothly (worst "
+				.. string.format("%.4f", worstTurn)
+				.. " rad per frame)",
+			worstTurn < 0.01
+		)
+		check(
+			"the spine's head position never steps (worst "
+				.. string.format("%.3f", worstStep)
+				.. " studs)",
+			worstStep < 0.2
+		)
+	end
 	-- THE BAND LEASH: with the world's obstacles, no creature strays far beyond its band
 	do
 		local worst = {}
