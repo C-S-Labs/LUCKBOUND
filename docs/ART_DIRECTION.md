@@ -88,20 +88,11 @@ dark** — the first thing worth tuning.
 Plus 14 deterministic floating islands (seeded, so every server shows one
 skyline) and raised radial walkways.
 
-**V2 sky traffic docking (2026-09-27).** Only the galleon/carrier orbiter group
-declares `CanDock = true` in `GameConfig.HubLayout.V2.Orbiters`. HubV2 publishes
-`WanderCanDock`; SkyTraffic reads this explicit intent, never body size. Whales
-and small ships continue wandering regardless of scale. Berths select a face of
-the island's oriented bounding box and place the ship side-on, with its hull
-18 studs plus `Docking.BerthPadding` (2 studs) off that face. Spacing uses the
-ship's beam rather than a mast/length-derived sphere, so angled approaches are
-clear without placing the ship far away. The berth overlap and docking approach
-cast; ship docking was removed (2026-10-05) when the boats gave way to the sky creatures.
-Approaches ease to a full
-stop, hold alongside, then resume flight. Large ships receive enough time to
-turn into the approach; their docking heading is distinct from the smoothed
-visual heading. Timings, stopping distance and slowdown live in `V2.Docking`.
-The large ships and whales retain Detail 2 visibility (medium graphics and up).
+**Sky traffic (2026-10-05).** The flying boats and ship docking are gone, replaced by the sky creatures: ten
+designs plus the whale, flown by class profile (`Core/FlightCore.luau`, `Controllers/SkyTraffic.luau`, data in
+`Content/Hub/SkyCreatures.luau`, tuning in `GameConfig.HubLayout.V2.SkyLife`). The design, the rules and every
+decision are in `docs/design/SKY_ECOSYSTEM_CONTRACT.md`. The earlier docking design (galleon/carrier berths on
+backdrop islands) is recorded only in git history.
 
 **Rescaled 2026-09-16.** The hub is 10× its original size; see `STATUS.md`. The
 old 436-instance count predates that and needs re-measuring on the next Studio

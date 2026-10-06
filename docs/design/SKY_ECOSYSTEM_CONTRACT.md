@@ -4,6 +4,9 @@ Orchestrated task `crossroads-v2-refinement` (owner brief, 2026-10-05). This is 
 packet points at. It settles the design so workers make none. It is an enhancement of the CURRENT Crossroads, not a
 redesign. Experimental: nothing here reaches `main` without the owner's review.
 
+> **Status (2026-10-05):** the boat flyers are removed everywhere: config, code, tests, generator, exports and the
+> imported `HUB_ORBITERS` meshes. Sections 1 and 4.2 describe the system as it was found and as it was replaced.
+
 ## 0. Frozen: the Fate Engine
 
 Nobody touches the Fate Engine: not `assets/rbxm/prefabs/HUB_FATE_ENGINE.rbxmx`, not its placement in

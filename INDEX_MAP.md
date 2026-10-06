@@ -45,7 +45,7 @@ _489 text files, 1006 binary assets. Regenerate with `python tools/gen_index.py`
 - `assets/export/hub/crossroads/creatures_colossal2.json` (901) · 2026-10-05
 - `assets/export/hub/crossroads/creatures_mid.json` (2665) · 2026-10-05
 - `assets/export/hub/crossroads/creatures_small.json` (2238) · 2026-10-05
-- `assets/export/hub/crossroads/crossroads_layout.json` (3622) · 2026-10-05
+- `assets/export/hub/crossroads/crossroads_layout.json` (2876) · 2026-10-05
 - `assets/export/worlds/ethereal_scape/ethereal_scape_structure.json` (2810) · 2026-10-01
 - `assets/export/worlds/ethereal_scape/live_animation_props.json` (2510) · 2026-10-01
 - `assets/export/worlds/ethereal_scape/live_delivery.json` (34569) · 2026-10-01
@@ -252,8 +252,8 @@ _489 text files, 1006 binary assets. Regenerate with `python tools/gen_index.py`
   - `rootbound_warden.py`: braid:23
 - `assets/source/hub/crossroads/README.md` (128) - The Crossroads, rebuilt (2026-09-23) · 2026-10-05
   - `README.md`: Design:15, Pieces:38, Shop wares:54, Checks:67, Gameplay anchors:72, Import:85, In the game (2026-09-24):98, The sky beyond (2026-09-24):115, Update 2026-10-05 (orchestrated refinement):126
-- `assets/source/hub/crossroads/build_crossroads_hub.py` (1780) - THE CROSSROADS, rebuilt around the Fate Engine (owner, 2026-09-23: "the · 2026-10-05
-  - `build_crossroads_hub.py`: part_of:126, anim:143, tris:156, anchor:160, sector:166, ring_with_gaps:185, ribbon_pts:201, lamp:205, pylon_beacon:212, hanging_core:225, stepped_keel:232, poly_band:245, poly_curb_with_gaps:283, district_deck:294, build_platform:316, build_levitator:434, statue:490, obelisk:506, build_hall:514, book_row:574, build_archives:585, ware:664, stall:725, build_shop:744, brazier:811, rack:820, target:831, build_training:841, lump:906, peak:945, crag:952, island_base:957, vein:979, ruin_spire:987, build_backdrop_peaks:996, build_backdrop_mesa:1021, build_backdrop_spires:1063, prop_isle_shrine:1107, prop_isle_grove:1122, prop_isle_ruin:1135, ... +34 more
+- `assets/source/hub/crossroads/build_crossroads_hub.py` (1535) - THE CROSSROADS, rebuilt around the Fate Engine (owner, 2026-09-23: "the · 2026-10-05
+  - `build_crossroads_hub.py`: part_of:126, anim:143, tris:156, anchor:160, sector:166, ring_with_gaps:185, ribbon_pts:201, lamp:205, pylon_beacon:212, hanging_core:225, stepped_keel:232, poly_band:245, poly_curb_with_gaps:283, district_deck:294, build_platform:316, build_levitator:434, statue:490, obelisk:506, build_hall:514, book_row:574, build_archives:585, ware:664, stall:725, build_shop:744, brazier:811, rack:820, target:831, build_training:841, lump:906, peak:945, crag:952, island_base:957, vein:979, ruin_spire:987, build_backdrop_peaks:996, build_backdrop_mesa:1021, build_backdrop_spires:1063, prop_isle_shrine:1107, prop_isle_grove:1122, prop_isle_ruin:1135, ... +21 more
 - `assets/source/hub/crossroads/check_buried_parts.py` (68) - Find loose parts buried inside other parts of the same static mesh (points · 2026-10-05
 - `assets/source/hub/crossroads/check_walkways.py` (56) - Walk every route (plaza -> bridges -> districts, the promenade ring, the overlooks) · 2026-10-05
   - `check_walkways.py`: ground:15
@@ -426,8 +426,8 @@ _489 text files, 1006 binary assets. Regenerate with `python tools/gen_index.py`
 
 ### docs/ART_DIRECTION.md
 
-- `docs/ART_DIRECTION.md` (663) - LUCKBOUND — Art Direction Brief · 2026-10-05
-  - `ART_DIRECTION.md`: The approach:32, The mesh seam:50, What exists now:75, The PortalRig:114, What to describe:135, 1. Hub lighting ⭐ (cheapest, highest impact right now):139, 2. The reveal moment ⭐⭐ (the whole game, per §25):148, 3. The Fate Engine:160, 4. Placeholder text:169, 5. Biomes (Phase 2):174, The house style — low poly, one palette:188, Natural things grow in patches, never in geometry — universa:297, No built-in Roblox materials:317, Colour is applied in code, not baked in:340, Collision is part of the paint table, and it is the dangerou:361, The hub palette — the thematic cycle:406, Current defaults:459, Rarity colours — do not deviate:477, How a description becomes code:495, Hub scale vs. the player — measured and APPLIED 2026-09-21:506, What the number would be:528, It was applied on 2026-09-21:541, Why it was not changed in the pass before:571, Replacing the Crossroads later — the drop-in contract:596, What the new delivery has to keep:611, And the one thing to do differently:623, ES/SC cloud and wind review — 2026-10-01:632, ES twilight revision — 2026-10-01:640, ES upper-air ribbons — 2026-10-01:648, ES readability tuning — 2026-10-01:658
+- `docs/ART_DIRECTION.md` (654) - LUCKBOUND — Art Direction Brief · 2026-10-05
+  - `ART_DIRECTION.md`: The approach:32, The mesh seam:50, What exists now:75, The PortalRig:105, What to describe:126, 1. Hub lighting ⭐ (cheapest, highest impact right now):130, 2. The reveal moment ⭐⭐ (the whole game, per §25):139, 3. The Fate Engine:151, 4. Placeholder text:160, 5. Biomes (Phase 2):165, The house style — low poly, one palette:179, Natural things grow in patches, never in geometry — universa:288, No built-in Roblox materials:308, Colour is applied in code, not baked in:331, Collision is part of the paint table, and it is the dangerou:352, The hub palette — the thematic cycle:397, Current defaults:450, Rarity colours — do not deviate:468, How a description becomes code:486, Hub scale vs. the player — measured and APPLIED 2026-09-21:497, What the number would be:519, It was applied on 2026-09-21:532, Why it was not changed in the pass before:562, Replacing the Crossroads later — the drop-in contract:587, What the new delivery has to keep:602, And the one thing to do differently:614, ES/SC cloud and wind review — 2026-10-01:623, ES twilight revision — 2026-10-01:631, ES upper-air ribbons — 2026-10-01:639, ES readability tuning — 2026-10-01:649
 
 ### docs/BLENDER_DIRECTORY_EVIDENCE.json
 
@@ -540,8 +540,8 @@ _489 text files, 1006 binary assets. Regenerate with `python tools/gen_index.py`
 
 ### docs/RESERVED.md
 
-- `docs/RESERVED.md` (123) - Reserved and unconsumed declarations · 2026-10-05
-  - `RESERVED.md`: World definition — `Core/Types.WorldDefinition`:28, Chunk definition — `Core/Types.ChunkDefinition`:40, Remotes — `Core/Net`, build spec §4:49, Generation options:59, Loot, fixtures and vault keys — build spec §7.5:67, Movement hooks for weapons and upgrades:80, Expedition rifts — build spec §7.8:90, The living sky — `Content/Hub/SkyCreatures`, `GameConfig.Hub:98, Nothing is currently ORPHANED:109, When you add a reserved declaration:117
+- `docs/RESERVED.md` (106) - Reserved and unconsumed declarations · 2026-10-05
+  - `RESERVED.md`: World definition — `Core/Types.WorldDefinition`:28, Chunk definition — `Core/Types.ChunkDefinition`:40, Remotes — `Core/Net`, build spec §4:49, Generation options:59, Loot, fixtures and vault keys — build spec §7.5:67, Movement hooks for weapons and upgrades:80, Expedition rifts — build spec §7.8:90, The living sky — `Content/Hub/SkyCreatures`, `GameConfig.Hub:98
 
 ### docs/SKY_CITADEL_WEAPONS_BLENDER_PROMPT.md
 
@@ -676,8 +676,8 @@ _489 text files, 1006 binary assets. Regenerate with `python tools/gen_index.py`
 
 - `docs/design/ASTRAL_REACH_BOSS_REFINEMENT.md` (683) - Astral Reach --- Boss Design Refinement · 2026-09-29
   - `ASTRAL_REACH_BOSS_REFINEMENT.md`: Core Identity:10, Visual Design:30, Movement:61, Idle Behavior:89, Combat Philosophy:110, Wing Sweep:125, Halo Beam:136, Descent:150, Feather-Blade Barrage:163, Wing Cloak:174, Celestial Rotation:184, Phase Two:193, Detached Wings:215, Final Phase Behavior:234, Core Identity:255, Visual Design:284, The Cape:311, Movement Language:336, Step:352, Glide:360, Pivot:369, Pause:377, Sudden Acceleration:391, Combat Philosophy:404, Signature Attacks:421, The Opening Waltz:423, Veiled Step:440, Crescent Waltz:452, Falling Star:465, Silent Step:480, Twin Echo:495, Floating Blade Sequence:510, Phase Two:530, Phase Two Signature: The Grand Dance:559, Final Phase:591, Defeat:620
-- `docs/design/SKY_ECOSYSTEM_CONTRACT.md` (235) - Crossroads V2 refinement: sky ecosystem and hub contract · 2026-10-05
-  - `SKY_ECOSYSTEM_CONTRACT.md`: 0. Frozen: the Fate Engine:7, 1. Current system (as inspected):15, 2. Shared visual contract:36, 3. Roster (decided; 10 designs, plus the retained whale):46, 4. Technical contract:67, 4.1 Authoring and sidecar (creature workers):69, 4.2 Runtime data (traffic worker):100, 4.3 Animation gaits:131, 4.4 Hub geometry worker:137, 5. Acceptance (orchestrator checks):151, 6. Round 2 amendment (owner Studio test, 2026-10-05) - SUPER:161, 7. Round 3 amendment (owner Studio test 2, 2026-10-05) - SUP:199, 7.x Runtime decisions (round 3 implementation):224
+- `docs/design/SKY_ECOSYSTEM_CONTRACT.md` (238) - Crossroads V2 refinement: sky ecosystem and hub contract · 2026-10-05
+  - `SKY_ECOSYSTEM_CONTRACT.md`: 0. Frozen: the Fate Engine:10, 1. Current system (as inspected):18, 2. Shared visual contract:39, 3. Roster (decided; 10 designs, plus the retained whale):49, 4. Technical contract:70, 4.1 Authoring and sidecar (creature workers):72, 4.2 Runtime data (traffic worker):103, 4.3 Animation gaits:134, 4.4 Hub geometry worker:140, 5. Acceptance (orchestrator checks):154, 6. Round 2 amendment (owner Studio test, 2026-10-05) - SUPER:164, 7. Round 3 amendment (owner Studio test 2, 2026-10-05) - SUP:202, 7.x Runtime decisions (round 3 implementation):227
 - `docs/design/boss_plans/ASCENDANT_SENTINEL_ANIMATION_VFX_PLAN.md` (351) - LUCKBOUND — The Ascendant & The Winged Sentinel · 2026-09-30
   - `ASCENDANT_SENTINEL_ANIMATION_VFX_PLAN.md`: Blender construction, animation, and Roblox VFX production p:2, 1. Purpose and authority:6, Sources inspected:12, 2. Spectacle across the four bosses:33, 3. Shared Blender and runtime contract:46, Extend the current pipeline:48, Timing and event data:60, Warning and recovery rules:70, 4. Ascendant — preserve the edited guardian:79, Critical mesh provenance:81, Art identity:89, Parts and bones:95, Existing-action production recipes:112, OrbCast prototype cue sheet:126, Additional attacks — compatibility plan:141, Transfiguration cue sheet:159, Defeat:174, 5. Winged Sentinel — precision and plasma:178, Art and parts:180, Charge ownership:196, Existing Dash Lunge prototype:204, Phase 1 recipes:222, Phase change — existing 60-frame choreography:237, Phase 2 recipes:251, Defeat:264, 6. Moveset conflicts to resolve before full encounter wiring:268, 7. Shared accompanying FX assets and recipes:286, Runtime recipe schema:302, 8. Deliverables and verification:315, Agent delivery checklist:317, Acceptance gates:327, 9. Copyable agent handoff:339, 10. References:343
 - `docs/design/boss_plans/ASTRAL_BOSS_ANIMATION_VFX_PLAN.md` (323) - LUCKBOUND — Astral Seraph & Celestial Dancer · 2026-09-30
@@ -696,7 +696,7 @@ _489 text files, 1006 binary assets. Regenerate with `python tools/gen_index.py`
   - `AtmosphereEffects.luau`: LOCKDOWN:36, SIEGE:48, STORMHAWK:58, RIME:68, RECLAIMED:80, AETHER_SURGE:92, UNMOORING:102, num:123, col:126, vec:129, part:133, prop:149, readMap:179, randomIn:259, band:270, buildLights:278, lightLevel:311, newMover:337, buildGraph:359, route:399, hover:422, newRoute:427, stepMover:443, buildFlyers:474, bolt:516, buildWeather:572, buildDome:622, buildPlumes:672, beam:712, anchorAt:726, buildAurora:738, buildRibbons:832, buildDebris:939, buildCanopy:990, applyTint:1011, AtmosphereEffects.enter:1040, AtmosphereEffects.updateAnchors:1220, AtmosphereEffects.leave:1229, AtmosphereEffects.setTint:1256
 - `src/client/Controllers/CharacterAnimator.luau` (859) - HOW THE PLAYER'S BODY MOVES: clips, blending and the procedural layer. · 2026-10-01
   - `CharacterAnimator.luau`: bend:114, findJoint:118, makeSound:127, loadTrack:137, stockId:159, CharacterAnimator.bind:202, CharacterAnimator.unbind:370, playOneShot:403, CharacterAnimator.onJump:425, CharacterAnimator.onLand:434, slotDirection:452, CharacterAnimator.onRoll:461, windPart:501, setWeight:566, CharacterAnimator.update:585, CharacterAnimator.overrideSlot:812, CharacterAnimator.describeSlots:846
-- `src/client/Controllers/DebugCommands.luau` (939) - Developer commands, client half. Testing tooling, not a feature. · 2026-09-28
+- `src/client/Controllers/DebugCommands.luau` (939) - Developer commands, client half. Testing tooling, not a feature. · 2026-10-05
   - `DebugCommands.luau`: DebugCommands.onOutput:49, emit:53, say:67, fail:71, stopFlying:82, startFlying:98, toggleFly:172, setSpeed:185, teleport:227, currentStage:271, currentChunks:300, toggleNoclip:332, setOverlay:376, setStats:438, setProps:489, sorted:512, DebugCommands.sources:606, DebugCommands.describeChunk:611, onOff:622, DebugCommands.bindPanel:630, locomotion:644, DebugCommands.run:852, DebugCommands.runLine:879, DebugCommands.init:886
 - `src/client/Controllers/EventController.luau` (167) - The client's mirror of what is happening to the world. Build spec §4.1. · 2026-09-20
   - `EventController.luau`: list:40, notify:51, EventController.active:59, EventController.dominant:66, EventController.onChanged:70, apply:81, EventController.init:135
@@ -826,7 +826,7 @@ _489 text files, 1006 binary assets. Regenerate with `python tools/gen_index.py`
 - `src/shared/Content/Fixtures/init.luau` (16) - Fixture registry: one module per world, keyed by the world's Id. Each · 2026-09-23
 - `src/shared/Content/Hub/Cinematics.luau` (103) - THE LOADING SCREEN'S CAMERA TOUR, AS DATA. · 2026-09-21
 - `src/shared/Content/Hub/Crossroads.luau` (1504) - The Crossroads, described as DATA. Biome Blueprint §2. · 2026-10-05
-- `src/shared/Content/Hub/CrossroadsV2.luau` (217) - GENERATED by assets/source/hub/crossroads/make_layout_luau.py from · 2026-10-05
+- `src/shared/Content/Hub/CrossroadsV2.luau` (191) - GENERATED by assets/source/hub/crossroads/make_layout_luau.py from · 2026-10-05
 - `src/shared/Content/Hub/Menu.luau` (192) - THE HUB MENU, AS DATA. Build spec §2.2 -- Systems are reusable, content is · 2026-09-25
 - `src/shared/Content/Hub/Palettes.luau` (115) - WHAT THE UI LOOKS LIKE RIGHT NOW, AS DATA. · 2026-09-20
   - `Palettes.luau`: districtColor:32
@@ -860,9 +860,9 @@ _489 text files, 1006 binary assets. Regenerate with `python tools/gen_index.py`
   - `CodeCore.luau`: CodeCore.normalise:16, CodeCore.find:24, CodeCore.hasRedeemed:37, CodeCore.redeem:51, CodeCore.record:94
 - `src/shared/Core/Constants.luau` (217) - Frozen enums and lookup tables. Build spec §2.1. · 2026-10-01
   - `Constants.luau`: COMMON:24, UNCOMMON:31, RARE:38, EPIC:45, LEGENDARY:52, MYTHIC:59, UNKNOWN:66, SLOTS:81, NAMES:84, HOTKEY_NAMES:127, DATASTORE:184
-- `src/shared/Core/CreatureMotionCore.luau` (717) - THE LAYERED MOTION OF THE SKY CREATURES: the pure animation maths behind · 2026-10-05
+- `src/shared/Core/CreatureMotionCore.luau` (743) - THE LAYERED MOTION OF THE SKY CREATURES: the pure animation maths behind · 2026-10-05
   - `CreatureMotionCore.luau`: clamp:90, CreatureMotionCore.flapShape:97, CreatureMotionCore.flapSlope:106, CreatureMotionCore.burstShape:116, CreatureMotionCore.noise:126, CreatureMotionCore.follow:132, CreatureMotionCore.softLimit:141, CreatureMotionCore.torque:163, CreatureMotionCore.newBody:184, CreatureMotionCore.newPart:211, CreatureMotionCore.updateBody:270, CreatureMotionCore.stepPart:323, CreatureMotionCore.newSpine:492, CreatureMotionCore.seedTrail:548, CreatureMotionCore.pushTrail:570, unit:603, CreatureMotionCore.solveSpine:620
-- `src/shared/Core/DevCore.luau` (268) - The pure half of the developer tools: parsing a command line, checking the · 2026-09-27
+- `src/shared/Core/DevCore.luau` (268) - The pure half of the developer tools: parsing a command line, checking the · 2026-10-05
   - `DevCore.luau`: DevCore.parse:37, DevCore.index:52, DevCore.usage:61, DevCore.options:70, DevCore.check:90, startsWith:116, DevCore.complete:124, DevCore.validate:206
 - `src/shared/Core/EventCore.luau` (257) - Pure live-event state. Build spec §4.1. · 2026-09-20
   - `EventCore.luau`: EventCore.trackedLighting:73, EventCore.formatAnnouncement:84, EventCore.newState:91, EventCore.expire:97, EventCore.startEvent:111, EventCore.isValidScope:128, EventCore.dominant:149, EventCore.pushAnnouncement:191, EventCore.snapshot:219
@@ -957,7 +957,7 @@ _489 text files, 1006 binary assets. Regenerate with `python tools/gen_index.py`
 
 ### tests/cases.luau
 
-- `tests/cases.luau` (12166) - LUCKBOUND test suite. Run: python3 tests/build_suite.py && luau tests/generated_suite.luau · 2026-10-05
+- `tests/cases.luau` (12213) - LUCKBOUND test suite. Run: python3 tests/build_suite.py && luau tests/generated_suite.luau · 2026-10-05
   - `cases.luau`: group:52, check:57, throws:70, lcg:76, profile:87, cfg:95
 
 ### tests/check_chunk_loader.py
