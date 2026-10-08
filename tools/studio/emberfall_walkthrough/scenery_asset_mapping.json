@@ -1,0 +1,1228 @@
+{
+  "records": [
+    {
+      "key": "EF_SCENERY_SURFACE_0",
+      "role": "terrain",
+      "center": [
+        -768.0,
+        31.6511173248291,
+        1024.0
+      ],
+      "size": [
+        256.0,
+        10.631160736083984,
+        256.0
+      ],
+      "vertices": 1306,
+      "triangles": 1058,
+      "assetId": "rbxassetid://77267506152563",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_0"
+    },
+    {
+      "key": "EF_SCENERY_COVER_0_0",
+      "role": "grass",
+      "center": [
+        -768.0543823242188,
+        32.51189422607422,
+        1023.9973754882812
+      ],
+      "size": [
+        255.951171875,
+        11.64971923828125,
+        256.2923583984375
+      ],
+      "vertices": 18261,
+      "triangles": 6087,
+      "assetId": "rbxassetid://104243326348179",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_0_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_1",
+      "role": "terrain",
+      "center": [
+        -512.0,
+        22.362162113189697,
+        1024.0
+      ],
+      "size": [
+        256.0,
+        13.685343742370605,
+        256.0
+      ],
+      "vertices": 1648,
+      "triangles": 1520,
+      "assetId": "rbxassetid://125282179714969",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_1"
+    },
+    {
+      "key": "EF_SCENERY_COVER_1_0",
+      "role": "grass",
+      "center": [
+        -511.9684600830078,
+        23.142515659332275,
+        1023.8301696777344
+      ],
+      "size": [
+        256.1525573730469,
+        14.959914207458496,
+        255.57452392578125
+      ],
+      "vertices": 21348,
+      "triangles": 7116,
+      "assetId": "rbxassetid://78823201449129",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_1_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_2",
+      "role": "terrain",
+      "center": [
+        -256.0,
+        19.848471641540527,
+        1024.0
+      ],
+      "size": [
+        256.0,
+        12.974126815795898,
+        256.0
+      ],
+      "vertices": 1648,
+      "triangles": 1520,
+      "assetId": "rbxassetid://116209482946079",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_2"
+    },
+    {
+      "key": "EF_SCENERY_COVER_2_0",
+      "role": "grass",
+      "center": [
+        -256.1056900024414,
+        20.618218898773193,
+        1023.8876342773438
+      ],
+      "size": [
+        255.9672088623047,
+        14.391179084777832,
+        255.9263916015625
+      ],
+      "vertices": 21393,
+      "triangles": 7131,
+      "assetId": "rbxassetid://89204460498024",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_2_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_3",
+      "role": "terrain",
+      "center": [
+        0.0,
+        18.335536003112793,
+        1024.0
+      ],
+      "size": [
+        256.0,
+        15.999998092651367,
+        256.0
+      ],
+      "vertices": 1648,
+      "triangles": 1520,
+      "assetId": "rbxassetid://107757288276800",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_3"
+    },
+    {
+      "key": "EF_SCENERY_COVER_3_0",
+      "role": "grass",
+      "center": [
+        0.014404296875,
+        19.03280210494995,
+        1023.8502197265625
+      ],
+      "size": [
+        256.30938720703125,
+        17.107430458068848,
+        255.81591796875
+      ],
+      "vertices": 20907,
+      "triangles": 6969,
+      "assetId": "rbxassetid://130946397510969",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_3_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_4",
+      "role": "terrain",
+      "center": [
+        256.0,
+        13.762639999389648,
+        1024.0
+      ],
+      "size": [
+        256.0,
+        6.854206085205078,
+        256.0
+      ],
+      "vertices": 1648,
+      "triangles": 1520,
+      "assetId": "rbxassetid://134737098564568",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_4"
+    },
+    {
+      "key": "EF_SCENERY_COVER_4_0",
+      "role": "grass",
+      "center": [
+        256.03126525878906,
+        14.451453685760498,
+        1023.8916625976562
+      ],
+      "size": [
+        256.3020324707031,
+        8.144928932189941,
+        256.0675048828125
+      ],
+      "vertices": 20817,
+      "triangles": 6939,
+      "assetId": "rbxassetid://77630769798593",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_4_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_5",
+      "role": "terrain",
+      "center": [
+        512.0,
+        8.451562583446503,
+        1024.0
+      ],
+      "size": [
+        256.0,
+        13.720377564430237,
+        256.0
+      ],
+      "vertices": 1306,
+      "triangles": 1058,
+      "assetId": "rbxassetid://123144559323338",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_5"
+    },
+    {
+      "key": "EF_SCENERY_COVER_5_0",
+      "role": "grass",
+      "center": [
+        511.94903564453125,
+        9.177134990692139,
+        1023.8920288085938
+      ],
+      "size": [
+        256.2230224609375,
+        14.829201698303223,
+        255.7850341796875
+      ],
+      "vertices": 17631,
+      "triangles": 5877,
+      "assetId": "rbxassetid://137379501096642",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_5_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_6",
+      "role": "terrain",
+      "center": [
+        -768.0,
+        28.637648582458496,
+        768.0
+      ],
+      "size": [
+        256.0,
+        18.186113357543945,
+        256.0
+      ],
+      "vertices": 1648,
+      "triangles": 1520,
+      "assetId": "rbxassetid://133599838606751",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_6"
+    },
+    {
+      "key": "EF_SCENERY_COVER_6_0",
+      "role": "grass",
+      "center": [
+        -767.9588623046875,
+        29.405534744262695,
+        767.8883361816406
+      ],
+      "size": [
+        256.2587890625,
+        19.541736602783203,
+        256.04949951171875
+      ],
+      "vertices": 21672,
+      "triangles": 7224,
+      "assetId": "rbxassetid://95018020402865",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_6_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_7",
+      "role": "terrain",
+      "center": [
+        512.0,
+        11.589772462844849,
+        768.0
+      ],
+      "size": [
+        256.0,
+        10.859384059906006,
+        256.0
+      ],
+      "vertices": 1648,
+      "triangles": 1520,
+      "assetId": "rbxassetid://124385475131757",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_7"
+    },
+    {
+      "key": "EF_SCENERY_COVER_7_0",
+      "role": "grass",
+      "center": [
+        512.0072021484375,
+        12.304956912994385,
+        767.9300537109375
+      ],
+      "size": [
+        256.1632080078125,
+        11.961066246032715,
+        256.1025390625
+      ],
+      "vertices": 21195,
+      "triangles": 7065,
+      "assetId": "rbxassetid://74312231626654",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_7_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_8",
+      "role": "terrain",
+      "center": [
+        -768.0,
+        33.48089790344238,
+        512.0
+      ],
+      "size": [
+        256.0,
+        33.70927810668945,
+        256.0
+      ],
+      "vertices": 1648,
+      "triangles": 1520,
+      "assetId": "rbxassetid://82007985356058",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_8"
+    },
+    {
+      "key": "EF_SCENERY_COVER_8_0",
+      "role": "grass",
+      "center": [
+        -768.0505676269531,
+        34.209733963012695,
+        511.85235595703125
+      ],
+      "size": [
+        256.13641357421875,
+        35.0587043762207,
+        255.9691162109375
+      ],
+      "vertices": 21258,
+      "triangles": 7086,
+      "assetId": "rbxassetid://121316054205074",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_8_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_9",
+      "role": "terrain",
+      "center": [
+        -256.0,
+        43.69693565368652,
+        512.0
+      ],
+      "size": [
+        256.0,
+        34.72279739379883,
+        256.0
+      ],
+      "vertices": 1990,
+      "triangles": 1982,
+      "assetId": "rbxassetid://76445626679718",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_9"
+    },
+    {
+      "key": "EF_SCENERY_COVER_9_0",
+      "role": "grass",
+      "center": [
+        -255.9601936340332,
+        44.33674240112305,
+        511.89390563964844
+      ],
+      "size": [
+        256.25765228271484,
+        35.914161682128906,
+        256.1183166503906
+      ],
+      "vertices": 23418,
+      "triangles": 7806,
+      "assetId": "rbxassetid://128634086631717",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_9_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_10",
+      "role": "terrain",
+      "center": [
+        0.0,
+        18.38147473335266,
+        512.0
+      ],
+      "size": [
+        256.0,
+        26.261224269866943,
+        256.0
+      ],
+      "vertices": 1990,
+      "triangles": 1982,
+      "assetId": "rbxassetid://117180156542076",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_10"
+    },
+    {
+      "key": "EF_SCENERY_COVER_10_0",
+      "role": "grass",
+      "center": [
+        0.05284881591796875,
+        19.05705976486206,
+        511.9918212890625
+      ],
+      "size": [
+        256.1796417236328,
+        27.515809059143066,
+        256.3057861328125
+      ],
+      "vertices": 23175,
+      "triangles": 7725,
+      "assetId": "rbxassetid://105681381211244",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_10_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_11",
+      "role": "terrain",
+      "center": [
+        512.0,
+        10.927277088165283,
+        512.0
+      ],
+      "size": [
+        256.0,
+        15.687003135681152,
+        256.0
+      ],
+      "vertices": 1648,
+      "triangles": 1520,
+      "assetId": "rbxassetid://85838828307415",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_11"
+    },
+    {
+      "key": "EF_SCENERY_COVER_11_0",
+      "role": "grass",
+      "center": [
+        511.91619873046875,
+        11.504680156707764,
+        511.9521179199219
+      ],
+      "size": [
+        256.15966796875,
+        16.680947303771973,
+        256.07635498046875
+      ],
+      "vertices": 20304,
+      "triangles": 6768,
+      "assetId": "rbxassetid://76069115984422",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_11_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_12",
+      "role": "terrain",
+      "center": [
+        -768.0,
+        45.73827362060547,
+        256.0
+      ],
+      "size": [
+        256.0,
+        10.572486877441406,
+        256.0
+      ],
+      "vertices": 1306,
+      "triangles": 1058,
+      "assetId": "rbxassetid://82543325557724",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_12"
+    },
+    {
+      "key": "EF_SCENERY_COVER_12_0",
+      "role": "grass",
+      "center": [
+        -767.9471435546875,
+        46.6471004486084,
+        256.12745666503906
+      ],
+      "size": [
+        256.28466796875,
+        11.48995590209961,
+        255.90176391601562
+      ],
+      "vertices": 18549,
+      "triangles": 6183,
+      "assetId": "rbxassetid://138341339081063",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_12_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_13",
+      "role": "terrain",
+      "center": [
+        -512.0,
+        38.09533405303955,
+        256.0
+      ],
+      "size": [
+        256.0,
+        37.2128963470459,
+        256.0
+      ],
+      "vertices": 1648,
+      "triangles": 1520,
+      "assetId": "rbxassetid://97151539602552",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_13"
+    },
+    {
+      "key": "EF_SCENERY_COVER_13_0",
+      "role": "grass",
+      "center": [
+        -512.0233612060547,
+        39.68824577331543,
+        256.01123046875
+      ],
+      "size": [
+        256.1028137207031,
+        36.74888229370117,
+        256.27825927734375
+      ],
+      "vertices": 20889,
+      "triangles": 6963,
+      "assetId": "rbxassetid://97474498572590",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_13_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_14",
+      "role": "terrain",
+      "center": [
+        -256.0,
+        30.74248407781124,
+        256.0
+      ],
+      "size": [
+        256.0,
+        60.63170054554939,
+        256.0
+      ],
+      "vertices": 1332,
+      "triangles": 1092,
+      "assetId": "rbxassetid://110172841495198",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_14"
+    },
+    {
+      "key": "EF_SCENERY_COVER_14_0",
+      "role": "grass",
+      "center": [
+        -255.9712371826172,
+        31.457509547472,
+        256.03894805908203
+      ],
+      "size": [
+        256.2362976074219,
+        61.803158700466156,
+        256.2212371826172
+      ],
+      "vertices": 21663,
+      "triangles": 7221,
+      "assetId": "rbxassetid://110341531674444",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_14_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_15",
+      "role": "terrain",
+      "center": [
+        0.0,
+        18.945021152496338,
+        256.0
+      ],
+      "size": [
+        256.0,
+        23.549864768981934,
+        256.0
+      ],
+      "vertices": 1990,
+      "triangles": 1982,
+      "assetId": "rbxassetid://96145075914958",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_15"
+    },
+    {
+      "key": "EF_SCENERY_COVER_15_0",
+      "role": "grass",
+      "center": [
+        0.02295684814453125,
+        19.266704082489014,
+        255.9472770690918
+      ],
+      "size": [
+        256.2401885986328,
+        24.088295936584473,
+        256.14005279541016
+      ],
+      "vertices": 23346,
+      "triangles": 7782,
+      "assetId": "rbxassetid://133842926894031",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_15_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_16",
+      "role": "terrain",
+      "center": [
+        512.0,
+        10.726309776306152,
+        256.0
+      ],
+      "size": [
+        256.0,
+        16.090158462524414,
+        256.0
+      ],
+      "vertices": 1648,
+      "triangles": 1520,
+      "assetId": "rbxassetid://105361746773035",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_16"
+    },
+    {
+      "key": "EF_SCENERY_COVER_16_0",
+      "role": "grass",
+      "center": [
+        512.0178527832031,
+        11.556005954742432,
+        255.9696922302246
+      ],
+      "size": [
+        256.28472900390625,
+        16.89675807952881,
+        256.1720657348633
+      ],
+      "vertices": 21249,
+      "triangles": 7083,
+      "assetId": "rbxassetid://81231434607491",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_16_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_17",
+      "role": "terrain",
+      "center": [
+        -768.0,
+        40.81673812866211,
+        -0.0
+      ],
+      "size": [
+        256.0,
+        13.455337524414062,
+        256.0
+      ],
+      "vertices": 1280,
+      "triangles": 1024,
+      "assetId": "rbxassetid://106489261454028",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_17"
+    },
+    {
+      "key": "EF_SCENERY_COVER_17_0",
+      "role": "grass",
+      "center": [
+        -767.8919372558594,
+        42.13759422302246,
+        -0.11940383911132812
+      ],
+      "size": [
+        256.17242431640625,
+        13.746700286865234,
+        256.06993865966797
+      ],
+      "vertices": 12555,
+      "triangles": 4185,
+      "assetId": "rbxassetid://101862333944897",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_17_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_18",
+      "role": "terrain",
+      "center": [
+        -512.0,
+        22.213825847953558,
+        -0.0
+      ],
+      "size": [
+        256.0,
+        44.57147855311632,
+        256.0
+      ],
+      "vertices": 1280,
+      "triangles": 1024,
+      "assetId": "rbxassetid://102014234862090",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_18"
+    },
+    {
+      "key": "EF_SCENERY_COVER_18_0",
+      "role": "grass",
+      "center": [
+        -511.85841369628906,
+        23.04947616904974,
+        0.018329620361328125
+      ],
+      "size": [
+        255.85433959960938,
+        45.67398162186146,
+        256.0190963745117
+      ],
+      "vertices": 12375,
+      "triangles": 4125,
+      "assetId": "rbxassetid://114241358818127",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_18_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_19",
+      "role": "terrain",
+      "center": [
+        -256.0,
+        3.7335734367370605,
+        -0.0
+      ],
+      "size": [
+        256.0,
+        31.510624885559082,
+        256.0
+      ],
+      "vertices": 1648,
+      "triangles": 1520,
+      "assetId": "rbxassetid://97388799323817",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_19"
+    },
+    {
+      "key": "EF_SCENERY_COVER_19_0",
+      "role": "grass",
+      "center": [
+        -255.80772018432617,
+        4.051876544952393,
+        -0.01599884033203125
+      ],
+      "size": [
+        255.71366119384766,
+        31.96833324432373,
+        256.1572723388672
+      ],
+      "vertices": 20961,
+      "triangles": 6987,
+      "assetId": "rbxassetid://81864710856169",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_19_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_20",
+      "role": "terrain",
+      "center": [
+        512.0,
+        9.5742427110672,
+        -0.0
+      ],
+      "size": [
+        256.0,
+        15.679628133773804,
+        256.0
+      ],
+      "vertices": 1648,
+      "triangles": 1520,
+      "assetId": "rbxassetid://72687873654267",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_20"
+    },
+    {
+      "key": "EF_SCENERY_COVER_20_0",
+      "role": "grass",
+      "center": [
+        512.0178680419922,
+        10.3031325340271,
+        0.10137176513671875
+      ],
+      "size": [
+        256.3122863769531,
+        16.949482917785645,
+        256.0861053466797
+      ],
+      "vertices": 21168,
+      "triangles": 7056,
+      "assetId": "rbxassetid://126728977209660",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_20_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_21",
+      "role": "terrain",
+      "center": [
+        -768.0,
+        26.402328968048096,
+        -256.0
+      ],
+      "size": [
+        256.0,
+        33.446539878845215,
+        256.0
+      ],
+      "vertices": 1280,
+      "triangles": 1024,
+      "assetId": "rbxassetid://139805777448946",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_21"
+    },
+    {
+      "key": "EF_SCENERY_COVER_21_0",
+      "role": "grass",
+      "center": [
+        -768.0149536132812,
+        26.9496111869812,
+        -256.086669921875
+      ],
+      "size": [
+        256.1585693359375,
+        34.39051151275635,
+        255.98016357421875
+      ],
+      "vertices": 12123,
+      "triangles": 4041,
+      "assetId": "rbxassetid://131172985003463",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_21_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_22",
+      "role": "terrain",
+      "center": [
+        -512.0,
+        21.88760232925415,
+        -256.0
+      ],
+      "size": [
+        256.0,
+        24.402934074401855,
+        256.0
+      ],
+      "vertices": 1280,
+      "triangles": 1024,
+      "assetId": "rbxassetid://73436158485678",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_22"
+    },
+    {
+      "key": "EF_SCENERY_COVER_22_0",
+      "role": "grass",
+      "center": [
+        -511.5974426269531,
+        21.962249279022217,
+        -256.0116195678711
+      ],
+      "size": [
+        255.59185791015625,
+        24.45436191558838,
+        255.87977600097656
+      ],
+      "vertices": 12609,
+      "triangles": 4203,
+      "assetId": "rbxassetid://101388105990028",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_22_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_23",
+      "role": "terrain",
+      "center": [
+        -256.0,
+        12.059587001800537,
+        -256.0
+      ],
+      "size": [
+        256.0,
+        8.36330509185791,
+        256.0
+      ],
+      "vertices": 1306,
+      "triangles": 1058,
+      "assetId": "rbxassetid://118095469333588",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_23"
+    },
+    {
+      "key": "EF_SCENERY_COVER_23_0",
+      "role": "grass",
+      "center": [
+        -255.9111099243164,
+        12.715779781341553,
+        -256.1232376098633
+      ],
+      "size": [
+        256.2435760498047,
+        9.41503620147705,
+        256.0402069091797
+      ],
+      "vertices": 17883,
+      "triangles": 5961,
+      "assetId": "rbxassetid://72506404275246",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_23_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_24",
+      "role": "terrain",
+      "center": [
+        0.0,
+        7.44669508934021,
+        -256.0
+      ],
+      "size": [
+        256.0,
+        12.158064365386963,
+        256.0
+      ],
+      "vertices": 1648,
+      "triangles": 1520,
+      "assetId": "rbxassetid://72551805062888",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_24"
+    },
+    {
+      "key": "EF_SCENERY_COVER_24_0",
+      "role": "grass",
+      "center": [
+        -0.02880096435546875,
+        8.19992446899414,
+        -256.0331039428711
+      ],
+      "size": [
+        255.80406188964844,
+        13.524682998657227,
+        255.93360900878906
+      ],
+      "vertices": 21069,
+      "triangles": 7023,
+      "assetId": "rbxassetid://112429057919066",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_24_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_25",
+      "role": "terrain",
+      "center": [
+        256.0,
+        6.229304015636444,
+        -256.0
+      ],
+      "size": [
+        256.0,
+        16.167097687721252,
+        256.0
+      ],
+      "vertices": 1648,
+      "triangles": 1520,
+      "assetId": "rbxassetid://106164513423283",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_25"
+    },
+    {
+      "key": "EF_SCENERY_COVER_25_0",
+      "role": "grass",
+      "center": [
+        255.88753509521484,
+        7.001994609832764,
+        -256.03570556640625
+      ],
+      "size": [
+        255.92408752441406,
+        17.538979530334473,
+        256.22039794921875
+      ],
+      "vertices": 20691,
+      "triangles": 6897,
+      "assetId": "rbxassetid://108153335903538",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_25_0"
+    },
+    {
+      "key": "EF_SCENERY_SURFACE_26",
+      "role": "terrain",
+      "center": [
+        512.0,
+        8.757294595241547,
+        -256.0
+      ],
+      "size": [
+        256.0,
+        16.29708683490753,
+        256.0
+      ],
+      "vertices": 1306,
+      "triangles": 1058,
+      "assetId": "rbxassetid://77598573816919",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_SURFACE_26"
+    },
+    {
+      "key": "EF_SCENERY_COVER_26_0",
+      "role": "grass",
+      "center": [
+        512.0276947021484,
+        9.493816882371902,
+        -255.90369033813477
+      ],
+      "size": [
+        256.1971740722656,
+        17.22696965932846,
+        256.0474166870117
+      ],
+      "vertices": 17280,
+      "triangles": 5760,
+      "assetId": "rbxassetid://124356132893905",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_COVER_26_0"
+    },
+    {
+      "key": "EF_SCENERY_EDGE_UNDERLAP",
+      "role": "terrain",
+      "center": [
+        -128.0,
+        24.30921906232834,
+        384.0
+      ],
+      "size": [
+        1026.0,
+        52.22014677524567,
+        1026.0
+      ],
+      "vertices": 5120,
+      "triangles": 2560,
+      "assetId": "rbxassetid://99141677395409",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_CONTINUATION.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_EDGE_UNDERLAP"
+    },
+    {
+      "key": "EF_SCENERY_TREES_0",
+      "role": "sceneryProps",
+      "center": [
+        -126.60714721679688,
+        40.13595914840698,
+        390.5392761230469
+      ],
+      "size": [
+        1386.1603393554688,
+        59.55527591705322,
+        1406.5059204101562
+      ],
+      "vertices": 24000,
+      "triangles": 8000,
+      "assetId": "rbxassetid://114757661698965",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_TREES.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_TREES_0"
+    },
+    {
+      "key": "EF_SCENERY_TREES_1",
+      "role": "sceneryProps",
+      "center": [
+        -124.63796997070312,
+        26.81277561187744,
+        384.79156494140625
+      ],
+      "size": [
+        1387.0650024414062,
+        40.33370780944824,
+        1410.7161865234375
+      ],
+      "vertices": 24000,
+      "triangles": 8000,
+      "assetId": "rbxassetid://137977709954123",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_TREES.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_TREES_1"
+    },
+    {
+      "key": "EF_SCENERY_TREES_2",
+      "role": "sceneryProps",
+      "center": [
+        -129.58749389648438,
+        43.589343547821045,
+        382.01397705078125
+      ],
+      "size": [
+        1376.4509887695312,
+        68.02806949615479,
+        1407.4681396484375
+      ],
+      "vertices": 24000,
+      "triangles": 8000,
+      "assetId": "rbxassetid://126243005156134",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_TREES.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_TREES_2"
+    },
+    {
+      "key": "EF_SCENERY_TREES_3",
+      "role": "sceneryProps",
+      "center": [
+        -128.6744384765625,
+        42.533307790756226,
+        375.6140441894531
+      ],
+      "size": [
+        1387.890380859375,
+        74.23555421829224,
+        1403.4603881835938
+      ],
+      "vertices": 24000,
+      "triangles": 8000,
+      "assetId": "rbxassetid://127701922936865",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_TREES.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_TREES_3"
+    },
+    {
+      "key": "EF_SCENERY_TREES_4",
+      "role": "sceneryProps",
+      "center": [
+        -131.226806640625,
+        41.04833483695984,
+        375.1269989013672
+      ],
+      "size": [
+        1382.4747314453125,
+        79.06164026260376,
+        1402.4144592285156
+      ],
+      "vertices": 24000,
+      "triangles": 8000,
+      "assetId": "rbxassetid://85025819087274",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_TREES.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_TREES_4"
+    },
+    {
+      "key": "EF_SCENERY_TREES_5",
+      "role": "sceneryProps",
+      "center": [
+        -117.40777587890625,
+        33.93253177404404,
+        373.49896240234375
+      ],
+      "size": [
+        1350.4854736328125,
+        64.21109306812286,
+        1399.2835693359375
+      ],
+      "vertices": 6840,
+      "triangles": 2280,
+      "assetId": "rbxassetid://139034233602327",
+      "sourceExport": "E:\\BlenderAIProjects\\Runtime\\Emberfall_SceneryScaling\\EF_SCENERY_TREES.fbx",
+      "destination": "ReplicatedStorage.EmberfallSceneryData.ids.EF_SCENERY_TREES_5"
+    }
+  ],
+  "ids": {
+    "EF_SCENERY_SURFACE_13": "rbxassetid://97151539602552",
+    "EF_SCENERY_COVER_10_0": "rbxassetid://105681381211244",
+    "EF_SCENERY_COVER_24_0": "rbxassetid://112429057919066",
+    "EF_SCENERY_COVER_0_0": "rbxassetid://104243326348179",
+    "EF_SCENERY_COVER_25_0": "rbxassetid://108153335903538",
+    "EF_SCENERY_SURFACE_17": "rbxassetid://106489261454028",
+    "EF_SCENERY_COVER_14_0": "rbxassetid://110341531674444",
+    "EF_SCENERY_COVER_22_0": "rbxassetid://101388105990028",
+    "EF_SCENERY_SURFACE_26": "rbxassetid://77598573816919",
+    "EF_SCENERY_COVER_3_0": "rbxassetid://130946397510969",
+    "EF_SCENERY_COVER_21_0": "rbxassetid://131172985003463",
+    "EF_SCENERY_SURFACE_22": "rbxassetid://73436158485678",
+    "EF_SCENERY_SURFACE_11": "rbxassetid://85838828307415",
+    "EF_SCENERY_COVER_8_0": "rbxassetid://121316054205074",
+    "EF_SCENERY_SURFACE_7": "rbxassetid://124385475131757",
+    "EF_SCENERY_SURFACE_5": "rbxassetid://123144559323338",
+    "EF_SCENERY_COVER_1_0": "rbxassetid://78823201449129",
+    "EF_SCENERY_SURFACE_12": "rbxassetid://82543325557724",
+    "EF_SCENERY_COVER_11_0": "rbxassetid://76069115984422",
+    "EF_SCENERY_SURFACE_9": "rbxassetid://76445626679718",
+    "EF_SCENERY_SURFACE_1": "rbxassetid://125282179714969",
+    "EF_SCENERY_SURFACE_2": "rbxassetid://116209482946079",
+    "EF_SCENERY_SURFACE_4": "rbxassetid://134737098564568",
+    "EF_SCENERY_SURFACE_3": "rbxassetid://107757288276800",
+    "EF_SCENERY_SURFACE_15": "rbxassetid://96145075914958",
+    "EF_SCENERY_SURFACE_25": "rbxassetid://106164513423283",
+    "EF_SCENERY_COVER_16_0": "rbxassetid://81231434607491",
+    "EF_SCENERY_SURFACE_16": "rbxassetid://105361746773035",
+    "EF_SCENERY_SURFACE_0": "rbxassetid://77267506152563",
+    "EF_SCENERY_COVER_6_0": "rbxassetid://95018020402865",
+    "EF_SCENERY_SURFACE_24": "rbxassetid://72551805062888",
+    "EF_SCENERY_COVER_12_0": "rbxassetid://138341339081063",
+    "EF_SCENERY_COVER_19_0": "rbxassetid://81864710856169",
+    "EF_SCENERY_COVER_18_0": "rbxassetid://114241358818127",
+    "EF_SCENERY_SURFACE_23": "rbxassetid://118095469333588",
+    "EF_SCENERY_COVER_7_0": "rbxassetid://74312231626654",
+    "EF_SCENERY_SURFACE_18": "rbxassetid://102014234862090",
+    "EF_SCENERY_COVER_26_0": "rbxassetid://124356132893905",
+    "EF_SCENERY_COVER_13_0": "rbxassetid://97474498572590",
+    "EF_SCENERY_SURFACE_20": "rbxassetid://72687873654267",
+    "EF_SCENERY_COVER_5_0": "rbxassetid://137379501096642",
+    "EF_SCENERY_SURFACE_6": "rbxassetid://133599838606751",
+    "EF_SCENERY_COVER_17_0": "rbxassetid://101862333944897",
+    "EF_SCENERY_COVER_15_0": "rbxassetid://133842926894031",
+    "EF_SCENERY_COVER_4_0": "rbxassetid://77630769798593",
+    "EF_SCENERY_SURFACE_21": "rbxassetid://139805777448946",
+    "EF_SCENERY_COVER_23_0": "rbxassetid://72506404275246",
+    "EF_SCENERY_SURFACE_14": "rbxassetid://110172841495198",
+    "EF_SCENERY_COVER_9_0": "rbxassetid://128634086631717",
+    "EF_SCENERY_SURFACE_10": "rbxassetid://117180156542076",
+    "EF_SCENERY_SURFACE_19": "rbxassetid://97388799323817",
+    "EF_SCENERY_SURFACE_8": "rbxassetid://82007985356058",
+    "EF_SCENERY_COVER_20_0": "rbxassetid://126728977209660",
+    "EF_SCENERY_EDGE_UNDERLAP": "rbxassetid://99141677395409",
+    "EF_SCENERY_COVER_2_0": "rbxassetid://89204460498024",
+    "EF_SCENERY_TREES_0": "rbxassetid://114757661698965",
+    "EF_SCENERY_TREES_5": "rbxassetid://139034233602327",
+    "EF_SCENERY_TREES_1": "rbxassetid://137977709954123",
+    "EF_SCENERY_TREES_3": "rbxassetid://127701922936865",
+    "EF_SCENERY_TREES_4": "rbxassetid://85025819087274",
+    "EF_SCENERY_TREES_2": "rbxassetid://126243005156134"
+  },
+  "mode": "Layout1BakedScenery",
+  "editableMeshes": 0
+}

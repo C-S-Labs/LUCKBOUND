@@ -1,0 +1,57 @@
+{
+  "name": "EmberfallBatch2ProductionReview",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "Luckbound": {
+        "$path": "src/shared"
+      },
+      "LuckboundProps": {
+        "$path": "assets/rbxm/props"
+      },
+      "LuckboundAnimations": {
+        "$path": "assets/rbxm/animations"
+      },
+      "EmberfallBatch2ReviewData": {
+        "$path": "tools/studio/emberfall_batch2/ReviewData.luau"
+      }
+    },
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "LuckboundServer": {
+        "$path": "src/server"
+      },
+      "EmberfallBatch2Review": {
+        "$path": "tools/studio/emberfall_batch2/Batch2Review.server.luau"
+      }
+    },
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "LuckboundClient": {
+          "$path": "src/client"
+        },
+        "EmberfallBatch2ReviewAppearance": {
+          "$path": "tools/studio/emberfall_batch2/Batch2ReviewAppearance.client.luau"
+        }
+      }
+    },
+    "ServerStorage": {
+      "$className": "ServerStorage",
+      "LuckboundMaps": {
+        "$path": "assets/rbxm/maps"
+      },
+      "LuckboundPrefabs": {
+        "$path": "assets/rbxm/prefabs"
+      },
+      "LuckboundChunkKits": {
+        "$path": "assets/rbxm/chunks"
+      },
+      "LuckboundBosses": {
+        "$path": "assets/rbxm/bosses"
+      }
+    }
+  }
+}

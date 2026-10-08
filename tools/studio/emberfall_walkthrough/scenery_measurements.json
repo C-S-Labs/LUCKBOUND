@@ -1,0 +1,373 @@
+{
+  "baseline": {
+    "runs": [
+      {
+        "vertices": 221363,
+        "role": "terrain",
+        "retained": 9,
+        "seconds": 3.333133000007365,
+        "faces": 80622,
+        "allocations": [
+          {
+            "vertices": 24590,
+            "seconds": 1.0006544000061695,
+            "success": true,
+            "colors": 24590,
+            "faces": 8958,
+            "key": "EF_ENTRY_WINDWARD_MEADOW_TERRAIN"
+          },
+          {
+            "vertices": 24504,
+            "seconds": 0.6569867999933194,
+            "success": true,
+            "colors": 24504,
+            "faces": 8958,
+            "key": "EF_DRAINAGE_CROSSING_TERRAIN"
+          },
+          {
+            "vertices": 24638,
+            "seconds": 0.31547120001050644,
+            "success": true,
+            "colors": 24638,
+            "faces": 8958,
+            "key": "EF_ORCHARD_BEND_TERRAIN"
+          },
+          {
+            "vertices": 24618,
+            "seconds": 0.18198900000425056,
+            "success": true,
+            "colors": 24618,
+            "faces": 8958,
+            "key": "EF_RIDGE_ASCENT_TERRAIN"
+          },
+          {
+            "vertices": 24680,
+            "seconds": 0.23339080000005197,
+            "success": true,
+            "colors": 24680,
+            "faces": 8958,
+            "key": "EF_SWITCHBACK_BANK_TERRAIN"
+          },
+          {
+            "vertices": 24540,
+            "seconds": 0.19866259999980684,
+            "success": true,
+            "colors": 24540,
+            "faces": 8958,
+            "key": "EF_WAYMARK_TERRACE_TERRAIN"
+          },
+          {
+            "vertices": 24544,
+            "seconds": 0.1649457000021357,
+            "success": true,
+            "colors": 24544,
+            "faces": 8958,
+            "key": "EF_OPEN_FIELD_CLEARING_TERRAIN"
+          },
+          {
+            "vertices": 24631,
+            "seconds": 0.18387910000456031,
+            "success": true,
+            "colors": 24631,
+            "faces": 8958,
+            "key": "EF_BURN_FRONT_VERGE_TERRAIN"
+          },
+          {
+            "vertices": 24618,
+            "seconds": 0.1623909000045387,
+            "success": true,
+            "colors": 24618,
+            "faces": 8958,
+            "key": "EF_FENCELINE_RISE_TERRAIN"
+          }
+        ]
+      },
+      {
+        "vertices": 226845,
+        "role": "grass",
+        "retained": 18,
+        "seconds": 3.233081400001538,
+        "faces": 75615,
+        "allocations": [
+          {
+            "vertices": 18000,
+            "seconds": 0.16663200000766665,
+            "success": true,
+            "colors": 18000,
+            "faces": 6000,
+            "key": "EF_ENTRY_WINDWARD_MEADOW_GRASS_0"
+          },
+          {
+            "vertices": 11349,
+            "seconds": 0.1821736999991117,
+            "success": true,
+            "colors": 11349,
+            "faces": 3783,
+            "key": "EF_ENTRY_WINDWARD_MEADOW_GRASS_1"
+          },
+          {
+            "vertices": 18000,
+            "seconds": 0.18245049999677576,
+            "success": true,
+            "colors": 18000,
+            "faces": 6000,
+            "key": "EF_DRAINAGE_CROSSING_GRASS_0"
+          },
+          {
+            "vertices": 5706,
+            "seconds": 0.13243840000359342,
+            "success": true,
+            "colors": 5706,
+            "faces": 1902,
+            "key": "EF_DRAINAGE_CROSSING_GRASS_1"
+          },
+          {
+            "vertices": 18000,
+            "seconds": 0.19911290000891313,
+            "success": true,
+            "colors": 18000,
+            "faces": 6000,
+            "key": "EF_ORCHARD_BEND_GRASS_0"
+          },
+          {
+            "vertices": 6138,
+            "seconds": 0.16679009998915717,
+            "success": true,
+            "colors": 6138,
+            "faces": 2046,
+            "key": "EF_ORCHARD_BEND_GRASS_1"
+          },
+          {
+            "vertices": 18000,
+            "seconds": 0.14873780000198167,
+            "success": true,
+            "colors": 18000,
+            "faces": 6000,
+            "key": "EF_RIDGE_ASCENT_GRASS_0"
+          },
+          {
+            "vertices": 7722,
+            "seconds": 0.18286479999369476,
+            "success": true,
+            "colors": 7722,
+            "faces": 2574,
+            "key": "EF_RIDGE_ASCENT_GRASS_1"
+          },
+          {
+            "vertices": 18000,
+            "seconds": 0.18297499998880085,
+            "success": true,
+            "colors": 18000,
+            "faces": 6000,
+            "key": "EF_SWITCHBACK_BANK_GRASS_0"
+          },
+          {
+            "vertices": 7947,
+            "seconds": 0.16564300000027288,
+            "success": true,
+            "colors": 7947,
+            "faces": 2649,
+            "key": "EF_SWITCHBACK_BANK_GRASS_1"
+          },
+          {
+            "vertices": 18000,
+            "seconds": 0.16630870000517461,
+            "success": true,
+            "colors": 18000,
+            "faces": 6000,
+            "key": "EF_WAYMARK_TERRACE_GRASS_0"
+          },
+          {
+            "vertices": 7497,
+            "seconds": 0.16513119998853654,
+            "success": true,
+            "colors": 7497,
+            "faces": 2499,
+            "key": "EF_WAYMARK_TERRACE_GRASS_1"
+          },
+          {
+            "vertices": 18000,
+            "seconds": 0.1691572000127053,
+            "success": true,
+            "colors": 18000,
+            "faces": 6000,
+            "key": "EF_OPEN_FIELD_CLEARING_GRASS_0"
+          },
+          {
+            "vertices": 3258,
+            "seconds": 0.1768725000001723,
+            "success": true,
+            "colors": 3258,
+            "faces": 1086,
+            "key": "EF_OPEN_FIELD_CLEARING_GRASS_1"
+          },
+          {
+            "vertices": 18000,
+            "seconds": 0.26680949999717996,
+            "success": true,
+            "colors": 18000,
+            "faces": 6000,
+            "key": "EF_BURN_FRONT_VERGE_GRASS_0"
+          },
+          {
+            "vertices": 9450,
+            "seconds": 0.18213340001238976,
+            "success": true,
+            "colors": 9450,
+            "faces": 3150,
+            "key": "EF_BURN_FRONT_VERGE_GRASS_1"
+          },
+          {
+            "vertices": 18000,
+            "seconds": 0.18267769999511074,
+            "success": true,
+            "colors": 18000,
+            "faces": 6000,
+            "key": "EF_FENCELINE_RISE_GRASS_0"
+          },
+          {
+            "vertices": 5778,
+            "seconds": 0.1992919000040274,
+            "success": true,
+            "colors": 5778,
+            "faces": 1926,
+            "key": "EF_FENCELINE_RISE_GRASS_1"
+          }
+        ]
+      },
+      {
+        "vertices": 221363,
+        "role": "combined",
+        "retained": 9,
+        "seconds": 0.8325306999904569,
+        "faces": 80622,
+        "allocations": [
+          {
+            "vertices": 24590,
+            "seconds": 0.08303499998874031,
+            "success": true,
+            "colors": 24590,
+            "faces": 8958,
+            "key": "EF_ENTRY_WINDWARD_MEADOW_TERRAIN"
+          },
+          {
+            "vertices": 24504,
+            "seconds": 0.048767700005555525,
+            "success": true,
+            "colors": 24504,
+            "faces": 8958,
+            "key": "EF_DRAINAGE_CROSSING_TERRAIN"
+          },
+          {
+            "vertices": 24638,
+            "seconds": 0.09753020000061952,
+            "success": true,
+            "colors": 24638,
+            "faces": 8958,
+            "key": "EF_ORCHARD_BEND_TERRAIN"
+          },
+          {
+            "vertices": 24618,
+            "seconds": 0.05142399999022018,
+            "success": true,
+            "colors": 24618,
+            "faces": 8958,
+            "key": "EF_RIDGE_ASCENT_TERRAIN"
+          },
+          {
+            "vertices": 24680,
+            "seconds": 0.11225849999755155,
+            "success": true,
+            "colors": 24680,
+            "faces": 8958,
+            "key": "EF_SWITCHBACK_BANK_TERRAIN"
+          },
+          {
+            "vertices": 24540,
+            "seconds": 0.0824097000004258,
+            "success": true,
+            "colors": 24540,
+            "faces": 8958,
+            "key": "EF_WAYMARK_TERRACE_TERRAIN"
+          },
+          {
+            "vertices": 24544,
+            "seconds": 0.06494730000849813,
+            "success": true,
+            "colors": 24544,
+            "faces": 8958,
+            "key": "EF_OPEN_FIELD_CLEARING_TERRAIN"
+          },
+          {
+            "vertices": 24631,
+            "seconds": 0.09873929999594111,
+            "success": true,
+            "colors": 24631,
+            "faces": 8958,
+            "key": "EF_BURN_FRONT_VERGE_TERRAIN"
+          },
+          {
+            "vertices": 24618,
+            "seconds": 0.0650078000035137,
+            "success": true,
+            "colors": 24618,
+            "faces": 8958,
+            "key": "EF_FENCELINE_RISE_TERRAIN"
+          },
+          {
+            "success": false,
+            "seconds": 0.11534839999512769,
+            "key": "EF_ENTRY_WINDWARD_MEADOW_GRASS_0",
+            "failure": "returned nil"
+          }
+        ]
+      }
+    ]
+  },
+  "after": {
+    "loadSeconds": 8.22056759998668,
+    "editableMeshes": 0,
+    "stress": {
+      "copies": 8,
+      "triangles": 1402104,
+      "uniqueAssets": 27,
+      "cloneSeconds": 0.0030632999987574294,
+      "offscreen": true,
+      "parts": 216
+    },
+    "counts": {
+      "grass": 27,
+      "sceneryProps": 6,
+      "terrain": 28,
+      "collision": 627,
+      "playableVisual": 39
+    },
+    "recolourSeconds": 0,
+    "previousLoadSeconds": 8.486764200002654,
+    "canopyTransformsVerified": true
+  },
+  "sourceHashes": {
+    "EF_ENTRY_WINDWARD_MEADOW": "a990b6fccd651b6825f06d61207e271deb05c36557ffbd02ca32b14b40452b10",
+    "EF_ORCHARD_BEND": "ef836eafddc8200621824f8bf42a01c8ded468c0ccbfea59fd76aa4fd49e150f",
+    "EF_OPEN_FIELD_CLEARING": "2c6cbf147317fc67cecaf3c0d74994717979abd25a009f202e7c7c157bed9ad1",
+    "EF_DRAINAGE_CROSSING": "9cdf2344ff09e064dc6357cfd4ff499ce889943cb098f95429f892c075b5d020",
+    "EF_SWITCHBACK_BANK": "1a093107517b257b39a7bea9d21f5f3636873146b8edd5bcdda89aee1aa93082",
+    "EF_FENCELINE_RISE": "33b9b18e374622b127d81cad237c0a869696f65706afabfd1076a6e208d7bae1",
+    "EF_WAYMARK_TERRACE": "971c5323a52e458fa5eff96ec7cf2b8bdd4afece30fecf5686cc8073477551fc",
+    "EF_BURN_FRONT_VERGE": "e6edd0a1a3478f3a5f7ced9ead6c1ce0f284e98efa5713b0b1e95a670312756b",
+    "EF_RIDGE_ASCENT": "37132823c924e35d03e859590cce0fd731374aab6ec6f96b60e09a857d467cbe"
+  },
+  "geometry": {
+    "sceneryGrass": 175263,
+    "sceneryGround": 40264,
+    "sceneryTrees": 42280,
+    "area": 1769472
+  },
+  "edge": {
+    "samples": 652,
+    "oldMax": 0.3323631286621094,
+    "newMax": 0.000087738037109375
+  },
+  "baselineCommit": "73b918b",
+  "scope": "Studio desktop bounded fixture; no GPU/mobile or unique asset memory proof"
+}

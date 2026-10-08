@@ -1,0 +1,51 @@
+{
+  "name": "LUCKBOUND NON_PRODUCTION Emberfall Scale Benchmark",
+  "servePort": 34874,
+  "tree": {
+    "$className": "DataModel",
+    "$ignoreUnknownInstances": true,
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "$ignoreUnknownInstances": true,
+      "EmberfallWalkthroughData": {
+        "$path": "tools/studio/emberfall_walkthrough/WalkthroughData.luau"
+      },
+      "EmberfallSceneryData": {
+        "$path": "tools/studio/emberfall_walkthrough/SceneryData.luau"
+      },
+      "EmberfallBenchmarkUniqueScenery": {
+        "$path": "tools/studio/emberfall_scale_test/UniqueSceneryData.luau"
+      }
+    },
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "$ignoreUnknownInstances": true,
+      "EmberfallOwnerWalkthrough": {
+        "$path": "tools/studio/emberfall_walkthrough/OwnerWalkthrough.server.luau",
+        "$properties": {
+          "Enabled": false
+        }
+      },
+      "EmberfallScaleBenchmark": {
+        "$path": "tools/studio/emberfall_scale_test/BenchmarkServer.server.luau"
+      }
+    },
+    "StarterPlayer": {
+      "$className": "StarterPlayer",
+      "$ignoreUnknownInstances": true,
+      "StarterPlayerScripts": {
+        "$className": "StarterPlayerScripts",
+        "$ignoreUnknownInstances": true,
+        "EmberfallWalkthroughAppearance": {
+          "$path": "tools/studio/emberfall_walkthrough/OwnerWalkthroughAppearance.client.luau",
+          "$properties": {
+            "Enabled": false
+          }
+        },
+        "EmberfallBenchmarkClient": {
+          "$path": "tools/studio/emberfall_scale_test/BenchmarkClient.client.luau"
+        }
+      }
+    }
+  }
+}

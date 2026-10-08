@@ -1,0 +1,876 @@
+{
+  "hardware": {
+    "cpu": "Intel Core i9-14900K",
+    "gpu": "NVIDIA RTX 4080",
+    "ramBytes": 34087915520,
+    "driver": "32.0.15.9159"
+  },
+  "runs": [
+    {
+      "label": "9_serial_warm_repeat",
+      "server": {
+        "sceneryPreparation": {
+          "ActiveWorkers": 0,
+          "TemplateClones": 61,
+          "VisualOnlyPreciseRequests": 0,
+          "Entries": 61,
+          "DuplicatePreparations": 0,
+          "ConfiguredWorkers": 6,
+          "CreateMeshPartAsyncCalls": 61,
+          "MaximumActiveWorkers": 1,
+          "CacheMisses": 61,
+          "UniqueAssetPreparations": 61
+        },
+        "chunks": 9,
+        "uniqueBank": false,
+        "uniqueVisualAssets": 100,
+        "persistent": true,
+        "streamingEnabled": true,
+        "uniqueCollisionAssets": 627,
+        "timings": {
+          "sceneryPreparation": 1.00000761449337e-7,
+          "collisionAcquisition": 16.515896099997917,
+          "firstSceneryTotal": 7.239835799991852,
+          "sceneryClonePlacement": 7.2001949999976205,
+          "serverReady": 32.533311799998046,
+          "replicaAndStructuralAssembly": 1.00000761449337e-7,
+          "uniqueSceneryPreparation": 0,
+          "playablePresentation": 0.0010111000010510907,
+          "playablePreparation": 8.76502829999663,
+          "firstChunkAssembly": 0.011352999994414859
+        },
+        "groups": 1,
+        "playablePreparation": {
+          "ActiveWorkers": 0,
+          "TemplateClones": 39,
+          "VisualOnlyPreciseRequests": 0,
+          "Entries": 39,
+          "DuplicatePreparations": 0,
+          "ConfiguredWorkers": 6,
+          "UniqueAssetPreparations": 39,
+          "CacheHits": 39,
+          "MaximumActiveWorkers": 1,
+          "CacheMisses": 39,
+          "CreateMeshPartAsyncCalls": 39
+        },
+        "editableMeshes": 0,
+        "counts": {
+          "collisionMeshParts": 627,
+          "meshParts": 727,
+          "baseParts": 905,
+          "proxyParts": 0,
+          "instances": 933
+        },
+        "parallelPreparation": false
+      },
+      "client": {
+        "playerReadySeconds": 52.98037815093994,
+        "fullAssetReadySeconds": 33.184388160705566,
+        "preload": {
+          "ok": true,
+          "seconds": 0.45018590000108816,
+          "failures": [],
+          "statusCounts": {
+            "Enum.AssetFetchStatus.Success": 727
+          },
+          "callbackCount": 727
+        },
+        "uniqueMeshIds": 727,
+        "viewport": "713, 500",
+        "startupMemory": {
+          "unavailable": [],
+          "categoriesMb": {
+            "GraphicsMeshParts": 35.95399475097656,
+            "PhysicsCollision": 0.0027313232421875,
+            "HttpCache": 0.0107879638671875,
+            "Instances": 286.788330078125,
+            "PhysicsParts": 104.78266906738281,
+            "GraphicsParticles": 15.326614379882812,
+            "LuaHeap": 847.1585693359375,
+            "Signals": 19.77642822265625,
+            "GraphicsParts": 3.5619354248046875,
+            "GraphicsTexture": 71.37858581542969
+          },
+          "totalMb": 3937.0859375
+        },
+        "finalMemory": {
+          "unavailable": [],
+          "categoriesMb": {
+            "GraphicsMeshParts": 97.22509765625,
+            "PhysicsCollision": 0.003173828125,
+            "HttpCache": 0.0214385986328125,
+            "Instances": 326.83135986328125,
+            "PhysicsParts": 110.7147216796875,
+            "GraphicsParticles": 15.332061767578125,
+            "LuaHeap": 994.37548828125,
+            "Signals": 21.526153564453125,
+            "GraphicsParts": 8.22930908203125,
+            "GraphicsTexture": 72.54508972167969
+          },
+          "totalMb": 4026.3125
+        },
+        "views": [
+          {
+            "name": "playerEye",
+            "meanFps": 37.555853301004184,
+            "p95Ms": 67.33330339193344,
+            "p99Ms": 68.00899654626846,
+            "maxMs": 68.12209635972977,
+            "framesOver33Ms": 39
+          },
+          {
+            "name": "elevated",
+            "meanFps": 37.32809426633908,
+            "p95Ms": 67.21749901771545,
+            "p99Ms": 67.68269836902618,
+            "maxMs": 67.99399852752686,
+            "framesOver33Ms": 38
+          },
+          {
+            "name": "overview",
+            "meanFps": 14.999585744258487,
+            "p95Ms": 68.2528018951416,
+            "p99Ms": 74.80990141630173,
+            "maxMs": 74.80990141630173,
+            "framesOver33Ms": 75
+          }
+        ]
+      }
+    },
+    {
+      "label": "9_parallel_1",
+      "server": {
+        "sceneryPreparation": {
+          "ActiveWorkers": 0,
+          "TemplateClones": 61,
+          "VisualOnlyPreciseRequests": 0,
+          "Entries": 61,
+          "DuplicatePreparations": 0,
+          "ConfiguredWorkers": 6,
+          "UniqueAssetPreparations": 61,
+          "CacheHits": 61,
+          "MaximumActiveWorkers": 6,
+          "CacheMisses": 61,
+          "CreateMeshPartAsyncCalls": 61
+        },
+        "chunks": 9,
+        "uniqueBank": false,
+        "uniqueVisualAssets": 100,
+        "persistent": true,
+        "streamingEnabled": true,
+        "uniqueCollisionAssets": 627,
+        "timings": {
+          "sceneryPreparation": 1.120877900000778,
+          "collisionAcquisition": 15.220117700009723,
+          "firstSceneryTotal": 1.1563925999944331,
+          "sceneryClonePlacement": 0.0011780000058934093,
+          "serverReady": 18.022433399994043,
+          "replicaAndStructuralAssembly": 1.00000761449337e-7,
+          "uniqueSceneryPreparation": 0,
+          "playablePresentation": 0.0012527999933809042,
+          "playablePreparation": 1.6333244999987073,
+          "firstChunkAssembly": 0.011054600006900728
+        },
+        "groups": 1,
+        "playablePreparation": {
+          "ActiveWorkers": 0,
+          "TemplateClones": 39,
+          "VisualOnlyPreciseRequests": 0,
+          "Entries": 39,
+          "DuplicatePreparations": 0,
+          "ConfiguredWorkers": 6,
+          "UniqueAssetPreparations": 39,
+          "CacheHits": 39,
+          "MaximumActiveWorkers": 6,
+          "CacheMisses": 39,
+          "CreateMeshPartAsyncCalls": 39
+        },
+        "editableMeshes": 0,
+        "counts": {
+          "authoredCollisionTriangles": 50016,
+          "meshParts": 727,
+          "baseParts": 905,
+          "sceneryMeshParts": 61,
+          "instances": 933,
+          "collisionMeshParts": 627,
+          "proxyParts": 0,
+          "sceneryGrassTriangles": 175263,
+          "safetySegments": 160,
+          "visualTriangles": 488940
+        },
+        "parallelPreparation": true
+      },
+      "client": {
+        "playerReadySeconds": 19.03591012954712,
+        "fullAssetReadySeconds": 18.373918056488037,
+        "preload": {
+          "ok": true,
+          "seconds": 0.2656753000046592,
+          "failures": [],
+          "statusCounts": {
+            "Enum.AssetFetchStatus.Success": 727
+          },
+          "callbackCount": 727
+        },
+        "uniqueMeshIds": 727,
+        "viewport": "713, 500",
+        "startupMemory": {
+          "unavailable": [],
+          "categoriesMb": {
+            "GraphicsMeshParts": 35.94380187988281,
+            "PhysicsCollision": 0.0029449462890625,
+            "HttpCache": 0.0077056884765625,
+            "Instances": 287.4996032714844,
+            "PhysicsParts": 109.64088439941406,
+            "GraphicsParticles": 15.326614379882812,
+            "LuaHeap": 780.207275390625,
+            "Signals": 19.923782348632812,
+            "GraphicsParts": 3.684539794921875,
+            "GraphicsTexture": 71.92790222167969
+          },
+          "totalMb": 3975.24609375
+        },
+        "finalMemory": {
+          "unavailable": [],
+          "categoriesMb": {
+            "GraphicsMeshParts": 97.25250244140625,
+            "PhysicsCollision": 0.003387451171875,
+            "HttpCache": 0.0231170654296875,
+            "Instances": 327.4034423828125,
+            "PhysicsParts": 115.31320190429688,
+            "GraphicsParticles": 15.332061767578125,
+            "LuaHeap": 1001.0216064453125,
+            "Signals": 21.659942626953125,
+            "GraphicsParts": 8.28997802734375,
+            "GraphicsTexture": 72.54508972167969
+          },
+          "totalMb": 4065.0390625
+        },
+        "views": [
+          {
+            "name": "playerEye",
+            "meanFps": 59.99230906175896,
+            "p95Ms": 17.79099926352501,
+            "p99Ms": 18.27320083975792,
+            "maxMs": 18.960800021886826,
+            "framesOver33Ms": 0
+          },
+          {
+            "name": "elevated",
+            "meanFps": 59.806301709962774,
+            "p95Ms": 17.96410046517849,
+            "p99Ms": 18.563900142908096,
+            "maxMs": 54.26270142197609,
+            "framesOver33Ms": 1
+          },
+          {
+            "name": "overview",
+            "meanFps": 59.99900214201923,
+            "p95Ms": 17.78619922697544,
+            "p99Ms": 18.24519969522953,
+            "maxMs": 18.789000809192657,
+            "framesOver33Ms": 0
+          }
+        ]
+      }
+    },
+    {
+      "label": "9_parallel_2",
+      "server": {
+        "sceneryPreparation": {
+          "ActiveWorkers": 0,
+          "TemplateClones": 61,
+          "VisualOnlyPreciseRequests": 0,
+          "Entries": 61,
+          "DuplicatePreparations": 0,
+          "ConfiguredWorkers": 6,
+          "UniqueAssetPreparations": 61,
+          "CacheHits": 61,
+          "MaximumActiveWorkers": 6,
+          "CacheMisses": 61,
+          "CreateMeshPartAsyncCalls": 61
+        },
+        "chunks": 9,
+        "uniqueBank": false,
+        "uniqueVisualAssets": 100,
+        "persistent": true,
+        "streamingEnabled": true,
+        "uniqueCollisionAssets": 627,
+        "timings": {
+          "sceneryPreparation": 1.4217159999971045,
+          "collisionAcquisition": 16.583226499991724,
+          "firstSceneryTotal": 1.4571423000015784,
+          "sceneryClonePlacement": 0.001177600002847612,
+          "serverReady": 19.018578500006697,
+          "replicaAndStructuralAssembly": 2.00001522898674e-7,
+          "uniqueSceneryPreparation": 0,
+          "playablePresentation": 0.0009843000007094815,
+          "playablePreparation": 0.9659501999994973,
+          "firstChunkAssembly": 0.010975600001984276
+        },
+        "groups": 1,
+        "playablePreparation": {
+          "ActiveWorkers": 0,
+          "TemplateClones": 39,
+          "VisualOnlyPreciseRequests": 0,
+          "Entries": 39,
+          "DuplicatePreparations": 0,
+          "ConfiguredWorkers": 6,
+          "UniqueAssetPreparations": 39,
+          "CacheHits": 39,
+          "MaximumActiveWorkers": 6,
+          "CacheMisses": 39,
+          "CreateMeshPartAsyncCalls": 39
+        },
+        "editableMeshes": 0,
+        "counts": {
+          "authoredCollisionTriangles": 50016,
+          "meshParts": 727,
+          "baseParts": 905,
+          "sceneryMeshParts": 61,
+          "instances": 933,
+          "collisionMeshParts": 627,
+          "proxyParts": 0,
+          "sceneryGrassTriangles": 175263,
+          "safetySegments": 160,
+          "visualTriangles": 488940
+        },
+        "parallelPreparation": true
+      },
+      "client": {
+        "playerReadySeconds": 20.032243967056274,
+        "fullAssetReadySeconds": 19.599570989608765,
+        "preload": {
+          "ok": true,
+          "seconds": 0.5454559000063455,
+          "failures": [],
+          "statusCounts": {
+            "Enum.AssetFetchStatus.Success": 727
+          },
+          "callbackCount": 727
+        },
+        "uniqueMeshIds": 727,
+        "viewport": "1993, 978",
+        "startupMemory": {
+          "unavailable": [],
+          "categoriesMb": {
+            "GraphicsMeshParts": 35.95562744140625,
+            "PhysicsCollision": 0.003936767578125,
+            "HttpCache": 0.0107879638671875,
+            "Instances": 290.2503356933594,
+            "PhysicsParts": 134.9403076171875,
+            "GraphicsParticles": 15.326614379882812,
+            "LuaHeap": 831.585693359375,
+            "Signals": 21.577194213867188,
+            "GraphicsParts": 3.9162139892578125,
+            "GraphicsTexture": 71.92790222167969
+          },
+          "totalMb": 4010.6328125
+        },
+        "finalMemory": {
+          "unavailable": [],
+          "categoriesMb": {
+            "GraphicsMeshParts": 97.36111450195312,
+            "PhysicsCollision": 0.004425048828125,
+            "HttpCache": 0.0203704833984375,
+            "Instances": 330.22113037109375,
+            "PhysicsParts": 140.5731964111328,
+            "GraphicsParticles": 15.332061767578125,
+            "LuaHeap": 1055.19677734375,
+            "Signals": 23.360382080078125,
+            "GraphicsParts": 8.10150146484375,
+            "GraphicsTexture": 72.54508972167969
+          },
+          "totalMb": 4222.9921875
+        },
+        "views": [
+          {
+            "name": "playerEye",
+            "meanFps": 60.003076942097515,
+            "p95Ms": 17.933299764990807,
+            "p99Ms": 18.236100673675537,
+            "maxMs": 18.537700176239014,
+            "framesOver33Ms": 0
+          },
+          {
+            "name": "elevated",
+            "meanFps": 59.99439154468261,
+            "p95Ms": 17.861299216747284,
+            "p99Ms": 18.4199009090662,
+            "maxMs": 18.785299733281136,
+            "framesOver33Ms": 0
+          },
+          {
+            "name": "overview",
+            "meanFps": 60.014577850208546,
+            "p95Ms": 17.72410050034523,
+            "p99Ms": 18.264299258589745,
+            "maxMs": 18.693599849939346,
+            "framesOver33Ms": 0
+          }
+        ]
+      }
+    },
+    {
+      "label": "18_overstress",
+      "server": {
+        "sceneryPreparation": {
+          "ActiveWorkers": 0,
+          "TemplateClones": 61,
+          "VisualOnlyPreciseRequests": 0,
+          "Entries": 61,
+          "DuplicatePreparations": 0,
+          "ConfiguredWorkers": 6,
+          "UniqueAssetPreparations": 61,
+          "CacheHits": 61,
+          "MaximumActiveWorkers": 6,
+          "CacheMisses": 61,
+          "CreateMeshPartAsyncCalls": 61
+        },
+        "chunks": 18,
+        "uniqueBank": false,
+        "uniqueVisualAssets": 100,
+        "persistent": true,
+        "streamingEnabled": true,
+        "uniqueCollisionAssets": 627,
+        "timings": {
+          "sceneryPreparation": 1.188002900002175,
+          "collisionAcquisition": 16.358227899996564,
+          "firstSceneryTotal": 1.2239542000024812,
+          "sceneryClonePlacement": 0.001126599992858246,
+          "serverReady": 19.04649559999234,
+          "replicaAndStructuralAssembly": 0.01869129999249708,
+          "uniqueSceneryPreparation": 0,
+          "playablePresentation": 0.00096750000375323,
+          "playablePreparation": 1.4331105000019306,
+          "firstChunkAssembly": 0.010883900002227165
+        },
+        "groups": 2,
+        "playablePreparation": {
+          "ActiveWorkers": 0,
+          "TemplateClones": 228,
+          "VisualOnlyPreciseRequests": 0,
+          "Entries": 39,
+          "DuplicatePreparations": 0,
+          "ConfiguredWorkers": 6,
+          "UniqueAssetPreparations": 39,
+          "CacheHits": 228,
+          "MaximumActiveWorkers": 6,
+          "CacheMisses": 39,
+          "CreateMeshPartAsyncCalls": 39
+        },
+        "editableMeshes": 0,
+        "counts": {
+          "authoredCollisionTriangles": 100032,
+          "meshParts": 1814,
+          "baseParts": 2170,
+          "sceneryMeshParts": 122,
+          "instances": 2228,
+          "collisionMeshParts": 1434,
+          "proxyParts": 360,
+          "sceneryGrassTriangles": 350526,
+          "safetySegments": 320,
+          "visualTriangles": 2359146
+        },
+        "parallelPreparation": true
+      },
+      "client": {
+        "playerReadySeconds": 36.839998960494995,
+        "fullAssetReadySeconds": 19.59386706352234,
+        "preload": {
+          "ok": true,
+          "seconds": 0.4442836999951396,
+          "failures": [],
+          "statusCounts": {
+            "Enum.AssetFetchStatus.Success": 1814
+          },
+          "callbackCount": 1814
+        },
+        "uniqueMeshIds": 727,
+        "viewport": "713, 500",
+        "startupMemory": {
+          "unavailable": [],
+          "categoriesMb": {
+            "GraphicsMeshParts": 35.95610046386719,
+            "PhysicsCollision": 0.0031585693359375,
+            "HttpCache": 0.0061798095703125,
+            "Instances": 287.552001953125,
+            "PhysicsParts": 111.9664306640625,
+            "GraphicsParticles": 15.326614379882812,
+            "LuaHeap": 790.1417236328125,
+            "Signals": 20.167816162109375,
+            "GraphicsParts": 3.9666595458984375,
+            "GraphicsTexture": 71.92790222167969
+          },
+          "totalMb": 3860.26953125
+        },
+        "finalMemory": {
+          "unavailable": [],
+          "categoriesMb": {
+            "GraphicsMeshParts": 97.28842163085938,
+            "PhysicsCollision": 0.00360107421875,
+            "HttpCache": 0.161834716796875,
+            "Instances": 327.63232421875,
+            "PhysicsParts": 122.65646362304688,
+            "GraphicsParticles": 15.332061767578125,
+            "LuaHeap": 996.8492431640625,
+            "Signals": 22.1322021484375,
+            "GraphicsParts": 10.133651733398438,
+            "GraphicsTexture": 72.54508972167969
+          },
+          "totalMb": 4045.8984375
+        },
+        "views": [
+          {
+            "name": "playerEye",
+            "meanFps": 60.0080260586954,
+            "p95Ms": 17.960600554943085,
+            "p99Ms": 18.29189993441105,
+            "maxMs": 18.528200685977936,
+            "framesOver33Ms": 0
+          },
+          {
+            "name": "elevated",
+            "meanFps": 60.0095413522038,
+            "p95Ms": 18.003199249505997,
+            "p99Ms": 18.39110068976879,
+            "maxMs": 18.725400790572166,
+            "framesOver33Ms": 0
+          },
+          {
+            "name": "overview",
+            "meanFps": 59.99765889168377,
+            "p95Ms": 18.18089932203293,
+            "p99Ms": 18.667200580239296,
+            "maxMs": 18.836399540305138,
+            "framesOver33Ms": 0
+          },
+          {
+            "name": "laterHalfPlayerEye",
+            "meanFps": 60.00911459125131,
+            "p95Ms": 17.9539006203413,
+            "p99Ms": 18.54499988257885,
+            "maxMs": 18.759699538350105,
+            "framesOver33Ms": 0
+          }
+        ]
+      }
+    },
+    {
+      "label": "36_parallel_unique_1",
+      "server": {
+        "sceneryPreparation": {
+          "ActiveWorkers": 0,
+          "TemplateClones": 61,
+          "VisualOnlyPreciseRequests": 0,
+          "Entries": 61,
+          "DuplicatePreparations": 0,
+          "ConfiguredWorkers": 6,
+          "UniqueAssetPreparations": 61,
+          "CacheHits": 61,
+          "MaximumActiveWorkers": 6,
+          "CacheMisses": 61,
+          "CreateMeshPartAsyncCalls": 61
+        },
+        "chunks": 36,
+        "uniqueBank": true,
+        "uniqueVisualAssets": 100,
+        "persistent": true,
+        "streamingEnabled": true,
+        "uniqueCollisionAssets": 627,
+        "timings": {
+          "sceneryPreparation": 1.2532317000004696,
+          "collisionAcquisition": 15.260206099992502,
+          "firstSceneryTotal": 1.289857600000687,
+          "sceneryClonePlacement": 0.0011807999981101602,
+          "serverReady": 19.633110299997497,
+          "replicaAndStructuralAssembly": 0.054683599999407306,
+          "uniqueSceneryPreparation": 1.2981388999905903,
+          "playablePresentation": 0.001029399994877167,
+          "playablePreparation": 1.7160508999950252,
+          "firstChunkAssembly": 0.011627100000623614
+        },
+        "groups": 4,
+        "playablePreparation": {
+          "ActiveWorkers": 0,
+          "TemplateClones": 426,
+          "VisualOnlyPreciseRequests": 0,
+          "Entries": 39,
+          "DuplicatePreparations": 0,
+          "ConfiguredWorkers": 6,
+          "UniqueAssetPreparations": 39,
+          "CacheHits": 426,
+          "MaximumActiveWorkers": 6,
+          "CacheMisses": 39,
+          "CreateMeshPartAsyncCalls": 39
+        },
+        "editableMeshes": 0,
+        "uniquePreparation": {
+          "ActiveWorkers": 0,
+          "TemplateClones": 122,
+          "VisualOnlyPreciseRequests": 0,
+          "Entries": 61,
+          "DuplicatePreparations": 0,
+          "ConfiguredWorkers": 6,
+          "UniqueAssetPreparations": 61,
+          "CacheHits": 122,
+          "MaximumActiveWorkers": 6,
+          "CacheMisses": 61,
+          "CreateMeshPartAsyncCalls": 61
+        },
+        "counts": {
+          "authoredCollisionTriangles": 200064,
+          "meshParts": 3628,
+          "baseParts": 4340,
+          "sceneryMeshParts": 244,
+          "instances": 4457,
+          "collisionMeshParts": 2868,
+          "proxyParts": 720,
+          "sceneryGrassTriangles": 701052,
+          "safetySegments": 640,
+          "visualTriangles": 2338548
+        },
+        "parallelPreparation": true
+      },
+      "client": {
+        "playerReadySeconds": 20.642888069152832,
+        "fullAssetReadySeconds": 20.294862985610962,
+        "preload": {
+          "ok": true,
+          "seconds": 0.4765410000109114,
+          "failures": [],
+          "statusCounts": {
+            "Enum.AssetFetchStatus.Success": 3628
+          },
+          "callbackCount": 3628
+        },
+        "uniqueMeshIds": 786,
+        "viewport": "713, 500",
+        "startupMemory": {
+          "unavailable": [],
+          "categoriesMb": {
+            "GraphicsMeshParts": 35.94169616699219,
+            "PhysicsCollision": 0.003509521484375,
+            "HttpCache": 0.009674072265625,
+            "Instances": 288.0063781738281,
+            "PhysicsParts": 118.93705749511719,
+            "GraphicsParticles": 15.326614379882812,
+            "LuaHeap": 784.0974731445312,
+            "Signals": 20.49090576171875,
+            "GraphicsParts": 3.7039947509765625,
+            "GraphicsTexture": 71.92790222167969
+          },
+          "totalMb": 3986.1640625
+        },
+        "finalMemory": {
+          "unavailable": [],
+          "categoriesMb": {
+            "GraphicsMeshParts": 97.5650634765625,
+            "PhysicsCollision": 0.0039520263671875,
+            "HttpCache": 0.0249481201171875,
+            "Instances": 328.46002197265625,
+            "PhysicsParts": 138.0869903564453,
+            "GraphicsParticles": 15.332061767578125,
+            "LuaHeap": 1007.6248168945312,
+            "Signals": 22.718582153320312,
+            "GraphicsParts": 13.683059692382812,
+            "GraphicsTexture": 72.54508972167969
+          },
+          "totalMb": 4116.53125
+        },
+        "views": [
+          {
+            "name": "playerEye",
+            "meanFps": 60.017654318473866,
+            "p95Ms": 17.940500751137733,
+            "p99Ms": 18.550200387835503,
+            "maxMs": 18.75929906964302,
+            "framesOver33Ms": 0
+          },
+          {
+            "name": "elevated",
+            "meanFps": 59.999400397127225,
+            "p95Ms": 17.72640086710453,
+            "p99Ms": 18.105100840330124,
+            "maxMs": 19.084900617599487,
+            "framesOver33Ms": 0
+          },
+          {
+            "name": "overview",
+            "meanFps": 60.003280584105475,
+            "p95Ms": 17.74049922823906,
+            "p99Ms": 18.068799749016762,
+            "maxMs": 19.173700362443924,
+            "framesOver33Ms": 0
+          },
+          {
+            "name": "laterHalfPlayerEye",
+            "meanFps": 59.99730490274191,
+            "p95Ms": 17.858000472187996,
+            "p99Ms": 18.532900139689445,
+            "maxMs": 19.19890008866787,
+            "framesOver33Ms": 0
+          }
+        ]
+      }
+    },
+    {
+      "label": "36_parallel_unique_2",
+      "server": {
+        "sceneryPreparation": {
+          "ActiveWorkers": 0,
+          "TemplateClones": 61,
+          "VisualOnlyPreciseRequests": 0,
+          "Entries": 61,
+          "DuplicatePreparations": 0,
+          "ConfiguredWorkers": 6,
+          "UniqueAssetPreparations": 61,
+          "CacheHits": 61,
+          "MaximumActiveWorkers": 6,
+          "CacheMisses": 61,
+          "CreateMeshPartAsyncCalls": 61
+        },
+        "chunks": 36,
+        "uniqueBank": true,
+        "uniqueVisualAssets": 100,
+        "persistent": true,
+        "streamingEnabled": true,
+        "uniqueCollisionAssets": 627,
+        "timings": {
+          "sceneryPreparation": 1.3052461000042967,
+          "collisionAcquisition": 17.793291499998304,
+          "firstSceneryTotal": 1.3416664000105811,
+          "sceneryClonePlacement": 0.001269300002604723,
+          "serverReady": 22.447896900004707,
+          "replicaAndStructuralAssembly": 0.053273099998477846,
+          "uniqueSceneryPreparation": 2.1464581999898655,
+          "playablePresentation": 0.0009980000031646341,
+          "playablePreparation": 1.1000895999895874,
+          "firstChunkAssembly": 0.010654400000930764
+        },
+        "groups": 4,
+        "playablePreparation": {
+          "ActiveWorkers": 0,
+          "TemplateClones": 426,
+          "VisualOnlyPreciseRequests": 0,
+          "Entries": 39,
+          "DuplicatePreparations": 0,
+          "ConfiguredWorkers": 6,
+          "UniqueAssetPreparations": 39,
+          "CacheHits": 426,
+          "MaximumActiveWorkers": 6,
+          "CacheMisses": 39,
+          "CreateMeshPartAsyncCalls": 39
+        },
+        "editableMeshes": 0,
+        "uniquePreparation": {
+          "ActiveWorkers": 0,
+          "TemplateClones": 122,
+          "VisualOnlyPreciseRequests": 0,
+          "Entries": 61,
+          "DuplicatePreparations": 0,
+          "ConfiguredWorkers": 6,
+          "UniqueAssetPreparations": 61,
+          "CacheHits": 122,
+          "MaximumActiveWorkers": 6,
+          "CacheMisses": 61,
+          "CreateMeshPartAsyncCalls": 61
+        },
+        "counts": {
+          "authoredCollisionTriangles": 200064,
+          "meshParts": 3628,
+          "baseParts": 4340,
+          "sceneryMeshParts": 244,
+          "instances": 4457,
+          "collisionMeshParts": 2868,
+          "proxyParts": 720,
+          "sceneryGrassTriangles": 701052,
+          "safetySegments": 640,
+          "visualTriangles": 2338548
+        },
+        "parallelPreparation": true
+      },
+      "client": {
+        "playerReadySeconds": 25.193240880966187,
+        "fullAssetReadySeconds": 23.56236696243286,
+        "preload": {
+          "ok": true,
+          "seconds": 0.8970375000062631,
+          "failures": [],
+          "statusCounts": {
+            "Enum.AssetFetchStatus.Success": 3628
+          },
+          "callbackCount": 3628
+        },
+        "uniqueMeshIds": 786,
+        "viewport": "1993, 978",
+        "startupMemory": {
+          "unavailable": [],
+          "categoriesMb": {
+            "GraphicsMeshParts": 35.945556640625,
+            "PhysicsCollision": 0.00372314453125,
+            "HttpCache": 0.01141357421875,
+            "Instances": 289.8050842285156,
+            "PhysicsParts": 126.40907287597656,
+            "GraphicsParticles": 15.326614379882812,
+            "LuaHeap": 798.8888549804688,
+            "Signals": 21.144271850585938,
+            "GraphicsParts": 5.7674407958984375,
+            "GraphicsTexture": 71.92790222167969
+          },
+          "totalMb": 4092.9765625
+        },
+        "finalMemory": {
+          "unavailable": [],
+          "categoriesMb": {
+            "GraphicsMeshParts": 97.48591613769531,
+            "PhysicsCollision": 0.0041656494140625,
+            "HttpCache": 0.237213134765625,
+            "Instances": 330.2062072753906,
+            "PhysicsParts": 145.63356018066406,
+            "GraphicsParticles": 15.332061767578125,
+            "LuaHeap": 1045.359619140625,
+            "Signals": 23.512710571289062,
+            "GraphicsParts": 13.551971435546875,
+            "GraphicsTexture": 72.54508972167969
+          },
+          "totalMb": 4198.140625
+        },
+        "views": [
+          {
+            "name": "playerEye",
+            "meanFps": 60.014963016967116,
+            "p95Ms": 18.130499869585037,
+            "p99Ms": 18.571799620985985,
+            "maxMs": 20.80089971423149,
+            "framesOver33Ms": 0
+          },
+          {
+            "name": "elevated",
+            "meanFps": 59.996445657774785,
+            "p95Ms": 17.85369962453842,
+            "p99Ms": 18.268100917339325,
+            "maxMs": 18.962500616908073,
+            "framesOver33Ms": 0
+          },
+          {
+            "name": "overview",
+            "meanFps": 60.00391082281317,
+            "p95Ms": 17.721299082040787,
+            "p99Ms": 18.40979978442192,
+            "maxMs": 18.838899210095406,
+            "framesOver33Ms": 0
+          },
+          {
+            "name": "laterHalfPlayerEye",
+            "meanFps": 59.99119695254021,
+            "p95Ms": 17.722299322485924,
+            "p99Ms": 18.062200397253036,
+            "maxMs": 19.29520070552826,
+            "framesOver33Ms": 0
+          }
+        ]
+      }
+    }
+  ]
+}
