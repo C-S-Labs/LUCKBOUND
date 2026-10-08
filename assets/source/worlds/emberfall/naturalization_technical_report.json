@@ -1,0 +1,1098 @@
+{
+  "scene": "E:\\BlenderAIProjects\\Runtime\\Emberfall_FoundationReview\\EmberfallFoundation.blend",
+  "snapshot": "E:\\BlenderAIProjects\\Runtime\\Emberfall_FoundationReview\\Input_Naturalization.blend",
+  "runtime_modified": false,
+  "seam_band": 20,
+  "seam_profiles": [
+    "BASELINE_ROUTE",
+    "RAISED_ROUTE",
+    "OPEN_COMBAT",
+    "LAVA_ADJACENT",
+    "SCENERY_OUTER"
+  ],
+  "before": {
+    "mesh_objects": 732,
+    "evaluated_triangles": 315730,
+    "flora_count": 192,
+    "flora_average_scale": 1.9706621908893187,
+    "flora_max_height": 11.34870433807373
+  },
+  "origins_before": {
+    "ash_faultland_LOCAL_ORIGIN": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "broken_ridge_shelf_LOCAL_ORIGIN": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "combat_fortress_gateworks_ORIGIN": [
+      [
+        0.0,
+        512.0,
+        56.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "combat_wasteland_broken_road_ORIGIN": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "elevated_shelf_LOCAL_ORIGIN": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "entry_wasteland_waystone_ORIGIN": [
+      [
+        0.0,
+        -512.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "fortress_silhouette_LOCAL_ORIGIN": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "horizon_shelf_origin": [
+      [
+        -1200.0,
+        1214.98876953125,
+        -18.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.2217304706573486
+      ]
+    ],
+    "horizon_shelf_origin.001": [
+      [
+        -880.0,
+        1361.279296875,
+        -18.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.623156189918518
+      ]
+    ],
+    "horizon_shelf_origin.002": [
+      [
+        -560.0,
+        1263.5948486328125,
+        -18.0
+      ],
+      [
+        0.0,
+        0.0,
+        2.0245819091796875
+      ]
+    ],
+    "horizon_shelf_origin.003": [
+      [
+        -240.0,
+        1266.50830078125,
+        -18.0
+      ],
+      [
+        0.0,
+        0.0,
+        2.4260077476501465
+      ]
+    ],
+    "horizon_shelf_origin.004": [
+      [
+        80.0,
+        1215.1292724609375,
+        -18.0
+      ],
+      [
+        0.0,
+        0.0,
+        2.8274333477020264
+      ]
+    ],
+    "horizon_shelf_origin.005": [
+      [
+        400.0,
+        1354.716796875,
+        -18.0
+      ],
+      [
+        0.0,
+        0.0,
+        3.2288591861724854
+      ]
+    ],
+    "horizon_shelf_origin.006": [
+      [
+        720.0,
+        1318.481689453125,
+        -18.0
+      ],
+      [
+        0.0,
+        0.0,
+        3.6302847862243652
+      ]
+    ],
+    "horizon_shelf_origin.007": [
+      [
+        1040.0,
+        1292.9342041015625,
+        -18.0
+      ],
+      [
+        0.0,
+        0.0,
+        4.031710624694824
+      ]
+    ],
+    "horizon_shelf_origin.008": [
+      [
+        1360.0,
+        1376.5494384765625,
+        -18.0
+      ],
+      [
+        0.0,
+        0.0,
+        4.433136463165283
+      ]
+    ],
+    "infected_outskirts_LOCAL_ORIGIN": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "low_lava_terrain_LOCAL_ORIGIN": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "open_ashland_LOCAL_ORIGIN": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "path_fortress_causeway_ORIGIN": [
+      [
+        0.0,
+        256.0,
+        28.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "path_wasteland_fault_ORIGIN": [
+      [
+        0.0,
+        -256.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "ring_origin_-1_-1": [
+      [
+        -256.0,
+        -256.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        3.1415927410125732
+      ]
+    ],
+    "ring_origin_-1_-2": [
+      [
+        -256.0,
+        -512.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        4.71238899230957
+      ]
+    ],
+    "ring_origin_-1_-3": [
+      [
+        -256.0,
+        -768.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "ring_origin_-1_0": [
+      [
+        -256.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.5707963705062866
+      ]
+    ],
+    "ring_origin_-1_1": [
+      [
+        -256.0,
+        256.0,
+        28.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "ring_origin_-1_2": [
+      [
+        -256.0,
+        512.0,
+        56.0
+      ],
+      [
+        0.0,
+        0.0,
+        4.71238899230957
+      ]
+    ],
+    "ring_origin_-1_3": [
+      [
+        -256.0,
+        768.0,
+        56.0
+      ],
+      [
+        0.0,
+        0.0,
+        3.1415927410125732
+      ]
+    ],
+    "ring_origin_0_-3": [
+      [
+        0.0,
+        -768.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        4.71238899230957
+      ]
+    ],
+    "ring_origin_0_3": [
+      [
+        0.0,
+        768.0,
+        56.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.5707963705062866
+      ]
+    ],
+    "ring_origin_1_-1": [
+      [
+        256.0,
+        -256.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "ring_origin_1_-2": [
+      [
+        256.0,
+        -512.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.5707963705062866
+      ]
+    ],
+    "ring_origin_1_-3": [
+      [
+        256.0,
+        -768.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        3.1415927410125732
+      ]
+    ],
+    "ring_origin_1_1": [
+      [
+        256.0,
+        256.0,
+        28.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "ring_origin_1_2": [
+      [
+        256.0,
+        512.0,
+        56.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.5707963705062866
+      ]
+    ],
+    "ring_origin_1_3": [
+      [
+        256.0,
+        768.0,
+        56.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "ring_origin_2_-1": [
+      [
+        512.0,
+        -256.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        4.71238899230957
+      ]
+    ],
+    "ring_origin_2_0": [
+      [
+        512.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "ring_origin_2_1": [
+      [
+        512.0,
+        256.0,
+        28.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "ruined_outskirts_LOCAL_ORIGIN": [
+      [
+        0.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        0.0
+      ]
+    ],
+    "side_wasteland_shrine_ORIGIN": [
+      [
+        256.0,
+        0.0,
+        0.0
+      ],
+      [
+        0.0,
+        0.0,
+        1.5707963705062866
+      ]
+    ]
+  },
+  "terrain_objects": [
+    {
+      "object": "chunk_ash_faultland",
+      "identity": "ash faultland",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_ash_faultland.001",
+      "identity": "ash faultland",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_ash_faultland.002",
+      "identity": "ash faultland",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_broken_ridge_shelf",
+      "identity": "broken ridge shelf",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_broken_ridge_shelf.001",
+      "identity": "broken ridge shelf",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_combat_fortress_gateworks",
+      "identity": "Buried ruin terrace with rear vertical failure",
+      "profile": "RAISED_ROUTE"
+    },
+    {
+      "object": "chunk_combat_wasteland_broken_road",
+      "identity": "Broad combat plateau, off-center collapsed shoulder",
+      "profile": "OPEN_COMBAT"
+    },
+    {
+      "object": "chunk_elevated_shelf",
+      "identity": "elevated shelf",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_elevated_shelf.001",
+      "identity": "elevated shelf",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_elevated_shelf.002",
+      "identity": "elevated shelf",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_elevated_shelf.003",
+      "identity": "elevated shelf",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_entry_wasteland_waystone",
+      "identity": "Open ash basin, single peripheral broken ledge",
+      "profile": "BASELINE_ROUTE"
+    },
+    {
+      "object": "chunk_fortress_silhouette",
+      "identity": "fortress silhouette",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_fortress_silhouette.001",
+      "identity": "fortress silhouette",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_fortress_silhouette.002",
+      "identity": "fortress silhouette",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_fortress_silhouette.003",
+      "identity": "fortress silhouette",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_fortress_silhouette.004",
+      "identity": "fortress silhouette",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_fortress_silhouette.005",
+      "identity": "fortress silhouette",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_infected_outskirts",
+      "identity": "infected outskirts",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_infected_outskirts.001",
+      "identity": "infected outskirts",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_infected_outskirts.002",
+      "identity": "infected outskirts",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_low_lava_terrain",
+      "identity": "low lava terrain",
+      "profile": "LAVA_ADJACENT"
+    },
+    {
+      "object": "chunk_low_lava_terrain.001",
+      "identity": "low lava terrain",
+      "profile": "LAVA_ADJACENT"
+    },
+    {
+      "object": "chunk_open_ashland",
+      "identity": "open ashland",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_open_ashland.001",
+      "identity": "open ashland",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_open_ashland.002",
+      "identity": "open ashland",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_path_fortress_causeway",
+      "identity": "Broad ascending road, one slumped masonry shoulder",
+      "profile": "BASELINE_ROUTE"
+    },
+    {
+      "object": "chunk_path_wasteland_fault",
+      "identity": "One-sided basalt shelf and existing narrow fault",
+      "profile": "LAVA_ADJACENT"
+    },
+    {
+      "object": "chunk_ruined_outskirts",
+      "identity": "ruined outskirts",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_ruined_outskirts.001",
+      "identity": "ruined outskirts",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_ruined_outskirts.002",
+      "identity": "ruined outskirts",
+      "profile": "SCENERY_OUTER"
+    },
+    {
+      "object": "chunk_side_wasteland_shrine",
+      "identity": "Tilted sheltered ledge, localized vent",
+      "profile": "LAVA_ADJACENT"
+    }
+  ],
+  "palette_before": {
+    "EF_AshGround": [
+      0.0860000029206276,
+      0.07900000363588333,
+      0.06499999761581421,
+      1.0
+    ],
+    "EF_BasaltFreshBreak": [
+      0.03700000047683716,
+      0.04399999976158142,
+      0.05000000074505806,
+      1.0
+    ],
+    "EF_ExposedVolcanicStrata": [
+      0.054999999701976776,
+      0.04600000008940697,
+      0.032999999821186066,
+      1.0
+    ],
+    "EF_WeatheredCivilization": [
+      0.1599999964237213,
+      0.13699999451637268,
+      0.10300000011920929,
+      1.0
+    ]
+  },
+  "palette_after": {
+    "EF_AshGround": [
+      0.064,
+      0.073,
+      0.086
+    ],
+    "EF_BasaltFreshBreak": [
+      0.025,
+      0.037,
+      0.049
+    ],
+    "EF_ExposedVolcanicStrata": [
+      0.043,
+      0.048,
+      0.052
+    ],
+    "EF_WeatheredCivilization": [
+      0.095,
+      0.105,
+      0.115
+    ]
+  },
+  "lava_material": "Primary molten orange, dark cooled rim, sparse hotter core; eased low-contrast irregular patches instead of discrete contour bands.",
+  "ruin_blocks_removed": 430,
+  "rebuilt_ruins": [
+    {
+      "root": "combat_fortress_gateworks_ORIGIN",
+      "family": "combat_fortress_gateworks",
+      "panels": 3
+    },
+    {
+      "root": "combat_wasteland_broken_road_ORIGIN",
+      "family": "combat_wasteland_broken_road",
+      "panels": 2
+    },
+    {
+      "root": "elevated_shelf_LOCAL_ORIGIN",
+      "family": "elevated_shelf",
+      "panels": 1
+    },
+    {
+      "root": "fortress_silhouette_LOCAL_ORIGIN",
+      "family": "fortress_silhouette",
+      "panels": 2
+    },
+    {
+      "root": "infected_outskirts_LOCAL_ORIGIN",
+      "family": "infected_outskirts",
+      "panels": 1
+    },
+    {
+      "root": "path_fortress_causeway_ORIGIN",
+      "family": "path_fortress_causeway",
+      "panels": 2
+    },
+    {
+      "root": "path_wasteland_fault_ORIGIN",
+      "family": "path_wasteland_fault",
+      "panels": 1
+    },
+    {
+      "root": "ring_origin_-1_-1",
+      "family": "ruined_outskirts",
+      "panels": 1
+    },
+    {
+      "root": "ring_origin_-1_0",
+      "family": "infected_outskirts",
+      "panels": 1
+    },
+    {
+      "root": "ring_origin_-1_1",
+      "family": "elevated_shelf",
+      "panels": 1
+    },
+    {
+      "root": "ring_origin_-1_2",
+      "family": "fortress_silhouette",
+      "panels": 2
+    },
+    {
+      "root": "ring_origin_-1_3",
+      "family": "fortress_silhouette",
+      "panels": 2
+    },
+    {
+      "root": "ring_origin_0_-3",
+      "family": "ruined_outskirts",
+      "panels": 1
+    },
+    {
+      "root": "ring_origin_0_3",
+      "family": "fortress_silhouette",
+      "panels": 2
+    },
+    {
+      "root": "ring_origin_1_1",
+      "family": "elevated_shelf",
+      "panels": 1
+    },
+    {
+      "root": "ring_origin_1_2",
+      "family": "fortress_silhouette",
+      "panels": 2
+    },
+    {
+      "root": "ring_origin_1_3",
+      "family": "fortress_silhouette",
+      "panels": 2
+    },
+    {
+      "root": "ring_origin_2_-1",
+      "family": "infected_outskirts",
+      "panels": 1
+    },
+    {
+      "root": "ring_origin_2_1",
+      "family": "elevated_shelf",
+      "panels": 1
+    },
+    {
+      "root": "ruined_outskirts_LOCAL_ORIGIN",
+      "family": "ruined_outskirts",
+      "panels": 1
+    },
+    {
+      "root": "side_wasteland_shrine_ORIGIN",
+      "family": "side_wasteland_shrine",
+      "panels": 1
+    }
+  ],
+  "basalt_groups": [
+    {
+      "root": "broken_ridge_shelf_LOCAL_ORIGIN",
+      "count": 4,
+      "replaces": 1
+    },
+    {
+      "root": "combat_fortress_gateworks_ORIGIN",
+      "count": 5,
+      "replaces": 2
+    },
+    {
+      "root": "combat_wasteland_broken_road_ORIGIN",
+      "count": 5,
+      "replaces": 2
+    },
+    {
+      "root": "elevated_shelf_LOCAL_ORIGIN",
+      "count": 4,
+      "replaces": 1
+    },
+    {
+      "root": "entry_wasteland_waystone_ORIGIN",
+      "count": 5,
+      "replaces": 2
+    },
+    {
+      "root": "fortress_silhouette_LOCAL_ORIGIN",
+      "count": 4,
+      "replaces": 1
+    },
+    {
+      "root": "low_lava_terrain_LOCAL_ORIGIN",
+      "count": 4,
+      "replaces": 1
+    },
+    {
+      "root": "path_fortress_causeway_ORIGIN",
+      "count": 5,
+      "replaces": 2
+    },
+    {
+      "root": "path_wasteland_fault_ORIGIN",
+      "count": 5,
+      "replaces": 2
+    },
+    {
+      "root": "ring_origin_-1_1",
+      "count": 4,
+      "replaces": 1
+    },
+    {
+      "root": "ring_origin_-1_2",
+      "count": 4,
+      "replaces": 1
+    },
+    {
+      "root": "ring_origin_-1_3",
+      "count": 4,
+      "replaces": 1
+    },
+    {
+      "root": "ring_origin_0_3",
+      "count": 4,
+      "replaces": 1
+    },
+    {
+      "root": "ring_origin_1_-3",
+      "count": 4,
+      "replaces": 1
+    },
+    {
+      "root": "ring_origin_1_1",
+      "count": 4,
+      "replaces": 1
+    },
+    {
+      "root": "ring_origin_1_2",
+      "count": 4,
+      "replaces": 1
+    },
+    {
+      "root": "ring_origin_1_3",
+      "count": 4,
+      "replaces": 1
+    },
+    {
+      "root": "ring_origin_2_0",
+      "count": 4,
+      "replaces": 1
+    },
+    {
+      "root": "ring_origin_2_1",
+      "count": 4,
+      "replaces": 1
+    },
+    {
+      "root": "side_wasteland_shrine_ORIGIN",
+      "count": 5,
+      "replaces": 2
+    }
+  ],
+  "lava_geometry_exact": true,
+  "source_assets_exact": true,
+  "playable_macro_grammars_changed": 6,
+  "join_probes": [
+    {
+      "pair": [
+        "entry_wasteland_waystone",
+        "path_wasteland_fault"
+      ],
+      "max_gap": 3.0517578125e-05,
+      "max_normal_angle": 0.5274897466279725
+    },
+    {
+      "pair": [
+        "path_wasteland_fault",
+        "combat_wasteland_broken_road"
+      ],
+      "max_gap": 0.0,
+      "max_normal_angle": 0.5203939271322697
+    },
+    {
+      "pair": [
+        "combat_wasteland_broken_road",
+        "path_fortress_causeway"
+      ],
+      "max_gap": 6.103515625e-05,
+      "max_normal_angle": 0.14803752007085635
+    },
+    {
+      "pair": [
+        "path_fortress_causeway",
+        "combat_fortress_gateworks"
+      ],
+      "max_gap": 3.0517578125e-05,
+      "max_normal_angle": 0.5147228957696023
+    }
+  ],
+  "after": {
+    "mesh_objects": 386,
+    "evaluated_triangles": 104322,
+    "flora_count": 54,
+    "flora_average_scale": 0.6392592544908877,
+    "flora_max_height": 2.4966001510620117
+  },
+  "closed_terrain_readback": [
+    {
+      "object": "chunk_entry_wasteland_waystone",
+      "nonmanifold_edges": 0,
+      "identity": "Open ash basin, single peripheral broken ledge",
+      "local_origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "parent_origin": [
+        0.0,
+        -512.0,
+        0.0
+      ]
+    },
+    {
+      "object": "chunk_path_wasteland_fault",
+      "nonmanifold_edges": 0,
+      "identity": "One-sided basalt shelf and existing narrow fault",
+      "local_origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "parent_origin": [
+        0.0,
+        -256.0,
+        0.0
+      ]
+    },
+    {
+      "object": "chunk_combat_wasteland_broken_road",
+      "nonmanifold_edges": 0,
+      "identity": "Broad combat plateau, off-center collapsed shoulder",
+      "local_origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "parent_origin": [
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "object": "chunk_side_wasteland_shrine",
+      "nonmanifold_edges": 0,
+      "identity": "Tilted sheltered ledge, localized vent",
+      "local_origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "parent_origin": [
+        256.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "object": "chunk_path_fortress_causeway",
+      "nonmanifold_edges": 0,
+      "identity": "Broad ascending road, one slumped masonry shoulder",
+      "local_origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "parent_origin": [
+        0.0,
+        256.0,
+        28.0
+      ]
+    },
+    {
+      "object": "chunk_combat_fortress_gateworks",
+      "nonmanifold_edges": 0,
+      "identity": "Buried ruin terrace with rear vertical failure",
+      "local_origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "parent_origin": [
+        0.0,
+        512.0,
+        56.0
+      ]
+    }
+  ],
+  "extra_combinations": [
+    "entry_combat",
+    "fault_combat",
+    "causeway_raised"
+  ],
+  "raised_scenery_variants": [
+    [
+      "ring_origin_-1_1",
+      "SCENERY_SPLIT_RIDGE"
+    ],
+    [
+      "ring_origin_1_1",
+      "SCENERY_OPEN_TILT"
+    ],
+    [
+      "ring_origin_2_1",
+      "SCENERY_BROAD_STEPS"
+    ]
+  ],
+  "visual_assessment": {
+    "identity": "Stronger local and macro separation without heat. Open ash spaces intentionally contrast with one-sided shelf, plateau and raised failure. Still a prototype, not a production identity acceptance.",
+    "similarity": "Scenery source siblings still share low-poly facet construction; repeated longitudinal bands removed. Large ash aprons remain relatively plain.",
+    "seams": "Current route seams and three alternate pairings structurally continuous. Scenery silhouette handoffs and local faceted color changes remain visible in parts of top/oblique views; do not claim invisible seams universally.",
+    "studio_ready": false,
+    "next_gate": "Owner Blender acceptance of naturalization, especially scenery joins/terrace facets; then generic vertical socket handling and simplified walk collision."
+  },
+  "origins_exact": true
+}

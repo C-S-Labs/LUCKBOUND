@@ -1,0 +1,427 @@
+{
+  "before": {
+    "Architecture_A": {
+      "objects": 238,
+      "meshes": 173,
+      "triangles": 94562,
+      "used_materials": 11
+    },
+    "Architecture_B": {
+      "objects": 220,
+      "meshes": 168,
+      "triangles": 98180,
+      "used_materials": 11
+    },
+    "Architecture_C": {
+      "objects": 216,
+      "meshes": 164,
+      "triangles": 92446,
+      "used_materials": 11
+    },
+    "Independent_Assets_LIBRARY_ONLY": {
+      "objects": 62,
+      "meshes": 55,
+      "triangles": 44796,
+      "used_materials": 10
+    }
+  },
+  "materials_before": 14,
+  "flora_original_hashes_before": {
+    "prop_drained_wax_rosette": "1fd5fb8ccae6d4ff2f4840a22aac5a77d8db933f6db625ee8075c1e54a9fa113",
+    "prop_drained_seed_shrub": "85d86948e244201b829e3c2a5217a88ddab831233d718bb430928b66ff9f08c9",
+    "prop_charred_ember_rose": "0eb5089b450b4ea536e5928781c86be4dba577f13841289a596b7784cb4c68e4",
+    "prop_charred_thorn_pod": "4adbb8c114b5b17ba702f829eef5148b91c20ead5fa864322a1f25169794566f"
+  },
+  "buried_column_components": {
+    "chunk_entry_ash_plain": 2,
+    "path_column_pass": 7,
+    "chunk_column_forest": 4,
+    "side_lava_overlook": 3,
+    "cap_collapsed_pass": 7,
+    "scenery_ashland_a": 0,
+    "scenery_basalt_ridge_a": 0,
+    "scenery_basalt_ridge_high": 0,
+    "scenery_lava_field_a": 0,
+    "scenery_ravine_a": 0,
+    "scenery_drained_flora_a": 0,
+    "scenery_charred_flora_a": 0,
+    "scenery_foothill_a": 0
+  },
+  "surfaces": {
+    "chunk_entry_ash_plain": {
+      "stage": 0,
+      "dominant": "ENTRY",
+      "plates": 8
+    },
+    "path_column_pass": {
+      "stage": 1,
+      "dominant": "PATH",
+      "plates": 11
+    },
+    "chunk_column_forest": {
+      "stage": 1,
+      "dominant": "COMBAT",
+      "plates": 15
+    },
+    "side_lava_overlook": {
+      "stage": 1,
+      "dominant": "SIDE",
+      "plates": 8
+    },
+    "cap_collapsed_pass": {
+      "stage": 2,
+      "dominant": "CAP",
+      "plates": 15
+    },
+    "scenery_ashland_a": {
+      "stage": 0,
+      "dominant": "ASHLAND",
+      "plates": 8
+    },
+    "scenery_basalt_ridge_a": {
+      "stage": 1,
+      "dominant": "RIDGE",
+      "plates": 8
+    },
+    "scenery_basalt_ridge_high": {
+      "stage": 2,
+      "dominant": "RIDGE_HIGH",
+      "plates": 8
+    },
+    "scenery_lava_field_a": {
+      "stage": 2,
+      "dominant": "LAVA_FIELD",
+      "plates": 5
+    },
+    "scenery_ravine_a": {
+      "stage": 2,
+      "dominant": "RAVINE",
+      "plates": 8
+    },
+    "scenery_drained_flora_a": {
+      "stage": 0,
+      "dominant": "DRAINED",
+      "plates": 8
+    },
+    "scenery_charred_flora_a": {
+      "stage": 2,
+      "dominant": "CHARRED",
+      "plates": 8
+    },
+    "scenery_foothill_a": {
+      "stage": 1,
+      "dominant": "FOOTHILL",
+      "plates": 8
+    }
+  },
+  "original_empty_transforms_unchanged": true,
+  "seam_vertices_unchanged": true,
+  "flora_original_hashes_after": {
+    "prop_drained_wax_rosette": "1fd5fb8ccae6d4ff2f4840a22aac5a77d8db933f6db625ee8075c1e54a9fa113",
+    "prop_drained_seed_shrub": "85d86948e244201b829e3c2a5217a88ddab831233d718bb430928b66ff9f08c9",
+    "prop_charred_ember_rose": "0eb5089b450b4ea536e5928781c86be4dba577f13841289a596b7784cb4c68e4",
+    "prop_charred_thorn_pod": "4adbb8c114b5b17ba702f829eef5148b91c20ead5fa864322a1f25169794566f"
+  },
+  "assets_after": {
+    "chunk_entry_ash_plain": {
+      "objects": 13,
+      "triangles": 5404,
+      "mesh_triangles": {
+        "chunk_entry_ash_plain": 2804,
+        "prop_chunk_entry_ash_plain_solid": 400,
+        "prop_lava_hairline": 4,
+        "prop_drained_wax_rosette_placement": 216,
+        "prop_drained_seed_shrub_placement": 784,
+        "prop_drained_wax_rosette_placement.001": 216,
+        "prop_chunk_entry_ash_plain_fractured_crust": 224,
+        "prop_chunk_entry_ash_plain_windward_ash": 12,
+        "prop_chunk_entry_ash_plain_takeover_DRAINED": 216,
+        "prop_chunk_entry_ash_plain_takeover_30": 216,
+        "prop_chunk_entry_ash_plain_takeover_OLD": 216,
+        "prop_chunk_entry_ash_plain_takeover_veins": 96
+      }
+    },
+    "path_column_pass": {
+      "objects": 16,
+      "triangles": 9504,
+      "mesh_triangles": {
+        "path_column_pass": 4076,
+        "prop_path_column_pass_solid": 640,
+        "prop_low_fissure": 6,
+        "prop_charred_ember_rose_placement": 912,
+        "prop_charred_thorn_pod_placement": 870,
+        "prop_drained_seed_shrub_placement.001": 784,
+        "prop_path_column_pass_fractured_crust": 320,
+        "prop_recent_fracture_vent_smoke": 80,
+        "prop_path_column_pass_takeover_30": 216,
+        "prop_path_column_pass_takeover_70": 216,
+        "prop_path_column_pass_takeover_50": 216,
+        "prop_path_column_pass_takeover_SHRUB50": 784,
+        "prop_path_column_pass_takeover_veins": 384
+      }
+    },
+    "chunk_column_forest": {
+      "objects": 14,
+      "triangles": 9346,
+      "mesh_triangles": {
+        "chunk_column_forest": 3508,
+        "prop_chunk_column_forest_solid": 800,
+        "prop_basin_heat": 4,
+        "prop_charred_thorn_pod_placement.001": 870,
+        "prop_charred_ember_rose_placement.001": 912,
+        "prop_drained_wax_rosette_placement.002": 216,
+        "prop_drained_seed_shrub_placement.002": 784,
+        "prop_chunk_column_forest_fractured_crust": 436,
+        "prop_chunk_column_forest_takeover_70": 216,
+        "prop_chunk_column_forest_takeover_SHRUB50": 784,
+        "prop_chunk_column_forest_takeover_50": 216,
+        "prop_chunk_column_forest_takeover_30": 216,
+        "prop_chunk_column_forest_takeover_veins": 384
+      }
+    },
+    "side_lava_overlook": {
+      "objects": 13,
+      "triangles": 7640,
+      "mesh_triangles": {
+        "side_lava_overlook": 3016,
+        "prop_side_lava_overlook_solid": 660,
+        "prop_shelf_wound": 4,
+        "prop_drained_wax_rosette_placement.003": 216,
+        "prop_drained_seed_shrub_placement.003": 784,
+        "prop_charred_ember_rose_placement.002": 912,
+        "prop_side_lava_overlook_fractured_crust": 232,
+        "prop_side_lava_overlook_takeover_30": 216,
+        "prop_side_lava_overlook_takeover_SHRUB50": 784,
+        "prop_side_lava_overlook_takeover_50": 216,
+        "prop_side_lava_overlook_takeover_70": 216,
+        "prop_side_lava_overlook_takeover_veins": 384
+      }
+    },
+    "cap_collapsed_pass": {
+      "objects": 12,
+      "triangles": 9372,
+      "mesh_triangles": {
+        "cap_collapsed_pass": 3376,
+        "prop_cap_collapsed_pass_solid": 560,
+        "prop_charred_ember_rose_placement.003": 912,
+        "prop_charred_thorn_pod_placement.002": 870,
+        "prop_drained_seed_shrub_placement.004": 784,
+        "prop_cap_collapsed_pass_fractured_crust": 436,
+        "prop_recent_fracture_vent_smoke.004": 80,
+        "prop_cap_collapsed_pass_takeover_70": 216,
+        "prop_cap_collapsed_pass_takeover_CHARRED": 912,
+        "prop_cap_collapsed_pass_takeover_INVASIVE": 1130,
+        "prop_cap_collapsed_pass_takeover_veins": 96
+      }
+    },
+    "scenery_ashland_a": {
+      "objects": 7,
+      "triangles": 1834,
+      "mesh_triangles": {
+        "scenery_ashland_a": 854,
+        "prop_scenery_ashland_a_fractured_crust": 224,
+        "prop_scenery_ashland_a_windward_ash": 12,
+        "prop_scenery_ashland_a_takeover_OLD": 216,
+        "prop_scenery_ashland_a_takeover_DRAINED": 216,
+        "prop_scenery_ashland_a_takeover_30": 216,
+        "prop_scenery_ashland_a_takeover_veins": 96
+      }
+    },
+    "scenery_basalt_ridge_a": {
+      "objects": 9,
+      "triangles": 3326,
+      "mesh_triangles": {
+        "scenery_basalt_ridge_a": 854,
+        "scenery_fractured_ridge": 212,
+        "scenery_fractured_ridge.001": 212,
+        "prop_scenery_basalt_ridge_a_fractured_crust": 232,
+        "prop_scenery_basalt_ridge_a_takeover_70": 216,
+        "prop_scenery_basalt_ridge_a_takeover_SHRUB50": 784,
+        "prop_scenery_basalt_ridge_a_takeover_30": 216,
+        "prop_scenery_basalt_ridge_a_takeover_50": 216,
+        "prop_scenery_basalt_ridge_a_takeover_veins": 384
+      }
+    },
+    "scenery_basalt_ridge_high": {
+      "objects": 8,
+      "triangles": 3864,
+      "mesh_triangles": {
+        "scenery_basalt_ridge_high": 854,
+        "scenery_fractured_ridge.002": 212,
+        "scenery_fractured_ridge.003": 212,
+        "prop_scenery_basalt_ridge_high_fractured_crust": 232,
+        "prop_scenery_basalt_ridge_high_takeover_INVASIVE": 1130,
+        "prop_scenery_basalt_ridge_high_takeover_70": 216,
+        "prop_scenery_basalt_ridge_high_takeover_CHARRED": 912,
+        "prop_scenery_basalt_ridge_high_takeover_veins": 96
+      }
+    },
+    "scenery_lava_field_a": {
+      "objects": 8,
+      "triangles": 3574,
+      "mesh_triangles": {
+        "scenery_lava_field_a": 854,
+        "cooled_lava_islet": 212,
+        "scenery_molten_lowland": 8,
+        "prop_scenery_lava_field_a_fractured_crust": 146,
+        "prop_scenery_lava_field_a_takeover_70": 216,
+        "prop_scenery_lava_field_a_takeover_INVASIVE": 1130,
+        "prop_scenery_lava_field_a_takeover_CHARRED": 912,
+        "prop_scenery_lava_field_a_takeover_veins": 96
+      }
+    },
+    "scenery_ravine_a": {
+      "objects": 7,
+      "triangles": 3448,
+      "mesh_triangles": {
+        "scenery_ravine_a": 854,
+        "scenery_ravine_deep_heat": 8,
+        "prop_scenery_ravine_a_fractured_crust": 232,
+        "prop_scenery_ravine_a_takeover_CHARRED": 912,
+        "prop_scenery_ravine_a_takeover_70": 216,
+        "prop_scenery_ravine_a_takeover_INVASIVE": 1130,
+        "prop_scenery_ravine_a_takeover_veins": 96
+      }
+    },
+    "scenery_drained_flora_a": {
+      "objects": 9,
+      "triangles": 2834,
+      "mesh_triangles": {
+        "scenery_drained_flora_a": 854,
+        "scenery_flora_pocket": 216,
+        "scenery_flora_pocket.001": 784,
+        "prop_scenery_drained_flora_a_fractured_crust": 224,
+        "prop_scenery_drained_flora_a_windward_ash": 12,
+        "prop_scenery_drained_flora_a_takeover_DRAINED": 216,
+        "prop_scenery_drained_flora_a_takeover_OLD": 216,
+        "prop_scenery_drained_flora_a_takeover_30": 216,
+        "prop_scenery_drained_flora_a_takeover_veins": 96
+      }
+    },
+    "scenery_charred_flora_a": {
+      "objects": 8,
+      "triangles": 5222,
+      "mesh_triangles": {
+        "scenery_charred_flora_a": 854,
+        "scenery_flora_pocket.002": 912,
+        "scenery_flora_pocket.003": 870,
+        "prop_scenery_charred_flora_a_fractured_crust": 232,
+        "prop_scenery_charred_flora_a_takeover_70": 216,
+        "prop_scenery_charred_flora_a_takeover_INVASIVE": 1130,
+        "prop_scenery_charred_flora_a_takeover_CHARRED": 912,
+        "prop_scenery_charred_flora_a_takeover_veins": 96
+      }
+    },
+    "scenery_foothill_a": {
+      "objects": 9,
+      "triangles": 3326,
+      "mesh_triangles": {
+        "scenery_foothill_a": 854,
+        "scenery_fractured_ridge.004": 212,
+        "scenery_fractured_ridge.005": 212,
+        "prop_scenery_foothill_a_fractured_crust": 232,
+        "prop_scenery_foothill_a_takeover_70": 216,
+        "prop_scenery_foothill_a_takeover_SHRUB50": 784,
+        "prop_scenery_foothill_a_takeover_30": 216,
+        "prop_scenery_foothill_a_takeover_50": 216,
+        "prop_scenery_foothill_a_takeover_veins": 384
+      }
+    }
+  },
+  "materials_after": 21,
+  "after_saved_readback": {
+    "Architecture_A": {
+      "objects": 510,
+      "meshes": 437,
+      "triangles": 195246,
+      "used_materials": 18
+    },
+    "Architecture_B": {
+      "objects": 483,
+      "meshes": 431,
+      "triangles": 201710,
+      "used_materials": 18
+    },
+    "Architecture_C": {
+      "objects": 482,
+      "meshes": 430,
+      "triangles": 191158,
+      "used_materials": 18
+    },
+    "FloraSpectrum_REVIEW_ONLY": {
+      "objects": 22,
+      "meshes": 17,
+      "triangles": 3412,
+      "used_materials": 7
+    },
+    "Independent_Assets_LIBRARY_ONLY": {
+      "objects": 143,
+      "meshes": 136,
+      "triangles": 74254,
+      "used_materials": 17
+    }
+  },
+  "blender_version": "5.2.2 LTS",
+  "flora_state_readback": [
+    {
+      "name": "prop_surviving_ash_rosette",
+      "state": "OLD_STRESSED",
+      "fraction": 0,
+      "derived_from": "prop_drained_wax_rosette"
+    },
+    {
+      "name": "prop_partial_rosette_30",
+      "state": "PARTIAL_30",
+      "fraction": 0.3,
+      "derived_from": "prop_drained_wax_rosette"
+    },
+    {
+      "name": "prop_partial_rosette_50",
+      "state": "PARTIAL_50",
+      "fraction": 0.5,
+      "derived_from": "prop_drained_wax_rosette"
+    },
+    {
+      "name": "prop_partial_rosette_70",
+      "state": "PARTIAL_70",
+      "fraction": 0.7,
+      "derived_from": "prop_drained_wax_rosette"
+    },
+    {
+      "name": "prop_partial_seed_shrub_50",
+      "state": "PARTIAL_50",
+      "fraction": 0.5,
+      "derived_from": "prop_drained_seed_shrub"
+    },
+    {
+      "name": "prop_invasive_root_bloom",
+      "state": "INVASIVE",
+      "fraction": null,
+      "derived_from": "prop_charred_thorn_pod"
+    }
+  ],
+  "current_materials": [
+    "Ember_Ash",
+    "Ember_Basalt",
+    "Ember_BrokenCrust",
+    "Ember_CharredFlora",
+    "Ember_CooledLava",
+    "Ember_DeepHeat",
+    "Ember_DrainedFlora",
+    "Ember_DrainedStem",
+    "Ember_FreshBreakHeat",
+    "Ember_Glass",
+    "Ember_InvasiveGrowth",
+    "Ember_Molten",
+    "Ember_OldFlora",
+    "Ember_ScorchedStrata",
+    "Ember_VentingAsh_REVIEW_ONLY",
+    "Ember_WeatheredGround",
+    "Ember_WindblownAsh",
+    "review_cool_haze",
+    "review_cool_haze.001",
+    "review_cool_haze.002"
+  ],
+  "max_source_mesh_triangles": 4076,
+  "closeups_reframed_from_actual_plant_world_positions": true
+}

@@ -1,0 +1,171 @@
+{
+  "chunk_entry_ash_plain": {
+    "scene_all_objects": 7,
+    "scene_mesh_objects": 6,
+    "scene_mesh_triangles": 4898,
+    "mesh_counts": {
+      "chunk_entry_ash_plain": 3278,
+      "prop_chunk_entry_ash_plain_solid": 400,
+      "prop_lava_hairline": 4,
+      "prop_drained_wax_rosette_placement": 216,
+      "prop_drained_seed_shrub_placement": 784,
+      "prop_drained_wax_rosette_placement.001": 216
+    },
+    "collections": [
+      "chunk_entry_ash_plain"
+    ]
+  },
+  "path_column_pass": {
+    "scene_all_objects": 9,
+    "scene_mesh_objects": 6,
+    "scene_mesh_triangles": 12886,
+    "mesh_counts": {
+      "path_column_pass": 9674,
+      "prop_path_column_pass_solid": 640,
+      "prop_low_fissure": 6,
+      "prop_charred_ember_rose_placement": 912,
+      "prop_charred_thorn_pod_placement": 870,
+      "prop_drained_seed_shrub_placement.001": 784
+    },
+    "collections": [
+      "path_column_pass"
+    ]
+  },
+  "chunk_column_forest": {
+    "scene_all_objects": 8,
+    "scene_mesh_objects": 7,
+    "scene_mesh_triangles": 10364,
+    "mesh_counts": {
+      "chunk_column_forest": 6778,
+      "prop_chunk_column_forest_solid": 800,
+      "prop_basin_heat": 4,
+      "prop_charred_thorn_pod_placement.001": 870,
+      "prop_charred_ember_rose_placement.001": 912,
+      "prop_drained_wax_rosette_placement.002": 216,
+      "prop_drained_seed_shrub_placement.002": 784
+    },
+    "collections": [
+      "chunk_column_forest"
+    ]
+  },
+  "side_lava_overlook": {
+    "scene_all_objects": 7,
+    "scene_mesh_objects": 6,
+    "scene_mesh_triangles": 5854,
+    "mesh_counts": {
+      "side_lava_overlook": 3278,
+      "prop_side_lava_overlook_solid": 660,
+      "prop_shelf_wound": 4,
+      "prop_drained_wax_rosette_placement.003": 216,
+      "prop_drained_seed_shrub_placement.003": 784,
+      "prop_charred_ember_rose_placement.002": 912
+    },
+    "collections": [
+      "side_lava_overlook"
+    ]
+  },
+  "cap_collapsed_pass": {
+    "scene_all_objects": 6,
+    "scene_mesh_objects": 5,
+    "scene_mesh_triangles": 8744,
+    "mesh_counts": {
+      "cap_collapsed_pass": 5618,
+      "prop_cap_collapsed_pass_solid": 560,
+      "prop_charred_ember_rose_placement.003": 912,
+      "prop_charred_thorn_pod_placement.002": 870,
+      "prop_drained_seed_shrub_placement.004": 784
+    },
+    "collections": [
+      "cap_collapsed_pass"
+    ]
+  },
+  "EmberfallPrototype": {
+    "scene_all_objects": 92,
+    "scene_mesh_objects": 76,
+    "scene_mesh_triangles": 59620,
+    "mesh_counts": {
+      "chunk_entry_ash_plain": 3278,
+      "prop_chunk_entry_ash_plain_solid": 400,
+      "prop_lava_hairline": 4,
+      "prop_drained_wax_rosette_placement": 216,
+      "prop_drained_seed_shrub_placement": 784,
+      "prop_drained_wax_rosette_placement.001": 216,
+      "path_column_pass": 9674,
+      "prop_path_column_pass_solid": 640,
+      "prop_low_fissure": 6,
+      "prop_charred_ember_rose_placement": 912,
+      "prop_charred_thorn_pod_placement": 870,
+      "prop_drained_seed_shrub_placement.001": 784,
+      "chunk_column_forest": 6778,
+      "prop_chunk_column_forest_solid": 800,
+      "prop_basin_heat": 4,
+      "prop_charred_thorn_pod_placement.001": 870,
+      "prop_charred_ember_rose_placement.001": 912,
+      "prop_drained_wax_rosette_placement.002": 216,
+      "prop_drained_seed_shrub_placement.002": 784,
+      "side_lava_overlook": 3278,
+      "prop_side_lava_overlook_solid": 660,
+      "prop_shelf_wound": 4,
+      "prop_drained_wax_rosette_placement.003": 216,
+      "prop_drained_seed_shrub_placement.003": 784,
+      "prop_charred_ember_rose_placement.002": 912,
+      "cap_collapsed_pass": 5618,
+      "prop_cap_collapsed_pass_solid": 560,
+      "prop_charred_ember_rose_placement.003": 912,
+      "prop_charred_thorn_pod_placement.002": 870,
+      "prop_drained_seed_shrub_placement.004": 784,
+      "prop_drained_wax_rosette": 216,
+      "prop_drained_seed_shrub": 784,
+      "prop_charred_ember_rose": 912,
+      "prop_charred_thorn_pod": 870,
+      "review_only_continental_ground": 2,
+      "review_only_jagged_ridge": 36,
+      "review_only_jagged_ridge.001": 36,
+      "review_only_jagged_ridge.002": 36,
+      "review_only_jagged_ridge.003": 36,
+      "review_only_jagged_ridge.004": 36,
+      "review_only_jagged_ridge.005": 36,
+      "review_only_jagged_ridge.006": 36,
+      "review_only_jagged_ridge.007": 36,
+      "review_only_jagged_ridge.008": 36,
+      "review_only_jagged_ridge.009": 36,
+      "review_only_jagged_ridge.010": 36,
+      "review_only_jagged_ridge.011": 36,
+      "review_only_jagged_ridge.012": 36,
+      "review_only_jagged_ridge.013": 36,
+      "review_only_jagged_ridge.014": 36,
+      "review_only_jagged_ridge.015": 36,
+      "review_only_jagged_ridge.016": 36,
+      "review_only_jagged_ridge.017": 36,
+      "review_only_jagged_ridge.018": 36,
+      "review_only_jagged_ridge.019": 36,
+      "review_only_jagged_ridge.020": 36,
+      "review_only_jagged_ridge.021": 36,
+      "review_only_fitted_ash_continuation": 9728,
+      "review_only_distant_lava_field": 6,
+      "review_only_cooled_flow": 80,
+      "review_only_cooled_flow.001": 80,
+      "review_only_cooled_flow.002": 80,
+      "review_only_cooled_flow.003": 80,
+      "review_only_cooled_flow.004": 80,
+      "review_only_cooled_flow.005": 80,
+      "review_only_cooled_flow.006": 80,
+      "review_only_prop_drained_wax_rosette": 216,
+      "review_only_prop_drained_seed_shrub": 784,
+      "review_only_prop_charred_ember_rose": 912,
+      "review_only_prop_charred_thorn_pod": 870,
+      "review_only_flora_display": 2,
+      "review_only_5_stud_person": 44,
+      "review_only_5_stud_person.001": 44,
+      "review_only_5_stud_person.002": 44,
+      "review_only_5_stud_person.003": 44,
+      "review_only_5_stud_person.004": 44
+    },
+    "collections": [
+      "EF_PROTOTYPE_5_CHUNKS",
+      "PropLibrary",
+      "Surround_REVIEW_ONLY",
+      "Cameras_Lights_REVIEW_ONLY"
+    ]
+  }
+}

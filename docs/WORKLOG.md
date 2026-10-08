@@ -36,6 +36,57 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 246 — 2026-10-08 — Emberfall final pre-PR preservation review
+**Branch:** integration/emberfall-production   **Merged:** none; local cleanup checkpoint only.
+**Reviewed Head:** f78c90e   **Tests:** existing1299 units/4280 loader comparisons/four Rojo builds reused; targeted preservation/index/AST gates pass.
+
+### Done
+- Refreshed origin/main remains34f6c1e, included in branch; no newer main commits.
+- Reviewed234 paths against ledger/exclusions; current runtime, mappings and isolated fixtures unchanged.
+- Trimmed only29 EOF newline bytes in nine AreaII Python scripts; ASTs identical.
+- Rehashed272 external assets, eight approval checks and linked master/source registry; unchanged.
+- Recorded final pre-PR review in consolidation result/validation; regenerated index.
+
+### Decisions made
+- READY FOR PR for preservation-only baseline; future production HOLDs do not block this PR.
+- Reuse passing unchanged-input validation; no geometry/export/Studio/runtime work.
+
+### Stopped at
+Local pre-PR checkpoint complete. Owner review/acceptance and green PR CI remain required before main merge. No push or PR created.
+
+### Next
+Owner reviews the checkpoint and master B/A/provisional montage, then authorizes a PR if ready.
+
+### Leftovers
+No old iteration replaced by EOF cleanup. Keep all historical/recovery sources, exports and worktrees; archival cleanup remains deferred.
+
+---
+
+## Session 245 — 2026-10-08 — Emberfall preservation-first production consolidation
+**Branch:** integration/emberfall-production from refreshed pinned main34f6c1e.
+**Merged:** none; local staged checkpoints only. **Tests:** see docs/audits/EMBERFALL_INTEGRATION_STATUS.md.
+
+### Done
+- Reconciled137 newer-main paths with audited donor079882b;167 content/fixture paths remain safe.
+- Preserved newer main shared runtime/schema/config/mappings and created verified read-only backups before integration.
+- Consolidated frozen17-source content/evidence and immutable mappings, AreaII references/approved plan and linked review master (zero local meshes).
+-1299 units,4280 loader comparisons, source/hash/mapping checks and four Rojo builds pass; see consolidation result for lint baseline findings.
+
+### Decisions made
+- Scoped files only; no donor ancestry merge or129 unrelated path import.
+- Existing geometry/paths/IDs/recovery remain authoritative; master uses read-only library links.
+
+### Stopped at
+Stage2 complete locally; owner acceptance pending. See docs/audits/EMBERFALL_CONSOLIDATION_RESULT.md for checkpoints/gates. No push/PR/main merge or Studio/upload/export.
+
+### Next
+Owner reviews linked master B/A views and provisional world montage, then authorizes the separate AreaII proof if ready.
+
+### Leftovers
+Keep all old scenes/exports/mappings/failed probes/blend1 and hidden recovery; no historical cleanup authorized.
+
+---
+
 ## Session 244 — 2026-10-05 — Accept movement baseline and prepare PR
 **Merged:** none   **Branch:** agent/player-movement-refinement
 

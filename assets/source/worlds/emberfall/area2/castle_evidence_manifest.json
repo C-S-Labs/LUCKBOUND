@@ -1,0 +1,41 @@
+{
+  "panels": [
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\01_shared_overall_plan.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\02_shared_outer_approach.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\03_shared_settlement_progression.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\04_shared_inner_wall_approach.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\05_shared_inner_gate_threshold.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\06_A_settlement_castle.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\07_A_exterior_approach.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\08_A_surviving_room_sequence.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\09_A_crater_reveal.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\10_A_crater_boss_overview.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\11_B_settlement_castle.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\12_B_exterior_approach.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\13_B_surviving_interior.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\14_B_architectural_final_arena.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\15_matched_silhouette_comparison.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\16_footprint_plan_comparison.png"
+  ],
+  "raw_renders": [
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\01_shared_overall_plan.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\02_shared_outer_approach.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\03_shared_settlement_progression.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\04_shared_inner_wall_approach.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\05_shared_inner_gate_threshold.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\06_A_settlement_castle.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\07_A_exterior_approach.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\08_A_surviving_room_sequence.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\09_A_crater_reveal.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\10_A_crater_boss_overview.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\11_B_settlement_castle.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\12_B_exterior_approach.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\13_B_surviving_interior.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\14_B_architectural_final_arena.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\15A_matched_silhouette.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\15B_matched_silhouette.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\16A_footprint_plan.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\16B_footprint_plan.png"
+  ],
+  "contact_sheet": "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\CastleVariantsReview\\revision_review_sheet.png"
+}

@@ -1,0 +1,17 @@
+{
+  "protected_owner_paths": 48,
+  "changed_owner_files": [],
+  "preserved_inputs": {
+    "OwnerReview_Input": {
+      "file_count": 15,
+      "changed_files": []
+    },
+    "BeforeImpactCorrection": {
+      "file_count": 2,
+      "changed_files": []
+    }
+  },
+  "main_ref": "aa22e3d5a420c28aa7e7d6d00acce898765d62d3",
+  "main_unchanged": true,
+  "no_studio_upload_push_merge_pr": true
+}

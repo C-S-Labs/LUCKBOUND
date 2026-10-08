@@ -1,5 +1,22 @@
 # LUCKBOUND — Chunk authoring conventions
 
+## Emberfall frozen production contracts — 2026-10-08
+
+[Production handoff](../assets/source/worlds/emberfall/PRODUCTION_HANDOFF.md) owns source authority.
+AreaI:256×256 sources, centre-ground origins,24-stud socket mouths, HOLLOW/CREST profiles,
+canonical8-stud samples/shared corner datums and40-stud source-authored transitions.
+No neighbour-dependent geometry/collision changes or repair collars;0.01-stud numerical/dressing tolerance only.
+Final Batch1/2 cooking uses69–70 terrain colliders/source:16 PreciseConvexDecomposition
+interior tiles and53–54 Hull seam prisms. Merge only collinear intervals; curved merges
+were rejected by actual Studio cooking. Preserve source offsets and mesh-local importYaw180.
+Safety barriers belong only on exposed assembly edges, never internal seams or entrances.
+Foundation proofs are evidence; final batch contracts/counts supersede older142–144-part proofs.
+AreaII is an accepted continuous blockout, not a kit. Each entire Castle A/B is one oversized
+logical finale unit; ordinary256-square/arena caps do not apply. Urban cuts/street profiles
+are proposals in the approved [AreaII plan](biomes/EMBERFALL_AREA_II_PRODUCTION_PLAN.md).
+No schema/runtime amendment or production implementation is enacted by consolidation.
+
+
 **What this is:** the things that have to be true for a piece to work in the
 game at all. It is an engine contract and it applies to every world.
 

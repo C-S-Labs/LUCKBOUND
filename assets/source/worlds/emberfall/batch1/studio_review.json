@@ -1,0 +1,129 @@
+{
+  "place": "LUCKBOUND local testing place 140350563934259",
+  "bounded": true,
+  "production_asset_ids_changed": false,
+  "place_saved_or_published": false,
+  "final_fbx_import": {
+    "vertices": 24680,
+    "colors": 24680,
+    "boxCenterFromSourcePivot": "0, -7.82643127, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1",
+    "scale": 1,
+    "faces": 8958,
+    "size": "256, 29, 256"
+  },
+  "client": {
+    "vertices": 24680,
+    "clientFixedSizeCopy": true,
+    "sourceSize": "256, 29, 256",
+    "colours": 24680,
+    "faces": 8958,
+    "copySize": "256, 29, 256",
+    "sourceStillPresent": true
+  },
+  "collision": {
+    "stations": {
+      "1": {
+        "heights": {
+          "1": 95.33829498291016,
+          "2": 95.33829498291016,
+          "3": 95.33829498291016,
+          "4": 95.33829498291016
+        },
+        "across": -112
+      },
+      "2": {
+        "heights": {
+          "1": 101.9505386352539,
+          "2": 101.9505386352539,
+          "3": 101.9505386352539,
+          "4": 101.9505386352539
+        },
+        "across": -64
+      },
+      "3": {
+        "heights": {
+          "1": 106.67356872558594,
+          "2": 106.67356872558594,
+          "3": 106.67356872558594,
+          "4": 106.67356872558594
+        },
+        "across": -16
+      },
+      "4": {
+        "heights": {
+          "1": 106.67356872558594,
+          "2": 106.67356872558594,
+          "3": 106.67356872558594,
+          "4": 106.67356872558594
+        },
+        "across": 0
+      },
+      "5": {
+        "heights": {
+          "1": 106.67356872558594,
+          "2": 106.67356872558594,
+          "3": 106.67356872558594,
+          "4": 106.67356872558594
+        },
+        "across": 16
+      },
+      "6": {
+        "heights": {
+          "1": 101.9505386352539,
+          "2": 101.9505386352539,
+          "3": 101.9505386352539,
+          "4": 101.9505386352539
+        },
+        "across": 64
+      },
+      "7": {
+        "heights": {
+          "1": 95.33829498291016,
+          "2": 95.33829498291016,
+          "3": 95.33829498291016,
+          "4": 95.33829498291016
+        },
+        "across": 112
+      }
+    },
+    "misses": 0,
+    "maxCrossSeamStep": 0,
+    "parts": 139
+  },
+  "server_loader": {
+    "observed_in_actual_Play": true,
+    "AssetPreparation": true,
+    "ChunkLoader": true,
+    "UsedMeshes": 1,
+    "Size": [
+      256,
+      29,
+      256
+    ],
+    "Yaw90": true,
+    "WalkCollision": 69,
+    "SafetyBoundaries": 32,
+    "vertices": 24680,
+    "colours": 24680,
+    "faces": 8958
+  },
+  "rejected_collision_candidate": {
+    "parts": 85,
+    "maxCrossSeamStep": 0.139068603515625,
+    "reason": "Studio Hull cooking changed curved merged shoulder surface; final only-collinear merges replace it."
+  },
+  "limitations": [
+    "Bounded representative import and cooked collision raycast; not a full nine-chunk import or character walkthrough.",
+    "Mobile, published-place budgets and nine-placement appearance allocation not measured."
+  ],
+  "scratch_fixtures": [
+    "Workspace.RepresentativeSwitchback",
+    "Workspace.Batch1FinalFixedSizeRecolour",
+    "Workspace.Batch1SwitchbackCollisionVisual",
+    "Workspace.EmberfallBatch1Collision",
+    "Workspace.Batch1Switchback_InitialExporter",
+    "Workspace.Batch1AppearanceRecolour",
+    "ServerStorage.EmberfallBatch1Collision_RejectedCurvedHull",
+    "ServerStorage.LuckboundChunkKits.EmberfallBatch1Scratch"
+  ]
+}

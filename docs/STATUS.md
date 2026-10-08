@@ -9,6 +9,14 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 ## 1. Where the project stands
 
+- **Emberfall consolidation complete locally, owner acceptance pending (2026-10-08):** isolated integration/emberfall-production,
+  pinned main34f6c1e. Newer main runtime remains authoritative;167 scoped donor paths,
+  six selectively reconciled documents. Backups verified before content integration.
+  See [stage record](audits/EMBERFALL_INTEGRATION_STATUS.md). Final pre-PR review: **READY FOR PR**,
+  refreshed main still34f6c1e; nine EOF-only Python trims; source/master hashes intact.
+  Owner acceptance and green PR CI remain required before actual main merge.
+
+
 - **Movement accepted/frozen (owner 2026-10-05, `agent/player-movement-refinement`):** direct free trajectory and smooth visual facing; hub24/38.64, expedition15/23.85 studs/s; roll18 studs/0.52s; air dash70 studs/s/0.32s with immediate jump-dash and clean exit. Stamina, backstep and lock-on contracts retained. Grounded directional Run and forward Sprint clips include coordinated arm/chest drive. Owner says movement feels good and authorizes PR; further visual polish is deferred. Combat consumes PLAYER_ABILITIES.md §6 and preserves the Test K2 behavior baseline. Current-main validation and PR CI recorded in the latest WORKLOG. Not merged/published.
 
 - **Crossroads V2 refinement (2026-10-05, branch `claude/crossroads-v2-refinement-4f3234`, PR pending owner OK):** bridge-junction clips fixed in source, boat flyers and their meshes removed, a 10-creature sky ecosystem (+ whale) built and tuned over six owner Studio rounds: class-profile flight (`FlightCore`), obstacle pathfinding, one colossal at a time, spine locomotion, self-clip limits, `/colossal` dev command. 1,293 tests pass, Rojo build ok. Not merged. Owner must re-import `crossroads_hub.fbx` if the hub is not yet imported on the target place. See WORKLOG.

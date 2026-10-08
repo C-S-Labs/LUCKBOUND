@@ -1,0 +1,398 @@
+[
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "AGENTS.md",
+    "same_as_plan": false,
+    "plan_sha256": "fe86f795c58c5d5ac264e48576d93b9836ea4d9e0f3d6e4216c3fc32b00061f2"
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "INDEX.md",
+    "same_as_plan": false,
+    "plan_sha256": "80a2980e2f44b1fba7f31448832a33acca6c5d48d1f9b7cb10726c9271406d54"
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "INDEX_MAP.md",
+    "same_as_plan": false,
+    "plan_sha256": "9ddaef2947719e8d09fab3de49e942eb3b18362f9a2248381f52e29430914eda"
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "docs/CHUNK_AUTHORING.md",
+    "same_as_plan": false,
+    "plan_sha256": "b478df665d95d52292db57694a6c395d4dc6030a729d0cc7f856ec3df369dbba"
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "docs/MODULAR_MAPS.md",
+    "same_as_plan": false,
+    "plan_sha256": "53d9c8d96ca94cccd4d1152d89114fec319dfd71182f93565db2c31c373e545a"
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "docs/PROTOTYPE_BUILD_SPEC.md",
+    "same_as_plan": false,
+    "plan_sha256": "e813b17e63ebe288dcf7d633df907c1769a16219eb94839ca409a1eba4ca23ad"
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "docs/STATUS.md",
+    "same_as_plan": false,
+    "plan_sha256": "74fbe519ee4dd00005b2ba678b8053ee76ef744b5b9931e1ee8d6b791fd2eb9c"
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "docs/WORKLOG.md",
+    "same_as_plan": false,
+    "plan_sha256": "bbc7e14c40bce65ddb500ce6f1d95b7b98b1e921def9b0dc728ebabbb96e55ce"
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "docs/biomes/EMBERFALL.md",
+    "same_as_plan": false,
+    "plan_sha256": "7c138d38b5827eb439f840cf1f16931c7c785029b35bbf6d83d623d5483c2a55"
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "docs/design/emberfall/EMBERFALL_PROTOTYPE_VISUAL_TARGET.png",
+    "same_as_plan": false,
+    "plan_sha256": "1951c8ee197eb48d851abc3982d668ac7e3d77f5c454af30ca8e010726d662b6"
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "docs/design/emberfall/EMBERFALL_REFERENCE_01.png",
+    "same_as_plan": false,
+    "plan_sha256": "1ba5977b48a597691db28458b70693f1c79b26fcaffe41cc8d56194c17076ad7"
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "docs/design/emberfall/EMBERFALL_REFERENCE_02.png",
+    "same_as_plan": false,
+    "plan_sha256": "a24e22ad211a706683344ff64f98abce43bdb159f9ed950a582ef69467731e1a"
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "docs/design/emberfall/EMBERFALL_REFERENCE_03.png",
+    "same_as_plan": false,
+    "plan_sha256": "f8aafecafe18e3f4a727d402e3a12c0c884893af76e58fe4e5a13820d4e6db74"
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "docs/design/emberfall/EMBERFALL_reference_targets.txt",
+    "same_as_plan": false,
+    "plan_sha256": "049689fb607908202266bb8def29138cc7eb3dddd00a98d02b1e9864f40602f1"
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/BURNED_PLAINS_REVIEW.md",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/EDGE_PROFILE_REVIEW.md",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/MODULARITY_REVIEW.md",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/PRODUCTION_READINESS_REVIEW.md",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/build_burned_plains.py",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/build_edge_profile_study.py",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/build_modularity_study.py",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/burned_plains_contact_sheet.py",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/burned_plains_report.json",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/edge_profile_audit.py",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/edge_profile_character_probe.luau",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/edge_profile_character_report.json",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/edge_profile_collision_decomposition.json",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/edge_profile_contract.py",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/edge_profile_evidence.py",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/edge_profile_layout.py",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/edge_profile_report.json",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/edge_profile_root_cause.json",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/edge_profile_saved_readback.json",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/edge_profile_studio_probe.py",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/edge_profile_studio_report.json",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/modularity_probe.py",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/modularity_report.json",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/production_gate_evidence.py",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/production_gate_layout.py",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/production_gate_readback.py",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/production_gate_report.json",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/production_gate_studio_probe.luau",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/production_gate_studio_report.json",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/production_gate_study.py",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/review_burned_plains.py",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/review_edge_profiles.py",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/review_modularity.py",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-burned-plains",
+    "path": "assets/source/worlds/emberfall/validate_edge_profiles.py",
+    "same_as_plan": false,
+    "plan_sha256": null
+  },
+  {
+    "branch": "agent/emberfall-batch1-countryside",
+    "path": "assets/source/worlds/emberfall/batch1/batch1_shared.py",
+    "same_as_plan": true,
+    "plan_sha256": "4ac88a472762caaeb66e40ece25001bfa367c730653d11fbb722b713c17aa036"
+  },
+  {
+    "branch": "agent/emberfall-batch1-countryside",
+    "path": "assets/source/worlds/emberfall/batch1/countryside.py",
+    "same_as_plan": false,
+    "plan_sha256": "2ea9ed1d25abb4a06cb6e7696be6ad6df3326785c10121085ff7d60a86c4239e"
+  },
+  {
+    "branch": "agent/emberfall-batch1-elevations",
+    "path": "assets/source/worlds/emberfall/batch1/batch1_shared.py",
+    "same_as_plan": true,
+    "plan_sha256": "4ac88a472762caaeb66e40ece25001bfa367c730653d11fbb722b713c17aa036"
+  },
+  {
+    "branch": "agent/emberfall-batch1-elevations",
+    "path": "assets/source/worlds/emberfall/batch1/elevations.py",
+    "same_as_plan": false,
+    "plan_sha256": "135c1f5a118aa59fbb9a2f326d12ac54c1a423e4f04d9c921ca0947f3734b198"
+  },
+  {
+    "branch": "agent/emberfall-batch1-fields",
+    "path": "assets/source/worlds/emberfall/batch1/batch1_shared.py",
+    "same_as_plan": true,
+    "plan_sha256": "4ac88a472762caaeb66e40ece25001bfa367c730653d11fbb722b713c17aa036"
+  },
+  {
+    "branch": "agent/emberfall-batch1-fields",
+    "path": "assets/source/worlds/emberfall/batch1/fields.py",
+    "same_as_plan": false,
+    "plan_sha256": "16c2d4746a8b3d178c3f91bea84b3c9a888412d5dea94f76c43b76575ae28f56"
+  },
+  {
+    "branch": "agent/emberfall-scale-profiler",
+    "path": "tools/studio/emberfall_scale_test/BenchmarkClient.client.luau",
+    "same_as_plan": false,
+    "plan_sha256": "e63a6e185724b608a4abfbc3b9a0aa500fd0a7213f5e07b56554cd982d5f7dd7"
+  },
+  {
+    "branch": "agent/emberfall-terrain-foundation",
+    "path": "INDEX.md",
+    "same_as_plan": false,
+    "plan_sha256": "80a2980e2f44b1fba7f31448832a33acca6c5d48d1f9b7cb10726c9271406d54"
+  },
+  {
+    "branch": "agent/emberfall-terrain-foundation",
+    "path": "INDEX_MAP.md",
+    "same_as_plan": false,
+    "plan_sha256": "9ddaef2947719e8d09fab3de49e942eb3b18362f9a2248381f52e29430914eda"
+  },
+  {
+    "branch": "agent/emberfall-terrain-foundation",
+    "path": "assets/source/worlds/emberfall/VOCABULARY_REVIEW.md",
+    "same_as_plan": false,
+    "plan_sha256": "2ee3ae546da0c32a6ded071c4c45d1332c737915d7c711226e670d2529694fc1"
+  },
+  {
+    "branch": "agent/emberfall-terrain-foundation",
+    "path": "assets/source/worlds/emberfall/refine_emberfall_vocabulary.py",
+    "same_as_plan": false,
+    "plan_sha256": "4d11b2da7f50d02edabba97e477a74b6b04789896d70f57f39c403813febd857"
+  },
+  {
+    "branch": "agent/emberfall-terrain-foundation",
+    "path": "assets/source/worlds/emberfall/review_emberfall_vocabulary.py",
+    "same_as_plan": false,
+    "plan_sha256": "ab76ce7a268f450b50efba70bd0699b1f41aa45ddc85fad7a1de9885d231a32e"
+  },
+  {
+    "branch": "agent/emberfall-terrain-foundation",
+    "path": "assets/source/worlds/emberfall/vocabulary_contact_sheet.py",
+    "same_as_plan": false,
+    "plan_sha256": "c3be8a9aeeabc52e00fef46b118a9babb6c44eb76d6af0f963092ccd894d09bf"
+  },
+  {
+    "branch": "agent/emberfall-terrain-foundation",
+    "path": "assets/source/worlds/emberfall/vocabulary_technical_report.json",
+    "same_as_plan": false,
+    "plan_sha256": "68ad8b3ace6c4b07fa394457c7630a2a2eaa60dbf692aae222f22bf853b4fd8d"
+  },
+  {
+    "branch": "agent/emberfall-terrain-foundation",
+    "path": "docs/MODULAR_MAPS.md",
+    "same_as_plan": false,
+    "plan_sha256": "53d9c8d96ca94cccd4d1152d89114fec319dfd71182f93565db2c31c373e545a"
+  },
+  {
+    "branch": "agent/emberfall-terrain-foundation",
+    "path": "docs/STATUS.md",
+    "same_as_plan": false,
+    "plan_sha256": "74fbe519ee4dd00005b2ba678b8053ee76ef744b5b9931e1ee8d6b791fd2eb9c"
+  },
+  {
+    "branch": "agent/emberfall-terrain-foundation",
+    "path": "docs/WORKLOG.md",
+    "same_as_plan": false,
+    "plan_sha256": "bbc7e14c40bce65ddb500ce6f1d95b7b98b1e921def9b0dc728ebabbb96e55ce"
+  },
+  {
+    "branch": "agent/emberfall-terrain-foundation",
+    "path": "docs/biomes/EMBERFALL.md",
+    "same_as_plan": false,
+    "plan_sha256": "7c138d38b5827eb439f840cf1f16931c7c785029b35bbf6d83d623d5483c2a55"
+  }
+]

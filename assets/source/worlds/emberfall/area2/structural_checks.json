@@ -1,0 +1,32 @@
+{
+  "shared887_exact": true,
+  "A_arena_exact": true,
+  "A_entrance_exact": true,
+  "A_route_exact": true,
+  "A_support_sources_valid": true,
+  "B_accepted_geometry_routes_exact": true,
+  "common_entrance_interface_exact": true,
+  "bearing_contact_bounds": {
+    "B_STRUCT_Household_BreachRib / B_STRUCT_Household_CutEdge": true,
+    "B_STRUCT_Household_BreachRib / B_Composed_WestHousehold_ELintel": true,
+    "B_STRUCT_KeepSouthBearing / B_BossRearEastWall": true,
+    "B_STRUCT_KeepSouthUpperInfill / B_STRUCT_KeepSouthBearing": true,
+    "B_STRUCT_KeepEastUpperInfill / B_STRUCT_KeepEastBearing": true,
+    "B_STRUCT_KeepEastBearing / B_STRUCT_KeepSouthBearing": true,
+    "B_STRUCT_AudienceWestBearing / B_Composed_AudienceHall_Roof": true,
+    "B_STRUCT_ArchiveEdgeBearing / B_Composed_ArchiveAnnex_Roof": true,
+    "B_STRUCT_ArchiveEdgeBearing / B_STRUCT_ArchiveFrontBearing": true,
+    "B_STRUCT_ArchiveEdgeBearing / B_STRUCT_ArchiveRearBearing": true,
+    "B_STRUCT_Household_BurnedRib / B_STRUCT_Household_CutEdge": true,
+    "B_STRUCT_CrossHall_BurnedRib / B_Composed_TransverseHall_WLintel": true,
+    "B_STRUCT_Steward_BurnedRib / B_STRUCT_Steward_CutEdge": true,
+    "CastleGateRoof_ConnectedRafter / CastleGateRoof_EaveBearing": true,
+    "CastleGateRoof_ConnectedRafter / CastleGateRoof_RidgeBearing": true
+  },
+  "boss_floor_clear": true,
+  "reward_floor_clear": true,
+  "finite_geometry": true,
+  "new_support_meshes_nonempty": true,
+  "damage_regions": 2,
+  "existing_roof_masses_exact": true
+}

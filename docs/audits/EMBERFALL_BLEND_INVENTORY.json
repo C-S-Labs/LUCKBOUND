@@ -1,0 +1,667 @@
+[
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/cap_collapsed_pass.blend",
+    "bytes": 219412,
+    "sha256": "be13928ceb922cf2959e48c8f0de42e3050f093485774d1f49311521a8d30be7",
+    "mtime_ns": 1790984811652045500,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/chunk_column_forest.blend",
+    "bytes": 232801,
+    "sha256": "cdc88c481f50552ac38fec783f07460946199367493a105eeedcbea18bdcce6a",
+    "mtime_ns": 1790984811538047300,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/chunk_entry_ash_plain.blend",
+    "bytes": 185513,
+    "sha256": "7e3a4d17325049d2b80c2d52cc780c671e7f2a0eda3e3988e8906a3f0cc7e150",
+    "mtime_ns": 1790984811375978500,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/EmberfallPrototype.blend",
+    "bytes": 4069470,
+    "sha256": "f93eb319bcd712ef7a67f81b72e28efa137ce202e924694d7705ed34c9e0327e",
+    "mtime_ns": 1791062498887038200,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/Input_ArtDirection.blend",
+    "bytes": 933921,
+    "sha256": "cd45e2b68d5fb209fa9366e32bcc8b3e2a61a0a3ee7319106d14cf386be4e674",
+    "mtime_ns": 1790984807469626300,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/Input_Continuity.blend",
+    "bytes": 1540922,
+    "sha256": "fca91dd956ce577f43257b2273c4699dcd21e70f44bb7d2b48d32b303a481bf8",
+    "mtime_ns": 1790988387824060400,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/Input_FirstPass.blend",
+    "bytes": 614628,
+    "sha256": "4abba12b614a14da8a6e8a3121988e5f25292334165c7d843041ccbf0f2eefba",
+    "mtime_ns": 1790978901844943400,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/Input_LavaGeology.blend",
+    "bytes": 2891646,
+    "sha256": "f8bb20440c1ea39bf6ad4d7a7c6f81d707192b4c1ee9b7d1043f16ea86af904e",
+    "mtime_ns": 1790990070794538800,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/path_column_pass.blend",
+    "bytes": 235405,
+    "sha256": "b30977f73358abb4d85e48d570d48d84f51b06997a90f47374f9aaef2f43aab6",
+    "mtime_ns": 1790984811475654000,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/scenery_ashland_a.blend",
+    "bytes": 113802,
+    "sha256": "733f6a876455247b6747eaf261305bd590aa27fbdde00259aed7d52fb79515fb",
+    "mtime_ns": 1790984811705529400,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/scenery_basalt_ridge_a.blend",
+    "bytes": 119071,
+    "sha256": "0788428f255fe35b994f063cfb53651383b28bf056e9a851bcff20e9f31c91c3",
+    "mtime_ns": 1790984811753897100,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/scenery_basalt_ridge_high.blend",
+    "bytes": 118867,
+    "sha256": "3858cc71e3b25407e18a6dcab87e880018778419f2fa5bec6cadb19b694e2dbf",
+    "mtime_ns": 1790984811809505700,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/scenery_charred_flora_a.blend",
+    "bytes": 142599,
+    "sha256": "db75cd8f2d9c043645ec6b78a68727273b24eedcd496d22dd08a1f2cf490fb16",
+    "mtime_ns": 1790984812001798700,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/scenery_drained_flora_a.blend",
+    "bytes": 132615,
+    "sha256": "81aa5069bdc5a845ffe62f32e3ef98eeddc7bdf7f09a48fe7a60f467f0981bfe",
+    "mtime_ns": 1790984811953066500,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/scenery_foothill_a.blend",
+    "bytes": 118983,
+    "sha256": "29526518398c8208d739918e510b5af09b8d9aca7d5cc6e421f8d0b80350c248",
+    "mtime_ns": 1790984812049214000,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/scenery_lava_field_a.blend",
+    "bytes": 119496,
+    "sha256": "d6d35491fd1861e10ec077ba80a8ccec7793f489c96d05b40e775db501c5f473",
+    "mtime_ns": 1790984811858057900,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/scenery_ravine_a.blend",
+    "bytes": 115394,
+    "sha256": "731b00b6d83e8daa6f90d1ab0f0abf20a15eeb68cc9798fe346dda3dd01a4f65",
+    "mtime_ns": 1790984811905643900,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/side_lava_overlook.blend",
+    "bytes": 208656,
+    "sha256": "122cec63b86e1cef1134aca883e880ef9503270daae382e25302a8fed7105164",
+    "mtime_ns": 1790984811595164100,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/cap_collapsed_pass.blend1",
+    "bytes": 910661,
+    "sha256": "0272f509219fa95225364c2d993d565a75f96b0b3502406374cc176d92ec4ea6",
+    "mtime_ns": 1790984806934155200,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/chunk_column_forest.blend1",
+    "bytes": 976096,
+    "sha256": "5cfbe88b96aaa5e43b0b7829cec713b68c74ae883c8ada8f84048a249374bad6",
+    "mtime_ns": 1790984806931056600,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/chunk_entry_ash_plain.blend1",
+    "bytes": 735700,
+    "sha256": "b43eb1dadeb01dfd57e4bd2a85df9af17d38c1c9343b9e6f2e30fb75bce656a0",
+    "mtime_ns": 1790984806927953900,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/EmberfallPrototype.blend1",
+    "bytes": 4077621,
+    "sha256": "f62a154790fe9fd0cdf6558f52be8ec49ea73f803e1498aa0ba1d2a0604d2415",
+    "mtime_ns": 1791062359810465400,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/path_column_pass.blend1",
+    "bytes": 1000926,
+    "sha256": "614d4189bac1b0dc1205c34b804562d38a894a729b2e3a22e52728e5824c114e",
+    "mtime_ns": 1790984806929056100,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/scenery_ashland_a.blend1",
+    "bytes": 368764,
+    "sha256": "8a2616177a08944b18bf37639c7bd79c997890821957c036010d0b83c6de569d",
+    "mtime_ns": 1790984806935155700,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/scenery_basalt_ridge_a.blend1",
+    "bytes": 393049,
+    "sha256": "ca27cbc61d4a48fecf7eb893f061f7fff51f748e34a7c82ecd95affd3742bd4e",
+    "mtime_ns": 1790984806935155700,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/scenery_basalt_ridge_high.blend1",
+    "bytes": 393054,
+    "sha256": "4edcaa920eaf5929be39b2b1bb60f44c22f979717a1ae4b88a9c3bb04633a8e1",
+    "mtime_ns": 1790984806936659600,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/scenery_charred_flora_a.blend1",
+    "bytes": 537753,
+    "sha256": "7d599e5353b009dc04338506960f964eca8faea7541649aa65d3029f21216ee7",
+    "mtime_ns": 1790984806941678100,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/scenery_drained_flora_a.blend1",
+    "bytes": 488301,
+    "sha256": "8a3dba518ab673b978b8160e2f9989c91169ffb6ba4e895505511da9c08758ba",
+    "mtime_ns": 1790984806940173500,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/scenery_foothill_a.blend1",
+    "bytes": 393045,
+    "sha256": "8664b723b525f97e8b416e447c156fee1d1b380442df6afe6f61018116287671",
+    "mtime_ns": 1790984806942684200,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/scenery_lava_field_a.blend1",
+    "bytes": 408621,
+    "sha256": "b22a74e369dded2704300cd525f9b198b64fcc5cefe466b0f0423306297e2dce",
+    "mtime_ns": 1790984806937664600,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/scenery_ravine_a.blend1",
+    "bytes": 396477,
+    "sha256": "4c424d938a50ec118b6a32382651fe8918adb6410c80e7481485c5cec755ad84",
+    "mtime_ns": 1790984806939168900,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview/side_lava_overlook.blend1",
+    "bytes": 868309,
+    "sha256": "3aefa9b09fa95979ed6ed58b4c8b2d16ce24e970630da6a4c2dfc58f95a11cc6",
+    "mtime_ns": 1790984806932056300,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ArchitectureReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII/EmberfallAreaII.blend",
+    "bytes": 1738586,
+    "sha256": "b2b3e160efb6d30db4831448ebf540f2c13ae79d25b09d5e37c2fbc5a5e9e49d",
+    "mtime_ns": 1791444266058907400,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII/BeforeBaselineRework/EmberfallAreaII.blend",
+    "bytes": 1169382,
+    "sha256": "12565b5089eb6b862fcad87df0764ba90dd63e47165ab90cb7e8df3068211674",
+    "mtime_ns": 1791369432928722700,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII/BeforeConsistencyCorrection/EmberfallAreaII.blend",
+    "bytes": 1708809,
+    "sha256": "c0c525163e8ea0de576adad41387d6d8762e98f27e0a205e9506216a05876e0d",
+    "mtime_ns": 1791442083171108100,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII/BeforeFinalCorrections/EmberfallAreaII.blend",
+    "bytes": 1666767,
+    "sha256": "e2dddef570b9c96edac4e89219542896df07c23bee6144dfa6cc100a73ed01e4",
+    "mtime_ns": 1791437727314164500,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII/BeforeImpactCorrection/EmberfallAreaII.blend",
+    "bytes": 928633,
+    "sha256": "6dae80252cbf728bb4173429f1e0302362001123b225289d6cd04540711b1080",
+    "mtime_ns": 1791350611601475500,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII/BeforeImpactStructuralFailure/EmberfallAreaII.blend",
+    "bytes": 1677726,
+    "sha256": "67fcba8791318dc459b1893c7472e6b2766ea8be86248889851fe3020de2cc16",
+    "mtime_ns": 1791439700968989200,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII/BeforeInteriorLayout/EmberfallAreaII.blend",
+    "bytes": 1569009,
+    "sha256": "cde0b77761c541c5e92c124b79c3c137ca2b9075e571aace9a7fd3194ea96e26",
+    "mtime_ns": 1791407083524772600,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII/BeforeStructuralCleanup/EmberfallAreaII.blend",
+    "bytes": 1627651,
+    "sha256": "915440f49384fdf0864032e37c8bf51d46202a73211c2d55fcaee9ade54def45",
+    "mtime_ns": 1791431019932513900,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII/OwnerReview_Input/EmberfallAreaII.blend",
+    "bytes": 596198,
+    "sha256": "3796ba0573d5c8537b8a163cd65fda6e5eed7742ab9590c4e6e286fad21eebf2",
+    "mtime_ns": 1791348266411032100,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII/EmberfallAreaII.blend1",
+    "bytes": 596182,
+    "sha256": "3470c10d5ba877f8e72c2be0e27bbd14c81b3437b37cb80ecce2d9c6a6f0ddeb",
+    "mtime_ns": 1791348102798317400,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII/BeforeBaselineRework/EmberfallAreaII.blend1",
+    "bytes": 596182,
+    "sha256": "3470c10d5ba877f8e72c2be0e27bbd14c81b3437b37cb80ecce2d9c6a6f0ddeb",
+    "mtime_ns": 1791348102798317400,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII/BeforeConsistencyCorrection/EmberfallAreaII.blend1",
+    "bytes": 596182,
+    "sha256": "3470c10d5ba877f8e72c2be0e27bbd14c81b3437b37cb80ecce2d9c6a6f0ddeb",
+    "mtime_ns": 1791348102798317400,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII/BeforeFinalCorrections/EmberfallAreaII.blend1",
+    "bytes": 596182,
+    "sha256": "3470c10d5ba877f8e72c2be0e27bbd14c81b3437b37cb80ecce2d9c6a6f0ddeb",
+    "mtime_ns": 1791348102798317400,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII/BeforeImpactCorrection/EmberfallAreaII.blend1",
+    "bytes": 596182,
+    "sha256": "3470c10d5ba877f8e72c2be0e27bbd14c81b3437b37cb80ecce2d9c6a6f0ddeb",
+    "mtime_ns": 1791348102798317400,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII/BeforeImpactStructuralFailure/EmberfallAreaII.blend1",
+    "bytes": 596182,
+    "sha256": "3470c10d5ba877f8e72c2be0e27bbd14c81b3437b37cb80ecce2d9c6a6f0ddeb",
+    "mtime_ns": 1791348102798317400,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII/BeforeInteriorLayout/EmberfallAreaII.blend1",
+    "bytes": 596182,
+    "sha256": "3470c10d5ba877f8e72c2be0e27bbd14c81b3437b37cb80ecce2d9c6a6f0ddeb",
+    "mtime_ns": 1791348102798317400,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII/BeforeStructuralCleanup/EmberfallAreaII.blend1",
+    "bytes": 596182,
+    "sha256": "3470c10d5ba877f8e72c2be0e27bbd14c81b3437b37cb80ecce2d9c6a6f0ddeb",
+    "mtime_ns": 1791348102798317400,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII/OwnerReview_Input/EmberfallAreaII.blend1",
+    "bytes": 596182,
+    "sha256": "3470c10d5ba877f8e72c2be0e27bbd14c81b3437b37cb80ecce2d9c6a6f0ddeb",
+    "mtime_ns": 1791348102798317400,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Batch1/BurnedPlainsBatch1.blend",
+    "bytes": 16906583,
+    "sha256": "3e17a4ff40d7c3d379b9bb7640cb728f76616044e20ee5b7b32e9567f4dfa6c7",
+    "mtime_ns": 1791271338095745300,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Batch1"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Batch1/countryside/BurnedPlains_countryside.blend",
+    "bytes": 1682968,
+    "sha256": "d0f2d0ada9862aad4f29ef74a9f13ea83094ad7a4c906b958060c9434eb55a27",
+    "mtime_ns": 1791263929310638300,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Batch1"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Batch1/elevations/BurnedPlains_elevations.blend",
+    "bytes": 1444272,
+    "sha256": "ec2b6a8aa02806190ed3c6b4ea1d752c9bd613c14b20ce7ea43bb4acf43758c3",
+    "mtime_ns": 1791263937789090100,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Batch1"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Batch1/fields/BurnedPlains_fields.blend",
+    "bytes": 1630934,
+    "sha256": "eec8f8f34a6779aa92a4b744866afe43679bbbb00c701dce628bf6d5d09c1b78",
+    "mtime_ns": 1791263946236516300,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Batch1"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Batch1/BurnedPlainsBatch1.blend1",
+    "bytes": 16716482,
+    "sha256": "2459ca8f5bbe6fe4e597b5369e4e27dca2b3b0bed863ae0aee530e24ab999e8e",
+    "mtime_ns": 1791264024167504200,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Batch1"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Batch1/countryside/BurnedPlains_countryside.blend1",
+    "bytes": 1750016,
+    "sha256": "b1383c69d0d14105fc9d20aa88b0e00b2ed8e2b56fad1b1ccd31c55a0cb91a4b",
+    "mtime_ns": 1791263087244918900,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Batch1"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Batch1/elevations/BurnedPlains_elevations.blend1",
+    "bytes": 1471939,
+    "sha256": "97ca5b7d905aec9ad3e8dd7f50581bb04d8a1e7e3b49fafab3299e3cb34e24c9",
+    "mtime_ns": 1791263090678411200,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Batch1"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Batch1/fields/BurnedPlains_fields.blend1",
+    "bytes": 1475023,
+    "sha256": "ef94ef2e1260286ece6309ce5abc9534fa81ece60e7bed46a50d7e19de1b649b",
+    "mtime_ns": 1791263100190276900,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Batch1"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Batch2/BurnedPlainsBatch2.blend",
+    "bytes": 5035763,
+    "sha256": "03d0ce4479312e18bd7b9a5b193c5329d4268ea434d4599129b58dacf35ad098",
+    "mtime_ns": 1791343395340564700,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Batch2"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Batch2/BurnedPlainsBatch2_GateA.blend",
+    "bytes": 1466995,
+    "sha256": "afe1f8278ee1c5137597ceadf86bca639e41db84a2ef3e92d5f076685485a498",
+    "mtime_ns": 1791342726351473000,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Batch2"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Batch2/BurnedPlainsBatch2_Review.blend",
+    "bytes": 9707915,
+    "sha256": "8d79772b5990334233b0c653959ac881acdd680f6cded78d0ada2c8fa391577a",
+    "mtime_ns": 1791342798770574700,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Batch2"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Batch2/BurnedPlainsCombinedReview.blend",
+    "bytes": 36272758,
+    "sha256": "6e808961b6116f12db8f5dd6b354f6f669cdaaaafab6897bb4d9a5f842c82800",
+    "mtime_ns": 1791343572320014000,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Batch2"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Batch2/BurnedPlainsProductionReview.blend",
+    "bytes": 69139327,
+    "sha256": "9ea4f7fc3847def3be831f1d9a7b45f362bfcfb8d6c101d546093ca22661bc54",
+    "mtime_ns": 1791343766651971900,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Batch2"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Batch2/BurnedPlainsBatch2.blend1",
+    "bytes": 5036105,
+    "sha256": "be885a1d3ae6b2f700a1af2b51709d0867bee44525e838167eca1542efc92b02",
+    "mtime_ns": 1791343347234103300,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Batch2"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_BurnedPlainsReview/BurnedPlains.blend",
+    "bytes": 26984322,
+    "sha256": "2138cbed63a73253251c3526e4cfabcb6816b660d0d0c46538e3e419dff6e452",
+    "mtime_ns": 1791253592924852000,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_BurnedPlainsReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_BurnedPlainsReview/Input_DesignReset.blend",
+    "bytes": 2048953,
+    "sha256": "d3566987f2678efd3f08c6da44df31c48f38cc75a01fcfb49290b011c263f957",
+    "mtime_ns": 1791244941886568900,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_BurnedPlainsReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_BurnedPlainsReview/BurnedPlains.blend1",
+    "bytes": 26926313,
+    "sha256": "787151f360d57f28f0776d9641bf3d7f28c637d75ac2f2cb6ce85a8c210db4b0",
+    "mtime_ns": 1791245418182535700,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_BurnedPlainsReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_EdgeProfileReview/BurnedPlainsEdgeProfiles.blend",
+    "bytes": 7462052,
+    "sha256": "4833aeee7bdc82259498eab2d4feb6dabd0a72de1554d1b61b5c4ad276abe939",
+    "mtime_ns": 1791252408004589600,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_EdgeProfileReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_EdgeProfileReview/Input_ApprovedLive.blend",
+    "bytes": 26984374,
+    "sha256": "3e7e15b29bf7590475e1931d50f85df8c8e3a11c7a14e560fadc932267decab3",
+    "mtime_ns": 1791251073916779200,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_EdgeProfileReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_EdgeProfileReview/BurnedPlainsEdgeProfiles.blend1",
+    "bytes": 7451327,
+    "sha256": "b0b789616d174a8935050f688c7a498802ba5e5bb048d3e7a595c295626d875f",
+    "mtime_ns": 1791252173099549600,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_EdgeProfileReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_FoundationReview/EmberfallFoundation.blend",
+    "bytes": 2053507,
+    "sha256": "9a1eb389948648e7e355ea4be788ceef126313a4568a5a4c6dd88b12d76cb922",
+    "mtime_ns": 1791187639365028200,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_FoundationReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_FoundationReview/Input_Naturalization.blend",
+    "bytes": 552530,
+    "sha256": "a9caa656409beacd3ec1d31d0b72c7bc18f71a3adfbb1083a8490ba3f97f3fbb",
+    "mtime_ns": 1791067899487827000,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_FoundationReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_FoundationReview/Input_TerrainFoundation.blend",
+    "bytes": 2484162,
+    "sha256": "990db0d4dd51d0067a8662b024cef513e18062a2266ab126edd062daad8e1715",
+    "mtime_ns": 1791186248498621000,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_FoundationReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_FoundationReview/Input_Vocabulary.blend",
+    "bytes": 536891,
+    "sha256": "cb2562c9f67a7282e2d5f56b68fb6708e8f7e911ebe236d80f8a6b707d40f416",
+    "mtime_ns": 1791181083276971400,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_FoundationReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_FoundationReview/EmberfallFoundation.blend1",
+    "bytes": 518520,
+    "sha256": "1b9c84fd09ec02407371954d590dd00abed2945e1d0400eee34a2181dd4f141e",
+    "mtime_ns": 1791075507762273700,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_FoundationReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ModularityReview/BurnedPlainsModularity.blend",
+    "bytes": 82566948,
+    "sha256": "474626aa3e3496f01f4881a0ceb84b1ede1000ad0fc7369f5d6411f613c16829",
+    "mtime_ns": 1791247329553341600,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ModularityReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ModularityReview/Input_ApprovedBurnedPlains.blend",
+    "bytes": 26984378,
+    "sha256": "8c1081871f276e19540b74d13a26567831b28b85c0320d2d69278ead10d06c58",
+    "mtime_ns": 1791246721608458200,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ModularityReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ModularityReview/BurnedPlainsModularity.blend1",
+    "bytes": 82561749,
+    "sha256": "d7b6912acfefe4295bf570b436b0d6e65bff73b74fb5268682021767a810cfcc",
+    "mtime_ns": 1791247228589424900,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ModularityReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ProductionGateReview/BurnedPlainsProductionGate.blend",
+    "bytes": 99752408,
+    "sha256": "3d028de6b6761f2574df52204bcebd29db4411b0208f35eed072fcc5fbaf0683",
+    "mtime_ns": 1791249629177532100,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ProductionGateReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ProductionGateReview/Input_ApprovedLive.blend",
+    "bytes": 26984356,
+    "sha256": "add33eb4185074734c4be36a88ff334df301cf94db85042c86743572d4a29ee6",
+    "mtime_ns": 1791248542375165000,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ProductionGateReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_ProductionGateReview/BurnedPlainsProductionGate.blend1",
+    "bytes": 99754268,
+    "sha256": "b2154c0e46e92c52adf430e09e4f8ac5449211491189dcc667f79e054f615c48",
+    "mtime_ns": 1791249490490391700,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_ProductionGateReview"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype/cap_collapsed_pass.blend",
+    "bytes": 232208,
+    "sha256": "e39217c5ec413f9684aa42691fb68439d5f7dbba4eb80329da490fcb506227f6",
+    "mtime_ns": 1790978898092287900,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype/chunk_column_forest.blend",
+    "bytes": 252441,
+    "sha256": "e0d80690a3713d9b36767abd659a1554011a4b640a13a841907d2f2e849d0e53",
+    "mtime_ns": 1790978897990915100,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype/chunk_entry_ash_plain.blend",
+    "bytes": 175673,
+    "sha256": "7cbfd2fb8dfda47e585ea308388aedda899e828984944e08b6a0d2d65795a368",
+    "mtime_ns": 1790978897841668000,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype/EmberfallPrototype.blend",
+    "bytes": 614628,
+    "sha256": "4abba12b614a14da8a6e8a3121988e5f25292334165c7d843041ccbf0f2eefba",
+    "mtime_ns": 1790978901844943400,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype/path_column_pass.blend",
+    "bytes": 278297,
+    "sha256": "8d884b4c3222411606a455fef8d841f9cca2e71cfc0dee8f52b7652964b8a0e4",
+    "mtime_ns": 1790978897938327100,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype/side_lava_overlook.blend",
+    "bytes": 195224,
+    "sha256": "7988c4a9ce1565eb1c676a68fb050a7c028c39e3b5e7e623895345b0e5ce22b1",
+    "mtime_ns": 1790978898042131000,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype/cap_collapsed_pass.blend1",
+    "bytes": 232212,
+    "sha256": "3f210826bd91bd483c6d64b46c8d8d31cfae5f4dc06318ef0ceaa7bf3e0b47cc",
+    "mtime_ns": 1790978840431938100,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype/chunk_column_forest.blend1",
+    "bytes": 252485,
+    "sha256": "bdad01a90d4acde2e2747f60ee40ac4f4987997f9acfde32cb4ff0e653bbdbbb",
+    "mtime_ns": 1790978840330921900,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype/chunk_entry_ash_plain.blend1",
+    "bytes": 175668,
+    "sha256": "1bcec7e22d8a219befa1462468ddefe92793624d2808d42a8146defb5f4a221a",
+    "mtime_ns": 1790978840187267000,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype/EmberfallPrototype.blend1",
+    "bytes": 618340,
+    "sha256": "16080d71894968b23830c8b1d3eb6ed108d67c11c067ad3ad3ca443687509a9b",
+    "mtime_ns": 1790978797932896900,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype/path_column_pass.blend1",
+    "bytes": 278376,
+    "sha256": "e5acfed10a9da7c8f63bfaf33eb2d1925615d4160d46e82a8eb9c0f2622edca2",
+    "mtime_ns": 1790978840281967800,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype/side_lava_overlook.blend1",
+    "bytes": 195211,
+    "sha256": "ae0e40d4a6e9e0660882fa1350559be6acf41a0cf67b2aa0e314c61881fca27e",
+    "mtime_ns": 1790978840379926600,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_Prototype"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_SceneryScaling/SceneryScaling.blend",
+    "bytes": 24177449,
+    "sha256": "906f220fdb698abe81e40621aa8888f04b741e2478fefade03f97ea9e7585961",
+    "mtime_ns": 1791322738819814500,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_SceneryScaling"
+  },
+  {
+    "path": "E:/BlenderAIProjects/Runtime/Emberfall_SceneryScaling/SceneryScaling.blend1",
+    "bytes": 25657313,
+    "sha256": "41d40ff8a2ee5ed421e787a647e7678b27f84723326a58cc1d84bbeb51d38cd8",
+    "mtime_ns": 1791322226026875900,
+    "root": "E:/BlenderAIProjects/Runtime/Emberfall_SceneryScaling"
+  }
+]

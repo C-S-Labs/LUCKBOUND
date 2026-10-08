@@ -1,0 +1,322 @@
+{
+  "shared_objects": 887,
+  "shared_geometry_exact": true,
+  "A_entrance_exact": true,
+  "B_first_reviewed": true,
+  "A_direct_source_links": true,
+  "A_derived_survivor_meshes": 285,
+  "finite_geometry": true,
+  "route_floor_samples": {
+    "A": [
+      {
+        "midpoint": [
+          0.0,
+          1067.5,
+          69.5
+        ],
+        "hit": true,
+        "object": "ContinuousLand_ReviewOnly",
+        "z": 74.33332824707031
+      },
+      {
+        "midpoint": [
+          0.0,
+          1172.0,
+          89.5
+        ],
+        "hit": true,
+        "object": "CastleGrounds_RisingLand",
+        "z": 89.77999877929688
+      },
+      {
+        "midpoint": [
+          0.0,
+          1234.5,
+          96.0
+        ],
+        "hit": true,
+        "object": "A_EntryHall_Floor",
+        "z": 96.0
+      },
+      {
+        "midpoint": [
+          -46.0,
+          1255.0,
+          96.0
+        ],
+        "hit": true,
+        "object": "A_EntryHall_Floor",
+        "z": 96.0
+      },
+      {
+        "midpoint": [
+          -92.0,
+          1287.5,
+          96.0
+        ],
+        "hit": true,
+        "object": "A_WestGuardHall_Floor",
+        "z": 96.0
+      },
+      {
+        "midpoint": [
+          -92.0,
+          1352.5,
+          96.0
+        ],
+        "hit": true,
+        "object": "A_WestGuardHall_Floor",
+        "z": 96.0
+      },
+      {
+        "midpoint": [
+          -92.0,
+          1402.5,
+          97.0
+        ],
+        "hit": true,
+        "object": "A_FailingGallery_Floor",
+        "z": 96.0
+      },
+      {
+        "midpoint": [
+          -92.0,
+          1440.0,
+          95.5
+        ],
+        "hit": true,
+        "object": "A_FLAT_FINAL_BOSS_BASIN",
+        "z": 92.0
+      },
+      {
+        "midpoint": [
+          -36.0,
+          1502.5,
+          92.5
+        ],
+        "hit": true,
+        "object": "A_FLAT_FINAL_BOSS_BASIN",
+        "z": 92.0
+      }
+    ],
+    "B": [
+      {
+        "midpoint": [
+          0.0,
+          1067.5,
+          69.5
+        ],
+        "hit": true,
+        "object": "ContinuousLand_ReviewOnly",
+        "z": 74.33332824707031
+      },
+      {
+        "midpoint": [
+          0.0,
+          1172.0,
+          89.5
+        ],
+        "hit": true,
+        "object": "CastleGrounds_RisingLand",
+        "z": 89.77999877929688
+      },
+      {
+        "midpoint": [
+          0.0,
+          1234.5,
+          96.0
+        ],
+        "hit": true,
+        "object": "B_Composed_Entry_Floor",
+        "z": 96.0
+      },
+      {
+        "midpoint": [
+          10.0,
+          1292.5,
+          96.0
+        ],
+        "hit": true,
+        "object": "B_Composed_Entry_Floor",
+        "z": 96.0
+      },
+      {
+        "midpoint": [
+          20.0,
+          1355.0,
+          96.0
+        ],
+        "hit": true,
+        "object": "B_ArrivalCourt",
+        "z": 96.0999984741211
+      },
+      {
+        "midpoint": [
+          65.0,
+          1387.5,
+          96.0
+        ],
+        "hit": true,
+        "object": "B_Composed_TransverseHall_Floor",
+        "z": 96.0
+      },
+      {
+        "midpoint": [
+          132.5,
+          1407.5,
+          96.0
+        ],
+        "hit": true,
+        "object": "B_CrossTowerLink",
+        "z": 96.05000305175781
+      },
+      {
+        "midpoint": [
+          155.0,
+          1458.0,
+          108.0
+        ],
+        "hit": true,
+        "object": "B_TowerStair.015",
+        "z": 109.71428680419922
+      },
+      {
+        "midpoint": [
+          157.5,
+          1519.0,
+          120.0
+        ],
+        "hit": true,
+        "object": "B_Composed_EastGallery_Floor",
+        "z": 120.0
+      },
+      {
+        "midpoint": [
+          130.0,
+          1542.0,
+          120.0
+        ],
+        "hit": true,
+        "object": "B_Composed_EastGallery_Floor",
+        "z": 120.0
+      },
+      {
+        "midpoint": [
+          61.5,
+          1563.5,
+          120.0
+        ],
+        "hit": true,
+        "object": "B_Composed_AudienceHall_Floor",
+        "z": 120.0
+      }
+    ]
+  },
+  "variant_exclusions": {
+    "A": true,
+    "B": true
+  },
+  "matched_volume_samples": {
+    "A": [
+      {
+        "hit": true,
+        "object": "A_FLAT_FINAL_BOSS_BASIN",
+        "z": 92.0
+      },
+      {
+        "hit": true,
+        "object": "A_FLAT_FINAL_BOSS_BASIN",
+        "z": 92.0
+      },
+      {
+        "hit": true,
+        "object": "A_FLAT_FINAL_BOSS_BASIN",
+        "z": 92.0
+      }
+    ],
+    "B": [
+      {
+        "hit": true,
+        "object": "B_Composed_TransverseHall_Roof",
+        "z": 164.0
+      },
+      {
+        "hit": true,
+        "object": "B_Composed_StewardBlock_Roof",
+        "z": 206.0
+      },
+      {
+        "hit": true,
+        "object": "B_Composed_AudienceHall_Roof",
+        "z": 224.0
+      }
+    ]
+  },
+  "arena_floor_vertex_z_range": [
+    92.0,
+    92.0
+  ],
+  "arena_clear_samples": [
+    {
+      "hit": true,
+      "object": "A_FLAT_FINAL_BOSS_BASIN",
+      "z": 92.0
+    },
+    {
+      "hit": true,
+      "object": "A_FLAT_FINAL_BOSS_BASIN",
+      "z": 92.0
+    },
+    {
+      "hit": true,
+      "object": "A_FLAT_FINAL_BOSS_BASIN",
+      "z": 92.0
+    },
+    {
+      "hit": true,
+      "object": "A_FLAT_FINAL_BOSS_BASIN",
+      "z": 92.0
+    },
+    {
+      "hit": true,
+      "object": "A_FLAT_FINAL_BOSS_BASIN",
+      "z": 92.0
+    },
+    {
+      "hit": true,
+      "object": "A_FLAT_FINAL_BOSS_BASIN",
+      "z": 92.0
+    },
+    {
+      "hit": true,
+      "object": "A_FLAT_FINAL_BOSS_BASIN",
+      "z": 92.0
+    },
+    {
+      "hit": true,
+      "object": "A_FLAT_FINAL_BOSS_BASIN",
+      "z": 92.0
+    },
+    {
+      "hit": true,
+      "object": "A_FLAT_FINAL_BOSS_BASIN",
+      "z": 92.0
+    }
+  ],
+  "arena_flat_clear": true,
+  "arena_depression_studs": 4,
+  "max_transition_grade": 0.16,
+  "no_route_floor_misses": true,
+  "A_entry_conceals_basin": true,
+  "B_has_roofed_impact_architecture": true,
+  "A_corresponding_volume_removed": true,
+  "roof_damage_present": {
+    "WestHousehold": true,
+    "StewardBlock": true,
+    "TransverseHall": true,
+    "KitchenStore": true
+  },
+  "plan_height_variety": 10,
+  "longest_non_keep_block_studs": 200,
+  "all_current_cameras": true
+}

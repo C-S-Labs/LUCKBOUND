@@ -1,5 +1,14 @@
 # Drop-in chunk kits
 
+## Emberfall integration boundary — 2026-10-08
+
+Accepted frozen authored sockets/collision/mappings use the explicit review-loader path,
+not automatic mouth inference. Preserve OffsetY, center offsets and importYaw180.
+Historical architecture/probe limitations remain evidence, not permission to substitute
+inferred zero-height sockets. [Handoff](../assets/source/worlds/emberfall/PRODUCTION_HANDOFF.md)
+owns the current sources; normal runtime kit registration remains a separate task.
+
+
 A new biome's chunks no longer need a hand-written `Content/Chunks/<World>.luau`
 or manifest entries. Put the delivered `.rbxmx` in the world's folder and the
 server builds the kit when it starts.

@@ -1,0 +1,358 @@
+{
+  "scope": "visual blockout; no production",
+  "blend": "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\EmberfallAreaII.blend",
+  "route_studs": 1610.3084187152397,
+  "route_points": [
+    [
+      0,
+      0
+    ],
+    [
+      0,
+      90
+    ],
+    [
+      -85,
+      150
+    ],
+    [
+      -85,
+      280
+    ],
+    [
+      80,
+      280
+    ],
+    [
+      80,
+      430
+    ],
+    [
+      180,
+      470
+    ],
+    [
+      180,
+      600
+    ],
+    [
+      -40,
+      600
+    ],
+    [
+      -40,
+      720
+    ],
+    [
+      80,
+      800
+    ],
+    [
+      80,
+      900
+    ],
+    [
+      0,
+      950
+    ],
+    [
+      0,
+      1005
+    ]
+  ],
+  "ascent_studs": 56.0,
+  "inhabited_footprint_studs": [
+    640,
+    1005
+  ],
+  "buildings": [
+    {
+      "name": "GateKeeperHouse",
+      "xy": [
+        -98,
+        66
+      ],
+      "footprint": [
+        30,
+        38
+      ],
+      "eave": 18,
+      "state": "intact"
+    },
+    {
+      "name": "EdgeCottage",
+      "xy": [
+        84,
+        94
+      ],
+      "footprint": [
+        30,
+        38
+      ],
+      "eave": 16,
+      "state": "damaged"
+    },
+    {
+      "name": "GardenHome",
+      "xy": [
+        -175,
+        152
+      ],
+      "footprint": [
+        32,
+        42
+      ],
+      "eave": 18,
+      "state": "intact"
+    },
+    {
+      "name": "LowerHome",
+      "xy": [
+        -142,
+        223
+      ],
+      "footprint": [
+        34,
+        42
+      ],
+      "eave": 22,
+      "state": "damaged"
+    },
+    {
+      "name": "Workshop",
+      "xy": [
+        -161,
+        291
+      ],
+      "footprint": [
+        44,
+        58
+      ],
+      "eave": 25,
+      "state": "damaged"
+    },
+    {
+      "name": "StoreYardHall",
+      "xy": [
+        -8,
+        213
+      ],
+      "footprint": [
+        46,
+        66
+      ],
+      "eave": 24,
+      "state": "intact"
+    },
+    {
+      "name": "StreetHome",
+      "xy": [
+        -12,
+        335
+      ],
+      "footprint": [
+        34,
+        45
+      ],
+      "eave": 24,
+      "state": "damaged"
+    },
+    {
+      "name": "MarketShopWest",
+      "xy": [
+        18,
+        405
+      ],
+      "footprint": [
+        36,
+        48
+      ],
+      "eave": 26,
+      "state": "intact"
+    },
+    {
+      "name": "MarketShopEast",
+      "xy": [
+        197,
+        398
+      ],
+      "footprint": [
+        38,
+        50
+      ],
+      "eave": 27,
+      "state": "burning"
+    },
+    {
+      "name": "MarketStore",
+      "xy": [
+        245,
+        507
+      ],
+      "footprint": [
+        48,
+        65
+      ],
+      "eave": 29,
+      "state": "damaged"
+    },
+    {
+      "name": "GuildHall",
+      "xy": [
+        -14,
+        480
+      ],
+      "footprint": [
+        62,
+        76
+      ],
+      "eave": 34,
+      "state": "damaged"
+    },
+    {
+      "name": "ServiceWorkshop",
+      "xy": [
+        250,
+        582
+      ],
+      "footprint": [
+        44,
+        58
+      ],
+      "eave": 27,
+      "state": "collapsed"
+    },
+    {
+      "name": "UpperStores",
+      "xy": [
+        84,
+        655
+      ],
+      "footprint": [
+        46,
+        68
+      ],
+      "eave": 28,
+      "state": "burning"
+    },
+    {
+      "name": "ServiceHome",
+      "xy": [
+        -106,
+        553
+      ],
+      "footprint": [
+        38,
+        48
+      ],
+      "eave": 28,
+      "state": "damaged"
+    },
+    {
+      "name": "CivicHall",
+      "xy": [
+        -126,
+        790
+      ],
+      "footprint": [
+        64,
+        82
+      ],
+      "eave": 34,
+      "state": "damaged"
+    },
+    {
+      "name": "FailedTerraceHall",
+      "xy": [
+        180,
+        791
+      ],
+      "footprint": [
+        60,
+        74
+      ],
+      "eave": 32,
+      "state": "collapsed"
+    },
+    {
+      "name": "UpperHome",
+      "xy": [
+        141,
+        881
+      ],
+      "footprint": [
+        42,
+        58
+      ],
+      "eave": 30,
+      "state": "burning"
+    },
+    {
+      "name": "InnerStore",
+      "xy": [
+        -103,
+        898
+      ],
+      "footprint": [
+        50,
+        66
+      ],
+      "eave": 31,
+      "state": "collapsed"
+    },
+    {
+      "name": "LastStandingHouse",
+      "xy": [
+        -184,
+        938
+      ],
+      "footprint": [
+        42,
+        58
+      ],
+      "eave": 30,
+      "state": "damaged"
+    }
+  ],
+  "building_count": 19,
+  "objects": 854,
+  "mesh_objects": 836,
+  "triangles": 17806,
+  "collections": {
+    "Terrain": 8,
+    "OuterWall": 72,
+    "EarlySettlement": 91,
+    "MidSettlement": 83,
+    "LateSettlement": 47,
+    "CastleBoundary": 39,
+    "CastleProxy": 46,
+    "Streets": 60,
+    "CivilLife": 48,
+    "Destruction": 223,
+    "Vegetation": 48,
+    "Fire": 22,
+    "Smoke": 21,
+    "Route": 25,
+    "ReviewCameras": 10,
+    "ReviewLighting": 1,
+    "ScaleFigures": 10
+  },
+  "cameras": [
+    "01_overview",
+    "02_area1_approach",
+    "03_gate_threshold",
+    "04_first_reveal",
+    "05_workshop_street",
+    "06_market",
+    "07_elevated_progression",
+    "08_castle_approach",
+    "09_destruction_progression",
+    "10_route_plan"
+  ],
+  "finite_geometry": true,
+  "accepted_source_edits": false,
+  "collision_or_sockets": false,
+  "total_preboss_gameplay_minutes": 20,
+  "pure_walk_minutes_estimate": 1.5975281931698804,
+  "timing_uncertainty": "Combat, loot, exploration, POIs and transitions included in20min; no per-area walking quota"
+}

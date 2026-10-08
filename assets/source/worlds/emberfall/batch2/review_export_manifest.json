@@ -1,0 +1,4222 @@
+{
+  "files": [
+    {
+      "path": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx",
+      "bytes": 7172188,
+      "sha256": "a82019c8624df94df02a640eb3f159e99a7907df460af35cd45825666fd71bd1",
+      "meshes": 26,
+      "triangles": 158286,
+      "roundtrip": true
+    },
+    {
+      "path": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx",
+      "bytes": 7229356,
+      "sha256": "230a0ca3c84ba946105be557181d4cfb08302c4cdc64f43ca4ef82400c5259f5",
+      "meshes": 27,
+      "triangles": 159615,
+      "roundtrip": true
+    },
+    {
+      "path": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx",
+      "bytes": 7355692,
+      "sha256": "5bc6a3cb692beeab62043b5cf005acad90fbdbc869142728a2485ae477181bab",
+      "meshes": 24,
+      "triangles": 152609,
+      "roundtrip": true
+    },
+    {
+      "path": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_3.fbx",
+      "bytes": 8474620,
+      "sha256": "014020758e1c797c021ae12f9e3a86e1145480a880226efa4a7caec7d2753fc2",
+      "meshes": 18,
+      "triangles": 153000,
+      "roundtrip": true
+    },
+    {
+      "path": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_4.fbx",
+      "bytes": 8377100,
+      "sha256": "fe9597df475b5ff77ab85bab13d63b7f48def602a4df47a3a1e0d7d54c30b16c",
+      "meshes": 18,
+      "triangles": 153000,
+      "roundtrip": true
+    },
+    {
+      "path": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_5.fbx",
+      "bytes": 8265356,
+      "sha256": "ee6a54bd434fe7c2ecb43f1cd6ded00adccb93494a8e9a7b0c464ede619b1e18",
+      "meshes": 18,
+      "triangles": 153000,
+      "roundtrip": true
+    },
+    {
+      "path": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_6.fbx",
+      "bytes": 8221276,
+      "sha256": "5db21767cb83042e731baebb24ae64ae723f5b8084eb3d4a5357f852769605cc",
+      "meshes": 18,
+      "triangles": 153000,
+      "roundtrip": true
+    },
+    {
+      "path": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_7.fbx",
+      "bytes": 8091628,
+      "sha256": "caec23a18b5803b0bd1cb6b87b6d55905a73d33a38032953512905e538d33f38",
+      "meshes": 18,
+      "triangles": 153000,
+      "roundtrip": true
+    },
+    {
+      "path": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_8.fbx",
+      "bytes": 8085372,
+      "sha256": "4694d35a216c7e3dd837d4f0d3cc81284797455eff2dbce08ee90e555cc1c322",
+      "meshes": 18,
+      "triangles": 153000,
+      "roundtrip": true
+    },
+    {
+      "path": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_9.fbx",
+      "bytes": 7451388,
+      "sha256": "dc7d1847e5106a3feaf48f668fb6923fab050f6a26f456ef48390a74b9226611",
+      "meshes": 19,
+      "triangles": 153898,
+      "roundtrip": true
+    },
+    {
+      "path": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_10.fbx",
+      "bytes": 3781324,
+      "sha256": "5727934c0ff3116ebaa55d0c48387c487b04b95c39c3e251842075b521cd3a32",
+      "meshes": 13,
+      "triangles": 92182,
+      "roundtrip": true
+    }
+  ],
+  "visual_meshes": 217,
+  "visual_triangles": 1634590,
+  "unique_collision": 907,
+  "placed_collision": 1675,
+  "snapshotOnly": true,
+  "records": [
+    {
+      "key": "EF_REVIEW_01_TERRAIN",
+      "name": "EF_REVIEW_01_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_01",
+      "center": [
+        0.0,
+        3.3994908332824707,
+        -0.0
+      ],
+      "size": [
+        256.0,
+        23.17368221282959,
+        256.0
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_01_GRASS_0",
+      "name": "EF_REVIEW_01_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_01",
+      "center": [
+        0.030315399169921875,
+        6.647368788719177,
+        0.015979766845703125
+      ],
+      "size": [
+        254.24311065673828,
+        19.55118680000305,
+        254.1689682006836
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_01_GRASS_1",
+      "name": "EF_REVIEW_01_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_01",
+      "center": [
+        -0.01499176025390625,
+        6.616489291191101,
+        0.014713287353515625
+      ],
+      "size": [
+        254.14256286621094,
+        19.451908349990845,
+        254.00151824951172
+      ],
+      "triangles": 3783,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_02_TERRAIN",
+      "name": "EF_REVIEW_02_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_02",
+      "center": [
+        0.0,
+        6.217752933502197,
+        -0.0
+      ],
+      "size": [
+        256.0,
+        22.468676567077637,
+        256.0
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_02_GRASS_0",
+      "name": "EF_REVIEW_02_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_02",
+      "center": [
+        0.09747695922851562,
+        9.438150607049465,
+        0.0103607177734375
+      ],
+      "size": [
+        254.20349884033203,
+        18.69019277393818,
+        254.19717407226562
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_02_GRASS_1",
+      "name": "EF_REVIEW_02_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_02",
+      "center": [
+        0.02674102783203125,
+        9.36062217503786,
+        -0.19995880126953125
+      ],
+      "size": [
+        254.2689971923828,
+        18.558536991477013,
+        253.8152313232422
+      ],
+      "triangles": 3090,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_03_TERRAIN",
+      "name": "EF_REVIEW_03_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_03",
+      "center": [
+        0.0,
+        1.9355368614196777,
+        -0.0
+      ],
+      "size": [
+        256.0,
+        25.756300926208496,
+        256.0
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_03_GRASS_0",
+      "name": "EF_REVIEW_03_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_03",
+      "center": [
+        0.034450531005859375,
+        5.164845705032349,
+        0.015605926513671875
+      ],
+      "size": [
+        254.2393569946289,
+        22.082330226898193,
+        253.77611541748047
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_03_GRASS_1",
+      "name": "EF_REVIEW_03_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_03",
+      "center": [
+        0.13312149047851562,
+        5.158416986465454,
+        -0.006870269775390625
+      ],
+      "size": [
+        254.08844757080078,
+        22.012988567352295,
+        253.64380645751953
+      ],
+      "triangles": 3156,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_04_TERRAIN",
+      "name": "EF_REVIEW_04_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_04",
+      "center": [
+        1.52587890625e-05,
+        2.6812796592712402,
+        -1.52587890625e-05
+      ],
+      "size": [
+        256.0000305175781,
+        19.695528984069824,
+        256.0000305175781
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_04_GRASS_0",
+      "name": "EF_REVIEW_04_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_04",
+      "center": [
+        0.0130462646484375,
+        5.924091339111328,
+        -0.025058746337890625
+      ],
+      "size": [
+        254.35977172851562,
+        15.996389389038086,
+        254.17684173583984
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_04_GRASS_1",
+      "name": "EF_REVIEW_04_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_04",
+      "center": [
+        0.032276153564453125,
+        5.889251708984375,
+        -0.3206977844238281
+      ],
+      "size": [
+        254.23580169677734,
+        15.95884895324707,
+        253.46434783935547
+      ],
+      "triangles": 3096,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_05_TERRAIN",
+      "name": "EF_REVIEW_05_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_05",
+      "center": [
+        -1.52587890625e-05,
+        5.761335611343384,
+        1.9073486328125e-05
+      ],
+      "size": [
+        256.0000305175781,
+        21.58100461959839,
+        256.0000228881836
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_05_GRASS_0",
+      "name": "EF_REVIEW_05_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_05",
+      "center": [
+        0.016162872314453125,
+        9.363431096076965,
+        -0.01690673828125
+      ],
+      "size": [
+        254.33470916748047,
+        17.111276388168335,
+        254.1973876953125
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_05_GRASS_1",
+      "name": "EF_REVIEW_05_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_05",
+      "center": [
+        -0.3402099609375,
+        9.082264244556427,
+        0.9737586975097656
+      ],
+      "size": [
+        252.85511779785156,
+        16.394370436668396,
+        251.88715362548828
+      ],
+      "triangles": 1086,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_06_TERRAIN",
+      "name": "EF_REVIEW_06_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_06",
+      "center": [
+        0.0,
+        -4.047053098678589,
+        1.9073486328125e-05
+      ],
+      "size": [
+        256.0000305175781,
+        17.169983386993408,
+        256.0000228881836
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_06_GRASS_0",
+      "name": "EF_REVIEW_06_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_06",
+      "center": [
+        0.09670257568359375,
+        -0.799555778503418,
+        0.004886627197265625
+      ],
+      "size": [
+        254.2427520751953,
+        13.584978103637695,
+        254.03447723388672
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_06_GRASS_1",
+      "name": "EF_REVIEW_06_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_06",
+      "center": [
+        0.10268402099609375,
+        -0.8214471340179443,
+        -0.07000732421875
+      ],
+      "size": [
+        254.16976928710938,
+        13.541195392608643,
+        254.02122497558594
+      ],
+      "triangles": 3183,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_07_TERRAIN",
+      "name": "EF_REVIEW_07_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_07",
+      "center": [
+        1.52587890625e-05,
+        -8.83193039894104,
+        -4.1961669921875e-05
+      ],
+      "size": [
+        256.0000305175781,
+        24.999999523162842,
+        256.00003814697266
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_07_GRASS_0",
+      "name": "EF_REVIEW_07_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_07",
+      "center": [
+        0.34114837646484375,
+        -5.5987560749053955,
+        -0.015369415283203125
+      ],
+      "size": [
+        253.7193145751953,
+        21.38635015487671,
+        254.19170379638672
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_07_GRASS_1",
+      "name": "EF_REVIEW_07_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_07",
+      "center": [
+        0.10747146606445312,
+        -5.604763507843018,
+        -0.04058837890625
+      ],
+      "size": [
+        253.72689056396484,
+        21.374335289001465,
+        254.0482635498047
+      ],
+      "triangles": 3144,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_08_TERRAIN",
+      "name": "EF_REVIEW_08_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_08",
+      "center": [
+        0.0,
+        -7.989031136035919,
+        -4.1961669921875e-05
+      ],
+      "size": [
+        256.0000305175781,
+        18.26423966884613,
+        256.00003814697266
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_08_GRASS_0",
+      "name": "EF_REVIEW_08_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_08",
+      "center": [
+        -0.005107879638671875,
+        -4.763208031654358,
+        -0.041400909423828125
+      ],
+      "size": [
+        254.19115447998047,
+        14.635885953903198,
+        253.96512603759766
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_08_GRASS_1",
+      "name": "EF_REVIEW_08_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_08",
+      "center": [
+        -0.1903076171875,
+        -4.7825682163238525,
+        0.2157135009765625
+      ],
+      "size": [
+        253.58651733398438,
+        14.597165584564209,
+        253.9017333984375
+      ],
+      "triangles": 3126,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_09_TERRAIN",
+      "name": "EF_REVIEW_09_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_09",
+      "center": [
+        0.0,
+        -7.768397390842438,
+        -4.1961669921875e-05
+      ],
+      "size": [
+        256.0000305175781,
+        19.11439311504364,
+        256.00003814697266
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_09_GRASS_0",
+      "name": "EF_REVIEW_09_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_09",
+      "center": [
+        0.01000213623046875,
+        -4.562744379043579,
+        0.08444976806640625
+      ],
+      "size": [
+        254.11607360839844,
+        15.444165706634521,
+        253.85736083984375
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_0.fbx"
+    },
+    {
+      "key": "EF_REVIEW_09_GRASS_1",
+      "name": "EF_REVIEW_09_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_09",
+      "center": [
+        0.021015167236328125,
+        -4.539755821228027,
+        -0.056575775146484375
+      ],
+      "size": [
+        254.37247467041016,
+        15.488775253295898,
+        253.63823699951172
+      ],
+      "triangles": 3204,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_10_TERRAIN",
+      "name": "EF_REVIEW_10_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_10",
+      "center": [
+        0.0,
+        -9.38554072380066,
+        -0.0
+      ],
+      "size": [
+        256.0,
+        33.46899652481079,
+        256.0
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_10_GRASS_0",
+      "name": "EF_REVIEW_10_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_10",
+      "center": [
+        0.014801025390625,
+        -6.143718719482422,
+        0.006168365478515625
+      ],
+      "size": [
+        254.3647003173828,
+        29.872642517089844,
+        254.1819839477539
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_10_GRASS_1",
+      "name": "EF_REVIEW_10_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_10",
+      "center": [
+        -0.008869171142578125,
+        -6.1024603843688965,
+        0.3920478820800781
+      ],
+      "size": [
+        254.07759857177734,
+        29.63451099395752,
+        253.46317291259766
+      ],
+      "triangles": 1926,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_11_TERRAIN",
+      "name": "EF_REVIEW_11_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_11",
+      "center": [
+        0.0,
+        -8.270850449800491,
+        -0.0
+      ],
+      "size": [
+        256.0,
+        18.3559507727623,
+        256.0
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_11_GRASS_0",
+      "name": "EF_REVIEW_11_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_11",
+      "center": [
+        0.049713134765625,
+        -5.067291736602783,
+        -0.003475189208984375
+      ],
+      "size": [
+        254.2776641845703,
+        14.683066368103027,
+        254.10785675048828
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_11_GRASS_1",
+      "name": "EF_REVIEW_11_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_11",
+      "center": [
+        -0.16756057739257812,
+        -5.032045841217041,
+        0.007701873779296875
+      ],
+      "size": [
+        253.68427276611328,
+        14.753558158874512,
+        253.99018096923828
+      ],
+      "triangles": 3057,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_12_TERRAIN",
+      "name": "EF_REVIEW_12_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_12",
+      "center": [
+        0.0,
+        -8.83193039894104,
+        -0.0
+      ],
+      "size": [
+        256.0,
+        24.999999523162842,
+        256.0
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_12_GRASS_0",
+      "name": "EF_REVIEW_12_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_12",
+      "center": [
+        0.34113311767578125,
+        -5.5987560749053955,
+        -0.015331268310546875
+      ],
+      "size": [
+        253.7192840576172,
+        21.38635015487671,
+        254.1916732788086
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_12_GRASS_1",
+      "name": "EF_REVIEW_12_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_12",
+      "center": [
+        0.10745620727539062,
+        -5.604763507843018,
+        -0.04055023193359375
+      ],
+      "size": [
+        253.72686004638672,
+        21.374335289001465,
+        254.04823303222656
+      ],
+      "triangles": 3144,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_13_TERRAIN",
+      "name": "EF_REVIEW_13_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_13",
+      "center": [
+        1.1444091796875e-05,
+        -4.047053098678589,
+        -1.1444091796875e-05
+      ],
+      "size": [
+        256.00000762939453,
+        17.169983386993408,
+        256.00000762939453
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_13_GRASS_0",
+      "name": "EF_REVIEW_13_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_13",
+      "center": [
+        0.09671783447265625,
+        -0.799555778503418,
+        0.004848480224609375
+      ],
+      "size": [
+        254.24273681640625,
+        13.584978103637695,
+        254.03446197509766
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_13_GRASS_1",
+      "name": "EF_REVIEW_13_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_13",
+      "center": [
+        0.10269927978515625,
+        -0.8214471340179443,
+        -0.07004547119140625
+      ],
+      "size": [
+        254.1697540283203,
+        13.541195392608643,
+        254.02120971679688
+      ],
+      "triangles": 3183,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_14_TERRAIN",
+      "name": "EF_REVIEW_14_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_14",
+      "center": [
+        0.0,
+        6.217752933502197,
+        -0.0
+      ],
+      "size": [
+        256.0,
+        22.468676567077637,
+        256.0
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_14_GRASS_0",
+      "name": "EF_REVIEW_14_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_14",
+      "center": [
+        -0.1116485595703125,
+        9.504589684307575,
+        -0.048130035400390625
+      ],
+      "size": [
+        253.98045349121094,
+        18.682333692908287,
+        254.10279083251953
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_14_GRASS_1",
+      "name": "EF_REVIEW_14_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_14",
+      "center": [
+        -0.03495025634765625,
+        9.438890531659126,
+        0.12046051025390625
+      ],
+      "size": [
+        253.842529296875,
+        18.520614475011826,
+        253.55177307128906
+      ],
+      "triangles": 3105,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_15_TERRAIN",
+      "name": "EF_REVIEW_15_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_15",
+      "center": [
+        0.0,
+        1.9355368614196777,
+        -0.0
+      ],
+      "size": [
+        256.0,
+        25.756300926208496,
+        256.0
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_15_GRASS_0",
+      "name": "EF_REVIEW_15_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_15",
+      "center": [
+        -0.050037384033203125,
+        5.155919075012207,
+        -0.019451141357421875
+      ],
+      "size": [
+        254.10590362548828,
+        22.016481399536133,
+        254.1401138305664
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_15_GRASS_1",
+      "name": "EF_REVIEW_15_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_15",
+      "center": [
+        0.000919342041015625,
+        5.15373969078064,
+        0.1078643798828125
+      ],
+      "size": [
+        253.6159896850586,
+        21.998135089874268,
+        253.5146484375
+      ],
+      "triangles": 3150,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_16_TERRAIN",
+      "name": "EF_REVIEW_16_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_16",
+      "center": [
+        -1.52587890625e-05,
+        5.761335611343384,
+        -3.0517578125e-05
+      ],
+      "size": [
+        256.0000305175781,
+        21.58100461959839,
+        256.0000305175781
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_16_GRASS_0",
+      "name": "EF_REVIEW_16_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_16",
+      "center": [
+        0.016155242919921875,
+        9.363431096076965,
+        -0.01696014404296875
+      ],
+      "size": [
+        254.33470916748047,
+        17.111276388168335,
+        254.1973876953125
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_16_GRASS_1",
+      "name": "EF_REVIEW_16_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_16",
+      "center": [
+        -0.34021759033203125,
+        9.082264244556427,
+        0.9737052917480469
+      ],
+      "size": [
+        252.85511779785156,
+        16.394370436668396,
+        251.88715362548828
+      ],
+      "triangles": 1086,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_17_TERRAIN",
+      "name": "EF_REVIEW_17_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_17",
+      "center": [
+        -3.0517578125e-05,
+        2.6812796592712402,
+        9.1552734375e-05
+      ],
+      "size": [
+        256.0000305175781,
+        19.695528984069824,
+        256.0000305175781
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_17_GRASS_0",
+      "name": "EF_REVIEW_17_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_17",
+      "center": [
+        0.3692207336425781,
+        5.856048583984375,
+        -0.20951461791992188
+      ],
+      "size": [
+        253.69571685791016,
+        15.93130874633789,
+        253.72101593017578
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_17_GRASS_1",
+      "name": "EF_REVIEW_17_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_17",
+      "center": [
+        0.08271026611328125,
+        5.908700466156006,
+        0.012645721435546875
+      ],
+      "size": [
+        253.6271209716797,
+        15.894858360290527,
+        253.31949615478516
+      ],
+      "triangles": 3138,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_18_TERRAIN",
+      "name": "EF_REVIEW_18_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_18",
+      "center": [
+        -4.9591064453125e-05,
+        1.1936450004577637,
+        9.1552734375e-05
+      ],
+      "size": [
+        256.0000228881836,
+        27.800206184387207,
+        256.0000305175781
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_18_GRASS_0",
+      "name": "EF_REVIEW_18_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_18",
+      "center": [
+        0.051342010498046875,
+        4.412195682525635,
+        0.14280319213867188
+      ],
+      "size": [
+        254.25592803955078,
+        24.1095609664917,
+        253.89556121826172
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_1.fbx"
+    },
+    {
+      "key": "EF_REVIEW_18_GRASS_1",
+      "name": "EF_REVIEW_18_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_18",
+      "center": [
+        0.13205718994140625,
+        4.484385967254639,
+        0.7322807312011719
+      ],
+      "size": [
+        253.9532928466797,
+        24.061833381652832,
+        252.76876068115234
+      ],
+      "triangles": 2046,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_REVIEW_19_TERRAIN",
+      "name": "EF_REVIEW_19_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_19",
+      "center": [
+        0.0,
+        6.217752933502197,
+        -0.0
+      ],
+      "size": [
+        256.0,
+        22.468676567077637,
+        256.0
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_REVIEW_19_GRASS_0",
+      "name": "EF_REVIEW_19_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_19",
+      "center": [
+        0.09747695922851562,
+        9.438150607049465,
+        0.0103607177734375
+      ],
+      "size": [
+        254.20349884033203,
+        18.69019277393818,
+        254.19717407226562
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_REVIEW_19_GRASS_1",
+      "name": "EF_REVIEW_19_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_19",
+      "center": [
+        0.02674102783203125,
+        9.36062217503786,
+        -0.19995880126953125
+      ],
+      "size": [
+        254.2689971923828,
+        18.558536991477013,
+        253.8152313232422
+      ],
+      "triangles": 3090,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_REVIEW_20_TERRAIN",
+      "name": "EF_REVIEW_20_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_20",
+      "center": [
+        0.0,
+        -0.09925079345703125,
+        -0.0
+      ],
+      "size": [
+        256.0,
+        41.0,
+        256.0
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_REVIEW_20_GRASS_0",
+      "name": "EF_REVIEW_20_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_20",
+      "center": [
+        0.11088180541992188,
+        3.147402286529541,
+        -0.09678268432617188
+      ],
+      "size": [
+        254.19733428955078,
+        37.41330623626709,
+        254.0462417602539
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_REVIEW_20_GRASS_1",
+      "name": "EF_REVIEW_20_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_20",
+      "center": [
+        0.06673431396484375,
+        3.1385254859924316,
+        -0.06872177124023438
+      ],
+      "size": [
+        254.21218872070312,
+        37.39555263519287,
+        254.08617401123047
+      ],
+      "triangles": 2574,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_REVIEW_21_TERRAIN",
+      "name": "EF_REVIEW_21_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_21",
+      "center": [
+        0.0,
+        -4.047053098678589,
+        -0.0
+      ],
+      "size": [
+        256.0,
+        17.169983386993408,
+        256.0
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_REVIEW_21_GRASS_0",
+      "name": "EF_REVIEW_21_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_21",
+      "center": [
+        0.09670257568359375,
+        -0.799555778503418,
+        0.004863739013671875
+      ],
+      "size": [
+        254.2427215576172,
+        13.584978103637695,
+        254.0344467163086
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_REVIEW_21_GRASS_1",
+      "name": "EF_REVIEW_21_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_21",
+      "center": [
+        0.10268402099609375,
+        -0.8214471340179443,
+        -0.07003021240234375
+      ],
+      "size": [
+        254.16973876953125,
+        13.541195392608643,
+        254.0211944580078
+      ],
+      "triangles": 3183,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_REVIEW_22_TERRAIN",
+      "name": "EF_REVIEW_22_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_22",
+      "center": [
+        0.0,
+        -7.989031136035919,
+        -0.0
+      ],
+      "size": [
+        256.0,
+        18.26423966884613,
+        256.0
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_REVIEW_22_GRASS_0",
+      "name": "EF_REVIEW_22_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_22",
+      "center": [
+        -0.005100250244140625,
+        -4.763208031654358,
+        -0.041362762451171875
+      ],
+      "size": [
+        254.19112396240234,
+        14.635885953903198,
+        253.96509552001953
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_REVIEW_22_GRASS_1",
+      "name": "EF_REVIEW_22_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_22",
+      "center": [
+        -0.19029998779296875,
+        -4.7825682163238525,
+        0.21575164794921875
+      ],
+      "size": [
+        253.58648681640625,
+        14.597165584564209,
+        253.90170288085938
+      ],
+      "triangles": 3126,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_REVIEW_23_TERRAIN",
+      "name": "EF_REVIEW_23_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_23",
+      "center": [
+        0.0,
+        -7.768397390842438,
+        -0.0
+      ],
+      "size": [
+        256.0,
+        19.11439311504364,
+        256.0
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_REVIEW_23_GRASS_0",
+      "name": "EF_REVIEW_23_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_23",
+      "center": [
+        -0.048168182373046875,
+        -4.539503216743469,
+        -0.017948150634765625
+      ],
+      "size": [
+        254.15174102783203,
+        15.491620779037476,
+        254.1363754272461
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_REVIEW_23_GRASS_1",
+      "name": "EF_REVIEW_23_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_23",
+      "center": [
+        0.16399765014648438,
+        -4.545876502990723,
+        -0.0210723876953125
+      ],
+      "size": [
+        254.0519790649414,
+        15.476669311523438,
+        254.06576538085938
+      ],
+      "triangles": 3198,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_REVIEW_24_TERRAIN",
+      "name": "EF_REVIEW_24_TERRAIN",
+      "role": "terrain",
+      "chunk": "EF_REVIEW_24",
+      "center": [
+        9.1552734375e-05,
+        -8.83193039894104,
+        -9.5367431640625e-05
+      ],
+      "size": [
+        256.0000305175781,
+        24.999999523162842,
+        256.0000228881836
+      ],
+      "triangles": 8958,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_REVIEW_24_GRASS_0",
+      "name": "EF_REVIEW_24_GRASS_0",
+      "role": "grass",
+      "chunk": "EF_REVIEW_24",
+      "center": [
+        0.34122467041015625,
+        -5.5987560749053955,
+        -0.015430450439453125
+      ],
+      "size": [
+        253.7193145751953,
+        21.38635015487671,
+        254.19170379638672
+      ],
+      "triangles": 6000,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_REVIEW_24_GRASS_1",
+      "name": "EF_REVIEW_24_GRASS_1",
+      "role": "grass",
+      "chunk": "EF_REVIEW_24",
+      "center": [
+        0.10754776000976562,
+        -5.604763507843018,
+        -0.0406494140625
+      ],
+      "size": [
+        253.72689056396484,
+        21.374335289001465,
+        254.0482635498047
+      ],
+      "triangles": 3144,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_0",
+      "name": "EF_BATCH2_REVIEW_SCENERY_0",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -2432.0323486328125,
+        -2.792754650115967,
+        256.0174674987793
+      ],
+      "size": [
+        512.071044921875,
+        24.54008388519287,
+        256.25223541259766
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_1",
+      "name": "EF_BATCH2_REVIEW_SCENERY_1",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -2047.6910400390625,
+        -6.40683913230896,
+        255.96810150146484
+      ],
+      "size": [
+        767.382080078125,
+        16.902464389801025,
+        256.0637969970703
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_2",
+      "name": "EF_BATCH2_REVIEW_SCENERY_2",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1664.0220336914062,
+        -4.887086391448975,
+        256.0
+      ],
+      "size": [
+        512.0440673828125,
+        24.60404682159424,
+        256.0
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_3",
+      "name": "EF_BATCH2_REVIEW_SCENERY_3",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1279.2355346679688,
+        -4.304221153259277,
+        256.0363464355469
+      ],
+      "size": [
+        766.4710693359375,
+        26.418855667114258,
+        256.201416015625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_4",
+      "name": "EF_BATCH2_REVIEW_SCENERY_4",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -768.0311279296875,
+        3.6698622703552246,
+        255.93932342529297
+      ],
+      "size": [
+        768.062255859375,
+        31.973469734191895,
+        256.12135314941406
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_2.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_5",
+      "name": "EF_BATCH2_REVIEW_SCENERY_5",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -383.9653129577637,
+        11.532271929085255,
+        256.0509948730469
+      ],
+      "size": [
+        512.0693740844727,
+        23.455315455794334,
+        256.10198974609375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_3.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_6",
+      "name": "EF_BATCH2_REVIEW_SCENERY_6",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -127.8993148803711,
+        8.577604293823242,
+        256.0198669433594
+      ],
+      "size": [
+        512.0679473876953,
+        24.121681213378906,
+        256.19873046875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_3.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_7",
+      "name": "EF_BATCH2_REVIEW_SCENERY_7",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        128.09081268310547,
+        4.772172927856445,
+        256.0
+      ],
+      "size": [
+        512.2501373291016,
+        16.393056869506836,
+        256.0
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_3.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_8",
+      "name": "EF_BATCH2_REVIEW_SCENERY_8",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1152.0305480957031,
+        -1.2220911979675293,
+        32.03471374511719
+      ],
+      "size": [
+        3072.0092163085938,
+        31.20995807647705,
+        320.0694274902344
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_3.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_9",
+      "name": "EF_BATCH2_REVIEW_SCENERY_9",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -2175.9288940429688,
+        -5.976061105728149,
+        -0.03882598876953125
+      ],
+      "size": [
+        511.9210205078125,
+        21.535869121551514,
+        256.07765197753906
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_3.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_10",
+      "name": "EF_BATCH2_REVIEW_SCENERY_10",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1719.1908569335938,
+        -7.066212177276611,
+        0.069305419921875
+      ],
+      "size": [
+        622.7784423828125,
+        24.308478355407715,
+        256.13861083984375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_3.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_11",
+      "name": "EF_BATCH2_REVIEW_SCENERY_11",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1279.8468017578125,
+        -4.877025604248047,
+        -0.067413330078125
+      ],
+      "size": [
+        767.693603515625,
+        29.82797622680664,
+        256.13482666015625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_3.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_12",
+      "name": "EF_BATCH2_REVIEW_SCENERY_12",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -896.0340576171875,
+        2.728865146636963,
+        0.034912109375
+      ],
+      "size": [
+        512.068115234375,
+        32.54374599456787,
+        256.06982421875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_3.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_13",
+      "name": "EF_BATCH2_REVIEW_SCENERY_13",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -511.01666259765625,
+        8.598803222179413,
+        0.00199127197265625
+      ],
+      "size": [
+        766.0333251953125,
+        20.978678345680237,
+        256.2572479248047
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_3.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_14",
+      "name": "EF_BATCH2_REVIEW_SCENERY_14",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        0.1199188232421875,
+        10.348889827728271,
+        0.011566162109375
+      ],
+      "size": [
+        767.7601623535156,
+        24.37608051300049,
+        256.1280212402344
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_3.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_15",
+      "name": "EF_BATCH2_REVIEW_SCENERY_15",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1152.0154724121094,
+        8.582424402236938,
+        -144.08588027954102
+      ],
+      "size": [
+        3072.1047973632812,
+        30.789817333221436,
+        479.82823944091797
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_3.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_16",
+      "name": "EF_BATCH2_REVIEW_SCENERY_16",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -2304.018798828125,
+        -7.356142640113831,
+        -256.0488395690918
+      ],
+      "size": [
+        768.03759765625,
+        20.45410418510437,
+        256.1272964477539
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_3.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_17",
+      "name": "EF_BATCH2_REVIEW_SCENERY_17",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1919.922119140625,
+        -9.048198103904724,
+        -256.00978088378906
+      ],
+      "size": [
+        512.15576171875,
+        24.069474458694458,
+        256.2644348144531
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_3.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_18",
+      "name": "EF_BATCH2_REVIEW_SCENERY_18",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1663.8896484375,
+        -11.553271532058716,
+        -256.00505447387695
+      ],
+      "size": [
+        512.129150390625,
+        18.94541311264038,
+        256.1729965209961
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_3.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_19",
+      "name": "EF_BATCH2_REVIEW_SCENERY_19",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1407.5921020507812,
+        -10.208877563476562,
+        -256.0009956359863
+      ],
+      "size": [
+        511.5599365234375,
+        8.17863655090332,
+        256.1695785522461
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_3.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_20",
+      "name": "EF_BATCH2_REVIEW_SCENERY_20",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1151.7861938476562,
+        -0.9862899780273438,
+        -256.0168151855469
+      ],
+      "size": [
+        511.5723876953125,
+        21.18850326538086,
+        256.03363037109375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_3.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_21",
+      "name": "EF_BATCH2_REVIEW_SCENERY_21",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -895.5941772460938,
+        3.2939963340759277,
+        -256.0063896179199
+      ],
+      "size": [
+        511.2943115234375,
+        29.6257905960083,
+        256.2673110961914
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_3.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_22",
+      "name": "EF_BATCH2_REVIEW_SCENERY_22",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -639.72607421875,
+        4.410482883453369,
+        -256.00866317749023
+      ],
+      "size": [
+        511.8109130859375,
+        26.537108421325684,
+        256.2154006958008
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_3.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_23",
+      "name": "EF_BATCH2_REVIEW_SCENERY_23",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -384.01587295532227,
+        8.316939353942871,
+        -255.9974365234375
+      ],
+      "size": [
+        512.1686935424805,
+        7.9000701904296875,
+        256.14715576171875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_4.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_24",
+      "name": "EF_BATCH2_REVIEW_SCENERY_24",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        0.0249176025390625,
+        10.371225953102112,
+        -255.9229278564453
+      ],
+      "size": [
+        768.2840881347656,
+        23.612444639205933,
+        256.1541442871094
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_4.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_25",
+      "name": "EF_BATCH2_REVIEW_SCENERY_25",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1152.0934600830078,
+        3.856717348098755,
+        -431.9701461791992
+      ],
+      "size": [
+        3071.8130798339844,
+        18.02496099472046,
+        416.05970764160156
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_4.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_26",
+      "name": "EF_BATCH2_REVIEW_SCENERY_26",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -2303.9931640625,
+        -3.7785792350769043,
+        -511.9206848144531
+      ],
+      "size": [
+        767.986328125,
+        33.05612659454346,
+        256.15863037109375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_4.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_27",
+      "name": "EF_BATCH2_REVIEW_SCENERY_27",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1919.8185424804688,
+        -9.02342414855957,
+        -511.96385192871094
+      ],
+      "size": [
+        511.7657470703125,
+        24.162559509277344,
+        256.0722961425781
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_4.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_28",
+      "name": "EF_BATCH2_REVIEW_SCENERY_28",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -767.9129180908203,
+        -0.8588824272155762,
+        -511.96800231933594
+      ],
+      "size": [
+        2304.2564392089844,
+        25.216883659362793,
+        256.0851135253906
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_4.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_29",
+      "name": "EF_BATCH2_REVIEW_SCENERY_29",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1152.0845031738281,
+        1.5190629959106445,
+        -712.1612548828125
+      ],
+      "size": [
+        3072.1454467773438,
+        20.473413467407227,
+        368.006103515625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_4.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_30",
+      "name": "EF_BATCH2_REVIEW_SCENERY_30",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -2175.9598388671875,
+        1.5761299133300781,
+        -767.923095703125
+      ],
+      "size": [
+        512.122802734375,
+        21.585983276367188,
+        256.15380859375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_4.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_31",
+      "name": "EF_BATCH2_REVIEW_SCENERY_31",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1919.3184814453125,
+        1.4617042541503906,
+        -768.0693359375
+      ],
+      "size": [
+        510.636962890625,
+        24.401493072509766,
+        256.138671875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_4.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_32",
+      "name": "EF_BATCH2_REVIEW_SCENERY_32",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1535.9819946289062,
+        0.05567312240600586,
+        -767.9332580566406
+      ],
+      "size": [
+        767.9639892578125,
+        29.870184898376465,
+        256.13348388671875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_4.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_33",
+      "name": "EF_BATCH2_REVIEW_SCENERY_33",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1151.8123779296875,
+        -3.5743870735168457,
+        -768.0309143066406
+      ],
+      "size": [
+        511.91845703125,
+        22.469223976135254,
+        256.14141845703125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_4.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_34",
+      "name": "EF_BATCH2_REVIEW_SCENERY_34",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -895.9187316894531,
+        -0.2464599609375,
+        -767.9856872558594
+      ],
+      "size": [
+        512.1124877929688,
+        28.487871170043945,
+        256.02862548828125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_4.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_35",
+      "name": "EF_BATCH2_REVIEW_SCENERY_35",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -639.9768218994141,
+        6.752147674560547,
+        -767.9524536132812
+      ],
+      "size": [
+        512.2409362792969,
+        16.57834815979004,
+        256.1619873046875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_4.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_36",
+      "name": "EF_BATCH2_REVIEW_SCENERY_36",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -383.8226318359375,
+        6.568771183490753,
+        -768.0
+      ],
+      "size": [
+        511.645263671875,
+        15.40971028804779,
+        256.0
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_4.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_37",
+      "name": "EF_BATCH2_REVIEW_SCENERY_37",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -127.95516967773438,
+        7.26849889755249,
+        -768.0030822753906
+      ],
+      "size": [
+        511.91033935546875,
+        16.707119941711426,
+        256.25103759765625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_4.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_38",
+      "name": "EF_BATCH2_REVIEW_SCENERY_38",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        127.97087097167969,
+        10.148309230804443,
+        -768.0838928222656
+      ],
+      "size": [
+        512.0582580566406,
+        16.935490608215332,
+        256.16778564453125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_4.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_39",
+      "name": "EF_BATCH2_REVIEW_SCENERY_39",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1152.1053771972656,
+        6.294051170349121,
+        -976.041259765625
+      ],
+      "size": [
+        3071.9660034179688,
+        27.163869857788086,
+        352.11962890625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_4.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_40",
+      "name": "EF_BATCH2_REVIEW_SCENERY_40",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -2175.9229736328125,
+        7.132954120635986,
+        -1024.0358276367188
+      ],
+      "size": [
+        512.240478515625,
+        23.619502067565918,
+        256.1214599609375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_4.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_41",
+      "name": "EF_BATCH2_REVIEW_SCENERY_41",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1576.9219970703125,
+        6.466336965560913,
+        -1024.0086059570312
+      ],
+      "size": [
+        849.843994140625,
+        27.196667194366455,
+        256.0172119140625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_5.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_42",
+      "name": "EF_BATCH2_REVIEW_SCENERY_42",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1279.9725952148438,
+        0.44369959831237793,
+        -1023.9582214355469
+      ],
+      "size": [
+        256.2691650390625,
+        14.743312358856201,
+        256.08355712890625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_5.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_43",
+      "name": "EF_BATCH2_REVIEW_SCENERY_43",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -929.0586547851562,
+        5.970429182052612,
+        -1023.9867248535156
+      ],
+      "size": [
+        578.1173095703125,
+        26.204851627349854,
+        256.19134521484375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_5.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_44",
+      "name": "EF_BATCH2_REVIEW_SCENERY_44",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -511.97998046875,
+        9.169525444507599,
+        -1024.0288696289062
+      ],
+      "size": [
+        767.9599609375,
+        19.3894761800766,
+        256.0577392578125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_5.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_45",
+      "name": "EF_BATCH2_REVIEW_SCENERY_45",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -127.83319091796875,
+        10.550060763955116,
+        -1024.0260314941406
+      ],
+      "size": [
+        512.0442504882812,
+        21.981425255537033,
+        256.12640380859375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_5.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_46",
+      "name": "EF_BATCH2_REVIEW_SCENERY_46",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1151.923110961914,
+        14.001657485961914,
+        -1151.9555053710938
+      ],
+      "size": [
+        3072.153778076172,
+        20.892120361328125,
+        512.0889892578125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_5.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_47",
+      "name": "EF_BATCH2_REVIEW_SCENERY_47",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -2303.875244140625,
+        9.382680535316467,
+        -1280.0504150390625
+      ],
+      "size": [
+        767.75048828125,
+        23.61949610710144,
+        256.137939453125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_5.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_48",
+      "name": "EF_BATCH2_REVIEW_SCENERY_48",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1920.00341796875,
+        0.10896492004394531,
+        -1279.9512329101562
+      ],
+      "size": [
+        512.0068359375,
+        20.760446548461914,
+        256.1094970703125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_5.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_49",
+      "name": "EF_BATCH2_REVIEW_SCENERY_49",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1535.9708251953125,
+        -0.05808305740356445,
+        -1279.9412841796875
+      ],
+      "size": [
+        767.941650390625,
+        20.327515602111816,
+        256.117431640625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_5.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_50",
+      "name": "EF_BATCH2_REVIEW_SCENERY_50",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1151.9910888671875,
+        2.271484613418579,
+        -1280.0299682617188
+      ],
+      "size": [
+        511.982177734375,
+        18.213990688323975,
+        256.0599365234375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_5.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_51",
+      "name": "EF_BATCH2_REVIEW_SCENERY_51",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -767.9871215820312,
+        4.440809488296509,
+        -1279.9473266601562
+      ],
+      "size": [
+        767.9742431640625,
+        24.02342939376831,
+        256.1053466796875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_5.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_52",
+      "name": "EF_BATCH2_REVIEW_SCENERY_52",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -383.9349670410156,
+        8.822292804718018,
+        -1280.0196533203125
+      ],
+      "size": [
+        511.86993408203125,
+        21.15980052947998,
+        256.12158203125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_5.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_53",
+      "name": "EF_BATCH2_REVIEW_SCENERY_53",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -0.0233306884765625,
+        9.644773602485657,
+        -1279.9284057617188
+      ],
+      "size": [
+        768.2779235839844,
+        22.353843450546265,
+        256.1431884765625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_5.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_54",
+      "name": "EF_BATCH2_REVIEW_SCENERY_54",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1151.8936309814453,
+        10.961633205413818,
+        -1451.9301147460938
+      ],
+      "size": [
+        3072.2156677246094,
+        24.895268440246582,
+        424.1397705078125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_5.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_55",
+      "name": "EF_BATCH2_REVIEW_SCENERY_55",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -2176.0,
+        8.409276247024536,
+        -1535.9512939453125
+      ],
+      "size": [
+        512.0,
+        30.15487051010132,
+        256.181884765625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_5.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_56",
+      "name": "EF_BATCH2_REVIEW_SCENERY_56",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1919.7077026367188,
+        1.1721124649047852,
+        -1536.0700073242188
+      ],
+      "size": [
+        511.8345947265625,
+        19.704282760620117,
+        256.1400146484375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_5.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_57",
+      "name": "EF_BATCH2_REVIEW_SCENERY_57",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1535.3328247070312,
+        7.093529045581818,
+        -1535.9949951171875
+      ],
+      "size": [
+        766.7254638671875,
+        17.515984892845154,
+        256.175048828125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_5.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_58",
+      "name": "EF_BATCH2_REVIEW_SCENERY_58",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1023.0682373046875,
+        3.7560696601867676,
+        -1536.044677734375
+      ],
+      "size": [
+        766.136474609375,
+        17.308756828308105,
+        256.10595703125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_5.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_59",
+      "name": "EF_BATCH2_REVIEW_SCENERY_59",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -512.0709228515625,
+        10.125796809792519,
+        -1536.0842895507812
+      ],
+      "size": [
+        768.141845703125,
+        21.156212776899338,
+        256.1685791015625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_6.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_60",
+      "name": "EF_BATCH2_REVIEW_SCENERY_60",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -128.0,
+        12.93585467338562,
+        -1535.9287719726562
+      ],
+      "size": [
+        512.0,
+        18.402655124664307,
+        256.1424560546875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_6.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_61",
+      "name": "EF_BATCH2_REVIEW_SCENERY_61",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1151.9248962402344,
+        7.644487250596285,
+        -1664.0
+      ],
+      "size": [
+        3072.1502075195312,
+        15.114225648343563,
+        512.0
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_6.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_62",
+      "name": "EF_BATCH2_REVIEW_SCENERY_62",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -2432.029541015625,
+        8.042667292058468,
+        -1792.0057983398438
+      ],
+      "size": [
+        512.05908203125,
+        16.243599131703377,
+        256.2940673828125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_6.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_63",
+      "name": "EF_BATCH2_REVIEW_SCENERY_63",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -2175.5606689453125,
+        9.859450835734606,
+        -1792.0540771484375
+      ],
+      "size": [
+        511.372314453125,
+        19.78929229825735,
+        256.108154296875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_6.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_64",
+      "name": "EF_BATCH2_REVIEW_SCENERY_64",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1920.0035400390625,
+        13.082567691802979,
+        -1792.0040893554688
+      ],
+      "size": [
+        512.007080078125,
+        15.777762413024902,
+        256.1551513671875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_6.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_65",
+      "name": "EF_BATCH2_REVIEW_SCENERY_65",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1536.007568359375,
+        10.79274320974946,
+        -1792.0357055664062
+      ],
+      "size": [
+        768.01513671875,
+        21.67060946673155,
+        256.0714111328125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_6.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_66",
+      "name": "EF_BATCH2_REVIEW_SCENERY_66",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1152.0,
+        10.050557632464916,
+        -1791.9351806640625
+      ],
+      "size": [
+        512.0,
+        20.094723663292825,
+        256.129638671875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_6.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_67",
+      "name": "EF_BATCH2_REVIEW_SCENERY_67",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -895.9138488769531,
+        12.604706287384033,
+        -1791.9425048828125
+      ],
+      "size": [
+        512.1723022460938,
+        19.07521343231201,
+        256.114990234375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_6.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_68",
+      "name": "EF_BATCH2_REVIEW_SCENERY_68",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -511.68701171875,
+        10.503535509109497,
+        -1791.9165649414062
+      ],
+      "size": [
+        767.3740234375,
+        26.171678066253662,
+        256.1668701171875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_6.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_69",
+      "name": "EF_BATCH2_REVIEW_SCENERY_69",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        0.207275390625,
+        8.608335971832275,
+        -1792.0156860351562
+      ],
+      "size": [
+        767.58544921875,
+        22.294386863708496,
+        256.2589111328125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_6.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_70",
+      "name": "EF_BATCH2_REVIEW_SCENERY_70",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1151.9017028808594,
+        14.769808292388916,
+        -1919.9591064453125
+      ],
+      "size": [
+        3072.1965942382812,
+        17.11574077606201,
+        512.081787109375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_6.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_71",
+      "name": "EF_BATCH2_REVIEW_SCENERY_71",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1920.0408935546875,
+        9.983004570007324,
+        -2047.99853515625
+      ],
+      "size": [
+        1536.081787109375,
+        11.380424499511719,
+        256.2666015625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_6.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_72",
+      "name": "EF_BATCH2_REVIEW_SCENERY_72",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1152.0661010742188,
+        12.53666353225708,
+        -2048.053466796875
+      ],
+      "size": [
+        512.1322021484375,
+        19.55964183807373,
+        256.10693359375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_6.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_73",
+      "name": "EF_BATCH2_REVIEW_SCENERY_73",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -767.9710083007812,
+        12.784732639789581,
+        -2048.03466796875
+      ],
+      "size": [
+        767.9420166015625,
+        21.62129247188568,
+        256.2314453125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_6.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_74",
+      "name": "EF_BATCH2_REVIEW_SCENERY_74",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -384.04964447021484,
+        10.423033654689789,
+        -2047.9773559570312
+      ],
+      "size": [
+        512.1172637939453,
+        16.850385785102844,
+        256.2298583984375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_6.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_75",
+      "name": "EF_BATCH2_REVIEW_SCENERY_75",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        0.4541778564453125,
+        12.203837215900421,
+        -2048.0711669921875
+      ],
+      "size": [
+        767.4498596191406,
+        22.31618344783783,
+        256.142333984375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_6.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_76",
+      "name": "EF_BATCH2_REVIEW_SCENERY_76",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1151.9231262207031,
+        11.609792232513428,
+        -2208.2442016601562
+      ],
+      "size": [
+        3072.1537475585938,
+        20.9387788772583,
+        447.5115966796875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_6.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_77",
+      "name": "EF_BATCH2_REVIEW_SCENERY_77",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -2304.0537109375,
+        12.147309958934784,
+        -2303.95849609375
+      ],
+      "size": [
+        768.107421875,
+        22.531738877296448,
+        256.2197265625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_7.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_78",
+      "name": "EF_BATCH2_REVIEW_SCENERY_78",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1920.016357421875,
+        7.264760881662369,
+        -2303.981201171875
+      ],
+      "size": [
+        512.03271484375,
+        13.458267390727997,
+        256.03759765625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_7.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_79",
+      "name": "EF_BATCH2_REVIEW_SCENERY_79",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1664.0418701171875,
+        11.86460068821907,
+        -2304.0
+      ],
+      "size": [
+        512.083740234375,
+        22.560334146022797,
+        256.0
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_7.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_80",
+      "name": "EF_BATCH2_REVIEW_SCENERY_80",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1407.9126586914062,
+        15.27245569229126,
+        -2303.994873046875
+      ],
+      "size": [
+        511.9564208984375,
+        18.550238609313965,
+        256.1865234375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_7.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_81",
+      "name": "EF_BATCH2_REVIEW_SCENERY_81",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1024.0668334960938,
+        12.698813274502754,
+        -2304.0601806640625
+      ],
+      "size": [
+        768.1336669921875,
+        25.49423822760582,
+        256.120361328125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_7.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_82",
+      "name": "EF_BATCH2_REVIEW_SCENERY_82",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -639.9715881347656,
+        10.482097167987376,
+        -2303.998291015625
+      ],
+      "size": [
+        512.2151489257812,
+        20.971596679650247,
+        256.27392578125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_7.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_83",
+      "name": "EF_BATCH2_REVIEW_SCENERY_83",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -255.67584228515625,
+        12.784284353256226,
+        -2304.002197265625
+      ],
+      "size": [
+        767.3516845703125,
+        23.363155841827393,
+        256.201171875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_7.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_84",
+      "name": "EF_BATCH2_REVIEW_SCENERY_84",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        128.18649673461914,
+        10.005974888801575,
+        -2304.0213623046875
+      ],
+      "size": [
+        511.6270065307617,
+        22.18097472190857,
+        256.042724609375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_7.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_85",
+      "name": "EF_BATCH2_REVIEW_SCENERY_85",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1152.0296020507812,
+        18.90834951400757,
+        -2543.9266357421875
+      ],
+      "size": [
+        3071.9407958984375,
+        30.854374885559082,
+        288.146728515625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_7.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_86",
+      "name": "EF_BATCH2_REVIEW_SCENERY_86",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -2303.1058349609375,
+        21.348724842071533,
+        -2559.9456787109375
+      ],
+      "size": [
+        766.307861328125,
+        28.468459129333496,
+        256.108642578125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_7.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_87",
+      "name": "EF_BATCH2_REVIEW_SCENERY_87",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1791.271728515625,
+        20.626567840576172,
+        -2559.9942626953125
+      ],
+      "size": [
+        766.54345703125,
+        29.973976135253906,
+        256.011474609375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_7.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_88",
+      "name": "EF_BATCH2_REVIEW_SCENERY_88",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1279.949462890625,
+        14.3324556350708,
+        -2560.0335693359375
+      ],
+      "size": [
+        767.89892578125,
+        19.947019577026367,
+        256.152099609375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_7.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_89",
+      "name": "EF_BATCH2_REVIEW_SCENERY_89",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -896.07373046875,
+        12.543644666671753,
+        -2560.02294921875
+      ],
+      "size": [
+        512.1474609375,
+        14.461798191070557,
+        256.22900390625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_7.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_90",
+      "name": "EF_BATCH2_REVIEW_SCENERY_90",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -511.3838806152344,
+        12.749423503875732,
+        -2560.01416015625
+      ],
+      "size": [
+        766.7677612304688,
+        21.438042640686035,
+        256.0283203125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_7.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_91",
+      "name": "EF_BATCH2_REVIEW_SCENERY_91",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -80.06999206542969,
+        11.163737773895264,
+        -2560.0670166015625
+      ],
+      "size": [
+        608.1399841308594,
+        18.160561561584473,
+        256.134521484375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_7.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_92",
+      "name": "EF_BATCH2_REVIEW_SCENERY_92",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1151.9015502929688,
+        19.746460676193237,
+        -2687.95361328125
+      ],
+      "size": [
+        3072.1968994140625,
+        31.258909702301025,
+        512.0927734375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_7.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_93",
+      "name": "EF_BATCH2_REVIEW_SCENERY_93",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -2304.076904296875,
+        28.656457901000977,
+        -2815.9686279296875
+      ],
+      "size": [
+        768.15380859375,
+        19.810062408447266,
+        256.179931640625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_7.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_94",
+      "name": "EF_BATCH2_REVIEW_SCENERY_94",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1919.9142456054688,
+        28.80342960357666,
+        -2816.06103515625
+      ],
+      "size": [
+        512.2305908203125,
+        22.433935165405273,
+        256.1220703125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_7.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_95",
+      "name": "EF_BATCH2_REVIEW_SCENERY_95",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1535.6458129882812,
+        22.02484703063965,
+        -2816.0108642578125
+      ],
+      "size": [
+        767.2916259765625,
+        35.332210540771484,
+        256.021728515625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_8.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_96",
+      "name": "EF_BATCH2_REVIEW_SCENERY_96",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1151.8952331542969,
+        15.47464895248413,
+        -2815.9339599609375
+      ],
+      "size": [
+        512.2095336914062,
+        22.148838996887207,
+        256.132080078125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_8.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_97",
+      "name": "EF_BATCH2_REVIEW_SCENERY_97",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -767.3507080078125,
+        15.745655059814453,
+        -2816.050048828125
+      ],
+      "size": [
+        766.701416015625,
+        24.260982513427734,
+        256.13232421875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_8.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_98",
+      "name": "EF_BATCH2_REVIEW_SCENERY_98",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -255.96942138671875,
+        12.611234366893768,
+        -2815.98388671875
+      ],
+      "size": [
+        767.9388427734375,
+        21.40994703769684,
+        256.08935546875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_8.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_99",
+      "name": "EF_BATCH2_REVIEW_SCENERY_99",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        127.92493438720703,
+        14.56775426864624,
+        -2816.0052490234375
+      ],
+      "size": [
+        512.1501312255859,
+        21.515957832336426,
+        256.086669921875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_8.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_100",
+      "name": "EF_BATCH2_REVIEW_SCENERY_100",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1152.0593872070312,
+        23.063446044921875,
+        -3008.0267333984375
+      ],
+      "size": [
+        3071.8812255859375,
+        10.079971313476562,
+        383.946533203125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_8.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_101",
+      "name": "EF_BATCH2_REVIEW_SCENERY_101",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -2303.6764526367188,
+        19.03815984725952,
+        -3072.03173828125
+      ],
+      "size": [
+        767.7559814453125,
+        23.685662269592285,
+        256.22265625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_8.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_102",
+      "name": "EF_BATCH2_REVIEW_SCENERY_102",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1919.677734375,
+        18.068487405776978,
+        -3072.0301513671875
+      ],
+      "size": [
+        511.35546875,
+        24.39897108078003,
+        256.060302734375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_8.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_103",
+      "name": "EF_BATCH2_REVIEW_SCENERY_103",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1535.8578491210938,
+        15.080302715301514,
+        -3072.0013427734375
+      ],
+      "size": [
+        767.7156982421875,
+        18.303261756896973,
+        256.282470703125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_8.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_104",
+      "name": "EF_BATCH2_REVIEW_SCENERY_104",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1151.9911499023438,
+        16.243796586990356,
+        -3071.989013671875
+      ],
+      "size": [
+        512.0970458984375,
+        18.514081478118896,
+        256.12548828125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_8.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_105",
+      "name": "EF_BATCH2_REVIEW_SCENERY_105",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -766.5868835449219,
+        14.557253122329712,
+        -3071.9952392578125
+      ],
+      "size": [
+        765.3613891601562,
+        17.947227001190186,
+        256.307373046875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_8.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_106",
+      "name": "EF_BATCH2_REVIEW_SCENERY_106",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -256.0249328613281,
+        12.910218954086304,
+        -3072.0377197265625
+      ],
+      "size": [
+        768.0498657226562,
+        16.30809450149536,
+        256.108642578125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_8.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_107",
+      "name": "EF_BATCH2_REVIEW_SCENERY_107",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        128.05572509765625,
+        11.681204438209534,
+        -3072.0194091796875
+      ],
+      "size": [
+        512.1114501953125,
+        18.202959775924683,
+        256.217041015625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_8.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_108",
+      "name": "EF_BATCH2_REVIEW_SCENERY_108",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1153.2087707519531,
+        19.140634059906006,
+        -3296.1387939453125
+      ],
+      "size": [
+        3069.5824584960938,
+        33.03635120391846,
+        319.722412109375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_8.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_109",
+      "name": "EF_BATCH2_REVIEW_SCENERY_109",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -2176.05322265625,
+        17.930718660354614,
+        -3327.9437255859375
+      ],
+      "size": [
+        1024.1064453125,
+        23.815751552581787,
+        256.112548828125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_8.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_110",
+      "name": "EF_BATCH2_REVIEW_SCENERY_110",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1535.99755859375,
+        23.942115306854248,
+        -3327.9619140625
+      ],
+      "size": [
+        767.9951171875,
+        30.49368381500244,
+        256.076171875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_8.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_111",
+      "name": "EF_BATCH2_REVIEW_SCENERY_111",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1151.9702758789062,
+        23.588632822036743,
+        -3327.953125
+      ],
+      "size": [
+        512.2850341796875,
+        32.08145475387573,
+        256.21435546875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_8.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_112",
+      "name": "EF_BATCH2_REVIEW_SCENERY_112",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -695.0164794921875,
+        17.119906187057495,
+        -3328.0089111328125
+      ],
+      "size": [
+        622.032958984375,
+        22.455557346343994,
+        256.017822265625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_8.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_113",
+      "name": "EF_BATCH2_REVIEW_SCENERY_113",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -256.0160217285156,
+        17.987432718276978,
+        -3327.9227294921875
+      ],
+      "size": [
+        768.0320434570312,
+        24.778682231903076,
+        256.154541015625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_9.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_114",
+      "name": "EF_BATCH2_REVIEW_SCENERY_114",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        128.0196304321289,
+        14.603299260139465,
+        -3328.0
+      ],
+      "size": [
+        512.1816864013672,
+        23.578141927719116,
+        256.0
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_9.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_115",
+      "name": "EF_BATCH2_REVIEW_SCENERY_115",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1152.7121124267578,
+        16.213852405548096,
+        -3568.196533203125
+      ],
+      "size": [
+        3070.7364196777344,
+        20.219531059265137,
+        287.734375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_9.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_116",
+      "name": "EF_BATCH2_REVIEW_SCENERY_116",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -2176.0472412109375,
+        17.451773643493652,
+        -3584.0216064453125
+      ],
+      "size": [
+        512.094482421875,
+        13.596532821655273,
+        256.275634765625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_9.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_117",
+      "name": "EF_BATCH2_REVIEW_SCENERY_117",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1920.0174560546875,
+        18.529606342315674,
+        -3584.0421142578125
+      ],
+      "size": [
+        512.034912109375,
+        19.86532497406006,
+        256.084228515625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_9.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_118",
+      "name": "EF_BATCH2_REVIEW_SCENERY_118",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1664.0,
+        18.695130825042725,
+        -3584.0013427734375
+      ],
+      "size": [
+        512.0,
+        20.038044929504395,
+        256.263916015625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_9.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_119",
+      "name": "EF_BATCH2_REVIEW_SCENERY_119",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1279.6146850585938,
+        15.514883041381836,
+        -3584.0335693359375
+      ],
+      "size": [
+        767.2293701171875,
+        13.457000732421875,
+        256.088623046875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_9.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_120",
+      "name": "EF_BATCH2_REVIEW_SCENERY_120",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -896.0,
+        18.465057849884033,
+        -3583.9305419921875
+      ],
+      "size": [
+        512.0,
+        17.93623638153076,
+        256.138916015625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_9.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_121",
+      "name": "EF_BATCH2_REVIEW_SCENERY_121",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -511.738525390625,
+        17.24606728553772,
+        -3583.9306640625
+      ],
+      "size": [
+        767.47705078125,
+        22.826560497283936,
+        256.138671875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_9.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_122",
+      "name": "EF_BATCH2_REVIEW_SCENERY_122",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -48.00071716308594,
+        13.85628080368042,
+        -3584.012451171875
+      ],
+      "size": [
+        672.0014343261719,
+        15.960808753967285,
+        256.02490234375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_9.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_123",
+      "name": "EF_BATCH2_REVIEW_SCENERY_123",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -640.4661865234375,
+        7.824240207672119,
+        -1791.5650634765625
+      ],
+      "size": [
+        2049.067626953125,
+        35.21818828582764,
+        3841.130126953125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_9.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_124",
+      "name": "EF_BATCH2_REVIEW_SCENERY_124",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1141.4456176757812,
+        19.52461862564087,
+        -1652.4001770019531
+      ],
+      "size": [
+        2910.4910888671875,
+        60.15709209442139,
+        3963.8436889648438
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_9.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_125",
+      "name": "EF_BATCH2_REVIEW_SCENERY_125",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1151.6439666748047,
+        23.20831823348999,
+        -1655.8546752929688
+      ],
+      "size": [
+        2921.1773986816406,
+        60.47630023956299,
+        3971.5284423828125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_9.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_126",
+      "name": "EF_BATCH2_REVIEW_SCENERY_126",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1151.2959442138672,
+        21.762423515319824,
+        -1660.8317565917969
+      ],
+      "size": [
+        2920.8753967285156,
+        48.35441017150879,
+        3974.7930297851562
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_9.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_127",
+      "name": "EF_BATCH2_REVIEW_SCENERY_127",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1152.9154663085938,
+        24.109283059835434,
+        -1667.109115600586
+      ],
+      "size": [
+        2921.0323486328125,
+        47.04089432954788,
+        3966.120147705078
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_9.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_128",
+      "name": "EF_BATCH2_REVIEW_SCENERY_128",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1156.0048370361328,
+        30.312458992004395,
+        -1669.84814453125
+      ],
+      "size": [
+        2917.1758728027344,
+        54.130849838256836,
+        3963.85498046875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_9.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_129",
+      "name": "EF_BATCH2_REVIEW_SCENERY_129",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        -1298.8651604652405,
+        27.417591094970703,
+        -1677.9520721435547
+      ],
+      "size": [
+        2568.461085319519,
+        34.11316680908203,
+        3944.5465393066406
+      ],
+      "triangles": 898,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_9.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_PROPS_0",
+      "name": "EF_BATCH2_REVIEW_PROPS_0",
+      "role": "props",
+      "chunk": null,
+      "center": [
+        152.81462478637695,
+        23.408769577741623,
+        -5.057437896728516
+      ],
+      "size": [
+        496.3707504272461,
+        47.526760160923004,
+        169.48575592041016
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_9.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_PROPS_1",
+      "name": "EF_BATCH2_REVIEW_PROPS_1",
+      "role": "props",
+      "chunk": null,
+      "center": [
+        -49.46778869628906,
+        17.689499139785767,
+        -422.08202362060547
+      ],
+      "size": [
+        900.9355773925781,
+        45.5408091545105,
+        981.8359527587891
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_9.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_PROPS_2",
+      "name": "EF_BATCH2_REVIEW_PROPS_2",
+      "role": "props",
+      "chunk": null,
+      "center": [
+        -632.5240936279297,
+        17.94407045841217,
+        -659.0607604980469
+      ],
+      "size": [
+        411.5523986816406,
+        42.90570521354675,
+        507.87847900390625
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_10.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_PROPS_3",
+      "name": "EF_BATCH2_REVIEW_PROPS_3",
+      "role": "props",
+      "chunk": null,
+      "center": [
+        -1190.6639709472656,
+        12.714391946792603,
+        -660.2803802490234
+      ],
+      "size": [
+        845.3280639648438,
+        37.65848112106323,
+        505.4392395019531
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_10.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_PROPS_4",
+      "name": "EF_BATCH2_REVIEW_PROPS_4",
+      "role": "props",
+      "chunk": null,
+      "center": [
+        -1388.9862670898438,
+        16.308022022247314,
+        -756.2083740234375
+      ],
+      "size": [
+        507.9725341796875,
+        45.075201988220215,
+        695.114990234375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_10.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_PROPS_5",
+      "name": "EF_BATCH2_REVIEW_PROPS_5",
+      "role": "props",
+      "chunk": null,
+      "center": [
+        -1536.0,
+        15.086305856704712,
+        -1544.9736633300781
+      ],
+      "size": [
+        802.0,
+        40.33442258834839,
+        1175.4198608398438
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_10.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_PROPS_6",
+      "name": "EF_BATCH2_REVIEW_PROPS_6",
+      "role": "props",
+      "chunk": null,
+      "center": [
+        -2042.2158203125,
+        18.015676140785217,
+        -2196.9959106445312
+      ],
+      "size": [
+        665.59033203125,
+        43.04891657829285,
+        504.0081787109375
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_10.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_PROPS_7",
+      "name": "EF_BATCH2_REVIEW_PROPS_7",
+      "role": "props",
+      "chunk": null,
+      "center": [
+        -2150.913818359375,
+        23.87946844100952,
+        -2402.31640625
+      ],
+      "size": [
+        495.82763671875,
+        59.63664722442627,
+        903.04736328125
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_10.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_PROPS_8",
+      "name": "EF_BATCH2_REVIEW_PROPS_8",
+      "role": "props",
+      "chunk": null,
+      "center": [
+        -2148.824951171875,
+        41.182021141052246,
+        -3123.1370849609375
+      ],
+      "size": [
+        491.64990234375,
+        43.58636665344238,
+        614.274169921875
+      ],
+      "triangles": 6080,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_10.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_ROAD_0",
+      "name": "EF_BATCH2_REVIEW_ROAD_0",
+      "role": "road",
+      "chunk": null,
+      "center": [
+        -500.99396800994873,
+        2.2833058834075928,
+        -199.43588256835938
+      ],
+      "size": [
+        1054.0120639801025,
+        16.353025913238525,
+        654.8717651367188
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_10.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_ROAD_1",
+      "name": "EF_BATCH2_REVIEW_ROAD_1",
+      "role": "road",
+      "chunk": null,
+      "center": [
+        -1287.6627807617188,
+        9.668048825114965,
+        -1053.195053100586
+      ],
+      "size": [
+        527.3255615234375,
+        19.514160223305225,
+        1110.6914367675781
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_10.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_ROAD_2",
+      "name": "EF_BATCH2_REVIEW_ROAD_2",
+      "role": "road",
+      "chunk": null,
+      "center": [
+        -1919.9332885742188,
+        1.6007826328277588,
+        -2069.7750244140625
+      ],
+      "size": [
+        820.9381103515625,
+        17.463883876800537,
+        932.449951171875
+      ],
+      "triangles": 8500,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_10.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_ROAD_3",
+      "name": "EF_BATCH2_REVIEW_ROAD_3",
+      "role": "road",
+      "chunk": null,
+      "center": [
+        -2114.2730712890625,
+        22.805575847625732,
+        -2937.1875
+      ],
+      "size": [
+        388.546142578125,
+        27.25532627105713,
+        810.375
+      ],
+      "triangles": 6226,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_10.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_FIRE_0",
+      "name": "EF_BATCH2_REVIEW_FIRE_0",
+      "role": "fire",
+      "chunk": null,
+      "center": [
+        -1536.284423828125,
+        6.530762195587158,
+        -1438.0133666992188
+      ],
+      "size": [
+        241.70068359375,
+        15.097149848937988,
+        174.3782958984375
+      ],
+      "triangles": 576,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_10.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SMOKE_0",
+      "name": "EF_BATCH2_REVIEW_SMOKE_0",
+      "role": "smoke",
+      "chunk": null,
+      "center": [
+        -1905.6514282226562,
+        26.216612577438354,
+        -2374.1347045898438
+      ],
+      "size": [
+        790.4974365234375,
+        68.17755365371704,
+        1948.8707275390625
+      ],
+      "triangles": 2800,
+      "fidelity": null,
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_VISUAL_10.fbx"
+    }
+  ]
+}

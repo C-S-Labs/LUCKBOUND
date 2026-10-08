@@ -1,0 +1,18 @@
+{
+  "1": {
+    "seconds": 0.8842376000029617,
+    "name": "A_B2",
+    "floorMaterial": "Plastic",
+    "minimumRootY": 115.2004623413086,
+    "pass": true,
+    "distanceToTarget": 0.9498443603515625
+  },
+  "2": {
+    "seconds": 0.915011199998844,
+    "name": "B2_C_rotated",
+    "floorMaterial": "Plastic",
+    "minimumRootY": 138.8225860595703,
+    "pass": true,
+    "distanceToTarget": 0.9609375
+  }
+}

@@ -1,0 +1,836 @@
+{
+  "source": "E:\\BlenderAIProjects\\Runtime\\Emberfall_ArchitectureReview\\EmberfallPrototype.blend",
+  "units": "metres = studs",
+  "runtime_modified": false,
+  "method": "Welded authored cross-section networks with paired shelf lips/feet, planar strata and continuous buried volume; no warped-plane source or crust inserts.",
+  "prototype_only": true,
+  "reused_flora_fingerprints": {
+    "prop_drained_wax_rosette": "1fd5fb8ccae6d4ff2f4840a22aac5a77d8db933f6db625ee8075c1e54a9fa113",
+    "prop_drained_seed_shrub": "85d86948e244201b829e3c2a5217a88ddab831233d718bb430928b66ff9f08c9",
+    "prop_charred_ember_rose": "0eb5089b450b4ea536e5928781c86be4dba577f13841289a596b7784cb4c68e4",
+    "prop_charred_thorn_pod": "4adbb8c114b5b17ba702f829eef5148b91c20ead5fa864322a1f25169794566f",
+    "prop_surviving_ash_rosette": "5f45a851f9de696b9e84afb40aea3d102ffd787adbe338721bbb391b790bfbe2",
+    "prop_partial_rosette_30": "ce6e2db94a683900ea975b1380dd12e822384cf62e4f197a2b6d9b0aa2147c57",
+    "prop_partial_rosette_50": "b4f2ef5c78e927deeee5ab7bb1292a16f96284f7280fe57e1a3c7d9d8cd41b70",
+    "prop_partial_rosette_70": "9400f95c8cb6c1f2740fdee5935e2aa6b6cb327673b27c35da1a759e81c797a1",
+    "prop_partial_seed_shrub_50": "d379aecb68e7eff4988d373d959e293f42a3e5eb5552a316af6b5662598eda9b",
+    "prop_invasive_root_bloom": "9f6262f317f865a1fc9800f99ca938a5c1bc32c12c98a407519ec27b0c4d0990"
+  },
+  "reused_basalt_modules": 6,
+  "chunks": [
+    {
+      "name": "entry_wasteland_waystone",
+      "role": "ENTRY",
+      "zone": "WASTELAND",
+      "origin_world": [
+        0,
+        -512,
+        0
+      ],
+      "footprint": [
+        256,
+        256
+      ],
+      "lava": "none",
+      "elevation_delta": 0,
+      "objects": 23,
+      "triangles": 8070,
+      "terrain_triangles": 578,
+      "floor_samples": [
+        {
+          "xy": [
+            0,
+            -116
+          ],
+          "height": 0.0,
+          "slope": 0.39
+        },
+        {
+          "xy": [
+            0,
+            0
+          ],
+          "height": -0.0,
+          "slope": 0.51
+        },
+        {
+          "xy": [
+            0,
+            116
+          ],
+          "height": 0.0,
+          "slope": 0.4
+        },
+        {
+          "xy": [
+            -24,
+            0
+          ],
+          "height": 0.1988,
+          "slope": 0.49
+        },
+        {
+          "xy": [
+            24,
+            0
+          ],
+          "height": 0.2281,
+          "slope": 0.51
+        }
+      ],
+      "world_bounds": [
+        [
+          -128.0,
+          -640.0,
+          -46.0
+        ],
+        [
+          128.0,
+          -384.0,
+          15.876
+        ]
+      ],
+      "terrain_local_origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "nonmanifold_edges": 0
+    },
+    {
+      "name": "path_wasteland_fault",
+      "role": "PATH",
+      "zone": "WASTELAND",
+      "origin_world": [
+        0,
+        -256,
+        0
+      ],
+      "footprint": [
+        256,
+        256
+      ],
+      "lava": "channel",
+      "elevation_delta": 0,
+      "objects": 26,
+      "triangles": 8154,
+      "terrain_triangles": 578,
+      "floor_samples": [
+        {
+          "xy": [
+            0,
+            -116
+          ],
+          "height": 0.0,
+          "slope": 0.59
+        },
+        {
+          "xy": [
+            0,
+            0
+          ],
+          "height": 0.0,
+          "slope": 0.41
+        },
+        {
+          "xy": [
+            0,
+            116
+          ],
+          "height": 0.0,
+          "slope": 0.44
+        },
+        {
+          "xy": [
+            -24,
+            0
+          ],
+          "height": 0.3649,
+          "slope": 3.55
+        },
+        {
+          "xy": [
+            24,
+            0
+          ],
+          "height": 0.1795,
+          "slope": 0.41
+        }
+      ],
+      "world_bounds": [
+        [
+          -128.0,
+          -384.0,
+          -46.0
+        ],
+        [
+          128.0,
+          -128.0,
+          21.21
+        ]
+      ],
+      "terrain_local_origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "nonmanifold_edges": 0
+    },
+    {
+      "name": "combat_wasteland_broken_road",
+      "role": "COMBAT",
+      "zone": "WASTELAND",
+      "origin_world": [
+        0,
+        0,
+        0
+      ],
+      "footprint": [
+        256,
+        256
+      ],
+      "lava": "none",
+      "elevation_delta": 0,
+      "objects": 38,
+      "triangles": 26514,
+      "terrain_triangles": 578,
+      "floor_samples": [
+        {
+          "xy": [
+            0,
+            -116
+          ],
+          "height": 0.0135,
+          "slope": 0.25
+        },
+        {
+          "xy": [
+            0,
+            0
+          ],
+          "height": 0.0676,
+          "slope": 0.39
+        },
+        {
+          "xy": [
+            0,
+            116
+          ],
+          "height": -0.0,
+          "slope": 0.3
+        },
+        {
+          "xy": [
+            -24,
+            0
+          ],
+          "height": 0.2285,
+          "slope": 0.39
+        },
+        {
+          "xy": [
+            24,
+            0
+          ],
+          "height": -0.0,
+          "slope": 0.02
+        }
+      ],
+      "world_bounds": [
+        [
+          -128.0,
+          -128.0,
+          -46.0
+        ],
+        [
+          128.0,
+          128.0,
+          29.61
+        ]
+      ],
+      "terrain_local_origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "nonmanifold_edges": 0
+    },
+    {
+      "name": "side_wasteland_shrine",
+      "role": "SIDE",
+      "zone": "WASTELAND",
+      "origin_world": [
+        256,
+        0,
+        0
+      ],
+      "footprint": [
+        256,
+        256
+      ],
+      "lava": "vent",
+      "elevation_delta": 0,
+      "objects": 39,
+      "triangles": 26534,
+      "terrain_triangles": 578,
+      "floor_samples": [
+        {
+          "xy": [
+            0,
+            -116
+          ],
+          "height": 0.0,
+          "slope": 0.36
+        },
+        {
+          "xy": [
+            0,
+            0
+          ],
+          "height": 0.0,
+          "slope": 0.67
+        },
+        {
+          "xy": [
+            0,
+            116
+          ],
+          "height": 0.0,
+          "slope": 0.44
+        },
+        {
+          "xy": [
+            -24,
+            0
+          ],
+          "height": 0.487,
+          "slope": 4.19
+        },
+        {
+          "xy": [
+            24,
+            0
+          ],
+          "height": 0.1763,
+          "slope": 0.47
+        }
+      ],
+      "world_bounds": [
+        [
+          128.0,
+          -128.0,
+          -46.0
+        ],
+        [
+          384.0,
+          128.0,
+          28.0
+        ]
+      ],
+      "terrain_local_origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "nonmanifold_edges": 0
+    },
+    {
+      "name": "path_fortress_causeway",
+      "role": "PATH",
+      "zone": "WASTELAND_TO_FORTRESS",
+      "origin_world": [
+        0,
+        256,
+        28
+      ],
+      "footprint": [
+        256,
+        256
+      ],
+      "lava": "seam",
+      "elevation_delta": 56,
+      "objects": 61,
+      "triangles": 26790,
+      "terrain_triangles": 578,
+      "floor_samples": [
+        {
+          "xy": [
+            0,
+            -116
+          ],
+          "height": -28.0,
+          "slope": 6.29
+        },
+        {
+          "xy": [
+            0,
+            0
+          ],
+          "height": 0.0,
+          "slope": 15.04
+        },
+        {
+          "xy": [
+            0,
+            116
+          ],
+          "height": 28.0,
+          "slope": 0.39
+        },
+        {
+          "xy": [
+            -24,
+            0
+          ],
+          "height": 0.2022,
+          "slope": 15.04
+        },
+        {
+          "xy": [
+            24,
+            0
+          ],
+          "height": 0.2357,
+          "slope": 15.13
+        }
+      ],
+      "world_bounds": [
+        [
+          -128.0,
+          128.0,
+          -18.0
+        ],
+        [
+          128.0,
+          384.0,
+          69.5866
+        ]
+      ],
+      "terrain_local_origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "nonmanifold_edges": 0
+    },
+    {
+      "name": "combat_fortress_gateworks",
+      "role": "COMBAT",
+      "zone": "FORTRESS",
+      "origin_world": [
+        0,
+        512,
+        56
+      ],
+      "footprint": [
+        256,
+        256
+      ],
+      "lava": "none",
+      "elevation_delta": 0,
+      "objects": 129,
+      "triangles": 16416,
+      "terrain_triangles": 578,
+      "floor_samples": [
+        {
+          "xy": [
+            0,
+            -116
+          ],
+          "height": 0.0165,
+          "slope": 0.34
+        },
+        {
+          "xy": [
+            0,
+            0
+          ],
+          "height": 0.0453,
+          "slope": 0.26
+        },
+        {
+          "xy": [
+            0,
+            116
+          ],
+          "height": -0.0,
+          "slope": 0.36
+        },
+        {
+          "xy": [
+            -24,
+            0
+          ],
+          "height": 0.1548,
+          "slope": 0.26
+        },
+        {
+          "xy": [
+            24,
+            0
+          ],
+          "height": 0.1644,
+          "slope": 0.66
+        }
+      ],
+      "world_bounds": [
+        [
+          -128.0,
+          384.0,
+          10.0
+        ],
+        [
+          128.0,
+          640.0,
+          81.55
+        ]
+      ],
+      "terrain_local_origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "nonmanifold_edges": 0
+    }
+  ],
+  "scenery": [
+    {
+      "name": "open_ashland",
+      "objects": 10,
+      "triangles": 5374,
+      "footprint": [
+        256,
+        256
+      ]
+    },
+    {
+      "name": "ruined_outskirts",
+      "objects": 15,
+      "triangles": 5434,
+      "footprint": [
+        256,
+        256
+      ]
+    },
+    {
+      "name": "broken_ridge_shelf",
+      "objects": 10,
+      "triangles": 5374,
+      "footprint": [
+        256,
+        256
+      ]
+    },
+    {
+      "name": "low_lava_terrain",
+      "objects": 14,
+      "triangles": 5530,
+      "footprint": [
+        256,
+        256
+      ]
+    },
+    {
+      "name": "ash_faultland",
+      "objects": 10,
+      "triangles": 5374,
+      "footprint": [
+        256,
+        256
+      ]
+    },
+    {
+      "name": "infected_outskirts",
+      "objects": 14,
+      "triangles": 17082,
+      "footprint": [
+        256,
+        256
+      ]
+    },
+    {
+      "name": "fortress_silhouette",
+      "objects": 49,
+      "triangles": 10610,
+      "footprint": [
+        256,
+        256
+      ]
+    },
+    {
+      "name": "elevated_shelf",
+      "objects": 16,
+      "triangles": 17106,
+      "footprint": [
+        256,
+        256
+      ]
+    }
+  ],
+  "ring_instances": [
+    {
+      "cell": [
+        -1,
+        -3
+      ],
+      "family": "open_ashland",
+      "datum": 0
+    },
+    {
+      "cell": [
+        -1,
+        -2
+      ],
+      "family": "ash_faultland",
+      "datum": 0
+    },
+    {
+      "cell": [
+        -1,
+        -1
+      ],
+      "family": "ruined_outskirts",
+      "datum": 0
+    },
+    {
+      "cell": [
+        -1,
+        0
+      ],
+      "family": "infected_outskirts",
+      "datum": 0
+    },
+    {
+      "cell": [
+        -1,
+        1
+      ],
+      "family": "elevated_shelf",
+      "datum": 28.0
+    },
+    {
+      "cell": [
+        -1,
+        2
+      ],
+      "family": "fortress_silhouette",
+      "datum": 56
+    },
+    {
+      "cell": [
+        -1,
+        3
+      ],
+      "family": "fortress_silhouette",
+      "datum": 56
+    },
+    {
+      "cell": [
+        0,
+        -3
+      ],
+      "family": "ruined_outskirts",
+      "datum": 0
+    },
+    {
+      "cell": [
+        0,
+        3
+      ],
+      "family": "fortress_silhouette",
+      "datum": 56
+    },
+    {
+      "cell": [
+        1,
+        -3
+      ],
+      "family": "broken_ridge_shelf",
+      "datum": 0
+    },
+    {
+      "cell": [
+        1,
+        -2
+      ],
+      "family": "open_ashland",
+      "datum": 0
+    },
+    {
+      "cell": [
+        1,
+        -1
+      ],
+      "family": "ash_faultland",
+      "datum": 0
+    },
+    {
+      "cell": [
+        1,
+        1
+      ],
+      "family": "elevated_shelf",
+      "datum": 28.0
+    },
+    {
+      "cell": [
+        1,
+        2
+      ],
+      "family": "fortress_silhouette",
+      "datum": 56
+    },
+    {
+      "cell": [
+        1,
+        3
+      ],
+      "family": "fortress_silhouette",
+      "datum": 56
+    },
+    {
+      "cell": [
+        2,
+        -1
+      ],
+      "family": "infected_outskirts",
+      "datum": 0
+    },
+    {
+      "cell": [
+        2,
+        0
+      ],
+      "family": "low_lava_terrain",
+      "datum": 0
+    },
+    {
+      "cell": [
+        2,
+        1
+      ],
+      "family": "elevated_shelf",
+      "datum": 28.0
+    }
+  ],
+  "visible_objects": 779,
+  "visible_mesh_objects": 732,
+  "visible_triangles_base": 301074,
+  "max_visible_mesh_triangles": 3724,
+  "collections": [
+    "Playable_6_FOUNDATION_STUDY",
+    "Scenery_8_SOURCE_LIBRARY",
+    "SceneryRing_REVIEW_ONLY",
+    "DistantGround_REVIEW_ONLY",
+    "ReuseLibrary_SOURCE_ONLY",
+    "Cameras_Lights_Scale_REVIEW_ONLY"
+  ],
+  "source_flora_unchanged": true,
+  "studio_ready": false,
+  "collision_needs": "Broad route, ascent and combat walk skins; simplify shelf risers and masonry, keep plant tissue and decorative cracks nonsolid. No collision generated.",
+  "saved_readback": {
+    "scene": "Emberfall_Foundation_Review",
+    "scene_objects_including_libraries": 933,
+    "visible_objects": 779,
+    "visible_mesh_objects": 732,
+    "evaluated_visible_triangles": 315730,
+    "terrain_checks": [
+      {
+        "name": "entry_wasteland_waystone",
+        "closed": true,
+        "footprint_exact": true
+      },
+      {
+        "name": "path_wasteland_fault",
+        "closed": true,
+        "footprint_exact": true
+      },
+      {
+        "name": "combat_wasteland_broken_road",
+        "closed": true,
+        "footprint_exact": true
+      },
+      {
+        "name": "side_wasteland_shrine",
+        "closed": true,
+        "footprint_exact": true
+      },
+      {
+        "name": "path_fortress_causeway",
+        "closed": true,
+        "footprint_exact": true
+      },
+      {
+        "name": "combat_fortress_gateworks",
+        "closed": true,
+        "footprint_exact": true
+      }
+    ],
+    "socket_checks": [
+      {
+        "pair": [
+          "entry_wasteland_waystone",
+          "path_wasteland_fault"
+        ],
+        "max_gap": 3.0517578125e-05
+      },
+      {
+        "pair": [
+          "path_wasteland_fault",
+          "combat_wasteland_broken_road"
+        ],
+        "max_gap": 3.0517578125e-05
+      },
+      {
+        "pair": [
+          "combat_wasteland_broken_road",
+          "path_fortress_causeway"
+        ],
+        "max_gap": 4.57763671875e-05
+      },
+      {
+        "pair": [
+          "path_fortress_causeway",
+          "combat_fortress_gateworks"
+        ],
+        "max_gap": 1.52587890625e-05
+      },
+      {
+        "pair": [
+          "combat",
+          "side"
+        ],
+        "max_gap": 3.0517578125e-05
+      }
+    ]
+  },
+  "review_images": [
+    "ascent_to_gateworks.png",
+    "broad_lava_close.png",
+    "broad_lava_player.png",
+    "combat_broken_shelves.png",
+    "entry_no_open_lava.png",
+    "flora_actual_50.png",
+    "flora_partial.png",
+    "glow_minimized_ascent_to_gateworks.png",
+    "glow_minimized_combat_broken_shelves.png",
+    "glow_minimized_overview.png",
+    "glow_minimized_raised_gateworks.png",
+    "overview.png",
+    "path_narrow_channel.png",
+    "raised_gateworks.png",
+    "seam_baseline.png",
+    "seam_raised.png",
+    "terrain_meso.png"
+  ],
+  "visual_assessment": {
+    "glow_minimized": "Localized ruined outskirts, broken volcanic shelves and infected plants remain readable without lava emission or orange lava color. Wide overview still has repeated longitudinal shelf rhythms and broad plain aprons. Identity gate is partial, not production accepted.",
+    "remaining": [
+      "Authored profiles remain too ribbon-like in parts of the overview.",
+      "Some bank faces are overly planar; coarse masonry needs stronger stress/failure.",
+      "Far apron is contextual review ground, not a finished scenery kit.",
+      "Procedural materials, smoke and color attributes are Blender-only.",
+      "Collision and vertical socket measurement require later generic work and owner acceptance."
+    ]
+  }
+}

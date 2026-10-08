@@ -1,0 +1,117 @@
+{
+  "scope": "AREA I isolated modularity proof",
+  "production_changes": false,
+  "input": "E:\\BlenderAIProjects\\Runtime\\Emberfall_ModularityReview\\Input_ApprovedBurnedPlains.blend",
+  "layout": {
+    "source": "actual ChunkCore.placeAgainst/worldSocket/overlaps/yawRadians",
+    "placements": [
+      {
+        "index": 1,
+        "x": 0.0,
+        "y": 4.148148148148,
+        "z": 256.0,
+        "yaw": 0
+      },
+      {
+        "index": 2,
+        "x": 0.0,
+        "y": 1.037037037037,
+        "z": 0.0,
+        "yaw": 180
+      },
+      {
+        "index": 3,
+        "x": 0.0,
+        "y": -2.074074074074,
+        "z": -256.0,
+        "yaw": 0
+      }
+    ],
+    "quarter_turns_checked": [
+      0,
+      90,
+      180,
+      270
+    ],
+    "socket_pairs": 2
+  },
+  "joins": [
+    {
+      "y": -128,
+      "stations": 65,
+      "max_height_gap": 3.814697265625e-06,
+      "max_colour_gap": 2.9802322387695312e-08
+    },
+    {
+      "y": 128,
+      "stations": 65,
+      "max_height_gap": 2.86102294921875e-06,
+      "max_colour_gap": 3.725290298461914e-09
+    }
+  ],
+  "playable_balance_percent": {
+    "green": 18.88,
+    "stressed": 31.05,
+    "charred": 50.07
+  },
+  "preserved_local_objects": 355,
+  "road_samples": 295,
+  "terrain_geometry_changed": "24-stud experimental join collars only; approved input unchanged",
+  "max_collar_adjustment_studs": 2.401871395429845,
+  "primary_yaw": [
+    0,
+    180,
+    0
+  ],
+  "alternate_yaw": [
+    90,
+    270,
+    90
+  ],
+  "backend": "offline Blender vertex-colour bake, not Roblox runtime proof",
+  "evidence": [
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_ModularityReview\\01_assembled_overview.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_ModularityReview\\02_top_burn_crossing.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_ModularityReview\\03_player_eye_boundary.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_ModularityReview\\04_raised_join_front.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_ModularityReview\\05_interior_road.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_ModularityReview\\06_quarter_turn_top.png"
+  ],
+  "terrain_triangles": [
+    8958,
+    8958,
+    8958
+  ],
+  "saved_readback": {
+    "terrain": [
+      {
+        "name": "PLAYABLE_opening_edge",
+        "footprint": [
+          256.0,
+          256.0
+        ],
+        "closed": true
+      },
+      {
+        "name": "PLAYABLE_active_burn_mid_plains",
+        "footprint": [
+          256.0000305175781,
+          256.0000305175781
+        ],
+        "closed": true
+      },
+      {
+        "name": "PLAYABLE_interior_edge",
+        "footprint": [
+          256.0,
+          256.0
+        ],
+        "closed": true
+      }
+    ],
+    "road_seam_rows": 2,
+    "road_is_one_connected_strip": true,
+    "no_studio_connected": true,
+    "approved_scene_retained_in_review_file": true
+  }
+}

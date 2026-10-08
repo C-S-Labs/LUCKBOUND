@@ -1,0 +1,380 @@
+[
+  {
+    "id": "EF_ENTRY_WINDWARD_MEADOW",
+    "sockets": [
+      {
+        "Id": "S",
+        "Kind": "BP_EDGE_HOLLOW",
+        "OffsetX": 0,
+        "OffsetY": -1.6644632987548464,
+        "OffsetZ": 128,
+        "Facing": 180,
+        "Width": 24
+      },
+      {
+        "Id": "N",
+        "Kind": "BP_EDGE_HOLLOW",
+        "OffsetX": 0,
+        "OffsetY": -1.6644632987548464,
+        "OffsetZ": -128,
+        "Facing": 0,
+        "Width": 24
+      }
+    ],
+    "length": 256.271,
+    "road_rise": 0.0,
+    "road_range": [
+      -1.609,
+      0.41
+    ],
+    "max_grade": 0.0538,
+    "trees": 5,
+    "refuges": [
+      {
+        "x": -17,
+        "y": -28,
+        "rx": 27,
+        "ry": 53,
+        "strength": 0.78,
+        "reason": "Maintained low field sheltered behind windward dry-stone wall"
+      }
+    ],
+    "geometry_sha256": "a990b6fccd651b6825f06d61207e271deb05c36557ffbd02ca32b14b40452b10"
+  },
+  {
+    "id": "EF_DRAINAGE_CROSSING",
+    "sockets": [
+      {
+        "Id": "S",
+        "Kind": "BP_EDGE_HOLLOW",
+        "OffsetX": 0,
+        "OffsetY": -1.9519968979163353,
+        "OffsetZ": 128,
+        "Facing": 180,
+        "Width": 24
+      },
+      {
+        "Id": "N",
+        "Kind": "BP_EDGE_HOLLOW",
+        "OffsetX": 0,
+        "OffsetY": -1.9519968979163353,
+        "OffsetZ": -128,
+        "Facing": 0,
+        "Width": 24
+      }
+    ],
+    "length": 256.097,
+    "road_rise": 0.0,
+    "road_range": [
+      -1.897,
+      0.432
+    ],
+    "max_grade": 0.1826,
+    "trees": 5,
+    "refuges": [
+      {
+        "x": 0,
+        "y": -13,
+        "rx": 83,
+        "ry": 15,
+        "strength": 0.84,
+        "reason": "Damp transverse drainage and stone culvert interrupt ground fire"
+      }
+    ],
+    "geometry_sha256": "9cdf2344ff09e064dc6357cfd4ff499ce889943cb098f95429f892c075b5d020"
+  },
+  {
+    "id": "EF_ORCHARD_BEND",
+    "sockets": [
+      {
+        "Id": "S",
+        "Kind": "BP_EDGE_HOLLOW",
+        "OffsetX": 0,
+        "OffsetY": -2.19814667064922,
+        "OffsetZ": 128,
+        "Facing": 180,
+        "Width": 24
+      },
+      {
+        "Id": "E",
+        "Kind": "BP_EDGE_HOLLOW",
+        "OffsetX": 128,
+        "OffsetY": -2.19814667064922,
+        "OffsetZ": 0,
+        "Facing": 90,
+        "Width": 24
+      }
+    ],
+    "length": 201.057,
+    "road_rise": 0.0,
+    "road_range": [
+      -7.5,
+      -2.143
+    ],
+    "max_grade": 0.0911,
+    "trees": 16,
+    "refuges": [
+      {
+        "x": -57,
+        "y": 24,
+        "rx": 39,
+        "ry": 57,
+        "strength": 0.58,
+        "reason": "Cultivated orchard shelter behind stone field boundary"
+      }
+    ],
+    "geometry_sha256": "ef836eafddc8200621824f8bf42a01c8ded468c0ccbfea59fd76aa4fd49e150f"
+  },
+  {
+    "id": "EF_RIDGE_ASCENT",
+    "sockets": [
+      {
+        "Id": "S",
+        "Kind": "BP_EDGE_HOLLOW",
+        "OffsetX": 0,
+        "OffsetY": -15.599250480607946,
+        "OffsetZ": 128,
+        "Facing": 180,
+        "Width": 24
+      },
+      {
+        "Id": "N",
+        "Kind": "BP_EDGE_HOLLOW",
+        "OffsetX": 0,
+        "OffsetY": 8.400749519392054,
+        "OffsetZ": -128,
+        "Facing": 0,
+        "Width": 24
+      }
+    ],
+    "length": 256.173,
+    "road_rise": 24.0,
+    "road_range": [
+      -15.544,
+      10.421
+    ],
+    "max_grade": 0.1865,
+    "trees": 6,
+    "refuges": [
+      {
+        "x": -54,
+        "y": 23,
+        "rx": 27,
+        "ry": 59,
+        "strength": 0.25,
+        "reason": "Leeward grass behind the ridge windbreak and surviving field wall"
+      }
+    ],
+    "geometry_sha256": "37132823c924e35d03e859590cce0fd731374aab6ec6f96b60e09a857d467cbe"
+  },
+  {
+    "id": "EF_SWITCHBACK_BANK",
+    "sockets": [
+      {
+        "Id": "S",
+        "Kind": "BP_EDGE_HOLLOW",
+        "OffsetX": 0,
+        "OffsetY": -17.32642973475572,
+        "OffsetZ": 128,
+        "Facing": 180,
+        "Width": 24
+      },
+      {
+        "Id": "E",
+        "Kind": "BP_EDGE_CREST",
+        "OffsetX": 128,
+        "OffsetY": 6.67357026524428,
+        "OffsetZ": 0,
+        "Facing": 90,
+        "Width": 24
+      }
+    ],
+    "length": 201.057,
+    "road_rise": 24.0,
+    "road_range": [
+      -17.271,
+      6.729
+    ],
+    "max_grade": 0.2184,
+    "trees": 8,
+    "refuges": [
+      {
+        "x": -47,
+        "y": -28,
+        "rx": 25,
+        "ry": 40,
+        "strength": 0.22,
+        "reason": "Sheltered lower bank at the foot of the cutbank tree line"
+      }
+    ],
+    "geometry_sha256": "1a093107517b257b39a7bea9d21f5f3636873146b8edd5bcdda89aee1aa93082"
+  },
+  {
+    "id": "EF_WAYMARK_TERRACE",
+    "sockets": [
+      {
+        "Id": "S",
+        "Kind": "BP_EDGE_CREST",
+        "OffsetX": 0,
+        "OffsetY": -2.1027948263660927,
+        "OffsetZ": 128,
+        "Facing": 180,
+        "Width": 24
+      },
+      {
+        "Id": "N",
+        "Kind": "BP_EDGE_CREST",
+        "OffsetX": 0,
+        "OffsetY": -2.1027948263660927,
+        "OffsetZ": -128,
+        "Facing": 0,
+        "Width": 24
+      }
+    ],
+    "length": 256.043,
+    "road_rise": 0.0,
+    "road_range": [
+      -2.048,
+      0.839
+    ],
+    "max_grade": 0.0954,
+    "trees": 5,
+    "refuges": [
+      {
+        "x": -44,
+        "y": 60,
+        "rx": 31,
+        "ry": 22,
+        "strength": 0.2,
+        "reason": "Small field remnant on the sheltered side of the low bench wall"
+      }
+    ],
+    "geometry_sha256": "971c5323a52e458fa5eff96ec7cf2b8bdd4afece30fecf5686cc8073477551fc"
+  },
+  {
+    "id": "EF_OPEN_FIELD_CLEARING",
+    "sockets": [
+      {
+        "Id": "S",
+        "Kind": "BP_EDGE_HOLLOW",
+        "OffsetX": 0,
+        "OffsetY": 1.8443187652314523,
+        "OffsetZ": 128,
+        "Facing": 180,
+        "Width": 24
+      },
+      {
+        "Id": "N",
+        "Kind": "BP_EDGE_HOLLOW",
+        "OffsetX": 0,
+        "OffsetY": 1.8443187652314523,
+        "OffsetZ": -128,
+        "Facing": 0,
+        "Width": 24
+      }
+    ],
+    "length": 256.173,
+    "road_rise": 0.0,
+    "road_range": [
+      0.026,
+      1.899
+    ],
+    "max_grade": 0.0265,
+    "trees": 4,
+    "refuges": [
+      {
+        "x": -48,
+        "y": -38,
+        "rx": 17,
+        "ry": 31,
+        "strength": 0.25,
+        "reason": "Shallow drainage behind low western field wall"
+      }
+    ],
+    "geometry_sha256": "2c6cbf147317fc67cecaf3c0d74994717979abd25a009f202e7c7c157bed9ad1"
+  },
+  {
+    "id": "EF_BURN_FRONT_VERGE",
+    "sockets": [
+      {
+        "Id": "S",
+        "Kind": "BP_EDGE_HOLLOW",
+        "OffsetX": 0,
+        "OffsetY": -14.512194237458939,
+        "OffsetZ": 128,
+        "Facing": 180,
+        "Width": 24
+      },
+      {
+        "Id": "W",
+        "Kind": "BP_EDGE_CREST",
+        "OffsetX": -128,
+        "OffsetY": 9.487805762541061,
+        "OffsetZ": 0,
+        "Facing": 270,
+        "Width": 24
+      }
+    ],
+    "length": 201.057,
+    "road_rise": 24.0,
+    "road_range": [
+      -14.457,
+      9.543
+    ],
+    "max_grade": 0.215,
+    "trees": 4,
+    "refuges": [
+      {
+        "x": 69,
+        "y": 4,
+        "rx": 19,
+        "ry": 48,
+        "strength": 0.28,
+        "reason": "Outer shallow swale below the ascending track"
+      }
+    ],
+    "geometry_sha256": "e6edd0a1a3478f3a5f7ced9ead6c1ce0f284e98efa5713b0b1e95a670312756b"
+  },
+  {
+    "id": "EF_FENCELINE_RISE",
+    "sockets": [
+      {
+        "Id": "S",
+        "Kind": "BP_EDGE_CREST",
+        "OffsetX": 0,
+        "OffsetY": -9.120039078714301,
+        "OffsetZ": 128,
+        "Facing": 180,
+        "Width": 24
+      },
+      {
+        "Id": "N",
+        "Kind": "BP_EDGE_CREST",
+        "OffsetX": 0,
+        "OffsetY": 6.879960921285699,
+        "OffsetZ": -128,
+        "Facing": 0,
+        "Width": 24
+      }
+    ],
+    "length": 256.53,
+    "road_rise": 16.0,
+    "road_range": [
+      -9.065,
+      6.935
+    ],
+    "max_grade": 0.121,
+    "trees": 3,
+    "refuges": [
+      {
+        "x": 52,
+        "y": 23,
+        "rx": 15,
+        "ry": 49,
+        "strength": 0.3,
+        "reason": "Low drainage strip sheltered below pasture ridge"
+      }
+    ],
+    "geometry_sha256": "33b9b18e374622b127d81cad237c0a869696f65706afabfd1076a6e208d7bae1"
+  }
+]

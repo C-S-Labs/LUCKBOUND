@@ -1,0 +1,28 @@
+{
+  "raw_views": [
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\01_A_exterior.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\02_B_exterior.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\03_A_missing_palace.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\04_B_roofed_palace.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\05_A_surviving_entrance.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\06_A_impact_reveal.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\07_A_sheared_floors.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\08_A_impact_to_earth.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\09_B_enclosed_lower_hall.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\10_B_gallery_final_arena.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\11A_palace_section.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\11B_palace_section.png"
+  ],
+  "panels": [
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\comparison_missing_vs_present.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\comparison_exterior.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\05_A_surviving_entrance.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\06_A_impact_reveal.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\07_A_sheared_floors.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\08_A_impact_to_earth.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\09_B_enclosed_lower_hall.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\10_B_gallery_final_arena.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\comparison_floor_sections.png"
+  ],
+  "sheet": "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\ImpactCorrectionReview\\impact_review_sheet.png"
+}

@@ -1,5 +1,7 @@
 # LUCKBOUND — Art Direction Brief
 
+> Emberfall consolidation note (2026-10-08): Emberfall accepted grassland/scenery and settlement/castle structural references are consolidated without visual changes. Current design/source authority is assets/source/worlds/emberfall/PRODUCTION_HANDOFF.md. Castle B is the architectural baseline; A is its catastrophe derivative; both are whole oversized finale chunks. AreaII production remains HOLD.
+
 How to describe the look so it becomes code, and where authored art plugs in.
 
 Detached ES miniboss arena now uses a 114 × 114 clear combat floor, 60.9-stud ceiling,

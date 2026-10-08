@@ -1,0 +1,10 @@
+{
+  "saved_B_architecture_rooms_routes_exact": true,
+  "interior_framing_except_rejected_exposed_truss_exact": true,
+  "shared887_exact": true,
+  "A_flat_combat_floor_exact_z92": true,
+  "A_route_entrance_exact": true,
+  "A_altered_edges_have_B_sources": true,
+  "eight_rejected_supports_isolated": true,
+  "no_layout_massing_production_changes": true
+}

@@ -1,0 +1,4511 @@
+{
+  "units": "one Blender metre = one Roblox stud",
+  "seam_band_studs": 24,
+  "provisional_elevation_step": 56,
+  "runtime_modified": false,
+  "preserved_basalt_modules": {
+    "chunk_entry_ash_plain": 2,
+    "path_column_pass": 6,
+    "chunk_column_forest": 4,
+    "side_lava_overlook": 2,
+    "cap_collapsed_pass": 4
+  },
+  "playable": [
+    {
+      "objects": 7,
+      "mesh_objects": 6,
+      "triangles": 4424,
+      "mesh_triangles": {
+        "chunk_entry_ash_plain": 2804,
+        "prop_chunk_entry_ash_plain_solid": 400,
+        "prop_lava_hairline": 4,
+        "prop_drained_wax_rosette_placement": 216,
+        "prop_drained_seed_shrub_placement": 784,
+        "prop_drained_wax_rosette_placement.001": 216
+      },
+      "collections": {
+        "chunk_entry_ash_plain_Structure": [
+          "chunk_entry_ash_plain"
+        ],
+        "chunk_entry_ash_plain_Props_Solid": [
+          "prop_chunk_entry_ash_plain_solid"
+        ],
+        "chunk_entry_ash_plain_Props_NonSolid": [
+          "prop_lava_hairline",
+          "prop_drained_wax_rosette_placement",
+          "prop_drained_seed_shrub_placement",
+          "prop_drained_wax_rosette_placement.001"
+        ]
+      },
+      "name": "chunk_entry_ash_plain",
+      "role": "ENTRY",
+      "dimensions_xyz": [
+        256.0,
+        256.0,
+        34.02500343322754
+      ],
+      "bounds_local": [
+        [
+          -128.0,
+          -128.0,
+          -1.5477733612060547
+        ],
+        [
+          128.0,
+          128.0,
+          32.477230072021484
+        ]
+      ],
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "entry_local": 0,
+      "exit_local": 0,
+      "world_datum": 0,
+      "entry_world": 0,
+      "exit_world": 0,
+      "delta": 0,
+      "continuation": "LEVEL_0",
+      "mouth_probes": [
+        {
+          "side": "N",
+          "samples": 20,
+          "width": 56,
+          "buffer": 24,
+          "local_height": 0.0
+        }
+      ],
+      "edge_profiles": {
+        "N": {
+          "profile": "LOW_ROLL_4",
+          "mouth": 0.0
+        },
+        "E": {
+          "profile": "LOW_ROLL_4",
+          "mouth": 0.0
+        },
+        "S": {
+          "profile": "LOW_ROLL_4",
+          "mouth": 0.0
+        },
+        "W": {
+          "profile": "LOW_ROLL_4",
+          "mouth": 0.0
+        }
+      },
+      "design": "Windswept open ashland, retained split fins and drained shelter pockets"
+    },
+    {
+      "objects": 9,
+      "mesh_objects": 6,
+      "triangles": 7288,
+      "mesh_triangles": {
+        "path_column_pass": 4076,
+        "prop_path_column_pass_solid": 640,
+        "prop_low_fissure": 6,
+        "prop_charred_ember_rose_placement": 912,
+        "prop_charred_thorn_pod_placement": 870,
+        "prop_drained_seed_shrub_placement.001": 784
+      },
+      "collections": {
+        "path_column_pass_Structure": [
+          "path_column_pass"
+        ],
+        "path_column_pass_Props_Solid": [
+          "prop_path_column_pass_solid"
+        ],
+        "path_column_pass_Props_NonSolid": [
+          "prop_low_fissure",
+          "fissure_uplight",
+          "fissure_uplight.001",
+          "prop_charred_ember_rose_placement",
+          "prop_charred_thorn_pod_placement",
+          "prop_drained_seed_shrub_placement.001"
+        ]
+      },
+      "name": "path_column_pass",
+      "role": "PATH",
+      "dimensions_xyz": [
+        256.0,
+        256.0,
+        136.1741828918457
+      ],
+      "bounds_local": [
+        [
+          -128.0,
+          -128.0,
+          -39.54976272583008
+        ],
+        [
+          128.0,
+          128.0,
+          96.62442016601562
+        ]
+      ],
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "entry_local": -28,
+      "exit_local": 28,
+      "world_datum": 28,
+      "entry_world": 0,
+      "exit_world": 56,
+      "delta": 56,
+      "continuation": "LEVEL_1",
+      "mouth_probes": [
+        {
+          "side": "S",
+          "samples": 20,
+          "width": 56,
+          "buffer": 24,
+          "local_height": -28.0
+        },
+        {
+          "side": "N",
+          "samples": 20,
+          "width": 56,
+          "buffer": 24,
+          "local_height": 28.0
+        }
+      ],
+      "edge_profiles": {
+        "N": {
+          "profile": "LOW_ROLL_4",
+          "mouth": 28.0
+        },
+        "E": {
+          "profile": "RAMP_56_LOW_ROLL_4",
+          "mouth": 0.0
+        },
+        "S": {
+          "profile": "LOW_ROLL_4",
+          "mouth": -28.0
+        },
+        "W": {
+          "profile": "RAMP_56_LOW_ROLL_4",
+          "mouth": 0.0
+        }
+      },
+      "design": "Broad cooled-flow ascent, fractured western terraces and eastern hot cut"
+    },
+    {
+      "objects": 8,
+      "mesh_objects": 7,
+      "triangles": 7094,
+      "mesh_triangles": {
+        "chunk_column_forest": 3508,
+        "prop_chunk_column_forest_solid": 800,
+        "prop_basin_heat": 4,
+        "prop_charred_thorn_pod_placement.001": 870,
+        "prop_charred_ember_rose_placement.001": 912,
+        "prop_drained_wax_rosette_placement.002": 216,
+        "prop_drained_seed_shrub_placement.002": 784
+      },
+      "collections": {
+        "chunk_column_forest_Structure": [
+          "chunk_column_forest"
+        ],
+        "chunk_column_forest_Props_Solid": [
+          "prop_chunk_column_forest_solid"
+        ],
+        "chunk_column_forest_Props_NonSolid": [
+          "prop_basin_heat",
+          "prop_charred_thorn_pod_placement.001",
+          "prop_charred_ember_rose_placement.001",
+          "prop_drained_wax_rosette_placement.002",
+          "prop_drained_seed_shrub_placement.002"
+        ]
+      },
+      "name": "chunk_column_forest",
+      "role": "COMBAT",
+      "dimensions_xyz": [
+        256.0,
+        256.0,
+        51.900352478027344
+      ],
+      "bounds_local": [
+        [
+          -128.0,
+          -128.0,
+          -19.0
+        ],
+        [
+          128.0,
+          128.0,
+          32.900352478027344
+        ]
+      ],
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "entry_local": 0,
+      "exit_local": 0,
+      "world_datum": 56,
+      "entry_world": 56,
+      "exit_world": 56,
+      "delta": 0,
+      "continuation": "LEVEL_1",
+      "mouth_probes": [
+        {
+          "side": "S",
+          "samples": 20,
+          "width": 56,
+          "buffer": 24,
+          "local_height": 0.0
+        },
+        {
+          "side": "N",
+          "samples": 20,
+          "width": 56,
+          "buffer": 24,
+          "local_height": 0.0
+        },
+        {
+          "side": "E",
+          "samples": 20,
+          "width": 56,
+          "buffer": 24,
+          "local_height": 0.0
+        }
+      ],
+      "edge_profiles": {
+        "N": {
+          "profile": "LOW_ROLL_4",
+          "mouth": 0.0
+        },
+        "E": {
+          "profile": "LOW_ROLL_4",
+          "mouth": 0.0
+        },
+        "S": {
+          "profile": "LOW_ROLL_4",
+          "mouth": 0.0
+        },
+        "W": {
+          "profile": "LOW_ROLL_4",
+          "mouth": 0.0
+        }
+      },
+      "design": "Raised combat shelf, western sunken ravine and asymmetric broken lava plates"
+    },
+    {
+      "objects": 7,
+      "mesh_objects": 6,
+      "triangles": 5592,
+      "mesh_triangles": {
+        "side_lava_overlook": 3016,
+        "prop_side_lava_overlook_solid": 660,
+        "prop_shelf_wound": 4,
+        "prop_drained_wax_rosette_placement.003": 216,
+        "prop_drained_seed_shrub_placement.003": 784,
+        "prop_charred_ember_rose_placement.002": 912
+      },
+      "collections": {
+        "side_lava_overlook_Structure": [
+          "side_lava_overlook"
+        ],
+        "side_lava_overlook_Props_Solid": [
+          "prop_side_lava_overlook_solid"
+        ],
+        "side_lava_overlook_Props_NonSolid": [
+          "prop_shelf_wound",
+          "prop_drained_wax_rosette_placement.003",
+          "prop_drained_seed_shrub_placement.003",
+          "prop_charred_ember_rose_placement.002"
+        ]
+      },
+      "name": "side_lava_overlook",
+      "role": "SIDE",
+      "dimensions_xyz": [
+        256.0,
+        256.0,
+        33.52231740951538
+      ],
+      "bounds_local": [
+        [
+          -128.0,
+          -128.0,
+          -3.0008654594421387
+        ],
+        [
+          128.0,
+          128.0,
+          30.521451950073242
+        ]
+      ],
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "entry_local": 0,
+      "exit_local": null,
+      "world_datum": 56,
+      "entry_world": 56,
+      "exit_world": null,
+      "delta": 0,
+      "continuation": "LEVEL_1",
+      "mouth_probes": [
+        {
+          "side": "W",
+          "samples": 20,
+          "width": 56,
+          "buffer": 24,
+          "local_height": 0.0
+        }
+      ],
+      "edge_profiles": {
+        "N": {
+          "profile": "LOW_ROLL_4",
+          "mouth": 0.0
+        },
+        "E": {
+          "profile": "LOW_ROLL_4",
+          "mouth": 0.0
+        },
+        "S": {
+          "profile": "LOW_ROLL_4",
+          "mouth": 0.0
+        },
+        "W": {
+          "profile": "LOW_ROLL_4",
+          "mouth": 0.0
+        }
+      },
+      "design": "Raised lava overlook, glassy cairn and pale shelf growth"
+    },
+    {
+      "objects": 6,
+      "mesh_objects": 5,
+      "triangles": 6502,
+      "mesh_triangles": {
+        "cap_collapsed_pass": 3376,
+        "prop_cap_collapsed_pass_solid": 560,
+        "prop_charred_ember_rose_placement.003": 912,
+        "prop_charred_thorn_pod_placement.002": 870,
+        "prop_drained_seed_shrub_placement.004": 784
+      },
+      "collections": {
+        "cap_collapsed_pass_Structure": [
+          "cap_collapsed_pass"
+        ],
+        "cap_collapsed_pass_Props_Solid": [
+          "prop_cap_collapsed_pass_solid"
+        ],
+        "cap_collapsed_pass_Props_NonSolid": [
+          "prop_charred_ember_rose_placement.003",
+          "prop_charred_thorn_pod_placement.002",
+          "prop_drained_seed_shrub_placement.004"
+        ]
+      },
+      "name": "cap_collapsed_pass",
+      "role": "CAP",
+      "dimensions_xyz": [
+        256.0,
+        256.0,
+        70.26285696029663
+      ],
+      "bounds_local": [
+        [
+          -128.0,
+          -128.0,
+          -4.858804225921631
+        ],
+        [
+          128.0,
+          128.0,
+          65.404052734375
+        ]
+      ],
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "entry_local": 0,
+      "exit_local": null,
+      "world_datum": 56,
+      "entry_world": 56,
+      "exit_world": null,
+      "delta": 0,
+      "continuation": "LEVEL_1",
+      "mouth_probes": [
+        {
+          "side": "S",
+          "samples": 20,
+          "width": 56,
+          "buffer": 24,
+          "local_height": 0.0
+        }
+      ],
+      "edge_profiles": {
+        "N": {
+          "profile": "LOW_ROLL_4",
+          "mouth": 0.0
+        },
+        "E": {
+          "profile": "LOW_ROLL_4",
+          "mouth": 0.0
+        },
+        "S": {
+          "profile": "LOW_ROLL_4",
+          "mouth": 0.0
+        },
+        "W": {
+          "profile": "LOW_ROLL_4",
+          "mouth": 0.0
+        }
+      },
+      "design": "Raised continuation ending in geological collapse and one buried road fragment"
+    }
+  ],
+  "scenery": [
+    {
+      "objects": 1,
+      "mesh_objects": 1,
+      "triangles": 854,
+      "mesh_triangles": {
+        "scenery_ashland_a": 854
+      },
+      "collections": {
+        "scenery_ashland_a_Structure": [
+          "scenery_ashland_a"
+        ],
+        "scenery_ashland_a_Props_NonSolid": []
+      },
+      "name": "scenery_ashland_a",
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "terrain_dimensions": [
+        256.0,
+        256.0,
+        8.937240600585938
+      ],
+      "role": null,
+      "sockets": [],
+      "enemy_spawns": [],
+      "bounds_local": [
+        [
+          -128.0,
+          -128.0,
+          0.0
+        ],
+        [
+          128.0,
+          128.0,
+          8.937240600585938
+        ]
+      ]
+    },
+    {
+      "objects": 3,
+      "mesh_objects": 3,
+      "triangles": 1278,
+      "mesh_triangles": {
+        "scenery_basalt_ridge_a": 854,
+        "scenery_fractured_ridge": 212,
+        "scenery_fractured_ridge.001": 212
+      },
+      "collections": {
+        "scenery_basalt_ridge_a_Structure": [
+          "scenery_basalt_ridge_a",
+          "scenery_fractured_ridge",
+          "scenery_fractured_ridge.001"
+        ],
+        "scenery_basalt_ridge_a_Props_NonSolid": []
+      },
+      "name": "scenery_basalt_ridge_a",
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "terrain_dimensions": [
+        256.0,
+        256.0,
+        63.05728530883789
+      ],
+      "role": null,
+      "sockets": [],
+      "enemy_spawns": [],
+      "bounds_local": [
+        [
+          -128.0,
+          -128.0,
+          0.0
+        ],
+        [
+          128.0,
+          128.0,
+          63.05728530883789
+        ]
+      ]
+    },
+    {
+      "objects": 3,
+      "mesh_objects": 3,
+      "triangles": 1278,
+      "mesh_triangles": {
+        "scenery_basalt_ridge_high": 854,
+        "scenery_fractured_ridge.002": 212,
+        "scenery_fractured_ridge.003": 212
+      },
+      "collections": {
+        "scenery_basalt_ridge_high_Structure": [
+          "scenery_basalt_ridge_high",
+          "scenery_fractured_ridge.002",
+          "scenery_fractured_ridge.003"
+        ],
+        "scenery_basalt_ridge_high_Props_NonSolid": []
+      },
+      "name": "scenery_basalt_ridge_high",
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "terrain_dimensions": [
+        256.0,
+        256.0,
+        105.0662612915039
+      ],
+      "role": null,
+      "sockets": [],
+      "enemy_spawns": [],
+      "bounds_local": [
+        [
+          -128.0,
+          -128.0,
+          0.0
+        ],
+        [
+          128.0,
+          128.0,
+          105.0662612915039
+        ]
+      ]
+    },
+    {
+      "objects": 3,
+      "mesh_objects": 3,
+      "triangles": 1074,
+      "mesh_triangles": {
+        "scenery_lava_field_a": 854,
+        "cooled_lava_islet": 212,
+        "scenery_molten_lowland": 8
+      },
+      "collections": {
+        "scenery_lava_field_a_Structure": [
+          "scenery_lava_field_a",
+          "cooled_lava_islet"
+        ],
+        "scenery_lava_field_a_Props_NonSolid": [
+          "scenery_molten_lowland"
+        ]
+      },
+      "name": "scenery_lava_field_a",
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "terrain_dimensions": [
+        256.0,
+        256.0,
+        42.99904251098633
+      ],
+      "role": null,
+      "sockets": [],
+      "enemy_spawns": [],
+      "bounds_local": [
+        [
+          -128.0,
+          -128.0,
+          -38.99904251098633
+        ],
+        [
+          128.0,
+          128.0,
+          4.0
+        ]
+      ]
+    },
+    {
+      "objects": 2,
+      "mesh_objects": 2,
+      "triangles": 862,
+      "mesh_triangles": {
+        "scenery_ravine_a": 854,
+        "scenery_ravine_deep_heat": 8
+      },
+      "collections": {
+        "scenery_ravine_a_Structure": [
+          "scenery_ravine_a"
+        ],
+        "scenery_ravine_a_Props_NonSolid": [
+          "scenery_ravine_deep_heat"
+        ]
+      },
+      "name": "scenery_ravine_a",
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "terrain_dimensions": [
+        256.0,
+        256.0,
+        71.39478874206543
+      ],
+      "role": null,
+      "sockets": [],
+      "enemy_spawns": [],
+      "bounds_local": [
+        [
+          -128.0,
+          -128.0,
+          -54.994300842285156
+        ],
+        [
+          128.0,
+          128.0,
+          16.400487899780273
+        ]
+      ]
+    },
+    {
+      "objects": 3,
+      "mesh_objects": 3,
+      "triangles": 1854,
+      "mesh_triangles": {
+        "scenery_drained_flora_a": 854,
+        "scenery_flora_pocket": 216,
+        "scenery_flora_pocket.001": 784
+      },
+      "collections": {
+        "scenery_drained_flora_a_Structure": [
+          "scenery_drained_flora_a"
+        ],
+        "scenery_drained_flora_a_Props_NonSolid": [
+          "scenery_flora_pocket",
+          "scenery_flora_pocket.001"
+        ]
+      },
+      "name": "scenery_drained_flora_a",
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "terrain_dimensions": [
+        256.0,
+        256.0,
+        16.32390785217285
+      ],
+      "role": null,
+      "sockets": [],
+      "enemy_spawns": [],
+      "bounds_local": [
+        [
+          -128.0,
+          -128.0,
+          0.0
+        ],
+        [
+          128.0,
+          128.0,
+          16.32390785217285
+        ]
+      ]
+    },
+    {
+      "objects": 3,
+      "mesh_objects": 3,
+      "triangles": 2636,
+      "mesh_triangles": {
+        "scenery_charred_flora_a": 854,
+        "scenery_flora_pocket.002": 912,
+        "scenery_flora_pocket.003": 870
+      },
+      "collections": {
+        "scenery_charred_flora_a_Structure": [
+          "scenery_charred_flora_a"
+        ],
+        "scenery_charred_flora_a_Props_NonSolid": [
+          "scenery_flora_pocket.002",
+          "scenery_flora_pocket.003"
+        ]
+      },
+      "name": "scenery_charred_flora_a",
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "terrain_dimensions": [
+        256.0,
+        256.0,
+        43.19541358947754
+      ],
+      "role": null,
+      "sockets": [],
+      "enemy_spawns": [],
+      "bounds_local": [
+        [
+          -128.0,
+          -128.0,
+          -16.918718338012695
+        ],
+        [
+          128.0,
+          128.0,
+          26.276695251464844
+        ]
+      ]
+    },
+    {
+      "objects": 3,
+      "mesh_objects": 3,
+      "triangles": 1278,
+      "mesh_triangles": {
+        "scenery_foothill_a": 854,
+        "scenery_fractured_ridge.004": 212,
+        "scenery_fractured_ridge.005": 212
+      },
+      "collections": {
+        "scenery_foothill_a_Structure": [
+          "scenery_foothill_a",
+          "scenery_fractured_ridge.004",
+          "scenery_fractured_ridge.005"
+        ],
+        "scenery_foothill_a_Props_NonSolid": []
+      },
+      "name": "scenery_foothill_a",
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "terrain_dimensions": [
+        256.0,
+        256.0,
+        56.036590576171875
+      ],
+      "role": null,
+      "sockets": [],
+      "enemy_spawns": [],
+      "bounds_local": [
+        [
+          -128.0,
+          -128.0,
+          0.0
+        ],
+        [
+          128.0,
+          128.0,
+          56.036590576171875
+        ]
+      ]
+    }
+  ],
+  "flora_hashes_before": {
+    "prop_drained_wax_rosette": "1fd5fb8ccae6d4ff2f4840a22aac5a77d8db933f6db625ee8075c1e54a9fa113",
+    "prop_drained_seed_shrub": "85d86948e244201b829e3c2a5217a88ddab831233d718bb430928b66ff9f08c9",
+    "prop_charred_ember_rose": "0eb5089b450b4ea536e5928781c86be4dba577f13841289a596b7784cb4c68e4",
+    "prop_charred_thorn_pod": "4adbb8c114b5b17ba702f829eef5148b91c20ead5fa864322a1f25169794566f"
+  },
+  "flora_hashes_after": {
+    "prop_drained_wax_rosette": "1fd5fb8ccae6d4ff2f4840a22aac5a77d8db933f6db625ee8075c1e54a9fa113",
+    "prop_drained_seed_shrub": "85d86948e244201b829e3c2a5217a88ddab831233d718bb430928b66ff9f08c9",
+    "prop_charred_ember_rose": "0eb5089b450b4ea536e5928781c86be4dba577f13841289a596b7784cb4c68e4",
+    "prop_charred_thorn_pod": "4adbb8c114b5b17ba702f829eef5148b91c20ead5fa864322a1f25169794566f"
+  },
+  "blender_version": "5.2.2 LTS",
+  "arrangements": {
+    "A": {
+      "seed": 421,
+      "cells": [
+        {
+          "cell": [
+            -2,
+            -3
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -1,
+            -3
+          ],
+          "asset": "scenery_foothill_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            0,
+            -3
+          ],
+          "asset": "scenery_drained_flora_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            1,
+            -3
+          ],
+          "asset": "scenery_charred_flora_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            2,
+            -3
+          ],
+          "asset": "scenery_charred_flora_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            3,
+            -3
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -2,
+            -2
+          ],
+          "asset": "scenery_drained_flora_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -1,
+            -2
+          ],
+          "asset": "scenery_basalt_ridge_high",
+          "datum": 0,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            0,
+            -2
+          ],
+          "asset": "scenery_charred_flora_a",
+          "datum": 0,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            1,
+            -2
+          ],
+          "asset": "scenery_drained_flora_a",
+          "datum": 0,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            2,
+            -2
+          ],
+          "asset": "scenery_ashland_a",
+          "datum": 0,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            3,
+            -2
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -2,
+            -1
+          ],
+          "asset": "scenery_lava_field_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -1,
+            -1
+          ],
+          "asset": "scenery_ashland_a",
+          "datum": 0,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            1,
+            -1
+          ],
+          "asset": "scenery_basalt_ridge_a",
+          "datum": 0,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            2,
+            -1
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 0,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            3,
+            -1
+          ],
+          "asset": "scenery_charred_flora_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -2,
+            0
+          ],
+          "asset": "scenery_foothill_a",
+          "datum": 28.0,
+          "ring": "distant",
+          "controlled_transition_fit": true
+        },
+        {
+          "cell": [
+            -1,
+            0
+          ],
+          "asset": "scenery_lava_field_a",
+          "datum": 28.0,
+          "ring": "local",
+          "controlled_transition_fit": true
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "asset": "scenery_drained_flora_a",
+          "datum": 28.0,
+          "ring": "local",
+          "controlled_transition_fit": true
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "asset": "scenery_basalt_ridge_a",
+          "datum": 28.0,
+          "ring": "local",
+          "controlled_transition_fit": true
+        },
+        {
+          "cell": [
+            3,
+            0
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 28.0,
+          "ring": "distant",
+          "controlled_transition_fit": true
+        },
+        {
+          "cell": [
+            -2,
+            1
+          ],
+          "asset": "scenery_basalt_ridge_high",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -1,
+            1
+          ],
+          "asset": "scenery_basalt_ridge_high",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            2,
+            1
+          ],
+          "asset": "scenery_lava_field_a",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            3,
+            1
+          ],
+          "asset": "scenery_basalt_ridge_high",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -2,
+            2
+          ],
+          "asset": "scenery_foothill_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -1,
+            2
+          ],
+          "asset": "scenery_drained_flora_a",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            1,
+            2
+          ],
+          "asset": "scenery_foothill_a",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            2,
+            2
+          ],
+          "asset": "scenery_ashland_a",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            3,
+            2
+          ],
+          "asset": "scenery_foothill_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -2,
+            3
+          ],
+          "asset": "scenery_basalt_ridge_high",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -1,
+            3
+          ],
+          "asset": "scenery_ashland_a",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            0,
+            3
+          ],
+          "asset": "scenery_lava_field_a",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            1,
+            3
+          ],
+          "asset": "scenery_basalt_ridge_high",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            2,
+            3
+          ],
+          "asset": "scenery_basalt_ridge_high",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            3,
+            3
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -2,
+            4
+          ],
+          "asset": "scenery_drained_flora_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -1,
+            4
+          ],
+          "asset": "scenery_lava_field_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            0,
+            4
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            1,
+            4
+          ],
+          "asset": "scenery_lava_field_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            2,
+            4
+          ],
+          "asset": "scenery_foothill_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            3,
+            4
+          ],
+          "asset": "scenery_basalt_ridge_high",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        }
+      ],
+      "seams": [
+        {
+          "a": "chunk_entry_ash_plain_placed",
+          "b": "path_column_pass_placed",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "playable-playable"
+        },
+        {
+          "a": "chunk_entry_ash_plain_placed",
+          "b": "scenery_basalt_ridge_a_cell_1_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "path_column_pass_placed",
+          "b": "chunk_column_forest_placed",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "playable-playable"
+        },
+        {
+          "a": "path_column_pass_placed",
+          "b": "scenery_drained_flora_a_cell_1_0",
+          "samples": 35,
+          "max_gap": 1.9073486328125e-06,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "chunk_column_forest_placed",
+          "b": "cap_collapsed_pass_placed",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-playable"
+        },
+        {
+          "a": "chunk_column_forest_placed",
+          "b": "side_lava_overlook_placed",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-playable"
+        },
+        {
+          "a": "side_lava_overlook_placed",
+          "b": "scenery_foothill_a_cell_1_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "side_lava_overlook_placed",
+          "b": "scenery_lava_field_a_cell_2_1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "cap_collapsed_pass_placed",
+          "b": "scenery_lava_field_a_cell_0_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "cap_collapsed_pass_placed",
+          "b": "scenery_foothill_a_cell_1_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_-2_-3",
+          "b": "scenery_drained_flora_a_cell_-2_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_-2_-3",
+          "b": "scenery_foothill_a_cell_-1_-3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_-1_-3",
+          "b": "scenery_basalt_ridge_high_cell_-1_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_-1_-3",
+          "b": "scenery_drained_flora_a_cell_0_-3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_drained_flora_a_cell_0_-3",
+          "b": "scenery_charred_flora_a_cell_0_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_drained_flora_a_cell_0_-3",
+          "b": "scenery_charred_flora_a_cell_1_-3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_1_-3",
+          "b": "scenery_drained_flora_a_cell_1_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_1_-3",
+          "b": "scenery_charred_flora_a_cell_2_-3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_2_-3",
+          "b": "scenery_ashland_a_cell_2_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_2_-3",
+          "b": "scenery_ravine_a_cell_3_-3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_3_-3",
+          "b": "scenery_ravine_a_cell_3_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_drained_flora_a_cell_-2_-2",
+          "b": "scenery_lava_field_a_cell_-2_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_drained_flora_a_cell_-2_-2",
+          "b": "scenery_basalt_ridge_high_cell_-1_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_-1_-2",
+          "b": "scenery_ashland_a_cell_-1_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_-1_-2",
+          "b": "scenery_charred_flora_a_cell_0_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_0_-2",
+          "b": "chunk_entry_ash_plain_placed",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_0_-2",
+          "b": "scenery_drained_flora_a_cell_1_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_drained_flora_a_cell_1_-2",
+          "b": "scenery_basalt_ridge_a_cell_1_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_drained_flora_a_cell_1_-2",
+          "b": "scenery_ashland_a_cell_2_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_2_-2",
+          "b": "scenery_ravine_a_cell_2_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_2_-2",
+          "b": "scenery_ravine_a_cell_3_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_3_-2",
+          "b": "scenery_charred_flora_a_cell_3_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_-2_-1",
+          "b": "scenery_foothill_a_cell_-2_0",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_-2_-1",
+          "b": "scenery_ashland_a_cell_-1_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_-1_-1",
+          "b": "scenery_lava_field_a_cell_-1_0",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_-1_-1",
+          "b": "chunk_entry_ash_plain_placed",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_a_cell_1_-1",
+          "b": "scenery_drained_flora_a_cell_1_0",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_a_cell_1_-1",
+          "b": "scenery_ravine_a_cell_2_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_2_-1",
+          "b": "scenery_basalt_ridge_a_cell_2_0",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_2_-1",
+          "b": "scenery_charred_flora_a_cell_3_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_3_-1",
+          "b": "scenery_ravine_a_cell_3_0",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_-2_0",
+          "b": "scenery_basalt_ridge_high_cell_-2_1",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_-2_0",
+          "b": "scenery_lava_field_a_cell_-1_0",
+          "samples": 35,
+          "max_gap": 1.4210854715202004e-14,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_-1_0",
+          "b": "scenery_basalt_ridge_high_cell_-1_1",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_-1_0",
+          "b": "path_column_pass_placed",
+          "samples": 35,
+          "max_gap": 1.9073486328125e-06,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "scenery_drained_flora_a_cell_1_0",
+          "b": "side_lava_overlook_placed",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "scenery_drained_flora_a_cell_1_0",
+          "b": "scenery_basalt_ridge_a_cell_2_0",
+          "samples": 35,
+          "max_gap": 1.4210854715202004e-14,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_a_cell_2_0",
+          "b": "scenery_lava_field_a_cell_2_1",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_a_cell_2_0",
+          "b": "scenery_ravine_a_cell_3_0",
+          "samples": 35,
+          "max_gap": 1.4210854715202004e-14,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_3_0",
+          "b": "scenery_basalt_ridge_high_cell_3_1",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_-2_1",
+          "b": "scenery_foothill_a_cell_-2_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_-2_1",
+          "b": "scenery_basalt_ridge_high_cell_-1_1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_-1_1",
+          "b": "scenery_drained_flora_a_cell_-1_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_-1_1",
+          "b": "chunk_column_forest_placed",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_2_1",
+          "b": "scenery_ashland_a_cell_2_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_2_1",
+          "b": "scenery_basalt_ridge_high_cell_3_1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_3_1",
+          "b": "scenery_foothill_a_cell_3_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_-2_2",
+          "b": "scenery_basalt_ridge_high_cell_-2_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_-2_2",
+          "b": "scenery_drained_flora_a_cell_-1_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_drained_flora_a_cell_-1_2",
+          "b": "scenery_ashland_a_cell_-1_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_drained_flora_a_cell_-1_2",
+          "b": "cap_collapsed_pass_placed",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_1_2",
+          "b": "scenery_basalt_ridge_high_cell_1_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_1_2",
+          "b": "scenery_ashland_a_cell_2_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_2_2",
+          "b": "scenery_basalt_ridge_high_cell_2_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_2_2",
+          "b": "scenery_foothill_a_cell_3_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_3_2",
+          "b": "scenery_ravine_a_cell_3_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_-2_3",
+          "b": "scenery_drained_flora_a_cell_-2_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_-2_3",
+          "b": "scenery_ashland_a_cell_-1_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_-1_3",
+          "b": "scenery_lava_field_a_cell_-1_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_-1_3",
+          "b": "scenery_lava_field_a_cell_0_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_0_3",
+          "b": "scenery_ravine_a_cell_0_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_0_3",
+          "b": "scenery_basalt_ridge_high_cell_1_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_1_3",
+          "b": "scenery_lava_field_a_cell_1_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_1_3",
+          "b": "scenery_basalt_ridge_high_cell_2_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_2_3",
+          "b": "scenery_foothill_a_cell_2_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_2_3",
+          "b": "scenery_ravine_a_cell_3_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_3_3",
+          "b": "scenery_basalt_ridge_high_cell_3_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_drained_flora_a_cell_-2_4",
+          "b": "scenery_lava_field_a_cell_-1_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_-1_4",
+          "b": "scenery_ravine_a_cell_0_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_0_4",
+          "b": "scenery_lava_field_a_cell_1_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_1_4",
+          "b": "scenery_foothill_a_cell_2_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_2_4",
+          "b": "scenery_basalt_ridge_high_cell_3_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        }
+      ],
+      "counts": {
+        "objects": 223,
+        "mesh_objects": 173,
+        "triangles": 94562,
+        "mesh_triangles": {
+          "chunk_entry_ash_plain.001": 2804,
+          "prop_chunk_entry_ash_plain_solid.001": 400,
+          "prop_lava_hairline.001": 4,
+          "prop_drained_wax_rosette_placement.004": 216,
+          "prop_drained_seed_shrub_placement.005": 784,
+          "prop_drained_wax_rosette_placement.005": 216,
+          "path_column_pass.001": 4076,
+          "prop_path_column_pass_solid.001": 640,
+          "prop_low_fissure.001": 6,
+          "prop_charred_ember_rose_placement.004": 912,
+          "prop_charred_thorn_pod_placement.003": 870,
+          "prop_drained_seed_shrub_placement.006": 784,
+          "chunk_column_forest.001": 3508,
+          "prop_chunk_column_forest_solid.001": 800,
+          "prop_basin_heat.001": 4,
+          "prop_charred_thorn_pod_placement.004": 870,
+          "prop_charred_ember_rose_placement.005": 912,
+          "prop_drained_wax_rosette_placement.006": 216,
+          "prop_drained_seed_shrub_placement.007": 784,
+          "side_lava_overlook.001": 3016,
+          "prop_side_lava_overlook_solid.001": 660,
+          "prop_shelf_wound.001": 4,
+          "prop_drained_wax_rosette_placement.007": 216,
+          "prop_drained_seed_shrub_placement.008": 784,
+          "prop_charred_ember_rose_placement.006": 912,
+          "cap_collapsed_pass.001": 3376,
+          "prop_cap_collapsed_pass_solid.001": 560,
+          "prop_charred_ember_rose_placement.007": 912,
+          "prop_charred_thorn_pod_placement.005": 870,
+          "prop_drained_seed_shrub_placement.009": 784,
+          "scenery_basalt_ridge_high.001": 854,
+          "scenery_fractured_ridge.008": 212,
+          "scenery_fractured_ridge.009": 212,
+          "scenery_charred_flora_a.003": 854,
+          "scenery_flora_pocket.012": 912,
+          "scenery_flora_pocket.013": 870,
+          "scenery_drained_flora_a.003": 854,
+          "scenery_flora_pocket.014": 216,
+          "scenery_flora_pocket.015": 784,
+          "scenery_ashland_a.001": 854,
+          "scenery_ashland_a.002": 854,
+          "scenery_basalt_ridge_a.001": 854,
+          "scenery_fractured_ridge.010": 212,
+          "scenery_fractured_ridge.011": 212,
+          "scenery_ravine_a.004": 854,
+          "scenery_ravine_deep_heat.004": 8,
+          "scenery_lava_field_a.002": 854,
+          "cooled_lava_islet.002": 212,
+          "scenery_molten_lowland.002": 8,
+          "scenery_drained_flora_a.004": 854,
+          "scenery_flora_pocket.018": 216,
+          "scenery_flora_pocket.019": 784,
+          "scenery_basalt_ridge_a.002": 854,
+          "scenery_fractured_ridge.014": 212,
+          "scenery_fractured_ridge.015": 212,
+          "scenery_basalt_ridge_high.003": 854,
+          "scenery_fractured_ridge.018": 212,
+          "scenery_fractured_ridge.019": 212,
+          "scenery_lava_field_a.003": 854,
+          "cooled_lava_islet.003": 212,
+          "scenery_molten_lowland.003": 8,
+          "scenery_drained_flora_a.005": 854,
+          "scenery_flora_pocket.020": 216,
+          "scenery_flora_pocket.021": 784,
+          "scenery_foothill_a.004": 854,
+          "scenery_fractured_ridge.024": 212,
+          "scenery_fractured_ridge.025": 212,
+          "scenery_ashland_a.003": 854,
+          "scenery_ashland_a.004": 854,
+          "scenery_lava_field_a.004": 854,
+          "cooled_lava_islet.004": 212,
+          "scenery_molten_lowland.004": 8,
+          "scenery_basalt_ridge_high.006": 854,
+          "scenery_fractured_ridge.030": 212,
+          "scenery_fractured_ridge.031": 212,
+          "scenery_basalt_ridge_high.007": 854,
+          "scenery_fractured_ridge.032": 212,
+          "scenery_fractured_ridge.033": 212,
+          "horizon_-2_-3_W_REVIEW_ONLY": 204,
+          "horizon_-2_-3_S_REVIEW_ONLY": 198,
+          "horizon_-1_-3_S_REVIEW_ONLY": 204,
+          "horizon_0_-3_S_REVIEW_ONLY": 198,
+          "horizon_1_-3_S_REVIEW_ONLY": 198,
+          "horizon_2_-3_S_REVIEW_ONLY": 204,
+          "horizon_3_-3_E_REVIEW_ONLY": 198,
+          "horizon_3_-3_S_REVIEW_ONLY": 204,
+          "horizon_-2_-2_W_REVIEW_ONLY": 204,
+          "horizon_3_-2_E_REVIEW_ONLY": 204,
+          "horizon_-2_-1_W_REVIEW_ONLY": 204,
+          "horizon_3_-1_E_REVIEW_ONLY": 204,
+          "horizon_-2_0_W_REVIEW_ONLY": 198,
+          "horizon_3_0_E_REVIEW_ONLY": 198,
+          "horizon_-2_1_W_REVIEW_ONLY": 204,
+          "horizon_3_1_E_REVIEW_ONLY": 198,
+          "horizon_-2_2_W_REVIEW_ONLY": 198,
+          "horizon_3_2_E_REVIEW_ONLY": 204,
+          "horizon_-2_3_W_REVIEW_ONLY": 198,
+          "horizon_3_3_E_REVIEW_ONLY": 204,
+          "horizon_-2_4_W_REVIEW_ONLY": 198,
+          "horizon_-2_4_N_REVIEW_ONLY": 204,
+          "horizon_-1_4_N_REVIEW_ONLY": 204,
+          "horizon_0_4_N_REVIEW_ONLY": 204,
+          "horizon_1_4_N_REVIEW_ONLY": 204,
+          "horizon_2_4_N_REVIEW_ONLY": 198,
+          "horizon_3_4_E_REVIEW_ONLY": 198,
+          "horizon_3_4_N_REVIEW_ONLY": 204,
+          "scenery_ravine_a.001": 854,
+          "scenery_ravine_deep_heat.001": 8,
+          "scenery_foothill_a.001": 854,
+          "scenery_fractured_ridge.006": 212,
+          "scenery_fractured_ridge.007": 212,
+          "scenery_drained_flora_a.001": 854,
+          "scenery_flora_pocket.004": 216,
+          "scenery_flora_pocket.005": 784,
+          "scenery_charred_flora_a.001": 854,
+          "scenery_flora_pocket.006": 912,
+          "scenery_flora_pocket.007": 870,
+          "scenery_charred_flora_a.002": 854,
+          "scenery_flora_pocket.008": 912,
+          "scenery_flora_pocket.009": 870,
+          "scenery_ravine_a.002": 854,
+          "scenery_ravine_deep_heat.002": 8,
+          "scenery_drained_flora_a.002": 854,
+          "scenery_flora_pocket.010": 216,
+          "scenery_flora_pocket.011": 784,
+          "scenery_ravine_a.003": 854,
+          "scenery_ravine_deep_heat.003": 8,
+          "scenery_lava_field_a.001": 854,
+          "cooled_lava_islet.001": 212,
+          "scenery_molten_lowland.001": 8,
+          "scenery_charred_flora_a.004": 854,
+          "scenery_flora_pocket.016": 912,
+          "scenery_flora_pocket.017": 870,
+          "scenery_foothill_a.002": 854,
+          "scenery_fractured_ridge.012": 212,
+          "scenery_fractured_ridge.013": 212,
+          "scenery_ravine_a.005": 854,
+          "scenery_ravine_deep_heat.005": 8,
+          "scenery_basalt_ridge_high.002": 854,
+          "scenery_fractured_ridge.016": 212,
+          "scenery_fractured_ridge.017": 212,
+          "scenery_basalt_ridge_high.004": 854,
+          "scenery_fractured_ridge.020": 212,
+          "scenery_fractured_ridge.021": 212,
+          "scenery_foothill_a.003": 854,
+          "scenery_fractured_ridge.022": 212,
+          "scenery_fractured_ridge.023": 212,
+          "scenery_foothill_a.005": 854,
+          "scenery_fractured_ridge.026": 212,
+          "scenery_fractured_ridge.027": 212,
+          "scenery_basalt_ridge_high.005": 854,
+          "scenery_fractured_ridge.028": 212,
+          "scenery_fractured_ridge.029": 212,
+          "scenery_ravine_a.006": 854,
+          "scenery_ravine_deep_heat.006": 8,
+          "scenery_drained_flora_a.006": 854,
+          "scenery_flora_pocket.022": 216,
+          "scenery_flora_pocket.023": 784,
+          "scenery_lava_field_a.005": 854,
+          "cooled_lava_islet.005": 212,
+          "scenery_molten_lowland.005": 8,
+          "scenery_ravine_a.007": 854,
+          "scenery_ravine_deep_heat.007": 8,
+          "scenery_lava_field_a.006": 854,
+          "cooled_lava_islet.006": 212,
+          "scenery_molten_lowland.006": 8,
+          "scenery_foothill_a.006": 854,
+          "scenery_fractured_ridge.034": 212,
+          "scenery_fractured_ridge.035": 212,
+          "scenery_basalt_ridge_high.008": 854,
+          "scenery_fractured_ridge.036": 212,
+          "scenery_fractured_ridge.037": 212,
+          "Atmosphere_REVIEW_ONLY": 12
+        },
+        "collections": {
+          "Playable_5": [],
+          "Scenery_instances_REVIEW_ONLY": [],
+          "Distant_ring_REVIEW_ONLY": [
+            "horizon_-2_-3_W_REVIEW_ONLY",
+            "horizon_-2_-3_S_REVIEW_ONLY",
+            "horizon_-1_-3_S_REVIEW_ONLY",
+            "horizon_0_-3_S_REVIEW_ONLY",
+            "horizon_1_-3_S_REVIEW_ONLY",
+            "horizon_2_-3_S_REVIEW_ONLY",
+            "horizon_3_-3_E_REVIEW_ONLY",
+            "horizon_3_-3_S_REVIEW_ONLY",
+            "horizon_-2_-2_W_REVIEW_ONLY",
+            "horizon_3_-2_E_REVIEW_ONLY",
+            "horizon_-2_-1_W_REVIEW_ONLY",
+            "horizon_3_-1_E_REVIEW_ONLY",
+            "horizon_-2_0_W_REVIEW_ONLY",
+            "horizon_3_0_E_REVIEW_ONLY",
+            "horizon_-2_1_W_REVIEW_ONLY",
+            "horizon_3_1_E_REVIEW_ONLY",
+            "horizon_-2_2_W_REVIEW_ONLY",
+            "horizon_3_2_E_REVIEW_ONLY",
+            "horizon_-2_3_W_REVIEW_ONLY",
+            "horizon_3_3_E_REVIEW_ONLY",
+            "horizon_-2_4_W_REVIEW_ONLY",
+            "horizon_-2_4_N_REVIEW_ONLY",
+            "horizon_-1_4_N_REVIEW_ONLY",
+            "horizon_0_4_N_REVIEW_ONLY",
+            "horizon_1_4_N_REVIEW_ONLY",
+            "horizon_2_4_N_REVIEW_ONLY",
+            "horizon_3_4_E_REVIEW_ONLY",
+            "horizon_3_4_N_REVIEW_ONLY"
+          ],
+          "Cameras_Lights_REVIEW_ONLY": [
+            "Atmosphere_REVIEW_ONLY"
+          ]
+        }
+      },
+      "local_instances": 19,
+      "distant_instances": 24
+    },
+    "B": {
+      "seed": 824,
+      "cells": [
+        {
+          "cell": [
+            -2,
+            -3
+          ],
+          "asset": "scenery_basalt_ridge_high",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -1,
+            -3
+          ],
+          "asset": "scenery_ashland_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            0,
+            -3
+          ],
+          "asset": "scenery_ashland_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            1,
+            -3
+          ],
+          "asset": "scenery_basalt_ridge_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            2,
+            -3
+          ],
+          "asset": "scenery_lava_field_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            3,
+            -3
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -2,
+            -2
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -1,
+            -2
+          ],
+          "asset": "scenery_charred_flora_a",
+          "datum": 0,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            0,
+            -2
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 0,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            1,
+            -2
+          ],
+          "asset": "scenery_charred_flora_a",
+          "datum": 0,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            2,
+            -2
+          ],
+          "asset": "scenery_ashland_a",
+          "datum": 0,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            3,
+            -2
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -2,
+            -1
+          ],
+          "asset": "scenery_lava_field_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -1,
+            -1
+          ],
+          "asset": "scenery_charred_flora_a",
+          "datum": 0,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            1,
+            -1
+          ],
+          "asset": "scenery_charred_flora_a",
+          "datum": 0,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            2,
+            -1
+          ],
+          "asset": "scenery_charred_flora_a",
+          "datum": 0,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            3,
+            -1
+          ],
+          "asset": "scenery_basalt_ridge_high",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -2,
+            0
+          ],
+          "asset": "scenery_foothill_a",
+          "datum": 28.0,
+          "ring": "distant",
+          "controlled_transition_fit": true
+        },
+        {
+          "cell": [
+            -1,
+            0
+          ],
+          "asset": "scenery_ashland_a",
+          "datum": 28.0,
+          "ring": "local",
+          "controlled_transition_fit": true
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "asset": "scenery_charred_flora_a",
+          "datum": 28.0,
+          "ring": "local",
+          "controlled_transition_fit": true
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "asset": "scenery_charred_flora_a",
+          "datum": 28.0,
+          "ring": "local",
+          "controlled_transition_fit": true
+        },
+        {
+          "cell": [
+            3,
+            0
+          ],
+          "asset": "scenery_basalt_ridge_a",
+          "datum": 28.0,
+          "ring": "distant",
+          "controlled_transition_fit": true
+        },
+        {
+          "cell": [
+            -2,
+            1
+          ],
+          "asset": "scenery_drained_flora_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -1,
+            1
+          ],
+          "asset": "scenery_foothill_a",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            2,
+            1
+          ],
+          "asset": "scenery_lava_field_a",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            3,
+            1
+          ],
+          "asset": "scenery_basalt_ridge_high",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -2,
+            2
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -1,
+            2
+          ],
+          "asset": "scenery_foothill_a",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            1,
+            2
+          ],
+          "asset": "scenery_basalt_ridge_high",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            2,
+            2
+          ],
+          "asset": "scenery_drained_flora_a",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            3,
+            2
+          ],
+          "asset": "scenery_ashland_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -2,
+            3
+          ],
+          "asset": "scenery_foothill_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -1,
+            3
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            0,
+            3
+          ],
+          "asset": "scenery_basalt_ridge_high",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            1,
+            3
+          ],
+          "asset": "scenery_basalt_ridge_a",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            2,
+            3
+          ],
+          "asset": "scenery_ashland_a",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            3,
+            3
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -2,
+            4
+          ],
+          "asset": "scenery_foothill_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -1,
+            4
+          ],
+          "asset": "scenery_charred_flora_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            0,
+            4
+          ],
+          "asset": "scenery_foothill_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            1,
+            4
+          ],
+          "asset": "scenery_charred_flora_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            2,
+            4
+          ],
+          "asset": "scenery_lava_field_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            3,
+            4
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        }
+      ],
+      "seams": [
+        {
+          "a": "chunk_entry_ash_plain_placed.001",
+          "b": "path_column_pass_placed.001",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "playable-playable"
+        },
+        {
+          "a": "chunk_entry_ash_plain_placed.001",
+          "b": "scenery_charred_flora_a_cell_1_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "path_column_pass_placed.001",
+          "b": "chunk_column_forest_placed.001",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "playable-playable"
+        },
+        {
+          "a": "path_column_pass_placed.001",
+          "b": "scenery_charred_flora_a_cell_1_0",
+          "samples": 35,
+          "max_gap": 1.9073486328125e-06,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "chunk_column_forest_placed.001",
+          "b": "cap_collapsed_pass_placed.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-playable"
+        },
+        {
+          "a": "chunk_column_forest_placed.001",
+          "b": "side_lava_overlook_placed.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-playable"
+        },
+        {
+          "a": "side_lava_overlook_placed.001",
+          "b": "scenery_basalt_ridge_high_cell_1_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "side_lava_overlook_placed.001",
+          "b": "scenery_lava_field_a_cell_2_1.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "cap_collapsed_pass_placed.001",
+          "b": "scenery_basalt_ridge_high_cell_0_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "cap_collapsed_pass_placed.001",
+          "b": "scenery_basalt_ridge_high_cell_1_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_-2_-3",
+          "b": "scenery_ravine_a_cell_-2_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_-2_-3",
+          "b": "scenery_ashland_a_cell_-1_-3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_-1_-3",
+          "b": "scenery_charred_flora_a_cell_-1_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_-1_-3",
+          "b": "scenery_ashland_a_cell_0_-3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_0_-3",
+          "b": "scenery_ravine_a_cell_0_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_0_-3",
+          "b": "scenery_basalt_ridge_a_cell_1_-3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_a_cell_1_-3",
+          "b": "scenery_charred_flora_a_cell_1_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_a_cell_1_-3",
+          "b": "scenery_lava_field_a_cell_2_-3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_2_-3",
+          "b": "scenery_ashland_a_cell_2_-2.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_2_-3",
+          "b": "scenery_ravine_a_cell_3_-3.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_3_-3.001",
+          "b": "scenery_ravine_a_cell_3_-2.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_-2_-2",
+          "b": "scenery_lava_field_a_cell_-2_-1.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_-2_-2",
+          "b": "scenery_charred_flora_a_cell_-1_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_-1_-2",
+          "b": "scenery_charred_flora_a_cell_-1_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_-1_-2",
+          "b": "scenery_ravine_a_cell_0_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_0_-2",
+          "b": "chunk_entry_ash_plain_placed.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_0_-2",
+          "b": "scenery_charred_flora_a_cell_1_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_1_-2",
+          "b": "scenery_charred_flora_a_cell_1_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_1_-2",
+          "b": "scenery_ashland_a_cell_2_-2.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_2_-2.001",
+          "b": "scenery_charred_flora_a_cell_2_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_2_-2.001",
+          "b": "scenery_ravine_a_cell_3_-2.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_3_-2.001",
+          "b": "scenery_basalt_ridge_high_cell_3_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_-2_-1.001",
+          "b": "scenery_foothill_a_cell_-2_0.001",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_-2_-1.001",
+          "b": "scenery_charred_flora_a_cell_-1_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_-1_-1",
+          "b": "scenery_ashland_a_cell_-1_0",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_-1_-1",
+          "b": "chunk_entry_ash_plain_placed.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_1_-1",
+          "b": "scenery_charred_flora_a_cell_1_0",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_1_-1",
+          "b": "scenery_charred_flora_a_cell_2_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_2_-1",
+          "b": "scenery_charred_flora_a_cell_2_0",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_2_-1",
+          "b": "scenery_basalt_ridge_high_cell_3_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_3_-1",
+          "b": "scenery_basalt_ridge_a_cell_3_0",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_-2_0.001",
+          "b": "scenery_drained_flora_a_cell_-2_1",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_-2_0.001",
+          "b": "scenery_ashland_a_cell_-1_0",
+          "samples": 35,
+          "max_gap": 2.1316282072803006e-14,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_-1_0",
+          "b": "scenery_foothill_a_cell_-1_1",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_-1_0",
+          "b": "path_column_pass_placed.001",
+          "samples": 35,
+          "max_gap": 1.9073486328125e-06,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_1_0",
+          "b": "side_lava_overlook_placed.001",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_1_0",
+          "b": "scenery_charred_flora_a_cell_2_0",
+          "samples": 35,
+          "max_gap": 1.4210854715202004e-14,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_2_0",
+          "b": "scenery_lava_field_a_cell_2_1.001",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_2_0",
+          "b": "scenery_basalt_ridge_a_cell_3_0",
+          "samples": 35,
+          "max_gap": 7.105427357601002e-15,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_a_cell_3_0",
+          "b": "scenery_basalt_ridge_high_cell_3_1.001",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_drained_flora_a_cell_-2_1",
+          "b": "scenery_ravine_a_cell_-2_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_drained_flora_a_cell_-2_1",
+          "b": "scenery_foothill_a_cell_-1_1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_-1_1",
+          "b": "scenery_foothill_a_cell_-1_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_-1_1",
+          "b": "chunk_column_forest_placed.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_2_1.001",
+          "b": "scenery_drained_flora_a_cell_2_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_2_1.001",
+          "b": "scenery_basalt_ridge_high_cell_3_1.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_3_1.001",
+          "b": "scenery_ashland_a_cell_3_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_-2_2",
+          "b": "scenery_foothill_a_cell_-2_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_-2_2",
+          "b": "scenery_foothill_a_cell_-1_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_-1_2",
+          "b": "scenery_ravine_a_cell_-1_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_-1_2",
+          "b": "cap_collapsed_pass_placed.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_1_2",
+          "b": "scenery_basalt_ridge_a_cell_1_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_1_2",
+          "b": "scenery_drained_flora_a_cell_2_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_drained_flora_a_cell_2_2",
+          "b": "scenery_ashland_a_cell_2_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_drained_flora_a_cell_2_2",
+          "b": "scenery_ashland_a_cell_3_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_3_2",
+          "b": "scenery_ravine_a_cell_3_3.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_-2_3",
+          "b": "scenery_foothill_a_cell_-2_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_-2_3",
+          "b": "scenery_ravine_a_cell_-1_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_-1_3",
+          "b": "scenery_charred_flora_a_cell_-1_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_-1_3",
+          "b": "scenery_basalt_ridge_high_cell_0_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_0_3",
+          "b": "scenery_foothill_a_cell_0_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_0_3",
+          "b": "scenery_basalt_ridge_a_cell_1_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_a_cell_1_3",
+          "b": "scenery_charred_flora_a_cell_1_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_a_cell_1_3",
+          "b": "scenery_ashland_a_cell_2_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_2_3",
+          "b": "scenery_lava_field_a_cell_2_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_2_3",
+          "b": "scenery_ravine_a_cell_3_3.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_3_3.001",
+          "b": "scenery_ravine_a_cell_3_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_-2_4",
+          "b": "scenery_charred_flora_a_cell_-1_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_-1_4",
+          "b": "scenery_foothill_a_cell_0_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_0_4",
+          "b": "scenery_charred_flora_a_cell_1_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_1_4",
+          "b": "scenery_lava_field_a_cell_2_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_2_4",
+          "b": "scenery_ravine_a_cell_3_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        }
+      ],
+      "counts": {
+        "objects": 218,
+        "mesh_objects": 168,
+        "triangles": 98180,
+        "mesh_triangles": {
+          "chunk_entry_ash_plain.002": 2804,
+          "prop_chunk_entry_ash_plain_solid.002": 400,
+          "prop_lava_hairline.002": 4,
+          "prop_drained_wax_rosette_placement.008": 216,
+          "prop_drained_seed_shrub_placement.010": 784,
+          "prop_drained_wax_rosette_placement.009": 216,
+          "path_column_pass.002": 4076,
+          "prop_path_column_pass_solid.002": 640,
+          "prop_low_fissure.002": 6,
+          "prop_charred_ember_rose_placement.008": 912,
+          "prop_charred_thorn_pod_placement.006": 870,
+          "prop_drained_seed_shrub_placement.011": 784,
+          "chunk_column_forest.002": 3508,
+          "prop_chunk_column_forest_solid.002": 800,
+          "prop_basin_heat.002": 4,
+          "prop_charred_thorn_pod_placement.007": 870,
+          "prop_charred_ember_rose_placement.009": 912,
+          "prop_drained_wax_rosette_placement.010": 216,
+          "prop_drained_seed_shrub_placement.012": 784,
+          "side_lava_overlook.002": 3016,
+          "prop_side_lava_overlook_solid.002": 660,
+          "prop_shelf_wound.002": 4,
+          "prop_drained_wax_rosette_placement.011": 216,
+          "prop_drained_seed_shrub_placement.013": 784,
+          "prop_charred_ember_rose_placement.010": 912,
+          "cap_collapsed_pass.002": 3376,
+          "prop_cap_collapsed_pass_solid.002": 560,
+          "prop_charred_ember_rose_placement.011": 912,
+          "prop_charred_thorn_pod_placement.008": 870,
+          "prop_drained_seed_shrub_placement.014": 784,
+          "scenery_charred_flora_a.005": 854,
+          "scenery_flora_pocket.024": 912,
+          "scenery_flora_pocket.025": 870,
+          "scenery_ravine_a.010": 854,
+          "scenery_ravine_deep_heat.010": 8,
+          "scenery_charred_flora_a.006": 854,
+          "scenery_flora_pocket.026": 912,
+          "scenery_flora_pocket.027": 870,
+          "scenery_ashland_a.007": 854,
+          "scenery_charred_flora_a.007": 854,
+          "scenery_flora_pocket.028": 912,
+          "scenery_flora_pocket.029": 870,
+          "scenery_charred_flora_a.008": 854,
+          "scenery_flora_pocket.030": 912,
+          "scenery_flora_pocket.031": 870,
+          "scenery_charred_flora_a.009": 854,
+          "scenery_flora_pocket.032": 912,
+          "scenery_flora_pocket.033": 870,
+          "scenery_ashland_a.008": 854,
+          "scenery_charred_flora_a.010": 854,
+          "scenery_flora_pocket.034": 912,
+          "scenery_flora_pocket.035": 870,
+          "scenery_charred_flora_a.011": 854,
+          "scenery_flora_pocket.036": 912,
+          "scenery_flora_pocket.037": 870,
+          "scenery_foothill_a.008": 854,
+          "scenery_fractured_ridge.048": 212,
+          "scenery_fractured_ridge.049": 212,
+          "scenery_lava_field_a.009": 854,
+          "cooled_lava_islet.009": 212,
+          "scenery_molten_lowland.009": 8,
+          "scenery_foothill_a.009": 854,
+          "scenery_fractured_ridge.052": 212,
+          "scenery_fractured_ridge.053": 212,
+          "scenery_basalt_ridge_high.012": 854,
+          "scenery_fractured_ridge.054": 212,
+          "scenery_fractured_ridge.055": 212,
+          "scenery_drained_flora_a.008": 854,
+          "scenery_flora_pocket.040": 216,
+          "scenery_flora_pocket.041": 784,
+          "scenery_ravine_a.013": 854,
+          "scenery_ravine_deep_heat.013": 8,
+          "scenery_basalt_ridge_high.013": 854,
+          "scenery_fractured_ridge.058": 212,
+          "scenery_fractured_ridge.059": 212,
+          "scenery_basalt_ridge_a.005": 854,
+          "scenery_fractured_ridge.060": 212,
+          "scenery_fractured_ridge.061": 212,
+          "scenery_ashland_a.010": 854,
+          "horizon_-2_-3_W_REVIEW_ONLY.001": 198,
+          "horizon_-2_-3_S_REVIEW_ONLY.001": 204,
+          "horizon_-1_-3_S_REVIEW_ONLY.001": 198,
+          "horizon_0_-3_S_REVIEW_ONLY.001": 204,
+          "horizon_1_-3_S_REVIEW_ONLY.001": 198,
+          "horizon_2_-3_S_REVIEW_ONLY.001": 204,
+          "horizon_3_-3_E_REVIEW_ONLY.001": 204,
+          "horizon_3_-3_S_REVIEW_ONLY.001": 198,
+          "horizon_-2_-2_W_REVIEW_ONLY.001": 198,
+          "horizon_3_-2_E_REVIEW_ONLY.001": 204,
+          "horizon_-2_-1_W_REVIEW_ONLY.001": 204,
+          "horizon_3_-1_E_REVIEW_ONLY.001": 204,
+          "horizon_-2_0_W_REVIEW_ONLY.001": 204,
+          "horizon_3_0_E_REVIEW_ONLY.001": 198,
+          "horizon_-2_1_W_REVIEW_ONLY.001": 204,
+          "horizon_3_1_E_REVIEW_ONLY.001": 204,
+          "horizon_-2_2_W_REVIEW_ONLY.001": 204,
+          "horizon_3_2_E_REVIEW_ONLY.001": 198,
+          "horizon_-2_3_W_REVIEW_ONLY.001": 204,
+          "horizon_3_3_E_REVIEW_ONLY.001": 198,
+          "horizon_-2_4_W_REVIEW_ONLY.001": 204,
+          "horizon_-2_4_N_REVIEW_ONLY.001": 198,
+          "horizon_-1_4_N_REVIEW_ONLY.001": 198,
+          "horizon_0_4_N_REVIEW_ONLY.001": 198,
+          "horizon_1_4_N_REVIEW_ONLY.001": 198,
+          "horizon_2_4_N_REVIEW_ONLY.001": 198,
+          "horizon_3_4_E_REVIEW_ONLY.001": 204,
+          "horizon_3_4_N_REVIEW_ONLY.001": 198,
+          "scenery_basalt_ridge_high.009": 854,
+          "scenery_fractured_ridge.038": 212,
+          "scenery_fractured_ridge.039": 212,
+          "scenery_ashland_a.005": 854,
+          "scenery_ashland_a.006": 854,
+          "scenery_basalt_ridge_a.003": 854,
+          "scenery_fractured_ridge.040": 212,
+          "scenery_fractured_ridge.041": 212,
+          "scenery_lava_field_a.007": 854,
+          "cooled_lava_islet.007": 212,
+          "scenery_molten_lowland.007": 8,
+          "scenery_ravine_a.008": 854,
+          "scenery_ravine_deep_heat.008": 8,
+          "scenery_ravine_a.009": 854,
+          "scenery_ravine_deep_heat.009": 8,
+          "scenery_ravine_a.011": 854,
+          "scenery_ravine_deep_heat.011": 8,
+          "scenery_lava_field_a.008": 854,
+          "cooled_lava_islet.008": 212,
+          "scenery_molten_lowland.008": 8,
+          "scenery_basalt_ridge_high.010": 854,
+          "scenery_fractured_ridge.042": 212,
+          "scenery_fractured_ridge.043": 212,
+          "scenery_foothill_a.007": 854,
+          "scenery_fractured_ridge.044": 212,
+          "scenery_fractured_ridge.045": 212,
+          "scenery_basalt_ridge_a.004": 854,
+          "scenery_fractured_ridge.046": 212,
+          "scenery_fractured_ridge.047": 212,
+          "scenery_drained_flora_a.007": 854,
+          "scenery_flora_pocket.038": 216,
+          "scenery_flora_pocket.039": 784,
+          "scenery_basalt_ridge_high.011": 854,
+          "scenery_fractured_ridge.050": 212,
+          "scenery_fractured_ridge.051": 212,
+          "scenery_ravine_a.012": 854,
+          "scenery_ravine_deep_heat.012": 8,
+          "scenery_ashland_a.009": 854,
+          "scenery_foothill_a.010": 854,
+          "scenery_fractured_ridge.056": 212,
+          "scenery_fractured_ridge.057": 212,
+          "scenery_ravine_a.014": 854,
+          "scenery_ravine_deep_heat.014": 8,
+          "scenery_foothill_a.011": 854,
+          "scenery_fractured_ridge.062": 212,
+          "scenery_fractured_ridge.063": 212,
+          "scenery_charred_flora_a.012": 854,
+          "scenery_flora_pocket.042": 912,
+          "scenery_flora_pocket.043": 870,
+          "scenery_foothill_a.012": 854,
+          "scenery_fractured_ridge.064": 212,
+          "scenery_fractured_ridge.065": 212,
+          "scenery_charred_flora_a.013": 854,
+          "scenery_flora_pocket.044": 912,
+          "scenery_flora_pocket.045": 870,
+          "scenery_lava_field_a.010": 854,
+          "cooled_lava_islet.010": 212,
+          "scenery_molten_lowland.010": 8,
+          "scenery_ravine_a.015": 854,
+          "scenery_ravine_deep_heat.015": 8,
+          "Atmosphere_REVIEW_ONLY.001": 12
+        },
+        "collections": {
+          "Playable_5.001": [],
+          "Scenery_instances_REVIEW_ONLY.001": [],
+          "Distant_ring_REVIEW_ONLY.001": [
+            "horizon_-2_-3_W_REVIEW_ONLY.001",
+            "horizon_-2_-3_S_REVIEW_ONLY.001",
+            "horizon_-1_-3_S_REVIEW_ONLY.001",
+            "horizon_0_-3_S_REVIEW_ONLY.001",
+            "horizon_1_-3_S_REVIEW_ONLY.001",
+            "horizon_2_-3_S_REVIEW_ONLY.001",
+            "horizon_3_-3_E_REVIEW_ONLY.001",
+            "horizon_3_-3_S_REVIEW_ONLY.001",
+            "horizon_-2_-2_W_REVIEW_ONLY.001",
+            "horizon_3_-2_E_REVIEW_ONLY.001",
+            "horizon_-2_-1_W_REVIEW_ONLY.001",
+            "horizon_3_-1_E_REVIEW_ONLY.001",
+            "horizon_-2_0_W_REVIEW_ONLY.001",
+            "horizon_3_0_E_REVIEW_ONLY.001",
+            "horizon_-2_1_W_REVIEW_ONLY.001",
+            "horizon_3_1_E_REVIEW_ONLY.001",
+            "horizon_-2_2_W_REVIEW_ONLY.001",
+            "horizon_3_2_E_REVIEW_ONLY.001",
+            "horizon_-2_3_W_REVIEW_ONLY.001",
+            "horizon_3_3_E_REVIEW_ONLY.001",
+            "horizon_-2_4_W_REVIEW_ONLY.001",
+            "horizon_-2_4_N_REVIEW_ONLY.001",
+            "horizon_-1_4_N_REVIEW_ONLY.001",
+            "horizon_0_4_N_REVIEW_ONLY.001",
+            "horizon_1_4_N_REVIEW_ONLY.001",
+            "horizon_2_4_N_REVIEW_ONLY.001",
+            "horizon_3_4_E_REVIEW_ONLY.001",
+            "horizon_3_4_N_REVIEW_ONLY.001"
+          ],
+          "Cameras_Lights_REVIEW_ONLY.001": [
+            "Atmosphere_REVIEW_ONLY.001"
+          ]
+        }
+      },
+      "local_instances": 19,
+      "distant_instances": 24
+    },
+    "C": {
+      "seed": 1207,
+      "cells": [
+        {
+          "cell": [
+            -2,
+            -3
+          ],
+          "asset": "scenery_ashland_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -1,
+            -3
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            0,
+            -3
+          ],
+          "asset": "scenery_basalt_ridge_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            1,
+            -3
+          ],
+          "asset": "scenery_lava_field_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            2,
+            -3
+          ],
+          "asset": "scenery_basalt_ridge_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            3,
+            -3
+          ],
+          "asset": "scenery_ashland_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -2,
+            -2
+          ],
+          "asset": "scenery_ashland_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -1,
+            -2
+          ],
+          "asset": "scenery_basalt_ridge_a",
+          "datum": 0,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            0,
+            -2
+          ],
+          "asset": "scenery_basalt_ridge_high",
+          "datum": 0,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            1,
+            -2
+          ],
+          "asset": "scenery_lava_field_a",
+          "datum": 0,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            2,
+            -2
+          ],
+          "asset": "scenery_charred_flora_a",
+          "datum": 0,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            3,
+            -2
+          ],
+          "asset": "scenery_basalt_ridge_high",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -2,
+            -1
+          ],
+          "asset": "scenery_ashland_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -1,
+            -1
+          ],
+          "asset": "scenery_ashland_a",
+          "datum": 0,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            1,
+            -1
+          ],
+          "asset": "scenery_charred_flora_a",
+          "datum": 0,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            2,
+            -1
+          ],
+          "asset": "scenery_foothill_a",
+          "datum": 0,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            3,
+            -1
+          ],
+          "asset": "scenery_foothill_a",
+          "datum": 0,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -2,
+            0
+          ],
+          "asset": "scenery_ashland_a",
+          "datum": 28.0,
+          "ring": "distant",
+          "controlled_transition_fit": true
+        },
+        {
+          "cell": [
+            -1,
+            0
+          ],
+          "asset": "scenery_basalt_ridge_high",
+          "datum": 28.0,
+          "ring": "local",
+          "controlled_transition_fit": true
+        },
+        {
+          "cell": [
+            1,
+            0
+          ],
+          "asset": "scenery_charred_flora_a",
+          "datum": 28.0,
+          "ring": "local",
+          "controlled_transition_fit": true
+        },
+        {
+          "cell": [
+            2,
+            0
+          ],
+          "asset": "scenery_charred_flora_a",
+          "datum": 28.0,
+          "ring": "local",
+          "controlled_transition_fit": true
+        },
+        {
+          "cell": [
+            3,
+            0
+          ],
+          "asset": "scenery_charred_flora_a",
+          "datum": 28.0,
+          "ring": "distant",
+          "controlled_transition_fit": true
+        },
+        {
+          "cell": [
+            -2,
+            1
+          ],
+          "asset": "scenery_ashland_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -1,
+            1
+          ],
+          "asset": "scenery_basalt_ridge_a",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            2,
+            1
+          ],
+          "asset": "scenery_ashland_a",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            3,
+            1
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -2,
+            2
+          ],
+          "asset": "scenery_drained_flora_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -1,
+            2
+          ],
+          "asset": "scenery_basalt_ridge_a",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            1,
+            2
+          ],
+          "asset": "scenery_drained_flora_a",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            2,
+            2
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            3,
+            2
+          ],
+          "asset": "scenery_foothill_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -2,
+            3
+          ],
+          "asset": "scenery_drained_flora_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -1,
+            3
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            0,
+            3
+          ],
+          "asset": "scenery_basalt_ridge_high",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            1,
+            3
+          ],
+          "asset": "scenery_basalt_ridge_high",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            2,
+            3
+          ],
+          "asset": "scenery_foothill_a",
+          "datum": 56,
+          "ring": "local",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            3,
+            3
+          ],
+          "asset": "scenery_lava_field_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -2,
+            4
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            -1,
+            4
+          ],
+          "asset": "scenery_basalt_ridge_high",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            0,
+            4
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            1,
+            4
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            2,
+            4
+          ],
+          "asset": "scenery_ravine_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        },
+        {
+          "cell": [
+            3,
+            4
+          ],
+          "asset": "scenery_lava_field_a",
+          "datum": 56,
+          "ring": "distant",
+          "controlled_transition_fit": false
+        }
+      ],
+      "seams": [
+        {
+          "a": "chunk_entry_ash_plain_placed.002",
+          "b": "path_column_pass_placed.002",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "playable-playable"
+        },
+        {
+          "a": "chunk_entry_ash_plain_placed.002",
+          "b": "scenery_charred_flora_a_cell_1_-1.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "path_column_pass_placed.002",
+          "b": "chunk_column_forest_placed.002",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "playable-playable"
+        },
+        {
+          "a": "path_column_pass_placed.002",
+          "b": "scenery_charred_flora_a_cell_1_0.001",
+          "samples": 35,
+          "max_gap": 1.9073486328125e-06,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "chunk_column_forest_placed.002",
+          "b": "cap_collapsed_pass_placed.002",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-playable"
+        },
+        {
+          "a": "chunk_column_forest_placed.002",
+          "b": "side_lava_overlook_placed.002",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-playable"
+        },
+        {
+          "a": "side_lava_overlook_placed.002",
+          "b": "scenery_drained_flora_a_cell_1_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "side_lava_overlook_placed.002",
+          "b": "scenery_ashland_a_cell_2_1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "cap_collapsed_pass_placed.002",
+          "b": "scenery_basalt_ridge_high_cell_0_3.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "cap_collapsed_pass_placed.002",
+          "b": "scenery_drained_flora_a_cell_1_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_-2_-3",
+          "b": "scenery_ashland_a_cell_-2_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_-2_-3",
+          "b": "scenery_ravine_a_cell_-1_-3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_-1_-3",
+          "b": "scenery_basalt_ridge_a_cell_-1_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_-1_-3",
+          "b": "scenery_basalt_ridge_a_cell_0_-3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_a_cell_0_-3",
+          "b": "scenery_basalt_ridge_high_cell_0_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_a_cell_0_-3",
+          "b": "scenery_lava_field_a_cell_1_-3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_1_-3",
+          "b": "scenery_lava_field_a_cell_1_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_1_-3",
+          "b": "scenery_basalt_ridge_a_cell_2_-3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_a_cell_2_-3",
+          "b": "scenery_charred_flora_a_cell_2_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_a_cell_2_-3",
+          "b": "scenery_ashland_a_cell_3_-3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_3_-3",
+          "b": "scenery_basalt_ridge_high_cell_3_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_-2_-2",
+          "b": "scenery_ashland_a_cell_-2_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_-2_-2",
+          "b": "scenery_basalt_ridge_a_cell_-1_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_a_cell_-1_-2",
+          "b": "scenery_ashland_a_cell_-1_-1.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_a_cell_-1_-2",
+          "b": "scenery_basalt_ridge_high_cell_0_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_0_-2",
+          "b": "chunk_entry_ash_plain_placed.002",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_0_-2",
+          "b": "scenery_lava_field_a_cell_1_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_1_-2",
+          "b": "scenery_charred_flora_a_cell_1_-1.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_1_-2",
+          "b": "scenery_charred_flora_a_cell_2_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_2_-2",
+          "b": "scenery_foothill_a_cell_2_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_2_-2",
+          "b": "scenery_basalt_ridge_high_cell_3_-2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_3_-2",
+          "b": "scenery_foothill_a_cell_3_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_-2_-1",
+          "b": "scenery_ashland_a_cell_-2_0",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_-2_-1",
+          "b": "scenery_ashland_a_cell_-1_-1.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_-1_-1.001",
+          "b": "scenery_basalt_ridge_high_cell_-1_0",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_-1_-1.001",
+          "b": "chunk_entry_ash_plain_placed.002",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_1_-1.001",
+          "b": "scenery_charred_flora_a_cell_1_0.001",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_1_-1.001",
+          "b": "scenery_foothill_a_cell_2_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_2_-1",
+          "b": "scenery_charred_flora_a_cell_2_0.001",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_2_-1",
+          "b": "scenery_foothill_a_cell_3_-1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_3_-1",
+          "b": "scenery_charred_flora_a_cell_3_0",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_-2_0",
+          "b": "scenery_ashland_a_cell_-2_1",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_-2_0",
+          "b": "scenery_basalt_ridge_high_cell_-1_0",
+          "samples": 35,
+          "max_gap": 7.105427357601002e-15,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_-1_0",
+          "b": "scenery_basalt_ridge_a_cell_-1_1",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_-1_0",
+          "b": "path_column_pass_placed.002",
+          "samples": 35,
+          "max_gap": 1.9073486328125e-06,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_1_0.001",
+          "b": "side_lava_overlook_placed.002",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_1_0.001",
+          "b": "scenery_charred_flora_a_cell_2_0.001",
+          "samples": 35,
+          "max_gap": 1.4210854715202004e-14,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_2_0.001",
+          "b": "scenery_ashland_a_cell_2_1",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_2_0.001",
+          "b": "scenery_charred_flora_a_cell_3_0",
+          "samples": 35,
+          "max_gap": 1.4210854715202004e-14,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_charred_flora_a_cell_3_0",
+          "b": "scenery_ravine_a_cell_3_1",
+          "samples": 35,
+          "max_gap": 9.5367431640625e-07,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_-2_1",
+          "b": "scenery_drained_flora_a_cell_-2_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_-2_1",
+          "b": "scenery_basalt_ridge_a_cell_-1_1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_a_cell_-1_1",
+          "b": "scenery_basalt_ridge_a_cell_-1_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_a_cell_-1_1",
+          "b": "chunk_column_forest_placed.002",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_2_1",
+          "b": "scenery_ravine_a_cell_2_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ashland_a_cell_2_1",
+          "b": "scenery_ravine_a_cell_3_1",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_3_1",
+          "b": "scenery_foothill_a_cell_3_2.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_drained_flora_a_cell_-2_2",
+          "b": "scenery_drained_flora_a_cell_-2_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_drained_flora_a_cell_-2_2",
+          "b": "scenery_basalt_ridge_a_cell_-1_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_a_cell_-1_2",
+          "b": "scenery_ravine_a_cell_-1_3.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_a_cell_-1_2",
+          "b": "cap_collapsed_pass_placed.002",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "playable-scenery"
+        },
+        {
+          "a": "scenery_drained_flora_a_cell_1_2",
+          "b": "scenery_basalt_ridge_high_cell_1_3.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_drained_flora_a_cell_1_2",
+          "b": "scenery_ravine_a_cell_2_2",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_2_2",
+          "b": "scenery_foothill_a_cell_2_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_2_2",
+          "b": "scenery_foothill_a_cell_3_2.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_3_2.001",
+          "b": "scenery_lava_field_a_cell_3_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_drained_flora_a_cell_-2_3",
+          "b": "scenery_ravine_a_cell_-2_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_drained_flora_a_cell_-2_3",
+          "b": "scenery_ravine_a_cell_-1_3.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_-1_3.001",
+          "b": "scenery_basalt_ridge_high_cell_-1_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_-1_3.001",
+          "b": "scenery_basalt_ridge_high_cell_0_3.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_0_3.001",
+          "b": "scenery_ravine_a_cell_0_4.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_0_3.001",
+          "b": "scenery_basalt_ridge_high_cell_1_3.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_1_3.001",
+          "b": "scenery_ravine_a_cell_1_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_1_3.001",
+          "b": "scenery_foothill_a_cell_2_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_2_3",
+          "b": "scenery_ravine_a_cell_2_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_foothill_a_cell_2_3",
+          "b": "scenery_lava_field_a_cell_3_3",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_lava_field_a_cell_3_3",
+          "b": "scenery_lava_field_a_cell_3_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_-2_4",
+          "b": "scenery_basalt_ridge_high_cell_-1_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_basalt_ridge_high_cell_-1_4",
+          "b": "scenery_ravine_a_cell_0_4.001",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_0_4.001",
+          "b": "scenery_ravine_a_cell_1_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_1_4",
+          "b": "scenery_ravine_a_cell_2_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        },
+        {
+          "a": "scenery_ravine_a_cell_2_4",
+          "b": "scenery_lava_field_a_cell_3_4",
+          "samples": 35,
+          "max_gap": 0.0,
+          "type": "scenery-scenery"
+        }
+      ],
+      "counts": {
+        "objects": 214,
+        "mesh_objects": 164,
+        "triangles": 92446,
+        "mesh_triangles": {
+          "chunk_entry_ash_plain.003": 2804,
+          "prop_chunk_entry_ash_plain_solid.003": 400,
+          "prop_lava_hairline.003": 4,
+          "prop_drained_wax_rosette_placement.012": 216,
+          "prop_drained_seed_shrub_placement.015": 784,
+          "prop_drained_wax_rosette_placement.013": 216,
+          "path_column_pass.003": 4076,
+          "prop_path_column_pass_solid.003": 640,
+          "prop_low_fissure.003": 6,
+          "prop_charred_ember_rose_placement.012": 912,
+          "prop_charred_thorn_pod_placement.009": 870,
+          "prop_drained_seed_shrub_placement.016": 784,
+          "chunk_column_forest.003": 3508,
+          "prop_chunk_column_forest_solid.003": 800,
+          "prop_basin_heat.003": 4,
+          "prop_charred_thorn_pod_placement.010": 870,
+          "prop_charred_ember_rose_placement.013": 912,
+          "prop_drained_wax_rosette_placement.014": 216,
+          "prop_drained_seed_shrub_placement.017": 784,
+          "side_lava_overlook.003": 3016,
+          "prop_side_lava_overlook_solid.003": 660,
+          "prop_shelf_wound.003": 4,
+          "prop_drained_wax_rosette_placement.015": 216,
+          "prop_drained_seed_shrub_placement.018": 784,
+          "prop_charred_ember_rose_placement.014": 912,
+          "cap_collapsed_pass.003": 3376,
+          "prop_cap_collapsed_pass_solid.003": 560,
+          "prop_charred_ember_rose_placement.015": 912,
+          "prop_charred_thorn_pod_placement.011": 870,
+          "prop_drained_seed_shrub_placement.019": 784,
+          "scenery_basalt_ridge_a.008": 854,
+          "scenery_fractured_ridge.070": 212,
+          "scenery_fractured_ridge.071": 212,
+          "scenery_basalt_ridge_high.014": 854,
+          "scenery_fractured_ridge.072": 212,
+          "scenery_fractured_ridge.073": 212,
+          "scenery_lava_field_a.012": 854,
+          "cooled_lava_islet.012": 212,
+          "scenery_molten_lowland.012": 8,
+          "scenery_charred_flora_a.014": 854,
+          "scenery_flora_pocket.046": 912,
+          "scenery_flora_pocket.047": 870,
+          "scenery_ashland_a.015": 854,
+          "scenery_charred_flora_a.015": 854,
+          "scenery_flora_pocket.048": 912,
+          "scenery_flora_pocket.049": 870,
+          "scenery_foothill_a.013": 854,
+          "scenery_fractured_ridge.076": 212,
+          "scenery_fractured_ridge.077": 212,
+          "scenery_basalt_ridge_high.016": 854,
+          "scenery_fractured_ridge.080": 212,
+          "scenery_fractured_ridge.081": 212,
+          "scenery_charred_flora_a.016": 854,
+          "scenery_flora_pocket.050": 912,
+          "scenery_flora_pocket.051": 870,
+          "scenery_charred_flora_a.017": 854,
+          "scenery_flora_pocket.052": 912,
+          "scenery_flora_pocket.053": 870,
+          "scenery_basalt_ridge_a.009": 854,
+          "scenery_fractured_ridge.082": 212,
+          "scenery_fractured_ridge.083": 212,
+          "scenery_ashland_a.018": 854,
+          "scenery_basalt_ridge_a.010": 854,
+          "scenery_fractured_ridge.084": 212,
+          "scenery_fractured_ridge.085": 212,
+          "scenery_drained_flora_a.010": 854,
+          "scenery_flora_pocket.058": 216,
+          "scenery_flora_pocket.059": 784,
+          "scenery_ravine_a.018": 854,
+          "scenery_ravine_deep_heat.018": 8,
+          "scenery_ravine_a.019": 854,
+          "scenery_ravine_deep_heat.019": 8,
+          "scenery_basalt_ridge_high.017": 854,
+          "scenery_fractured_ridge.088": 212,
+          "scenery_fractured_ridge.089": 212,
+          "scenery_basalt_ridge_high.018": 854,
+          "scenery_fractured_ridge.090": 212,
+          "scenery_fractured_ridge.091": 212,
+          "scenery_foothill_a.016": 854,
+          "scenery_fractured_ridge.092": 212,
+          "scenery_fractured_ridge.093": 212,
+          "horizon_-2_-3_W_REVIEW_ONLY.002": 198,
+          "horizon_-2_-3_S_REVIEW_ONLY.002": 204,
+          "horizon_-1_-3_S_REVIEW_ONLY.002": 198,
+          "horizon_0_-3_S_REVIEW_ONLY.002": 198,
+          "horizon_1_-3_S_REVIEW_ONLY.002": 198,
+          "horizon_2_-3_S_REVIEW_ONLY.002": 198,
+          "horizon_3_-3_E_REVIEW_ONLY.002": 204,
+          "horizon_3_-3_S_REVIEW_ONLY.002": 198,
+          "horizon_-2_-2_W_REVIEW_ONLY.002": 198,
+          "horizon_3_-2_E_REVIEW_ONLY.002": 204,
+          "horizon_-2_-1_W_REVIEW_ONLY.002": 198,
+          "horizon_3_-1_E_REVIEW_ONLY.002": 198,
+          "horizon_-2_0_W_REVIEW_ONLY.002": 198,
+          "horizon_3_0_E_REVIEW_ONLY.002": 198,
+          "horizon_-2_1_W_REVIEW_ONLY.002": 204,
+          "horizon_3_1_E_REVIEW_ONLY.002": 198,
+          "horizon_-2_2_W_REVIEW_ONLY.002": 204,
+          "horizon_3_2_E_REVIEW_ONLY.002": 198,
+          "horizon_-2_3_W_REVIEW_ONLY.002": 198,
+          "horizon_3_3_E_REVIEW_ONLY.002": 198,
+          "horizon_-2_4_W_REVIEW_ONLY.002": 204,
+          "horizon_-2_4_N_REVIEW_ONLY.002": 198,
+          "horizon_-1_4_N_REVIEW_ONLY.002": 204,
+          "horizon_0_4_N_REVIEW_ONLY.002": 198,
+          "horizon_1_4_N_REVIEW_ONLY.002": 198,
+          "horizon_2_4_N_REVIEW_ONLY.002": 204,
+          "horizon_3_4_E_REVIEW_ONLY.002": 198,
+          "horizon_3_4_N_REVIEW_ONLY.002": 204,
+          "scenery_ashland_a.011": 854,
+          "scenery_ravine_a.016": 854,
+          "scenery_ravine_deep_heat.016": 8,
+          "scenery_basalt_ridge_a.006": 854,
+          "scenery_fractured_ridge.066": 212,
+          "scenery_fractured_ridge.067": 212,
+          "scenery_lava_field_a.011": 854,
+          "cooled_lava_islet.011": 212,
+          "scenery_molten_lowland.011": 8,
+          "scenery_basalt_ridge_a.007": 854,
+          "scenery_fractured_ridge.068": 212,
+          "scenery_fractured_ridge.069": 212,
+          "scenery_ashland_a.012": 854,
+          "scenery_ashland_a.013": 854,
+          "scenery_basalt_ridge_high.015": 854,
+          "scenery_fractured_ridge.074": 212,
+          "scenery_fractured_ridge.075": 212,
+          "scenery_ashland_a.014": 854,
+          "scenery_foothill_a.014": 854,
+          "scenery_fractured_ridge.078": 212,
+          "scenery_fractured_ridge.079": 212,
+          "scenery_ashland_a.016": 854,
+          "scenery_charred_flora_a.018": 854,
+          "scenery_flora_pocket.054": 912,
+          "scenery_flora_pocket.055": 870,
+          "scenery_ashland_a.017": 854,
+          "scenery_ravine_a.017": 854,
+          "scenery_ravine_deep_heat.017": 8,
+          "scenery_drained_flora_a.009": 854,
+          "scenery_flora_pocket.056": 216,
+          "scenery_flora_pocket.057": 784,
+          "scenery_foothill_a.015": 854,
+          "scenery_fractured_ridge.086": 212,
+          "scenery_fractured_ridge.087": 212,
+          "scenery_drained_flora_a.011": 854,
+          "scenery_flora_pocket.060": 216,
+          "scenery_flora_pocket.061": 784,
+          "scenery_lava_field_a.013": 854,
+          "cooled_lava_islet.013": 212,
+          "scenery_molten_lowland.013": 8,
+          "scenery_ravine_a.020": 854,
+          "scenery_ravine_deep_heat.020": 8,
+          "scenery_basalt_ridge_high.019": 854,
+          "scenery_fractured_ridge.094": 212,
+          "scenery_fractured_ridge.095": 212,
+          "scenery_ravine_a.021": 854,
+          "scenery_ravine_deep_heat.021": 8,
+          "scenery_ravine_a.022": 854,
+          "scenery_ravine_deep_heat.022": 8,
+          "scenery_ravine_a.023": 854,
+          "scenery_ravine_deep_heat.023": 8,
+          "scenery_lava_field_a.014": 854,
+          "cooled_lava_islet.014": 212,
+          "scenery_molten_lowland.014": 8,
+          "Atmosphere_REVIEW_ONLY.002": 12
+        },
+        "collections": {
+          "Playable_5.002": [],
+          "Scenery_instances_REVIEW_ONLY.002": [],
+          "Distant_ring_REVIEW_ONLY.002": [
+            "horizon_-2_-3_W_REVIEW_ONLY.002",
+            "horizon_-2_-3_S_REVIEW_ONLY.002",
+            "horizon_-1_-3_S_REVIEW_ONLY.002",
+            "horizon_0_-3_S_REVIEW_ONLY.002",
+            "horizon_1_-3_S_REVIEW_ONLY.002",
+            "horizon_2_-3_S_REVIEW_ONLY.002",
+            "horizon_3_-3_E_REVIEW_ONLY.002",
+            "horizon_3_-3_S_REVIEW_ONLY.002",
+            "horizon_-2_-2_W_REVIEW_ONLY.002",
+            "horizon_3_-2_E_REVIEW_ONLY.002",
+            "horizon_-2_-1_W_REVIEW_ONLY.002",
+            "horizon_3_-1_E_REVIEW_ONLY.002",
+            "horizon_-2_0_W_REVIEW_ONLY.002",
+            "horizon_3_0_E_REVIEW_ONLY.002",
+            "horizon_-2_1_W_REVIEW_ONLY.002",
+            "horizon_3_1_E_REVIEW_ONLY.002",
+            "horizon_-2_2_W_REVIEW_ONLY.002",
+            "horizon_3_2_E_REVIEW_ONLY.002",
+            "horizon_-2_3_W_REVIEW_ONLY.002",
+            "horizon_3_3_E_REVIEW_ONLY.002",
+            "horizon_-2_4_W_REVIEW_ONLY.002",
+            "horizon_-2_4_N_REVIEW_ONLY.002",
+            "horizon_-1_4_N_REVIEW_ONLY.002",
+            "horizon_0_4_N_REVIEW_ONLY.002",
+            "horizon_1_4_N_REVIEW_ONLY.002",
+            "horizon_2_4_N_REVIEW_ONLY.002",
+            "horizon_3_4_E_REVIEW_ONLY.002",
+            "horizon_3_4_N_REVIEW_ONLY.002"
+          ],
+          "Cameras_Lights_REVIEW_ONLY.002": [
+            "Atmosphere_REVIEW_ONLY.002"
+          ]
+        }
+      },
+      "local_instances": 19,
+      "distant_instances": 24
+    }
+  }
+}

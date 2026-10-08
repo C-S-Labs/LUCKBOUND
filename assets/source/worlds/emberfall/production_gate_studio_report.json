@@ -1,0 +1,44 @@
+{
+  "place_id": 140350563934259,
+  "scope": "isolated appearance probe; no production manifest or IDs changed",
+  "probe_mesh_uri": "rbxassetid://130220149078699",
+  "import_preset": "No upload, Anchored; vertex colours retained",
+  "studio_import": {
+    "vertices": 23812,
+    "faces": 8958,
+    "colour_attributes": 23812,
+    "size": [256, 56.40654373168945, 256],
+    "default_meshpart_colour": [0.639216, 0.635294, 0.647059],
+    "palette_sample_srgb": [0.435294, 0.521569, 0.235294]
+  },
+  "edit_access": {"fixed_size": true, "set_colour_max_error": 1.4901161193847657e-8, "create_meshpart": true},
+  "actual_server_pipeline": {
+    "modules": ["AssetPreparation", "ChunkLoader"],
+    "scratch_manifest_injected": true,
+    "loader_success": true,
+    "yaw_degrees": 90,
+    "final_orientation": [0, -90, 0],
+    "retained_colour_attributes": 23812,
+    "default_tint_preserved": true
+  },
+  "play_client": {
+    "first_attempt": "EditableMesh is not accessible. Go to the Security Tab in Experience Settings to enable this API.",
+    "owner_enabled_mesh_image_apis": true,
+    "independent_fixed_size_copies": 5,
+    "all_copies_allocated_recoloured_and_renderable": true,
+    "vertices_each": 23812,
+    "faces_each": 8958,
+    "yaws_degrees": [0, 90, 180, 270, 0],
+    "total_seconds_desktop": 0.581528900000194,
+    "cached_copy_seconds_approx": 0.066,
+    "test_colours": ["green", "green", "stressed", "charred", "charred"]
+  },
+  "limits": [
+    "Desktop Studio test, not a mobile/published-server benchmark",
+    "Five allocations prove this bounded working set, not an unlimited run",
+    "No production assembly appearance hook implemented",
+    "Imported colour data is quantized; compare with byte tolerance",
+    "Edit screen_capture tool did not complete; import preview visually inspected through Computer Use"
+  ],
+  "studio_retained": "Workspace.EmberfallProductionGateAppearance; Play probes discarded on stop"
+}

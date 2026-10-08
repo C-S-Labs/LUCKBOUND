@@ -1,0 +1,438 @@
+{
+  "tolerance_studs": 0.01,
+  "source_profile_max_error": {
+    "A": 9.167653551855892e-07,
+    "A2": 2.38165188015671e-07,
+    "B1": 4.7567407790438665e-07,
+    "B2": 8.253523517964823e-07,
+    "B3": 3.889792701272654e-07,
+    "C": 2.1705980834951788e-07
+  },
+  "joins": [
+    {
+      "layout": "A_0_B1",
+      "from": "A",
+      "to": "B1",
+      "rotations": [
+        0,
+        0
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 9.573084334135729e-07,
+      "max_collision_gap_studs": 7.188898543120104e-07,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A_0_B2",
+      "from": "A",
+      "to": "B2",
+      "rotations": [
+        0,
+        0
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 1.0457674193276034e-06,
+      "max_collision_gap_studs": 1.0457674193276034e-06,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A_0_B3",
+      "from": "A",
+      "to": "B3",
+      "rotations": [
+        0,
+        270
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 1.0409062234373323e-06,
+      "max_collision_gap_studs": 8.664424093751677e-07,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A_90_B1",
+      "from": "A",
+      "to": "B1",
+      "rotations": [
+        90,
+        90
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 9.573084334135729e-07,
+      "max_collision_gap_studs": 7.188898543120104e-07,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A_90_B2",
+      "from": "A",
+      "to": "B2",
+      "rotations": [
+        90,
+        90
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 1.0457674193276034e-06,
+      "max_collision_gap_studs": 1.0457674193276034e-06,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A_90_B3",
+      "from": "A",
+      "to": "B3",
+      "rotations": [
+        90,
+        0
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 1.0409062234373323e-06,
+      "max_collision_gap_studs": 8.664424093751677e-07,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A_180_B1",
+      "from": "A",
+      "to": "B1",
+      "rotations": [
+        180,
+        180
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 9.573084334135729e-07,
+      "max_collision_gap_studs": 7.188898543120104e-07,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A_180_B2",
+      "from": "A",
+      "to": "B2",
+      "rotations": [
+        180,
+        180
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 1.0457674193276034e-06,
+      "max_collision_gap_studs": 1.0457674193276034e-06,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A_180_B3",
+      "from": "A",
+      "to": "B3",
+      "rotations": [
+        180,
+        90
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 1.0409062234373323e-06,
+      "max_collision_gap_studs": 8.664424093751677e-07,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A_270_B1",
+      "from": "A",
+      "to": "B1",
+      "rotations": [
+        270,
+        270
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 9.573084334135729e-07,
+      "max_collision_gap_studs": 7.188898543120104e-07,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A_270_B2",
+      "from": "A",
+      "to": "B2",
+      "rotations": [
+        270,
+        270
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 1.0457674193276034e-06,
+      "max_collision_gap_studs": 1.0457674193276034e-06,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A_270_B3",
+      "from": "A",
+      "to": "B3",
+      "rotations": [
+        270,
+        180
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 1.0409062234373323e-06,
+      "max_collision_gap_studs": 8.664424093751677e-07,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A2_0_B1",
+      "from": "A2",
+      "to": "B1",
+      "rotations": [
+        0,
+        0
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 6.490068749087641e-07,
+      "max_collision_gap_studs": 3.046674414974859e-07,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A2_0_B2",
+      "from": "A2",
+      "to": "B2",
+      "rotations": [
+        0,
+        0
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 8.772308159876729e-07,
+      "max_collision_gap_studs": 8.772308159876729e-07,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A2_0_B3",
+      "from": "A2",
+      "to": "B3",
+      "rotations": [
+        0,
+        270
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 5.581418527356163e-07,
+      "max_collision_gap_studs": 3.9553246367063366e-07,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A2_90_B1",
+      "from": "A2",
+      "to": "B1",
+      "rotations": [
+        90,
+        90
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 6.490068749087641e-07,
+      "max_collision_gap_studs": 3.046674414974859e-07,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A2_90_B2",
+      "from": "A2",
+      "to": "B2",
+      "rotations": [
+        90,
+        90
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 8.772308159876729e-07,
+      "max_collision_gap_studs": 8.772308159876729e-07,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A2_90_B3",
+      "from": "A2",
+      "to": "B3",
+      "rotations": [
+        90,
+        0
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 5.581418527356163e-07,
+      "max_collision_gap_studs": 3.9553246367063366e-07,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A2_180_B1",
+      "from": "A2",
+      "to": "B1",
+      "rotations": [
+        180,
+        180
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 6.490068749087641e-07,
+      "max_collision_gap_studs": 3.046674414974859e-07,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A2_180_B2",
+      "from": "A2",
+      "to": "B2",
+      "rotations": [
+        180,
+        180
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 8.772308159876729e-07,
+      "max_collision_gap_studs": 8.772308159876729e-07,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A2_180_B3",
+      "from": "A2",
+      "to": "B3",
+      "rotations": [
+        180,
+        90
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 5.581418527356163e-07,
+      "max_collision_gap_studs": 3.9553246367063366e-07,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A2_270_B1",
+      "from": "A2",
+      "to": "B1",
+      "rotations": [
+        270,
+        270
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 6.490068749087641e-07,
+      "max_collision_gap_studs": 3.046674414974859e-07,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A2_270_B2",
+      "from": "A2",
+      "to": "B2",
+      "rotations": [
+        270,
+        270
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 8.772308159876729e-07,
+      "max_collision_gap_studs": 8.772308159876729e-07,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "A2_270_B3",
+      "from": "A2",
+      "to": "B3",
+      "rotations": [
+        270,
+        180
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 5.581418527356163e-07,
+      "max_collision_gap_studs": 3.9553246367063366e-07,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "rising_corner",
+      "from": "A",
+      "to": "B2",
+      "rotations": [
+        0,
+        0
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 1.0457674193276034e-06,
+      "max_collision_gap_studs": 1.0457674193276034e-06,
+      "bespoke_edits": 0,
+      "pass": true
+    },
+    {
+      "layout": "rising_corner",
+      "from": "B2",
+      "to": "C",
+      "rotations": [
+        0,
+        90
+      ],
+      "stations": 129,
+      "max_visual_gap_studs": 2.398911789214253e-07,
+      "max_collision_gap_studs": 2.398911789214253e-07,
+      "bespoke_edits": 0,
+      "pass": true
+    }
+  ],
+  "three_way_corner_gap_studs": 3.847440552817716e-07,
+  "max_visual_collision_approximation_in_authored_band": {
+    "A": 0.28537750244140625,
+    "A2": 0.2736988067626953,
+    "B1": 0.2106924057006836,
+    "B2": 0.20048346742987633,
+    "B3": 0.2603027820587158,
+    "C": 0.2489480972290039
+  },
+  "negative_controls_rejected": [
+    "visual",
+    "collision",
+    "socket",
+    "corner"
+  ],
+  "source_mesh_sha256": {
+    "A": "99e4dc8718ab3f1b399e1e43daab2b6d0bd7aaf44820b7b183ee8936e9e28df3",
+    "A2": "504946e64550f4f87c6cf354bbce9065aa8bdcd93accbcb33a889ed8bb4a637a",
+    "B1": "4694806b96d55ad51e72aaaa32732d87c576ee9cc52e5d06ea7cd863bbe0703e",
+    "B2": "a1de09e6535378d529412d02f90661cf065a12bdceda4e6a0272b6d37c298ab1",
+    "B3": "4201aa67a98e93464802c5089877725ff380f3564f14639082f1257b08d2dd6b",
+    "C": "324bddb03d57667491e6e9bafd66c0cff08cd9a98fb3be0c903f70c672138b4f"
+  },
+  "layout_specific_vertex_edits": 0,
+  "production_systems_modified": false,
+  "closed_collision_pieces_per_source": {
+    "A": 144,
+    "A2": 144,
+    "B1": 144,
+    "B2": 142,
+    "B3": 142,
+    "C": 144
+  },
+  "inputs_unchanged": true,
+  "saved_readback": {
+    "saved_source_count": 6,
+    "frozen_assembled_visual_instances_checked": 12,
+    "actual_closed_collision_objects_checked": 860,
+    "origin_at_ground": true,
+    "collision_grid_matches_actual_saved_pieces": true,
+    "assembled_vertices_unchanged": true
+  },
+  "preserved_inputs_sha256": {
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_BurnedPlainsReview\\BurnedPlains.blend": "ee0fa5b53ff858a1e2ae1bda14debf9bcc2bc8936c0fbf18251979a5ebe0977b",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_ModularityReview\\BurnedPlainsModularity.blend": "474626aa3e3496f01f4881a0ceb84b1ede1000ad0fc7369f5d6411f613c16829",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_ProductionGateReview\\BurnedPlainsProductionGate.blend": "3d028de6b6761f2574df52204bcebd29db4411b0208f35eed072fcc5fbaf0683"
+  },
+  "boundary_collision": "Frozen convex triangular prisms with Hull fidelity, outer 8-stud row.",
+  "evidence": [
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_EdgeProfileReview\\01_profile_contract_overview.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_EdgeProfileReview\\02_source_A.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_EdgeProfileReview\\03_A_0_B1.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_EdgeProfileReview\\04_A_0_B2.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_EdgeProfileReview\\05_A_0_B3.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_EdgeProfileReview\\06_A_90_B2.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_EdgeProfileReview\\07_visual_seam.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_EdgeProfileReview\\08_collision_seam.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_EdgeProfileReview\\09_player_eye.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_EdgeProfileReview\\10_elevated_gameplay.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_EdgeProfileReview\\11_reachable_ridge.png"
+  ]
+}

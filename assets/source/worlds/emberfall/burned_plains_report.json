@@ -1,0 +1,119 @@
+{
+  "scope": "AREA I ONLY",
+  "input": "E:\\BlenderAIProjects\\Runtime\\Emberfall_BurnedPlainsReview\\Input_DesignReset.blend",
+  "production_export": false,
+  "runtime_modified": false,
+  "units": "one metre = one stud",
+  "seed": 51026,
+  "reused_flora_sources": [
+    "prop_partial_ash_rosette_spread",
+    "prop_healthy_ash_rosette_spread",
+    "prop_early_ash_rosette_curled"
+  ],
+  "opening_edge": {
+    "surface_balance_percent": {
+      "green": 50.66,
+      "stressed": 42.04,
+      "charred": 7.3
+    },
+    "center_datum": 4.148148148148147
+  },
+  "active_burn_mid_plains": {
+    "surface_balance_percent": {
+      "stressed": 44.51,
+      "green": 5.98,
+      "charred": 49.51
+    },
+    "center_datum": 28.0
+  },
+  "interior_edge": {
+    "surface_balance_percent": {
+      "charred": 93.41,
+      "stressed": 6.59
+    },
+    "center_datum": 51.851851851851855
+  },
+  "aggregate_playable_surface_percent": {
+    "green": 18.88,
+    "stressed": 31.05,
+    "charred": 50.07
+  },
+  "whole_land_surface_percent": {
+    "green": 18.42,
+    "stressed": 30.57,
+    "charred": 51.01
+  },
+  "ascent_studs": 56.0,
+  "authored_joins": [
+    {
+      "pair": [
+        "chunk_opening_edge",
+        "chunk_active_burn_mid_plains"
+      ],
+      "stations": 65,
+      "max_gap_stud": 4.76837158203125e-07
+    },
+    {
+      "pair": [
+        "chunk_active_burn_mid_plains",
+        "chunk_interior_edge"
+      ],
+      "stations": 65,
+      "max_gap_stud": 9.5367431640625e-07
+    }
+  ],
+  "objects": 940,
+  "mesh_triangles": 650196,
+  "evidence": [
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_BurnedPlainsReview\\01_broad_overview.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_BurnedPlainsReview\\02_top_progression.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_BurnedPlainsReview\\03_baseline_player_eye.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_BurnedPlainsReview\\04_opening_edge.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_BurnedPlainsReview\\05_mid_plains_active_burn.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_BurnedPlainsReview\\06_interior_edge.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_BurnedPlainsReview\\07_raised_gradient.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_BurnedPlainsReview\\08_glow_removed.png"
+  ],
+  "saved_readback": {
+    "scene": "Emberfall_Area_I_Burned_Plains",
+    "terrain": [
+      {
+        "name": "chunk_opening_edge",
+        "closed": true,
+        "triangles": 8958,
+        "dimensions": [
+          256.0,
+          256.0,
+          56.50200653076172
+        ],
+        "origin_at_center_ground": true
+      },
+      {
+        "name": "chunk_active_burn_mid_plains",
+        "closed": true,
+        "triangles": 8958,
+        "dimensions": [
+          256.0,
+          256.0,
+          88.01448059082031
+        ],
+        "origin_at_center_ground": true
+      },
+      {
+        "name": "chunk_interior_edge",
+        "closed": true,
+        "triangles": 8958,
+        "dimensions": [
+          256.0,
+          256.0,
+          102.66266632080078
+        ],
+        "origin_at_center_ground": true
+      }
+    ],
+    "eight_renders_exist": true,
+    "scene_objects": 940,
+    "no_old_geology_or_later_area_objects": true,
+    "original_live_snapshot_preserved": true
+  }
+}

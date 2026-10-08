@@ -1,4 +1,6 @@
 # LUCKBOUND — Prototype Build Specification
+
+> Emberfall consolidation note (2026-10-08): Emberfall consolidation preserves main34f6c1e runtime, schemas and configuration, including §7.8 expedition rifts. Authored Burned Plains sources and opt-in review loaders are content evidence, not a new runtime registration or amendment. AreaII planning and whole-castle content exception are described in docs/biomes/EMBERFALL_AREA_II_PRODUCTION_PLAN.md; production implementation remains HOLD.
 ## Phase 1: Foundation · v0.1 · AI-Executable
 
 **Status:** Canonical. **Phase 1 complete and verified in Studio; expedition entry opened by amendment §7.1.** Derived from `LUCKBOUND Master Game Design & Development Specification v0.1`; see `STATUS.md` for current state and `BLUEPRINT_RECONCILIATION.md` for how the Biome Blueprint was merged.

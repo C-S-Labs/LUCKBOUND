@@ -1,0 +1,62 @@
+{
+  "corrections": [
+    {
+      "chunk": 1,
+      "max_delta": 8.987651824951172,
+      "local_position": [
+        128.0,
+        128.0,
+        10.370370864868164
+      ],
+      "before_world_height": 14.518518924713135,
+      "after_world_height": 23.506170749664307
+    },
+    {
+      "chunk": 2,
+      "max_delta": 9.1685152053833,
+      "local_position": [
+        128.0,
+        -40.0,
+        1.6766271591186523
+      ],
+      "before_world_height": 29.676627159118652,
+      "after_world_height": 38.84514236450195
+    },
+    {
+      "chunk": 3,
+      "max_delta": 17.97530746459961,
+      "local_position": [
+        128.0,
+        -128.0,
+        -13.481483459472656
+      ],
+      "before_world_height": 41.48147964477539,
+      "after_world_height": 23.50617218017578
+    },
+    {
+      "chunk": 4,
+      "max_delta": 9.1685152053833,
+      "local_position": [
+        128.0,
+        -40.0,
+        1.6766271591186523
+      ],
+      "before_world_height": 83.60255336761475,
+      "after_world_height": 92.77106857299805
+    },
+    {
+      "chunk": 5,
+      "max_delta": 17.97531032562256,
+      "local_position": [
+        128.0,
+        -128.0,
+        -10.370369911193848
+      ],
+      "before_world_height": 95.40740871429443,
+      "after_world_height": 77.43209838867188
+    }
+  ],
+  "socket_transforms": "previous actual ChunkCore probe passed; centers oppose/coincide",
+  "cause": "source straight rising template reused at rotated and turned exits; off-mouth edge/corner heights not contracted; shared-corner averaging then adjusted up to 17.98 studs",
+  "not_tested_previously": "matching simplified collision"
+}

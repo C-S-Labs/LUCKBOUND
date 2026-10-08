@@ -1,0 +1,23 @@
+[
+  "INDEX.md",
+  "INDEX_MAP.md",
+  "assets/source/worlds/emberfall/batch1/AUTHORING.md",
+  "assets/source/worlds/emberfall/batch1/BATCH1_REVIEW.md",
+  "assets/source/worlds/emberfall/batch1/assemble_batch1.py",
+  "assets/source/worlds/emberfall/batch1/authority_manifest.json",
+  "assets/source/worlds/emberfall/batch1/batch1_report.json",
+  "assets/source/worlds/emberfall/batch1/batch1_shared.py",
+  "assets/source/worlds/emberfall/batch1/changed_files.json",
+  "assets/source/worlds/emberfall/batch1/check_and_export.py",
+  "assets/source/worlds/emberfall/batch1/contact_sheets.py",
+  "assets/source/worlds/emberfall/batch1/countryside.py",
+  "assets/source/worlds/emberfall/batch1/elevations.py",
+  "assets/source/worlds/emberfall/batch1/fbx_result.json",
+  "assets/source/worlds/emberfall/batch1/fields.py",
+  "assets/source/worlds/emberfall/batch1/final_evidence.py",
+  "assets/source/worlds/emberfall/batch1/studio_collision_result.json",
+  "assets/source/worlds/emberfall/batch1/studio_review.json",
+  "docs/STATUS.md",
+  "docs/WORKLOG.md",
+  "docs/biomes/EMBERFALL.md"
+]
