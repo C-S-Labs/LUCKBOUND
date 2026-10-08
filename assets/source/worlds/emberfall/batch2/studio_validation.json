@@ -1,0 +1,437 @@
+{
+  "imported": {
+    "rays": 162,
+    "sizeError": 0.0000431583721365314,
+    "centreError": 0,
+    "presentationSizeError": 0,
+    "seamHeightDifference": 0.0001220703125,
+    "socketError": 0.0001220703125,
+    "placements": 24,
+    "misses": 0,
+    "attributes": {
+      "CollisionParts": 1675,
+      "RemovedInteriorBoundaries": 368,
+      "Origin": null,
+      "VisualParts": 299,
+      "TestMode": true,
+      "AssetPreparation": "{\"ActiveWorkers\":0,\"TemplateClones\":299,\"VisualOnlyPreciseRequests\":0,\"Entries\":299,\"DuplicatePreparations\":0,\"ConfiguredWorkers\":6,\"UniqueAssetPreparations\":299,\"CacheHits\":299,\"MaximumActiveWorkers\":6,\"CacheMisses\":299,\"CreateMeshPartAsyncCalls\":299}",
+      "WorldId": "EMBERFALL",
+      "OuterBoundaryParts": 400,
+      "UniqueCollisionParts": 907,
+      "Layout": "Combined2 — long repeated route /24",
+      "SceneryEditableMeshes": 0,
+      "SceneryRecolourSeconds": 0,
+      "Seed": 1,
+      "FallbackFloors": 0,
+      "UsedMeshes": 24,
+      "TerrainReady": true,
+      "ReviewOnly": true
+    },
+    "sourceVisualsResolved": 44,
+    "checks": [
+      {
+        "centreGroundHit": true,
+        "colliderCount": 70,
+        "source": "EF_ENTRY_WINDWARD_MEADOW",
+        "yaw": 0,
+        "placement": 1,
+        "exitSeam": 0
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 70,
+        "source": "EF_SWALE_DRIFT",
+        "yaw": 0,
+        "placement": 2,
+        "exitSeam": 0
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 69,
+        "source": "EF_QUIET_HOLLOW_BEND",
+        "yaw": 0,
+        "placement": 3,
+        "exitSeam": 0.00006103515625
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 70,
+        "source": "EF_LONG_DITCH_VERGE",
+        "yaw": 270,
+        "placement": 4,
+        "exitSeam": 0.00006103515625
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 70,
+        "source": "EF_OPEN_FIELD_CLEARING",
+        "yaw": 270,
+        "placement": 5,
+        "exitSeam": 0.00006103515625
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 70,
+        "source": "EF_LOW_SHOULDER_CLIMB",
+        "yaw": 270,
+        "placement": 6,
+        "exitSeam": 0
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 70,
+        "source": "EF_PASTURE_SADDLE",
+        "yaw": 270,
+        "placement": 7,
+        "exitSeam": 0.00006103515625
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 70,
+        "source": "EF_LEEWARD_GROVE",
+        "yaw": 270,
+        "placement": 8,
+        "exitSeam": 0
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 69,
+        "source": "EF_RAISED_PASTURE_BEND",
+        "yaw": 270,
+        "placement": 9,
+        "exitSeam": 0
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 70,
+        "source": "EF_FENCELINE_RISE",
+        "yaw": 0,
+        "placement": 10,
+        "exitSeam": 0
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 70,
+        "source": "EF_ABANDONED_FIELDSTEAD",
+        "yaw": 0,
+        "placement": 11,
+        "exitSeam": 0.00006103515625
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 70,
+        "source": "EF_PASTURE_SADDLE",
+        "yaw": 0,
+        "placement": 12,
+        "exitSeam": 0
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 70,
+        "source": "EF_LOW_SHOULDER_CLIMB",
+        "yaw": 180,
+        "placement": 13,
+        "exitSeam": 0.00006103515625
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 70,
+        "source": "EF_SWALE_DRIFT",
+        "yaw": 0,
+        "placement": 14,
+        "exitSeam": 0
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 69,
+        "source": "EF_QUIET_HOLLOW_BEND",
+        "yaw": 0,
+        "placement": 15,
+        "exitSeam": 0
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 70,
+        "source": "EF_OPEN_FIELD_CLEARING",
+        "yaw": 270,
+        "placement": 16,
+        "exitSeam": 0.00006103515625
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 70,
+        "source": "EF_LONG_DITCH_VERGE",
+        "yaw": 270,
+        "placement": 17,
+        "exitSeam": 0
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 69,
+        "source": "EF_ORCHARD_BEND",
+        "yaw": 270,
+        "placement": 18,
+        "exitSeam": 0.00006103515625
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 70,
+        "source": "EF_SWALE_DRIFT",
+        "yaw": 0,
+        "placement": 19,
+        "exitSeam": 0.00006103515625
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 70,
+        "source": "EF_RIDGE_ASCENT",
+        "yaw": 0,
+        "placement": 20,
+        "exitSeam": 0.00006103515625
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 70,
+        "source": "EF_LOW_SHOULDER_CLIMB",
+        "yaw": 0,
+        "placement": 21,
+        "exitSeam": 0.0001220703125
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 70,
+        "source": "EF_LEEWARD_GROVE",
+        "yaw": 0,
+        "placement": 22,
+        "exitSeam": 0
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 69,
+        "source": "EF_RAISED_PASTURE_BEND",
+        "yaw": 0,
+        "placement": 23,
+        "exitSeam": 0
+      },
+      {
+        "centreGroundHit": true,
+        "colliderCount": 70,
+        "source": "EF_PASTURE_SADDLE",
+        "yaw": 90,
+        "placement": 24
+      }
+    ],
+    "sourceMappingCount": 44,
+    "presentationParts": 275
+  },
+  "walk": {
+    "total": 1553,
+    "maximumWaypointDistance": 8.304393768310547,
+    "waypoint": 1551,
+    "completed": true,
+    "translationAfterEntry": false,
+    "health": 100,
+    "position": [
+      18067.72265625,
+      1029.4383544921875,
+      -3328.024658203125
+    ],
+    "controller": "ControllerManager",
+    "visitedPlacements": {
+      "1": true,
+      "2": true,
+      "3": true,
+      "4": true,
+      "5": true,
+      "6": true,
+      "7": true,
+      "8": true,
+      "9": true,
+      "10": true,
+      "11": true,
+      "12": true,
+      "13": true,
+      "14": true,
+      "15": true,
+      "16": true,
+      "17": true,
+      "18": true,
+      "19": true,
+      "20": true,
+      "21": true,
+      "22": true,
+      "23": true,
+      "24": true
+    },
+    "seconds": 372.00208589999966
+  },
+  "preload": {
+    "failures": [],
+    "uniqueIds": 1074,
+    "parts": 1974
+  },
+  "firstSessionClientFetch": {
+    "pendingIds": {
+      "1": {
+        "id": "rbxassetid://98859329751839",
+        "transparency": 1,
+        "name": "EF_ABANDONED_FIELDSTEAD_COLLISION_69",
+        "parent": "WalkCollision"
+      },
+      "2": {
+        "id": "rbxassetid://107688380500527",
+        "transparency": 0,
+        "name": "Mesh",
+        "parent": "12_EF_REVIEW_12"
+      },
+      "3": {
+        "id": "rbxassetid://96959561880860",
+        "transparency": 0,
+        "name": "Mesh",
+        "parent": "13_EF_REVIEW_13"
+      },
+      "4": {
+        "id": "rbxassetid://84660338203184",
+        "transparency": 0,
+        "name": "Mesh",
+        "parent": "14_EF_REVIEW_14"
+      },
+      "5": {
+        "id": "rbxassetid://83220108926097",
+        "transparency": 1,
+        "name": "EF_ORCHARD_BEND_COLLISION_49",
+        "parent": "WalkCollision"
+      },
+      "6": {
+        "id": "rbxassetid://130367058641966",
+        "transparency": 1,
+        "name": "EF_ORCHARD_BEND_COLLISION_56",
+        "parent": "WalkCollision"
+      },
+      "7": {
+        "id": "rbxassetid://110710240940766",
+        "transparency": 1,
+        "name": "EF_RIDGE_ASCENT_COLLISION_17",
+        "parent": "WalkCollision"
+      },
+      "8": {
+        "id": "rbxassetid://135423715732082",
+        "transparency": 1,
+        "name": "EF_RIDGE_ASCENT_COLLISION_43",
+        "parent": "WalkCollision"
+      },
+      "9": {
+        "id": "rbxassetid://112345262735348",
+        "transparency": 1,
+        "name": "EF_RIDGE_ASCENT_COLLISION_42",
+        "parent": "WalkCollision"
+      },
+      "10": {
+        "id": "rbxassetid://72976848332699",
+        "transparency": 1,
+        "name": "EF_RIDGE_ASCENT_COLLISION_49",
+        "parent": "WalkCollision"
+      },
+      "11": {
+        "id": "rbxassetid://129527097511127",
+        "transparency": 1,
+        "name": "EF_RIDGE_ASCENT_COLLISION_50",
+        "parent": "WalkCollision"
+      },
+      "12": {
+        "id": "rbxassetid://117405680876336",
+        "transparency": 0,
+        "name": "Mesh",
+        "parent": "24_EF_REVIEW_24"
+      },
+      "13": {
+        "id": "rbxassetid://118349186251831",
+        "transparency": 0,
+        "name": "EF_REVIEW_03_GRASS_0",
+        "parent": "AssemblyPresentation"
+      },
+      "14": {
+        "id": "rbxassetid://74660084769560",
+        "transparency": 0,
+        "name": "EF_BATCH2_REVIEW_SCENERY_16",
+        "parent": "AssemblyPresentation"
+      },
+      "15": {
+        "id": "rbxassetid://71530792244725",
+        "transparency": 0,
+        "name": "EF_BATCH2_REVIEW_SCENERY_37",
+        "parent": "AssemblyPresentation"
+      },
+      "16": {
+        "id": "rbxassetid://131124213610022",
+        "transparency": 0,
+        "name": "EF_BATCH2_REVIEW_SCENERY_48",
+        "parent": "AssemblyPresentation"
+      },
+      "17": {
+        "id": "rbxassetid://127721158084835",
+        "transparency": 0,
+        "name": "EF_BATCH2_REVIEW_SCENERY_93",
+        "parent": "AssemblyPresentation"
+      },
+      "18": {
+        "id": "rbxassetid://94438271457302",
+        "transparency": 0,
+        "name": "EF_BATCH2_REVIEW_SCENERY_96",
+        "parent": "AssemblyPresentation"
+      },
+      "19": {
+        "id": "rbxassetid://132102552129018",
+        "transparency": 0,
+        "name": "EF_BATCH2_REVIEW_PROPS_3",
+        "parent": "AssemblyPresentation"
+      },
+      "20": {
+        "id": "rbxassetid://81185738654382",
+        "transparency": 0,
+        "name": "EF_BATCH2_REVIEW_SCENERY_39_CELL_0",
+        "parent": "AssemblyPresentation"
+      },
+      "21": {
+        "id": "rbxassetid://79554412825668",
+        "transparency": 0,
+        "name": "EF_BATCH2_REVIEW_SCENERY_85_CELL_0",
+        "parent": "AssemblyPresentation"
+      },
+      "22": {
+        "id": "rbxassetid://83158612615167",
+        "transparency": 0,
+        "name": "EF_BATCH2_REVIEW_SCENERY_100_CELL_2",
+        "parent": "AssemblyPresentation"
+      },
+      "23": {
+        "id": "rbxassetid://90025720716691",
+        "transparency": 0,
+        "name": "EF_BATCH2_REVIEW_SCENERY_124_CELL_5",
+        "parent": "AssemblyPresentation"
+      },
+      "24": {
+        "id": "rbxassetid://136733314815623",
+        "transparency": 0,
+        "name": "EF_BATCH2_REVIEW_SCENERY_125_CELL_3",
+        "parent": "AssemblyPresentation"
+      },
+      "25": {
+        "id": "rbxassetid://70949029507308",
+        "transparency": 0,
+        "name": "EF_BATCH2_REVIEW_SCENERY_15_CELL_0_PART_1",
+        "parent": "AssemblyPresentation"
+      }
+    },
+    "targetedTerrainStatus": "Failure",
+    "disposition": "All 1074 unique IDs succeeded in one fresh Play session; no asset reupload"
+  },
+  "warnings": [
+    "Unpublished PlaceId0: DataStore/ledger unavailable",
+    "Existing production EMBERFALL/ASTRAL_REACH map registration absent",
+    "Legacy chat dev slash commands unavailable",
+    "Existing placeholders/debug mode"
+  ],
+  "ownerReview": "E:/BlenderAIProjects/Runtime/Emberfall_Batch2/EmberfallBatch2Walkthrough.rbxlx",
+  "status": "READY FOR OWNER REVIEW"
+}

@@ -1,0 +1,982 @@
+{
+  "scope": "Planning only: actual Batch 1 sockets plus hypothetical Batch 2 sockets; no new geometry, appearance, collision or gameplay proof.",
+  "real_source_hashes": {
+    "EF_ENTRY_WINDWARD_MEADOW": "a990b6fccd651b6825f06d61207e271deb05c36557ffbd02ca32b14b40452b10",
+    "EF_DRAINAGE_CROSSING": "9cdf2344ff09e064dc6357cfd4ff499ce889943cb098f95429f892c075b5d020",
+    "EF_ORCHARD_BEND": "ef836eafddc8200621824f8bf42a01c8ded468c0ccbfea59fd76aa4fd49e150f",
+    "EF_RIDGE_ASCENT": "37132823c924e35d03e859590cce0fd731374aab6ec6f96b60e09a857d467cbe",
+    "EF_SWITCHBACK_BANK": "1a093107517b257b39a7bea9d21f5f3636873146b8edd5bcdda89aee1aa93082",
+    "EF_WAYMARK_TERRACE": "971c5323a52e458fa5eff96ec7cf2b8bdd4afece30fecf5686cc8073477551fc",
+    "EF_OPEN_FIELD_CLEARING": "2c6cbf147317fc67cecaf3c0d74994717979abd25a009f202e7c7c157bed9ad1",
+    "EF_BURN_FRONT_VERGE": "e6edd0a1a3478f3a5f7ced9ead6c1ce0f284e98efa5713b0b1e95a670312756b",
+    "EF_FENCELINE_RISE": "33b9b18e374622b127d81cad237c0a869696f65706afabfd1076a6e208d7bae1"
+  },
+  "proposed_edges": {
+    "QuietBend": [
+      [
+        "S",
+        "HOLLOW",
+        0
+      ],
+      [
+        "W",
+        "HOLLOW",
+        0
+      ]
+    ],
+    "PastureBend": [
+      [
+        "S",
+        "CREST",
+        0
+      ],
+      [
+        "E",
+        "CREST",
+        0
+      ]
+    ],
+    "Swale": [
+      [
+        "S",
+        "HOLLOW",
+        0
+      ],
+      [
+        "N",
+        "HOLLOW",
+        0
+      ]
+    ],
+    "Grove": [
+      [
+        "S",
+        "CREST",
+        0
+      ],
+      [
+        "N",
+        "CREST",
+        0
+      ]
+    ],
+    "Shoulder": [
+      [
+        "S",
+        "HOLLOW",
+        0
+      ],
+      [
+        "N",
+        "CREST",
+        12
+      ]
+    ],
+    "Saddle": [
+      [
+        "S",
+        "CREST",
+        0
+      ],
+      [
+        "N",
+        "CREST",
+        -8
+      ]
+    ],
+    "Ditch": [
+      [
+        "S",
+        "HOLLOW",
+        0
+      ],
+      [
+        "N",
+        "HOLLOW",
+        0
+      ]
+    ],
+    "Fieldstead": [
+      [
+        "S",
+        "CREST",
+        0
+      ],
+      [
+        "N",
+        "CREST",
+        0
+      ]
+    ]
+  },
+  "layouts": {
+    "Batch 1 repeated control / 16": {
+      "placements": [
+        {
+          "name": "Windward",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Clearing",
+          "x": 0.0,
+          "y": -3.508782064,
+          "z": -256.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Drainage",
+          "x": 0.0,
+          "y": 0.287533599,
+          "z": -512.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Ridge",
+          "x": 0.0,
+          "y": 13.934787182,
+          "z": -768.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": 22.335536701
+        },
+        {
+          "name": "Orchard",
+          "x": 0.0,
+          "y": 24.533683372,
+          "z": -1024.0,
+          "yaw": 0,
+          "entryY": 22.335536701,
+          "exitY": 22.335536701
+        },
+        {
+          "name": "Clearing",
+          "x": 256.0,
+          "y": 20.491217936,
+          "z": -1024.0,
+          "yaw": 90,
+          "entryY": 22.335536701,
+          "exitY": 22.335536701
+        },
+        {
+          "name": "Drainage",
+          "x": 512.0,
+          "y": 24.287533599,
+          "z": -1024.0,
+          "yaw": 90,
+          "entryY": 22.335536701,
+          "exitY": 22.335536701
+        },
+        {
+          "name": "Clearing",
+          "x": 768.0,
+          "y": 20.491217936,
+          "z": -1024.0,
+          "yaw": 90,
+          "entryY": 22.335536701,
+          "exitY": 22.335536701
+        },
+        {
+          "name": "Ridge",
+          "x": 1024.0,
+          "y": 37.934787182,
+          "z": -1024.0,
+          "yaw": 90,
+          "entryY": 22.335536701,
+          "exitY": 46.335536701
+        },
+        {
+          "name": "Orchard",
+          "x": 1280.0,
+          "y": 48.533683372,
+          "z": -1024.0,
+          "yaw": 90,
+          "entryY": 46.335536701,
+          "exitY": 46.335536701
+        },
+        {
+          "name": "Clearing",
+          "x": 1280.0,
+          "y": 44.491217936,
+          "z": -768.0,
+          "yaw": 180,
+          "entryY": 46.335536701,
+          "exitY": 46.335536701
+        },
+        {
+          "name": "Drainage",
+          "x": 1280.0,
+          "y": 48.287533599,
+          "z": -512.0,
+          "yaw": 180,
+          "entryY": 46.335536701,
+          "exitY": 46.335536701
+        },
+        {
+          "name": "Clearing",
+          "x": 1280.0,
+          "y": 44.491217936,
+          "z": -256.0,
+          "yaw": 180,
+          "entryY": 46.335536701,
+          "exitY": 46.335536701
+        },
+        {
+          "name": "Ridge",
+          "x": 1280.0,
+          "y": 61.934787182,
+          "z": 0.0,
+          "yaw": 180,
+          "entryY": 46.335536701,
+          "exitY": 70.335536701
+        },
+        {
+          "name": "Drainage",
+          "x": 1280.0,
+          "y": 72.287533599,
+          "z": 256.0,
+          "yaw": 180,
+          "entryY": 70.335536701,
+          "exitY": 70.335536701
+        },
+        {
+          "name": "Clearing",
+          "x": 1280.0,
+          "y": 68.491217936,
+          "z": 512.0,
+          "yaw": 180,
+          "entryY": 70.335536701,
+          "exitY": 70.335536701
+        }
+      ],
+      "repeated_sources": {
+        "Clearing": [
+          2,
+          6,
+          8,
+          11,
+          13,
+          16
+        ],
+        "Drainage": [
+          3,
+          7,
+          12,
+          15
+        ],
+        "Orchard": [
+          5,
+          10
+        ],
+        "Ridge": [
+          4,
+          9,
+          14
+        ]
+      },
+      "signature_counts": {
+        "LOW": 6,
+        "MEDIUM": 8,
+        "HIGH": 2
+      },
+      "low_share": 0.375,
+      "turns": 2,
+      "regular_quarter_circle_turns": 2,
+      "high_positions": [
+        5,
+        10
+      ],
+      "socket_elevation_change": 72.0,
+      "warnings": [
+        "Clearing: repeat cap",
+        "Clearing: spacing",
+        "Drainage: repeat cap",
+        "Drainage: spacing",
+        "Orchard: repeat cap",
+        "Orchard: spacing",
+        "Ridge: repeat cap",
+        "Ridge: spacing",
+        "repeated three-source motif"
+      ]
+    },
+    "Hollow countryside / 16": {
+      "placements": [
+        {
+          "name": "Windward",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Swale",
+          "x": 0.0,
+          "y": -1.664463299,
+          "z": -256.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "QuietBend",
+          "x": 0.0,
+          "y": -1.664463299,
+          "z": -512.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Ditch",
+          "x": -256.0,
+          "y": -1.664463299,
+          "z": -512.0,
+          "yaw": 270,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Clearing",
+          "x": -512.0,
+          "y": -3.508782064,
+          "z": -512.0,
+          "yaw": 270,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Orchard",
+          "x": -768.0,
+          "y": 0.533683372,
+          "z": -512.0,
+          "yaw": 270,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Swale",
+          "x": -768.0,
+          "y": -1.664463299,
+          "z": -768.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Drainage",
+          "x": -768.0,
+          "y": 0.287533599,
+          "z": -1024.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Ditch",
+          "x": -768.0,
+          "y": -1.664463299,
+          "z": -1280.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Ridge",
+          "x": -768.0,
+          "y": 13.934787182,
+          "z": -1536.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": 22.335536701
+        },
+        {
+          "name": "QuietBend",
+          "x": -768.0,
+          "y": 22.335536701,
+          "z": -1792.0,
+          "yaw": 0,
+          "entryY": 22.335536701,
+          "exitY": 22.335536701
+        },
+        {
+          "name": "Clearing",
+          "x": -1024.0,
+          "y": 20.491217936,
+          "z": -1792.0,
+          "yaw": 270,
+          "entryY": 22.335536701,
+          "exitY": 22.335536701
+        },
+        {
+          "name": "Shoulder",
+          "x": -1280.0,
+          "y": 22.335536701,
+          "z": -1792.0,
+          "yaw": 270,
+          "entryY": 22.335536701,
+          "exitY": 34.335536701
+        },
+        {
+          "name": "Grove",
+          "x": -1536.0,
+          "y": 34.335536701,
+          "z": -1792.0,
+          "yaw": 270,
+          "entryY": 34.335536701,
+          "exitY": 34.335536701
+        },
+        {
+          "name": "PastureBend",
+          "x": -1792.0,
+          "y": 34.335536701,
+          "z": -1792.0,
+          "yaw": 270,
+          "entryY": 34.335536701,
+          "exitY": 34.335536701
+        },
+        {
+          "name": "Saddle",
+          "x": -1792.0,
+          "y": 34.335536701,
+          "z": -2048.0,
+          "yaw": 0,
+          "entryY": 34.335536701,
+          "exitY": 26.335536701
+        }
+      ],
+      "repeated_sources": {
+        "Clearing": [
+          5,
+          12
+        ],
+        "Ditch": [
+          4,
+          9
+        ],
+        "QuietBend": [
+          3,
+          11
+        ],
+        "Swale": [
+          2,
+          7
+        ]
+      },
+      "signature_counts": {
+        "LOW": 11,
+        "MEDIUM": 4,
+        "HIGH": 1
+      },
+      "low_share": 0.688,
+      "turns": 4,
+      "regular_quarter_circle_turns": 1,
+      "high_positions": [
+        6
+      ],
+      "socket_elevation_change": 28.0,
+      "warnings": []
+    },
+    "Long repeated route / 24": {
+      "placements": [
+        {
+          "name": "Windward",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Swale",
+          "x": 0.0,
+          "y": -1.664463299,
+          "z": -256.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "QuietBend",
+          "x": 0.0,
+          "y": -1.664463299,
+          "z": -512.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Ditch",
+          "x": -256.0,
+          "y": -1.664463299,
+          "z": -512.0,
+          "yaw": 270,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Clearing",
+          "x": -512.0,
+          "y": -3.508782064,
+          "z": -512.0,
+          "yaw": 270,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Shoulder",
+          "x": -768.0,
+          "y": -1.664463299,
+          "z": -512.0,
+          "yaw": 270,
+          "entryY": -1.664463299,
+          "exitY": 10.335536701
+        },
+        {
+          "name": "Saddle",
+          "x": -1024.0,
+          "y": 10.335536701,
+          "z": -512.0,
+          "yaw": 270,
+          "entryY": 10.335536701,
+          "exitY": 2.335536701
+        },
+        {
+          "name": "Grove",
+          "x": -1280.0,
+          "y": 2.335536701,
+          "z": -512.0,
+          "yaw": 270,
+          "entryY": 2.335536701,
+          "exitY": 2.335536701
+        },
+        {
+          "name": "PastureBend",
+          "x": -1536.0,
+          "y": 2.335536701,
+          "z": -512.0,
+          "yaw": 270,
+          "entryY": 2.335536701,
+          "exitY": 2.335536701
+        },
+        {
+          "name": "Fenceline",
+          "x": -1536.0,
+          "y": 11.45557578,
+          "z": -768.0,
+          "yaw": 0,
+          "entryY": 2.335536701,
+          "exitY": 18.335536701
+        },
+        {
+          "name": "Fieldstead",
+          "x": -1536.0,
+          "y": 18.335536701,
+          "z": -1024.0,
+          "yaw": 0,
+          "entryY": 18.335536701,
+          "exitY": 18.335536701
+        },
+        {
+          "name": "Saddle",
+          "x": -1536.0,
+          "y": 18.335536701,
+          "z": -1280.0,
+          "yaw": 0,
+          "entryY": 18.335536701,
+          "exitY": 10.335536701
+        },
+        {
+          "name": "Shoulder",
+          "x": -1536.0,
+          "y": -1.664463299,
+          "z": -1536.0,
+          "yaw": 180,
+          "entryY": 10.335536701,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Swale",
+          "x": -1536.0,
+          "y": -1.664463299,
+          "z": -1792.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "QuietBend",
+          "x": -1536.0,
+          "y": -1.664463299,
+          "z": -2048.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Clearing",
+          "x": -1792.0,
+          "y": -3.508782064,
+          "z": -2048.0,
+          "yaw": 270,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Ditch",
+          "x": -2048.0,
+          "y": -1.664463299,
+          "z": -2048.0,
+          "yaw": 270,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Orchard",
+          "x": -2304.0,
+          "y": 0.533683372,
+          "z": -2048.0,
+          "yaw": 270,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Swale",
+          "x": -2304.0,
+          "y": -1.664463299,
+          "z": -2304.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Ridge",
+          "x": -2304.0,
+          "y": 13.934787182,
+          "z": -2560.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": 22.335536701
+        },
+        {
+          "name": "Shoulder",
+          "x": -2304.0,
+          "y": 22.335536701,
+          "z": -2816.0,
+          "yaw": 0,
+          "entryY": 22.335536701,
+          "exitY": 34.335536701
+        },
+        {
+          "name": "Grove",
+          "x": -2304.0,
+          "y": 34.335536701,
+          "z": -3072.0,
+          "yaw": 0,
+          "entryY": 34.335536701,
+          "exitY": 34.335536701
+        },
+        {
+          "name": "PastureBend",
+          "x": -2304.0,
+          "y": 34.335536701,
+          "z": -3328.0,
+          "yaw": 0,
+          "entryY": 34.335536701,
+          "exitY": 34.335536701
+        },
+        {
+          "name": "Saddle",
+          "x": -2048.0,
+          "y": 34.335536701,
+          "z": -3328.0,
+          "yaw": 90,
+          "entryY": 34.335536701,
+          "exitY": 26.335536701
+        }
+      ],
+      "repeated_sources": {
+        "Clearing": [
+          5,
+          16
+        ],
+        "Ditch": [
+          4,
+          17
+        ],
+        "Grove": [
+          8,
+          22
+        ],
+        "PastureBend": [
+          9,
+          23
+        ],
+        "QuietBend": [
+          3,
+          15
+        ],
+        "Saddle": [
+          7,
+          12,
+          24
+        ],
+        "Shoulder": [
+          6,
+          13,
+          21
+        ],
+        "Swale": [
+          2,
+          14,
+          19
+        ]
+      },
+      "signature_counts": {
+        "LOW": 18,
+        "MEDIUM": 4,
+        "HIGH": 2
+      },
+      "low_share": 0.75,
+      "turns": 5,
+      "regular_quarter_circle_turns": 1,
+      "high_positions": [
+        11,
+        18
+      ],
+      "socket_elevation_change": 28.0,
+      "warnings": []
+    },
+    "Mixed elevation / 20": {
+      "placements": [
+        {
+          "name": "Windward",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Drainage",
+          "x": 0.0,
+          "y": 0.287533599,
+          "z": -256.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Swale",
+          "x": 0.0,
+          "y": -1.664463299,
+          "z": -512.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": -1.664463299
+        },
+        {
+          "name": "Switchback",
+          "x": 0.0,
+          "y": 15.661966436,
+          "z": -768.0,
+          "yaw": 0,
+          "entryY": -1.664463299,
+          "exitY": 22.335536701
+        },
+        {
+          "name": "Saddle",
+          "x": 256.0,
+          "y": 22.335536701,
+          "z": -768.0,
+          "yaw": 90,
+          "entryY": 22.335536701,
+          "exitY": 14.335536701
+        },
+        {
+          "name": "Grove",
+          "x": 512.0,
+          "y": 14.335536701,
+          "z": -768.0,
+          "yaw": 90,
+          "entryY": 14.335536701,
+          "exitY": 14.335536701
+        },
+        {
+          "name": "PastureBend",
+          "x": 768.0,
+          "y": 14.335536701,
+          "z": -768.0,
+          "yaw": 90,
+          "entryY": 14.335536701,
+          "exitY": 14.335536701
+        },
+        {
+          "name": "Fenceline",
+          "x": 768.0,
+          "y": 23.45557578,
+          "z": -512.0,
+          "yaw": 180,
+          "entryY": 14.335536701,
+          "exitY": 30.335536701
+        },
+        {
+          "name": "Waymark",
+          "x": 768.0,
+          "y": 32.438331528,
+          "z": -256.0,
+          "yaw": 180,
+          "entryY": 30.335536701,
+          "exitY": 30.335536701
+        },
+        {
+          "name": "Saddle",
+          "x": 768.0,
+          "y": 30.335536701,
+          "z": 0.0,
+          "yaw": 180,
+          "entryY": 30.335536701,
+          "exitY": 22.335536701
+        },
+        {
+          "name": "Shoulder",
+          "x": 768.0,
+          "y": 10.335536701,
+          "z": 256.0,
+          "yaw": 0,
+          "entryY": 22.335536701,
+          "exitY": 10.335536701
+        },
+        {
+          "name": "Ditch",
+          "x": 768.0,
+          "y": 10.335536701,
+          "z": 512.0,
+          "yaw": 180,
+          "entryY": 10.335536701,
+          "exitY": 10.335536701
+        },
+        {
+          "name": "QuietBend",
+          "x": 768.0,
+          "y": 10.335536701,
+          "z": 768.0,
+          "yaw": 180,
+          "entryY": 10.335536701,
+          "exitY": 10.335536701
+        },
+        {
+          "name": "Clearing",
+          "x": 1024.0,
+          "y": 8.491217936,
+          "z": 768.0,
+          "yaw": 90,
+          "entryY": 10.335536701,
+          "exitY": 10.335536701
+        },
+        {
+          "name": "Swale",
+          "x": 1280.0,
+          "y": 10.335536701,
+          "z": 768.0,
+          "yaw": 90,
+          "entryY": 10.335536701,
+          "exitY": 10.335536701
+        },
+        {
+          "name": "Wagon",
+          "x": 1536.0,
+          "y": 24.847730939,
+          "z": 768.0,
+          "yaw": 90,
+          "entryY": 10.335536701,
+          "exitY": 34.335536701
+        },
+        {
+          "name": "Grove",
+          "x": 1536.0,
+          "y": 34.335536701,
+          "z": 512.0,
+          "yaw": 0,
+          "entryY": 34.335536701,
+          "exitY": 34.335536701
+        },
+        {
+          "name": "PastureBend",
+          "x": 1536.0,
+          "y": 34.335536701,
+          "z": 256.0,
+          "yaw": 0,
+          "entryY": 34.335536701,
+          "exitY": 34.335536701
+        },
+        {
+          "name": "Saddle",
+          "x": 1792.0,
+          "y": 34.335536701,
+          "z": 256.0,
+          "yaw": 90,
+          "entryY": 34.335536701,
+          "exitY": 26.335536701
+        },
+        {
+          "name": "Fenceline",
+          "x": 2048.0,
+          "y": 35.45557578,
+          "z": 256.0,
+          "yaw": 90,
+          "entryY": 26.335536701,
+          "exitY": 42.335536701
+        }
+      ],
+      "repeated_sources": {
+        "Fenceline": [
+          8,
+          20
+        ],
+        "Grove": [
+          6,
+          17
+        ],
+        "PastureBend": [
+          7,
+          18
+        ],
+        "Saddle": [
+          5,
+          10,
+          19
+        ],
+        "Swale": [
+          3,
+          15
+        ]
+      },
+      "signature_counts": {
+        "LOW": 13,
+        "MEDIUM": 5,
+        "HIGH": 2
+      },
+      "low_share": 0.65,
+      "turns": 5,
+      "regular_quarter_circle_turns": 2,
+      "high_positions": [
+        9,
+        16
+      ],
+      "socket_elevation_change": 44.0,
+      "warnings": []
+    }
+  }
+}

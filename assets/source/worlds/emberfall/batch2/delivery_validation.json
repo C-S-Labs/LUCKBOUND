@@ -1,0 +1,30 @@
+{
+  "source_sanity": "PASS",
+  "variant_identity": "PASS",
+  "canonical_library_sources": 17,
+  "combined_layouts": {
+    "Combined1": 16,
+    "Combined2": 24,
+    "Combined3": 20
+  },
+  "exports_checked": 17,
+  "source_mesh_mappings": 602,
+  "delivered_review_mesh_mappings": 323,
+  "source_visual_triangles": 169800,
+  "source_visual_objects": 250,
+  "canonical_collision_parts": 558,
+  "pending_review_files": [],
+  "readiness": "READY FOR OWNER REVIEW",
+  "bounds_repair": {
+    "replaced": 23,
+    "parts": 104,
+    "triangles": 187898,
+    "exports": 2
+  },
+  "cell_repair": {
+    "parts": 2,
+    "triangles": 2458,
+    "exports": 1
+  },
+  "imported_validation": "PASS"
+}

@@ -1,0 +1,207 @@
+{
+  "rotations": [
+    {
+      "initial_yaw": 0,
+      "max_seam": 5.2288733058958314e-06
+    },
+    {
+      "initial_yaw": 90,
+      "max_seam": 6.208616014191648e-06
+    },
+    {
+      "initial_yaw": 180,
+      "max_seam": 6.5783970057964325e-06
+    },
+    {
+      "initial_yaw": 270,
+      "max_seam": 6.5783970057964325e-06
+    }
+  ],
+  "layouts": {
+    "GateA1": {
+      "rows": [
+        {
+          "id": "EF_ENTRY_WINDWARD_MEADOW",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "yaw": 0,
+          "exit": "N"
+        },
+        {
+          "id": "EF_QUIET_HOLLOW_BEND",
+          "x": 0.0,
+          "y": -0.645601576,
+          "z": -256.0,
+          "yaw": 0,
+          "exit": "W"
+        },
+        {
+          "id": "EF_OPEN_FIELD_CLEARING",
+          "x": -256.0,
+          "y": -3.508782064,
+          "z": -256.0,
+          "yaw": 270,
+          "exit": "N"
+        },
+        {
+          "id": "EF_LOW_SHOULDER_CLIMB",
+          "x": -512.0,
+          "y": 5.967581367,
+          "z": -256.0,
+          "yaw": 270,
+          "exit": "N"
+        },
+        {
+          "id": "EF_RAISED_PASTURE_BEND",
+          "x": -768.0,
+          "y": 10.65966725,
+          "z": -256.0,
+          "yaw": 270,
+          "exit": "E"
+        },
+        {
+          "id": "EF_FENCELINE_RISE",
+          "x": -768.0,
+          "y": 19.45557578,
+          "z": -512.0,
+          "yaw": 0,
+          "exit": "N"
+        },
+        {
+          "id": "EF_WAYMARK_TERRACE",
+          "x": -768.0,
+          "y": 28.438331528,
+          "z": -768.0,
+          "yaw": 0,
+          "exit": "N"
+        },
+        {
+          "id": "EF_SWITCHBACK_BANK",
+          "x": -768.0,
+          "y": 19.661966436,
+          "z": -1024.0,
+          "yaw": 90,
+          "exit": "S"
+        },
+        {
+          "id": "EF_DRAINAGE_CROSSING",
+          "x": -1024.0,
+          "y": 4.287533599,
+          "z": -1024.0,
+          "yaw": 270,
+          "exit": "END"
+        }
+      ],
+      "balance_percent": [
+        18.87942815095133,
+        31.052244297277408,
+        50.06832755177126
+      ],
+      "thresholds": [
+        466.42576280496246,
+        1127.5041906492777
+      ],
+      "field": {
+        "iterations": 1549,
+        "bytes": 297992,
+        "length": 2176.1285611467083
+      },
+      "joins": [
+        {
+          "from": "EF_ENTRY_WINDWARD_MEADOW",
+          "to": "EF_QUIET_HOLLOW_BEND",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            0
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_QUIET_HOLLOW_BEND",
+          "to": "EF_OPEN_FIELD_CLEARING",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            0,
+            1
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_OPEN_FIELD_CLEARING",
+          "to": "EF_LOW_SHOULDER_CLIMB",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            1
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_LOW_SHOULDER_CLIMB",
+          "to": "EF_RAISED_PASTURE_BEND",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            1
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_RAISED_PASTURE_BEND",
+          "to": "EF_FENCELINE_RISE",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            1,
+            2
+          ],
+          "burn_front_crosses": true
+        },
+        {
+          "from": "EF_FENCELINE_RISE",
+          "to": "EF_WAYMARK_TERRACE",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_WAYMARK_TERRACE",
+          "to": "EF_SWITCHBACK_BANK",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_SWITCHBACK_BANK",
+          "to": "EF_DRAINAGE_CROSSING",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        }
+      ],
+      "max_seam": 5.2288733058958314e-06,
+      "scenery_tiles": 40,
+      "active_flames": 100,
+      "vegetation_object_states": [
+        66,
+        88,
+        209
+      ],
+      "source_geometry_hashes": {
+        "EF_ENTRY_WINDWARD_MEADOW": "a990b6fccd651b6825f06d61207e271deb05c36557ffbd02ca32b14b40452b10",
+        "EF_QUIET_HOLLOW_BEND": "94528f061ced35a3c6a59681f1f37c830fcb4e240d337687e69fc1211ccaef3a",
+        "EF_OPEN_FIELD_CLEARING": "2c6cbf147317fc67cecaf3c0d74994717979abd25a009f202e7c7c157bed9ad1",
+        "EF_LOW_SHOULDER_CLIMB": "f759a17222d8069bb43f475f70e09ddaa5d914ba3454ed44b8618f9c19223f21",
+        "EF_RAISED_PASTURE_BEND": "f265577eff0d6d6eadd4f611fac9ae73c93f6adefebc5805795a14b7a1aa46f8",
+        "EF_FENCELINE_RISE": "33b9b18e374622b127d81cad237c0a869696f65706afabfd1076a6e208d7bae1",
+        "EF_WAYMARK_TERRACE": "971c5323a52e458fa5eff96ec7cf2b8bdd4afece30fecf5686cc8073477551fc",
+        "EF_SWITCHBACK_BANK": "1a093107517b257b39a7bea9d21f5f3636873146b8edd5bcdda89aee1aa93082",
+        "EF_DRAINAGE_CROSSING": "9cdf2344ff09e064dc6357cfd4ff499ce889943cb098f95429f892c075b5d020"
+      }
+    }
+  }
+}

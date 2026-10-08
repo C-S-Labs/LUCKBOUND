@@ -1,0 +1,15 @@
+{
+  "status": "HOLD",
+  "failedFile": "EF_BATCH2_REVIEW_VISUAL_8.fbx",
+  "operationId": "fea2f937-03a8-4978-8c70-27d22ddf4c2d",
+  "response": {"code": "Unknown", "message": "Unknown Error", "details": []},
+  "returnedModelAssetId": null,
+  "partialFailedAssetExistence": "unknown",
+  "log": "E:/BlenderAIProjects/Runtime/Emberfall_Batch2/review_visual_8_upload.log",
+  "notAttempted": ["EF_BATCH2_REVIEW_VISUAL_9.fbx", "EF_BATCH2_REVIEW_VISUAL_10.fbx"],
+  "successfulReusableSourceModels": ["88065938858510", "88157428738073", "108592230513646"],
+  "successfulReviewModels": ["139712835647313", "129641798175330", "79656345119842", "112864973724944", "136262450851398", "124914370627829", "83612230158373", "75116781971033"],
+  "existingAssetsModified": false,
+  "blindRetryAttempted": false,
+  "finalImportedStudioReviewRun": false
+}

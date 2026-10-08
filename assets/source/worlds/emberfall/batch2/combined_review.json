@@ -1,0 +1,1154 @@
+{
+  "layouts": {
+    "Combined1": {
+      "rows": [
+        {
+          "id": "EF_ENTRY_WINDWARD_MEADOW",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "yaw": 0,
+          "exit": "N"
+        },
+        {
+          "id": "EF_SWALE_DRIFT",
+          "x": 0.0,
+          "y": -5.080905239,
+          "z": -256.0,
+          "yaw": 0,
+          "exit": "N"
+        },
+        {
+          "id": "EF_QUIET_HOLLOW_BEND",
+          "x": 0.0,
+          "y": -0.645601576,
+          "z": -512.0,
+          "yaw": 0,
+          "exit": "W"
+        },
+        {
+          "id": "EF_LONG_DITCH_VERGE",
+          "x": -256.0,
+          "y": -0.80781337,
+          "z": -512.0,
+          "yaw": 270,
+          "exit": "N"
+        },
+        {
+          "id": "EF_OPEN_FIELD_CLEARING",
+          "x": -512.0,
+          "y": -3.508782064,
+          "z": -512.0,
+          "yaw": 270,
+          "exit": "N"
+        },
+        {
+          "id": "EF_ORCHARD_BEND",
+          "x": -768.0,
+          "y": 0.533683372,
+          "z": -512.0,
+          "yaw": 270,
+          "exit": "E"
+        },
+        {
+          "id": "EF_SWALE_DRIFT_DRESSING_B",
+          "x": -768.0,
+          "y": -5.080905239,
+          "z": -768.0,
+          "yaw": 0,
+          "exit": "N",
+          "source_id": "EF_SWALE_DRIFT"
+        },
+        {
+          "id": "EF_DRAINAGE_CROSSING",
+          "x": -768.0,
+          "y": 0.287533599,
+          "z": -1024.0,
+          "yaw": 0,
+          "exit": "N"
+        },
+        {
+          "id": "EF_LONG_DITCH_VERGE_DRESSING_B",
+          "x": -768.0,
+          "y": -0.80781337,
+          "z": -1280.0,
+          "yaw": 0,
+          "exit": "N",
+          "source_id": "EF_LONG_DITCH_VERGE"
+        },
+        {
+          "id": "EF_RIDGE_ASCENT",
+          "x": -768.0,
+          "y": 13.934787182,
+          "z": -1536.0,
+          "yaw": 0,
+          "exit": "N"
+        },
+        {
+          "id": "EF_QUIET_HOLLOW_BEND_DRESSING_B",
+          "x": -768.0,
+          "y": 23.354398424,
+          "z": -1792.0,
+          "yaw": 0,
+          "exit": "W",
+          "source_id": "EF_QUIET_HOLLOW_BEND"
+        },
+        {
+          "id": "EF_OPEN_FIELD_CLEARING",
+          "x": -1024.0,
+          "y": 20.491217936,
+          "z": -1792.0,
+          "yaw": 270,
+          "exit": "N"
+        },
+        {
+          "id": "EF_LOW_SHOULDER_CLIMB",
+          "x": -1280.0,
+          "y": 29.967581367,
+          "z": -1792.0,
+          "yaw": 270,
+          "exit": "N"
+        },
+        {
+          "id": "EF_LEEWARD_GROVE",
+          "x": -1536.0,
+          "y": 34.456687765,
+          "z": -1792.0,
+          "yaw": 270,
+          "exit": "N"
+        },
+        {
+          "id": "EF_RAISED_PASTURE_BEND",
+          "x": -1792.0,
+          "y": 34.65966725,
+          "z": -1792.0,
+          "yaw": 270,
+          "exit": "E"
+        },
+        {
+          "id": "EF_PASTURE_SADDLE",
+          "x": -1792.0,
+          "y": 30.667467427,
+          "z": -2048.0,
+          "yaw": 0,
+          "exit": "END"
+        }
+      ],
+      "balance_percent": [
+        18.880085146641438,
+        31.048959318826867,
+        50.07095553453169
+      ],
+      "thresholds": [
+        863.6320965440932,
+        2029.8906203844151
+      ],
+      "field": {
+        "iterations": 2400,
+        "bytes": 742152,
+        "length": 3997.091998804051
+      },
+      "joins": [
+        {
+          "from": "EF_ENTRY_WINDWARD_MEADOW",
+          "to": "EF_SWALE_DRIFT",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            0
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_SWALE_DRIFT",
+          "to": "EF_QUIET_HOLLOW_BEND",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            0
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_QUIET_HOLLOW_BEND",
+          "to": "EF_LONG_DITCH_VERGE",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            0,
+            1
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_LONG_DITCH_VERGE",
+          "to": "EF_OPEN_FIELD_CLEARING",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            1
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_OPEN_FIELD_CLEARING",
+          "to": "EF_ORCHARD_BEND",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            1
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_ORCHARD_BEND",
+          "to": "EF_SWALE_DRIFT_DRESSING_B",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            1
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_SWALE_DRIFT_DRESSING_B",
+          "to": "EF_DRAINAGE_CROSSING",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            1
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_DRAINAGE_CROSSING",
+          "to": "EF_LONG_DITCH_VERGE_DRESSING_B",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            1,
+            2
+          ],
+          "burn_front_crosses": true
+        },
+        {
+          "from": "EF_LONG_DITCH_VERGE_DRESSING_B",
+          "to": "EF_RIDGE_ASCENT",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_RIDGE_ASCENT",
+          "to": "EF_QUIET_HOLLOW_BEND_DRESSING_B",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_QUIET_HOLLOW_BEND_DRESSING_B",
+          "to": "EF_OPEN_FIELD_CLEARING",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_OPEN_FIELD_CLEARING",
+          "to": "EF_LOW_SHOULDER_CLIMB",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_LOW_SHOULDER_CLIMB",
+          "to": "EF_LEEWARD_GROVE",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_LEEWARD_GROVE",
+          "to": "EF_RAISED_PASTURE_BEND",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_RAISED_PASTURE_BEND",
+          "to": "EF_PASTURE_SADDLE",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        }
+      ],
+      "max_seam": 9.955192581401207e-06,
+      "scenery_tiles": 94,
+      "active_flames": 98,
+      "vegetation_object_states": [
+        82,
+        263,
+        224
+      ],
+      "source_geometry_hashes": {
+        "EF_ENTRY_WINDWARD_MEADOW": "a990b6fccd651b6825f06d61207e271deb05c36557ffbd02ca32b14b40452b10",
+        "EF_SWALE_DRIFT": "b81390d90e7552839977c286e054356577cd215007ee19f7104d81f924a8421b",
+        "EF_QUIET_HOLLOW_BEND": "94528f061ced35a3c6a59681f1f37c830fcb4e240d337687e69fc1211ccaef3a",
+        "EF_LONG_DITCH_VERGE": "ed3b58f489e0b42a53facc1448f31bbe17ddcfe9564f5dc1bc9fa67b2d2960ec",
+        "EF_OPEN_FIELD_CLEARING": "2c6cbf147317fc67cecaf3c0d74994717979abd25a009f202e7c7c157bed9ad1",
+        "EF_ORCHARD_BEND": "ef836eafddc8200621824f8bf42a01c8ded468c0ccbfea59fd76aa4fd49e150f",
+        "EF_SWALE_DRIFT_DRESSING_B": "b81390d90e7552839977c286e054356577cd215007ee19f7104d81f924a8421b",
+        "EF_DRAINAGE_CROSSING": "9cdf2344ff09e064dc6357cfd4ff499ce889943cb098f95429f892c075b5d020",
+        "EF_LONG_DITCH_VERGE_DRESSING_B": "ed3b58f489e0b42a53facc1448f31bbe17ddcfe9564f5dc1bc9fa67b2d2960ec",
+        "EF_RIDGE_ASCENT": "37132823c924e35d03e859590cce0fd731374aab6ec6f96b60e09a857d467cbe",
+        "EF_QUIET_HOLLOW_BEND_DRESSING_B": "94528f061ced35a3c6a59681f1f37c830fcb4e240d337687e69fc1211ccaef3a",
+        "EF_LOW_SHOULDER_CLIMB": "f759a17222d8069bb43f475f70e09ddaa5d914ba3454ed44b8618f9c19223f21",
+        "EF_LEEWARD_GROVE": "f15a072c5210c9b7c5db7d4672c53d25c6f342c1530dc252f27ffe71e24439b7",
+        "EF_RAISED_PASTURE_BEND": "f265577eff0d6d6eadd4f611fac9ae73c93f6adefebc5805795a14b7a1aa46f8",
+        "EF_PASTURE_SADDLE": "559fd053c4a75050796d99d3c38853788b8011479bd1f037d15d4c47c7123f9c"
+      }
+    },
+    "Combined2": {
+      "rows": [
+        {
+          "id": "EF_ENTRY_WINDWARD_MEADOW",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "yaw": 0,
+          "exit": "N"
+        },
+        {
+          "id": "EF_SWALE_DRIFT",
+          "x": 0.0,
+          "y": -5.080905239,
+          "z": -256.0,
+          "yaw": 0,
+          "exit": "N"
+        },
+        {
+          "id": "EF_QUIET_HOLLOW_BEND",
+          "x": 0.0,
+          "y": -0.645601576,
+          "z": -512.0,
+          "yaw": 0,
+          "exit": "W"
+        },
+        {
+          "id": "EF_LONG_DITCH_VERGE",
+          "x": -256.0,
+          "y": -0.80781337,
+          "z": -512.0,
+          "yaw": 270,
+          "exit": "N"
+        },
+        {
+          "id": "EF_OPEN_FIELD_CLEARING",
+          "x": -512.0,
+          "y": -3.508782064,
+          "z": -512.0,
+          "yaw": 270,
+          "exit": "N"
+        },
+        {
+          "id": "EF_LOW_SHOULDER_CLIMB",
+          "x": -768.0,
+          "y": 5.967581367,
+          "z": -512.0,
+          "yaw": 270,
+          "exit": "N"
+        },
+        {
+          "id": "EF_PASTURE_SADDLE",
+          "x": -1024.0,
+          "y": 6.667467427,
+          "z": -512.0,
+          "yaw": 270,
+          "exit": "N"
+        },
+        {
+          "id": "EF_LEEWARD_GROVE",
+          "x": -1280.0,
+          "y": 2.456687765,
+          "z": -512.0,
+          "yaw": 270,
+          "exit": "N"
+        },
+        {
+          "id": "EF_RAISED_PASTURE_BEND",
+          "x": -1536.0,
+          "y": 2.65966725,
+          "z": -512.0,
+          "yaw": 270,
+          "exit": "E"
+        },
+        {
+          "id": "EF_FENCELINE_RISE",
+          "x": -1536.0,
+          "y": 11.45557578,
+          "z": -768.0,
+          "yaw": 0,
+          "exit": "N"
+        },
+        {
+          "id": "EF_ABANDONED_FIELDSTEAD",
+          "x": -1536.0,
+          "y": 18.784361729,
+          "z": -1024.0,
+          "yaw": 0,
+          "exit": "N"
+        },
+        {
+          "id": "EF_PASTURE_SADDLE",
+          "x": -1536.0,
+          "y": 14.667467427,
+          "z": -1280.0,
+          "yaw": 0,
+          "exit": "N"
+        },
+        {
+          "id": "EF_LOW_SHOULDER_CLIMB",
+          "x": -1536.0,
+          "y": 5.967581367,
+          "z": -1536.0,
+          "yaw": 180,
+          "exit": "S"
+        },
+        {
+          "id": "EF_SWALE_DRIFT_DRESSING_B",
+          "x": -1536.0,
+          "y": -5.080905239,
+          "z": -1792.0,
+          "yaw": 0,
+          "exit": "N",
+          "source_id": "EF_SWALE_DRIFT"
+        },
+        {
+          "id": "EF_QUIET_HOLLOW_BEND_DRESSING_B",
+          "x": -1536.0,
+          "y": -0.645601576,
+          "z": -2048.0,
+          "yaw": 0,
+          "exit": "W",
+          "source_id": "EF_QUIET_HOLLOW_BEND"
+        },
+        {
+          "id": "EF_OPEN_FIELD_CLEARING",
+          "x": -1792.0,
+          "y": -3.508782064,
+          "z": -2048.0,
+          "yaw": 270,
+          "exit": "N"
+        },
+        {
+          "id": "EF_LONG_DITCH_VERGE_DRESSING_B",
+          "x": -2048.0,
+          "y": -0.80781337,
+          "z": -2048.0,
+          "yaw": 270,
+          "exit": "N",
+          "source_id": "EF_LONG_DITCH_VERGE"
+        },
+        {
+          "id": "EF_ORCHARD_BEND",
+          "x": -2304.0,
+          "y": 0.533683372,
+          "z": -2048.0,
+          "yaw": 270,
+          "exit": "E"
+        },
+        {
+          "id": "EF_SWALE_DRIFT",
+          "x": -2304.0,
+          "y": -5.080905239,
+          "z": -2304.0,
+          "yaw": 0,
+          "exit": "N"
+        },
+        {
+          "id": "EF_RIDGE_ASCENT",
+          "x": -2304.0,
+          "y": 13.934787182,
+          "z": -2560.0,
+          "yaw": 0,
+          "exit": "N"
+        },
+        {
+          "id": "EF_LOW_SHOULDER_CLIMB",
+          "x": -2304.0,
+          "y": 29.967581367,
+          "z": -2816.0,
+          "yaw": 0,
+          "exit": "N"
+        },
+        {
+          "id": "EF_LEEWARD_GROVE",
+          "x": -2304.0,
+          "y": 34.456687765,
+          "z": -3072.0,
+          "yaw": 0,
+          "exit": "N"
+        },
+        {
+          "id": "EF_RAISED_PASTURE_BEND_DRESSING_B",
+          "x": -2304.0,
+          "y": 34.65966725,
+          "z": -3328.0,
+          "yaw": 0,
+          "exit": "E",
+          "source_id": "EF_RAISED_PASTURE_BEND"
+        },
+        {
+          "id": "EF_PASTURE_SADDLE",
+          "x": -2048.0,
+          "y": 30.667467427,
+          "z": -3328.0,
+          "yaw": 90,
+          "exit": "END"
+        }
+      ],
+      "balance_percent": [
+        18.882056133711764,
+        31.04698833175654,
+        50.07095553453169
+      ],
+      "thresholds": [
+        1186.577158560954,
+        3046.1534934649867
+      ],
+      "field": {
+        "iterations": 2400,
+        "bytes": 1358344,
+        "length": 6029.521707223294
+      },
+      "joins": [
+        {
+          "from": "EF_ENTRY_WINDWARD_MEADOW",
+          "to": "EF_SWALE_DRIFT",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            0
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_SWALE_DRIFT",
+          "to": "EF_QUIET_HOLLOW_BEND",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            0
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_QUIET_HOLLOW_BEND",
+          "to": "EF_LONG_DITCH_VERGE",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            0
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_LONG_DITCH_VERGE",
+          "to": "EF_OPEN_FIELD_CLEARING",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            0,
+            1
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_OPEN_FIELD_CLEARING",
+          "to": "EF_LOW_SHOULDER_CLIMB",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            1
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_LOW_SHOULDER_CLIMB",
+          "to": "EF_PASTURE_SADDLE",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            1
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_PASTURE_SADDLE",
+          "to": "EF_LEEWARD_GROVE",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            1
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_LEEWARD_GROVE",
+          "to": "EF_RAISED_PASTURE_BEND",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            1
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_RAISED_PASTURE_BEND",
+          "to": "EF_FENCELINE_RISE",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            1
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_FENCELINE_RISE",
+          "to": "EF_ABANDONED_FIELDSTEAD",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            1
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_ABANDONED_FIELDSTEAD",
+          "to": "EF_PASTURE_SADDLE",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            1
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_PASTURE_SADDLE",
+          "to": "EF_LOW_SHOULDER_CLIMB",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            1,
+            2
+          ],
+          "burn_front_crosses": true
+        },
+        {
+          "from": "EF_LOW_SHOULDER_CLIMB",
+          "to": "EF_SWALE_DRIFT_DRESSING_B",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_SWALE_DRIFT_DRESSING_B",
+          "to": "EF_QUIET_HOLLOW_BEND_DRESSING_B",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_QUIET_HOLLOW_BEND_DRESSING_B",
+          "to": "EF_OPEN_FIELD_CLEARING",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_OPEN_FIELD_CLEARING",
+          "to": "EF_LONG_DITCH_VERGE_DRESSING_B",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_LONG_DITCH_VERGE_DRESSING_B",
+          "to": "EF_ORCHARD_BEND",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_ORCHARD_BEND",
+          "to": "EF_SWALE_DRIFT",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_SWALE_DRIFT",
+          "to": "EF_RIDGE_ASCENT",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_RIDGE_ASCENT",
+          "to": "EF_LOW_SHOULDER_CLIMB",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_LOW_SHOULDER_CLIMB",
+          "to": "EF_LEEWARD_GROVE",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_LEEWARD_GROVE",
+          "to": "EF_RAISED_PASTURE_BEND_DRESSING_B",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_RAISED_PASTURE_BEND_DRESSING_B",
+          "to": "EF_PASTURE_SADDLE",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        }
+      ],
+      "max_seam": 1.652108767302707e-05,
+      "scenery_tiles": 168,
+      "active_flames": 48,
+      "vegetation_object_states": [
+        130,
+        230,
+        421
+      ],
+      "source_geometry_hashes": {
+        "EF_ENTRY_WINDWARD_MEADOW": "a990b6fccd651b6825f06d61207e271deb05c36557ffbd02ca32b14b40452b10",
+        "EF_SWALE_DRIFT": "b81390d90e7552839977c286e054356577cd215007ee19f7104d81f924a8421b",
+        "EF_QUIET_HOLLOW_BEND": "94528f061ced35a3c6a59681f1f37c830fcb4e240d337687e69fc1211ccaef3a",
+        "EF_LONG_DITCH_VERGE": "ed3b58f489e0b42a53facc1448f31bbe17ddcfe9564f5dc1bc9fa67b2d2960ec",
+        "EF_OPEN_FIELD_CLEARING": "2c6cbf147317fc67cecaf3c0d74994717979abd25a009f202e7c7c157bed9ad1",
+        "EF_LOW_SHOULDER_CLIMB": "f759a17222d8069bb43f475f70e09ddaa5d914ba3454ed44b8618f9c19223f21",
+        "EF_PASTURE_SADDLE": "559fd053c4a75050796d99d3c38853788b8011479bd1f037d15d4c47c7123f9c",
+        "EF_LEEWARD_GROVE": "f15a072c5210c9b7c5db7d4672c53d25c6f342c1530dc252f27ffe71e24439b7",
+        "EF_RAISED_PASTURE_BEND": "f265577eff0d6d6eadd4f611fac9ae73c93f6adefebc5805795a14b7a1aa46f8",
+        "EF_FENCELINE_RISE": "33b9b18e374622b127d81cad237c0a869696f65706afabfd1076a6e208d7bae1",
+        "EF_ABANDONED_FIELDSTEAD": "75b2ba856f60371ea3e3ca7d49adee7e9268b9ef9a68b57b5d8315694ad2eb12",
+        "EF_SWALE_DRIFT_DRESSING_B": "b81390d90e7552839977c286e054356577cd215007ee19f7104d81f924a8421b",
+        "EF_QUIET_HOLLOW_BEND_DRESSING_B": "94528f061ced35a3c6a59681f1f37c830fcb4e240d337687e69fc1211ccaef3a",
+        "EF_LONG_DITCH_VERGE_DRESSING_B": "ed3b58f489e0b42a53facc1448f31bbe17ddcfe9564f5dc1bc9fa67b2d2960ec",
+        "EF_ORCHARD_BEND": "ef836eafddc8200621824f8bf42a01c8ded468c0ccbfea59fd76aa4fd49e150f",
+        "EF_RIDGE_ASCENT": "37132823c924e35d03e859590cce0fd731374aab6ec6f96b60e09a857d467cbe",
+        "EF_RAISED_PASTURE_BEND_DRESSING_B": "f265577eff0d6d6eadd4f611fac9ae73c93f6adefebc5805795a14b7a1aa46f8"
+      }
+    },
+    "Combined3": {
+      "rows": [
+        {
+          "id": "EF_ENTRY_WINDWARD_MEADOW",
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0,
+          "yaw": 0,
+          "exit": "N"
+        },
+        {
+          "id": "EF_DRAINAGE_CROSSING",
+          "x": 0.0,
+          "y": 0.287533599,
+          "z": -256.0,
+          "yaw": 0,
+          "exit": "N"
+        },
+        {
+          "id": "EF_SWALE_DRIFT",
+          "x": 0.0,
+          "y": -5.080905239,
+          "z": -512.0,
+          "yaw": 0,
+          "exit": "N"
+        },
+        {
+          "id": "EF_SWITCHBACK_BANK",
+          "x": 0.0,
+          "y": 15.661966436,
+          "z": -768.0,
+          "yaw": 0,
+          "exit": "E"
+        },
+        {
+          "id": "EF_PASTURE_SADDLE",
+          "x": 256.0,
+          "y": 18.667467427,
+          "z": -768.0,
+          "yaw": 90,
+          "exit": "N"
+        },
+        {
+          "id": "EF_LEEWARD_GROVE",
+          "x": 512.0,
+          "y": 14.456687765,
+          "z": -768.0,
+          "yaw": 90,
+          "exit": "N"
+        },
+        {
+          "id": "EF_RAISED_PASTURE_BEND",
+          "x": 768.0,
+          "y": 14.65966725,
+          "z": -768.0,
+          "yaw": 90,
+          "exit": "E"
+        },
+        {
+          "id": "EF_FENCELINE_RISE",
+          "x": 768.0,
+          "y": 23.45557578,
+          "z": -512.0,
+          "yaw": 180,
+          "exit": "N"
+        },
+        {
+          "id": "EF_WAYMARK_TERRACE",
+          "x": 768.0,
+          "y": 32.438331528,
+          "z": -256.0,
+          "yaw": 180,
+          "exit": "N"
+        },
+        {
+          "id": "EF_PASTURE_SADDLE",
+          "x": 768.0,
+          "y": 26.667467427,
+          "z": 0.0,
+          "yaw": 180,
+          "exit": "N"
+        },
+        {
+          "id": "EF_LOW_SHOULDER_CLIMB",
+          "x": 768.0,
+          "y": 17.967581367,
+          "z": 256.0,
+          "yaw": 0,
+          "exit": "S"
+        },
+        {
+          "id": "EF_LONG_DITCH_VERGE",
+          "x": 768.0,
+          "y": 11.19218663,
+          "z": 512.0,
+          "yaw": 180,
+          "exit": "N"
+        },
+        {
+          "id": "EF_QUIET_HOLLOW_BEND",
+          "x": 768.0,
+          "y": 11.354398424,
+          "z": 768.0,
+          "yaw": 180,
+          "exit": "W"
+        },
+        {
+          "id": "EF_OPEN_FIELD_CLEARING",
+          "x": 1024.0,
+          "y": 8.491217936,
+          "z": 768.0,
+          "yaw": 90,
+          "exit": "N"
+        },
+        {
+          "id": "EF_SWALE_DRIFT_DRESSING_B",
+          "x": 1280.0,
+          "y": 6.919094761,
+          "z": 768.0,
+          "yaw": 90,
+          "exit": "N",
+          "source_id": "EF_SWALE_DRIFT"
+        },
+        {
+          "id": "EF_BURN_FRONT_VERGE",
+          "x": 1536.0,
+          "y": 24.847730939,
+          "z": 768.0,
+          "yaw": 90,
+          "exit": "W"
+        },
+        {
+          "id": "EF_LEEWARD_GROVE",
+          "x": 1536.0,
+          "y": 34.456687765,
+          "z": 512.0,
+          "yaw": 0,
+          "exit": "N"
+        },
+        {
+          "id": "EF_RAISED_PASTURE_BEND_DRESSING_B",
+          "x": 1536.0,
+          "y": 34.65966725,
+          "z": 256.0,
+          "yaw": 0,
+          "exit": "E",
+          "source_id": "EF_RAISED_PASTURE_BEND"
+        },
+        {
+          "id": "EF_PASTURE_SADDLE",
+          "x": 1792.0,
+          "y": 30.667467427,
+          "z": 256.0,
+          "yaw": 90,
+          "exit": "N"
+        },
+        {
+          "id": "EF_FENCELINE_RISE",
+          "x": 2048.0,
+          "y": 35.45557578,
+          "z": 256.0,
+          "yaw": 90,
+          "exit": "END"
+        }
+      ],
+      "balance_percent": [
+        18.883632923368022,
+        31.045411542100283,
+        50.07095553453169
+      ],
+      "thresholds": [
+        985.9071159685385,
+        2458.8863362120405
+      ],
+      "field": {
+        "iterations": 2400,
+        "bytes": 659976,
+        "length": 4947.243698449148
+      },
+      "joins": [
+        {
+          "from": "EF_ENTRY_WINDWARD_MEADOW",
+          "to": "EF_DRAINAGE_CROSSING",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            0
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_DRAINAGE_CROSSING",
+          "to": "EF_SWALE_DRIFT",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            0
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_SWALE_DRIFT",
+          "to": "EF_SWITCHBACK_BANK",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            0
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_SWITCHBACK_BANK",
+          "to": "EF_PASTURE_SADDLE",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            0,
+            1
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_PASTURE_SADDLE",
+          "to": "EF_LEEWARD_GROVE",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            1
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_LEEWARD_GROVE",
+          "to": "EF_RAISED_PASTURE_BEND",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            1
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_RAISED_PASTURE_BEND",
+          "to": "EF_FENCELINE_RISE",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            1
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_FENCELINE_RISE",
+          "to": "EF_WAYMARK_TERRACE",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            1
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_WAYMARK_TERRACE",
+          "to": "EF_PASTURE_SADDLE",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            1,
+            2
+          ],
+          "burn_front_crosses": true
+        },
+        {
+          "from": "EF_PASTURE_SADDLE",
+          "to": "EF_LOW_SHOULDER_CLIMB",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            1,
+            2
+          ],
+          "burn_front_crosses": true
+        },
+        {
+          "from": "EF_LOW_SHOULDER_CLIMB",
+          "to": "EF_LONG_DITCH_VERGE",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            1,
+            2
+          ],
+          "burn_front_crosses": true
+        },
+        {
+          "from": "EF_LONG_DITCH_VERGE",
+          "to": "EF_QUIET_HOLLOW_BEND",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_QUIET_HOLLOW_BEND",
+          "to": "EF_OPEN_FIELD_CLEARING",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_OPEN_FIELD_CLEARING",
+          "to": "EF_SWALE_DRIFT_DRESSING_B",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_SWALE_DRIFT_DRESSING_B",
+          "to": "EF_BURN_FRONT_VERGE",
+          "kind": "BP_EDGE_HOLLOW",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_BURN_FRONT_VERGE",
+          "to": "EF_LEEWARD_GROVE",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_LEEWARD_GROVE",
+          "to": "EF_RAISED_PASTURE_BEND_DRESSING_B",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_RAISED_PASTURE_BEND_DRESSING_B",
+          "to": "EF_PASTURE_SADDLE",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        },
+        {
+          "from": "EF_PASTURE_SADDLE",
+          "to": "EF_FENCELINE_RISE",
+          "kind": "BP_EDGE_CREST",
+          "states_across_edge": [
+            2
+          ],
+          "burn_front_crosses": false
+        }
+      ],
+      "max_seam": 6.208616014191648e-06,
+      "scenery_tiles": 79,
+      "active_flames": 66,
+      "vegetation_object_states": [
+        187,
+        192,
+        406
+      ],
+      "source_geometry_hashes": {
+        "EF_ENTRY_WINDWARD_MEADOW": "a990b6fccd651b6825f06d61207e271deb05c36557ffbd02ca32b14b40452b10",
+        "EF_DRAINAGE_CROSSING": "9cdf2344ff09e064dc6357cfd4ff499ce889943cb098f95429f892c075b5d020",
+        "EF_SWALE_DRIFT": "b81390d90e7552839977c286e054356577cd215007ee19f7104d81f924a8421b",
+        "EF_SWITCHBACK_BANK": "1a093107517b257b39a7bea9d21f5f3636873146b8edd5bcdda89aee1aa93082",
+        "EF_PASTURE_SADDLE": "559fd053c4a75050796d99d3c38853788b8011479bd1f037d15d4c47c7123f9c",
+        "EF_LEEWARD_GROVE": "f15a072c5210c9b7c5db7d4672c53d25c6f342c1530dc252f27ffe71e24439b7",
+        "EF_RAISED_PASTURE_BEND": "f265577eff0d6d6eadd4f611fac9ae73c93f6adefebc5805795a14b7a1aa46f8",
+        "EF_FENCELINE_RISE": "33b9b18e374622b127d81cad237c0a869696f65706afabfd1076a6e208d7bae1",
+        "EF_WAYMARK_TERRACE": "971c5323a52e458fa5eff96ec7cf2b8bdd4afece30fecf5686cc8073477551fc",
+        "EF_LOW_SHOULDER_CLIMB": "f759a17222d8069bb43f475f70e09ddaa5d914ba3454ed44b8618f9c19223f21",
+        "EF_LONG_DITCH_VERGE": "ed3b58f489e0b42a53facc1448f31bbe17ddcfe9564f5dc1bc9fa67b2d2960ec",
+        "EF_QUIET_HOLLOW_BEND": "94528f061ced35a3c6a59681f1f37c830fcb4e240d337687e69fc1211ccaef3a",
+        "EF_OPEN_FIELD_CLEARING": "2c6cbf147317fc67cecaf3c0d74994717979abd25a009f202e7c7c157bed9ad1",
+        "EF_SWALE_DRIFT_DRESSING_B": "b81390d90e7552839977c286e054356577cd215007ee19f7104d81f924a8421b",
+        "EF_BURN_FRONT_VERGE": "e6edd0a1a3478f3a5f7ced9ead6c1ce0f284e98efa5713b0b1e95a670312756b",
+        "EF_RAISED_PASTURE_BEND_DRESSING_B": "f265577eff0d6d6eadd4f611fac9ae73c93f6adefebc5805795a14b7a1aa46f8"
+      }
+    }
+  },
+  "canonical_sources": 17,
+  "dressing_alternatives": 4
+}

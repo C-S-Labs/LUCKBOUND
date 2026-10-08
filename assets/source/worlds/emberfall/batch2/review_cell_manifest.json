@@ -1,0 +1,59 @@
+{
+  "replaced": [
+    "EF_BATCH2_REVIEW_SCENERY_15_CELL_0"
+  ],
+  "records": [
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_15_CELL_0_PART_0",
+      "name": "EF_BATCH2_REVIEW_SCENERY_15_CELL_0_PART_0",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        255.0870132446289,
+        14.525418758392334,
+        63.9154167175293
+      ],
+      "size": [
+        254.16917419433594,
+        8.280163764953613,
+        63.825645446777344
+      ],
+      "triangles": 1229,
+      "fidelity": null,
+      "replaces": "EF_BATCH2_REVIEW_SCENERY_15_CELL_0",
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_CELL_0.fbx"
+    },
+    {
+      "key": "EF_BATCH2_REVIEW_SCENERY_15_CELL_0_PART_1",
+      "name": "EF_BATCH2_REVIEW_SCENERY_15_CELL_0_PART_1",
+      "role": "scenery",
+      "chunk": null,
+      "center": [
+        256.24161529541016,
+        16.10137701034546,
+        23.966149423271418
+      ],
+      "size": [
+        255.5906219482422,
+        11.352734565734863,
+        48.10850315541029
+      ],
+      "triangles": 1229,
+      "fidelity": null,
+      "replaces": "EF_BATCH2_REVIEW_SCENERY_15_CELL_0",
+      "export": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_CELL_0.fbx"
+    }
+  ],
+  "files": [
+    {
+      "path": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Batch2\\exports\\EF_BATCH2_REVIEW_CELL_0.fbx",
+      "bytes": 163020,
+      "sha256": "5e72b0ccb533531432f0f2207a4013f1cf6c2f46a2ca61f640aa4cb263ae2692",
+      "meshes": 2,
+      "triangles": 2458,
+      "roundtrip": true
+    }
+  ],
+  "triangles": 2458,
+  "reason": "Isolated delivered cell repeatedly rejected by Studio; exact faces/colors partitioned into two import artifacts"
+}
