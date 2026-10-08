@@ -59,6 +59,11 @@
 
 ## 3. Docs: what each one owns
 
+Emberfall consolidation: [current-main reconciliation](docs/audits/EMBERFALL_MAIN_RECONCILIATION.md),
+[approved Stage1 plan](docs/audits/EMBERFALL_CONSOLIDATION_AUDIT.md) and
+[stage record](docs/audits/EMBERFALL_INTEGRATION_STATUS.md) own scoped integration and preservation.
+
+
 Emberfall and Astral Reach safety-boundary authoring requirements are now recorded in
 `docs/biomes/EMBERFALL.md` and `docs/biomes/ASTRAL_REACH.md`; their full kit schemas remain
 pending. Shared safety requirements live in `docs/MODULAR_MAPS.md`.

@@ -1,0 +1,1738 @@
+{
+  "base": "34f6c1ea81f6825b4f0a251e9c13623d532b1c44",
+  "original_base": "aa22e3d5a420c28aa7e7d6d00acce898765d62d3",
+  "donor": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb",
+  "main_changed_paths": [
+    "INDEX.md",
+    "INDEX_MAP.md",
+    "assets/export/hub/crossroads/creatures_colossal.fbx",
+    "assets/export/hub/crossroads/creatures_colossal.json",
+    "assets/export/hub/crossroads/creatures_colossal2.fbx",
+    "assets/export/hub/crossroads/creatures_colossal2.json",
+    "assets/export/hub/crossroads/creatures_mid.fbx",
+    "assets/export/hub/crossroads/creatures_mid.json",
+    "assets/export/hub/crossroads/creatures_small.fbx",
+    "assets/export/hub/crossroads/creatures_small.json",
+    "assets/export/hub/crossroads/crossroads_hub.fbx",
+    "assets/export/hub/crossroads/crossroads_layout.json",
+    "assets/export/hub/crossroads/crossroads_orbiters.fbx",
+    "assets/export/portals/EXPEDITION_ENTRANCE.fbx",
+    "assets/export/portals/EXPEDITION_EXIT.fbx",
+    "assets/rbxm/animations/RunBackward.rbxmx",
+    "assets/rbxm/animations/RunForward.rbxmx",
+    "assets/rbxm/animations/RunLeft.rbxmx",
+    "assets/rbxm/animations/RunRight.rbxmx",
+    "assets/rbxm/animations/Sprint.rbxmx",
+    "assets/rbxm/prefabs/EXPEDITION_ENTRANCE.rbxmx",
+    "assets/rbxm/prefabs/EXPEDITION_EXIT.rbxmx",
+    "assets/rbxm/prefabs/HUB_CROSSROADS_V2.rbxmx",
+    "assets/rbxm/props/HUB_CREATURES_COLOSSAL.rbxmx",
+    "assets/rbxm/props/HUB_CREATURES_COLOSSAL2.rbxmx",
+    "assets/rbxm/props/HUB_CREATURES_MID.rbxmx",
+    "assets/rbxm/props/HUB_CREATURES_SMALL.rbxmx",
+    "assets/rbxm/props/HUB_ORBITERS.rbxmx",
+    "assets/source/enemies/sky_citadel/ws_lance.py",
+    "assets/source/hub/crossroads/README.md",
+    "assets/source/hub/crossroads/build_crossroads_hub.py",
+    "assets/source/hub/crossroads/check_buried_parts.py",
+    "assets/source/hub/crossroads/check_walkways.py",
+    "assets/source/hub/crossroads/creatures/colossal/README.md",
+    "assets/source/hub/crossroads/creatures/colossal/build_colossal.py",
+    "assets/source/hub/crossroads/creatures/colossal/pose_preview.py",
+    "assets/source/hub/crossroads/creatures/colossal/renders/colossal_contact_sheet.jpg",
+    "assets/source/hub/crossroads/creatures/colossal/renders/elder_greatturtle_closeup.jpg",
+    "assets/source/hub/crossroads/creatures/colossal/renders/pose_elder_greatturtle_3q.jpg",
+    "assets/source/hub/crossroads/creatures/colossal/renders/pose_elder_greatturtle_front.jpg",
+    "assets/source/hub/crossroads/creatures/colossal/renders/pose_elder_greatturtle_top.jpg",
+    "assets/source/hub/crossroads/creatures/colossal/renders/pose_starweaver_3q.jpg",
+    "assets/source/hub/crossroads/creatures/colossal/renders/pose_starweaver_below.jpg",
+    "assets/source/hub/crossroads/creatures/colossal/renders/pose_starweaver_burst_below.jpg",
+    "assets/source/hub/crossroads/creatures/colossal/renders/pose_starweaver_burst_side.jpg",
+    "assets/source/hub/crossroads/creatures/colossal/renders/pose_starweaver_side.jpg",
+    "assets/source/hub/crossroads/creatures/colossal/renders/starweaver_closeup.jpg",
+    "assets/source/hub/crossroads/creatures/colossal/renders/starweaver_tendrils_before_after.jpg",
+    "assets/source/hub/crossroads/creatures/colossal/tendril_compare.py",
+    "assets/source/hub/crossroads/creatures/colossal2/README.md",
+    "assets/source/hub/crossroads/creatures/colossal2/bend_preview.py",
+    "assets/source/hub/crossroads/creatures/colossal2/build_colossal2.py",
+    "assets/source/hub/crossroads/creatures/colossal2/pose_preview.py",
+    "assets/source/hub/crossroads/creatures/colossal2/renders/aether_nautilus_closeup.jpg",
+    "assets/source/hub/crossroads/creatures/colossal2/renders/aether_nautilus_pose_sheet.jpg",
+    "assets/source/hub/crossroads/creatures/colossal2/renders/cinder_wyrm_closeup.jpg",
+    "assets/source/hub/crossroads/creatures/colossal2/renders/cinder_wyrm_pose_sheet.jpg",
+    "assets/source/hub/crossroads/creatures/colossal2/renders/colossal2_contact_sheet.jpg",
+    "assets/source/hub/crossroads/creatures/mid/README.md",
+    "assets/source/hub/crossroads/creatures/mid/build_mid.py",
+    "assets/source/hub/crossroads/creatures/mid/pose_preview.py",
+    "assets/source/hub/crossroads/creatures/mid/renders/aether_manta_posesheet.png",
+    "assets/source/hub/crossroads/creatures/mid/renders/after_aether_manta_join.png",
+    "assets/source/hub/crossroads/creatures/mid/renders/ashen_roc_posesheet.png",
+    "assets/source/hub/crossroads/creatures/mid/renders/before_aether_manta_join.png",
+    "assets/source/hub/crossroads/creatures/mid/renders/canopy_drake_posesheet.png",
+    "assets/source/hub/crossroads/creatures/mid/renders/citadel_falcon_posesheet.png",
+    "assets/source/hub/crossroads/creatures/mid/renders/contact_sheet.png",
+    "assets/source/hub/crossroads/creatures/small/README.md",
+    "assets/source/hub/crossroads/creatures/small/build_small.py",
+    "assets/source/hub/crossroads/creatures/small/pose_preview.py",
+    "assets/source/hub/crossroads/creatures/small/renders/contact_sheet.jpg",
+    "assets/source/hub/crossroads/creatures/small/renders/pose_cinderkite.jpg",
+    "assets/source/hub/crossroads/creatures/small/renders/pose_lumen_moth.jpg",
+    "assets/source/hub/crossroads/creatures/small/renders/pose_prism_darter.jpg",
+    "assets/source/hub/crossroads/creatures/small/renders/pose_skyfinch.jpg",
+    "assets/source/hub/crossroads/crossroads_hub.blend",
+    "assets/source/hub/crossroads/renders/18_junction_before_after.jpg",
+    "assets/source/hub/crossroads/renders/19_junction_plans_before_after.jpg",
+    "assets/source/portals/README.md",
+    "assets/source/portals/build_expedition_portals.py",
+    "assets/source/portals/expedition_entrance.blend",
+    "assets/source/portals/expedition_exit.blend",
+    "assets/source/portals/renders/entrance.png",
+    "assets/source/portals/renders/exit.png",
+    "assets/textures/make_rift_flow.py",
+    "assets/textures/rift_flow.png",
+    "docs/ART_DIRECTION.md",
+    "docs/DEV_TOOLS.md",
+    "docs/PLAYER_ABILITIES.md",
+    "docs/PLAYER_ANIMATION_BRIEF.md",
+    "docs/PROTOTYPE_BUILD_SPEC.md",
+    "docs/RESERVED.md",
+    "docs/STATUS.md",
+    "docs/TESTING.md",
+    "docs/WORKLOG.md",
+    "docs/design/SKY_ECOSYSTEM_CONTRACT.md",
+    "src/client/Controllers/CharacterAnimator.luau",
+    "src/client/Controllers/DebugCommands.luau",
+    "src/client/Controllers/HubEffects.luau",
+    "src/client/Controllers/LocomotionController.luau",
+    "src/client/Controllers/RiftController.luau",
+    "src/client/Controllers/SkyTraffic.luau",
+    "src/client/init.client.luau",
+    "src/server/Systems/DebugSystem.luau",
+    "src/server/Systems/ExpeditionSystem.luau",
+    "src/server/Systems/HubBuilder.luau",
+    "src/server/Systems/HubV2.luau",
+    "src/server/Systems/LootSystem.luau",
+    "src/server/init.server.luau",
+    "src/shared/Content/Animations/GroundSpeeds.luau",
+    "src/shared/Content/AssetManifest.luau",
+    "src/shared/Content/DevCommands.luau",
+    "src/shared/Content/Hub/Crossroads.luau",
+    "src/shared/Content/Hub/CrossroadsV2.luau",
+    "src/shared/Content/Hub/SkyCreatures.luau",
+    "src/shared/Content/LightningRigs.luau",
+    "src/shared/Content/Portals/init.luau",
+    "src/shared/Core/Constants.luau",
+    "src/shared/Core/CreatureMotionCore.luau",
+    "src/shared/Core/DevCore.luau",
+    "src/shared/Core/ExpeditionCore.luau",
+    "src/shared/Core/FlightCore.luau",
+    "src/shared/Core/GameConfig.luau",
+    "src/shared/Core/LocomotionCore.luau",
+    "src/shared/Core/PropCore.luau",
+    "src/shared/Core/RiftCore.luau",
+    "src/shared/Core/SkyLayout.luau",
+    "src/shared/Core/Types.luau",
+    "src/shared/Util/RiftRig.luau",
+    "src/shared/Util/Schema.luau",
+    "tests/build_suite.py",
+    "tests/cases.luau",
+    "tools/gen_index.py",
+    "tools/gen_part_limits.py",
+    "tools/gen_player_anims.py",
+    "tools/gen_sky_creatures.py"
+  ],
+  "overlap": [
+    {
+      "path": "INDEX.md",
+      "group": "owning_docs_reconcile"
+    },
+    {
+      "path": "INDEX_MAP.md",
+      "group": "owning_docs_reconcile"
+    },
+    {
+      "path": "docs/ART_DIRECTION.md",
+      "group": "owning_docs_reconcile"
+    },
+    {
+      "path": "docs/PROTOTYPE_BUILD_SPEC.md",
+      "group": "owning_docs_reconcile"
+    },
+    {
+      "path": "docs/STATUS.md",
+      "group": "owning_docs_reconcile"
+    },
+    {
+      "path": "docs/WORKLOG.md",
+      "group": "owning_docs_reconcile"
+    }
+  ],
+  "safe_copy": [
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/ARCHITECTURE_REVIEW.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/CONTINUITY_REVIEW.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/FOUNDATION_REVIEW.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/IDENTITY_REVIEW.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/LAVA_GEOLOGY_REVIEW.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/NATURALIZATION_REVIEW.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/PROTOTYPE_REVIEW.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/VOCABULARY_REVIEW.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/architecture_saved_verification.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/architecture_technical_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/architecture_visual_coverage.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/AREA2_REVIEW.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/CONSISTENCY_REVIEW.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/IMPACT_FAILURE_REVIEW.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/STRUCTURAL_ACCEPTANCE.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/WORKER_SYNTHESIS.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/architecture_checks.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/architecture_evidence_manifest.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/architecture_protection_checks.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/architecture_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/blockout_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/build_area2.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/castle_evidence_manifest.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/castle_protection_checks.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/castle_revision_checks.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/castle_revision_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/check_area2.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/check_castle_composition.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/check_castle_impact.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/check_castle_interiors.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/check_castle_structure.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/cleanup_castle_structure.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/consistency_checks.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/consistency_protection.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/consistency_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/correct_castle_consistency.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/correct_castle_impact.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/final_castle_corrections.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/final_corrections_checks.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/final_corrections_protection.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/final_corrections_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/impact_checks.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/impact_evidence_manifest.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/impact_failure_checks.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/impact_failure_protection.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/impact_failure_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/impact_protection_checks.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/impact_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/interior_layout_checks.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/interior_layout_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/interior_protection_checks.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/protected_check.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/recompose_castle.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/refine_impact_structural_failure.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/review_area2.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/review_castle_composition.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/review_castle_impact.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/review_castle_interiors.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/review_castle_structure.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/revise_castle_interiors.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/revise_castle_variants.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/saved_readback.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/structural_checks.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/structural_protection_checks.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/structural_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/AUTHORING.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/BATCH1_REVIEW.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/FULL_MAP_SCALE_REVIEW.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/OWNER_WALKTHROUGH.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/SCENERY_SCALING_REVIEW.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/assemble_batch1.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/authority_manifest.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/batch1_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/batch1_shared.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/changed_files.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/check_and_export.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/contact_sheets.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/countryside.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/elevations.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/fbx_result.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/fields.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/final_evidence.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/studio_collision_result.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/studio_review.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/BATCH2_PLAN.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/BATCH2_REVIEW.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/DELIVERY_STUDIO_REVIEW.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/asset_mapping.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/author_batch2.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/batch2_sources.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/batch2_variants.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/combined_review.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/delivery_validation.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/export_batch2.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/export_review.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/gate_a_review.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/gate_a_sources.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/integrate_review.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/layout_audit.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/layout_audit.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/make_gate_probe.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/resolve_delivery.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/review_batch2.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/review_bounds_manifest.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/review_cell_manifest.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/review_export_manifest.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/scenery_batch2.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/source_export_manifest.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/source_readback.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/studio_validation.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/upload_hold.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/upload_review.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/validate_delivery.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/build_emberfall_foundation.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/build_emberfall_prototype.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/continuity_technical_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/finalize_emberfall_review.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/foundation_technical_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/identity_technical_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/lava_geology_technical_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/naturalization_technical_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/refine_emberfall_continuity.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/refine_emberfall_identity.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/refine_emberfall_lava_geology.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/refine_emberfall_naturalization.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/refine_emberfall_vocabulary.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/review_emberfall_architecture.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/review_emberfall_foundation.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/review_emberfall_identity.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/review_emberfall_naturalization.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/review_emberfall_prototype.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/review_emberfall_vocabulary.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/revise_emberfall_architecture.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/saved_scene_verification.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/technical_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/verify_emberfall_architecture.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/vocabulary_contact_sheet.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/vocabulary_technical_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "emberfall-batch2-review.project.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "emberfall-scale-test.project.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "emberfall-walkthrough.project.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_batch2/Batch2Review.server.luau",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_batch2/Batch2ReviewAppearance.client.luau",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_batch2/ClientLoadCheck.luau",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_batch2/ReviewData.luau",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_batch2/ValidateImported.luau",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_batch2/WalkImported.luau",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_scale_test/BenchmarkClient.client.luau",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_scale_test/BenchmarkServer.server.luau",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_scale_test/README.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_scale_test/UniqueSceneryData.luau",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_scale_test/build_unique_bank.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_scale_test/measurements_summary.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_scale_test/unique_asset_mapping.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/AllocationProbe.client.luau",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/OwnerWalkthrough.server.luau",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/OwnerWalkthroughAppearance.client.luau",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/SceneryData.luau",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/WalkthroughData.luau",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/asset_mapping.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/build_scenery_scaling.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/export_layout_snapshot.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/export_walkthrough.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/map_scenery_imports.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/measure_scenery_edges.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/scenery_asset_mapping.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/scenery_measurements.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    }
+  ],
+  "already_in_main": [],
+  "reconcile": [
+    {
+      "status": "M",
+      "path": "INDEX.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "M",
+      "path": "INDEX_MAP.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "M",
+      "path": "docs/ART_DIRECTION.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "M",
+      "path": "docs/CHUNK_AUTHORING.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "M",
+      "path": "docs/CHUNK_DROP_IN.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "M",
+      "path": "docs/MODULAR_MAPS.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "M",
+      "path": "docs/PROTOTYPE_BUILD_SPEC.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "M",
+      "path": "docs/STATUS.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "M",
+      "path": "docs/WORKLOG.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "M",
+      "path": "docs/biomes/EMBERFALL.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "docs/biomes/EMBERFALL_AREA_II_PRODUCTION_PLAN.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "docs/design/emberfall/EMBERFALL_PROTOTYPE_VISUAL_TARGET.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "docs/design/emberfall/EMBERFALL_REFERENCE_01.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "docs/design/emberfall/EMBERFALL_REFERENCE_02.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "docs/design/emberfall/EMBERFALL_REFERENCE_03.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "docs/design/emberfall/EMBERFALL_reference_targets.txt",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    }
+  ],
+  "excluded": [
+    {
+      "status": "A",
+      "path": "assets/export/enemies/verdant_valley/AncientMossback.blend",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/export/enemies/verdant_valley/ElderTreant.blend",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/export/enemies/verdant_valley/FoldingStoneAwakening.blend",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/export/enemies/verdant_valley/FoldingStoneGolem - Copy.blend",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/export/enemies/verdant_valley/FoldingStoneGolem.blend",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/export/enemies/verdant_valley/ForestWolf.blend",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/export/enemies/verdant_valley/MossSlime.blend",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/export/enemies/verdant_valley/MossbackWardenReview.blend",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/export/enemies/verdant_valley/RootboundGuardian.blend",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/export/enemies/verdant_valley/RootboundWarden.blend",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/export/enemies/verdant_valley/ThornGoblin.blend",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/export/enemies/verdant_valley/VerdantValleyLineup.blend",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/FOLDING_STONE_MECHANICS.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "M",
+      "path": "assets/source/enemies/verdant_valley/ROSTER.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/ancient_mossback.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/ancient_mossback_review.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/contact_sheet.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/elder_treant.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/elder_treant_review.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/elder_treant_validation.txt",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/folding_stone_awakening.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/folding_stone_awakening_map.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/folding_stone_awakening_preview.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/folding_stone_awakening_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/folding_stone_awakening_sheet.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/folding_stone_choreography.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/folding_stone_choreography_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/folding_stone_detail.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/folding_stone_golem.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/folding_stone_golem_review.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/folding_stone_packing.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/folding_stone_packing_map.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/folding_stone_packing_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/folding_stone_packing_sheet.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/folding_stone_review.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/folding_stone_sheet.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/forest_detail.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/forest_wolf.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/forest_wolf_review.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/forest_wolf_validation.txt",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/lineup.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/lineup_review.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "M",
+      "path": "assets/source/enemies/verdant_valley/manifest.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/moss_slime.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/moss_slime_review.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/moss_slime_validation.txt",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/mossback_detail.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/mossback_geometry.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/palette.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/references/owner_rig_stone_circle.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/references/owner_upper_front34.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/references/owner_upper_red_circle.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/references/owner_upper_top.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/elder_treant_34.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/elder_treant_back.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/elder_treant_front.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/elder_treant_side.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/forest_wolf_34.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/forest_wolf_back.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/forest_wolf_front.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/forest_wolf_side.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/moss_slime_34.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/moss_slime_back.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/moss_slime_front.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/moss_slime_side.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/rootbound_guardian_34.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/rootbound_guardian_back.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/rootbound_guardian_front.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/rootbound_guardian_side.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/rootbound_warden_34.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/rootbound_warden_back.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/rootbound_warden_front.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/rootbound_warden_side.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/thorn_goblin_34.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/thorn_goblin_back.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/thorn_goblin_front.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/thorn_goblin_side.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/verdant_valley_contact_sheet.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/verdant_valley_lineup_34.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/renders/verdant_valley_lineup_front.png",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/review.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_arc_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_blockout_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_distal_rig.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_distal_rig_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_facet_review.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_facets_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_geometry_cleanup.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_geometry_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_guardian.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_guardian_review.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_guardian_validation.txt",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_heart_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_heart_review.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_mass_review.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_mass_review.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_path_junction.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_path_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_rear_integration.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_rear_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_reconstruction_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_refine.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_refine_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_rig_prep.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_rig_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_sanctuary_review.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_sanctuary_review.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_sanctuary_sheet.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_structure_refine.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_structure_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_support_inspect.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_tip_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_tip_rig.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_tip_rig_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_topology_report.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_upper_arc.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_upper_blockout.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_upper_facets.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_upper_retopology.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_upper_surface.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_upper_tip.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_warden_review.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/rootbound_warden_validation.txt",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/thorn_goblin.py",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/thorn_goblin_review.json",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/enemies/verdant_valley/thorn_goblin_validation.txt",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "M",
+      "path": "docs/ENEMY_FRAMEWORK.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "M",
+      "path": "docs/biomes/README.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    },
+    {
+      "status": "M",
+      "path": "docs/biomes/VERDANT_VALLEY.md",
+      "source_commit": "079882bbbcc389c82099f54dd6ef5fd6de2d5aeb"
+    }
+  ],
+  "runtime_policy": "All src, default.project.json, tests, repository guidance and tools remain from main; donor only scoped sources and isolated fixtures"
+}

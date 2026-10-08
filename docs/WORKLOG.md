@@ -36,6 +36,30 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 245 — 2026-10-08 — Emberfall preservation-first production consolidation
+**Branch:** integration/emberfall-production from refreshed pinned main34f6c1e.
+**Merged:** none; local staged checkpoints only. **Tests:** see docs/audits/EMBERFALL_INTEGRATION_STATUS.md.
+
+### Done
+- Reconciled137 newer-main paths with audited donor079882b;167 content/fixture paths remain safe.
+- Preserved newer main shared runtime/schema/config/mappings and created verified read-only backups before integration.
+- Remaining stage results are recorded in the integration stage record.
+
+### Decisions made
+- Scoped files only; no donor ancestry merge or129 unrelated path import.
+- Existing geometry/paths/IDs/recovery remain authoritative; master uses read-only library links.
+
+### Stopped at
+Staged integration in progress; see stage record for checkpoints/gates. No push/PR/main merge or Studio/upload/export.
+
+### Next
+Complete the approved stages, then stop for owner visual acceptance; AreaII production remains a separate task.
+
+### Leftovers
+Keep all old scenes/exports/mappings/failed probes/blend1 and hidden recovery; no historical cleanup authorized.
+
+---
+
 ## Session 244 — 2026-10-05 — Accept movement baseline and prepare PR
 **Merged:** none   **Branch:** agent/player-movement-refinement
 
