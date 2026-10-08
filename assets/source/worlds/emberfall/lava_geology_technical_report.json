@@ -1,0 +1,1930 @@
+{
+  "before": {
+    "Architecture_A": {
+      "objects": 777,
+      "meshes": 694,
+      "triangles": 677632,
+      "used_materials": 21
+    },
+    "Architecture_B": {
+      "objects": 744,
+      "meshes": 692,
+      "triangles": 715704,
+      "used_materials": 21
+    },
+    "Architecture_C": {
+      "objects": 739,
+      "meshes": 687,
+      "triangles": 673448,
+      "used_materials": 21
+    },
+    "FloraSpectrum_REVIEW_ONLY": {
+      "objects": 22,
+      "meshes": 17,
+      "triangles": 9772,
+      "used_materials": 9
+    },
+    "Independent_Assets_LIBRARY_ONLY": {
+      "objects": 213,
+      "meshes": 206,
+      "triangles": 239412,
+      "used_materials": 20
+    }
+  },
+  "input": "E:\\BlenderAIProjects\\Runtime\\Emberfall_ArchitectureReview\\Input_LavaGeology.blend",
+  "debug_objects_hidden": 212,
+  "foundation_edits": {
+    "cap_collapsed_pass": {
+      "seated_components": 3
+    },
+    "cap_collapsed_pass.001": {
+      "seated_components": 3
+    },
+    "cap_collapsed_pass.002": {
+      "seated_components": 3
+    },
+    "cap_collapsed_pass.003": {
+      "seated_components": 3
+    },
+    "chunk_column_forest": {
+      "seated_components": 1
+    },
+    "chunk_column_forest.001": {
+      "seated_components": 1
+    },
+    "chunk_column_forest.002": {
+      "seated_components": 1
+    },
+    "chunk_column_forest.003": {
+      "seated_components": 1
+    },
+    "chunk_entry_ash_plain": {
+      "seated_components": 3
+    },
+    "chunk_entry_ash_plain.001": {
+      "seated_components": 3
+    },
+    "chunk_entry_ash_plain.002": {
+      "seated_components": 3
+    },
+    "chunk_entry_ash_plain.003": {
+      "seated_components": 3
+    },
+    "path_column_pass": {
+      "seated_components": 4
+    },
+    "path_column_pass.001": {
+      "seated_components": 4
+    },
+    "path_column_pass.002": {
+      "seated_components": 4
+    },
+    "path_column_pass.003": {
+      "seated_components": 4
+    },
+    "scenery_ashland_a": {
+      "seated_components": 0
+    },
+    "scenery_ashland_a.001": {
+      "seated_components": 0
+    },
+    "scenery_ashland_a.002": {
+      "seated_components": 0
+    },
+    "scenery_ashland_a.003": {
+      "seated_components": 0
+    },
+    "scenery_ashland_a.004": {
+      "seated_components": 0
+    },
+    "scenery_ashland_a.005": {
+      "seated_components": 0
+    },
+    "scenery_ashland_a.006": {
+      "seated_components": 0
+    },
+    "scenery_ashland_a.007": {
+      "seated_components": 0
+    },
+    "scenery_ashland_a.008": {
+      "seated_components": 0
+    },
+    "scenery_ashland_a.009": {
+      "seated_components": 0
+    },
+    "scenery_ashland_a.010": {
+      "seated_components": 0
+    },
+    "scenery_ashland_a.011": {
+      "seated_components": 0
+    },
+    "scenery_ashland_a.012": {
+      "seated_components": 0
+    },
+    "scenery_ashland_a.013": {
+      "seated_components": 0
+    },
+    "scenery_ashland_a.014": {
+      "seated_components": 0
+    },
+    "scenery_ashland_a.015": {
+      "seated_components": 0
+    },
+    "scenery_ashland_a.016": {
+      "seated_components": 0
+    },
+    "scenery_ashland_a.017": {
+      "seated_components": 0
+    },
+    "scenery_ashland_a.018": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_a": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_a.001": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_a.002": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_a.003": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_a.004": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_a.005": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_a.006": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_a.007": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_a.008": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_a.009": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_a.010": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_high": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_high.001": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_high.002": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_high.003": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_high.004": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_high.005": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_high.006": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_high.007": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_high.008": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_high.009": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_high.010": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_high.011": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_high.012": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_high.013": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_high.014": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_high.015": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_high.016": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_high.017": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_high.018": {
+      "seated_components": 0
+    },
+    "scenery_basalt_ridge_high.019": {
+      "seated_components": 0
+    },
+    "scenery_charred_flora_a": {
+      "seated_components": 0
+    },
+    "scenery_charred_flora_a.001": {
+      "seated_components": 0
+    },
+    "scenery_charred_flora_a.002": {
+      "seated_components": 0
+    },
+    "scenery_charred_flora_a.003": {
+      "seated_components": 0
+    },
+    "scenery_charred_flora_a.004": {
+      "seated_components": 0
+    },
+    "scenery_charred_flora_a.005": {
+      "seated_components": 0
+    },
+    "scenery_charred_flora_a.006": {
+      "seated_components": 0
+    },
+    "scenery_charred_flora_a.007": {
+      "seated_components": 0
+    },
+    "scenery_charred_flora_a.008": {
+      "seated_components": 0
+    },
+    "scenery_charred_flora_a.009": {
+      "seated_components": 0
+    },
+    "scenery_charred_flora_a.010": {
+      "seated_components": 0
+    },
+    "scenery_charred_flora_a.011": {
+      "seated_components": 0
+    },
+    "scenery_charred_flora_a.012": {
+      "seated_components": 0
+    },
+    "scenery_charred_flora_a.013": {
+      "seated_components": 0
+    },
+    "scenery_charred_flora_a.014": {
+      "seated_components": 0
+    },
+    "scenery_charred_flora_a.015": {
+      "seated_components": 0
+    },
+    "scenery_charred_flora_a.016": {
+      "seated_components": 0
+    },
+    "scenery_charred_flora_a.017": {
+      "seated_components": 0
+    },
+    "scenery_charred_flora_a.018": {
+      "seated_components": 0
+    },
+    "scenery_drained_flora_a": {
+      "seated_components": 0
+    },
+    "scenery_drained_flora_a.001": {
+      "seated_components": 0
+    },
+    "scenery_drained_flora_a.002": {
+      "seated_components": 0
+    },
+    "scenery_drained_flora_a.003": {
+      "seated_components": 0
+    },
+    "scenery_drained_flora_a.004": {
+      "seated_components": 0
+    },
+    "scenery_drained_flora_a.005": {
+      "seated_components": 0
+    },
+    "scenery_drained_flora_a.006": {
+      "seated_components": 0
+    },
+    "scenery_drained_flora_a.007": {
+      "seated_components": 0
+    },
+    "scenery_drained_flora_a.008": {
+      "seated_components": 0
+    },
+    "scenery_drained_flora_a.009": {
+      "seated_components": 0
+    },
+    "scenery_drained_flora_a.010": {
+      "seated_components": 0
+    },
+    "scenery_drained_flora_a.011": {
+      "seated_components": 0
+    },
+    "scenery_foothill_a": {
+      "seated_components": 0
+    },
+    "scenery_foothill_a.001": {
+      "seated_components": 0
+    },
+    "scenery_foothill_a.002": {
+      "seated_components": 0
+    },
+    "scenery_foothill_a.003": {
+      "seated_components": 0
+    },
+    "scenery_foothill_a.004": {
+      "seated_components": 0
+    },
+    "scenery_foothill_a.005": {
+      "seated_components": 0
+    },
+    "scenery_foothill_a.006": {
+      "seated_components": 0
+    },
+    "scenery_foothill_a.007": {
+      "seated_components": 0
+    },
+    "scenery_foothill_a.008": {
+      "seated_components": 0
+    },
+    "scenery_foothill_a.009": {
+      "seated_components": 0
+    },
+    "scenery_foothill_a.010": {
+      "seated_components": 0
+    },
+    "scenery_foothill_a.011": {
+      "seated_components": 0
+    },
+    "scenery_foothill_a.012": {
+      "seated_components": 0
+    },
+    "scenery_foothill_a.013": {
+      "seated_components": 0
+    },
+    "scenery_foothill_a.014": {
+      "seated_components": 0
+    },
+    "scenery_foothill_a.015": {
+      "seated_components": 0
+    },
+    "scenery_foothill_a.016": {
+      "seated_components": 0
+    },
+    "scenery_lava_field_a": {
+      "seated_components": 0
+    },
+    "scenery_lava_field_a.001": {
+      "seated_components": 0
+    },
+    "scenery_lava_field_a.002": {
+      "seated_components": 0
+    },
+    "scenery_lava_field_a.003": {
+      "seated_components": 0
+    },
+    "scenery_lava_field_a.004": {
+      "seated_components": 0
+    },
+    "scenery_lava_field_a.005": {
+      "seated_components": 0
+    },
+    "scenery_lava_field_a.006": {
+      "seated_components": 0
+    },
+    "scenery_lava_field_a.007": {
+      "seated_components": 0
+    },
+    "scenery_lava_field_a.008": {
+      "seated_components": 0
+    },
+    "scenery_lava_field_a.009": {
+      "seated_components": 0
+    },
+    "scenery_lava_field_a.010": {
+      "seated_components": 0
+    },
+    "scenery_lava_field_a.011": {
+      "seated_components": 0
+    },
+    "scenery_lava_field_a.012": {
+      "seated_components": 0
+    },
+    "scenery_lava_field_a.013": {
+      "seated_components": 0
+    },
+    "scenery_lava_field_a.014": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.001": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.002": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.003": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.004": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.005": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.006": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.007": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.008": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.009": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.010": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.011": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.012": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.013": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.014": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.015": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.016": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.017": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.018": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.019": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.020": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.021": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.022": {
+      "seated_components": 0
+    },
+    "scenery_ravine_a.023": {
+      "seated_components": 0
+    },
+    "side_lava_overlook": {
+      "seated_components": 1
+    },
+    "side_lava_overlook.001": {
+      "seated_components": 1
+    },
+    "side_lava_overlook.002": {
+      "seated_components": 1
+    },
+    "side_lava_overlook.003": {
+      "seated_components": 1
+    }
+  },
+  "lava": {
+    "chunk_entry_ash_plain": {
+      "surface_area": 42.99,
+      "type": "shallow peripheral pool"
+    },
+    "path_column_pass": {
+      "surface_area": 2412.62,
+      "type": "sloping cooled-flow channel"
+    },
+    "chunk_column_forest": {
+      "surface_area": 2565.84,
+      "type": "shallow peripheral pool"
+    },
+    "scenery_lava_field_a": {
+      "surface_area": 8947.54,
+      "crust_islands": 3,
+      "type": "crusted pool"
+    },
+    "scenery_ravine_a": {
+      "surface_area": 5711.17,
+      "crust_islands": 2,
+      "type": "stepped ravine river"
+    },
+    "scenery_charred_flora_a": {
+      "surface_area": 3135.91,
+      "crust_islands": 1,
+      "type": "reopened pocket"
+    }
+  },
+  "seam_band_exact": true,
+  "placement_matrices_exact": true,
+  "original_flora_exact": true,
+  "after": {
+    "Architecture_A": {
+      "objects": 851,
+      "meshes": 731,
+      "triangles": 772162,
+      "used_materials": 22
+    },
+    "Architecture_B": {
+      "objects": 813,
+      "meshes": 737,
+      "triangles": 816347,
+      "used_materials": 22
+    },
+    "Architecture_C": {
+      "objects": 800,
+      "meshes": 724,
+      "triangles": 765679,
+      "used_materials": 22
+    },
+    "FloraSpectrum_REVIEW_ONLY": {
+      "objects": 22,
+      "meshes": 17,
+      "triangles": 10456,
+      "used_materials": 9
+    },
+    "Independent_Assets_LIBRARY_ONLY": {
+      "objects": 226,
+      "meshes": 215,
+      "triangles": 263760,
+      "used_materials": 21
+    }
+  },
+  "visible_meshes": {
+    "Architecture_A": 666,
+    "Architecture_B": 673,
+    "Architecture_C": 660,
+    "FloraSpectrum_REVIEW_ONLY": 17,
+    "Independent_Assets_LIBRARY_ONLY": 184
+  },
+  "assets": {
+    "chunk_entry_ash_plain": {
+      "objects": 19,
+      "mesh_objects": 18,
+      "triangles": 9576,
+      "mesh_triangles": {
+        "chunk_entry_ash_plain": 2804,
+        "prop_chunk_entry_ash_plain_solid": 400,
+        "prop_drained_wax_rosette_placement": 216,
+        "prop_drained_seed_shrub_placement": 784,
+        "prop_drained_wax_rosette_placement.001": 216,
+        "prop_lava_hairline": 4,
+        "prop_chunk_entry_ash_plain_fractured_crust": 288,
+        "prop_chunk_entry_ash_plain_windward_ash": 12,
+        "prop_chunk_entry_ash_plain_takeover_DRAINED": 216,
+        "prop_chunk_entry_ash_plain_takeover_30": 1764,
+        "prop_chunk_entry_ash_plain_takeover_OLD": 216,
+        "prop_chunk_entry_ash_plain_takeover_veins": 96,
+        "prop_chunk_entry_ash_plain_handoff_growth": 216,
+        "prop_chunk_entry_ash_plain_handoff_growth.001": 1764,
+        "prop_chunk_entry_ash_plain_handoff_growth.002": 216,
+        "prop_chunk_entry_ash_plain_handoff_growth.003": 216,
+        "prop_chunk_entry_ash_plain_continuous_ash_crust": 132,
+        "prop_chunk_entry_ash_plain_contained_molten_body": 16
+      },
+      "collections": {
+        "chunk_entry_ash_plain_Structure": [
+          "chunk_entry_ash_plain"
+        ],
+        "chunk_entry_ash_plain_Props_Solid": [
+          "prop_chunk_entry_ash_plain_solid"
+        ],
+        "chunk_entry_ash_plain_Props_NonSolid": [
+          "prop_drained_wax_rosette_placement",
+          "prop_drained_seed_shrub_placement",
+          "prop_drained_wax_rosette_placement.001"
+        ],
+        "chunk_entry_ash_plain_SurfaceIdentity": [
+          "prop_chunk_entry_ash_plain_fractured_crust",
+          "prop_chunk_entry_ash_plain_windward_ash"
+        ],
+        "chunk_entry_ash_plain_FloraProgression": [
+          "prop_chunk_entry_ash_plain_takeover_DRAINED",
+          "prop_chunk_entry_ash_plain_takeover_30",
+          "prop_chunk_entry_ash_plain_takeover_OLD",
+          "prop_chunk_entry_ash_plain_takeover_veins"
+        ],
+        "chunk_entry_ash_plain_BorderFlow": [
+          "prop_chunk_entry_ash_plain_handoff_growth",
+          "prop_chunk_entry_ash_plain_handoff_growth.001",
+          "prop_chunk_entry_ash_plain_handoff_growth.002",
+          "prop_chunk_entry_ash_plain_handoff_growth.003"
+        ],
+        "chunk_entry_ash_plain_ContainedLava": [
+          "prop_chunk_entry_ash_plain_contained_molten_body"
+        ]
+      }
+    },
+    "path_column_pass": {
+      "objects": 22,
+      "mesh_objects": 19,
+      "triangles": 30800,
+      "mesh_triangles": {
+        "path_column_pass": 4076,
+        "prop_path_column_pass_solid": 640,
+        "prop_charred_ember_rose_placement": 3312,
+        "prop_charred_thorn_pod_placement": 1542,
+        "prop_drained_seed_shrub_placement.001": 3724,
+        "prop_low_fissure": 6,
+        "prop_path_column_pass_fractured_crust": 408,
+        "prop_recent_fracture_vent_smoke": 80,
+        "prop_path_column_pass_takeover_30": 1764,
+        "prop_path_column_pass_takeover_70": 1764,
+        "prop_path_column_pass_takeover_50": 1764,
+        "prop_path_column_pass_takeover_SHRUB50": 3724,
+        "prop_path_column_pass_takeover_veins": 384,
+        "prop_path_column_pass_handoff_growth": 1764,
+        "prop_path_column_pass_handoff_growth.001": 1764,
+        "prop_path_column_pass_handoff_growth.002": 1764,
+        "prop_path_column_pass_handoff_growth.003": 1764,
+        "prop_path_column_pass_continuous_ash_crust": 132,
+        "prop_path_column_pass_contained_molten_body": 424
+      },
+      "collections": {
+        "path_column_pass_Structure": [
+          "path_column_pass"
+        ],
+        "path_column_pass_Props_Solid": [
+          "prop_path_column_pass_solid"
+        ],
+        "path_column_pass_Props_NonSolid": [
+          "fissure_uplight",
+          "fissure_uplight.001",
+          "prop_charred_ember_rose_placement",
+          "prop_charred_thorn_pod_placement",
+          "prop_drained_seed_shrub_placement.001"
+        ],
+        "path_column_pass_SurfaceIdentity": [
+          "prop_path_column_pass_fractured_crust"
+        ],
+        "path_column_pass_VentSmoke": [
+          "prop_recent_fracture_vent_smoke"
+        ],
+        "path_column_pass_FloraProgression": [
+          "prop_path_column_pass_takeover_30",
+          "prop_path_column_pass_takeover_70",
+          "prop_path_column_pass_takeover_50",
+          "prop_path_column_pass_takeover_SHRUB50",
+          "prop_path_column_pass_takeover_veins"
+        ],
+        "path_column_pass_BorderFlow": [
+          "prop_path_column_pass_handoff_growth",
+          "prop_path_column_pass_handoff_growth.001",
+          "prop_path_column_pass_handoff_growth.002",
+          "prop_path_column_pass_handoff_growth.003"
+        ],
+        "path_column_pass_ContainedLava": [
+          "prop_path_column_pass_contained_molten_body"
+        ]
+      }
+    },
+    "chunk_column_forest": {
+      "objects": 20,
+      "mesh_objects": 19,
+      "triangles": 32210,
+      "mesh_triangles": {
+        "chunk_column_forest": 3508,
+        "prop_chunk_column_forest_solid": 800,
+        "prop_charred_thorn_pod_placement.001": 1542,
+        "prop_charred_ember_rose_placement.001": 3312,
+        "prop_drained_wax_rosette_placement.002": 1764,
+        "prop_drained_seed_shrub_placement.002": 3724,
+        "prop_basin_heat": 4,
+        "prop_chunk_column_forest_fractured_crust": 556,
+        "prop_chunk_column_forest_takeover_70": 1764,
+        "prop_chunk_column_forest_takeover_SHRUB50": 3724,
+        "prop_chunk_column_forest_takeover_50": 1764,
+        "prop_chunk_column_forest_takeover_30": 1764,
+        "prop_chunk_column_forest_takeover_veins": 384,
+        "prop_chunk_column_forest_handoff_growth": 1764,
+        "prop_chunk_column_forest_handoff_growth.001": 1764,
+        "prop_chunk_column_forest_handoff_growth.002": 1764,
+        "prop_chunk_column_forest_handoff_growth.003": 1764,
+        "prop_chunk_column_forest_continuous_ash_crust": 132,
+        "prop_chunk_column_forest_contained_molten_body": 412
+      },
+      "collections": {
+        "chunk_column_forest_Structure": [
+          "chunk_column_forest"
+        ],
+        "chunk_column_forest_Props_Solid": [
+          "prop_chunk_column_forest_solid"
+        ],
+        "chunk_column_forest_Props_NonSolid": [
+          "prop_charred_thorn_pod_placement.001",
+          "prop_charred_ember_rose_placement.001",
+          "prop_drained_wax_rosette_placement.002",
+          "prop_drained_seed_shrub_placement.002"
+        ],
+        "chunk_column_forest_SurfaceIdentity": [
+          "prop_chunk_column_forest_fractured_crust"
+        ],
+        "chunk_column_forest_FloraProgression": [
+          "prop_chunk_column_forest_takeover_70",
+          "prop_chunk_column_forest_takeover_SHRUB50",
+          "prop_chunk_column_forest_takeover_50",
+          "prop_chunk_column_forest_takeover_30",
+          "prop_chunk_column_forest_takeover_veins"
+        ],
+        "chunk_column_forest_BorderFlow": [
+          "prop_chunk_column_forest_handoff_growth",
+          "prop_chunk_column_forest_handoff_growth.001",
+          "prop_chunk_column_forest_handoff_growth.002",
+          "prop_chunk_column_forest_handoff_growth.003"
+        ],
+        "chunk_column_forest_ContainedLava": [
+          "prop_chunk_column_forest_contained_molten_body"
+        ]
+      }
+    },
+    "side_lava_overlook": {
+      "objects": 18,
+      "mesh_objects": 17,
+      "triangles": 29364,
+      "mesh_triangles": {
+        "side_lava_overlook": 3016,
+        "prop_side_lava_overlook_solid": 660,
+        "prop_drained_wax_rosette_placement.003": 1764,
+        "prop_drained_seed_shrub_placement.003": 3724,
+        "prop_charred_ember_rose_placement.002": 3312,
+        "prop_shelf_wound": 4,
+        "prop_side_lava_overlook_fractured_crust": 296,
+        "prop_side_lava_overlook_takeover_30": 1764,
+        "prop_side_lava_overlook_takeover_SHRUB50": 3724,
+        "prop_side_lava_overlook_takeover_50": 1764,
+        "prop_side_lava_overlook_takeover_70": 1764,
+        "prop_side_lava_overlook_takeover_veins": 384,
+        "prop_side_lava_overlook_handoff_growth": 1764,
+        "prop_side_lava_overlook_handoff_growth.001": 1764,
+        "prop_side_lava_overlook_handoff_growth.002": 1764,
+        "prop_side_lava_overlook_handoff_growth.003": 1764,
+        "prop_side_lava_overlook_continuous_ash_crust": 132
+      },
+      "collections": {
+        "side_lava_overlook_Structure": [
+          "side_lava_overlook"
+        ],
+        "side_lava_overlook_Props_Solid": [
+          "prop_side_lava_overlook_solid"
+        ],
+        "side_lava_overlook_Props_NonSolid": [
+          "prop_drained_wax_rosette_placement.003",
+          "prop_drained_seed_shrub_placement.003",
+          "prop_charred_ember_rose_placement.002"
+        ],
+        "side_lava_overlook_SurfaceIdentity": [
+          "prop_side_lava_overlook_fractured_crust"
+        ],
+        "side_lava_overlook_FloraProgression": [
+          "prop_side_lava_overlook_takeover_30",
+          "prop_side_lava_overlook_takeover_SHRUB50",
+          "prop_side_lava_overlook_takeover_50",
+          "prop_side_lava_overlook_takeover_70",
+          "prop_side_lava_overlook_takeover_veins"
+        ],
+        "side_lava_overlook_BorderFlow": [
+          "prop_side_lava_overlook_handoff_growth",
+          "prop_side_lava_overlook_handoff_growth.001",
+          "prop_side_lava_overlook_handoff_growth.002",
+          "prop_side_lava_overlook_handoff_growth.003"
+        ]
+      }
+    },
+    "cap_collapsed_pass": {
+      "objects": 17,
+      "mesh_objects": 16,
+      "triangles": 23700,
+      "mesh_triangles": {
+        "cap_collapsed_pass": 3376,
+        "prop_cap_collapsed_pass_solid": 560,
+        "prop_charred_ember_rose_placement.003": 3312,
+        "prop_charred_thorn_pod_placement.002": 1542,
+        "prop_drained_seed_shrub_placement.004": 784,
+        "prop_cap_collapsed_pass_fractured_crust": 556,
+        "prop_recent_fracture_vent_smoke.004": 80,
+        "prop_cap_collapsed_pass_takeover_70": 1764,
+        "prop_cap_collapsed_pass_takeover_CHARRED": 3312,
+        "prop_cap_collapsed_pass_takeover_INVASIVE": 1130,
+        "prop_cap_collapsed_pass_takeover_veins": 96,
+        "prop_cap_collapsed_pass_handoff_growth": 1764,
+        "prop_cap_collapsed_pass_handoff_growth.001": 1764,
+        "prop_cap_collapsed_pass_handoff_growth.002": 1764,
+        "prop_cap_collapsed_pass_handoff_growth.003": 1764,
+        "prop_cap_collapsed_pass_continuous_ash_crust": 132
+      },
+      "collections": {
+        "cap_collapsed_pass_Structure": [
+          "cap_collapsed_pass"
+        ],
+        "cap_collapsed_pass_Props_Solid": [
+          "prop_cap_collapsed_pass_solid"
+        ],
+        "cap_collapsed_pass_Props_NonSolid": [
+          "prop_charred_ember_rose_placement.003",
+          "prop_charred_thorn_pod_placement.002",
+          "prop_drained_seed_shrub_placement.004"
+        ],
+        "cap_collapsed_pass_SurfaceIdentity": [
+          "prop_cap_collapsed_pass_fractured_crust"
+        ],
+        "cap_collapsed_pass_VentSmoke": [
+          "prop_recent_fracture_vent_smoke.004"
+        ],
+        "cap_collapsed_pass_FloraProgression": [
+          "prop_cap_collapsed_pass_takeover_70",
+          "prop_cap_collapsed_pass_takeover_CHARRED",
+          "prop_cap_collapsed_pass_takeover_INVASIVE",
+          "prop_cap_collapsed_pass_takeover_veins"
+        ],
+        "cap_collapsed_pass_BorderFlow": [
+          "prop_cap_collapsed_pass_handoff_growth",
+          "prop_cap_collapsed_pass_handoff_growth.001",
+          "prop_cap_collapsed_pass_handoff_growth.002",
+          "prop_cap_collapsed_pass_handoff_growth.003"
+        ]
+      }
+    },
+    "scenery_ashland_a": {
+      "objects": 12,
+      "mesh_objects": 12,
+      "triangles": 5990,
+      "mesh_triangles": {
+        "scenery_ashland_a": 854,
+        "prop_scenery_ashland_a_fractured_crust": 288,
+        "prop_scenery_ashland_a_windward_ash": 12,
+        "prop_scenery_ashland_a_takeover_OLD": 216,
+        "prop_scenery_ashland_a_takeover_DRAINED": 216,
+        "prop_scenery_ashland_a_takeover_30": 1764,
+        "prop_scenery_ashland_a_takeover_veins": 96,
+        "prop_scenery_ashland_a_handoff_growth": 216,
+        "prop_scenery_ashland_a_handoff_growth.001": 1764,
+        "prop_scenery_ashland_a_handoff_growth.002": 216,
+        "prop_scenery_ashland_a_handoff_growth.003": 216,
+        "prop_scenery_ashland_a_continuous_ash_crust": 132
+      },
+      "collections": {
+        "scenery_ashland_a_Structure": [
+          "scenery_ashland_a"
+        ],
+        "scenery_ashland_a_Props_NonSolid": [],
+        "scenery_ashland_a_SurfaceIdentity": [
+          "prop_scenery_ashland_a_fractured_crust",
+          "prop_scenery_ashland_a_windward_ash"
+        ],
+        "scenery_ashland_a_FloraProgression": [
+          "prop_scenery_ashland_a_takeover_OLD",
+          "prop_scenery_ashland_a_takeover_DRAINED",
+          "prop_scenery_ashland_a_takeover_30",
+          "prop_scenery_ashland_a_takeover_veins"
+        ],
+        "scenery_ashland_a_BorderFlow": [
+          "prop_scenery_ashland_a_handoff_growth",
+          "prop_scenery_ashland_a_handoff_growth.001",
+          "prop_scenery_ashland_a_handoff_growth.002",
+          "prop_scenery_ashland_a_handoff_growth.003"
+        ]
+      }
+    },
+    "scenery_basalt_ridge_a": {
+      "objects": 14,
+      "mesh_objects": 14,
+      "triangles": 18162,
+      "mesh_triangles": {
+        "scenery_basalt_ridge_a": 854,
+        "scenery_fractured_ridge": 212,
+        "scenery_fractured_ridge.001": 212,
+        "prop_scenery_basalt_ridge_a_fractured_crust": 296,
+        "prop_scenery_basalt_ridge_a_takeover_70": 1764,
+        "prop_scenery_basalt_ridge_a_takeover_SHRUB50": 3724,
+        "prop_scenery_basalt_ridge_a_takeover_30": 1764,
+        "prop_scenery_basalt_ridge_a_takeover_50": 1764,
+        "prop_scenery_basalt_ridge_a_takeover_veins": 384,
+        "prop_scenery_basalt_ridge_a_handoff_growth": 1764,
+        "prop_scenery_basalt_ridge_a_handoff_growth.001": 1764,
+        "prop_scenery_basalt_ridge_a_handoff_growth.002": 1764,
+        "prop_scenery_basalt_ridge_a_handoff_growth.003": 1764,
+        "prop_scenery_basalt_ridge_a_continuous_ash_crust": 132
+      },
+      "collections": {
+        "scenery_basalt_ridge_a_Structure": [
+          "scenery_basalt_ridge_a",
+          "scenery_fractured_ridge",
+          "scenery_fractured_ridge.001"
+        ],
+        "scenery_basalt_ridge_a_Props_NonSolid": [],
+        "scenery_basalt_ridge_a_SurfaceIdentity": [
+          "prop_scenery_basalt_ridge_a_fractured_crust"
+        ],
+        "scenery_basalt_ridge_a_FloraProgression": [
+          "prop_scenery_basalt_ridge_a_takeover_70",
+          "prop_scenery_basalt_ridge_a_takeover_SHRUB50",
+          "prop_scenery_basalt_ridge_a_takeover_30",
+          "prop_scenery_basalt_ridge_a_takeover_50",
+          "prop_scenery_basalt_ridge_a_takeover_veins"
+        ],
+        "scenery_basalt_ridge_a_BorderFlow": [
+          "prop_scenery_basalt_ridge_a_handoff_growth",
+          "prop_scenery_basalt_ridge_a_handoff_growth.001",
+          "prop_scenery_basalt_ridge_a_handoff_growth.002",
+          "prop_scenery_basalt_ridge_a_handoff_growth.003"
+        ]
+      }
+    },
+    "scenery_basalt_ridge_high": {
+      "objects": 13,
+      "mesh_objects": 13,
+      "triangles": 15064,
+      "mesh_triangles": {
+        "scenery_basalt_ridge_high": 854,
+        "scenery_fractured_ridge.002": 212,
+        "scenery_fractured_ridge.003": 212,
+        "prop_scenery_basalt_ridge_high_fractured_crust": 296,
+        "prop_scenery_basalt_ridge_high_takeover_INVASIVE": 1130,
+        "prop_scenery_basalt_ridge_high_takeover_70": 1764,
+        "prop_scenery_basalt_ridge_high_takeover_CHARRED": 3312,
+        "prop_scenery_basalt_ridge_high_takeover_veins": 96,
+        "prop_scenery_basalt_ridge_high_handoff_growth": 1764,
+        "prop_scenery_basalt_ridge_high_handoff_growth.001": 1764,
+        "prop_scenery_basalt_ridge_high_handoff_growth.002": 1764,
+        "prop_scenery_basalt_ridge_high_handoff_growth.003": 1764,
+        "prop_scenery_basalt_ridge_high_continuous_ash_crust": 132
+      },
+      "collections": {
+        "scenery_basalt_ridge_high_Structure": [
+          "scenery_basalt_ridge_high",
+          "scenery_fractured_ridge.002",
+          "scenery_fractured_ridge.003"
+        ],
+        "scenery_basalt_ridge_high_Props_NonSolid": [],
+        "scenery_basalt_ridge_high_SurfaceIdentity": [
+          "prop_scenery_basalt_ridge_high_fractured_crust"
+        ],
+        "scenery_basalt_ridge_high_FloraProgression": [
+          "prop_scenery_basalt_ridge_high_takeover_INVASIVE",
+          "prop_scenery_basalt_ridge_high_takeover_70",
+          "prop_scenery_basalt_ridge_high_takeover_CHARRED",
+          "prop_scenery_basalt_ridge_high_takeover_veins"
+        ],
+        "scenery_basalt_ridge_high_BorderFlow": [
+          "prop_scenery_basalt_ridge_high_handoff_growth",
+          "prop_scenery_basalt_ridge_high_handoff_growth.001",
+          "prop_scenery_basalt_ridge_high_handoff_growth.002",
+          "prop_scenery_basalt_ridge_high_handoff_growth.003"
+        ]
+      }
+    },
+    "scenery_lava_field_a": {
+      "objects": 18,
+      "mesh_objects": 16,
+      "triangles": 17735,
+      "mesh_triangles": {
+        "scenery_lava_field_a": 2162,
+        "cooled_lava_islet": 212,
+        "scenery_molten_lowland": 8,
+        "prop_scenery_lava_field_a_fractured_crust": 186,
+        "prop_scenery_lava_field_a_takeover_70": 1764,
+        "prop_scenery_lava_field_a_takeover_INVASIVE": 1130,
+        "prop_scenery_lava_field_a_takeover_CHARRED": 3312,
+        "prop_scenery_lava_field_a_takeover_veins": 96,
+        "prop_scenery_lava_field_a_handoff_growth": 1764,
+        "prop_scenery_lava_field_a_handoff_growth.001": 1764,
+        "prop_scenery_lava_field_a_handoff_growth.002": 1764,
+        "prop_scenery_lava_field_a_handoff_growth.003": 1764,
+        "prop_scenery_lava_field_a_continuous_ash_crust": 132,
+        "prop_scenery_lava_field_a_undermined_shelves": 84,
+        "prop_scenery_lava_field_a_contained_molten_body": 1536,
+        "prop_scenery_lava_field_a_crusted_molten_islands": 57
+      },
+      "collections": {
+        "scenery_lava_field_a_Structure": [
+          "scenery_lava_field_a",
+          "cooled_lava_islet"
+        ],
+        "scenery_lava_field_a_Props_NonSolid": [],
+        "scenery_lava_field_a_SurfaceIdentity": [
+          "prop_scenery_lava_field_a_fractured_crust"
+        ],
+        "scenery_lava_field_a_FloraProgression": [
+          "prop_scenery_lava_field_a_takeover_70",
+          "prop_scenery_lava_field_a_takeover_INVASIVE",
+          "prop_scenery_lava_field_a_takeover_CHARRED",
+          "prop_scenery_lava_field_a_takeover_veins"
+        ],
+        "scenery_lava_field_a_BorderFlow": [
+          "prop_scenery_lava_field_a_handoff_growth",
+          "prop_scenery_lava_field_a_handoff_growth.001",
+          "prop_scenery_lava_field_a_handoff_growth.002",
+          "prop_scenery_lava_field_a_handoff_growth.003"
+        ],
+        "scenery_lava_field_a_CollapseRemnants": [
+          "prop_scenery_lava_field_a_undermined_shelves"
+        ],
+        "scenery_lava_field_a_ContainedLava": [
+          "prop_scenery_lava_field_a_contained_molten_body",
+          "prop_scenery_lava_field_a_crusted_molten_islands"
+        ]
+      }
+    },
+    "scenery_ravine_a": {
+      "objects": 17,
+      "mesh_objects": 15,
+      "triangles": 16830,
+      "mesh_triangles": {
+        "scenery_ravine_a": 2002,
+        "scenery_ravine_deep_heat": 8,
+        "prop_scenery_ravine_a_fractured_crust": 296,
+        "prop_scenery_ravine_a_takeover_CHARRED": 3312,
+        "prop_scenery_ravine_a_takeover_70": 1764,
+        "prop_scenery_ravine_a_takeover_INVASIVE": 1130,
+        "prop_scenery_ravine_a_takeover_veins": 96,
+        "prop_scenery_ravine_a_handoff_growth": 1764,
+        "prop_scenery_ravine_a_handoff_growth.001": 1764,
+        "prop_scenery_ravine_a_handoff_growth.002": 1764,
+        "prop_scenery_ravine_a_handoff_growth.003": 1764,
+        "prop_scenery_ravine_a_continuous_ash_crust": 132,
+        "prop_scenery_ravine_a_undermined_shelves": 84,
+        "prop_scenery_ravine_a_contained_molten_body": 912,
+        "prop_scenery_ravine_a_crusted_molten_islands": 38
+      },
+      "collections": {
+        "scenery_ravine_a_Structure": [
+          "scenery_ravine_a"
+        ],
+        "scenery_ravine_a_Props_NonSolid": [],
+        "scenery_ravine_a_SurfaceIdentity": [
+          "prop_scenery_ravine_a_fractured_crust"
+        ],
+        "scenery_ravine_a_FloraProgression": [
+          "prop_scenery_ravine_a_takeover_CHARRED",
+          "prop_scenery_ravine_a_takeover_70",
+          "prop_scenery_ravine_a_takeover_INVASIVE",
+          "prop_scenery_ravine_a_takeover_veins"
+        ],
+        "scenery_ravine_a_BorderFlow": [
+          "prop_scenery_ravine_a_handoff_growth",
+          "prop_scenery_ravine_a_handoff_growth.001",
+          "prop_scenery_ravine_a_handoff_growth.002",
+          "prop_scenery_ravine_a_handoff_growth.003"
+        ],
+        "scenery_ravine_a_CollapseRemnants": [
+          "prop_scenery_ravine_a_undermined_shelves"
+        ],
+        "scenery_ravine_a_ContainedLava": [
+          "prop_scenery_ravine_a_contained_molten_body",
+          "prop_scenery_ravine_a_crusted_molten_islands"
+        ]
+      }
+    },
+    "scenery_drained_flora_a": {
+      "objects": 14,
+      "mesh_objects": 14,
+      "triangles": 6990,
+      "mesh_triangles": {
+        "scenery_drained_flora_a": 854,
+        "scenery_flora_pocket": 216,
+        "scenery_flora_pocket.001": 784,
+        "prop_scenery_drained_flora_a_fractured_crust": 288,
+        "prop_scenery_drained_flora_a_windward_ash": 12,
+        "prop_scenery_drained_flora_a_takeover_DRAINED": 216,
+        "prop_scenery_drained_flora_a_takeover_OLD": 216,
+        "prop_scenery_drained_flora_a_takeover_30": 1764,
+        "prop_scenery_drained_flora_a_takeover_veins": 96,
+        "prop_scenery_drained_flora_a_handoff_growth": 216,
+        "prop_scenery_drained_flora_a_handoff_growth.001": 1764,
+        "prop_scenery_drained_flora_a_handoff_growth.002": 216,
+        "prop_scenery_drained_flora_a_handoff_growth.003": 216,
+        "prop_scenery_drained_flora_a_continuous_ash_crust": 132
+      },
+      "collections": {
+        "scenery_drained_flora_a_Structure": [
+          "scenery_drained_flora_a"
+        ],
+        "scenery_drained_flora_a_Props_NonSolid": [
+          "scenery_flora_pocket",
+          "scenery_flora_pocket.001"
+        ],
+        "scenery_drained_flora_a_SurfaceIdentity": [
+          "prop_scenery_drained_flora_a_fractured_crust",
+          "prop_scenery_drained_flora_a_windward_ash"
+        ],
+        "scenery_drained_flora_a_FloraProgression": [
+          "prop_scenery_drained_flora_a_takeover_DRAINED",
+          "prop_scenery_drained_flora_a_takeover_OLD",
+          "prop_scenery_drained_flora_a_takeover_30",
+          "prop_scenery_drained_flora_a_takeover_veins"
+        ],
+        "scenery_drained_flora_a_BorderFlow": [
+          "prop_scenery_drained_flora_a_handoff_growth",
+          "prop_scenery_drained_flora_a_handoff_growth.001",
+          "prop_scenery_drained_flora_a_handoff_growth.002",
+          "prop_scenery_drained_flora_a_handoff_growth.003"
+        ]
+      }
+    },
+    "scenery_charred_flora_a": {
+      "objects": 16,
+      "mesh_objects": 16,
+      "triangles": 21179,
+      "mesh_triangles": {
+        "scenery_charred_flora_a": 1768,
+        "scenery_flora_pocket.002": 3312,
+        "scenery_flora_pocket.003": 1542,
+        "prop_scenery_charred_flora_a_fractured_crust": 296,
+        "prop_scenery_charred_flora_a_takeover_70": 1764,
+        "prop_scenery_charred_flora_a_takeover_INVASIVE": 1130,
+        "prop_scenery_charred_flora_a_takeover_CHARRED": 3312,
+        "prop_scenery_charred_flora_a_takeover_veins": 96,
+        "prop_scenery_charred_flora_a_handoff_growth": 1764,
+        "prop_scenery_charred_flora_a_handoff_growth.001": 1764,
+        "prop_scenery_charred_flora_a_handoff_growth.002": 1764,
+        "prop_scenery_charred_flora_a_handoff_growth.003": 1764,
+        "prop_scenery_charred_flora_a_continuous_ash_crust": 132,
+        "prop_scenery_charred_flora_a_undermined_shelves": 84,
+        "prop_scenery_charred_flora_a_contained_molten_body": 668,
+        "prop_scenery_charred_flora_a_crusted_molten_islands": 19
+      },
+      "collections": {
+        "scenery_charred_flora_a_Structure": [
+          "scenery_charred_flora_a"
+        ],
+        "scenery_charred_flora_a_Props_NonSolid": [
+          "scenery_flora_pocket.002",
+          "scenery_flora_pocket.003"
+        ],
+        "scenery_charred_flora_a_SurfaceIdentity": [
+          "prop_scenery_charred_flora_a_fractured_crust"
+        ],
+        "scenery_charred_flora_a_FloraProgression": [
+          "prop_scenery_charred_flora_a_takeover_70",
+          "prop_scenery_charred_flora_a_takeover_INVASIVE",
+          "prop_scenery_charred_flora_a_takeover_CHARRED",
+          "prop_scenery_charred_flora_a_takeover_veins"
+        ],
+        "scenery_charred_flora_a_BorderFlow": [
+          "prop_scenery_charred_flora_a_handoff_growth",
+          "prop_scenery_charred_flora_a_handoff_growth.001",
+          "prop_scenery_charred_flora_a_handoff_growth.002",
+          "prop_scenery_charred_flora_a_handoff_growth.003"
+        ],
+        "scenery_charred_flora_a_CollapseRemnants": [
+          "prop_scenery_charred_flora_a_undermined_shelves"
+        ],
+        "scenery_charred_flora_a_ContainedLava": [
+          "prop_scenery_charred_flora_a_contained_molten_body",
+          "prop_scenery_charred_flora_a_crusted_molten_islands"
+        ]
+      }
+    },
+    "scenery_foothill_a": {
+      "objects": 14,
+      "mesh_objects": 14,
+      "triangles": 18162,
+      "mesh_triangles": {
+        "scenery_foothill_a": 854,
+        "scenery_fractured_ridge.004": 212,
+        "scenery_fractured_ridge.005": 212,
+        "prop_scenery_foothill_a_fractured_crust": 296,
+        "prop_scenery_foothill_a_takeover_70": 1764,
+        "prop_scenery_foothill_a_takeover_SHRUB50": 3724,
+        "prop_scenery_foothill_a_takeover_30": 1764,
+        "prop_scenery_foothill_a_takeover_50": 1764,
+        "prop_scenery_foothill_a_takeover_veins": 384,
+        "prop_scenery_foothill_a_handoff_growth": 1764,
+        "prop_scenery_foothill_a_handoff_growth.001": 1764,
+        "prop_scenery_foothill_a_handoff_growth.002": 1764,
+        "prop_scenery_foothill_a_handoff_growth.003": 1764,
+        "prop_scenery_foothill_a_continuous_ash_crust": 132
+      },
+      "collections": {
+        "scenery_foothill_a_Structure": [
+          "scenery_foothill_a",
+          "scenery_fractured_ridge.004",
+          "scenery_fractured_ridge.005"
+        ],
+        "scenery_foothill_a_Props_NonSolid": [],
+        "scenery_foothill_a_SurfaceIdentity": [
+          "prop_scenery_foothill_a_fractured_crust"
+        ],
+        "scenery_foothill_a_FloraProgression": [
+          "prop_scenery_foothill_a_takeover_70",
+          "prop_scenery_foothill_a_takeover_SHRUB50",
+          "prop_scenery_foothill_a_takeover_30",
+          "prop_scenery_foothill_a_takeover_50",
+          "prop_scenery_foothill_a_takeover_veins"
+        ],
+        "scenery_foothill_a_BorderFlow": [
+          "prop_scenery_foothill_a_handoff_growth",
+          "prop_scenery_foothill_a_handoff_growth.001",
+          "prop_scenery_foothill_a_handoff_growth.002",
+          "prop_scenery_foothill_a_handoff_growth.003"
+        ]
+      }
+    }
+  },
+  "origins_bounds_elevations": {
+    "chunk_entry_ash_plain": {
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bounds": [
+        [
+          -128.0,
+          -128.0,
+          -2.019970655441284
+        ],
+        [
+          128.0,
+          128.0,
+          19.536212921142578
+        ]
+      ],
+      "entry": 0,
+      "exit": 0
+    },
+    "path_column_pass": {
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bounds": [
+        [
+          -128.0,
+          -128.0,
+          -31.08700180053711
+        ],
+        [
+          128.0,
+          128.0,
+          91.76697540283203
+        ]
+      ],
+      "entry": -28,
+      "exit": 28
+    },
+    "chunk_column_forest": {
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bounds": [
+        [
+          -128.0,
+          -128.0,
+          -7.369206428527832
+        ],
+        [
+          128.0,
+          128.0,
+          17.686485290527344
+        ]
+      ],
+      "entry": 0,
+      "exit": 0
+    },
+    "side_lava_overlook": {
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bounds": [
+        [
+          -128.0,
+          -128.0,
+          -7.504269599914551
+        ],
+        [
+          128.0,
+          128.0,
+          21.873926162719727
+        ]
+      ],
+      "entry": 0,
+      "exit": 0
+    },
+    "cap_collapsed_pass": {
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bounds": [
+        [
+          -128.0,
+          -128.0,
+          -7.373678684234619
+        ],
+        [
+          128.0,
+          128.0,
+          36.550167083740234
+        ]
+      ],
+      "entry": 0,
+      "exit": 0
+    },
+    "scenery_ashland_a": {
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bounds": [
+        [
+          -128.0,
+          -128.0,
+          0.0
+        ],
+        [
+          128.0,
+          128.0,
+          8.937240600585938
+        ]
+      ],
+      "entry": null,
+      "exit": null
+    },
+    "scenery_basalt_ridge_a": {
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bounds": [
+        [
+          -128.0,
+          -128.0,
+          0.0
+        ],
+        [
+          128.0,
+          128.0,
+          63.05728530883789
+        ]
+      ],
+      "entry": null,
+      "exit": null
+    },
+    "scenery_basalt_ridge_high": {
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bounds": [
+        [
+          -128.0,
+          -128.0,
+          0.0
+        ],
+        [
+          128.0,
+          128.0,
+          105.0662612915039
+        ]
+      ],
+      "entry": null,
+      "exit": null
+    },
+    "scenery_lava_field_a": {
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bounds": [
+        [
+          -128.0,
+          -128.0,
+          -35.55999755859375
+        ],
+        [
+          128.0,
+          128.0,
+          4.0
+        ]
+      ],
+      "entry": null,
+      "exit": null
+    },
+    "scenery_ravine_a": {
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bounds": [
+        [
+          -128.0,
+          -128.0,
+          -51.23999786376953
+        ],
+        [
+          128.0,
+          128.0,
+          16.400487899780273
+        ]
+      ],
+      "entry": null,
+      "exit": null
+    },
+    "scenery_drained_flora_a": {
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bounds": [
+        [
+          -128.0,
+          -128.0,
+          0.0
+        ],
+        [
+          128.0,
+          128.0,
+          16.32390785217285
+        ]
+      ],
+      "entry": null,
+      "exit": null
+    },
+    "scenery_charred_flora_a": {
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bounds": [
+        [
+          -128.0,
+          -128.0,
+          -18.96000099182129
+        ],
+        [
+          128.0,
+          128.0,
+          26.276695251464844
+        ]
+      ],
+      "entry": null,
+      "exit": null
+    },
+    "scenery_foothill_a": {
+      "origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "bounds": [
+        [
+          -128.0,
+          -128.0,
+          0.0
+        ],
+        [
+          128.0,
+          128.0,
+          56.036590576171875
+        ]
+      ],
+      "entry": null,
+      "exit": null
+    }
+  },
+  "collision_note": "Retained broad central corridors/hub, PATH fringe minimum -6. Visual shoulder shelves and lava banks need simplified nonsolid art over later walk colliders; Studio untested.",
+  "materials_saved": 28,
+  "seam_band_exact_after_fractures": true,
+  "source_max_mesh_triangles": 4076,
+  "fracture_topology_note": "Locally split inland cavity edges; old vertices retained; sharp selected strata faces. Lower visible lava exposes intermediate ledges; molten bodies have actual eight-stud buried depth.",
+  "central_floor_samples": {
+    "chunk_entry_ash_plain": [
+      {
+        "xy": [
+          -20,
+          -64
+        ],
+        "height": 2.386016845703125,
+        "slope_degrees": 5.7276552045844555
+      },
+      {
+        "xy": [
+          -20,
+          0
+        ],
+        "height": 0.6053466796875,
+        "slope_degrees": 6.981317080496818
+      },
+      {
+        "xy": [
+          -20,
+          64
+        ],
+        "height": 0.11968994140625,
+        "slope_degrees": 0.4005626901348312
+      },
+      {
+        "xy": [
+          0,
+          -64
+        ],
+        "height": 0.87127685546875,
+        "slope_degrees": 2.5145054110243468
+      },
+      {
+        "xy": [
+          0,
+          0
+        ],
+        "height": 0.0,
+        "slope_degrees": 0.0
+      },
+      {
+        "xy": [
+          0,
+          64
+        ],
+        "height": 0.0499267578125,
+        "slope_degrees": 0.19382665722055112
+      },
+      {
+        "xy": [
+          20,
+          -64
+        ],
+        "height": 0.229705810546875,
+        "slope_degrees": 0.9954397866536098
+      },
+      {
+        "xy": [
+          20,
+          0
+        ],
+        "height": 0.06103515625,
+        "slope_degrees": 0.6039314537148585
+      },
+      {
+        "xy": [
+          20,
+          64
+        ],
+        "height": 0.1304931640625,
+        "slope_degrees": 0.7268544919824526
+      }
+    ],
+    "path_column_pass": [
+      {
+        "xy": [
+          -20,
+          -64
+        ],
+        "height": -22.496185302734375,
+        "slope_degrees": 15.124716247583223
+      },
+      {
+        "xy": [
+          -20,
+          0
+        ],
+        "height": 0.117431640625,
+        "slope_degrees": 22.008848588413823
+      },
+      {
+        "xy": [
+          -20,
+          64
+        ],
+        "height": 22.872222900390625,
+        "slope_degrees": 13.111675029999017
+      },
+      {
+        "xy": [
+          0,
+          -64
+        ],
+        "height": -22.61578369140625,
+        "slope_degrees": 14.982166318818084
+      },
+      {
+        "xy": [
+          0,
+          0
+        ],
+        "height": 0.0,
+        "slope_degrees": 21.951876934882424
+      },
+      {
+        "xy": [
+          0,
+          64
+        ],
+        "height": 23.31854248046875,
+        "slope_degrees": 13.289577084639896
+      },
+      {
+        "xy": [
+          20,
+          -64
+        ],
+        "height": -23.056640625,
+        "slope_degrees": 14.694844915905895
+      },
+      {
+        "xy": [
+          20,
+          0
+        ],
+        "height": -0.22161865234375,
+        "slope_degrees": 21.97416587903281
+      },
+      {
+        "xy": [
+          20,
+          64
+        ],
+        "height": 25.7449951171875,
+        "slope_degrees": 16.55937806468091
+      }
+    ],
+    "chunk_column_forest": [
+      {
+        "xy": [
+          -20,
+          -64
+        ],
+        "height": 5.9744873046875,
+        "slope_degrees": 14.221118245299836
+      },
+      {
+        "xy": [
+          -20,
+          0
+        ],
+        "height": 0.0,
+        "slope_degrees": 0.0
+      },
+      {
+        "xy": [
+          -20,
+          64
+        ],
+        "height": -1.0391845703125,
+        "slope_degrees": 3.4838580846180616
+      },
+      {
+        "xy": [
+          0,
+          -64
+        ],
+        "height": 0.97064208984375,
+        "slope_degrees": 5.520841400934123
+      },
+      {
+        "xy": [
+          0,
+          0
+        ],
+        "height": 0.0,
+        "slope_degrees": 0.0
+      },
+      {
+        "xy": [
+          0,
+          64
+        ],
+        "height": -0.24407958984375,
+        "slope_degrees": 1.6424671489294655
+      },
+      {
+        "xy": [
+          20,
+          -64
+        ],
+        "height": 0.007080078125,
+        "slope_degrees": 0.12511453444308365
+      },
+      {
+        "xy": [
+          20,
+          0
+        ],
+        "height": 0.0,
+        "slope_degrees": 0.0
+      },
+      {
+        "xy": [
+          20,
+          64
+        ],
+        "height": 3.95916748046875,
+        "slope_degrees": 29.614725086883762
+      }
+    ],
+    "side_lava_overlook": [
+      {
+        "xy": [
+          -20,
+          -64
+        ],
+        "height": 4.05804443359375,
+        "slope_degrees": 10.859804790885024
+      },
+      {
+        "xy": [
+          -20,
+          0
+        ],
+        "height": 0.63128662109375,
+        "slope_degrees": 8.543781657429665
+      },
+      {
+        "xy": [
+          -20,
+          64
+        ],
+        "height": 4.06146240234375,
+        "slope_degrees": 11.503467085096624
+      },
+      {
+        "xy": [
+          0,
+          -64
+        ],
+        "height": 6.566864013671875,
+        "slope_degrees": 15.406876649221298
+      },
+      {
+        "xy": [
+          0,
+          0
+        ],
+        "height": 0.0,
+        "slope_degrees": 0.0
+      },
+      {
+        "xy": [
+          0,
+          64
+        ],
+        "height": 6.611541748046875,
+        "slope_degrees": 15.088667503090264
+      },
+      {
+        "xy": [
+          20,
+          -64
+        ],
+        "height": 8.75103759765625,
+        "slope_degrees": 17.70734967924808
+      },
+      {
+        "xy": [
+          20,
+          0
+        ],
+        "height": 1.66650390625,
+        "slope_degrees": 23.231536064343427
+      },
+      {
+        "xy": [
+          20,
+          64
+        ],
+        "height": 9.110107421875,
+        "slope_degrees": 19.8953742722171
+      }
+    ],
+    "cap_collapsed_pass": [
+      {
+        "xy": [
+          -20,
+          -64
+        ],
+        "height": 0.498046875,
+        "slope_degrees": 2.7690199270540328
+      },
+      {
+        "xy": [
+          -20,
+          0
+        ],
+        "height": 0.020263671875,
+        "slope_degrees": 0.28939100670166956
+      },
+      {
+        "xy": [
+          -20,
+          64
+        ],
+        "height": 21.497802734375,
+        "slope_degrees": 31.194903300471204
+      },
+      {
+        "xy": [
+          0,
+          -64
+        ],
+        "height": 0.040679931640625,
+        "slope_degrees": 0.20747905542313175
+      },
+      {
+        "xy": [
+          0,
+          0
+        ],
+        "height": 0.0,
+        "slope_degrees": 0.0
+      },
+      {
+        "xy": [
+          0,
+          64
+        ],
+        "height": 21.60809326171875,
+        "slope_degrees": 31.204007689914484
+      },
+      {
+        "xy": [
+          20,
+          -64
+        ],
+        "height": 0.0018310546875,
+        "slope_degrees": 0.0
+      },
+      {
+        "xy": [
+          20,
+          0
+        ],
+        "height": 0.0029296875,
+        "slope_degrees": 1.0702749423981486
+      },
+      {
+        "xy": [
+          20,
+          64
+        ],
+        "height": 21.47845458984375,
+        "slope_degrees": 30.96416829020404
+      }
+    ]
+  },
+  "central_route_vertices_exact": {
+    "chunk_entry_ash_plain": true,
+    "path_column_pass": true,
+    "chunk_column_forest": true,
+    "side_lava_overlook": true,
+    "cap_collapsed_pass": true
+  },
+  "flora_anchors_reseated": 145,
+  "material_review_note": "Alternating fracture swatches replaced by continuous exposed strata bands; selected wall/shoulder fractures sharpened without random displacement.",
+  "flora_moved_to_dry_banks": 62,
+  "heat_diagnostic_restored": true,
+  "review_images": [
+    "before_lava_pool.png",
+    "before_lava_ravine.png",
+    "after_overall.png",
+    "after_overall_glow_minimized.png",
+    "after_route_no_rails.png",
+    "after_stable_combat.png",
+    "after_seam_player.png",
+    "after_raised_seam.png",
+    "after_raised_scenery.png",
+    "after_meso_shelves.png",
+    "after_lava_pool.png",
+    "after_lava_ravine.png",
+    "after_flora_midpoint.png",
+    "after_flora_inner_heat.png"
+  ],
+  "visual_review_limitations": [
+    "Wide handoffs and outer ash fields remain plain in some views.",
+    "Some collapse walls remain regular and quarry-like; broad ridges retain rounded forms.",
+    "Some crust silhouettes remain panel-like and flora tendrils wire-like.",
+    "Glow-minimized view shows volcanic failure but does not establish unmistakable Emberfall identity.",
+    "Blender review shader/lights and rendered footing do not establish Studio collision or material parity."
+  ]
+}

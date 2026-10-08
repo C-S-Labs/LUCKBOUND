@@ -1,0 +1,592 @@
+{
+  "scope": "FINAL AREA I TECHNICAL GATE ONLY",
+  "studio_tested": true,
+  "production_export": false,
+  "production_systems_changed": false,
+  "layout": {
+    "placements": [
+      {
+        "index": 1,
+        "x": 0.0,
+        "y": 4.148148148148,
+        "z": 256.0,
+        "yaw": 0,
+        "source_center_y": -256,
+        "bend": false
+      },
+      {
+        "index": 2,
+        "x": 0.0,
+        "y": 28.0,
+        "z": 0.0,
+        "yaw": 0,
+        "source_center_y": 0,
+        "bend": true
+      },
+      {
+        "index": 3,
+        "x": 256.0,
+        "y": 54.962962962963,
+        "z": 0.0,
+        "yaw": 90,
+        "source_center_y": 0,
+        "bend": false
+      },
+      {
+        "index": 4,
+        "x": 512.0,
+        "y": 81.925925925926,
+        "z": 0.0,
+        "yaw": 90,
+        "source_center_y": 0,
+        "bend": true
+      },
+      {
+        "index": 5,
+        "x": 512.0,
+        "y": 105.777777777778,
+        "z": 256.0,
+        "yaw": 180,
+        "source_center_y": 256,
+        "bend": false
+      }
+    ],
+    "connections": [
+      {
+        "from": 1,
+        "to": 2,
+        "x": 0.0,
+        "y": 14.518518518519,
+        "z": 128.0
+      },
+      {
+        "from": 2,
+        "to": 3,
+        "x": 128.0,
+        "y": 41.481481481481,
+        "z": 0.0
+      },
+      {
+        "from": 3,
+        "to": 4,
+        "x": 384.0,
+        "y": 68.444444444444,
+        "z": 0.0
+      },
+      {
+        "from": 4,
+        "to": 5,
+        "x": 512.0,
+        "y": 95.407407407407,
+        "z": 128.0
+      }
+    ],
+    "source": "actual ChunkCore helpers; isolated review definitions"
+  },
+  "fbx_probe": {
+    "file": "E:\\BlenderAIProjects\\Runtime\\Emberfall_ProductionGateReview\\probe_export\\colour_probe.fbx",
+    "export_layer": "Col BYTE_COLOR CORNER",
+    "import_layer": "Col",
+    "import_format": "BYTE_COLOR",
+    "matched_corners": 25856,
+    "unmatched_corners": 0,
+    "max_linear_colour_channel_error": 0.0,
+    "triangles": 8958,
+    "max_position_comparison_error_studs": 0.0005068664550780255,
+    "bytes": 226524,
+    "roblox_import": "PASS: production_gate_studio_report.json",
+    "settings": "legacy world FBX settings; SRGB, -Z/Y, baked space transform"
+  },
+  "shared_edge_profiles": [
+    [
+      {
+        "face": "N",
+        "center": 10.370370370371,
+        "ends": [
+          10.370372012809545,
+          19.358023537529952
+        ]
+      }
+    ],
+    [
+      {
+        "face": "S",
+        "center": -13.481481481481,
+        "ends": [
+          -13.481479839042455,
+          -4.493828314322048
+        ]
+      },
+      {
+        "face": "E",
+        "center": 13.481481481480998,
+        "ends": [
+          -4.493828314322048,
+          13.481481958318653
+        ]
+      }
+    ],
+    [
+      {
+        "face": "S",
+        "center": -13.481481481482,
+        "ends": [
+          -13.481481004644344,
+          -31.456791277285046
+        ]
+      },
+      {
+        "face": "N",
+        "center": 13.481481481481005,
+        "ends": [
+          13.481484819341595,
+          22.469134683962288
+        ]
+      }
+    ],
+    [
+      {
+        "face": "S",
+        "center": -13.481481481481993,
+        "ends": [
+          -13.481478143621402,
+          -4.493828279000709
+        ]
+      },
+      {
+        "face": "E",
+        "center": 13.481481481481012,
+        "ends": [
+          -4.493828279000709,
+          13.481480792716766
+        ]
+      }
+    ],
+    [
+      {
+        "face": "S",
+        "center": -10.370370370370992,
+        "ends": [
+          -10.370371059135238,
+          -28.345680130852713
+        ]
+      }
+    ]
+  ],
+  "field_solver": {
+    "grid": [
+      131,
+      155
+    ],
+    "step_studs": 8,
+    "iterations": 2023,
+    "normalized_change_residual": 1.9993467344492366e-06,
+    "fixed_guide_nodes": 161,
+    "route_length_studs": 1174.7686408105333,
+    "grid_float64_bytes": 162440
+  },
+  "balance_percent": {
+    "green": 18.88,
+    "stressed": 31.05,
+    "charred": 50.07
+  },
+  "field_thresholds_studs": [
+    288.7779101756993,
+    548.8114115409303
+  ],
+  "refuges": [
+    {
+      "x": 77,
+      "y": 51,
+      "rx": 32,
+      "ry": 43,
+      "strength": 350,
+      "name": "STONE_WALL_FIELD",
+      "chunk": 1
+    },
+    {
+      "x": -79,
+      "y": -48,
+      "rx": 14,
+      "ry": 90,
+      "strength": 650,
+      "name": "DAMP_DRAINAGE",
+      "chunk": 3
+    },
+    {
+      "x": 84,
+      "y": -37,
+      "rx": 12,
+      "ry": 16,
+      "strength": 180,
+      "name": "HERO_TREE_PROTECTED_ROOTS",
+      "chunk": 1
+    }
+  ],
+  "tree_anchor_checks": [
+    {
+      "chunk": 1,
+      "world_root": [
+        84.0,
+        -293.0,
+        -8.138128280639648
+      ],
+      "terrain_state": 0,
+      "variant": "healthy",
+      "parts": 8,
+      "depth": 0.23288205299814607
+    },
+    {
+      "chunk": 1,
+      "world_root": [
+        -89.0,
+        -318.0,
+        4.559627056121826
+      ],
+      "terrain_state": 0,
+      "variant": "healthy",
+      "parts": 8,
+      "depth": 0.14236658280532738
+    },
+    {
+      "chunk": 1,
+      "world_root": [
+        108.0,
+        -176.0,
+        6.817348480224609
+      ],
+      "terrain_state": 1,
+      "variant": "stressed",
+      "parts": 7,
+      "depth": 0.3122644243826368
+    },
+    {
+      "chunk": 1,
+      "world_root": [
+        -47.0,
+        -152.0,
+        12.8372802734375
+      ],
+      "terrain_state": 0,
+      "variant": "healthy",
+      "parts": 8,
+      "depth": 0.2068419760807379
+    },
+    {
+      "chunk": 1,
+      "world_root": [
+        -91.0,
+        -264.0,
+        4.689576148986816
+      ],
+      "terrain_state": 0,
+      "variant": "healthy",
+      "parts": 8,
+      "depth": 0.1591269765783411
+    },
+    {
+      "chunk": 1,
+      "world_root": [
+        -69.0,
+        -239.0,
+        7.124030113220215
+      ],
+      "terrain_state": 0,
+      "variant": "healthy",
+      "parts": 8,
+      "depth": 0.16063100019540544
+    },
+    {
+      "chunk": 2,
+      "world_root": [
+        -104.0,
+        116.0,
+        39.97847366333008
+      ],
+      "terrain_state": 1,
+      "variant": "stressed",
+      "parts": 7,
+      "depth": 0.332084715337842
+    },
+    {
+      "chunk": 2,
+      "world_root": [
+        56.0,
+        -45.0,
+        32.27470779418945
+      ],
+      "terrain_state": 1,
+      "variant": "stressed",
+      "parts": 7,
+      "depth": 0.3157774345526867
+    },
+    {
+      "chunk": 2,
+      "world_root": [
+        -53.0,
+        23.0,
+        24.257598876953125
+      ],
+      "terrain_state": 1,
+      "variant": "stressed",
+      "parts": 7,
+      "depth": 0.31031478711321275
+    },
+    {
+      "chunk": 2,
+      "world_root": [
+        102.0,
+        108.0,
+        46.259796142578125
+      ],
+      "terrain_state": 1,
+      "variant": "stressed",
+      "parts": 7,
+      "depth": 0.40591566232752596
+    },
+    {
+      "chunk": 3,
+      "world_root": [
+        372.0,
+        103.99999237060547,
+        67.69293975830078
+      ],
+      "terrain_state": 2,
+      "variant": "fresh_char",
+      "parts": 2,
+      "depth": 0.5734085679306472
+    },
+    {
+      "chunk": 3,
+      "world_root": [
+        211.0,
+        -55.999996185302734,
+        60.499000549316406
+      ],
+      "terrain_state": 1,
+      "variant": "stressed",
+      "parts": 7,
+      "depth": 0.45590292164764235
+    },
+    {
+      "chunk": 3,
+      "world_root": [
+        279.0,
+        53.0,
+        51.22056198120117
+      ],
+      "terrain_state": 2,
+      "variant": "fresh_char",
+      "parts": 2,
+      "depth": 0.5172548282749481
+    },
+    {
+      "chunk": 3,
+      "world_root": [
+        364.0,
+        -102.00000762939453,
+        73.34034729003906
+      ],
+      "terrain_state": 2,
+      "variant": "fresh_char",
+      "parts": 2,
+      "depth": 0.6164720034141951
+    },
+    {
+      "chunk": 4,
+      "world_root": [
+        628.0,
+        103.99999237060547,
+        93.9043960571289
+      ],
+      "terrain_state": 2,
+      "variant": "fresh_char",
+      "parts": 2,
+      "depth": 0.6738252566098196
+    },
+    {
+      "chunk": 4,
+      "world_root": [
+        467.0,
+        -55.999996185302734,
+        86.20063018798828
+      ],
+      "terrain_state": 2,
+      "variant": "fresh_char",
+      "parts": 2,
+      "depth": 0.6981350252117056
+    },
+    {
+      "chunk": 4,
+      "world_root": [
+        535.0,
+        53.0,
+        78.18352508544922
+      ],
+      "terrain_state": 2,
+      "variant": "fresh_char",
+      "parts": 2,
+      "depth": 0.6682494704027322
+    },
+    {
+      "chunk": 4,
+      "world_root": [
+        620.0,
+        -102.00000762939453,
+        100.18572235107422
+      ],
+      "terrain_state": 2,
+      "variant": "fresh_char",
+      "parts": 2,
+      "depth": 0.7583869184963555
+    },
+    {
+      "chunk": 5,
+      "world_root": [
+        425.0,
+        -190.0,
+        100.7358627319336
+      ],
+      "terrain_state": 2,
+      "variant": "fresh_char",
+      "parts": 2,
+      "depth": 0.721746854044319
+    },
+    {
+      "chunk": 5,
+      "world_root": [
+        573.0,
+        -297.0,
+        109.77011108398438
+      ],
+      "terrain_state": 2,
+      "variant": "skeletal",
+      "parts": 1,
+      "depth": 0.871093106617145
+    },
+    {
+      "chunk": 5,
+      "world_root": [
+        407.0,
+        -322.0,
+        98.37995910644531
+      ],
+      "terrain_state": 2,
+      "variant": "fresh_char",
+      "parts": 2,
+      "depth": 0.7329991899587047
+    },
+    {
+      "chunk": 5,
+      "world_root": [
+        598.0,
+        -223.0,
+        105.40434265136719
+      ],
+      "terrain_state": 2,
+      "variant": "skeletal",
+      "parts": 1,
+      "depth": 0.824652221528588
+    },
+    {
+      "chunk": 5,
+      "world_root": [
+        456.0,
+        -299.0,
+        98.16191864013672
+      ],
+      "terrain_state": 2,
+      "variant": "skeletal",
+      "parts": 1,
+      "depth": 0.8220073648270337
+    }
+  ],
+  "retained_remnant_objects": 755,
+  "road": {
+    "samples": 321,
+    "max_sample_slope": 0.2068569768070434,
+    "width_range_studs": [
+      7.4,
+      9.4
+    ],
+    "connected_strip": true
+  },
+  "joins": [
+    {
+      "from": 1,
+      "to": 2,
+      "stations": 65,
+      "max_height_gap": 3.552713678800501e-15,
+      "one_shared_field": true
+    },
+    {
+      "from": 2,
+      "to": 3,
+      "stations": 65,
+      "max_height_gap": 1.7712628661570307e-06,
+      "one_shared_field": true
+    },
+    {
+      "from": 3,
+      "to": 4,
+      "stations": 65,
+      "max_height_gap": 1.7712625322019449e-06,
+      "one_shared_field": true
+    },
+    {
+      "from": 4,
+      "to": 5,
+      "stations": 65,
+      "max_height_gap": 1.7543936365882473e-06,
+      "one_shared_field": true
+    }
+  ],
+  "progression": {
+    "start_depth": 0.0017024629838838174,
+    "end_depth": 0.9982975370135851,
+    "max_local_backstep": 0,
+    "chunk_midpoint_depth": [
+      0.1169931804229663,
+      0.30492021463271024,
+      0.49999999043564247,
+      0.6950797162261255,
+      0.883006682634245
+    ],
+    "return_same_world_y": true
+  },
+  "evidence": [
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_ProductionGateReview\\01_return_route_overview.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_ProductionGateReview\\02_route_depth_top.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_ProductionGateReview\\03_player_eye_bend.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_ProductionGateReview\\04_raised_gameplay.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_ProductionGateReview\\05_reachable_ridge.png",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_ProductionGateReview\\06_return_interior_eye.png"
+  ],
+  "preserved_inputs_sha256": {
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_ModularityReview\\BurnedPlainsModularity.blend": "474626aa3e3496f01f4881a0ceb84b1ede1000ad0fc7369f5d6411f613c16829",
+    "E:\\BlenderAIProjects\\Runtime\\Emberfall_BurnedPlainsReview\\BurnedPlains.blend": "ee0fa5b53ff858a1e2ae1bda14debf9bcc2bc8936c0fbf18251979a5ebe0977b"
+  },
+  "inputs_unchanged": true,
+  "prototype_geometry_adjustments": [
+    {
+      "chunk": 1,
+      "max_prototype_shape_adjustment_studs": 8.987651824951172
+    },
+    {
+      "chunk": 2,
+      "max_prototype_shape_adjustment_studs": 9.1685152053833
+    },
+    {
+      "chunk": 3,
+      "max_prototype_shape_adjustment_studs": 17.97530746459961
+    },
+    {
+      "chunk": 4,
+      "max_prototype_shape_adjustment_studs": 9.1685152053833
+    },
+    {
+      "chunk": 5,
+      "max_prototype_shape_adjustment_studs": 17.97531032562256
+    }
+  ]
+}

@@ -1,0 +1,1236 @@
+{
+  "before": {
+    "mesh_objects": 386,
+    "evaluated_triangles": 104322,
+    "flora_count": 54,
+    "flora_average_scale": 0.6392592544908877,
+    "flora_max_height": 2.4966001510620117
+  },
+  "terrain": [
+    {
+      "object": "chunk_combat_fortress_gateworks",
+      "identity": "Raised ruin terrace above lower outer field",
+      "range": 42.85085957185534
+    },
+    {
+      "object": "chunk_combat_wasteland_broken_road",
+      "identity": "Broad plateau with slumped rear rise",
+      "range": 35.484856567382806
+    },
+    {
+      "object": "chunk_entry_wasteland_waystone",
+      "identity": "Interrupted open basin",
+      "range": 32.04764839660142
+    },
+    {
+      "object": "chunk_path_fortress_causeway",
+      "identity": "Broken ascent with tilted shoulder",
+      "range": 83.19891093519121
+    },
+    {
+      "object": "chunk_path_wasteland_fault",
+      "identity": "Asymmetrical cut shelf",
+      "range": 45.24888081118614
+    },
+    {
+      "object": "chunk_side_wasteland_shrine",
+      "identity": "Shallow collapsed shrine depression",
+      "range": 39.52257202148437
+    },
+    {
+      "object": "chunk_ash_faultland",
+      "identity": "Interrupted ash_faultland / composition 2",
+      "range": 17.541469027454283
+    },
+    {
+      "object": "chunk_ash_faultland.001",
+      "identity": "Interrupted ash_faultland / composition 3",
+      "range": 17.44200014892665
+    },
+    {
+      "object": "chunk_ash_faultland.002",
+      "identity": "Interrupted ash_faultland / composition 0",
+      "range": 22.961839824690813
+    },
+    {
+      "object": "chunk_broken_ridge_shelf",
+      "identity": "Interrupted broken_ridge_shelf / composition 1",
+      "range": 53.381457430774596
+    },
+    {
+      "object": "chunk_broken_ridge_shelf.001",
+      "identity": "Interrupted broken_ridge_shelf / composition 2",
+      "range": 37.4550928723387
+    },
+    {
+      "object": "chunk_elevated_shelf",
+      "identity": "Interrupted elevated_shelf / composition 3",
+      "range": 43.48591726964179
+    },
+    {
+      "object": "chunk_elevated_shelf.001",
+      "identity": "Interrupted elevated_shelf / composition 0",
+      "range": 76.87108809684835
+    },
+    {
+      "object": "chunk_elevated_shelf.002",
+      "identity": "Interrupted elevated_shelf / composition 1",
+      "range": 99.78437906358016
+    },
+    {
+      "object": "chunk_elevated_shelf.003",
+      "identity": "Interrupted elevated_shelf / composition 2",
+      "range": 61.804160669848095
+    },
+    {
+      "object": "chunk_fortress_silhouette",
+      "identity": "Interrupted fortress_silhouette / composition 3",
+      "range": 25.33078665440741
+    },
+    {
+      "object": "chunk_fortress_silhouette.001",
+      "identity": "Interrupted fortress_silhouette / composition 0",
+      "range": 26.736838362989133
+    },
+    {
+      "object": "chunk_fortress_silhouette.002",
+      "identity": "Interrupted fortress_silhouette / composition 1",
+      "range": 36.88983530397933
+    },
+    {
+      "object": "chunk_fortress_silhouette.003",
+      "identity": "Interrupted fortress_silhouette / composition 2",
+      "range": 18.054873011544107
+    },
+    {
+      "object": "chunk_fortress_silhouette.004",
+      "identity": "Interrupted fortress_silhouette / composition 3",
+      "range": 25.471306179200088
+    },
+    {
+      "object": "chunk_fortress_silhouette.005",
+      "identity": "Interrupted fortress_silhouette / composition 0",
+      "range": 26.65432353196284
+    },
+    {
+      "object": "chunk_infected_outskirts",
+      "identity": "Interrupted infected_outskirts / composition 1",
+      "range": 21.544142367298033
+    },
+    {
+      "object": "chunk_infected_outskirts.001",
+      "identity": "Interrupted infected_outskirts / composition 2",
+      "range": 11.969811818008413
+    },
+    {
+      "object": "chunk_infected_outskirts.002",
+      "identity": "Interrupted infected_outskirts / composition 3",
+      "range": 15.34452545987724
+    },
+    {
+      "object": "chunk_low_lava_terrain",
+      "identity": "Interrupted low_lava_terrain / composition 0",
+      "range": 26.653583984375
+    },
+    {
+      "object": "chunk_low_lava_terrain.001",
+      "identity": "Interrupted low_lava_terrain / composition 1",
+      "range": 26.653583984375
+    },
+    {
+      "object": "chunk_open_ashland",
+      "identity": "Interrupted open_ashland / composition 2",
+      "range": 30.90254699707031
+    },
+    {
+      "object": "chunk_open_ashland.001",
+      "identity": "Interrupted open_ashland / composition 3",
+      "range": 30.90254699707031
+    },
+    {
+      "object": "chunk_open_ashland.002",
+      "identity": "Interrupted open_ashland / composition 0",
+      "range": 30.90254699707031
+    },
+    {
+      "object": "chunk_ruined_outskirts",
+      "identity": "Interrupted ruined_outskirts / composition 1",
+      "range": 11.081469027454286
+    },
+    {
+      "object": "chunk_ruined_outskirts.001",
+      "identity": "Interrupted ruined_outskirts / composition 2",
+      "range": 7.983826782329545
+    },
+    {
+      "object": "chunk_ruined_outskirts.002",
+      "identity": "Interrupted ruined_outskirts / composition 3",
+      "range": 9.65728695670914
+    }
+  ],
+  "backdrop": "Conforming external land, excludes all occupied kit footprints; not runtime scenery logic.",
+  "ruins": [
+    {
+      "root": "combat_fortress_gateworks_ORIGIN",
+      "archetype": "collapsed_gateway"
+    },
+    {
+      "root": "combat_wasteland_broken_road_ORIGIN",
+      "archetype": "collapsed_gateway"
+    },
+    {
+      "root": "path_fortress_causeway_ORIGIN",
+      "archetype": "broken_stair"
+    },
+    {
+      "root": "path_wasteland_fault_ORIGIN",
+      "archetype": "shattered_barricade"
+    },
+    {
+      "root": "side_wasteland_shrine_ORIGIN",
+      "archetype": "buried_foundation"
+    },
+    {
+      "root": "elevated_shelf_LOCAL_ORIGIN",
+      "archetype": "split_facade"
+    },
+    {
+      "root": "ring_origin_-1_1",
+      "archetype": "toppled_wall_mass"
+    },
+    {
+      "root": "ring_origin_1_1",
+      "archetype": "burned_structure"
+    },
+    {
+      "root": "ring_origin_2_1",
+      "archetype": "snapped_corner"
+    },
+    {
+      "root": "fortress_silhouette_LOCAL_ORIGIN",
+      "archetype": "collapsed_gateway"
+    },
+    {
+      "root": "ring_origin_-1_2",
+      "archetype": "broken_stair"
+    },
+    {
+      "root": "ring_origin_-1_3",
+      "archetype": "shattered_barricade"
+    },
+    {
+      "root": "ring_origin_0_3",
+      "archetype": "buried_foundation"
+    },
+    {
+      "root": "ring_origin_1_2",
+      "archetype": "split_facade"
+    },
+    {
+      "root": "ring_origin_1_3",
+      "archetype": "toppled_wall_mass"
+    },
+    {
+      "root": "infected_outskirts_LOCAL_ORIGIN",
+      "archetype": "burned_structure"
+    },
+    {
+      "root": "ring_origin_-1_0",
+      "archetype": "snapped_corner"
+    },
+    {
+      "root": "ring_origin_2_-1",
+      "archetype": "collapsed_gateway"
+    },
+    {
+      "root": "ruined_outskirts_LOCAL_ORIGIN",
+      "archetype": "broken_stair"
+    },
+    {
+      "root": "ring_origin_-1_-1",
+      "archetype": "shattered_barricade"
+    },
+    {
+      "root": "ring_origin_0_-3",
+      "archetype": "buried_foundation"
+    }
+  ],
+  "basalt": [
+    {
+      "root": "combat_fortress_gateworks_ORIGIN",
+      "archetype": "fractured_wall"
+    },
+    {
+      "root": "combat_wasteland_broken_road_ORIGIN",
+      "archetype": "broken_cluster"
+    },
+    {
+      "root": "entry_wasteland_waystone_ORIGIN",
+      "archetype": "stump_field"
+    },
+    {
+      "root": "path_fortress_causeway_ORIGIN",
+      "archetype": "buried_column_line"
+    },
+    {
+      "root": "path_wasteland_fault_ORIGIN",
+      "archetype": "shattered_ridge"
+    },
+    {
+      "root": "side_wasteland_shrine_ORIGIN",
+      "archetype": "leaning_outcrop"
+    },
+    {
+      "root": "broken_ridge_shelf_LOCAL_ORIGIN",
+      "archetype": "shelf_support"
+    },
+    {
+      "root": "ring_origin_1_-3",
+      "archetype": "collapsed_fan"
+    },
+    {
+      "root": "elevated_shelf_LOCAL_ORIGIN",
+      "archetype": "fractured_wall"
+    },
+    {
+      "root": "ring_origin_-1_1",
+      "archetype": "broken_cluster"
+    },
+    {
+      "root": "ring_origin_1_1",
+      "archetype": "stump_field"
+    },
+    {
+      "root": "ring_origin_2_1",
+      "archetype": "buried_column_line"
+    },
+    {
+      "root": "fortress_silhouette_LOCAL_ORIGIN",
+      "archetype": "shattered_ridge"
+    },
+    {
+      "root": "ring_origin_-1_2",
+      "archetype": "leaning_outcrop"
+    },
+    {
+      "root": "ring_origin_-1_3",
+      "archetype": "shelf_support"
+    },
+    {
+      "root": "ring_origin_0_3",
+      "archetype": "collapsed_fan"
+    },
+    {
+      "root": "ring_origin_1_2",
+      "archetype": "fractured_wall"
+    },
+    {
+      "root": "ring_origin_1_3",
+      "archetype": "broken_cluster"
+    },
+    {
+      "root": "low_lava_terrain_LOCAL_ORIGIN",
+      "archetype": "stump_field"
+    },
+    {
+      "root": "ring_origin_2_0",
+      "archetype": "buried_column_line"
+    }
+  ],
+  "heat_features": [
+    {
+      "root": "entry_wasteland_waystone_ORIGIN",
+      "type": "tiny_heat_crack",
+      "half_width": 0.16,
+      "length": 15.12899020449196
+    },
+    {
+      "root": "path_wasteland_fault_ORIGIN",
+      "type": "medium_heat_crack",
+      "half_width": 0.6,
+      "length": 39.31825218735118
+    },
+    {
+      "root": "combat_wasteland_broken_road_ORIGIN",
+      "type": "narrow_lava_seam",
+      "half_width": 1.25,
+      "length": 48.41944025494253
+    },
+    {
+      "root": "path_fortress_causeway_ORIGIN",
+      "type": "buried_heat_vent",
+      "half_width": 0.85,
+      "length": 24.413029764030824
+    },
+    {
+      "root": "side_wasteland_shrine_ORIGIN",
+      "type": "small_molten_pocket",
+      "half_width": 2.6,
+      "length": 17.53650576834548
+    },
+    {
+      "root": "combat_fortress_gateworks_ORIGIN",
+      "type": "one_sided_fissure",
+      "half_width": 2.2,
+      "length": 52.866713380103405
+    },
+    {
+      "root": "path_wasteland_fault_ORIGIN",
+      "type": "contained_channel",
+      "retained_geometry": true
+    },
+    {
+      "root": "side_wasteland_shrine_ORIGIN",
+      "type": "small_molten_pocket",
+      "retained_geometry": true
+    },
+    {
+      "root": "ring_origin_2_0",
+      "type": "broad_basin",
+      "retained_geometry": true
+    },
+    {
+      "root": "ring_origin_-1_0",
+      "type": "buried_heat_vent",
+      "half_width": 0.8,
+      "length": 24.64556723906345
+    }
+  ],
+  "flora": {
+    "states": 4,
+    "variants": 8,
+    "count_before": 54,
+    "count_after": 54,
+    "placements_by_state": {
+      "healthy": 6,
+      "early": 19,
+      "partial": 22,
+      "corrupted": 7
+    }
+  },
+  "join_checks": [
+    {
+      "pair": [
+        "chunk_entry_wasteland_waystone",
+        "chunk_path_wasteland_fault"
+      ],
+      "max_gap": 0.0
+    },
+    {
+      "pair": [
+        "chunk_entry_wasteland_waystone",
+        "chunk_ash_faultland.001"
+      ],
+      "max_gap": 2.7567148208618164e-07
+    },
+    {
+      "pair": [
+        "chunk_entry_wasteland_waystone",
+        "chunk_ruined_outskirts.002"
+      ],
+      "max_gap": 6.51925802230835e-09
+    },
+    {
+      "pair": [
+        "chunk_entry_wasteland_waystone",
+        "chunk_open_ashland.002"
+      ],
+      "max_gap": 2.7194619178771973e-07
+    },
+    {
+      "pair": [
+        "chunk_path_wasteland_fault",
+        "chunk_combat_wasteland_broken_road"
+      ],
+      "max_gap": 0.0
+    },
+    {
+      "pair": [
+        "chunk_path_wasteland_fault",
+        "chunk_ruined_outskirts.001"
+      ],
+      "max_gap": 2.8312206268310547e-07
+    },
+    {
+      "pair": [
+        "chunk_path_wasteland_fault",
+        "chunk_ash_faultland.002"
+      ],
+      "max_gap": 0.0
+    },
+    {
+      "pair": [
+        "chunk_combat_wasteland_broken_road",
+        "chunk_side_wasteland_shrine"
+      ],
+      "max_gap": 5.960464477539063e-08
+    },
+    {
+      "pair": [
+        "chunk_combat_wasteland_broken_road",
+        "chunk_path_fortress_causeway"
+      ],
+      "max_gap": 8.940696716308594e-07
+    },
+    {
+      "pair": [
+        "chunk_combat_wasteland_broken_road",
+        "chunk_infected_outskirts.001"
+      ],
+      "max_gap": 5.960464477539063e-08
+    },
+    {
+      "pair": [
+        "chunk_side_wasteland_shrine",
+        "chunk_ash_faultland.002"
+      ],
+      "max_gap": 3.5762786865234375e-07
+    },
+    {
+      "pair": [
+        "chunk_side_wasteland_shrine",
+        "chunk_elevated_shelf.002"
+      ],
+      "max_gap": 9.238719940185547e-07
+    },
+    {
+      "pair": [
+        "chunk_side_wasteland_shrine",
+        "chunk_low_lava_terrain.001"
+      ],
+      "max_gap": 5.960464477539063e-08
+    },
+    {
+      "pair": [
+        "chunk_path_fortress_causeway",
+        "chunk_combat_fortress_gateworks"
+      ],
+      "max_gap": 3.814697265625e-06
+    },
+    {
+      "pair": [
+        "chunk_path_fortress_causeway",
+        "chunk_elevated_shelf.001"
+      ],
+      "max_gap": 0.0
+    },
+    {
+      "pair": [
+        "chunk_path_fortress_causeway",
+        "chunk_elevated_shelf.002"
+      ],
+      "max_gap": 0.0
+    },
+    {
+      "pair": [
+        "chunk_combat_fortress_gateworks",
+        "chunk_fortress_silhouette.001"
+      ],
+      "max_gap": 0.0
+    },
+    {
+      "pair": [
+        "chunk_combat_fortress_gateworks",
+        "chunk_fortress_silhouette.003"
+      ],
+      "max_gap": 0.0
+    },
+    {
+      "pair": [
+        "chunk_combat_fortress_gateworks",
+        "chunk_fortress_silhouette.004"
+      ],
+      "max_gap": 0.0
+    },
+    {
+      "pair": [
+        "chunk_open_ashland.001",
+        "chunk_ash_faultland.001"
+      ],
+      "max_gap": 2.384185791015625e-07
+    },
+    {
+      "pair": [
+        "chunk_open_ashland.001",
+        "chunk_ruined_outskirts.002"
+      ],
+      "max_gap": 0.0
+    },
+    {
+      "pair": [
+        "chunk_ash_faultland.001",
+        "chunk_ruined_outskirts.001"
+      ],
+      "max_gap": 2.60770320892334e-08
+    },
+    {
+      "pair": [
+        "chunk_ruined_outskirts.001",
+        "chunk_infected_outskirts.001"
+      ],
+      "max_gap": 3.5762786865234375e-07
+    },
+    {
+      "pair": [
+        "chunk_infected_outskirts.001",
+        "chunk_elevated_shelf.001"
+      ],
+      "max_gap": 1.0728836059570312e-06
+    },
+    {
+      "pair": [
+        "chunk_elevated_shelf.001",
+        "chunk_fortress_silhouette.001"
+      ],
+      "max_gap": 3.814697265625e-06
+    },
+    {
+      "pair": [
+        "chunk_fortress_silhouette.001",
+        "chunk_fortress_silhouette.002"
+      ],
+      "max_gap": 3.814697265625e-06
+    },
+    {
+      "pair": [
+        "chunk_fortress_silhouette.002",
+        "chunk_fortress_silhouette.003"
+      ],
+      "max_gap": 3.814697265625e-06
+    },
+    {
+      "pair": [
+        "chunk_ruined_outskirts.002",
+        "chunk_broken_ridge_shelf.001"
+      ],
+      "max_gap": 5.438923835754395e-07
+    },
+    {
+      "pair": [
+        "chunk_fortress_silhouette.003",
+        "chunk_fortress_silhouette.005"
+      ],
+      "max_gap": 0.0
+    },
+    {
+      "pair": [
+        "chunk_broken_ridge_shelf.001",
+        "chunk_open_ashland.002"
+      ],
+      "max_gap": 4.470348358154297e-07
+    },
+    {
+      "pair": [
+        "chunk_open_ashland.002",
+        "chunk_ash_faultland.002"
+      ],
+      "max_gap": 2.60770320892334e-08
+    },
+    {
+      "pair": [
+        "chunk_ash_faultland.002",
+        "chunk_infected_outskirts.002"
+      ],
+      "max_gap": 2.086162567138672e-07
+    },
+    {
+      "pair": [
+        "chunk_elevated_shelf.002",
+        "chunk_fortress_silhouette.004"
+      ],
+      "max_gap": 3.814697265625e-06
+    },
+    {
+      "pair": [
+        "chunk_elevated_shelf.002",
+        "chunk_elevated_shelf.003"
+      ],
+      "max_gap": 0.0
+    },
+    {
+      "pair": [
+        "chunk_fortress_silhouette.004",
+        "chunk_fortress_silhouette.005"
+      ],
+      "max_gap": 3.814697265625e-06
+    },
+    {
+      "pair": [
+        "chunk_infected_outskirts.002",
+        "chunk_low_lava_terrain.001"
+      ],
+      "max_gap": 4.172325134277344e-07
+    },
+    {
+      "pair": [
+        "chunk_low_lava_terrain.001",
+        "chunk_elevated_shelf.003"
+      ],
+      "max_gap": 8.940696716308594e-07
+    }
+  ],
+  "origins_exact": true,
+  "after": {
+    "mesh_objects": 340,
+    "evaluated_triangles": 141392,
+    "flora_count": 54,
+    "flora_average_scale": 0.5915686079749355,
+    "flora_max_height": 2.451190948486328
+  },
+  "heat_types": [
+    "tiny_heat_crack",
+    "medium_heat_crack",
+    "narrow_lava_seam",
+    "buried_heat_vent",
+    "small_molten_pocket",
+    "one_sided_fissure",
+    "contained_channel",
+    "broad_basin"
+  ],
+  "ruin_types": [
+    "broken_stair",
+    "buried_foundation",
+    "burned_structure",
+    "collapsed_gateway",
+    "shattered_barricade",
+    "snapped_corner",
+    "split_facade",
+    "toppled_wall_mass"
+  ],
+  "basalt_types": [
+    "broken_cluster",
+    "buried_column_line",
+    "collapsed_fan",
+    "fractured_wall",
+    "leaning_outcrop",
+    "shattered_ridge",
+    "shelf_support",
+    "stump_field"
+  ],
+  "closed_mesh_checks": [
+    {
+      "object": "chunk_combat_fortress_gateworks",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_combat_wasteland_broken_road",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_entry_wasteland_waystone",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_path_fortress_causeway",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_path_wasteland_fault",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_side_wasteland_shrine",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_ash_faultland",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_ash_faultland.001",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_ash_faultland.002",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_broken_ridge_shelf",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_broken_ridge_shelf.001",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_elevated_shelf",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_elevated_shelf.001",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_elevated_shelf.002",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_elevated_shelf.003",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_fortress_silhouette",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_fortress_silhouette.001",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_fortress_silhouette.002",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_fortress_silhouette.003",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_fortress_silhouette.004",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_fortress_silhouette.005",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_infected_outskirts",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_infected_outskirts.001",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_infected_outskirts.002",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_low_lava_terrain",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_low_lava_terrain.001",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_open_ashland",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_open_ashland.001",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_open_ashland.002",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_ruined_outskirts",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_ruined_outskirts.001",
+      "nonmanifold_edges": 0
+    },
+    {
+      "object": "chunk_ruined_outskirts.002",
+      "nonmanifold_edges": 0
+    }
+  ],
+  "scene_objects": 531,
+  "collections": {
+    "ash_faultland_FLORA_NONSOLID": 2,
+    "ash_faultland_SOLID_DECOR": 0,
+    "broken_ridge_shelf_FLORA_NONSOLID": 2,
+    "broken_ridge_shelf_SOLID_DECOR": 0,
+    "Cameras_Lights_Scale_REVIEW_ONLY": 66,
+    "combat_fortress_gateworks": 22,
+    "combat_fortress_gateworks_FLORA_NONSOLID": 4,
+    "combat_fortress_gateworks_SOLID_DECOR": 3,
+    "combat_wasteland_broken_road": 17,
+    "combat_wasteland_broken_road_FLORA_NONSOLID": 4,
+    "combat_wasteland_broken_road_SOLID_DECOR": 4,
+    "DistantGround_REVIEW_ONLY": 19,
+    "elevated_shelf_FLORA_NONSOLID": 2,
+    "elevated_shelf_SOLID_DECOR": 0,
+    "entry_wasteland_waystone": 12,
+    "entry_wasteland_waystone_FLORA_NONSOLID": 3,
+    "entry_wasteland_waystone_SOLID_DECOR": 2,
+    "FloraInfection_SOURCE_ONLY": 8,
+    "fortress_silhouette_FLORA_NONSOLID": 2,
+    "fortress_silhouette_SOLID_DECOR": 0,
+    "infected_outskirts_FLORA_NONSOLID": 2,
+    "infected_outskirts_SOLID_DECOR": 0,
+    "low_lava_terrain_FLORA_NONSOLID": 2,
+    "low_lava_terrain_SOLID_DECOR": 0,
+    "open_ashland_FLORA_NONSOLID": 1,
+    "open_ashland_SOLID_DECOR": 0,
+    "path_fortress_causeway": 27,
+    "path_fortress_causeway_FLORA_NONSOLID": 3,
+    "path_fortress_causeway_SOLID_DECOR": 4,
+    "path_wasteland_fault": 17,
+    "path_wasteland_fault_FLORA_NONSOLID": 3,
+    "path_wasteland_fault_SOLID_DECOR": 1,
+    "Playable_6_FOUNDATION_STUDY": 0,
+    "ReuseLibrary_SOURCE_ONLY": 16,
+    "ring_-1_-1_ruined_outskirts": 9,
+    "ring_-1_-2_ash_faultland": 4,
+    "ring_-1_-3_open_ashland": 3,
+    "ring_-1_0_infected_outskirts": 11,
+    "ring_-1_1_elevated_shelf": 13,
+    "ring_-1_2_fortress_silhouette": 17,
+    "ring_-1_3_fortress_silhouette": 13,
+    "ring_0_-3_ruined_outskirts": 9,
+    "ring_0_3_fortress_silhouette": 13,
+    "ring_1_-1_ash_faultland": 4,
+    "ring_1_-2_open_ashland": 3,
+    "ring_1_-3_broken_ridge_shelf": 8,
+    "ring_1_1_elevated_shelf": 16,
+    "ring_1_2_fortress_silhouette": 16,
+    "ring_1_3_fortress_silhouette": 13,
+    "ring_2_-1_infected_outskirts": 10,
+    "ring_2_0_low_lava_terrain": 14,
+    "ring_2_1_elevated_shelf": 15,
+    "ruined_outskirts_FLORA_NONSOLID": 2,
+    "ruined_outskirts_SOLID_DECOR": 0,
+    "Scenery_8_SOURCE_LIBRARY": 0,
+    "scenery_ash_faultland": 2,
+    "scenery_broken_ridge_shelf": 6,
+    "scenery_elevated_shelf": 14,
+    "scenery_fortress_silhouette": 12,
+    "scenery_infected_outskirts": 8,
+    "scenery_low_lava_terrain": 12,
+    "scenery_open_ashland": 2,
+    "scenery_ruined_outskirts": 11,
+    "SceneryRing_REVIEW_ONLY": 0,
+    "side_wasteland_shrine": 16,
+    "side_wasteland_shrine_FLORA_NONSOLID": 3,
+    "side_wasteland_shrine_SOLID_DECOR": 4
+  },
+  "chunk_dimensions": [
+    256,
+    256
+  ],
+  "persistent_elevation_delta": 56,
+  "playable_center_datums": {
+    "entry_wasteland_waystone": -3.0517578125e-05,
+    "path_wasteland_fault": -3.0517578125e-05,
+    "combat_wasteland_broken_road": -3.0517578125e-05,
+    "side_wasteland_shrine": -3.0517578125e-05,
+    "path_fortress_causeway": -3.0517578125e-05,
+    "combat_fortress_gateworks": -3.0517578125e-05
+  },
+  "origins": {
+    "entry_wasteland_waystone_ORIGIN": [
+      0.0,
+      -512.0,
+      0.0
+    ],
+    "path_wasteland_fault_ORIGIN": [
+      0.0,
+      -256.0,
+      0.0
+    ],
+    "combat_wasteland_broken_road_ORIGIN": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "side_wasteland_shrine_ORIGIN": [
+      256.0,
+      0.0,
+      0.0
+    ],
+    "path_fortress_causeway_ORIGIN": [
+      0.0,
+      256.0,
+      28.0
+    ],
+    "combat_fortress_gateworks_ORIGIN": [
+      0.0,
+      512.0,
+      56.0
+    ],
+    "open_ashland_LOCAL_ORIGIN": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "ruined_outskirts_LOCAL_ORIGIN": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "broken_ridge_shelf_LOCAL_ORIGIN": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "low_lava_terrain_LOCAL_ORIGIN": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "ash_faultland_LOCAL_ORIGIN": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "infected_outskirts_LOCAL_ORIGIN": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "fortress_silhouette_LOCAL_ORIGIN": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "elevated_shelf_LOCAL_ORIGIN": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "ring_origin_-1_-3": [
+      -256.0,
+      -768.0,
+      0.0
+    ],
+    "ring_origin_-1_-2": [
+      -256.0,
+      -512.0,
+      0.0
+    ],
+    "ring_origin_-1_-1": [
+      -256.0,
+      -256.0,
+      0.0
+    ],
+    "ring_origin_-1_0": [
+      -256.0,
+      0.0,
+      0.0
+    ],
+    "ring_origin_-1_1": [
+      -256.0,
+      256.0,
+      28.0
+    ],
+    "ring_origin_-1_2": [
+      -256.0,
+      512.0,
+      56.0
+    ],
+    "ring_origin_-1_3": [
+      -256.0,
+      768.0,
+      56.0
+    ],
+    "ring_origin_0_-3": [
+      0.0,
+      -768.0,
+      0.0
+    ],
+    "ring_origin_0_3": [
+      0.0,
+      768.0,
+      56.0
+    ],
+    "ring_origin_1_-3": [
+      256.0,
+      -768.0,
+      0.0
+    ],
+    "ring_origin_1_-2": [
+      256.0,
+      -512.0,
+      0.0
+    ],
+    "ring_origin_1_-1": [
+      256.0,
+      -256.0,
+      0.0
+    ],
+    "ring_origin_1_1": [
+      256.0,
+      256.0,
+      28.0
+    ],
+    "ring_origin_1_2": [
+      256.0,
+      512.0,
+      56.0
+    ],
+    "ring_origin_1_3": [
+      256.0,
+      768.0,
+      56.0
+    ],
+    "ring_origin_2_-1": [
+      512.0,
+      -256.0,
+      0.0
+    ],
+    "ring_origin_2_0": [
+      512.0,
+      0.0,
+      0.0
+    ],
+    "ring_origin_2_1": [
+      512.0,
+      256.0,
+      28.0
+    ],
+    "horizon_shelf_origin": [
+      -1200.0,
+      1214.98876953125,
+      -18.0
+    ],
+    "horizon_shelf_origin.001": [
+      -880.0,
+      1361.279296875,
+      -18.0
+    ],
+    "horizon_shelf_origin.002": [
+      -560.0,
+      1263.5948486328125,
+      -18.0
+    ],
+    "horizon_shelf_origin.003": [
+      -240.0,
+      1266.50830078125,
+      -18.0
+    ],
+    "horizon_shelf_origin.004": [
+      80.0,
+      1215.1292724609375,
+      -18.0
+    ],
+    "horizon_shelf_origin.005": [
+      400.0,
+      1354.716796875,
+      -18.0
+    ],
+    "horizon_shelf_origin.006": [
+      720.0,
+      1318.481689453125,
+      -18.0
+    ],
+    "horizon_shelf_origin.007": [
+      1040.0,
+      1292.9342041015625,
+      -18.0
+    ],
+    "horizon_shelf_origin.008": [
+      1360.0,
+      1376.5494384765625,
+      -18.0
+    ]
+  },
+  "visible_terrain_counts": [
+    {
+      "object": "chunk_entry_wasteland_waystone",
+      "triangles": 3312
+    },
+    {
+      "object": "chunk_path_wasteland_fault",
+      "triangles": 3068
+    },
+    {
+      "object": "chunk_combat_wasteland_broken_road",
+      "triangles": 3220
+    },
+    {
+      "object": "chunk_side_wasteland_shrine",
+      "triangles": 3194
+    },
+    {
+      "object": "chunk_path_fortress_causeway",
+      "triangles": 3166
+    },
+    {
+      "object": "chunk_combat_fortress_gateworks",
+      "triangles": 3102
+    },
+    {
+      "object": "chunk_open_ashland.001",
+      "triangles": 3312
+    },
+    {
+      "object": "chunk_ash_faultland.001",
+      "triangles": 2946
+    },
+    {
+      "object": "chunk_ruined_outskirts.001",
+      "triangles": 3086
+    },
+    {
+      "object": "chunk_infected_outskirts.001",
+      "triangles": 3096
+    },
+    {
+      "object": "chunk_elevated_shelf.001",
+      "triangles": 2960
+    },
+    {
+      "object": "chunk_fortress_silhouette.001",
+      "triangles": 2974
+    },
+    {
+      "object": "chunk_fortress_silhouette.002",
+      "triangles": 2872
+    },
+    {
+      "object": "chunk_ruined_outskirts.002",
+      "triangles": 2946
+    },
+    {
+      "object": "chunk_fortress_silhouette.003",
+      "triangles": 3086
+    },
+    {
+      "object": "chunk_broken_ridge_shelf.001",
+      "triangles": 3096
+    },
+    {
+      "object": "chunk_open_ashland.002",
+      "triangles": 3328
+    },
+    {
+      "object": "chunk_ash_faultland.002",
+      "triangles": 2964
+    },
+    {
+      "object": "chunk_elevated_shelf.002",
+      "triangles": 2882
+    },
+    {
+      "object": "chunk_fortress_silhouette.004",
+      "triangles": 2946
+    },
+    {
+      "object": "chunk_fortress_silhouette.005",
+      "triangles": 2964
+    },
+    {
+      "object": "chunk_infected_outskirts.002",
+      "triangles": 2934
+    },
+    {
+      "object": "chunk_low_lava_terrain.001",
+      "triangles": 3138
+    },
+    {
+      "object": "chunk_elevated_shelf.003",
+      "triangles": 3086
+    }
+  ],
+  "assessment": {
+    "terrain": "Stronger differentiated local silhouettes and rise/fall, without repeated longitudinal ribbon channels. Some scenery still shares polygonal stepped shelf syntax.",
+    "seams": "No open gaps in current assembled border stations; baseline/raised player-eye route joins no longer show a hard handoff. Broad slope shading and scenery shoulder rhythm can still expose modular composition from above.",
+    "identity": "Recent ruins, black takeover pockets, integrated basalt and smoke add local identity. Fully heat-muted distant overview still has plain ash areas and coarse polygonal landmarks; not a final art acceptance.",
+    "studio_ready": false,
+    "next_gate": "Owner Blender review; resolve any identified scenery composition/ash plainness before simple walk-collision and generic vertical socket preparation. No Studio import in this pass.",
+    "collision": "Broad hidden route/ramp and combat apron needed; simplify cracks, shelves, stairs and lava banks. No collider authoring or traversal validation."
+  }
+}

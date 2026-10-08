@@ -1,0 +1,114 @@
+[
+  {
+    "image": "seam_eye_1_N.png",
+    "chunk": "chunk_entry_ash_plain",
+    "side": "N",
+    "neighbor": "path_column_pass",
+    "eye_height_above_authored_floor": 4.5
+  },
+  {
+    "image": "seam_eye_1_E.png",
+    "chunk": "chunk_entry_ash_plain",
+    "side": "E",
+    "neighbor": "local scenery",
+    "eye_height_above_authored_floor": 4.5
+  },
+  {
+    "image": "seam_eye_1_S.png",
+    "chunk": "chunk_entry_ash_plain",
+    "side": "S",
+    "neighbor": "local scenery",
+    "eye_height_above_authored_floor": 4.5
+  },
+  {
+    "image": "seam_eye_1_W.png",
+    "chunk": "chunk_entry_ash_plain",
+    "side": "W",
+    "neighbor": "local scenery",
+    "eye_height_above_authored_floor": 4.5
+  },
+  {
+    "image": "seam_eye_2_N.png",
+    "chunk": "path_column_pass",
+    "side": "N",
+    "neighbor": "chunk_column_forest",
+    "eye_height_above_authored_floor": 4.5
+  },
+  {
+    "image": "seam_eye_2_E.png",
+    "chunk": "path_column_pass",
+    "side": "E",
+    "neighbor": "local scenery",
+    "eye_height_above_authored_floor": 4.5
+  },
+  {
+    "image": "seam_eye_2_W.png",
+    "chunk": "path_column_pass",
+    "side": "W",
+    "neighbor": "local scenery",
+    "eye_height_above_authored_floor": 4.5
+  },
+  {
+    "image": "seam_eye_3_N.png",
+    "chunk": "chunk_column_forest",
+    "side": "N",
+    "neighbor": "cap_collapsed_pass",
+    "eye_height_above_authored_floor": 4.5
+  },
+  {
+    "image": "seam_eye_3_E.png",
+    "chunk": "chunk_column_forest",
+    "side": "E",
+    "neighbor": "side_lava_overlook",
+    "eye_height_above_authored_floor": 4.5
+  },
+  {
+    "image": "seam_eye_3_W.png",
+    "chunk": "chunk_column_forest",
+    "side": "W",
+    "neighbor": "local scenery",
+    "eye_height_above_authored_floor": 4.5
+  },
+  {
+    "image": "seam_eye_4_N.png",
+    "chunk": "side_lava_overlook",
+    "side": "N",
+    "neighbor": "local scenery",
+    "eye_height_above_authored_floor": 4.5
+  },
+  {
+    "image": "seam_eye_4_E.png",
+    "chunk": "side_lava_overlook",
+    "side": "E",
+    "neighbor": "local scenery",
+    "eye_height_above_authored_floor": 4.5
+  },
+  {
+    "image": "seam_eye_4_S.png",
+    "chunk": "side_lava_overlook",
+    "side": "S",
+    "neighbor": "local scenery",
+    "eye_height_above_authored_floor": 4.5
+  },
+  {
+    "image": "seam_eye_5_N.png",
+    "chunk": "cap_collapsed_pass",
+    "side": "N",
+    "neighbor": "local scenery",
+    "eye_height_above_authored_floor": 4.5
+  },
+  {
+    "image": "seam_eye_5_E.png",
+    "chunk": "cap_collapsed_pass",
+    "side": "E",
+    "neighbor": "local scenery",
+    "eye_height_above_authored_floor": 4.5
+  },
+  {
+    "image": "seam_eye_5_W.png",
+    "chunk": "cap_collapsed_pass",
+    "side": "W",
+    "neighbor": "local scenery",
+    "eye_height_above_authored_floor": 4.5
+  }
+]

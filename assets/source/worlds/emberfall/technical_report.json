@@ -1,0 +1,428 @@
+{
+  "units": "one metre = one stud",
+  "BlenderVersion": "5.2.2 LTS",
+  "chunks": [
+    {
+      "name": "chunk_entry_ash_plain",
+      "role": "ENTRY",
+      "design": "Calm windswept ash shelf; one split blackstone fin catches an ash drift. Almost no nearby heat.",
+      "mesh_objects": 6,
+      "all_objects": 7,
+      "structure_triangles": 3278,
+      "total_mesh_triangles": 4898,
+      "dimensions_xyz": [
+        256.0,
+        256.0,
+        52.372
+      ],
+      "bounds_local": [
+        [
+          -128.0,
+          -128.0,
+          -24.0
+        ],
+        [
+          128.0,
+          128.0,
+          28.372072219848633
+        ]
+      ],
+      "authored_origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "review_translation": [
+        0.0,
+        -256.0,
+        0.0
+      ],
+      "socket_probes": [
+        {
+          "side": "N",
+          "sample_count": 20,
+          "width_studs": 56,
+          "buffer_studs": 16,
+          "actual_floor_min": 0.0,
+          "actual_floor_max": 0.0,
+          "not_level_samples": 0
+        }
+      ],
+      "boundary_crossings": [],
+      "gently_sloped_upward_surface_projected_area": 65536.0,
+      "combat_clear_hub": null,
+      "collections": {
+        "chunk_entry_ash_plain_Structure": [
+          "chunk_entry_ash_plain"
+        ],
+        "chunk_entry_ash_plain_Props_Solid": [
+          "prop_chunk_entry_ash_plain_solid"
+        ],
+        "chunk_entry_ash_plain_Props_NonSolid": [
+          "prop_lava_hairline",
+          "prop_drained_wax_rosette_placement",
+          "prop_drained_seed_shrub_placement",
+          "prop_drained_wax_rosette_placement.001"
+        ]
+      },
+      "flora_assets": [
+        "prop_drained_seed_shrub",
+        "prop_drained_wax_rosette"
+      ],
+      "ambient_lava_surface_area": 7.38
+    },
+    {
+      "name": "path_column_pass",
+      "role": "PATH",
+      "design": "Narrow cool road between monumental jointed basalt walls; one snapped leaning crown and a broad internal rise.",
+      "mesh_objects": 6,
+      "all_objects": 9,
+      "structure_triangles": 9674,
+      "total_mesh_triangles": 12886,
+      "dimensions_xyz": [
+        256.0,
+        256.0,
+        118.909
+      ],
+      "bounds_local": [
+        [
+          -128.0,
+          -128.0,
+          -24.0
+        ],
+        [
+          128.0,
+          128.0,
+          94.90904998779297
+        ]
+      ],
+      "authored_origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "review_translation": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "socket_probes": [
+        {
+          "side": "N",
+          "sample_count": 20,
+          "width_studs": 56,
+          "buffer_studs": 16,
+          "actual_floor_min": 0.0,
+          "actual_floor_max": 0.0,
+          "not_level_samples": 0
+        },
+        {
+          "side": "S",
+          "sample_count": 20,
+          "width_studs": 56,
+          "buffer_studs": 16,
+          "actual_floor_min": 0.0,
+          "actual_floor_max": 0.0,
+          "not_level_samples": 0
+        }
+      ],
+      "boundary_crossings": [],
+      "gently_sloped_upward_surface_projected_area": 54520.0,
+      "combat_clear_hub": null,
+      "collections": {
+        "path_column_pass_Structure": [
+          "path_column_pass"
+        ],
+        "path_column_pass_Props_Solid": [
+          "prop_path_column_pass_solid"
+        ],
+        "path_column_pass_Props_NonSolid": [
+          "prop_low_fissure",
+          "fissure_uplight",
+          "fissure_uplight.001",
+          "prop_charred_ember_rose_placement",
+          "prop_charred_thorn_pod_placement",
+          "prop_drained_seed_shrub_placement.001"
+        ]
+      },
+      "flora_assets": [
+        "prop_charred_ember_rose",
+        "prop_charred_thorn_pod",
+        "prop_drained_seed_shrub"
+      ],
+      "ambient_lava_surface_area": 324.11
+    },
+    {
+      "name": "chunk_column_forest",
+      "role": "COMBAT",
+      "design": "Three combat clearings between asymmetric column groves. Lower cooled basin, main floor, upper flank; radial rather than corridor composition.",
+      "mesh_objects": 7,
+      "all_objects": 8,
+      "structure_triangles": 6778,
+      "total_mesh_triangles": 10364,
+      "dimensions_xyz": [
+        256.0,
+        256.0,
+        72.517
+      ],
+      "bounds_local": [
+        [
+          -128.0,
+          -128.0,
+          -24.0
+        ],
+        [
+          128.0,
+          128.0,
+          48.51697540283203
+        ]
+      ],
+      "authored_origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "review_translation": [
+        0.0,
+        256.0,
+        0.0
+      ],
+      "socket_probes": [
+        {
+          "side": "N",
+          "sample_count": 20,
+          "width_studs": 56,
+          "buffer_studs": 16,
+          "actual_floor_min": 0.0,
+          "actual_floor_max": 0.0,
+          "not_level_samples": 0
+        },
+        {
+          "side": "S",
+          "sample_count": 20,
+          "width_studs": 56,
+          "buffer_studs": 16,
+          "actual_floor_min": 0.0,
+          "actual_floor_max": 0.0,
+          "not_level_samples": 0
+        },
+        {
+          "side": "E",
+          "sample_count": 20,
+          "width_studs": 56,
+          "buffer_studs": 16,
+          "actual_floor_min": 0.0,
+          "actual_floor_max": 0.0,
+          "not_level_samples": 0
+        }
+      ],
+      "boundary_crossings": [],
+      "gently_sloped_upward_surface_projected_area": 53248.0,
+      "combat_clear_hub": {
+        "width": 48,
+        "length": 64,
+        "actual_samples": 25,
+        "floor_range": [
+          -0.1952362060546875,
+          0.0
+        ]
+      },
+      "collections": {
+        "chunk_column_forest_Structure": [
+          "chunk_column_forest"
+        ],
+        "chunk_column_forest_Props_Solid": [
+          "prop_chunk_column_forest_solid"
+        ],
+        "chunk_column_forest_Props_NonSolid": [
+          "prop_basin_heat",
+          "prop_charred_thorn_pod_placement.001",
+          "prop_charred_ember_rose_placement.001",
+          "prop_drained_wax_rosette_placement.002",
+          "prop_drained_seed_shrub_placement.002"
+        ]
+      },
+      "flora_assets": [
+        "prop_charred_ember_rose",
+        "prop_charred_thorn_pod",
+        "prop_drained_seed_shrub",
+        "prop_drained_wax_rosette"
+      ],
+      "ambient_lava_surface_area": 133.92
+    },
+    {
+      "name": "side_lava_overlook",
+      "role": "SIDE",
+      "design": "One west entrance; a broad rising ash trail ends on a high shelf beside a glassy mineral cairn. View over a vast external lava field.",
+      "mesh_objects": 6,
+      "all_objects": 7,
+      "structure_triangles": 3278,
+      "total_mesh_triangles": 5854,
+      "dimensions_xyz": [
+        256.0,
+        256.0,
+        68.193
+      ],
+      "bounds_local": [
+        [
+          -128.0,
+          -128.0,
+          -24.0
+        ],
+        [
+          128.0,
+          128.0,
+          44.19336700439453
+        ]
+      ],
+      "authored_origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "review_translation": [
+        256.0,
+        256.0,
+        0.0
+      ],
+      "socket_probes": [
+        {
+          "side": "W",
+          "sample_count": 20,
+          "width_studs": 56,
+          "buffer_studs": 16,
+          "actual_floor_min": 0.0,
+          "actual_floor_max": 0.0,
+          "not_level_samples": 0
+        }
+      ],
+      "boundary_crossings": [],
+      "gently_sloped_upward_surface_projected_area": 49768.0,
+      "combat_clear_hub": null,
+      "collections": {
+        "side_lava_overlook_Structure": [
+          "side_lava_overlook"
+        ],
+        "side_lava_overlook_Props_Solid": [
+          "prop_side_lava_overlook_solid"
+        ],
+        "side_lava_overlook_Props_NonSolid": [
+          "prop_shelf_wound",
+          "prop_drained_wax_rosette_placement.003",
+          "prop_drained_seed_shrub_placement.003",
+          "prop_charred_ember_rose_placement.002"
+        ]
+      },
+      "flora_assets": [
+        "prop_charred_ember_rose",
+        "prop_drained_seed_shrub",
+        "prop_drained_wax_rosette"
+      ],
+      "ambient_lava_surface_area": 0
+    },
+    {
+      "name": "cap_collapsed_pass",
+      "role": "CAP",
+      "design": "An old road buried beneath oblique fallen columns well inside the boundary. A cold road remnant beyond and ember bloom nook suggest continuation.",
+      "mesh_objects": 5,
+      "all_objects": 6,
+      "structure_triangles": 5618,
+      "total_mesh_triangles": 8744,
+      "dimensions_xyz": [
+        256.0,
+        256.0,
+        90.636
+      ],
+      "bounds_local": [
+        [
+          -128.0,
+          -128.0,
+          -24.0
+        ],
+        [
+          128.0,
+          128.0,
+          66.63587951660156
+        ]
+      ],
+      "authored_origin": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "review_translation": [
+        0.0,
+        512.0,
+        0.0
+      ],
+      "socket_probes": [
+        {
+          "side": "S",
+          "sample_count": 20,
+          "width_studs": 56,
+          "buffer_studs": 16,
+          "actual_floor_min": 0.0,
+          "actual_floor_max": 0.0,
+          "not_level_samples": 0
+        }
+      ],
+      "boundary_crossings": [],
+      "gently_sloped_upward_surface_projected_area": 60032.0,
+      "combat_clear_hub": null,
+      "collections": {
+        "cap_collapsed_pass_Structure": [
+          "cap_collapsed_pass"
+        ],
+        "cap_collapsed_pass_Props_Solid": [
+          "prop_cap_collapsed_pass_solid"
+        ],
+        "cap_collapsed_pass_Props_NonSolid": [
+          "prop_charred_ember_rose_placement.003",
+          "prop_charred_thorn_pod_placement.002",
+          "prop_drained_seed_shrub_placement.004"
+        ]
+      },
+      "flora_assets": [
+        "prop_charred_ember_rose",
+        "prop_charred_thorn_pod",
+        "prop_drained_seed_shrub"
+      ],
+      "ambient_lava_surface_area": 0
+    }
+  ],
+  "issues": [
+    "No Studio export/upload or runtime registration. Missing BOSS is intentional: this is not a boot-valid kit.",
+    "Blender Openings/Supports properties are authoring intent; Studio attribute transfer is not automatic.",
+    "Automatic center-median walk-height probe can misread vertical chunks; explicit Openings recommended on import.",
+    "Multiple structural materials, procedural bump detail and smooth shading are Blender review appearance. Studio color/normal baking and collision decomposition remain unverified.",
+    "No lava damage, loot, boundary system or permanent surrounding-land system implemented.",
+    "Minor ENTRY/SIDE surface seams are visual cooled-crust accents; major PATH/COMBAT molten surfaces sit in recessed ground.",
+    "SIDE origin is the common connection datum, with center carved to that datum; climb reaches eastern upper shelf."
+  ],
+  "flora_library": [
+    {
+      "name": "prop_drained_wax_rosette",
+      "triangles": 216,
+      "solid": false
+    },
+    {
+      "name": "prop_drained_seed_shrub",
+      "triangles": 784,
+      "solid": false
+    },
+    {
+      "name": "prop_charred_ember_rose",
+      "triangles": 912,
+      "solid": false
+    },
+    {
+      "name": "prop_charred_thorn_pod",
+      "triangles": 870,
+      "solid": false
+    }
+  ],
+  "review_surround": {
+    "objects": 32,
+    "mesh_triangles": 11088
+  }
+}

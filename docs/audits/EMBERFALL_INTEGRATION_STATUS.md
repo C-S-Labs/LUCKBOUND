@@ -4,7 +4,7 @@ Base:34f6c1e. Donor:079882b. Branch:integration/emberfall-production.
 
 - Preflight reconciliation: PASS;167 safe donor paths, six document overlaps; no content/runtime conflict.
 - Preservation: PASS;1168 read-only verified backup files;66 relevant dirty entries recorded.
-- Foundation: pending.
+- Foundation: PASS;34 owner proof files/current reference preserved; current grassland design and frozen contract reconciled atop newer main. Historical inputs retained. No geometry/export change.
 - Batch1/2: pending.
 - Fixtures/mappings: pending.
 - AreaII references/plan: pending.
