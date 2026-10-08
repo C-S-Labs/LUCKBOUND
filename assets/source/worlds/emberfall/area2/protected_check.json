@@ -1,0 +1,10 @@
+{
+  "upload_calls": false,
+  "batch1_batch2_source_edits": false,
+  "owner_branch_unchanged": true,
+  "main_ref_unchanged": true,
+  "worker_writes": false,
+  "owner_protected_path_count": 48,
+  "studio_calls": false,
+  "mismatches": []
+}

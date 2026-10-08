@@ -1,0 +1,250 @@
+{
+  "saved_file": "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\EmberfallAreaII.blend",
+  "preserved_original_objects": 397,
+  "preserved_original_geometry_exact": true,
+  "both_variants_final_boss": true,
+  "inner_interface": [
+    0,
+    1005,
+    56
+  ],
+  "floor_probes": {
+    "A": [
+      {
+        "xyz": [
+          0.0,
+          1067.5,
+          69.5
+        ],
+        "hit": true,
+        "object": "ContinuousLand_ReviewOnly",
+        "floor_z": 74.33332824707031
+      },
+      {
+        "xyz": [
+          0.0,
+          1172.0,
+          89.5
+        ],
+        "hit": true,
+        "object": "CastleGrounds_RisingLand",
+        "floor_z": 89.77999877929688
+      },
+      {
+        "xyz": [
+          0.0,
+          1234.5,
+          96.0
+        ],
+        "hit": true,
+        "object": "A_CastleShellGround_EmptyCenter",
+        "floor_z": 96.27738952636719
+      },
+      {
+        "xyz": [
+          -46.0,
+          1255.0,
+          96.0
+        ],
+        "hit": true,
+        "object": "A_CastleShellGround_EmptyCenter",
+        "floor_z": 96.44221496582031
+      },
+      {
+        "xyz": [
+          -92.0,
+          1287.5,
+          96.0
+        ],
+        "hit": true,
+        "object": "A_CastleShellGround_EmptyCenter",
+        "floor_z": 96.8174057006836
+      },
+      {
+        "xyz": [
+          -92.0,
+          1352.5,
+          96.0
+        ],
+        "hit": true,
+        "object": "A_WestGuardHall_Floor",
+        "floor_z": 96.0
+      },
+      {
+        "xyz": [
+          -92.0,
+          1405.0,
+          97.0
+        ],
+        "hit": true,
+        "object": "A_CraterFractureBand",
+        "floor_z": 97.47702026367188
+      },
+      {
+        "xyz": [
+          -122.0,
+          1442.5,
+          99.0
+        ],
+        "hit": true,
+        "object": "A_MasonryDescent_00",
+        "floor_z": 99.25
+      },
+      {
+        "xyz": [
+          -148.0,
+          1505.0,
+          98.0
+        ],
+        "hit": true,
+        "object": "A_MasonryDescent_01",
+        "floor_z": 98.25
+      },
+      {
+        "xyz": [
+          -118.0,
+          1575.0,
+          85.5
+        ],
+        "hit": true,
+        "object": "A_MasonryDescent_02",
+        "floor_z": 85.75
+      },
+      {
+        "xyz": [
+          -67.0,
+          1590.0,
+          66.5
+        ],
+        "hit": true,
+        "object": "A_MasonryDescent_03",
+        "floor_z": 66.75
+      },
+      {
+        "xyz": [
+          -21.0,
+          1562.5,
+          55.0
+        ],
+        "hit": true,
+        "object": "A_MasonryDescent_04",
+        "floor_z": 55.25
+      }
+    ],
+    "B": [
+      {
+        "xyz": [
+          0.0,
+          1067.5,
+          69.5
+        ],
+        "hit": true,
+        "object": "ContinuousLand_ReviewOnly",
+        "floor_z": 74.33332824707031
+      },
+      {
+        "xyz": [
+          0.0,
+          1180.0,
+          89.5
+        ],
+        "hit": true,
+        "object": "CastleGrounds_RisingLand",
+        "floor_z": 91.16666412353516
+      },
+      {
+        "xyz": [
+          30.0,
+          1255.0,
+          96.0
+        ],
+        "hit": true,
+        "object": "B_ArrivalCourtyard",
+        "floor_z": 96.0999984741211
+      },
+      {
+        "xyz": [
+          85.0,
+          1280.0,
+          96.0
+        ],
+        "hit": true,
+        "object": "B_ArrivalCourtyard",
+        "floor_z": 96.0999984741211
+      },
+      {
+        "xyz": [
+          110.0,
+          1320.0,
+          96.0
+        ],
+        "hit": true,
+        "object": "B_EastGuardHall_Floor",
+        "floor_z": 96.0
+      },
+      {
+        "xyz": [
+          110.0,
+          1411.0,
+          103.0
+        ],
+        "hit": true,
+        "object": "B_EastGuardHall_Floor",
+        "floor_z": 96.0
+      },
+      {
+        "xyz": [
+          91.0,
+          1476.0,
+          110.0
+        ],
+        "hit": true,
+        "object": "B_UpperLanding",
+        "floor_z": 110.0
+      },
+      {
+        "xyz": [
+          36.0,
+          1504.0,
+          110.0
+        ],
+        "hit": true,
+        "object": "B_UpperGallery_Floor",
+        "floor_z": 110.0
+      },
+      {
+        "xyz": [
+          0.0,
+          1549.0,
+          110.0
+        ],
+        "hit": true,
+        "object": "B_ArenaVestibule",
+        "floor_z": 110.0
+      },
+      {
+        "xyz": [
+          0.0,
+          1607.5,
+          110.0
+        ],
+        "hit": true,
+        "object": "B_FINAL_ARENA_Hypothesis_Floor",
+        "floor_z": 110.0
+      }
+    ]
+  },
+  "variant_exclusions": {
+    "A": true,
+    "B": true
+  },
+  "finite_geometry": true,
+  "crater_occluded_from_entry_hall": true,
+  "entry_occluder": "A_EntryHall_NWall",
+  "crater_center_floor_z": 52.25,
+  "crater_center_hit_object": "A_MasonryDescent_04",
+  "crater_actual_open_cavity": true,
+  "missing_floor_samples": 0,
+  "named_revision_cameras": true,
+  "initial_proxy_isolated": true
+}

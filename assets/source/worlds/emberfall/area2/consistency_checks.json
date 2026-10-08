@@ -1,0 +1,572 @@
+{
+  "all_surviving_A_architecture_audited": true,
+  "fixed_survivors_actual_B_subset_verified": 140,
+  "fixed_subset_residuals": [
+    {
+      "A": "A_EntryHall_Floor",
+      "outside_actual_B_volume": 2e-06
+    },
+    {
+      "A": "A_EntryHall_NWall",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_SWall",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_SWall.001",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_SOpening_Jamb",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_SOpening_Jamb.001",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_SOpening_ArchSector",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_SOpening_ArchSector.001",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_SOpening_ArchSector.002",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_SOpening_ArchSector.003",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_SOpening_ArchSector.004",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_SOpening_ArchSector.005",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_SOpening_ArchSector.006",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_SOpening_ArchSector.007",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_SOpening_ArchSector.008",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_EWall",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_WWall",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_WWall.001",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_WLintel",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_Pier",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_Pier.001",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_RoofTie",
+      "outside_actual_B_volume": 8e-06
+    },
+    {
+      "A": "A_EntryHall_Pier.002",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_Pier.003",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_RoofTie.001",
+      "outside_actual_B_volume": 6.9e-05
+    },
+    {
+      "A": "A_EntryHall_Pier.004",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_Pier.005",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_RoofTie.002",
+      "outside_actual_B_volume": 6.9e-05
+    },
+    {
+      "A": "A_BrokenGatehouseRoof",
+      "surface_distance_to_B": 1.5e-05
+    },
+    {
+      "A": "A_FracturedFrontCurtain",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_SurvivingCurtainCrown",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_SurvivingCurtainCrown.001",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_SurvivingCurtainCrown.002",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_SurvivingCurtainCrown.003",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_EntryHall_Roof",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_Floor",
+      "outside_actual_B_volume": 1e-06
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_NWall",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_NWall.001",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_NOpening_Jamb",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_NOpening_Jamb.001",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_NOpening_ArchSector",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_NOpening_ArchSector.001",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_NOpening_ArchSector.002",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_NOpening_ArchSector.003",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_NOpening_ArchSector.004",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_NOpening_ArchSector.005",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_NOpening_ArchSector.006",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_NOpening_ArchSector.007",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_NOpening_ArchSector.008",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_SWall",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_EWall",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_WWall",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_WWall.001",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_WLintel",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_Pier",
+      "outside_actual_B_volume": 1.6e-05
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_Pier.001",
+      "outside_actual_B_volume": 1.5e-05
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_RoofTie",
+      "outside_actual_B_volume": 8e-06
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_Pier.002",
+      "outside_actual_B_volume": 1e-06
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_Pier.003",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_RoofTie.001",
+      "outside_actual_B_volume": 8e-06
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_Pier.004",
+      "outside_actual_B_volume": 1.6e-05
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_Pier.005",
+      "outside_actual_B_volume": 1.5e-05
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_RoofTie.002",
+      "outside_actual_B_volume": 8e-06
+    },
+    {
+      "A": "A_From_B_Composed_WestHousehold_Floor",
+      "outside_actual_B_volume": 0.011168
+    },
+    {
+      "A": "A_From_B_Composed_WestHousehold_SWall",
+      "outside_actual_B_volume": 3.1e-05
+    },
+    {
+      "A": "A_From_B_Composed_WestHousehold_SWall.001",
+      "outside_actual_B_volume": 3.1e-05
+    },
+    {
+      "A": "A_From_B_Composed_WestHousehold_EWall",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_WestHousehold_WWall",
+      "outside_actual_B_volume": 4e-06
+    },
+    {
+      "A": "A_From_B_Composed_WestHousehold_Pier",
+      "outside_actual_B_volume": 1.5e-05
+    },
+    {
+      "A": "A_From_B_Composed_WestHousehold_Pier.001",
+      "outside_actual_B_volume": 1.7e-05
+    },
+    {
+      "A": "A_From_B_Composed_WestHousehold_RoofTie",
+      "outside_actual_B_volume": 8e-06
+    },
+    {
+      "A": "A_From_B_Composed_WestHousehold_Pier.002",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_WestHousehold_Pier.003",
+      "outside_actual_B_volume": 2e-06
+    },
+    {
+      "A": "A_From_B_Composed_WestHousehold_Pier.004",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_WestHousehold_Pier.005",
+      "outside_actual_B_volume": 2e-06
+    },
+    {
+      "A": "A_From_B_Composed_TransverseHall_EWall",
+      "outside_actual_B_volume": 2e-06
+    },
+    {
+      "A": "A_From_B_Composed_TransverseHall_WWall",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_ResidentialTower_NWall",
+      "outside_actual_B_volume": 3.1e-05
+    },
+    {
+      "A": "A_From_B_Composed_ResidentialTower_WWall",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_ResidentialTower_Pier",
+      "outside_actual_B_volume": 8e-06
+    },
+    {
+      "A": "A_From_B_Composed_ResidentialTower_Pier.002",
+      "outside_actual_B_volume": 1e-06
+    },
+    {
+      "A": "A_From_B_Composed_ResidentialTower_Pier.004",
+      "outside_actual_B_volume": 2e-06
+    },
+    {
+      "A": "A_From_B_Composed_ResidentialTower_Pier.005",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_KitchenStore_NWall",
+      "outside_actual_B_volume": 3.1e-05
+    },
+    {
+      "A": "A_From_B_Composed_KitchenStore_SWall.001",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_KitchenStore_EWall",
+      "outside_actual_B_volume": 4e-06
+    },
+    {
+      "A": "A_From_B_Composed_KitchenStore_Pier.001",
+      "outside_actual_B_volume": 1.5e-05
+    },
+    {
+      "A": "A_From_B_Composed_KitchenStore_Pier.002",
+      "outside_actual_B_volume": 0.009773
+    },
+    {
+      "A": "A_From_B_Composed_KitchenStore_Pier.003",
+      "outside_actual_B_volume": 1.5e-05
+    },
+    {
+      "A": "A_From_B_Composed_KitchenStore_Pier.004",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_KitchenStore_Pier.005",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_RearKeep_NWall",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_RearKeep_Pier",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_RearKeep_Pier.002",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_RearKeep_Pier.004",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_ArrivalCourt",
+      "outside_actual_B_volume": 4e-06
+    },
+    {
+      "A": "A_From_B_WestPocketCourt",
+      "outside_actual_B_volume": 2e-06
+    },
+    {
+      "A": "A_From_B_EastServiceCourt",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_BossRearWall",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_HouseholdClosedFront",
+      "outside_actual_B_volume": 3.1e-05
+    },
+    {
+      "A": "A_From_B_PRIMARY_INTERIOR_PORTAL_Jamb",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_PRIMARY_INTERIOR_PORTAL_Jamb.001",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_SolidRaisedFoundation_ServiceCourt",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_Composed_EastBarracks_Roof",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_STRUCT_EntrySouthHaunch",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_From_B_STRUCT_BarracksNorthHaunch",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_StairCornerFooting",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_StairTowerGroundedEastCorner",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_StairBrokenSouthReturn",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_StewardWestFracture",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_StewardSouthReturn",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_StewardGroundFloorRemnant",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_HallFrontBrokenCrownLeft",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_HallFrontBrokenCrownRight",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_HallRoofWallSeatedRemnant",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_HouseholdNorthBrokenReturn",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_HouseholdEastBrokenEnd",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_HouseholdUpperRoomFragment",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_HouseholdSurvivingSouthRoof",
+      "outside_actual_B_volume": 0.000263
+    },
+    {
+      "A": "A_ResidentialFracturedFoundation",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_ResidentialBrokenFloor",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_ResidentialSouthCornerReturn",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_ResidentialNorthUpperRoom",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_ResidentialRoofCornerRemnant",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_ResidentialNorthSurvivingCrown",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_ResidentialWestRoofCrown",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_KeepFracturedFoundation",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_BossRearFracturedFoundation",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_BossRearBrokenFloor",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_RearBossWestBrokenWall",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_RearBossEastBrokenWall",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_KeepWestBrokenOuterWall",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_KeepBrokenGroundFloor",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_KeepSouthBrokenUpperReturn",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_KeepUpperFloorNorthRemnant",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_KeepNorthernRoofRemnant",
+      "outside_actual_B_volume": 0.002367
+    },
+    {
+      "A": "A_RearBossRoofWallSeatedRemnant",
+      "outside_actual_B_volume": 0.000514
+    },
+    {
+      "A": "A_KitchenBrokenFloor",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_KitchenWestCornerBroken",
+      "outside_actual_B_volume": 0.0
+    },
+    {
+      "A": "A_KitchenEastSupportedRoof",
+      "outside_actual_B_volume": 0.0
+    }
+  ],
+  "shared_B_geometry_exact": true,
+  "approved_arena_route_exact": true,
+  "no_unmapped_A_architecture": true,
+  "displaced_rubble_identified_separately": true,
+  "post_duplicate_removal_live_coverage_and_preservation_pass": true,
+  "note": "Full geometric audit performed on saved architecture; later removed one duplicate and corrected normals/material slots without moving retained geometry. All retained proofs still covered."
+}

@@ -1,0 +1,206 @@
+{
+  "saved_file": "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\EmberfallAreaII.blend",
+  "shared_preservation_count": 887,
+  "shared_geometry_exact": true,
+  "A_entrance_exact": true,
+  "finite_mesh_coordinates": true,
+  "missing_volume_probes": {
+    "A": [
+      {
+        "hit": true,
+        "object": "A_CraterFractureBand.001",
+        "z": 59.8848876953125
+      },
+      {
+        "hit": true,
+        "object": "A_MasonryDescent_04",
+        "z": 52.25
+      },
+      {
+        "hit": true,
+        "object": "A_CraterFractureBand.002",
+        "z": 52.352752685546875
+      }
+    ],
+    "B": [
+      {
+        "hit": true,
+        "object": "B_CentralPalaceHall_Roof",
+        "z": 214.3000030517578
+      },
+      {
+        "hit": true,
+        "object": "B_BaselineUpperGallery_Roof",
+        "z": 231.5
+      },
+      {
+        "hit": true,
+        "object": "B_BaselineFinalArena_Roof",
+        "z": 237.39999389648438
+      }
+    ]
+  },
+  "variant_exclusions": {
+    "A": true,
+    "B": true
+  },
+  "B_lower_floor": {
+    "hit": true,
+    "object": "B_CentralPalaceHall_Floor",
+    "z": 96.0
+  },
+  "B_upper_floor": {
+    "hit": true,
+    "object": "B_CentralUpperFloor_West",
+    "z": 132.0
+  },
+  "B_lower_room_ceiling": {
+    "hit": true,
+    "object": "B_CentralUpperFloor_West",
+    "z": 126.0
+  },
+  "B_route_floor_midpoints": [
+    {
+      "midpoint": [
+        0.0,
+        1067.5,
+        69.5
+      ],
+      "hit": true,
+      "object": "ContinuousLand_ReviewOnly",
+      "z": 74.33332824707031
+    },
+    {
+      "midpoint": [
+        0.0,
+        1172.0,
+        89.5
+      ],
+      "hit": true,
+      "object": "CastleGrounds_RisingLand",
+      "z": 89.77999877929688
+    },
+    {
+      "midpoint": [
+        0.0,
+        1234.5,
+        96.0
+      ],
+      "hit": true,
+      "object": "B_BaselineEntry_Floor",
+      "z": 96.0
+    },
+    {
+      "midpoint": [
+        0.0,
+        1282.5,
+        96.0
+      ],
+      "hit": true,
+      "object": "B_BaselineEntry_Floor",
+      "z": 96.0
+    },
+    {
+      "midpoint": [
+        55.0,
+        1310.0,
+        96.0
+      ],
+      "hit": true,
+      "object": "B_SmallArrivalCourt",
+      "z": 96.0999984741211
+    },
+    {
+      "midpoint": [
+        135.0,
+        1310.0,
+        96.0
+      ],
+      "hit": true,
+      "object": "B_BaselineEastGuard_Floor",
+      "z": 96.0
+    },
+    {
+      "midpoint": [
+        160.0,
+        1348.0,
+        96.0
+      ],
+      "hit": true,
+      "object": "B_PalaceSideWing_Floor.001",
+      "z": 96.0
+    },
+    {
+      "midpoint": [
+        132.5,
+        1390.5,
+        96.0
+      ],
+      "hit": true,
+      "object": "B_PalaceSideWing_Floor.001",
+      "z": 96.0
+    },
+    {
+      "midpoint": [
+        88.5,
+        1407.5,
+        96.0
+      ],
+      "hit": true,
+      "object": "B_CentralPalaceHall_Floor",
+      "z": 96.0
+    },
+    {
+      "midpoint": [
+        72.0,
+        1450.0,
+        114.0
+      ],
+      "hit": true,
+      "object": "B_CentralStair.015",
+      "z": 115.19999694824219
+    },
+    {
+      "midpoint": [
+        72.0,
+        1502.5,
+        132.0
+      ],
+      "hit": true,
+      "object": "B_CentralUpperFloor_North",
+      "z": 132.0
+    },
+    {
+      "midpoint": [
+        36.0,
+        1537.5,
+        132.0
+      ],
+      "hit": true,
+      "object": "B_BaselineUpperGallery_Floor",
+      "z": 132.0
+    },
+    {
+      "midpoint": [
+        0.0,
+        1587.5,
+        132.0
+      ],
+      "hit": true,
+      "object": "B_BaselineFinalArena_Floor",
+      "z": 132.0
+    }
+  ],
+  "B_missing_floor_samples": 0,
+  "A_entry_crater_occlusion": {
+    "hit": true,
+    "object": "A_EntryHall_NWall",
+    "z": 97.6965560913086
+  },
+  "A_center_below_ground": true,
+  "B_roofed_impact_footprint": true,
+  "A_corresponding_center_absent": true,
+  "B_two_real_levels": true,
+  "review_cameras_present": true,
+  "previous_B_study_isolated": true
+}

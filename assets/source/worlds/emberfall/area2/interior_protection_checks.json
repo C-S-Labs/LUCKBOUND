@@ -1,0 +1,14 @@
+{
+  "owner_paths_unchanged": 48,
+  "preserved_input_counts": {
+    "OwnerReview_Input": 15,
+    "BeforeImpactCorrection": 2,
+    "BeforeBaselineRework": 2,
+    "BeforeInteriorLayout": 3
+  },
+  "main_ref": "aa22e3d5a420c28aa7e7d6d00acce898765d62d3",
+  "main_unchanged": true,
+  "no_studio_upload_push_merge_pr": true,
+  "blend_sha256": "915440f49384fdf0864032e37c8bf51d46202a73211c2d55fcaee9ade54def45",
+  "special_finale_chunk_undivided": true
+}

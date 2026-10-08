@@ -1,0 +1,363 @@
+{
+  "saved_filepath": "E:\\BlenderAIProjects\\Runtime\\Emberfall_AreaII\\EmberfallAreaII.blend",
+  "collections_present": true,
+  "cameras_10": true,
+  "route_hidden_default": true,
+  "route_floor_samples": 39,
+  "missing_floor": 0,
+  "route_building_obstructions": [],
+  "finite_geometry": true,
+  "details": [
+    {
+      "xy": [
+        0.0,
+        18.0
+      ],
+      "hit": true,
+      "object": "PrimaryStreet_00",
+      "height": 1.97
+    },
+    {
+      "xy": [
+        0.0,
+        45.0
+      ],
+      "hit": true,
+      "object": "ArrivalApron",
+      "height": 2.58
+    },
+    {
+      "xy": [
+        0.0,
+        72.0
+      ],
+      "hit": true,
+      "object": "ArrivalApron",
+      "height": 2.58
+    },
+    {
+      "xy": [
+        -17.0,
+        102.0
+      ],
+      "hit": true,
+      "object": "PrimaryStreet_01",
+      "height": 2.742
+    },
+    {
+      "xy": [
+        -42.5,
+        120.0
+      ],
+      "hit": true,
+      "object": "PrimaryStreet_01",
+      "height": 3.24
+    },
+    {
+      "xy": [
+        -68.0,
+        138.0
+      ],
+      "hit": true,
+      "object": "PrimaryStreet_01",
+      "height": 4.319
+    },
+    {
+      "xy": [
+        -85.0,
+        176.0
+      ],
+      "hit": true,
+      "object": "PrimaryStreet_02",
+      "height": 7.324
+    },
+    {
+      "xy": [
+        -85.0,
+        215.0
+      ],
+      "hit": true,
+      "object": "PrimaryStreet_02",
+      "height": 11.142
+    },
+    {
+      "xy": [
+        -85.0,
+        254.0
+      ],
+      "hit": true,
+      "object": "WorkshopYard",
+      "height": 12.18
+    },
+    {
+      "xy": [
+        -52.0,
+        280.0
+      ],
+      "hit": true,
+      "object": "WorkshopYard",
+      "height": 12.18
+    },
+    {
+      "xy": [
+        -2.5,
+        280.0
+      ],
+      "hit": true,
+      "object": "ContinuousLand_ReviewOnly",
+      "height": 12.0
+    },
+    {
+      "xy": [
+        47.0,
+        280.0
+      ],
+      "hit": true,
+      "object": "PrimaryStreet_03",
+      "height": 12.05
+    },
+    {
+      "xy": [
+        80.0,
+        310.0
+      ],
+      "hit": true,
+      "object": "ContinuousLand_ReviewOnly",
+      "height": 13.55
+    },
+    {
+      "xy": [
+        80.0,
+        355.0
+      ],
+      "hit": true,
+      "object": "PrimaryStreet_04",
+      "height": 17.917
+    },
+    {
+      "xy": [
+        80.0,
+        400.0
+      ],
+      "hit": true,
+      "object": "MarketCourt",
+      "height": 19.027
+    },
+    {
+      "xy": [
+        100.0,
+        438.0
+      ],
+      "hit": true,
+      "object": "MarketCourt",
+      "height": 19.027
+    },
+    {
+      "xy": [
+        130.0,
+        450.0
+      ],
+      "hit": true,
+      "object": "MarketCourt",
+      "height": 19.027
+    },
+    {
+      "xy": [
+        160.0,
+        462.0
+      ],
+      "hit": true,
+      "object": "MarketCourt",
+      "height": 19.027
+    },
+    {
+      "xy": [
+        180.0,
+        496.0
+      ],
+      "hit": true,
+      "object": "PrimaryStreet_06",
+      "height": 20.111
+    },
+    {
+      "xy": [
+        180.0,
+        535.0
+      ],
+      "hit": true,
+      "object": "PrimaryStreet_06",
+      "height": 21.749
+    },
+    {
+      "xy": [
+        180.0,
+        574.0
+      ],
+      "hit": true,
+      "object": "PrimaryStreet_06",
+      "height": 28.217
+    },
+    {
+      "xy": [
+        136.0,
+        600.0
+      ],
+      "hit": true,
+      "object": "PrimaryStreet_07",
+      "height": 30.209
+    },
+    {
+      "xy": [
+        70.0,
+        600.0
+      ],
+      "hit": true,
+      "object": "PrimaryStreet_07",
+      "height": 30.209
+    },
+    {
+      "xy": [
+        4.0,
+        600.0
+      ],
+      "hit": true,
+      "object": "PrimaryStreet_07",
+      "height": 30.208
+    },
+    {
+      "xy": [
+        -40.0,
+        624.0
+      ],
+      "hit": true,
+      "object": "DrainCoping.014",
+      "height": 31.96
+    },
+    {
+      "xy": [
+        -40.0,
+        660.0
+      ],
+      "hit": true,
+      "object": "PrimaryStreet_08",
+      "height": 34.66
+    },
+    {
+      "xy": [
+        -40.0,
+        696.0
+      ],
+      "hit": true,
+      "object": "PrimaryStreet_08",
+      "height": 40.009
+    },
+    {
+      "xy": [
+        -16.0,
+        736.0
+      ],
+      "hit": true,
+      "object": "UpperCivicCourt",
+      "height": 43.001
+    },
+    {
+      "xy": [
+        20.0,
+        760.0
+      ],
+      "hit": true,
+      "object": "UpperCivicCourt",
+      "height": 43.001
+    },
+    {
+      "xy": [
+        56.0,
+        784.0
+      ],
+      "hit": true,
+      "object": "UpperCivicCourt",
+      "height": 43.001
+    },
+    {
+      "xy": [
+        80.0,
+        820.0
+      ],
+      "hit": true,
+      "object": "PrimaryStreet_10",
+      "height": 43.73
+    },
+    {
+      "xy": [
+        80.0,
+        850.0
+      ],
+      "hit": true,
+      "object": "ContinuousLand_ReviewOnly",
+      "height": 46.073
+    },
+    {
+      "xy": [
+        80.0,
+        880.0
+      ],
+      "hit": true,
+      "object": "ContinuousLand_ReviewOnly",
+      "height": 51.88
+    },
+    {
+      "xy": [
+        64.0,
+        910.0
+      ],
+      "hit": true,
+      "object": "ContinuousLand_ReviewOnly",
+      "height": 53.772
+    },
+    {
+      "xy": [
+        40.0,
+        925.0
+      ],
+      "hit": true,
+      "object": "InnerBoundaryCourt",
+      "height": 54.362
+    },
+    {
+      "xy": [
+        16.0,
+        940.0
+      ],
+      "hit": true,
+      "object": "InnerBoundaryCourt",
+      "height": 54.362
+    },
+    {
+      "xy": [
+        0.0,
+        961.0
+      ],
+      "hit": true,
+      "object": "InnerBoundaryCourt",
+      "height": 54.362
+    },
+    {
+      "xy": [
+        0.0,
+        977.5
+      ],
+      "hit": true,
+      "object": "InnerBoundaryCourt",
+      "height": 54.362
+    },
+    {
+      "xy": [
+        0.0,
+        994.0
+      ],
+      "hit": true,
+      "object": "InnerBoundaryCourt",
+      "height": 54.362
+    }
+  ]
+}

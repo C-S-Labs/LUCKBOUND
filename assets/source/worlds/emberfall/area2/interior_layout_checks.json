@@ -1,0 +1,275 @@
+{
+  "shared_exact": true,
+  "A_basin_exact": true,
+  "A_entrance_exact": true,
+  "exterior_exact": true,
+  "boss_clear_floor": [
+    {
+      "hit": true,
+      "object": "B_BossChamber_Floor",
+      "point": [
+        -89.99999237060547,
+        1560.0,
+        120.0
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_BossChamber_Floor",
+      "point": [
+        0.0,
+        1560.0,
+        120.0
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_BossChamber_Floor",
+      "point": [
+        89.99999237060547,
+        1560.0,
+        120.0
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_BossChamber_Floor",
+      "point": [
+        -89.99999237060547,
+        1640.0,
+        120.0
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_BossChamber_Floor",
+      "point": [
+        0.0,
+        1640.0,
+        120.0
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_BossChamber_Floor",
+      "point": [
+        89.99999237060547,
+        1640.0,
+        120.0
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_BossChamber_Floor",
+      "point": [
+        -89.99999237060547,
+        1730.0,
+        120.0
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_BossChamber_Floor",
+      "point": [
+        0.0,
+        1730.0,
+        120.0
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_BossChamber_Floor",
+      "point": [
+        89.99999237060547,
+        1730.0,
+        120.0
+      ]
+    }
+  ],
+  "reward_clear_floor": [
+    {
+      "hit": true,
+      "object": "B_RewardChamber_Floor",
+      "point": [
+        -190.00001525878906,
+        1620.0001220703125,
+        120.0
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_RewardChamber_Floor",
+      "point": [
+        -150.0,
+        1620.0001220703125,
+        120.0
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_RewardChamber_Floor",
+      "point": [
+        -190.00001525878906,
+        1672.0,
+        120.0
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_RewardChamber_Floor",
+      "point": [
+        -150.0,
+        1672.0,
+        120.0
+      ]
+    }
+  ],
+  "reward_behind_seal_clear": true,
+  "reward_internal_clear": true,
+  "reward_floor_level": true,
+  "combat_floor_level": true,
+  "primary_portal_open": true,
+  "hall_to_stair_turn_clear": true,
+  "stair_upper_exit_open": true,
+  "boss_entry_open": true,
+  "reward_sealed": {
+    "hit": true,
+    "object": "B_POST_BOSS_SEALED_DOOR",
+    "point": [
+      -115.5,
+      1643.9998779296875,
+      127.99999237060547
+    ]
+  },
+  "foundation_solid": {
+    "hit": true,
+    "object": "B_SolidRaisedFoundation_Boss",
+    "point": [
+      -5.960464477539063e-08,
+      1516.0,
+      105.0
+    ]
+  },
+  "route_floor_midpoints": [
+    {
+      "hit": true,
+      "object": "ContinuousLand_ReviewOnly",
+      "point": [
+        0.0,
+        1067.5,
+        74.33332824707031
+      ]
+    },
+    {
+      "hit": true,
+      "object": "CastleGrounds_RisingLand",
+      "point": [
+        0.0,
+        1172.0,
+        89.77999877929688
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_Composed_Entry_Floor",
+      "point": [
+        0.0,
+        1234.5,
+        96.0
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_Composed_Entry_Floor",
+      "point": [
+        10.0,
+        1292.5,
+        96.0
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_ArrivalCourt",
+      "point": [
+        20.0,
+        1355.0,
+        96.0999984741211
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_Composed_TransverseHall_Floor",
+      "point": [
+        65.0,
+        1387.4998779296875,
+        96.0
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_CrossTowerLink",
+      "point": [
+        132.5,
+        1395.0,
+        96.05000305175781
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_CrossTowerLink",
+      "point": [
+        155.0,
+        1407.5,
+        96.05000305175781
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_TowerStair.015",
+      "point": [
+        155.0,
+        1457.9998779296875,
+        109.71428680419922
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_Composed_EastGallery_Floor",
+      "point": [
+        157.49998474121094,
+        1519.0001220703125,
+        120.0
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_Composed_EastGallery_Floor",
+      "point": [
+        130.0,
+        1542.0001220703125,
+        120.0
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_BossChamber_Floor",
+      "point": [
+        62.5,
+        1542.0,
+        120.0
+      ]
+    },
+    {
+      "hit": true,
+      "object": "B_BossChamber_Floor",
+      "point": [
+        24.999998092651367,
+        1586.0,
+        120.0
+      ]
+    }
+  ],
+  "route_no_floor_misses": true,
+  "finite_vertices": true,
+  "A_sources_current": true
+}

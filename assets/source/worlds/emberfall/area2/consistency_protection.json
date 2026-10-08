@@ -1,0 +1,20 @@
+{
+  "owner_files_unchanged": 48,
+  "protected_input_files_unchanged": 34,
+  "main_unchanged": "aa22e3d5a420c28aa7e7d6d00acce898765d62d3",
+  "current_blend_sha256": "b2b3e160efb6d30db4831448ebf540f2c13ae79d25b09d5e37c2fbc5a5e9e49d",
+  "evidence_files": 9,
+  "evidence_sha256": {
+    "A_edge_after.png": "f45a97506972bc2e224906f0202511b12c63f5674c73e330a9ef42b303fc007e",
+    "A_edge_before.png": "820e08575009e67575feae92c81948a1ad872832a028ed50a813f2a7c0ef3101",
+    "A_overhead_after.png": "1ded6f0877ad30c1da9de34b7176362bf58e5ae95902abd2f7f39866d1d20f4d",
+    "A_overhead_before.png": "a0d1b842825b6dec766b17230d44d231e106ce2b5196d1d86e836d501457261b",
+    "B_overhead_after.png": "7342a1e3baed348b28bac2119643619665fd3c39f5c47c58f0fcfa18eea2e6a4",
+    "B_overhead_before.png": "4439fcaff28fbd00d2354d7c0b5afa3062f290bf594cd09c49cb7dcdb6208cbb",
+    "consistency_review_sheet.png": "2358bb918d46f4f0cfb88c088659a8bd126ab2b35613a506d0fa1a3c8aba07f6",
+    "crater_edge_comparison.png": "1f58b9bfdd57f58892c0454e12a972a9f0c2fac20bdad3dcb8ddbc702a0044d7",
+    "matched_overhead.png": "fc83689560ac3cf8c500fd6b0b9a49694e3f9664548e78d331f5fa0511b8a397"
+  },
+  "source_parse_pass": true,
+  "no_push_merge_PR_Studio_upload_separation": true
+}
