@@ -1,0 +1,975 @@
+{
+  "base": "34f6c1ea81f6825b4f0a251e9c13623d532b1c44",
+  "branch": "integration/emberfall-production",
+  "stage6_head": "678d6817adc94d2a7c753c6b1e33ea15a3bf4c88",
+  "paths": [
+    {
+      "status": "M",
+      "path": "INDEX.md"
+    },
+    {
+      "status": "M",
+      "path": "INDEX_MAP.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/ARCHITECTURE_REVIEW.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/BURNED_PLAINS_REVIEW.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/CONTINUITY_REVIEW.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/EDGE_PROFILE_REVIEW.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/FOUNDATION_REVIEW.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/IDENTITY_REVIEW.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/LAVA_GEOLOGY_REVIEW.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/MODULARITY_REVIEW.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/NATURALIZATION_REVIEW.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/PRODUCTION_HANDOFF.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/PRODUCTION_READINESS_REVIEW.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/PROTOTYPE_REVIEW.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/VOCABULARY_REVIEW.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/architecture_saved_verification.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/architecture_technical_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/architecture_visual_coverage.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/AREA2_REVIEW.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/CONSISTENCY_REVIEW.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/IMPACT_FAILURE_REVIEW.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/STRUCTURAL_ACCEPTANCE.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/WORKER_SYNTHESIS.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/architecture_checks.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/architecture_evidence_manifest.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/architecture_protection_checks.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/architecture_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/blockout_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/build_area2.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/castle_evidence_manifest.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/castle_protection_checks.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/castle_revision_checks.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/castle_revision_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/check_area2.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/check_castle_composition.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/check_castle_impact.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/check_castle_interiors.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/check_castle_structure.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/cleanup_castle_structure.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/consistency_checks.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/consistency_protection.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/consistency_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/correct_castle_consistency.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/correct_castle_impact.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/final_castle_corrections.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/final_corrections_checks.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/final_corrections_protection.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/final_corrections_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/impact_checks.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/impact_evidence_manifest.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/impact_failure_checks.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/impact_failure_protection.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/impact_failure_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/impact_protection_checks.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/impact_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/interior_layout_checks.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/interior_layout_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/interior_protection_checks.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/protected_check.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/recompose_castle.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/refine_impact_structural_failure.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/review_area2.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/review_castle_composition.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/review_castle_impact.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/review_castle_interiors.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/review_castle_structure.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/revise_castle_interiors.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/revise_castle_variants.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/saved_readback.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/structural_checks.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/structural_protection_checks.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/area2/structural_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/AUTHORING.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/BATCH1_REVIEW.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/FULL_MAP_SCALE_REVIEW.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/OWNER_WALKTHROUGH.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/SCENERY_SCALING_REVIEW.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/assemble_batch1.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/authority_manifest.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/batch1_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/batch1_shared.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/changed_files.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/check_and_export.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/contact_sheets.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/countryside.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/elevations.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/fbx_result.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/fields.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/final_evidence.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/studio_collision_result.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch1/studio_review.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/BATCH2_PLAN.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/BATCH2_REVIEW.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/DELIVERY_STUDIO_REVIEW.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/asset_mapping.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/author_batch2.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/batch2_sources.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/batch2_variants.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/combined_review.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/delivery_validation.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/export_batch2.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/export_review.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/gate_a_review.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/gate_a_sources.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/integrate_review.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/layout_audit.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/layout_audit.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/make_gate_probe.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/resolve_delivery.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/review_batch2.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/review_bounds_manifest.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/review_cell_manifest.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/review_export_manifest.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/scenery_batch2.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/source_export_manifest.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/source_readback.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/studio_validation.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/upload_hold.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/upload_review.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/batch2/validate_delivery.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/build_burned_plains.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/build_edge_profile_study.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/build_emberfall_foundation.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/build_emberfall_prototype.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/build_modularity_study.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/burned_plains_contact_sheet.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/burned_plains_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/continuity_technical_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/edge_profile_audit.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/edge_profile_character_probe.luau"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/edge_profile_character_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/edge_profile_collision_decomposition.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/edge_profile_contract.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/edge_profile_evidence.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/edge_profile_layout.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/edge_profile_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/edge_profile_root_cause.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/edge_profile_saved_readback.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/edge_profile_studio_probe.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/edge_profile_studio_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/finalize_emberfall_review.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/foundation_technical_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/identity_technical_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/lava_geology_technical_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/master/README.md"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/master/build_master.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/master/master_validation.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/master/source_registry.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/master/validate_master.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/modularity_probe.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/modularity_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/naturalization_technical_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/production_gate_evidence.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/production_gate_layout.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/production_gate_readback.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/production_gate_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/production_gate_studio_probe.luau"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/production_gate_studio_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/production_gate_study.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/refine_emberfall_continuity.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/refine_emberfall_identity.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/refine_emberfall_lava_geology.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/refine_emberfall_naturalization.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/refine_emberfall_vocabulary.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/review_burned_plains.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/review_edge_profiles.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/review_emberfall_architecture.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/review_emberfall_foundation.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/review_emberfall_identity.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/review_emberfall_naturalization.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/review_emberfall_prototype.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/review_emberfall_vocabulary.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/review_modularity.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/revise_emberfall_architecture.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/saved_scene_verification.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/technical_report.json"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/validate_edge_profiles.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/verify_emberfall_architecture.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/vocabulary_contact_sheet.py"
+    },
+    {
+      "status": "A",
+      "path": "assets/source/worlds/emberfall/vocabulary_technical_report.json"
+    },
+    {
+      "status": "M",
+      "path": "docs/ART_DIRECTION.md"
+    },
+    {
+      "status": "M",
+      "path": "docs/CHUNK_AUTHORING.md"
+    },
+    {
+      "status": "M",
+      "path": "docs/CHUNK_DROP_IN.md"
+    },
+    {
+      "status": "M",
+      "path": "docs/MODULAR_MAPS.md"
+    },
+    {
+      "status": "M",
+      "path": "docs/PROTOTYPE_BUILD_SPEC.md"
+    },
+    {
+      "status": "M",
+      "path": "docs/STATUS.md"
+    },
+    {
+      "status": "M",
+      "path": "docs/WORKLOG.md"
+    },
+    {
+      "status": "A",
+      "path": "docs/audits/EMBERFALL_APPROVED_HASH_CHECKS.json"
+    },
+    {
+      "status": "A",
+      "path": "docs/audits/EMBERFALL_BLEND_INVENTORY.json"
+    },
+    {
+      "status": "A",
+      "path": "docs/audits/EMBERFALL_BLEND_READBACK.json"
+    },
+    {
+      "status": "A",
+      "path": "docs/audits/EMBERFALL_CONSOLIDATION_AUDIT.md"
+    },
+    {
+      "status": "A",
+      "path": "docs/audits/EMBERFALL_CONSOLIDATION_RESULT.md"
+    },
+    {
+      "status": "A",
+      "path": "docs/audits/EMBERFALL_CONSOLIDATION_VALIDATION.json"
+    },
+    {
+      "status": "A",
+      "path": "docs/audits/EMBERFALL_DIRTY_COMPARISON.json"
+    },
+    {
+      "status": "A",
+      "path": "docs/audits/EMBERFALL_EXTERNAL_LEDGER.json"
+    },
+    {
+      "status": "A",
+      "path": "docs/audits/EMBERFALL_GIT_SNAPSHOT.json"
+    },
+    {
+      "status": "A",
+      "path": "docs/audits/EMBERFALL_INTEGRATION_FILE_GROUPS.json"
+    },
+    {
+      "status": "A",
+      "path": "docs/audits/EMBERFALL_INTEGRATION_STATUS.md"
+    },
+    {
+      "status": "A",
+      "path": "docs/audits/EMBERFALL_MAIN_RECONCILIATION.md"
+    },
+    {
+      "status": "A",
+      "path": "docs/audits/EMBERFALL_PRESERVATION_SUMMARY.json"
+    },
+    {
+      "status": "A",
+      "path": "docs/audits/EMBERFALL_RECONCILED_FILE_GROUPS.json"
+    },
+    {
+      "status": "M",
+      "path": "docs/biomes/EMBERFALL.md"
+    },
+    {
+      "status": "A",
+      "path": "docs/biomes/EMBERFALL_AREA_II_PRODUCTION_PLAN.md"
+    },
+    {
+      "status": "A",
+      "path": "docs/design/emberfall/EMBERFALL_REFERENCE_01.png"
+    },
+    {
+      "status": "A",
+      "path": "emberfall-batch2-review.project.json"
+    },
+    {
+      "status": "A",
+      "path": "emberfall-scale-test.project.json"
+    },
+    {
+      "status": "A",
+      "path": "emberfall-walkthrough.project.json"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_batch2/Batch2Review.server.luau"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_batch2/Batch2ReviewAppearance.client.luau"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_batch2/ClientLoadCheck.luau"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_batch2/ReviewData.luau"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_batch2/ValidateImported.luau"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_batch2/WalkImported.luau"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_scale_test/BenchmarkClient.client.luau"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_scale_test/BenchmarkServer.server.luau"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_scale_test/README.md"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_scale_test/UniqueSceneryData.luau"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_scale_test/build_unique_bank.py"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_scale_test/measurements_summary.json"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_scale_test/unique_asset_mapping.json"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/AllocationProbe.client.luau"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/OwnerWalkthrough.server.luau"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/OwnerWalkthroughAppearance.client.luau"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/SceneryData.luau"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/WalkthroughData.luau"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/asset_mapping.json"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/build_scenery_scaling.py"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/export_layout_snapshot.py"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/export_walkthrough.py"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/map_scenery_imports.py"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/measure_scenery_edges.py"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/scenery_asset_mapping.json"
+    },
+    {
+      "status": "A",
+      "path": "tools/studio/emberfall_walkthrough/scenery_measurements.json"
+    },
+    {
+      "status": "A",
+      "path": "docs/audits/EMBERFALL_CONSOLIDATION_CHANGED_FILES.json"
+    }
+  ],
+  "excluded_donor_paths_integrated": [],
+  "protected_main_diff": [],
+  "stage_checkpoints": [
+    {
+      "head": "576b89e960bc6d8e693616ae293da65b565d000f",
+      "stage": "Reconcile Emberfall audit with pinned main and verify preservation backups"
+    },
+    {
+      "head": "95feaf1e570d7bdba7e94e4b7817b16bbadb075f",
+      "stage": "Consolidate approved Burned Plains foundation and frozen authoring contracts"
+    },
+    {
+      "head": "c1c74ce952f51d1d820aaa9f2a38cfb540e6e5e7",
+      "stage": "Integrate frozen Emberfall Batch 1 and 2 sources and production evidence"
+    },
+    {
+      "head": "a55c4997c624abc6efd3a7ede2d091f71f9e2cac",
+      "stage": "Preserve Emberfall Roblox mappings and opt-in review fixtures"
+    },
+    {
+      "head": "0d4b22edbbad151c2139d5b4a43c745650aa28c0",
+      "stage": "Integrate approved Area II blockout evidence and planning baseline"
+    },
+    {
+      "head": "7a9fd7925d1423e8f7cd20f1f7421a42d34bc20a",
+      "stage": "Create linked Emberfall review master and pinned source registry"
+    },
+    {
+      "head": "678d6817adc94d2a7c753c6b1e33ea15a3bf4c88",
+      "stage": "Establish authoritative Emberfall production handoff and reconciled documentation"
+    }
+  ]
+}

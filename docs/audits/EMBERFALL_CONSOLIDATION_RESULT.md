@@ -39,9 +39,13 @@ Local completed stage checkpoints:
 | Existing mappings/isolated fixtures |a55c499|
 | AreaII structural references/approved plan |0d4b22e|
 | Linked review master/registry |7a9fd79|
+| Current documentation/handoff |678d681|
 
-Documentation and final validation are separately checkpointed after this table;
-use branch log for their exact HEADs. [Production handoff](../../assets/source/worlds/emberfall/PRODUCTION_HANDOFF.md)
+Final validation is separately checkpointed after this table;
+use branch log for its exact HEAD.
+[Changed-file ledger](EMBERFALL_CONSOLIDATION_CHANGED_FILES.json) lists every integrated path
+and the seven preceding checkpoints. Final commit adds this ledger and updates this record/index;
+production changes are confined to Emberfall sources/evidence, opt-in fixtures and reconciled docs. [Production handoff](../../assets/source/worlds/emberfall/PRODUCTION_HANDOFF.md)
 is the current entry point; historical reports retain original acceptance dates/statuses.
 [Validation JSON](EMBERFALL_CONSOLIDATION_VALIDATION.json) provides machine-readable gate results.
 
@@ -90,7 +94,7 @@ verify link resolution, source hashes and B/A exclusivity. Review contact sheet 
 - BASELINE FINDINGS: Selene0.28 reports83 errors/96 warnings/0 parse errors in unchanged
  main src/tests (including standalone test __require shim names). Selene is not a CI gate
  in current main; consolidation does not alter these files or fix unrelated findings.
-- Final gates: repository index current, current handoff local links resolve, protected
+- PASS final gates: repository index current,42 current handoff/report links resolve, protected
  shared-main paths unchanged, excluded donor paths absent from diff, clean local checkpoint.
 
 No remote CI run was requested or possible without pushing. Automated checks establish
