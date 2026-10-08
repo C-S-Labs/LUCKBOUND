@@ -13,3 +13,8 @@ Base:34f6c1e. Donor:079882b. Branch:integration/emberfall-production.
 - Validation: PASS preservation/1299 units/4280 loader cases/syntax/four Rojo builds/CI formatting; Selene inherited main findings documented. Index/42 links/protected-main/excluded-path gates pass; final local checkpoint recorded in branch log.
 
 No push/PR/main merge, Studio, upload, re-export or AreaII production authorized.
+
+- Final pre-PR: READY FOR PR; refreshed main still34f6c1e, no newer commits;234-path
+  scope unchanged; all external/master hashes match. Nine EOF-only Python trims have
+  identical ASTs;158 remaining donor files/mappings/fixtures exact. Existing gates reused.
+  Owner acceptance and green PR CI required before actual main merge; later production HOLDs remain.

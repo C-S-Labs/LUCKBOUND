@@ -24,5 +24,3 @@ checks['new_support_meshes_nonempty']=all(o.data.polygons for col in [s.BS,s.AS]
 checks['damage_regions']=len(report['localized_wall_damage_regions']);checks['existing_roof_masses_exact']=report['original_roof_masses_exact']
 (s.EV/'structural_checks.json').write_text(json.dumps(checks,indent=2));print(json.dumps(checks,indent=2),flush=True)
 assert all(v for k,v in checks.items() if k!='bearing_contact_bounds') and all(checks['bearing_contact_bounds'].values())
-
-

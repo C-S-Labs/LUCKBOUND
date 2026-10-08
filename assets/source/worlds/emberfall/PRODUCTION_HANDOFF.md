@@ -10,7 +10,9 @@ Read the [main reconciliation](../../../../docs/audits/EMBERFALL_MAIN_RECONCILIA
 [execution/validation result](../../../../docs/audits/EMBERFALL_CONSOLIDATION_RESULT.md).
 The [Stage1 audit](../../../../docs/audits/EMBERFALL_CONSOLIDATION_AUDIT.md) remains
 historical ancestry/authority evidence; its old main and proposed-stage language is superseded
-by these current records. Scoped integration copied167 donor paths, preserving their bytes;
+by these current records. Scoped integration copied167 donor paths, preserving their original bytes;
+final pre-PR cleanup trims EOF blank lines in nine Python scripts with identical ASTs.
+Current result:158 exact donor files plus nine EOF-only exceptions;
 six shared document overlaps were reconciled without replacing main behavior.
 
 ## 1. Current approved state

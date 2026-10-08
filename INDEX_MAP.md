@@ -319,8 +319,8 @@ _712 text files, 1008 binary assets. Regenerate with `python tools/gen_index.py`
   - `MODULARITY_REVIEW.md`: What the repository actually supports:12, Burn-state ownership and practical backend:37, Road: hybrid, with authored control:101, Footprints and interior_continuation:131, Isolated prototype and results:156, Repository implications and readiness:198, Owner acceptance and final technical gate — 2026-10-05:232
 - `assets/source/worlds/emberfall/NATURALIZATION_REVIEW.md` (157) - Emberfall — current-scene naturalization review · 2026-10-08
   - `NATURALIZATION_REVIEW.md`: Focused review package:11, What changed:34, Flora scale and distribution:59, Palette, ruins, basalt and lava:77, Seam construction and actual checks:101, Honest visual assessment and Studio gate:122, Current source and cleanup:144
-- `assets/source/worlds/emberfall/PRODUCTION_HANDOFF.md` (161) - Emberfall production handoff — authoritative consolidated baseline · 2026-10-08
-  - `PRODUCTION_HANDOFF.md`: 1. Current approved state:16, 2. Git authority and current locations:38, 3. Editable source registry:61, 4. Contracts, production evidence and mapping links:92, 5. Validation, open decisions and next task:131
+- `assets/source/worlds/emberfall/PRODUCTION_HANDOFF.md` (163) - Emberfall production handoff — authoritative consolidated baseline · 2026-10-08
+  - `PRODUCTION_HANDOFF.md`: 1. Current approved state:18, 2. Git authority and current locations:40, 3. Editable source registry:63, 4. Contracts, production evidence and mapping links:94, 5. Validation, open decisions and next task:133
 - `assets/source/worlds/emberfall/PRODUCTION_READINESS_REVIEW.md` (256) - Burned Plains production-readiness gate — 2026-10-05 · 2026-10-08
   - `PRODUCTION_READINESS_REVIEW.md`: Appearance backend:20, Returning route and burn field:87, Vegetation and local composition:117, Road and scenery:139, Seams, collars and the remaining blocker:159, Proposed repository changes — review-gated, not implemented:194, Evidence, validation and repository state:213
 - `assets/source/worlds/emberfall/PROTOTYPE_REVIEW.md` (79) - Emberfall — five-chunk prototype review · 2026-10-08
@@ -345,7 +345,7 @@ _712 text files, 1008 binary assets. Regenerate with `python tools/gen_index.py`
 - `assets/source/worlds/emberfall/area2/architecture_protection_checks.json` (11) · 2026-10-08
 - `assets/source/worlds/emberfall/area2/architecture_report.json` (1690) · 2026-10-08
 - `assets/source/worlds/emberfall/area2/blockout_report.json` (358) · 2026-10-08
-- `assets/source/worlds/emberfall/area2/build_area2.py` (456) - Emberfall Area II: one editable design study, never a production/export kit. · 2026-10-08
+- `assets/source/worlds/emberfall/area2/build_area2.py` (454) - Emberfall Area II: one editable design study, never a production/export kit. · 2026-10-08
   - `build_area2.py`: collection:36, material:42, assign:58, box:65, mesh:72, beam:78, cylinder:84, elevation:88, distance_segment:94, street_height:99, terrain_height:107, terrain:115, road_segment:141, plaza:151, roof:156, building:162, rubble:191, fire:198, tree:207, arch:215, tower:225, defense:236, town:263, castle:334, route_overlay:349, cameras:363, build:382, render:438
 - `assets/source/worlds/emberfall/area2/castle_evidence_manifest.json` (41) · 2026-10-08
 - `assets/source/worlds/emberfall/area2/castle_protection_checks.json` (10) · 2026-10-08
@@ -357,16 +357,16 @@ _712 text files, 1008 binary assets. Regenerate with `python tools/gen_index.py`
   - `check_castle_composition.py`: signature:10, find:18, use:27, ray:33
 - `assets/source/worlds/emberfall/area2/check_castle_impact.py` (76) - Cheap saved-scene proof of enclosed B / missing A architecture, not traversal certification. · 2026-10-08
   - `check_castle_impact.py`: signature:14, find:24, layer:33, ray:40
-- `assets/source/worlds/emberfall/area2/check_castle_interiors.py` (47) - Cheap saved-scene interior checks, not physics or boss-mechanics certification. · 2026-10-08
+- `assets/source/worlds/emberfall/area2/check_castle_interiors.py` (42) - Cheap saved-scene interior checks, not physics or boss-mechanics certification. · 2026-10-08
   - `check_castle_interiors.py`: ray:9, use:13
-- `assets/source/worlds/emberfall/area2/check_castle_structure.py` (28) - Cheap protection/contact checks for the final castle structural cleanup. · 2026-10-08
+- `assets/source/worlds/emberfall/area2/check_castle_structure.py` (26) - Cheap protection/contact checks for the final castle structural cleanup. · 2026-10-08
   - `check_castle_structure.py`: same:8, overlap:9, ray:11
-- `assets/source/worlds/emberfall/area2/cleanup_castle_structure.py` (143) - Final bounded structural cleanup of the provisionally accepted castle blockout. · 2026-10-08
+- `assets/source/worlds/emberfall/area2/cleanup_castle_structure.py` (141) - Final bounded structural cleanup of the provisionally accepted castle blockout. · 2026-10-08
   - `cleanup_castle_structure.py`: bounds:11, cameras:14, render:23, arch_infill:31, cleanup:44
 - `assets/source/worlds/emberfall/area2/consistency_checks.json` (572) · 2026-10-08
 - `assets/source/worlds/emberfall/area2/consistency_protection.json` (20) · 2026-10-08
 - `assets/source/worlds/emberfall/area2/consistency_report.json` (5364) · 2026-10-08
-- `assets/source/worlds/emberfall/area2/correct_castle_consistency.py` (212) - A/B consistency: fixed A remnants must be subsets of actual active B architectural volumes. · 2026-10-08
+- `assets/source/worlds/emberfall/area2/correct_castle_consistency.py` (210) - A/B consistency: fixed A remnants must be subsets of actual active B architectural volumes. · 2026-10-08
   - `correct_castle_consistency.py`: cameras:12, render:23, normal:29, volume:32, cutter:35, operation:41, outside:49, surface_error:52, active_b:60, counterpart:62, audit_list:75, apply:85, repair_cut_faces:148, final_coverage:171, check:184
 - `assets/source/worlds/emberfall/area2/correct_castle_impact.py` (206) - Castle-only impact correction: B enclosed baseline; A its destroyed interior. · 2026-10-08
   - `correct_castle_impact.py`: floor_fragment:35, preserve_shared:41, baseline_b:47, remnants_a:104, cameras:157, build:167, render:185
@@ -388,15 +388,15 @@ _712 text files, 1008 binary assets. Regenerate with `python tools/gen_index.py`
 - `assets/source/worlds/emberfall/area2/protected_check.json` (10) · 2026-10-08
 - `assets/source/worlds/emberfall/area2/recompose_castle.py` (257) - B-first irregular castle composition, then direct impact derivation and shallow arena. · 2026-10-08
   - `recompose_castle.py`: collection:50, recovery:53, archive_objects:59, bool_difference:64, cut_box:72, roof:77, block:98, damage_b:108, build_b:127, make_cameras:164, derive_a:173, shallow_basin:215, render:229
-- `assets/source/worlds/emberfall/area2/refine_impact_structural_failure.py` (198) - A-only impact aftermath: deliberate structural bay failures, not a circular architecture cut. · 2026-10-08
+- `assets/source/worlds/emberfall/area2/refine_impact_structural_failure.py` (196) - A-only impact aftermath: deliberate structural bay failures, not a circular architecture cut. · 2026-10-08
   - `refine_impact_structural_failure.py`: cameras:11, render:22, tag:29, slab:32, wall:37, apply:48, check:155
 - `assets/source/worlds/emberfall/area2/review_area2.py` (30) - Create the16 requested revision panels from18 renders; no additional evidence swarm. · 2026-10-08
 - `assets/source/worlds/emberfall/area2/review_castle_composition.py` (25) - Focused castle architecture/flat-arena evidence assembly. · 2026-10-08
 - `assets/source/worlds/emberfall/area2/review_castle_impact.py` (28) - Assemble focused castle-only impact correction evidence; preserve preceding town views. · 2026-10-08
-- `assets/source/worlds/emberfall/area2/review_castle_interiors.py` (48) - Annotated owner evidence from the focused castle interior review renders. · 2026-10-08
+- `assets/source/worlds/emberfall/area2/review_castle_interiors.py` (47) - Annotated owner evidence from the focused castle interior review renders. · 2026-10-08
   - `review_castle_interiors.py`: font:7, label:9, pair:12, main:18
-- `assets/source/worlds/emberfall/area2/review_castle_structure.py` (21) - Five compact owner comparison panels for the structural cleanup. · 2026-10-08
-- `assets/source/worlds/emberfall/area2/revise_castle_interiors.py` (187) - Focused saved-scene B interior revision; matching A edits only. Blockout, no chunks. · 2026-10-08
+- `assets/source/worlds/emberfall/area2/review_castle_structure.py` (20) - Five compact owner comparison panels for the structural cleanup. · 2026-10-08
+- `assets/source/worlds/emberfall/area2/revise_castle_interiors.py` (175) - Focused saved-scene B interior revision; matching A edits only. Blockout, no chunks. · 2026-10-08
   - `revise_castle_interiors.py`: use:26, signature:30, hashes:36, cameras:38, render:49, revise:68
 - `assets/source/worlds/emberfall/area2/revise_castle_variants.py` (420) - Revise the owner-reviewed AreaII scene in place; shared town, two finale studies. · 2026-10-08
   - `revise_castle_variants.py`: new_collection:49, geometry_hash:57, relink:68, castle_tower:74, wall:84, slab:94, path:98, room:109, point_light:141, small_fire:146, debris:152, shared_changes:159, variant_a:218, variant_b:260, exterior_damage:291, labels:315, layer_collection:322, make_views:331, length:355, revise:358, render:394
@@ -818,8 +818,8 @@ _712 text files, 1008 binary assets. Regenerate with `python tools/gen_index.py`
 
 ### docs/STATUS.md
 
-- `docs/STATUS.md` (506) - LUCKBOUND — Project Status · 2026-10-08
-  - `STATUS.md`: 1. Where the project stands:10, 2. Next — pick up here:82, 3. Decisions locked in:404, Why true RNG matters downstream:430, 4. Open items (one line each; details are in the archive und:443, 5. Environment:488, Startup:496
+- `docs/STATUS.md` (508) - LUCKBOUND — Project Status · 2026-10-08
+  - `STATUS.md`: 1. Where the project stands:10, 2. Next — pick up here:84, 3. Decisions locked in:406, Why true RNG matters downstream:432, 4. Open items (one line each; details are in the archive und:445, 5. Environment:490, Startup:498
 
 ### docs/TESTING.md
 
@@ -908,8 +908,8 @@ _712 text files, 1008 binary assets. Regenerate with `python tools/gen_index.py`
 
 ### docs/WORKLOG.md
 
-- `docs/WORKLOG.md` (9206) - LUCKBOUND — Work Log · 2026-10-08
-  - `WORKLOG.md`: Template:18, Session N — YYYY-MM-DD — <short title>:21, Done:24, Decisions made:27, Stopped at:30, Next:33, Session 245 — 2026-10-08 — Emberfall preservation-first prod:39, Done:43, Decisions made:49, Stopped at:53, Next:56, Leftovers:59, Session 244 — 2026-10-05 — Accept movement baseline and prep:64, Done:67, Decisions made:72, Stopped at:76, Next:79, Leftovers:83, Session 243 — 2026-10-05 — Give running a coordinated should:88, Done:91, Decisions made:96, Stopped at:100, Next:103, Leftovers:107, Session 242 — 2026-10-05 — First movement walk: immediate da:112, Done:115, Decisions made:123, Stopped at:127, Next:130, Leftovers:134, Session 241 — 2026-10-05 — Player movement refinement (orche:139, Done:142, Decisions made:151, Stopped at:156, Next:159, Leftovers:164, crossroads-v2 round 3 (same branch) - 2026-10-05 - owner Stu:169, Done:172, Follow-ups (owner test 3):178, Follow-ups (owner test 4: circling, weaving, drifting coloss:181, ... +1238 more
+- `docs/WORKLOG.md` (9232) - LUCKBOUND — Work Log · 2026-10-08
+  - `WORKLOG.md`: Template:18, Session N — YYYY-MM-DD — <short title>:21, Done:24, Decisions made:27, Stopped at:30, Next:33, Session 246 — 2026-10-08 — Emberfall final pre-PR preservati:39, Done:43, Decisions made:50, Stopped at:54, Next:57, Leftovers:60, Session 245 — 2026-10-08 — Emberfall preservation-first prod:65, Done:69, Decisions made:75, Stopped at:79, Next:82, Leftovers:85, Session 244 — 2026-10-05 — Accept movement baseline and prep:90, Done:93, Decisions made:98, Stopped at:102, Next:105, Leftovers:109, Session 243 — 2026-10-05 — Give running a coordinated should:114, Done:117, Decisions made:122, Stopped at:126, Next:129, Leftovers:133, Session 242 — 2026-10-05 — First movement walk: immediate da:138, Done:141, Decisions made:149, Stopped at:153, Next:156, Leftovers:160, Session 241 — 2026-10-05 — Player movement refinement (orche:165, Done:168, Decisions made:177, Stopped at:182, ... +1244 more
 
 ### docs/archive
 
@@ -923,15 +923,15 @@ _712 text files, 1008 binary assets. Regenerate with `python tools/gen_index.py`
 - `docs/audits/EMBERFALL_BLEND_READBACK.json` (10115) · 2026-10-08
 - `docs/audits/EMBERFALL_CONSOLIDATION_AUDIT.md` (429) - Emberfall production consolidation — Stage 1 audit and execution plan · 2026-10-08
   - `EMBERFALL_CONSOLIDATION_AUDIT.md`: 1. Conclusion and authority:5, 2. Evidence and audit limits:42, 3. Branch and worktree integration matrix:77, 4. Blender source ownership inventory:125, 5. Proposed master Blender workspace:178, 6. Assets, exports, mappings and relocation risks:219, 7. Documentation reconciliation:270, 8. Exact Stage2 sequence — proposed, not executed:299, 9. Validation and rollback gates:357, 10. Remaining decisions, risks and effort:386, 11. Stage1 result and retention:415
-- `docs/audits/EMBERFALL_CONSOLIDATION_CHANGED_FILES.json` (975) · new
-- `docs/audits/EMBERFALL_CONSOLIDATION_RESULT.md` (118) - Emberfall production consolidation — local execution result · 2026-10-08
-  - `EMBERFALL_CONSOLIDATION_RESULT.md`: Revised authority and exclusions:8, Preservation and stages:23, Source/master architecture:52, Validation and practical limits:76, HOLDs, next task and rollback:103
-- `docs/audits/EMBERFALL_CONSOLIDATION_VALIDATION.json` (64) · 2026-10-08
+- `docs/audits/EMBERFALL_CONSOLIDATION_CHANGED_FILES.json` (975) · 2026-10-08
+- `docs/audits/EMBERFALL_CONSOLIDATION_RESULT.md` (158) - Emberfall production consolidation — local execution result · 2026-10-08
+  - `EMBERFALL_CONSOLIDATION_RESULT.md`: Revised authority and exclusions:8, Preservation and stages:23, Source/master architecture:52, Validation and practical limits:76, HOLDs, next task and rollback:103, Final pre-PR review — 2026-10-08:120
+- `docs/audits/EMBERFALL_CONSOLIDATION_VALIDATION.json` (167) · 2026-10-08
 - `docs/audits/EMBERFALL_DIRTY_COMPARISON.json` (398) · 2026-10-08
 - `docs/audits/EMBERFALL_EXTERNAL_LEDGER.json` (887) · 2026-10-08
 - `docs/audits/EMBERFALL_GIT_SNAPSHOT.json` (3626) · 2026-10-08
 - `docs/audits/EMBERFALL_INTEGRATION_FILE_GROUPS.json` (1570) · 2026-10-08
-- `docs/audits/EMBERFALL_INTEGRATION_STATUS.md` (15) - Emberfall integration stage record · 2026-10-08
+- `docs/audits/EMBERFALL_INTEGRATION_STATUS.md` (20) - Emberfall integration stage record · 2026-10-08
 - `docs/audits/EMBERFALL_MAIN_RECONCILIATION.md` (49) - Emberfall consolidation — reconciliation against main34f6c1e · 2026-10-08
   - `EMBERFALL_MAIN_RECONCILIATION.md`: Decision:5, Main changes and authority:12, Overlap and file treatment:21, Preservation and revised gates:37
 - `docs/audits/EMBERFALL_PRESERVATION_SUMMARY.json` (8) · 2026-10-08

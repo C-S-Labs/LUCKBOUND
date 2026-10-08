@@ -139,5 +139,3 @@ if __name__=='__main__':
  if '--before' in args:render('before',selected)
  elif '--render-only' in args:render('after',selected)
  else:cleanup()
-
-

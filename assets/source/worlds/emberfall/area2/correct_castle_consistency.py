@@ -208,5 +208,3 @@ if __name__=='__main__':
  elif '--after' in args:render('after')
  elif '--check' in args:check()
  else:apply()
-
-

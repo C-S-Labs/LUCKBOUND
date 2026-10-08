@@ -452,5 +452,3 @@ if __name__=='__main__':
     args=sys.argv[sys.argv.index('--')+1:] if '--' in sys.argv else []
     if '--render-only' not in args:build()
     if '--build-only' not in args:render()
-
-

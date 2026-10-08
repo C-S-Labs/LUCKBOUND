@@ -116,3 +116,43 @@ pinned recipe after explicitly handling existing output; source libraries must n
 Retain every historical source/blend1/review/failed mapping/delivery/export and new master
 artifact. Recommend future archival/navigation cleanup only after owner acceptance and
 applicable validation; no deletion or cleanup was performed or is authorized here.
+
+## Final pre-PR review — 2026-10-08
+
+**READY FOR PR**, subject to owner review; no PR/push/merge performed.
+Reviewed Stage2 HEADf78c90e; final cleanup checkpoint is the latest branch commit.
+Refreshed origin/main remains34f6c1ea81f6825b4f0a251e9c13623d532b1c44,
+an ancestor of this branch. No newer main commits exist at this review.
+
+Final scope is234 paths, exactly matching the changed-file ledger;178 Emberfall source/
+evidence paths,25 docs,26 opt-in fixture paths,INDEX/INDEX_MAP and three review projects.
+129 unrelated donor paths remain excluded. Normal src/tests/default.project/AGENTS/
+index generator/rokit/CI remain identical to current main. Review overlays and all existing
+Roblox mappings still match donor Git blobs and remain outside normal project routing.
+
+Removed only29 trailing newline bytes across the nine AreaII Python scripts listed in
+validation JSON. All nine ASTs are identical before/after; no authoring/export script was
+executed. Stage2's167-byte-equality result is a historical snapshot: current state is158
+exact donor files plus these nine EOF-only exceptions. Geometry, manifests, mapping IDs,
+fixtures and accepted evidence are unchanged. git diff --check passes without disabling
+blank-at-EOF checking; Python syntax and repository index pass.
+
+Rehashed272 external files (95 blend/blend1 and177 artifacts), eight approved-hash checks,
+the master and four registry sources. All match. Master library paths resolve; unchanged
+master/source hashes justify reuse of successful reopen/variant-exclusivity/zero-local-mesh
+checks. Reused1299 units,4280 loader cases,162 Luau syntax files and four Rojo builds
+because their complete inputs are unchanged. Rechecked pinned StyLua (pass) and Selene
+(same83 errors/96 warnings/0 parse errors) with Git/CI LF endings. No render, recook, export,
+upload or Studio rerun. Inherited Selene findings remain unchanged and are not a CI gate.
+
+No unresolved technical HOLD blocks a PR for this preservation-only baseline. Existing
+placement/seam/recipe/timer/reward/socket/device/runtime-registration HOLDs govern later
+production, not this documentation/source consolidation. **Actual main merge still requires
+owner acceptance (including master B/A/provisional montage) and green PR CI.** No visual
+approval is inferred from this pre-PR request. External Blender sources/master remain at
+owner-specific E:/ paths; another machine needs those preserved libraries to use the master.
+
+No old iteration was replaced by the EOF cleanup; all historical worktrees, artifacts and
+recovery copies remain retained. Archival cleanup stays deferred until owner acceptance
+and applicable validation. The pre-PR checkpoint updates handoff/validation/index records
+and leaves the worktree clean; no additional production scope is authorized.

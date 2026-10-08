@@ -194,5 +194,3 @@ if __name__=='__main__':
  elif '--before' in args:render('before',selected)
  elif '--after' in args:render('after',selected)
  else:apply()
-
-

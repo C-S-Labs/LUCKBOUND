@@ -40,8 +40,3 @@ print(json.dumps({k:v for k,v in checks.items() if k not in ['boss_clear_floor',
 assert all(checks[k] for k in ['shared_exact','A_basin_exact','A_entrance_exact','exterior_exact','combat_floor_level','reward_floor_level','reward_internal_clear','reward_behind_seal_clear','primary_portal_open','boss_entry_open','stair_upper_exit_open','hall_to_stair_turn_clear','route_no_floor_misses','finite_vertices','A_sources_current'])
 assert checks['reward_sealed']['object']=='B_POST_BOSS_SEALED_DOOR'
 assert checks['foundation_solid']['object'].startswith('B_SolidRaisedFoundation')
-
-
-
-
-

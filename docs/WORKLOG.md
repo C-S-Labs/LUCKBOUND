@@ -36,6 +36,32 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 
 ---
 
+## Session 246 — 2026-10-08 — Emberfall final pre-PR preservation review
+**Branch:** integration/emberfall-production   **Merged:** none; local cleanup checkpoint only.
+**Reviewed Head:** f78c90e   **Tests:** existing1299 units/4280 loader comparisons/four Rojo builds reused; targeted preservation/index/AST gates pass.
+
+### Done
+- Refreshed origin/main remains34f6c1e, included in branch; no newer main commits.
+- Reviewed234 paths against ledger/exclusions; current runtime, mappings and isolated fixtures unchanged.
+- Trimmed only29 EOF newline bytes in nine AreaII Python scripts; ASTs identical.
+- Rehashed272 external assets, eight approval checks and linked master/source registry; unchanged.
+- Recorded final pre-PR review in consolidation result/validation; regenerated index.
+
+### Decisions made
+- READY FOR PR for preservation-only baseline; future production HOLDs do not block this PR.
+- Reuse passing unchanged-input validation; no geometry/export/Studio/runtime work.
+
+### Stopped at
+Local pre-PR checkpoint complete. Owner review/acceptance and green PR CI remain required before main merge. No push or PR created.
+
+### Next
+Owner reviews the checkpoint and master B/A/provisional montage, then authorizes a PR if ready.
+
+### Leftovers
+No old iteration replaced by EOF cleanup. Keep all historical/recovery sources, exports and worktrees; archival cleanup remains deferred.
+
+---
+
 ## Session 245 — 2026-10-08 — Emberfall preservation-first production consolidation
 **Branch:** integration/emberfall-production from refreshed pinned main34f6c1e.
 **Merged:** none; local staged checkpoints only. **Tests:** see docs/audits/EMBERFALL_INTEGRATION_STATUS.md.

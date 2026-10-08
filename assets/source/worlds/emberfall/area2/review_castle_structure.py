@@ -18,4 +18,3 @@ for k,name in enumerate([a+'_comparison' for a,b in ROWS]+['matched_support_deri
  pic=Image.open(EV/(name+'.png'));pic=pic.resize((800,310));sheet.paste(pic,((k%2)*800,(k//2)*320))
 sheet.save(EV/'structural_review_sheet.png')
 print('Five comparison panels; four before/after pairs and matched B/A support derivation')
-

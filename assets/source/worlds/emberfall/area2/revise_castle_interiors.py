@@ -173,15 +173,3 @@ if __name__=='__main__':
  elif '--render-only' in args:
   selected=next((a.split('=',1)[1].split(',') for a in args if a.startswith('--views=')),[v[0] for v in VIEWS if not v[0].startswith('00')]);render(selected)
  else:revise()
-
-
-
-
-
-
-
-
-
-
-
-

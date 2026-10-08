@@ -60,5 +60,108 @@
   "python_parse": {
     "files": 75,
     "exit_code": 0
+  },
+  "final_prepr_review_2026_10_08": {
+    "reviewed_head": "f78c90ee1e19d7d5c31092cbc200d04c483527d4",
+    "refreshed_main": "34f6c1ea81f6825b4f0a251e9c13623d532b1c44",
+    "pinned_main_ancestor": true,
+    "new_main_commits": [],
+    "reviewed_changed_paths": 234,
+    "unrelated_paths": [],
+    "excluded_overlap": [],
+    "protected_main_diff": [],
+    "external_hashes_checked": 272,
+    "approved_hashes_checked": 8,
+    "master_sha256": "e80900b51d6d723df893f511b2005a0889573c3e8da61eca9705bad36f77f493",
+    "master_link_evidence_reused": true,
+    "existing_evidence_reused": [
+      "1299 units",
+      "4280 loader comparisons",
+      "162 Luau syntax files",
+      "4 Rojo builds",
+      "StyLua2.0.2 LF"
+    ],
+    "donor_original_blobs_equal": 167,
+    "python_cleanup": [
+      {
+        "path": "assets/source/worlds/emberfall/area2/build_area2.py",
+        "before_sha256": "e4e54c43271d77d8c8e6feb3ca7616fab51304e11768b925a2ea7ccd1d46fe6a",
+        "after_sha256": "1afce8394789b3375f81ef49638a2955f05c879007000d0503dce971cabdff28",
+        "removed_bytes": 2,
+        "ast_identical": true
+      },
+      {
+        "path": "assets/source/worlds/emberfall/area2/check_castle_interiors.py",
+        "before_sha256": "f132c435225c13fd1d0cf0523f04673578a86bcfe6fb8b7b39e2f48f7bd26247",
+        "after_sha256": "9b2dfa1ea8bf114abfe41c0a606403854a1c50ea3494ec094ccd7764829322f0",
+        "removed_bytes": 5,
+        "ast_identical": true
+      },
+      {
+        "path": "assets/source/worlds/emberfall/area2/check_castle_structure.py",
+        "before_sha256": "f9b84423f1244666e776eb6ad4a1f896938c8f17d9cab9131bd17e2c5cfea26d",
+        "after_sha256": "2bf68828e0895f238a948946691bbda6b8bc40906ae6df53b465757d4bd3abbc",
+        "removed_bytes": 2,
+        "ast_identical": true
+      },
+      {
+        "path": "assets/source/worlds/emberfall/area2/cleanup_castle_structure.py",
+        "before_sha256": "34d29b78e3691f7a206b4afd34e12c9691cf0fbf8fcca3d9fc4c4d007ad3c8b0",
+        "after_sha256": "faa5179572e809ed20fea409042e91fc00225c73635c03e6c4603f1161829cfc",
+        "removed_bytes": 2,
+        "ast_identical": true
+      },
+      {
+        "path": "assets/source/worlds/emberfall/area2/correct_castle_consistency.py",
+        "before_sha256": "ec5a1d5080c690d3c723d4861c23582b8144d68c50169f9ab3b4da040043c192",
+        "after_sha256": "d985831d3b178576994f3c3218c6a34daf97b853eaf442ce2d65db969e15fd18",
+        "removed_bytes": 2,
+        "ast_identical": true
+      },
+      {
+        "path": "assets/source/worlds/emberfall/area2/refine_impact_structural_failure.py",
+        "before_sha256": "bc6ba86b14102a56710eff622f998e04a5b71cc56591a89b7637598836807f95",
+        "after_sha256": "a543acb19d3640c364cbc99ad323c3406eaa6a4c46f0e29b53304b4f5bb96208",
+        "removed_bytes": 2,
+        "ast_identical": true
+      },
+      {
+        "path": "assets/source/worlds/emberfall/area2/review_castle_interiors.py",
+        "before_sha256": "ae2305bf3b182c8d7a9818275863fea9a14b87f39a98644f93faf3a037a5a4d5",
+        "after_sha256": "a03876d30a3a0159622636643b16b5925ee17a9b3049fc6037e0a1568f9c54fe",
+        "removed_bytes": 1,
+        "ast_identical": true
+      },
+      {
+        "path": "assets/source/worlds/emberfall/area2/review_castle_structure.py",
+        "before_sha256": "0b9fbb0cf2fc67a0d3a8d43cb4e03564ea2df1650f3932dcdc0f4437977c2291",
+        "after_sha256": "0ad5b68abd588f655272f915ad34572999fdfae937b8f6228efe418f32d25bbf",
+        "removed_bytes": 1,
+        "ast_identical": true
+      },
+      {
+        "path": "assets/source/worlds/emberfall/area2/revise_castle_interiors.py",
+        "before_sha256": "f3be00649fa27f64f2a53ec78ed8977bd0e1da5fe1fa9ddb6b4f7b66298dbc97",
+        "after_sha256": "be91052dd96f7c6b66f6a9b16a972f2c4a24523a7b9d9050627bb7bafce32e1b",
+        "removed_bytes": 12,
+        "ast_identical": true
+      }
+    ],
+    "donor_exact_after_cleanup": 158,
+    "donor_eof_only_exceptions": 9,
+    "merge_blocking_holds": [],
+    "owner_acceptance_required": true,
+    "whitespace_check": "PASS git diff origin/main --check; default rules",
+    "python_parsed": 75,
+    "cleanup_ast_identical": true,
+    "index_check": "PASS",
+    "handoff_report_master_links_checked": 40,
+    "stylua_rechecked": "PASS pinned2.0.2 with Git/CI LF",
+    "selene_rechecked": {
+      "errors": 83,
+      "warnings": 96,
+      "parse_errors": 0,
+      "unchanged_main_baseline": true
+    }
   }
 }

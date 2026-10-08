@@ -45,4 +45,3 @@ def main():
  sheet.save(EV/'interior_review_sheet.png')
  print('7 review panels, annotated plan, paired foundation / variant evidence')
 if __name__=='__main__':main()
-
