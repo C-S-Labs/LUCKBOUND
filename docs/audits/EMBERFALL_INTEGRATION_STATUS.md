@@ -8,7 +8,7 @@ Base:34f6c1e. Donor:079882b. Branch:integration/emberfall-production.
 - Batch1/2: PASS; scoped donor bytes preserved from079882b; shared main files unchanged.
 - Fixtures/mappings: PASS; scoped donor bytes preserved from079882b; shared main files unchanged.
 - AreaII references/plan: PASS; scoped donor bytes preserved from079882b; shared main files unchanged.
-- Linked master: pending.
+- Linked master: PASS;6 scenes,60 linked collections,4 libraries,0 local meshes; source hashes unchanged. Whole-world offset provisional. B/A review renders generated.
 - Documentation/validation: pending.
 
 No push/PR/main merge, Studio, upload, re-export or AreaII production authorized.

@@ -1,0 +1,26 @@
+{
+  "master": "E:\\BlenderAIProjects\\Projects\\Emberfall\\EmberfallMaster.blend",
+  "sha256": "e80900b51d6d723df893f511b2005a0889573c3e8da61eca9705bad36f77f493",
+  "scenes": [
+    "01_SourceCatalogue_17_plus4",
+    "02_AreaI_AcceptedLayout1_Scenery",
+    "03_AreaII_CastleB",
+    "04_WholeWorld_B_PROVISIONAL",
+    "03_AreaII_CastleA",
+    "04_WholeWorld_A_PROVISIONAL"
+  ],
+  "linked_libraries": [
+    "E:\\BlenderAIProjects\\Projects\\Emberfall\\..\\..\\Runtime\\Emberfall_Batch1\\BurnedPlainsBatch1.blend",
+    "E:\\BlenderAIProjects\\Projects\\Emberfall\\..\\..\\Runtime\\Emberfall_Batch2\\BurnedPlainsBatch2.blend",
+    "E:\\BlenderAIProjects\\Projects\\Emberfall\\..\\..\\Runtime\\Emberfall_AreaII\\EmberfallAreaII.blend",
+    "E:\\BlenderAIProjects\\Projects\\Emberfall\\..\\..\\Runtime\\Emberfall_SceneryScaling\\SceneryScaling.blend"
+  ],
+  "local_meshes": 0,
+  "linked_collections": 60,
+  "source_hashes_unchanged": true,
+  "placement_approved": false,
+  "empty_startup_scene": true,
+  "reopened_links_verified": true,
+  "no_local_overrides": true,
+  "variant_exclusivity_verified": true
+}

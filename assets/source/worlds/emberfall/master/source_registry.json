@@ -1,0 +1,785 @@
+{
+  "master": "E:/BlenderAIProjects/Projects/Emberfall/EmberfallMaster.blend",
+  "sources": {
+    "batch1": {
+      "path": "E:/BlenderAIProjects/Runtime/Emberfall_Batch1/BurnedPlainsBatch1.blend",
+      "sha256": "3e17a4ff40d7c3d379b9bb7640cb728f76616044e20ee5b7b32e9567f4dfa6c7",
+      "scenes": [
+        {
+          "name": "EF_BURN_FRONT_VERGE",
+          "objects": 238,
+          "root_collections": [
+            "EF_BURN_FRONT_VERGE",
+            "COLLISION_EF_BURN_FRONT_VERGE",
+            "Scale_Reference.007"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_DRAINAGE_CROSSING",
+          "objects": 163,
+          "root_collections": [
+            "EF_DRAINAGE_CROSSING",
+            "COLLISION_EF_DRAINAGE_CROSSING",
+            "Scale_Reference.001"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_ENTRY_WINDWARD_MEADOW",
+          "objects": 207,
+          "root_collections": [
+            "EF_ENTRY_WINDWARD_MEADOW",
+            "COLLISION_EF_ENTRY_WINDWARD_MEADOW",
+            "Scale_Reference"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_FENCELINE_RISE",
+          "objects": 148,
+          "root_collections": [
+            "EF_FENCELINE_RISE",
+            "COLLISION_EF_FENCELINE_RISE",
+            "Scale_Reference.008"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_OPEN_FIELD_CLEARING",
+          "objects": 150,
+          "root_collections": [
+            "EF_OPEN_FIELD_CLEARING",
+            "COLLISION_EF_OPEN_FIELD_CLEARING",
+            "Scale_Reference.006"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_ORCHARD_BEND",
+          "objects": 250,
+          "root_collections": [
+            "EF_ORCHARD_BEND",
+            "COLLISION_EF_ORCHARD_BEND",
+            "Scale_Reference.002"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_RIDGE_ASCENT",
+          "objects": 135,
+          "root_collections": [
+            "EF_RIDGE_ASCENT",
+            "COLLISION_EF_RIDGE_ASCENT",
+            "Scale_Reference.003"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_SWITCHBACK_BANK",
+          "objects": 149,
+          "root_collections": [
+            "EF_SWITCHBACK_BANK",
+            "COLLISION_EF_SWITCHBACK_BANK",
+            "Scale_Reference.004"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_WAYMARK_TERRACE",
+          "objects": 128,
+          "root_collections": [
+            "EF_WAYMARK_TERRACE",
+            "COLLISION_EF_WAYMARK_TERRACE",
+            "Scale_Reference.005"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "Layout1",
+          "objects": 1955,
+          "root_collections": [
+            "Scale_Reference.009",
+            "PLACED_EF_ENTRY_WINDWARD_MEADOW",
+            "COLLISION_PLACED_EF_ENTRY_WINDWARD_MEADOW",
+            "PLACED_EF_ORCHARD_BEND",
+            "COLLISION_PLACED_EF_ORCHARD_BEND",
+            "PLACED_EF_OPEN_FIELD_CLEARING",
+            "COLLISION_PLACED_EF_OPEN_FIELD_CLEARING",
+            "PLACED_EF_DRAINAGE_CROSSING",
+            "COLLISION_PLACED_EF_DRAINAGE_CROSSING",
+            "PLACED_EF_SWITCHBACK_BANK",
+            "COLLISION_PLACED_EF_SWITCHBACK_BANK",
+            "PLACED_EF_FENCELINE_RISE",
+            "COLLISION_PLACED_EF_FENCELINE_RISE",
+            "PLACED_EF_WAYMARK_TERRACE",
+            "COLLISION_PLACED_EF_WAYMARK_TERRACE",
+            "PLACED_EF_BURN_FRONT_VERGE",
+            "COLLISION_PLACED_EF_BURN_FRONT_VERGE",
+            "PLACED_EF_RIDGE_ASCENT",
+            "COLLISION_PLACED_EF_RIDGE_ASCENT",
+            "ASSEMBLY_ROAD_AUTHORED_GUIDES",
+            "SCENERY_NONPLAYABLE_CONTINUATION",
+            "ASSEMBLY_ACTIVE_FIRE_NONSOLID"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "Layout2",
+          "objects": 1965,
+          "root_collections": [
+            "Scale_Reference.010",
+            "PLACED_EF_ENTRY_WINDWARD_MEADOW.001",
+            "COLLISION_PLACED_EF_ENTRY_WINDWARD_MEADOW.001",
+            "PLACED_EF_RIDGE_ASCENT.001",
+            "COLLISION_PLACED_EF_RIDGE_ASCENT.001",
+            "PLACED_EF_BURN_FRONT_VERGE.001",
+            "COLLISION_PLACED_EF_BURN_FRONT_VERGE.001",
+            "PLACED_EF_FENCELINE_RISE.001",
+            "COLLISION_PLACED_EF_FENCELINE_RISE.001",
+            "PLACED_EF_WAYMARK_TERRACE.001",
+            "COLLISION_PLACED_EF_WAYMARK_TERRACE.001",
+            "PLACED_EF_SWITCHBACK_BANK.001",
+            "COLLISION_PLACED_EF_SWITCHBACK_BANK.001",
+            "PLACED_EF_ORCHARD_BEND.001",
+            "COLLISION_PLACED_EF_ORCHARD_BEND.001",
+            "PLACED_EF_DRAINAGE_CROSSING.001",
+            "COLLISION_PLACED_EF_DRAINAGE_CROSSING.001",
+            "PLACED_EF_OPEN_FIELD_CLEARING.001",
+            "COLLISION_PLACED_EF_OPEN_FIELD_CLEARING.001",
+            "ASSEMBLY_ROAD_AUTHORED_GUIDES.001",
+            "SCENERY_NONPLAYABLE_CONTINUATION.001",
+            "ASSEMBLY_ACTIVE_FIRE_NONSOLID.001"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "Layout3",
+          "objects": 1981,
+          "root_collections": [
+            "Scale_Reference.011",
+            "PLACED_EF_ENTRY_WINDWARD_MEADOW.002",
+            "COLLISION_PLACED_EF_ENTRY_WINDWARD_MEADOW.002",
+            "PLACED_EF_BURN_FRONT_VERGE.002",
+            "COLLISION_PLACED_EF_BURN_FRONT_VERGE.002",
+            "PLACED_EF_FENCELINE_RISE.002",
+            "COLLISION_PLACED_EF_FENCELINE_RISE.002",
+            "PLACED_EF_WAYMARK_TERRACE.002",
+            "COLLISION_PLACED_EF_WAYMARK_TERRACE.002",
+            "PLACED_EF_SWITCHBACK_BANK.002",
+            "COLLISION_PLACED_EF_SWITCHBACK_BANK.002",
+            "PLACED_EF_ORCHARD_BEND.002",
+            "COLLISION_PLACED_EF_ORCHARD_BEND.002",
+            "PLACED_EF_RIDGE_ASCENT.002",
+            "COLLISION_PLACED_EF_RIDGE_ASCENT.002",
+            "PLACED_EF_OPEN_FIELD_CLEARING.002",
+            "COLLISION_PLACED_EF_OPEN_FIELD_CLEARING.002",
+            "PLACED_EF_DRAINAGE_CROSSING.002",
+            "COLLISION_PLACED_EF_DRAINAGE_CROSSING.002",
+            "ASSEMBLY_ROAD_AUTHORED_GUIDES.002",
+            "SCENERY_NONPLAYABLE_CONTINUATION.002",
+            "ASSEMBLY_ACTIVE_FIRE_NONSOLID.002"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "Scene",
+          "objects": 0,
+          "root_collections": [],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        }
+      ]
+    },
+    "batch2": {
+      "path": "E:/BlenderAIProjects/Runtime/Emberfall_Batch2/BurnedPlainsBatch2.blend",
+      "sha256": "03d0ce4479312e18bd7b9a5b193c5329d4268ea434d4599129b58dacf35ad098",
+      "scenes": [
+        {
+          "name": "EF_ABANDONED_FIELDSTEAD",
+          "objects": 128,
+          "root_collections": [
+            "EF_ABANDONED_FIELDSTEAD",
+            "COLLISION_EF_ABANDONED_FIELDSTEAD",
+            "Scale_Reference.007"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_LEEWARD_GROVE",
+          "objects": 136,
+          "root_collections": [
+            "EF_LEEWARD_GROVE",
+            "COLLISION_EF_LEEWARD_GROVE",
+            "Scale_Reference.006"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_LONG_DITCH_VERGE",
+          "objects": 89,
+          "root_collections": [
+            "EF_LONG_DITCH_VERGE",
+            "COLLISION_EF_LONG_DITCH_VERGE",
+            "Scale_Reference.005"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_LONG_DITCH_VERGE_DRESSING_B",
+          "objects": 103,
+          "root_collections": [
+            "EF_LONG_DITCH_VERGE_DRESSING_B",
+            "COLLISION_EF_LONG_DITCH_VERGE_DRESSING_B",
+            "Scale_Reference.011"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_LOW_SHOULDER_CLIMB",
+          "objects": 104,
+          "root_collections": [
+            "EF_LOW_SHOULDER_CLIMB",
+            "COLLISION_EF_LOW_SHOULDER_CLIMB",
+            "Scale_Reference.002"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_PASTURE_SADDLE",
+          "objects": 98,
+          "root_collections": [
+            "EF_PASTURE_SADDLE",
+            "COLLISION_EF_PASTURE_SADDLE",
+            "Scale_Reference.004"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_QUIET_HOLLOW_BEND",
+          "objects": 103,
+          "root_collections": [
+            "EF_QUIET_HOLLOW_BEND",
+            "COLLISION_EF_QUIET_HOLLOW_BEND",
+            "Scale_Reference"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_QUIET_HOLLOW_BEND_DRESSING_B",
+          "objects": 93,
+          "root_collections": [
+            "EF_QUIET_HOLLOW_BEND_DRESSING_B",
+            "COLLISION_EF_QUIET_HOLLOW_BEND_DRESSING_B",
+            "Scale_Reference.008"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_RAISED_PASTURE_BEND",
+          "objects": 95,
+          "root_collections": [
+            "EF_RAISED_PASTURE_BEND",
+            "COLLISION_EF_RAISED_PASTURE_BEND",
+            "Scale_Reference.001"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_RAISED_PASTURE_BEND_DRESSING_B",
+          "objects": 93,
+          "root_collections": [
+            "EF_RAISED_PASTURE_BEND_DRESSING_B",
+            "COLLISION_EF_RAISED_PASTURE_BEND_DRESSING_B",
+            "Scale_Reference.009"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_SWALE_DRIFT",
+          "objects": 103,
+          "root_collections": [
+            "EF_SWALE_DRIFT",
+            "COLLISION_EF_SWALE_DRIFT",
+            "Scale_Reference.003"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_SWALE_DRIFT_DRESSING_B",
+          "objects": 89,
+          "root_collections": [
+            "EF_SWALE_DRIFT_DRESSING_B",
+            "COLLISION_EF_SWALE_DRIFT_DRESSING_B",
+            "Scale_Reference.010"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "Scene",
+          "objects": 0,
+          "root_collections": [],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        }
+      ]
+    },
+    "scenery": {
+      "path": "E:/BlenderAIProjects/Runtime/Emberfall_SceneryScaling/SceneryScaling.blend",
+      "sha256": "906f220fdb698abe81e40621aa8888f04b741e2478fefade03f97ea9e7585961",
+      "scenes": [
+        {
+          "name": "EF_BURN_FRONT_VERGE",
+          "objects": 238,
+          "root_collections": [
+            "EF_BURN_FRONT_VERGE",
+            "COLLISION_EF_BURN_FRONT_VERGE",
+            "Scale_Reference.007"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_DRAINAGE_CROSSING",
+          "objects": 163,
+          "root_collections": [
+            "EF_DRAINAGE_CROSSING",
+            "COLLISION_EF_DRAINAGE_CROSSING",
+            "Scale_Reference.001"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_ENTRY_WINDWARD_MEADOW",
+          "objects": 207,
+          "root_collections": [
+            "EF_ENTRY_WINDWARD_MEADOW",
+            "COLLISION_EF_ENTRY_WINDWARD_MEADOW",
+            "Scale_Reference"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_FENCELINE_RISE",
+          "objects": 148,
+          "root_collections": [
+            "EF_FENCELINE_RISE",
+            "COLLISION_EF_FENCELINE_RISE",
+            "Scale_Reference.008"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_OPEN_FIELD_CLEARING",
+          "objects": 150,
+          "root_collections": [
+            "EF_OPEN_FIELD_CLEARING",
+            "COLLISION_EF_OPEN_FIELD_CLEARING",
+            "Scale_Reference.006"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_ORCHARD_BEND",
+          "objects": 250,
+          "root_collections": [
+            "EF_ORCHARD_BEND",
+            "COLLISION_EF_ORCHARD_BEND",
+            "Scale_Reference.002"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_RIDGE_ASCENT",
+          "objects": 135,
+          "root_collections": [
+            "EF_RIDGE_ASCENT",
+            "COLLISION_EF_RIDGE_ASCENT",
+            "Scale_Reference.003"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_SWITCHBACK_BANK",
+          "objects": 149,
+          "root_collections": [
+            "EF_SWITCHBACK_BANK",
+            "COLLISION_EF_SWITCHBACK_BANK",
+            "Scale_Reference.004"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "EF_WAYMARK_TERRACE",
+          "objects": 128,
+          "root_collections": [
+            "EF_WAYMARK_TERRACE",
+            "COLLISION_EF_WAYMARK_TERRACE",
+            "Scale_Reference.005"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "Layout1",
+          "objects": 1955,
+          "root_collections": [
+            "Scale_Reference.009",
+            "PLACED_EF_ENTRY_WINDWARD_MEADOW",
+            "COLLISION_PLACED_EF_ENTRY_WINDWARD_MEADOW",
+            "PLACED_EF_ORCHARD_BEND",
+            "COLLISION_PLACED_EF_ORCHARD_BEND",
+            "PLACED_EF_OPEN_FIELD_CLEARING",
+            "COLLISION_PLACED_EF_OPEN_FIELD_CLEARING",
+            "PLACED_EF_DRAINAGE_CROSSING",
+            "COLLISION_PLACED_EF_DRAINAGE_CROSSING",
+            "PLACED_EF_SWITCHBACK_BANK",
+            "COLLISION_PLACED_EF_SWITCHBACK_BANK",
+            "PLACED_EF_FENCELINE_RISE",
+            "COLLISION_PLACED_EF_FENCELINE_RISE",
+            "PLACED_EF_WAYMARK_TERRACE",
+            "COLLISION_PLACED_EF_WAYMARK_TERRACE",
+            "PLACED_EF_BURN_FRONT_VERGE",
+            "COLLISION_PLACED_EF_BURN_FRONT_VERGE",
+            "PLACED_EF_RIDGE_ASCENT",
+            "COLLISION_PLACED_EF_RIDGE_ASCENT",
+            "ASSEMBLY_ROAD_AUTHORED_GUIDES",
+            "SCENERY_NONPLAYABLE_CONTINUATION",
+            "ASSEMBLY_ACTIVE_FIRE_NONSOLID"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "Layout2",
+          "objects": 1965,
+          "root_collections": [
+            "Scale_Reference.010",
+            "PLACED_EF_ENTRY_WINDWARD_MEADOW.001",
+            "COLLISION_PLACED_EF_ENTRY_WINDWARD_MEADOW.001",
+            "PLACED_EF_RIDGE_ASCENT.001",
+            "COLLISION_PLACED_EF_RIDGE_ASCENT.001",
+            "PLACED_EF_BURN_FRONT_VERGE.001",
+            "COLLISION_PLACED_EF_BURN_FRONT_VERGE.001",
+            "PLACED_EF_FENCELINE_RISE.001",
+            "COLLISION_PLACED_EF_FENCELINE_RISE.001",
+            "PLACED_EF_WAYMARK_TERRACE.001",
+            "COLLISION_PLACED_EF_WAYMARK_TERRACE.001",
+            "PLACED_EF_SWITCHBACK_BANK.001",
+            "COLLISION_PLACED_EF_SWITCHBACK_BANK.001",
+            "PLACED_EF_ORCHARD_BEND.001",
+            "COLLISION_PLACED_EF_ORCHARD_BEND.001",
+            "PLACED_EF_DRAINAGE_CROSSING.001",
+            "COLLISION_PLACED_EF_DRAINAGE_CROSSING.001",
+            "PLACED_EF_OPEN_FIELD_CLEARING.001",
+            "COLLISION_PLACED_EF_OPEN_FIELD_CLEARING.001",
+            "ASSEMBLY_ROAD_AUTHORED_GUIDES.001",
+            "SCENERY_NONPLAYABLE_CONTINUATION.001",
+            "ASSEMBLY_ACTIVE_FIRE_NONSOLID.001"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "Layout3",
+          "objects": 1981,
+          "root_collections": [
+            "Scale_Reference.011",
+            "PLACED_EF_ENTRY_WINDWARD_MEADOW.002",
+            "COLLISION_PLACED_EF_ENTRY_WINDWARD_MEADOW.002",
+            "PLACED_EF_BURN_FRONT_VERGE.002",
+            "COLLISION_PLACED_EF_BURN_FRONT_VERGE.002",
+            "PLACED_EF_FENCELINE_RISE.002",
+            "COLLISION_PLACED_EF_FENCELINE_RISE.002",
+            "PLACED_EF_WAYMARK_TERRACE.002",
+            "COLLISION_PLACED_EF_WAYMARK_TERRACE.002",
+            "PLACED_EF_SWITCHBACK_BANK.002",
+            "COLLISION_PLACED_EF_SWITCHBACK_BANK.002",
+            "PLACED_EF_ORCHARD_BEND.002",
+            "COLLISION_PLACED_EF_ORCHARD_BEND.002",
+            "PLACED_EF_RIDGE_ASCENT.002",
+            "COLLISION_PLACED_EF_RIDGE_ASCENT.002",
+            "PLACED_EF_OPEN_FIELD_CLEARING.002",
+            "COLLISION_PLACED_EF_OPEN_FIELD_CLEARING.002",
+            "PLACED_EF_DRAINAGE_CROSSING.002",
+            "COLLISION_PLACED_EF_DRAINAGE_CROSSING.002",
+            "ASSEMBLY_ROAD_AUTHORED_GUIDES.002",
+            "SCENERY_NONPLAYABLE_CONTINUATION.002",
+            "ASSEMBLY_ACTIVE_FIRE_NONSOLID.002"
+          ],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "Scene",
+          "objects": 0,
+          "root_collections": [],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        },
+        {
+          "name": "SceneryScalingExport",
+          "objects": 55,
+          "root_collections": [],
+          "view_layers": [
+            {
+              "name": "ViewLayer",
+              "excluded": []
+            }
+          ]
+        }
+      ]
+    },
+    "area2": {
+      "path": "E:/BlenderAIProjects/Runtime/Emberfall_AreaII/EmberfallAreaII.blend",
+      "sha256": "b2b3e160efb6d30db4831448ebf540f2c13ae79d25b09d5e37c2fbc5a5e9e49d",
+      "scenes": [
+        {
+          "name": "Emberfall_AreaII_SelectedBlockout",
+          "objects": 3427,
+          "root_collections": [
+            "ReviewCameras",
+            "ReviewLighting",
+            "AREA_II_SHARED",
+            "INITIAL_PROXY_RETAINED",
+            "INNER_WALL_SHARED",
+            "CASTLE_GROUNDS_SHARED",
+            "CASTLE_EXTERIOR_SHARED",
+            "CASTLE_A_CATASTROPHE",
+            "CASTLE_B_STRONGHOLD",
+            "CASTLE_REVIEW_CAMERAS",
+            "PRE_IMPACT_B_INTERIOR_RETAINED",
+            "IMPACT_REVIEW_CAMERAS",
+            "PRE_BASELINE_CASTLE_RETAINED",
+            "BASELINE_REVIEW_CAMERAS",
+            "PRE_INTERIOR_LAYOUT_RETAINED",
+            "INTERIOR_REVIEW_CAMERAS",
+            "PRE_STRUCTURAL_CLEANUP_RETAINED",
+            "STRUCTURAL_REVIEW_CAMERAS",
+            "FINAL_CORRECTIONS_RETAINED",
+            "FINAL_CORRECTION_CAMERAS",
+            "PRE_IMPACT_FAILURE_RETAINED",
+            "IMPACT_STRUCTURE_REVIEW_CAMERAS",
+            "PRE_CONSISTENCY_RETAINED",
+            "CONSISTENCY_REVIEW_CAMERAS"
+          ],
+          "view_layers": [
+            {
+              "name": "VARIANT_A_CATASTROPHE",
+              "excluded": [
+                "CASTLE_B_STRONGHOLD"
+              ]
+            },
+            {
+              "name": "VARIANT_B_STRONGHOLD",
+              "excluded": [
+                "CASTLE_A_CATASTROPHE"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  "whole_world_placement": {
+    "approved": false,
+    "area1_translation": [
+      -2200,
+      0,
+      0
+    ],
+    "area2_translation": [
+      0,
+      0,
+      0
+    ],
+    "note": "PROVISIONAL side-by-side review montage. No AreaI/II seam, complete route, world transform or timer approved."
+  }
+}
