@@ -1,5 +1,5 @@
 import bpy,pathlib,json,hashlib
-r=pathlib.Path('E:/BlenderAIProjects/Worktrees/emberfall-production/assets/source/worlds/emberfall/master');reg=json.loads((r/'source_registry.json').read_text());report=json.loads((r/'master_validation.json').read_text())
+r=pathlib.Path(__file__).resolve().parent;reg=json.loads((r/'source_registry.json').read_text());report=json.loads((r/'master_validation.json').read_text())
 assert bpy.data.filepath==reg['master'] or pathlib.Path(bpy.data.filepath)==pathlib.Path(reg['master'])
 assert len([s for s in bpy.data.scenes if s.name in report['scenes']])==6
 extra=[s for s in bpy.data.scenes if s.name not in report['scenes']]

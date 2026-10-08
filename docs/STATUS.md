@@ -9,7 +9,7 @@ report, is `docs/archive/STATUS_HISTORY.md`. Read it only by section, when an it
 
 ## 1. Where the project stands
 
-- **Emberfall consolidation in progress (2026-10-08):** isolated integration/emberfall-production,
+- **Emberfall consolidation complete locally, owner acceptance pending (2026-10-08):** isolated integration/emberfall-production,
   pinned main34f6c1e. Newer main runtime remains authoritative;167 scoped donor paths,
   six selectively reconciled documents. Backups verified before content integration.
   See [stage record](audits/EMBERFALL_INTEGRATION_STATUS.md). Owner acceptance remains pending.

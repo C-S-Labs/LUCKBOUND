@@ -43,17 +43,18 @@ Integration history: main-only Sessions 91–120 retain their numbers; the main 
 ### Done
 - Reconciled137 newer-main paths with audited donor079882b;167 content/fixture paths remain safe.
 - Preserved newer main shared runtime/schema/config/mappings and created verified read-only backups before integration.
-- Remaining stage results are recorded in the integration stage record.
+- Consolidated frozen17-source content/evidence and immutable mappings, AreaII references/approved plan and linked review master (zero local meshes).
+-1299 units,4280 loader comparisons, source/hash/mapping checks and four Rojo builds pass; see consolidation result for lint baseline findings.
 
 ### Decisions made
 - Scoped files only; no donor ancestry merge or129 unrelated path import.
 - Existing geometry/paths/IDs/recovery remain authoritative; master uses read-only library links.
 
 ### Stopped at
-Staged integration in progress; see stage record for checkpoints/gates. No push/PR/main merge or Studio/upload/export.
+Stage2 complete locally; owner acceptance pending. See docs/audits/EMBERFALL_CONSOLIDATION_RESULT.md for checkpoints/gates. No push/PR/main merge or Studio/upload/export.
 
 ### Next
-Complete the approved stages, then stop for owner visual acceptance; AreaII production remains a separate task.
+Owner reviews linked master B/A views and provisional world montage, then authorizes the separate AreaII proof if ready.
 
 ### Leftovers
 Keep all old scenes/exports/mappings/failed probes/blend1 and hidden recovery; no historical cleanup authorized.

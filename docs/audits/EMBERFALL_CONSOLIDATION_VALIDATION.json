@@ -1,0 +1,64 @@
+{
+  "donor_byte_equality": 167,
+  "mapping_ids_immutable": true,
+  "production_counts": {
+    "batch1": 9,
+    "batch2": 8,
+    "variants": 4,
+    "sockets_width": 24,
+    "walkthrough_mapping": 673,
+    "scenery_mapping": 61,
+    "batch2_assets": 602,
+    "visuals": 44,
+    "collision": 558,
+    "models": 17
+  },
+  "newer_main_code_unchanged": true,
+  "forbidden_names": 0,
+  "backup_files_verified": 1168,
+  "historical_preservation": {
+    "dirty_entries": 75,
+    "external_hashes": 272,
+    "result": "PASS via validate_audit.py"
+  },
+  "repository": {
+    "unit_tests": {
+      "exit_code": 0,
+      "passed": 1299
+    },
+    "chunk_loader": {
+      "exit_code": 0,
+      "differential_cases": 4280
+    },
+    "luau_syntax": {
+      "exit_code": 0,
+      "files": 162
+    },
+    "python_parse": {
+      "exit_code": 0
+    },
+    "rojo": {
+      "exit_code": 0,
+      "projects": 4
+    },
+    "protected_main_diff": [],
+    "stylua": {
+      "exit_code": 0,
+      "mode": "LF materialization; pinned2.0.2; same bytes after newline normalization",
+      "log": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Consolidation\\stylua_lf.log"
+    },
+    "selene": {
+      "exit_code": 1,
+      "log": "E:\\BlenderAIProjects\\Runtime\\Emberfall_Consolidation\\selene.log",
+      "baseline_only": true
+    }
+  },
+  "current_document_links": {
+    "checked": 42,
+    "errors": []
+  },
+  "python_parse": {
+    "files": 75,
+    "exit_code": 0
+  }
+}

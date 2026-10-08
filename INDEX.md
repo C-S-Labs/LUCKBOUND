@@ -382,3 +382,12 @@ Nothing else needs hand-written timestamps.
 
 Regenerate it with `python tools/gen_index.py`. CI fails a PR whose map is stale, and `index.yml` regenerates it on
 `main` after every merge.
+
+### Emberfall consolidated production workspace (2026-10-08)
+
+- `assets/source/worlds/emberfall/PRODUCTION_HANDOFF.md`: current single entry point; accepted sources, mappings, recovery, HOLDs and next owner review.
+- `assets/source/worlds/emberfall/master/`: linked review master recipe, pinned source registry and readback; external master at E:/BlenderAIProjects/Projects/Emberfall/EmberfallMaster.blend.
+- `assets/source/worlds/emberfall/batch1/`, `batch2/`, `area2/`: frozen source/export evidence, accepted structural references and historical rebuild scripts.
+- `docs/biomes/EMBERFALL_AREA_II_PRODUCTION_PLAN.md`: owner-approved079882b planning baseline; production HOLD.
+- `emberfall-walkthrough.project.json`, `emberfall-batch2-review.project.json`, `emberfall-scale-test.project.json` and `tools/studio/emberfall_*`: isolated opt-in review fixtures/mappings; diagnostic scale fixture not expedition content.
+- `docs/audits/EMBERFALL_CONSOLIDATION_RESULT.md`: staged local checkpoints, revised authority, preservation and validation results; historical audit evidence retained alongside.
